@@ -98,6 +98,7 @@ import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
+import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.Cylinder
 import CaTTExp.GrayCtx.VComp

@@ -290,6 +290,20 @@ The comparison turns on two facts about the rest of the design. Neither is a mat
 
 Given what is established today, A2 rests only on proven pieces (cylinders on globes), and A1 rests on a conjecture. A reasonable plan is to **formalise A2's rules and prove A1's universal property from them**. Then ⟦Γ⟧ is available to users with A1's interface either way, and the A1 rules can replace A2 later if general pushouts land.
 
+### 4.5 Relation to `limits-representables.md` §5 (PR #2)
+
+The limits and representables note compares two kernel options for the same goal. Both are relevant here.
+
+- **Its R-A is A1.** That note states the same object former and the same universal property, with the same "no definitional β" convention.
+- **Its R-B defines ⟦Γ⟧ as the lax colimit of the constant point diagram over Γ.** It adds no rule beyond general lax colimits, and rests on the conjecture `laxcolim(const ⊤) ≃ Free(Γ)`.
+- **Its §5.1 supplies the diagram notion of §1.2 here.** Elements of C are maps `⊤ → C`, and a Γ-diagram is a Γ-family of such maps. With that reading, ATTACH's input `(a, b)` is a pair of parallel ambient cells `⊤ → C`.
+
+How A2 sits next to R-A and R-B:
+
+1. **Dependence on general Gray shapes.** R-A has it for the reason given in §4.3. R-B has it too, because a lax cocone over an arbitrary context Γ is built from the same cone and Gray machinery, including Mikhail's Conjecture 3.6. A2 is the only one of the three whose rules mention only globe-shaped cylinders.
+2. **Lax or pseudo.** R-B uses *lax* colimits, which Mikhail's framework already provides. ATTACH is a *pseudo* pushout: the cell relating `G ∘ ι` to F must be invertible. A lax pushout of the span `C ← ⟦∂Dⁿ⟧ → ⟦Dⁿ⟧` would instead add non-invertible cells between the two copies of the boundary. So under R-B, adjoining a cell to a non-free object needs either pseudo colimits or lax colimits with marked (invertible) legs. Which of these is available depends on the pseudo-versus-lax choice for the ambient (`notes/pseudo-vs-gray.md`).
+3. **Staging.** That note proposes R-A first, then R-B once colimits exist. A2 fits the same staging: its rules can come first too, and they give R-A's interface as a theorem (§3.3). If R-B's conjecture is proved and pseudo colimits are available, both A1 and A2 become derived.
+
 ---
 
 ## 5. Size and consistency

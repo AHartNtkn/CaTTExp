@@ -69,6 +69,8 @@ import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
+import CaTTExp.SU
+import CaTTExp.SUExamples
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient
@@ -78,6 +80,10 @@ import CaTTExp.Gray.OrientRev
 import CaTTExp.Gray.DownAgree
 import CaTTExp.Gray.Graded
 import CaTTExp.Gray.MarksFuel
+import CaTTExp.Gray.PsFacts
+import CaTTExp.Gray.CohDim
+import CaTTExp.Gray.FullSupp
+import CaTTExp.Gray.SuppVars
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.Cylinder
 import CaTTExp.GrayCtx.VComp

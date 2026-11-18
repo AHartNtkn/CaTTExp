@@ -1,6 +1,6 @@
-# Free higher categories with directed interchange in every dimension (fourth round)
+# Free higher categories with directed interchange in every dimension (fifth round)
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1–3, with their answers, are in `answered/`. Questions are in §4, smallest first.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1–4, with their answers, are in `answered/`. Questions are in §4, smallest first.*
 
 ## 1. Setting
 
@@ -72,6 +72,18 @@ Then the maximal hom-3 interval is the free category on S → V₀ → V₁ → 
 
 h is **not forced**. The mirror repair k : U₁ ⇛ T with t̄₁ = χ̄₂ ∗₂ k works equally well, and so does the symmetric repair with both h and k and both equations (12 cells, second route h ; χ̄₂ ; k, same exact Gray quotient). The alternative 2-equation U₀ = U₁ makes χ̄₂ an endomorphism and needs further equations (at least χ̄₂² = χ̄₂ under set supports), so it is not preferred.
 
+**(K11) The first larger case, ΣD³ ∨ ΣD², is completed through its top cell (round 4, proved).** Write the first factor as α₀, α₁ : f₀ → f₁, A⁰, A¹ : α₀ ⇒ α₁, Ω : A⁰ ⇛ A¹, and the second as β₀, β₁ : g₀ → g₁, B : β₀ ⇒ β₁. The maximal hom-3 interval is two copies (ε = 0, 1) of the repaired hexagon of (K10), with arrows a^ε, b^ε, c^ε, h^ε, e^ε, f^ε, joined by six variations z_X : X⁰ → X¹ (Ω whiskered in place of the A-edge of X).
+- **Hom-4 faces.** W^ε = A^ε ⊗ B : a^ε b^ε c^ε ⇛ h^ε f^ε. R_j = Ω ⊗ β_j. The naturalities N₁, N₂ of χ₁, χ₂ have opposite directions: Ω varies the left input of χ₁ and the right input of χ₂. Two inner interchangers along a hom-1 cell, 𝖠 : z_S a¹ ⇛ a⁰ z_{V₀} (of t₀ with Ω) and 𝖥 : f⁰ z_T ⇛ z_{U₀} f¹. Writing 𝖡, 𝖢, 𝖣, 𝖤 for the whiskered N₁, R₀, R₁, N₂, the maximal hom-4 interval has the seven hom-3 paths x₁ … x₇ from S⁰ to T¹.
+- **Added data.** Two hom-4 generators and two equations:
+  ```
+  H : h⁰ z_{U₀} ⇛ z_S h¹,                H e¹ = (h⁰ 𝖤) ; 𝖣                 (variation of the factorization)
+  K : a⁰ z_{V₀} b¹ c¹ ⇛ z_S h¹ f¹,       z_S W¹ = (𝖠 b¹ c¹) ; K            (k-type factorization in hom-dimension 4)
+  ```
+  Then there are exactly two routes x₁ ⇛ x₇: L = (W⁰ z_T) ; (h⁰ 𝖥) ; (H f¹) and R = (a⁰ b⁰ 𝖢) ; (a⁰ 𝖡 c¹) ; K. The top generator Z = Ω ⊗ B : L ⇛ R has the orientation of ∂(Ω ⊗ B) = W¹ − W⁰ − R₁ + R₀.
+- **Checks.** On the maximal interval there are 68 hom-3 cells and 98 hom-4 cells, all with distinct supports; the graphs are acyclic, and the reductions have no overlaps. The Gray quotient is exact: q(H) = q(R₁ whiskered), q(K) = q(z_S W¹), and the surviving tensor generators are R₀, R₁, W⁰, W¹.
+- **Forcing substitution.** A⁰, A¹ ↦ A, Ω ↦ 1_A sends H ↦ 1_h, K ↦ W and Z ↦ 1_W, so K is not a cell that every degeneration kills.
+- **The source/sink pattern.** In both the h-repair and the k-repair of (K10), the face 𝖠 (whose pair flips relative to the tensor faces) creates a second source and a second sink one dimension up. With source-joining (h) in hom-dimension 3, the one-face joining that works in hom-dimension 4 is sink-joining (K); a source-joining alternative would have to factor a composite. Each existing factorization also needs a variation cell and equation under each higher variable (H).
+
 **Literature.** No construction and no impossibility result is known.
 - Closest: n-sesquicategories, which have no interchange at all (Araújo, arXiv 2202.09293 and 2210.07704; Forest–Mimram, arXiv 2211.16099 and *Rewriting in Gray categories*, MSCS 2022).
 - Crans's teisi.
@@ -89,14 +101,25 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (the uniform rule).** State a rule, in terms of the cube or tensor combinatorics, saying which whiskered tensor cells must factor through which whiskered inner interchangers. A candidate: whenever a whiskered tensor face d and a whiskered interchanger face e of the same cube interval share a target (or source), adjoin a factor h with d = h e (or k with d = e k). Is the h-type, the k-type or the symmetric version the right one? An equivalent formulation: the hom-2 paths of a cube interval are words in its coordinates, its faces are adjacent transpositions (the 2-faces of a permutohedron), and in ΣD² ∨ ΣD² the tensor pairs are oriented consistently while the interchanger pair flips when the third coordinate crosses it, so the hexagon has two sources and two sinks instead of one of each; h joins the two sources and k the two sinks. Does "every 2-face with a position-dependent pair gets a source-joining (or sink-joining) factorization, and the resulting diamond gets one 4-generator" extend to cubes with four or more coordinates, where square 2-faces (disjoint transpositions) also appear? Test the rule on the next cases: Γ = ΣD³ ∨ ΣD² (where the hom contains λD³ ⊗ λD² and the relevant cubes are larger), and Γ = ΣD² ∨ ΣD² ∨ ΣD² (three summands, hom ν(λD² ⊗ λD² ⊗ λD²), where interchangers of different pairs meet in one 4-dimensional cube). In each case give the added generators and equations through hom-dimension 4 and check requirements 2–4.
+**Q1 (three summands).** For Γ = ΣD² ∨ ΣD² ∨ ΣD², hom ν(λD² ⊗ λD² ⊗ λD²): the hom-2 paths are words in more coordinates, interchangers of different pairs meet, and square 2-faces (disjoint transpositions) appear. Give the added generators and equations through hom-dimension 4 (or 5), following the pattern of (K10)–(K11): one joining factorization for each extra source/sink pair created by a position-flipping face, and variation cells with equations for existing factorizations. Check requirements 2–4 and give the top-cell lift.
 
-**Q2 (substitution).** Requirement 5 requires every substitution F to preserve (F): F(r̄₁) = F(h) ; F(χ̄₂). Do the substitutions of (K9), or others between free objects on small Γ, force one of the h-type, k-type or symmetric repairs, or rule all of them out? In particular, if a substitution sends a cube of one shape onto a degenerate or larger interval of another, is the image of h determined?
+**Q2 (the uniform rule).** State a rule, uniform in dimension, for the two kinds of data in (K11):
+- (i) which joining factorizations to add, and on which side (source- or sink-joining) in each dimension;
+- (ii) which variation cells and equations accompany existing factorizations.
 
-**Q3 (definition).** Is there a recursive "Gray tensor of towers" whose generators include the factorizations of Q1 uniformly, giving F(Γ) with requirements 1–5, up to some finite dimension N ≥ 5?
+Does the source/sink pattern of (K11) hold in general: does every position-flipping face create exactly one extra source/sink pair one dimension up? Does the side alternate with dimension?
 
-**Q4 (impossibility).** Can requirements 1–3 and 5 be shown inconsistent without requirement 4? (K1), (K2) and (K8) all use requirement 4 or (B).
+**Q3 (substitution).** Extend the forcing substitution of (K11) to a proof that the rule of Q2 is closed under substitution of cells for generators (requirement 5), including degenerate and composite-valued substitutions. Alternatively, find a substitution that forces two incompatible choices.
+
+**Q4 (definition and impossibility).**
+- Is there a recursive "Gray tensor of towers" whose generators include these factorizations uniformly, giving F(Γ) with requirements 1–5 up to some finite dimension N ≥ 5?
+- Conversely, can requirements 1–3 and 5 be shown inconsistent without requirement 4?
 
 ## 5. What counts as a solution
 
-Explicit generators and equations for Q1 in either test case; a forcing or refuting substitution for Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.
+Any of the following:
+- explicit generators and equations for Q1;
+- a rule with a proof for Q2;
+- a closure proof or a conflicting substitution for Q3;
+- a definition or an impossibility proof for Q4;
+- a reference to a published construction.

@@ -603,4 +603,4 @@ A higher-dimensional criterion restricted to positive bases and suitably restric
 **Consequences.**
 - **B14 closed for positive 2-computad bases** with free finitely generated categorical fibres; FT₃ with the positivity hypothesis is the rule. Bases with a 2-generator with an empty boundary path admit no finite presentation of this form at all, so the rule must keep the hypothesis (not a gap that more generators could fill).
 - **Evidence for C1/D2 (NGC):** loopy contexts such as (x, σ : 1_x ⇒ 1_x) have weak free object with groupoidification S², not K(ℤ,2); π₃(S²) = ℤ, so the weak free object on such a context has nontrivial higher structure that the strict one lacks. This strongly suggests that relative coherence RC(3) fails for contexts with identity-boundary generators, consistent with the Eckmann–Hilton obstruction.
-- Open: FT_n for n ≥ 3 over positive/regular bases. Follow-up prompt: `outbox/finite-fibration-test-higher-base.md`, unsent.
+- Open: FT_n for n ≥ 3 over positive/regular bases. Follow-up prompt: `answered/finite-fibration-test-higher-base-2026-11-18.md`, unsent.

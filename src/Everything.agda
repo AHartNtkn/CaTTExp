@@ -64,6 +64,11 @@ import CaTTExp.Trunc.Typing
 import CaTTExp.Trunc.Check
 import CaTTExp.Trunc.Subst
 import CaTTExp.Trunc.Examples
+import CaTTExp.Ops.Typing
+import CaTTExp.Ops.Check
+import CaTTExp.Ops.Subst
+import CaTTExp.Ops.Nat
+import CaTTExp.Ops.NatExamples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell

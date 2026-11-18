@@ -177,10 +177,10 @@ module _ (K : ADC) (L : Nat) where
     Cnd-add (suc j) (a , b) (a′ , b′) r r′ c c′
 
   private
-    hdN : ∀ {m} {e e′ : P′} {r r′ : Tb m} → e ∷ r ≡ e′ ∷ r′ → e ≡ e′
+    hdN : ∀ {m} {e e′ : P′} {r r′ : Tb m} → _≡_ {A = Tb (suc m)} (e ∷ r) (e′ ∷ r′) → e ≡ e′
     hdN refl = refl
 
-    tlN : ∀ {m} {e e′ : P′} {r r′ : Tb m} → e ∷ r ≡ e′ ∷ r′ → r ≡ r′
+    tlN : ∀ {m} {e e′ : P′} {r r′ : Tb m} → _≡_ {A = Tb (suc m)} (e ∷ r) (e′ ∷ r′) → r ≡ r′
     tlN refl = refl
 
     snd-fst : ∀ {a b c d : M} → (b , b) ≡ (c , c) → b ≡ c

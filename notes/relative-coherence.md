@@ -28,8 +28,8 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | Gray cube: X-free 3-loops contractible; the factorisation of inactive columns extends to 3-dim contexts whose 3-generators have 2-supported 2-sources (incl. the D² cylinder and c⋆D²) | proved by a researcher, verified at paper level (`conjectures/answered/gray-contexts-r5-2026-11-18.md`) |
 | An acyclic 1-graph is **not** enough for RC(3): (x, a : 1_x→1_x) is acyclic and RC(3) fails | counterexample (same file); the open condition is now "no 2-generator from an identity to an identity" |
 | Fusion when two generator letters can be exchanged: Y={x,f,g} | proof sketch here (§7.6): y is a cut vertex, so horizontal normal forms remove the exchange; key constructors machine-checked. Not verified |
-| Fusion when two generator letters can be exchanged: the 2×2 grid (no cut vertex) | **RC(3) proved internally** (§7.8): path lattice ⊥ ⊕ {0,1}² ⊕ ⊤, all exchange at the cut (1,1), round-5 and round-6 constructions glued by a mixed multiplication whose laws are of known kinds; constructors machine-checked (`GridRC3`). Round-5/6 standard, not externally verified |
-| The 2-skeleton of the D² ∗₀ D² cylinder | proof sketch (§7.9): every strict cell factors uniquely as (A⁻, B⁻, G letters) · (F, A⁺, B⁺ letters); the one exchange the multiplication needs is a single coherence χ_M; normal forms, all 203 multiplications and χ_M machine-checked (`TwoDiscCylinderRC3`). Fusion laws for the three-column fold and transfers not written out |
+| Fusion when two generator letters can be exchanged: the 2×2 grid (no cut vertex) | **RC(3) proved by a researcher, verified** (`conjectures/answered/gray-contexts-r7-2026-11-18.md`: matrix normal form, flattening lemma). An independent internal proof (§7.8: path lattice ⊥ ⊕ {0,1}² ⊕ ⊤, all exchange at the cut (1,1)) has its constructors machine-checked (`GridRC3`) |
+| RC(3) on the full cylinder of D² ∗₀ D² | **proved by a researcher, verified** (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`: orientations AB→BA, AG→GA, FB→BF; U_A/U_B via the interchange 4-cell). An independent internal sketch of the 2-skeleton (§7.9: unique factorisation, a single exchange χ_M) has its normal forms and all multiplications machine-checked (`TwoDiscCylinderRC3`) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
@@ -572,7 +572,7 @@ This is the 2 × 2 case of question 1 of the gray-contexts r7 prompt: RC(3) in a
   - the lattice decomposition and Lemma G2, which together locate every exchange at a cut vertex of the cells it occurs in;
   - the mixed normal form, with at most one block letter between forced chain letters;
   - the μ table and the case analysis of its laws.
-- *Status: internal proof at the round-5/6 standard.* The case lists are complete and checked. The new constructors and a representative of every new kind of 4-cell are machine-checked. The fusion 4-cells are not all written out, and that is the step the external verifications checked line by line. **Not externally verified.**
+- *Status: internal proof at the round-5/6 standard.* The case lists are complete and checked. The new constructors and a representative of every new kind of 4-cell are machine-checked. The fusion 4-cells are not all written out, and that is the step the external verifications checked line by line. **Not externally verified.** **Superseded as the reference result** by the verified researcher proof of the same statement (`conjectures/answered/gray-contexts-r7-2026-11-18.md`); this subsection is kept as an independent route whose constructors are machine-checked.
 
 **Why this works, and what it does not reach.** In the grid, the trace poset of every strict cell is series-parallel: S₁₀ ; (S₀₀ ∥ S₁₁) ; S₀₁. A series-parallel poset has a canonical normal form, a vertical list of horizontal products, with no choices. That is why the round-5 and round-6 pieces glue with no new law. The 2-skeleton of the D² ∗₀ D² cylinder (§7.9) contains the N-shaped poset, which is not series-parallel, so a choice is needed there.
 
@@ -657,7 +657,7 @@ Each of these is a direct coherence over the named pasting context after the rou
 **Status: proof sketch at the round-3 standard.**
 - Lemma D1, Lemma D2, the normal forms, all multiplications, χ_M and the transfers are complete and machine-checked.
 - The fusion laws for ψ_M and τ are named with their arities but not written out. **Not verified.**
-- If the sketch is right, RC(3) holds for W₂. Combined with a two-generator extension lemma, which is still open (U_A and U_B interchange through (36), so item 20 of the gray-contexts prompt does not apply), it would give RC(3) for the full cylinder of D² ∗₀ D².
+- If the sketch is right, RC(3) holds for W₂. Combined with a two-generator extension lemma, which is still open (U_A and U_B interchange through (36), so item 20 of the gray-contexts prompt does not apply), it would give RC(3) for the full cylinder of D² ∗₀ D². **Both are now settled** by the verified naturality round-7 answer (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`), which proves RC(3) on the full cylinder; the cone round-5 extension theorem (`conjectures/answered/cone-over-coherences-r5-2026-11-18.md`) reduces any cylinder of a 2-dimensional Q to its 2-skeleton. This subsection is kept as an independent route.
 
 **Machine checks** (`tools/rc3_d2d2.py`, `src/CaTTExp/Generated/TwoDiscCylinderRC3.agda`, 468 checks):
 - the 67 normal forms;
@@ -697,7 +697,7 @@ Each of these is a direct coherence over the named pasting context after the rou
 - C1b, mechanical check in the Agda checker (now including Theorem A's exchange step on a small instance): NGC.
 - Mikhail's printed-rule defects: ledger D3b, owned by LIM-F.
 - Agda for Gray contexts (D5) is unchanged.
-- RC exchange step (thread RCX, 2026-11-18): §7.8 (2 × 2 grid, internal proof), §7.9 (D² ∗₀ D² 2-skeleton, sketch) and §7.10 (checks of round-6 constructions). Open, owned by RCX: writing out the fusion laws of §7.9 (ψ_M, transfers); a two-generator extension lemma for U_A, U_B (full D² ∗₀ D² cylinder); the general dimension-2 statement via a canonical block factorisation (§7.9 suggests: choose a total preorder on letters compatible with every trace poset; the multiplication then needs only exchanges of independent pairs, and with no three pairwise independent letters its laws are interchanges); RC(4) for the triangle context (E11 link).
+- RC exchange step (thread RCX, 2026-11-18): §7.8 (2 × 2 grid, internal proof), §7.9 (D² ∗₀ D² 2-skeleton, sketch) and §7.10 (checks of round-6 constructions). The grid and the full D² ∗₀ D² cylinder are now settled by verified researcher answers (gray-contexts r7, naturality r7), and the several-3-generator question by the cone r5 extension theorem, so the RC(3) frontier is general exchange in dimension 2 (asked in `conjectures/outbox/gray-contexts-r8.md`). Open, owned by RCX: that general statement (§7.8 suggests a canonical block factorisation by a total preorder on letters compatible with every trace poset); RC(4) for the triangle context, which is RC(4) of a 2-dimensional context (E11 link, asked in gray-contexts r8); machine checks of the r5/r7 comparison lemma and grid flattening step.
 
 ## 9. Machine checks (C1b)
 

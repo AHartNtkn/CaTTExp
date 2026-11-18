@@ -85,6 +85,11 @@ import CaTTExp.GlobularTotal.ExMerge
 import CaTTExp.GlobularTotal.Contract
 import CaTTExp.GlobularTotal.DimCheck
 import CaTTExp.GlobularTotal.EndsNf
+import CaTTExp.GlobularTotal.NfFuel
+import CaTTExp.GlobularTotal.ImgTyped
+import CaTTExp.GlobularTotal.CohParts
+import CaTTExp.GlobularTotal.NfCoh
+import CaTTExp.GlobularTotal.SplitMerge
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing
@@ -151,6 +156,11 @@ import CaTTExp.Strict.Expr
 import CaTTExp.Strict.NuWords
 import CaTTExp.Strict.Lifting
 import CaTTExp.Strict.BdElim
+import CaTTExp.Strict.StdSem
+import CaTTExp.Strict.Std
+import CaTTExp.Strict.NuRows
+import CaTTExp.Strict.LowerCut
+import CaTTExp.Strict.AtomSum
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

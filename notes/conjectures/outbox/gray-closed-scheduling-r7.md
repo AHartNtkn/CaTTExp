@@ -1,4 +1,4 @@
-# Schedules in free Gray-monoidal biclosed 2-categories, round 6
+# Schedules in free Gray-monoidal biclosed 2-categories, round 7
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. Everything under "What is known" is proved and is not re-asked. The smallest open case is Question 1.*
 
@@ -61,7 +61,7 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
 ## Further observations (proved)
 
 9. **Subtractive models cannot see interchangers with a structural argument.** Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = weight(target) − weight(source) is additive under composition and tensor, and an interchanger χ_{f,g} adds a bilinear term β(δ(f), δ(g)). If moreover the residuals are group subtraction (A\C = C − A, as in the model 𝓜 of item 5 and its matrix version), every structural 1-cell (ev, curried evaluations, units) has δ = 0, so every interchanger with a structural argument has weight 0. Such models cannot decide whether two 2-cells differing in those interchangers are equal. This blindness is specific to subtractive residuals; see item 13.
-10. **The axioms do not make evaluation central.** For ev : A ⊗ (A\C) → C and a generator g : Y → Y′, compare (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) and (C ⊗ g) ∘ (ev ⊗ Y), related by χ_{ev,g}. Currying A on the left (using strict naturality in the context variable and the target) turns this into the same question for m_Y := Φ(ev ⊗ Y) and g, so currying only transports it. Likewise for χ_{ev,ev′} at independent positions. Unless centrality is imposed (as in Garner–Hirschowitz–Pardon's premonoidal construction), structural maps are non-central events in 𝒢. In the quotient 𝒢_c of 𝒢 in which every interchanger with a structural argument is an identity, Question 1 follows at once from item 6.
+10. **The axioms do not make evaluation central.** For ev : A ⊗ (A\C) → C and a generator g : Y → Y′, compare (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) and (C ⊗ g) ∘ (ev ⊗ Y), related by χ_{ev,g}. Currying A on the left (using strict naturality in the context variable and the target) turns this into the same question for m_Y := Φ(ev ⊗ Y) and g, so currying only transports it. Likewise for χ_{ev,ev′} at independent positions. Unless centrality is imposed (as in Garner–Hirschowitz–Pardon's premonoidal construction), structural maps are non-central events in 𝒢. In the quotient 𝒢_c of 𝒢 in which every interchanger with a structural argument is an identity, Question 5 follows at once from item 6.
 
 11. **Structural loops.** Take atoms A, B, C, D and U = A\(A⊗B), X = A⊗B, X′ = A⊗U, V = (C⊗D)/D, Y = C⊗D, Y′ = V⊗D. Let u = 1_A ⊗ Λ_A(1) : X → X′, e = ev : X′ → X, v = Λ^R_D(1) ⊗ 1_D : Y → Y′ and d = ev^R : Y′ → Y, so that e u = 1 and d v = 1 by β. Put T = X ⊗ Y and (composition rightmost first)
 
@@ -101,30 +101,39 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
     So the Gray tensor's left and right closures are matched by 2-cells of opposite orientation (lax for one side, oplax for the other; Gagna–Harpaz–Lanari, Ex. 2.5). Campion's tensor gives (A\C)/B ≃ A\(C/B) canonically, but not literally.
 18. **The correct structure is two-sided Gray enrichment.** For strict 2-categories with the Gray tensor, put ℍ(A, C)(P, Q) = 2Cat(P ⊗ A ⊗ Q, C), with probes P, Q on either side. Its one-sided restrictions are two different hom 2-categories: ℍ_ℓ (left probe, D_k ⊗ A → C) and ℍ_r (right probe, A ⊗ D_k → C). Then:
     - left currying is an isomorphism ℍ_r(A ⊗ B, C) ≅ ℍ_r(B, A\C), and right currying is an isomorphism ℍ_ℓ(A ⊗ B, C) ≅ ℍ_ℓ(A, C/B);
-    - with probes on both sides, the bound argument absorbs the probe on its side: ℍ(A ⊗ B, C)(P, Q) ≅ ℍ(B, A\C)(P ⊗ A, Q) and ℍ(A ⊗ B, C)(P, Q) ≅ ℍ(A, C/B)(P, B ⊗ Q);
+    - with probes on both sides, the bound argument absorbs the probe on its side (writing 𝒟 for data maps): ℍ(A ⊗ B, C)(P, Q) ≅ 𝒟(B ⊗ Q, (P ⊗ A)\C) = ℍ(B, (P ⊗ A)\C)(I, Q), and ℍ(A ⊗ B, C)(P, Q) ≅ 𝒟(P ⊗ A, C/(B ⊗ Q)) = ℍ(A, C/(B ⊗ Q))(P, I);
     - the squares 2Cat(J ⊗ A ⊗ J, C) give a strict double hom with mixed lax/oplax modifications.
 19. **The free unit-free model 𝒢′_Σ.** Models have a probe sort and a data sort, adjunctions only between data types, and gluing along designated probe colimits (needed only for one-hole contexts). The free model 𝒢′_Σ on a signature Σ of generating 1-cells exists as a term model with an explicit universal property. The Gray model is a model. An erasure model (probes act by identities) shows that the free unit-free biclosed monoidal category 𝓑_Σ embeds faithfully in 𝒢′_Σ.
 20. **What collapses and what survives in 𝒢′.**
     - Data arrows (functors) tensor bifunctorially, so the structural loops of items 11 and 14 are trivial: H = H_L = 1_T, and the maps ι, π of item 11 are identities.
     - Non-invertible Gray interchange survives one dimension up. For two transformations, the two schedules are related by the modification F(χ ▷ 1_A), which has no inverse in 𝒢′ (in the Gray model, with the atom A sent to the terminal 2-category, it is the 2-cell of the walking Gray square).
-    - So in 𝒢′ the schedule structure of the Background lives on generators of probe degree J (transformations X ⊗ J → Y or J ⊗ X → Y, and more generally cells X ⊗ D_k → Y), with interchangers as modifications.
+    - So in 𝒢′ the schedule structure of the Background lives on generators of probe degree J (transformations X ⊗ J → Y or J ⊗ X → Y, and more generally cells X ⊗ D_k → Y), with interchangers as modifications. Items 21–25 show that this structure is not a product of schedule categories.
+
+21. **Transformation-level homs are not posets (proved).** Take one data atom A and two generating left-parameter transformations α, β : 1_A ⇒ 1_A (maps J ▷ A → A with both endpoints 1_A). Write α·β for "β, then α". With κ : D₂ → J ⊗ J the Gray square (right factor first ⇒ left factor first), F_{α,β} = α ∘ (1_J ▷ β) gives a forward crossing σ_{α,β} = F_{α,β} ∘ (κ ▷ 1_A) : α·β ⇒ β·α. Assigning the generators to the two probe positions the other way round gives σ_{β,α} : β·α ⇒ α·β. Let q = σ_{β,α} ∘ σ_{α,β}.
+    - *Separating model.* Let 𝒳 be the strict 2-category with one object, 1-cells ℕ under addition, 2-cells only n ⇒ n, labelled by k ∈ ℕ, with all compositions adding labels. T : J ⊗ 𝒳 → 𝒳, identity at the ends, sending the J-arrow to 1 and its interchanger with n to the cell labelled n, is a transformation Id ⇒ Id. Interpreting α and β as T sends each crossing to label 1 and q^r to label 2r.
+    - *Consequence.* (ℕ, +) embeds in End(α·β), and q is not invertible. A category equivalent to a poset has trivial endomorphism monoids, so the hom is not equivalent to any product of schedule categories S(P). The same happens with one generator τ : 1_A ⇒ 1_A and its self-interchanger on τ·τ.
+    - *Where the schedule picture breaks.* A fixed planar diagram fixes the left/right positions of events. Here α and β are endo-transformations of the same arrow, so either can occupy either probe position, and both crossings are well typed.
+22. **Fixed-bound naturality of evaluation and unit is strict (proved).** For e_{A,C} : A ⊗ (A\C) → C and a right-parameter family γ : C ⊗ P → C′, put R_A^P(γ) = Λ_A(γ ∘ (e_{A,C} ⊗ P)). Then e_{A,C′} ∘ (A ⊗ R_A^P(γ)) = γ ∘ (e_{A,C} ⊗ P), and similarly for the unit η^A and for right closure. The identity transformation of an evaluation, unit or counit data arrow has trivial interchange with everything, since its parameter map factors through ! : J → I.
+23. **Varying the bound argument changes sides (proved).** For H = A\C and a right-parameter transformation a : X ⊗ J → A with endpoints f₀, f₁, the mate ā = Λ_X(e ∘ (a ⊗ H)) : J ⊗ H → X\C is a left-parameter transformation between f₀^*, f₁^*. For a left-parameter b : J ⊗ Y → H with endpoints g₀, g₁, the Gray square transported through currying is M_{a,b} : (ā g₁)·(f₀^* b) ⇒ (f₁^* b)·(ā g₀). The right-closure mirror goes (f₁^* b)·(ā g₀) ⇒ (ā g₁)·(f₀^* b). Both run right factor first ⇒ left factor first.
+24. **A noninvertible structural crossing (proved).** With A = X ⊗ J, C = A ⊗ J ⊗ Y, a = 1_A viewed as a right-parameter transformation X ⊗ J → A (its endpoints X → X ⊗ J differ), and b = η^A_{J⊗Y}, the triangle identity gives M_{a,b} = Λ_X(X ⊗ κ ⊗ Y). With X and Y sent to terminal 2-categories this is the walking Gray square, which has no reverse. So structural terms with a genuine J-parameter are directed events, and their side is set by the parameter position, not by the symbol "evaluation" or "unit".
+25. **The ω-version is obstructed the same way (proved).** 𝒳 is gaunt. Through the strong monoidal gaunt reflections of Campion (arXiv 2311.00205, Thm 3.14, Cor. 3.15), T gives T_∞ : J ⊗ i𝒳 → i𝒳 in (∞,ω)-categories, and the powers q^r stay distinct in the homotopy category of the transformation hom. In ν(K_P) the inversion weight ρ(J, i) = #{j ∈ J : j > i, j ∥ i} satisfies ρ(∂F) = −1 on every oriented 2-face, so cubical schedule homs have no nonidentity endo-2-cells.
 
 ## Questions
 
-Questions 1–3 are about 𝒢′ of items 18–20. Questions 4–5 are about the original 𝒢 of the Setting, whose closed structure is strict isomorphisms of hom-categories.
+Questions 1–3 are about 𝒢′ of items 18–25. Questions 4–5 are about the original 𝒢 of the Setting, whose closed structure is strict isomorphisms of hom-categories.
 
-1. **(Schedules of transformations.)** In 𝒢′_Σ, let the generators include transformations (left- or right-parameter maps of probe degree J) as well as 1-cells. Fix an arrow of 𝓑_Σ and the 1-cells over it. Is the category of composites of generating transformations over it, with modifications as morphisms, equivalent to a product of schedule categories S(P), where P is the dependency order of the generating transformations and the swaps are the modifications F(χ ▷ 1)? Do structural events (units and counits of the two adjunctions, evaluations, the probe-absorption isomorphisms of item 18) enter P as events, and on which side?
-2. **(Centrality at the transformation level.)** Item 12 shows evaluation is not central among 1-cells of 𝒢. In 𝒢′, is there an interchanger modification between a generating transformation and an evaluation, and if so in which direction? Which interchangers involving evaluation, units or currying survive as non-invertible modifications?
-3. **(ω-version.)** Using two-sided enrichment over (∞,ω)-categories with the Gray tensor (probes D_k on either side), are the hom (∞,ω)-categories of the free unit-free biclosed object over a fixed arrow of 𝓑_Σ equivalent to products of ν(K_P)-homs, with structural events included?
+1. **(The smallest transformation hom.)** In the free 𝒢′_Σ with one data atom A and generating transformations α, β : 1_A ⇒ 1_A, describe the category whose objects are the composites α·β and β·α and whose morphisms are modifications. Is it the free category on the two crossings σ_{α,β} and σ_{β,α}, so that End(α·β) is the free monoid on q (≅ ℕ)? Or do the Gray axioms impose relations on these crossings? Same question for one generator τ : 1_A ⇒ 1_A and the composites τ^n.
+2. **(Position-rigid composites.)** Call a set of generating transformations *position-rigid* over a fixed arrow of 𝓑_Σ when every pair of them can be crossed in at most one direction in composites over that arrow (for instance when their endpoint data arrows are pairwise distinct and no generator is an endo-transformation). In that case, is the category of composites, with modifications, equivalent to a product of schedule categories S(P), with P the dependency order? If not, give the smallest counterexample. Is the ω-analogue with ν(K_P) true under the same hypothesis?
+3. **(Which structural terms are events?)** Items 22–24 show that structural data arrows contribute no event, while structural terms with a genuine J-parameter can be directed events. Give a criterion on βη-normal terms of 𝒢′ that decides which subterms are transformation events and on which side, or show that no criterion depending only on the term's type exists.
 4. **(Is ι ∘ π the identity in 𝒢?)** For H of item 11, or H_L of item 14, is ι ∘ π = 1_H in the original 𝒢? By item 15, a countermodel must have u ∘ e ≠ 1. If ι ∘ π = 1_H, are the isomorphisms H^n ≅ 1_T unique?
 5. **(Forward uniqueness in 𝒢, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}, or show that they fail. This includes identifying the forward comparisons built from different typed instances of the crossing interchanger (item 11, last point).
 
 ## What counts as a solution
 
 Any of the following:
-- a description of the transformation-level hom categories for Question 1, or a counterexample to the S(P) form;
-- a decision of Question 2;
-- an answer to Question 3;
+- a description of the hom category of Question 1, or relations in it;
+- a proof or counterexample for Question 2;
+- a criterion for Question 3;
 - a decision of Question 4;
 - a proof or counterexample for Question 5;
 - a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories or double categories.
@@ -136,4 +145,3 @@ Any of the following:
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Ex. 2.5, Rem. 2.6 and Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
 - Campion, *The Gray tensor product of (∞,n)-categories* (arXiv 2311.00205), Thm A.
-

@@ -1,4 +1,4 @@
-# Problem: naturality of CaTT coherences at depth ≥ 2, round 7
+# Problem: naturality of CaTT coherences at depth ≥ 2, round 8
 
 *Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Everything under "What is known" is proved and is not re-asked. Questions are in §4, smallest first.*
 
@@ -150,12 +150,23 @@ Write RC(n) for the property:
     - *Line-word criterion (sketch).* If a strict 2-cell w has a unique event word, every proper contiguous subword satisfies RC(3), and some event uses a 2-generator spanning w's endpoints, then the fibre of w satisfies RC(3).
     - These give RC(3) for the whole Gray cube, for the full cylinder of D² (a second proof of item 13), and for the join c ⋆ D².
     - *Local exchange law.* Over P = D²(a) ∨₀ D²(b), with χ = coh_{P, L → R} the exchange between L = (a ∗₀ g₀) ∗₁ (f₁ ∗₀ b) and R = (f₀ ∗₀ b) ∗₁ (a ∗₀ g₁), the term coh_{D³ ∨₀ D³, (χ⁻ ∗₂ A_R) → (A_L ∗₂ χ⁺)} is a valid 4-term. It is a local law, not a comparison of arbitrary 3-heads.
-    - The open step there is the 2 × 2 grid of lax squares: two 2-generators exchange without a cut vertex separating them.
-23. **Cones over vertical chains (proved).** For every vertical chain Q_m of 2-discs, RC(3) holds for the join context Cone(Q_m; c). The case Cone(D² ∨ D²; c), with two apex edges under non-point columns, is open for the same reason as question 1 below.
+    - The 2 × 2 grid of lax squares, where two 2-generators exchange without a cut vertex separating them, is settled in item 26.
+23. **Cones over vertical chains (proved).** For every vertical chain Q_m of 2-discs, RC(3) holds for the join context Cone(Q_m; c). The case Cone(D² ∨ D²; c) is open; by item 25 it reduces to a context with four 2-generators.
+
+24. **RC(3) on the full cylinder of D² ∗₀ D² (proved).** Let Γ = (D² ∗₀ D²)↑Var and Γ₀ its 2-skeleton (Γ without U_A, U_B). Then RC(3)(Γ₀) and RC(3)(Γ) hold, so K(Q, B, Var Q) = Fill_Γ(a_c, b_c) exists for every 3-dimensional coherence over the horizontal two-disc.
+    - *Events.* The strict 2-cells x⁻ → z⁺ of Γ₀ are words in four events: A (uses a before F and a′ after), B (uses b before G and b′ after), G (p-paths f⁻g⁻Z to q-paths f⁻Yg⁺) and F (q-paths to r-paths Xf⁺g⁺), each used at most once, with G before F. The independent pairs are (A,B), (A,G) and (F,B).
+    - *Orientation.* Orient the exchanges AB → BA, AG → GA and FB → BF. The measure m = [A before B] + [A before G] + [F before B] drops by one at each step. Left sides start in {A, F} and end in {B, G}, so they never overlap, and the only branching is AGFB, which closes with two disjoint swaps. This orientation agrees with right-column-first serialization at both nontrivial cuts y⁻ and y⁺. Sectors p → r have only the corners in common and hence one active column.
+    - *Serialization and sorting.* Serialization comparisons ρ, χ and their 4-dimensional laws against multiplication are full coherences over genuine pasting contexts. Padded words are sorted, and the one new sorting diamond is the disjoint-swap diamond.
+    - *U_A and U_B.* Normalising a single use of a generator gives sixteen unary representatives with fixed framings. A 3-term using both generators sequentialises into two unary terms with a middle pad, an endo-3-term of a framed corner S_ij = (v^{(i)} · K) · u^{(j)}, which RC(3)(Γ₀) removes. The two remaining routes B₇ ; A₇ and A₈ ; B₈ are exactly the boundary of item 21's interchange 4-cell.
+25. **The 3-generator extension theorem (proved).** Let Λ have dimension ≤ 2 and an acyclic generating 1-graph, and let Γ = (Λ, z_1 : A_1 → B_1, …, z_k : A_k → B_k) with A_i, B_i parallel 2-terms of Λ. Then RC(3)(Γ) ⇔ RC(3)(Λ), with no restriction on number, order, whiskering or composability of the z_i.
+    - *Method.* 3-terms modulo 4-terms form a category (4-terms of Γ and 3-terms of Λ are invertible, by the Benjamin–Markakis–Sarti criterion). Normalise each 3-term by RC(2) comparisons at both ends. For 2-terms F(X), G(X) in a fresh 2-variable X with equal strict image with X formal, RC(2) gives J(X), and depth-1 naturality of J in X (item 1) shows F and G whisker every 3-term to the same normalised arrow. Strict 3-cells are composites of elementary steps C[z_i] modulo replacement and adjacent exchange (Ara et al., *Polygraphs*, arXiv 2312.00429, App. D, Props. D.3.9 and D.3.12). Both moves preserve normalised evaluation.
+    - *Consequence for cylinders.* For every pasting context Q of dimension ≤ 2 and every up-closed Y, Q↑Y has dimension ≤ 3 and an acyclic 1-graph, so RC(3)(Q↑Y) ⇔ RC(3) of its 2-skeleton. Items 19, 21 and 24's treatment of U_A, U_B are instances. For join contexts, RC(3)(Cone(Q; c)) ⇔ RC(3) of its 2-skeleton, and the horizontal cone Cone(D² ∨ D²; c) reduces to the context with vertices c, x, y, z, edges p_x, p_y, p_z, f, f′, g, g′ and 2-generators α, β, p_f, p_g.
+26. **RC(3) for the 2 × 2 grid (proved).** In the Gray product of two paths of length 2 (faces oriented hv ⇒ vh), only two faces F, G are independent, and they are adjacent in every event word. Reassociating isolates F, G and the path factors between them in the two-square subcontext, which has a cut vertex where item 20's matrix normal form applies. This settles every fibre.
+27. **The next-dimensional obligation.** For RC(4), after choosing 4-normalisers η_H : H → N(H) for 3-terms, compatibility with a 4-term K : H → H′ needs a 5-term η_H → K ∗₃ η_{H′}. Equivalently, the 4-fillers C(k,k′) supplied by RC(3) need 5-terms C(k₀,k₁) ∗₃ C(k₁,k₂) → C(k₀,k₂). The generic pasting-context instances exist by the coherence rule. The missing step is relative fusion after the chosen 3-normalisers have been substituted and expanded.
 
 ## 3. What remains, and why
 
-Item 20 settles exchange of two letters when a cut vertex splits every head into at most two horizontal columns. Item 21 gives the 4-term that interchanges the two 3-generators of the cylinder of D² ∗₀ D². What is missing for that cylinder is RC(3) on its 2-skeleton, where the exchanges are not separated by a cut vertex, and fusion of the U_A/U_B interchange with that normal form. 3-dimensional Q needs RC(4), which needs a 5-dimensional compatibility between chosen 3-normalisers.
+By item 25, RC(3) on every cylinder Q↑Y with dim Q ≤ 2 is equivalent to RC(3) on its 2-skeleton, an acyclic 2-dimensional context. Items 10, 13, 17, 18, 20, 24 and 26 settle the 2-skeleta in which exchanges are separated by a cut vertex or can be isolated one at a time. The general case, with several exchanges between letters that are not adjacent in every event word, is open. 3-dimensional Q needs RC(4), which needs item 27's 5-dimensional compatibility.
 
 Item 14 reduces Conjecture N to RC(n) on all cylinders.
 
@@ -163,16 +174,20 @@ Item 14 reduces Conjecture N to RC(n) on all cylinders.
 
 Each question asks for explicit CaTT terms, built only with the coherence rule over pasting contexts and substitution.
 
-1. **The horizontal two-disc.** Prove RC(3) on the full cylinder of Q = D² ∗₀ D². Two steps are needed: RC(3) on its 2-skeleton, where several exchanges between letters are not separated by a cut vertex; and fusion of item 21's interchange with the normal form for 3-terms using U_A and U_B in either order. A solution of the first step alone is useful.
-2. **RC(3) on all cylinders.** Prove RC(3) for every Q↑Y with Q a pasting context of dimension ≤ 2 and Y up-closed, or for every finite Steiner loop-free context. Or give a counterexample.
-3. **The 3-disc.** Prove RC(4) on the cylinder of the 3-disc, or on (ΣD²)↑ΣY. State what 5-dimensional compatibility of chosen 3-normalisers the proof needs and how it is built.
+1. **RC(3) on all 2-dimensional cylinder skeleta.** Prove RC(3) for the 2-skeleton of every Q↑Y with Q a pasting context of dimension ≤ 2 and Y up-closed, or give a counterexample. By item 25 this gives RC(3) on all these cylinders, hence Conjecture N for every 3-dimensional coherence. Natural next cases:
+   - the full cylinder of D² ∗₀ D² ∗₀ D² (three horizontally composable discs);
+   - the full cylinder of (D² ∗₁ D²) ∗₀ D²;
+   - partial selections Y on D² ∗₀ D².
+   A uniform route would be an orientation of exchanges that terminates, has closing critical branchings and agrees with serialization at every cut (as in item 24), together with relative fusion.
+2. **The 3-disc.** Prove RC(4) on the cylinder of the 3-disc, or on (ΣD²)↑ΣY. Construct item 27's 5-dimensional compatibility, or show it fails.
+3. **A 4-dimensional extension theorem.** Is there an analogue of item 25 one dimension up: for Λ of dimension ≤ 3 with RC(4), does adjoining 4-generators preserve RC(4)?
 4. **All dimensions.** Prove RC(n) on all cylinders Q↑Y, including partial selections. By item 14, this proves Conjecture N at every depth.
-5. **Global choice of K in dimension 3.** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with Y = Var(Q), compatible with substitution. Two choices of K for the same (Q, B, Y) are 4-cells; the minimal requirement is a **5-cell** between them (item 9).
+5. **Global choice of K in dimension 3.** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with Y = Var(Q), compatible with substitution. Two choices of K for the same (Q, B, Y) are 4-cells, and the minimal requirement is a **5-cell** between them (item 9).
 
 ## 5. What counts as a solution
 
 Any of the following:
-- explicit terms for question 1, 2 or 5;
+- explicit terms for question 1 or 5;
 - a proof of RC(3) or RC(n) for the cylinders or for loop-free contexts;
 - a counterexample: a cylinder Q↑Y, or a loop-free context, with two parallel n-terms of equal strict image and no term between them;
 - a published reference.
@@ -188,4 +203,3 @@ Any of the following:
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
-

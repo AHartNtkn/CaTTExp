@@ -1,4 +1,4 @@
-# Problem: composites of molecules in CaTT (Gray contexts), round 7
+# Problem: composites of molecules in CaTT (Gray contexts), round 8
 
 *Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Everything under "What is known" is proved and is not re-asked. Questions are in §4, smallest first.*
 
@@ -103,23 +103,44 @@ Existence in G(n) follows from RC(n−1) for U's (n−1)-skeleton. Uniqueness in
     - Vertical composition of normal forms is a matrix-style multiplication I ; (m^F ∗₀ m^G), with I : (α ∗₀ β) · (α′ ∗₀ β′) ⇛ (α · α′) ∗₀ (β · β′) over C₂ ∗₀ C₂.
     - Fusion uses a horizontal fold over C₃ ∗₀ C₃ and a horizontal–vertical 4-cell built over C₆ ∗₀ C₆. A separate clause absorbs a column that becomes point-supported under substitution.
     - The cut vertex is essential to this argument: every 0-cut of a head must go to one of the common vertices a, c, d of the two boundary paths, so heads are horizontal composites of at most two vertical chains.
-26. **On question 3's hypothesis.** In an acyclic generating 1-graph, a 2-generator with an identity source has a closed path, hence an identity, as target. So "acyclic, and no 2-generator has an identity as both source and target" is the same as "acyclic, and every 2-generator has nonempty source and target paths". Forest–Mimram ([arXiv 2109.05369](https://arxiv.org/abs/2109.05369)) prove coherence for the free Gray category on a positive Gray presentation (termination of interchanger rewriting plus confluence of critical branchings); this is the strict-Gray analogue, not a relative normalisation of CaTT terms.
+26. **On question 1's hypothesis.** In an acyclic generating 1-graph, a 2-generator with an identity source has a closed path, hence an identity, as target. So "acyclic, and no 2-generator has an identity as both source and target" is the same as "acyclic, and every 2-generator has nonempty source and target paths". Forest–Mimram ([arXiv 2109.05369](https://arxiv.org/abs/2109.05369)) prove coherence for the free Gray category on a positive Gray presentation (termination of interchanger rewriting plus confluence of critical branchings); this is the strict-Gray analogue, not a relative normalisation of CaTT terms.
+
+27. **The 2 × 2 grid (proved).** RC(3) holds for the Gray product of two paths of length 2. Orient each face hv ⇒ vh, and name the faces D = e₁₀, F = e₀₀, G = e₁₁, E = e₀₁. The six paths are p₀ = hhvv, p₁ = hvhv, p₂ = vhhv, p₃ = hvvh, p₄ = vhvh, p₅ = vvhh, with rewrites p₀ →D p₁, p₁ →F p₂ →G p₄, p₁ →G p₃ →F p₄, p₄ →E p₅. Only F and G are independent, so the fibres that need work are DFG, FGE and DFGE.
+    - *One active column.* The boundary paths of those three fibres meet only at the corners, so every head has one nonconstant 0-column and item 14 reduces it to a vertical chain V_m.
+    - *The FG cut fibre.* F and G meet at the cut vertex c = (1,1). With the bracketings p₁ = f₀ ∗₀ g₀, p₂ = f₁ ∗₀ g₀, p₃ = f₀ ∗₀ g₁, p₄ = f₁ ∗₀ g₁ (two-edge paths), item 25's matrix argument applies verbatim, with item 10 supplying the factorwise comparisons. So every grid fibre with at most two faces satisfies RC(3).
+    - *Normal forms.* N(T) = C(κ(r, pᵢ), E(w), κ(pⱼ, s)), where E(w) is the event word with F before G, D first and E last. ν_T is defined by the generic comparison over V_m, the input normalisers and a flattening Φ that expands chosen normal forms, merges path factors and applies the fixed reverse of item 24 at most once.
+    - *Flattening lemma.* Every exchange is between F and G, which are adjacent in every word. Reassociating isolates F, G, the path factors between them and their corrections into one literal 2-subterm of the two-square subcontext, so any two flattenings differ by a 3-term in the FG fibre, where RC(3) holds.
+    - *Fusion and compatibility.* Relative evaluation fusion ν_{u[δ]} → b_u[δ] ∗₂ f_{u,δ} is proved by induction on u, keeping input normalisers formal until they have been moved through the head by generic naturality over V_m↑. Compatibility I_H : ν_T → H ∗₂ ν_{T′} uses one coherence Ξ_P = [b_u ∗₂ D, h ∗₂ b_v]_P over the reduced 3-arity.
+28. **Vertically composable 3-generators (proved).** If dim Λ ≤ 2, Λ has an acyclic 1-graph and RC(3), and Γ = (Λ, z_i : A_i → B_i) is such that nonidentity strict 3-cells are unique vertical words in the z_i, every lower composition with a nonidentity 3-cell has one nonidentity operand, and π(A_i) ≠ π(B_i), then RC(3)(Γ). Example: x, y; f, g : x → y; a, b : f → g; z : a → b, w : b → a.
+29. **A nontrivial strict whisker (proved).** The Gray cube with an outgoing edge e : 111 → c satisfies RC(3). Its nonidentity strict 3-cells are X and X ∗₀ e, and the new local comparison is one 4-coherence over D³ ∨₀ D¹.
+30. **The 3-generator extension theorem (proved).** Let Λ have dimension ≤ 2 and an acyclic generating 1-graph, and let Γ = (Λ, z_1 : A_1 → B_1, …, z_k : A_k → B_k) with A_i, B_i parallel 2-terms of Λ. Then RC(3)(Γ) ⇔ RC(3)(Λ), with no restriction on the number, order, whiskering or composability of the z_i. This supersedes items 20, 28 and 29.
+    - *Quotient category.* For literal parallel 1-terms p, q, 3-terms between 2-terms p → q modulo "joined by a 4-term" form a category (4-terms of Γ and 3-terms of Λ are invertible, by the Benjamin–Markakis–Sarti criterion). Normalise each 3-term U : A → B to r_A⁻¹ ; U ; r_B, with r_A : A → (chosen representative of πA) from RC(2). RC(3)(Λ) makes every normalised Λ-3-term an identity.
+    - *Comparison lemma.* For 2-terms F(X), G(X) over (Λ, X) with X a fresh 2-variable and πF(X) = πG(X) with X formal, RC(2) gives J(X) : F(X) → G(X). Depth-1 naturality of J in X (Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620, Thm 3.1) shows F and G whisker every 3-term U to the same normalised arrow.
+    - *Strict presentation.* Strict 3-cells are composites of elementary steps C[z_i], and equality is generated by replacement and adjacent exchange (Polygraphs book, App. D, Props. D.3.9 and D.3.12). Both moves preserve normalised evaluation, so it is well defined on strict 3-cells, and sequentialisation shows every 3-term evaluates to its strict image.
+    - *Consequence.* RC(3) for every 3-dimensional context with an acyclic dimension-≤2 part reduces to its 2-skeleton.
+31. **The next-dimensional obligation.** In item 27, cut-fibre coherence supplies 4-terms C(k, k′) : k → k′ between parallel 3-terms, and no comparison between them is needed. For RC(4), after choosing 4-normalisers η_H : H → N(H) for 3-terms, compatibility with a 4-term K : H → H′ needs a 5-term η_H → K ∗₃ η_{H′}, equivalently 5-terms C(k₀,k₁) ∗₃ C(k₁,k₂) → C(k₀,k₂). The generic pasting-context instances exist by the coherence rule. The missing step is relative fusion after the chosen 3-normalisers have been substituted and expanded.
 
 ## 3. What remains
 
-Items 20–23 reduce RC(3) for contexts whose 3-generators are isolated (no strict whiskering, no strict composite) to RC(3) for their 2-skeleta, and settle the 2-skeleta in which every strict 2-cell has a unique event word. Item 25 settles one case with two commuting letters, using a cut vertex to split heads horizontally. The step that remains open is a 2-skeleton where two 2-generators commute up to exchange **without** a cut vertex separating them, so that a strict 2-cell has several event words related by exchange, and a single 0-column of a head can carry both letters.
+By item 30, RC(3) for every context of dimension ≤ 3 whose dimension-≤2 part has an acyclic generating 1-graph reduces to RC(3) of that 2-dimensional part. Items 10, 13, 17, 22, 23, 25 and 27 settle 2-dimensional cases with at most one pair of independent letters. In each, either a cut vertex splits heads horizontally, or the independent letters are adjacent in every event word, so one exchange can be isolated in a smaller fibre. The open step is a 2-dimensional context in which a strict 2-cell has event words related by several exchanges, or by exchanges between letters that are not adjacent in every word. In dimension 4 the open step is item 31.
 
 ## 4. Questions
 
-1. **The 2 × 2 grid.** Prove RC(3) for the Gray product of two paths of length 2 (four lax squares; the path h v h v admits two independent face rewrites, and there is no cut vertex separating them). The missing step is a comparison taking every 3-head whose value involves an exchange to a chosen normal form, for instance a Squier-style normal form of the exchange class with item 24 as the local law. Any normal form and fusion is acceptable.
-2. **Exchange in general, dimension 2.** Prove RC(3) for every finite context of dimension ≤ 2 whose generating 1-graph is acyclic and in which every 2-generator has nonempty source and target paths. Or give a counterexample. If the general statement is out of reach, prove it for finite Steiner loop-free 2-computads, which include the cylinders of 1-dimensional pasting contexts and the Gray products of two such contexts.
-3. **Several 3-generators.** Extend item 20 to several 3-generators, or to a 3-generator with nontrivial strict whiskerings or composites. The smallest cases are the Gray product of a 2-disc with an edge whose 3-generators compose along a 2-cell, and a 3-cell z : A → B where some 2-cell can be whiskered onto z nontrivially.
-4. **RC(4) and G(4).** Prove RC(4) for the 4-dimensional Gray cube (or for the cylinder of D³), or explain what new compatibility is needed. A 4-dimensional analogue of the head expansion in item 20 needs a 5-dimensional comparison between chosen 3-normalisers.
-5. **RC(n) or G(n).** Prove RC(n) under the hypothesis of question 2 (suitably extended to higher generators), or the weaker G(n) for frame-acyclic molecules.
+1. **General exchange in dimension 2.** Prove RC(3) for every finite context of dimension ≤ 2 whose generating 1-graph is acyclic and in which every 2-generator has nonempty source and target paths (item 26). Or give a counterexample. Smallest open cases:
+   - the Gray product of paths of lengths 2 and 3 (six squares; a strict 2-cell can need several exchanges, and independent letters need not be adjacent);
+   - the 3 × 3 grid;
+   - finite Steiner loop-free 2-computads, which include all cylinders of 1-dimensional pasting contexts and all Gray products of two such contexts.
+   A Squier-style argument would suffice: a normal form for event words modulo exchange (for example a fixed orientation of exchanges that terminates and whose critical branchings close), together with relative fusion as in item 27 that isolates each exchange step in a smaller fibre.
+2. **RC(4).** Construct the 5-dimensional compatibility of item 31, or show it fails. Smallest cases:
+   - the triangle context (x, y, z; f : x → y, g : y → z, h : x → z; α : f ∗₀ g ⇒ h), where RC(3) holds and RC(4) is open;
+   - the lax square S of item 5;
+   - the 4-dimensional Gray cube, or the cylinder of D³.
+3. **A 4-dimensional extension theorem.** Is there an analogue of item 30 one dimension up: for Λ of dimension ≤ 3 with RC(4), does adjoining 4-generators preserve RC(4)? The quotient-category argument needs 5-terms between 4-terms and invertibility of 5-terms.
+4. **RC(n) or G(n).** Prove RC(n) under the hypothesis of question 1, suitably extended to higher generators, or the weaker G(n) for frame-acyclic molecules.
 
 ## 5. What counts as a solution
 
-Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hypothesis; a counterexample (a context satisfying the hypothesis of question 3 with two parallel terms of equal strict image and no term between them); or a published reference.
+Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hypothesis; a counterexample (a context satisfying the hypothesis of question 1 with two parallel terms of equal strict image and no term between them); or a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
@@ -132,4 +153,3 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hyp
 - Hadzihasanovic's diagrammatic sets ([arXiv 1909.07639](https://arxiv.org/abs/1909.07639), [arXiv 2007.14505](https://arxiv.org/abs/2007.14505)) take unique weak composites of round molecules as the definition of a weak higher category.
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
-

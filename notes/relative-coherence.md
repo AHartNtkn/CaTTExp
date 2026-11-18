@@ -20,7 +20,9 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | G5: linearity is not needed | answered (§6) |
 | G4: associativity up to invertible cells | reduced to RC (§6) |
 | RC(3) fails for non-loop-free contexts (Eckmann–Hilton) | sketch (§7) |
-| RC(n), n ≥ 3, for loop-free contexts | **open**, sent out |
+| **RC(3) for the lax square S**, every pair of parallel 3-terms; hence N for every 3-dimensional coherence over one arrow | proved by a researcher, verified as a paper construction (§7.4) |
+| D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
+| RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
 ## 1. Notation
 
@@ -350,6 +352,18 @@ Source: `conjectures/answered/gray-contexts-round2-2026-11-18.md`. Partial answe
 - **Refuted shortcut:** "equal global strict image ⇒ equal hom strict image". Over D₂, take `W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g`, `r = coh(A → W(A))`, `ℓ = coh(W(A) → A)` and `κ = r ∗₂ ℓ`. Then κ is not `1_A` in the hom strictification, yet `coh(κ → 1_A)` exists globally. The same example transports to the lax square S.
 - **Consistency with §6.1.** The steps r and ℓ re-parse the atom A into a whiskered expression `W(A)`. This is exactly the step the column-loop lemma excludes, because there atoms stay fixed syntactic pieces. So the column-loop lemma and D14 are unaffected, and the remaining gap is the same in both accounts.
 - **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 prompt is `conjectures/outbox/gray-contexts-r3.md`.
+
+### 7.4 RC(3) for the lax square: settled (C1 round 2, verified 2026-11-18)
+
+Source: `conjectures/answered/naturality-arbitrary-depth-r2-2026-11-18.md`. A paper construction, verified step by step and not run through an implementation. **Every pair of parallel 3-terms of S is connected by a 4-term.** Hence K(Q, B, Var Q) exists for every 3-dimensional coherence over the single arrow `(x, y, f)`.
+
+The proof has four steps.
+1. **Active-column factorisation.** This is the column lemma of §7.2, strengthened. Take a 2-term with image F. Exactly one column of its arity carries F and spans `x⁻ → y⁺`. The other columns sit over a point, because `x⁻` is the unique source and `y⁺` the unique sink. So the term factors literally through a full 2-term on a path context, and the factorisation is stable under substitution.
+2. **Normalisers.** Define `ν_T : T → (κ(σT,p)·F)·κ(q,τT)`. Folding 4-laws are given by coherences on path contexts, on vertical chains with F substituted, and on the mixed context `V(1,0,1)`.
+3. **Evaluation fusion.** A connecting cell `Λ_G : G ∗₂ ν_{T′} → ν_T` is built by induction on the syntax of the 3-term G, through 2- and 3-dimensional arities.
+4. **Right cancellation.** This uses the invertibility of coherence composites.
+
+This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They are asked in the round-3 prompt (`conjectures/outbox/naturality-arbitrary-depth-r3.md`, unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
 
 ## 8. Follow-ups and owners
 

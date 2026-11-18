@@ -301,13 +301,12 @@ isVarAt (var i) n = i ==ℕ n
 isVarAt _       _ = false
 
 -- The first and last objects.
-private
-  firstL lastL : List Nat → Nat
-  firstL []       = 0
-  firstL (x ∷ _)  = x
-  lastL []           = 0
-  lastL (x ∷ [])     = x
-  lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
+firstL lastL : List Nat → Nat
+firstL []       = 0
+firstL (x ∷ _)  = x
+lastL []           = 0
+lastL (x ∷ [])     = x
+lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
 
 -- The ⋆-endpoints of A are a₀ and aₙ.
 endsOK : Ctx → Ty → Bool

@@ -33,7 +33,8 @@
 -- whether it is a well-typed cell u → v. Every filler it returns is a
 -- theorem of plain CaTT, whatever the correctness of the normal-form
 -- code. Recursion into substitutions runs on fuel, set to one more
--- than the coh-nesting depth of the inputs, which is enough. Totality is the paper theorem (Thm 3.2); it
+-- than the coh-nesting depth of the inputs. That this is always enough
+-- is not proved here; it is part of the open totality item F2c. Totality is the paper theorem (Thm 3.2); it
 -- is checked here on examples (CaTTExp.GlobularFillerExamples).
 ------------------------------------------------------------------------
 module CaTTExp.GlobularFiller where
@@ -268,7 +269,8 @@ labSub ls (suc i) = labSub ls i >>= λ s → find i ls >>= λ x → just (s ,ₛ
 -- Fuel: one more than the coh-nesting depth of the inputs. nf, flat,
 -- liftT and assign spend one unit exactly when they enter the
 -- arguments of a coh, and liftTy is structural in the type, so this
--- fuel never runs out (no fixed bound on the size of u, v, A).
+-- fuel is meant never to run out (unproved; part of F2c). There is no
+-- fixed bound on the size of u, v, A.
 mutual
   depthTm : Tm → Nat
   depthTm (var _)     = 0

@@ -24,6 +24,10 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | **RC(3) for the cylinder of a composable pair** x → y → z; hence N for every 3-dimensional coherence over that pair | proved by a researcher at the round-2 standard (fixed-edge extension lemma), verified (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`); generalised factorisations machine-checked (§7.5) |
 | **RC(3) for the 2-disc cylinder** (the only strict 3-cell is πU); hence N for every 3-dimensional coherence over the 2-disc | proved by a researcher, verified at paper level (`conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md`) |
 | Suspension descent: RC(r+1) on `(ΣQ)↑ΣY` ⇒ RC(r) on `Q↑Y`, so RC(n) on all cylinders gives N through dimension n | proved by a researcher, verified at paper level (same file) |
+| **RC(3) on every finite full chain cylinder**, on the partial selections Y={z,g} and Y={y,z,f,g} over x→y→z, and on the cylinder of D²∗₁D² | proved by a researcher, verified at paper level (`conjectures/answered/naturality-arbitrary-depth-r5-2026-11-18.md`) |
+| Gray cube: X-free 3-loops contractible; the factorisation of inactive columns extends to 3-dim contexts whose 3-generators have 2-supported 2-sources (incl. the D² cylinder and c⋆D²) | proved by a researcher, verified at paper level (`conjectures/answered/gray-contexts-r5-2026-11-18.md`) |
+| An acyclic 1-graph is **not** enough for RC(3): (x, a : 1_x→1_x) is acyclic and RC(3) fails | counterexample (same file); the open condition is now "no 2-generator from an identity to an identity" |
+| Fusion when two generator letters can be exchanged (smallest cases Y={x,f,g} and the 2×2 grid) | open; asked in both r6 prompts |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 

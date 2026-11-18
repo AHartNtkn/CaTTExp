@@ -23,3 +23,6 @@ Each file has the same parts:
 | `steiner-support-determines-cells.md` | In free strict ω-categories on Steiner complexes (e.g. Gray tensors of pasting diagrams), are cells determined by their dimension and set of generators? | `pseudo-vs-gray.md` §3.6, lemmas (A)–(C) |
 | `free-infinity-gray-of-pasting-diagrams.md` | Are Gray tensors of globular pasting diagrams free as (∞,n)-categories (scope of Campion's pasting theorem)? | `pseudo-vs-gray.md` §3.6, (D)–(F) |
 | `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by generators. | `pseudo-vs-gray.md` §2.5, §3.6 |
+| `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | `internal-hom.md` §5.5 |
+| `gray-contexts-in-catt.md` | Do frame-acyclic molecules (e.g. boundaries of Gray generators) have composites in CaTT, unique up to invertible cells? | `internal-hom.md` §4.3 |
+| `planar-pasting-types.md` | Unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dim proved); tensor/unit and ω-version open | `internal-hom.md` §5.7 |

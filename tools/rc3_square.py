@@ -269,6 +269,15 @@ if __name__ == '__main__':
     main()
 
 
+def eta_witness(R, e):
+    """coh_{R, u -> u}[e] with u the unbiased composite of the pasting context R.
+    u has full support, so this is a coherence; the certified checker accepts
+    it in the target context only if every entry of e has the type required by
+    R, i.e. only if e is a well-typed substitution."""
+    u = ucomp(R)
+    w = ('coh', R, arr(infer(R, u), u, u), tuple(e))
+    return w
+
 def emit_module():
     from emit_agda import Emitter
     facts, (alpha, beta, fill), om = main()
@@ -276,6 +285,7 @@ def emit_module():
     for i, (T, R, d, e, H) in enumerate(facts):
         E.check_typed('T%d' % i, S, T)        # T is a term of S
         E.check_typed('H%d' % i, R, H)        # H = coh_{P,A}[d] is a term of R
+        E.check_typed('eta%d' % i, S, eta_witness(R, e))   # e : R -> S is well typed
         E.check_eq('fact%d' % i, H, e, T)     # H[e] = T, syntactically
     A = infer(S, alpha)
     E.check_type('fill', S, fill, arr(A, alpha, beta))
@@ -283,6 +293,7 @@ def emit_module():
     for i, (T, R, d, e, H) in enumerate(rc3_pair.main()):
         E.check_typed('PT%d' % i, rc3_pair.C, T)
         E.check_typed('PH%d' % i, R, H)
+        E.check_typed('peta%d' % i, rc3_pair.C, eta_witness(R, e))
         E.check_eq('pfact%d' % i, H, e, T)
     E.check_typed('omegaR', S, om)
     src = E.module('CaTTExp.Generated.LaxSquareRC3',

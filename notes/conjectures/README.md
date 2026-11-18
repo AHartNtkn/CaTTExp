@@ -34,6 +34,7 @@ Owners and status of the follow-up work these problems leave are tracked in `not
   - `lax-colimit-of-point.md`: the semantic claim is solved (Loubaton, Example 4.2.3.12). The syntactic form is false for arbitrary cone-judgment derivations (verified counterexample); it is open for a specified cocone construction.
   - `gray-contexts-in-catt.md` §6: the (∞,ω) part is answered.
 - **Open:**
+  - `lax-functor-refinement.md`: are lax-functor comparison cells decided by supports?
   - `gray-contexts-in-catt.md`: G(n), and Mikhail's rules.
   - `naturality-arbitrary-depth.md`
   - `strict-lax-interchange-at-every-level.md`
@@ -53,6 +54,7 @@ Owners and status of the follow-up work these problems leave are tracked in `not
 | `oriented-lax-limits.md` | In oriented (Gray-enriched) categories, is the *unrestricted* lax universal property of limits consistent (no forced invertibility), and does it give comma and hom objects? | Open; sent to an external researcher (2026-11-18) | Follows up `catt-lim-pseudo-vs-gray.md`; related to `strict-lax-interchange-at-every-level.md` | `pseudo-vs-gray.md` R11 |
 | `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? Syntactically, is the constant cocone context equivalent to the suspension? | Semantic: **solved**. Syntactic: **false** for arbitrary derivations of Mikhail's judgment (counterexample verified); open for a specified cocone construction | Step B uses `gray-contexts-in-catt.md` §6. A special case of `weighted-as-partially-lax-omega.md`. | `limits-representables.md` §10.3 |
 | `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | **Solved** in Loubaton's model (researcher, verified). Finite computad test open. | Generalises `lax-colimit-of-point.md` | `limits-representables.md` §10.4 |
+| `lax-functor-refinement.md` | Are the comparison cells of lax functors out of a finite loop-free category decided by Steiner supports of its glued orientals, in the strict and weak settings? | Open (2026-11-18) | Directed analogue of CaTT's coh; same pattern as `steiner-support-determines-cells.md` | `ordinary-math.md` §7 |
 | `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | **Solved: yes** (external researcher, verified) | None | `limits-representables.md` §10.5 |
 
-**Which files to send out.** Files marked solved need no external work. Their literature sections say exactly which published results to cite. The best candidates for external researchers are G in `gray-contexts-in-catt.md`, `naturality-arbitrary-depth.md` (the smallest open instances are listed in its §7), and `strict-lax-interchange-at-every-level.md`. `oriented-lax-limits.md` has been sent to a researcher.
+**Which files to send out.** Files marked solved need no external work. Their literature sections say exactly which published results to cite. The best candidates for external researchers are G in `gray-contexts-in-catt.md`, `naturality-arbitrary-depth.md` (the smallest open instances are listed in its §7), and `strict-lax-interchange-at-every-level.md`. `oriented-lax-limits.md` has been sent to a researcher. `lax-functor-refinement.md` is ready to send.

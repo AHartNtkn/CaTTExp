@@ -18,7 +18,7 @@
 5. **Pseudo or lax ambient.** If the ambient is a model of CaTT, its 2-cells are forced to be *pseudo* transformations, because every coherence, interchange included, is invertible (§3.1). The two ways out, a pseudo ambient (P) and a Gray-style lax ambient (L), are compared in `notes/pseudo-vs-gray.md`. §4–§6 hold under either.
 6. **What this reaches.** All finite (lax, pseudo, weighted) limits and colimits, and cotensors by shapes. Hom objects and an ℕ-like object `Hom_{⟦x, s:x→x⟧}(x, x)` with iteration (§6) come from the limit rules under L, and need the Gray thread's lax cotensors under P (§10.1). **What it does not reach:** colimits indexed by an *object* rather than a context (sequential colimits, general Kan extensions) and induction (dependent elimination). Both need internal hom [→ Gray] or fibrations [→ fibrations].
 7. **Proof attempts (§10).**
-   - Proved: CaTT_lim's universal property forces cone morphisms to be pseudo in a CaTT ambient. So its rules fit L as written, and fit P only with that modification.
+   - Proved and externally confirmed (§10.1): Mikhail's CaTT_lim, unchanged, forces cone-morphism cells to be invertible. With `uni` at every level it even forces every ambient cell of dimension ≥ 3 to be invertible. Neither the cartesian (P) nor the oriented (L) semantics models it unchanged. The repaired rule is: lax at the vertices, with invertibility certificates for the comparison cells over positive-dimensional diagram variables.
    - Proved: marking needs no closure condition.
    - Solved by external researchers and checked here:
      - weighted limits are marked lax limits, in all dimensions, with variance alternating by dimension (§10.4);
@@ -134,7 +134,7 @@ Source: *Colimits in oriented category theory*, [arXiv 2608.02592](https://arxiv
 - The oriented colimit of a constant functor at A is `A ⊗ I` (Gray), while the lax colimit is `A × I`.
 - The higher Grothendieck construction computes oplax colimits, and E-lax colimits are localised Grothendieck constructions.
 
-Relevance: **CaTT_lim's transfors are Gray-shaped, so its limits are oriented ones in their sense.** §10.1 shows its rules as written are sound only for Gray-enriched (L) ambients. This matters for cotensors (§6.3): oriented limits of a constant diagram give Gray-hom functor categories, i.e. *lax* transformations.
+Relevance: **CaTT_lim's transfors are Gray-shaped, so its limits are oriented ones in their sense.** §10.1 shows that its rules as written have neither a cartesian nor an oriented model: over the CaTT core they collapse dimensions ≥ 3. A repaired version is given there. This matters for cotensors (§6.3): oriented limits of a constant diagram give Gray-hom functor categories, i.e. *lax* transformations.
 
 ### 2.5 Gagna–Harpaz–Lanari [paper, abstract level]
 
@@ -211,9 +211,16 @@ What stands from this note:
 
 ## 4. Limits and colimits
 
-### 4.1 Base: CaTT_lim as is [proposal]
+### 4.1 Base: repaired CaTT_lim [proposal]
 
-Take Definition 4.15 of Mikhail wholesale for finite diagrams.
+Mikhail's Definition 4.15, used for finite diagrams, with three repairs. §10.1 and §10.3 give the reasons.
+1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5).
+   - For globular Γ, the construction is Mikhail's Thm 3.3.
+   - For general Γ, it should be checked against the Steiner Gray product (`gray-contexts-in-catt.md`).
+2. **Certified comparison cells.** In cone morphisms and higher transfors, the comparison cells over positive-dimensional diagram variables are marked declarations. Any substitution into them must supply an equivalence certificate. Cones themselves stay lax at the vertices.
+   - Without this, the unchanged universal property forces every ambient cell of dimension ≥ 3 to be invertible (§10.1).
+3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they must be re-stated over the Gray core, which is open.
+
 
 Kernel-level simplifications worth trying, since they are aesthetic, not semantic:
 - **Merge the star/pstar/uni bookkeeping into a single "lifting" judgment.** The rule's content is: for every ctrf shape M and every partial filler θ of the "M-shaped cell of cones," produce the next variable. This is a generic *horn-filling* statement: the filler schema is "each conical-transfor horn has a filler, which is invertible except at its top cell." Stating it as a horn judgment `M horn(Γ; c) ⊢ x` would bring it close to how `coh` reads.
@@ -377,12 +384,12 @@ substituted by  x ↦ ⊤, y ↦ ⊤, z ↦ C, f ↦ a, g ↦ b.
 
 A cone with apex c is `p_x, p_y : c → ⊤` (trivial), `p_z : c → C`, an invertible `p_g : p_z ≅ b∘!`, and `p_f : p_z → a∘!`. That is a "c-parameterised arrow between b and a" (or a to b, depending on orientation), so this is the comma `a ↓ b` = `Hom_C(a, b)`.
 
-- **Under L:** elements of this object are the arrows between a and b, and its arrows are C's 2-cells. This is the internal counterpart of Benjamin–Markakis's Hom.
+- **Under L, given a Gray-core version of the limit rules (§10.1):** elements of this object are the arrows between a and b, and its arrows are C's 2-cells. This is the internal counterpart of Benjamin–Markakis's Hom.
 - **Under P:** its arrows are only the *invertible* 2-cells (§10.1). The genuine hom object is then a fibre of the lax arrow object `[⟦D¹⟧, C]_lax`, which the Gray thread supplies.
 
 ### 6.3 Cotensors by shapes, and lax functor categories
 - `[⟦Γ⟧, C] := lim_Γ [ !_Γ ∘ ⟨C⟩ ]`, the lax limit of the constant diagram at C.
-- **Under L,** with CaTT_lim's rules as written, this is the **Gray-hom functor category: functors `⟦Γ⟧ → C` and lax transformations**. With all cells marked it is the pseudo functor category.
+- **Under L,** with a Gray-core version of the limit rules (§10.1), this is the **Gray-hom functor category: functors `⟦Γ⟧ → C` and lax transformations**. With all cells marked it is the pseudo functor category.
 - **Under P,** cone-style limits give only the pseudo functor category. The lax one needs the Gray tensor (§10.1).
 - **Lax transformations under Option P, given lax cotensors.** A lax transformation `F ⇒ G : C → D` is a 1-cell `C → [⟦D¹⟧, D]_lax` whose composites with the two evaluations are F and G.
   - "Whose composites are F and G" is an element of a pullback, so a lax transformation is an element of a finite marked limit.
@@ -443,7 +450,7 @@ In order of cost to benefit:
 
 ## 9. Open problems
 
-1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. §10.1 adds a fact that bears on the choice: CaTT_lim as written is native to L, and needs a modification under P.
+1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. §10.1 adds a fact that bears on the choice. CaTT_lim as written needs repair under either option. Under P the repair is a certified-invertibility marking on comparison cells. Under L it is a Gray-core version of the rules, which nobody has written down.
 2. **Self-contained problems** in `notes/conjectures/`. These can be worked on with no project context:
    - `catt-lim-pseudo-vs-gray.md`
    - `gray-contexts-in-catt.md` (§6, Mikhail's Gray contexts; formerly `gray-contexts-steiner.md`)
@@ -459,24 +466,35 @@ In order of cost to benefit:
 
 Each unproved claim in this note was attempted. Where an attempt stalls, the remaining gap is a self-contained problem in `notes/conjectures/`.
 
-### 10.1 CaTT_lim's universal property forces pseudo cone morphisms in a CaTT ambient (argument complete modulo one check)
+### 10.1 CaTT_lim's universal property and invertibility: answered
 
-**Claim.** In CaTT_lim, the connecting cells of cone morphisms (n = 1 `ctrf` shapes) over positive-dimensional cone variables are derivably invertible.
+My argument, confirmed and strengthened by an external researcher (verified; see `conjectures/catt-lim-pseudo-vs-gray.md`).
 
-**Argument.**
-1. Take `u, u' : c → L` with `L = lim_Γ`, and a 2-cell `β : u → u'`.
-2. The cone morphism `ucone_*(β)` has, at a 1-cell f of Γ, a connecting cell relating the two composites of `ucone_f` (a 2-cell along `L → ·`) and β (a 2-cell along `c → L`). That cell is an interchange coherence, hence invertible.
-3. By the 2-dimensional instance of `uni`, every cone morphism m is related to some `ucone_*(β)` by an invertible 2-transfor.
-4. So `m_f` is a composite of invertible cells, hence invertible, using closure of coinductive equivalences under composition (Benjamin–Markakis).
+**What holds:**
+1. **Cone-morphism cells over diagram arrows are forced invertible.** For `β : u → u'`, the cone morphism `ucone_*(β)` has as its cell at f an interchange coherence. The 2-dimensional `uni` relates every cone morphism to one of these.
+   - The researcher builds the inverse *explicitly* from `uni` and the interchanger. So this is derivable inverse data, not a `⊨` judgment. In Mikhail's system `⊨` comes only from `uni`, `inv`, `eta` and `eps`.
+2. **Stronger: with `uni` at every level, every ambient 3-cell is forced invertible.**
+   - Take the diagram `1_Y` and cones whose two legs coincide, with `m_x = a` and `m_y = b`. Then `m_f` can be any `z : a ⇛ b`, up to unitors.
+   - So **CaTT_lim as written collapses the ambient to an (∞,2)-category.** The researcher argues that higher dimensions follow the same way, but has not checked them line by line.
+3. **The cartesian semantics fails.** Finite counterexample: a C with `C(b, a) = (f →α g)` and α not invertible has no universal cone with a pseudonatural connector.
+4. **Oriented (Gray-enriched) categories do not model unchanged CaTT_lim either**, because CaTT's own interchanger is invertible. My earlier claim that the rules "fit L as written" was wrong: under L the *core* changes, so the limit rules have to be re-stated over the Gray core.
+5. **The printed rules (Def. 4.15) need repair.**
+   - In `ctrf`, τCond selects connecting cells through `τ(p)`, so the intended source `p_f ; (m_x ▷ f)` is not admitted.
+   - `x′ : X` copies the type without renaming.
 
-**Consequences.**
-- **Under P.** ωCat with pseudo transformations has non-invertible modifications, so it does not satisfy CaTT_lim's rules as written. The P-version of CaTT_lim must put the `ctrf` connecting cells in `⊨`, i.e. use *pseudo morphisms of lax cones*. With that change, Hom(c, lim) is lax cones with pseudo morphisms. This is the correct notion of lax limit in a cartesian-enriched setting.
-- **Under L.** Interchange across a 0-cell is one-way, so step 2 fails and the rules as written are the intended ones. CaTT_lim's Gray-shaped `ctrf` is native to L. This agrees with `pseudo-vs-gray.md` §4.4.
-- **Hom objects and lax cotensors (§6.2, §6.3) under P.** The comma of `⊤ →a C ←b ⊤` (b-leg marked) has arrows b → a as points, but only *invertible* 2-cells of C as its arrows, since those arrows are cone morphisms. The genuine hom-object is the fibre of the oplax arrow object. Its universal property goes through the Gray tensor (maps `X ⊗ D¹ → C`), not through cones. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C)`, not of the cartesian `Fun([1], C)` (GHL) **[recall]**.
-  - So under P, hom objects and lax cotensors come from the Gray thread's constructions, not from §4.
-  - Under L, §6.2 and §6.3 hold as written.
+**The repaired universal property.**
+- Cones stay **lax at the vertices**: cone cells `p_f` are not invertible.
+- The **comparison cells over positive-dimensional diagram variables** (the `m_f` of cone morphisms, and their higher analogues) are required to be invertible. They are implemented as **marked declarations whose substitutions must supply equivalence certificates**.
+- Positive-dimensional cone projections are *not* all marked: that would make the cones themselves pseudo.
 
-**Remaining check.** Steps 2 and 3 depend on the exact orientation of Mikhail's `ctrf` connecting cells (his σCond/τCond). Problem: `conjectures/catt-lim-pseudo-vs-gray.md`.
+This replaces my earlier "put the `ctrf` connecting cells in `⊨`". It is the same idea, but stated as a marking on declarations with certificates, matching ICaTT-style invertibility rather than Mikhail's `⊨`.
+
+**Consequences for this note:**
+- **Under P,** the repaired rules are the limit rules. Hom(c, lim) is lax cones with invertible comparison cells.
+  - Hom objects and lax cotensors are *not* produced by these limits: the comma of two points has only invertible 2-cells as arrows, which is point 3.
+  - They come from the Gray thread's constructions (§6.2, §6.3).
+- **Under L,** the limit rules must be re-stated over the Gray core, with directed interchangers in place of CaTT's invertible ones. If that is done, §6.2 and §6.3 should hold, with hom objects and lax cotensors coming directly from limits. That restatement has not been written down by anyone. It is the main open item for L on the limits side.
+- **The kernel needs canonical shapes** (§10.3). The printed `ctrf` rules both over-admit (they accept non-canonical cones) and under-admit (they reject the intended source in point 5). The cone and transfor shapes should therefore be given by a specified construction, checked against the Steiner Gray product, not by permissive free-variable judgments.
 
 ### 10.2 Marking closure (§4.2, M1): resolved, no closure condition needed
 
@@ -523,7 +541,7 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 **Consequences for §4.2:**
 - **The per-variable flag is the right primitive.** Marking a k-generator makes its (k+1)-dimensional cone cell invertible (Loubaton Remark 4.2.3.7). That is exactly the marked KE rule.
 - **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. The marked-limit schema must therefore fix lax/oplax per dimension in the alternating pattern of the response's §4, not uniformly.
-- **The cone categories must present Loubaton's `Hom_⊖`**, including the marked Gray product in higher dimensions. Under L, CaTT_lim's Gray-shaped `ctrf` with markings is the candidate. Under P, it is the `⊨`-modified version of §10.1. Matching either to `Hom_⊖` is the remaining syntax-to-semantics step, as for every semantic result here.
+- **The cone categories must present Loubaton's `Hom_⊖`**, including the marked Gray product in higher dimensions. Under L, the candidate is a Gray-core version of the repaired `ctrf`. Under P, it is the certified-marking version of §10.1. Matching either to `Hom_⊖` is the remaining syntax-to-semantics step, as for every semantic result here.
 - **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite, generator-level test on `π : Ψ → Γ` is open.
 - It agrees with §10.2: no closure condition on the marking is needed.
 
@@ -540,12 +558,12 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 
 **What remains open downstream:**
 - **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it holds semantically (§10.3, Loubaton), and syntactically it needs the specified cocone construction.
-- **That the hom-object construction gives the semantic hom.** Under L this follows from the limit rules (§6.2). Under P it needs the Gray thread's lax cotensor (§10.1).
+- **That the hom-object construction gives the semantic hom.** Under L this follows from a Gray-core version of the limit rules (§6.2, §10.1). Under P it needs the Gray thread's lax cotensor (§10.1).
 - **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule.
 - **Induction on N** still needs a dependent eliminator [→ fibrations].
 
 ### 10.6 Smaller claims
 
-- **"CaTT_lim's limits are oriented" (§2.4).** Settled by §10.1: the rules as written are sound for L-style (Gray-enriched) ambients, and under P they need the `⊨` modification.
+- **"CaTT_lim's limits are oriented" (§2.4).** Settled by §10.1, negatively for the unchanged rules: no oriented model exists, because CaTT's interchanger is invertible. The intended semantics is oriented, which needs a Gray core.
 - **"Cotensors turn colimits into limits" (§6.3).** This is formal once an internal hom exists: `Hom(c, [colim X_i, D]) ≃ Hom(c ⊗ colim X_i, D)`, and ⊗ preserves colimits in each variable (Loubaton). It is therefore a question for the internal-hom thread, not a conjecture here.
 - **"Only {lax, oplax} × {lim, colim} are needed" (§4.4).** Under L, `[⟦Γ⟧^{op_S}, C]` gives the other orientations as cotensors, and `⟦Γ⟧^{op_S} = ⟦Γ^{op_S}⟧` because opposites act on contexts (Benjamin–Markakis). Under P, the same holds once the Gray thread supplies lax cotensors.

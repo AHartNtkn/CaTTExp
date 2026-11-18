@@ -13,8 +13,9 @@
 --  * the boundary of a tuple follows the Leibniz rule
 --        ∂(v ⊗ w) = ∂v ⊗ w + (−1)^{|v|} v ⊗ ∂w,     ∂v = t − s,
 --    split into its positive part (∂T Γ true) and negative part
---    (∂T Γ false), which are bags (no cancellation occurs inside the
---    boundary of one basis element).
+--    (∂T Γ false), which are bags. For a pasting context no
+--    cancellation occurs inside the boundary of one basis element;
+--    elsewhere the additive chain equation of Strict.Cell absorbs it.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Complex where
 

@@ -119,13 +119,7 @@ private
   n+1≢0 zero    ()
   n+1≢0 (suc n) ()
 
-module _
-  (T-cell : ∀ {Θ} → Θ ⊢ps → ∀ A x y → T (endsOK Θ A) → endsTy A ≡ just (var x , var y) →
-            IsCellL Θ x y (dimK (homs Θ)) (twT (homs Θ) true (dimK (homs Θ))))
-  (B-supp : ∀ {Θ} → Θ ⊢ps → ∀ x y x' y' n X Y L M →
-            IsCellL Θ x y n X → IsCellL Θ x' y' n Y →
-            SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y)
-  where
+module _ (T-cell : TCell) (B-supp : BSupp) where
 
   open Soundness T-cell B-supp
 

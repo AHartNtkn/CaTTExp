@@ -22,13 +22,12 @@
 --      first and last object. (Ara–Maltsiniotis, arXiv 1607.00668,
 --      §A.16 and Prop. 4.13; Steiner 2004.)
 --  (B-supp) "support determines the cell": two cells of ν(K(Θ)) of the
---      same dimension whose downward-closed supports (CaTTExp.Gray.
---      Support's `down`) agree are equal. (Hadzihasanovic, arXiv
---      2404.07273, Prop. 8.3.17 and Thm 11.2.18, for these complexes;
---      notes/conjectures/steiner-support-determines-cells.md proves it
---      for every Steiner complex.) Cells may lie in different homs: for
---      n ≥ 0 a cell's 0-chain is a single basis element, so equal
---      supports force equal homs unless both are the unit hom.
+--      same dimension in the same hom whose downward-closed supports
+--      (CaTTExp.Gray.Support's `down`) agree are equal. (Hadzihasanovic,
+--      arXiv 2404.07273, Prop. 8.3.17 and Thm 11.2.18, for these
+--      complexes; notes/conjectures/steiner-support-determines-cells.md
+--      proves it for every Steiner complex.)
+-- CaTTExp.Strict.CheckCells checks (T-cell) by evaluation on 18 shapes.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Soundness where
 
@@ -193,13 +192,19 @@ endsV→endsTy (arr (arr B s t) _ _) e = endsV→endsTy (arr B s t) e
 closed : S.Closed
 closed ()
 
-module Soundness
-  (T-cell : ∀ {Θ} → Θ ⊢ps → ∀ A x y → T (endsOK Θ A) → endsTy A ≡ just (var x , var y) →
-            IsCellL Θ x y (dimK (homs Θ)) (twT (homs Θ) true (dimK (homs Θ))))
-  (B-supp : ∀ {Θ} → Θ ⊢ps → ∀ x y x' y' n X Y L M →
-            IsCellL Θ x y n X → IsCellL Θ x' y' n Y →
-            SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y)
-  where
+-- The two hypotheses, named so that every module using them states the
+-- same thing.
+TCell : Set
+TCell = ∀ {Θ} → Θ ⊢ps → ∀ A x y → T (endsOK Θ A) → endsTy A ≡ just (var x , var y) →
+        IsCellL Θ x y (dimK (homs Θ)) (twT (homs Θ) true (dimK (homs Θ)))
+
+-- Two cells in the same hom x → y.
+BSupp : Set
+BSupp = ∀ {Θ} → Θ ⊢ps → ∀ x y n X Y L M →
+        IsCellL Θ x y n X → IsCellL Θ x y n Y →
+        SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y
+
+module Soundness (T-cell : TCell) (B-supp : BSupp) where
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
   sound-op⋆ : ∀ {Γ Δ t u σ} → Δ ⊢ps → T (graySide Δ ⋆ t u) → Γ ⊢sub σ ∶ Δ → Cellular Γ σ Δ →
@@ -261,9 +266,9 @@ module Soundness
     opcell .(suc n) refl cTT pt pu C refl =
       let c₋ = fst cTT
           c₊ = fst (snd cTT)
-          et = B-supp psΔ e₁ e₂ e₁ e₂ n (towerOf t A) (twT hs false n) (supp t A) (lowerT n hs ++ chainT false n hs) cT c₋
+          et = B-supp psΔ e₁ e₂ n (towerOf t A) (twT hs false n) (supp t A) (lowerT n hs ++ chainT false n hs) cT c₋
                  (flat-supp t A₀ a₀ b₀) (flat-twT hs false n) pt
-          eu = B-supp psΔ e₁ e₂ e₁ e₂ n (towerOf u A) (twT hs true n) (supp u A) (lowerT n hs ++ chainT true n hs) cU c₊
+          eu = B-supp psΔ e₁ e₂ n (towerOf u A) (twT hs true n) (supp u A) (lowerT n hs ++ chainT true n hs) cU c₊
                  (flat-supp u A₀ a₀ b₀) (flat-twT hs true n) pu
       in Cells.IsCell-≈ (∂T Δ) (Basis Δ e₁ e₂) (suc n) (twT hs true (suc n)) _
            (≈w-sym (towerOf t A) _ et , ≈w-sym (towerOf u A) _ eu , ≈-refl) cTT
@@ -272,7 +277,7 @@ module Soundness
       let cc = subst T (sym ec) tt
           pt = ∧-fst (∧-snd {endsOK Δ A} cc)
           pu = ∧-snd {≈T (down Δ (supp t A)) (down Δ (fullT hs))} (∧-snd {endsOK Δ A} cc)
-          eTU = B-supp psΔ e₁ e₂ e₁ e₂ n (towerOf t A) (towerOf u A) (supp t A) (supp u A) cT cU
+          eTU = B-supp psΔ e₁ e₂ n (towerOf t A) (towerOf u A) (supp t A) (supp u A) cT cU
                   (flat-supp t A₀ a₀ b₀) (flat-supp u A₀ a₀ b₀)
                   (≈T-via (down Δ (supp t A)) (down Δ (supp u A)) (down Δ (fullT hs)) pt pu)
       in cT , cU , Par-same t u A₀ a₀ b₀ ,

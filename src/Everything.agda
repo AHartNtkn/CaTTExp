@@ -42,3 +42,4 @@ import CaTTExp.Strict.Subst
 import CaTTExp.Strict.L
 import CaTTExp.Strict.Soundness
 import CaTTExp.Strict.ReverseInterchanger
+import CaTTExp.Strict.CheckCells

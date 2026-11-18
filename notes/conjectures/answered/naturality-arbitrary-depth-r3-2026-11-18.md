@@ -965,4 +965,4 @@ Step by step.
 - **The natural generalisation** is factorisation through "horizontal words" D¹(h₁) ∗₀ … ∗₀ C_n ∗₀ … ∗₀ D¹(h_k), with each hᵢ sent literally to an edge variable.
 - **A second tool now exists.** The cone round-2 answer (`answered/cone-over-coherences-r2-2026-11-18.md`, §2) gives a syntactic dimension-lowering translation D, with RC(r+1) on a suspended context implying RC(r). An analogue for cylinders, from RC on (ΣQ)↑Y′ to RC on Q↑Y, would reduce the fixed-dimension part of Question 4.
 
-Follow-up prompt: `outbox/naturality-arbitrary-depth-r4.md` (round 4, unsent).
+Follow-up prompt: `answered/naturality-arbitrary-depth-r4-2026-11-18.md` (round 4, answered).

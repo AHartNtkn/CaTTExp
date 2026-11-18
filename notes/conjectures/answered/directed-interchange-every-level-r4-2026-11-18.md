@@ -714,4 +714,4 @@ Step by step.
   - closure under all substitutions;
   - Q4.
 
-Follow-up prompt: `outbox/directed-interchange-every-level-r5.md` (round 5, unsent).
+Follow-up prompt: `answered/directed-interchange-every-level-r5-2026-11-18.md` (round 5, answered).

@@ -219,6 +219,8 @@ At dimension 1 it says: given `G, G' : C[x : a → b] → D`, a transformation `
   ```
 
   The last step is a decomposition property of diagrams: a diagram on an extended context is a diagram on Γ plus one more cell. Under primitive elements this is immediate for 0-cells of Diag. For higher cells it is a statement about how the Gray shape `(Γ, x) ⊗ Dᵏ` decomposes **[conj for k ≥ 2]**.
+
+  *Update:* the decomposition holds as an isomorphism onto the strict pullback at every k, given the cylinder contexts (`free-objects-proofs.md` Theorem 3). The step from the first line to the second, written out at dimension 0, also needs the action of the inductive β on the boundary terms of A, i.e. naturality terms (`free-objects-proofs.md` §3).
 - **Maps from CaTT substitutions:** exactly as in A1 §2.3, once the universal property of ⟦Γ⟧ is available.
 - **Attaching to objects that are not free.** For example:
   - `C[e : a → a]` adjoins a free endomorphism of an object a of C. Maps out of it are a functor F on C together with an endomorphism of `F a`.
@@ -361,6 +363,8 @@ The Gray shapes `Γ ⊗ Dᵏ` that A1, A2 (via its decomposition theorem) and R-
 **What remains.** The general depth-≥2 case. The next concrete checks are the 3-dimensional unitor over the 2-disc (the first 2-dimensional Q), and arbitrary up-closed sets on a chain. The ladder theorem is the dimension-2 instance of a proposed induction hypothesis, the relative comparison property (RC) recorded in the conjecture file's verification section; RC in general is open.
 
 ### 7.2 Other open problems
+
+*Progress on all four items, and on density, is in [`free-objects-proofs.md`](free-objects-proofs.md) (2026-11-18): item 2 is proved, item 4 is answered for the strict and (∞,ω) models, item 1 holds strictly at every dimension given the cylinders, and item 3 is proved in its strict half under P and reduced to E11 otherwise. That file also shows that deriving A1's LIFT₀ from A2 already needs the naturality terms of the boundary terms of Γ's types (§3 there), not only (Dec) at higher dimensions. Owners and remaining pieces are in `open-issues.md` (C3–C7, C9).*
 
 1. **Decomposition of diagrams.** Prove `Diag((Γ, x : A), C) ≃ Diag(Γ, C) ×_{Diag(∂D, C)} Diag(D, C)` at every dimension. This is the one step between A2's rules and A1's universal property. Its higher cells are shaped like `Γ ⊗ Dᵏ`, so it depends on §7.1.
 2. **Lifts of invertible cells are invertible.** The LIFT schema should imply that the lift of an invertible cell is invertible, so that maps out of ⟦Γ⟧ agreeing on generators are related by an invertible cell. This is expected from the coinductive definition of equivalence, but it needs a proof in the rule system.

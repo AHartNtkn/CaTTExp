@@ -1,6 +1,6 @@
 # Relative coherence in CaTT: dimension 2, and what it gives for Gray contexts and naturality
 
-*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r4.md`.*
+*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r5.md`.*
 
 Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (dimension ≤ 2 closed; rest reduced), D3, D3a, D4, C2 (progress).
 
@@ -352,7 +352,7 @@ Source: `conjectures/answered/gray-contexts-round2-2026-11-18.md`. Partial answe
 - **Proved (any context, no acyclicity):** parallel 3-terms that are both *literally suspended* coherences `coh_{ΣC,ΣA}[τ]` over vertical chains ΣC are connected by a 4-term. The proof desuspends to the hom computad, using Benjamin–Markakis hom freeness (relied on at statement level, not re-read), lifts to the path chain `C_w` by item 4 / Proposition P∞, and re-suspends.
 - **Refuted shortcut:** "equal global strict image ⇒ equal hom strict image". Over D₂, take `W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g`, `r = coh(A → W(A))`, `ℓ = coh(W(A) → A)` and `κ = r ∗₂ ℓ`. Then κ is not `1_A` in the hom strictification, yet `coh(κ → 1_A)` exists globally. The same example transports to the lax square S.
 - **Consistency with §6.1.** The steps r and ℓ re-parse the atom A into a whiskered expression `W(A)`. This is exactly the step the column-loop lemma excludes, because there atoms stay fixed syntactic pieces. So the column-loop lemma and D14 are unaffected, and the remaining gap is the same in both accounts.
-- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 answer (`conjectures/answered/gray-contexts-r3-2026-11-18.md`) shows this replacement is impossible in general (a hom-word length invariant), so normalisers must keep boundary-adjusting terms, as in §7.4; round 4 is `conjectures/outbox/gray-contexts-r4.md`.
+- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 answer (`conjectures/answered/gray-contexts-r3-2026-11-18.md`) shows this replacement is impossible in general (a hom-word length invariant), so normalisers must keep boundary-adjusting terms, as in §7.4; round 4 is `conjectures/outbox/gray-contexts-r5.md`.
 
 ### 7.4 RC(3) for the lax square: settled (C1 round 2, verified 2026-11-18)
 

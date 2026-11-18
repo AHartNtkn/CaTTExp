@@ -35,6 +35,7 @@ open import CaTTExp.Strict.AtomSum
 import CaTTExp.Strict.Std as S
 open import CaTTExp.Strict.StdSem using (module StdSem)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
+open import CaTTExp.Strict.Bag using (+-zero)
 
 module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
             (𝒟 : ωCat) (κ : AtomG B H L → ωCat.C 𝒟)
@@ -45,6 +46,9 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
   open Gen B H L hiding (W)
   open Rows B H L
   open TabAt (ADC.𝕄 K)
+  open Sum B H L
+  open Det K L using (Above; factors)
+  open Cut B H L using (LC; lower-cut; no-cut-0)
 
   G : Set
   G = AtomG B H L
@@ -131,3 +135,187 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
           p = ≡-cell K L m
       in 𝔇.comp n y₁ y₂ (match𝔇 r Pr n nr R₁ R₂ p) ,
          rel-sub (≡-cell K L refl) refl (rel-comp n R₁ R₂ p (match𝔇 r Pr n nr R₁ R₂ p))
+
+    ------------------------------------------------------------------
+    -- Chains at cut r: r-composites of related pairs, each agreeing
+    -- above r with one atom (its label). The count vector records the
+    -- labels with multiplicity.
+
+    Lab : Nat → ν.C → Nat → Set
+    Lab r x g = (r < deg g) × (deg g ≤ L) × (g < N) × Agree r (rows x) (ent g)
+
+    data Ch (r : Nat) : ν.C → 𝔇.C → Vec Nat N → Set where
+      ch1 : ∀ {x y g} → Rel x y → Lab r x g → Ch r x y (unit g)
+      ch∷ : ∀ {x y x′ y′ g c} → Rel x y → Lab r x g → Ch r x′ y′ c →
+            (p : ν.tgt r x ≡ ν.src r x′) (q : 𝔇.tgt r y ≡ 𝔇.src r y′) →
+            Ch r (ν.comp r x x′ p) (𝔇.comp r y y′ q) (unit g +c c)
+
+    ch-rel : ∀ {r x y c} → Ch r x y c → Rel x y
+    ch-rel (ch1 R _)          = R
+    ch-rel (ch∷ R _ ch p q)   = rel-comp _ R (ch-rel ch) p q
+
+    -- Rows above r of a chain: Σ cᵢ⟨i⟩.
+    RS : Vec Nat N → RF
+    RS c j = esum fst c 0 j , esum snd c 0 j
+
+    RS-unit : ∀ g j → g < N → RS (unit g) j ≡ ent g j
+    RS-unit g j gN = cong₂ _,_ (trans (esum-unit fst g 0 j gN) (cong (λ t → fst (ent t j)) (+-zero g)))
+                               (trans (esum-unit snd g 0 j gN) (cong (λ t → snd (ent t j)) (+-zero g)))
+
+    RS-+ : ∀ c c′ j → RS (c +c c′) j ≡ RS c j +R RS c′ j
+    RS-+ c c′ j = cong₂ _,_ (esum-+ fst c c′ 0 j) (esum-+ snd c c′ 0 j)
+
+    rowsCh : ∀ {r x y c} → Ch r x y c → Agree r (rows x) (RS c)
+    rowsCh (ch1 {g = g} _ (_ , _ , gN , ag)) j rj jL = trans (ag j rj jL) (sym (RS-unit g j gN))
+    rowsCh {r} (ch∷ {x = x} {x′ = x′} {g = g} {c = c} _ (_ , _ , gN , ag) ch p q) j rj jL =
+      trans (rows-comp r x x′ p j rj)
+        (trans (cong₂ _+R_ (trans (ag j rj jL) (sym (RS-unit g j gN))) (rowsCh ch j rj jL))
+          (sym (RS-+ (unit g) c j)))
+
+    ------------------------------------------------------------------
+    -- Tables.
+
+    private
+      at-tabG′ : ∀ {m} (f : RF) k j → j < m → at 0R (tabG {m = m} f k) j ≡ f (j + k)
+      at-tabG′ {suc m} f k zero    _       = refl
+      at-tabG′ {suc m} f k (suc j) (s≤s l) = trans (at-tabG′ {m} f (suc k) j l) (cong f (+-suc′ j k))
+        where
+        +-suc′ : ∀ j k → j + suc k ≡ suc (j + k)
+        +-suc′ zero    k = refl
+        +-suc′ (suc j) k = cong suc (+-suc′ j k)
+
+      tab-ext : ∀ {m} (x y : Tab (ADC.𝕄 K) m) → (∀ j → j < m → at 0R x j ≡ at 0R y j) → x ≡ y
+      tab-ext []      []      h = refl
+      tab-ext (e ∷ x) (e′ ∷ y) h = cong₂ _∷_ (h 0 (s≤s z≤n)) (tab-ext x y (λ j l → h (suc j) (s≤s l)))
+
+      above-of : ∀ {m} n (x y : Tab (ADC.𝕄 K) m) → (∀ j → n < j → j < m → at 0R x j ≡ at 0R y j) → Above n x y
+      above-of n       []      []       h = tt
+      above-of zero    (e ∷ x) (e′ ∷ y) h = tab-ext x y (λ j l → h (suc j) (s≤s z≤n) (s≤s l))
+      above-of (suc n) (e ∷ x) (e′ ∷ y) h = above-of n x y (λ j l l′ → h (suc j) (s≤s l) (s≤s l′))
+
+    rows-tabG : ∀ f cf j → j ≤ L → rows (tabG {m = suc L} f 0 , cf) j ≡ f j
+    rows-tabG f cf j jL = trans (at-tabG′ {suc L} f 0 j (s≤s jL)) (cong f (+-zero j))
+
+    above : ∀ r (x y : ν.C) → Agree r (rows x) (rows y) → Above r (fst x) (fst y)
+    above r x y h = above-of r (fst x) (fst y) (λ j l jL → h j l (≤-pred′ jL))
+      where
+      ≤-pred′ : ∀ {a b} → suc a ≤ suc b → a ≤ b
+      ≤-pred′ (s≤s q) = q
+
+    ------------------------------------------------------------------
+    -- The swap lemma (§4): an adjacent pair with labels b > c can be
+    -- exchanged, in both categories at once.
+
+    record Sw (r : Nat) (X : ν.C) (Y : 𝔇.C) (b c : Nat) : Set where
+      field
+        x₁ x₂ : ν.C
+        y₁ y₂ : 𝔇.C
+        R₁ : Rel x₁ y₁
+        R₂ : Rel x₂ y₂
+        l₁ : Lab r x₁ c
+        l₂ : Lab r x₂ b
+        p  : ν.tgt r x₁ ≡ ν.src r x₂
+        q  : 𝔇.tgt r y₁ ≡ 𝔇.src r y₂
+        eν : X ≡ ν.comp r x₁ x₂ p
+        eD : Y ≡ 𝔇.comp r y₁ y₂ q
+
+    private
+      module SSν = StdSem (nu K L) (ιν B H L)
+      module SSD = StdSem 𝒟 κ
+      module BD = Basics 𝒟
+
+    swap : ∀ r → Lf r → ∀ {x₁ x₂ y₁ y₂ b c} → Rel x₁ y₁ → Lab r x₁ b → Rel x₂ y₂ → Lab r x₂ c → c < b →
+           (p : ν.tgt r x₁ ≡ ν.src r x₂) (q : 𝔇.tgt r y₁ ≡ 𝔇.src r y₂) →
+           Sw r (ν.comp r x₁ x₂ p) (𝔇.comp r y₁ y₂ q) b c
+    swap zero Pr {x₁} {x₂} {b = b} {c} R₁ (rb , bL , bN , ag₁) R₂ (rc , cL , cN , ag₂) cb p q =
+      ⊥-elim (no-cut-0 b c cb bN cN rb rc bL cL (fst x₁) (fst x₂) (snd x₁) (snd x₂) (cong fst p) ag₁ ag₂)
+    swap (suc s) Pr {x₁} {x₂} {y₁} {y₂} {b} {c} R₁ (rb , bL , bN , ag₁) R₂ (rc , cL , cN , ag₂) cb p q = record
+      { x₁ = ν.comp s Vc (ν.src r Uc) p₁ν ; x₂ = ν.comp s (ν.tgt r Vc) Uc p₂ν
+      ; y₁ = 𝔇.comp s yv (𝔇.src r yu) p₁D ; y₂ = 𝔇.comp s (𝔇.tgt r yv) yu p₂D
+      ; R₁ = rel-comp s RV (rel-bd σ⁻ r RU) p₁ν p₁D
+      ; R₂ = rel-comp s (rel-bd σ⁺ r RV) RU p₂ν p₂D
+      ; l₁ = rc , cL , cN , λ j rj jL →
+               trans (rows-comp s Vc (ν.src r Uc) p₁ν j (<→≤ rj))
+                 (trans (cong₂ _+R_ (trans (rows-tabG v (snd Vc) j jL) (v-ag j rj jL)) (rows-src r Uc j rj)) (+R-idr (ent c j)))
+      ; l₂ = rb , bL , bN , λ j rj jL →
+               trans (rows-comp s (ν.tgt r Vc) Uc p₂ν j (<→≤ rj))
+                 (trans (cong₂ _+R_ (rows-tgt r Vc j rj) (trans (rows-tabG u (snd Uc) j jL) (u-ag j rj jL))) (+R-idl (ent b j)))
+      ; p = qν ; q = qD′
+      ; eν = trans (sym eX) eqν
+      ; eD = trans (BD.comp-cong r q q′D (Pr x₁ (just b) (bN , bL) ag₁ R₁ (rel-sub (sym e₁) refl RA₁))
+                                         (Pr x₂ (just c) (cN , cL) ag₂ R₂ (rel-sub (sym e₂) refl RA₂)))
+                   (trans (sym eq′D) eqD)
+      }
+      where
+      r = suc s
+      open LC (lower-cut s b c cb rb rc bL cL (fst x₁) (fst x₂) (snd x₁) (snd x₂) (cong fst p) ag₁ ag₂)
+        renaming (comp to vu-eq; match to vu-m)
+      sL : suc s ≤ L
+      sL = <→≤ (≤-trans rb bL)
+      up : ∀ {x} → GenL (suc s) x → GenL (suc (suc s)) x
+      up = GenL-up (≤-suc (≤-refl _))
+      gv : GenL (suc s) (tabG v 0)
+      gv = gen-at (suc s) sL v cv (just c) (cN , cL) v-ag
+      gu : GenL (suc s) (tabG u 0)
+      gu = gen-at (suc s) sL u cu (just b) (bN , bL) u-ag
+      Vc Uc : ν.C
+      Vc = tabG v 0 , gen-cell (forget gv)
+      Uc = tabG u 0 , gen-cell (forget gu)
+      EV = exL (suc s) Pr (up gv) (snd Vc)
+      EU = exL (suc s) Pr (up gu) (snd Uc)
+      yv yu : 𝔇.C
+      yv = fst EV
+      yu = fst EU
+      RV : Rel Vc yv
+      RV = snd EV
+      RU : Rel Uc yu
+      RU = snd EU
+      pν : ν.tgt s Vc ≡ ν.src s Uc
+      pν = ≡-cell K L vu-m
+      qD : 𝔇.tgt s yv ≡ 𝔇.src s yu
+      qD = match𝔇 (suc s) Pr s (≤-suc (≤-refl s)) RV RU pν
+      eX : ν.comp s Vc Uc pν ≡ ν.comp r x₁ x₂ p
+      eX = ≡-cell K L vu-eq
+      sr : s < r
+      sr = ≤-refl _
+      -- The original order (b, c).
+      sp′ν = SSν.split′ sr Vc Uc pν
+      sp′D = SSD.split′ sr yv yu qD
+      p′₁ν = fst sp′ν
+      p′₂ν = fst (snd sp′ν)
+      q′ν  = fst (snd (snd sp′ν))
+      eq′ν = snd (snd (snd sp′ν))
+      p′₁D = fst sp′D
+      p′₂D = fst (snd sp′D)
+      q′D  = fst (snd (snd sp′D))
+      eq′D = snd (snd (snd sp′D))
+      A₁ A₂ : ν.C
+      A₁ = ν.comp s (ν.src r Vc) Uc p′₁ν
+      A₂ = ν.comp s Vc (ν.tgt r Uc) p′₂ν
+      RA₁ = rel-comp s (rel-bd σ⁻ r RV) RU p′₁ν p′₁D
+      RA₂ = rel-comp s RV (rel-bd σ⁺ r RU) p′₂ν p′₂D
+      h₁ : Agree r (rows x₁) (rows A₁)
+      h₁ j rj jL = trans (ag₁ j rj jL) (sym
+        (trans (rows-comp s (ν.src r Vc) Uc p′₁ν j (<→≤ rj))
+          (trans (cong₂ _+R_ (rows-src r Vc j rj) (trans (rows-tabG u (snd Uc) j jL) (u-ag j rj jL))) (+R-idl (ent b j)))))
+      h₂ : Agree r (rows x₂) (rows A₂)
+      h₂ j rj jL = trans (ag₂ j rj jL) (sym
+        (trans (rows-comp s Vc (ν.tgt r Uc) p′₂ν j (<→≤ rj))
+          (trans (cong₂ _+R_ (trans (rows-tabG v (snd Vc) j jL) (v-ag j rj jL)) (rows-tgt r Uc j rj)) (+R-idr (ent c j)))))
+      fs = factors r (fst x₁) (fst x₂) (fst A₁) (fst A₂) (snd x₁) (snd x₂) (snd A₁) (snd A₂)
+                   (cong fst p) (cong fst q′ν) (cong fst (trans (sym eX) eq′ν)) (above r x₁ A₁ h₁) (above r x₂ A₂ h₂)
+      e₁ : x₁ ≡ A₁
+      e₁ = ≡-cell K L (fst fs)
+      e₂ : x₂ ≡ A₂
+      e₂ = ≡-cell K L (snd fs)
+      -- The swapped order (c, b).
+      spν = SSν.split sr Vc Uc pν
+      spD = SSD.split sr yv yu qD
+      p₁ν = fst spν
+      p₂ν = fst (snd spν)
+      qν  = fst (snd (snd spν))
+      eqν = snd (snd (snd spν))
+      p₁D = fst spD
+      p₂D = fst (snd spD)
+      qD′ = fst (snd (snd spD))
+      eqD = snd (snd (snd spD))

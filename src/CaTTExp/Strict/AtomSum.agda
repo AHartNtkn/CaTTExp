@@ -191,3 +191,36 @@ module Sum {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
     esum-inj : c1 ≡ c2
     esum-inj = vext c1 c2 (λ i → desc (suc L) 0 (+-zero (suc L)) i z≤n)
+
+  ----------------------------------------------------------------------
+  -- Linearity.
+
+  private
+    one-⊙ : ∀ (v : Vec Nat N) → 1 ⊙ v ≡ v
+    one-⊙ v = trans (+c-comm v 0c) (+c-id v)
+
+    zero-⊙ : ∀ (v : Vec Nat N) → 0 ⊙ v ≡ 0c
+    zero-⊙ v = refl
+
+    mid′ : (a b c d : Vec Nat N) → (a +c b) +c (c +c d) ≡ (a +c c) +c (b +c d)
+    mid′ a b c d =
+      trans (+c-assoc a b (c +c d))
+        (trans (cong (a +c_) (trans (sym (+c-assoc b c d)) (trans (cong (_+c d) (+c-comm b c)) (+c-assoc c b d))))
+          (sym (+c-assoc a c (b +c d))))
+
+  esum-0 : ∀ {m} σ o j → esum σ (0c {m}) o j ≡ 0c
+  esum-0 {zero}  σ o j = refl
+  esum-0 {suc m} σ o j = trans (+c-id (esum σ (0c {m}) (suc o) j)) (esum-0 {m} σ (suc o) j)
+
+  esum-+ : ∀ {m} σ (c c′ : Vec Nat m) o j → esum σ (c +c c′) o j ≡ esum σ c o j +c esum σ c′ o j
+  esum-+ σ []      []        o j = sym (+c-id 0c)
+  esum-+ σ (k ∷ c) (k′ ∷ c′) o j =
+    trans (cong₂ _+c_ (⊙-+ k k′ (σ (ent o j))) (esum-+ σ c c′ (suc o) j))
+      (mid′ (k ⊙ σ (ent o j)) (k′ ⊙ σ (ent o j)) (esum σ c (suc o) j) (esum σ c′ (suc o) j))
+
+  esum-unit : ∀ {m} σ g o j → g < m → esum σ (unit {m} g) o j ≡ σ (ent (g + o) j)
+  esum-unit {suc m} σ zero    o j _       = trans (cong (_+c esum σ (0c {m}) (suc o) j) (one-⊙ (σ (ent o j))))
+                                              (trans (cong (σ (ent o j) +c_) (esum-0 {m} σ (suc o) j))
+                                                (trans (+c-comm (σ (ent o j)) 0c) (+c-id _)))
+  esum-unit {suc m} σ (suc g) o j (s≤s l) = trans (+c-id (esum σ (unit {m} g) (suc o) j))
+                                              (trans (esum-unit {m} σ g (suc o) j l) (cong (λ t → σ (ent t j)) (+-suc g o)))

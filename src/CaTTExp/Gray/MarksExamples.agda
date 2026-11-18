@@ -101,3 +101,33 @@ _ = refl
 -- interchanger with its last object z (level 5) marked grpd_1.
 _ : M ((5 , mgrpd 1) ∷ []) HComp ⊢ ich inv ≡ true
 _ = refl
+
+------------------------------------------------------------------------
+-- (PS*): ps* needs ps on the boundary too, from hd 2 on.
+-- D3: x0 y1 f2 g3 α4 β5 m6, with α β : f ⇒ g and m : α ⇛ β.
+
+D3 : Ctx
+D3 = ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (v 0) (v 1) ▸ arr ⋆ (v 0) (v 1)
+       ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3) ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+       ▸ arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)
+
+-- a 2-cell marked ps is ps* (hd 1)
+_ : M ((4 , mps) ∷ []) D3 ⊢ v 4 ps* ≡ true
+_ = refl
+-- a 1-cell is ps* (hd 0)
+_ : M [] D3 ⊢ v 2 ps* ≡ true
+_ = refl
+-- a 3-cell marked ps whose boundary is not ps: ps but not ps*
+_ : M ((6 , mps) ∷ []) D3 ⊢ v 6 ps ≡ true
+_ = refl
+_ : M ((6 , mps) ∷ []) D3 ⊢ v 6 ps* ≡ false
+_ = refl
+-- one boundary ps is not enough
+_ : M ((6 , mps) ∷ (4 , mps) ∷ []) D3 ⊢ v 6 ps* ≡ false
+_ = refl
+-- with both boundaries ps, it is ps*
+_ : M ((6 , mps) ∷ (4 , mps) ∷ (5 , mps) ∷ []) D3 ⊢ v 6 ps* ≡ true
+_ = refl
+-- an invertible 3-cell between ps 2-cells is ps* (INV⇒PS, then PS*)
+_ : M ((6 , minv) ∷ (4 , mps) ∷ (5 , mps) ∷ []) D3 ⊢ v 6 ps* ≡ true
+_ = refl

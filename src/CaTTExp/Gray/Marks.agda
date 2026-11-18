@@ -10,11 +10,13 @@
 --   (COH-inv)  coherence-case coh                               ⇒ inv
 --   (OP-inv)   op-case coh, every top generator g has g[γ] inv  ⇒ inv
 --   (OP-ps)    op-case coh, every top g: g[γ] inv, or some xⱼ in g
---              with dⱼ ≥ 1 and xⱼ[γ] ps                         ⇒ ps
+--              with dⱼ ≥ 1 and xⱼ[γ] ps*                        ⇒ ps
 --   (INV-fac)  some i, dᵢ ≥ 1, xᵢ[γ] inv                        ⇒ g[γ] inv
 --   (INV-obj)  all dᵢ = 0 and all xᵢ[γ] inv                     ⇒ g[γ] inv
---   (PS-fac)   some j, dⱼ ≥ 1, xⱼ[γ] ps, some i < j, dᵢ ≥ 1      ⇒ g[γ] inv
+--   (PS-fac)   some j, dⱼ ≥ 1, xⱼ[γ] ps*, some i < j, dᵢ ≥ 1     ⇒ g[γ] inv
 --   (INV⇒PS)   t inv and hd(t) ≥ 1                              ⇒ t ps
+--   (PS*)      hd(t) = 0, or t ps and (hd(t) = 1, or s ps* and
+--              u ps* for t : s → u)                             ⇒ t ps*
 --   (OBJ-k)    the 0-target of t is marked grpd_k, hd(t) ≥ k     ⇒ t inv
 -- g ranges over the top-dimensional generators of the coh's own
 -- unfolding K(Θ) (tuples), and g[γ] is the Gray cell of g at γ.
@@ -23,7 +25,10 @@
 -- new term formers, which the core syntax does not have. Nothing
 -- below derives a term; the judgments only classify existing terms.
 --
--- Encoding choices: `inv` and `ps` are computed together on raw terms
+-- (PS-fac) and (OP-ps) take ps* premises, as in the revised §1.2; the
+-- variant with plain ps premises is Conjecture 2.2′ and is not encoded.
+--
+-- Encoding choices: `inv`, `ps` and `ps*` are computed together on raw terms
 -- (`judge`), with the type of a term read off syntactically (lookup
 -- for variables, A[γ] for coh). On derivable terms that is the derived
 -- type (`typeOf-sound`).
@@ -92,11 +97,11 @@ objRule ms (just A) = objAt ms (dim A) (endsTy A)
 record IP : Set where
   constructor ip
   field
-    jinv jps : Bool
+    jinv jps jpss : Bool      -- inv, ps, ps*
 open IP public
 
 nthIP : Nat → List IP → IP
-nthIP _       []       = ip false false
+nthIP _       []       = ip false false false
 nthIP zero    (x ∷ _)  = x
 nthIP (suc n) (_ ∷ xs) = nthIP n xs
 
@@ -111,7 +116,7 @@ pos (suc _) = true
 -- (PS-fac): scanning left to right, `seen` records a positive factor.
 psFac : Bool → List (Nat × IP) → Bool
 psFac seen []             = false
-psFac seen ((d , j) ∷ xs) = (seen ∧ pos d ∧ jps j) ∨ psFac (seen ∨ pos d) xs
+psFac seen ((d , j) ∷ xs) = (seen ∧ pos d ∧ jpss j) ∨ psFac (seen ∨ pos d) xs
 
 -- g[γ] inv, from the dimensions and judgments of its factors.
 grayInv : List (Nat × IP) → Bool
@@ -122,7 +127,7 @@ grayInv xs =
 
 -- The premise of (OP-ps) for one top generator.
 grayPs : List (Nat × IP) → Bool
-grayPs xs = grayInv xs ∨ any (λ x → pos (fst x) ∧ jps (snd x)) xs
+grayPs xs = grayInv xs ∨ any (λ x → pos (fst x) ∧ jpss (snd x)) xs
 
 -- The factors of a generator: dimension and judgment of each image.
 facOf : List El → List IP → Tuple → List (Nat × IP)
@@ -135,24 +140,49 @@ invC Θ A t u comps =
 psC Θ A t u comps =
   opCase Θ A t u ∧ all (λ g → grayPs (facOf (cells Θ) comps g)) (topT (homs Θ))
 
+-- `judge n` computes all three judgments; n is fuel for the descent
+-- into boundaries that (PS*) needs, and n = dim t suffices (`judgeT`).
 mutual
-  judge : Marks → Ctx → Tm → IP
-  judge ms Γ (var x) =
+  judge : Nat → Marks → Ctx → Tm → IP
+  judge n ms Γ (var x) =
     let i = hasMark isInvM ms x ∨ objRule ms (lookup Γ x)
-    in ip i (hasMark isPsM ms x ∨ (i ∧ hdAtLeast 1 (lookup Γ x)))
-  judge ms Γ (cst k) =
-    let i = objRule ms (just (ty k)) in ip i (i ∧ hdAtLeast 1 (just (ty k)))
-  judge ms Γ (coh Θ ⋆ γ) = ip false false
-  judge ms Γ (coh Θ (arr A t u) γ) =
-    let comps = judgeSub ms Γ γ
+        p = hasMark isPsM ms x ∨ (i ∧ hdAtLeast 1 (lookup Γ x))
+    in ip i p (star n ms Γ (lookup Γ x) p)
+  judge n ms Γ (cst k) =
+    let i = objRule ms (just (ty k))
+        p = i ∧ hdAtLeast 1 (just (ty k))
+    in ip i p (star n ms Γ (just (ty k)) p)
+  judge n ms Γ (coh Θ ⋆ γ) = ip false false false
+  judge n ms Γ (coh Θ (arr A t u) γ) =
+    let comps = judgeSub n ms Γ γ
         ty'   = just (arr A t u [ γ ]ty)
         i     = invC Θ A t u comps ∨ objRule ms ty'
-    in ip i (psC Θ A t u comps ∨ (i ∧ hdAtLeast 1 ty'))
+        p     = psC Θ A t u comps ∨ (i ∧ hdAtLeast 1 ty')
+    in ip i p (star n ms Γ ty' p)
 
-  judgeSub : Marks → Ctx → Sub → List IP
-  judgeSub ms Γ ⟨⟩       = []
-  judgeSub ms Γ (γ ,ₛ t) = judgeSub ms Γ γ ++ (judge ms Γ t ∷ [])
+  judgeSub : Nat → Marks → Ctx → Sub → List IP
+  judgeSub n ms Γ ⟨⟩       = []
+  judgeSub n ms Γ (γ ,ₛ t) = judgeSub n ms Γ γ ++ (judge n ms Γ t ∷ [])
 
-_⊢_inv _⊢_ps : Marks × Ctx → Tm → Bool
-(ms , Γ) ⊢ t inv = jinv (judge ms Γ t)
-(ms , Γ) ⊢ t ps  = jps (judge ms Γ t)
+  -- (PS*) for a term of the given type that is ps iff p.
+  star : Nat → Marks → Ctx → Maybe Ty → Bool → Bool
+  star n ms Γ nothing  p = false
+  star n ms Γ (just A) p = (dim A ==ℕ 1) ∨ (p ∧ ((dim A ==ℕ 2) ∨ bdStar n ms Γ A))
+
+  bdStar : Nat → Marks → Ctx → Ty → Bool
+  bdStar zero    ms Γ A           = false
+  bdStar (suc n) ms Γ ⋆           = false
+  bdStar (suc n) ms Γ (arr A s u) = jpss (judge n ms Γ s) ∧ jpss (judge n ms Γ u)
+
+fuelOf : Ctx → Tm → Nat
+fuelOf Γ t with typeOf Γ t
+... | just A  = dim A
+... | nothing = 0
+
+judgeT : Marks → Ctx → Tm → IP
+judgeT ms Γ t = judge (fuelOf Γ t) ms Γ t
+
+_⊢_inv _⊢_ps _⊢_ps* : Marks × Ctx → Tm → Bool
+(ms , Γ) ⊢ t inv = jinv (judgeT ms Γ t)
+(ms , Γ) ⊢ t ps  = jps (judgeT ms Γ t)
+(ms , Γ) ⊢ t ps* = jpss (judgeT ms Γ t)

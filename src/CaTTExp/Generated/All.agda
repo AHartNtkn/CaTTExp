@@ -12,3 +12,4 @@ import CaTTExp.Generated.ChainCylinderRC3
 import CaTTExp.Generated.GridRC3
 import CaTTExp.Generated.TwoDiscCylinderRC3
 import CaTTExp.Generated.RoundSixChecks
+import CaTTExp.Generated.ExchangeLaws

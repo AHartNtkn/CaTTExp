@@ -1,6 +1,6 @@
 # Conjecture: the cartesian product of globes is the Gray product with mixed cells inverted
 
-*Self-contained problem statement. No knowledge of the surrounding project is assumed. Partial results and proof attempts are in §3–§4. Status: partly solved. The case l = 1, for every A, is Loubaton (arXiv 2406.05425), Prop. 3.1.3.1. §7 gives a sketch of the general case from published results, still to be checked.*
+*Self-contained problem statement. No knowledge of the surrounding project is assumed. Partial results and proof attempts are in §3–§4. Status: **SOLVED (2026-11-18).** C1 and C1′ are proved, in (∞,ω) and every finite n, by an external researcher who completed the §7 sketch; see "Researcher Response" and "Verification" at the end. C1″ holds with "locally full" deleted: strong cells are those whose adjunct inverts all mixed cells, including those on boundary faces.*
 
 ## 1. Setting
 
@@ -586,3 +586,43 @@ Therefore
 \]
 
 **The resulting status is:** C1 and C1′ are proved by the argument above; the intended cellwise assertion of C1″ is proved; “locally full” in C1″ should be deleted.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. C1 and C1′ are proved, for (∞,ω) and for every finite n.** The proof completes the §7 sketch with the two missing lemmas, and the reduction from cubes goes through mapping spaces. **C1″ is proved in the corrected form:** a cell is strong exactly when its adjunct D^r ⊗ B → C inverts every mixed cell, including those on the boundary faces. The words "locally full" in C1″ are wrong and should be deleted; there is a counterexample with B = D¹, C = D³. Lemma S3 follows.
+
+Checked step by step. Citations are to Loubaton [arXiv 2406.05425](https://arxiv.org/abs/2406.05425), Campion [arXiv 2311.00205](https://arxiv.org/abs/2311.00205) and Campion [arXiv 2209.09376](https://arxiv.org/abs/2209.09376).
+
+1. **The two cylinders agree (§1).**
+   - Loubaton's Gray cylinder is cocontinuous (Prop. 2.3.1.10, Thm 2.3.3.22), and on Θ it is the strict Steiner cylinder (Prop. 2.3.3.1 together with the strictness theorem 2.3.3.22).
+   - Campion's tensor restricts to the strict Steiner tensor on strongly loop-free complexes (Example 3.2, Cor. 3.5).
+   - Both are colimit-preserving and Θ is dense, so they agree. Confirmed.
+2. **Colimits of localisations (§1).** If each map Map(Y_j, Z) → Map(X_j, Z) is the inclusion of the maps inverting S_j, then the limit of these maps is the inclusion of the maps inverting every image. This is a correct and standard argument.
+3. **Lemma 1: tensoring a localisation with I.**
+   - Base case. Collapsing I⊗{0} and I⊗{1} in I⊗I gives ΣI = D². This is Loubaton Prop. 2.3.3.6: C⊗{0} ⊔ C⊗{1} → C⊗[1] → [C,1] is a pushout.
+   - So inverting i⊗0, i⊗1 and then the square gives D¹. This identifies q₁ ⊗ I as the localisation at the three cells. Confirmed.
+   - Induction step. Loubaton Prop. 2.3.1.10 gives the suspension formula for ΣC ⊗ [1]. The suspension preserves localisations, by the hom adjunction for maps under ∂I. Then apply step 2. Confirmed.
+   - The response notes correctly that the absolute equivalence Eʳ ⊗ I ≃ Dʳ⁻¹ ⊗ I does not suffice. What is needed is the universal property *under* Dʳ ⊗ I.
+4. **Lemma 2 and the marking (8).**
+   - The marked cylinder sends the attaching map of each marked r-cell to Dʳ⊗I → τʳ(Dʳ⊗I), which inverts exactly u_r ⊗ i (Construction 3.1.2.1). So freely generated markings give localisations. Confirmed.
+   - Identity (10): (a, 1_q) = (1_{s₀a}, 1_q) ∗₀ (a, 1_{t₀q}), computed coordinatewise. Since Loubaton's markings are closed under whiskering by arbitrary lower cells, the cells (x, 1_b), with x a generator of A and b a vertex of Q, generate the whole product marking of A♯ × Q♭. Confirmed.
+   - This repairs exactly the gap in the earlier sketch, which used "(x, b) ⊗ i" without showing it generates the marking.
+5. **Cube induction (§4).** Write c_{A,Q⊗I} as (c_{A,Q} ⊗ I) followed by the Prop. 3.1.3.2 equivalence. The localised families are exactly the mixed generators x⊗w for the factors A and Q⊗I, as tabulated. Confirmed.
+6. **Extension from cubes (§5).**
+   - Cubes are dense in complete Cat_ω (Campion 2209.09376, Cor. 2.6).
+   - Both ⊗ and × are cocontinuous in each variable, so c_{A,B} is the colimit of the cube comparisons. By step 2 it is a localisation at V(A,B).
+   - Moreover V ⊆ S, and c inverts S, because the mixed top cell of Dᵖ ⊗ D^q has dimension p+q > max(p,q) = dim(Dᵖ × D^q). So c is the localisation at S(A,B).
+   - Confirmed. This argument also removes the unproved claim in §3.1 that the localisation functor L̃ is cocontinuous; that claim is now a consequence.
+7. **Finite n (§6).** Campion's Cat_n tensor is the reflection τ_n of the Cat_ω one (Thm 3.14, Cor. 3.15). τ_n preserves pushouts, and A × B already lies in Cat_n. Confirmed.
+8. **C1″ and "locally full" (§7).**
+   - Take B = I, C = D³ (cells f, g : x → y; a, b : f ⇒ g; θ : a ⇛ b), and F, G constant at x, y.
+   - The transformations with components f and g have identity naturality cells, so they are strong.
+   - The map D² ⊗ I → D³ sending u⊗0 ↦ a, u⊗1 ↦ b, the mixed 2-generators to identities and u⊗i ↦ θ is a lax modification between them. It is not strong, since θ is not invertible. So Fun(I, D³) → Fun^lax(I, D³) is not full on hom-categories. Confirmed.
+   - This agrees with Gepner–Heine, Thm 4.1.9, which shows Fun → Fun^lax is an *inclusion* (an embedding on mapping spaces), not a full subcategory.
+9. **S3 (§8).** First localise at the mixed cells, which gives C × I. Then invert the components, which gives C × E¹ ≃ C. The second step needs "a strong transformation with invertible components is invertible". The response cites Loubaton Prop. 2.2.1.59, which is a cartesian square relating τ₀Hom(X, C) and Hom(τ₀X, C) rather than that sentence verbatim. The fact itself is standard, and the square does encode it. Accepted.
+
+**Status change.**
+- C1, C1′: **proved**. The proof assembles published results with two new lemmas, each checked above.
+- C1″: proved without "locally full".
+- §§3–4 of this file are superseded by the response.
+- The precise statement to cite: Fun(B, C) is the sub-(∞,n)-category of Fun^lax(B, C) on all objects, whose r-cells are those σ with adjunct D^r ⊗ B → C inverting all mixed cells. It is not locally full for n ≥ 3.

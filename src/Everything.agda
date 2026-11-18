@@ -47,6 +47,7 @@ import CaTTExp.Free.AssociatorDepth2
 import CaTTExp.Free.A2toA1
 import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
+import CaTTExp.Lim.Horn
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
 import CaTTExp.GraphFillerTotal.Chains

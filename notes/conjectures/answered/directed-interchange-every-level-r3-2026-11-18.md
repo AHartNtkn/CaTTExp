@@ -567,3 +567,33 @@ W:\bar t_0;\bar\chi_1;\bar r_0\Longrightarrow h;\bar t_1,
 }
 \]
 with the refined contextual basis and normal forms proved above.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** Q1 and Q2 are answered for Γ = ΣD² ∨ ΣD²: the (K8) obstruction is removed by one new hom-3 generator h : S ⇛ U₀ and one hom-3 equation r̄₁ = h ∗₂ χ̄₂, after which A ⊗ B lifts to a single 4-generator W : t̄₀ ; χ̄₁ ; r̄₀ ⇛ h ; t̄₁. h is not forced (a mirror repair exists) and is not an elementary interchanger. Q3 (a substitution-closed uniform rule) and Q4 remain open; the response says so.
+
+Step by step.
+
+1. **The cube (§2).** Checked against (K8). The hom-1 cells P_ij, Q_ij are the vertices of a 3-cube with coordinates A (i, the edges a_j^±), B (j, the edges b_i^±) and C (P → Q, the edges c_ij). The six hom-2 composites P₀₀ ⇒ Q₁₁ are its six maximal paths, and the words S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC match the definitions in (K8) exactly. Each of the six hom-3 cells a–f (whiskered t₀, χ₁, r₀, r₁, χ₂, t₁) is an adjacent transposition between two of these words, i.e. one square face of the cube, with the orientation given in (K8) (checked by script). A proper interval of the cube varies at most two coordinates, so it is a square or smaller and carries at most one face generator; two face generators side by side would need four coordinate changes. So all interaction happens on the maximal interval, as claimed.
+
+2. **No further contexts.** Correct. Every hom-2 cell on the maximal interval has hom-1 boundary P₀₀ ⇒ Q₁₁ (nothing to whisker by in hom-2), and hom-0 boundary f₀⊗g₀ → f₁⊗g₁, the whole external square (nothing to whisker by in hom-1). S has no incoming and U₁ no outgoing hom-3 arrow, so d ↦ he has no overlaps.
+
+3. **The repaired graph (§1, §8).** The Haskell program was ported to Python (no GHC here) and run. With h added and d eliminated: 11 non-identity arrows a, b, c, h, e, f, ab, bc, abc, he, hf, with pairwise distinct label sets; exactly two S → T arrows, abc and hf; no arrow V₁ → V₀ or U₁ → U₀. Before the repair the same script gives 9 arrows and the single S → T arrow abc, which is (K8).
+
+4. **Minimality and non-uniqueness.** Correct within repairs that keep the hom-2 skeleton: equations among existing hom-3 cells identify arrows but cannot create a second S → T path, and without (F) the Gray quotient would have two arrows S → U where the Gray diamond has one. The mirror repair k : U₁ ⇛ T with t̄₁ = χ̄₂ ∗₂ k also checks (11 arrows, distinct supports, routes abc and dk). **Additional check:** the symmetric repair with both h and k and both equations r̄₁ = h χ̄₂, t̄₁ = χ̄₂ k also works (12 arrows, distinct supports, no reverses, second route h χ̄₂ k), and its Gray quotient is again exactly the free diamond with q(h) = q(r̄₁), q(k) = q(t̄₁). It is not minimal, but it does not choose a side, which may matter for a uniform rule.
+
+5. **Support (§3).** The definition is consistent: d is no longer a basis element, its support is defined as that of he, and the eleven words have distinct label sets. This is the expanded basis that (K4) says is needed: a whiskered context gets its own label, and a generator on a proper interval (r₁) can whisker to a composite (he) on a larger one. Whether these context labels can be assigned uniformly under substitution is part of Q3.
+
+6. **Directedness (§4).** Correct. The repaired graph is acyclic, so neither χ̄₁ nor χ̄₂ gains a reverse; the unwhiskered χ₁, χ₂ sit on proper faces and are untouched.
+
+7. **Gray quotient (§4).** Correct and exact: killing b, e identifies V₀ = V₁ and U₀ = U₁, (F) becomes q(d) = q(h), and the presentation reduces to the free diamond on q(a), q(c), q(h), q(f) (also checked by script). **The strict half of requirement 4**, which the response does not discuss, follows: killing all interchangers factors as the Gray quotient followed by the known Gray-to-strict quotient, and (F) forces h to the image of r̄₁ there too.
+
+8. **Q2, the 4-generator (§5).** Correct. W : abc ⇛ hf is well typed, has no non-identity contexts in this shape and cannot compose with itself, so it adds exactly one hom-4 cell; q(W) : t̄₀ ; r̄₀ ⇛ r̄₁ ; t̄₁ has the orientation of A ⊗ B from (K3). The argument that a 4-cell H : he ⇛ d cannot replace the equation (F) without a new class of cells the quotient kills is correct.
+
+9. **h is not an interchanger (§6).** Correct: S and U₀ both contain a c_ij, every hom-2 path containing a c_ij spans the whole external hom-0 interval, so neither can be one half of a pair composable along a hom-0-cell. h is factorization data.
+
+10. **The 2-equation U₀ = U₁ (§7).** Correct. No cancellation gives a₀⁻ ; b₁⁻ = b₀⁻ ; a₁⁻, so the unwhiskered χ₂ is not forced to be an identity, but χ̄₂ becomes an endomorphism, and set-valued supports then force χ̄₂² = χ̄₂ at least. That route needs more equations and a new hom-2 support calculation, so the factorization repair is the better one.
+
+11. **Citation.** Forest–Mimram (arXiv 2109.05369), Thm 1.8.3, is cited for the normal-form formalism; not checked, and not needed, since the rewriting system here is finite and was checked directly.
+
+**Consequences for E6.** The (K8) obstruction is resolved without reversing either inner interchanger, keeping requirements 2–4 in dimensions ≤ 4 for ΣD² ∨ ΣD². The new ingredient is a *factorization* of a whiskered tensor cell through a whiskered inner interchanger that shares its target (h-type), or source (k-type). The open question is now a uniform, substitution-closed rule for these factorizations: which whiskered cells must factor, through which interchangers, and whether (K9)-style substitutions force the h-type, the k-type or both. Follow-up prompt: `answered/directed-interchange-every-level-r4-2026-11-18.md` (round 4, answered).

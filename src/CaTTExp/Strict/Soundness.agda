@@ -27,7 +27,9 @@
 --      arXiv 2404.07273, Prop. 8.3.17 and Thm 11.2.18, for these
 --      complexes; notes/conjectures/steiner-support-determines-cells.md
 --      proves it for every Steiner complex.)
--- CaTTExp.Strict.CheckCells checks (T-cell) by evaluation on 18 shapes.
+-- (T-cell) is proved in CaTTExp.Strict.Bridge (`T-cell`); it stays a
+-- parameter here only because Bridge imports this module's TCell.
+-- CaTTExp.Strict.CheckCells also checks it by evaluation on 18 shapes.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Soundness where
 

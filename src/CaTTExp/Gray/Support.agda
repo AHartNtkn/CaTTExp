@@ -205,25 +205,33 @@ record Hom : Set where
     hcs : List El
 open Hom public
 
+lengthN : List Nat → Nat
+lengthN []       = 0
+lengthN (_ ∷ xs) = suc (lengthN xs)
+
+dropLast : List Nat → List Nat
+dropLast []           = []
+dropLast (x ∷ [])     = []
+dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
+
+-- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
+drop1 : List Nat → List Nat
+drop1 []       = []
+drop1 (_ ∷ xs) = dropLast xs
+
 -- Hom k of Γ: its cells and its dimension.
 homAt : Ctx → Nat → Hom
 homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
 
+-- Hom indices 1 … n for n + 1 objects, and the number of objects.
+homIdx : Nat → List Nat
+homIdx L = drop1 (upto L)
+
+countL : List Nat → Nat
+countL = lengthN
+
 homs : Ctx → List Hom
 homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
-  where
-  lengthN : List Nat → Nat
-  lengthN []       = 0
-  lengthN (_ ∷ xs) = suc (lengthN xs)
-  -- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
-  drop1 : List Nat → List Nat
-  drop1 []       = []
-  drop1 (_ ∷ xs) = dropLast xs
-    where
-    dropLast : List Nat → List Nat
-    dropLast []           = []
-    dropLast (x ∷ [])     = []
-    dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
 
 -- d = Σ dim Θₖ, the dimension of K(Γ).
 dimK : List Hom → Nat
@@ -233,17 +241,17 @@ dimK hs = sumL (map hd hs)
 -- Tables of the ⟨Θₖ⟩ and of their tensor T.
 
 -- ⟨Θ⟩^sg_i as a set of levels (sg = true is +, false is −).
+-- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
+-- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
+hitsP : Nat → Bool → El → El → Bool
+hitsP i sg c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
+
 piece : Hom → Nat → Bool → List Nat
 piece h i sg =
   if i ==ℕ hd h then map lvl (filter (λ c → hdim c ==ℕ i) (hcs h))
   else if i <ℕ hd h then
-    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hits c) (hcs h))) (hcs h))
+    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hitsP i sg c) (hcs h))) (hcs h))
   else []
-  where
-  -- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
-  -- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
-  hits : El → El → Bool
-  hits c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
 
 -- T^sg_k.
 chainT : Bool → Nat → List Hom → TSet
@@ -346,13 +354,12 @@ isVarAt (var i) n = i ==ℕ n
 isVarAt _       _ = false
 
 -- The first and last objects.
-private
-  firstL lastL : List Nat → Nat
-  firstL []       = 0
-  firstL (x ∷ _)  = x
-  lastL []           = 0
-  lastL (x ∷ [])     = x
-  lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
+firstL lastL : List Nat → Nat
+firstL []       = 0
+firstL (x ∷ _)  = x
+lastL []           = 0
+lastL (x ∷ [])     = x
+lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
 
 -- The ⋆-endpoints of A are a₀ and aₙ.
 endsOK : Ctx → Ty → Bool

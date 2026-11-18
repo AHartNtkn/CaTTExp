@@ -40,4 +40,7 @@ import CaTTExp.Free.A2toA1
 import CaTTExp.Lim.OverL
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.Gray.Marks
+import CaTTExp.Gray.MarksExamples
+import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality

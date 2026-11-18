@@ -21,4 +21,18 @@ for k in range(0,5):
         n+=1; c2,g2=N(*T)
         ok=balanced_atoms(*T) and tame(*T) and prov(tuple(c2),g2)
         if not ok: bad+=1; print("FAIL",k,T)
+# remaining step types (eta, (R⊗), (R_I))
+Y=at('yy'); Z=at('zz'); B=at('bb'); C=at('cc')
+extra=[]
+for k in range(0,5):
+    G=[at('g%d'%i) for i in range(k)]
+    YZ=('\\',Y,Z)
+    extra.append((tuple(G+[('\\',tens(G+[I]),('*',YZ,I))]),YZ))      # eta
+extra+=[((A,B,('\\',('*',A,B),C)),C),                                  # A, B, (A⊗B)\C ⊢ C
+        ((('\\',('*',A,B),C),),('\\',B,('\\',A,C))),                     # Q
+        ((('\\',B,('\\',A,C)),),('\\',('*',A,B),C)),                     # Q^-1
+        ((('\\',I,C),),C), ((C,),('\\',I,C))]                            # (R_I)
+for T in extra:
+    n+=1; c2,g2=N(*T)
+    if not (balanced_atoms(*T) and tame(*T) and prov(tuple(c2),g2)): bad+=1; print("FAIL",T)
 print("checked",n,"types; failures",bad)

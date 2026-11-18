@@ -32,7 +32,9 @@ The table already shows the first gap: **P's intended model (ω-categories with 
 - (S1) A homotopy theory on GM weak ω-categories (or on CaTT models), and a comparison with (∞,ω)-categories.
 - (S2) Whether every (∞,ω)-category (resp. every oriented one) admits a strict-substitution model of CaTT (resp. L) presenting it.
 
-**What can be done now.** Every claim in the notes that needs an (∞,ω) model is stated *conditionally* on (S2), and is checked in the strict models of §1 first. The Agda formalisation targets the syntax and the strict models only.
+(S1)–(S4) are posed for external researchers in `conjectures/answered/catt-models-in-infinity-omega-2026-11-18.md` (round 1, answered) and `conjectures/outbox/catt-models-in-infinity-omega-r2.md`.
+
+**What can be done now.** Every claim in the notes that needs an (∞,ω) model is stated *conditionally* on (S2), and is checked in the strict models of §1 first. The Agda formalisation targets the syntax and the strict models only. For L the strict model is now formalized: `src/CaTTExp/Strict/` proves that every derivable L-term over a pasting context is a cell of the free strict Gray-enriched category ν(K(Γ)), and that no term has the reverse interchanger's type. Two facts about Steiner complexes are explicit hypotheses there: support determines cells, and the total cell of a Gray tensor is a cell (`agda-gray-findings.md`, last section).
 
 ## 3. Which (∞,ω)-categories?
 

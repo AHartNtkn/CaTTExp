@@ -23,7 +23,9 @@
 -- genuine derivation, and no new typing rule is involved. Totality (that
 -- it succeeds on every parallel pair of the same path) is the paper
 -- theorem in notes/ordinary-math.md §3; here it is checked on examples
--- (CaTTExp.GraphFillerExamples). Lift functions run on fuel, since they
+-- (CaTTExp.GraphFillerExamples). For 1-cells, a structural fuel-free
+-- version (fill₁) is proved total in CaTTExp.GraphFillerTotal; this
+-- fuel-based tactic is not itself proved total. Lift functions run on fuel, since they
 -- recurse into substitutions; fuel exhaustion only makes the tactic fail,
 -- never makes it unsound.
 ------------------------------------------------------------------------

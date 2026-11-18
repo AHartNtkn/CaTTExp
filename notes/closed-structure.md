@@ -283,7 +283,7 @@ Both id_T and e of B.1 arise this way, as *different* generalized sequents (e = 
 - **Lemma T\*** with Γ₁ or Γ₂ empty: the same argument.
 - The semantic equations used are valid in biclosed representable multicategories with nullary maps, as already noted in B.2. ∎
 
-`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. An 8-leaf run is pending; its result will be added to the D10a ledger row.
+`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. With 8 leaves it covers 11,460,087 balanced sequents (126,344 provable), again with no failures.
 
 **Consequence: a larger unit-pasting class.** Call S **unit-pasting\*** (UP\*) if N(S) is I-free, balanced and L\*-provable, or N(S) = ⊢ I. Theorem B extends with the same proof, using Theorem A\* in place of step 3. The new class is strictly larger.
 - (X\X)\Y ⊢ Y is UP\* but not unit-pasting in the sense of B.2: it is L\*-provable but not L-provable.
@@ -434,12 +434,22 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 **Researcher response (verified, `conjectures/answered/cartesian-closed-higher-coherence-2026-11-18.md`).**
 - Q1 and Q2 are proved by a different route: a strict simplicial model plus a retract. It agrees with C1 and C2, and the verifier found no error in C.4 as a sketch.
 - **Q3 is proved over graphs in every dimension.** The 1-core R₁ is right adjoint to the inclusion of (∞,1) into higher categories (Ozornova–Rovelli–Walde, arXiv 2603.11005, Thm 2.20), and it inherits cartesian closed structure. So the free higher cartesian closed category on a graph is the free (∞,1) one, hence the 1-category. In particular this proves coherence for cartesian closed tricategories over a graph.
-- **cccatt@69bb11af has two implementation bugs:**
-  - The unordered Dir duplicate check compares position-carrying terms (`pasting.ml` ll. 597–602). It accepts a 3-goal with no filler, refuted in Cat.
-  - The Rev side condition tests the hypothesis name rather than the endpoint (l. 474).
-  Reporting them upstream is Anthony's call.
+- **cccatt@69bb11af has one implementation bug.**
+  - The unordered Dir duplicate check compares position-carrying terms (`pasting.ml` ll. 597–602). It therefore accepts a 3-goal that has no filler, which is refuted in Cat.
+  - It is filed upstream as [smimram/cccatt#15](https://github.com/smimram/cccatt/issues/15), reproduced at master 69bb11a. The fix `var x = var x'` passes cccatt's test suites.
+  - *Correction (2026-11-18):* the Rev side condition at l. 474, which tests the hypothesis name, is **not** a bug. `add_rule` rejects every cycle, and any higher hypotheses left over fail `check1`, so no wrong acceptance is possible. It differs only from our paraphrase of Rev in C.2 ("x has not been rewritten before"), which describes the intended behaviour, not that line.
 
-**What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/outbox/dir-relative-coherence.md`.
+**What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/answered/dir-relative-coherence-2026-11-18.md`.
+
+**Answer to the follow-up prompt (verified, `conjectures/answered/dir-relative-coherence-2026-11-18.md`): Dir is sound whenever the non-invertible generators have dimension ≤ 2.** Take the free pseudo cartesian closed (∞,2)-category on a graph together with 2-generators forming chains. Every space of 2-cells is empty or contractible. The proof has four steps:
+1. Long βη-normal forms, natural in relabelling, with no permutation quotient needed.
+2. A degreewise simplicial cartesian closed category 𝒦 whose homs are nerves of posets ∐∏[r].
+3. Haugseng rectification to a strict enriched cartesian closed category.
+4. A retract 𝓕 → 𝒦 → 𝓕.
+
+*Correction to our expectation:* a generator α need not occur only once in a term. Duplicated uses give cubes [1]^m.
+
+**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread and unsent: `conjectures/outbox/dir-relative-coherence-r2.md`.
 
 *Superseded:* Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
 - Fiore–Saville did the bicategorical version.
@@ -721,7 +731,27 @@ The researcher findings on the closed part are listed after the next two bullets
 **Corrections from the response (V3, V5), which restate the two bullets above.**
 1. **Pushing events inward is not invariant.** We have h = Λ(ev) ∘ h = Λ(ev ∘ (1 ⊗ h)), and β also changes nesting. So the second bullet needs a *βη-canonical* nesting first, i.e. a specified normal form for closures.
 2. **The closed signature must be strictly natural only in the context variable.** Strict naturality of Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C) in the bound variable A forces (f⊗B′)(A⊗g) = (A′⊗g)(f⊗B). Then the two schedules are equal 1-cells. In the bound variable, naturality holds only up to the interchanger.
-3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/outbox/gray-closed-scheduling.md`.
+3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/answered/gray-closed-scheduling-2026-11-18.md`.
+
+**Answer to the follow-up prompt (verified, `conjectures/answered/gray-closed-scheduling-2026-11-18.md`): the comparison theorem cannot be indexed by βη-canonical closure trees.**
+- Closure trees are **not** invariants of connected components of hom-categories.
+- *Counterexample.* Take a : X → A, f : A⊗B → C and c = Λ_A f. The interchanger gives
+
+  ```
+  θ : e ∘ (a⊗U) ∘ (X⊗c)  ⇒  e ∘ (A⊗c) ∘ (a⊗B),
+  ```
+
+  and the target is f ∘ (a⊗B) by β.
+- In every representative of the source, a generator sits under currying. A Boolean biclosed poset model rules out the structural prefix that would avoid this. So a single 2-cell connects 1-cells with different canonical closure trees.
+- A word model gives an invariant W of 1-cells. It separates the first test's two 1-cells: W(t₁) = bφ ≠ φb = W(t₂).
+
+**Still open (D11):**
+- the singleton/empty question for the first test;
+- a product theorem restricted to an appropriate invariant;
+- the correct component invariant (W is a candidate);
+- the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
+
+Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling-r2.md`.
 
 ---
 

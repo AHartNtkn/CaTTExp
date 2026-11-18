@@ -45,9 +45,15 @@ A consequence of D1, D3 and D4 together: the researcher's collapse argument is a
 
 This is the syntactic side of `limits-metatheory.md` §1, which gives the semantic counterpart: strict ωCat with the Gray tensor has unrestricted lax limits and non-invertible `m_f`.
 
+**C. The d = 4 collapse instance on the specified shapes (B16, first slice; `Collapse4.agda`).** This is step 1 of the B9 proof (`limits-metatheory.md` §3) for k = 2, run on `Cones.ctrf 2` over the arrow, the shape the cone-constructions thread specifies:
+- **C1.** Let `z : a ⇛ b` be an arbitrary 4-cell, so Ω₄ = D⁴. The diagram is substituted by `(Y, Y, 1_Y)`. The x- and y-components are the boundaries of a and b. The lower f-components are coherences: the inverse right unitor `ρ` and its naturality `N`. The top f-component is `μ_f = C_a ;₃ G(z)`, where `C_a` is a full-support coherence over D³ and `G(u) = (ρ_r ∗₁ (u ∗₀ 1_Y)) ∗₂ N_{α₁}`. This is a well-typed substitution `Ω₄ → Tr₂` in the CaTT core. So with unrestricted transfors the instance is admitted, and the rest of the argument applies to it.
+- **C2.** The check is not vacuous: putting `a` for `b` at `μ_x` is rejected.
+- **C3.** Under P, and under L with f marked, `μ_f` is marked (the shape marks `m⁻_f`, `m⁺_f`, `μ_f`). Its image has no certificate unless z is certified, so the repaired rule refuses the instance. The other marked images, the coherences `N`, are certified.
+
+
 ## 3. What is not formalized
 
-- **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 checks the input to that argument, not its algebra.
+- **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 (d = 3) and C1 (d = 4, on the specified `Tr₂`) check the input to that argument, step 1 of the B9 proof, not its algebra. Steps 2–5 (`uni`, the endpoint reduction, and `F(w)_f` being a coherence-case coh) are not formalized.
 - **Non-derivability in the repaired theory.** R2 shows the repaired rule refuses the specific instance. That *no* derivation makes uncertified 3-cells invertible is a soundness statement and needs a model (open item (a) of `conjectures/catt-lim-pseudo-vs-gray.md`).
 - **Generality.** The constructions cover cones over globular diagrams of dimension ≤ 2 and cone morphisms over diagrams of dimension ≤ 1. The judgments are the n = 1 instance of Mikhail's schema. That the specified construction passes the fixed rules for every globular diagram (the analogue of Thm 3.3/4.4) is checked on examples only.
 - **Certificates.** `cert` is sound on the strength of Benjamin–Markakis ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)): coherences are invertible, and composites and whiskerings of invertible cells are invertible. That is cited.

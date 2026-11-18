@@ -6,7 +6,7 @@
 
 | Item | Result | Status |
 |---|---|---|
-| **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out, for the theory with ⊗ (Theorem A4). | closed |
+| **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
 | **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). | contractibility proved; completeness proof sketch to check |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. The general case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md`). | criteria worked out; soundness beyond dim 2 out as a conjecture |
@@ -120,7 +120,7 @@ The mirror statement holds for H = A/B with Δ on the right.
 
 **Corollary A1 (non-symmetric Kelly–Mac Lane, unit-free).** Two morphisms Γ → A of the free unit-free biclosed monoidal category are equal iff their cut-free derivations have the same axiom linking.
 - *Proof.* Rename the atoms of each link apart. Both derivations become derivations of the same balanced S′, and the two morphisms are τ_*(f′) and τ_*(g′) for f′, g′ ∈ F(S′). Theorem A gives f′ = g′.
-- The linking is an invariant of the morphism, since cut-elimination steps preserve it. ∎
+- The linking is an invariant of the morphism. Let G be the Brauer category with loop value 1 on atom-labelled signed points: a morphism is a fixed-point-free involution on leaf occurrences pairing equal atoms of opposite polarity, and composition follows paths and deletes closed loops (Kelly–Mac Lane's category of graphs, *Coherence in closed categories*, 1971). G is compact closed, hence biclosed monoidal, so there is a unique structure-preserving functor F → G that fixes atoms. Rule by rule, it sends a cut-free derivation to its axiom linking: R⊗, L⊗ and R\ juxtapose or regroup leaves, and L\(h, k) = k ∘_A ev(h, H) composes with the straight-through linking of ev, so no loop forms. Two cut-free derivations of the same morphism therefore have the same linking. ∎
 
 **Corollary A2 (the PL1 statement of `planar-pasting-types.md` §3).** Balanced provable sequents of the Lambek calculus with product have exactly one proof modulo βη and the commuting conversions for ⊗.
 - Those conversions are exactly the equations of the free biclosed monoidal category.
@@ -137,13 +137,59 @@ Then UL⊗-terms Γ ⊢ A modulo equality are in bijection with F(Γ; A), compat
 
 1. **Soundness.** Interpret coh_S[τ] as τ_*(the element of F(S)), where τ_* is the substitution functor of the free category. Composition is multicategory composition. The equality rule holds by Theorem A.
 2. **Fullness.** Given f ∈ F(Γ; A), take a cut-free derivation π. Rename each axiom link to a fresh atom. This gives a derivation π′ of a balanced provable S′ and a substitution τ with S′[τ] = (Γ ⊢ A) and τ_*⟦π′⟧ = f. So f = ⟦coh_{S′}[τ]⟧.
-3. **Faithfulness.**
-   - *Generalization lemma:* every UL⊗-term t is syntactically t′[τ_t] for a term t′ of a balanced sequent S_t, the principal typing of t.
-     - Induction on t. A coh with substituted arguments is generalized by the most general unifier of the generalized argument types with the coh's input types.
-     - In the linear planar setting every atom of the result occurs exactly twice. This is the standard fact that principal types of linear terms are balanced (Hirokawa 1993, BCK case), and it transfers because the unification is first order.
-   - Then t′ and coh_{S_t} are two terms of the pasting type S_t, so UL⊗ proves t = coh_{S_t}[τ_t].
-   - If ⟦t⟧ = ⟦u⟧, the linkings agree (A1), so S_t = S_u and τ_t = τ_u up to renaming, hence t = u.
-   - *Status:* the generalization lemma is a proof sketch at the level of detail of Mimram's Lemma 51. It is the one step here not written out in full.
+3. **Faithfulness.** This step was a sketch until 2026-11-18. It is now written out in full (D9a).
+
+   **Terms.** A UL⊗-term in an ordered context Γ is either:
+   - a variable x, in the context x : A, of type A; or
+   - coh_S[τ](t₁, …, tₙ), where S = (B₁, …, Bₙ ⊢ B) is balanced and provable, τ is a type substitution, Γ = Γ₁, …, Γₙ, and tᵢ is a term of type Bᵢ[τ] in Γᵢ.
+
+   Type substitution acts on terms by ρ ↦ coh_S[τ;ρ] at every node. Term substitution is grafting.
+
+   **Lemma A5 (generalization).** For every term t : (Γ ⊢ A) there are a balanced sequent S_t, a term t′ : S_t and a substitution σ_t such that S_t[σ_t] = (Γ ⊢ A) and t′[σ_t] = t syntactically.
+
+   *Proof.* Induction on t.
+   - **Variable x : A.** Rename the atom occurrences of A apart, one fresh atom per leaf position, giving A′. Then S = (A′ ⊢ A′) is balanced: each fresh atom occurs once in the hypothesis and once in the goal, with opposite polarities. Take t′ = x, and let σ send the fresh atom at leaf position p to the atom of A at p.
+   - **t = coh_S[τ](t₁, …, tₙ).** By induction, tᵢ = tᵢ′[σᵢ] with tᵢ′ : Sᵢ = (Γᵢ′ ⊢ Cᵢ) balanced. Rename so that the atoms of S, S₁, …, Sₙ are pairwise disjoint.
+     - The unification problem E = {Bᵢ ≐ Cᵢ}ᵢ has the unifier τ ∪ σ₁ ∪ … ∪ σₙ (disjoint domains), since Bᵢ[τ] = Cᵢ[σᵢ].
+     - So it has a most general unifier θ (Robinson). Then τ ∪ ⋃σᵢ = θ;π for some π.
+     - Put S_t = (Γ₁′, …, Γₙ′ ⊢ B)[θ] and t′ = coh_S[θ](t₁′[θ], …, tₙ′[θ]). This is well-typed, since tᵢ′[θ] has type Cᵢ[θ] = Bᵢ[θ].
+     - Take σ_t = π. Then S_t[π] = (Γ ⊢ A) and t′[π] = t.
+     - S_t is balanced by the plugging lemma below. ∎
+
+   **Plugging lemma.** In the situation above, (Γ₁′, …, Γₙ′ ⊢ B)[θ] is balanced. This holds for any balanced S, Sᵢ with disjoint atoms; provability and planarity are not used.
+
+   *Proof.* Compute θ by the Martelli–Montanari algorithm. Its state is the sequent (Γ₁′, …, Γₙ′ ⊢ B) together with a set of equations L ≐ R. All its steps preserve the following invariant.
+
+   > **(I)** Count the atom occurrences of the sequent with their polarities, and for each pending equation L ≐ R, count L as an extra hypothesis (negative) and R as an extra goal (positive). Then every atom occurs exactly twice, with opposite signs.
+
+   - **Initially**, orient each equation as Bᵢ ≐ Cᵢ. The counted occurrences are exactly those of S and of the Sᵢ, each balanced, with disjoint atoms. Bᵢ is a hypothesis of S, and Cᵢ is the goal of Sᵢ.
+   - **Decompose.**
+     - L₁⊗L₂ ≐ R₁⊗R₂ becomes L₁ ≐ R₁ and L₂ ≐ R₂. The signs are unchanged, because ⊗ preserves polarity.
+     - L₁\L₂ ≐ R₁\R₂ becomes L₂ ≐ R₂ and R₁ ≐ L₁. Note the swap: the argument of a residual flips polarity, so R₁ now counts negatively and L₁ positively, which are exactly their signs before.
+     - The / case is the same as the \ case.
+     - A clash between different connectives cannot occur, since E is unifiable.
+   - **Delete X ≐ X.** By (I) these are the only two occurrences of X, so X disappears and (I) still holds.
+   - **Eliminate X ≐ F**, with F ≠ X; the occurs check passes because E is unifiable. Here X counts negatively, so by (I) X has exactly one other occurrence, which is positive and not inside F. The step substitutes X := F everywhere, i.e. at that single occurrence, and drops the equation.
+     - The occurrences of F move from a positive root (the right side of the equation) to a positive position (that occurrence of X). So every moved occurrence keeps its sign.
+     - Nothing is copied, and both occurrences of X are gone.
+     - F ≐ X is symmetric, with all signs reversed.
+
+   The algorithm terminates with no equations, and the composite of its eliminations is an MGU. At that point (I) says exactly that the sequent is balanced. Any other MGU differs by a renaming, which preserves balance. ∎
+
+   This replaces the earlier appeal to Hirokawa (principal types of BCK-terms). The point is the same: substitutions found by unification move occurrences and never copy them. `scripts/generalization_check.py` tests the plugging lemma on random balanced sequents (no failures).
+
+   **Lemma A6 (linking of an instance).** Let S be balanced, f ∈ F(S) and σ a substitution. The linking of σ_*(f) pairs the leaf (o, p) with (o′, p), where o and o′ are the two occurrences in S of an atom X, and p is a leaf position of σ(X).
+   - *Proof.* Apply σ to a cut-free derivation of S, and replace each axiom X ⊢ X by the η-expanded identity on σ(X). Its linking pairs each leaf p of the hypothesis with p of the goal (induction on the formula), and it denotes the identity. The result is a cut-free derivation of S[σ] denoting σ_*(f), with the stated linking. ∎
+
+   **Theorem (faithfulness).** If t, u : (Γ ⊢ A) and ⟦t⟧ = ⟦u⟧, then UL⊗ proves t = u.
+   - By A5, t = t′[σ_t] with t′ : S_t balanced and provable. Provability holds because F(S_t) contains ⟦t′⟧, and F(S_t) is nonempty only if S_t is provable, by cut elimination.
+   - So t′ and coh_{S_t}(x⃗) are two terms of a pasting type. The equality rule, closed under substitution, gives t = coh_{S_t}[σ_t].
+   - Let λ be the linking of ⟦t⟧ = ⟦u⟧ (well-defined by A1). Let S* be Γ ⊢ A with the two leaves of each λ-pair renamed to one fresh atom, and σ* the renaming back. S* is balanced.
+   - Define ρ_t(X) as σ_t(X) with the leaf at p renamed to the fresh atom of the λ-pair of (o, p), for an occurrence o of X in S_t. By A6, (o, p) and (o′, p) are λ-paired, so ρ_t is well defined. By construction S_t[ρ_t] = S* and ρ_t;σ* = σ_t.
+   - S* is an instance of the provable S_t, so it is a pasting type. The term coh_{S_t}[ρ_t] has type S*, so UL⊗ proves coh_{S_t}[ρ_t] = coh_{S*}.
+   - Hence t = coh_{S_t}[ρ_t][σ*] = coh_{S*}[σ*]. The same argument gives u = coh_{S*}[σ*], so t = u. ∎
+
+   Steps 1–3 together prove Theorem A4.
 
 **Machine check.** `scripts/pl1_check.py` enumerates every balanced sequent with at most 4 atoms (8 occurrences) and at most 3 hypotheses: 3 520 753 sequents, 15 458 provable. For each it checks:
 - Lemma C;
@@ -475,10 +521,10 @@ These are recorded in `conjectures/planar-pasting-types.md` §4, which is ready 
 
 | Item | Owner after this thread |
 |---|---|
-| D10 completeness of UL_I (B.3 generation statement) | unowned (new ledger row D10a) |
-| A4 generalization lemma written out in full | unowned (D9a) |
-| D7 remainder: both factors arbitrary (F5 / PL-ω / B12) | blocked; listed under D7 |
-| D11: event order across residuals; ω-version; soundness/completeness | out to researcher (`planar-pasting-types.md` §4) plus unowned internal attempt |
-| D12: higher coherence for free cartesian closed (∞,1)/(∞,ω)-categories | `conjectures/cartesian-closed-higher-coherence.md`, ready to send; internal attempt unowned |
+| D10 completeness of UL_I (B.3 generation statement) | CLOSED thread (D10a), in progress |
+| ~~A4 generalization lemma written out in full~~ | done (Lemma A5, D9a closed) |
+| D7 remainder: both factors arbitrary (F5 / PL-ω / B12) | blocked; listed under D7. Adjacent E.2 rule work: CLOSED thread |
+| D11: event order across residuals; ω-version; soundness/completeness | out to researcher (`conjectures/outbox/gray-pasting-types.md`); internal attempt: CLOSED thread |
+| D12: higher coherence for free cartesian closed (∞,1)/(∞,ω)-categories | `conjectures/outbox/cartesian-closed-higher-coherence.md`, ready to send; internal attempt: CLOSED thread |
 | D8 for uniform L | blocked on E6 |
-| Implement L_ε in the support checker | add to E1 (LCORE) |
+| Implement L_ε in the support checker | L-core thread (E1) |

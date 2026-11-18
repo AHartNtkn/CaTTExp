@@ -32,8 +32,8 @@
 -- the candidate is raw syntax, and the certified checker decides
 -- whether it is a well-typed cell u → v. Every filler it returns is a
 -- theorem of plain CaTT, whatever the correctness of the normal-form
--- code. Recursion into substitutions runs on fuel; running out only
--- makes the tactic fail. Totality is the paper theorem (Thm 3.2); it
+-- code. Recursion into substitutions runs on fuel, set to one more
+-- than the coh-nesting depth of the inputs, which is enough. Totality is the paper theorem (Thm 3.2); it
 -- is checked here on examples (CaTTExp.GlobularFillerExamples).
 ------------------------------------------------------------------------
 module CaTTExp.GlobularFiller where
@@ -42,9 +42,9 @@ open import CaTTExp.Prelude
 open import CaTTExp.Pure
 
 ------------------------------------------------------------------------
--- List helpers.
+-- List helpers (in a named module, so proofs can refer to them).
 
-private
+module Lists where
   length : ∀ {a} {A : Set a} → List A → Nat
   length []       = 0
   length (_ ∷ xs) = suc (length xs)
@@ -72,6 +72,8 @@ private
   find : ∀ {a} {A : Set a} → Nat → List (Nat × A) → Maybe A
   find n []             = nothing
   find n ((m , a) ∷ xs) = if n ==ℕ m then just a else find n xs
+
+open Lists
 
 ------------------------------------------------------------------------
 -- Labelled pasting trees.
@@ -263,19 +265,38 @@ labSub ls (suc i) = labSub ls i >>= λ s → find i ls >>= λ x → just (s ,ₛ
 ------------------------------------------------------------------------
 -- The tactic.
 
-fuel : Nat
-fuel = 64
+-- Fuel: one more than the coh-nesting depth of the inputs. nf, flat,
+-- liftT and assign spend one unit exactly when they enter the
+-- arguments of a coh, and liftTy is structural in the type, so this
+-- fuel never runs out (no fixed bound on the size of u, v, A).
+mutual
+  depthTm : Tm → Nat
+  depthTm (var _)     = 0
+  depthTm (coh _ _ σ) = suc (depthSub σ)
+  depthTm (cst _)     = 0
+
+  depthSub : Sub → Nat
+  depthSub ⟨⟩       = 0
+  depthSub (σ ,ₛ t) = max (depthSub σ) (depthTm t)
+
+depthTy : Ty → Nat
+depthTy ⋆           = 0
+depthTy (arr A t u) = max (depthTy A) (max (depthTm t) (depthTm u))
+
+fuelFor : Tm → Tm → Ty → Nat
+fuelFor u v A = suc (max (depthTy A) (max (depthTm u) (depthTm v)))
 
 -- The common strict image of u and v, if they have one.
-image : Ctx → Tm → Tm → Maybe LT
-image Γ u v =
+image : Nat → Ctx → Tm → Tm → Maybe LT
+image fuel Γ u v =
   nf fuel Γ u >>= λ Nu →
   nf fuel Γ v >>= λ Nv →
   guard (ltEq Nu Nv) λ _ → just Nu
 
 fillRaw : Ctx → Tm → Tm → Ty → Maybe Tm
 fillRaw Γ u v A =
-  image Γ u v >>= λ N →
+  let fuel = fuelFor u v A in
+  image fuel Γ u v >>= λ N →
   let τ = shape N ; I = idTree τ ; Θ = ctxOf τ in
   liftTy fuel Γ A I >>= λ A′ →
   liftT fuel Γ u I >>= λ u′ →

@@ -19,7 +19,7 @@ open import CaTTExp.Strict.Complex
 open import CaTTExp.Strict.Cell
 open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Subst using (concatMap-cm; map-cm)
-open import CaTTExp.Strict.Soundness using (twT; TCell)
+open import CaTTExp.Strict.Hyp using (twT; TCell)
 open import CaTTExp.Strict.Tensor
 open import CaTTExp.Gray.Pure hiding (Tuple)
 

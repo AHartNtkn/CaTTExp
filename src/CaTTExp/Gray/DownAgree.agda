@@ -92,6 +92,19 @@ private
   ≤0 : ∀ {k} → k ≤ 0 → k ≡ 0
   ≤0 z≤n = refl
 
+-- Exported, for the strict model.
+memT-sound : ∀ x S → T (memT x S) → x ∈L S
+memT-sound = memT⇒
+
+memT-complete : ∀ x S → x ∈L S → T (memT x S)
+memT-complete = memT⇐
+
+nub-sound : ∀ S {x} → x ∈L nubT S → x ∈L S
+nub-sound = nub⇒
+
+nub-complete : ∀ S {x} → x ∈L S → x ∈L nubT S
+nub-complete = nub⇐
+
 ------------------------------------------------------------------------
 -- Face steps and reachability, for a fixed list of cells.
 

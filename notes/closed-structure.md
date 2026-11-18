@@ -1072,7 +1072,7 @@ This is a draft. The data:
   ```
 
   So currying on the "wrong" side is still an isomorphism, but it moves the probe into the residual's argument and does not preserve the probe position. This is the rule for every mixed currying. The rule set includes it as a third clause next to Φ_L and Φ_R.
-- **What survives of reading (I)'s phenomena.** In 𝒢′ the round-5 answer proves H = H_L = 1_T. Non-invertible Gray interchange survives, as a modification between schedules of transformations rather than of functors. This matches "schedules move into the homs" below.
+- **What survives of reading (I)'s phenomena.** In 𝒢′ the round-5 answer proves H = H_L = 1_T. Non-invertible Gray interchange survives, as a modification between schedules of transformations rather than of functors. See "Interchange moves into the homs" below, as corrected by round 6.
 
 **Check of E.2 against these rules (D17 (b), done).**
 - E.2 represents B ⊗ Θ by maps B → [Θ, D], with [Θ, D] = Hom_oplax(Θ, D) = D/Θ in AM's naming (`conventions.md` §4). That is right currying of Θ.
@@ -1085,7 +1085,11 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
 
 **Consequences.**
 - **Pasting types for (II).** A pasting type for reading (II) must record, for each cell, which side its time direction sits on: X ⊗ Dᵏ versus Dᵏ ⊗ X. This is the "time as a tensor position" of PL-ω, now with a side.
-- **Schedules move into the homs.** The schedule categories S(P) of F.5 reappear inside hom-objects, as the cells of Fun^lax(Δ, –) for Gray contexts Δ, not as 1-cell interchange. F.5's monoidal-core result transfers on that reading: the cells of ν(I^⊗n) between its extreme vertices.
+- **Interchange moves into the homs, but not as schedule posets.** *(Corrected 2026-11-18 after the verified round-6 answer, `conjectures/answered/gray-closed-scheduling-r6-2026-11-18.md`.)*
+  - For fixed Gray contexts Δ, the cells of Fun^lax(Δ, –) between the extreme vertices of ν(I^⊗n) are still F.5's schedule categories. That part of F.5 transfers.
+  - The claim that *transformation-level* homs of 𝒢′ are schedule categories S(P) is **refuted**. Round 6 gives two endo-transformations α and β of 1_A with forward crossings in both directions, and their composite q embeds (ℕ, +) into End(α·β). So these homs are not posets.
+  - Round 6 also shows that a non-invertible crossing can be built from structural maps alone.
+  - The correct description of these homs is open: the D11 round-7 prompt asks for the smallest transformation hom.
 - **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
 
 **Open (D17).**

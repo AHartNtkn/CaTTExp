@@ -2,7 +2,7 @@
 
 *Design and proof note, 2026-11-18. Owner thread: "Develop limit-rule metatheory and limits over L" (`cmsg_018pe2CvdFGDdsWgn8Tjn5gbD4wzRQd7hPxxsf6RGVQJT9`). Covers ledger items B4, B7, B8 (internal attempt), B9–B14 of `notes/open-issues.md`. Companion to `limits-representables.md` (§4, §10), `pseudo-vs-gray.md` (§3, §4.4, R11), `conjectures/catt-lim-pseudo-vs-gray.md` and the Agda findings in `catt-lim-formalization.md` (PR #22).*
 
-*Markers as in the other notes. **[paper]**: checked against the cited source this session (for Loubaton, arXiv 2406.05425v2, the PDF was read at the cited numbers). **[recall]**: background knowledge, not re-checked. **[conj]**: unproved, with an attempt recorded. **Proved** means a complete argument is written here; **proved (strict)** means it is proved in the strict model only.*
+*Markers as in the other notes. **[paper]**: checked against the cited source this session (for Loubaton, arXiv 2406.05425v2, the PDF was read at the cited numbers). **[conj]**: unproved, with an attempt recorded. **Proved** means a complete argument is written here; **proved (strict)** means it is proved in the strict model only.*
 
 ---
 
@@ -24,7 +24,7 @@
 
 ### 1.1 Setting
 
-- **ωCat** is the category of strict ω-categories, and ⊗ is the Ara–Maltsiniotis Gray tensor. It is monoidal and biclosed **[recall; ledger G1]**. Write `⟦A, –⟧ˡ` for the right adjoint of `A ⊗ –` and `⟦B, –⟧ʳ` for the right adjoint of `– ⊗ B`:
+- **ωCat** is the category of strict ω-categories, and ⊗ is the Ara–Maltsiniotis Gray tensor. It is monoidal and biclosed **[paper: AM Thm A.15, §A.18; G1 check]**. Write `⟦A, –⟧ˡ` for the right adjoint of `A ⊗ –` and `⟦B, –⟧ʳ` for the right adjoint of `– ⊗ B`. In AM's names (`conventions.md` §3.2), ⟦A, C⟧ˡ = Hom_lax(A, C) and ⟦B, C⟧ʳ = Hom_oplax(B, C):
 
   ```
   ωCat(A ⊗ B, C)  ≅  ωCat(B, ⟦A, C⟧ˡ)  ≅  ωCat(A, ⟦B, C⟧ʳ).
@@ -107,7 +107,7 @@ natural in c, and Gray-natural. **Proved (strict).**
 lim = {a} ×_C ⟦D¹, C⟧ʳ ×_C {b},
 ```
 
-the fibre of the Gray arrow object over a pair of objects. Its n-cells are maps `Dⁿ ⊗ D¹ → C` constant at the ends. Collapsing `Dⁿ ⊗ {0}` and `Dⁿ ⊗ {1}` in `Dⁿ ⊗ D¹` gives `D^{n+1}` **[recall: the Gray cylinder with collapsed ends is the suspension; checked by hand for n ≤ 1]**. So the fibre is the **full hom ω-category** between a and b (in the orientation the convention fixes), with non-invertible arrows. It is the strict counterpart of Gagna–Harpaz–Lanari's `fib(Ar^oplax(C) → C × C) ≃ Hom_C` (eq. (7) of the researcher response), and the opposite of the cartesian answer (eq. (8): the core).
+the fibre of the Gray arrow object over a pair of objects. Its n-cells are maps `Dⁿ ⊗ D¹ → C` constant at the ends. Collapsing `Dⁿ ⊗ {0}` and `Dⁿ ⊗ {1}` in `Dⁿ ⊗ D¹` gives `D^{n+1}` **[paper, G1 check: Ara–Maltsiniotis 1607.00668 Cor. B.6.6, ΣC ≅ D⁰ ⊔_C (D¹ ⊗ C) ⊔_C D⁰. That is the D¹ ⊗ C orientation; for Dⁿ ⊗ D¹ apply the even dual (AM Prop. A.22), under which Dⁿ and D¹ are self-dual, so the result is again D^{n+1}]**. So the fibre is the **full hom ω-category** between a and b (in the orientation the convention fixes), with non-invertible arrows. It is the strict counterpart of Gagna–Harpaz–Lanari's `fib(Ar^oplax(C) → C × C) ≃ Hom_C` (eq. (7) of the researcher response), and the opposite of the cartesian answer (eq. (8): the core).
 
 **A3. Cotensors.** `[⟦Γ⟧, C]`, the lax limit of the constant diagram at C over Γ, is a finite iterated pullback of `⟦Dᵏ, C⟧ʳ`'s. Its points are Γ-shaped lax diagrams in C, and its arrows are lax transformations. This is the claim of `limits-representables.md` §6.3 under L, now proved in the strict model.
 
@@ -180,8 +180,8 @@ Level d−1 of `uni` is used for d-cells, so, as the researcher says, invertibil
 - (⇐) Under condition 1, the same coincidence holds. The GHL/Loubaton universal property then supplies `ucone`, J1 and J2 at every level, the J2 cells being equivalences. ∎
 
 **Examples.**
-- The strict 2-category Cat of small categories: strict lax limits exist (Street **[recall]**), and its cells of dimension ≥ 3 are identities.
-- The (∞,2)-category of (∞,1)-categories (GHL **[recall]**).
+- The strict 2-category Cat of small categories: strict lax limits exist (they are Cat-weighted limits, and Cat has all of them: Street 1976, Kelly 1989; Lack, *A 2-categories companion*, [math/0702535](https://arxiv.org/abs/math/0702535), §§6.7–6.8 **[paper, G1 check]**), and its cells of dimension ≥ 3 are identities.
+- The (∞,2)-category of (∞,1)-categories (Gagna–Harpaz–Lanari, *Fibrations and lax limits of (∞,2)-categories*, [2012.04537](https://arxiv.org/abs/2012.04537), abstract: lax, weighted and pseudo limits via fibrations **[paper, G1 check]**).
 - *Non-example:* the researcher's Bicat, which has non-invertible modifications, so fails condition 1.
 
 So the original rules are a reasonable theory of (∞,2)-categories with lax limits, and nothing more. **B10 is closed**, conditional on the two shared premises.
@@ -225,7 +225,7 @@ Let `Δ ⊢ γ : Γ` and `L := lim_Γ[γ]`, with universal cone λ (`ucone`). Fo
 (J2)  Θ ⊨ uni^y_{Γ,n}[σ]     for every component y of the comparison transfor  E : T ⇛ F(uni^w)
 ```
 
-Here T is the transfor that σ supplies. **All of E's components are certified**: an invertible transfor in a Gray hom must have invertible components *and* invertible comparison cells. **[recall]** For 2-categories, an equivalence in the 2-category of lax transformations has invertible naturality cells, since the inverse's cells are mates.
+Here T is the transfor that σ supplies. **All of E's components are certified**: an invertible transfor in a Gray hom must have invertible components *and* invertible comparison cells. **[proved for 2-categories, G1 check; the (∞,ω) version is the same claim as the [conj] in `invertibility-markings.md` Lemma 2.2]** For 2-categories (proof: if β is a vertical inverse of α, the composite's components α_x β_x and naturality cells, the pastings of α_f and β_f, are identities; with α_x invertible, β_f whiskered by α's components is a two-sided inverse of α_f), an equivalence in the 2-category of lax transformations has invertible naturality cells, since the inverse's cells are mates.
 
 **The P/L switch.**
 

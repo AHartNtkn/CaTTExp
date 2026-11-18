@@ -28,6 +28,7 @@
 - **Ambient.** CaTT over ωCat, as in `limits-representables.md` §1: ⋆ is "ω-categories", 1-cells are functors. Elements of C are 1-cells `⊤ → C`; a *generalised element* is a 1-cell `c → C`.
 - **Cells into C.** A cell *into C* is an ambient cell whose iterated 1-dimensional base type is `c →_⋆ C` for some c. It has *level* k if it is a k-cell of the hom `Hom(c, C)`; so maps `c → C` have level 0, and an ambient d-cell into C has level d − 1.
 - **Invertibility.** `Γ ⊨ u` means u comes with inverse data (Mikhail's `⊨`, or ICaTT's invertibility types; which one is ledger items E4/F7). Nothing here depends on the choice.
+- **Orientation conventions** are those of `conventions.md`; this note fixes an orientation only where it says so (the lax recursion form in §4.3, and lax functors in §7).
 - **Options P and L.** Everything below is stated under P (pseudo ambient, repaired CaTT_lim of `limits-representables.md` §4.1). Where L differs, it says so. A useful fact for this note: **for discrete targets P and L agree**. The defect of P's comma objects (only invertible 2-cells as arrows, `limits-representables.md` §10.1) is invisible when every 2-cell of the target is already invertible. In particular N = Hom_{⟦L⟧}(x, x) is the right object under P as well, because ⟦L⟧ is a 1-category (§2.4).
 - **Pullbacks** are the all-marked (pseudo) limits of cospans. Fibres are pullbacks along elements.
 

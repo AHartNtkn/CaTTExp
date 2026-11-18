@@ -76,3 +76,581 @@
 ## What would help most
 
 A proof or counterexample for Q1; a reduction of Q2 to finitely many checks; the presentation for Q4 in low dimensions.
+
+# Researcher Response
+
+**The strong unit assertion reduces to all finite computads, and it implies both (H) and (R).** I can prove that unit assertion for every coherator representable and for every free model on a graph. This proves (H) for the fragment in which generator dimensions are bounded and all cells above dimension \(1\) are invertible.
+
+I do **not** obtain (R) for a general Kan complex or quasi-category, or the unit assertion for arbitrary finite computads. For \(L\), the stated rule gives an exact **ordinary globular cellular presentation** and an explicit classification of its generators through dimension \(3\). I do not establish the Gray-enriched cellular presentation needed to apply the enriched lifting theorem.
+
+Throughout, retain the comparison maps used to construct \(R\):
+\[
+q_P:R(P)\longrightarrow yP,
+\qquad
+e_P:\operatorname{Sp}(P)\longrightarrow UR(P),
+\qquad
+Uq_P\,e_P=j_P,
+\]
+where \(j_P:\operatorname{Sp}(P)\to yP\) is the spine inclusion. The \(q_P\) are natural over the strict interpretation of the coherator.
+
+## 1. Units on representables and free models on graphs
+
+### 1.1 Every coherator representable has its unit in \(W\)
+
+Write \(F_{\mathrm w}\) and \(F_{\mathrm s}\) for the free weak and strict \(\omega\)-category functors on globular sets.
+
+First, for **every globular set \(G\)**, the canonical map
+\[
+\alpha_G:F_{\mathrm w}G\longrightarrow F_{\mathrm s}G
+\]
+is a globular trivial fibration, hence belongs to \(W\).
+
+Indeed, let
+\[
+\mathrm{ar}:\mathsf B\longrightarrow\mathsf T
+\]
+be the cartesian arity map from the Batanin–Leinster monad to the strict monad. Its component at the terminal globular set has the right lifting property against positive-dimensional globe boundaries, by contraction. It is surjective in dimension \(0\), by the monad unit. Cartesian naturality makes
+\[
+\mathsf BG\longrightarrow\mathsf TG
+\]
+a pullback of this map. These are precisely the arity and contraction properties recalled in FHM §2.2. [arxiv.org](https://arxiv.org/pdf/2406.13240v3?utm_source=chatgpt.com)
+
+Now let
+\[
+h_P=\mathbb T(-,P)
+\]
+be a coherator representable, and let \(G_P\) be the generating globular set of the pasting shape \(P\). There are canonical identifications
+\[
+h_P\cong F_{\mathrm w}G_P,
+\qquad
+P\cong F_{\mathrm s}G_P.
+\]
+For the first, the universal property is
+\[
+\operatorname{Mod}(\mathrm{CaTT})(h_P,A)
+\cong A(P)
+\cong \operatorname{GSet}(G_P,U_{\mathrm g}A).
+\]
+
+Co-Yoneda gives \(\mathcal L_Rh_P\cong R(P)\). Under these identifications, naturality of \(q_P\) gives
+\[
+(S_0q_P)\,\eta_{h_P}=\alpha_{G_P}.
+\]
+Both \(S_0q_P\) and \(\alpha_{G_P}\) belong to \(W\). Therefore
+\[
+\boxed{\eta_{h_P}\in W\quad\text{for every }P\in\mathbb T.}
+\tag{1}
+\]
+
+This concerns free models on the globular sets underlying pasting shapes. The arity argument does not identify the strictification map of an arbitrary computad with a globular trivial fibration.
+
+### 1.2 Every free model on a graph has its unit in \(W\)
+
+Let \(G\) be a directed graph, allowing loops and parallel edges, and let \(\operatorname{Path}(G)\) be its free ordinary category. Regard \(G\) as a globular set concentrated in dimensions \(0\) and \(1\).
+
+Let \(|G|\) denote its presheaf realization by \(yD_0\) and \(yD_1\), attaching each edge along its two endpoints. The adjunctions give an ordinary isomorphism
+\[
+\mathcal L_R(F_{\mathrm w}G)\cong F|G|.
+\tag{2}
+\]
+Indeed, maps from either side to \(Y\in\mathcal A\) are exactly assignments of vertices and edges of \(G\) to the globular cells of \(S_0Y\).
+
+There is an algebraic comparison
+\[
+c_G:F|G|\longrightarrow N\operatorname{Path}(G)
+\]
+adjoint to \(\alpha_G\). Its underlying geometric map is an equivalence. To see this, the graph incidence pushout computes a homotopy pushout, since the edge-boundary inclusions are cofibrations. The free \((\infty,1)\)-category on this graph is \(\operatorname{Path}(G)\): the inclusion of a graph into the nerve of its free category is inner anodyne, as proved in Rezk, Proposition 26.5. The inclusion of \((\infty,1)\)-categories into the inductive target preserves these colimits because it has the \(1\)-core as a right adjoint. [rezk.web.illinois.edu](https://rezk.web.illinois.edu/quasicats.pdf?utm_source=chatgpt.com)
+
+Consequently,
+\[
+(S_0c_G)\,\eta_{F_{\mathrm w}G}=\alpha_G
+\]
+and two-out-of-three gives
+\[
+\boxed{\eta_{F_{\mathrm w}G}\in W\quad\text{for every graph }G.}
+\tag{3}
+\]
+
+### 1.3 The resulting positive fragment of Q1
+
+Suppose a computad has a finite bound on its generator dimensions and every cell above dimension \(1\) is coinductively invertible.
+
+Benjamin–Markakis, Proposition 37, says that in such a computad a \(d\)-cell is invertible exactly when its \(d\)-support is empty. Every \(d\)-generator belongs to its own \(d\)-support. Thus there can be no generators above dimension \(1\). The free model is therefore \(F_{\mathrm w}G\) for a graph \(G\). “Finite dimensional” here bounds generator dimensions; it does not require finitely many generators. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+Equation (3), together with the detection lemma below, proves:
+
+> **Bounded-generator case of (H).**  
+> If \(B,B'\) have computad presentations with bounded generator dimensions, all their cells above dimension \(1\) are coinductively invertible, and \(f:B\to B'\) belongs to \(W\), then
+> \[
+> QU\mathcal L_R(f)
+> \]
+> is an equivalence.
+
+This does not cover computads with generators in unbounded dimensions.
+
+## 2. The strong unit assertion implies (H), (R), and the full comparison
+
+The additional fact needed for this reduction is a detection statement for **actual algebraic maps**.
+
+### 2.1 Detection lemma
+
+For every morphism \(f:X\to Y\) in \(\mathcal A\),
+\[
+\boxed{S_0(f)\in W\quad\Longrightarrow\quad QU(f)\text{ is an equivalence}.}
+\tag{4}
+\]
+
+There are two steps.
+
+#### Algebraic invertibility implies geometric coinductive invertibility
+
+One must check the geometric meaning of the selected identities and compositions **relative to their boundaries**.
+
+Since \(q_P\) is a trivial fibration, choose a section
+\[
+s_P:yP\longrightarrow UR(P)
+\]
+under the spine:
+\[
+q_Ps_P=\mathrm{id},
+\qquad s_Pj_P=e_P.
+\]
+
+Let \(m:D_n\to P\) be a generic identity operation, or composition of two \(n\)-cells along their common \((n-1)\)-face. Consider
+\[
+a_m=UR(m)e_{D_n},
+\qquad
+b_m=s_P\,y(p(m)),
+\]
+as maps \(yD_n\to UR(P)\), where \(p\) is strict interpretation.
+
+Naturality gives
+\[
+q_Pa_m=q_Pb_m=y(p(m)).
+\]
+Their restrictions to the globular boundary \(B_n\) are exactly equal: for an identity both faces are the input cell, and for the specified composition they are the two outer faces of the inputs. These faces factor through the spine.
+
+The relative lifting space for
+\[
+B_n\hookrightarrow yD_n
+\quad\text{against}\quad
+q_P
+\]
+is contractible. Hence \(a_m\) and \(b_m\) are joined by a path relative to \(B_n\). After evaluation in \(Y\), this identifies the selected algebraic identity or composite with a geometric identity or composite, keeping its boundary fixed.
+
+Now take the union of path components of \(UY(D_n)\) meeting the images of algebraically invertible \(n\)-cells. Algebraic inverse and cancellation witnesses make these unions satisfy the forward recursive condition for geometric coinductive invertibility. Transporting witnesses along the relative paths above is legitimate because boundary-restriction maps are Kan fibrations. If a cancellation witness has the opposite orientation from the convention in that recursion, use its algebraic inverse.
+
+ORW Proposition 5.42 identifies geometric coinductive isomorphisms as the maximal class satisfying that recursive condition. Therefore
+\[
+u\text{ invertible in }S_0Y
+\quad\Longrightarrow\quad
+u\text{ geometrically coinductively invertible in }UY.
+\tag{5}
+\] :chatgpt-content-reference{index="3"}
+
+Only identities and composition along the immediately lower-dimensional face are needed here.
+
+#### Strict globular lifting problems detect the required surjectivity
+
+Define the globular boundaries by
+\[
+B_0=\varnothing,
+\qquad
+B_{n+1}=yD_n\amalg_{B_n}yD_n.
+\]
+The inclusions \(B_n\hookrightarrow yD_n\) are cofibrations. These pushouts also compute homotopy pushouts, so they present the geometric globular boundaries.
+
+A relative geometric \(n\)-cell problem for \(Uf\) is described by
+\[
+\operatorname{Map}(B_n,UX)
+\times^{h}_{\operatorname{Map}(B_n,UY)}
+\operatorname{Map}(yD_n,UY).
+\]
+Since \(UY\) is fibrant,
+\[
+\operatorname{Map}(yD_n,UY)\longrightarrow
+\operatorname{Map}(B_n,UY)
+\]
+is a Kan fibration. Thus the ordinary pullback computes this homotopy pullback. Equivalently, a specified homotopy of target boundaries can be lifted to make the target cell’s boundary exactly equal to the image of the source boundary.
+
+The problem then consists of an exactly parallel boundary in \(S_0X\) and a target cell in \(S_0Y\). The hypothesis \(S_0f\in W\) supplies a source cell with this boundary and an algebraically invertible comparison to the target cell. By (5), that comparison is geometrically coinductively invertible. Dimension \(0\) gives the corresponding assertion for target \(0\)-cells.
+
+Therefore \(Uf\) is \(\infty\)-surjective up to coinductive isomorphisms. ORW Proposition 5.30 identifies precisely these maps as the maps inverted by \(Q\), proving (4). [arxiv.org](https://arxiv.org/html/2603.11005v2?utm_source=chatgpt.com)
+
+This lemma does not replace the hypothesis \(S_0f\in W\) by membership in the saturation of \(W\). It also does not establish conservativity on arbitrary morphisms of \(\mathcal H_{\mathrm{CaTT}}\).
+
+### 2.2 Deriving all three comparison conditions from the unit
+
+Assume the strong assertion
+\[
+\tag{U}
+\eta_B:B\longrightarrow S_0\mathcal L_RB\in W
+\quad\text{for every computad-cofibrant }B.
+\]
+
+For \(f:B\to B'\) in \(W\) between computad-cofibrant models, naturality gives
+\[
+S_0\mathcal L_R(f)\,\eta_B=\eta_{B'}f.
+\]
+Two-out-of-three implies \(S_0\mathcal L_R(f)\in W\). Applying (4) to \(\mathcal L_R(f)\) proves **(H)**.
+
+For **(R)**, put \(A=S_0Y\) and
+\[
+d_Y=\varepsilon_Y\,\mathcal L_R(q_A):
+\mathcal L_RKA\longrightarrow Y.
+\]
+Naturality and the triangle identity give the strict equality
+\[
+S_0(d_Y)\,\eta_{KA}=q_A.
+\tag{6}
+\]
+Since \(q_A,\eta_{KA}\in W\), we have \(S_0(d_Y)\in W\). Thus
+\[
+QU(d_Y):QU\mathcal L_RKS_0Y\xrightarrow{\simeq}QUY.
+\tag{7}
+\]
+If \(UY\) presents a coinductively complete category, ORW’s criterion makes (7) equivalent to the required \(\infty\)-surjectivity of \(Ud_Y\).
+
+Finally, (U) makes the derived unit, represented by
+\[
+A\longleftarrow KA\xrightarrow{\eta_{KA}}S_0\mathcal L_RKA,
+\]
+an equivalence. Together with the derived adjunction from round 3 and (7), this proves the full comparison.
+
+Hence
+\[
+\boxed{
+\text{(U)}
+\ \Longrightarrow\
+\text{(H), (R), and }
+\mathcal H_{\mathrm{CaTT}}\simeq\mathrm{Cat}^{\mathrm{coind}}_\omega.
+}
+\tag{8}
+\]
+
+It suffices to assume (U) only for models of the form \(KA'\). Every computad-cofibrant \(B\) is a retract of \(KB\), by lifting against \(q_B\), and naturality makes \(\eta_B\) a retract of \(\eta_{KB}\). FHM \(W\) is retract closed. [arxiv.org](https://arxiv.org/pdf/2406.13240v3?utm_source=chatgpt.com)
+
+## 3. Q2 reduces to all finite computads
+
+Here “finite computad” means finitely many generators, with their prescribed boundary terms.
+
+The reduction is
+\[
+\boxed{
+\begin{aligned}
+&\eta_{A_{\mathfrak c}}\in W
+&&\text{for every finite computad }\mathfrak c\\
+&\hspace{2cm}\Longrightarrow\
+\eta_{A_{\mathfrak c}}\in W
+&&\text{for every computad }\mathfrak c.
+\end{aligned}}
+\tag{9}
+\]
+
+This holds for the fixed algebraic fibrancy construction even if its chosen set \(J\) has infinite domains. One must account for the difference between presheaf colimits and algebraic colimits.
+
+### 3.1 Filtered colimits of fibrant \(\Theta_\omega\)-spaces are fibrant
+
+The relevant finiteness facts concern the underlying geometric model category, independently of \(J\).
+
+The category \(\Theta_\omega\) is elegant Reedy, and its Reedy and injective model structures agree. Its recursive degree
+\[
+\deg([m](\theta_1,\ldots,\theta_m))
+=m+\sum_i\deg(\theta_i)
+\]
+gives finitely many shapes of bounded degree; its hom-sets are finite. Thus each Reedy boundary is a finite colimit of representables, and the Reedy fibrancy tests have finitely presentable domains. [arxiv.org](https://arxiv.org/pdf/1110.1066?utm_source=chatgpt.com)
+
+The Segal and completeness locality maps can also be chosen between finite colimits of representables. A direct \(\Theta_\omega\) presentation is Loubaton §1.1.2.14: spine maps and suspended copies of a finite completeness presheaf \(E^{\mathrm{eq}}\); §3.4.3.3 uses this family for the simplicial-presheaf localization. [arxiv.org](https://arxiv.org/pdf/2307.11931?utm_source=chatgpt.com)
+
+Consequently, the raw filtered colimit of fibrant presheaves remains injectively fibrant. Mapping out of each locality domain or codomain commutes with filtered colimits, and filtered colimits preserve weak equivalences between Kan complexes. It therefore remains local.
+
+### 3.2 A comparison lemma for algebraic colimits
+
+Let \(Y_i\) be a filtered diagram in \(\mathcal A\) whose underlying transition maps are monomorphisms. Then
+\[
+\boxed{
+\operatorname*{colim}_{i}^{\operatorname{Mod}(\mathrm{CaTT})}S_0Y_i
+\longrightarrow
+S_0\!\left(\operatorname*{colim}_{i}^{\mathcal A}Y_i\right)
+\in W.
+}
+\tag{10}
+\]
+
+Set
+\[
+X=\operatorname*{colim}_i UY_i,
+\qquad
+Y=\operatorname*{colim}_i^{\mathcal A}Y_i.
+\]
+
+The chosen fillers on the \(Y_i\) induce consistent **partial** chosen fillers on \(X\). To check consistency, suppose a map \(A_j\to X\) factors through two stages. At a common later stage, the resulting maps from \(A_j\) are equal because that stage maps monomorphically to \(X\). The transition maps preserve chosen fillers, so the induced fillers agree. This argument does not require \(A_j\) to be finite.
+
+Freely adjoin the missing \(J\)-fillers, using a transfinite construction long enough for all the \(A_j\). Its universal property identifies the result with \(Y\), and the canonical map
+\[
+c:X\longrightarrow UY
+\]
+is a relative \(J\)-cell map, hence a trivial cofibration. This is the partial-filler construction of Nikolaus §2.3, with the transfinite length chosen for the domains in \(J\). It does not use preservation of ordinary filtered colimits by \(U\). [arxiv.org](https://arxiv.org/pdf/1003.1342?utm_source=chatgpt.com)
+
+By §3.1, \(X\) is fibrant. Choose its remaining fillers, extending the inherited choices, to obtain \(X^a\in\mathcal A\) with \(UX^a=X\). The cocone induces an algebraic map
+\[
+r:Y\longrightarrow X^a,
+\qquad Ur\,c=\mathrm{id}_X.
+\]
+Thus \(r\) is a weak equivalence.
+
+The induced map
+\[
+h:\operatorname*{colim}_i S_0Y_i\longrightarrow S_0X^a
+\]
+is an isomorphism: in each globular dimension it is the bijection
+\[
+\operatorname*{colim}_i UY_i(D_n)_0\cong X(D_n)_0,
+\]
+and the weak \(\omega\)-category monad is finitary. If \(\theta\) denotes the map in (10), then
+\[
+(S_0r)\theta=h.
+\]
+Since \(S_0r\in W\), two-out-of-three proves (10).
+
+### 3.3 Apply the lemma to finite subcomputads
+
+Every finite set of generators of a computad extends to a finite set closed under the generators used in its prescribed boundary terms. Terms have finite syntax, and passing from a generator to its boundary decreases dimension. Thus the finite subcomputads form a filtered poset and
+\[
+A_{\mathfrak c}
+\cong
+\operatorname*{colim}_{\mathfrak d\subseteq_{\mathrm{fin}}\mathfrak c}
+A_{\mathfrak d}.
+\]
+
+Their inclusions are computadic cell attachments. The functor \(\mathcal L_R\) sends a generating attachment to a pushout of
+\[
+F(B_n)\longrightarrow F(yD_n),
+\]
+so it sends these inclusions to algebraic cofibrations.
+
+Their underlying maps are monomorphisms. For arbitrary \(J\), this can be seen directly: a pushout along \(F(A)\to F(B)\), with \(A\hookrightarrow B\), starts with the monomorphism
+\[
+UZ\longrightarrow UZ\amalg_A B
+\]
+and then completes partial chosen fillers. Limit stages use the same partial-filler construction as above. Retracts preserve monomorphisms. This is the preservation property stated in Nikolaus, Corollary 2.18. [arxiv.org](https://arxiv.org/pdf/1003.1342?utm_source=chatgpt.com)
+
+Since \(\mathcal L_R\) preserves colimits, naturality expresses the unit as
+\[
+\eta_{A_{\mathfrak c}}
+=
+\theta\circ
+\operatorname*{colim}_{\mathfrak d\subseteq_{\mathrm{fin}}\mathfrak c}
+\eta_{A_{\mathfrak d}},
+\]
+where \(\theta\in W\) by (10). The second map belongs to \(W\) by FHM Proposition 3.4.4, which proves closure under filtered colimits in the arrow category. This proves (9). [arxiv.org](https://arxiv.org/pdf/2406.13240v3?utm_source=chatgpt.com)
+
+### 3.4 What this reduction leaves unresolved
+
+Combining (8) and (9), the following single assertion suffices for the full comparison:
+\[
+\boxed{
+\eta_{A_{\mathfrak c}}\in W
+\quad\text{for every finite computad }\mathfrak c.
+}
+\tag{11}
+\]
+
+This is an **infinite family of finite-computad cases**, not finitely many checks.
+
+The representable cases are already proved in (1). Extending them to arbitrary finite computads requires an attachment or excision argument. A general computad attaches a generator along parallel **terms**, whereas a coherator representable is free on a globular pasting diagram. Although \(\mathcal L_R\) preserves the attachment pushouts, there is no established assertion here that \(S_0\mathcal L_R\) preserves them homotopically.
+
+Nor does the finite reduction stay within the \((\infty,1)\) fragment. A finite subcomputad of \(KS_0Y\) can omit the inverse witnesses that make its higher generators invertible in the full computad. Thus the graph calculation does not prove (R) for general spaces or quasi-categories.
+
+All the positive unit results above are in \(W\) itself. The proof of (9) does not give a corresponding reduction for membership merely in the saturation of \(W\).
+
+## 4. The directed theory \(L\)
+
+### 4.1 An exact ordinary cellular presentation
+
+Let \(\Theta_0\) be the universal globular extension of the globe category. Construct
+\[
+\mathbb T_0\longrightarrow\mathbb T_1\longrightarrow\cdots
+\]
+starting with \(\mathbb T_0=\Theta_0\).
+
+At stage \(k+1\), for every previously unadjoined formal head whose parallel boundary
+\[
+t,u:D_{r-1}\rightrightarrows\Gamma
+\]
+is available at stage \(k\) and satisfies your support rule, freely adjoin
+\[
+c_{\Gamma,A,t,u}:D_r\longrightarrow\Gamma
+\]
+with
+\[
+c_{\Gamma,A,t,u}\sigma_r=t,
+\qquad
+c_{\Gamma,A,t,u}\tau_r=u.
+\tag{12}
+\]
+
+Take this free extension **in globular extensions**, so substitution and the tuple formation required by globular sums are included. Add each syntactic head once, using the actual syntactic equality convention, including renaming.
+
+The stipulated strict interpretation extends at every stage:
+
+- an operation head maps to the total cell of \(U_{ij}(\Gamma)\);
+- a coherence head maps to the identity on the common strict interpretation of its endpoints.
+
+The second clause uses the stipulated uniqueness from supports.
+
+Every term has finite syntax, so
+\[
+\mathbb T_L=\operatorname*{colim}_{k<\omega}\mathbb T_k
+\tag{13}
+\]
+recovers the opposite of the syntax restricted to pasting contexts. This is the ordinary free-extension mechanism used for CaTT in Benjamin–Finster–Mimram §3.3, with your admissibility test substituted for theirs. [arxiv.org](https://arxiv.org/pdf/2106.04475?utm_source=chatgpt.com)
+
+There is a reason to use syntax stages **in all dimensions**.
+
+### 4.2 Proper intervals prevent a construction by output dimension alone
+
+Take
+\[
+\Gamma=\Sigma D^0\vee\Sigma D^{m-1},
+\qquad m>3.
+\]
+Let \(f:a_0\to a_1\) be the first-slot generator and \(\xi\) the second-slot generator of global dimension \(m\).
+
+The active interval \([0,1]\) has \(U_{01}=D^0\), so it supplies a \(1\)-dimensional head
+\[
+c_\Gamma:a_0\to a_1.
+\]
+Let \(\Omega(\xi)\) be a unary \(m\)-operation with the same formal boundary as \(\xi\), and define the endosubstitution
+\[
+\sigma(\xi)=\Omega(\xi),
+\qquad
+\sigma(x)=x\quad(x\ne\xi).
+\]
+Then
+\[
+c_\Gamma[\mathrm{id}],
+\qquad
+c_\Gamma[\sigma]
+\]
+are distinct formal \(1\)-terms, although both have strict image \(f\). Their active-interval support is \(D^0\), so the coherence clause supplies a \(2\)-head between them. Its boundary syntax mentions the \(m\)-operation.
+
+Thus the literal proper-interval rule permits low-dimensional constructors to depend formally on arbitrarily high-dimensional constructors.
+
+Restricting generic heads to full arities \((i,j)=(0,n)\) suffices for a filtration by output dimension. The literal interval rule does not. In particular, a presentation indexed only by the active tensor \(U_{ij}\) must still account for the remaining formal substitution arguments; erasing them would change the stated syntax.
+
+### 4.3 Exhaustive generator profiles through dimension \(3\)
+
+Let
+\[
+d=\dim U_{ij}
+=\sum_{i<k\le j}\dim\Theta_k,
+\]
+and let \(r\) be the global output dimension.
+
+The operation clause requires \(d=r-1\). The coherence clause requires \(d\le r-2\), because its endpoints are global \((r-1)\)-cells, hence hom \((r-2)\)-cells.
+
+| Global output \(r\) | Operation heads | Coherence heads |
+|---|---|---|
+| \(1\) | \(d=0\) | None with nonempty hom support |
+| \(2\) | \(d=1\) | \(d=0\) |
+| \(3\) | \(d=2\) | \(d=0\) or \(1\) |
+
+For empty intervals, use \(U_{ii}=D^0\), the tensor unit; the operation case supplies the \(1\)-identity on \(a_i\).
+
+The table classifies the **active interval**. For each row, the generators are indexed by **all formally parallel boundary pairs satisfying the actual support equalities**.
+
+Concretely:
+
+- **Dimension \(1\):** the unbiased composite heads for strings of \(1\)-cells, including unary heads and the empty-interval identity case.
+- **Dimension \(2\), operation case:** one active factor of hom dimension \(1\), with the others of dimension \(0\). These compose strings of \(2\)-cells and provide their \(1\)-cell whiskerings.
+- **Dimension \(2\), coherence case:** comparisons between full-support \(1\)-terms, including associativity and unit comparisons.
+- **Dimension \(3\), operation case:** either one active factor of hom dimension \(2\), or two active factors of hom dimension \(1\). The first gives a hom \(2\)-dimensional pasting operation, possibly whiskered by \(1\)-cells. The second gives the directed rectangular-grid interchangers.
+- **Dimension \(3\), coherence case:** comparisons between parallel \(2\)-terms with full active support of dimension \(0\) or \(1\).
+
+The square \(D^1\otimes D^1\) is the elementary instance of the second dimension-\(3\) operation family.
+
+### 4.4 Which interchangers are generators?
+
+For
+\[
+\alpha:f_0\Rightarrow f_1,
+\qquad
+\beta:g_0\Rightarrow g_1,
+\]
+the Leibniz boundary is
+\[
+\partial(\alpha\otimes\beta)
+=
+f_1\otimes\beta+\alpha\otimes g_0
+-f_0\otimes\beta-\alpha\otimes g_1.
+\]
+Thus, using ordinary right-to-left composition notation, the elementary generic head is
+\[
+\chi_{\alpha,\beta}:
+(g_1\alpha)\circ(\beta f_0)
+\Longrightarrow
+(\beta f_1)\circ(g_0\alpha).
+\tag{14}
+\]
+Its source executes \(\beta\), then \(\alpha\); its target executes \(\alpha\), then \(\beta\).
+
+The reverse boundary pair fails the operation support condition. The two boundary paths also omit the square’s \(2\)-dimensional generator, so they do not satisfy the full-support coherence clause. That clause therefore does not supply a reverse head.
+
+For a larger rectangular grid, distinguish three terms:
+
+1. the generic operation head indexed by that grid and a chosen admissible formal boundary pair;
+2. an elementary square head with composite terms substituted into its arguments;
+3. a pasting of elementary interchangers.
+
+The rule supplies the first as a **separate generator**. The second and third are derived terms. There is no presented judgmental equality identifying them.
+
+When two such \(3\)-terms are formally parallel and both have full grid support, the coherence rule supplies a \(4\)-cell between them. Semantic equality of their lower boundaries alone is insufficient: the pair must be formally parallel.
+
+Likewise, “no horizontal composite of \(\alpha,\beta\)” means there is no primitive simultaneous \(2\)-operation on the whole square arity. Both sequential composites in (14) are derived \(2\)-terms.
+
+### 4.5 The dimension-\(4\) comparisons
+
+At output dimension \(4\), the operation case has \(d=3\). Its positive factor-dimension profiles are
+\[
+(3),\qquad (2,1),\qquad (1,2),\qquad (1,1,1),
+\]
+with arbitrary dimension-\(0\) factors interspersed.
+
+The singleton profile gives the ordinary hom-dimensional operation. The mixed profiles \((2,1)\) and \((1,2)\) give the interchanger comparisons involving a global \(3\)-cell and a global \(2\)-cell. The profile \((1,1,1)\) gives the three-interchanger cube.
+
+For three global \(2\)-cells \(\alpha,\beta,\gamma\), that cube compares, with the appropriate whiskerings and bracketings, the two pastes that sort
+\[
+\gamma\beta\alpha
+\]
+to \(\alpha\beta\gamma\):
+\[
+\begin{aligned}
+\gamma\beta\alpha
+&\longrightarrow\beta\gamma\alpha
+\longrightarrow\beta\alpha\gamma
+\longrightarrow\alpha\beta\gamma,\\
+\gamma\beta\alpha
+&\longrightarrow\gamma\alpha\beta
+\longrightarrow\alpha\gamma\beta
+\longrightarrow\alpha\beta\gamma.
+\end{aligned}
+\]
+The signed tensor boundary specifies the direction between these two pastes.
+
+Separately, dimension-\(4\) **coherence** heads have \(d\le2\). These include the comparisons between a generic whole-grid interchanger and a composite of elementary interchangers, whenever the formal boundary and full-support conditions hold.
+
+In the quotient \(3\)-truncation identifying the two \(3\)-boundaries of every \(4\)-cell, these comparisons become equations. Merely discarding dimensions above \(3\) does not impose those equations, and this quotient alone does not make all lower compositions strict. The strict versions of the interchanger compatibilities appear in the lax dual of Morehouse’s Definition 2.4; his displayed oplax interchanger has the opposite orientation to (14). [arxiv.org](https://arxiv.org/pdf/2203.08783?utm_source=chatgpt.com)
+
+### 4.6 Does this establish an enriched \(R_L\)?
+
+It establishes the ordinary cellular presentation (12)–(13). It does **not** yet exhibit:
+
+- Gray-enriched homs between the arities;
+- enriched composition recovering the separate formal heads and their higher comparisons;
+- enriched attaching maps, or a coloured enriched operad with the same algebraic theory;
+- the required tensor-arity colimits and cofibration properties in the semantic category.
+
+Those are additional assertions. In particular, the existence of an ordinary free-extension tower does not prove that it is a cellular tower in the relevant category of Gray-enriched theories.
+
+Once such an enriched presentation is supplied, and the hom maps in round 2 are trivial fibrations, the stated lifting theorem applies to it. The ordinary presentation above and those hom trivial fibrations alone do not yet establish an enriched \(R_L\) for the literal rule.

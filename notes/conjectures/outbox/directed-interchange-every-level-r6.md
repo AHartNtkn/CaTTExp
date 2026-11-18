@@ -169,3 +169,541 @@ Any of the following:
 - a closure proof or a conflicting substitution for Q5;
 - a definition or an impossibility proof for Q6;
 - a reference to a published construction.
+
+# Researcher Response
+
+**The composite–composite equations in Q4 admit a complete local support theorem for every \(r\ge 2\).** They do not, by themselves, force sink-joining.
+
+There is also a **typed lift of the triple tensor’s top hom-6 cell without changing the K14 hom-3 skeleton**. It uses 15 additional hom-4 generators, six hom-5 generators, and one hom-6 generator. This establishes a globular extension with a map to the Gray tensor. It does **not** yet establish the exact Gray quotient or the complete interchange axioms.
+
+The complete certificates and standalone checkers are in directed_interchange_round6_checks.zip[directed_interchange_round6_checks.zip](sandbox:/workspace/scratch/81530e09e7cd/directed_interchange_round6_checks.zip). After extraction, run:
+
+```bash
+python3 r6_polygon_support_check.py
+python3 r6_endpoint_lifts_check.py
+```
+
+The archive also gives every lower path, generator boundary, reused whiskering, and image chain table.
+
+## 1. Q4: the isolated polygon has injective support
+
+Assume the polygon’s arms are nonempty, their interiors are pairwise disjoint, and there are no additional graph arrows. Write
+
+\[
+p_i:s_i\to t_i,\qquad q_i:s_{i+1}\to t_i
+\]
+
+with source indices modulo \(r\). Add
+
+\[
+h_i:s_0\to s_i\qquad(1\le i<r)
+\]
+
+and impose
+
+\[
+p_0=h_1;q_0,
+\qquad
+h_i;p_i=h_{i+1};q_i
+\quad(1\le i<r-1).
+\tag{1}
+\]
+
+Let \(Q\) be this graph, including the added \(h_i\), and let \(C\) be the presented category.
+
+### 1.1 The entire congruence can be described
+
+Every defining relation in (1) starts at \(s_0\), which has no incoming arrow, and ends at a sink \(t_i\), which has no outgoing arrow. Consequently, **no defining relation admits a nonidentity left or right composition context**.
+
+Moreover, different defining relations have different targets. Thus the nonsingleton congruence classes are exactly
+
+\[
+\{p_0,h_1;q_0\},
+\qquad
+\{h_i;p_i,h_{i+1};q_i\}
+\quad(1\le i<r-1).
+\tag{2}
+\]
+
+Every other path is a singleton class.
+
+To check that this lists all possible parallel paths, observe that a path starting at an arm interior must follow that arm. A path starting at \(s_i\ne s_0\) can follow \(p_i\) or \(q_{i-1}\), whose targets differ. The only ambiguities therefore concern paths from \(s_0\) to a sink:
+
+| Endpoints | The two paths |
+|---|---|
+| \(s_0,t_0\) | \(p_0,\ h_1;q_0\) |
+| \(s_0,t_i\), \(1\le i<r-1\) | \(h_i;p_i,\ h_{i+1};q_i\) |
+| \(s_0,t_{r-1}\) | \(h_{r-1};p_{r-1},\ q_{r-1}\) |
+
+It follows that \(C\) is thin except for
+
+\[
+C(s_0,t_{r-1})
+=
+\bigl\{
+[h_{r-1};p_{r-1}],\ [q_{r-1}]
+\bigr\},
+\tag{3}
+\]
+
+whose two arrows remain distinct.
+
+### 1.2 A normal form using the actual graph generators
+
+Orient (1) from left to right. Define
+
+\[
+N(P)=
+\begin{cases}
+h_1;q_0,&P=p_0,\\
+h_{i+1};q_i,&P=h_i;p_i,\quad 1\le i<r-1,\\
+P,&\text{otherwise}.
+\end{cases}
+\tag{4}
+\]
+
+Every reduction applies to a complete path. No right-hand side is a left-hand side. Hence reduction terminates in at most one step, and (2) proves that two paths represent the same arrow precisely when they have the same normal form.
+
+Use the finite alphabet consisting of tagged vertices and edges of \(Q\). Set
+
+\[
+\operatorname{Supp}_N([P])
+=
+\operatorname{Vert}(N(P))
+\;\sqcup\;
+\operatorname{Edge}(N(P)).
+\tag{5}
+\]
+
+For an identity, the support is its single vertex label.
+
+This support is well-defined and injective. The graph \(Q\) is acyclic, and a nonempty directed path in an acyclic graph is determined by its edge set. Vertex labels distinguish identities.
+
+Composition is computed by
+
+\[
+[P];[R]\longmapsto N\bigl(N(P);N(R)\bigr).
+\tag{6}
+\]
+
+Thus the composite–composite equations cause no local normal-form obstruction. The support in (5) is taken **after normalization**; it is not the union of the raw edge sets of an arbitrary expression.
+
+This construction uses the existing vertex and edge alphabet. It does not assign a separate support atom to each category arrow.
+
+### 1.3 Even a union-preserving finite set invariant exists
+
+There is a stronger algebraic statement, although its labels are incidence predicates rather than constituent generators.
+
+Let \(\le\) be reachability in \(Q\). Choose an edge \(e_\star\) of \(p_{r-1}\); no defining relation uses it. Define
+
+\[
+\chi(f)=
+\begin{cases}
+1,&\text{a path representing \(f\) uses \(e_\star\)},\\
+0,&\text{otherwise}.
+\end{cases}
+\]
+
+This is well-defined by (2).
+
+Take the alphabet
+
+\[
+\mathcal A
+=
+(\{\mathsf{up}\}\times V(Q))
+\sqcup
+(\{\mathsf{down}\}\times V(Q))
+\sqcup\{\star\}.
+\]
+
+For \(f:x\to y\), put
+
+\[
+\begin{aligned}
+S(f)={}&
+\{(\mathsf{up},v):x\le v\}\\
+&\cup\{(\mathsf{down},v):v\le y\}\\
+&\cup
+\begin{cases}
+\{\star\},&\chi(f)=1,\\
+\varnothing,&\chi(f)=0.
+\end{cases}
+\end{aligned}
+\tag{7}
+\]
+
+Then
+
+\[
+\boxed{S(f;g)=S(f)\cup S(g)}
+\tag{8}
+\]
+
+for every defined composition, including identities. Indeed, for \(x\to y\to z\),
+
+\[
+\uparrow y\subseteq\uparrow x,\qquad
+\downarrow y\subseteq\downarrow z,
+\]
+
+and the distinguished-edge predicate combines by disjunction.
+
+The invariant is injective. Its two tagged principal sets recover the source and target. By (3), endpoints distinguish every arrow except the final pair, and \(\star\) distinguishes that pair.
+
+Therefore \(2|V(Q)|+1\) labels suffice for a union-preserving injection.
+
+**The distinction matters:** (5) is a normal-form support on actual graph vertices and generators; (7) is an incidence-based set invariant. The latter is not, by itself, a graded globular generating basis satisfying requirement 1.
+
+### 1.4 What this establishes globally—and what it does not
+
+The local theorem holds for every \(r\) and every positive choice of arm lengths. Its proof is independent of the ambient dimension. Thus the composite–composite equations in K13 do not provide a local reason that sink-joining must eventually replace source-joining.
+
+The proof does not cover additional equations produced by overlapping tensor diagrams or substitutions.
+
+For example, consider the acyclic graph with parallel arrows \(a,b:x\to y\) and \(c,d:y\to z\), and equations
+
+\[
+a;c=b;d,\qquad a;d=b;c.
+\tag{9}
+\]
+
+There are two distinct \(x\to z\) classes:
+
+\[
+\{a;c,b;d\},
+\qquad
+\{a;d,b;c\}.
+\]
+
+Nevertheless, every union-preserving support identifies them. Writing \(A=S(a)\), and similarly for the other arrows, (9) implies
+
+\[
+A\cup C=B\cup D=A\cup B\cup C\cup D
+\]
+
+and
+
+\[
+A\cup D=B\cup C=A\cup B\cup C\cup D.
+\]
+
+This is a limitation of a prospective global **union-support** theorem, not a counterexample to your requirements: normalized contextual supports remain possible, and I have not realized (9) as forced equations in the tensor construction.
+
+The polygon checker independently computes the congruence and verifies both supports on all 336 choices with \(r\in\{2,3,4\}\) and arm lengths in \(\{1,2\}\), plus an unequal-length example. It checks all 24,291 composable pairs in those examples, including identities.
+
+## 2. Q2: nine sinks have the wrong Gray boundary
+
+Write
+
+\[
+K=\lambda D^2\otimes\lambda D^2\otimes\lambda D^2,
+\qquad b=[2,2,2].
+\]
+
+Let
+
+\[
+C_n^\pm=(\partial^\pm)^{6-n}b
+\]
+
+be the chains in the canonical atom’s \(n\)-boundaries.
+
+Among the 240 hom-2 words, the exact fibres over \(C_2^\pm\) are:
+
+| Boundary | Raw words | Directed inner interchanger |
+|---|---|---|
+| \(C_2^-\) | \(\{\texttt{crqbpa},\texttt{crbqpa}\}\) | \(\texttt{crqbpa}\to\texttt{crbqpa}\) |
+| \(C_2^+\) | \(\{\texttt{apbqrc},\texttt{apqbrc}\}\) | \(\texttt{apbqrc}\to\texttt{apqbrc}\) |
+
+The checker verifies that the equivalence relation generated by undirected inner interchanges has exactly 54 classes, and that these classes are exactly the fibres of the tensor hom-2 chain.
+
+Consequently, **only \(\texttt{apqbrc}\) among the ten sinks represents the top atom’s hom-2 target**. The other nine sinks need not be joined merely because they are sinks.
+
+Choose
+
+\[
+S=\texttt{crqbpa},
+\qquad
+T=\texttt{apqbrc}.
+\tag{10}
+\]
+
+The subgraph of vertices that reach \(T\) has:
+
+| Quantity | Count |
+|---|---:|
+| Hom-2 words | \(126\) |
+| Hom-3 basis arrows | \(244\) |
+| Hom-3 paths \(S\to T\) | \(1,226\) |
+| Distinct tensor hom-3 chains of those paths | \(25\) |
+| Paths mapping to \(C_3^-\) | \(252\) |
+| Paths mapping to \(C_3^+\) | \(2\) |
+
+These computations use the fixed K14 skeleton.
+
+## 3. An explicit typed top-cell lift
+
+This construction retains the prescribed hom-4 cells but permits additional hom-4 lifts. It changes no hom-3 generator or equation.
+
+### 3.1 The existing hom-3 paths used as boundaries
+
+For a hom-3 path \(P\), let \(c(P)\) be the sum of its tensor hom-3 labels. Inner interchangers contribute zero, and each joining generator contributes the tensor label of the arrow it factors.
+
+Number the 25 distinct chains of the \(S\to T\) paths as
+
+\[
+c_0,\ldots,c_{24}.
+\]
+
+For reproducibility, the certificate orders tensor coordinates by
+
+\[
+0^+<0^-<1^+<1^-<2,
+\]
+
+orders basis triples lexicographically, represents a chain by its ordered list of nonzero coefficient pairs, and orders those lists lexicographically. For each \(c_i\), choose the shortest \(S\to T\) path having that chain, breaking ties lexicographically. Call it \(P_i\).
+
+This gives
+
+\[
+c(P_{24})=C_3^-,
+\qquad
+c(P_0)=C_3^+.
+\tag{11}
+\]
+
+For example,
+
+\[
+\begin{aligned}
+P_0:\quad
+\texttt{crqbpa}
+&\xrightarrow{h_p}\texttt{crqabp}
+\xrightarrow{\mu}\texttt{acrqbp}
+\to\texttt{acrqpb}\\
+&\xrightarrow{h_z}\texttt{apcqrb}
+\to\texttt{apqcrb}
+\xrightarrow{h_r}\texttt{apqbcr}
+\to\texttt{apqbrc}.
+\end{aligned}
+\tag{12}
+\]
+
+Every \(P_i\) is an existing path in K14. The certificate lists all of them explicitly.
+
+### 3.2 Twenty-four hom-4 operations
+
+Write
+
+\[
+A_{ij}:P_i\Longrightarrow P_j.
+\]
+
+The selected operations are:
+
+| Operation | Tensor top chain | Status |
+|---|---|---|
+| \(A_{1,0}\) | \([2,2,0^-]\) | new |
+| \(A_{2,1}\) | \([2,1^-,1^+]\) | new |
+| \(A_{3,2}\) | \([2,0^-,2]\) | new |
+| \(A_{4,0}\) | \([1^+,2,1^+]\) | new |
+| \(A_{5,4}\) | \([2,1^+,1^+]\) | new |
+| \(A_{6,5}\) | \([2,2,0^+]\) | new |
+| \(A_{8,3}\) | \([1^-,2,1^+]\) | new |
+| \(A_{8,6}\) | \([2,0^-,2]\) | reused |
+| \(A_{9,0}\) | \([0^+,2,2]\) | reused |
+| \(A_{12,3}\) | \([0^+,2,2]\) | reused |
+| \(A_{13,9}\) | \([1^+,1^-,2]\) | reused |
+| \(A_{15,13}\) | \([2,0^+,2]\) | new |
+| \(A_{16,15}\) | \([2,2,0^-]\) | reused |
+| \(A_{17,12}\) | \([1^-,1^-,2]\) | new |
+| \(A_{17,16}\) | \([2,1^-,1^-]\) | new |
+| \(A_{18,4}\) | \([1^+,1^+,2]\) | reused |
+| \(A_{20,8}\) | \([1^-,1^+,2]\) | new |
+| \(A_{21,18}\) | \([0^-,2,2]\) | reused |
+| \(A_{22,15}\) | \([1^+,2,1^-]\) | new |
+| \(A_{22,21}\) | \([2,0^+,2]\) | new |
+| \(A_{23,22}\) | \([2,1^+,1^-]\) | new |
+| \(A_{24,17}\) | \([1^-,2,1^-]\) | new |
+| \(A_{24,20}\) | \([0^-,2,2]\) | reused |
+| \(A_{24,23}\) | \([2,2,0^+]\) | reused |
+
+For every row labelled by \(w\),
+
+\[
+c(P_j)-c(P_i)=\partial w.
+\tag{13}
+\]
+
+The full lower chains specify a cell of \(\nu(K)\) with top chain \(w\). It need not be the unwhiskered canonical atom of \(w\).
+
+The nine reused operations are literal whiskerings of the prescribed \(W\)-cells. The reuse certificates verify equalities of complete hom-3 paths
+
+\[
+P_i=L;\partial^-W;R,
+\qquad
+P_j=L;\partial^+W;R.
+\tag{14}
+\]
+
+These are equalities before taking the Gray quotient. Thus only **15** of the 24 operations require fresh hom-4 generators.
+
+### 3.3 Six parallel hom-4 paths
+
+Using those operations, define the following paths. A row \(i_0,\ldots,i_6\) means
+
+\[
+A_{i_0i_1};\cdots;A_{i_5i_6}.
+\]
+
+| Path | Sequence of hom-3 path indices |
+|---|---|
+| \(R_0\) | \(24,23,22,15,13,9,0\) |
+| \(R_1\) | \(24,17,16,15,13,9,0\) |
+| \(R_2\) | \(24,17,12,3,2,1,0\) |
+| \(R_3\) | \(24,23,22,21,18,4,0\) |
+| \(R_4\) | \(24,20,8,6,5,4,0\) |
+| \(R_5\) | \(24,20,8,3,2,1,0\) |
+
+All six have exactly the same hom-3 source and target:
+
+\[
+R_i:P_{24}\Longrightarrow P_0.
+\tag{15}
+\]
+
+Their tensor hom-4 chains satisfy
+
+\[
+c(R_5)=C_4^-,
+\qquad
+c(R_0)=C_4^+.
+\tag{16}
+\]
+
+### 3.4 Six hom-5 generators and the hom-6 generator
+
+Add:
+
+| Generator | Source | Target | Tensor top chain |
+|---|---|---|---|
+| \(F_x^-\) | \(R_5\) | \(R_2\) | \([1^-,2,2]\) |
+| \(F_y^-\) | \(R_2\) | \(R_1\) | \([2,1^-,2]\) |
+| \(F_z^-\) | \(R_1\) | \(R_0\) | \([2,2,1^-]\) |
+| \(F_z^+\) | \(R_5\) | \(R_4\) | \([2,2,1^+]\) |
+| \(F_y^+\) | \(R_4\) | \(R_3\) | \([2,1^+,2]\) |
+| \(F_x^+\) | \(R_3\) | \(R_0\) | \([1^+,2,2]\) |
+
+Their boundaries are parallel by (15). Their images satisfy the six corresponding tensor differential equations.
+
+Now the two hom-5 composites
+
+\[
+F_x^-\ast_4F_y^-\ast_4F_z^-,
+\qquad
+F_z^+\ast_4F_y^+\ast_4F_x^+
+\]
+
+are exactly parallel from \(R_5\) to \(R_0\). Add
+
+\[
+\boxed{
+\Omega:
+F_x^-\ast_4F_y^-\ast_4F_z^-
+\Longrightarrow
+F_z^+\ast_4F_y^+\ast_4F_x^+.
+}
+\tag{17}
+\]
+
+Assign its top chain to be \([2,2,2]\).
+
+### 3.5 Verification of the image
+
+For every new generator, the checker verifies all chain-table equations
+
+\[
+\partial C_n^-=\partial C_n^+
+=C_{n-1}^+-C_{n-1}^-,
+\tag{18}
+\]
+
+nonnegativity, degrees, augmentation one in dimension zero, and equality of the two top chains. These are the conditions defining the relevant cells of \(\nu(K)\). [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+It separately checks the raw globular boundaries: each new generator’s source and target are parallel before quotienting.
+
+For \(\Omega\), the image table agrees with the canonical atom
+
+\[
+\left\langle x_2\otimes y_2\otimes z_2\right\rangle
+\]
+
+in **every dimension from zero through six**, not merely in its top chain.
+
+The resulting construction uses
+
+\[
+\boxed{
+15\text{ new hom-4 generators}
++
+6\text{ new hom-5 generators}
++
+1\text{ new hom-6 generator}.
+}
+\tag{19}
+\]
+
+No minimality claim is made.
+
+## 4. What the top lift settles
+
+The construction proves that the K14 hom-3 skeleton has a globular extension carrying the tensor top, provided additional hom-4 lifts are allowed. Therefore the ten sinks, or the incompatible targets of particular prescribed faces, cannot alone prove that new hom-3 data are necessary.
+
+For example, the prescribed context \(bW_xc\) ends at the wrong-class sink \(\texttt{bapqrc}\). It cannot be postcomposed to \(T\). The construction instead uses a different hom-4 lift of its tensor label, namely \(A_{23,22}\), between existing paths with endpoints \(S,T\).
+
+There remains a substantial distinction between:
+
+\[
+\text{an extension with a map }q\text{ to }\nu(K)
+\]
+
+and
+
+\[
+\text{an extension whose prescribed inner-interchange quotient is }\nu(K).
+\]
+
+Only the first is proved here. In particular, the new hom-4 lifts may require further factorization equations to identify their quotient images with those of existing lifts. This certificate does not supply those equations or the complete hom-4 variation and disjoint-operation comparisons requested in Q1.
+
+Because no hom-3 data change, the hom-3 support and directedness results of K14 remain intact. A complete hom-4 support theorem is still missing.
+
+## 5. Q3 and Q5: the remaining closure issue
+
+The polygon theorem gives termination and confluence for the **isolated** equations (1): at most one reduction is possible. It does not prove termination or order independence when the rule is applied to overlapping comparison graphs and their substitutions.
+
+Likewise, requirement 4 gives the K15 equation after quotienting. If \(L\) is crossing against a composite and \(R\) is the pairwise-crossing composite, then
+
+\[
+q(L)=q(R).
+\]
+
+Requirement 5 propagates this to substituted instances:
+
+\[
+q(L[\sigma])=q(R[\sigma]).
+\]
+
+This does not establish
+
+\[
+L[\sigma]=R[\sigma]
+\]
+
+before quotienting. Such a derivation needs an additional faithfulness, normal-form, or direct coherence argument. Conversely, this gap is not an independence proof. I have not constructed an all-dimensional model satisfying requirements 4–5 while violating K15.
+
+Thus the proved progress is:
+
+- **Q4 locally:** the source-only polygon equations have explicit normal forms and injective finite supports for arbitrary \(r\) and arm lengths.
+- **Q2 at the level of typed extensions:** the fixed K14 hom-3 skeleton supports the displayed top-cell lift using 22 fresh higher generators.
+- **Still unresolved:** complete hom-4 coherence and support, the exact Gray quotient of this extension, substitution-compatible saturation, and the uniform theory or impossibility result of Q6.

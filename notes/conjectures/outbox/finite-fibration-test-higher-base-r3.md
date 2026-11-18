@@ -78,3 +78,724 @@ The generators of a presentation are the relative Gray-tensor generators: for a 
 ## 5. What would count as an answer
 
 A proof or counterexample for any question; a reference to a published recognition theorem for Grothendieck constructions over free strict n-categories presented by polygraphs, or to a published characterisation of homotopical polygraphs in low dimension.
+
+# Researcher Response
+
+**Question 1 is affirmative. The same construction closes the attaching-map gap for every finite homotopical 2-computad base, with fibres of arbitrary finite dimension \(m\).** The presentation has exactly the proposed generators and dimension at most \(m+2\).
+
+There is also a sufficient criterion for Question 3 beyond positivity: one-object 2-computads whose generating 2-cells all have a single generating arrow as target are homotopical, including nullary sources. The dual statement holds with “source” in place of “target.” I give this criterion, an obstruction to weakening it, and a 3-dimensional attachment rule below.
+
+Throughout, \(\operatorname{Free}(\Psi)\) means the coherent cellular construction specified in your §1.3.
+
+## 1. The composite-boundary attaching map
+
+Write
+\[
+A=T(0),\qquad B=T(1),\qquad C=T(2),
+\]
+and
+\[
+F=T(f):A\to B,\qquad
+G=T(g):B\to C,\qquad
+H=T(h):A\to C,\qquad
+a=T(\alpha):GF\Rightarrow H.
+\]
+
+The key construction is
+\[
+\delta_2:I\longrightarrow[2],
+\qquad 0\longmapsto0,\quad1\longmapsto2.
+\]
+Tensoring this map with \(A\) supplies the comparison with the composite of the two lifts **before localization**.
+
+### 1.1 The graph presentation
+
+For a strict functor \(W:D\to E\), let
+\[
+M_W=(D\otimes I)\amalg_{D\otimes\{1\}}E.
+\tag{1}
+\]
+Its distinguished endpoint fibres are \(D\) and \(E\).
+
+Glue \(M_F,M_G,M_H\) along their endpoint fibres, giving the unlocalized graph presentation \(P_{\mathrm{gr}}\). For 2-category fibres its structural generators are
+\[
+\eta^w_b:w_x;Wb\Rightarrow b;w_y
+\tag{2}
+\]
+and
+\[
+\kappa^w_\rho:
+\eta^w_p\cdot(\rho*w_y)
+\Rrightarrow
+(w_x*W\rho)\cdot\eta^w_q,
+\tag{3}
+\]
+where \((w,W)\) is \((f,F),(g,G)\), or \((h,H)\), and \(\rho:p\Rightarrow q\) is a generating fibre 2-cell.
+
+Here \(;\) is chronological 1-composition, \(\cdot\) is chronological vertical 2-composition, and \(*\) is whiskering.
+
+For a path \(p;r\), use
+\[
+\eta^w_{p;r}
+=(\eta^w_p*Wr)\cdot(p*\eta^w_r),
+\qquad
+\eta^w_{1_x}=1_{w_x}.
+\tag{4}
+\]
+
+The notation \(\kappa^w_\sigma\) also makes sense for an arbitrary fibre 2-cell \(\sigma\): it is the image of the mixed cell under
+\[
+D_2\otimes I\xrightarrow{\sigma\otimes I}D\otimes I
+\longrightarrow P_{\mathrm{gr}}.
+\tag{5}
+\]
+Thus, for example, \(\kappa^g_{F\rho}\) is a finite pasting of existing \(g\)-cylinder generators. It is not an additional generator or a cell obtained by localization.
+
+### 1.2 Concatenating the two cylinders
+
+The ordinal spine decomposition gives
+\[
+A\otimes[2]
+\simeq
+(A\otimes I)\amalg_A(A\otimes I).
+\tag{6}
+\]
+Map the first interval into the \(f\)-cylinder. Map the second by
+\[
+A\otimes I\xrightarrow{F\otimes I}B\otimes I
+\longrightarrow P_{\mathrm{gr}},
+\]
+using the \(g\)-cylinder. Their maps on the common endpoint agree.
+
+Precomposing with \(A\otimes\delta_2\) therefore gives
+\[
+A\otimes I
+\xrightarrow{A\otimes\delta_2}
+A\otimes[2]
+\longrightarrow P_{\mathrm{gr}}.
+\tag{7}
+\]
+Its terminal endpoint is the map \(GF:A\to C\), so it extends to
+\[
+J_{fg}:M_{GF}\longrightarrow P_{\mathrm{gr}}.
+\tag{8}
+\]
+
+This construction uses the functorial Gray cylinder and its preservation of colimits. Moreover, the finite ordinal cylinders are strict for strict input, by Loubaton’s Theorem 2.3.3.22, so their generating-cell images can be evaluated as finite strict pastings. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The horizontal generator is sent to
+\[
+\tau_x:=f_x;g_{Fx}.
+\tag{9}
+\]
+For \(p:x\to y\), its naturality cell is
+\[
+\boxed{
+\eta^{fg}_p
+=
+(f_x*\eta^g_{Fp})\cdot(\eta^f_p*g_{Fy}).
+}
+\tag{10}
+\]
+Its type is
+\[
+\eta^{fg}_p:\tau_x;GFp\Rightarrow p;\tau_y.
+\]
+
+For completeness, the corresponding fibre-2-cell comparison is also a directed pasting of existing generators. Define
+\[
+\operatorname{wh}(L,K,R):
+L\cdot sK\cdot R
+\Rrightarrow
+L\cdot tK\cdot R
+\]
+for a 3-cell \(K\), and write \(\odot\) for chronological 3-composition. Then
+\[
+\boxed{
+\begin{aligned}
+\kappa^{fg}_\rho
+={}&
+\operatorname{wh}
+\bigl(f_x*\eta^g_{Fp},\ \kappa^f_\rho*g_{Fy},\ 1\bigr)\\
+&\odot
+\operatorname{wh}
+\bigl(1,\ f_x*\kappa^g_{F\rho},\ \eta^f_q*g_{Fy}\bigr).
+\end{aligned}}
+\tag{11}
+\]
+It has type
+\[
+\kappa^{fg}_\rho:
+\eta^{fg}_p\cdot(\rho*\tau_y)
+\Rrightarrow
+(\tau_x*GF\rho)\cdot\eta^{fg}_q.
+\tag{12}
+\]
+
+The order is first \(\kappa^f_\rho\), then \(\kappa^g_{F\rho}\). Neither (10) nor (11) uses an inverse.
+
+### 1.3 The raw boundary map
+
+Let \(R_\alpha\) be the parallel-arrow boundary presentation for transports \(U=GF\) and \(V=H\):
+\[
+R_\alpha
+=
+M_{GF}\amalg_{A\amalg C}M_H.
+\tag{13}
+\]
+The local endpoint copies are distinguished until this gluing is performed.
+
+Define
+\[
+j:R_\alpha\longrightarrow P_{\mathrm{gr}}
+\tag{14}
+\]
+by the identity on \(A,C\), by \(J_{fg}\) on the first cylinder, and by the existing \(h\)-cylinder on the second. On generators:
+\[
+\begin{array}{lll}
+u_x\mapsto\tau_x,
+&
+\eta^u_b\mapsto\eta^{fg}_b,
+&
+\kappa^u_\rho\mapsto\kappa^{fg}_\rho,
+\\[1mm]
+v_x\mapsto h_x,
+&
+\eta^v_b\mapsto\eta^h_b,
+&
+\kappa^v_\rho\mapsto\kappa^h_\rho.
+\end{array}
+\tag{15}
+\]
+
+Equation (7) defines the map in every dimension. Equations (10)–(12) give its relevant generating-cell images for Question 1.
+
+## 2. The generators over \(\alpha\)
+
+Push out the already established walking-2-cell relative presentation along (14). The resulting new generators are the following.
+
+### 2.1 Dimensions 2 and 3
+
+For each vertex \(x\) of \(A\), add
+\[
+\lambda_x:\tau_x;a_x\Rightarrow h_x.
+\tag{16}
+\]
+
+For \(p:x\to y\), put
+\[
+P_p=(\lambda_x*Hp)\cdot\eta^h_p,
+\qquad
+Q_p=(\eta^{fg}_p*a_y)\cdot(p*\lambda_y).
+\tag{17}
+\]
+The strict naturality equation
+\[
+GFp;a_y=a_x;Hp
+\tag{18}
+\]
+makes these parallel.
+
+For each generating arrow \(b\) of \(A\), add
+\[
+\Xi_b:P_b\Rrightarrow Q_b.
+\tag{19}
+\]
+
+Extend \(\Xi\) to paths by \(\Xi_{1_x}=1_{\lambda_x}\) and
+\[
+\begin{aligned}
+\Xi_{p;r}
+={}&
+\operatorname{wh}(1,\Xi_p*Hr,\ p*\eta^h_r)\\
+&\odot
+\operatorname{wh}(\eta^{fg}_p*a_y*Hr,\ p*\Xi_r,\ 1).
+\end{aligned}
+\tag{20}
+\]
+The intermediate 2-cell is
+\[
+(Q_p*Hr)\cdot(p*\eta^h_r)
+=
+(\eta^{fg}_p*a_y*Hr)\cdot(p*P_r).
+\]
+
+### 2.2 Dimension 4
+
+For a generating \(\rho:p\Rightarrow q\), define
+\[
+\begin{aligned}
+A_\rho
+={}&
+\operatorname{wh}(1,\Xi_p,\rho*h_y)\\
+&\odot
+\operatorname{wh}(1,\kappa^{fg}_\rho*a_y,\ q*\lambda_y),
+\\[1ex]
+B_\rho
+={}&
+\operatorname{wh}(\lambda_x*Hp,\kappa^h_\rho,1)\\
+&\odot
+\operatorname{wh}(\tau_x*a_x*H\rho,\Xi_q,1).
+\end{aligned}
+\tag{21}
+\]
+
+Both are 3-cells from
+\[
+P_p\cdot(\rho*h_y)
+\quad\text{to}\quad
+(\tau_x*a_x*H\rho)\cdot Q_q.
+\tag{22}
+\]
+Their intermediate identifications use
+\[
+(p*\lambda_y)\cdot(\rho*h_y)
+=
+(\rho*\tau_y*a_y)\cdot(q*\lambda_y),
+\tag{23}
+\]
+\[
+(\lambda_x*Hp)\cdot(h_x*H\rho)
+=
+(\tau_x*a_x*H\rho)\cdot(\lambda_x*Hq),
+\tag{24}
+\]
+and
+\[
+GF\rho*a_y=a_x*H\rho.
+\tag{25}
+\]
+
+Add
+\[
+\Omega_\rho:A_\rho\Longrightarrow B_\rho.
+\tag{26}
+\]
+
+The occurrence of \(\kappa^{fg}_\rho\) in (21) means the explicit pasting (11). Thus all these attaching maps are defined before localization.
+
+Mark the transports, the \(\lambda_x\), and the structural generators. Localize at
+\[
+S=
+\{\eta^f,\eta^g,\eta^h,\kappa^f,\kappa^g,\kappa^h,\Xi,\Omega\}.
+\tag{27}
+\]
+The fibre generators retain their flat marking.
+
+For Cat-valued weights, omit the \(\kappa\) and \(\Omega\) families. The attachment then adds one 2-generator per source-fibre vertex and one 3-generator per source-fibre generating arrow. For 2-category-valued weights it additionally adds one 4-generator per source-fibre generating 2-cell.
+
+This is a precise implementation of the double-cylinder approach: the boundary cylinder is first substituted along \(I\to[2]\), and the walking-2-cell double cylinder is then attached through that substitution.
+
+## 3. The general theorem for 2-dimensional bases
+
+The preceding construction extends to every finite path and therefore to every base 2-generator.
+
+### Theorem
+
+Let \(\Gamma\) be a finite 2-computad such that the canonical map
+\[
+\operatorname{Free}(\Gamma)\longrightarrow F_2(\Gamma)
+\]
+is an equivalence.
+
+For each vertex \(b\), let
+\[
+A_b=F_m(\Pi_b),
+\qquad
+\operatorname{Free}(\Pi_b)\simeq A_b,
+\]
+where \(\Pi_b\) is finite and has dimension at most \(m\).
+
+Then every weight \(T:F_2(\Gamma)\to\omega\) with these fibre values has a finite presentation
+\[
+\operatorname{Free}(\Psi_T)[S^{-1}]
+\simeq
+\int_{F_2(\Gamma)}T
+\tag{28}
+\]
+over \(F_2(\Gamma)^\sharp\), with the following generators:
+
+| Index | Dimension | Marking and localization |
+|---|---:|---|
+| \(g\in(\Pi_b)_j\) | \(j\) | Original fibre marking |
+| \(e:b\to c,\ g\in(\Pi_b)_j\) | \(j+1\) | Marked; inverted exactly when \(j>0\) |
+| \(\sigma:p\Rightarrow q,\ p,q:b\to c,\ g\in(\Pi_b)_j\) | \(j+2\) | Marked; inverted exactly when \(j>0\) |
+
+In particular,
+\[
+\dim\Psi_T\le m+2,
+\tag{29}
+\]
+and
+\[
+\#(\Psi_T)_d
+=
+\sum_{b\in\Gamma_0}\#(\Pi_b)_d
++
+\sum_{e\in\Gamma_1}\#(\Pi_{s(e)})_{d-1}
++
+\sum_{\sigma\in\Gamma_2}\#(\Pi_{s_0(\sigma)})_{d-2},
+\tag{30}
+\]
+with negative subscripts interpreted as zero.
+
+### 3.1 Strict finite action data
+
+Write the edge actions as \(F_e\), and the action of
+\(\sigma:p\Rightarrow q\) as
+\[
+a_\sigma:F_p\Rightarrow F_q,
+\]
+equivalently a strict evaluation map
+\[
+\widehat a_\sigma:A_b\times I\to A_c.
+\tag{31}
+\]
+
+These are the finite action data supplied by \(T\) after fixing the strict fibre identifications. Free finite-dimensional strict categories are gaunt: descending from the top dimension, invertibility would require a strict inverse, which additive generator counts exclude. Consequently the invertible functoriality comparisons into these fibres are identities. Loubaton’s identification
+\[
+\operatorname{hom}_\omega(A,C)\simeq\operatorname{Hom}(A,C)
+\]
+then gives the stated Cartesian evaluation description. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+### 3.2 Substitution along every path
+
+For
+\[
+p=e_1;\cdots;e_r:b_0\to b_r,
+\]
+define
+\[
+F^{(0)}=\mathrm{id},
+\qquad
+F^{(k)}=F_{e_k}\cdots F_{e_1}.
+\]
+Use
+\[
+\delta_r:I\to[r],\qquad 0\mapsto0,\quad1\mapsto r.
+\]
+The map
+\[
+A_{b_0}\otimes I
+\longrightarrow A_{b_0}\otimes[r]
+\longrightarrow P_{\mathrm{gr}}
+\tag{32}
+\]
+uses \(F^{(k-1)}\otimes I\) followed by the \(e_k\)-cylinder on interval \(k\). Adjacent endpoint maps agree because both equal \(F^{(k)}\).
+
+It extends to
+\[
+J_p:M_{F_p}\longrightarrow P_{\mathrm{gr}}.
+\tag{33}
+\]
+On a vertex \(x\), its transport is
+\[
+(e_1)_x;
+(e_2)_{F^{(1)}x};
+\cdots;
+(e_r)_{F^{(r-1)}x}.
+\tag{34}
+\]
+
+For an identity path, take \(r=0\) and \(I\to[0]\). Thus identity boundaries cause no difficulty in this substitution construction. Positivity is only one way to establish the separate hypothesis that the base is homotopical.
+
+The map \(J_p\) preserves the markings. Each structural cell maps to a pasting of structural cells and their whiskerings; if a functor sends its fibre label to an identity, the corresponding cell becomes an identity. Hence \(J_p\) also sends the designated localization cells to cells inverted by the graph localization.
+
+### 3.3 The walking-2-cell block in arbitrary fibre dimension
+
+For \(\sigma:p\Rightarrow q\), put \(A=A_b,C=A_c,U=F_p,V=F_q\), and form
+\[
+H=A\otimes I_{\mathrm{in}},
+\]
+\[
+W_\sigma=
+A\amalg_{H\otimes\{0\}}
+(H\otimes I_{\mathrm{out}})
+\amalg_{H\otimes\{1\}}C,
+\tag{35}
+\]
+using projection \(H\to A\) and
+\[
+H\to A\times I_{\mathrm{in}}\xrightarrow{\widehat a_\sigma}C.
+\]
+
+Its parallel-arrow boundary is
+\[
+R_\sigma=M_U\amalg_{A\amalg C}M_V.
+\tag{36}
+\]
+The extension \(R_\sigma\to W_\sigma\) adds exactly
+\[
+g\otimes i_{\mathrm{in}}\otimes i_{\mathrm{out}}
+\]
+for each generating \(g\) of \(A\), in dimension \(\dim g+2\).
+
+This relative cellular assertion holds for a specified homotopical fibre presentation: filter it by its generating-cell attachments and apply the globe–interval cell-pair calculation at each step. The latter follows from the acyclic-atom pasting and Gray-product results in Chanavat, Corollary 3.27 and Theorem 3.29. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+The localization proof from round 2 is independent of the bound \(m=2\). Its ingredients are the tensor-localization lemma, valid in every dimension, and the marked interval comparisons. It gives
+\[
+W_\sigma[S_\sigma^{-1}]
+\simeq
+(A\times(1^{\mathrm{co}}\!\star I))
+\amalg_{A\times I}C
+\simeq
+\int_{D_2}T|_\sigma.
+\tag{37}
+\]
+
+### 3.4 Attach all base 2-cells simultaneously
+
+Use \(J_p,J_q\) to define
+\[
+R_\sigma\longrightarrow P_{\mathrm{gr}}.
+\]
+Then form
+\[
+P=
+P_{\mathrm{gr}}
+\amalg_{\coprod_{\sigma\in\Gamma_2}R_\sigma}
+\coprod_{\sigma\in\Gamma_2}W_\sigma.
+\tag{38}
+\]
+
+Every boundary map in (38) lands in the unlocalized graph presentation. No previously attached base 2-cell is required.
+
+Pushing out the finite relative cell filtrations shows that
+\[
+P=\operatorname{Free}(\Psi_T)
+\]
+with precisely the generators in the theorem.
+
+Localization gives
+\[
+P[S^{-1}]
+\simeq
+\left(\int_{\Gamma^{(1)}}T\right)
+\amalg_{\coprod_\sigma\int_{\partial D_2}T|_\sigma}
+\coprod_\sigma\left(\int_{D_2}T|_\sigma\right).
+\tag{39}
+\]
+This interchange of localization and pushout follows directly by mapping into any \(Z\): both sides specify the same compatible maps sending the designated cells to equivalences.
+
+The localized \(J_p\) is the required restriction map along the path \(p\): it uses the composite of the chosen marked edge lifts and has transport functor \(F_p\).
+
+The base hypothesis identifies
+\[
+F_2(\Gamma)\simeq
+\Gamma^{(1)}
+\amalg_{\coprod_\sigma\partial D_2}
+\coprod_\sigma D_2.
+\tag{40}
+\]
+Loubaton’s Corollary 3.2.3.16 identifies a left cartesian fibration over this colimit with the colimit of its pullbacks. Applying it to (40) proves (28). [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+For positive \(\Gamma\), the base hypothesis follows from Chanavat’s Corollary 3.39. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+### 3.5 The finite check
+
+Given certificates for the homotopical base and fibre presentations, the remaining check is finite:
+
+1. Check the images of fibre generators under each \(F_e\), including their boundaries.
+2. Check the vertex arrows of each \(a_\sigma\) and its strict naturality equations on the fibre generators.
+3. Construct the path substitutions (32) from the finite boundary words.
+4. Construct the relative blocks (35), substitute their boundaries through those path maps, and check the projection and marking.
+5. Use the localization set specified in the theorem.
+
+Finite derivations of the strict equalities can be supplied as part of the certificate. No decision procedure for arbitrary higher-dimensional equality is asserted.
+
+This proves Question 2 for **all homotopical bases of dimension at most \(2\)** and arbitrary finite fibre dimension.
+
+## 4. A sufficient 2-dimensional homotopicality criterion
+
+Here is a class beyond positive 2-computads.
+
+### Operadic criterion
+
+Let \(\Gamma\) have one vertex, and let \(C=\Gamma_1\) be its set of generating arrows. Suppose every generating 2-cell has the form
+\[
+\rho:c_1\cdots c_k\Rightarrow c,
+\qquad k\ge0,\quad c,c_i\in C.
+\tag{41}
+\]
+Thus its target is a **single generating arrow**; its source may be empty.
+
+Then
+\[
+\boxed{\operatorname{Free}(\Gamma)\simeq F_2(\Gamma).}
+\tag{42}
+\]
+The same conclusion holds when every generating 2-cell instead has a single generating arrow as its source, by reversing 2-cells.
+
+### Proof
+
+Let \(P\) be the free planar \(C\)-coloured operad whose generating operations are the \(\rho\) with the indicated input lists and output colours.
+
+First, \(P\) is free in the coherent sense. Symmetrize it while retaining its map to the associative operad, which records the input orders. Starting with the discrete operad on \(C\), attach the generating corollas along their edge boundaries. Cisinski–Moerdijk, Corollary 3.8, makes the comparison from this dendroidal cell attachment to the nerve of the ordinary operadic attachment inner anodyne. Their construction permits arity zero; the initial discrete coloured operad is \(\Sigma\)-cofibrant. [arxiv.org](https://arxiv.org/pdf/1109.1004?utm_source=chatgpt.com)
+
+This supplies the full \(\infty\)-operadic universal property. The comparison with Lurie’s operads, including constants, is provided by Hinich–Moerdijk, Theorem 3.1.4 and Proposition 3.4.4. [arxiv.org](https://arxiv.org/pdf/2206.14033?utm_source=chatgpt.com)
+
+Now form the relative monoidal envelope
+\[
+\mathcal F(P)=\operatorname{Env}_{E_1}(P).
+\]
+Its underlying ordinary category has words in \(C\) as objects, with
+\[
+\mathcal F(P)(w,d_1\cdots d_\ell)
+=
+\coprod_{w=w_1\cdots w_\ell}
+\prod_{j=1}^{\ell}P(w_j;d_j).
+\tag{43}
+\]
+The ordered factorization permits empty \(w_j\). Composition grafts trees, and tensor product concatenates the forests.
+
+These are exactly the 2-cells of \(F_2(\Gamma)\): a composite of generators gives a planar forest, and interchange identifies the orders of composing independent vertices. Conversely, composing a forest in any order compatible with its edges gives the same strict 2-cell. Hence
+\[
+F_2(\Gamma)\cong B\mathcal F(P).
+\tag{44}
+\]
+
+The envelope adjunction identifies strong monoidal functors \(\mathcal F(P)\to\mathcal M\) with \(P\)-algebras in an arbitrary monoidal \(\infty\)-category \(\mathcal M\). By coherent freeness of \(P\), this means precisely the data
+\[
+X_c\in\mathcal M,\qquad
+X_{c_1}\otimes\cdots\otimes X_{c_k}\longrightarrow X_c
+\]
+for the generators \(\rho\), with no further conditions. The envelope adjunction is Blans–Linskens, Lemma 2.2 and Remark 2.3. [arxiv.org](https://arxiv.org/html/2605.03150v1?utm_source=chatgpt.com)
+
+Apply this to \(\mathcal M=\operatorname{End}_{D}(d)\), for an arbitrary \((\infty,2)\)-category \(D\) and \(d\in D\). The homotopy fibre at \(d\) of
+\[
+\operatorname{Map}(B\mathcal F(P),D)\longrightarrow D_0
+\]
+is exactly the space of assignments
+\[
+c\mapsto t_c:d\to d,\qquad
+\rho\mapsto
+\bigl(t_{c_1};\cdots;t_{c_k}\Rightarrow t_c\bigr).
+\]
+This is the defining mapping-space universal property of the coherent free category on \(\Gamma\). It proves the canonical equivalence (42). The finite-dimensional inclusion into Loubaton’s \((\infty,\omega)\)-theory preserves these cellular colimits, as in the suspension argument of round 2. ∎
+
+### A finite sufficient test covering the requested examples
+
+Accept a finite 2-computad if any of the following holds:
+
+- it is positive;
+- it has one vertex and satisfies (41);
+- it has one vertex and satisfies the 2-opposite of (41).
+
+This covers every positive 2-computad and \(Q\). It excludes
+\[
+(*;\sigma:1\Rightarrow1).
+\]
+
+The operadic clause also covers, for example,
+\[
+(*;\ t;\ \eta:1\Rightarrow t,\ \mu:tt\Rightarrow t).
+\tag{45}
+\]
+There are no associativity or unit equations on \(\mu,\eta\): this is the free operad on a nullary and a binary operation.
+
+## 5. An obstruction to a weaker criterion
+
+The condition
+
+> each generating 2-cell has at least one nonidentity boundary
+
+is insufficient.
+
+Consider
+\[
+R=(*;\ t;\ \eta:1\Rightarrow t,\ \epsilon:t\Rightarrow1).
+\tag{46}
+\]
+Neither generator has two identity boundaries, but \(B^2\mathbb N\) is a strict retract of \(F_2(R)\).
+
+Define
+\[
+i:B^2\mathbb N\to F_2(R),
+\qquad
+i(\sigma)=\eta\cdot\epsilon,
+\tag{47}
+\]
+and
+\[
+r:F_2(R)\to B^2\mathbb N,
+\qquad
+r(t)=1,\quad r(\eta)=\sigma,\quad r(\epsilon)=1.
+\tag{48}
+\]
+The free strict universal properties define both functors, and
+\[
+ri=\mathrm{id}.
+\tag{49}
+\]
+
+Consequently \(K(\mathbb Z,2)\) is a retract of the groupoidification of \(F_2(R)\). Applying the obstruction in your item 4, its homology is nonzero in unbounded degrees, so
+\[
+\boxed{
+F_2(R)\text{ has no finite presentation }
+\operatorname{Free}(\Psi)[S^{-1}]
+\text{ of the prescribed kind.}
+}
+\tag{50}
+\]
+The identification of the groupoidification of \(B^2\mathbb N\) is Ara’s Theorem 4.9 and Example 4.10. [arxiv.org](https://arxiv.org/pdf/1808.02650?utm_source=chatgpt.com)
+
+Thus the obstruction may be produced by a composite \(\eta\cdot\epsilon:1\Rightarrow1\), even when no generator has that boundary.
+
+## 6. A 3-dimensional attachment rule
+
+The following rule combines the 2-dimensional criteria with the whiskered example.
+
+Let \(D\) be a strict 3-category with a finite homotopical computad presentation. Choose distinct vertices \(s,t\) satisfying
+\[
+D(x,s)=\varnothing\quad(x\ne s),\qquad
+D(t,x)=\varnothing\quad(x\ne t),
+\tag{51}
+\]
+and
+\[
+D(s,s)=D(t,t)=\mathbf1.
+\tag{52}
+\]
+Put \(K=D(s,t)\).
+
+Suppose \(i:K\hookrightarrow K'\) is a computadic inclusion obtained by finitely many 2-cell attachments, and that these attachments are homotopy attachments in the coherent theory. The latter condition follows, for example, from compatible canonical homotopical presentations of \(K,K'\) certified by §4.
+
+Define \(D'\) by replacing \(D(s,t)\) with \(K'\), retaining the other homs. Old composites landing in \(D(s,t)\) are followed by \(i\). A composite using a new cell of \(K'\) has only identity neighbours, by (51)–(52), so this defines a strict 3-category.
+
+Then the corresponding finite 3-cell attachment to \(D\) is homotopical.
+
+### Proof
+
+The full subcategories on \(\{s,t\}\) are \(\Sigma K\) and \(\Sigma K'\).
+
+Write a Θ-shape as
+\[
+[m](\theta_1,\ldots,\theta_m).
+\]
+A functor from it to \(D'\) that does not factor through \(D\) has an adjacent vertex pair \((s,t)\) whose hom map does not factor through \(K\).
+
+Every preceding vertex must be \(s\), since no nonidentity 1-cell enters \(s\). Every following vertex must be \(t\), since none leaves \(t\). The functor therefore factors through \(\Sigma K'\).
+
+Since \(i\) is an inclusion, this proves the exact nerve union
+\[
+N_\Theta D'
+=
+N_\Theta D
+\amalg_{N_\Theta\Sigma K}
+N_\Theta\Sigma K'.
+\tag{53}
+\]
+It is a pushout along monomorphisms of set-valued presheaves, hence objectwise a homotopy pushout. Localization gives
+\[
+D'\simeq D\amalg_{\Sigma K}\Sigma K'.
+\tag{54}
+\]
+Suspending the given relative 2-cell attachments and applying this pushout proves the claim. ∎
+
+Starting with regular 3-polygraphs and applying this rule gives a sufficient class covering all three requested examples:
+
+- Regular 3-polygraphs are initial cases by Chanavat’s Corollary 3.38. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+- For the whiskered generator \(\zeta:\alpha\triangleright r\Rrightarrow\beta\triangleright r\), take \(s=x,t=z\). The hom \(K\) is the free category on the two parallel arrows \(\alpha\triangleright r,\beta\triangleright r\); adjoining \(\zeta\) is a positive 2-dimensional hom attachment.
+- For \(\Sigma Q\), take \(D=\Sigma K\), where \(K\) is the free category on the loop \(t\), and \(K'=F_2(Q)\). The operadic criterion supplies the relative homotopical attachment. The same argument applies to suspensions of the entire operadic class in §4.
+
+The general FT statement for base dimension \(n\ge3\), and the assertion that every positive 3-computad is homotopical, remain unproved here.

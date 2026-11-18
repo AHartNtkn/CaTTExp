@@ -62,6 +62,7 @@ import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing
 import CaTTExp.Trunc.Check
+import CaTTExp.Trunc.Subst
 import CaTTExp.Trunc.Examples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex

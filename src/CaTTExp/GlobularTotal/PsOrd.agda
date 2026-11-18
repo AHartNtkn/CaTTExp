@@ -105,3 +105,26 @@ inv (psd d) with inv d
 
 ps-ord : ∀ {Γ} → Γ ⊢ps → Ord Γ
 ps-ord (ps d) = snd (snd (snd (inv d)))
+
+------------------------------------------------------------------------
+-- Every pasting context is globular: each of its types has variable
+-- endpoints in scope with the right types (NfTyped.Glob).
+
+private
+  glob : ∀ {Γ x A} → Γ ⊢ps x ∶ A → ∀ y B → lookup Γ y ≡ just B → TyIn Γ B
+  glob pss y B e with y ==ℕ 0
+  glob pss y B refl | true = tt
+  glob pss y B ()   | false
+  glob (pse {Γ} {x} {A} d) y B e with inv d | inv (pse d)
+  ... | _ , _ , tA , _ | _ , _ , tF , _ with y ==ℕ suc (len Γ)
+  ...   | true with just-inj e
+  ...     | refl = tF
+  glob (pse {Γ} {x} {A} d) y B e | _ , _ , tA , _ | _ | false with y ==ℕ len Γ
+  ...     | true with just-inj e
+  ...       | refl = tyin-weak (Γ ▸ A) _ A (tyin-weak Γ A A tA)
+  glob (pse {Γ} {x} {A} d) y B e | _ , _ , tA , _ | _ | false | false =
+    tyin-weak (Γ ▸ A) _ B (tyin-weak Γ A B (glob d y B e))
+  glob (psd d) y B e = glob d y B e
+
+ps-glob : ∀ {Γ} → Γ ⊢ps → ∀ y B → lookup Γ y ≡ just B → TyIn Γ B
+ps-glob (ps d) = glob d

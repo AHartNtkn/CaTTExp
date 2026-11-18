@@ -3,7 +3,10 @@
 -- formed for every well-formed globular context Γ of dimension ≤ k,
 -- provided the top generator types of D⁰ ⊗ D¹, …, D^k ⊗ D¹ are well
 -- typed. No postulates; the disk hypothesis is discharged for k ≤ 5
--- in CaTTExp.GrayCtx.Checks.Natural.
+-- in CaTTExp.GrayCtx.Checks.Natural, and for every k, for the
+-- explicit disk types, in CaTTExp.GrayCtx.NaturalAll. `Main` also
+-- gives every prefix of the cylinder up to the generators of the
+-- variables below a bound B (`prefix-wf`), which that induction uses.
 --
 -- Proof. Copies of Γ are renamings of Γ. The generator of x is the
 -- disk type T_m renamed along χ_x ⊗ D¹, and this renaming respects
@@ -623,7 +626,8 @@ gD-c2 Ts m d p =
 module Main (Ts : Nat → Ty) (k : Nat)
             (H : ∀ j → T (j <ℕ suc k) → diskPre Ts j ⊢ty Ts j)
             (Γ : Ctx) (w : Γ ⊢ctx) (gl : T (globular Γ))
-            (dk : ∀ x → T (x <ℕ len Γ) → T (dimV Γ x <ℕ suc k)) where
+            (B : Nat) (BN : T (B <ℕ suc (len Γ)))
+            (dk : ∀ x → T (x <ℕ B) → T (dimV Γ x <ℕ suc k)) where
   open Classify Γ w gl
 
   g : Nat → Ty
@@ -637,24 +641,11 @@ module Main (Ts : Nat → Ty) (k : Nat)
     fin true  = n<sn d
     fin false = ≤-<-trans v (dbl (half d)) (suc d) q (dbl-half d)
 
-  obl : ∀ n → T (n <ℕ N + (N + N)) → mkCtx n g ⊢ctx → mkCtx n g ⊢ty g n
-  obl n pn wn with view3 N n
-  ... | c0 p =
-    subst (mkCtx n g ⊢ty_) (sym (gN-c0 Ts Γ n p))
-      (subst (_⊢ty tyAt Γ n) (mk-ext n (λ i pi → sym (gN-c0 Ts Γ i (<-trans i n N pi p))))
-        (ctx-inv Γ n w p))
-  ... | c1 x px refl =
-    subst (mkCtx (N + x) g ⊢ty_) (sym (gN-c1 Ts Γ x px)) (rn-ty wn r (ctx-inv Γ x w px))
-    where
-    r : Resp (N +_) (mkCtx x (tyAt Γ)) (mkCtx (N + x) g)
-    r i A eq = let (pi , qi) = lk-mk-inv x (tyAt Γ) i eq in
-      trans (lk-mk (N + x) g (N + i) (T-+< N i x pi))
-            (cong just (trans (gN-c1 Ts Γ i (<-trans i x N pi px)) (cong (rnTy (N +_)) qi)))
-  ... | c2 x refl =
-    subst (mkCtx (N + (N + x)) g ⊢ty_) (sym (gN-c2 Ts Γ x)) (rn-ty wn r (H m (dk x px)))
-    where
+  -- The generator block of a variable x < B: its disk renames into
+  -- the cylinder along h, respecting types.
+  module C2 (x : Nat) (pB : T (x <ℕ B)) where
     px : T (x <ℕ N)
-    px = +<-T N x N (+<-T N (N + x) (N + N) pn)
+    px = <-≤-trans x B N pB BN
     m = dimV Γ x
     M = suc (dbl m)
     χ = chiK Γ m x
@@ -709,7 +700,7 @@ module Main (Ts : Nat → Ty) (k : Nat)
       ψ = chiK (Disk m) kd d
       φ = chiK Γ kd (χ d)
       hk : T (kd <ℕ suc k)
-      hk = <-trans kd m (suc k) (half-< d m d<) (dk x px)
+      hk = <-trans kd m (suc k) (half-< d m d<) (dk x pB)
       scT : ScTy (Kd + (Kd + dbl kd)) (Ts kd)
       scT = subst (λ n → ScTy n (Ts kd)) (len-mk (Kd + (Kd + dbl kd)) (gN Ts (Disk kd)))
                   (Sb.ty-sc closed∅ (H kd hk))
@@ -732,8 +723,32 @@ module Main (Ts : Nat → Ty) (k : Nat)
       trans (lk-mk (N + (N + x)) g (h j) (bnd j pj))
             (cong just (trans (geq j pj) (cong (rnTy h) qj)))
 
-  cylWith-wf : cylWith Ts Γ ⊢ctx
-  cylWith-wf = mk-wf (N + (N + N)) g obl
+  obl : ∀ n → T (n <ℕ N + (N + B)) → mkCtx n g ⊢ctx → mkCtx n g ⊢ty g n
+  obl n pn wn with view3 N n
+  ... | c0 p =
+    subst (mkCtx n g ⊢ty_) (sym (gN-c0 Ts Γ n p))
+      (subst (_⊢ty tyAt Γ n) (mk-ext n (λ i pi → sym (gN-c0 Ts Γ i (<-trans i n N pi p))))
+        (ctx-inv Γ n w p))
+  ... | c1 x px refl =
+    subst (mkCtx (N + x) g ⊢ty_) (sym (gN-c1 Ts Γ x px)) (rn-ty wn r (ctx-inv Γ x w px))
+    where
+    r : Resp (N +_) (mkCtx x (tyAt Γ)) (mkCtx (N + x) g)
+    r i A eq = let (pi , qi) = lk-mk-inv x (tyAt Γ) i eq in
+      trans (lk-mk (N + x) g (N + i) (T-+< N i x pi))
+            (cong just (trans (gN-c1 Ts Γ i (<-trans i x N pi px)) (cong (rnTy (N +_)) qi)))
+  ... | c2 x refl =
+    subst (mkCtx (N + (N + x)) g ⊢ty_) (sym (gN-c2 Ts Γ x))
+      (rn-ty wn (C2.r x pB) (H (dimV Γ x) (dk x pB)))
+    where
+    pB : T (x <ℕ B)
+    pB = +<-T N x B (+<-T N (N + x) (N + B) pn)
+
+  -- The prefix up to the generators of the variables below B.
+  prefix-wf : mkCtx (N + (N + B)) g ⊢ctx
+  prefix-wf = mk-wf (N + (N + B)) g obl
+
+  cylWith-wf : B ≡ len Γ → cylWith Ts Γ ⊢ctx
+  cylWith-wf e = subst (λ b → mkCtx (N + (N + b)) g ⊢ctx) e prefix-wf
 
 ------------------------------------------------------------------------
 -- From the parametrised theorem to cylN.
@@ -806,8 +821,8 @@ cylN-wf : ∀ sd k → (∀ j → T (j <ℕ suc k) → diskPre (TsF sd) j ⊢ty 
           ∀ Γ → Γ ⊢ctx → T (globular Γ) → T (dimCtx Γ <ℕ suc k) → cylN sd Γ ⊢ctx
 cylN-wf sd k H Γ w gl dk =
   subst _⊢ctx (sym (cylN-TsF sd Γ))
-    (Main.cylWith-wf (TsF sd) k H Γ w gl
-       (λ x p → ≤-<-trans (dimV Γ x) (dimCtx Γ) (suc k) (dimV-≤ Γ x p) dk))
+    (Main.cylWith-wf (TsF sd) k H Γ w gl (len Γ) (n<sn (len Γ))
+       (λ x p → ≤-<-trans (dimV Γ x) (dimCtx Γ) (suc k) (dimV-≤ Γ x p) dk) refl)
 
 -- The same, with no bound on the dimension, from all the disks.
 cylN-wf-all : ∀ sd → (∀ j → diskPre (TsF sd) j ⊢ty TsF sd j) →

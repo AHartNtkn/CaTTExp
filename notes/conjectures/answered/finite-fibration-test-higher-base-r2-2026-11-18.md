@@ -687,3 +687,89 @@ The walking 2-cell proof supplies that compatibility explicitly through (21). Pr
 ### 4.3 Question 3
 
 I do not prove that every positive 3-computad is homotopical, and I do not have a positive counterexample. The non-positive example in §3 answers the necessity question but does not decide that sufficiency question.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, with the same cited inputs as round 1 not re-derived.** Two questions are answered:
+- **Q1:** an explicit finite presentation for 2-category-valued weights over the walking 2-cell, with one 4-generator per fibre 2-cell.
+- **Q4:** positivity is not necessary. There is an explicit non-positive 3-computad whose strict free 3-category is coherently free, with contractible groupoidification.
+
+Q2 (general FT_n) and Q3 (which positive 3-computads are homotopical) remain open. The response makes the gap in Q2 precise.
+
+Step by step.
+
+1. **Strictness of the weight data (§1, equations (1)).**
+   - A functor out of a coherently free A is determined by generator images.
+   - A transformation a : A × I → C sends each mixed cell to an invertible cell of C.
+   - A free strict 2-category has no non-identity invertible 2-cells, because the number of generating 2-cells is additive and is preserved by interchange.
+   - So the pseudo-naturality data are identities, and the strict equations (1) are exactly the weight data. ✓
+
+2. **The computad (§1.1–1.4).** I checked every boundary.
+   - P_p = (λ_x ∗ Vp) · η^v_p and Q_p = (η^u_p ∗ a_y) · (p ∗ λ_y) are both 2-cells u_x ; a_x ; Vp ⇒ p ; v_y, using u_x ; Up ; a_y = u_x ; a_x ; Vp from (1). So Ξ_f is well typed. ✓
+   - The path extension Ξ_{pq} composes: after Ξ_p ∗ Vq and p ∗ Ξ_q one reaches (η^u_p ∗ a_y ∗ Vq) · (p ∗ η^u_q ∗ a_z) · (pq ∗ λ_z). This is Q_{pq}, because η^u_p ∗ a_y ∗ Vq = η^u_p ∗ Uq ∗ a_z by (1). ✓
+   - **Route (11).** Q_p · (ρ ∗ v_y) becomes (η^u_p ∗ a_y) · (ρ ∗ u_y ∗ a_y) · (q ∗ λ_y) by interchange. Then κ^u_ρ ∗ a_y gives (u_x ∗ Uρ ∗ a_y) · Q_q, and Uρ ∗ a_y = a_x ∗ Vρ by (1). ✓
+   - **Route (12).** κ^v_ρ, then the interchange (λ_x ∗ Vp) · (v_x ∗ Vρ) = (u_x ∗ a_x ∗ Vρ) · (λ_x ∗ Vq), then Ξ_q. ✓
+   - So Ω_ρ is a well-typed 4-generator between parallel 3-cells.
+   - The equalities written "=" are interchange identifications. In Free(Ψ_T) they are coherent equivalences, which is enough to specify the attaching maps. The strict pushout of §2.3 makes them literal.
+
+3. **Euler-characteristic check (mine).**
+   - For the constant weight D₂ (A = C = D₂, U = V = id, a = id) the counts are:
+     - dimension 0: 4;
+     - dimension 1: 2 + 2 + 4 = 8;
+     - dimension 2: 1 + 1 + 4 + 2 = 8;
+     - dimension 3: 2 + 2 = 4;
+     - dimension 4: 1.
+   - So χ = 1, which equals χ of the contractible B × D₂. This agrees with round-1 item 7, where without Ω the count gives χ = 0.
+   - For A = C = I the counts (4, 6, 4, 1) give χ = 1. ✓
+
+4. **Tensor-localisation lemma (14).**
+   - The statement is consistent. If s is inverted, s ⊗ i becomes invertible automatically: the walking equivalence tensored with I is I, all of whose 2-cells are identities. So listing s ⊗ i in the localisation set is harmless, and it is needed before s is inverted.
+   - The case n = 1 is right: invert the 2-cell to get I × I, then invert the two endpoint arrows to get Map(I, Z).
+   - The case n ≥ 2 goes by the cylinder decomposition (16) and induction. It is sketched, but the interface conditions follow by whiskering, as stated.
+   - **Rests on citations, not re-derived:** Loubaton Props 3.1.3.1, 2.2.1.59 and 2.3.1.10.
+
+5. **The mixed-localisation formula (17).**
+   - The proof factors (A ⊗ I_in) ⊗ I_out through (A × I_in) ⊗ I_out, which is (19), and then through A × (I_in ⊗ I_out), which is (20). It then collapses the 0-face, using K = 1 ∐_{I_in ⊗ {0}} (I_in ⊗ I_out).
+   - A × − preserves colimits (cartesian closure), so the collapse of A × (I ⊗ I) is A × K. ✓
+   - **Rests on citation:** the one-interval statement "(A ⊗ I)[mixed]⁻¹ ≃ A × I" for A a 2-category, Loubaton Prop. 3.1.3.2.
+   - **This answers the sub-question in Q1.** "K × A ≃ (K ⊗ A) localised at the mixed generators" remains true for a 2-category A, provided the mixed generators of every positive fibre dimension are included (here dimensions 3 and 4).
+
+6. **The double cylinder (§2.3–2.4).**
+   - The table matches the generators of H ⊗ I_out not on the two end faces with the generators of §1, row by row. For example:
+     - (x ⊗ i_in) ⊗ i_out is a 2-cell between v_x and u_x ; a_x, because r(x ⊗ i_in) = 1_x and h(x ⊗ i_in) = a_x;
+     - (ρ ⊗ i_in) ⊗ i_out has dimension 4. ✓
+   - **The localisation of P.** Localisation commutes with the pushout (21). The end faces factor through A × I via r and a, and the inverted generators on the faces map to identities (strict naturality). So P[S⁻¹] ≃ (A × K) ∐_{A×I} C, and the survivors are exactly S. ✓
+   - **Rests on citations:**
+     - Chanavat Cor. 3.27 / Thm 3.29, for the homotopy-cellularity of the relative cylinder steps;
+     - Loubaton Thm 2.3.3.22, for the strictness of (21);
+     - Loubaton Cor. 4.1.2.19, for the suspension-base classification (also used in round 1).
+
+7. **Q4: the non-positive example (§3).**
+   - **F₂(Q) = BΔ_+^inj.** A strict 2-functor to BΔ_+^inj sending t ↦ 1 and η ↦ (∅ → 1) shows that the injection is an invariant. Inserting letters left to right gives a normal form.
+     - For instance η ∗ t and t ∗ η : t ⇒ t² are the two injections 1 → 2, and they are distinct.
+     - Both interchange orders of η ∗₀ η give the unique injection ∅ → 2.
+     - This is the classical fact that Δ_+^inj is the free strict monoidal category on an object with a map from the unit. ✓
+   - **Coherent freeness.** The monoidal envelope Env_{E1}(E0) ≃ Δ_+^inj (Blans–Linskens, arXiv 2605.03150, not re-derived) gives the universal property in (30).
+     - Maps out of BΔ_+^inj over an object d are monoidal functors into End(d), that is, pairs (t, η : 1 ⇒ t).
+     - These are exactly maps out of Free(Q).
+     - The inclusion of (∞,2)- into (∞,ω)-categories has both adjoints, so it preserves the colimit presenting Free(Q). ✓
+   - **Suspension.** Γ = ΣQ, and suspension preserves the cellular pushouts, so Free(Γ) ≃ ΣF₂(Q) = F₃(Γ). ✓
+   - **Groupoidification.** Δ_+^inj has an initial object, so |Δ_+^inj| and its delooping are contractible. This matches the cell count S¹ ∪ D², and (34). ✓
+
+8. **Q2 gap (§4).**
+   - The local relative step (35)–(36) is right.
+   - The obstruction is real. Gluing totals gives attaching maps into Free(Ψ)[S⁻¹], and a presentation needs them in Free(Ψ). The marked-arrow example shows such lifts need not exist.
+   - For the walking 2-cell the double cylinder (21) supplies them. For a base generator whose boundary is a composite (for example α : f ; g ⇒ h), nothing yet does.
+
+**Consequences for B14.**
+- **FT for 2-category-valued weights over the walking 2-cell is proved.** The generators are the relative Gray-tensor generators of the double cylinder, and the localisation set is the six structural families.
+- **Lemma (14)** (tensoring a localisation with the Gray interval) is a general tool for the induction.
+- **Positivity is not necessary, even in dimension 2.** Q = (∗; t; η : 1 ⇒ t) is non-positive and homotopical.
+  - So round-2 known item 4 is true only of the particular base σ : 1_x ⇒ 1_x. It does not show that all non-positive bases fail.
+  - The hypothesis of the rule should be "homotopical" (Free ≃ F_n), with positivity and regularity as sufficient criteria.
+- **Open:**
+  - the compatibility (lifting) argument for general FT_n;
+  - a criterion for homotopical 2- and 3-computads that covers both Q and the positive ones and excludes σ;
+  - whether every positive 3-computad is homotopical.
+
+Follow-up prompt: `outbox/finite-fibration-test-higher-base-r3.md` (round 3, unsent).

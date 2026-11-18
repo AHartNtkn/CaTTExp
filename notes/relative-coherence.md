@@ -363,7 +363,7 @@ The proof has four steps.
 3. **Evaluation fusion.** A connecting cell `Λ_G : G ∗₂ ν_{T′} → ν_T` is built by induction on the syntax of the 3-term G, through 2- and 3-dimensional arities.
 4. **Right cancellation.** This uses the invertibility of coherence composites.
 
-This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They are asked in the round-3 prompt (`conjectures/outbox/naturality-arbitrary-depth-r3.md`, unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
+This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r4.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
 
 ### 7.5 Machine checks of the lax-square proof, and the cylinder of a composable pair (2026-11-18)
 

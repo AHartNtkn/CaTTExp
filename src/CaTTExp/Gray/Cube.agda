@@ -13,6 +13,7 @@ module CaTTExp.Gray.Cube where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.DownAgree ∅ using (hypSide)
 open import CaTTExp.Gray.Examples using (vcomp)
 
 v : Nat → Tm
@@ -274,6 +275,21 @@ cube-wf = snd (from-just (infer Γ₃ (coh Γ₃ cubeTy (idₛ Γ₃))))
 cube⁻-side : graySide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
                        (M hex⁺) (M hex⁻) ≡ false
 cube⁻-side = refl
+
+-- The generator-based and closure-based comparisons agree on both, and
+-- the hypotheses of DownAgree.sameDown≡Closure hold.
+_ : agreeSide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁻) (M hex⁺) ≡ true
+_ = refl
+_ : hypSide   Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁻) (M hex⁺) ≡ true
+_ = refl
+_ : agreeSide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁺) (M hex⁻) ≡ true
+_ = refl
+_ : hypSide   Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁺) (M hex⁻) ≡ true
+_ = refl
 
 no-cube⁻ : ∀ {Γ σ B} → ¬ (Γ ⊢tm coh Γ₃ cubeTy⁻ σ ∶ B)
 no-cube⁻ (coh-wf _ _ _ ok _) = subst T cube⁻-side ok

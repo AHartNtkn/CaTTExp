@@ -1,6 +1,6 @@
-# Interpreting CaTT in (∞,ω)-categories, round 2: reconstruction, and the coinductive target
+# Interpreting CaTT in (∞,ω)-categories, round 3: reconstruction and the coinductive target
 
-*A self-contained problem. No knowledge of the project that posed it is assumed. Round 1 and its verified answer are archived in `answered/catt-models-in-infinity-omega-2026-11-18.md`. The smallest open case is Q1.*
+*A self-contained problem. No knowledge of the project that posed it is assumed. Rounds 1 and 2 and their verified answers are archived in `answered/catt-models-in-infinity-omega-2026-11-18.md` and `answered/catt-models-in-infinity-omega-r2-2026-11-18.md`. The smallest open case is Q1.*
 
 ## Background
 
@@ -22,14 +22,24 @@
 - **Obstruction to the raw inductive nerve.** The coherent walking ω-equivalence E (Hadzihasanovic–Loubaton–Ozornova–Rovelli, arXiv 2404.14509, Thm 1.33) is a gaunt strict ω-category with E → 1 a folk weak equivalence, so no functor 𝓗_CaTT → Cat^ind_ω agrees with the raw inductive nerve on strict ω-categories. The Street nerve marking coinductively invertible cells does send E → 1 to an equivalence (Henry–Loubaton, arXiv 2301.11424, Prop. 4.58).
 - **Free shapes agree.** Finite globular pasting shapes and their Gray products are the same free objects in the inductive and coinductive theories (Campion, arXiv 2311.00205, Cor. 3.5, Thm 3.14, Cor. 3.15).
 
+**What round 2 established.**
+- **S factors through coinductive completion.** Write Q : Cat^ind_ω ⇄ Cat^coind_ω : j for coinductive completion. By Ozornova–Rovelli–Walde (arXiv 2603.11005: Lemma 5.9, Prop. 5.29 and 5.30, Cor. 5.31), completion is the localisation at ∞-surjective maps, and its units are ∞-surjective. S₀ sends every ∞-surjective map to W, because for an 𝒜-fibration, π₀-surjectivity of the Kan fibration Map(yDₙ, UY) → Map(Bₙ, UY) ×_{Map(Bₙ,UZ)} Map(yDₙ, UZ) gives strict globular boundary lifts, which are FHM trivial fibrations. Hence S ≃ S̄ ∘ Q with S̄ = S j.
+- **The underived left adjoint is not relative.** The coend 𝓛_R ⊣ S₀ is an ordinary adjunction. For gaunt strict C with discrete nerve NC (canonically algebraically fibrant), π₀ Map(𝓛_R A, NC) ≅ Mod(CaTT)(A, C). Applied to the coherent walking equivalence w : E → 1, this would make Mod(1, E) → Mod(E, E) a bijection if 𝓛_R(w) were an equivalence, which is false. So 𝓛_R does not send W to inductive equivalences.
+- **S₀ preserves categorical level.** If Y presents an (∞,n)-category, every cell of S₀(Y) above dimension n is coinductively invertible. The proof extends the cell strictly over N(Σ^{k−1} I), then uses that FHM weak equivalences reflect invertibility.
+- **A necessary test for reconstruction.** If the ordinary counit ε_Y : 𝓛_R S₀(Y) → Y is an equivalence, then 𝒜(Y, NC) → Mod(CaTT)(S₀Y, C) is bijective for every gaunt strict C. In particular, for contractible Y every strict CaTT map S₀(Y) → E must be constant.
+- **Marked targets.** Marking the coinductive equivalences of C does not change C. Localising at them gives QC (ORW Prop. 5.29).
+- **Directed version, conditional.** Suppose the coherator of L has a Gray-enriched cellular presentation, and suppose the hom maps K(Q_a, Q_b) → K(Q_a, Y_b) are trivial fibrations. Then lifting into the enriched category of commuting squares gives an enriched R_L that strictly preserves composition. Still to be supplied are arity colimits in the semantic category, ordered tensor domains D^r ⊗ D^s (for example via a coloured operad), and invertibility declarations.
+
 ## Questions
 
-**Q1 (reconstruction, smallest case).** For Y in 𝒜 presenting an (∞,2)-category (all cells above dimension 2 invertible), is the counit 𝓛_R S(Y) → Y a weak equivalence? Equivalently, does S restricted to (∞,2)-categories present them? A proof for (∞,1)-categories (complete Segal spaces) would already be new.
+**Q1 (the gaunt test, smallest case).** Let Y be a contractible algebraically fibrant Θ-space, for instance a fibrant replacement of the point with chosen fillers. Is every strict CaTT map S₀(Y) → E constant, where E is the coherent walking ω-equivalence (Hadzihasanovic–Loubaton–Ozornova–Rovelli, arXiv 2404.14509, Thm 1.33)? Is every strict CaTT map S₀(Y) → C constant for every gaunt strict C? A non-constant map refutes the ordinary counit theorem. A proof that all such maps are constant would be the first step of reconstruction.
 
-**Q2 (the right target).** Is there an equivalence 𝓗_CaTT ≃ Cat^coind_ω (the coinductive (∞,ω)-categories), or with marked inductive (∞,ω)-categories marking the coinductive equivalences, extending the marked Street nerve? Does S factor through the coinductive completion?
+**Q2 (derived reconstruction).** Is there a derived version of 𝓛_R, for example via cofibrant replacement of CaTT models by free models on computads (Markakis, arXiv 2303.11978), such that the derived counit is an equivalence for (∞,1)- or (∞,2)-categories? Equivalently, is S̄ : Cat^coind_ω → 𝓗_CaTT fully faithful on (∞,n)-categories for small n?
 
-**Q3 (directed version).** For a directed variant L of CaTT (interchange across objects lax) and oriented (∞,ω)-categories (Gepner–Heine, arXiv 2510.10504), does the analogue of S exist? What extra compatibility with the Gray-enriched composition C(y,z) ⊗ C(x,y) → C(x,z) is needed for a presentation theorem?
+**Q3 (the equivalence).** Is S̄ : Cat^coind_ω → 𝓗_CaTT an equivalence? A precise conjecture with the needed inputs, or a counterexample (two coinductive (∞,ω)-categories with W-equivalent S-images that are not equivalent), would help.
+
+**Q4 (directed version).** For the directed variant L, give the Gray-enriched (or coloured-operadic) cellular presentation of its coherator needed by the lifting theorem above, at least through dimension 3.
 
 ## What would help most
 
-A proof or counterexample for Q1 in any dimension; a precise statement of Q2 with references; for Q3, the construction of the analogue of R for a Gray-enriched coherator.
+A proof or counterexample for Q1; a precise derived statement for Q2 with references; for Q4, the presentation in low dimensions.

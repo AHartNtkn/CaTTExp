@@ -20,7 +20,7 @@ The printed CaTT_lim cone judgment admits non-canonical cones (`conjectures/lax-
 | | globular Γ, dim Γ = 2 | k = 1: **proved** from an interchange and associators over pasting contexts, machine-checked (cone and cocone) on 3 shapes. k ≥ 2: sketched by the same method (§4.3) |
 | | globular Γ, dim Γ ≥ 3 | needs Conjecture N at depth dim Γ − 1, for nested whiskerings only [conj] |
 | **Cones over non-globular Γ**: recursion through substitutions, one family of universal cells `Π(Q, B)` | Γ whose non-variable boundary terms are 1-dimensional | **proved** (Prop. 5.2); machine-checked on `τ : f ∗₀ g ⇒ h` |
-| | arbitrary Γ | equivalent to the cone form of N, `N^cone`, posed in `conjectures/cone-over-coherences.md` [conj]; dimension 2 follows from RC(2) |
+| | arbitrary Γ | equivalent to the cone form of N, `N^cone`, posed in `conjectures/cone-over-coherences.md`. Dimension ≤ 2 **proved** (researcher, verified: `conjectures/answered/cone-over-coherences-2026-11-18.md`). Dimension n follows from RC(1..n) on the join contexts `Cone(Q; c)`, so dimension 3 reduces to RC(3) there [conj] |
 | **B6, level 0**: a Γ-family of elements gives a cocone over the constant point diagram (`φ`) | every globular Γ, every dimension | **proved** (Prop. 6.2); machine-checked on all 12 shapes |
 | **B6, equivalence**: `φ`, `ψ` and invertible homotopies `ψφ ≃ id`, `φψ ≃ id` | globular Γ of dimension ≤ 1 (graphs) | **proved** (Thm 6.3); machine-checked on 6 graphs |
 | | dimension 2 | ψ and `ψφ ≃ id`: **proved**, machine-checked on 9 shapes (§6.4). `φψ ≃ id`: **proved on paper** using BMOSV depth 1 [cited] (Prop. 6.5); its cylinder is machine-checked, its top component is not |
@@ -199,7 +199,7 @@ which is exactly the **diagram-index-first** colimit row of `limits-metatheory.m
 
 *Higher levels over dimension 2 (sketch, not machine-checked).* At level k ≥ 2 the new up-closed set is the previous level's top variables. In the coherences xc, asL and asR they only occur as *maximal* arguments, meaning cells of the coherence's pasting context that lie in no other cell's boundary. Raising a maximal cell of a pasting context to a disk one dimension up gives a pasting context again. So the naturality of xc and of the associators is again a coherence over a pasting context, and composites are pasted through associators one dimension up as in the paste rule. I expect Tr_k over 2-dimensional Γ to exist for every k from coherences over pasting contexts alone. The Agda lift currently returns `nothing` on the coherence constructors (a recorded test: `ctrf 2 (DiskEx 2)` is undefined). Generalising the lifts is B18's remainder.
 
-**Dimension ≥ 3** needs Conjecture N at depth `dim Γ − 1`, for **nested whiskerings only** (composition constructors). This is a much narrower instance than general N. It is recorded under C1 (`conjectures/outbox/naturality-arbitrary-depth-r2.md`).
+**Dimension ≥ 3** needs Conjecture N at depth `dim Γ − 1`, for **nested whiskerings only** (composition constructors). This is a much narrower instance than general N. It is recorded under C1 (`conjectures/outbox/naturality-arbitrary-depth-r3.md`).
 
 ### 4.4 "Horns are cones" (`limits-metatheory.md` §5.3): an orientation finding
 
@@ -257,7 +257,7 @@ where step i whiskers `p_{f_i}` by `f_{i+1}, …, f_m` (left-nested). Consecutiv
 
 **Machine check.** `ConesExamples` §9 builds the cone over `x, y, z, f, g, h, τ : f ∗₀ g ⇒ h` with `P(f ∗₀ g) = (p_g ∗₁ (p_f ∗₀ g)) ∗₁ κ`. The checker accepts it, and so does (KE).
 
-**Dimension 2.** For a full 2-dimensional coherence `c : a ⇒ b` over a chain, `P(b)` and `P(a) ∗₁ (p_{x₀} ∗₀ c)` are parallel 2-terms of the cone, with the same strict image (the strict cone over the path). So RC(2) (`relative-coherence.md` Theorem A; paper, unchecked) gives `Π`. Composition coherences of dimension 2 need *existence* of a composite with prescribed boundary, by layering. This is the analogue of "existence in G(n) ⇐ RC(n−1)" there. Details are in the conjecture file.
+**Dimension 2.** For a full 2-dimensional coherence `c : a ⇒ b` over a chain, `P(b)` and `P(a) ∗₁ (p_{x₀} ∗₀ c)` are parallel 2-terms of the cone with the same strict image, so RC(2) (`relative-coherence.md` Theorem A) gives `Π`. For the composition case, the researcher response (`conjectures/answered/cone-over-coherences-2026-11-18.md`, verified) settles dimension 2 completely. The vertical composite is the elementary chain of the conjecture file. The horizontal composite `α ∗₀ β` has an explicit RC-free chain of eight 3-cells: `p_β`, then `p_α ∗₀ g′`, three coherences over pasting contexts, and reassociations. Its strict image is `c ⋆ (α ∗₀ β)`. In general, RC(1..n) on all join contexts `Cone(Q; c)` implies N^cone through dimension n, composition case included. The proof is a strict lift followed by face-by-face transport, and its key lemma is that every RC witness in `c ⋆ Q` strictifies to an identity. **Dimension 3** therefore reduces to RC(3) on join contexts. The smallest case is `Cone(D²; c)`, the unitor case (round-2 prompt: `conjectures/outbox/cone-over-coherences-r2.md`).
 
 ---
 
@@ -386,4 +386,4 @@ Ledger IDs in `open-issues.md`: S1 = B20, S2 = B21, S3 = B18, S4 = B23, S5 = B22
 | S3 | Depth-1 lifts in `CylOf`. Tr₁ over 2-dimensional Γ is done (§4.3). Remaining: lifts of the coherence constructors (naturality in maximal arguments) and the paste rule one dimension up, for Tr_k with k ≥ 2, plus a written proof of the k ≥ 2 sketch. | this thread |
 | S4 | "Horns are cones" for graphs: compare `Tr₁(Γ)` with `Cone((D¹)^op ⊗ Γ)[π]` up to units, using Prop. 5.2. | this thread |
 | S5 | General Agda proof of Lemma 2.2 (typing of `binC` on glued trees), removing the dependence on per-shape checks. | this thread |
-| — | N^cone in dimension ≥ 3 (`conjectures/cone-over-coherences.md`), and N at depth ≥ 2 for nested whiskerings (part of C1). | C1 owner (naturality thread); this thread keeps attempting |
+| — | N^cone in dimension ≥ 3, reduced to RC(n) on join contexts (smallest case `Cone(D²; c)`; round-2 prompt `conjectures/outbox/cone-over-coherences-r2.md`), and N at depth ≥ 2 for nested whiskerings (part of C1). | C1 owner (naturality thread); this thread keeps attempting |

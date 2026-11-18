@@ -1,5 +1,7 @@
 # Three non-derivability questions for a coherence-style theory of ω-categories with limits
 
+> **Status: answered (researcher, verified 2026-11-18).** Q1 and Q3 are **not derivable**; Q2 is not derivable with enriched cotensors only. Q1 (recursion): categories with an auxiliary equivalence relation, where N is the discrete ℕ but every map N → Bool is constant. Q2 (discreteness): the comma (H₁(–)[1] ↓ id_{D(ℤ)}), where N has a K(ℤ,1) of self-maps from a test object; this model fails the cartesian exponential law (E), which `ordinary-math.md` uses, so for the project's reading Q2 is still open (follow-up: `outbox/non-derivability-q2.md`). Q3 (effectiveness): posets with discrete homs. Prompt, response and verification: `answered/non-derivability-2026-11-18.md`.
+
 *A self-contained problem. No knowledge of the project that posed it is assumed. The three questions are independent. The smallest one is Question 3 (effectiveness of quotients), which is a question about 1-categories of sets inside a higher setting.*
 
 ## Background

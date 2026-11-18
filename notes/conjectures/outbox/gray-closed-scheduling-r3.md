@@ -1,6 +1,6 @@
-# Schedules in free Gray-monoidal biclosed 2-categories, round 2
+# Schedules in free Gray-monoidal biclosed 2-categories, round 3
 
-*A self-contained problem. No knowledge of the project that posed it is assumed. Round 1 and its verified answer are archived in `answered/gray-closed-scheduling-2026-11-18.md`. The smallest open case is Question 1.*
+*A self-contained problem. No knowledge of the project that posed it is assumed. Rounds 1 and 2 and their verified answers are archived in `answered/gray-closed-scheduling-2026-11-18.md` and `answered/gray-closed-scheduling-r2-2026-11-18.md`. The smallest open case is Question 1.*
 
 ## Background
 
@@ -41,23 +41,39 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
 3. **Question 1, partial.** For φ : P → C/B and b : X → B, the forward comparison α = e_B ∗ χ_{φ,b} : t₁ ⇒ t₂ exists, W distinguishes t₁, t₂, and Λ_X(t₂) = (C/b)∘φ by strict naturality in the context variable. Whether 𝒢(t₁, t₂) = {α} and 𝒢(t₂, t₁) = ∅ is open: the tensor-only schedule theorem does not control 2-cells built by currying, uncurrying and η-expansion.
 4. **Mapping-space biclosedness is too weak for Question 4.** Gagna–Harpaz–Lanari (arXiv 2006.14495, Rem. 2.20): Map(X ⊗ Y, Z) ≇ Map(X, Fun^{opgr}(Y, Z)) in general; only cores agree.
 
+## What is known from round 2 (proved)
+
+5. **An integer model.** Let 𝓜 be the strict 2-category with:
+   - objects the integers;
+   - for q ≥ p, the hom 𝓜(p, q) equal to the poset (ℤ, ≤) of weights; otherwise empty;
+   - composition adding weights;
+   - w(p ⊗ u) = w(u) + p·δ(u) and w(u ⊗ q) = w(u), where δ(u) = target − source;
+   - p\r = r − p and r/q = r − q, with left currying subtracting p·δ and right currying leaving the weight unchanged.
+
+   𝓜 is a Gray-monoidal biclosed 2-category. An interchanger raises the weight by δ(f)·δ(g). A matrix-valued version (objects in ℤ^r) records ordered generator pairs.
+6. **Question 1, reverse direction.** With distinct atoms, 𝒢(t₂, t₁) = ∅ and 𝒢(t, s) = ∅. For t₁ and t₂ the weights are 0 and 1, from |B| = 1, |C| = 2 and |P| = |X| = 0. For s and t they are −1 and 0. Every forward 2-cell between them uses **exactly one** interchanger whose two arguments each contain one generator. Every other interchanger in it has a generator-free argument.
+7. **Undirected components.** π₀ 𝒢(A, C) ≅ 𝓑_Σ(A, C), the free ordinary unit-free biclosed monoidal category. Two 1-cells are connected by a zigzag of 2-cells iff their images there agree.
+8. **The image and W do not classify 1-cells.** Take generators f : A → B and g : B → C with padding L, R, and let m = L ⊗ (g ∘ f) ⊗ R.
+   - Currying g with the right padding gives u ⇒ m.
+   - Currying g with the left padding gives m ⇒ v.
+   - u, m and v have equal images in 𝓑_Σ, and W(u) = W(v).
+   - Their weights (with |L| = |R| = |A| = 0, |B| = 1, |C| = 2) are −1, 0 and 1, so the three 1-cells are distinct.
+   - The side of currying is data of the 1-cell, and schedules with only generator events cannot describe this component.
+
 ## Questions
 
-1. **(Smallest open case.)** Prove or refute 𝒢(t₁, t₂) = {α} and 𝒢(t₂, t₁) = ∅ for t₁ = ev∘(φ⊗B)∘(P⊗b), t₂ = ev∘(C/B⊗b)∘(φ⊗X). Likewise for the s, t of known item 2: is 𝒢(s, t) = {θ} and 𝒢(t, s) = ∅?
-2. **(The right invariant.)** Since closure trees are not component invariants, what is? Candidate: the string diagram obtained after full β-reduction where possible, together with W. Describe the connected components of 𝒢(A, C) for 1-cells with a fixed word W, and show each hom-category is a product of schedule categories S(P), or give a counterexample.
-3. **(A 2-cell-level normal form.)** Is there a rewriting presentation of the 2-cells of 𝒢 (interchangers, plus the bound-variable comparison cells of known item 3, modulo the Gray and closure equations) that is terminating and confluent, so that hom-categories can be computed? Does every hom-category of 𝒢 remain thin (at most one 2-cell between two 1-cells)?
-4. **(ω-version.)** With biclosedness on full hom ω-categories (not mapping spaces only), are the hom ω-categories of the free Gray-monoidal biclosed (∞,ω)-category between 1-cells with a fixed invariant (question 2) products of ν(K_P)-homs?
+1. **(Forward uniqueness, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}. By item 6 it suffices to show that interchangers with a generator-free argument are coherent: any two 2-cells between the same 1-cells that differ only in such interchangers are equal by the Gray and closure equations.
+2. **(1-cells within a component.)** For a fixed arrow of 𝓑_Σ, describe the 1-cells of 𝒢 over it. Is a 1-cell determined by its image together with the matrix-valued weight of item 5, or with a "curry side" label on each generator? Is each hom-category a product of schedule categories S(P) whose events include curry-side choices, as for u ⇒ m ⇒ v of item 8?
+3. **(Thinness and rewriting.)** Is every hom-category of 𝒢 thin? Give a terminating and confluent presentation of its 2-cells, or a pair of distinct parallel 2-cells.
+4. **(ω-version.)** With biclosedness on full hom ω-categories, are the hom ω-categories of the free Gray-monoidal biclosed (∞,ω)-category over a fixed arrow of 𝓑_Σ products of ν(K_P)-homs for suitable P?
 
 ## What counts as a solution
 
-An answer to Question 1 with proof; an invariant and a product theorem (or counterexample) for Question 2; a rewriting system for Question 3; or a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories.
+A proof of Question 1; a complete invariant of 1-cells for Question 2; a rewriting system or a non-thin example for Question 3; or a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories.
 
 ## Literature (searched 2026-11-18)
 
-- **Gray monoids and categories:** Gordon–Power–Street, *Coherence for tricategories* (1995); Forest–Mimram, *Coherence of Gray categories via rewriting* (FSCD 2018); Bourke–Lobbia (arXiv 2212.12358) on skew-closed structures.
-- **Weak order on linear extensions:** Björner–Wachs, JCTA 58 (1991), Thm 6.8; Chatel–Pilaud–Pons (arXiv 1701.07995), Prop. 26.
-- **Higher Bruhat orders:** Manin–Schechtman (1989); Kapranov–Voevodsky (1991).
-- **Biclosedness on mapping spaces only:** Gagna–Harpaz–Lanari (arXiv 2006.14495), Rem. 2.20.
-- **Oriented categories:** Gepner–Heine (arXiv 2510.10504), Cor. 4.1.11.
-- No paper on 2-cells of free Gray-closed structure was found.
-
+- Gordon–Power–Street, *Coherence for tricategories* (1995); Forest–Mimram, *Coherence of Gray categories via rewriting* (FSCD 2018; its Thm 11 uses invertible interchangers).
+- Garner–Hirschowitz–Pardon, *Graphical presentations of symmetric monoidal closed theories* (arXiv 0810.4420), §2: a premonoidal construction with central units and counits.
+- Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
+- Gagna–Harpaz–Lanari (arXiv 2006.14495), Rem. 2.20; Gepner–Heine (arXiv 2510.10504).

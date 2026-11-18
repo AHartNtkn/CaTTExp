@@ -1,12 +1,13 @@
 ------------------------------------------------------------------------
--- Evidence for the hypothesis (T-cell) of CaTTExp.Strict.Soundness.
+-- Checks by evaluation of (T-cell) of CaTTExp.Strict.Soundness.
 --
 -- A boolean checker cell? for IsCellL, proved sound (cell-sound), and
 -- its evaluation on the total cell twT of 18 pasting contexts: points,
 -- single homs ΣDⁿ (n ≤ 3), wedges of up to four ΣD¹, mixed dimensions,
 -- wedges with a point factor, and homs that are themselves composites.
--- Tcell-inst turns each check into an IsCellL proof. This checks
--- (T-cell) on examples; the general statement is cited, not proved.
+-- Tcell-inst turns each check into an IsCellL proof. The general
+-- statement is proved in CaTTExp.Strict.Bridge (`T-cell`); these
+-- checks are an independent test of it.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.CheckCells where
 

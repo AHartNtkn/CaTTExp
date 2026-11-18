@@ -1,6 +1,6 @@
-# Free higher categories with directed interchange in every dimension (third round)
+# Free higher categories with directed interchange in every dimension (fourth round)
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1 and 2, with their answers, are in `answered/`. Questions are in §4, smallest first.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1–3, with their answers, are in `answered/`. Questions are in §4, smallest first.*
 
 ## 1. Setting
 
@@ -60,7 +60,17 @@ So when only A varies, the Gray structure has a naturality 4-cell from the "χ f
 
 The repair must change dimension-3 data: an extra 3-generator such as h : S ⇛ U₀ whose image under the Gray quotient is r̄₁, or a 2-equation such as U₀ = U₁. Inverting χ₂ would also work but breaks requirement 3.
 
-**(K9) The orientation of χ₁, χ₂ in (K7) is forced by substitution (proved).** One might try to avoid (K8) by orienting every inner interchanger by the factor order of the enclosing tensor (always "Θ₂-cell first ⇛ Θ₁-cell first"), which keeps χ₁ and reverses χ₂. This fails requirement 5. The free object on Σ(D² ∨ D²) has, inside its hom, the interchanger of its two 2-cells A′ (left) and B′ (right), oriented as in the Gray case: "B′ first ⇛ A′ first". The assignment A′ ↦ f₀ ⊗ B and B′ ↦ A ⊗ g₁ (with the hom-0-cells and hom-1-cells sent to f₀⊗g₀, f₀⊗g₁, f₁⊗g₁ and to the matching edges) respects all boundaries, so substitution sends that interchanger to a 3-cell from "A ⊗ g₁ first" to "f₀ ⊗ B first", which is exactly χ₂ in its (K7) orientation. The pair χ₁ is forced the same way via A′ ↦ A ⊗ g₀, B′ ↦ f₁ ⊗ B. So χ₂ cannot be reversed: adding the reversed cell as well breaks requirement 3, which is the "inverting χ₂" option above. Inner interchangers are oriented by position (right cell first ⇛ left cell first), as at the outer level, and some repair of the kind in Q1 is needed.
+**(K9) The orientation of χ₁, χ₂ in (K7) is forced by substitution (proved).** One might try to avoid (K8) by orienting every inner interchanger by the factor order of the enclosing tensor (always "Θ₂-cell first ⇛ Θ₁-cell first"), which keeps χ₁ and reverses χ₂. This fails requirement 5. The free object on Σ(D² ∨ D²) has, inside its hom, the interchanger of its two 2-cells A′ (left) and B′ (right), oriented as in the Gray case: "B′ first ⇛ A′ first". The assignment A′ ↦ f₀ ⊗ B and B′ ↦ A ⊗ g₁ (with the hom-0-cells and hom-1-cells sent to f₀⊗g₀, f₀⊗g₁, f₁⊗g₁ and to the matching edges) respects all boundaries, so substitution sends that interchanger to a 3-cell from "A ⊗ g₁ first" to "f₀ ⊗ B first", which is exactly χ₂ in its (K7) orientation. The pair χ₁ is forced the same way via A′ ↦ A ⊗ g₀, B′ ↦ f₁ ⊗ B. So χ₂ cannot be reversed: adding the reversed cell as well breaks requirement 3, which is the "inverting χ₂" option above. Inner interchangers are oriented by position (right cell first ⇛ left cell first), as at the outer level, and some repair of dimension-3 data is needed (see (K10)).
+
+**(K10) The smallest case is repaired by a factorization (round 3, proved).** The six hom-2 composites P₀₀ ⇒ Q₁₁ of (K8) are the maximal paths of an oriented 3-cube with coordinates A (edges a_j^±), B (edges b_i^±) and C (edges c_ij): S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC. The six whiskered hom-3 cells t̄₀, χ̄₁, r̄₀, r̄₁, χ̄₂, t̄₁ are its six square faces (adjacent transpositions); every proper interval carries at most one of them. Add one hom-3 generator and one hom-3 equation:
+
+```
+h : S ⇛ U₀,        r̄₁ = h ∗₂ χ̄₂.        (F)
+```
+
+Then the maximal hom-3 interval is the free category on S → V₀ → V₁ → T, S → U₀ → U₁, U₀ → T, with 11 non-identity cells with pairwise distinct label sets, two routes S → T (t̄₀ ; χ̄₁ ; r̄₀ and h ; t̄₁), and no reverse of χ̄₁ or χ̄₂. Killing the inner interchangers gives exactly the free Gray diamond with q(h) = q(r̄₁), and A ⊗ B lifts to one 4-generator W : t̄₀ ; χ̄₁ ; r̄₀ ⇛ h ; t̄₁ with no non-identity contexts. Supports use one label per whiskered context, so r̄₁ is no longer a basis element (its support is that of h χ̄₂). The equation (F) cannot be dropped or replaced by a 4-cell h χ̄₂ ⇛ r̄₁ without a new class of cells killed by the quotient. h is not an interchanger: S and U₀ each contain a c_ij, and every hom-2 path containing a c_ij spans the whole external hom-0 interval.
+
+h is **not forced**. The mirror repair k : U₁ ⇛ T with t̄₁ = χ̄₂ ∗₂ k works equally well, and so does the symmetric repair with both h and k and both equations (12 cells, second route h ; χ̄₂ ; k, same exact Gray quotient). The alternative 2-equation U₀ = U₁ makes χ̄₂ an endomorphism and needs further equations (at least χ̄₂² = χ̄₂ under set supports), so it is not preferred.
 
 **Literature.** No construction and no impossibility result is known.
 - Closest: n-sesquicategories, which have no interchange at all (Araújo, arXiv 2202.09293 and 2210.07704; Forest–Mimram, arXiv 2211.16099 and *Rewriting in Gray categories*, MSCS 2022).
@@ -79,14 +89,14 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (the repaired 3-skeleton, smallest case).** For Γ = ΣD² ∨ ΣD², find the minimal hom-dimension-3 data to add to the 25 tensor generators and χ₁, χ₂ so that both boundary routes of A ⊗ B exist and requirements 2–4 still hold in dimension ≤ 3. Is a generator h : S ⇛ U₀ (or its mirror through χ₁) forced, and what is its image under the Gray quotient? Is it itself an interchanger of some pair of whiskered cells, i.e. is it part of a uniform rule ("interchange of a whiskered 2-cell with a 3-cell's boundary")? Note that a new 3-generator h survives the quotient of requirement 4 (it is not an interchanger), so it must either be classed as an interchanger-type cell that the quotient sends to r̄₁, or be accompanied by a 4-cell or equation relating it to r̄₁ and χ̄₂. Or is a 2-equation such as U₀ = U₁ the right repair? It equates two hom-2-cells whose unwhiskered parts a₀⁻ ; b₁⁻ and b₀⁻ ; a₁⁻ differ, which makes χ̄₂ an endo-3-cell of U₀: is that compatible with requirements 2 and 3?
+**Q1 (the uniform rule).** State a rule, in terms of the cube or tensor combinatorics, saying which whiskered tensor cells must factor through which whiskered inner interchangers. A candidate: whenever a whiskered tensor face d and a whiskered interchanger face e of the same cube interval share a target (or source), adjoin a factor h with d = h e (or k with d = e k). Is the h-type, the k-type or the symmetric version the right one? An equivalent formulation: the hom-2 paths of a cube interval are words in its coordinates, its faces are adjacent transpositions (the 2-faces of a permutohedron), and in ΣD² ∨ ΣD² the tensor pairs are oriented consistently while the interchanger pair flips when the third coordinate crosses it, so the hexagon has two sources and two sinks instead of one of each; h joins the two sources and k the two sinks. Does "every 2-face with a position-dependent pair gets a source-joining (or sink-joining) factorization, and the resulting diamond gets one 4-generator" extend to cubes with four or more coordinates, where square 2-faces (disjoint transpositions) also appear? Test the rule on the next cases: Γ = ΣD³ ∨ ΣD² (where the hom contains λD³ ⊗ λD² and the relevant cubes are larger), and Γ = ΣD² ∨ ΣD² ∨ ΣD² (three summands, hom ν(λD² ⊗ λD² ⊗ λD²), where interchangers of different pairs meet in one 4-dimensional cube). In each case give the added generators and equations through hom-dimension 4 and check requirements 2–4.
 
-**Q2 (dimension 4).** With the repaired 3-skeleton, give the 4-generators (the comparison for A ⊗ B and any naturality cells of the new 3-generators) and check requirements 2 and 4.
+**Q2 (substitution).** Requirement 5 requires every substitution F to preserve (F): F(r̄₁) = F(h) ; F(χ̄₂). Do the substitutions of (K9), or others between free objects on small Γ, force one of the h-type, k-type or symmetric repairs, or rule all of them out? In particular, if a substitution sends a cube of one shape onto a degenerate or larger interval of another, is the image of h determined?
 
-**Q3 (definition).** Is there a recursive "Gray tensor of towers" whose generators include the repairs of Q1 uniformly, giving F(Γ) with 1–5, up to some finite dimension N ≥ 5?
+**Q3 (definition).** Is there a recursive "Gray tensor of towers" whose generators include the factorizations of Q1 uniformly, giving F(Γ) with requirements 1–5, up to some finite dimension N ≥ 5?
 
-**Q4 (impossibility).** Can requirements 1–3 alone be shown inconsistent? (K1), (K2) and (K8) all use requirement 4 or (B).
+**Q4 (impossibility).** Can requirements 1–3 and 5 be shown inconsistent without requirement 4? (K1), (K2) and (K8) all use requirement 4 or (B).
 
 ## 5. What counts as a solution
 
-Explicit generators for Q1 or Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.
+Explicit generators and equations for Q1 in either test case; a forcing or refuting substitution for Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.

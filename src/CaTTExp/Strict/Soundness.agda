@@ -27,7 +27,9 @@
 --      arXiv 2404.07273, Prop. 8.3.17 and Thm 11.2.18, for these
 --      complexes; notes/conjectures/steiner-support-determines-cells.md
 --      proves it for every Steiner complex.)
--- CaTTExp.Strict.CheckCells checks (T-cell) by evaluation on 18 shapes.
+-- (T-cell) is proved in CaTTExp.Strict.Bridge (`T-cell`); it stays a
+-- parameter here only because Bridge imports this module's TCell.
+-- CaTTExp.Strict.CheckCells also checks it by evaluation on 18 shapes.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Soundness where
 
@@ -39,6 +41,7 @@ open import CaTTExp.Strict.Subst
 open import CaTTExp.Strict.L
 open import CaTTExp.Gray.Pure hiding (Tuple)
 import CaTTExp.Subst ∅ graySide as S
+import CaTTExp.Gray.Graded ∅ as Gr
 
 ------------------------------------------------------------------------
 -- Finite sets via CaTTExp.Gray.Support's memT.
@@ -204,6 +207,15 @@ BSupp = ∀ {Θ} → Θ ⊢ps → ∀ x y n X Y L M →
         IsCellL Θ x y n X → IsCellL Θ x y n Y →
         SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y
 
+-- The side condition compares downsets on generators (Support's
+-- `sameDown`); B-supp is about the closures `down`. In a pasting
+-- context the two agree on every comparison the side condition makes
+-- (CaTTExp.Gray.Graded.PsSide, from Gray.DownAgree), using that the
+-- context's types are variable towers.
+inv-gr : ∀ {Γ} → PsInv Γ → Gr.Inv Γ
+inv-gr p i ⋆           e = tt
+inv-gr p i (arr B s t) e = p i (arr B s t) e
+
 module Soundness (T-cell : TCell) (B-supp : BSupp) where
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
@@ -249,6 +261,7 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
     n = dim A₀
     lenσ = snd (S.sub-sc closed sσ)
     module SM = SubstMap cellσ lenσ (psInv psΔ)
+    module HD = Gr.PsSide Δ (inv-gr (psInv psΔ)) A₀ a₀ b₀ t u
     sct : S.ScTm (lenₛ σ) t
     sct = subst (λ m → S.ScTm m t) (sym lenσ) (S.tm-sc closed d)
     scA : S.ScTy (lenₛ σ) A
@@ -275,8 +288,8 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
     cellX : ∀ b → cohCase Δ A t u ≡ b → IsCellL Δ e₁ e₂ (dim A) (X₀ b)
     cellX true ec =
       let cc = subst T (sym ec) tt
-          pt = ∧-fst (∧-snd {endsOK Δ A} cc)
-          pu = ∧-snd {≈T (down Δ (supp t A)) (down Δ (fullT hs))} (∧-snd {endsOK Δ A} cc)
+          pt = HD.coh-t (∧-fst (∧-snd {endsOK Δ A} cc))
+          pu = HD.coh-u (∧-snd {sameDown Δ (supp t A) (fullT hs)} (∧-snd {endsOK Δ A} cc))
           eTU = B-supp psΔ e₁ e₂ n (towerOf t A) (towerOf u A) (supp t A) (supp u A) cT cU
                   (flat-supp t A₀ a₀ b₀) (flat-supp u A₀ a₀ b₀)
                   (≈T-via (down Δ (supp t A)) (down Δ (supp u A)) (down Δ (fullT hs)) pt pu)
@@ -287,8 +300,8 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
           okE = ∧-fst oc
           dA  = ==ℕ-sound (dim A) (dimK hs) (∧-fst (∧-snd {endsOK Δ A} oc))
           rest = ∧-snd {dim A ==ℕ dimK hs} (∧-snd {endsOK Δ A} oc)
-          pt = ∧-fst rest
-          pu = ∧-snd {≈T (down Δ (supp t A)) (down Δ (bdryT false hs))} rest
+          pt = HD.op-t (∧-fst rest)
+          pu = HD.op-u (∧-snd {sameDown Δ (supp t A) (bdryT false hs)} rest)
       in opcell (dimK hs) dA (T-cell psΔ A e₁ e₂ okE (endsV→endsTy A ee)) pt pu (topT hs) refl
 
   mutual

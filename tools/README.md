@@ -24,7 +24,7 @@ Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are n
 | `ChainCylinderRC3` | Full cylinder of x₀ → ⋯ → x₃: letters, normal forms N_w, μ for every split, fold 4-cells, frame factorisations (`rc3_chain.py`) | ~36 s |
 | `GridRC3` | 2 × 2 grid: 20 normal forms, 50 multiplications (8 block merges), exchange and its compatibility 4-term, raw law (12), Z₃, ζ, an interchange 4-cell, 61 frames (`rc3_grid.py`) | ~3 min |
 | `TwoDiscCylinderRC3` | D² ∗₀ D² cylinder 2-skeleton: 67 normal forms, 203 multiplications (4 through χ_M), χ_M, transfers, 64 frames; (36) on the full cylinder (`rc3_d2d2.py`) | ~10 min |
-| `RoundSixChecks` | cone r4 (2), (14); gray-contexts r6 (3), (6), (11), (24); naturality r6 (11), (14), (18), (20), routes of (19) (`rc3_r6.py`) | ~18 s |
+| `RoundSixChecks` | cone r4 (2), (14); gray-contexts r6 (3), (6), (11), (24); naturality r6 (11), (14), (18), (20), routes of (19) (`rc3_r6.py`) | ~21 s |
 
 Negative control: swapping source and target in `expected` of `UnitorNaturality` makes Agda reject the module (`3 != 1 of type Nat … refl`).
 

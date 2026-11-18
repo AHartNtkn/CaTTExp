@@ -80,7 +80,8 @@ def cone_checks():
     want_l = comp2(G, 2, comp2(G, 1, M1, RR), comp2(G, 1, comp2(G, 1, V('u0'), A[1]), delta))
     want_r = comp2(G, 2, comp2(G, 1, V('u1'), delta), comp2(G, 1, M1, A[2]))
     assert ty[2] == want_l and ty[3] == want_r, '(14) type'
-    return G, dict(S12=S12, e14=e14)
+    want = (ty[0], ty[1], want_l, want_r)   # the displayed type of (14), checked in Agda
+    return G, dict(S12=S12, e14=e14), want
 
 def struct_or(G, a, b):
     """A coherence a => b between 2-terms whose only 2-variables are whole
@@ -385,8 +386,7 @@ def sub_coh(P, Q, entries, s_Q, t_Q, order=None):
 # ================================================================ run
 def main():
     out = {}
-    Gc, cone = cone_checks()
-    out['cone'] = (Gc, cone)
+    Gc, cone, t14 = cone_checks()
     om = [omega_P(((((),), (), ((),)),)), omega_P(((((),),), (((),),)))]
     D3, e6 = eq6()
     P11, _, e11 = eq11_formal()
@@ -396,7 +396,7 @@ def main():
     print('cone r4: S_1^2, (14); gray r6: Omega_P x2, (6), (11) formal + instance, (24); '
           'naturality r6: M both orders, zeta, psi x3, (19) routes parallel, (20) ok')
     return dict(Gc=Gc, cone=cone, om=om, e6=(D3, e6), e11=(P11, e11), e11i=(Wf, e11i),
-                e24=(Pu, e24), W=W, nat=nat, e20=(P66, e20), t19=t19)
+                e24=(Pu, e24), W=W, nat=nat, e20=(P66, e20), t19=t19, t14=t14)
 
 def emit_module():
     from emit_agda import Emitter
@@ -404,6 +404,7 @@ def emit_module():
     E = Emitter()
     for k_, t in r['cone'].items():
         E.check_typed('cone-' + k_, r['Gc'], t)
+    E.check_type('cone-e14-ty', r['Gc'], r['cone']['e14'], r['t14'])
     for i, (P, t) in enumerate(r['om']):
         E.check_typed('Omega%d' % i, P, t)
     E.check_typed('eq6', *r['e6'])

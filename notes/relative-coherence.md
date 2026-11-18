@@ -673,7 +673,7 @@ Each of these is a direct coherence over the named pasting context after the rou
 `tools/rc3_r6.py` and `src/CaTTExp/Generated/RoundSixChecks.agda`. The certified checker accepts the following.
 - **Cone, round 4** (`conjectures/answered/cone-over-coherences-r4-2026-11-18.md`), in `Cone(D² ∗₁ D²; c)`:
   - `S₁²` (2), with its target associator;
-  - the 4-cell (14), formed over `D³ ∗₁ D³` with `M₁` and the right-frame comparison δ substituted. Its type is checked to be exactly the displayed one.
+  - the 4-cell (14), formed over `D³ ∗₁ D³` with `M₁` and the right-frame comparison δ substituted. Its type is checked in Agda against the displayed type, built independently from M₁, R, δ and the frame cells (check `cone-e14-ty`).
 
   (15) is a composite of (14), unitor naturality and the associator. It is not assembled.
 - **Gray contexts, round 6** (`conjectures/answered/gray-contexts-r6-2026-11-18.md`):
@@ -697,7 +697,7 @@ Each of these is a direct coherence over the named pasting context after the rou
 - C1b, mechanical check in the Agda checker (now including Theorem A's exchange step on a small instance): NGC.
 - Mikhail's printed-rule defects: ledger D3b, owned by LIM-F.
 - Agda for Gray contexts (D5) is unchanged.
-- RC exchange step (thread RCX, 2026-11-18): §7.8 (2 × 2 grid, internal proof), §7.9 (D² ∗₀ D² 2-skeleton, sketch) and §7.10 (checks of round-6 constructions). The grid and the full D² ∗₀ D² cylinder are now settled by verified researcher answers (gray-contexts r7, naturality r7), and the several-3-generator question by the cone r5 extension theorem, so the RC(3) frontier is general exchange in dimension 2 (asked in `conjectures/outbox/gray-contexts-r8.md`). Open, owned by RCX: that general statement (§7.8 suggests a canonical block factorisation by a total preorder on letters compatible with every trace poset); RC(4) for the triangle context, which is RC(4) of a 2-dimensional context (E11 link, asked in gray-contexts r8); machine checks of the r5/r7 comparison lemma and grid flattening step.
+- RC exchange step (thread RCX, 2026-11-18): §7.8 (2 × 2 grid, internal proof), §7.9 (D² ∗₀ D² 2-skeleton, sketch) and §7.10 (checks of round-6 constructions). The grid and the full D² ∗₀ D² cylinder are now settled by verified researcher answers (gray-contexts r7, naturality r7), and the several-3-generator question by the cone r5 extension theorem, so the RC(3) frontier is general exchange in dimension 2 (asked in `conjectures/outbox/gray-contexts-r8.md`). Open, owned by RCX: that general statement (§7.9 suggests a canonical block factorisation by a total preorder on letters compatible with every trace poset); RC(4) for the triangle context, which is RC(4) of a 2-dimensional context (E11 link, asked in gray-contexts r8); machine checks of the r5/r7 comparison lemma and grid flattening step.
 
 ## 9. Machine checks (C1b)
 
@@ -713,7 +713,7 @@ Each of these is a direct coherence over the named pasting context after the rou
 | `ChainCylinderRC3` | Round-5 constructors on the cylinder of x₀→x₁→x₂→x₃ (§7.7): letters, 22 normal forms incl. (5), μ for all 20 splits, the fold 4-cells, 42 one-active-column frame factorisations | typechecks (~36 s); negative control rejected |
 | `GridRC3` | RC(3) for the 2 × 2 grid (§7.8): 20 normal forms, 50 multiplications (8 with a block merge), the exchange and its compatibility 4-term, the raw law (12), Z₃, ζ, a sep/mer interchange 4-cell, 61 frame factorisations | typechecks (~3 min); negative control rejected |
 | `TwoDiscCylinderRC3` | The D² ∗₀ D² cylinder (§7.9): 67 normal forms, 203 multiplications (incl. 4 through χ_M), χ_M, transfers, 64 frames; (36) on the full cylinder | ~10 min (local Agda 2.6.3); negative control rejected |
-| `RoundSixChecks` | Cone r4 (2), (14); gray-contexts r6 (3) ×2, (6), (11) formal and instance, (24); naturality r6 (11), (14), (18), (20), the two routes of (19) parallel (§7.10) | typechecks (~18 s); negative control rejected |
+| `RoundSixChecks` | Cone r4 (2), (14); gray-contexts r6 (3) ×2, (6), (11) formal and instance, (24); naturality r6 (11), (14), (18), (20), the two routes of (19) parallel (§7.10) | typechecks (~21 s, 20 checks); negative control rejected |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

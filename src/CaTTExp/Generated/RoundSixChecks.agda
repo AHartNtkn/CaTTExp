@@ -148,1301 +148,1322 @@ t45 = coh c5 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t7) t44 t42) ⟪ (v 7) ∷ (v 0)
 t46 : Tm
 t46 = coh c28 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) t34 t38) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ (v 11) ∷ t9 ∷ (v 13) ∷ t3 ∷ t41 ∷ t10 ∷ t45 ∷ [] ⟫
 
-c47 : Ctx
-c47 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) (v 10) (v 11))
+t47 : Tm
+t47 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ (v 11) ∷ t3 ∷ t41 ∷ [] ⟫
 
 t48 : Tm
-t48 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t48 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ t9 ∷ t3 ∷ t41 ∷ [] ⟫
 
 t49 : Tm
-t49 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t49 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ (v 11) ∷ t9 ∷ (v 13) ∷ t3 ∷ t41 ∷ [] ⟫
 
 t50 : Tm
-t50 = coh c47 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t48 t49) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t50 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ t9 ∷ t3 ∷ t41 ∷ t10 ∷ t45 ∷ [] ⟫
 
 t51 : Tm
-t51 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t17 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t51 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t3 ∷ t47 ∷ t48 ∷ t49 ∷ t14 ∷ t50 ∷ [] ⟫
 
 t52 : Tm
-t52 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t16 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t52 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t2 ∷ (v 11) ∷ t3 ∷ t41 ∷ t10 ∷ t45 ∷ [] ⟫
 
 t53 : Tm
-t53 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t53 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 7) ∷ (v 1) ∷ (v 9) ∷ t3 ∷ t47 ∷ t11 ∷ t52 ∷ t14 ∷ t18 ∷ [] ⟫
 
-t54 : Tm
-t54 = coh c21 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t53 t23) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+c54 : Ctx
+c54 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) (v 10) (v 11))
 
 t55 : Tm
-t55 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t16 ∷ t17 ∷ t30 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t55 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t56 : Tm
-t56 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t48 ∷ t52 ∷ t54 ∷ t51 ∷ t55 ∷ [] ⟫
+t56 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t57 : Tm
-t57 = coh c21 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t53) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t57 = coh c54 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t55 t56) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t58 : Tm
-t58 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t48 ∷ t51 ∷ t56 ∷ t49 ∷ t57 ∷ [] ⟫
+t58 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t17 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t59 : Tm
-t59 = coh c47 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t48 t49) t50 t58) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t59 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t16 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
-c60 : Ctx
-c60 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) (v 10) (v 11))
+t60 : Tm
+t60 = coh c21 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t61 : Tm
-t61 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t61 = coh c21 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t60 t23) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t62 : Tm
-t62 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t62 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t16 ∷ t17 ∷ t30 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
-c63 : Ctx
-c63 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 5)) ▸ (arr ⋆ (v 1) (v 5)) ▸ (arr (arr ⋆ (v 1) (v 5)) (v 6) (v 7))
+t63 : Tm
+t63 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t55 ∷ t59 ∷ t61 ∷ t58 ∷ t62 ∷ [] ⟫
 
 t64 : Tm
-t64 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t64 = coh c21 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t60) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t65 : Tm
-t65 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
+t65 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t55 ∷ t58 ∷ t63 ∷ t56 ∷ t64 ∷ [] ⟫
 
 t66 : Tm
-t66 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t66 = coh c54 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t55 t56) t57 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
-t67 : Tm
-t67 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+c67 : Ctx
+c67 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) (v 10) (v 11))
 
 t68 : Tm
-t68 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t68 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t69 : Tm
-t69 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t69 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
-t70 : Tm
-t70 = coh c63 (arr (arr (arr ⋆ (v 0) (v 5)) t64 t65) t69 t69) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+c70 : Ctx
+c70 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 5)) ▸ (arr ⋆ (v 1) (v 5)) ▸ (arr (arr ⋆ (v 1) (v 5)) (v 6) (v 7))
 
 t71 : Tm
-t71 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t62 ∷ t66 ∷ t66 ∷ t70 ∷ t67 ∷ t68 ∷ [] ⟫
+t71 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t72 : Tm
-t72 = coh c63 (arr (arr (arr ⋆ (v 0) (v 5)) t64 t65) t69 t69) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t72 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
 
 t73 : Tm
-t73 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t62 ∷ t66 ∷ t67 ∷ t71 ∷ t67 ∷ t72 ∷ [] ⟫
+t73 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t74 : Tm
-t74 = coh c60 (arr (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) t68 t73) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t74 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
-c75 : Ctx
-c75 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5))
+t75 : Tm
+t75 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
-c76 : Ctx
-c76 = ε ▸ ⋆
+t76 : Tm
+t76 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t77 : Tm
-t77 = coh c76 (arr ⋆ (v 0) (v 0)) ⟪ (v 1) ∷ [] ⟫
+t77 = coh c70 (arr (arr (arr ⋆ (v 0) (v 5)) t71 t72) t76 t76) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t78 : Tm
-t78 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 1) ∷ t77 ∷ [] ⟫
+t78 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t69 ∷ t73 ∷ t73 ∷ t77 ∷ t74 ∷ t75 ∷ [] ⟫
 
 t79 : Tm
-t79 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 1) ∷ t77 ∷ (v 1) ∷ t77 ∷ [] ⟫
+t79 = coh c70 (arr (arr (arr ⋆ (v 0) (v 5)) t71 t72) t76 t76) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t80 : Tm
-t80 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 1) ∷ t79 ∷ [] ⟫
+t80 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t69 ∷ t73 ∷ t74 ∷ t78 ∷ t74 ∷ t79 ∷ [] ⟫
 
 t81 : Tm
-t81 = coh c76 (arr ⋆ (v 0) (v 0)) ⟪ (v 0) ∷ [] ⟫
+t81 = coh c67 (arr (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) t75 t80) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
-t82 : Tm
-t82 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 0) ∷ t81 ∷ (v 0) ∷ t81 ∷ [] ⟫
+c82 : Ctx
+c82 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5))
 
-t83 : Tm
-t83 = coh c76 (arr (arr ⋆ (v 0) (v 0)) t81 t82) ⟪ (v 1) ∷ [] ⟫
+c83 : Ctx
+c83 = ε ▸ ⋆
 
 t84 : Tm
-t84 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 1) ∷ t77 ∷ t79 ∷ t83 ∷ [] ⟫
+t84 = coh c83 (arr ⋆ (v 0) (v 0)) ⟪ (v 1) ∷ [] ⟫
 
 t85 : Tm
-t85 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 1) ∷ t77 ∷ t79 ∷ t83 ∷ [] ⟫
+t85 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 1) ∷ t84 ∷ [] ⟫
 
-c86 : Ctx
-c86 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3))
+t86 : Tm
+t86 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 1) ∷ t84 ∷ (v 1) ∷ t84 ∷ [] ⟫
 
 t87 : Tm
-t87 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 4)) ⟪ (v 1) ∷ (v 1) ∷ t77 ∷ t79 ∷ t83 ∷ [] ⟫
+t87 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 1) ∷ t86 ∷ [] ⟫
 
 t88 : Tm
-t88 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 1) ∷ t77 ∷ t79 ∷ t83 ∷ t83 ∷ t87 ∷ [] ⟫
+t88 = coh c83 (arr ⋆ (v 0) (v 0)) ⟪ (v 0) ∷ [] ⟫
 
 t89 : Tm
-t89 = coh c39 (arr (arr ⋆ (v 0) (v 1)) t78 (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ [] ⟫
+t89 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 0) ∷ t88 ∷ (v 0) ∷ t88 ∷ [] ⟫
 
 t90 : Tm
-t90 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 2) ∷ t89 ∷ (v 3) ∷ (v 5) ∷ [] ⟫
+t90 = coh c83 (arr (arr ⋆ (v 0) (v 0)) t88 t89) ⟪ (v 1) ∷ [] ⟫
 
 t91 : Tm
-t91 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 1) ∷ t79 ∷ [] ⟫
+t91 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 1) ∷ t84 ∷ t86 ∷ t90 ∷ [] ⟫
 
 t92 : Tm
-t92 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) t91) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ [] ⟫
+t92 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 1) ∷ t84 ∷ t86 ∷ t90 ∷ [] ⟫
 
-t93 : Tm
-t93 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 3) ∷ t90 ∷ t80 ∷ t92 ∷ [] ⟫
+c93 : Ctx
+c93 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3))
 
 t94 : Tm
-t94 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 2) ∷ t89 ∷ (v 3) ∷ (v 4) ∷ [] ⟫
+t94 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 4)) ⟪ (v 1) ∷ (v 1) ∷ t84 ∷ t86 ∷ t90 ∷ [] ⟫
 
 t95 : Tm
-t95 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 3) ∷ t94 ∷ t80 ∷ t92 ∷ [] ⟫
+t95 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 1) ∷ t84 ∷ t86 ∷ t90 ∷ t90 ∷ t94 ∷ [] ⟫
 
 t96 : Tm
-t96 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) t78 t80) t84 t95) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
+t96 = coh c39 (arr (arr ⋆ (v 0) (v 1)) t85 (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ [] ⟫
 
 t97 : Tm
-t97 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 2) ∷ t89 ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t97 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 2) ∷ t96 ∷ (v 3) ∷ (v 5) ∷ [] ⟫
 
 t98 : Tm
-t98 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ (v 3) ∷ t94 ∷ t90 ∷ t97 ∷ t80 ∷ t92 ∷ [] ⟫
+t98 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 1) ∷ t86 ∷ [] ⟫
 
 t99 : Tm
-t99 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ t80 ∷ t84 ∷ t95 ∷ t96 ∷ t93 ∷ t98 ∷ [] ⟫
+t99 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) t98) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ [] ⟫
 
 t100 : Tm
-t100 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) t78 t80) t95 t84) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ [] ⟫
+t100 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 3) ∷ t97 ∷ t87 ∷ t99 ∷ [] ⟫
 
 t101 : Tm
-t101 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ t78 ∷ t80 ∷ t84 ∷ t93 ∷ t99 ∷ t85 ∷ t100 ∷ [] ⟫
+t101 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 2) ∷ t96 ∷ (v 3) ∷ (v 4) ∷ [] ⟫
 
 t102 : Tm
-t102 = coh c75 (arr (arr (arr (arr ⋆ (v 0) (v 1)) t78 t80) t84 t85) t88 t101) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t102 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 3) ∷ t101 ∷ t87 ∷ t99 ∷ [] ⟫
 
-c103 : Ctx
-c103 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) (v 6) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) (v 10) (v 11))
+t103 : Tm
+t103 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) t85 t87) t91 t102) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
 
 t104 : Tm
-t104 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t104 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 2) ∷ t96 ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t105 : Tm
-t105 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t105 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ (v 3) ∷ t101 ∷ t97 ∷ t104 ∷ t87 ∷ t99 ∷ [] ⟫
 
 t106 : Tm
-t106 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t106 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ t87 ∷ t91 ∷ t102 ∷ t103 ∷ t100 ∷ t105 ∷ [] ⟫
 
 t107 : Tm
-t107 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t107 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) t85 t87) t102 t91) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ [] ⟫
 
 t108 : Tm
-t108 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ t32 ∷ t107 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t108 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ t85 ∷ t87 ∷ t91 ∷ t100 ∷ t106 ∷ t92 ∷ t107 ∷ [] ⟫
 
 t109 : Tm
-t109 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t109 = coh c82 (arr (arr (arr (arr ⋆ (v 0) (v 1)) t85 t87) t91 t92) t95 t108) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
-t110 : Tm
-t110 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t104 ∷ t106 ∷ t108 ∷ t105 ∷ t109 ∷ [] ⟫
+c110 : Ctx
+c110 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) (v 6) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9)) (v 10) (v 11))
 
 t111 : Tm
-t111 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t111 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t112 : Tm
-t112 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t112 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t113 : Tm
-t113 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ t32 ∷ t107 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t113 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t114 : Tm
-t114 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t104 ∷ t111 ∷ t112 ∷ t105 ∷ t113 ∷ [] ⟫
+t114 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t115 : Tm
-t115 = coh c103 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t104 t105) t110 t114) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t115 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ t32 ∷ t114 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t116 : Tm
-t116 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
+t116 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t32 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t117 : Tm
-t117 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 7) ∷ [] ⟫
+t117 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t111 ∷ t113 ∷ t115 ∷ t112 ∷ t116 ∷ [] ⟫
 
 t118 : Tm
-t118 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 9) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
+t118 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t119 : Tm
-t119 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ [] ⟫
+t119 = coh c31 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t22 t32) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
-c120 : Ctx
-c120 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 5))
+t120 : Tm
+t120 = coh c15 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t17) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ t32 ∷ t114 ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t121 : Tm
-t121 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t121 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t111 ∷ t118 ∷ t119 ∷ t112 ∷ t120 ∷ [] ⟫
 
 t122 : Tm
-t122 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 9) ∷ (v 12) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
+t122 = coh c110 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t111 t112) t117 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t123 : Tm
-t123 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ t118 ∷ t122 ∷ t119 ∷ (v 11) ∷ [] ⟫
+t123 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
 
 t124 : Tm
-t124 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 7) ∷ (v 10) ∷ (v 13) ∷ [] ⟫
+t124 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 7) ∷ [] ⟫
 
 t125 : Tm
-t125 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ t117 ∷ (v 8) ∷ t119 ∷ t124 ∷ [] ⟫
+t125 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 9) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
 
 t126 : Tm
-t126 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 15) ∷ (v 18) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
+t126 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ [] ⟫
 
-t127 : Tm
-t127 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+c127 : Ctx
+c127 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 5))
 
 t128 : Tm
-t128 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 15) ∷ (v 21) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
+t128 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t129 : Tm
-t129 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 22) ∷ [] ⟫
+t129 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 9) ∷ (v 12) ∷ (v 4) ∷ (v 5) ∷ [] ⟫
 
 t130 : Tm
-t130 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 3) ∷ (v 15) ∷ (v 18) ∷ (v 21) ∷ (v 24) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
+t130 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ t125 ∷ t129 ∷ t126 ∷ (v 11) ∷ [] ⟫
 
 t131 : Tm
-t131 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 16) ∷ t126 ∷ t128 ∷ t130 ∷ t129 ∷ (v 23) ∷ [] ⟫
+t131 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 7) ∷ (v 10) ∷ (v 13) ∷ [] ⟫
 
 t132 : Tm
-t132 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ (v 22) ∷ (v 25) ∷ [] ⟫
+t132 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ t124 ∷ (v 8) ∷ t126 ∷ t131 ∷ [] ⟫
 
 t133 : Tm
-t133 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 16) ∷ t126 ∷ t127 ∷ (v 20) ∷ t129 ∷ t132 ∷ [] ⟫
+t133 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 15) ∷ (v 18) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
 
-c134 : Ctx
-c134 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 4)) ▸ (arr (arr ⋆ (v 0) (v 4)) t116 t117) ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 4)) ▸ (arr (arr ⋆ (v 0) (v 4)) t118 t119) ▸ (arr (arr ⋆ (v 0) (v 3)) (v 6) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 4)) (v 7) (v 10)) ▸ (arr (arr (arr ⋆ (v 0) (v 4)) t116 t119) t123 t125) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 15) (v 16)) ▸ (arr ⋆ (v 3) (v 15)) ▸ (arr ⋆ (v 4) (v 16)) ▸ (arr (arr ⋆ (v 3) (v 16)) t126 t127) ▸ (arr ⋆ (v 3) (v 15)) ▸ (arr ⋆ (v 4) (v 16)) ▸ (arr (arr ⋆ (v 3) (v 16)) t128 t129) ▸ (arr (arr ⋆ (v 3) (v 15)) (v 18) (v 21)) ▸ (arr (arr ⋆ (v 4) (v 16)) (v 19) (v 22)) ▸ (arr (arr (arr ⋆ (v 3) (v 16)) t126 t129) t131 t133)
+t134 : Tm
+t134 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t135 : Tm
-t135 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t135 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 15) ∷ (v 21) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
 
-c136 : Ctx
-c136 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 3) (v 5))
+t136 : Tm
+t136 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 22) ∷ [] ⟫
 
 t137 : Tm
-t137 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t137 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 3) ∷ (v 15) ∷ (v 18) ∷ (v 21) ∷ (v 24) ∷ (v 16) ∷ (v 17) ∷ [] ⟫
 
 t138 : Tm
-t138 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t137) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t138 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 16) ∷ t133 ∷ t135 ∷ t137 ∷ t136 ∷ (v 23) ∷ [] ⟫
 
 t139 : Tm
-t139 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 4) ∷ t119 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t139 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ (v 22) ∷ (v 25) ∷ [] ⟫
 
 t140 : Tm
-t140 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ t119 ∷ t123 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t140 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 16) ∷ t133 ∷ t134 ∷ (v 20) ∷ t136 ∷ t139 ∷ [] ⟫
 
-t141 : Tm
-t141 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ t119 ∷ t125 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+c141 : Ctx
+c141 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 4)) ▸ (arr (arr ⋆ (v 0) (v 4)) t123 t124) ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 4)) ▸ (arr (arr ⋆ (v 0) (v 4)) t125 t126) ▸ (arr (arr ⋆ (v 0) (v 3)) (v 6) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 4)) (v 7) (v 10)) ▸ (arr (arr (arr ⋆ (v 0) (v 4)) t123 t126) t130 t132) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 15) (v 16)) ▸ (arr ⋆ (v 3) (v 15)) ▸ (arr ⋆ (v 4) (v 16)) ▸ (arr (arr ⋆ (v 3) (v 16)) t133 t134) ▸ (arr ⋆ (v 3) (v 15)) ▸ (arr ⋆ (v 4) (v 16)) ▸ (arr (arr ⋆ (v 3) (v 16)) t135 t136) ▸ (arr (arr ⋆ (v 3) (v 15)) (v 18) (v 21)) ▸ (arr (arr ⋆ (v 4) (v 16)) (v 19) (v 22)) ▸ (arr (arr (arr ⋆ (v 3) (v 16)) t133 t136) t138 t140)
 
-c142 : Ctx
-c142 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7))
+t142 : Tm
+t142 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
-t143 : Tm
-t143 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+c143 : Ctx
+c143 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 3)) ▸ ⋆ ▸ (arr ⋆ (v 3) (v 5))
 
 t144 : Tm
-t144 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t144 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t145 : Tm
-t145 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t145 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t144) ⟪ (v 0) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 5) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t146 : Tm
-t146 = coh c142 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t143) t144 t145) ⟪ (v 0) ∷ (v 4) ∷ t116 ∷ t119 ∷ t123 ∷ t125 ∷ (v 14) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t146 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 4) ∷ t126 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t147 : Tm
-t147 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t147 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ t126 ∷ t130 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t148 : Tm
-t148 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 16) ∷ t147 ∷ [] ⟫
+t148 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ t126 ∷ t132 ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
-t149 : Tm
-t149 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t137) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+c149 : Ctx
+c149 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7))
 
 t150 : Tm
-t150 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t150 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t151 : Tm
-t151 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t150 ∷ [] ⟫
+t151 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t152 : Tm
-t152 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t151) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t152 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t153 : Tm
-t153 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 16) ∷ t139 ∷ t139 ∷ t149 ∷ t148 ∷ t152 ∷ [] ⟫
+t153 = coh c149 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t150) t151 t152) ⟪ (v 0) ∷ (v 4) ∷ t123 ∷ t126 ∷ t130 ∷ t132 ∷ (v 14) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t154 : Tm
-t154 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t137) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t154 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t155 : Tm
-t155 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t151) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t155 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 16) ∷ t154 ∷ [] ⟫
 
 t156 : Tm
-t156 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t137 ∷ t137 ∷ t154 ∷ t151 ∷ t155 ∷ [] ⟫
+t156 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t144) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t157 : Tm
-t157 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t151) t156 t155) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
+t157 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 1) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t158 : Tm
-t158 = coh c103 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t104 t105) t110 t114) ⟪ (v 0) ∷ (v 16) ∷ t135 ∷ t135 ∷ t138 ∷ t139 ∷ t140 ∷ t141 ∷ t146 ∷ t148 ∷ t153 ∷ t152 ∷ t157 ∷ [] ⟫
+t158 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t157 ∷ [] ⟫
 
 t159 : Tm
-t159 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t159 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t158) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t160 : Tm
-t160 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t143 ∷ t144 ∷ t62 ∷ t159 ∷ [] ⟫
+t160 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 16) ∷ t146 ∷ t146 ∷ t156 ∷ t155 ∷ t159 ∷ [] ⟫
 
 t161 : Tm
-t161 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t161 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t144) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t162 : Tm
-t162 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t162 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t158) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t163 : Tm
-t163 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t163 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t144 ∷ t144 ∷ t161 ∷ t158 ∷ t162 ∷ [] ⟫
 
 t164 : Tm
-t164 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t161 ∷ t162 ∷ t62 ∷ t163 ∷ [] ⟫
+t164 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t158) t163 t162) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 4) ∷ (v 10) ∷ (v 16) ∷ (v 19) ∷ [] ⟫
 
 t165 : Tm
-t165 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t165 = coh c110 (arr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t111 t112) t117 t121) ⟪ (v 0) ∷ (v 16) ∷ t142 ∷ t142 ∷ t145 ∷ t146 ∷ t147 ∷ t148 ∷ t153 ∷ t155 ∷ t160 ∷ t159 ∷ t164 ∷ [] ⟫
 
 t166 : Tm
-t166 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t166 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t167 : Tm
-t167 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t161 ∷ t165 ∷ t62 ∷ t166 ∷ [] ⟫
+t167 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t150 ∷ t151 ∷ t69 ∷ t166 ∷ [] ⟫
 
 t168 : Tm
-t168 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t168 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
 t169 : Tm
-t169 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t169 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t170 : Tm
-t170 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t64 ∷ t121 ∷ t168 ∷ t65 ∷ t169 ∷ [] ⟫
+t170 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
 t171 : Tm
-t171 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
+t171 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t168 ∷ t169 ∷ t69 ∷ t170 ∷ [] ⟫
 
 t172 : Tm
-t172 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t172 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t173 : Tm
-t173 = coh c120 (arr (arr ⋆ (v 0) (v 5)) t64 t121) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
+t173 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
 t174 : Tm
-t174 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t64 ∷ t171 ∷ t172 ∷ t65 ∷ t173 ∷ [] ⟫
+t174 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t168 ∷ t172 ∷ t69 ∷ t173 ∷ [] ⟫
 
 t175 : Tm
-t175 = coh c63 (arr (arr (arr ⋆ (v 0) (v 5)) t64 t65) t170 t174) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t175 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
-c176 : Ctx
-c176 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) ▸ (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) ▸ (arr (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) (v 6) (v 7))
+t176 : Tm
+t176 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t177 : Tm
-t177 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
+t177 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t71 ∷ t128 ∷ t175 ∷ t72 ∷ t176 ∷ [] ⟫
 
 t178 : Tm
-t178 = coh c176 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t7) t42 t177) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t178 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
 
 t179 : Tm
-t179 = coh c142 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t143) t144 t145) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t179 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t180 : Tm
-t180 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t161 ∷ t165 ∷ t162 ∷ t178 ∷ t62 ∷ t166 ∷ t163 ∷ t179 ∷ [] ⟫
+t180 = coh c127 (arr (arr ⋆ (v 0) (v 5)) t71 t128) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
 
 t181 : Tm
-t181 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t62 ∷ t160 ∷ t167 ∷ t175 ∷ t164 ∷ t180 ∷ [] ⟫
+t181 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t71 ∷ t178 ∷ t179 ∷ t72 ∷ t180 ∷ [] ⟫
 
 t182 : Tm
-t182 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t182 = coh c70 (arr (arr (arr ⋆ (v 0) (v 5)) t71 t72) t177 t181) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
-t183 : Tm
-t183 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t143 ∷ t145 ∷ t62 ∷ t182 ∷ [] ⟫
+c183 : Ctx
+c183 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) ▸ (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) ▸ (arr (arr (arr ⋆ (v 1) (v 3)) (v 4) (v 5)) (v 6) (v 7))
 
 t184 : Tm
-t184 = coh c142 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t143) t144 t145) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
+t184 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 7) ∷ [] ⟫
 
 t185 : Tm
-t185 = coh c176 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t7) t42 t177) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t185 = coh c183 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t7) t42 t184) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t186 : Tm
-t186 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t143 ∷ t144 ∷ t145 ∷ t184 ∷ t62 ∷ t159 ∷ t182 ∷ t185 ∷ [] ⟫
+t186 = coh c149 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t150) t151 t152) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
 t187 : Tm
-t187 = coh c63 (arr (arr (arr ⋆ (v 0) (v 5)) t64 t65) t170 t174) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+t187 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t168 ∷ t172 ∷ t169 ∷ t185 ∷ t69 ∷ t173 ∷ t170 ∷ t186 ∷ [] ⟫
 
 t188 : Tm
-t188 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t62 ∷ t160 ∷ t183 ∷ t186 ∷ t164 ∷ t187 ∷ [] ⟫
+t188 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t69 ∷ t167 ∷ t174 ∷ t182 ∷ t171 ∷ t187 ∷ [] ⟫
 
 t189 : Tm
-t189 = coh c60 (arr (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t160 t164) t181 t188) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t189 = coh c5 (arr (arr ⋆ (v 0) (v 3)) t6 t7) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t190 : Tm
-t190 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
+t190 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t150 ∷ t152 ∷ t69 ∷ t189 ∷ [] ⟫
 
-c191 : Ctx
-c191 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 3)) (v 5) t190) ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr (arr ⋆ (v 3) (v 4)) (v 8) (v 9))
+t191 : Tm
+t191 = coh c149 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t150) t151 t152) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ [] ⟫
 
 t192 : Tm
-t192 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t192 = coh c183 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t7) t42 t184) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t193 : Tm
-t193 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ (v 4) ∷ (v 9) ∷ [] ⟫
+t193 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t150 ∷ t151 ∷ t152 ∷ t191 ∷ t69 ∷ t166 ∷ t189 ∷ t192 ∷ [] ⟫
 
 t194 : Tm
-t194 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t194 = coh c70 (arr (arr (arr ⋆ (v 0) (v 5)) t71 t72) t177 t181) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t195 : Tm
-t195 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t195 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t69 ∷ t167 ∷ t190 ∷ t193 ∷ t171 ∷ t194 ∷ [] ⟫
 
 t196 : Tm
-t196 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ [] ⟫
+t196 = coh c67 (arr (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t167 t171) t188 t195) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t197 : Tm
-t197 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ [] ⟫
+t197 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
 
-t198 : Tm
-t198 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t197 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+c198 : Ctx
+c198 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 3)) ▸ (arr ⋆ (v 1) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 3)) (v 5) t197) ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr ⋆ (v 3) (v 4)) ▸ (arr (arr ⋆ (v 3) (v 4)) (v 8) (v 9))
 
 t199 : Tm
-t199 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t196 ∷ t193 ∷ t198 ∷ [] ⟫
+t199 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t200 : Tm
-t200 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ t190 ∷ t197 ∷ [] ⟫
+t200 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ (v 4) ∷ (v 9) ∷ [] ⟫
 
 t201 : Tm
-t201 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t201 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t202 : Tm
-t202 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t200 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t201 ∷ [] ⟫
+t202 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
-c203 : Ctx
-c203 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 9) (v 11))
+t203 : Tm
+t203 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t204 : Tm
-t204 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 11) ∷ [] ⟫
+t204 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ [] ⟫
 
 t205 : Tm
-t205 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 9) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t205 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t204 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t206 : Tm
-t206 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t61 ∷ t62 ∷ t66 ∷ t204 ∷ t205 ∷ [] ⟫
+t206 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t203 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t207 : Tm
-t207 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t207 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ t197 ∷ t204 ∷ [] ⟫
 
 t208 : Tm
-t208 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 7) ∷ (v 8) ∷ (v 11) ∷ t207 ∷ [] ⟫
+t208 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t209 : Tm
-t209 = coh c203 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t204) t206 t208) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ t190 ∷ t197 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t209 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t207 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t208 ∷ [] ⟫
 
-t210 : Tm
-t210 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+c210 : Ctx
+c210 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 8) (v 9)) ▸ (arr ⋆ (v 1) (v 7)) ▸ (arr (arr ⋆ (v 1) (v 7)) (v 9) (v 11))
 
 t211 : Tm
-t211 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ [] ⟫
+t211 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 11) ∷ [] ⟫
 
 t212 : Tm
-t212 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 3) ∷ t211 ∷ [] ⟫
+t212 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 9) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t213 : Tm
-t213 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t212 (v 4)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ [] ⟫
+t213 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 7) ∷ t68 ∷ t69 ∷ t73 ∷ t211 ∷ t212 ∷ [] ⟫
 
 t214 : Tm
-t214 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ [] ⟫
+t214 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t215 : Tm
-t215 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t214 ∷ (v 3) ∷ (v 4) ∷ [] ⟫
+t215 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 7) ∷ (v 8) ∷ (v 11) ∷ t214 ∷ [] ⟫
 
 t216 : Tm
-t216 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t215 (v 4)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t216 = coh c210 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t211) t213 t215) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ t197 ∷ t204 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t217 : Tm
-t217 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t200 ∷ (v 7) ∷ t213 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t201 ∷ (v 10) ∷ t216 ∷ [] ⟫
+t217 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t218 : Tm
-t218 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t199 ∷ t202 ∷ t209 ∷ t210 ∷ t217 ∷ [] ⟫
+t218 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ [] ⟫
 
 t219 : Tm
-t219 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
+t219 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 3) ∷ t218 ∷ [] ⟫
 
 t220 : Tm
-t220 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ [] ⟫
+t220 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t219 (v 4)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ [] ⟫
 
 t221 : Tm
-t221 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t221 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ [] ⟫
 
 t222 : Tm
-t222 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
+t222 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t221 ∷ (v 3) ∷ (v 4) ∷ [] ⟫
 
 t223 : Tm
-t223 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ (v 4) ∷ (v 9) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t223 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t222 (v 4)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t224 : Tm
-t224 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t219 ∷ t221 ∷ t193 ∷ t223 ∷ [] ⟫
+t224 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t207 ∷ (v 7) ∷ t220 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t208 ∷ (v 10) ∷ t223 ∷ [] ⟫
 
 t225 : Tm
-t225 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ [] ⟫
+t225 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t206 ∷ t209 ∷ t216 ∷ t217 ∷ t224 ∷ [] ⟫
 
 t226 : Tm
-t226 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t226 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
 
 t227 : Tm
-t227 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t225 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t226 ∷ [] ⟫
+t227 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ [] ⟫
 
 t228 : Tm
-t228 = coh c203 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t204) t206 t208) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t228 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t229 : Tm
-t229 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t215 (v 4)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ [] ⟫
+t229 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
 
 t230 : Tm
-t230 = coh c86 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t212 (v 4)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t230 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ (v 4) ∷ (v 9) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t231 : Tm
-t231 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t225 ∷ (v 7) ∷ t229 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t226 ∷ (v 10) ∷ t230 ∷ [] ⟫
+t231 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t226 ∷ t228 ∷ t200 ∷ t230 ∷ [] ⟫
 
 t232 : Tm
-t232 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t224 ∷ t227 ∷ t228 ∷ t210 ∷ t231 ∷ [] ⟫
+t232 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ [] ⟫
 
 t233 : Tm
-t233 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
+t233 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t234 : Tm
-t234 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t234 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t232 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t233 ∷ [] ⟫
 
 t235 : Tm
-t235 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ t6 ∷ t233 ∷ (v 5) ∷ (v 6) ∷ (v 6) ∷ t234 ∷ [] ⟫
+t235 = coh c210 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t211) t213 t215) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t236 : Tm
-t236 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t137) t154 t235) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t236 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t222 (v 4)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ [] ⟫
 
 t237 : Tm
-t237 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
+t237 = coh c93 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) t219 (v 4)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t238 : Tm
-t238 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t225 ∷ t190 ∷ t237 ∷ [] ⟫
+t238 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t232 ∷ (v 7) ∷ t236 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t233 ∷ (v 10) ∷ t237 ∷ [] ⟫
 
 t239 : Tm
-t239 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ [] ⟫
+t239 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t231 ∷ t234 ∷ t235 ∷ t217 ∷ t238 ∷ [] ⟫
 
 t240 : Tm
-t240 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t239 ∷ (v 8) ∷ t195 ∷ [] ⟫
+t240 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
 
 t241 : Tm
-t241 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t240 ∷ [] ⟫
+t241 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 3) ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t242 : Tm
-t242 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t242 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ t6 ∷ t240 ∷ (v 5) ∷ (v 6) ∷ (v 6) ∷ t241 ∷ [] ⟫
 
 t243 : Tm
-t243 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ [] ⟫
+t243 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t144) t161 t242) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t244 : Tm
-t244 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t237 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ [] ⟫
+t244 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
 
 t245 : Tm
-t245 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t243 ∷ t194 ∷ t244 ∷ [] ⟫
+t245 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t232 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t246 : Tm
-t246 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ [] ⟫
+t246 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t247 : Tm
-t247 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t246 ∷ t194 ∷ t196 ∷ [] ⟫
+t247 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t246 ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t248 : Tm
-t248 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t247 ∷ t194 ∷ t244 ∷ [] ⟫
+t248 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t247 ∷ [] ⟫
 
-c249 : Ctx
-c249 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 10) (v 11)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 11) (v 13)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 13) (v 15))
+t249 : Tm
+t249 = coh c0 (arr (arr ⋆ (v 0) (v 3)) t6 t6) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t250 : Tm
-t250 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t250 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ [] ⟫
 
 t251 : Tm
-t251 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 15) ∷ [] ⟫
+t251 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t244 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t252 : Tm
-t252 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t252 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t250 ∷ t201 ∷ t251 ∷ [] ⟫
 
 t253 : Tm
-t253 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 9) ∷ (v 10) ∷ (v 13) ∷ t252 ∷ (v 15) ∷ (v 16) ∷ [] ⟫
+t253 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t254 : Tm
-t254 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 9) ∷ (v 10) ∷ (v 15) ∷ t253 ∷ [] ⟫
+t254 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t253 ∷ t201 ∷ t203 ∷ [] ⟫
 
 t255 : Tm
-t255 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 9) ∷ (v 13) ∷ [] ⟫
+t255 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t254 ∷ t201 ∷ t251 ∷ [] ⟫
 
-t256 : Tm
-t256 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
+c256 : Ctx
+c256 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 10) (v 11)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 11) (v 13)) ▸ (arr ⋆ (v 1) (v 9)) ▸ (arr (arr ⋆ (v 1) (v 9)) (v 13) (v 15))
 
 t257 : Tm
-t257 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t257 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t258 : Tm
-t258 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 9) ∷ (v 11) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t258 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 15) ∷ [] ⟫
 
 t259 : Tm
-t259 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 9) ∷ t250 ∷ t256 ∷ t257 ∷ t255 ∷ t258 ∷ [] ⟫
+t259 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t260 : Tm
-t260 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 13) ∷ (v 15) ∷ (v 16) ∷ [] ⟫
+t260 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 9) ∷ (v 10) ∷ (v 13) ∷ t259 ∷ (v 15) ∷ (v 16) ∷ [] ⟫
 
 t261 : Tm
-t261 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 9) ∷ t250 ∷ t255 ∷ t259 ∷ t251 ∷ t260 ∷ [] ⟫
+t261 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 9) ∷ (v 10) ∷ (v 15) ∷ t260 ∷ [] ⟫
 
 t262 : Tm
-t262 = coh c249 (arr (arr (arr ⋆ (v 0) (v 9)) t250 t251) t254 t261) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t237 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ [] ⟫
+t262 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 9) ∷ (v 13) ∷ [] ⟫
 
-c263 : Ctx
-c263 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9))
+t263 : Tm
+t263 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 9) ∷ (v 11) ∷ [] ⟫
 
 t264 : Tm
-t264 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t17 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t264 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t265 : Tm
-t265 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 1) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
+t265 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 9) ∷ (v 11) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t266 : Tm
-t266 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t214 ∷ (v 3) ∷ (v 4) ∷ (v 4) ∷ t265 ∷ [] ⟫
+t266 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 9) ∷ t257 ∷ t263 ∷ t264 ∷ t262 ∷ t265 ∷ [] ⟫
 
 t267 : Tm
-t267 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t266 t233) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t267 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 13) ∷ (v 15) ∷ (v 16) ∷ [] ⟫
 
 t268 : Tm
-t268 = coh c263 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t52 t264) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t246 ∷ t242 ∷ t267 ∷ t194 ∷ t196 ∷ t194 ∷ t244 ∷ [] ⟫
+t268 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 9) ∷ t257 ∷ t262 ∷ t266 ∷ t258 ∷ t267 ∷ [] ⟫
 
 t269 : Tm
-t269 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t241 ∷ t248 ∷ t262 ∷ t245 ∷ t268 ∷ [] ⟫
+t269 = coh c256 (arr (arr (arr ⋆ (v 0) (v 9)) t257 t258) t261 t268) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t244 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ [] ⟫
 
-t270 : Tm
-t270 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t137) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+c270 : Ctx
+c270 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9))
 
 t271 : Tm
-t271 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t243 ∷ t194 ∷ t270 ∷ [] ⟫
+t271 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t17 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
-c272 : Ctx
-c272 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) (v 8) (v 9))
+t272 : Tm
+t272 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 1) ∷ (v 3) ∷ (v 4) ∷ [] ⟫
 
 t273 : Tm
-t273 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 7) ∷ (v 9) ∷ [] ⟫
+t273 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t221 ∷ (v 3) ∷ (v 4) ∷ (v 4) ∷ t272 ∷ [] ⟫
 
 t274 : Tm
-t274 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t137) t235 t154) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t274 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t273 t240) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t275 : Tm
-t275 = coh c272 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t273) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t244 ∷ t270 ∷ t274 ∷ [] ⟫
+t275 = coh c270 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t59 t271) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t253 ∷ t249 ∷ t274 ∷ t201 ∷ t203 ∷ t201 ∷ t251 ∷ [] ⟫
 
 t276 : Tm
-t276 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t241 ∷ t245 ∷ t269 ∷ t271 ∷ t275 ∷ [] ⟫
+t276 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t248 ∷ t255 ∷ t269 ∷ t252 ∷ t275 ∷ [] ⟫
 
 t277 : Tm
-t277 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t237 ∷ t190 ∷ t197 ∷ [] ⟫
+t277 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t144) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t278 : Tm
-t278 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t277 ∷ t190 ∷ t237 ∷ [] ⟫
+t278 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t250 ∷ t201 ∷ t277 ∷ [] ⟫
 
-t279 : Tm
-t279 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t201 ∷ (v 9) ∷ t222 ∷ [] ⟫
+c279 : Ctx
+c279 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) (v 8) (v 9))
 
 t280 : Tm
-t280 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t278 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t279 ∷ [] ⟫
+t280 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 7) ∷ (v 9) ∷ [] ⟫
 
 t281 : Tm
-t281 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t194 ∷ t270 ∷ t193 ∷ t198 ∷ [] ⟫
+t281 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t144) t242 t161) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t282 : Tm
-t282 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t237 ∷ (v 4) ∷ (v 9) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t282 = coh c279 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t280) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t251 ∷ t277 ∷ t281 ∷ [] ⟫
 
 t283 : Tm
-t283 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t193 ∷ t281 ∷ t193 ∷ t282 ∷ [] ⟫
+t283 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t248 ∷ t252 ∷ t276 ∷ t278 ∷ t282 ∷ [] ⟫
 
 t284 : Tm
-t284 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t194 ∷ t244 ∷ t193 ∷ t198 ∷ [] ⟫
+t284 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t244 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t285 : Tm
-t285 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t193 ∷ t284 ∷ t193 ∷ t282 ∷ [] ⟫
+t285 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t284 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t286 : Tm
-t286 = coh c249 (arr (arr (arr ⋆ (v 0) (v 9)) t250 t251) t254 t261) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t237 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t286 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t208 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t287 : Tm
-t287 = coh c263 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t52 t264) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t194 ∷ t244 ∷ t270 ∷ t274 ∷ t193 ∷ t198 ∷ t193 ∷ t282 ∷ [] ⟫
+t287 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t285 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t286 ∷ [] ⟫
 
 t288 : Tm
-t288 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t193 ∷ t280 ∷ t285 ∷ t286 ∷ t283 ∷ t287 ∷ [] ⟫
+t288 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t201 ∷ t277 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t289 : Tm
-t289 = coh c136 (arr (arr ⋆ (v 0) (v 5)) t137 t137) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
+t289 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t244 ∷ (v 4) ∷ (v 9) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t290 : Tm
-t290 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t193 ∷ t281 ∷ t193 ∷ t289 ∷ [] ⟫
+t290 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t200 ∷ t288 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t291 : Tm
-t291 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t137) t235 t154) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
+t291 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t201 ∷ t251 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t292 : Tm
-t292 = coh c272 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t273) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t194 ∷ t270 ∷ t193 ∷ t198 ∷ t193 ∷ t282 ∷ t289 ∷ t291 ∷ [] ⟫
+t292 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t200 ∷ t291 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t293 : Tm
-t293 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t193 ∷ t280 ∷ t283 ∷ t288 ∷ t290 ∷ t292 ∷ [] ⟫
+t293 = coh c256 (arr (arr (arr ⋆ (v 0) (v 9)) t257 t258) t261 t268) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t244 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t294 : Tm
-t294 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t279 ∷ [] ⟫
+t294 = coh c270 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t59 t271) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t201 ∷ t251 ∷ t277 ∷ t281 ∷ t200 ∷ t205 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t295 : Tm
-t295 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t193 ∷ t210 ∷ [] ⟫
+t295 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t200 ∷ t287 ∷ t292 ∷ t293 ∷ t290 ∷ t294 ∷ [] ⟫
 
 t296 : Tm
-t296 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t295 ∷ t193 ∷ t282 ∷ [] ⟫
+t296 = coh c143 (arr (arr ⋆ (v 0) (v 5)) t144 t144) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
 
 t297 : Tm
-t297 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t246 ∷ t193 ∷ t210 ∷ [] ⟫
+t297 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t200 ∷ t288 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t298 : Tm
-t298 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t297 ∷ t193 ∷ t282 ∷ [] ⟫
+t298 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t144) t242 t161) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 9) ∷ [] ⟫
 
 t299 : Tm
-t299 = coh c249 (arr (arr (arr ⋆ (v 0) (v 9)) t250 t251) t254 t261) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t237 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t299 = coh c279 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t280) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t201 ∷ t277 ∷ t200 ∷ t205 ∷ t200 ∷ t289 ∷ t296 ∷ t298 ∷ [] ⟫
 
 t300 : Tm
-t300 = coh c263 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t52 t264) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t246 ∷ t242 ∷ t267 ∷ t193 ∷ t210 ∷ t193 ∷ t282 ∷ [] ⟫
+t300 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t200 ∷ t287 ∷ t290 ∷ t295 ∷ t297 ∷ t299 ∷ [] ⟫
 
 t301 : Tm
-t301 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t294 ∷ t298 ∷ t299 ∷ t296 ∷ t300 ∷ [] ⟫
+t301 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t286 ∷ [] ⟫
 
 t302 : Tm
-t302 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t295 ∷ t193 ∷ t289 ∷ [] ⟫
+t302 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t200 ∷ t217 ∷ [] ⟫
 
 t303 : Tm
-t303 = coh c272 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t273) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t193 ∷ t210 ∷ t193 ∷ t282 ∷ t289 ∷ t291 ∷ [] ⟫
+t303 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t302 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t304 : Tm
-t304 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t294 ∷ t296 ∷ t301 ∷ t302 ∷ t303 ∷ [] ⟫
+t304 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t253 ∷ t200 ∷ t217 ∷ [] ⟫
 
 t305 : Tm
-t305 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t241 ∷ t193 ∷ t280 ∷ [] ⟫
+t305 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t304 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t306 : Tm
-t306 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t271 ∷ t193 ∷ t290 ∷ [] ⟫
+t306 = coh c256 (arr (arr (arr ⋆ (v 0) (v 9)) t257 t258) t261 t268) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t244 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t307 : Tm
-t307 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t241 ∷ t271 ∷ t276 ∷ t193 ∷ t280 ∷ t290 ∷ t293 ∷ [] ⟫
+t307 = coh c270 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t59 t271) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t253 ∷ t249 ∷ t274 ∷ t200 ∷ t217 ∷ t200 ∷ t289 ∷ [] ⟫
 
 t308 : Tm
-t308 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ [] ⟫
+t308 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t301 ∷ t305 ∷ t306 ∷ t303 ∷ t307 ∷ [] ⟫
 
 t309 : Tm
-t309 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t243 ∷ t194 ∷ t308 ∷ [] ⟫
+t309 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t302 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t310 : Tm
-t310 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t309 ∷ t193 ∷ t198 ∷ [] ⟫
+t310 = coh c279 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t23 t280) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t200 ∷ t217 ∷ t200 ∷ t289 ∷ t296 ∷ t298 ∷ [] ⟫
 
 t311 : Tm
-t311 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t310 ∷ t193 ∷ t289 ∷ [] ⟫
+t311 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t301 ∷ t303 ∷ t308 ∷ t309 ∷ t310 ∷ [] ⟫
 
 t312 : Tm
-t312 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t271 ∷ t193 ∷ t198 ∷ [] ⟫
+t312 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t248 ∷ t200 ∷ t287 ∷ [] ⟫
 
 t313 : Tm
-t313 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t312 ∷ t193 ∷ t289 ∷ [] ⟫
+t313 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t278 ∷ t200 ∷ t297 ∷ [] ⟫
 
 t314 : Tm
-t314 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t271 ∷ t194 ∷ t270 ∷ [] ⟫
+t314 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t248 ∷ t278 ∷ t283 ∷ t200 ∷ t287 ∷ t297 ∷ t300 ∷ [] ⟫
 
 t315 : Tm
-t315 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t314 ∷ t193 ∷ t198 ∷ [] ⟫
+t315 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ [] ⟫
 
 t316 : Tm
-t316 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t315 ∷ t193 ∷ t289 ∷ [] ⟫
+t316 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t250 ∷ t201 ∷ t315 ∷ [] ⟫
 
-c317 : Ctx
-c317 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13))
+t317 : Tm
+t317 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t316 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t318 : Tm
-t318 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t318 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t317 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t319 : Tm
-t319 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 11) ∷ t318 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t319 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t278 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t320 : Tm
-t320 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 13) ∷ t319 ∷ [] ⟫
+t320 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t319 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t321 : Tm
-t321 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t321 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t278 ∷ t201 ∷ t277 ∷ [] ⟫
 
 t322 : Tm
-t322 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t321 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t322 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t321 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t323 : Tm
-t323 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t322 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t323 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t322 ∷ t200 ∷ t296 ∷ [] ⟫
 
-t324 : Tm
-t324 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t270 ∷ t194 ∷ t270 ∷ t193 ∷ t198 ∷ t193 ∷ t289 ∷ [] ⟫
+c324 : Ctx
+c324 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13))
 
 t325 : Tm
-t325 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t194 ∷ t194 ∷ t270 ∷ t194 ∷ t270 ∷ [] ⟫
+t325 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t326 : Tm
-t326 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t243 ∷ t194 ∷ t325 ∷ [] ⟫
+t326 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 11) ∷ t325 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t327 : Tm
-t327 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t326 ∷ t193 ∷ t198 ∷ [] ⟫
+t327 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 13) ∷ t326 ∷ [] ⟫
 
 t328 : Tm
-t328 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t327 ∷ t193 ∷ t289 ∷ [] ⟫
+t328 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t329 : Tm
-t329 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t329 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t328 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t330 : Tm
-t330 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ t329 ∷ [] ⟫
+t330 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t329 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t331 : Tm
-t331 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t330 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t331 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t277 ∷ t201 ∷ t277 ∷ t200 ∷ t205 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t332 : Tm
-t332 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t331 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t332 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t201 ∷ t201 ∷ t277 ∷ t201 ∷ t277 ∷ [] ⟫
 
 t333 : Tm
-t333 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t323 t332) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t270 ∷ t194 ∷ t270 ∷ t193 ∷ t198 ∷ t193 ∷ t289 ∷ [] ⟫
+t333 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t250 ∷ t201 ∷ t332 ∷ [] ⟫
 
-c334 : Ctx
-c334 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) (v 8) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13))
+t334 : Tm
+t334 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t333 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t335 : Tm
-t335 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t335 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t334 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t336 : Tm
-t336 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t335 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t336 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t337 : Tm
-t337 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t273 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t337 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 5) ∷ t22 ∷ (v 9) ∷ t336 ∷ [] ⟫
 
 t338 : Tm
-t338 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t337 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t338 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t337 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t339 : Tm
-t339 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t137 ∷ t137 ∷ t154 ∷ t137 ∷ t154 ∷ [] ⟫
+t339 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t338 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t340 : Tm
-t340 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t137) t339 t154) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t340 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t330 t339) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t277 ∷ t201 ∷ t277 ∷ t200 ∷ t205 ∷ t200 ∷ t296 ∷ [] ⟫
 
-t341 : Tm
-t341 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t325 ∷ t270 ∷ t340 ∷ t193 ∷ t198 ∷ t193 ∷ t289 ∷ [] ⟫
+c341 : Ctx
+c341 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) (v 8) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13))
 
 t342 : Tm
-t342 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t316 ∷ t328 ∷ t333 ∷ t313 ∷ t341 ∷ [] ⟫
+t342 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t343 : Tm
-t343 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t306 ∷ t316 ∷ t324 ∷ t313 ∷ t342 ∷ [] ⟫
+t343 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t342 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t344 : Tm
-t344 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 5) ∷ t137 ∷ [] ⟫
+t344 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t280 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t345 : Tm
-t345 = coh c136 (arr (arr (arr ⋆ (v 0) (v 5)) t137 t137) t154 t344) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t345 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 11) ∷ t344 ∷ (v 13) ∷ (v 14) ∷ [] ⟫
 
 t346 : Tm
-t346 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t270 ∷ t308 ∷ t345 ∷ t193 ∷ t198 ∷ t193 ∷ t289 ∷ [] ⟫
+t346 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 5) ∷ t144 ∷ t144 ∷ t161 ∷ t144 ∷ t161 ∷ [] ⟫
 
 t347 : Tm
-t347 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t306 ∷ t313 ∷ t343 ∷ t311 ∷ t346 ∷ [] ⟫
+t347 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t144) t346 t161) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t348 : Tm
-t348 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t196 ∷ t194 ∷ t308 ∷ [] ⟫
+t348 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t332 ∷ t277 ∷ t347 ∷ t200 ∷ t205 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t349 : Tm
-t349 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t348 ∷ t193 ∷ t198 ∷ [] ⟫
+t349 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t323 ∷ t335 ∷ t340 ∷ t320 ∷ t348 ∷ [] ⟫
 
 t350 : Tm
-t350 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t193 ∷ t349 ∷ [] ⟫
+t350 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t313 ∷ t323 ∷ t331 ∷ t320 ∷ t349 ∷ [] ⟫
 
 t351 : Tm
-t351 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t350 ∷ t193 ∷ t289 ∷ [] ⟫
+t351 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 5) ∷ t144 ∷ [] ⟫
 
-c352 : Ctx
-c352 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11))
+t352 : Tm
+t352 = coh c143 (arr (arr (arr ⋆ (v 0) (v 5)) t144 t144) t161 t351) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t353 : Tm
-t353 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ t24 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t353 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t277 ∷ t315 ∷ t352 ∷ t200 ∷ t205 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t354 : Tm
-t354 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 9) ∷ t353 ∷ [] ⟫
+t354 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t313 ∷ t320 ∷ t350 ∷ t318 ∷ t353 ∷ [] ⟫
 
 t355 : Tm
-t355 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t354 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
+t355 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t203 ∷ t201 ∷ t315 ∷ [] ⟫
 
 t356 : Tm
-t356 = coh c352 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t322 t355) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t194 ∷ t196 ∷ t194 ∷ t308 ∷ t193 ∷ t198 ∷ t193 ∷ t289 ∷ [] ⟫
+t356 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t355 ∷ t200 ∷ t205 ∷ [] ⟫
 
-c357 : Ctx
-c357 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) (v 6) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9))
+t357 : Tm
+t357 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t200 ∷ t356 ∷ [] ⟫
 
 t358 : Tm
-t358 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ t212 ∷ (v 5) ∷ (v 6) ∷ [] ⟫
+t358 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t357 ∷ t200 ∷ t296 ∷ [] ⟫
 
-t359 : Tm
-t359 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t358 t22) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t194 ∷ t196 ∷ t193 ∷ t198 ∷ [] ⟫
+c359 : Ctx
+c359 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11))
 
 t360 : Tm
-t360 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t349 ∷ t199 ∷ t359 ∷ t210 ∷ t218 ∷ [] ⟫
+t360 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 7) ∷ t24 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t361 : Tm
-t361 = coh c357 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t104 t106) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t192 ∷ t242 ∷ t193 ∷ t349 ∷ t210 ∷ t360 ∷ t193 ∷ t289 ∷ [] ⟫
+t361 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 9) ∷ t360 ∷ [] ⟫
 
 t362 : Tm
-t362 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t311 ∷ t351 ∷ t356 ∷ t302 ∷ t361 ∷ [] ⟫
+t362 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 9) ∷ t361 ∷ (v 11) ∷ (v 12) ∷ [] ⟫
 
 t363 : Tm
-t363 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t306 ∷ t311 ∷ t347 ∷ t302 ∷ t362 ∷ [] ⟫
+t363 = coh c359 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t329 t362) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t201 ∷ t203 ∷ t201 ∷ t315 ∷ t200 ∷ t205 ∷ t200 ∷ t296 ∷ [] ⟫
 
-t364 : Tm
-t364 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t305 ∷ t306 ∷ t307 ∷ t302 ∷ t363 ∷ [] ⟫
+c364 : Ctx
+c364 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) (v 6) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 9))
 
 t365 : Tm
-t365 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ t190 ∷ t278 ∷ [] ⟫
+t365 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ t219 ∷ (v 5) ∷ (v 6) ∷ [] ⟫
 
 t366 : Tm
-t366 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t240 ∷ (v 9) ∷ t279 ∷ [] ⟫
+t366 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t365 t22) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t201 ∷ t203 ∷ t200 ∷ t205 ∷ [] ⟫
 
 t367 : Tm
-t367 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t365 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t366 ∷ [] ⟫
+t367 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t356 ∷ t206 ∷ t366 ∷ t217 ∷ t225 ∷ [] ⟫
 
 t368 : Tm
-t368 = coh c203 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t204) t206 t208) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ t190 ∷ t278 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t240 ∷ (v 9) ∷ t279 ∷ [] ⟫
+t368 = coh c364 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t111 t113) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t199 ∷ t249 ∷ t200 ∷ t356 ∷ t217 ∷ t367 ∷ t200 ∷ t296 ∷ [] ⟫
 
 t369 : Tm
-t369 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t225 ∷ t190 ∷ t197 ∷ [] ⟫
+t369 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t318 ∷ t358 ∷ t363 ∷ t309 ∷ t368 ∷ [] ⟫
 
 t370 : Tm
-t370 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t369 ∷ t190 ∷ t197 ∷ [] ⟫
+t370 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t313 ∷ t318 ∷ t354 ∷ t309 ∷ t369 ∷ [] ⟫
 
 t371 : Tm
-t371 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t370 ∷ t190 ∷ t237 ∷ [] ⟫
+t371 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t312 ∷ t313 ∷ t314 ∷ t309 ∷ t370 ∷ [] ⟫
 
 t372 : Tm
-t372 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ t190 ∷ t197 ∷ [] ⟫
+t372 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ t197 ∷ t285 ∷ [] ⟫
 
 t373 : Tm
-t373 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t372 ∷ t190 ∷ t237 ∷ [] ⟫
+t373 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t247 ∷ (v 9) ∷ t286 ∷ [] ⟫
 
 t374 : Tm
-t374 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t238 ∷ t190 ∷ t237 ∷ [] ⟫
+t374 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t372 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t373 ∷ [] ⟫
 
 t375 : Tm
-t375 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t374 ∷ t190 ∷ t197 ∷ [] ⟫
+t375 = coh c210 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t211) t213 t215) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ t197 ∷ t285 ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t247 ∷ (v 9) ∷ t286 ∷ [] ⟫
 
 t376 : Tm
-t376 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t375 ∷ t190 ∷ t237 ∷ [] ⟫
+t376 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t232 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t377 : Tm
-t377 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t237 ∷ t190 ∷ t237 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ [] ⟫
+t377 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t376 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t378 : Tm
-t378 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t190 ∷ t190 ∷ t237 ∷ t190 ∷ t237 ∷ [] ⟫
+t378 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t377 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t379 : Tm
-t379 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t225 ∷ t190 ∷ t378 ∷ [] ⟫
+t379 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t380 : Tm
-t380 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t379 ∷ t190 ∷ t197 ∷ [] ⟫
+t380 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t379 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t381 : Tm
-t381 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t380 ∷ t190 ∷ t237 ∷ [] ⟫
+t381 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t245 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t382 : Tm
-t382 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t323 t332) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t237 ∷ t190 ∷ t237 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ [] ⟫
+t382 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t381 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t383 : Tm
-t383 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ t6 ∷ t233 ∷ t6 ∷ t233 ∷ [] ⟫
+t383 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t382 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t384 : Tm
-t384 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t383 t233) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
+t384 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t244 ∷ t197 ∷ t244 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t385 : Tm
-t385 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t378 ∷ t237 ∷ t384 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ [] ⟫
+t385 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t197 ∷ t197 ∷ t244 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t386 : Tm
-t386 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t376 ∷ t381 ∷ t382 ∷ t373 ∷ t385 ∷ [] ⟫
+t386 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t232 ∷ t197 ∷ t385 ∷ [] ⟫
 
 t387 : Tm
-t387 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t365 ∷ t376 ∷ t377 ∷ t373 ∷ t386 ∷ [] ⟫
+t387 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t386 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t388 : Tm
-t388 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ [] ⟫
+t388 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t387 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t389 : Tm
-t389 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t233 t388) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
+t389 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t330 t339) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t244 ∷ t197 ∷ t244 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t390 : Tm
-t390 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t237 ∷ t197 ∷ t389 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ [] ⟫
+t390 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ t6 ∷ t240 ∷ t6 ∷ t240 ∷ [] ⟫
 
 t391 : Tm
-t391 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t365 ∷ t373 ∷ t387 ∷ t371 ∷ t390 ∷ [] ⟫
+t391 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t390 t240) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
 
 t392 : Tm
-t392 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t200 ∷ t190 ∷ t197 ∷ [] ⟫
+t392 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t385 ∷ t244 ∷ t391 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t393 : Tm
-t393 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ t392 ∷ [] ⟫
+t393 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t383 ∷ t388 ∷ t389 ∷ t380 ∷ t392 ∷ [] ⟫
 
 t394 : Tm
-t394 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t393 ∷ t190 ∷ t237 ∷ [] ⟫
+t394 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t372 ∷ t383 ∷ t384 ∷ t380 ∷ t393 ∷ [] ⟫
 
 t395 : Tm
-t395 = coh c352 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t322 t355) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ (v 7) ∷ t190 ∷ t197 ∷ t190 ∷ t197 ∷ t190 ∷ t237 ∷ [] ⟫
+t395 = coh c39 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ (v 0) ∷ (v 3) ∷ t6 ∷ [] ⟫
 
 t396 : Tm
-t396 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t358 t22) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ (v 7) ∷ t190 ∷ t197 ∷ [] ⟫
+t396 = coh c0 (arr (arr (arr ⋆ (v 0) (v 3)) t6 t6) t240 t395) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 6) ∷ [] ⟫
 
 t397 : Tm
-t397 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t392 ∷ t200 ∷ t396 ∷ (v 7) ∷ t213 ∷ [] ⟫
+t397 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t244 ∷ t204 ∷ t396 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t398 : Tm
-t398 = coh c357 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t104 t106) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t220 ∷ t190 ∷ t392 ∷ (v 7) ∷ t397 ∷ t190 ∷ t237 ∷ [] ⟫
+t398 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t372 ∷ t380 ∷ t394 ∷ t378 ∷ t397 ∷ [] ⟫
 
 t399 : Tm
-t399 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t371 ∷ t394 ∷ t395 ∷ t238 ∷ t398 ∷ [] ⟫
+t399 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t207 ∷ t197 ∷ t204 ∷ [] ⟫
 
 t400 : Tm
-t400 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t365 ∷ t371 ∷ t391 ∷ t238 ∷ t399 ∷ [] ⟫
+t400 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ t399 ∷ [] ⟫
 
 t401 : Tm
-t401 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t240 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t401 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t400 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t402 : Tm
-t402 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t401 ∷ (v 9) ∷ t222 ∷ [] ⟫
+t402 = coh c359 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t329 t362) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ (v 7) ∷ t197 ∷ t204 ∷ t197 ∷ t204 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t403 : Tm
-t403 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t240 ∷ (v 8) ∷ t195 ∷ [] ⟫
+t403 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t365 t22) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ (v 7) ∷ t197 ∷ t204 ∷ [] ⟫
 
 t404 : Tm
-t404 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t403 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t404 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t399 ∷ t207 ∷ t403 ∷ (v 7) ∷ t220 ∷ [] ⟫
 
 t405 : Tm
-t405 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t404 ∷ (v 9) ∷ t222 ∷ [] ⟫
+t405 = coh c364 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t111 t113) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ (v 5) ∷ t227 ∷ t197 ∷ t399 ∷ (v 7) ∷ t404 ∷ t197 ∷ t244 ∷ [] ⟫
 
 t406 : Tm
-t406 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t406 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t378 ∷ t401 ∷ t402 ∷ t245 ∷ t405 ∷ [] ⟫
 
 t407 : Tm
-t407 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t239 ∷ (v 8) ∷ t239 ∷ [] ⟫
+t407 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t372 ∷ t378 ∷ t398 ∷ t245 ∷ t406 ∷ [] ⟫
 
 t408 : Tm
-t408 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t407 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t408 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t247 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t409 : Tm
-t409 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t408 ∷ (v 9) ∷ t222 ∷ [] ⟫
+t409 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t408 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t410 : Tm
-t410 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t323 t332) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t410 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t247 ∷ (v 8) ∷ t202 ∷ [] ⟫
 
 t411 : Tm
-t411 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t214 ∷ (v 2) ∷ t214 ∷ [] ⟫
+t411 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t410 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t412 : Tm
-t412 = coh c39 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) t411 t214) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t412 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t411 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t413 : Tm
-t413 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t239 ∷ t195 ∷ t412 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t413 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t414 : Tm
-t414 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t405 ∷ t409 ∷ t410 ∷ t402 ∷ t413 ∷ [] ⟫
+t414 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t246 ∷ (v 8) ∷ t246 ∷ [] ⟫
 
 t415 : Tm
-t415 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t366 ∷ t405 ∷ t406 ∷ t402 ∷ t414 ∷ [] ⟫
+t415 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t414 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t416 : Tm
-t416 = coh c39 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) t214 t214) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
+t416 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t415 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t417 : Tm
-t417 = coh c334 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t336 t338) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ t195 ∷ t416 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t417 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t330 t339) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t418 : Tm
-t418 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t366 ∷ t402 ∷ t415 ∷ t402 ∷ t417 ∷ [] ⟫
+t418 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 2) ∷ t221 ∷ (v 2) ∷ t221 ∷ [] ⟫
 
 t419 : Tm
-t419 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t239 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t419 = coh c39 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) t418 t221) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t420 : Tm
-t420 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ t419 ∷ [] ⟫
+t420 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t246 ∷ t202 ∷ t419 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t421 : Tm
-t421 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t420 ∷ (v 9) ∷ t222 ∷ [] ⟫
+t421 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t412 ∷ t416 ∷ t417 ∷ t409 ∷ t420 ∷ [] ⟫
 
 t422 : Tm
-t422 = coh c352 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t322 t355) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t222 ∷ [] ⟫
+t422 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t373 ∷ t412 ∷ t413 ∷ t409 ∷ t421 ∷ [] ⟫
 
 t423 : Tm
-t423 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t358 t22) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
+t423 = coh c39 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) t221 t221) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ [] ⟫
 
 t424 : Tm
-t424 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t419 ∷ t201 ∷ t423 ∷ (v 10) ∷ t216 ∷ [] ⟫
+t424 = coh c341 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t343 t345) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ t202 ∷ t423 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t425 : Tm
-t425 = coh c357 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t104 t106) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t195 ∷ (v 9) ∷ t419 ∷ (v 10) ∷ t424 ∷ (v 9) ∷ t222 ∷ [] ⟫
+t425 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t373 ∷ t409 ∷ t422 ∷ t409 ∷ t424 ∷ [] ⟫
 
 t426 : Tm
-t426 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t402 ∷ t421 ∷ t422 ∷ t279 ∷ t425 ∷ [] ⟫
+t426 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t246 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
 t427 : Tm
-t427 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t366 ∷ t402 ∷ t418 ∷ t279 ∷ t426 ∷ [] ⟫
+t427 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ t426 ∷ [] ⟫
 
 t428 : Tm
-t428 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t190 ∷ t365 ∷ t238 ∷ t400 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t366 ∷ t279 ∷ t427 ∷ [] ⟫
+t428 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t427 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t429 : Tm
-t429 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t305 ∷ t367 ∷ t368 ∷ t294 ∷ t428 ∷ [] ⟫
+t429 = coh c359 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 11)) t329 t362) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t430 : Tm
-t430 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t192 ∷ t193 ∷ t305 ∷ t294 ∷ t429 ∷ t302 ∷ t304 ∷ [] ⟫
+t430 = coh c4 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) t365 t22) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ (v 10) ∷ [] ⟫
 
-c431 : Ctx
-c431 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 16) (v 17)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 17) (v 19)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 19) (v 21)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 21) (v 23)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 23) (v 25)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 25) (v 27))
+t431 : Tm
+t431 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t426 ∷ t208 ∷ t430 ∷ (v 10) ∷ t223 ∷ [] ⟫
 
 t432 : Tm
-t432 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 15) ∷ (v 16) ∷ [] ⟫
+t432 = coh c364 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 9)) t111 t113) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 8) ∷ t202 ∷ (v 9) ∷ t426 ∷ (v 10) ∷ t431 ∷ (v 9) ∷ t229 ∷ [] ⟫
 
 t433 : Tm
-t433 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 13) ∷ (v 15) ∷ (v 27) ∷ [] ⟫
+t433 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t409 ∷ t428 ∷ t429 ∷ t286 ∷ t432 ∷ [] ⟫
 
 t434 : Tm
-t434 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 15) ∷ (v 21) ∷ [] ⟫
+t434 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 3) ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t373 ∷ t409 ∷ t425 ∷ t286 ∷ t433 ∷ [] ⟫
 
 t435 : Tm
-t435 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ [] ⟫
+t435 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 3) ∷ (v 5) ∷ t197 ∷ t372 ∷ t245 ∷ t407 ∷ (v 4) ∷ (v 8) ∷ (v 9) ∷ t373 ∷ t286 ∷ t434 ∷ [] ⟫
 
 t436 : Tm
-t436 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 19) ∷ t435 ∷ (v 21) ∷ (v 22) ∷ [] ⟫
+t436 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t312 ∷ t374 ∷ t375 ∷ t301 ∷ t435 ∷ [] ⟫
 
 t437 : Tm
-t437 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t436 ∷ [] ⟫
+t437 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 4) ∷ t199 ∷ t200 ∷ t312 ∷ t301 ∷ t436 ∷ t309 ∷ t311 ∷ [] ⟫
 
-t438 : Tm
-t438 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ [] ⟫
+c438 : Ctx
+c438 = ε ▸ ⋆ ▸ ⋆ ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 7) (v 9)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 9) (v 11)) ▸ (arr ⋆ (v 0) (v 1)) ▸ (arr (arr ⋆ (v 0) (v 1)) (v 11) (v 13)) ▸ ⋆ ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 16) (v 17)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 17) (v 19)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 19) (v 21)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 21) (v 23)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 23) (v 25)) ▸ (arr ⋆ (v 1) (v 15)) ▸ (arr (arr ⋆ (v 1) (v 15)) (v 25) (v 27))
 
 t439 : Tm
-t439 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 21) ∷ (v 25) ∷ t438 ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t439 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 15) ∷ (v 16) ∷ [] ⟫
 
 t440 : Tm
-t440 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 13) ∷ t319 ∷ (v 15) ∷ (v 21) ∷ (v 27) ∷ t439 ∷ [] ⟫
+t440 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 13) ∷ (v 15) ∷ (v 27) ∷ [] ⟫
 
 t441 : Tm
-t441 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t434 ∷ t437 ∷ t433 ∷ t440 ∷ [] ⟫
+t441 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 15) ∷ (v 21) ∷ [] ⟫
 
 t442 : Tm
-t442 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 11) ∷ (v 15) ∷ (v 25) ∷ [] ⟫
+t442 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ [] ⟫
 
 t443 : Tm
-t443 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 9) ∷ (v 15) ∷ (v 23) ∷ [] ⟫
+t443 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 19) ∷ t442 ∷ (v 21) ∷ (v 22) ∷ [] ⟫
 
 t444 : Tm
-t444 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 15) ∷ (v 19) ∷ [] ⟫
+t444 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t443 ∷ [] ⟫
 
 t445 : Tm
-t445 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 15) ∷ (v 17) ∷ [] ⟫
+t445 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ [] ⟫
 
 t446 : Tm
-t446 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ [] ⟫
+t446 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 21) ∷ (v 25) ∷ t445 ∷ (v 27) ∷ (v 28) ∷ [] ⟫
 
 t447 : Tm
-t447 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 15) ∷ (v 17) ∷ (v 19) ∷ (v 20) ∷ [] ⟫
+t447 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 13) ∷ t326 ∷ (v 15) ∷ (v 21) ∷ (v 27) ∷ t446 ∷ [] ⟫
 
 t448 : Tm
-t448 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t445 ∷ t446 ∷ t444 ∷ t447 ∷ [] ⟫
+t448 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t441 ∷ t444 ∷ t440 ∷ t447 ∷ [] ⟫
 
 t449 : Tm
-t449 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 15) ∷ (v 19) ∷ (v 21) ∷ (v 22) ∷ [] ⟫
+t449 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 11) ∷ (v 15) ∷ (v 25) ∷ [] ⟫
 
 t450 : Tm
-t450 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t444 ∷ t448 ∷ t434 ∷ t449 ∷ [] ⟫
+t450 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 9) ∷ (v 15) ∷ (v 23) ∷ [] ⟫
 
 t451 : Tm
-t451 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ [] ⟫
+t451 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 15) ∷ (v 19) ∷ [] ⟫
 
 t452 : Tm
-t452 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t434 ∷ t450 ∷ t443 ∷ t451 ∷ [] ⟫
+t452 = coh c0 (arr ⋆ (v 0) (v 3)) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 15) ∷ (v 17) ∷ [] ⟫
 
 t453 : Tm
-t453 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 9) ∷ (v 11) ∷ (v 12) ∷ (v 15) ∷ (v 23) ∷ (v 25) ∷ (v 26) ∷ [] ⟫
+t453 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ [] ⟫
 
 t454 : Tm
-t454 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t443 ∷ t452 ∷ t442 ∷ t453 ∷ [] ⟫
+t454 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 3) ∷ (v 5) ∷ (v 6) ∷ (v 15) ∷ (v 17) ∷ (v 19) ∷ (v 20) ∷ [] ⟫
 
 t455 : Tm
-t455 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 11) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 25) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t455 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t452 ∷ t453 ∷ t451 ∷ t454 ∷ [] ⟫
 
 t456 : Tm
-t456 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t442 ∷ t454 ∷ t433 ∷ t455 ∷ [] ⟫
+t456 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 5) ∷ (v 7) ∷ (v 8) ∷ (v 15) ∷ (v 19) ∷ (v 21) ∷ (v 22) ∷ [] ⟫
 
 t457 : Tm
-t457 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t434 ∷ t443 ∷ t451 ∷ t442 ∷ t453 ∷ [] ⟫
+t457 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t451 ∷ t455 ∷ t441 ∷ t456 ∷ [] ⟫
 
 t458 : Tm
-t458 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t434 ∷ t442 ∷ t457 ∷ t433 ∷ t455 ∷ [] ⟫
+t458 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ [] ⟫
 
 t459 : Tm
-t459 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t434 ∷ t450 ∷ t433 ∷ t458 ∷ [] ⟫
+t459 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t441 ∷ t457 ∷ t450 ∷ t458 ∷ [] ⟫
 
 t460 : Tm
-t460 = coh c249 (arr (arr (arr ⋆ (v 0) (v 9)) t250 t251) t254 t261) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ [] ⟫
+t460 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 9) ∷ (v 11) ∷ (v 12) ∷ (v 15) ∷ (v 23) ∷ (v 25) ∷ (v 26) ∷ [] ⟫
 
 t461 : Tm
-t461 = coh c249 (arr (arr (arr ⋆ (v 0) (v 9)) t250 t251) t254 t261) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t461 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t450 ∷ t459 ∷ t449 ∷ t460 ∷ [] ⟫
 
 t462 : Tm
-t462 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t434 ∷ t437 ∷ t450 ∷ t460 ∷ t433 ∷ t440 ∷ t458 ∷ t461 ∷ [] ⟫
+t462 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 11) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 25) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
 
 t463 : Tm
-t463 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t445 ∷ t446 ∷ t444 ∷ t447 ∷ t434 ∷ t449 ∷ t443 ∷ t451 ∷ t442 ∷ t453 ∷ t433 ∷ t455 ∷ [] ⟫
+t463 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t449 ∷ t461 ∷ t440 ∷ t462 ∷ [] ⟫
 
 t464 : Tm
-t464 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t433 ∷ t441 ∷ t459 ∷ t462 ∷ t456 ∷ t463 ∷ [] ⟫
+t464 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t441 ∷ t450 ∷ t458 ∷ t449 ∷ t460 ∷ [] ⟫
 
 t465 : Tm
-t465 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t436 ∷ (v 23) ∷ (v 24) ∷ [] ⟫
+t465 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t441 ∷ t449 ∷ t464 ∷ t440 ∷ t462 ∷ [] ⟫
 
 t466 : Tm
-t466 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 23) ∷ t465 ∷ (v 25) ∷ (v 26) ∷ [] ⟫
+t466 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t441 ∷ t457 ∷ t440 ∷ t465 ∷ [] ⟫
 
 t467 : Tm
-t467 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 25) ∷ t466 ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t467 = coh c256 (arr (arr (arr ⋆ (v 0) (v 9)) t257 t258) t261 t268) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ [] ⟫
 
 t468 : Tm
-t468 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t323 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t467 ∷ [] ⟫
+t468 = coh c256 (arr (arr (arr ⋆ (v 0) (v 9)) t257 t258) t261 t268) ⟪ (v 0) ∷ (v 1) ∷ (v 7) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 21) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
 
 t469 : Tm
-t469 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t436 ∷ (v 27) ∷ t439 ∷ [] ⟫
+t469 = coh c28 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) t16 t29) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t441 ∷ t444 ∷ t457 ∷ t467 ∷ t440 ∷ t447 ∷ t465 ∷ t468 ∷ [] ⟫
 
 t470 : Tm
-t470 = coh c63 (arr (arr ⋆ (v 0) (v 5)) t64 t65) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t320 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t469 ∷ [] ⟫
+t470 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t452 ∷ t453 ∷ t451 ∷ t454 ∷ t441 ∷ t456 ∷ t450 ∷ t458 ∷ t449 ∷ t460 ∷ t440 ∷ t462 ∷ [] ⟫
 
 t471 : Tm
-t471 = coh c203 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t204) t206 t208) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 13) ∷ t319 ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t436 ∷ (v 27) ∷ t439 ∷ [] ⟫
+t471 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t440 ∷ t448 ∷ t466 ∷ t469 ∷ t463 ∷ t470 ∷ [] ⟫
 
 t472 : Tm
-t472 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+t472 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t443 ∷ (v 23) ∷ (v 24) ∷ [] ⟫
 
 t473 : Tm
-t473 = coh c317 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t320 t323) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t473 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 23) ∷ t472 ∷ (v 25) ∷ (v 26) ∷ [] ⟫
 
 t474 : Tm
-t474 = coh c60 (arr (arr (arr ⋆ (v 0) (v 7)) t61 t62) t66 t67) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t320 ∷ t323 ∷ t472 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t469 ∷ t467 ∷ t473 ∷ [] ⟫
+t474 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 25) ∷ t473 ∷ (v 27) ∷ (v 28) ∷ [] ⟫
 
 t475 : Tm
-t475 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t433 ∷ t441 ∷ t470 ∷ t471 ∷ t468 ∷ t474 ∷ [] ⟫
+t475 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t330 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t474 ∷ [] ⟫
 
 t476 : Tm
-t476 = coh c431 (arr (arr (arr ⋆ (v 0) (v 15)) t432 t433) t468 t456) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t476 = coh c4 (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5)) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t443 ∷ (v 27) ∷ t446 ∷ [] ⟫
 
 t477 : Tm
-t477 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t432 ∷ t433 ∷ t441 ∷ t468 ∷ t475 ∷ t456 ∷ t476 ∷ [] ⟫
+t477 = coh c70 (arr (arr ⋆ (v 0) (v 5)) t71 t72) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t327 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t476 ∷ [] ⟫
 
 t478 : Tm
-t478 = coh c431 (arr (arr (arr (arr ⋆ (v 0) (v 15)) t432 t433) t441 t456) t464 t477) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+t478 = coh c210 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t211) t213 t215) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 7) ∷ t23 ∷ (v 13) ∷ t326 ∷ (v 15) ∷ (v 16) ∷ (v 21) ∷ t443 ∷ (v 27) ∷ t446 ∷ [] ⟫
+
+t479 : Tm
+t479 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ [] ⟫
+
+t480 : Tm
+t480 = coh c324 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 13)) t327 t330) ⟪ (v 1) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+
+t481 : Tm
+t481 = coh c67 (arr (arr (arr ⋆ (v 0) (v 7)) t68 t69) t73 t74) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 13) ∷ t327 ∷ t330 ∷ t479 ∷ (v 15) ∷ (v 16) ∷ (v 27) ∷ t476 ∷ t474 ∷ t480 ∷ [] ⟫
+
+t482 : Tm
+t482 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t440 ∷ t448 ∷ t477 ∷ t478 ∷ t475 ∷ t481 ∷ [] ⟫
+
+t483 : Tm
+t483 = coh c438 (arr (arr (arr ⋆ (v 0) (v 15)) t439 t440) t475 t463) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
+
+t484 : Tm
+t484 = coh c13 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7)) ⟪ (v 0) ∷ (v 15) ∷ t439 ∷ t440 ∷ t448 ∷ t475 ∷ t482 ∷ t463 ∷ t483 ∷ [] ⟫
+
+t485 : Tm
+t485 = coh c438 (arr (arr (arr (arr ⋆ (v 0) (v 15)) t439 t440) t448 t463) t471 t484) ⟪ (v 0) ∷ (v 1) ∷ (v 2) ∷ (v 3) ∷ (v 4) ∷ (v 5) ∷ (v 6) ∷ (v 7) ∷ (v 8) ∷ (v 9) ∷ (v 10) ∷ (v 11) ∷ (v 12) ∷ (v 13) ∷ (v 14) ∷ (v 15) ∷ (v 16) ∷ (v 17) ∷ (v 18) ∷ (v 19) ∷ (v 20) ∷ (v 21) ∷ (v 22) ∷ (v 23) ∷ (v 24) ∷ (v 25) ∷ (v 26) ∷ (v 27) ∷ (v 28) ∷ [] ⟫
 
 -- Checks (each by the certified checker or by refl).
 
@@ -1452,53 +1473,56 @@ cone-S12-typed = from-just (infer c12 t27)
 cone-e14-typed : Σ Ty (c12 ⊢tm t46 ∶_)
 cone-e14-typed = from-just (infer c12 t46)
 
-Omega0-typed : Σ Ty (c47 ⊢tm t59 ∶_)
-Omega0-typed = from-just (infer c47 t59)
+cone-e14-ty-type : fst (from-just (infer c12 t46)) ≡ (arr (arr (arr (arr ⋆ (v 7) (v 1)) (v 9) t3) t47 t14) t51 t53)
+cone-e14-ty-type = refl
 
-Omega1-typed : Σ Ty (c60 ⊢tm t74 ∶_)
-Omega1-typed = from-just (infer c60 t74)
+Omega0-typed : Σ Ty (c54 ⊢tm t66 ∶_)
+Omega0-typed = from-just (infer c54 t66)
 
-eq6-typed : Σ Ty (c75 ⊢tm t102 ∶_)
-eq6-typed = from-just (infer c75 t102)
+Omega1-typed : Σ Ty (c67 ⊢tm t81 ∶_)
+Omega1-typed = from-just (infer c67 t81)
 
-eq11-typed : Σ Ty (c103 ⊢tm t115 ∶_)
-eq11-typed = from-just (infer c103 t115)
+eq6-typed : Σ Ty (c82 ⊢tm t109 ∶_)
+eq6-typed = from-just (infer c82 t109)
 
-eq11-inst-typed : Σ Ty (c134 ⊢tm t158 ∶_)
-eq11-inst-typed = from-just (infer c134 t158)
+eq11-typed : Σ Ty (c110 ⊢tm t122 ∶_)
+eq11-typed = from-just (infer c110 t122)
 
-eq24-typed : Σ Ty (c60 ⊢tm t189 ∶_)
-eq24-typed = from-just (infer c60 t189)
+eq11-inst-typed : Σ Ty (c141 ⊢tm t165 ∶_)
+eq11-inst-typed = from-just (infer c141 t165)
 
-nat-M_FG-typed : Σ Ty (c191 ⊢tm t218 ∶_)
-nat-M_FG-typed = from-just (infer c191 t218)
+eq24-typed : Σ Ty (c67 ⊢tm t196 ∶_)
+eq24-typed = from-just (infer c67 t196)
 
-nat-M_GF-typed : Σ Ty (c191 ⊢tm t232 ∶_)
-nat-M_GF-typed = from-just (infer c191 t232)
+nat-M_FG-typed : Σ Ty (c198 ⊢tm t225 ∶_)
+nat-M_FG-typed = from-just (infer c198 t225)
 
-nat-zeta-typed : Σ Ty (c191 ⊢tm t236 ∶_)
-nat-zeta-typed = from-just (infer c191 t236)
+nat-M_GF-typed : Σ Ty (c198 ⊢tm t239 ∶_)
+nat-M_GF-typed = from-just (infer c198 t239)
 
-nat-psi1-typed : Σ Ty (c191 ⊢tm t276 ∶_)
-nat-psi1-typed = from-just (infer c191 t276)
+nat-zeta-typed : Σ Ty (c198 ⊢tm t243 ∶_)
+nat-zeta-typed = from-just (infer c198 t243)
 
-nat-psi2-typed : Σ Ty (c191 ⊢tm t293 ∶_)
-nat-psi2-typed = from-just (infer c191 t293)
+nat-psi1-typed : Σ Ty (c198 ⊢tm t283 ∶_)
+nat-psi1-typed = from-just (infer c198 t283)
 
-nat-psi12-typed : Σ Ty (c191 ⊢tm t304 ∶_)
-nat-psi12-typed = from-just (infer c191 t304)
+nat-psi2-typed : Σ Ty (c198 ⊢tm t300 ∶_)
+nat-psi2-typed = from-just (infer c198 t300)
 
-nat-route1-typed : Σ Ty (c191 ⊢tm t364 ∶_)
-nat-route1-typed = from-just (infer c191 t364)
+nat-psi12-typed : Σ Ty (c198 ⊢tm t311 ∶_)
+nat-psi12-typed = from-just (infer c198 t311)
 
-nat-route2-typed : Σ Ty (c191 ⊢tm t430 ∶_)
-nat-route2-typed = from-just (infer c191 t430)
+nat-route1-typed : Σ Ty (c198 ⊢tm t371 ∶_)
+nat-route1-typed = from-just (infer c198 t371)
 
-nat-route1-ty-type : fst (from-just (infer c191 t364)) ≡ (arr (arr (arr ⋆ (v 0) (v 4)) t192 t193) t305 t302)
+nat-route2-typed : Σ Ty (c198 ⊢tm t437 ∶_)
+nat-route2-typed = from-just (infer c198 t437)
+
+nat-route1-ty-type : fst (from-just (infer c198 t371)) ≡ (arr (arr (arr ⋆ (v 0) (v 4)) t199 t200) t312 t309)
 nat-route1-ty-type = refl
 
-nat-route2-ty-type : fst (from-just (infer c191 t430)) ≡ (arr (arr (arr ⋆ (v 0) (v 4)) t192 t193) t305 t302)
+nat-route2-ty-type : fst (from-just (infer c198 t437)) ≡ (arr (arr (arr ⋆ (v 0) (v 4)) t199 t200) t312 t309)
 nat-route2-ty-type = refl
 
-eq20-typed : Σ Ty (c431 ⊢tm t478 ∶_)
-eq20-typed = from-just (infer c431 t478)
+eq20-typed : Σ Ty (c438 ⊢tm t485 ∶_)
+eq20-typed = from-just (infer c438 t485)

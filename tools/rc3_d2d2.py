@@ -151,7 +151,7 @@ def enumerate_cells():
                     if ok and BACK[tuple(cur2)] == q:
                         yield tuple(w2)
         seen = set()
-        for w in ws:
+        for w in sorted(ws):
             if w in seen: continue
             nclasses += 1
             comp_ = {w}; stack = [w]

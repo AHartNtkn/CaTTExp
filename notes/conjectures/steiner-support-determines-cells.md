@@ -68,3 +68,10 @@ This needs a sublemma: no element of R is a face of a higher-dimensional element
 - A 2-cell from r + s to p + q would need top chain −σ. This is impossible because H₂(K) = 0 and chains are non-negative.
 
 **Why the problems are asked.** They give a decidable criterion for when two composites in a free Gray-enriched strict ω-category coincide, by comparing finite sets of generators. That criterion is the basis of a type-theoretic rule for such composites.
+
+## What would count as a solution
+
+Any of the following:
+- proofs of Problems 1–4, or references to them in the literature;
+- a counterexample to Problem 2, together with the largest natural class of Steiner complexes for which it holds;
+- a proof of Problem 2 just for Gray tensors of globular pasting diagrams.

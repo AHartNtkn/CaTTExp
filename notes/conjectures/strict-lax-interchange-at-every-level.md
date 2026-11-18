@@ -44,3 +44,9 @@ A negative answer is equally valuable: an argument that no notion satisfies 1–
 - **Dimension 3.** Forest and Mimram's "Gray presentations" (*Rewriting in Gray categories with applications to coherence*, MSCS 2022) treat interchange as a 3-generator and work in sesquicategories. That is the k = 0 case in dimension 3. A candidate is to iterate their construction, adding an interchange generator for every pair k < l, and to look for a normal form.
 - **Diagrammatic sets.** Hadzihasanovic's regular directed complexes (*Combinatorics of higher-categorical diagrams*, arXiv:2404.07273) and Chanavat's Gray products of diagrammatic sets (arXiv:2505.01387) handle pasting by molecules without fixing an interchange law. They may provide the generator sets of requirement 1.
 - **Recursive guess.** The generators of F(Γ) between the endpoints of Γ should be tuples (g_n, …, g₁), with each gᵢ a generator of F(Θᵢ) itself. Their boundaries should be given by a Leibniz rule in which "∂gᵢ" is a cell of F(Θᵢ), not a chain. Making this precise requires tensoring a *composite* with a generator. That is where the directed interchange inside F(Θᵢ) enters and the chain-complex calculus stops working.
+
+## What would count as a solution
+
+Either of the following:
+- a definition together with a combinatorial description of free objects satisfying requirements 1–5, even if limited to finite dimension;
+- an impossibility argument showing that requirements 1–3 cannot hold together.

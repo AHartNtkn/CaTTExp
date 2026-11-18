@@ -43,3 +43,10 @@ Problems 1–3 would show that every category enriched in (Cat_(∞,n), ⊗) sat
 - whenever the strict model has a (non-invertible) cell between two composites, the enriched category supplies one too.
 
 Gepner–Heine (*Oriented category theory*, arXiv:2510.10504) call such enriched categories "oriented categories", and ∞Cat with lax transformations is one. The strict half of the rule is the subject of a companion problem (cells of ν(K) are determined by their supports). This problem asks whether the strict rule transfers to the (∞,n) setting.
+
+## What would count as a solution
+
+Any of the following:
+- a proof that Gray tensors of globular pasting diagrams are torsion-free, or otherwise covered by Campion's theorem;
+- a reference establishing Problems 1–2;
+- a counterexample, with the obstruction identified.

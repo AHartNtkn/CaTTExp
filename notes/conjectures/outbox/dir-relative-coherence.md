@@ -32,7 +32,7 @@ A goal of dimension n is a pair of parallel (n−1)-terms. A filler is an n-cell
 
 There is no fullness condition. With no n-dimensional hypotheses, every parallel pair of terms of a pasting (n−1)-type is accepted, in both directions.
 
-*(Note: the unordered implementation at commit 69bb11af does not enforce distinctness in step 1, because it compares position-carrying terms. The question is about the abstract criterion above, not the implementation.)*
+*(Note: the unordered implementation at commit 69bb11af does not enforce distinctness in step 1, because it compares position-carrying terms (filed as smimram/cccatt#15). The question is about the abstract criterion above, not the implementation.)*
 
 ## Questions
 

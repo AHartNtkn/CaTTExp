@@ -523,5 +523,5 @@ I checked every step. I also read the cited cccatt source at commit 69bb11af (`s
 ### V6. Consequences
 
 1. **D12 Questions 1–2 are closed**, by the response and independently by C.4. **Question 3 is closed over graphs.** Open: Dir with higher generators.
-2. **cccatt bugs to report upstream** (if Anthony wants): the unordered Dir duplicate check compares positioned terms, and the Rev side condition checks the hypothesis name rather than the endpoint. Reporting them is an outward action, so it is Anthony's call.
+2. *Update (2026-11-18): the Dir duplicate-check bug is filed as smimram/cccatt#15. The Rev side-condition item is not a bug: `add_rule` rejects every cycle and leftover higher hypotheses fail `check1`, so no wrong acceptance is possible; it only differs from our paraphrase of Rev.* Original text: **cccatt bugs to report upstream** (if Anthony wants): the unordered Dir duplicate check compares positioned terms, and the Rev side condition checks the hypothesis name rather than the endpoint. Reporting them is an outward action, so it is Anthony's call.
 3. A next prompt for Dir with higher generators (relative coherence) is owed by the CLOSED thread, if wanted.

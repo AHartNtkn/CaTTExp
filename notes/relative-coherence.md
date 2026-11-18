@@ -286,7 +286,7 @@ Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gi
 |---|---|---|
 | `UnitorNaturality` | the left unitor's naturality 3-cell at depth 2 over the lax square (§6 "partial progress" case of the N file), via Theorem A | typechecks (~50 s) |
 | `ExchangeTwoBigons` | Theorem A with one exchange move (two side-by-side bigons) | typechecks (~3 min) |
-| `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | generated (5121 definitions, about 1 MB); Agda check in progress, uses about 10 GB |
+| `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | typechecks (5121 definitions, about 1 MB; 17 min and about 10 GB with `+RTS -M12G`) |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

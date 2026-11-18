@@ -43,9 +43,10 @@
 -- DEFINITION CHANGE (PR #68). Earlier versions compared `down`
 -- closures (`sameDownClosure`). The two differ in their step budget:
 -- `sameDown` allows up to dim K(Γ) face steps *per entry*, `down` at
--- most dim K(Γ) single-entry steps *in total*. They agree when every
--- tuple has rank ≤ dim K(Γ) (then both are the order ideal); that is
--- argued, not proved. Every L result stated with graySide (no-ich⁻,
+-- most dim K(Γ) single-entry steps *in total*. Gray.DownAgree proves
+-- that closure-equality implies sameDown always, and that the two are
+-- equal when Γ is graded and every tuple has rank ≤ dim K(Γ)
+-- (`sameDown≡Closure`; hypotheses decidable via `hypSide`). Every L result stated with graySide (no-ich⁻,
 -- substitution under L, the marks, everything over L) refers to the
 -- new definition. `agreeSide` checks agreement on given cohs by
 -- evaluation (Gray.Examples, Gray.Cube). The note: "the
@@ -279,32 +280,33 @@ bdEl cs w with findEl w cs
 ... | nothing = []
 ... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
 
-private
-  -- Codimension-1 faces of a tuple.
-  faces : List El → Tuple → TSet
-  faces cs []       = []
-  faces cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (faces cs ws)
+-- Codimension-1 faces of a tuple.
+faces : List El → Tuple → TSet
+faces cs []       = []
+faces cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (faces cs ws)
 
-  nubT : TSet → TSet
-  nubT []       = []
-  nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
+nubT : TSet → TSet
+nubT []       = []
+nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
 
-  closeN : Nat → List El → TSet → TSet
-  closeN zero    cs S = S
-  closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (faces cs) S))
+closeN : Nat → List El → TSet → TSet
+closeN zero    cs S = S
+closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (faces cs) S))
 
 down : Ctx → TSet → TSet
 down Γ S = closeN (dimK (homs Γ)) (cells Γ) (nubT S)
 
 -- The face order on entries: a ≤ b if a is reached from b by at most
 -- n source/target steps. Tuples are compared entrywise.
-leqL : List El → Nat → Nat → Nat → Bool
-leqL cs zero    a b = a ==ℕ b
-leqL cs (suc n) a b = (a ==ℕ b) ∨ anyB (bdEl cs b)
-  where
-  anyB : List Nat → Bool
-  anyB []       = false
-  anyB (c ∷ bs) = leqL cs n a c ∨ anyB bs
+mutual
+  leqL : List El → Nat → Nat → Nat → Bool
+  leqL cs zero    a b = a ==ℕ b
+  leqL cs (suc n) a b = (a ==ℕ b) ∨ leqAny cs n a (bdEl cs b)
+
+  -- a is below one of bs.
+  leqAny : List El → Nat → Nat → List Nat → Bool
+  leqAny cs n a []       = false
+  leqAny cs n a (c ∷ bs) = leqL cs n a c ∨ leqAny cs n a bs
 
 leqT : List El → Nat → Tuple → Tuple → Bool
 leqT cs n []       []       = true

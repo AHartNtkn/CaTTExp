@@ -59,3 +59,4 @@ import CaTTExp.Gray.Orient
 import CaTTExp.Gray.OrientExamples
 import CaTTExp.Gray.SetFacts
 import CaTTExp.Gray.OrientRev
+import CaTTExp.Gray.DownAgree

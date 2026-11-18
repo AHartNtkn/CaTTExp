@@ -22,6 +22,10 @@
 -- the image σ(C), so substitution into a marked tuple needs the mark
 -- (the certificate); no definitional equality is added.
 --
+-- Simplification: μ is one global function on raw terms, so a
+-- variable index is marked in every context, not per declaration as
+-- T-var specifies. Per-declaration marks are left to the T-var item.
+--
 -- Levels: T-fill needs level k ≥ n + 1 = m − 1, i.e. m ≤ k + 1;
 -- T-inv inverts a cell of level j + 1 ≥ n + 1, i.e. m ≤ j + 2
 -- (levels ≥ n + 2 are also derivable, Prop. 2.1; level 0 is excluded);

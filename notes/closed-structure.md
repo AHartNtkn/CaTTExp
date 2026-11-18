@@ -723,6 +723,26 @@ The researcher findings on the closed part are listed after the next two bullets
 2. **The closed signature must be strictly natural only in the context variable.** Strict naturality of Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C) in the bound variable A forces (f⊗B′)(A⊗g) = (A′⊗g)(f⊗B). Then the two schedules are equal 1-cells. In the bound variable, naturality holds only up to the interchanger.
 3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/outbox/gray-closed-scheduling.md`.
 
+**Answer to the follow-up prompt (verified, `conjectures/answered/gray-closed-scheduling-2026-11-18.md`): the comparison theorem cannot be indexed by βη-canonical closure trees.**
+- Closure trees are **not** invariants of connected components of hom-categories.
+- *Counterexample.* Take a : X → A, f : A⊗B → C and c = Λ_A f. The interchanger gives
+
+  ```
+  θ : e ∘ (a⊗U) ∘ (X⊗c)  ⇒  e ∘ (A⊗c) ∘ (a⊗B),
+  ```
+
+  and the target is f ∘ (a⊗B) by β.
+- In every representative of the source, a generator sits under currying. A Boolean biclosed poset model rules out the structural prefix that would avoid this. So a single 2-cell connects 1-cells with different canonical closure trees.
+- A word model gives an invariant W of 1-cells. It separates the first test's two 1-cells: W(t₁) = bφ ≠ φb = W(t₂).
+
+**Still open (D11):**
+- the singleton/empty question for the first test;
+- a product theorem restricted to an appropriate invariant;
+- the correct component invariant (W is a candidate);
+- the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
+
+Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling.md`.
+
 ---
 
 # Part G. Open items left by this note

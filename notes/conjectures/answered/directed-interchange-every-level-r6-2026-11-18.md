@@ -707,3 +707,37 @@ Thus the proved progress is:
 - **Q4 locally:** the source-only polygon equations have explicit normal forms and injective finite supports for arbitrary \(r\) and arm lengths.
 - **Q2 at the level of typed extensions:** the fixed K14 hom-3 skeleton supports the displayed top-cell lift using 22 fresh higher generators.
 - **Still unresolved:** complete hom-4 coherence and support, the exact Gray quotient of this extension, substitution-compatible saturation, and the uniform theory or impossibility result of Q6.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct where checkable. Partial.**
+- **Q4 is settled locally.** Source-only polygon equations keep an injective support for every r and every arm length. This removes the caveat raised in (K13).
+- **Q2 is answered at the level of typed extensions.**
+  - Only one of the ten sinks represents the top atom's hom-2 target.
+  - The top cell x₂⊗y₂⊗z₂ lifts without changing any hom-3 data, using 15 new hom-4, 6 hom-5 and 1 hom-6 generators.
+  - What is proved is a map to ν(K), not an exact Gray quotient.
+- **Open:** Q1 (full hom-4 data and support), Q3 and Q5 (closure and K15 before quotienting), and Q6.
+
+The researcher's archive was not attached. I re-checked what I could with the round-5 script (`scripts/e6/triple_tensor_r5_check.py`) and ad-hoc extensions of it.
+
+1. **§1.1, the congruence of (1).** Every relation runs from the source s₀ to a sink tᵢ, so no relation has a nonidentity context, and different relations have different targets. The table of parallel paths is complete: a path from sᵢ ≠ s₀ chooses pᵢ or q_{i−1}, and these have different targets. So C is thin except at C(s₀, t_{r−1}), which has two arrows.
+2. **§1.2–1.3, supports.**
+   - The one-step normal form (4) and the normal-form support (5) are correct, because a path in a DAG is determined by its edge set.
+   - The union-preserving invariant (7) is also correct: up-sets and down-sets combine under union along x → y → z, and the predicate "uses e_⋆" combines by disjunction.
+   - The example (9) correctly shows a limit for union-supports in general.
+3. **§2, sinks and boundary classes.** Reproduced:
+   - undirected inner interchanges give exactly **54** classes on the 240 words;
+   - the class of T = apqbrc is {apbqrc, apqbrc}, and the class of S = crqbpa is {crbqpa, crqbpa};
+   - of the ten sinks, only apqbrc lies in T's class;
+   - the subgraph reaching T has **126** words and **244** arrows, and there are **1,226** paths S → T.
+
+   I also computed each path's tensor hom-3 chain, as the sum of the labels of its naturality, τ and joining arrows, with inner arrows contributing 0. That gives exactly **25** distinct chains, and one of them is carried by 252 paths. I did not identify which chains are C₃^±.
+4. **§3, the top lift.** Not independently re-checked: the 24 operations A_{ij}, the paths R₀–R₅, the six F's and Ω need the paths P_i from the missing certificate. The construction is coherent:
+   - (13) and (16) are the chain equations;
+   - parallelism (15) makes Ω well typed;
+   - nine of the operations are literal whiskerings of the W-cells, by (14).
+
+   The response correctly limits the claim to "an extension with a map to ν(K)".
+5. **§5.** Correct that the requirements give q(L[σ]) = q(R[σ]) but not L[σ] = R[σ]. K15 before quotienting stays open.
+
+Follow-up prompt: `outbox/directed-interchange-every-level-r7.md` (round 7, unsent).

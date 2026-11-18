@@ -822,3 +822,53 @@ It does not prove general RC(3) from acyclicity of the generating \(1\)-graph. T
 has one vertex and no generating \(1\)-edges. If a nonempty connected graph is required, adjoin \(y\) and \(f:x\to y\); the substitution \(y\mapsto x,\ f\mapsto1_x\) retracts it to the same counterexample.
 
 The Steiner loop-free alternative and the general \(RC(n)\)/\(G(n)\) statements are not established by this argument.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** Question 1. Every X-free 3-term H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉ of the Gray cube is connected to the identity by an explicit 4-term (21).
+- **Settled for the hemisphere:** Question 2. Evaluation fusion for the active column holds relative to a formal vertical chain (10). The general case, with exchange between events, is open.
+- **Corrected:** Question 3. Its hypothesis is wrong. The context (x, a : 1_x → 1_x) already has an acyclic generating 1-graph (no edges), and RC(3) fails there. Adjoining y and f : x → y gives a connected example, which retracts onto it, so RC(3) fails there too.
+- **Partial:** Question 4. Item 14's factorisation extends to 3-dimensional contexts satisfying (22). Both examples satisfy (22). RC(3) for them is not proved.
+- **Open:** Question 5.
+
+The proof depends on two earlier results: item 13 (RC(3) on the two-square cylinder, proved on paper in naturality-arbitrary-depth r3) and item 14.
+
+Checked step by step:
+
+1. **§1, the hemisphere.** I recomputed it. ∂⁻(I⊗I⊗I) has the faces x₁ = 0, x₂ = 1 and x₃ = 0, so it has 7 vertices and misses 101.
+   - Paths 000 → 111 are coordinate orders. The orders 132 and 312 pass through 101, which leaves 321, 231, 213 and 123.
+   - The face rewrites are 321 ⇒ 231 (face x₁ = 0, then the edge in direction 1), 231 ⇒ 213 (the edge in direction 2, then face x₂ = 1) and 213 ⇒ 123 (face x₃ = 0, then the edge in direction 3). So E₁ and E₃ are right-whiskered and E₂ is left-whiskered, as stated.
+   - Each path has at most one outgoing rewrite and no two rewrites are independent. So the strict 2-cells 000 → 111 are exactly the intervals of E₁E₂E₃.
+2. **§1, proper intervals.**
+   - Faces x₁ = 0 and x₂ = 1 share the edge 010 → 011. Together they form the cylinder of 000 → 010 → 110 in direction 3. Faces x₂ = 1 and x₃ = 0 share 010 → 110 and form the cylinder of 000 → 010 → 011 in direction 1.
+   - All faces go from "higher coordinate first" to "lower coordinate first". So the second rectangle has item 13's orientation (horizontal first ⇒ vertical first) and the first has the 2-opposite one. The opposite involution on CaTT preserves π and typing, so RC(3) transfers.
+   - Both retractions type-check. Under c⁻ ↦ b⁻, g⁻ ↦ 1, e₂ ↦ e₁g⁺, G becomes 1_{b⁻}(e₁g⁺) → e₁g⁺, a left unitor. Under a⁺ ↦ a⁻, e₀ ↦ 1, f⁺ ↦ f⁻e₁, F becomes f⁻e₁ → 1(f⁻e₁). RC(3) passes to a retract: include, connect, then substitute the retraction, which is the identity on the subcontext.
+   - The single faces are covered: E₁ and E₃ are "F with g⁺" in their rectangles, and E₂ is "f⁻ with G" in either. An unwhiskered face is a further retract.
+   - The restriction of support is exactly the support lemma supp(πt) = supp(t) (cone-over-coherences r3, item 11 of that prompt). It is cleaner than the positivity argument given, and it covers 3-terms directly.
+3. **§2.1.** A_a and Ω_χ (3) are legal. a[−] is full in ∂⁻V_m^↑ and a[+] is full in ∂⁺V_m^↑ (composition rule). Both sides of (3) are 3-terms a[−] → b[+], and both are full because A_a and A_b use every η_i (coherence rule). The action on 4-cells, the composition comparison and the substitution comparison are coherences over pasting contexts with full boundaries.
+4. **§2.2, gap normalisation.** The formal context P_gap is a pasting context (D³ and D² glued along 1-cells). In it, L and R are full 3-terms with the same boundary, so (5) is a coherence. Identities are removed only after substitution, and the removals are compared over smaller vertical arities. This lemma is written as a sketch. Every step I checked is a coherence over a pasting context with full boundaries, but I did not write out every nested-versus-flat case.
+5. **§3, normalisers.** If T has the full word, its active column contains E₁ (source vertex 000) and E₃ (target 111). 000 is the only source and 111 the only sink, so the column spans 000 → 111 and every other column sits at a point. The reduced arity is a single 0-column of a 2-dimensional arity, which is a vertical chain V_m.
+   - T̃ is a composition over V_m, so its strict image is α₁ ⋯ α_m. Both T̃ and K(T̃) are full, so b in (7) is a coherence.
+   - The recursion (8) calls only on the proper subterms δ(α_i). The gap terms (9) come from item 4.
+6. **§4, relative fusion.** In V_m the only vertices are x and y and the only nonidentity paths are single f_j. So any arity over V_m has one non-point column, and it stays active after δ. Hence the reduced head of u[δ] is the reduced head of u with inputs u_i[δ], and λ = id.
+   - (12) is a coherence over V_m, since b_eval and b_u are parallel and full (their source u is full).
+   - In (14), the first arrow is composition plus substitution, the second is (13), and the third is (3) reversed with a = a₀ and b = K(u). Both a₀ and K(u) are full because the inputs' images cover the chain.
+   - Combining (11), (14) and (12) gives (10). The proof never expands the arities of δ(α_i), only their chosen normal forms. This is the same device as cone-over-coherences r3 (§5 there).
+7. **§5, compatibility.**
+   - A 0-column of a 3-dimensional arity is the suspension of a 2-dimensional pasting context. So it has 1-variables f₀, …, f_m and, for each j, a chain of 2- and 3-variables, as described.
+   - Ξ_P (16) is a coherence over P: both sides have type u₀ → K⁺. b_{u₀} ∗₂ D uses every ξ, and an empty chain keeps α_{j,0} through its identity. 𝔥 is full.
+   - (17) composes the inductive I for the proper subterms ξ_{j,k}[δ], or proper-interval fillers. (18) is a dimension-1 composite of these, compared by an interchange coherence over a pasting context.
+   - L is literally the same on both sides because u₀ and v₀ share their exact 1-boundaries. So the same Φ serves both, and f_u and f_v match the f of relative fusion.
+   - (20) composes correctly. Reversing E_v is legal because each step is a coherence, a reversible filler, or a whiskering of a reversible step.
+8. **§6.** ν_A is a composite of substituted coherences. Each coherence coh_{P, u→v} has the reverse coh_{P, v→u} and the cancellation coh_{P, c ∗₂ c̄ → 1}, both full. So ν̄_A and ε exist, and (21) type-checks.
+9. **§7, boundary support.** I checked (23).
+   - A 3-term over an arity of dimension ≤ 2 must be a coherence with full source.
+   - Over an arity of dimension 3 it must be a composition. In a globular pasting context the 2-variables and 3-variables form disjoint chains whose initial vertices are exactly ∂⁻₂P, so the induction along chains is sound.
+   - (22) is necessary for (23): apply (23) to a 3-variable.
+   - The cylinder of D² typechecks. (A⁻ ∗₀ k) ∗₁ G and F ∗₁ (h ∗₀ A⁺) are both f⁻k → hg⁺, with 2-supports {A⁻, G} and {F, A⁺}.
+   - The join c ⋆ D² typechecks too. β_g and β_f ∗₁ (p ∗₀ A) are both q → pg.
+   - The counterexample (x, y, f, Z : 1_f → 1_f) is right. The column is inactive by the old test but carries Z.
+10. **§8, scope.** The correction to Question 3 is right, and it is a defect in our prompt. "Loopy" in §3 meant a 2-generator from an identity to an identity, not a cycle of 1-cells. The next round restates Question 3 with a hypothesis that excludes such generators.
+
+Follow-up prompt: `outbox/gray-contexts-r6.md` (round 6, unsent).

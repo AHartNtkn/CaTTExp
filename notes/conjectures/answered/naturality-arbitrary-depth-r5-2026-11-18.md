@@ -1104,3 +1104,52 @@ The following remain unresolved by this construction:
 
 The indispensable distinction throughout is between **forming a coherence on a retained pasting with every marked variable present**, and **repairing its evaluated path comparisons on actual literal paths**. That distinction is what makes the arbitrary-length fusion construction type correctly.
 
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** Question 1, and more: RC(3) holds for the full cylinder of every finite chain x₀ → ⋯ → x_k.
+- **Settled:** Question 2 for the two proposed selections, Y = {z, g} and Y = {y, z, f, g}. In both the letters still come in a forced order. Selections with two independent letters remain open; the smallest is Y = {x, f, g}.
+- **Settled:** Question 3, vertical case, RC(3) for (D² ∗₁ D²)↑Var. The horizontal case D² ∗₀ D² is open.
+- **Open:** Questions 4, 5 and 6.
+- **Consequence:** with item 3, K exists for every 3-dimensional coherence over these pasting contexts and selections, for any fixed lower lifts.
+
+Checked step by step:
+
+1. **§2, chain normal forms.**
+   - In the full chain cylinder, the strict paths x_a⁻ → x_b⁺ are the P_j, each with exactly one vertical edge v_j, and F_i rewrites P_i to P_{i−1}. So every nonidentity 2-cell has a forced word.
+   - A horizontal composite of two nonidentity 2-cells would need two vertical edges in one path. So every arity has exactly one active 0-column.
+   - (3)–(5) keep a path comparison between every two letters, so no differently bracketed boundaries are identified.
+   - μ (7) is a reassociation over C_N plus one contraction m on an actual path. The table covers all four empty and nonempty cases.
+2. **§2.2, fold 4-cells.** The three cases are exhaustive. Two adjacent path comparisons with no letter between them lie on the same path, so an overlap κ(A,B), κ(B,C), κ(C,D) is on one path and both routes are full there. Disjoint pairs are interchanged over V_n(k). No step exchanges two F_i.
+3. **§3, fixed whiskering.**
+   - d_W (8) is full on P ∗₀ C₂.
+   - e^Q (10) is a coherence on Q = P_ℓ ∗₀ D²(z) ∗₀ P_r, since S and Pad_Q(T) are parallel and full.
+   - The path repairs (11) happen after substitution, on actual paths.
+   - §3.3 marks every entry of a long word as a separate 2-variable of C_N before evaluating. That is the right way to avoid treating a formal variable as a path term.
+   - I checked the table for (14) at the level of arities and typing, not every 4-cell.
+4. **§4, normalisers and fusion.**
+   - v_H (15) is a coherence on the retained frame: H and B_H are parallel, and B_H uses every marked slot.
+   - The evaluator (16) recurses only on the assigned 2-arguments, which are proper subterms.
+   - The restricted presentation comparison is sound. An active column stays active unless the total word becomes empty, and item 12's refinement changes only inactive exterior paths.
+   - The variable case of fusion uses the already built ν_Z, so the induction is well founded.
+   - This is the same relative-fusion device as gray-contexts r5 and cone-over-coherences r3.
+5. **§5, the 3-term induction.**
+   - Ξ_H (20) is a full 4-coherence: U and V are parallel full 2-terms on a 2-dimensional frame, so their formal normal words coincide.
+   - For a 3-dimensional frame, 𝒲_R uses every link h_i^j, so (21) is full. The type is right: H ; λ_V and λ_U ; 𝒲_R both go from U to the normal word of V.
+   - (22) applies the induction hypothesis to the proper 3-arguments.
+   - Cancellation gives (23).
+6. **§6, the two proper selections.** I recomputed both cylinders from the definition of a_t and b_t, omitting factors for unselected terms.
+   - **Y = {z, g}:** G : g⁻ ∗₀ Z ⇒ g⁺. The only nonidentity 2-cells are G and f ∗₀ G.
+   - **Y = {y, z, f, g}:** F : f⁻ ∗₀ Y ⇒ f⁺ and G : g⁻ ∗₀ Z ⇒ Y ∗₀ g⁺. The paths x → z⁺ are f⁻g⁻Z, f⁻Yg⁺ and f⁺g⁺. G rewrites the first into the second, and F rewrites the second into the third. So the order is forced, and the middle comparison in (24) is needed.
+   - **Y = {x, f, g}:** F : f⁻ ⇒ X ∗₀ f⁺ and G : g⁻ ⇒ g⁺. They act on disjoint parts of f⁻g⁻ and commute up to exchange, as the response says. Y is up-closed, since only f has x in its type.
+7. **§7, D² ∗₁ D².**
+   - From a_t and b_t: U_A : c₀ · F₁ ⇛ F₀ · d₀ and U_B : c₁ · F₂ ⇛ F₁ · d₁, as stated.
+   - The mixed 1-cells x⁻ → y⁺ are the six paths r_i⁻Y and Xr_j⁺. On a p-path only c or F applies, and on a q-path only d. So the words C(i, k, j) of (26) are unique and distinct for distinct k.
+   - The strict 3-cells are as in (30). x⁻ has no incoming and y⁺ no outgoing 1-cell, so nothing composes in dimension 0. Since U_A ends at C(0,0,1) and nothing starts there, the only composite is W_B then W_A.
+   - The weight argument in §7.3 is also a direct consequence of the support lemma supp(πt) = supp(t) (cone-over-coherences r3).
+   - The coefficient targets in §7.4 are parallel to the coefficients and have the same images. For example, W_A's right coefficient has image d₁, and W_B's left coefficient has image c₀. (32) and (33) are full coherences over D³ ∗₁ D³ and D² ∗₁ D² ∗₁ D³.
+   - The anchors E_W (34) compose literally, and the seam (37) is an RC(3) comparison in Γ₀.
+8. **§8, scope.** The remaining cases are the ones with independent active columns: Y = {x, f, g}, D² ∗₀ D², and general cylinders. The Gray-contexts problem has reached the same point. Its round 6 asks for fusion with exchange on the 2 × 2 grid.
+
+Follow-up prompt: `outbox/naturality-arbitrary-depth-r6.md` (round 6, unsent).

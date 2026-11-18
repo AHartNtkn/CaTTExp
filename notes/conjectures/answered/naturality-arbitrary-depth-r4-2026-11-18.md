@@ -979,4 +979,4 @@ Checked step by step.
 
    This is not a counterexample to RC(3): the exchange is one direct coherence. It does show that Q2 for proper Y needs frames with several retained chains.
 
-Follow-up prompt: `outbox/naturality-arbitrary-depth-r5.md` (round 5, unsent).
+Follow-up prompt: `naturality-arbitrary-depth-r5-2026-11-18.md` (round 5, answered).

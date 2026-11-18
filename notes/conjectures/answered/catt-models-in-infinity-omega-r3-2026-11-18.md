@@ -560,4 +560,4 @@ Step by step.
 - The derived comparison reduces to (H), (R) and the unit condition.
 - Q4 needs the rule stated, and the round-4 prompt does that.
 
-Follow-up prompt: `outbox/catt-models-in-infinity-omega-r4.md` (round 4, unsent).
+Follow-up prompt: `catt-models-in-infinity-omega-r4-2026-11-18.md` (round 4, answered).

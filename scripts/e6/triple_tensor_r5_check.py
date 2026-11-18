@@ -4,7 +4,8 @@ Rebuilds the 240-word hom-2 interval of lambda D2 (x) lambda D2 (x) lambda D2 fr
 rules (tensor naturalities, positional inner interchangers, contextual tau), applies the six
 joining-factorization families h_p, h_q, h_r, lambda_x, h_z, mu, and checks the counts,
 acyclicity, sources, the 40,172 path count, and the 24-word source/sink table (4).
-Run: python3 scripts/e6/triple_tensor_r5_check.py
+Also checks the round-6 counts (54 inner classes, one sink in the top class, 126 words, 244 arrows,
+1,226 paths S -> T). Run: python3 scripts/e6/triple_tensor_r5_check.py
 """
 import itertools, sys
 from collections import defaultdict
@@ -115,3 +116,24 @@ def arrows24(rule):
 for rule in('const','pos'):
     E24=arrows24(rule); V=set(map(''.join,itertools.permutations('ABCD')))
     print('24-word',rule,'sources',sorted(V-set(t for _,t in E24)),'sinks',sorted(V-set(s for s,_ in E24)))
+
+# Round-6 checks: inner-interchange classes and the sub-interval reaching the top target.
+inner=[(e[1],e[2]) for e in E if e[0]=='inner']
+par={w:w for w in W}
+def _f(x):
+    while par[x]!=x: par[x]=par[par[x]]; x=par[x]
+    return x
+for s,t in inner: par[_f(s)]=_f(t)
+sinks=sorted(set(W)-set(s for s,_ in arr))
+T6,S6='apqbrc','crqbpa'
+print('r6: inner classes',len(set(_f(w) for w in W)),'sinks in class of T',[s for s in sinks if _f(s)==_f(T6)])
+pred=defaultdict(list)
+for s,t in arr: pred[t].append(s)
+reach={T6}; st=[T6]
+while st:
+    x=st.pop()
+    for p in pred[x]:
+        if p not in reach: reach.add(p); st.append(p)
+@functools.lru_cache(None)
+def _np(u): return 1 if u==T6 else sum(_np(v) for v in succ[u] if v in reach)
+print('r6: words reaching T',len(reach),'arrows',sum(1 for s,t in arr if s in reach and t in reach),'paths S->T',_np(S6))

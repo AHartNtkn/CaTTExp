@@ -772,4 +772,4 @@ Step by step.
   - a criterion for homotopical 2- and 3-computads that covers both Q and the positive ones and excludes σ;
   - whether every positive 3-computad is homotopical.
 
-Follow-up prompt: `outbox/finite-fibration-test-higher-base-r3.md` (round 3, unsent).
+Follow-up prompt: `finite-fibration-test-higher-base-r3-2026-11-18.md` (round 3, answered).

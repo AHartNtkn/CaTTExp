@@ -463,7 +463,35 @@ With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (clos
 - The β-step types depending on S, namely S itself and T_S uncurried, were already checked (`tens_names.py`).
 - The remaining step types are fixed unit-free L-pasting sequents.
 
-*Not yet done.* Lemmas 1–4 are written at sketch level, and the substitution lemma has the most bookkeeping. Before D10b is closed, they need an independent check, or an Agda formalization of the term model.
+*Independent check (LIT thread, 2026-11-18).* Lemmas 1–4 were re-derived step by step and are correct at paper level. The check asked for four additions, made here.
+1. **Bracketing.** All lists are right-nested: ⊗Γ = Γ₁ ⊗ (Γ₂ ⊗ (… ⊗ Y)), and L_{B₁′⊗…⊗B_{k−1}′} means iterated L, i.e. L_{B₁′}(L_{B₂′}(…)). Otherwise, use L_B(L_{B′}s) ≡ L_{B⊗B′}s, which is unit-free and L-pasting.
+2. **Lemma 2 is stated for an arbitrary s : Z\W**, not only for names. The induction uses s′ = L_{Γ_k}(s) with Z′ = Γ_k ⊗ Z.
+3. **Lemma 4 uses two facts.**
+   - ≡ is closed under type substitution, and Ť_{u[τ]} = Ť_u[τ] syntactically.
+   - A coh-rule instance has the form u′[τ] ≡ v′[τ] with u′, v′ : S. A term whose type is S[τ] need not be such an instance; the closed-term counterexample above is one. Ť_{u′} and Ť_{v′} both have type T_S, so they are ≡, and then apply τ.
+4. **β for tuples.** ev(p, Ť_σ) ≡ the right-nested tensor of σ's terms with y. It is proved like lemma 1, and is needed for prefixes of several closed terms.
+
+**The ξ-rule, written out.** ≡ is the least congruence closed under term and type substitution that contains the coh-rule instances. So it is the equivalence closure of one-step rewriting C[l[ρ]] ↦ C[r[ρ]], where C is a one-hole context, l ≡ r is a coh-rule instance (l = l′[τ], r = r′[τ] with l′, r′ : S UP\*), and ρ is a term substitution. It suffices that [x] respects one step. Induct on C.
+- **The redex does not contain x.**
+  - If it sits in a closed-prefix slot, use lemma 4 (Ť respects ≡).
+  - Otherwise it sits in an argument that bracket abstraction copies unchanged, and congruence applies.
+- **The redex contains x, and C is a context around it.** Each clause of [x] applies [x] to the argument containing x, so this reduces to C = hole.
+- **C = hole.** Let z be the variable of l whose ρ-image s contains x. ρ sends the variables left of z to closed terms c⃗, and the variables right of z to x-free terms ρ_>. Three lemmas finish the case.
+  - **Lemma A (right substitutions commute, syntactically).** [x](t[q/y]) = ([x]t)[q/y] for y right of x. The same clause of [x] fires on both sides.
+  - **Lemma B (abstraction through a leftmost variable).** [x](t[s/z]) ≡ coh_K([x]s, [z]t) when z is leftmost in t. Induct on t:
+    - First-argument clause: by the induction hypothesis and K-associativity.
+    - Prefix clause: lemma 4 and β of Ť.
+  - **Lemma D (closed prefix).** For t with variables w⃗, z, γ⃗ in this order and closed c⃗,
+
+    ```
+    [z](t[c⃗/w⃗])  ≡  E(Ť_{c⃗}[Y := Z], [z][w_k]…[w₁]t).
+    ```
+
+    Here E is the coh over a : Z\(W⃗⊗Z), h : Z\(W_k\…(W₁\A)) ⊢ Z\A. Its normal form is Z, Z\(W⃗⊗Z), Z\(W_k\…) ⊢ A, which is unit-free L-pasting. Lemma D is proved by induction on t, using lemmas 1 and 2 and β for tuples.
+
+  Then [x](l[ρ]) ≡ coh_K([x]s, E(Ť_{c⃗}, [z][w⃗]l))[ρ_>], and likewise for r. The iterated abstractions [z][w⃗]l′ and [z][w⃗]r′ both have the fully curried type of S, which is UP\* with the same normal form. So they are ≡, and τ and ρ_> preserve ≡.
+
+*Status.* Lemmas 1–4 are independently checked. The ξ-rule is written out above, and Lemmas A and B are routine. Lemma D carries the remaining bookkeeping and has not been independently checked. D10b closes once Lemma D is checked.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

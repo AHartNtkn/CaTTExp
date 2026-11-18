@@ -46,6 +46,7 @@ open import CaTTExp.GraphFillerTotal.Chains
 open import CaTTExp.GraphFillerTotal
 open import CaTTExp.GraphFillerTotal.Range
 open import CaTTExp.PureMetatheory using (closed; ty[]; tm[]; sub∘)
+open import CaTTExp.Weakening ∅ cattSide using (wk-ty)
 import CaTTExp.Subst ∅ cattSide as S
 
 ------------------------------------------------------------------------
@@ -750,3 +751,211 @@ module Comm {Γ Θ x₀ A₀} (τ : Sub) (o : Nat) (sτ : Γ ⊢sub τ ∶ Θ) (
                (trans (pull c lc'')
                 (cong₂ (λ t q → P (vi t) ++ q) (sym r0eq)
                        (sym (upd-old P₀ n (P₀ x') (P₀ x') c c<))))
+
+  comm-ty : ∀ B → Θ ⊢ty B → NS B →
+            liftTy (B [ τ ]ty) (∣ P (o₀Ty B) ∣ + o) (∣ P (o₁Ty B) ∣ + o) ≡ B [ L ]ty
+  comm-ty (arr ⋆ a b) (arr-wf da db) _ with ⋆-var da refl | ⋆-var db refl
+  ... | c , refl | d , refl = cong₂ (arr ⋆) (sym (fst (E c) (var-obj da))) (sym (fst (E d) (var-obj db)))
+  comm-ty (arr (arr B' s₀ t₀) a b) (arr-wf da db) _ =
+    cong₃ arr (comm-ty (arr B' s₀ t₀) (tm-ty da) tt) (comm-tm a da tt) (comm-tm b db tt)
+
+------------------------------------------------------------------------
+-- The lift is well typed.
+
+private
+  ⊑-nil : ∀ p → p ⊑ [] → p ≡ []
+  ⊑-nil []      _       = refl
+  ⊑-nil (x ∷ p) (r , ())
+
+  ⊑-len : ∀ {p q} → p ⊑ q → ∣ p ∣ ≤ ∣ q ∣
+  ⊑-len {p} (r , refl) = subst (∣ p ∣ ≤_) (sym (∣++∣ p r)) (≤-+r ∣ p ∣ ∣ r ∣)
+    where
+    ≤-+r : ∀ m n → m ≤ m + n
+    ≤-+r zero    n = z≤n
+    ≤-+r (suc m) n = s≤s (≤-+r m n)
+
+  +-mono-l : ∀ {m n} k → m ≤ n → m + k ≤ n + k
+  +-mono-l {m} {n} k h = subst₂' (+-comm k m) (+-comm k n) (+-mono-≤ k h)
+    where
+    subst₂' : ∀ {a b c d} → a ≡ b → c ≡ d → a ≤ c → b ≤ d
+    subst₂' refl refl h = h
+
+  ext-ty' : ∀ {Γ Θ σ s B} → Γ ⊢sub σ ∶ Θ → Θ ⊢ty B → B [ σ ,ₛ s ]ty ≡ B [ σ ]ty
+  ext-ty' {σ = σ} {s} {B} sσ b =
+    S.ext-ty B σ s (subst (λ n → S.ScTy n B) (sym (sub-len' sσ)) (S.ty-sc closed b))
+
+-- The boundary of a valid coherence, for positions.
+module Bd {Γ Θ x₀} (τ : Sub) (sτ : Γ ⊢sub τ ∶ Θ) (p₀ : Θ ⊢ps x₀ ∶ ⋆) (pe : PEdge Θ τ)
+          (A' : Ty) (s' t' : Tm) (a : Θ ⊢ty arr A' s' t') (ok : T (cattSide Θ A' s' t')) where
+  bd : ∀ c → lookup Θ c ≡ just ⋆ → (pp Θ τ (o₀Ty (arr A' s' t')) ⊑ pp Θ τ c) × (pp Θ τ c ⊑ pp Θ τ (o₁Ty (arr A' s' t')))
+  bd = bdry (pp Θ τ) (ps p₀) (fst (good p₀)) (mono-pp {Θ} {τ} pe) A' s' t' a ok
+
+  start : pp Θ τ (o₀Ty (arr A' s' t')) ≡ []
+  start = ⊑-nil _ (subst (pp Θ τ (o₀Ty (arr A' s' t')) ⊑_) (pp-0 p₀ τ sτ) (fst (bd 0 (ps-0 p₀))))
+
+-- The path of a coherence's 1-dimensional source ends at the position
+-- of its last object.
+coh-len : ∀ {Γ Θ x₀ A' s' t' τ} → Γ ⊢sub τ ∶ Θ → (p₀ : Θ ⊢ps x₀ ∶ ⋆) → (pe : PEdge Θ τ) →
+          (a : Θ ⊢ty arr A' s' t') → (ok : T (cattSide Θ A' s' t')) →
+          pp Θ τ (o₁Ty (arr A' s' t')) ≡ π (arr A' s' t' [ τ ]ty) (coh Θ (arr A' s' t') τ)
+coh-len {A' = ⋆} {τ = τ} sτ p₀ pe (arr-wf ds dt) ok with ⋆-var ds refl | ⋆-var dt refl
+... | j , refl | j' , refl with chain-side (ps p₀) ok
+...   | k , refl , refl , refl = pp-chain k τ sτ
+coh-len {A' = arr X u v} {s'} {t'} {τ} sτ p₀ pe a@(arr-wf ds dt) ok =
+  trans (πty pe sτ (arr X u v) s' ds tt) (cong (_++ π (arr X u v [ τ ]ty) (s' [ τ ]tm)) start)
+  where open Bd τ sτ p₀ pe (arr X u v) s' t' a ok
+
+mutual
+  liftN-ty : ∀ {Γ K} → Graph Γ → ∀ t {A} o → Γ ⊢tm t ∶ A → NS A → ∣ π A t ∣ + o ≤ K →
+             chainC K ⊢tm liftN t o ∶ liftTy A o (∣ π A t ∣ + o)
+  liftN-ty gr (var i) {arr ⋆ a b} o d _ le = lift-ty (var i) o d refl le
+  liftN-ty gr (var i) {arr (arr _ _ _) _ _} o (var-wf _ eq) _ le = ⊥-elim (gr i eq)
+  liftN-ty {Γ} {K} gr (coh Θ (arr A' s' t') τ) o (coh-wf (ps p₀) w a ok sτ) _ le =
+    subst (chainC K ⊢tm coh Θ A'' (liftSN Θ τ o) ∶_) tyEq (coh-wf (ps p₀) w a ok sL)
+    where
+    A'' = arr A' s' t'
+    pe  = pedge gr p₀ τ sτ
+    open Bd τ sτ p₀ pe A' s' t' a ok
+    cl  = coh-len sτ p₀ pe a ok
+    πℓ  = ∣ π (A'' [ τ ]ty) (coh Θ A'' τ) ∣
+    bnd : ∀ c → lookup Θ c ≡ just ⋆ → ∣ pp Θ τ c ∣ + o ≤ K
+    bnd c lc = ≤-trans (+-mono-l o (subst (∣ pp Θ τ c ∣ ≤_) (cong ∣_∣ cl) (⊑-len (snd (bd c lc))))) le
+    sL : chainC K ⊢sub liftSN Θ τ o ∶ Θ
+    sL = liftSN-ty gr p₀ w τ o sτ bnd
+    tyEq : A'' [ liftSN Θ τ o ]ty ≡ liftTy (A'' [ τ ]ty) o (πℓ + o)
+    tyEq = sym (trans (cong₂ (liftTy (A'' [ τ ]ty)) (cong (λ q → ∣ q ∣ + o) (sym start))
+                                                   (cong (λ q → ∣ q ∣ + o) (sym cl)))
+                      (Comm.comm-ty τ o sτ p₀ w pe A'' a tt))
+  liftN-ty gr (cst ()) _ _ _ _
+
+  liftSN-ty : ∀ {Γ K Θ x A} → Graph Γ → Θ ⊢ps x ∶ A → Θ ⊢ctx → ∀ τ o → Γ ⊢sub τ ∶ Θ →
+              (∀ c → lookup Θ c ≡ just ⋆ → ∣ pp Θ τ c ∣ + o ≤ K) → chainC K ⊢sub liftSN Θ τ o ∶ Θ
+  liftSN-ty {K = K} gr p w ⟨⟩ o (⟨⟩-wf _) bnd = ⟨⟩-wf (chainC-wf K)
+  liftSN-ty {K = K} gr p w (⟨⟩ ,ₛ a) o (,-wf (⟨⟩-wf _) _) bnd with ps-one p
+  ... | refl = ,-wf (⟨⟩-wf (chainC-wf K)) (var-wf (chainC-wf K) (lookup-vtx K o (bnd 0 refl)))
+  liftSN-ty gr p w@(▸-wf (▸-wf w₀ bB) bC) (τ₀ ,ₛ y ,ₛ f) o s@(,-wf (,-wf sτ₀ dy) df) bnd with ps-inv p
+  ... | x' , p' , refl = liftSN-ty-step gr _ p' w₀ bB bC w τ₀ y f o sτ₀ dy df s bnd
+
+  liftSN-ty-step : ∀ {Γ K} → Graph Γ → ∀ B {Θ₀ x'} → Θ₀ ⊢ps x' ∶ B → Θ₀ ⊢ctx → Θ₀ ⊢ty B →
+                   (Θ₀ ▸ B) ⊢ty arr B (var x') (var (len Θ₀)) →
+                   (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) ⊢ctx → ∀ τ₀ y f o → Γ ⊢sub τ₀ ∶ Θ₀ →
+                   Γ ⊢tm y ∶ B [ τ₀ ]ty → Γ ⊢tm f ∶ arr B (var x') (var (len Θ₀)) [ τ₀ ,ₛ y ]ty →
+                   Γ ⊢sub τ₀ ,ₛ y ,ₛ f ∶ Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀)) →
+                   (∀ c → lookup (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) c ≡ just ⋆ →
+                      ∣ pp (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) (τ₀ ,ₛ y ,ₛ f) c ∣ + o ≤ K) →
+                   chainC K ⊢sub liftSN (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) (τ₀ ,ₛ y ,ₛ f) o
+                                 ∶ Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))
+  liftSN-ty-step {Γ} {K} gr ⋆ {Θ₀} {x'} p' w₀ bB bC wF τ₀ y f o sτ₀ dy df sF bnd =
+    ,-wf (,-wf ih dy') df'
+    where
+    n   = len Θ₀
+    C   = arr ⋆ (var x') (var n)
+    P₀  = pp Θ₀ τ₀
+    L₀  = liftSN Θ₀ τ₀ o
+    ox  = ∣ P₀ x' ∣ + o
+    wK  = chainC-wf K
+    lx  = snd (good p')
+    x<n : x' < n
+    x<n = lookup-< {Θ₀} lx
+    lL  = lenL p' τ₀ o sτ₀
+    bnd₀ : ∀ c → lookup Θ₀ c ≡ just ⋆ → ∣ P₀ c ∣ + o ≤ K
+    bnd₀ c lc = subst (λ q → ∣ q ∣ + o ≤ K) (upd-old P₀ n (P₀ x' ++ path f) (P₀ x') c (lookup-< {Θ₀} lc))
+                      (bnd c (lookup-wk {Θ₀ ▸ ⋆} {C} (lookup-wk {Θ₀} {⋆} lc)))
+    ih : chainC K ⊢sub L₀ ∶ Θ₀
+    ih = liftSN-ty gr p' w₀ τ₀ o sτ₀ bnd₀
+    bn : ∣ path f ∣ + ox ≤ K
+    bn = subst (_≤ K) (trans (cong (λ q → ∣ q ∣ + o) (upd-n P₀ n (P₀ x' ++ path f) (P₀ x')))
+                             (∣++∣+ (P₀ x') (path f) o))
+               (bnd n (lookup-wk {Θ₀ ▸ ⋆} {C} (lookup-here Θ₀ ⋆ n refl)))
+    y'  = var (vtx (∣ path f ∣ + ox))
+    dy' : chainC K ⊢tm y' ∶ ⋆
+    dy' = var-wf wK (lookup-vtx K _ bn)
+    eqf : arr ⋆ (var (vtx ox)) (var (vtx (∣ path f ∣ + ox))) ≡ C [ L₀ ,ₛ y' ]ty
+    eqf = cong₂ (arr ⋆)
+            (sym (trans (lookupₛ-there L₀ y' x' (subst (x' <_) (sym lL) x<n)) (fst (ent p' τ₀ o sτ₀ x') lx)))
+            (sym (lookupₛ-here L₀ y' n (sym lL)))
+    df' : chainC K ⊢tm liftN f ox ∶ C [ L₀ ,ₛ y' ]ty
+    df' = subst (chainC K ⊢tm liftN f ox ∶_) eqf (liftN-ty gr f ox df tt bn)
+  liftSN-ty-step {Γ} {K} gr (arr B₀ s₀ t₀) {Θ₀} {x'} p' w₀ bB bC wF τ₀ y f o sτ₀ dy df sF bnd =
+    ,-wf (,-wf ih dy') df'
+    where
+    n   = len Θ₀
+    B   = arr B₀ s₀ t₀
+    C   = arr B (var x') (var n)
+    P₀  = pp Θ₀ τ₀
+    L₀  = liftSN Θ₀ τ₀ o
+    ox  = ∣ P₀ x' ∣ + o
+    lx  = snd (good p')
+    x<n : x' < n
+    x<n = lookup-< {Θ₀} lx
+    lL  = lenL p' τ₀ o sτ₀
+    lτ  = sub-len' sτ₀
+    E₀  = ent p' τ₀ o sτ₀
+    pe₀ = pedge gr p' τ₀ sτ₀
+    bnd₀ : ∀ c → lookup Θ₀ c ≡ just ⋆ → ∣ P₀ c ∣ + o ≤ K
+    bnd₀ c lc = subst (λ q → ∣ q ∣ + o ≤ K) (upd-old P₀ n (P₀ x') (P₀ x') c (lookup-< {Θ₀} lc))
+                      (bnd c (lookup-wk {Θ₀ ▸ B} {C} (lookup-wk {Θ₀} {B} lc)))
+    ih : chainC K ⊢sub L₀ ∶ Θ₀
+    ih = liftSN-ty gr p' w₀ τ₀ o sτ₀ bnd₀
+    xo : P₀ x' ≡ P₀ (o₀Ty B)
+    xo = snd (snd (E₀ x') lx)
+    o₀<n : o₀Ty B < n
+    o₀<n = lookup-< {Θ₀} (o₀-obj B bB tt)
+    o₁<n : o₁Ty B < n
+    o₁<n = lookup-< {Θ₀} (o₁-obj B bB tt)
+    bB' : (Θ₀ ▸ B) ⊢ty B
+    bB' = wk-ty bB (▸-wf w₀ bB)
+    eBy : B [ τ₀ ,ₛ y ]ty ≡ B [ τ₀ ]ty
+    eBy = ext-ty' sτ₀ bB
+    eBτ : B [ τ₀ ,ₛ y ,ₛ f ]ty ≡ B [ τ₀ ]ty
+    eBτ = trans (ext-ty' (,-wf sτ₀ dy) bB') eBy
+    -- The path of y, via the full context.
+    PF  = pp (Θ₀ ▸ B ▸ C) (τ₀ ,ₛ y ,ₛ f)
+    πyF : PF (o₁Ty B) ≡ PF (o₀Ty B) ++ π (B [ τ₀ ,ₛ y ,ₛ f ]ty) (lookupₛ (τ₀ ,ₛ y ,ₛ f) n)
+    πyF = πty (pedge gr (pse p') (τ₀ ,ₛ y ,ₛ f) sF) sF B (var n)
+              (var-wf wF (lookup-wk {Θ₀ ▸ B} {C} (lookup-here Θ₀ B n refl))) tt
+    πy : P₀ (o₁Ty B) ≡ P₀ (o₀Ty B) ++ π (B [ τ₀ ]ty) y
+    πy = trans (sym (upd-old P₀ n (P₀ x') (P₀ x') _ o₁<n))
+          (trans πyF (cong₂ _++_ (upd-old P₀ n (P₀ x') (P₀ x') _ o₀<n)
+                                 (cong₂ π eBτ (lk-mid2 τ₀ y f lτ))))
+    πx : P₀ (o₁Ty B) ≡ P₀ (o₀Ty B) ++ π (B [ τ₀ ]ty) (lookupₛ τ₀ x')
+    πx = πty pe₀ sτ₀ B (var x') (var-wf w₀ lx) tt
+    -- Offsets.
+    len-y : ∣ π (B [ τ₀ ]ty) y ∣ + ox ≡ ∣ P₀ (o₁Ty B) ∣ + o
+    len-y = trans (cong (λ q → ∣ π (B [ τ₀ ]ty) y ∣ + (∣ q ∣ + o)) xo)
+             (trans (sym (∣++∣+ (P₀ (o₀Ty B)) (π (B [ τ₀ ]ty) y) o)) (cong (λ q → ∣ q ∣ + o) (sym πy)))
+    len-x : ∣ π (B [ τ₀ ]ty) (lookupₛ τ₀ x') ∣ + ox ≡ ∣ P₀ (o₁Ty B) ∣ + o
+    len-x = trans (cong (λ q → ∣ π (B [ τ₀ ]ty) (lookupₛ τ₀ x') ∣ + (∣ q ∣ + o)) xo)
+             (trans (sym (∣++∣+ (P₀ (o₀Ty B)) (π (B [ τ₀ ]ty) (lookupₛ τ₀ x')) o))
+                    (cong (λ q → ∣ q ∣ + o) (sym πx)))
+    ox-eq : ox ≡ ∣ P₀ (o₀Ty B) ∣ + o
+    ox-eq = cong (λ q → ∣ q ∣ + o) xo
+    commB : liftTy (B [ τ₀ ]ty) (∣ P₀ (o₀Ty B) ∣ + o) (∣ P₀ (o₁Ty B) ∣ + o) ≡ B [ L₀ ]ty
+    commB = Comm.comm-ty τ₀ o sτ₀ p' w₀ pe₀ B bB tt
+    bo₁ : ∣ P₀ (o₁Ty B) ∣ + o ≤ K
+    bo₁ = bnd₀ (o₁Ty B) (o₁-obj B bB tt)
+    -- y.
+    y'  = liftN y ox
+    dy' : chainC K ⊢tm y' ∶ B [ L₀ ]ty
+    dy' = subst (chainC K ⊢tm y' ∶_) (trans (cong₂ (liftTy (B [ τ₀ ]ty)) ox-eq len-y) commB)
+                (liftN-ty gr y ox dy tt (subst (_≤ K) (sym len-y) bo₁))
+    -- f.
+    eu : lookupₛ (τ₀ ,ₛ y) x' ≡ lookupₛ τ₀ x'
+    eu = lk₁-old {y = y} sτ₀ x<n
+    πf : π (B [ τ₀ ,ₛ y ]ty) (lookupₛ (τ₀ ,ₛ y) x') ≡ π (B [ τ₀ ]ty) (lookupₛ τ₀ x')
+    πf = cong₂ π eBy eu
+    bnf : ∣ π (C [ τ₀ ,ₛ y ]ty) f ∣ + ox ≤ K
+    bnf = subst (_≤ K) (sym (trans (cong (λ q → ∣ q ∣ + ox) πf) len-x)) bo₁
+    e1 : liftTy (B [ τ₀ ,ₛ y ]ty) ox (∣ π (B [ τ₀ ,ₛ y ]ty) (lookupₛ (τ₀ ,ₛ y) x') ∣ + ox)
+         ≡ B [ L₀ ,ₛ y' ]ty
+    e1 = trans (cong₂ (λ X q → liftTy X ox (∣ q ∣ + ox)) eBy πf)
+          (trans (cong₂ (liftTy (B [ τ₀ ]ty)) ox-eq len-x)
+           (trans commB (sym (ext-ty' ih bB))))
+    e2 : liftN (lookupₛ (τ₀ ,ₛ y) x') ox ≡ lookupₛ (L₀ ,ₛ y') x'
+    e2 = trans (cong (λ t → liftN t ox) eu)
+          (trans (sym (fst (snd (E₀ x') lx))) (sym (lookupₛ-there L₀ y' x' (subst (x' <_) (sym lL) x<n))))
+    e3 : liftN (lookupₛ (τ₀ ,ₛ y) n) ox ≡ lookupₛ (L₀ ,ₛ y') n
+    e3 = trans (cong (λ t → liftN t ox) (lookupₛ-here τ₀ y n (sym lτ)))
+               (sym (lookupₛ-here L₀ y' n (sym lL)))
+    df' : chainC K ⊢tm liftN f ox ∶ C [ L₀ ,ₛ y' ]ty
+    df' = subst (chainC K ⊢tm liftN f ox ∶_) (cong₃ arr e1 e2 e3) (liftN-ty gr f ox df tt bnf)

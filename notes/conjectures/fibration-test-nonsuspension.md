@@ -4,7 +4,7 @@
 
 Status summary:
 
-- **§1–§3, proved here (internal, not yet independently checked).** FT₃ holds over **every** finite 3-computad base Γ such that Γ and its 2-skeleton are homotopical, for weights valued in categories free on finite graphs. In particular it holds over the non-suspension base ζ of R5 item 8. The new ingredient is an unlocalised lift of the FT₃ data along **right whiskering**, which uses the naturality cells η^r on the paths a_e. The presentation has one generator `g ⊗ c` per base k-generator g (k ≥ 1) and generator c of the source fibre, in dimension k + dim c. Dimension ≤ 4.
+- **§1–§3, proved here; confirmed independently.** Round 5 (`answered/finite-fibration-test-higher-base-r5-2026-11-18.md` §1, §2.3, verified 2026-11-18) gives an explicit unlocalised attaching map for ζ by outer-cylinder subdivision, which needs only R a = R b. It also proves Cat fibres over every 3-computad base whose 2-skeleton is homotopical and whose 3-cell attachment is a homotopy pushout, which contains Theorem A. FT₃ holds over **every** finite 3-computad base Γ such that Γ and its 2-skeleton are homotopical, for weights valued in categories free on finite graphs. In particular it holds over the non-suspension base ζ of R5 item 8. The new ingredient is an unlocalised lift of the FT₃ data along **right whiskering**, which uses the naturality cells η^r on the paths a_e. The presentation has one generator `g ⊗ c` per base k-generator g (k ≥ 1) and generator c of the source fibre, in dimension k + dim c. Dimension ≤ 4.
 - **§4, sketched.** The same argument gives FT_n over every homotopical n-computad base (all skeleta homotopical) with Cat-valued free fibres, using item 16's suspension blocks for the globes D_k and ∂D_k. Fibres of dimension ≥ 2 remain open (R5 Question 2).
 - **§5, open.** Bubble-free ⇒ homotopical is a strengthening of Guetta's open Conjecture 6.6.5. The bubble obstruction already proved (R5 item 17) settles the "only if" half of Guetta's conjecture. The note also gives a reformulation as a collapse problem over a **positive** computad, and proposes a decidable subclass, the *one-sided* 2-computads, that contains the positive ones, both operadic classes and Q, and is automatically bubble-free.
 
@@ -205,8 +205,8 @@ So bubble-freeness is exactly the hypothesis this picture needs. Making it a pro
 
 ## 6. Open items left by this note
 
-1. Independent check of Theorem A (§3), in particular §2.2 and the fibrewise-equivalence step §3 (5).
+1. ~~Independent check of Theorem A~~: done by round 5 §1 and §2.3.
 2. Full write-up of Theorem A′ (§4).
 3. FT_n with fibres of dimension ≥ 2 (R5 Question 2, unchanged).
-4. Conjecture C (one-sided ⇒ homotopical), and bubble-free ⇒ homotopical in general (§5).
+4. Conjecture C (one-sided ⇒ homotopical), and bubble-free ⇒ homotopical in general (§5). Round 5 §3 proves a decidable partition test (internally positive or single-vertex operadic parts) that covers some one-sided computads. The rest is in `outbox/finite-fibration-test-higher-base-r6.md`.
 5. Check §5.2 against the post-2021 literature on Guetta's conjecture.

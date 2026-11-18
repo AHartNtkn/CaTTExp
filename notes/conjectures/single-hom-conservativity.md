@@ -15,7 +15,9 @@
 
 ## Statement
 
-**Conjecture (term-level conservativity).** Let Γ = ΣΘ be single-hom, and Γ ⊢ t : A be derivable in two-tier L. Then for every non-object variable v of Γ:
+**Status: proved in Agda (2026-11-18), for the empty signature.** ⇒ is `Gray/SuppVars.agda` (`supp-vars`), ⇐ is `Strict/SuppFV.agda` (`supp-fv⇐`). See "Proof of ⇐" below.
+
+**Theorem (term-level conservativity, formerly a conjecture).** Let Γ = ΣΘ be single-hom, and Γ ⊢ t : A be derivable in two-tier L. Then for every non-object variable v of Γ:
 
   (v) ∈ ↓supp(t : A)  ⟺  v ∈ FV(t) ∪ FV(A).
 
@@ -26,14 +28,21 @@ Consequently, on a single hom, L's side condition is Finster–Mimram's, and L r
 - **The rule-level half is proved for every single-hom diagram** (`Gray/SingleHom.agda`, 2026-11-18). For Θ ⊢ps with dim Θ ≥ 1, ↓Supp(∂^±T) consists exactly of the singletons (v) with v a non-object variable of ∂^±Γ (`rule-bdry⇒`, `rule-bdry⇐`), and ↓Supp(T) of all of them (`rule-full`). The proof goes through a pointwise description of Finster–Mimram's ∂^±, proved for every pasting context (`Gray/BdryChar.agda`). `Gray/Bounded.agda` had checked this by evaluation for Θ with ≤ 6 edges.
 - **↓Supp(T) is all of K(Δ), for every context Δ.** This is proved in Agda (`Gray/FullSupp.agda`, `full-cover`, 2026-11-18). The proof goes up one hom at a time: a cell that is the s-face of a higher cell is replaced by that cell. Otherwise the cell is already in the s-table.
 - **⇒ is proved in Agda, in any number of homs** (`Gray/SuppVars.agda`, `supp-vars`, 2026-11-18). For a derivable t : A over a context whose types are variable towers (every pasting context), every entry of every tuple of ↓supp(t : A) is in FV(t) ∪ FV(A). The proof has two parts. The entries of supports are variables of t : A, which is syntactic. And for derivable t : A, FV(t) ∪ FV(A) is closed under the variables of a variable's type, by induction on the derivation, as in CaTT.
-- **⇐ is where the argument stalls.** Take t = coh_Δ(…)[σ] and a variable w of Δ. We need FV(σ(w)) ⊆ ↓supp(t : A). Every w is an entry of a table tuple τ of Δ (by `full-cover`). But F_σ(τ) = ∅ as soon as some other entry α of τ is sent to a coherence-case coh, i.e. an identity-like cell, whose top support is empty.
-  - *Example.* Let t be the vertical composite of α : f ⇒ g and β : g ⇒ h, and send α and β to identity-like cells. The middle cell g is an *interior* face: it is in neither ∂⁻T nor ∂⁺T. Its image's variables are reached only through the invariant below, applied to σ(α) and then to σ(β).
-  - *Invariant (I).* A derivable cell with empty top support has boundaries with equal closed supports. This follows from strict soundness (`Strict/Soundness.agda`): the interpretation is a Steiner cell, and a cell with zero top chain has x⁺ = x⁻.
-  - *What (I) does not give.* (I) moves supports across one interior face. A proof also has to reach every interior face from ∂⁻T or ∂⁺T through a sequence of top tuples whose shared faces are interior. That requires an order on the top tuples with no cycles of interior faces, which is Steiner's *loop-free* condition on the basis of K(Δ). It is known for Gray tensors of pasting diagrams (Steiner 2004, §3; Ara–Maltsiniotis 1607.00668, §A), but not formalized here.
-- **Two routes.**
-  - **(R1) Atoms.** Every cell of ν(K(Δ)) is a composite of atoms ⟨τ⟩ (Steiner 2004, Thm 3.2, for loop-free unital bases). The strict functor σ̂ preserves composites, and the closed support of a composite is the union of the closed supports of its factors (x⁺ ⊆ ↓∂⁺c ∪ x⁻ from the chain equation). Apply this to the atom of a tuple (c₁, …, w, …, cₘ) whose other entries are 0-dimensional in their homs. Its image's support contains supp(σ(w)), because σ of a hom 0-cell is a 1-cell with nonempty top support.
-  - **Available order (2026-11-18).** `conjectures/answered/steiner-support-formalizable-2026-11-18.md` (PR #103) gives an explicit total order on the basis of λΘ₁ ⊗ … ⊗ λΘₘ. Every negative face of b comes before b and every positive face after it. Each factor is in creation order, and tuples are ordered lexicographically, with the comparison reversed after an odd dimension sum. This order is what (R2) needs to cross interior faces without cycles, so (R2) no longer depends on atom theory. The order is now formalized (`src/CaTTExp/Strict/Order.agda`, 2026-11-18). It provides `_<ₒ_` with irreflexivity, transitivity and trichotomy, and `ord-neg`/`ord-pos`, which put negative faces before a tuple and positive faces after it, for every pasting context. It is shared with the Agda proof of (B).
-  - **(R2) Chain level.** Prove the ⇐ inclusion by induction on dimension. Use the chain equation of T (hypothesis T-cell of `Strict/Soundness.agda`) to cover the boundary tables, and (I) to cross interior faces in a loop-free order.
+- **⇐ is proved in Agda** (`Strict/SuppFV.agda`, `supp-fv⇐`, 2026-11-18), for Θ ⊢ps and the empty signature: if Σctx Θ ⊢ t : A and v ∈ FV(t) ∪ FV(A) is not an object, then (v) ∈ ↓supp(t : A). See "Proof of ⇐".
+- *The obstacle, for the record.* Take t = coh_Δ(…)[σ] and a variable w of Δ. Every w is an entry of a table tuple τ of Δ (by `full-cover`), but F_σ(τ) = ∅ as soon as another entry of τ goes to a coherence-case coh, whose top support is empty. Example: the vertical composite of α : f ⇒ g and β : g ⇒ h, with α and β sent to identity-like cells; the middle cell g is an interior face, in neither ∂⁻T nor ∂⁺T. Entrywise reasoning cannot reach it. Earlier versions of this note proposed two routes, (R1) atoms and (R2) a loop-free order (`Strict/Order.agda`); the proof below goes through Strict.Recon's cuts instead, which already use that order.
+
+## Proof of ⇐
+
+By induction on the derivation, with Cl(t : A) the set of tuples reached from supp(t : A) by Gray face steps (no bound on the number of steps).
+
+1. **Variables.** (v) ∈ supp(v : A), and the variables of A are in suppTy(A), since types in a pasting context are variable towers.
+2. **Coh.** Let t = coh_Δ(t′ →_B u′)[σ] and v ∈ FV(σ(w)). By induction (v) is reached from some s ∈ supp(σ(w) : B_w[σ]). Since B_w is a variable tower, s is in the top support of σ(g) for a variable g of Δ, and since (v) is a singleton so is s = (a). If g is an object, σ(g) is an object variable, which has no faces, so v would be an object. Otherwise:
+3. **A tuple through g** (`Gray/Through.agda`). Each hom of Δ contains a 1-cell (`PsFacts.nonE`), so there is τ = (o₁, …, g, …, oₘ) in K(Δ) with 1-cells oᵢ. By `full-cover` it is below a tuple of Supp(T), so by the side condition it is in the closed support of the cell X of ν(K(Δ)) whose σ-image is t (`Strict/Soundness.agda`, `cohX`): T in the operation case, step(t′, u′, 0) in the coherence case.
+4. **Images keep the closure** (`Strict/LiftImage.agda`, `image`). Let F = F_σ and let Cl be closed under positive faces and contain every row of F(X). Then every tuple of F(b) is in Cl, for every b in the face closure of X. Proof: Strict.Recon lifts b to the top row of a cell obtained from X by cuts w = u + ∂(c<a) (Strict.Cut). F is a chain map, so F w + ∂⁻F(c<a) = F u + ∂⁺F(c<a) as bags, and every tuple of F w is in F u or a positive face of a tuple of F c. This is where interior faces are crossed.
+5. **Single hom** (`Strict/SigmaFacts.agda`). Every cell of ΣΘ goes from object 0 to object 1, so a composable tuple has length ≤ 1, and a strict face is one Gray step. Take Cl = Cl(t : A): it is face-closed, it contains F(X) because F(X) is t's tower (soundness), and its tuples are short (soundness again).
+6. **Conclusion.** F(τ) contains w₁ ⋯ (a) ⋯ wₘ, with wᵢ the single tuple of the top support of the 1-cell σ(oᵢ) (augmentation). By 4 it is in Cl, so it is short, so every wᵢ is empty and (a) ∈ Cl. Then (v) ∈ Cl. Paths from a singleton have length ≤ dim Θ, so (v) ∈ ↓supp(t : A).
+
+The facts about Steiner complexes used are those of the strict model: the total cell is a cell (Bridge), support determines cells and cuts (Recon, Cut), and soundness. No atom theory is used.
 
 ## Why it matters
 

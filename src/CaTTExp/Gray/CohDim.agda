@@ -135,6 +135,16 @@ private
   pos-in-idx zero    zero p q = ⊥-elim p
   pos-in-idx (suc k) zero p ()
 
+-- Public names for three of the facts above (used by Gray.Through).
+homIdx-bounds : ∀ L {k} → k ∈ᴺ homIdx L → T (0 <ℕ k) × T (k <ℕ L)
+homIdx-bounds = idx⇒
+
+homIdx-in : ∀ k L → T (0 <ℕ k) → T (k <ℕ L) → k ∈ᴺ homIdx L
+homIdx-in = pos-in-idx
+
+lookup→entry : ∀ Γ {v C} → lookup Γ v ≡ just C → Any ((v , C) ≡_) (entries Γ)
+lookup→entry = lookup-entries
+
 ------------------------------------------------------------------------
 -- Cells of a pasting context.
 

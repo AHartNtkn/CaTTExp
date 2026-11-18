@@ -399,13 +399,22 @@ See `conjectures/answered/finite-fibration-test-2026-11-18.md`.
 - **FT₂ is the test.** Vertical generators are unmarked, μ = horizontals ∪ θ's, one marked horizontal lift per (vertex, base edge), and one marked filler θ_{u,β} per (vertical edge, base edge). Then the localisation is the Grothendieck construction of the transport functor. The test is complete for weights valued in categories free on finite graphs, and a checker may index by the unlocalised computad.
 - **Use in the horn rules (§5.3).** By (Loc), a marked index cell that every diagram sends to an equivalence may be inverted in the index without changing the limit. In particular, marked diagram generators of dimension ≥ 1 can be treated as invertible index cells when comparing shapes.
 
-### 9.3 Open: 2-dimensional bases (FT₃)
+### 9.3 2-dimensional bases (FT₃): solved for positive bases (researcher, verified)
 
-- A base 2-generator α : u ⇒ v needs vertical paths `a_{α,e}` satisfying a finite naturality check (path equalities), and marked lifts `λ_{α,e} : τ_{u,e};a_{α,e} ⇒ τ_{v,e}` with prescribed *target*.
-- It also needs a 3-dimensional relation per (α, vertical generator). Without it the λ's are not cartesian: there is a counting obstruction.
-- Candidate FT₃: add 3-generators Ξ_{α,β} for that relation, mark them, and invert them with the θ's.
-- Also open: whether the free weak ω-category on a 2-computad is the free strict 2-category.
-- Posed as `conjectures/outbox/finite-fibration-test-2d-base.md`.
+See `conjectures/answered/finite-fibration-test-2d-base-2026-11-18.md` (PR #76).
+
+**The data FT₃ needs for each base 2-generator α : u ⇒ v:**
+- vertical paths `a_{α,e}` satisfying finitely many path equalities (naturality on generators);
+- marked lifts `λ_{α,e} : τ_{u,e};a_{α,e} ⇒ τ_{v,e}`, with prescribed target;
+- a marked 3-generator Ξ_{α,β} for each 3-dimensional naturality relation, inverted together with the θ's.
+
+**Results:**
+- **Positive bases.** A 2-computad is *positive* when no 2-generator has an identity in its boundary. For positive bases, Free(Γ) ≃ F₂(Γ) (Chanavat 2603.22242, Cor. 3.39), and FT₃ holds. On the walking 2-cell, the homs are intervals or points. The general positive case follows from Loubaton Thm 3.2.3.15.
+- **Non-positive bases admit no finite presentation at all.** Take σ : 1_x ⇒ 1_x. The localisation of B²ℕ is K(ℤ,2), but every finite `Free(Ψ)[S⁻¹]` groupoidifies to a finite CW complex. **So positivity is a necessary hypothesis of the weighted-limit rule.**
+
+### 9.4 Open: higher bases (FT_n)
+
+The next prompt is `conjectures/outbox/finite-fibration-test-higher-base.md` (unsent). It covers the walking 3-cell, weights valued in 2-categories, regular bases (Chanavat Cor. 3.38), and whether regularity is necessary.
 
 ---
 
@@ -419,4 +428,4 @@ See `conjectures/answered/finite-fibration-test-2026-11-18.md`.
 | 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
-| 7 | Finite fibration test over 2-dimensional bases (FT₃); FT_n. | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-2d-base.md` ready to send |
+| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base.md` ready to send |

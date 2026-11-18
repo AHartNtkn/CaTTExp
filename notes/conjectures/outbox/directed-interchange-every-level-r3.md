@@ -1,6 +1,6 @@
-# Free higher categories with directed interchange in every dimension (second round)
+# Free higher categories with directed interchange in every dimension (third round)
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. This is the second version of this prompt: the first, with its answer, is in `../answered/directed-interchange-every-level-2026-11-18.md`. Questions are in §3, smallest first.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1 and 2, with their answers, are in `answered/`. Questions are in §4, smallest first.*
 
 ## 1. Setting
 
@@ -56,40 +56,37 @@ So when only A varies, the Gray structure has a naturality 4-cell from the "χ f
 
 **(K7) The first uniform case through hom-dimension 3.** For Γ = ΣD² ∨ ΣD², directing interchange inside the hom 𝒦(x, z) adds exactly two generators of hom-dimension 3 beyond the 25 tensor generators. They are the interchangers χ₁ of (A⊗g, f′⊗B) and χ₂ of (f⊗B, A⊗g′), the only pairs of hom-2-cells composable along a hom-0-cell. Their two sides have different supports. Neither occurs in the boundary of A ⊗ B.
 
+**(K8) The (K7) 3-skeleton cannot be extended by 4-generators alone (round 2, proved).** Write h_i^j = α_i ⊗ g_j, k_j^i = f_i ⊗ β_j, P_ij = k_j^0 h_i^1, Q_ij = h_i^0 k_j^1, so c_ij : P_ij ⇒ Q_ij. The tensor 3-generators are r_j : c_0j ; a_j^+ ⇛ a_j^- ; c_1j and t_i : b_i^- ; c_i1 ⇛ c_i0 ; b_i^+ (a_j^±, b_i^± the whiskered edge cells u_j, v_i), and the interchangers are χ₁ : b_0^+ ; a_1^+ ⇛ a_0^+ ; b_1^+ and χ₂ : a_0^- ; b_1^- ⇛ b_0^- ; a_1^-. The six composite hom-2-cells P₀₀ ⇒ Q₁₁ are S = b_0^- ; c_01 ; a_1^+, V₀ = c_00 ; b_0^+ ; a_1^+, V₁ = c_00 ; a_0^+ ; b_1^+, T = a_0^- ; c_10 ; b_1^+, U₀ = a_0^- ; b_1^- ; c_11 and U₁ = b_0^- ; a_1^- ; c_11. Whiskering gives t̄₀ : S ⇛ V₀, χ̄₁ : V₀ ⇛ V₁, r̄₀ : V₁ ⇛ T, r̄₁ : S ⇛ U₁, χ̄₂ = χ₂ ∗₁ 1_{c₁₁} : U₀ ⇛ U₁ and t̄₁ : U₀ ⇛ T. Since ∂(A⊗B) = t₁ − t₀ + r₁ − r₀, requirement 4 forces a 4-cell between the route t̄₀, χ̄₁, r̄₀ from S to T and a route from S to T using r̄₁ and t̄₁. In the free 3-skeleton with exactly the 25 tensor generators plus χ₁, χ₂ and no 2-equations, the first route exists, but the second would have to go S ⇛ U₁ and then U₁ ⇛ U₀ against χ̄₂: in the directed graph of these composites the only S → T path is t̄₀, χ̄₁, r̄₀. So no list of 4-generators recovers A ⊗ B. The naturality cells of χ₁, χ₂ are trivial here (the edge homs have no 3-generators).
+
+The repair must change dimension-3 data: an extra 3-generator such as h : S ⇛ U₀ whose image under the Gray quotient is r̄₁, or a 2-equation such as U₀ = U₁. Inverting χ₂ would also work but breaks requirement 3.
+
+**(K9) The orientation of χ₁, χ₂ in (K7) is forced by substitution (proved).** One might try to avoid (K8) by orienting every inner interchanger by the factor order of the enclosing tensor (always "Θ₂-cell first ⇛ Θ₁-cell first"), which keeps χ₁ and reverses χ₂. This fails requirement 5. The free object on Σ(D² ∨ D²) has, inside its hom, the interchanger of its two 2-cells A′ (left) and B′ (right), oriented as in the Gray case: "B′ first ⇛ A′ first". The assignment A′ ↦ f₀ ⊗ B and B′ ↦ A ⊗ g₁ (with the hom-0-cells and hom-1-cells sent to f₀⊗g₀, f₀⊗g₁, f₁⊗g₁ and to the matching edges) respects all boundaries, so substitution sends that interchanger to a 3-cell from "A ⊗ g₁ first" to "f₀ ⊗ B first", which is exactly χ₂ in its (K7) orientation. The pair χ₁ is forced the same way via A′ ↦ A ⊗ g₀, B′ ↦ f₁ ⊗ B. So χ₂ cannot be reversed: adding the reversed cell as well breaks requirement 3, which is the "inverting χ₂" option above. Inner interchangers are oriented by position (right cell first ⇛ left cell first), as at the outer level, and some repair of the kind in Q1 is needed.
+
 **Literature.** No construction and no impossibility result is known.
 - Closest: n-sesquicategories, which have no interchange at all (Araújo, arXiv 2202.09293 and 2210.07704; Forest–Mimram, arXiv 2211.16099 and *Rewriting in Gray categories*, MSCS 2022).
 - Crans's teisi.
 - Bourke–Lobbia, arXiv 2610.31448: their §4.2.6 lax 4-categories have non-invertible outer interchangers, but invertible interchange inside homs.
 - Bourke–Gurski's cocategorical obstruction needs hypotheses not assumed here.
 
-## 3. Questions
+## 3. Requirements
 
-Call a structure a **tensor-shaped lax-interchange ω-category** if, for every k < l:
-- it has elementary interchangers χ : L ⇛ R for (l+1)-cells, with no reverse cell in free objects;
-- for each higher cell, it has one naturality cell per varying argument, oriented by the Leibniz sign of the tensor differential as in (K3);
-- for several simultaneous variations, it has higher cells between routes of lower naturality cells, as A ⊗ B does in (K3);
-- it satisfies coherence equations, to be determined.
-
-The requirements on the free objects F(Γ), for finite pasting diagrams Γ, are:
+A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary interchangers χ : L ⇛ R for (l+1)-cells with no reverse cell in free objects; one naturality cell per varying argument, oriented by the Leibniz sign; higher cells between routes of lower naturality cells; and coherence equations to be determined. The free objects F(Γ) must satisfy:
 1. an explicit combinatorial description by generators with explicit boundaries;
-2. two cells of the same dimension that use the same generators, in the expanded basis, are equal;
+2. two cells of the same dimension using the same generators, in the expanded basis, are equal;
 3. every elementary interchanger exists and its reverse does not;
 4. making all interchangers with k ≥ 1 identities gives the free Gray-enriched category, and making all interchangers identities gives the free strict ω-category;
 5. closure under substitution of cells for generators.
 
-**Q1 (smallest case).** For Γ = ΣD² ∨ ΣD², start from the 25 tensor generators and χ₁, χ₂ of (K7). Which generators of hom-dimension 4 does the tensor-shaped rule force? Candidates are a naturality cell of χ₁ and χ₂ in each argument, and a comparison relating A ⊗ B to composites through χ₁, χ₂. Give their boundaries, check requirement 2 for them, and check requirement 4 (that they collapse onto A ⊗ B and identities).
+## 4. Questions
 
-**Q2 (definition).** Is there a recursive definition, a "Gray tensor of towers", whose generators are tuples of generators of the F(Θᵢ) with a Leibniz-type boundary, and which gives F(Γ) satisfying 1–5? A definition up to some finite dimension N ≥ 5 counts.
+**Q1 (the repaired 3-skeleton, smallest case).** For Γ = ΣD² ∨ ΣD², find the minimal hom-dimension-3 data to add to the 25 tensor generators and χ₁, χ₂ so that both boundary routes of A ⊗ B exist and requirements 2–4 still hold in dimension ≤ 3. Is a generator h : S ⇛ U₀ (or its mirror through χ₁) forced, and what is its image under the Gray quotient? Is it itself an interchanger of some pair of whiskered cells, i.e. is it part of a uniform rule ("interchange of a whiskered 2-cell with a 3-cell's boundary")? Note that a new 3-generator h survives the quotient of requirement 4 (it is not an interchanger), so it must either be classed as an interchanger-type cell that the quotient sends to r̄₁, or be accompanied by a 4-cell or equation relating it to r̄₁ and χ̄₂. Or is a 2-equation such as U₀ = U₁ the right repair? It equates two hom-2-cells whose unwhiskered parts a₀⁻ ; b₁⁻ and b₀⁻ ; a₁⁻ differ, which makes χ̄₂ an endo-3-cell of U₀: is that compatible with requirements 2 and 3?
 
-**Q3 (finiteness).** Is there a finite Γ for which the tensor-shaped rule forces infinitely many non-identity cells? By (K5), a yes refutes the finite-basis version of requirement 1.
+**Q2 (dimension 4).** With the repaired 3-skeleton, give the 4-generators (the comparison for A ⊗ B and any naturality cells of the new 3-generators) and check requirements 2 and 4.
 
-**Q4 (impossibility).** Can requirements 1–3 alone, without 4 and 5, be shown inconsistent for every choice of higher comparisons? The known negative results (K1, K2) all use requirement 4 or (B).
+**Q3 (definition).** Is there a recursive "Gray tensor of towers" whose generators include the repairs of Q1 uniformly, giving F(Γ) with 1–5, up to some finite dimension N ≥ 5?
 
-## 4. What counts as a solution
+**Q4 (impossibility).** Can requirements 1–3 alone be shown inconsistent? (K1), (K2) and (K8) all use requirement 4 or (B).
 
-Any of the following is useful:
-- explicit generators for Q1;
-- a definition with a combinatorial description for Q2, even in finite dimension;
-- a finite Γ for Q3;
-- an impossibility proof for Q4;
-- a reference to a published construction.
+## 5. What counts as a solution
+
+Explicit generators for Q1 or Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.

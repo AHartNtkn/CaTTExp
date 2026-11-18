@@ -96,6 +96,8 @@ import CaTTExp.GlobularTotal.LamTyped
 import CaTTExp.GlobularTotal.SplitProps
 import CaTTExp.GlobularTotal.Assign
 import CaTTExp.GlobularTotal.AssignTyped
+import CaTTExp.GlobularTotal.AssignUnique
+import CaTTExp.GlobularTotal.LiftSub
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

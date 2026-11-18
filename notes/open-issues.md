@@ -31,7 +31,7 @@ Thread ids used below:
 | MARK | "Design invertibility markings for lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbQhMQC4fsaRjMJypHXq4ZVv` | active |
 | FOBJ | "Develop free-object rules" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbUxJhXTzhRJEWFkLNmH5acC` | active |
 | CONV | "Clean up recalled claims and conventions" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1EVjAv52BfW2yu9RrGQaFH` | done |
-| OMATH | "Extend toward ordinary mathematics" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb372mKMHNCxwDtepUMwRs3d` | active (2026-11-18) |
+| OMATH | "Extend toward ordinary mathematics" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb372mKMHNCxwDtepUMwRs3d` | done (PR #35) |
 
 ---
 
@@ -114,13 +114,13 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| F1 | **Dependent eliminators.** Families are maps, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (AGS argument). Proved on paper: dependent elimination for shapes ⟦Γ⟧ from R-A (Thm 4.1); induction for N from recursion (Thm 4.3); recursion for N := Hom_{⟦L⟧}(x,x) from two general principles, G (lax colimits are Grothendieck constructions) and DJ (comma objects are free cocartesian fibrations) (Thm 4.4). Three routes compared (§4.5). | `ordinary-math.md` §4 | proposal written | OMATH (proposal); open parts F1a, F1b |
+| F1 | **Dependent eliminators.** Families are maps, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (AGS argument). Proved on paper: dependent elimination for shapes ⟦Γ⟧ from R-A (Thm 4.1); induction for N from recursion (Thm 4.3); recursion for N := Hom_{⟦L⟧}(x,x) from two general principles, G (lax colimits are Grothendieck constructions) and DJ (comma objects are free cocartesian fibrations) (Thm 4.4). Three routes compared (§4.5). | `ordinary-math.md` §4 | proposal written (PR #35) | — ; open parts F1a, F1b |
 | F1a | Write G and DJ as rules with their `uni`-style higher levels; check the uniqueness step of Thm 4.4 in detail. | `ordinary-math.md` §4.6 | unowned | former area OMATH |
 | F1b | Tree-shaped inductive objects, and lists over an arbitrary object, in route III (no ℕ-specific rule). | `ordinary-math.md` §4.7 | unowned | former area OMATH |
 | F2 | **Discreteness filler tactic** for graph contexts: proved on paper (Thm 3.1), implemented with certified output and checked examples in `src/CaTTExp/GraphFiller*.agda`. | `ordinary-math.md` §3 | done (paper + certified instances) | — |
 | F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | blocked on A1; adjacent: more instances | former area OMATH |
 | F2b | Filler for **globular** contexts (Thm 3.2, semantic proof done): implement strict normal forms (labelled trees) and the lift. | `ordinary-math.md` §3.3 | unowned | former area OMATH |
-| F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written | OMATH; open parts F3b, F3c |
+| F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written (PR #35) | — ; open parts F3b, F3c |
 | F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3 | unowned | former area OMATH |
 | F3c | Full proofs of T-lim and T-hom against the specified `ctrf` construction. | `ordinary-math.md` §2.3 | blocked on B5; adjacent: F3b | former area OMATH |
 | F4 | **The integers**: ℤ := Hom(x,x) in ⟦L⟧ localised at s (a finite pushout). ℤ ≃ ℤ_disc proved from Dwyer–Kan 1980 Prop. 2.3 and `free-on-graph.md`. General quotients need a set-truncation rule (proposed, §5.3). | `ordinary-math.md` §5 | done for ℤ; quotients proposed | — ; open parts F4a, F4b |

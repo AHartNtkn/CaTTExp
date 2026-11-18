@@ -169,3 +169,32 @@ module StdSem (𝒞 : ωCat) {G : Set} (ι : G → ωCat.C 𝒞) where
   absorb-r : ∀ {k y z} → Dim k z → (p : tgt k y ≡ src k z) → comp k y z p ≡ y
   absorb-r {k} {y} {z} dz p =
     trans (comp-cong k p (sym (src-tgt-≥ y (≤-refl k))) refl (trans (sym dz) (sym p))) (unit-r k y _)
+
+  ----------------------------------------------------------------------
+  -- The other form: Y #ₖ Z = (∂ᵣ⁻Y #ₖ Z) #ᵣ (Y #ₖ ∂ᵣ⁺Z), for k < r.
+
+  split′ : ∀ {k r} → k < r → ∀ y z (p : tgt k y ≡ src k z) →
+           Σ (tgt k (src r y) ≡ src k z) λ p₁ →
+           Σ (tgt k y ≡ src k (tgt r z)) λ p₂ →
+           Σ (tgt r (comp k (src r y) z p₁) ≡ src r (comp k y (tgt r z) p₂)) λ q →
+           comp k y z p ≡ comp r (comp k (src r y) z p₁) (comp k y (tgt r z) p₂) q
+  split′ {k} {r} l y z p = p₁ , p₂ , q , eq
+    where
+    p₁ = trans (tgt-src-< y l) p
+    p₂ = trans p (sym (src-tgt-< z l))
+    qa : tgt k (tgt r (src r y)) ≡ src k (tgt r z)
+    qa = trans (tgt-tgt-< (src r y) l) (trans p₁ (sym (src-tgt-< z l)))
+    qb : tgt k (src r y) ≡ src k (src r (tgt r z))
+    qb = trans p₁ (trans (sym (src-tgt-< z l)) (sym (src-src-< (tgt r z) l)))
+    q : tgt r (comp k (src r y) z p₁) ≡ src r (comp k y (tgt r z) p₂)
+    q = trans (tgt-comp-> (src r y) z p₁ l qa)
+              (trans (comp-cong k qa qb (tgt-src-≥ y (≤-refl r)) (sym (src-tgt-≥ z (≤-refl r))))
+                     (sym (src-comp-> y (tgt r z) p₂ l qb)))
+    u₁ : tgt r (src r y) ≡ src r y
+    u₁ = tgt-src-≥ y (≤-refl r)
+    u₂ : tgt r z ≡ src r (tgt r z)
+    u₂ = sym (src-tgt-≥ z (≤-refl r))
+    r₀ : tgt k (comp r (src r y) y u₁) ≡ src k (comp r z (tgt r z) u₂)
+    r₀ = trans (cong (tgt k) (unit-l r y u₁)) (trans p (cong (src k) (sym (unit-r r z u₂))))
+    eq = trans (comp-cong k p r₀ (sym (unit-l r y u₁)) (sym (unit-r r z u₂)))
+               (interchange (src r y) y z (tgt r z) l u₁ u₂ r₀ p₁ p₂ q)

@@ -199,7 +199,7 @@ which is exactly the **diagram-index-first** colimit row of `limits-metatheory.m
 
 *Higher levels over dimension 2 (sketch, not machine-checked).* At level k ≥ 2 the new up-closed set is the previous level's top variables. In the coherences xc, asL and asR they only occur as *maximal* arguments, meaning cells of the coherence's pasting context that lie in no other cell's boundary. Raising a maximal cell of a pasting context to a disk one dimension up gives a pasting context again. So the naturality of xc and of the associators is again a coherence over a pasting context, and composites are pasted through associators one dimension up as in the paste rule. I expect Tr_k over 2-dimensional Γ to exist for every k from coherences over pasting contexts alone. The Agda lift currently returns `nothing` on the coherence constructors (a recorded test: `ctrf 2 (DiskEx 2)` is undefined). Generalising the lifts is B18's remainder.
 
-**Dimension ≥ 3** needs Conjecture N at depth `dim Γ − 1`, for **nested whiskerings only** (composition constructors). This is a much narrower instance than general N. It is recorded under C1 (`conjectures/outbox/naturality-arbitrary-depth-r2.md`).
+**Dimension ≥ 3** needs Conjecture N at depth `dim Γ − 1`, for **nested whiskerings only** (composition constructors). This is a much narrower instance than general N. It is recorded under C1 (`conjectures/outbox/naturality-arbitrary-depth-r3.md`).
 
 ### 4.4 "Horns are cones" (`limits-metatheory.md` §5.3): an orientation finding
 

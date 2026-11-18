@@ -14,7 +14,7 @@
 |---|---|---|
 | **F3** h-levels | A judgment `C trunc n` ("C is an n-category"; n = 0 is "C is a set") with a filler rule, an invertibility rule, and closure rules: limits, hom objects (which lower the level by one), coproducts, and two semantic base rules (free objects on graphs, and on graphs with inverted edges, are 1-categories). §2. | Closure under limits and homs **[proved here]** (sketches at the level of the other notes). Base rules sound by `free-on-graph.md` and Dwyer–Kan **[paper]**. That the base rules are not derivable from R-A is **[conj]**, argued. |
 | **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`). Extension to globular contexts **[proved here]** semantically, not implemented. |
-| **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Recursion for ℕ from G + DJ **[proved here]** (existence and the two equations; uniqueness sketched). G and DJ are sound semantically **[paper/recall]**. |
+| **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Induction, and hence recursion with uniqueness, for ℕ from G + DJ **[proved here, Thm 4.4]** (a circular uniqueness step in the first version is corrected). G and DJ are sound semantically **[paper/recall]**. |
 | **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need a set-truncation rule; proposed. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. |
 | **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3, Gepner–Haugseng–Nikolaus and Gepner–Heine **[recall / abstract-level]**. |
 | **F6** lax functors | For loop-free finite shapes P, lax functors ⟦P⟧ ⇝ C are maps out of a finite context P^lax glued from Street's orientals: no new rule. For lax-functor *variables* between arbitrary objects, a directed "refinement coherence" rule decided by Steiner supports, parallel to L's interchange rule. §7. | The oriental classifier is in the literature for dimension ≤ 3 (Gagna) and as a definition in general; the rule is **[conj]**, written up as `conjectures/lax-functor-refinement.md`. |
@@ -85,6 +85,7 @@ Introduction rules (how a truncation is established):
 (T-graph)  Γ a finite graph context (only objects and 1-cells between variables)
            ⟹  ⟦Γ⟧ trunc 1
 (T-loc)    the same, with a set M of edges inverted (§5.1)  ⟹  ⟦Γ⟧[M⁻¹] trunc 1
+(T-trunc)  ‖X‖_n trunc n, for the n-truncation of §5.3
 ```
 
 *Stability.* Every rule is stable under substitution: the premises mention only C, its diagram and its declared marks, and substitution into a declared mark requires a certificate (T-var). This is the same discipline as certified comparison cells.
@@ -256,7 +257,7 @@ Standard 3: what each route can and cannot do, without asking which is preferred
 
 - **Route I (primitive NNO).** Add constants `ℕ, zero, succ`, a rule `rec` with the cells above, and `ℕ trunc 0` as a rule.
 - **Route II (hom object plus a rule).** Keep N := Hom_{⟦L⟧}(x, x). zero, succ and `N trunc 0` are derived (§2). Add `rec` as a rule about this object.
-- **Route III (no ℕ-specific rule).** Keep N := Hom_{⟦L⟧}(x, x). Add two general principles, G and DJ (§4.6), each a statement about all shapes and all comma objects. Recursion for N is a theorem (Theorem 4.4).
+- **Route III (no ℕ-specific rule).** Keep N := Hom_{⟦L⟧}(x, x). Add two general principles, G and DJ (§4.6), each a statement about all shapes and all comma objects. Induction and recursion (with uniqueness) for N are theorems (Theorem 4.4, Corollary 4.4.1).
 
 | | I | II | III |
 |---|---|---|---|
@@ -274,20 +275,46 @@ Standard 3: what each route can and cannot do, without asking which is preferred
 
 **Cocartesian fibrations as structure (no universe).** `p : E → B` is a cocartesian fibration when the map `r : [⟦D¹⟧, E] → p ↓ B` (an arrow of E ↦ its source and its image in B) has a left adjoint ℓ whose unit is invertible (Riehl–Verity's characterisation [recall]). Every piece is a cotensor by a shape, a comma object, or cells (an adjunction is two maps and two cells with invertible triangle cells), so a cocartesian fibration is a *substitution into a finite context* of the extended theory. Pseudo cotensors suffice, so this works under P.
 
-**(G) Grothendieck principle [proposal].** For a finite diagram γ over Γ, the lax colimit `T := laxcolim_Γ γ` comes with `π : T → ⟦Γ⟧` (the colimit of `γ → const ⊤`, using R-B or R-A) carrying a specified cocartesian-fibration structure, whose fibre over each object variable x is γ(x), and whose transport along each 1-cell variable f is γ(f), up to specified invertible cells. Semantics: the lax colimit of a diagram is the total space of its Grothendieck construction (AHM Thm F; Loubaton Thm 4.1.4.2) [recall/abstract-level].
+**Conventions for this section.** A *diagram over L* is an object P with an endomap t : P → P. A *map of diagrams* (P, t) ⇒ (Q, u) is a map p : P → Q with an invertible cell τ : p ∘ t ≅ u ∘ p. For a cocartesian fibration q : E → C and `c : ⊤ → C`, the *fibre* `E_c` is the pullback of q along c. A *CF-morphism* over C between cocartesian fibrations E → C and E' → C is a map over C (with its invertible cell) sending cocartesian arrows to cocartesian arrows, i.e. commuting with the left adjoints ℓ up to an invertible cell. The lax colimit of (P, t) has legs `q_P : P → T_P` and a cell `λ_P : q_P ⇒ q_P ∘ t` (the covariant convention, so that the Grothendieck construction is cocartesian).
 
-**(DJ) Directed J / fibrational Yoneda [proposal].** For `a : ⊤ → C`, the comma `π_a : a ↓ C → C` with the element `ι = (a, 1_a)` is the *free cocartesian fibration on a point*: for every cocartesian fibration `q : E → C` and `e : ⊤ → E` with `q ∘ e ≅ a`, there is `h : a ↓ C → E` with `q ∘ h ≅ π_a`, `h ∘ ι ≅ e`, h sending arrows to cocartesian arrows, unique up to contractible choice among such. Semantics: the dependent Yoneda lemma (Riehl–Shulman, for covariant families; Riehl–Verity for cocartesian fibrations in an ∞-cosmos) [recall]. DJ is the directed analogue of path induction, and it is a universal property of comma objects, so it is a rule about *all* objects, not about ℕ.
+**(G) Grothendieck principle [proposal].** Stated as structure, with no new judgment. For a finite diagram γ over Γ, the lax colimit `T := laxcolim_Γ γ` comes with:
+- **G-fib.** `π : T → ⟦Γ⟧`, the map induced by the cocone `(x ↦ x, f ↦ f)` (using R-B, or R-A for the universal property of ⟦Γ⟧), carrying a specified cocartesian-fibration structure (ℓ and its invertible unit).
+- **G-fibre.** For each object variable x, an equivalence `φ_x : γ(x) ≃ T_x` whose composite with the fibre inclusion `T_x → T` is the leg `q_x`, up to an invertible cell.
+- **G-transport.** For each 1-cell variable `f : x → y` and `e : ⊤ → γ(x)`, the cell `λ_f(e) : q_x(e) → q_y(γ(f)(e))` is cocartesian over f. Equivalently, transport along f is `γ(f)` up to the cells φ.
+- **G-nat.** For a map of diagrams α : γ ⇒ γ' (a map per object variable and an invertible naturality cell per 1-cell variable), the induced map `T(α) : T → T'` (the universal property of T applied to the cocone `q' ∘ α`) is a CF-morphism over ⟦Γ⟧ whose restriction to the fibre over x is `α_x`, up to the cells φ.
 
-**Theorem 4.4 (recursion from G and DJ) [proved here: existence and equations; uniqueness sketched].** Let a : ⊤ → A, f : A → A.
-1. By G, `T := laxcolim_L(A, f)` has a cocartesian fibration `π : T → ⟦L⟧`, with fibre `T_x ≃ A` and transport along s equal to f.
-2. Let `e := q(a)`, the image of a under the colimit leg q : A → T. Then `π ∘ e ≅ x`.
-3. DJ, applied to the comma `x ↓ ⟦L⟧` and (π, e), gives `h : x ↓ ⟦L⟧ → T` over ⟦L⟧ with `h(ι) ≅ e`.
-4. Restrict h to the fibres over x: `N = Hom_{⟦L⟧}(x, x) ≃ (x ↓ ⟦L⟧)_x → T_x ≃ A`. Call it rec.
-5. `rec(zero) = h(ι) ≅ q(a) ↦ a`. For n : x → x, the arrow `(n, n;s)` of `x ↓ ⟦L⟧` lies over s; h sends it to a cocartesian arrow over s, whose target is the transport of h(n) along s, i.e. `f(rec(n))`. That gives `rec ∘ succ ≅ f ∘ rec`.
-6. Uniqueness: an algebra map g : N → A extends to a map `x ↓ ⟦L⟧ → T` over ⟦L⟧ preserving cocartesian arrows (on the fibre over x by g, and elsewhere by transport), so DJ's uniqueness compares it with h. Parameters B: run the argument in the slice over B (`B × –` preserves everything used).
+Semantics: the lax colimit of a diagram is the total space of its Grothendieck construction, naturally in the diagram (AHM Thm F; Loubaton Thm 4.1.4.2) [recall/abstract-level]. G-fib and G-fibre are the content of those theorems; G-transport says the cocone cells are the cocartesian lifts; G-nat is the functoriality of the construction.
+
+**(DJ) Directed J / fibrational Yoneda [proposal].** For `a : ⊤ → C`, let `π_a : a ↓ C → C` be the comma object and `ι := (a, 1_a) : ⊤ → a ↓ C`, with `π_a ∘ ι ≅ a`. Then:
+- **DJ-cocart.** `π_a` is a cocartesian fibration and **every arrow of `a ↓ C` is cocartesian**. (So every map over C *into* `a ↓ C` is a CF-morphism.)
+- **DJ-sec (J1).** For every cocartesian fibration `q : E → C` and `e : ⊤ → E` with `q ∘ e ≅ a`, there is a CF-morphism `h : a ↓ C → E` over C with an invertible cell `h ∘ ι ≅ e` over a.
+- **DJ-uni (J2).** For two CF-morphisms `h, h' : a ↓ C → E` over C and an invertible cell `θ : h ∘ ι ≅ h' ∘ ι` over a, there is an invertible cell `h ≅ h'` over C whose restriction along ι is θ, up to an invertible cell.
+- **Higher levels.** A cell `h ⇒ h'` over C is a map over C into the *fibrewise cotensor* `E^{D¹}_C := [⟦D¹⟧, E] ×_{[⟦D¹⟧, C]} C` (pulled back along the constant map), which is again a cocartesian fibration over C with the pointwise cocartesian arrows [recall: cocartesian fibrations are closed under fibrewise cotensors; Riehl–Verity]. DJ-sec and DJ-uni applied to `E^{D¹}_C`, and then to its fibrewise cotensors, give the levels 2, 3, …, coinductively, exactly as `uni`'s higher levels are generated in `limits-representables.md`.
+
+Every clause is a finite piece of syntax over limits, comma objects, cotensors by ⟦D¹⟧ and cells, so DJ is one rule schema about *all* objects C and points a, not about ℕ. Semantics: the dependent Yoneda lemma (Riehl–Shulman, for covariant families; Riehl–Verity, for cocartesian fibrations in an ∞-cosmos: `a ↓ C` is the free cocartesian fibration on a) [recall]. DJ is the directed analogue of path induction.
+
+**Correction (2026-11-18).** The version of Theorem 4.4 merged in PR #35 proved existence and the two equations of recursion, and then argued uniqueness by extending an algebra map g : N → A to a CF-morphism `x ↓ ⟦L⟧ → T` "by transport". That extension is a map out of `x ↓ ⟦L⟧`, and the only source of such maps is DJ itself, so the step was circular. The proof below does not need it: it proves **induction** directly from G and DJ, and recursion with its uniqueness follows from induction, as in AGS run backwards.
+
+**Theorem 4.4 (induction from G and DJ) [proved here, relative to G and DJ].** Let `p : P → N` be any map, `e₀ : ⊤ → P` with `p ∘ e₀ ≅ zero`, and `t : P → P` with `τ : p ∘ t ≅ succ ∘ p`. Then there is `σ : N → P` with invertible cells `p ∘ σ ≅ 1_N`, `σ ∘ zero ≅ e₀` and `σ ∘ succ ≅ t ∘ σ`.
+
+*Proof.*
+1. (p, τ) is a map of diagrams (P, t) ⇒ (N, succ) over L. By G, `π_P : T_P → ⟦L⟧` and `π_N : T_N → ⟦L⟧` are cocartesian fibrations, and `T(p) : T_P → T_N` is a CF-morphism over ⟦L⟧ restricting to p on the fibres over x.
+2. Let `e := q_P(e₀) : ⊤ → T_P`; then `π_P ∘ e ≅ x`. DJ-sec for `π_P` and e gives a CF-morphism `h : x ↓ ⟦L⟧ → T_P` over ⟦L⟧ with `h ∘ ι ≅ e`.
+3. **A map back, ψ : T_N → x ↓ ⟦L⟧.** By the universal property of the lax colimit T_N, a map out of it is a lax cocone on (N, succ): a map `c : N → x ↓ ⟦L⟧` and a cell `c ⇒ c ∘ succ`. Take for c the fibre inclusion `N = Hom_{⟦L⟧}(x, x) = (x ↓ ⟦L⟧)_x → x ↓ ⟦L⟧` (the hom object *is* this pullback). Take for the cell the map `N → [⟦D¹⟧, x ↓ ⟦L⟧]` given by the comma's universal property from the composition cells `n ; s ⇒ (n;s)` (a coh), i.e. the arrow `(x, n) → (x, n;s)` lying over s. Then `π_x ∘ ψ ≅ π_N`, by the uniqueness clause of the lax colimit applied to the cocone `(const x, s)` that defines π_N. By DJ-cocart ψ is a CF-morphism.
+4. Let `k := ψ ∘ T(p) ∘ h : x ↓ ⟦L⟧ → x ↓ ⟦L⟧`, a CF-morphism over ⟦L⟧. On ι: `k(ι) ≅ ψ(T(p)(q_P e₀)) ≅ ψ(q_N(p e₀)) ≅ ψ(q_N(zero)) ≅ c(zero) = (x, 1_x) = ι` (using G-nat for the second step, and `q_N(zero)` being `zero` in the fibre for the fourth). So DJ-uni, with id as the second CF-morphism, gives an invertible cell `k ≅ 1` over ⟦L⟧.
+5. Restrict to fibres over x (pulling back along `x : ⊤ → ⟦L⟧` is functorial, by the universal property of the pullbacks). Let `σ := h_x : N → P`, read through `φ_x : P ≃ (T_P)_x`. G-nat gives `T(p)_x ≅ p`, and `ψ_x ≅ 1_N` since c is the fibre inclusion. Step 4 restricted is `p ∘ σ ≅ k_x ≅ 1_N`.
+6. `σ(zero) ≅ h(ι) ≅ e = q_P(e₀)`, which is e₀ under φ_x. For n : N, the arrow `(x, n) → (x, n;s)` of `x ↓ ⟦L⟧` lies over s, and h sends it to a cocartesian arrow over s out of `h(n)`. By G-transport, the cocartesian arrow over s out of `q_P(σ n)` ends at `q_P(t(σ n))`, and cocartesian lifts are unique up to an invertible cell (the unit of ℓ is invertible). Its target is `h(n;s) = σ(succ n)`, so `σ ∘ succ ≅ t ∘ σ`. Each step is a cell natural in n because it is built from maps out of N, not pointwise.
 ∎
 
-Induction (Theorem 4.3) then follows as before, and N trunc 0 is derived. Route III also gives recursion out of `Hom_{⟦Γ⟧}(a, b)` for every graph Γ (lists, words, paths) with no further rule.
+**Corollary 4.4.1 (recursion with uniqueness, route III).** For `a : ⊤ → A` and `f : A → A`:
+- *Existence.* Apply Theorem 4.4 to `pr₁ : N × A → N`, `e₀ := (zero, a)`, `t := succ × f`. Then `rec := pr₂ ∘ σ` satisfies `rec ∘ zero ≅ a` and `rec ∘ succ ≅ f ∘ rec`.
+- *Uniqueness, level 1.* Let g, g' : N → A be algebra maps (with cells `γ₀ : g ∘ zero ≅ a`, `γ_s : g ∘ succ ≅ f ∘ g`, and γ'₀, γ'_s). Let `I(A) := [⟦J⟧, A]` (the cotensor by the walking equivalence, a finite limit; F7), with its endpoint map `I(A) → A × A`, and let `P := N ×_{A×A} I(A)` be the pullback along `⟨g, g'⟩`, with `p := pr₁`. A point of P over n is an invertible cell `g n ≅ g' n`. Take `e₀ := γ'₀⁻¹ ∘ γ₀`, and t the map sending `α : g n ≅ g' n` to `γ'_s⁻¹ ∘ f(α) ∘ γ_s : g(n+1) ≅ g'(n+1)` (built from `[⟦J⟧, f]` and composition with the γ cells, all of which are maps out of P). Theorem 4.4 gives `σ : N → P` over N, i.e. an invertible cell `g ≅ g'`, compatible with γ₀, γ'₀ and with γ_s, γ'_s (by the two cell equations of the theorem).
+- *Higher levels.* Two such cells are compared by the same argument with `[⟦J⟧, A]` replaced by the object of invertible 2-cells between two parallel maps (a further cotensor), and so on, coinductively.
+- *Parameters.* Run everything in the slice over B (`B × –` preserves the limits, commas and lax colimits used [recall: lax colimits are stable under product with an object, since `B × –` is a left adjoint in ωCat]).
+
+So route III gives exactly the content of the recursion rule of routes I and II, uniqueness included, with Theorem 4.3 and N trunc 0 following as before. It also gives induction and recursion out of `Hom_{⟦Γ⟧}(a, b)` for every finite graph Γ (lists, words, paths): replace L by Γ and run the same proof with a family over each object variable.
+
+**What the proof uses.** From G: G-fib, G-fibre, G-transport, G-nat. From DJ: DJ-cocart, DJ-sec, DJ-uni (level 1 only for Theorem 4.4; the higher levels for the higher levels of Corollary 4.4.1). An initiality clause "ι is initial in `(a ↓ C)_a`" is not needed.
 
 ### 4.7 Other inductive objects
 
@@ -326,25 +353,57 @@ This justifies **T-loc** and gives ℤ trunc 0 by T-hom. It also gives a filler 
 
 Addition is composition in Hom(x, x), negation is inversion of loops (every loop of ⟦L⟧[s⁻¹] is invertible, being a composite of s and s⁻¹), and multiplication comes from recursion on N followed by the sign split. Ring axioms are cells between maps ℤᵏ → ℤ, and all their coherence is T-fill (§2.5). So ℤ "behaves like the integers", with cancellation given by the equivalence data, not by a definitional rule.
 
-### 5.3 Quotients beyond localisation
+### 5.3 Quotients beyond localisation: the truncation rule
 
-ℚ, ℤ/n and quotient sets in general are not localisations of free objects on graphs. Coequalisers alone do not give sets: in an (∞,1)- or (∞,ω)-setting the coequaliser of two maps ⊤ ⇉ ⊤ is the circle Bℤ, not a point. What is needed is **set-truncation**:
+ℚ, ℤ/n and quotient sets in general are not localisations of free objects on graphs. Coequalisers alone do not give sets: in an (∞,1)- or (∞,ω)-setting the coequaliser of two maps ⊤ ⇉ ⊤ is the circle Bℤ, not a point. What is needed is **n-truncation**, a reflection onto n-truncated objects, stated with the same J1/J2 pattern as Mikhail's `uni` and with the certified judgment `C trunc n` as its side condition.
+
+**The rule Trunc_n (n ≥ −1) [proposal].** For every object X:
 
 ```
-(Trunc)   for n ≥ −1 and any object X: an object ‖X‖_n, trunc n, with |–| : X → ‖X‖_n,
-          and for every C trunc n, restriction along |–| : Hom(‖X‖_n, C) → Hom(X, C)
-          essentially surjective at every level (a `uni`-style filler rule whose
-          side condition is the certified judgment C trunc n).
+(Tr-form)  ‖X‖_n  an object,  and  ‖X‖_n trunc n          (a new clause T-trunc of §2.1)
+(Tr-unit)  |–| : X → ‖X‖_n
+(Tr-J1)    C trunc n,  g : X → C
+           ⊢  ext_g : ‖X‖_n → C,   ε_g : ext_g ∘ |–| ≅ g
+(Tr-J2)    C trunc n,  k, k' : ‖X‖_n → C,  θ : k ∘ |–| ≅ k' ∘ |–|
+           ⊢  θ̄ : k ≅ k',   and an invertible cell  θ̄ ∘ |–| ≅ θ
 ```
 
-It is a localisation (left adjoint to the inclusion of n-categories), stated with the same J1/J2 pattern as Mikhail's `uni`, with a `trunc` premise. Then the quotient of a set X by an equivalence relation `R ⇉ X` is `‖coeq(R ⇉ X)‖₀`, and ℚ is the quotient of ℤ × ℤ_{≠0}.
+Only these two levels are rules. All higher levels are derived (Proposition 5.3).
 
-| | localisation only (§5.1) | with Trunc |
-|---|---|---|
-| ℤ | yes | yes, also as a quotient of ℕ × ℕ |
-| ℤ/n, ℚ, quotient sets | no | yes |
-| new rules | none (pushout) | Trunc |
-| effectiveness of quotients (R is the kernel of X → X/R) | n/a | needs a further argument (in HoTT it uses univalence; here it is open, F4b) |
+**Lemma 5.2 (total spaces) [proved here].** If `p : E → B` is relatively n-truncated and B trunc n, then E trunc n.
+*Proof.* Take parallel cells u, v into E of a level where T-fill or T-inv is required. Their images p u, p v are parallel cells into B of the same level, so B trunc n gives a filler or an inverse ω. The relative rule for p, applied to (u, v, ω), gives a filler or an inverse over ω. Both rules are coinductive in the same way as Proposition 2.1, and the argument is uniform in the level. ∎
+
+**Proposition 5.3 (dependent elimination and the higher levels) [proved here].**
+1. *(Dependent elimination.)* Let `p : E → ‖X‖_n` be relatively n-truncated and `s : X → E` with `p ∘ s ≅ |–|`. Then there is `σ : ‖X‖_n → E` with `p ∘ σ ≅ 1` and `σ ∘ |–| ≅ s`.
+2. *(Higher levels.)* For C trunc n, any two parallel j-cells between maps `‖X‖_n → C` whose restrictions along |–| are connected by an invertible (j+1)-cell are themselves connected by an invertible (j+1)-cell restricting to it. So restriction along |–| is essentially surjective at every level, which is the full universal property.
+
+*Proof.* (1) E trunc n by Lemma 5.2. Tr-J1 gives `ext_s : ‖X‖_n → E` with `ext_s ∘ |–| ≅ s`. Both `p ∘ ext_s` and `1` restrict along |–| to maps isomorphic to |–|, so Tr-J2 (with C := ‖X‖_n, which is trunc n by Tr-form) gives `p ∘ ext_s ≅ 1`. Take σ := ext_s (the AGS argument of §4.1).
+(2) A j-cell between maps `‖X‖_n → C` with a fixed boundary `b : ‖X‖_n → [∂⟦Dʲ⟧, C]` is a section of the pullback `E_b := ‖X‖_n ×_{[∂⟦Dʲ⟧, C]} [⟦Dʲ⟧, C]`, a family over ‖X‖_n. Its fibres are j-fold hom objects of C, which are trunc (n − j) by T-hom and so trunc n by T-cum; hence `E_b → ‖X‖_n` is relatively n-truncated. Two parallel j-cells are two sections of E_b, and the cell between them is a section of the relatively n-truncated family of cells between them (the same construction one level up). Part (1) gives it, with the restriction condition. ∎
+
+**Quotients.** For a set X and an equivalence relation `R ⇉ X` (R a set, `⟨r₀, r₁⟩ : R → X × X` a mono, with reflexivity, symmetry and transitivity maps), put
+
+```
+X/R := ‖ coeq(r₀, r₁) ‖₀        [ · ] : X → X/R
+```
+
+where coeq is the pseudo coequaliser (the colimit with an invertible cell `c ∘ r₀ ≅ c ∘ r₁`).
+
+**Proposition 5.4 (universal property of the quotient) [proved here].** For C trunc 0, maps `X/R → C` correspond, up to invertible cells at every level, to pairs (g : X → C, an invertible cell `g ∘ r₀ ≅ g ∘ r₁`); no compatibility of that cell with reflexivity or transitivity is required, since C is a set and T-fill supplies it.
+*Proof.* Compose the universal properties of coeq (maps out of it are such pairs) and of Trunc₀ (Tr-J1, Tr-J2 and Proposition 5.3(2)). ∎
+
+So ℤ/n is the quotient of ℤ by "differ by a multiple of n" (the relation is an equaliser, so a set), and **ℚ is the quotient of ℤ × N by `(a, m) ~ (b, k) ⟺ a·(k+1) = b·(m+1)`**, reading (a, m) as a/(m+1). This avoids a "non-zero integers" object. The relation is an equaliser of two maps `(ℤ × N)² → ℤ` into a set, so a mono, and its reflexivity, symmetry and transitivity are proved by the induction of §4 (transitivity uses cancellation of the non-zero factor m+1, itself an induction).
+
+**Effectiveness [conj].** The quotient is *effective* when the canonical map `R → X ×_{X/R} X` is an equivalence: two elements become equal in X/R only if they are related. Without it, ℚ could identify more fractions than intended, and the construction would not provably be ℚ.
+- Semantically it holds: sets in ωCat are ordinary sets, `‖–‖₀ ∘ coeq` computes the ordinary quotient (π₀ of the groupoid generated by R, which for an equivalence relation is X/R), and the category of sets is exact.
+- In HoTT it is proved with univalence (encode–decode against a family of propositions `x ∼ –` on X/R). Here the analogous family would be a map `X/R → Prop`, which needs a classifier for propositions, i.e. a universe. Standard 5 forbids that.
+- **Rule (EX) [proposal].** For a set X and an equivalence relation R on it, the map `R → X ×_{X/R} X` is an equivalence. It is a statement *about maps into* a pullback, so no colimit rule implies it, which is why a separate rule is expected to be needed. Whether EX is derivable from finite limits, colimits, Trunc and the T-rules is posed as a problem in `conjectures/outbox/non-derivability.md` (problem 3).
+- **What Trunc + EX give.** Sets with finite limits, quotients and effectiveness form an exact category (a pretopos once T-coprod's disjointness is added). Together with N from §4, this is the arithmetic part of ordinary mathematics: ℤ, ℚ, ℤ/n, and finite combinatorics. The reals and function sets still need exponentials (F8).
+
+| | localisation only (§5.1) | with Trunc | with Trunc + EX |
+|---|---|---|---|
+| ℤ | yes | yes, also as a quotient of ℕ × ℕ | yes |
+| ℤ/n, ℚ, quotient sets | no | yes, with the right universal property | yes, and provably effective |
+| new rules | none (pushout) | Trunc_n (two levels; higher ones derived) | Trunc_n, EX |
 
 **Vector-space-like objects.** A field object K is a set with ring structure and an inverse on the non-zero part (a pullback). A K-module is a set M with maps `K × M → M`, `M × M → M`, and laws as cells; coherence is again automatic. Free modules on a finite set are products Kⁿ. Free modules on an arbitrary set, quotients of modules, and dual spaces need Trunc (quotients) and F8 (function sets).
 

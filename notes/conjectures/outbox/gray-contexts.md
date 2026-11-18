@@ -69,3 +69,247 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) on loop-free conte
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible, so uniqueness only needs some connecting cell.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange; Squier-style coherence.
 - Ara–Lucas ([arXiv 1909.13564](https://arxiv.org/abs/1909.13564)), Cor. 3.11, and Steiner (HHA 6, 2004): Gray tensors of free strict ω-categories are free on their atoms.
+
+# Researcher Response
+
+**I have not obtained a solution meeting §5.** The unresolved case already includes arbitrary parallel 3-terms of the lax square whose strict 2-boundary is \(F\). I did not find a published theorem that supplies those CaTT fillers.
+
+There are, however, two explicit partial constructions and a support restriction that sharpens the cube problem. I give their proofs below, including the point where the square argument stops.
+
+## 1. A support restriction
+
+Write \(\operatorname{supp}(t)\) for the variables used by \(t\), closed recursively under dependencies in their declared types, and \(\operatorname{supp}_d(t)\) for its dimension-\(d\) subset.
+
+Benjamin–Markakis, Lemma 36, proves equality of the \((d-1)\)-supports below. The same induction gives the following stronger, total-support statement:
+\[
+\boxed{
+\operatorname{supp}_d(c)=\varnothing
+\quad\Longrightarrow\quad
+\operatorname{supp}(c)
+=\operatorname{supp}(s c)
+=\operatorname{supp}(t c).
+}
+\tag{1}
+\]
+This strengthening is a deduction, not the literal statement of their lemma. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+**Proof.** Induct structurally on \(c\). A variable is excluded. Write
+\[
+c=\operatorname{coh}_{P,a\to b}[\sigma],
+\qquad
+\operatorname{supp}(c)=
+\bigcup_{z\in\operatorname{Var}(P)}
+\operatorname{supp}(\sigma z).
+\]
+
+If \(\dim P<d\), fullness of \(a,b\) gives the result by substitution.
+
+If \(\dim P=d\), every arity variable below dimension \(d-1\) belongs to the source boundary. Every remaining \((d-1)\)-variable is reached from that boundary by a vertical string of \(d\)-variables. Each substituted \(d\)-variable has empty \(d\)-support. Induction identifies its total support with both endpoint supports. Consequently, all supports in the displayed union already belong to \(\operatorname{supp}(a[\sigma])\). The reverse inclusion follows from substitution. The target argument is identical. ∎
+
+The dependency closure matters: (1) is not a statement about a convention under which the support of a variable is just that variable.
+
+## 2. Explicit 4-fillers for the identity-path cases of the lax square
+
+Let
+\[
+p=f^-*_0y^\uparrow,
+\qquad
+q=x^\uparrow *_0f^+,
+\]
+so \(F:p\Rightarrow q\).
+
+### Strict classification
+
+The generating graph has ten paths: four empty paths, four edges, and \(p,q\). Its free strict 2-category has precisely
+\[
+1_w\quad\text{for those ten paths }w,
+\qquad\text{and}\qquad F:p\Rightarrow q.
+\tag{2}
+\]
+
+Indeed, two copies of \(F\) cannot compose vertically because \(p\ne q\). No nonempty path precedes \(F\), since no edge enters \(x^-\); no nonempty path follows \(F\), since no edge leaves \(y^+\). Thus adjoining identities produces no additional nonidentity 2-cells.
+
+Consider parallel 3-terms
+\[
+\alpha,\beta:t\longrightarrow t'.
+\]
+Their common strict 2-boundary is therefore either \(1_w\) or \(F\). Since \(S\) has no 3-generators, their strict 3-images agree automatically.
+
+### Construction when \(\pi(t)=1_w\)
+
+First, \(t\) cannot use \(F\). To see this syntactically, count \(F\) in strict 2-cell expressions. The count is additive under composition and preserved by associativity, units and exchange. Induction on a CaTT 2-term shows that its strict count is positive exactly when its support includes \(F\): a composition uses every top-dimensional input of its pasting arity, and a coherence over an arity of dimension at most one has no 2-dimensional input. Hence strict count zero implies absence of \(F\).
+
+Applying (1), first in dimension three and then in dimension two, gives
+\[
+\operatorname{supp}(\alpha)
+=\operatorname{supp}(\beta)
+=\operatorname{supp}(t)
+=\operatorname{supp}(s t).
+\tag{3}
+\]
+The 1-term \(s t\) flattens to \(w\). Induction on 1-terms identifies its support with the vertices and edges of \(w\): concatenation has no cancellation.
+
+Let \(C_w\) be the standard path context for \(w\), and let
+\[
+S\vdash \iota_w:C_w
+\]
+send each path variable to the corresponding variable of \(S\). By (3), restricting and renaming \(\alpha,\beta\) gives full parallel terms \(\bar\alpha,\bar\beta\) over \(C_w\), with
+\[
+\bar\alpha[\iota_w]=\alpha,
+\qquad
+\bar\beta[\iota_w]=\beta.
+\]
+Therefore the required 4-term is
+\[
+\boxed{
+K(\alpha,\beta)
+=
+\operatorname{coh}_{C_w,\,
+\bar\alpha\to\bar\beta}[\iota_w].
+}
+\tag{4}
+\]
+
+This is a single legal application of the original coherence rule. It settles all cases in (2) except the case with common strict 2-boundary \(F\).
+
+## 3. An explicit reduction for elementary coherences with strict boundary \(F\)
+
+There is also a reduction for a 3-term
+\[
+c=\operatorname{coh}_{P,u\to v}[\sigma]
+\tag{5}
+\]
+when \(\dim P=2\) and
+\[
+\pi(u[\sigma])=\pi(v[\sigma])=F.
+\]
+It reduces the arity to a vertical 2-chain.
+
+### The substitutions
+
+Decompose the globular 2-pasting context \(P\) into horizontal columns. Write its 0-variables as \(z_0,\ldots,z_m\). Column \(j\) has parallel 1-variables and a vertical chain:
+\[
+g_{j,0},\ldots,g_{j,n_j}:z_{j-1}\to z_j,
+\qquad
+\theta_{j,k}:g_{j,k-1}\Rightarrow g_{j,k}.
+\]
+A column with \(n_j=0\) consists of one 1-variable.
+
+Because \(u,v\) have full support, their strict 2-images use every \(\theta_{j,k}\) once. This follows directly from the column description: vertical composition traverses a subchain, and full support forces traversal of every step in every column.
+
+After applying \(\sigma\), exactly one \(\theta_{j,k}\) has strict image \(F\). Let \(j_0\) be its column. That column spans \(x^-\to y^+\). The absence of nonempty paths entering \(x^-\) or leaving \(y^+\) forces:
+
+- Every column before \(j_0\) to be assigned terms over the single vertex \(x^-\).
+- Every column after \(j_0\) to be assigned terms over the single vertex \(y^+\).
+
+Here the assertion about terms, rather than just their strict images, follows from the identity-path support argument in §2, in dimensions one and two.
+
+Let \(n=n_{j_0}\), and let \(Q\) be the vertical 2-chain with variables
+\[
+x,y:*,
+\qquad h_k:x\to y\quad(0\le k\le n),
+\qquad
+\xi_k:h_{k-1}\Rightarrow h_k\quad(1\le k\le n),
+\]
+declared in the pasting-context order
+\[
+x,y,h_0,h_1,\xi_1,h_2,\xi_2,\ldots,h_n,\xi_n.
+\]
+
+Define \(Q\vdash\lambda:P\) by:
+
+- Sending \(z_i\) to \(x\) for \(i<j_0\), and to \(y\) for \(i\ge j_0\).
+- Sending \(g_{j_0,k}\) to \(h_k\), and \(\theta_{j_0,k}\) to \(\xi_k\).
+- For every variable in another column, taking its \(\sigma\)-image and renaming its sole supporting vertex \(x^-\) to \(x\), or \(y^+\) to \(y\), respectively.
+
+Define \(S\vdash\tau:Q\) by
+\[
+x\mapsto x^-,
+\quad y\mapsto y^+,
+\quad h_k\mapsto\sigma(g_{j_0,k}),
+\quad \xi_k\mapsto\sigma(\theta_{j_0,k}).
+\]
+These substitutions satisfy the syntactic equality
+\[
+\lambda[\tau]=\sigma.
+\tag{6}
+\]
+
+### The 4-term
+
+Put
+\[
+\bar c=\operatorname{coh}_{P,u\to v}[\lambda],
+\qquad
+\bar u=u[\lambda],
+\qquad
+\bar v=v[\lambda],
+\]
+and define
+\[
+d=\operatorname{coh}_{Q,\bar u\to\bar v}[\operatorname{id}_Q].
+\]
+Both \(\bar u,\bar v\) have full support \(Q\), since every central-column variable is retained by \(\lambda\). Thus \(d\) is legal. Likewise, \(\bar c,d\) are full parallel 3-terms over \(Q\). Hence
+\[
+\boxed{
+R(c)=
+\operatorname{coh}_{Q,\bar c\to d}[\tau]
+:
+c\longrightarrow
+\operatorname{coh}_{Q,\bar u\to\bar v}[\tau].
+}
+\tag{7}
+\]
+The source is exactly \(c\), by (6).
+
+### Why this does not finish question 1
+
+The terms \(\tau(\xi_k)\) remain arbitrary 2-terms of \(S\). Exactly one has strict image \(F\); the others have identity strict images. In particular, the term assigned to that one \(\xi_k\) need not be the variable \(F\).
+
+Your \(RC(2)\) supplies comparisons between parallel choices for these 2-terms. It does not supply the 4-cells making those comparisons compatible with every 3-term. Moreover, an arbitrary 3-term can have a three-dimensional composition arity, whereas (7) treats a two-dimensional coherence arity.
+
+Thus (7) is an explicit arity reduction, but it does not yield a common normal form for arbitrary parallel 3-terms. Using it as such would leave precisely the missing coherence argument unproved.
+
+## 4. The cube’s specified loop already lies over one hemisphere
+
+Let
+\[
+A=\left\lceil\partial^-U\right\rceil,
+\qquad
+H:A\longrightarrow A
+\]
+be a 3-term with no \(X\).
+
+Equation (1) gives
+\[
+\boxed{\operatorname{supp}(H)=\operatorname{supp}(A).}
+\tag{8}
+\]
+Therefore \(H\) cannot use any positive-hemisphere face generator absent from \(A\). Since support includes type dependencies, it cannot introduce additional edge or vertex generators either.
+
+Consequently, \(H\) is obtained by weakening a term over the context presenting the **negative three-face 2-molecule**. The specified nullhomotopy problem can be studied entirely over that hemisphere; it does not require all six face generators of the boundary sphere.
+
+This is a restriction on possible terms, not a construction of
+\[
+H\longrightarrow 1_A.
+\]
+I have not established the required \(RC(3)\) for that three-face context.
+
+## 5. What subdivision contractibility does and does not supply
+
+Chanavat’s Theorem 2.52 states that \(\mathrm{Sd}\,U\) is contractible for a frame-acyclic molecule **that is not an atom**. For an atom, this subdivision poset is empty. The semantic freeness statement is Theorem 3.17; Theorem 3.29 concerns compatibility with the Gray product under its acyclic-atom hypothesis. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+To derive the requested CaTT result from subdivision contractibility, one must additionally construct:
+
+1. A CaTT composite for each chosen subdivision.
+2. A comparison term for each refinement.
+3. Higher comparison terms satisfying the boundaries prescribed by chains of refinements.
+4. A proof that arbitrary CaTT composites and comparison terms are controlled by this construction.
+
+Contractibility of the indexing poset does not construct these terms. Even a coherent assignment on its nerve would only compare the assigned terms unless the fourth requirement were proved. For \(RC(3)\), that requirement includes control of arbitrary syntactic 3-loops.
+
+The Gray-categorical pasting theorem does not remove this issue as stated. Di Vittorio explicitly restricts the theorem to composites produced by the specified pasting algorithm and leaves the identification with all composites of the free Gray-category outside that paper’s proof. A further translation to arbitrary CaTT terms would still be needed. [arxiv.org](https://arxiv.org/pdf/2205.15486?utm_source=chatgpt.com)
+
+There is also a hypothesis distinction in §3 of the problem: **frame-acyclicity should not be identified with Steiner loop-freeness**. Hadzihasanovic’s Comment 8.3.5 relates Steiner loop-freeness to strong dimension-wise acyclicity, whereas Example 8.3.12 gives a frame-acyclic 3-atom that is not even dimension-wise acyclic. Thus a theorem for Steiner’s loop-free class would not, by that hypothesis alone, cover every frame-acyclic molecule. [arxiv.org](https://arxiv.org/html/2404.07273v2?utm_source=chatgpt.com)
+
+The explicit constructions established here are (4) and (7). The arbitrary \(F\)-boundary case of question 1, the hemisphere nullhomotopy required by question 2, and the general assertions in questions 3–4 remain unresolved by these arguments.

@@ -463,7 +463,35 @@ With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (clos
 - The β-step types depending on S, namely S itself and T_S uncurried, were already checked (`tens_names.py`).
 - The remaining step types are fixed unit-free L-pasting sequents.
 
-*Not yet done.* Lemmas 1–4 are written at sketch level, and the substitution lemma has the most bookkeeping. Before D10b is closed, they need an independent check, or an Agda formalization of the term model.
+*Independent check (LIT thread, 2026-11-18).* Lemmas 1–4 were re-derived step by step and are correct at paper level. The check asked for four additions, made here.
+1. **Bracketing.** All lists are right-nested: ⊗Γ = Γ₁ ⊗ (Γ₂ ⊗ (… ⊗ Y)), and L_{B₁′⊗…⊗B_{k−1}′} means iterated L, i.e. L_{B₁′}(L_{B₂′}(…)). Otherwise, use L_B(L_{B′}s) ≡ L_{B⊗B′}s, which is unit-free and L-pasting.
+2. **Lemma 2 is stated for an arbitrary s : Z\W**, not only for names. The induction uses s′ = L_{Γ_k}(s) with Z′ = Γ_k ⊗ Z.
+3. **Lemma 4 uses two facts.**
+   - ≡ is closed under type substitution, and Ť_{u[τ]} = Ť_u[τ] syntactically.
+   - A coh-rule instance has the form u′[τ] ≡ v′[τ] with u′, v′ : S. A term whose type is S[τ] need not be such an instance; the closed-term counterexample above is one. Ť_{u′} and Ť_{v′} both have type T_S, so they are ≡, and then apply τ.
+4. **β for tuples.** ev(p, Ť_σ) ≡ the right-nested tensor of σ's terms with y. It is proved like lemma 1, and is needed for prefixes of several closed terms.
+
+**The ξ-rule, written out.** ≡ is the least congruence closed under term and type substitution that contains the coh-rule instances. So it is the equivalence closure of one-step rewriting C[l[ρ]] ↦ C[r[ρ]], where C is a one-hole context, l ≡ r is a coh-rule instance (l = l′[τ], r = r′[τ] with l′, r′ : S UP\*), and ρ is a term substitution. It suffices that [x] respects one step. Induct on C.
+- **The redex does not contain x.**
+  - If it sits in a closed-prefix slot, use lemma 4 (Ť respects ≡).
+  - Otherwise it sits in an argument that bracket abstraction copies unchanged, and congruence applies.
+- **The redex contains x, and C is a context around it.** Each clause of [x] applies [x] to the argument containing x, so this reduces to C = hole.
+- **C = hole.** Let z be the variable of l whose ρ-image s contains x. ρ sends the variables left of z to closed terms c⃗, and the variables right of z to x-free terms ρ_>. Three lemmas finish the case.
+  - **Lemma A (right substitutions commute, syntactically).** [x](t[q/y]) = ([x]t)[q/y] for y right of x. The same clause of [x] fires on both sides.
+  - **Lemma B (abstraction through a leftmost variable).** [x](t[s/z]) ≡ coh_K([x]s, [z]t) when z is leftmost in t. Induct on t:
+    - First-argument clause: by the induction hypothesis and K-associativity.
+    - Prefix clause: lemma 4 and β of Ť.
+  - **Lemma D (closed prefix).** For t with variables w⃗, z, γ⃗ in this order and closed c⃗,
+
+    ```
+    [z](t[c⃗/w⃗])  ≡  E(Ť_{c⃗}[Y := Z], [z][w_k]…[w₁]t).
+    ```
+
+    Here E is the coh over a : Z\(W⃗⊗Z), h : Z\(W_k\…(W₁\A)) ⊢ Z\A. Its normal form is Z, Z\(W⃗⊗Z), Z\(W_k\…) ⊢ A, which is unit-free L-pasting. Lemma D is proved by induction on t, using lemmas 1 and 2 and β for tuples.
+
+  Then [x](l[ρ]) ≡ coh_K([x]s, E(Ť_{c⃗}, [z][w⃗]l))[ρ_>], and likewise for r. The iterated abstractions [z][w⃗]l′ and [z][w⃗]r′ both have the fully curried type of S, which is UP\* with the same normal form. So they are ≡, and τ and ρ_> preserve ≡.
+
+*Status.* Lemmas 1–4 are independently checked. The ξ-rule is written out above, and Lemmas A and B are routine. Lemma D carries the remaining bookkeeping and has not been independently checked. D10b closes once Lemma D is checked.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 
@@ -907,11 +935,11 @@ Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 
 *Added 2026-11-18.*
 
-**1. Additive models cannot see generator-free interchangers.**
+**1. Additive models with group-subtraction residuals cannot see generator-free interchangers.** *(Scope narrowed 2026-11-18; see item 4.)*
 - Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = target − source is additive, and an interchanger adds a bilinear term β(δ(f), δ(g)). The integer model 𝓜 and its matrix version are additive.
-- Every structural 1-cell has δ = 0, because it is a coh of a balanced sequent.
+- Every structural 1-cell has δ = 0 *when the residual is group subtraction* (p\r = r − p, as in 𝓜), because it is a coh of a balanced sequent. Item 4 drops this assumption, and the conclusion fails.
 - So in every additive model, an interchanger χ_{f,g} in which f or g is structural (ev, curried evaluation, associators) has weight 0, and lands in a hom where it is forced to be an identity once the hom is a poset.
-- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with weight models. It needs a rewriting or coherence argument, or a non-additive model.
+- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with models of this kind. It needs a rewriting or coherence argument, or a model like 𝓟 of item 4.
 
 **2. Structural interchangers are not forced trivial by the stated axioms.**
 - Take ev : A⊗(A\C) → C and a generator g : Y → Y′. Compare (ev⊗Y′)∘(A⊗(A\C)⊗g) with (C⊗g)∘(ev⊗Y).
@@ -925,6 +953,30 @@ Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 - (b) its quotient in which structural 1-cells are central, i.e. every interchanger with a structural argument is an identity.
 
 In (b), the reduction of round-3 Q1 to item 6 of round 2 is immediate: every forward 2-cell between t₁ and t₂ is a single generator interchanger, so 𝒢_b(t₁, t₂) = {α}. Whether (b) is still sound for the Gray tensor of (∞,ω)-categories, i.e. whether ev is central there, is the real question. Campion's biclosedness is only on mapping spaces (GHL Rem. 2.20), which suggests it is not. This is recorded for the round-3 answer to settle.
+
+**4. Evaluation is not central in 𝒢 (proved).** *(Added 2026-11-18.)*
+
+*The polarized model 𝓟.* It is a strict 2-category with codiscrete homs, so every 2-cell equation holds automatically and only the 1-cell structure needs checking.
+- **Objects:** pairs (P, N) ∈ ℤ².
+- **Tensor and residuals:** A ⊗ B = A + B, and A\C = C/A = C + swap(A), where swap(P, N) = (N, P). So the residual swaps polarity instead of subtracting, unlike 𝓜.
+- **1-cells:** a 1-cell X → Y exists iff (P − N)(X) = (P − N)(Y), and is then an integer weight w. Composition adds weights.
+- **Grading:** put d(u) = P(source) − P(target).
+- **Whiskering:** w(A ⊗ u) = w(u) + P(A)·d(u) and w(u ⊗ B) = w(u).
+- **Currying:** left currying is Φ_A(u) = w(u) − P(A)·d(u), and right currying leaves the weight unchanged.
+
+*It is a model of the setting of r3.*
+- A⊗– is a functor, ⊗ is strictly associative, and (A⊗v)⊗B = A⊗(v⊗B).
+- Φ is a bijection, strictly natural in the context variable and in the target. Naturality in A holds up to the (codiscrete) interchanger.
+- The interchanger exists because the homs are codiscrete. It is an identity only when the weights agree, and w(A′⊗g)(f⊗B) − w(f⊗B′)(A⊗g) = (P(A′) − P(A))·d(g) = −d(f)·d(g).
+- `scripts/d11/polar_model.py` checks these laws on 20,000 random instances, with no failures.
+
+*Consequence.* Here ev_A = Φ⁻¹(id) has d(ev_A) = P(A) + N(A), which is not 0 in general. Take atoms with A ↦ (1, 0), C ↦ (0, 0), X ↦ (1, 1) and X′ ↦ (0, 0), and a generator g : X → X′. Then the 1-cells (X′ ⊗ ev) ∘ (g ⊗ A ⊗ A\C) and (g ⊗ C) ∘ (X ⊗ ev) have weights 1 and 2. So they are **distinct 1-cells of the free 𝒢**, and χ_{g,ev} is not an identity. The same computation separates the two orders of two evaluations at independent positions, χ_{ev,ev′}, which involves no generator at all.
+
+So:
+- **Round-3 Q5, first half: answered, no.** Evaluation is not central in 𝒢, and the quotient 𝒢_c of item 3(b) is a proper quotient.
+- **Q1:** structural interchangers really are events between distinct 1-cells. The open part is that any two 2-cells between the same 1-cells built from them are equal, which is a coherence statement and not a triviality.
+- **Q2:** confirmed. A complete invariant must schedule structural events too.
+- **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
 
 ---
 

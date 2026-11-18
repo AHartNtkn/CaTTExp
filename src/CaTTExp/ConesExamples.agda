@@ -230,3 +230,57 @@ _ = refl
 -- On 1-dimensional shapes it is the φ of ConstPoint.
 _ : map PhiAll.φ oneDim ≡ map ConstPoint.φ oneDim
 _ = refl
+
+------------------------------------------------------------------------
+-- 9. A non-globular diagram: τ : f ∗₀ g ⇒ h (boundary is a composite).
+--    Its cone needs the cone cell over the composite f ∗₀ g:
+--      P(f ∗₀ g) := (p_g ∗₁ (p_f ∗₀ g)) ∗₁ κ,
+--    κ : (p_x ∗₀ f) ∗₀ g ⇒ p_x ∗₀ (f ∗₀ g), the associator over the
+--    chain c → x → y → z (notes/specified-cones.md §5, Prop. 5.2).
+--    Levels: x0 y1 f2 z3 g4 h5 τ6 | c7 p_x8 p_y9 p_f10 p_z11 p_g12 p_h13 p_τ14.
+
+module NonGlobular where
+  open import CaTTExp.Prelude
+  Tri : ExCtx
+  Tri = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ ob ∷ hom ob (v 1) (v 3)
+      ∷ hom ob (v 0) (v 3) ∷ hom (hom ob (v 0) (v 3)) (bn 0 (v 2) (v 4)) (v 5) ∷ []
+
+  -- The cone up to p_h, which only needs variable boundaries.
+  pre : ExCtx
+  pre = Tri ++ (ob ∷ hom ob (v 7) (v 0) ∷ hom ob (v 7) (v 1)
+       ∷ hom (hom ob (v 7) (v 1)) (v 9) (bn 0 (v 8) (v 2))
+       ∷ hom ob (v 7) (v 3)
+       ∷ hom (hom ob (v 7) (v 3)) (v 11) (bn 0 (v 9) (v 4))
+       ∷ hom (hom ob (v 7) (v 3)) (v 11) (bn 0 (v 8) (v 5)) ∷ [])
+
+  C₀ : Ctx
+  C₀ = evCtx pre
+  g : Nat → Cell
+  g = gen C₀
+
+  Chain3 : Ctx
+  Chain3 = ctxOf (node (leaf ∷ leaf ∷ leaf ∷ []))
+  -- In Chain3 (a0 b1 u2 d3 w4 e5 r6): (u ∗₀ w) ∗₀ r ⇒ u ∗₀ (w ∗₀ r).
+  assocT : Ty
+  assocT = arr (snd l) (fst l) (fst r)
+    where
+    l = binC 0 (binC 0 (gen Chain3 2) (gen Chain3 4)) (gen Chain3 6)
+    r = binC 0 (gen Chain3 2) (binC 0 (gen Chain3 4) (gen Chain3 6))
+  κ : Cell
+  κ = coh Chain3 assocT ⟪ fst (g 7) ∷ fst (g 0) ∷ fst (g 8) ∷ fst (g 1) ∷ fst (g 2) ∷ fst (g 3) ∷ fst (g 4) ∷ [] ⟫
+    , assocT [ ⟪ fst (g 7) ∷ fst (g 0) ∷ fst (g 8) ∷ fst (g 1) ∷ fst (g 2) ∷ fst (g 3) ∷ fst (g 4) ∷ [] ⟫ ]ty
+
+  Pfg : Cell
+  Pfg = binC 1 (binC 1 (g 12) (binC 0 (g 10) (g 4))) κ
+
+  pτTy : Ty
+  pτTy = arr (snd (g 13)) (var 13) (fst (binC 1 Pfg (binC 0 (g 8) (g 6))))
+
+  cone : Ctx
+  cone = C₀ ▸ pτTy
+
+  _ : is-just (checkCtx cone) ≡ true
+  _ = refl
+  -- Mikhail's (KE) admits it too.
+  _ : KE.okConeAll cone 7 ≡ true
+  _ = refl

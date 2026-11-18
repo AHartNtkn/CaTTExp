@@ -172,6 +172,8 @@ import CaTTExp.GrayCtx.CylGen
 import CaTTExp.GrayCtx.Cylinder
 import CaTTExp.GrayCtx.Natural
 import CaTTExp.GrayCtx.NaturalWF
+import CaTTExp.GrayCtx.NaturalExplicit
+import CaTTExp.GrayCtx.NaturalAll
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

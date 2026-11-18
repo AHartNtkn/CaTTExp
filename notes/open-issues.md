@@ -31,6 +31,7 @@ Thread ids used below:
 | LIT | literature / conjecture verification `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKdRdpEiQuvAuEvTAURBqhf` | done |
 | MARK | "Design invertibility markings for lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbQhMQC4fsaRjMJypHXq4ZVv` | active |
 | FOBJ | "Develop free-object rules" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbUxJhXTzhRJEWFkLNmH5acC` | active |
+| META | "CaTT metatheory items A1–A4, C8" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb8s5y6BDXaxtFpQZJZ9T4oD` | done 2026-11-18 |
 | CONV | "Clean up recalled claims and conventions" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1EVjAv52BfW2yu9RrGQaFH` | active (E11) |
 | OMATH | "Extend toward ordinary mathematics" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb372mKMHNCxwDtepUMwRs3d` | done (PR #35) |
 
@@ -41,9 +42,10 @@ Thread ids used below:
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
 | A1 | **Substitution admissibility** for core CaTT: Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]. The main missing metatheorem; every extension needs it. | `agda-sketch-findings.md` "Not yet done", "Suggested next steps" | **done** (PR #20: `CaTTExp.Subst`, for every side condition, plain CaTT included) | LCORE |
-| A2 | **Checker completeness**: the certified checker is sound (returns derivations) but not proved complete. | `agda-sketch-findings.md` | unowned | former area AGDA0 |
-| A3 | **Any semantics in Agda**, starting with interpretation in strict ω-categories (or the strict free category on a graph). | `agda-sketch-findings.md` | unowned (needs A1) | former area AGDA0 |
-| A4 | **Non-derivability of functoriality of ⟦_⟧** (finding 2) is argued informally. Make it rigorous: soundness of the strict-model interpretation, then the separating model. | `agda-sketch-findings.md` finding 2 | unowned (needs A1, A3) | former area AGDA0 |
+| A2 | ~~Checker completeness~~ **Closed**: `CaTTExp.Completeness` proves the checker complete for every side condition, so all four judgments are decidable; the pasting judgment is decided by `CaTTExp.PastingCheck`. Hypotheses (reflexive constant equality, complete `valid?`) hold for pure CaTT, instance in `PureMetatheory`. | `agda-sketch-findings.md` | closed | — |
+| A3 | ~~Any semantics in Agda~~ **Closed for a first class**: soundness for the one-object locally discrete strict ω-categories B G, G any group, constants allowed (`CaTTExp.GroupModel`). This is the class A4 needs. General strict ω-categories: A3a. | `agda-sketch-findings.md` | closed | — |
+| A3a | Soundness of CaTT for **general strict ω-categories** in Agda (e.g. the strict ω-category of a globular set's free computad, or Steiner complexes, as C8(4) will need), without universes (standard 5). | `agda-sketch-findings.md` "Metatheory added" | unowned | former area META |
+| A4 | ~~Non-derivability of functoriality of ⟦_⟧~~ **Closed**: machine-checked in `CaTTExp.Sketch.NonDerivable` via the B(ℤ/2) model, all three laws, both orientations. | `agda-sketch-findings.md` finding 2 | closed | — |
 
 ## B. Limit rules (CaTT_lim and its repair)
 
@@ -72,7 +74,7 @@ Thread ids used below:
 | C4 | **Lifts of invertible cells are invertible** under the LIFT schema. **Proved on paper** (`free-objects-proofs.md` §1, coinduction; rule-level form of FHM 2406.13240 Prop. 3.1.7). Agda proof done (`Free/Reflect.agda`), in independent review. | `free-objects.md` §7.2.2 | in progress (Agda review) | FOBJ |
 | C5 | **Conservativity**: cells of ⟦Γ⟧ between CaTT terms are exactly CaTT terms. Non-collapse half **proved under P** in the strict cartesian model (`free-objects-proofs.md` Prop. 5). Weak statement **reduced** to BMS + DFMRV (known) and a sound weak interpretation (E11). Remaining: (C5a) weak half, blocked on E11; (C5b) strict half under L, needs the strict Gray model of the L core (adjacent to E2). | `free-objects.md` §2.6, §5, §7.2.3; `free-objects-proofs.md` §5 | C5a blocked on E11; C5b in progress (adjacent work while C5a waits) | FOBJ |
 | C7 | Agda: postulate A1 (⟦Γ⟧ + LIFT) and A2 (INIT/ATTACH + LIFT) side by side and derive A1's LIFT₀ from A2; formalise the cylinder contexts Q↑Y and machine-check the depth-2 left-unitor case and the C1 next checks. Paper side of the derivation done (`free-objects-proofs.md` §3), with the finding that it needs naturality terms of Γ's boundary terms already at dimension 0. Done in Agda (in review): cylinder contexts for globular Γ, the depth-2 left-unitor naturality cell. Remaining: A1/A2 side by side with the A2 ⇒ A1 LIFT₀ derivation; the associator case (shared with C1b). | `free-objects.md` §6 | in progress | FOBJ |
-| C8 | Agda targets from the limits notes: (1) elements elaboration R-C → §5.1 is well typed; (2) constant substitutions `(c:⋆) ⊢ !_Γ : Γ` exist; (3) cone contexts exist for pasting-scheme diagrams; (4) strict-model check of `laxcolim(const 1) ≅ Free(Γ)` for D¹, D², the loop and the composable pair; (6) formalise the free-on-graph trivial-fibration argument. (Target 5 is B2.) | `limits-representables.md` §8 | (3), (4), (6) in progress; (1), (2) unowned | FOBJ for (3), (4), (6); former area LIMN for (1), (2) |
+| C8 | Agda targets from the limits notes: (1) elements elaboration R-C → §5.1 is well typed; (2) constant substitutions `(c:⋆) ⊢ !_Γ : Γ` exist; (3) cone contexts exist for pasting-scheme diagrams; (4) strict-model check of `laxcolim(const 1) ≅ Free(Γ)` for D¹, D², the loop and the composable pair; (6) formalise the free-on-graph trivial-fibration argument. (Target 5 is B2.) | `limits-representables.md` §8 | (3), (4), (6) in progress; (1), (2) **closed**: (1) `CaTTExp.Suspension` (`Σat-wf`, `elements-at`: every derivation over Θ lands in ΣΘ[a, b]; pure CaTT needs no hypothesis), (2) `CaTTExp.ConstSub` (constant-free Γ; for every pure Γ, `PureMetatheory.!-wf`) | FOBJ for (3), (4), (6) |
 
 ## D. Gray contexts, internal hom and closed structure
 
@@ -121,7 +123,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 | F1a | Write G and DJ as rules with their `uni`-style higher levels; check the uniqueness step of Thm 4.4 in detail. | `ordinary-math.md` §4.6 | unowned | former area OMATH |
 | F1b | Tree-shaped inductive objects, and lists over an arbitrary object, in route III (no ℕ-specific rule). | `ordinary-math.md` §4.7 | unowned | former area OMATH |
 | F2 | **Discreteness filler tactic** for graph contexts: proved on paper (Thm 3.1), implemented with certified output and checked examples in `src/CaTTExp/GraphFiller*.agda`. | `ordinary-math.md` §3 | done (paper + certified instances) | — |
-| F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | blocked on A1; adjacent: more instances | former area OMATH |
+| F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | unowned (A1 is done, so no longer blocked) | former area OMATH |
 | F2b | Filler for **globular** contexts (Thm 3.2, semantic proof done): implement strict normal forms (labelled trees) and the lift. | `ordinary-math.md` §3.3 | unowned | former area OMATH |
 | F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written (PR #35) | — ; open parts F3b, F3c |
 | F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3 | unowned | former area OMATH |

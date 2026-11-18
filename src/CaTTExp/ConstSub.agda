@@ -10,10 +10,11 @@
 --
 -- Hypotheses. The signature's constants have closed types (needed for
 -- substitution, CaTTExp.Subst). Γ must be *constant free* outside coh
--- bodies (`NcCtx`): a constant c₀ : ⋆ in Γ's types would force a term
--- of type c₀ → c₀ that mentions the variable c, which the full-coherence
--- side condition cannot produce over D₀. Pure CaTT contexts are
--- constant free, so for pure CaTT the theorem holds for every Γ.
+-- bodies (`NcCtx`). Some hypothesis is necessary: with two unrelated
+-- constants c₀ c₁ : ⋆, the context (x : c₀ → c₁) is well formed but has
+-- no constant substitution, since nothing has type c₀ → c₁. Pure CaTT
+-- contexts are constant free, so for pure CaTT the theorem holds for
+-- every Γ.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

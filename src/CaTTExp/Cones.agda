@@ -832,3 +832,55 @@ module ConstPoint (Γ : ExCtx) where
     okSub : (Γ' : Ctx) → Sub → Maybe Ctx → Bool
     okSub Γ' σ nothing  = false
     okSub Γ' σ (just C) = is-just (checkCtx Γ' >>= λ w → checkSub Γ' w σ C)
+
+------------------------------------------------------------------------
+-- φ for every globular Γ: "a family is a cocone" in all dimensions.
+--
+-- For a variable t of dimension m ≥ 1, the constant-cocone type of q_t,
+-- pushed along φ (already defined on lower variables), is A → B with
+-- Var(A) = ∂⁻ and Var(B) = ∂⁺ of the disk around s_t. So it is the type
+-- of an operation-case coherence over that disk D^{m+1} = ΣD^m:
+--     φ(q_t) := coh_{D^{m+1}, A → B}[χ_t].
+-- The generic type is computed once per dimension, in the disk itself.
+
+module PhiAll where
+  private
+    dTy : Nat → ExTy
+    dTy zero    = ob
+    dTy (suc j) = hom (dTy j) (v (j + j)) (v (suc (j + j)))
+    dEx : Nat → ExCtx
+    dEx n = concatMap (λ j → dTy j ∷ dTy j ∷ []) (range n) ++ (dTy n ∷ [])
+    -- φ on the generic disk Γ = D^m, as a list of ΣD^m-terms for the
+    -- K(D^m) variables, computed for all variables below the top one.
+    -- genTyF f m: the type of φ(q_top) in ΣD^m = D^{m+1} (f is fuel ≥ m).
+    mutual
+      genTyF : Nat → Nat → Ty
+      genTyF zero    m = ⋆
+      genTyF (suc f) m = lookupTy (evCtx (constCocone (dEx m))) (2 + (m + m)) [ φdisk f m ]ty
+
+      φdisk : Nat → Nat → Sub
+      φdisk f m = ⟪ var 0 ∷ var 1 ∷ map (φvar f m) (range (m + m)) ⟫
+
+      φvar : Nat → Nat → Nat → Tm
+      φvar f m x = phiAt f (dimE (nth ob (dEx m) x)) (evCtx (susp (dEx m))) x
+
+      phiAt : Nat → Nat → Ctx → Nat → Tm
+      phiAt f zero    S x = var (2 + x)
+      phiAt f (suc j) S x = coh (Disk (suc (suc j))) (genTyF f (suc j)) ⟪ diskList (gen S (2 + x)) ⟫
+
+  genTy : Nat → Ty
+  genTy m = genTyF (suc m) m
+
+  -- φ for an arbitrary globular Γ.
+  φ : ExCtx → Sub
+  φ Γ = ⟪ var 0 ∷ var 1 ∷ map φv (range (length Γ)) ⟫
+    where
+    S = evCtx (susp Γ)
+    φv : Nat → Tm
+    φv x with dimE (nth ob Γ x)
+    ... | zero  = var (2 + x)
+    ... | suc j = coh (Disk (suc (suc j))) (genTy (suc j)) ⟪ diskList (gen S (2 + x)) ⟫
+
+  okφ : ExCtx → Bool
+  okφ Γ = is-just (checkCtx S >>= λ w → checkSub S w (φ Γ) (evCtx (constCocone Γ)))
+    where S = evCtx (susp Γ)

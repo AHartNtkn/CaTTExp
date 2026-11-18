@@ -218,3 +218,15 @@ _ = refl
 _ : is-just (checkCtx (ConstPoint.ΣΓ Arr) >>= λ w →
              checkSub (ConstPoint.ΣΓ Arr) w (idₛ (ConstPoint.ΣΓ Arr)) (ConstPoint.𝒦 Arr)) ≡ false
 _ = refl
+
+-- The directly-defined cocone is literally the O_odd-dual of the cone
+-- of the O_odd-dual diagram.
+_ : map CoconeOf.cocone shapes ≡ map (λ Γ → dualCtx (ConeOf.cone (dualCtx Γ))) shapes
+_ = refl
+
+-- φ (a family is a cocone) for every shape, in every dimension.
+_ : all PhiAll.okφ shapes ≡ true
+_ = refl
+-- On 1-dimensional shapes it is the φ of ConstPoint.
+_ : map PhiAll.φ oneDim ≡ map ConstPoint.φ oneDim
+_ = refl

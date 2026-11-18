@@ -439,7 +439,7 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
   - It is filed upstream as [smimram/cccatt#15](https://github.com/smimram/cccatt/issues/15), reproduced at master 69bb11a. The fix `var x = var x'` passes cccatt's test suites.
   - *Correction (2026-11-18):* the Rev side condition at l. 474, which tests the hypothesis name, is **not** a bug. `add_rule` rejects every cycle, and any higher hypotheses left over fail `check1`, so no wrong acceptance is possible. It differs only from our paraphrase of Rev in C.2 ("x has not been rewritten before"), which describes the intended behaviour, not that line.
 
-**What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/outbox/dir-relative-coherence.md`.
+**What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/answered/dir-relative-coherence-2026-11-18.md`.
 
 **Answer to the follow-up prompt (verified, `conjectures/answered/dir-relative-coherence-2026-11-18.md`): Dir is sound whenever the non-invertible generators have dimension ≤ 2.** Take the free pseudo cartesian closed (∞,2)-category on a graph together with 2-generators forming chains. Every space of 2-cells is empty or contractible. The proof has four steps:
 1. Long βη-normal forms, natural in relabelling, with no permutation quotient needed.
@@ -449,7 +449,7 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 
 *Correction to our expectation:* a generator α need not occur only once in a term. Duplicated uses give cubes [1]^m.
 
-**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread and unsent: `conjectures/outbox/dir-relative-coherence.md`.
+**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread and unsent: `conjectures/outbox/dir-relative-coherence-r2.md`.
 
 *Superseded:* Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
 - Fiore–Saville did the bicategorical version.
@@ -731,7 +731,7 @@ The researcher findings on the closed part are listed after the next two bullets
 **Corrections from the response (V3, V5), which restate the two bullets above.**
 1. **Pushing events inward is not invariant.** We have h = Λ(ev) ∘ h = Λ(ev ∘ (1 ⊗ h)), and β also changes nesting. So the second bullet needs a *βη-canonical* nesting first, i.e. a specified normal form for closures.
 2. **The closed signature must be strictly natural only in the context variable.** Strict naturality of Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C) in the bound variable A forces (f⊗B′)(A⊗g) = (A′⊗g)(f⊗B). Then the two schedules are equal 1-cells. In the bound variable, naturality holds only up to the interchanger.
-3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/outbox/gray-closed-scheduling.md`.
+3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/answered/gray-closed-scheduling-2026-11-18.md`.
 
 **Answer to the follow-up prompt (verified, `conjectures/answered/gray-closed-scheduling-2026-11-18.md`): the comparison theorem cannot be indexed by βη-canonical closure trees.**
 - Closure trees are **not** invariants of connected components of hom-categories.
@@ -751,7 +751,7 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling.md`.
+Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling-r2.md`.
 
 ---
 

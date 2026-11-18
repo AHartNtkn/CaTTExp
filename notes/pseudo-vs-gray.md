@@ -127,6 +127,119 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 ---
 
+## Reconciliation with the other notes
+
+*Added 2026-11-18. This note is now the single pseudo-vs-lax comparison for the project. The comparison sections in `limits-representables.md` (PR #2 §3) and `internal-hom.md` (PR #3 Part I) point here. Below, each point on which they and this note disagreed is settled on the merits. "Option A/B" in PR #3 are P/L here.*
+
+### R1. Can the L side condition be stated, and is it decidable?
+
+- **Earlier claims.**
+  - PR #2 §3.3: "side conditions stop being purely free-variable checks… an orientation condition, not a free-variable condition."
+  - PR #3 I.4: "a new kind of side condition… its correctness is the central open problem."
+  - PR #3 I.7, experiment 2, asks whether a free-variable-style test that permits CaTT minus interchange can be found.
+- **Settled.** Yes, it can be stated, and it is decidable (§3.3).
+  - The test is still "the sides use exactly these generators". The generators are now those of the Gray unfolding of the pasting scheme rather than its raw variables.
+  - Orientation is not a separate check. The two whiskered composites of an interchange have *different* supports (∂⁻ and ∂⁺ of the unfolding), so the coherence case cannot relate them, and the operation case relates them in one direction only (§3.4).
+  - On a single hom the test is expected to coincide with Finster–Mimram's Var **[conj]**, which is step 2 of the plan in §7.1.
+
+  So experiment 2 has an answer in the CaTT aesthetic.
+- **What PR #2 and PR #3 got right.** Stating the test is not the same as knowing it is *correct*. Correctness is lemma S1 (§3.6): in the intended models, any two parallel terms with full support over a Gray unfolding are connected by an invertible cell. Nobody has proved a weak-ω coherence theorem of this kind. It is an open research problem, as they say.
+
+  The earlier summary of this note ("a small, decidable change") was accurate about the rule and silent about S1. The summary now says both.
+
+### R2. Does L need a new class of context shapes?
+
+- **Earlier claims.**
+  - PR #2 §3.3: "Gray tensors of pasting schemes are not pasting schemes… the core would need a new shape class, whose well-formedness and contractibility are open for n > 1."
+  - PR #3 I.6 lists "the same Gray shapes" as new machinery for both options.
+- **Settled.** Not in the kernel.
+  - L's contexts stay pasting schemes. The Gray tensor is computed on chain complexes, only to evaluate side conditions.
+  - Every source and target needed, including the Gray cube's hexagons, is an ordinary term over pasting schemes (§3.4).
+- **Where the n > 1 problem really lives.** Typing Gray-shaped *contexts* (PR #3's G1; Mikhail's open n > 1 case) is needed by **P**, for its lax function objects [Θ, C]ₗₐₓ. Under L, Gray-shaped diagrams are maps out of free objects into native lax homs. That they are derivable is a conjecture (§4.2), which replaces G1 rather than adding to it.
+
+### R3. Is there a semantics?
+
+- **Earlier claims.**
+  - PR #3 I.4: "the intended model, ω-categories enriched over the Gray tensor, is expected to exist but is not in the literature in a usable form."
+  - PR #2 §3.3: "no published weak-ω notion."
+- **Settled.**
+  - **∞-categorical target (two-tier L): in the literature.** Campion builds the Gray tensor on (∞,ω)-categories as a monoidal biclosed structure, and Gepner–Heine (2025) define categories enriched in it ("oriented categories") and treat ∞Cat as one (§2.1).
+  - **Strict test model: in the literature** (Ara–Maltsiniotis).
+  - **Algebraic, CaTT-style notion: not in the literature.** This means a coherator, i.e. what "a model of L" would be in the Grothendieck–Maltsiniotis sense. PR #2 and PR #3 are right about that. But the same gap exists for P: no one has shown that ωCat itself is a model of CaTT.
+  - **Uniform L: no semantics of its own** (§2.5).
+
+### R4. What carries over from existing CaTT metatheory?
+
+- **Earlier claims.** PR #2: "none directly; each needs reproving." PR #3: "most existing CaTT results need to be redone."
+- **Settled: partly.**
+  - The single-hom fragment of two-tier L *is* CaTT (given the [conj] in R1). So the existing checker, models of hom-ω-categories, suspension, and the invertibility argument for the coherence case all carry over.
+  - What needs new work is everything about composition across objects: computads, models, S1, substitution (S3), and the interaction with markings.
+  - Anthony has said redoing results is not a cost, so this matters only as a schedule question.
+
+### R5. Dualities
+
+- **Earlier claim.** PR #3 I.4: "Half the dualities stop being symmetries. Reversing dimension-2 cells turns lax into oplax."
+- **Settled: PR #3 is right, and §5.4 of this note understated it.**
+  - Under L, an opposites meta-operation that reverses the order of composition across objects sends the lax theory to the *oplax* theory, not to itself. Using the Gray tensor's duality formulas, e.g. (X⊗Y)^op ≅ Y^op ⊗ X^op, some reversals stay symmetries and the rest swap lax and oplax.
+  - Practical consequence: a lemma proved once and dualised may land in the oplax theory, so a second proof may be needed. CaTT's proof-size savings from opposites shrink accordingly.
+  - Mitigation: a kernel parameterised by orientation, so proofs transfer between the lax and oplax theories. This reduces the loss but does not remove it.
+  - Which reversals survive is a short computation, and it is PR #3's experiment 3. Under two-tier L, dualities used only inside one object (e.g. the Eckmann–Hilton development) are unaffected.
+
+### R6. "P and L coincide for functors into 1-categories" (PR #2 §3.2)
+
+- **Semantically true.** Into a 1-category, every interchange cell is invertible.
+- **Syntactically, L does not know this.** It needs either a mark ("C is a 1-category") or a propagation rule from invertibility of C's cells (Example 5 above). So for ordinary math the difference is annotation cost, not expressiveness.
+
+### R7. Staging: "build P first, then test elaborating L into it" (PR #2 §3.4)
+
+- **Settled: the cheap direction is the other way round.**
+  - P sits inside L as the marked fragment (§2.4). Embedding is cheap.
+  - Elaborating L into P would require P to have lax homs for arbitrary domains, Gray composition maps between them, and all their coherence cells via `uni`. Those are the most expensive parts of P, so this direction is costly.
+- **PR #2's underlying aim survives.** Its aim was to start from existing foundations. The two-tier milestone does that: step 2 of §7.1 *is* the existing checker, re-expressed through supports.
+- **The Agda thread agrees** (PR #4, finding 4 and suggested next steps):
+  - it lists "a Gray-CaTT whose invertible fragment is CaTT" as option (c), which is this note's conclusion;
+  - it proposes the same first experiment: orient the full-coherence case and check that naturality typechecks in one direction only.
+
+### R8. Where lax transformations are actually needed
+
+- **Earlier claim.** PR #3 I.1 and I.6 list "lax limits, lax algebras, monad morphisms" as uses of lax transformations.
+- **Correction.**
+  - The 2-cells in lax algebras and lax monad morphisms are ordinary non-invertible 2-cells of the ambient. Every option has those, P included, since P's 2-cells are directed and only their *naturality* is invertible.
+  - Lax limits likewise need only non-invertible cone cells (Mikhail; Example 3).
+  - Lax *transformations* matter when naturality itself is directed. That covers lax naturality squares, maps into lax function objects, (op)lax twists (JFS), Grothendieck-type constructions, and composing such things.
+
+  So P covers more of the "lax" programme than PR #3's table suggests. The difference between P and L is concentrated in Examples 1–2 above.
+
+### R9. Mimram's CCCaTT (PR #3 §5.7)
+
+- **Neutral between P and L.** It supplies the closed structure in CaTT style. A cartesian-closed version is published (1-dimensional). The planar/linear version, which a Gray-closed (lax) hom would need, is unpublished.
+  - **P** needs the cartesian one for its native hom and a planar/linear one for lax homs of arbitrary domain.
+  - **L** needs the planar/linear one for currying its native (lax) hom, and gets the pseudo hom from markings plus products.
+
+  Either way both flavours appear.
+- **One connection.** L's support condition and CCCaTT's planar/linear pasting types both express the same "no duplication, no cancellation, order matters" principle, the linearity theme of survey §13. That is a reason to expect the two to fit together, not a decision criterion.
+
+### R10. Option C (two kinds of 2-cell)
+
+PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed: it is heavier than both P and L. It is subsumed by L with markings, where pseudo 2-cells are marked lax ones.
+
+### Settled conclusion
+
+1. **Stating L is solved.** The coherence side condition for lax interchange can be stated in the CaTT aesthetic, as an equality-of-supports test on pasting-scheme contexts, and it is decidable. No new context shapes are needed.
+2. **Correctness of L is open.** That the rule is correct for the intended models (S1) is an open research problem. The ∞-categorical target exists for two-tier L; an algebraic coherence theory does not, and nothing yet exists for uniform L.
+3. **Practical trade-off.** P is cheapest for pseudo-heavy and standard work and clumsy for lax transformations. L reverses this. Uniform L adds marks inside objects.
+4. **Real losses of L that remain:**
+   - fewer dualities (R5);
+   - annotations for pseudo work and for 1-categorical targets (R6);
+   - non-canonical horizontal composites.
+5. **Recommendation, unchanged but conditional.** Pursue L, uniform as the goal and two-tier as the first milestone, *because* its first steps are cheap and decisive:
+   - the single-hom fragment reproduces the existing checker;
+   - the two-object cases of §3.4 and the strict model test S1 on small shapes.
+
+   If those experiments fail, fall back to P, which loses nothing already built (R7).
+
+---
+
 ## 0. Summary
 
 1. **The target is not an ω-category.** The ω-category of ω-categories with lax transformations is a category *enriched over ωCat with the lax Gray tensor*, which Gepner–Heine call an **oriented category** ([2510.10504](https://arxiv.org/abs/2510.10504), §1.8, with ∞Cat's hom-objects being Fun^lax(S, T)) **[paper, intro level]**. A CaTT model is enriched over the *cartesian* product. So under P the ambient is a different object (ωCat with pseudo transformations), and the lax one appears only as a family of objects and maps inside it.
@@ -136,6 +249,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
    - Uniform L is weaker than two-tier L, which is weaker than P. Each stronger theory is the weaker one plus an invertibility marking, so every model of the stronger theory is a model of the weaker one, ωCat_lax included **[conj]**.
    - *Revised 2026-11-18 after Anthony clarified that "lax by default" means "the most general version until there is a concrete reason otherwise". The first version recommended two-tier L.*
 3. **The L rule is a small syntactic change.** Contexts stay pasting schemes, and the coh rule keeps its shape. What changes is the side condition: free-variable sets are replaced by **supports in the Gray unfolding** of the pasting scheme. For Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, that unfolding is the hom-level shape Θₙ ⊗ … ⊗ Θ₁. Supports are Steiner chains, so the check is integer linear algebra and decidable (§3).
+   - *Stating* the rule is the small part. Whether it is *correct* is the open coherence lemma S1, and that part is research (see "Reconciliation").
 4. **L absorbs the hardest open item of P.** Under P, lax homs [Θ, C]ₗₐₓ need a Gray *context former* whose generators x⊗y must be typed by composites of non-pasting molecules. PR #3 calls this "the biggest open technical point" (G1). Under L, a lax square in C is just the interchanger of a native 2-cell with an arrow of C, so lax homs are the native hom made into an object and Gray contexts become derivable (§4.2).
 5. **L is the weaker theory, and P is recoverable from it.** Every cartesian-enriched model is also Gray-enriched, through the comparison map X ⊗ Y → X × Y. So **P ≈ L + "interchangers are invertible"** **[conj]**. "Pseudo = lax + marking", which PR #3 adopted for shapes, then holds for the ambient as well. Choosing L does not close off P; the reverse is false.
 6. **L's real costs.**
@@ -448,7 +562,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Models | GM/BFM weak ω-categories; computads (Dean–Finster–Markakis–Reutter–Vicary); Benjamin–Markakis–Sarti contexts-as-computads | to build: "Gray-coherator" models. Target notion exists (Gepner–Heine). Markakis's generalised signatures may cover the computads **[recall]**. |
 | Strict test model | strict ω-Cat with the cartesian hom (strictly natural transformations) | strict ω-Cat with the AM Gray tensor. This model is exactly the one used to compute supports, so the side condition and the test model coincide. |
 | Is ωCat itself a model? | open (algebraic weak ω-cats vs (∞,ω)) | open, same gap |
-| Invertibility, Σ, opposites, naturality meta-operations | done | to redo. Σ is admissible (§3.4). Opposites swap tensor order via (X⊗Y)^op ≅ Y^op ⊗ X^op (Chanavat) **[paper per PR #3]**. The naturality meta-operation (BMOSV) becomes the interchange coh. |
+| Invertibility, Σ, opposites, naturality meta-operations | done | to redo. Σ is admissible (§3.4). Some opposites swap lax and oplax instead of being symmetries (see R5). The naturality meta-operation (BMOSV) becomes the interchange coh. |
 | Biggest open lemma | G1 for Gray contexts (PR #3 §4.3); Conj. (P) "pseudo = marked Gray" for weak ω | S1 (coherence case over Gray unfoldings, §3.6) |
 
 ---

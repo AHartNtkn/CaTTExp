@@ -13,7 +13,7 @@ open import CaTTExp.Signature
 module CaTTExp.PastingTrees (𝕊 : Signature) where
 
 open Signature 𝕊
-open import CaTTExp.Typing 𝕊
+open import CaTTExp.Pasting 𝕊
 
 data Tree : Set where
   node : List Tree → Tree

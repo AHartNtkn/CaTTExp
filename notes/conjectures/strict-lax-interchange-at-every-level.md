@@ -27,7 +27,9 @@ and nothing in the other direction. Composition along k-cells with k ≥ 1 happe
 
 ## The problem
 
-Define a notion of **strict lax-interchange ω-category**: a globular set with compositions ∗ₖ, identities, strict associativity and unit laws, in which every interchange law for k < l is replaced by a directed (l+1)-cell, oriented consistently. The interchange cells must themselves satisfy appropriate coherence laws, e.g. with respect to further composition and to each other.
+Define a notion of **strict lax-interchange ω-category**: a globular set with compositions ∗ₖ, identities, strict associativity and unit laws, in which every interchange law for k < l is replaced by a directed cell, oriented consistently. The interchange cells must themselves satisfy appropriate coherence laws, e.g. with respect to further composition and to each other.
+
+*Precise reading (corrected 2026-11-18, see the verified researcher response at the end).* The **elementary** interchanger is for (l+1)-cells a, b, c, d: an (l+2)-cell between the two composites. (An earlier version said "(l+1)-cell", which is off by one: in the Gray example, k = 0, l = 1 and the interchanger is a 3-cell.) For cells of higher dimension n > l+1, the interchanger must **not** be a raw (n+1)-cell `(a ∗ₗ b) ∗ₖ (c ∗ₗ d) → (a ∗ₖ c) ∗ₗ (b ∗ₖ d)`: such cells force every interchange law two dimensions down to hold strictly, which contradicts requirement 3. The higher instances are instead naturality comparisons whose boundaries have the lower interchangers composed on, e.g. for 3-cells A, B, C, D a 4-cell `L_A ∗₂ χ_{a′} ⇛ χ_a ∗₂ R_A`. Choosing these boundary formulas is part of the problem.
 
 The requirements:
 
@@ -53,7 +55,7 @@ Either of the following:
 
 ## Literature status (searched 2026-11-18)
 
-**Status: open. No construction that satisfies requirements 1–5 was found, and no impossibility result either. The closest work handles either "no interchange at all" in every dimension, or directed interchange in dimension ≤ 4 only.**
+**Status (updated 2026-11-18 after a verified researcher response): open, with the problem sharpened. The literal reading (a raw higher cell between the two composites in every dimension) is impossible; this is proved below. The corrected reading, with boundary-adjusted higher comparisons, is open. Two necessary conditions are now known: supports must be taken in the expanded basis, and one finite generator set with injective support forces finitely many non-identity cells in total.** The literature search found: no construction that satisfies requirements 1–5, and no impossibility result either. The closest work handles either "no interchange at all" in every dimension, or directed interchange in dimension ≤ 4 only.**
 
 - **No interchange at all, every dimension.** Interchange as a *generator* rather than a law is handled by these:
   - n-sesquicategories: Araújo, *Simple string diagrams and n-sesquicategories* ([arXiv 2202.09293](https://arxiv.org/abs/2202.09293)), and *Computads and string diagrams for n-sesquicategories* ([arXiv 2210.07704](https://arxiv.org/abs/2210.07704)). Computads for them form a presheaf category, and there is a string-diagram normal form.
@@ -424,3 +426,31 @@ The subsequent computad paper proves its normal-form and presheaf results, while
 **The cocategorical obstruction has additional hypotheses.** Bourke–Gurski constrain cocontinuous tensor bifunctors on Gray-categories and derive obstructions to the desired biclosed and model-compatible tensor structures. Those hypotheses are not consequences of requirements 1–5. Their result therefore cannot establish nonexistence of every algebraic theory contemplated here. [arxiv.org](https://arxiv.org/pdf/1412.1320?utm_source=chatgpt.com)
 
 The proved obstruction is consequently specific: **direct higher comparisons of the raw rectangular composites force lower interchange to be strict.** Once higher boundaries are adjusted as in (4), the unresolved question is whether one can choose all those comparisons and coherence equations so that free structures admit a finite expanded basis, injective support, and substitution. None of the arguments above settles that corrected question.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. The no-go theorem for raw higher interchangers is right and elementary. The boundary-adjusted alternative (4) is well typed. The support and finiteness propositions are right. The citations check out. The corrected problem remains open, and the statement above has been updated.**
+
+**§1, no-go for raw interchangers.** If a raw (m+2)-cell `χ^{m+1}(1_a, 1_b, 1_c, 1_d) : L̃ → R̃` exists, its source and target are parallel, so `s(L̃) = s(R̃)`. Because k, l < m, the source of a composite along a dimension below m is the composite of the sources, and `s(1_a) = a`. So `s(L̃) = (a ∗ₗ b) ∗ₖ (c ∗ₗ d)` and `s(R̃) = (a ∗ₖ c) ∗ₗ (b ∗ₖ d)`, and strict interchange holds for m-cells. The proof uses only globularity and the boundary formula (2). Correct.
+- The finite witness is correct. With 2-cells a, b, c, d in a 2-dimensional pasting diagram, the elementary 3-cell `p → q` exists by requirement 3. The raw 4-dimensional schema forces `p = q`, so `1_p : q → p` is a reverse cell.
+- The variant with four generating 3-cells is also correct: taking 2-sources of the two sides of a raw 4-cell gives `p = q` again.
+- This was an error in the problem statement's wording, not in the intended construction: Gray-categories already handle interchange of 3-cells along 0-cells through naturality of the interchanger, not through a raw cell. The statement above now says so.
+
+**§2, the corrected comparison.** For 3-cells `A : a ⇛ a′` etc., `L_A : L_a ⇛ L_{a′}` and `χ_{a′} : L_{a′} ⇛ R_{a′}`, so `L_A ∗₂ χ_{a′} : L_a ⇛ R_{a′}`. Likewise `χ_a ∗₂ R_A : L_a ⇛ R_{a′}`. The two are parallel, and for identity inputs both reduce to `χ_a`, which forces nothing. Correct. Di Vittorio–Lobbia (arXiv 2310.03503) is cited for the same pattern in Gray-categories: their abstract states generalized interchange of 3-cells "modulo the unique isomorphism" between boundary composites. Confirmed.
+
+**§3, union support.** If support of every composite is the union of supports, then L and R always have the same support, and requirement 2 makes interchange strict. Correct and immediate. The tensor example is right: the two whiskered paths for adjacent 2-cells α, β use different basis elements (`g₀ ⊗ α, β ⊗ f₁` versus `β ⊗ f₀, g₁ ⊗ α`). So requirement 2 must be stated for the expanded basis, as `pseudo-vs-gray.md` already does for k = 0.
+
+**§4, finiteness.** Injective `C_n → 𝒫(B)` gives `|C_n| ≤ 2^{|B|}`. Identities `C_n → C_{n+1}` are injective since `s ∘ i = id`. So `|C_n|` is non-decreasing and bounded, and the numbers of new non-identity cells sum to at most `2^{|B|} − |C_0|`. Correct. The consequence: if every F(Γ) has one finite generator set with injective support (as Steiner complexes of pasting diagrams do), then F(Γ) has only finitely many non-identity cells, so the tower of higher interchange comparisons must stop in each F(Γ). A finite Γ that forces infinitely many would refute the finite-basis version. Neither is established.
+
+**§5, citations.**
+- Bourke–Lobbia, arXiv 2610.31448v2, §4.2.6: "lax 4-categories", in which the 3-cell interchanger is not an adjoint equivalence and certain 4-cells need not be invertible. They are enriched in Gray-categories, so interchange inside homs stays invertible. Confirmed. §4.3 says their flavours are monadic over 4-globular sets (via Griffiths' presentations). Confirmed. So they give existence of free objects abstractly in dimension 4, directed only at the outer level. This sharpens the "dimension 4" entry of the literature status above.
+- Araújo and Bourke–Gurski: the qualifications are fair. They supply ambient syntax and an obstruction under extra hypotheses respectively, not a construction or a no-go for requirements 1–5.
+
+**What this settles, and what it opens.**
+- Settled: the literal reading is impossible. The problem statement is corrected.
+- Settled: supports must be computed in the expanded basis.
+- Settled: a finite basis with injective support forces finitely many non-identity cells.
+- Open: the corrected problem. The concrete next steps are (a) write the boundary formulas for the higher comparisons in dimension 4 and check them against Bourke–Lobbia's lax 4-categories, and (b) search for a finite Γ forcing infinitely many non-identity cells, which would refute the finite-basis version.
+- Consequence for uniform L in `pseudo-vs-gray.md`: its side condition must compute supports in a structure whose higher interchangers are boundary-adjusted, never raw.

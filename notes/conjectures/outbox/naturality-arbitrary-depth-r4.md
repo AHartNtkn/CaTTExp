@@ -139,3 +139,798 @@ Explicit terms for question 1, 2 or 6; a proof of RC(3) or RC(n) for the cylinde
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
+
+# Researcher Response
+
+**Questions 1 and 4 have positive answers.** For the 2-disc cylinder, the construction reduces every 3-term with nonidentity strict image to one use of \(A^\uparrow\), with explicitly controlled whiskering. For descent, take
+\[
+Y'=\Sigma Y
+\]
+and leave the two new suspension objects unselected.
+
+I also establish the literal factorization asked for in Question 2 for full chain cylinders. For proper \(Y\), the proposed frame with only one retained vertical chain can fail: several vertical chains may need to be retained.
+
+The arguments below use the results accepted in §2, particularly RC(2), the square construction, and the two-letter construction from round 3.
+
+# 1. RC(3) for the cylinder of the 2-disc
+
+Let \(\Gamma\) be that cylinder, and let \(\Gamma_0\) be the context obtained by deleting its 3-variable. Write
+\[
+X=x^\uparrow,\qquad Y=y^\uparrow,\qquad
+a=A^-,\qquad b=A^+,\qquad
+F=f^\uparrow,\qquad G=g^\uparrow.
+\]
+
+Introduce the following actual CaTT terms:
+\[
+\begin{aligned}
+p&=f^-*_0Y,&q&=g^-*_0Y,\\
+r&=X*_0f^+,&s&=X*_0g^+,\\
+c&=a*_0Y,&d&=X*_0b,\\
+L&=c*_1G,&R&=F*_1d.
+\end{aligned}
+\]
+Their boundaries match literally. The remaining variable is
+\[
+U=A^\uparrow:L\longrightarrow R.
+\]
+
+Throughout this section, write
+\[
+u\cdot v=u*_1v,\qquad M;N=M*_2N.
+\]
+Thus \(\cdot\) composes 2-cells, including the corresponding higher whiskerings, while \(;\) composes 3-cells.
+
+## 1.1 The strict calculation
+
+The nonidentity strict 2-cells of \(\Gamma_0\) are exactly the images of the following eight terms.
+
+| Term | Source | Target |
+|---|---|---|
+| \(a\) | \(f^-\) | \(g^-\) |
+| \(b\) | \(f^+\) | \(g^+\) |
+| \(c=a*_0Y\) | \(p\) | \(q\) |
+| \(d=X*_0b\) | \(r\) | \(s\) |
+| \(F\) | \(p\) | \(r\) |
+| \(G\) | \(q\) | \(s\) |
+| \(L=c\cdot G\) | \(p\) | \(s\) |
+| \(R=F\cdot d\) | \(p\) | \(s\) |
+
+In particular,
+\[
+\pi L\ne\pi R.
+\]
+
+To verify completeness, inspect the generating rewrites on 1-paths. At the outer endpoints \(x^-\to y^+\), they are
+\[
+p\xrightarrow{c}q\xrightarrow{G}s,
+\qquad
+p\xrightarrow{F}r\xrightarrow{d}s.
+\]
+There is no nonidentity 2-cell into \(p\) or out of \(s\). The unwhiskered rewrites \(a,b\) give the other two entries.
+
+It follows that the only nonidentity strict 3-cell of \(\Gamma\) is \(\pi U\):
+
+- it cannot be composed with another copy of itself along dimension \(2\), since \(\pi L\ne\pi R\);
+- it cannot receive a nonidentity 2-whisker along dimension \(1\), since there is no nonidentity 2-cell into \(p\) or out of \(s\);
+- it cannot receive a nonidentity 1-whisker along dimension \(0\), since \(x^-\) is initial and \(y^+\) is terminal in the generating directed graph.
+
+The number of uses of \(U\) in the strict image of a 3-term is additive under composition. Consequently:
+
+1. a 3-term with identity strict image is a term of \(\Gamma_0\);
+2. a 3-term with strict image \(\pi U\) uses \(U\) exactly once when expanded into binary composition and structural 3-terms.
+
+Here a **structural 3-term** means a term of \(\Gamma_0\).
+
+## 1.2 RC(3) for the 2-skeleton \(\Gamma_0\)
+
+This is the first input to the construction involving \(U\).
+
+Terms with identity strict 2-boundary are handled by the path result. For the other strict 2-values:
+
+| Strict 2-value | Context to which the terms restrict | Available construction |
+|---|---|---|
+| \(a,b\) | A 2-disc | Direct 4-coherence |
+| \(c\) | \(D^2(a)*_0D^1(Y)\) | Direct 4-coherence |
+| \(d\) | \(D^1(X)*_0D^2(b)\) | Direct 4-coherence |
+| \(F,G\) | The corresponding lax square | Round 2 |
+| \(L,R\) | A two-letter case described below | Round-3 construction |
+
+These restrictions concern the entire typed support of the 3-term. Positivity of the strict 2-image gives the restriction for 2-terms. For 3-terms, the absence of 3-generators in \(\Gamma_0\) identifies their 2-support with that of either boundary; the path classification then restricts their 1-support. This is the support argument used in the accepted square proof, based on Lemma 36. The resulting terms lift by renaming to the indicated pasting contexts. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+For \(L\), its outer 1-paths \(p=f^-Y\) and \(s=Xg^+\) have only \(x^-,y^+\) as common vertices. Therefore every constructor with strict 2-value \(L\) has the exact point-supported factorization through
+\[
+C_n\quad\text{or}\quad V(k_1,\ldots,k_m)
+\]
+from round 3. The active 2-arguments have nonidentity values only among
+\[
+c,\quad G,\quad L.
+\]
+The order of the two distinguished letters is forced: \(c\), then \(G\).
+
+Thus the round-3 two-letter construction applies with these letters. Its smaller cases are already available: the \(c\)-case is supported on a pasting context, and the \(G\)-case is a square. Proper arguments of value \(L\) are handled by structural induction, as in round 3.
+
+One can retain the normal-form seam
+\[
+c\cdot\kappa_q(q,q)\cdot G.
+\]
+The comparison with the literal term \(L=c\cdot G\) uses the path 3-cell
+\[
+1_q\longrightarrow\kappa_q(q,q),
+\]
+together with vertical unitors and associators. No equality
+\(\kappa_q(q,q)\equiv1_q\) is imposed.
+
+The \(R\)-case is identical, with distinguished letters \(F,d\) and middle path \(r\).
+
+This proves
+\[
+\boxed{\operatorname{RC}(3,\Gamma_0).}
+\tag{1}
+\]
+
+The dependency order matters: first construct the normalizers and fusion for \(L,R\) by the accepted two-letter induction; only after obtaining (1) may arbitrary structural normalizers be substituted for those choices.
+
+## 1.3 Fix the target normal form for 3-terms
+
+For a 1-term \(e\) with strict path \(p\), and a 1-term \(h\) with strict path \(s\), fix path coherences
+\[
+k_e=\kappa_p(e,p),\qquad j_h=\kappa_s(s,h).
+\]
+
+Put
+\[
+L_{e,h}=(k_e\cdot L)\cdot j_h,\qquad
+R_{e,h}=(k_e\cdot R)\cdot j_h,
+\]
+and define the 3-term
+\[
+U_{e,h}=(k_e*_1U)*_1j_h:
+L_{e,h}\longrightarrow R_{e,h}.
+\tag{2}
+\]
+These are mixed-dimensional whiskerings with the displayed brackets.
+
+For every 2-term \(t:e\to h\) with \(\pi t=\pi L\), choose, using RC(2),
+\[
+\nu_t:t\longrightarrow L_{e,h}.
+\]
+For \(\pi t=\pi R\), choose
+\[
+\nu_t:t\longrightarrow R_{e,h}.
+\]
+All these terms belong to \(\Gamma_0\).
+
+Choose reverse 3-terms \(\bar\nu_t\) using RC(2). Their two cancellation 4-cells are supplied by (1). No choice-coherence condition on the family \(\nu\) is needed: (1) compares any two parallel structural 3-routes.
+
+For \(v:t\to t'\) with strict image \(\pi U\), the target normal form will be
+\[
+\mathcal N(t,t')
+=
+(\nu_t;U_{e,h});\bar\nu_{t'}.
+\tag{3}
+\]
+It depends only on the literal boundary terms \(t,t'\), the fixed path comparisons, and the fixed choices of \(\nu\).
+
+We next construct a 4-term
+\[
+v\longrightarrow\mathcal N(t,t').
+\tag{4}
+\]
+
+## 1.4 Sequentialize arbitrary 3-constructors first
+
+This removes the need for a new arbitrary-head fusion theorem.
+
+Consider a 3-head
+\[
+H=\operatorname{coh}_{P,u\to v}[\mathrm{id}_P].
+\]
+
+If \(\dim P\leq2\), every substitution instance of this head is structural. Suppose \(\dim P=3\).
+
+A binary strict composite of \(P\) uses every maximal generator, with identities on maxima of lower dimension. Realize that expression weakly as follows.
+
+- At a dimension-0 composition, the 0-boundary already matches literally.
+- At a dimension-1 composition, insert a path 2-comparison if the matching 1-terms differ syntactically.
+- At a dimension-2 composition, first align the literal 1-boundaries by path comparisons, then insert an RC(2) 3-bridge between the matching 2-terms.
+
+All added 3-bridges are constructed in \(P_{\leq2}\). This context need not be a pasting context: universal RC(2) applies to it.
+
+Call the result \(C_P\). It retains every maximal generator and has the required strict 3-image. Pad its 1-boundaries to those of \(H\), obtaining
+\[
+C'_P:S'\longrightarrow T'.
+\]
+RC(2) in \(P_{\leq2}\) gives
+\[
+a:u\longrightarrow S',\qquad
+b:T'\longrightarrow v.
+\]
+Hence
+\[
+B_H=(a;C'_P);b
+\]
+is parallel to \(H\) and full in \(P\). Define
+\[
+\operatorname{coh}_{P,H\to B_H}[\mathrm{id}_P].
+\tag{5}
+\]
+This is a legal 4-coherence.
+
+After substitution, all the inserted 3-bridges remain structural: their arguments have dimension at most \(2\), so cannot use \(U\). Recursively apply (5) to the proper substituted 3-arguments.
+
+We have therefore reduced to binary 3-composition. For \(k<2\), the comparison
+\[
+u*_kv
+\longrightarrow
+(u*_k1_{\sigma v});(1_{\tau u}*_kv)
+\tag{6}
+\]
+is a direct 4-coherence on \(D^3*_kD^3\). Also use
+\[
+(M;N)*_kc
+\longrightarrow
+(M*_kc);(N*_kc)
+\tag{7}
+\]
+on \((D^3*_2D^3)*_kD^2\), and the corresponding left-whiskering formula. These have literal matching boundaries by the componentwise boundary equations.
+
+Equations (6)–(7), associativity, and the direct comparison between an identity-lifted 2-coefficient and mixed-dimensional whiskering extract every term of strict image \(\pi U\) into
+\[
+I_0;\omega(U);I_1,
+\tag{8}
+\]
+with fixed brackets, where:
+
+- \(I_0,I_1\) are structural 3-terms;
+- \(\omega\) is obtained by binary whiskering by terms of dimension at most \(2\);
+- dimension-1 coefficients have identity strict 2-image on \(p\) or \(s\);
+- dimension-0 coefficients are supported at \(x^-\) or \(y^+\).
+
+Every comparison used in this extraction is a coherence on a pasting context, followed by substitution.
+
+## 1.5 Normalize the whiskering around \(U\)
+
+The required statement is:
+
+> For every \(\omega\) in (8), with literal 1-boundaries \(e,h\), there are structural 3-terms
+> \[
+> \delta_L:\omega(L)\to L_{e,h},\qquad
+> \delta_R:\omega(R)\to R_{e,h},
+> \]
+> and a 4-term
+> \[
+> \omega(U);\delta_R
+> \longrightarrow
+> \delta_L;U_{e,h}.
+> \tag{9}
+> \]
+
+Here are the constructors for an induction on \(\omega\).
+
+### A. Vertical path coefficients
+
+A 2-coefficient with identity strict image is a path term. Normalize it to the chosen \(\kappa\) using a path 3-coherence.
+
+Its passage past \(U\) is the 4-interchanger on
+\[
+D^3*_1D^3.
+\]
+For example, for \(m:a\to a'\), the comparison
+\[
+(a*_1U);(m*_1R)
+\longrightarrow
+(m*_1L);(a' *_1U)
+\tag{10}
+\]
+is a direct 4-coherence on that pasting.
+
+Concatenated path coefficients are folded by path multiplication 3-cells and vertical associators. Their naturality in the distinguished 3-cell is obtained from:
+
+- associator naturality on vertical 3-pastings;
+- (10) for each path multiplication or cancellation;
+- the unitor 4-law on \(D^3\).
+
+This also handles the base case of \(\omega\): inserting the two pads in (2) is not treated as an identity operation.
+
+### B. A dimension-0 coefficient of dimension 2
+
+Let \(a:l_0\to l_1\) be point-supported, and let \(T:p\to s\) be a 2-cell. Define
+\[
+\theta_T:
+(l_0*_0T)\cdot(a*_0s)
+\longrightarrow
+a*_0T
+\tag{11}
+\]
+by direct 3-coherence on \(D^2(a)*_0D^2(T)\).
+
+Its naturality through \(U:L\to R\) is the direct 4-coherence
+\[
+\begin{aligned}
+&\bigl((l_0*_0U)*_1(a*_0s)\bigr);\theta_R
+\\
+&\hspace{12mm}\longrightarrow
+\theta_L;(a*_0U)
+\end{aligned}
+\tag{12}
+\]
+on \(D^2(a)*_0D^3(U)\).
+
+Using reverse coherences and their cancellation cells, (12) reduces the 2-coefficient to:
+
+1. the point-supported 1-coefficient \(l_0\);
+2. the dimension-1 path coefficient \(a*_0s\).
+
+The second is handled by A. The right-hand version uses
+\(D^3(U)*_0D^2(a)\).
+
+### C. A point-supported 1-coefficient
+
+This is the substantive local calculation.
+
+Let \(l:x^-\to x^-\). Choose a point-context 2-cell
+\[
+\kappa:l\longrightarrow1_{x^-}.
+\]
+
+For a 2-cell \(T:p\to s\), first construct the inverse-free interchanger
+\[
+J_{\kappa,T}:
+(l*_0T)\cdot(\kappa*_0s)
+\longrightarrow
+(\kappa*_0p)\cdot(1_{x^-}*_0T).
+\tag{13}
+\]
+It is a direct coherence on \(D^2(\kappa)*_0D^2(T)\), with the point identification made only by substitution.
+
+Its naturality is a direct 4-coherence on
+\[
+D^2(\kappa)*_0D^3(U):
+\]
+\[
+\begin{aligned}
+&\bigl((l*_0U)*_1(\kappa*_0s)\bigr);J_{\kappa,R}
+\\
+&\hspace{8mm}\longrightarrow
+J_{\kappa,L};
+\bigl((\kappa*_0p)*_1(1_{x^-}*_0U)\bigr).
+\end{aligned}
+\tag{14}
+\]
+
+Let \(\ell_p,\ell_s\) be the 2-unitors
+\[
+1_{x^-}*_0p\to p,\qquad1_{x^-}*_0s\to s.
+\]
+The 3-term
+\[
+\ell_T:
+(1_{x^-}*_0T)\cdot\ell_s
+\longrightarrow
+\ell_p\cdot T
+\tag{15}
+\]
+is a direct coherence on \(D^2(T)\); its naturality in \(U\) is a direct 4-coherence on \(D^3(U)\).
+
+Put
+\[
+u=(\kappa*_0p)\cdot\ell_p,\qquad
+d=(\kappa*_0s)\cdot\ell_s.
+\]
+Using associators, (13), and (15), form
+\[
+\chi_T:(l*_0T)\cdot d\longrightarrow u\cdot T.
+\tag{16}
+\]
+Explicitly, if \(\mathfrak a\) is the vertical 3-associator, the five steps are
+\[
+\begin{aligned}
+\chi_T={}&
+\mathfrak a^{-}_{lT,\kappa s,\ell_s};
+(J_{\kappa,T}\cdot\ell_s);
+\mathfrak a_{\kappa p,1T,\ell_s};
+\\
+&((\kappa p)\cdot\ell_T);
+\mathfrak a^{-}_{\kappa p,\ell_p,T}.
+\end{aligned}
+\]
+Here only the abbreviations \(lT=l*_0T\), \(\kappa p=\kappa*_0p\), and similarly for the other dimension-0 composites have been used.
+
+Choose a reverse path 2-cell
+\[
+\bar d:s\longrightarrow l*_0s
+\]
+and a path 3-cell
+\[
+\bar\epsilon_d:1_{l*_0s}\longrightarrow d\cdot\bar d.
+\]
+Then the following is a structural 3-term:
+\[
+\begin{aligned}
+l*_0T
+&\longrightarrow(l*_0T)\cdot1_{l*_0s}\\
+&\longrightarrow(l*_0T)\cdot(d\cdot\bar d)\\
+&\longrightarrow((l*_0T)\cdot d)\cdot\bar d\\
+&\xrightarrow{\chi_T\cdot\bar d}
+(u\cdot T)\cdot\bar d.
+\end{aligned}
+\tag{17}
+\]
+
+The first arrow is the inverse right unitor. The next two arrows are the whiskered \(\bar\epsilon_d\) and inverse associator.
+
+All cancellation data in (17) depend only on \(p,s,l,\kappa\). They remain fixed when \(T\) changes through \(U\). Consequently its naturality follows by composing:
+
+- (14);
+- the naturality of (15);
+- vertical associator naturality;
+- the 4-interchanger (10) for \(\bar\epsilon_d\).
+
+Finally, normalize \(u,\bar d\) to the chosen path comparisons. Their naturality is again (10). This yields the required comparison for the point 1-whisker.
+
+The right-hand calculation replaces \(\kappa*_0p\) by \(p*_0\kappa\), uses right unitors, and has arity \(D^3(U)*_0D^2(\kappa)\).
+
+Cases A–C exhaust the whiskering operations in \(\omega\), proving (9). All changes to parentheses are explicit associators; all inverse and cancellation terms are obtained on the stated pasting or path contexts.
+
+## 1.6 Finish the normalization
+
+Start with (8). Using (9) and the cancellation data for \(\delta_R\), compare it to
+\[
+(I_0;\delta_L);U_{e,h};(\bar\delta_R;I_1).
+\tag{18}
+\]
+Both exterior 3-terms are structural.
+
+By RC(3) in \(\Gamma_0\),
+\[
+I_0;\delta_L\longrightarrow\nu_t,
+\qquad
+\bar\delta_R;I_1\longrightarrow\bar\nu_{t'}
+\]
+have 4-fillers. Whiskering these fillers gives (4).
+
+For parallel \(v,w:t\to t'\) with strict image \(\pi U\), their target normal form (3) is literally the same. Compose
+\[
+v\longrightarrow\mathcal N(t,t')
+\]
+with the reversed normalization of \(w\). Reversing these 4-comparisons does not reverse \(U\): reverse the coherence steps above \(U\), keeping \(U\) as their fixed 3-dimensional argument.
+
+If the common strict image is an identity, both terms belong to \(\Gamma_0\), so (1) applies directly.
+
+Therefore
+\[
+\boxed{\operatorname{RC}(3,\Gamma).}
+\tag{19}
+\]
+
+For any 3-dimensional coherence \(c\) over the 2-disc, with any fixed lower lifts, define
+\[
+K(Q,B,\operatorname{Var}Q)
+=
+\operatorname{Fill}_\Gamma(a_c,b_c)
+\]
+using this construction. Their strict images agree by the reduction stated in §2.3 of the question.
+
+This settles Question 1, including the unitor for arbitrary lower lifts.
+
+# 2. Suspension descent for cylinders
+
+The descent works for arbitrary CaTT contexts, not only pasting contexts. The only pasting-context requirement occurs at the arity of each coherence.
+
+## 2.1 Suspension and the selected variables
+
+Use the usual syntactic suspension:
+\[
+\Sigma\star=N\to S,\qquad
+\Sigma(u\to_Av)=\Sigma u\to_{\Sigma A}\Sigma v,
+\]
+\[
+\Sigma x=x,\qquad
+\Sigma\operatorname{coh}_{P,B}[\gamma]
+=
+\operatorname{coh}_{\Sigma P,\Sigma B}[\Sigma\gamma].
+\]
+Contexts acquire the two new objects \(N,S\), and every old variable increases in dimension by one. This is the suspension meta-operation underlying the computadic suspension construction. [arxiv.org](https://arxiv.org/pdf/2402.01611?utm_source=chatgpt.com)
+
+Take
+\[
+Y'=\{\Sigma y:y\in Y\}.
+\tag{20}
+\]
+The poles \(N,S\) are unselected. This set is up-closed.
+
+For each original variable \(x\), the possible dimension-0 whiskering factor in \(a_{\Sigma x}\) or \(b_{\Sigma x}\) comes from a pole. It is therefore literally omitted. All remaining factors are the suspended original factors. With the standard suspension-compatible binary composites,
+\[
+a_{\Sigma x}=\Sigma a_x,\qquad
+b_{\Sigma x}=\Sigma b_x.
+\]
+Hence, up to the fixed naming of variables,
+\[
+\boxed{
+(\Sigma Q)\uparrow\Sigma Y
+=
+\Sigma(Q\uparrow Y).
+}
+\tag{21}
+\]
+
+It remains to decode arbitrary fillers in a suspended context.
+
+## 2.2 Cut a coloured pasting context
+
+Colour the 0-variables of a context by \(0,1\), nondecreasing along each generating 1-cell. A positive-dimensional term is **crossing** when its 0-source has colour \(0\) and its 0-target has colour \(1\).
+
+Every positive-dimensional pasting context has a root decomposition
+\[
+P=\Sigma P_1\vee_0\cdots\vee_0\Sigma P_k.
+\tag{22}
+\]
+Its 0-vertices form an ordered list. For a nonconstant nondecreasing colouring, exactly one adjacent pair changes from \(0\) to \(1\).
+
+Let that pair belong to \(\Sigma P_j\). Define
+\[
+\operatorname{Cut}(P)=P_j.
+\]
+Thus the cut is a pasting context because it is the desuspension of one root column. It is not an arbitrary deletion of variables.
+
+For dimension-specific boundaries, with \(\partial_m^\epsilon R=R\) when \(m\geq\dim R\),
+\[
+\operatorname{Cut}(\partial_m^\epsilon P)
+=
+\partial_{m-1}^\epsilon\operatorname{Cut}(P),
+\qquad m\geq1.
+\tag{23}
+\]
+This follows directly from (22), since taking such a boundary truncates every suspended root column at the corresponding dimension.
+
+We also need locality:
+
+> If both 0-boundaries of a typed term have colour \(i\), every variable in its typed support has colour pair \((i,i)\), or is a 0-variable of colour \(i\).
+
+Prove this simultaneously with monotonicity of term boundaries by induction on dimension and syntax. In a coherence case, pull the colouring back along its substitution. Full endpoint support forces all relevant arity vertices to have the endpoint colour. For a boundary-full constructor of dimension at least \(2\), its top boundary includes every 0-variable of the arity. For a 1-dimensional composition, monotonicity along its path gives the same conclusion.
+
+In particular, a term with equal endpoint colours cannot use a crossing variable.
+
+## 2.3 The decoder, including dimension 1
+
+For a coloured context \(\Delta\), define \(D\Delta\) by retaining precisely its crossing variables and lowering their dimensions by one.
+
+On crossing types, set
+\[
+D(u\to_\star v)=\star
+\]
+when \(u,v\) are 0-terms, and otherwise set
+\[
+D(u\to_Av)=Du\to_{DA}Dv.
+\tag{24}
+\]
+For a crossing variable, put \(Dx=x\).
+
+Now let
+\[
+t=\operatorname{coh}_{P,B}[\gamma]
+\]
+be crossing. Colour \(P\) by pulling back the colouring along \(\gamma\), and write
+\[
+R=\operatorname{Cut}(P).
+\]
+The substitution \(D\gamma\) keeps the crossing arity variables and sends each one to the decoded argument.
+
+There are two constructor clauses.
+
+**If \(\dim t=1\):** \(P\) is a 1-pasting path with a unique crossing edge \(e\). Define
+\[
+\boxed{
+D\operatorname{coh}_{P,B}[\gamma]
+=
+D(\gamma(e)).
+}
+\tag{25}
+\]
+A crossing 1-dimensional full-endpoint coherence over a point is impossible. Thus (25) covers every crossing 1-dimensional coherence.
+
+**If \(\dim t\geq2\):** define
+\[
+\boxed{
+D\operatorname{coh}_{P,B}[\gamma]
+=
+\operatorname{coh}_{R,DB}[D\gamma].
+}
+\tag{26}
+\]
+
+Clause (25) is necessary: replacing it by (26) would attempt to construct a coherence of type \(\star\).
+
+## 2.4 Typing and fullness of the decoded coherence
+
+Let \(X\) be the set of crossing variables of the ambient context. Simultaneous induction gives
+\[
+\operatorname{Var}(Dt:DA)
+=
+\operatorname{Var}(t:A)\cap X.
+\tag{27}
+\]
+
+For a coherence, the decoded substitution retains exactly the crossing arity arguments. Every discarded argument has equal endpoint colours, so locality says that its support has empty intersection with \(X\). Taking unions of supports proves (27). In dimension 1, the retained arity has just the edge \(e\), so the same calculation proves the claim for (25).
+
+Suppose the original constructor has dimension \(d\geq2\).
+
+- If its endpoints are full in \(P\), equation (27) makes the decoded endpoints full in \(R\).
+- If it is a composition, then \(\dim P=d\). Equations (23) and (27) identify the decoded endpoint supports with
+  \[
+  \operatorname{Var}(\partial_{d-2}^-R),
+  \qquad
+  \operatorname{Var}(\partial_{d-2}^+R).
+  \]
+
+There are two possibilities in the second case.
+
+1. If \(\dim R=d-1\), this is the boundary-full condition for the decoded composition.
+2. If \(\dim R\leq d-2\), both displayed boundaries equal \(R\). The decoded constructor instead satisfies the full-endpoint coherence condition.
+
+The second possibility is essential: a deleted root column may have been higher-dimensional than the crossing column.
+
+Thus (26) is always legal. This also proves that \(D\Delta\) is a well-formed context, including when the original declarations have composite boundaries.
+
+## 2.5 Substitution and the retraction
+
+For a colour-preserving substitution \(\theta\), induction gives literal equalities
+\[
+D(t[\theta])=(Dt)[D\theta],
+\qquad
+D(A[\theta])=(DA)[D\theta].
+\tag{28}
+\]
+The pulled-back colouring of an arity is the same on both sides. In (25), both sides therefore select the same edge \(e\).
+
+Colour the poles of \(\Sigma\Delta\) by \(0,1\). Every suspended variable is crossing, and \(\Sigma P\) has exactly one root column. Consequently,
+\[
+\boxed{
+D(\Sigma\Delta)=\Delta,\qquad
+D(\Sigma A)=A,\qquad
+D(\Sigma t)=t.
+}
+\tag{29}
+\]
+These are syntactic equalities after fixing compatible names. A suspended coherence has dimension at least \(2\), so (26) reconstructs its original constructor exactly.
+
+One should distinguish (29) from a stronger claim about arbitrary weak 0-whiskering. This decoder need not literally erase such a whisker: it may produce a unary disc coherence. That does not affect descent.
+
+For strict images, define the corresponding strict cut by shifting positive composition indices down by one and retaining the unique crossing factor of a dimension-0 composite. Associativity, units, and interchange preserve this operation. Induction on terms gives
+\[
+\pi(Dt)=D_{\mathrm{str}}(\pi t),
+\qquad
+\pi(\Sigma t)=\Sigma_{\mathrm{str}}(\pi t).
+\tag{30}
+\]
+Thus suspension and decoding preserve equal strict images.
+
+## 2.6 Apply the decoder to an arbitrary filler
+
+Put \(\Delta=Q\uparrow Y\). Given parallel \(r\)-terms \(t,t':A\) with
+\[
+\pi t=\pi t',
+\]
+their suspensions are parallel \((r+1)\)-terms with equal strict images.
+
+Assume
+\[
+\operatorname{RC}(r+1,(\Sigma Q)\uparrow\Sigma Y).
+\]
+By (21), this supplies a term
+\[
+H:\Sigma t\longrightarrow_{\Sigma A}\Sigma t'
+\]
+in \(\Sigma\Delta\).
+
+Its type is crossing, so the decoder applies regardless of its syntax. By (29),
+\[
+DH:t\longrightarrow_A t'.
+\]
+
+Therefore
+\[
+\boxed{
+\operatorname{RC}(r+1,(\Sigma Q)\uparrow\Sigma Y)
+\Longrightarrow
+\operatorname{RC}(r,Q\uparrow Y).
+}
+\tag{31}
+\]
+
+Iterating,
+\[
+\operatorname{RC}(n,(\Sigma^{n-r}Q)\uparrow\Sigma^{n-r}Y)
+\Longrightarrow
+\operatorname{RC}(r,Q\uparrow Y).
+\]
+Hence RC(\(n\)) on **all** cylinders, including partial selections, implies RC(\(r\)) on all cylinders for every \(r\leq n\). Combined with the reduction in §2.3 of the question, it proves Conjecture N through dimension \(n\).
+
+The unselected suspension poles are part of the statement. This argument does not replace the hypothesis by RC(\(n\)) only on fully selected cylinders.
+
+# 3. What the horizontal factorization does establish
+
+There is a useful correction to the possible ordering obstruction in Question 2: **a full chain cylinder has no independent orders of nonidentity 2-generators.**
+
+Write its generators as
+\[
+v_i:x_i^-\to x_i^+,\qquad
+a_i^\pm:x_{i-1}^\pm\to x_i^\pm,
+\]
+\[
+F_i:a_i^-v_i\longrightarrow v_{i-1}a_i^+.
+\]
+
+For endpoints \(x_a^-\to x_b^+\), every strict 1-path is
+\[
+P_j^{a,b}
+=
+a_{a+1}^-\cdots a_j^-\,v_j\,
+a_{j+1}^+\cdots a_b^+,
+\qquad a\leq j\leq b.
+\]
+A generating rewrite changes \(P_i^{a,b}\) to \(P_{i-1}^{a,b}\). Therefore a nonidentity strict 2-cell has a forced word
+\[
+F_r,F_{r-1},\ldots,F_{s+1}.
+\tag{32}
+\]
+Longer full chains produce longer forced words.
+
+For an arity substitution with such a strict value, exactly one 0-column has nonidentity 2-image. Preceding columns are supported on a minus-row path; following columns are supported on a plus-row path. Retain those literal paths and the entire active column. This gives the exact frames
+\[
+P_{\mathrm{left}}*_0C_n*_0P_{\mathrm{right}},
+\]
+or
+\[
+P_{\mathrm{left}}*_0V(\mathbf k)*_0P_{\mathrm{right}}.
+\tag{33}
+\]
+
+An assigned term spanning several exterior edges is lifted **as a whole** by renaming those edges. For example,
+\[
+b(h_1,h_2,h_3)
+\]
+is sent to the same expression \(b(\widehat h_1,\widehat h_2,\widehat h_3)\) in the retained path. The original arity variable is not split into three variables.
+
+This factorization is literal and stable for the required evaluations that:
+
+- preserve the distinct frame vertices;
+- send every retained exterior edge to the same literal edge variable.
+
+It is not a claim of invariance under arbitrary substitutions replacing those edges by composite paths.
+
+For proper \(Y\), a frame with only one vertical chain can be insufficient. Take a two-edge chain and select only its arrows:
+\[
+Y=\{a_1,a_2\}.
+\]
+The cylinder is the pasting context \(D^2*_0D^2\), with independent 2-generators
+\[
+A_1:a_1^-\to a_1^+,\qquad
+A_2:a_2^-\to a_2^+.
+\]
+The two routes
+\[
+(A_1*_0a_2^-)\cdot(a_1^+*_0A_2),
+\]
+and
+\[
+(a_1^-*_0A_2)\cdot(A_1*_0a_2^+)
+\]
+have the same strict image.
+
+A factorization of this diagram through one \(C_n\) with only fixed 1-paths outside it cannot retain both independent 2-generators: whichever side is replaced by a 1-path would have to express one of \(A_1,A_2\) using only 1-variables. Its strict 2-image would then be an identity. Here both vertical chains must be retained.
+
+This is a limitation of the proposed one-chain frame, not a counterexample to RC(3). The exchange itself is the direct 3-coherence over \(D^2*_0D^2\). A general normalization theorem for proper selections still needs the exchange/fusion argument.
+
+## Scope
+
+The constructions above establish:
+
+- **Question 1:** RC(3) for the full 2-disc cylinder, and its 3-dimensional naturality instances for arbitrary fixed lower lifts.
+- **Question 4:** suspension descent with \(Y'=\Sigma Y\), leaving the new poles unselected.
+- **The literal factorization part of Question 2:** for full chain cylinders, with the precise fixed-edge substitution condition; also the failure of the single-chain frame for arbitrary proper selections.
+
+They do not establish RC(3) on all cylinders, RC in all dimensions, or the 5-dimensional comparison required in Question 6.
+
+The strict 2-cell classification and the displayed local interchanger, unit, and point-whisker boundary formulas were checked symbolically without associativity or unit identifications. The complete constructions are proofs on paper, not CaTT-kernel verifications.

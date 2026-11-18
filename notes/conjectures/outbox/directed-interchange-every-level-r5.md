@@ -123,3 +123,582 @@ Any of the following:
 - a closure proof or a conflicting substitution for Q3;
 - a definition or an impossibility proof for Q4;
 - a reference to a published construction.
+
+# Researcher Response
+
+**The proposed source/sink count fails for the full comparison graph. There is also a further explicit factorization in the triple tensor: a whiskered joining generator must itself be factored for the particular face lifts constructed below.**
+
+These are partial results. I give generators, equations, and boundaries for the tensor hom-4 generators, together with a support check for the resulting hom-3 path presentation. I have not completed the additional hom-4 coherence equations or lifted the top hom-6 generator.
+
+The finite calculations are reproducible with triple_tensor_check.py[triple_tensor_check.py](sandbox:/workspace/scratch/81530e09e7cd/triple_tensor_check.py):
+
+```bash
+python3 triple_tensor_check.py
+```
+
+The checker verifies orientations, tensor boundary signs, contextual factorization equations, acyclicity, and the stated path counts. It checks the specified sequential presentation; it does not assume that an unspecified theory satisfying §3 has that presentation as a normal form.
+
+## 1. Q2: the ambient source/sink count is false
+
+### The exact counting rule
+
+Let \(e:u\to v\) be an arrow of a finite directed graph. Reverse \(e\), keeping all other arrows fixed. Write \(d^-,d^+\) for the degrees before reversal. Then
+
+\[
+\Delta\#\operatorname{Src}
+=
+\mathbf 1_{d^-(v)=1}-\mathbf 1_{d^-(u)=0},
+\]
+
+\[
+\Delta\#\operatorname{Snk}
+=
+\mathbf 1_{d^+(u)=1}-\mathbf 1_{d^+(v)=0}.
+\tag{1}
+\]
+
+Only the two endpoints change degree, which proves the formulas.
+
+Thus a reversal creates exactly one additional source and one additional sink precisely when
+
+\[
+d^-(v)=1,\qquad d^+(u)=1,\qquad
+d^-(u)>0,\qquad d^+(v)>0.
+\tag{2}
+\]
+
+An internal arrow on a directed branch of an isolated polygon satisfies these conditions. An arrow in the full comparison graph need not.
+
+### A 24-path interval of the triple tensor
+
+Consider the hom-1 boundary
+
+\[
+(\beta _0\alpha _0)\gamma _0
+\longrightarrow
+(\alpha _1\beta _1)\gamma _1.
+\]
+
+There are four hom-2 operations:
+
+- \(A,B\): the updates in the first two factors;
+- \(C\): the crossing \(\beta\alpha\to\alpha\beta\);
+- \(D\): the third-factor update \(\gamma_0\to\gamma_1\).
+
+The third-factor arrow remains last. The sequential hom-2 paths are the \(24\) permutations of \(A,B,C,D\).
+
+The hom-3 adjacent exchanges are
+
+\[
+BC\to CB,\qquad CA\to AC,\qquad
+DX\to XD\quad(X=A,B,C),
+\]
+
+together with the position-dependent rule
+
+\[
+AB\to BA
+\quad\text{if \(C\) follows the adjacent pair},
+\]
+
+\[
+BA\to AB
+\quad\text{if \(C\) precedes the pair}.
+\tag{3}
+\]
+
+Compare this with the graph using \(BA\to AB\) at every position. Exactly three contextual arrows reverse:
+
+| Before reversal | After reversal | Change in sources | Change in sinks |
+|---|---|---:|---:|
+| \(BACD\to ABCD\) | \(ABCD\to BACD\) | \(0\) | \(+1\) |
+| \(BADC\to ABDC\) | \(ABDC\to BADC\) | \(0\) | \(0\) |
+| \(DBAC\to DABC\) | \(DABC\to DBAC\) | \(+1\) | \(0\) |
+
+The middle reversal creates **neither** a source nor a sink. Its endpoint degrees change from
+
+\[
+(1,2),\ (2,1)
+\quad\text{to}\quad
+(2,1),\ (1,2).
+\]
+
+For the complete graphs,
+
+\[
+\begin{array}{c|c|c}
+&\operatorname{Src}&\operatorname{Snk}\\ \hline
+\text{constant \(BA\to AB\)}
+&\{DBCA\}&\{ACBD\}\\
+\text{position-dependent rule}
+&\{DBCA,DABC\}&\{ACBD,BACD\}.
+\end{array}
+\tag{4}
+\]
+
+There is also a direct proof of (4). A source must begin with \(D\), since otherwise moving the preceding letter past \(D\) supplies an incoming arrow. A sink must end with \(D\). After deleting \(D\), source and sink conditions reduce to those of the binary hexagon.
+
+Counting geometric faces instead of contextual arrows does not restore the proposed count. The first two reversals are two suffix contexts of the \(AB\)-square at \(C=0,D=0\); together they contribute one ambient sink and no source. The third reversal is the square at \(C=0,D=1\); it contributes one ambient source and no sink.
+
+**This refutes a count of one additional ambient source/sink pair per flipped face.** It preserves the isolated-hexagon calculation. A rule formulated separately for isolated faces must still account for their other incidences when those faces are assembled.
+
+### Alternation is not forced by the local factorization problem
+
+A source-only construction works for any simple oriented polygon, provided equations may factor composite paths.
+
+Let its directed arms be
+
+\[
+p_i:s_i\to t_i,\qquad q_i:s_{i+1}\to t_i,
+\]
+
+with source indices modulo \(r\). Its signed boundary is
+
+\[
+z=\sum_{i=0}^{r-1}(p_i-q_i).
+\]
+
+For \(r\ge2\), add \(h_i:s_0\to s_i\), \(1\le i<r\), and impose
+
+\[
+p_0=h_1;q_0,
+\qquad
+h_i;p_i=h_{i+1};q_i
+\quad(1\le i<r-1).
+\tag{5}
+\]
+
+In the abelianization of the path presentation, these equations telescope to
+
+\[
+z=h_{r-1}+p_{r-1}-q_{r-1}.
+\]
+
+The remaining boundary paths
+
+\[
+h_{r-1};p_{r-1},
+\qquad q_{r-1}
+\]
+
+are parallel from \(s_0\) to \(t_{r-1}\). Dimension does not enter this construction.
+
+Thus the local boundary problem does not force source/sink alternation. Whether global coherence and substitution force an alternating choice remains unresolved.
+
+## 2. Q1: explicit data for the triple tensor
+
+All dimensions below are **hom dimensions**.
+
+### Word conventions
+
+Write the three hom-2 updates as
+
+\[
+a=x_2,\qquad b=y_2,\qquad c=z_2.
+\]
+
+Start with hom-1 order \(zyx\), and write
+
+\[
+p:yx\to xy,\qquad
+q:zx\to xz,\qquad
+r:zy\to yz.
+\]
+
+The two maximal crossing words are
+
+\[
+rqp,\qquad pqr,
+\]
+
+and the tensor hom-3 generator has direction
+
+\[
+\tau:rqp\longrightarrow pqr.
+\tag{6}
+\]
+
+A word denotes the sequential hom-2 composite of its letters. Each letter is whiskered at the positions determined by the preceding letters. Endpoint superscripts are suppressed: preceding updates determine them.
+
+For a prescribed set of \(m\) updates, take words using those updates once and having crossing subsequence \(rqp\) or \(pqr\). There are
+
+\[
+2\frac{(m+3)!}{3!}
+=
+8,\ 40,\ 240
+\quad\text{for }m=1,2,3.
+\tag{7}
+\]
+
+The original hom-3 arrows are:
+
+1. The tensor naturalities between an update and a crossing involving its factor. The lower-index update moves earlier; the higher-index update moves later.
+2. The inner interchangers between adjacent disjoint operations, directed from right-first to left-first according to the current hom-1 order.
+3. The contextual instances of \(\tau\).
+
+The sign calculation uses the stated Leibniz differential for Steiner’s tensor of augmented directed complexes. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+### Six families of joining factorizations
+
+The following table specifies new hom-3 arrows and equations. In each row,
+
+\[
+\text{old arrow}
+=
+\text{new arrow}\ ;\ \text{final inner arrow}.
+\tag{8}
+\]
+
+Apply a row in every type-valid prefix and suffix context.
+
+| Name | New arrow | Old arrow being factored | Final inner arrow |
+|---|---|---|---|
+| \(h_p\) | \(bpa\to abp\) | \(bpa\to bap\) | \(abp\to bap\) |
+| \(h_q\) | \(cqa\to acq\) | \(cqa\to caq\) | \(acq\to caq\) |
+| \(h_r\) | \(crb\to bcr\) | \(crb\to cbr\) | \(bcr\to cbr\) |
+| \(\lambda_x\) | \(rqa\to arq\) | \(rqa\to raq\) | \(arq\to raq\) |
+| \(h_z\) | \(crqp\to pcqr\) | \(crqp\to cpqr\) | \(pcqr\to cpqr\) |
+| \(\mu\) | \(crqa\to acrq\) | \(crqa\to carq\) | \(acrq\to carq\) |
+
+The first three rows are the binary \(h\)-repair. The next two arise when lifting the tensor hom-4 generators. The last row factors a contextual instance of the newly added \(\lambda_x\).
+
+With endpoint or arrow signs restored, this list specifies
+
+\[
+6\text{ binary }h
++4\lambda_x
++4h_z
++2\mu
+=
+16
+\tag{9}
+\]
+
+basic additions. This is a count of this proposed presentation, not a minimality or completeness theorem.
+
+## 3. Explicit boundaries for the tensor hom-4 generators
+
+There are eighteen tensor basis elements in degree four:
+
+- six of degree pattern \((2,2,0)\), including permutations and endpoint choices;
+- twelve of degree pattern \((2,1,1)\), including permutations and arrow choices.
+
+The six \((2,2,0)\) cases use K10. Here are the other three shapes; each has four choices of the fixed degree-one generators.
+
+In the formulas, an arrow sequence denotes a hom-3 route, and \(\Longrightarrow\) denotes the new hom-4 generator.
+
+### Degree pattern \((2,1,1)\)
+
+Add
+
+\[
+\begin{aligned}
+W_x:\quad
+&\bigl(
+rqpa\to pqra\to pqar\to paqr\to apqr
+\bigr)\\
+&\Longrightarrow
+\bigl(
+rqpa\to rqap
+\xrightarrow{\lambda_x\,p}arqp
+\to apqr
+\bigr).
+\end{aligned}
+\tag{10}
+\]
+
+The required factorization is
+
+\[
+(rqap\to raqp)
+=
+(\lambda_x\,p);
+(arqp\to raqp).
+\tag{11}
+\]
+
+Thus \(\lambda_x:rqa\to arq\) is a joining factor in a proper interval, subsequently whiskered by \(p\).
+
+### Degree pattern \((1,2,1)\)
+
+No new joining factor is needed:
+
+\[
+\begin{aligned}
+W_y:\quad
+&\bigl(
+rqbp\to rbqp\to brqp\to bpqr\to pbqr\to pqbr
+\bigr)\\
+&\Longrightarrow
+\bigl(
+rqbp\to rqpb\to pqrb\to pqbr
+\bigr).
+\end{aligned}
+\tag{12}
+\]
+
+### Degree pattern \((1,1,2)\)
+
+Add
+
+\[
+\begin{aligned}
+W_z:\quad
+&\bigl(
+crqp\to rcqp\to rqcp\to rqpc\to pqrc
+\bigr)\\
+&\Longrightarrow
+\bigl(
+crqp\xrightarrow{h_z}pcqr\to pqcr\to pqrc
+\bigr),
+\end{aligned}
+\tag{13}
+\]
+
+with
+
+\[
+(crqp\xrightarrow{\tau^+}cpqr)
+=
+h_z;(pcqr\to cpqr).
+\tag{14}
+\]
+
+The checker verifies that target minus source in (10), (12), and (13), after taking the intended Gray quotient, is exactly the corresponding Leibniz differential. These are typed lifts of all eighteen tensor hom-4 generators.
+
+They are **not** the complete hom-4 presentation: comparisons for disjoint hom-3 operations and variations of the new factorization equations still need to be specified.
+
+## 4. The overlap requiring \(\mu\)
+
+The additional factorization is visible in the degree-\((2,1,2)\) tensor five-cell.
+
+Use the forty words in \(a,c,p,q,r\). First apply the binary repair \(h_q\), together with \(\lambda_x\) and \(h_z\), in all applicable contexts. Do not yet add \(\mu\).
+
+The resulting graph has exactly two sources:
+
+\[
+S=crqpa,\qquad U=acrqp.
+\tag{15}
+\]
+
+These sources are relevant to the actual tensor five-cell
+
+\[
+F=x_2\otimes y_1\otimes z_2.
+\]
+
+Suppressing tensor symbols, its differential is
+
+\[
+\begin{aligned}
+\partial F={}&
+x_1^+y_1z_2-x_1^-y_1z_2
++x_2y_0^+z_2-x_2y_0^-z_2\\
+&-x_2y_1z_1^++x_2y_1z_1^-.
+\end{aligned}
+\tag{16}
+\]
+
+The chosen opposite \(W_z\)-faces have hom-2 sources:
+
+\[
+W_z^-\text{ followed by }a:\quad S=crqpa,
+\]
+
+\[
+a\text{ followed by }W_z^+:\quad U=acrqp.
+\]
+
+To use these two embedded lifts in one sequential hom-5 boundary with hom-2 source \(G\), existing hom-3 contexts would have to give paths
+
+\[
+G\to S,\qquad G\to U.
+\tag{17}
+\]
+
+Since \(S,U\) are distinct sources, no such \(G\) exists.
+
+This obstructs assembling **these chosen face lifts** using the current hom-3 arrows. It does not exclude adding alternative hom-4 lifts with different hom-3 boundaries.
+
+### The repair
+
+Set
+
+\[
+Y=crqap,\qquad V=carqp.
+\]
+
+There are existing arrows
+
+\[
+S\to Y,
+\qquad
+c\lambda_x\,p:Y\to V,
+\qquad
+\chi_{ac}:U\to V.
+\]
+
+Add
+
+\[
+\mu p:Y\longrightarrow U
+\]
+
+and impose
+
+\[
+\boxed{
+c\lambda_x\,p=(\mu p);\chi_{ac}.
+}
+\tag{18}
+\]
+
+Removing the final \(p\) gives the last row of the table:
+
+\[
+\boxed{
+\mu:crqa\to acrq,
+\qquad
+c\lambda_x=\mu;(acrq\to carq).
+}
+\tag{19}
+\]
+
+Now \(S\to Y\to U\), so the common-source obstruction is removed.
+
+The significant point is that (19) factors a **previously added joining generator**, not an original tensor face. A construction that repairs the individual tensor hom-4 generators once and subsequently adds only higher-dimensional variation data does not assemble these prescribed faces.
+
+### Support and directedness checks
+
+For the maximal \(240\)-word interval, the original graph has
+
+\[
+240\text{ tensor naturality arrows}
++
+240\text{ inner interchangers}
++
+24\text{ tensor-cube arrows}
+=
+504
+\]
+
+contextual arrows.
+
+The six rows introduce respectively
+
+\[
+8,\ 8,\ 8,\ 12,\ 6,\ 3
+\]
+
+contextual factorizations: \(45\) equations in total. Three of the twelve \(\lambda_x\)-arrows are subsequently eliminated by the \(\mu\)-equations. After eliminating all factored left-hand sides, the resulting basis again has \(504\) arrows.
+
+The checker verifies:
+
+| Property | Result |
+|---|---:|
+| Hom-2 words | \(240\) |
+| Retained contextual hom-3 basis arrows | \(504\) |
+| Non-identity hom-3 paths | \(40{,}172\) |
+| Distinct supports of those paths | \(40{,}172\) |
+| Identity hom-3 paths | \(240\) |
+| Directed cycles | \(0\) |
+| Sources | \(\{crqbpa\}\) |
+
+The support statement also has a direct proof. Each factorization eliminates a distinct contextual arrow. The dependencies terminate; the only later elimination of a joining arrow is through \(\mu\). The resulting category is therefore free on the retained acyclic graph.
+
+In a directed acyclic graph, a path cannot repeat a vertex. Its edge set consequently determines the path: the set has a unique initial vertex and a unique successive edge at every visited vertex. Hence **set support**, without multiplicities, determines every non-identity hom-3 path. Identities are distinguished by their hom-2 boundaries.
+
+Acyclicity also excludes a reverse of every listed inner interchanger.
+
+These are checks for this finite path presentation, rather than a support theorem for the still-undefined full \(F(\Gamma)\).
+
+### What is established about the Gray quotient
+
+Let \(P\) denote the original sequential presentation and \(P'\) its extension by the six factorization families. After imposing inner interchangers as identities, each new joining arrow becomes its factored old arrow. The \(\mu\)-equations eliminate through the \(\lambda_x\)-equations. Thus
+
+\[
+P'/(\text{inner identities})
+\cong
+P/(\text{inner identities}).
+\tag{20}
+\]
+
+The added data introduce no additional quotient relations among the original arrows.
+
+Equation (20) is a **relative quotient statement**. Establishing that the completed presentation gives the full Gray tensor requires the missing hom-4 coherence data.
+
+## 5. Q3: a composite-valued substitution explains the new factor
+
+The following calculation assumes the explicit normalization:
+
+> Crossing against a composite hom-1 path is the composite of its pairwise crossings.
+
+That normalization is not a consequence of (B), associativity, and units alone.
+
+Under it, substitute into the binary repair
+
+\[
+A\longmapsto a,\qquad B\longmapsto c;r.
+\tag{21}
+\]
+
+Both images have the required hom dimension two. The binary joining arrow must then map to a hom-3 arrow
+
+\[
+crqpa\longrightarrow acrqp.
+\tag{22}
+\]
+
+Before adding \(\mu\), (15) shows that no such path exists in the chosen presentation.
+
+With \(\mu\), define
+
+\[
+\sigma(h)
+=
+(crqpa\to crqap);(\mu p).
+\tag{23}
+\]
+
+To check the factorization equation, write
+
+\[
+\eta:crqpa\to crqap,\quad
+i:acrqp\to carqp,\quad
+j:carqp\to craqp,
+\]
+
+and
+
+\[
+\lambda'=c\lambda_x\,p:crqap\to carqp.
+\]
+
+The substituted binary arrows satisfy
+
+\[
+\sigma(e)=i;j,
+\qquad
+\sigma(d)=\eta;\lambda';j.
+\]
+
+Equation (18) gives \(\lambda'=(\mu p);i\). Therefore
+
+\[
+\sigma(d)
+=
+\eta;(\mu p);i;j
+=
+\sigma(h);\sigma(e).
+\tag{24}
+\]
+
+So this composite substitution requires additional hom-3 reachability relative to the earlier skeleton, and \(\mu\) supplies it. It does not establish closure under every substitution or force this particular choice of factor in every possible completion.
+
+There is a general distinction here. Declaring \(h,H,K,\mu,\ldots\) as typed operations with schematic equations gives substitution closure for the **term quotient** by structural induction. It does not prove that the proposed finite contextual bases describe that quotient, that supports remain injective, or that reverse interchangers remain absent.
+
+## Remaining questions
+
+The calculations establish the ambient source/sink counterexample, the six displayed factorization families, the tensor hom-4 boundaries, and the finite hom-3 support result.
+
+They do not provide the complete hom-4 presentation for the triple tensor, support injectivity in hom dimensions four and five, the lift of \(x_2\otimes y_2\otimes z_2\), or a substitution-closed theory satisfying requirements 1–5. They also give no inconsistency proof for requirements 1–3 and 5.

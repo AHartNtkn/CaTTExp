@@ -907,11 +907,11 @@ Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 
 *Added 2026-11-18.*
 
-**1. Additive models cannot see generator-free interchangers.**
+**1. Additive models with group-subtraction residuals cannot see generator-free interchangers.** *(Scope narrowed 2026-11-18; see item 4.)*
 - Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = target − source is additive, and an interchanger adds a bilinear term β(δ(f), δ(g)). The integer model 𝓜 and its matrix version are additive.
-- Every structural 1-cell has δ = 0, because it is a coh of a balanced sequent.
+- Every structural 1-cell has δ = 0 *when the residual is group subtraction* (p\r = r − p, as in 𝓜), because it is a coh of a balanced sequent. Item 4 drops this assumption, and the conclusion fails.
 - So in every additive model, an interchanger χ_{f,g} in which f or g is structural (ev, curried evaluation, associators) has weight 0, and lands in a hom where it is forced to be an identity once the hom is a poset.
-- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with weight models. It needs a rewriting or coherence argument, or a non-additive model.
+- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with models of this kind. It needs a rewriting or coherence argument, or a model like 𝓟 of item 4.
 
 **2. Structural interchangers are not forced trivial by the stated axioms.**
 - Take ev : A⊗(A\C) → C and a generator g : Y → Y′. Compare (ev⊗Y′)∘(A⊗(A\C)⊗g) with (C⊗g)∘(ev⊗Y).
@@ -925,6 +925,30 @@ Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 - (b) its quotient in which structural 1-cells are central, i.e. every interchanger with a structural argument is an identity.
 
 In (b), the reduction of round-3 Q1 to item 6 of round 2 is immediate: every forward 2-cell between t₁ and t₂ is a single generator interchanger, so 𝒢_b(t₁, t₂) = {α}. Whether (b) is still sound for the Gray tensor of (∞,ω)-categories, i.e. whether ev is central there, is the real question. Campion's biclosedness is only on mapping spaces (GHL Rem. 2.20), which suggests it is not. This is recorded for the round-3 answer to settle.
+
+**4. Evaluation is not central in 𝒢 (proved).** *(Added 2026-11-18.)*
+
+*The polarized model 𝓟.* It is a strict 2-category with codiscrete homs, so every 2-cell equation holds automatically and only the 1-cell structure needs checking.
+- **Objects:** pairs (P, N) ∈ ℤ².
+- **Tensor and residuals:** A ⊗ B = A + B, and A\C = C/A = C + swap(A), where swap(P, N) = (N, P). So the residual swaps polarity instead of subtracting, unlike 𝓜.
+- **1-cells:** a 1-cell X → Y exists iff (P − N)(X) = (P − N)(Y), and is then an integer weight w. Composition adds weights.
+- **Grading:** put d(u) = P(source) − P(target).
+- **Whiskering:** w(A ⊗ u) = w(u) + P(A)·d(u) and w(u ⊗ B) = w(u).
+- **Currying:** left currying is Φ_A(u) = w(u) − P(A)·d(u), and right currying leaves the weight unchanged.
+
+*It is a model of the setting of r3.*
+- A⊗– is a functor, ⊗ is strictly associative, and (A⊗v)⊗B = A⊗(v⊗B).
+- Φ is a bijection, strictly natural in the context variable and in the target. Naturality in A holds up to the (codiscrete) interchanger.
+- The interchanger exists because the homs are codiscrete. It is an identity only when the weights agree, and w(A′⊗g)(f⊗B) − w(f⊗B′)(A⊗g) = (P(A′) − P(A))·d(g) = −d(f)·d(g).
+- `scripts/d11/polar_model.py` checks these laws on 20,000 random instances, with no failures.
+
+*Consequence.* Here ev_A = Φ⁻¹(id) has d(ev_A) = P(A) + N(A), which is not 0 in general. Take atoms with A ↦ (1, 0), C ↦ (0, 0), X ↦ (1, 1) and X′ ↦ (0, 0), and a generator g : X → X′. Then the 1-cells (X′ ⊗ ev) ∘ (g ⊗ A ⊗ A\C) and (g ⊗ C) ∘ (X ⊗ ev) have weights 1 and 2. So they are **distinct 1-cells of the free 𝒢**, and χ_{g,ev} is not an identity. The same computation separates the two orders of two evaluations at independent positions, χ_{ev,ev′}, which involves no generator at all.
+
+So:
+- **Round-3 Q5, first half: answered, no.** Evaluation is not central in 𝒢, and the quotient 𝒢_c of item 3(b) is a proper quotient.
+- **Q1:** structural interchangers really are events between distinct 1-cells. The open part is that any two 2-cells between the same 1-cells built from them are equal, which is a coherence statement and not a triviality.
+- **Q2:** confirmed. A complete invariant must schedule structural events too.
+- **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
 
 ---
 

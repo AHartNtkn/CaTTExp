@@ -215,9 +215,8 @@ pathSub Γ a p = go (⟨⟩ ,ₛ var a) p
 ------------------------------------------------------------------------
 -- The tactic: a raw candidate filler, then certification.
 
--- Enough fuel for any term the tactic meets: the fuel bounds recursion
--- depth, and every recursive call descends into a strictly smaller term.
--- A generous constant keeps typechecking of examples fast.
+-- A fixed recursion-depth bound, enough for the examples. Deeper terms
+-- make the tactic fail (return nothing); they never make it unsound.
 fuel : Nat
 fuel = 64
 

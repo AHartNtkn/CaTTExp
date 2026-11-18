@@ -190,9 +190,9 @@ For *non-globular* contexts the statement fails in general **[conj]**. Expected 
 
 `src/CaTTExp/GraphFiller.agda` implements path, lift, σ_p and the candidate filler on raw syntax, then runs the existing **certified checker**: `fill Γ u v A` returns a term together with a derivation of `Γ ⊢ fill ∶ u →_A v`. So every filler it returns is a theorem of plain CaTT; soundness needs no proof about the tactic. `src/CaTTExp/GraphFillerExamples.agda` checks:
 - in L: the associator of `s;s;s` (and that it *is* the associator of `CaTTExp.Examples` substituted along the path s, s, s, by `refl`); the two unit laws; `1;1 ⇒ 1`; a four-letter word with units in two bracketings;
-- dimension 3: a 3-cell between the associator and the associator composed with an identity 2-cell; dimension 4: a 4-cell between that 3-cell and itself;
+- dimension 3: a 3-cell between the associator and the associator composed with an identity 2-cell; dimension 4: a 4-cell between two different 3-cells (that one, and its composite with a filler of the associator with itself);
 - a two-vertex graph `x ⇄ y`: `(f;g);f ⇒ f;(g;f)`;
-- negative: no filler for `s;s` vs `s`, `s` vs `1_x`, and two different loops at x.
+- negative: the tactic rejects `s;s` vs `s`, `s` vs `1_x`, and two different loops at x (their paths differ). That no cell exists at all is the paper argument via the path invariant, not a machine-checked statement.
 
 **What is not machine-checked:** totality (Theorem 3.1 for all inputs). It needs substitution admissibility for core CaTT (ledger A1). Recorded as F2a.
 

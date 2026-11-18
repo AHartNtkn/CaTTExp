@@ -10,6 +10,7 @@ module CaTTExp.GraphFillerExamples where
 open import CaTTExp.Prelude
 open import CaTTExp.Pure
 open import CaTTExp.GraphFiller
+import CaTTExp.Examples as Ex
 
 v : Nat → Tm
 v = var
@@ -56,11 +57,7 @@ assoc₃ = snd (from-just (fill L [ss]s s[ss] hom))
 -- The filler is exactly the associator of CaTTExp.Examples (over the
 -- chain Θ₃ with full support), substituted along the path s, s, s.
 _ : fst (from-just (fill L [ss]s s[ss] hom))
-    ≡ coh (chain 3)
-          (arr (arr ⋆ (v 0) (v 5))
-               (comp (v 0) (v 3) (comp (v 0) (v 1) (v 2) (v 3) (v 4)) (v 5) (v 6))
-               (comp (v 0) (v 1) (v 2) (v 5) (comp (v 1) (v 3) (v 4) (v 5) (v 6))))
-          ⟪ x ∷ x ∷ s ∷ x ∷ s ∷ x ∷ s ∷ [] ⟫
+    ≡ coh Ex.Comp₃ Ex.assocTy ⟪ x ∷ x ∷ s ∷ x ∷ s ∷ x ∷ s ∷ [] ⟫
 _ = refl
 
 -- Units: 0 + 1 ⇒ 1 and 1 + 0 ⇒ 0 + 1.
@@ -108,19 +105,40 @@ a₃' = vcomp x x [ss]s s[ss] a₃ s[ss] (id₂ x x s[ss])
 hom₂ : Ty
 hom₂ = arr hom [ss]s s[ss]
 
--- Sanity: both are 2-cells of that type.
-_ : is-just (infer L a₃') ≡ true
+-- Sanity: a₃' is a 2-cell of the same type as a₃.
+_ : fst (from-just (infer L a₃')) ≡ hom₂
 _ = refl
 
 three-cell : L ⊢tm _ ∶ arr hom₂ a₃ a₃'
 three-cell = snd (from-just (fill L a₃ a₃' hom₂))
 
--- Dimension 4: the 3-cell against its composite with an identity is
--- one dimension up again; we just check the parallel pair of the 3-cell
--- with itself (a filler of a cell with itself).
-four-cell : L ⊢tm _ ∶ arr (arr hom₂ a₃ a₃') (fst (from-just (fill L a₃ a₃' hom₂)))
-                                            (fst (from-just (fill L a₃ a₃' hom₂)))
-four-cell = snd (from-just (fill L _ _ (arr hom₂ a₃ a₃')))
+-- Dimension 4: two different 3-cells a₃ ⇛ a₃'. The first is the
+-- filler a₄ above; the second is the vertical composite of the filler
+-- c₃₃ : a₃ ⇛ a₃ with a₄. The tactic connects them by a 4-cell.
+a₄ c₃₃ : Tm
+a₄  = fst (from-just (fill L a₃ a₃' hom₂))
+c₃₃ = fst (from-just (fill L a₃ a₃ hom₂))
+
+-- Vertical composition of 3-cells over x, y, f, g, α, β, Φ, γ, Ψ.
+VComp₃ : Ctx
+VComp₃ = ctxOf (node (node (node (leaf ∷ leaf ∷ []) ∷ []) ∷ []))
+
+vcomp₃ : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+vcomp₃ a b f g α β Φ γ Ψ =
+  coh VComp₃ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7))
+      ⟪ a ∷ b ∷ f ∷ g ∷ α ∷ β ∷ Φ ∷ γ ∷ Ψ ∷ [] ⟫
+
+a₄' : Tm
+a₄' = vcomp₃ x x [ss]s s[ss] a₃ a₃ c₃₃ a₃' a₄
+
+hom₃ : Ty
+hom₃ = arr hom₂ a₃ a₃'
+
+_ : fst (from-just (infer L a₄')) ≡ hom₃
+_ = refl
+
+four-cell : L ⊢tm _ ∶ arr hom₃ a₄ a₄'
+four-cell = snd (from-just (fill L a₄ a₄' hom₃))
 
 ------------------------------------------------------------------------
 -- A graph with two vertices: x —f→ y —g→ x. Levels x0 y1 f2 g3.
@@ -136,13 +154,16 @@ graph-assoc : G ⊢tm _ ∶ arr (arr ⋆ (v 0) (v 1)) fg-f f-gf
 graph-assoc = snd (from-just (fill G fg-f f-gf (arr ⋆ (v 0) (v 1))))
 
 ------------------------------------------------------------------------
--- Negative examples: different paths, no filler.
+-- Negative examples: the tactic rejects pairs whose paths differ.
+-- (That no such cell exists in CaTT at all is the paper argument via the
+-- path invariant, notes/ordinary-math.md §3.1; Agda only shows that the
+-- tactic returns nothing.)
 
--- 2 ≠ 1 in ℕ: no cell s ⨾ s ⇒ s.
+-- 2 vs 1: s ⨾ s and s.
 _ : is-just (fill L ss s hom) ≡ false
 _ = refl
 
--- 1 ≠ 0.
+-- 1 vs 0.
 _ : is-just (fill L s (id x) hom) ≡ false
 _ = refl
 

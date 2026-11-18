@@ -178,6 +178,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 - `outbox/finite-fibration-test-higher-base-r4.md` (B14, round 4: FT₃ with a composite 2-boundary, FT_n, the identity-to-identity characterisation, positive 3-computads).
 - `outbox/gray-contexts-r6.md` (D2, round 6: the full Gray cube, fusion with exchange, RC(3) under a corrected hypothesis, contexts with 3-variables, RC(n)/G(n)).
 - `outbox/naturality-arbitrary-depth-r6.md` (C1, round 6: two independent letters, D² ∗₀ D², all cylinders, RC(n), global K).
+- `outbox/steiner-nu-freeness.md` (A5: a formalizable proof of the existence half of freeness of ν(K) on its atoms; (N1) generation is already formalised for ordered bases).
 - Also ready, outside the outbox: `canonical-gray-terms.md` (CT, from E8), `gray-contexts-in-catt.md` §6 (D3).
 
 **Answered 2026-11-18 and verified** (in `conjectures/answered/`): naturality-arbitrary-depth (rounds 1–5), directed-interchange-every-level (rounds 1–6), gray-contexts (rounds 1–5), cone-over-coherences (rounds 1–3), gray-closed-scheduling (rounds 1–4), catt-models-in-infinity-omega (rounds 1–4), steiner-support-formalizable, strict-omega-pasting-formal, dir-relative-coherence (rounds 1 and 2), non-derivability-q2, finite-fibration-test, finite-fibration-test-2d-base, finite-fibration-test-higher-base (rounds 1–3), lax-functor-refinement, gray-pasting-types, cartesian-closed-higher-coherence, non-derivability.

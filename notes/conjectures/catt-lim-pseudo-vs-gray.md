@@ -31,7 +31,7 @@ Let Γ = `(x:⋆, y:⋆, f : x → y)` and let `L = lim_Γ`. Take two 1-cells `u
 
 ## A consequence to check
 
-If (1)–(3) hold, take the cartesian setting and the partially lax limit of `⊤ →a C ←b ⊤` with the b-leg invertible. Its points are arrows `b → a` of C, but its arrows are only the **invertible** 2-cells of C. The genuine hom-object `Hom_C(b, a)` is instead the fibre of the *oplax arrow object*, which is characterised through the Gray tensor. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C) → C × C`, not of `Fun([1], C)` (Gagna–Harpaz–Lanari, [2012.04537](https://arxiv.org/abs/2012.04537)) **[recalled, please verify]**.
+If (1)–(3) hold, take the cartesian setting and the partially lax limit of `⊤ →a C ←b ⊤` with the b-leg invertible. Its points are arrows `b → a` of C, but its arrows are only the **invertible** 2-cells of C. The genuine hom-object `Hom_C(b, a)` is instead the fibre of the *oplax arrow object*, which is characterised through the Gray tensor. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C) → C × C`, not of `Fun([1], C)` (Gagna–Harpaz–Lanari, [2012.04537](https://arxiv.org/abs/2012.04537)) **[verified: researcher response §7 and the verification below, item 8; Gagna–Harpaz–Lanari §1.3]**.
 
 ## What is known
 

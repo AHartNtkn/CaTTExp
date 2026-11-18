@@ -2,7 +2,7 @@
 
 *Design notes, 2026-11-18. Answers the decision raised in `notes/limits-representables.md` §3 (PR #2), `notes/internal-hom.md` §2–3 (PR #3) and `notes/agda-sketch-findings.md` finding 4 (PR #4). Background: `catt-survey.md` (project files). Redoing existing results is treated as free, per Anthony; only mathematical and practical upsides and downsides count.*
 
-*Markers. **[paper]**: checked against the source this session. **[recall]**: background knowledge, not re-checked. **[conj]**: my conjecture. **[proposal]**: a design choice being put forward.*
+*Markers. **[paper]**: checked against the source this session. **[conj]**: my conjecture. **[proposal]**: a design choice being put forward. Every claim once marked **[recall]** was re-checked on 2026-11-18 (ledger G1) and now carries its source, a correction, or [conj]. Orientation conventions are fixed in `conventions.md`; long-term semantic gaps are collected in `semantics-gaps.md`.*
 
 ---
 
@@ -185,7 +185,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 - **Earlier claim.** PR #3 I.4: "Half the dualities stop being symmetries. Reversing dimension-2 cells turns lax into oplax."
 - **Settled: PR #3 is right, and §5.4 of this note understated it.**
-  - Under L, an opposites meta-operation that reverses the order of composition across objects sends the lax theory to the *oplax* theory, not to itself. Using the Gray tensor's duality formulas, e.g. (X⊗Y)^op ≅ Y^op ⊗ X^op, some reversals stay symmetries and the rest swap lax and oplax.
+  - Under L, an opposites meta-operation that reverses the order of composition across objects sends the lax theory to the *oplax* theory, not to itself. By the Gray tensor's duality formulas (AM Props. A.20, A.22; `conventions.md` §3.3), the odd dual (X⊗Y)^op ≅ Y^op ⊗ X^op and the even dual (X⊗Y)^co ≅ Y^co ⊗ X^co swap lax and oplax, while the total dual (X⊗Y)° ≅ X° ⊗ Y° is a symmetry of the lax theory. By AM Remark A.21 no other duality gives an isomorphism of this kind.
   - Practical consequence: a lemma proved once and dualised may land in the oplax theory, so a second proof may be needed. CaTT's proof-size savings from opposites shrink accordingly.
   - Mitigation: a kernel parameterised by orientation, so proofs transfer between the lax and oplax theories. This reduces the loss but does not remove it.
   - Which reversals survive is a short computation, and it is PR #3's experiment 3. Under two-tier L, dualities used only inside one object (e.g. the Eckmann–Hilton development) are unaffected.
@@ -308,8 +308,8 @@ The comparison should be about which *mathematical object* each theory is the in
 
 ### 2.1 ωCat with lax transformations is Gray-enriched
 
-- **Strict.** Strict ω-Cat with the Ara–Maltsiniotis Gray tensor is monoidal biclosed, with Hom(A ⊗ B, C) ≅ Hom(A, Fun_oplax(B, C)) ≅ Hom(B, Fun_lax(A, C)) up to naming conventions ([1607.00668](https://arxiv.org/abs/1607.00668)) **[recall]**. So strict ω-Cat is a category enriched over (ω-Cat, ⊗).
-- **(∞,ω).** Campion constructs a unique monoidal biclosed Gray structure on Cat_n for n ∈ ℕ ∪ {ω} (Theorem A of [2311.00205](https://arxiv.org/abs/2311.00205)) **[paper, abstract/intro]**. A closed presentably monoidal ∞-category is enriched over itself (Gepner–Haugseng) **[recall]**. So Cat_ω is Gray-enriched, with hom-objects Fun^lax(A, B).
+- **Strict.** Strict ω-Cat with the Ara–Maltsiniotis Gray tensor is monoidal biclosed, with Hom(A ⊗ B, C) ≅ Hom(A, Hom_oplax(B, C)) ≅ Hom(B, Hom_lax(A, C)) ([1607.00668](https://arxiv.org/abs/1607.00668)) **[paper: Thm A.15, §A.18]**. AM's names agree with Bénabou's (`conventions.md` §3.1). So strict ω-Cat is enriched over (ω-Cat, ⊗) in two ways: ∞-Cat_oplax with homs Hom_oplax, and ∞-Cat_lax with homs Hom_lax, enriched in the transposed tensor **[paper: AM Ex. C.18, §C.16]**. The latter, read in execution order, is L's ambient (`conventions.md` §4).
+- **(∞,ω).** Campion constructs a unique monoidal biclosed Gray structure on Cat_n for n ∈ ℕ ∪ {ω} (Theorem A of [2311.00205](https://arxiv.org/abs/2311.00205)) **[paper, abstract/intro]**. A left-closed monoidal ∞-category is enriched in itself, with hom-objects the internal homs **[paper: Gepner–Haugseng, [1312.3178](https://arxiv.org/abs/1312.3178), Cor. 7.4.10]**. So Cat_ω is Gray-enriched, with hom-objects Fun^lax(A, B).
 - **Named notion.** Gepner–Heine, *Oriented category theory* ([2510.10504](https://arxiv.org/abs/2510.10504)), define oriented categories as categories enriched in ∞Cat for the lax Gray tensor. Their compositions "only commute up to a coherent (anti)oriented interchange law". They state that ∞Cat viewed as an oriented category has hom-objects Fun^lax(S, T) **[paper, intro level]**. Their companion paper on oriented colimits is the one PR #2 already cites ([2608.02592](https://arxiv.org/abs/2608.02592)).
 
 So **L's semantic target is an established notion. P's ambient is the cartesian (∞,ω)-category Cat_ω, which is a different object.**
@@ -319,7 +319,7 @@ So **L's semantic target is an established notion. P's ambient is the cartesian 
 In a Gray-enriched 𝒦:
 
 - For objects a, b, the hom 𝒦(a, b) is an ordinary ω-category. All its internal compositions, which are 𝒦's compositions in dimension ≥ 1, interchange invertibly as usual.
-- Composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), with factors in execution order; this order is the lax/oplax convention, fixed in §3.1. On generators it sends a pair (x, y) of cells of dimensions m and k (in the homs) to a cell of dimension m + k. So:
+- Composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), with factors in execution order; this order is the lax/oplax convention, fixed in §3.1 and recorded project-wide in `conventions.md` §4. On generators it sends a pair (x, y) of cells of dimensions m and k (in the homs) to a cell of dimension m + k. So:
   - an object x (k = 0) whiskers: y ⊗ x has the dimension of y;
   - two 1-cells of homs (2-cells of 𝒦, i.e. transformations α, β) give a **2-cell of the hom, i.e. a 3-cell of 𝒦: the interchanger**, between the two whiskered composites. There is no horizontal composite in dimension 2.
 
@@ -329,7 +329,7 @@ This is the precise content of "lax by default" for ωCat. Inside an object C, c
 
 One could try a theory in which *every* pair of compositions interchanges directedly, i.e. Gray structure at every level. The evidence says this is not a well-understood structure:
 
-- Crans showed that no monoidal biclosed structure on Gray-categories captures weak transformations. Bourke–Lobbia ([2212.12358](https://arxiv.org/abs/2212.12358)) recall this and work around it with *skew* monoidal closed structures, one for lax and one for pseudo transformations **[paper, abstract/intro]**. A related obstruction is Bourke–Gurski, *A cocategorical obstruction to tensor products of Gray-categories* **[recall]**.
+- Crans showed that no monoidal biclosed structure on Gray-categories captures weak transformations. Bourke–Lobbia ([2212.12358](https://arxiv.org/abs/2212.12358)) recall this and work around it with *skew* monoidal closed structures, one for lax and one for pseudo transformations **[paper, abstract/intro]**. A related obstruction is Bourke–Gurski, *A cocategorical obstruction to tensor products of Gray-categories* (TAC 30, 2015; [1412.1320](https://arxiv.org/abs/1412.1320)): any monoidal biclosed structure on Gray-categories has undesirable properties, and none makes the model category of Gray-categories a monoidal model category **[paper, abstract]**.
 - Gepner–Heine introduce *bioriented* categories, related to suspension. This is the frontier, not a foundation one can build a kernel against yet **[paper, intro level]**.
 - The objects of ωCat are ordinary ω-categories anyway. A uniformly directed theory would describe something *other* than ωCat_lax.
 
@@ -337,7 +337,7 @@ One could try a theory in which *every* pair of compositions interchanges direct
 
 ### 2.4 Every P-model is an L-model
 
-There is a canonical comparison X ⊗ Y → X × Y, which collapses the mixed generators. It makes the identity a lax monoidal functor (ωCat, ×) → (ωCat, ⊗), and change of base along it turns a cartesian-enriched ω-category into a Gray-enriched one whose interchangers are invertible **[recall for the comparison map; the change of base is standard]**.
+There is a canonical comparison X ⊗ Y → X × Y, which collapses the mixed generators. It makes the identity a lax monoidal functor (ωCat, ×) → (ωCat, ⊗), and change of base along it turns a cartesian-enriched ω-category into a Gray-enriched one whose interchangers are invertible **[paper: AM Ex. C.17 gives the lax monoidal structure, with comparison (1_X ⊗ p_Y, p_X ⊗ 1_Y) : X ⊗ Y → X × Y and identity unit constraint; the change of base is standard enriched category theory]**. Since × is symmetric, the result can be read in either factor order, in particular in L's (`conventions.md` §4). The interchanger generators β ⊗ φ map to identities.
 
 Consequences:
 
@@ -378,7 +378,7 @@ Finer supports map onto coarser ones under the collapse X ⊗ Y → X × Y, so e
 2. **Usability, unless markings are cheap.** Plain CaTT reasoning inside an object (elements, the post's §Functors) now has directed interchange. The fix is a marking "C is an ordinary ω-category" that restores invertible interchange in C. The marking must be easy enough that ordinary use never notices it.
 3. **Cost.** Unfoldings now multiply at every level, not only across objects. Symbolic supports should keep this polynomial **[conj]**, but it is a real constant-factor cost.
 
-**Where generality stops.** One step further is to drop the interchanger entirely (an ω-sesquicategory, the setting of Markakis's generalised signatures **[recall]**). That gives up the *existence* of naturality cells, which every lax transformation has. So there is a concrete reason to stop at directed interchange: it is the most general option that still contains the intended structure.
+**Where generality stops.** One step further is to drop the interchanger entirely, i.e. an ω-sesquicategory: whiskering without any interchange cell (AM Appendix C define ∞-sesquicategories and use them as the underlying structure of Gray ∞-categories; Araújo studies n-sesquicategories, their computads and string diagrams, [2210.07704](https://arxiv.org/abs/2210.07704)) **[paper]**. *Correction:* an earlier version called this "the setting of Markakis's generalised signatures". Markakis's signatures ([2303.11978](https://arxiv.org/abs/2303.11978)) are about computads for operations over a direct category of sorts (weak ω-categories, semi-simplicial Kan complexes); sesquicategories are not their topic. That gives up the *existence* of naturality cells, which every lax transformation has. So there is a concrete reason to stop at directed interchange: it is the most general option that still contains the intended structure.
 
 ---
 
@@ -400,9 +400,9 @@ Here Θᵢ is the pasting scheme of cells in the hom from aᵢ₋₁ to aᵢ.
 U_{ij}(Γ)  :=  Θᵢ₊₁ ⊗ … ⊗ Θⱼ          (i < j, factors in execution order)
 ```
 
-These are tensors of Steiner complexes, computed generator-wise, with generators θⱼ ⊗ … ⊗ θᵢ₊₁, dimension the sum, and boundary given by the Leibniz formula. Mikhail's `gray` judgment and PR #3 §4.1 give the same formula. Steiner complexes of pasting schemes are loop-free, and tensors of loop-free complexes are loop-free (Steiner) **[recall]**. So the free strict ω-category on U_{ij} is well behaved and cells of it are determined by their chains.
+These are tensors of Steiner complexes, computed generator-wise, with generators θⱼ ⊗ … ⊗ θᵢ₊₁, dimension the sum, and boundary given by the Leibniz formula. Mikhail's `gray` judgment and PR #3 §4.1 give the same formula. The Steiner complex λ(S) of a pasting diagram is a strong Steiner complex, i.e. its basis is unital and *strongly* loop-free **[paper: AM Prop. 4.13]**, and tensors of strongly loop-free unital bases are strongly loop-free **[paper: Steiner, HHA 2004, Example 3.10]**. *Correction:* an earlier version said "loop-free"; Steiner's tensor statement is for the strong notion (which implies loop-free, Steiner Prop. 3.7). So the free strict ω-category on U_{ij} is ν of a strong Steiner complex, freely generated by its atoms (Steiner Thm 5.6), and its cells are determined by their chains.
 
-The **order of factors** is the lax/oplax convention, and it is **forced by the limit rules**. Mikhail's lax cones need the comparison cell of a cone morphism to go from "outer cell first" to "inner cell first". In execution order, for β : u ⇒ u′ (from c to L) and φ : v ⇒ v′ (from L to y), that is
+The **order of factors** is the lax/oplax convention, and it is **forced by the limit rules**. The project-wide statement of this convention, with the Leibniz computation, is `conventions.md` §4. Mikhail's lax cones need the comparison cell of a cone morphism to go from "outer cell first" to "inner cell first". In execution order, for β : u ⇒ u′ (from c to L) and φ : v ⇒ v′ (from L to y), that is
 
 ```
 (u◁φ);(β▷v′)  ⇛  (β▷v);(u′◁φ)
@@ -472,8 +472,10 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 | Anything inside a single hom | as in CaTT | §3.4, last case |
 | Composites (operation case, n = 1) | no, as in CaTT | |
 | Interchangers y ⊗ x with dim x, dim y ≥ 1 | **no** | The source and target supports are different halves of ∂U. |
-| Interchanger where one factor is invertible | yes **[conj]** | For 2-categories, a lax transformation's naturality cell at an equivalence is invertible **[recall]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
+| Interchanger where one factor is invertible | yes **[conj]** | Semantically true for 2-categories (proof in the note below the table) and for (∞,2)-categories (Haugseng, [2002.01037](https://arxiv.org/abs/2002.01037), Remark 3.11) **[paper]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
 | Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
+
+**Naturality cells at invertible 1-cells (semantic fact behind the [conj] row) [proved here for strict 2-categories].** Let α : F ⇒ G be a lax transformation between 2-functors A → B, with cells α_f : Gf ∘ α_x ⇒ α_y ∘ Ff, and let f : x → y be an isomorphism in A with inverse g. Lax naturality says α_{gf} is the pasting (α_g · Ff) ∘ (Gg · α_f), and α_{1} = 1. Since gf = 1, this gives (α_g · Ff) ∘ (Gg · α_f) = 1. Whiskering by Gf on the left and using GfGg = 1: (Gf · α_g · Ff) ∘ α_f = 1. Symmetrically, fg = 1 gives (α_f · Fg) ∘ (Gf · α_g) = 1, and whiskering by Ff on the right: α_f ∘ (Gf · α_g · Ff) = 1. So β := Gf · α_g · Ff is a two-sided inverse of α_f. For an adjoint equivalence the same computation goes through with the unit and counit isomorphisms inserted, using naturality of α with respect to 2-cells. The (∞,2) statement is Haugseng's Remark 3.11. The type-theoretic question (a propagation rule deriving this in L) is ledger E4.
 
 ### 3.6 Soundness: proof attempt
 
@@ -483,7 +485,7 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 𝔉(Γ)(aᵢ, aⱼ)  =  ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ)  ≅  ν(Kᵢⱼ),      Kᵢⱼ := λΘᵢ₊₁ ⊗ … ⊗ λΘⱼ
 ```
 
-where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara–Maltsiniotis's ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) **[recall]**.
+where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara–Maltsiniotis's ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) for strong Steiner complexes **[paper: AM §A.16, with Prop. 4.13 for λ(S)]**.
 
 - Every L-term t over Γ has a **strict interpretation** ⟦t⟧, a cell of some 𝔉(Γ)(aᵢ, aⱼ), defined by induction on derivations (coh cases below; substitutions act through the strict Gray functors they induce).
 - **supp(t : A)** := Supp(⟦t⟧), the downward-closed set of basis elements of Kᵢⱼ used by ⟦t⟧ and its boundaries. Supports of objects are the objects themselves.
@@ -516,7 +518,7 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 
 - **(D)** For K = λΘ₁ ⊗ … ⊗ λΘₙ, the free (∞,n)-category on K's generators is equivalent to ν(K). This is Campion's pasting theorem, if K is torsion-free; Campion's theorem covers lax Gray cubes, and the question is whether it covers Gray tensors of pasting diagrams.
 - **(E)** Campion's Gray tensor of the free (∞,n)-categories on λΘᵢ is the free one on their Steiner tensor.
-- **(F)** The free oriented ∞-category on Γ has homs given by tensoring along the chain. This is the ∞-version of the formula for 𝔉(Γ), and is expected from the description of free enriched ∞-categories on graphs **[recall]**.
+- **(F)** The free oriented ∞-category on Γ has homs given by tensoring along the chain. This is the ∞-version of the formula for 𝔉(Γ). For V monoidal with ⊗ preserving colimits in each variable, the free V-∞-category on the chain graph 0 → 1 → … → n with edge objects V₁, …, Vₙ has maps from i−1 to j given by Vᵢ ⊗ … ⊗ Vⱼ **[paper: Gepner–Haugseng, [1312.3178](https://arxiv.org/abs/1312.3178), §2.5, stated in the discussion of the graphs Δ_(V₁,…,Vₙ)]**. Campion's Gray tensor is biclosed, so this applies with V = (Cat_ω, ⊗).
 
 Then every oriented (∞,ω)-category (Gepner–Heine), in particular ∞Cat with lax transformations, interprets two-tier L:
 - operation-case cohs go to lifts of T;
@@ -574,7 +576,7 @@ So each option makes one hom native and gets the other from an extra rule family
 - **Verified (R11).** As written, Mikhail's universal property forces cone-morphism cells to be invertible in a CaTT ambient, and all cells of dimension ≥ 3 once every level of `uni` is imposed. So P must use marked (pseudo) cone transfors, and hom and comma objects from limits have only invertible arrows.
 - **L.** The cone *shapes* are the same: a cone over Γ is the same context. The universal property becomes a Gray-enriched one, quantifying over native lax cells.
   - **[conj]** The `ctrf` shapes (transfors between cones) become native cells of the hom 𝒦(c, ·), so the `ctrf`/`star` machinery may shrink. A cone transfor would be a native cell between cones, with interchangers supplying the Gray squares.
-  - Gray-enriched weighted limits are standard in dimension 2 (Street; Lack) **[recall]**.
+  - In dimension 2, lax limits are special Cat-weighted limits, which are standard (Street 1976, Kelly 1989; surveyed in Lack, *A 2-categories companion*, [math/0702535](https://arxiv.org/abs/math/0702535), §§6.7–6.8) **[paper: Lack]**. *Correction:* an earlier version said "Gray-enriched weighted limits"; the dimension-2 theory is Cat-enriched, and Gray-enrichment only enters one dimension up.
   - Gepner–Heine's oriented colimits are the matching (∞,ω) notion. PR #2 §2.4 already suspects CaTT_lim's limits are "oriented" in their sense. Under L that becomes the expected reading rather than a mismatch.
 - **Markings** (PR #2 §4.2) are needed by both.
 
@@ -634,9 +636,9 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 
 | | P | L |
 |---|---|---|
-| Models | GM/BFM weak ω-categories; computads (Dean–Finster–Markakis–Reutter–Vicary); Benjamin–Markakis–Sarti contexts-as-computads | to build: "Gray-coherator" models. Target notion exists (Gepner–Heine). Markakis's generalised signatures may cover the computads **[recall]**. |
+| Models | GM/BFM weak ω-categories; computads (Dean–Finster–Markakis–Reutter–Vicary); Benjamin–Markakis–Sarti contexts-as-computads | to build: "Gray-coherator" models. Target notion exists (Gepner–Heine). Markakis's generalised signatures ([2303.11978](https://arxiv.org/abs/2303.11978): sorts form a direct category; free algebras on computads are the cofibrant objects) may cover the computads **[conj; see `semantics-gaps.md` §5]**. |
 | Strict test model | strict ω-Cat with the cartesian hom (strictly natural transformations) | strict ω-Cat with the AM Gray tensor. This model is exactly the one used to compute supports, so the side condition and the test model coincide. |
-| Is ωCat itself a model? | open (algebraic weak ω-cats vs (∞,ω)) | open, same gap |
+| Is ωCat itself a model? | strictly, only with strict 2-cells; (∞,ω) open (algebraic weak ω-cats vs (∞,ω)) | strictly yes: AM's ∞-Cat_lax, by Theorem 1 of §3.6; (∞,ω) open, same gap. Details in `semantics-gaps.md` §4 |
 | Invertibility, Σ, opposites, naturality meta-operations | done | to redo. Σ is admissible (§3.4). Some opposites swap lax and oplax instead of being symmetries (see R5). The naturality meta-operation (BMOSV) becomes the interchange coh. |
 | Biggest open lemma | G1 for Gray contexts (PR #3 §4.3). "Pseudo = marked Gray" is now proved (§2.4). | Steiner lemmas (A)–(C) and the (∞,ω) transfer (D)–(F), §3.6 |
 
@@ -699,7 +701,7 @@ The reasons for L over P (first version, still valid):
 
 ### 7.1 Work plan
 
-1. **Fix conventions.** Choose lax vs oplax, i.e. the factor order in U, once, consistently with Mikhail and with PR #3 §4.1.
+1. **Fix conventions.** *Done (2026-11-18): `conventions.md`.* Choose lax vs oplax, i.e. the factor order in U, once, consistently with Mikhail and with PR #3 §4.1.
 2. **Supports and conservativity (Agda).**
    - Implement Steiner chains for pasting schemes and the Gray unfolding.
    - Prove that on a single hom, supp = Var. Then L restricted to one hom *is* the existing PR #4 checker.

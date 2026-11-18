@@ -158,6 +158,7 @@ import CaTTExp.Strict.Atoms
 import CaTTExp.Strict.CMonSolver
 import CaTTExp.Strict.Generation
 import CaTTExp.Strict.BasisCheck
+import CaTTExp.Strict.Cylinder
 import CaTTExp.Strict.Expr
 import CaTTExp.Strict.NuWords
 import CaTTExp.Strict.Lifting

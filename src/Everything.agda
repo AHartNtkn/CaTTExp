@@ -37,3 +37,4 @@ import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.GrayDuality

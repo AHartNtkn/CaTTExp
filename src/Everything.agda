@@ -72,6 +72,11 @@ import CaTTExp.GlobularTotal.NfSub
 import CaTTExp.GlobularTotal.NfSubExample
 import CaTTExp.GlobularTotal.Uniq
 import CaTTExp.GlobularTotal.PsOrd
+import CaTTExp.GlobularTotal.ExGood
+import CaTTExp.GlobularTotal.LabEx
+import CaTTExp.GlobularTotal.Labels
+import CaTTExp.GlobularTotal.ExBd
+import CaTTExp.GlobularTotal.LabRange
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing
@@ -134,6 +139,8 @@ import CaTTExp.Strict.Atoms
 import CaTTExp.Strict.CMonSolver
 import CaTTExp.Strict.Generation
 import CaTTExp.Strict.BasisCheck
+import CaTTExp.Strict.Expr
+import CaTTExp.Strict.NuWords
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

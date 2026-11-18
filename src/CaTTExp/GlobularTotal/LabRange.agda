@@ -13,11 +13,12 @@ open import CaTTExp.GlobularTotal.Uniq using (mem; memCs; memL)
 open import CaTTExp.GlobularTotal.Labels using (bool-ext)
 open import CaTTExp.GlobularTotal.LabEx using (B)
 
-private
-  data _⊎_ (A B : Set) : Set where
-    inl : A → A ⊎ B
-    inr : B → A ⊎ B
+-- Exported, since labT-range's statement uses it.
+data _⊎_ (A B : Set) : Set where
+  inl : A → A ⊎ B
+  inr : B → A ⊎ B
 
+private
   ∨-split : ∀ a b → (a ∨ b) ≡ true → (a ≡ true) ⊎ (b ≡ true)
   ∨-split true  b e = inl refl
   ∨-split false b e = inr e

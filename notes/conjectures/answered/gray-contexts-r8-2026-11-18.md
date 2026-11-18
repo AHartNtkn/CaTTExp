@@ -934,3 +934,31 @@ The additional RC(3) assumption is used twice:
 Choosing representatives separately in existing 4-cell connected classes does not supply the second comparison. Therefore this argument neither proves the extension from RC(4) alone nor proves that the additional assumption is necessary.
 
 It also does not supply the missing RC(4) fusion for the triangle or square. Moving 3-inputs of a 4-term is covered by depth-one naturality; moving its 2-inputs through the chosen 3-normalizers is the additional compatibility still required.
+
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at the level of a paper proof.**
+- **RC(3) holds for the 2 × 3 Gray grid.** Write a = e10, b = e11, c = e12, d = e00, e = e01, f = e02. The constraints are a < b < c < f, a < d < e < f and b < e.
+- **§II proves a conditional 4-dimensional extension theorem.** For dim Λ ≤ 3 with an acyclic 1-graph, RC(3)(Λ) and RC(4)(Λ) together give RC(4)(Λ + 4-generators). Example: D³ with any 4-generators attached.
+  - It does not give the extension from RC(4)(Λ) alone.
+  - It does not give RC(4) for the triangle context or the lax square.
+
+Checked:
+
+1. **Event words.** I recomputed them by script. The linear extensions are exactly the five words abcdef, abdcef, abdecf, adbcef and adbecf, the standard Young tableaux of shape (3,3).
+   - The exchange graph is the square abdcef — {adbcef, abdecf} — adbecf, plus the single edge abdcef — abcdef.
+   - This agrees with the response.
+2. **Cut fibres.** The cut fibres are bcd and cde.
+   - The block-exchange comparison B_{m,n} over V_m ∨₀ V_n (3) reduces each fibre to one exchange, as in the 2 × 2 case.
+   - The square 4-cell S_□ over D³ ∨₁ D³ (5) fills the one square of the graph. It is an interchange of two disjoint 3-cells, so it is a coherence over a pasting context.
+3. **Gluing the fibres.** The flattening table, the fusions (8)/(9), Ξ_P (11) and the filler (12) follow the r7 pattern with one more column. I found no gap.
+4. **§II.** The argument is the r5 three-generator extension theorem one dimension up. It uses the support lemma to split a 4-loop into a part inside Λ, settled by RC(4)(Λ), and generator-local parts. Those are fused by 5-dimensional coherences whose boundary 4-loops lie in RC(3)-settled data. That is why RC(3)(Λ) is a hypothesis.
+
+**Open.**
+- RC(3) for the 3 × 3 grid and for general Steiner loop-free 2-computads.
+- RC(4) for the triangle context, the lax square and the 4-cube.
+- The extension theorem from RC(4) alone.
+- RC(n) and G(n) in general.
+
+Follow-up: no incremental round-9 prompt. The open items pass to the consolidated RC(n) prompt (thread "Consolidate researcher prompts into ambitious asks").

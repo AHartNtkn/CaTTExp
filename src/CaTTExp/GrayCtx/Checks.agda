@@ -12,3 +12,5 @@ import CaTTExp.GrayCtx.Checks.Cube
 import CaTTExp.GrayCtx.Checks.Prune
 import CaTTExp.GrayCtx.Checks.CrossFree
 import CaTTExp.GrayCtx.Checks.Alternation
+import CaTTExp.GrayCtx.Checks.Natural
+import CaTTExp.GrayCtx.Checks.NaturalAgree

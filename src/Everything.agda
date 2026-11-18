@@ -104,7 +104,10 @@ import CaTTExp.Gray.BdryChar
 import CaTTExp.Gray.SingleHom
 import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
+import CaTTExp.GrayCtx.CylGen
 import CaTTExp.GrayCtx.Cylinder
+import CaTTExp.GrayCtx.Natural
+import CaTTExp.GrayCtx.NaturalWF
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

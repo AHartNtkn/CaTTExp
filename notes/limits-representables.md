@@ -293,7 +293,7 @@ f : x →_C y    means   f : x →_{⊤→C} y          (an ambient 2-cell)
 **Semantic check [recall/conj].** In ωCat with cartesian homs, `Hom(1, C) ≃ C`, since `1 × Dⁿ = Dⁿ`. So "elements of C" are elements of C.
 
 **What does not follow without more rules.**
-- **Extensionality / density:** "if `F x ≅ G x` naturally in elements x, then `F ≅ G`." That needs `⊤` and the disks to be jointly dense, which is the internal-hom/Gray thread's problem [→ Gray].
+- **Extensionality / density:** "if `F x ≅ G x` naturally in elements x, then `F ≅ G`." That needs `⊤` and the disks to be jointly dense, which is the internal-hom/Gray thread's problem [→ Gray]. *Answered 2026-11-18* (`free-objects-proofs.md` §6): disks are not dense; pasting diagrams Θ are, so the principle must be indexed by Θ (a colimit rule, F5).
 - I suggest an explicit rule only if needed. It would read: *a family of components indexed by the generic element, plus naturality, is a transfor.* That is the cylinder rule `Hom(⟦Γ⟧,D)(u,v) ≃ Hom(⟦(Γ ⊗ D¹)^μ⟧, D)` restricted to representable domains. Here `(Γ ⊗ D¹)^μ` is Mikhail's `gray` context with its cylinder cells *marked*: under Option P the ambient's 2-cells are pseudo, so the marked Gray cylinder (≈ Γ × D¹) is the right shape, and the unmarked one classifies lax transformations instead. It is well-formed because the `gray` judgment generates `Γ ⊗ D¹` as a finite context.
 
 ### 5.2 Shapes as objects: two kernel options and one surface layer

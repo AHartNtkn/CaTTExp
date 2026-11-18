@@ -113,3 +113,642 @@ Any of the following:
 - a proof or counterexample for any question;
 - a reference to a published recognition theorem for Grothendieck constructions over free strict n-categories presented by polygraphs;
 - a reference to a published characterisation of homotopical polygraphs in low dimension.
+
+# Researcher Response
+
+**Question 1 has an affirmative answer, with dimension bound \(5\).** The same construction proves \(\mathrm{FT}_{3,m}\) for arbitrary finite \(m\), under the hypotheses on the base in item 23.
+
+There is also a general mixed-localisation lemma extending item 22 to arbitrary finite-dimensional factors. It gives \(\mathrm{FT}_{n,m}\) for suspension bases and arbitrary finite \(m\). It does not, by itself, supply the compatible attaching maps required for arbitrary bases of dimension \(n\geq4\).
+
+I give the constructions and proofs below. I do not resolve Questions 3–5.
+
+## 1. The whiskered \(3\)-generator with \(2\)-category fibres
+
+Write
+\[
+A=T(x),\qquad B=T(y),\qquad C=T(z),
+\]
+and
+\[
+P,Q:A\to B,\qquad R:B\to C,
+\qquad a,b:P\Rightarrow Q.
+\]
+Set
+\[
+F=RP,\qquad G=RQ,\qquad d_0=Ra,\qquad d_1=Rb.
+\]
+The new datum is the modification
+\[
+z=T(\zeta):d_0\Rightarrow d_1,
+\]
+whose component at a vertex \(e\in A\) is a genuine \(2\)-cell
+\[
+z_e:Ra_e\Rightarrow Rb_e
+\]
+in \(C\).
+
+In the formulas below, tensors used to specify unlocalised presentations are the underlying Gray tensors. Markings are specified separately. Tensor factors remain in the indicated order.
+
+### 1.1 Mapping cylinders and double cylinders
+
+For a functor \(U:A\to B\), let
+\[
+M_U=(A\otimes I)\amalg_{A\otimes\{1\}}B.
+\]
+
+For a transformation \(d:U\Rightarrow V\), put
+\[
+H=A\otimes I_{\mathrm{in}},
+\qquad
+h_d:H\longrightarrow A\times I_{\mathrm{in}}
+\xrightarrow{\operatorname{ev}_d}B,
+\]
+and define
+\[
+W_d=
+A\amalg_{H\otimes\{0\}}
+(H\otimes I_{\mathrm{out}})
+\amalg_{H\otimes\{1\}}B.
+\tag{1}
+\]
+The first endpoint map is the projection \(H\to A\); the second is \(h_d\). Its two inner faces are the specified cylinders \(M_U\) and \(M_V\).
+
+Thus an unlocalised presentation over the \(2\)-skeleton of the base is
+\[
+\mathcal P_2=
+\left(
+W_a\amalg_{\,M_P\amalg_{A\amalg B}M_Q}W_b
+\right)\amalg_B M_R.
+\tag{2}
+\]
+This is the instance of the construction in item 12 that we will use.
+
+### 1.2 The attaching map for right whiskering
+
+For \(d=a,b\), there is an actual map
+\[
+\Psi_d:W_{Rd}\longrightarrow W_d\amalg_B M_R.
+\tag{3}
+\]
+
+Here is its complete construction. Use the outer subdivision
+\[
+H\otimes I
+\xrightarrow{1\otimes\delta_2}
+H\otimes[2]
+\simeq
+(H\otimes I)\amalg_H(H\otimes I).
+\]
+Map the first interval to \(W_d\). Map the second by
+\[
+H\otimes I
+\xrightarrow{h_d\otimes I}
+B\otimes I
+\longrightarrow M_R.
+\]
+At the subdivision vertex both maps are \(h_d:H\to B\). At the two outer endpoints they are the source projection and \(Rh_d\). Consequently they descend to (3).
+
+The restrictions of \(\Psi_a\) and \(\Psi_b\) to \(M_F\) and \(M_G\) agree: those restrictions use only \(P,Q,R\), with the same outer subdivision. This agreement holds on the entire cylinders, including the cells indexed by fibre \(2\)-generators.
+
+### 1.3 The triple cylinder for \(z\)
+
+Let \(D_2\) have vertices \(0,1\), parallel arrows
+\[
+\sigma_0,\sigma_1:0\to1,
+\]
+and top cell
+\[
+\vartheta:\sigma_0\Rightarrow\sigma_1.
+\]
+The modification gives the evaluation
+\[
+\operatorname{ev}_z:A\times D_2\longrightarrow C
+\]
+determined by \(F,G,d_0,d_1,z\). Put
+\[
+H_z=A\otimes D_2,
+\qquad
+h_z:H_z\longrightarrow A\times D_2
+\xrightarrow{\operatorname{ev}_z}C.
+\]
+Define
+\[
+W_z=
+A\amalg_{H_z\otimes\{0\}}
+(H_z\otimes I_{\mathrm{out}})
+\amalg_{H_z\otimes\{1\}}C.
+\tag{4}
+\]
+
+Its boundary obtained from \(\partial D_2\subset D_2\) is
+\[
+\partial W_z
+=
+W_{d_0}\amalg_{\,M_F\amalg_{A\amalg C}M_G}W_{d_1}.
+\tag{5}
+\]
+The maps (3) therefore glue to an unlocalised map
+\[
+\Psi:\partial W_z\longrightarrow\mathcal P_2.
+\tag{6}
+\]
+
+The required presentation is
+\[
+\boxed{\mathcal P=\mathcal P_2\amalg_{\partial W_z}W_z.}
+\tag{7}
+\]
+
+Every map used in (7) has now been specified before localisation.
+
+### 1.4 The new \(3\)-cell and its actual boundary
+
+Write the marked transports as
+\[
+p_e:e\to Pe,\qquad q_e:e\to Qe,\qquad r_b:b\to Rb.
+\]
+Use the naturality orientation from item 20:
+\[
+\eta^r_f:r_b;Rf\Rightarrow f;r_{b'}.
+\]
+For a fibre path, extend this by
+\[
+\eta^r_{\ell;m}
+=
+(\eta^r_\ell*Rm)\cdot(\ell*\eta^r_m),
+\qquad
+\eta^r_{1}=1.
+\]
+
+For \(d=a,b\), let
+\[
+\lambda_{d,e}:p_e;d_e\Rightarrow q_e,
+\]
+and define
+\[
+L^R_{d,e}
+=
+(p_e*\eta^r_{d_e})\cdot
+(\lambda_{d,e}*r_{Qe}).
+\tag{8}
+\]
+With
+\[
+u_e=p_e;r_{Pe},\qquad v_e=q_e;r_{Qe},
+\]
+its type is
+\[
+L^R_{d,e}:u_e;Rd_e\Rightarrow v_e.
+\]
+
+The new marked \(3\)-generator is
+\[
+\boxed{
+\chi_e:
+L^R_{a,e}
+\Rrightarrow
+(u_e*z_e)\cdot L^R_{b,e}.
+}
+\tag{9}
+\]
+Both sides are \(2\)-cells from \(u_e;Ra_e\) to \(v_e\). Its projection is \(\zeta\).
+
+The factor \(u_e*z_e\) is essential. It is precisely what changes when the fibres are \(2\)-categories.
+
+### 1.5 Complete attaching maps for the \(4\)- and \(5\)-generators
+
+The tensor prescription determines all higher boundaries, including their whiskerings.
+
+For \(j=0,1,2\), set
+\[
+T_j=D_j\otimes D_2\otimes I
+\]
+and
+\[
+B_j=
+(\partial D_j\otimes D_2\otimes I)
+\cup
+(D_j\otimes\partial D_2\otimes I)
+\cup
+(D_j\otimes D_2\otimes\partial I),
+\tag{10}
+\]
+with \(\partial D_0=\varnothing\).
+
+There is one generating cell of dimension \(j+3\) in \(T_j\):
+\[
+d_j\otimes\vartheta\otimes i.
+\]
+Let
+\[
+\delta_j:\partial D_{j+3}\longrightarrow B_j
+\tag{11}
+\]
+be its Gray-computad boundary map.
+
+For each generating \(j\)-cell \(g:D_j\to A\), attach
+\[
+\chi_g=g\otimes\vartheta\otimes i
+\]
+along
+\[
+\partial D_{j+3}\xrightarrow{\delta_j}B_j
+\xrightarrow{\phi_g}\mathcal P^{[j-1]},
+\tag{12}
+\]
+where \(\mathcal P^{[-1]}=\mathcal P_2\), and \(\phi_g\) is defined as follows.
+
+- On \(\partial D_j\otimes D_2\otimes I\), use \(\partial g\) and the triple-cylinder map already constructed for the lower-dimensional fibre generators.
+- On \(D_j\otimes\partial D_2\otimes I\), use \(g\) and the boundary map \(\Psi\) in (6).
+- On the outer endpoint \(0\), use the projection
+  \[
+  D_j\otimes D_2\longrightarrow D_j\xrightarrow g A.
+  \]
+- On the outer endpoint \(1\), use
+  \[
+  D_j\otimes D_2\xrightarrow{g\otimes1}A\otimes D_2
+  \xrightarrow{h_z}C.
+  \]
+
+These maps agree on their intersections. Attach the cells in increasing \(j\). This gives a finite recursive specification of every boundary in (7).
+
+The globular tensor cells used here admit the stated cellular interpretation: products of globes are acyclic Gray atoms, and their coherent realisations agree with their strict Gray tensors by Chanavat’s Corollary 3.27 and Theorem 3.29. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+Thus the new families are exactly:
+
+| Fibre generator | New generator | Dimension | Invert? |
+|---|---|---:|---|
+| Vertex \(e\) | \(\chi_e\) | \(3\) | No |
+| Generating arrow \(f\) | \(\chi_f\) | \(4\) | Yes |
+| Generating \(2\)-cell \(\rho\) | \(\chi_\rho\) | \(5\) | Yes |
+
+Mark all three families. Retain the fibre generators and the relative generators already present in \(\mathcal P_2\).
+
+## 2. Mixed localisation in arbitrary finite dimensions
+
+The following lemma proves correctness of the preceding construction and extends item 22.
+
+### Lemma
+
+Let \(X\) and \(Y\) have finite homotopical computad presentations. Form their **coherent cellular Gray tensor** from those presentations, with one generating cell \(x\otimes y\) for each pair of generators. Then the canonical comparison induces an equivalence
+\[
+\boxed{
+(X\otimes Y)
+\bigl[
+(x\otimes y)^{-1}:\dim x>0,\ \dim y>0
+\bigr]
+\simeq X\times Y.
+}
+\tag{13}
+\]
+
+The equivalence is natural, including with respect to cellular attaching maps.
+
+The qualification “coherent cellular” matters: the proof does not assume that an arbitrary strict tensor of polygraphs is homotopical.
+
+### Proof, step 1: adding a mark changes the cylinder by a localisation
+
+Suppose a marking on \(Z\) is generated by positive-dimensional cells \(M\). The underlying map
+\[
+Z\otimes I\longrightarrow
+(Z^M\otimes I^\sharp)^\natural
+\]
+localises at
+\[
+\{m\otimes i:m\in M\}.
+\tag{14}
+\]
+
+Indeed, adjoining a mark on \(m:D_r\to Z\) is a pushout of \(D_r^\flat\to D_r^t\). In Loubaton’s marked-cylinder construction, the corresponding underlying pushout replaces \(D_r\otimes I\) by \(\tau_r^i(D_r\otimes I)\), which inverts its top \((r+1)\)-generator. Marked tensoring preserves these pushouts. This is Construction 3.1.2.1 and Proposition 3.1.2.3. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+### Step 2: the second factor is a globe
+
+Fix \(X\), and argue inductively for \(Y=D_k\). The case \(k=0\) is immediate.
+
+Put \(E=D_{k-1}\). Use the suspension presentation
+\[
+D_k\simeq
+(E\otimes I)\amalg_{E\amalg E}(*\amalg *).
+\]
+Consequently,
+\[
+X\otimes D_k
+\simeq
+\bigl((X\otimes E)\otimes I\bigr)
+\amalg_{(X\otimes E)\amalg(X\otimes E)}
+(X\amalg X).
+\tag{15}
+\]
+
+By induction,
+\[
+X\otimes E\longrightarrow X\times E
+\]
+localises at the mixed generators \(g\otimes h\) with both dimensions positive. The tensor-localisation lemma from item 9 says that tensoring this map with \(I\) localises at
+\[
+g\otimes h\otimes0,\qquad
+g\otimes h\otimes1,\qquad
+g\otimes h\otimes i.
+\]
+In the endpoint pushout (15), the first two families already map to identities. The remaining family is
+\[
+g\otimes h\otimes i,
+\qquad \dim g>0,\quad \dim h>0.
+\tag{16}
+\]
+
+It remains to compare the outer cylinder of \(X\times E\) with \(X\times(E\otimes I)\). Give \(X\times E\) the auxiliary marking
+\[
+X^\sharp\times E^\flat.
+\]
+This marking is generated by
+\[
+(g,v),
+\qquad
+g\text{ a positive-dimensional generator of }X,\quad v\in E_0.
+\tag{17}
+\]
+
+To check that assertion, \(E\) is gaunt, so a marked \(r\)-cell has the form
+\[
+(a,\operatorname{id}^{(r)}b),\qquad \dim b<r.
+\]
+It factors as
+\[
+(a,\operatorname{id}^{(r)}s_0b)
+*_0
+(\operatorname{id}^{(r)}t_0a,\operatorname{id}^{(r)}b).
+\tag{18}
+\]
+The second factor is an identity \(r\)-cell. The first is generated by the cells in (17), using an expression for \(a\) in the generators of \(X\).
+
+By (14), imposing this auxiliary marking on the outer cylinder adds exactly the localisations
+\[
+(g,v)\otimes i.
+\tag{19}
+\]
+Loubaton’s Proposition 3.1.3.2 identifies the resulting underlying category with
+\[
+X\times(E\otimes I):
+\qquad
+(X^\sharp\times E^\flat)\otimes I^\sharp
+\simeq
+X^\sharp\times(E^\flat\otimes I^\sharp).
+\] :chatgpt-content-reference{index="2"}
+
+Collapsing the two endpoints now gives \(X\times D_k\). The families (16) and (19), together, are exactly the mixed generators between \(X\) and the positive-dimensional generators of \(D_k\). This proves the globe case.
+
+### Step 3: cellular attachment of the second factor
+
+The Gray tensor preserves colimits in each variable; the globular tensor calculations therefore give a cellular tensor with the asserted pair generators. The required cocontinuity and compatibility with strict globular tensors follow from Campion’s Theorem 3.4 and Corollary 3.5. :chatgpt-content-reference{index="3"}
+
+Suppose a stage of the chosen coherent presentation is
+\[
+Y'=Y_0\amalg_{\partial D_r}D_r.
+\]
+Assume the assertion for \(Y_0\), for \(D_r\), and for its boundary.
+
+Consider a map
+\[
+f:X\otimes Y'\longrightarrow Z
+\]
+inverting the prescribed mixed generators. Its restriction to \(X\otimes Y_0\) factors through \(X\times Y_0\). By naturality of the comparison, that factorisation already inverts the images of every mixed generator from \(X\otimes\partial D_r\). Therefore the restriction to \(X\otimes D_r\) inverts all its mixed generators, including those on its boundary, and factors through \(X\times D_r\).
+
+The two factorisations agree over \(X\times\partial D_r\): precomposition with a localisation is fully faithful on the corresponding mapping spaces. Thus \(f\) factors uniquely, in the localisation sense, through
+\[
+(X\times Y_0)
+\amalg_{X\times\partial D_r}
+(X\times D_r)
+\simeq X\times Y'.
+\]
+This is exactly the universal property of (13). Induction over the finite cellular presentation proves the lemma. ∎
+
+## 3. Correctness of the whiskered presentation
+
+Apply (13) to
+\[
+A\otimes(D_2\otimes I).
+\]
+Its mixed generators are those with positive \(A\)-dimension and positive dimension in \(D_2\otimes I\).
+
+After the endpoint pushouts defining \(W_z\), every generator
+\[
+g\otimes t\otimes\epsilon,
+\qquad \dim g>0,\quad \dim t>0,\quad \epsilon=0,1,
+\]
+already maps to an identity. At endpoint \(0\) this follows from the projection; at endpoint \(1\) it follows because \(h_z\) factors through \(A\times D_2\).
+
+The surviving localisation set is therefore
+\[
+S_z=
+\{g\otimes t\otimes i:
+\dim g>0,\ t\text{ a generator of }D_2\}.
+\tag{20}
+\]
+Here \(t\) may have dimension \(0,1,\) or \(2\). These are precisely the existing edge and \(2\)-cell naturality generators, together with the new \(4\)- and \(5\)-generators.
+
+Writing
+\[
+K=1^{\mathrm{co}}\star D_2,
+\]
+we obtain
+\[
+W_z[S_z^{-1}]
+\simeq
+(A\times K)\amalg_{A\times D_2}C.
+\tag{21}
+\]
+By the suspension classification, this is the total fibration over \(D_3=\Sigma D_2\) classified by the actual evaluation \(\operatorname{ev}_z\). This is the application of Loubaton’s Corollary 4.1.2.19. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+This identification also respects the Cartesian marking. Before localisation, mark all outer-cylinder generators \(h\otimes i\). After localisation, the generators with positive fibre dimension are equivalences; those with fibre dimension zero give the marked lifts of the base cells.
+
+We must also check the map \(\Psi\).
+
+First, outer subdivision sends every marked outer-cylinder generator to a pasting of marked outer-cylinder generators. Second, it preserves the required localisation:
+
+- If an inner generator is \(g\otimes v\), where \(v\) is an inner vertex and \(\dim g>0\), its image under \(h_d\) is \(P(g)\) or \(Q(g)\). Its outer cylinder is a pasting of positive-fibre naturality cells.
+- If the inner generator is \(g\otimes t\) with both dimensions positive, then \(h_d(g\otimes t)\) is an identity. Its outer top cell is consequently degenerate.
+
+Thus the localised boundary map is a map of marked Cartesian fibrations. Its evaluation is the prescribed \(Rd\), and it is the identity on the endpoint fibres. It is therefore an equivalence onto the corresponding pullback; equivalence of such maps is detected on fibres by Loubaton’s Corollary 3.2.2.8. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+Finally, the base’s \(3\)-cell attachment is a homotopy pushout by item 8. Pulling this pushout back along the classified fibration and using Corollary 3.2.3.16 gives
+\[
+\boxed{\mathcal P[S^{-1}]\simeq\int T}
+\]
+over the fully marked base. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The complete generator count is therefore:
+
+| Base generator | Fibre generators used | Total dimensions |
+|---|---|---|
+| \(p,q\) | \(g\in\Pi_j(A)\) | \(1+j\) |
+| \(r\) | \(g\in\Pi_j(B)\) | \(1+j\) |
+| \(\alpha,\beta\) | \(g\in\Pi_j(A)\) | \(2+j\) |
+| \(\zeta\) | \(g\in\Pi_j(A)\) | \(3+j\) |
+
+Here \(j=0,1,2\). Mark every displayed relative generator and invert precisely those with \(j>0\). The dimension is at most \(5\).
+
+## 4. Extension to arbitrary \(3\)-dimensional bases
+
+### Theorem: \(\mathrm{FT}_{3,m}\)
+
+Let \(\Gamma\) be a finite \(3\)-computad such that:
+
+1. its \(2\)-skeleton is homotopical;
+2. adjoining its \(3\)-generators is a homotopy pushout.
+
+Let the fibres have finite homotopical \(m\)-computad presentations. Then the relative Gray-generator presentation exists in dimension at most
+\[
+m+3.
+\]
+Besides the fibre generators, it has one marked generator of dimension \(k+j\) for every base \(k\)-generator, \(k=1,2,3\), and every source-fibre \(j\)-generator. Invert precisely those with \(j>0\).
+
+### Proof
+
+Item 12 supplies the presentation \(\mathcal P_2\) over the \(2\)-skeleton.
+
+For each \(3\)-generator
+\[
+\Omega:s\Rrightarrow t,
+\]
+choose finite expressions for its two \(2\)-cell boundaries. We require actual maps
+\[
+W_{T(s)}\longrightarrow\mathcal P_2,
+\qquad
+W_{T(t)}\longrightarrow\mathcal P_2
+\tag{22}
+\]
+agreeing on their two path-cylinder boundaries.
+
+These maps are obtained recursively by the following operations.
+
+**Identities.** Collapse the inner interval. This sends the double cylinder of an identity transformation to its mapping cylinder.
+
+**Vertical composition.** Apply
+\[
+I_{\mathrm{in}}\xrightarrow{\delta_2}[2]
+\]
+and glue the double cylinders of the two transformations along their common mapping cylinder.
+
+**Right whiskering.** Use the outer subdivision (3), in arbitrary fibre dimension.
+
+**Left whiskering.** Suppose \(F:D\to A\) and \(d:U\Rightarrow V\) has source fibre \(A\). Put \(H_D=D\otimes I_{\mathrm{in}}\). Subdivide
+\[
+H_D\otimes I_{\mathrm{out}}\longrightarrow H_D\otimes[2].
+\]
+Map the first interval through
+\[
+H_D\otimes I\longrightarrow D\otimes I\longrightarrow M_F
+\]
+using the inner projection. Map the second through
+\[
+H_D\otimes I
+\xrightarrow{(F\otimes I_{\mathrm{in}})\otimes I}
+(A\otimes I_{\mathrm{in}})\otimes I
+\longrightarrow W_d.
+\]
+At the subdivision vertex both maps are \(F\) after the inner projection. This gives
+\[
+W_{dF}\longrightarrow M_F\amalg_A W_d.
+\]
+
+Horizontal composition is expressed using whiskering and vertical composition.
+
+The restrictions of these operations to a path boundary are the path-cylinder maps of item 12. They depend on the resulting path: successive subdivisions compose to the single map
+\[
+\delta_r:I\to[r].
+\]
+Consequently the two maps in (22) agree on their complete common path cylinders, in every fibre dimension.
+
+For each \(\Omega\), now use the triple cylinder (4), evaluated by the genuine modification \(T(\Omega)\), and attach it along (22). Its relative generators are
+\[
+g\otimes\vartheta\otimes i,
+\qquad \dim g+3\leq m+3,
+\]
+with the boundary prescription (10)–(12).
+
+The marking and localisation checks in §3 apply without a bound of \(2\) on the fibre dimension. In particular, the evaluation of a positive-positive mixed generator is an identity because the evaluation factors through a Cartesian product.
+
+After localisation, all these maps are the boundary maps of the corresponding classified local totals. The assumed base pushout and pullback-preserves-colimits then identify their pushout with \(\int T\). ∎
+
+This proof uses one chosen expression for each attaching \(2\)-cell. It does not require the unlocalised presentation to identify the maps produced by every pair of expressions related by interchange. The compatibility required for a \(3\)-cell attachment is compatibility on its common **\(1\)-dimensional** boundaries, and the path-cylinder construction supplies exactly that.
+
+## 5. Suspension bases with arbitrary finite-dimensional fibres
+
+The mixed-localisation lemma also removes the fibre-dimension restriction from item 24.
+
+Let
+\[
+Q=F_d(\Lambda),\qquad B=\Sigma Q,\qquad n=d+1,
+\]
+with \(\Lambda\) finite and homotopical. Let the two fibres \(A,C\) have finite homotopical \(m\)-computad presentations, and write the weight as its evaluation
+\[
+h:A\times Q\longrightarrow C.
+\]
+Put
+\[
+K=1^{\mathrm{co}}\star Q.
+\]
+
+The cone has the cellular presentation consisting of the generators of \(Q\), its apex, and one generator
+\[
+\kappa_q,\qquad \dim\kappa_q=\dim q+1,
+\]
+for each generator \(q\) of \(Q\). This follows by applying the cylinder-and-endpoint-collapse construction to the chosen cellular presentation of \(Q\).
+
+Form the unlocalised pushout
+\[
+\boxed{
+\mathcal P_T=(A\otimes K)\amalg_{A\otimes Q}C,
+}
+\tag{23}
+\]
+where the attaching map is the actual composite
+\[
+A\otimes Q\longrightarrow A\times Q\xrightarrow h C.
+\]
+
+The relative generators are
+\[
+g\otimes\kappa_q,
+\qquad
+\dim(g\otimes\kappa_q)=j+i+1,
+\]
+for \(g\in\Pi_j(A)\) and \(q\in\Lambda_i\). Mark all of them and invert those with \(j>0\).
+
+The mixed generators belonging to \(A\otimes Q\) already map to identities in \(C\). Therefore (13), followed by the pushout, gives
+\[
+\mathcal P_T[S^{-1}]
+\simeq
+(A\times K)\amalg_{A\times Q}C
+\simeq
+\int_{\Sigma Q}T.
+\tag{24}
+\]
+The final equivalence is the same suspension classification used in (21). The dimension bound is
+\[
+i+1+j\leq d+1+m=n+m.
+\]
+
+Thus **\(\mathrm{FT}_{n,m}\) holds for finite homotopical suspension bases, for every finite \(m\)**.
+
+## 6. The finite certificate and the remaining scope
+
+For the two classes just proved—bases of dimension at most \(3\), and suspension bases—the finite certificate consists of:
+
+1. **Homotopicality certificates** for the chosen fibre presentations and the required base attachments.
+2. **Weight data**, given by the finite evaluation maps on the relevant cellular presentations, with derivations of their boundary equations.
+3. **Attaching expressions**, using the cylinder substitutions above; for \(3\)-bases these include chosen expressions for the \(2\)-cell boundaries.
+4. **The generator list**, indexed by the prescribed base–fibre pairs, with dimension \(k+j\).
+5. **The marking and localisation lists**: mark all relative generators and invert exactly those of positive fibre degree.
+6. **Face-compatibility checks**, verifying the maps on the intersections in (10) and on the common path cylinders.
+
+This is a finite certificate for the stated construction. It does not require a decision procedure for arbitrary homotopicality or arbitrary equality problems: where an equality is needed, the certificate supplies a finite derivation.
+
+For general bases of dimension \(n\geq4\), the unresolved step is now specifically the compatible substitution of higher-dimensional boundary expressions into the unlocalised presentations. The mixed-localisation lemma supplies the local tensor models and their dimension bounds, but does not establish that compatibility.
+
+I have no proof or counterexample for bubble-free or one-sided \(2\)-computads, including
+\[
+(*;s,t;\eta:1\Rightarrow st,\ \mu:ts\Rightarrow t).
+\]
+I also have none for positivity in every dimension in the \(3\)-dimensional question. Chanavat’s Comment 3.40 describes the extension to arbitrary regular and positive polygraphs as an expected extension; it does not prove that case. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)

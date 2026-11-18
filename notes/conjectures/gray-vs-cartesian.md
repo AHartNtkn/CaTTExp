@@ -86,3 +86,14 @@ Gagna–Harpaz–Lanari (arXiv 2006.14495), Prop. 2.12 prove, for ∞-bicategori
 **Alternative routes.**
 - Verity's complicial sets, where both products are explicit.
 - The strict analogue: Steiner complexes, with C1 holding up to folk weak equivalence, transported along a comparison of strict Gray products with Campion's.
+
+## 5. Why it matters
+
+Strong (pseudo) natural transformations are expected to be exactly the lax transformations with invertible naturality cells. C1 makes this precise in every dimension. A syntax that describes lax cylinders could then describe pseudo ones by marking some generators invertible, so a single shape language serves both.
+
+## 6. What would count as a solution
+
+Any of the following:
+- a proof of C1 for all k and l, or of lemma S3 together with a general-l argument;
+- a counterexample, e.g. specific k and l for which the localisation is not equivalent to Dᵏ × Dˡ;
+- a reference where this is proved, in any model of (∞,n)-categories.

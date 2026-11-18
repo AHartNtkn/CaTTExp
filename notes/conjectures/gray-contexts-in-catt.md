@@ -89,3 +89,16 @@ For G(n) with n ≥ 3, two layerings of an n-molecule may differ by moves that a
 This is a syntactic, "algebraic" form of Chanavat's homotopical pasting theorem. Chanavat's result is about (∞,n)-categories; CaTT's models are Grothendieck–Maltsiniotis weak ω-categories, where the pasting theorem has not been proved.
 
 **Question (G-alg).** Does the conclusion of Chanavat's Thm. 2.52, contractibility of the subdivision poset of a frame-acyclic molecule, imply G(n) for CaTT, through an explicit translation of chains of subdivisions into substituted coherences?
+
+## 4. Why it matters
+
+Gray products of globes are the shapes of lax transformations and their higher analogues. A type theory in the CaTT style can name these shapes as contexts only if their generators can be typed by terms of the theory. G also decides whether allowing coherences over arbitrary frame-acyclic molecules, not just globular pasting schemes, adds anything.
+
+## 5. What would count as a solution
+
+Any of the following:
+- a proof of G(n) for all n (equivalently, conservativity of molecular coh over CaTT);
+- a proof of the bookkeeping step in §3.3 together with a positive answer to G-alg;
+- a counterexample: two composites of a frame-acyclic molecule that are not related by any invertible CaTT cell.
+
+Related: `gray-contexts-steiner.md` asks whether Mikhail's Gray contexts exist and present the Steiner and weak Gray tensors (the *semantic* side). This file asks the *syntactic* question for arbitrary pasting schemes.

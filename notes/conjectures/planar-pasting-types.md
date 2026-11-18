@@ -70,3 +70,13 @@ It does **not** extend naively to the mapping (∞,ω)-categories, whose higher 
 - k-cells of Fun(A ⊗ B, C) are maps out of A ⊗ B ⊗ Dᵏ, with the (A⊗B)–Dᵏ mixed cells inverted.
 
 **Question PL-ω.** Is there a class of "Gray pasting types" with the following property: the ω-dimensional coherence rule over them generates exactly the cells of the free monoidal biclosed (∞,ω)-category on a set of objects, with each higher cell's "time" direction tracked as a tensor position in this sense? A first test case: is there a pasting-type criterion whose 2-cells are exactly the lax naturality cells of evaluation, Fun^lax(B, C) ⊗ B → C, and which does not also produce their inverses?
+
+## 5. Why it matters
+
+Cartesian closed structure has an unbiased presentation in which all structure maps and laws come from a single contractibility rule (Mimram). The Gray tensor product, which governs lax transformations, is closed but neither symmetric nor cartesian. §2 shows that the 1-dimensional planar analogue works, with linearity built in. The open parts decide whether the same pattern scales to tensors and units, and to higher dimensions, where closure is only an equivalence on mapping spaces.
+
+## 6. What would count as a solution
+
+Any of the following:
+- for PL1, a proof, a counterexample, or a reference (non-commutative MLL coherence for balanced sequents);
+- for PL-ω, a candidate criterion that passes the evaluation test case, or an argument that no pasting-type criterion can avoid producing inverses.

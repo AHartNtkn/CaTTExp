@@ -6,6 +6,127 @@
 
 ---
 
+## Practical gains and losses
+
+This section answers one question: what can a user write, construct and prove under each option, and how much bookkeeping does each force? The technical comparison starts at §0.
+
+The three options, in one line each:
+- **P:** plain CaTT. The ambient's 2-cells are pseudo transformations.
+- **Two-tier L:** the ambient's 2-cells are lax transformations. Inside each object, plain CaTT.
+- **Uniform L:** like two-tier L, but composition is laxly interchanged inside objects too.
+
+A "mark" below means an annotation the user writes, such as "this cell is pseudo" or "this object is an ordinary ω-category". Under it, coh treats the relevant interchange cells as invertible.
+
+### Example 1: a lax transformation and its naturality cell
+
+Take F, G : B → C, an element x of B (a map ⊤ → B), and an arrow f : x ⇒ y of B.
+
+**P.** A lax transformation is not a cell. The user declares
+
+```
+α  : B → [⟦D¹⟧, C]ₗₐₓ
+e₀ : ev₀ ∘ α ≅ F        e₁ : ev₁ ∘ α ≅ G          (invertible 2-cells)
+```
+
+- **Component at x.** First take (α ∘ x)♭ : ⟦D¹⟧ → C. This is an arrow of C from ev₀(αx) to ev₁(αx). It becomes an arrow F x → G x only after composing with (e₀x)⁻¹ and e₁x.
+- **Naturality at f.** First take (α ∘ f)♭ : ⟦D¹ ⊗ D¹⟧ → C, a lax square. Then extract its 2-cell generator and whisker it with e₀ and e₁ at x and y.
+- So every use goes through two transport isomorphisms and the Λ/♭ rule.
+
+**Two-tier L and uniform L.**
+
+```
+α   : F ⇒ G                                   (a context variable)
+α_x := α ∘ x                                  (whiskering coh)
+α_f := the interchange coh of α with f        (one term; the reverse direction is rejected)
+```
+
+**Verdict:** L is one line, P is about five steps with two isomorphisms carried through. If α is a *pseudo* transformation, P is one line (α is a variable and naturality is a coh in both directions). Two-tier L is then one line plus a "pseudo" mark on α.
+
+### Example 2: composing lax transformations
+
+Take α : F ⇒ G and α′ : G ⇒ G′, both from B to C, and β : H ⇒ K from C to D.
+
+**Vertical composite α′·α.**
+- **P.** Four steps:
+  1. Pair α and α′ into B → [D¹, C] ×_C [D¹, C]. This is a pullback map, and it needs an isomorphism ev₁α ≅ ev₀α′ built from e₁ and e₀′.
+  2. Identify the result with [D¹∨D¹, C].
+  3. Restrict along the composite D¹ → D¹∨D¹.
+  4. Build the new endpoint isomorphisms.
+
+  Associativity and unit laws are restrictions along coherences, followed by comparing the endpoint data.
+- **L.** α′·α is a coh. Associativity and units are coh.
+
+**Horizontal composite of α and β.**
+- **P.** Compose [D¹, β] ∘ α : B → [D¹, [D¹, D]]. Curry to [D¹⊗D¹, D], then restrict along one of the two diagonal paths of the square. The interchange between the two choices is restriction along the square's 2-cell. Endpoint isomorphisms for HF and KG are built by whiskering the e's.
+- **L.** Write (βG)·(Hα) or (Kα)·(βF), one coh each. The directed interchanger between them is one more coh.
+  - The user must pick one of the two. Laws such as middle-four interchange then hold in one direction only.
+  - If β or α is marked pseudo, the two choices become interchangeable.
+
+**Verdict:** for lax transformations L turns a multi-step universal-property construction into single coherences, and P never lets coh see these laws. The cost of L is choosing an order for horizontal composites.
+
+### Example 3: comma objects and lax slices
+
+- **All three options.** f ↓ g, the lax slice C//c, and other lax or partially lax limits are the same cone context (Mikhail's rules plus markings). Constructing them, and their 1-dimensional universal property, look the same.
+- **Where they differ: the 2-dimensional universal property.**
+  - Under P, the cells of Hom(X, f ↓ g) are built from pseudo transformations. The question "what does a *lax* transformation into C//c correspond to?" can be asked only through [D¹, –]ₗₐₓ again.
+  - Under L it is a direct statement about native cells.
+
+**Verdict:** for building limits, a wash. L only matters once lax transformations are mapped into them.
+
+### Example 4: adjunctions and monads between ω-categories
+
+The standard notions (adjunction L ⊣ R : A ⇄ B, monad T on C) use pseudo transformations for η, ε, μ.
+
+- **P.** Written exactly as in CaTT, with no annotations. Triangle laws and higher coherences (the swallowtail; associativity of μ at arity 4, which uses μ ⋆ μ) are cohs, and horizontal composites like μ ⋆ μ are canonical.
+- **L, unmarked.** η, ε and μ are lax, so the user gets a weaker notion: a "lax adjunction" or "lax-natural monad". All of its theorems also hold for real adjunctions and monads. But some standard theorems need invertible naturality and fail for it, for example the hom-isomorphism Hom(Lx, y) ≅ Hom(x, Ry) being natural in both variables. The higher coherences involve μ ⋆ μ and η ⋆ ε, which have two non-equivalent layerings, so the user must write them in a specific orientation.
+- **L, with "pseudo" marks on η, ε, μ.** Behaves like P. The cost is one mark per structure cell, plus a marking-propagation rule that makes every interchanger involving them invertible.
+- **Gained by L:** monads and adjunctions whose structure cells are genuinely lax become statable directly. These are rare in practice.
+
+**Verdict:** P wins on the standard notions. L matches it only with marks. L's advantage here is narrow.
+
+### Example 5: a group or ring (ordinary math)
+
+- **Group.** Present BG as an object from a computad with invertible marks, e.g. BZ from (x, s : x → x) with s invertible. Reasoning about elements of BG (composing, inverting, proving equations) happens *inside one object*.
+  - P and two-tier L: identical, plain CaTT.
+  - Uniform L: horizontal composites inside BG are directed. Every cell of BG is invertible, so with a propagation rule ("an interchanger with an invertible factor is invertible" **[conj]**) nothing changes. Without that rule the user marks BG ordinary.
+- **Ring.** R with + and · : R × R → R (products are finite limits) and equation witnesses: invertible 2-cells between maps R³ → R.
+  - P: those witnesses must be marked invertible anyway, since ambient 2-cells are directed in P too.
+  - Two-tier L: the same marks suffice, given the propagation rule.
+  - Neither option proves R discrete; that needs an h-level discipline in all three.
+
+**Verdict:** P and two-tier L cost the same. Uniform L costs nothing extra *if* invertibility propagates automatically, and one mark per object otherwise.
+
+### Example 6: structure inside an object (where uniform L differs)
+
+A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal composite of two 2-cells.
+
+- **P and two-tier L.** f ⊗ g is a canonical coh, and Eckmann–Hilton and the braiding argument go through as in CaTT.
+- **Uniform L, unmarked.** f ⊗ g has two layerings, (f⊗1)(1⊗g) and (1⊗g)(f⊗1), connected by a directed cell. So BM is a monoidal structure whose ⊗ is only laxly functorial. Ordinary monoidal reasoning needs "BM is ordinary".
+- **Gained by uniform L:** objects whose own composition interchanges only laxly are first class. Examples are monoidal-like structures with a non-invertible interchanger, and ωCat_lax itself (or a lax universe) as an object. P and two-tier L can describe such things only through maps out of Gray tensors.
+
+### What none of the three gives
+
+**Lax functors**, meaning maps preserving composition only up to a directed cell. In all three options functors preserve composition up to invertible cells. Lax functors would need yet another rule (e.g. Gray-shaped "lax functor" contexts) in any of them.
+
+### Gains and losses, side by side
+
+| | **P** | **Two-tier L** | **Uniform L** |
+|---|---|---|---|
+| Lax transformations | 1-cells into [⟦D¹⟧, C]ₗₐₓ plus two endpoint isomorphisms. Every component and naturality cell is unpacked by hand. | context variables; components and naturality are cohs | same as two-tier |
+| Composing lax transformations | universal-map constructions (pullback pairing, currying, restriction); laws not checked by coh | cohs; pick an order for horizontal composites | same |
+| Standard notions (adjunction, monad, equivalence) | exactly as in CaTT | one "pseudo" mark per structure cell, or you get the weaker lax notion | same |
+| Reasoning inside an object (elements, groups, rings) | plain CaTT | plain CaTT | plain CaTT after an "ordinary" mark or automatic propagation; otherwise directed |
+| Objects with lax internal composition | not expressible as objects | not expressible as objects | expressible |
+| Bookkeeping falls on | lax work (heavy) | pseudo work (one mark each) + layering choices | pseudo work + ordinary objects (one mark each) |
+
+### The practical trade-off
+
+- P is cheapest when most transformations are pseudo, which is the case in standard (∞,n)-category theory and ordinary math. It is clumsy wherever lax transformations are the point: lax naturality, lax colimits and Grothendieck constructions, (op)lax twists, lax slices.
+- L reverses this. It moves the annotation cost from lax work to pseudo work.
+- **Surface defaults are a lever.** The kernel can be uniform L while the surface syntax assumes "objects are ordinary, transformations are pseudo, unless declared lax". The user then writes P-style code for standard work and opts into laxness where it matters. The kernel cost is the marking and propagation machinery, which P also needs for marked limits.
+
+---
+
 ## 0. Summary
 
 1. **The target is not an ω-category.** The ω-category of ω-categories with lax transformations is a category *enriched over ωCat with the lax Gray tensor*, which Gepner–Heine call an **oriented category** ([2510.10504](https://arxiv.org/abs/2510.10504), §1.8, with ∞Cat's hom-objects being Fun^lax(S, T)) **[paper, intro level]**. A CaTT model is enriched over the *cartesian* product. So under P the ambient is a different object (ωCat with pseudo transformations), and the lax one appears only as a family of objects and maps inside it.

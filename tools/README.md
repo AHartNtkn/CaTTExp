@@ -8,7 +8,7 @@ These Python scripts *generate* CaTT terms, which are then checked by the certif
 - `ladder.py`: the cylinder `L(Q)` of a chain, BMOSV-style lifts of binary composites, and the associator's naturality 3-cell (C1b).
 - `unitor.py`, `exch_test.py`: the other generated checks.
 - `rc3_square.py`, `rc3_pair.py`: checks for RC(3) on the lax square (`notes/relative-coherence.md` §7.4–7.5) and the generalised active-column factorisation on the composable-pair cylinder.
-- `rc3_wedge.py`: the cut-vertex reduction for Y = {x, f, g} on x → y → z (§7.6). `rc3_chain.py`: the round-5 chain-cylinder constructors for x₀ → ⋯ → x₃ (§7.7). Run either with `emit` to write its module.
+- `rc3_wedge.py`: the cut-vertex reduction for Y = {x, f, g} on x → y → z (§7.6). `rc3_chain.py`: the round-5 chain-cylinder constructors for x₀ → ⋯ → x₃ (§7.7). Run either with `emit` to write its module, or with `neg` to write a negative control (`NegWedge.agda`, `NegChain.agda`, not committed) that Agda must reject.
 - `emit_agda.py`: writes a module with hash-consed definitions (one Agda definition per distinct subterm).
 
 Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are not imported by `Everything.agda`, because they take minutes to check.

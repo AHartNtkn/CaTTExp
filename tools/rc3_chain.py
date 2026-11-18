@@ -268,9 +268,21 @@ def emit_module():
     open('../src/CaTTExp/Generated/ChainCylinderRC3.agda', 'w').write(src)
     print('emitted', len(E.defs), 'definitions,', len(E.checks), 'checks')
 
+def emit_negative():
+    """Negative control: mu_{(3),(2,1)} at its type with source and target
+    swapped.  Agda must reject src/CaTTExp/Generated/NegChain.agda."""
+    from emit_agda import Emitter
+    m_, ty = mu((3,), (2, 1), lnest(P_edges(3, 0, 3)), rnest(P_edges(2, 0, 3)),
+                lnest(P_edges(0, 0, 3)), 0, 3)
+    E = Emitter(); E.check_type('bad', C, m_, arr(ty[1], ty[3], ty[2]))
+    open('../src/CaTTExp/Generated/NegChain.agda', 'w').write(
+        E.module('CaTTExp.Generated.NegChain', 'Negative control: must be rejected.'))
+
 if __name__ == '__main__':
     import sys
     if sys.argv[1:] == ['emit']:
         emit_module()
+    elif sys.argv[1:] == ['neg']:
+        emit_negative()
     else:
         main()

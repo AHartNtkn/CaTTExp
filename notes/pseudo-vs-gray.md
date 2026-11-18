@@ -427,6 +427,8 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 - **[conj]** On a single hom (n = 1), supp coincides with Finster–Mimram's Var. The intuition is that the free strict ω-category on a pasting scheme has no cancellation, so a variable used by a term stays in the support of its strict image.
 - This is the same "linearity / no cancellation" principle that the survey (§13) identifies as recurring.
 
+*Convention, as formalized (`notes/agda-gray-findings.md`).* "Its iterated boundaries" means the cells in t's type, read type-directedly like Var(t : A). Side conditions compare the *downward closures* of these sets in K(Γ), as in §3.6. The table support alone, i.e. the union of the chains of ⟦t⟧'s table, is not enough here. For example, in D¹ ⊗ D¹ the 0-cells f⊗g′ and f′⊗g occur only in boundaries of atoms, so they are absent from the table support of the total cell but present in its closure, which is all of U. The same holds for single homs: in f ⇒ g ⇒ h the middle 1-cell g is absent from the table support of the vertical composite, so supp = Var on a single hom (§3.2 [conj]) can only hold for closed supports.
+
 ### 3.3 The rule
 
 ```
@@ -439,6 +441,7 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 ```
 
 - ∂^± are taken in the molecule U_{ij} at dimension dim U_{ij} − 1, with all lower boundaries.
+- *As formalized:* the operation case also checks dim A = dim U_{ij} explicitly. For A = ⋆ (composites of 1-cells and identities), the condition is dim U = 0, t = a₀, u = aₙ. Both cases compare downward closures (§3.2 convention). Implemented and checked in `src/CaTTExp/Gray/`.
 - Composites and coherences relate the endpoints a₀ and aₙ, so in practice (i, j) = (0, n). The general indexing is for sub-terms.
 - **The dimension changes.** The operation case over Γ produces a cell of 𝒦-dimension 1 + Σᵢ dim Θᵢ, not dim Γ.
 
@@ -464,7 +467,8 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 
 **The Gray cube.** Take Γ = ΣD¹ ∨ ΣD¹ ∨ ΣD¹. Then U is the 3-cube, and its top generator is a 4-cell of 𝒦 between the two hexagonal composites of interchangers.
 
-- Each hexagon is a vertical composite of whiskered interchangers. Each interchanger is a coh over a two-factor sub-wedge, substituted. So **the source and target are ordinary terms over pasting schemes.**
+- Each hexagon is a vertical composite of whiskered interchangers, plus associators to match bracketings. Each interchanger is a coh over a sub-wedge with one point factor (e.g. ΣD¹ ∨ ΣD¹ ∨ ΣD⁰), substituted. So **the source and target are ordinary terms over pasting schemes.**
+- *Checked in Agda* (`src/CaTTExp/Gray/Cube.agda`). The ∂⁻ hexagon uses faces fβγ, αg′γ, αβh; the ∂⁺ hexagon uses αβh′, αgγ, f′βγ. hex⁻ ⇛ hex⁺ is accepted as one operation-case coh, and the reverse coh's side condition is false.
 - No coh over a non-pasting context is needed. The Gray molecules appear only in the side-condition computation.
 - This corrects PR #3 §4.3's expectation that a Gray core forces "molecular coh" into the kernel.
 
@@ -516,7 +520,9 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 
    So on a single hom, the rule *is* Finster–Mimram's rule, and L restricted to one hom is CaTT. The existing Agda checker is that fragment.
 
-**What is proved outright** (no lemma needed): the decidability of the side condition, the non-degeneracy argument in 2, and substitution admissibility. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
+**What is proved outright** (no lemma needed): the decidability of the side condition, the non-degeneracy argument in 2, and substitution admissibility. *Formalization status (`notes/agda-gray-findings.md`):*
+- Machine-checked: decidability (by construction), substitution admissibility (`CaTTExp.Subst`, for every side condition), and that the reverse interchanger *coh* has no derivation.
+- Not yet formalized: that no *term* inhabits the reverse type (2, which needs the strict interpretation and (B)), and conservativity (3), which is checked only on examples. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
 
 **Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`. *Literature update (2026-11-18): (D) and (E) are known (Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5; Chanavat, arXiv 2603.22242, Thm 3.29), and (F) follows. So the hypotheses (D)–(F) of Theorem 2 are discharged; see that file's "Literature status".*
 

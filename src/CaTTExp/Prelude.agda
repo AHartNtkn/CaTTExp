@@ -19,6 +19,10 @@ data ⊥ : Set where
 ⊥-elim : ∀ {a} {A : Set a} → ⊥ → A
 ⊥-elim ()
 
+infix 3 ¬_
+¬_ : ∀ {a} → Set a → Set a
+¬ A = A → ⊥
+
 infixr 2 _×_
 _×_ : ∀ {a b} (A : Set a) (B : Set b) → Set (a ⊔ b)
 A × B = Σ A (λ _ → B)

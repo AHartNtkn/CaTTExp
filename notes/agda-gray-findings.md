@@ -110,7 +110,7 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
 
 ## Not yet proved
 
-- **The non-negativity bridge.** Supports are computed on sets: the support of a sum is the union, and the support of a tensor is the product. This is correct only if every chain involved has non-negative coefficients. They do: T's chains are sums of basis elements, and F_σ maps basis elements to supports of top chains of the same kind. But this is argued in `Gray/Support.agda`'s header, not proved in Agda; the integer chains are never built. The side condition as implemented is a precise decidable rule either way. The bridge is needed only to connect it to the strict model, i.e. for Theorem 1 soundness.
+- **The non-negativity bridge.** *Now done* (2026-11-18): the strict layer keeps chains as bags, so they are non-negative by construction, and `Strict/Subst.topS-sub` proves that the set-level supports of `Gray/Support.agda` are the supports of these chains (see the last section).
 
 - **Conservativity on a single hom.** For Γ = ΣΘ, L's side condition should equal Finster–Mimram's. This splits into two halves.
   - *Rule-level half: checked for all small diagrams.* The closed supports of T, ∂⁻T and ∂⁺T must be exactly the non-object variables of Γ, ∂⁻Γ and ∂⁺Γ, using PR #4's `srcVars`/`tgtVars`. `Gray/Bounded.agda` checks this by evaluation for all 196 pasting diagrams Θ with 1–6 edges, and checks that the test distinguishes ∂⁻ from ∂⁺ on each. It also checks, for every pasting context with 1–5 edges and any number of homs, that ↓Supp(T) is all of K(Γ).
@@ -119,5 +119,26 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
   - The inclusion ⊇ is where a proof gets stuck. F_σ does not commute with downward closure when σ sends a cell to an identity-like term, i.e. a coherence-case coh, whose top support is empty. Then F_σ(α) = ∅ while F_σ(∂α) ≠ ∅. Example: the middle 1-cell g of f ⇒ g ⇒ h lies in the closure of the vertical composite's support but not in its table support.
   - So the induction needs the invariant "a derivable cell with empty top support has boundaries with equal closed supports". That is the support-level shadow of "coherence-case cohs are identities in the strict model", i.e. of Theorem 1 soundness, which needs lemma (B).
   - **Finding:** conservativity (Thm 1(3)) and non-degeneracy (Thm 1(2)) share one missing layer, the strict interpretation with (B). They are not independent proofs, as §3.6 suggests for (3).
-- **Non-derivability of the reverse interchanger as any term** (Theorem 1(2)). What is proved is that the reverse *coh* has no derivation. Excluding every composite term needs strict-model soundness. That needs integer chain tables, chain maps for substitutions, and lemma (B) "support determines the cell", which is known in the literature (Hadzihasanovic) but not formalized. The plan is soundness as an Agda theorem with (B) as an explicit hypothesis.
-- **Validation against the strict model on examples** (chain-level, not just supports): not done. It needs the same integer-chain layer.
+- **Non-derivability of the reverse interchanger as any term** (Theorem 1(2)): *now proved, with two explicit hypotheses* (see the next section). The integer-chain layer is avoided: chains are bags (non-negative by construction), and the chain equation is written additively, ∂⁺c + x⁻ = ∂⁻c + x⁺.
+- **Validation against the strict model on examples** (chain-level): *now done* for the total cell, by `Strict/CheckCells.agda` on 18 pasting contexts, and in general for every derivable term, given the two hypotheses (last section).
+
+## Strict-model soundness (`src/CaTTExp/Strict/`)
+
+*Added 2026-11-18.* The strict interpretation of two-tier L in Steiner's ν(K(Γ)) is formalized.
+
+- `Strict/Cell.agda`: cells of ν(K) for an abstract complex with a basis (Steiner 2004 Def. 2.8), as towers of bags; transport of cells along chain maps.
+- `Strict/Complex.agda`: K(Γ) hom by hom, basis = composable tuples of hom cells, boundary by the Leibniz rule.
+- `Strict/Subst.agda`: top supports commute with substitution, topS(t[σ]) ≈ F_σ(topS t). This replaces lemma (C) by a proof.
+- `Strict/L.agda`: every variable of a pasting context is a cell; a cellular substitution induces a chain map, which sends cells to cells.
+- `Strict/Soundness.agda`: `sound-tm`, every derivable term t : A over a pasting context is a cell of ν(K(Γ)) with t's table.
+- `Strict/ReverseInterchanger.agda`: `no-reverse-interchanger`, no term of any shape has type (α▷g);(f′◁β) ⇛ (f◁β);(α▷g′) over ΣD¹ ∨ ΣD¹. The proof counts f′⊗β on both sides of the chain equation: |c| + 1 against 0.
+
+The hypotheses are module parameters, so every use of them is visible in the types:
+- **(T-cell)** the total cell built from `chainT` is a cell between the context's first and last object (Ara–Maltsiniotis, arXiv 1607.00668, §A.16, Prop. 4.13). `Strict/CheckCells.agda` checks it by evaluation, with a checker proved sound, on 18 pasting contexts (ΣDⁿ for n ≤ 3, wedges of up to four ΣD¹, mixed dimensions, a point factor, composite homs);
+- **(B-supp)** cells of ν(K(Θ)) of the same dimension in the same hom with equal downward-closed supports are equal (Hadzihasanovic, arXiv 2404.07273; proved for every Steiner complex in `conjectures/steiner-support-determines-cells.md`).
+
+- **(D-hyp)**, added when PR #68 changed the side condition to compare downsets on generators (`sameDown`): for a pasting context Δ and t, u : A derivable over it, `hypSide Δ A t u` holds (Δ graded, and the supports and tables compared have rank ≤ dim K(Δ)). By `Gray/DownAgree.agda` this turns each generator comparison into the closure equality that (B-supp) is stated with. Unlike (T-cell) and (B-supp), this is a fact about the formalization itself, decidable, checked on the interchanger, the horizontal composite and the Gray cube, and to be proved (ledger E1).
+
+(T-cell) and (B-supp) are true statements in the literature; what the formalization takes on trust is that `chainT` and `down` compute the objects those statements are about.
+
+An independent review (2026-11-18) checked that the development builds from scratch under `--safe` with no postulates, that `IsCell` is Steiner's Def. 2.8 and `∂T` the Leibniz rule with `chainT`'s sign convention, that `towerOf` reads the whole boundary from the type (so `IsCellTm` is not trivially satisfiable), and that both hypotheses are true as stated.

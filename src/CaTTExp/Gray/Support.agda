@@ -281,9 +281,9 @@ bdEl cs w with findEl w cs
 ... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
 
 -- Codimension-1 faces of a tuple.
-faces : List El → Tuple → TSet
-faces cs []       = []
-faces cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (faces cs ws)
+facesT : List El → Tuple → TSet
+facesT cs []       = []
+facesT cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (facesT cs ws)
 
 nubT : TSet → TSet
 nubT []       = []
@@ -291,7 +291,7 @@ nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
 
 closeN : Nat → List El → TSet → TSet
 closeN zero    cs S = S
-closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (faces cs) S))
+closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (facesT cs) S))
 
 down : Ctx → TSet → TSet
 down Γ S = closeN (dimK (homs Γ)) (cells Γ) (nubT S)

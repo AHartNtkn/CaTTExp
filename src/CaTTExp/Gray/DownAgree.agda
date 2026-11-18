@@ -199,38 +199,38 @@ module Faces (cs : List El) where
   ----------------------------------------------------------------------
   -- closeN is the bounded reachability closure.
 
-  faces⇒ : ∀ x {y} → y ∈L faces cs x → Step x y
+  faces⇒ : ∀ x {y} → y ∈L facesT cs x → Step x y
   faces⇒ (w ∷ ws) m with any-++⁻ (map (_∷ ws) (bdEl cs w)) m
   ... | inj₁ a with any-witness (any-map⁻ (_∷ ws) (bdEl cs w) (subst (Any _) (map≡ (_∷ ws) (bdEl cs w)) a))
   ...   | b , mb , refl = sh mb
   faces⇒ (w ∷ ws) m | inj₂ a
-    with any-witness (any-map⁻ (w ∷_) (faces cs ws) (subst (Any _) (map≡ (w ∷_) (faces cs ws)) a))
+    with any-witness (any-map⁻ (w ∷_) (facesT cs ws) (subst (Any _) (map≡ (w ∷_) (facesT cs ws)) a))
   ... | y' , my , refl = st (faces⇒ ws my)
 
-  faces⇐ : ∀ {x y} → Step x y → y ∈L faces cs x
+  faces⇐ : ∀ {x y} → Step x y → y ∈L facesT cs x
   faces⇐ {w ∷ ws} (sh {b = b} mb) =
     any-++l (subst (Any _) (sym (map≡ (_∷ ws) (bdEl cs w))) (any-map⁺ (_∷ ws) (any-mono (λ { refl → refl }) mb)))
   faces⇐ {w ∷ ws} (st s) =
     any-++r (map (_∷ ws) (bdEl cs w))
-      (subst (Any _) (sym (map≡ (w ∷_) (faces cs ws))) (any-map⁺ (w ∷_) (any-mono (λ { refl → refl }) (faces⇐ s))))
+      (subst (Any _) (sym (map≡ (w ∷_) (facesT cs ws))) (any-map⁺ (w ∷_) (any-mono (λ { refl → refl }) (faces⇐ s))))
 
   private
     nextS : TSet → TSet
-    nextS S = nubT (S ++ concatMap (faces cs) S)
+    nextS S = nubT (S ++ concatMap (facesT cs) S)
 
     next⇒ : ∀ S {y} → y ∈L nextS S → y ∈L S ⊎ (Σ Tuple λ s → s ∈L S × Step s y)
-    next⇒ S m with any-++⁻ S (nub⇒ (S ++ concatMap (faces cs) S) m)
+    next⇒ S m with any-++⁻ S (nub⇒ (S ++ concatMap (facesT cs) S) m)
     ... | inj₁ a = inj₁ a
-    ... | inj₂ b with any-witness (any-cm⁻ (faces cs) S (subst (Any _) (cm≡ (faces cs) S) b))
+    ... | inj₂ b with any-witness (any-cm⁻ (facesT cs) S (subst (Any _) (cm≡ (facesT cs) S) b))
     ...   | s , ms , my = inj₂ (s , ms , faces⇒ s my)
 
     next-S : ∀ S {y} → y ∈L S → y ∈L nextS S
-    next-S S m = nub⇐ (S ++ concatMap (faces cs) S) (any-++l m)
+    next-S S m = nub⇐ (S ++ concatMap (facesT cs) S) (any-++l m)
 
     next-F : ∀ S {s y} → s ∈L S → Step s y → y ∈L nextS S
     next-F S ms st' =
-      nub⇐ (S ++ concatMap (faces cs) S)
-        (any-++r S (subst (Any _) (sym (cm≡ (faces cs) S)) (any-cm⁺ (faces cs) (any-at ms (faces⇐ st')))))
+      nub⇐ (S ++ concatMap (facesT cs) S)
+        (any-++r S (subst (Any _) (sym (cm≡ (facesT cs) S)) (any-cm⁺ (facesT cs) (any-at ms (faces⇐ st')))))
 
   close⇒ : ∀ n S {x} → x ∈L closeN n cs S → InClo n S x
   close⇒ zero    S {x} m = x , m , 0 , z≤n , done
@@ -390,3 +390,31 @@ hypSide Θ A@(arr _ _ _) t u =
   gradedB (cells Θ) ∧
   all (rankB (cells Θ) (dimK (homs Θ)))
       (supp t A ∷ supp u A ∷ fullT (homs Θ) ∷ bdryT false (homs Θ) ∷ bdryT true (homs Θ) ∷ [])
+
+-- Under hypSide, each of the four comparisons of the side condition
+-- may be read as closure equality.
+module HypSide (Θ : Ctx) (B : Ty) (s s' t u : Tm) (h : T (hypSide Θ (arr B s s') t u)) where
+  private
+    A  = arr B s s'
+    hs = homs Θ
+    cs = cells Θ
+    N  = dimK hs
+    Ls = supp t A ∷ supp u A ∷ fullT hs ∷ bdryT false hs ∷ bdryT true hs ∷ []
+
+    clo : ∀ {S F} → Any (S ≡_) Ls → Any (F ≡_) Ls → T (sameDown Θ S F) → T (sameDownClosure Θ S F)
+    clo {S} {F} mS mF p =
+      subst T (sameDown≡Closureᴮ Θ S F (∧-fst h)
+                 (All-T (rankB cs N) Ls (∧-snd {gradedB cs} h) mS)
+                 (All-T (rankB cs N) Ls (∧-snd {gradedB cs} h) mF)) p
+
+  coh-t : T (sameDown Θ (supp t A) (fullT hs)) → T (sameDownClosure Θ (supp t A) (fullT hs))
+  coh-t = clo (here refl) (there (there (here refl)))
+
+  coh-u : T (sameDown Θ (supp u A) (fullT hs)) → T (sameDownClosure Θ (supp u A) (fullT hs))
+  coh-u = clo (there (here refl)) (there (there (here refl)))
+
+  op-t : T (sameDown Θ (supp t A) (bdryT false hs)) → T (sameDownClosure Θ (supp t A) (bdryT false hs))
+  op-t = clo (here refl) (there (there (there (here refl))))
+
+  op-u : T (sameDown Θ (supp u A) (bdryT true hs)) → T (sameDownClosure Θ (supp u A) (bdryT true hs))
+  op-u = clo (there (here refl)) (there (there (there (there (here refl)))))

@@ -233,6 +233,8 @@ Write `p := f⁻ ∗₀ y↑` and `q := x↑ ∗₀ f⁺`, so that `f↑ : p →
 
 Composing these cells, with reassociations from (F1), gives `L → R`. ∎
 
+*Machine-checked (2026-11-18):* `src/CaTTExp/Free/LeftUnitorDepth2.agda` builds this 3-cell, with (id_x ∗₀ f)↑ given by an explicit depth-1 naturality term for binary composition substituted with ι, and the certified checker accepts it with type `L → R`.
+
 **Why this works.** After f↑ is slid out of the way, every remaining comparison involves 2-cells between composites along a single path through the square. On a 1-dimensional Q, every such path is a chain, hence a pasting context, so (F1) applies.
 
 ### Proposed induction

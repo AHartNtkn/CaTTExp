@@ -1,3 +1,4 @@
+{-# OPTIONS --guardedness #-}
 -- Typecheck this file to check the whole development.
 module Everything where
 
@@ -14,3 +15,7 @@ import CaTTExp.Check
 import CaTTExp.Pure
 import CaTTExp.Examples
 import CaTTExp.Sketch.Representables
+import CaTTExp.Free.Reflect
+import CaTTExp.Free.Builders
+import CaTTExp.Free.Cylinder
+import CaTTExp.Free.LeftUnitorDepth2

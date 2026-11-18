@@ -180,7 +180,7 @@ U ∈ 𝓜    U ⊢ t →_A u    Δ ⊢ σ : U
 - **G(1)** is proved.
 - **Existence in G(2)** is proved, using Chanavat's result that all molecules of dimension ≤ 3 are frame-acyclic. So **every Gray generator of dimension ≤ 3 has a plain-CaTT type**, including the Gray cube.
 - **Uniqueness in G(2)** is proved (Theorem A of `relative-coherence.md`: parallel 2-terms with equal strict image are connected, in any context). **Existence in G(3)** follows, so every Gray generator of dimension 4 has a plain-CaTT type.
-- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It is posed for researchers in `conjectures/outbox/gray-contexts.md`.
+- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It was posed to researchers; the first response (verified, `conjectures/answered/gray-contexts-2026-11-18.md`) settles special cases of RC(3) only.
 
 ---
 

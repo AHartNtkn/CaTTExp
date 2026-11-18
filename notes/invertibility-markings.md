@@ -52,7 +52,7 @@ plus ICaTT's destructors as **term formers without equations**:
 
 (The names t⁻ˡ etc. are ICaTT's linv(e), …, with the evidence e erased: since inv is a judgment, the destructors depend on t only. There is no β or η, so there is nothing for ICaTT's can/rec equations to say.)
 
-**Marked declarations.** A context may declare a variable with marks: `(x : A)^inv`, `(x : A)^ps`, and for objects `(C : ★)^{grpd_k}` (k ≥ 1). Rules: `(x:A)^m ∈ Γ ⇒ Γ ⊢ x m`. A substitution `Δ ⊢ γ : Γ` must send every marked variable to a term with the same mark: `Δ ⊢ x[γ] m`. This is the marked-computad style of Benjamin–Champin–Markakis (`icatt-and-rice-rules.md` §3).
+**Marked declarations.** A context may declare a variable with marks: `(x : A)^inv`, `(x : A)^ps`, and for objects `(C : ★)^{grpd_k}` (k ≥ 1). Rules: `(x:A)^m ∈ Γ ⇒ Γ ⊢ x m`. A substitution `Δ ⊢ γ : Γ` must send every marked variable to a term with the same mark: `Δ ⊢ x[γ] m`. This is the marked-computad style of Benjamin–Champin–Markakis (`icatt-and-rice-rules.md` §3). *Precision from the Agda encoding (PR #41):* a variable marked `grpd_k` must be sent to an object **variable** marked `grpd_k′` with k′ ≤ k, since (OBJ-k) reads the mark off the object variable and object constants carry no marks.
 
 **Propagation rules.** Below, `Δ ⊢ coh_{Γ,A}[γ] : A[γ]` is an L-coh (operation or coherence case), and g ranges over the generators of U(Γ) of the top dimension D := dim U(Γ) (in the op-case, hd of the coh is D; in the coherence case it is D + 1).
 
@@ -273,6 +273,10 @@ So under L the honest statement is: **strict CT is false from dimension 3 (three
 **Restated question (E9′) [conj].** Is the L side condition decidable in time polynomial in the DAG size (with sharing) of the term and its type? The recursion of observation 1 visits the iterated sources of the type, and those have top chains of size up to C(n, n/2). So the procedure is polynomial if and only if terms of polynomial DAG size cannot have types whose iterated sources have exponentially large top chains, which needs a lower bound on the size of terms denoting the k-source of the n-cube. Open; the natural experiment (time the checker on Γₙ for n = 1…8) is passed to the L-core Agda thread.
 
 ---
+
+**Measurement (L-core thread, 2026-11-18, PR #41).** The explicit closed-support check on ΣD¹ ∨ … ∨ ΣD¹ (↓∂⁻T of size 3ⁿ − 2ⁿ, ↓T of size 3ⁿ) took 0.34 s, 0.27 s, 0.32 s, 0.70 s, 5.3 s, 58 s for n = 1…6. For n = 7 it was still running after 11 minutes. From n = 4 on, each step costs about 9×, i.e. roughly (3ⁿ)², because the explicit supports have size 3ⁿ and the set operations are quadratic. This confirms in practice that explicit supports are exponential. It says nothing yet about E9′, which needs a representation that never materialises ↓T.
+
+**Candidate for E9′.** For a wedge, ∂^±U and U are unions of at most n *boxes* (products of down-closed sets, one per factor; Leibniz formula). If the supports of terms can be kept as short unions of boxes, closed under substitution, and compared factorwise, the check is polynomial. The risk: deciding whether a union of boxes equals a given box is coNP-hard in general (it is DNF tautology when every factor is a 2-element chain). So the question becomes whether the unions that arise from valid terms stay structured, for example as layerings. Open; owned here.
 
 ## 6. Surface defaults (E10), settled by counts
 

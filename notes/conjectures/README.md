@@ -20,6 +20,9 @@ Each file has the same parts:
 | `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | `limits-representables.md` §10.3 |
 | `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | `limits-representables.md` §10.4 |
 | `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | `limits-representables.md` §10.5 |
+| `steiner-support-determines-cells.md` | In free strict ω-categories on Steiner complexes (e.g. Gray tensors of pasting diagrams), are cells determined by their dimension and set of generators? | `pseudo-vs-gray.md` §3.6, lemmas (A)–(C) |
+| `free-infinity-gray-of-pasting-diagrams.md` | Are Gray tensors of globular pasting diagrams free as (∞,n)-categories (scope of Campion's pasting theorem)? | `pseudo-vs-gray.md` §3.6, (D)–(F) |
+| `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by generators. | `pseudo-vs-gray.md` §2.5, §3.6 |
 | `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | `internal-hom.md` §5.5 |
 | `gray-contexts-in-catt.md` | Do frame-acyclic molecules (e.g. boundaries of Gray generators) have composites in CaTT, unique up to invertible cells? | `internal-hom.md` §4.3 |
 | `planar-pasting-types.md` | Unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dim proved); tensor/unit and ω-version open | `internal-hom.md` §5.7 |

@@ -680,3 +680,26 @@ q*_3N_C\ \Longrightarrow\ N_B
 \qquad(q:B\Longrightarrow C).
 \]
 The 4-dimensional fusion used above does not supply that theorem.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** the vertical case of Question 1, in a stronger form. RC(3) holds for Cone(Q_m; c) for every finite vertical chain Q_m of 2-disks, so in particular for Cone(D² ∗₁ D²; c). With RC(1) and RC(2), a cone cell exists over every 3-dimensional coherence whose arity is a vertical chain Q_m.
+- **Open:** the horizontal case Cone(D² ∨ D²; c), Questions 2–4.
+- **New observation:** RC(4) needs a 5-dimensional compatibility q ∗₃ N_C ⇛ N_B for the chosen 3-normalisers; the 4-dimensional fusion does not give it.
+
+Checked step by step:
+
+1. **Setup.** From the cone rule, p_{f_i} : p_y ⇒ p_x ∗₀ f_i gives u_i : b ⇒ F_i, and p_{α_i} : p_{f_i} ⇛ p_{f_{i−1}} ∗₁ (p_x ∗₀ α_i) gives M_i : u_i ⇛ u_{i−1} ∗₁ A_i. This matches §1.
+2. **Strict 2-cells c → y.** The only 2-cells c → x are identities (no 2-generator lies over a, the only 1-cell c → x). So the 2-cells c → y are vertical paths in the graph u_i : b → F_i, A_i : F_{i−1} → F_i. A path from b starts with exactly one u_i and continues with consecutive A's, so the list 1_b, R_ij, W_ij is complete.
+3. **Strict 3-cells.** M_i's source is the single letter u_i, which occurs only at the start of a word W_ij. No nonidentity 2-path ends at b, so left 2-whiskers are identities. The base has no 3-generators, so nothing else interchanges with M_i. The rewriting graph for fixed j is the chain W_jj → … → W_0j, so the nonidentity strict 3-cells are the c^j_{iℓ} with the generator order (1). No two nonidentity 3-cells compose along a 1-cell (1-sources are b, 1-targets F_j), and 0-whiskers are point units.
+4. **Representatives.** The associator in (2) is needed: M_i ∗₁ r_ij ends at (u_{i−1} ∗₁ A_i) ∗₁ r_ij, while w_{i−1,j} is right-associated. The types of S_i^j are correct.
+5. **RC(3, K_m), §2.** The pasting-supported cases are right: the support of R_ij is c, x, y, a, f_i … f_j, α_{i+1} … α_j, which is the pasting context D¹(a) ∗₀ Q_[i,j], and parallel terms with that full support are joined by one coherence. For the word W_ij, u_i occurs once in the strict image, so exactly one formal 2-generator of the arity carries it. Its 0-column spans c → y, and every other column is a point column at c or y (no nonidentity 1-cells c → c or y → y). This is the round-3 factorisation through one vertical column C_n. In the fusion induction the proper formal arguments have strict images that are consecutive intervals of e_1 … e_n, and after σ they partition the word; exactly one interval contains u_i. The final word comparisons are coherences over C_{j−i+1}, which is a genuine pasting context for every length, so the word-length bound of round 3 disappears. I checked the case list and the dependency order (normalisers, then fusion, then compatibility for arity ≤ 2, then general compatibility). As in round 3, not every 4-cell was written out.
+6. **Sequentialisation, §3.** (10) is a coherence over D³ ∗_k D³ with both sides full. Boundary corrections depend only on terms of dimension ≤ 2, so they lie in K_m. Level-0 frames around an M_i are point-supported (no nonidentity 1-cell enters c or leaves y), and the 3-disc construction of round 3 removes them. The level-1 flattening (11) uses associator naturality in a 2-variable, which is depth 1.
+7. **The generator square (14).** Both sides have source u_i ∗₁ (R ∗₁ R_t) and target (u_{i−1} ∗₁ A_i) ∗₁ r_ij. The arity is D³ ∗₁ D³ (M_i and δ glued along the 1-cell F_i), and both sides use every variable, so the coherence is legal. πL = 1_b and πR = R_ij are forced by item 2. λ and δ in (13) are coherences on the 1-disk b and on D¹(a) ∗₀ Q_[i,j] (or the path a, f_i), justified by the support lemma; neither uses an M_k.
+8. **Assembly, §5–6.** After sequentialising and applying (15) to each generator factor, the strict image forces the generator indices i, i − 1, …, ℓ + 1 (the rewriting graph is a chain), and each intervening K_m factor is an endomorphism of a fixed literal w_kj with identity strict image. RC(3, K_m) compares it with the identity. Undoing the frames uses naturality of e_P in a 2-variable (depth 1). The identity-image case reduces to K_m by the support lemma. 4-terms of Δ_m are invertible because Δ_m has no 4-generators (Benjamin–Markakis invertibility criterion), so the cancellations are legal.
+9. **Scope.** The response is accurate about what it uses: one initial cone generator followed by a pure interval with pasting support, and a uniquely ordered rewriting of that generator. This fails for D² ∨ D², where two apex edges p_x, p_y lie under non-point columns.
+
+**Relation to other problems.** The join c ⋆ D² = Cone(D²; c) is also covered by the Gray-contexts round-6 extension lemma (`gray-contexts-r6-2026-11-18.md` §6.2), which gives an independent proof of the round-3 result.
+
+Follow-up prompt: `outbox/cone-over-coherences-r5.md` (round 5, unsent).

@@ -1038,3 +1038,32 @@ This also explains why a strict \(2\)-category with two classes of transformatio
 Thus **\(\mathcal G'_\Sigma\) gives a free, unit-free correction for the external-functor interpretation**, with both full oriented hom \(2\)-categories and their mixed double homs. In it, \(H\) and \(H_L\) are identities, and noninvertible interchange survives between transformations. Preserving the original directed schedules of the \(f_i\) requires assigning those generators a different semantic degree or choosing a different doctrine; changing only the labels on the old \(2\)-cells does not accomplish that.
 
 The idempotent and forward-uniqueness questions in the original \(\mathcal G\), and the proposed product classification, remain undecided here.
+
+# Verification of the researcher response (2026-11-18)
+
+**Note on the file.** The response arrived as two drafts of the same answer: the first (from "Question 1 admits a precise correction" to the sentence ending "It" in §6) is cut off, and the second (from "A correction is available using two-sided Gray enrichment") is complete. They agree; the verification refers to the second draft's numbering.
+
+**Verdict: correct; answers the construction part of Question 1. Questions 2–5 are not decided, and the answer changes how they should be posed.**
+
+- **Settled (Q1):** the correct structure for the Gray tensor on strict 2-categories (formulas = strict 2-categories, generators = strict 2-functors) is two-sided Gray enrichment ("bienrichment"): hom-objects ℍ(A, C)(P, Q) = 2Cat(P ⊗ A ⊗ Q, C) with probes P, Q on either side. Its one-sided restrictions are two different hom 2-categories, ℍ_ℓ (left probe, D_k ⊗ A → C) and ℍ_r (right probe, A ⊗ D_k → C), and the currying laws are
+  - left currying: ℍ_r(A ⊗ B, C) ≅ ℍ_r(B, A\C);
+  - right currying: ℍ_ℓ(A ⊗ B, C) ≅ ℍ_ℓ(A, C/B);
+  - with probes on both sides, the bound argument absorbs the probe on its side ((5): P ⊗ A, respectively B ⊗ Q).
+  The squares 2Cat(J ⊗ A ⊗ J, C) give a strict double hom (mixed lax/oplax modifications).
+- **A free unit-free 𝒢′_Σ** with an explicit universal property (§2–3), relative to a stated category of models (probe sort, data sort, data-only adjunctions, gluing along designated probe colimits), with the intended Gray model and an erasure model showing that the free unit-free biclosed category 𝓑_Σ embeds faithfully.
+- **Consequences in 𝒢′:** data arrows tensor bifunctorially, so H = H_L = 1_T and the displayed ι, π are identities. Non-invertible Gray interchange survives one dimension up, as the modification F(χ ▷ 1_A) between the two schedules of two transformations; it has no inverse in 𝒢′ (its image in the Gray model is the walking Gray square's 2-cell).
+- **Not decided:** ι π = 1_H, forward uniqueness and the classification of 1-cells in the original 𝒢 (reading (I) of `closed-structure.md` F.7).
+
+Checked step by step:
+
+1. **Currying laws.** With A\C and C/B defined by 2Cat(A ⊗ X, C) ≅ 2Cat(X, A\C) and 2Cat(X ⊗ B, C) ≅ 2Cat(X, C/B): ℍ_r(A ⊗ B, C)_k = 2Cat(A ⊗ B ⊗ D_k, C) ≅ 2Cat(B ⊗ D_k, A\C) = ℍ_r(B, A\C)_k, and ℍ_ℓ(A ⊗ B, C)_k = 2Cat(D_k ⊗ A ⊗ B, C) ≅ 2Cat(D_k ⊗ A, C/B) = ℍ_ℓ(A, C/B)_k. Both bijections are natural in the probe, so they respect boundaries, identities and composites, hence are isomorphisms of hom 2-categories. (5) is the same computation with both probes. This agrees with prompt item 17 and with `closed-structure.md` F.7.3, which reached the same rules internally ("lax cells X ⊗ D¹ → Y for left closure, oplax cells D¹ ⊗ X → Y for right closure"); the response adds the precise two-sided parameter law (5).
+2. **Models (§2).** Restricting the adjunctions to data types is necessary, as the response shows (𝓔(I, A\C) would be empty). The gluing condition is required only for one-hole contexts, which is what tensor sections with right adjoints preserve. The Gray model satisfies it.
+3. **Free construction (§3).** Gluing is an essentially algebraic (partial) operation with finite compatibility conditions, and (10) states the colimit universal property, so the term model is initial among models with an interpretation of Σ. Standard.
+4. **Hom 2-categories and double homs (§4).** Composition by gluing along J ∐_I J, D₂ ∐_J D₂, D₂ ∐_I D₂ and restriction along composite-selecting maps; associativity, units and interchange hold because the relevant maps of probes are equal and amalgamations are unique. The double hom is the Fairbanks–Shulman one (cited; not re-checked against the paper).
+5. **Erasure model (§5).** Constant probe actions P ▷ A = A with probe arrows acting by identities give a monoidal category, and a nonempty connected diagram of identities has its constant value as colimit. With j : 𝓑_Σ → 𝒢′_Σ from freeness of 𝓑_Σ, ε j = 1. Correct.
+6. **H = 1_T (§6).** Immediate from bifunctoriality of ⊗ on data arrows and e u = 1, d v = 1 (and d_L v_L = 1). This uses neither strict mixed currying nor invertibility.
+7. **Directed interchange survives (§7).** F(χ ▷ 1_A) is a left-parameter map D₂ ▷ A → C. Interpreting the atom A as the terminal 2-category sends χ ▷ 1_A to χ : D₂ → J ⊗ J, which is not invertible, so it has no inverse in 𝒢′_Σ.
+
+**Consequence for the project (D11, D17).** This confirms reading (II) of `closed-structure.md` F.7 as the right setting for the project's type formers, and refines F.7.3 by the position rule (5). In reading (II), schedules of functors collapse, so the scheduling theorem S(P) must be asked for generators of degree J (transformations, or more generally cells X ⊗ Dᵏ → Y), where interchange is a modification. The r1–r5 questions about 𝒢 remain open questions about reading (I) (kept, not dropped).
+
+Follow-up prompt: `outbox/gray-closed-scheduling-r6.md` (round 6, unsent).

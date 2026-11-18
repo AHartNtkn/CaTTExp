@@ -100,3 +100,556 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 ## 5. What counts as a solution
 
 Explicit generators and equations for Q1 in either test case; a forcing or refuting substitution for Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.
+
+# Researcher Response
+
+**The first test case admits an explicit completion in the same contextual-presentation sense as K10.** For
+\[
+\Gamma=\Sigma D^3\vee\Sigma D^2,
+\]
+start with the \(h\)-repair on each of the two \(D^2\otimes D^2\) boundary diagrams. Add two hom-4 generators \(H,K\) and two hom-4 equations. These supply parallel boundaries for the hom-5 generator \(\Omega\otimes B\).
+
+The construction also admits the degeneration \(\Omega\mapsto1_A\). Under that substitution,
+\[
+H\longmapsto1_h,\qquad K\longmapsto W.
+\]
+
+I give the generators, boundaries, equations, support proof, and quotient below. This does not establish a rule closed under arbitrary substitution, or settle the three-summand case.
+
+## 1. The larger diagram is a variation of the repaired cube
+
+Write the first factor \(D^3\) as
+\[
+\alpha_0,\alpha_1:f_0\to f_1,\qquad
+A^0,A^1:\alpha_0\Rightarrow\alpha_1,\qquad
+\Omega:A^0\Rrightarrow A^1,
+\]
+and the second factor \(D^2\) as
+\[
+\beta_0,\beta_1:g_0\to g_1,\qquad
+B:\beta_0\Rightarrow\beta_1.
+\]
+
+These dimensions are **hom dimensions**. Thus \(\Omega\) has hom-dimension \(3\).
+
+Increasing the first globe from \(D^2\) to \(D^3\) introduces two parallel choices \(A^0,A^1\) and a variation between them. It does not introduce a fourth independent hom-2 coordinate. Accordingly, the relevant hom-3 graph consists of two copies of the repaired cube graph, joined by six whiskerings of \(\Omega\).
+
+For \(\epsilon=0,1\), use the notation
+\[
+S^\epsilon,V_0^\epsilon,V_1^\epsilon,T^\epsilon,U_0^\epsilon,U_1^\epsilon
+\]
+for the six paths formed using \(A^\epsilon\). Abbreviate their hom-3 arrows by
+\[
+\begin{array}{c|c|c}
+\text{Symbol}&\text{Original notation}&\text{Boundary}\\ \hline
+a^\epsilon&\bar t_0&S^\epsilon\to V_0^\epsilon\\
+b^\epsilon&\bar\chi_1^\epsilon&V_0^\epsilon\to V_1^\epsilon\\
+c^\epsilon&\bar r_0^\epsilon&V_1^\epsilon\to T^\epsilon\\
+d^\epsilon&\bar r_1^\epsilon&S^\epsilon\to U_1^\epsilon\\
+e^\epsilon&\bar\chi_2^\epsilon&U_0^\epsilon\to U_1^\epsilon\\
+f^\epsilon&\bar t_1&U_0^\epsilon\to T^\epsilon .
+\end{array}
+\]
+The \(\epsilon\)-dependence of \(a^\epsilon,f^\epsilon\) is in their whiskering contexts.
+
+Apply K10 separately:
+\[
+h^\epsilon:S^\epsilon\longrightarrow U_0^\epsilon,
+\qquad
+\boxed{d^\epsilon=h^\epsilon e^\epsilon.} \tag{1}
+\]
+
+Hereafter:
+
+- juxtaposition of hom-3 cells denotes \(*_2\);
+- a semicolon between hom-4 cells denotes \(*_3\);
+- \(u\Phi v\), with \(\Phi\) a hom-4 cell and \(u,v\) hom-3 cells, denotes whiskering along hom-dimension \(2\).
+
+All orders are diagrammatic.
+
+### The six vertical hom-3 cells
+
+Put
+\[
+\rho_j=\Omega\otimes g_j:
+u_j^0\longrightarrow u_j^1.
+\]
+Their whiskerings give
+\[
+\omega_j^-:a_j^{-,0}\longrightarrow a_j^{-,1},
+\qquad
+\omega_j^+:a_j^{+,0}\longrightarrow a_j^{+,1}.
+\]
+
+For each \(X\in\{S,V_0,V_1,T,U_0,U_1\}\), let
+\[
+z_X:X^0\longrightarrow X^1
+\]
+be obtained by replacing the unique \(A^0\)-edge by its \(\omega\)-variation. Explicitly, using brackets for hom-2 whiskering,
+\[
+\begin{aligned}
+z_S&=[b_0^-;c_{01};\omega_1^+],&
+z_{V_0}&=[c_{00};b_0^+;\omega_1^+],\\
+z_{V_1}&=[c_{00};\omega_0^+;b_1^+],&
+z_T&=[\omega_0^-;c_{10};b_1^+],\\
+z_{U_0}&=[\omega_0^-;b_1^-;c_{11}],&
+z_{U_1}&=[b_0^-;\omega_1^-;c_{11}].
+\end{aligned} \tag{2}
+\]
+
+After normalizing (1), the maximal hom-3 graph has:
+
+- six arrows \(a^\epsilon,b^\epsilon,c^\epsilon,h^\epsilon,e^\epsilon,f^\epsilon\) in each layer;
+- the six arrows \(z_X:X^0\to X^1\).
+
+This is the hom-3 graph used in the calculations below.
+
+## 2. The hom-4 tensor and interchange generators
+
+The tensor generators of hom-dimension \(4\) are
+\[
+R_j=\Omega\otimes\beta_j\quad(j=0,1),
+\qquad
+W^\epsilon=A^\epsilon\otimes B\quad(\epsilon=0,1).
+\]
+
+The repaired boundaries of \(W^\epsilon\) are
+\[
+\boxed{
+W^\epsilon:
+a^\epsilon b^\epsilon c^\epsilon
+\Longrightarrow
+h^\epsilon f^\epsilon.
+} \tag{3}
+\]
+
+The boundaries of \(R_j\) are
+\[
+R_j:
+r_j^0[\omega_j^-;c_{1j}]
+\Longrightarrow
+[c_{0j};\omega_j^+]r_j^1. \tag{4}
+\]
+Their orientation follows directly from
+\[
+\partial(\Omega\otimes\beta_j)
+=
+(A^1-A^0)\otimes\beta_j
+-\Omega\otimes(g_1-g_0). \tag{5}
+\]
+
+There are also four inner hom-4 generators.
+
+Two are the one-variable naturalities of \(\chi_1,\chi_2\):
+\[
+\begin{aligned}
+N_1:\quad&
+\chi_1^0[\omega_0^+;b_1^+]
+\Longrightarrow
+[b_0^+;\omega_1^+]\chi_1^1,\\
+N_2:\quad&
+[\omega_0^-;b_1^-]\chi_2^1
+\Longrightarrow
+\chi_2^0[b_0^-;\omega_1^-].
+\end{aligned} \tag{6}
+\]
+Their directions are opposite because \(\Omega\) varies the left input in the first pair and the right input in the second pair, as in K3.
+
+The other two are elementary interchangers between the independent hom-3 cells:
+
+- \(t_0\) and the appropriate whiskering of \(\Omega\);
+- the appropriate whiskering of \(\Omega\) and \(t_1\).
+
+For the maximal interval, these four inner generators and the two \(R_j\) give the following six hom-4 faces.
+
+| Face | Hom-3 source | Hom-3 target | Origin |
+|---|---|---|---|
+| \(\mathsf A\) | \(z_Sa^1\) | \(a^0z_{V_0}\) | Inner interchange |
+| \(\mathsf B\) | \(b^0z_{V_1}\) | \(z_{V_0}b^1\) | Whiskered \(N_1\) |
+| \(\mathsf C\) | \(c^0z_T\) | \(z_{V_1}c^1\) | Whiskered \(R_0\) |
+| \(\mathsf D\) | \(h^0e^0z_{U_1}\) | \(z_Sh^1e^1\) | Whiskered \(R_1\), using (1) |
+| \(\mathsf E\) | \(z_{U_0}e^1\) | \(e^0z_{U_1}\) | Whiskered \(N_2\) |
+| \(\mathsf F\) | \(f^0z_T\) | \(z_{U_0}f^1\) | Inner interchange |
+
+The positional orientation gives \(\mathsf A,\mathsf F\). Equations (5)–(6) give the other four directions.
+
+## 3. First new hom-4 generator: variation of the factorization
+
+Add
+\[
+\boxed{
+H:h^0z_{U_0}\Longrightarrow z_Sh^1
+} \tag{7}
+\]
+and impose
+\[
+\boxed{
+He^1=(h^0\mathsf E)\,;\,\mathsf D.
+} \tag{8}
+\]
+
+Both sides have source and target
+\[
+h^0z_{U_0}e^1
+\Longrightarrow
+z_Sh^1e^1.
+\]
+The right side passes through
+\[
+h^0e^0z_{U_1}.
+\]
+
+Thus the relevant hom-4 graph is
+\[
+h^0z_{U_0}e^1
+\xrightarrow{\,h^0\mathsf E\,}
+h^0e^0z_{U_1}
+\xrightarrow{\,\mathsf D\,}
+z_Sh^1e^1,
+\]
+and equation (8) identifies the whiskering \(He^1\) with this two-step path.
+
+This is the compatibility equation for the variation of
+\[
+d^\epsilon=h^\epsilon e^\epsilon.
+\]
+It is additional information beyond the rule that merely adjoins factors to pairs of faces.
+
+In the Gray quotient, \(e^1\) and \(\mathsf E\) become identities, so
+\[
+\boxed{q(H)=q(\mathsf D).} \tag{9}
+\]
+Consequently \(H\) contributes no extra hom-4 generator to that quotient.
+
+## 4. A second factorization is needed for the top tensor boundary
+
+Adding \(H\) does not yet provide both boundary routes for \(\Omega\otimes B\).
+
+The seven hom-3 paths from \(S^0\) to \(T^1\) are
+\[
+\begin{aligned}
+x_1&=a^0b^0c^0z_T,\\
+x_2&=a^0b^0z_{V_1}c^1,\\
+x_3&=a^0z_{V_0}b^1c^1,\\
+x_4&=z_Sa^1b^1c^1,\\
+x_5&=h^0f^0z_T,\\
+x_6&=h^0z_{U_0}f^1,\\
+x_7&=z_Sh^1f^1.
+\end{aligned} \tag{10}
+\]
+
+The contextual inner face
+\[
+\overline{\mathsf A}:=\mathsf A b^1c^1:x_4\longrightarrow x_3
+\]
+and the contextual tensor face
+\[
+z_SW^1:x_4\longrightarrow x_7
+\]
+have the same source.
+
+Apply a **\(k\)-type factorization** to this pair. Add
+\[
+\boxed{
+K:x_3\Longrightarrow x_7
+} \tag{11}
+\]
+and impose
+\[
+\boxed{
+z_SW^1=(\mathsf A b^1c^1)\,;\,K.
+} \tag{12}
+\]
+
+After replacing the contextual arrow \(z_SW^1\) by the right side of (12), the maximal hom-4 graph is:
+
+```mermaid
+flowchart LR
+    x1 -->|"C"| x2
+    x2 -->|"B"| x3
+    x3 -->|"K"| x7
+    x1 -->|"W⁰"| x5
+    x5 -->|"F"| x6
+    x6 -->|"H"| x7
+    x4 -->|"A"| x3
+```
+
+The labels in this diagram include the whiskerings displayed in (10). Precisely, its two \(x_1\to x_7\) paths are
+\[
+L=(W^0z_T)\,;\,(h^0\mathsf F)\,;\,(Hf^1)
+\]
+and
+\[
+R=(a^0b^0\mathsf C)\,;\,(a^0\mathsf Bc^1)\,;\,K. \tag{13}
+\]
+
+This gives the requested additional hom-4 data. It also permits the hom-5 generator
+\[
+\boxed{Z:L\Longrightarrow R.} \tag{14}
+\]
+
+### What this says about the proposed rule
+
+This example uses:
+
+- \(h\)-type factorizations in hom-dimension \(3\);
+- a compatibility equation for their variation, namely (8);
+- a \(k\)-type factorization in hom-dimension \(4\), namely (12).
+
+A recipe restricted to **\(h\)-type factorizations of individual tensor faces** misses the pair in (12). A source-joining alternative would instead need to factor the composite
+\[
+(a^0b^0\mathsf C)\,;\,(a^0\mathsf Bc^1)
+\]
+through \(\overline{\mathsf A}\). That is a factorization of a composite, rather than a single tensor face.
+
+Thus this calculation does not select \(h\), \(k\), or the symmetric choice uniformly. It shows that a rule must specify both:
+
+1. which mixed face factorizations it adds;
+2. how an existing factorization varies, including equations such as (8).
+
+## 5. Complete generator inventory through hom-dimension 4
+
+The inventory is finite.
+
+| Hom dimension | Tensor generators | Added inner generators | Added factorization generators |
+|---|---:|---:|---:|
+| \(0\) | \(4\) | \(0\) | \(0\) |
+| \(1\) | \(8\) | \(0\) | \(0\) |
+| \(2\) | \(10\) | \(0\) | \(0\) |
+| \(3\) | \(8\) | \(4\) | \(2\) |
+| \(4\) | \(4\) | \(4\) | \(2\) |
+
+More explicitly, the positive-dimensional additions are:
+
+- **Hom-dimension 3:** \(\chi_1^\epsilon,\chi_2^\epsilon,h^\epsilon\), for \(\epsilon=0,1\), with equations (1).
+- **Hom-dimension 4:** \(N_1,N_2,\mathsf A,\mathsf F,H,K\), with equations (8) and (12).
+- The existing tensor labels \(W^\epsilon\) receive the repaired boundaries (3).
+- If the top tensor generator is included, its label \(Z=\Omega\otimes B\) receives boundary (14).
+
+Here \(\mathsf B,\mathsf C,\mathsf D,\mathsf E\) are specified whiskerings, not four further independent generators.
+
+## 6. Normal forms, supports, and directedness
+
+The support convention is the one already accepted in K10: distinct whiskering contexts have distinct basis records, and equations may make a particular contextual record composite.
+
+In hom-dimension \(3\), normalize
+\[
+d^\epsilon\rightsquigarrow h^\epsilon e^\epsilon.
+\]
+
+In hom-dimension \(4\), normalize the two contextual records
+\[
+\boxed{
+He^1\rightsquigarrow(h^0\mathsf E)\,;\,\mathsf D,
+\qquad
+z_SW^1\rightsquigarrow(\mathsf A b^1c^1)\,;\,K.
+} \tag{15}
+\]
+
+These reductions do **not** eliminate \(H\) or \(W^1\) themselves. They eliminate only the indicated contextual records.
+
+### Why there are no overlaps in this example
+
+For the first reduction:
+
+- its hom-3 boundary interval is \(S^0\to U_1^1\);
+- no nonidentity hom-3 arrow enters \(S^0\) or leaves \(U_1^1\);
+- its hom-4 source has no incoming hom-4 arrow, and its target has no outgoing one.
+
+For the second:
+
+- its hom-3 boundary interval is \(S^0\to T^1\);
+- no nonidentity hom-3 arrow enters \(S^0\) or leaves \(T^1\);
+- \(x_4\) has no incoming hom-4 arrow, and \(x_7\) has no outgoing one.
+
+Both lower hom-1 boundaries are the full interval \(P_{00}\to Q_{11}\), so neither equation has an additional nonidentity lower whiskering context. The right sides of (15) use neither eliminated record. Therefore the reductions terminate and have no overlaps.
+
+The remaining proper intervals are also explicit. The four square faces involving the \(A\)-coordinate each have two horizontal hom-3 arrows and two \(\Omega\)-variation arrows; each carries one hom-4 comparison, respectively \(R_0,R_1,N_1,N_2\). The other proper intervals contribute no additional hom-4 ambiguity.
+
+### Support injectivity
+
+For each normal contextual generator \(g\), use its own graded label and include its recursively determined boundary supports. Define support of a normal path by union, and identity support by
+\[
+\operatorname{supp}(1_u)=\operatorname{supp}(u).
+\]
+
+Every resulting hom-3 and hom-4 graph is acyclic. A nonempty directed path in an acyclic graph is determined by its set of directed edges: it cannot revisit a vertex, and its edges determine their order. Distinct intervals use distinct contextual labels. Identities are distinguished recursively.
+
+This proves support injectivity through hom-dimension \(4\) for this finite presentation.
+
+The exhaustive counts **within the maximal hom-1 interval \(P_{00}\to Q_{11}\)** are:
+
+| Quantity | Count |
+|---|---:|
+| Hom-3 cells, including identities | \(68\) |
+| Contextual hom-4 generating records before (15) | \(23\) |
+| Contextual hom-4 generating records after (15) | \(21\) |
+| Normal hom-4 cells, including identities | \(98\) |
+| Nonidentity normal hom-4 cells | \(30\) |
+| Distinct supports of those hom-3 cells | \(68\) |
+| Distinct supports of those hom-4 cells | \(98\) |
+
+These counts, the boundary checks, acyclicity, support injectivity, and the degeneration below are reproduced by the complete checker d3_d2_interchange_check.mjs[d3_d2_interchange_check.mjs](sandbox:/workspace/scratch/81530e09e7cd/d3_d2_interchange_check.mjs). Run it with:
+
+```sh
+node d3_d2_interchange_check.mjs
+```
+
+It ran successfully with all checks passing.
+
+### Directedness
+
+Neither the hom-2 paths nor the hom-3 normalization introduces a reverse of an existing elementary interchanger. At hom-dimension \(4\), acyclicity excludes a reverse of each inner comparison in the table of §2.
+
+The two relations in (15) replace arrows by forward paths. They introduce no inverse or endpoint identification.
+
+## 7. The Gray quotient is exact
+
+Let \(q\) kill all inner interchange data. On the displayed graphs this kills
+\[
+b^\epsilon,\ e^\epsilon,\ \mathsf A,\ \mathsf B,\ \mathsf E,\ \mathsf F,
+\]
+together with their underlying proper-interval instances.
+
+Equation (1) gives
+\[
+q(h^\epsilon)=q(d^\epsilon).
+\]
+Equation (8) gives
+\[
+q(H)=q(\mathsf D).
+\]
+Equation (12) gives
+\[
+q(K)=q(z_SW^1).
+\]
+
+Consequently the added generators \(h^\epsilon,H,K\) can all be eliminated from the quotient presentation. The remaining hom-4 tensor generators are exactly
+\[
+R_0,\ R_1,\ W^0,\ W^1.
+\]
+
+On the maximal hom-4 graph, the two paths (13) become
+\[
+q(L)=(qW^0z_T)\,;\,q(\mathsf D),
+\qquad
+q(R)=q(\mathsf C)\,;\,(z_SqW^1),
+\]
+with the now-strict whiskering equalities understood. No equation identifies these two paths.
+
+The orientation of \(Z\) is the required one because
+\[
+\begin{aligned}
+\partial(\Omega\otimes B)
+&=(A^1-A^0)\otimes B
+-\Omega\otimes(\beta_1-\beta_0)\\
+&=W^1-W^0-R_1+R_0.
+\end{aligned}
+\]
+Thus its negative boundary uses \(W^0,R_1\), and its positive boundary uses \(R_0,W^1\), exactly as in (13)–(14).
+
+This is an exact quotient of presentations: the new generators are eliminated by the displayed equations, leaving no extra comparison or relation among the surviving tensor cells.
+
+Further strictification leaves no residual data from the repair. Once the corresponding tensor comparisons and inner interchangers are identities, equations (1), (8), and (12) force \(h^\epsilon,H,K\) to be identities as well.
+
+## 8. A genuine forcing substitution
+
+Let
+\[
+\Gamma_2=\Sigma D^2\vee\Sigma D^2,
+\qquad
+\Gamma_3=\Sigma D^3\vee\Sigma D^2.
+\]
+Consider the boundary-matching assignment
+\[
+\sigma:\Gamma_3\longrightarrow F(\Gamma_2)
+\]
+given by
+\[
+A^0\longmapsto A,\qquad
+A^1\longmapsto A,\qquad
+\Omega\longmapsto1_A,
+\]
+with all other original generating data fixed.
+
+For the finite presentations above, this extends as follows:
+\[
+\begin{aligned}
+z_X&\longmapsto1_X,\\
+h^\epsilon&\longmapsto h,\\
+W^\epsilon&\longmapsto W,\\
+R_j,N_1,N_2,\mathsf A,\mathsf F
+&\longmapsto\text{the corresponding identities}.
+\end{aligned}
+\]
+
+The new generators have forced images:
+\[
+\boxed{
+\sigma(H)=1_h,\qquad
+\sigma(K)=W,\qquad
+\sigma(Z)=1_W.
+} \tag{16}
+\]
+
+Indeed:
+
+- The boundary of \(H\) becomes \(h\Rightarrow h\). The K10 presentation has only the identity at that boundary.
+- The boundary of \(K\) becomes
+  \[
+  abc\Longrightarrow hf,
+  \]
+  whose sole hom-4 cell in K10 is \(W\).
+- Both boundaries of \(Z\) become \(W\).
+
+The equations are preserved:
+\[
+He^1=(h^0\mathsf E);\mathsf D
+\]
+becomes the identity equality at \(he=d\), while
+\[
+z_SW^1=(\mathsf A b^1c^1);K
+\]
+becomes
+\[
+W=1;W.
+\]
+
+The two boundary inclusions
+\[
+\iota_\epsilon:F(\Gamma_2)\longrightarrow F(\Gamma_3),
+\qquad A\longmapsto A^\epsilon,
+\]
+send \(h\mapsto h^\epsilon\), \(W\mapsto W^\epsilon\), and satisfy
+\[
+\sigma\iota_\epsilon=1
+\]
+on these presentations.
+
+This gives an explicit substitution test beyond K9. In particular, **\(K\) cannot be classified as a cell that every degeneration sends to an identity**: this degeneration sends it to the nonidentity tensor comparison \(W\).
+
+It does not force the original choice of \(h\)-type versus \(k\)-type repair. Nor does it determine the image of a factor under every composite-input substitution.
+
+## 9. Scope of the result
+
+This extends K10 to the first test case:
+
+\[
+\boxed{
+\begin{gathered}
+d^\epsilon=h^\epsilon e^\epsilon,\\[2pt]
+H:h^0z_{U_0}\Longrightarrow z_Sh^1,
+\qquad
+He^1=(h^0\mathsf E);\mathsf D,\\[2pt]
+K:a^0z_{V_0}b^1c^1\Longrightarrow z_Sh^1f^1,
+\qquad
+z_SW^1=(\mathsf A b^1c^1);K.
+\end{gathered}
+}
+\]
+
+It supplies finite contextual normal forms, injective supports, directed interchange, the exact Gray quotient, and the substitution (16). It also supplies the correctly oriented lift of \(\Omega\otimes B\).
+
+The remaining issue is uniformity. In larger diagrams, the contextual reductions can acquire additional whiskerings and overlapping applications. A recursive construction must prove that those operations preserve the normal forms and that the resulting completion remains directed and support-injective. The finite argument above does not establish those properties for the three-summand example or for arbitrary \(\Gamma\).
+
+Accordingly, this is a solution to the first finite test in Q1 and a forcing substitution for Q2. Q3 and the general impossibility question Q4 remain unresolved here.

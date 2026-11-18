@@ -31,10 +31,13 @@ import CaTTExp.Lim.Rules
 import CaTTExp.Lim.Terms
 import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
+import CaTTExp.Cones
+import CaTTExp.ConesExamples
 import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.Free.AssociatorDepth2
 import CaTTExp.Free.A2toA1
+import CaTTExp.Lim.OverL
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
 import CaTTExp.GrayDuality

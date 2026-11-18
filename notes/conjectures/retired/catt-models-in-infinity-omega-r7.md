@@ -1,4 +1,4 @@
-# Interpreting CaTT in (∞,ω)-categories, round 6: the unit on finite computads and the directed coherator
+# Interpreting CaTT in (∞,ω)-categories, round 7: higher spherical representation, saturation and the directed coherator
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. Everything under the "Known" headings is proved and is not re-asked. The smallest open case is Q1.*
 
@@ -95,6 +95,23 @@
   (Cof the computad-cofibrations) would give W = W^sat, via the factorisation w = p i with p a trivial fibration.
 - **Enrichment.** The semantic tensor arities for L exist in oriented (∞,ω)-categories (Gepner–Heine enriched suspension and wedge). A *strict* Gray enrichment of the raw coherator of L that represents cells is impossible: it would require the raw equation c(f, i(y)) = f for a composition head c and an identity head i, and CaTT-style syntax has no definitional equations. A weak enrichment is not ruled out.
 
+**Known (VI): degree-2 representation, a saturation criterion and the two-square arity.**
+- **(5) for r ≥ 4 is a relative-coherence statement.** It asks that parallel 4-terms of the 2-dimensional triangle context with equal strict image be joined. Extending the r = 3 normalisers needs, for each 4-term θ : a → b and chosen comparisons H_a : a → ν, a 5-cell θ ; H_b ⇒ H_a. This is not asked here.
+- **Spherical representation in degree 2.** Let B be free on a computad with every positive-dimensional cell coinductively invertible, and X = g U 𝓛_R B (g = groupoidification). Every class of π₂(X, x) is the interpretation of a cell b : 1_x ⇒ 1_x of B.
+  - *Filtration.* 𝓛_R(F_w D_n) = F(yD_n) and 𝓛_R(F_w ∂D_n) = F(∂_Θ D_n), so generator attachments become homotopy pushouts of S^{n−1} → D^n. This gives a relative CW model X₁ ⊆ X₂ ⊆ X with X₁ ≃ |G|, X₂ from the 2-generators and higher cells of dimension ≥ 3, so π₂X₁ = 0 and π₂X₂ → π₂X is onto.
+  - *Crossed modules.* The homotopy bigroupoid H₂B (2-cells modulo invertible 3-cells; FHM Prop. 2.4.6, Thm 2.4.8, Cor. 2.4.9) maps to Π₂X by a pseudofunctor s whose coherence is checked in generic shapes. Over the free groupoid F = π₁(X₁, G₀), an algebraic crossed module M_B with ker ∂_x = Aut(1_x) in H₂B maps to π₂(X, X₁, G₀). Composed with j from the free crossed module C ≅ π₂(X₂, X₁, G₀) (Whitehead; Brown–Razak Salleh Thm 5.1), it is the canonical map, checked on generators.
+  - *Consequence.* For Y presenting a space, d : QU𝓛_R K S₀ Y → Y is an isomorphism on π₀, π₁ and π₂ and surjective on every π_n. Injectivity uses the literal-boundary lift of a nullhomotopy through the Kan fibration Map(yD₃, UY) → Map(∂_Θ D₃, UY) and the trivial fibration q_A.
+- **A saturation criterion.** Let 𝒞ⁿ = F_w D_n and j_n : 𝒞ⁿ → ℰⁿ⁺¹ the source inclusion into the FHM weak walking (n+1)-equivalence, so J = {j_n} has J^⋔ = equifibrations and W ∩ J^⋔ = TF (FHM arXiv 2511.09849, Prop. 5.0.4, Prop. 4.1.5). Consider
+  ```
+  (FEA)  A_𝔠 → A_𝔠 ∐_{𝒞ⁿ} ℰⁿ⁺¹ lies in W, for every finite computad 𝔠, every n and every map 𝒞ⁿ → A_𝔠.
+  ```
+  (FEA) implies W = W^sat, hence the detection statement (10). Proof: (FEA) extends to cofibrant sources by filtered colimits. Every relative J-cell complex with cofibrant source is in W. A trivial cofibration with cofibrant source is a retract of such a complex (factor through J, then use W ∩ J^⋔ = TF). This gives the precofibration-category axiom CF3, and Rădulescu-Banu (arXiv math/0610009) Thm 7.2.7 gives saturation from 2-out-of-6. Unconditionally, every J-cofibration i : A → B has a strict retraction (A → 1 is an equifibration). (FEA) contains j_n ∈ W itself, which FHM prove only after strict reflection.
+- **The two-square arity of L.** For Γ = ΣΔ₂ ∨ ΣΔ₁ (α₁ : f₀ ⇒ f₁, α₂ : f₁ ⇒ f₂ : x → y, β : g₀ ⇒ g₁ : y → z), U_Γ = Δ₂ ⊗ Δ₁ has a canonical 2-cell ρ : P ⇒ Q with P = (f₀◁β) ; (α₁▷g₁) ; (α₂▷g₁) and Q = (α₁▷g₀) ; (α₂▷g₀) ; (f₂◁β), the paste of two elementary squares through M = (α₁▷g₀) ; (f₁◁β) ; (α₂▷g₁).
+  - The raw coherator has an independent whole-grid head G_Γ : P ⇒ Q distinct from the elementary paste E_Γ, and evaluating both in the unchanged strict arity identifies them.
+  - Adjoining a second parallel 2-generator g ↦ ρ (U_Γ⁺ → U_Γ) is not a folk weak equivalence: g and ρ have the same image and no 3-cell joins them.
+  - Attaching the strict walking 3-equivalence along ρ, Û_Γ = U_Γ ∐_{D²} E_s³, gives a folk trivial cofibration U_Γ → Û_Γ and a folk weak equivalence Û_Γ → U_Γ. Its 2-skeleton is U_Γ⁺, and its new 3-generators supply the global 4-dimensional equivalence between G_Γ and E_Γ.
+  - This is a repair of one arity. Substitution maps between resolved arities, weak Gray composition, the augmentation to semantic arities, and the model comparison are not constructed. The coloured-operad Boardman–Vogt route (Berger–Moerdijk) does not apply directly: the directed Gray tensor has no braiding.
+
 **The coh rule of L (two-tier).** Contexts are CaTT pasting contexts. Each decomposes uniquely as Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, with objects a₀, …, aₙ and Θᵢ the pasting scheme in the hom from aᵢ₋₁ to aᵢ.
 - **Gray unfolding.** U_{ij}(Γ) := Θᵢ₊₁ ⊗ … ⊗ Θⱼ (factors in execution order) is the Steiner tensor of the Steiner complexes λ(Θ). Its generators are tensors of generators, dimensions add, and the boundary is the Leibniz formula. It is strongly loop-free, so its cells are determined by their supports.
 - **Supports.** For a term t : A with endpoints aᵢ, aⱼ, supp(t : A) is the downward-closed set of generators of U_{ij}(Γ) used by the strict image of t and of the cells in its type, computed in the free strict Gray-enriched ω-category on Γ.
@@ -111,15 +128,19 @@
 
 ## Questions
 
-**Q1 (the triangle, and homotopical computads).** Prove (5) for r ≥ 4, which gives η_{A_△} ∈ W by (4). More generally, call a finite computad 𝔠 *homotopical* when its free (∞,ω)-category is the nerve of its free strict ω-category F_s(𝔠). For such 𝔠, the same argument as (4) gives η_{A_𝔠} ∈ W ⟸ π : A_𝔠 → F_s(𝔠) is a trivial fibration, that is: strict cells with lifted boundaries lift, and any two parallel terms with equal strict image are joined by a term one dimension up. Prove this for a class of homotopical computads (for instance those of dimension ≤ 2 with acyclic generating graph), or prove the unit statement for 𝔠_△ without it, for example by an excision lemma for generator attachments.
+**Q1 (spherical representation in degree 3).** Let Y present a space and B = K S₀ Y. Is every class of π₃(QU𝓛_R B, x) the interpretation of an algebraic 3-cell with iterated identity boundary? A positive answer gives an isomorphism on π₃ by the argument of Known (VI). The degree-2 proof uses crossed modules over the free groupoid of the 1-skeleton. A degree-3 analogue might use crossed squares or 2-crossed modules for the filtration X₁ ⊆ X₂ ⊆ X₃, with the generic-shape coherence of the comparison s one dimension up. A proof for all n, or a counterexample in some degree, would settle the reconstruction for spaces.
 
-**Q2 (spherical representation).** Prove the spherical representation condition for B = K S₀ Y with Y presenting a space, or find a counterexample. This would complete (R) for spaces.
+**Q2 (FEA, smallest cases).** Prove (FEA) for n = 0: pushouts of j₀ : 𝒞⁰ → ℰ¹ along a point of A_𝔠 lie in W. Or prove j_n ∈ W in the weak setting. Or show (FEA) fails, which would leave saturation open by this route. The strict retraction of every J-cofibration is available. What is missing is equivalence witnesses with exact boundaries for arbitrary terms of the enlarged model.
 
-**Q3 (detection or pushout stability).** Prove (10), or prove (11) for the FHM class W, or show that W is not saturated.
+**Q3 (resolved arities for L).** Extend the two-square repair of Known (VI) to a substitution-compatible family:
+- resolved arities Û for every hom tensor domain through global dimension 3 (D^r ⊗ D^s with r + s ≤ 2, and the whole-grid arities such as Δ₂ ⊗ Δ₁);
+- substitution maps between them, with coherent comparisons for the images of whole-grid heads;
+- an augmentation to the semantic arities in oriented (∞,ω)-categories.
 
-**Q4 (a weak enriched coherator for L).** Give a weak Gray-enriched or coloured-operadic presentation of L's coherator through global dimension 3, with a comparison to the raw coherator that preserves the intended models, so that the conditional lifting theorem of Known (II) applies; or identify the step that fails.
+Or identify the step that fails. A presentation as algebras for a coloured operad, or a Gray-enriched category up to coherent homotopy, is acceptable, provided the comparison with the raw coherator of L preserves the intended models, so that the conditional lifting theorem of Known (II) applies.
+
+**Q4 (saturation without FEA).** Prove (10), that S₀ f ∈ W^sat implies QU f is an equivalence, by another route. Or prove (11), that pushouts of maps in Cof ∩ W remain in W, for the FHM class W. Or show that W is not saturated.
 
 ## What would help most
 
-A proof of (5) for r = 4, or the general statement of Q1 for a class of homotopical computads; the spherical representation condition for Q2; the weak enriched presentation for Q4 in low dimensions.
-
+The degree-3 spherical representation for Q1; (FEA) for n = 0 for Q2; resolved arities through global dimension 3 for Q3.

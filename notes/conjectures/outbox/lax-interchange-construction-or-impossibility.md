@@ -1,6 +1,8 @@
-# Free higher categories with directed interchange in every dimension (eighth round)
+# Free higher categories with directed interchange in every dimension: construction or impossibility
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked. Questions are in §4, smallest first.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked.*
+
+**What we are asking for.** A decision. Either a definition, valid in every dimension, whose free objects satisfy the requirements of §3, or a proof that the requirements (or a named subset of them) are inconsistent. Section 2 records many hand-built completions of particular comparison graphs (for ΣD² ∨ ΣD², ΣD³ ∨ ΣD², the triple tensor λD² ⊗ λD² ⊗ λD²) and several ways in which such completions fail. More completions of particular shapes, more lifts, or more support checks in a fixed hom-dimension are not what we want. They are listed so that a general construction can be tested against them, and so that an impossibility proof can start from the failure patterns (K19), (K20), (K24), (K25), (K29).
 
 ## 1. Setting
 
@@ -159,6 +161,40 @@ On the 240-word interval of (K14) a rank with values 0, …, 7 exists; there are
 - Bourke–Lobbia, arXiv 2610.31448: their §4.2.6 lax 4-categories have non-invertible outer interchangers, but invertible interchange inside homs.
 - Bourke–Gurski's cocategorical obstruction needs hypotheses not assumed here.
 
+**(K23) A substitution-natural source-only completion (proved, machine-checked).** In the setting of (K18), for α : s → t in P and inner paths I : t → m and R : u → m, adjoin j_{α,I,R} : s → u ("α ; I ; R⁻¹"), with j_{α,1,1} = α and the equations j_{α,I,e;R} ; e = j_{α,I,R} and j_{α,I,1} = α ; I. (K18) is the case I = 1. The left-hand sides never overlap, so the oriented system has the diamond property. It is confluent with unique normal forms for any quiver, Path(Q) embeds, seed lists are invariant, every j raises φ (so the completion is acyclic and normal forms have injective supports), killing E gives the original inner quotient, and the generators are finite. Every map of comparison categories that sends inner arrows to inner paths and each seed to a word containing a seed (pre ; β ; post, β the last seed) extends by j_{α,I,R} ↦ pre ; j_{β, post;F(I), F(R)}. This includes the map of (K19), where j_{τ,1,e} ↦ j_{h_z,f,e}. The generators are forced: in (K18)'s completion, α ; I has no right division by an inner path R when I, R are nonempty with different last arrows. Indexing by reduced cospans (common suffix cancelled) gives the minimal form; on the 240-word interval of (K14) it has 4,549 joining generators beyond the 264 seeds.
+
+**(K24) Degenerate maps (proved).** In (K23)'s completion, a nonempty inner path R : u → a has no H : a → u with H ; R = 1. So no source-joining completion containing (K18)'s generators extends a map that sends a seed α to an identity while sending some inner path into t(α) to a nonempty path. More generally, a seed sent to an inner path I₀ requires F(R) to be a suffix of I₀ ; F(I) for every cospan (I, R) at α.
+
+**(K25) A globular degeneration obstructs the (K18) joins (proved).** Let Γ₃ = ΣD² ∨ ΣD² ∨ ΣD² with objects a₀ … a₃ and Γ₂ = ΣD² ∨ ΣD² with objects b₀, b₁, b₂. Keep the first two suspended globes, send a₃ ↦ b₂, and send the third summand's 1-cells, 2-faces and 3-cell to iterated identities on b₂. Every boundary matches.
+- *The forced word map.* In the binary presentation (K10) the hom-2 paths are paths in the directed cube with events a, b, p, so there are no nonidentity hom-2 endomorphisms. Hence the crossings q, r and the update c must go to identities, and the induced map on hom-2 words erases c, q, r.
+- *The obstruction.* (K14) has A = h_z : bacrqp → bapcqr and the inner arrow e : abpcqr → bapcqr. (K18) adds J = j_{A,e} : bacrqp → abpcqr with J ; e = A. Under the word map, J would need an arrow bap → abp. But in the (K10) graph (bpa → pba → pab → apb, bpa → abp → bap, abp → apb), bap is a sink, and applying (K18) to the binary graph adds nothing.
+- *Scope.* This rules out every completion that adds (K18)'s triple joins while keeping the binary presentation (K10). It does not rule out completions that change the binary data. The forced arrow is the reverse of an inner interchanger **after right whiskering by p**, not of an elementary interchanger, so it does not by itself contradict requirement 3.
+
+**(K26) Variation of factorizations: a four-sign rule (proved).** Let d_i = h_i ; e_i : S_i → T_i (i = 0, 1) with h_i : S_i → U_i, and let a higher variable give z_S, z_U, z_T. Reference orientations: D⁺ : d₀ ; z_T ⇛ z_S ; d₁, E⁺ : e₀ ; z_T ⇛ z_U ; e₁, H⁺ : h₀ ; z_U ⇛ z_S ; h₁, with superscript − for the reverse boundary orientation. Choosing the sign of H equal to that of D, the variation equations are:
+
+| sign D | sign E | equation |
+|---|---|---|
+| + | + | D⁺ = (h₀E⁺) ; (H⁺e₁) |
+| − | − | D⁻ = (H⁻e₁) ; (h₀E⁻) |
+| + | − | H⁺e₁ = (h₀E⁻) ; D⁺ |
+| − | + | H⁻e₁ = D⁻ ; (h₀E⁺) |
+
+- *Formal input variations.* Replacing a, b or c by two parallel faces joined by a hom-3 input cell (factor dimensions (3,2,2), (2,3,2), (2,2,3)), the six families of (K14) have ten active (family, input) cases, giving 135 equations over all spectator contexts (39 with signs (+,−), 60 with (+,+), 36 with (−,−)). The μ equations reuse the λ_x variation literally.
+- *Disjoint variables on the 240-word interval.* Taking as variables the nonidentity hom-3 paths acting outside the smallest interval touched by d, h, e gives 33 variable paths (23 of length one, eight of length two, two of length three) and 33 further hom-4 equations, all between composites of existing D-cells.
+- *D and N need hom-5 cells.* A single operation outside a D- or N-boundary gives 21 D-instances and 20 N-instances. These need 34 hom-5 comparison cells (14 D-types, 20 N-types), and the grading of (K28) shows their boundaries stay distinct.
+
+**(K27) Five more fresh lifts before quotienting (proved).** For F : P ⇒ Q, W : U ⇒ V and forward kernel composites α : X ⇒ P, β : Q ⇒ Y, γ : X ⇒ U, δ : V ⇒ Y, the directed rectangle α ; F ; β = γ ; W ; δ is a legitimate equation between parallel hom-4 cells, and gives F̄ = W̄ after killing the kernel. Five of the eleven lifts left open in (K22) have such equations through a whiskered W_x, W_y or W_z. One of them needs an auxiliary hom-4 generator G with tensor label x₁⁻ ⊗ y₂ ⊗ z₁⁻. **Six of the fifteen fresh lifts remain without an equation before quotienting.** The calculation uses the unchanged (K14) hom-3 graph and none of the (K18) joins, and keeps (K15) as a convention.
+
+**(K28) Injective supports through hom-dimension 5 for the finite comparison presentation (proved).**
+- *Lemma.* In a finite DAG with any equations between parallel paths, each congruence class has a computable least representative. A nonempty path is determined by its set of edge identifiers. So support defined recursively by supp_n(f) = Edges_n(NF(f)) ∪ supp_{n−1}(sf) ∪ supp_{n−1}(tf) is injective.
+- *Hom-dimension 4.* The comparison graph on the 40,412 raw hom-3 paths has 64,696 generating hom-4 edges (D, N, old W, and the new A, H, G) and is acyclic: an integer functional on tensor hom-3 chains is constant on D, N edges and rises by one on W, A, H, G edges. The lemma applies after imposing 43 parallel equations (the 33 variations, the six lift equations, three earlier eliminations and the earlier H-equation) plus one whiskering definition.
+- *Hom-dimension 5.* An integer weight θ on primitive D, N identifiers (values −3 … 2, preserved by all 44 identifications) and a linear functional ℓ on tensor degree-4 chains (value −1 on x₀⁻⊗y₂⊗z₂, x₁⁻⊗y₁^±⊗z₂, x₁⁻⊗y₂⊗z₁^±, zero elsewhere, with ℓ(∂b) = 1 for the six degree-5 basis vectors) give ρ = ℓ(q₄) + θ. Every specified hom-5 generator raises ρ by exactly one, so the hom-5 comparison graph is acyclic and finite, and supports are injective.
+- *Scope.* Arbitrary hom-2 word whiskering can change a primitive D_i into a differently weighted D_j and is not covered. Neither are the (K18) joins.
+
+**(K29) Two completion attempts fail (proved).**
+- *Parity completion.* For a weak inner class K, let G₂(E)(u, v) = {g ∈ 𝔽₂^{E_K} : ∂g = [u] + [v]}. Adjoin j[α, g] : s → u for every positive seed α : s → t and g : t → u, with j[α, 0] = α and j[α, g] ; e = j[α, g + [e]]. This is finite, terminating and confluent, it embeds the path category, and it is natural for maps sending positive seeds to positive composite paths. It still fails the degeneration of (K25), and on the inner diamond P = p ; e, Q = q ; f with comparison D : P ⇒ Q and A = h_z, the joins a = j[A, [q]] and b = j[A, [p]+[e]+[f]] give whiskered comparisons a[D] : X ⇒ Y and b[D] : Y ⇒ X in opposite directions one level up.
+- *Free division.* Freely adjoining D_e(f) with D_e(f) ; e = f for arbitrary positive f terminates and is confluent, but on the same diamond a₀ = A, a_{n+1} = D_p(D_e(a_n ; f)) ; q are pairwise distinct parallel normal forms of weight 1 + 4n. So unrestricted division is infinite on a finite comparison diagram.
+
 ## 3. Requirements
 
 A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary interchangers χ : L ⇛ R for (l+1)-cells with no reverse cell in free objects; one naturality cell per varying argument, oriented by the Leibniz sign; higher cells between routes of lower naturality cells; and coherence equations to be determined. The free objects F(Γ) must satisfy:
@@ -170,30 +206,18 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (a completion compatible with substitution).** (K18) is canonical on a fixed comparison graph, and (K19) shows it is not natural under maps sending a generator to a composite. Either:
-- give a joining rule (possibly with sink divisions, handling critical pairs such as (K20)) that is natural under the maps induced by substituting cells for generators of Γ, so that requirement 5 holds, with injective supports; or
-- realise a failure of the type in (K19) as an actual substitution between free objects, and show that no completion satisfying requirements 1–4 is closed under it.
+**Q1 (main: decide).** Do one of the following.
+- **(A) Construction.** Give a definition of tensor-shaped lax-interchange ω-categories, valid in every dimension and for interchange along k-cells for every k, together with an explicit description of the free object F(Γ) on every finite globular pasting diagram Γ, and prove requirements 1–5 for all Γ and all dimensions.
+- **(B) Impossibility.** Prove that requirements 1–5 cannot all hold, or that a named subset of them (for example 1–3 and 5, without 4; or 2, 3 and 5) cannot. Identify the smallest dimension and the smallest Γ where the contradiction appears.
 
-**Q2 (exactness through hom-dimension 6).** For the triple tensor λD² ⊗ λD² ⊗ λD² of (K14)/(K17), with the data of (K18), (K21) and (K22):
-- identify the remaining eleven fresh lifts before quotienting, or show some need new hom-3 data;
-- check support injectivity in hom-dimensions 4 and 5;
-- show that killing inner interchangers gives exactly ν(K) through hom-dimension 6, or find the obstruction.
+Two directions that the known results suggest, offered only as suggestions:
+- *For (B).* (K24) and (K25) show that substitutions sending generators to identities (requirement 5) force, in the image, arrows that reverse a whiskered inner interchanger, and that every source-joining completion containing the (K18) joins fails for that reason while the binary presentation (K10) is kept. A general version would say: for every family of presentations satisfying requirements 2 and 5, some degenerate substitution forces either the reverse of an elementary interchanger (against 3) or an identification of two cells with different supports (against 2). The case analysis would have to cover all choices of binary data, not only (K10) and its mirror.
+- *For (A).* A recursive definition: lax-interchange (n+1)-categories as categories enriched in lax-interchange n-categories for a Gray-type tensor ⊠ₙ on the latter, with the free objects computed hom by hom ("a Gray tensor of towers", as forced by (K6)). The tensor need not be associative on the nose; skew or lax monoidal enrichment is acceptable (compare Bourke–Lobbia, arXiv 2212.12358, for Gray-categories). The construction must reproduce the χ of §1 at every level, the orientation forced by (K9), and the forced extra data of (K8)/(K10) in the smallest case.
 
-**Q3 (variation equations).** Give the variation cells and equations for the six factorization families of (K14) under every higher variable, on the whole 240-word interval, as (K11) did for one family in ΣD³ ∨ ΣD². Do D and N need their own variation cells?
+**Q2 (the best consistent theory).** If (B) holds, say which requirement is the culprit, and give the strongest consistent weakening with a construction in every dimension. Natural candidates: replace requirement 2 (cells determined by their generators) by "cells determined by their generators together with bounded additional data"; or keep 2 and weaken 3 to "no reverse of an elementary interchanger, but reverses of some whiskered interchangers are allowed" (the second bullet of (K25) asks whether that is consistent); or weaken 4 to require the Gray quotient only up to equivalence.
 
-**Q4 (K15 before the quotient).** Requirements 4 and 5 give q(L[σ]) = q(R[σ]) for the crossing-against-a-composite equation. Prove L[σ] = R[σ] in the free structure, or build a model satisfying requirements 1–5 in which it fails. (K21)'s N comparisons currently assume it.
-
-**Q5 (definition and impossibility).**
-- Is there a recursive "Gray tensor of towers" with these factorizations giving F(Γ) with requirements 1–5 up to some finite dimension N ≥ 5?
-- Can requirements 1–3 and 5 be shown inconsistent without requirement 4?
+**Q3 (the convention (K15)).** Requirements 4 and 5 give q(L[σ]) = q(R[σ]) for the interchanger of a cell with a composite. Prove that crossing against a composite is the composite of the pairwise crossings in any structure satisfying 1–5, or exhibit a structure satisfying 1–5 up to some dimension where it fails. (This is needed for any construction under (A), and several known lifts assume it.)
 
 ## 5. What counts as a solution
 
-Any of the following:
-- a substitution-natural completion, or an impossibility proof, for Q1;
-- the identifications and support check for Q2;
-- the variation data for Q3;
-- a proof or model for Q4;
-- a definition or an impossibility proof for Q5;
-- a reference to a published construction.
-
+A definition with proofs for (A), an inconsistency proof for (B), a construction for Q2, or a proof or model for Q3. A reference to a published construction or impossibility result is also a solution.

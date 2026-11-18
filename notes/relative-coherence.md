@@ -28,8 +28,10 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | Gray cube: X-free 3-loops contractible; the factorisation of inactive columns extends to 3-dim contexts whose 3-generators have 2-supported 2-sources (incl. the D² cylinder and c⋆D²) | proved by a researcher, verified at paper level (`conjectures/answered/gray-contexts-r5-2026-11-18.md`) |
 | An acyclic 1-graph is **not** enough for RC(3): (x, a : 1_x→1_x) is acyclic and RC(3) fails | counterexample (same file); the open condition is now "no 2-generator from an identity to an identity" |
 | Fusion when two generator letters can be exchanged: Y={x,f,g} | proof sketch here (§7.6): y is a cut vertex, so horizontal normal forms remove the exchange; key constructors machine-checked. Not verified |
-| Fusion when two generator letters can be exchanged: the 2×2 grid (no cut vertex) | open; asked in both r6 prompts |
+| Fusion when two generator letters can be exchanged: the 2×2 grid (no cut vertex) | **RC(3) proved by a researcher, verified** (`conjectures/answered/gray-contexts-r7-2026-11-18.md`: matrix normal form, flattening lemma). An independent internal proof (§7.8: path lattice ⊥ ⊕ {0,1}² ⊕ ⊤, all exchange at the cut (1,1)) has its constructors machine-checked (`GridRC3`) |
+| RC(3) on the full cylinder of D² ∗₀ D² | **proved by a researcher, verified** (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`: orientations AB→BA, AG→GA, FB→BF; U_A/U_B via the interchange 4-cell). An independent internal sketch of the 2-skeleton (§7.9: unique factorisation, a single exchange χ_M) has its normal forms and all multiplications machine-checked (`TwoDiscCylinderRC3`) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
+| General exchange in dimension 2 (acyclic, nonempty boundaries) | strict side **proved** (§7.11): exchange classes are linear extensions of event posets, and squares and hexagons are a homotopy basis (machine-checked on grids up to 3 × 3); both are single coherences over pasting contexts (`ExchangeLaws`). RC(3) reduced to two forced-order statements (K), (F): sketch |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
 ## 1. Notation
@@ -481,12 +483,317 @@ Right cancellation of the invertible ν then gives RC(3), exactly as in §7.4.
 
 Negative control: a swapped type on a μ is rejected. These checks cover the constructors and the fold (§2 of the answer). The normalisers, fusion and the 3-term induction (§§4–5) are not generated.
 
+### 7.8 RC(3) for the 2 × 2 grid (internal proof, thread RCX, 2026-11-18)
+
+This is question 1 of `conjectures/outbox/gray-contexts-r7.md`: the smallest Gray context with two generator letters that commute and no cut vertex of the whole context between them. **Outcome:** RC(3) holds. The path lattice is an ordinal sum `{⊥} ⊕ {0,1}² ⊕ {⊤}`. All exchange happens inside the middle block, and every cell in that block has the centre vertex (1,1) as a cut vertex. So the proof is the round-5 forced-chain construction (§7.7) at the two ends, glued to the round-6 two-letter construction (`conjectures/answered/naturality-arbitrary-depth-r6-2026-11-18.md`) in the middle. The only new ingredient is the multiplication table that mixes the two, and its 4-laws turn out to be laws of kinds already used in rounds 5 and 6. Status is at the end of the subsection.
+
+**The context.** `G₂₂` has vertices `(i, j)`, `0 ≤ i, j ≤ 2`, edges `h_ij : (i,j) → (i+1,j)` and `v_ij : (i,j) → (i,j+1)`, and four lax squares
+
+```
+S_ij : h_ij ∗₀ v_{i+1,j}  ⇒  v_ij ∗₀ h_{i,j+1}          (i, j ∈ {0, 1}).
+```
+
+This is the strict Gray product of two paths of length 2, and its full sub-squares have the orientation of the lax square (§7.4) with `f = h`, `↑ = v`.
+
+**Lemma G1 (paths and strict cells).** Put `l₀ = h₀₀v₁₀`, `l₁ = v₀₀h₀₁` (the paths (0,0) → (1,1)) and `r₀ = h₁₁v₂₁`, `r₁ = v₁₁h₁₂` (the paths (1,1) → (2,2)). The six paths (0,0) → (2,2) are
+
+```
+⊥ = hhvv,   (i, j) := l_i r_j  for i, j ∈ {0, 1},   ⊤ = vvhh,
+```
+
+ordered as the lattice `L = {⊥} ⊕ {0,1}² ⊕ {⊤}`. The covers are `⊥ → (0,0)` by S₁₀, `(0,j) → (1,j)` by S₀₀, `(i,0) → (i,1)` by S₁₁, and `(1,1) → ⊤` by S₀₁. Between two paths p, q there is exactly one strict 2-cell if p ≤ q, and none otherwise.
+
+*Proof.* The 2-cells of the free strict 2-category are 2-paths of whiskered generators modulo exchange moves (§2, Step 4). A whiskered generator adds one box to the Young diagram of the path, so a 2-path from p to q is a saturated chain of `[p, q]`. Two saturated chains differ only inside the square `[(0,0), (1,1)]`. There, S₀₀ acts on positions 1–2 of the path and S₁₁ on positions 3–4, so the two chains are related by one exchange move. ∎ *Machine-checked by enumerating all 2-paths and their exchange classes: 20 strict cells, one class each.*
+
+**Sub-context transfer.** If RC(n) holds in Γ, it holds in every dependency-closed sub-context Γ′ ⊆ Γ, and in every context isomorphic to one. *Proof.* Take parallel n-terms T, T′ of Γ′ with `π T = π T′`. RC(n) in Γ gives an (n+1)-term Θ : T → T′ of Γ. Its strict image is the identity on `π T`, which uses only generators of Γ′. By the support lemma (`supp(π Θ) = supp Θ`), Θ uses only variables of Γ′, so it is a term of Γ′. ∎ RC is also invariant under the opposite meta-operations of Benjamin–Markakis (arXiv 2402.01611), which preserve typing and send strict images to opposite strict images. Here this is used for the reversal of 2-cells.
+
+**The fibres.** A 2-term whose 0-boundary is not (0,0) → (2,2) lives, by the support lemma, in a proper sub-rectangle. That sub-rectangle is a path, a lax square, a cylinder of a composable pair, or the 2-opposite of one. RC(3) holds there by Proposition P∞, §7.4 and round 3. So only 3-terms between 2-terms over (0,0) → (2,2) remain. By Lemma G1 their strict 2-boundaries are the intervals `[p, q]` of L.
+
+| Interval [p, q] | Letters | Status |
+|---|---|---|
+| p = q | none | Proposition P∞ |
+| the six covers | one square, with fixed path pieces | sub-context of a full chain cylinder or its 2-opposite: round 5 and transfer |
+| `[⊥,(1,0)]`, `[⊥,(0,1)]`, `[(1,0),⊤]`, `[(0,1),⊤]` | two squares in a forced order | a 2 × 1 or 1 × 2 grid with one pendant edge: a sub-context of the full cylinder of x₀ → x₁ → x₂ → x₃ or of its 2-opposite (for example `[⊥,(1,0)]`: S₁₀ = F₁, S₀₀ = F₂, pendant v₂₁ = a₃⁺): round 5 and transfer |
+| `[(0,0),(1,1)]` | S₀₀ and S₁₁ in either order | two lax squares wedged at (1,1): the round-6 construction with both letters squares (below) |
+| `[⊥,(1,1)]`, `[(0,0),⊤]`, `[⊥,⊤]` | the block exchange plus one or two forced end letters | **new** (below) |
+
+`[(0,0), ⊤]` is the image of `[⊥, (1,1)]` under the (1,2)-opposite with `(i,j) ↦ (2−i, 2−j)`. That opposite is an automorphism of G₂₂ with `S_ij ↦ S_{1−i,1−j}`. The construction below is uniform in any case.
+
+**Lemma G2 (head shapes).** Let `T = coh_{P,A}[γ]` be a term of dimension 2 or 3 whose 0-boundary is (0,0) → (2,2), and let p, q be the paths of its 1-boundaries.
+1. Every 0-vertex of P is sent to a vertex on both p and q.
+2. If `p ≠ q` and p, q share only their endpoints, then exactly one 0-column of P is active (has an entry containing a 2-variable). All the others are point-supported at (0,0) or (2,2). This happens exactly for the three new intervals.
+3. Two active columns are always separated at (1,1). The interval then lies in the block, the left column's value is `1` or S₀₀, and the right column's value is `1` or S₁₁.
+
+*Proof.* (1) The source and target 1-terms of T traverse the images of all 0-vertices of P. (2) (0,0) is the unique source and (2,2) the unique sink, so a column over a single endpoint has an empty path, as in §7.4. (3) An inner common vertex other than (1,1) is (1,0), (2,1), (0,1), (1,2), (2,0) or (0,2). At the first four, one side of the cut is a single shared edge, whose strict value is an identity. The last two lie only on ⊥ or only on ⊤, so the value is an identity there. ∎ *Machine-checked on 1064 subterms of generated 2-, 3- and 4-terms: 67 prime one-column heads, 44 heads split at (1,1).*
+
+So **two active columns occur only in the block, split at the centre**. In the prime fibres every head is one vertical column, with point-supported columns at the unique source and sink. That is the round-2/round-5 situation, with entries whose values are arbitrary intervals of L.
+
+**Normal forms.** Fix the representatives `l̂₀ = h₀₀ ∗₀ v₁₀`, `l̂₁ = v₀₀ ∗₀ h₀₁`, `r̂₀`, `r̂₁` likewise, `p̂_{ij} = l̂_i ∗₀ r̂_j`, and right-nested `⊥̂`, `⊤̂`. The raw letters are:
+- *Chain letters*, as in round 5 (2): `E_up = h₀₀ ∗₀ (S₁₀ ∗₀ v₂₁)` and `E_dn = v₀₀ ∗₀ (S₀₁ ∗₀ h₁₂)`.
+- *Block letters*, as in round 6 (3)–(4): for `δ = (i,j) → (i′,j′)` in `{0,1}²`, `E_δ = a_{ii′} ∗₀ b_{jj′}`, where `a₀₁ = S₀₀`, `a_ii = 1_{l̂_i}`, `b₀₁ = S₁₁`, `b_jj = 1_{r̂_j}`. Identity factors are kept.
+
+The word of `[p, q]` (p < q) is: `E_up` if p = ⊥; then `E_{p′→q′}` if `p′ ≠ q′`, where `p′ = (0,0)` if p = ⊥ (else p) and `q′ = (1,1)` if q = ⊤ (else q); then `E_dn` if q = ⊤. So a word has at most one block letter. The normal form is the round-5 list
+
+```
+N_{p,q}(A, B) = LF[ κ(A, S₁), E₁, κ(T₁, S₂), E₂, …, E_k, κ(T_k, B) ],        N_{p,p}(A, B) = κ(A, B),
+```
+
+with `S_m`, `T_m` the literal boundaries of the letters. A comparison is kept between any two letters.
+
+**Multiplication.** `μ_{p,q,r} : N_{p,q}(A,B) · N_{q,r}(B,C) ⇛ N_{p,r}(A,C)` is built in this order:
+1. reassociate the concatenated list (a coherence on `C_N`);
+2. contract the junction pair `κ(T, B) · κ(B, S) ⇛ κ(T, S)` by path multiplication, inserted on `V_N(0,…,1,…,0)`, as in round 5 (7);
+3. *if the letters on both sides of the junction are block letters*, round 6 (13) steps 3–5: `κ(q̂, q̂) ⇛ 1_{q̂}` on the actual path, then unit removal on C₂, then `M_{δ,ε} = I ; (m^F ∗₀ m^G)`, with I the interchange on `C₂ ∗₀ C₂`.
+
+The concatenated word, with the two block letters merged at a block/block junction, is the word of `[p, r]`. So μ has the stated type. *Machine-checked: all 50 composable pairs, 8 of them with a block merge, typed by the certified checker.*
+
+**The 4-laws of μ.** We need the two bracketings of `N₁ · N₂ · N₃` to be joined. Classify the two junctions as *sep* (step 2 only) or *mer* (steps 2–3).
+- *sep/sep*: round 5 §2.2. Disjoint pairs use the interchange on `V(1,1)`. When the middle word is empty, the overlapping pairs use one path 4-coherence.
+- *mer/mer*: block chains have length ≤ 2, so this needs an empty middle word. It is then round 6's laws: path contraction, unit and reassociation naturality, and the raw law (12) on `D²(F) ∗₀ D²(G)`.
+- *sep/mer* with a non-empty middle word: the merge and the contraction act at disjoint slots. The comparison is the interchange coherence on `V(1,1)`, with the whole merge 3-cell and the contraction 3-cell as its two 3-arguments, plus reassociations.
+- *sep/mer* with an empty middle word: both routes do the same contractions in a different order and then the same merge. That is round 5's overlapping-pair 4-cell, whiskered by the merge.
+
+So **no new kind of 4-law appears**. The table only combines round-5 and round-6 laws.
+
+**Normalisers and fusion.** For a 2-term T with value `[p, q]`:
+- *Settled fibres (rows 1–3 of the table).* Use the established normalisers (rounds 2, 3 and 5, through the sub-context embedding). Transport them to the present letters by fixed raw-letter conversions. For example, `S₀₀ ∗₀ 1_{r̂₀}` versus the round-5 whiskered letter `S₀₀ ∗₀ r̂₀` is one coherence over `D²(S₀₀) ∨₀ C₂`. Round 6 does the same in its §7 ("transported to conventions (5)–(6)"). The conversions commute with the laws by naturality in the letter, with formal letters, before substitution.
+- *Block fibre.* Use round 6 §§5–7 verbatim, with both local theories lax squares (rows 2–3) instead of a triangle and a disc. Heads are `C_n` or `C_m ∗₀ C_n` split at (1,1) (Lemma G2). The horizontal fold ψ (18), the horizontal–vertical 4-cell (19) and the point-column clause (27) are unchanged. The local normal forms are the lax-square ones, `κ · S · κ`.
+- *Prime fibres.* By Lemma G2 the head factors literally through one column `C_n`, or `V_n(𝐤)` in dimension 3. Put `ν_T = v_H[η] ; D_{B_H,η}`, where `v_H` is the one coherence on the column and D is the vertical fold of the entries' normalisers by μ. The entries are proper subterms of any value, normalised by recursion.
+
+Fusion `F_{u,σ}` (round 6 (30)) is by induction on the relative term u, with the evaluator grammar of round 6 (28): variable, path-only, `U · V` (μ), `U ∗₀ V` at (1,1) (ψ), point column (`B_q`), fixed path whiskering. Its 4-cells are the μ-laws above, round 6's (19), top-argument naturality (depth 1), and the actual-path laws (15)–(16). The 3-term induction `Λ_J` (round 6 (31)–(33)) and right cancellation (34) are unchanged. Hence
+
+```
+RC(3) for G₂₂.
+```
+
+This is the 2 × 2 case of question 1 of the gray-contexts r7 prompt: RC(3) in a 2-dimensional Gray context where two letters commute and no cut vertex of the whole context separates them. It is the 2-skeleton step for RC(3), hence uniqueness in G(3), of 3-dimensional Gray contexts that contain a 2 × 2 grid. The grid is not a cylinder `Q↑Y` of a pasting context, so it gives no new instance of N directly. Its method is what the D² ∗₀ D² cylinder needs (§7.9).
+
+**What is new, and the status.**
+- *New:*
+  - the lattice decomposition and Lemma G2, which together locate every exchange at a cut vertex of the cells it occurs in;
+  - the mixed normal form, with at most one block letter between forced chain letters;
+  - the μ table and the case analysis of its laws.
+- *Status: internal proof at the round-5/6 standard.* The case lists are complete and checked. The new constructors and a representative of every new kind of 4-cell are machine-checked. The fusion 4-cells are not all written out, and that is the step the external verifications checked line by line. **Not externally verified.** **Superseded as the reference result** by the verified researcher proof of the same statement (`conjectures/answered/gray-contexts-r7-2026-11-18.md`); this subsection is kept as an independent route whose constructors are machine-checked.
+
+**Why this works, and what it does not reach.** In the grid, the trace poset of every strict cell is series-parallel: S₁₀ ; (S₀₀ ∥ S₁₁) ; S₀₁. A series-parallel poset has a canonical normal form, a vertical list of horizontal products, with no choices. That is why the round-5 and round-6 pieces glue with no new law. The 2-skeleton of the D² ∗₀ D² cylinder (§7.9) contains the N-shaped poset, which is not series-parallel, so a choice is needed there.
+
+**Machine checks** (`tools/rc3_grid.py`, `src/CaTTExp/Generated/GridRC3.agda`, 261 checks, about 3 min):
+- *Python:* the classification of Lemma G1; Lemma G2 on 1064 subterms; frame stability.
+- *Agda:*
+  - the 20 normal forms;
+  - the 50 multiplications, each with exactly its stated type;
+  - the exchange χ at `(0,0) → (1,1)` and its compatibility 4-term (round 6 (8));
+  - the raw law (12) in the block, formed with formal letters on `D²(F) ∗₀ D²(G)` and substituted;
+  - `Z₃` on `C₃ ∗₀ C₃` and ζ;
+  - the core interchange 4-cell of a sep/mer law (a block merge and a separator contraction at disjoint slots, on `V(1,1)`);
+  - 61 literal frame factorisations, with H typed over R and η a well-typed substitution.
+- *Negative control:* μ_{⊥,(1,0),⊤} with source and target swapped is rejected.
+
+### 7.9 The 2-skeleton of the D² ∗₀ D² cylinder (proof sketch, thread RCX, 2026-11-18)
+
+This is the 2-dimensional part of question 2 of `conjectures/outbox/naturality-arbitrary-depth-r7.md`.
+
+**The context.** Let `Q = (x, y, z, f₀, f₁ : x → y, A : f₀ ⇒ f₁, g₀, g₁ : y → z, B : g₀ ⇒ g₁)`, and let W₂ be the 2-skeleton of `Q↑Var(Q)`. Its variables are:
+- vertices `x^±, y^±, z^±` and cylinder edges `X, Y, Z`;
+- edges `f_i^±`, `g_j^±`;
+- 2-cells `A^±`, `B^±`, `F_i : f_i⁻ ∗₀ Y ⇒ X ∗₀ f_i⁺` and `G_j : g_j⁻ ∗₀ Z ⇒ Y ∗₀ g_j⁺`.
+
+The 3-generators `U_A`, `U_B` are omitted. The paths x⁻ → z⁺ are `(i, j, c)`, with c the crossing position: `R = f_i⁻ g_j⁻ Z`, `M = f_i⁻ Y g_j⁺`, `L = X f_i⁺ g_j⁺`. The paths in R ∪ M pass through y⁻, and those in M ∪ L pass through y⁺.
+
+**Independence.** Two letters can be adjacent and act on disjoint segments exactly when one is a *left* letter (A⁻, A⁺, F_i) and the other a *right* letter (B⁻, B⁺, G_j), and they are not the pair (G, F). G must precede F, because F needs the edge Y that G produces. Every independent pair is separated by y⁻ or by y⁺. No three letters are pairwise independent.
+
+**Lemma D1 (factorisation).** Every strict 2-cell w between paths x⁻ → z⁺ factors uniquely as
+
+```
+w = w₁ · w₂,     w₁ ∈ ⟨A⁻, B⁻, G_j⟩ (a product at the cut y⁻),     w₂ ∈ ⟨F_i, A⁺, B⁺⟩ (a product at the cut y⁺).
+```
+
+*Proof.* Call A⁻, B⁻, G_j block-1 letters and F_i, A⁺, B⁺ block-2 letters. Take a block-2 letter immediately followed by a block-1 letter in a 2-path. After F or A⁺ the path is in L, where no block-1 letter applies. After B⁺ the path is in M or L, and B⁻ and G need R. So the only possible pair is B⁺ then A⁻ in M, and those two commute: they act on g⁺ and f⁻ on either side of Y. Bubble-sorting therefore moves every 2-path to block-1 letters followed by block-2 letters, by exchange moves. The block-1 part lives in R ∪ M, so it is a cell of `D²(A⁻) ∨_{y⁻} C_R`, where C_R is the right D²-cylinder's paths from y⁻. There the class is determined by the left and right words, which are forced (round 4). The same holds for block 2 on `C_L ∨_{y⁺} D²(B⁺)`. ∎ *Machine-checked: all 2-paths from all 12 source paths enumerated; 67 strict cells; each exchange class has a block-sorted representative, and distinct classes have distinct factorisations.*
+
+**Why a choice is needed here.** Take the cell `f₀⁻g₀⁻Z ⇒ X f₁⁺ g₁⁺` through A⁻, G₀, F₁, B⁺. Its trace poset is `A⁻ < F₁ > G₀ < B⁺`, the N-shaped poset, which is not series-parallel. The cell has no canonical vertical list of horizontal products. Lemma D1 makes the choice: A⁻ early, B⁺ late.
+
+**Normal forms.** For the block-1 representatives, write paths in R ∪ M as `f_i⁻ ∗₀ (g_j⁻ ∗₀ Z)` or `f_i⁻ ∗₀ (Y ∗₀ g_j⁺)`; the inner factors are literally the boundaries of G_j. For block 2, write paths in M ∪ L as `(f_i⁻ ∗₀ Y) ∗₀ g_j⁺` or `(X ∗₀ f_i⁺) ∗₀ g_j⁺`; the outer factors are the boundaries of F_i. The raw letters are:
+- `E¹(w₁) = a ∗₀ b`, where a is `A⁻` or an identity, and b is a local raw word of C_R: `B⁻ ∗₀ Z`, `G_j`, `(B⁻ ∗₀ Z) · κ · G₁`, or an identity;
+- `E²(w₂) = a′ ∗₀ b′`, where a′ is a local word of C_L (`F_i`, `X ∗₀ A⁺`, `F₀ · κ · (X ∗₀ A⁺)`, or an identity), and b′ is `B⁺` or an identity.
+
+Then
+
+```
+N(w) = LF[ κ, E¹(w₁), κ, E²(w₂), κ ]          (absent letters omitted; N(1) = κ).
+```
+
+**Lemma D2 (the only exchange in μ).** Concatenate `N(u) · N(v)`. If `u₂ ≠ 1` and `v₁ ≠ 1`, then `u₂ = B⁺` and `v₁ = A⁻`, both in phase M. *Proof.* As in D1: after F or A⁺ no block-1 letter applies, and from M the only block-1 letter is A⁻. ∎
+
+So μ has three non-trivial cases:
+- a block-1 merge (`u₂ = 1`): round 6 M at y⁻, with local multiplications in `D²(A⁻)` and in C_R. The latter are round-5 list multiplications, for example `(B⁻ ∗₀ Z) · G₁ ⇛ LF[B⁻ ∗₀ Z, κ, G₁]`;
+- a block-2 merge (`v₁ = 1`): the same at y⁺;
+- the exchange case: apply
+
+  ```
+  χ_M : LF[ E²(B⁺)_{f₀}, κ, E¹(A⁻)_{g₁} ]  ⇛  LF[ κ, E¹(A⁻)_{g₀}, κ, E²(B⁺)_{f₁}, κ ],
+  ```
+
+  then contract the κ pairs on both sides and merge with the neighbours. χ_M is **one coherence over `D²(a) ∨₀ D¹(e) ∨₀ D²(b)`**. All the 1-cells involved (f_i⁻, Y, g_j⁺) are single edges, so the κ's of the instance are literally the substituted formal κ's.
+
+*Machine-checked:* all 203 composable pairs (27 block-1 merges, 27 block-2 merges, 4 exchanges, 145 separators) have exactly the type `N(u) · N(v) ⇛ N(uv)`.
+
+**4-laws of μ.** In a triple `N₁ · N₂ · N₃`, A⁻ and B⁺ occur at most once. So each route applies χ_M at most once, and the two routes apply the same multiset of operations: χ_M, merges at y⁻, merges at y⁺, and contractions. They differ in order and association only. The laws are therefore:
+- round-5 and round-6 laws inside a block;
+- interchanges of operations at disjoint slots;
+- round-5 overlapping-pair path laws where χ_M's boundary κ's meet the neighbouring ones.
+
+**Heads.** Lemma G2 holds verbatim with these changes. Prime values are those containing both G and F; their heads are one column, with point columns at the unique source x⁻ and sink z⁺. Otherwise active columns are separated only at y⁻ and/or y⁺. *Machine-checked on 390 subterms.*
+
+**Fusion, and what is new.** The evaluator grammar of §7.8 gains three clauses:
+- a horizontal fold ψ¹ at y⁻ and ψ² at y⁺ (round 6 (18), with local theories D²(A⁻) and C_R, or C_L and D²(B⁺));
+- a three-column fold ψ_M for heads split at both y⁻ and y⁺ in phase M. It is the zip `Z` on `C ∗₀ D¹(Y) ∗₀ C`, followed by un-merging `A⁻ ∗₀ Y ∗₀ B⁺` into the two block letters;
+- the **transfers** `τ_A, τ_B` between block-1 and block-2 coordinates of a phase-M letter. For example, `1_{f⁻} ∗₀ (Y ∗₀ B⁺) ⇛ κ · (1_{f⁻ ∗₀ Y} ∗₀ B⁺) · κ`, one coherence over `D¹ ∨₀ D¹ ∨₀ D²`. They are needed because ψ¹ produces B⁺ in block-1 coordinates while N puts it in block 2.
+
+The new 4-law families are:
+- (19)-type horizontal–vertical laws for ψ¹, ψ² and ψ_M, the last over `C₆ ∗₀ D¹ ∗₀ C₆`;
+- the compatibility of τ with merges and with χ_M. These are formal coherences over `D²(a) ∨₀ D¹(e) ∨₀ D²(b)`, again because the letters' boundary 1-cells are single edges.
+
+Each of these is a direct coherence over the named pasting context after the round-6 four-step reduction (pure recipes, top-argument naturality, actual-path laws, raw comparison).
+
+**Status: proof sketch at the round-3 standard.**
+- Lemma D1, Lemma D2, the normal forms, all multiplications, χ_M and the transfers are complete and machine-checked.
+- The fusion laws for ψ_M and τ are named with their arities but not written out. **Not verified.**
+- If the sketch is right, RC(3) holds for W₂. Combined with a two-generator extension lemma, which is still open (U_A and U_B interchange through (36), so item 20 of the gray-contexts prompt does not apply), it would give RC(3) for the full cylinder of D² ∗₀ D². **Both are now settled** by the verified naturality round-7 answer (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`), which proves RC(3) on the full cylinder; the cone round-5 extension theorem (`conjectures/answered/cone-over-coherences-r5-2026-11-18.md`) reduces any cylinder of a 2-dimensional Q to its 2-skeleton. This subsection is kept as an independent route.
+
+**Machine checks** (`tools/rc3_d2d2.py`, `src/CaTTExp/Generated/TwoDiscCylinderRC3.agda`, 468 checks):
+- the 67 normal forms;
+- all 203 multiplications at their exact types;
+- χ_M and four transfers;
+- 64 frame factorisations;
+- the generator interchange 4-term (36) of round 6 on the full cylinder, including U_A and U_B.
+
+*Negative control:* χ_M with source and target swapped is rejected.
+
+### 7.10 Machine checks of constructions from three verified answers (thread RCX, 2026-11-18)
+
+`tools/rc3_r6.py` and `src/CaTTExp/Generated/RoundSixChecks.agda`. The certified checker accepts the following.
+- **Cone, round 4** (`conjectures/answered/cone-over-coherences-r4-2026-11-18.md`), in `Cone(D² ∗₁ D²; c)`:
+  - `S₁²` (2), with its target associator;
+  - the 4-cell (14), formed over `D³ ∗₁ D³` with `M₁` and the right-frame comparison δ substituted. Its type is checked in Agda against the displayed type, built independently from M₁, R, δ and the frame cells (check `cone-e14-ty`).
+
+  (15) is a composite of (14), unitor naturality and the associator. It is not assembled.
+- **Gray contexts, round 6** (`conjectures/answered/gray-contexts-r6-2026-11-18.md`):
+  - `Ω_P` (3) on `V(1,0,1)`, where `b₋` and `b₊` are non-trivial, and on `D³ ∨₀ D³`;
+  - the point-support 4-term (6) over D³, with β′(y) the identity on a unitor 2-cell at y;
+  - the interchange 4-coherence (11) over `D² ∨₁ D³ ∨₁ D³`, formally and substituted in the D² ∗₀ D² cylinder with `z ↦ U_A ∗₀ g₀⁺` and e a path-contraction 3-cell;
+  - the local exchange law (24) over `D³ ∨₀ D³`.
+- **Naturality, round 6** (`conjectures/answered/naturality-arbitrary-depth-r6-2026-11-18.md`), in `(x→y→z)↑{x,f,g}`:
+  - the block multiplication M (11) for both orders;
+  - ζ (14);
+  - three instances of the horizontal fold ψ (18);
+  - the first step (20) of the horizontal–vertical 4-cell, a coherence over `C₆ ∗₀ C₆`;
+  - the two routes `(ψ₁ ∗₁ ψ₂) ; μ` and `I ; (μ^F ∗₀ μ^G) ; ψ` of (19). They are checked to be parallel, with the same type. The 4-cell (19) itself is a composite through depth-1 naturality and is not assembled.
+  - (36) is in `TwoDiscCylinderRC3` (§7.9).
+
+*Negative control:* (24) with source and target swapped is rejected.
+
+### 7.11 General exchange in dimension 2: the strict homotopy basis and a reduction (thread RCX, 2026-11-18)
+
+This is question 1 of `conjectures/outbox/gray-contexts-r8.md`. **Hypothesis (H):** Γ is finite and of dimension ≤ 2, its generating 1-graph is acyclic, and every 2-generator has nonempty source and target paths. **Outcome:** the combinatorics of exchange are settled in general. For each strict 2-cell, the exchange moves between its 2-paths have an explicit homotopy basis made of squares and hexagons, and both are single coherences over pasting contexts. What is left for RC(3) is two forced-order statements, (K) and (F) below. Neither involves exchanging two letters. Both are of the kind proved case by case in rounds 5–7. They are a proof sketch here.
+
+**Lemma E1 (event posets).** Assume (H) and let c : p ⇒ q be a strict 2-cell of F(Γ). Then the 2-paths representing c are exactly the linear extensions of a poset (E_c, <), and an exchange move is exactly a swap of two adjacent incomparable events.
+
+*Proof.* By ABGLM (arXiv 2312.00429), 2-cells of the free 2-category are 2-paths of whiskered generators modulo exchange moves.
+- Give each edge occurrence of a path an *instance* name. A letter consumes the instances of its source segment and produces fresh instances for its target segment.
+- Order the events (letter occurrences) of a word w by "e′ consumes an instance that e produced", transitively closed. This gives a poset E_w.
+- An exchange move swaps two adjacent letters acting on disjoint segments. Neither consumes what the other produced, so it preserves events, instances and E_w.
+- Conversely, let e, e′ be adjacent in w with e′ not consuming any instance that e produced. Then e′'s consumed segment and e's produced block are contiguous and disjoint. Both are nonempty by (H), so one lies strictly to the left of the other, and the two letters can be exchanged.
+- Bubble sort reaches every linear extension of E_w from w through adjacent incomparable swaps. So the exchange class of w is Lin(E_w). ∎
+
+With an empty boundary, this proof fails at the "strictly to the left" step: for a : 1_x → 1_x the letter has no position. That is the Eckmann–Hilton obstruction of §7.
+
+**Lemma E2 (Squier basis).** Let X_c be the 2-complex with:
+- vertices Lin(E_c);
+- edges the exchange moves;
+- one 2-cell for each *square*: two swaps at disjoint positions, in either order;
+- one 2-cell for each *hexagon*: three consecutive pairwise incomparable events abc, with the two reduced routes abc → bac → bca → cba and abc → acb → cab → cba.
+
+Then X_c is simply connected.
+
+*Proof.* Fix L₀ ∈ Lin(E_c), and orient each exchange so that it removes an inversion relative to L₀. This rewriting terminates. Its only normal form is L₀: a linear extension L ≠ L₀ has an adjacent pair that L₀ orders the other way, and two events that two linear extensions order differently are incomparable.
+
+Now take two descents at positions k < l.
+- If l > k + 1, they commute: a square.
+- If l = k + 1, the three events are pairwise inverted relative to L₀, so they are pairwise incomparable. Both routes to their reversal are descents: a hexagon.
+
+So the rewriting is convergent, and squares and hexagons close all its local branchings. By Squier's homotopy lemma (ABGLM, Polygraphs, the homotopy-basis theorem for convergent 1-polygraphs), they generate all loops of the exchange graph. ∎
+
+*Machine-checked* (`tools/rc3_exch.py`). For each context below and every pair of parallel paths, the script enumerates all 2-paths and checks:
+- that exchange classes are exactly the sets of linear extensions (E1);
+- that exchanges are exactly the adjacent incomparable swaps;
+- that the descent rewriting is stuck only at L₀;
+- that every local branching is a square or a hexagon (E2).
+
+| context | strict 2-cells | 2-paths | largest class | square branchings | hexagon branchings | cells with three pairwise independent events |
+|---|---|---|---|---|---|---|
+| 1 × 1 grid (lax square) | 7 | 7 | 1 | 0 | 0 | 0 |
+| 2 × 2 grid | 74 | 78 | 2 | 0 | 0 | 0 |
+| 2 × 3 grid | 200 | 241 | 5 | 4 | 0 | 0 |
+| 3 × 3 grid | 662 | 1419 | 42 | 402 | 49 | 25 |
+| three bigons side by side | 54 | 67 | 6 | 0 | 1 | 1 |
+| four bigons side by side | 174 | 286 | 24 | 6 | 18 | 11 |
+| D² ∗₀ D² cylinder, 2-skeleton | 120 | 149 | 5 | 1 | 0 | 0 |
+| two triangles and a bigon | 77 | 91 | 6 | 0 | 1 | 1 |
+
+So the 2 × 3 grid, the smallest open case of the r8 prompt, needs only squares, while the 3 × 3 grid is the smallest grid that needs hexagons. A path in an m × n grid has at most min(m, n) corners of the form hv, and three pairwise independent faces need three of them.
+
+**Lemma E3 (block-form laws).** Let a, b, c, d be the 2-variables of `D² ∨₀ D² ∨₀ D²` or of `D² ∨₀ D² ∨₀ D² ∨₀ D²`. The *block word* of an order of the letters is the vertical composite of the letters, each whiskered by the current source or target edges of the others. For two orders, the *block exchange* is the full coherence between their block words.
+- The two hexagon routes are parallel full 3-terms, so one coherence 4-term connects them.
+- The two orders of two disjoint exchanges are likewise connected by one coherence 4-term.
+
+Both are substitution instances of a single coherence, with any 2-terms for the letters and any 1-terms for the edges. *Checked in Agda:* `Generated/ExchangeLaws.agda`, 2 checks, with a negative control (swapped hexagon type) rejected.
+
+**The reduction.** In Γ fix the following data.
+- Path representatives p̂.
+- Pure-path connectors κ(s, t) : s → t between 1-terms with the same path. By Proposition P∞ these are coherent in every dimension, because acyclicity makes path labellings injective.
+- For each strict 2-cell c and each w ∈ Lin(E_c), the word term T_w = κ₀ · L₁ · κ₁ · … · L_k · κ_k. Here L_i is the i-th letter whiskered by representatives.
+
+Then:
+- An *exchange in context* X_{w,i} : T_w → T_{w′} is the block exchange of Lemma E3, conjugated by a *block normaliser*. The block normaliser is a 3-term that splits κ_i into whisker-side pieces with Proposition P∞, and slides those pieces past L_i and L_{i+1}. Each slide is the item-24 coherence over `D²(α) ∨₀ D²(κ)`, with α's boundary edges sent to its declared boundary 1-terms. A square or hexagon of E2 in context is then the E3 coherence, up to a comparison of block normalisers.
+
+RC(3) for Γ then follows from two statements.
+- **(K) Rigid coherence.** Take two 3-terms between the same two 2-terms, each a composite of pure-path 3-terms inserted between letters and slides of pure-path 2-cells past letters, never exchanging two letters. Then the two are connected.
+  - *Sketch.* Slides past one letter compose: a coherence over `D²(α) ∨₀ (D² ∨₁ D²)`. Slides past different letters interchange: a coherence over `V(1,1)`. Slides are natural in pure-path 3-cells: a coherence over `D²(α) ∨₀ D³`. With these, each such 3-term is connected to one canonical slide per letter, fixed by the change of that letter's whiskers, followed by pure-path parts that Proposition P∞ compares.
+- **(F) Fusion.** Define normalisers by recursion on syntax: for u = coh_{Q, s→t}[τ] with Q of dimension ≤ 2,
+
+  ```
+  ν_u = ν^Q[τ] ; Φ_τ ; ξ.
+  ```
+
+  Here:
+  - ν^Q : coh_Q[id] → T^Q is the coherence onto Q's block word;
+  - Φ_τ flattens T^Q[τ] using ν_{τ(α)} for the 2-variables α of Q, item 15's D_m and Ω_m, and P∞;
+  - ξ is the descent path of E2 to the chosen linear extension.
+
+  Then ν_{a[σ]} is connected to ν_a[σ] ; Φ_σ ; ξ′, for every 2-term a over a context Δ and every σ : Γ ⊢ Δ.
+  - *Sketch.* By induction on a. a[σ] = coh_Q[τσ] and ν^Q[τσ] = ν^Q[τ][σ] syntactically. The flattenings compare by the induction hypothesis on the τ(α), item 15's Ω_m, and (K). Any two descent paths with the same ends are connected by E2 and E3.
+
+*Assembly.* Let H = coh_{P, a→b}[σ] : u → v be a 3-term. In P, RC(3) for pasting contexts writes coh_P[id] as ν^P_a, then exchanges of P's letters, then whiskered 3-variables of P, then (ν^P_b)⁻¹.
+- Substitute σ.
+- Expand each substituted P-exchange into elementary exchanges. This is the block-shuffle coherence over `C ∨₀ V_m ∨₀ C ∨₀ V_n ∨₀ C`, which is natural in the slots.
+- Apply (F) to ν^P_a[σ] and ν^P_b[σ], and induction to σ of the 3-variables.
+
+This shows ν_u⁻¹ ; H ; ν_v is connected to an exchange path. By E2 and E3, two exchange paths with the same ends are connected. So any two parallel 3-terms with the same strict image are connected.
+
+**Status.**
+- E1 and E2 are proved and machine-checked on the contexts in the table. E3 is checked in Agda.
+- (K), (F) and the assembly are a proof sketch at the round-3 standard, with the 4-terms not generated. **Not verified.**
+- If (K) and (F) hold, RC(3) holds under (H). With the cone round-5 extension theorem, RC(3) then holds for every 3-dimensional context whose 2-skeleton satisfies (H).
+- The point of the reduction is that exchange stops being the obstacle. All of it is handled by E2 and two coherences over pasting contexts. What remains is a uniform statement of the relative fusion that rounds 5–7 proved case by case for the lax square, the chain cylinders, the cube hemispheres and the 2 × 2 grid.
+- *Next:* generate (K) and the block normaliser explicitly for the hexagon triple S₀₀, S₁₁, S₂₂ of the 3 × 3 grid, and check them in Agda.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).
 - C1b, mechanical check in the Agda checker (now including Theorem A's exchange step on a small instance): NGC.
 - Mikhail's printed-rule defects: ledger D3b, owned by LIM-F.
 - Agda for Gray contexts (D5) is unchanged.
+- RC exchange step (thread RCX, 2026-11-18): §7.8 (2 × 2 grid, internal proof), §7.9 (D² ∗₀ D² 2-skeleton, sketch) and §7.10 (checks of round-6 constructions). The grid and the full D² ∗₀ D² cylinder are now settled by verified researcher answers (gray-contexts r7, naturality r7), and the several-3-generator question by the cone r5 extension theorem, so the RC(3) frontier is general exchange in dimension 2 (asked in `conjectures/outbox/gray-contexts-r8.md`). §7.11 settles its strict side (event posets; squares and hexagons are a homotopy basis; both are pasting-context coherences) and reduces RC(3) to two forced-order statements. Open, owned by RCX: proving (K) and (F) of §7.11 and generating them for the 3 × 3 grid's hexagon; RC(4) for the triangle context, which is RC(4) of a 2-dimensional context (E11 link, asked in gray-contexts r8); machine checks of the r5/r7 comparison lemma and grid flattening step.
 
 ## 9. Machine checks (C1b)
 
@@ -500,6 +807,10 @@ Negative control: a swapped type on a μ is rejected. These checks cover the con
 | `LaxSquareRC3` | Checks toward RC(3) for the lax square (§7.4–7.5): 43 active-column factorisations `γ = δ[η]` (2- and 3-dimensional arities, refl) with H typed over the retained column and η a well-typed substitution `R → S` (witnessed by the coherence `coh_{R, u→u}[η]`, u the unbiased composite of R); an exchange 4-term between a path 3-cell and a column coherence carrying F; the mixed law Ω_R (11) instantiated in S; 19 generalised factorisations for the composable-pair cylinder | typechecks (~11 s); negative control (swapped fill type) rejected |
 | `WedgeRC3` | Checks toward RC(3) for Y={x,f,g} on x→y→z (§7.6): 56 factorisations through one- and two-column frames, 50 frame normalisers, the exchange coherences and a 4-term between the two exchange routes, the horizontal fold μ^h | typechecks (~13 s); negative control rejected |
 | `ChainCylinderRC3` | Round-5 constructors on the cylinder of x₀→x₁→x₂→x₃ (§7.7): letters, 22 normal forms incl. (5), μ for all 20 splits, the fold 4-cells, 42 one-active-column frame factorisations | typechecks (~36 s); negative control rejected |
+| `GridRC3` | RC(3) for the 2 × 2 grid (§7.8): 20 normal forms, 50 multiplications (8 with a block merge), the exchange and its compatibility 4-term, the raw law (12), Z₃, ζ, a sep/mer interchange 4-cell, 61 frame factorisations | typechecks (~3 min); negative control rejected |
+| `TwoDiscCylinderRC3` | The D² ∗₀ D² cylinder (§7.9): 67 normal forms, 203 multiplications (incl. 4 through χ_M), χ_M, transfers, 64 frames; (36) on the full cylinder | ~10 min (local Agda 2.6.3); negative control rejected |
+| `ExchangeLaws` | Block-form hexagon and square 4-coherences for general exchange (§7.11, `rc3_exch.py`, which also checks Lemmas E1 and E2 combinatorially) | typechecks (~4 s, 2 checks); negative control rejected |
+| `RoundSixChecks` | Cone r4 (2), (14); gray-contexts r6 (3) ×2, (6), (11) formal and instance, (24); naturality r6 (11), (14), (18), (20), the two routes of (19) parallel (§7.10) | typechecks (~21 s, 20 checks); negative control rejected |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

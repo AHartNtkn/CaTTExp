@@ -132,13 +132,13 @@ deg-at : ∀ {m} j (gs w : Vec Nat m) c → prj j gs w ≡ w → (at 0 w c ≡ 0
 deg-at j []       []      c       p = inj₁ refl
 deg-at j (g ∷ gs) (a ∷ w) (suc c) p = deg-at j gs w c (tl p)
   where
-  tl : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+  tl : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
   tl refl = refl
 deg-at j (g ∷ gs) (a ∷ w) zero    p with g ==ℕ j | ==ℕ-sound g j
 ... | true  | s = inj₂ (s tt)
 ... | false | _ = inj₁ (sym (hd p))
   where
-  hd : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → x ≡ y
+  hd : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → x ≡ y
   hd refl = refl
 
 ------------------------------------------------------------------------

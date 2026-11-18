@@ -28,9 +28,6 @@
 --      complexes; notes/conjectures/steiner-support-determines-cells.md
 --      proves it for every Steiner complex.)
 -- CaTTExp.Strict.CheckCells checks (T-cell) by evaluation on 18 shapes.
---
--- A third parameter, (D-hyp), lets the side condition's generator-based
--- comparisons be read as closure equalities (see DHyp below).
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Soundness where
 
@@ -42,7 +39,7 @@ open import CaTTExp.Strict.Subst
 open import CaTTExp.Strict.L
 open import CaTTExp.Gray.Pure hiding (Tuple)
 import CaTTExp.Subst ∅ graySide as S
-open import CaTTExp.Gray.DownAgree ∅ using (hypSide; module HypSide)
+import CaTTExp.Gray.Graded ∅ as Gr
 
 ------------------------------------------------------------------------
 -- Finite sets via CaTTExp.Gray.Support's memT.
@@ -209,18 +206,15 @@ BSupp = ∀ {Θ} → Θ ⊢ps → ∀ x y n X Y L M →
         SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y
 
 -- The side condition compares downsets on generators (Support's
--- `sameDown`); B-supp is about the closures `down`. The two agree when
--- the pasting context is graded and the compared tuples have rank
--- ≤ dim K (CaTTExp.Gray.DownAgree, `sameDown≡Closure`); `hypSide`
--- decides those hypotheses for the four comparisons of a coh. That
--- they hold for every pasting context and derivable t, u is expected
--- (open, ledger E1) and checked on the examples; it is taken here as
--- the explicit parameter D-hyp.
-DHyp : Set
-DHyp = ∀ {Δ} → Δ ⊢ps → ∀ A₀ a₀ b₀ t u →
-       Δ ⊢tm t ∶ arr A₀ a₀ b₀ → Δ ⊢tm u ∶ arr A₀ a₀ b₀ → T (hypSide Δ (arr A₀ a₀ b₀) t u)
+-- `sameDown`); B-supp is about the closures `down`. In a pasting
+-- context the two agree on every comparison the side condition makes
+-- (CaTTExp.Gray.Graded.PsSide, from Gray.DownAgree), using that the
+-- context's types are variable towers.
+inv-gr : ∀ {Γ} → PsInv Γ → Gr.Inv Γ
+inv-gr p i ⋆           e = tt
+inv-gr p i (arr B s t) e = p i (arr B s t) e
 
-module Soundness (T-cell : TCell) (B-supp : BSupp) (D-hyp : DHyp) where
+module Soundness (T-cell : TCell) (B-supp : BSupp) where
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
   sound-op⋆ : ∀ {Γ Δ t u σ} → Δ ⊢ps → T (graySide Δ ⋆ t u) → Γ ⊢sub σ ∶ Δ → Cellular Γ σ Δ →
@@ -265,7 +259,7 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) (D-hyp : DHyp) where
     n = dim A₀
     lenσ = snd (S.sub-sc closed sσ)
     module SM = SubstMap cellσ lenσ (psInv psΔ)
-    module HD = HypSide Δ A₀ a₀ b₀ t u (D-hyp psΔ A₀ a₀ b₀ t u d e)
+    module HD = Gr.PsSide Δ (inv-gr (psInv psΔ)) A₀ a₀ b₀ t u
     sct : S.ScTm (lenₛ σ) t
     sct = subst (λ m → S.ScTm m t) (sym lenσ) (S.tm-sc closed d)
     scA : S.ScTy (lenₛ σ) A

@@ -23,7 +23,9 @@
 -- (`gradedB`, `rankB`, with soundness), and both are needed:
 -- `closeN N` counts steps over the whole tuple, `leqT N` per entry,
 -- and the two counts agree only when every step lowers the rank by
--- one and the rank starts at most N.
+-- one and the rank starts at most N. Gray.Graded proves that they
+-- hold for every comparison the side condition makes in a pasting
+-- context.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

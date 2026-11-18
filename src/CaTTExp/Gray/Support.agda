@@ -46,7 +46,8 @@
 -- most dim K(Γ) single-entry steps *in total*. Gray.DownAgree proves
 -- that closure-equality implies sameDown always, and that the two are
 -- equal when Γ is graded and every tuple has rank ≤ dim K(Γ)
--- (`sameDown≡Closure`; hypotheses decidable via `hypSide`). Every L result stated with graySide (no-ich⁻,
+-- (`sameDown≡Closure`); Gray.Graded proves those hypotheses for every
+-- comparison graySide makes in a pasting context. Every L result stated with graySide (no-ich⁻,
 -- substitution under L, the marks, everything over L) refers to the
 -- new definition. `agreeSide` checks agreement on given cohs by
 -- evaluation (Gray.Examples, Gray.Cube). The note: "the
@@ -176,23 +177,22 @@ record El : Set where
     tgt  : Nat
 open El public
 
-private
-  varLvl : Tm → Maybe Nat
-  varLvl (var i) = just i
-  varLvl _       = nothing
+varLvl : Tm → Maybe Nat
+varLvl (var i) = just i
+varLvl _       = nothing
 
-  bdry : Ty → Nat × Nat
-  bdry (arr (arr _ _ _) (var s) (var t)) = s , t
-  bdry _                                 = 0 , 0
+elBdry : Ty → Nat × Nat
+elBdry (arr (arr _ _ _) (var s) (var t)) = s , t
+elBdry _                                 = 0 , 0
 
-  mkEl : List Nat → Nat × Ty → List El
-  mkEl os (v , A) with endsTy A
-  ... | nothing      = []
-  ... | just (_ , b) with varLvl b
-  ...   | nothing = []
-  ...   | just b' with posOf b' os
-  ...     | nothing = []
-  ...     | just k  = el v k (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) ∷ []
+mkEl : List Nat → Nat × Ty → List El
+mkEl os (v , A) with endsTy A
+... | nothing      = []
+... | just (_ , b) with varLvl b
+...   | nothing = []
+...   | just b' with posOf b' os
+...     | nothing = []
+...     | just k  = el v k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) ∷ []
 
 cells : Ctx → List El
 cells Γ = concatMap (mkEl (objs Γ)) (entries Γ)
@@ -205,8 +205,12 @@ record Hom : Set where
     hcs : List El
 open Hom public
 
+-- Hom k of Γ: its cells and its dimension.
+homAt : Ctx → Nat → Hom
+homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
+
 homs : Ctx → List Hom
-homs Γ = map one (drop1 (upto (lengthN (objs Γ))))
+homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
   where
   lengthN : List Nat → Nat
   lengthN []       = 0
@@ -220,8 +224,6 @@ homs Γ = map one (drop1 (upto (lengthN (objs Γ))))
     dropLast []           = []
     dropLast (x ∷ [])     = []
     dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
-  one : Nat → Hom
-  one k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
 
 -- d = Σ dim Θₖ, the dimension of K(Γ).
 dimK : List Hom → Nat

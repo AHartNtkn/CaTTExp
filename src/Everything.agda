@@ -87,6 +87,7 @@ import CaTTExp.GlobularTotal.DimCheck
 import CaTTExp.GlobularTotal.EndsNf
 import CaTTExp.GlobularTotal.NfFuel
 import CaTTExp.GlobularTotal.ImgTyped
+import CaTTExp.GlobularTotal.CohParts
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

@@ -83,6 +83,15 @@ private
   suc-inj : ∀ {a b} → suc a ≡ suc b → a ≡ b
   suc-inj refl = refl
 
+  ≤-refl : ∀ a → T (a <ℕ suc a)
+  ≤-refl zero    = tt
+  ≤-refl (suc a) = ≤-refl a
+
+  ≤-weak : ∀ a b → T (a <ℕ suc b) → T (a <ℕ suc (suc b))
+  ≤-weak zero    b       p = tt
+  ≤-weak (suc a) zero    ()
+  ≤-weak (suc a) (suc b) p = ≤-weak a b p
+
 Dim : Nat → LT → Set
 Dim d a = ∀ β i → bd β (d + i) a ≡ a
 
@@ -106,9 +115,9 @@ module _ (τ : Tree) where
   ends-nf : ∀ B u v au av → Ex Θ 0 nothing au → Ex Θ 0 nothing av → Dim (dim B) au → Dim (dim B) av →
             (∀ y → mem y au ≡ memL y (fvTmTy u B)) → (∀ y → mem y av ≡ memL y (fvTmTy v B)) →
             ParB B au av → T (cattSide Θ B u v) →
-            (au ≡ bd false (dim B) Tr) × (av ≡ bd true (dim B) Tr)
+            (au ≡ bd false (dim B) Tr) × (av ≡ bd true (dim B) Tr) × T (dimCtx Θ <ℕ suc (suc (dim B)))
   ends-nf B u v au av xu xv du dv lu lv pb side with ∨-T (isCoh Θ B u v) (isOp Θ B u v) side
-  ... | inl full = eu , ev
+  ... | inl full = eu , ev , ≤-weak (dimCtx Θ) (dim B) dimΘ≤
     where
     au-T : au ≡ Tr
     au-T = full-nf τ au xu (λ y → trans (lu y) (≈?-sound (fvTmTy u B) (varsCtx Θ) (∧-fst full) y))
@@ -135,7 +144,8 @@ module _ (τ : Tree) where
   ...   | au-s | av-t with dimCtx Θ in eq
   ...     | zero rewrite au-s | av-t =
     trans (zero-thin false) (sym (thin-at false (dim B) (subst (λ n → T (n <ℕ suc (dim B))) (sym eq) tt))) ,
-    trans (zero-thin true) (sym (thin-at true (dim B) (subst (λ n → T (n <ℕ suc (dim B))) (sym eq) tt)))
+    trans (zero-thin true) (sym (thin-at true (dim B) (subst (λ n → T (n <ℕ suc (dim B))) (sym eq) tt))) ,
+    tt
     where
     zero-thin : ∀ β → bd β 0 Tr ≡ Tr
     zero-thin β = subst (λ n → bd β n Tr ≡ Tr) (trans (+0 (dimCtx Θ)) eq) (tree-dim τ β 0)
@@ -146,7 +156,8 @@ module _ (τ : Tree) where
                     (trans (cong (λ n → bd false n au) (sym (+0 (dim B)))) (du false 0))
                     (trans (cong (mem y) au-s) m)))
   ...         | zero , e = trans au-s (cong (λ n → bd false n Tr) (trans (sym (+0 k)) (sym e))) ,
-                           trans av-t (cong (λ n → bd true n Tr) (trans (sym (+0 k)) (sym e)))
+                           trans av-t (cong (λ n → bd true n Tr) (trans (sym (+0 k)) (sym e))) ,
+                           subst (λ n → T (k <ℕ suc n)) (trans (sym (+0 k)) (sym e)) (≤-refl k)
   ...         | suc i , e = ⊥-elim (higher B pb e)
     where
     wT = ex-wf Θ 0 nothing Tr xT

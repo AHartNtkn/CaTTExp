@@ -137,6 +137,8 @@ import CaTTExp.Strict.Atoms
 import CaTTExp.Strict.CMonSolver
 import CaTTExp.Strict.Generation
 import CaTTExp.Strict.BasisCheck
+import CaTTExp.Strict.Expr
+import CaTTExp.Strict.NuWords
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

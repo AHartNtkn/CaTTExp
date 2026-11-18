@@ -158,6 +158,7 @@ import CaTTExp.Strict.StdSem
 import CaTTExp.Strict.Std
 import CaTTExp.Strict.NuRows
 import CaTTExp.Strict.LowerCut
+import CaTTExp.Strict.AtomSum
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

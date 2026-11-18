@@ -1,6 +1,6 @@
 # CaTT_lim's printed rules and their repair, machine-checked
 
-*Agda formalization notes, 2026-11-18. Code: `src/CaTTExp/Lim/`. Companion to `limits-representables.md` §4.1, §10.1 and `conjectures/catt-lim-pseudo-vs-gray.md`. Everything below is checked by Agda 2.8.0 under `--safe` (no postulates); the scope of each statement is stated with it.*
+*Agda formalization notes, 2026-11-18. Code: `src/CaTTExp/Lim/`. Companion to `limits-representables.md` §4.1, §10.1 and `conjectures/catt-lim-pseudo-vs-gray.md`. The results labelled D1–D5 and R1–R2 are checked by Agda 2.8.0 under `--safe` (no postulates). Two supporting facts are cited, not checked: the non-equivalence in D5 and "Z is invertible iff z is" in R2. The scope of each statement is given with it.*
 
 ## 1. What is encoded
 
@@ -15,7 +15,7 @@
 
 **D1. The printed ctrf rule admits no intended cone morphism over an arrow.** For the diagram `f : x → y` and the canonical cone, no derivation of the cone-morphism judgment has a comparison cell `m_f` whose boundary type mentions `q_x`, whatever its source and target terms and whatever type the duplicate `q_f` has (`Defects.D1-printed`, `D1-copyFixed`). The intended `m_f : p_f ; (m_x ◁ f) ⇛ m_y ; q_f` has boundary type `p_y ⇒ q_x f`, so it is rejected. Repairing only the copy does not help; the cause is the selector: the source condition reaches earlier connecting cells only through `τ(p)`, and `m_x` is reachable only through `σ(m_x) = p_x`.
 
-**D2. The printed copy `x′ : X` does not produce a second cone.** No printed ctrf derivation over the arrow has a duplicate block equal to the cone `Q` (`q_f : q_y ⇒ q_x f`), whatever the comparison block is (`Defects.D2`).
+**D2. The printed copy `x′ : X` does not produce a second cone.** No printed ctrf derivation over the arrow has a duplicate block equal to the cone `Q` (`q_f : q_y ⇒ q_x f`), whatever the comparison block is (`Defects.D2`). This is a defect of the literal text, and is almost certainly notational shorthand: Thm 4.4 also writes `Γ′ = (xᵢ′ : Aᵢ)`, while the examples rename (`f′ : x′ → y′`). It carries less weight than the selector defect in D1 and D3, which is mathematical.
 
 **D3. The same selector defect is in the printed gray rule, and it rejects the paper's own Example 4.1.** Mikhail's natural-transformation component `p_f : f · p_y ⇒ p_x · f′` is not derivable, nor is any component over an arrow whose type mentions `y′` (`Defects.D3-printed`, `D3-ex41`). Since Thm 4.4's construction has this form, the printed gray judgment does not recognise the shapes Thm 4.4 builds. This is new relative to the researcher response, which reported the defect for ctrf only.
 

@@ -10,3 +10,16 @@ Layout:
 
 - `notes/`: design notes and literature surveys.
 - `src/`: Agda formalization experiments.
+
+## Building the Agda development
+
+Requires Agda 2.6.3 or later; there is no standard library dependency.
+
+```
+cd src
+LC_ALL=C.UTF-8 agda Everything.agda
+```
+
+`src/CaTTExp/` contains core CaTT (syntax, typing, pasting contexts, a
+certified checker), worked examples, and exploratory sketches under
+`Sketch/`. Design findings from the sketches are in `notes/`.

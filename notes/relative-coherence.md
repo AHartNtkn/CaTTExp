@@ -8,9 +8,9 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 
 | Result | Status |
 |---|---|
-| **Theorem A.** RC(2) holds in every CaTT context: parallel 2-terms with equal strict image are connected by a 3-term (both directions). | proved here (§2) |
+| **Theorem A.** RC(2) holds in every CaTT context: parallel 2-terms with equal strict image are connected by a 3-term (both directions). | proved here (§2); the 2-molecule case was proved independently by a referee, verified (`conjectures/gray-contexts-in-catt.md`) |
 | G(2), existence and uniqueness, for every 2-molecule (D1) | proved (§3.1) |
-| Existence in G(3), hence every Gray generator of dimension ≤ 4 has a CaTT type | proved (§3.2) |
+| Existence in G(3), hence every Gray generator of dimension ≤ 4 has a CaTT type | proved (§3.2); also by the referee, by padding |
 | Existence in G(n) ⇐ RC(n−1); uniqueness in G(n) ⇐ RC(n) | proved (§3.3) |
 | **Reduction.** N for coherences of dimension n ⇐ RC(n) on the cylinder contexts `Q↑Y` | proved (§4.1) |
 | N for every term of dimension ≤ 2, every pasting context Q, every up-closed Y (includes arbitrary up-closed Y on a chain) | proved (§4.2) |
@@ -188,7 +188,7 @@ Var(t↑ : a_t → b_t) = { q⁻, q⁺ : q ∈ Var(t : A) ∩ Y } ∪ { q : q �
 
 Applying `γ↑` gives the claim. ∎
 
-**Repair of "G implies N"** (full Y; the general form of G is statement (b) of the G file: molecular coherences are conservative). Let `U = I ⊗ Q`, a molecule presented by `Q↑Var(Q)`.
+**Repair of "G implies N"** (full Y). Here G must be taken in the form of statement (b) of the G file, i.e. molecular coherences are conservative. G(n) for all n is not known to imply (b), since (b) also needs higher filling, which is RC. Let `U = I ⊗ Q`, a molecule presented by `Q↑Var(Q)`.
 - **Coherence c.** By Lemma S, `a_c` and `b_c` are full in U. The molecular coherence rule (coherence side condition) gives a cell `a_c → b_c`, and conservativity gives a CaTT cell. The earlier §8 argument was right for this case, but needed Lemma S.
 - **Composition c.** Here §8 was wrong, as the verified review found. The correct side condition is the *composition* one. By Steiner's formula, `∂⁻U = (0⊗Q) ∪ (e ⊗ ∂⁺Q)` and `∂⁺U = (1⊗Q) ∪ (e ⊗ ∂⁻Q)`. By Lemma S, `Var(a_c) = Var(c⁻) ∪ {cylinders of ∂⁺-boundary terms}`, which is `Var(∂⁻U)`, and dually `Var(b_c) = Var(∂⁺U)`. So the molecular composition rule applies.
 
@@ -214,7 +214,11 @@ The layers are `Γ, Γ′`, then `P, P′, M` for n = 2, and in general 2n+1 lay
 - **Boundary formulas.** For globular Γ and n = 1, Mikhail's Thm 4.4 gives `σ(p_x) = x ∗₀ 1^{d−1}_{p_{τᵈx}} ∗₁ ⋯ ∗_{d−1} p_{τx}` and `τ(p_x) = p_{σx} ∗_{d−1} ⋯ ∗₀ x′`. This is the same pasting as our `a_x`, `b_x`, written with identity-padded binary composites instead of whiskerings.
   - The two versions are different terms with equal strict images. For generators of dimension ≤ 3 they are connected by RC(2). In higher dimensions this needs RC(d).
   - So our contexts and Mikhail's T(Γ) agree up to transport along invertible cells for dim Γ ≤ 2. Syntactic equality would require adopting his composite convention.
-- **Free-variable conditions.** Mikhail's Gray rules reuse the cone conditions τCond/σCond (his §3.1, δCond), with Π the new layer. As printed (read from the PDF's text layer, so worth re-checking against the typeset page), the union in δCond ranges over projections p with "y ∝ τ(p)" for y in `FV(τx : ∂X)`. For the Gray layer, `τ(p_y)` contains the duplicate y′, not y, so a literal reading excludes p_y and contradicts his own Example 4.1, where `s = f · p_y`. This looks like the same renaming slip as the verified `x′ : X` defect in the cone rules (`catt-lim-pseudo-vs-gray.md`). Under the intended reading, "the projections attached to the boundary variables of x", `a_x` and `b_x` satisfy the conditions: their free variables are x (resp. x′) plus the cylinders of the iterated boundaries and their types, and `x ∝ a_x`, `x′ ∝ b_x` hold because x occurs once at top dimension. *To pass to the CaTT_lim formalization thread (B1), which encodes the printed rules.*
+- **Free-variable conditions.** Mikhail's printed conditions are defective, as found by LIM-F (machine-checked, `catt-lim-formalization.md` D3/D4) and by a verified researcher response (`conjectures/gray-contexts-in-catt.md`, verification §5; ledger D3b):
+  - the source-side selector must read `y ∝ σ(p)`, and copies must be renamed;
+  - the linearity predicate ∝ does not enforce multiplicity one.
+  
+  Under the repaired selector, `a_x` and `b_x` satisfy the conditions. Their free variables are x (resp. x′), plus the cylinders of the iterated boundaries and their types, which are exactly the connectors selected by the repaired rule. `x ∝ a_x` and `x′ ∝ b_x` hold with multiplicity one, since x occurs once at top dimension. So the iterated-cylinder construction is a specified derivation of the *repaired* Gray rules for every case in which it is defined. *This is an informal check against the repaired rules; LIM-F's encoding is where it can be machine-checked.*
 - **Strict presentation (§6.2(2) of the G file).** Strictly, the partial cylinder of `I ⊗ M` along its top layer is `I ⊗ (I ⊗ M)` collapsed along `I ⊗ (∂I ⊗ M)`. That is `(I⊗I collapsed at two opposite sides) ⊗ M = D² ⊗ M`, because the strict Gray tensor preserves colimits in each variable (Ara–Maltsiniotis). By induction, the iterated construction presents `Dⁿ ⊗ M` under Steiner's convention. The generators are Steiner's atoms, so for Steiner M this is the free strict ω-category on `𝒪(Dⁿ) ⊗ 𝒪(M)` (Ara–Lucas Cor. 3.11). *[sketch]*
 
 ## 6. Side conditions of the Gray tensor of contexts (D4)
@@ -251,5 +255,5 @@ So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).
 - C1b, mechanical check in the Agda checker (now including Theorem A's exchange step on a small instance): NGC.
-- Mikhail's τCond misprint: to be added to B1's checklist (LIM-F). NGC notifies that thread.
+- Mikhail's printed-rule defects: ledger D3b, owned by LIM-F.
 - Agda for Gray contexts (D5) is unchanged.

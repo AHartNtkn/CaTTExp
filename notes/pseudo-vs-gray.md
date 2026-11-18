@@ -242,9 +242,10 @@ PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed:
 **What it means for each option.**
 - **P.** It must use the restricted universal property. Its limits then classify lax cones with *pseudo* morphisms, and comma and hom objects built from limits have only invertible arrows (eq. (8) there: the cartesian arrow fibre is the core of the hom). Genuine hom objects and lax cotensors need the Gray tensor (G1), not limits.
 - **Two-tier L.** Compatible with the *unrestricted* universal property, given two checks.
-  - *Where the obstruction lives.* Every interchanger used in the argument composes a cell along c → L with a cell along L → (diagram), i.e. across an object. Two-tier L directs exactly those, so the forced-invertibility argument does not go through: ucone_*(β)'s comparison cell is a directed interchanger, and essential surjectivity transfers nothing invertible. The same holds for the ≥3-cell collapse argument (§4 there), which interchanges an arbitrary 3-cell along c → Y with a cell along Y → ·. Inside a hom, two-tier L's interchange stays invertible, and the argument never uses it **[checked against §§1–4 of the response; a line-by-line re-derivation in L is part of the problem below]**.
+  - *Where the obstruction lives.* Every interchanger used in the argument composes a cell along c → L with a cell along L → (diagram), i.e. across an object. Two-tier L directs exactly those, so the forced-invertibility argument does not go through: ucone_*(β)'s comparison cell is a directed interchanger, and essential surjectivity transfers nothing invertible. The same holds for the ≥3-cell collapse argument (§4 there), which interchanges an arbitrary 3-cell along c → Y with a cell along Y → ·. Inside a hom, two-tier L's interchange stays invertible, and the argument never uses it **[checked against §§1–4 of the response; the semantic re-derivation is now done, see *Semantics* below]**.
   - *Orientation.* The direction is forced: the universal cone needs (u◁φ);(β▷v′) ⇛ (β▷v);(u′◁φ). §3.1 now fixes L's factor order so that this is the derivable direction. With the reverse order, ucone_* would be ill-typed in L.
-  - *Semantics.* That oriented ∞-categories satisfy the unrestricted lax universal property, with Gray-shaped cone transfors, is posed in `notes/conjectures/oriented-lax-limits.md`. Gepner–Heine's oriented (co)limits are the expected answer.
+  - *Semantics (answered, researcher result verified 2026-11-18; `notes/conjectures/oriented-lax-limits.md`).* In ∞Cat as an oriented category, the unrestricted lax universal property holds with no collapse. For an arrow F : X → Y the limit is `Fun^oplax([1], Y) ×_{ev₁,Y,F} X`, and it has cone morphisms with non-invertible m_F in every dimension. Every small diagram has such a limit, as a Gray-weighted limit. The response also locates the failed step of the cartesian argument: it needs the interchanger to be invertible. That is the line-by-line re-derivation asked for above.
+  - *Marked legs.* A partially lax limit must respect its marked leg coherently: m_b invertible in every dimension. With an arbitrary m_b, a finite strict 2-category shows that no limit exists. With the coherent marking, the comma `⊤ →a C ←b ⊤` is the full `Hom_C(b, a)`.
 - **Uniform L.** The same, plus the inner levels: cone transfors of higher dimension interchange laxly inside homs too, so `ctrf` shapes must use uniform Gray shapes. This depends on the construction problem of §2.5.
 
 **Practical point.** Under L, comma objects, hom objects and lax cotensors come directly from the limit rules (with the ctrf repair). Under P they need the restricted rules plus Gray tensors.
@@ -477,8 +478,8 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 | Anything inside a single hom | as in CaTT | §3.4, last case |
 | Composites (operation case, n = 1) | no, as in CaTT | |
 | Interchangers y ⊗ x with dim x, dim y ≥ 1 | **no** | The source and target supports are different halves of ∂U. |
-| Interchanger where one factor is invertible | yes **[conj]** | For 2-categories, a lax transformation's naturality cell at an equivalence is invertible **[recall]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
-| Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
+| Interchanger where one factor is invertible | yes **[proved]** | Rule (INV-fac) of `invertibility-markings.md` §1.2, sound by Lemma 2.1 there (Dᵐ ⊗ Eᵏ ≃ Dᵐ ⊗ Dᵏ⁻¹). |
+| Interchangers with a transformation marked *pseudo* (as the **later** factor; `invertibility-markings.md` §1.6c) | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
 
 ### 3.6 Soundness: proof attempt
 
@@ -563,6 +564,8 @@ Then every oriented (∞,ω)-category (Gepner–Heine), in particular ∞Cat wit
 
 This is the largest concrete simplification L offers. It is also the place where the earlier threads underestimated L.
 
+*Correction (2026-11-18, `invertibility-markings.md` §4.3).* "G1 disappears" holds for *using* lax cells (their Gray-shaped components are derivable L-terms), not for *introducing* a lax cell from component data, which still needs a Gray-shaped context with syntactically matching boundaries. That residue is Conjecture CT, `conjectures/canonical-gray-terms.md`.
+
 ### 4.3 Internal homs
 
 | | P | L |
@@ -623,7 +626,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 ### 5.2 Cost
 
 - U for a row of n horizontally composable 2-cells is the n-cube, with 3ⁿ cells. Computed naively, supports blow up exponentially in the *horizontal width* of a pasting scheme.
-- Computed symbolically, as sums of tensors of chains touching only the cells a term uses, the cost should be polynomial in term size **[conj]**.
+- ~~Computed symbolically … the cost should be polynomial in term size **[conj]**.~~ *Corrected (2026-11-18):* false for explicit supports, since the coh over n side-by-side 2-cells is a term of size O(n) with support of size 3ⁿ. The restated question (polynomial in shared term size) is E9′ in `invertibility-markings.md` §5.
 - In practice horizontal width is small. Plain CaTT has no such cost.
 
 ### 5.3 Usability

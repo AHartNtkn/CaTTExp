@@ -742,3 +742,42 @@ Therefore:
 - **Questions 1 and 3 have the countermodels above even with cartesian exponentials by the finite realized shapes and the corresponding product-parameterized R-A.**
 - **Question 2 has the countermodel above for enriched cotensors and the R-A correspondence as stated.**
 - **If the intended rules additionally impose (E), product-parameterized R-A, or universal coproducts under arbitrary base change, I have not established Question 2 for that strengthened theory.**
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+I checked each step against the definitions in the prompt and against the project's rules: R-A as stated in `limits-representables.md` §5.2 and `ordinary-math.md` Theorem 4.1 (restriction `Hom(⟦Γ⟧, C) → Fam_Γ(C)` essentially surjective at every level), and `C trunc n` read through T-fill/T-inv, which test cells into C from an arbitrary object, i.e. representable truncation.
+
+**Verdict: correct.** All three questions have a negative answer. For Q1 and Q3 the countermodels also satisfy the stronger, product-parameterised form of R-A. For Q2 the countermodel satisfies R-A in the hom-wise (enriched) form, which is the form the project uses; the product-parameterised strengthening is left open, as the response says.
+
+### V1. Q3 (effectiveness), the poset model: correct
+
+- **The model.** Pos with discrete hom ω-categories. Every comparison cell is an identity, so finite lax and pseudo colimits are ordinary colimits, and the universal properties hold at every level trivially. Every object is a set, and Trunc₀ = id satisfies Tr-J1/Tr-J2.
+- **R-A.** `⟦Γ⟧` is the discrete poset on the 0-generators modulo "joined by a 1-generator". A substitution into C must send both ends of a 1-cell to the same element, since the only 1-cells of a hom are identities. So `Pos(Δk(Γ), C) ≅ Sub(Γ, C)` ✓, also with a parameter poset T ✓.
+- **The relation.** R = {0,1}² with the single strict comparison (0,0) < (1,1). `R → X × X` is monotone and injective, which makes it a mono here because homs are discrete. e, i and c are monotone; I checked the only non-trivial comparison in `R ×_X R` ✓.
+- **The quotient.** A monotone g with g∘r₀ = g∘r₁ has g(0) = g(1), witnessed by (0,1) ∈ R. So Q = 1 and the kernel pair is X × X with the product order. The comparison `R → X × X` is a bijection, but (0,0) < (0,1) holds in the product and not in R, so its inverse is not monotone. In a locally discrete model an equivalence is an isomorphism, so the comparison is not an equivalence ✓.
+- **Caveat.** In this model ⟦L⟧ collapses to a point, so N = ⊤. That is harmless, since EX is a statement about all sets. It does mean the model says nothing about arithmetic.
+
+### V2. Q1 (recursion), categories with an auxiliary equivalence relation: correct
+
+- **The model.** Objects are (C, E_C); 1-cells are functors preserving E; 2-cells are all natural transformations. Limits take the limit relation through the projections, and colimits take the generated relation. Cotensors use the pointwise relation and tensors the relation "same j and related a". Weighted limits and colimits follow from conical ones plus (co)tensors (Kelly 3.73). Because 2-cells are unrestricted, the universal properties hold for hom categories, which is what R-A and the colimit rules require ✓.
+- **R-A.** `⟦Γ⟧ = (P_Γ, =)`. Every functor out of an object whose relation is equality preserves it, so `K(⟦Γ⟧, C) = Fun(P_Γ, C)` ✓. The product-parameterised law holds too, since the relation on `A × ⟦Γ⟧` is "related in A and equal in ⟦Γ⟧" ✓.
+- **N.** `[I, BN]` has the natural numbers as objects, and its relation is total: every functor I → BN takes both objects to the single object, so the pointwise condition holds. Pulling back along (x, x) keeps the relation total, so `N = (Disc ℕ, total)`. zero and succ preserve the total relation ✓.
+- **Failure.** Take `A = (Disc{0,1}, =)`, which is Bool = ⊤ ⊔ ⊤ by the colimit formula. Any permitted r : N → A is constant, so `r(0) = a = 0` and `r(1) = f(r 0) = 1` cannot both hold, and invertible cells into a discrete category are equalities ✓.
+- **Consequence.** In this model N is a set, but recursion into Bool fails, even for "is zero". The model must violate G or DJ (§4.6), since together they derive recursion. That is consistent: both are new principles, not consequences of limits, colimits and R-A.
+
+### V3. Q2 (discreteness), the comma (F ↓ id) with F = H₁(–)[1]: correct for hom-wise R-A
+
+- **Mapping spaces.** (1) is the standard formula for maps in the comma `F ↓ id_{D(ℤ)}` ✓. The projection to `S × D(ℤ)` creates limits because the codomain functor is the identity, giving formula (2). Colimits are computed by the pushout (3); I checked this against the universal property through (1), and it uses no preservation by F ✓. Cotensors by shapes are limits over the groupoidal realisation, which is right for an (∞,1)-category regarded as an (∞,ω)-category with all higher cells invertible ✓.
+- **R-A.** `T(G) = (G, F G, id)` is left adjoint to `P(X, A, α) = X`, and `P(C) ≃ Map(1, C)`. So `Map(T|Γ|, C) ≃ Map_S(|Γ|, P C) ≃ Sub(Γ, C)` as spaces, naturally in C. This is R-A at every level in the hom-wise form ✓.
+- **N.** The arrow cotensor is C itself, since |D¹| ≃ ∗, so `Hom_C(x, x) = 1 ×_C 1`. For `⟦L⟧ = (S¹, ℤ[1], id)` this gives `(ℤ, ℤ[0], 0)` by (2) ✓. With `E = (∅, ℤ[−1], 0)`, `Map(E, N) ≃ Map_{D(ℤ)}(ℤ[−1], ℤ) ≃ K(ℤ, 1)`. I checked π₁ = H₀(ℤ) = ℤ with the formula `π_k Map(ℤ[−n], A) = H_{k−n}(A)` ✓. So N is not 0-truncated, and likewise ⟦L⟧ is not 1-truncated (K(ℤ, 2)).
+- **Bool and coproducts.** The sets are exactly (S, 0, 0) with S discrete, and the necessity argument via `E(A[−1])` is right ✓. Bool = ({0,1}, 0) is a set, and coproducts of sets are sets and disjoint ✓. Trunc₀ exists ✓.
+- **Scope (§4 of the response).** The model fails the cartesian law `K(A × ⟦D⟧, C) ≃ K(A, C^D)`. The `E₂` computation gives 2 against 4 maps ✓. The project's R-A is the hom-wise one, so Q2 is answered for the theory as stated. If R-A were ever strengthened to the product-parameterised form (or coproducts required to be universal), Q2 would be open again.
+
+### V4. Consequences for the project
+
+1. **F1c, closed.** Route II's recursion is not derivable from finite limits, colimits and R-A, even with the product-parameterised R-A and with N provably a set. Route II must add `rec` as a rule, as `ordinary-math.md` §4.5 assumed.
+2. **F3b, closed for the theory as stated.** T-graph (and its instance `N trunc 0`) is not derivable from R-A, limits, colimits, Trunc₀ and a Bool that is a set with disjoint coproducts. This makes Prop. 2.5 a theorem for hom-wise R-A. Open, and optional: the same question for product-parameterised R-A.
+3. **F4b, closed.** EX is not derivable from limits, colimits, R-A, Trunc₀ and the T-rules, even with cartesian exponentials by shapes. So EX is a genuine rule.
+4. **The three are independent new principles.** rec (or G + DJ), T-graph and EX each have to be added. None follows from the universal-property core.

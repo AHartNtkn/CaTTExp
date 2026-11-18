@@ -467,3 +467,61 @@ Afterward, conversion to names produces
 This relation is acyclic. Removing targets leaves only \(f\); removing sources leaves only \(g\). Both recursive one-dimensional checks pass. At dimension \(3\), the absence of top-dimensional hypotheses then permits `alpha -> beta`.
 
 The abstract Dir criterion in your question rejects this example because the two \(2\)-generators have the same source and target. The executable counterexample therefore refutes **the unordered checker at this revision**, while leaving the general mathematical Dir question described in Section 3.3 unresolved.
+
+## Verification of the researcher response (2026-11-18)
+
+I checked every step. I also read the cited cccatt source at commit 69bb11af (`src/pasting.ml`, `src/term.ml`). I did not run the checker. I did not re-read HTT A.3.3.2, Shulman Cor. 8.29, Nguyen–Raptis–Schrade Prop. 2.3.2 or Ozornova–Rovelli–Walde Thm 2.20; they are standard facts and used as the response states them.
+
+**Verdict: correct.**
+- Question 1 is solved positively for sets, graphs and simply typed signatures.
+- Question 2 (Rev, as stated) is proved.
+- Question 3 is solved for graph-generated contexts in all dimensions, including the tricategory case. The abstract Dir with higher generators stays open.
+- The cccatt implementation of Dir (unordered mode) at the cited commit is unsound.
+
+### V1. Discreteness (§1): correct
+
+- *Strict model lemma.* Yoneda preserves products and exponentials. Injective simplicial presheaves are simplicial, cartesian (the pushout-product of monomorphisms is computed objectwise) and have every object cofibrant. So fibrant objects are closed under products and exponentials, and `M^f` has strict enriched cartesian closed structure presenting `P(C)`. Closing the representables under the chosen operations gives a small D with `C ≃ N_hc D`. Checked.
+- *Retract.*
+  - q comes from the freeness of F, and s from the 1-categorical freeness of C into `D₀`. s preserves the ∞-structure because D's universal properties are isomorphisms of simplicial sets.
+  - Freeness gives `sq ≃ e`, so `rq ≃ id`, and `Map_F(A,B)` is a retract of a set, hence 0-truncated.
+  - `qr ≃ id` follows from bi-initiality of the free CCC.
+  - So `F_∞(G) ≃ N F_1(G)`. Checked.
+- *Existence (1.3):* weak initiality of `N F_1(G)` plus a solution-set argument. Fine.
+- *Signatures (1.4):* domains built from 1, ×, ⇒. Fine.
+
+### V2. Rev (§2): correct
+
+- The space of (x, α : x → t) is a based path space, hence contractible. This uses the side conditions that x is not free in t and occurs in no other type. So contraction does not change the free CCC.
+- The remaining 1-dimensional goal has exactly one βη-class (Mimram Thm 15). By V1 its filler space is a point, and higher goals are iterated path spaces of a point.
+- *Code remark, confirmed in the source:* `pasting.ml`, l. 474 checks `not (List.exists (fun (_,a) -> has_fv r a) l)`, with r the hypothesis's name, not its endpoint x. So the implemented Rev differs from the stated one.
+
+### V3. Graph-generated Dir (§3): correct
+
+- The 1-core `R₁` is right adjoint to the inclusion of (∞,1)- into (∞,n)-categories. It inherits the cartesian closed structure, since taking cores of an equivalence of mapping categories gives an equivalence of mapping spaces, and the adjunction restricts to cartesian closed functors. A graph only sees objects and 1-cells.
+- So the free higher CCC on G is `N F_1(G)`, viewed with identity cells only above dimension 1. **Any two parallel cells over βη-equal 1-terms are joined by a contractible space of invertible cells, in every dimension.** This settles the "smallest open case" of Question 3: coherence for free cartesian closed tricategories over a graph, in the (∞,n) sense with pseudo universal properties.
+
+### V4. The unordered Dir implementation is unsound (§4): the code analysis is confirmed; the semantic counterexample is correct
+
+- *Code.* `pasting.ml`, ll. 597–602 compare `x = x'` and `y = y'`, where these are `Term.t` records, before mapping them to `var x`. `term.ml`, l. 10 shows that the record contains `pos : Pos.t`. So structural equality distinguishes separately written occurrences of the same variable, and duplicate sources or targets are missed.
+- *Semantics.* In Cat, take `𝟙 ⇉ P` with distinct parallel arrows p and q. The transformations α and β with components p and q are distinct, so there is no 3-cell `α → β`. Cat is cartesian closed with an isomorphism of hom-categories, so the empty filler space transfers to the free object.
+- I did not run the binary. The response reports exit status 0 and the printed output.
+
+### V5. Comparison with the internal sketch `closed-structure.md` C.4 (CLOSED thread)
+
+- **Theorem C1** (discreteness, by normalisation by gluing) and the response's §1 (strict simplicial model plus retract) **reach the same theorem by different routes.**
+  - C.4 glues into presheaves of spaces on renamings and builds reflect/reify in the ∞-topos.
+  - The response strictifies and uses ordinary freeness.
+  - The response's proof is shorter and uses no normalisation. C.4's proof is more constructive and is the one that might extend to (∞,ω) (C.4's own "What remains").
+  - Both establish the retract onto a set. **I found no error in C.4 steps 1–7 at the level of a sketch.**
+  - One point in C.4 step 3 needs an argument: "the space of such functors is contractible". This is freeness of F(Σ), the same assumption the response makes explicit in (1) and justifies in §1.3.
+- **Corollary C2** (Rev) matches the response's §2. C.4 phrases contraction as a pushout along an equivalence `D^{k−1} → J`, and the response as a contractible extension space. These are equivalent.
+- **What C.4 does not have, and the response adds:**
+  - the graph case of Question 3 via the 1-core, which C.4 lists as open and which is now settled;
+  - the two implementation defects.
+- **What remains of D12:** abstract Dir with non-invertible higher hypotheses. It needs a relative coherence theorem (§3.3), of the same shape as RC.
+
+### V6. Consequences
+
+1. **D12 Questions 1–2 are closed**, by the response and independently by C.4. **Question 3 is closed over graphs.** Open: Dir with higher generators.
+2. **cccatt bugs to report upstream** (if Anthony wants): the unordered Dir duplicate check compares positioned terms, and the Rev side condition checks the hypothesis name rather than the endpoint. Reporting them is an outward action, so it is Anthony's call.
+3. A next prompt for Dir with higher generators (relative coherence) is owed by the CLOSED thread, if wanted.

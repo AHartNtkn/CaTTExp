@@ -529,3 +529,56 @@ Under that strong interpretation, the two schedules are already equal as 1-cells
 This argument requires strict naturality in the bound parameter. It does not follow merely from a strict 2-adjunction for each fixed tensor factor. The distinction also prevents promoting the mapping-space adjunction to the required enriched statement; Gagna–Harpaz–Lanari explicitly distinguish those levels in Remark 2.20. [arxiv.org](https://arxiv.org/pdf/2006.14495?utm_source=chatgpt.com)
 
 A repaired comparison therefore needs a precise closed signature, a normalization that accounts for \(\beta\), \(\eta\), and the relevant naturality equations, and a theorem identifying its directed cells with the proposed scheduling model. The fixed-poset theorem and the cubical higher-Bruhat theorem above establish the one-level scheduling results; they do not establish that comparison for the nested biclosed completion.
+
+## Verification of the researcher response (2026-11-18)
+
+I checked every step. Sources read: Chatel–Pilaud–Pons arXiv 1701.07995, Prop. 26 (= Björner–Wachs 1991, Thm 6.8); Ara–Maltsiniotis, *Joint et tranches*, §A.25–A.31; Steiner math/0403237. The tensor differential was recomputed by script. I did not re-read Kapranov–Voevodsky (the PDF link returned an empty file) or Gepner–Heine Cor. 4.1.11.
+
+**Verdict: correct.** The response refutes all four questions *as literally sent*, and every refutation targets a real flaw in the prompt. The positive results agree with `closed-structure.md` F.5 as corrected in PR #64.
+
+### V1. Question 1 as sent is false (§1): correct; the researcher caught the flaw
+
+- The counterexample is `t = g∘f`, `u = f∘g` for `f, g : A → A`. This is the same counterexample as our independent review (`reviews/closed-structure-F5-2026-11-18.md`, C1), which led to the erratum on Question 1 and to the correction of F.5.
+- The model separates them: a strict cartesian closed category of functions `{0,1}^m → {0,1}^n`, made locally discrete, which is a Gray monoid with identity interchangers. There, `g∘f = 0` and `f∘g = 1`, so `𝒢(t,u) = 𝒢(u,t) = ∅`. It also refutes "mutual acceptance forces equal event orders".
+- **Against corrected F.5:** with the hypothesis "same string diagram", the counterexample no longer applies, and the response's own §2 proves the corrected statement.
+
+### V2. The fixed-poset theorem (1) (§2): correct; it is corrected F.5, proved without the interval lemma
+
+- *Existence.* Move the first differing label x left. Every crossed y is P-incomparable to x, since both words are linear extensions. Also x < y: otherwise (y, x) ∈ Inv(v) ⊆ Inv(current), but y precedes x in the current word. Each swap deletes an inversion absent from v, so the invariant `Inv(v) ⊆ Inv(current)` is kept. Checked.
+- *Uniqueness.* If two first swaps overlap, they act on a triple `cba` with `a < b < c`. Since both swaps lead toward v, v orders the triple as abc, so the three labels are pairwise incomparable and the hexagon applies. With the square for disjoint swaps, induction on the inversion difference identifies all paths to v. Checked.
+- *Comparison with F.5.* F.5 obtains the same result from Björner–Wachs (an interval) plus Matsumoto–Tits. The response's argument needs no interval property: reachability equals inversion containment for **any** labeling. Under F.5's realizer labeling the two arguments agree.
+- *Labeling caveat:* correct. With `P = {1 < 3}`, the linear extensions are {123, 132, 213}, with two weak-order maxima. Prop. 26 of Chatel–Pilaud–Pons is exactly the Björner–Wachs Thm 6.8 criterion quoted. F.5 labels events by the realizer "precedence, then left-first". Relabelling this example by its realizer (213, 132) leaves only the relation 2 < 3, and the criterion holds. So F.5's interval claim stands as corrected. Its "[recall: theorem number]" is **Björner–Wachs Thm 6.8**.
+
+### V3. Question 2: closure nesting is not invariant under the stated rule (§3): correct
+
+- (2): `h = Λ(ev) ∘ h = Λ(ev ∘ (1 ⊗ h))`, by η and by naturality in the context. The same 1-cell has h ambient in one form and inside a closure in the other.
+- (3): β changes the nesting.
+- So "push events inward" does not define an invariant without a specified βη-normal form. The interchanger (4) between a closure and an independent event is the ordinary one.
+- This bears directly on F.5's open bullet "2-paths through closures", which proposes exactly this push-inward reduction. That reduction needs a canonical βη-normalisation first.
+
+### V4. Question 3 (§4): correct; the hom ω-category is not thin
+
+- I recomputed with `∂(x⊗y) = ∂x⊗y + (−1)^{|x|} x⊗∂y`:
+  - `∂a = ∂b = *00 + 1*0 + 11* − 00* − 0*1 − *11`, for `a = 0** + *1* + **0` and `b = **1 + *0* + 1**`;
+  - `∂(***) = b − a`.
+  So α ≠ β are parallel 2-cells of Q₃, joined by the 3-cell `***`. The prompt's "its 1-dimensional part is the weak Bruhat order" holds only for reachability, not as a thin category.
+- *Intelligent truncation.* Ara–Maltsiniotis A.25 defines `A ⊗_n B = τ^i_{≤n}(A ⊗ B)`, and A.31 states that `τ^i_{≤2}(Δ¹ ⊗ … ⊗ Δ¹)` is Gray's tensor. Confirmed. So F.5's uniqueness of 2-cells (Gray's 2-categorical tensor, where the cube's 3-cell is an equation) and the non-thin ω-version are compatible. This is the same point as F.5's braid step.
+- *K_P.* Faces are (order ideal J, `S ⊆ min(P∖J)`), and they are closed under faces (a star becomes 0, or joins J). Paths are linear extensions, squares are independent pairs, and the subcomplex inherits unitality and strong loop-freeness from the cube. (7) is stated with the proof sketched by reference to §2; the identification of the truncated hom with S(P) is plausible but not checked in detail.
+- Kapranov–Voevodsky Thms 3–4 not re-read.
+
+### V5. Question 4, and an ambiguity in the setting (§5): correct
+
+- If `Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C)` is strictly natural in *both* A and B, then `Φ(p) = (f\C) ∘ Φ(k) ∘ g = Φ(q)`. Φ is injective on 1-cells, so `(f⊗B′)(A⊗g) = (A′⊗g)(f⊗B)`, and the two schedules coincide. Rechecked.
+- So the prompt's "closed structure … strictly natural" must mean strict naturality in the context variable only. In the bound variable it can hold only up to the interchanger. This is a real defect of the setting, and it also affects F.5's closed-structure bullets, which use only context naturality.
+- G as stated cannot present the free structure (V1). Gepner–Heine Cor. 4.1.11 is a monomorphism, not a presentation (not re-read).
+
+### V6. Consequences
+
+1. **The monoidal core of D11 is settled**, twice: F.5 as corrected and the response's Prop. (1) agree. Uniqueness comes from fixed dependencies plus square and hexagon equations.
+2. **The closed part needs three things:**
+   - a βη-canonical nesting, since inward-pushing is not invariant;
+   - a precise closed signature, natural strictly in the context and laxly in the bound variable;
+   - a comparison theorem with S(P).
+   F.5's two closed bullets should be restated accordingly (CLOSED thread).
+3. **ω-version:** reachability is weak order. The hom ω-category of `ν(I^{⊗n})` carries the higher Bruhat structure (Kapranov–Voevodsky), and the dependent version is `ν K_P`.
+4. A next prompt, if wanted, should start from S(P) and ask for the biclosed comparison. It is owed by the CLOSED thread.

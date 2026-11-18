@@ -412,9 +412,20 @@ See `conjectures/answered/finite-fibration-test-2d-base-2026-11-18.md` (PR #76).
 - **Positive bases.** A 2-computad is *positive* when no 2-generator has an identity in its boundary. For positive bases, Free(Γ) ≃ F₂(Γ) (Chanavat 2603.22242, Cor. 3.39), and FT₃ holds. On the walking 2-cell, the homs are intervals or points. The general positive case follows from Loubaton Thm 3.2.3.15.
 - **Non-positive bases admit no finite presentation at all.** Take σ : 1_x ⇒ 1_x. The localisation of B²ℕ is K(ℤ,2), but every finite `Free(Ψ)[S⁻¹]` groupoidifies to a finite CW complex. **So positivity is a necessary hypothesis of the weighted-limit rule.**
 
-### 9.4 Open: higher bases (FT_n)
+### 9.4 Higher bases (FT_n): partly solved (researcher, verified modulo cited Loubaton results)
 
-That prompt was answered (`conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md`; the round-2 prompt is `conjectures/outbox/finite-fibration-test-higher-base-r2.md`). It covers the walking 3-cell, weights valued in 2-categories, regular bases (Chanavat Cor. 3.38), and whether regularity is necessary.
+See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #99).
+
+- **Walking 3-cell base, Cat-valued weights: solved.** The presentation is the FT₃ data plus:
+  - 3-generators `ω_e : λ_{α,e} ⇛ λ_{β,e}`, one per fibre vertex;
+  - 4-generators `K_{Ω,f}`, one per fibre arrow;
+  - localisation at the θ's, Ξ's and K's.
+
+  In general, the generators are the relative Gray-tensor generators `k ⊗ a` of a universal total space. The ω_e alone do not suffice: the Euler-characteristic count is 4 − 6 + 6 − 4 = 0, but B × [1] is contractible.
+- **2-category-valued weights over the walking 2-cell: a 4-generator (α ⊗ fibre 2-cell) is necessary.** Sufficiency is open.
+- **Regularity is not necessary.** A non-regular 3-computad (x, y, z; p, q : x → y; r : y → z; α, β : p ⇒ q; ζ : α▷r ⇛ β▷r) still has Free ≃ F₃.
+- **Pattern for the kernel.** Every case so far is "the Gray-tensor generators of the fibre against the base generator, with the over-identity ones marked and localised". This matches the Gray shapes the limit rules already use (§1, §5), so the weight test should be stated through the same shape construction (B5) rather than as a separate rule.
+- Round 2: `conjectures/outbox/finite-fibration-test-higher-base-r2.md` (unsent).
 
 ---
 

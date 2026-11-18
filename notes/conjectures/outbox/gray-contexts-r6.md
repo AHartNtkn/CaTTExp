@@ -115,3 +115,721 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hyp
 - Hadzihasanovic's diagrammatic sets ([arXiv 1909.07639](https://arxiv.org/abs/1909.07639), [arXiv 2007.14505](https://arxiv.org/abs/2007.14505)) take unique weak composites of round molecules as the definition of a weak higher category.
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
+
+# Research Response
+
+**Questions 1 and 4 have positive answers, using the results stated in the prompt.** The new step is a normalisation lemma for adjoining a single \(3\)-generator whose strict image admits no nontrivial whiskering or iteration.
+
+I first give the lemma and its CaTT constructions. I then apply it to the cube, the cylinder of \(D^2\), and \(c\star D^2\). The general exchange-fusion problem in Questions 2 and 3 remains unresolved by this argument.
+
+## 1. A one-generator extension lemma
+
+Let \(\Lambda\) be a context of dimension at most \(2\), and put
+\[
+\Gamma=(\Lambda,z:A\to B).
+\]
+Assume:
+
+1. The generating \(1\)-graph of \(\Lambda\) is acyclic.
+2. \(\mathrm{RC}(3)\) holds in \(\Lambda\).
+3. The only nonidentity \(3\)-cell of \(F(\Gamma)\) is the generating cell \(z\).
+
+Then **\(\mathrm{RC}(3)\) holds in \(\Gamma\)**.
+
+Condition 3 is strong. In particular, it excludes nontrivial strict whiskerings of \(z\), and excludes a strict composite using \(z\) twice. These are exactly the restrictions satisfied by the three contexts considered below.
+
+### Notation and available operations
+
+For parallel \(3\)-terms \(a,b\) with full support in a pasting context \(P\), write
+\[
+[a,b]_P
+=
+\operatorname{coh}_{P,a\to b}[\operatorname{id}_P].
+\]
+Thus \([a,b]_P\) denotes a specified \(4\)-term, not an assertion that a comparison exists.
+
+Write
+\[
+C(f,a,g)=(f*_1a)*_1g,
+\qquad
+C^3(f,H,g)=(1_f*_1H)*_1 1_g.
+\]
+Here \(f,g\) are \(2\)-terms, \(H:a\to b\) is a \(3\)-term, and the identities in \(C^3\) are \(3\)-dimensional. Its boundary is
+\[
+C^3(f,H,g):C(f,a,g)\longrightarrow C(f,b,g).
+\]
+
+Products are left associated unless parentheses specify otherwise. Reassociations of \(3\)-products are implemented by \(4\)-coherences over strings of \(3\)-discs. No reassociation below is a definitional equality.
+
+A \(3\)-term over \(\Lambda\) has a chosen inverse and \(4\)-dimensional cancellation witnesses. The same holds for every \(4\)-term over \(\Gamma\). These are instances of the constructive invertibility criterion: a cell with no generator of its own dimension in its support is invertible. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+### The selected normal form
+
+Write the literal \(1\)-boundaries of \(A,B\) as
+\[
+A,B:p_0\longrightarrow q_0.
+\]
+
+For every \(1\)-term \(r\) with \(\pi r=\pi p_0\), choose a path-supported \(2\)-coherence
+\[
+\gamma_r:r\longrightarrow p_0.
+\]
+Similarly choose
+\[
+\bar\gamma_s:q_0\longrightarrow s
+\qquad
+(\pi s=\pi q_0).
+\]
+Take \(\gamma_{p_0}=1_{p_0}\) and \(\bar\gamma_{q_0}=1_{q_0}\).
+
+Define
+\[
+\begin{aligned}
+A_{rs}&=C(\gamma_r,A,\bar\gamma_s),\\
+B_{rs}&=C(\gamma_r,B,\bar\gamma_s),\\
+z_{rs}&=C^3(\gamma_r,z,\bar\gamma_s).
+\end{aligned}
+\]
+These have literal boundaries
+\[
+A_{rs},B_{rs}:r\longrightarrow s,
+\qquad
+z_{rs}:A_{rs}\longrightarrow B_{rs}.
+\]
+
+Using \(\mathrm{RC}(2)\), choose, once for each relevant \(2\)-term,
+\[
+\nu_u:u\longrightarrow A_{rs}
+\quad\text{if }\pi u=\pi A,
+\]
+and
+\[
+\nu_v:v\longrightarrow B_{rs}
+\quad\text{if }\pi v=\pi B.
+\]
+Choose these in \(\Lambda\). For \(u=A\) and \(v=B\), take the ordinary unit-insertion coherences over their formal \(2\)-discs.
+
+For a \(3\)-term \(H:u\to v\) with \(\pi H=z\), the selected normal form is
+\[
+\boxed{
+N(u,v)=
+(\nu_u*_2z_{rs})*_2\nu_v^\dagger.
+}
+\tag{1}
+\]
+It depends only on the literal boundary \(u,v\), not on \(H\).
+
+The rest of the proof constructs
+\[
+R_H:H\longrightarrow N(u,v).
+\tag{2}
+\]
+
+## 2. Expanding a \(3\)-dimensional coherence head
+
+This step works over an arbitrary \(3\)-dimensional pasting context.
+
+Let
+\[
+h_P=\operatorname{coh}_{P,u\to v}[\operatorname{id}_P],
+\qquad \dim P=3.
+\]
+
+Construct a binary \(3\)-composite \(K_P^0\) by the ordered globular-sum decomposition of \(P\):
+
+- compose the strings of \(3\)-variables by \(*_2\);
+- combine the resulting \(1\)-columns by \(*_1\);
+- combine the \(0\)-columns by \(*_0\);
+- use iterated identities on maximal declarations of dimension below \(3\).
+
+The last clause ensures
+\[
+\operatorname{supp}(K_P^0)=\operatorname{Var}(P).
+\]
+Every \(3\)-variable of \(P\) is used exactly once.
+
+The raw \(K_P^0\) need not have the same literal \(1\)-boundaries as \(u,v\). Suppose its \(1\)-boundaries are \(p',q'\), whereas those of \(u,v\) are \(p,q\). Their respective strict paths agree. Choose \(2\)-coherences on the linear boundary pastings
+\[
+a:p\longrightarrow p',
+\qquad
+b:q'\longrightarrow q,
+\]
+and set
+\[
+K_P=C^3(a,K_P^0,b).
+\]
+
+Now the following are literal types:
+\[
+b_-:u\longrightarrow s_2K_P,
+\qquad
+b_+:t_2K_P\longrightarrow v.
+\]
+Define \(b_-\) by one coherence over \(\partial^-P\), and \(b_+\) by one coherence over \(\partial^+P\). Their respective endpoints have full support in those boundary pastings.
+
+Consequently,
+\[
+\boxed{
+\Omega_P=
+\left[
+h_P,\,
+(b_-*_2K_P)*_2b_+
+\right]_P
+}
+\tag{3}
+\]
+is a valid \(4\)-term. Both endpoints are parallel and have full \(P\)-support.
+
+For
+\[
+H=\operatorname{coh}_{P,u\to v}[\sigma],
+\]
+substitute \(\sigma\) into (3).
+
+The added \(3\)-terms \(b_-[\sigma]\) and \(b_+[\sigma]\) use only images of variables of dimension at most \(2\); they are therefore \(z\)-free.
+
+### Why this expansion terminates along one branch
+
+A \(3\)-head using \(z\) must have a \(3\)-dimensional arity: an arity of dimension at most \(2\) has no substitution entry that can use \(z\).
+
+Use the additive count of \(z\) in the free strict \(3\)-category:
+\[
+\#_z(\xi*_k\eta)=\#_z(\xi)+\#_z(\eta),
+\qquad
+\#_z(1)=0,
+\qquad
+\#_z(z)=1.
+\]
+This count is preserved by strict interchange.
+
+Since \(\pi H=z\), and \(K_P^0\) uses each formal \(3\)-variable once, exactly one substituted \(3\)-variable has an image using \(z\). Recursively expand that original substitution subterm. Its syntactic size decreases.
+
+The result is a binary \(3\)-expression with:
+
+- exactly one leaf labelled \(z\);
+- all other \(3\)-leaves \(z\)-free;
+- explicit \(4\)-terms comparing it with \(H\).
+
+This argument uses the additive count, not merely support equality.
+
+## 3. The universal comparisons needed for whiskers
+
+For \(k=0,1\), there is a direct \(4\)-coherence over \(D^3\vee_kD^3\):
+\[
+H*_kK
+\longrightarrow
+(H*_k1_{s_2K})*_2(1_{t_2H}*_kK).
+\tag{4}
+\]
+Its two endpoints have the same literal \(2\)-boundary and use both formal \(3\)-variables.
+
+Distribution of a vertical string through such a composition is obtained in the same way. For example, the relevant arity for a three-factor string is
+\[
+(D^3\vee_2D^3\vee_2D^3)\vee_kD^3.
+\tag{5}
+\]
+
+These comparisons separate the factor using \(z\) from \(z\)-free \(3\)-factors. Condition 3 of the lemma then has two consequences:
+
+- every \(2\)-term used to \(*_1\)-whisker the factor using \(z\) has a strict identity image;
+- every \(3\)-term composed beside it by \(*_0\) has a strict image supported at a single vertex.
+
+By support agreement, the first kind is path-supported and the second factors literally through a point context.
+
+The following two constructions remove them.
+
+### 3.1 Point-supported factors
+
+Work over the formal \(3\)-disc
+\[
+D^3=(x,y,f,g,a,b,z),
+\qquad
+a,b:f\to g,\quad z:a\to b.
+\]
+
+Let \(\beta'(y)\) be a fixed \(3\)-term over the point \(y\), with
+\[
+\beta':c\longrightarrow d,
+\qquad
+c,d:r\longrightarrow s,
+\qquad
+r,s:y\longrightarrow y.
+\]
+
+The term \(z*_0\beta'(y)\) has \(1\)-boundaries
+\[
+f*_0r,\qquad g*_0s.
+\]
+Over the corresponding formal \(1\)-discs, define
+\[
+\kappa_f:f*_0r\longrightarrow f,
+\qquad
+\bar\kappa_g:g\longrightarrow g*_0s
+\]
+by \(2\)-coherences.
+
+Over \(D^2(a)\), the terms
+\[
+a*_0c,\qquad C(\kappa_f,a,\bar\kappa_g)
+\]
+are literally parallel and both have full support. Thus define
+\[
+\ell:
+a*_0c\longrightarrow C(\kappa_f,a,\bar\kappa_g)
+\]
+by one \(3\)-coherence over \(D^2(a)\).
+
+Likewise define, over \(D^2(b)\),
+\[
+r_b:
+b*_0d\longrightarrow C(\kappa_f,b,\bar\kappa_g).
+\]
+
+Now
+\[
+\boxed{
+\left[
+z*_0\beta'(y),\,
+\bigl(\ell*_2C^3(\kappa_f,z,\bar\kappa_g)\bigr)*_2r_b^\dagger
+\right]_{D^3}
+}
+\tag{6}
+\]
+is a valid \(4\)-term.
+
+Its endpoints are literally parallel, and both have full \(D^3\)-support. Substituting an actual \(3\)-term for the formal \(z\) replaces its point-supported factor by:
+
+- two path-supported \(2\)-whiskers;
+- two \(z\)-free \(3\)-terms.
+
+For a point-supported factor on the left, use \(\beta'(x)*_0z\), with
+\[
+\kappa_f:r*_0f\to f,
+\qquad
+\bar\kappa_g:g\to s*_0g,
+\]
+and the same displayed construction.
+
+### 3.2 Path-supported \(2\)-whiskers
+
+Consider a right whisker
+\[
+w:s\longrightarrow t,
+\qquad
+\pi w=1_{\pi q_0}.
+\]
+Its support consists of vertices and edges of that path.
+
+The two \(2\)-terms
+\[
+\bar\gamma_s*_1w,\qquad \bar\gamma_t
+\]
+are literally parallel and path-supported. Item 4 therefore supplies an explicit path-context coherence
+\[
+d:(\bar\gamma_s*_1w)\longrightarrow\bar\gamma_t.
+\tag{7}
+\]
+
+Let \(\mathsf a_3\) denote the ordinary \(3\)-associator for \(*_1\)-composition of \(2\)-terms. Define
+\[
+\begin{aligned}
+\rho_A={}&
+\mathsf a_3(\gamma_r*_1A,\bar\gamma_s,w)
+*_2
+(1_{\gamma_r*_1A}*_1d),\\
+\rho_B={}&
+\mathsf a_3(\gamma_r*_1B,\bar\gamma_s,w)
+*_2
+(1_{\gamma_r*_1B}*_1d).
+\end{aligned}
+\tag{8}
+\]
+Their types are
+\[
+\rho_A:A_{rs}*_1w\longrightarrow A_{rt},
+\qquad
+\rho_B:B_{rs}*_1w\longrightarrow B_{rt}.
+\]
+
+There is a \(4\)-term
+\[
+\boxed{
+(z_{rs}*_11_w)*_2\rho_B
+\longrightarrow
+\rho_A*_2z_{rt}.
+}
+\tag{9}
+\]
+
+Here is its construction, including the arities.
+
+**First, reassociate around the formal \(3\)-variable.** Use a direct \(4\)-coherence over
+\[
+D^2\vee_1D^3\vee_1D^2\vee_1D^2,
+\tag{10}
+\]
+substituting respectively \(\gamma_r,z,\bar\gamma_s,w\). It compares
+\[
+(z_{rs}*_11_w)
+*_2
+\mathsf a_3(\gamma_r*_1B,\bar\gamma_s,w)
+\]
+with
+\[
+\mathsf a_3(\gamma_r*_1A,\bar\gamma_s,w)
+*_2
+\bigl((1_{\gamma_r}*_1z)*_11_{\bar\gamma_s*_1w}\bigr).
+\]
+
+**Second, interchange with \(d\).** Over the formal pasting
+\[
+P_I=D^2(f)\vee_1D^3(z)\vee_1D^3(e),
+\]
+write
+\[
+z:a\to b,\qquad e:c\to c'.
+\]
+Take the direct \(4\)-coherence between
+\[
+\bigl((1_f*_1z)*_11_c\bigr)
+*_2
+(1_{f*_1b}*_1e)
+\]
+and
+\[
+(1_{f*_1a}*_1e)
+*_2
+\bigl((1_f*_1z)*_11_{c'}\bigr).
+\tag{11}
+\]
+Substitute
+\[
+f\mapsto\gamma_r,\qquad
+z\mapsto z,\qquad
+c\mapsto\bar\gamma_s*_1w,\qquad
+c'\mapsto\bar\gamma_t,\qquad
+e\mapsto d.
+\]
+
+In particular, \(c\) is a **formal \(2\)-variable** in \(P_I\). Its assigned value is the composite \(\bar\gamma_s*_1w\). We do not declare a \(3\)-generator with that composite source in the purported pasting context.
+
+Composing these two comparisons, with vertical associativity comparisons, gives (9). Appending \(\rho_B^\dagger\) and using its cancellation witness gives
+\[
+\boxed{
+z_{rs}*_11_w
+\longrightarrow
+(\rho_A*_2z_{rt})*_2\rho_B^\dagger.
+}
+\tag{12}
+\]
+
+For completeness, left padding has the same construction. If
+\[
+w:t\to r,\qquad
+d:(w*_1\gamma_r)\to\gamma_t,
+\]
+put
+\[
+\begin{aligned}
+\rho_A^\ell={}&
+\mathsf a_3(w,\gamma_r*_1A,\bar\gamma_s)^\dagger\\
+&*_2
+\bigl(\mathsf a_3(w,\gamma_r,A)^\dagger*_11_{\bar\gamma_s}\bigr)\\
+&*_2
+\bigl((d*_11_A)*_11_{\bar\gamma_s}\bigr),
+\end{aligned}
+\tag{13}
+\]
+and define \(\rho_B^\ell\) similarly. The associativity comparisons live over
+\[
+D^2(w)\vee_1D^2(\gamma_r)\vee_1D^3(z)\vee_1D^2(\bar\gamma_s),
+\]
+and the interchange comparison over
+\[
+D^3(d)\vee_1D^3(z)\vee_1D^2(\bar\gamma_s).
+\]
+They give
+\[
+(1_w*_1z_{rs})*_2\rho_B^\ell
+\longrightarrow
+\rho_A^\ell*_2z_{ts},
+\]
+and hence the left version of (12).
+
+Thus both kinds of whisker are removed by explicit \(4\)-coherences over globular pastings.
+
+## 4. Completing the normalisation
+
+Apply the head expansion of §2. Normalise the resulting binary expression by induction on its syntax, following the unique leaf labelled \(z\).
+
+- At a \(*_2\)-node, the other factor is \(z\)-free and is added to the preceding or following \(3\)-product.
+- At a \(*_1\)-node, use (4) and (5) to separate the \(z\)-free \(3\)-factor. Then use (12) or its left version to remove the remaining path-supported \(2\)-whisker.
+- At a \(*_0\)-node, the other factor is point-supported. Apply (6), then the already established path-whisker constructions.
+- At the leaf \(z\), the comparison with its framed version is a direct \(4\)-coherence over \(D^3\), using the selected unit-insertion choices of \(\nu_A,\nu_B\).
+
+This yields a \(4\)-term
+\[
+H\longrightarrow (L*_2z_{rs})*_2R,
+\tag{14}
+\]
+where
+\[
+L:u\longrightarrow A_{rs},
+\qquad
+R:B_{rs}\longrightarrow v,
+\]
+and \(L,R\) are \(z\)-free.
+
+The recursion is finite. Head expansion recurses only into original substitution subterms. Whisker removal operates on the resulting finite binary expression; its newly constructed coherence terms are not recursively expanded.
+
+Now use \(\mathrm{RC}(3)\) in \(\Lambda\):
+\[
+L\longrightarrow\nu_u,
+\qquad
+R\longrightarrow\nu_v^\dagger.
+\tag{15}
+\]
+These pairs are literally parallel. Their strict images agree because \(\Lambda\) has no \(3\)-generators.
+
+Whiskering (15) into (14) constructs the required
+\[
+R_H:H\longrightarrow N(u,v).
+\]
+
+For parallel \(H,H'\) with strict image \(z\), the target normal forms are syntactically identical. Therefore
+\[
+\boxed{
+R_H*_3R_{H'}^\dagger:H\longrightarrow H'
+}
+\tag{16}
+\]
+is the requested \(4\)-term.
+
+Finally, suppose their common strict image is an identity \(3\)-cell. Item 16 implies that neither term uses \(z\), so both are literally terms of \(\Lambda\). Apply \(\mathrm{RC}(3)\) there.
+
+This proves the extension lemma.
+
+## 5. Application to the entire Gray cube
+
+Let \(\Lambda=U_{\leq2}\), and let
+\[
+U=(\Lambda,X:A\to B).
+\]
+
+### The \(X\)-free cases
+
+For the full \(0\)-boundary \(000\to111\), the strict path-rewrite graph consists of the two chains
+\[
+321\longrightarrow231\longrightarrow213\longrightarrow123
+\]
+and
+\[
+321\longrightarrow312\longrightarrow132\longrightarrow123.
+\tag{17}
+\]
+
+A strict \(2\)-cell is a directed subpath of one of these chains. The two length-three paths are distinct strict \(2\)-cells, namely \(\pi A\) and \(\pi B\).
+
+The first chain is covered by item 17. The second satisfies the same hypotheses of that construction:
+
+- its three events have a forced order;
+- its proper intervals are the corresponding two-square cylinders and single whiskered faces;
+- a full-word head reduces to one vertical column.
+
+Thus the same construction gives \(\mathrm{RC}(3)\) on the second hemisphere.
+
+For smaller \(0\)-boundaries, the relevant strict \(2\)-cells are identities or faces, with possible edge whiskers. They are among the proper-interval cases. By support agreement, any \(3\)-term with a specified strict \(2\)-boundary strengthens to the corresponding subcontext.
+
+Consequently,
+\[
+\mathrm{RC}(3)\text{ holds in }\Lambda.
+\tag{18}
+\]
+
+### The strict \(3\)-cells
+
+The cell \(X\) has \(0\)-boundary \(000\to111\). There is no nonempty path into \(000\), or out of \(111\), so it has no nontrivial strict \(0\)-whiskering.
+
+Its \(1\)-source path is \(321\), the initial vertex of the rewrite graph (17), and its \(1\)-target path is \(123\), the terminal vertex. Hence it has no nontrivial strict \(1\)-whiskering.
+
+Finally, \(\pi A\neq\pi B\), so \(X\) cannot be vertically composed with itself. There are no other \(3\)-generators.
+
+Therefore the only nonidentity strict \(3\)-cell is \(X\). All hypotheses of the extension lemma hold.
+
+\[
+\boxed{\mathrm{RC}(3)\text{ holds for the whole Gray-cube context }U.}
+\]
+
+In particular, if \(H:A\to B\) is any \(U\)-composite, its strict image is \(X\). Applying the construction to \(H\) and to \(X\) gives the explicit term
+\[
+\boxed{
+R_H*_3R_X^\dagger:H\longrightarrow X.
+}
+\tag{19}
+\]
+This proves uniqueness in \(G(3)\) for the cube.
+
+## 6. Application to the cylinder and join on \(D^2\)
+
+The extension lemma also settles Question 4. The additional work is to verify \(\mathrm{RC}(3)\) in their \(2\)-skeleta.
+
+### A consequence of the line-word argument in item 17
+
+The construction in item 17 applies to an event word of any finite length, provided its three geometric requirements hold.
+
+A useful sufficient criterion is the following. Fix a strict \(2\)-cell
+\[
+w=E_1\cdots E_r
+\]
+in a \(2\)-dimensional context with acyclic generating \(1\)-graph. Suppose:
+
+1. \(w\) has a unique ordered word of whiskered generating \(2\)-cells.
+2. Every proper contiguous subword, including empty subwords, satisfies \(\mathrm{RC}(3)\).
+3. At least one event uses a generating \(2\)-cell whose own \(0\)-source and \(0\)-target are the external endpoints of \(w\).
+
+Then the fiber of \(w\) satisfies \(\mathrm{RC}(3)\).
+
+Here is why the existing construction applies. In any head evaluating to \(w\), the generator in condition 3 is assigned through a \(0\)-column whose image spans both external endpoints. Acyclicity forces all preceding and following \(0\)-columns to be point-supported. Item 14 therefore leaves one vertical column.
+
+The images of its successive \(2\)-variables are contiguous subwords of the unique event word. Proper subwords use condition 2; a full-word input is handled by induction on the original term syntax. The relative-fusion construction uses precisely the same \(A_a\), \(\Omega_\chi\), and path-gap comparisons as item 17. None depends on the event list having length three. Its generic \(\Xi_P\) comparison then gives compatibility with arbitrary \(3\)-heads.
+
+The case \(r=1\) is included. It proves the one-face polygon case from the path cases.
+
+For a full strict composite of a globular pasting context, the required proper-subword case is even simpler: both parallel \(3\)-terms have full support, so their comparison is one coherence over that pasting context.
+
+### 6.1 Cylinder of \(D^2\)
+
+Use the notation from item 18:
+\[
+Z:(A^-*_0k)*_1G
+\longrightarrow
+F*_1(h*_0A^+).
+\]
+
+Its four full-boundary \(1\)-paths are
+\[
+p_0=f^-k,\qquad
+p_1=g^-k,\qquad
+p_2=hf^+,\qquad
+p_3=hg^+.
+\]
+The elementary rewrites are
+\[
+p_0\xrightarrow{\,a=A^-*_0k\,}p_1
+\xrightarrow{\,b=G\,}p_3,
+\]
+and
+\[
+p_0\xrightarrow{\,c=F\,}p_2
+\xrightarrow{\,d=h*_0A^+\,}p_3.
+\tag{20}
+\]
+
+Thus the nonempty strict event words are exactly
+\[
+a,\ b,\ c,\ d,\ ab,\ cd.
+\]
+In particular, \(ab\) and \(cd\) are distinct strict \(2\)-cells.
+
+Their fibers are covered as follows.
+
+| Strict word | Construction of its \(\mathrm{RC}(3)\) comparisons |
+|---|---|
+| Empty | Path-context coherence |
+| \(a\) | Pasting context \(D^2\vee_0D^1\) |
+| \(d\) | Pasting context \(D^1\vee_0D^2\) |
+| \(b,c\) | Lax-square result |
+| \(ab\) | Line-word criterion, using the full-span generator \(G\) |
+| \(cd\) | Line-word criterion, using the full-span generator \(F\) |
+
+The other \(0\)-boundaries contribute only path cases and the unwhiskered globes \(A^\pm\). Support agreement justifies restriction to the indicated subcontexts. Hence the entire \(2\)-skeleton satisfies \(\mathrm{RC}(3)\).
+
+The source \(p_0\) and target \(p_3\) of (20) are respectively initial and terminal in this rewrite graph. The external vertices are also source and sink in the generating \(1\)-graph. Therefore \(Z\) has no nontrivial strict whiskerings. Its two strict \(2\)-boundaries are distinct, so it cannot be iterated.
+
+The extension lemma gives
+\[
+\boxed{\mathrm{RC}(3)\text{ for the cylinder of }D^2.}
+\tag{21}
+\]
+
+### 6.2 The join \(c\star D^2\)
+
+Write its \(2\)-generators as
+\[
+A:f\to g,\qquad
+\beta_f:q\to p*_0f,\qquad
+\beta_g:q\to p*_0g,
+\]
+and its \(3\)-generator as
+\[
+Z:\beta_g\longrightarrow\beta_f*_1(p*_0A).
+\]
+
+The full-boundary rewrite graph is
+\[
+q\xrightarrow{\beta_f}pf\xrightarrow{p*_0A}pg,
+\qquad
+q\xrightarrow{\beta_g}pg.
+\tag{22}
+\]
+
+The relevant nonempty event words are
+\[
+\beta_f,\qquad p*_0A,\qquad
+\beta_g,\qquad \beta_f;(p*_0A).
+\]
+
+- The word \(p*_0A\) is covered by the pasting context \(D^1\vee_0D^2\).
+- Each singleton \(\beta_f,\beta_g\) satisfies the one-face polygon case of the criterion.
+- The two-event word satisfies the criterion because \(\beta_f\) spans its external \(0\)-boundary.
+
+Together with the path cases and the globe \(A\), these prove \(\mathrm{RC}(3)\) for the \(2\)-skeleton.
+
+Again, the external vertices are source and sink, \(q\) is initial in (22), and \(pg\) is terminal. The two strict \(2\)-boundaries of \(Z\) are distinct. Thus \(Z\) is the only nonidentity strict \(3\)-cell.
+
+Applying the same explicit normalisation gives
+\[
+\boxed{\mathrm{RC}(3)\text{ for }c\star D^2.}
+\tag{23}
+\]
+
+## 7. What remains for exchange and the corrected general hypothesis
+
+The proof above leaves \(z\)-free \(3\)-terms to an already established \(\mathrm{RC}(3)\) theorem for the \(2\)-skeleton. It therefore does not establish that theorem for the \(2\times2\) grid or for arbitrary contexts in Question 3.
+
+The elementary exchange does have the required local fourth-dimensional compatibility. Over
+\[
+P=D^2(a)\vee_0D^2(b),
+\]
+put
+\[
+\begin{aligned}
+L&=(a*_0g_0)*_1(f_1*_0b),\\
+R&=(f_0*_0b)*_1(a*_0g_1),\\
+\chi&=\operatorname{coh}_{P,L\to R}[\operatorname{id}].
+\end{aligned}
+\]
+Replacing the two formal \(2\)-variables by formal \(3\)-discs gives
+\[
+P^\uparrow=D^3\vee_0D^3.
+\]
+Define the composition terms
+\[
+A_L:L^-\to L^+,\qquad A_R:R^-\to R^+.
+\]
+Then
+\[
+\boxed{
+\operatorname{coh}_{P^\uparrow,\,
+(\chi^-*_2A_R)\to(A_L*_2\chi^+)}
+[\operatorname{id}]
+}
+\tag{24}
+\]
+is a valid \(4\)-term, and may be substituted with arbitrary input normalisers. Backtrack cancellation for \(\chi\) and its reverse is likewise one \(4\)-coherence over \(P\).
+
+What is still needed for Question 2 is a comparison taking **every arbitrary grid \(3\)-head** to the chosen combination of these exchanges and structural comparisons. Formula (24) alone does not provide that comparison.
+
+There is also a relevant published semistrict result. Under Question 3’s hypothesis, both strict boundaries of every \(2\)-generator are nonempty: in an acyclic generating graph, an identity boundary would force both boundaries to be identities. Forest–Mimram prove termination of interchanger rewriting for positive Gray presentations, show that two interchangers produce no remaining critical branching, and derive coherence from termination and critical confluence. Applied to the presentation with only structural interchangers, these results establish the corresponding free Gray-category statement. They do not supply the missing relative normalisation of arbitrary CaTT \(3\)-heads. [arxiv.org](https://arxiv.org/pdf/2109.05369?utm_source=chatgpt.com)
+
+Thus the constructions above settle **all of the Gray cube**, **the cylinder of \(D^2\)**, and **the join \(c\star D^2\)**. General exchange fusion, the full statement of Question 3, and the higher-dimensional assertions in Question 5 are not proved here.

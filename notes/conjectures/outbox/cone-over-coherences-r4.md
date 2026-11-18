@@ -121,3 +121,562 @@ Any of the following:
 - E. Finster, S. Mimram, *A type-theoretical definition of weak ω-categories*, LICS 2017.
 - T. J. Mikhail, *A type-theoretic definition of lax (∞,∞)-limits*, arXiv 2412.13310.
 
+# Research Response
+
+**The vertical case of Question 1 holds.** The argument extends to every finite vertical chain of 2-disks.
+
+Let
+\[
+Q_m=
+\bigl(x,y,\ f_0,\ldots,f_m:x\to y,\ 
+\alpha_i:f_{i-1}\Rightarrow f_i\ (1\le i\le m)\bigr).
+\]
+
+> **Theorem.** Using the support lemma and the normalisation and fusion construction established in round 3,
+> \[
+> \boxed{\operatorname{RC}(3,\operatorname{Cone}(Q_m;c))}
+> \]
+> holds for every finite \(m\).
+
+The two extensions needed beyond round 3 are:
+
+1. the normalisers for the 2-dimensional subcontext work for arbitrary finite vertical words;
+2. an arbitrary right 2-whisker of a cone 3-generator can be replaced by its chosen normal form, with a 4-dimensional comparison.
+
+The order of construction matters: first sequentialise the whole 3-term into individual generator insertions, then normalise those insertions. This avoids assuming a fusion theorem for an already normalised composite of several cone 3-generators.
+
+## 1. Notation and strict classification
+
+Write \(\Delta_m=\operatorname{Cone}(Q_m;c)\), and put
+\[
+\begin{aligned}
+a&=p_x,& b&=p_y,\\
+F_i&=a*_0f_i,& A_i&=a*_0\alpha_i,\\
+u_i&=p_{f_i}:b\Rightarrow F_i,&
+M_i&=p_{\alpha_i}:u_i\Rrightarrow u_{i-1}*_1A_i.
+\end{aligned}
+\]
+Let \(K_m\) be the subcontext obtained by deleting all \(M_i\). Thus \(K_m\) has no generators above dimension 2.
+
+Write \(U\simeq_4V\) when there is a 4-term between parallel 3-terms \(U,V\). Every 3-term in \(K_m\), and every 4-term in \(\Delta_m\), is invertible: its support in its own dimension is empty. Consequently \(\simeq_4\) is an equivalence relation and is preserved by composition and whiskering. Here inverses are weak inverses, with their cancellation cells. This is the syntactic invertibility criterion of Benjamin–Markakis, Proposition 35. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+### Strict 2-cells
+
+For this subsection, symbols denote strict images and juxtaposition denotes strict \(*_1\)-composition. Put
+\[
+R_{ii}=1_{F_i},\qquad
+R_{ij}=A_{i+1}\cdots A_j\quad(i<j),
+\]
+and
+\[
+W_{ij}=u_iR_{ij}\qquad(i\le j).
+\]
+
+The strict 2-cells from \(c\) to \(y\) are exactly
+\[
+1_b,\qquad R_{ij},\qquad W_{ij}.
+\]
+
+Indeed, their directed path expressions are the paths in the graph with edges
+\[
+u_i:b\longrightarrow F_i,
+\qquad
+A_i:F_{i-1}\longrightarrow F_i.
+\]
+A path starting at \(b\) has one initial edge \(u_i\), followed by a consecutive string of \(A\)'s. A path starting at \(F_i\) is a consecutive string of \(A\)'s.
+
+The other nonidentity strict 2-cells are the consecutive composites of the base generators \(\alpha_i\).
+
+### Strict 3-cells
+
+A nonidentity strict 3-cell can only apply an \(M_i\) to the initial \(u_i\) of a word \(W_{ij}\). Its left 2-whisker is an identity, because there is no nonidentity 2-path ending at \(b\). Its right 2-whisker is \(R_{ij}\). Thus the generating steps are
+\[
+\sigma_i^j=M_i*_1R_{ij}:
+W_{ij}\longrightarrow W_{i-1,j},
+\qquad 1\le i\le j.
+\]
+
+For each fixed \(j\), the rewriting graph is a chain:
+\[
+W_{jj}\longrightarrow W_{j-1,j}\longrightarrow\cdots
+\longrightarrow W_{0j}.
+\]
+
+It follows that the nonidentity strict 3-cells are exactly
+\[
+c^j_{i\ell}:W_{ij}\longrightarrow W_{\ell j},
+\qquad 0\le\ell<i\le j,
+\]
+with generator sequence
+\[
+i,\ i-1,\ \ldots,\ \ell+1.
+\tag{1}
+\]
+
+This also accounts for lower-dimensional compositions. Two nonidentity 3-cells cannot compose at level 1: every such cell has initial 1-boundary \(b\), whereas its final 1-boundary is some \(F_j\). At level 0, only point-unit whiskers are possible, since there are no nonidentity arrows into \(c\) or out of \(y\).
+
+In particular, there are no competing orders of generator applications in this family.
+
+### Literal representatives
+
+Return now to raw CaTT terms. Choose right-associated terms
+\[
+r_{ii}=1_{F_i},\qquad
+r_{i,i+1}=A_{i+1},\qquad
+r_{ij}=A_{i+1}*_1r_{i+1,j}\quad(j>i+1),
+\]
+and put
+\[
+w_{ii}=u_i,\qquad w_{ij}=u_i*_1r_{ij}\quad(i<j).
+\]
+
+Choose
+\[
+S_i^i=M_i.
+\]
+For \(j>i\), choose the ordinary associator
+\[
+\mathfrak a:
+(u_{i-1}*_1A_i)*_1r_{ij}
+\Rrightarrow
+u_{i-1}*_1(A_i*_1r_{ij})
+\]
+and define
+\[
+S_i^j=(M_i*_1r_{ij})*_2\mathfrak a.
+\tag{2}
+\]
+Then, literally,
+\[
+S_i^j:w_{ij}\Rrightarrow w_{i-1,j}.
+\]
+
+Let \(C^j_{i\ell}\) be a fixed association of
+\[
+S_i^j*_2S_{i-1}^j*_2\cdots *_2S_{\ell+1}^j.
+\tag{3}
+\]
+
+The associator in (2) is necessary: the unadjusted target of \(M_i*_1r_{ij}\) has the other bracketing.
+
+## 2. The 2-dimensional subcontext
+
+The first step is
+\[
+\operatorname{RC}(3,K_m).
+\tag{4}
+\]
+
+Here is the uniform extension of the round-3 normaliser construction.
+
+### 2.1 Supports that are pasting contexts
+
+The dependency support of a pure base interval is its vertical pasting context. The support of \(R_{ij}\), for \(i<j\), is the pasting context
+\[
+D^1(a)*_0Q_{[i,j]}.
+\]
+For \(i=j\), the support is the 1-path \(a,f_i\). Identity 2-cells on other strict 1-paths likewise have path supports.
+
+Therefore the support lemma puts every term with any of these strict images literally in the corresponding pasting context, up to the evident renaming. Parallel full terms there admit direct coherences.
+
+The only remaining strict 2-images are
+\[
+W_{ij}=u_iA_{i+1}\cdots A_j.
+\tag{5}
+\]
+Their supports need the vertical-column construction.
+
+### 2.2 Factorisation through one vertical column
+
+Consider a 2-coherence whose strict image is (5). Exactly one substituted formal 2-generator has an image using \(u_i\). Its root 0-column spans \(c\to y\).
+
+Every other root 0-column must then have identity strict 1-boundary at \(c\) or at \(y\). By the support lemma, all terms assigned to such a column are literally terms over that endpoint alone.
+
+Rename those point terms at the endpoints of the retained column. This gives the same literal factorisation used in round 3:
+\[
+C_n\vdash\delta:P,\qquad
+K_m\vdash\sigma:C_n,\qquad
+\gamma=\delta[\sigma],
+\tag{6}
+\]
+where \(P\) is the original arity and \(C_n\) is a vertical chain of \(n\) 2-generators.
+
+The original head is retained as a term over \(C_n\):
+\[
+r=\operatorname{coh}_{P,B}[\delta].
+\]
+No head is replaced merely because its strict image agrees with a composite.
+
+The factorisation is stable under the substitutions used below. Outside the retained column, it performs only endpoint renaming.
+
+### 2.3 Normalisers and common evaluation
+
+For each 1-term \(p\), choose an invertible path comparison
+\[
+\kappa_p:p\Rightarrow p^0,
+\]
+where \(p^0\) is the chosen representative of its strict path. For a strict 2-cell \(e\) and literal 1-boundaries \(p,q\), put
+\[
+\widehat e_{p,q}
+=
+(\kappa_p*_1e^0)*_1\kappa_q^{-1}.
+\]
+
+We construct invertible 3-terms
+\[
+N_A:A\Rrightarrow\widehat{\pi A}_{p,q}
+\qquad(A:p\Rightarrow q)
+\tag{7}
+\]
+by structural recursion on the actual 2-term \(A\).
+
+For the pasting-supported cases of §2.1, use a direct coherence.
+
+For (5), use (6). Write the generators of \(C_n\) as
+\[
+e_k:z_{k-1}\Rightarrow z_k,
+\]
+and choose a vertical fold \(L_n\). If the retained full term is \(r:p\Rightarrow q\), choose path comparisons
+\[
+k_p:p\Rightarrow z_0,\qquad k_q:q\Rightarrow z_n
+\]
+and put
+\[
+H_n^B=(k_p*_1L_n)*_1k_q^{-1}.
+\]
+There is a direct full coherence
+\[
+\chi_r:r\Rrightarrow H_n^B
+\]
+over \(C_n\).
+
+After substitution, evaluate \(H_n^B[\sigma]\) by:
+
+1. applying the already constructed \(N_{\sigma(e_k)}\);
+2. cancelling the intermediate \(\kappa^{-1}*_1\kappa\) pairs;
+3. comparing the resulting external path normalisers with the chosen \(\kappa_{p[\sigma]},\kappa_{q[\sigma]}\);
+4. expanding pure intervals into their \(A\)-letters and reassociating the resulting word to \(w_{ij}\).
+
+Call this evaluation \(E(\sigma;B)\). It depends on \(\sigma\) and the literal boundary type \(B\), but not on the full term \(r:B\). Define
+\[
+N_{r[\sigma]}=\chi_r[\sigma]*_2E(\sigma;B)
+\]
+when this is the outer-head construction.
+
+Every recursive call in this definition is on an original proper 2-dimensional substitution argument.
+
+### 2.4 Fusion for arbitrary finite words
+
+The fusion statement is
+\[
+N_{r[\sigma]}
+\ \simeq_4\
+\chi_r[\sigma]*_2E(\sigma;B)
+\tag{8}
+\]
+for every full formal \(r:B\) over \(C_n\), including when \(r[\sigma]\) was normalised through a different outer-head factorisation.
+
+The proof is structural induction on the **formal** term \(r\).
+
+Each proper formal 2-argument has strict image a consecutive interval of \(e_1,\ldots,e_n\). First restrict it to that interval subcontext using the support lemma. Restriction and renaming preserve the strict decrease in formal term size.
+
+After applying \(\sigma\), these intervals partition the word (5):
+
+- empty intervals have path support;
+- intervals not using \(u_i\) have the pasting supports of §2.1;
+- exactly one interval uses \(u_i\).
+
+For the first two cases, the competing 3-terms are compared directly by a 4-coherence on their pasting support. Only the last case requires the formal-term induction hypothesis.
+
+The rest of the fusion comparison uses the round-3 operations:
+
+- compare the assembled formal comparison with \(\chi_r\) by a direct 4-coherence over \(C_n\);
+- interchange normalisers acting on adjacent 2-letters using pasting arities formed from 3-disks;
+- reassociate and cancel intermediate path normalisers;
+- compare alternative path comparisons by direct 4-coherences on the actual 1-path.
+
+In particular, one does **not** identify
+\[
+\kappa_{p[\sigma]}
+\quad\text{with}\quad
+k_p[\sigma]*_1\kappa_{\sigma(z_0)}
+\]
+literally. These are compared by a 3-cell on their common path support; alternative such comparisons are compared there by a 4-cell.
+
+After those comparisons, hold the common external \(\kappa\)-frames fixed. The final word comparisons are direct coherences over
+\[
+C_{j-i+1},
+\]
+with its generators sent to
+\[
+u_i,\ A_{i+1},\ldots,A_j.
+\]
+This is the precise point where the word-length restriction disappears: the arity is a genuine vertical pasting context for every finite \(j-i+1\).
+
+In the formal-variable case, (8) is unitor naturality along the arbitrary 3-normaliser \(N_A\), followed by path comparisons. It varies a 2-variable in a 3-term, so it is within depth-1 naturality. The same depth bound applies to the other naturality operations above. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### 2.5 Compatibility with 3-terms
+
+We now obtain, for every \(T:A\Rrightarrow B\) in \(K_m\),
+\[
+T*_2N_B\ \simeq_4\ N_A.
+\tag{9}
+\]
+
+First take a 3-coherence head of arity at most 2. In a pasting-supported fibre, use a direct 4-coherence. In a fibre (5), factor through \(C_n\). The two formal 3-terms
+\[
+T^\delta*_2\chi_{\mathrm{target}},
+\qquad
+\chi_{\mathrm{source}}
+\]
+are full and literally parallel over \(C_n\). Compare them there, substitute, and apply (8).
+
+Thus compatibility is established for **all** heads of arity at most 2 before treating general 3-terms.
+
+For a composition head of arity 3, use the boundary-corrected binary evaluation described in §3 below. Its newly inserted boundary corrections have arities of dimension at most 2, so the preceding paragraph already handles them. Apply structural induction only to the original proper 3-dimensional substitution arguments.
+
+Compatibility with the binary operations follows as follows:
+
+- level 2 uses (9) for the two factors and reassociation;
+- level 1 uses the established fusion comparison (8);
+- at level 0, a result of type (5) has one non-point factor, and the other factor is point-supported, so the round-3 point comparison applies;
+- if the total image is pure, the whole comparison has pasting support and is direct.
+
+This proves (9). For parallel \(T,U:A\Rrightarrow B\), apply (9) to both and cancel the invertible \(N_B\). This proves (4).
+
+The dependency order is therefore:
+\[
+\text{2-normalisers}
+\ \longrightarrow\
+\text{formal-term fusion}
+\ \longrightarrow\
+\text{compatibility for arity }\le2
+\ \longrightarrow\
+\text{general 3-compatibility}
+\ \longrightarrow\
+\operatorname{RC}(3,K_m).
+\]
+No step assumes an instance of \(\operatorname{RC}(3,K_m)\).
+
+## 3. Sequentialisation with literal boundaries
+
+We next reduce a 3-term in \(\Delta_m\) to a sequence of individually framed \(M_i\)'s and \(K_m\)-terms.
+
+The generic head-replacement argument from round 3 applies unchanged. Its boundary corrections are essential.
+
+For a 3-coherence over a 3-dimensional pasting arity \(P\):
+
+1. Choose a binary evaluation of its formal 3-generators.
+2. Correct its 1-boundaries by 2-dimensional path comparisons.
+3. Compare its resulting 2-source and 2-target with those of the original coherence by 3-coherences over the 2-dimensional boundary pasting contexts of \(P\).
+4. The original coherence and the corrected evaluation are now full, literally parallel 3-terms over \(P\). A direct coherence over \(P\) compares them by a 4-term.
+
+After substitution into \(\Delta_m\), every boundary correction belongs to \(K_m\): it depends only on terms of dimension at most 2.
+
+Apply this replacement by structural induction on the original 3-term. Newly introduced binary operations are retained as operations; their coherence syntax is not expanded again. This makes the procedure well founded.
+
+For \(k=0,1\), generic 4-interchange gives
+\[
+X*_kY
+\ \simeq_4\
+(X*_k s_2Y)*_2(t_2X*_kY).
+\tag{10}
+\]
+Generic 4-distribution then distributes each fixed whisker over the level-2 sequence for its argument. Consequently the whole expression becomes a level-2 sequence of:
+
+- \(K_m\) 3-terms;
+- individual \(M_i\)'s with iterated lower-dimensional frames.
+
+Every external level-0 frame around an \(M_i\) is point-supported. Its removal uses the direct 3-disk construction from round 3: retain the point-term syntax at the endpoints of a generic 3-variable, correct the 1-boundaries by path 2-cells, and correct the 2-boundaries over its source and target 2-disks. The resulting 3-term and the generic 3-variable are full and parallel over the 3-disk, so a direct 4-coherence compares them. After substitution, all boundary corrections are in \(K_m\).
+
+The remaining level-1 frames flatten, with \(K_m\) boundary corrections, to
+\[
+E=(L*_1M_i)*_1R.
+\tag{11}
+\]
+Flattening uses associator naturality in a 2-variable, hence only depth 1.
+
+Thus every 3-term has been completely sequentialised before any composite \(C^j_{i\ell}\) is introduced.
+
+## 4. Normalising the actual right whisker
+
+Suppose the original 3-term has literal 1-boundaries \(s,t\), with
+\[
+\pi s=b,\qquad \pi t=F_j.
+\]
+Choose invertible path 2-cells
+\[
+L_s:b\Rightarrow s,\qquad R_t:t\Rightarrow F_j
+\]
+and define
+\[
+\mathcal T_j(U)=(L_s*_1U)*_1R_t.
+\tag{12}
+\]
+
+Consider a factor (11), where
+\[
+L:s\Rightarrow b,\qquad R:F_i\Rightarrow t.
+\]
+The strict classification forces
+\[
+\pi L=1_b,\qquad \pi R=R_{ij}.
+\]
+
+Reassociation compares \(\mathcal T_j(E)\), with \(K_m\) boundary corrections, to
+\[
+((L_s*_1L)*_1M_i)*_1(R*_1R_t).
+\]
+
+Now the required frame comparisons have literal types
+\[
+\lambda:L_s*_1L\Rrightarrow1_b,
+\qquad
+\delta:R*_1R_t\Rrightarrow r_{ij}.
+\tag{13}
+\]
+
+The first is a direct coherence on the 1-disk \(b\). The second is a direct coherence on \(D^1(a)*_0Q_{[i,j]}\), or on the path \(a,f_i\) if \(i=j\). The support lemma justifies both statements. In particular, neither comparison uses an \(M_k\).
+
+The right comparison moves across \(M_i\) by the following 4-cell:
+\[
+\begin{aligned}
+&(M_i*_1(R*_1R_t))
+ *_2\bigl((u_{i-1}*_1A_i)*_1\delta\bigr)
+\\
+&\qquad\Longrightarrow
+(u_i*_1\delta)
+ *_2(M_i*_1r_{ij}).
+\end{aligned}
+\tag{14}
+\]
+
+This is a substitution instance of a full coherence over
+\[
+D^3*_1D^3.
+\]
+Both displayed 3-terms have literal source
+\[
+u_i*_1(R*_1R_t)
+\]
+and literal target
+\[
+(u_{i-1}*_1A_i)*_1r_{ij}.
+\]
+There is an analogous square for \(\lambda\).
+
+Remove the resulting left unit by unitor naturality. For \(i=j\), remove the right unit as well. For \(i<j\), include the target associator from (2).
+
+We obtain \(K_m\) 3-terms
+\[
+a_E:s_2\mathcal T_j(E)\Rrightarrow w_{ij},
+\qquad
+b_E:t_2\mathcal T_j(E)\Rrightarrow w_{i-1,j}
+\]
+and a 4-term
+\[
+\boxed{
+\mathcal T_j(E)*_2b_E
+\ \Longrightarrow\
+a_E*_2S_i^j.
+}
+\tag{15}
+\]
+
+This treats the actual syntactic right whisker \(R\), including all its coherence terms. Neither \(R\) nor \(r_{ij}\) is inverted. Only the invertible comparison 3-cells and path 2-cells are inverted.
+
+## 5. Normalising the complete 3-term
+
+Let
+\[
+U:P\Rrightarrow Q,\qquad
+\pi U=c^j_{i\ell},\quad \ell<i.
+\]
+Choose \(K_m\) 3-cells
+\[
+\eta_P:\mathcal T_j(P)\Rrightarrow w_{ij},
+\qquad
+\eta_Q:\mathcal T_j(Q)\Rrightarrow w_{\ell j}.
+\tag{16}
+\]
+They exist by the 2-normalisers above, with unit comparisons, or directly by the assumed \(\operatorname{RC}(2)\). Use the same choices for every 3-term with these literal boundaries.
+
+Sequentialise \(U\), distribute \(\mathcal T_j\) across the resulting level-2 sequence, and apply (15) to each generator factor.
+
+After inserting the inverse \(K_m\) comparison cells, the result is a sequence of canonical \(S_k^j\)'s separated by \(K_m\) 3-terms. The strict classification forces the indices to be exactly (1). A \(K_m\) 3-term has identity strict image, so it cannot change the intervening strict 2-word.
+
+Including the endpoint comparisons (16), every intervening \(K_m\) factor is therefore an endomorphism of one **literal chosen term** \(w_{kj}\). By \(\operatorname{RC}(3,K_m)\), compare it with the identity 3-term on \(w_{kj}\). Remove these factors and reassociate. This gives
+\[
+\boxed{
+\eta_P^{-1}*_2\mathcal T_j(U)*_2\eta_Q
+\ \simeq_4\
+C^j_{i\ell}.
+}
+\tag{17}
+\]
+
+Only the individual generator comparison (15) was needed. A compatibility theorem for whiskering a previously normalised multi-generator composite was not used.
+
+## 6. Recovering the original literal boundaries
+
+Let \(U,V:P\Rrightarrow Q\) be parallel with equal strict images.
+
+If their common strict image is an identity, the support lemma puts both terms in \(K_m\), so (4) applies.
+
+Otherwise, their common image is some \(c^j_{i\ell}\). Equation (17), using the same \(\eta_P,\eta_Q\), gives
+\[
+\mathcal T_j(U)\simeq_4\mathcal T_j(V).
+\tag{18}
+\]
+
+To undo the fixed path frames, define
+\[
+G(X)=(L_s^{-1}*_1X)*_1R_t^{-1}.
+\]
+For every 2-term \(P:s\Rightarrow t\), reassociation, inverse witnesses and unitors give a \(K_m\) 3-term
+\[
+e_P:G(\mathcal T_j(P))\Rrightarrow P.
+\]
+Naturality of this 3-term in the 2-variable \(P\) supplies
+\[
+G(\mathcal T_j(U))*_2e_Q
+\ \Longrightarrow\
+e_P*_2U,
+\tag{19}
+\]
+and likewise for \(V\). This again has depth 1.
+
+Apply \(G\) to (18), use (19), and cancel the invertible \(e_P,e_Q\). The result is a 4-term between \(U\) and \(V\). This proves the theorem.
+
+## 7. The vertical pair and the scope of the result
+
+For the requested vertical pair, take \(m=2\). Its nonidentity strict 3-cells are exactly:
+
+| Strict source | Strict target | Strict 3-cell |
+|---|---|---|
+| \(u_1\) | \(u_0A_1\) | \(M_1\) |
+| \(u_2\) | \(u_1A_2\) | \(M_2\) |
+| \(u_1A_2\) | \(u_0A_1A_2\) | \(M_1*_1A_2\) |
+| \(u_2\) | \(u_0A_1A_2\) | \(M_2*_2(M_1*_1A_2)\) |
+
+For raw terms, the third representative is \(S_1^2\), including its target associator, and the fourth is \(M_2*_2S_1^2\). Equations (15)–(19) compare arbitrary terms in all four strict fibres.
+
+Thus
+\[
+\boxed{
+\operatorname{RC}\!\left(
+3,\operatorname{Cone}(D^2*_1D^2;c)
+\right).
+}
+\]
+
+The property used by this induction is stronger than having a unique source and sink: every relevant strict 2-word has one initial cone generator followed by a pure interval with pasting support, and the cone 3-generators rewrite that initial generator in a uniquely determined order.
+
+This proves the vertical alternative in Question 1 and gives an induction for arbitrary finite vertical chains. It does not establish the horizontal alternative or arbitrary \(Q\): those require normalisation and fusion for multiple non-point horizontal columns.
+
+For Question 3, varying a 3-variable in a 4-term is still depth 1. The additional requirement for \(\operatorname{RC}(4)\) is a **5-dimensional compatibility theorem for the chosen 3-term normalisers**, of the form
+\[
+q*_3N_C\ \Longrightarrow\ N_B
+\qquad(q:B\Longrightarrow C).
+\]
+The 4-dimensional fusion used above does not supply that theorem.

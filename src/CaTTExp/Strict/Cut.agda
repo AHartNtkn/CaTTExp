@@ -48,7 +48,7 @@ open import CaTTExp.Strict.Order using (_<ₒ_; <ₒ-irrefl; <ₒ-trans; ord-neg
 
 private
   data VShape (Γ : Ctx) (v : Nat) : Set where
-    flatS : facesTy (lookup Γ v) ≡ nothing → VShape Γ v
+    flatS : facesTy (lookup Γ v) ≡ nothing → hdimV Γ v ≡ 0 → VShape Γ v
     deep  : ∀ B a b s t → lookup Γ v ≡ just (arr (arr B a b) (var s) (var t)) →
             lookup Γ s ≡ just (arr B a b) → lookup Γ t ≡ just (arr B a b) → VShape Γ v
 
@@ -56,9 +56,9 @@ private
   vshape {Γ} inv v = go (lookup Γ v) refl
     where
     go : ∀ m → lookup Γ v ≡ m → VShape Γ v
-    go nothing            e = flatS (cong facesTy e)
-    go (just ⋆)           e = flatS (cong facesTy e)
-    go (just (arr ⋆ _ _)) e = flatS (cong facesTy e)
+    go nothing            e = flatS (cong facesTy e) (cong hdimTy e)
+    go (just ⋆)           e = flatS (cong facesTy e) (cong hdimTy e)
+    go (just (arr ⋆ _ _)) e = flatS (cong facesTy e) (cong hdimTy e)
     go (just (arr (arr B a b) s t)) e with inv v _ e
     ... | (i , j , refl , refl , li , lj) = deep B a b i j e li lj
 
@@ -71,7 +71,7 @@ face-wft {Γ} inv σ x y (v ∷ w) {z} (m , ev , p) mz
 ...   | z' , refl , m' with face-wft inv (flipN (hdimV Γ v) σ) m y w p m'
 ...     | wz , dz = (m , ev , wz) , trans (sym (+-suc (hdimV Γ v) (deg Γ z'))) (cong (hdimV Γ v +_) dz)
 face-wft {Γ} inv σ x y (v ∷ w) {z} (m , ev , p) mz | inj₁ mh with vshape inv v
-... | flatS e = ⊥-elim (none (subst (λ F → z ∈L here σ F w) e mh))
+... | flatS e _ = ⊥-elim (none (subst (λ F → z ∈L here σ F w) e mh))
   where
   none : z ∈L [] → ⊥
   none ()
@@ -231,3 +231,191 @@ module _ {Γ : Ctx} (I : OInv Γ) where
              (sym (trans (cm-split a (∂T Γ true) (λ b → b < a) c)
                   (trans (cong (count a (∂B Γ true (below a c)) +_) (P-above a c a (λ b ba → ba)))
                          (+-zero _)))))))
+
+------------------------------------------------------------------------
+-- Sizes of bags.
+
+sizeB : Bag → Nat
+sizeB []      = 0
+sizeB (_ ∷ X) = suc (sizeB X)
+
+sizeB-++ : ∀ X Y → sizeB (X ++ Y) ≡ sizeB X + sizeB Y
+sizeB-++ []      Y = refl
+sizeB-++ (x ∷ X) Y = cong suc (sizeB-++ X Y)
+
+sizeB-consB : ∀ v X → sizeB (consB v X) ≡ sizeB X
+sizeB-consB v []      = refl
+sizeB-consB v (x ∷ X) = cong suc (sizeB-consB v X)
+
+sizeB-cm1 : ∀ {P : Tuple → Set} g X → All P X → (∀ b → P b → sizeB (g b) ≡ 1) → sizeB (cm g X) ≡ sizeB X
+sizeB-cm1 g []      _        h = refl
+sizeB-cm1 g (x ∷ X) (px , a) h =
+  trans (sizeB-++ (g x) (cm g X)) (cong₂ _+_ (h x px) (sizeB-cm1 g X a h))
+
+private
+  rmT : Tuple → Bag → Bag
+  rmT a []      = []
+  rmT a (x ∷ X) = if eqT a x then X else (x ∷ rmT a X)
+
+  swap≈ : ∀ y a R → y ∷ a ∷ R ≈ a ∷ y ∷ R
+  swap≈ y a R = ≈-trans (≈-sym (++-assoc (y ∷ []) (a ∷ []) R))
+                (≈-trans (++-cong (++-comm (y ∷ []) (a ∷ [])) ≈-refl) (++-assoc (a ∷ []) (y ∷ []) R))
+
+  rm-≈ : ∀ a Y {n} → count a Y ≡ suc n → (Y ≈ a ∷ rmT a Y) × (sizeB Y ≡ suc (sizeB (rmT a Y)))
+  rm-≈ a []      ()
+  rm-≈ a (y ∷ Y) e with eqT a y in q
+  ... | true rewrite eqT-sound a y (subst T (sym q) tt) = ≈-refl , refl
+  ... | false with rm-≈ a Y e
+  ...   | r , sz = ≈-trans (++-cong (≈-refl {y ∷ []}) r) (swap≈ y a (rmT a Y)) , cong suc sz
+
+≈-size : ∀ X Y → X ≈ Y → sizeB X ≡ sizeB Y
+≈-size []      []      p = refl
+≈-size []      (y ∷ Y) p = ⊥-elim (z≢s (trans (at p y) (cong (λ b → if b then suc (count y Y) else count y Y) (eqT-refl y))))
+  where
+  z≢s : ∀ {n} → 0 ≡ suc n → ⊥
+  z≢s ()
+≈-size (x ∷ X) Y p with rm-≈ x Y (trans (sym (at p x)) (cong (λ b → if b then suc (count x X) else count x X) (eqT-refl x)))
+... | r , sz = trans (cong suc (≈-size X (rmT x Y) (++-cancelˡ X (rmT x Y) (x ∷ []) (≈-trans p r)))) (sym sz)
+
+------------------------------------------------------------------------
+-- Degree 0 and 1 boundaries.
+
+module _ {Γ : Ctx} (inv : PsInv Γ) where
+
+  private
+    plus0 : ∀ m n → m + n ≡ 0 → (m ≡ 0) × (n ≡ 0)
+    plus0 zero n e = refl , e
+
+    s≢0 : ∀ {n} → suc n ≡ 0 → ⊥
+    s≢0 ()
+
+  ∂-deg0' : ∀ σ w → deg Γ w ≡ 0 → ∂T Γ σ w ≡ []
+  ∂-deg0' σ []      _ = refl
+  ∂-deg0' σ (v ∷ w) d with vshape inv v | plus0 (hdimV Γ v) (deg Γ w) d
+  ... | flatS e _ | _ , dw =
+    cong₂ _++_ (cong (λ F → here σ F w) e)
+               (cong (consB v) (∂-deg0' (flipN (hdimV Γ v) σ) w dw))
+  ... | deep B a b s t lv ls lt | hv0 , _ =
+    ⊥-elim (s≢0 (trans (sym (trans (cong hdimTy lv) (cong (λ q → suc (hdimTy q)) (sym ls)))) hv0))
+
+  ∂-deg1 : ∀ σ w → deg Γ w ≡ 1 → sizeB (∂T Γ σ w) ≡ 1
+  ∂-deg1 σ []      ()
+  ∂-deg1 σ (v ∷ w) d with vshape inv v
+  ... | flatS e h0 =
+    trans (sizeB-++ (here σ (facesTy (lookup Γ v)) w) _)
+    (cong₂ _+_ (cong (λ F → sizeB (here σ F w)) e)
+               (trans (sizeB-consB v _) (∂-deg1 (flipN (hdimV Γ v) σ) w (trans (cong (_+ deg Γ w) (sym h0)) d))))
+  ... | deep B a b s t lv ls lt =
+    trans (sizeB-++ (here σ (facesTy (lookup Γ v)) w) _)
+    (cong₂ _+_ (trans (cong (λ F → sizeB (here σ F w)) (cong facesTy lv)) (hs σ))
+               (trans (sizeB-consB v _) (cong sizeB (∂-deg0' (flipN (hdimV Γ v) σ) w (snd (sp (hdimV Γ s) (deg Γ w) d'))))))
+    where
+    hv : hdimV Γ v ≡ suc (hdimV Γ s)
+    hv = trans (cong hdimTy lv) (cong (λ q → suc (hdimTy q)) (sym ls))
+    d' : suc (hdimV Γ s) + deg Γ w ≡ 1
+    d' = trans (cong (_+ deg Γ w) (sym hv)) d
+    sp : ∀ m n → suc m + n ≡ 1 → (m ≡ 0) × (n ≡ 0)
+    sp zero zero _ = refl , refl
+    sp zero (suc n) ()
+    sp (suc m) n ()
+    hs : ∀ σ → sizeB (here σ (just (s , t)) w) ≡ 1
+    hs true  = refl
+    hs false = refl
+
+------------------------------------------------------------------------
+-- Replacing the top row of a cell by a cut gives a cell.
+
+setTop : Tower → Bag → Tower
+setTop (base _)     w = base w
+setTop (step S U _) w = step S U w
+
+All-filter : ∀ {P} Q X → All P X → All P (filter Q X)
+All-filter Q []      _       = tt
+All-filter Q (x ∷ X) (p , a) with Q x
+... | true  = p , All-filter Q X a
+... | false = All-filter Q X a
+
+All-intro : ∀ {P : Tuple → Set} X → (∀ {z} → z ∈L X → P z) → All P X
+All-intro []      h = tt
+All-intro (x ∷ X) h = h (hereA refl) , All-intro X (λ m → h (thereA m))
+
+private
+  cnt2 : ∀ {X Y Z W} → X ++ Y ≈ Z ++ W → ∀ d → count d X + count d Y ≡ count d Z + count d W
+  cnt2 {X} {Y} {Z} {W} p d = trans (sym (count-++ d X Y)) (trans (at p d) (count-++ d Z W))
+
+  ar2 : ∀ A B U U' s1 s2 n1 n2 p1 p2 → A + n1 ≡ U + p1 → B + n2 ≡ U' + p2 → U + s1 ≡ U' + s2 →
+        p1 + n2 ≡ n1 + p2 → A + s1 ≡ B + s2
+  ar2 A B U U' s1 s2 n1 n2 p1 p2 e1 e2 e3 e4 = +-cancelʳ (n1 + n2) (A + s1) (B + s2) (trans L (sym R))
+    where
+    L : (A + s1) + (n1 + n2) ≡ (U' + s2) + (n1 + p2)
+    L = trans (+-interchange A s1 n1 n2) (trans (cong (_+ (s1 + n2)) e1)
+        (trans (+-interchange U p1 s1 n2) (cong₂ _+_ e3 e4)))
+    R : (B + s2) + (n1 + n2) ≡ (U' + s2) + (n1 + p2)
+    R = trans (cong ((B + s2) +_) (+-comm n1 n2)) (trans (+-interchange B s2 n2 n1)
+        (trans (cong (_+ (s2 + n1)) e2)
+        (trans (+-interchange U' p2 s2 n1) (cong ((U' + s2) +_) (+-comm p2 n1)))))
+
+  one : ∀ X → sizeB X ≡ 1 → Σ Tuple λ w → X ≡ w ∷ []
+  one (w ∷ []) _ = w , refl
+  one []          ()
+  one (_ ∷ _ ∷ _) ()
+
+  ∂-++ : ∀ Γ σ X Y Z W → X ++ Y ≈ Z ++ W → ∂B Γ σ X ++ ∂B Γ σ Y ≈ ∂B Γ σ Z ++ ∂B Γ σ W
+  ∂-++ Γ σ X Y Z W p =
+    ≈-trans (≡→≈ (sym (cm-++ (∂T Γ σ) X Y)))
+    (≈-trans (cm-cong (∂T Γ σ) (X ++ Y) (Z ++ W) p) (≡→≈ (cm-++ (∂T Γ σ) Z W)))
+
+module _ {Γ : Ctx} (I : OInv Γ) (inv : PsInv Γ) {x y : Nat} where
+
+  cut-bas : ∀ q a u v c → All (Basis Γ x y q) u → All (Basis Γ x y q) v → All (Basis Γ x y (suc q)) c →
+            All (Basis Γ x y q) (cut I a u v c)
+  cut-bas q a u v c au av ac =
+    All-++ _ _ (All-filter _ _ (All-++ v _ av (faces false (above I a c) (All-filter _ c ac))))
+               (All-filter _ _ (All-++ u _ au (faces true (below I a c) (All-filter _ c ac))))
+    where
+    faces : ∀ σ C → All (Basis Γ x y (suc q)) C → All (Basis Γ x y q) (∂B Γ σ C)
+    faces σ C aC = All-cm (∂T Γ σ) C aC (λ w bw → All-intro (∂T Γ σ w) (λ m → face-basis inv σ x y q w bw m))
+
+  -- For a q-cell S with top row u, and c with ∂⁺c + u = ∂⁻c + v, replacing
+  -- u by the cut at a gives a q-cell.
+  cut-cell : ∀ q a S v c → IsCellL Γ x y q S → All (Basis Γ x y q) v → All (Basis Γ x y (suc q)) c →
+             ∂B Γ true c ++ top S ≈ ∂B Γ false c ++ v → IsCellL Γ x y q (setTop S (cut I a (top S) v c))
+  cut-cell zero a (base s) v c (w₀ , qs , b₀) av ac ch with one C szC
+    where
+    C Lo : Bag
+    C  = cut I a s v c
+    Lo = below I a c
+    szL : ∀ σ → sizeB (∂B Γ σ Lo) ≡ sizeB Lo
+    szL σ = sizeB-cm1 (∂T Γ σ) Lo (All-filter _ c ac) (λ b bb → ∂-deg1 inv σ b (snd bb))
+    szC : sizeB C ≡ 1
+    szC = +-cancelʳ (sizeB Lo) (sizeB C) 1
+            (trans (cong (sizeB C +_) (sym (szL false)))
+            (trans (sym (sizeB-++ C (∂B Γ false Lo)))
+            (trans (≈-size _ _ (cut-eq I a s v c ch))
+            (trans (sizeB-++ s (∂B Γ true Lo))
+                   (cong₂ _+_ (≈-size s (w₀ ∷ []) qs) (szL true))))))
+  ... | w , e = w , ≡→≈ e , fst (subst (All (Basis Γ x y zero)) e (cut-bas zero a s v c (All-≈ (w₀ ∷ []) s (≈-sym qs) (b₀ , tt)) av ac))
+  cut-cell (suc q) a (step S₁ S₂ u) v c (c₁ , c₂ , par , chu , au) av ac ch =
+    c₁ , c₂ , par , mk≈ chain , cut-bas (suc q) a u v c au av ac
+    where
+    C Lo : Bag
+    C  = cut I a u v c
+    Lo = below I a c
+    E : C ++ ∂B Γ false Lo ≈ u ++ ∂B Γ true Lo
+    E = cut-eq I a u v c ch
+    N P : Bag
+    N = ∂B Γ false Lo
+    P = ∂B Γ true Lo
+    chain : ∀ d → count d (∂B Γ true C ++ top S₁) ≡ count d (∂B Γ false C ++ top S₂)
+    chain d =
+      trans (count-++ d (∂B Γ true C) (top S₁))
+      (trans (ar2 (k (∂B Γ true C)) (k (∂B Γ false C)) (k (∂B Γ true u)) (k (∂B Γ false u))
+                  (k (top S₁)) (k (top S₂)) (k (∂B Γ true N)) (k (∂B Γ false N)) (k (∂B Γ true P)) (k (∂B Γ false P))
+                  (cnt2 {∂B Γ true C} {∂B Γ true N} {∂B Γ true u} {∂B Γ true P} (∂-++ Γ true C N u P E) d)
+                  (cnt2 {∂B Γ false C} {∂B Γ false N} {∂B Γ false u} {∂B Γ false P} (∂-++ Γ false C N u P E) d)
+                  (cnt2 {∂B Γ true u} {top S₁} {∂B Γ false u} {top S₂} chu d)
+                  (cnt2 {∂B Γ true P} {∂B Γ false N} {∂B Γ true N} {∂B Γ false P} (ddB Γ inv Lo) d))
+             (sym (count-++ d (∂B Γ false C) (top S₂))))
+      where
+      k : Bag → Nat
+      k = count d

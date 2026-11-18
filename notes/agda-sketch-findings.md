@@ -25,7 +25,7 @@ The theory is parameterised by a **signature of closed constants** (`CaTTExp.Sig
 - `psOf : Tree → Σ Ctx _⊢ps` builds a context and its pasting derivation from a Batanin tree.
 - The checker decides `Γ ⊢ps` by parsing Γ to a tree and comparing contexts.
 
-**Certified checker.** Every success returns a derivation, so a successful run is a proof. It is *not* proved complete.
+**Certified checker.** Every success returns a derivation, so a successful run is a proof. It is also proved complete (`CaTTExp.Completeness`, using the deterministic pasting checker `CaTTExp.PastingCheck`), so it decides all four judgments.
 
 **Checked examples** (`CaTTExp.Examples`)
 
@@ -42,10 +42,14 @@ Rejected:
 - a "composite" that forgets variables
 - an "inverse" of an arrow
 
-**Not yet done:**
-- Admissibility of substitution: if Δ ⊢ σ : Γ and Γ ⊢ t : A, then Δ ⊢ t[σ] : A[σ].
-- Checker completeness.
-- Any semantics.
+**Metatheory added since milestone 1** (all checked with `--safe`, no postulates):
+
+- Substitution admissibility, `CaTTExp.Subst` (PR #20); pure instance in `CaTTExp.PureMetatheory`.
+- Checker completeness and decidability of the four judgments, `CaTTExp.Completeness`. The pasting judgment is decided by `CaTTExp.PastingCheck` (read left to right, descend with psd to the dimension of the next object). Hypotheses: the equality test on constants is reflexive and `valid?` is complete; both hold for pure CaTT.
+- Constant substitutions `(c : ⋆) ⊢ !_Γ ∶ Γ`, `CaTTExp.ConstSub`, for constant-free Γ in any signature, hence for every pure Γ. Some hypothesis is needed (argued, not formalised): Γ = (x : c₀ → c₁) with two unrelated constants should have no such substitution, since nothing has type c₀ → c₁.
+- Weakening and context extension along a substitution, `CaTTExp.Weakening`.
+- Suspension, `CaTTExp.Suspension`: Σ preserves all four judgments for constant-free syntax (all syntax in pure CaTT), including both side conditions and the pasting judgment. `elements-at` puts any derivation over Θ in the context ΣΘ[a, b] (`limits-representables.md` §8 target 1).
+- Soundness for the one-object, locally discrete strict models B G (G a group, constants allowed), `CaTTExp.GroupModel`. General strict ω-categories are ledger item A3a.
 
 ## The sketch (`CaTTExp.Sketch.Representables`)
 
@@ -63,14 +67,14 @@ Validity of a constant is a pure CaTT judgment, decided by the pure checker.
 - This is natural rather than a restriction: a shape is a computad, whose generators' types are built from other generators, never from named objects.
 - It is not a universe either. ⟦Γ⟧ is a particular finitely presented object, not a code for one.
 
-**2. Functoriality of ⟦_⟧ is not derivable.** This is *argued informally*, not formally proved. What Agda checks is narrower: one candidate, a coh over D₀ with an empty substitution, is rejected.
+**2. Functoriality of ⟦_⟧ is not derivable.** *Machine-checked* in `CaTTExp.Sketch.NonDerivable` (2026-11-18). The separating model is B(ℤ/2): every ⟦Γ⟧ goes to the one object and every ⟦σ⟧ to the non-identity element. By soundness for group models, no term has type ⟦s⟧ ; ⟦id⟧ ⇒ ⟦s⟧, ⟦id_Γ⟧ ⇒ id, or ⟦σ ∘ τ⟧ ⇒ ⟦σ⟧ ; ⟦τ⟧, nor the reverse of any of them, in the empty context or any context with a valid ℤ/2 environment. The original informal argument follows.
 - Nothing relates ⟦σ ∘ τ⟧ to ⟦τ⟧ ; ⟦σ⟧, or ⟦id⟧ to the ambient identity.
 - `coh` only proves laws for *arbitrary* cells (variables). It never proves laws about named constants.
 - Argument for non-derivability:
   - Interpret the ambient theory in a strict ω-category: the free category on the graph whose vertices are the ⟦Γ⟧ and whose edges are the ⟦σ⟧, with only identity cells above dimension 1.
   - Strict ω-categories model CaTT, so every derivable term is interpreted.
   - A cell ⟦s⟧ ; ⟦id_{D₁}⟧ ⇒ ⟦s⟧ would become an identity between two distinct paths, which is impossible.
-  - Making this rigorous needs soundness of that interpretation, which in turn needs substitution admissibility. That is not yet formalized.
+  - The formal proof uses B(ℤ/2) instead of the free category on the graph, since it only needs to separate the two sides.
 - Any law about a new object must come from a new rule. There are three options:
   - (a) definitional equalities, which pull in CaTT_su/sua-style strictness early, against the plan;
   - (b) invertible comparison cells, which need an invertibility judgment or type from the start (as in Mikhail's `⊨` or ICaTT);
@@ -107,6 +111,6 @@ Validity of a constant is a pure CaTT judgment, decided by the pure checker.
 
 ## Suggested next steps
 
-- Prove substitution admissibility for the core. It is the main missing metatheorem and will be needed by every extension.
+- ~~Prove substitution admissibility for the core.~~ Done (PR #20).
 - Prototype a minimal Gray-CaTT side condition: orient the full-coherence case using Mikhail's gray judgments. Check that the naturality cell then typechecks in only one direction.
 - State Mikhail's lax limits over the signature mechanism, with cone and transfor judgments, and check his examples.

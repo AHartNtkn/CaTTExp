@@ -305,6 +305,10 @@ module _ (Θ : Ctx) where
       ... | ab , inc = (p , above-trans o o' os p ab) , (ab , inc)
         where p = branch-ord e o o' c xc
 
+    -- Exported: the objects of every node of a diagram increase.
+    objs-inc : ∀ e os cs → ExCs e os cs → Inc os
+    objs-inc = chain-inc
+
     ----------------------------------------------------------------------
     -- Uniqueness.
 

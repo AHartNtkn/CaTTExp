@@ -8,11 +8,11 @@
 
 ## 0. Summary
 
-1. **Unrestricted lax limits are consistent over L (B8, internal).** In strict ω-categories, self-enriched over the Ara–Maltsiniotis Gray tensor, every diagram over a finite computad has a lax limit whose universal property is an *isomorphism* between `𝒦(c, lim)` and the ω-category of lax cones with **unrestricted** Gray-shaped transfors (Theorem A, §1). Cone morphisms with non-invertible comparison cells exist and are classified. Comma and hom objects come out as the full hom ω-categories. This answers Problems 1–3 of `conjectures/oriented-lax-limits.md` in the strict case. The (∞,ω) case stays with the researcher.
-2. **R11 re-derived line by line in two-tier L (B8, internal).** Exactly one step of the forced-invertibility and collapse arguments fails in L: the invertibility of `F(w)_g`, the image of a cell under the universal cone, which in L is an operation-case Gray cell. It fails at every level. Every other step (associators, unitors, J2 certificates, the endpoint reduction) goes through unchanged (§2).
+1. **Unrestricted lax limits are consistent over L (B8, internal).** In strict ω-categories, self-enriched over the Ara–Maltsiniotis Gray tensor, every diagram over a finite computad has a lax limit whose universal property is an *isomorphism* between `𝒦(c, lim)` and the ω-category of lax cones with **unrestricted** Gray-shaped transfors (Theorem A, §1). Cone morphisms with non-invertible comparison cells exist and are classified. Comma and hom objects come out as the full hom ω-categories. This is the strict analogue, for every finite computad, of the researcher's answer to `conjectures/oriented-lax-limits.md` (PR #29, verified). That answer proves the arrow case in ∞Cat with the same two ingredients.
+2. **R11 re-derived line by line in two-tier L (B8, internal; agrees with the researcher's §1).** Exactly one step of the forced-invertibility and collapse arguments fails in L: the invertibility of `F(w)_g`, the image of a cell under the universal cone, which in L is an operation-case Gray cell. It fails at every level. Every other step (associators, unitors, J2 certificates, the endpoint reduction) goes through unchanged (§2).
 3. **The collapse in every dimension ≥ 3 is proved (B9).** A clean induction: a d-cell becomes the top f-component of a (d−2)-transfor over the identity arrow, and `uni` at level d−1 makes it invertible. It needs no appeal to Benjamin–Markakis Prop. 35, only the full-support coherence rule (§3).
 4. **Models of the original CaTT_lim are classified (B10).** They are exactly the (∞,ω)-categories whose cells of dimension ≥ 3 are invertible and which have finite lax limits in the sense of Gagna–Harpaz–Lanari and Loubaton. Example: the 2-category Cat (§4). This holds under the shared premises (specified shapes, B5; interpreting CaTT in (∞,ω)-categories, E11).
-5. **Limit rules over L, in one schema with P (B7, B11).** P and L use the same specified cone and transfor shapes, and the same filler rule. They differ in two places only: the core, and whether the transfor comparison cells over positive-dimensional diagram generators carry invertibility marks. The whole `cone`/`ctrf`/`pctrf`/`star`/`pstar`/`⊢uni` apparatus becomes one horn context `Horn_n(Γ, γ; c)` and one term former `uni`. Under L, the only cells the rules need from the core are operation-case cohs over two-factor wedges `ΣDᵃ ∨ ΣDᵇ`, which LCORE's checker already covers (§5).
+5. **Limit rules over L, in one schema with P (B7, B11).** P and L use the same specified cone and transfor shapes, and the same filler rule. They differ in two places only: the core, and which transfor comparison cells carry invertibility marks. Under P, the comparisons over all positive-dimensional diagram generators are marked; under L, only those over *marked* diagram generators (the coherent marking that the verified Problem 3 correction requires). The whole `cone`/`ctrf`/`pctrf`/`star`/`pstar`/`⊢uni` apparatus becomes one horn context `Horn_n(Γ, γ; c)` and one term former `uni`. Under L, the only cells the rules need from the core are operation-case cohs over two-factor wedges `ΣDᵃ ∨ ΣDᵇ`, which LCORE's checker already covers (§5).
 6. **Metatheory of the marked version (B4).** Substitution admissibility is proved. Composition of transfors over arrows is given explicitly; over higher generators it reduces to the specified-shape problem B5 / naturality C1. Soundness reduces to Loubaton's lax limits in ω (Prop. 4.2.3.8, Cor. 4.2.3.18) plus B5 and E11 (§6).
 7. **Hom_⊖ under P is identified at the generator level (B13).** Loubaton's marked enhanced Gray product `I ⊖ a♯` is Gray in the first transfor direction and *cartesian* in all higher ones (Construction 3.1.2.15, Prop. 3.1.2.17). That is exactly the repaired table: arbitrary vertex components and invertible comparisons over positive-dimensional generators. Under L the cone categories are the full Gray homs of Theorem A (§7).
 8. **One schema, and where the alternating variance lives (B12).** The alternating variance of the weighted-limit theorem is a condition on the *index* (π, μ), so it belongs to B14, not to the cone schema, which keeps one variance. Under L, **colimit transfors have the opposite Gray factor order** (diagram index first) and need no second interchange direction. **Full duality is not a symmetry of L**: it reverses the interchanger. So colimit rules must come from their own specified shapes, not from dualising derivations (§8).
@@ -101,7 +101,7 @@ natural in c, and Gray-natural. **Proved (strict).**
 - Its arrow f → g is the unique β with `F(β)_f = α`.
 - The cartesian obstruction of `catt-lim-pseudo-vs-gray.md` §4 does not arise, because `F(β)_f` is the Gray interchanger of β with the universal evaluation cell, which is not invertible.
 
-**A2. Comma and hom objects (Problem 3, strict).** Take the diagram `x, y, z, f : x → z, g : y → z`, sent to `1, 1, C, a, b`, with g marked. In the strict model "marked" means that p_g must be an identity. This is equivalent to asking for an invertible p_g. Then
+**A2. Comma and hom objects (Problem 3, strict).** Take the diagram `x, y, z, f : x → z, g : y → z`, sent to `1, 1, C, a, b`, with g marked. In the strict model, "marked" is taken to mean that p_g is an identity. Because the leg is a fixed point, the pullback then also makes every transfor comparison over g an identity: the marking is respected **coherently**. The verified researcher response shows this is necessary. If p_g is only invertible and the transfor comparison m_g is arbitrary, no limit exists in general (its counterexample is the one-object 2-category with hom-poset [1] and composition max). Then
 
 ```
 lim = {a} ×_C ⟦D¹, C⟧ʳ ×_C {b},
@@ -116,7 +116,7 @@ the fibre of the Gray arrow object over a pair of objects. Its n-cells are maps 
 ### 1.5 What this does and does not settle
 
 - **Settled (strict).** The unrestricted lax universal property is consistent in a Gray-enriched setting: it has a model in which comparison cells are genuinely non-invertible, and in which comma objects are the full homs. This is the positive half of R11 that the notes predicted, now proved for strict ω-categories. With Theorem 1 of `pseudo-vs-gray.md` (whose lemmas (A)–(C) are discharged by Hadzihasanovic), it gives a **relative consistency result: the unrestricted limit rules over two-tier L have a non-degenerate model.** It depends on one more identification: that the specified syntactic cone and transfor shapes interpret as the cell-attachment formula above. That is B5's job.
-- **Not settled.** The (∞,ω) statement in oriented categories (Gepner–Heine), i.e. whether `Fun^lax(c, –)` commutes with Gray cotensors in ∞Cat. The proof above uses only Lemmas 1–2, which are formal consequences of a biclosed associative tensor and its Gray self-enrichment, so the ∞-version should follow in the same way from Campion's biclosed Gray structure **[conj]**. This is recorded in `conjectures/oriented-lax-limits.md` as internal progress, for the researcher.
+- **(∞,ω).** The researcher response to `conjectures/oriented-lax-limits.md` (PR #29, verified) proves the ∞Cat version of Lemma 1 (its mixed currying (4), from Gepner–Heine Notation 3.1.3) and of Lemma 2, and with them the arrow case. Existence for all small diagrams follows from Heine Lemma 3.69. What is still open (ledger B17) is the general-Γ statement that the cell-attachment limit represents the cone category presented by the *specified syntactic shapes*: a comparison between filler rules and the weight, which the response flags too.
 
 ---
 
@@ -135,6 +135,8 @@ Each step of the verified argument (`conjectures/catt-lim-pseudo-vs-gray.md`, re
 | §2 endpoint reduction (dimension-1 `uni`, composition of transfors) | used | unchanged, and harmless |
 | §4 collapse: the unit coherences relating `a` and `P_f;(a▷1_Y)` | invertible | the context is `ΣD¹ ∨ ΣD⁰` with U ≅ D¹, both sides full: **invertible**. So m_f ≅ z still holds. |
 | §4: `F(α)_g` for higher α "invertible by BM Prop. 35" | invertible | the top cell of `D^{dim α − 1} ⊗ D^{dim g}`, operation case, **not invertible** (Thm 1(2) covers every y ⊗ x with both dimensions ≥ 1) |
+
+The researcher's response to `oriented-lax-limits.md` (§1, verified) reaches the same conclusion for the cone-morphism step. The table above also covers the collapse argument and the higher levels.
 
 **Conclusion.** The only step that fails in L is the invertibility of `F(w)_g`, and it fails at every level. Everything else, including the unit and associator bookkeeping, survives. So in L the argument proves something true but harmless: **every cone transfor is conjugate, by certified cells, to a directed interchanger.** Theorem A shows this is exactly what happens in the strict model. Together with §1.5, this closes the internal half of B8.
 
@@ -229,10 +231,10 @@ Here T is the transfor that σ supplies. **All of E's components are certified**
 
 | | Inputs σ | Outputs |
 |---|---|---|
-| **L** | unrestricted: Tr_n has no marks | J2 certified |
+| **L** | unrestricted, except that Tr_n's comparison variables over **marked** diagram generators are marked declarations (coherent marking; verified Problem 3 correction) | J2 certified |
 | **P** | Tr_n's comparison variables over positive-dimensional diagram generators are **marked declarations**, so σ must certify them (§6.1) | J2 certified |
 
-This is "P = L + marking" (`pseudo-vs-gray.md` §2.4) at the level of the limit rules: one schema, one implementation, and a flag on Tr_n.
+This is "P = L + marking" (`pseudo-vs-gray.md` §2.4) at the level of the limit rules: one schema, one implementation, and the set of marked comparison variables in Tr_n as the switch.
 
 **What this removes.** `cone`, `ctrf`, `pctrf`, `star`, `pstar`, `⊢uni` and `⊢_{K,Θ}` become two context functions (`Cone`, `Tr`, or the single `Horn`) and one term former. The rule now reads like `coh`: `uni_{Horn_n(Γ,γ;c), y}[σ]`. **B11 is closed as a design.** Its encoding is an Agda follow-up (§10, item 2).
 
@@ -412,7 +414,7 @@ This is posed, self-contained, in `conjectures/finite-fibration-test.md`.
 | 1 | Shapes `Cone`, `Tr_n` (transfor-first) and cocone shapes (diagram-first) as functions, matched to the cell-attachment formula of §1.3; the [conj] `Tr_n(Γ) = Cone(Dⁿ ⊗ Γ)[π]`. Needed by B4.2 (higher generators), B4.3, B7, B13. | B5, "Define canonical cone constructions" (`cmsg_018pe2CvdFGDdsWgn8Tjn5gbLYSyekUerAT8DpXZFBCtrp`) |
 | 2 | Agda: encode the horn form (§5.3) for P on top of PR #22. Under LCORE's core (PR #26), encode the L version with `F(w)_g` as operation-case cohs, and machine-check that the forced-invertibility derivation is blocked, i.e. that no inverse of the interchanger is derivable. | ledger B15, LIM-F (accepted 2026-11-18) |
 | 3 | Agda: machine-check the B9 induction for d = 4 in the *intended* rules (selector and copy fixed, unrestricted transfors), inside the horn encoding. The printed rules cannot run the collapse at all, since over an arrow they never produce the needed transfors (`catt-lim-formalization.md` D1/D3). | ledger B16, LIM-F (accepted 2026-11-18) |
-| 4 | (∞,ω) version of Theorem A in oriented categories. | out to researcher (`oriented-lax-limits.md`); internal: the [conj] in §1.5 |
+| 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
 | 7 | Finite fibration test beyond set-valued weights. | this thread, with the conjecture file ready to send |

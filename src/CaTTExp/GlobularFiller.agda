@@ -42,9 +42,9 @@ open import CaTTExp.Prelude
 open import CaTTExp.Pure
 
 ------------------------------------------------------------------------
--- List helpers.
+-- List helpers (in a named module, so proofs can refer to them).
 
-private
+module Lists where
   length : ∀ {a} {A : Set a} → List A → Nat
   length []       = 0
   length (_ ∷ xs) = suc (length xs)
@@ -72,6 +72,8 @@ private
   find : ∀ {a} {A : Set a} → Nat → List (Nat × A) → Maybe A
   find n []             = nothing
   find n ((m , a) ∷ xs) = if n ==ℕ m then just a else find n xs
+
+open Lists
 
 ------------------------------------------------------------------------
 -- Labelled pasting trees.

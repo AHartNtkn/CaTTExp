@@ -1,6 +1,6 @@
 # Conjecture CT: canonical terms for cells of Gray tensors of pasting diagrams
 
-*Self-contained problem statement. No knowledge of the surrounding project is assumed. Status: open (2026-11-18).*
+*Self-contained problem statement. No knowledge of the surrounding project is assumed. Status (2026-11-18): **strict CT is false** for D¹ ⊗ D¹ ⊗ D¹ when T is built from layerings (§8); CT holds for D² ⊗ D¹; **CT′ holds for all generators of dimension ≤ 4** and is open beyond, where it reduces to relative coherence RC(n) for loop-free contexts.*
 
 ## 1. Setting
 
@@ -47,3 +47,11 @@ It is exactly what is needed to write Gray-shaped contexts (lax naturality squar
 ## 7. What would count as a solution
 
 An explicit construction of T satisfying (a)–(c), or (a), (b), (c′); or a pair Θ, Δ for which no assignment satisfies (a)–(c), together with an explanation of which coherences are forced.
+
+## 8. Partial results (2026-11-18)
+
+- **D² ⊗ D¹: CT holds.** For t : u ⇒ v in D² and the interval i, ∂⁻(t ⊗ i) = (u ⊗ i) followed by (t ⊗ 0) whiskered on the right by y ⊗ i, and ∂⁺(t ⊗ i) = (t ⊗ 1) whiskered on the left by x ⊗ i, followed by (v ⊗ i). With binary composites for 2-edge paths and whiskering coherences typed f ∗ h ⇒ g ∗ h, all layer boundaries agree syntactically.
+- **D¹ ⊗ D¹ ⊗ D¹: CT fails for layered T.** The source hexagon of the top cell has a unique layering whose first two layers are a square whiskered on the right and a square whiskered on the left, meeting at a 3-edge path. The first layer's target contains a subterm denoting a 2-edge path b c that no subterm of the second layer's source can denote (every term uses exactly the variables of its strict image). So the two sides bracket the 3-edge path differently.
+- **CT′ for generators of dimension ≤ 3:** conjugate each layer by associators to a fixed bracketing of paths. **Dimension 4:** follows from relative coherence in dimension 2 (any two parallel 2-terms with the same strict image are connected), proved in the project's `relative-coherence.md`. **Dimension ≥ 5:** reduces to relative coherence in dimension n − 2 for loop-free contexts, open.
+
+So the remaining question is CT′ in dimension ≥ 5, or equivalently that relative-coherence statement.

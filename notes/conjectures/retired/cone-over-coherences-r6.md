@@ -134,3 +134,614 @@ Any of the following:
 - D. Ara, A. Burroni, Y. Guiraud, P. Malbos, F. Métayer, S. Mimram, *Polygraphs: From Rewriting to Higher Categories*, arXiv 2312.00429 (Appendix D).
 - E. Finster, S. Mimram, *A type-theoretical definition of weak ω-categories*, LICS 2017.
 - T. J. Mikhail, *A type-theoretic definition of lax (∞,∞)-limits*, arXiv 2412.13310.
+
+# Researcher Response
+
+**Questions 1 and 2 follow from the support lemma and the 3-generator extension theorem in item 17.** More precisely,
+\[
+\boxed{\mathrm{RC}_3\bigl(\operatorname{Cone}(Q;c)\bigr)
+       \quad\text{for every pasting context }Q.}
+\]
+Consequently, your reduction proves \(N^{\mathrm{cone}}\) through dimension \(3\).
+
+The additional step is a **fixed-vertex naturality construction for 3-terms**, obtained by applying item 17 to cylinders of their *pasting arities*. It allows a cone edge and its cone 2-generator to be contracted together. Induction on the number of cone 2-generators in the strict support then proves the result.
+
+I give the construction and the contraction argument below. They do not supply the five-dimensional compatibility required in Question 3.
+
+Throughout, \(1_t\) denotes an identity one dimension above \(t\). Identity lifts are displayed explicitly in the weak naturality types. Calculations expressly designated as strict calculations use strict associativity, units and interchange.
+
+## 1. A class of globular contexts with relative coherence
+
+Let \(G\) be a globular context of dimension at most \(2\). Assume:
+
+1. The directed graph of its 0- and 1-generators is acyclic.
+2. For every pair of 0-generators \(x,y\), the directed graph whose vertices are the 1-generators \(x\to y\), and whose arrows are the 2-generators between them, is acyclic.
+
+Then
+\[
+\mathrm{RC}_3(G).
+\tag{1}
+\]
+
+Here is a direct proof.
+
+The free strict 2-category on \(G\) has the following description. Its 1-cells are paths in the generating 1-graph. A 2-cell between two such paths exists only when their sequences of 0-vertices agree. For a fixed sequence
+\[
+x_0,\ldots,x_k,
+\]
+a 2-cell is a tuple of directed paths in the graphs of 2-generators between \(x_{i-1}\to x_i\) arrows. Vertical composition concatenates these paths coordinatewise; horizontal composition concatenates tuples. This construction satisfies interchange and has the required free universal property.
+
+Fix a strict 2-cell \(\theta\). Its tuple determines a pasting context
+\[
+P_\theta=C_{n_1}*_0\cdots *_0C_{n_k},
+\]
+allowing \(n_i=0\), and allowing the point context when \(k=0\).
+
+The assignment of its variables to generators of \(G\) is injective:
+
+- acyclicity of the 1-graph prevents a 0-vertex from repeating along the horizontal path;
+- acyclicity of each graph of 2-generators prevents a 1-variable from repeating along a vertical path.
+
+Thus the dependency support of \(\theta\) is isomorphic to \(P_\theta\). A dependency-preserving permutation of declarations may be needed to put it in pasting-context order.
+
+Now let \(U,V:A\to B\) be parallel 3-terms of \(G\). Since \(G\) has dimension at most \(2\), their strict images are identities on a strict 2-cell \(\theta\). By exact support, \(U,V\), including their types, strengthen to the support of \(\theta\). Transport them along its variable isomorphism with \(P_\theta\), obtaining \(U',V'\).
+
+Both \(U'\) and \(V'\) are full in \(P_\theta\). Hence the full coherence
+\[
+\operatorname{coh}_{P_\theta,\,U'\to V'}[\mathrm{id}]
+\]
+is an admissible 4-term. Substitution gives the required comparison in \(G\). This proves (1).
+
+## 2. Relative strict lifting through dimension 4
+
+We will use the following form of your boundary-transport argument.
+
+**Lifting lemma.** Suppose a context \(L\), of dimension at most \(4\), satisfies
+\[
+\mathrm{RC}_1(L_{\le1}),\qquad
+\mathrm{RC}_2(L_{\le2}),\qquad
+\mathrm{RC}_3(L_{\le3}).
+\tag{2}
+\]
+If \(d\) is a strict 4-cell and \(u,v\) are literally parallel weak 3-terms with
+\[
+\pi u=\sigma d,\qquad \pi v=\tau d,
+\]
+then there is a 4-term \(D:u\to v\) with \(\pi D=d\).
+
+The corresponding statements for strict 2- and 3-cells need only the corresponding lower-dimensional assumptions.
+
+For completeness, the compatible-face part works as follows. Choose weak representatives \(s_j(a)\) of strict cells through dimension \(3\), with
+\[
+s_j(a):
+s_{j-1}(\sigma a)\longrightarrow s_{j-1}(\tau a).
+\]
+Construct \(s_1\) from path composites, \(s_2\) using \(\mathrm{RC}_1(L_{\le1})\), and \(s_3\) using \(\mathrm{RC}_1(L_{\le1})\) and \(\mathrm{RC}_2(L_{\le2})\).
+
+Lift a strict 4-expression inductively with these chosen 3-boundaries. Its factors are literally composable because the representatives form a globular section. After a weak composition, correct:
+
+1. its 1-frame using 2-cells from \(L_{\le1}\);
+2. its 2-frame using 3-cells from \(L_{\le2}\);
+3. its 3-endpoints using 4-cells from \(L_{\le3}\).
+
+At each stage this is the transport
+\[
+(\lambda_r *_r D)*_r\rho_r
+\]
+with appropriately oriented corrections. The same procedure gives the prescribed endpoints \(u,v\).
+
+Every correction has identity strict image: a term of dimension \(r+1\) in \(L_{\le r}\) strictifies to an identity. Thus the strict image remains \(d\). No \(\mathrm{RC}_4\) is used.
+
+## 3. Fixed-vertex naturality through dimension 3
+
+We now construct the operation needed for contraction.
+
+Let \(\Gamma\) have dimension at most \(3\), and let \(X\) be an up-closed set of its variables containing no 0-variable. Define a context
+\[
+\Gamma\langle X\rangle
+\]
+with minus and plus copies of selected variables. Write \(t^\pm\) for the corresponding copies of a term.
+
+The operations will have types
+\[
+E_f:f^-\longrightarrow f^+
+\tag{3}
+\]
+for a 1-term \(f\),
+\[
+N_A:
+A^- *_1 E_g
+\longrightarrow
+E_f *_1 A^+
+\tag{4}
+\]
+for a 2-term \(A:f\to g\), and
+\[
+\mathcal N_U:
+\bigl(U^- *_1 1_{E_g}\bigr)*_2N_B
+\longrightarrow
+N_A *_2\bigl(1_{E_f} *_1 U^+\bigr)
+\tag{5}
+\]
+for a 3-term \(U:A\to B\), where \(A,B:f\to g\).
+
+Both 3-terms in (5) have the literal 2-source
+\[
+A^- *_1 E_g
+\]
+and literal 2-target
+\[
+E_f *_1 B^+.
+\]
+
+### 3.1. The context and the unaffected cases
+
+A selected 1-variable \(f\) contributes
+\[
+f^-,f^+,\qquad E_f:f^-\to f^+.
+\]
+A selected 2-variable \(A:f\to g\) contributes its copies and a 3-variable of type (4). A selected 3-variable contributes its copies and a 4-variable of type (5).
+
+Unselected variables remain unchanged. Up-closure ensures that their types are unchanged.
+
+The declarations are constructed by dimension. The connector for a variable uses naturality only for its lower-dimensional boundary terms.
+
+For a term whose support does not meet \(X\), use fixed unit templates:
+\[
+E_f=1_f,
+\qquad
+N_A=\rho_A *_2\ell_A^{-1},
+\tag{6}
+\]
+where
+\[
+\rho_A:A*_1 1_g\to A,
+\qquad
+\ell_A:1_f*_1A\to A.
+\]
+For an unaffected 3-term \(U\), choose the full 4-coherence over the 3-disc filling (5) with these unit templates. Both boundaries use the top 3-variable, so this coherence is admissible.
+
+These are also the chosen generic-head fillers when the selected set is empty. In particular, the unaffected clauses commute literally with substitution.
+
+### 3.2. Relative coherence on the arity cylinders
+
+Let \(P\) be a pasting context of dimension at most \(3\), and let \(Y\) be up-closed with no 0-variables.
+
+The 2-skeleton of \(P\langle Y\rangle\) is globular. Its 2-generators are:
+
+- unchanged or duplicated original 2-generators of \(P\);
+- connectors \(E_f:f^-\to f^+\).
+
+The original 0-vertices are unchanged, and duplicating an edge preserves acyclicity of the generating 1-graph.
+
+For the second acyclicity condition of Section 1, choose a rank \(r(f)\) on the original 1-generators such that every original 2-generator increases rank. Such ranks are supplied by the vertical orders in a pasting diagram. The suspension–wedge description of pasting diagrams gives these orders, including when higher-dimensional generators produce parallel 2-generators. [arxiv.org](https://arxiv.org/pdf/2402.01611?utm_source=chatgpt.com)
+
+Give the copies of a selected \(f\) ranks
+\[
+(r(f),0),\qquad(r(f),1).
+\]
+Every copied original 2-generator increases the first coordinate; every \(E_f\) increases the second. Lexicographic order proves acyclicity.
+
+Section 1 therefore gives
+\[
+\mathrm{RC}_3\bigl(P\langle Y\rangle_{\le2}\bigr).
+\]
+Apply the supplied 3-generator extension theorem, item 17:
+\[
+\mathrm{RC}_3\bigl(P\langle Y\rangle_{\le3}\bigr).
+\tag{7}
+\]
+
+This is the only class of contexts on which the construction below needs a new application of \(\mathrm{RC}_3\).
+
+### 3.3. Strict naturality in dimensions 1 and 2
+
+We first specify the strict images of the lower-dimensional operations.
+
+For strict 1-cells, put
+\[
+e_{f*_0g}=e_f*_0e_g,
+\qquad
+e_{1_x}=1_{1_x}.
+\tag{8}
+\]
+A selected generator uses its connector; an unselected generator uses an identity.
+
+For strict 2-cells, put
+\[
+\begin{aligned}
+\eta(A*_1C)
+  &=(A^-*_1\eta C)*_2(\eta A*_1C^+),\\
+\eta(A*_0C)
+  &=\eta A*_0\eta C,\\
+\eta(1_f)&=1_{e_f}.
+\end{aligned}
+\tag{9}
+\]
+Selected 2-generators use their declared 3-connectors.
+
+These formulas respect the strict 2-category equations. For example, the interchange equation is verified by
+\[
+\begin{aligned}
+\eta\bigl((A*_0B)*_1(C*_0D)\bigr)
+&=
+\bigl((A^-*_0B^-)*_1(\eta C*_0\eta D)\bigr)
+\\[-2pt]&\qquad *_2
+\bigl((\eta A*_0\eta B)*_1(C^+*_0D^+)\bigr)
+\\
+&=
+\bigl((A^-*_1\eta C)*_2(\eta A*_1C^+)\bigr)
+\\[-2pt]&\qquad *_0
+\bigl((B^-*_1\eta D)*_2(\eta B*_1D^+)\bigr)
+\\
+&=\eta\bigl((A*_1C)*_0(B*_1D)\bigr).
+\end{aligned}
+\tag{10}
+\]
+The middle equality uses strict interchange. Vertical associativity expands to the same sequence of three connector steps; the unit equations follow from (8). Thus \(\eta\) is well defined on strict 2-cells. The formulas also commute with substitution.
+
+For each generic 1-coherence \(c\), lift \(e_{\pi c}\) with prescribed endpoints \(c^-,c^+\), using Section 2 and \(\mathrm{RC}_1\).
+
+For each generic 2-coherence \(c:f\to g\), lift \(\eta(\pi c)\) with prescribed endpoints
+\[
+c^-*_1E_g,\qquad E_f*_1c^+,
+\]
+using \(\mathrm{RC}_1\) and \(\mathrm{RC}_2\).
+
+Fix these choices for each head and selected set, and define the operation on instantiated heads by substitution. Equations (8)–(10) then give, by induction on syntax,
+\[
+\pi E_f=e_{\pi f},
+\qquad
+\pi N_A=\eta(\pi A).
+\tag{11}
+\]
+
+This establishes the strict boundary agreement needed for (5).
+
+### 3.4. The strict 4-cell for a generic 3-head
+
+Let \(c:A\to B\) be a generic 3-coherence over \(P\). Choose a strict expression \(d\) for \(\pi c\).
+
+We construct a strict 4-cell \(H_d\) between the strict images of the boundaries in (5). In this subsection, identity lifts in strict whiskerings are suppressed.
+
+A selected 3-generator uses its declared 4-connector. An unselected generator uses an identity. For identities,
+\[
+H_{1_A}=1_{\eta A}.
+\]
+For direction \(0\),
+\[
+H_{U*_0V}=H_U*_0H_V.
+\]
+For direction \(2\), with \(U:A\to B\), \(V:B\to C\),
+\[
+H_{U*_2V}
+=
+\bigl((U^-*_1e_g)*_2H_V\bigr)
+*_3
+\bigl(H_U*_2(e_f*_1V^+)\bigr).
+\tag{12}
+\]
+
+Here is the direction-\(1\) construction explicitly. Let
+\[
+U:A\to B,\qquad V:C\to D,
+\]
+where
+\[
+A,B:f\to g,\qquad C,D:g\to h.
+\]
+Write
+\[
+a=\eta A,\quad b=\eta B,\quad
+c=\eta C,\quad d=\eta D,
+\qquad
+E=e_f,\quad F=e_g,\quad G=e_h.
+\]
+
+The required 3-source is
+\[
+(U^-*_1V^-*_1G)
+ *_2(B^-*_1d)
+ *_2(b*_1D^+).
+\tag{13}
+\]
+Strict interchange rewrites it as
+\[
+(U^-*_1C^-*_1G)
+ *_2\bigl(B^-*_1((V^-*_1G)*_2d)\bigr)
+ *_2(b*_1D^+).
+\]
+Apply \(H_V\), with the displayed whiskers. The result is
+\[
+(U^-*_1C^-*_1G)
+ *_2(B^-*_1c)
+ *_2(B^-*_1F*_1V^+)
+ *_2(b*_1D^+).
+\]
+Two strict \((1,2)\)-interchanges rewrite this as
+\[
+(A^-*_1c)
+ *_2\bigl(((U^-*_1F)*_2b)*_1C^+\bigr)
+ *_2(E*_1B^+*_1V^+).
+\]
+Apply \(H_U\), again with the displayed whiskers. The result is
+\[
+(A^-*_1c)
+ *_2(a*_1C^+)
+ *_2\bigl(E*_1(U^+*_1V^+)\bigr),
+\]
+which, by (9), is exactly
+\[
+\eta(A*_1C)
+ *_2\bigl(e_f*_1(U^+*_1V^+)\bigr).
+\tag{14}
+\]
+The two 4-pastings therefore construct \(H_{U*_1V}\).
+
+This constructs \(H_d\) for the chosen strict expression. **Independence from the chosen strict 3-expression is unnecessary:** each generic head needs one filler.
+
+By (11), \(H_d\) has precisely the strict images of the weak boundaries in (5). Equation (7), together with \(\mathrm{RC}_1\), \(\mathrm{RC}_2\) and Section 2, lifts it to a 4-term with those literal boundaries. Choose this as the generic \(\mathcal N_c\).
+
+For a coherence-case 3-head, \(d\) is an identity 3-cell, so this step lifts the identity 4-cell on \(\eta(\pi A)=\eta(\pi B)\).
+
+### 3.5. Substitution and well-foundedness
+
+For a substitution assigning terms \(\sigma(x)\) to variables of an arity, pull back the selected set by
+\[
+\sigma^{-1}X
+=
+\{x:\operatorname{supp}(\sigma(x))\cap X\ne\varnothing\}.
+\]
+This is up-closed and has no 0-variable.
+
+The cylinder substitution \(\widehat\sigma\) sends copied variables to copied substituted terms, and connectors to
+\[
+E_x\mapsto E_{\sigma(x)},\qquad
+N_a\mapsto N_{\sigma(a)},\qquad
+\mathcal N_z\mapsto\mathcal N_{\sigma(z)}.
+\]
+Define
+\[
+\mathcal N_{\operatorname{coh}_{P,B}[\sigma]}
+=
+\mathcal N_{\operatorname{coh}_{P,B}[\mathrm{id}]}
+[\widehat\sigma],
+\tag{15}
+\]
+and likewise in lower dimensions.
+
+There are two inductions:
+
+- Dimension first: cylinder declarations for an \(n\)-variable use operations only on boundary terms of dimension below \(n\).
+- Within a dimension, structural recursion: the terms assigned to \(n\)-variables of an arity are proper argument subterms of the coherence application.
+
+The generic filler is constructed separately by strict lifting; its construction does not call the operation on the head being defined.
+
+The definition of \(\sigma^{-1}X\), the fixed unaffected templates, and (15) give literal substitution compatibility by mutual induction on terms and substitutions. In particular, (5) is available for **every** 3-term of a 2-context. Its construction uses (7), rather than relative coherence in that 2-context.
+
+## 4. Contracting one edge and one 2-generator
+
+Consider a 2-context which, after reordering independent declarations, has the form
+\[
+\Gamma=(\Lambda,\ e:x\to y,\ s:e\to h),
+\tag{16}
+\]
+where \(h:x\to y\) is a 1-term of \(\Lambda\).
+
+Define the substitution \(r\) by
+\[
+r(e)=h,\qquad r(s)=1_h,
+\]
+fixing \(\Lambda\).
+
+The set \(X=\{e,s\}\) is up-closed. Define a substitution
+\[
+\zeta:\Gamma\vdash\Gamma\langle X\rangle
+\]
+by
+\[
+\begin{array}{c|ccc}
+ & e^- & e^+ & E_e\\ \hline
+\zeta & e & h & s
+\end{array}
+\qquad
+\begin{array}{c|cc}
+ & s^- & s^+\\ \hline
+\zeta & s & 1_h .
+\end{array}
+\]
+The selected 2-variable connector has, after substitution, source and target both literally
+\[
+s*_1 1_h.
+\]
+Send it to \(1_{s*_1 1_h}\).
+
+Thus minus substitution followed by \(\zeta\) is the identity, and plus substitution followed by \(\zeta\) is \(r\).
+
+Let
+\[
+U,V:A\to B,\qquad A,B:p\to q,
+\]
+and assume the literal 1-term \(q\) omits \(e\). Then
+\[
+E_q[\zeta]=1_q.
+\]
+Put \(E=E_p[\zeta]\), and define
+\[
+\nu_A
+=
+\rho_A^{-1}*_2N_A[\zeta]:
+A\longrightarrow E*_1rA,
+\tag{17}
+\]
+and similarly \(\nu_B\).
+
+Specializing (5) gives
+\[
+(U*_1 1_{1_q})*_2N_B[\zeta]
+\longrightarrow
+N_A[\zeta]*_2(1_E*_1rU).
+\]
+A full 4-coherence over the 3-disc supplies the right-unitor comparison
+\[
+U*_2\rho_B^{-1}
+\longrightarrow
+\rho_A^{-1}*_2(U*_1 1_{1_q}).
+\]
+Combining these terms and reassociating gives
+\[
+\boxed{
+U*_2\nu_B
+\longrightarrow
+\nu_A*_2(1_E*_1rU).
+}
+\tag{18}
+\]
+
+Suppose a 4-term \(W:rU\to rV\) has been obtained. Whiskering it by \(1_{1_E}\), and then by \(\nu_A\), compares the right sides of (18) for \(U,V\). Hence
+\[
+U*_2\nu_B\longrightarrow V*_2\nu_B.
+\tag{19}
+\]
+
+All 3- and 4-terms in the 2-context \(\Gamma\) are invertible: their support has no generator of their own dimension. This is the stated invertibility criterion, Proposition 35 of Benjamin–Markakis. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+We can therefore cancel \(\nu_B\) in (19), using its inverse and 4-dimensional cancellation data, obtaining
+\[
+U\longrightarrow V.
+\tag{20}
+\]
+
+**The 2-cell \(E\) is never cancelled.** The construction needs only a comparison between \(rU\) and \(rV\), together with the fact that the common final 1-boundary is unaffected.
+
+## 5. Induction for cone 2-skeleta
+
+The contraction applies to a slightly larger class than the one asked for.
+
+Let \(G\) be a globular 2-context satisfying the two acyclicity assumptions of Section 1. Form \(K_G\) by adjoining a fresh apex \(c\), edges
+\[
+p_x:c\to x,
+\]
+and 2-generators
+\[
+p_f:p_y\to p_x*_0f
+\qquad(f:x\to y).
+\tag{21}
+\]
+Then
+\[
+\mathrm{RC}_3(K_G).
+\tag{22}
+\]
+
+Fix parallel 3-terms \(U,V:A\to B\). Their common strict image is the identity on a strict 2-cell
+\[
+\theta=\pi A=\pi B.
+\]
+Induct on the number of cone 2-generators \(p_f\) in the dependency support of \(\theta\).
+
+### Base case
+
+If this number is zero, exact support strengthens \(U,V\) to the context consisting of \(G\) and the apex edges, without cone 2-generators.
+
+This context is globular and satisfies both acyclicity conditions of Section 1. Therefore one full coherence on the pasting support gives the required 4-term.
+
+### Inductive step
+
+Sequentialize a strict expression for \(\theta\) into whiskered generating 2-steps. This uses strict interchange.
+
+A 1-path from \(c\) has the form
+\[
+p_y\,\gamma,
+\]
+where \(\gamma\) is a path in \(G\). In such a sequentialization:
+
+- a base 2-generator changes a base edge and leaves the first apex edge unchanged;
+- a cone generator \(p_f\), for \(f:x\to y\), changes the first apex edge from \(p_y\) to \(p_x\).
+
+Thus successive cone steps move the first apex vertex **backward along edges of the acyclic generating 1-graph of \(G\)**. No vertex can be revisited.
+
+Let \(s=p_f\) be the first cone generator used, with
+\[
+e=p_y,\qquad h=p_x*_0f.
+\]
+The preceding observations imply:
+
+1. No other used cone generator has \(p_y\) as its source edge.
+2. No used cone generator has \(p_y\) as its target’s apex edge: that would revisit \(y\).
+3. The final 1-target of \(\theta\) omits \(p_y\).
+
+By exact support, discard all cone 2-generators not used by \(\theta\), retaining the base context and apex edges. In the resulting context, \(s\) is the only 2-generator whose type depends on \(e\). After reordering independent declarations, it has form (16).
+
+The literal common 1-target \(q\) of \(A,B\) also omits \(e\), by exact support applied to \(q\).
+
+Apply the contraction
+\[
+e\mapsto h,\qquad s\mapsto1_h.
+\]
+It removes \(s\) from the strict 2-expression and introduces no cone 2-generator. The strict image of \(rA\) therefore uses fewer cone 2-generators.
+
+View \(rU,rV\) back in \(K_G\) by weakening. The induction hypothesis gives a 4-term
+\[
+rU\longrightarrow rV.
+\]
+Section 4 turns this into a 4-term \(U\to V\). This proves (22).
+
+The induction requires only one strict sequentialization to identify the first cone step. It requires no choice-independent normal form for sequentializations.
+
+## 6. Application to \(S\) and to every join
+
+### The context \(S\)
+
+For the full-support strict 2-cell
+\[
+w=s*_1\bigl((u*_1(a*_0\alpha))*_0\beta\bigr),
+\]
+the two contractions are
+\[
+\begin{array}{c|c|c}
+\text{Stage}&\text{1-variable replacement}&\text{2-generator replacement}\\ \hline
+1&e\mapsto b*_0g&s\mapsto1_{b*_0g}\\
+2&b\mapsto a*_0f&u\mapsto1_{a*_0f}.
+\end{array}
+\tag{23}
+\]
+
+All substitutions preserve their displayed parentheses.
+
+After these contractions, the strict 2-cell is
+\[
+(a*_0\alpha)*_0\beta.
+\]
+Its dependency support is the pasting context
+\[
+D^1(a)*_0D^2(\alpha)*_0D^2(\beta).
+\]
+The contracted parallel 3-terms are therefore compared by one full 4-coherence over that pasting context. Apply the comparison-transfer construction (18)–(20) twice to obtain a 4-term between the original terms.
+
+For strict images with smaller support, the same induction uses only the applicable contractions. Hence
+\[
+\boxed{\mathrm{RC}_3(S).}
+\]
+
+The compatibility with arbitrary 3-terms is supplied by (15) and (18). It does not depend on representing an arbitrary \(S\)-term by a particular exchange schedule.
+
+### Every pasting context \(Q\)
+
+Take
+\[
+G=Q_{\le2}.
+\]
+It is globular and has the two acyclicity properties used above. Its cone 2-skeleton is exactly \(K_G\): the additional 2-generators are precisely the \(p_f\) in (21). Therefore
+\[
+\mathrm{RC}_3\bigl(\operatorname{Cone}(Q;c)_{\le2}\bigr).
+\]
+Your item 18 now gives
+\[
+\boxed{\mathrm{RC}_3\bigl(\operatorname{Cone}(Q;c)\bigr)}
+\]
+for every pasting \(Q\). Together with the given \(\mathrm{RC}_1,\mathrm{RC}_2\), item 3 supplies the required \(\Pi(Q,B)\) through dimension \(3\), including its strict-image clause.
+
+The properties used are explicit: acyclicity of the base generating 1-graph, acyclicity of its graphs of 2-generators, and the triangular form \(p_f:p_y\to p_xf\). A unique sink is unnecessary for this argument.
+
+Questions 3 and 4 remain beyond this construction. Extending it one dimension further would require the corresponding relative lifting on the 4-skeleta of the arity cylinders; item 17 supplies only the 3-dimensional attachment step.

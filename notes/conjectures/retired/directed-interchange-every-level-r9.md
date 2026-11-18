@@ -231,3 +231,575 @@ Any of the following:
 - a proof or model for Q4;
 - a definition or an impossibility proof for Q5;
 - a reference to a published construction.
+
+# Researcher Response
+
+**The current positive hom-5 data cannot give the required Gray quotient.** The obstruction persists after resolving all six remaining hom-4 lifts, adding the checked word-whiskering contexts, and imposing any further equations that preserve the tensor map.
+
+There are also constructive results:
+
+- All six remaining hom-4 lifts admit equations before quotienting, without changing the hom-3 presentation.
+- Support injectivity extends to every admissible hom-2 word-whiskering context in the finite triple presentation.
+- A finite change to the binary presentation extends the K25 degeneration on all K23 hom-3 joins.
+- Explicit overlapping variation data give three of the new hom-4 generators, and two pairs of the existing hom-5 variations admit additional hom-6 comparisons.
+
+These are results about the specified finite presentations. They do not yet define a family satisfying requirements 1–5.
+
+The complete generator declarations, equations, proofs, certificates, and verification programs are in directed_interchange_round9_checks.zip[directed_interchange_round9_checks.zip](sandbox:/workspace/scratch/81530e09e7cd/directed_interchange_round9_checks.zip). I ran all seven programs from a fresh extraction. They require Python 3.10 or later and its standard library:
+
+```bash
+python3 run_round9_checks.py
+```
+
+All dimensions below are **hom dimensions**, and composition is in diagrammatic order.
+
+## 1. Q2: an obstruction to exactness in hom-dimension 5
+
+Let
+\[
+K=\lambda D^2\otimes\lambda D^2\otimes\lambda D^2.
+\]
+For a degree-5 basis vector \(b\), write \(\langle b\rangle\) for its atom in \(\nu(K)\), and \(F_b\) for the corresponding selected hom-5 generator from K17.
+
+The problem is that \(q(F_b)\) is a whiskered version of \(\langle b\rangle\). The whiskering contributes a nonzero degree-4 chain to both boundaries.
+
+### 1.1 The six excess chains
+
+Use the abbreviation
+\[
+1^-21^+=x_1^-\otimes y_2\otimes z_1^+,
+\]
+and likewise for the other digit-and-sign strings.
+
+The complete tableaux satisfy
+\[
+q_4(sF_b)=\langle b\rangle_4^-+c_b,
+\qquad
+q_4(tF_b)=\langle b\rangle_4^++c_b,
+\]
+with the following nonnegative chains:
+
+| \(b\) | Selected generator | Common excess \(c_b\) |
+|---|---|---|
+| \(1^-22\) | \(F_4\) | \(20^-2+21^-1^++220^-\) |
+| \(1^+22\) | \(F_2\) | \(20^+2+21^+1^-+220^+\) |
+| \(21^-2\) | \(F_1\) | \(0^+22+1^-21^-+220^-\) |
+| \(21^+2\) | \(F_3\) | \(0^-22+1^+21^++220^+\) |
+| \(221^-\) | \(F_0\) | \(0^+22+1^+1^-2+20^+2\) |
+| \(221^+\) | \(F_5\) | \(0^-22+1^-1^+2+20^-2\) |
+
+Here *mass* means the sum of the nonnegative basis coefficients. Every atomic degree-4 boundary has mass \(3\); every selected \(F_b\) boundary has mass \(6\).
+
+For example, for
+\[
+b=x_2\otimes y_2\otimes z_1^-,
+\]
+the atomic boundaries are
+\[
+\begin{aligned}
+\langle b\rangle_4^-
+&=x_1^-y_2z_1^-+x_2y_1^-z_1^-+x_2y_2z_0^-,\\
+\langle b\rangle_4^+
+&=x_1^+y_2z_1^-+x_2y_1^+z_1^-+x_2y_2z_0^+.
+\end{aligned}
+\]
+Both boundaries of \(q(F_0)\) additionally have
+\[
+c_b=x_0^+y_2z_2+x_1^+y_1^-z_2+x_2y_0^+z_2.
+\]
+
+The checker `r9_exactness_check.py` validates the complete tableaux, including all lower boundaries.
+
+### 1.2 The invariant
+
+The current presentation, including the word-context extension described below, has exactly six positive hom-5 primitives: the six \(F_b\). Every other admitted hom-5 generator has degree-5 chain zero.
+
+**Proposition.** Every generated hom-5 cell \(f\) with \(q_5(f)=b\), where \(b\) is one basis vector, satisfies
+\[
+\boxed{
+q_4(sf)=q_4(sF_b)+C,\qquad
+q_4(tf)=q_4(tF_b)+C
+}
+\]
+for one nonnegative degree-4 chain \(C\).
+
+This remains true in any quotient through which \(q\) factors, including compositions newly enabled by that quotient.
+
+**Proof.** Degree-5 chains add under every composition of hom-5 cells. Their coefficients are nonnegative. Thus an expression with degree-5 chain \(b\) uses exactly one \(F_b\); every other hom-5 factor has degree-5 chain zero.
+
+For a zero-degree-5 cell \(z\), the tableau equation gives
+\[
+q_4(tz)-q_4(sz)=\partial q_5(z)=0.
+\]
+Its two degree-4 boundary chains therefore agree.
+
+Now induct on the expression for \(f\).
+
+- For composition at \(k<4\), the degree-4 boundaries add. A zero-degree-5 factor adds the same nonnegative chain to both boundaries.
+- For composition at \(k=4\), composability identifies the intervening degree-4 chains. A zero-degree-5 factor has equal source and target chains, so composing it before or after the factor containing \(F_b\) preserves that factor’s two boundary chains.
+
+Identities on arbitrary hom-4 cells are covered: their degree-5 chain is zero, while their equal degree-4 boundaries need not be zero.
+
+Finally, a quotient preserving \(q\) can enable new compositions only between cells whose intervening image boundaries agree. The same tableau formulas apply. Equations preserving \(q\) cannot change the invariant. ∎
+
+Consequently, every generated cell with degree-5 chain \(b\) has both degree-4 boundary masses at least \(6\). The atom \(\langle b\rangle\), whose boundary masses are \(3\), cannot be its image.
+
+### 1.3 The obstruction occurs on the full hom-1 boundary too
+
+This does not depend on considering atoms outside the 240-word sector.
+
+Each degree-5 basis vector has one degree-1 factor. Add that factor’s missing degree-2 update:
+
+- after the atom if the degree-1 sign is \( - \);
+- before the atom if the sign is \(+\).
+
+Compose at level \(1\), using the identity hom-5 cell on that update. This restores the full hom-1 boundary and leaves degrees \(3,4,5\) unchanged.
+
+For example, for \(b=221^-\), let
+\[
+u=\langle x_0^+\otimes y_0^+\otimes z_2\rangle.
+\]
+Then
+\[
+Y_b=\langle b\rangle *_1 1^{(5)}_u
+\]
+has the full hom-1 boundary, degree-5 chain \(b\), and degree-4 boundary masses \(3,3\). Its hom-2 boundaries are represented by existing words `rbqcpa` and `apqbrc`.
+
+The certificate supplies six such full-boundary witnesses.
+
+**Therefore the current quotient is not surjective in hom-dimension 5 and cannot be exact through hom-dimension 6.** Adding only zero-image hom-5 comparisons, equations preserving \(q\), or higher coherence cells with boundaries built from the existing hom-5 generators cannot repair this.
+
+A completion by generators and compositions needs additional positive hom-5 data for each of the six basis labels. This does **not** show that new hom-3 data are necessary, or that such a completion is impossible.
+
+## 2. Q2: all six remaining hom-4 lifts can nevertheless be identified
+
+The six lifts left unresolved in K27 can all be handled over the unchanged K14 hom-3 graph.
+
+The extension adds:
+
+- six zero-image hom-4 generators \(K_0,\ldots,K_5\);
+- twenty-five positive hom-4 generators \(B_{ij;r}\);
+- thirty-seven parallel hom-4 equations.
+
+There are no new hom-3 generators or equations. No reversed \(D\)- or \(N\)-comparison is used.
+
+### 2.1 The six zero-image comparisons
+
+The full paths are listed in `r9_lifts_notes.md`. Three arise from the same typed transport pattern:
+\[
+\mu;\,T(cr);\,I(ar)
+\quad\Longrightarrow\quad
+T(cr);\,h_q.
+\]
+Their respective full source words are
+\[
+\texttt{bcrqap},\qquad
+\texttt{crqabp},\qquad
+\texttt{crqapb}.
+\]
+
+For instance,
+\[
+\begin{aligned}
+K_1:\;&
+\texttt{crqabp}
+\xrightarrow{\mu}\texttt{acrqbp}
+\xrightarrow{T}\texttt{arcqbp}
+\xrightarrow{I}\texttt{racqbp}\\
+&\Longrightarrow
+\texttt{crqabp}
+\xrightarrow{T}\texttt{rcqabp}
+\xrightarrow{h_q}\texttt{racqbp}.
+\end{aligned}
+\]
+
+The other three have boundaries
+\[
+\begin{aligned}
+K_3:\;&
+\texttt{crqabp}\to\texttt{acrqbp}\to\texttt{acrbqp}
+\to\texttt{abcrqp}\to\texttt{bacrqp}\\
+&\Longrightarrow
+\texttt{crqabp}\to\texttt{crqbap}\to\texttt{crbqap}
+\to\texttt{bcrqap}\to\texttt{bacrqp},
+\\[1ex]
+K_4:\;&
+\texttt{rqabcp}\to\texttt{arqbcp}\to\texttt{arbqcp}
+\to\texttt{abrqcp}\to\texttt{barqcp}\\
+&\Longrightarrow
+\texttt{rqabcp}\to\texttt{rqbacp}\to\texttt{rbqacp}
+\to\texttt{brqacp}\to\texttt{barqcp},
+\\[1ex]
+K_5:\;&
+\texttt{rqabpc}\to\texttt{arqbpc}\to\texttt{arbqpc}
+\to\texttt{abrqpc}\to\texttt{barqpc}\\
+&\Longrightarrow
+\texttt{rqabpc}\to\texttt{rqbapc}\to\texttt{rbqapc}
+\to\texttt{brqapc}\to\texttt{barqpc}.
+\end{aligned}
+\]
+Every arrow in these routes is an existing K14 generator, with its identifier recorded in the certificate.
+
+Each \(K_i\) is accompanied by an equation making it an identity after \(I=D=N=1\). For \(K_1\), the equation is
+\[
+D_{109}=(\mu N_5);(K_1e_1),
+\]
+where \(e_1\) is the inner arrow
+\[
+\texttt{racqbp}\longrightarrow\texttt{rcaqbp}.
+\]
+After quotienting, \(e_1,D_{109},N_5\) become identities, so \(K_1\) becomes an identity by the unit laws. There is no cancellation of \(e_1\) before quotienting.
+
+The six equations for the \(K_i\) are explicitly listed and checked in the archive.
+
+### 2.2 The positive auxiliary generators and equations
+
+The remaining thirty-one equations identify the selected \(A_{ij}\) with old \(W\)-expressions after quotienting:
+
+| Selected lift | Tensor label | Old \(W\)-context | New \(B\)’s | Lift equations |
+|---|---|---|---:|---:|
+| \(A_{4,0}\) | \(1^+21^+\) | \(W_y\), word prefix `ac` | 6 | 7 |
+| \(A_{5,4}\) | \(21^+1^+\) | \(W_x\), word prefix `bc` | 2 | 3 |
+| \(A_{8,3}\) | \(1^-21^+\) | \(W_y\), prefix `c`, suffix `a` | 7 | 8 |
+| \(A_{15,13}\) | \(20^+2\) | \(W_{xz}\), prefix `r`, suffix `pb` | 3 | 4 |
+| \(A_{22,21}\) | \(20^+2\) | \(W_{xz}\), prefix `r`, suffix `bp` | 3 | 4 |
+| \(A_{23,22}\) | \(21^+1^-\) | \(W_x\), prefix `b`, suffix `c` | 4 | 5 |
+
+Every \(B\) has explicit raw hom-3 boundaries. The complete declarations and all thirty-one equations are in `r9_lifts_notes.md` and `r9_lifts_certificate.json`.
+
+The construction uses three forms of equation:
+
+1. **Directed rectangles**
+   \[
+   \alpha;F;\beta=\gamma;G;\delta,
+   \]
+   where the four surrounding paths use forward \(D,N,K\) comparisons.
+
+2. **Factoring a common hom-3 context**
+   \[
+   F=1_L *_2 G *_2 1_R.
+   \]
+   The contexts \(L,R\) remain in the equation.
+
+3. **Padding by inner hom-3 paths**
+   \[
+   1_\eta *_2 F *_2 1_\zeta=G,
+   \]
+   with \(\eta,\zeta\) consisting entirely of inner arrows.
+
+Several successive factor-and-pad steps are needed. Restricting the search to one such step misses valid identifications.
+
+Working backwards from the terminal old \(W\)-cell eliminates every auxiliary \(B\) in the quotient. Directed rectangle factors become identities; inner padding disappears by units; non-inner contexts remain explicitly. Thus the argument does not cancel a nonidentity context.
+
+The checker verifies all thirty-seven equations before quotienting and all 172 distinct literal hom-3 prefix/suffix instances.
+
+The enlarged full hom-4 quiver has **40,412 vertices and 65,373 generating contextual arrows** and is acyclic. In particular, these additions create no reverse of an existing \(D\)- or \(N\)-comparison.
+
+This resolves the six lift-identification problems. It does not evade the hom-5 obstruction in §1.
+
+## 3. Q2: support under every admissible hom-2 word context
+
+The word-whiskering extension can be made explicit for this finite triple presentation, including the new \(K/B\) data.
+
+A state is
+\[
+(\sigma,\epsilon)\in S_3\times\{0,1\}^3,
+\]
+where \(\sigma\) records the current wire order and \(\epsilon\) records which updates have been performed. A typed word is a directed path between two such states.
+
+The checker uses all **48 states**, all **459 typed intervals**, and all **2,076 words**. A word context is an actual pair of paths \(L,R\) acting by
+\[
+w\longmapsto LwR.
+\]
+
+Whiskering first inserts the words and then normalizes using the target interval’s factorization equations. This matters: an old tensor arrow retained on a proper interval can become \(h_p;I\) after adding a word prefix.
+
+The resulting presentation has:
+
+| Data | Count |
+|---|---:|
+| Hom-4 primitives over all typed intervals | 1,059 |
+| Primitive word-context maps | 2,360 |
+| Checks of composition of context maps | 4,403 |
+| Typed hom-4 equations/definitions | 109 |
+| Their word-context images | 145 |
+
+These checks establish equality of the actual mapped generators and equations, not merely agreement of their tensor chains.
+
+### A word-invariant grading
+
+Replace K28’s context-dependent weight by the following integer weight \(w\). Every unlisted generator has weight zero.
+
+| Weight | Full-interval generators |
+|---:|---|
+| \(-1\) | \(D_{27},D_{29},D_{42},D_{80},D_{99},D_{105},D_{137},D_{139},D_{147},D_{149},D_{156},D_{171},D_{236}\) |
+| \(1\) | \(D_{77},D_{81},D_{93},D_{125},D_{170},D_{194},D_{204},D_{208},D_{230},D_{231},D_{232},D_{253}\) |
+| \(2\) | \(D_{94},D_{169},D_{214}\) |
+
+Every \(N,W,A,H,G,K,B\) has weight zero. Define a proper-interval generator’s weight using any full completion. The checker verifies that every completion gives the same value.
+
+Let \(\ell\) take value \(-1\) on
+\[
+0^-22,\quad 1^-1^-2,\quad 1^-1^+2,\quad
+1^-21^-,\quad 1^-21^+,
+\]
+and zero on the other degree-4 basis vectors. Then
+\[
+\rho(f)=w(f)+\ell(q_4(f))
+\]
+is invariant under every admitted word context and respects every stated hom-4 equation.
+
+Every full hom-5 generator raises \(\rho\) by one. Ten proper-interval generators also raise it by one; the remaining proper generator raises it by two, because its full image is a composite of two existing hom-5 generators.
+
+There are eleven proper-interval hom-5 definitions. Nine have literal existing full images. The other two use, respectively,
+\[
+V_{N53},
+\qquad
+V_{N55};V_{N12},
+\]
+with their exact whiskers and intervening hom-4 equations recorded. No additional full-interval positive hom-5 generator is introduced.
+
+The finite hom-4 DAG and this strict rank increase prove finiteness of the admitted hom-5 comparison category, including compositions enabled by the hom-4 quotient. The resulting hom-5 path-length bound is \(121{,}233\).
+
+K28’s normal-form support argument therefore applies: use the actual contextual generating-edge set of the least path representative, together with recursive boundary supports. No composite cell receives a new label merely to encode its identity.
+
+This extends support injectivity through hom-dimension 5 to **all admissible hom-2 word contexts in this fixed triple model**. It does not establish closure under arbitrary globular substitutions or operations on the K23 joins.
+
+## 4. Q1: a finite binary repair of the K25 degeneration
+
+The missing whiskered reverse can be added without adding a reverse of either unwhiskered elementary interchanger in this binary presentation.
+
+In fact, extending **all** K18 joins requires two contextual reverses.
+
+Use the K10 names
+\[
+\begin{array}{lll}
+S=\texttt{bpa},&V_0=\texttt{pba},&V_1=\texttt{pab},\\
+T=\texttt{apb},&U_0=\texttt{abp},&U_1=\texttt{bap},
+\end{array}
+\]
+and arrows
+\[
+a:S\to V_0,\quad b:V_0\to V_1,\quad c:V_1\to T,
+\quad h:S\to U_0,\quad e:U_0\to U_1,\quad f:U_0\to T.
+\]
+
+### 4.1 Two contextual inverses
+
+Adjoin
+\[
+B:V_1\to V_0,\qquad E:U_1\to U_0
+\]
+and impose
+\[
+b;B=1_{V_0},\quad B;b=1_{V_1},\qquad
+e;E=1_{U_0},\quad E;e=1_{U_1}.
+\]
+
+K25 requires the arrow \(E:\texttt{bap}\to\texttt{abp}\).
+
+For the other reverse, take the surviving triple tensor arrow and inner arrow
+\[
+\alpha:\texttt{rqpabc}\to\texttt{pqrabc},
+\qquad
+\varepsilon:\texttt{pqrbac}\to\texttt{pqrabc}.
+\]
+K18 supplies
+\[
+j_{\alpha,\varepsilon}:
+\texttt{rqpabc}\to\texttt{pqrbac}.
+\]
+Erasing \(c,q,r\) gives
+\[
+\texttt{pab}\to\texttt{pba}.
+\]
+Its factorization equation becomes \(F(j);b=1_{V_1}\). Thus adjoining \(E\) alone does not extend all the joins.
+
+The two opposite arrows are forced by these witnesses. Choosing them to be two-sided inverses is the additional repair used here.
+
+### 4.2 Finiteness, support, and the binary quotient
+
+Orient the four inverse equations as cancellations. They reduce length. The only overlapping reductions are three-letter alternations, such as \(b;B;b\), and both reductions give \(b\).
+
+After cancellation, a path traverses either two-vertex inner class at most once. The graph obtained by identifying each class is a directed diamond, so a reduced path cannot revisit a class after a positive arrow.
+
+There are exactly **14 nonidentity hom-3 cells and six identities** on the maximal interval. Relative to K10, the only new nonidentity cells are
+\[
+B,\qquad E,\qquad E;f.
+\]
+Their reduced-path supports are injective.
+
+Killing \(b,e\) also kills \(B,E\), giving exactly the original Gray diamond. Keep
+\[
+W:a;b;c\Longrightarrow h;f.
+\]
+It still has no nonidentity exterior context in this binary presentation.
+
+The unwhiskered elementary interchangers have proper hom-1 boundaries where the crossing coordinate is fixed at \(0\) or at \(1\). Both \(B\) and \(E\) have the full hom-1 boundary where that coordinate changes from \(0\) to \(1\). Directed cube-path whiskering extends an interval; it cannot change a varying crossing coordinate into a fixed one. Consequently no composite using \(B,E\) has either elementary reverse boundary.
+
+This establishes local consistency of the contextual inverses with elementary directedness. It does not establish their consistency under every future substitution.
+
+### 4.3 The degeneration on every K23 join
+
+For a K23 generator indexed by
+\[
+\alpha:s\to t,\qquad I:t\to m,\qquad R:u\to m,
+\]
+define
+\[
+\boxed{
+F(j_{\alpha,I,R})
+=
+F(\alpha);F(I);F(R)^{-1}.
+}
+\]
+Every \(F(I)\) and \(F(R)\) is a word in \(b,e\) and identities, so the displayed inverse exists.
+
+This preserves absorption:
+\[
+\begin{aligned}
+F(j_{\alpha,I,\varepsilon;R});F(\varepsilon)
+&=
+F(\alpha);F(I);F(R)^{-1};
+F(\varepsilon)^{-1};F(\varepsilon)\\
+&=F(\alpha);F(I);F(R)^{-1}.
+\end{aligned}
+\]
+It also preserves \(j_{\alpha,I,1}=\alpha;I\) and common-suffix reduction.
+
+The checker verifies all **4,549 reduced joins** and **9,841 literal absorption instances** under the actual K25 globular assignment. It also verifies images of the prescribed higher data: all \(D,N\) map to identities; the selected \(W,A,H,G,B,K\) data map to identities or the binary \(W\); the six \(F\)’s map to \(1_W\).
+
+This repairs that degeneration on the specified comparison presentations. It does not supply all higher operations on the additional K23 joins, and it does not prove naturality under the entire class of maps considered in K23.
+
+## 5. Q3: overlapping and iterated variations
+
+### 5.1 An overlapping transport produces \(K_1\)
+
+Take
+\[
+\begin{array}{lll}
+S_0=\texttt{crqabp},&
+U_0=\texttt{acrqbp},&
+T_0=\texttt{carqbp},\\
+S_1=\texttt{rcqabp},&
+U_1=\texttt{racqbp},&
+T_1=\texttt{rcaqbp}.
+\end{array}
+\]
+
+The first factorization is
+\[
+d_0=\mu;e_0,
+\]
+the second is
+\[
+d_1=h_q;e_1,
+\]
+and the vertical paths are
+\[
+\begin{aligned}
+z_S &: \texttt{crqabp}\xrightarrow{T(cr)}\texttt{rcqabp},\\
+z_U &: \texttt{acrqbp}\xrightarrow{T(cr)}\texttt{arcqbp}
+                         \xrightarrow{I(ar)}\texttt{racqbp},\\
+z_T &: \texttt{carqbp}\xrightarrow{I(ar)}\texttt{craqbp}
+                         \xrightarrow{T(cr)}\texttt{rcaqbp}.
+\end{aligned}
+\]
+
+The existing comparisons are \(D_{109}\) and \(N_5\). Applying the chosen K26 \((+,+)\) convention gives exactly
+\[
+K_1:h_0;z_U\Longrightarrow z_S;h_1,
+\qquad
+D_{109}=(h_0N_5);(K_1e_1).
+\]
+
+The two boundaries of \(K_1\) lie in different weak components of the old \(D/N\) graph. Thus old \(D/N\) paths cannot supply this comparison in either direction. The analogous two word contexts give \(K_0,K_2\).
+
+There is also an overlapping \(\lambda_x\)-transport using an existing comparison:
+\[
+\boxed{D_{56}=(h_0D_{50});(D_{54}e_1).}
+\]
+This is a new equation. After expanding the twenty-three elementary definitions, counting \(D_{56}\) distinguishes its sides under the previous thirty-three equations.
+
+These are fully typed transport data. They have not been proved to arise from substitutions of one common globular input diagram in every case.
+
+### 5.2 Two pairs of the thirty-four hom-5 variations require additional coherence data
+
+Expanding only the twenty-three elementary hom-4 definitions gives these parallel pairs:
+
+| Hom-6 source | Hom-6 target | Hom-4 equation making the boundaries agree |
+|---|---|---|
+| \(V_{\mathrm{D133},T_{\mathrm{pacqbr}}}\) | \(V_{\mathrm{D134},T_{\mathrm{apcqrb}}}\) | \(D_{139}=D_{137};D_{138}\) |
+| \(V_{\mathrm{D207},I_{\mathrm{rbqapc}}}\) | \(V_{\mathrm{D209},T_{\mathrm{brqacp}}}\) | \(D_{86}=D_{85};D_{48}\) |
+
+The existing equations do not equate the hom-5 generators themselves. The proper-word hom-5 definitions do not equate them either.
+
+If coherence is expressed by directed cells, adjoin
+\[
+\begin{aligned}
+C_0 &: V_{\mathrm{D133},T_{\mathrm{pacqbr}}}
+       \Longrightarrow V_{\mathrm{D134},T_{\mathrm{apcqrb}}},\\
+C_1 &: V_{\mathrm{D207},I_{\mathrm{rbqapc}}}
+       \Longrightarrow V_{\mathrm{D209},T_{\mathrm{brqacp}}}.
+\end{aligned}
+\]
+Both have zero tensor degree-6 chain. Their directions are choices. Imposing the corresponding hom-5 equations is an alternative presentation.
+
+The existing \(\Omega\) cannot provide these comparisons: the endpoints have degree-5 chain zero, whereas each \(\Omega\)-boundary has three positive degree-5 terms. Nonnegative contexts cannot remove them.
+
+The sequential-overlap check finds 110 contextual overlaps after the elementary expansions: nine instances of the first pair and 101 of the second. This exhausts overlapping consecutive source patterns in the specified presentation. It does not exhaust disjoint application sites or overlaps enabled by other equations.
+
+For the limited extension with \(C_0,C_1,\Omega\), define
+\[
+\rho_6(f)=
+\#V_{\mathrm{D134},T_{\mathrm{apcqrb}}}(f)
++\#V_{\mathrm{D209},T_{\mathrm{brqacp}}}(f)
++[1^+22]\,q_5(f).
+\]
+All admitted word-context definitions preserve this value, and each of the three hom-6 generators raises it by one. This gives a finite hom-6 DAG and injective canonical-normal-form supports for these specified cells and contexts. It is not a complete hom-6 coherence theorem.
+
+### 5.3 An explicit iterated higher input
+
+For a separate \((4,2,2)\)-input, take
+\[
+\Omega_a^0,\Omega_a^1:a_0\Rightarrow a_1,
+\qquad
+\Psi_a:\Omega_a^0\Rightarrow\Omega_a^1.
+\]
+Use the \(h_p\)-factorization \(d=h;e\). Its first variations satisfy
+\[
+H_j e_1=(h_0E_j);D_j,\qquad j=0,1.
+\]
+
+Write \(Z_X:z_X^0\Rightarrow z_X^1\) for the whiskering of \(\Psi_a\) at \(X=S,U,T\). The next variation cells can be specified as
+\[
+\begin{aligned}
+D_\Psi &: D_0;(Z_Sd_1)
+           \Longrightarrow(d_0Z_T);D_1,\\
+E_\Psi &: E_0;(e_0Z_T)
+           \Longrightarrow(Z_Ue_1);E_1,\\
+H_\Psi &: H_0;(Z_Sh_1)
+           \Longrightarrow(h_0Z_U);H_1.
+\end{aligned}
+\]
+
+Their factorization coherence is the hom-6 comparison
+\[
+\boxed{
+H_\Psi e_1
+\Longrightarrow
+\bigl((h_0E_0)D_\Psi\bigr);
+\bigl((h_0E_\Psi)D_1\bigr).
+}
+\]
+The two factors on the right compose literally. The two first-variation equations identify their endpoints with those of the left side. No exchange equality or cancellation is used.
+
+Both hom-5 sides have the same positive tensor label, so this hom-6 comparison has tensor image zero. The complete input and all tableaux are checked by `r9_overlaps_iterated.py`.
+
+## 6. What remains unresolved
+
+The results establish raw identifications for all fifteen fresh hom-4 lifts, support under the specified word contexts, a finite comparison-level repair of K25, and explicit further variation data.
+
+They also establish a definite limitation: **the present six positive hom-5 generators cannot generate the required target hom-5 cells.** Further positive hom-5 data are necessary before exactness through dimension 6 can hold.
+
+K15 remains an assumption in the \(D/N\) calculations. I have not derived it from requirements 4 and 5 or constructed a model satisfying 1–5 in which it fails. Nor do these results provide a recursive tensor of towers, arbitrary substitution closure, or an impossibility theorem for requirements 1–3 and 5.

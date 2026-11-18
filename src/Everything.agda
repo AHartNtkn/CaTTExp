@@ -67,6 +67,7 @@ import CaTTExp.GlobularTotal.FlatBd
 import CaTTExp.GlobularTotal.FlatBdExample
 import CaTTExp.GlobularTotal.MergeLaws
 import CaTTExp.GlobularTotal.FlatMerge
+import CaTTExp.GlobularTotal.FlatAssoc
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

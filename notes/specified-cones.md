@@ -25,7 +25,7 @@ The printed CaTT_lim cone judgment admits non-canonical cones (`conjectures/lax-
 | **B6, equivalence**: `φ`, `ψ` and invertible homotopies `ψφ ≃ id`, `φψ ≃ id` | globular Γ of dimension ≤ 1 (graphs) | **proved** (Thm 6.3); machine-checked on 6 graphs |
 | | dimension 2 | ψ and `ψφ ≃ id`: **proved**, machine-checked on 9 shapes (§6.4). `φψ ≃ id`: **proved on paper** using BMOSV depth 1 [cited] (Prop. 6.5); its cylinder is machine-checked, its top component is not |
 | | dimension ≥ 3 | reduced to transport along unit coherences (§6.4) [conj] |
-| B6 Step B (cocone morphisms vs family morphisms) | | reduced to depth-1 naturality of two named cells (§6.5) [conj] |
+| B6 Step B (cocone morphisms vs family morphisms) | graphs, level 1 | φ↑ and ψ↑ constructed on paper from coherences over pasting contexts (§6.5); homotopies open |
 
 **What "machine-checked" means here.** Each construction is an Agda function producing CaTT syntax. For each listed shape the certified checker returns a typing derivation. The general statements (for every Γ in the class) are paper proofs. They reduce to the checked generic cases by *locality* (§7): every construction is assembled from its value on disks Dᵐ by substitution. So the checks on D⁰–D⁴ plus substitution admissibility (A1, proved in Agda in `CaTTExp.Subst`, PR #20) cover all globular Γ of dimension ≤ 4. The step from disks to Γ is a paper argument; it is not itself formalised (S5).
 
@@ -351,11 +351,20 @@ This gives `LHS ⇛ X ∗₂ (id_{q_x} ∗₁ q_α)`, where X is a 3-term in whi
 
 **Status.** Step 1 consists of explicit coherences. Step 2 uses BMOSV depth 1 [cited] in a non-pasting context. Neither step is machine-checked: H′ in dimension 2 is not in the Agda. Dimension ≥ 3 needs ψ by transport along invertible spheres (`lax-colimit-of-point.md`, "What is known"), then the same two steps with depth `dim Γ − 1` lifts, which is Conjecture N.
 
-### 6.5 Step B (open)
+### 6.5 Step B (B21): the maps at level 1, for graphs
 
-Higher cocone morphisms against family morphisms: φ and ψ must extend to cylinders, `φ↑ : ΣΓ↑ → 𝒦↑` and back. For graphs this needs exactly two depth-1 naturality cells: of the unary operation U over D² in all its variables (a suspended lax square), and of λ_w in w. The latter's `Q↑Y` is the pasting context D², so it is a plain coherence. The former is within BMOSV's depth-1 theorem and `relative-coherence.md` §4.2. Follow-up S2.
+Step B compares higher cocone morphisms over the constant diagram with family morphisms. At level 1, the constant instance of `coTr₁(Γ)` is the cylinder of 𝒦 in the direction of the q's. Because cocone transfors put the diagram index first (§4.2), its top cells run `m_x ∗₁ q′_f ⇛ q_f ∗₁ (id_⊤ ∗₀ m_y)`. That is the cylinder `𝒦↑Y` of §4.1 with its new top cells reversed. The family side is the cylinder `ΣΓ↑Y` with the same orientation. An equivalence at level 1 needs `φ↑`, `ψ↑` and homotopies between the cylinders. All the constructions below work for either orientation, by reversing the invertible cells used.
 
----
+**φ↑ and ψ↑ for graphs (paper).** Both extensions need one new naturality cell each, and neither needs a conjecture:
+
+- **ψ↑ over f** needs the lift of `q_f ∗₁ λ_{q_y}`. This is the paste rule of §4.3, applied to `q_f↑` and `λ↑`. Here `λ↑ : λ⁻ ∗₁ (id_⊤ ∗₀ w↑) ⇛ w↑ ∗₁ λ⁺` lives in the context `(⊤, c, w⁻, w⁺, w↑)`, which is the pasting context D², and both sides are full. So λ↑ is a coherence.
+- **φ↑ over f** needs the lift of `U(s_f)`, where U is the unary operation `a ⇒ id_⊤ ∗₀ b` over D². Its variables a and b are 1-dimensional inside a 2-dimensional operation, which is depth 1. Lift it by **transport along an invertible cell**. Let `κ : U(u) ⇛ u ∗₁ λ⁻¹_b` be the full coherence over D², and write `v = u ∗₁ λ⁻¹_b`. Then
+  ```
+  U↑ := (κ⁻ ∗₁ (id_⊤ ∗₀ b↑)) ∗₂ v↑ ∗₂ (a↑ ∗₁ (κ⁺)⁻¹)
+  ```
+  runs from `U(u)⁻ ∗₁ (id_⊤ ∗₀ b↑)` to `a↑ ∗₁ U(u)⁺`, which are exactly a_U and b_U. Here `v↑` is the paste-rule lift of `u ∗₁ λ⁻¹`, using `λ⁻¹↑`, a coherence over D². κ⁻ and κ⁺ are κ at the minus and plus copies, and (κ⁺)⁻¹ is the reverse coherence. Every factor is a coherence over a pasting context or a cylinder variable. So U's depth-1 naturality is elementary, and BMOSV is not needed here.
+
+**What remains for Step B at level 1:** the homotopies `ψ↑φ↑ ≃ id` and `φ↑ψ↑ ≃ id` on the cylinders. Their components over objects and arrows are lifts of H and H′ (Theorem 6.3). Those are 3-cells comparing the composites above, and they should follow by the same two-step method as Prop. 6.5. Levels k ≥ 2 iterate. None of this is machine-checked: φ↑ and ψ↑ need U and λ as constructors of the Agda expression language, which they are not yet.
 
 ## 7. What the Agda checks cover
 
@@ -373,7 +382,7 @@ Ledger IDs in `open-issues.md`: S1 = B20, S2 = B21, S3 = B18, S4 = B23, S5 = B22
 | ID | Item | Owner |
 |---|---|---|
 | S1 | B6 in dimension ≥ 2. Dimension 2: proved (ψ, H machine-checked; H′ on paper, Prop. 6.5). Remaining: H′(q_α↑) in Agda (needs depth-1 lifts of 3-terms in a non-pasting context), and dimension ≥ 3 (ψ by transport, then N at depth dim Γ − 1). | this thread |
-| S2 | B6 Step B for graphs: depth-1 naturality of U and λ, giving φ↑ and ψ↑. | this thread |
+| S2 | B6 Step B for graphs. φ↑ and ψ↑ at level 1 constructed on paper (§6.5). Remaining: the level-1 homotopies, levels k ≥ 2, and an Agda check (needs U and λ in the expression language). | this thread |
 | S3 | Depth-1 lifts in `CylOf`. Tr₁ over 2-dimensional Γ is done (§4.3). Remaining: lifts of the coherence constructors (naturality in maximal arguments) and the paste rule one dimension up, for Tr_k with k ≥ 2, plus a written proof of the k ≥ 2 sketch. | this thread |
 | S4 | "Horns are cones" for graphs: compare `Tr₁(Γ)` with `Cone((D¹)^op ⊗ Γ)[π]` up to units, using Prop. 5.2. | this thread |
 | S5 | General Agda proof of Lemma 2.2 (typing of `binC` on glued trees), removing the dependence on per-shape checks. | this thread |

@@ -672,6 +672,32 @@ For a 1-term t, let inv(t) be the set of independent pairs (e, e′) with e left
 
 These are recorded in `conjectures/planar-pasting-types.md` §4, which is ready for a researcher.
 
+## F.5 Internal progress on D11 (outbox Question 1, monoidal fragment)
+
+*Added 2026-11-18.*
+
+**Prop. F1 (Gray monoids).** Let 𝒢₀ be the free strict Gray monoid on a set of objects and a set of generating 1-cells. This is a monoid in (2-Cat, ⊗_Gray) with lax interchange and no closed structure. Let t, u be 1-cells of 𝒢₀ with the same source, target and events. Then:
+- there is a 2-cell t ⇒ u iff inv(u) ⊆ inv(t); and
+- that 2-cell is unique.
+
+So each hom-category is a poset, isomorphic to an interval of the weak Bruhat order.
+
+*Proof.*
+1. **Generators.** 2-cells of 𝒢₀ are composites of whiskered interchangers X_{f,g} for *generating* f, g. An interchanger at composite 1-cells decomposes by the Gray-monoid axioms X_{f, g′∘g} = (X_{f,g′} ∗ g)·(g′ ∗ X_{f,g}) and X_{f, b⊗g} = b ⊗ X_{f,g}, and symmetrically in f. Compare Forest–Mimram's presentation of free Gray categories (FSCD 2018), here without inverses. **[recall: the directed presentation is the same generators and relations, minus the inverse generators]**
+2. **Each generator removes one inversion.** A whiskered X_{f,g} swaps two events that are consecutive in time and independent, from "right factor first" to "left factor first". It deletes exactly the pair (f, g) from the inversion set and changes no other pair. So t ⇒ u implies inv(u) ⊆ inv(t). Every 2-path has length |inv(t)| − |inv(u)|.
+3. **Existence.** The event orders of 1-cells with given events are the linear extensions of the dependency order. Adding left/right for independent pairs makes it a 2-dimensional poset. Its linear extensions form an interval of the weak order (Björner–Wachs 1991). In the weak order, inv(u) ⊆ inv(t) iff u ≤ t, and then there is a saturated chain of adjacent swaps between them. That chain stays in the interval, so every step is an interchanger.
+4. **Uniqueness.**
+   - A 2-path from t to u is a maximal chain of [u, t], i.e. a reduced word of the permutation u⁻¹t.
+   - By Matsumoto–Tits, any two reduced words are connected by commutation moves s_i s_j = s_j s_i (|i − j| ≥ 2) and braid moves s_i s_{i+1} s_i = s_{i+1} s_i s_{i+1}. Each intermediate word is again a chain of [u, t], so it is again a 2-path of 𝒢₀.
+   - Commutation moves are the interchange law of the underlying 2-category: the two swaps act on disjoint time slots.
+   - Braid moves involve three pairwise independent events. Their two hexagon composites are equal in a Gray monoid, because (D¹ ⊗ D¹ ⊗ D¹) is a commuting cube in Gray's 2-categorical tensor. In the ω-version this equality becomes the 3-cell of Question 3.
+   - Hence any two 2-paths are equal. ∎
+
+**What the closed structure adds (remaining for Question 1).**
+- *1-cells.* The underlying 1-category of a Gray-monoidal biclosed 2-category is premonoidal and biclosed. Structural maps are central. Needed: two 1-cells with the same event order and generators are equal. This is a premonoidal version of Theorem A, and should follow by rerunning A.2 with events as non-central generators.
+- *2-paths through closures.* A 2-path from t to u may pass through 1-cells with events inside closures, even when t and u have none. Strict naturality of Λ (Λ(f) ∘ h = Λ(f ∘ (X ⊗ h))) and the hom-isomorphism ev ∘ (Λs ⊗ B) = s should push every such intermediate event back out. That reduces the general 2-path to the Prop. F1 situation. This is the content of the nested event order (outbox Question 2).
+- Status: Prop. F1 settles the monoidal core. The closed parts are the two bullets above, both in progress.
+
 ---
 
 # Part G. Open items left by this note

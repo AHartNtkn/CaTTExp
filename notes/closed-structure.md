@@ -921,7 +921,7 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 was answered too (`conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`); round 4 is `conjectures/outbox/gray-closed-scheduling-r4.md` (unsent).
+Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 was answered too (`conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`); round 4 was answered too (`conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`); round 5 is `conjectures/outbox/gray-closed-scheduling-r5.md` (unsent).
 
 **Round-2 results (verified).**
 1. **A weight model.** The integer-weight model 𝓜 is a Gray-monoidal biclosed 2-category.
@@ -939,7 +939,7 @@ Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11
 - the 1-cells within a component;
 - thinness of the hom-categories.
 
-Round 3 (answered): `conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`; round 4 (unsent): `conjectures/outbox/gray-closed-scheduling-r4.md`.
+Round 3 (answered): `conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`; round 4 (answered): `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`; round 5 (unsent): `conjectures/outbox/gray-closed-scheduling-r5.md`.
 
 ## F.6 Internal notes toward round 3 (D11, closed part)
 

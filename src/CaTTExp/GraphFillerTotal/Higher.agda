@@ -567,3 +567,186 @@ mutual
   where
   arr-l : ∀ {Θ A a b} → Θ ⊢ty arr A a b → Θ ⊢tm a ∶ A
   arr-l (arr-wf da _) = da
+
+------------------------------------------------------------------------
+-- Lifting commutes with substitution.
+
+private
+  var-obj : ∀ {Θ m} → Θ ⊢tm var m ∶ ⋆ → lookup Θ m ≡ just ⋆
+  var-obj (var-wf _ e) = e
+
+  ⊑-self : ∀ p q → p ++ q ⊑ p → q ≡ []
+  ⊑-self p q (r , e) with ++-cancel p [] (q ++ r) (trans (++-[] p) (trans e (++-assoc p q r)))
+  ⊑-self p []      (r , e) | _ = refl
+  ⊑-self p (x ∷ q) (r , e) | ()
+
+module Comm {Γ Θ x₀ A₀} (τ : Sub) (o : Nat) (sτ : Γ ⊢sub τ ∶ Θ) (pΘ : Θ ⊢ps x₀ ∶ A₀)
+            (wΘ : Θ ⊢ctx) (pe : PEdge Θ τ) where
+
+  P = pp Θ τ
+  L = liftSN Θ τ o
+  E = ent pΘ τ o sτ
+  g = fst (good pΘ)
+
+  Pull : Ctx → Sub → Set
+  Pull Θ' ρ = ∀ c → lookup Θ' c ≡ just ⋆ →
+              P (vi (lookupₛ ρ c)) ≡ P (vi (lookupₛ ρ 0)) ++ pp Θ' (ρ ∘ τ) c
+
+  -- The offset of a sub-coherence's first object.
+  off : Sub → Nat
+  off ρ = ∣ P (vi (lookupₛ ρ 0)) ∣ + o
+
+  mutual
+    comm-tm : ∀ t {B} → Θ ⊢tm t ∶ B → NS B → liftN (t [ τ ]tm) (∣ P (o₀Ty B) ∣ + o) ≡ t [ L ]tm
+    comm-tm (var j) {arr B s t} (var-wf _ lj) _ =
+      sym (trans (fst (snd (E j) lj)) (cong (λ q → liftN (lookupₛ τ j) (∣ q ∣ + o)) (snd (snd (E j) lj))))
+    comm-tm (coh Θ' (arr A' s' t') ρ) (coh-wf (ps p₀) w' a ok sρ) _ =
+      cong (coh Θ' A'') (trans (cong (liftSN Θ' (ρ ∘ τ)) oeq) (fst cs))
+      where
+      A'' = arr A' s' t'
+      cs = commS p₀ w' ρ sρ
+      T' : Nat → List Nat
+      T' y = P (vi (lookupₛ ρ y))
+      bd = fst (bdry T' (ps p₀) (fst (good p₀)) (monoS P g (mono-pp {Θ} {τ} pe) ρ sρ w') A' s' t' a ok 0 (ps-0 p₀))
+      pl = snd cs (o₀Ty A'') (o₀-obj A'' a tt)
+      q0 : pp Θ' (ρ ∘ τ) (o₀Ty A'') ≡ []
+      q0 = ⊑-self (P (vi (lookupₛ ρ 0))) _ (subst (_⊑ T' 0) pl bd)
+      oeq : ∣ P (o₀Ty (A'' [ ρ ]ty)) ∣ + o ≡ off ρ
+      oeq = cong (λ m → ∣ P m ∣ + o)
+              (trans (o₀-sub A'' ρ a tt) refl)
+            ⟨≡⟩ cong (λ q → ∣ q ∣ + o) (trans pl (trans (cong (P (vi (lookupₛ ρ 0)) ++_) q0) (++-[] _)))
+        where
+        _⟨≡⟩_ : ∀ {a b c : Nat} → a ≡ b → b ≡ c → a ≡ c
+        _⟨≡⟩_ = trans
+    comm-tm (cst ()) _ _
+
+    commS : ∀ {Θ' x' A'} → Θ' ⊢ps x' ∶ A' → Θ' ⊢ctx → ∀ ρ → Θ ⊢sub ρ ∶ Θ' →
+            (liftSN Θ' (ρ ∘ τ) (off ρ) ≡ ρ ∘ L) × Pull Θ' ρ
+    commS p w ⟨⟩ (⟨⟩-wf _) = refl , λ c ()
+    commS p w (⟨⟩ ,ₛ r) (,-wf (⟨⟩-wf _) dr) with ps-one p
+    ... | refl with ⋆-var dr refl
+    ...   | m , refl with dr
+    ...     | var-wf _ lm =
+      cong (⟨⟩ ,ₛ_) (sym (fst (E m) lm)) ,
+      λ c lc → pull0 c lc
+      where
+      pull0 : ∀ c → lookup (ε ▸ ⋆) c ≡ just ⋆ →
+              P (vi (lookupₛ (⟨⟩ ,ₛ var m) c)) ≡ P m ++ pp (ε ▸ ⋆) ((⟨⟩ ,ₛ var m) ∘ τ) c
+      pull0 c lc with lookup-cases ε ⋆ c lc
+      ... | inj₁ (refl , _) = sym (++-[] (P m))
+      ... | inj₂ (() , _)
+    commS p (▸-wf (▸-wf w₀ bB) bC) (ρ ,ₛ ry ,ₛ rf) (,-wf (,-wf sρ dry) drf) with ps-inv p
+    ... | x' , p' , refl = commS-step _ p' w₀ bB bC ρ ry rf sρ dry drf (commS p' w₀ ρ sρ)
+
+    commS-step : ∀ B {Θ₀ x'} → Θ₀ ⊢ps x' ∶ B → Θ₀ ⊢ctx → Θ₀ ⊢ty B →
+                 Θ₀ ▸ B ⊢ty arr B (var x') (var (len Θ₀)) → ∀ ρ ry rf → Θ ⊢sub ρ ∶ Θ₀ →
+                 Θ ⊢tm ry ∶ B [ ρ ]ty → Θ ⊢tm rf ∶ arr B (var x') (var (len Θ₀)) [ ρ ,ₛ ry ]ty →
+                 (liftSN Θ₀ (ρ ∘ τ) (off ρ) ≡ ρ ∘ L) × Pull Θ₀ ρ →
+                 (liftSN (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) ((ρ ,ₛ ry ,ₛ rf) ∘ τ) (off (ρ ,ₛ ry ,ₛ rf))
+                    ≡ (ρ ,ₛ ry ,ₛ rf) ∘ L) ×
+                 Pull (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) (ρ ,ₛ ry ,ₛ rf)
+    commS-step ⋆ {Θ₀} {x'} p' w₀ bB bC ρ ry rf sρ dry drf (ih , pull)
+      with ⋆-var dry refl | ⋆-var (S.lookup-sub closed w₀ (snd (good p')) sρ) refl
+    ... | my , refl | mx , emx = part1 , part2
+      where
+      n   = len Θ₀
+      lρ  = sub-len' sρ
+      0<n : 0 < n
+      0<n = lookup-< {Θ₀} (ps-0 p')
+      x<n : x' < n
+      x<n = lookup-< {Θ₀} (snd (good p'))
+      ρ'  = ρ ,ₛ var my ,ₛ rf
+      C   = arr ⋆ (var x') (var n)
+      P₀  = pp Θ₀ (ρ ∘ τ)
+      lmy : lookup Θ my ≡ just ⋆
+      lmy = var-obj dry
+      r0eq : lookupₛ ρ' 0 ≡ lookupₛ ρ 0
+      r0eq = lk-old2 ρ (var my) rf lρ 0<n
+      offeq : off ρ' ≡ off ρ
+      offeq = cong (λ t → ∣ P (vi t) ∣ + o) r0eq
+      tyrf : C [ ρ ,ₛ var my ]ty ≡ arr ⋆ (var mx) (var my)
+      tyrf = cong₂ (arr ⋆) (trans (lk₁-old {y = var my} sρ x<n) emx)
+                           (lookupₛ-here ρ (var my) n (sym lρ))
+      drf' : Θ ⊢tm rf ∶ arr ⋆ (var mx) (var my)
+      drf' = subst (Θ ⊢tm rf ∶_) tyrf drf
+      dP : P my ≡ P mx ++ path (rf [ τ ]tm)
+      dP = D' pe sτ rf drf refl'
+        where refl' = tyrf
+      pl : P mx ≡ P (vi (lookupₛ ρ 0)) ++ P₀ x'
+      pl = trans (cong (λ t → P (vi t)) (sym emx)) (pull x' (snd (good p')))
+      k₁ : ∣ P mx ∣ + o ≡ ∣ P₀ x' ∣ + off ρ'
+      k₁ = trans (cong (λ q → ∣ q ∣ + o) pl)
+             (trans (∣++∣+ (P (vi (lookupₛ ρ 0))) (P₀ x') o) (cong (∣ P₀ x' ∣ +_) (sym offeq)))
+      part1 : liftSN (Θ₀ ▸ ⋆ ▸ C) (ρ' ∘ τ) (off ρ') ≡ ρ' ∘ L
+      part1 =
+        cong₃ (λ a b c → a ,ₛ b ,ₛ c)
+          (trans (cong (liftSN Θ₀ (ρ ∘ τ)) offeq) ih)
+          (trans (cong (λ m → var (vtx (∣ path (rf [ τ ]tm) ∣ + m))) (sym k₁))
+            (trans (cong (λ m → var (vtx m))
+                     (sym (trans (cong (λ q → ∣ q ∣ + o) dP) (∣++∣+ (P mx) (path (rf [ τ ]tm)) o))))
+                   (sym (fst (E my) lmy))))
+          (trans (cong (liftN (rf [ τ ]tm)) (sym k₁)) (comm-tm rf drf' tt))
+      part2 : Pull (Θ₀ ▸ ⋆ ▸ C) ρ'
+      part2 c lc with lookup-cases (Θ₀ ▸ ⋆) C c lc
+      ... | inj₁ (_ , ())
+      ... | inj₂ (_ , lc') with lookup-cases Θ₀ ⋆ c lc'
+      ...   | inj₁ (refl , _) =
+              trans (cong (λ t → P (vi t)) (lk-mid2 ρ (var my) rf lρ))
+               (trans dP
+                (trans (cong (_++ path (rf [ τ ]tm)) pl)
+                 (trans (++-assoc (P (vi (lookupₛ ρ 0))) (P₀ x') (path (rf [ τ ]tm)))
+                  (cong₂ (λ t q → P (vi t) ++ q) (sym r0eq)
+                         (sym (upd-n P₀ n (P₀ x' ++ path (rf [ τ ]tm)) (P₀ x')))))))
+      ...   | inj₂ (c< , lc'') =
+              trans (cong (λ t → P (vi t)) (lk-old2 ρ (var my) rf lρ c<))
+               (trans (pull c lc'')
+                (cong₂ (λ t q → P (vi t) ++ q) (sym r0eq)
+                       (sym (upd-old P₀ n (P₀ x' ++ path (rf [ τ ]tm)) (P₀ x') c c<))))
+    commS-step (arr B₀ s₀ t₀) {Θ₀} {x'} p' w₀ bB bC ρ ry rf sρ dry drf (ih , pull) = part1 , part2
+      where
+      n   = len Θ₀
+      lρ  = sub-len' sρ
+      B   = arr B₀ s₀ t₀
+      C   = arr B (var x') (var n)
+      0<n : 0 < n
+      0<n = lookup-< {Θ₀} (ps-0 p')
+      lx  = snd (good p')
+      ρ'  = ρ ,ₛ ry ,ₛ rf
+      P₀  = pp Θ₀ (ρ ∘ τ)
+      r0eq : lookupₛ ρ' 0 ≡ lookupₛ ρ 0
+      r0eq = lk-old2 ρ ry rf lρ 0<n
+      offeq : off ρ' ≡ off ρ
+      offeq = cong (λ t → ∣ P (vi t) ∣ + o) r0eq
+      ob : lookup Θ₀ (o₀Ty B) ≡ just ⋆
+      ob = o₀-obj B bB tt
+      o<n : o₀Ty B < n
+      o<n = lookup-< {Θ₀} ob
+      eB : o₀Ty (B [ ρ ]ty) ≡ vi (lookupₛ ρ (o₀Ty B))
+      eB = o₀-sub B ρ bB tt
+      eC : o₀Ty (C [ ρ ,ₛ ry ]ty) ≡ o₀Ty (B [ ρ ]ty)
+      eC = trans (o₀-sub C (ρ ,ₛ ry) bC tt) (trans (cong vi (lk₁-old {y = ry} sρ o<n)) (sym eB))
+      xo : P₀ x' ≡ P₀ (o₀Ty B)
+      xo = snd (snd (ent p' (ρ ∘ τ) o (sub∘ w₀ sρ sτ) x') lx)
+      k₂ : ∣ P (o₀Ty (B [ ρ ]ty)) ∣ + o ≡ ∣ P₀ x' ∣ + off ρ'
+      k₂ = trans (cong (λ m → ∣ P m ∣ + o) eB)
+            (trans (cong (λ q → ∣ q ∣ + o) (pull (o₀Ty B) ob))
+             (trans (∣++∣+ (P (vi (lookupₛ ρ 0))) (P₀ (o₀Ty B)) o)
+                    (cong₂ (λ q m → ∣ q ∣ + m) (sym xo) (sym offeq))))
+      k₃ : ∣ P (o₀Ty (C [ ρ ,ₛ ry ]ty)) ∣ + o ≡ ∣ P₀ x' ∣ + off ρ'
+      k₃ = trans (cong (λ m → ∣ P m ∣ + o) eC) k₂
+      part1 : liftSN (Θ₀ ▸ B ▸ C) (ρ' ∘ τ) (off ρ') ≡ ρ' ∘ L
+      part1 =
+        cong₃ (λ a b c → a ,ₛ b ,ₛ c)
+          (trans (cong (liftSN Θ₀ (ρ ∘ τ)) offeq) ih)
+          (trans (cong (liftN (ry [ τ ]tm)) (sym k₂)) (comm-tm ry dry tt))
+          (trans (cong (liftN (rf [ τ ]tm)) (sym k₃)) (comm-tm rf drf tt))
+      part2 : Pull (Θ₀ ▸ B ▸ C) ρ'
+      part2 c lc with lookup-cases (Θ₀ ▸ B) C c lc
+      ... | inj₁ (_ , ())
+      ... | inj₂ (_ , lc') with lookup-cases Θ₀ B c lc'
+      ...   | inj₁ (_ , ())
+      ...   | inj₂ (c< , lc'') =
+              trans (cong (λ t → P (vi t)) (lk-old2 ρ ry rf lρ c<))
+               (trans (pull c lc'')
+                (cong₂ (λ t q → P (vi t) ++ q) (sym r0eq)
+                       (sym (upd-old P₀ n (P₀ x') (P₀ x') c c<))))

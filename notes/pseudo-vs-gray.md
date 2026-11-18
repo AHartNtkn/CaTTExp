@@ -71,7 +71,7 @@ Take α : F ⇒ G and α′ : G ⇒ G′, both from B to C, and β : H ⇒ K fro
   - Under P, the cells of Hom(X, f ↓ g) are built from pseudo transformations. The question "what does a *lax* transformation into C//c correspond to?" can be asked only through [D¹, –]ₗₐₓ again.
   - Under L it is a direct statement about native cells.
 
-- **Correction from the limits thread (R11).** Under P, Mikhail's rules as written force the arrows of a comma or hom object built this way to be *invertible*. P has to modify the rules, and then still needs the Gray machinery for genuine hom objects (whose arrows are non-invertible). Under L the rules work as written.
+- **Correction (R11, verified).** Under P, Mikhail's rules as written force the arrows of a comma or hom object built this way to be *invertible*. P must restrict cone morphisms to pseudo ones, and still needs the Gray machinery for genuine hom objects (whose arrows are non-invertible). Under L the unrestricted lax rules are compatible, given the orientation fixed in §3.1 and the printed `ctrf` repair needed in either option.
 
 **Verdict:** not a wash, as an earlier version said. L gets comma and hom objects directly from the limit rules. P needs modified rules plus Gray tensors for them.
 
@@ -228,17 +228,26 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed: it is heavier than both P and L. It is subsumed by L with markings, where pseudo 2-cells are marked lax ones.
 
-### R11. CaTT_lim's universal property is native to L (finding from the limits thread)
+### R11. CaTT_lim and directed interchange (verified researcher result)
 
-`limits-representables.md` §10.1 (on main) finds the following **[conj, attempted there]**:
-- In a CaTT ambient (P), the 2-dimensional instance of Mikhail's `uni` makes every connecting cell of a cone morphism derivably invertible. The cell of `ucone_*(β)` is an interchange coherence, and essential surjectivity transfers invertibility to every cone morphism.
-- So **Mikhail's rules as written fit L**, where that interchange is directed.
-- Under P, the connecting cells must be moved into `⊨`, which gives pseudo morphisms of lax cones.
-- Consequence for P: comma objects and hom objects built from cone-style limits have only invertible 2-cells as arrows. Genuine hom objects and lax cotensors then need the Gray tensor, not limits.
+**The result.** `notes/conjectures/catt-lim-pseudo-vs-gray.md` (answered and verified, PR #11) establishes three things.
+- **Forced invertibility.** In a CaTT ambient, Mikhail's universal property forces the comparison cell m_f of every cone morphism to be invertible. The cell of ucone_*(β) is CaTT's invertible interchanger I_{β,λ_f}, and essential surjectivity transfers that invertibility.
+- **Collapse.** With `uni` at all levels, every ambient cell of dimension ≥ 3 becomes invertible. There is a finite cartesian counterexample to the unchanged rules.
+- **No oriented models.** Oriented (Gray-enriched) categories cannot model *unchanged* CaTT_lim, because unchanged CaTT already contains the invertible interchanger and its inverse.
+- **Two repairs.**
+  - Keep CaTT and restrict cone transfors to invertible comparison cells over positive-dimensional diagram variables. This must be done with marked declarations, not an invertibility rule.
+  - Keep unrestricted lax transfors and change the base theory so that this interchanger is directed. This is option L.
+- Separately, Mikhail's printed `ctrf` side condition (Def. 4.15) needs a repair under either option.
 
-The open part is the exact orientation of the ctrf cells, posed in `notes/conjectures/catt-lim-pseudo-vs-gray.md`.
+**What it means for each option.**
+- **P.** It must use the restricted universal property. Its limits then classify lax cones with *pseudo* morphisms, and comma and hom objects built from limits have only invertible arrows (eq. (8) there: the cartesian arrow fibre is the core of the hom). Genuine hom objects and lax cotensors need the Gray tensor (G1), not limits.
+- **Two-tier L.** Compatible with the *unrestricted* universal property, given two checks.
+  - *Where the obstruction lives.* Every interchanger used in the argument composes a cell along c → L with a cell along L → (diagram), i.e. across an object. Two-tier L directs exactly those, so the forced-invertibility argument does not go through: ucone_*(β)'s comparison cell is a directed interchanger, and essential surjectivity transfers nothing invertible. The same holds for the ≥3-cell collapse argument (§4 there), which interchanges an arbitrary 3-cell along c → Y with a cell along Y → ·. Inside a hom, two-tier L's interchange stays invertible, and the argument never uses it **[checked against §§1–4 of the response; a line-by-line re-derivation in L is part of the problem below]**.
+  - *Orientation.* The direction is forced: the universal cone needs (u◁φ);(β▷v′) ⇛ (β▷v);(u′◁φ). §3.1 now fixes L's factor order so that this is the derivable direction. With the reverse order, ucone_* would be ill-typed in L.
+  - *Semantics.* That oriented ∞-categories satisfy the unrestricted lax universal property, with Gray-shaped cone transfors, is posed in `notes/conjectures/oriented-lax-limits.md`. Gepner–Heine's oriented (co)limits are the expected answer.
+- **Uniform L.** The same, plus the inner levels: cone transfors of higher dimension interchange laxly inside homs too, so `ctrf` shapes must use uniform Gray shapes. This depends on the construction problem of §2.5.
 
-This **adds a practical point for L** to Example 3 above. Under P, building hom objects needs the Gray machinery (G1). Under L, they come straight from the limit rules.
+**Practical point.** Under L, comma objects, hom objects and lax cotensors come directly from the limit rules (with the ctrf repair). Under P they need the restricted rules plus Gray tensors.
 
 ### Settled conclusion
 
@@ -264,7 +273,7 @@ This **adds a practical point for L** to Example 3 above. Under P, building hom 
    - **Uniform L** makes interchange directed at every level. Its side condition needs a free "lax at every level" structure to compute supports in, and that structure still has to be constructed (§2.5).
    - Uniform L is weaker than two-tier L, which is weaker than P. Each stronger theory is the weaker one plus an invertibility marking, so every model of the stronger theory is a model of the weaker one, ωCat_lax included **[conj]**.
    - *Revised 2026-11-18 after Anthony clarified that "lax by default" means "the most general version until there is a concrete reason otherwise". The first version recommended two-tier L.*
-3. **The L rule is a small syntactic change.** Contexts stay pasting schemes, and the coh rule keeps its shape. What changes is the side condition: free-variable sets are replaced by **supports in the Gray unfolding** of the pasting scheme. For Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, that unfolding is the hom-level shape Θₙ ⊗ … ⊗ Θ₁. Supports are Steiner chains, so the check is integer linear algebra and decidable (§3).
+3. **The L rule is a small syntactic change.** Contexts stay pasting schemes, and the coh rule keeps its shape. What changes is the side condition: free-variable sets are replaced by **supports in the Gray unfolding** of the pasting scheme. For Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, that unfolding is the hom-level shape Θ₁ ⊗ … ⊗ Θₙ (factors in execution order; §3.1 explains why the order is forced). Supports are Steiner chains, so the check is integer linear algebra and decidable (§3).
    - *Stating* the rule is the small part. Its correctness for two-tier L is proved in the strict model modulo three combinatorial lemmas, and reduced to a known theorem's scope for (∞,ω) models (§3.6). The open pieces are written up as self-contained problems in `notes/conjectures/`.
 4. **L absorbs the hardest open item of P.** Under P, lax homs [Θ, C]ₗₐₓ need a Gray *context former* whose generators x⊗y must be typed by composites of non-pasting molecules. PR #3 calls this "the biggest open technical point" (G1). Under L, a lax square in C is just the interchanger of a native 2-cell with an arrow of C, so lax homs are the native hom made into an object and Gray contexts become derivable (§4.2).
 5. **L is the weaker theory, and P is recoverable from it.** Every cartesian-enriched model is also Gray-enriched, through the comparison map X ⊗ Y → X × Y. So **P ≈ L + "interchangers are invertible"** **[conj]**. "Pseudo = lax + marking", which PR #3 adopted for shapes, then holds for the ambient as well. Choosing L does not close off P; the reverse is false.
@@ -310,7 +319,7 @@ So **L's semantic target is an established notion. P's ambient is the cartesian 
 In a Gray-enriched 𝒦:
 
 - For objects a, b, the hom 𝒦(a, b) is an ordinary ω-category. All its internal compositions, which are 𝒦's compositions in dimension ≥ 1, interchange invertibly as usual.
-- Composition across objects is 𝒦(b, c) ⊗ 𝒦(a, b) → 𝒦(a, c). On generators it sends a pair (y, x) of cells of dimensions m and k (in the homs) to a cell of dimension m + k. So:
+- Composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), with factors in execution order; this order is the lax/oplax convention, fixed in §3.1. On generators it sends a pair (x, y) of cells of dimensions m and k (in the homs) to a cell of dimension m + k. So:
   - an object x (k = 0) whiskers: y ⊗ x has the dimension of y;
   - two 1-cells of homs (2-cells of 𝒦, i.e. transformations α, β) give a **2-cell of the hom, i.e. a 3-cell of 𝒦: the interchanger**, between the two whiskered composites. There is no horizontal composite in dimension 2.
 
@@ -339,7 +348,7 @@ Consequences:
 ### 2.5 Uniform L, and where generality stops
 
 **The rule.** The coh rule of §3.3 is unchanged. Only the structure in which supports are computed changes.
-- Two-tier L computes supports in ν(Θₙ ⊗ … ⊗ Θ₁), a strict ω-category, so composition *inside* the hom interchanges strictly.
+- Two-tier L computes supports in ν(Θ₁ ⊗ … ⊗ Θₙ), a strict ω-category, so composition *inside* the hom interchanges strictly.
 - Uniform L needs, in its place, the **free strict structure on Γ in which every interchange is directed**. Each hom is then itself such a structure, not an ω-category.
 
 **Correction (2026-11-18).** An earlier version of this section defined uniform L by the recursion U(ΣΘ₁ ∨ … ∨ ΣΘₙ) := U(Θₙ) ⊗ … ⊗ U(Θ₁). That formula is wrong. U(Θ) is the shape of a *single hom* of Θ's free structure, so the recursion throws away all of Θ's lower-dimensional structure. For example, it sends a vertical composable pair of 2-cells to a point.
@@ -385,12 +394,20 @@ Here Θᵢ is the pasting scheme of cells in the hom from aᵢ₋₁ to aᵢ.
 **Gray unfolding.** Define the hom-level shapes
 
 ```
-U_{ij}(Γ)  :=  Θⱼ ⊗ … ⊗ Θᵢ₊₁          (i < j)
+U_{ij}(Γ)  :=  Θᵢ₊₁ ⊗ … ⊗ Θⱼ          (i < j, factors in execution order)
 ```
 
 These are tensors of Steiner complexes, computed generator-wise, with generators θⱼ ⊗ … ⊗ θᵢ₊₁, dimension the sum, and boundary given by the Leibniz formula. Mikhail's `gray` judgment and PR #3 §4.1 give the same formula. Steiner complexes of pasting schemes are loop-free, and tensors of loop-free complexes are loop-free (Steiner) **[recall]**. So the free strict ω-category on U_{ij} is well behaved and cells of it are determined by their chains.
 
-The **order of factors** (Θⱼ ⊗ … ⊗ Θᵢ₊₁ vs. the reverse) is the lax/oplax convention. It must be fixed once, as PR #3 §4.1 already notes.
+The **order of factors** is the lax/oplax convention, and it is **forced by the limit rules**. Mikhail's lax cones need the comparison cell of a cone morphism to go from "outer cell first" to "inner cell first". In execution order, for β : u ⇒ u′ (from c to L) and φ : v ⇒ v′ (from L to y), that is
+
+```
+(u◁φ);(β▷v′)  ⇛  (β▷v);(u′◁φ)
+```
+
+(`notes/conjectures/catt-lim-pseudo-vs-gray.md`, eq. (2), verified). With factors in execution order, the Leibniz formula gives exactly this orientation; the reverse factor order gives the opposite one. So U is Θᵢ₊₁ ⊗ … ⊗ Θⱼ.
+- *Correction:* an earlier version used the reverse order, which would have made Mikhail's universal cone ill-typed under L.
+- The same orientation makes the naturality cell of α : F ⇒ G at f : x → y go α_x ; Gf ⇛ Ff ; α_y (execution order), i.e. Gf ∘ α_x ⇛ α_y ∘ Ff. That is the lax convention of Bénabou and Johnson-Freyd–Scheimbauer.
 
 ### 3.2 Supports
 
@@ -422,21 +439,19 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 
 **Horizontal composite: gone.** Take Γ = ΣD¹ ∨ ΣD¹, with α : f ⇒ f′ : x → y and β : g ⇒ g′ : y → z.
 
-- U = D¹_β ⊗ D¹_α is the lax square in 𝒦(x, z). It has four vertices gf, gf′, g′f, g′f′, four edges, and one 2-dimensional generator β⊗α.
-- No term of 𝒦-dimension 2 has full support, so there is **no coherence-case or operation-case horizontal composite**. The two whiskered composites (βf′)·(gα) and (g′α)·(βf) are both well typed, through ordinary whiskering and vertical cohs, but they are not identified.
+- U = D¹_α ⊗ D¹_β is the lax square in 𝒦(x, z). It has four vertices f;g, f′;g, f;g′, f′;g′, four edges, and one 2-dimensional generator α⊗β.
+- No term of 𝒦-dimension 2 has full support, so there is **no coherence-case or operation-case horizontal composite**. The two whiskered composites (f◁β);(α▷g′) and (α▷g);(f′◁β) are both well typed, through ordinary whiskering and vertical cohs, but they are not identified.
 
-**The interchanger: one direction only.** In the same Γ, the Leibniz formula gives
+**The interchanger: one direction only.** In the same Γ, the Leibniz formula gives, in execution order:
 
 ```
-∂⁻(β⊗α) = (g⊗α) ∪ (β⊗f′)      i.e.   (βf′)·(gα)
-∂⁺(β⊗α) = (g′⊗α) ∪ (β⊗f)      i.e.   (g′α)·(βf)
+∂⁻(α⊗β) = (f⊗β) ∪ (α⊗g′)      i.e.   (f◁β) ; (α▷g′)      β first, then α
+∂⁺(α⊗β) = (α⊗g) ∪ (f′⊗β)      i.e.   (α▷g) ; (f′◁β)      α first, then β
 ```
 
-These are in diagrammatic order, with one choice of convention.
-
-- So coh_{Γ, (βf′)·(gα) → (g′α)·(βf)} is an operation-case 3-cell.
+- So coh_{Γ, (f◁β);(α▷g′) → (α▷g);(f′◁β)} is an operation-case 3-cell.
 - The reverse fails, because the support of its source is ∂⁺U, not ∂⁻U.
-- This is exactly the lax naturality cell of β at the component of α.
+- With β : F ⇒ G a transformation and α an arrow of an object (an element 2-cell), this is β's lax naturality cell at α. With α = β of a cone morphism and β = a cone cell, it is the comparison cell Mikhail's universal cone needs (§3.1).
 
 **The Gray cube.** Take Γ = ΣD¹ ∨ ΣD¹ ∨ ΣD¹. Then U is the 3-cube, and its top generator is a 4-cell of 𝒦 between the two hexagonal composites of interchangers.
 
@@ -462,14 +477,14 @@ These are in diagrammatic order, with one choice of convention.
 **Precise form of §3.2.** Fix a pasting scheme Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ with objects a₀, …, aₙ. Let **𝔉(Γ)** be the free strict Gray-enriched category on Γ: the free category enriched in (strict ω-Cat, ⊗_AM) on the chain of hom-generators ν(λΘ₁), …, ν(λΘₙ). Because the underlying graph is a chain, its homs are
 
 ```
-𝔉(Γ)(aᵢ, aⱼ)  =  ν(λΘⱼ) ⊗ … ⊗ ν(λΘᵢ₊₁)  ≅  ν(Kᵢⱼ),      Kᵢⱼ := λΘⱼ ⊗ … ⊗ λΘᵢ₊₁
+𝔉(Γ)(aᵢ, aⱼ)  =  ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ)  ≅  ν(Kᵢⱼ),      Kᵢⱼ := λΘᵢ₊₁ ⊗ … ⊗ λΘⱼ
 ```
 
 where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara–Maltsiniotis's ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) **[recall]**.
 
 - Every L-term t over Γ has a **strict interpretation** ⟦t⟧, a cell of some 𝔉(Γ)(aᵢ, aⱼ), defined by induction on derivations (coh cases below; substitutions act through the strict Gray functors they induce).
 - **supp(t : A)** := Supp(⟦t⟧), the downward-closed set of basis elements of Kᵢⱼ used by ⟦t⟧ and its boundaries. Supports of objects are the objects themselves.
-- The rule of §3.3 reads: operation case if supp(t) = Supp(∂⁻T) and supp(u) = Supp(∂⁺T); coherence case if supp(t) = supp(u) = all of Kᵢⱼ. Here T := ⟨Θⱼ⟩ ⊗ … ⊗ ⟨Θᵢ₊₁⟩ is the **total cell**, the Gray tensor of the composites of the pasting diagrams.
+- The rule of §3.3 reads: operation case if supp(t) = Supp(∂⁻T) and supp(u) = Supp(∂⁺T); coherence case if supp(t) = supp(u) = all of Kᵢⱼ. Here T := ⟨Θᵢ₊₁⟩ ⊗ … ⊗ ⟨Θⱼ⟩ is the **total cell**, the Gray tensor of the composites of the pasting diagrams.
 - Everything is computable: tables of finite chains, and chain maps for substitutions.
 
 **Three combinatorial lemmas**, about any Steiner complex K, in particular Gray tensors of pasting diagrams. They are posed precisely, with proof sketches, in `notes/conjectures/steiner-support-determines-cells.md`. *Literature update (2026-11-18): (A)–(C) hold for Gray tensors of pasting diagrams. They follow from Hadzihasanovic (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18; see that file's "Literature status".*
@@ -496,7 +511,7 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 
 **Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`. *Literature update (2026-11-18): (D) and (E) are known (Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5; Chanavat, arXiv 2603.22242, Thm 3.29), and (F) follows. So the hypotheses (D)–(F) of Theorem 2 are discharged; see that file's "Literature status".*
 
-- **(D)** For K = λΘₙ ⊗ … ⊗ λΘ₁, the free (∞,n)-category on K's generators is equivalent to ν(K). This is Campion's pasting theorem, if K is torsion-free; Campion's theorem covers lax Gray cubes, and the question is whether it covers Gray tensors of pasting diagrams.
+- **(D)** For K = λΘ₁ ⊗ … ⊗ λΘₙ, the free (∞,n)-category on K's generators is equivalent to ν(K). This is Campion's pasting theorem, if K is torsion-free; Campion's theorem covers lax Gray cubes, and the question is whether it covers Gray tensors of pasting diagrams.
 - **(E)** Campion's Gray tensor of the free (∞,n)-categories on λΘᵢ is the free one on their Steiner tensor.
 - **(F)** The free oriented ∞-category on Γ has homs given by tensoring along the chain. This is the ∞-version of the formula for 𝔉(Γ), and is expected from the description of free enriched ∞-categories on graphs **[recall]**.
 
@@ -552,8 +567,8 @@ So each option makes one hom native and gets the other from an extra rule family
 
 ### 4.4 Limits (CaTT_lim)
 
-- **P.** Mikhail's rules apply as published ([2412.13310](https://arxiv.org/abs/2412.13310)). Lax cones have non-invertible ambient 2-cells p_f, so they are lax limits in ωCat_pseudo. Transfors between cones are Gray-shaped *contexts* (`ctrf`), whose existence is proved only for n = 1.
-- **Finding from the limits thread (R11).** As written, Mikhail's 2-dimensional universal property forces cone-morphism cells to be invertible in a CaTT ambient. So under P the rules need modifying (connecting cells in `⊨`), and hom/comma objects from limits have only invertible arrows.
+- **P.** Mikhail's cone shapes apply as published ([2412.13310](https://arxiv.org/abs/2412.13310)). Lax cones have non-invertible ambient 2-cells p_f, so they are lax limits in ωCat_pseudo. Transfors between cones are Gray-shaped *contexts* (`ctrf`), whose existence is proved only for n = 1.
+- **Verified (R11).** As written, Mikhail's universal property forces cone-morphism cells to be invertible in a CaTT ambient, and all cells of dimension ≥ 3 once every level of `uni` is imposed. So P must use marked (pseudo) cone transfors, and hom and comma objects from limits have only invertible arrows.
 - **L.** The cone *shapes* are the same: a cone over Γ is the same context. The universal property becomes a Gray-enriched one, quantifying over native lax cells.
   - **[conj]** The `ctrf` shapes (transfors between cones) become native cells of the hom 𝒦(c, ·), so the `ctrf`/`star` machinery may shrink. A cone transfor would be a native cell between cones, with interchangers supplying the Gray squares.
   - Gray-enriched weighted limits are standard in dimension 2 (Street; Lack) **[recall]**.
@@ -639,7 +654,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Horizontal composite | canonical | chosen across objects; laws are directed | chosen everywhere unless marked |
 | Internal hom with cartesian currying | yes (pseudo) | yes for the marked pseudo hom | yes for the marked pseudo hom |
 | Internal hom, lax | needs Gray tensor of objects | native; currying needs Gray tensor of objects | same |
-| Limits | CaTT_lim with cone-morphism cells moved into ⊨; hom objects need Gray tensors (R11) | CaTT_lim as written (R11) | same |
+| Limits | CaTT_lim restricted to pseudo cone transfors (marked declarations); hom objects need Gray tensors (R11) | unrestricted lax CaTT_lim over L's base, with the interchange orientation fixed by the cones (R11) | same, with uniform Gray shapes for higher transfors |
 | Free objects, elements | yes | yes; naturality comes out lax | yes |
 | Future universe | kind-correct (pseudo) | pseudo only (mismatch) | kind-correct (lax) |
 | Established semantics | (∞,ω)-categories | oriented categories | none of its own yet; frontier (bioriented) |

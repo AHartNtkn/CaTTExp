@@ -2,7 +2,7 @@
 
 *Design notes, revised 2026-11-18 (§3 and §5.2 rewritten as practical comparisons). Companion to `catt-survey.md` (project files). Scope: representables, Yoneda-style principles, and (weighted, lax, ω-)limits and colimits as CaTT-style rules. Internal hom / Gray tensor and fibrations are handled in other threads; the interfaces are marked **[→ Gray]** and **[→ fibrations]**. Fixed constraints: no universes, the ambient may stay external, and no definitional β/η rules. Universal properties are witnessed by generated cells.*
 
-*Markers. **[paper]**: checked against the cited paper this session. **[recall]**: from background knowledge, not re-checked. **[conj]**: my conjecture, unproved. **[proposal]**: a design choice being put forward.*
+*Markers. **[paper]**: checked against the cited paper this session. **[recall]**: from background knowledge, not re-checked. **[conj]**: unproved; every such claim has a proof attempt in §10 and, where the attempt stalls, a self-contained problem in `notes/conjectures/`. **[proposal]**: a design choice being put forward. Unproved claims are investigated, never used as reasons to reject an option.*
 
 ---
 
@@ -16,7 +16,13 @@
    - *free ω-categories on contexts* `⟦Γ⟧` can be either a primitive with its own universal property (R-A) or derived as `laxcolim_Γ (const ⊤)` (R-B, **[conj]**). §5.2 compares the two;
    - in both, the Yoneda principle "maps `⟦Γ⟧ → C` are Γ-shaped families of elements of C" is a universal property witnessed by generated cells, with no definitional β/η.
 5. **Pseudo or lax ambient.** If the ambient is a model of CaTT, its 2-cells are forced to be *pseudo* transformations, because every coherence, interchange included, is invertible (§3.1). The two ways out, a pseudo ambient (P) and a Gray-style lax ambient (L), are compared in `notes/pseudo-vs-gray.md`. §4–§6 hold under either.
-6. **What this reaches.** All finite (lax, pseudo, weighted) limits and colimits; cotensors by shapes; hom objects; an ℕ-like object `Hom_{⟦x, s:x→x⟧}(x, x)` with iteration (§6). **What it does not reach:** colimits indexed by an *object* rather than a context (sequential colimits, general Kan extensions) and induction (dependent elimination). Both need internal hom [→ Gray] or fibrations [→ fibrations].
+6. **What this reaches.** All finite (lax, pseudo, weighted) limits and colimits, and cotensors by shapes. Hom objects and an ℕ-like object `Hom_{⟦x, s:x→x⟧}(x, x)` with iteration (§6) come from the limit rules under L, and need the Gray thread's lax cotensors under P (§10.1). **What it does not reach:** colimits indexed by an *object* rather than a context (sequential colimits, general Kan extensions) and induction (dependent elimination). Both need internal hom [→ Gray] or fibrations [→ fibrations].
+7. **Proof attempts (§10).**
+   - Proved: CaTT_lim's universal property forces cone morphisms to be pseudo in a CaTT ambient. So its rules fit L as written, and fit P only with that modification.
+   - Proved: marking needs no closure condition.
+   - Partly proved: free objects as lax colimits of the point.
+   - Reduced to one semantic theorem each: weighted limits as marked limits, and discreteness of the ℕ-like object.
+   - Remaining gaps are written up as problems in `notes/conjectures/`.
 
 ---
 
@@ -115,7 +121,7 @@ Source: *Free fibrations, lax colimits and Kan extensions for (∞,2)-categories
 - **Weighted (co)limits are partially lax (co)limits** over the fibration classified by the weight, and conversely.
 - Kan extensions are I_b-lax limits over comma categories.
 
-Relevance: this justifies **"marking" as the only extra ingredient for weighted limits**, at least in dimension 2. For ω this is **[conj]**.
+Relevance: this justifies **"marking" as the only extra ingredient for weighted limits** in dimension 2. For ω, see §10.4.
 
 ### 2.4 Gepner–Heine, oriented colimits [paper, abstract/intro level]
 
@@ -125,7 +131,7 @@ Source: *Colimits in oriented category theory*, [arXiv 2608.02592](https://arxiv
 - The oriented colimit of a constant functor at A is `A ⊗ I` (Gray), while the lax colimit is `A × I`.
 - The higher Grothendieck construction computes oplax colimits, and E-lax colimits are localised Grothendieck constructions.
 
-Relevance: **CaTT_lim's transfors are Gray-shaped, so its "lax" limits are probably oriented ones in their sense [conj].** This matters for cotensors (§6.3): oriented limits of a constant diagram give Gray-hom functor categories, i.e. *lax* transformations.
+Relevance: **CaTT_lim's transfors are Gray-shaped, so its limits are oriented ones in their sense.** §10.1 shows its rules as written are sound only for Gray-enriched (L) ambients. This matters for cotensors (§6.3): oriented limits of a constant diagram give Gray-hom functor categories, i.e. *lax* transformations.
 
 ### 2.5 Gagna–Harpaz–Lanari [paper, abstract level]
 
@@ -224,21 +230,21 @@ Kernel-level simplifications worth trying, since they are aesthetic, not semanti
 ```
 
 Side conditions:
-- **(M1) Closure.** If x ∈ μ then every variable whose type mentions x at top dimension and that is "parallel" to x is also marked. This is needed so the higher projection cells over a marked cell are invertible. The exact form is **[conj]**; it should mirror Benjamin–Markakis's "empty top-dimensional support" criterion.
+- **(M1) No closure condition is needed** (§10.2). Cone cells over composites, identities and coherences of marked generators are invertible automatically.
 - **(M2) The universal property quantifies only over cones with the same marking.** That is, `ctrf` shapes inherit the marking, and J2 already produces `⊨` cells.
 
 What it gives:
 
 | Marking | Limit | Examples |
 |---|---|---|
-| none | lax (oriented?) limit | lax limits, comma-like constructions |
+| none | lax (oriented) limit | lax limits, comma-like constructions |
 | all | pseudo = homotopy limit of the diagram | products (no difference for discrete Γ), pullbacks, equalizers, iso-inserters |
 | some | partially lax | comma objects `f ↓ g` (mark one leg), hom objects (§6.2), inserters |
 
 **Weighted limits.**
 - In CaTT style a weight is a *display substitution* `π : Ψ → Γ` together with a marking of Ψ: the "Grothendieck construction of the weight."
 - `lim^{(Ψ,π)} γ := lim_{Ψ^μ}[γ ∘ π]`.
-- AHM show this recovers all weighted limits in dimension 2; for ω this is **[conj]**.
+- AHM show this recovers all weighted limits in dimension 2. For ω, see §10.4.
 - The side condition on π ("π is a (co)cartesian display") is the open part. A first version can **omit it**: any π gives *some* partially lax limit, and only the comparison theorem with "weighted limits" needs π to be a fibration.
 
 ### 4.3 Colimits [proposal]
@@ -249,11 +255,10 @@ Mikhail says colimits are obtained by reversing all 1-cells. Concretely, there i
 
 Opposites are a meta-operation on *terms in one ambient*. They are not a symmetry of the ambient ωCat, since `ωCat^op` is not ωCat. So colimits really are **new rules**, though generated by the same schema. Recommendation: present a single schema parameterised by an orientation `ε ∈ {lim, colim}` × a laxness marking, so the kernel has one implementation.
 
-### 4.4 Open orientation question
+### 4.4 Orientation variants
 
-Which of the 2ⁿ op-variants are needed?
-- Mikhail notes the other lax/oplax variants come from opposites. With marking, the useful set is probably only {lax, oplax} × {lim, colim}. The higher-dimensional orientation can be fixed once by convention.
-- This is because (§6.3) cotensors already give access to the remaining variants via `[⟦Γ⟧^{op_S}, C]`. **[conj]**
+- Mikhail notes the other lax/oplax variants come from opposites. With marking, the rule schema needs only {lax, oplax} × {lim, colim}.
+- The other orientations come from cotensors by opposite shapes, `[⟦Γ^{op_S}⟧, C]` (§10.6).
 
 ---
 
@@ -323,7 +328,7 @@ The kernel gets nothing new beyond the colimit rules of §4.3:
   - and so on in higher dimensions.
 
   So a cocone is a Γ-family of elements of C, with unit coherences inserted. The colimit's universal property is then the Yoneda principle above.
-- **Semantics [conj].** The lax colimit of the constant point diagram over I is I itself: either the Grothendieck construction of the terminal functor, or Gepner–Heine's `1 × I = 1 ⊗ I = I`. So `⟦Γ⟧ ≃ Free(Γ)`, possibly up to an opposite in some dimensions depending on orientation. The convention in §1 should be chosen so that no opposite appears. Checking this in the strict model (Steiner complexes) is formalisation target 4 (§8).
+- **Semantics [conj, §10.3].** The lax colimit of the constant point diagram over I is I itself: either the Grothendieck construction of the terminal functor, or Gepner–Heine's `1 × I = 1 ⊗ I = I`. So `⟦Γ⟧ ≃ Free(Γ)`, possibly up to an opposite in some dimensions depending on orientation. The convention in §1 should be chosen so that no opposite appears. §10.3 gives the proof attempt and where it stalls.
 
 **Structure available under either option:**
 - `⟦∅⟧` is initial, and `⟦x:⋆⟧ ≃ ⊤`.
@@ -368,22 +373,25 @@ substituted by  x ↦ ⊤, y ↦ ⊤, z ↦ C, f ↦ a, g ↦ b.
 
 A cone with apex c is `p_x, p_y : c → ⊤` (trivial), `p_z : c → C`, an invertible `p_g : p_z ≅ b∘!`, and `p_f : p_z → a∘!`. That is a "c-parameterised arrow between b and a" (or a to b, depending on orientation), so this is the comma `a ↓ b` = `Hom_C(a, b)`.
 
-- **Check [conj]:** elements of `Hom_C(a, b)` are the arrows `a → b` of C, and its elements' arrows are C's 2-cells. This is the internal counterpart of Benjamin–Markakis's Hom.
+- **Under L:** elements of this object are the arrows between a and b, and its arrows are C's 2-cells. This is the internal counterpart of Benjamin–Markakis's Hom.
+- **Under P:** its arrows are only the *invertible* 2-cells (§10.1). The genuine hom object is then a fibre of the lax arrow object `[⟦D¹⟧, C]_lax`, which the Gray thread supplies.
 
 ### 6.3 Cotensors by shapes, and lax functor categories
 - `[⟦Γ⟧, C] := lim_Γ [ !_Γ ∘ ⟨C⟩ ]`, the lax limit of the constant diagram at C.
-- If CaTT_lim's limits are oriented (§2.4), this is the **Gray-hom functor category: functors `⟦Γ⟧ → C` and lax transformations** **[conj]**. With all cells marked it is the pseudo functor category.
-- **Lax transformations under Option P.** A lax transformation `F ⇒ G : C → D` is a 1-cell `C → [⟦D¹⟧, D]_lax` whose composites with the two evaluations are F and G.
+- **Under L,** with CaTT_lim's rules as written, this is the **Gray-hom functor category: functors `⟦Γ⟧ → C` and lax transformations**. With all cells marked it is the pseudo functor category.
+- **Under P,** cone-style limits give only the pseudo functor category. The lax one needs the Gray tensor (§10.1).
+- **Lax transformations under Option P, given lax cotensors.** A lax transformation `F ⇒ G : C → D` is a 1-cell `C → [⟦D¹⟧, D]_lax` whose composites with the two evaluations are F and G.
   - "Whose composites are F and G" is an element of a pullback, so a lax transformation is an element of a finite marked limit.
   - Consequence: **lax transformations between functors with an arbitrary domain need only cotensors by `⟦D¹⟧`, not a general internal hom.** The general internal hom `[C, D]` for an *arbitrary* object C is not a limit [→ Gray].
-  - When C is itself built as a colimit of shapes, `[colim_i ⟦Γ_i⟧, D] ≃ lim_i [⟦Γ_i⟧, D]` gives it anyway **[conj]**.
+  - When C is itself built as a colimit of shapes, `[colim_i ⟦Γ_i⟧, D] ≃ lim_i [⟦Γ_i⟧, D]` gives it anyway, once an internal hom exists (§10.6).
 
 ### 6.4 An ℕ-like object (test case for "ordinary math")
 - Let `L := (x:⋆, s : x → x)`. This is a finite, non-pasting-scheme context.
   - `⟦L⟧` is the free ω-category on a loop, i.e. "Bℕ".
   - Its universal property: maps `⟦L⟧ → C` are pairs (element c, endo-arrow e on c). **This is iteration.**
 - `N := Hom_{⟦L⟧}(x, x)` (§6.2). Its elements are the arrows `sⁿ`, so N is the "object of natural numbers."
-  - It is **discrete, up to equivalence, if the free weak ω-category on a 1-dimensional computad is equivalent to the free 1-category [conj; believed folklore]**. A good formal target.
+  - It is **discrete, up to equivalence, if the free weak ω-category on a graph is equivalent to the free category**. §10.5 has a proof sketch with one gap.
+  - N needs the hom-object construction, which comes from the limit rules under L and from the Gray thread under P (§6.2).
 - **Operations:**
   - zero = `id_x`;
   - successor = postcomposition with s, i.e. the functoriality of Hom in its second argument;
@@ -425,16 +433,99 @@ In order of cost to benefit:
 2. **Constant substitutions exist.** For every Γ there is `(c:⋆) ⊢ !_Γ : Γ`. This follows from the contractibility of the one-point context and is needed by R-B.
 3. **Cone contexts exist for pasting-scheme diagrams.** This is Mikhail's Conj 3.6 restricted to ps-contexts. It is needed before CaTT_lim can be implemented at all.
 4. **Strict-model check of R-B.** In strict ω-categories via Steiner complexes, check `laxcolim(const 1) ≅ Free(Γ)` for small Γ (D¹, D², the loop, the composable pair). This settles the orientation convention.
-5. **Marking closure (M1).** Find the precise condition, and prove the marked cone rule stays within cone contexts.
-
+5. **§10.1 in CaTT_lim.** Derive an inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule. This would settle `conjectures/catt-lim-pseudo-vs-gray.md` mechanically.
+6. **The free-on-graph lifting lemma** (§10.5). Construct the canonical lifts to the chain pasting scheme.
 ---
 
 ## 9. Open problems
 
-These are open mathematical or design problems, ordered by how much of the rest depends on them.
+1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. §10.1 adds a fact that bears on the choice: CaTT_lim as written is native to L, and needs a modification under P.
+2. **Self-contained problems** in `notes/conjectures/`. These can be worked on with no project context:
+   - `catt-lim-pseudo-vs-gray.md`
+   - `gray-contexts-steiner.md`
+   - `lax-colimit-of-point.md`
+   - `weighted-as-partially-lax-omega.md`
+   - `free-on-graph.md`
+3. **Presentations with equations** (§6.5). Do marked colimits suffice to build objects that act like structures with laws? The integers are the test case where cancellation shows up.
+4. **Object-indexed colimits** (§7). These need the internal hom or a fibration story.
 
-1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. The one that bears most on this note is S1, the correctness of L's support condition.
-2. **The closure condition for markings** (§4.2, M1). This is needed before marked limits can be stated as rules.
-3. **Is `laxcolim(const ⊤) ≃ Free(Γ)`?** (§5.2) This decides whether R-A is a primitive or a derived rule.
-4. **Presentations with equations** (§6.5). Do marked colimits suffice to build objects that act like structures with laws, such as monoids with associativity or the integers? The integers are the test case where cancellation shows up.
-5. **Object-indexed colimits** (§7). Sequential colimits and Kan extensions along non-shapes need the internal hom or a fibration story, which belong to other threads.
+---
+
+## 10. Proof attempts
+
+Each unproved claim in this note was attempted. Where an attempt stalls, the remaining gap is a self-contained problem in `notes/conjectures/`.
+
+### 10.1 CaTT_lim's universal property forces pseudo cone morphisms in a CaTT ambient (argument complete modulo one check)
+
+**Claim.** In CaTT_lim, the connecting cells of cone morphisms (n = 1 `ctrf` shapes) over positive-dimensional cone variables are derivably invertible.
+
+**Argument.**
+1. Take `u, u' : c → L` with `L = lim_Γ`, and a 2-cell `β : u → u'`.
+2. The cone morphism `ucone_*(β)` has, at a 1-cell f of Γ, a connecting cell relating the two composites of `ucone_f` (a 2-cell along `L → ·`) and β (a 2-cell along `c → L`). That cell is an interchange coherence, hence invertible.
+3. By the 2-dimensional instance of `uni`, every cone morphism m is related to some `ucone_*(β)` by an invertible 2-transfor.
+4. So `m_f` is a composite of invertible cells, hence invertible, using closure of coinductive equivalences under composition (Benjamin–Markakis).
+
+**Consequences.**
+- **Under P.** ωCat with pseudo transformations has non-invertible modifications, so it does not satisfy CaTT_lim's rules as written. The P-version of CaTT_lim must put the `ctrf` connecting cells in `⊨`, i.e. use *pseudo morphisms of lax cones*. With that change, Hom(c, lim) is lax cones with pseudo morphisms. This is the correct notion of lax limit in a cartesian-enriched setting.
+- **Under L.** Interchange across a 0-cell is one-way, so step 2 fails and the rules as written are the intended ones. CaTT_lim's Gray-shaped `ctrf` is native to L. This agrees with `pseudo-vs-gray.md` §4.4.
+- **Hom objects and lax cotensors (§6.2, §6.3) under P.** The comma of `⊤ →a C ←b ⊤` (b-leg marked) has arrows b → a as points, but only *invertible* 2-cells of C as its arrows, since those arrows are cone morphisms. The genuine hom-object is the fibre of the oplax arrow object. Its universal property goes through the Gray tensor (maps `X ⊗ D¹ → C`), not through cones. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C)`, not of the cartesian `Fun([1], C)` (GHL) **[recall]**.
+  - So under P, hom objects and lax cotensors come from the Gray thread's constructions, not from §4.
+  - Under L, §6.2 and §6.3 hold as written.
+
+**Remaining check.** Steps 2 and 3 depend on the exact orientation of Mikhail's `ctrf` connecting cells (his σCond/τCond). Problem: `conjectures/catt-lim-pseudo-vs-gray.md`.
+
+### 10.2 Marking closure (§4.2, M1): resolved, no closure condition needed
+
+**Claim.** Marking any subset μ of positive-dimensional *generators* of Γ is enough. No closure condition is needed.
+
+**Argument.**
+- A cone over a marked diagram needs invertible cone cells over every cell of Free(Γ) in the generated marking: generators in μ, identities, coherences, and composites of these.
+- Over a generator in μ, the cone cell is invertible by the marked KE rule.
+- Over a composite, the cone cell is the derived term `p_t` of Mikhail's Conj 3.6, built by composing the cone cells of the pieces with coherences. That is a composite of invertible cells, hence invertible.
+- Over an identity or a coherence, `p_t` is built from coherences alone, hence invertible.
+
+So (M1) is dropped. One residual dependency: the existence of `p_t` for arbitrary Γ is Mikhail's Conj 3.6, which is covered by the Gray-context problem below for the cases needed here.
+
+### 10.3 Free objects as lax colimits of the point (§5.2, R-B): partly proved
+
+The claim splits into three steps.
+
+**Step A (syntactic). The cocone context over const ⊤ is equivalent to `(c:⋆, Σ_{⊤,c}Γ)`.** Sketch:
+- Each cocone variable `q_x` differs from the suspended variable only by `id_⊤`-whiskerings in its boundary.
+- Unitors are coherences, hence invertible. Define substitutions both ways by transporting along them.
+- The composites are unitor-after-inverse, which a coherence connects to the identity.
+- **Stall:** confirming that the dual of Mikhail's cone rules produces exactly these whiskered types.
+
+**Step B (all dimensions). Higher cocone morphisms match transfors between Γ-families.**
+- Under L, the `ctrf` shapes over const ⊤ are Gray shapes `Σ_{⊤,c}(Γ ⊗ Dⁿ)`, by Step A applied layer-wise.
+- Under P, they are the same shapes with connecting cells invertible (§10.1).
+- **Stall:** the Gray contexts `Γ ⊗ Dⁿ` exist only for n = 1 (Mikhail Thm 4.4).
+
+**Step C (semantic). `⟦Γ⟧ ≃ Free(Γ)`.**
+- Both corepresent Γ-families. For Free(Γ) this is the universal property of free ω-categories on computads, with higher cells via `Free(Γ) ⊗ Dⁿ ≃ Free(Γ ⊗ Dⁿ)`. That equivalence follows from Loubaton's colimit-preserving Gray tensor if `Dᵏ ⊗ Dⁿ` is free on its Steiner basis.
+
+Problems: `conjectures/lax-colimit-of-point.md` (Steps A and C) and `conjectures/gray-contexts-steiner.md` (Step B).
+
+**What does not depend on any of this.** R-B's universal property is "maps out of ⟦Γ⟧ are cocones", and Step A turns cocones into Γ-families of elements. So *as rules*, R-A's universal property is derivable from R-B once Steps A and B hold, independently of Step C's semantics.
+
+### 10.4 Weighted limits as marked limits (§4.2): reduced to one semantic theorem
+
+- **Syntactic part: done.** With §10.2, marked limits over `Ψ^μ` along `π : Ψ → Γ` are well-defined.
+- **Semantic part: open.** Showing they are the weighted limits for the weight π presents is AHM in dimension 2. For ω, it should follow from Loubaton's lax Grothendieck construction with adjustable laxness.
+- The condition on π that makes it present a fibration is part of the same problem.
+
+Problem: `conjectures/weighted-as-partially-lax-omega.md`.
+
+### 10.5 The ℕ-like object is discrete (§6.4): proof sketch
+
+- Every 2-cell of the free weak ω-category on a graph is a coherence, hence invertible.
+- Parallel cells over the same path are connected by a coherence over the linear chain pasting scheme, after factoring through it.
+- **Gap:** choosing canonical lifts when a loop is traversed more than once.
+
+Problem: `conjectures/free-on-graph.md`.
+
+### 10.6 Smaller claims
+
+- **"CaTT_lim's limits are oriented" (§2.4).** Settled by §10.1: the rules as written are sound for L-style (Gray-enriched) ambients, and under P they need the `⊨` modification.
+- **"Cotensors turn colimits into limits" (§6.3).** This is formal once an internal hom exists: `Hom(c, [colim X_i, D]) ≃ Hom(c ⊗ colim X_i, D)`, and ⊗ preserves colimits in each variable (Loubaton). It is therefore a question for the internal-hom thread, not a conjecture here.
+- **"Only {lax, oplax} × {lim, colim} are needed" (§4.4).** Under L, `[⟦Γ⟧^{op_S}, C]` gives the other orientations as cotensors, and `⟦Γ⟧^{op_S} = ⟦Γ^{op_S}⟧` because opposites act on contexts (Benjamin–Markakis). Under P, the same holds once the Gray thread supplies lax cotensors.

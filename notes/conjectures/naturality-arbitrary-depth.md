@@ -2,7 +2,7 @@
 
 > **Update 2026-11-18.** N now holds for every term of dimension ≤ 2 (any Q, any up-closed Y), and N in dimension n follows from RC(n) on cylinders; see [`../relative-coherence.md`](../relative-coherence.md) §4. That note also proves the support lemma and repairs the §8 argument for composites (§4.3 there).
 >
-> **Round 2 prompt: [`outbox/naturality-arbitrary-depth-r2.md`](outbox/naturality-arbitrary-depth-r2.md).** The standalone prompt of 2026-11-18 was answered: see [`answered/naturality-arbitrary-depth-2026-11-18.md`](answered/naturality-arbitrary-depth-2026-11-18.md) for the prompt, the response and its verification. §7 case 3 (the 3-dimensional unitor) is settled there. An updated prompt for what remains goes in `outbox/`. This file keeps the history, earlier responses and verifications.
+> **Round 3 prompt: [`outbox/naturality-arbitrary-depth-r3.md`](outbox/naturality-arbitrary-depth-r3.md).** Round 2 was answered (RC(3) for the lax square settled): [`answered/naturality-arbitrary-depth-r2-2026-11-18.md`](answered/naturality-arbitrary-depth-r2-2026-11-18.md). The standalone prompt of 2026-11-18 was answered: see [`answered/naturality-arbitrary-depth-2026-11-18.md`](answered/naturality-arbitrary-depth-2026-11-18.md) for the prompt, the response and its verification. §7 case 3 (the 3-dimensional unitor) is settled there. An updated prompt for what remains goes in `outbox/`. This file keeps the history, earlier responses and verifications.
 
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 

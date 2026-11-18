@@ -374,7 +374,7 @@ homOf os A = endsHom os (endsTy A)
 
 elsOf : Nat → Ty → Maybe Nat → List El
 elsOf v A nothing  = []
-elsOf v A (just k) = el v k (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) ∷ []
+elsOf v A (just k) = el v k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) ∷ []
 
 mkEl-eq : ∀ os v A → mkEl os (v , A) ≡ elsOf v A (homOf os A)
 mkEl-eq os v A with endsTy A
@@ -576,10 +576,10 @@ module OneHom {Γ : Ctx} (P : Γ ⊢ps) (pre : List Nat) (o o' : Nat) (rest : Li
           m  = CellInfo.m ci
       in
       trans (cong (λ L → map lvl (filter (Qc i sg) (filter Hq L))) (trans (mkEl-eq os v A) (cong (elsOf v A) (CellInfo.hom-eq ci))))
-        (trans (filter-one (el v m (dim A ∸ 1) (fst (bdry A)) (snd (bdry A))) (Qc i sg) Hq)
+        (trans (filter-one (el v m (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A))) (Qc i sg) Hq)
           (cong (λ x → if x then v ∷ [] else [])
             (bool-sel (m ==ℕ k) (dim A ∸ 1 ==ℕ i) _ _ (homM (o , o') (endsV A)) (sym (hom-sel v A ci))
-              (λ mk di → eq-hit i sg v A m (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) lv
+              (λ mk di → eq-hit i sg v A m (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) lv
                  (trans (CellInfo.hom-eq ci) (cong just (==ℕ-sound m k mk)))
                  (sym (==ℕ-sound _ i di))))))
 

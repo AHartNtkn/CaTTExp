@@ -49,6 +49,9 @@ import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.GraphFillerTotal.Chains
+import CaTTExp.GraphFillerTotal
+import CaTTExp.GraphFillerTotalExamples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell
@@ -65,3 +68,12 @@ import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
+import CaTTExp.Gray.Cover
+import CaTTExp.Gray.Fast
+import CaTTExp.Gray.Orient
+import CaTTExp.Gray.OrientExamples
+import CaTTExp.Gray.SetFacts
+import CaTTExp.Gray.OrientRev
+import CaTTExp.Gray.DownAgree
+import CaTTExp.Gray.Graded
+import CaTTExp.Gray.MarksFuel

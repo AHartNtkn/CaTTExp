@@ -1,6 +1,6 @@
-# Problem: naturality of CaTT coherences at depth ≥ 2, round 2
+# Problem: naturality of CaTT coherences at depth ≥ 2, round 3
 
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/naturality-arbitrary-depth-2026-11-18.md`; this prompt does not re-ask anything answered there.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Rounds 1 and 2 and their verified answers are archived in `answered/naturality-arbitrary-depth-2026-11-18.md` and `answered/naturality-arbitrary-depth-r2-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -93,32 +93,30 @@ Write RC(n) for the property:
    - **F-boundary, 2-dimensional coherence arity: reduced.** Such a coherence is connected to a coherence over a vertical 2-chain, but the 2-terms substituted into that chain are arbitrary.
    - **Terms without 2-variables:** connected in every dimension, in any context.
    - In any coherence touching F, F's boundary `f⁻ ∗₀ y↑` is never split across columns.
+8. **RC(3) for the lax square S, all cases (round 2, proved on paper).** Any two parallel 3-terms of S are connected by a 4-term, so K(Q, B, Var Q) exists for every 3-dimensional coherence over the single arrow. The method:
+   - *Active-column factorisation.* For a 2-term T = coh_{P,A}[γ] with π(T) = F, exactly one 0-column of the arity P carries F, and it spans x⁻ → y⁺; every other column sits at the point x⁻ or y⁺ (S has no directed loops there), so it factors literally through a point context. Hence γ = δ[η] with δ landing in a vertical chain C_k, and the factorised constructor H = coh_{P,A}[δ] is literally unchanged by any substitution C_n → S sending the full word to F.
+   - *Normalisers* ν_T : T → N_F(σT, τT) = (κ_p(σT, p) · F) · κ_q(q, τT), defined by the factorisation and a fixed vertical fold, with associativity/unit/mixed 4-laws given by coherences on path contexts and small vertical pasting contexts (e.g. V(1,0,1) for the interchange of two path contractions around F).
+   - *Evaluation fusion:* ν_{u[σ]} is 4-connected to (relative normaliser of u)[σ] followed by the fold; then every 3-term G with F-boundary gets Λ_G : G ; ν_{T′} → ν_T by induction on its syntax (2- and 3-dimensional arities, the latter via the 3-chains of the retained column V(k₁,…,k_m)), and right cancellation of the invertible ν gives the filler.
+   - *Where it uses the square:* x⁻ is the unique source and y⁺ the unique sink, so discarded columns are point-supported. In a general cylinder Q↑Y, discarded columns can carry nonidentity paths, and literal stability fails.
+9. **Dimension of the global-choice question.** A K for an n-dimensional coherence is an (n+1)-cell; comparing two choices of K is an (n+2)-cell.
 
 ## 3. What remains, and why
 
-RC(3) fails for arbitrary contexts. In `(x : ⋆, a : id_x → id_x)`, the Eckmann–Hilton 3-cell and the identity are expected not to be connected, since they give a non-zero class in π₃(S²). (This is a sketch, not checked in detail.) So a proof must use acyclicity of the context. The cylinders `Q↑Y` present Steiner complexes with loop-free bases.
-
-In dimension 3, runs of 3-cells without 3-variables live over a 2-dimensional context such as S, where no single pasting context covers them. For S, everything except the F-boundary case is settled (item 7). What is left is the compatibility of a chosen normalization `ν_P : P → N(P)`, for 2-terms P with image F, with `∗₁`-composition by 2-terms containing F.
-
-Separately, N as stated lets K be chosen for each (Q, B, Y). It is not known whether one family of choices, with the lower lifts fixed universally as in item 5, works for all instances at once.
+RC(3) fails for loopy contexts such as (x : ⋆, a : id_x → id_x): the weak free object groupoidifies to S² and the strict one to K(ℤ,2), and π₃(S²) = ℤ. So a proof must use acyclicity. For the lax square (item 8) the proof used that the F-carrying column always spans the unique source and the unique sink. The next cylinders do not have this: in the cylinder of the composable pair (x → y → z), a 2-term whose strict image is the lax square of the first arrow can be followed horizontally by a nonidentity path, so the discarded columns are no longer point-supported.
 
 ## 4. Questions
 
 Each question asks for explicit CaTT terms, built only with the coherence rule over pasting contexts and substitution.
 
-1. **Smallest open case: the F-boundary case of RC(3) for the lax square S.** Let `α, β : t → t′` be parallel 3-terms of S with `π(t) = π(t′) = F`. Construct a 4-term `α → β`. This gives N for every 3-dimensional coherence over the single arrow `(x, y, f)` with `Y = Var(Q)`.
-   - *Smaller first step:* take α and β to be coherences over 2-dimensional arities. They reduce to coherences over vertical 2-chains whose middle 2-terms are arbitrary. Connect those.
-2. **Global choice of K in dimension 3.** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with `Y = Var(Q)`, such that the naturality terms `t↑` it defines are compatible with substitution. The minimal requirement: two choices for the same `(Q, B, Y)` are connected by a 4-term.
-3. **RC(3) on the cylinders.** Prove RC(3) for every cylinder `Q↑Y`, or for every finite Steiner loop-free context. Or give a loop-free counterexample.
-4. **All dimensions.** Prove RC(n) for all n on the cylinders `Q↑Y`. By item 3 of §2, this proves Conjecture N at every depth.
+1. **Smallest open case: RC(3) on the cylinder of a composable pair.** Let Q = (x, y, z, f : x → y, g : y → z) and Y = Var(Q), so Q↑Y is two lax squares F_f, F_g glued along y↑. Prove that any two parallel 3-terms of Q↑Y with equal strict image are connected by a 4-term. The new feature: a 2-term with image F_f ∗₀ g⁺ (or whiskered by paths on either side) has active columns that are not at the extreme vertices. Does a factorisation through a "horizontal word of vertical chains", stable under substitution, replace item 8's point-support step?
+   - *Alternative smallest case:* the cylinder of the 2-disc Q = (x, y, f, g : x → y, A : f ⇒ g) with Y = Var(Q), which has a 3-variable A↑.
+2. **Global choice of K in dimension 3 (corrected).** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with Y = Var(Q), compatible with substitution. Two choices of K for the same (Q, B, Y) are 4-cells; the minimal requirement is a **5-cell** between them (item 9).
+3. **RC(3) on all cylinders.** Prove RC(3) for every cylinder Q↑Y, or for every finite Steiner loop-free context. Or give a loop-free counterexample.
+4. **All dimensions.** Prove RC(n) for all n on the cylinders Q↑Y. By §2 item 3, this proves Conjecture N at every depth.
 
 ## 5. What counts as a solution
 
-Any of the following counts:
-- explicit terms for question 1 or 2;
-- a proof of RC(3) or RC(n) for the cylinders, or for loop-free contexts;
-- a counterexample: a cylinder `Q↑Y`, or a loop-free context, with two parallel n-terms of equal strict image and no term between them;
-- a published reference.
+Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) for the cylinders or for loop-free contexts; a counterexample (a cylinder Q↑Y, or a loop-free context, with two parallel n-terms of equal strict image and no term between them); or a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
@@ -131,3 +129,4 @@ Any of the following counts:
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
+

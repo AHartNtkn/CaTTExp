@@ -20,10 +20,12 @@
 7. **Proof attempts (§10).**
    - Proved: CaTT_lim's universal property forces cone morphisms to be pseudo in a CaTT ambient. So its rules fit L as written, and fit P only with that modification.
    - Proved: marking needs no closure condition.
-   - Partly proved: free objects as lax colimits of the point.
-   - Reduced to one semantic theorem: weighted limits as marked limits.
-   - Solved (external researcher, verified): the ℕ-like object is discrete (§10.5).
-   - Remaining gaps are written up as problems in `notes/conjectures/`.
+   - Solved by external researchers and checked here:
+     - weighted limits are marked lax limits, in all dimensions, with variance alternating by dimension (§10.4);
+     - free objects are lax colimits of the point, semantically (§10.3);
+     - the ℕ-like object is discrete (§10.5).
+   - **Refuted:** the syntactic form of R-B for arbitrary cocones. Mikhail's cone judgment admits non-canonical cones, so R-B and the limit rules need a *specified* cone construction (§10.3).
+   - The remaining open problems are in `notes/conjectures/`.
 
 ---
 
@@ -122,7 +124,7 @@ Source: *Free fibrations, lax colimits and Kan extensions for (∞,2)-categories
 - **Weighted (co)limits are partially lax (co)limits** over the fibration classified by the weight, and conversely.
 - Kan extensions are I_b-lax limits over comma categories.
 
-Relevance: this justifies **"marking" as the only extra ingredient for weighted limits** in dimension 2. For ω, see §10.4.
+Relevance: this justifies **"marking" as the only extra ingredient for weighted limits**. In dimension 2 this is AHM. For all dimensions it is now solved in Loubaton's model (§10.4).
 
 ### 2.4 Gepner–Heine, oriented colimits [paper, abstract/intro level]
 
@@ -245,7 +247,7 @@ What it gives:
 **Weighted limits.**
 - In CaTT style a weight is a *display substitution* `π : Ψ → Γ` together with a marking of Ψ: the "Grothendieck construction of the weight."
 - `lim^{(Ψ,π)} γ := lim_{Ψ^μ}[γ ∘ π]`.
-- AHM show this recovers all weighted limits in dimension 2. For ω, see §10.4.
+- AHM show this recovers all weighted limits in dimension 2. In all dimensions it holds in Loubaton's model, provided the marking variance alternates by dimension (§10.4).
 - The side condition on π ("π is a (co)cartesian display") is the open part. A first version can **omit it**: any π gives *some* partially lax limit, and only the comparison theorem with "weighted limits" needs π to be a fibration.
 
 ### 4.3 Colimits [proposal]
@@ -329,7 +331,8 @@ The kernel gets nothing new beyond the colimit rules of §4.3:
   - and so on in higher dimensions.
 
   So a cocone is a Γ-family of elements of C, with unit coherences inserted. The colimit's universal property is then the Yoneda principle above.
-- **Semantics [conj, §10.3].** The lax colimit of the constant point diagram over I is I itself: either the Grothendieck construction of the terminal functor, or Gepner–Heine's `1 × I = 1 ⊗ I = I`. So `⟦Γ⟧ ≃ Free(Γ)`, possibly up to an opposite in some dimensions depending on orientation. The convention in §1 should be chosen so that no opposite appears. §10.3 gives the proof attempt and where it stalls.
+- **Semantics (solved, §10.3).** Loubaton's Example 4.2.3.12 gives `laxcolim_{Free(Γ)♭} 1 ≃ Free(Γ)`, with no opposite.
+- **Syntactic requirement (§10.3).** R-B must use a *specified* cocone construction. Mikhail's cocone judgment admits non-canonical cocones, and for some of those the constant-diagram instance is not Γ.
 
 **Structure available under either option:**
 - `⟦∅⟧` is initial, and `⟦x:⋆⟧ ≃ ⊤`.
@@ -487,35 +490,42 @@ Each unproved claim in this note was attempted. Where an attempt stalls, the rem
 
 So (M1) is dropped. One residual dependency: the existence of `p_t` for arbitrary Γ is Mikhail's Conj 3.6, which is covered by the Gray-context problem below for the cases needed here.
 
-### 10.3 Free objects as lax colimits of the point (§5.2, R-B): partly proved
+### 10.3 Free objects as lax colimits of the point (§5.2, R-B): semantics solved, syntax needs a specified cocone
 
-The claim splits into three steps.
+Two external researcher responses have been verified; see `conjectures/lax-colimit-of-point.md`.
 
-**Step A (syntactic). The cocone context over const ⊤ is equivalent to `(c:⋆, Σ_{⊤,c}Γ)`.** Sketch:
-- Each cocone variable `q_x` differs from the suspended variable only by `id_⊤`-whiskerings in its boundary.
-- Unitors are coherences, hence invertible. Define substitutions both ways by transporting along them.
-- The composites are unitor-after-inverse, which a coherence connects to the identity.
-- **Stall:** confirming that the dual of Mikhail's cone rules produces exactly these whiskered types.
+**Semantics: solved.** Loubaton ([2406.05425](https://arxiv.org/abs/2406.05425)), Example 4.2.3.12: the lax colimit over A♭ of the constant diagram at C is `A × C`. With C = 1, `laxcolim_{Free(Γ)♭} 1 ≃ Free(Γ)`, with no opposite. This holds for every (∞,ω)-category, not only for free ones.
 
-**Step B (all dimensions). Higher cocone morphisms match transfors between Γ-families.**
-- Under L, the `ctrf` shapes over const ⊤ are Gray shapes `Σ_{⊤,c}(Γ ⊗ Dⁿ)`, by Step A applied layer-wise.
-- Under P, they are the same shapes with connecting cells invertible (§10.1).
-- **Stall:** the Gray contexts `Γ ⊗ Dⁿ` exist only for n = 1 (Mikhail Thm 4.4).
+**Syntax: false for arbitrary cocones, open for a specified one.**
+- Mikhail's (KE) rule constrains only free variables and the linearity of the new variable. He says explicitly that "all legitimate ways of gluing" are allowed. So the cone judgment does not determine a unique cone context.
+- **Counterexample.** Take Γ = `(x, f : x → x, α : f ⇒ f)`. Some admitted cocone, specialised to the constant diagram, gives a 3-cell `b : r·r ⇛ r·r` where the suspension has `a : r ⇛ r`. A finite strict 2-category Q separates them: 7 interpretations against 6.
+- So my Step A ("each `q_x` differs from the suspended variable only by `id_⊤`-whiskerings") holds only for a *canonical* cocone C(Γ), such as the dual of Mikhail's Thm 3.3 for globular Γ.
 
-**Step C (semantic). `⟦Γ⟧ ≃ Free(Γ)`.**
-- Both corepresent Γ-families. For Free(Γ) this is the universal property of free ω-categories on computads, with higher cells via `Free(Γ) ⊗ Dⁿ ≃ Free(Γ ⊗ Dⁿ)`. That equivalence follows from Loubaton's colimit-preserving Gray tensor if `Dᵏ ⊗ Dⁿ` is free on its Steiner basis. That freeness is known: Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5 (see `conjectures/free-infinity-gray-of-pasting-diagrams.md`, Literature status).
+**Consequences for the design:**
+- **R-B needs a specified cocone construction**, i.e. a function from Γ to its cocone context, not a judgment with many derivations. The same holds for the Gray/`ctrf` judgments, which have the same style of side condition (`gray-contexts-in-catt.md` §6).
+- Whether CaTT_lim should keep its permissive judgments at all is now a question for the limit rules. Each non-canonical cone context gets its own `ucone`/`uni`, i.e. its own universal object. As the counterexample shows, those objects are not the intended lax limits. A kernel should accept only the canonical cone.
+- **Step B** (higher cocone morphisms vs transfors) inherits the same requirement for the `ctrf` shapes.
 
-Problems: `conjectures/lax-colimit-of-point.md` (Steps A and C) and `conjectures/gray-contexts-in-catt.md` §6 (Step B).
+**Still open:** for the specified construction C(Γ), is the constant-diagram instance equivalent to `(c:⋆, Σ_{⊤,c}Γ)`? The proof sketch of the old Step A applies to that version. This is the restated problem in the conjecture file.
 
-**What does not depend on any of this.** R-B's universal property is "maps out of ⟦Γ⟧ are cocones", and Step A turns cocones into Γ-families of elements. So *as rules*, R-A's universal property is derivable from R-B once Steps A and B hold, independently of Step C's semantics.
+**Unchanged:** R-A (primitive shape objects) is unaffected. The semantic result means R-A's intended model is exactly what R-B's lax colimit computes.
 
-### 10.4 Weighted limits as marked limits (§4.2): reduced to one semantic theorem
+### 10.4 Weighted limits as marked limits (§4.2): solved in Loubaton's model
 
-- **Syntactic part: done.** With §10.2, marked limits over `Ψ^μ` along `π : Ψ → Γ` are well-defined.
-- **Semantic part: open.** Showing they are the weighted limits for the weight π presents is AHM in dimension 2. For ω, it should follow from Loubaton's lax Grothendieck construction with adjustable laxness.
-- The condition on π that makes it present a fibration is part of the same problem.
+External researcher response, verified; see `conjectures/weighted-as-partially-lax-omega.md`.
 
-Problem: `conjectures/weighted-as-partially-lax-omega.md`.
+**Result.** In Loubaton's model of (∞,ω)-categories, in all dimensions and in both directions:
+- the W-weighted limit of F is the marked lax limit of `F ∘ p` over `∫W`, where p is the left cartesian fibration classifying W;
+- conversely, every marking M arises from a weight (`ι_! 1`).
+
+The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
+
+**Consequences for §4.2:**
+- **The per-variable flag is the right primitive.** Marking a k-generator makes its (k+1)-dimensional cone cell invertible (Loubaton Remark 4.2.3.7). That is exactly the marked KE rule.
+- **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. The marked-limit schema must therefore fix lax/oplax per dimension in the alternating pattern of the response's §4, not uniformly.
+- **The cone categories must present Loubaton's `Hom_⊖`**, including the marked Gray product in higher dimensions. Under L, CaTT_lim's Gray-shaped `ctrf` with markings is the candidate. Under P, it is the `⊨`-modified version of §10.1. Matching either to `Hom_⊖` is the remaining syntax-to-semantics step, as for every semantic result here.
+- **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite, generator-level test on `π : Ψ → Γ` is open.
+- It agrees with §10.2: no closure condition on the marking is needed.
 
 ### 10.5 The ℕ-like object is discrete (§6.4): solved
 
@@ -529,7 +539,7 @@ Problem: `conjectures/weighted-as-partially-lax-omega.md`.
 - More generally, any finite **1-dimensional** presentation (a graph) has homs that are the discrete sets of paths. So free categories on graphs behave exactly like their 1-categorical counterparts. This covers objects that act like ℕ, lists, words over an alphabet, and free categories on finite quivers.
 
 **What remains open downstream:**
-- **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it is the lax-colimit-of-the-point problem (§10.3).
+- **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it holds semantically (§10.3, Loubaton), and syntactically it needs the specified cocone construction.
 - **That the hom-object construction gives the semantic hom.** Under L this follows from the limit rules (§6.2). Under P it needs the Gray thread's lax cotensor (§10.1).
 - **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule.
 - **Induction on N** still needs a dependent eliminator [→ fibrations].

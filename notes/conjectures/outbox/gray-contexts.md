@@ -1,6 +1,6 @@
-# Problem: composites of molecules in CaTT (Gray contexts), round 2
+# Problem: composites of molecules in CaTT (Gray contexts), round 3
 
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/gray-contexts-2026-11-18.md`; this prompt does not re-ask anything answered there.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Rounds 1 and 2 and their verified answers are archived in `answered/gray-contexts-2026-11-18.md` and `answered/gray-contexts-round2-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -59,38 +59,24 @@ Existence in G(n) follows from RC(n−1) for U's (n−1)-skeleton. Uniqueness in
    - *2-dimensional arity: reduced.* Let `c = coh_{P,u→v}[σ]` be a coherence 3-term with `dim P = 2` and strict 2-boundary F. Then exactly one 2-variable of P goes to a term with image F. All of P's columns except that one lie over `x⁻` or `y⁺`. A coherence over P's middle column, read as a vertical 2-chain Q, connects c to `coh_{Q,ū→v̄}[τ]`.
    - *One coherence never splits F's boundary.* In any `coh_R[δ]` with F in the support of δ, exactly one 1-column of R has a non-empty path, and that path runs from `x⁻` to `y⁺`. So `f⁻` and `y↑` are never separated into different columns inside a single coherence.
 6. **The Gray cube's loops reduce to one hemisphere.** Let U be the Gray cube, X its 3-cell, and `A = ⌈∂⁻U⌉`. By item 3, a 3-term `H : A → A` without X has support in the negative hemisphere `∂⁻U`, which has three faces.
+7. **Suspended coherences over vertical chains (round 2, proved).** Let Γ be any context and α = coh_{ΣC,ΣA}[τ], β = coh_{ΣC′,ΣA′}[τ′] parallel 3-terms with 0-boundary (a, b), where C, C′ are 1-dimensional path contexts and both the arity **and the type** are literal syntactic suspensions; the substituted 2-terms are arbitrary. Then there is a 4-term α → β. Proof: by Benjamin–Markakis, the hom H = Hom(a, b) is free on its indecomposable cells and decomposable hom cells are exactly coh_{ΣP,ΣB}[σ]; so α, β desuspend to hom 2-terms over a finite graph of hom generators, which lift to full-support 2-terms α̂, β̂ over a path context C_w (item 4 in the hom), and `coh_{ΣC_w, Σα̂ → Σβ̂}[δ_w]` is the required term.
+8. **The hom shortcut fails in general (round 2, proved).** Over D₂ = (x, y, f, g, A : f → g) put W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g, r = coh_{D₂, A → W(A)}, ℓ = coh_{D₂, W(A) → A}, κ = r ∗₂ ℓ. Then r, ℓ are indecomposable hom 2-generators (their types contain ∗₀, so are not suspensions), κ ≠ 1_A in the strictification of the hom computad, yet coh_{D₂, κ → 1_A} exists globally; substituting into S gives the same in the lax square. So "equal global strict image ⇒ equal hom strict image" is false, and item 7 does not by itself settle the F-boundary case.
+9. **Literature on normalisers.** Rice's thesis (arXiv 2502.17068) proves rehydration of semistrict CaTT over pasting contexts (Thm 4.5.3); §4.5.2 explains that extending it to arbitrary contexts needs normalisers that are not single coherences and comparisons between normalisation choices, and leaves this open. The BMOSV naturality construction (arXiv 2501.11620) covers depth ≤ 1 only.
 
-## 3. What remains, and why
+## 3. What remains
 
-In dimension 2, the runs of cells with no top variable live over a single path, and the coherence rule settles them. In dimension 3 they live over a 2-dimensional context, such as S, which is not a pasting context.
-
-Item 5 settles S except in one case. Both parallel 3-terms have strict 2-boundary F, and at least one of them is a composite over a **3-dimensional** arity, or is a coherence whose middle-column 2-terms `τ(ξ_k)` are arbitrary.
-
-The Squier-style route needs one normalization 3-cell `ν_P : P → N(P)` for each 2-term P with image F, chosen once and for all (Theorem A gives one). It must be compatible, up to 4-cells, with every whiskered elementary 3-cell b, i.e. `ν_{src b}` must be connected to `b ∗₂ ν_{tgt b}`. Item 4 settles the part of this inside F-free runs. So the remaining compatibility is with `∗₁`-composition by 2-terms that contain F.
-
-RC(3) fails in general. In `(x : ⋆, a : id_x → id_x)`, the Eckmann–Hilton 3-cell and the identity are expected not to be connected, since they give a non-zero class in π₃(S²). (This is a sketch, not checked in detail.) So any proof must use some acyclicity of the context, and which notion it needs is part of question 3.
+For the lax square S, RC(3) is settled when the strict 2-boundary is an identity (item 5) and when both 3-terms are literally suspended coherences over vertical chains (item 7). The remaining F-boundary terms are those whose hom expressions use hom 2-generators: global coherences whose types contain ∗₀-whiskers (as r, ℓ in item 8), and composites over 3-dimensional arities. RC(3) fails for loopy contexts such as (x, a : 1_x → 1_x) (π₃(S²) = ℤ: the weak free object groupoidifies to S², the strict one to K(ℤ,2)), so a proof must use some acyclicity.
 
 ## 4. Questions
 
-Each question asks for explicit CaTT terms, built with the coherence rule over pasting contexts and substitution.
-
-1. **Smallest open case: the F-boundary case of the lax square.** Let `α, β : t → t′` be parallel 3-terms of S with `π(t) = π(t′) = F`. Construct a 4-term `α → β`.
-   - *Smaller first step:* take α and β to be coherences over 2-dimensional arities. By item 5, both reduce to coherences over vertical 2-chains Q, Q′ whose middle 2-terms are arbitrary. Connect them.
-   - *Equivalent form:* exhibit a choice of `ν_P` for 2-terms P with image F, and prove that `ν_{u ∗₁ W}` is connected to `(ν_u ∗₁ ν_W) ∗₂ (flattening coherence)` whenever W contains F.
-2. **The Gray cube.** Let `U = D¹ ⊗ D¹ ⊗ D¹`, presented with hexagon composites. Prove that every X-free 3-term `H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉` is connected to the identity. By item 6, this is RC(3) for 3-loops over the three-face negative hemisphere. This gives uniqueness in G(3) for the cube.
-3. **RC(3) for acyclic contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule, or its skeleta. Or prove it for every finite Steiner loop-free computad, and say which hypothesis the proof uses.
-4. **G(n) for all n.** Prove RC(n), or the weaker G(n), for such contexts.
-   - Chanavat's contractible subdivision poset (Thm 2.52, non-atoms) indexes composites but does not construct them.
-   - A proof must give a CaTT composite for each subdivision, comparisons for refinements, and higher comparisons for chains of refinements.
-   - It must also show that **arbitrary** CaTT composites are controlled by those comparisons.
+1. **The reduction step (smallest open case).** For S, construct, for every 3-term α with strict 2-boundary F, a 3-term α′ with the same boundary that is a literally suspended coherence over a vertical chain (or a composite of such), together with a 4-term α → α′. Item 7 then finishes the F-boundary case. The first instance: α = r[x ↦ x⁻, y ↦ y⁺, f ↦ p, g ↦ q, A ↦ F] from item 8.
+2. **A hom-level formulation.** Equivalently, show that every indecomposable hom 2-generator of Hom_S(x⁻, y⁺) whose strict image is an identity is connected, by a global 4-term, to a composite of decomposable hom cells. Is this true for every context, or only for loop-free ones?
+3. **The Gray cube.** Let U = D¹ ⊗ D¹ ⊗ D¹, presented with hexagon composites. Prove that every X-free 3-term H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉ is connected to the identity (RC(3) for 3-loops over the three-face negative hemisphere).
+4. **RC(3) and RC(n) for acyclic contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule (or every finite Steiner loop-free computad), and say which hypothesis the proof uses; then RC(n), or the weaker G(n).
 
 ## 5. What counts as a solution
 
-Any of the following counts:
-- explicit terms for question 1 or 2;
-- a proof of RC(3) or RC(n) on acyclic contexts;
-- a counterexample: an acyclic context with two parallel terms of equal strict image and no term between them;
-- a published reference.
+Explicit terms for question 1, 2 or 3; a proof of RC(3) or RC(n) on acyclic contexts; a counterexample (an acyclic context with two parallel terms of equal strict image and no term between them); or a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
@@ -103,3 +89,4 @@ Any of the following counts:
 - Hadzihasanovic's diagrammatic sets ([arXiv 1909.07639](https://arxiv.org/abs/1909.07639), [arXiv 2007.14505](https://arxiv.org/abs/2007.14505)) take unique weak composites of round molecules as the definition of a weak higher category.
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
+

@@ -1,6 +1,6 @@
-# Interpreting CaTT in (∞,ω)-categories: coherent choice, and which (∞,ω)
+# Interpreting CaTT in (∞,ω)-categories, round 2: reconstruction, and the coinductive target
 
-*A self-contained problem. No knowledge of the project that posed it is assumed. The questions are Q1–Q4 under "Questions"; the most useful partial answer is Q2 for a fixed small fragment (Q2a).*
+*A self-contained problem. No knowledge of the project that posed it is assumed. Round 1 and its verified answer are archived in `answered/catt-models-in-infinity-omega-2026-11-18.md`. The smallest open case is Q1.*
 
 ## Background
 
@@ -15,19 +15,21 @@
 - Cat_ω (Loubaton, arXiv 2406.05425, the inductive notion lim Cat_n) is presentable and cartesian closed (Prop. 2.2.1.54). Campion's Gray tensor is built on flagged (∞,∞)-categories and transferred to Cat_n for n ≤ ω and to the version with coinductive equivalences.
 - CaTT's invertible cells are the coinductively invertible ones (Benjamin–Markakis, arXiv 2406.12127).
 
-**The gap.** To use CaTT (or L) as an internal language for an (∞,ω)-category C, one needs a CaTT model, i.e. a weak ω-category with strictly functorial substitution, that *presents* C. In (∞,1)-category theory the analogous step for Martin-Löf type theory is a coherence/strictification theorem (local universes, model categories presenting the ∞-category). We know of no analogue for CaTT and (∞,ω)-categories.
+**What round 1 established.**
+- **A relative category.** Models of CaTT are equivalent to Batanin–Leinster weak ω-categories (Benjamin–Markakis–Sarti, arXiv 2405.00398, §7). With W the Fujii–Hoshino–Maehara ω-weak equivalences (2-out-of-6, arXiv 2406.13240 Thm 3.3.3, Cor. 3.3.4), 𝓗_CaTT := Mod(CaTT)[W⁻¹] exists. FHM (arXiv 2511.09849) characterise trivial fibrations as W ∩ ω-equifibrations (Prop. 4.1.5) and equifibrations as J-injectives (Thm 4.3.1). No (semi-)model structure is known.
+- **Strict coherent choice, one direction.** Let 𝓜 be the injective complete Segal Θ_ω-space model category and 𝒜 its algebraically fibrant objects (Nikolaus). For each globular pasting shape P, yP is discrete and fibrant, so F Sp(P) → yP is a trivial fibration in 𝒜. Lifting the CaTT coherator's cell attachments against these gives R : 𝕋 → 𝒜 preserving globular sums, and S(Y) := 𝒜(R(−), Y) is a CaTT model with strict substitution and S(Y)_n = (UY)(D_n)₀. S sends weak equivalences to W, so it induces Cat_ω → 𝓗_CaTT. It has a formal left adjoint 𝓛_R(A) = ∫^P A(P) · R(P).
+- **(2,2)-categories are presented** (Campbell, arXiv 1907.01999: 2-truncated (∞,2)-categories are bicategories; strictify).
+- **Obstruction to the raw inductive nerve.** The coherent walking ω-equivalence E (Hadzihasanovic–Loubaton–Ozornova–Rovelli, arXiv 2404.14509, Thm 1.33) is a gaunt strict ω-category with E → 1 a folk weak equivalence, so no functor 𝓗_CaTT → Cat^ind_ω agrees with the raw inductive nerve on strict ω-categories. The Street nerve marking coinductively invertible cells does send E → 1 to an equivalence (Henry–Loubaton, arXiv 2301.11424, Prop. 4.58).
+- **Free shapes agree.** Finite globular pasting shapes and their Gray products are the same free objects in the inductive and coinductive theories (Campion, arXiv 2311.00205, Cor. 3.5, Thm 3.14, Cor. 3.15).
 
 ## Questions
 
-**Q1 (homotopy theory).** Is there a homotopy theory on GM weak ω-categories (equivalently, on models of CaTT), e.g. a (semi-)model structure or a relative category whose weak equivalences are the ω-weak equivalences, whose underlying ∞-category is Cat_ω for some notion of (∞,ω)-category? Which notion: inductive, coinductive, or flagged?
+**Q1 (reconstruction, smallest case).** For Y in 𝒜 presenting an (∞,2)-category (all cells above dimension 2 invertible), is the counit 𝓛_R S(Y) → Y a weak equivalence? Equivalently, does S restricted to (∞,2)-categories present them? A proof for (∞,1)-categories (complete Segal spaces) would already be new.
 
-**Q2 (presentation).** Does every (∞,ω)-category arise, up to equivalence, as the image of a CaTT model? Equivalently, is the functor from CaTT models to (∞,ω)-categories (once Q1 defines it) essentially surjective?
-- **Q2a (smallest case).** For C a strict ω-category regarded as an (∞,ω)-category, the answer is yes trivially. Is it yes for C = an (∞,2)-category presented by a 2-complicial set, or a Bergner–Rezk Θ₂-space? A construction of a CaTT model whose underlying (∞,2)-category is C would settle the dimension-2 case.
+**Q2 (the right target).** Is there an equivalence 𝓗_CaTT ≃ Cat^coind_ω (the coinductive (∞,ω)-categories), or with marked inductive (∞,ω)-categories marking the coinductive equivalences, extending the marked Street nerve? Does S factor through the coinductive completion?
 
-**Q3 (directed version).** The same as Q1–Q2 with L in place of CaTT and oriented (∞,ω)-categories (Gepner–Heine) in place of (∞,ω)-categories. Does the Gray-enriched structure make the coherent-choice problem easier or harder? (L's coherence cells are invertible only within one hom; cells across objects are directed.)
-
-**Q4 (which notion).** CaTT's invertibility is coinductive, but the limit and Yoneda results one wants to use with CaTT (Loubaton) are for the inductive notion. Is there an argument that the "free" statements CaTT needs (e.g. Gray tensors of globular pasting diagrams are free (∞,n)-categories, Campion Cor. 3.5) hold in both, so that the choice does not matter for the theory's soundness?
+**Q3 (directed version).** For a directed variant L of CaTT (interchange across objects lax) and oriented (∞,ω)-categories (Gepner–Heine, arXiv 2510.10504), does the analogue of S exist? What extra compatibility with the Gray-enriched composition C(y,z) ⊗ C(x,y) → C(x,z) is needed for a presentation theorem?
 
 ## What would help most
 
-A precise statement of what is known for Q1 in the literature, with references; and for Q2a, either a construction or an obstruction. A negative answer to Q2 (some (∞,ω)-category not presented by any strict-substitution model) would be equally valuable.
+A proof or counterexample for Q1 in any dimension; a precise statement of Q2 with references; for Q3, the construction of the analogue of R for a Gray-enriched coherator.

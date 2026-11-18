@@ -108,7 +108,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 ### What none of the three gives
 
-**Lax functors**, meaning maps preserving composition only up to a directed cell. In all three options functors preserve composition up to invertible cells. Lax functors would need yet another rule (e.g. Gray-shaped "lax functor" contexts) in any of them.
+**Lax functors**, meaning maps preserving composition only up to a directed cell. In all three options functors preserve composition up to invertible cells. Lax functors would need yet another rule (e.g. Gray-shaped "lax functor" contexts) in any of them. *Update 2026-11-18:* `ordinary-math.md` §7 proposes maps out of glued orientals for finite loop-free shapes (no new rule) and a directed refinement-coherence rule for lax-functor variables (`conjectures/lax-functor-refinement.md`).
 
 ### Gains and losses, side by side
 
@@ -522,9 +522,14 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 
    So on a single hom, the rule *is* Finster–Mimram's rule, and L restricted to one hom is CaTT. The existing Agda checker is that fragment.
 
-**What is proved outright** (no lemma needed): the decidability of the side condition, the non-degeneracy argument in 2, and substitution admissibility. *Formalization status (`notes/agda-gray-findings.md`):*
+**What is proved outright** (no lemma needed): the decidability of the side condition and substitution admissibility. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
+
+*Correction (2026-11-18, from the formalization):* an earlier version also listed the non-degeneracy argument in 2 as proved outright. Its chain computation needs no lemma, but its last step, "every derivable term is interpreted", is soundness (1), and that uses (B) in both coh cases. So 2 holds under the same hypotheses as 1. Since (A)–(C) are now known for Gray tensors of pasting diagrams (Literature update above), the conclusion stands. Without (B), what is proved is only that the reverse interchanger *coh* is underivable.
+
+*Formalization status (`notes/agda-gray-findings.md`):*
 - Machine-checked: decidability (by construction), substitution admissibility (`CaTTExp.Subst`, for every side condition), and that the reverse interchanger *coh* has no derivation.
-- Not yet formalized: that no *term* inhabits the reverse type (2, which needs the strict interpretation and (B)), and conservativity (3), which is checked only on examples. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
+- Not yet formalized: that no *term* inhabits the reverse type (2), and the term-level half of conservativity (3), supp = Var for derivable terms. Both need the strict interpretation with (B). Conservativity's ⊇ step needs the invariant "a cell with empty top support has boundaries with equal closed supports", which is not available without soundness.
+- Checked by evaluation: the rule-level half of (3), for all 196 pasting diagrams with ≤ 6 edges (`Gray/Bounded.agda`).
 
 **Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`. *Literature update (2026-11-18): (D) and (E) are known (Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5; Chanavat, arXiv 2603.22242, Thm 3.29), and (F) follows. So the hypotheses (D)–(F) of Theorem 2 are discharged; see that file's "Literature status".*
 

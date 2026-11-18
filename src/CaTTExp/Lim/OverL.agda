@@ -14,17 +14,18 @@
 --  O1  The collapse instance (an arbitrary 3-cell z over the diagram
 --      1_Y, Repaired.agda) is also well typed in the L core.
 --  O2  Under L with f unmarked, m_f is not marked, so the instance is
---      admitted with no certificate: unrestricted lax transfors. Under
---      P it is rejected (Repaired.collapse-instance-rejected).
+--      admitted with no certificate (CertSubL, typed by the L core):
+--      unrestricted lax transfors. Under P it is rejected
+--      (Repaired.collapse-instance-rejected).
 --  O3  Under L with f marked, m_f is marked, and the instance is
 --      rejected unless z is certified, exactly as under P.
---  O4  Why L does not collapse: the image comparison F(β)_f of a cell β
---      under the universal cone is the interchanger over ΣD¹ ∨ ΣD¹
---      substituted by (β, λ_f) (limits-metatheory.md §5.2). Under L its
---      reverse is not derivable in any context and for any substitution
---      (Gray.Examples.no-ich⁻), so the researcher's inverse
---      R⁻¹ = B ; N⁻¹ ; A⁻¹ cannot be formed. Under CaTT both directions
---      are coherences.
+--  O4  The reverse interchanger N⁻¹ cannot be formed as a coh in L, in
+--      any context and for any substitution (Gray.Examples.no-ich⁻).
+--      Cited, not formalized here: that the image comparison F(β)_f of
+--      a cell β under the universal cone is the interchanger over
+--      ΣD¹ ∨ ΣD¹ substituted by (β, λ_f) (limits-metatheory.md §5.2),
+--      so the researcher's inverse R⁻¹ = B ; N⁻¹ ; A⁻¹ is not available
+--      by coherence. That *no* term of L inverts it is Thm 1(2), open.
 ------------------------------------------------------------------------
 module CaTTExp.Lim.OverL where
 
@@ -62,6 +63,14 @@ subL? Ω θ M = go (lower Ω) refl (lower M) refl (renSub (levelOf Ω) θ) refl
     just (subokL LΩ LM σ e₁ e₂ e₃ w wM d)
   go _ _ _ _ _ _ = nothing
 
+-- θ : Ω → M is admissible for the rules over L when it is well typed
+-- in the L core and certifies every marked variable of M.
+record CertSubL (Ω : NCtx) (μΩ : List Name) (θ : Sub) (M : NCtx) (μM : List Name) : Set where
+  constructor certsubL
+  field
+    typed : SubOKL Ω θ M
+    certs : T (all (certAt μΩ M θ) μM)
+
 ------------------------------------------------------------------------
 -- The P/L switch on the marking of cone-morphism shapes.
 
@@ -88,26 +97,27 @@ O1 : SubOKL Ω θ Mfull
 O1 = from-just (subL? Ω θ Mfull)
 
 -- O2. Under L, f unmarked: nothing to certify.
-O2-L : CertSub Ω [] θ Mfull (marksL Γarr 3 [])
-O2-L = certsub collapse-instance-typed tt
+O2-L : CertSubL Ω [] θ Mfull (marksL Γarr 3 [])
+O2-L = certsubL O1 tt
 
 -- O3. Under L, f (name 2) marked: m_f (12) must be certified.
 _ : marksL Γarr 3 (2 ∷ []) ≡ (12 ∷ [])
 _ = refl
 
-O3-rejected : CertSub Ω [] θ Mfull (marksL Γarr 3 (2 ∷ [])) → ⊥
-O3-rejected = collapse-instance-rejected
+O3-rejected : CertSubL Ω [] θ Mfull (marksL Γarr 3 (2 ∷ [])) → ⊥
+O3-rejected (certsubL _ ())
 
-O3-if-z-certified : CertSub Ω (26 ∷ []) θ Mfull (marksL Γarr 3 (2 ∷ []))
-O3-if-z-certified = collapse-instance-if-z-certified
+O3-if-z-certified : CertSubL Ω (26 ∷ []) θ Mfull (marksL Γarr 3 (2 ∷ []))
+O3-if-z-certified = certsubL O1 tt
 
 -- Under P the marking is forced: m_f is marked.
 _ : marksP Γarr 3 ≡ just (12 ∷ [])
 _ = refl
 
 ------------------------------------------------------------------------
--- O4. The reverse interchanger is not derivable in L, in any context,
--- for any substitution (in particular for (β, λ_f)).
+-- O4. The reverse interchanger cannot be formed as a coh in L, in any
+-- context, for any substitution. (Only the coh is ruled out; see the
+-- header for what is cited and what is open.)
 
 O4 : ∀ {Γ σ B} → Γ L.⊢tm coh LEx.HComp LEx.ichTy⁻ σ ∶ B → ⊥
 O4 = LEx.no-ich⁻

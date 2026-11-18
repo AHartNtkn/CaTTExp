@@ -30,6 +30,7 @@ Thread ids used below:
 | LIT | literature / conjecture verification `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKdRdpEiQuvAuEvTAURBqhf` | done |
 | MARK | "Design invertibility markings for lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbQhMQC4fsaRjMJypHXq4ZVv` | active |
 | FOBJ | "Develop free-object rules" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbUxJhXTzhRJEWFkLNmH5acC` | active |
+| CONV | "Clean up recalled claims and conventions" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1EVjAv52BfW2yu9RrGQaFH` | done |
 
 ---
 
@@ -37,7 +38,7 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| A1 | **Substitution admissibility** for core CaTT: Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]. The main missing metatheorem; every extension needs it. | `agda-sketch-findings.md` "Not yet done", "Suggested next steps" | unowned | former area AGDA0. LCORE proves substitution for the L side condition; check whether that proof covers or can be reused for plain CaTT. |
+| A1 | **Substitution admissibility** for core CaTT: Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]. The main missing metatheorem; every extension needs it. | `agda-sketch-findings.md` "Not yet done", "Suggested next steps" | **done** (PR #20: `CaTTExp.Subst`, for every side condition, plain CaTT included) | LCORE |
 | A2 | **Checker completeness**: the certified checker is sound (returns derivations) but not proved complete. | `agda-sketch-findings.md` | unowned | former area AGDA0 |
 | A3 | **Any semantics in Agda**, starting with interpretation in strict ω-categories (or the strict free category on a graph). | `agda-sketch-findings.md` | unowned (needs A1) | former area AGDA0 |
 | A4 | **Non-derivability of functoriality of ⟦_⟧** (finding 2) is argued informally. Make it rigorous: soundness of the strict-model interpretation, then the separating model. | `agda-sketch-findings.md` finding 2 | unowned (needs A1, A3) | former area AGDA0 |
@@ -84,7 +85,7 @@ Thread ids used below:
 | D5 | Agda targets for Gray contexts: Γ ⊗ D¹ for Γ a pasting scheme as a function on syntax, proved well formed; G3 (wedges); vertical composition of lax transformations as a substitution, recording which non-ps composites are needed; D¹ ⊗ D¹ ⊗ D¹ under both orientations. | `internal-hom.md` §7 | unowned (LCORE's Gray-cube test is the L-side analogue, not this) | former area IHOM |
 | D6 | If molecular coh is adopted: re-examine **pruning, insertion and rehydration** for molecules. | `internal-hom.md` §4.3(ii) | unowned (conditional on D2 outcome) | former area IHOM |
 | D7 | **Gray tensor of arbitrary objects** B ⊗ C as a colimit of ⟦x ⊗ y⟧, then check the Gray tensor's universal property. Needed for lax currying with both factors arbitrary. | `internal-hom.md` §6; `pseudo-vs-gray.md` §4.3 | blocked on general colimits (B12); adjacent work: state the target universal property | former area IHOM |
-| D8 | **Dualities under L**: which reversals stay symmetries and which swap lax/oplax (PR #3 experiment 3), including the even-duality formula for ⊗ (marked [recall]); design an orientation-parameterised kernel so proofs transfer. | `pseudo-vs-gray.md` R5; `internal-hom.md` §5.6 | unowned | former area PVG |
+| D8 | **Dualities under L**: which reversals stay symmetries and which swap lax/oplax (PR #3 experiment 3), (the duality formulas for ⊗, including the even one, are now verified: AM Props. A.20–A.23, `conventions.md` §3.3; odd and even duals swap lax/oplax, the total dual does not); design an orientation-parameterised kernel so proofs transfer. | `pseudo-vs-gray.md` R5; `internal-hom.md` §5.6 | unowned | former area PVG |
 | D9 | **PL1**: pin down the faithfulness lemma (free unit-free biclosed monoidal category → free non-symmetric linearly distributive category); write out steps 2–3 of the 1-dimensional theorem carefully. | `conjectures/planar-pasting-types.md` §2, §7 | unowned | former area IHOM |
 | D10 | **Units** for planar pasting types: a separate criterion. | `planar-pasting-types.md` §3 | unowned | former area IHOM |
 | D11 | **PL-ω**: a class of Gray pasting types; first test, a criterion whose 2-cells are exactly the lax naturality cells of evaluation Fun^lax(B, C) ⊗ B → C, without inverses; compare Gepner–Heine's LMor/RMor. | `planar-pasting-types.md` §4, §7 | unowned | former area IHOM |
@@ -94,9 +95,9 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| E1 | Implement Steiner chains and the Gray unfolding; checker with decidability; **supp = Var on a single hom** (conservativity over CaTT). | `pseudo-vs-gray.md` §7.1 step 2, §3.6 Thm 1(3) | in progress | LCORE |
-| E2 | Two-object cases mechanically: D²∨D² (interchanger one way only), D¹∨D² (whiskering), D²∨D²∨D² (cube 4-cell from ps-terms); validate against the strict AM model. | `pseudo-vs-gray.md` §7.1 step 3, §3.4 | in progress | LCORE |
-| E3 | Substitution admissibility and **non-derivability of the reverse interchanger** for L. | `pseudo-vs-gray.md` §3.6 Thm 1(2) | in progress | LCORE |
+| E1 | Implement Steiner chains and the Gray unfolding; checker with decidability; **supp = Var on a single hom** (conservativity over CaTT). | `pseudo-vs-gray.md` §7.1 step 2, §3.6 Thm 1(3) | side condition + checker done (`Gray/Support.agda`); conservativity checked on PR #4 examples, general proof in progress | LCORE |
+| E2 | Two-object cases mechanically: D²∨D² (interchanger one way only), D¹∨D² (whiskering), D²∨D²∨D² (cube 4-cell from ps-terms); validate against the strict AM model. | `pseudo-vs-gray.md` §7.1 step 3, §3.4 | done at support level (`Gray/Examples.agda`, `Gray/Cube.agda`, `agda-gray-findings.md`); chain-level validation against the strict AM model not done | LCORE |
+| E3 | Substitution admissibility and **non-derivability of the reverse interchanger** for L. | `pseudo-vs-gray.md` §3.6 Thm 1(2) | substitution done (PR #20); reverse interchanger *coh* proved underivable; reverse *type* uninhabited needs strict-model soundness with (B) as hypothesis, not started | LCORE |
 | E4 | **Invertibility markings.** Designed 2026-11-18 in `invertibility-markings.md` §1–2: judgments `inv` and `ps` (pseudo is one-sided in execution order), recursive `ps*` = corrected C1″, marked declarations, propagation rules (INV-fac, INV-obj, PS-fac, OP-inv/ps, OBJ-k for `grpd_k` objects), all **proved sound** in oriented (∞,ω)-categories and the strict model; "interchanger with an invertible factor is invertible" is now proved. Remaining: Agda encoding (asked of LCORE); whether ICaTT's rec is admissible (low priority). | `invertibility-markings.md` | in progress (Agda encoding) | MARK; LCORE for the encoding |
 | E5 | **Generality ordering.** Semantic half of P ≈ L + "every mixed cell invertible" **proved** (`invertibility-markings.md` Thm 3.1, via n-ary gray-vs-cartesian and a sub-operad argument). Open: syntactic half, Conjecture 3.2 (conservative translation CaTT → L⁺), reduced to a relative coherence lemma; uniform ⊂ two-tier part needs E6. | `invertibility-markings.md` §3 | in progress | MARK |
 | E6 | **Uniform L construction**: free structure with directed interchange at every level (requirements 1–5), corrected boundary-adjusted reading. Literal version impossible (verified). New 2026-11-18: no single directed complex, or hom-wise family of them, can present the answer (`invertibility-markings.md` §7, Obs. 7.1); a description must be an iterated tower. Researcher-ready prompt: `conjectures/outbox/directed-interchange-every-level.md` (Q1–Q4). Internal next step: the first genuinely uniform case ΣD² ∨ ΣD² up to dimension 5 (Q2). | `conjectures/strict-lax-interchange-at-every-level.md`; `conjectures/outbox/directed-interchange-every-level.md`; `invertibility-markings.md` §7 | in progress; prompt ready to send | MARK |
@@ -104,7 +105,7 @@ Thread ids used below:
 | E8 | **Representables and lax homs over L.** Hom rule and R-A restated over L (`invertibility-markings.md` §4); semantics proved from the literature; elimination (reading Gray-shaped components off a native lax cell) derivable. **Finding:** G1 does not disappear under L: introducing a lax cell from components needs a Gray-shaped context. Posed as Conjecture CT, `conjectures/canonical-gray-terms.md`. | `invertibility-markings.md` §4; `pseudo-vs-gray.md` §4.2 | in progress (CT open) | MARK |
 | E9 | **Cost.** The [conj] is **false for explicit supports** (term of size O(n) with support 3ⁿ; source chains of size C(n,k)). Restated as E9′: is the side condition decidable in time polynomial in shared term size? Open; timing experiment on n-fold wedges asked of LCORE. | `invertibility-markings.md` §5 | in progress | MARK; LCORE for measurement |
 | E10 | **Surface defaults**: settled 2026-11-18 by worked counts (`invertibility-markings.md` §6): kernel has no defaults; surface marks only at declarations (M1), derives the rest; default horizontal composite is the ∂⁻-layering. Remaining: the uniform-L `ord` default, which waits on E6/E7. | `invertibility-markings.md` §6 | blocked on E6 for the uniform part only | MARK |
-| E11 | **Interpreting a dependent type theory in (∞,ω)-categories** (strictification / coherent choice), shared with CaTT; and whether ωCat itself is a model of CaTT (or of L). | `pseudo-vs-gray.md` §3.6 caveat, §5.4 | unowned (long-term) | — |
+| E11 | **Long-term semantics gaps**, now written out in `semantics-gaps.md`: (S1) a homotopy theory on GM weak ω-categories / CaTT models and a comparison with (∞,ω)-categories (no model structure on weak ω-categories exists yet; Fujii–Hoshino–Maehara 2025 call it future work); (S2) strict-substitution (coherent-choice) models presenting a given (∞,ω)-category or oriented one; (S3) which (∞,ω) notion (inductive, coinductive, flagged) is intended; (S4) whether the cited results hold there; Gray-coherator models of L. **Settled in passing:** strict ω-Cat with lax transformations (AM's ∞-Cat_lax) is a strict model of two-tier L, by Theorem 1 of `pseudo-vs-gray.md` §3.6; P's strict model has only strict 2-cells. | `semantics-gaps.md`; `pseudo-vs-gray.md` §3.6 caveat, §5.4 | unowned (long-term; (S3) is analysis that can start now) | former area CONV |
 
 ## F. Ordinary mathematics and further extensions
 
@@ -121,9 +122,7 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| G1 | **Re-check every claim marked [recall]** against its source, e.g.: AM Gray tensor biclosedness and its naming; Steiner's "tensors of loop-free complexes are loop-free"; ν(K ⊗ L) ≅ ν(K) ⊗ ν(L); "a lax transformation's naturality cell at an equivalence is invertible"; the even-duality formula for ⊗; Haugseng on lax transformations; Gray 1974; Markakis's generalised signatures. | `internal-hom.md`, `pseudo-vs-gray.md`, `free-objects.md`, `limits-representables.md` (search "[recall]") | unowned | former area LIT |
-| G2 | **One place for conventions**: lax vs oplax and factor order. `pseudo-vs-gray.md` §3.1 fixes L's order from the limit rules; `internal-hom.md` §4.1 ("Mikhail's Γ ⊗ Dⁿ is Dⁿ ⊗ Γ in AM orientation") and `limits-representables.md` §1 use their own. Write a single conventions section and make the other notes cite it. | `internal-hom.md` §4.1; `pseudo-vs-gray.md` §3.1, §7.1 step 1 | unowned | former area PVG |
-| G3 | **Steiner support lemma for arbitrary Steiner complexes** (beyond acyclic ones). Not needed by any current design; recorded so it is not lost. | `conjectures/steiner-support-determines-cells.md` | unowned (low priority) | — |
+| G3 | **Steiner support lemma for arbitrary Steiner complexes** (beyond acyclic ones). Not needed by any current design. Progress 2026-11-18: 0/1 chains hold in general (Forest Lemma 3.4.5; Campbell 2605.09427 Prop. 2.20); "support determines the cell" is reduced, by induction on Steiner's decomposition index, to one step **(Conv)**: a generator whiskered beside an atom along r is not an internal face of that atom. | `conjectures/steiner-support-determines-cells.md`, "Progress on the general case" | unowned (low priority) | former area CONV |
 
 ---
 
@@ -136,7 +135,7 @@ Thread ids used below:
 
 **Responses received, awaiting verification:** none. (`naturality-arbitrary-depth.md` and `strict-lax-interchange-at-every-level.md` were verified 2026-11-18.)
 
-**Ready to send** (self-contained, literature-checked): `finite-fibration-test.md` (B14, category-valued case and the localisation lemma). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
+**Ready to send** (self-contained, literature-checked): `outbox/finite-fibration-test.md` (B14; paste as is). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
 
 ## Closed
 
@@ -155,6 +154,8 @@ Kept briefly for orientation; details are in the linked files.
 - `free-infinity-gray-of-pasting-diagrams.md`: solved in the literature. Discharges (D)–(F) of `pseudo-vs-gray.md` §3.6.
 - `steiner-support-determines-cells.md`: solved for the needed case (Hadzihasanovic). Discharges (A)–(C). Leaves G3.
 - `limits-representables.md` §10.2: marking needs no closure condition.
+- **G1** (re-check every [recall] claim): done 2026-11-18 by CONV. All ~35 claims in `internal-hom.md`, `pseudo-vs-gray.md`, `limits-representables.md`, `free-objects.md`, `invertibility-markings.md`, the conjecture files and the project-folder survey are now cited with their place, proved, or corrected. Corrections: Steiner's tensor statement is for *strongly* loop-free bases; Al-Agl–Steiner, not Crans, introduced the ω-Gray tensor, and no "pseudo version" was found; BMOSV's naturality is only for depth ≤ 1, so `internal-hom.md` §4.1's Γ ⊗ D¹ on composite terms depends on Conjecture N (C1); ω-sesquicategories are not Markakis's setting; the dimension-2 lax-limit theory is Cat-weighted, not Gray-weighted; no model structure on weak ω-categories exists to cite (now in E11).
+- **G2** (one place for conventions): done 2026-11-18 by CONV, `conventions.md`. L's factor order (execution order, L = AM's ∞-Cat_lax), names checked against AM, JFS, Haugseng, Loubaton and Gepner–Heine (all agree with Bénabou's lax), Mikhail's transformations are Bénabou-oplax, the naming hazard between `internal-hom.md`'s lax hom (AM's Hom_oplax) and L's hom 𝒦(Θ, C) (AM's Hom_lax), and the duality table. Fixed one inconsistent factor order in `invertibility-markings.md` §4.2.
 - C6 (weak model of ATTACH): answered in `free-objects-proofs.md` §4. Strict and (∞,ω) models justified; the algebraic-weak gap is part of E11.
 - C9 (density): answered in `free-objects-proofs.md` §6. Disks are not dense, Θ is; the Θ-density rule is recorded under F5.
 - B8 (oriented lax limits): answered by a researcher, verified 2026-11-18. Problems 1–2 yes; Problem 3 false as stated, true with coherent marking (full Hom_C(b,a)). The internal R11 re-derivation is done by the response's §1. Leaves B7.

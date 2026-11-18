@@ -902,3 +902,44 @@ The construction establishes:
 One refinement to §2.3 is needed for the broader induction: **strict compatibility and lower-dimensional boundary adjustment should be explicit induction invariants.** RC(\(n\)) applies only after the compared \(n\)-terms are literally parallel. It does not itself turn strict equality of their lower boundaries into syntactic equality. In dimension 2, path coherences supply that adjustment, so this does not obstruct your stated \(N_{\leq2}\) consequence.
 
 The new unitor calculation avoids that general lifting issue. Its only nontrivial cancellation occurs on the 1-path \(X,g^+\); the comparison that moves \(A\) past that cancellation is formed on \(D^3*_1D^3\). Those two facts allow the required 4-term to be constructed without first proving RC(3) for the lax square.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. Question 2 (the 3-dimensional unitor over the 2-disc) is answered, for the stated universal choices of the lower lifts. Question 1 has an explicit non-endomorphism instance. A new general result gives naturality of every endomorphism coherence, in every dimension and for any lower lifts. Questions 1 (in general), 3 and 4 remain open.**
+
+**§2, universal lower lifts.**
+- C(A, B) has exactly the type `a_{αβ} → b_{αβ} = L(αβ)H ⇛ F(R(αβ))`. I checked each of the seven intermediate 2-boundaries.
+- φ_L and φ_R are full coherences over `(D²∗₁D²)∗₀D¹` and `D¹∗₀(D²∗₁D²)`.
+- κ and ℓ are full coherences over the paths (g⁻, Y) and (X, g⁺). J has the type `eG ⇛ Gh = a_{1_g} → b_{1_g}`.
+- Conjecture N lets K be any chosen inhabitant for each (Q, B, Y), so fixing these universal choices is legitimate. Under β ↦ 1_g the recursion gives `s↑ = C(A, J)` literally. Correct.
+
+**§3, the dimension-4 calculation.**
+- 𝓛 and 𝓡 both have type `(ae)b ⇛ cd`. I checked both chains of boundaries.
+- (10): (11) is full over D²∗₁D². (12) is full over D²∗₁D³∗₁D², with the middle 1-cell and e′ substituted by Lg and 1_{Lg}. Substituting a variable by a non-variable term is allowed.
+- (13)–(14): expanding J and r_d by distribution gives T;τ. Correct.
+- (16), (17) and (19) are well typed and full over D²∗₁D²∗₁D³ and D³∗₁D³. In (19), A enters only by substitution into a generic 3-disc Z, and the glued 1-cell is sent to Rg. This is the key step, and it is valid.
+- (20): `ℓ^rev;ℓ` and `1_i` are parallel full 3-terms over the path (X, g⁺). The identity-preservation, unitor and associator steps (21)–(23) and the final conjugation over D³ are full coherences. Correct.
+- `K_mid = L₄ ∗₃ R₄^rev` is well formed: every primitive step is a coherence between parallel full terms, so each one has a reverse.
+
+**§4, assembly.**
+- `a_ϱ = (W_L b);A` and `b_ϱ = C(A, J);(cW_R)` agree with the staircase formulas for n = 3.
+- H_L and H_R are full coherences over `D²(α⁻)∗₀D¹(Y)` and `D¹(X)∗₀D²(α⁺)`.
+- E_L ends at `P;𝓛`. E_R ends at `P;𝓡`, because the first factor of `C(A, J)` is `φ_L b = P`. So (32) has type `a_ϱ → b_ϱ`. Correct.
+
+**§5, question 1 instance.**
+- Substituting α ↦ 1_f sends A to `(1_f)↑ = J`, so K₀ is the naturality term of `ρ_{1_f}`.
+- The correction by δ (a 4-term between two full 3-terms over Q₁) and its copies δ^±: in (36) the first factor takes a_c to a_{c₀} and the last takes b_{c₀} to b_c. Both use the same lifts U and V, because the recursion gives the same σ and τ lifts. Correct.
+
+**§6, endomorphism naturality.**
+- For `c : u → u` with u full in Q, the coherence rule gives `δ : c → 1_u` whatever c is, because the type is full.
+- `a_c = T(c⁻) ∗_n U` and `b_c = U ∗_n S(c⁺)`, since `τᵏc = τ^{k−1}u` for k ≥ 2.
+- The unit-absorption coherences turn `T(1_{u⁻})` into `1_{a_u}`, and (37) has the stated type. Correct, in every dimension, for any lower lift U.
+
+**Remark on §7.** The point that RC(n) needs literally parallel terms, so strict compatibility and lower boundary adjustment must be explicit induction invariants, is right. The in-house review of Theorem A asked for the same invariant, π(w↑) = e⊗π(w).
+
+**What this settles, and what it opens.**
+- Settled: §7 case 3 of `naturality-arbitrary-depth.md` (the 3-dimensional unitor over the 2-disc), for the universal choices (2) and (4). One explicit non-endomorphism 3-dimensional instance over the single arrow. N for every endomorphism coherence, in every dimension.
+- Open: RC(3) on the lax square (question 1 in general); RC(3) on loop-free contexts (question 3); RC(n) (question 4); and whether one global family of choices of K works for all instances at once. The construction here fixes the lower lifts universally, which is the intended reading of N, but no global consistency theorem has been stated.
+- Mechanical check: the construction is explicit enough to type-check in the Agda checker that already holds the depth-2 left unitor (`src/CaTTExp/Free/LeftUnitorDepth2.agda`).

@@ -16,7 +16,7 @@ Two Agda results stop at the passage from augmented directed complexes to strict
 
 Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
 
-- **(N0) ν(K) is a strict ω-category.** Cells are Steiner's tables. ∂^±_k truncates a table. x #_k y is defined when ∂⁺_k x = ∂⁻_k y, and is given by (x #_k y)_j^± = x_j^± + y_j^± − x_k^+ for j > k (and the shared lower part for j ≤ k). The axioms are those of the `ωCat` record. Steiner 2004, Prop. 2.3 / Def. 2.8; Ara–Maltsiniotis 1607.00668 §2.4.
+- **(N0) ν(K) is a strict ω-category.** Cells are Steiner's tables. ∂^±_k truncates a table. x #_k y is defined when ∂⁺_k x = ∂⁻_k y, and is x + y − ∂⁺_k x componentwise: the shared entries below k, (x_k^-, y_k^+) at k, and x_j^± + y_j^± above k. The axioms are those of the `ωCat` record. Steiner 2004, Prop. 2.3 / Def. 2.8; Ara–Maltsiniotis 1607.00668 §2.4.
 - **(N1) Atom generation.** If the basis is loop-free and unital, every cell of ν(K) is a composite of atoms. Steiner 2004, Thm 5.6, via Props. 5.4 and 5.5 (decomposition index).
 - **(N2) Freeness.** Under the same hypotheses, ν(K) is presented by its atoms: a strict functor out of ν(K) is the same as a choice, for each atom ⟨b⟩, of a cell whose boundaries are the images of ∂^±⟨b⟩. Steiner 2004, Thm 5.7 (a morphism from a composition-generated C that is a dimension-preserving bijection on generators is an isomorphism) and Thm 6.1 (presentation by atoms).
 - **(N3) Consequences used by C8(4).**

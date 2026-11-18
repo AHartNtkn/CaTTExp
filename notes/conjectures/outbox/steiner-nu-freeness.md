@@ -14,7 +14,7 @@ We use Steiner's augmented directed complexes (R. Steiner, *Omega-categories and
 - ∂xₖ^± = xₖ₋₁⁺ − xₖ₋₁⁻ for 1 ≤ k ≤ n;
 - ε(x₀^±) = 1.
 
-Boundaries truncate the table. For ∂⁺ₖx = ∂⁻ₖy the composite x #ₖ y has (x #ₖ y)ⱼ^± = xⱼ^± + yⱼ^± − xₖ⁺ for j > k, and the common lower part for j ≤ k. This makes ν(K) a strict ω-category (single-set presentation).
+Boundaries truncate the table. For ∂⁺ₖx = ∂⁻ₖy the composite x #ₖ y is x + y − ∂⁺ₖx entrywise: the common entries below k, (xₖ⁻, yₖ⁺) at k, and xⱼ^± + yⱼ^± above k. This makes ν(K) a strict ω-category (single-set presentation).
 
 **Atoms.** The atom ⟨b⟩ of b ∈ Bₙ has ⟨b⟩ₙ^± = b, ⟨b⟩ₖ⁻ = (∂⟨b⟩ₖ₊₁⁻)₋ and ⟨b⟩ₖ⁺ = (∂⟨b⟩ₖ₊₁⁺)₊.
 

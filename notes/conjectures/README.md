@@ -19,6 +19,9 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
 
 ## Status at a glance
 
+Owners and status of the follow-up work these problems leave are tracked in `notes/open-issues.md`.
+
+
 - **Solved:**
   - `free-on-graph.md`: proved by an external researcher, and verified here.
   - `weighted-as-partially-lax-omega.md`: proved by an external researcher in Loubaton's model, and verified here. A finite computad test is still open.

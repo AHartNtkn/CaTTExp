@@ -65,6 +65,14 @@ import CaTTExp.Strict.TotalCell
 import CaTTExp.Strict.Bridge
 import CaTTExp.Strict.ReverseInterchanger
 import CaTTExp.Strict.CheckCells
+import CaTTExp.Strict.PsFacts
+import CaTTExp.Strict.Lambda
+import CaTTExp.Strict.ConstFree
+import CaTTExp.Strict.Interp
+import CaTTExp.Strict.Dim
+import CaTTExp.Strict.CaTT
+import CaTTExp.Strict.Purity
+import CaTTExp.Strict.Sound
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

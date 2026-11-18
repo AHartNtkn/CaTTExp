@@ -59,3 +59,566 @@ A type theory for lax Gray-enriched higher categories has been proved sound for 
 - (Rad) and (F2) for all Steiner complexes: Forest (HHA 2022) Lemmas 3.4.5 and 3.4.11; Campbell 2605.09427 Props. 2.20 and 2.23.
 - Atom generation: Steiner 2004, for loop-free unital bases.
 - No elementary or machine-checked proof of (P) was found.
+
+# Researcher Response
+
+**The full statement (P) follows from a direct chain argument.** The same argument proves (Rad), (F2), and (G). Its main construction filters a chain at a cut in a linear order on the basis.
+
+There is also a relevant literature correction: Steiner’s *Opetopes and chain complexes*, Theorem 4.1, already gives a direct proof of radicality and a stronger coefficient bound by induction and ordered partial sums, without invoking atom generation. The proof below uses a cut formulation of that argument, then supplies the lifting step needed for downward-closed support. [arxiv.org](https://arxiv.org/pdf/1204.6723?utm_source=chatgpt.com)
+
+I will first prove an abstract chain-level statement, then verify its hypotheses directly from your presentations of the \(\Theta_i\).
+
+## 1. The three hypotheses actually needed
+
+Let \(K\) be a finite based augmented directed complex. Assume:
+
+1. Every \(a\in B_0\) has \(\epsilon(a)=1\).
+2. Every positive-dimensional basis element \(b\) has \((\partial b)_+\ne0\).
+3. There is a strict total order \(\prec\) on the entire graded basis \(B\) such that
+   \[
+   a\in\operatorname{supp}((\partial b)_-)
+   \Longrightarrow a\prec b,
+   \qquad
+   a\in\operatorname{supp}((\partial b)_+)
+   \Longrightarrow b\prec a.
+   \tag{Order}
+   \]
+
+The tensor products in the question satisfy these conditions by the explicit construction in §7.
+
+Write \(c[a]\) for the coefficient of \(a\) in a chain \(c\). For a **positive** chain \(c\), define
+\[
+P(c):=\sum_b c[b](\partial b)_+,
+\qquad
+N(c):=\sum_b c[b](\partial b)_-.
+\]
+Thus
+\[
+\partial c=P(c)-N(c).
+\]
+These sums retain contributions before cancellation; \(P(c)\) and \(N(c)\) need not equal \((\partial c)_+\) and \((\partial c)_-\).
+
+All inequalities between chains below are coefficientwise.
+
+## 2. The cut lemma
+
+Suppose
+\[
+c\in K_{q+1}^*,\qquad u,v\in K_q^*,
+\qquad \partial c=v-u.
+\]
+Define
+\[
+g:=u+P(c)=v+N(c).
+\]
+
+For \(a\in B_q\), filter \(c\) by the basis order:
+\[
+c_{<a}:=\sum_{\substack{b\in B_{q+1}\\b\prec a}}c[b]b,
+\qquad
+c_{\ge a}:=c-c_{<a}.
+\]
+Set
+\[
+w_a:=u+\partial c_{<a}
+     =v-\partial c_{\ge a}.
+\tag{1}
+\]
+
+**Cut lemma.** The chain \(w_a\) is nonnegative, and
+\[
+\boxed{
+w_a[a]=g[a]
+      =u[a]+P(c)[a]
+      =v[a]+N(c)[a].
+}
+\tag{2}
+\]
+
+### Proof of nonnegativity
+
+Fix \(d\in B_q\).
+
+If \(d\prec a\), every basis element contributing positively to \(d\) precedes \(a\): positive incidence gives
+\[
+b\prec d\prec a.
+\]
+Consequently \(P(c_{\ge a})[d]=0\), and the second expression in (1) gives
+\[
+w_a[d]
+=v[d]+N(c_{\ge a})[d]\ge0.
+\]
+
+If \(a\preceq d\), no basis element in \(c_{<a}\) contributes negatively to \(d\): negative incidence would give
+\[
+d\prec b\prec a,
+\]
+contradicting \(a\preceq d\). Therefore \(N(c_{<a})[d]=0\), and the first expression gives
+\[
+w_a[d]
+=u[d]+P(c_{<a})[d]\ge0.
+\]
+
+At \(d=a\), every positive contributor precedes \(a\), while every negative contributor follows \(a\). Hence
+\[
+w_a[a]=u[a]+P(c)[a].
+\]
+The equality with \(v[a]+N(c)[a]\) follows from \(\partial c=v-u\). This proves the lemma. \(\square\)
+
+### Applying the cut to a cell table
+
+Take adjacent rows of any cell \(x\):
+\[
+u=x_q^-,
+\qquad
+v=x_q^+,
+\qquad
+c=x_{q+1}^{\alpha},
+\quad \alpha\in\{-,+\}.
+\]
+The cut defines a \(q\)-cell
+\[
+W_a=
+\bigl(
+x_0^-,x_0^+,\ldots,
+x_{q-1}^-,x_{q-1}^+,
+w_a,w_a
+\bigr).
+\tag{3}
+\]
+
+Indeed, positivity is the cut lemma. For \(q>0\),
+\[
+\partial w_a
+=\partial u+\partial^2c_{<a}
+=\partial u,
+\]
+so the required equation at degree \(q\) holds. For \(q=0\),
+\[
+\epsilon(w_a)
+=\epsilon(u)+\epsilon\partial c_{<a}
+=1.
+\]
+All retained rows already satisfy their equations.
+
+Thus **a cut produces a cell one dimension lower while retaining every row below its new top degree**.
+
+## 3. Radicality and (F2)
+
+For every cell table \(x\), put
+\[
+g_q^\alpha(x)
+:=
+x_q^-+P(x_{q+1}^\alpha)
+=
+x_q^++N(x_{q+1}^\alpha).
+\tag{4}
+\]
+
+We prove by induction on \(q\) the following statements, quantified over **all** cell tables:
+
+\[
+\begin{aligned}
+R_q &: \quad\text{every coefficient of }x_q^\pm\text{ is at most }1,\\
+H_q &: \quad\text{every coefficient of }g_q^\alpha(x)\text{ is at most }1.
+\end{aligned}
+\]
+
+The induction proceeds as
+\[
+R_0,\qquad R_q\Longrightarrow H_q\Longrightarrow R_{q+1}.
+\]
+
+### Base case \(R_0\)
+
+Since each degree-zero basis element has augmentation \(1\),
+\[
+1=\epsilon(x_0^\pm)=\sum_{a\in B_0}x_0^\pm[a].
+\]
+The coefficients are nonnegative integers, so each is at most \(1\).
+
+### \(R_q\Longrightarrow H_q\)
+
+Fix \(a\in B_q\). Apply the cut construction to
+\[
+u=x_q^-,
+\quad v=x_q^+,
+\quad c=x_{q+1}^{\alpha}.
+\]
+The resulting \(q\)-cell \(W_a\) has
+\[
+w_a[a]=g_q^\alpha(x)[a].
+\]
+Apply \(R_q\) to \(W_a\). This gives
+\[
+g_q^\alpha(x)[a]\le1.
+\]
+Since \(a\) was arbitrary, \(H_q\) follows.
+
+### \(H_q\Longrightarrow R_{q+1}\)
+
+Fix \(b\in B_{q+1}\). By hypothesis 2, choose
+\[
+a\in\operatorname{supp}((\partial b)_+).
+\]
+Then \((\partial b)_+[a]\ge1\), and
+\[
+\begin{aligned}
+x_{q+1}^\alpha[b]
+&\le x_{q+1}^\alpha[b](\partial b)_+[a]\\
+&\le P(x_{q+1}^\alpha)[a]\\
+&\le g_q^\alpha(x)[a]\\
+&\le1.
+\end{aligned}
+\]
+This proves \(R_{q+1}\).
+
+Therefore every row of every cell is radical: **(Rad)**.
+
+The quantification over all cell tables is essential: when proving \(H_q\), \(R_q\) is already available for the newly constructed cut table.
+
+### Deriving (F2)
+
+Suppose \(b\in\operatorname{supp}(x_{q+1}^\alpha)\). The bounds just proved give
+\[
+x_q^-+P(x_{q+1}^\alpha)\le\mathbf1,
+\qquad
+x_q^++N(x_{q+1}^\alpha)\le\mathbf1,
+\]
+where \(\mathbf1\) denotes coefficient \(1\) at each element of \(B_q\).
+
+If a basis element \(a\) belonged both to \(\operatorname{supp}(x_q^-)\) and to \(\operatorname{supp}((\partial b)_+)\), the first sum would have coefficient at least \(2\) at \(a\). Hence
+\[
+\operatorname{supp}(x_q^-)
+\cap\operatorname{supp}((\partial b)_+)=\varnothing.
+\]
+The second bound similarly gives
+\[
+\operatorname{supp}(x_q^+)
+\cap\operatorname{supp}((\partial b)_-)=\varnothing.
+\]
+These are precisely **(F2)**.
+
+## 4. Lifting from downward-closed support
+
+The same cut construction gives the required lifting lemma.
+
+### Immediate-face lemma
+
+Let \(z\) be a \((q+1)\)-cell with top chain \(c\). Suppose
+\[
+c[b]>0,
+\qquad
+a\in\operatorname{supp}(\partial b).
+\]
+Then there is a \(q\)-cell \(w\) such that
+\[
+w_q[a]>0,
+\qquad
+w_j^\pm=z_j^\pm\quad(j<q).
+\tag{5}
+\]
+
+**Proof.** Use the cut at \(a\).
+
+If \(a\) is a positive face of \(b\), equation (2) gives
+\[
+w_a[a]
+=u[a]+P(c)[a]
+\ge c[b](\partial b)_+[a]>0.
+\]
+
+If \(a\) is a negative face, use the other expression:
+\[
+w_a[a]
+=v[a]+N(c)[a]
+\ge c[b](\partial b)_-[a]>0.
+\]
+
+The retained rows are exactly those in (3). \(\square\)
+
+This lemma uses positivity and the order, without needing radicality.
+
+### Full lifting lemma
+
+Let \(S=\operatorname{Supp}(x)\), and write \(S_r=S\cap B_r\).
+
+**Lemma.** For every \(b\in S_r\), there exists an \(r\)-cell \(z\) such that
+\[
+z_r[b]>0,
+\qquad
+z_j^\pm=x_j^\pm\quad(j<r).
+\tag{6}
+\]
+
+**Proof.** Membership in the downward closure supplies a finite face path
+\[
+b_t,b_{t-1},\ldots,b_r=b
+\]
+such that
+\[
+b_t\in\operatorname{supp}(x_t^\alpha),
+\qquad
+b_{j-1}\in\operatorname{supp}(\partial b_j).
+\tag{7}
+\]
+
+Start with the \(t\)-cell obtained by retaining the rows of \(x\) below \(t\) and using \(x_t^\alpha\) as both top entries.
+
+Apply the immediate-face lemma at \(b_{t-1}\). This produces a \((t-1)\)-cell with \(b_{t-1}\) in its top support. Continue along (7).
+
+At every step from degree \(j\) to degree \(j-1\), all rows below \(j-1\) remain unchanged. Thus, when degree \(r\) is reached, every row below \(r\) still equals the corresponding row of \(x\). This proves (6). \(\square\)
+
+This is an induction on a witness of downward-closure membership. It requires no factorization into atoms.
+
+## 5. Proof of (G)
+
+Fix \(k<n\) and \(b\in S_{k+1}\).
+
+The lifting lemma gives a \((k+1)\)-cell \(z\) with
+\[
+z_{k+1}[b]>0,
+\qquad
+z_k^-=x_k^-,
+\qquad
+z_k^+=x_k^+.
+\]
+Apply (F2) to \(z\). We obtain the stronger statements
+\[
+\operatorname{supp}(x_k^-)
+\cap\operatorname{supp}((\partial b)_+)=\varnothing,
+\tag{8}
+\]
+\[
+\operatorname{supp}(x_k^+)
+\cap\operatorname{supp}((\partial b)_-)=\varnothing,
+\tag{9}
+\]
+for **every** \(b\in S_{k+1}\), including those absent from the table entries of \(x\).
+
+Consequently, for
+\[
+R_k:=x_k^-\wedge x_k^+,
+\]
+equations (8)–(9) imply
+\[
+\boxed{
+\operatorname{supp}(R_k)
+\cap\operatorname{supp}(\partial b)=\varnothing
+\quad\text{for every }b\in S_{k+1}.
+}
+\]
+This is **(G)**.
+
+## 6. Explicit reconstruction from support
+
+For a downward-closed set \(S\), define
+\[
+F_k(S):=
+\bigcup_{b\in S_{k+1}}\operatorname{supp}(\partial b),
+\qquad
+E_k(S):=S_k\setminus F_k(S).
+\tag{10}
+\]
+Write
+\[
+\chi_A:=\sum_{a\in A}a
+\]
+for the chain with coefficient \(1\) on \(A\).
+
+The key reconstruction identity is
+\[
+\boxed{
+x_k^-\wedge x_k^+=\chi_{E_k(S)}
+\qquad(k<n).
+}
+\tag{11}
+\]
+
+### Proof of (11)
+
+First, the definition of downward closure gives the exact equality
+\[
+S_k
+=
+\operatorname{supp}(x_k^-)
+\cup\operatorname{supp}(x_k^+)
+\cup F_k(S).
+\tag{12}
+\]
+Indeed, a degree-\(k\) basis element in \(S\) either belongs to a degree-\(k\) table entry or is reached from a higher table entry by a face path. In the latter case, the last step is from an element of \(S_{k+1}\).
+
+Put
+\[
+D_k:=\partial x_{k+1}^-=x_k^+-x_k^-.
+\]
+Coefficientwise positive/negative decomposition gives
+\[
+x_k^-=R_k+(D_k)_-,
+\qquad
+x_k^+=R_k+(D_k)_+.
+\tag{13}
+\]
+Also,
+\[
+\operatorname{supp}(D_k)\subseteq F_k(S),
+\tag{14}
+\]
+because \(x_{k+1}^-\) is supported in \(S_{k+1}\).
+
+By (G), \(R_k\) is disjoint from \(F_k(S)\). Hence
+\[
+\operatorname{supp}(R_k)\subseteq E_k(S).
+\]
+
+Conversely, let \(a\in E_k(S)\). Equation (12) says that at least one of \(x_k^-[a]\), \(x_k^+[a]\) is positive. Since \(a\notin F_k(S)\), equation (14) gives \(D_k[a]=0\), so those two coefficients are equal. They are therefore both positive. Radicality makes both equal to \(1\).
+
+This proves (11).
+
+### The reconstruction formula
+
+Since no table entry has degree above \(n\),
+\[
+S_n=\operatorname{supp}(x_n^-)
+   =\operatorname{supp}(x_n^+).
+\]
+Radicality gives
+\[
+\boxed{x_n^-=x_n^+=\chi_{S_n}.}
+\tag{15}
+\]
+
+Now reconstruct downward, for \(k=n-1,\ldots,0\):
+\[
+\boxed{
+\begin{aligned}
+x_k^-
+&=\bigl(\partial x_{k+1}^-\bigr)_-
+  +\chi_{E_k(S)},\\[1mm]
+x_k^+
+&=\bigl(\partial x_{k+1}^-\bigr)_+
+  +\chi_{E_k(S)}.
+\end{aligned}
+}
+\tag{16}
+\]
+
+The right sides use only \(S\) and the already reconstructed next row. Therefore two \(n\)-cells with the same closed support have identical tables.
+
+This proves **(P)**.
+
+Equations (15)–(16) also handle identity cells: if \(S_k=\varnothing\) above some degree, the reconstructed rows in those degrees are zero.
+
+## 7. Verifying the hypotheses for the tensor products
+
+The preceding proof can be instantiated without appealing to the theorem that these tensor products are Steiner complexes.
+
+### 7.1 An order on each factor
+
+Maintain a list of the cells already created.
+
+Start with the initial \(0\)-cell. At a step adding
+\[
+y:A,\qquad f:x\longrightarrow y,
+\]
+insert the two new entries **\(f,y\)** immediately after \(x\). Thus the list has
+\[
+x\prec f\prec y.
+\]
+
+Inductively, every positive-dimensional cell \(a\) satisfies
+\[
+s(a)\prec a\prec t(a).
+\tag{17}
+\]
+
+To check the induction:
+
+- Relative orders between old entries are unchanged.
+- The new cell \(f\) satisfies (17) by its insertion position.
+- If \(y\) has positive dimension, it is parallel to \(x\), so
+  \[
+  s(y)=s(x),\qquad t(y)=t(x).
+  \]
+  Before insertion,
+  \[
+  s(x)\prec x\prec t(x).
+  \]
+  Since \(y\) is inserted immediately after \(x\), it remains before the old entry \(t(x)\), giving
+  \[
+  s(y)\prec y\prec t(y).
+  \]
+- A change of current cell leaves the list unchanged.
+
+This constructs a strict total order on each factor satisfying (Order).
+
+### 7.2 The order on tuples
+
+For distinct tuples
+\[
+a=(a_1,\ldots,a_m),
+\qquad
+b=(b_1,\ldots,b_m),
+\]
+let \(i\) be their first differing coordinate. Set
+\[
+p=\sum_{j<i}\dim a_j
+ =\sum_{j<i}\dim b_j.
+\]
+Define
+\[
+a\prec b
+\quad\Longleftrightarrow\quad
+\begin{cases}
+a_i\prec_i b_i,&p\text{ even},\\
+b_i\prec_i a_i,&p\text{ odd}.
+\end{cases}
+\tag{18}
+\]
+
+For implementation as a list, this order can be constructed recursively: traverse the first-factor list in order; after each entry \(a_1\), traverse the recursively ordered list of remaining tuples forward if \(\dim a_1\) is even and backward if it is odd. Prefix each of those tuples with \(a_1\). This directly gives a list without duplicates and therefore a strict total order.
+
+To verify (Order), consider an immediate face obtained by changing coordinate \(i\). Its Leibniz sign is determined by
+\[
+(-1)^p,\qquad p=\sum_{j<i}\dim a_j.
+\]
+
+When \(p\) is even, the source face is negative and precedes the tuple, while the target face is positive and follows it, by (17).
+
+When \(p\) is odd, the source and target signs are exchanged. The comparison in (18) is also reversed. Thus the negative face again precedes the tuple and the positive face follows it.
+
+### 7.3 Nonempty positive boundaries and augmentation
+
+A positive-dimensional tuple has some positive-dimensional coordinate \(a_i\). Replacing that coordinate by \(s(a_i)\) and \(t(a_i)\) gives two distinct faces with opposite signs.
+
+Boundary contributions from different coordinates have different coordinatewise dimension vectors: the contribution from coordinate \(i\) lowers exactly its \(i\)-th degree. Thus such contributions cannot cancel each other. Every positive-dimensional tensor basis element therefore has a nonempty positive boundary.
+
+Finally, every degree-zero tensor basis element has augmentation
+\[
+\prod_i\epsilon(a_i)=1.
+\]
+
+All three hypotheses of §1 are verified.
+
+## 8. The requested instances
+
+For **Q3a**, assume \(d\ge1\). Apply (P) at dimension \(d-1\) to \(x\) and \(\partial^-T\):
+\[
+\operatorname{Supp}(x)=\operatorname{Supp}(\partial^-T)
+\Longrightarrow x=\partial^-T.
+\]
+The target case is identical. This uses the already checked validity of \(T\).
+
+For **Q3b**, radicality alone now gives the top-chain conclusion. If the closed support is \(B\), then \(n\ge d\). For \(n=d\),
+\[
+x_n=y_n=\sum_{b\in B_d}b,
+\]
+and for \(n>d\), both top chains are zero. Parallelism is unnecessary for this conclusion.
+
+For an Agda formalization, the only auxiliary chain construction is
+\[
+c_{<a}=\text{the multiset }c\text{ filtered by }b\prec a,
+\qquad
+w_a=u+\partial c_{<a}.
+\]
+The proof then consists of coefficientwise inequalities, induction on degree, recursion along a downward-closure witness, and the reconstruction formula (16). No atom, composition operation, or atom-generation theorem is needed.

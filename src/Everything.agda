@@ -81,3 +81,4 @@ import CaTTExp.Gray.MarksFuel
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
+import CaTTExp.Gray.SuppVars

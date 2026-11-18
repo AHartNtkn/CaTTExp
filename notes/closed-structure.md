@@ -7,7 +7,7 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness open, reduced to β/η in the term model (D10b, Prop. B7) |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness proved in sketch (Theorem B8, D10b), awaiting independent check |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
@@ -425,7 +425,45 @@ So k ↦ ev(y, k) is surjective in T, and [y] is a section of it. It is a biject
 - Abstracting n_h to a variable turns an equation in h into a coh equation over variables. For example, h(u, λ(i, d)) ≡ h(i, d) for (R_I), and h(m(a, b)) ≡ h′ ⇒ … for (R⊗).
 - Its type contains I only under the canonical isomorphisms (I\A ↦ A and so on), so it is UP\*.
 
-**Status of D10b.** It is reduced to one lemma: **names respect ≡.** That is, c ≡ c′ for closed terms implies ⌜c ⊗ –⌝ ≡ ⌜c′ ⊗ –⌝, and mirror. Everything else in Prop. B7 is now proved, modulo routine checks of the substitution lemma. A natural route is to prove ⌜c ⊗ –⌝ ≡ coh_{⊢ Y\(C⊗Y)}[τ] whenever c has a UP\* generalization ⊢ C, and then handle the general case by induction on the coh-rule instance.
+**Closing the last lemma: generalized names (2026-11-18, proof sketch).** B5's names are defined by recursion on closed syntax. Comparing two of them runs into an interchange of names taken at different instances of Y, which is not a coh equation over variables. The fix is to define names for *open* terms, uniformly in a type variable Y, and to use them in the closed-prefix clause of bracket abstraction.
+
+*Definition.* For a term u : Γ ⊢ C, define a closed term Ť_u : ⊢ (⊗Γ ⊗ Y)\(C ⊗ Y), by recursion on u (⊗∅ ⊗ Y := Y). For B5's closed terms it plays the role of ⌜u ⊗ –⌝.
+- Ť_x = coh_{⊢ (X⊗Y)\(X⊗Y)}.
+- For u = coh_S[τ](u₁, …, u_k) with uᵢ : Γᵢ ⊢ Bᵢ′, take the K-composite, in this order, of:
+  - Ť_{u₁}[Y := Γ₂ ⊗ … ⊗ Γ_k ⊗ Y];
+  - L_{B₁′}(Ť_{u₂}[Y := Γ₃ ⊗ … ⊗ Y]);
+  - …;
+  - L_{B₁′⊗…⊗B_{k−1}′}(Ť_{u_k});
+  - coh_{T_S}[τ].
+
+  Here L_B(s) = coh_{Z\W ⊢ (B⊗Z)\(B⊗W)}(s). That type is planar: its normal form is B, Z, Z\W ⊢ B ⊗ W. This is the step that is impossible for an open term on the left of y, as with ⌜u ⊗ –⌝, and it is why Ť_u carries Γ in its domain.
+
+*Lemmas.* Each is proved by induction, and each inductive step is one coh equation at a UP\* type, with the induction hypotheses abstracted as variables.
+1. **β:** ev(p, Ť_u) ≡ m(u, y), when p is the tensor of u's variables and y. The steps are K-β, ev against L_B, and ev against T_S, as in the β proof above.
+2. **Naturality in Y:** for s : (D⊗Y)\(G⊗Y),
+   ```
+   K(Ť_u[Y := D⊗Y], L_C(s)) ≡ K(L_{⊗Γ}(s), Ť_u[Y := G⊗Y]).
+   ```
+   - For Ť_x the step type is Z\W ⊢ (X⊗Z)\(X⊗W).
+   - For the T_S piece it is Z\W ⊢ (B₁⊗…⊗B_k⊗Z)\(C⊗W). Its normal form is N(B⃗), Z, Z\W ⊢ N(C) ⊗ W, which is UP\* when S is.
+   - For the L_B pieces, functoriality L_B(K(a, b)) ≡ K(L_B a, L_B b) is unit-free L-pasting.
+3. **Substitution:** Ť_{u[σ]} ≡ K(Ť_σ, Ť_u), where Ť_σ is the parallel name of σ, built in the same left-to-right order. The inductive step reorders pieces Ť_{u₁}, L(Ť_{σ₂}). That reordering is exactly lemma 2. The remaining steps are K-associativity and unit laws, and L_B functoriality.
+4. **Congruence:** u ≡ v implies Ť_u ≡ Ť_v. Induct on the derivation of ≡.
+   - **A coh-rule instance at S[τ].** Ť_u and Ť_v both have type T_S[τ], which is UP\*. So the coh rule applies.
+   - **Congruence.** Ť is compositional.
+   - **Substitution instances.** Use lemma 3.
+   - **Refl, sym, trans.** Trivial.
+
+With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (closed c, Γ = ∅) instead of B5's name, the β proof above goes through unchanged, by lemma 1. The ξ-rule's last case is lemma 4. So (R\) and (R/) hold, and Prop. B7 gives:
+
+**Theorem B8 (faithfulness of UL_I\*; D10b), proof sketch.** If two UL_I\* terms have the same denotation in the free biclosed monoidal category with unit, then UL_I\* proves them equal. Together with Theorem B6, the syntactic multicategory of UL_I\* *is* the free biclosed representable multicategory with unit.
+
+*Checks.*
+- `scripts/d10a/natural_names.py` checks the only step type that depends on S, the naturality step Z\W ⊢ (B⃗⊗Z)\(C⊗W) and its mirror. It is UP\* for 3,003 random UP\* coh's, with no failures. The checker rejects the non-planar Z ⊢ Y\(Z⊗Y).
+- The β-step types depending on S, namely S itself and T_S uncurried, were already checked (`tens_names.py`).
+- The remaining step types are fixed unit-free L-pasting sequents.
+
+*Not yet done.* Lemmas 1–4 are written at sketch level, and the substitution lemma has the most bookkeeping. Before D10b is closed, they need an independent check, or an Agda formalization of the term model.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

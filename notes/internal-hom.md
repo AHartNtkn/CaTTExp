@@ -1,20 +1,148 @@
 # Internal hom, Gray tensor, and lax vs pseudo
 
-*Design notes, first pass, 2026-11-18. Builds on `catt-survey.md` (project files), especially §8 (naturality), §9a (Mikhail's CaTT_lim), §10 and §13. Claims marked **[recall]** come from background knowledge and were not re-checked against the source this session. Rules are proposals, not results.*
+*Design notes, 2026-11-18, revised the same day. Part I is a plain-language comparison of the options and what each gains and loses in practice. Part II holds the technical material: literature, rules and side conditions. Builds on `catt-survey.md` (project files). Claims marked **[recall]** come from background knowledge and were not re-checked against the source. Rules are proposals, not results.*
 
 ---
 
-## 0. Summary
+# Part I. The choice, in practice
 
-1. **The ambient's own 2-cells cannot be lax if the core is plain CaTT.** CaTT's coh rule proves the interchange law as an *invertible* coherence. In ω-categories with lax transformations, the two ways of composing transformations horizontally are related by a *non-invertible* cell. So "CaTT with ambient ωCat" is sound only if the ambient's native transformations are pseudo (strong). The post's observation that "the naturality square comes out as a coherence" is exactly this: a naturality square produced by coh is invertible. (§2)
-2. **"Lax by default" can still hold, one level over.** Lax transformations between arbitrary functors F, G : B → C can be defined as functors B → C^→, where C^→ = [D¹, C]ₗₐₓ is a *lax hom out of a representable*. Its cells are finite Gray-shaped diagrams in C. This is the Johnson-Freyd–Scheimbauer construction, and it needs Gray tensors only of *contexts*, never of arbitrary objects. (§3, §5.3)
-3. **Gray tensor as a context operation.** Γ ⊗ Δ on finite contexts (computads) has one generator x⊗y per pair of generators, with a Leibniz boundary formula. Mikhail's `gray` judgment is the case Δ = Dⁿ. Typing the generators *is* the naturality meta-operation of Benjamin–Markakis–Offord–Sarti–Vicary, iterated. (§4)
-4. **Pseudo is lax plus a marking.** The cartesian (pseudo) cylinder is expected to be the Gray cylinder with its "mixed" generators marked invertible, as in ICaTT. So lax and pseudo homs can share one rule schema with a marking parameter, and oplax comes from the opposites meta-operation. (§5.5, §5.6)
-5. **Biggest open technical point:** typing Gray generators needs composites of non-pasting-scheme shapes. There are two in-style ways to get them: explicit layering with associators, which is easiest over CaTT_sua, or a "molecular coh" rule justified by Campion's pasting theorem. (§4.3)
+## I.1 What is being decided
 
-The recommended architecture is **A** in §3. Two alternatives are kept open.
+The plan is to run CaTT with the ambient being "the ω-category of ω-categories":
+- objects (variables of type ⋆) are categories;
+- 1-cells are functors;
+- 2-cells are transformations between functors;
+- and so on up.
+
+The question is **what a 2-cell α : F ⇒ G is**, concretely what its naturality cells look like. For a cell f : x → y of the source category, α has a component α_x : Fx → Gx and a naturality cell comparing Gf ∘ α_x with α_y ∘ Ff.
+
+- **Pseudo** (also called strong): the naturality cell is invertible. The components α_x are still ordinary one-way cells, not isomorphisms.
+- **Lax**: the naturality cell goes one way only, and need not be invertible.
+
+Every pseudo transformation is a lax one, so lax is the more general notion. Lax transformations are what show up for lax limits, lax algebras, monad morphisms and twisted constructions.
+
+## I.2 The fact that forces a choice
+
+In CaTT, the following is a theorem, produced by the coh rule.
+
+> Take two 2-cells side by side, α : f ⇒ f′ on the left and β : g ⇒ g′ on the right. Applying α first and then β, or β first and then α, gives two composites. CaTT supplies a cell between them **in both directions**, so they are equivalent. This is the interchange law.
+
+Now read it in the ambient, where α and β are transformations between functors:
+
+- α : F ⇒ G, where F, G : A → B;
+- β : H ⇒ K, where H, K : B → C.
+
+The two composites are "do α, then β" and "do β, then α", both going from HF to KG. Evaluated at an object a, they differ by the naturality cell of β at the component α_a. So:
+
+- if β is **pseudo**, that naturality cell is invertible and the interchange law holds. CaTT is sound.
+- if β is **lax**, the naturality cell exists in one direction only. CaTT would also give the reverse cell, which does not exist in general. CaTT is **unsound**.
+
+So **if the core rules are CaTT's, the ambient's native 2-cells are pseudo**. The limits notes (PR #2, §3) reach the same conclusion independently.
+
+Your blog post already reflects this. It observes that the naturality square of a transformation comes out as a coherence. Coherences between full composites come in both directions, so the squares produced that way are invertible, i.e. pseudo.
+
+There are two ways to respond, described next. A third, keeping two kinds of 2-cell side by side ("double" categories), is mentioned in I.5.
+
+## I.3 Option A: keep CaTT; lax transformations are maps into an "arrow object"
+
+**Description.** The core rules stay exactly as in CaTT. The ambient's native 2-cells are pseudo transformations. Lax transformations are added in a different way:
+
+- For a category C, there is an object C^→ (written [D¹, C]_lax in Part II), the **lax arrow category** of C:
+  - its objects are the arrows of C;
+  - its 1-cells are squares of C with a one-way 2-cell inside (lax squares);
+  - its higher cells are the higher-dimensional analogues (lax cubes and so on), all finite shapes.
+- A **lax transformation** α : F ⇒ G : B → C is then a *functor* α : B → C^→ whose source and target ends are F and G. This is the standard definition in the literature (Johnson-Freyd–Scheimbauer; Loubaton).
+  - Applying α to an object x of B gives an arrow of C, i.e. the component α_x.
+  - Applying α to a 1-cell f of B gives a lax square, i.e. the naturality cell at f.
+
+So a lax transformation is a native 1-cell (a functor) into a constructed object. It is not a native 2-cell.
+
+**What a user does, concretely.**
+- *Components and naturality of a lax α.* These are α applied to x and to f, so they are ordinary functor application, then reading off the parts of the resulting shape. They are no harder than for a pseudo transformation. The elaborator can show them as α_x and α_f.
+- *Composing two lax transformations.* The composite is a functor B → C^→ built from the two given ones. Gluing two arrows end to end is a coherence on the arrow shape (the composite of two arrows), so the composite comes from a coherence applied to shapes, not from a new rule. The associativity and unit laws for composing lax transformations come the same way.
+- *Whiskering by functors.* On the source side, precompose: B′ → B → C^→. On the target side, apply a functor H : C → D to every cell of the arrow shape. Both are ordinary composition.
+- *Interchange of two lax transformations.* This appears as a lax square inside D^→, i.e. a two-dimensional arrow object. It is one-way, as it should be, and it is a piece of data rather than a coherence.
+- *Pseudo transformations.* These are the native 2-cells, so everything in CaTT applies to them directly: interchange, whiskering, functoriality and the post's "naturality as a coherence".
+
+**What is gained.**
+- **No change to the core.** Every existing CaTT result carries over unchanged: the GM/BFM models, computads, CaTT_sua and Rice's strictification, ICaTT invertibility, and the meta-operations (suspension, opposites, functorialisation, naturality, inverses).
+- **Duality stays complete.** The opposites meta-operations reverse cells in any set of dimensions, and this is where most of the reported proof-size savings came from (survey §2). In A, reversing dimension 2 of the ambient turns pseudo into pseudo, so nothing is lost. The lax/oplax pair is related by duality at the level of the arrow object.
+- **Most ordinary mathematics uses pseudo cells.** Natural isomorphisms, units and counits of adjunctions between functors, and equivalences of categories are all pseudo. They get the full CaTT treatment for free.
+- **Known semantics.** The intended model is weak ω-categories with the cartesian closed structure. The lax arrow objects are the constructions of JFS, Loubaton and Campion.
+
+**What is lost.**
+- **Lax transformations are second-class syntactically.** They are not cells of the ambient, so CaTT's coh rule does not compose them directly. Every operation on them goes through the arrow object: compose by gluing shapes, whisker by composing functors.
+  - This is mechanical, and an elaborator can hide it.
+  - But the theory has two notions of "transformation" with different bookkeeping, and the user can see the seam whenever lax and pseudo cells interact. For example, whiskering a lax transformation with a pseudo one means converting the pseudo one into a map into the arrow object first.
+- **Two function categories.**
+  - The pseudo one, [B, C], exists for every B. It just turns the ambient's own homs into objects.
+  - The lax one, [Θ, C]_lax, is directly available only when the domain Θ is a finite shape, such as an arrow or a square. Lax functor categories with an arbitrary domain B have to be assembled, e.g. as the functors B → C^→ with prescribed ends. That assembly needs pullbacks, which come from the limits thread.
+- **New shape machinery is still needed.** The arrow-object shapes (lax squares, lax cubes, …) are not pasting schemes. Part II §4 explains how they can be generated from CaTT contexts by a "Gray tensor of contexts". Making their boundaries type-check is the main technical cost (Part II §4.3).
+
+## I.4 Option B: make the ambient's native 2-cells lax, and change the core
+
+**Description.** The ambient's native 2-cells are lax transformations. Then CaTT's interchange coherence has to go. The core is replaced by a variant, call it Gray-CaTT, in which:
+- interchange is a **one-way cell**, a generator rather than an invertible coherence;
+- the coh side condition must be refined so that it never proves a coherence relating two composites that differ by an interchange.
+
+Pseudo transformations are then lax transformations whose naturality cells are marked invertible, using ICaTT-style marking.
+
+**What a user does, concretely.**
+- *A lax transformation* is a native 2-cell. Its components and naturality cells come out of whiskering and interchange, exactly as the post describes, but now the naturality cells are one-way. So lax naturality is automatic.
+- *Composition and whiskering* of lax transformations are native composition.
+- *A pseudo transformation* is a 2-cell together with invertibility witnesses for its naturality cells. To use the interchange law in the reverse direction, the user, or the elaborator, must supply those witnesses.
+
+**What is gained.**
+- **One notion of transformation, one function category.** Lax is the default everywhere and all composition is native. There is no arrow object in the user's way, and no seam between lax and pseudo beyond invertibility markings.
+- **The post's observation yields lax naturality** directly. This is arguably the most "directed" reading of the original aesthetic.
+- **Function categories [B, C] are lax for every B**, so lax functor categories need no assembly.
+
+**What is lost.**
+- **The core must be redesigned, and nobody has done it.** No coherence theory for weak "lax-Gray" ω-categories exists in the literature. The strict analogue (Gray-categories) is well understood only in low dimensions. The new side condition must detect the *orientation* of interchange, which is a new kind of side condition, not a free-variable check. Its correctness is the central open problem.
+- **Most existing CaTT results need to be redone.** Models, the computad correspondence, CaTT_sua strictification, ICaTT and the meta-operations were all proved for the invertible-interchange core.
+- **Half the dualities stop being symmetries.** Reversing dimension-2 cells turns lax into oplax, so the opposites meta-operation no longer maps the theory to itself in that dimension. The proof-size savings from opposites would be partially lost, or the theory would need lax and oplax variants side by side.
+- **Ordinary mathematics pays a tax.** Most transformations used in practice are pseudo. In B, each one carries invertibility witnesses, and each use of reverse interchange needs them. This is the same kind of overhead ICaTT already has, but now it is pervasive.
+- **Unknown semantics.** The intended model, ω-categories enriched over the Gray tensor, is expected to exist but is not in the literature in a usable form.
+
+## I.5 Option C, briefly: two kinds of 2-cell
+
+The ambient could carry both kinds of 2-cell as two separate directions, a pseudo one and a lax one, with squares between them. This is a "double ω-category", the structure JFS actually build.
+- It makes both kinds of transformation native, with no seam and no unsound coherence.
+- It doubles the shape language, since every pasting scheme now has two kinds of 2-cell, and it has no CaTT-style precedent.
+
+It is listed for completeness. It looks strictly heavier than A and B.
+
+## I.6 Side-by-side, task by task
+
+| Task | Option A (CaTT core, lax via arrow objects) | Option B (Gray-CaTT core, lax native) |
+|---|---|---|
+| Use a natural isomorphism, adjunction unit or equivalence | Native 2-cell; all CaTT coherences apply | Native 2-cell plus invertibility witnesses; reverse interchange needs them |
+| Use a lax transformation (lax limits, monad morphisms, lax algebras) | A functor into C^→; components and naturality by application | Native 2-cell |
+| Compose lax transformations | Glue arrow shapes along a coherence (no new rule) | Native composition |
+| Interchange of two transformations | Pseudo: invertible coherence. Lax: one-way cell inside D^→ | One-way generator; invertible only with witnesses |
+| Lax functor category [B, C]_lax, arbitrary B | Assembled from C^→ and a pullback | Primitive |
+| Opposites / duality meta-operations | All still symmetries | Dimension-2 reversal swaps lax and oplax; fewer symmetries |
+| Existing results (models, computads, CaTT_sua, ICaTT, meta-operations, formalisation) | All carry over | Need re-proving for the new core |
+| New machinery | Gray tensor of contexts; molecule composites (Part II §4) | A directed-interchange side condition (unknown), plus the same Gray shapes |
+| Semantics | Known (cartesian closed (∞,ω)-categories; JFS/Loubaton arrow objects) | Expected, not available |
+| Where the cost is felt | Ergonomics: a seam between lax and pseudo, hidden by elaboration | Foundations: the core and its metatheory |
+
+**Summary.** A puts the cost in usability, where elaboration can absorb most of it. B puts the cost in foundations, where it is an open research problem. In B, everything built on a working core then looks cleaner. Both need the same Gray shape machinery of Part II §4, so that work is useful whichever way the choice goes.
+
+## I.7 What would settle it
+
+These are concrete experiments, not preferences:
+
+1. **Write a lax limit, a monad morphism and a lax algebra in A's style** (functors into C^→), and see how much of the seam the user actually sees. If the elaborator can hide it, A's main loss is small.
+2. **Try to state B's side condition.** Find a free-variable-style test on a pasting scheme that permits the coherences of CaTT minus interchange, and check whether it can be stated without orientation bookkeeping. If no clean statement exists, B is not in the CaTT aesthetic.
+3. **Count dualities.** List the opposites used in the Eckmann–Hilton development (survey §2) and see which would fail under B.
+4. **Formalise the Gray tensor of contexts** for an arrow times a pasting scheme (Part II §7, item 1). Both options need it, and it shows how heavy the shape machinery is.
 
 ---
+
+# Part II. Technical material
+
+The section numbers below continue those of the first version of these notes.
 
 ## 1. Literature
 
@@ -63,58 +191,6 @@ The recommended architecture is **A** in §3. Two alternatives are kept open.
   Side conditions are τCond/σCond, in the same style as the cone conditions. Existence is proved only for globular Γ and n = 1, and the n > 1 claim is unproved. Remark 4.5 points to Ara–Maltsiniotis for the strict formula.
 - **Benjamin–Markakis–Offord–Sarti–Vicary**, *Naturality for higher-dimensional path types* ([2501.11620](https://arxiv.org/abs/2501.11620)). This is a meta-operation producing naturality fillers along a directed interval, "a local tensor product with a directed interval". **[recall]** It takes a term and a set X of its variables, and produces the filler relating the composite at x⁻ with the composite at x⁺ through cells x⃗.
 - **Benjamin–Markakis**, Σ ⊣ Hom, and homs of free are free ([2402.01611](https://arxiv.org/abs/2402.01611)). This is the template for the native internal hom rule in §5.4.
-
----
-
-## 2. Lax vs pseudo: the obstruction
-
-Take functors F, G : A → B and H, K : B → C, with transformations α : F ⇒ G and β : H ⇒ K. The two horizontal composites are
-
-```
-(βG) ∘ (Hα)   and   (Kα) ∘ (βF)   :  HF ⇒ KG .
-```
-
-At an object a they differ by β's naturality cell at the 1-cell α_a:
-
-```
-β_{α_a} : K(α_a) ∘ β_{Fa}  ⇒  β_{Ga} ∘ H(α_a)
-```
-
-- If β is **lax**, this cell is not invertible. The two composites are connected only one way.
-- In **CaTT**, take the pasting scheme x → y → z with 2-cells α : f ⇒ f′ and β : g ⇒ g′. The two whiskered composites both use every variable, so the coherence side condition allows a coh **in each direction** between them. This is the exchange law.
-
-So **a model of CaTT whose 2-cells are lax transformations would need invertible interchangers, which lax transformations do not have.** ωCat with lax transformations is not a weak ω-category. It is a Gray-enriched one: composition goes [B,C] ⊗ [A,B] → [A,C], not [B,C] × [A,B] → [A,C]. GHL show Cat_(∞,2) is monoidal under Gray. The full Gray-enrichment statement is **[recall/expected]**.
-
-With **pseudo** (strong) transformations, components are still directed 1-cells, but naturality cells are invertible. Then the interchanger is invertible, and ωCat is cartesian closed and self-enriched, so it is a legitimate CaTT ambient.
-
-**Reading of the §13 decision "lax by default".** Lax cones, lax limits (Mikhail) and lax transformations as *data the user works with* are all fine. What fails is making lax transformations the *native globular 2-cells of the ambient that coh composes*. §3 lists three ways to respond.
-
-> A useful sanity check: the post's "naturality square as a coherence" (Omega-Categories Made Easy, §Functors) already commits to pseudo naturality for native cells, because coh cells are invertible whenever both sides are full.
-
----
-
-## 3. Three architectures
-
-| | **A. Pseudo ambient, lax via representable homs** (recommended) | **B. Lax-native ambient ("Gray-CaTT")** | **C. Double ambient** |
-|---|---|---|---|
-| Native 2-cells of the ambient | pseudo transformations | lax transformations | both, as two directions |
-| Core coh rule | unchanged CaTT | redesigned: interchange is a *directed generator*, not a coherence | CaTT in each direction plus a compatibility rule |
-| Lax transformation F ⇒ G : B → C | functor B → [D¹, C]ₗₐₓ over (F, G) | a native 2-cell | a "loose" 2-cell |
-| Internal hom for arbitrary B | native hom [B, C] (pseudo), §5.4 | native hom [B, C] (lax) | two homs |
-| Gray tensor needed for | contexts only (finite computads) | the composition law itself | squares between the two directions |
-| Existing results reused | all of CaTT, CaTT_sua, computads, meta-operations | few: coh, rehydration and computads need redoing for Gray signatures | most, but the double layer is new |
-| Aesthetic risk | lax is "one level over"; two homs (lax out of representables, pseudo everywhere) | the coh side condition must detect *orientation* of interchange; nobody has a weak Gray-ω coherence theory | heaviest syntax; least CaTT-like |
-| Semantics | (∞,ω)-Cat, cartesian closed; lax homs à la JFS/Loubaton | Gray-enriched (∞,ω)-Cat (expected, not in the literature in this form) | JFS-style double (∞,n)-categories |
-
-**Agreement with the limits notes.** `notes/limits-representables.md` (limits/representables thread, PR #2) reaches the same obstruction independently. Its option **P** (keep the core, get lax transformations from a lax function category [⟦D¹⟧, D]ₗₐₓ) is architecture **A** here, and its option **L** (Gray-style directed interchange) is **B**. These notes add the rule-level detail for P/A: the Gray context operation (§4), λ/♭ rules for [Θ, C]ₗₐₓ (§5.1), and pseudo as a marking (§5.5).
-
-**Why A is recommended.**
-- It keeps every existing result.
-- It matches how JFS and Loubaton actually define lax transformations.
-- It puts all lax structure into *shapes*: Gray contexts plus a hom-out-of-representable rule. This is §11 principle 1 ("shapes, not axioms") and §13 candidate principle 8.
-- The directed interchanger appears as the generator of the Gray square D¹ ⊗ D¹, inside [D¹ ⊗ D¹, D]. It never shows up as a coherence (§5.3).
-
-**What B would buy.** Lax would be uniform: the native hom is already lax, with no second hom. It would require a coherence theory for "lax Gray ω-categories". A possible starting point is Markakis's generalised signatures, which already cover sesquicategories, with the interchanger as a generator. The side condition would be that a coh may relate two composites only when they differ by *no* interchange, and interchanges come from a separate directed rule. This is plausible but entirely unexplored. It is a good candidate for a separate investigation if A turns out to feel too indirect.
 
 ---
 
@@ -190,7 +266,7 @@ Option (i) is less invasive and fits the "admissible before primitive" principle
 
 ---
 
-## 5. Rules for architecture A
+## 5. Rules for Option A
 
 The ambient judgment `Γ ⊢ C : ⋆` means C is an ω-category. `Γ ⊢ φ : Δ ⊳ C` means φ is a Δ-shaped diagram in C, i.e. a functor ⟦Δ⟧ → C, equivalently a 1-cell out of a representable. How representables are presented is the other thread's question. These rules only assume:
 
@@ -209,10 +285,18 @@ The ambient judgment `Γ ⊢ C : ⋆` means C is an ω-category. `Γ ⊢ φ : Δ
 (lhom-Λ) ─────────────────────           (lhom-♭) ──────────────────────
         Γ ⊢ Λφ : Δ ⊳ [Θ, C]                      Γ ⊢ ψ♭ : (Δ ⊗ Θ) ⊳ C
 
-(β)  (Λφ)♭ ≡ φ          (η)  Λ(ψ♭) ≡ ψ
-(nat-Δ)  (Λφ) ∘ σ ≡ Λ(φ ∘ (σ ⊗ Θ))         for σ : Δ′ → Δ    (needs G2)
-(nat-C)  F ∘ (Λφ) ≡ [Θ, F] ∘ Λφ ≡ Λ(F ∘ φ)  where [Θ, F] : [Θ, C] → [Θ, D]
+(β-cell)  Γ ⊨ βφ : (Λφ)♭ → φ            (η-cell)  Γ ⊨ ηψ : ψ → Λ(ψ♭)
+(nat-Δ)   Γ ⊨ (Λφ) ∘ σ → Λ(φ ∘ (σ ⊗ Θ))   for σ : Δ′ → Δ    (needs G2)
+(nat-C)   Γ ⊨ F ∘ (Λφ) → Λ(F ∘ φ)         for F : C → D
 ```
+
+**No definitional β or η.** β, η and naturality are *invertible cells*, written in Mikhail's invertibility judgment ⊨ (or as ICaTT invertible cells), not equations. This is the pattern of CaTT_lim's `uni` fillers. The theory keeps only syntactic definitional equality, as in core CaTT.
+
+There are two ways to generate these cells:
+- (a) list them as above, with their higher coherences produced by a single filler schema in Mikhail's style;
+- (b) use Mimram's approach (§5.7): declare the relevant shapes contractible, so that Λ, ♭ and all their laws are coherences over those shapes.
+
+(b) is more uniform. (a) is closer to existing published rules.
 
 - **Covariance in Θ.** A substitution τ : Θ′ → Θ induces a restriction [τ, C] : [Θ, C] → [Θ′, C], defined by Λ((–)♭ ∘ (Δ ⊗ τ)).
 - **Style.** The rule is a shape plus a bijection with no new side conditions beyond G1 and G2. It is the hom-version of Mikhail's cone rule: a representing object for a family of Gray-shaped diagrams.
@@ -234,7 +318,7 @@ The map is induced by the two endpoint substitutions 0, 1 : D⁰ → D¹. This u
 - **Whiskering.**
   - On the left: precomposition B′ → B → [D¹, C].
   - On the right: postcomposition with [D¹, H] : [D¹, C] → [D¹, D] (nat-C).
-- **The lax interchanger.** For α : B → [D¹, C] and β : C → [D¹, D], the composite [D¹, β] ∘ α : B → [D¹, [D¹, D]] ≃ [D¹ ⊗ D¹, D] (currying plus G4) picks out a Gray square of transformations. Its 2-cell generator *is* the directed interchanger β_α of §2. The non-invertible interchange appears as a *generator of a shape*, not as a coherence. This is how architecture A avoids the obstruction.
+- **The lax interchanger.** For α : B → [D¹, C] and β : C → [D¹, D], the composite [D¹, β] ∘ α : B → [D¹, [D¹, D]] ≃ [D¹ ⊗ D¹, D] (currying plus G4) picks out a Gray square of transformations. Its 2-cell generator *is* the directed interchanger of §I.2. The non-invertible interchange appears as a *generator of a shape*, not as a coherence. This is how Option A avoids the obstruction.
 
 ### 5.4 Native (pseudo) internal hom
 
@@ -249,7 +333,8 @@ This makes the ambient's own hom-ω-categories into objects. It is the Benjamin�
 (hom-⌜⌝) ──────────────────────────────────────    (hom-⌞⌟) ─────────────────────────────
         Γ ⊢ ⌜σ⌝ : Δ ⊳ [B, C]                              Γ ⊢ ⌞φ⌟ : ΣΔ → Γ    (ends B, C)
 
-with ⌞⌜σ⌝⌟ ≡ σ,  ⌜⌞φ⌟⌝ ≡ φ,  and naturality in Δ
+with invertible cells ⌞⌜σ⌝⌟ → σ and φ → ⌜⌞φ⌟⌝, and naturality in Δ, as in §5.1
+(no definitional equations)
 ```
 
 Here ΣΔ → Γ means a ΣΔ-shaped tuple of terms of the ambient context. So "a Δ-cell of [B, C]" is "a ΣΔ-diagram of functors, transformations, … from B to C".
@@ -290,7 +375,7 @@ This is the case Δ = D¹ of Conjecture (P), read as a rule rather than a conjec
 (cyl-Λ) ────────────────────────         (cyl-♭) ──────────────────────────
         Γ ⊢ Λₘφ : Δ ⊳ [⟦Θ⟧, C]                  Γ ⊢ ψ♭ₘ : (Δ ⊗ₘ Θ) ⊳ C
 
-β, η and naturality in Δ exactly as in §5.1
+β-, η- and naturality cells exactly as in §5.1 (invertible cells, not equations)
 ```
 
 The cylinder rule is (cyl-Λ/♭) at Δ = D¹, combined with the native hom of §5.4: a D¹-cell of [⟦Θ⟧, C] is an ambient 2-cell between Θ-diagrams.
@@ -300,7 +385,7 @@ Points to settle:
 - **Which cells are marked.** Only the *mixed* generators x⊗i with dim x ≥ 1 should be marked, i.e. the naturality cells. The components x⊗i for dim x = 0 are the transformation's components, and they must stay unmarked and directed. Otherwise the rule would classify invertible transformations, not pseudo ones. In Mikhail's notation: mark p_f, p_α, …, never pₓ for objects x.
 - **Orientation.** The limits note writes Γ ⊗ D¹. With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
 - **Status.**
-  - Under architecture A (their option P), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
+  - Under Option A (option P of the limits notes), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
   - Its semantic justification is the localisation statement in (P): GHL Prop. 2.12 in dimension 2, unverified for weak ω.
   - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
 - **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
@@ -334,7 +419,7 @@ Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](ht
 **Why it matters here.**
 - It is the first CaTT-line treatment of an **exponential**, which is not a limit, so Mikhail's CaTT_lim does not cover it.
 - It is in exactly the style Anthony asked for: the universal property is *not* a λ/♭ bijection. Instead, a shape class (pasting types) is declared contractible, and every structure map and law is a coherence over it.
-- It is a candidate replacement for the λ/⌜⌝ rules of §5.4. Cartesian closure is the *pseudo* hom, which is what the ambient needs under architecture A. In the ω-version:
+- It is a candidate replacement for the λ/⌜⌝ rules of §5.4. Cartesian closure is the *pseudo* hom, which is what the ambient needs under Option A. In the ω-version:
   - `ps=` would become a coherence cell, invertible as usual;
   - β and η would become higher cells, not definitional equalities;
   - so the "limited normalisation" requirement of survey §13 would be respected.
@@ -344,7 +429,7 @@ Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](ht
 
 **Caveats.**
 - CCCaTT works *inside* one cartesian closed category, whereas §5.4 internalises the ambient ωCat's hom. To match, the pasting types must range over ambient object variables B, C : ⋆, with [B, C] a type former of the ambient. This seems direct.
-- The higher-dimensional criterion, which the paper says needs dependent types, is the unknown. Until it appears, the λ/♭ rules of §5.1 and §5.4 remain the conservative fallback.
+- The higher-dimensional criterion, which the paper says needs dependent types, is the unknown. Until it appears, the rules of §5.1 and §5.4, with β/η as invertible cells, remain the conservative fallback.
 
 ## 6. What about ⊗ of arbitrary objects?
 
@@ -366,10 +451,3 @@ These are for the Agda thread, smallest first.
 4. **D¹ ⊗ D¹ ⊗ D¹** (the Gray cube) under both orientations, checking G4 syntactically. This is the first place layering choices (§4.3) bite.
 
 ---
-
-## 8. Questions for Anthony
-
-1. **Architecture.** Is A acceptable, with lax as the default for user-facing data but native ambient cells pseudo? Or is "the ambient's 2-cells are lax" itself an aesthetic requirement? If it is, B, which redesigns coh with directed interchange, becomes its own research line.
-2. **Molecular coh.** Is extending coh from pasting schemes to molecules (Gray cubes, etc.) within the aesthetic, given that the side conditions stay the same? Or should Gray shapes stay "contexts only", with composites built by layering?
-3. **CaTT_sua earlier.** Option (i) is much cleaner over strict associativity/units. Is moving strictness from "end-stage" into the kernel acceptable for this sub-theory?
-4. **Two homs.** In A there is a pseudo [B, C] for all B and a lax [Θ, C] only for representable Θ. Is that asymmetry tolerable, or does it argue for B?

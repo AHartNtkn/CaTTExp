@@ -42,8 +42,15 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
    - `Strict/FreeADC.agda`: the instance for a finite basis (chains as vectors of naturals, ∂ extended linearly), with the atom of D¹ checked by evaluation.
    - `Strict/Atoms.agda`: the atom ⟨b⟩ of a basis element (Steiner Def. 3.4: ⟨b⟩ₖ⁻ = (∂⟨b⟩ₖ₊₁⁻)₋, ⟨b⟩ₖ⁺ = (∂⟨b⟩ₖ₊₁⁺)₊, with positive and negative parts by pointwise truncated subtraction) is a cell of ν(K) when ∂∂ = 0 holds on chains, ∂ lowers degree by one, the basis element is unital (ε⟨b⟩₀^± = 1), and deg b ≤ L (`atom-cell`).
    - Still to do: bridge the bag/≈ representation of `Strict/Cell.agda` to these tables.
-2. **(N1)** Atom generation by Steiner's decomposition index, or by the cut lemma of the answered support prompt if that gives a shorter route.
+2. **(N1) Done for ordered bases** (`Strict/Generation.agda`, `--safe`, no postulates). `Gen.generation : ∀ x → IsCell K L x → Gen x`, where `Gen` is the closure of the atoms of dimension ≤ L under the composites `compT n` of `nu`.
+   - Hypotheses (record `Hyp`): ∂∂ = 0 and degree-lowering of ∂ on chains; ε∂ = 0 on 1-chains; unital basis; and the basis listed in an order with supp ∂⁻bᵢ ⊆ [0, i) and supp ∂⁺bᵢ ⊆ (i, N). The last is the strongly loop-free case (Steiner Def. 3.6 with a linear extension), which covers λΘ, loop-free globular sets and their tensors (the order of `Strict/Order.agda`). Steiner's weaker loop-free hypothesis (Def. 3.5) is not covered.
+   - Proof: Steiner's Props. 5.1, 5.2, 5.4, 5.5 and Thm 5.6, with the decomposition index replaced by an induction on the level s.
+     - `peel` (Prop. 5.1, binary form): if the rows of a cell above s split as p + q, both satisfying the boundary conditions above s, and (∂p_{s+1})₋ is disjoint from (∂q_{s+1})₊, then the cell is y #ₛ z with y, z cells whose rows above s are p and q.
+     - `gen-suc` (Prop. 5.2): rows above s+1 equal to an atom ⟨a⟩ (or zero) give row s+1 = ⟨a⟩_{s+1} + w with w ≥ 0, so the rows above s are those of ⟨a⟩ + Σ_{c ∈ w} ⟨c⟩.
+     - `peel-all` (Prop. 5.4): peel the least of these atoms in the basis order, recursing on |w|. The order makes every disjointness condition a support comparison.
+     - `gen-0` (Prop. 5.5): at s = 0 unitality forces the cell to be the atom.
+   - Equations between chains use a small commutative-monoid solver (`Strict/CMonSolver.agda`).
 3. **(N2)** Freeness. Uniqueness of the extension uses (N1). Existence follows Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms).
 4. **(N3)** Discharge the citations of C8(4), and connect the L strict model to `ωCat`.
 
-Steps 2–3 are the bulk. An outside prompt asking for the shortest formalisable route to (N1)–(N2), in the style of the support prompt, is in `conjectures/outbox/steiner-nu-freeness.md`. Internal work proceeds in parallel, starting from (N0).
+Step 3 is now the bulk. An outside prompt asking for the shortest formalisable route to (N1)–(N2), in the style of the support prompt, is in `conjectures/outbox/steiner-nu-freeness.md`. Internal work proceeds in parallel, starting from (N0).

@@ -759,3 +759,464 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   peel : ∀ s → s < L → (f p q : RF) → CellF f → Good s p → Good s q →
          (∀ j → s < j → j ≤ L → f j ≡ p j +R q j) → Disj s p q → Split s f p q
   peel s sL f p q cf gp gq sp dj = Peel.result s sL f p q cf gp gq sp dj
+
+  ----------------------------------------------------------------------
+  -- Composites of atoms.
+
+  data Gen : Tb → Set where
+    g-atom : ∀ i → deg i ≤ L → Gen (atomT L i)
+    g-comp : ∀ n {x y : Tb} → Gen x → Gen y → tgtT 𝕄 n x ≡ srcT 𝕄 n y → Gen (compT 𝕄 n x y)
+
+  gen-split : ∀ {s f p q} (S : Split s f p q) →
+              Gen (tabG (Split.y S) 0) → Gen (tabG (Split.z S) 0) → Gen (tabG f 0)
+  gen-split S gy gz = subst Gen (Split.comp S) (g-comp _ gy gz (Split.match S))
+
+  Agree : Nat → RF → RF → Set
+  Agree s f r = ∀ j → s < j → j ≤ L → f j ≡ r j
+
+  -- A table that agrees with an atom on all rows is that atom.
+  gen-atom : ∀ f a → deg a ≤ L → (∀ j → j ≤ L → f j ≡ ent a j) → Gen (tabG f 0)
+  gen-atom f a aL h =
+    subst Gen (trans (atomT≡ (ent a) 0) (tabG-ext (ent a) f 0 (λ i _ q → sym (h i (subst (λ k → i ≤ k) (+-zero L) (≤-pred q))))))
+      (g-atom a aL)
+
+  ----------------------------------------------------------------------
+  -- Chain lemmas.
+
+  private
+    +c-idr : ∀ {m} (u : Vec Nat m) → u +c 0c ≡ u
+    +c-idr u = trans (+c-comm u 0c) (+c-id u)
+
+    ∸c-0 : ∀ {m} (u : Vec Nat m) → u ∸c 0c ≡ u
+    ∸c-0 []      = refl
+    ∸c-0 (a ∷ u) = cong (a ∷_) (∸c-0 u)
+
+    +∸ : ∀ b c → (b + c) ∸ c ≡ b
+    +∸ b zero    = +-zero b
+    +∸ b (suc c) = trans (cong (_∸ suc c) (+-suc b c)) (+∸ b c)
+
+    ≼→∸0 : ∀ x n → x ≼ n → x ∸ n ≡ 0
+    ≼→∸0 zero    n       _       = 0∸ n
+    ≼→∸0 (suc x) zero    (k , ())
+    ≼→∸0 (suc x) (suc n) (k , e) = ≼→∸0 x n (k , suc-inj e)
+
+    ≼-+ : ∀ x y z → x ≼ y → x ≼ (y + z)
+    ≼-+ x y z (k , e) = k + z , trans (sym (+-assoc x k z)) (cong (_+ z) e)
+
+  sumv : ∀ {m} → Vec Nat m → Nat
+  sumv []      = 0
+  sumv (a ∷ u) = a + sumv u
+
+  -- The least basis element in the support of a chain.
+  least : ∀ {m} (w : Vec Nat m) → (w ≡ 0c) ⊎ Σ Nat (λ c → Hi c w × Σ Nat (λ k → at0 w c ≡ suc k))
+  least []          = inj₁ refl
+  least (suc a ∷ w) = inj₂ (0 , (λ d ()) , a , refl)
+  least (zero ∷ w) with least w
+  ... | inj₁ e = inj₁ (cong (0 ∷_) e)
+  ... | inj₂ (c , h , k , e) = inj₂ (suc c , hi , k , e)
+    where
+    hi : Hi (suc c) (zero ∷ w)
+    hi zero    _       = refl
+    hi (suc d) (s≤s p) = h d p
+
+  unit-split : ∀ {m} (w : Vec Nat m) c k → at0 w c ≡ suc k → w ≡ unit c +c (w ∸c unit c)
+  unit-split (.(suc k) ∷ w) zero k refl = cong (suc k ∷_) (sym (trans (+c-id (w ∸c 0c)) (∸c-0 w)))
+  unit-split (a ∷ w) (suc c) k e = cong (a ∷_) (unit-split w c k e)
+
+  sum-split : ∀ {m} (w : Vec Nat m) c k → at0 w c ≡ suc k → sumv w ≡ suc (sumv (w ∸c unit c))
+  sum-split (a ∷ w) zero    k refl = cong (λ t → suc (k + t)) (sym (cong sumv (∸c-0 w)))
+  sum-split (a ∷ w) (suc c) k e    = trans (cong (a +_) (sum-split w c k e)) (+-suc a _)
+
+  deg-of : ∀ {m} j (gs w : Vec Nat m) c k → prj j gs w ≡ w → at0 w c ≡ suc k → at 0 gs c ≡ j
+  deg-of j (g ∷ gs) (a ∷ w) zero    k p e with g ==ℕ j | ==ℕ-sound g j
+  ... | true  | snd₁ = snd₁ tt
+  ... | false | _    = ⊥-elim (z≢s (trans (hd p) e))
+    where
+    hd : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → x ≡ y
+    hd refl = refl
+    z≢s : 0 ≡ suc k → ⊥
+    z≢s ()
+  deg-of j (g ∷ gs) (a ∷ w) (suc c) k p e = deg-of j gs w c k (tl p) e
+    where
+    tl : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tl refl = refl
+
+  -- Degree-0 chains with augmentation 0 or 1.
+  aug-zero : ∀ {m} (gs w : Vec Nat m) → prj 0 gs w ≡ w → augm gs w ≡ 0 → w ≡ 0c
+  aug-zero []       []      p e = refl
+  aug-zero (g ∷ gs) (a ∷ w) p e with g ==ℕ 0
+  aug-zero (g ∷ gs) (zero ∷ w) p e | true  = cong (0 ∷_) (aug-zero gs w (tlV p) e)
+    where
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV refl = refl
+  aug-zero (g ∷ gs) (suc a ∷ w) p () | true
+  aug-zero (g ∷ gs) (zero ∷ w) p e | false = cong (0 ∷_) (aug-zero gs w (tlV p) e)
+    where
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV refl = refl
+  aug-zero (g ∷ gs) (suc a ∷ w) () e | false
+
+  aug-one : ∀ {m} (gs w : Vec Nat m) → prj 0 gs w ≡ w → augm gs w ≡ 1 →
+            Σ Nat (λ i → (w ≡ unit i) × (at 0 gs i ≡ 0))
+  aug-one []       []      p ()
+  aug-one (g ∷ gs) (a ∷ w) p e with g ==ℕ 0 | ==ℕ-sound g 0
+  aug-one (g ∷ gs) (zero ∷ w) p e | true | _ =
+    let (i , u , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , d
+    where
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV refl = refl
+  aug-one (g ∷ gs) (suc zero ∷ w) p e | true | g0 =
+    0 , cong (1 ∷_) (aug-zero gs w (tlV p) (suc-inj e)) , g0 tt
+    where
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV refl = refl
+  aug-one (g ∷ gs) (suc (suc a) ∷ w) p () | true | _
+  aug-one (g ∷ gs) (zero ∷ w) p e | false | _ =
+    let (i , u , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , d
+    where
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV refl = refl
+  aug-one (g ∷ gs) (suc a ∷ w) () e | false | _
+
+  -- Prop. 5.2(ii): two rows with the same boundary, one of disjoint support.
+  excess : ∀ (u v u0 v0 : Vec Nat N) → u +c v0 ≡ v +c u0 → (∀ d → (at0 u0 d ≡ 0) ⊎ (at0 v0 d ≡ 0)) →
+           (u ≡ u0 +c (u ∸c u0)) × (v ≡ v0 +c (u ∸c u0))
+  excess u v u0 v0 e dj =
+    vext _ _ (λ d → trans (pt1 d) (sym (trans (at-+c u0 (u ∸c u0) d) (cong (at0 u0 d +_) (at-∸c u u0 d))))) ,
+    vext _ _ (λ d → trans (pt2 d) (sym (trans (at-+c v0 (u ∸c u0) d) (cong (at0 v0 d +_) (at-∸c u u0 d)))))
+    where
+    E : ∀ d → at0 u d + at0 v0 d ≡ at0 v d + at0 u0 d
+    E d = trans (sym (at-+c u v0 d)) (trans (pt d e) (at-+c v u0 d))
+    Eu : ∀ d → at0 v0 d ≡ 0 → at0 u d ≡ at0 v d + at0 u0 d
+    Eu d z = trans (sym (+-zero (at0 u d))) (trans (cong (at0 u d +_) (sym z)) (E d))
+    Ev : ∀ d → at0 u0 d ≡ 0 → at0 v d ≡ at0 u d + at0 v0 d
+    Ev d z = trans (sym (+-zero (at0 v d))) (trans (cong (at0 v d +_) (sym z)) (sym (E d)))
+    pt1 : ∀ d → at0 u d ≡ at0 u0 d + (at0 u d ∸ at0 u0 d)
+    pt1 d with dj d
+    ... | inj₁ z = subst (λ t → at0 u d ≡ t + (at0 u d ∸ t)) (sym z) refl
+    ... | inj₂ z = trans (Eu d z) (trans (+-comm (at0 v d) (at0 u0 d))
+                     (cong (at0 u0 d +_) (sym (trans (cong (_∸ at0 u0 d) (Eu d z)) (+∸ (at0 v d) (at0 u0 d))))))
+    pt2 : ∀ d → at0 v d ≡ at0 v0 d + (at0 u d ∸ at0 u0 d)
+    pt2 d with dj d
+    ... | inj₁ z = trans (Ev d z) (trans (+-comm (at0 u d) (at0 v0 d)) (cong (λ t → at0 v0 d + (at0 u d ∸ t)) (sym z)))
+    ... | inj₂ z = trans (sym (+∸ (at0 v d) (at0 u0 d)))
+                     (trans (cong (_∸ at0 u0 d) (sym (Eu d z))) (cong (_+ (at0 u d ∸ at0 u0 d)) (sym z)))
+
+  -- Two rows below the same chain: u + v0 = v + u0.
+  same-bd : ∀ (u v u0 v0 e : Vec Nat N) → dp e +c u ≡ dm e +c v → dp e +c u0 ≡ dm e +c v0 → u +c v0 ≡ v +c u0
+  same-bd u v u0 v0 e E1 E2 = by-lin +c-cancel (E1 ∷ʰ sym E2 ∷ʰ []ʰ) _ _
+    (solve ((` 0 ⊞ ` 1) ⊞ ((` 2 ⊞ ` 3) ⊞ ((` 4 ⊞ ` 5) ⊞ ∅)))
+           ((` 3 ⊞ ` 5) ⊞ ((` 4 ⊞ ` 0) ⊞ ((` 2 ⊞ ` 1) ⊞ ∅)))
+           (lk (u ∷ v0 ∷ dm e ∷ v ∷ dp e ∷ u0 ∷ [])) tt)
+
+  -- A row over a zero row has equal entries.
+  over-zero : ∀ (u v : Vec Nat N) → dp 0c +c u ≡ dm 0c +c v → u ≡ v
+  over-zero u v e = trans (sym (+c-id u)) (trans (cong (_+c u) (sym (lin-0 bplus)))
+                      (trans e (trans (cong (_+c v) (lin-0 bminus)) (+c-id v))))
+
+  ----------------------------------------------------------------------
+  -- Atoms and zero above a level.
+
+  Arow : Maybe Nat → RF
+  Arow nothing  j = 0R
+  Arow (just a) j = ent a j
+
+  bit : Maybe Nat → Nat
+  bit nothing  = 0
+  bit (just _) = 1
+
+  AOK : Nat → Maybe Nat → Set
+  AOK s nothing  = ⊤
+  AOK s (just a) = (s < deg a) × (deg a ≤ L)
+
+  AOKL : Maybe Nat → Set
+  AOKL nothing  = ⊤
+  AOKL (just a) = deg a ≤ L
+
+  ent-zero : ∀ a j → deg a < j → ent a j ≡ 0R
+  ent-zero a j h with <-split h
+  ... | k , e rewrite e | +-suc (deg a) k = ent-out a k
+
+  ent-step : ∀ a s → s < deg a → ent a s ≡ step (ent a (suc s))
+  ent-step a s h with <-split h
+  ... | k , e = trans (ent-in a s (suc k) e) (cong step (sym (ent-in a (suc s) k (trans e (+-suc s k)))))
+
+  Good-0 : ∀ s → Good s (λ _ → 0R)
+  Good-0 s = record { g-deg⁻ = prj-0 (suc s) gdeg ; g-deg⁺ = prj-0 (suc s) gdeg ; g-inv = refl
+                    ; g-ent = λ j _ _ → Ent-0 (suc j) 0R refl ; g-last = refl }
+
+  Good-A : ∀ s A → AOK s A → Good s (Arow A)
+  Good-A s nothing  _       = Good-0 s
+  Good-A s (just a) (p , q) = Good-ent a s p q
+
+  W-unit-ent : ∀ s c → deg c ≡ suc s → ∀ j → s < j → W s (unit c) j ≡ ent c j
+  W-unit-ent s c dc j h with view3 j (suc s)
+  ... | vlt h′   = ⊥-elim (≤-<-⊥ h h′)
+  ... | veq refl = trans (W-top s (unit c)) (sym (ent-in c (suc s) 0 (trans dc (sym (+-zero (suc s))))))
+  ... | vgt h′   = trans (W-above s (unit c) j h′) (sym (ent-zero c j (subst (λ k → k < j) (sym dc) h′)))
+
+  W-split : ∀ s w u w′ → w ≡ u +c w′ → ∀ j → W s w j ≡ W s u j +R W s w′ j
+  W-split s w u w′ e j with cmp3 j (suc s)
+  ... | LT = sym (cong₂ _,_ (+c-id 0c) (+c-id 0c))
+  ... | EQ = cong₂ _,_ e e
+  ... | GT = sym (cong₂ _,_ (+c-id 0c) (+c-id 0c))
+
+  W-0 : ∀ s j → W s 0c j ≡ 0R
+  W-0 s j with cmp3 j (suc s)
+  ... | LT = refl
+  ... | EQ = refl
+  ... | GT = refl
+
+  +R-idr : ∀ (r : Row) → r +R 0R ≡ r
+  +R-idr (a , b) = cong₂ _,_ (+c-idr a) (+c-idr b)
+
+  +R-idl : ∀ (r : Row) → 0R +R r ≡ r
+  +R-idl (a , b) = cong₂ _,_ (+c-id a) (+c-id b)
+
+  +R-swap : ∀ (x u v : Row) → x +R (u +R v) ≡ u +R (x +R v)
+  +R-swap (x , x′) (u , u′) (v , v′) =
+    cong₂ _,_ (solve (` 0 ⊞ (` 1 ⊞ ` 2)) (` 1 ⊞ (` 0 ⊞ ` 2)) (lk (x ∷ u ∷ v ∷ [])) tt)
+              (solve (` 0 ⊞ (` 1 ⊞ ` 2)) (` 1 ⊞ (` 0 ⊞ ` 2)) (lk (x′ ∷ u′ ∷ v′ ∷ [])) tt)
+
+  Hi-mono : ∀ {a c} (w : Vec Nat N) → a ≤ c → Hi c w → Hi a w
+  Hi-mono w ac h d p = h d (≤-trans p ac)
+
+  ----------------------------------------------------------------------
+  -- Prop. 5.4: peel the atoms of ⟨A⟩ + Σ_{c ∈ w} ⟨c⟩ in the basis order.
+
+  GenAt : Nat → Set
+  GenAt s = ∀ f → CellF f → ∀ A → AOKL A → Agree s f (Arow A) → Gen (tabG f 0)
+
+  peel-all : ∀ s → s < L → GenAt s → ∀ n f A w → CellF f → AOK s A → InD (suc s) w →
+             sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+  peel-all s sL G n f A w cf aok dw en ag with least w
+  ... | inj₁ e = G f cf A (aokl A aok)
+                   (λ j h hL → trans (ag j h hL) (trans (cong (λ x → Arow A j +R W s x j) e)
+                                       (trans (cong (Arow A j +R_) (W-0 s j)) (+R-idr (Arow A j)))))
+    where
+    aokl : ∀ A → AOK s A → AOKL A
+    aokl nothing  _       = tt
+    aokl (just a) (_ , q) = q
+  ... | inj₂ (c , hc , k , ec) = go n A aok en ag
+    where
+    w′ : Vec Nat N
+    w′ = w ∸c unit c
+    dc : deg c ≡ suc s
+    dc = deg-of (suc s) gdeg w c k dw ec
+    sw : sumv w ≡ suc (sumv w′)
+    sw = sum-split w c k ec
+    dw′ : InD (suc s) w′
+    dw′ = ∸c-deg (suc s) gdeg w (unit c) dw
+    du : InD (suc s) (unit c)
+    du = subst (λ j → prj j gdeg (unit c) ≡ unit c) dc (unit-deg′ gdeg c)
+    hw′ : Hi c w′
+    hw′ = ∸c-Hi {N} {c} w (unit c) hc
+
+    -- Peel ⟨c⟩.
+    peel-c : ∀ n A → AOK s A → sumv w′ + bit A ≡ n →
+             (∀ d → d < c → at0 (dp (snd (Arow A (suc s)))) d ≼ at0 (dm (snd (Arow A (suc s)))) d) →
+             Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+    peel-c n A aok en key ag =
+      gen-split S (G (Split.y S) (Split.cy S) (just c) (subst (λ k → k ≤ L) (sym dc) sL)
+                     (λ j h _ → trans (Split.yp S j h) (W-unit-ent s c dc j h)))
+                  (peel-all s sL G n (Split.z S) A w′ (Split.cz S) aok dw′ en (λ j h _ → Split.zq S j h))
+      where
+      q : RF
+      q j = Arow A j +R W s w′ j
+      sp : ∀ j → s < j → j ≤ L → f j ≡ W s (unit c) j +R q j
+      sp j h hL = trans (ag j h hL) (trans (cong (Arow A j +R_) (W-split s w (unit c) w′ (unit-split w c k ec) j))
+                                           (+R-swap (Arow A j) (W s (unit c) j) (W s w′ j)))
+      a⁺ : Vec Nat N
+      a⁺ = snd (Arow A (suc s))
+      lo : Lo c (dm (fst (W s (unit c) (suc s))) ∸c dp (fst (W s (unit c) (suc s))))
+      lo = subst (λ r → Lo c (dm (fst r) ∸c dp (fst r))) (sym (W-top s (unit c)))
+             (∸c-Lo {N} {c} (dm (unit c)) (dp (unit c)) (dm-Lo c (unit c) (unit-Lo {N} c)))
+      hi : Hi c (dp (snd (q (suc s))) ∸c dm (snd (q (suc s))))
+      hi d h = subst (λ r → at0 (dp (a⁺ +c snd r) ∸c dm (a⁺ +c snd r)) d ≡ 0) (sym (W-top s w′))
+        (trans (at-∸c (dp (a⁺ +c w′)) (dm (a⁺ +c w′)) d)
+          (trans (cong₂ _∸_ (trans (pt d (lin-+ a⁺ w′ bplus)) (at-+c (dp a⁺) (dp w′) d))
+                            (trans (pt d (lin-+ a⁺ w′ bminus)) (at-+c (dm a⁺) (dm w′) d)))
+            (trans (cong (λ t → (at0 (dp a⁺) d + t) ∸ (at0 (dm a⁺) d + at0 (dm w′) d))
+                         (dp-Hi c w′ hw′ d (≤-suc h)))
+              (≼→∸0 _ _ (let (t , et) = key d h in
+                          t + at0 (dm w′) d ,
+                          trans (cong (_+ (t + at0 (dm w′) d)) (+-zero (at0 (dp a⁺) d)))
+                            (trans (sym (+-assoc (at0 (dp a⁺) d) t (at0 (dm w′) d))) (cong (_+ at0 (dm w′) d) et)))))))
+      S : Split s f (W s (unit c)) q
+      S = peel s sL f (W s (unit c)) q cf (Good-W s (unit c) du)
+               (Good-add s (Arow A) (W s w′) (Good-A s A aok) (Good-W s w′ dw′)) sp
+               (λ d → disj-c d)
+        where
+        disj-c : ∀ d → _
+        disj-c d with ≤-dec c d
+        ... | inj₁ p = inj₁ (lo d p)
+        ... | inj₂ p = inj₂ (hi d p)
+
+    -- Peel ⟨a⟩ (when a comes no later than every element of w).
+    peel-a : ∀ n a → s < deg a → deg a ≤ L → a ≤ c → sumv w ≡ n →
+             Agree s f (λ j → ent a j +R W s w j) → Gen (tabG f 0)
+    peel-a n a h aL ac en ag =
+      gen-split S (G (Split.y S) (Split.cy S) (just a) aL (λ j h′ _ → Split.yp S j h′))
+                  (peel-all s sL G n (Split.z S) nothing w (Split.cz S) tt dw (trans (+-zero (sumv w)) en)
+                     (λ j h′ _ → trans (Split.zq S j h′) (sym (+R-idl (W s w j)))))
+      where
+      lo : Lo a (dm (fst (ent a (suc s))) ∸c dp (fst (ent a (suc s))))
+      lo = subst (λ r → Lo a (fst r)) (ent-step a s h) (fst (ent-sides a s h))
+      hi : Hi (suc a) (dp (snd (W s w (suc s))) ∸c dm (snd (W s w (suc s))))
+      hi = subst (λ r → Hi (suc a) (dp (snd r) ∸c dm (snd r))) (sym (W-top s w))
+             (∸c-Hi {N} {suc a} (dp w) (dm w) (dp-Hi a w (Hi-mono w ac hc)))
+      S : Split s f (ent a) (W s w)
+      S = peel s sL f (ent a) (W s w) cf (Good-ent a s h aL) (Good-W s w dw) ag
+               (λ d → disj-LH a (dm (fst (ent a (suc s))) ∸c dp (fst (ent a (suc s))))
+                                  (dp (snd (W s w (suc s))) ∸c dm (snd (W s w (suc s)))) lo hi d)
+
+    go : ∀ n A → AOK s A → sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+    go zero A aok en ag = ⊥-elim (z≢s (trans (sym en) (cong (_+ bit A) sw)))
+      where
+      z≢s : ∀ {t} → 0 ≡ suc t → ⊥
+      z≢s ()
+    go (suc n) nothing aok en ag =
+      peel-c n nothing tt (suc-inj (trans (sym (cong (_+ 0) sw)) en))
+        (λ d _ → at0 (dm 0c) d , cong (_+ at0 (dm 0c) d) (trans (pt d (lin-0 bplus)) (at-0c {N} d))) ag
+    go (suc n) (just a) (h , aL) en ag with ≤-dec a c
+    ... | inj₁ ac = peel-a n a h aL ac (trans (sym (+-zero (sumv w))) (suc-inj (trans (sym (+-suc (sumv w) 0)) en))) ag
+    ... | inj₂ ca = peel-c n (just a) (h , aL) (suc-inj (trans (sym (cong (_+ 1) sw)) en)) key ag
+      where
+      a⁺ : Vec Nat N
+      a⁺ = snd (ent a (suc s))
+      key : ∀ d → d < c → at0 (dp a⁺) d ≼ at0 (dm a⁺) d
+      key d dc′ = ∸0→≼ _ _ (trans (sym (at-∸c (dp a⁺) (dm a⁺) d))
+                    (subst (λ r → at0 (snd r) d ≡ 0) (ent-step a s h)
+                      (snd (ent-sides a s h) d (≤-suc (≤-trans dc′ (<→≤ ca))))))
+
+  ----------------------------------------------------------------------
+  -- Prop. 5.5: rows above 0 those of an atom (or zero) give an atom.
+
+  private
+    ≤0 : ∀ {n} → n ≤ 0 → n ≡ 0
+    ≤0 z≤n = refl
+
+    -- Rows of the cell f, as entries of an Ent.
+    entF : ∀ {f} → CellF f → ∀ j → j < L → Ent K L (suc j) (f j) (f (suc j))
+    entF cf = fst (snd cf)
+
+    Ent-at : ∀ {j r e e′} → e ≡ e′ → Ent K L j r e → Ent K L j r e′
+    Ent-at refl h = h
+
+    -- A zero row above makes a row diagonal.
+    diag : ∀ f → CellF f → ∀ j → j ≤ L → (j < L → f (suc j) ≡ 0R) → fst (f j) ≡ snd (f j)
+    diag f cf j jL z with ≤-dec L j
+    ... | inj₁ Lj = subst (λ k → fst (f k) ≡ snd (f k)) (≤-antisym Lj jL) (snd (snd cf))
+      where
+      ≤-antisym : ∀ {m n} → m ≤ n → n ≤ m → m ≡ n
+      ≤-antisym z≤n     z≤n     = refl
+      ≤-antisym (s≤s p) (s≤s q) = cong suc (≤-antisym p q)
+    ... | inj₂ jL′ = let (_ , _ , b , _) = Ent-at (z jL′) (entF cf j jL′) in over-zero (fst (f j)) (snd (f j)) b
+
+  base-none : ∀ f → CellF f → Agree 0 f (λ _ → 0R) → Gen (tabG f 0)
+  base-none f cf ag =
+    gen-atom f i (subst (λ k → k ≤ L) (sym di) z≤n) rows
+    where
+    uv : fst (f 0) ≡ snd (f 0)
+    uv = diag f cf 0 z≤n (λ h → ag 1 (s≤s z≤n) h)
+    i-data = aug-one gdeg (fst (f 0)) (fst (fst cf)) (fst (snd (snd (fst cf))))
+    i : Nat
+    i = fst i-data
+    di : deg i ≡ 0
+    di = snd (snd i-data)
+    rows : ∀ j → j ≤ L → f j ≡ ent i j
+    rows zero    _  = trans (cong₂ _,_ (fst (snd i-data)) (trans (sym uv) (fst (snd i-data))))
+                            (sym (ent-in i 0 0 di))
+    rows (suc j) jL = trans (ag (suc j) (s≤s z≤n) jL) (sym (ent-zero i (suc j) (subst (λ k → k < suc j) (sym di) (s≤s z≤n))))
+
+  base-atom : ∀ f → CellF f → ∀ a → 0 < deg a → deg a ≤ L → Agree 0 f (ent a) → Gen (tabG f 0)
+  base-atom f cf a h aL ag = gen-atom f a aL rows
+    where
+    oL : 0 < L
+    oL = ≤-trans h aL
+    u v u0 v0 e : Vec Nat N
+    u = fst (f 0)
+    v = snd (f 0)
+    u0 = fst (ent a 0)
+    v0 = snd (ent a 0)
+    e = fst (ent a 1)
+    E1 : dp e +c u ≡ dm e +c v
+    E1 = let (_ , _ , b , _) = Ent-at (ag 1 (s≤s z≤n) oL) (entF cf 0 oL) in b
+    E2 : dp e +c u0 ≡ dm e +c v0
+    E2 = let (_ , _ , b , _) = ent-ok a 0 in b
+    ex = excess u v u0 v0 (same-bd u v u0 v0 e E1 E2) (disj-LH a u0 v0 (fst (ent-sides a 0 h)) (snd (ent-sides a 0 h)))
+    w = u ∸c u0
+    aw : augm gdeg w ≡ 0
+    aw = sym (suc-inj (trans (sym (fst (snd (snd (fst cf)))))
+                   (trans (cong (augm gdeg) (fst ex)) (trans (augm-+ gdeg u0 w) (cong (_+ augm gdeg w) (fst (unital a)))))))
+    w0 : w ≡ 0c
+    w0 = aug-zero gdeg w (∸c-deg 0 gdeg u u0 (fst (fst cf))) aw
+    rows : ∀ j → j ≤ L → f j ≡ ent a j
+    rows zero    _  = cong₂ _,_ (trans (fst ex) (trans (cong (u0 +c_) w0) (+c-idr u0)))
+                                (trans (snd ex) (trans (cong (v0 +c_) w0) (+c-idr v0)))
+    rows (suc j) jL = ag (suc j) (s≤s z≤n) jL
+
+  gen-0 : GenAt 0
+  gen-0 f cf nothing  _  ag = base-none f cf ag
+  gen-0 f cf (just a) aL ag with ≤-dec (deg a) 0
+  ... | inj₁ d0 = base-none f cf (λ j h hL → trans (ag j h hL) (ent-zero a j (≤-trans (s≤s d0) h)))
+  ... | inj₂ h  = base-atom f cf a h aL ag
+
+  ----------------------------------------------------------------------
+  -- Prop. 5.2 and the induction on the level.
+
+  gen-suc : ∀ s → suc s ≤ L → GenAt s → GenAt (suc s)
+  gen-suc s sL G f cf nothing _ ag = peel-all s sL G (sumv u + 0) f nothing u cf tt du refl agree
+    where
+    u : Vec Nat N
+    u = fst (f (suc s))
+    uv : u ≡ snd (f (suc s))
+    uv = diag f cf (suc s) sL (λ h → ag (suc (suc s)) (≤-refl _) h)
+    du : InD (suc s) u
+    du = let (d , _ , _ , _) = entF cf s sL in d
+    agree : Agree s f (λ j → 0R +R W s u j)
+    agree j h hL with view3 j (suc s)
+    ... | vlt h′   = ⊥-elim (≤-<-⊥ h h′)
+    ... | veq refl = trans (cong₂ _,_ refl (sym uv)) (sym (trans (cong (0R +R_) (W-top s u)) (+R-idl (u , u))))
+    ... | vgt h′   = trans (ag j h′ hL) (sym (trans (cong (0R +R_) (W-above s u j h′)) (+R-idl 0R)))
+  gen-suc s sL G f cf (just a) aL ag with ≤-dec (deg a) (suc s)
+  ... | inj₁ da = gen-suc s sL G f cf nothing tt (λ j h hL → trans (ag j h hL) (ent-zero a j (≤-trans (s≤s da) h)))
+  ... | inj₂ h  = peel-all s sL G (sumv w + 1) f (just a) w cf (≤-trans (≤-suc (≤-refl _)) h , aL) dw refl agree
+    where
+    s2L : suc s < L
+    s2L = ≤-trans h aL
+    u v u0 v0 e : Vec Nat N
+    u = fst (f (suc s))
+    v = snd (f (suc s))
+    u0 = fst (ent a (suc s))
+    v0 = snd (ent a (suc s))
+    e = fst (ent a (suc (suc s)))
+    E1 : dp e +c u ≡ dm e +c v
+    E1 = let (_ , _ , b , _) = Ent-at (ag (suc (suc s)) (≤-refl _) s2L) (entF cf (suc s) s2L) in b
+    E2 : dp e +c u0 ≡ dm e +c v0
+    E2 = let (_ , _ , b , _) = ent-ok a (suc s) in b
+    ex = excess u v u0 v0 (same-bd u v u0 v0 e E1 E2)
+                (disj-LH a u0 v0 (fst (ent-sides a (suc s) h)) (snd (ent-sides a (suc s) h)))
+    w : Vec Nat N
+    w = u ∸c u0
+    du : InD (suc s) u
+    du = let (d , _ , _ , _) = entF cf s sL in d
+    dw : InD (suc s) w
+    dw = ∸c-deg (suc s) gdeg u u0 du
+    agree : Agree s f (λ j → ent a j +R W s w j)
+    agree j h′ hL with view3 j (suc s)
+    ... | vlt h″   = ⊥-elim (≤-<-⊥ h′ h″)
+    ... | veq refl = trans (cong₂ _,_ (fst ex) (snd ex)) (sym (cong (ent a (suc s) +R_) (W-top s w)))
+    ... | vgt h″   = trans (ag j h″ hL) (sym (trans (cong (ent a j +R_) (W-above s w j h″)) (+R-idr (ent a j))))
+
+  gen-at : ∀ s → s ≤ L → GenAt s
+  gen-at zero    _  = gen-0
+  gen-at (suc s) sL = gen-suc s sL (gen-at s (≤-trans (≤-suc (≤-refl s)) sL))
+
+  ----------------------------------------------------------------------
+  -- Thm 5.6 (generation): every cell of ν(K) is a composite of atoms.
+
+  generation : ∀ (x : Tb) → IsCell K L x → Gen x
+  generation x cx =
+    subst Gen (sym (tab-at 0R x))
+      (gen-at L (≤-refl L) (at 0R x) (IsCell→CellF x cx) nothing tt (λ j h hL → ⊥-elim (≤-<-⊥ hL h)))

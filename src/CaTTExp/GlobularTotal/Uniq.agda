@@ -172,8 +172,7 @@ inc-eq (x ∷ xs) (y ∷ ys) (ax , ix) (ay , iy) h | false =
 ------------------------------------------------------------------------
 -- Diagrams of a context Θ whose sources come before their targets.
 
-module _ (Θ : Ctx)
-         (Ord : ∀ y B a b → lookup Θ y ≡ just (arr B (var a) (var b)) → T (a <ℕ b)) where
+module _ (Θ : Ctx) where
 
   dimOf : Nat → Nat
   dimOf y with lookup Θ y
@@ -206,173 +205,175 @@ module _ (Θ : Ctx)
     ExCs e (o ∷ o' ∷ os) (c ∷ cs) = Ex (suc e) (just (o , o')) c × ExCs e (o' ∷ os) cs
     ExCs e _             _        = ⊥
 
-  private
-    cell-dim : ∀ e par o → Cell e par o → dimOf o ≡ e
-    cell-dim e nothing        o (_ , d) = d
-    cell-dim e (just (p , q)) o (_ , d) = d
+  module _ (Ord : ∀ y B a b → lookup Θ y ≡ just (arr B (var a) (var b)) → T (a <ℕ b)) where
 
-    cell-src : ∀ e p q o → Cell e (just (p , q)) o → src o ≡ p
-    cell-src e p q o ((B , eo) , _) with lookup Θ o
-    cell-src e p q o ((B , refl) , _) | .(just (arr B (var p) (var q))) = refl
+    private
+      cell-dim : ∀ e par o → Cell e par o → dimOf o ≡ e
+      cell-dim e nothing        o (_ , d) = d
+      cell-dim e (just (p , q)) o (_ , d) = d
 
-    cell-ord : ∀ e p q o → Cell e (just (p , q)) o → T (p <ℕ q)
-    cell-ord e p q o ((B , eo) , _) = Ord o B p q eo
+      cell-src : ∀ e p q o → Cell e (just (p , q)) o → src o ≡ p
+      cell-src e p q o ((B , eo) , _) with lookup Θ o
+      cell-src e p q o ((B , refl) , _) | .(just (arr B (var p) (var q))) = refl
 
-    objs-dim : ∀ e par os → AllN (Cell e par) os → ∀ y → memL y os ≡ true → dimOf y ≡ e
-    objs-dim e par os cs y m = cell-dim e par y (allN-mem y os cs m)
+      cell-ord : ∀ e p q o → Cell e (just (p , q)) o → T (p <ℕ q)
+      cell-ord e p q o ((B , eo) , _) = Ord o B p q eo
 
-  -- Labels below depth e have dimension above e.
-  mutual
-    ex-dim : ∀ e par a y → Ex e par a → mem y a ≡ true → T (e <ℕ suc (dimOf y))
-    ex-dim e par (lt os cs) y (ok , x) m with ∨-split (memL y os) (memCs y cs) m
-    ... | inl mo rewrite objs-dim e par os ok y mo = <-suc e
-    ... | inr mc = <-weak e (dimOf y) (cs-dim e os cs y x mc)
+      objs-dim : ∀ e par os → AllN (Cell e par) os → ∀ y → memL y os ≡ true → dimOf y ≡ e
+      objs-dim e par os cs y m = cell-dim e par y (allN-mem y os cs m)
 
-    cs-dim : ∀ e os cs y → ExCs e os cs → memCs y cs ≡ true → T (e <ℕ dimOf y)
-    cs-dim e []            cs       y () m
-    cs-dim e (o ∷ [])      []       y x ()
-    cs-dim e (o ∷ [])      (c ∷ cs) y () m
-    cs-dim e (o ∷ o' ∷ os) []       y () m
-    cs-dim e (o ∷ o' ∷ os) (c ∷ cs) y (xc , xs) m with ∨-split (mem y c) (memCs y cs) m
-    ... | inl mc = ex-dim (suc e) _ c y xc mc
-    ... | inr ms = cs-dim e (o' ∷ os) cs y xs ms
+    -- Labels below depth e have dimension above e.
+    mutual
+      ex-dim : ∀ e par a y → Ex e par a → mem y a ≡ true → T (e <ℕ suc (dimOf y))
+      ex-dim e par (lt os cs) y (ok , x) m with ∨-split (memL y os) (memCs y cs) m
+      ... | inl mo rewrite objs-dim e par os ok y mo = <-suc e
+      ... | inr mc = <-weak e (dimOf y) (cs-dim e os cs y x mc)
 
-  -- The labels of a branch from o lie over o.
-  private
-    srcAt-step : ∀ e y → T (e <ℕ dimOf y) → srcAt e y ≡ src (srcAt (suc e) y)
-    srcAt-step e y p rewrite ∸-suc (dimOf y) e p = refl
+      cs-dim : ∀ e os cs y → ExCs e os cs → memCs y cs ≡ true → T (e <ℕ dimOf y)
+      cs-dim e []            cs       y () m
+      cs-dim e (o ∷ [])      []       y x ()
+      cs-dim e (o ∷ [])      (c ∷ cs) y () m
+      cs-dim e (o ∷ o' ∷ os) []       y () m
+      cs-dim e (o ∷ o' ∷ os) (c ∷ cs) y (xc , xs) m with ∨-split (mem y c) (memCs y cs) m
+      ... | inl mc = ex-dim (suc e) _ c y xc mc
+      ... | inr ms = cs-dim e (o' ∷ os) cs y xs ms
 
-  mutual
-    br-src : ∀ e o o' c y → Ex (suc e) (just (o , o')) c → mem y c ≡ true → srcAt e y ≡ o
-    br-src e o o' (lt os cs) y (ok , x) m with ∨-split (memL y os) (memCs y cs) m
-    ... | inl mo =
-      let cy = allN-mem y os ok mo in
-      trans (cong (λ n → iter n src y) (trans (cong (_∸ e) (cell-dim (suc e) (just (o , o')) y cy)) (suc∸ e)))
-            (cell-src (suc e) o o' y cy)
-    ... | inr mc = brs-src e o o' os cs y ok x mc
+    -- The labels of a branch from o lie over o.
+    private
+      srcAt-step : ∀ e y → T (e <ℕ dimOf y) → srcAt e y ≡ src (srcAt (suc e) y)
+      srcAt-step e y p rewrite ∸-suc (dimOf y) e p = refl
 
-    brs-src : ∀ e o o' os cs y → AllN (Cell (suc e) (just (o , o'))) os → ExCs (suc e) os cs →
-              memCs y cs ≡ true → srcAt e y ≡ o
-    brs-src e o o' []            cs       y ok () m
-    brs-src e o o' (p ∷ [])      []       y ok x ()
-    brs-src e o o' (p ∷ [])      (c ∷ cs) y ok () m
-    brs-src e o o' (p ∷ q ∷ os)  []       y ok () m
-    brs-src e o o' (p ∷ q ∷ os)  (c ∷ cs) y (cp , ok) (xc , xs) m
-      with ∨-split (mem y c) (memCs y cs) m
-    ... | inl mc =
-      trans (srcAt-step e y (<-trans e (suc e) (dimOf y) (<-suc e) (ex-dim′ mc)))
-            (trans (cong src (br-src (suc e) p q c y xc mc)) (cell-src (suc e) o o' p cp))
-      where
-      ex-dim′ : mem y c ≡ true → T (suc e <ℕ dimOf y)
-      ex-dim′ mc = cs-dim (suc e) (p ∷ q ∷ os) (c ∷ cs) y (xc , xs) (cong (_∨ memCs y cs) mc)
-    ... | inr ms = brs-src e o o' (q ∷ os) cs y ok xs ms
+    mutual
+      br-src : ∀ e o o' c y → Ex (suc e) (just (o , o')) c → mem y c ≡ true → srcAt e y ≡ o
+      br-src e o o' (lt os cs) y (ok , x) m with ∨-split (memL y os) (memCs y cs) m
+      ... | inl mo =
+        let cy = allN-mem y os ok mo in
+        trans (cong (λ n → iter n src y) (trans (cong (_∸ e) (cell-dim (suc e) (just (o , o')) y cy)) (suc∸ e)))
+              (cell-src (suc e) o o' y cy)
+      ... | inr mc = brs-src e o o' os cs y ok x mc
 
-  -- Branches further along lie over later objects.
-  private
-    branch-ord : ∀ e o o' c → Ex (suc e) (just (o , o')) c → T (o <ℕ o')
-    branch-ord e o o' (lt []       cs) (_ , x) = ⊥-elim (no-obj cs x)
-      where
-      no-obj : ∀ cs → ExCs (suc e) [] cs → ⊥
-      no-obj []      ()
-      no-obj (_ ∷ _) ()
-    branch-ord e o o' (lt (h ∷ hs) cs) ((ch , _) , _) = cell-ord (suc e) o o' h ch
+      brs-src : ∀ e o o' os cs y → AllN (Cell (suc e) (just (o , o'))) os → ExCs (suc e) os cs →
+                memCs y cs ≡ true → srcAt e y ≡ o
+      brs-src e o o' []            cs       y ok () m
+      brs-src e o o' (p ∷ [])      []       y ok x ()
+      brs-src e o o' (p ∷ [])      (c ∷ cs) y ok () m
+      brs-src e o o' (p ∷ q ∷ os)  []       y ok () m
+      brs-src e o o' (p ∷ q ∷ os)  (c ∷ cs) y (cp , ok) (xc , xs) m
+        with ∨-split (mem y c) (memCs y cs) m
+      ... | inl mc =
+        trans (srcAt-step e y (<-trans e (suc e) (dimOf y) (<-suc e) (ex-dim′ mc)))
+              (trans (cong src (br-src (suc e) p q c y xc mc)) (cell-src (suc e) o o' p cp))
+        where
+        ex-dim′ : mem y c ≡ true → T (suc e <ℕ dimOf y)
+        ex-dim′ mc = cs-dim (suc e) (p ∷ q ∷ os) (c ∷ cs) y (xc , xs) (cong (_∨ memCs y cs) mc)
+      ... | inr ms = brs-src e o o' (q ∷ os) cs y ok xs ms
 
-    later : ∀ e o o' os cs y → T (o <ℕ o') → ExCs e (o' ∷ os) cs → memCs y cs ≡ true →
-            T (o <ℕ srcAt e y)
-    later e o o' []            []       y p x ()
-    later e o o' []            (c ∷ cs) y p () m
-    later e o o' (o'' ∷ os)    []       y p () m
-    later e o o' (o'' ∷ os)    (c ∷ cs) y p (xc , xs) m with ∨-split (mem y c) (memCs y cs) m
-    ... | inl mc rewrite br-src e o' o'' c y xc mc = p
-    ... | inr ms = later e o o'' os cs y (<-trans o o' o'' p (first-ord xc)) xs ms
-      where
-      first-ord : Ex (suc e) (just (o' , o'')) c → T (o' <ℕ o'')
-      first-ord x = branch-ord e o' o'' c x
+    -- Branches further along lie over later objects.
+    private
+      branch-ord : ∀ e o o' c → Ex (suc e) (just (o , o')) c → T (o <ℕ o')
+      branch-ord e o o' (lt []       cs) (_ , x) = ⊥-elim (no-obj cs x)
+        where
+        no-obj : ∀ cs → ExCs (suc e) [] cs → ⊥
+        no-obj []      ()
+        no-obj (_ ∷ _) ()
+      branch-ord e o o' (lt (h ∷ hs) cs) ((ch , _) , _) = cell-ord (suc e) o o' h ch
 
-  -- The objects of a node increase.
-  private
-    above-trans : ∀ o o' xs → T (o <ℕ o') → Above o' xs → Above o xs
-    above-trans o o' []       p _        = tt
-    above-trans o o' (z ∷ zs) p (q , qs) = <-trans o o' z p q , above-trans o o' zs p qs
+      later : ∀ e o o' os cs y → T (o <ℕ o') → ExCs e (o' ∷ os) cs → memCs y cs ≡ true →
+              T (o <ℕ srcAt e y)
+      later e o o' []            []       y p x ()
+      later e o o' []            (c ∷ cs) y p () m
+      later e o o' (o'' ∷ os)    []       y p () m
+      later e o o' (o'' ∷ os)    (c ∷ cs) y p (xc , xs) m with ∨-split (mem y c) (memCs y cs) m
+      ... | inl mc rewrite br-src e o' o'' c y xc mc = p
+      ... | inr ms = later e o o'' os cs y (<-trans o o' o'' p (first-ord xc)) xs ms
+        where
+        first-ord : Ex (suc e) (just (o' , o'')) c → T (o' <ℕ o'')
+        first-ord x = branch-ord e o' o'' c x
 
-    chain-inc : ∀ e os cs → ExCs e os cs → Inc os
-    chain-inc e []            cs       ()
-    chain-inc e (o ∷ [])      []       x = tt , tt
-    chain-inc e (o ∷ [])      (c ∷ cs) ()
-    chain-inc e (o ∷ o' ∷ os) []       ()
-    chain-inc e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) with chain-inc e (o' ∷ os) cs xs
-    ... | ab , inc = (p , above-trans o o' os p ab) , (ab , inc)
-      where p = branch-ord e o o' c xc
+    -- The objects of a node increase.
+    private
+      above-trans : ∀ o o' xs → T (o <ℕ o') → Above o' xs → Above o xs
+      above-trans o o' []       p _        = tt
+      above-trans o o' (z ∷ zs) p (q , qs) = <-trans o o' z p q , above-trans o o' zs p qs
 
-  ----------------------------------------------------------------------
-  -- Uniqueness.
+      chain-inc : ∀ e os cs → ExCs e os cs → Inc os
+      chain-inc e []            cs       ()
+      chain-inc e (o ∷ [])      []       x = tt , tt
+      chain-inc e (o ∷ [])      (c ∷ cs) ()
+      chain-inc e (o ∷ o' ∷ os) []       ()
+      chain-inc e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) with chain-inc e (o' ∷ os) cs xs
+      ... | ab , inc = (p , above-trans o o' os p ab) , (ab , inc)
+        where p = branch-ord e o o' c xc
 
-  private
-    ∨-true : ∀ a → (a ∨ true) ≡ true
-    ∨-true true  = refl
-    ∨-true false = refl
+    ----------------------------------------------------------------------
+    -- Uniqueness.
 
-    objs-char : ∀ e par os cs y → AllN (Cell e par) os → ExCs e os cs →
-                memL y os ≡ (mem y (lt os cs) ∧ (dimOf y ==ℕ e))
-    objs-char e par os cs y ok x with memL y os in em
-    ... | true rewrite objs-dim e par os ok y em = sym (==-refl e)
-    ... | false with memCs y cs in ec
-    ...   | false = refl
-    ...   | true rewrite <-≢ e (dimOf y) (cs-dim e os cs y x ec) = refl
+    private
+      ∨-true : ∀ a → (a ∨ true) ≡ true
+      ∨-true true  = refl
+      ∨-true false = refl
 
-    cs-char : ∀ e par os cs y → AllN (Cell e par) os → ExCs e os cs →
-              memCs y cs ≡ (mem y (lt os cs) ∧ not (dimOf y ==ℕ e))
-    cs-char e par os cs y ok x with memCs y cs in ec
-    ... | true rewrite ∨-true (memL y os) | <-≢ e (dimOf y) (cs-dim e os cs y x ec) = refl
-    ... | false with memL y os in em
-    ...   | false = refl
-    ...   | true rewrite objs-dim e par os ok y em | ==-refl e = refl
+      objs-char : ∀ e par os cs y → AllN (Cell e par) os → ExCs e os cs →
+                  memL y os ≡ (mem y (lt os cs) ∧ (dimOf y ==ℕ e))
+      objs-char e par os cs y ok x with memL y os in em
+      ... | true rewrite objs-dim e par os ok y em = sym (==-refl e)
+      ... | false with memCs y cs in ec
+      ...   | false = refl
+      ...   | true rewrite <-≢ e (dimOf y) (cs-dim e os cs y x ec) = refl
 
-    head-char : ∀ e o o' os c cs y → ExCs e (o ∷ o' ∷ os) (c ∷ cs) →
-                mem y c ≡ (memCs y (c ∷ cs) ∧ (srcAt e y ==ℕ o))
-    head-char e o o' os c cs y (xc , xs) with mem y c in em
-    ... | true rewrite br-src e o o' c y xc em = sym (==-refl o)
-    ... | false with memCs y cs in es
-    ...   | false = refl
-    ...   | true rewrite <-≢ o (srcAt e y) (later e o o' os cs y (branch-ord e o o' c xc) xs es) = refl
+      cs-char : ∀ e par os cs y → AllN (Cell e par) os → ExCs e os cs →
+                memCs y cs ≡ (mem y (lt os cs) ∧ not (dimOf y ==ℕ e))
+      cs-char e par os cs y ok x with memCs y cs in ec
+      ... | true rewrite ∨-true (memL y os) | <-≢ e (dimOf y) (cs-dim e os cs y x ec) = refl
+      ... | false with memL y os in em
+      ...   | false = refl
+      ...   | true rewrite objs-dim e par os ok y em | ==-refl e = refl
 
-    tail-char : ∀ e o o' os c cs y → ExCs e (o ∷ o' ∷ os) (c ∷ cs) →
-                memCs y cs ≡ (memCs y (c ∷ cs) ∧ not (srcAt e y ==ℕ o))
-    tail-char e o o' os c cs y (xc , xs) with memCs y cs in es
-    ... | true rewrite ∨-true (mem y c)
-                     | <-≢ o (srcAt e y) (later e o o' os cs y (branch-ord e o o' c xc) xs es) = refl
-    ... | false with mem y c in em
-    ...   | false = refl
-    ...   | true rewrite br-src e o o' c y xc em | ==-refl o = refl
+      head-char : ∀ e o o' os c cs y → ExCs e (o ∷ o' ∷ os) (c ∷ cs) →
+                  mem y c ≡ (memCs y (c ∷ cs) ∧ (srcAt e y ==ℕ o))
+      head-char e o o' os c cs y (xc , xs) with mem y c in em
+      ... | true rewrite br-src e o o' c y xc em = sym (==-refl o)
+      ... | false with memCs y cs in es
+      ...   | false = refl
+      ...   | true rewrite <-≢ o (srcAt e y) (later e o o' os cs y (branch-ord e o o' c xc) xs es) = refl
 
-  mutual
-    uniq : ∀ e par a b → Ex e par a → Ex e par b → (∀ y → mem y a ≡ mem y b) → a ≡ b
-    uniq e par (lt osa csa) (lt osb csb) (oka , xa) (okb , xb) h
-      with inc-eq osa osb (chain-inc e osa csa xa) (chain-inc e osb csb xb)
-             (λ y → trans (objs-char e par osa csa y oka xa)
-                     (trans (cong (_∧ (dimOf y ==ℕ e)) (h y))
-                            (sym (objs-char e par osb csb y okb xb))))
-    ... | refl = cong (lt osa) (uniqCs e osa csa csb xa xb λ y →
-                   trans (cs-char e par osa csa y oka xa)
-                     (trans (cong (_∧ not (dimOf y ==ℕ e)) (h y))
-                            (sym (cs-char e par osa csb y okb xb))))
+      tail-char : ∀ e o o' os c cs y → ExCs e (o ∷ o' ∷ os) (c ∷ cs) →
+                  memCs y cs ≡ (memCs y (c ∷ cs) ∧ not (srcAt e y ==ℕ o))
+      tail-char e o o' os c cs y (xc , xs) with memCs y cs in es
+      ... | true rewrite ∨-true (mem y c)
+                       | <-≢ o (srcAt e y) (later e o o' os cs y (branch-ord e o o' c xc) xs es) = refl
+      ... | false with mem y c in em
+      ...   | false = refl
+      ...   | true rewrite br-src e o o' c y xc em | ==-refl o = refl
 
-    uniqCs : ∀ e os cs ds → ExCs e os cs → ExCs e os ds →
-             (∀ y → memCs y cs ≡ memCs y ds) → cs ≡ ds
-    uniqCs e []            cs       ds       () xd h
-    uniqCs e (o ∷ [])      []       []       xc xd h = refl
-    uniqCs e (o ∷ [])      []       (d ∷ ds) xc () h
-    uniqCs e (o ∷ [])      (c ∷ cs) ds       () xd h
-    uniqCs e (o ∷ o' ∷ os) []       ds       () xd h
-    uniqCs e (o ∷ o' ∷ os) (c ∷ cs) []       xc () h
-    uniqCs e (o ∷ o' ∷ os) (c ∷ cs) (d ∷ ds) xc xd h =
-      cong₂ _∷_
-        (uniq (suc e) (just (o , o')) c d (fst xc) (fst xd) λ y →
-          trans (head-char e o o' os c cs y xc)
-            (trans (cong (_∧ (srcAt e y ==ℕ o)) (h y)) (sym (head-char e o o' os d ds y xd))))
-        (uniqCs e (o' ∷ os) cs ds (snd xc) (snd xd) λ y →
-          trans (tail-char e o o' os c cs y xc)
-            (trans (cong (_∧ not (srcAt e y ==ℕ o)) (h y)) (sym (tail-char e o o' os d ds y xd))))
+    mutual
+      uniq : ∀ e par a b → Ex e par a → Ex e par b → (∀ y → mem y a ≡ mem y b) → a ≡ b
+      uniq e par (lt osa csa) (lt osb csb) (oka , xa) (okb , xb) h
+        with inc-eq osa osb (chain-inc e osa csa xa) (chain-inc e osb csb xb)
+               (λ y → trans (objs-char e par osa csa y oka xa)
+                       (trans (cong (_∧ (dimOf y ==ℕ e)) (h y))
+                              (sym (objs-char e par osb csb y okb xb))))
+      ... | refl = cong (lt osa) (uniqCs e osa csa csb xa xb λ y →
+                     trans (cs-char e par osa csa y oka xa)
+                       (trans (cong (_∧ not (dimOf y ==ℕ e)) (h y))
+                              (sym (cs-char e par osa csb y okb xb))))
+
+      uniqCs : ∀ e os cs ds → ExCs e os cs → ExCs e os ds →
+               (∀ y → memCs y cs ≡ memCs y ds) → cs ≡ ds
+      uniqCs e []            cs       ds       () xd h
+      uniqCs e (o ∷ [])      []       []       xc xd h = refl
+      uniqCs e (o ∷ [])      []       (d ∷ ds) xc () h
+      uniqCs e (o ∷ [])      (c ∷ cs) ds       () xd h
+      uniqCs e (o ∷ o' ∷ os) []       ds       () xd h
+      uniqCs e (o ∷ o' ∷ os) (c ∷ cs) []       xc () h
+      uniqCs e (o ∷ o' ∷ os) (c ∷ cs) (d ∷ ds) xc xd h =
+        cong₂ _∷_
+          (uniq (suc e) (just (o , o')) c d (fst xc) (fst xd) λ y →
+            trans (head-char e o o' os c cs y xc)
+              (trans (cong (_∧ (srcAt e y ==ℕ o)) (h y)) (sym (head-char e o o' os d ds y xd))))
+          (uniqCs e (o' ∷ os) cs ds (snd xc) (snd xd) λ y →
+            trans (tail-char e o o' os c cs y xc)
+              (trans (cong (_∧ not (srcAt e y ==ℕ o)) (h y)) (sym (tail-char e o o' os d ds y xd))))
 
 ------------------------------------------------------------------------
 -- Example: x →f y →g z. The context has Ord, and its labelled tree is a
@@ -393,7 +394,7 @@ private
   gfTree : LT
   gfTree = lt (0 ∷ 1 ∷ 3 ∷ []) (lt (2 ∷ []) [] ∷ lt (4 ∷ []) [] ∷ [])
 
-  exΔ : Ex Δ ordΔ 0 nothing gfTree
+  exΔ : Ex Δ 0 nothing gfTree
   exΔ = (((⋆ , refl) , refl) , ((⋆ , refl) , refl) , ((⋆ , refl) , refl) , tt)
       , (((((⋆ , refl) , refl) , tt) , tt)
       , ((((⋆ , refl) , refl) , tt) , tt) , tt)

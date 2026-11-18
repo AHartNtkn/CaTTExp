@@ -442,7 +442,11 @@ u ⇒ canon(path u) ⇒ … ⇒ canon(r) ⇒ … ⇒ canon(path v) ⇒ v
 
 The certified checker decides the result. Examples in `LocalisedFillerExamples.agda` for ℤ: `s;s̄ ⇒ 1`, `s;(s̄;s) ⇒ s`, `(s;s);(s̄;s̄) ⇒ 1`, `s̄;s ⇒ s;s̄` (one cancellation each way), and `s̄;(s;s) ⇒ s;1`. There is also a two-object example with an uninverted edge, and the tactic rejects pairs whose reduced words differ.
 
-What remains of F4a is cells between parallel 2-cells and higher. Semantically they exist, since the localisation is a 1-category (Thm 5.1, T-loc). Syntactically they need the higher data of the walking equivalence (triangle identities and up), and the composite above is one choice among many, not a canonical lift.
+**Cells between parallel 2-cells and higher (F4a, 2026-11-18).** Two readings, with opposite answers.
+- *In the finite context of the tactic, they do not exist in general* **[proved here, relative to the recall that strict ω-categories model CaTT]**. Take the localised loop Z = (x, s, s̄, ρ, ρ̄, λ, λ̄). Interpret it in B²ℕ, the strict ω-category with one object, one 1-cell, 2-cells the commutative monoid (ℕ, +) and only identities above: s, s̄ ↦ the 1-cell, ρ, λ ↦ 1 and ρ̄, λ̄ ↦ 0. Every boundary condition holds, because all 1-cells are equal. A CaTT 3-cell `ρ̄ · ρ ⇛ 1_{1_x}` would be interpreted as an identity 3-cell, forcing 0 + 1 = 0 in ℕ. So no such term exists, although both sides are parallel 2-cells with the same reduced word (empty). One level of inverse data is not enough; the missing cells are exactly the higher data of the walking equivalence (the triangle identities and up). With ICaTT/⊨ markings (E4/F7) that data is coinductive, and this obstruction disappears.
+- *In the localisation as an object, they are T-fill* **[agda]**. T-loc says `L = ⟦Γ⟧[M⁻¹] trunc 1`. Cells of level ≥ 2 into L are exactly the cells between parallel 2-cells of the localisation and above, so T-fill gives all of them. This is now checked in `CaTTExp.Trunc.Examples` §5 (`loc-3cell`, with the negative at level 1). Level 1 (cells between parallel 1-cells) is below a 1-category's filler level, and there the reduced-word tactic above is the content.
+
+So F4a is complete in the form the ambient needs: the tactic for level 1, and T-loc with T-fill above. A syntactic tactic for level ≥ 2 inside a context would first need ⊨-style coinductive inverse data in the core syntax. That is the MARK thread's area, not this item's.
 
 ### 5.2 Operations on ℤ
 
@@ -673,7 +677,7 @@ All rows are added to `notes/open-issues.md` under F.
 - **F3c** Full proofs of Props. 2.2 and 2.3 against the specified `ctrf` construction once it exists (B5).
 - **F1a** Done (2026-11-18): G and DJ written as rules (§4.6), the uniqueness gap in Theorem 4.4 found and corrected (induction is proved directly from G + DJ; recursion and its uniqueness follow).
 - **F1b** Proposed and proved relative to R-A⁺ and G⁺ (§4.8): lists over any object, and every finitary signature as well-formed reverse-Polish words. Open: an independent check of Thm 4.6, and infinitary signatures (F8).
-- **F4a** 1-cells done (2026-11-18): `LocalisedFiller.agda` (§5.1). Open: cells between parallel 2-cells and higher.
+- **F4a** Done (2026-11-18, §5.1): level 1 by `LocalisedFiller.agda`. Levels ≥ 2 are T-fill on T-loc (`Trunc.Examples` §5). With finite inverse data in a context they fail (B²ℕ countermodel).
 - **F4b** Trunc written in full (§5.3). Effectiveness of quotients needs EX; EX is not derivable (§5.3, countermodel), so it is a rule.
 - **F5a** Done (2026-11-18): §6.1–6.3 checked at statement level (Loubaton, Gepner–Heine, AHM). "Lax colimit = total space" holds in the fully lax sense; AHM's convention inverts cartesian 2-morphisms (§6.1).
 - **F5b** Analysed (2026-11-18, §6.6): extensionality in generalised-element form is trivial; Θ-density for existence is a non-finite instance of §6.1, needing Θ internal (§4.8 variant; morphisms not yet written) and a relative cotensor R-cot⁺ (or F8).

@@ -162,3 +162,26 @@ _ = refl
 -- does not make C a set, so the same filler is rejected.
 _ : is-just (infer S (at2 2) (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))) ≡ false
 _ = refl
+
+------------------------------------------------------------------------
+-- 5. Higher cells in a localisation (F4a). T-loc makes L = ⟦Γ⟧[M⁻¹]
+-- a 1-category (m = 3). Its elements are maps c → L (level 0), its
+-- arrows level-1 cells, and any two parallel 2-cells α β : f ⇒ g
+-- between arrows f g : x → y are connected by T-fill at level 2, and
+-- so on above. Level 1 is not covered (that is LocalisedFiller's job).
+
+Loc : Ctx
+Loc = ε ▸ ⋆ ▸ ⋆ ▸ hom ▸ hom ▸ arr hom (v 2) (v 3) ▸ arr hom (v 2) (v 3)
+        ▸ arr (arr hom (v 2) (v 3)) (v 4) (v 5) ▸ arr (arr hom (v 2) (v 3)) (v 4) (v 5)
+
+private
+  x y φ ψ a b : Tm
+  x = v 2 ; y = v 3 ; φ = v 4 ; ψ = v 5 ; a = v 6 ; b = v 7
+
+loc-3cell : Loc ∣ at1 3 ⊢tm fill 2 (c ∷ C ∷ x ∷ y ∷ φ ∷ ψ ∷ a ∷ b ∷ [])
+                          ∶ arr (arr (arr hom x y) φ ψ) a b
+loc-3cell = from-just (check Loc (at1 3) _ _)
+
+-- But a 1-category gives nothing at level 1: no arrow φ ⇒ ψ.
+_ : is-just (infer Loc (at1 3) (fill 1 (c ∷ C ∷ x ∷ y ∷ φ ∷ ψ ∷ []))) ≡ false
+_ = refl

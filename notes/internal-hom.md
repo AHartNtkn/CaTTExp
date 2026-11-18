@@ -1,6 +1,6 @@
 # Internal hom, Gray tensor, and lax vs pseudo
 
-*Design notes, 2026-11-18, revised the same day. Part I states the lax-vs-pseudo problem; the comparison of options is in `notes/pseudo-vs-gray.md`. Part II holds the technical material: literature, rules and side conditions. Builds on `catt-survey.md` (project files). Claims marked **[recall]** come from background knowledge and were not re-checked against the source. Rules are proposals, not results.*
+*Design notes, 2026-11-18, revised the same day. Part I states the lax-vs-pseudo problem; the comparison of options is in `notes/pseudo-vs-gray.md`. Part II holds the technical material: literature, rules and side conditions. Builds on `catt-survey.md` (project files). Every claim once marked **[recall]** was re-checked against its source on 2026-11-18 (ledger G1) and is now cited with its place, corrected, or marked **[conj]**. Orientation conventions (lax/oplax, factor order, dualities) are fixed in `conventions.md`, which this note follows. Rules are proposals, not results.*
 
 ---
 
@@ -61,15 +61,15 @@ The section numbers below continue those of the first version of these notes.
 
 ### 1.1 Strict ω-categories
 
-- **Ara–Maltsiniotis**, *Joint et tranches pour les ∞-catégories strictes* (Mém. SMF 165; [arXiv 1607.00668](https://arxiv.org/abs/1607.00668v4)). They build the Gray tensor product on strict ω-Cat through Steiner's augmented directed complexes. **[recall]** It is monoidal and biclosed but not symmetric:
+- **Ara–Maltsiniotis**, *Joint et tranches pour les ∞-catégories strictes* (Mém. SMF 165; [arXiv 1607.00668](https://arxiv.org/abs/1607.00668v4)). They build the Gray tensor product on strict ω-Cat through Steiner's augmented directed complexes. It is monoidal and biclosed but not symmetric **[paper: Thm A.15, §A.18]**:
 
   ```
   Hom(A ⊗ B, C) ≅ Hom(A, Hom_oplax(B, C)) ≅ Hom(B, Hom_lax(A, C))
   ```
 
-  (lax/oplax naming depends on convention). The tensor of two Steiner-free ω-categories is again Steiner-free, with basis {x⊗y}. They also describe joins and slices, which are the lax cones Mikhail uses.
-- **Crans** (thesis, 1995) **[recall]** gave the first Gray tensor of ω-categories, and also a pseudo version. **Al-Agl–Brown–Steiner** **[recall]** handle the cubical side.
-- **Steiner's formula** **[recall]** gives the boundary of a product generator by a Leibniz rule: d(x⊗y) = dx⊗y + (−1)^|x| x⊗dy.
+  The 1-cells of Hom_oplax(B, C) are maps D¹ ⊗ B → C, which AM call oplax transformations, and AM's names agree with Bénabou's (`conventions.md` §3). The tensor of two strong Steiner complexes is again one, with basis {x⊗y}, and ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) **[paper: §A.16]**. They also describe joins and slices, which are the lax cones Mikhail uses.
+- **Al-Agl–Steiner** (*Nerves of multiple categories*, Proc. LMS 1993) introduced this tensor, and **Crans** (thesis, Utrecht 1995) studied it and gave a direct construction by pasting schemes **[paper: AM Remark A.17, refs [1], [18]]**. *Correction:* an earlier version said Crans gave the first one, and also a pseudo version; neither is supported by the sources checked. **Al-Agl–Brown–Steiner** (*Multiple categories: the equivalence of a globular and a cubical approach*, Adv. Math. 2002) give the cubical side.
+- **Steiner's formula** gives the boundary of a product generator by a Leibniz rule: d(x⊗y) = dx⊗y + (−1)^|x| x⊗dy **[paper: Steiner, HHA 2004, [math/0403237](https://arxiv.org/abs/math/0403237), Example 3.10]**. Steiner proves there that tensors of *strongly* loop-free unital bases are strongly loop-free, and (§7) that the resulting tensor on ω-Cat is monoidal and biclosed.
 
 ### 1.2 Weak (∞,n) and (∞,ω)
 
@@ -89,7 +89,7 @@ The section numbers below continue those of the first version of these notes.
 ### 1.3 Lax transformations and their conventions
 
 - **Johnson-Freyd–Scheimbauer**, *(Op)lax natural transformations, twisted QFTs, and "even higher" Morita categories* ([1502.06526](https://arxiv.org/abs/1502.06526)). They build C^↓ (lax), C^→ (oplax) and [Θ⁽¹⁾, C] (strong) from walking i-by-j-morphisms, which are higher analogues of Crans–Gray cells. A lax transformation is a functor B → C^↓. Functors themselves stay strong; only transfors are lax. They follow Bénabou's naming: a lax transformation has G(b)∘η ⇒ η∘F(b). Their motivation for lax: with duals, strong transformations are forced to be invertible, and adjunctibility is classified by lax twists.
-- **Haugseng**, *On lax transformations, adjunctions, and monads in (∞,2)-categories* **[recall]**.
+- **Haugseng**, *On lax transformations, adjunctions, and monads in (∞,2)-categories* ([2002.01037](https://arxiv.org/abs/2002.01037)) **[paper: abstract, §3]**. From the expected properties of the Gray tensor of (∞,2)-categories, he identifies lax transformations between adjunctions and monads with commuting squares of (monadic) right adjoints, and colax transformations with equivalence components with the icon-like 2-morphisms. He says *colax* for oplax (Def. 3.9, footnote 4). Remark 3.11: the (co)lax square at an equivalence commutes, i.e. its naturality cell is invertible. This is relevant to `pseudo-vs-gray.md` Example 4 and §3.5.
 
 ### 1.4 The CaTT line
 
@@ -102,7 +102,7 @@ The section numbers below continue those of the first version of these notes.
   ```
 
   Side conditions are τCond/σCond, in the same style as the cone conditions. Existence is proved only for globular Γ and n = 1, and the n > 1 claim is unproved. Remark 4.5 points to Ara–Maltsiniotis for the strict formula.
-- **Benjamin–Markakis–Offord–Sarti–Vicary**, *Naturality for higher-dimensional path types* ([2501.11620](https://arxiv.org/abs/2501.11620)). This is a meta-operation producing naturality fillers along a directed interval, "a local tensor product with a directed interval". **[recall]** It takes a term and a set X of its variables, and produces the filler relating the composite at x⁻ with the composite at x⁺ through cells x⃗.
+- **Benjamin–Markakis–Offord–Sarti–Vicary**, *Naturality for higher-dimensional path types* ([2501.11620](https://arxiv.org/abs/2501.11620)). This is a meta-operation producing naturality fillers along a directed interval, "a local tensor product with a directed interval" **[paper: abstract, §1, §3]**. It takes a context Γ, a set X ⊆ Var(Γ) that is **up-closed** (if x ∈ X occurs in the type of y, then y ∈ X), and a term t. It produces a context Γ ↑ X, in which the variables of X are duplicated and joined by filler cells, and a filler t ↑ X relating the two copies of t. **The construction is defined only when X has depth at most 1** in Γ and in t, where depth_X t = max{dim t − dim x : x ∈ X ∩ Var(t)} (§3.1). Depth 0 is functoriality and depth 1 is naturality; higher depths are "beyond our present work" (§1). Higher depth is the project's Conjecture N (`conjectures/naturality-arbitrary-depth.md`, ledger C1).
 - **Benjamin–Markakis**, Σ ⊣ Hom, and homs of free are free ([2402.01611](https://arxiv.org/abs/2402.01611)). This is the template for the native internal hom rule in §5.4.
 
 ---
@@ -124,8 +124,8 @@ Input: finite CaTT contexts Γ and Δ, viewed as finite computads (Benjamin–Ma
   This is Steiner's Leibniz formula (Chanavat Prop. 2.16 gives all boundary levels).
 - **Extension to terms.** Here ∂^α x is a *term* of Γ, usually a composite, so t ⊗ y must be defined for terms t:
   - if dim y = 0, then t ⊗ y is t with each variable x renamed to x⊗y (a substitution Γ → Γ ⊗ Δ);
-  - if dim y = 1, then t ⊗ y is the naturality filler of t along y, i.e. the BMOSV meta-operation with X = all variables of t;
-  - for higher y, it is the iterated version.
+  - if dim y = 1, then t ⊗ y is the naturality filler of t along y, i.e. the BMOSV meta-operation with X = all variables of t. *Caveat (G1 check):* BMOSV define this only when X has depth ≤ 1 in t, i.e. dim t ≤ (least dimension of a variable of t) + 1. For a term whose variables include cells of dimension ≤ dim t − 2 (e.g. a composite of 2-cells, which mentions 0-cells), X = all variables has depth ≥ 2, and the filler is Conjecture N (ledger C1), not a published construction;
+  - for higher y, it is the iterated version, with the same caveat.
 
   So **⊗ on contexts is "naturality, iterated and applied generator-wise".**
 
@@ -135,19 +135,19 @@ Input: finite CaTT contexts Γ and Δ, viewed as finite computads (Benjamin–Ma
 ∂⁻(i⊗f) = (0⊗f)·(i⊗y) = f·p_y        ∂⁺(i⊗f) = (i⊗x)·(1⊗f) = pₓ·f′
 ```
 
-This matches p_f. So Mikhail's "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the AM/Steiner orientation. Conventions should be fixed once, in one place.
+This matches p_f. So Mikhail's "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the AM/Steiner orientation, and his transformations are Bénabou-oplax (`conventions.md` §5).
 
-**Lax vs oplax orientation.** With the convention of §5.3, functors into [D¹, C]ₗₐₓ, where the cells have shape Δ ⊗ D¹, have naturality cells α_b · Gf ⇒ Ff · α_{b′} (diagrammatic order). That is Bénabou/JFS **lax**. The other side, D¹ ⊗ Δ, gives oplax.
+**Lax vs oplax orientation.** With the convention of §5.3, functors into [D¹, C]ₗₐₓ, where the cells have shape Δ ⊗ D¹, have naturality cells α_b · Gf ⇒ Ff · α_{b′} (diagrammatic order). That is Bénabou/JFS **lax**, matching AM's "lax ↔ C ⊗ D¹". The other side, D¹ ⊗ Δ, gives oplax. *Naming hazard:* the hom [Θ, C] of §5.1 is AM's Hom_oplax(Θ, C), since maps *into* it classify lax transformations while its own 1-cells are oplax ones (`conventions.md` §3.2).
 
 ### 4.2 Side conditions
 
 | Condition | What it says | Status |
 |---|---|---|
 | **G1. Well-typedness** | The two composites ∂⁻(x⊗y) and ∂⁺(x⊗y) have *syntactically equal* boundaries, since CaTT has only syntactic definitional equality. | Main burden; see §4.3. Mikhail proves it for Γ globular, Δ = D¹. |
-| **G2. Functoriality in substitutions** | A substitution σ : Δ′ → Δ induces Γ ⊗ σ : Γ ⊗ Δ′ → Γ ⊗ Δ, using the same term extension t ⊗ y. Needed for naturality of λ in §5.3. | Follows from G1 if t ⊗ – commutes with substitution. Unproved. |
+| **G2. Functoriality in substitutions** | A substitution σ : Δ′ → Δ induces Γ ⊗ σ : Γ ⊗ Δ′ → Γ ⊗ Δ, using the same term extension t ⊗ y. Needed for naturality of λ in §5.3. | **Holds for the D¹ factor** (and iterated Dⁿ), syntactically: lifts commute with substitution by structural induction, because fillers are chosen once per (Q, B, Y) (`relative-coherence.md` §6). |
 | **G3. Preservation of wedges** | Γ ⊗ (Δ ∨ Δ′) ≅ (Γ ⊗ Δ) ∨_{Γ⊗pt} (Γ ⊗ Δ′) | Immediate on generators. Needed for composing transformations. |
-| **G4. Associativity** | (Γ ⊗ Δ) ⊗ Θ ≅ Γ ⊗ (Δ ⊗ Θ) | Bijective on generators. Agreement of types holds up to coherence, so strict equality may need CaTT_sua. |
-| **G5. Linearity** | Mikhail's x ∝ t may be needed when a boundary term uses a variable non-linearly (e.g. after an endo-coherence). | Open. It is unclear whether the naturality meta-operation imposes it. |
+| **G4. Associativity** | (Γ ⊗ Δ) ⊗ Θ ≅ Γ ⊗ (Δ ⊗ Θ) | Bijective on generators. The two types of each generator have equal strict images; for generators of dimension ≤ 3 they are connected by Theorem A (`relative-coherence.md` §6), in general by RC(dim − 1). Strict equality may need CaTT_sua. |
+| **G5. Linearity** | Mikhail's x ∝ t may be needed when a boundary term uses a variable non-linearly (e.g. after an endo-coherence). | **Not needed** for the naturality-based construction, which lifts every term, linear or not (e.g. (f ∗₀ f)↑ for a loop f uses f↑ twice). Linearity serves Mikhail's recognition judgment only (`relative-coherence.md` §6). |
 
 ### 4.3 Two ways to get the composites
 
@@ -157,7 +157,8 @@ The molecules in ∂^α(x⊗y) are generally **not pasting schemes**. For exampl
 - This is what Mikhail does by hand, with explicit types and τCond/σCond.
 - **Over CaTT_sua the associators and unitors disappear definitionally**, so any layering has the right boundary on the nose. Different layerings still differ by interchange, so a canonical layering must be chosen.
 - This suggests that **Gray shapes push strict associativity/units (Rice) earlier** than "end-stage ergonomics". It may be part of the core typing story.
-- Existence of layerings is a real condition on molecules ("frame-acyclic" in Hadzihasanovic's terminology **[recall]**). Gray products of globes should satisfy it, but this needs checking.
+- Existence of layerings is a real condition on molecules. Hadzihasanovic (*Combinatorics of higher-categorical diagrams*, [2404.07273](https://arxiv.org/abs/2404.07273)) calls the condition **frame-acyclic**: a frame-acyclic molecule admits an r-layering for r its frame dimension (Thm 8.1.4), and frame-acyclicity is equivalent to the existence of layerings in all relevant dimensions for all submolecules (Cor. 8.1.5). Not every molecule is frame-acyclic; there is a 4-dimensional counterexample (Example 8.2.18), while every molecule of dimension ≤ 3 is frame-acyclic (Thm 8.4.11) **[paper]**.
+- **Gray products of globes satisfy it [paper].** Globes and thetas are acyclic, acyclic oriented graded posets are closed under Gray products (Prop. 8.3.28), and acyclic ones have frame-acyclic molecules (Prop. 8.3.15). So every molecule over a Gray product of pasting diagrams admits layerings.
 
 **(ii) Molecular coh.** Extend the coh rule from pasting schemes to a class 𝓜 of *molecules*, with the same two side conditions:
 
@@ -178,8 +179,8 @@ U ∈ 𝓜    U ⊢ t →_A u    Δ ⊢ σ : U
 **(i) and (ii) are the same question.** Molecular coh (ii) is a conservative extension of CaTT exactly when every molecule's composites exist and are unique up to invertible cells in plain CaTT, which is what (i) needs. This is stated as Conjecture G(n) in [`conjectures/gray-contexts-in-catt.md`](conjectures/gray-contexts-in-catt.md). Status:
 - **G(1)** is proved.
 - **Existence in G(2)** is proved, using Chanavat's result that all molecules of dimension ≤ 3 are frame-acyclic. So **every Gray generator of dimension ≤ 3 has a plain-CaTT type**, including the Gray cube.
-- **Uniqueness in G(2)** has a proof sketch: linear extensions are connected by swaps, and each swap is an exchange coherence. One bookkeeping gap remains. Granting it, every Gray generator of dimension 4 is covered too.
-- **G(n) for n ≥ 3** is open. The missing step is translating Chanavat's contractible subdivision poset (arXiv 2603.22242, Thm. 2.52) into CaTT cells. The problem statement there is written for external researchers.
+- **Uniqueness in G(2)** is proved (Theorem A of `relative-coherence.md`: parallel 2-terms with equal strict image are connected, in any context). **Existence in G(3)** follows, so every Gray generator of dimension 4 has a plain-CaTT type.
+- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It is posed for researchers in `conjectures/outbox/gray-contexts.md`.
 
 ---
 
@@ -315,31 +316,41 @@ The cylinder rule is (cyl-Λ/♭) at Δ = D¹, combined with the native hom of �
 Points to settle:
 
 - **Which cells are marked.** Only the *mixed* generators x⊗i with dim x ≥ 1 should be marked, i.e. the naturality cells. The components x⊗i for dim x = 0 are the transformation's components, and they must stay unmarked and directed. Otherwise the rule would classify invertible transformations, not pseudo ones. In Mikhail's notation: mark p_f, p_α, …, never pₓ for objects x.
-- **Orientation.** The limits note writes Γ ⊗ D¹. With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
+- **Orientation.** The limits note writes Γ ⊗ D¹ in Mikhail's notation, which is D¹ ⊗ Γ in the AM orientation (`conventions.md` §5). With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
 - **Status.**
   - Under Option A (option P of the limits notes), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
   - Its semantic justification is Theorem (P), formerly Conjecture C1, now proved ([`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md)).
   - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
 - **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
   - For arbitrary domains B, the same question becomes whether the disks are jointly dense, i.e. whether a 1-cell B → [D¹, C] is determined by its restrictions along all elements Dⁿ ⊳ B.
-  - In style, that would need a colimit principle presenting B from its cells (§6). It stays open here.
+  - In style, that would need a colimit principle presenting B from its cells (§6).
+  - *Answered 2026-11-18* (`free-objects-proofs.md` §6): the disks are not dense (counterexample over the composable pair), while pasting diagrams Θ are. The extensionality principle for arbitrary B is therefore Θ-density, a colimit rule tracked under F5.
 - **Relation to the lax rule.** (lhom) of §5.1 is the same schema with no marking. Both rules are one schema [Θ, C]_μ with μ ∈ {lax, pseudo}, and the marked Gray cylinder is its μ = pseudo instance.
 
 ### 5.6 Oplax and other variances
 
-Oplax homs use Θ ⊗ Δ in place of Δ ⊗ Θ. Since (X ⊗ Y)^op ≅ Y^op ⊗ X^op (Chanavat, odd duality),
+Oplax homs use Θ ⊗ Δ in place of Δ ⊗ Θ. Since (X ⊗ Y)^op ≅ Y^op ⊗ X^op for the odd duality (Chanavat; for strict ω-categories AM Prop. A.22),
 
 ```
 [Θ, C]ₒₚₗₐₓ ≃ ([Θ^op, C^op]ₗₐₓ)^op
 ```
 
-So oplax is *derivable* from the lax rule and the opposites meta-operation of Benjamin–Markakis. Only one primitive rule is needed. The even and total dualities give the other mixed-variance versions **[recall: exact duality formulas for ⊗ under even duality]**.
+So oplax is *derivable* from the lax rule and the opposites meta-operation of Benjamin–Markakis. Only one primitive rule is needed. In AM's notation this is Hom_oplax(A, B)^op ≅ Hom_lax(A^op, B^op) **[paper: AM Prop. A.23]**.
+
+The other dualities, now checked **[paper: AM Props. A.20, A.22, A.23; re-derived in `conventions.md` §3.3]**: the even dual also reverses factors, (X ⊗ Y)^co ≅ Y^co ⊗ X^co, so it also swaps lax and oplax: [Θ, C]ₒₚₗₐₓ ≃ ([Θ^co, C^co]ₗₐₓ)^co. The total dual keeps the order, (X ⊗ Y)° ≅ X° ⊗ Y°, so it maps the lax rule to itself: [Θ, C]ₗₐₓ ≃ ([Θ°, C°]ₗₐₓ)°. By AM Remark A.21 these are the only dualities of this kind.
+
+The same classification is proved independently, together with the consequences for two-tier L (which ambient dualities are symmetries, which swap lax and oplax, and the twisted tensors that every other duality produces), in `closed-structure.md` Part D, with an Agda check (`GrayDuality.agda`).
 
 ---
 
 ### 5.7 Alternative: closed structure by contractible types (Mimram's CCCaTT)
 
-Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt.pdf), [Agda](https://github.com/smimram/agda-ccatt/)). Read from the PDF via a summary, so rule details are approximate.
+Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt.pdf), [Agda](https://github.com/smimram/agda-ccatt/)). **Re-checked against the PDF and the tool source on 2026-11-18** (`closed-structure.md` Part C). The summary below is confirmed. Corrections:
+- the implicational system is CCaTT₁;
+- terms carry both type and term substitutions;
+- transitivity of equality is an explicit rule;
+- "cartesian closed ∞-categories" means (∞,1);
+- the tool has two higher criteria, a reversible one and a directed one, written out in Part C.2 there.
 
 **What it does.** It is the 1-categorical truncation of CaTT for cartesian closed categories.
 - **Pasting types replace pasting contexts.** A type is *pasting* if a deterministic proof search derives `Θ \ ∅ | ∅ ⊢ A`. The rules are `→ps I`, with the side condition that tgt(A) is not already a used target, and `→ps E`, which consumes the head hypothesis. This is a decidable subclass of the contractible types (exactly one βη-inhabitant).
@@ -372,6 +383,11 @@ Architecture A never forms B ⊗ C for non-representable B and C.
 - **What would be lost:** an object-level ⊗ is needed for lax-functor-category currying [B ⊗ C, D] ≃ [B, [C, D]ₗₐₓ] with *both* B and C arbitrary.
 - **Why it is hard:** its mapping-out property is a Day-convolution coend, so it is not finitary. In style, it would have to come from a colimit principle (lax colimits of computads, survey §13 Q3) plus "⊗ preserves colimits in each variable".
 - **Next step:** once colimits exist, define B ⊗ C as the colimit, over cells of B and C, of ⟦x ⊗ y⟧. Then check that it has the Gray tensor's universal property. The cocontinuity argument of `conjectures/gray-vs-cartesian.md` §3.1 is the template.
+- **Update 2026-11-18** (`closed-structure.md` Part E):
+  - B ⊗ ⟦Θ⟧ for arbitrary B and representable Θ needs no colimits. It is the representing object of B ⊳ [Θ, –] over rule (lhom). So lax transformations between arbitrary functors are maps B ⊗ D¹ → C.
+  - The universal property holds on mapping spaces only. Higher cells go through the pseudo cotensor [⟦Dᵏ⟧, D].
+  - A rule asserting the bijection on all cells is unsound: counterexample at B = C = D¹.
+  - Both factors arbitrary still needs [C, –]_lax for arbitrary C, either from object-indexed limits (F5) or from PL-ω.
 
 ---
 

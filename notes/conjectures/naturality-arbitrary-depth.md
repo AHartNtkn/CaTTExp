@@ -1,5 +1,9 @@
 # Naturality of CaTT coherences with respect to variables of arbitrary depth
 
+> **Update 2026-11-18.** N now holds for every term of dimension ≤ 2 (any Q, any up-closed Y), and N in dimension n follows from RC(n) on cylinders; see [`../relative-coherence.md`](../relative-coherence.md) §4. That note also proves the support lemma and repairs the §8 argument for composites (§4.3 there).
+>
+> **To send to a researcher, use [`outbox/naturality-arbitrary-depth.md`](outbox/naturality-arbitrary-depth.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 
 ---
@@ -161,6 +165,8 @@ Call a chosen inhabitant `K(Q, B, Y)`.
 
 **Lemma 2 (substitution).** Assuming Conjecture N in dimensions below n, the substitution `γ↑` is well typed. Hence `t↑ : a_t → b_t` for every term t of dimension n.
 
+*Correction (verified 2026-11-18, see the end of this file).* As written, the induction order is wrong. When c is a composite, a top-dimensional variable q of its arity Q has `dim q[γ] = n`, so `γ↑` needs the dimension-n term `(q[γ])↑`, not only lower-dimensional ones. The correct order is: build the dimension-n cylinder types from lower-dimensional lifts; supply the fillers K in dimension n; then define dimension-n term and substitution lifts by structural induction on the term. Same-dimensional arguments of a substitution are proper subterms, so this is well founded.
+
 *Proof sketch.* Each variable `q↑` of `Q↑γ⁻¹Y` has type `a_q → b_q`, built from variables by binary composites. Applying `γ↑` gives the corresponding expression with `(q'[γ])↑` in place of `q'↑`. That is `a_{q[γ]} → b_{q[γ]}`, because binary composites commute with substitution, and because `Var(q') ∩ γ⁻¹Y = ∅` exactly when `Var(q'[γ]) ∩ Y = ∅`, so the same factors are omitted on both sides. ∎
 
 **Consequence (any context).** Conjecture N, together with Lemma 2 and induction on the length of the context, gives a well-formed cylinder context `Γ↑X` and naturality terms `t↑ : a_t → b_t` for every CaTT context Γ (not only pasting contexts), every up-closed X, and every term t. For a variable x whose boundary terms are composites, the type `a_x → b_x` of x↑ uses the naturality terms of those composites.
@@ -169,7 +175,8 @@ Call a chosen inhabitant `K(Q, B, Y)`.
 
 ## 4. Known cases
 
-1. **Depth 0** (`depth_Y(Q) = 0`). Then `Q↑Y` is a pasting context, and K is a coherence over it (Benjamin, PhD thesis 2020, §3.4, functoriality; BMOSV Theorem 3.1, case d = k = 0).
+1. **Depth 0** (`depth_Y(Q) = 0` and `depth_Y(c) = 0`). Then `Q↑Y` is a pasting context, and K is a coherence over it (Benjamin, PhD thesis 2020, §3.4, functoriality; BMOSV Theorem 3.1, case d = k = 0). BMOSV Lemma B.10 adds context depth 0 with term depth 1. Context depth 0 with term depth ≥ 2 is *not* covered by either result. (Corrected 2026-11-18: an earlier version claimed all of context depth 0.)
+1a. **Fully selected chains, any 2-dimensional coherence** (`dim Q = 1`, `Y = Var(Q)`, depth 2). Settled by the relative ladder theorem in the researcher response below (verified 2026-11-18). This covers the associator and the left unitor.
 2. **Depth at most 1 in both context and term** (`depth_Y(Q) ≤ 1` and `depth_Y(c) ≤ 1`). This is BMOSV Theorem 3.1. The term is built as a composite `j⁻ ∗ c' ∗ j⁺`, where c' is the depth-0 naturality term pulled back along a substitution θ that absorbs the depth-1 cylinders into the depth-0 duplicates. `j^±` are coherences interchanging composites (BMOSV §3.2(6)).
 3. **Globular contexts, full Y, conical variant.** Mikhail (arXiv 2412.13310, Theorems 3.3 and 4.4) constructs the analogous contexts (cones over a context, and the Gray cylinder `Γ ⊗ D¹`) when every boundary of every variable is a variable. This is the context-level statement for pasting contexts. It does not provide the terms K.
 
@@ -181,9 +188,9 @@ So the **open case** is: depth of Y in the coherence c is at least 2.
 
 In strict ω-categories, the Gray tensor product exists and is monoidal closed (Crans 1995; Ara–Maltsiniotis 2020). For the free strict ω-category on a pasting diagram P, Steiner's theory of loop-free bases (Steiner 2004) presents `P ⊗ I` as the free strict ω-category on the generators `x ⊗ 0`, `x ⊗ 1` and `x ⊗ I`, for x a generator of P. Those are exactly `x⁻`, `x⁺` and `x↑` in `P↑Var(P)`.
 
-The image of any cell c of P under `− ⊗ I` is a cell `c ⊗ I` whose source and target are the strict pastings that `a_c` and `b_c` describe, up to choice of orientation convention. So the strict analogue of Conjecture N holds for every depth. The weak case is open because `Q↑Y` is not a pasting context, so the coherence rule cannot be applied directly.
+The image of any cell c of P under `− ⊗ I` is a cell `c ⊗ I` whose source and target are the strict pastings that `a_c` and `b_c` describe, up to choice of orientation convention. (With Steiner's sign convention `∂(a ⊗ b) = ∂a ⊗ b + (−1)^{|a|} a ⊗ ∂b`, the formulas for `a_x → b_x` match `I ⊗ P`, not `P ⊗ I`; see the verification at the end.) So the strict analogue of Conjecture N holds for every depth. The weak case is open because `Q↑Y` is not a pasting context, so the coherence rule cannot be applied directly.
 
-In the homotopy theory of weak ω-categories, `Q↑Var(Q)` for all Q would amount to a path-object construction. BMOSV (§1) note that such a construction has long been sought as the missing piece of a model structure on weak ω-categories, analogous to the folk model structure on strict ω-categories (Lafont–Métayer–Worytkiewicz 2010).
+In the homotopy theory of weak ω-categories, `Q↑Var(Q)` for all Q would be the directed half of a path-object construction. It is not a path object by itself: for C = [1], the constant map C → Fun([1], C) ≅ [2] misses the middle functor, so it is not an equivalence. An invertible or marked variant is needed (corrected 2026-11-18). BMOSV (§1) note that such a construction has long been sought as the missing piece of a model structure on weak ω-categories, analogous to the folk model structure on strict ω-categories (Lafont–Métayer–Worytkiewicz 2010).
 
 ---
 
@@ -230,6 +237,8 @@ Write `p := f⁻ ∗₀ y↑` and `q := x↑ ∗₀ f⁺`, so that `f↑ : p →
 
 Composing these cells, with reassociations from (F1), gives `L → R`. ∎
 
+*Machine-checked (2026-11-18):* `src/CaTTExp/Free/LeftUnitorDepth2.agda` builds this 3-cell, with (id_x ∗₀ f)↑ given by an explicit depth-1 naturality term for binary composition substituted with ι, and the certified checker accepts it with type `L → R`.
+
 **Why this works.** After f↑ is slid out of the way, every remaining comparison involves 2-cells between composites along a single path through the square. On a 1-dimensional Q, every such path is a chain, hence a pasting context, so (F1) applies.
 
 ### Proposed induction
@@ -247,7 +256,7 @@ What is missing is a precise *relative* form of the conjecture: a statement abou
 
 ## 7. Smallest open instances
 
-The left unitor at depth 2 is settled in §6 (partial progress). The following are the next cases.
+The left unitor at depth 2 is settled in §6 (partial progress). **Cases 1 and 2 below are now settled** by the relative ladder theorem in the researcher response (verified 2026-11-18). Case 3 is the smallest open instance; also open are arbitrary up-closed Y on a chain.
 
 1. **The associator** `(f ∗₀ g) ∗₀ h → f ∗₀ (g ∗₀ h)` over three composable arrows, with Y = all variables. BMOSV Example 1.3 treats it for `Y = {f, g, h}` only; including the objects raises the depth to 2. The sliding argument of §6 (partial progress) should apply, since Q is 1-dimensional, but it has not been checked in detail. Three cylinder cells must be slid, and one must verify that each residual comparison lies along a single path.
 2. **All 2-dimensional coherences over 1-dimensional Q**, with Y = all variables. This is the general case of the §6 (partial progress) argument.
@@ -259,7 +268,7 @@ The left unitor at depth 2 is settled in §6 (partial progress). The following a
 
 Write `P ⊗ D¹` for `P↑Var(P)`. It presents the strict Gray tensor of P with the 1-globe (§5), which is a molecule in Hadzihasanovic's sense (*Combinatorics of higher-categorical diagrams*).
 
-- Both `a_c` and `b_c` are full terms over `P ⊗ D¹`, with the same boundary.
+- For a *coherence* constructor c, both `a_c` and `b_c` should be full terms over `P ⊗ D¹`, with the same boundary; this still needs a support theorem for the boundary lifts. For a *composition* constructor it is false: for c = f ∗₀ g, `a_c` and `b_c` are 1-terms that miss f↑ and g↑. There the argument must use fullness on the source and target boundary molecules and build a composite. (Corrected 2026-11-18.)
 - Suppose the coherence rule were extended from pasting contexts to frame-acyclic molecules with the same two side conditions, and that this extension were conservative over CaTT (every new term equivalent to a CaTT term). Then `a_c → b_c` would be inhabited by a molecular coherence, hence by a CaTT term. So Conjecture N for `Y = Var(P)` would follow, at least when `P ⊗ D¹` is frame-acyclic. All molecules of dimension ≤ 3 are frame-acyclic (Chanavat, arXiv 2603.22242).
 - The sliding argument of §6 is an instance of the layering technique such a conservativity proof would use: reorder the top-dimensional atoms, and compare what lies between them along 1-dimensional paths.
 
@@ -277,7 +286,7 @@ Conjecture N is therefore a special case of molecular conservativity, but a targ
 
 ## Literature status (searched 2026-11-18)
 
-**Status: open. The depth ≤ 1 case (BMOSV) is still the frontier. The latest version of BMOSV ([arXiv 2501.11620v3](https://arxiv.org/abs/2501.11620)) says explicitly that "the higher-depth cases ... are beyond our present work". No follow-up was found.**
+**Status (updated 2026-11-18 after a verified researcher response): open in general. Every 2-dimensional coherence over a fully selected chain is now settled (§7 cases 1–2). Open: the 3-dimensional unitor over the 2-disc, arbitrary up-closed Y on a chain, and arbitrary depth.** The literature search found: the depth ≤ 1 case (BMOSV) was the published frontier. The latest version of BMOSV ([arXiv 2501.11620v3](https://arxiv.org/abs/2501.11620)) says explicitly that "the higher-depth cases ... are beyond our present work". No follow-up was found.**
 
 Related results:
 - **Molecular conservativity (§8).** This is problem G of `gray-contexts-in-catt.md`, also open. That file's §6 (Mikhail's Gray rules, formerly `gray-contexts-steiner.md`) asks for the same contexts `Γ ⊗ D¹`, and higher `Γ ⊗ Dⁿ`, through free-variable side conditions instead of explicit naturality terms.
@@ -300,3 +309,623 @@ Related results:
 - F. Chanavat. *A strengthened (∞,n)-categorical pasting theorem.* arXiv 2603.22242.
 - R. Steiner. *Omega-categories and chain complexes.* Homology Homotopy Appl. 6 (2004).
 - Y. Lafont, F. Métayer, K. Worytkiewicz. *A folk model structure on omega-cat.* Adv. Math. 224 (2010).
+
+# Researcher Response
+
+**The first two cases in §7 admit a uniform syntactic proof:** the associator with all variables selected, and every 2-dimensional coherence over a 1-dimensional pasting context.
+
+The useful strengthening is a relative statement about **parallel 2-terms in a ladder**. It applies to any valid choices of the lower-dimensional naturality terms, so it avoids checking the particular associator expression produced by BMOSV.
+
+I do not obtain arbitrary-depth Conjecture N, or your 3-dimensional unitor over the 2-disc. There are also corrections needed to Lemma 2 and the molecular argument.
+
+## 1. A relative coherence theorem for ladders
+
+Let
+\[
+Q=(x_0\xrightarrow{f_1}x_1\xrightarrow{f_2}\cdots
+\xrightarrow{f_m}x_m),
+\qquad Y=\operatorname{Var}(Q).
+\]
+Write \(L(Q)=Q\uparrow Y\), with generators
+\[
+v_i:x_i^-\longrightarrow x_i^+,
+\]
+\[
+f_i^\pm:x_{i-1}^\pm\longrightarrow x_i^\pm,
+\]
+and
+\[
+F_i:p_i\Longrightarrow q_i,
+\qquad
+p_i=f_i^-*_0v_i,
+\qquad
+q_i=v_{i-1}*_0f_i^+.
+\]
+
+Define the directed paths
+\[
+w_i=
+f_1^-\cdots f_i^-\,v_i\,f_{i+1}^+\cdots f_m^+,
+\qquad 0\leq i\leq m.
+\]
+
+Here a *path* is a list of generating 1-arrows. It is distinct from a CaTT 1-term: different bracketings, identities, and primitive composition constructors can have the same path. Flattening a 1-term means replacing identities by empty lists and composition constructors by concatenation.
+
+### Theorem — relative ladder coherence
+
+Suppose \(A,B\) are 1-terms from \(x_0^-\) to \(x_m^+\), whose flattened paths are \(w_m,w_0\), respectively. For any parallel 2-terms
+\[
+T,U:A\Longrightarrow B
+\]
+in \(L(Q)\), there are CaTT 3-terms
+\[
+T\Longrightarrow U,
+\qquad
+U\Longrightarrow T.
+\]
+
+This theorem concerns specified syntactic boundaries \(A,B\), not merely boundaries equal after strictification.
+
+The proof uses only the CaTT rules in your statement. Every comparison is formed over a genuine globular pasting context and then substituted into \(L(Q)\).
+
+## 2. Proof
+
+Throughout this proof, a “replacement” of one 2-term by another means a constructed 3-term. It never means judgmental equality.
+
+### 2.1. Comparisons along one directed path
+
+For a directed path \(w\), let \(C(w)\) be its 1-dimensional pasting context.
+
+Every 1-term over \(C(w)\) with the endpoints of the entire path has full typed support in \(C(w)\). To see this directly from the syntax:
+
+- A 1-dimensional constructor with a 0-dimensional arity supplies an identity.
+- A 1-dimensional constructor with a 1-dimensional arity composes successive 1-terms.
+- An arity of dimension greater than 1 cannot satisfy either fullness condition for a 1-dimensional term.
+
+Thus such a term traverses every generating edge of \(w\), in order.
+
+Consequently, for any two such 1-terms \(a,b\), define
+\[
+\kappa_w(a,b)
+=
+\operatorname{coh}_{C(w),\,a\to b}[\mathrm{id}].
+\]
+
+Furthermore, any two parallel 2-terms defined over \(C(w)\), with these full path boundaries, admit a direct 3-coherence. Their common type already has full support in \(C(w)\).
+
+In particular, there are 3-comparisons in both directions between
+\[
+\kappa_w(a,b)*_1\kappa_w(b,c)
+\quad\text{and}\quad
+\kappa_w(a,c).
+\]
+The same applies to longer composites of path coherences with specified equal endpoints.
+
+This is an application of your F1 to \(C(w)\), not to the whole ladder.
+
+### 2.2. Sequentializing arbitrary 2-terms
+
+We first establish the following syntactic lemma.
+
+> **Sequentialization lemma.** Every 2-term in a context generated in dimensions at most 2 admits 3-comparisons, in both directions, with a vertical composite whose factors are:
+>
+> 1. iterated whiskerings of individual generating 2-variables by 1-terms; or
+> 2. 2-terms obtained from constructors whose arities have dimension at most 1.
+
+Here is the construction.
+
+Consider a primitive 2-term
+\[
+a=\operatorname{coh}_{P,u\to v}[\gamma].
+\]
+Its pasting arity \(P\) has dimension at most 2, by the fullness conditions and the fact that \(u,v\) are 1-dimensional.
+
+If \(\dim P\leq1\), this is already a factor of the second kind.
+
+Suppose \(\dim P=2\). The pasting rules give a horizontal sequence of columns. Each column is either a single 1-generator or a vertical sequence
+\[
+\alpha_{j,1}:g_{j,0}\Rightarrow g_{j,1},
+\quad\dots,\quad
+\alpha_{j,n_j}:g_{j,n_j-1}\Rightarrow g_{j,n_j}.
+\]
+
+Form \(V_P\) by vertically composing each nonempty sequence and horizontally composing the columns, with fixed brackets. Columns with no 2-generator supply 1-dimensional whiskers.
+
+The source of \(V_P\) and \(u\) are full 1-terms over \(\partial^-P\); its target and \(v\) are full 1-terms over \(\partial^+P\). Therefore
+\[
+\widehat V_P=
+\bigl(
+\kappa_{\partial^-P}(u,\sigma V_P)*_1V_P
+\bigr)
+*_1
+\kappa_{\partial^+P}(\tau V_P,v)
+\]
+is a 2-term with exactly the prescribed type \(u\to v\).
+
+Both
+\[
+\operatorname{coh}_{P,u\to v}[\mathrm{id}]
+\quad\text{and}\quad
+\widehat V_P
+\]
+have full support in \(P\). The first does by its identity substitution. The second uses every generating 2-variable in its column and every remaining generating 1-variable as a whisker or boundary.
+
+Hence the coherence rule gives a 3-term between them, in either direction, **over \(P\)**. Substitute \(\gamma\), then recursively sequentialize the 2-term arguments. These arguments are proper syntactic subterms.
+
+It remains to flatten binary compositions. The required comparisons include
+\[
+a*_0b
+\;\Longrightarrow\;
+(a*_0\sigma b)*_1(\tau a*_0b),
+\tag{1}
+\]
+distribution of 1-dimensional whiskering over vertical composition, and associativity of vertical composition.
+
+Each is a direct full-support 3-coherence over a specified globular pasting context:
+
+| Comparison | Pasting context |
+|---|---|
+| Equation (1) | Two horizontally composable 2-discs |
+| Whiskering distribution | Two vertically composable 2-discs with a 1-dimensional whisker |
+| Vertical associativity | Three vertically composable 2-discs |
+
+The two terms in each comparison have the same syntactic boundaries and full support. Their endpoints can therefore be swapped to obtain the reverse comparison.
+
+A 3-comparison between 2-terms can be inserted into a larger binary expression using ordinary 3-dimensional whiskering. No instance of arbitrary-depth naturality is used.
+
+This proves the sequentialization lemma.
+
+### 2.3. The order of generating squares is forced
+
+The directed paths from \(x_0^-\) to \(x_m^+\) in the generating graph of \(L(Q)\) are exactly
+\[
+w_0,\dots,w_m.
+\]
+
+Indeed, a path travels along the minus row, crosses exactly one \(v_i\), and then travels along the plus row. No generating arrow returns from the plus row to the minus row.
+
+Apply sequentialization to \(T:A\Rightarrow B\). Every intermediate 1-term still has endpoints \(x_0^-,x_m^+\), and therefore has a unique cut index \(i\).
+
+A factor of the second kind preserves that index. Its substitution uses only 0- and 1-terms, and its two boundary words agree. In this ladder, all its variables lie along the corresponding path \(w_i\).
+
+An iterated whiskering of \(F_i\) changes
+\[
+w_i\longrightarrow w_{i-1}.
+\]
+Its prefix must be the minus path ending at \(x_{i-1}^-\), and its suffix must be the plus path starting at \(x_i^+\).
+
+Since \(A\) has cut \(m\) and \(B\) has cut \(0\), the generating-square factors in the sequentialization are therefore exactly
+\[
+F_m,F_{m-1},\dots,F_1,
+\tag{2}
+\]
+each with multiplicity one.
+
+Only their whiskering syntax and the intervening path coherences can differ.
+
+### 2.4. Fixing one crossing term at each cut
+
+Choose, once and for all, a bracketed 1-term \(B_i\) with path \(w_i\).
+
+For \(1\leq i\leq m\), form the path context
+\[
+D_i=(f_1^-,\dots,f_{i-1}^-,z,
+          f_{i+1}^+,\dots,f_m^+).
+\]
+The arrow \(z\) has endpoints \(x_{i-1}^-,x_i^+\).
+
+Replace \(z\) by a 2-disc
+\[
+z^-\xRightarrow{Z}z^+.
+\]
+Call the resulting context \(P_i\). It is a genuine globular 2-pasting context: a prefix path, a 2-disc, and a suffix path.
+
+Choose a full 1-term \(N_i(z)\) on \(D_i\), for example its fixed binary composite. The composition rule gives
+\[
+H_i=
+\operatorname{coh}_{P_i,\,
+N_i(z^-)\to N_i(z^+)}[\mathrm{id}].
+\]
+
+There is a well-typed substitution
+\[
+L(Q)\vdash\theta_i:P_i
+\]
+given by
+\[
+z^-\mapsto p_i,\qquad
+z^+\mapsto q_i,\qquad
+Z\mapsto F_i,
+\]
+and the evident assignments on the prefix and suffix.
+
+Put
+\[
+S_i^-=N_i(p_i),\qquad
+S_i^+=N_i(q_i),\qquad
+H_i'=H_i[\theta_i].
+\]
+Define
+\[
+e_i=
+\bigl(
+\kappa_{w_i}(B_i,S_i^-)*_1H_i'
+\bigr)
+*_1
+\kappa_{w_{i-1}}(S_i^+,B_{i-1}).
+\tag{3}
+\]
+Then
+\[
+e_i:B_i\Longrightarrow B_{i-1}.
+\]
+
+The outside factors in (3) are necessary: substituting a two-edge composite for \(z^\pm\) need not produce the chosen bracketing \(B_i\).
+
+### 2.5. Normalizing an arbitrary whiskering of \(F_i\)
+
+Let
+\[
+W:a\Longrightarrow b
+\]
+be one atomic factor in (2), expressed as an iterated whiskering of \(F_i\).
+
+All its left whiskers lie along the minus prefix, and all its right whiskers lie along the plus suffix. Consequently, replacing \(F_i\) by \(Z\) gives a term \(\widetilde W\) over \(P_i\), with type
+\[
+\widetilde W:U(z^-)\Longrightarrow U(z^+)
+\]
+for a single full 1-term \(U(z)\) over \(D_i\).
+
+This abstraction applies to the atomic whiskering \(W\). It does **not** assert that an arbitrary adjacent path coherence factors through \(z^\pm\).
+
+Over \(D_i\), define
+\[
+d=\kappa_{D_i}(U,N_i),
+\qquad
+r=\kappa_{D_i}(N_i,U).
+\]
+Over \(P_i\), the terms
+\[
+\widetilde W
+\quad\text{and}\quad
+\bigl(d[z^-]*_1H_i\bigr)*_1r[z^+]
+\]
+are parallel and have full support: both use \(Z\), and their boundaries use every prefix and suffix edge.
+
+Thus there is a direct 3-coherence between them over \(P_i\), in either direction.
+
+After substitution by \(\theta_i\), compare the left outside factor with
+\[
+\kappa_{w_i}(a,B_i)*_1
+\kappa_{w_i}(B_i,S_i^-)
+\]
+using a direct 3-coherence on the **expanded path \(w_i\)**. Compare the right outside factor with
+\[
+\kappa_{w_{i-1}}(S_i^+,B_{i-1})*_1
+\kappa_{w_{i-1}}(B_{i-1},b)
+\]
+over \(w_{i-1}\).
+
+Whiskering these comparisons and reassociating gives comparisons in both directions between \(W\) and
+\[
+\kappa_{w_i}(a,B_i)
+*_1 e_i
+*_1\kappa_{w_{i-1}}(B_{i-1},b).
+\tag{4}
+\]
+
+This explicitly handles the potential problem with compression: any coherence that distinguishes \(f_i^-\) from \(v_i\) is compared over their expanded path, not over a context in which they have been replaced by one variable.
+
+### 2.6. A common term with fixed brackets
+
+Use (4) for each generating-square factor.
+
+Between consecutive crossings, all remaining 2-factors are defined over one path \(w_i\). Compare their composite with the corresponding chosen path coherence. When its endpoints are both \(B_i\), compare it with \(\mathrm{id}_{B_i}\).
+
+Remove these identity 2-factors using 3-dimensional vertical unitors obtained over a 2-disc, and fix the vertical brackets using 3-associators over vertical chains of 2-discs.
+
+The result is the fixed term
+\[
+\mathcal N(A,B)=
+\kappa_{w_m}(A,B_m)
+*_1 e_m *_1\cdots *_1e_1
+*_1\kappa_{w_0}(B_0,B),
+\tag{5}
+\]
+with one fixed bracketing.
+
+Every comparison used above is available in both directions. We have therefore constructed
+\[
+\nu_T:T\Longrightarrow\mathcal N(A,B),
+\qquad
+\mu_T:\mathcal N(A,B)\Longrightarrow T.
+\]
+Applying the same construction to \(U\) gives the required term
+\[
+\nu_T*_2\mu_U:T\Longrightarrow U.
+\]
+
+For \(m=0\), \(L(Q)\) is the single-arrow context \(v_0\), and the result follows directly from §2.1. This completes the proof.
+
+## 3. Consequence for Conjecture N
+
+Let
+\[
+c:s\Longrightarrow t
+\]
+be a full 2-dimensional coherence over the chain \(Q\), with all variables selected.
+
+The required endpoints are
+\[
+L=(c^-*_0v_m)*_1t^\uparrow,
+\qquad
+R=s^\uparrow*_1(v_0*_0c^+).
+\]
+By your Lemma 1, these are parallel 2-terms with common source and target
+\[
+A=s^-*_0v_m,
+\qquad
+B=v_0*_0t^+.
+\]
+Their flattened paths are \(w_m,w_0\). Hence the ladder theorem supplies
+\[
+K(Q,\operatorname{type}(c),\operatorname{Var}(Q))
+=
+\nu_L*_2\mu_R.
+\tag{6}
+\]
+
+The construction does not depend on a particular formula for \(s^\uparrow,t^\uparrow\). It needs only their types. BMOSV supplies those 1-term lifts, since both the chain and these terms have depth at most 1. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### The associator explicitly
+
+For
+\[
+c=\alpha_{f,g,h}:
+(f*_0g)*_0h\Longrightarrow f*_0(g*_0h),
+\]
+the four paths are
+\[
+\begin{aligned}
+w_3&=f^-g^-h^-v_3,\\
+w_2&=f^-g^-v_2h^+,\\
+w_1&=f^-v_1g^+h^+,\\
+w_0&=v_0f^+g^+h^+.
+\end{aligned}
+\]
+
+Every sequentialization of either naturality endpoint crosses the squares in the order
+\[
+F_h,\ F_g,\ F_f.
+\]
+Both endpoints compare to
+\[
+\kappa_{w_3}(A,B_3)
+*_1e_3*_1e_2*_1e_1
+*_1\kappa_{w_0}(B_0,B),
+\]
+where
+\[
+A=((f^-*_0g^-)*_0h^-)*_0v_3,
+\qquad
+B=v_0*_0\bigl(f^+*_0(g^+*_0h^+)\bigr).
+\]
+Equation (6) gives the associator’s naturality 3-cell.
+
+Thus the proof settles **§7.1 and §7.2 for \(Y=\operatorname{Var}(Q)\)**, and subsumes the left-unitor argument. This is a syntactic paper proof; I have not checked its generated terms in the CaTT implementation.
+
+## 4. Corrections to the setup
+
+### 4.1. Lemma 1 survives the typing audit
+
+For \(n\geq1\), your staircase brackets give the claimed type
+\[
+a_t,b_t:a_{\sigma t}\longrightarrow b_{\tau t}.
+\]
+There is no associativity mismatch in dimension 3.
+
+The omission convention needs the following supporting fact:
+\[
+\operatorname{Var}(u)\cap Y=\varnothing
+\quad\Longrightarrow\quad
+\operatorname{Var}(\operatorname{type}(u))\cap Y=\varnothing.
+\tag{7}
+\]
+For a variable, (7) follows from up-closure. For a coherence term, its type’s free variables are among those of its substitution. Thus an unaffected term has unaffected iterated boundaries.
+
+With (7), deleting the designated factors preserves the composability argument. Deletion must remain literal deletion of the binary composition; replacing a deleted factor by an identity would change the syntax.
+
+For \(n=0\), state separately that \(a_t,b_t:\star\); the formula involving \(\sigma t,\tau t\) does not apply.
+
+### 4.2. Lemma 2 needs same-dimension structural induction
+
+The assertion
+
+> Assuming N in dimensions below \(n\), the substitution \(\gamma^\uparrow\) is well typed
+
+is too strong as written.
+
+A top-dimensional variable \(q\) of a composition arity can satisfy
+\[
+\dim(q[\gamma])=n.
+\]
+Already for \(n=1\), an assignment
+\[
+f\longmapsto u*_0v
+\]
+requires
+\[
+f^\uparrow\longmapsto(u*_0v)^\uparrow,
+\]
+which uses a dimension-1 canonical filler, not merely lower-dimensional fillers.
+
+The corrected order is:
+
+1. Use lower-dimensional lifts to construct the dimension-\(n\) cylinder **types**.
+2. Supply the canonical fillers \(K_n\).
+3. Define dimension-\(n\) term and substitution lifts by structural induction.
+
+Same-dimensional substitution arguments are proper syntactic subterms; lower-dimensional arguments use the outer induction. The substitution calculation in your proof then works.
+
+This repairs the recursion. It is not an obstruction to N.
+
+There is also a citation qualification in §4.1: BMOSV’s \(d=k=0\) case bounds the depth in both the context and the term. Their Lemma B.10 treats context depth 0 and term depth 1. Neither statement alone establishes your unrestricted claim about arbitrarily high-dimensional coherences when only the context has depth 0. That broader claim may hold, but needs its own support argument. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### 4.3. The whole-cylinder fullness claim in §8 is false for composition constructors
+
+Take
+\[
+Q=(x\xrightarrow f y\xrightarrow g z),
+\qquad c=f*_0g.
+\]
+Then
+\[
+a_c=(f^-*_0g^-)*_0z^\uparrow,
+\qquad
+b_c=x^\uparrow*_0(f^+*_0g^+).
+\]
+
+Neither typed support includes \(f^\uparrow\) or \(g^\uparrow\). In particular, \(a_c,b_c\) are 1-terms, whereas these are 2-dimensional generators.
+
+Therefore \(a_c,b_c\) are not both full over the entire cylinder.
+
+This does not refute N. It shows that the molecular argument must distinguish:
+
+- **Composition constructors:** establish fullness on the appropriate source and target boundary molecules, and construct a composite.
+- **Coherence constructors:** establish whole-cylinder fullness, including a support theorem for the previously constructed boundary lifts.
+
+Molecular conservativity could still imply the desired result, but the blanket whole-cylinder fullness argument does not.
+
+### 4.4. Fix the strict tensor convention
+
+Under Steiner’s convention,
+\[
+\partial(a\otimes b)
+=
+\partial a\otimes b+(-1)^{|a|}a\otimes\partial b.
+\]
+This tensor on directed complexes induces the strict categorical tensor. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+Let \(e:0\to1\) generate \(I\). Identifying
+\[
+x^\pm=e^\pm\otimes x,
+\qquad
+x^\uparrow=e\otimes x
+\]
+gives
+\[
+\partial x^\uparrow
+=
+x^+-x^--(\tau x)^\uparrow+(\sigma x)^\uparrow.
+\tag{8}
+\]
+Equation (8) matches the signed boundary of your \(a_x\to b_x\).
+
+Thus, with this convention, the written formulas correspond to
+\[
+\boxed{I\otimes Q}.
+\]
+For \(Q\otimes I\), the differential has the factor \((-1)^{\dim x}\), and the square already has the opposite orientation when \(x\) is 1-dimensional. You can retain the notation \(Q\otimes I\) by explicitly choosing the reversed tensor convention; it should not remain implicit.
+
+### 4.5. A directed cylinder does not by itself give a path object
+
+For the ordinary category \(C=[1]\),
+\[
+\operatorname{Fun}([1],C)\cong[2].
+\]
+Its three functors correspond to
+\[
+\mathrm{id}_0,\qquad (0\to1),\qquad \mathrm{id}_1.
+\]
+The constant-arrow map \(C\to[2]\) misses the middle functor up to isomorphism, so it is not an equivalence.
+
+Thus the directed construction alone does not yield a path-object factorization for categorical weak equivalences. An invertible or suitably marked version is additional work. The 2026 ICaTT paper makes this distinction when discussing the adaptation of directed cylinders to undirected cylinders for a model structure. [arxiv.org](https://arxiv.org/pdf/2602.16602?utm_source=chatgpt.com)
+
+## 5. What remains for the proposed induction
+
+The ladder theorem identifies a sufficient relative statement in dimension 2:
+
+> Two terms with the same prescribed outer boundary can be compared by normalizing their use of the square generators, even when neither term is itself a naturality expression.
+
+Its proof has two separate ingredients:
+
+1. **Sequentialization:** express a term, up to a higher cell, as a sequence of generating-cell whiskerings and lower-dimensional comparisons.
+2. **Comparison of those sequences:** normalize each generating-cell whiskering and compare the terms between successive generators.
+
+For a chain, the sequence of square generators is forced. That is the decisive simplification.
+
+For higher-dimensional \(Q\), merely assuming N for lower-dimensional pasting contexts does not supply the second ingredient in the required generality. In particular, your 3-dimensional unitor can leave **3-term comparisons over cylinders of 1-dimensional contexts**. The theorem above compares 2-terms there; it does not compare arbitrary 3-terms.
+
+One precise stronger target would be the following. Let
+\[
+\pi_Q:\text{CaTT terms in }Q\uparrow\operatorname{Var}(Q)
+\longrightarrow
+\text{cells of the corresponding strict Gray cylinder}
+\]
+be strict interpretation. Consider the relative comparison property
+\[
+\begin{gathered}
+\dim Q\leq d,\qquad r\geq d+1,\\
+S,T\text{ parallel }r\text{-terms},\qquad
+\pi_Q(S)=\pi_Q(T)
+\\[2mm]
+\Longrightarrow
+\exists H:S\longrightarrow T.
+\end{gathered}
+\tag{RC}_{d,r}
+\]
+
+This is a **proposed strengthening**, not a theorem established here. The ladder proof establishes its relevant full-boundary instance for \((d,r)=(1,2)\), without needing a separate strict-equality hypothesis: the forced sequence (2) supplies it.
+
+For composition constructors, a further relative existence statement is needed: lift a specified strict composite with prescribed weak source and target terms. Equality of strict images alone does not address that case.
+
+The semantic pasting theorems support this direction, but do not supply the required CaTT comparison terms. Chanavat’s results concern homotopy polygraphs and a strongly monoidal functor into flagged \((\infty,\omega)\)-categories under stated acyclicity hypotheses; transferring these conclusions to the particular CaTT syntax is still a separate proof obligation. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+The resulting status is:
+
+| Claim | Status of the argument above |
+|---|---|
+| Lemma 1, with literal omission | Valid; add the support fact (7) |
+| Lemma 2 as stated | Repair the induction order |
+| Associator over a fully selected chain | Proved by relative ladder coherence |
+| Every 2-dimensional coherence over a fully selected chain | Proved by the same argument |
+| Arbitrary up-closed subsets of a chain | Not established by this proof |
+| The 3-dimensional unitor over the fully selected 2-disc | Not established |
+| Arbitrary-depth N | Not established |
+
+The substantial addition is the relative ladder theorem: **the first two open instances reduce to one normalization argument, independent of the chosen formulas for their 1-dimensional boundary lifts.**
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. The relative ladder theorem holds, and with it §7 cases 1 and 2. The four corrections in §4 of the response are right and have been applied to the problem statement above. The proposed strengthening (RC) in §5 is a proposal, not a result.**
+
+Checked step by step against the statement above, BMOSV ([arXiv 2501.11620v3](https://arxiv.org/abs/2501.11620)), Bourke–Lobbia and the ICaTT paper.
+
+**§2.1, path coherences.** A 1-term between the endpoints of a chain must be an identity or a composite: a coherence 1-term has a 0-dimensional arity (an identity), and a composition 1-term has a 1-dimensional arity. Its flattened path is a path in a line graph between the two ends, so it uses every edge. Hence any two such terms are full and parallel, and `κ_w(a, b)` exists by the coherence rule. Any two parallel 2-terms over `C(w)` with these boundaries are connected the same way. Correct.
+
+**§2.2, sequentialization.** A primitive 2-term has an arity of dimension ≤ 2: in the coherence case its 1-dimensional boundary terms use only variables of dimension ≤ 1, so the arity is 1-dimensional; in the composition case the arity is 2-dimensional. A 2-dimensional pasting context is a row of columns, each a vertical stack of 2-cells, as stated. `V̂_P` and `coh_{P,u→v}[id]` are parallel and both full over P, so the coherence rule connects them. The flattening comparisons (horizontal composite to whiskered vertical composite, distribution of whiskering, vertical associativity) are full coherences over the listed pasting contexts. Correct.
+- *One step stated briefly.* A whiskering of a second-kind factor by a 1-term is not literally a constructor with a 1-dimensional arity. It is still a 2-term with no 2-dimensional generator, so its source and target flatten to the same path w, it lifts to `C(w)`, and §2.1 connects it to a κ. So the lemma holds as stated, with this extra comparison.
+
+**§2.3, forced order.** The generating graph of `L(Q)` is a minus row, a plus row and the verticals `vᵢ`, with nothing going back from plus to minus. So the paths from `x₀⁻` to `x_m⁺` are exactly `w₀, …, w_m`. A factor without 2-generators keeps the cut index. A whiskering of `Fᵢ` has source path `prefix · fᵢ⁻ vᵢ · suffix`, which must be `wᵢ`, so it moves the cut from i to i − 1. Going from cut m to cut 0 therefore uses `F_m, …, F₁` once each, in that order. Correct.
+
+**§2.4–2.5, normalizing each crossing.** `P_i` is a genuine pasting context (prefix chain, 2-disc, suffix chain). `θᵢ` is well typed: `pᵢ` and `qᵢ` both go from `x_{i−1}⁻` to `xᵢ⁺`, and `Fᵢ : pᵢ ⇒ qᵢ`. `eᵢ : Bᵢ ⇒ B_{i−1}` typechecks. In an atomic whiskering W of `Fᵢ`, the source `pᵢ` occurs as one subterm, so abstracting `Fᵢ` to Z gives `W̃` over `Pᵢ` with boundary `U(z^±)`. `W̃` and `(d[z⁻] ∗₁ Hᵢ) ∗₁ r[z⁺]` are parallel and full over `Pᵢ`. The outer factors are then compared over the expanded path `wᵢ`, where `zᵢ` is replaced by `fᵢ⁻ ∗₀ vᵢ`, so nothing is compared over a compressed context. Correct.
+
+**§2.6, assembly.** Between consecutive crossings, the factors form a 2-term from `Bᵢ` to `Bᵢ` over `C(wᵢ)`, which is full and parallel to `id_{Bᵢ}`. Unitors and associators for 2-cells are coherences over discs and chains of discs. Every comparison used is a coherence between parallel full terms, so it exists in both directions. This gives `ν_T : T ⇒ 𝒩(A, B)` and `μ_T`, hence `T ⇒ U`. Correct.
+
+**§3, consequence.** For a 2-dimensional coherence `c : s ⇒ t` over a chain, Lemma 1 gives `a_c = (c⁻ ∗₀ v_m) ∗₁ t↑` and `b_c = s↑ ∗₁ (v₀ ∗₀ c⁺)`, with common source `s⁻ ∗₀ v_m` (path `w_m`) and target `v₀ ∗₀ t⁺` (path `w₀`). The theorem applies to any lifts `s↑`, `t↑` of the right types, so it does not depend on BMOSV's formula. Their existence is BMOSV's depth-1 case. A 2-cell over a 1-dimensional context is always a coherence (not a composition), so this covers all of §7 case 2, and case 1 as an instance. Correct.
+
+**§4 corrections, all confirmed.**
+- *(7) and Lemma 1.* `Var(A[γ]) ⊆ Var(coh_{P,A}[γ])`, so unaffected terms have unaffected boundaries. Correct.
+- *Lemma 2.* Confirmed: for a composite, a top-dimensional arity variable is sent to an n-dimensional term. Fixed above.
+- *§4 case 1.* Confirmed against BMOSV: Theorem 3.1's case d = k = 0 bounds both context depth and term depth by 0, and Lemma B.10 covers context depth 0 with term depth 1 (p. 19 and Appendix B of v3). Context depth 0 does not bound term depth (e.g. Y = {f} for a 1-cell f of a 2-dimensional context, and a 3-dimensional coherence). Fixed above.
+- *§8 fullness.* Confirmed by the example `c = f ∗₀ g`. Fixed above.
+- *Orientation.* `∂(e ⊗ x) = x⁺ − x⁻ − (τx)↑ + (σx)↑`, which equals `b_x − a_x`. With `x ⊗ e` and x 1-dimensional the sign of the whole boundary flips. So the formulas present `I ⊗ P` under Steiner's convention. Noted above.
+- *Path object.* `Fun([1], [1]) ≅ [2]` and the constant map misses `0 → 1`. The ICaTT paper (arXiv 2602.16602, abstract) likewise says directed cylinders must be turned into undirected ones for the model structure. Fixed above.
+
+**What this settles, and what it opens.**
+- Settled: §7 cases 1 and 2 (every 2-dimensional coherence over a fully selected chain, including the associator).
+- Open: the 3-dimensional unitor over the 2-disc (§7 case 3); arbitrary up-closed Y on a chain (the proof uses Y = Var(Q), where every path crosses exactly one vertical); arbitrary depth.
+- New candidate induction hypothesis: (RC)_{d,r} of §5 of the response, plus a relative existence statement for composition constructors. The ladder theorem is its full-boundary instance for (d, r) = (1, 2).
+- The response's construction has not been run in a CaTT implementation. Doing so would be a direct check.

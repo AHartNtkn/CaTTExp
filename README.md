@@ -9,6 +9,7 @@ variants.
 Layout:
 
 - `notes/`: design notes and literature surveys.
+- `notes/open-issues.md`: the single list of known open items, each with its owner and status. Threads update it whenever they find or close an item.
 - `src/`: Agda formalization experiments.
 
 ## Building the Agda development

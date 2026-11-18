@@ -134,10 +134,10 @@ varsCtx Γ = downFrom (len Γ)
 -- Var(t : A) = Var(∂⁻Γ) is equivalent to typing it in ∂⁻Γ, because the
 -- boundary is downward closed.
 
-dropLast : List Nat → List Nat
-dropLast []           = []
-dropLast (x ∷ [])     = []
-dropLast (x ∷ y ∷ xs) = x ∷ dropLast (y ∷ xs)
+dropLastᴸ : List Nat → List Nat
+dropLastᴸ []           = []
+dropLastᴸ (x ∷ [])     = []
+dropLastᴸ (x ∷ y ∷ xs) = x ∷ dropLastᴸ (y ∷ xs)
 
 snoc : List Nat → Nat → List Nat
 snoc xs x = xs ++ (x ∷ [])
@@ -159,7 +159,7 @@ tgtVars i (Γ ▸ A ▸ B)     =
   if i <ℕ dim A                  -- dim A > i
   then tgtVars i Γ
   else if dim A ==ℕ i
-  then snoc (dropLast (tgtVars i Γ)) (len Γ)
+  then snoc (dropLastᴸ (tgtVars i Γ)) (len Γ)
   else snoc (snoc (tgtVars i Γ) (len Γ)) (suc (len Γ))
 
 ∂⁻ ∂⁺ : Ctx → List Nat

@@ -31,7 +31,7 @@ Let Γ = `(x:⋆, y:⋆, f : x → y)` and let `L = lim_Γ`. Take two 1-cells `u
 
 ## A consequence to check
 
-If (1)–(3) hold, take the cartesian setting and the partially lax limit of `⊤ →a C ←b ⊤` with the b-leg invertible. Its points are arrows `b → a` of C, but its arrows are only the **invertible** 2-cells of C. The genuine hom-object `Hom_C(b, a)` is instead the fibre of the *oplax arrow object*, which is characterised through the Gray tensor. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C) → C × C`, not of `Fun([1], C)` (Gagna–Harpaz–Lanari, [2012.04537](https://arxiv.org/abs/2012.04537)) **[recalled, please verify]**.
+If (1)–(3) hold, take the cartesian setting and the partially lax limit of `⊤ →a C ←b ⊤` with the b-leg invertible. Its points are arrows `b → a` of C, but its arrows are only the **invertible** 2-cells of C. The genuine hom-object `Hom_C(b, a)` is instead the fibre of the *oplax arrow object*, which is characterised through the Gray tensor. This matches the (∞,2) fact that mapping categories are fibres of `Ar^oplax(C) → C × C`, not of `Fun([1], C)` (Gagna–Harpaz–Lanari, [2012.04537](https://arxiv.org/abs/2012.04537)) **[verified: researcher response §7 and the verification below, item 8; Gagna–Harpaz–Lanari §1.3]**.
 
 ## What is known
 
@@ -667,3 +667,9 @@ Checked step by step against Mikhail ([arXiv 2412.13310v2](https://arxiv.org/abs
 - (a) Repair Def. 4.15's τCond and variable renaming in `ctrf`, and prove substitution, composition and soundness for the corrected marked-declaration version.
 - (b) Classify the models of the original rules beyond the necessary condition "cells of dimension ≥ 3 are invertible".
 - (c) A lax-transfor variant with non-invertible interchange would need a different base theory than CaTT. This connects to `strict-lax-interchange-at-every-level.md` and to the L option in `pseudo-vs-gray.md`.
+
+*Follow-up status (2026-11-18, `../limits-metatheory.md`):*
+- (a) Substitution is proved, composition over arrows is explicit, and soundness under P reduces to Loubaton plus the specified shapes (§6).
+- (b) Classified: models are the (∞,ω)-categories with cells of dimension ≥ 3 invertible and with GHL/Loubaton lax limits (§4).
+- (c) Done for two-tier L, with a strict model (§1, §5).
+- The extension of the collapse to every dimension ≥ 3 is proved (§3).

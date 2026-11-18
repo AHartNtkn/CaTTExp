@@ -119,7 +119,7 @@ private
   mapS-++ []       ys = refl
   mapS-++ (x ∷ xs) ys = cong (S x ∷_) (mapS-++ xs ys)
 
-  mapS-dropLast : ∀ xs → mapS (dropLast xs) ≡ dropLast (mapS xs)
+  mapS-dropLast : ∀ xs → mapS (dropLastᴸ xs) ≡ dropLastᴸ (mapS xs)
   mapS-dropLast []           = refl
   mapS-dropLast (x ∷ [])     = refl
   mapS-dropLast (x ∷ y ∷ xs) = cong (S x ∷_) (mapS-dropLast (y ∷ xs))
@@ -381,7 +381,7 @@ private
     NE-if (i <ℕ dim A) (tgt-NE i Γ o)
       (NE-if (dim A ==ℕ i) (NE-snoc _ (len Γ)) (NE-snoc (tgtVars i Γ ++ (len Γ ∷ [])) (suc (len Γ))))
 
-  dropLast-Lift : ∀ xs → NE xs → dropLast (Lift xs) ≡ Lift (dropLast xs)
+  dropLast-Lift : ∀ xs → NE xs → dropLastᴸ (Lift xs) ≡ Lift (dropLastᴸ xs)
   dropLast-Lift (x ∷ xs) ne = cong (λ X → 0 ∷ 1 ∷ X) (sym (mapS-dropLast (x ∷ xs)))
 
 tgtΣ : ∀ i Γ → Odd Γ → tgtVars (suc i) (Σctx Γ) ≡ Lift (tgtVars i Γ)
@@ -390,7 +390,7 @@ tgtΣ i (Γ ▸ A ▸ B) (odd+ o) rewrite dimΣ A | lenΣ Γ | tgtΣ i Γ o with
 ... | true  = refl
 ... | false with dim A ==ℕ i
 ...   | true  = trans (cong (_++ (S (len Γ) ∷ [])) (dropLast-Lift (tgtVars i Γ) (tgt-NE i Γ o)))
-                      (cong (λ X → 0 ∷ 1 ∷ X) (sym (mapS-++ (dropLast (tgtVars i Γ)) (len Γ ∷ []))))
+                      (cong (λ X → 0 ∷ 1 ∷ X) (sym (mapS-++ (dropLastᴸ (tgtVars i Γ)) (len Γ ∷ []))))
 ...   | false = cong (λ X → 0 ∷ 1 ∷ X)
                   (sym (trans (mapS-++ (tgtVars i Γ ++ (len Γ ∷ [])) (suc (len Γ) ∷ []))
                               (cong (_++ (S (suc (len Γ)) ∷ [])) (mapS-++ (tgtVars i Γ) (len Γ ∷ [])))))

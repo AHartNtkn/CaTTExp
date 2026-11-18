@@ -70,8 +70,8 @@ Writing the rule down exactly also fixed three details:
   - The inclusion ⊇ is where a proof gets stuck. F_σ does not commute with downward closure when σ sends a cell to an identity-like term, i.e. a coherence-case coh, whose top support is empty. Then F_σ(α) = ∅ while F_σ(∂α) ≠ ∅. Example: the middle 1-cell g of f ⇒ g ⇒ h lies in the closure of the vertical composite's support but not in its table support.
   - So the induction needs the invariant "a derivable cell with empty top support has boundaries with equal closed supports". That is the support-level shadow of "coherence-case cohs are identities in the strict model", i.e. of Theorem 1 soundness, which needs lemma (B).
   - **Finding:** conservativity (Thm 1(3)) and non-degeneracy (Thm 1(2)) share one missing layer, the strict interpretation with (B). They are not independent proofs, as §3.6 suggests for (3).
-- **Non-derivability of the reverse interchanger as any term** (Theorem 1(2)): *now proved, with two explicit hypotheses* (see the next section). The integer-chain layer is avoided: chains are bags (non-negative by construction), and the chain equation is written additively, ∂⁺c + x⁻ = ∂⁻c + x⁺.
-- **Validation against the strict model on examples** (chain-level): *now done* for the total cell, by `Strict/CheckCells.agda` on 18 pasting contexts, and in general for every derivable term, given the two hypotheses (last section).
+- **Non-derivability of the reverse interchanger as any term** (Theorem 1(2)): *now proved, with one explicit hypothesis, (B-supp)* (see the next section; the second one, (T-cell), is now a theorem). The integer-chain layer is avoided: chains are bags (non-negative by construction), and the chain equation is written additively, ∂⁺c + x⁻ = ∂⁻c + x⁺.
+- **Validation against the strict model on examples** (chain-level): *now done* for the total cell, by `Strict/CheckCells.agda` on 18 pasting contexts, and in general for every derivable term, given (B-supp) (last section).
 
 ## Strict-model soundness (`src/CaTTExp/Strict/`)
 
@@ -84,10 +84,15 @@ Writing the rule down exactly also fixed three details:
 - `Strict/Soundness.agda`: `sound-tm`, every derivable term t : A over a pasting context is a cell of ν(K(Γ)) with t's table.
 - `Strict/ReverseInterchanger.agda`: `no-reverse-interchanger`, no term of any shape has type (α▷g);(f′◁β) ⇛ (f◁β);(α▷g′) over ΣD¹ ∨ ΣD¹. The proof counts f′⊗β on both sides of the chain equation: |c| + 1 against 0.
 
-The two hypotheses are module parameters, so every use of them is visible in the types:
-- **(T-cell)** the total cell built from `chainT` is a cell between the context's first and last object (Ara–Maltsiniotis, arXiv 1607.00668, §A.16, Prop. 4.13). `Strict/CheckCells.agda` checks it by evaluation, with a checker proved sound, on 18 pasting contexts (ΣDⁿ for n ≤ 3, wedges of up to four ΣD¹, mixed dimensions, a point factor, composite homs);
-- **(B-supp)** cells of ν(K(Θ)) of the same dimension in the same hom with equal downward-closed supports are equal (Hadzihasanovic, arXiv 2404.07273; proved for every Steiner complex in `conjectures/steiner-support-determines-cells.md`).
+The two facts were first module parameters, so every use of them is visible in the types:
+- **(T-cell)** the total cell built from `chainT` is a cell between the context's first and last object (Ara–Maltsiniotis, arXiv 1607.00668, §A.16, Prop. 4.13). **Now a theorem** (`Strict/Bridge.T-cell : TCell`, 2026-11-18), in four steps:
+  - `Strict/Tensor.agda`: the Gray tensor of two cell tables is a cell table (`tensor-cell`), from the Leibniz rule and a sign computation; the unit table is a cell.
+  - `Strict/TotalCell.agda`: `chainT` of a list of homs is the iterated tensor of the homs' tables (`chainT-cons`), so T is a cell once each hom's table is one (`HomCells → TCell`).
+  - `Strict/Pasting.agda`: for every pasting context, the table of each hom, defined by lookups ("cells of the hom of dimension i that are not the target / source of an (i+1)-cell"), is a cell between consecutive objects. By induction on the pasting derivation: each `pse` step changes only the hom of the cursor, where x leaves the + side, y enters it and f enters both sides one dimension up.
+  - `Strict/Bridge.agda`: these tables are the ones `Gray/Support`'s `piece`/`homAt`/`homs` compute. The key facts are that a cell is hit only by cells of its own hom, that the hom index read off by `posOf` is the hom between consecutive objects (objects are strictly increasing), and that the hom dimension bounds every cell's.
+  `Strict/CheckCells.agda` still checks it by evaluation on 18 pasting contexts.
+- **(B-supp)** cells of ν(K(Θ)) of the same dimension in the same hom with equal downward-closed supports are equal (Hadzihasanovic, arXiv 2404.07273; proved for every Steiner complex in `conjectures/steiner-support-determines-cells.md`). Still a module parameter of `Soundness` and of `ReverseInterchanger`.
 
-Both are true statements in the literature; what the formalization takes on trust is that `chainT` and `down` compute the objects those statements are about.
+(B-supp) is true in the literature; what the formalization takes on trust is that `down` computes the downward closure it is about.
 
 An independent review (2026-11-18) checked that the development builds from scratch under `--safe` with no postulates, that `IsCell` is Steiner's Def. 2.8 and `∂T` the Leibniz rule with `chainT`'s sign convention, that `towerOf` reads the whole boundary from the type (so `IsCellTm` is not trivially satisfiable), and that both hypotheses are true as stated.

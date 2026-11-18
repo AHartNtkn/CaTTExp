@@ -133,3 +133,807 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hyp
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
 
+
+# Researcher Response
+
+**The \(2\times2\) grid satisfies \(\mathrm{RC}(3)\).** The missing comparison can be constructed by extending the relative-fusion argument of item 17.
+
+The essential point is to separate two operations:
+
+1. Move input normalisers through a generic head while their \(2\)-sources remain formal variables.
+2. Expand only the resulting chosen normal forms. At that stage, every exchange is between the same two adjacent faces \(F,G\). Reassociate to isolate those faces together with the intervening path terms, and apply \(\mathrm{RC}(3)\) in their cut-vertex subcontext.
+
+The cut-vertex result must first be extended from item 25’s triangle and globe to two squares. I give that extension explicitly below. I also give extensions of item 20 to vertically composable \(3\)-generators and to a cube with a nontrivial edge whisker.
+
+## 1. The grid and its strict \(2\)-cells
+
+Orient each face as \(hv\Rightarrow vh\). Name the six paths from \((0,0)\) to \((2,2)\) as follows.
+
+| Name | Path |
+|---|---|
+| \(p_0\) | \(hhvv\) |
+| \(p_1\) | \(hvhv\) |
+| \(p_2\) | \(vhhv\) |
+| \(p_3\) | \(hvvh\) |
+| \(p_4\) | \(vhvh\) |
+| \(p_5\) | \(vvhh\) |
+
+Put
+\[
+D=e_{10},\qquad F=e_{00},\qquad G=e_{11},\qquad E=e_{01}.
+\]
+With the required edge whiskers, the elementary rewrites are
+\[
+p_0\xrightarrow{D}p_1,
+\]
+\[
+p_1\xrightarrow{F}p_2\xrightarrow{G}p_4,
+\qquad
+p_1\xrightarrow{G}p_3\xrightarrow{F}p_4,
+\]
+\[
+p_4\xrightarrow{E}p_5.
+\tag{1}
+\]
+
+This list follows by applying \(hv\mapsto vh\) at each adjacent \(hv\) in each of the six paths. The only pair of independent events is \(F,G\). Thus the nonunique event words are exactly
+\[
+FG=GF,\qquad
+DFG=DGF,\qquad
+FGE=GFE,\qquad
+DFGE=DGFE.
+\tag{2}
+\]
+
+The two-event cells other than \(FG\) are
+\[
+DF,\quad DG,\quad GE,\quad FE.
+\tag{3}
+\]
+Each is a two-square strip with one unchanged outer edge.
+
+The three remaining cells to prove coherent are therefore
+\[
+DFG,\qquad FGE,\qquad DFGE.
+\tag{4}
+\]
+
+Their boundary paths have no common interior vertex:
+\[
+\begin{aligned}
+\operatorname{Vert}(p_0)\cap\operatorname{Vert}(p_4)
+&=\{(0,0),(2,2)\},\\
+\operatorname{Vert}(p_1)\cap\operatorname{Vert}(p_5)
+&=\{(0,0),(2,2)\},\\
+\operatorname{Vert}(p_0)\cap\operatorname{Vert}(p_5)
+&=\{(0,0),(2,2)\}.
+\end{aligned}
+\tag{5}
+\]
+
+Consequently, a head evaluating to any cell in (4) has precisely one nonconstant \(0\)-column. Indeed, every \(0\)-cut of its arity maps to a vertex of both boundary paths. By (5), it maps to an external endpoint. Acyclicity then makes all other columns point-supported.
+
+After item 14, a \(2\)-head has arity \(V_m\), a vertical chain of \(2\)-discs; a \(3\)-head has one \(0\)-column, possibly with several vertical chains of \(3\)-variables.
+
+This reduction concerns **every head**, independently of how its substituted \(2\)-terms were constructed.
+
+## 2. Proper fibers: fixed paths and the two-square cut
+
+Write
+\[
+V_n=D^2\vee_1\cdots\vee_1D^2,
+\qquad
+V_n^\uparrow=D^3\vee_1\cdots\vee_1D^3.
+\]
+Let \(\mathsf C\) denote a fixed bracketing of vertical \(2\)-composition.
+
+For full parallel \(3\)-terms \(a,b\) over a pasting context \(P\), abbreviate
+\[
+[a,b]_P
+=
+\operatorname{coh}_{P,a\to b}[\operatorname{id}_P].
+\]
+This abbreviation always denotes a particular \(4\)-term.
+
+### 2.1 Adding fixed prefix and suffix paths
+
+The line-word constructions already established for squares, strips, and cube hemispheres extend to fixed outer paths. The additional terms are the following.
+
+Let
+\[
+R=V_n\vee_0C_w,
+\]
+where \(C_w\) is a nonempty linear path context, and let \(q\) be its chosen composite. If \(a_1,\ldots,a_n\) are the \(2\)-variables of \(V_n\), put
+\[
+a_\Sigma=\mathsf C(a_1,\ldots,a_n).
+\]
+Define
+\[
+\mathsf F_{n,w}:
+\mathsf C(a_1*_01_q,\ldots,a_n*_01_q)
+\longrightarrow
+a_\Sigma*_01_q
+\tag{6}
+\]
+by one full-support \(3\)-coherence over \(R\).
+
+Its naturality under arbitrary \(3\)-comparisons of the \(a_i\) is a \(4\)-coherence over
+\[
+R^\uparrow=V_n^\uparrow\vee_0C_w.
+\]
+Writing \(A_{\mathrm{exp}}\) and \(A_{\mathrm{fold}}\) for the two composition actions, its type is
+\[
+A_{\mathrm{exp}}*_2\mathsf F_{n,w}^{+}
+\longrightarrow
+\mathsf F_{n,w}^{-}*_2A_{\mathrm{fold}}.
+\tag{7}
+\]
+Both sides use every formal \(3\)-input and every edge of \(C_w\).
+
+There is also a comparison with the matrix fold used in item 25. Over
+\[
+Q_n=V_n^L\vee_0V_n^R,
+\]
+define
+\[
+I_n:
+\mathsf C(a_i*_0b_i)
+\longrightarrow
+\mathsf C(a_i)*_0\mathsf C(b_i)
+\tag{8}
+\]
+by a full-support \(3\)-coherence.
+
+Let \(\theta:R\vdash Q_n\) send every right-hand \(1\)-variable to \(q\), and every right-hand \(2\)-variable to \(1_q\). Choose the path-supported comparison
+\[
+\epsilon_q:\mathsf C(1_q,\ldots,1_q)\longrightarrow1_q.
+\]
+Then the following two \(3\)-terms have exactly the same \(2\)-boundary:
+\[
+\mathsf F_{n,w},
+\qquad
+I_n[\theta]*_2(1_{a_\Sigma}*_0\epsilon_q).
+\]
+Both have full \(R\)-support. Therefore
+\[
+\boxed{
+K_{n,w}
+=
+\left[
+\mathsf F_{n,w},
+I_n[\theta]*_2(1_{a_\Sigma}*_0\epsilon_q)
+\right]_R
+}
+\tag{9}
+\]
+is a \(4\)-term.
+
+There are left-hand and two-sided versions over
+\[
+C_u\vee_0V_n\vee_0C_w.
+\tag{10}
+\]
+Different orders of folding the outer paths are compared by full-support \(4\)-coherences over (10). Empty paths use the point-column clause already present in item 25.
+
+Here is the resulting induction. Include, in the family being normalised, every event subword of the original line word with every admissible fixed prefix and suffix path. This is necessary because an active column can extend through part of an unchanged outer path. A reduced \(2\)-head has the form (10). Apply the generic head comparison, normalise its \(2\)-inputs, flatten the path gaps, and apply (6). An input with fewer events belongs to an earlier case; an input with the same events is a proper syntactic subterm.
+
+Relative fusion uses the same induction, with:
+
+- item 17’s comparisons for the vertical column;
+- (7) to move input normalisers through the path folds;
+- (9) to compare path folding with matrix folding;
+- item 14’s \(\lambda,\zeta,\Theta\);
+- path coherence and the point-column clause.
+
+For a \(3\)-head, retain its actual reduced \(3\)-arity and use its generic \(\Xi\)-comparison, as in item 17. In particular, one does not replace an arbitrary \(3\)-arity by \(V_n^\uparrow\).
+
+Only the **\(3\)-operations** are varied using \(4\)-dimensional naturality. After those variations have been moved, the \(4\)-cells such as \(K_{n,w}\) are simply substituted with the resulting \(2\)-normal forms. No naturality of a \(4\)-cell is required.
+
+This proves \(\mathrm{RC}(3)\) for the one-face fibers with fixed paths and the four strip fibers in (3).
+
+### 2.2 Two squares meeting at one vertex
+
+Let \(\Lambda_{FG}\) be the dependency-closed subcontext consisting of the two squares \(F,G\). Write
+\[
+F:f_0\to f_1\quad(a\to c),
+\qquad
+G:g_0\to g_1\quad(c\to d),
+\]
+where each \(f_i,g_i\) is a two-edge path.
+
+Choose the middle path bracketings so that
+\[
+p_1=f_0*_0g_0,\quad
+p_2=f_1*_0g_0,\quad
+p_3=f_0*_0g_1,\quad
+p_4=f_1*_0g_1.
+\tag{11}
+\]
+
+The common vertices of \(p_1,p_4\) are exactly \(a,c,d\). A head with strict value \(FG\) consequently has, after item 14, either:
+
+- one active column from \(a\) to \(d\); or
+- two active columns, from \(a\) to \(c\) and from \(c\) to \(d\).
+
+All other columns are point columns. In particular, the one-column case using both faces is included.
+
+Use \(F*_0G\) as the diagonal normal form. A sequence of normalised inputs is a sequence of rows
+\[
+\alpha_i*_0\beta_i,
+\]
+where the left column uses \(F\) once in total and the right column uses \(G\) once in total; the other factors are the corresponding horizontal identities. Its multiplication is
+\[
+I_n*_2(m_F*_0m_G),
+\tag{12}
+\]
+where \(m_F,m_G\) are the selected one-square normalisation comparisons.
+
+The construction of item 25 now applies with the following substitutions of proof data.
+
+| Required comparison | Construction here |
+|---|---|
+| Factorwise multiplication, unit and associativity comparisons | \(\mathrm{RC}(3)\) of the appropriate square, or the path case |
+| Horizontal fold fusion | The same generic terms over \(V_3\vee_0V_3\) |
+| Horizontal–vertical fusion | The same generic terms over \(V_6\vee_0V_6\) |
+| Moving arbitrary input \(3\)-normalisers through a \(3\)-operation | Its \(4\)-coherence over the lifted genuine pasting arity |
+| An inactive factor represented by a longer path | (9) |
+| A column becoming point-supported | Item 25’s point-column clause |
+
+The triangular boundary of item 25’s first generator and the globular boundary of its second generator are not used by these generic matrix terms. Their formal \(1\)-variables may be assigned the two-edge paths \(f_i,g_i\). The factorwise comparisons are now supplied by the square theorem.
+
+For a one-column head, normalise its inputs into rows and use (12). For a two-column head, normalise the columns separately. The generic horizontal–vertical fusion compares those prescriptions. The two cases and the point-collapse case exhaust the possible images of the \(0\)-cut \(c\), so the same relative-fusion and \(3\)-head inductions prove
+\[
+\boxed{\mathrm{RC}(3)\text{ in the }FG\text{ fiber of }\Lambda_{FG}.}
+\tag{13}
+\]
+
+We may subsequently use the vertical normal form
+\[
+L=(F*_01_{g_0})*_1(1_{f_1}*_0G)
+\tag{14}
+\]
+instead of \(F*_0G\). The comparison between them is one \(3\)-coherence over \(D^2\vee_0D^2\), followed by substitution. Compatibility with any chosen normalisers is supplied by the now-proved (13).
+
+Thus **every grid fiber with at most two faces satisfies \(\mathrm{RC}(3)\)**.
+
+## 3. Chosen normal forms for the remaining fibers
+
+Fix literal \(1\)-terms for all the paths \(p_i\), using (11) for the middle four paths.
+
+Each elementary rewrite in (1) is represented by its face with the indicated edge whiskers. Insert path-supported \(2\)-coherences at its source and target when necessary to obtain exactly the chosen path bracketings. This fixes the elementary \(2\)-terms once and for all.
+
+Always order \(F\) before \(G\). Hence the selected words for (4) are
+\[
+D,F,G;\qquad F,G,E;\qquad D,F,G,E.
+\]
+
+For \(T:r\to s\) with strict image \(w:p_i\to p_j\), put
+\[
+N(T)=
+\mathsf C\bigl(
+\kappa(r,p_i),\,
+E(w),\,
+\kappa(p_j,s)
+\bigr),
+\tag{15}
+\]
+where \(E(w)\) is the selected word and \(\kappa\) denotes a selected path-supported \(2\)-coherence.
+
+A singleton composite is itself. An empty event list is an identity. A correction factor is omitted when its two arguments are literally identical.
+
+For proper fibers, choose normalisers
+\[
+\nu_T:T\longrightarrow N(T)
+\]
+using \(\mathrm{RC}(2)\). Their compatibility with \(3\)-terms follows from the \(\mathrm{RC}(3)\) results of §2.
+
+For a full fiber in (4), define \(\nu_T\) recursively.
+
+After item 14, write the \(2\)-head as
+\[
+\widetilde T[\delta],
+\]
+where \(\widetilde T\) is full over \(V_m\), with formal \(2\)-variables \(\alpha_1,\ldots,\alpha_m\).
+
+Let \(K(\widetilde T)\) be the framed vertical composite of these variables, with exactly the literal \(1\)-boundaries of \(\widetilde T\). Then
+\[
+b_{\widetilde T}
+=
+\operatorname{coh}_{V_m,\,
+\widetilde T\to K(\widetilde T)}
+[\operatorname{id}]
+\tag{16}
+\]
+is a valid \(3\)-term.
+
+Define \(\nu_T\) by:
+
+1. \(b_{\widetilde T}[\delta]\);
+2. the input normalisers \(\nu_{\delta\alpha_i}\), applied to the framed vertical composite;
+3. a specified flattening \(\Phi\).
+
+The flattening \(\Phi\) does the following:
+
+- expands the chosen \(N(\delta\alpha_i)\);
+- combines adjacent path-only factors and normalises them;
+- removes the resulting internal identity factors;
+- if the expanded event order is \(GF\), applies the fixed reverse of the exchange in item 24;
+- puts the result into the bracketing of (15).
+
+There is at most one such exchange. The faces are each used once, and \(D\), when present, precedes both \(F,G\), while \(E\), when present, follows both.
+
+This recursion is well founded: a substituted \(2\)-input with the same strict face set is a proper syntactic subterm.
+
+The remaining issue is coherence of this recursion under evaluation. That is addressed next.
+
+## 4. The flattening comparison with exchange
+
+The following comparison replaces the path-only gap comparison used in item 17.
+
+### Flattening lemma
+
+Take a vertical expression formed from chosen event normal forms, with strict value one of
+\[
+DFG,\quad FGE,\quad DFGE.
+\]
+Any two hierarchical applications of the specified flattening \(\Phi\), with the same literal source and target, are connected by a \(4\)-term.
+
+Here a hierarchical application means that some consecutive input groups are first flattened, and their results are then flattened together.
+
+### Construction
+
+First use vertical associators and their \(4\)-dimensional comparisons to expose the individual fixed event terms and the intervening path-only factors. These comparisons are formed over vertical pasting contexts before substitution.
+
+Every change of event order is between \(F,G\). They are adjacent events after the optional initial \(D\) and before the optional final \(E\). Reassociate so that the following factors form one \(2\)-subexpression:
+
+- \(F,G\), in either order;
+- every path-only factor between them;
+- their endpoint corrections on the middle paths \(p_1,p_4\).
+
+When \(D\) or \(E\) is absent, include the corresponding outer correction in this same subexpression.
+
+Every path used by those corrections is one of
+\[
+p_1,\ p_2,\ p_3,\ p_4.
+\]
+Its vertices and edges belong to \(\Lambda_{FG}\). Thus the isolated \(2\)-subexpression has strict image \(FG\) and is literally a term over \(\Lambda_{FG}\).
+
+After the reassociations, each candidate flattening gives a \(3\)-term between the same two literal \(2\)-terms in this \(FG\) fiber. By (13), these \(3\)-terms have a \(4\)-comparison. Whisker that comparison by the fixed outer \(D,E\) terms.
+
+The path-only operations outside this \(FG\) subexpression are compared using item 4. Their changes of position relative to other factors use full-support \(4\)-coherences over vertical strings of \(3\)-discs and \(2\)-discs.
+
+This construction does **not** assert that a path-gap comparison between \(F\) and \(G\) is independent of the exchange. Such a comparison belongs to the isolated \(FG\) subexpression and is handled by (13).
+
+There are also no assumptions about the syntax of the original input normalisers. Those remain formal \(3\)-inputs until generic naturality has moved them. Only their selected target \(2\)-normal forms are expanded.
+
+This proves the lemma.
+
+## 5. Relative evaluation fusion
+
+Here is the induction that makes the preceding lemma apply to arbitrary heads.
+
+Let \(u\) be a full \(2\)-term over \(V_m\), and let \(\delta\) be a substitution into the grid. Choose the generic comparison
+\[
+b_u:u\longrightarrow K(u)
+\]
+as in (16), taking \(b_u=1_u\) in the variable case.
+
+Let
+\[
+f_{u,\delta}:K(u)[\delta]\longrightarrow N(u[\delta])
+\]
+be the application of the input normalisers followed by the specified \(\Phi\).
+
+We construct
+\[
+\boxed{
+\mathcal E(u,\delta):
+\nu_{u[\delta]}
+\longrightarrow
+b_u[\delta]*_2f_{u,\delta}.
+}
+\tag{17}
+\]
+
+If the strict image is a proper fiber already settled, use its \(\mathrm{RC}(3)\). The variable case is a \(4\)-unitor.
+
+For the remaining case, induct on the syntax of \(u\).
+
+Since \(u\) is over a formal vertical chain, its head has one nonconstant \(0\)-column. Its other columns are point-supported. After applying \(\delta\), those columns remain point-supported, and the active column cannot disappear because the resulting strict cell is nonidentity. Thus the reduction used in defining \(\nu_{u[\delta]}\) is the substitution of the generic reduction used for \(u\).
+
+Let \(u_i\) be the \(2\)-inputs of that reduced head. Their generic strict images are contiguous subchains of \(V_m\). Apply the induction hypothesis on those supporting subchains. For an input whose actual strict image is proper, its established \(\mathrm{RC}(3)\) supplies the same comparison.
+
+It remains to compare the two flattenings. The following gives the precise \(4\)-dimensional calculation.
+
+Write
+\[
+\eta_j=\nu_{\delta\alpha_j},
+\]
+and let \(\delta^+\) agree with \(\delta\) on \(0\)- and \(1\)-variables and send
+\[
+\alpha_j\longmapsto N(\delta\alpha_j).
+\]
+This is a well-typed substitution: each normaliser preserves the literal \(1\)-boundary.
+
+Let \(a_0\) be the generic outer composite of the \(K(u_i)\). Choose
+\[
+\chi_{\mathrm{gen}}:a_0\longrightarrow K(u)
+\]
+by the specified generic gap-flattening route over \(V_m\).
+
+For a full \(2\)-term \(a\), write \(A_a(\eta)\) for its action on the \(3\)-inputs \(\eta\), formed over \(V_m^\uparrow\). Each
+\[
+f_i=f_{u_i,\delta}
+\]
+has the form
+\[
+A_{K(u_i)}(\eta)*_2\Phi_i.
+\]
+
+Up to the explicitly inserted associativity comparisons, the needed calculation is
+\[
+\begin{aligned}
+\mathsf C^3(f_i)*_2\Phi_{\mathrm{head}}
+&\Longrightarrow_4
+A_{a_0}(\eta)
+ *_2\mathsf C^3(\Phi_i)
+ *_2\Phi_{\mathrm{head}}\\
+&\Longrightarrow_4
+A_{a_0}(\eta)
+ *_2\chi_{\mathrm{gen}}[\delta^+]
+ *_2\Phi_u\\
+&\Longrightarrow_4
+\chi_{\mathrm{gen}}[\delta]
+ *_2A_{K(u)}(\eta)
+ *_2\Phi_u.
+\end{aligned}
+\tag{18}
+\]
+
+The justifications are:
+
+1. The first comparison is the generic action/composition comparison over the appropriate vertical strings of \(3\)-discs.
+2. The second is the flattening lemma of §4.
+3. The third is the reverse of
+   \[
+   \Omega_{\chi_{\mathrm{gen}}}:
+   \chi_{\mathrm{gen}}[\delta]*_2A_{K(u)}(\eta)
+   \longrightarrow
+   A_{a_0}(\eta)*_2\chi_{\mathrm{gen}}[\delta^+],
+   \]
+   formed over \(V_m^\uparrow\).
+
+Before substitution, the generic head comparison, the input comparisons \(b_{u_i}\), and \(\chi_{\mathrm{gen}}\) assemble into a \(3\)-term
+\[
+b_{\mathrm{eval}}:u\longrightarrow K(u).
+\]
+Both \(b_{\mathrm{eval}}\) and \(b_u\) have full \(V_m\)-support. Consequently
+\[
+[b_{\mathrm{eval}},b_u]_{V_m}
+\tag{19}
+\]
+is the final \(4\)-term needed for (17).
+
+This is the point at which an arbitrary generic coherence is handled. It is compared **over its formal pasting context**, and its naturality is used before any chosen input normal form is expanded. No global assertion that arbitrary \(3\)-terms are exchange words has been assumed.
+
+## 6. Compatibility with every \(3\)-term
+
+We now construct, for every grid \(3\)-term \(H:T\to T'\),
+\[
+\boxed{
+I_H:\nu_T\longrightarrow H*_2\nu_{T'}.
+}
+\tag{20}
+\]
+
+For a proper strict fiber, this follows from its already-established \(\mathrm{RC}(3)\). For the three fibers in (4), induct on \(H\).
+
+Apply item 14 to its head. The reduced arity \(P\) has one \(0\)-column. When \(\dim P=3\), its \(1\)-columns are chains
+\[
+\alpha_{j,0}
+\xrightarrow{\xi_{j,1}}
+\cdots
+\xrightarrow{\xi_{j,r_j}}
+\alpha_{j,r_j}.
+\]
+Let
+\[
+D_j=\xi_{j,1}*_2\cdots *_2\xi_{j,r_j},
+\]
+using an identity when \(r_j=0\), and let \(D\) be their framed \(*_1\)-composite.
+
+Write the generic head as
+\[
+h:u\longrightarrow v.
+\]
+The generic comparisons \(b_u,b_v\) and \(D\) have types
+\[
+b_u:u\to K^-,
+\qquad
+D:K^-\to K^+,
+\qquad
+b_v:v\to K^+.
+\]
+Hence
+\[
+\boxed{
+\Xi_P=
+[b_u*_2D,\ h*_2b_v]_P
+}
+\tag{21}
+\]
+is a valid \(4\)-coherence. The first endpoint uses every \(3\)-variable through \(D\); the second uses them through \(h\). Identities retain all maximal lower-dimensional declarations.
+
+For a \(2\)-dimensional arity, take \(D=1_K\).
+
+After substitution:
+
+- apply the induction hypothesis to the images of the \(\xi_{j,k}\);
+- compose those comparisons within each chain and then along \(*_1\);
+- apply relative fusion (17) at the two boundary \(2\)-terms.
+
+The normal forms at the two ends of a fixed \(j\)-chain are literally identical. Their strict \(2\)-images agree, and their literal \(1\)-boundaries are the same substitution entries. Therefore, after the input normalisations, the same literal \(2\)-expression appears on both sides. Use **the identical chosen \(\Phi\)** on those two expressions.
+
+This gives
+\[
+f_{u,\delta}\longrightarrow D[\delta]*_2f_{v,\delta}.
+\]
+Together with (17) and (21), the resulting route is
+\[
+\begin{aligned}
+\nu_{u[\delta]}
+&\Longrightarrow_4 b_u[\delta]*_2f_{u,\delta}\\
+&\Longrightarrow_4
+(b_u[\delta]*_2D[\delta])*_2f_{v,\delta}\\
+&\Longrightarrow_4
+h[\delta]*_2(b_v[\delta]*_2f_{v,\delta})\\
+&\Longrightarrow_4
+h[\delta]*_2\nu_{v[\delta]}.
+\end{aligned}
+\tag{22}
+\]
+The comparison from the original head to the reduced head, supplied by item 14, transfers this to (20).
+
+Every recursive call concerns an original substituted \(3\)-argument. Thus this induction covers arbitrary \(3\)-dimensional heads as well as \(2\)-dimensional coherence heads.
+
+### The requested \(4\)-term
+
+For parallel
+\[
+\alpha,\beta:T\longrightarrow T',
+\]
+put \(\nu=\nu_{T'}\), and choose its inverse \(\bar\nu\) and cancellation witness. These are constructive CaTT operations on composites of coherences. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+Let
+\[
+c_\alpha:(\alpha*_2\nu)*_2\bar\nu\longrightarrow\alpha,
+\qquad
+c_\beta:(\beta*_2\nu)*_2\bar\nu\longrightarrow\beta
+\]
+be the resulting cancellation routes, including associators and unitors.
+
+Then
+\[
+\boxed{
+c_\alpha^\dagger
+ *_3
+\bigl((I_\alpha^\dagger*_3I_\beta)*_21_{\bar\nu}\bigr)
+ *_3
+c_\beta
+:
+\alpha\longrightarrow\beta
+}
+\tag{23}
+\]
+is the required term.
+
+All smaller \(0\)-boundary rectangles in the grid have at most two faces and are covered by §2. Equations (17)–(23) handle the remaining three fibers. Therefore
+\[
+\boxed{\mathrm{RC}(3)\text{ holds for the entire }2\times2\text{ grid}.}
+\]
+
+## 7. Several vertically composable \(3\)-generators
+
+There is also a direct extension of item 20.
+
+### Proposition
+
+Let
+\[
+\Gamma=(\Lambda,z_i:A_i\to B_i\mid i\in I),
+\]
+where \(\Lambda\) has dimension at most \(2\), its generating \(1\)-graph is acyclic, and \(\mathrm{RC}(3)\) holds in \(\Lambda\). Assume:
+
+1. Nonidentity strict \(3\)-cells are uniquely represented by nonempty composable vertical words in the \(z_i\).
+2. Every defined \(*_0\)- or \(*_1\)-composition involving a nonidentity strict \(3\)-cell has exactly one nonidentity operand and returns that operand.
+3. \(\pi A_i\ne\pi B_i\) for every \(i\).
+
+Then \(\mathrm{RC}(3)\) holds in \(\Gamma\).
+
+### Construction
+
+Head expansion works recursively on all original \(3\)-arguments. To distribute lower compositions over vertical strings, use the direct \(4\)-coherences
+\[
+(U*_2V)*_kE
+\longrightarrow
+(U*_k1_{s_2E})*_2(V*_kE),
+\qquad k=0,1,
+\tag{24}
+\]
+over
+\[
+(D^3\vee_2D^3)\vee_kD^3,
+\]
+and the left-hand versions over
+\[
+D^3\vee_k(D^3\vee_2D^3).
+\]
+
+Both sides of (24) use all three formal \(3\)-variables and have the same literal \(2\)-boundary.
+
+Assumption 2 ensures that the other operand of a lower composition has an identity strict image and therefore restricts to \(\Lambda\). Repeatedly apply (24), then absorb the \(\Lambda\)-factors into adjacent nonempty factors. This constructs
+\[
+e_H:H\longrightarrow F_1*_2\cdots *_2F_m,
+\qquad
+\pi F_j=z_{i_j},
+\tag{25}
+\]
+where \(i_1\cdots i_m\) is the strict word of \(H\).
+
+For each \(i\), the restricted context \((\Lambda,z_i)\) has exactly one nonidentity strict \(3\)-cell: a longer word using only \(z_i\) cannot compose, by assumption 3. Item 20 therefore applies to that restricted context.
+
+Now factor parallel \(H,H'\) with the same strict word:
+\[
+F_j:u_{j-1}\to u_j,
+\qquad
+F'_j:u'_{j-1}\to u'_j.
+\]
+All intermediate \(2\)-terms have the same literal \(1\)-boundary frame. Choose, using \(\mathrm{RC}(2)\) in \(\Lambda\),
+\[
+\nu_j:u'_j\to u_j,
+\qquad
+\bar\nu_j:u_j\to u'_j,
+\]
+taking endpoint identities.
+
+The two terms
+\[
+F'_j,
+\qquad
+(\nu_{j-1}*_2F_j)*_2\bar\nu_j
+\]
+are parallel and have strict image \(z_{i_j}\). Support agreement places both in \((\Lambda,z_{i_j})\), so item 20 supplies their \(4\)-comparison.
+
+Compose these comparisons. The resulting intermediate factors are
+\[
+\bar\nu_j*_2\nu_j.
+\]
+They are \(\Lambda\)-terms, so \(\mathrm{RC}(3)\) in \(\Lambda\) compares them with the appropriate identities. Cancelling them gives a \(4\)-term from \(H'\) to the same product \(F_1*_2\cdots *_2F_m\) reached by \(H\). This proves the proposition.
+
+No comparison between the chosen \(4\)-fillers is used.
+
+For example, it applies to
+\[
+x,y;\quad f,g:x\to y;\quad a,b:f\to g;
+\quad z:a\to b,\quad w:b\to a.
+\tag{26}
+\]
+The strict \(3\)-cells are the alternating words
+\[
+z,\ w,\ zw,\ wz,\ zwz,\ wzw,\ldots.
+\]
+Their lower compositions are units because \(x\ne y\) and \(f\ne g\). The \(2\)-dimensional base satisfies \(\mathrm{RC}(3)\): support restricts each pair to a \(2\)-globe, a \(1\)-globe, or a point, where one full-support coherence gives the comparison.
+
+Thus (26), which is not a pasting context, satisfies \(\mathrm{RC}(3)\), including arbitrary repeated vertical words.
+
+## 8. A nontrivial strict whisker
+
+A concrete extension in the other direction is the Gray cube with one new outgoing edge
+\[
+e:111\longrightarrow c.
+\tag{27}
+\]
+This context also satisfies \(\mathrm{RC}(3)\).
+
+Its nonidentity strict \(3\)-cells are exactly
+\[
+X,\qquad X_e=X*_01^3_{1^2_e}.
+\tag{28}
+\]
+Indeed, freely adjoining the new terminal vertex and edge copies each old hom \(C(u,111)\) into \(C(u,c)\), by right whiskering with \(e\). It creates no other composites. Its new strict \(2\)-cells are likewise exactly the fixed-suffix whiskers of old ones.
+
+The \(2\)-skeleton therefore satisfies \(\mathrm{RC}(3)\) by the fixed-path extension in §2.1 applied to the two cube hemispheres and their proper intervals.
+
+The new local comparison is formed over
+\[
+P=D^3_z\vee_0D^1_e.
+\]
+Write
+\[
+z:a\to b,\qquad a,b:f\to g,
+\]
+and let
+\[
+\beta:c_2\to d_2,\qquad c_2,d_2:r\to s
+\]
+be a \(3\)-term over \(D^1_e\), with strict image \(1^3_{1^2_e}\).
+
+Choose path-supported \(2\)-terms
+\[
+\kappa_f:f*_0r\to f*_0e,
+\qquad
+\lambda_g:g*_0e\to g*_0s.
+\]
+Over \(D^2_a\vee_0D^1_e\), define
+\[
+L:a*_0c_2\longrightarrow
+C^2(\kappa_f,a*_01^2_e,\lambda_g),
+\]
+and define \(R\) analogously over \(D^2_b\vee_0D^1_e\). Both are full-support \(3\)-coherences.
+
+With \(I_e=1^3_{1^2_e}\), the new \(4\)-term is
+\[
+\boxed{
+\operatorname{coh}_{P,\,
+(z*_0\beta)\to
+L*_2C^3(\kappa_f,z*_0I_e,\lambda_g)*_2R^\dagger}
+[\operatorname{id}].
+}
+\tag{29}
+\]
+Its endpoints have exactly the same \(2\)-source and \(2\)-target and full \(P\)-support.
+
+To move an existing \(2\)-frame past \(e\), use item 15 over
+\[
+(D^2_p\vee_1D^3_z\vee_1D^2_q)\vee_0D^1_e.
+\]
+Writing \(W(-)=(-)*_0I_e\) in dimension \(3\), the comparison has the form
+\[
+W(C^3(p,z,q))*_2D_b
+\longrightarrow
+D_a*_2C^3(Wp,Wz,Wq).
+\tag{30}
+\]
+Append \(D_b^\dagger\) and cancel \(D_b*_2D_b^\dagger\), using the established \(\mathrm{RC}(3)\) of the \(2\)-skeleton.
+
+Now perform item 20’s head expansion. The strict \(X\)-case restricts to the original cube. For the strict \(X_e\)-case, the only new binary case is a term of strict image \(X\) composed along \(*_0\) with a term of strict image \(1^3_{1^2_e}\). Apply (29), then (30). The remaining path and point adjustments are exactly the generic templates of item 20, with their formal \(3\)-variable assigned \(X_e\).
+
+The remaining \(X\)-free \(3\)-factors are compared in the \(2\)-skeleton. This gives a common normal form for all terms with strict image \(X_e\), proving the claim.
+
+## 9. Scope and the next-dimensional obligation
+
+The argument proves:
+
+- \(\mathrm{RC}(3)\) for the \(2\times2\) grid;
+- the vertical-word extension in §7;
+- a case with a nontrivial strict whisker, namely (27).
+
+It does not establish Question 2 for all positive acyclic \(2\)-contexts.
+
+For Question 4, one precise new obligation is already visible in the grid proof. In §4, cut-fiber coherence supplies a \(4\)-term
+\[
+C(k,k'):k\longrightarrow k'
+\]
+between parallel \(3\)-terms. A dimension-higher proof must compare choices and composites of these fillers. For example, it needs \(5\)-terms
+\[
+C(k_0,k_1)*_3C(k_1,k_2)
+\longrightarrow
+C(k_0,k_2).
+\tag{31}
+\]
+The current proof never requires (31).
+
+Equivalently, after choosing \(4\)-normalisers
+\[
+\eta_H:H\longrightarrow N(H)
+\]
+for \(3\)-terms, compatibility with a \(4\)-term \(K:H\to H'\) requires
+\[
+\eta_H
+\longrightarrow
+K*_3\eta_{H'}
+\tag{32}
+\]
+in dimension \(5\). The generic pasting-context instances of (32) are available from the coherence rule; the missing step is relative fusion after the chosen \(3\)-normalisers have been substituted and expanded.
+
+I have not constructed that \(5\)-dimensional fusion for the \(4\)-cube or the cylinder of \(D^3\), nor proved the general \(\mathrm{RC}(n)\) or \(G(n)\) statements.

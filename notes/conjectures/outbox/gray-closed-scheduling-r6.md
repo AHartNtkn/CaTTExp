@@ -137,3 +137,568 @@ Any of the following:
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Ex. 2.5, Rem. 2.6 and Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
 - Campion, *The Gray tensor product of (∞,n)-categories* (arXiv 2311.00205), Thm A.
 
+# Researcher Response
+
+**Question 1 is false, even with two distinct generating transformations, each used exactly once, and no structural events.** There is a composite whose endomodification monoid contains a copy of \((\mathbb N,+)\). The modifications witnessing this are generated entirely by the proposed interchangers \(F(\chi\triangleright1)\).
+
+The counterexample also obstructs the higher product description in Question 3. For Question 2, evaluation has strict naturality in the compatible enrichment, but varying its bound argument produces an opposite-sided transformation whose interchange with another transformation can be noninvertible.
+
+## 1. A counterexample to Question 1
+
+Take one data atom \(A\), no nonidentity generating data arrows, and two distinct generating left-parameter transformations
+\[
+\alpha,\beta:1_A\Rightarrow1_A.
+\]
+Thus their parameter maps are
+\[
+\alpha,\beta:J\triangleright A\longrightarrow A,
+\]
+and both endpoint restrictions of each map are \(1_A\).
+
+This is unit-free: \(A\) is an atom, and \(1_A\) is its identity arrow. No tensor-unit formula is used.
+
+We work over the arrow \(1_A\) of the ordinary biclosed erasure. The endpoint equations impose only \(1_A=1_A\), so they impose no additional equation there.
+
+Write \(\alpha\cdot\beta\) for composition of transformations, executing \(\beta\) first. This is composition in \(\mathbb H_\ell(A,A)\); it is not ordinary composition of the maps \(J\triangleright A\to A\).
+
+### 1.1 Two forward crossings give an endomodification
+
+Let
+\[
+\kappa:D_2\longrightarrow J\otimes J
+\]
+select the Gray square, oriented as in the question:
+\[
+\text{right factor first}\ \Longrightarrow\ \text{left factor first}.
+\]
+
+Define
+\[
+F_{\alpha,\beta}
+=
+\alpha\circ(1_J\triangleright\beta):
+(J\otimes J)\triangleright A\longrightarrow A.
+\]
+Its right-first boundary executes \(\beta\), then \(\alpha\). Its left-first boundary executes \(\alpha\), then \(\beta\). Hence
+\[
+\sigma_{\alpha,\beta}
+=
+F_{\alpha,\beta}\circ(\kappa\triangleright1_A):
+\alpha\cdot\beta
+\Longrightarrow
+\beta\cdot\alpha.
+\tag{1}
+\]
+
+Interchanging the assignments of the two generators to the parameter positions gives another **forward** crossing:
+\[
+\sigma_{\beta,\alpha}:
+\beta\cdot\alpha
+\Longrightarrow
+\alpha\cdot\beta.
+\tag{2}
+\]
+
+Neither construction uses an inverse to \(\kappa\). Their composite is an endomodification
+\[
+q
+=
+\sigma_{\beta,\alpha}\circ\sigma_{\alpha,\beta}:
+\alpha\cdot\beta
+\Longrightarrow
+\alpha\cdot\beta.
+\tag{3}
+\]
+
+We will prove that
+\[
+1,\ q,\ q^2,\ldots
+\]
+are pairwise distinct.
+
+### 1.2 A strict \(2\)-category separating all powers
+
+Define a strict \(2\)-category \(\mathcal X\) by the following data.
+
+| Dimension | Cells and operations |
+|---|---|
+| \(0\) | One object \(*\) |
+| \(1\) | The natural numbers; composition is addition; identity is \(0\) |
+| \(2\) | No cells \(m\Rightarrow n\) when \(m\ne n\); cells \(n\Rightarrow n\) are labelled by \(k\in\mathbb N\) |
+| \(2\)-cell identities | Label \(0\) |
+| Vertical and horizontal \(2\)-composition | Add labels |
+
+The underlying \(1\)-cell and the \(2\)-cell label are separate data: a \(2\)-cell is specified by \(n\) and \(k\), with source and target both \(n\).
+
+Associativity and units follow from addition. Interchange holds because
+\[
+(a+b)+(c+d)=(a+c)+(b+d).
+\]
+
+There is a parameter map
+\[
+T:J\otimes\mathcal X\longrightarrow\mathcal X
+\tag{4}
+\]
+with the following assignments:
+
+- each endpoint copy of \(\mathcal X\) maps identically to \(\mathcal X\);
+- the \(J\)-arrow at \(*\) maps to the \(1\)-cell \(1\);
+- the Gray interchanger between that \(J\)-arrow and the \(1\)-cell \(n\) of \(\mathcal X\) maps to the \(2\)-cell labelled \(n\).
+
+Both boundary composites of this last cell have underlying \(1\)-cell \(1+n=n+1\), so this assignment is typed.
+
+Here are the relations needed to check (4):
+
+- The interchanger with the identity \(1\)-cell \(0\) has label \(0\).
+- The interchanger with \(m+n\) has label
+  \[
+  m+n,
+  \]
+  equal to the sum of the labels of the two successive interchangers.
+- Naturality with respect to a \(2\)-cell labelled \(k:n\Rightarrow n\) is the equality
+  \[
+  n+k=k+n.
+  \]
+
+These are precisely the unit, composition, and \(2\)-cell naturality relations for the parameterized transformation. Thus \(T\) is a strict \(2\)-functor. Equivalently, it is a transformation \(\operatorname{Id}_{\mathcal X}\Rightarrow\operatorname{Id}_{\mathcal X}\), with value \(1\) at \(*\) and naturality cell labelled \(n\) at \(n\). The parameter-map/internal-hom description is the usual lax Gray one; see Nikolić, §1 and §4.1. [arxiv.org](https://arxiv.org/html/1810.12213v1?utm_source=chatgpt.com)
+
+Interpret \(A\) as \(\mathcal X\) in the stipulated strict \(2\)-category model of \(\mathcal G'\), and interpret **both** \(\alpha\) and \(\beta\) as \(T\). Distinct free generators may receive the same interpretation.
+
+Each crossing (1)–(2), evaluated at \(*\), is the naturality cell of \(T\) at its own value \(1\). Its label is therefore \(1\). Consequently,
+\[
+\llbracket q^r\rrbracket_*=2r
+\qquad(r\in\mathbb N).
+\tag{5}
+\]
+
+The identity modification has label \(0\). Equation (5) proves that every power of \(q\) is distinct in the free theory.
+
+It also proves that \(q\) is not invertible: an inverse would require a label \(k\in\mathbb N\) satisfying \(2+k=0\).
+
+### 1.3 Consequence for the schedule proposal
+
+A category equivalent to a poset has exactly one endomorphism of each object. Indeed, a fully faithful equivalence \(F:\mathcal C\to P\) gives
+\[
+\mathcal C(x,x)\cong P(Fx,Fx),
+\]
+and the latter set is a singleton. Every product of schedule posets is again a poset.
+
+Our category has an injective monoid homomorphism
+\[
+\boxed{
+(\mathbb N,+)\hookrightarrow
+\operatorname{End}(\alpha\cdot\beta),
+\qquad r\longmapsto q^r.
+}
+\tag{6}
+\]
+
+Therefore it is not equivalent to any product of schedule categories.
+
+This counterexample fixes:
+
+- the erased arrow \(1_A\);
+- the underlying data arrow \(1_A\);
+- the two distinct generator names \(\alpha,\beta\);
+- the number of uses of each generator: exactly one.
+
+Its obstructing modifications use only the specified crossings. Adding evaluations, units, counits, or curry-side labels to a dependency poset cannot eliminate (6).
+
+The distinction from the Background is precise. A fixed planar diagram fixes left/right positions. Here \(\alpha\) and \(\beta\), both endotransformations of \(1_A\), can be assigned to the two probe positions in either order. Fixing the erased arrow and generator multiset does not fix those assignments. Restricting to a diagram that excludes one of (1)–(2) would define a smaller category.
+
+One generator already suffices: for \(\tau:1_A\Rightarrow1_A\), its self-interchanger is a nonidentity endomodification of \(\tau^2\). The two-generator construction avoids any dependence on repeated generator names.
+
+## 2. Question 2: evaluation, units, and currying
+
+There are three different cases:
+
+| Situation | Result |
+|---|---|
+| Interchange with the identity transformation on an evaluation data arrow | Identity modification |
+| Fixed-bound evaluation/unit naturality in the compatible enrichment | Strict equality |
+| Interchange involving a bound-variable mate and another genuine transformation | Directed modification; it can be noninvertible |
+
+The parameter positions determine which case applies.
+
+### 2.1 A bare evaluation is not a second transformation event
+
+Let \(e:U\to V\) be any data arrow, including an evaluation. Its left-parameter identity transformation is
+\[
+1_e^\ell
+=
+e\circ(!\triangleright1_U):
+J\triangleright U\longrightarrow V,
+\]
+where \(!:J\to I\). There is an analogous right-parameter identity transformation.
+
+An interchange involving this identity transformation factors through
+\[
+!\otimes J
+\quad\text{or}\quad
+J\otimes!.
+\]
+Both maps send the Gray square to an identity \(2\)-cell. Hence, whenever typed,
+\[
+\chi_{1_e,\gamma}=1,
+\qquad
+\chi_{\gamma,1_e}=1.
+\tag{7}
+\]
+
+The same statement applies to the identity transformations on units and counits. A nontrivial comparison involving evaluation must specify two genuine parameter directions.
+
+### 2.2 Fixed-bound enriched naturality is strict
+
+For left closure, put
+\[
+R_A C=A\backslash C,
+\qquad
+e_{A,C}:A\otimes R_A C\to C.
+\]
+
+For a right-parameter family
+\[
+\gamma:C\otimes P\longrightarrow C',
+\]
+define
+\[
+R_A^P(\gamma)
+=
+\Lambda_A\!\left(
+\gamma\circ(e_{A,C}\otimes P)
+\right):
+R_A C\otimes P\longrightarrow R_A C'.
+\]
+Then the counit equation is exactly
+\[
+\boxed{
+e_{A,C'}\circ(A\otimes R_A^P(\gamma))
+=
+\gamma\circ(e_{A,C}\otimes P).
+}
+\tag{8}
+\]
+This is \(\beta\), applied to the definition of \(R_A^P(\gamma)\).
+
+For the unit
+\[
+\eta_X^A
+=
+\Lambda_A(1_{A\otimes X})
+:
+X\to A\backslash(A\otimes X)
+\]
+and \(\delta:X\otimes P\to Y\), one likewise has
+\[
+\boxed{
+(R_A L_A)^P(\delta)\circ(\eta_X^A\otimes P)
+=
+\eta_Y^A\circ\delta,
+\qquad L_A=A\otimes-.
+}
+\tag{9}
+\]
+Uncurrying either side gives \(A\otimes\delta\), proving the equality.
+
+These formulas apply to \(P=J,D_2\), and the pasting probes. Thus evaluation and the unit are strict in \(\mathbb H_r\), including at transformation and modification degrees.
+
+For right closure, the corresponding statements are strict in \(\mathbb H_\ell\). Explicitly, for \(\gamma:P\otimes C\to C'\),
+\[
+R_B^P(\gamma)
+=
+\Lambda^R_B\!\left(
+\gamma\circ(P\otimes e^B_C)
+\right):
+P\otimes(C/B)\to C'/B,
+\]
+and
+\[
+e^B_{C'}\circ(R_B^P(\gamma)\otimes B)
+=
+\gamma\circ(P\otimes e^B_C).
+\tag{10}
+\]
+
+These equalities do not contribute directed scheduling events.
+
+### 2.3 Varying the bound argument changes sides
+
+Now fix
+\[
+H=A\backslash C,
+\qquad e=e_{A,C},
+\]
+and take a **right-parameter** transformation
+\[
+a:X\otimes J\longrightarrow A
+\]
+with endpoint data maps \(f_0,f_1:X\to A\).
+
+Define
+\[
+f_i^*
+=
+\Lambda_X\!\left(e\circ(f_i\otimes H)\right)
+:
+H\longrightarrow X\backslash C
+\]
+and
+\[
+\bar a
+=
+\Lambda_X\!\left(e\circ(a\otimes H)\right)
+:
+J\otimes H\longrightarrow X\backslash C.
+\tag{11}
+\]
+
+Thus a right-parameter transformation in the bound argument gives a **left-parameter** transformation between precomposition maps.
+
+Let
+\[
+b:J\otimes Y\longrightarrow H
+\]
+be another left-parameter transformation, with endpoints \(g_0,g_1:Y\to H\). Form
+\[
+W=e\circ(a\otimes b):
+X\otimes J\otimes J\otimes Y\longrightarrow C.
+\]
+Restrict along the Gray square and curry \(X\):
+\[
+M_{a,b}
+=
+\Lambda_X\!\left(
+W\circ(X\otimes\kappa\otimes Y)
+\right):
+D_2\otimes Y\longrightarrow X\backslash C.
+\tag{12}
+\]
+
+Its direction is
+\[
+\boxed{
+(\bar a\,g_1)\cdot(f_0^*b)
+\ \Longrightarrow\
+(f_1^*b)\cdot(\bar a\,g_0).
+}
+\tag{13}
+\]
+Here
+\[
+\bar a\,g_i=\bar a\circ(J\otimes g_i),
+\qquad
+f_i^*b=f_i^*\circ b.
+\]
+
+The source executes the second parameter, belonging to \(b\), first. The target executes the first parameter, belonging to \(a\), first. Thus (13) uses exactly the direction stipulated in the question.
+
+There is no extra comparison generator hidden in this construction. Strict context naturality gives
+\[
+\Lambda_X(W)
+=
+\bar a\circ(J\otimes b),
+\]
+so (12) is precisely the ordinary transformation interchanger for \(\bar a\) and \(b\), transported through evaluation and currying.
+
+### 2.4 The right-closure formula
+
+For
+\[
+K=C/B,\qquad e=e^B_C,
+\]
+start instead with
+\[
+a:J\otimes X\to B,
+\qquad
+b:Y\otimes J\to K.
+\]
+Set
+\[
+f_i^*=\Lambda^R_X\!\left(e\circ(K\otimes f_i)\right),
+\qquad
+\bar a=\Lambda^R_X\!\left(e\circ(K\otimes a)\right)
+:
+K\otimes J\to C/X.
+\]
+Then
+\[
+N_{a,b}
+=
+\Lambda^R_X\!\left(
+e\circ(b\otimes a)\circ(Y\otimes\kappa\otimes X)
+\right)
+:
+Y\otimes D_2\to C/X
+\]
+has direction
+\[
+\boxed{
+(f_1^*b)\cdot(\bar a\,g_0)
+\ \Longrightarrow\
+(\bar a\,g_1)\cdot(f_0^*b).
+}
+\tag{14}
+\]
+
+The parameter order in the uncurried expression is now \(b\), then \(a\). Equation (14) is again right-factor-first to left-factor-first.
+
+### 2.5 A noninvertible comparison made entirely from structural maps
+
+The comparisons above can be noninvertible even without generating transformations.
+
+Choose data types \(X,Y\), and set
+\[
+A=X\otimes J,
+\qquad
+C=A\otimes J\otimes Y,
+\qquad
+H=A\backslash C.
+\]
+Use
+\[
+a=1_A:X\otimes J\to A,
+\qquad
+b=\eta^A_{J\otimes Y}:J\otimes Y\to H.
+\tag{15}
+\]
+
+Although \(a\) is an identity **data map**, its endpoints as a parameterized transformation are the two maps
+\[
+X\longrightarrow X\otimes J.
+\]
+It is therefore not an identity transformation.
+
+The triangle equation gives
+\[
+e_{A,C}\circ(a\otimes b)
+=
+e_{A,C}\circ(A\otimes\eta^A_{J\otimes Y})
+=
+1_C.
+\]
+Consequently (12) becomes
+\[
+\boxed{
+M_{a,b}
+=
+\Lambda_X(X\otimes\kappa\otimes Y).
+}
+\tag{16}
+\]
+
+Interpret \(X\) and \(Y\) as data-tagged terminal strict \(2\)-categories. Then \(A\) is interpreted as \(J\), \(C\) as \(J\otimes J\), and (16) as its generating Gray square. That square has no reverse \(2\)-cell. Thus (16) has neither an inverse nor a reverse modification in the free theory.
+
+This is a unit-free syntactic example: terminal \(2\)-categories are used only as interpretations of data types.
+
+The consequence for structural events is therefore:
+
+- an evaluation, unit, or counit **as a data arrow** contributes no \(J\)-event;
+- its identity transformation has trivial interchange;
+- a structural term whose type designates a genuine \(J\)-parameter can be a transformation event;
+- the side of that parameter determines its orientation and its possible crossings.
+
+A dependency poset cannot be assigned merely by counting uses of the symbols “evaluation” or “unit.”
+
+## 3. The higher product claim is obstructed as well
+
+For the higher analogue of the transformation/modification category in Question 1, the same counterexample survives. The required transfer does not assume that the inclusion of strict \(2\)-categories preserves the Gray tensor.
+
+### 3.1 Transfer to Campion’s setting
+
+The strict \(2\)-category \(\mathcal X\) above is gaunt: its only invertible \(1\)-cell is \(0\), and its only invertible \(2\)-cells have label \(0\).
+
+There are compatible strong monoidal reflections
+\[
+L:\mathrm{Cat}_\omega\longrightarrow\mathrm{Gaunt}_2,
+\qquad
+G:\mathrm{sCat}_2\longrightarrow\mathrm{Gaunt}_2.
+\tag{17}
+\]
+For the source statements, Campion identifies strict and gaunt categories as the relevant localizations in Examples 1.25 and 1.30; Theorem 3.14 and Corollary 3.15 provide the strong monoidal reflections, and Example 4.7 identifies the strict Gray structure. [arxiv.org](https://arxiv.org/pdf/2311.00205?utm_source=chatgpt.com)
+
+Apply \(G\) to (4), obtaining
+\[
+T_g:J\otimes_g\mathcal X\to\mathcal X.
+\]
+If \(i:\mathrm{Gaunt}_2\hookrightarrow\mathrm{Cat}_\omega\) is the fully faithful right adjoint, the adjunction \(L\dashv i\) gives
+\[
+T_\infty:
+J\otimes_\infty i\mathcal X\longrightarrow i\mathcal X.
+\tag{18}
+\]
+Indeed,
+\[
+\begin{aligned}
+\operatorname{Map}_{\mathrm{Cat}_\omega}
+(J\otimes i\mathcal X,i\mathcal X)
+&\simeq
+\operatorname{Hom}_{\mathrm{Gaunt}_2}
+(L(J\otimes i\mathcal X),\mathcal X)\\
+&\cong
+\operatorname{Hom}_{\mathrm{Gaunt}_2}
+(J\otimes_g\mathcal X,\mathcal X).
+\end{aligned}
+\]
+The endpoint restrictions of (18) are identities.
+
+Interpret both generators by \(T_\infty\). Applying the strong monoidal \(L\) to their tensor/composition/probe pastings recovers the calculation in \(\mathcal X\). Each crossing still has evaluated label \(1\), and \(q^r\) has label \(2r\).
+
+Distinct labels cannot become equivalent through higher cells: \(\mathcal X\) has only identity cells above dimension \(2\). Thus the powers of \(q\) remain distinct even after passing to the homotopy category of the transformation/modification hom.
+
+### 3.2 Why cubical schedule homs cannot have this behavior
+
+Here the relevant objects of
+\[
+\nu(K_P)(\bot,\top)
+\]
+are bottom-to-top \(1\)-paths \(w\). Its \(1\)-morphisms are \(2\)-cells of \(\nu(K_P)\).
+
+There is no nonidentity \(2\)-cell \(w\Rightarrow w\). One can check this directly on chains. Give an edge that adds \(i\) to an ideal \(J\) the weight
+\[
+\rho(J,i)
+=
+\#\{j\in J:j>i,\ j\parallel_P i\}.
+\]
+Extend \(\rho\) linearly to \(1\)-chains. Its value on a path is that path’s inversion number.
+
+For every oriented \(2\)-face \(F\), with the direction used in the question,
+\[
+\rho(\partial F)=-1.
+\]
+Thus for a positive \(2\)-chain \(c=\sum_F n_FF\),
+\[
+\rho(\partial c)=-\sum_F n_F.
+\]
+If a \(2\)-cell has the same source and target path, then \(\partial c=0\), forcing every \(n_F=0\). Its top \(2\)-chain is zero, so it is the identity \(2\)-cell.
+
+Therefore the homotopy category of each proposed cubical schedule hom has only identity endomorphisms of its path objects. Products retain this property. Our higher transformation hom has the distinct endomorphisms \(q^r\), so it cannot be equivalent to such a product.
+
+The obstruction again uses only two generating transformations at \(1_A\). Including structural events does not repair it.
+
+## 4. A typing correction to item 18
+
+The second bullet of item 18 has a transcription error: \(P\otimes A\) is a data type, so it cannot occupy the probe argument of \(\mathbb H\).
+
+The correctly typed absorption formulas are
+\[
+\begin{aligned}
+\mathbb H(A\otimes B,C)(P,Q)
+&\cong
+\mathcal D\bigl(B\otimes Q,(P\otimes A)\backslash C\bigr),\\
+\mathbb H(A\otimes B,C)(P,Q)
+&\cong
+\mathcal D\bigl(P\otimes A,C/(B\otimes Q)\bigr).
+\end{aligned}
+\]
+Equivalently, their right-hand sides are
+\[
+\mathbb H\bigl(B,(P\otimes A)\backslash C\bigr)(I,Q)
+\]
+and
+\[
+\mathbb H\bigl(A,C/(B\otimes Q)\bigr)(P,I).
+\]
+These are the formulas used in the mate calculations above.
+
+**Questions 4 and 5 about the original \(\mathcal G\) remain undecided here.** The endomodification \(q\) belongs to the corrected transformation theory; it does not determine the structural idempotent \(\iota\pi\) or the forward-comparison hom-sets in the original theory.

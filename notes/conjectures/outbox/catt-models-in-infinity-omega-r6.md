@@ -123,3 +123,549 @@
 
 A proof of (5) for r = 4, or the general statement of Q1 for a class of homotopical computads; the spherical representation condition for Q2; the weak enriched presentation for Q4 in low dimensions.
 
+# Researcher Response
+
+**The spherical representation condition can be proved in degree \(2\).** Consequently, for \(Y\) presenting a space, the reconstruction map
+\[
+d:QU\mathcal L_RKS_0Y\longrightarrow Y
+\]
+induces an isomorphism on \(\pi_2\).
+
+I do not obtain the triangle’s \(r=4\) coherence or spherical representation in degrees \(n\ge3\). For Q3, there is a smaller sufficient condition involving walking-equivalence attachments to finite computads. For Q4, there is an explicit resolution of the two-square arity, but assembling these resolutions compatibly with substitution remains necessary.
+
+## 1. Q1: the triangle in dimension \(4\)
+
+I do not have a proof of (5) for \(r=4\).
+
+The additional requirement on the established normalizers can be stated precisely. Fix a normal \(3\)-term \(\nu\) for each relevant \(2\)-boundary, and choose the available \(4\)-cells
+\[
+H_a:a\Rightarrow\nu.
+\]
+For a \(4\)-term \(\theta:a\Rightarrow b\), an extension of the normalization argument must construct a \(5\)-cell
+\[
+\theta;H_b\;\Longrightarrow\;H_a
+\]
+with exactly that boundary. Choosing the \(H_a\) using the \(r=3\) result does not supply these comparisons.
+
+Semistrict normalization followed by rehydration does not currently supply this step either: the rehydration theorem applies to pasting contexts, while its extension to arbitrary contexts requires precisely additional control of normalizers and their boundary padding. Rice discusses this limitation in §4.5.2 of his thesis. This is a limitation of that proposed proof, not a counterexample to the triangle statement. [alexarice.github.io](https://alexarice.github.io/pub/thesis.pdf?utm_source=chatgpt.com)
+
+## 2. Q2: spherical representation in degree \(2\)
+
+Write \(\mathsf g\) for groupoidification to spaces.
+
+### Proposition
+
+Let \(B\) be free on an ordinary computad, and suppose every positive-dimensional cell of \(B\) is coinductively invertible. Set
+\[
+X=\mathsf g\,U\mathcal L_RB.
+\]
+For every \(x\in B_0\), every class of \(\pi_2(X,x)\) is represented by the interpretation of a cell
+\[
+b:1_x\Rightarrow1_x
+\]
+of \(B\).
+
+Here the interpretation uses the generic unit contractions to regard the identity boundary as the constant boundary.
+
+The proof uses a free crossed module to turn a topological spherical diagram into an algebraic \(2\)-cell. The essential comparison is that each crossed-module generator maps to the correct characteristic disk.
+
+### 2.1. The computadic filtration gives relative cell attachments
+
+Let \(\partial_\Theta D_n\subseteq yD_n\) denote the boundary presheaf. From \(R(D_n)=F(yD_n)\), preservation of colimits by \(\mathcal L_R\), and the decomposition of a globular boundary into globes,
+\[
+\mathcal L_R(F_wD_n)=F(yD_n),
+\qquad
+\mathcal L_R(F_w\partial D_n)=F(\partial_\Theta D_n).
+\]
+
+Thus \(\mathcal L_R\) sends a computadic generator attachment to a pushout of
+\[
+F(\partial_\Theta D_n)\longrightarrow F(yD_n).
+\]
+This is a cofibration because \(F\) is left Quillen. The model structure and Quillen equivalence \(F\dashv U\) are Nikolaus’s Theorem 2.20. [arxiv.org](https://arxiv.org/pdf/1003.1342?utm_source=chatgpt.com)
+
+All stages of the realization of a free computad are cofibrant. Consequently, these pushouts are homotopy pushouts: they are pushouts along cofibrations between cofibrant objects. The derived functor of \(U\), being an equivalence, preserves them; groupoidification also preserves them.
+
+Groupoidifying the globe-boundary pair gives the homotopy type of
+\[
+(S^{n-1}\hookrightarrow D^n).
+\]
+This follows inductively from the decomposition of a globular boundary into two \((n-1)\)-globes along their common boundary.
+
+We can therefore choose a relative CW model
+\[
+X_1\subseteq X_2\subseteq X
+\]
+for the computadic filtration, where:
+
+- \(X_1\simeq |G|\), for the graph \(G\) of \(0\)- and \(1\)-generators;
+- \(X_2\) is obtained by attaching the computad’s \(2\)-generators;
+- the remaining relative cells have dimension at least \(3\).
+
+In particular,
+\[
+\pi_2(X_1,x)=0,
+\qquad
+\pi_2(X_2,x)\twoheadrightarrow\pi_2(X,x).
+\tag{12}
+\]
+The latter is the relative cellular approximation consequence for attachments of dimension at least \(3\). [pi.math.cornell.edu](https://pi.math.cornell.edu/~hatcher/AT/ATch4.pdf?utm_source=chatgpt.com)
+
+This establishes the geometric attachment statement needed below. It does not assert that \(S_0\) preserves these attachments up to \(W\).
+
+### 2.2. A geometric pseudofunctor, with compatibility on the graph
+
+Form the homotopy bigroupoid
+\[
+\mathscr B=H_2B:
+\]
+its \(0\)- and \(1\)-cells are those of \(B\), and its \(2\)-cells are \(2\)-cells of \(B\) modulo the relation of being joined by an invertible \(3\)-cell.
+
+The coherence, closure under composition, and equivalence-relation results needed for this quotient are FHM Proposition 2.4.6, Theorem 2.4.8, and Corollary 2.4.9. Since \(B\) is groupoidal, the resulting bicategory is a bigroupoid. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+There is a pseudofunctor
+\[
+s:\mathscr B\longrightarrow\Pi_2X
+\tag{13}
+\]
+given by geometric interpretation. We need its coherence, rather than merely separate comparisons between algebraic and geometric composites.
+
+For each generic pasting shape \(P\), put
+\[
+X_P=\mathsf g\,UR(P).
+\]
+The maps \(R(P)\to yP\) in the construction of \(R\) imply that \(X_P\) is contractible. After functorial Kan replacement, every prescribed boundary extends:
+\[
+\operatorname{Map}(D^k,X_P)
+\longrightarrow
+\operatorname{Map}(\partial D^k,X_P)
+\]
+is a trivial fibration. Indeed, it is the mapping-space map induced by the cofibration \(\partial D^k\hookrightarrow D^k\) and the trivial fibration \(X_P\to *\).
+
+Choose compatible characteristic maps for the globes. These assign points, paths, and disks to algebraic cells. A \(3\)-cell gives a homotopy between its two boundary disks relative to their common boundary, so the assignment descends to \(H_2B\).
+
+Choose the compositor of \(s\) once in the realization of the generic two-edge pasting shape, and choose its unit comparison in the realization of \(D_0\). The pseudofunctor equations are then verified in the following generic shapes:
+
+| Equation | Generic shape in which its boundary is assembled |
+|---|---|
+| Preservation of vertical \(2\)-composition | Two vertically composable \(2\)-globes |
+| Preservation of identity \(2\)-cells | One \(1\)-globe |
+| Naturality of the compositor | Two horizontally composable \(2\)-globes |
+| Compatibility with the associator | A three-edge word |
+| Compatibility with the unitors | One \(1\)-globe |
+
+For each equation, the two specified disks, including the previously chosen compositors, have the same boundary and map into the **same** \(X_P\). Strict functoriality of \(R\) supplies the maps from the constituent arities. They therefore form a prescribed \(2\)-sphere in \(X_P\), which extends to a \(3\)-disk. Applying any labeling of \(P\) proves the required equality in \(\Pi_2X\).
+
+These choices are made before labeling. Consequently, when the labels belong to the free graph submodel \(F_wG\to B\), all the resulting comparisons factor through
+\[
+\mathsf g\,U\mathcal L_R(F_wG)\simeq |G|.
+\tag{14}
+\]
+This applies both to compositors and to the coherences normalizing a \(1\)-term to its positive word of generating edges.
+
+### 2.3. Algebraic and topological crossed modules over the same free groupoid
+
+Let
+\[
+F=\pi_1(X_1,G_0),
+\]
+the free groupoid on \(G\).
+
+The free bigroupoid \(F_bG\) maps by a biequivalence to the locally discrete bigroupoid \(F\). Moreover, a pseudofunctor out of \(F_bG\) is related by an invertible icon to the strict evaluation agreeing with it on the generating graph. These are den Besten’s Theorem B.11 and Lemma B.8. [arxiv.org](https://arxiv.org/pdf/1809.00963?utm_source=chatgpt.com)
+
+Choose a normal pseudoinverse
+\[
+J:F\longrightarrow F_bG
+\]
+using parenthesized reduced words. Choose adjoint inverses in \(\mathscr B\), and evaluate \(F_bG\) in \(\mathscr B\). This gives a normal pseudofunctor
+\[
+\Phi:F\longrightarrow\mathscr B.
+\]
+Evaluating the same expressions as paths in \(X_1\), with literal reversed paths as inverses, gives
+\[
+\rho:F\longrightarrow\Pi_2X.
+\]
+The preceding graph-coherence theorem gives an invertible icon
+\[
+\vartheta:s\Phi\Longrightarrow\rho
+\tag{15}
+\]
+whose components on generating edges are identities.
+
+Now construct a strict \(2\)-groupoid \(P_\Phi\). Its \(0\)-cells are \(G_0\), its \(1\)-arrows are those of \(F\), and, for \(u,v:x\to y\),
+\[
+(P_\Phi)_2(u,v)
+=
+\operatorname{Hom}_{\mathscr B(x,y)}(\Phi u,\Phi v).
+\]
+If \(\phi_{v,u}:\Phi v*\Phi u\Rightarrow\Phi(vu)\) is the compositor, define horizontal composition by
+\[
+\beta\widehat *\alpha
+=
+\phi_{v',u'}\circ(\beta*\alpha)\circ\phi_{v,u}^{-1}.
+\]
+The pseudofunctor axioms make this composition strictly associative and unital. Its \(1\)-arrows are strictly invertible because they are arrows of \(F\).
+
+The corresponding crossed \(F\)-module is
+\[
+M_B(x)
+=
+\coprod_{u\in F(x,x)}(P_\Phi)_2(1_x,u),
+\qquad
+\partial(u,a)=u.
+\]
+Its multiplication is horizontal composition and its \(F\)-action is conjugation. The crossed-module identities follow from interchange. In particular,
+\[
+\ker\partial_x
+=
+\operatorname{Aut}_{\mathscr B(x,x)}(1_x).
+\tag{16}
+\]
+
+Performing the same construction with \(\rho\) gives a crossed module \(M_X\). A \(2\)-cell from the constant path to \(\rho(u)\) is a relative disk in \((X,X_1)\). Conversely, a relative disk’s boundary can be replaced by the chosen reduced-word path in \(X_1\). The choice introduces no ambiguity because \(\pi_2X_1=0\). Thus
+\[
+M_X\cong\pi_2(X,X_1,G_0).
+\tag{17}
+\]
+
+The icon (15) induces a strict \(2\)-functor \(P_\Phi\to P_\rho\), by sending a \(2\)-cell \(a:u\Rightarrow v\) to
+\[
+\vartheta_v\circ s(a)\circ\vartheta_u^{-1}.
+\]
+Hence it induces a crossed-module morphism
+\[
+h:M_B\longrightarrow\pi_2(X,X_1,G_0).
+\tag{18}
+\]
+On kernels, this is geometric interpretation of algebraic \(2\)-spheres.
+
+### 2.4. Comparison on characteristic disks
+
+For each computad \(2\)-generator
+\[
+a:s(a)\Rightarrow t(a),
+\]
+let \(p_a,q_a\) be the positive edge words of its source and target. Normalize the two boundary terms to the chosen bracketings of \(p_a,q_a\), using \(2\)-cells in the free graph submodel. This gives a \(2\)-cell
+\[
+\widehat a:p_a\Rightarrow q_a
+\]
+in \(P_\Phi\).
+
+Use ordinary categorical composition, read right to left, and set
+\[
+r_a=p_a^{-1}q_a.
+\]
+Whiskering \(\widehat a\) by \(p_a^{-1}\) gives
+\[
+m_a:1\Rightarrow r_a
+\]
+in \(P_\Phi\), hence \(m_a\in M_B\) with boundary \(r_a\).
+
+Let \(C\to F\) be the free crossed module on these generators and boundary words. Whitehead’s free-crossed-module theorem, in the groupoid form stated by Brown–Razak Salleh as Theorem 5.1, identifies
+\[
+C\cong\pi_2(X_2,X_1,G_0),
+\]
+with each free generator corresponding to its characteristic disk. [cambridge.org](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/3EB28E848795671604EBC93440DEA09F/S1461157000000061a.pdf/free_crossed_resolutions_of_groups_and_presentations_of_modules_of_identities_among_relations.pdf?utm_source=chatgpt.com)
+
+The assignments \(a\mapsto m_a\) induce
+\[
+j:C\longrightarrow M_B.
+\]
+
+The required comparison is
+\[
+hj
+=
+\bigl[\pi_2(X_2,X_1,G_0)\longrightarrow
+       \pi_2(X,X_1,G_0)\bigr].
+\tag{19}
+\]
+
+It suffices to check (19) on free generators. First compare \(\widehat a:p_a\Rightarrow q_a\), **before inverse whiskering**. Its geometric disk is the characteristic disk of \(a\), with the chosen boundary-normalizing disks attached.
+
+Those normalizing disks factor through \(X_1\) by (14). The icon contributes no additional sphere: for a positive word, its components are determined recursively by its generating-edge components and the compositor equation
+\[
+\vartheta_{vu}\circ\mu^{s\Phi}_{v,u}
+=
+\mu^\rho_{v,u}\circ(\vartheta_v*\vartheta_u).
+\]
+All these positive-word comparisons factor through \(X_1\). Their possible differences are \(2\)-spheres in \(X_1\), hence zero.
+
+Finally, the strict \(2\)-functor defining \(h\) preserves whiskering. Therefore whiskering by \(p_a^{-1}\) gives exactly the corresponding relative characteristic disk. This accounts for the algebraic adjoint-inverse witnesses without assuming that their individual geometric disks factor through the graph. Equation (19) follows.
+
+### 2.5. Every topological \(2\)-sphere is algebraic
+
+Take \(\xi\in\pi_2(X,x)\). By (12), choose a lift
+\[
+\xi_2\in\pi_2(X_2,x).
+\]
+Since \(\pi_2X_1=0\), the relative homotopy sequence identifies \(\xi_2\) with an element
+\[
+c\in\ker(C(x)\to F(x,x)).
+\]
+Then
+\[
+j(c)\in\ker(M_B(x)\to F(x,x)).
+\]
+By (16), this is a \(2\)-automorphism of \(1_x\) in \(H_2B\), so it has an actual representative
+\[
+b:1_x\Rightarrow1_x
+\]
+in \(B\). Equation (19) says that its geometric interpretation represents \(\xi\).
+
+This proves the proposition.
+
+### 2.6. Consequence for \(B=KS_0Y\)
+
+Now suppose \(Y\) presents a space. Put
+\[
+A=S_0Y,\qquad B=KA,\qquad
+Z=QU\mathcal L_RB.
+\]
+By the stipulated results, \(B\) is groupoidal and \(Z\) is a space. Thus
+\[
+Z\simeq\mathsf g\,U\mathcal L_RB,
+\]
+and the proposition applies.
+
+Let \(\xi\in\pi_2(Z,x)\) satisfy \(d_*(\xi)=0\). Choose an algebraic representative
+\[
+b:1_x\Rightarrow1_x.
+\]
+The triangle identity
+\[
+S_0(d_Y)\eta_B=q_A
+\]
+identifies \(d_*(\xi)\) with the sphere represented by \(q_A(b)\).
+
+Because \(Y\) is groupoidal, nullity of this sphere gives a geometric \(3\)-disk with the prescribed boundary
+\[
+q_A(b)\Rightarrow 1_{1_{q_Ax}}.
+\]
+This can be realized with the **literal** globular boundary: the restriction
+\[
+\operatorname{Map}(yD_3,UY)
+\longrightarrow
+\operatorname{Map}(\partial_\Theta D_3,UY)
+\]
+is a Kan fibration, and the nullhomotopy puts the specified boundary in the image on \(\pi_0\). Hence its strict fiber is nonempty.
+
+The globular trivial fibration \(q_A:B\to A\) then lifts that \(3\)-cell to
+\[
+b\Rightarrow1_{1_x}
+\]
+in \(B\). Its interpretation kills \(\xi\). Therefore \(d_*\) is injective on \(\pi_2\).
+
+Surjectivity follows separately by representing a class of \(\pi_2Y\) by a \(2\)-cell of \(S_0Y\) with identity boundary and lifting that cell through \(q_A\). Consequently,
+\[
+\boxed{\pi_2(d):\pi_2(Z,x)\xrightarrow{\;\cong\;}\pi_2(Y,dx).}
+\]
+
+Together with Known (V), this gives isomorphisms through degree \(2\) and surjections in every higher degree. The argument does not establish spherical representation for \(n\ge3\).
+
+## 3. Q3: saturation reduces to elementary attachments to finite computads
+
+There is a sufficient condition weaker than unrestricted pushout stability of \(\mathrm{Cof}\cap W\).
+
+Write
+\[
+\mathcal C^n=F_wD_n,
+\qquad
+j_n:\mathcal C^n\longrightarrow\mathcal E^{n+1}_{\mathcal F}
+\]
+for the source inclusions into the FHM weak walking equivalences. FHM Proposition 5.0.4 and Proposition 4.1.5 give
+\[
+J^\pitchfork=\mathrm{Equifib},
+\qquad
+W\cap J^\pitchfork=\mathrm{TF},
+\quad J=\{j_n\}_{n\ge0}.
+\] :chatgpt-content-reference{index="6"}
+
+Consider the assertion
+\[
+\tag{FEA}
+A_{\mathfrak c}\longrightarrow
+A_{\mathfrak c}\amalg_{\mathcal C^n}
+\mathcal E^{n+1}_{\mathcal F}
+\quad\text{belongs to }W
+\]
+for every finite ordinary computad \(\mathfrak c\), every \(n\ge0\), and every attaching map \(\mathcal C^n\to A_{\mathfrak c}\).
+
+**Then (FEA) implies that \(W\) is saturated, and hence implies your detection statement (10).**
+
+### Proof
+
+First,
+\[
+J\text{-}\mathrm{cof}\subseteq\mathrm{Cof},
+\]
+because \(\mathrm{TF}\subseteq J^\pitchfork\).
+
+**Extend (FEA) to all cofibrant sources.** A computad is the filtered union of its finite subcomputads. A fixed attaching cell has finite support and therefore belongs to one finite subcomputad. Pushouts commute with these filtered colimits, and \(W\) is closed under filtered colimits. Thus (FEA) implies the same assertion for every computad-cofibrant source.
+
+**Relative \(J\)-cell complexes with cofibrant source belong to \(W\).** All stages remain cofibrant. Successor stages are covered by the preceding paragraph; coproduct attachments can be well-ordered into individual attachments. At limit stages, use filtered-colimit closure of \(W\).
+
+**Trivial cofibrations with cofibrant source are retracts of such complexes.** Given
+\[
+i:A\longrightarrow B\in\mathrm{Cof}\cap W
+\]
+with \(A\) cofibrant, factor it using \(J\):
+\[
+A\xrightarrow{a}Z\xrightarrow{p}B,
+\qquad
+a\in J\text{-}\mathrm{cell},
+\quad p\in J^\pitchfork.
+\]
+We have \(a\in W\), so \(p\in W\). Hence \(p\in\mathrm{TF}\). Lifting \(i\) against \(p\) makes \(i\) a retract of \(a\) under \(A\).
+
+It follows that the pushout of \(i\) along any map \(A\to C\) with \(C\) cofibrant belongs to \(W\): it is a retract of a relative \(J\)-cell complex starting at \(C\).
+
+These are exactly the pushouts required by the precofibration-category axiom CF3. The remaining CF1–CF4 axioms follow from the existing cofibration–trivial-fibration factorization and two-out-of-three. Rădulescu-Banu’s Definition 1.1.1 requires only these cofibrant-source pushouts; his Theorem 7.2.7 says that, for a precofibration category, two-out-of-six implies saturation. [arxiv.org](https://arxiv.org/pdf/math/0610009?utm_source=chatgpt.com)
+
+Thus \(W=W^{\mathrm{sat}}\). Your established detector then gives
+\[
+S_0f\in W^{\mathrm{sat}}
+\Longrightarrow
+QUf\text{ is an equivalence}.
+\]
+
+### An unconditional splitting result
+
+Every \(J\)-cofibration \(i:A\to B\) has a strict retraction.
+
+Indeed, \(A\to1\) is an equifibration: the unique equivalence in the terminal model lifts to an identity on the specified source cell. Apply the lifting property of \(i\) to
+\[
+\begin{array}{ccc}
+A&\xrightarrow{1_A}&A\\
+\downarrow i&&\downarrow\\
+B&\longrightarrow&1.
+\end{array}
+\]
+The lift is \(r:B\to A\) with \(ri=1_A\).
+
+Thus all the elementary attachments in (FEA) split. What is missing is the construction of equivalence witnesses for arbitrary terms in the enlarged model, with their exact boundaries.
+
+I do not prove (FEA). It includes \(j_n\in W\), obtained by taking \(A_{\mathfrak c}=\mathcal C^n\) and the identity attaching map. FHM’s theorem establishing the corresponding generating trivial cofibrations is a theorem **after strict \(\omega\)-categorical reflection**. The generalized-computad description identifies the weak walking-equivalence generators, but does not establish their required pushout stability. [arxiv.org](https://arxiv.org/pdf/2511.09849v1?utm_source=chatgpt.com)
+
+## 4. Q4: an explicit arity resolution and the remaining comparison problem
+
+There is an obstruction beyond the already established strict-unit issue: weakening the laws governing composition does not automatically resolve the equations within a fixed strict tensor arity.
+
+### 4.1. The two-square arity
+
+Take
+\[
+\Gamma=\Sigma\Delta_2\vee\Sigma\Delta_1,
+\qquad
+U_\Gamma=\Delta_2\otimes\Delta_1,
+\]
+with
+\[
+\alpha_1:f_0\Rightarrow f_1,\qquad
+\alpha_2:f_1\Rightarrow f_2:x\to y,
+\qquad
+\beta:g_0\Rightarrow g_1:y\to z.
+\]
+
+Writing paths in execution order, the rectangle has boundary
+\[
+\begin{aligned}
+P&=(f_0\triangleleft\beta);
+   (\alpha_1\triangleright g_1);
+   (\alpha_2\triangleright g_1),\\
+Q&=(\alpha_1\triangleright g_0);
+   (\alpha_2\triangleright g_0);
+   (f_2\triangleleft\beta).
+\end{aligned}
+\]
+Its canonical local \(2\)-cell
+\[
+\rho:P\Rightarrow Q
+\]
+is the paste of the two elementary squares, through
+\[
+M=(\alpha_1\triangleright g_0);
+  (f_1\triangleleft\beta);
+  (\alpha_2\triangleright g_1).
+\]
+The orientation follows directly from
+\[
+d(u_i\otimes v)
+=(a_i-a_{i-1})\otimes v-u_i\otimes(b_1-b_0),
+\]
+using the directed tensor differential of Ara–Lucas §2.9. [arxiv.org](https://arxiv.org/pdf/1909.13564?utm_source=chatgpt.com)
+
+The raw theory has an independent global \(3\)-head \(G_\Gamma:P\Rightarrow Q\). Let \(E_\Gamma\) be the elementary paste, with the necessary hom coherences fixing its parentheses and boundary. By the stipulated syntax,
+\[
+G_\Gamma\ne E_\Gamma
+\]
+as raw terms.
+
+If both are interpreted by evaluating the same canonical cell \(\rho\) of the unchanged strict arity \(U_\Gamma\), they are identified. Resolving only the operad governing composition does not change the equality expressing \(\rho\) as a composite within \(U_\Gamma\).
+
+### 4.2. Adding the independent head is insufficient by itself
+
+Introduce a separate local \(2\)-generator:
+\[
+U_\Gamma^+
+=
+U_\Gamma\amalg_{\partial D^2}D^2,
+\qquad g:P\Rightarrow Q.
+\]
+There is an augmentation
+\[
+\varepsilon^+:U_\Gamma^+\longrightarrow U_\Gamma,
+\qquad g\longmapsto\rho.
+\]
+
+This augmentation is not a folk weak equivalence. The distinct parallel \(2\)-cells \(g,\rho\) have the same image. The target identity \(3\)-cell on \(\rho\) would therefore require a source \(3\)-cell from \(g\) to \(\rho\). None exists: \(U_\Gamma^+\) is a strict \(2\)-category, regarded as a strict \(\omega\)-category with only identity cells above dimension \(2\).
+
+Thus retaining an independent whole-grid head requires additional local \(3\)-dimensional data, corresponding to global dimension \(4\).
+
+### 4.3. A concrete repair exists for this strict arity
+
+Let
+\[
+j_2^s:D^2\longrightarrow E_s^3
+\]
+be the source inclusion into the strict coherent walking \(3\)-equivalence. Its presentation adds a second parallel \(2\)-generator and equivalence witnesses in dimensions at least \(3\). It is a folk trivial cofibration by FHM’s strict result. [arxiv.org](https://arxiv.org/pdf/2511.09849v1?utm_source=chatgpt.com)
+
+Attach it along the cell \(\rho:D^2\to U_\Gamma\):
+\[
+\widehat U_\Gamma
+=
+U_\Gamma\amalg_{D^2}E_s^3.
+\tag{20}
+\]
+Then
+\[
+i:U_\Gamma\longrightarrow\widehat U_\Gamma
+\]
+is a folk trivial cofibration.
+
+The collapse \(E_s^3\to D^2\) induces
+\[
+\varepsilon:\widehat U_\Gamma\longrightarrow U_\Gamma,
+\qquad
+\varepsilon i=1.
+\]
+Two-out-of-three gives that \(\varepsilon\) is a folk weak equivalence.
+
+The \(2\)-dimensional computadic skeleton of \(\widehat U_\Gamma\) is \(U_\Gamma^+\). Its new local \(3\)-generators supply the global \(4\)-dimensional equivalence between the independent whole-grid head and the elementary composite, with higher generators supplying its invertibility witnesses.
+
+This is an arity-by-arity repair in strict \(\omega\)-categories. It does not yet define a weak enriched coherator.
+
+### 4.4. The step still required before applying the lifting theorem
+
+To apply the lifting theorem from Known (II), the individual constructions (20) must be assembled into:
+
+1. resolved arities with substitution maps and weak Gray composition;
+2. coherent comparisons for substitution, including the images of whole-grid heads;
+3. an augmentation to the semantic arities;
+4. a comparison proving that the specified models of the resolved theory correspond to the intended models of raw \(L\).
+
+A folk weak equivalence for each individual strict arity does not establish these statements.
+
+Nor does the standard coloured-operad Boardman–Vogt theorem apply without further setup. Berger–Moerdijk work over a symmetric monoidal base, and their comparison theorem additionally assumes admissibility and cofibrancy conditions on the operads. [arxiv.org](https://arxiv.org/pdf/math/0512576?utm_source=chatgpt.com) The directed Gray tensor has no braiding: naturality would force a braiding on \(D^1\otimes D^1\) to exchange coordinates and hence reverse its unique directed square, but that reversed \(2\)-cell is absent.
+
+The unresolved step is therefore a **substitution-compatible resolution of the tensor arities, together with the model comparison**. The two-square construction gives the first required attachment and its strict resolution; it does not yet produce \(R_L\).

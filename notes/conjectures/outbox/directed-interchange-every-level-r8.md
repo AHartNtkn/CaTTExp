@@ -202,3 +202,555 @@ Any of the following:
 - a definition or an impossibility proof for Q5;
 - a reference to a published construction.
 
+# Research Response
+
+**The K18 completion fails an actual globular substitution.** The substitution collapses the third input globe to identities. A join that K18 adds to the triple tensor would have to map to an arrow absent from the repaired binary presentation.
+
+There are also three constructive advances:
+
+- Five more fresh hom-4 lifts have explicit equations **before quotienting**, leaving six unresolved.
+- The six factorization families admit a uniform four-sign variation formula, with explicit instances for the three higher input variables and for disjoint operations on the 240-word interval.
+- An integer grading proves acyclicity and injective normal-form supports through hom-dimension 5 for the **specified finite comparison presentation**.
+
+These results do not establish a substitution-closed globular theory or exactness through hom-dimension 6.
+
+The complete equations, paths, proofs, and runnable checks are in directed_interchange_round8_checks.zip[directed_interchange_round8_checks.zip](sandbox:/workspace/scratch/81530e09e7cd/directed_interchange_round8_checks.zip). All dimensions below are hom dimensions unless stated otherwise.
+
+## 1. An actual globular substitution obstructs K18
+
+Let
+\[
+\Gamma_3=\Sigma D^2\vee\Sigma D^2\vee\Sigma D^2,
+\qquad
+\Gamma_2=\Sigma D^2\vee\Sigma D^2.
+\]
+
+Consider the following assignment of the **original globular generators**. Keep the first two suspended globes fixed. If the objects of \(\Gamma_3\) are \(a_0,a_1,a_2,a_3\), and those of \(\Gamma_2\) are \(b_0,b_1,b_2\), send
+\[
+(a_0,a_1,a_2,a_3)\longmapsto(b_0,b_1,b_2,b_2).
+\]
+Send both generating 1-cells of the third summand to \(1_{b_2}\), both generating 2-faces to \(1_{1_{b_2}}\), and its generating 3-cell to \(1_{1_{1_{b_2}}}\). Every boundary matches.
+
+### The induced word map is forced
+
+In the current binary presentation, the hom-2 paths are paths in the directed coordinate cube with events \(a,b,p\). Each nonidentity edge changes one coordinate from zero to one. Consequently, there are no nonidentity hom-2 endomorphisms.
+
+After the specified degeneration, the triple crossings \(q,r\) have equal source and target, so their images must be identities in this binary target. The input update \(c\) is assigned an identity. The crossing \(p\) has its usual binary boundary and its image is the unique binary crossing with that boundary.
+
+Thus the map on the hom-2 words must be
+\[
+\boxed{\text{erase }c,q,r;\quad\text{retain }a,b,p.}
+\]
+
+This conclusion uses the actual binary presentation. It does not assume a tensor-unit coherence equation.
+
+### A surviving K14 arrow produces the obstruction
+
+Use the following arrows, which are already present after the K14 repairs:
+\[
+A=h_z:\texttt{bacrqp}\longrightarrow\texttt{bapcqr},
+\]
+and the inner arrow
+\[
+e:\texttt{abpcqr}\longrightarrow\texttt{bapcqr}.
+\]
+
+The K18 completion adds
+\[
+J=j_{A,e}:\texttt{bacrqp}\longrightarrow\texttt{abpcqr},
+\qquad
+J;e=A.
+\tag{1}
+\]
+
+Under the forced word map, their boundaries become:
+
+| Arrow | Required image boundary |
+|---|---|
+| \(A\) | \(\texttt{bap}\to\texttt{bap}\) |
+| \(e\) | \(\texttt{abp}\to\texttt{bap}\) |
+| \(J\) | \(\texttt{bap}\to\texttt{abp}\) |
+
+But the binary K10 graph is
+\[
+\begin{aligned}
+&\texttt{bpa}\longrightarrow\texttt{pba}
+ \longrightarrow\texttt{pab}\longrightarrow\texttt{apb},\\
+&\texttt{bpa}\longrightarrow\texttt{abp}
+ \longrightarrow\texttt{bap},\\
+&\texttt{abp}\longrightarrow\texttt{apb}.
+\end{aligned}
+\tag{2}
+\]
+In particular, \(\texttt{bap}\) is a sink.
+
+Applying K18 to this binary graph adds no generators: no positive seed has a target admitting a nonidentity incoming inner path. Hence there is still no arrow
+\[
+\texttt{bap}\longrightarrow\texttt{abp}.
+\]
+
+The assignment of original globular generators therefore **cannot extend to a structure map between these completed presentations**. Equation (1) would additionally require its nonexistent image to satisfy
+\[
+F(J);F(e)=1_{\texttt{bap}}.
+\]
+
+This realizes a substitution obstruction on the repaired K14 presentation itself; it does not use the eliminated \(\tau\) as a positive seed. The executable verification is `r8_substitution_check.py`.
+
+### Exact scope of the obstruction
+
+This rules out:
+
+- the K18 completion applied uniformly to the current K10/K14 presentations;
+- any extension adding this triple join while retaining the binary absence of \(\texttt{bap}\to\texttt{abp}\).
+
+It does **not** yet rule out every completion satisfying requirements 1–4. A different completion could change the binary data. Moreover, the forced reverse is a reverse of the inner interchanger **after right whiskering by \(p\)**. The calculation does not produce a reverse of the unwhiskered elementary interchanger.
+
+That distinction prevents promotion of this result to the general impossibility statement in Q1 or Q5.
+
+## 2. Variation equations for the six factorization families
+
+### 2.1 A uniform four-sign formula
+
+Suppose
+\[
+d_i=h_i;e_i:S_i\longrightarrow T_i,
+\qquad
+h_i:S_i\longrightarrow U_i,
+\quad i=0,1,
+\]
+and a higher variable supplies
+\[
+z_S:S_0\to S_1,\qquad
+z_U:U_0\to U_1,\qquad
+z_T:T_0\to T_1.
+\]
+
+Use the following reference orientations:
+\[
+\begin{aligned}
+D^+&:d_0;z_T\Longrightarrow z_S;d_1,\\
+E^+&:e_0;z_T\Longrightarrow z_U;e_1,\\
+H^+&:h_0;z_U\Longrightarrow z_S;h_1.
+\end{aligned}
+\]
+A superscript \(-\) specifies the reverse **boundary orientation**, not an inverse of an available cell.
+
+Choose the sign of \(H\) to equal the sign of \(D\). The four variation equations are:
+
+| Sign of \(D\) | Sign of \(E\) | Equation |
+|---|---|---|
+| \(+\) | \(+\) | \(D^+=(h_0E^+);(H^+e_1)\) |
+| \(-\) | \(-\) | \(D^-=(H^-e_1);(h_0E^-)\) |
+| \(+\) | \(-\) | \(H^+e_1=(h_0E^-);D^+\) |
+| \(-\) | \(+\) | \(H^-e_1=D^-;(h_0E^+)\) |
+
+Here juxtaposition with \(h_0\) or \(e_1\) denotes whiskering.
+
+For example, the right side in the \((+,-)\) row has consecutive boundaries
+\[
+h_0;z_U;e_1
+ \xRightarrow{\,h_0E^-\,}
+h_0;e_0;z_T
+ \xRightarrow{\,D^+\,}
+z_S;h_1;e_1,
+\]
+which are exactly the boundaries of \(H^+e_1\). The other three rows follow by the same boundary calculation.
+
+This is a dimension-independent **typing and factorization rule**. It does not prove that the required \(D,E,z_S,z_U,z_T\) exist for every derived variable.
+
+If the quotient declares \(e_0,e_1\) and \(E\) to be identities, every row gives \(\bar H=\bar D\) by units. Merely knowing that \(E\) has zero tensor image does not justify that identity declaration.
+
+### 2.2 All formal input variations of the 45 contextual equations
+
+Replace \(a\), \(b\), or \(c\), in turn, by two parallel hom-2 faces joined by a hom-3 input cell \(\Omega_a,\Omega_b,\Omega_c\). These give three separate input extensions with factor dimensions
+\[
+(3,2,2),\qquad(2,3,2),\qquad(2,2,3).
+\]
+
+The active cases are:
+
+| Family | Higher input | \(D,E\) signs |
+|---|---|---|
+| \(h_p\) | \(\Omega_a\) | \(+,-\) |
+| \(h_p\) | \(\Omega_b\) | \(+,+\) |
+| \(h_q\) | \(\Omega_a\) | \(+,-\) |
+| \(h_q\) | \(\Omega_c\) | \(+,+\) |
+| \(h_r\) | \(\Omega_b\) | \(+,-\) |
+| \(h_r\) | \(\Omega_c\) | \(+,+\) |
+| \(\lambda_x\) | \(\Omega_a\) | \(+,-\) |
+| \(h_z\) | \(\Omega_c\) | \(+,+\) |
+| \(\mu\) | \(\Omega_a\) | \(+,-\) |
+| \(\mu\) | \(\Omega_c\) | \(+,+\) |
+
+Including all spectator contexts gives **135 equations**: 39 with signs \((+,-)\), 60 with \((+,+)\), and 36 with \((-,-)\).
+
+The \(\mu\) equations reuse the earlier \(\lambda_x\) variation literally. For instance, at
+\[
+S=\texttt{crqabp},\quad
+U=\texttt{acrqbp},\quad
+T=\texttt{carqbp},
+\]
+variation by \(\Omega_a\) gives
+\[
+H_\mu e_1=(\mu_0E^-);H_\lambda.
+\tag{3}
+\]
+The old-operation variation on the right is \(H_\lambda\), not a second generator with the same tensor image.
+
+The certificates specify every boundary and verify its full tensor tableau. These formal higher inputs are **not** additional generators already present in \(D^2\otimes D^2\otimes D^2\).
+
+### 2.3 Variations on the unchanged 240-word interval
+
+There is also a complete calculation for the following precisely delimited class.
+
+For a contextual equation \(d=h;e\), take the smallest contiguous word interval covering every position changed by the recursively expanded \(d,h,e\). Allow a variable to be any nonidentity hom-3 path whose generating operations act on intervals disjoint from that interval.
+
+The enumeration gives:
+
+| Family | Contextual equations | Single-operation variables | All variable paths |
+|---|---:|---:|---:|
+| \(h_p\) | 8 | 4 | 6 |
+| \(h_q\) | 8 | 4 | 4 |
+| \(h_r\) | 8 | 4 | 6 |
+| \(\lambda_x\) | 12 | 8 | 14 |
+| \(h_z\) | 6 | 2 | 2 |
+| \(\mu\) | 3 | 1 | 1 |
+| **Total** | **45** | **23** | **33** |
+
+The 33 variable paths comprise 23 of length one, eight of length two, and two of length three. Their variations are composites of existing \(D\)-cells. The factorization formulas impose **33 additional hom-4 equations**, with literally parallel boundaries.
+
+For example, the \(\mu\) equation for the right-hand operation \(T(bp)\) is
+\[
+D107=(D106\,e_1);(\mu_0D20),
+\tag{4}
+\]
+with the exact contextual indices defined in the certificate.
+
+### 2.4 D and N themselves require higher comparisons
+
+For a single hom-3 operation acting outside the entire word interval of a \(D\)- or \(N\)-boundary, there are:
+
+- 21 \(D\)-variation instances;
+- 20 \(N\)-variation instances.
+
+Seven pairs of \(D\)-instances have identical directed boundaries. Thus **34 specified hom-5 cells serve all 41 instances**: 14 \(D\)-types and 20 \(N\)-types.
+
+One example uses three disjoint operations
+\[
+A=I(ar),\qquad B=T(cq),\qquad C=T(bp)
+\]
+at \(\texttt{arcqbp}\). The proposed hom-5 cell compares
+\[
+CBA\xRightarrow{D32}BCA
+   \xRightarrow{D42}BAC
+   \xRightarrow{D34}ABC
+\]
+with
+\[
+CBA\xRightarrow{D35}CAB
+   \xRightarrow{D33}ACB
+   \xRightarrow{D195}ABC.
+\tag{5}
+\]
+
+Their orientations adopt the mixed Gray/Leibniz convention at the common hom-2 level. Zero tensor image alone would not determine those orientations.
+
+The grading in §4 proves that these boundary pairs remain unequal after all the hom-4 equations considered here. Consequently, their variations require additional hom-5 cells, or additional hom-4 equations beyond those currently imposed.
+
+All computations in this section are reproduced by `r8_variation_check.py`. They do not cover all overlapping derived variables or arbitrary iterated higher substitutions.
+
+## 3. Five further fresh lifts have equations before quotienting
+
+This calculation uses the **unchanged K14 hom-3 graph**, together with the existing \(D,N,W\) data. It does not include the 613 extra K18 joins. Calculations involving \(N\) retain K15 as a convention.
+
+### The construction: directed rectangles
+
+Suppose
+\[
+F:P\Rightarrow Q,\qquad W:U\Rightarrow V,
+\]
+and forward kernel composites give
+\[
+\alpha:X\Rightarrow P,\quad
+\beta:Q\Rightarrow Y,\quad
+\gamma:X\Rightarrow U,\quad
+\delta:V\Rightarrow Y.
+\]
+Then
+\[
+\boxed{\alpha;F;\beta=\gamma;W;\delta}
+\tag{6}
+\]
+is a legitimate equation between parallel hom-4 cells.
+
+After declaring those kernel cells identities, it implies \(\bar F=\bar W\). It does not express \(F\) as a raw composite of \(W\) and kernel cells, because no cancellation is available.
+
+### The five additional cases
+
+| Fresh lift | Existing \(W\)-context | Added equations | Forward \(D,N\) factors |
+|---|---|---:|---:|
+| \(A_{17,12}\) | \(W_z\), suffix \(ab\) | 1 | 4 |
+| \(A_{17,16}\) | \(W_x\), suffix \(cb\) | 1 | 5 |
+| \(A_{20,8}\) | \(W_z\), prefix \(b\), suffix \(a\) | 1 | 3 |
+| \(A_{22,15}\) | \(W_y\), prefix \(a\), suffix \(c\) | 1 | 8 |
+| \(A_{24,17}\) | \(W_y\), suffix \(ca\) | 2 | \(15+13\) |
+
+The last case uses one auxiliary hom-4 generator \(G\). Its tensor label is
+\[
+q_4(G)=x_1^-\otimes y_2\otimes z_1^-.
+\]
+Its two raw hom-3 boundaries are specified completely in `r8_lifts_certificate.json`; both run from
+\[
+S=\texttt{crqbpa}
+\quad\text{to}\quad
+T=\texttt{apqbrc}.
+\]
+Two rectangle equations identify \(G\) with the appropriate \(W_y\)-context and \(A_{24,17}\) after the lower quotient.
+
+For a concrete instance, write \(R[n]\) for the literal hom-3 path with index \(n\) in that certificate. A label \(Dk@n:c\) specifies \(Dk\) applied at cut \(c\) of \(R[n]\), retaining the literal prefix and suffix. One new equation is
+\[
+\begin{aligned}
+A_{20,8};D72@14487{:}3
+={}&W16@15944{:}2;N19@15175{:}4;D75@15005{:}6.
+\end{aligned}
+\tag{7}
+\]
+Both sides have raw boundary
+\[
+R[15944]\Longrightarrow R[14966].
+\]
+Every intermediate endpoint agrees as a literal path. The other five equations have the same explicit form in the certificate and notes.
+
+Together with the four cases in K22, this supplies raw relations for **nine of the fifteen** fresh lifts. The remaining six are
+\[
+\boxed{
+A_{4,0},\ A_{5,4},\ A_{8,3},\
+A_{15,13},\ A_{22,21},\ A_{23,22}.
+}
+\tag{8}
+\]
+
+A restricted search did not find a single lower-factor repair for these six. That search does not prove that new hom-3 data are necessary.
+
+The executable verification is `r8_lifts_check.py`.
+
+## 4. Injective normal-form supports through hom-dimension 5
+
+The support argument applies to the specified finite comparison presentations, using the normal-form interpretation of support permitted in K16 and K18.
+
+### 4.1 A finite-DAG lemma removes the need for convergent equation orientations
+
+Let \(Q\) be a finite directed multigraph without directed cycles, and impose any equations between parallel \(Q\)-paths.
+
+There are finitely many paths: a path cannot repeat a vertex, so its length is at most \(|Q_0|-1\). Consequently every congruence class has a computable least representative in a fixed ordering of paths. Congruence is computed by bidirectional equation replacement in all path contexts; this terminates because the path set is finite.
+
+A nonempty path in a DAG is determined by its set of **actual edge IDs**. Its incidence relations determine their unique directed order.
+
+For the higher-dimensional application, define support recursively:
+\[
+\operatorname{supp}_n(f)=
+\operatorname{Edges}_n(\operatorname{NF}(f))
+\;\cup\;
+\operatorname{supp}_{n-1}(sf)
+\;\cup\;
+\operatorname{supp}_{n-1}(tf),
+\tag{9}
+\]
+with generator IDs tagged by dimension.
+
+If the top-dimensional edge set is nonempty, it determines the normal path. If it is empty, the cell is an identity, distinguished by its lower support. Thus support is injective.
+
+**No composite graph vertex receives a new support atom.** The labels are actual contextual generating edges and inherited lower-dimensional generators. Support is taken after normalization; it is not asserted to preserve unions of arbitrary expressions.
+
+### 4.2 Application in hom-dimension 4
+
+The checked hom-4 comparison graph has:
+
+| Data | Count |
+|---|---:|
+| Raw hom-3 paths, including identities | 40,412 |
+| Contextual \(D,N\) edges | 60,961 |
+| Contextual old-\(W\) edges | 3,702 |
+| Contextual selected \(A,H,G\) edges | 33 |
+| **Total hom-4 generating edges** | **64,696** |
+
+It is acyclic.
+
+There is also a structural certificate: an integer functional on tensor hom-3 chains is constant across every \(D,N\) edge and increases by one across every \(W,A,H,G\) edge. Therefore a cycle would have to consist entirely of \(D,N\) edges, whose graph is acyclic.
+
+The lemma applies after imposing:
+
+- the 33 factorization-variation equations;
+- the six new lift equations;
+- the three previous raw eliminations;
+- the previous \(H\)-equation;
+- the definition of \(A_{2,1}\) as the specified whiskering of \(H\).
+
+These are 43 parallel equations plus one whiskering definition.
+
+### 4.3 An explicit hom-5 grading survives those equations
+
+Give the primitive \(D,N\) IDs the following weights \(\theta\), and give every unlisted ID weight zero:
+
+| Weight | IDs |
+|---:|---|
+| \(-3\) | \(D10\) |
+| \(-2\) | \(D66,D200\) |
+| \(-1\) | \(D14,D15,D27,D29,D32,D77,D99,D105,D123,D149,D165,D168,D193,D208,D251,N55\) |
+| \(1\) | \(D17,D22,D25,D53,D84,D95,D146,N47\) |
+| \(2\) | \(D96\) |
+
+Assign weight zero to every \(W,A,H,G\) primitive, and extend additively to hom-4 paths. Exact integer checks establish that all 43 equations and the additional whiskering definition preserve \(\theta\).
+
+Each of the 34 specified zero-image hom-5 comparisons raises \(\theta\) by one.
+
+To include the six tensor hom-5 generators from K17, define a linear functional \(\ell\) on tensor degree-4 chains. Give it value \(-1\) on
+\[
+\begin{gathered}
+x_0^-\otimes y_2\otimes z_2,\\
+x_1^-\otimes y_1^\varepsilon\otimes z_2,\qquad
+x_1^-\otimes y_2\otimes z_1^\varepsilon
+\quad(\varepsilon\in\{-,+\}),
+\end{gathered}
+\]
+and zero on the other thirteen degree-4 basis vectors.
+
+The signed differential gives
+\[
+\ell(\partial b)=1
+\]
+for every one of the six degree-5 tensor basis vectors \(b\).
+
+Define
+\[
+\boxed{\rho(f)=\ell(q_4(f))+\theta(f).}
+\tag{10}
+\]
+
+Then:
+
+| Hom-5 generator | Change in \(\ell q_4\) | Change in \(\theta\) |
+|---|---:|---:|
+| Each specified zero-image comparison | \(0\) | \(1\) |
+| Each of the six K17 tensor comparisons | \(1\) | \(0\) |
+
+Thus every specified generating hom-5 arrow raises \(\rho\) by **exactly one**.
+
+Both summands descend through the hom-4 equations. Hom-3 path whiskering retains their primitive IDs and tensor labels. Hom-4 prefix and suffix contexts add the same quantity to both boundaries. The argument therefore also covers contexts represented by quotient hom-4 cells and hom-5 compositions enabled by the hom-4 identifications.
+
+Hence the resulting hom-5 comparison graph is acyclic. It is finite because the hom-4 quotient is finite and there are finitely many normalized admitted contexts. Formula (9) supplies injective hom-5 support.
+
+The certificate gives the explicit bounds
+\[
+-121233\leq\rho\leq80822,
+\qquad
+\text{hom-5 path length}\leq202055.
+\]
+These bounds are loose; their purpose is to make finiteness explicit.
+
+The executable verification is `r8_rank5_check.py`.
+
+### Scope of this support theorem
+
+It covers the stated hom-3 and hom-4 path contexts. It does **not** cover arbitrary hom-2 word whiskering, which can change a primitive \(D_i\) into a differently weighted \(D_j\). It also excludes the K18 joins, the separate formal higher-input presentations, and unspecified additional generators or equations.
+
+It is therefore a support theorem for the current finite comparison presentation, not yet requirement 2 for a complete globular theory.
+
+## 5. Two broader completion attempts expose additional restrictions
+
+These results explain why repairing only the generator-to-composite defect does not solve Q1.
+
+### 5.1 A finite completion can handle positive composite images
+
+For a weak inner class \(K\), define the finite groupoid
+\[
+G_2(E)(u,v)=
+\{g\in\mathbb F_2^{E_K}:\partial g=[u]+[v]\}.
+\]
+Composition is addition over \(\mathbb F_2\).
+
+For every positive seed \(\alpha:s\to t\) and \(g:t\to u\), add
+\[
+j[\alpha,g]:s\to u,
+\]
+with \(j[\alpha,0]=\alpha\), and impose
+\[
+j[\alpha,g];e=j[\alpha,g+[e]].
+\tag{11}
+\]
+
+These contractions terminate and are confluent: their left sides have sorts “positive, inner,” so two reductions cannot overlap in one edge. The original path category embeds because an inner path in a DAG is determined by its edge-parity vector. Killing \(E\) identifies every \(j[\alpha,g]\) with \(\alpha\).
+
+This construction is natural for comparison functors sending inner edges to inner paths and positive seeds to **positive composite paths**. The extension transports the final positive factor by the image parity vector.
+
+It still fails the globular degeneration in §1, because that degeneration sends a positive arrow to an identity.
+
+There is also a higher-dimensional obstruction. In the actual inner diamond from K19, write
+\[
+P=p;e,\qquad Q=q;f,
+\]
+and retain its existing comparison \(D:P\Rightarrow Q\). With \(A=h_z\), define
+\[
+a=j[A,[q]],\qquad
+b=j[A,[p]+[e]+[f]].
+\]
+There are distinct normal generators \(X,Y\) satisfying
+\[
+aP=X,\quad aQ=Y,\qquad
+bP=Y,\quad bQ=X.
+\tag{12}
+\]
+Whiskering \(D\) gives
+\[
+a[D]:X\Rightarrow Y,
+\qquad
+b[D]:Y\Rightarrow X.
+\]
+
+Thus this finite completion introduces opposite **whiskered** comparisons at the next dimension. It cannot inherit the preceding DAG support proof recursively.
+
+### 5.2 Unrestricted free division is infinite
+
+Instead, freely adjoin divisions \(D_e(f)\) for arbitrary positive \(f\), subject only to
+\[
+D_e(f);e=f.
+\tag{13}
+\]
+Flatten composition into words and contract (13), including in division arguments.
+
+Counting primitive letters and division constructors proves termination: each contraction reduces that count by two. Reductions at disjoint positions commute. A reduction in another reduction’s argument also commutes with it, because the outer rule neither duplicates nor deletes that argument. Hence normal forms are unique.
+
+On the same inner diamond, set
+\[
+a_0=A,\qquad
+a_{n+1}=D_p\!\bigl(D_e(a_n;f)\bigr);q.
+\tag{14}
+\]
+Every \(a_n\) has the same boundary. These expressions are irreducible and have weights \(1+4n\), so they are pairwise distinct.
+
+Therefore **unrestricted free division saturation is already infinite on this finite comparison diagram**. This concerns that specific division rule; it is not an infinitude theorem for every possible lax-interchange theory.
+
+Both constructions and their proofs are supplied in `r8_substitution_notes.md`, with checks in `r8_substitution_check.py`.
+
+## 6. What remains unresolved
+
+For the questions as stated:
+
+| Question | Result obtained | Remaining gap |
+|---|---|---|
+| Q1 | An actual globular degeneration refutes the current K18 family | No obstruction to every possible completion |
+| Q2 | Five more raw lift constraints; scoped support through hom-dimension 5 | Six lifts remain; exactness through hom-dimension 6 is unproved |
+| Q3 | Four-sign rule; 135 formal input instances; 33 disjoint variation equations; 34 higher comparison types | Arbitrary overlapping and iterated variables are not covered |
+| Q4 | No derivation or complete countermodel | K15 remains an explicit convention here |
+| Q5 | No complete construction or general impossibility proof | Substitution closure remains the central unresolved condition |
+
+To reproduce the new calculations, extract the archive and run, with Python 3.10 or later:
+
+```bash
+python3 r8_lifts_check.py
+python3 r8_variation_check.py
+python3 r8_substitution_check.py
+python3 r8_rank5_check.py
+```
+
+All four checks passed. They use the Python standard library and the included unchanged earlier-round dependencies.

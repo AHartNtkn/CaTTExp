@@ -189,3 +189,757 @@ Any of the following:
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
 
+# Researcher Response
+
+**Question 1 has an affirmative answer, using the results in §2 as premises.** The construction below proves both
+\[
+\mathrm{RC}(3)(\Gamma_0)
+\qquad\text{and}\qquad
+\mathrm{RC}(3)(\Gamma),
+\]
+where
+\[
+\Gamma=(D^2*_0D^2)\uparrow\operatorname{Var}(D^2*_0D^2)
+\]
+and \(\Gamma_0\) is obtained from \(\Gamma\) by deleting \(U_A,U_B\).
+
+The new ingredient for \(\Gamma_0\) is a choice of exchange orientation that agrees with serialization at both possible nontrivial cuts. It has exactly one branching, involving two disjoint swaps. The extension from \(\Gamma_0\) to \(\Gamma\) then uses normal forms whose four relevant edges are precisely the edges of the interchange square in §2 item 21.
+
+I use
+\[
+\alpha\cdot\beta:=\alpha*_1\beta,\qquad
+H;K:=H*_2K.
+\]
+Parentheses displayed below are part of the syntax. For parallel full terms \(s,t\) on a genuine pasting context \(P\), write
+\[
+[s,t]_P:=\operatorname{coh}_{P,s\to t}[\mathrm{id}].
+\]
+All uses of this notation below specify such a \(P\).
+
+## 1. The strict 2-cells and the choice of exchange orientation
+
+Write the original two 2-discs as
+\[
+A:f_0\Rightarrow f_1:x\to y,
+\qquad
+B:g_0\Rightarrow g_1:y\to z.
+\]
+In \(\Gamma_0\), put
+\[
+a=A^-,\quad a'=A^+,\quad b=B^-,\quad b'=B^+.
+\]
+The other 2-generators are
+\[
+F_i:f_i^-*_0Y\Rightarrow X*_0f_i^+,
+\qquad
+G_j:g_j^-*_0Z\Rightarrow Y*_0g_j^+.
+\]
+
+For the strict calculation only, suppress parentheses and write the paths \(x^-\to z^+\) as
+\[
+p_{ij}=f_i^-g_j^-Z,\qquad
+q_{ij}=f_i^-Yg_j^+,\qquad
+r_{ij}=Xf_i^+g_j^+.
+\]
+
+Use \(A,B,F,G\) as **event labels**, distinct from the individual CaTT generators:
+
+- \(A\) increases \(i\); it uses \(a\) before \(F\), and \(a'\) after \(F\).
+- \(B\) increases \(j\); it uses \(b\) before \(G\), and \(b'\) after \(G\).
+- \(G\) changes a \(p\)-path to a \(q\)-path.
+- \(F\) changes a \(q\)-path to an \(r\)-path.
+
+Each event can be used at most once, and \(G\) precedes \(F\) when both are used. The independent pairs are exactly
+\[
+(A,B),\qquad(A,G),\qquad(F,B).
+\]
+
+Orient their exchanges by
+\[
+AB\longrightarrow BA,\qquad
+AG\longrightarrow GA,\qquad
+FB\longrightarrow BF. \tag{1}
+\]
+
+For an admissible event word \(w\), define
+\[
+m(w)=
+[A\text{ precedes }B]+
+[A\text{ precedes }G]+
+[F\text{ precedes }B],
+\]
+with a summand equal to zero when one of its letters is absent. Each reduction decreases \(m\) by one.
+
+Two reductions cannot overlap: every left side of (1) starts in \(\{A,F\}\) and ends in \(\{B,G\}\). Two disjoint reductions require all four events. The only admissible branching is
+\[
+\begin{aligned}
+AGFB&\longrightarrow GAFB\longrightarrow GABF,\\
+AGFB&\longrightarrow AGBF\longrightarrow GABF.
+\end{aligned} \tag{2}
+\]
+Both routes then continue to \(GBAF\).
+
+Thus every strict 2-cell has a unique normal event word. For the four strict 2-cells using every event, these words are:
+
+| Order of the dependent pairs | Normal word |
+|---|---|
+| \(A<F,\ B<G\) | \(BGAF\) |
+| \(F<A,\ B<G\) | \(BGFA\) |
+| \(A<F,\ G<B\) | \(GBAF\) |
+| \(F<A,\ G<B\) | \(GBFA\) |
+
+The orientation matters because it agrees with **right-column-first serialization at every nonpoint cut**:
+
+| Strict 2-cell sector | Possible nonpoint cut | Left-column events | Right-column events |
+|---|---|---|---|
+| \(p\to q\) | \(y^-\) | \(A\) | a subword of \(BG\) or \(GB\) |
+| \(q\to r\) | \(y^+\) | a subword of \(AF\) or \(FA\) | \(B\) |
+| \(p\to r\) | none | — | — |
+
+For the last row, the source and target paths have common vertices only \(x^-,z^+\). Consequently every head with a \(p\to r\) value has one retained nonpoint \(0\)-column.
+
+The remaining sectors are covered by the same-cut cases \(p\to p,q\to q,r\to r\), by the local disc cylinders \(x^-\to y^+\) and \(y^-\to z^+\), or by genuine pasting contexts with fixed path factors. In particular, the \(q\to q\) frame can be
+\[
+C_m*_0D^1(Y)*_0C_n.
+\]
+The fixed middle edge must be retained.
+
+## 2. The serialization comparison and its 4-dimensional laws
+
+The combinatorial calculation above needs a compatibility with evaluation. Here is the additional term construction.
+
+### 2.1 Serialization of two columns
+
+On
+\[
+P=D^2(u)*_0D^2(v),
+\]
+write
+\[
+u:s_0\Rightarrow s_1,\qquad v:t_0\Rightarrow t_1.
+\]
+Define
+\[
+\begin{aligned}
+R(u,v)&=(1_{s_0}*_0v)\cdot(u*_01_{t_1}),\\
+L(u,v)&=(u*_01_{t_0})\cdot(1_{s_1}*_0v).
+\end{aligned}
+\]
+Both have literal source \(s_0*_0t_0\) and target \(s_1*_0t_1\). Choose
+\[
+\rho_{u,v}=[u*_0v,R(u,v)]_P,
+\qquad
+\chi_{u,v}=[L(u,v),R(u,v)]_P. \tag{3}
+\]
+
+The identity 2-factors in these expressions are retained.
+
+For \(AG\) and \(FB\), the arities of the exchange are respectively
+\[
+D^2(a)*_0D^2(G_j),
+\qquad
+D^2(F_i)*_0D^2(b').
+\]
+For \(AB\), retain the appropriate fixed path:
+\[
+\begin{array}{c|c}
+p\text{-sector}&D^2(a)*_0D^2(b)*_0D^1(Z),\\
+q\text{-sector}&D^2(a)*_0D^1(Y)*_0D^2(b'),\\
+r\text{-sector}&D^1(X)*_0D^2(a')*_0D^2(b').
+\end{array} \tag{4}
+\]
+The two descriptions of the \(q\)-sector exchange, obtained by placing \(Y\) with either adjacent column, are compared by a full 4-coherence on the middle arity in (4).
+
+After substituting the actual generators, the path corrections from §2 items 17 and 20 convert these terms to exchanges between the chosen padded word forms. No arbitrary 1-term is split at \(y^\pm\).
+
+### 2.2 Serialization versus multiplication
+
+Work on the genuine pasting context
+\[
+C_2(u,u')*_0C_2(v,v'),
+\]
+with
+\[
+u:s_0\Rightarrow s_1,\quad u':s_1\Rightarrow s_2,
+\qquad
+v:t_0\Rightarrow t_1,\quad v':t_1\Rightarrow t_2.
+\]
+
+Let
+\[
+I:(u*_0v)\cdot(u' *_0v')
+\Rightarrow
+(u\cdot u')*_0(v\cdot v')
+\]
+be the usual interchange coherence.
+
+Define
+\[
+J:R(u,v)\cdot R(u',v')
+\Rightarrow R(u\cdot u',v\cdot v') \tag{5}
+\]
+by this finite recipe:
+
+1. Reassociate the four factors to isolate
+   \[
+   (u*_01_{t_1})\cdot(1_{s_1}*_0v').
+   \]
+2. Apply \(\chi_{u,v'}\).
+3. Reassociate to group the two right-column factors and the two left-column factors.
+4. Apply the column folds
+   \[
+   \begin{aligned}
+   &(1_{s_0}*_0v)\cdot(1_{s_0}*_0v')
+   \Rightarrow1_{s_0}*_0(v\cdot v'),\\
+   &(u*_01_{t_2})\cdot(u' *_01_{t_2})
+   \Rightarrow(u\cdot u')*_01_{t_2}.
+   \end{aligned}
+   \]
+
+Now the two 3-terms
+\[
+I;\rho_{u\cdot u',\,v\cdot v'}
+\quad\text{and}\quad
+(\rho_{u,v}*_1\rho_{u',v'});J \tag{6}
+\]
+have the same literal source and target. Each uses all four 2-variables and their boundaries. Therefore
+\[
+\left[
+I;\rho,\,
+(\rho*_1\rho);J
+\right]_{C_2*_0C_2} \tag{7}
+\]
+is the required 4-cell.
+
+When the column representatives use their own multiplication \(m^L,m^R\), append those folds and their naturality comparisons to (6). This gives the same law for
+\[
+M=I;(m^L*_0m^R).
+\]
+
+For longer column words, make every entry a separate variable of
+\[
+C_M*_0C_N.
+\]
+Both subdivision routes are then explicit full 3-terms on this genuine pasting context, so their comparison is a 4-coherence there. **This comparison is formed before the marked variables are evaluated.**
+
+Updating one marked 2-variable by a 3-cell uses
+\[
+V_M(0,\ldots,1,\ldots,0)*_0C_N
+\quad\text{or}\quad
+C_M*_0V_N(0,\ldots,1,\ldots,0).
+\]
+These are precisely top-2-argument naturality instances: depth \(0\) in the context and depth \(1\) in the 3-term. They are within BMOSV Theorem 3.1. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+This establishes the serialization interface for arbitrary retained column lengths, including a column whose evaluated value is a composite.
+
+## 3. Sorting padded words
+
+Use the padded word convention of §2 item 17. For an enabled event \(e\), let \(E_e\) be its generator with the fixed raw whiskers, and write
+\[
+S_e=\sigma E_e,\qquad T_e=\tau E_e.
+\]
+For \(w=e_1\cdots e_k\), put
+\[
+\begin{aligned}
+\langle w\rangle_{U,V}
+=\operatorname{LF}\bigl[
+&\kappa(U,S_{e_1}),E_{e_1},
+\kappa(T_{e_1},S_{e_2}),E_{e_2},\ldots,\\
+&E_{e_k},\kappa(T_{e_k},V)
+\bigr],
+\end{aligned} \tag{8}
+\]
+where \(\operatorname{LF}\) denotes the fixed left-associated vertical composite.
+
+The empty-word form is the fixed path form. Comparisons \(\kappa(W,W)\) are retained until an explicit path fold removes them.
+
+For a strict value \(\delta\), define
+\[
+N_\delta(U,V)=\langle n(\delta)\rangle_{U,V}, \tag{9}
+\]
+where \(n(\delta)\) is its normal event word.
+
+Let \(\operatorname{sort}_w\) be the 3-term that applies the **leftmost** available reduction in (1), using (3)–(4) and the fixed padding conversions, until the word is normal.
+
+For composable values define multiplication by
+\[
+\mu_{\delta,\epsilon}
+=
+\mu^{\mathrm{flat}}_{\delta,\epsilon};
+\operatorname{sort}_{\,n(\delta)n(\epsilon)}. \tag{10}
+\]
+Here \(\mu^{\mathrm{flat}}\) is the previously constructed word fold: it contracts the path comparisons at the join and produces the single padded concatenation.
+
+### The one new sorting diamond
+
+Retain the seam between the two exchanged blocks. On
+\[
+P=D^3(s)*_1D^2(k)*_1D^3(t),
+\]
+write
+\[
+s:S_0\Rightarrow S_1,\qquad
+t:T_0\Rightarrow T_1.
+\]
+The terms
+\[
+\begin{aligned}
+D_1&=((s*_1k)*_1T_0);
+       ((S_1*_1k)*_1t),\\
+D_2&=((S_0*_1k)*_1t);
+       ((s*_1k)*_1T_1)
+\end{aligned} \tag{11}
+\]
+have literal 2-source
+\[
+(S_0\cdot k)\cdot T_0
+\]
+and literal 2-target
+\[
+(S_1\cdot k)\cdot T_1.
+\]
+Both are full in \(P\). Thus
+\[
+[D_1,D_2]_P \tag{12}
+\]
+evaluated at the \(AG\) and \(FB\) exchanges fills (2).
+
+The surrounding padded word is handled by the established vertical fold laws. A swap is kept as a whole 3-variable in contexts such as
+\[
+D^2(\text{prefix})*_1D^3(s)*_1D^2(\text{suffix}),
+\]
+with separate seam discs when required.
+
+This gives a finite comparison between any two sorting routes. If their first reductions agree, continue with their suffixes. If they differ, use (12), then continue. The measure \(m\) makes this recursion terminate.
+
+Consequently, the associativity 4-cell for (10) is constructed by:
+
+1. applying the old flat-word and path-fold laws to put both routes over the same padded concatenation;
+2. moving swaps through those folds using (7) and the whole-3-variable vertical comparisons;
+3. comparing the resulting sorting routes by (12).
+
+The unit and subdivision laws use the same construction. There is no overlapping exchange branching.
+
+## 4. Evaluation fusion on the 2-skeleton
+
+This is the step needed to pass from the finite event calculation to arbitrary CaTT terms.
+
+### 4.1 Loss of a cut
+
+Suppose a two-column reference frame evaluates to a value using both \(G\) and \(F\). Its cut must map to \(x^-\) or \(z^+\). One column is therefore point-supported.
+
+By the support lemma, its complete contribution is literally a term
+\[
+q:\ell_0\Rightarrow\ell_1
+\]
+over that point. Leave the other 2-variable \(z:s\Rightarrow t\) unevaluated. Use
+\[
+B_q(z):
+q*_0z
+\Rightarrow
+\bigl(\kappa(\ell_0*_0s,s)\cdot z\bigr)
+\cdot\kappa(t,\ell_1*_0t). \tag{13}
+\]
+This is a full 3-coherence on \(D^2(z)\): \(q,\ell_0,\ell_1\) are terms over its source object, and both endpoints use \(z\).
+
+For \(h:z\Rightarrow z'\), the two routes
+\[
+(q*_0h);B_q(z')
+\]
+and
+\[
+B_q(z);
+\bigl((\kappa(\ell_0*_0s,s)*_1h)
+       *_1\kappa(t,\ell_1*_0t)\bigr)
+\]
+are full parallel 3-terms on \(D^3(h)\). Their comparison gives the slot-update law for (13).
+
+The comparison between matrix evaluation and this point absorption is also formed before evaluating \(z\), on \(D^2(z)\), or on \(C_N\) when the other column is a reference word. Thus \(z\) may subsequently be assigned an arbitrary term with the whole global value.
+
+An inactive nonpoint column uses the literal path factorization and the path comparison \(\zeta\) from §2 items 12 and 20.
+
+### 4.2 Normalizers
+
+For a 2-head \(T\), perform the literal factorization
+\[
+T=H[\eta]
+\]
+through its retained genuine frame \(R\). Keep every active 2-slot. Choose the fixed reference word or grid \(B_H\), with the same literal 1-boundaries as \(H\), and put
+\[
+v_H=[H,B_H]_R.
+\]
+
+Define
+\[
+\nu_T=v_H[\eta];D_{B_H,\eta}, \tag{14}
+\]
+where the evaluator \(D\) has these clauses:
+
+| Reference expression | Evaluation |
+|---|---|
+| Marked 2-slot | Its proper-child normalizer |
+| Path comparison or identity | The established path evaluator |
+| Vertical product | Child evaluations followed by (10) |
+| Two active horizontal columns | The matrix evaluator followed by \(\rho\) and the fixed padding conversions |
+| Inactive nonpoint column | Literal path factorization and \(\zeta\) |
+| Point column | (13), formed with the other slot unevaluated, followed by that slot’s evaluation |
+
+The two-active-column clause is applicable to the \(p\to q\) and \(q\to r\) sectors because the column words are forced. Right-first serialization agrees with (1). Longer reference columns are handled by (7) before evaluation.
+
+For a relative 2-term \(u\), let
+\[
+\lambda_u:u\Rightarrow B_u
+\]
+be the recursive relative normalizer using these same operations. The fusion cell is
+\[
+\mathcal F_{u,\sigma}:
+\nu_{u[\sigma]}
+\Longrightarrow
+\lambda_u[\sigma];D_{B_u,\sigma}. \tag{15}
+\]
+
+Its construction is by induction on the syntax of \(u\):
+
+- **Slot:** substitute \(h=\nu_{\sigma z}\) into the generic \(D^3(h)\) insertion-transport law.
+- **Path:** use path fusion.
+- **Vertical product:** use the child fusion cells, flat-fold naturality, and the associativity/subdivision comparisons for (10).
+- **Horizontal product:** use matrix fusion, then (7) and its marked-slot naturality. If a column is lost, apply the path clause or (13).
+- **Head:** retain the first step \(v_H\) in (14), and apply the preceding finite-fold comparisons. When a retained column becomes point-supported, factor its terms literally through the point before forming the comparison on the surviving \(C_n\).
+
+The slot clause permits \(\sigma z\) to have the entire global value: it uses the already defined \(\nu_{\sigma z}\) as the value of a 3-variable. It does not recursively normalize an assembled expression.
+
+### 4.3 Arbitrary 3-heads
+
+A retained active \(0\)-column of a 3-head is
+\[
+V_n(k_1,\ldots,k_n),
+\]
+with arbitrary \(k_i\geq0\). Every original 3-link is retained. Two active columns give the horizontal product of two such frames, with the fixed path factors retained.
+
+For a relative head
+\[
+H:S\Rightarrow T
+\]
+on a retained frame \(R\), form \(\lambda_S,\lambda_T\). Let
+\[
+W:B_S\Rightarrow B_T
+\]
+update every retained 3-link in the selected reference expression. A slot with \(k_i=0\) contributes an identity 3-cell.
+
+Then
+\[
+H;\lambda_T
+\quad\text{and}\quad
+\lambda_S;W
+\]
+are parallel and full in \(R\). The first uses every retained variable through \(H\); the second uses every 3-link through \(W\) and every remaining 2-slot through the reference expression. Hence
+\[
+\Xi_H=[H;\lambda_T,\lambda_S;W]_R \tag{16}
+\]
+is a valid 4-coherence.
+
+Evaluate (16), apply (15), and use the finite-fold naturality laws. Structural induction on a 3-term \(h:S\Rightarrow T\) gives
+\[
+\Lambda_h:h;\nu_T\Longrightarrow\nu_S. \tag{17}
+\]
+
+Every primitive in \(\nu_T\) is a coherence between full 2-terms on a genuine pasting context. Reverse coherences and their 4-dimensional cancellation comparisons are available on the same contexts. Therefore, for parallel \(h,k:S\Rightarrow T\), compose
+\[
+h;\nu_T
+\xRightarrow{\Lambda_h}
+\nu_S
+\xRightarrow{\overline{\Lambda_k}}
+k;\nu_T
+\]
+and cancel \(\nu_T\).
+
+This constructs
+\[
+\operatorname{Fill}_{\Gamma_0}(h,k):h\longrightarrow k.
+\]
+
+Thus
+\[
+\boxed{\mathrm{RC}(3)(\Gamma_0).} \tag{18}
+\]
+
+## 5. Restoring \(U_A,U_B\): fixed representatives
+
+The generating 3-cells are
+\[
+\begin{aligned}
+U_A&:(a*_0Y)\cdot F_1
+ \Rightarrow F_0\cdot(X*_0a'),\\
+U_B&:(b*_0Z)\cdot G_1
+ \Rightarrow G_0\cdot(Y*_0b').
+\end{aligned}
+\]
+
+Define actual weak terms
+\[
+\begin{aligned}
+u_j&=U_A*_0g_j^+,& u&=u_1,\\
+v_i&=f_i^-*_0U_B,& v&=v_0,\\
+e_j&=f_0^-*_0G_j,& d_i&=F_i*_0g_1^+,\\
+c&=(f_0^-*_0Y)*_0b',&
+a_R&=(a*_0Y)*_0g_1^+.
+\end{aligned}
+\]
+
+Choose the path associators
+\[
+\begin{aligned}
+K_j &: f_0^-*_0(Y*_0g_j^+)
+      \Rightarrow(f_0^-*_0Y)*_0g_j^+,\\
+K^i &: f_i^-*_0(Y*_0g_1^+)
+      \Rightarrow(f_i^-*_0Y)*_0g_1^+,
+\end{aligned}
+\]
+with \(K_1=K^0=K\) literally.
+
+The following are well-typed representatives of all sixteen single-generator strict 3-values:
+
+| \(i\) | \(A_i\), using \(U_A\) | \(B_i\), using \(U_B\) |
+|---|---|---|
+| 1 | \(U_A\) | \(U_B\) |
+| 2 | \(u_0\) | \(v_0\) |
+| 3 | \(u_1\) | \(v_1\) |
+| 4 | \((e_0\cdot K_0)*_1u_0\) | \((v_0*_1K^0)*_1d_0\) |
+| 5 | \((e_1\cdot K_1)*_1u_1\) | \((v_1*_1K^1)*_1d_1\) |
+| 6 | \(c*_1u\) | \((v*_1K)*_1a_R\) |
+| 7 | \((\tau v\cdot K)*_1u\) | \((v*_1K)*_1\sigma u\) |
+| 8 | \((\sigma v\cdot K)*_1u\) | \((v*_1K)*_1\tau u\) |
+
+Here \(\sigma u,\tau u,\sigma v,\tau v\) are 2-terms of \(\Gamma_0\). In particular, the displayed \(A_i\) do not use \(U_B\), and the \(B_i\) do not use \(U_A\).
+
+The list is exhaustive. For a single \(U_A\), its right 1-whisker is an identity, \(g_0^+\), or \(g_1^+\); its left 1-whisker is point-supported. After moving a possible \(b'\)-suffix to the prefix, the numbers of possible prefix values are respectively \(1,2,5\). They are represented by the eight \(A_i\).
+
+For \(U_B\), the corresponding left 1-whiskers are an identity, \(f_0^-\), or \(f_1^-\). Move a possible \(a\)-prefix to the suffix. The numbers of possible suffix values are \(1,5,2\), represented by the \(B_i\).
+
+These restrictions follow from monotonicity of the indices and of the position of the vertical edge. For example, a prefix ending at \((f_0^-Y)g_j^+\) cannot use \(A\) or \(F\): neither change can subsequently be reversed.
+
+Each strict 3-cell uses each of \(U_A,U_B\) at most once. The only two-step routes using both are
+\[
+B_7;A_7,\qquad A_8;B_8. \tag{19}
+\]
+They represent the same strict 3-cell.
+
+## 6. Normalizing a single use of a 3-generator
+
+Two elementary 4-constructions suffice beyond the established sequentialization.
+
+### 6.1 Transporting a 2-cell coefficient
+
+Let
+\[
+h:c\Rightarrow d,\qquad z:\alpha\Rightarrow\beta
+\]
+be generic 3-variables. For \(k=0,1\), work on
+\[
+P_k=D^3(h)*_kD^3(z).
+\]
+The routes
+\[
+\begin{aligned}
+L_k&=(h*_k\alpha);(d*_kz),\\
+R_k&=(c*_kz);(h*_k\beta)
+\end{aligned}
+\]
+are parallel and full. Thus
+\[
+[L_k,R_k]_{P_k} \tag{20}
+\]
+transports a coefficient comparison supplied by RC(2) past the distinguished 3-cell.
+
+When a 1-dimensional seam needs correction, retain its 2-disc:
+\[
+D^3(h)*_1D^2(k)*_1D^3(z).
+\]
+
+### 6.2 Distributing a horizontal 2-cell coefficient
+
+Take
+\[
+z:\alpha\Rightarrow\beta,\qquad
+\alpha,\beta:p\Rightarrow q,
+\qquad c:r\Rightarrow s.
+\]
+Work on
+\[
+P=D^3(z)*_0D^2(c).
+\]
+
+On the source boundary choose
+\[
+\delta_\alpha:
+\alpha*_0c
+\Rightarrow
+(\alpha*_0r)\cdot(q*_0c),
+\]
+using \(D^2(\alpha)*_0D^2(c)\). Choose the reverse-oriented target comparison \(\overline{\delta_\beta}\).
+
+Then
+\[
+z*_0c
+\quad\text{and}\quad
+\delta_\alpha;
+\bigl((z*_0r)*_1(q*_0c)\bigr);
+\overline{\delta_\beta} \tag{21}
+\]
+are parallel full 3-terms on \(P\). Their 4-comparison is \([\,\cdot,\cdot\,]_P\).
+
+The other order uses
+\[
+\alpha*_0c
+\Rightarrow
+(p*_0c)\cdot(\alpha*_0s).
+\]
+The left-coefficient version uses \(D^2(c)*_0D^3(z)\).
+
+These coherences are formed with the source and target of \(z\) as whole 2-variables. Only afterward is \(z\) replaced by \(U_A\) or \(U_B\).
+
+### 6.3 The unary normalization procedure
+
+Sequentialization reduces a 3-term with one nonidentity strict generator to structural 3-pads and a term obtained by whiskering that generator.
+
+Apply (21) until only 1-whiskers and 2-cell prefixes/suffixes remain. Normalize the 1-whiskers on their actual path contexts; the relevant universal arities are
+\[
+P_{\mathrm{left}}*_0D^3(z)*_0P_{\mathrm{right}}.
+\]
+Normalize the 2-cell coefficients by RC(2), and transport those comparisons using (20).
+
+Finally:
+
+- for \(U_A\), move the possible \(b'\)-suffix to the prefix;
+- for \(U_B\), move the possible \(a\)-prefix to the suffix.
+
+The result has one of the sixteen strict values above. A further coefficient normalization targets the corresponding displayed \(A_i\) or \(B_i\). For example, the prefix of \(A_7\) is chosen to be the actual term \(\tau v\cdot K\); it is not identified syntactically with another presentation of its strict value.
+
+All structural 3-pads produced in this process lie in \(\Gamma_0\).
+
+## 7. Actual-boundary normal forms and the double-generator case
+
+Fix a representative \(W_h\) for each strict 3-value \(h\), using the preceding table and
+\[
+W_{AB}=B_7;A_7
+\]
+for the value using both generators.
+
+First give representatives with the same strict 1-boundaries a common choice of actual 1-boundaries \(\bar p,\bar q\), using path comparisons. Use the same framing for all four edges in (19).
+
+For a particular problem
+\[
+T,T':s\Rightarrow t,
+\]
+let the actual common 1-boundaries be \(p,q\). Choose
+\[
+L:p\Rightarrow\bar p,\qquad
+R:\bar q\Rightarrow q,
+\]
+and put
+\[
+W_h^{p,q}=(1_L*_1W_h)*_11_R.
+\]
+Its 2-source and 2-target are literally
+\[
+S_h^{p,q}=(L\cdot\sigma W_h)\cdot R,
+\qquad
+T_h^{p,q}=(L\cdot\tau W_h)\cdot R.
+\]
+
+RC(2) now applies to genuinely parallel 2-terms. Fix
+\[
+\kappa_s:s\Rightarrow S_h^{p,q},
+\qquad
+\kappa_t:T_h^{p,q}\Rightarrow t,
+\]
+and define the 3-normal form
+\[
+\mathcal N_h(s,t)
+=(\kappa_s;W_h^{p,q});\kappa_t. \tag{22}
+\]
+
+The result of unary normalization differs from (22) only in its structural 3-pads. By (18), any such left pad is 4-connected to \(\kappa_s\), and any such right pad is 4-connected to \(\kappa_t\). Whiskering these comparisons by \(W_h^{p,q}\) gives the required 4-cell to (22).
+
+### The four exact corners
+
+Put
+\[
+v^{(0)}=\sigma v,\quad v^{(1)}=\tau v,
+\qquad
+u^{(0)}=\sigma u,\quad u^{(1)}=\tau u,
+\]
+and define
+\[
+S_{ij}=(v^{(i)}\cdot K)\cdot u^{(j)}.
+\]
+The four selected edges have literal boundaries
+\[
+\begin{array}{c|c}
+A_8&S_{00}\to S_{01},\\
+A_7&S_{10}\to S_{11},\\
+B_7&S_{00}\to S_{10},\\
+B_8&S_{01}\to S_{11}.
+\end{array}
+\]
+
+Thus the two paths in (19) are exactly
+\[
+\begin{aligned}
+B_7;A_7
+&=((v*_1K)*_1\sigma u);
+  ((\tau v*_1K)*_1u),\\
+A_8;B_8
+&=((\sigma v*_1K)*_1u);
+  ((v*_1K)*_1\tau u).
+\end{aligned} \tag{23}
+\]
+The 4-cell of §2 item 21 applies directly to (23).
+
+For an arbitrary 3-term using both generators, sequentialization produces two unary terms separated by structural 3-pads. Normalize the unary terms as above. The middle pad then becomes a 3-term from one framed \(S_{ij}\) to itself. RC(3) in \(\Gamma_0\) compares it with the identity 3-cell. Replace the outer pads by the fixed ones in (22).
+
+The resulting route is one of (23). Apply the supplied interchange when necessary.
+
+Outer framing is compatible with this step by coherences on
+\[
+D^2(L)*_1D^3(v)*_1D^2(K)*_1D^3(u)*_1D^2(R).
+\]
+This is a genuine pasting context.
+
+## 8. The resulting filler and scope
+
+The construction gives, for every 3-term \(T:s\Rightarrow t\), a 4-term
+\[
+\eta_T:T\longrightarrow\mathcal N_{\pi T}(s,t).
+\]
+Each elementary comparison is available in the reverse direction as well: reverse the endpoints of its genuine-pasting coherence, or apply RC(3) in \(\Gamma_0\) with reversed arguments.
+
+For parallel \(T,T'\) with equal strict image, the required explicit recursive filler is therefore
+\[
+\boxed{
+\operatorname{Fill}_{\Gamma}(T,T')
+=
+\eta_T*_3\overline{\eta_{T'}}:
+T\longrightarrow T'.
+} \tag{24}
+\]
+
+This proves
+\[
+\boxed{
+\mathrm{RC}(3)\bigl((D^2*_0D^2)\uparrow
+\operatorname{Var}(D^2*_0D^2)\bigr).
+}
+\]
+
+By §2 item 3, it supplies
+\[
+K(Q,B,\operatorname{Var}Q)
+=
+\operatorname{Fill}_{\Gamma}(a_c,b_c)
+\]
+for every 3-dimensional coherence over the horizontal two-disc, with the lower lifts fixed arbitrarily.
+
+The finite checks performed for this construction verified the event-word branching calculation, the literal boundaries and full support of the serialization-multiplication and disjoint-swap schemes, and the literal types of the sixteen unary representatives and four corner edges. They are symbolic checks of these schemes, not a complete CaTT formalization.
+
+This settles question 1. The construction does not establish RC(3) for all cylinders, RC(4) for the 3-disc cylinder, or the 5-cell comparison required by question 5.

@@ -131,3 +131,499 @@ Any of the following:
 - T. Campion, pasting theorem for loop-free complexes, arXiv 2311.00200 (Thm 5.11, Rem. 5.13).
 - E. Finster, S. Mimram, *A type-theoretical definition of weak ω-categories*, LICS 2017.
 - T. J. Mikhail, *A type-theoretic definition of lax (∞,∞)-limits*, arXiv 2412.13310.
+
+# Researcher Response
+
+**Question 2 has an affirmative answer. The unique-order hypothesis on the 3-generators can be removed.**
+
+The additional ingredient is a comparison between different 2-dimensional expressions surrounding one 3-generator. Global RC(2), applied with a fresh 2-variable, supplies that comparison; depth-1 naturality moves it across the 3-generator.
+
+This gives the following theorem.
+
+> **3-generator extension theorem.** Let \(\Lambda\) be a CaTT context of dimension at most \(2\), with acyclic generating 1-graph. Let
+> \[
+> \Gamma=
+> \bigl(\Lambda,\ z_1:A_1\to B_1,\ldots,z_k:A_k\to B_k\bigr),
+> \]
+> where each \(A_i,B_i\) is a pair of parallel 2-terms of \(\Lambda\). Then
+> \[
+> \boxed{\operatorname{RC}(3,\Gamma)
+> \iff
+> \operatorname{RC}(3,\Lambda).}
+> \]
+> There is no restriction on the number, order, whiskering, or composability of the \(z_i\).
+
+For the horizontal cone, this settles the attachment of \(p_\alpha,p_\beta\). Its remaining RC(3) problem lies entirely in its 2-skeleton. At the end, I reduce that 2-skeleton further to a context with four 2-generators.
+
+## 1. Comparing 3-terms modulo 4-terms
+
+Assume \(\operatorname{RC}(3,\Lambda)\). Fix literal parallel 1-terms \(p,q\) of \(\Lambda\).
+
+Define a category \(\mathcal H_\Gamma(p,q)\) as follows:
+
+- objects are 2-terms of the literal type \(p\to q\);
+- arrows are 3-terms, identified when a 4-term connects them;
+- composition is induced by \(*_2\).
+
+All 2-terms of \(\Gamma\) belong to \(\Lambda\), by the support lemma. Thus this definition includes the boundaries of every relevant 3-term.
+
+The relation on arrows is an equivalence relation. Every 4-term of \(\Gamma\) is invertible, since \(\Gamma\) has no 4-generators. Generic 4-dimensional associators and unitors make the induced composition associative and unital. Similarly, every 3-term of \(\Lambda\) is invertible. These are applications of the empty-own-dimension-support invertibility criterion. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+In the rest of the proof, semicolons denote composition in this quotient category, in diagrammatic order. Equality there means that an actual CaTT 4-term exists; it does not mean judgmental equality of raw terms.
+
+### Chosen representatives of strict 2-cells
+
+For each strict 2-cell \(a\) with boundary
+\[
+\pi p\to\pi q,
+\]
+choose a term
+\[
+\widehat a:p\to q
+\qquad\text{with}\qquad
+\pi\widehat a=a.
+\tag{1}
+\]
+
+Such a representative exists with these **literal** boundaries. Lift a binary strict expression for \(a\), inserting path comparisons at its 1-dimensional gluings. Then correct its outside 1-boundaries to \(p,q\). The path comparisons can be chosen to have identity strict images: two 1-terms with the same strict path are terms of that path’s pasting context, so a direct coherence compares them. Acyclicity ensures that the path has distinct vertices.
+
+For each 2-term \(A:p\to q\), choose, using RC(2) in \(\Lambda\),
+\[
+r_A:A\to\widehat{\pi A}.
+\tag{2}
+\]
+These are invertible 3-terms in \(\Lambda\).
+
+For a 3-term \(U:A\to B\), define its normalised arrow by
+\[
+[U]^\nu
+=
+r_A^{-1};U;r_B.
+\tag{3}
+\]
+Its endpoints are the chosen representatives of \(\pi A,\pi B\), and its strict image is \(\pi U\).
+
+The decisive consequence of \(\operatorname{RC}(3,\Lambda)\) is:
+
+> If \(J:A\to B\) is a 3-term of \(\Lambda\), then
+> \[
+> J;r_B=r_A
+> \quad\text{in }\mathcal H_\Gamma(p,q).
+> \tag{4}
+> \]
+
+Indeed, \(\Lambda\) has no nonidentity strict 3-cells. Consequently \(\pi A=\pi B\), and the two sides of (4) are parallel 3-terms of \(\Lambda\) with equal strict images. RC(3) in \(\Lambda\) compares them.
+
+Thus every normalised base 3-arrow is an identity. Any two choices of base 3-transport with the same endpoints agree in this quotient.
+
+## 2. The comparison lemma for a surrounding 2-expression
+
+This is the step that replaces the restrictions on whiskers in the earlier extension lemmas.
+
+Let \(X\) be a fresh 2-variable with a fixed literal 1-boundary. Consider two 2-terms
+\[
+F(X),G(X):p\to q
+\]
+over \((\Lambda,X)\), and assume
+\[
+\pi F(X)=\pi G(X)
+\quad\text{in the free strict 2-category on }(\Lambda,X).
+\tag{5}
+\]
+
+The equality is required **before substituting a particular term for \(X\)**.
+
+By global RC(2), there is a 3-term
+\[
+J(X):F(X)\to G(X)
+\tag{6}
+\]
+in \((\Lambda,X)\).
+
+Now let
+\[
+U:A\to B
+\]
+be a 3-term of \(\Gamma\), where \(A,B\) have the declared literal 1-boundary of \(X\). Apply naturality to \(J\), varying only \(X\), and substitute
+\[
+X^-=A,\qquad X^+=B,\qquad X^\uparrow=U.
+\]
+
+This is a permitted depth-1 application:
+
+- \(X\) is maximal in \((\Lambda,X)\), so the selected set is upward closed and has context depth \(0\);
+- \(J\) has dimension \(3\), while \(X\) has dimension \(2\), so the term depth is \(1\).
+
+Theorem 3.1 of Benjamin–Markakis–Offord–Sarti–Vicary therefore supplies a 4-dimensional naturality comparison. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com) Writing \(F^\uparrow(U)\) and \(G^\uparrow(U)\) for its two actions, this gives
+\[
+F^\uparrow(U);J(B)
+\ \simeq_4\
+J(A);G^\uparrow(U).
+\tag{7}
+\]
+
+Both \(J(A)\) and \(J(B)\) belong to \(\Lambda\), since their substitutions use only 2-terms. Equation (4) therefore identifies them with the chosen endpoint transports.
+
+It follows that
+\[
+\boxed{
+[F^\uparrow(U)]^\nu=[G^\uparrow(U)]^\nu.
+}
+\tag{8}
+\]
+
+Explicitly, the calculation in \(\mathcal H_\Gamma(p,q)\) is
+\[
+\begin{aligned}
+[F^\uparrow(U)]^\nu
+&=
+r_{F(A)}^{-1};F^\uparrow(U);r_{F(B)}
+\\
+&=
+r_{F(A)}^{-1};F^\uparrow(U);J(B);r_{G(B)}
+\\
+&=
+r_{F(A)}^{-1};J(A);G^\uparrow(U);r_{G(B)}
+\\
+&=
+r_{G(A)}^{-1};G^\uparrow(U);r_{G(B)}
+\\
+&=[G^\uparrow(U)]^\nu.
+\end{aligned}
+\tag{9}
+\]
+
+Only RC(2) was used in the enlarged context \((\Lambda,X)\). No instance of RC(3) in that context is assumed.
+
+### Naturality actions versus binary whiskering
+
+For the application below, \(F(X)\) is a binary 2-expression with constants in \(\Lambda\) and exactly one leaf labelled \(X\). Replacing that leaf by \(U\) and evaluating with the standard direct mixed-dimensional compositions gives a binary 3-term, denoted \(F_*(U)\).
+
+We need
+\[
+F^\uparrow(U)\simeq_4 F_*(U).
+\tag{10}
+\]
+This must be proved without invoking RC(3) in \(\Gamma\).
+
+Proceed by induction on the binary expression \(F\). Naturality commutes with substitution, so the induction reduces to the binary heads. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+- For \(F=X\), the comparison is immediate.
+- Constants remain base data.
+- For a binary head, its depth-0 naturality action and its direct binary 3-evaluation are parallel full 3-terms over the corresponding genuine pasting context. Depending on the dimensions of the constant argument, this is of the form
+  \[
+  D^3*_kD^2,\qquad D^2*_kD^3,
+  \]
+  or \(D^3*_0D^1\) and its reverse. If both arguments vary, it is \(D^3*_kD^3\).
+
+A direct full coherence over that pasting context compares the two 3-terms. Substitute the actual arguments and compose with the inductive comparisons.
+
+Thus (10) follows using direct pasting coherences. In particular, (8) holds for the binary actions:
+\[
+\boxed{
+\pi F(X)=\pi G(X)
+\quad\Longrightarrow\quad
+[F_*(U)]^\nu=[G_*(U)]^\nu.
+}
+\tag{11}
+\]
+
+### Why this handles changing 1-whiskers
+
+For example, let \(X:p\to q\) be a 2-variable and let \(\beta:g\to g'\) be a horizontally composable 2-term. Put
+\[
+\begin{aligned}
+F(X)&=(X*_0g)*_1(q*_0\beta),\\
+G(X)&=(p*_0\beta)*_1(X*_0g').
+\end{aligned}
+\]
+These have the same strict image by interchange.
+
+For \(U:A\to B\), equation (7) gives the comparison between
+\[
+\bigl((U*_0g)*_1(q*_0\beta)\bigr);J(B)
+\]
+and
+\[
+J(A);\bigl((p*_0\beta)*_1(U*_0g')\bigr).
+\]
+
+Thus the 1-whisker changes from \(g\) to \(g'\) by naturalising a **3-term in a 2-variable**. No naturality of a 3-term in a 1-variable is required.
+
+## 3. The strict presentation used in the proof
+
+A strict elementary 3-step is a whiskered generator \(C[z_i]\). Here \(C\) is a strict 2-expression with a formal 2-variable \(X\) used once; applying it to \(z_i\) means evaluating that expression on the 3-cell \(z_i\).
+
+The required strict facts are:
+
+1. every strict 3-cell is a vertical composite of elementary 3-steps;
+2. equality between such composites is generated by replacement of equal elementary steps and adjacent exchanges;
+3. two elementary steps \(C[z_i]\), \(D[z_j]\) are equal precisely when \(i=j\) and \(C=D\) as strict expressions with the formal 2-variable.
+
+These are the atom-and-molecule presentation results in *Polygraphs: From Rewriting to Higher Categories*, Appendix D, especially Propositions D.3.9 and D.3.12. [webusers.imj-prg.fr](https://webusers.imj-prg.fr/~yves.guiraud/articles/polybook.pdf?utm_source=chatgpt.com)
+
+The third fact is what makes (11) applicable. Equality of elementary 3-steps gives equality of the surrounding 2-expressions with \(X\) still formal.
+
+### Weak realisations of strict expressions
+
+Every such strict 2-expression has a weak binary realisation \(F(X)\) with literal outside boundary \(p\to q\).
+
+To construct one, lift its binary operations and insert path 2-comparisons wherever a 1-dimensional gluing agrees strictly but not literally. Finally correct its outside boundary to \(p,q\).
+
+All these corrections are constants with respect to \(X\): the 1-boundary of \(X\) is fixed. Thus the resulting expression still has exactly one leaf labelled \(X\), and it has the required strict image.
+
+Its action on \(z_i\) supplies a weak realisation of \(C[z_i]\).
+
+## 4. Normalised evaluation respects strict equality
+
+We now prove that normalised evaluation of a strict vertical composite does not depend on its presentation.
+
+### 4.1 Replacement of an equal elementary step
+
+Suppose
+\[
+C[z_i]=D[z_j].
+\]
+The strict presentation theorem gives \(i=j\) and \(C=D\) as strict 2-expressions with a formal variable.
+
+Choose weak realisations \(F(X),G(X)\), both with outside literal boundary \(p\to q\). Then (5) holds. Applying (11) with \(U=z_i\) gives
+\[
+[F_*(z_i)]^\nu=[G_*(z_i)]^\nu.
+\tag{12}
+\]
+
+This also proves independence from the chosen weak realisation: any two choices have the same formal strict image.
+
+### 4.2 Adjacent exchange
+
+For \(k=0,1\), the basic adjacent exchange is
+\[
+\begin{aligned}
+&(U*_k s_2V)*_2(t_2U*_kV)
+\\
+&\hspace{3em}\simeq_4
+(s_2U*_kV)*_2(U*_k t_2V).
+\end{aligned}
+\tag{13}
+\]
+
+There is a direct 4-coherence for (13) over
+\[
+D^3*_kD^3.
+\]
+Both displayed 3-terms are full over that pasting context and have the same literal 2-source and 2-target.
+
+For a strict adjacent exchange, choose weak realisations whose lower interfaces match literally. Such choices are available by the same path-boundary correction construction as above. Equation (12) permits replacing the original elementary-step realisations by these choices.
+
+Apply (13), then insert the chosen endpoint transports. Intermediate transports cancel as invertible arrows in \(\mathcal H_\Gamma(p,q)\); any alternative base transport is identified with the chosen one by (4).
+
+This proves invariance under adjacent exchange. Whiskering by the surrounding vertical prefix and suffix preserves the resulting 4-comparison.
+
+Therefore both generators of strict equality preserve normalised evaluation. We have proved:
+
+> A strict 3-cell determines a well-defined normalised arrow between the chosen representatives of its strict 2-boundaries.
+
+The argument allows exchanges. It consequently does not require a unique order of the generator labels.
+
+## 5. Every CaTT 3-term has that evaluation
+
+Let \(U:A\to B\) be an arbitrary 3-term of \(\Gamma\), with common literal 1-boundary \(p\to q\).
+
+Use the boundary-corrected sequentialisation established in items 13–14:
+
+- a 3-head over an arity of dimension at most 2 gives a term of \(\Lambda\);
+- a 3-head over a 3-dimensional arity is compared by a 4-term with its binary evaluation, after correcting its literal 1- and 2-boundaries;
+- the inserted corrections use only arguments of dimension at most 2, hence belong to \(\Lambda\);
+- generic interchange and distribution turn the binary evaluation into a vertical sequence of base 3-terms and individually whiskered \(z_i\)'s.
+
+The recursion is on original proper 3-dimensional substitution arguments. Newly introduced binary operation heads are not expanded again.
+
+Every individually whiskered generator is the binary action of a 2-expression with one formal variable. Equation (10) justifies its interpretation in §4.
+
+Normalisation removes every intervening base 3-term by (4). Hence
+\[
+[U]^\nu
+\]
+is exactly the well-defined normalised evaluation of its strict 3-cell \(\pi U\).
+
+For parallel \(U,V:A\to B\) with \(\pi U=\pi V\), it follows that
+\[
+[U]^\nu=[V]^\nu.
+\]
+Their normalisations use the same \(r_A,r_B\). Cancelling these invertible arrows gives
+\[
+[U]=[V]
+\quad\text{in }\mathcal H_\Gamma(p,q).
+\]
+By the definition of that category, a CaTT 4-term \(U\to V\) exists.
+
+This proves
+\[
+\operatorname{RC}(3,\Lambda)
+\Longrightarrow
+\operatorname{RC}(3,\Gamma).
+\tag{14}
+\]
+
+Only finitely many choices and comparisons are needed for any given pair of terms and a finite derivation of their strict equality.
+
+## 6. The converse
+
+Suppose \(\operatorname{RC}(3,\Gamma)\), and take parallel 3-terms \(U,V\) of \(\Lambda\) with equal strict images.
+
+Weaken them to \(\Gamma\) and obtain a 4-term
+\[
+H:U\to V.
+\]
+Since \(\Gamma\) has no 4-generators, \(\pi H\) is the identity 4-cell on the common strict image of \(U,V\). That strict image uses only variables of \(\Lambda\).
+
+The support lemma therefore excludes every \(z_i\) from \(H\). Strengthening returns \(H\) to \(\Lambda\). Thus
+\[
+\operatorname{RC}(3,\Gamma)
+\Longrightarrow
+\operatorname{RC}(3,\Lambda),
+\]
+completing the theorem.
+
+## 7. Consequence for every join context
+
+Write
+\[
+\Delta=\operatorname{Cone}(Q;c),
+\qquad
+\Delta_{\le2}
+\]
+for its dependency-closed subcontext of variables of dimension at most 2.
+
+The extension theorem gives the reduction
+\[
+\boxed{
+\operatorname{RC}(3,\Delta)
+\iff
+\operatorname{RC}(3,\Delta_{\le2}).
+}
+\tag{15}
+\]
+
+For the forward implication, take a comparison problem in \(\Delta_{\le2}\) and fill it in \(\Delta\). By item 2, the strict image of that filler is an identity. The support lemma then strengthens it back to \(\Delta_{\le2}\).
+
+For the reverse implication, first adjoin all 3-generators of \(\Delta\), using the theorem. Every 3-term of \(\Delta\) already belongs to this subcontext, by the support lemma. The resulting 4-filler can be weakened into the full cone.
+
+The generating 1-graph here is acyclic, as required: a directed 1-cycle would give a nonidentity strict endo-1-cell, contrary to item 2.
+
+Thus **the obstruction to RC(3) for joins is entirely a problem about their 2-skeletons**. Neither interactions among cone 3-generators nor higher cone generators add an independent RC(3) obligation.
+
+## 8. The horizontal cone reduces to four 2-generators
+
+For Question 1, use the notation
+\[
+\begin{gathered}
+a=p_x,\qquad b=p_y,\qquad e=p_z,\\
+u=p_f,\qquad v=p_{f'},\qquad
+s=p_g,\qquad t=p_{g'},\\
+M=p_\alpha,\qquad N=p_\beta.
+\end{gathered}
+\]
+Thus
+\[
+\begin{aligned}
+u&:b\to a*_0f,&
+v&:b\to a*_0f',\\
+s&:e\to b*_0g,&
+t&:e\to b*_0g'.
+\end{aligned}
+\]
+
+Let \(K\) be the horizontal cone with \(M,N\) deleted. The theorem gives
+\[
+\operatorname{RC}(3,\operatorname{Cone}(D^2\vee D^2;c))
+\iff
+\operatorname{RC}(3,K).
+\tag{16}
+\]
+
+There is a further support reduction. Let
+\[
+S=K\setminus\{v,t\}.
+\]
+Its 2-generators are exactly
+\[
+\alpha:f\to f',\qquad
+\beta:g\to g',\qquad
+u:b\to a*_0f,\qquad
+s:e\to b*_0g.
+\]
+
+Then
+\[
+\boxed{\operatorname{RC}(3,K)\iff\operatorname{RC}(3,S).}
+\tag{17}
+\]
+
+Here is the strict classification needed for (17).
+
+The strict 2-cells between paths \(c\to y\) form the category
+\[
+L:\qquad
+b\xrightarrow{u}af\xrightarrow{a\alpha}af',
+\qquad
+b\xrightarrow{v}af',
+\]
+with \(v\) distinct from \(u\cdot a\alpha\). Let \(R\) be the category generated by \(g\xrightarrow{\beta}g'\).
+
+Between the paths \(c\to z\) other than \(e\), the strict 2-cells form \(L\times R\). The path \(e\) adds the two initial steps \(s,t\). Every nonidentity strict 2-cell starting at \(e\) therefore has one of the forms
+\[
+s\cdot(\ell*_0r),
+\qquad
+\ell\in\{1_b,u,v,u\cdot a\alpha\},
+\quad r\in\{1_g,\beta\},
+\tag{18}
+\]
+or
+\[
+t\cdot(\ell*_0 1_{g'}),
+\qquad
+\ell\in\{1_b,u,v,u\cdot a\alpha\}.
+\tag{19}
+\]
+
+To verify this, the first nonidentity step on \(e\) must be \(s\) or \(t\). Subsequent steps act on the two sides of \(y\); interchange moves the right-hand \(\beta\) past the left-hand steps. The left-hand sequence is one of those listed.
+
+Consequently:
+
+- a strict 2-cell never uses both \(u\) and \(v\);
+- if it uses \(v\), its support uses neither \(\alpha\) nor \(f\), so that support can be renamed by \(v\mapsto u,\ f'\mapsto f\);
+- a strict 2-cell never uses both \(s\) and \(t\);
+- if it uses \(t\), its support uses neither \(\beta\) nor \(g\), so that support can be renamed by \(t\mapsto s,\ g'\mapsto g\).
+
+These are bijective renamings of the relevant supports, not identifications of distinct variables. The other homs use the corresponding subcontexts. Hence every strict 2-cell support in \(K\) is isomorphic to a dependency-closed subcontext of \(S\).
+
+Since \(K\) has dimension 2, every strict 3-cell is an identity on a strict 2-cell. The support lemma therefore proves (17): strengthen a comparison problem to its support, rename into \(S\), fill there, and strengthen the filler back to that support. The converse follows by strengthening along \(S\subseteq K\).
+
+Combining (16) and (17),
+\[
+\boxed{
+\operatorname{RC}(3,\operatorname{Cone}(D^2\vee D^2;c))
+\iff
+\operatorname{RC}(3,S).
+}
+\tag{20}
+\]
+
+A strict 2-cell with full support \(S\) is
+\[
+w=
+s*_1
+\bigl((u*_1(a*_0\alpha))*_0\beta\bigr).
+\tag{21}
+\]
+
+The remaining normalisation problem is therefore the combination of:
+
+- the left vertical word \(u*_1(a*_0\alpha)\);
+- its horizontal interaction with \(\beta\);
+- the initial step \(s\).
+
+Item 16 supplies the one-left-event cut-vertex case. Substituting the two-event word for that event supplies particular comparison terms, but does not establish substitution fusion for arbitrary \(S\)-terms. That fusion statement remains necessary to prove RC(3) for \(S\).
+
+**The completed result is the extension theorem of Question 2, without the ordering restriction, together with reductions (15) and (20).** The horizontal 2-skeleton normalisation, RC(4), and the all-dimensional conjecture are not proved here.

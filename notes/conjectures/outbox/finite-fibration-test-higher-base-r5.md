@@ -111,3 +111,809 @@ Any of the following:
 - a reference to a published recognition theorem for Grothendieck constructions over free strict n-categories presented by polygraphs;
 - a reference to a published characterisation of homotopical polygraphs in low dimension.
 
+# Researcher Response
+
+**Question 1 has the expected presentation in dimension \(4\).** The attaching map is obtained by subdividing the **outer** cylinder. It requires only
+\[
+T(r)T(\alpha)=T(r)T(\beta),
+\]
+not \(T(\alpha)=T(\beta)\).
+
+The construction also gives three further results:
+
+- FT for Cat-valued weights over finite homotopical \(3\)-computads whose \(2\)-skeleton is homotopical;
+- FT over arbitrary finite homotopical suspension bases with homotopical \(2\)-category fibres, with dimension bound \(n+2\);
+- a decidable sufficient condition for homotopical \(2\)-computads, and a class of hom attachments allowing incoming arrows, outgoing arrows, and nontrivial endpoint endomorphisms.
+
+I use the results in your §2 as hypotheses. The arguments below do not establish the full \(n,m\) theorem, bubble-free sufficiency, or homotopicality of every positive \(3\)-computad.
+
+## 1. The whiskered \(3\)-generator
+
+### 1.1 Data and composition conventions
+
+Write
+\[
+A=T(x),\qquad B=T(y),\qquad C=T(z),
+\]
+and
+\[
+P=T(p),\quad Q=T(q):A\to B,\qquad R=T(r):B\to C.
+\]
+Let
+\[
+a=T(\alpha),\qquad b=T(\beta):P\Rightarrow Q.
+\]
+The existence of \(T(\zeta)\), with category-valued fibres, says exactly that
+\[
+Ra=Rb=:c.
+\tag{1}
+\]
+
+Use chronological composition: \(f;g\) means first \(f\), then \(g\). Write \(\cdot\) for chronological composition of \(2\)-cells, \(\odot\) for that of \(3\)-cells, and \(*\) for whiskering.
+
+Start with the unlocalised presentation \(\mathcal P_{\leq2}\) supplied by your item 12 for the \(2\)-skeleton. Use the comparison-cell convention
+\[
+\eta^p_f:p_e;Pf\Rightarrow f;p_{e'},
+\]
+and likewise for \(q,r\). Its other relevant generators are
+\[
+\lambda_{\sigma,e}:p_e;d^\sigma_e\Rightarrow q_e,
+\qquad
+d^\alpha=a,\quad d^\beta=b,
+\]
+and
+\[
+\Xi_{\sigma,f}:X_{\sigma,f}\Rrightarrow Y_{\sigma,f},
+\]
+where
+\[
+\begin{aligned}
+X_{\sigma,f}
+  &=(\lambda_{\sigma,e}*Qf)\cdot\eta^q_f,\\
+Y_{\sigma,f}
+  &=(\eta^p_f*d^\sigma_{e'})
+       \cdot(f*\lambda_{\sigma,e'}).
+\end{aligned}
+\tag{2}
+\]
+
+Here \(f:e\to e'\) is a generating arrow of \(A\).
+
+### 1.2 Derived comparisons for paths
+
+Extend \(\eta^r\) from generating arrows of \(B\) to all finite paths by
+\[
+\eta^r_{1_d}=1_{r_d},
+\qquad
+\eta^r_{\ell;m}
+ =(\eta^r_\ell*Rm)\cdot(\ell*\eta^r_m).
+\tag{3}
+\]
+These are pastings in the unlocalised presentation.
+
+Set
+\[
+U=RP,\qquad V=RQ,
+\]
+and define the composite transports
+\[
+u_e=p_e;r_{Pe},
+\qquad
+v_e=q_e;r_{Qe}.
+\]
+Their comparison cells are
+\[
+\begin{aligned}
+\eta^u_f
+  &=(p_e*\eta^r_{Pf})\cdot(\eta^p_f*r_{Pe'}),\\
+\eta^v_f
+  &=(q_e*\eta^r_{Qf})\cdot(\eta^q_f*r_{Qe'}).
+\end{aligned}
+\tag{4}
+\]
+
+The required lifts of the whiskered faces are
+\[
+\boxed{
+\bar\lambda_{\sigma,e}
+  =(p_e*\eta^r_{d^\sigma_e})
+       \cdot(\lambda_{\sigma,e}*r_{Qe}).
+}
+\tag{5}
+\]
+Their types, using (1), are
+\[
+\bar\lambda_{\sigma,e}:u_e;c_e\Rightarrow v_e.
+\]
+
+Thus (5) first moves \(d^\sigma_e\) across the transport for \(r\), then applies the lift of \(\sigma\). No inverse is used.
+
+For their naturality cells, put
+\[
+\ell^\sigma_f=d^\sigma_e;Qf=Pf;d^\sigma_{e'},
+\qquad
+J_{\sigma,f}=p_e*\eta^r_{\ell^\sigma_f}.
+\tag{6}
+\]
+The equality in (6) is naturality in the free category \(B\).
+
+For a \(3\)-cell \(H:X\Rrightarrow Y\), write
+\[
+[L,H,R]:L\cdot X\cdot R\Rrightarrow L\cdot Y\cdot R.
+\]
+Define
+\[
+\boxed{
+\bar\Xi_{\sigma,f}
+  =[J_{\sigma,f},\,\Xi_{\sigma,f}*r_{Qe'},\,1].
+}
+\tag{7}
+\]
+Its boundaries are
+\[
+\begin{aligned}
+\bar X_{\sigma,f}
+  &=(\bar\lambda_{\sigma,e}*Vf)\cdot\eta^v_f,\\
+\bar Y_{\sigma,f}
+  &=(\eta^u_f*c_{e'})
+       \cdot(f*\bar\lambda_{\sigma,e'}).
+\end{aligned}
+\tag{8}
+\]
+
+To check (7), expand (3)–(5) and interchange the indicated whiskerings. The resulting identities are
+\[
+\begin{aligned}
+\bar X_{\sigma,f}
+   &=J_{\sigma,f}\cdot(X_{\sigma,f}*r_{Qe'}),\\
+\bar Y_{\sigma,f}
+   &=J_{\sigma,f}\cdot(Y_{\sigma,f}*r_{Qe'}).
+\end{aligned}
+\tag{9}
+\]
+The cylinder construction below supplies these identifications coherently. In particular, one does **not** need an equality
+\(J_{\alpha,f}=J_{\beta,f}\).
+
+### 1.3 The actual unlocalised substitution map
+
+Here is a construction of the map underlying all these formulas.
+
+For \(d:P\Rightarrow Q\), let
+\[
+H=A\otimes I_{\mathrm{in}},
+\]
+with evaluation
+\[
+h_d:H\longrightarrow B.
+\]
+It sends the endpoint copies of \(A\) by \(P,Q\), sends the bridge at \(e\) to \(d_e\), and sends the mixed \(2\)-cells to identities witnessing naturality.
+
+The double-cylinder presentation is
+\[
+W_d=
+A\amalg_{H\otimes\{0\}}
+(H\otimes I_{\mathrm{out}})
+\amalg_{H\otimes\{1\}}B,
+\tag{10}
+\]
+where the first endpoint map is projection \(H\to A\). Also put
+\[
+M_R=(B\otimes I)\amalg_{B\otimes\{1\}}C.
+\]
+
+Subdivide the outer interval:
+\[
+H\otimes[2]
+ \simeq
+(H\otimes I)\amalg_H(H\otimes I).
+\]
+Map its first interval into \(W_d\), and its second by
+\[
+h_d\otimes I:H\otimes I\longrightarrow B\otimes I
+\longrightarrow M_R.
+\]
+They agree on their common \(H\). Precomposition with
+\[
+H\otimes\delta_2:H\otimes I\longrightarrow H\otimes[2]
+\]
+therefore gives
+\[
+\boxed{
+W_{Rd}\longrightarrow W_d\amalg_B M_R.
+}
+\tag{11}
+\]
+
+This is an unlocalised map. Its images of the generating lift and naturality cells are exactly (5) and (7).
+
+Apply (11) separately to \(a\) and \(b\). Equation (1) gives the same source double cylinder \(W_c\), while the restrictions to its two edge cylinders agree: they depend only on \(P,Q,R\). Consequently, the two maps glue along the entire parallel-arrow boundary.
+
+### 1.4 The new generators
+
+Adjoin precisely the following generators to \(\mathcal P_{\leq2}\).
+
+For each vertex \(e\) of \(A\), a marked \(3\)-generator
+\[
+\omega_e:
+\bar\lambda_{\alpha,e}
+\Rrightarrow
+\bar\lambda_{\beta,e}.
+\tag{12}
+\]
+
+For each generating arrow \(f:e\to e'\) of \(A\), define
+\[
+\begin{aligned}
+L_f
+ &=[1,\omega_e*Vf,\eta^v_f]\odot\bar\Xi_{\beta,f},\\
+R_f
+ &=\bar\Xi_{\alpha,f}\odot
+       [\eta^u_f*c_{e'},\,f*\omega_{e'},\,1].
+\end{aligned}
+\tag{13}
+\]
+Both are \(3\)-cells
+\[
+\bar X_{\alpha,f}\Rrightarrow\bar Y_{\beta,f}.
+\]
+Adjoin a marked \(4\)-generator
+\[
+K_f:L_f\Rrightarrow R_f.
+\tag{14}
+\]
+
+The projections are
+\[
+\omega_e\longmapsto\zeta,
+\qquad
+K_f\longmapsto1_\zeta.
+\]
+Localise at
+\[
+S=
+\{\eta^p_f,\eta^q_f,\eta^r_g,
+  \Xi_{\alpha,f},\Xi_{\beta,f},K_f\},
+\tag{15}
+\]
+with \(f\) ranging over generating arrows of \(A\) and \(g\) over those of \(B\).
+
+### 1.5 Correctness
+
+Use the compatible walking-\(3\)-cell block proved in §2.2 below. Its boundary is literally the union of the two double cylinders in (10), glued along their edge cylinders. Thus (11) supplies its attaching map into \(\mathcal P_{\leq2}\).
+
+After localisation:
+
+- \(\mathcal P_{\leq2}\) presents the total over the \(2\)-skeleton, by your item 12;
+- the attached block presents the total over \(D_3\);
+- its boundary presents the total over \(\partial D_3\);
+- (11) becomes the restriction map associated with the whiskered faces.
+
+Your item 8 supplies the homotopy pushout for the base attachment. Loubaton’s Corollary 3.2.3.16 then identifies the corresponding pushout of totals with the total over the attached base. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com) Hence
+\[
+\boxed{
+\operatorname{Free}(\Psi_T)[S^{-1}]
+ \simeq \int T
+}
+\]
+as marked categories over the base. The dimension is at most \(4\).
+
+## 2. Extensions of FT
+
+### 2.1 A mixed-localisation lemma for a \(2\)-dimensional second factor
+
+Let \(X\) have a finite homotopical computad presentation, of arbitrary finite dimension. Let
+\[
+A=F_2(\Pi)
+\]
+for a finite homotopical \(2\)-computad \(\Pi\).
+
+There is a finite cellular model \(\mathcal R_A(X)\), with one generator \(x\otimes g\) for every pair of generators, such that
+\[
+\boxed{
+\mathcal R_A(X)
+ \big[(x\otimes g)^{-1}:
+       \dim x>0,\ \dim g>0\big]
+ \simeq X\times A.
+}
+\tag{16}
+\]
+It is natural in \(X\), and has the corresponding relative cellular description. This is the comparison needed for \(2\)-category fibres.
+
+#### Construction and proof
+
+Let \(A_1\) be the free category on the generating graph of \(\Pi\). Homotopicality gives the pushout
+\[
+A\simeq
+A_1\amalg_{\coprod_{\rho\in\Pi_2}\partial D_2}
+          \coprod_{\rho\in\Pi_2}D_2.
+\tag{17}
+\]
+
+Put \(H_X=X\otimes I_{\mathrm{in}}\), and define
+\[
+C_2(X)=
+X\amalg_{H_X\otimes\{0\}}
+(H_X\otimes I_{\mathrm{out}})
+\amalg_{H_X\otimes\{1\}}X,
+\tag{18}
+\]
+using projection \(H_X\to X\) at both ends.
+
+Apply your item 12 to the **constant weight \(X\) over \(D_2\)**. It identifies (18), after inversion of every mixed generator, with \(X\times D_2\). Its two boundary cylinders give the corresponding comparison for \(X\times\partial D_2\).
+
+Now form
+\[
+\mathcal R_A(X)=
+(X\otimes A_1)
+\amalg_{\coprod_{\rho}X\otimes\partial D_2}
+\coprod_{\rho}C_2(X).
+\tag{19}
+\]
+All maps in (19) exist before localisation. In particular, the maps
+\(\partial D_2\to A_1\) are functors between categories, so their tensors with \(X\) give the attaching maps directly.
+
+For any target \(Z\), a map from (19) inverting the graph-stage mixed generators factors on that stage through \(X\times A_1\). Naturality of the graph comparison makes its boundary restrictions factor through \(X\times\partial D_2\). Inverting the additional mixed generators in each copy of \(C_2(X)\) makes that restriction factor through \(X\times D_2\). Therefore its space of maps to \(Z\) is
+\[
+\begin{aligned}
+&\operatorname{Map}(X\times A_1,Z)\\
+&\quad\times_{\prod_{\rho}
+ \operatorname{Map}(X\times\partial D_2,Z)}
+ \prod_{\rho}\operatorname{Map}(X\times D_2,Z)
+ \;\simeq\;
+ \operatorname{Map}(X\times A,Z).
+\end{aligned}
+\]
+This proves (16), including its naturality.
+
+For the generator count, the relative Gray product of a \(p\)-globe and a \(j\)-globe adds one \((p+j)\)-cell, for \(j=0,1,2\). The required atomic pasting statements follow from Chanavat’s acyclic-atom and monoidal comparison results, Corollary 3.27, Proposition 3.28 and Theorem 3.29. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com) Since (19) preserves cellular pushouts in \(X\), this gives the stated relative version.
+
+### 2.2 A walking-\(3\)-cell block with the required raw boundary
+
+The orientation of the tensor factors matters here: a localised cone-first presentation cannot simply be identified with the fibre-first double cylinders used in (11).
+
+Let \(A,C\) be free categories, let \(U,V:A\to C\), and let \(d:U\Rightarrow V\). Write the inner walking \(2\)-cell as
+\[
+D_2=(u,v;\alpha,\beta:u\to v;\Omega:\alpha\Rightarrow\beta).
+\]
+Set
+\[
+H=A\otimes D_2,
+\]
+using the cellular construction of §2.1, and let
+\[
+h:H\longrightarrow A\times D_2\longrightarrow C
+\]
+send both inner arrows to \(d\) and the inner \(2\)-cell to an identity.
+
+Define
+\[
+W_3=
+A\amalg_{H\otimes\{0\}}
+(H\otimes I)
+\amalg_{H\otimes\{1\}}C.
+\tag{20}
+\]
+Its boundary is
+\[
+W_d^\alpha
+ \amalg_{M_U\amalg_{A\amalg C}M_V}
+W_d^\beta.
+\tag{21}
+\]
+This follows by restricting \(H\) to \(A\otimes\partial D_2\), before taking the outer cylinder.
+
+Relative to (21), the new cells are exactly a \(3\)-cell per vertex of \(A\) and a \(4\)-cell per generating arrow.
+
+To verify localisation, first use (16):
+\[
+A\otimes D_2\longrightarrow A\times D_2
+\]
+inverts
+\[
+f\otimes\alpha,\quad f\otimes\beta,\quad f\otimes\Omega.
+\]
+Tensor-localisation along the outer interval leaves their outer comparison cells
+\[
+\Xi_{\alpha,f},\quad\Xi_{\beta,f},\quad K_{\Omega,f};
+\]
+their endpoint copies map to identities.
+
+Next apply Loubaton’s Proposition 3.1.3.2 with the auxiliary marking
+\(A^\sharp\times D_2^\flat\). This adds precisely the inversions of the two transport comparisons \(\eta^u_f,\eta^v_f\). In dimension at least \(2\), every marked cell of this auxiliary product is an identity, since \(A\) is a category. Thus there are no further independent comparison generators. The auxiliary marking specifies this underlying localisation; the vertical fibre arrows retain their original marking. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The result is
+\[
+\bigl(A\times(1^{\mathrm{co}}\star D_2)\bigr)
+ \amalg_{A\times D_2}C,
+\]
+which is the required total by the suspension-base classification. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com) This proves the local lemma used in §1.
+
+### 2.3 Cat fibres over general \(3\)-dimensional bases
+
+**Theorem.** Let \(\Gamma\) be a finite \(3\)-computad. Suppose its \(2\)-skeleton is homotopical and its displayed attachment of generating \(3\)-cells is a homotopy pushout. Then every strict Cat-valued weight with fibres free on finite graphs has the relative Gray-generator presentation, in dimension at most \(4\).
+
+In particular, the hypotheses hold if both \(\Gamma\) and \(\Gamma_{\leq2}\) are homotopical, with their canonical comparisons.
+
+#### Substitution for arbitrary \(2\)-cell expressions
+
+Fix the path-cylinder maps from your item 12. For every chosen finite expression
+\[
+\delta:p\Rightarrow q
+\]
+in the free strict \(2\)-category, construct
+\[
+J_\delta:W_{T\delta}\longrightarrow\mathcal P_{\leq2}
+\tag{22}
+\]
+under the fixed cylinders for \(p,q\).
+
+There are four operations:
+
+1. **Identity:** collapse the inner interval:
+   \[
+   W_{1_U}\longrightarrow M_U.
+   \]
+
+2. **Vertical composition:** subdivide the inner interval:
+   \[
+   W_{e\circ d}\longrightarrow W_d\amalg_{M_V}W_e.
+   \]
+
+3. **Right whiskering:** use (11):
+   \[
+   W_{Rd}\longrightarrow W_d\amalg_C M_R.
+   \]
+
+4. **Left whiskering:** subdivide the outer interval:
+   \[
+   W_{dF}\longrightarrow M_F\amalg_A W_d.
+   \]
+   On its first interval use projection
+   \(H_D\otimes I\to D\otimes I\to M_F\); on its second use
+   \[
+   (F\otimes I_{\mathrm{in}})\otimes I:
+   H_D\otimes I\longrightarrow H_A\otimes I\longrightarrow W_d.
+   \]
+   The interface agrees because projection commutes with \(F\).
+
+Horizontal composition is a composite of whiskering and vertical composition.
+
+These operations preserve the fixed path-cylinder boundary. For concatenated paths of lengths \(r,s\), this is an equality of maps on the whole cylinder: the composite
+\[
+I\xrightarrow{\delta_2}[2]\longrightarrow[r+s],
+\qquad
+0\mapsto0,\quad1\mapsto r,\quad2\mapsto r+s,
+\]
+is \(\delta_{r+s}\).
+
+Now take a generating \(3\)-cell
+\[
+\Omega:\delta\Rrightarrow\epsilon.
+\]
+Choose one finite expression for each boundary. Since
+\(T\delta=T\epsilon\), the two maps (22) have the common boundary needed to attach (20).
+
+There is no requirement that different expressions for the same \(2\)-cell induce equal raw maps. After localisation they induce the same map: in the strict Grothendieck \(2\)-category of a Cat-valued weight, a \(2\)-cell over \(\delta:p\Rightarrow q\), between
+\[
+(p,r)\quad\text{and}\quad(q,s),
+\]
+exists exactly when
+\[
+r=T(\delta)_e;s,
+\]
+and is then uniquely determined. Thus the localised map depends only on the denoted base \(2\)-cell. Strict interchange creates no additional attaching obligation.
+
+Attach all blocks (20), then localise. The same pullback-colimit argument as in §1.5 proves the theorem.
+
+The generator families are:
+
+| Base-generator dimension \(k\) | Fibre vertices | Fibre generating arrows |
+|---|---:|---:|
+| \(1\) | marked \(1\)-generators | inverted \(2\)-generators |
+| \(2\) | marked \(2\)-generators | inverted \(3\)-generators |
+| \(3\) | marked \(3\)-generators | inverted \(4\)-generators |
+
+The vertical fibre generators are also retained.
+
+### 2.4 Suspension bases with \(2\)-category fibres
+
+**Theorem.** Let \(Q=F_d(\Lambda)\), where \(\Lambda\) is finite and homotopical. Let the base be \(\Sigma Q\), of dimension \(n=d+1\), and let its two fibres \(A,C\) have finite homotopical \(2\)-computad presentations. Then the expected relative Gray-generator presentation exists, with dimension at most
+\[
+d+3=n+2.
+\]
+
+Let
+\[
+h:Q\times A\longrightarrow C
+\]
+be the evaluation map associated with the weight, and put
+\[
+K=1^{\mathrm{co}}\star Q.
+\]
+Relative to \(Q\), this cone has its apex and one cell
+\[
+\kappa_q,\qquad \dim\kappa_q=i+1,
+\]
+for every generating \(i\)-cell \(q\) of \(\Lambda\).
+
+Use §2.1 to form the unlocalised pushout
+\[
+\boxed{
+\mathcal P=
+\mathcal R_A(K)
+ \amalg_{\mathcal R_A(Q)}C,
+}
+\tag{23}
+\]
+where the attaching map is the actual composite
+\[
+\mathcal R_A(Q)\longrightarrow Q\times A\xrightarrow{h}C.
+\tag{24}
+\]
+Thus no lift out of a localisation is required.
+
+The generators of (23) are those of \(A,C\), together with
+\[
+\kappa_q\otimes g,
+\qquad
+\dim(\kappa_q\otimes g)=i+1+j,
+\qquad g\in\Pi_j,\quad j=0,1,2.
+\tag{25}
+\]
+Mark all generators in (25), and invert precisely those with \(j>0\).
+
+The mixed boundary generators in \(\mathcal R_A(Q)\) map to identities under (24). By (16) and the localisation universal property,
+\[
+\mathcal P[S^{-1}]
+ \simeq
+(K\times A)\amalg_{Q\times A}C
+ \simeq
+\int_{\Sigma Q}T.
+\tag{26}
+\]
+The final equivalence is the same suspension classification used above.
+
+The marking is also the required one. The marked cone cells at fibre vertices generate the Cartesian marking after localisation: whiskering them by identities on fibre cells gives the remaining marked product cells. The construction therefore proves a marked equivalence over \((\Sigma Q)^\sharp\).
+
+### 2.5 The finite certificate
+
+For these two FT extensions, a checker needs:
+
+1. the stipulated homotopicality certificates for the base attachments and fibre presentations;
+2. the finite functor and transformation data of \(T\), with their boundary equalities;
+3. finite expressions for the attaching boundaries;
+4. the cylinder substitutions above and the prescribed generator families;
+5. the marking and localisation list: the relative pairs with positive fibre dimension are precisely those inverted.
+
+For category fibres, the necessary equalities are finite word equalities in the free fibre categories. For \(2\)-category fibres, finite derivations of the required pasting equalities can be supplied.
+
+This is a finite recognition certificate for the constructed presentations. It is not a decision procedure for homotopicality of arbitrary input computads.
+
+## 3. A decidable sufficient condition for homotopical \(2\)-computads
+
+The following answers the sufficient-condition alternative in question 3.
+
+### 3.1 Closure under adjoining \(1\)-generators
+
+**Lemma.** If a \(2\)-computad is homotopical, freely adjoining finitely many \(1\)-generators, without changing its \(2\)-generators or their boundaries, preserves homotopicality. The new arrows may be loops or form cycles.
+
+Here is a coherent calculation proving the lemma.
+
+Fix the vertex set \(X\). Use the monoidal category
+\[
+\mathcal V_X=\operatorname{Fun}(X\times X,\operatorname{Cat}_\infty),
+\qquad
+(F\star G)(x,z)=\coprod_yF(x,y)\times G(y,z).
+\]
+Associative algebras describe enriched categories with specified vertices. Haugseng gives this matrix construction and its comparison with enriched categorical algebras. [arxiv.org](https://arxiv.org/pdf/1312.3881?utm_source=chatgpt.com)
+
+Let \(C\) be the algebra corresponding to the existing category. To adjoin
+\(f:s\to t\), let \(G\) have value \(*\) at \((s,t)\) and be empty elsewhere. The free \(C\)-bimodule is
+\[
+M=C\star G\star C.
+\]
+The coherent extension under \(C\) is the tensor algebra
+\[
+T_C(M)=\coprod_{r\geq0}M^{\otimes_C r}.
+\tag{27}
+\]
+This uses the equivalence between algebras in \(C\)-bimodules and algebras under \(C\), together with the free associative algebra formula. The relevant results are *Higher Algebra*, Corollary 3.4.1.7, Proposition 4.1.1.18 and Proposition 4.4.3.12. [math.ias.edu](https://www.math.ias.edu/~lurie/papers/HA.pdf?utm_source=chatgpt.com)
+
+Because \(M\) is free on both sides, unitality of relative tensor products gives
+\[
+M^{\otimes_C r}
+ \simeq C\star G\star C\star\cdots\star G\star C.
+\]
+Consequently,
+\[
+\boxed{
+C[f](x,y)\simeq
+C(x,y)\amalg
+\coprod_{r\geq1}
+C(x,s)\times C(t,s)^{r-1}\times C(t,y).
+}
+\tag{28}
+\]
+
+The ordinary strict extension has exactly the same hom categories. A \(1\)-cell using \(f\) exactly \(r\) times has a unique expression
+\[
+c_0\,f\,c_1\,f\cdots f\,c_r,
+\]
+with
+\[
+c_0:x\to s,\quad c_i:t\to s\ (0<i<r),\quad c_r:t\to y.
+\]
+A \(2\)-cell is a tuple of \(2\)-cells between the corresponding \(c_i\). Composition concatenates expressions and composes the adjacent \(C\)-factors. Products and disjoint unions of ordinary categories compute the corresponding constructions in \(\operatorname{Cat}_\infty\), so (28) identifies the strict extension with the coherent one.
+
+For compatibility with the model in the question, the enriched Segal nerve has values
+\[
+[m]\longmapsto
+\coprod_{x_0,\ldots,x_m}
+\prod_i C(x_{i-1},x_i).
+\]
+Haugseng’s comparison identifies its completion with the complete iterated-Segal model; restriction along
+\[
+([m],[n])\longmapsto[m]([n],\ldots,[n])
+\]
+identifies the strict nerve here with the corresponding \(\Theta_2\)-nerve. Thus this calculation proves the required coherent pushout statement, not merely an ordinary enriched pushout statement. [arxiv.org](https://arxiv.org/pdf/1312.3881?utm_source=chatgpt.com)
+
+The lemma follows by adjoining the new arrows successively.
+
+### 3.2 The finite test
+
+Let \(\Gamma\) be a finite \(2\)-computad. Require a partition
+\[
+\Gamma_0=\coprod_i X_i
+\]
+with these properties:
+
+- No boundary of a generating \(2\)-cell uses an arrow joining different parts.
+- For each induced internal computad \(\Gamma_i\), one of the following holds:
+  - both boundaries of every \(2\)-generator are nonempty;
+  - \(X_i\) is a singleton and every \(2\)-generator has one generating arrow as target;
+  - \(X_i\) is a singleton and every \(2\)-generator has one generating arrow as source.
+
+Then \(\Gamma\) is homotopical.
+
+Indeed, the internal computads are homotopical by the positive and operadic criteria in your §2. Take their coproduct and freely adjoin the arrows joining different parts. The lemma applies, and no \(2\)-cell boundary is changed.
+
+The condition is decidable: enumerate the finitely many partitions and inspect the finite boundary words. It covers all positive \(2\)-computads and both accepted operadic classes, including \(Q\). The identity-to-identity generator fails all three internal tests.
+
+The condition also gives examples beyond the disjunction of those classes. Take vertices \(x,z\), arrows
+\[
+a,b:x\to x,\qquad t:z\to z,\qquad
+h:x\to z,\qquad k:z\to x,
+\]
+and \(2\)-generators
+\[
+\theta:aa\Rightarrow bb,\qquad
+\eta:1_z\Rightarrow t.
+\]
+The partition \(\{x\}\amalg\{z\}\) passes. The entire computad is neither positive nor single-source nor single-target. The cross arrows \(h,k\) may be retained, including the cycle they form.
+
+This establishes a sufficient test; it does not establish bubble-free sufficiency.
+
+## 4. Hom attachments with incoming and outgoing arrows and endomorphisms
+
+There is a direct extension of the attachment argument for the following class.
+
+Let \(J,L\) be gaunt ordinary categories, with chosen vertices \(s\in J\), \(t\in L\), and disjoint vertex sets. Let \(H\) be a gaunt strict \(2\)-category. Define the strict wedge
+\[
+D(H)=J\amalg_{\{s\}}\Sigma H\amalg_{\{t\}}L.
+\tag{29}
+\]
+
+### 4.1 The strict wedge is a coherent wedge
+
+Apply Loubaton’s Theorem 2.3.3.22 to the constant maps
+\[
+H\to J,\qquad H\to L
+\]
+at \(s,t\). It says that the coherent double mapping cylinder
+\[
+J\amalg_{H\otimes\{0\}}
+(H\otimes I)
+\amalg_{H\otimes\{1\}}L
+\tag{30}
+\]
+is strict. Proposition 2.3.3.6 identifies the cylinder with its ends collapsed as \(\Sigma H\), so (30) is the coherent version of (29). Applying the strict reflector computes the ordinary strict wedge, proving the comparison. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The gaunt qualification is needed for this invocation: Loubaton’s strict categories are gaunt strict \(\omega\)-categories. Free graph categories, including those with loops, satisfy it. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+### 4.2 Every affected hom is explicit
+
+For \(j\in J\) and \(\ell\in L\),
+\[
+\boxed{
+D(H)(j,\ell)
+  =J(j,s)\times H\times L(t,\ell).
+}
+\tag{31}
+\]
+The outer factors are discrete. Homs entirely in \(J\) or \(L\) are unchanged, and homs from \(L\) to \(J\) are empty.
+
+A cross arrow has a unique expression consisting of an arrow \(j\to s\), an arrow of the suspended \(H\), and an arrow \(t\to\ell\). It can cross from \(J\) to \(L\) only once. Higher cells are cells of \(H\) with those two outer arrows fixed. This proves (31).
+
+In particular,
+\[
+D(H)(s,t)=J(s,s)\times H\times L(t,t).
+\tag{32}
+\]
+Thus \(H\) need not equal the entire hom \(D(H)(s,t)\).
+
+### 4.3 Transporting an attachment
+
+Put \(A_0=J\amalg L\). The coherent functor
+\[
+\Phi(H)=A_0\amalg_{\partial D_1}\Sigma H
+\]
+takes values under \(A_0\), and satisfies
+\[
+\operatorname{Map}_{A_0/}(\Phi(H),X)
+ \simeq
+\operatorname{Map}(H,X(s,t)).
+\tag{33}
+\]
+It is therefore a left adjoint.
+
+Suppose
+\[
+H'=H\amalg_{\partial D_2}D_2
+\]
+is a homotopical \(2\)-cell attachment. Applying \(\Phi\) and pasting pushouts gives
+\[
+\boxed{
+D(H')\simeq D(H)\amalg_{\partial D_3}D_3.
+}
+\tag{34}
+\]
+Naturality of the strictness comparison in §4.1 identifies this with the strict attachment.
+
+This changes every cross hom in (31) to
+\[
+J(j,s)\times H'\times L(t,\ell).
+\]
+No additional independent generators are needed for these whiskered cells.
+
+### 4.4 A finite example exhibiting all the requested phenomena
+
+Let \(J\) be freely generated by
+\[
+i\xrightarrow{\iota}s,\qquad a:s\to s,
+\]
+and \(L\) by
+\[
+b:t\to t,\qquad t\xrightarrow{\pi}o.
+\]
+Take
+\[
+H=\partial D_2=(u,v;\alpha,\beta:u\to v),
+\]
+and attach \(\zeta:\alpha\Rightarrow\beta\) to obtain \(H'=D_2\).
+
+Then \(D(H')\) has generators
+\[
+\begin{array}{c|l}
+0&i,s,t,o\\
+1&\iota,\ a,\ u,v:s\to t,\ b,\ \pi\\
+2&\alpha,\beta:u\Rightarrow v\\
+3&\zeta:\alpha\Rrightarrow\beta.
+\end{array}
+\]
+The attachment of \(\zeta\) is homotopical by (34). Both endpoint endomorphism monoids are nontrivial, and there are distinct incoming and outgoing arrows. The single \(3\)-generator yields all whiskerings
+\[
+\iota a^m*\zeta*b^n\pi,
+\qquad m,n\geq0.
+\]
+
+This proves an attachment theorem with all those features. It does not assert that an arbitrary \(D\), without the wedge decomposition (29), permits arbitrary replacement of one hom.
+
+## 5. Remaining scope
+
+The results above leave three issues unresolved here:
+
+- the full FT theorem for arbitrary \(n,m\), including compatibility along higher-dimensional common boundaries;
+- whether every finite bubble-free \(2\)-computad is homotopical;
+- whether every \(3\)-computad positive in every dimension is homotopical.
+
+For question 1, however, the unlocalised attaching map and every new boundary are given explicitly by (3)–(14), and the resulting presentation has exactly the predicted \(3\)- and \(4\)-generators.

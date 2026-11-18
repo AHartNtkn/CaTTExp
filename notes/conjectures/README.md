@@ -21,13 +21,13 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
 
 - **Solved:**
   - `free-on-graph.md`: proved by an external researcher, and verified here.
+  - `weighted-as-partially-lax-omega.md`: proved by an external researcher in Loubaton's model, and verified here. A finite computad test is still open.
   - `free-infinity-gray-of-pasting-diagrams.md`: in the literature (Campion 2311.00205, Cor. 3.5; Chanavat 2603.22242, Thm 3.29).
   - `steiner-support-determines-cells.md`: the main case follows from Hadzihasanovic's book (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18.
 - **Partly solved:**
   - `gray-vs-cartesian.md`: the case l = 1 is Loubaton 2406.05425, Prop. 3.1.3.1. A sketch of the general case from published results is included and needs checking.
   - `planar-pasting-types.md`: PL1 follows from unit-free proof-net coherence, up to one lemma.
-  - `lax-colimit-of-point.md`: the (∞,1) case is known.
-  - `weighted-as-partially-lax-omega.md`: dimension 2 is known.
+  - `lax-colimit-of-point.md`: the semantic claim is solved (Loubaton, Example 4.2.3.12). The syntactic form is false for arbitrary cone-judgment derivations (verified counterexample); it is open for a specified cocone construction.
   - `gray-contexts-in-catt.md` §6: the (∞,ω) part is answered.
 - **Open:**
   - `gray-contexts-in-catt.md`: G(n), and Mikhail's rules.
@@ -47,8 +47,8 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
 | `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | Partly solved: l = 1 proved; general case sketched from the literature | Assumed by `planar-pasting-types.md` §4. Bears on `catt-lim-pseudo-vs-gray.md`. | `internal-hom.md` §5.5 |
 | `planar-pasting-types.md` | An unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dimensional case proved). PL1: tensor. PL-ω: Gray version. | PL1 very likely true (known coherence results, one lemma to cite). PL-ω open. | PL-ω uses `gray-vs-cartesian.md` | `internal-hom.md` §5.7 |
 | `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | Open | Related to `gray-vs-cartesian.md` | `limits-representables.md` §10.1 |
-| `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | (∞,1) case known; (∞,ω) open | Step B uses `gray-contexts-in-catt.md` §6. A special case of `weighted-as-partially-lax-omega.md`. | `limits-representables.md` §10.3 |
-| `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | Dimension 2 known; n > 2 open | Generalises `lax-colimit-of-point.md` | `limits-representables.md` §10.4 |
+| `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? Syntactically, is the constant cocone context equivalent to the suspension? | Semantic: **solved**. Syntactic: **false** for arbitrary derivations of Mikhail's judgment (counterexample verified); open for a specified cocone construction | Step B uses `gray-contexts-in-catt.md` §6. A special case of `weighted-as-partially-lax-omega.md`. | `limits-representables.md` §10.3 |
+| `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | **Solved** in Loubaton's model (researcher, verified). Finite computad test open. | Generalises `lax-colimit-of-point.md` | `limits-representables.md` §10.4 |
 | `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | **Solved: yes** (external researcher, verified) | None | `limits-representables.md` §10.5 |
 
 **Which files to send out.** Files marked solved need no external work. Their literature sections say exactly which published results to cite. The best candidates for external researchers are G in `gray-contexts-in-catt.md`, `naturality-arbitrary-depth.md` (the smallest open instances are listed in its §7), `strict-lax-interchange-at-every-level.md`, and a check of the sketch in `gray-vs-cartesian.md` §7.

@@ -128,6 +128,10 @@ The resulting context `M₁, …, M_{2n+1}` is meant to be `M ⊗ Dⁿ`. **Mikha
 2. **Presentation.** Suppose M is a pasting scheme, or more generally that the free strict ω-category on M is a Steiner complex. Then the computad presented by `M ⊗ Dⁿ` generates, *as a strict ω-category*, the Steiner Gray tensor `𝒪(M) ⊗ 𝒪(Dⁿ)`.
 3. **Weak version.** The free (∞,ω)-category on `M ⊗ Dⁿ` is the Gray tensor of the free (∞,ω)-categories on M and on Dⁿ. *Answered for pasting schemes; see §7.*
 
+### 6.2a Caveat: the raw judgment is permissive
+
+Mikhail's side conditions constrain free variables and the linearity of the *new* variable only. An external researcher showed that the analogous cone judgment admits non-canonical cones, which reuse earlier projections; see `lax-colimit-of-point.md`, verified counterexample. The Gray judgment has the same style of side condition, so it presumably admits non-canonical "Gray contexts" too. (1) should therefore ask for *some* derivation, given by an explicit formula. (2) is about that specified construction, not about every context the judgment admits.
+
 ### 6.3 Relation to §2
 
 For M a pasting scheme, (1) is the existence half of G applied to the molecules ∂(x ⊗ y) with y a cell of Dⁿ, together with the requirement that the composites satisfy Mikhail's τCond and σCond. For M an arbitrary context, the generators' boundaries are themselves composites. Then (1) needs the naturality cells of `naturality-arbitrary-depth.md` (n = 1), or their analogues for Dⁿ.

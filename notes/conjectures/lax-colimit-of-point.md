@@ -1,5 +1,7 @@
 # Is the lax colimit of the constant point diagram the indexing category?
 
+> **Status (2026-11-18): semantic claim SOLVED (Loubaton, arXiv 2406.05425, Example 4.2.3.12). The syntactic form is FALSE for arbitrary contexts admitted by Mikhail's cone judgment (researcher counterexample, verified below). It is still open for a specified canonical cocone construction.** See "Researcher Response" and "Verification" at the end.
+
 ## Background
 
 Let 𝒞 be the (∞,ω)-category of (∞,ω)-categories.
@@ -333,3 +335,43 @@ A theorem about **a specified canonical construction** is separate. Mikhail’s 
 The precise scope of the negative result is equivalence by categorical CaTT substitutions, with terminality available—the setting of the proposed proof using unitors and coherences. I have not established a model of every additional constructor of the full \(\mathrm{CaTT}_{\lim}\) extension, so I am not claiming a nonderivability theorem allowing unrestricted use of those extra constructors.
 
 **Your semantic construction of \(\operatorname{Free}(\Gamma)\) as the lax colimit of \(1\) is valid. To obtain it syntactically, the cone construction needs more specification than the raw \(\sigma\mathrm{Cond}/\tau\mathrm{Cond}\) judgment provides.**
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. The semantic claim is solved. The syntactic form, as stated for contexts admitted by Mikhail's raw cone judgment, is false.** The open question that remains is about a *specified* cocone construction (see "What remains" below).
+
+Each step was checked against the primary sources.
+
+1. **Semantic claim.** Loubaton ([arXiv 2406.05425](https://arxiv.org/abs/2406.05425)), Example 4.2.3.12, states laxcolim over A of the constant diagram at C is ≃ A × C for the minimally marked A, and τ₀A × C for the maximally marked A. With C = 1 this gives `laxcolim_{Free(Γ)♭} 1 ≃ Free(Γ)`. Loubaton's lax colimits are defined in his Def. 4.2.3.3, and the convention needs no opposite. This is correct, and it holds for any (∞,ω)-category, not only finite free ones.
+2. **The rule as quoted.** Mikhail ([arXiv 2412.13310v2](https://arxiv.org/abs/2412.13310)), §3.1, rule (KE): append `p_x : s →_A t` when
+   - s satisfies τCond, with `{c}` in place of FV(x : X) and with no linearity requirement;
+   - t satisfies σCond, including `x ∝ t`;
+   - both terms are "categorical", i.e. built with CaTT rules.
+
+   Mikhail himself writes: "we do not restrict ourselves to any particular way of gluing. All legitimate ways of gluing cells to obtain higher projections are permitted and lead to distinct but valid cones." Nothing restricts how often earlier projections are used. The researcher's summary of the rule is accurate.
+3. **The counterexample cone over `x, f : x → x, α : f ⇒ f`.**
+   - q = p_x : c → x is admitted: FV(s) = {c}, and FV(t) = {x}.
+   - r = p_f : q ⇒ qf is admitted. U_τ(f) = FV(q) = {c, x, q}. FV(qf) = {x, f, c, q}, and f ∝ qf (a single occurrence, dimensions match).
+   - For α, both boundaries are f, with FV = {x, f}. Then x ∝ τ(q) = x (dimension 0) and f ∝ τ(r) = qf (dimension 1); x ∝ qf is excluded by dimension. So U = {c, x, f, q, r}.
+   - s = r·(r∗1_f) has FV = U, and t = s·(1_{qf}∗α) has FV = U ∪ {α}. Also α ∝ t: α occurs once, through w, and the dimensions agree.
+   - The extension b : s ⇛ t is admitted. Confirmed.
+4. **Dualising and specialising to the constant diagram.**
+   - Reversing 1-cells and substituting x ↦ ⊤, f ↦ 1_⊤, α ↦ 1 gives, after strict interpretation, `q : ⊤ → c, r : q ⇒ q, b : r·r ⇛ r·r`.
+   - The suspension is `q, r, a : r ⇛ r`.
+   - Confirmed.
+5. **The model Q (1 object; 1-cells u₀, u₁, u₂ with truncated addition; 2-cells e_{n,a}, a ≤ n, composed by max).**
+   - Well typed: max(a, b) ≤ min(2, n+m), since a ≤ n, b ≤ m and n, m ≤ 2.
+   - Units are e_{n,0} and e_{0,0}. Associativity and interchange hold, since both sides are a max of the same labels over the same truncated sum.
+   - The only invertible 1-cell is u₀, and the only invertible 2-cells are the e_{n,0}.
+6. **Counting.** In the strict 3-category of strict 2-categories, take ⊤ = * and c = Q.
+   - A 2-natural transformation q ⇒ q is a choice of u_n, with trivial naturality since * is discrete. A modification is an endo-2-cell of that 1-cell.
+   - Counts: r ⇛ r gives 1 + 2 + 3 = 6; r² ⇛ r² gives 1 + 3 + 3 = 7 (u₁² = u₂). Confirmed.
+7. **Non-equivalence.**
+   - Strict models interpret CaTT, with coherences as identities (Benjamin–Finster–Mimram, [arXiv 2106.04475](https://arxiv.org/abs/2106.04475)). Invertible syntactic comparison cells are therefore invertible in the model.
+   - With the endpoints fixed, the comparisons at q and r must be identities, and comparisons in dimension 3 force equality. So mutually inverse substitutions would give a bijection between sets of 6 and 7 elements.
+   - One point the response leaves implicit: the endpoints are fixed. In context (4) there is no term of type c → ⊤ and no non-identity loop at either object. So a comparison at an endpoint can only be a coherence on an identity (interpreted as an identity), or the non-invertible q. Hence both composites of the substitutions must fix ⊤ and c, and the counting argument applies.
+   - The objects are endomorphisms in every positive dimension, so no choice of opposites removes the mismatch. Confirmed.
+
+**What the counterexample does and does not show.** It refutes the step "each q_x differs from the suspended variable only by identity whiskerings" *for arbitrary derivations of the cone judgment*. It does not touch the canonical cone C(Γ) built in Mikhail's Thm 3.3. For that cone, the types are of the stated form.
+
+**What remains (restated problem).** Let C(Γ) be the *specified* cocone construction: the dual of Mikhail's Thm 3.3 for globular Γ, or of a chosen canonical extension for arbitrary Γ. Is its constant-diagram instance equivalent to the suspension of Γ, with endpoints ⊤ and c? The proof sketch in "What is known" applies to that version. A type theory that wants "free category = lax colimit of the point" syntactically must therefore fix the cocone construction rather than accept every derivation of the judgment. The same permissiveness applies to Mikhail's Gray judgment, which has the same σCond/τCond style of side condition; see `gray-contexts-in-catt.md` §6.

@@ -1,5 +1,9 @@
 # Naturality of CaTT coherences with respect to variables of arbitrary depth
 
+> **Update 2026-11-18.** N now holds for every term of dimension ≤ 2 (any Q, any up-closed Y), and N in dimension n follows from RC(n) on cylinders; see [`../relative-coherence.md`](../relative-coherence.md) §4. That note also proves the support lemma and repairs the §8 argument for composites (§4.3 there).
+>
+> **To send to a researcher, use [`outbox/naturality-arbitrary-depth.md`](outbox/naturality-arbitrary-depth.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 
 ---
@@ -232,6 +236,8 @@ Write `p := f⁻ ∗₀ y↑` and `q := x↑ ∗₀ f⁺`, so that `f↑ : p →
 4. **Match the whiskerings.** W and W' are parallel full terms over the disc-with-unit pasting context, so (F1) connects them.
 
 Composing these cells, with reassociations from (F1), gives `L → R`. ∎
+
+*Machine-checked (2026-11-18):* `src/CaTTExp/Free/LeftUnitorDepth2.agda` builds this 3-cell, with (id_x ∗₀ f)↑ given by an explicit depth-1 naturality term for binary composition substituted with ι, and the certified checker accepts it with type `L → R`.
 
 **Why this works.** After f↑ is slid out of the way, every remaining comparison involves 2-cells between composites along a single path through the square. On a 1-dimensional Q, every such path is a chain, hence a pasting context, so (F1) applies.
 

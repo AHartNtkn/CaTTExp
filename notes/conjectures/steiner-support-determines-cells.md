@@ -2,7 +2,7 @@
 
 *Self-contained problem statement. No project context needed.*
 
-> **Status: SOLVED for Gray tensors of globular pasting diagrams, and for any acyclic regular directed complex (2026-11-18).** The result follows from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18. Open for arbitrary Steiner complexes. See "Literature status" at the end.
+> **Status: SOLVED for Gray tensors of globular pasting diagrams, and for any acyclic regular directed complex (2026-11-18).** The result follows from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18. **Problems 1–3 are now SOLVED for arbitrary Steiner complexes (2026-11-18):** Problem 1 is in the literature (Forest; Campbell), and Problems 2 and 3 are proved in "Progress on the general case" at the end. See "Literature status" at the end.
 
 ## Background and definitions
 
@@ -80,7 +80,7 @@ Any of the following:
 
 ## Literature status (searched 2026-11-18)
 
-**Status: solved for the main case K = λΘ₁ ⊗ … ⊗ λΘₘ, and more generally for any K coming from an acyclic regular directed complex. The fully general Steiner-complex case is still open. Problems 1–4 follow from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* ([arXiv 2404.07273](https://arxiv.org/abs/2404.07273)).**
+**Status: solved for the main case K = λΘ₁ ⊗ … ⊗ λΘₘ, and more generally for any K coming from an acyclic regular directed complex. The fully general Steiner-complex case of Problems 1–3 is proved in the next section. Problems 1–4 follow from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* ([arXiv 2404.07273](https://arxiv.org/abs/2404.07273)).**
 
 The argument, assembled from that book:
 
@@ -105,6 +105,48 @@ The argument, assembled from that book:
 
    This is a short derivation, not a quoted theorem.
 
-**General Steiner complexes.** Hadzihasanovic, Example 11.2.19, shows that for regular directed complexes that are *not* dimension-wise acyclic, ν(ℤP) is a "more degenerate quotient" of Mol/P. Comment 11.2.37 records that compatibility with Gray products is not expected beyond the acyclic case. Problem 2 for arbitrary strongly loop-free Steiner complexes was not found in the literature. The case the project needs is covered.
+**General Steiner complexes.** Hadzihasanovic, Example 11.2.19, shows that for regular directed complexes that are *not* dimension-wise acyclic, ν(ℤP) is a "more degenerate quotient" of Mol/P. Comment 11.2.37 records that compatibility with Gray products is not expected beyond the acyclic case. Problem 2 for arbitrary strongly loop-free Steiner complexes was not found in the literature. It is proved in the next section.
+
+## Progress on the general case (2026-11-18, ledger G3): solved
+
+Not needed by any current design. K is a Steiner complex throughout (unital, strongly loop-free basis). For a cell x and m < dim x write **R_m(x) := x_m⁻ ∧ x_m⁺** (the part of the m-boundary present in both the source and the target).
+
+**Problem 1 holds in general [paper].** Every x_m^± of every cell is *well-formed*, in particular *radical* (a sum of distinct basis elements): Forest, *Unifying notions of pasting diagrams* (HHA 2022), Lemma 3.4.5, for Steiner complexes; Campbell, *Parity complexes redux* ([2605.09427](https://arxiv.org/abs/2605.09427)), Prop. 2.20, for weakly loop-free bases. Well-formed also means: distinct basis elements y, z ≤ x_m^± share no element of ∂⁻ and none of ∂⁺ (Campbell Def. 2.19).
+
+**A second tool [paper].** For every cell x, every m < dim x and every basis element b ≤ x_{m+1}^±: x_m⁻ ∧ ∂⁺b = 0 and x_m⁺ ∧ ∂⁻b = 0 (Forest Lemma 3.4.11; Campbell Prop. 2.23). Call this **(F2)**. In words, nothing produced by a top-level generator is in the source, and nothing consumed is in the target.
+
+**Reduction of Problem 2 [proved].** Problem 2 follows from:
+
+> **(G)** For every cell x, every m < dim x and every (m+1)-dimensional c ∈ Supp(x): R_m(x) ∧ (∂⁻c + ∂⁺c) = 0.
+
+*Proof of the reduction.* Rebuild x from n = dim x and Supp(x) top-down. The top chain x_n is the sum of the n-dimensional elements of Supp(x) (by Problem 1, and because lower atoms only contribute lower dimensions). Suppose x_{m+1}^± are known, and write ∂x_{m+1}⁻ = P − N with P, N disjoint and non-negative. Since x_m^± are radical and x_m⁺ − x_m⁻ = P − N, we get x_m⁻ = N + R and x_m⁺ = P + R with R = R_m(x). Let F be the set of m-dimensional basis elements that are faces (in ∂⁻ or ∂⁺) of some (m+1)-dimensional element of Supp(x). Every m-dimensional element of Supp(x) lies in x_m⁻, in x_m⁺ or in F, and P, N ⊆ F. Hence R ⊇ Supp_m(x) ∖ F, and (G) says R ∩ F = ∅, so R = Supp_m(x) ∖ F is determined by Supp(x). ∎
+
+**(G) holds in general [proved].** It follows from (F2) and two lemmas, proved by induction on (dimension, Steiner decomposition index). Steiner 2004, Def. 5.3, defines the index. A cell of index −1 is an atom ⟨b⟩, padded with identities if |b| < n (Prop. 5.5). A cell x ∈ (νK)ₙ of index r′ ≥ 0 decomposes as x = x_1 #_{r′} ⋯ #_{r′} x_p with every x_l ∈ (νK)ₙ of smaller index (Prop. 5.4, and the proof of Thm. 5.6). Every cell of νK is a valid table, and conversely any table satisfying the four conditions of "Background" is a cell. So an (r+1)-cell w with w_k^± = z_k^± for k ≤ r is the same thing as a chain w_{r+1} ≥ 0 with ∂w_{r+1} = z_r⁺ − z_r⁻.
+
+*Lemma A (support of a composite).* Supp(x #_k y) = Supp(x) ∪ Supp(y).
+- ⊆: below k the chains are shared, in degree k the composite takes x_k⁻ and y_k⁺, and above k it takes sums. The downward closure of a union of downward closed sets is their union.
+- ⊇: degrees < k, the chain x_k⁻ and the chain y_k⁺ are chains of the composite. Above k, the composite's chains are x_j^± + y_j^± with non-negative summands, so their supports contain supp(x_j^±) and supp(y_j^±). It remains to show supp(x_k⁺) ⊆ Supp(x #_k y), and supp(y_k⁻) likewise. If dim x = k then x = s_k y and Supp(x) ⊆ Supp(y). Otherwise let a ∈ supp(x_k⁺). Either a ∈ supp(x_k⁻), a chain of the composite, or a has a larger coefficient in x_k⁺ than in x_k⁻. Then a has a positive coefficient in ∂x_{k+1}⁻ = x_k⁺ − x_k⁻, so a ∈ supp((∂e)₊) = supp(⟨e⟩_k⁺) for some e ∈ supp(x_{k+1}⁻). That e lies in the composite's (k+1)-chain, and a lies in the downward closure. The case of y_k⁻ is dual.
+
+Also, Supp(s_j x) and Supp(t_j x) are contained in Supp(x), because their chains are chains of x. And Supp(⟨d⟩) = {d} ∪ Supp(s_{n−1}⟨d⟩) ∪ Supp(t_{n−1}⟨d⟩) for |d| = n ≥ 1.
+
+*Lemma P (lifting a support element).* Let z be a cell, r + 1 ≤ dim z, and c ∈ Supp(z) with |c| = r + 1. Then there is an (r+1)-cell w with w_k^± = z_k^± for all k ≤ r and c ∈ supp(w_{r+1}).
+
+*Proof.* If r + 1 = dim z, then c ∈ supp(z_{r+1}) (downward closure only adds lower dimensions), and w = z. Let n := dim z > r + 1.
+- *z an atom ⟨d⟩ (padded).* If |d| ≤ r + 1 then c ∈ supp(z_{r+1}^±), and w = s_{r+1}z or t_{r+1}z works. Otherwise c ≠ d, so c ∈ Supp(s_{|d|−1}z) or Supp(t_{|d|−1}z). These cells have dimension |d| − 1 ≥ r + 1, smaller than n, and the same chains as z in degrees ≤ r. Apply the induction hypothesis.
+- *z of index r′ ≥ 0,* z = z_1 #_{r′} ⋯ #_{r′} z_p. By Lemma A, c ∈ Supp(z_l) for some l. The induction hypothesis (same dimension, smaller index) gives w_l for z_l.
+  - If r′ ≥ r + 1, then (z_l)_k^± = z_k^± for k ≤ r < r′. Take w = w_l.
+  - If r′ ≤ r, take w := s_{r+1}z_1 #_{r′} ⋯ #_{r′} w_l #_{r′} ⋯ #_{r′} s_{r+1}z_p. It is defined, since each composand has the same r′-boundaries as the z_i it replaces. In degrees < r′ its chains are those of z. In degree r′ it takes the source of z_1 and the target of z_p, as z does. In degrees r′ < k ≤ r its chains are the sums of the composands' chains, which agree with those of the z_i. So w_k^± = z_k^± for k ≤ r. Finally w_{r+1} ≥ (w_l)_{r+1}, which contains c, because all summands are non-negative. ∎
+
+*Proof of (G).* Let c ∈ Supp(x) with |c| = m + 1 ≤ dim x. Lemma P gives w with w_m^± = x_m^± and c ∈ supp(w_{m+1}). Apply (F2) to w: x_m⁻ ∧ (∂c)₊ = 0 and x_m⁺ ∧ (∂c)₋ = 0. Since R_m(x) ≤ x_m⁻ and R_m(x) ≤ x_m⁺, we get R_m(x) ∧ ((∂c)₋ + (∂c)₊) = 0. ∎
+
+So **Problem 2 holds for every Steiner complex.** An earlier draft of this section reduced the last case of an induction to a "convexity" statement (Conv). Lemma P makes that induction unnecessary.
+
+**Problem 3 holds in general [proved].** Let F : ν(K) → ν(L) be a strict ω-functor. We show Supp(Fx) = ⋃_{b ∈ Supp(x)} Supp(F⟨b⟩) by the same induction.
+- *Atoms.* For x = ⟨d⟩ with |d| = 0 both sides are Supp(F⟨d⟩). For |d| = n ≥ 1, the right side is Supp(F⟨d⟩) ∪ ⋃_{b ∈ Supp(s_{n−1}⟨d⟩) ∪ Supp(t_{n−1}⟨d⟩)} Supp(F⟨b⟩). By the induction hypothesis (dimension n − 1) the second part is Supp(F s_{n−1}⟨d⟩) ∪ Supp(F t_{n−1}⟨d⟩) = Supp(s_{n−1}F⟨d⟩) ∪ Supp(t_{n−1}F⟨d⟩), which is contained in Supp(F⟨d⟩). Identities change neither side.
+- *Composites.* For x = x_1 #_{r′} ⋯ #_{r′} x_p, F preserves the composite, so Lemma A on both sides gives Supp(Fx) = ⋃_l Supp(F x_l) = ⋃_l ⋃_{b ∈ Supp(x_l)} Supp(F⟨b⟩) = ⋃_{b ∈ Supp(x)} Supp(F⟨b⟩). ∎
+
+**Problem 4** needs Supp(T) = B, which is the solved case above (K = λΘ₁ ⊗ ⋯ ⊗ λΘₘ comes from an acyclic regular directed complex), and its second part is an instance of Problem 2.
+
+**Checks.** Problem 2 was also tested by exhaustive enumeration of cells for D¹, D¹⊗D¹, the cube, D²⊗D¹ and D²⊗D², and on twelve random strongly loop-free Steiner complexes built by attaching generators between parallel cells. No two cells of the same dimension shared a support.
 
 Related: Campbell, *Parity complexes redux* ([arXiv 2605.09427](https://arxiv.org/abs/2605.09427)), shows that parity complexes are equivalent to strong Steiner complexes. In Street's parity complexes, cells are given as pairs of subsets.

@@ -30,10 +30,10 @@ open import CaTTExp.Pure
 open import CaTTExp.PureMetatheory using (closed; tm[])
 import CaTTExp.Subst ∅ cattSide as S
 open import CaTTExp.GlobularFiller
-  using (LT; lt; bd; nf; flat; liftT; liftS; assign; idTree; depthTm; depthSub; module Lists)
+  using (LT; lt; bd; nf; liftTy; depthTy; flat; liftT; liftS; assign; idTree; depthTm; depthSub; module Lists)
 open Lists using (find)
 open import CaTTExp.GlobularTotal.Surj ∅ using (treeOf-ps)
-open import CaTTExp.GlobularTotal.Uniq using (mem; memL; memCs)
+open import CaTTExp.GlobularTotal.Uniq using (mem; memL; memCs; Ex)
 open import CaTTExp.GlobularTotal.PsOrd using (ps-glob)
 open import CaTTExp.GlobularTotal.LabEx using (lab-ex)
 open import CaTTExp.GlobularTotal.LabRange using (lab-all)
@@ -41,8 +41,10 @@ open import CaTTExp.GlobularTotal.FlatBd using (flatG; Good; flat-bd; flat-is-fl
 open import CaTTExp.GlobularTotal.FlatAssoc using (flat-def; flat-assoc; I∘J)
 open import CaTTExp.GlobularTotal.NfSub using (Lab; LabL; AllN; Ĵ; nf-sub; wrap-flat; lookup-∘)
 open import CaTTExp.GlobularTotal.ExGood using (TypedImg; Bnd; ex-good)
-open import CaTTExp.GlobularTotal.NfTyped using (Glob)
-open import CaTTExp.GlobularTotal.NfFuel using (nf-det; depth-look; sub-len)
+open import CaTTExp.GlobularTotal.NfTyped using (Glob; Ends)
+open import CaTTExp.GlobularTotal.ExBd using (ex-bd)
+open import CaTTExp.GlobularTotal.NfFuel using (nf-det; depth-look; sub-len; dim-sub)
+open import CaTTExp.Derived using (tm-ty)
 open import CaTTExp.GlobularTotal.ImgTyped using (img-res; J; typed-img)
 open import CaTTExp.GlobularTotal.CohParts using (flat-total; lab-of-mem; lt-lookup)
 open import CaTTExp.GlobularTotal.NfCoh using (glob-shape; img-ex; res; all-res; hyp-res)
@@ -84,6 +86,18 @@ private
   le-lt a       b       zero    p ()
   le-lt (suc a) zero    (suc c) () q
   le-lt (suc a) (suc b) (suc c) p q = le-lt a b c p q
+
+  max-ltl : ∀ a b k → T (max a b <ℕ k) → T (a <ℕ k)
+  max-ltl zero    b       (suc k) p = tt
+  max-ltl a       b       zero    ()
+  max-ltl (suc a) zero    (suc k) p = p
+  max-ltl (suc a) (suc b) (suc k) p = max-ltl a b k p
+
+  max-ltr : ∀ a b k → T (max a b <ℕ k) → T (b <ℕ k)
+  max-ltr zero    b       k       p = p
+  max-ltr a       b       zero    ()
+  max-ltr (suc a) zero    (suc k) p = tt
+  max-ltr (suc a) (suc b) (suc k) p = max-ltr a b k p
 
   bind-just : ∀ {A B : Set} (m : Maybe A) (k : A → Maybe B) {x} → m ≡ just x → (m >>= k) ≡ k x
   bind-just m k refl = refl
@@ -352,3 +366,48 @@ module _ (Γ : Ctx) (gΓ : Glob Γ) (f : Nat → Nat)
     lift-subS (,-wf {τ} dτ dt) z q with z ==ℕ lenₛ τ in eq
     ... | true  = lift-sub dt
     ... | false = lift-subS dτ z (lt-ne' z (lenₛ τ) q eq)
+
+  ----------------------------------------------------------------------
+  -- The same for types.
+
+  -- The endpoints of B, at every dimension, sit at the boundaries of E.
+  TyPos : Ty → LT → Set
+  TyPos ⋆           E = ⊤
+  TyPos (arr B a b) E =
+      (Σ Nat λ n → Σ LT λ x → (nf n Θ₁ a ≡ just x) × (flatG P 0 x ≡ just (bd false (dim B) E)))
+    × (Σ Nat λ n → Σ LT λ x → (nf n Θ₁ b ≡ just x) × (flatG P 0 x ≡ just (bd true (dim B) E)))
+    × TyPos B (bd false (dim B) E)
+
+  private
+    arr-step : ∀ k B a b E B′ a′ b′ → liftTy k Γ B (bd false (dim B) E) ≡ just B′ →
+               liftT k Γ a (bd false (dim B) E) ≡ just a′ → liftT k Γ b (bd true (dim B) E) ≡ just b′ →
+               liftTy k Γ (arr B a b) E ≡ just (arr B′ a′ b′)
+    arr-step k B a b E B′ a′ b′ e₁ e₂ e₃ rewrite e₁ | e₂ | e₃ = refl
+
+  lift-sub-ty : ∀ B → Θ₁ ⊢ty B → ∀ E k → TyPos B E → T (depthTy (B [ σ₁ ]ty) <ℕ k) →
+                liftTy k Γ (B [ σ₁ ]ty) E ≡ just (B [ σ₁′ ]ty)
+  lift-sub-ty ⋆           _            E k _ _ = refl
+  lift-sub-ty (arr B a b) (arr-wf da db) E k ((na , xa , ea , fa) , (nb , xb , eb , fb) , tb) p =
+    arr-step k (B [ σ₁ ]ty) (a [ σ₁ ]tm) (b [ σ₁ ]tm) E (B [ σ₁′ ]ty) (a [ σ₁′ ]tm) (b [ σ₁′ ]tm)
+      (subst (λ j → liftTy k Γ (B [ σ₁ ]ty) (bd false j E) ≡ just (B [ σ₁′ ]ty)) (sym (dim-sub B σ₁))
+        (lift-sub-ty B (tm-ty da) (bd false (dim B) E) k tb (max-ltl (depthTy (B [ σ₁ ]ty)) _ k p)))
+      (subst (λ j → liftT k Γ (a [ σ₁ ]tm) (bd false j E) ≡ just (a [ σ₁′ ]tm)) (sym (dim-sub B σ₁))
+        (lift-sub da na xa (bd false (dim B) E) k ea fa (max-ltl (depthTm (a [ σ₁ ]tm)) (depthTm (b [ σ₁ ]tm)) k (max-ltr (depthTy (B [ σ₁ ]ty)) _ k p))))
+      (subst (λ j → liftT k Γ (b [ σ₁ ]tm) (bd true j E) ≡ just (b [ σ₁′ ]tm)) (sym (dim-sub B σ₁))
+        (lift-sub db nb xb (bd true (dim B) E) k eb fb (max-ltr (depthTm (a [ σ₁ ]tm)) (depthTm (b [ σ₁ ]tm)) k (max-ltr (depthTy (B [ σ₁ ]ty)) _ k p))))
+
+  -- TyPos from the normal forms of B's endpoints (by (1′) in Θ₁).
+  typos : ∀ B → Θ₁ ⊢ty B → ∀ a₀ E → Ex Θ₁ 0 nothing a₀ → Ends Θ₁ B a₀ → flatG P 0 a₀ ≡ just E → TyPos B E
+  typos ⋆           _              a₀ E xa en eA = tt
+  typos (arr B s u) (arr-wf ds du) a₀ E xa (n , es , eu) eA =
+    (n , bd false (dim B) a₀ , es , com false (dim B)) ,
+    (n , bd true  (dim B) a₀ , eu , com true  (dim B)) ,
+    typos B (tm-ty ds) (bd false (dim B) a₀) (bd false (dim B) E)
+          (ex-bd Θ₁ false (dim B) 0 nothing a₀ xa) endsB (com false (dim B))
+    where
+    com = snd (flat-bd P 0 (λ _ → ⊤) a₀ E (ex-good Θ₁ P tiP 0 a₀ xa) eA)
+    r = res gΘ₁ ds
+    endsB : Ends Θ₁ B (bd false (dim B) a₀)
+    endsB = subst (Ends Θ₁ B)
+                  (nf-det (suc (depthTm s) + 0) n Θ₁ s _ _ (fst (snd r) 0) es)
+                  (fst (snd (snd (snd (snd (snd r))))))

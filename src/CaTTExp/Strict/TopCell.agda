@@ -174,3 +174,180 @@ top-shape {Γ} P w (wf , dk) =
   where
   open Shape (shape P)
   W = walk P [] o rest eqo w (subst₂ (λ a b → WFT Γ a b w) efst elst wf)
+
+------------------------------------------------------------------------
+-- Order facts about faces in a pasting context.
+--
+--   fl : a cell's source comes before its target;
+--   sl : a cell whose source is the target of α comes after α;
+--   tu : two cells with the same target that are sources of nothing
+--        are equal.
+
+record Facts (Γ : Ctx) : Set where
+  field
+    fl : ∀ v {s t} → facesTy (lookup Γ v) ≡ just (s , t) → T (s <ℕ t)
+    sl : ∀ α β {s t u} → facesTy (lookup Γ α) ≡ just (s , t) → facesTy (lookup Γ β) ≡ just (t , u) → T (α <ℕ β)
+    tu : ∀ α α' {s s' t} → facesTy (lookup Γ α) ≡ just (s , t) → facesTy (lookup Γ α') ≡ just (s' , t) →
+         NotSrc Γ α → NotSrc Γ α' → α ≡ α'
+
+private
+  data View (Γ : Ctx) (A F : Ty) (v : Nat) : Maybe Ty → Set where
+    old : View Γ A F v (lookup Γ v)
+    isy : v ≡ len Γ → View Γ A F v (just A)
+    isf : v ≡ suc (len Γ) → View Γ A F v (just F)
+
+  view : ∀ Γ A F v → View Γ A F v (lookup (Γ ▸ A ▸ F) v)
+  view Γ A F v with v ==ℕ suc (len Γ) in e1
+  ... | true  = isf (==→≡ v _ e1)
+  ... | false with v ==ℕ len Γ in e2
+  ...   | true  = isy (==→≡ v _ e2)
+  ...   | false = old
+
+  lt-trans' : ∀ a b c → T (a <ℕ b) → T (b <ℕ c) → T (a <ℕ c)
+  lt-trans' zero    (suc b) (suc c) _ _ = tt
+  lt-trans' (suc a) (suc b) (suc c) p q = lt-trans' a b c p q
+  lt-trans' zero    zero    c       () _
+  lt-trans' (suc a) zero    c       () _
+  lt-trans' a       (suc b) zero    _ ()
+
+  lt-neq : ∀ a b → T (a <ℕ b) → a ≡ b → ⊥
+  lt-neq a .a p refl = lt-irr a p
+
+  true≢false' : true ≡ false → ⊥
+  true≢false' ()
+
+  just-pair : ∀ {a b c d : Nat} → just (a , b) ≡ just (c , d) → (a ≡ c) × (b ≡ d)
+  just-pair refl = refl , refl
+
+  hit-self : ∀ Γ v {s t} → facesTy (lookup Γ v) ≡ just (s , t) → hitB Γ true s v ≡ true
+  hit-self Γ v {s} e rewrite e = ==-true s
+
+  notsrc-old : ∀ Γ A F v → NotSrc (Γ ▸ A ▸ F) v → NotSrc Γ v
+  notsrc-old Γ A F v ns w lt =
+    trans (cong (λ m → hitM true v (facesTy m)) (sym (trans (lookup-old (Γ ▸ A) F w (<-suc w (len Γ) lt)) (lookup-old Γ A w lt))))
+          (ns w (<-suc w (suc (len Γ)) (<-suc w (len Γ) lt)))
+
+  fF : ∀ A x y {s t} → facesTy (just A) ≡ just (s , t) → facesTy (just (arr A (var x) (var y))) ≡ just (x , y)
+  fF ⋆           x y ()
+  fF (arr _ _ _) x y e = refl
+
+  ffA : ∀ A x y {s t} → facesTy (just (arr A (var x) (var y))) ≡ just (s , t) → (s ≡ x) × (t ≡ y)
+  ffA ⋆           x y ()
+  ffA (arr _ _ _) x y e = sym (fst (just-pair e)) , sym (snd (just-pair e))
+
+module PseFacts {Γ : Ctx} {x : Nat} {A : Ty} (d : Γ ⊢ps x ∶ A) (I : Facts Γ) where
+  open Facts I
+  y = len Γ
+  F = arr A (var x) (var y)
+  Γ' = Γ ▸ A ▸ F
+  invΓ = fst (ps-inv d)
+  lx : lookup Γ x ≡ just A
+  lx = snd (ps-inv d)
+  x<y : T (x <ℕ y)
+  x<y = lookup-lt Γ x lx
+  IΓ = inv-ps d
+
+  old-lt : ∀ v {s t} → facesTy (lookup Γ v) ≡ just (s , t) → T (v <ℕ len Γ)
+  old-lt v e with lookup Γ v in lv
+  old-lt v () | nothing
+  old-lt v e  | just C = lookup-lt Γ v lv
+
+  -- the faces of y are those of x
+  fy : ∀ {s t} → facesTy (just A) ≡ just (s , t) → facesTy (lookup Γ x) ≡ just (s , t)
+  fy e = trans (cong facesTy lx) e
+
+  -- the faces of f are x and y
+  ff : ∀ {s t} → facesTy (just F) ≡ just (s , t) → (s ≡ x) × (t ≡ y)
+  ff = ffA A x y
+
+  fl' : ∀ v {s t} → facesTy (lookup Γ' v) ≡ just (s , t) → T (s <ℕ t)
+  fl' v e = go (lookup Γ' v) (view Γ A F v) e
+    where
+    go : ∀ m → View Γ A F v m → ∀ {s t} → facesTy m ≡ just (s , t) → T (s <ℕ t)
+    go _ old       e = fl v e
+    go _ (isy _)   e = fl x (fy e)
+    go _ (isf _)   e with ff e
+    ... | refl , refl = x<y
+
+  -- the target of y is not the source of an old cell
+  tgt-y : ∀ {s t} → facesTy (just A) ≡ just (s , t) → NotSrc Γ t
+  tgt-y {s} {t} e = go A (Inv.tch IΓ) e
+    where
+    go : ∀ B → TgtChain Γ B → facesTy (just B) ≡ just (s , t) → NotSrc Γ t
+    go ⋆ _ ()
+    go (arr ⋆ _ _) _ ()
+    go (arr (arr B a b) (var s₀) (var c)) (ns , _) refl = ns
+    go (arr (arr B a b) (var s₀) (coh _ _ _)) () _
+    go (arr (arr B a b) (var s₀) (cst ())) _ _
+    go (arr (arr B a b) (coh _ _ _) _) _ ()
+    go (arr (arr B a b) (cst ()) _) _ _
+
+  sl' : ∀ α β {s t u} → facesTy (lookup Γ' α) ≡ just (s , t) → facesTy (lookup Γ' β) ≡ just (t , u) → T (α <ℕ β)
+  sl' α β eα eβ = go (lookup Γ' α) (view Γ A F α) (lookup Γ' β) (view Γ A F β) eα eβ
+    where
+    go : ∀ mα → View Γ A F α mα → ∀ mβ → View Γ A F β mβ → ∀ {s t u} →
+         facesTy mα ≡ just (s , t) → facesTy mβ ≡ just (t , u) → T (α <ℕ β)
+    go _ old _ old eα eβ = sl α β eα eβ
+    go _ old _ (isy refl) eα eβ = old-lt α eα
+    go _ old _ (isf refl) eα eβ = <-suc α (len Γ) (old-lt α eα)
+    go _ (isy refl) _ old {s} {t} eα eβ =
+      ⊥-elim (true≢false' (trans (sym (hit-self Γ β eβ)) (tgt-y eα β (old-lt β eβ))))
+    go _ (isy refl) _ (isy refl) eα eβ =
+      ⊥-elim (lt-neq _ _ (fl x (fy eα)) (fst (just-pair (trans (sym eα) eβ))))
+    go _ (isy refl) _ (isf refl) eα eβ = n<suc (len Γ)
+    go _ (isf refl) _ old eα eβ with ff eα
+    ... | refl , refl = ⊥-elim (lt-irr (len Γ) (fst (faces-lt Γ invΓ β eβ)))
+    go _ (isf refl) _ (isy refl) eα eβ with ff eα
+    ... | refl , refl = ⊥-elim (lt-irr (len Γ) (fst (faces-lt Γ invΓ x (fy eβ))))
+    go _ (isf refl) _ (isf refl) eα eβ with ff eα | ff eβ
+    ... | refl , refl | e , _ = ⊥-elim (lt-neq _ _ x<y (sym e))
+
+  -- once A has faces, x is the source of f
+  x-src : ∀ {s t} → facesTy (just A) ≡ just (s , t) → NotSrc Γ' x → ⊥
+  x-src e ns =
+    true≢false' (trans (sym (==-true x))
+                (trans (sym (cong (hitM true x) (fF A x y e)))
+                (trans (sym (cong (λ m → hitM true x (facesTy m)) (lookup-new (Γ ▸ A) F)))
+                       (ns (suc (len Γ)) (n<suc (suc (len Γ)))))))
+
+  tu' : ∀ α α' {s s' t} → facesTy (lookup Γ' α) ≡ just (s , t) → facesTy (lookup Γ' α') ≡ just (s' , t) →
+        NotSrc Γ' α → NotSrc Γ' α' → α ≡ α'
+  tu' α α' eα eα' nα nα' = go (lookup Γ' α) (view Γ A F α) (lookup Γ' α') (view Γ A F α') eα eα'
+    where
+    go : ∀ m → View Γ A F α m → ∀ m' → View Γ A F α' m' → ∀ {s s' t} →
+         facesTy m ≡ just (s , t) → facesTy m' ≡ just (s' , t) → α ≡ α'
+    go _ old _ old e e' = tu α α' e e' (notsrc-old Γ A F α nα) (notsrc-old Γ A F α' nα')
+    go _ old _ (isy refl) e e' with tu α x e (fy e') (notsrc-old Γ A F α nα) (Inv.nsx IΓ)
+    ... | refl = ⊥-elim (x-src e' nα)
+    go _ old _ (isf refl) e e' with ff e'
+    ... | _ , refl = ⊥-elim (lt-irr (len Γ) (snd (faces-lt Γ invΓ α e)))
+    go _ (isy refl) _ old e e' with tu α' x e' (fy e) (notsrc-old Γ A F α' nα') (Inv.nsx IΓ)
+    ... | refl = ⊥-elim (x-src e nα')
+    go _ (isy refl) _ (isy refl) e e' = refl
+    go _ (isy refl) _ (isf refl) e e' with ff e'
+    ... | _ , refl = ⊥-elim (lt-irr (len Γ) (snd (faces-lt Γ invΓ x (fy e))))
+    go _ (isf refl) _ old e e' with ff e
+    ... | _ , refl = ⊥-elim (lt-irr (len Γ) (snd (faces-lt Γ invΓ α' e')))
+    go _ (isf refl) _ (isy refl) e e' with ff e
+    ... | _ , refl = ⊥-elim (lt-irr (len Γ) (snd (faces-lt Γ invΓ x (fy e'))))
+    go _ (isf refl) _ (isf refl) e e' = refl
+
+facts : ∀ {Γ x A} → Γ ⊢ps x ∶ A → Facts Γ
+facts pss = record { fl = fl0 ; sl = sl0 ; tu = tu0 }
+  where
+  fl0 : ∀ v {s t} → facesTy (lookup (ε ▸ ⋆) v) ≡ just (s , t) → T (s <ℕ t)
+  fl0 zero ()
+  fl0 (suc v) ()
+  sl0 : ∀ α β {s t u} → facesTy (lookup (ε ▸ ⋆) α) ≡ just (s , t) → facesTy (lookup (ε ▸ ⋆) β) ≡ just (t , u) → T (α <ℕ β)
+  sl0 zero    _ ()
+  sl0 (suc α) _ ()
+  tu0 : ∀ α α' {s s' t} → facesTy (lookup (ε ▸ ⋆) α) ≡ just (s , t) → facesTy (lookup (ε ▸ ⋆) α') ≡ just (s' , t) →
+        NotSrc (ε ▸ ⋆) α → NotSrc (ε ▸ ⋆) α' → α ≡ α'
+  tu0 zero    _ ()
+  tu0 (suc α) _ ()
+facts (pse d) = record { fl = fl' ; sl = sl' ; tu = tu' }
+  where open PseFacts d (facts d)
+facts (psd d) = facts d
+
+facts-ps : ∀ {Γ} → Γ ⊢ps → Facts Γ
+facts-ps (ps d) = facts d

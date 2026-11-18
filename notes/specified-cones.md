@@ -23,7 +23,8 @@ The printed CaTT_lim cone judgment admits non-canonical cones (`conjectures/lax-
 | | arbitrary Γ | equivalent to the cone form of N, `N^cone`, posed in `conjectures/cone-over-coherences.md` [conj]; dimension 2 follows from RC(2) |
 | **B6, level 0**: a Γ-family of elements gives a cocone over the constant point diagram (`φ`) | every globular Γ, every dimension | **proved** (Prop. 6.2); machine-checked on all 12 shapes |
 | **B6, equivalence**: `φ`, `ψ` and invertible homotopies `ψφ ≃ id`, `φψ ≃ id` | globular Γ of dimension ≤ 1 (graphs) | **proved** (Thm 6.3); machine-checked on 6 graphs |
-| | dimension ≥ 2 | reduced to transport along unit coherences (§6.4) [conj] |
+| | dimension 2 | ψ and `ψφ ≃ id`: **proved**, machine-checked on 9 shapes (§6.4). `φψ ≃ id`: its cylinder is built; the one 4-cell component is open |
+| | dimension ≥ 3 | reduced to transport along unit coherences (§6.4) [conj] |
 | B6 Step B (cocone morphisms vs family morphisms) | | reduced to depth-1 naturality of two named cells (§6.5) [conj] |
 
 **What "machine-checked" means here.** Each construction is an Agda function producing CaTT syntax. For each listed shape the certified checker returns a typing derivation. The general statements (for every Γ in the class) are paper proofs. They reduce to the checked generic cases by *locality* (§7): every construction is assembled from its value on disks Dᵐ by substitution. So the checks on D⁰–D⁴ plus substitution admissibility (A1, proved in Agda in `CaTTExp.Subst`, PR #20) cover all globular Γ of dimension ≤ 4. The step from disks to Γ is a paper argument; it is not itself formalised (S5).
@@ -309,13 +310,29 @@ Every component is an identity, a coherence, or a vertical composite of whiskere
 
 **Consequence for R-B.** For graphs, "maps out of the lax colimit of the point are Γ-families" holds at level 0: families give cocones (φ), cocones give families (ψ), and the round trips are invertibly homotopic to the identity. Together with the colimit rule's J1/J2, this derives R-A's level-0 rule for graphs: the map `⟦Γ⟧ → C` from a family, and the invertible cells saying it restricts to the family.
 
-### 6.4 Dimension ≥ 2 (open)
+### 6.4 Dimension 2: ψ and H (B20)
 
-φ exists in all dimensions (Prop. 6.2). What is missing is ψ and the two homotopies:
-- **ψ** needs, for each t, a cell `ψ(s_{σt}) → ψ(s_{τt})` built from q_t. q_t's boundary differs from the desired one by unit coherences *in every dimension below*. So ψ(s_t) is q_t transported along an invertible boundary comparison. In dimension 2 the transport is explicit: `ψ(s_α) := κ ∗₂ (q_α ∗₁ λ)` with κ assembled as in c₁–c₄. The general transport is the "transport along an invertible sphere" operation of `lax-colimit-of-point.md` ("What is known").
-- **The homotopies** need cylinders on 𝒦 at depth `dim Γ − 1`.
+**Proposition 6.4.** For every globular Γ of dimension ≤ 2, ψ extends to `ψ : 𝒦(Γ) ⊢ ψ : ΣΓ`, and there is a homotopy `H : ψφ ≃ id` on ΣΓ with invertible components.
 
-Both are follow-up S1 (§8). Since every comparison involved has equal strict images, RC(n) would supply them.
+- For a 2-cell `α : f ⇒ g` over `x → y`, the constant cocone has `q_α : q_f ∗₁ (id²_⊤ ∗₀ q_y) ⇛ q_g`, and ψ(s_α) must run from `q_f ∗₁ λ` to `q_g ∗₁ λ` (λ = λ_{q_y}). Put
+
+  ```
+  ψ(s_α) := (q_f ∗₁ κ′) ∗₂ asR(q_f, id²_⊤ ∗₀ q_y, λ) ∗₂ (q_α ∗₁ λ),
+  κ′ : λ_w ⇛ (id_{id_⊤} ∗₀ w) ∗₁ λ_w      (full coherence over D¹, at w = q_y).
+  ```
+
+  The trick is the one from Theorem 6.3: q_f's target is a composite, so q_f is isolated by whiskering, and every coherence used lives over a pasting context (D¹, or three vertical 2-cells).
+- `H(s_α↑) : (ψφ(s_α) ∗₁ id_{s_y}) ∗₂ H_g ⇛ H_f ∗₂ (id_{s_x} ∗₁ s_α)` is the full coherence over the disk around s_α. That disk is ΣD² = D³, a pasting context, and both sides use all of its variables. This is the same argument as for H_f, one dimension up. The argument does not depend on the dimension, so H exists in every dimension once ψ does.
+
+**Machine-checked** (`ConstD2.okψ`, `ConstD2.okH`) on D², the loop with a 2-cell, two parallel 2-cells, and the six graphs.
+
+**The cocone-side homotopy H′ (open).** The cylinder `𝒦↑Y` is now built and well typed for these shapes (machine-checked). The lift of `id²_⊤ ∗₀ q_y` is the reversed interchange, and the lift of `q_f ∗₁ (id²_⊤ ∗₀ q_y)` uses the paste rule of §4.3. The missing component is a 4-cell
+
+```
+H′(q_α↑) : (φψ(q_α) ∗₁ (id_⊤ ∗₀ id_{q_y})) ∗₂ H′_g  ⇛  Paste[H′] ∗₂ (id_{q_x} ∗₁ q_α)
+```
+
+between parallel 3-terms of 𝒦. Here `Paste[H′]` is the paste-rule lift of `q_f ∗₁ (id²_⊤ ∗₀ q_y)` with H′ substituted: three associators, `H′_f`, and the reversed interchange at `id_{q_y}`. Both sides contain q_α exactly once and otherwise only q_f, q_g, q_x, q_y and coherences. So the plan is the c₁–c₄ method one dimension up: isolate q_α, q_f and q_g by inserting `λ ∗₁ λ⁻¹`, so that each step is a coherence over a pasting context. Since the strict images agree, RC(3) for 𝒦 would also supply it. Dimension ≥ 3 needs ψ by transport along invertible spheres (`lax-colimit-of-point.md`, "What is known"), with the same pattern.
 
 ### 6.5 Step B (open)
 
@@ -338,7 +355,7 @@ Ledger IDs in `open-issues.md`: S1 = B20, S2 = B21, S3 = B18, S4 = B23, S5 = B22
 
 | ID | Item | Owner |
 |---|---|---|
-| S1 | B6 in dimension ≥ 2: ψ by transport along invertible spheres, and the cylinder homotopies; check via RC(n). Explicit dimension-2 case first. | this thread |
+| S1 | B6 in dimension ≥ 2. Dimension 2: ψ and H done (§6.4); H′(q_α↑) open. Dimension ≥ 3: ψ by transport along invertible spheres. | this thread |
 | S2 | B6 Step B for graphs: depth-1 naturality of U and λ, giving φ↑ and ψ↑. | this thread |
 | S3 | Depth-1 lifts in `CylOf`. Tr₁ over 2-dimensional Γ is done (§4.3). Remaining: lifts of the coherence constructors (naturality in maximal arguments) and the paste rule one dimension up, for Tr_k with k ≥ 2, plus a written proof of the k ≥ 2 sketch. | this thread |
 | S4 | "Horns are cones" for graphs: compare `Tr₁(Γ)` with `Cone((D¹)^op ⊗ Γ)[π]` up to units, using Prop. 5.2. | this thread |

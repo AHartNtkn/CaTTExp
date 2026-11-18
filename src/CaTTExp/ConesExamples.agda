@@ -235,12 +235,26 @@ _ = refl
 ------------------------------------------------------------------------
 -- 8. Free object = lax colimit of the point, for 1-dimensional shapes.
 
+okCylK : ExCtx → Bool
+okCylK Γ with CylOf.cyl (constCocone Γ) (rangeFrom 2 (length Γ))
+... | nothing = false
+... | just C  = ok (Cyl.ctx C)
+
 okConst : ExCtx → Bool
 okConst Γ = ConstPoint.okφ Γ ∧ ConstPoint.okψ Γ ∧ ConstPoint.okH Γ ∧ ConstPoint.okH′ Γ
 
 _ : okConst Arr ≡ true
 _ = refl
 _ : all okConst oneDim ≡ true
+_ = refl
+
+-- Dimension 2 (ledger B20): ψ (cocone ⇒ family) and the homotopy
+-- H : ψφ ≃ id on the family side, on every shape of dimension ≤ 2.
+-- The cocone-side homotopy H′ is open; its cylinder is built and well
+-- typed (the lift of id²_⊤ ∗₀ q_y is the reversed interchange).
+_ : all (λ Γ → ConstD2.okψ Γ ∧ ConstD2.okH Γ) (twoDim ++ oneDim) ≡ true
+_ = refl
+_ : all (λ Γ → okCylK Γ) twoDim ≡ true
 _ = refl
 
 -- Non-vacuity: the naive identification q ↦ s is not a substitution

@@ -173,15 +173,16 @@ binC k u w = binF (suc (max (dimC u) (dimC w))) k u w
 --
 -- xchC u w, for 2-cells u : f ⇒ g : x → y and w : h ⇒ k : y → z, is the
 -- interchange  (f ∗₀ w) ∗₁ (u ∗₀ k)  ⇛  (u ∗₀ h) ∗₁ (g ∗₀ w),
--- over D² ∨₀ D² (levels x0 y1 f2 g3 u4 z5 h6 k7 w8).
-xchC : Cell → Cell → Cell
-xchC u w = coh Q B σ , B [ σ ]ty
+-- over D² ∨₀ D² (levels x0 y1 f2 g3 u4 z5 h6 k7 w8); with dir = false,
+-- its reverse.
+xchC : Bool → Cell → Cell → Cell
+xchC dir u w = coh Q B σ , B [ σ ]ty
   where
   Q = Glue 0 2 2
   f = gen Q 2 ; g = gen Q 3 ; a = gen Q 4 ; h = gen Q 6 ; k = gen Q 7 ; b = gen Q 8
   s = binC 1 (binC 0 f b) (binC 0 a k)
   t = binC 1 (binC 0 a h) (binC 0 g b)
-  B = arr (snd s) (fst s) (fst t)
+  B = if dir then arr (snd s) (fst s) (fst t) else arr (snd s) (fst t) (fst s)
   σ = ⟪ diskList u ++ restDisk 0 w ⟫
 
 -- assocC dir u v w, for 2-cells composable along 1-cells, is the
@@ -205,6 +206,7 @@ data Ex : Set where
   bn  : Nat → Ex → Ex → Ex    -- binary composite along a k-cell
   idn : Ex → Ex               -- identity
   xc  : Ex → Ex → Ex          -- interchange of two 2-cells (xchC)
+  xr  : Ex → Ex → Ex          -- its reverse
   asL asR : Ex → Ex → Ex → Ex -- associator of three 2-cells along 1-cells, and its reverse
 
 data ExTy : Set where
@@ -234,6 +236,12 @@ tyF zero       Γ e = ob
 tyF (suc f) Γ (v i)      = nth ob Γ i
 tyF (suc f) Γ (idn e)    = hom (tyF f Γ e) e e
 tyF (suc f) Γ (xc u w)   = hom (tyF f Γ s) s t
+  where
+  A = tyF f Γ u
+  B = tyF f Γ w
+  s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
+  t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
+tyF (suc f) Γ (xr u w)   = hom (tyF f Γ s) t s
   where
   A = tyF f Γ u
   B = tyF f Γ w
@@ -269,7 +277,8 @@ mutual
   evF (suc f) Γ (v i)      = var i
   evF (suc f) Γ (idn e)    = fst (idC (cellF f Γ e))
   evF (suc f) Γ (bn k u w) = fst (binC k (cellF f Γ u) (cellF f Γ w))
-  evF (suc f) Γ (xc u w)   = fst (xchC (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (xc u w)   = fst (xchC true  (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (xr u w)   = fst (xchC false (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asR u y w) = fst (assocC false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
 
@@ -305,6 +314,7 @@ substE ρ (v i)      = ρ i
 substE ρ (bn k u w) = bn k (substE ρ u) (substE ρ w)
 substE ρ (idn e)    = idn (substE ρ e)
 substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
+substE ρ (xr u w)   = xr (substE ρ u) (substE ρ w)
 substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (asR u y w) = asR (substE ρ u) (substE ρ y) (substE ρ w)
 
@@ -317,6 +327,7 @@ varsE (v i)      = i ∷ []
 varsE (bn _ u w) = varsE u ++ varsE w
 varsE (idn e)    = varsE e
 varsE (xc u w)   = varsE u ++ varsE w
+varsE (xr u w)   = varsE u ++ varsE w
 varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
 varsE (asR u y w) = varsE u ++ varsE y ++ varsE w
 
@@ -537,7 +548,8 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   -- * depth 0: an affected factor of the composite's own dimension,
   --   whiskered by unaffected cells, lifts factorwise;
   -- * depth 1, whisker: u ∗₀ w with u an affected 1-cell and w an
-  --   unaffected 2-cell lifts to the interchange xc u↑ w;
+  --   unaffected 2-cell lifts to the interchange xc u↑ w; mirrored, an
+  --   unaffected 2-cell u and an affected 1-cell w give xr u w↑;
   -- * depth 1, paste: u ∗₁ w with u, w affected 2-cells (and affected
   --   1-dimensional boundaries, unaffected 0-dimensional ones) lifts to
   --   the pasting of u↑ and w↑ through three associators.
@@ -547,6 +559,7 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   liftF (suc fl) (v i)      = if inY i then just (v (upl i)) else nothing
   liftF (suc fl) (idn e)    = nothing
   liftF (suc fl) (xc _ _)    = nothing
+  liftF (suc fl) (xr _ _)    = nothing
   liftF (suc fl) (asL _ _ _) = nothing
   liftF (suc fl) (asR _ _ _) = nothing
   liftF (suc fl) (bn k u w) =
@@ -558,7 +571,10 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
        then (liftF fl u >>= λ u' → just (xc u' (ren⁻ w)))
        else nothing)
     else if affected w then
-      (if dw ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w')) else nothing)
+      (if dw ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w'))
+       else if (n ==ℕ 2) ∧ (dw ==ℕ 1) ∧ (k ==ℕ 0)
+       then (liftF fl w >>= λ w' → just (xr (ren⁻ u) w'))
+       else nothing)
     else nothing
     where
     du = dimΓ u
@@ -755,6 +771,7 @@ dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dual
 -- the dual of an interchange is the interchange with factors swapped,
 -- and the dual of an associator is the reverse associator.
 dualE (xc u w)    = xc (dualE w) (dualE u)
+dualE (xr u w)    = xr (dualE w) (dualE u)
 dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
 dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
 
@@ -989,3 +1006,101 @@ module PhiAll where
   okφ : ExCtx → Bool
   okφ Γ = is-just (checkCtx S >>= λ w → checkSub S w (φ Γ) (evCtx (constCocone Γ)))
     where S = evCtx (susp Γ)
+
+------------------------------------------------------------------------
+-- B6 in dimension 2 (ledger B20): ψ and the homotopy H for globular Γ
+-- of dimension ≤ 2. The homotopy H′ on the cocone side is not here: it
+-- needs the cylinder on 𝒦 over 2-cells, whose lift of id²_⊤ ∗₀ q_y is a
+-- mirrored interchange (see notes/specified-cones.md §6.4).
+
+module PsiD2 (Γ : ExCtx) where
+  open ConstPoint Γ public using (lam; lami; ΣΓ; 𝒦; cellΣ; cellK; bnd; ψf; Hf; Y; cylΣ)
+
+  dimV : Nat → Nat
+  dimV x = dimE (nth ob Γ x)
+
+  cohC : Ctx → Ty → List Tm → Cell
+  cohC P A ts = coh P A ⟪ ts ⟫ , A [ ⟪ ts ⟫ ]ty
+
+  asTy : Cell → Cell → Ty
+  asTy s t = arr (snd s) (fst s) (fst t)
+
+  -- κ' over D¹ = (x₀, y₀, w):  λ_w ⇛ (id_{id_{x₀}} ∗₀ w) ∗₁ λ_w  (full coherence).
+  private
+    D¹ : Ctx
+    D¹ = Disk 1
+    w₀ : Cell
+    w₀ = gen D¹ 2
+    κT : Ty
+    κT = asTy (lam w₀) (binC 1 (binC 0 (idC (idC (gen D¹ 0))) w₀) (lam w₀))
+
+  -- For α : f ⇒ g with f, g : x → y, the constant cocone has
+  --   q_α : q_f ∗₁ (id²_⊤ ∗₀ q_y) ⇛ q_g.
+  -- ψ(s_α) : q_f ∗₁ λ ⇛ q_g ∗₁ λ is
+  --   (q_f ∗₁ κ') ∗₂ assoc⁻¹(q_f, id²_⊤ ∗₀ q_y, λ) ∗₂ (q_α ∗₁ λ).
+  ψα : Nat → Cell
+  ψα x = binC 2 (binC 2 (binC 1 qf κ') (assocC false qf W (lam qy))) (binC 1 qα (lam qy))
+    where
+    f  = fst (bnd x)
+    qα = cellK x
+    qf = cellK f
+    qy = cellK (snd (bnd f))
+    W  = binC 0 (idC (idC (gen 𝒦 0))) qy
+    κ' = cohC D¹ κT (diskList qy)
+
+  φ : Sub
+  φ = PhiAll.φ Γ
+
+  ψ : Sub
+  ψ = ⟪ var 0 ∷ var 1 ∷ map ψv (range (length Γ)) ⟫
+    where
+    ψv : Nat → Tm
+    ψv x with dimV x
+    ... | zero        = var (2 + x)
+    ... | suc zero    = fst (ψf x)
+    ... | suc (suc _) = fst (ψα x)
+
+  ψφ : Sub
+  ψφ = ψ ∘ φ
+
+-- The generic H-component over a 2-cell, computed once in ΣD² = D³:
+--   (ψφ(s_α) ∗₁ id_{s_y}) ∗₂ H_g  ⇛  H_f ∗₂ (id_{s_x} ∗₁ s_α),
+-- a full coherence over D³ (both sides use every variable).
+module HGenD2 where
+  G : ExCtx
+  G = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ hom ob (v 0) (v 1) ∷ hom (hom ob (v 0) (v 1)) (v 2) (v 3) ∷ []
+  open PsiD2 G
+  S : Ctx
+  S = ΣΓ
+  sα : Cell
+  sα = gen S 6
+  ψφα : Cell
+  ψφα = lookupₛ ψφ 6 , lookupTy S 6 [ ψφ ]ty
+  a b : Cell
+  a = binC 2 (binC 1 ψφα (idC (gen S 3))) (Hf 3)
+  b = binC 2 (Hf 2) (binC 1 (idC (gen S 2)) sα)
+  HαT : Ty
+  HαT = asTy a b
+
+module ConstD2 (Γ : ExCtx) where
+  open PsiD2 Γ public
+
+  Hα : Nat → Cell
+  Hα x = cohC HGenD2.S HGenD2.HαT (diskList (cellΣ x))
+
+  H : Sub
+  H = ⟪ var 0 ∷ var 1 ∷ concatMap (λ x → lookupₛ ψφ (2 + x) ∷ var (2 + x) ∷ comp x ∷ []) (range (length Γ)) ⟫
+    where
+    comp : Nat → Tm
+    comp x with dimV x
+    ... | zero        = fst (idC (cellΣ x))
+    ... | suc zero    = fst (Hf x)
+    ... | suc (suc _) = fst (Hα x)
+
+  okψ okH : Bool
+  okψ = is-just (checkCtx 𝒦 >>= λ w → checkSub 𝒦 w ψ ΣΓ)
+  okH = okSub cylΣ
+    where
+    okSub : Maybe Ctx → Bool
+    okSub nothing  = false
+    okSub (just C) = is-just (checkCtx ΣΓ >>= λ w → checkSub ΣΓ w H C)

@@ -55,6 +55,10 @@ import CaTTExp.Strict.Cell
 import CaTTExp.Strict.Subst
 import CaTTExp.Strict.L
 import CaTTExp.Strict.Soundness
+import CaTTExp.Strict.Tensor
+import CaTTExp.Strict.Pasting
+import CaTTExp.Strict.TotalCell
+import CaTTExp.Strict.Bridge
 import CaTTExp.Strict.ReverseInterchanger
 import CaTTExp.Strict.CheckCells
 import CaTTExp.Gray.Marks

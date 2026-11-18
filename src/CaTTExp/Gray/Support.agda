@@ -223,6 +223,13 @@ drop1 (_ ∷ xs) = dropLast xs
 homAt : Ctx → Nat → Hom
 homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
 
+-- Hom indices 1 … n for n + 1 objects, and the number of objects.
+homIdx : Nat → List Nat
+homIdx L = drop1 (upto L)
+
+countL : List Nat → Nat
+countL = lengthN
+
 homs : Ctx → List Hom
 homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
 

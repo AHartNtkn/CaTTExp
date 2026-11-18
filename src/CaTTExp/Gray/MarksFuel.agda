@@ -14,7 +14,7 @@
 --
 -- fuel-stable uses that a derivable coh is at least as high as its
 -- pasting context: dim Θ ≤ dim (t →_A u) (`DimOK`, a module
--- parameter: true for L, not yet proved here), and that the signature's constants have
+-- parameter, proved for L in CaTTExp.Gray.CohDim), and that the signature's constants have
 -- well-formed types (`SigOK`; trivial for pure L).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
@@ -104,10 +104,12 @@ private
   max-r (suc a) zero    _       = z≤n
   max-r (suc a) (suc b) (s≤s l) = s≤s (max-r a b l)
 
-  tm-ty : ∀ (closed : S.Closed) → SigOK → ∀ {Γ t A} → Γ ⊢tm t ∶ A → Γ ⊢ty A
-  tm-ty closed sig (var-wf w eq)          = lookup-valid w eq
-  tm-ty closed sig (coh-wf _ _ tyΔ _ sσ)  = S.ty[] closed tyΔ sσ
-  tm-ty closed sig (cst-wf w v)           = sig w v
+
+-- The type of a derivable term is derivable.
+tm-ty : ∀ (closed : S.Closed) → SigOK → ∀ {Γ t A} → Γ ⊢tm t ∶ A → Γ ⊢ty A
+tm-ty closed sig (var-wf w eq)          = lookup-valid w eq
+tm-ty closed sig (coh-wf _ _ tyΔ _ sσ)  = S.ty[] closed tyΔ sσ
+tm-ty closed sig (cst-wf w v)           = sig w v
 
 module Stable (closed : S.Closed) (sig : SigOK) (dimOK : DimOK) (ms : Marks) where
 

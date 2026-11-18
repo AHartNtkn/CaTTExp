@@ -38,90 +38,89 @@ Inv Γ = ∀ i B → lookup Γ i ≡ just B → VT Γ B
 ------------------------------------------------------------------------
 -- The cells of a context.
 
-private
-  headM : List El → Maybe El
-  headM []      = nothing
-  headM (c ∷ _) = just c
+headM : List El → Maybe El
+headM []      = nothing
+headM (c ∷ _) = just c
 
-  orElse : Maybe El → Maybe El → Maybe El
-  orElse (just c) _ = just c
-  orElse nothing  m = m
+orElse : Maybe El → Maybe El → Maybe El
+orElse (just c) _ = just c
+orElse nothing  m = m
 
-  -- The hom index of a cell of type A (if A's ends are objects).
-  homOf : List Nat → Ty → Maybe Nat
-  homOf os A with endsTy A
-  ... | nothing      = nothing
-  ... | just (_ , b) with varLvl b
-  ...   | nothing = nothing
-  ...   | just b' = posOf b' os
+-- The hom index of a cell of type A (if A's ends are objects).
+homOf : List Nat → Ty → Maybe Nat
+homOf os A with endsTy A
+... | nothing      = nothing
+... | just (_ , b) with varLvl b
+...   | nothing = nothing
+...   | just b' = posOf b' os
 
-  elsOf : List Nat → Nat → Ty → Maybe Nat → List El
-  elsOf os v A nothing  = []
-  elsOf os v A (just k) = el v k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) ∷ []
+elsOf : List Nat → Nat → Ty → Maybe Nat → List El
+elsOf os v A nothing  = []
+elsOf os v A (just k) = el v k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) ∷ []
 
-  mkEl≡ : ∀ os v A → mkEl os (v , A) ≡ elsOf os v A (homOf os A)
-  mkEl≡ os v A with endsTy A
-  ... | nothing      = refl
-  ... | just (_ , b) with varLvl b
-  ...   | nothing = refl
-  ...   | just b' with posOf b' os
-  ...     | nothing = refl
-  ...     | just k  = refl
+mkEl≡ : ∀ os v A → mkEl os (v , A) ≡ elsOf os v A (homOf os A)
+mkEl≡ os v A with endsTy A
+... | nothing      = refl
+... | just (_ , b) with varLvl b
+...   | nothing = refl
+...   | just b' with posOf b' os
+...     | nothing = refl
+...     | just k  = refl
 
-  elsOf-lvl : ∀ os v A m {c} → Any (c ≡_) (elsOf os v A m) → lvl c ≡ v
-  elsOf-lvl os v A (just k) (here refl) = refl
+elsOf-lvl : ∀ os v A m {c} → Any (c ≡_) (elsOf os v A m) → lvl c ≡ v
+elsOf-lvl os v A (just k) (here refl) = refl
 
-  elAt : List Nat → Ctx → Nat → Maybe El
-  elAt os Γ w with lookup Γ w
-  ... | nothing = nothing
-  ... | just A  = headM (mkEl os (w , A))
+elAt : List Nat → Ctx → Nat → Maybe El
+elAt os Γ w with lookup Γ w
+... | nothing = nothing
+... | just A  = headM (mkEl os (w , A))
 
-  findEl-++ : ∀ w xs ys → findEl w (xs ++ ys) ≡ orElse (findEl w xs) (findEl w ys)
-  findEl-++ w []       ys = refl
-  findEl-++ w (c ∷ xs) ys with lvl c ==ℕ w
-  ... | true  = refl
-  ... | false = findEl-++ w xs ys
+findEl-++ : ∀ w xs ys → findEl w (xs ++ ys) ≡ orElse (findEl w xs) (findEl w ys)
+findEl-++ w []       ys = refl
+findEl-++ w (c ∷ xs) ys with lvl c ==ℕ w
+... | true  = refl
+... | false = findEl-++ w xs ys
 
-  cm-++ : ∀ {A B : Set} (f : A → List B) xs ys → concatMap f (xs ++ ys) ≡ concatMap f xs ++ concatMap f ys
-  cm-++ f []       ys = refl
-  cm-++ f (x ∷ xs) ys = trans (cong (f x ++_) (cm-++ f xs ys)) (sym (++-assoc (f x) (concatMap f xs) (concatMap f ys)))
+cm-++ : ∀ {A B : Set} (f : A → List B) xs ys → concatMap f (xs ++ ys) ≡ concatMap f xs ++ concatMap f ys
+cm-++ f []       ys = refl
+cm-++ f (x ∷ xs) ys = trans (cong (f x ++_) (cm-++ f xs ys)) (sym (++-assoc (f x) (concatMap f xs) (concatMap f ys)))
 
-  ==-refl≡ : ∀ n → (n ==ℕ n) ≡ true
-  ==-refl≡ zero    = refl
-  ==-refl≡ (suc n) = ==-refl≡ n
+==-refl≡ : ∀ n → (n ==ℕ n) ≡ true
+==-refl≡ zero    = refl
+==-refl≡ (suc n) = ==-refl≡ n
 
-  ==-sym≡ : ∀ m n → (m ==ℕ n) ≡ (n ==ℕ m)
-  ==-sym≡ zero    zero    = refl
-  ==-sym≡ zero    (suc n) = refl
-  ==-sym≡ (suc m) zero    = refl
-  ==-sym≡ (suc m) (suc n) = ==-sym≡ m n
+==-sym≡ : ∀ m n → (m ==ℕ n) ≡ (n ==ℕ m)
+==-sym≡ zero    zero    = refl
+==-sym≡ zero    (suc n) = refl
+==-sym≡ (suc m) zero    = refl
+==-sym≡ (suc m) (suc n) = ==-sym≡ m n
 
-  lt-ne : ∀ i n → T (i <ℕ n) → (i ==ℕ n) ≡ false
-  lt-ne zero    (suc n) _ = refl
-  lt-ne (suc i) (suc n) p = lt-ne i n p
+lt-ne : ∀ i n → T (i <ℕ n) → (i ==ℕ n) ≡ false
+lt-ne zero    (suc n) _ = refl
+lt-ne (suc i) (suc n) p = lt-ne i n p
 
-  weak< : ∀ a b → T (a <ℕ b) → T (a <ℕ suc b)
-  weak< zero    b       _ = tt
-  weak< (suc a) (suc b) q = weak< a b q
+weak< : ∀ a b → T (a <ℕ b) → T (a <ℕ suc b)
+weak< zero    b       _ = tt
+weak< (suc a) (suc b) q = weak< a b q
 
-  lookup-len : ∀ Γ i → T (len Γ <ℕ suc i) → lookup Γ i ≡ nothing
-  lookup-len ε       i _ = refl
-  lookup-len (Γ ▸ A) i p rewrite trans (==-sym≡ i (len Γ)) (lt-ne (len Γ) i p) = lookup-len Γ i (weak< (len Γ) i p)
+lookup-len : ∀ Γ i → T (len Γ <ℕ suc i) → lookup Γ i ≡ nothing
+lookup-len ε       i _ = refl
+lookup-len (Γ ▸ A) i p rewrite trans (==-sym≡ i (len Γ)) (lt-ne (len Γ) i p) = lookup-len Γ i (weak< (len Γ) i p)
 
-  -- A cell of mkEl for entry w is found first.
-  findEl-one : ∀ os w A → findEl w (mkEl os (w , A)) ≡ headM (mkEl os (w , A))
-  findEl-one os w A rewrite mkEl≡ os w A with homOf os A
-  ... | nothing = refl
-  ... | just k rewrite ==-refl≡ w = refl
+-- A cell of mkEl for entry w is found first.
+findEl-one : ∀ os w A → findEl w (mkEl os (w , A)) ≡ headM (mkEl os (w , A))
+findEl-one os w A rewrite mkEl≡ os w A with homOf os A
+... | nothing = refl
+... | just k rewrite ==-refl≡ w = refl
 
-  findEl-other : ∀ os v w A → (v ==ℕ w) ≡ false → findEl w (mkEl os (v , A)) ≡ nothing
-  findEl-other os v w A ne rewrite mkEl≡ os v A with homOf os A
-  ... | nothing = refl
-  ... | just k rewrite ne = refl
+findEl-other : ∀ os v w A → (v ==ℕ w) ≡ false → findEl w (mkEl os (v , A)) ≡ nothing
+findEl-other os v w A ne rewrite mkEl≡ os v A with homOf os A
+... | nothing = refl
+... | just k rewrite ne = refl
 
-  orElse-nothing : ∀ m → orElse m nothing ≡ m
-  orElse-nothing nothing  = refl
-  orElse-nothing (just c) = refl
+orElse-nothing : ∀ m → orElse m nothing ≡ m
+orElse-nothing nothing  = refl
+orElse-nothing (just c) = refl
 
 findEl-cells : ∀ os Γ w → findEl w (concatMap (mkEl os) (entries Γ)) ≡ elAt os Γ w
 findEl-cells os ε       w = refl
@@ -135,22 +134,21 @@ findEl-cells os (Γ ▸ A) w
                   | lookup-len Γ (len Γ) (lt-refl (len Γ)) = findEl-one os (len Γ) A
 ... | false rewrite findEl-other os (len Γ) w A (trans (==-sym≡ (len Γ) w) e) = orElse-nothing (elAt os Γ w)
 
-private
-  entries-lt : ∀ Γ {v A} → Any ((v , A) ≡_) (entries Γ) → T (v <ℕ len Γ)
-  entries-lt (Γ ▸ B) m with any-++⁻ (entries Γ) m
-  ... | inj₁ a = weak< _ (len Γ) (entries-lt Γ a)
-  ... | inj₂ (here refl) = lt-refl (len Γ)
+entries-lt : ∀ Γ {v A} → Any ((v , A) ≡_) (entries Γ) → T (v <ℕ len Γ)
+entries-lt (Γ ▸ B) m with any-++⁻ (entries Γ) m
+... | inj₁ a = weak< _ (len Γ) (entries-lt Γ a)
+... | inj₂ (here refl) = lt-refl (len Γ)
 
-  entries-lookup : ∀ Γ {v A} → Any ((v , A) ≡_) (entries Γ) → lookup Γ v ≡ just A
-  entries-lookup (Γ ▸ B) {v} m with any-++⁻ (entries Γ) m
-  ... | inj₁ a rewrite lt-ne v (len Γ) (entries-lt Γ a) = entries-lookup Γ a
-  ... | inj₂ (here refl) rewrite ==-refl≡ (len Γ) = refl
+entries-lookup : ∀ Γ {v A} → Any ((v , A) ≡_) (entries Γ) → lookup Γ v ≡ just A
+entries-lookup (Γ ▸ B) {v} m with any-++⁻ (entries Γ) m
+... | inj₁ a rewrite lt-ne v (len Γ) (entries-lt Γ a) = entries-lookup Γ a
+... | inj₂ (here refl) rewrite ==-refl≡ (len Γ) = refl
 
-  elsOf-head : ∀ os v A m {c} → Any (c ≡_) (elsOf os v A m) → headM (elsOf os v A m) ≡ just c
-  elsOf-head os v A (just k) (here refl) = refl
+elsOf-head : ∀ os v A m {c} → Any (c ≡_) (elsOf os v A m) → headM (elsOf os v A m) ≡ just c
+elsOf-head os v A (just k) (here refl) = refl
 
-  elsOf-mem-lvl : ∀ os v A {c} → Any (c ≡_) (mkEl os (v , A)) → lvl c ≡ v
-  elsOf-mem-lvl os v A m = elsOf-lvl os v A (homOf os A) (subst (Any _) (mkEl≡ os v A) m)
+elsOf-mem-lvl : ∀ os v A {c} → Any (c ≡_) (mkEl os (v , A)) → lvl c ≡ v
+elsOf-mem-lvl os v A m = elsOf-lvl os v A (homOf os A) (subst (Any _) (mkEl≡ os v A) m)
 
 -- Every cell of Γ is the one findEl returns for its level.
 findEl-mem : ∀ Γ {e} → Any (e ≡_) (cells Γ) → findEl (lvl e) (cells Γ) ≡ just e
@@ -168,22 +166,21 @@ findEl-mem Γ {e} m
 ------------------------------------------------------------------------
 -- Gradedness.
 
-private
-  elAt-just : ∀ os Γ w {c} → elAt os Γ w ≡ just c →
-              Σ Ty λ A → (lookup Γ w ≡ just A) × Σ Nat λ k → (homOf os A ≡ just k) ×
-              (c ≡ el w k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)))
-  elAt-just os Γ w e with lookup Γ w
-  ... | just A rewrite mkEl≡ os w A with homOf os A in eH
-  elAt-just os Γ w refl | just A | just k = A , refl , k , eH , refl
+elAt-just : ∀ os Γ w {c} → elAt os Γ w ≡ just c →
+            Σ Ty λ A → (lookup Γ w ≡ just A) × Σ Nat λ k → (homOf os A ≡ just k) ×
+            (c ≡ el w k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)))
+elAt-just os Γ w e with lookup Γ w
+... | just A rewrite mkEl≡ os w A with homOf os A in eH
+elAt-just os Γ w refl | just A | just k = A , refl , k , eH , refl
 
-  hgt-of : ∀ Γ i {A' k} → lookup Γ i ≡ just A' → homOf (objs Γ) A' ≡ just k →
-           Faces.hgt (cells Γ) i ≡ dim A' ∸ 1
-  hgt-of Γ i {A'} eL eH
-    rewrite findEl-cells (objs Γ) Γ i | eL | mkEl≡ (objs Γ) i A' | eH = refl
+hgt-of : ∀ Γ i {A' k} → lookup Γ i ≡ just A' → homOf (objs Γ) A' ≡ just k →
+         Faces.hgt (cells Γ) i ≡ dim A' ∸ 1
+hgt-of Γ i {A'} eL eH
+  rewrite findEl-cells (objs Γ) Γ i | eL | mkEl≡ (objs Γ) i A' | eH = refl
 
-  bd-just : ∀ cs w {c} → findEl w cs ≡ just c → bdEl cs w ≡ (if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ []))
-  bd-just cs w e with findEl w cs
-  bd-just cs w refl | just c = refl
+bd-just : ∀ cs w {c} → findEl w cs ≡ just c → bdEl cs w ≡ (if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ []))
+bd-just cs w e with findEl w cs
+bd-just cs w refl | just c = refl
 
 -- The hom dimension of a cell whose type ends at an object.
 hgt-pos : ∀ Γ i {A a b k} → lookup Γ i ≡ just A → endsTy A ≡ just (var a , var b) →
@@ -223,27 +220,26 @@ graded Γ inv w {b} mb = go (findEl w (cells Γ)) refl
 ------------------------------------------------------------------------
 -- Ranks of table tuples.
 
-private
-  piece-mem : ∀ h i sg {w} → w ∈ᴺ piece h i sg →
-              Σ El λ e → Any (e ≡_) (hcs h) × (w ≡ lvl e) × (hdim e ≡ i)
-  piece-mem h i sg m with i ==ℕ hd h
-  ... | true with any-witness (any-map⁻ lvl _ (subst (Any _) (map≡ lvl (filter (λ c → hdim c ==ℕ i) (hcs h))) m))
-  ...   | e , me , refl with filter⇒ (λ c → hdim c ==ℕ i) (hcs h) me
-  ...     | me' , q = e , me' , refl , ==ℕ-sound (hdim e) i q
-  piece-mem h i sg m | false with i <ℕ hd h
-  piece-mem h i sg m | false | true
-    with any-witness (any-map⁻ lvl _ (subst (Any _) (map≡ lvl _) m))
-  ... | e , me , refl with filter⇒ _ (hcs h) me
-  ...   | me' , q = e , me' , refl , ==ℕ-sound (hdim e) i (∧-fst {hdim e ==ℕ i} q)
-  piece-mem h i sg () | false | false
+piece-mem : ∀ h i sg {w} → w ∈ᴺ piece h i sg →
+            Σ El λ e → Any (e ≡_) (hcs h) × (w ≡ lvl e) × (hdim e ≡ i)
+piece-mem h i sg m with i ==ℕ hd h
+... | true with any-witness (any-map⁻ lvl _ (subst (Any _) (map≡ lvl (filter (λ c → hdim c ==ℕ i) (hcs h))) m))
+...   | e , me , refl with filter⇒ (λ c → hdim c ==ℕ i) (hcs h) me
+...     | me' , q = e , me' , refl , ==ℕ-sound (hdim e) i q
+piece-mem h i sg m | false with i <ℕ hd h
+piece-mem h i sg m | false | true
+  with any-witness (any-map⁻ lvl _ (subst (Any _) (map≡ lvl _) m))
+... | e , me , refl with filter⇒ _ (hcs h) me
+...   | me' , q = e , me' , refl , ==ℕ-sound (hdim e) i (∧-fst {hdim e ==ℕ i} q)
+piece-mem h i sg () | false | false
 
-  +-mono : ∀ {a b c d} → a ≤ b → c ≤ d → a + c ≤ b + d
-  +-mono {b = b} {d = d} z≤n q = ≤-trans q (n≤m+n b d)
-  +-mono (s≤s p) q = s≤s (+-mono p q)
++-mono : ∀ {a b c d} → a ≤ b → c ≤ d → a + c ≤ b + d
++-mono {b = b} {d = d} z≤n q = ≤-trans q (n≤m+n b d)
++-mono (s≤s p) q = s≤s (+-mono p q)
 
-  ∸1≤ : ∀ n → n ∸ 1 ≤ n
-  ∸1≤ zero    = z≤n
-  ∸1≤ (suc n) = ≤-step (≤-refl n)
+∸1≤ : ∀ n → n ∸ 1 ≤ n
+∸1≤ zero    = z≤n
+∸1≤ (suc n) = ≤-step (≤-refl n)
 
 module Ranks (Γ : Ctx) where
   open Faces (cells Γ)

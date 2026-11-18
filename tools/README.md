@@ -35,3 +35,5 @@ To regenerate and check:
 cd tools && python3 -c "import rc3_square; rc3_square.emit_module()" && python3 unitor.py && python3 exch_test.py && python3 ladder.py && python3 -c "import ladder; ladder.emit_assoc()"
 cd ../src && LC_ALL=C.UTF-8 agda +RTS -M12G -RTS CaTTExp/Generated/All.agda
 ```
+
+`tensor_atom_tableau.py` checks the tensor-atom tableau formula (4) of `notes/conjectures/answered/gray-tensor-of-contexts-rule-2026-11-18.md` for p, q ≤ 4 (Steiner sign convention). Run `python3 tools/tensor_atom_tableau.py`; it prints the number of mismatches (0).

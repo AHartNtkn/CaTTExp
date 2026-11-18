@@ -476,3 +476,72 @@ A relevant additional reference is Garner–Hirschowitz–Pardon, *Graphical pre
 There is also a limitation in applying Forest–Mimram’s rewriting theorem: their interchangers are invertible, and the proof of their Theorem 11 uses inverse normalization paths. That proof does not directly yield thinness for the directed interchangers in this question. [drops.dagstuhl.de](https://drops.dagstuhl.de/storage/00lipics/lipics-vol108-fscd2018/LIPIcs.FSCD.2018.15/LIPIcs.FSCD.2018.15.pdf?utm_source=chatgpt.com)
 
 I have not established forward uniqueness in Question 1, a general product decomposition, a terminating and confluent presentation of these 2-cells, or local thinness. Question 4 remains unresolved under its strengthened full-hom biclosedness assumption.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.**
+- **Q1:** the reverse hom-sets are empty in both examples, and every forward 2-cell uses exactly one interchange of the two generators. Forward uniqueness is still open.
+- **Q2:** two new facts.
+  - The image in the free ordinary biclosed monoidal category is a complete invariant of undirected components of hom-categories.
+  - That image together with W is not a complete invariant of 1-cells: an explicit example has three distinct 1-cells with equal image, two of them with equal W.
+- **Q3 and Q4:** unanswered.
+
+Step by step.
+
+1. **The model 𝓜 (§1).**
+   - Objects are integers. 1-cells p → q exist when q ≥ p and carry an integer weight. Each hom is the poset (ℤ, ≤), and composition adds weights.
+   - The left section L_p adds p·δ to the weight and the right section R_q leaves it unchanged. Both are strict 2-functors, and the stated equations L_{p+q} = L_p L_q, R_{p+q} = R_q R_p and L_p R_q = R_q L_p hold literally.
+   - The two interchange composites differ by (p′ − p)·δ(g) = δ(f)·δ(g) ≥ 0, in the "right factor first ⇒ left factor first" direction.
+   - Gray axioms hold automatically, because every hom is a poset.
+   - Closure: p\r = r − p, with Λ_p = L_p⁻¹ (weight minus p·δ) and right currying the identity on weights. Both are isomorphisms of hom-posets that preserve displacement.
+   - Strict naturality in the context variable is checked in the response and is correct. Evaluations have weight 0.
+   
+   So 𝓜 is a model, and freeness of 𝒢 gives an interpretation for any choice of integers on atoms with δ ≥ 0 on generators.
+
+2. **Reverse emptiness (§2).** Recomputed by hand.
+   - **Example 1** (|P| = |X| = 0, |B| = 1, |C| = 2): w(t₁) = 0. For t₂, the factor C/B ⊗ b contributes w(b) + |C/B|·δ(b) = 1, so w(t₂) = 1.
+   - **Example 2** (|X| = |B| = 0, |A| = 1, |C| = 2): w(c) = 0 − 1·1 = −1, so w(s) = −1 and w(t) = 0.
+   
+   Every 2-cell expression of 𝒢, including those built with currying, uncurrying and η, is interpreted in 𝓜. So 𝒢(t₂, t₁) = ∅ and 𝒢(t, s) = ∅.
+   
+   The scope conditions (6) and (7) are right. The argument needs an integer assignment with positive displacements, which fails, for example, for endomorphism generators.
+
+3. **Exactly one mutual interchange (§3).** Correct.
+   - With every generator of displacement 1, δ(u) is the number of generator leaves of u.
+   - Each interchanger raises the weight by N(p)·N(q), and whiskering and currying translate weights.
+   - The forward increment is 1, so exactly one interchanger has two one-generator arguments, and every other interchanger has a generator-free argument.
+   - The matrix refinement fixes the left/right assignment of that interchange.
+   
+   This does not give uniqueness, because the model cannot see the generator-free interchangers.
+
+4. **Undirected components (§4).** Correct.
+   - π₀ of the hom-categories forms a category ΠG.
+   - The interchanger becomes an equality in ΠG, so tensor is a bifunctor there. The closure isomorphisms descend, so ΠG is a unit-free biclosed monoidal category.
+   - Interpretations in an ordinary biclosed D are exactly structure-preserving 2-functors G → D^disc, and these factor uniquely through ΠG. So ΠG is the free biclosed monoidal category B_Σ.
+   
+   Hence two 1-cells are connected by a zigzag iff their images in B_Σ agree. Combined with round 2's unit-free planar coherence (structural parts are unique), the components are classified by ordinary biclosed proofs with generators. The response notes the caveat that this classifies components of the full hom-category, not of the subcategory with fixed W.
+
+5. **Q and W are not a complete invariant of 1-cells (§5).** Recomputed by hand, with |L| = |R| = |A| = 0, |B| = 1 and |C| = 2.
+   - **u.** c = Λ_B^L(g ⊗ R) has weight 0 − 1·1 = −1, and the remaining factors add 0, so w(u) = −1.
+   - **m.** w(m) = 0.
+   - **v.** The factor H ⊗ f, with |H| = 1, contributes 0 + 1·1, so w(v) = 1.
+   
+   The 2-cells u ⇒ m (interchange f with c, then β) and m ⇒ v (interchange d with f, then β) are correctly oriented. Q(u) = Q(m) = Q(v), and W(u) = W(v) ≠ W(m).
+   
+   Consequence: the side on which currying is performed is data of the 1-cell. A component can contain three 1-cells over two generators, so S(P) with events only the generators cannot describe it.
+
+6. **Literature remarks.** Not checked in the sources:
+   - Garner–Hirschowitz–Pardon's premonoidal construction has central units, an extra condition not available here.
+   - Forest–Mimram's Thm 11 uses invertible interchangers.
+   
+   Both remarks are consistent with the earlier rounds.
+
+**Consequences for D11.**
+- The connected-component question is settled: components are the arrows of the free ordinary biclosed monoidal category.
+- What is open is the directed structure inside a component:
+  - which 1-cells there are (the integer and matrix weights distinguish curry sides);
+  - forward uniqueness, i.e. coherence of interchangers with a generator-free argument;
+  - thinness.
+- The product-of-S(P) theorem needs extra event labels for the curry side.
+
+Follow-up prompt: `outbox/gray-closed-scheduling-r3.md` (round 3, unsent).

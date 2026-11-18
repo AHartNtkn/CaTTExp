@@ -622,3 +622,58 @@ c_{<a}=\text{the multiset }c\text{ filtered by }b\prec a,
 w_a=u+\partial c_{<a}.
 \]
 The proof then consists of coefficientwise inequalities, induction on degree, recursion along a downward-closure witness, and the reconstruction formula (16). No atom, composition operation, or atom-generation theorem is needed.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct and complete.** It answers Q1 (a direct proof of (P)), Q2 ((Rad), (F2) and (G)) and Q3 (both instances), with no use of atoms, composition or atom generation. No follow-up is needed. What remains is internal: formalising the proof in Agda.
+
+Step by step.
+
+1. **Hypotheses (§1).** The proof needs three things:
+   - augmentation 1 on every 0-dimensional basis element;
+   - (∂b)₊ ≠ 0 for every positive-dimensional b;
+   - one strict total order ≺ on the whole graded basis, with negative faces before b and positive faces after it.
+   
+   These are weaker than "Steiner complex" as an assumption, and they are checked directly in §7.
+
+2. **Cut lemma (§2).** Correct; I checked each case.
+   - For d ≺ a, every positive contributor b to d satisfies b ≺ d ≺ a. So P(c_{≥a})[d] = 0, and w_a[d] = v[d] + N(c_{≥a})[d] ≥ 0.
+   - For a ⪯ d, no b ≺ a has d as a negative face, since that would give d ≺ b ≺ a. So w_a[d] = u[d] + P(c_{<a})[d] ≥ 0.
+   - At d = a both observations apply, giving w_a[a] = u[a] + P(c)[a].
+   - The table (3) is a q-cell: ∂w_a = ∂u because ∂² = 0, and ε(w_a) = ε(u) because ε∂ = 0.
+
+3. **(Rad) and (F2) (§3).** Correct.
+   - The induction R₀ ⇒ H₀ ⇒ R₁ ⇒ … is quantified over all cell tables, which is what lets R_q apply to the cut cell W_a.
+   - H_q ⇒ R_{q+1} uses (∂b)₊ ≠ 0: x_{q+1}[b] ≤ P(x_{q+1})[a] ≤ g_q[a] ≤ 1.
+   - (F2) follows because x_q⁻ + P(x_{q+1}) ≤ 1 and x_q⁺ + N(x_{q+1}) ≤ 1 coefficientwise.
+
+4. **Lifting (§4).** Correct.
+   - The immediate-face lemma is the cut at a face a of b with c[b] > 0. It uses the first expression of (2) for a positive face and the second for a negative face.
+   - The full lemma follows a downward-closure witness b_t ∈ supp(x_t^α), b_{j−1} ∈ supp(∂b_j). It starts from the t-cell (rows below t, x_t^α, x_t^α), which is valid because ∂x_t^α = x_{t−1}⁺ − x_{t−1}⁻. Each step keeps every row below the new top.
+
+5. **(G) (§5).** Correct, and stronger than asked. For every b ∈ S_{k+1}, not only those in table entries, lift to a (k+1)-cell z with z_k = x_k and apply (F2) to z. So R_k is disjoint from supp(∂b).
+
+6. **Reconstruction (§6).** Correct.
+   - S_k = supp(x_k⁻) ∪ supp(x_k⁺) ∪ F_k(S), since the last step of a face path into degree k comes from S_{k+1}.
+   - x_k^± = R_k + (D_k)_±, and supp D_k ⊆ F_k(S).
+   - So R_k = χ_{E_k(S)}: (G) gives supp R_k ⊆ E_k, and for a ∈ E_k the two coefficients agree, are positive, and are 1 by (Rad).
+   - With x_n = χ_{S_n}, the downward formula (16) determines the whole table from S.
+
+7. **The order on λ(Θ₁) ⊗ … ⊗ λ(Θₘ) (§7).**
+   - **On each factor:** inserting f, y right after x keeps s(a) ≺ a ≺ t(a) for all a. A new y is parallel to x, and t(x) stays after y.
+   - **On tuples:** the order (18) compares the first differing coordinate, reversed when the dimension sum before it is odd. Its Leibniz signs match: for odd p the t-face is negative and precedes, and the s-face is positive and follows.
+   - **No cancellation:** contributions from different coordinates have different dimension vectors, so (∂b)₊ ≠ 0.
+   - **Checked by script (scratch Python).** I built Θ's with the creation rule and checked, for D¹⊗D¹, D²⊗D², D³⊗D²⊗D¹ and (a vertical pasting of two 2-cells)⊗D², that every negative face precedes and every positive face follows, that every positive-dimensional tuple has a positive face, and that (18) is a strict total order. All 9 + 25 + 105 + 35 tuples pass.
+
+8. **Q3.** Q3a is (P) at dimension d − 1. Q3b follows from (Rad) alone: if the closed support is B, the top chain is χ_{B_d} when n = d and 0 when n > d.
+
+9. **Literature.** Steiner, *Opetopes and chain complexes* (arXiv 1204.6723), Thm 4.1, is cited as an earlier direct proof of radicality. Not checked; not needed.
+
+**Consequences.** For E1/E3 and the strict soundness of L, the cited fact (B) has an elementary proof whose ingredients suit the Agda chain representation:
+- filtering a multiset by the order;
+- coefficientwise inequalities;
+- induction on degree;
+- recursion on a downward-closure witness;
+- the explicit reconstruction (16).
+
+The order (18) can be built as a list recursively. Formalisation is owned by LCORE / CONV. No follow-up prompt.

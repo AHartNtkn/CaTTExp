@@ -751,7 +751,7 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling-r2.md`.
+Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 is `conjectures/outbox/gray-closed-scheduling-r3.md` (unsent).
 
 ---
 

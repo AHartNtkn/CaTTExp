@@ -34,7 +34,7 @@ Owners and status of the follow-up work these problems leave are tracked in `not
   - `planar-pasting-types.md`: PL1 follows from unit-free proof-net coherence, up to one lemma.
   - `lax-colimit-of-point.md`: the semantic claim is solved (Loubaton, Example 4.2.3.12). The syntactic form is false for arbitrary cone-judgment derivations (verified counterexample); it is open for a specified cocone construction.
   - `gray-contexts-in-catt.md`: G(2) is proved (researcher, verified; also in-house), with existence in dimension 3, so Gray generators of dimension ≤ 4 are typed. Mikhail's printed Gray rules are defective (verified). §6 (3), the (∞,ω) part, is answered. Open: G(n ≥ 3) uniqueness, G-alg, and §6 (1)–(2).
-  - `naturality-arbitrary-depth.md`: every 2-dimensional coherence over a fully selected chain (the associator included) is settled by a researcher's relative ladder theorem, verified here. Open: the 3-dimensional unitor over the 2-disc, arbitrary up-closed sets on a chain, and arbitrary depth.
+  - `naturality-arbitrary-depth.md`: every 2-dimensional coherence over a fully selected chain (the associator included) is settled by a researcher's relative ladder theorem, verified here. Every term of dimension ≤ 2, with any up-closed set, is now settled (`../relative-coherence.md`). Open: dimension ≥ 3, reduced to RC(n); smallest cases the lax square and the 3-dimensional unitor over the 2-disc.
   - `strict-lax-interchange-at-every-level.md`: the literal reading (raw higher interchange cells) is proved impossible by a researcher, verified here; the statement is corrected to boundary-adjusted higher comparisons, which remain open.
 
 ## Index (each distinct problem once)

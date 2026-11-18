@@ -144,10 +144,10 @@ This matches p_f. So Mikhail's "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the AM/Steiner or
 | Condition | What it says | Status |
 |---|---|---|
 | **G1. Well-typedness** | The two composites ∂⁻(x⊗y) and ∂⁺(x⊗y) have *syntactically equal* boundaries, since CaTT has only syntactic definitional equality. | Main burden; see §4.3. Mikhail proves it for Γ globular, Δ = D¹. |
-| **G2. Functoriality in substitutions** | A substitution σ : Δ′ → Δ induces Γ ⊗ σ : Γ ⊗ Δ′ → Γ ⊗ Δ, using the same term extension t ⊗ y. Needed for naturality of λ in §5.3. | Follows from G1 if t ⊗ – commutes with substitution. Unproved. |
+| **G2. Functoriality in substitutions** | A substitution σ : Δ′ → Δ induces Γ ⊗ σ : Γ ⊗ Δ′ → Γ ⊗ Δ, using the same term extension t ⊗ y. Needed for naturality of λ in §5.3. | **Holds for the D¹ factor** (and iterated Dⁿ), syntactically: lifts commute with substitution by structural induction, because fillers are chosen once per (Q, B, Y) (`relative-coherence.md` §6). |
 | **G3. Preservation of wedges** | Γ ⊗ (Δ ∨ Δ′) ≅ (Γ ⊗ Δ) ∨_{Γ⊗pt} (Γ ⊗ Δ′) | Immediate on generators. Needed for composing transformations. |
-| **G4. Associativity** | (Γ ⊗ Δ) ⊗ Θ ≅ Γ ⊗ (Δ ⊗ Θ) | Bijective on generators. Agreement of types holds up to coherence, so strict equality may need CaTT_sua. |
-| **G5. Linearity** | Mikhail's x ∝ t may be needed when a boundary term uses a variable non-linearly (e.g. after an endo-coherence). | Open. It is unclear whether the naturality meta-operation imposes it. |
+| **G4. Associativity** | (Γ ⊗ Δ) ⊗ Θ ≅ Γ ⊗ (Δ ⊗ Θ) | Bijective on generators. The two types of each generator have equal strict images; for generators of dimension ≤ 3 they are connected by Theorem A (`relative-coherence.md` §6), in general by RC(dim − 1). Strict equality may need CaTT_sua. |
+| **G5. Linearity** | Mikhail's x ∝ t may be needed when a boundary term uses a variable non-linearly (e.g. after an endo-coherence). | **Not needed** for the naturality-based construction, which lifts every term, linear or not (e.g. (f ∗₀ f)↑ for a loop f uses f↑ twice). Linearity serves Mikhail's recognition judgment only (`relative-coherence.md` §6). |
 
 ### 4.3 Two ways to get the composites
 
@@ -178,8 +178,8 @@ U ∈ 𝓜    U ⊢ t →_A u    Δ ⊢ σ : U
 **(i) and (ii) are the same question.** Molecular coh (ii) is a conservative extension of CaTT exactly when every molecule's composites exist and are unique up to invertible cells in plain CaTT, which is what (i) needs. This is stated as Conjecture G(n) in [`conjectures/gray-contexts-in-catt.md`](conjectures/gray-contexts-in-catt.md). Status:
 - **G(1)** is proved.
 - **Existence in G(2)** is proved, using Chanavat's result that all molecules of dimension ≤ 3 are frame-acyclic. So **every Gray generator of dimension ≤ 3 has a plain-CaTT type**, including the Gray cube.
-- **Uniqueness in G(2)** has a proof sketch: linear extensions are connected by swaps, and each swap is an exchange coherence. One bookkeeping gap remains. Granting it, every Gray generator of dimension 4 is covered too.
-- **G(n) for n ≥ 3** is open. The missing step is translating Chanavat's contractible subdivision poset (arXiv 2603.22242, Thm. 2.52) into CaTT cells. The problem statement there is written for external researchers.
+- **Uniqueness in G(2)** is proved (Theorem A of `relative-coherence.md`: parallel 2-terms with equal strict image are connected, in any context). **Existence in G(3)** follows, so every Gray generator of dimension 4 has a plain-CaTT type.
+- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It is posed for researchers in `conjectures/outbox/gray-contexts.md`.
 
 ---
 

@@ -5,7 +5,7 @@
 -- Γ is a graph context: no variable has dimension ≥ 2. For every two
 -- parallel cells
 --
---     Γ ⊢ u ∶ A      Γ ⊢ v ∶ A      with dim A ≥ 1,
+--     Γ ⊢ u ∶ A      Γ ⊢ v ∶ A      with dim A ≥ 2 (u, v of dimension ≥ 2),
 --
 -- the term  fillN Γ u v A  is a well-typed cell u → v (Theorem
 -- `totalN`). No hypothesis on paths is needed: parallel cells of

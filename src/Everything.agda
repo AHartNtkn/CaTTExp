@@ -111,6 +111,10 @@ import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
 import CaTTExp.Gray.BdryChar
 import CaTTExp.Gray.SingleHom
+import CaTTExp.Gray.Through
+import CaTTExp.Strict.LiftImage
+import CaTTExp.Strict.SigmaFacts
+import CaTTExp.Strict.SuppFV
 import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.CylGen

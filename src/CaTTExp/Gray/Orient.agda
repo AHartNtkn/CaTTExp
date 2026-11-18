@@ -17,7 +17,8 @@
 -- Results:
 --   graySideε (λ _ → false) ≡ graySide       (no reversal: L)
 --   graySideε (λ _ → true)  ≡ graySide       (total reversal: L again)
--- by `chainTε-const`. Examples (alternating ε gives L^rev; the twisted
+-- by `chainTε-const`. Alternating ε gives the factor-reversed tables
+-- (Gray.OrientRev). Examples (the interchanger; the twisted
 -- tensor of the note's D.1 example) are in Gray.OrientExamples.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude

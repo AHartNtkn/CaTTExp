@@ -95,12 +95,14 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
 `Gray/Orient.agda` implements L_ε. Here ε says which hom-dimensions are reversed. Supports are computed in ν(Θ₁ ⊗_ε … ⊗_ε Θₙ), with X ⊗_ε Y = D_ε(D_ε X ⊗ D_ε Y). On tables, D_ε swaps the i-dimensional source and target pieces exactly when (i+1)-cells are reversed: (D_ε Θ)^sg_i = Θ^{ε(i+1)·sg}_i. So (T_ε)^sg_k is the AM tensor of the twisted pieces, twisted once more by ε(k+1). Cells, the face order and the top chain do not depend on ε, so only the sides of the tables change.
 
 - **Proved:** `graySideε-const`. For ε constant (no reversal, or total reversal), L_ε = L for every Θ, A, t, u.
+- **Proved** (`Gray/OrientRev.agda`): alternating ε gives the factor-reversed tensor on all tables. For ε = odd, every sign, every k and every list of factors, x ∈ (T_ε)^sg_k(Θ₁,…,Θₙ) iff rev x ∈ T^sg_k(Θₙ,…,Θ₁) (`alt-rev⇒`, `alt-rev⇐`). The same holds for Supp(T), Supp(∂^±T) (`full-rev`, `bdry-rev`), and for ε = even, whose tables are literally those of ε = odd (`chainTε-even`). Proof: a tuple in a chain is a path (a dimension iⱼ and a cell per factor, Σ iⱼ = k, with sign flipped by the parity of the prefix sum). Reversing an ⊗_odd path gives an ⊗ path whose signs use suffix sums, and the two agree because prefix + (iⱼ + 1) + (k + 1) ≡ suffix (mod 2).
+  - Scope: this is the statement on tables (the supports of the cells of K(Θ)). The side condition compares term supports in the original Θ against these tables, so L_odd's side condition is L's with every table read in reversed factor order. That is what "L_ε = L^rev" means for L, whose rules only use the tables.
 - **Checked by evaluation** (`Gray/OrientExamples.agda`):
-  - Alternating ε (odd or even) gives L^rev. On the interchanger, βα ⇛ αβ is rejected and αβ ⇛ βα accepted. On whole tables, the codimension-1 chains of T_ε equal those of the factor-reversed tensor for nine wedges of globes (two and three factors).
+  - On the interchanger, alternating ε rejects βα ⇛ αβ and accepts αβ ⇛ βα. The nine-wedge table comparison is now a special case of `OrientRev`.
   - Reversing hom-dimension 2 only (the D_{3} image) reverses the interchanger itself, because it is a hom-2 cell.
   - The D.1 example (K = {2} on D¹ ⊗ D³) is confirmed. α⊗s₂ has the codimension-1 chains of ⊗^rev, not of ⊗, and α⊗c₃ has those of ⊗, not of ⊗^rev. On D¹ ⊗ D² ⊗ D¹, this ε is neither L nor L^rev.
 - **Not done:** the symbolic checker of `Gray/Fast.agda` is for L only. Extending it to L_ε means swapping the two pieces of an SHom entry when ε(i+1) holds, and the starting sign by ε(k+1).
-- **Not proved:** "L_ε = L^rev iff ε alternates" in general (only checked), and the "only if" direction of the constant case.
+- **Not proved:** the "only if" directions ("L_ε = L^rev only if ε alternates", "L_ε = L only if ε is constant"). Both are true at the level of the D_K dualities (`GrayDuality.agda`); here they would need a separating table for each other ε.
 
 ## Not yet proved
 

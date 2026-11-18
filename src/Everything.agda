@@ -57,3 +57,5 @@ import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient
 import CaTTExp.Gray.OrientExamples
+import CaTTExp.Gray.SetFacts
+import CaTTExp.Gray.OrientRev

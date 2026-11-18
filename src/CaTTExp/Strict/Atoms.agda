@@ -182,7 +182,7 @@ module Atom {N : Nat} (B : Basis N) where
     Inv-entK i zero    = refl
     Inv-entK i (suc k) = Inv-step (entK i k) (Inv-entK i k)
 
-    module _
+    module Deg
       (deg-dp : ∀ j c → pj (suc j) c ≡ c → pj j (dp c) ≡ dp c)
       (deg-dm : ∀ j c → pj (suc j) c ≡ c → pj j (dm c) ≡ dm c)
       where
@@ -259,16 +259,15 @@ module Atom {N : Nat} (B : Basis N) where
       ent-out2 : ∀ i k → ent i (suc (suc (deg i + k))) ≡ (0c , 0c)
       ent-out2 i k rewrite lt-f2 (deg i) k = refl
 
-      private
-        Ent′ = Ent K 0
-        Bd0 : ∀ (u : Vec Nat N) → dp 0c +c u ≡ dm 0c +c u
-        Bd0 u = trans (cong (_+c u) (lin-0 bplus)) (cong (_+c u) (sym (lin-0 bminus)))
+      Ent′ = Ent K 0
+      Bd0 : ∀ (u : Vec Nat N) → dp 0c +c u ≡ dm 0c +c u
+      Bd0 u = trans (cong (_+c u) (lin-0 bplus)) (cong (_+c u) (sym (lin-0 bminus)))
 
-        Ent-zero : ∀ j (u : Vec Nat N) → Ent′ j (u , u) (0c , 0c)
-        Ent-zero j u = prj-0 j gdeg , prj-0 j gdeg , Bd0 u , Bd0 u
+      Ent-zero : ∀ j (u : Vec Nat N) → Ent′ j (u , u) (0c , 0c)
+      Ent-zero j u = prj-0 j gdeg , prj-0 j gdeg , Bd0 u , Bd0 u
 
-        +-comm′ : ∀ m n → m + n ≡ n + m
-        +-comm′ = +-comm
+      +-comm′ : ∀ m n → m + n ≡ n + m
+      +-comm′ = +-comm
 
       -- Every consecutive pair of entries satisfies the cell conditions.
       ent-ok : ∀ i j → Ent′ (suc j) (ent i j) (ent i (suc j))
@@ -301,22 +300,25 @@ module Atom {N : Nat} (B : Basis N) where
       ------------------------------------------------------------------
       -- The atom is a cell.
 
-      private
-        Cnd-tab : ∀ {m} L (f : Nat → Vec Nat N × Vec Nat N) →
-                  (∀ j → Ent K L (suc j) (f j) (f (suc j))) →
-                  ∀ j → Cnd K L (suc j) (f j) (tabF {m} f (suc j))
-        Cnd-tab {zero}  L f h j = tt
-        Cnd-tab {suc m} L f h j = h j , Cnd-tab {m} L f h (suc j)
+      Cnd-tab : ∀ {m} L (f : Nat → Vec Nat N × Vec Nat N) →
+                (∀ j → Ent K L (suc j) (f j) (f (suc j))) →
+                ∀ j → Cnd K L (suc j) (f j) (tabF {m} f (suc j))
+      Cnd-tab {zero}  L f h j = tt
+      Cnd-tab {suc m} L f h j = h j , Cnd-tab {m} L f h (suc j)
 
-        Last-tab : ∀ L m (f : Nat → Vec Nat N × Vec Nat N) j →
-                   fst (f (m + j)) ≡ snd (f (m + j)) → Last K L (tabF {suc m} f j)
-        Last-tab L zero    f j p = p
-        Last-tab L (suc m) f j p = Last-tab L m f (suc j) (subst (λ q → fst (f q) ≡ snd (f q)) (sym (+-suc″ m j)) p)
+      Last-tab : ∀ L m (f : Nat → Vec Nat N × Vec Nat N) j →
+                 fst (f (m + j)) ≡ snd (f (m + j)) → Last K L (tabF {suc m} f j)
+      Last-tab L zero    f j p = p
+      Last-tab L (suc m) f j p = Last-tab L m f (suc j) (subst (λ q → fst (f q) ≡ snd (f q)) (sym (+-suc″ m j)) p)
 
       -- Unitality of the basis (Steiner Def. 3.4), and atoms of dimension
       -- at most L.
       Unital : Nat → Set
       Unital i = (augm gdeg (fst (ent i 0)) ≡ 1) × (augm gdeg (snd (ent i 0)) ≡ 1)
+
+      ent-last : ∀ L i k → L ≡ deg i + k → fst (ent i L) ≡ snd (ent i L)
+      ent-last L i zero    e rewrite e | +-zero (deg i) | ent-in i (deg i) 0 (sym (+-zero (deg i))) = refl
+      ent-last L i (suc k) e rewrite e | +-suc″ (deg i) k | ent-out i k = refl
 
       atom-cell : ∀ L i → Unital i → ∀ k → L ≡ deg i + k → IsCell K L (atomT L i)
       atom-cell L i (u⁻ , u⁺) k eL =
@@ -326,6 +328,4 @@ module Atom {N : Nat} (B : Basis N) where
         where
         d0 : (pj 0 (fst (ent i 0)) ≡ fst (ent i 0)) × (pj 0 (snd (ent i 0)) ≡ snd (ent i 0))
         d0 rewrite ent-in i 0 (deg i) refl = deg-entK i (deg i) 0 (sym (+-zero (deg i)))
-        last : ∀ k → L ≡ deg i + k → fst (ent i L) ≡ snd (ent i L)
-        last zero    e rewrite e | +-zero (deg i) | ent-in i (deg i) 0 (sym (+-zero (deg i))) = refl
-        last (suc k) e rewrite e | +-suc″ (deg i) k | ent-out i k = refl
+        last = ent-last L i

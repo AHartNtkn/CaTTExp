@@ -462,6 +462,29 @@ module Std {G : Set} (deg : G → Nat) (W : Sd → G → Expr G) where
     std-wf (cmp k a b) (co-cmp _ x y) = comb-wf k (std a) (std b) (std-wf a x) (std-wf b y)
 
   ----------------------------------------------------------------------
+  -- Generators of degree ≤ r give r-dimensional values.
+
+  module DimProof (𝒞 : ωCat) (ι : G → ωCat.C 𝒞) (dimι : ∀ g → ωCat.src 𝒞 (deg g) (ι g) ≡ ι g) where
+    open ωCat 𝒞
+    open Eval 𝒞 ι
+    open StdSem 𝒞 ι
+
+    dimLe : ∀ {r e y} → DegLe r e → Ev e y → Dim r y
+    dimLe {r} (dl-gen {g} l) (ev-gen .g) =
+      trans (cong (src r) (sym (dimι g))) (trans (src-src-≥ (ι g) l) (dimι g))
+    dimLe {r} (dl-cmp {k} da db) (ev-cmp .k {x = x} {y = y} u v p) with tri k r
+    ... | tri< l = trans (src-comp-> x y p l q) (comp-cong k q p (dimLe da u) (dimLe db v))
+      where
+      q : tgt k (src r x) ≡ src k (src r y)
+      q = trans (tgt-src-< x l) (trans p (sym (src-src-< y l)))
+    ... | tri≡ refl = trans (src-comp k x y p) (trans (dimLe da u) (sym (absorb-r (dimLe db v) p)))
+    ... | tri> l = trans (src-comp-< x y p l) (trans (dimLe da u) (sym (absorb-r dyk p)))
+      where
+      dyk : Dim k y
+      dyk = trans (cong (src k) (sym (dimLe db v))) (trans (src-src-≥ y (<→≤ l)) (dimLe db v))
+
+
+  ----------------------------------------------------------------------
   -- Soundness in a strict ω-category.
 
   module SemProof (𝒞 : ωCat) (ι : G → ωCat.C 𝒞)
@@ -476,25 +499,11 @@ module Std {G : Set} (deg : G → Nat) (W : Sd → G → Expr G) where
     sound : ∀ s f n e {x} → DegLe f e → Ev e x → Ev (bd s f n e) (bdC s n x)
     sound = sound₀ W-deg dimι W-ev
     open WFProof W-co W-deg
+    open DimProof 𝒞 ι dimι
 
     private
       Ev-sub : ∀ {e x y} → x ≡ y → Ev e x → Ev e y
       Ev-sub refl v = v
-
-    -- Generators of degree ≤ r give r-dimensional values.
-    dimLe : ∀ {r e y} → DegLe r e → Ev e y → Dim r y
-    dimLe {r} (dl-gen {g} l) (ev-gen .g) =
-      trans (cong (src r) (sym (dimι g))) (trans (src-src-≥ (ι g) l) (dimι g))
-    dimLe {r} (dl-cmp {k} da db) (ev-cmp .k {x = x} {y = y} u v p) with tri k r
-    ... | tri< l = trans (src-comp-> x y p l q) (comp-cong k q p (dimLe da u) (dimLe db v))
-      where
-      q : tgt k (src r x) ≡ src k (src r y)
-      q = trans (tgt-src-< x l) (trans p (sym (src-src-< y l)))
-    ... | tri≡ refl = trans (src-comp k x y p) (trans (dimLe da u) (sym (absorb-r (dimLe db v) p)))
-    ... | tri> l = trans (src-comp-< x y p l) (trans (dimLe da u) (sym (absorb-r dyk p)))
-      where
-      dyk : Dim k y
-      dyk = trans (cong (src k) (sym (dimLe db v))) (trans (src-src-≥ y (<→≤ l)) (dimLe db v))
 
     -- What a group gives: its r-composite has the child's value.
     GS : Nat → List (Expr G) → C → Set

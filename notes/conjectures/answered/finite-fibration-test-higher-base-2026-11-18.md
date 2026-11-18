@@ -549,3 +549,58 @@ whereas the actual product groupoidifies to a contractible space. Thus the const
 That necessity does not itself prove sufficiency for arbitrary positive 2-category fibres. I have not completed that sufficiency proof here.
 
 For Question 3, the proved extension is the walking-3-cell, Cat-valued case above. Its finite test is explicit: verify the finitely many path equalities (1), construct the boundaries (2)–(6), and localize the specified set (7). A general \(FT_n\) recognition theorem is not established by these arguments.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, with two steps resting on cited results that I did not re-derive.**
+- **Q1 is answered.** Over the walking 3-cell the presentation needs one 3-generator ω_e per fibre vertex and one 4-generator K_{Ω,f} per fibre arrow. The ω_e alone are provably not enough.
+- **The second part of Q4 is answered.** Regularity is not necessary: an explicit non-regular, positive 3-computad is already homotopical.
+- **Q2 is partly answered.** A 4-dimensional generator indexed by the fibre 2-cell is necessary; sufficiency is not proved.
+- **Still open:** Q3 (general FT_n) and whether positivity is necessary.
+
+Step by step.
+
+1. **The generators (§1.1).** These extend the FT₃ data of known item 3 consistently.
+   - u_e, v_e are marked lifts with prescribed source, and λ_{γ,e} : u_e ; a_e ⇒ v_e has prescribed target.
+   - θ and Ξ are as before.
+   - The new generators are ω_e : λ_{α,e} ⇛ λ_{β,e} and K_{Ω,f}. K_{Ω,f} goes between the two 3-cells R_{α,f} ⇛ L_{β,f}, namely Ξ_α ; L_ω and R_ω ; Ξ_β, so it is well typed. ✓
+
+2. **The homs (§1.2), checked directly.**
+   - A 2-cell from (u, h) to (v, k) over α or β exists exactly when h = a_e ; k, and then it is unique. The two such cells are joined by Ω_k, so the hom is [1].
+   - The only other non-empty homs are identities.
+   - The variance is correct: lifts of α, β with prescribed target, and a hom map [1] → [1] over Ω.
+   - So (9) is the strict Grothendieck construction, and it satisfies Loubaton's recursive criterion. ✓
+
+3. **The coherent presentation (§1.3).**
+   - The formal part is correct. The localisation-and-pushout identity (13) is formal. The relative generators of I ⊗ A → K ⊗ A are (K ∖ I) × A with dimensions added, and they match the table row for row, the last row being ω ⊗ f ↦ K_{Ω,f}.
+   - **Rests on citations, not re-derived:**
+     - (11), ∫T ≃ (K × A) ∐_{I×A} C, via Loubaton's cone formula over a suspension (Cor. 4.1.2.19, Thm 2.3.3.22);
+     - "Gray tensor localised at the mixed generators ≃ cartesian product" (Loubaton Prop. 3.1.3.1). For (∞,2) this is the classical biequivalence between the pseudo Gray tensor and the product.
+     - Chanavat Cor. 3.27 / Thm 3.29 for the homotopy-cellularity of K ⊗ A and I ⊗ A.
+   - **Independent consistency check (mine).** By the table, the relative generators contribute (1 − 2 + 2 − 1)·χ(A) = 0 to the Euler characteristic, so χ(Ψ_T) = χ(C). The groupoidification of the right side of (11) is C^gpd, because K^gpd and I^gpd are contractible. The two agree for every A and C.
+
+4. **ω_e alone fail (§1.4).** Correct.
+   - For A = C = I with identity functors, the generator counts without K are (4, 6, 6, 4), so χ = 0.
+   - The groupoidification of a free (∞,ω)-category on a finite computad, localised or not, is a CW complex with one cell per generator.
+   - B × I groupoidifies to a point, which has χ = 1.
+   - Adding the one K_{Ω,f} gives χ = 1.
+
+5. **Non-regular but homotopical (§2).** Correct.
+   - **Δ is not regular.** Its 3-generator ζ : α ▷ r ⇛ β ▷ r has a whiskered 2-cell as boundary, whose 1-source p ; r and 1-target q ; r share r.
+   - **Strict homs.** The strict homs of M₂ = F₂(Δ≤2) are as stated. ζ changes only M(x, z). The full subcategory on x, z is D₃, and it meets M₂ in ∂D₃.
+   - **The nerve splits.** A Θ-shape map is a weakly increasing vertex sequence (x < y < z) together with maps into the adjacent homs. If the sequence contains y, it has no adjacent pair (x, z) and so lands in M₂; otherwise it lands in D₃. So νM = νM₂ ∪ νD₃ with intersection ν∂D₃, a pushout of presheaves of sets along monomorphisms.
+   - **The homotopy pushout.** That pushout is a homotopy pushout. Localisation preserves it, and strict ω-categories without non-trivial invertible cells are local. So M ≃ M₂ ∐^h_{∂D₃} D₃.
+   - **Conclusion.** Since Free(Δ≤2) ≃ M₂ (Chanavat Cor. 3.39, positive 2-polygraph), Free(Δ) ≃ F₃(Δ).
+   - Δ is positive, so whether positivity is necessary stays open.
+
+6. **Q2 diagnostic (§3).** Correct.
+   - D₂ ⊗ D₂ has generator counts (4, 8, 8, 4, 1).
+   - Dropping the 4-cell gives χ = 0, but the product is contractible after groupoidification.
+   - So any finite presentation of the constant D₂-valued weight over the walking 2-cell built from the FT₃ shape needs a 4-generator indexed by (base 2-cell, fibre 2-cell).
+
+**Consequences for B14.**
+- **The FT_n shape of §3 is corrected.** The generators are exactly the relative Gray-tensor generators k ⊗ a, for k in the universal total K ∖ I and a a fibre generator. Their dimension is dim k + dim a, so the top generators can exceed the base dimension by the fibre dimension (4-generators over a 3-dimensional base with a Cat-valued weight).
+- **The proof method of §1.3 looks general.** It writes ∫T as a pushout of a universal total times the fibre, then localises a relative Gray tensor. Whenever the weight factors through a product with a universal total in this way, it should give FT_n.
+- **Regularity is not a necessary hypothesis.**
+
+Follow-up prompt: `outbox/finite-fibration-test-higher-base-r2.md` (round 2, unsent).

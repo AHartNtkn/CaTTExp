@@ -54,6 +54,14 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
 3. **(N2)** Freeness.
    - **Uniqueness: done** (`Gen.uniqueness`). Two strict functors out of `nu K L` (record `Functor`, preserving sources, targets and composites) that agree on the atoms of dimension ≤ L agree everywhere, by induction on `generation`. `gen-cell` shows that composites of atoms are cells.
    - **Existence: open.** It would follow Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms). The outside prompt asks for a shorter route.
+   - **Plan for existence** (internal, in parallel with the outside prompt). Existence reduces to one statement, the word problem for ν(K):
+     - **(E1) Expressions.** Write composites of atoms as syntax `Expr` (atoms, n-composites). An expression has a partial value as a table (`compT`) and a relational value in any ωCat 𝒟 under φ, as in `OmegaEval`.
+     - **(E4) Invariance.** If two expressions have the same table, their values in 𝒟 are equal. Given E4, put Φ(x) := the value of any expression for x; one exists by `generation`. Then Φ(y #ₙ z) = Φ(y) #ₙ Φ(z) holds because e_y #ₙ e_z is an expression for y #ₙ z. Boundaries are handled the same way, once boundaries of expressions are expressions; for atoms this uses the compatibility of φ.
+     - E4 is Steiner's Thm 5.7 argument, by induction on the level s of `Generation`:
+       - **(E2) Standard form.** Steiner Prop. 4.2, applied to expressions. Rewrite an expression whose table is ⟨a⟩ + Σ⟨c⟩ above s into e₁ #ₛ … #ₛ e_k, each eᵢ with the rows of one atom above s. Only ω-category axioms are used, so 𝒟-values are preserved.
+       - **(E3) Transposition.** Steiner Lemma 5.10: two consecutive pieces in the wrong basis order can be swapped, again by axioms only.
+       - **Assembly.** Sort the pieces into the peel order, then match them with Prop. 5.8: pieces congruent mod μₛ with the same composite are equal.
+     - E2 is the largest step. It is a normal form for composites in any strict ω-category, and needs interchange and associativity bookkeeping on expressions.
 4. **(N3)** Discharge the citations of C8(4), and connect the L strict model to `ωCat`.
 
 Step 3 is now the bulk. An outside prompt asking for the shortest formalisable route to (N1)–(N2), in the style of the support prompt, is in `conjectures/outbox/steiner-nu-freeness.md`. Internal work proceeds in parallel, starting from (N0).

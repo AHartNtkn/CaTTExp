@@ -1,0 +1,449 @@
+# Toward ordinary mathematics: h-levels, induction, presentations, object-indexed colimits, lax functors
+
+*Design notes, 2026-11-18. Owner of ledger items F1–F6 at the time of writing: thread "Extend toward ordinary mathematics". Companion to `limits-representables.md` (limits, colimits, shapes ⟦Γ⟧, hom objects, the ℕ-like object) and `pseudo-vs-gray.md` (P vs L). Fixed constraints: no universes; no definitional β/η; universal properties witnessed by generated cells; rules in the style of published CaTT variants; no algebraic structure in the meta-theory (`catt-survey.md` §13).*
+
+*Markers, as in the other notes. **[paper]**: checked against the cited source this session (for an abstract-level check, the marker says so). **[recall]**: background knowledge, not re-checked. **[proved here]**: a proof written out in this note. **[conj]**: unproved; each has a proof attempt here and, where the design hinges on it, a problem in `notes/conjectures/`. **[proposal]**: a design choice. **[agda]**: machine-checked in `src/`.*
+
+---
+
+## 0. Summary
+
+"Ordinary mathematics in principle" is read here as Anthony's criterion (`catt-survey.md` §13): for any ordinary structure we can *build an object that behaves like an instance of it*. Concretely we need, inside the ambient: sets (discrete objects), the natural numbers with induction, quotients (the integers first), indexed families and their dependent sections, colimits indexed by objects (sequences), and lax functors where the mathematics is lax. The note proposes the following, item by item.
+
+| Item | Proposal | Status |
+|---|---|---|
+| **F3** h-levels | A judgment `C trunc n` ("C is an n-category"; n = 0 is "C is a set") with a filler rule, an invertibility rule, and closure rules: limits, hom objects (which lower the level by one), coproducts, and two semantic base rules (free objects on graphs, and on graphs with inverted edges, are 1-categories). §2. | Closure under limits and homs **[proved here]** (sketches at the level of the other notes). Base rules sound by `free-on-graph.md` and Dwyer–Kan **[paper]**. That the base rules are not derivable from R-A is **[conj]**, argued. |
+| **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`). Extension to globular contexts **[proved here]** semantically, not implemented. |
+| **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Recursion for ℕ from G + DJ **[proved here]** (existence and the two equations; uniqueness sketched). G and DJ are sound semantically **[paper/recall]**. |
+| **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need a set-truncation rule; proposed. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. |
+| **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3, Gepner–Haugseng–Nikolaus and Gepner–Heine **[recall / abstract-level]**. |
+| **F6** lax functors | For loop-free finite shapes P, lax functors ⟦P⟧ ⇝ C are maps out of a finite context P^lax glued from Street's orientals: no new rule. For lax-functor *variables* between arbitrary objects, a directed "refinement coherence" rule decided by Steiner supports, parallel to L's interchange rule. §7. | The oriental classifier is in the literature for dimension ≤ 3 (Gagna) and as a definition in general; the rule is **[conj]**, written up as `conjectures/lax-functor-refinement.md`. |
+
+**New open item found:** function sets. Ordinary mathematics needs exponentials of sets (ℕ → ℕ, Cauchy sequences). Shapes give cotensors, but `[A, B]` for an arbitrary set A is an internal hom. Recorded as **F8** (§6.5).
+
+---
+
+## 1. Conventions
+
+- **Ambient.** CaTT over ωCat, as in `limits-representables.md` §1: ⋆ is "ω-categories", 1-cells are functors. Elements of C are 1-cells `⊤ → C`; a *generalised element* is a 1-cell `c → C`.
+- **Cells into C.** A cell *into C* is an ambient cell whose iterated 1-dimensional base type is `c →_⋆ C` for some c. It has *level* k if it is a k-cell of the hom `Hom(c, C)`; so maps `c → C` have level 0, and an ambient d-cell into C has level d − 1.
+- **Invertibility.** `Γ ⊨ u` means u comes with inverse data (Mikhail's `⊨`, or ICaTT's invertibility types; which one is ledger items E4/F7). Nothing here depends on the choice.
+- **Orientation conventions** are those of `conventions.md`; this note fixes an orientation only where it says so (the lax recursion form in §4.3, and lax functors in §7).
+- **Options P and L.** Everything below is stated under P (pseudo ambient, repaired CaTT_lim of `limits-representables.md` §4.1). Where L differs, it says so. A useful fact for this note: **for discrete targets P and L agree**. The defect of P's comma objects (only invertible 2-cells as arrows, `limits-representables.md` §10.1) is invisible when every 2-cell of the target is already invertible. In particular N = Hom_{⟦L⟧}(x, x) is the right object under P as well, because ⟦L⟧ is a 1-category (§2.4).
+- **Pullbacks** are the all-marked (pseudo) limits of cospans. Fibres are pullbacks along elements.
+
+---
+
+## 2. h-levels (F3)
+
+### 2.1 The judgment
+
+For n ≥ −2, **`Γ ⊢ C trunc n`** reads "C is an n-category": every cell into C of level > n is invertible and fillable, with level n + 1 the place where existence of fillers starts. Read for small n:
+
+| n | meaning | example |
+|---|---|---|
+| −2 | contractible | ⊤ |
+| −1 | proposition (subterminal) | ⊥, a mono's domain over ⊤ |
+| 0 | set (discrete ω-category) | ℕ, ℤ, Bool |
+| 1 | 1-category | ⟦Γ⟧ for a graph Γ |
+
+`trunc` is a judgment, not a type. It produces no terms of its own and quantifies over nothing; it enables the rules below. This keeps it inside the CaTT aesthetic in the same way as `⊨` and marked declarations.
+
+### 2.2 Rules [proposal]
+
+Use rules (what a truncation gives):
+
+```
+(T-fill)  Γ ⊢ C trunc n    Γ ⊢ u : B    Γ ⊢ v : B    u, v cells into C of level ≥ n + 1
+          ─────────────────────────────────────────────────────────────────────────
+          Γ ⊢ fill(u, v) : u →_B v        and   Γ ⊨ fill(u, v)
+
+(T-inv)   Γ ⊢ C trunc n    Γ ⊢ u : B    u a cell into C of level n + 1
+          ──────────────────────────────────────────────────
+          Γ ⊨ u
+
+(T-ctr)   Γ ⊢ C trunc (−2)    Γ ⊢ c : ⋆
+          ───────────────────────────
+          Γ ⊢ ctr(c) : c → C
+```
+
+For n = −1 and −2, "level ≥ n + 1" includes level 0, so T-fill gives a 2-cell between any two maps `c → C`. Parallel maps of level 0 are just any two maps with the same domain.
+
+Introduction rules (how a truncation is established):
+
+```
+(T-var)    declarations may carry a truncation:  Γ, C : ⋆^{≤n}  ⊢ C trunc n.
+           A substitution into such a variable must supply a derivation of
+           Δ ⊢ C[σ] trunc n for its image (a certified marking, as in §4.1 of
+           limits-representables.md).
+(T-cum)    C trunc n  ⟹  C trunc (n+1)
+(T-unit)   ⊤ trunc (−2);    ⊥ trunc (−1)
+(T-lim)    every object vertex of the diagram γ has trunc n  ⟹  lim_{Γ^μ}[γ] trunc n
+           (any marking μ, lax or pseudo)
+(T-hom)    C trunc n,  a, b : ⊤ → C  ⟹  Hom_C(a, b) trunc (n − 1)          (n ≥ −1)
+(T-coprod) A trunc n, B trunc n, n ≥ 0  ⟹  A ⊔ B trunc n
+(T-graph)  Γ a finite graph context (only objects and 1-cells between variables)
+           ⟹  ⟦Γ⟧ trunc 1
+(T-loc)    the same, with a set M of edges inverted (§5.1)  ⟹  ⟦Γ⟧[M⁻¹] trunc 1
+```
+
+*Stability.* Every rule is stable under substitution: the premises mention only C, its diagram and its declared marks, and substitution into a declared mark requires a certificate (T-var). This is the same discipline as certified comparison cells.
+
+**Consequences used later.** N := Hom_{⟦L⟧}(x, x) is a set: T-graph gives ⟦L⟧ trunc 1 and T-hom gives N trunc 0. Bool := ⊤ ⊔ ⊤ is a set (T-unit, T-cum, T-coprod). Products, pullbacks and equalisers of sets are sets (T-lim). ℤ is a set (T-loc, T-hom).
+
+### 2.3 Proofs
+
+**Proposition 2.1 (T-inv above level n + 1 is derivable) [proved here].** If C trunc n and u : a → b is a cell into C of level k ≥ n + 2, then u is invertible.
+*Proof.* a and b are parallel of level k − 1 ≥ n + 1, so T-fill gives w = fill(b, a) : b → a. Then u·w and 1_b are parallel of level k, and T-fill gives an invertible cell between them; likewise w·u and 1_a. So w is a two-sided inverse up to invertible higher cells, which is the coinductive notion of invertibility used throughout (Benjamin–Markakis). ∎
+
+So T-inv is only needed at level n + 1. The rule keeps it at that level.
+
+**Proposition 2.2 (T-lim) [proved here, sketch].** If every object vertex of a finite diagram γ has trunc n, then so does `L = lim_{Γ^μ}[γ]`, for any marking μ.
+*Proof.* Let u, v : B be parallel cells into L of level k ≥ n + 1. Under the repaired limit rules, cells into L correspond to *cone transfors* (`ctrf` shapes):
+1. Post-compose u and v with the universal cone (`ucone`). This gives two parallel level-k cone transfors.
+2. Build a level-(k+1) cone transfor between them variable by variable, in the order of the `ctrf` context. Each new component is a cell into a vertex `γ(x)` of level ≥ k + 1 ≥ n + 1, between two composites that are already parallel because the earlier components were chosen. So T-fill for `γ(x)` provides it, invertibly. Components over positive-dimensional diagram variables are also cells into vertices, of even higher level.
+3. The `uni` rule (J1) lifts this cone transfor to a cell `u' : u → v` up to the invertible J2 cells, and composing with those gives the filler. Invertibility: every component is invertible, and the universal property reflects invertibility (an ω-functor that is essentially surjective at every level reflects equivalences, by the coinductive argument of Proposition 2.1).
+
+For T-inv at level n + 1: a level-(n+1) cell into L has components of level ≥ n + 1 in the vertices, all invertible, so its cone transfor is invertible, and so is the cell. ∎
+
+The proof uses the two facts that every cone component lands in a vertex and that `uni` reflects invertibility. It is independent of the marking. It does use the repaired rules: under the unchanged CaTT_lim the cone categories are wrong (§10.1 there), though the conclusion would still hold for them.
+
+**Proposition 2.3 (T-hom) [proved here, sketch].** If C trunc n with n ≥ −1, then H = Hom_C(a, b) trunc (n − 1).
+*Proof.* H is the partially lax limit of `x, y : ⋆, z : ⋆, f : x → z, g : y → z` with g marked, at `x, y ↦ ⊤`, `z ↦ C`, `f ↦ a`, `g ↦ b` (`limits-representables.md` §6.2). A level-k cell of cones into H has: trivial components at x and y; a level-k component θ_z into C; an invertible level-(k+1) component θ_g relating θ_z to the identity on b (because the g-leg is constant at b); and a level-(k+1) component θ_f into C.
+
+Take two parallel level-k cone cells θ, θ′ with k ≥ n. We need a level-(k+1) filler Φ.
+- Φ_z: θ_z and θ′_z are both connected to identities by the invertible θ_g and θ′_g. Take Φ_z := (θ′_g)⁻¹ · θ_g, suitably whiskered. It is invertible.
+- Φ_g, Φ_f: level k + 2 ≥ n + 2 cells into C between parallel composites. T-fill for C gives them, invertibly.
+
+Then `uni` lifts Φ. For T-inv at level n: such a cell has θ_z invertible (through θ_g), and θ_f of level n + 1, invertible by T-inv for C. For n = −1 the conclusion is trunc (−2), which also needs T-ctr for H: a map `c → H` is a cone, and its only non-trivial datum is a level-1 cell `a ∘ ! → b ∘ !` into C, which T-fill provides because `a ∘ !` and `b ∘ !` are level-0 cells and n + 1 = 0. ∎
+
+The marked leg g is what lowers the level: it pins θ_z down, so the "free" data starts one level higher. For a comma object with neither leg marked, only T-lim's level n is available, which is correct (lax comma objects of sets need not be sets; they are posets of arrows, e.g. the arrow category of a 1-category).
+
+**Proposition 2.4 (soundness of the base rules) [paper].**
+- *T-graph:* by `free-on-graph.md` (solved, verified), F_ω(G) → F_1(G) is a trivial fibration, so ⟦Γ⟧ ≃ F_1(Γ) is a 1-category; functor categories into a 1-category are 1-categories, so all cells into ⟦Γ⟧ of level ≥ 2 are fillable and level-2 cells invertible.
+- *T-loc:* §5.1.
+- *T-coprod:* in ωCat, Hom(c, A ⊔ B) is a coproduct of products of homs over the connected components of c **[recall]**; truncation levels n ≥ 0 are preserved by both. It fails for n = −1 (⊤ ⊔ ⊤ is not a proposition), hence the restriction.
+
+**Proposition 2.5 (T-graph is not derivable from R-A) [conj, argued].** R-A's universal property describes maps *out of* ⟦Γ⟧. T-graph is about maps *into* ⟦Γ⟧ from an arbitrary c. In the term model of R-A plus limits, a variable `c : ⋆`, two variables `u, u' : c → ⟦L⟧` and two parallel variables `α, β : u → u'` have no term `α → β`: the coh rule needs a pasting context in which α and β are variables of the same pasting scheme, and no rule introduces cells between variables whose target is a constant. A proof needs a normal-form theorem for the extended theory, which does not exist yet. **Alternative being kept open (standard 1):** a Hedberg-style derivation, as in HoTT's proof that ℕ is a set. It needs decidable equality `N × N → Bool` (available from recursion, §4) and that `true : ⊤ → Bool` is a mono (needs T-coprod's disjointness). In HoTT the step from "the path space retracts onto a proposition" to "set" uses only path induction; here it would use DJ (§4.6) on the path object. This derivation would make T-graph's ℕ instance a theorem. Recorded as open item F3b.
+
+### 2.4 Relative truncation and predicates
+
+A map `p : E → B` is **relatively n-truncated**, `p trunc_B n`, when its fibres are: the rules are T-fill and T-inv with "cells into E" replaced by "pairs of cells into E together with an invertible cell between their images in B", and the filler lies over that cell. Absolute truncation is the case B = ⊤.
+- **Predicates** on a set B are relatively (−1)-truncated maps `P → B` ("subsets").
+- **Set-valued families** over B are relatively 0-truncated maps.
+
+Closure rules are the same as in §2.2, read over B, plus: pullback along any map preserves relative truncation (the fibres do not change).
+
+### 2.5 The payoff: coherence is automatic for sets
+
+Take a ring object `R : ⋆^{≤0}` with `+, · : R × R → R` and the usual equations as invertible 2-cells between maps `Rᵏ → R`. In a weak ω-categorical setting each equation witness raises coherence questions (pentagon for the associator witness, compatibility of distributivity witnesses, and so on). Here every such question is a parallel pair of cells into R of level ≥ 1, so T-fill answers it, and every equation witness is invertible by T-inv at level 1. The user writes the classical axioms and nothing else. This is what "the theory of rings" means for sets, without any algebraic structure in the meta-theory: R is just a declared set, the operations are maps, and the laws are cells.
+
+---
+
+## 3. The discreteness filler tactic (F2)
+
+### 3.1 Statement
+
+A **graph context** is a pure context whose variables are objects `x : ⋆` and edges `f : x → y` between object variables. Every term t of dimension ≥ 1 in a graph context has a **path** `path(t)`: the list of edges of its strict image (the image in the free 1-category). For a 1-cell:
+- `path(f) = [f]` for an edge variable;
+- `path(coh_{Θ, A}[τ]) = path(τ(e₁)) ++ … ++ path(τ(e_k))` if Θ is the chain with edges e₁ … e_k (an operation), and `[]` if Θ is the point (an identity).
+
+For a higher cell, `path(t)` is the path of its iterated 1-dimensional source. Parallel cells of dimension ≥ 2 automatically have the same path.
+
+**Theorem 3.1 (filler) [proved here; agda for instances].** Let Γ be a graph context and `Γ ⊢ u : A`, `Γ ⊢ v : A` parallel, of dimension n ≥ 1, with `path(u) = path(v) = p` of length k. Then
+
+```
+fill(u, v)  :=  coh_{Θ_k, ũ →_{Ã} ṽ} [σ_p]
+```
+
+is a well-typed cell `u →_A v` of plain CaTT, where:
+- `Θ_k` is the chain pasting context `v₀ —e₁→ v₁ → … —e_k→ v_k`;
+- `σ_p : Θ_k → Γ` sends e_i to the i-th edge of p and v_i to its endpoints (`σ_p` need not be injective: a loop traversed three times is fine);
+- `ũ = lift(u, 0)` is u re-read in Θ_k with every edge occurrence sent to the edge *at its position along the path*: `lift(f, o) = e_{o+1}` for an edge, `lift(x, o) = v_o` for an object, and `lift(coh_{Θ', B}[τ], o) = coh_{Θ', B}[τ′]` with `τ′(y) = lift(τ(y), o + off(y))`, where `off(y)` is the total path length of τ along Θ′'s spine up to the 0-source object of y;
+- `Ã` lifts A the same way, with the 0-target of a cell of path length k placed at position k.
+
+*Proof.* Three facts, each by induction on the term.
+1. **Re-substitution:** `lift(t, o)[σ_p] ≡ t` syntactically, whenever t's path occupies positions o+1 … o+|path t| of p. For variables this is the definition of σ_p; for a coh, `coh_{Θ′,B}[τ′][σ_p] = coh_{Θ′,B}[τ′ ∘ σ_p]` and each `τ′(y)[σ_p] = τ(y)` by induction, because the offsets of the arguments are exactly the positions of their paths inside the composite's path.
+2. **Typing:** if `Γ ⊢ t : B` then `Θ_k ⊢ lift(t, o) : lift(B, o)`. For a coh this needs `Θ_k ⊢ τ′ : Θ′`, i.e. each `τ′(y)` has type `B_y[τ′]`. By induction `τ′(y)` has type `lift(B_y[τ], ·)`, and lifting commutes with substitution into Θ′ because objects of Θ′ are sent to positions that add up along the spine. This is where positions, not names, matter: two occurrences of the same edge of Γ at different positions lift to different edges of Θ_k, so the lifted boundaries agree *in Θ_k*, not merely after σ_p. This is the canonical lift of the free-on-graph response (§3 there), made syntactic; the uniqueness argument there is what guarantees that lifted sources and targets coincide.
+3. **Full support:** for t of dimension ≥ 1 with path of length k, `FV(lift(t,0) : lift(B,0)) = Var(Θ_k)`. Every edge e_i occurs (each position of the path comes from an edge occurrence), v₀ and v_k occur in the type, and the inner vertices occur as arguments of the coh that composes across them.
+
+So ũ, ṽ are parallel cells of full support in the pasting context Θ_k, which is exactly the side condition of CaTT's full-coherence case, and `coh_{Θ_k, ũ → ṽ}` is a valid coherence. Its type substituted along σ_p is `u →_A v` by fact 1. ∎
+
+**Corollaries.** In the loop L = (x, s : x → x), every equation between numerals that holds in ℕ holds as a coherence: `(s;s);s ⇒ s;(s;s)` ("3 = 2 + 1 = 1 + 2"), `1_x ; s ⇒ s`, `s ; 1_x ⇒ 1_x ; s`, and so on, and every two parallel cells above them are connected. Conversely the tactic fails exactly when the paths differ, which matches the semantics (`2 ≠ 1`).
+
+### 3.2 Scope: generic cells, not arbitrary elements
+
+The tactic fills cells *built from the generators of Γ*. It does not say that two arbitrary maps `n, m : ⊤ → N` with a cell between them are connected; that is T-graph and T-hom (§2). The two are complementary:
+- the tactic is **admissible** (no rule; every filler is an ordinary coh), and covers all *closed* computations, e.g. "2 + 2 = 4";
+- the truncation rules are **new rules** and cover *generic* statements, e.g. "addition is associative" for variables, together with induction (§4).
+
+### 3.3 Extension to globular contexts [proved here, semantically; not implemented]
+
+The free-on-graph response proves more than it was asked: for **every globular set X**, the comparison `ar_X : LX → TX` from the free weak to the free strict ω-category is a trivial fibration (cartesianness of `ar` plus the contraction on `L1`). A *globular context* is one whose every variable's source and target are variables (e.g. `x, s : x → x, α : s ⇒ s`). So:
+
+**Theorem 3.2.** In a globular context Γ, two parallel cells with the same image in the free strict ω-category on Γ are connected by a cell, namely `coh_{τ, ũ → ṽ}[λ]` where (τ, λ) is the common strict image (a pasting tree τ and a labelling λ : τ → Γ) and ũ, ṽ are the unique lifts of `LΓ ≅ L1 ×_{T1} TΓ`.
+
+The algorithm needs strict normal forms (labelled pasting trees, i.e. tree substitution, the operad structure of T), which is more than the path computation of the graph case. Recorded as F2b.
+
+For *non-globular* contexts the statement fails in general **[conj]**. Expected counterexample: `x, α : 1_x ⇒ 1_x`. The braiding-type 3-cell `α ∗₀ α ⇛ α ∗₀ α` coming from Eckmann–Hilton and the identity 3-cell have the same strict image, and should not be connected in the free weak ω-category (as in a free braided monoidal category, where the self-braiding of an object is not the identity).
+
+### 3.4 Formalisation [agda]
+
+`src/CaTTExp/GraphFiller.agda` implements path, lift, σ_p and the candidate filler on raw syntax, then runs the existing **certified checker**: `fill Γ u v A` returns a term together with a derivation of `Γ ⊢ fill ∶ u →_A v`. So every filler it returns is a theorem of plain CaTT; soundness needs no proof about the tactic. `src/CaTTExp/GraphFillerExamples.agda` checks:
+- in L: the associator of `s;s;s` (and that it *is* the associator of `CaTTExp.Examples` substituted along the path s, s, s, by `refl`); the two unit laws; `1;1 ⇒ 1`; a four-letter word with units in two bracketings;
+- dimension 3: a 3-cell between the associator and the associator composed with an identity 2-cell; dimension 4: a 4-cell between two different 3-cells (that one, and its composite with a filler of the associator with itself);
+- a two-vertex graph `x ⇄ y`: `(f;g);f ⇒ f;(g;f)`;
+- negative: the tactic rejects `s;s` vs `s`, `s` vs `1_x`, and two different loops at x (their paths differ). That no cell exists at all is the paper argument via the path invariant, not a machine-checked statement.
+
+**What is not machine-checked:** totality (Theorem 3.1 for all inputs). It needs substitution admissibility for core CaTT (ledger A1). Recorded as F2a.
+
+---
+
+## 4. Families and dependent eliminators (F1)
+
+### 4.1 Families without universes
+
+- A **family over B** is a map `p : E → B`. The **fibre** over an element `b : ⊤ → B` is the pullback `E_b := ⊤ ×_B E`.
+- A **section of p over f : A → B** is a map `h : A → E` with an invertible cell `θ : p ∘ h ≅ f`. A *dependent function* is a section over `id_B`.
+- There is no fibration condition for groupoidal bases. Over a set B (or any B whose cells are invertible) every map is equivalent to a fibration, sections are taken up to the invertible θ, and transport along a cell of B is not needed separately: it is built into θ. This is the ∞-categorical reading of "families are maps", and it is what lets us avoid a universe.
+- **Directed bases** need transport along non-invertible arrows, so families must be *cocartesian fibrations* there. Universe-free, that is structure, not a code: §4.6.
+- **Dependent products over shapes** are limits: the object of sections of `p : E → ⟦Γ⟧` is the pullback of `[⟦Γ⟧, p] : [⟦Γ⟧, E] → [⟦Γ⟧, ⟦Γ⟧]` along the element `id` of the cotensor. Over a non-shape base (e.g. ℕ) this needs exponentials, F8 (§6.5).
+
+### 4.2 Dependent elimination for shapes is derivable
+
+Write η_Γ for the generic Γ-family in ⟦Γ⟧ (each variable of Γ as an element of ⟦Γ⟧), and `h_* e` for the image of a Γ-family under a map h.
+
+**Theorem 4.1 [proved here].** Assume R-A (`limits-representables.md` §5.2): restriction along η_Γ, `Hom(⟦Γ⟧, C) → Fam_Γ(C)`, is essentially surjective at every level, where cells of Fam_Γ(C) are marked cylinder families. Let `p : E → ⟦Γ⟧`, let e be a Γ-family in E, and let `θ : p_* e ≅ η_Γ` be an invertible cylinder ("e lies over the generic family"). Then there are `h : ⟦Γ⟧ → E`, an invertible `ρ : h_* η_Γ ≅ e`, and an invertible `Θ : p ∘ h ≅ id`, whose restriction is `θ · p_*ρ` up to an invertible cell.
+
+*Proof.* Level 0 of the universal property gives h and ρ. Now `p ∘ h` and `id` are two maps `⟦Γ⟧ → ⟦Γ⟧` whose restrictions are connected by the invertible cylinder `θ · p_*ρ : (p∘h)_* η = p_* h_* η ≅ p_* e ≅ η = id_* η`. Level 1 gives `Θ : p ∘ h → id` restricting to it up to an invertible 2-cell. Θ is invertible because restriction reflects invertibility (Proposition 2.1's argument, applied to an ω-functor essentially surjective at every level). ∎
+
+This is "induction on a free object": to define a dependent function on ⟦Γ⟧ it suffices to give it on the generators, lying over them. It needs no fibration condition on p, because the base ⟦Γ⟧'s cells are only used through invertible cylinders (under P, cells between maps are pseudo transformations). Under L, the same argument goes through with the marked (pseudo) cylinders, since θ and ρ are invertible.
+
+### 4.3 The natural numbers: recursion and its h-initiality
+
+Write N := Hom_{⟦L⟧}(x, x), with `zero := 1_x` and `succ := (– ; s)`, the post-composition map N → N (functoriality of Hom in its second argument). By §2, N trunc 0.
+
+**Recursion with parameters.** For any objects B, A and maps `a : B → A`, `f : A → A`, we want
+
+```
+rec(a, f) : B × N → A,     ε₀ : rec ∘ ⟨1, zero ∘ !⟩ ≅ a,     ε_s : rec ∘ (B × succ) ≅ f ∘ rec,
+```
+
+and uniqueness: any `h : B × N → A` with invertible `c₀ : h ∘ ⟨1, zero!⟩ ≅ a`, `c_s : h ∘ (B × succ) ≅ f ∘ h` has an invertible cell `h ≅ rec` compatible with (c₀, c_s), and any two such compatible cells are connected, and so on up all levels. The parameter object B is needed because without exponentials `B × N` is not determined by N (Lawvere's parametrised NNO). The input is the context `(B, A : ⋆, a : B → A, f : A → A)`: a linear computad, no equations, so no algebraic structure enters the meta-theory.
+
+**Lax form (standard 4).** The most general version replaces "invertible" in the uniqueness clause by directed cells: for any *lax* (h, c₀ : h∘⟨1,zero!⟩ → a, c_s : h∘(B×succ) → f∘h) there is a cell `h → rec`, unique up to contractible choice. **[proved here, for 1-categories]**: in Cat with N = ℕ discrete, the components θ_n : h_n → rec_n are forced by `θ_0 = c₀` and `θ_{n+1} = f(θ_n) ∘ c_{s,n}`, so rec is *terminal among lax morphisms*, and the pseudo form follows (θ is invertible when c is). In ωCat the same recursion defines the components at every level. The pseudo form is what induction needs; the lax form is what an L-style kernel would state.
+
+**Proposition 4.2 (all levels from levels 0 and 1) [proved here, sketch].** If recursion and uniqueness at level 1 (existence of compatible cells between any two algebra maps) hold for every algebra (A, a, f) and parameter B, then uniqueness holds at all levels. *Proof:* a level-k cell between algebra maps into A is an algebra map into the cotensor `[⟦D^k⟧, A]` with the pointwise structure (the pseudo cotensor exists as a marked limit), lying over the given boundary; apply level-1 uniqueness there. This is the path-object argument of Awodey–Gambino–Sojakova, with cotensors by disks in place of identity types. ∎
+
+### 4.4 Induction from recursion
+
+**Theorem 4.3 (induction) [proved here].** Let `p : E → N` be a family, `e₀ : ⊤ → E` with `p ∘ e₀ ≅ zero`, and `t : E → E` with `p ∘ t ≅ succ ∘ p`. Then there is a section `h : N → E`, `p ∘ h ≅ id_N`, with `h ∘ zero ≅ e₀` and `h ∘ succ ≅ t ∘ h`.
+
+*Proof (AGS).* (E, e₀, t) is an algebra, and the cells make p an algebra map E → N. Recursion gives `r : N → E`, an algebra map. Then `p ∘ r` and `id_N` are both algebra maps N → N, so uniqueness gives an invertible `p ∘ r ≅ id`. Take h := r. (Parameters: the same with B × N.) ∎
+
+For a **predicate** (p relatively (−1)-truncated, §2.4) this is ordinary induction: if 0 satisfies P and P is closed under successor, every n does. Since N and P are sets, every compatibility cell in the proof is automatic by T-fill.
+
+**Worked example.** `add := rec(a = 1_N, f = succ) : N × N → N` (parameter B = N), so `add(m, 0) ≅ m` and `add(m, n+1) ≅ succ(add(m, n))`.
+- `add(0, n) ≅ n`: both `add ∘ ⟨zero!, 1⟩` and `1_N` are algebra maps (N, zero, succ) → (N, zero, succ), so they are connected by uniqueness.
+- `add(succ m, n) ≅ succ(add(m, n))`: induction on n, with the predicate given by the equaliser of the two sides (a mono, since N is a set).
+- Commutativity: induction on n using the two lemmas.
+
+Each step is an instance of Theorem 4.3 or of uniqueness, and every coherence between the resulting cells is T-fill on N. On *numerals* the tactic of §3 proves the same equations directly, e.g. `add(2, 1) ≅ add(1, 2)` as the associator over Θ₃.
+
+### 4.5 Three routes to recursion
+
+Standard 3: what each route can and cannot do, without asking which is preferred.
+
+- **Route I (primitive NNO).** Add constants `ℕ, zero, succ`, a rule `rec` with the cells above, and `ℕ trunc 0` as a rule.
+- **Route II (hom object plus a rule).** Keep N := Hom_{⟦L⟧}(x, x). zero, succ and `N trunc 0` are derived (§2). Add `rec` as a rule about this object.
+- **Route III (no ℕ-specific rule).** Keep N := Hom_{⟦L⟧}(x, x). Add two general principles, G and DJ (§4.6), each a statement about all shapes and all comma objects. Recursion for N is a theorem (Theorem 4.4).
+
+| | I | II | III |
+|---|---|---|---|
+| New rules | ℕ, rec (+ levels), trunc | rec (+ levels) | G, DJ (general) |
+| N's truncation | a rule | derived (T-graph, T-hom) | derived |
+| Numerals computed by the §3 tactic | no (ℕ is not a presentation) | yes | yes |
+| Other inductive objects | one rule per signature (§4.7) | one rule per signature | lists, words, paths in any graph come from the same two principles; trees do not (§4.7) |
+| Algebra in the meta-theory | an "algebra" (a, f) appears in the rule, though only as a linear context | same | none |
+| Semantic justification | ℕ_disc is the NNO of ωCat [recall] | same, plus `free-on-graph.md` | Grothendieck construction (Loubaton Thm 4.1.4.2; AHM Thm F) and fibrational Yoneda (Riehl–Verity; Riehl–Shulman) [recall/abstract-level] |
+| Cost to implement | smallest | small | largest: needs cocartesian fibrations as structure, and cotensors by ⟦D¹⟧ |
+
+*Can route II derive rec from R-A and limits alone?* **Attempted; the obstruction is identified [conj that it is not derivable].** A map N → A must come from somewhere. R-A gives maps out of ⟦L⟧, and functoriality gives maps between hom objects, `Hom_{⟦L⟧}(x,x) → Hom_C(c,c)`. To land in an arbitrary A we would need a C with `Hom_C(c, c) ≃ A` on which s acts by f, i.e. "the ω-category with one object whose endomorphisms are A acted on by f". That object is the lax colimit T of the diagram (A, f) over L, but T's homs are known only through maps *into* T, and colimit rules never describe maps into a colimit. So something must describe maps *out of* hom objects; route III supplies it as DJ.
+
+### 4.6 Route III: two general principles
+
+**Cocartesian fibrations as structure (no universe).** `p : E → B` is a cocartesian fibration when the map `r : [⟦D¹⟧, E] → p ↓ B` (an arrow of E ↦ its source and its image in B) has a left adjoint ℓ whose unit is invertible (Riehl–Verity's characterisation [recall]). Every piece is a cotensor by a shape, a comma object, or cells (an adjunction is two maps and two cells with invertible triangle cells), so a cocartesian fibration is a *substitution into a finite context* of the extended theory. Pseudo cotensors suffice, so this works under P.
+
+**(G) Grothendieck principle [proposal].** For a finite diagram γ over Γ, the lax colimit `T := laxcolim_Γ γ` comes with `π : T → ⟦Γ⟧` (the colimit of `γ → const ⊤`, using R-B or R-A) carrying a specified cocartesian-fibration structure, whose fibre over each object variable x is γ(x), and whose transport along each 1-cell variable f is γ(f), up to specified invertible cells. Semantics: the lax colimit of a diagram is the total space of its Grothendieck construction (AHM Thm F; Loubaton Thm 4.1.4.2) [recall/abstract-level].
+
+**(DJ) Directed J / fibrational Yoneda [proposal].** For `a : ⊤ → C`, the comma `π_a : a ↓ C → C` with the element `ι = (a, 1_a)` is the *free cocartesian fibration on a point*: for every cocartesian fibration `q : E → C` and `e : ⊤ → E` with `q ∘ e ≅ a`, there is `h : a ↓ C → E` with `q ∘ h ≅ π_a`, `h ∘ ι ≅ e`, h sending arrows to cocartesian arrows, unique up to contractible choice among such. Semantics: the dependent Yoneda lemma (Riehl–Shulman, for covariant families; Riehl–Verity for cocartesian fibrations in an ∞-cosmos) [recall]. DJ is the directed analogue of path induction, and it is a universal property of comma objects, so it is a rule about *all* objects, not about ℕ.
+
+**Theorem 4.4 (recursion from G and DJ) [proved here: existence and equations; uniqueness sketched].** Let a : ⊤ → A, f : A → A.
+1. By G, `T := laxcolim_L(A, f)` has a cocartesian fibration `π : T → ⟦L⟧`, with fibre `T_x ≃ A` and transport along s equal to f.
+2. Let `e := q(a)`, the image of a under the colimit leg q : A → T. Then `π ∘ e ≅ x`.
+3. DJ, applied to the comma `x ↓ ⟦L⟧` and (π, e), gives `h : x ↓ ⟦L⟧ → T` over ⟦L⟧ with `h(ι) ≅ e`.
+4. Restrict h to the fibres over x: `N = Hom_{⟦L⟧}(x, x) ≃ (x ↓ ⟦L⟧)_x → T_x ≃ A`. Call it rec.
+5. `rec(zero) = h(ι) ≅ q(a) ↦ a`. For n : x → x, the arrow `(n, n;s)` of `x ↓ ⟦L⟧` lies over s; h sends it to a cocartesian arrow over s, whose target is the transport of h(n) along s, i.e. `f(rec(n))`. That gives `rec ∘ succ ≅ f ∘ rec`.
+6. Uniqueness: an algebra map g : N → A extends to a map `x ↓ ⟦L⟧ → T` over ⟦L⟧ preserving cocartesian arrows (on the fibre over x by g, and elsewhere by transport), so DJ's uniqueness compares it with h. Parameters B: run the argument in the slice over B (`B × –` preserves everything used).
+∎
+
+Induction (Theorem 4.3) then follows as before, and N trunc 0 is derived. Route III also gives recursion out of `Hom_{⟦Γ⟧}(a, b)` for every graph Γ (lists, words, paths) with no further rule.
+
+### 4.7 Other inductive objects
+
+- **Routes I/II, generalised.** Finitary polynomial signatures `P(X) = Σ_i B_i × X^{n_i}` (a list of arities n_i and parameter objects B_i): an initial-algebra rule per signature, with the same cells, Proposition 4.2 and Theorem 4.3 (the AGS argument is uniform in the signature). Covers Bool (two nullary constructors), Fin k, lists over B, binary trees.
+- **Route III** covers what is a hom object of a free object on a graph: ℕ, lists and words over a finite alphabet (one loop per letter), paths in finite graphs. **It does not cover binary trees**, which are not paths. Trees would need a free object whose homs are trees: hom objects of free *operad-like* or *monoidal* objects, i.e. `Hom_{⟦Γ⟧}` for Γ a 2-dimensional computad with a binary generator `m : x ⊗ x → x`, which needs a tensor. Recorded as F1b: an in-style source of tree-shaped inductive objects for route III.
+- Lists over an *arbitrary* object B (not a finite alphabet) need parameters in route III: the free monoid on B as the hom of a free object "with a B-indexed family of loops", which is a family-indexed colimit (§6). Plausible but not worked out; part of F1b.
+
+---
+
+## 5. Presentations with equations: the integers (F4)
+
+### 5.1 ℤ as a localised loop
+
+Let ⟦J⟧ be the walking (coherent) equivalence (ICaTT's walking equivalence as a context; F7). Define
+
+```
+⟦L⟧[s⁻¹] := pushout of  ⟦L⟧ ←s− ⟦D¹⟧ −→ ⟦J⟧          (a finite colimit)
+ℤ := Hom_{⟦L⟧[s⁻¹]}(x, x)
+```
+
+zero is `1_x`, successor is `– ; s`, predecessor is `– ; s⁻¹`, and **cancellation** `s ; s⁻¹ ≅ 1` is the unit of the equivalence, a cell, not an equation.
+
+**Theorem 5.1 (ℤ is the integers) [proved here, from the literature].** ⟦L⟧[s⁻¹] ≃ Bℤ, so ℤ ≃ ℤ_disc. More generally, for a finite graph G and a set M of edges, the localisation of F_ω(G) at M is a 1-category, equivalent to the 1-categorical localisation F_1(G)[M⁻¹].
+
+*Proof.*
+1. F_ω(G) ≃ F_1(G), a 1-category (`free-on-graph.md`).
+2. The pushout is taken in (∞,ω)-categories, but every object in it (F_1(G), ⟦D¹⟧, ⟦J⟧) is an (∞,1)-category, and the inclusion of (∞,1)-categories into (∞,ω)-categories has a right adjoint (keep the cells whose higher structure is invertible), so it preserves colimits. The pushout is therefore the (∞,1)-categorical one, i.e. the Dwyer–Kan localisation of F_1(G) at M.
+3. **Dwyer–Kan, *Calculating simplicial localizations* (JPAA 18, 1980), Prop. 2.3 [paper]:** if C = D ∗ W is a free product of free categories, then the hammock localisation L^H(C, W) → C[W⁻¹] is a weak equivalence. Here C = F_1(G) is the free product of F_1(G∖M) and W = F_1(M), both free. So the localisation is homotopically discrete: it is the 1-category F_1(G)[M⁻¹].
+4. For one loop with M = {s}: F_1(L)[s⁻¹] is the one-object groupoid on ℤ. ∎
+
+*Caveat on step 3.* The copy of DK 1980 consulted is an OCR scan; the statement of Prop. 2.3 was read through it, and the reduction from the simplicial localisation L to L^H is DK's Prop. 2.2. It should be re-read against a clean copy (added to G1).
+
+This justifies **T-loc** and gives ℤ trunc 0 by T-hom. It also gives a filler tactic for localised graphs in principle (paths become reduced words in G ∪ M̄), but the proof of §3 does not transfer as it stands: the weak-to-strict comparison for a localised graph is not a globular-set instance of the trivial-fibration theorem. Recorded as F4a.
+
+### 5.2 Operations on ℤ
+
+Addition is composition in Hom(x, x), negation is inversion of loops (every loop of ⟦L⟧[s⁻¹] is invertible, being a composite of s and s⁻¹), and multiplication comes from recursion on N followed by the sign split. Ring axioms are cells between maps ℤᵏ → ℤ, and all their coherence is T-fill (§2.5). So ℤ "behaves like the integers", with cancellation given by the equivalence data, not by a definitional rule.
+
+### 5.3 Quotients beyond localisation
+
+ℚ, ℤ/n and quotient sets in general are not localisations of free objects on graphs. Coequalisers alone do not give sets: in an (∞,1)- or (∞,ω)-setting the coequaliser of two maps ⊤ ⇉ ⊤ is the circle Bℤ, not a point. What is needed is **set-truncation**:
+
+```
+(Trunc)   for n ≥ −1 and any object X: an object ‖X‖_n, trunc n, with |–| : X → ‖X‖_n,
+          and for every C trunc n, restriction along |–| : Hom(‖X‖_n, C) → Hom(X, C)
+          essentially surjective at every level (a `uni`-style filler rule whose
+          side condition is the certified judgment C trunc n).
+```
+
+It is a localisation (left adjoint to the inclusion of n-categories), stated with the same J1/J2 pattern as Mikhail's `uni`, with a `trunc` premise. Then the quotient of a set X by an equivalence relation `R ⇉ X` is `‖coeq(R ⇉ X)‖₀`, and ℚ is the quotient of ℤ × ℤ_{≠0}.
+
+| | localisation only (§5.1) | with Trunc |
+|---|---|---|
+| ℤ | yes | yes, also as a quotient of ℕ × ℕ |
+| ℤ/n, ℚ, quotient sets | no | yes |
+| new rules | none (pushout) | Trunc |
+| effectiveness of quotients (R is the kernel of X → X/R) | n/a | needs a further argument (in HoTT it uses univalence; here it is open, F4b) |
+
+**Vector-space-like objects.** A field object K is a set with ring structure and an inverse on the non-zero part (a pullback). A K-module is a set M with maps `K × M → M`, `M × M → M`, and laws as cells; coherence is again automatic. Free modules on a finite set are products Kⁿ. Free modules on an arbitrary set, quotients of modules, and dual spaces need Trunc (quotients) and F8 (function sets).
+
+---
+
+## 6. Object-indexed colimits (F5)
+
+### 6.1 Ambient-valued diagrams are fibrations
+
+A diagram indexed by an *object* I and valued in the ambient is a functor I → ωCat, which a universe-free theory cannot name. Its Grothendieck construction can be named: **an I-indexed diagram is a cocartesian fibration `p : E → I`** (§4.6 for the structure). Then:
+
+- **A cocone** under the diagram with vertex Z is, by definition, a map `E → Z` sending p-cocartesian arrows to invertible ones. This is the straightening of "a transformation from the diagram to the constant diagram at Z", with no universe [recall: Lurie HTT §3.3.4].
+- **The lax colimit is E itself** (no colimit rule at all): cocones that are not required to invert anything are just maps out of E.
+- **The pseudo colimit is the localisation** `E[W⁻¹]` at the cocartesian arrows W. W is given as a map `w : W → [⟦D¹⟧, E]` (the cocartesian arrows, picked out by ℓ of §4.6), and
+
+  ```
+  E[W⁻¹] := pushout of  E ←ev− W × ⟦D¹⟧ −→ W × ⟦J⟧
+  ```
+
+  a finite colimit. Its universal property is literally: maps `E[W⁻¹] → Z` are maps `E → Z` inverting w. **Proposition 6.1 [proved here]:** this is the cocone universal property above. (The pushout needs `W × ⟦D¹⟧` to be the tensor of W by the shape, i.e. maps out of it are maps `W → [⟦D¹⟧, Z]`. Under P this holds because ⟦D¹⟧ is exponentiable via the pseudo cotensor; in ωCat, `Fun(W × D¹, Z) ≃ Fun(W, Fun(D¹, Z))` [recall].)
+- **Partially lax colimits** localise a sub-map of w (AHM's I-lax colimits; Gepner–Heine's E-lax colimits are localised Grothendieck constructions [abstract-level]).
+- Higher cocartesian cells (for I an ω-category) are localised in the same way, with ⟦D^k⟧ and the walking k-equivalence; this matches Loubaton's marked colimits, which invert marked cells in every dimension.
+
+Semantic agreement (the localisation computes the colimit of the straightened functor) is Lurie HTT Cor. 3.3.4.3 in (∞,1), AHM Thm F in (∞,2), Gepner–Heine in the oriented (∞,ω) setting [recall / abstract-level]. Inside the theory nothing has to be proved: the encoding defines cocones, and the pushout's universal property is exactly the cocone property.
+
+### 6.2 Sequential colimits
+
+A sequence `X₀ → X₁ → …` is given, as in §4.4, by a family `p : X → N` (the total object, which plays the role of `⊔_n X_n`) and `t : X → X` with `p ∘ t ≅ succ ∘ p`. Its colimit is
+
+```
+colim_n X_n := pseudo-coequaliser of  1_X, t : X ⇉ X      (the all-marked colimit over L)
+```
+
+**Proposition 6.2 [recall, standard].** A colimit over the free category on a graph is the coequaliser of the coproduct over edges into the coproduct over vertices. This holds in (∞,1)- and (∞,ω)-categories because the free category on a graph is free as an ∞-category: Fun(F(G), C) ≃ Map(G, C). With ω = F(0 → 1 → 2 → …) the coproducts are X itself, so the formula above is the mapping telescope. ∎
+
+So **sequential colimits need no new rule and no fibration structure**: a finite pseudo colimit of the total family suffices. Example: the ascending union of a chain of subsets X_n ⊆ Y.
+
+### 6.3 Left Kan extensions
+
+For `f : I → J` and a diagram `p : E → I`, the left Kan extension `f_! E` is classified by the localisation of the **free cocartesian fibration** on `f ∘ p`, which is the comma `E ×_J [⟦D¹⟧, J] → J` (source on E, target to J), at the arrows coming from p-cocartesian arrows of E [recall: Gepner–Haugseng–Nikolaus, *Lax colimits and free fibrations in ∞-categories*]. Both steps are finite constructions (a comma object, then §6.1's localisation). So Kan extensions along arbitrary maps, not only along shapes, are available.
+
+### 6.4 Colimits inside an object
+
+A colimit *inside* an object C (an element of C with a universal cocone) is not an ambient colimit, and a general C has none. So it is **declared structure**: a marking on context variables, like T-var.
+
+```
+Γ, d : I → C, L : ⊤ → C, λ : d ⇒ L ∘ !_I   colim-marked
+```
+
+with a `uni`-style filler rule: for every `W`, `w : W → C` and cocone `θ : d ∘ π_I ⇒ w ∘ π_W : I × W → C`, a cell `m : L ∘ !_W → w` and invertible cells relating θ to `m · λ`, at every level. Generalised: **Lan-marked** variables `(f : I → J, d : I → C, K : J → C, λ : d ⇒ K ∘ f)` for left Kan extensions, the colimit being the case J = ⊤. Substituting into a marked tuple requires a certificate, as in T-var: an actual universal property derived elsewhere (e.g. an ambient colimit from §6.1, or a previously declared structure). "C has I-colimits" is then a hypothesis a user can take, the way they take a group object.
+
+Pointwise-ness (stability under restriction along comma squares, which ∞-cosmos Kan extensions need, Riehl–Verity) is automatic for the generalised-element form, because the universal property is required for every parameter object W.
+
+### 6.5 Infinite limits, and a new item: function sets
+
+Dually, ambient limits indexed by a cartesian fibration are sections (the lax limit, a "dependent product"), which need the object of maps `[I, E]`. For a shape I it is a cotensor; for an arbitrary object I it is an **internal hom**, not a finite limit. Ordinary mathematics needs exactly this for sets: ℕ → ℕ, sequences in ℚ (for ℝ), power sets (functions into the proposition classifier, which needs a universe and is out of scope; predicates are monos, §2.4).
+
+**F8 (new): exponentials of sets.** Under P the cartesian internal hom of ωCat restricted to sets, `[A, B]` with `Hom(C × A, B) ≃ Hom(C, [A, B])` for all C, is semantically fine (Set is cartesian closed inside ωCat). In-style candidate: Mimram's cartesian closed CaTT rules (`internal-hom.md` §5.7, D12) restricted to targets with `trunc 0`, so the higher-dimensional cartesian pasting criterion is not needed (every cell above level 0 is T-fill). Nobody owns this yet.
+
+---
+
+## 7. Lax functors (F6)
+
+### 7.1 What is missing
+
+In every option functors preserve composition up to invertible cells (`pseudo-vs-gray.md`, "What none of the three gives"). A lax functor `F : A ⇝ B` has *directed* comparison cells `F f ; F g → F(f;g)` and `1 → F 1`. Monads are the basic example: a lax functor from the point is a monad (Bénabou) [recall].
+
+### 7.2 Lax functors out of finite loop-free shapes: no new rule
+
+For a finite poset P, normal (op)lax functors `P ⇝ B` into a 2-category B are the simplices of B's Street nerve, i.e. strict maps out of the **orientals** glued along the nerve: `c_∞ N(P)` (Street; Duskin) [recall]. For 3-categories, Gagna proves that normalised oplax 3-functors correspond to simplicial maps between Street nerves, with a constraint on thin simplices, and for 1-categories without split monos or epis identifies `c_∞ N(A)` as the strictification [paper, arXiv 2004.14220, abstract/introduction level]. Maehara proves the orientals are also *free weak* ω-categories on the same generators [paper, arXiv 2102.09736, abstract level].
+
+So, **[proposal]** for a finite loop-free context P (a finite category without non-identity loops, e.g. a pasting scheme), define the context P^lax as the finite computad presenting `c_∞ N(P)`. It is finite because N(P) has finitely many non-degenerate simplices. Then **lax functors ⟦P⟧ ⇝ C are P^lax-families**, i.e. maps `⟦P^lax⟧ → C`. Example: for the chain `0 → 1 → 2`, P^lax is the 2-oriental `(0, 1, 2, f₀₁, f₁₂, f₀₂, α : f₀₁ ; f₁₂ ⇒ f₀₂)`: exactly one comparison cell. No new rule is needed; P^lax must be a *specified construction* (as the cone contexts must be, `limits-representables.md` §10.3).
+
+Shapes with loops (e.g. Bℕ, the point with its identity, needed for monads) have infinite nerves. A lax functor `Bℕ ⇝ C` is an infinite family; it would be given by the family encoding of §6 (a lax functor out of the point is a monad, which is finite data: t, μ, η and coherence cells, but its classifier, the walking monad, has hom Δ₊, which is infinite).
+
+### 7.3 Lax-functor variables: a directed coherence rule [conj]
+
+For lax functors between *arbitrary* objects, a context entry `F : A ⇝ B` with:
+- action on elements and arrows: `F⟨x⟩ : ⊤ → B`, `F⟨f⟩ : F⟨x⟩ → F⟨y⟩`, and on higher cells of A;
+- **refinement coherence**: for a pasting scheme Θ, a Θ-family in A, and two *F-image terms* u, v over it (composites in B of F-images of composites in A), a cell `u → v` whenever the Steiner support condition of the lax-functor classifier holds, i.e. u is a refinement of v in the oriental order. In the 1-dimensional case: `F⟨w₁⟩ ; … ; F⟨w_m⟩ → F⟨w₁ ; … ; w_m⟩` and every composite of such, with no cell in the other direction.
+
+This has the same shape as L's rule (`pseudo-vs-gray.md` §3): a directed coherence decided by supports computed on a Steiner complex, here the complex of the nerve instead of the Gray product. Its soundness and conservativity are the conjecture in `notes/conjectures/lax-functor-refinement.md`. The 1-dimensional chain case is supported by the fact that the hom `O_k(0, k)` of an oriental is a Gray cube [recall], which is loop-free with cells determined by supports (`steiner-support-determines-cells.md`, solved for Gray tensors of pasting diagrams).
+
+---
+
+## 8. Open items left by this note
+
+All rows are added to `notes/open-issues.md` under F.
+
+- **F2a** Agda: totality of the graph filler (Theorem 3.1). Needs A1.
+- **F2b** Filler for globular contexts (Theorem 3.2): implement strict normal forms (labelled trees) and the lift.
+- **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0`.
+- **F3c** Full proofs of Props. 2.2 and 2.3 against the specified `ctrf` construction once it exists (B5).
+- **F1a** Write G and DJ (§4.6) as rules with their `uni`-style higher levels; check Theorem 4.4's uniqueness step in detail.
+- **F1b** Tree-shaped inductive objects and lists over an arbitrary object in route III.
+- **F4a** Filler tactic for localised graphs (reduced words).
+- **F4b** Effectiveness of quotients under Trunc.
+- **F5a** Check §6.1–6.3 against the (∞,ω) sources (Gepner–Heine, Loubaton) at the level of statements, not abstracts.
+- **F5b** Θ-density (from C9) as an instance of §6.1: B as the localised Grothendieck construction of its disk elements, giving extensionality of transformations.
+- **F6a** `conjectures/lax-functor-refinement.md`.
+- **F8** Exponentials of sets.
+- **Formalisation (standard 9):** an Agda encoding of the `trunc` judgment and T-fill as signature-level rules, with the §2.5 ring example checked; an encoding of the recursion rule over a parameter context. Both need the syntax to carry operations "over a context applied to a substitution" beyond `coh`, i.e. an extension of `CaTTExp.Syntax`.

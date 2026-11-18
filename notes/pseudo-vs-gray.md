@@ -9,7 +9,11 @@
 ## 0. Summary
 
 1. **The target is not an ω-category.** The ω-category of ω-categories with lax transformations is a category *enriched over ωCat with the lax Gray tensor*, which Gepner–Heine call an **oriented category** ([2510.10504](https://arxiv.org/abs/2510.10504), §1.8, with ∞Cat's hom-objects being Fun^lax(S, T)) **[paper, intro level]**. A CaTT model is enriched over the *cartesian* product. So under P the ambient is a different object (ωCat with pseudo transformations), and the lax one appears only as a family of objects and maps inside it.
-2. **Only the outermost composition is Gray.** Each hom Fun^lax(B, C) is an honest ω-category. So the right L is **two-tier**: plain CaTT inside homs, directed interchange only between composition across objects (dimension-0 composition) and the rest. "Directed interchange at every level" is a different and much less settled target (§2.3). This sharpens the earlier sketches, which spoke of making interchange directed in general.
+2. **Two versions of L.** In ωCat_lax only the outermost composition is Gray, since each hom Fun^lax(B, C) is an ordinary ω-category.
+   - **Two-tier L** matches that exactly: plain CaTT inside homs, directed interchange only for composition across objects.
+   - **Uniform L** makes interchange directed at every level. Its rule is the same algorithm applied recursively (§2.5).
+   - Uniform L is weaker than two-tier L, which is weaker than P. Each stronger theory is the weaker one plus an invertibility marking, so every model of the stronger theory is a model of the weaker one, ωCat_lax included **[conj]**.
+   - *Revised 2026-11-18 after Anthony clarified that "lax by default" means "the most general version until there is a concrete reason otherwise". The first version recommended two-tier L.*
 3. **The L rule is a small syntactic change.** Contexts stay pasting schemes, and the coh rule keeps its shape. What changes is the side condition: free-variable sets are replaced by **supports in the Gray unfolding** of the pasting scheme. For Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, that unfolding is the hom-level shape Θₙ ⊗ … ⊗ Θ₁. Supports are Steiner chains, so the check is integer linear algebra and decidable (§3).
 4. **L absorbs the hardest open item of P.** Under P, lax homs [Θ, C]ₗₐₓ need a Gray *context former* whose generators x⊗y must be typed by composites of non-pasting molecules. PR #3 calls this "the biggest open technical point" (G1). Under L, a lax square in C is just the interchanger of a native 2-cell with an arrow of C, so lax homs are the native hom made into an object and Gray contexts become derivable (§4.2).
 5. **L is the weaker theory, and P is recoverable from it.** Every cartesian-enriched model is also Gray-enriched, through the comparison map X ⊗ Y → X × Y. So **P ≈ L + "interchangers are invertible"** **[conj]**. "Pseudo = lax + marking", which PR #3 adopted for shapes, then holds for the ambient as well. Choosing L does not close off P; the reverse is false.
@@ -17,15 +21,15 @@
    - The horizontal composite of 2-cells across objects no longer exists canonically. Users choose an order, and the laws carry directed interchangers.
    - Ordinary-math reasoning in low dimensions may meet interchangers that are semantically invertible but not syntactically so.
    - The metatheory (computads, models, invertibility, substitution) must be built for the new side condition.
-   - A future universe object would be pseudo, not lax, so it would not match the ambient (§5.6).
+   - Under two-tier L, a future universe object would be pseudo, not lax, so it would not match the ambient (§4.7). Uniform L removes this mismatch.
 
    None of these makes L ill-defined.
 7. **Is there an unambiguous path?**
-   - **P:** unambiguous to build, but it reaches the stated target ("internal language for ωCat, lax by default") only indirectly.
-   - **Two-tier L:** a well-defined target (oriented categories; the strict model of Ara–Maltsiniotis), a pinned-down rule change, and a finite list of lemmas. That is as unambiguous as research gets, though not risk-free.
-   - **Uniform L:** ambiguous. Avoid it.
+   - **P:** unambiguous to build, but it is the least general option.
+   - **Two-tier L:** a target in the literature (oriented categories; the strict model of Ara–Maltsiniotis), a pinned-down rule change, and a finite list of lemmas.
+   - **Uniform L:** the syntax is just as well defined, as the recursive Gray unfolding. What is missing is an established *semantics* of its own: iterated Gray enrichment fails as a construction (Crans; Bourke–Lobbia). That is a risk for the soundness proofs, not a reason the theory is wrong. Its intended models, ωCat_lax among them, are still models.
 
-**Recommendation: two-tier L** (§7), with a staged plan and an explicit fallback to P that costs nothing because P = L + marking.
+**Recommendation (revised): uniform L as the kernel**, with "ordinary ω-category" (interchange invertible inside an object) and "pseudo" as markings (§2.5, §7). Two-tier L is its first milestone, since the two differ only in whether the unfolding recurses. Both two-tier L and P remain reachable by marking.
 
 ---
 
@@ -69,7 +73,7 @@ One could try a theory in which *every* pair of compositions interchanges direct
 - Gepner–Heine introduce *bioriented* categories, related to suspension. This is the frontier, not a foundation one can build a kernel against yet **[paper, intro level]**.
 - The objects of ωCat are ordinary ω-categories anyway. A uniformly directed theory would describe something *other* than ωCat_lax.
 
-So **L should mean two-tier L.** Note that PR #3 §3 described B as "interchange is a directed generator" without the restriction to composition across objects. With the restriction, the design question becomes much better posed.
+*First-version conclusion, superseded by §2.5:* "L should mean two-tier L." That conclusion assumed the target was ωCat_lax exactly. Under the generality principle it does not hold, and §2.5 replaces it.
 
 ### 2.4 Every P-model is an L-model
 
@@ -80,6 +84,41 @@ Consequences:
 - Everything L proves holds in every CaTT model. **L is a weaker theory with more models**, including both ωCat_lax and ωCat_pseudo.
 - **[conj]** L plus a rule "every interchanger is invertible" is equivalent to P, in the sense of having the same models, with a conservative translation of P-terms. Horizontal composites become definable by a chosen layering, and the two layerings are related by an invertible cell.
 - PR #3's principle "pseudo = lax + marking" (Conjecture P, GHL Prop. 2.12) becomes uniform. It applies to the ambient's own cells, not only to shapes.
+
+### 2.5 Uniform L, and where generality stops
+
+**The rule.** Recurse the Gray unfolding of §3.1 into the hom pieces:
+
+```
+U(ΣΘ₁ ∨ … ∨ ΣΘₙ)  :=  U(Θₙ) ⊗ … ⊗ U(Θ₁)          U(point) := point
+```
+
+Two-tier L is the case where U(Θᵢ) is replaced by Θᵢ itself.
+
+- Tensors and suspensions of loop-free Steiner complexes are loop-free **[recall]**, so supports are computed exactly as in §3.2 and the check stays decidable.
+- The rule (§3.3) is unchanged. Only U changes.
+
+**What it does.**
+- Example: inside a single object C, take two 2-cells composable along a 1-cell, i.e. Γ = Σ(D¹ ∨ D¹) in C's own cells. This now gets a directed interchanger one dimension up, just as transformations do in two-tier L.
+- So Eckmann–Hilton, horizontal composites and the like are directed everywhere, unless marked.
+
+**Generality ordering [conj].** Uniform L ⊂ two-tier L ⊂ P, in the sense that each is the previous one plus invertibility markings:
+- "interchange inside this hom is invertible" gives two-tier;
+- "every interchanger is invertible" gives P.
+
+Finer supports map onto coarser ones under the collapse X ⊗ Y → X × Y, so every pair of terms the finer rule accepts, the coarser rule accepts too. Hence every model of the stronger theory is a model of the weaker one, including ωCat_lax and every ordinary ω-category.
+
+**What uniform L gains over two-tier L.**
+- Objects need not be ordinary ω-categories. The theory also covers objects whose own compositions interchange directedly, such as Gepner–Heine's oriented categories, which are not ω-categories.
+- The ambient and its objects are the same *kind* of structure again. This removes the universe mismatch of §4.7: a universe object can be lax.
+- One rule at every level, with no special status for dimension 0. That is closer to the CaTT aesthetic than two-tier L.
+
+**Concrete reasons it could fail (none decisive now).**
+1. **No established semantics of its own.** The obvious construction, iterated Gray enrichment, breaks at dimension 4: there is no monoidal biclosed structure on Gray-categories for weak transformations (Crans; Bourke–Lobbia). Gepner–Heine's bioriented categories are the closest current work. This makes S1 (§3.6) harder to *prove*, because there is no ∞-categorical model class to check against. It does not make the theory inconsistent, since its intended models are models.
+2. **Usability, unless markings are cheap.** Plain CaTT reasoning inside an object (elements, the post's §Functors) now has directed interchange. The fix is a marking "C is an ordinary ω-category" that restores invertible interchange in C. The marking must be easy enough that ordinary use never notices it.
+3. **Cost.** Unfoldings now multiply at every level, not only across objects. Symbolic supports should keep this polynomial **[conj]**, but it is a real constant-factor cost.
+
+**Where generality stops.** One step further is to drop the interchanger entirely (an ω-sesquicategory, the setting of Markakis's generalised signatures **[recall]**). That gives up the *existence* of naturality cells, which every lax transformation has. So there is a concrete reason to stop at directed interchange: it is the most general option that still contains the intended structure.
 
 ---
 
@@ -252,7 +291,7 @@ So each option makes one hom native and gets the other from an extra rule family
   - Elementwise reasoning inside U would give pseudo naturality while the ambient gives lax: a mismatch.
   - A lax universe would need objects that are themselves oriented categories. That is the uniform/bioriented frontier of §2.3.
 
-PR #1 recommends no universe for now, so this is a long-term cost of L, not a near-term one.
+PR #1 recommends no universe for now, so this is a long-term cost of two-tier L, not a near-term one. **Uniform L removes it** (§2.5), because its objects may be oriented categories themselves.
 
 ---
 
@@ -295,38 +334,52 @@ PR #1 recommends no universe for now, so this is a long-term cost of L, not a ne
 
 ## 6. Side-by-side
 
-| | **P: pseudo ambient** | **L: two-tier Gray-CaTT** |
-|---|---|---|
-| Internal language of | Cat_ω with pseudo transformations | ωCat_lax, an oriented category (Gepner–Heine) |
-| Core rule | CaTT, unchanged | CaTT syntax; side conditions on Gray supports |
-| Lax transformations | constructed (cotensor + pullback) | native |
-| Pseudo transformations | native | lax + marking |
-| Relation between the two | P cannot express L-models | P ≈ L + invertible interchange **[conj]** |
-| Gray tensor of contexts | primitive context former (G1 open) | algorithm inside the side condition. Gray diagrams are derived **[conj]**. |
-| Coherence of lax composition | via universal-property rules | via coh |
-| Horizontal composite | canonical | chosen; laws are directed |
-| Internal hom with cartesian currying | yes (pseudo) | yes for the marked pseudo hom |
-| Internal hom, lax | needs Gray tensor of objects | native; currying needs Gray tensor of objects |
-| Limits | CaTT_lim as published | CaTT_lim re-read Gray-enriched; ctrf may simplify **[conj]** |
-| Free objects, elements | yes | yes; naturality comes out lax |
-| Future universe | kind-correct | pseudo only (mismatch) |
-| Decidable | yes | yes; cost grows with horizontal width |
-| Central open lemma | G1 + Conj. (P) | S1 |
+| | **P: pseudo ambient** | **L: two-tier Gray-CaTT** | **L: uniform** |
+|---|---|---|---|
+| Internal language of | Cat_ω with pseudo transformations | ωCat_lax, an oriented category (Gepner–Heine) | structures with directed interchange at every level; ωCat_lax is one model |
+| Core rule | CaTT, unchanged | CaTT syntax; side conditions on Gray supports | same, with the unfolding applied recursively |
+| Lax transformations | constructed (cotensor + pullback) | native | native |
+| Pseudo transformations | native | lax + marking | lax + marking |
+| Inside one object | plain CaTT | plain CaTT | directed, unless C is marked as an ordinary ω-category |
+| Generality | strongest theory | P + nothing; P = it + marking **[conj]** | weakest; both others = it + marking **[conj]** |
+| Gray tensor of contexts | primitive context former (G1 open) | algorithm inside the side condition. Gray diagrams are derived **[conj]**. | same |
+| Coherence of lax composition | via universal-property rules | via coh | via coh |
+| Horizontal composite | canonical | chosen across objects; laws are directed | chosen everywhere unless marked |
+| Internal hom with cartesian currying | yes (pseudo) | yes for the marked pseudo hom | yes for the marked pseudo hom |
+| Internal hom, lax | needs Gray tensor of objects | native; currying needs Gray tensor of objects | same |
+| Limits | CaTT_lim as published | CaTT_lim re-read Gray-enriched; ctrf may simplify **[conj]** | same |
+| Free objects, elements | yes | yes; naturality comes out lax | yes |
+| Future universe | kind-correct (pseudo) | pseudo only (mismatch) | kind-correct (lax) |
+| Established semantics | (∞,ω)-categories | oriented categories | none of its own yet; frontier (bioriented) |
+| Decidable | yes | yes; cost grows with horizontal width | yes; cost grows at every level |
+| Central open lemma | G1 + Conj. (P) | S1 | S1, without a model class to check against |
 
 ---
 
 ## 7. Recommendation
 
-**Adopt two-tier L as the core.** The reasons, in order of weight:
+**Revised recommendation: uniform L as the kernel**, with two markings:
+- "C is an ordinary ω-category": interchange inside C is invertible;
+- "this transformation is pseudo".
 
-1. **It is the internal language of the stated target.** "Lax by default" (survey §13) plus "internal language for the ω-category of ω-categories" names an oriented category, not an ω-category. Under P the target is a derived structure whose coherences coh never sees. With redoing results set aside as a cost, P's remaining advantage is mostly that it works in a different, easier ambient.
+Two-tier L and P are then fragments obtained by marking. The working rule is "steer toward the most general version until there is a concrete reason otherwise", and §2.5 found no decisive reason against uniform L. The one reason found against going further, dropping interchangers altogether, is concrete: it loses naturality cells that every lax transformation has.
+
+**Order of work: two-tier first.** Two-tier L is the *first milestone* toward uniform L, not a competing choice:
+- it has a model class in the literature to check S1 against;
+- the only change from two-tier to uniform is letting the unfolding recurse (§2.5).
+
+If the recursive version hits a concrete problem, such as S1 failing for an unfolding inside a hom or marking overhead that makes ordinary CaTT reasoning unusable, that is the concrete reason to stop at two-tier.
+
+The reasons for L over P (first version, still valid):
+
+1. **It is the internal language of the stated target.** "Internal language for the ω-category of ω-categories" with lax transformations names an oriented category, not an ω-category. Under P the target is a derived structure whose coherences coh never sees. With redoing results set aside as a cost, P's remaining advantage is mostly that it works in a different, easier ambient.
 2. **It removes P's hardest open item rather than adding one.** P needs Gray contexts as a primitive, with G1 open. L gets lax squares, cubes and lax homs from native interchangers, and keeps the Gray tensor as a chain-complex computation in the side condition.
 3. **It is weaker and more general.** Every CaTT model is an L-model, and P is (conjecturally) L plus one marking. So L does not foreclose anything P offers. Choosing P forecloses the lax ambient.
 4. **The target and the test are concrete.**
    - The semantics is Gray-enriched (∞,ω)-categories (Campion's monoidal structure; Gepner–Heine's oriented categories).
    - The strict AM model is exactly what the side condition computes in, so every rule can be tested mechanically against it.
 
-**What not to do:** uniform L, i.e. directed interchange at every level. It describes something other than ωCat_lax, and the dimension-4 literature (Crans; Bourke–Lobbia) shows the iterated Gray structure is not even monoidal biclosed in the naive sense.
+*The first version advised against uniform L because "it describes something other than ωCat_lax". Under the generality principle that is not a reason: ωCat_lax remains a model. The dimension-4 literature (Crans; Bourke–Lobbia) is a risk for its semantics (§2.5), not a refutation.*
 
 **Honest residual risks of L:**
 - S1 could fail for some endo-coherence in a Gray unfolding. The direct analogue for pasting schemes took real work (Finster–Mimram; Benjamin–Finster–Mimram).
@@ -345,13 +398,19 @@ PR #1 recommends no universe for now, so this is a long-term cost of L, not a ne
 4. **Invertibility markings.** Port ICaTT's judgment, add the interchange propagation rule, and state "pseudo transformation".
 5. **S3 (substitution) and S1 on paper,** starting from Steiner's strict result and Campion's pasting theorem.
 6. **Representables and lax homs.** Restate PR #2's R-B and PR #3's §5.4 hom rule over L. Check the [conj] in §4.2 that Gray-shaped diagrams are derivable.
+7. **Go uniform.**
+   - Let the unfolding recurse (§2.5) and add the "ordinary ω-category" marking.
+   - Re-run steps 2–3 for the case Σ(D¹ ∨ D¹) *inside* an object, i.e. directed Eckmann–Hilton-type interchange.
+   - Check that marking an object restores exactly plain CaTT inside it.
 
-**Fallback criterion.** If S1 fails, or step 3 shows the support condition admits an interchanger in both directions or rejects a needed whiskering law, switch to P by adding the invertible-interchange marking globally. Under §2.4, work done in steps 1–4 carries over.
+**Fallback criteria.** Each fallback adds a marking globally, so under §2.4 and §2.5 work done earlier carries over.
+- If the recursive step fails (S1 inside homs, or marking overhead), stay at two-tier.
+- If S1 fails already for two-tier, or step 3 shows the support condition admits an interchanger in both directions or rejects a needed whiskering law, fall back to P.
 
 ---
 
 ## 8. Questions for Anthony
 
-1. **Two-tier vs uniform.** Is "directed only across objects, ordinary ω-category inside homs" what you meant by lax by default? It is what ωCat_lax actually is. Uniform directedness would describe a different object.
-2. **Universe mismatch.** Under L, a future universe object would be pseudo. Is that acceptable as a long-term cost, given the current no-universe stance?
+1. *(Answered 2026-11-18: "lax by default" means the most general version until there is a concrete reason otherwise. This note now recommends uniform L, reached through two-tier L.)*
+2. **Marking ergonomics.** Under uniform L, plain CaTT reasoning inside an object needs the "ordinary ω-category" marking. Should objects be unmarked by default (most general), with the marking opt-in, as recommended here? Or should the surface syntax assume the marking unless told otherwise?
 3. **Horizontal composition.** Is it acceptable that composing transformations across objects has no canonical result, with a surface-syntax default layering, or should the surface hide interchangers more aggressively?

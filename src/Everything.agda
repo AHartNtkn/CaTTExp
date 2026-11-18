@@ -47,6 +47,9 @@ import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.GraphFillerTotal.Chains
+import CaTTExp.GraphFillerTotal
+import CaTTExp.GraphFillerTotalExamples
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

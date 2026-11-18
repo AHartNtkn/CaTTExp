@@ -13,7 +13,7 @@
 | Item | Proposal | Status |
 |---|---|---|
 | **F3** h-levels | A judgment `C trunc n` ("C is an n-category"; n = 0 is "C is a set") with a filler rule, an invertibility rule, and closure rules: limits, hom objects (which lower the level by one), coproducts, and two semantic base rules (free objects on graphs, and on graphs with inverted edges, are 1-categories). §2. | Closure under limits and homs **[proved here]** (sketches at the level of the other notes). Base rules sound by `free-on-graph.md` and Dwyer–Kan **[paper]**. That the base rules are not derivable from R-A is **[conj]**, argued. |
-| **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`). Extension to globular contexts **[proved here]** semantically, not implemented. |
+| **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`); total on 1-cells **[agda]** (`CaTTExp.GraphFillerTotal`). Extension to globular contexts **[proved here]** semantically, not implemented. |
 | **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Induction, and hence recursion with uniqueness, for ℕ from G + DJ **[proved here, Thm 4.4]** (a circular uniqueness step in the first version is corrected). G and DJ are sound semantically **[paper/recall]**. |
 | **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need an n-truncation rule Trunc (two levels; the higher levels and dependent elimination are derived), and effectiveness needs a further rule EX. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. Trunc's derived levels and the quotient's universal property **[proved here]**. Non-derivability of EX **[conj]** (`conjectures/outbox/non-derivability.md`). |
 | **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3, Gepner–Haugseng–Nikolaus and Gepner–Heine **[recall / abstract-level]**. |
@@ -205,7 +205,22 @@ For *non-globular* contexts the statement fails in general **[conj]**. Expected 
 - a two-vertex graph `x ⇄ y`: `(f;g);f ⇒ f;(g;f)`;
 - negative: the tactic rejects `s;s` vs `s`, `s` vs `1_x`, and two different loops at x (their paths differ). That no cell exists at all is the paper argument via the path invariant, not a machine-checked statement.
 
-**What is not machine-checked:** totality (Theorem 3.1 for all inputs). It needs substitution admissibility for core CaTT (ledger A1). Recorded as F2a.
+**Totality for 1-cells [agda] (2026-11-18).** `src/CaTTExp/GraphFillerTotal.agda` proves Theorem 3.1 for 1-cells, for all inputs:
+
+```
+total : Γ ⊢ u ∶ a → b   →   Γ ⊢ v ∶ a → b   →   path u ≡ path v   →   Γ ⊢ fill₁ Γ u v (a → b) ∶ u → v
+```
+
+`fill₁` is a structural (fuel-free) version of the tactic, and it agrees with `GraphFiller.fill` on the examples (checked by `refl` in `GraphFillerTotalExamples.agda`). Γ is arbitrary: the theorem is about the 1-cells of any pure CaTT context, so it also covers contexts with higher variables. The proof has five parts:
+1. every 1-dimensional coherence is over a chain Θ_k from x₀ to x_k (`Chains.chain-side`: a pasting context of dimension ≥ 2 has two variables in its source boundary, and one of dimension ≤ 1 is a chain);
+2. the lift is well typed in Θ_K at every offset (`lift-ty`);
+3. the path of a 1-cell is a walk from its source to its target (`walk`);
+4. substituting σ back into the lift gives the original term (`lift-sub`);
+5. the lift has full support in Θ_k (`lift-fs`, `fs-cell`), which is the coh side condition.
+
+It uses the scoping lemmas and `lookup-sub` from `CaTTExp.Subst`, and weakening; it does not need the full substitution theorem.
+
+**What is not machine-checked:** totality for parallel n-cells with n ≥ 2 (the dimension-2, 3 and 4 examples are checked instances only). That case needs the path invariant for higher cells (a 2-cell between 1-cells relates terms of the same path), the lift of cells whose coherences are over pasting contexts of any dimension, and the offsets of §3.2 computed along a pasting derivation. Recorded as F2a (higher cells).
 
 ---
 
@@ -516,7 +531,7 @@ So dcoh has the same shape as L's rule (`pseudo-vs-gray.md` §3), with the lesso
 
 All rows are added to `notes/open-issues.md` under F.
 
-- **F2a** Agda: totality of the graph filler (Theorem 3.1). Needs A1.
+- **F2a** Agda: totality of the graph filler (Theorem 3.1). Done for 1-cells (`GraphFillerTotal.agda`); open for parallel n-cells, n ≥ 2.
 - **F2b** Filler for globular contexts (Theorem 3.2): implement strict normal forms (labelled trees) and the lift.
 - **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0` (§2.3, after Prop. 2.5: it reduces to F8 or to a parameter-varying induction). Posed as problem 2 of `conjectures/outbox/non-derivability.md`.
 - **F1c** Non-derivability of recursion in route II from R-A and limits (§4.5). Posed as problem 1 of `conjectures/outbox/non-derivability.md`.

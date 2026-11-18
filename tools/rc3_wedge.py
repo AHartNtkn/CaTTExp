@@ -333,9 +333,20 @@ def emit_module():
     open('../src/CaTTExp/Generated/WedgeRC3.agda', 'w').write(src)
     print('emitted', len(E.defs), 'definitions,', len(E.checks), 'checks')
 
+def emit_negative():
+    """Negative control: the exchange 3-term psi1 at its type with source and
+    target swapped.  Agda must reject src/CaTTExp/Generated/NegWedge.agda."""
+    from emit_agda import Emitter
+    t = exchange_terms()['psi1']; A = infer(W, t)
+    E = Emitter(); E.check_type('bad', W, t, arr(A[1], A[3], A[2]))
+    open('../src/CaTTExp/Generated/NegWedge.agda', 'w').write(
+        E.module('CaTTExp.Generated.NegWedge', 'Negative control: must be rejected.'))
+
 if __name__ == '__main__':
     import sys
     if sys.argv[1:] == ['emit']:
         emit_module()
+    elif sys.argv[1:] == ['neg']:
+        emit_negative()
     else:
         main()

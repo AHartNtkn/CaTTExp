@@ -71,6 +71,7 @@ import CaTTExp.GlobularTotal.FlatAssoc
 import CaTTExp.GlobularTotal.NfSub
 import CaTTExp.GlobularTotal.NfSubExample
 import CaTTExp.GlobularTotal.Uniq
+import CaTTExp.GlobularTotal.PsOrd
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

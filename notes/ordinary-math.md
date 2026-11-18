@@ -654,6 +654,23 @@ Semantics: U is `∐_T ⟦T⟧` with the Yoneda/realisation action of Θ, which 
 4. Localise the total space at its cocartesian arrows (§6.1). The result is |X|.
 Semantically, every 1-category is the colimit of its simplices in `Cat_(∞,1)`, because Δ is dense there through complete Segal spaces **[recall]**. The inclusion `Cat_(∞,1) ⊂ Cat_(∞,ω)` is a left adjoint, with right adjoint the underlying (∞,1)-category **[recall]**, so it preserves that colimit. So F5d needs **no rule of its own** once R-U exists. Recorded separately because el(B) (§6.6(v)) uses it.
 
+**(vii) R-U's Θ₁-functoriality, written out (2026-11-18, ledger F5c) [proposal; proved here, sketch, relative to the suspension–hom adjunction and the hom of a wedge [recall]].** Write a tree as `T = [n](T₁ … T_n)` (a node with n children), so that `U_T = Σ U_{T₁} ∨ … ∨ Σ U_{T_n}`, a chain of n suspensions glued end to start along the points `x₀, …, x_n`. A morphism of Θ (Berger's wreath datum, (v)) is
+```
+φ = (f, (φ_{ij}))  :  [m](S₁ … S_m) → [n](T₁ … T_n),
+f : [m] → [n] monotone,   φ_{ij} : S_i → T_j  for 1 ≤ i ≤ m and f(i−1) < j ≤ f(i).
+```
+Two facts about the ambient are used.
+- **(Σ)** Suspension is left adjoint to the hom, for bipointed targets: maps `Σ A → C` sending the two poles to c, c′ are maps `A → Hom_C(c, c′)`, at every level. This is the definition of Σ as a pushout, so it is the universal property of a finite colimit. **[recall; in-system: T-coprod and R-A's pushouts]**
+- **(∨)** The hom of a wedge between its far ends is the product of the pieces: `Hom_{ΣA₁ ∨ … ∨ ΣA_k}(x₀, x_k) ≃ A₁ × … × A_k`, and for k = 0 it is the terminal object. In `Cat_(∞,ω)` this is the Segal condition for the free composite. For strict ω-categories it holds because composition along a wedge is free. **[recall]**
+
+*Definition of `U_φ : U_S → U_T`, by recursion on φ.* On the points, `x_i ↦ x_{f(i)}`. On the i-th piece `Σ U_{S_i}`, by (Σ) we need a map `U_{S_i} → Hom_{U_T}(x_{f(i−1)}, x_{f(i)})`. By (∨) that hom is `∏_{f(i−1)<j≤f(i)} U_{T_j}`, and the map is the tuple `(U_{φ_{ij}})_j`, given by the recursion on the smaller data φ_{ij}. When f(i−1) = f(i) the product is empty and the piece is sent to the identity cell. The pieces agree at their shared points, so they glue along the wedge (a finite colimit).
+
+*Functoriality.* Identities: the identity datum has f = id and φ_{ii} = id, so U_id is the map whose adjuncts are identities. By the uniqueness half of (Σ) and of the wedge's colimit property, it is the identity up to a specified invertible cell. Composition: Berger's composite is `(g ∘ f, (ψ_{jk} ∘ φ_{ij}))`, with j the unique index such that f(i−1) < j ≤ f(i) and g(j−1) < k ≤ g(j). Both `U_ψ ∘ U_φ` and `U_{ψ∘φ}` agree on points. On each piece, their adjuncts are maps into `∏_k U_{R_k}` whose k-th components are `U_{ψ_{jk}} ∘ U_{φ_{ij}}` and `U_{ψ_{jk} ∘ φ_{ij}}`. These are related by the induction hypothesis on the smaller trees, because (∨)'s comparison is natural in the pieces. So the two maps are related by an invertible cell built from the uniqueness cells of (Σ) and of the wedge. Higher coherences (associativity of these cells, and so on) come from the uniqueness cells at every level, as for the recursor's `uniq` (F9b), since each `U_φ` is characterised by a universal property. Semantically the space of maps with the given adjuncts is contractible. So `T ↦ U_T, φ ↦ U_φ` is a functor `Θ → Cat_(∞,ω)`, and it agrees with the Yoneda/realisation functor because the two agree on the generators (the suspension and wedge maps) and both preserve the colimits (Σ) and (∨) used. **[proved here, sketch]**
+
+*Consequence.* With this functor, q : U → Θ₀ extends over the realised Θ (F5d) to a cocartesian fibration, by §6.1's localised Grothendieck construction. That is the form (iv) uses.
+
+*What the in-system rule must state.* (Σ) is already available from finite colimits. (∨) for the generic fibres `U_{T_j}` is not: it is a Segal-type statement about arbitrary objects, not about closed pasting contexts. So R-U's statement gains a clause, **(R-U∨)**: the comparison `Hom_{U_{node(ts)}}(x₀, x_k) → ∏ U_{t_j}` is invertible, with specified inverse cells. Over closed trees this is the pasting-context fact, and over generic trees it is part of the declared rule. With (R-U∨) the definition above is a recursion on the morphism datum into maps of the ambient. That is object-valued recursion again, so it is part of R-U and is not derived. **[proposal]**
+
 ---
 
 ## 7. Lax functors (F6)

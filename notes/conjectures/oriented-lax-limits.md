@@ -54,7 +54,16 @@ Any of the following:
 - references settling Problems 2–3, e.g. from Gepner–Heine's oriented (co)limits;
 - partial answers in the (∞,2) case, using Gray-enriched 2-categories and lax limits in the sense of Street and Lack.
 
-# Researcher Resposne
+## Status (updated 2026-11-18 after a verified researcher response)
+
+**Answered.**
+- *Problem 1: yes.* The unrestricted universal property does not collapse in ∞Cat. The forced-invertibility argument stops exactly where it needs the interchanger to be invertible.
+- *Problem 2: yes, for every small diagram.* The construction is a weighted limit in the Gray self-enrichment of ∞Cat. For the arrow F : X → Y it is `Fun^oplax([1], Y) ×_{ev₁, Y, F} X`. This is Gepner–Heine's framework, but with the cone direction reversed relative to their named "oriented limit".
+- *Problem 3: false as literally stated, true once corrected.* If m_b (the cone-morphism cell on the marked leg) is arbitrary, a finite strict 2-category shows that no limit exists. If transfors respect the marked leg coherently (m_b invertible, in every dimension), the limit is the full `Hom_C(b, a)`, with non-invertible higher cells. In the cartesian case the same construction gives only the core `Hom_C(b, a)^≃`.
+
+**Correction to the problem statement:** in Problem 3, "m unrestricted" must exclude the marked leg; the marking has to be respected by cone morphisms and all higher transfors. See the verification at the end.
+
+# Researcher Response
 
 **The unmarked unrestricted universal property is consistent, and the arrow case has an explicit construction in \(\infty\mathrm{Cat}\).** There are two qualifications:
 
@@ -445,3 +454,38 @@ Replacing the oplax internal hom in (13) by the cartesian internal hom gives
 Gepner–Heine discuss this directly in §1.3: endpoint evaluation for the ordinary functor category is conservative, so its fixed-endpoint fibers are spaces. [arxiv.org](https://arxiv.org/html/2510.10504v2?utm_source=chatgpt.com)
 
 Equations (13) and (15) give the requested distinction. The oriented construction retains arbitrary higher cells of \(\operatorname{Hom}_C(b,a)\). For generic filler rules, this requires unrestricted comparisons on unmarked legs and coherent compatibility with localization on marked legs.
+
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** I checked every step against Gepner–Heine, *Oriented category theory* (arXiv 2510.10504v2), Gepner–Heine, *Colimits in oriented category theory* (arXiv 2608.02592v1), Mesiti (TAC 41(30), 2024) and Mikhail's conventions as used in `catt-lim-pseudo-vs-gray.md`.
+
+**§1, where the argument stops.** The cone morphism induced by β : u ⇒ u′ has m_X = β▷λ_X and m_Y = β▷λ_Y. Its comparison (1) is the interchanger of β with λ_F. With φ = λ_F : λ_Y ⇒ λ_X;F, this is the background's interchanger `(u◁φ);(β▷v′) ⇛ (β▷v);(u′◁φ)`, and its boundaries are `p_F;(m_X▷F) ⇛ m_Y;q_F`. Correct. Representability gives "every cone morphism is induced", not "every cone morphism is invertible". This is also the internal re-derivation of R11 that open-issues B8 asked for, so that part is done.
+
+**§2, the arrow limit.**
+- GH Notation 3.1.3 confirms the conventions: `C ⊠ (−) ⊣ Fun^lax(C, −)` and `(−) ⊠ C ⊣ Fun^oplax(C, −)`.
+- From these, `Fun^lax(c, Fun^oplax(A, Y))` and `Fun^oplax(A, Fun^lax(c, Y))` both classify maps out of `c ⊠ T ⊠ A`, which proves the mixed currying (4) by associativity alone. Correct.
+- (5) follows because `Fun^lax(c, −)` is a right adjoint and so preserves the pullback. Correct.
+- The cone category is *defined* as the right side of (5). This is the right definition: (5) is natural in c, so the morphisms it contains are exactly those induced by interchangers in 𝒦. The labels "lax" and "oplax" therefore cannot be mismatched.
+- Mesiti's Definition 4.4 and Proposition 4.5 (lax comma objects in 2-Cat_lax, with the full universal property) exist as cited.
+- *Non-invertible m_F.* Take Y = D² and F picking out a. The fiber of L_F over b is `Mor_Y(b, a) = [1]` (GH Prop. 3.6.4), and (id, id_b, α) lies in it, so it is not invertible. The D^{r+1} version gives non-invertible r-cells for every r. Correct.
+
+**§3, existence and convention.**
+- GH-colimits cites Heine's *The higher algebra of weighted colimits* (arXiv 2406.08925) as [18], and uses its Lemma 3.69 in the way the response describes. I did not open Heine's paper itself.
+- GH-colimits Definition 3.2.3 defines the oriented limit as the right `W^C_oplax`-weighted limit, as stated.
+- I did not re-derive the response's orientation table, i.e. that GH's named convention gives the opposite cone direction. Nothing depends on it, because formula (2) states the cone direction explicitly.
+
+**§4, the Problem 3 obstruction.**
+- *The example 2-category.* C has one object, hom-poset [1], composition max, and unit 0. This is a strict 2-category whose only equivalence 1-cell is 0. For normalized cones over `1 → C ← 1`, a morphism is h with `0 ≤ h` (this inequality is m_b) and `u ≤ max(h, v)`. Then (u, v, h) = (1, 0, 1) is a cone morphism from cone 1 to cone 0. Correct.
+- *Non-representability.* A universal cone's λ_b is an equivalence of lax transformations. Its components are equivalences, hence 0. Its naturality cells give `p_C(β) ≤ 0` for every arrow β of L, so `p_C(β) = 0`. Every induced morphism therefore has h = 0. The hom-categories are posets, so no 2-cell can identify a morphism with h = 1 with one with h = 0, and full faithfulness fails. Correct.
+
+**§5, the corrected construction.** `H = {(b, a)} ×_{C×C} Fun^oplax([1], C) ≃ Hom_C(b, a)` is GH Prop. 3.6.4. (14) follows from pullback preservation and (4) as in §2, so H has the stated enriched universal property. This part is fully checked.
+- The identification of `Hom_{D_c}(b, a)` with the coherently marked cone category is checked at the first morphism level: transport along the invertible η. In higher dimensions it is argued through localizing the weight (GH-colimits Defs 3.3.3–3.3.6). I checked that this mechanism is the one Gepner–Heine use, but not the identification line by line.
+- (15), the cartesian case, is standard and is discussed in GH §1.3.
+
+**What this settles, and what it opens.**
+- Settled: Problems 1 and 2, and Problem 3 as corrected. In an oriented ambient, cone-morphism comparison cells may be unrestricted on unmarked legs and must be coherently invertible on marked legs. Contrast the cartesian (CaTT) ambient of `limits-representables.md`, where every comparison cell over a positive-dimensional diagram variable has to be certified invertible.
+- Open (internal, design): restate the limit rules over the L core so that their cone and transfor shapes match the right side of (5). This is open-issues B7. Generic filler rules still need a comparison proof against the weighted limit (response §3, last paragraph).
+- Nothing in this file needs to go back to a researcher.

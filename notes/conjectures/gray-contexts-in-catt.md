@@ -730,3 +730,50 @@ This is separate from the walking-arrow obstruction, which uses no repeated arro
 Mikhail’s Theorem 4.4 is stated for **globular contexts** and three layers, so even after repairing the displayed rules it does not establish arbitrary-context \(n=1\) existence. The later naturality construction of Benjamin–Markakis–Offord–Sarti–Vicary proves the depth-at-most-one construction; its theorem does not supply arbitrary-depth naturality. [arxiv.org](https://arxiv.org/html/2412.13310v2?utm_source=chatgpt.com)
 
 The semantic Steiner statement in §7 remains valid in its stated strict setting: Campion’s Example 3.2 and Corollary 3.5 identify a strongly loop-free Steiner site whose inclusion into flagged \((\infty,\omega)\)-categories is strong monoidal. That establishes compatibility of the **strict Steiner tensor** with the semantic Gray tensor. It does not identify a context selected by Mikhail’s printed conditions with that strict tensor; that identification still requires the presentation result in §6(2). [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. G(2) is proved, the §3.3 gap is closed, existence in dimension 3 holds, and the obstruction to Mikhail's printed Gray rules is real.** This independently confirms the in-house proof of G(2) through Theorem A (open-issues D1, NGC thread); the two proofs have the same structure. The body of this file is owned by the NGC thread, so the corrections below are recorded here and passed to it, not applied to §§1–6.
+
+**§2, G(2).**
+- *2.1, structural path lemma.* A primitive 1-term has an arity of dimension ≤ 1, so its flattened word is a path. A molecule of dimension ≤ 2 is acyclic, so that path has no repeated vertex. Hence any two parallel structural 2-terms live over one path context and are connected by the coherence rule. This is the same argument as §2.1 of the verified ladder proof in `naturality-arbitrary-depth.md`. Correct. (I did not re-open Hadzihasanovic Prop. 8.4.3, which is cited for the acyclicity.)
+- *2.2, quotients.* `∼` is an equivalence relation because a 3-cell over a 2-dimensional computad has no 3-generator in its support, hence is invertible. That is the content of the cited Benjamin–Markakis–Sarti criterion; I did not re-check the proposition numbers 35 and 37. Each listed bicategory law is a full coherence over the stated globular pasting context. Using the structural lemma to make the path-normalized N strict is sound. Correct.
+- *2.3, normalization.* `coh_{P,A}[id]` and `b_{P,A}` are parallel and full over P, so they are related by a 3-cell. Substituting and recursing on the arguments gives every 2-term as an expression in normalized atomic generators. A 2-term over a 1-dimensional arity is structural. Correct.
+- *2.4, each face used once.* The four properties of a regular 2-molecule hold (unique producer and consumer, acyclic flow, non-empty input and output paths).
+  - Injectivity of ∂₂: take a flow-minimal face a with non-zero coefficient and an input edge e of a. No other face consumes e, and its producer precedes a, so has coefficient 0. Hence `(∂₂z)_e = −z_a ≠ 0`. Correct.
+  - The telescoping identity gives `∂₂ c(E) = ∂₂(Σ a)`, so every multiplicity is 1. Correct. This does not assume that supports record multiplicity.
+- *2.5, swaps.* A produced edge is not in ∂⁻U, so its consumer must come after its producer, and the face order is a linear extension of the flow order. For adjacent incomparable faces a then b, the input path of b is contiguous and cannot contain an output edge of a. Since a's output is non-empty, b's input cannot straddle it either. So the two rewrites act on disjoint intervals, and swapping them is an interchange. Linear extensions are connected by adjacent swaps. So `T̄ = T̄′`, hence `[T] = [T′]`, hence there is a CaTT 3-cell `T ⇒ T′` of exactly that type. Correct. This closes the §3.3 bookkeeping gap.
+- *2.6.* Wrapping T in the unary 2-composite makes literal `Var` equal to typed support. Correct.
+
+**§3, existence in dimension 3.**
+- The recursive boundary conventions for `c_{r,k}` make the padded term's source and target definitionally the displayed `s̃` and `t̃`.
+- `e^±` come from G(1). `p` and `q` come from G(2) in the boundary 2-molecules, which applies to any two parallel 2-terms with the prescribed boundary, not only to layer composites.
+- Correct, under one implicit requirement: the composite `⌈V⌉` must be chosen once per submolecule V, so that factors sharing a k-boundary agree syntactically. The pasting induction needs this anyway.
+- This gives existence for 3-molecules, hence types for Gray generators of dimension 4. It does not give uniqueness in dimension 3.
+
+**§4, G-alg and conservativity.**
+- The claim that pairwise uniqueness needs only (1) normalization to a selected layering and (2) a comparison for each adjacent swap is sound. I did not open the cited Hadzihasanovic Lemma 8.1.3 or the Chanavat Lemma 2.16 numbering.
+- The obstruction one dimension up is identified correctly. Normalizing boundaries needs 4-cells between 3-cells over 2-molecules, and G(2) gives only 3-cells.
+- **Correction to §2 of this file:** "(∀n G(n)) ⇒ (b)" is not established. Molecular coherences over an m-molecule U include d-cells for every d > m. G compares only the m-dimensional U-composites. The implication needs a higher filling statement for parallel full d-terms over the context of U. This is the same shape as the relative comparison property (RC) of `naturality-arbitrary-depth.md`.
+
+**§5, Mikhail's printed Gray rules** (checked against arXiv 2412.13310v2, Def. 3.1, the δCond display on p. 14, and the `pgray` rules before Lemma 4.3).
+- *Selector.* The printed δCond selects connectors with `y ∝ τ(p)` for both values of δ. The Gray rule applies τCond to x and σCond to x′, and writes `x′ : X` without renaming. Both confirmed.
+- *Renamed reading.*
+  - τCond gives `FV(s : A) = {a, b, f}`, because b is linear in neither τ(u) = a′ nor τ(v) = b′.
+  - σCond selects u, because a′ ∝ τ(u). It gives `FV(t : A) = {a, a′, b′, u, f′}`.
+  - Linearity forces s to be a 1-term built from f, so `A ≡ a → b`. Then b ∈ FV(t : A), a contradiction.
+  - So no derivation exists. Confirmed.
+- *Proposed repair.* With `y ∝ σ(p)` on the source side, τCond selects v, because b ∝ σ(v). The supports become `{a, b, f, v, b′}` and `{a, a′, b′, u, f′}`. These match the intended square `p_f : f;v ⇒ u;f′`. Confirmed for this example only.
+- *Unrenamed reading.* `f′ : a → b` and `p_f : f ⇒ f′` satisfy the conditions. The resulting 1-skeleton has two sink vertices, a′ and b′, while the Gray square has one. So this reading does not present the Gray square. Confirmed.
+- *Linearity predicate.* By Def. 3.1 (OP), `ℓ ∝ c(c(ℓ, ℓ), ℓ)` holds: only the right argument satisfies ∝, because ℓ is not linear in `c(ℓ, ℓ)`. So the predicate does not enforce multiplicity one. Confirmed.
+- The selector defect and the degenerate unrenamed reading were also found independently, and machine-checked in Agda, as D3 and D4 of `notes/catt-lim-formalization.md`. The linearity-predicate defect is new.
+- These defects are in the printed rules. Mikhail's Theorem 4.4 constructs specific contexts and is not refuted by them.
+
+**§6, scope.** Mikhail's Theorem 4.4 is stated for globular contexts and n = 1. Confirmed.
+
+**What this settles, and what it opens.**
+- Settled: G(2), including the §3.3 bookkeeping (D1, already closed in-house); existence in dimension 3; Gray generators of dimension ≤ 4 are typed.
+- Settled: Mikhail's printed Gray rules are defective in two ways (the source-side selector and the linearity predicate). Any formalization should use the repaired selector and a multiplicity-one linearity predicate.
+- Open: uniqueness in G(3); G(n ≥ 3); G-alg; the conservativity implication, which needs higher filling (RC-shaped); and correctness of the repaired Gray rules in every dimension (D3).

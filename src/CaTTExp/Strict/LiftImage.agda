@@ -29,7 +29,7 @@ open import CaTTExp.Strict.Cell
 open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Cut
 open import CaTTExp.Strict.Rad using (∈L-count; pos-≤; cm-ge; cm-mem; setTop-top)
-open import CaTTExp.Strict.Recon using (step-face; SubT; self; inS; inU; Sub-cell; flat-sub; topdeg; D; ∈L-++l)
+open import CaTTExp.Strict.Recon using (step-face; SubT; self; inS; inU; Sub-cell; flat-sub; topdeg; ∈L-++l)
 open import CaTTExp.Strict.TopCell using (Pos; _⊎_; inj₁; inj₂)
 open import CaTTExp.Strict.CohCase using (count-∈L; All-∈L; ∈L-++r)
 open import CaTTExp.Strict.Order using (OInv; oinv-⊢ps)
@@ -177,8 +177,10 @@ module _ {Δ Γ : Ctx} (P : Δ ⊢ps) {x y : Nat}
     flat-map-mono {X = step S U c} (inU p) m = ∈L-++r (flat (mapTw f S)) (∈L-++l (flat (mapTw f U)) _ (flat-map-mono p m))
 
   -- The images of the closed support of X lie in Cl.
-  image : ∀ {n X b} → Cell n X → Good X → D P {x} {y} X b → ∀ {z} → z ∈L F b → Cl z
-  image {n} {X} {b} cX g (t , mt , j , _ , r) {z} mz with flat-sub P n X cX mt
+  -- (The face path need not be bounded, unlike in D.)
+  image : ∀ {n X b} → Cell n X → Good X → (Σ Tuple λ t → t ∈L flat X × Σ Nat λ j → Fc.Reach j t b) →
+          ∀ {z} → z ∈L F b → Cl z
+  image {n} {X} {b} cX g (t , mt , j , r) {z} mz with flat-sub P n X cX mt
   ... | m , V , sub , mv with lift* (Sub-cell P cX sub) (λ {z′} m′ → g (flat-map-mono sub m′)) mv r
   ...   | m' , Z' , cZ' , g' , mb =
     g' (top-in-flat (mapTw f Z') (subst (λ B → z ∈L B) (sym (top-map f Z')) (in-cm F (top Z') mb mz)))

@@ -35,7 +35,7 @@ open import CaTTExp.Strict.AtomSum
 import CaTTExp.Strict.Std as S
 open import CaTTExp.Strict.StdSem using (module StdSem)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
-open import CaTTExp.Strict.Bag using (+-zero)
+open import CaTTExp.Strict.Bag using (+-zero; +-assoc; +-comm)
 
 ------------------------------------------------------------------------
 -- Re-bracketing around a replaced pair: a #ᵣ (b #ᵣ c) becomes
@@ -425,3 +425,126 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
           (p₃ , p₄ , eν) = Rν.rot r x x₁ x₂ p₁ p (Sw.x₁ S) (Sw.x₂ S) (Sw.p S) (Sw.eν S)
           (q₃ , q₄ , eD) = RD.rot r y y₁ y₂ q₁ q (Sw.y₁ S) (Sw.y₂ S) (Sw.q S) (Sw.eD S)
       in fr∷ (Sw.R₁ S) (Sw.l₁ S) (ch∷ (Sw.R₂ S) (Sw.l₂ S) ch₂ p₃ q₃) p₄ q₄ eν eD (swap4 (unit {N} g) (unit {N} m) c₂)
+
+    ------------------------------------------------------------------
+    -- Two chains with the same ν-value have the same 𝒟-value.
+
+    private
+      sumv-0 : ∀ {m} → sumv (0c {m}) ≡ 0
+      sumv-0 {zero}  = refl
+      sumv-0 {suc m} = sumv-0 {m}
+
+      sumv-+ : ∀ {m} (u v : Vec Nat m) → sumv (u +c v) ≡ sumv u + sumv v
+      sumv-+ []      []      = refl
+      sumv-+ (a ∷ u) (b ∷ v) =
+        trans (cong ((a + b) +_) (sumv-+ u v))
+          (trans (+-assoc a b (sumv u + sumv v))
+            (trans (cong (a +_) (trans (sym (+-assoc b (sumv u) (sumv v)))
+                                   (trans (cong (_+ sumv v) (+-comm b (sumv u))) (+-assoc (sumv u) b (sumv v)))))
+              (sym (+-assoc a (sumv u) (b + sumv v)))))
+
+      sumv-unit : ∀ {m} g → g < m → sumv (unit {m} g) ≡ 1
+      sumv-unit {suc m} zero    _       = cong suc (sumv-0 {m})
+      sumv-unit {suc m} (suc g) (s≤s l) = sumv-unit {m} g l
+
+      unit-supp : ∀ r g → r < deg g → deg g ≤ L → Supp r (unit g)
+      unit-supp r g rg gL k h with tri k g
+      ... | tri≡ refl = ⊥-elim (out h)
+        where
+        out : (deg k ≤ r) ⊎ (L < deg k) → ⊥
+        out (inj₁ a) = ≤-<-⊥ a rg
+        out (inj₂ b) = ≤-<-⊥ gL b
+      ... | tri< l = at-other g k (λ e → ≤-<-⊥ (≤-of (sym e)) l)
+        where
+        ≤-of : ∀ {a b} → a ≡ b → b ≤ a
+        ≤-of refl = ≤-refl _
+      ... | tri> l = at-other g k (λ e → ≤-<-⊥ (≤-of e) l)
+        where
+        ≤-of : ∀ {a b} → a ≡ b → b ≤ a
+        ≤-of refl = ≤-refl _
+
+    ch-supp : ∀ {r x y c} → Ch r x y c → Supp r c
+    ch-supp {r} (ch1 {g = g} _ (rg , gL , _ , _)) = unit-supp r g rg gL
+    ch-supp {r} (ch∷ {g = g} {c = c} _ (rg , gL , _ , _) ch _ _) k h =
+      trans (at-+c (unit {N} g) c k) (cong₂ _+_ (unit-supp r g rg gL k h) (ch-supp ch k h))
+
+    ch-nz : ∀ {r x y c} → Ch r x y c → Σ Nat (λ g → 1 ≤ at0 c g)
+    ch-nz (ch1 {g = g} _ (_ , _ , gN , _))                 = g , at-self g gN
+    ch-nz (ch∷ {g = g} {c = c} _ (_ , _ , gN , _) _ _ _) = g , subst (1 ≤_) (sym (at-ug g c g)) (1≤+r _ _ (at-self g gN))
+
+    ch-sum : ∀ {r x y c} → Ch r x y c → 1 ≤ sumv c
+    ch-sum (ch1 {g = g} _ (_ , _ , gN , _))                 = subst (1 ≤_) (sym (sumv-unit g gN)) (≤-refl 1)
+    ch-sum (ch∷ {g = g} {c = c} _ (_ , _ , gN , _) _ _ _) =
+      subst (1 ≤_) (sym (trans (sumv-+ (unit {N} g) c) (cong (_+ sumv c) (sumv-unit g gN)))) (s≤s z≤n)
+
+    least-of : ∀ c → Σ Nat (λ g → 1 ≤ at0 c g) → Σ Nat (Least c)
+    least-of c (g , h) with least c
+    ... | inj₁ refl = ⊥-elim (¬1≤0 (subst (1 ≤_) (at-0c {N} g) h))
+    ... | inj₂ (m , hi , k , e) = m , subst (1 ≤_) (sym e) (s≤s z≤n) , mn
+      where
+      mn : ∀ g′ → 1 ≤ at0 c g′ → m ≤ g′
+      mn g′ h′ with tri m g′
+      ... | tri< l    = <→≤ l
+      ... | tri≡ refl = ≤-refl _
+      ... | tri> l    = ⊥-elim (¬1≤0 (subst (1 ≤_) (hi g′ l) h′))
+
+    ch-sub : ∀ {r x x′ y c} → x ≡ x′ → Ch r x y c → Ch r x′ y c
+    ch-sub refl ch = ch
+
+    private
+      cancel-u : ∀ m (a b : Vec Nat N) → unit {N} m +c a ≡ unit m +c b → a ≡ b
+      cancel-u m a b e = +c-cancel a b (unit m) (trans (+c-comm a (unit m)) (trans e (+c-comm (unit m) b)))
+
+      not-single : ∀ {r x y} m c → Ch r x y c → unit {N} m ≡ unit m +c c → ⊥
+      not-single m c ch e = ¬1≤0 (subst (1 ≤_) (at-0c {N} g) (subst (λ v → 1 ≤ at0 v g) c0 h))
+        where
+        g = fst (ch-nz ch)
+        h = snd (ch-nz ch)
+        c0 : c ≡ 0c
+        c0 = sym (cancel-u m 0c c (trans (trans (+c-comm (unit m) 0c) (+c-id (unit m))) e))
+
+    chUn : ∀ r → Lf r → ∀ n {x y y′ c c′} → sumv c < n → Ch r x y c → Ch r x y′ c′ → y ≡ y′
+    chUn r Pr (suc n) {x} {c = c} {c′} sn ch ch′
+      with least-of c (ch-nz ch)
+    ... | m , lst with front r Pr ch m lst
+                     | front r Pr ch′ m (subst (λ v → Least v m) cc lst)
+      where
+      cc : c ≡ c′
+      cc = esum-inj r c c′ (ch-supp ch) (ch-supp ch′)
+             (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (rowsCh ch′ j rj jL)))
+    ... | fr1 R (_ , mL , mN , ag) _ | fr1 R′ _ _ = Pr x (just m) (mN , mL) ag R R′
+    ... | fr1 _ _ e | fr∷ _ _ ch₂′ _ _ _ _ e′ = ⊥-elim (not-single m _ ch₂′ (trans (sym e) (trans cc e′)))
+      where
+      cc : c ≡ c′
+      cc = esum-inj r c c′ (ch-supp ch) (ch-supp ch′)
+             (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (rowsCh ch′ j rj jL)))
+    ... | fr∷ _ _ ch₂ _ _ _ _ e | fr1 _ _ e′ = ⊥-elim (not-single m _ ch₂ (trans (sym e′) (trans (sym cc) e)))
+      where
+      cc : c ≡ c′
+      cc = esum-inj r c c′ (ch-supp ch) (ch-supp ch′)
+             (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (rowsCh ch′ j rj jL)))
+    ... | fr∷ {x₁ = x₁} {x₂ = x₂} {c′ = c₂} R₁ (_ , mL , mN , ag₁) ch₂ p q ex ey ec
+        | fr∷ {x₁ = x₁′} {x₂ = x₂′} {c′ = c₂′} R₁′ (_ , _ , _ , ag₁′) ch₂′ p′ q′ ex′ ey′ ec′ =
+      trans ey (trans (BD.comp-cong r q q′ y1 y2) (sym ey′))
+      where
+      cc : c ≡ c′
+      cc = esum-inj r c c′ (ch-supp ch) (ch-supp ch′)
+             (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (rowsCh ch′ j rj jL)))
+      c22 : c₂ ≡ c₂′
+      c22 = cancel-u m c₂ c₂′ (trans (sym ec) (trans cc ec′))
+      fs = factors r (fst x₁) (fst x₂) (fst x₁′) (fst x₂′) (snd x₁) (snd x₂) (snd x₁′) (snd x₂′)
+                   (cong fst p) (cong fst p′) (cong fst (trans (sym ex) ex′))
+                   (above r x₁ x₁′ (λ j rj jL → trans (ag₁ j rj jL) (sym (ag₁′ j rj jL))))
+                   (above r x₂ x₂′ (λ j rj jL → trans (rowsCh ch₂ j rj jL)
+                                                 (trans (cong (λ v → RS v j) c22) (sym (rowsCh ch₂′ j rj jL)))))
+      e₁ : x₁ ≡ x₁′
+      e₁ = ≡-cell K L (fst fs)
+      e₂ : x₂ ≡ x₂′
+      e₂ = ≡-cell K L (snd fs)
+      y1 = Pr x₁ (just m) (mN , mL) ag₁ R₁ (rel-sub (sym e₁) refl R₁′)
+      lt : sumv c₂ < n
+      lt = ≤-pred″ (subst (_< suc n) (trans (cong sumv ec) (trans (sumv-+ (unit {N} m) c₂) (cong (_+ sumv c₂) (sumv-unit m mN)))) sn)
+        where
+        ≤-pred″ : ∀ {a b} → suc a ≤ suc b → a ≤ b
+        ≤-pred″ (s≤s l) = l
+      y2 = chUn r Pr n lt ch₂ (ch-sub (sym e₂) ch₂′)

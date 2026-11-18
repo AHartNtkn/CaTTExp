@@ -15,9 +15,9 @@
 | **F3** h-levels | A judgment `C trunc n` ("C is an n-category"; n = 0 is "C is a set") with a filler rule, an invertibility rule, and closure rules: limits, hom objects (which lower the level by one), coproducts, and two semantic base rules (free objects on graphs, and on graphs with inverted edges, are 1-categories). §2. | Closure under limits and homs **[proved here]** (sketches at the level of the other notes). Base rules sound by `free-on-graph.md` and Dwyer–Kan **[paper]**. That the base rules are not derivable from R-A is **[conj]**, argued. |
 | **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`). Extension to globular contexts **[proved here]** semantically, not implemented. |
 | **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Induction, and hence recursion with uniqueness, for ℕ from G + DJ **[proved here, Thm 4.4]** (a circular uniqueness step in the first version is corrected). G and DJ are sound semantically **[paper/recall]**. |
-| **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need a set-truncation rule; proposed. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. |
+| **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need an n-truncation rule Trunc (two levels; the higher levels and dependent elimination are derived), and effectiveness needs a further rule EX. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. Trunc's derived levels and the quotient's universal property **[proved here]**. Non-derivability of EX **[conj]** (`conjectures/outbox/non-derivability.md`). |
 | **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3, Gepner–Haugseng–Nikolaus and Gepner–Heine **[recall / abstract-level]**. |
-| **F6** lax functors | For loop-free finite shapes P, lax functors ⟦P⟧ ⇝ C are maps out of a finite context P^lax glued from Street's orientals: no new rule. For lax-functor *variables* between arbitrary objects, a directed "refinement coherence" rule decided by Steiner supports, parallel to L's interchange rule. §7. | The oriental classifier is in the literature for dimension ≤ 3 (Gagna) and as a definition in general; the rule is **[conj]**, written up as `conjectures/lax-functor-refinement.md`. |
+| **F6** lax functors | For loop-free finite shapes P, lax functors ⟦P⟧ ⇝ C are maps out of a finite context P^lax glued from Street's orientals: no new rule. For lax-functor *variables* between arbitrary objects, a directed coherence rule `dcoh_S` that names its support S (a set of generators of the oriental complex with the right boundary), parallel to L's interchange rule. §7. | The oriental classifier is in the literature for dimension ≤ 3 (Gagna) and as a definition in general. The support rule is exact for `c_∞N(A)` **[paper, researcher-verified]**; the first version (a cell whenever supports allow, unique) was **refuted** (two distinct 2-cells in O₃). |
 
 **New open item found:** function sets. Ordinary mathematics needs exponentials of sets (ℕ → ℕ, Cauchy sequences). Shapes give cotensors, but `[A, B]` for an arbitrary set A is an internal hom. Recorded as **F8** (§6.5).
 
@@ -126,6 +126,15 @@ The marked leg g is what lowers the level: it pins θ_z down, so the "free" data
 - *T-coprod:* in ωCat, Hom(c, A ⊔ B) is a coproduct of products of homs over the connected components of c **[recall]**; truncation levels n ≥ 0 are preserved by both. It fails for n = −1 (⊤ ⊔ ⊤ is not a proposition), hence the restriction.
 
 **Proposition 2.5 (T-graph is not derivable from R-A) [conj, argued].** R-A's universal property describes maps *out of* ⟦Γ⟧. T-graph is about maps *into* ⟦Γ⟧ from an arbitrary c. In the term model of R-A plus limits, a variable `c : ⋆`, two variables `u, u' : c → ⟦L⟧` and two parallel variables `α, β : u → u'` have no term `α → β`: the coh rule needs a pasting context in which α and β are variables of the same pasting scheme, and no rule introduces cells between variables whose target is a constant. A proof needs a normal-form theorem for the extended theory, which does not exist yet. **Alternative being kept open (standard 1):** a Hedberg-style derivation, as in HoTT's proof that ℕ is a set. It needs decidable equality `N × N → Bool` (available from recursion, §4) and that `true : ⊤ → Bool` is a mono (needs T-coprod's disjointness). In HoTT the step from "the path space retracts onto a proposition" to "set" uses only path induction; here it would use DJ (§4.6) on the path object. This derivation would make T-graph's ℕ instance a theorem. Recorded as open item F3b.
+
+*Attempt at the Hedberg route under route III (2026-11-18).* With G and DJ (§4.6) the argument goes through as far as the following, and stops at one identified step.
+1. `eq : N × N → Bool` by recursion with parameters (Corollary 4.4.1), and `eq(n, n) ≅ true` by induction (Theorem 4.4).
+2. Let `P ↪ N × N` be the pullback of `true : ⊤ → Bool` along eq. Since Bool is a set (T-coprod), `true` is a mono, so P is a predicate. For fixed m, `P_m → N` is closed under arrows of N (an arrow n → n' maps to an invertible arrow of the set Bool), so it is a cocartesian fibration, and a mono.
+3. *Encode.* DJ-sec for `P_m` and the point `(m, m)` gives a map `m ↓ N → P_m` over N.
+4. *Decode.* Needs a map `P_m → m ↓ N` over N, i.e. "eq(m, n) = true implies an invertible arrow m → n". The usual proof is induction on m **for all n** at once, because the step from (succ m, succ n) to (m, n) changes n. Without exponentials (F8) there is no object "for all n", and Theorem 4.4 in the slice over a parameter object only allows parameters that stay fixed along the step.
+5. Given encode and decode, DJ-uni makes `m ↓ N` a retract of `P_m` over N, so `m ↓ N → N` is a mono: every hom of N is a proposition, and every arrow is invertible (it is parallel to the invertible one from decode). That is `N trunc 0`.
+
+So the Hedberg route reduces F3b to either F8 (Π over N) or a **parameter-varying induction** principle (step maps over `succ × θ` for an endomap θ of the parameter object). The latter is itself a recursion principle into a function object, so it is expected to need F8 as well [conj].
 
 ### 2.4 Relative truncation and predicates
 
@@ -479,13 +488,27 @@ So, **[proposal]** for a finite loop-free context P (a finite category without n
 
 Shapes with loops (e.g. Bℕ, the point with its identity, needed for monads) have infinite nerves. A lax functor `Bℕ ⇝ C` is an infinite family; it would be given by the family encoding of §6 (a lax functor out of the point is a monad, which is finite data: t, μ, η and coherence cells, but its classifier, the walking monad, has hom Δ₊, which is infinite).
 
-### 7.3 Lax-functor variables: a directed coherence rule [conj]
+### 7.3 Lax-functor variables: a directed coherence rule that names its support
 
-For lax functors between *arbitrary* objects, a context entry `F : A ⇝ B` with:
+For lax functors between *arbitrary* objects, a context entry `F : A ⇝ B` (A a finite category whose nerve has finitely many non-degenerate simplices) with:
 - action on elements and arrows: `F⟨x⟩ : ⊤ → B`, `F⟨f⟩ : F⟨x⟩ → F⟨y⟩`, and on higher cells of A;
-- **refinement coherence**: for a pasting scheme Θ, a Θ-family in A, and two *F-image terms* u, v over it (composites in B of F-images of composites in A), a cell `u → v` whenever the Steiner support condition of the lax-functor classifier holds, i.e. u is a refinement of v in the oriental order. In the 1-dimensional case: `F⟨w₁⟩ ; … ; F⟨w_m⟩ → F⟨w₁ ; … ; w_m⟩` and every composite of such, with no cell in the other direction.
+- **support coherence `dcoh`**: for parallel F-image terms u, v of dimension n (composites in B of images of generators of `c_∞N(A)`), and a set S of (n+1)-dimensional generators (non-degenerate (n+1)-simplices of N(A)) satisfying the boundary equation
 
-This has the same shape as L's rule (`pseudo-vs-gray.md` §3): a directed coherence decided by supports computed on a Steiner complex, here the complex of the nerve instead of the Gray product. Its soundness and conservativity are the conjecture in `notes/conjectures/lax-functor-refinement.md`. The 1-dimensional chain case is supported by the fact that the hom `O_k(0, k)` of an oriental is a Gray cube [recall], which is loop-free with cells determined by supports (`steiner-support-determines-cells.md`, solved for Gray tensors of pasting diagrams).
+  ```
+  ∂(Σ_{σ ∈ S} σ) = w_n(v) − w_n(u)          (in the normalised chain complex Λ(A))
+  ```
+
+  a cell `dcoh_S(u, v) : u → v`. Here `w_n(t)` is the sum of the n-dimensional generators used by t. The side condition is a finite 0/1 linear system, decidable by enumeration.
+
+**What is known (researcher response, verified; `conjectures/answered/lax-functor-refinement-2026-11-18.md`).**
+- Λ(A) is a strongly loop-free unital Steiner complex for every A in scope, so `c_∞N(A) ≅ νΛ(A)` (Steiner Thm 5.7) [paper, verified].
+- In `c_∞N(A)`, the (n+1)-cells u → v correspond exactly to the subsets S satisfying the boundary equation. So dcoh_S exists exactly when the equation holds, it is unique *for the given S*, and different S give different cells [paper, verified].
+- **A cell is not determined by its boundary.** In O₃ there are two distinct 2-cells `f₀₁;f₁₂;f₂₃ ⇒ f₀₃`, with supports `{012, 023}` and `{013, 123}`. They are related by the 3-cell, not equal. This is why the rule names S: a rule "a cell u → v whenever a support condition on (u, v) holds" (the first version of this section, and Conjecture LF part 2) would identify them.
+- In dimension 2 for a DAG, the existence test is the refinement criterion ("the partition of the path given by u refines that given by v"), and the cells are counted by a product of Catalan numbers (binary bracketings of each block).
+- Weak freeness of `c_∞N(A)` holds as an (∞,ω)-category by Campion (arXiv 2311.00200, Thm 5.11); contractibility applies after a strict cell is chosen, not a boundary. The CaTT-side comparison is part of the general semantic gap.
+- The earlier [recall] "`Hom_{O_k}(0, k)` is a Gray cube" is **false for k ≥ 4**: `Hom_{O₄}(0,4)` has 5 one-cells from the longest path to the long edge (the Tamari/associahedral structure of Lack–Street), against 6 edge paths in the Gray 3-cube.
+
+So dcoh has the same shape as L's rule (`pseudo-vs-gray.md` §3), with the lesson of both: **a directed coherence is decided by supports, not by boundaries**, and the term records its support. Under this reading the rule is sound for strict targets B through dimension 3 by Gagna (arXiv 2004.14220, Lemma 1.3.19, Thms 4.0.6, 5.0.17), and for weak B it is taken as the definition: normalised oplax functors A ⇝ B are maps `c_∞N(A) → B`. Conjecture LF is closed as stated (refuted, with the positive replacement above). The remaining question is the CaTT-side comparison, which is shared with the rest of the semantic gap.
 
 ---
 
@@ -495,14 +518,15 @@ All rows are added to `notes/open-issues.md` under F.
 
 - **F2a** Agda: totality of the graph filler (Theorem 3.1). Needs A1.
 - **F2b** Filler for globular contexts (Theorem 3.2): implement strict normal forms (labelled trees) and the lift.
-- **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0`.
+- **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0` (§2.3, after Prop. 2.5: it reduces to F8 or to a parameter-varying induction). Posed as problem 2 of `conjectures/outbox/non-derivability.md`.
+- **F1c** Non-derivability of recursion in route II from R-A and limits (§4.5). Posed as problem 1 of `conjectures/outbox/non-derivability.md`.
 - **F3c** Full proofs of Props. 2.2 and 2.3 against the specified `ctrf` construction once it exists (B5).
-- **F1a** Write G and DJ (§4.6) as rules with their `uni`-style higher levels; check Theorem 4.4's uniqueness step in detail.
+- **F1a** Done (2026-11-18): G and DJ written as rules (§4.6), the uniqueness gap in Theorem 4.4 found and corrected (induction is proved directly from G + DJ; recursion and its uniqueness follow).
 - **F1b** Tree-shaped inductive objects and lists over an arbitrary object in route III.
 - **F4a** Filler tactic for localised graphs (reduced words).
-- **F4b** Effectiveness of quotients under Trunc.
+- **F4b** Trunc written in full (§5.3). Effectiveness of quotients needs EX; its non-derivability is problem 3 of `conjectures/outbox/non-derivability.md`.
 - **F5a** Check §6.1–6.3 against the (∞,ω) sources (Gepner–Heine, Loubaton) at the level of statements, not abstracts.
 - **F5b** Θ-density (from C9) as an instance of §6.1: B as the localised Grothendieck construction of its disk elements, giving extensionality of transformations.
-- **F6a** `conjectures/lax-functor-refinement.md`.
+- **F6a** Answered (refuted as stated; rule revised to `dcoh_S`, §7.3). Remaining: the CaTT-side comparison, part of the semantic gap.
 - **F8** Exponentials of sets.
 - **Formalisation (standard 9):** an Agda encoding of the `trunc` judgment and T-fill as signature-level rules, with the §2.5 ring example checked; an encoding of the recursion rule over a parameter context. Both need the syntax to carry operations "over a context applied to a substitution" beyond `coh`, i.e. an extension of `CaTTExp.Syntax`.

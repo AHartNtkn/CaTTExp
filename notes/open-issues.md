@@ -31,7 +31,7 @@ Thread ids used below:
 | LIT | literature / conjecture verification `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKdRdpEiQuvAuEvTAURBqhf` | done |
 | MARK | "Design invertibility markings for lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbQhMQC4fsaRjMJypHXq4ZVv` | active |
 | FOBJ | "Develop free-object rules" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbUxJhXTzhRJEWFkLNmH5acC` | active |
-| META | "CaTT metatheory items A1–A4, C8" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb8s5y6BDXaxtFpQZJZ9T4oD` | done 2026-11-18 |
+| META | "CaTT metatheory items A1–A4, C8" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb8s5y6BDXaxtFpQZJZ9T4oD` | active (A3a) |
 | CONV | "Clean up recalled claims and conventions" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1EVjAv52BfW2yu9RrGQaFH` | active (E11) |
 | OMATH | "Extend toward ordinary mathematics" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb372mKMHNCxwDtepUMwRs3d` | done (PR #35) |
 
@@ -44,7 +44,7 @@ Thread ids used below:
 | A1 | **Substitution admissibility** for core CaTT: Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]. The main missing metatheorem; every extension needs it. | `agda-sketch-findings.md` "Not yet done", "Suggested next steps" | **done** (PR #20: `CaTTExp.Subst`, for every side condition, plain CaTT included) | LCORE |
 | A2 | ~~Checker completeness~~ **Closed**: `CaTTExp.Completeness` proves the checker complete for every side condition, so all four judgments are decidable; the pasting judgment is decided by `CaTTExp.PastingCheck`. Hypotheses (reflexive constant equality, complete `valid?`) hold for pure CaTT, instance in `PureMetatheory`. | `agda-sketch-findings.md` | closed | — |
 | A3 | ~~Any semantics in Agda~~ **Closed for a first class**: soundness for the one-object locally discrete strict ω-categories B G, G any group, constants allowed (`CaTTExp.GroupModel`). This is the class A4 needs. General strict ω-categories: A3a. | `agda-sketch-findings.md` | closed | — |
-| A3a | Soundness of CaTT for **general strict ω-categories** in Agda (e.g. the strict ω-category of a globular set's free computad, or Steiner complexes, as C8(4) will need), without universes (standard 5). | `agda-sketch-findings.md` "Metatheory added" | unowned | former area META |
+| A3a | Soundness of CaTT for **general strict ω-categories** in Agda (e.g. the strict ω-category of a globular set's free computad, or Steiner complexes, as C8(4) will need), without universes (standard 5). | `agda-sketch-findings.md` "Metatheory added" | in progress (one strict-model layer shared with E11: chains and ν(K) by CONV, pasting contractibility and CaTT soundness by META) | META |
 | A4 | ~~Non-derivability of functoriality of ⟦_⟧~~ **Closed**: machine-checked in `CaTTExp.Sketch.NonDerivable` via the B(ℤ/2) model, all three laws, both orientations. | `agda-sketch-findings.md` finding 2 | closed | — |
 
 ## B. Limit rules (CaTT_lim and its repair)
@@ -123,7 +123,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 | F1a | Write G and DJ as rules with their `uni`-style higher levels; check the uniqueness step of Thm 4.4 in detail. | `ordinary-math.md` §4.6 | unowned | former area OMATH |
 | F1b | Tree-shaped inductive objects, and lists over an arbitrary object, in route III (no ℕ-specific rule). | `ordinary-math.md` §4.7 | unowned | former area OMATH |
 | F2 | **Discreteness filler tactic** for graph contexts: proved on paper (Thm 3.1), implemented with certified output and checked examples in `src/CaTTExp/GraphFiller*.agda`. | `ordinary-math.md` §3 | done (paper + certified instances) | — |
-| F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | unowned (A1 is done, so no longer blocked) | former area OMATH |
+| F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | assigned to the ordinary-math thread (A1 is done, so no longer blocked) | OMATH |
 | F2b | Filler for **globular** contexts (Thm 3.2, semantic proof done): implement strict normal forms (labelled trees) and the lift. | `ordinary-math.md` §3.3 | unowned | former area OMATH |
 | F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written (PR #35) | — ; open parts F3b, F3c |
 | F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3 | unowned | former area OMATH |

@@ -84,6 +84,7 @@ import CaTTExp.GlobularTotal.NfTyped
 import CaTTExp.GlobularTotal.ExMerge
 import CaTTExp.GlobularTotal.Contract
 import CaTTExp.GlobularTotal.DimCheck
+import CaTTExp.GlobularTotal.EndsNf
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

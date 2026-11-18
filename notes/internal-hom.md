@@ -275,6 +275,39 @@ Here Δ ⊗ₘ Θ is Δ ⊗ Θ with every *mixed* generator x⊗y (dim x, dim y 
 - **Payoff:** "lax by default" holds at the level of shapes. Pseudo is an extra marking, never a separate construction.
 - **Consistency check:** (P) with Θ = D¹ says the native 2-cells of the ambient (pseudo transformations) are exactly the lax transformations whose naturality cells are invertible.
 
+### 5.5a The marked Gray cylinder rule (from the limits notes)
+
+`notes/limits-representables.md` §5.1 (PR #2) proposes this rule and hands it to these notes:
+
+```
+Hom(⟦Γ⟧, D)(u, v)  ≃  Hom(⟦(Γ ⊗ D¹)^μ⟧, D)        (fibre over the ends u, v)
+```
+
+This is the case Δ = D¹ of Conjecture (P), read as a rule rather than a conjecture. It says that an ambient (pseudo) 2-cell between Γ-diagrams u, v is the same as a marked Gray cylinder with ends u and v. Here it is stated in this note's notation, for any shape Δ:
+
+```
+        Γ ⊢ φ : (Δ ⊗ₘ Θ) ⊳ C                    Γ ⊢ ψ : Δ ⊳ [⟦Θ⟧, C]
+(cyl-Λ) ────────────────────────         (cyl-♭) ──────────────────────────
+        Γ ⊢ Λₘφ : Δ ⊳ [⟦Θ⟧, C]                  Γ ⊢ ψ♭ₘ : (Δ ⊗ₘ Θ) ⊳ C
+
+β, η and naturality in Δ exactly as in §5.1
+```
+
+The cylinder rule is (cyl-Λ/♭) at Δ = D¹, combined with the native hom of §5.4: a D¹-cell of [⟦Θ⟧, C] is an ambient 2-cell between Θ-diagrams.
+
+Points to settle:
+
+- **Which cells are marked.** Only the *mixed* generators x⊗i with dim x ≥ 1 should be marked, i.e. the naturality cells. The components x⊗i for dim x = 0 are the transformation's components, and they must stay unmarked and directed. Otherwise the rule would classify invertible transformations, not pseudo ones. In Mikhail's notation: mark p_f, p_α, …, never pₓ for objects x.
+- **Orientation.** The limits note writes Γ ⊗ D¹. With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
+- **Status.**
+  - Under architecture A (their option P), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
+  - Its semantic justification is the localisation statement in (P): GHL Prop. 2.12 in dimension 2, unverified for weak ω.
+  - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
+- **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
+  - For arbitrary domains B, the same question becomes whether the disks are jointly dense, i.e. whether a 1-cell B → [D¹, C] is determined by its restrictions along all elements Dⁿ ⊳ B.
+  - In style, that would need a colimit principle presenting B from its cells (§6). It stays open here.
+- **Relation to the lax rule.** (lhom) of §5.1 is the same schema with no marking. Both rules are one schema [Θ, C]_μ with μ ∈ {lax, pseudo}, and the marked Gray cylinder is its μ = pseudo instance.
+
 ### 5.6 Oplax and other variances
 
 Oplax homs use Θ ⊗ Δ in place of Δ ⊗ Θ. Since (X ⊗ Y)^op ≅ Y^op ⊗ X^op (Chanavat, odd duality),

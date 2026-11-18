@@ -14,3 +14,9 @@ import CaTTExp.Check
 import CaTTExp.Pure
 import CaTTExp.Examples
 import CaTTExp.Sketch.Representables
+import CaTTExp.Gray.Support
+import CaTTExp.Gray.Typing
+import CaTTExp.Gray.Check
+import CaTTExp.Gray.Pure
+import CaTTExp.Gray.Examples
+import CaTTExp.Gray.Cube

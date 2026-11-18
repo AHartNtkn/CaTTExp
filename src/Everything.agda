@@ -55,3 +55,5 @@ import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
+import CaTTExp.Gray.Orient
+import CaTTExp.Gray.OrientExamples

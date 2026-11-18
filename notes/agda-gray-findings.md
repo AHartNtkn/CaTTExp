@@ -90,6 +90,18 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
 - **Caveat on the type checker.** Evaluating the symbolic check *inside the type checker* (a `refl` proof) still grows about 2.2× per step: 0.6 s at n = 1, 50 s at n = 8. The type checker's evaluator does not share the residual sets that later rounds reuse, so they are recomputed. This is a property of Agda's evaluator, not of the algorithm. Large instances should be checked with the compiled checker.
 - **What is not proved.** A polynomial bound. The check is exact, so on arbitrary unions of boxes it decides DNF tautology, which is coNP-hard. A polynomial bound for *valid* terms needs the structural statement the markings thread is working on: residuals of a molecule's support are again supports of molecules of the remaining factors. Polynomial behaviour on the wedges is measured, not proved.
 
+## Orientation family L_ε (`closed-structure.md` D.3)
+
+`Gray/Orient.agda` implements L_ε. Here ε says which hom-dimensions are reversed. Supports are computed in ν(Θ₁ ⊗_ε … ⊗_ε Θₙ), with X ⊗_ε Y = D_ε(D_ε X ⊗ D_ε Y). On tables, D_ε swaps the i-dimensional source and target pieces exactly when (i+1)-cells are reversed: (D_ε Θ)^sg_i = Θ^{ε(i+1)·sg}_i. So (T_ε)^sg_k is the AM tensor of the twisted pieces, twisted once more by ε(k+1). Cells, the face order and the top chain do not depend on ε, so only the sides of the tables change.
+
+- **Proved:** `graySideε-const`. For ε constant (no reversal, or total reversal), L_ε = L for every Θ, A, t, u.
+- **Checked by evaluation** (`Gray/OrientExamples.agda`):
+  - Alternating ε (odd or even) gives L^rev. On the interchanger, βα ⇛ αβ is rejected and αβ ⇛ βα accepted. On whole tables, the codimension-1 chains of T_ε equal those of the factor-reversed tensor for nine wedges of globes (two and three factors).
+  - Reversing hom-dimension 2 only (the D_{3} image) reverses the interchanger itself, because it is a hom-2 cell.
+  - The D.1 example (K = {2} on D¹ ⊗ D³) is confirmed. α⊗s₂ has the codimension-1 chains of ⊗^rev, not of ⊗, and α⊗c₃ has those of ⊗, not of ⊗^rev. On D¹ ⊗ D² ⊗ D¹, this ε is neither L nor L^rev.
+- **Not done:** the symbolic checker of `Gray/Fast.agda` is for L only. Extending it to L_ε means swapping the two pieces of an SHom entry when ε(i+1) holds, and the starting sign by ε(k+1).
+- **Not proved:** "L_ε = L^rev iff ε alternates" in general (only checked), and the "only if" direction of the constant case.
+
 ## Not yet proved
 
 - **The non-negativity bridge.** Supports are computed on sets: the support of a sum is the union, and the support of a tensor is the product. This is correct only if every chain involved has non-negative coefficients. They do: T's chains are sums of basis elements, and F_σ maps basis elements to supports of top chains of the same kind. But this is argued in `Gray/Support.agda`'s header, not proved in Agda; the integer chains are never built. The side condition as implemented is a precise decidable rule either way. The bridge is needed only to connect it to the strict model, i.e. for Theorem 1 soundness.

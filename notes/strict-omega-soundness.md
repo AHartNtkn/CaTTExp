@@ -1,6 +1,6 @@
 # Soundness of CaTT in arbitrary strict ω-categories (ledger A3a, general case)
 
-Owner: META. Started 2026-11-18. This note covers the literature, the definitions, the proof route and the formalisation plan. Progress is tracked in `open-issues.md` (row A3a).
+Owner: META. Started 2026-11-18. This note covers the literature, the definitions, the proof route and the formalisation, which is complete (§5). Progress is tracked in `open-issues.md` (row A3a).
 
 ## 1. What is already done, and what is left
 
@@ -21,30 +21,31 @@ What is left is soundness in an arbitrary strict ω-category C, given by the usu
 
 **No universes in the object language.** The definition of C is an ordinary Agda record over `Set` in the metatheory, like `Signature`. CaTT itself is unchanged.
 
-## 4. Proof route
+## 4. Proof route (as formalised)
 
-1. **Labelled trees.** A C-labelled Batanin tree at level k is `node x₀ [(T₁, x₁), …, (T_m, x_m)]`. Here the x_i are cells (the vertices at level k), and each T_i is a labelled tree at level k+1 whose root label is the (k+1)-cell between x_{i−1} and x_i. Its composite is a fold:
-   - comp(node x₀ []) = x₀
-   - comp(node x₀ ((T, x) ∷ r)) = comp T #_k comp(node x r)
+The formalisation follows the answered outside prompt (`conjectures/answered/strict-omega-pasting-formal-2026-11-18.md`). No functor out of ν(λΘ) is needed, because the free model is the strict ω-category of trees of variables itself.
 
-   Validity says that the labels have the boundaries their positions prescribe.
-2. **Boundary lemma.** s_j comp(T) = comp(∂⁻_j T) and t_j comp(T) = comp(∂⁺_j T), where ∂^±_j truncates the tree at height j and keeps the first (respectively last) vertex at height j. Validity of T gives composability at every #.
-3. **Binary pasting lemma.** If ∂⁺_k S₁ = ∂⁻_k S₂, then comp(S₁ ⊔_k S₂) = comp S₁ #_k comp S₂. Gluing is defined by recursion: ⊔_0 concatenates the root lists, and ⊔_{k+1} zips the subtrees with ⊔_k. The proof is by induction on k and on the trees:
-   - k = 0 is associativity of #_0;
-   - k > 0 is the inductive hypothesis inside each branch, then interchange of #_0 with #_k, iterated along the root list.
-4. **Functor out of the free object.** For a pasting context Θ and a valid labelling λ of Θ in C, define F_λ on cells of ν(λΘ) as the composite of the sub-pasting diagram of Θ spanned by the cell. Cells of ν(λΘ) are determined by their supports (closed, `conjectures/steiner-support-determines-cells.md`, ledger G3), and supports of cells of ν(λΘ) are sub-pasting diagrams. By the binary pasting lemma, F_λ preserves #_k. It sends the atom of x to λ(x).
-5. **Interpretation commutes with F.** For a term t over a pasting context Θ, Ev λ t c implies c = F_λ(⟦t⟧^ν η_Θ), where the right side uses A3a's ν-interpretation at the generic environment. The proof is by induction on t:
-   - the var case is the atom equation;
-   - the coh case uses that the ν-interpretation of a coh is the ν-pasting composite of its substitution, and that F_λ commutes with pasting composites (step 3, folded over the tree).
-6. **Soundness.** For a coh over Θ with substitution σ, the coh is sent to F_{⟦σ⟧ρ}(c_Θ), where c_Θ is the coh at η_Θ. That is a cell of ν(λΘ) by A3a. Its boundaries are F of the boundaries, which are ⟦s⟧ and ⟦u⟧ by step 5. Constants are handled as in `Strict.Sound`, by the hypothesis that each constant is a cell with its type's boundary.
+1. **Labelled trees and pasting.** Labelled Batanin trees, their composites (a relation `Cp k T c`, since composition is partial), the boundary lemma and the binary pasting lemma, in any strict ω-category. Interchange is used for all m < n.
+2. **Relational interpretation.** `Ev ρ t c`: a variable denotes its entry; `coh Θ A σ` denotes the composite of the tree `tr Θ` of the pasting context Θ labelled by the environment of σ (the same element whether the coh is a composite or a coherence); a constant denotes any cell the model allows. It is deterministic, stable under weakening, and satisfies the substitution lemma both ways.
+3. **Free model.** Trees of variables form a strict ω-category 𝒯 (`TreeCat`). The generic environment η Θ sends each variable to its disc. For a labelling λ of the variables, Φ X c ("c is the composite of X relabelled by λ") is functional and preserves boundaries and composites, so evaluation commutes with it (`OmegaFunctor.fl`). If λ gives each variable of Θ a cell with the boundary its type prescribes, η Θ is Φ-related to λ.
+4. **Support invariant.** In 𝒯, at η Θ, every derivable t : A denotes a well-typed tree whose labels are exactly the variables of t and A. Well-typed trees are determined by their labels, and the labels of the j-boundaries of `tr Θ` are exactly the variables of ∂±_j Θ.
+5. **Key lemma.** For coh Θ (s →_B u) allowed by the side condition, with d = dim B, the generic values of s and u are s_d(tr Θ) and t_d(tr Θ), and tr Θ has dimension ≤ d+1. A degenerate operation (dim Θ − 1 < d, which this repo's side condition allows) is handled by a stability lemma: s_i X = t_i X forces X to have dimension ≤ i.
+6. **Soundness.** The composite of `tr Θ` labelled by the substitution exists (`PsComposite.comp-ex`). Its boundaries are Φ of the boundaries of `tr Θ`. By the key lemma these are Φ of the generic values of s and u, and by step 3 those are the values of s and u. The generic values come from soundness itself, applied in 𝒯 to the sub-derivations of s and u (constant-free by `Purity`). So `sound` takes the model as an argument and recurses structurally on the derivation.
 
-Steps 1–3 are independent of CaTT and are the expected bulk of the formalisation. Steps 4–5 reuse A3a's support lemma and need the dictionary between cells of ν(λΘ) and sub-pasting diagrams of Θ. An outside prompt asking for a shorter route through steps 3–5 was answered and verified: `conjectures/answered/strict-omega-pasting-formal-2026-11-18.md` (step 4 can be dropped; see its verification section).
+## 5. Modules
 
-## 5. Formalisation plan
+All are under `src/CaTTExp/Strict/` and imported by `Everything.agda`. All check with `--safe`, and nothing is postulated.
 
-| Module | Content | Status |
-|---|---|---|
-| `Strict.Omega` | The single-set strict ω-category record and basic lemmas (iterated boundaries, units at every level, composites of identities). | open |
-| `Strict.Pasting` | Labelled trees, composite, boundary lemma, binary pasting lemma (steps 1–3). | open |
-| `Strict.Free` | F_λ : ν(λΘ) → C and its functoriality (step 4). | open |
-| `Strict.OmegaSound` | Relational interpretation, determinism, soundness (steps 5–6). | open |
+| Module | Content |
+|---|---|
+| `Omega` | Single-set strict ω-category record (Steiner's m < n / m ≥ n axioms) and basic lemmas. |
+| `Trees`, `OmegaPasting` | Labelled trees, truncations, gluing, relabelling; composites, boundary and binary pasting lemmas. |
+| `TreeCat` | Trees of labels form a strict ω-category (the free model 𝒯). |
+| `PsTree` | The tree `tr Θ` of a pasting context. |
+| `OmegaEval` | Relational interpretation, determinism, weakening, substitution, `Bd`, `VE`, `ValidEnv`. |
+| `OmegaFunctor`, `OmegaFree` | Evaluation commutes with a structure-preserving relation Φ; the relation Φ out of 𝒯 for a labelling λ. |
+| `GenericEnv` | Discs and the generic environment η Θ, which is valid. |
+| `PsComposite` | Existence of the composite of a well-labelled `tr Θ`. |
+| `LabelSets`, `FreeTV`, `TrFlat`, `Support` | Label sets; injectivity of well-typed trees and the stability lemma; labels of the boundaries of `tr Θ`; the support invariant. |
+| `Key` | The key lemma (step 5). |
+| `OmegaSound` | `sound` for any model, and `sound-in`: for every strict ω-category 𝒞 and M : K → C sending each valid constant to a cell of the shape its type prescribes, every derivable Γ ⊢ t : A in a valid environment ρ denotes a cell c (`Ev ρ t c`) of dimension ≤ dim A with the boundary A prescribes. |

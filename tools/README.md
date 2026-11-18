@@ -9,13 +9,13 @@ These Python scripts *generate* CaTT terms, which are then checked by the certif
 - `unitor.py`, `exch_test.py`: the other generated checks.
 - `emit_agda.py`: writes a module with hash-consed definitions (one Agda definition per distinct subterm).
 
-Generated modules (`src/CaTTExp/Generated/`). They are not imported by `Everything.agda`, because they take minutes to check.
+Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are not imported by `Everything.agda`, because they take minutes to check.
 
 | Module | Statement checked | Agda time |
 |---|---|---|
 | `UnitorNaturality` | Left unitor's naturality 3-cell at depth 2 over the lax square | ~50 s |
 | `ExchangeTwoBigons` | Theorem A with one exchange move: `(a ∗₀ g) ∗₁ (f′ ∗₀ b) ⇛ (f ∗₀ b) ∗₁ (a ∗₀ g′)` | ~3 min |
-| `AssociatorNaturality` | Associator's naturality 3-cell over the fully selected 3-chain (the ladder theorem's example) | see `notes/relative-coherence.md` §9 |
+| `AssociatorNaturality` | Associator's naturality 3-cell over the fully selected 3-chain (the ladder theorem's example) | ~17 min, about 10 GB (`+RTS -M12G`) |
 
 Negative control: swapping source and target in `expected` of `UnitorNaturality` makes Agda reject the module (`3 != 1 of type Nat … refl`).
 
@@ -23,5 +23,5 @@ To regenerate and check:
 
 ```
 cd tools && python3 unitor.py && python3 exch_test.py && python3 ladder.py && python3 -c "import ladder; ladder.emit_assoc()"
-cd ../src && LC_ALL=C.UTF-8 agda CaTTExp/Generated/UnitorNaturality.agda
+cd ../src && LC_ALL=C.UTF-8 agda +RTS -M12G -RTS CaTTExp/Generated/All.agda
 ```

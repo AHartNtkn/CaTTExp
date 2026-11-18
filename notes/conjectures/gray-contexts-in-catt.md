@@ -1,6 +1,6 @@
 # Conjecture: Gray contexts in CaTT (composites of molecules, and Mikhail's Gray rules)
 
-> **To send to a researcher, use [`outbox/gray-contexts.md`](outbox/gray-contexts.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+> **To send to a researcher, use [`outbox/gray-contexts.md`](outbox/gray-contexts.md)** (round 2, starting from the F-boundary case of the lax square). Round 1, its response and verification are in [`answered/gray-contexts-2026-11-18.md`](answered/gray-contexts-2026-11-18.md). This file keeps the history, earlier responses and verifications.
 
 *Self-contained problem statement. Familiarity with the type theory CaTT (Finster–Mimram, LICS 2017, arXiv 1706.02866) is assumed, and the relevant parts are recalled in §1. Partial results are in §3. Status (updated 2026-11-18): G(2) is proved and existence in G(3) is proved (`../relative-coherence.md` §3); the rest reduces to the relative coherence property RC(n), n ≥ 3, for loop-free contexts. In §6 (formerly `gray-contexts-steiner.md`), parts (1)–(2) are open and part (3) is answered (§7).*
 
@@ -27,7 +27,7 @@ A variable's type may be a composite. For example, f : x → y, g : y → z, h :
 - A **layering** of an n-molecule U is a decomposition of U as a sequence of n-dimensional atoms, each "whiskered" by lower-dimensional cells and pasted one after another.
 - Chanavat, *A strengthened (∞,n)-categorical pasting theorem* (arXiv 2603.22242), gives several relevant results:
   - for **frame-acyclic** molecules, pre-layerings correspond to pre-orderings (Prop. 2.18);
-  - the poset of subdivisions is contractible (Thm. 2.52);
+  - the poset of subdivisions of a frame-acyclic molecule that is not an atom is contractible (Thm. 2.52; for an atom it is empty);
   - all molecules of dimension ≤ 3 are frame-acyclic, and so are all acyclic molecules;
   - as a consequence, frame-acyclic molecules have essentially unique composites in (∞,n)-categories.
 

@@ -283,7 +283,7 @@ Both id_T and e of B.1 arise this way, as *different* generalized sequents (e = 
 - **Lemma T\*** with Γ₁ or Γ₂ empty: the same argument.
 - The semantic equations used are valid in biclosed representable multicategories with nullary maps, as already noted in B.2. ∎
 
-`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. An 8-leaf run is pending; its result will be added to the D10a ledger row.
+`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. With 8 leaves it covers 11,460,087 balanced sequents (126,344 provable), again with no failures.
 
 **Consequence: a larger unit-pasting class.** Call S **unit-pasting\*** (UP\*) if N(S) is I-free, balanced and L\*-provable, or N(S) = ⊢ I. Theorem B extends with the same proof, using Theorem A\* in place of step 3. The new class is strictly larger.
 - (X\X)\Y ⊢ Y is UP\* but not unit-pasting in the sense of B.2: it is L\*-provable but not L-provable.
@@ -431,7 +431,17 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 3. **A goal of dimension 1** is a type whose inhabitants form a single βη-class, by Mimram's Theorem 15 (with the context's constants as free variables). By Theorem C1, its space of fillers is that one-point set.
 4. **A goal of dimension n ≥ 2** asks for a path, or a higher path, between points of a discrete space whose endpoints are equal, by step 3. That space is contractible, in both directions. ∎
 
-**What remains of D12.** Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
+**Researcher response (verified, `conjectures/answered/cartesian-closed-higher-coherence-2026-11-18.md`).**
+- Q1 and Q2 are proved by a different route: a strict simplicial model plus a retract. It agrees with C1 and C2, and the verifier found no error in C.4 as a sketch.
+- **Q3 is proved over graphs in every dimension.** The 1-core R₁ is right adjoint to the inclusion of (∞,1) into higher categories (Ozornova–Rovelli–Walde, arXiv 2603.11005, Thm 2.20), and it inherits cartesian closed structure. So the free higher cartesian closed category on a graph is the free (∞,1) one, hence the 1-category. In particular this proves coherence for cartesian closed tricategories over a graph.
+- **cccatt@69bb11af has one implementation bug.**
+  - The unordered Dir duplicate check compares position-carrying terms (`pasting.ml` ll. 597–602). It therefore accepts a 3-goal that has no filler, which is refuted in Cat.
+  - It is filed upstream as [smimram/cccatt#15](https://github.com/smimram/cccatt/issues/15), reproduced at master 69bb11a. The fix `var x = var x'` passes cccatt's test suites.
+  - *Correction (2026-11-18):* the Rev side condition at l. 474, which tests the hypothesis name, is **not** a bug. `add_rule` rejects every cycle, and any higher hypotheses left over fail `check1`, so no wrong acceptance is possible. It differs only from our paraphrase of Rev in C.2 ("x has not been rewritten before"), which describes the intended behaviour, not that line.
+
+**What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/outbox/dir-relative-coherence.md`.
+
+*Superseded:* Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
 - Fiore–Saville did the bicategorical version.
 - The obstacle is step 2. It needs pseudo exponentials in an (∞,ω)-categorical comma object. It also needs a statement that the presheaves of normal forms are discrete as (∞,ω)-categories, i.e. no non-identity cells between normal forms. That is exactly what Dir's directed hypotheses violate, because those hypotheses generate non-invertible cells between neutrals.
 
@@ -676,27 +686,42 @@ These are recorded in `conjectures/planar-pasting-types.md` §4, which is ready 
 
 *Added 2026-11-18.*
 
-**Prop. F1 (Gray monoids).** Let 𝒢₀ be the free strict Gray monoid on a set of objects and a set of generating 1-cells. This is a monoid in (2-Cat, ⊗_Gray) with lax interchange and no closed structure. Let t, u be 1-cells of 𝒢₀ with the same source, target and events. Then:
+**Prop. F1 (Gray monoids).** Let 𝒢₀ be the free strict Gray monoid on a set of objects and a set of generating 1-cells. This is a monoid in (2-Cat, ⊗_Gray) with lax interchange and no closed structure. Let t, u be 1-cells of 𝒢₀ with the same source and target and the **same image in the free strict monoidal category**, i.e. the same string diagram. Then:
 - there is a 2-cell t ⇒ u iff inv(u) ⊆ inv(t); and
 - that 2-cell is unique.
 
-So each hom-category is a poset, isomorphic to an interval of the weak Bruhat order.
+So each hom-category is a poset: a disjoint union of weak-Bruhat-order intervals, one per string diagram.
+
+*Correction (independent review, `reviews/closed-structure-F5-2026-11-18.md`).* The first version assumed only "the same events", which is too weak. For f, g : A → A, the 1-cells f;g and g;f have the same events and inv = ∅, but no 2-cell relates them. In planar form, compare f on the left then g on the right with g on the left then f on the right, on A⊗A. Interchangers preserve the string diagram, so the diagram must be fixed.
 
 *Proof.*
-1. **Generators.** 2-cells of 𝒢₀ are composites of whiskered interchangers X_{f,g} for *generating* f, g. An interchanger at composite 1-cells decomposes by the Gray-monoid axioms X_{f, g′∘g} = (X_{f,g′} ∗ g)·(g′ ∗ X_{f,g}) and X_{f, b⊗g} = b ⊗ X_{f,g}, and symmetrically in f. Compare Forest–Mimram's presentation of free Gray categories (FSCD 2018), here without inverses. **[recall: the directed presentation is the same generators and relations, minus the inverse generators]**
+1. **Generators.** 2-cells of 𝒢₀ are composites of whiskered interchangers X_{f,g} for *generating* f, g. An interchanger at composite 1-cells decomposes by the Gray-monoid axioms X_{f, g′∘g} = (X_{f,g′} ∗ g)·(g′ ∗ X_{f,g}) and X_{f, B⊗g} = X_{f⊗B, g} for an object B between f and g, and symmetrically in f. Compare Forest–Mimram's presentation of free Gray categories (FSCD 2018), here without inverses. **[recall: the directed presentation is the same generators and relations, minus the inverse generators]**
 2. **Each generator removes one inversion.** A whiskered X_{f,g} swaps two events that are consecutive in time and independent, from "right factor first" to "left factor first". It deletes exactly the pair (f, g) from the inversion set and changes no other pair. So t ⇒ u implies inv(u) ⊆ inv(t). Every 2-path has length |inv(t)| − |inv(u)|.
-3. **Existence.** The event orders of 1-cells with given events are the linear extensions of the dependency order. Adding left/right for independent pairs makes it a 2-dimensional poset. Its linear extensions form an interval of the weak order (Björner–Wachs 1991). In the weak order, inv(u) ⊆ inv(t) iff u ≤ t, and then there is a saturated chain of adjacent swaps between them. That chain stays in the interval, so every step is an interchanger.
+3. **Existence.** Over a fixed string diagram, the event orders of the 1-cells are the linear extensions of the dependency order. Adding left/right for independent pairs makes it a 2-dimensional poset. Its realizer is the pair of linear orders "precedence, then left first" and "precedence, then right first" (the planar st-graph / dominance fact, **[recall]**). Its linear extensions form an interval of the weak order (Björner–Wachs 1991, Thm 6.8 = Chatel–Pilaud–Pons arXiv 1701.07995, Prop. 26). In the weak order, inv(u) ⊆ inv(t) iff u ≤ t, and then there is a saturated chain of adjacent swaps between them. That chain stays in the interval, so every step is an interchanger.
 4. **Uniqueness.**
    - A 2-path from t to u is a maximal chain of [u, t], i.e. a reduced word of the permutation u⁻¹t.
    - By Matsumoto–Tits, any two reduced words are connected by commutation moves s_i s_j = s_j s_i (|i − j| ≥ 2) and braid moves s_i s_{i+1} s_i = s_{i+1} s_i s_{i+1}. Each intermediate word is again a chain of [u, t], so it is again a 2-path of 𝒢₀.
    - Commutation moves are the interchange law of the underlying 2-category: the two swaps act on disjoint time slots.
-   - Braid moves involve three pairwise independent events. Their two hexagon composites are equal in a Gray monoid, because (D¹ ⊗ D¹ ⊗ D¹) is a commuting cube in Gray's 2-categorical tensor. In the ω-version this equality becomes the 3-cell of Question 3.
+   - Braid moves involve three pairwise independent events. Their two hexagon composites are equal in a Gray monoid, by naturality of X_{f,–} with respect to X_{g,h} together with the decomposition axioms; equivalently, D¹ ⊗ D¹ ⊗ D¹ is a commuting cube in Gray's 2-categorical tensor. In the ω-version this equality becomes the 3-cell of Question 3.
    - Hence any two 2-paths are equal. ∎
 
-**What the closed structure adds (remaining for Question 1).**
+**Researcher response (verified, `conjectures/answered/gray-pasting-types-2026-11-18.md`).**
+- It proves the corrected Prop. F1 for *any* labeling, using only squares and hexagons and no interval lemma.
+- The hom ω-category of ν(I^⊗n) is **not thin**. Two hexagon 2-cells are joined by the 3-cell ***.
+- Gray's 2-tensor is its intelligent 2-truncation (Ara–Maltsiniotis A.25, A.31), which is why F1's uniqueness holds.
+- The dependent version is νK_P, built from the faces (order ideal J, S ⊆ min(P∖J)). Its truncated hom is the scheduling category S(P).
+
+The researcher findings on the closed part are listed after the next two bullets.
+
+**What the closed structure adds (remaining for Question 1; superseded in part by the findings below).**
 - *1-cells.* The underlying 1-category of a Gray-monoidal biclosed 2-category is premonoidal and biclosed. Structural maps are central. Needed: two 1-cells with the same event order and generators are equal. This is a premonoidal version of Theorem A, and should follow by rerunning A.2 with events as non-central generators.
 - *2-paths through closures.* A 2-path from t to u may pass through 1-cells with events inside closures, even when t and u have none. Strict naturality of Λ (Λ(f) ∘ h = Λ(f ∘ (X ⊗ h))) and the hom-isomorphism ev ∘ (Λs ⊗ B) = s should push every such intermediate event back out. That reduces the general 2-path to the Prop. F1 situation. This is the content of the nested event order (outbox Question 2).
-- Status: Prop. F1 settles the monoidal core. The closed parts are the two bullets above, both in progress.
+- Status: Prop. F1 settles the monoidal core.
+
+**Corrections from the response (V3, V5), which restate the two bullets above.**
+1. **Pushing events inward is not invariant.** We have h = Λ(ev) ∘ h = Λ(ev ∘ (1 ⊗ h)), and β also changes nesting. So the second bullet needs a *βη-canonical* nesting first, i.e. a specified normal form for closures.
+2. **The closed signature must be strictly natural only in the context variable.** Strict naturality of Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C) in the bound variable A forces (f⊗B′)(A⊗g) = (A′⊗g)(f⊗B). Then the two schedules are equal 1-cells. In the bound variable, naturality holds only up to the interchanger.
+3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/outbox/gray-closed-scheduling.md`.
 
 ---
 

@@ -476,7 +476,7 @@ I checked every step. I also read the cited cccatt source at commit 69bb11af (`s
 - Question 1 is solved positively for sets, graphs and simply typed signatures.
 - Question 2 (Rev, as stated) is proved.
 - Question 3 is solved for graph-generated contexts in all dimensions, including the tricategory case. The abstract Dir with higher generators stays open.
-- The cccatt implementation of Dir (unordered mode) at the cited commit is unsound.
+- The cccatt implementation of Dir (unordered mode) at the cited commit is unsound (reproduced). The response's second implementation remark, about Rev, is not a bug (V2).
 
 ### V1. Discreteness (§1): correct
 
@@ -493,7 +493,7 @@ I checked every step. I also read the cited cccatt source at commit 69bb11af (`s
 
 - The space of (x, α : x → t) is a based path space, hence contractible. This uses the side conditions that x is not free in t and occurs in no other type. So contraction does not change the free CCC.
 - The remaining 1-dimensional goal has exactly one βη-class (Mimram Thm 15). By V1 its filler space is a point, and higher goals are iterated path spaces of a point.
-- *Code remark, confirmed in the source:* `pasting.ml`, l. 474 checks `not (List.exists (fun (_,a) -> has_fv r a) l)`, with r the hypothesis's name, not its endpoint x. So the implemented Rev differs from the stated one.
+- *Code remark, confirmed in the source:* `pasting.ml`, l. 474 checks `not (List.exists (fun (_,a) -> has_fv r a) l)`, with r the hypothesis's name, not its endpoint x. So the implemented Rev differs from the stated one. *Correction (2026-11-18, cccatt filing thread):* this is **not a bug**. Substitution rejects every cycle, and any higher hypothesis left over fails the final 1-dimensional check, so no wrong acceptance is possible. It is a valid variant of the rule.
 
 ### V3. Graph-generated Dir (§3): correct
 
@@ -523,5 +523,5 @@ I checked every step. I also read the cited cccatt source at commit 69bb11af (`s
 ### V6. Consequences
 
 1. **D12 Questions 1–2 are closed**, by the response and independently by C.4. **Question 3 is closed over graphs.** Open: Dir with higher generators.
-2. *Update (2026-11-18): the Dir duplicate-check bug is filed as smimram/cccatt#15. The Rev side-condition item is not a bug: `add_rule` rejects every cycle and leftover higher hypotheses fail `check1`, so no wrong acceptance is possible; it only differs from our paraphrase of Rev.* Original text: **cccatt bugs to report upstream** (if Anthony wants): the unordered Dir duplicate check compares positioned terms, and the Rev side condition checks the hypothesis name rather than the endpoint. Reporting them is an outward action, so it is Anthony's call.
+2. **cccatt bugs to report upstream** (if Anthony wants): the unordered Dir duplicate check compares positioned terms (**real**, reproduced at 69bb11a by the cccatt filing thread). The second item the response raises, that the Rev side condition checks the hypothesis name, is a valid variant and not a bug (see V2).
 3. A next prompt for Dir with higher generators (relative coherence) is owed by the CLOSED thread, if wanted.

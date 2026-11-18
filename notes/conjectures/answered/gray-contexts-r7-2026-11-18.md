@@ -937,3 +937,43 @@ K*_3\eta_{H'}
 in dimension \(5\). The generic pasting-context instances of (32) are available from the coherence rule; the missing step is relative fusion after the chosen \(3\)-normalisers have been substituted and expanded.
 
 I have not constructed that \(5\)-dimensional fusion for the \(4\)-cube or the cylinder of \(D^3\), nor proved the general \(\mathrm{RC}(n)\) or \(G(n)\) statements.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** Question 1. RC(3) holds for the 2 × 2 grid.
+- **Two extensions toward Question 3:**
+  - several 3-generators forming unique vertical words, with unit lower compositions (§7);
+  - the Gray cube with an outgoing edge, a 3-generator with a nontrivial strict whisker (§8).
+- **Open:** Question 2 (general exchange in dimension 2), Question 4 (RC(4)), Question 5.
+- **New precise obligation for RC(4):** the 5-dimensional fusion (31)/(32).
+
+Checked step by step:
+
+1. **Strict 2-cells, §1.** With faces oriented hv ⇒ vh, the rewrites (1) are right. I enumerated adjacent hv pairs in the six paths: F and G are the only independent pair. The fibres needing work are DFG, FGE and DFGE (4). Their boundary paths meet only at the corners (5), so every head has a single nonconstant 0-column and item 14 reduces it to a vertical chain.
+2. **Two-square cut fibre, §2.2.** The cut vertex c and the bracketings (11) make item 25's matrix argument apply with the two-edge paths f_i, g_i in place of single edges.
+   - The generic matrix terms over V₃ ∨₀ V₃ and V₆ ∨₀ V₆ do not depend on the triangular or globular boundary of item 25's generators, so this substitution is legitimate.
+   - The factorwise comparisons are RC(3) of single squares (item 10).
+   - Result: RC(3) for every grid fibre with at most two faces, including FG.
+3. **Normal forms, §3.** The rules are: F before G, D first, E last, and at most one exchange (the fixed reverse of item 24). The recursion for ν_T is well founded because a substituted input with the same face set is a proper subterm.
+4. **Flattening lemma, §4.** This is the key new idea.
+   - Every exchange is between F and G, which are adjacent after D and before E.
+   - Reassociating isolates F, G, the path factors between them and the corrections on p₁ … p₄ into one literal 2-subterm of the subcontext Λ_FG.
+   - Two flattenings then differ by a 3-term in the FG fibre, and (13) compares them.
+   - I checked that the paths involved lie in Λ_FG: p₁ … p₄ use only vertices of the two squares.
+5. **Relative fusion and compatibility, §5–6.**
+   - The 4-step calculation (18) uses the generic action/composition comparison over V_m↑, the flattening lemma and Ω_χ, which matches item 17's pattern.
+   - The final comparison (19) is a full coherence over V_m.
+   - Ξ_P (21) is a valid coherence: both endpoints use every 3-variable.
+   - The induction in (22) recurses only on original 3-arguments.
+   - As in earlier rounds, not every 4-cell is written out.
+6. **Vertical words, §7.**
+   - The distribution coherences (24) over (D³ ∨₂ D³) ∨_k D³ are full on both sides.
+   - Assumption 2 makes the other operand of a lower composition a Λ-term.
+   - Each factor F_j lies in (Λ, z_{i_j}), where item 20 applies because assumption 3 prevents words in one letter.
+   - Example (26) is right: x ≠ y and f ≠ g make the lower compositions units.
+7. **Cube plus an edge, §8.** The new strict 3-cells are X and X ∗₀ e (28), because adjoining a terminal edge only copies homs into c. The 4-coherence (29) over D³ ∨₀ D¹ has full support with equal 2-boundaries. Moving frames uses item 15.
+
+**Relation to other results.** The cone-over-coherences round-5 extension theorem (`cone-over-coherences-r5-2026-11-18.md` §1–6) proves RC(3)(Λ + any 3-generators) ⇔ RC(3)(Λ) for dim Λ ≤ 2 with an acyclic 1-graph. That subsumes §7 and §8 and answers Question 3 in full. Question 2 is therefore the whole remaining RC(3) problem. The grid is its first case without a cut vertex.
+
+Follow-up prompt: `outbox/gray-contexts-r8.md` (round 8, unsent).

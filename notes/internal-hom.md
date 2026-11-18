@@ -106,6 +106,8 @@ With **pseudo** (strong) transformations, components are still directed 1-cells,
 | Aesthetic risk | lax is "one level over"; two homs (lax out of representables, pseudo everywhere) | the coh side condition must detect *orientation* of interchange; nobody has a weak Gray-ω coherence theory | heaviest syntax; least CaTT-like |
 | Semantics | (∞,ω)-Cat, cartesian closed; lax homs à la JFS/Loubaton | Gray-enriched (∞,ω)-Cat (expected, not in the literature in this form) | JFS-style double (∞,n)-categories |
 
+**Agreement with the limits notes.** `notes/limits-representables.md` (limits/representables thread, PR #2) reaches the same obstruction independently. Its option **P** (keep the core, get lax transformations from a lax function category [⟦D¹⟧, D]ₗₐₓ) is architecture **A** here, and its option **L** (Gray-style directed interchange) is **B**. These notes add the rule-level detail for P/A: the Gray context operation (§4), λ/♭ rules for [Θ, C]ₗₐₓ (§5.1), and pseudo as a marking (§5.5).
+
 **Why A is recommended.**
 - It keeps every existing result.
 - It matches how JFS and Loubaton actually define lax transformations.

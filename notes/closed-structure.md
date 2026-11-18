@@ -1089,7 +1089,10 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
   - For fixed Gray contexts Δ, the cells of Fun^lax(Δ, –) between the extreme vertices of ν(I^⊗n) are still F.5's schedule categories. That part of F.5 transfers.
   - The claim that *transformation-level* homs of 𝒢′ are schedule categories S(P) is **refuted**. Round 6 gives two endo-transformations α and β of 1_A with forward crossings in both directions, and their composite q embeds (ℕ, +) into End(α·β). So these homs are not posets.
   - Round 6 also shows that a non-invertible crossing can be built from structural maps alone.
-  - The correct description of these homs is open: the D11 round-7 prompt asks for the smallest transformation hom.
+  - **Round 7** (verified, `conjectures/answered/gray-closed-scheduling-r7-2026-11-18.md`) shows what replaces schedules: crossings of generating endo-transformations of 1_A satisfy exactly the **positive braid relations**.
+    - A model with hom Br⁺_S retracts the map F : Br⁺_S → modifications. So End(τⁿ) contains the positive braid monoid B⁺ₙ.
+    - No modification changes a word's multiset of letters.
+    - Open (r8): whether F is full, i.e. whether End(α·β) ≅ ℕ, and how the choice of probe stock affects this.
 - **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
 
 **Open (D17).**

@@ -943,4 +943,4 @@ This is a metatheoretic construction with specified pasting arities and substitu
 **Consequences.**
 - C1: N holds for every 3-dimensional coherence over the single arrow, with Y = Var(Q), by (32).
 - D2: RC(3) for the lax square is fully settled (this also answers question 1 of the then-unsent `outbox/gray-contexts-r3.md`, now `answered/gray-contexts-r3-2026-11-18.md`, which was revised accordingly).
-- The method needs discarded columns to be point-supported; general cylinders Q↑Y and loop-free contexts remain open (RC(3) there, RC(n)). Follow-up prompt: `outbox/naturality-arbitrary-depth-r3.md` (unsent).
+- The method needs discarded columns to be point-supported; general cylinders Q↑Y and loop-free contexts remain open (RC(3) there, RC(n)). Follow-up prompt: `naturality-arbitrary-depth-r3-2026-11-18.md` (round 3, answered).

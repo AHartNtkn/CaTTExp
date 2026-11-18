@@ -58,11 +58,14 @@ import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell
 import CaTTExp.Strict.Subst
 import CaTTExp.Strict.L
+import CaTTExp.Strict.Hyp
 import CaTTExp.Strict.Soundness
 import CaTTExp.Strict.Tensor
 import CaTTExp.Strict.Pasting
 import CaTTExp.Strict.TotalCell
 import CaTTExp.Strict.Bridge
+import CaTTExp.Strict.TopCell
+import CaTTExp.Strict.CohCase
 import CaTTExp.Strict.ReverseInterchanger
 import CaTTExp.Strict.CheckCells
 import CaTTExp.Strict.PsFacts
@@ -93,3 +96,10 @@ import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
 import CaTTExp.Strict.Order
+import CaTTExp.GrayCtx.Elab
+import CaTTExp.GrayCtx.Cylinder
+import CaTTExp.GrayCtx.VComp
+import CaTTExp.GrayCtx.Cube
+import CaTTExp.GrayCtx.Prune
+import CaTTExp.GrayCtx.Show
+import CaTTExp.GrayCtx.Checks

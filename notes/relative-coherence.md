@@ -21,6 +21,7 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | G4: associativity up to invertible cells | reduced to RC (§6) |
 | RC(3) fails for non-loop-free contexts (Eckmann–Hilton) | sketch (§7) |
 | **RC(3) for the lax square S**, every pair of parallel 3-terms; hence N for every 3-dimensional coherence over one arrow | proved by a researcher, verified as a paper construction (§7.4) |
+| **RC(3) for the cylinder of a composable pair** x → y → z; hence N for every 3-dimensional coherence over that pair | proved by a researcher at the round-2 standard (fixed-edge extension lemma), verified (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`); generalised factorisations machine-checked (§7.5) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
@@ -363,7 +364,7 @@ The proof has four steps.
 3. **Evaluation fusion.** A connecting cell `Λ_G : G ∗₂ ν_{T′} → ν_T` is built by induction on the syntax of the 3-term G, through 2- and 3-dimensional arities.
 4. **Right cancellation.** This uses the invertibility of coherence composites.
 
-This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They are asked in the round-3 prompt (`conjectures/outbox/naturality-arbitrary-depth-r3.md`, unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
+This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r4.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
 
 ### 7.5 Machine checks of the lax-square proof, and the cylinder of a composable pair (2026-11-18)
 
@@ -380,7 +381,7 @@ This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whos
 - *The mixed law (11).* `Ω_R` is instantiated in S with `Z ↦ F` and with path 3-cells for M and N. It typechecks.
 - *Not checked:* the full recursive construction (normalisers ν, folding laws, evaluation fusion, `Λ_G`, cancellation) on arbitrary pairs. The checks cover its key lemma and its basic 4-cells on generated instances.
 
-**The cylinder of a composable pair (sketch).** Let `Q = (x, y, z, f, g)` and `Y = Var(Q)`. Q↑Y is two lax squares pasted along `y↑`, with generators `f↑ : f⁻y↑ ⇒ x↑f⁺` and `g↑ : g⁻z↑ ⇒ y↑g⁺`. The lax-square proof uses that inactive columns are point-supported. Here they can carry paths, for example the f⁻ column of `f⁻ ∗₀ g↑`. Two observations remove that obstacle.
+**The cylinder of a composable pair.** *Status:* the sketch below was settled by the round-3 answer (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`), whose fixed-edge extension lemma replaces observation 2 by a literal factorisation through `C_n ∗₀ D¹(h)` or `D¹(h) ∗₀ C_n`, and whose two-generator case `H = L ∗₁ R` is point-supported with a forced order. The general-chain statement below is still open (longer cylinders, ledger C1). Let `Q = (x, y, z, f, g)` and `Y = Var(Q)`. Q↑Y is two lax squares pasted along `y↑`, with generators `f↑ : f⁻y↑ ⇒ x↑f⁺` and `g↑ : g⁻z↑ ⇒ y↑g⁺`. The lax-square proof uses that inactive columns are point-supported. Here they can carry paths, for example the f⁻ column of `f⁻ ∗₀ g↑`. Two observations remove that obstacle.
 1. *At most one active column.* Two 2-generators are never `∗₀`-composable after whiskering. That would need a path from the target vertex of one to the source vertex of the other, and here those are `y⁺ → y⁻`, which does not exist. So in every term, all 2-variable-bearing entries of the arity lie in one column, because columns are horizontally disjoint. The same holds for `Q↑Var(Q)` with Q any chain: edges go `⁻→⁻`, `⁺→⁺` and `⁻→⁺`, never `⁺→⁻`.
 2. *Generalised factorisation.* Retain the active column as it is. Pull back each inactive column positionally to the chain of its path, which is possible because the 1-skeleton is acyclic. The retained R is a pasting context: a horizontal concatenation of single-edge columns and the active column. η sends R's chain edges to edges of Γ.
 

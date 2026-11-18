@@ -1,5 +1,3 @@
-**Status: unsent** (written 2026-11-18; follows `answered/finite-fibration-test-2d-base-2026-11-18.md`).
-
 # Problem: finite presentations of cartesian fibrations over higher-dimensional bases (FT_n)
 
 *Standalone problem statement. It assumes familiarity with (∞,ω)-categories, the Gray tensor product, computads (polygraphs) and Grothendieck constructions, and nothing else. The questions are in §4, smallest first.*

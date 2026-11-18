@@ -167,6 +167,36 @@ binF (suc fuel) k u w = coh P A σ , A [ σ ]ty
 binC : Nat → Cell → Cell → Cell
 binC k u w = binF (suc (max (dimC u) (dimC w))) k u w
 
+-- Two named coherences on 2-cells, used by the depth-1 lifts of the
+-- cylinder construction (ledger B18). Both are coherence-case cohs
+-- (both sides full) over pasting contexts.
+--
+-- xchC u w, for 2-cells u : f ⇒ g : x → y and w : h ⇒ k : y → z, is the
+-- interchange  (f ∗₀ w) ∗₁ (u ∗₀ k)  ⇛  (u ∗₀ h) ∗₁ (g ∗₀ w),
+-- over D² ∨₀ D² (levels x0 y1 f2 g3 u4 z5 h6 k7 w8).
+xchC : Cell → Cell → Cell
+xchC u w = coh Q B σ , B [ σ ]ty
+  where
+  Q = Glue 0 2 2
+  f = gen Q 2 ; g = gen Q 3 ; a = gen Q 4 ; h = gen Q 6 ; k = gen Q 7 ; b = gen Q 8
+  s = binC 1 (binC 0 f b) (binC 0 a k)
+  t = binC 1 (binC 0 a h) (binC 0 g b)
+  B = arr (snd s) (fst s) (fst t)
+  σ = ⟪ diskList u ++ restDisk 0 w ⟫
+
+-- assocC dir u v w, for 2-cells composable along 1-cells, is the
+-- associator (u ∗₁ v) ∗₁ w ⇛ u ∗₁ (v ∗₁ w) (dir = true) or its reverse
+-- (dir = false), over three 2-disks glued along 1-disks.
+assocC : Bool → Cell → Cell → Cell → Cell
+assocC dir u v w = coh Q B σ , B [ σ ]ty
+  where
+  Q = ctxOf (node (node (leaf ∷ leaf ∷ leaf ∷ []) ∷ []))
+  a = gen Q 4 ; b = gen Q 6 ; c = gen Q 8
+  l = binC 1 (binC 1 a b) c
+  r = binC 1 a (binC 1 b c)
+  B = if dir then arr (snd l) (fst l) (fst r) else arr (snd l) (fst r) (fst l)
+  σ = ⟪ diskList u ++ restDisk 1 v ++ restDisk 1 w ⟫
+
 ------------------------------------------------------------------------
 -- Layer 2: expressions for context types
 
@@ -174,6 +204,8 @@ data Ex : Set where
   v   : Nat → Ex              -- a variable (de Bruijn level)
   bn  : Nat → Ex → Ex → Ex    -- binary composite along a k-cell
   idn : Ex → Ex               -- identity
+  xc  : Ex → Ex → Ex          -- interchange of two 2-cells (xchC)
+  asL asR : Ex → Ex → Ex → Ex -- associator of three 2-cells along 1-cells, and its reverse
 
 data ExTy : Set where
   ob  : ExTy
@@ -201,6 +233,16 @@ tyF : Nat → ExCtx → Ex → ExTy
 tyF zero       Γ e = ob
 tyF (suc f) Γ (v i)      = nth ob Γ i
 tyF (suc f) Γ (idn e)    = hom (tyF f Γ e) e e
+tyF (suc f) Γ (xc u w)   = hom (tyF f Γ s) s t
+  where
+  A = tyF f Γ u
+  B = tyF f Γ w
+  s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
+  t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
+tyF (suc f) Γ (asL u y w) = hom (tyF f Γ l) l (bn 1 u (bn 1 y w))
+  where l = bn 1 (bn 1 u y) w
+tyF (suc f) Γ (asR u y w) = hom (tyF f Γ l) (bn 1 u (bn 1 y w)) l
+  where l = bn 1 (bn 1 u y) w
 tyF (suc f) Γ (bn k u w) =
   if r ==ℕ suc k then hom (baseE A) (srcE A) (tgtE B)
   else hom (tyF f Γ s') s' t'
@@ -227,6 +269,9 @@ mutual
   evF (suc f) Γ (v i)      = var i
   evF (suc f) Γ (idn e)    = fst (idC (cellF f Γ e))
   evF (suc f) Γ (bn k u w) = fst (binC k (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (xc u w)   = fst (xchC (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
+  evF (suc f) Γ (asR u y w) = fst (assocC false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
 
   evTyF : Nat → ExCtx → ExTy → Ty
   evTyF zero    Γ A           = ⋆
@@ -259,6 +304,9 @@ substE : (Nat → Ex) → Ex → Ex
 substE ρ (v i)      = ρ i
 substE ρ (bn k u w) = bn k (substE ρ u) (substE ρ w)
 substE ρ (idn e)    = idn (substE ρ e)
+substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
+substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
+substE ρ (asR u y w) = asR (substE ρ u) (substE ρ y) (substE ρ w)
 
 substTyE : (Nat → Ex) → ExTy → ExTy
 substTyE ρ ob          = ob
@@ -268,6 +316,9 @@ varsE : Ex → List Nat
 varsE (v i)      = i ∷ []
 varsE (bn _ u w) = varsE u ++ varsE w
 varsE (idn e)    = varsE e
+varsE (xc u w)   = varsE u ++ varsE w
+varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
+varsE (asR u y w) = varsE u ++ varsE y ++ varsE w
 
 idxE : Ex → Nat
 idxE (v i) = i
@@ -478,13 +529,61 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   ren⁻ = substE (λ i → v (mi i))
   ren⁺ = substE (λ i → v (pl i))
 
+  dimΓ : Ex → Nat
+  dimΓ e = dimE (tyE Γ e)
+
+  -- lift t : a_t → b_t, the naturality cell of an affected term t.
+  -- Rules (notes/specified-cones.md §4.3):
+  -- * depth 0: an affected factor of the composite's own dimension,
+  --   whiskered by unaffected cells, lifts factorwise;
+  -- * depth 1, whisker: u ∗₀ w with u an affected 1-cell and w an
+  --   unaffected 2-cell lifts to the interchange xc u↑ w;
+  -- * depth 1, paste: u ∗₁ w with u, w affected 2-cells (and affected
+  --   1-dimensional boundaries, unaffected 0-dimensional ones) lifts to
+  --   the pasting of u↑ and w↑ through three associators.
+  -- Anything else returns nothing, so the cylinder is not built.
+  liftF : Nat → Ex → Maybe Ex
+  liftF zero _ = nothing
+  liftF (suc fl) (v i)      = if inY i then just (v (upl i)) else nothing
+  liftF (suc fl) (idn e)    = nothing
+  liftF (suc fl) (xc _ _)    = nothing
+  liftF (suc fl) (asL _ _ _) = nothing
+  liftF (suc fl) (asR _ _ _) = nothing
+  liftF (suc fl) (bn k u w) =
+    if affected u ∧ affected w then
+      (if (suc k ==ℕ n) ∧ (n ==ℕ 2) ∧ (du ==ℕ 2) ∧ (dw ==ℕ 2) then paste else nothing)
+    else if affected u then
+      (if du ==ℕ n then (liftF fl u >>= λ u' → just (bn k u' (ren⁻ w)))
+       else if (n ==ℕ 2) ∧ (du ==ℕ 1) ∧ (k ==ℕ 0)
+       then (liftF fl u >>= λ u' → just (xc u' (ren⁻ w)))
+       else nothing)
+    else if affected w then
+      (if dw ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w')) else nothing)
+    else nothing
+    where
+    du = dimΓ u
+    dw = dimΓ w
+    n  = max du dw
+    srcΓ tgtΓ : Ex → Ex
+    srcΓ e = srcE (tyE Γ e)
+    tgtΓ e = tgtE (tyE Γ e)
+    ok0 = not (affected (srcΓ (srcΓ u))) ∧ not (affected (tgtΓ (tgtΓ w)))
+    ok1 = affected (srcΓ u) ∧ affected (tgtΓ u) ∧ affected (tgtΓ w)
+    paste : Maybe Ex
+    paste =
+      if ok0 ∧ ok1 then
+        (liftF fl u >>= λ u↑ → liftF fl w >>= λ w↑ →
+         liftF fl (tgtΓ w) >>= λ Lτw → liftF fl (srcΓ w) >>= λ Lσw → liftF fl (srcΓ u) >>= λ Lσu →
+         let u⁻ = ren⁻ u ; w⁻ = ren⁻ w ; u⁺ = ren⁺ u ; w⁺ = ren⁺ w in
+         just (bn 2 (asL u⁻ w⁻ Lτw)
+              (bn 2 (bn 1 u⁻ w↑)
+              (bn 2 (asR u⁻ Lσw w⁺)
+              (bn 2 (bn 1 u↑ w⁺)
+                    (asL Lσu u⁺ w⁺))))))
+      else nothing
+
   lift : Ex → Maybe Ex
-  lift (v i)      = if inY i then just (v (upl i)) else nothing
-  lift (idn e)    = nothing
-  lift (bn k u w) =
-    (if affected u then lift u else just (ren⁻ u)) >>= λ u' →
-    (if affected w then lift w else just (ren⁻ w)) >>= λ w' →
-    just (bn k u' w')
+  lift = liftF fuel
 
   -- a_x and b_x for x : A of dimension m ≥ 1, in the new context K.
   aSide bSide : Nat → Nat → Maybe Ex
@@ -652,6 +751,12 @@ dualE : Ex → Ex
 dualE (v i)      = v i
 dualE (idn e)    = idn (dualE e)
 dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dualE u) (dualE w)
+-- O_odd swaps ∗₀ factors and the ends of 3-cells, and fixes ∗₁:
+-- the dual of an interchange is the interchange with factors swapped,
+-- and the dual of an associator is the reverse associator.
+dualE (xc u w)    = xc (dualE w) (dualE u)
+dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
+dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
 
 dualTy : ExTy → ExTy
 dualTy ob          = ob

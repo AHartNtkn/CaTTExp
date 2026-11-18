@@ -121,6 +121,11 @@ okCtrf k Γ with ctrf k Γ
 ... | nothing = false
 ... | just T  = ok (Ctrf.ctx T)
 
+ctrfDefined : Nat → ExCtx → Bool
+ctrfDefined k Γ with ctrf k Γ
+... | nothing = false
+... | just _  = true
+
 _ : all (okCtrf 1) oneDim ≡ true
 _ = refl
 _ : all (okCtrf 2) oneDim ≡ true
@@ -173,11 +178,26 @@ _ = refl
 _ : nonCanonical ≡ ConeOf.cone Loop → ⊥
 _ = λ ()
 
--- The depth boundary: over a 2-dimensional shape, ctrf₁ needs the
--- naturality of p_x ∗₀ α in p_x, a depth-1 term (BMOSV), which the
--- depth-0 lift does not produce. The construction does not detect this
--- itself: it returns a context, and the certified checker rejects it.
-_ : okCtrf 1 (DiskEx 2) ≡ false
+-- Depth 1 (ledger B18): over a 2-dimensional shape, ctrf₁ needs the
+-- naturality of p_x ∗₀ α in p_x (an interchange coherence) and of
+-- p_f ∗₁ (p_x ∗₀ α) (the pasting of m_f and that interchange through
+-- associators). With those lifts, ctrf₁ is well typed on every
+-- 2-dimensional shape of the suite, and so is the cocone version.
+twoDim : List ExCtx
+twoDim = DiskEx 2 ∷ Loop ∷ Par2 ∷ []
+
+_ : all (okCtrf 1) twoDim ≡ true
+_ = refl
+
+-- The next level needs naturality of those coherences themselves
+-- (depth 1 in a 3-dimensional coherence, BMOSV), which is not
+-- implemented: the lift returns nothing and no context is produced.
+_ : ctrfDefined 2 (DiskEx 2) ≡ false
+_ = refl
+
+-- Over a 3-dimensional shape even ctrf₁ needs depth-2 lifts (p_x ∗₀ θ
+-- for a 3-cell θ), which are not implemented.
+_ : ctrfDefined 1 (DiskEx 3) ≡ false
 _ = refl
 
 module Show where
@@ -206,6 +226,10 @@ okCoctrf k Γ with coctrf k Γ
 _ : all (okCoctrf 1) oneDim ≡ true
 _ = refl
 _ : all (okCoctrf 2) oneDim ≡ true
+_ = refl
+-- Cocone transfors over 2-dimensional shapes (B18), via the duals of
+-- the interchange and associator lifts.
+_ : all (okCoctrf 1) (DiskEx 2 ∷ Loop ∷ Par2 ∷ []) ≡ true
 _ = refl
 
 ------------------------------------------------------------------------

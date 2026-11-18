@@ -27,6 +27,7 @@ open import CaTTExp.Strict.Cylinder
 open import CaTTExp.Strict.GlobBasis
 open import CaTTExp.Strict.NuMap
 open import CaTTExp.Strict.Expr using (Functor)
+open import CaTTExp.Strict.GlobAtoms
 open import CaTTExp.Strict.Bag using (+-comm; +-assoc; +-zero)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
 
@@ -147,7 +148,7 @@ module Collapse (D : GData) where
 
   module LH = LinHom B′ S.basis Q
 
-  private
+  module Aux where
     g = λ k → at 0 gdeg k
 
     X-at : ∀ k → k < N → at 0c X k ≡ end e⊥ (g k)
@@ -322,6 +323,8 @@ module Collapse (D : GData) where
     chW k kN W1 = cong₂ _+c_ (trans (c1-bd bplus t K.bp-at k kN) (trans (end-bd e⊤ k kN) (sym (c1-bd bminus s K.bm-at k kN))))
                              (trans (endZ _ bmΣ0 bmΣ⊤ k kN) (sym (endZ _ bpΣ0 bpΣ⊤ k kN)))
 
+  open Aux
+
   ch : LH.ChainQ
   ch i iN with pos N i iN
   ... | (k , r , kN , rl , refl) =
@@ -407,3 +410,208 @@ private
   _ : mapT CD¹.q 2 (Atom.atomT (Cyl.B′ BD¹) 2 4)
       ≡ (unit 0 , unit 4) ∷ (unit 1 , unit 3) ∷ (unit 2 , unit 2) ∷ []
   _ = refl
+
+------------------------------------------------------------------------
+-- ν(q) on the middle atoms: q sends the rows of ⟨k ⊗ i⟩ to those of ⟨Σk⟩.
+
+module CollapseAtoms (D : GData) where
+  open GData D
+  open Collapse D
+  private
+    module K  = GB D
+    module S  = GB (Σg D)
+    module GK = GA D
+    module GS = GA (Σg D)
+    module CD = CylDD K.basis K.hyp K.DegP-ok K.DegM-ok
+    module AK = Atom K.basis
+    module AS = Atom S.basis
+  open Basis K.basis
+  open Cyl K.basis
+
+  open Aux
+
+  private
+    end-pos : ∀ e h → 1 ≤ h → end e h ≡ 0c
+    end-pos e (suc h) _ = refl
+
+    -- The middle of F e a b, when a lies in positive degree.
+    qF : ∀ e a b → lin a X ≡ 0c → lin a Z ≡ 0c → lin (CD.F e a b) Q ≡ lin b Y
+    qF e a b ax az =
+      trans (lin-cyl gdeg _ _ _ X Y Z) (go e)
+      where
+      go : ∀ e → (lin (if e then a else 0c) X +c lin b Y) +c lin (if e then 0c else a) Z ≡ lin b Y
+      go true  = trans (cong₂ (λ p q → (p +c lin b Y) +c q) ax (lin-0 Z)) (trans (+c-comm _ 0c) (trans (+c-id _) (+c-id _)))
+      go false = trans (cong₂ (λ p q → (p +c lin b Y) +c q) (lin-0 X) az) (trans (+c-comm _ 0c) (trans (+c-id _) (+c-id _)))
+    qG : ∀ e a b → lin a X ≡ 0c → lin a Z ≡ 0c → lin (CD.G e a b) Q ≡ lin b Y
+    qG e a b ax az =
+      trans (lin-cyl gdeg _ _ _ X Y Z) (go e)
+      where
+      go : ∀ e → (lin (if e then 0c else a) X +c lin b Y) +c lin (if e then a else 0c) Z ≡ lin b Y
+      go false = trans (cong₂ (λ p q → (p +c lin b Y) +c q) ax (lin-0 Z)) (trans (+c-comm _ 0c) (trans (+c-id _) (+c-id _)))
+      go true  = trans (cong₂ (λ p q → (p +c lin b Y) +c q) (lin-0 X) az) (trans (+c-comm _ 0c) (trans (+c-id _) (+c-id _)))
+
+    lin-Y : ∀ p → p < N → lin (unit p) Y ≡ unit (suc p)
+    lin-Y p pN = trans (lin-unit p pN Y) (Y-at p pN)
+
+    -- Iterated faces of Σk.
+    iterΣ : ∀ f fΣ → (∀ x → 1 ≤ gd x → fΣ (suc x) ≡ suc (f x)) →
+            (∀ x → x < N → 1 ≤ gd x → f x < N) → (∀ x → x < N → 1 ≤ gd x → gd (f x) ≡ gd x ∸ 1) →
+            ∀ d x → x < N → d ≤ gd x → iter fΣ d (suc x) ≡ suc (iter f d x)
+    iterΣ f fΣ e fN df zero    x xN l = refl
+    iterΣ f fΣ e fN df (suc d) x xN l =
+      trans (cong (iter fΣ d) (e x p))
+        (iterΣ f fΣ e fN df d (f x) (fN x xN p) (subst (d ≤_) (sym (df x xN p)) (pr (gd x) d l)))
+      where
+      p = ≤-trans (s≤s z≤n) l
+      pr : ∀ g d → suc d ≤ g → d ≤ g ∸ 1
+      pr (suc g) d (s≤s l) = l
+
+    sΣ-in : ∀ x → 1 ≤ gd x → GData.s (Σg D) (suc x) ≡ suc (s x)
+    sΣ-in x p with gd x
+    ... | suc _ = refl
+    tΣ-in : ∀ x → 1 ≤ gd x → GData.t (Σg D) (suc x) ≡ suc (t x)
+    tΣ-in x p with gd x
+    ... | suc _ = refl
+
+    gdΣ-in : ∀ k → k < N → GData.gd (Σg D) (suc k) ≡ suc (gd k)
+    gdΣ-in k kN rewrite <ℕ-complete k N kN = refl
+
+    pos-deg : ∀ d k → k < N → suc d ≤ gd k → 1 ≤ gd (iter s d k)
+    pos-deg d k kN l = subst (1 ≤_) (sym (snd (GK.iter-ok s sN ds d k kN (≤-trans (≤-suc (≤-refl d)) l)))) (go (gd k) d l)
+      where
+      go : ∀ g d → suc d ≤ g → 1 ≤ g ∸ d
+      go (suc g) zero    _       = s≤s z≤n
+      go (suc g) (suc d) (s≤s l) = go g d l
+    pos-deg-t : ∀ d k → k < N → suc d ≤ gd k → 1 ≤ gd (iter t d k)
+    pos-deg-t d k kN l = subst (1 ≤_) (sym (snd (GK.iter-ok t tN dt d k kN (≤-trans (≤-suc (≤-refl d)) l)))) (go (gd k) d l)
+      where
+      go : ∀ g d → suc d ≤ g → 1 ≤ g ∸ d
+      go (suc g) zero    _       = s≤s z≤n
+      go (suc g) (suc d) (s≤s l) = go g d l
+
+    -- An element of positive degree goes to 0 under X and Z.
+    XZ0 : ∀ p → p < N → 1 ≤ gd p → (lin (unit p) X ≡ 0c) × (lin (unit p) Z ≡ 0c)
+    XZ0 p pN l = trans (lin-X p pN) (end-pos e⊥ (gd p) l) , trans (lin-Z p pN) (end-pos e⊤ (gd p) l)
+
+  -- Rows of ⟨k ⊗ i⟩ at depth d ≤ deg k.
+  row-mid : ∀ k (kN : k < N) d → d ≤ gd k →
+            (lin (fst (CD.A′.entK (k * 3 + 1) d)) Q , lin (snd (CD.A′.entK (k * 3 + 1) d)) Q) ≡ AS.entK (suc k) d
+  row-mid k kN d l =
+    trans (cong (λ r → (lin (fst r) Q , lin (snd r) Q)) (CD.Mid.claim k kN d (subst (d ≤_) (sym (gk k kN)) l)))
+      (trans (cong₂ _,_ (qF (M.P d) (M.pm d) (M.Am d) (fst (pmXZ d l)) (snd (pmXZ d l))) (qG (M.P d) (M.pp d) (M.Ap d) (fst (ppXZ d l)) (snd (ppXZ d l))))
+        (trans (cong₂ _,_ (trans (cong (λ v → lin v Y) (cong fst (GK.entK-glob d k kN l))) (lin-Y _ (fst (GK.iter-ok s sN ds d k kN l))))
+                          (trans (cong (λ v → lin v Y) (cong snd (GK.entK-glob d k kN l))) (lin-Y _ (fst (GK.iter-ok t tN dt d k kN l)))))
+          (sym (trans (GS.entK-glob d (suc k) (s≤s (≤-suc kN)) (subst (d ≤_) (sym (gdΣ-in k kN)) (≤-suc l)))
+                 (cong₂ _,_ (cong unit (iterΣ s (GData.s (Σg D)) sΣ-in sN ds d k kN l))
+                            (cong unit (iterΣ t (GData.t (Σg D)) tΣ-in tN dt d k kN l)))))))
+    where
+    module M = CD.Mid k kN
+    pmXZ : ∀ d → d ≤ gd k → (lin (M.pm d) X ≡ 0c) × (lin (M.pm d) Z ≡ 0c)
+    pmXZ zero    _ = lin-0 X , lin-0 Z
+    pmXZ (suc d) l =
+      let e = cong fst (GK.entK-glob d k kN (≤-trans (≤-suc (≤-refl d)) l))
+          sok = GK.iter-ok s sN ds d k kN (≤-trans (≤-suc (≤-refl d)) l)
+          xz = XZ0 _ (fst sok) (pos-deg d k kN l)
+      in trans (cong (λ v → lin v X) e) (fst xz) , trans (cong (λ v → lin v Z) e) (snd xz)
+    ppXZ : ∀ d → d ≤ gd k → (lin (M.pp d) X ≡ 0c) × (lin (M.pp d) Z ≡ 0c)
+    ppXZ zero    _ = lin-0 X , lin-0 Z
+    ppXZ (suc d) l =
+      let e = cong snd (GK.entK-glob d k kN (≤-trans (≤-suc (≤-refl d)) l))
+          tok = GK.iter-ok t tN dt d k kN (≤-trans (≤-suc (≤-refl d)) l)
+          xz = XZ0 _ (fst tok) (pos-deg-t d k kN l)
+      in trans (cong (λ v → lin v X) e) (fst xz) , trans (cong (λ v → lin v Z) e) (snd xz)
+
+  -- The bottom row of ⟨k ⊗ i⟩ goes to (⊥, ⊤).
+  row-bot : ∀ k (kN : k < N) →
+            (lin (fst (CD.A′.entK (k * 3 + 1) (suc (AK.deg k)))) Q , lin (snd (CD.A′.entK (k * 3 + 1) (suc (AK.deg k)))) Q)
+            ≡ AS.entK (suc k) (suc (gd k))
+  row-bot k kN =
+    trans (cong (λ r → (lin (fst r) Q , lin (snd r) Q)) M.top)
+      (trans (cong₂ _,_ lhs⁻ lhs⁺) (sym rhs))
+    where
+    module M = CD.Mid k kN
+    l = ≤-refl (gd k)
+    sok = GK.iter-ok s sN ds (gd k) k kN l
+    tok = GK.iter-ok t tN dt (gd k) k kN l
+    ∸-self : ∀ n → n ∸ n ≡ 0
+    ∸-self zero    = refl
+    ∸-self (suc n) = ∸-self n
+    s0 : gd (iter s (gd k) k) ≡ 0
+    s0 = trans (snd sok) (∸-self (gd k))
+    t0 : gd (iter t (gd k) k) ≡ 0
+    t0 = trans (snd tok) (∸-self (gd k))
+    am : M.Am (AK.deg k) ≡ unit (iter s (gd k) k)
+    am = trans (cong (λ d → fst (AK.entK k d)) (gk k kN)) (cong fst (GK.entK-glob (gd k) k kN l))
+    ap : M.Ap (AK.deg k) ≡ unit (iter t (gd k) k)
+    ap = trans (cong (λ d → snd (AK.entK k d)) (gk k kN)) (cong snd (GK.entK-glob (gd k) k kN l))
+    am′ : M.Am (suc (AK.deg k)) ≡ 0c
+    am′ = trans (cong (λ d → fst (AK.entK k (suc d))) (gk k kN)) (cong fst (GK.entK-bot k kN))
+    ap′ : M.Ap (suc (AK.deg k)) ≡ 0c
+    ap′ = trans (cong (λ d → snd (AK.entK k (suc d))) (gk k kN)) (cong snd (GK.entK-bot k kN))
+    lhs⁻ : lin (CD.F true (M.Am (AK.deg k)) (M.Am (suc (AK.deg k)))) Q ≡ e⊥
+    lhs⁻ = trans (lin-cyl gdeg _ _ _ X Y Z)
+             (trans (cong₂ (λ a b → (lin a X +c lin b Y) +c lin 0c Z) am am′)
+               (trans (cong₂ (λ p q → (p +c q) +c lin 0c Z) (trans (lin-X _ (fst sok)) (cong (end e⊥) s0)) (lin-0 Y))
+                 (trans (cong ((e⊥ +c 0c) +c_) (lin-0 Z)) (trans (+c-comm _ 0c) (trans (+c-id _) (trans (+c-comm _ 0c) (+c-id _)))))))
+    lhs⁺ : lin (CD.G true (M.Ap (AK.deg k)) (M.Ap (suc (AK.deg k)))) Q ≡ e⊤
+    lhs⁺ = trans (lin-cyl gdeg _ _ _ X Y Z)
+             (trans (cong₂ (λ a b → (lin 0c X +c lin b Y) +c lin a Z) ap ap′)
+               (trans (cong₂ (λ p q → (p +c q) +c lin (unit (iter t (gd k) k)) Z) (lin-0 X) (lin-0 Y))
+                 (trans (cong ((0c +c 0c) +c_) (trans (lin-Z _ (fst tok)) (cong (end e⊤) t0))) (trans (cong (_+c e⊤) (+c-id 0c)) (+c-id e⊤)))))
+    rhs : AS.entK (suc k) (suc (gd k)) ≡ (e⊥ , e⊤)
+    rhs = trans (GS.entK-glob (suc (gd k)) (suc k) (s≤s (≤-suc kN)) (subst (suc (gd k) ≤_) (sym (gdΣ-in k kN)) (≤-refl _)))
+            (cong₂ _,_
+              (cong unit (trans (iter-suc (GData.s (Σg D)) (gd k) (suc k))
+                 (trans (cong (GData.s (Σg D)) (iterΣ s (GData.s (Σg D)) sΣ-in sN ds (gd k) k kN l))
+                        (cong (λ h → if h ==ℕ 0 then 0 else suc (s (iter s (gd k) k))) s0))))
+              (cong unit (trans (iter-suc (GData.t (Σg D)) (gd k) (suc k))
+                 (trans (cong (GData.t (Σg D)) (iterΣ t (GData.t (Σg D)) tΣ-in tN dt (gd k) k kN l))
+                        (cong (λ h → if h ==ℕ 0 then suc N else suc (t (iter t (gd k) k))) t0)))))
+
+  private
+    which-1 : ∀ b → which b 1 ≡ Wi
+    which-1 true  = refl
+    which-1 false = refl
+
+    degC : ∀ k → k < N → CD.A′.deg (k * 3 + 1) ≡ suc (gd k)
+    degC k kN =
+      trans (at-pick 0 gdeg gdeg (mapV suc gdeg) gdeg k 1 kN (s≤s (s≤s z≤n)))
+        (trans (cong (λ w → pick w (g k) (at 0 (mapV suc gdeg) k) (g k)) (which-1 (even (g k))))
+               (trans (at-map-lt suc 0 0 gdeg k kN) (cong suc (gk k kN))))
+
+    ∸-le : ∀ g j → g ∸ j ≤ g
+    ∸-le zero    zero    = z≤n
+    ∸-le zero    (suc j) = z≤n
+    ∸-le (suc g) zero    = ≤-refl _
+    ∸-le (suc g) (suc j) = ≤-suc (∸-le g j)
+
+  -- ν(q) on rows of ⟨k ⊗ i⟩.
+  ent-mid : ∀ k (kN : k < N) j →
+            (lin (fst (CD.A′.ent (k * 3 + 1) j)) Q , lin (snd (CD.A′.ent (k * 3 + 1) j)) Q) ≡ AS.ent (suc k) j
+  ent-mid k kN j = go (CD.A′.deg (k * 3 + 1)) (AS.deg (suc k)) (degC k kN) (gΣk k kN) j
+    where
+    go : ∀ n n′ → n ≡ suc (gd k) → n′ ≡ suc (gd k) → ∀ j →
+         (lin (fst (if j <ℕ suc n then CD.A′.entK (k * 3 + 1) (n ∸ j) else (0c , 0c))) Q ,
+          lin (snd (if j <ℕ suc n then CD.A′.entK (k * 3 + 1) (n ∸ j) else (0c , 0c))) Q)
+         ≡ (if j <ℕ suc n′ then AS.entK (suc k) (n′ ∸ j) else (0c , 0c))
+    go n n′ refl refl zero = trans (cong (λ d → (lin (fst (CD.A′.entK (k * 3 + 1) (suc d))) Q , lin (snd (CD.A′.entK (k * 3 + 1) (suc d))) Q))
+                                          (sym (gk k kN)))
+                                   (row-bot k kN)
+    go n n′ refl refl (suc j) with j <ℕ suc (gd k)
+    ... | true  = row-mid k kN (gd k ∸ j) (∸-le (gd k) j)
+    ... | false = cong₂ _,_ (lin-0 Q) (lin-0 Q)
+
+  private
+    mapT-tabF : ∀ L′ {m} (f : Nat → Vec Nat (N * 3) × Vec Nat (N * 3)) j →
+                mapT q L′ (Atom.tabF B′ {m} f j) ≡ Atom.tabF S.basis {m} (λ i → lin (fst (f i)) Q , lin (snd (f i)) Q) j
+    mapT-tabF L′ {zero}  f j = refl
+    mapT-tabF L′ {suc m} f j = cong (_ ∷_) (mapT-tabF L′ {m} f (suc j))
+
+    tabF-cong : ∀ {m} (f g : Nat → Chn NS × Chn NS) → (∀ i → f i ≡ g i) → ∀ j →
+                Atom.tabF S.basis {m} f j ≡ Atom.tabF S.basis {m} g j
+    tabF-cong {zero}  f g h j = refl
+    tabF-cong {suc m} f g h j = cong₂ _∷_ (h j) (tabF-cong {m} f g h (suc j))
+
+  -- ν(q)⟨k ⊗ i⟩ = ⟨Σk⟩, as tables.
+  atom-mid : ∀ L k → k < N → mapT q L (Atom.atomT B′ L (k * 3 + 1)) ≡ Atom.atomT S.basis L (suc k)
+  atom-mid L k kN = trans (mapT-tabF L (CD.A′.ent (k * 3 + 1)) 0) (tabF-cong _ _ (ent-mid k kN) 0)

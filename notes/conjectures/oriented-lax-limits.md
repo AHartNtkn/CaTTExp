@@ -445,3 +445,21 @@ Replacing the oplax internal hom in (13) by the cartesian internal hom gives
 Gepner–Heine discuss this directly in §1.3: endpoint evaluation for the ordinary functor category is conservative, so its fixed-endpoint fibers are spaces. [arxiv.org](https://arxiv.org/html/2510.10504v2?utm_source=chatgpt.com)
 
 Equations (13) and (15) give the requested distinction. The oriented construction retains arbitrary higher cells of \(\operatorname{Hom}_C(b,a)\). For generic filler rules, this requires unrestricted comparisons on unmarked legs and coherent compatibility with localization on marked legs.
+
+## Internal progress (2026-11-18, while the problem is out)
+
+*This section is for the researcher too. It solves the strict analogue of Problems 1–3 and isolates what the (∞,ω) case needs. Details are in the project file `limits-metatheory.md` §1–§2.*
+
+**Strict case: solved.** Let 𝒦 be strict ω-Cat enriched over itself via the Ara–Maltsiniotis Gray tensor ⊗, with 𝒦(A, B) := ⟦A, B⟧ˡ, the right adjoint of A ⊗ –. Composition is in execution order.
+- **Lemma 1.** 𝒦(c, ⟦K, X⟧ʳ) ≅ ⟦K, 𝒦(c, X)⟧ʳ, where ⟦K, –⟧ʳ is the right adjoint of – ⊗ K. This is Yoneda plus associativity of ⊗.
+- **Lemma 2.** 𝒦(c, –) preserves limits.
+- **Theorem A.** For every finite computad Γ and every diagram D, build lim_Γ D by attaching generators one at a time: a pullback of ⟦Dᵏ, D b⟧ʳ → ⟦∂Dᵏ, D b⟧ʳ for each k-generator. Then postcomposition with the universal cone is an *isomorphism* 𝒦(c, lim_Γ D) ≅ Cone_Γ(c, D) of strict ω-categories, where Cone_Γ is the same iterated pullback computed in 𝒦(c, D–).
+  - Its n-cells give a map Dⁿ ⊗ Dᵏ → 𝒦(c, D b) at each k-generator: Gray-shaped transfors with no invertibility condition.
+- **Problem 1, strict.** Answered: no forced invertibility. For C with C(b, a) = (f →α g), C(a, b) = ∅ and trivial endomorphisms, the lax limit of a : 1 → C has a 1-cell β with F(β)_f = α, which is not invertible. F(β)_f is the Gray interchanger of β with the universal evaluation cell.
+- **Problem 2, strict.** Answered: every finite diagram has such a limit. For the arrow it is the Gray comma object X ×_Y ⟦D¹, Y⟧ʳ.
+- **Problem 3, strict.** Answered: the partially lax limit of 1 →a C ←b 1, with the b-cell an identity, is the fibre of ⟦D¹, C⟧ʳ over the pair of objects. That is the full hom ω-category, with non-invertible arrows.
+- **Colimits, strict.** Dually, 𝒦(X ⊗ K, c) ≅ ⟦K, 𝒦(X, c)⟧ˡ, and cocone transfors have the shape Dᵏ ⊗ Dⁿ: the diagram index comes first.
+
+**Where the cartesian argument breaks.** Under directed interchange, the forced-invertibility argument of `catt-lim-pseudo-vs-gray.md` fails at exactly one step, at every level: the invertibility of F(w)_g, the image of a cell w : u ⇒ u′ : c → L under the universal cone at a diagram generator g. In the oriented setting this is the top cell of D^{dim w − 1} ⊗ D^{dim g}, which is directed. All associator and unitor adjustments the argument uses stay invertible. The argument then proves only that every cone transfor is conjugate, by invertible cells, to a directed interchanger. That is what Theorem A exhibits.
+
+**What the (∞,ω) case seems to need.** The strict proof uses only Lemmas 1 and 2. Both are formal consequences of a biclosed associative tensor and the self-enrichment it induces. So for ∞Cat, viewed as an oriented category with Campion's biclosed Gray tensor (Gepner–Heine's main example), the same argument should give Problems 1–3, provided the lax limit is *defined* by iterated pullbacks of Gray cotensors along generator attachments. Whether this agrees with Gepner–Heine's oriented limits is the remaining question.

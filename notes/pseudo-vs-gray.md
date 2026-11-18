@@ -581,6 +581,7 @@ So each option makes one hom native and gets the other from an extra rule family
 - **Verified (R11).** As written, Mikhail's universal property forces cone-morphism cells to be invertible in a CaTT ambient, and all cells of dimension ≥ 3 once every level of `uni` is imposed. So P must use marked (pseudo) cone transfors, and hom and comma objects from limits have only invertible arrows.
 - **L.** The cone *shapes* are the same: a cone over Γ is the same context. The universal property becomes a Gray-enriched one, quantifying over native lax cells.
   - **[conj]** The `ctrf` shapes (transfors between cones) become native cells of the hom 𝒦(c, ·), so the `ctrf`/`star` machinery may shrink. A cone transfor would be a native cell between cones, with interchangers supplying the Gray squares.
+  - *Update (2026-11-18, `limits-metatheory.md` §1, §5):* semantically yes. In strict ωCat with the Gray tensor, n-transfors are exactly n-cells of 𝒦(c, lim) (Theorem A). Syntactically, `star`/`ctrf` shrink to one horn context and one `uni`, shared with P. L needs only operation-case cohs over two-factor wedges `ΣDᵃ ∨ ΣDᵇ`.
   - Gray-enriched weighted limits are standard in dimension 2 (Street; Lack) **[recall]**.
   - Gepner–Heine's oriented colimits are the matching (∞,ω) notion. PR #2 §2.4 already suspects CaTT_lim's limits are "oriented" in their sense. Under L that becomes the expected reading rather than a mismatch.
 - **Markings** (PR #2 §4.2) are needed by both.

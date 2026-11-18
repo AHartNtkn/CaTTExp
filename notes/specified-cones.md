@@ -308,6 +308,6 @@ Ledger IDs in `open-issues.md`: S1 = B20, S2 = B21, S3 = B18, S4 = B23, S5 = B22
 | S1 | B6 in dimension ≥ 2: ψ by transport along invertible spheres, and the cylinder homotopies; check via RC(n). Explicit dimension-2 case first. | this thread |
 | S2 | B6 Step B for graphs: depth-1 naturality of U and λ, giving φ↑ and ψ↑. | this thread |
 | S3 | Depth-1 lifts in `CylOf` (BMOSV / `relative-coherence.md` §4.2), giving Tr_k over 2-dimensional Γ in Agda. Coordinate with the Gray-contexts Agda thread, whose `GrayCtx` cylinder supports binary 1-composites. | this thread |
-| S4 | "Horns are cones" for graphs: compare `Tr₁(Γ)` with `Cone((D¹)^op ⊗ Γ)[π]` up to units, using Prop. 5.2. | this thread, with the limit-metatheory thread |
+| S4 | "Horns are cones" for graphs: compare `Tr₁(Γ)` with `Cone((D¹)^op ⊗ Γ)[π]` up to units, using Prop. 5.2. | this thread |
 | S5 | General Agda proof of Lemma 2.2 (typing of `binC` on glued trees), removing the dependence on per-shape checks. | this thread |
 | — | N^cone in dimension ≥ 3 (`conjectures/cone-over-coherences.md`), and N at depth ≥ 2 for nested whiskerings (part of C1). | C1 owner (naturality thread); this thread keeps attempting |

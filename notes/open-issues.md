@@ -65,7 +65,7 @@ Thread ids used below:
 | B20 | **B6 in dimension ≥ 2**: ψ by transport along invertible spheres, and the cylinder homotopies; explicit dim 2 first. | `specified-cones.md` §6.4 | in progress | CONE |
 | B21 | **B6 Step B for graphs**: depth-1 naturality of the unary operation U over D² and of the unitor λ, giving φ↑, ψ↑. | `specified-cones.md` §6.5 | in progress | CONE |
 | B22 | **General Agda proof that the specified cone is well typed** (typing of `binC` on glued trees for all m), replacing per-shape checks plus the paper locality argument. | `specified-cones.md` §7, §8 S5 | in progress | CONE |
-| B23 | **"Horns are cones" needs reorientation**: `Cone(D¹ ⊗ Γ)` gives transfors from the + cone to the − cone, the reverse of Tr₁. Restate with `(D¹)^op` and compare with Tr₁ for graphs (via Prop. 5.2). | `specified-cones.md` §4.4; `limits-metatheory.md` §5.3 | in progress | CONE with LMETA |
+| B23 | **"Horns are cones" needs reorientation**: `Cone(D¹ ⊗ Γ)` gives transfors from the + cone to the − cone, the reverse of Tr₁. Restate with `(D¹)^op` and compare with Tr₁ for graphs (via Prop. 5.2). | `specified-cones.md` §4.4; `limits-metatheory.md` §5.3 | in progress | CONE (former area LMETA) |
 
 ## C. Free objects and representables
 

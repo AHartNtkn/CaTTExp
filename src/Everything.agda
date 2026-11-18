@@ -170,3 +170,8 @@ import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune
 import CaTTExp.GrayCtx.Show
 import CaTTExp.GrayCtx.Checks
+import CaTTExp.Join.Quiver
+import CaTTExp.Join.Completion
+import CaTTExp.Join.Natural
+import CaTTExp.Join.NotNatural
+import CaTTExp.Join.Finite

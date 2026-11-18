@@ -27,7 +27,7 @@ Owners and status of the follow-up work these problems leave are tracked in `not
   - `weighted-as-partially-lax-omega.md`: proved by an external researcher in Loubaton's model, and verified here. A finite computad test is still open.
   - `gray-vs-cartesian.md`: proved by an external researcher, who completed the literature sketch, and verified here. C1″ holds without "locally full".
   - `catt-lim-pseudo-vs-gray.md`: answered by an external researcher, and verified here. The intended CaTT_lim forces pseudo cone morphisms, and even all cells of dimension ≥ 3 invertible. The corrected universal property is identified. The printed `ctrf` rules need repair.
-  - `free-infinity-gray-of-pasting-diagrams.md`: in the literature (Campion 2311.00205, Cor. 3.5; Chanavat 2603.22242, Thm 3.29).
+  - `free-infinity-gray-of-pasting-diagrams.md`: in the literature (Campion 2311.00205, Cor. 3.5, for Gray monoidality, and Campion's pasting theorem 2311.00200 for freeness; Chanavat 2603.22242, Thm 3.17 for freeness, Thm 3.29 for Gray monoidality).
   - `oriented-lax-limits.md`: answered by an external researcher, and verified here. In ∞Cat as an oriented category the unrestricted lax universal property is consistent, lax limits exist, and the corrected partially lax limit (coherently marked leg) is the full hom-object. Problem 3 as literally stated is false.
   - `steiner-support-determines-cells.md`: the main case follows from Hadzihasanovic's book (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18.
 - **Partly solved:**

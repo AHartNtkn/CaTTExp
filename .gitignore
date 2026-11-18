@@ -2,3 +2,4 @@
 _build/
 MAlonzo/
 .DS_Store
+__pycache__/

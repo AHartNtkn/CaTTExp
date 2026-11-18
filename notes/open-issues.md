@@ -164,13 +164,13 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 - D11 and D12: `gray-pasting-types.md` and `cartesian-closed-higher-coherence.md` were answered on 2026-11-18 and moved, with responses and verifications, to `conjectures/answered/`. Follow-up prompts, if wanted, are owed by CLOSED.
 - `outbox/directed-interchange-every-level.md` (E6, second round), **sent 2026-11-18**.
 - B14 and F6a: their prompts were answered on 2026-11-18 and moved, with the responses and verifications, to `conjectures/answered/`. The FT₃ prompt (2-dimensional bases) is written and sent. F6a needs no further prompt for now.
-- D2: the prompt `gray-contexts.md` was answered on 2026-11-18 and moved, with the response and verification, to `conjectures/answered/`. An updated prompt (F-boundary case of the lax square) is owed by NGC.
-- C1: the first prompt was answered on 2026-11-18 and moved, with the response and verification, to `conjectures/answered/`. An updated prompt for what remains is owed by NGC.
+- `outbox/gray-contexts.md` (D2, round 2: the F-boundary case of RC(3) for the lax square, the cube's hemisphere loops, RC(3)/RC(n) for acyclic contexts), **ready to send** (paste as is). Round 1 is in `conjectures/answered/`.
+- `outbox/naturality-arbitrary-depth.md` (C1, round 2: the same F-boundary case, a global choice of K in dimension 3, RC(n) on the cylinders), **ready to send** (paste as is). Round 1 is in `conjectures/answered/`.
 
 
 **Responses received, awaiting verification:** none. (`naturality-arbitrary-depth.md`, `strict-lax-interchange-at-every-level.md`, `gray-contexts.md`, `finite-fibration-test.md`, `lax-functor-refinement.md`, `gray-pasting-types.md` and `cartesian-closed-higher-coherence.md` were verified 2026-11-18.)
 
-**Ready to send** (self-contained, literature-checked): `outbox/gray-closed-scheduling.md` (D11 follow-up; paste as is). `outbox/dir-relative-coherence.md` (D12 follow-up; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` §6 (D3). C1 and D2 need updated prompts first (see above).
+**Ready to send** (self-contained, literature-checked): `outbox/gray-closed-scheduling.md` (D11 follow-up; paste as is). `outbox/dir-relative-coherence.md` (D12 follow-up; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` §6 (D3).
 
 ## Closed
 

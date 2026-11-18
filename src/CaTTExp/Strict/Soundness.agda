@@ -16,8 +16,8 @@
 -- One fact about Steiner complexes is taken as an explicit module
 -- parameter, not postulated:
 --
---  (B-bdry) a cell of ν(K(Θ)) in the hom from the first to the last
---      object, of dimension d − 1 (d = dim K(Θ)), whose downward-closed
+--  (B-bdry) a cell of ν(K(Θ)) in a hom x → y (in use, from the first
+--      to the last object), of dimension d − 1 (d = dim K(Θ)), whose downward-closed
 --      support (CaTTExp.Gray.Support's `down`) equals that of a boundary
 --      ∂^sg T of the total cell T, is that boundary. It is the instance
 --      of "support determines the cell" (Hadzihasanovic, arXiv

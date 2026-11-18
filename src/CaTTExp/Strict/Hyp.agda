@@ -183,7 +183,7 @@ BSupp = ∀ {Θ} → Θ ⊢ps → ∀ x y n X Y L M →
 
 -- The instance soundness uses: a cell with the same closed support as
 -- a boundary ∂^sg T of the total cell T (dimension d = n + 1) is that
--- boundary. (Q3a of notes/conjectures/outbox/steiner-support-formalizable.md.)
+-- boundary. (Q3a of notes/conjectures/answered/steiner-support-formalizable-2026-11-18.md.)
 BBdry : Set
 BBdry = ∀ {Θ} → Θ ⊢ps → ∀ x y n sg X L → suc n ≡ dimK (homs Θ) →
         IsCellL Θ x y n X → IsCellL Θ x y n (twT (homs Θ) sg n) →
@@ -196,7 +196,7 @@ bsupp→bbdry B {Θ} P x y n sg X L _ cX cT fX p =
   B P x y n X (twT (homs Θ) sg n) L (lowerT n (homs Θ) ++ chainT sg n (homs Θ)) cX cT fX (flat-twT (homs Θ) sg n) p
 
 -- The side condition compares downsets on generators (Support's
--- `sameDown`); B-supp is about the closures `down`. In a pasting
+-- `sameDown`); B-supp and B-bdry are about the closures `down`. In a pasting
 -- context the two agree on every comparison the side condition makes
 -- (CaTTExp.Gray.Graded.PsSide, from Gray.DownAgree), using that the
 -- context's types are variable towers.

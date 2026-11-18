@@ -579,3 +579,53 @@ The following references address the strict constructions and the variance:
 The second and third references are available in the [Gurski–Johnson–Osorno paper](https://nyjm.albany.edu/j/2021/27-40v.pdf) and [Warren’s paper](https://mawarren.net/papers/crmp1295.pdf). [nyjm.albany.edu](https://nyjm.albany.edu/j/2021/27-40v.pdf?utm_source=chatgpt.com)
 
 These supply constructions and structural criteria. I did not find in them a finite recognition theorem for arbitrary polygraph presentations of strict \(\omega\)-categorical fibrations.
+
+## Verification of the researcher response (2026-11-18)
+
+I checked every step against Loubaton, *Categorical theory of (∞,ω)-categories* (arXiv 2406.05425v2), and Hörmann, *Six functor formalisms and fibered multiderivators* (Def. 2.14, Prop. 2.16). I also found Gurski–Johnson–Osorno Def. 2.14 (2-opfibrations). Warren's paper was not checked.
+
+**Verdict: correct.** (Loc) is proved in every positive dimension. FT₂ is proved after one marking correction, and it is complete for weights valued in finitely generated free categories over a graph. Questions 3–5 are only partly answered, but a well-typed form of question 3 and its first obstruction are given.
+
+### V1. (Loc) (§1): correct
+
+- *The pushout (2) is the localisation.* `Map(D_k^t, X)` is the space `tX_k` of marked k-cells, and `Map(D_{k−1}^♭, X) = X_{k−1}`. Inserting identities `X_{k−1} → tX_k` is, by completeness, the inclusion of the equivalence k-cells, and those are components of `X_k` contained in `tX_k` because markings contain equivalences. So `Map(Q, X)` is the space of marked G with G(θ) an equivalence, as in (3)–(4). It holds for every k ≥ 1, not only k ≥ 2.
+- *q is initial and final.* Loubaton Def. 3.2.1.6: marked trivialisations form the smallest cocomplete class containing `I_n : D_{n+1}^t → D_n^♭`. Prop. 3.2.1.7: they are initial and final. q is a pushout of `I_{k−1}`, or for a set S, of a coproduct of them. Confirmed.
+- *Cones.* Lemma 4.2.3.15: `hom_{Hom_⊖(I,A)}(cst a, F) ≃ laxlim_I hom_A(a, F(−))`, natural in F and a. Lemma 4.2.3.23: for initial i, `laxlim f → laxlim f∘i` is an equivalence. Composing them gives (1) as an equivalence of whole (∞,ω)-categories of cones, natural in the apex. So the two marked lax limits exist together and agree, and F extends along q iff it inverts S. Confirmed.
+
+### V2. The marking correction (§2): correct
+
+With Γ a point and Ψ = (a →β b), where β is vertical and marked, all FT₂ clauses hold vacuously. But condition 2 of §1.1 fails for u = β and z = a: `E(b, a) = ∅` while `E(a, a) ×_B B = ∗`. Lifts of the marked base identity at a are also not unique, since 1_a and β are both marked. So FT₂ needs **μ = horizontals ∪ comparison 2-generators**, with vertical generators unmarked. This was the intended reading, but the prompt did not say it.
+
+### V3. Corrected FT₂ ⇒ left cartesian fibration (§3): correct
+
+- *Transport.* The type of `θ_{u,β} : β;u_{e′} ⇒ u_e;t_{u,β}` forces `t_{u,β} : T_u(e) → T_u(e′)`. Freeness of `C_b = Free(G_b)` and of the base gives `T : Free(Γ) → Cat`. No equations are needed. (In the (∞,ω) sense this uses that the free (∞,ω)-category on a graph is the free category, item 3 of §2.)
+- *E_T.* The composition formula (8) is the split Grothendieck construction, marked on `(w, 1)`. The three conditions of §1.1 are as stated; homs are discrete.
+- *Decomposition.* B^♯ is the colimit of points and `[1]^♯`, since every path is marked. Thm 3.2.3.15 (pullback along a *classified* left cartesian fibration preserves colimits) and Cor. 3.2.3.16 (`colim i*p → p` is an equivalence over a colimit base) give `E_T` as the colimit of fibres and edge pullbacks. The response's appeal to 3.2.3.15 needs E_T to be classified, and it is: it is the straightening of T.
+- *Mapping cylinders.* Example 4.1.2.6 presents a left cartesian fibration over [1] as the colimit `X(0)^♭ × [1]^♯ ⊔ X(1)^♭`, glued by the transport. Cor. 4.1.2.19 (`LCart([C,1]^♯)` ≃ arrows `X₀ × C → X₁`) gives the same with C = ∗. Confirmed.
+- *Cells.* Prop. 3.1.1.19: the marked cartesian product preserves colimits in each variable, so `C_b^♭ × [1]^♯` is built from `e × [1]^♯` and the squares `D₁^♭ × [1]^♯`. Prop. 3.1.1.38 is the general (equaliser/coequaliser) presentation of `[a × b^♯, 1]`. Its case n = 1, a = b = ∗ gives (10): two length-2 paths glued along their composite, i.e. a free *invertible* 2-cell. The cartesian square is not the Gray square, and that is why θ must be inverted. Under gluing by T_u the squares become (11).
+- *Marking.* In `D₁^♭ × [1]^♯` the 2-cell projects to identities in both factors, so it is marked. With the horizontals, this gives the marking H ∪ Θ.
+- *Assumption, flagged by the response:* `Free(Ψ)` is the (∞,ω) cellular colimit. Identifying it with the free CaTT (Grothendieck–Maltsiniotis) weak ω-category is the standing semantic gap (`semantics-gaps.md`), not a defect of this proof.
+
+### V4. Completeness (§4) and the checker consequence (15): correct
+
+- Functors between free categories send generators to paths, possibly empty, so (13) is an FT₂ datum with T = W. The counts (14) are right: one horizontal per (base edge, source-fibre vertex), and one θ per (base edge, source-fibre edge).
+- (15) follows from (Loc) with S = Θ (Fπ sends each θ to an identity), (12), and §1.3. **So a checker may use the finite, unlocalised marked computad (Ψ, H ∪ Θ) as the index of the weighted limit.**
+- Scope, as the response notes: this is completeness of a presentation scheme, not recognition of arbitrary presentations of the same weight.
+
+### V5. Base 2-generators (§5): correct, and it corrects question 3
+
+- *Typing.* Hörmann Def. 2.14 has 2-cells `ν : (α, f) ⇒ (β, g)` exactly when `β ∘ Ξ(ν) = α`, with 1-opfibred and 2-fibred projection. In diagrammatic order that is (18): `r = a_{α,e}; s`. The cartesian lift with target `τ_{v,e}` is `λ_{α,e} : τ_{u,e}; a_{α,e} ⇒ τ_{v,e}`. Question 3's "2-cells between the lifts u_e and u′_e" is not well typed in general: their targets `T_u(e)` and `T_v(e)` differ.
+- *(16)* is the naturality of a_α on generators, and it extends to paths by pasting.
+- *(19).* I typed both sides: each runs `β;τ_{u,e′};a_{α,e′} ⇒ τ_{v,e};T_v(β)`, and (16) identifies the middle on the left.
+- *The obstruction (20).* Counting λ_x and λ_y gives a 2-functor to ℤ² (θ's count 0, so inverting them is harmless). The two pastings have counts (1,0) and (0,1). A cell over an identity has count (0,0), since the λ-count is the α-count of the projection. So `(h⋆λ_y);θ_v` does not factor through `λ_x ⋆ k`, and that lift is not cartesian. **A 2-dimensional base needs 3-generators (or 3-dimensional relations) for (19).** The weak presentation theorem with these 3-generators is left open.
+
+### V6. Questions 4–5 (§6)
+
+No FT_n and no obstruction. The strict references are constructions, not recognition theorems. Nothing to check beyond the Hörmann and GJO citations (confirmed).
+
+### V7. Consequences for the project
+
+1. **B14 is closed for Cat-valued weights with free finitely generated values over a graph.** The test is FT₂ with vertical generators unmarked, it is complete for that class, and the checker may use the unlocalised computad (15).
+2. **(Loc) holds in all positive dimensions** (Loubaton 3.2.1.7, 4.2.3.15, 4.2.3.23). It applies wherever a marked index cell is sent to an equivalence. That includes `limits-metatheory.md`'s horn rules, and the "cartesian 2-cells" of the alternating pattern (§2 item 4).
+3. **Next case (FT₃ for 2-dimensional bases):** the data are (16) per base 2-generator, the lifts λ (17), and a 3-generator for each instance of (19). That this localised 3-computad presents the Grothendieck construction is the open step. It is the natural next prompt, owned by the owner of B14.
+4. Questions 4 (FT_n) and 5 (strict literature) remain open.

@@ -519,3 +519,62 @@ An arbitrary lift \(W\) need not have \(n\)-source parallel to \(P(\tau c_0)\), 
 Accordingly, (24) proves the reduction when RC is assumed in all dimensions through \(n\). It does **not** establish that the single fixed-dimensional assertion \(\mathrm{RC}(n)\) implies the needed lower-dimensional RC assertions.
 
 The dimension-3 unitor example remains unproved here. The unconditional result is the horizontal construction (9)–(13); the general construction (18)–(24) is conditional on the stated RC hypotheses.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** Smallest open case 1, the horizontal composite in dimension 2, is solved by an explicit term whose strict image is c ⋆ π(α ∗₀ β); this needs no RC hypothesis. Case 3 is answered too: RC(1), …, RC(n) for all join contexts Cone(Q; c) imply N^cone through dimension n, composition case included. Case 2 (the unitor, RC(3) for Cone(D²; c)) is not addressed.
+
+Step by step.
+
+1. **Setting.**
+   - a = p_x : c → x, u = p_f : b ⇒ af, v = p_g : b ⇒ ag, u′ = p_{f′} : p_z ⇒ br and v′ = p_{g′} : p_z ⇒ bs, where b = p_y, r = f′ and s = g′.
+   - M = p_α : v ⇛ u • aα and N = p_β : v′ ⇛ u′ • bβ, as in the cone formula.
+   - The chosen P(f ∗₀ r) = (p_r • p_f r) • κ(a, f, r) has type p_z ⇒ a(fr), and it is the item-1 construction with one parenthesisation.
+   - The required type (3) is correct.
+
+2. **The three auxiliary coherences.**
+   - **D** lives over the context with two vertical 2-cells and then a 1-cell. Both sides are full and of type e₁s ⇒ e₃s. ✓
+   - **X** lives over two horizontally composable 2-cells, with u : b ⇒ af and β : r ⇒ s. Both sides are full and of type br ⇒ (af)s. Substituting the composite af for a variable is ordinary substitution. ✓
+   - **J** lives over R = (c, x, a, y, f, g, α, z, r, s, β), which is the pasting context D¹ ∨ D² ∨ D². Its left side ((af)β • (aα)s) • K uses a, f, g, α, r, s and β. Its right side L • Z uses a, f, r, α, β and so also g and s. Both are full, both have type (af)r ⇒ a(gs), so this is the coherence case. ✓
+
+3. **The chain E₀ → … → E₈.** All nine 2-terms have type p_z ⇒ a(gs). Each H_i is well typed with the right endpoints:
+   - H₀ and H₁ are whiskerings of N and M ∗₀ s.
+   - H₂ is D whiskered; this step is needed because M ∗₀ s ends at (u • aα)s.
+   - H₃, H₅ and H₇ are reassociations, which are coherences over vertical 5-, 5- and 3-chains.
+   - H₄ is X whiskered, and H₆ is J whiskered.
+   
+   The composite F₇ has type (10). ✓
+
+4. **Strict image.**
+   - Coherence-case coherences over pasting contexts strictify to identities, so π(Π_hor) = π((N ∗₁ vs) ∗₂ (U ∗₁ (M ∗₀ s))). By interchange this is p_β ∗₁ (p_α ∗₀ g′). ✓
+   - I did not open Ara–Maltsiniotis Prop. 9.14. The identification with c ⋆ (α ∗₀ β) also follows directly. In the Steiner complex of the join, a cell is determined by its boundaries and its top chain. Here the top chain is p_α + p_β, the same as for c ⋆ (α ∗₀ β). The source is p_{g′} ∗₁ (p_g ∗₀ g′), which is the strict image of P(g ∗₀ g′). The target is u′ • bβ • us • (aα)s, which equals u′ • ur • (af)β • (aα)s by strict interchange, and that is the strict image of P(f ∗₀ f′) ∗₁ (p_x ∗₀ (α ∗₀ β)). ✓
+
+5. **The endomorphism property (§2).** Correct.
+   - A strong Steiner basis has a partial order with a < b when a ∈ supp ∂⁻b, and b < a when a ∈ supp ∂⁺b.
+   - Let z be a non-zero positive cycle and b a minimal element of its support. Pick a ∈ supp ∂⁻b, which exists by unitality.
+   - The negative contribution at a can only be cancelled by some b′ in the support of z with a ∈ supp ∂⁺b′. That gives b′ < a < b, contradicting minimality.
+   - So positive cycles vanish, and an endo-cell of ν(K) has top chain 0, hence is an identity.
+   - The strict free category on Cone(Q; c) is c ⋆ Q, which is strong Steiner because joins of strong Steiner complexes are strong Steiner (Ara–Maltsiniotis).
+   - **So every RC witness in a cone context strictifies to an identity.**
+
+6. **The transport lemma (§2).** Correct.
+   - At stage r, L_r and U_r = s_r W_{r−1} are parallel because the faces below r already agree, and likewise V_r and R_r. Their strict images agree because π L_r = s_r d = π U_r.
+   - RC(r) gives λ_r and ρ_r, whose strict images are identities by item 5.
+   - The mixed composite W_r = (λ_r ∗_r W_{r−1}) ∗_r ρ_r is literally well typed, has the prescribed r-faces and the same lower faces, and satisfies π W_r = d.
+   - No correction is ever inverted.
+
+7. **The strict lift (§3).** Correct.
+   - Every cell of the free strict category is an expression in generators, identities and binary composites.
+   - For d₁ ∗_k d₂, first adjust the lower faces of V by the lemma, then insert λ : t_k U → s_k V from RC(k). At k = 0 the gluing is literal, because 0-terms are variables.
+   - So RC(1..m−1) lifts every strict m-cell, and with m = n + 1 the transport lemma then gives Π(Q, B) with the right boundary and π Π(Q, B) = c ⋆ π(c₀).
+   - The response states the qualification itself: the reduction needs RC in all dimensions ≤ n, not RC(n) alone.
+
+**Consequences for B19 (N^cone).**
+- **Dimension 2 holds in full**, by two routes:
+  - by (24) with n = 2. RC(1) holds in every context, since parallel 1-terms with equal path pull back to the chain context. RC(2) is Theorem A (`../relative-coherence.md` §2, paper proof).
+  - unconditionally for the horizontal case, by the explicit term Π_hor.
+- **Dimension n now follows from RC(1..n) on the join contexts c ⋆ Q, composition case included.** The first open instance is RC(3) for Cone(Q; c), with smallest case Cone(D²; c), which is the unitor case.
+- **New tool:** every RC witness in a join context strictifies to an identity.
+- In c ⋆ Q the apex c is the unique source object, which is the kind of hypothesis that known item 10 of the gray-contexts prompt (RC(3) for the lax square) uses. So the active-column method is a candidate for RC(3) on cone contexts.
+
+Follow-up prompt: `outbox/cone-over-coherences-r2.md` (round 2, unsent).

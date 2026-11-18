@@ -1,6 +1,6 @@
 # Relative coherence in CaTT: dimension 2, and what it gives for Gray contexts and naturality
 
-*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r3.md`.*
+*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r4.md`.*
 
 Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (dimension ≤ 2 closed; rest reduced), D3, D3a, D4, C2 (progress).
 
@@ -351,7 +351,7 @@ Source: `conjectures/answered/gray-contexts-round2-2026-11-18.md`. Partial answe
 - **Proved (any context, no acyclicity):** parallel 3-terms that are both *literally suspended* coherences `coh_{ΣC,ΣA}[τ]` over vertical chains ΣC are connected by a 4-term. The proof desuspends to the hom computad, using Benjamin–Markakis hom freeness (relied on at statement level, not re-read), lifts to the path chain `C_w` by item 4 / Proposition P∞, and re-suspends.
 - **Refuted shortcut:** "equal global strict image ⇒ equal hom strict image". Over D₂, take `W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g`, `r = coh(A → W(A))`, `ℓ = coh(W(A) → A)` and `κ = r ∗₂ ℓ`. Then κ is not `1_A` in the hom strictification, yet `coh(κ → 1_A)` exists globally. The same example transports to the lax square S.
 - **Consistency with §6.1.** The steps r and ℓ re-parse the atom A into a whiskered expression `W(A)`. This is exactly the step the column-loop lemma excludes, because there atoms stay fixed syntactic pieces. So the column-loop lemma and D14 are unaffected, and the remaining gap is the same in both accounts.
-- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 prompt is `conjectures/outbox/gray-contexts-r3.md`.
+- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 answer (`conjectures/answered/gray-contexts-r3-2026-11-18.md`) shows this replacement is impossible in general (a hom-word length invariant), so normalisers must keep boundary-adjusting terms, as in §7.4; round 4 is `conjectures/outbox/gray-contexts-r4.md`.
 
 ### 7.4 RC(3) for the lax square: settled (C1 round 2, verified 2026-11-18)
 
@@ -373,7 +373,9 @@ This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whos
   - `H = coh_{P,A}[δ]` is a term of the retained one-column context R;
   - `H[η] ≡ T` holds by `refl`.
 
-  Stability is checked in Python on two instances: for u over `C_2` and σ into S, the H of `u[σ]` is literally the H of u.
+  - η is a well-typed substitution `R → S`. The generated module does not call `CheckWith.checkSub`; instead it witnesses this by the coherence `coh_{R, u → u}[η]`, where u is the unbiased composite of R. u is full, and the certified checker accepts the coherence only if every entry of η has the type R requires.
+
+  That each generated term has strict image F is guaranteed by the generator, not checked by Agda. Agda checks only the typing and the syntactic equalities above. Stability is checked in Python on two instances: for u over `C_2` and σ into S, the H of `u[σ]` is literally the H of u.
 - *The crux exchange.* Let α and β be the parallel 3-terms `(b ∗₁ F) ∗₂ c` and `c′ ∗₂ ((b′ ∗₁ F) ∗₁ 1_q)`. Here b and b′ are two different path 3-cells, which split `f⁻ | y↑` inside the chain `C(f⁻, y↑)`, and c, c′ are the right unitor of the vertical word, in which F is a whole 2-disc. The 4-term `α ⇛ β` is built as naturality (4), a coherence over `V(1,0)` with b substituted as a whole into the 3-disc, followed by the path 4-cell `b ⇛ b′` (Proposition P∞), whiskered into the column. The certified checker gives it exactly the type `α → β`. With the two sides swapped, it is rejected.
 - *The mixed law (11).* `Ω_R` is instantiated in S with `Z ↦ F` and with path 3-cells for M and N. It typechecks.
 - *Not checked:* the full recursive construction (normalisers ν, folding laws, evaluation fusion, `Λ_G`, cancellation) on arbitrary pairs. The checks cover its key lemma and its basic 4-cells on generated instances.
@@ -404,7 +406,7 @@ With these two changes, the rest of the lax-square proof goes through as far as 
 | `UnitorNaturality` | the left unitor's naturality 3-cell at depth 2 over the lax square (§6 "partial progress" case of the N file), via Theorem A | typechecks (~50 s) |
 | `ExchangeTwoBigons` | Theorem A with one exchange move (two side-by-side bigons) | typechecks (~3 min) |
 | `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | typechecks (5121 definitions, about 1 MB; 17 min and about 10 GB with `+RTS -M12G`) |
-| `LaxSquareRC3` | RC(3) for the lax square (§7.4–7.5): 43 active-column factorisations `γ = δ[η]` (2- and 3-dimensional arities, refl) with H typed over the retained column; an exchange 4-term between a path 3-cell and a column coherence carrying F; the mixed law Ω_R (11) instantiated in S; 19 generalised factorisations for the composable-pair cylinder | typechecks (~11 s); negative control (swapped fill type) rejected |
+| `LaxSquareRC3` | Checks toward RC(3) for the lax square (§7.4–7.5): 43 active-column factorisations `γ = δ[η]` (2- and 3-dimensional arities, refl) with H typed over the retained column and η a well-typed substitution `R → S` (witnessed by the coherence `coh_{R, u→u}[η]`, u the unbiased composite of R); an exchange 4-term between a path 3-cell and a column coherence carrying F; the mixed law Ω_R (11) instantiated in S; 19 generalised factorisations for the composable-pair cylinder | typechecks (~11 s); negative control (swapped fill type) rejected |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

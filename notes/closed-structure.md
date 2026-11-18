@@ -751,7 +751,25 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt (written by the verifying thread, unsent): `conjectures/outbox/gray-closed-scheduling-r2.md`.
+Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 is `conjectures/outbox/gray-closed-scheduling-r3.md` (unsent).
+
+**Round-2 results (verified).**
+1. **A weight model.** The integer-weight model 𝓜 is a Gray-monoidal biclosed 2-category.
+   - Objects are the integers. Hom-categories are (ℤ, ≤) when the target is at least the source.
+   - The weight rules are: w(p⊗u) = w(u) + p·δ(u); left currying subtracts p·δ; an interchanger adds δ(f)·δ(g).
+2. **The first test (Q1).** Both reverse homs are empty. The weights are 0 and 1 for t₁ and t₂, and −1 and 0 for the variant s, t. Every forward 2-cell uses exactly one interchange of the two generators.
+3. **Undirected components.** The undirected components of the hom-categories are exactly the arrows of the free ordinary biclosed monoidal category, via π₀ and freeness.
+4. **The component plus W does not classify 1-cells.**
+   - Take f : A → B, g : B → C and paddings L, R, and put m = L⊗gf⊗R.
+   - Currying g on the right gives a 2-cell u ⇒ m, and currying on the left gives m ⇒ v. The weights are −1, 0 and 1.
+   - So the side on which a generator is curried is data of the 1-cell.
+
+**Still open (D11):**
+- forward uniqueness, i.e. coherence of interchangers with a generator-free argument;
+- the 1-cells within a component;
+- thinness of the hom-categories.
+
+Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 
 ---
 

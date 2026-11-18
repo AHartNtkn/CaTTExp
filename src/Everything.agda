@@ -45,6 +45,7 @@ import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
+import CaTTExp.Lim.Horn
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
 import CaTTExp.Gray.Marks

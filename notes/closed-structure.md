@@ -723,7 +723,7 @@ The researcher findings on the closed part are listed after the next two bullets
 2. **The closed signature must be strictly natural only in the context variable.** Strict naturality of Φ : 𝒢(A⊗B, C) ≅ 𝒢(B, A\C) in the bound variable A forces (f⊗B′)(A⊗g) = (A′⊗g)(f⊗B). Then the two schedules are equal 1-cells. In the bound variable, naturality holds only up to the interchanger.
 3. **What remains** is a comparison theorem: for the biclosed Gray structure with signature 2, and 1-cells in βη-canonical nested form, the hom-categories should be products (over nesting levels) of the S(P)'s. Prompt: `conjectures/outbox/gray-closed-scheduling.md`.
 
-**Round-2 answer (verified, `conjectures/answered/gray-closed-scheduling-2026-11-18.md`): the comparison theorem cannot be indexed by βη-canonical closure trees.**
+**Answer to the follow-up prompt (verified, `conjectures/answered/gray-closed-scheduling-2026-11-18.md`): the comparison theorem cannot be indexed by βη-canonical closure trees.**
 - Closure trees are **not** invariants of connected components of hom-categories.
 - *Counterexample.* Take a : X → A, f : A⊗B → C and c = Λ_A f. The interchanger gives
 

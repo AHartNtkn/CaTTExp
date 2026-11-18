@@ -313,3 +313,61 @@ The Gray-categorical pasting theorem does not remove this issue as stated. Di Vi
 There is also a hypothesis distinction in §3 of the problem: **frame-acyclicity should not be identified with Steiner loop-freeness**. Hadzihasanovic’s Comment 8.3.5 relates Steiner loop-freeness to strong dimension-wise acyclicity, whereas Example 8.3.12 gives a frame-acyclic 3-atom that is not even dimension-wise acyclic. Thus a theorem for Steiner’s loop-free class would not, by that hypothesis alone, cover every frame-acyclic molecule. [arxiv.org](https://arxiv.org/html/2404.07273v2?utm_source=chatgpt.com)
 
 The explicit constructions established here are (4) and (7). The arbitrary \(F\)-boundary case of question 1, the hemisphere nullhomotopy required by question 2, and the general assertions in questions 3–4 remain unresolved by these arguments.
+
+## Verification of the researcher response (2026-11-18)
+
+Checked step by step, with the cited sources read in the arXiv PDFs (Benjamin–Markakis 2406.12127; Chanavat 2603.22242v2; Di Vittorio 2205.15486; Hadzihasanovic 2404.07273v2; Campion 2311.00200 and 2311.00205).
+
+**Verdict.** No question of §4 is solved, as the response says. Every claim it does make is correct. It gives two explicit families of 4-terms for question 1, a reduction for question 2, and four corrections to this prompt, two of which also correct our own notes.
+
+### V1. The support lemma (1): correct
+
+- *Citation.* Benjamin–Markakis, *Invertible cells in ω-categories*, Lemma 36 (p. 35), states exactly `supp_d(c) = ∅ ⇒ supp_{d−1}(src c) = supp_{d−1}(tgt c) = supp_{d−1}(c)`. The response says, correctly, that (1) is a strengthening it deduces, not the lemma.
+- *Proof.* Rechecked case by case. A d-term `coh_{P,a→b}[σ]` with `dim P < d` is a coherence (a composition over P has dimension `dim P`), so a and b cover `Var(P)` and the supports agree after substitution. With `dim P = d` it is a composition. Every variable of P of dimension < d−1 lies in `∂⁻P`. Every (d−1)-variable not in `∂⁻P` is the target of a d-variable, and following sources reaches `∂⁻P`. Each substituted d-variable has empty d-support, so by induction its total support equals that of its source. Hence every summand of `supp(c)` lies in `supp(a[σ])`. This is the same induction as BM's proof, carried for total support.
+- *Small gap, closable.* The proof uses without comment that a composition over P has dimension `dim P`. In Finster–Mimram's formulation that is a consequence, not a rule. It follows from (1) one dimension down, or by taking the BMS form of the rule. This does not affect the result.
+- The dependency-closed support (Var of a term together with its type) is the convention of the CaTT side conditions, so (1) applies to them directly.
+
+### V2. Strict classification (2): correct
+
+- The paths of the lax square are 4 vertices, 4 edges, and the two composites `p = f⁻ ∗₀ y↑` and `q = x↑ ∗₀ f⁺`: 10 in all. There are no paths of length 3.
+- `F : p ⇒ q` starts at `x⁻`, which has no incoming edge, and ends at `y⁺`, which has no outgoing edge, so F has only trivial whiskers. `F ∘ F` is undefined since `p ≠ q`. So the free strict 2-category has exactly the identities `1_w` and F as 2-cells.
+- S has no 3-variables, so parallel 3-terms have equal strict images automatically. Question 1 therefore really is: every pair of parallel 3-terms.
+
+### V3. The identity-boundary filler (4): correct
+
+- *F-count.* The F-count is a functor from the free strict 2-category to ℕ. A 2-term is F itself, a composition over a 2-dimensional arity (count = sum over all 2-variables of the arity), or a coherence over an arity of dimension ≤ 1 (no 2-inputs, count 0). So by induction, count 0 ⇔ F ∉ supp. Rechecked.
+- *(3).* Applying (1) to α (no 3-variables exist), and then to t (no F), gives `supp α = supp β = supp t = supp t′ = supp(s t)`. The support of a 1-term is the vertices and edges of its flattened path; in S paths have no repeated vertex, so `ι_w` is an injective renaming onto a sub-context closed under dependencies.
+- *Legality.* ᾱ and β̄ (types included) live over `C_w` and are full, and `C_w` is a pasting context. So `coh_{C_w, ᾱ→β̄}[ι_w]` is one instance of the coherence rule, with source α and target β. This includes the empty path, where `C_w` is a point.
+- **So question 1 is settled for every pair of parallel 3-terms whose 2-boundary is an identity.** Open: the F-boundary case.
+
+### V4. The arity reduction (7): correct
+
+- A 3-term over a 2-dimensional P is a coherence, and a 2-dimensional pasting context is a sequence of columns, each a vertical chain. That is the standard decomposition.
+- *Each θ is used once.* This is not "directly from the column description": it uses the count argument of V3 for each θ separately (full support ⇒ count ≥ 1), together with "count ≤ 1" in the free 2-category on P. With that line added, it holds.
+- *Exactly one θ goes to F.* The F-counts add up to 1, and every 2-cell of S is `1_w` or F. Correct. 0-terms are variables, so `σ(z_{j₀−1}) = x⁻` and `σ(z_{j₀}) = y⁺` hold syntactically. Then the side columns are forced over the single vertices `x⁻` and `y⁺`, at the level of terms, by V3 in dimensions 1 and 2.
+- *λ and τ.* I typechecked both on every variable. `λ[τ] = σ` holds syntactically: in the side columns τ renames x and y back to `x⁻` and `y⁺`.
+- *Legality.* ū and v̄ contain every central-column variable, so they are full over Q, and d is a coherence. c̄ and d are parallel and full over Q. So `R(c) = coh_{Q, c̄→d}[τ]` is legal, with source `c̄[τ] = coh_{P,u→v}[λ[τ]] = c`.
+- *The response's own assessment is right.* (7) only reduces the arity. It does not touch 3-terms whose arity is 3-dimensional, and it leaves `τ(ξ_k)` as arbitrary 2-terms.
+
+### V5. The hemisphere reduction (8): correct
+
+- H has no 3-variable, since X is the only one. So by (1), `supp H = supp A = Var(∂⁻U)`, and H is a weakening of a term over the 2-molecule `∂⁻U` (three faces).
+- More generally: **RC(3) for 3-loops with no 3-variables reduces to the support of the base 2-term.** This applies to any context, not only the cube.
+
+### V6. Corrections to the prompt: all confirmed
+
+1. **Chanavat Thm 2.52** reads "Let U be a frame-acyclic n-molecule which is not an atom. Then Sd U is contractible." The prompt omitted "not an atom".
+2. **Semantic freeness** is Chanavat **Thm 3.17** (Mol/X is a polygraph and a homotopy polygraph, for X with frame-acyclic molecules). **Thm 3.29** is the monoidality of `ι_s Mol/−` for the Gray product on complexes with acyclic atoms. The prompt §3 cited 3.29.
+   - *Not noticed by the response:* prompt §3 also cites "Campion arXiv 2311.00205, Cor. 3.5". 2311.00205 is Campion's *Gray tensor product of (∞,n)-categories*, and its Cor. 3.5 is the strong monoidality of `S → Cat^f_ω` for a monoidally suitable site, which is what Chanavat uses to prove 3.29. The freeness statement is Campion's pasting theorem, arXiv **2311.00200** (cited correctly in §6).
+3. **Frame-acyclic ≠ Steiner loop-free.** Hadzihasanovic, Comment 8.3.5: acyclicity and strong dimension-wise acyclicity correspond to Steiner's total loop-freeness and loop-freeness. Frame-acyclicity corresponds to Steiner's "split". Example 8.3.12 is a 3-atom that is frame-acyclic but not dimension-wise acyclic, so by Prop. 8.3.6 it is not Steiner loop-free. The prompt's "molecules are loop-free" (§3) and the two classes in question 3 should be kept apart. §3's motivation is not affected: the Eckmann–Hilton context needs a cell `a : id_x → id_x` with degenerate boundary, which no regular directed complex has. Which form of loop-freeness a proof of RC(3) can use for all frame-acyclic molecules is part of question 3.
+4. **Di Vittorio**, p. 3: the theorem covers only composites output by the pasting algorithm. "Every possible composite in the free Gray-category … arises in this way" is said to be beyond the scope of the paper, and the relation is called an open problem. Confirmed.
+
+The response's analysis of what Sd-contractibility does not give (items 1–4 of its §5) is also correct. Contractibility of the indexing poset only compares the chosen composites. Requirement 4 (control of arbitrary terms) is RC itself.
+
+### V7. Consequences for the project
+
+- **Question 1 now reduces to the F-boundary case**, and within it, coherence 3-terms over 2-dimensional arities reduce by (7) to coherences over a vertical chain Q. What is left: 3-terms with 3-dimensional composition arities, and compatibility of RC(2) comparisons for the 2-terms `τ(ξ_k)`.
+- **Question 2 reduces to RC(3) for X-free 3-loops over the negative hemisphere** (three faces).
+- **(1) is a general tool.** It is the total-support form of BM Lemma 36, usable for "N ⇐ RC" and wherever a filler must be built over the support of its boundary (`relative-coherence.md`, D3a).
+- **Corrections that also apply to our notes.** `gray-contexts-in-catt.md` and `relative-coherence.md` should cite Chanavat Thm 2.52 with "not an atom", Thm 3.17 for freeness, and Campion 2311.00200 for the pasting theorem. Their hypotheses should keep frame-acyclic and Steiner loop-free apart.
+- **Updated prompt.** It should start from the F-boundary case of the lax square, state V3–V5 as known, and make the citation fixes. It is owed by the owner of D2 (NGC).

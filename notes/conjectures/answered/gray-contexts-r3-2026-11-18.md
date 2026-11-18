@@ -390,4 +390,4 @@ Step by step.
 - The suspended-chain normal form is impossible: no class built from suspended chain coherences by ordinary compositions reaches F → W(F).
 - The hom-level reformulation is either trivially true or false.
 
-Neither affects RC(3) for the lax square, which item 10 proves with boundary-adjusting normalisers. Any normalisation proof of RC(3) on larger contexts must likewise include boundary-adjusting 3-terms. Follow-up prompt: `outbox/gray-contexts-r4.md` (round 4, unsent). It re-asks the current Q1–Q3 with these facts as known items.
+Neither affects RC(3) for the lax square, which item 10 proves with boundary-adjusting normalisers. Any normalisation proof of RC(3) on larger contexts must likewise include boundary-adjusting 3-terms. Follow-up prompt: `gray-contexts-r4-2026-11-18.md` (round 4, answered). It re-asks the current Q1–Q3 with these facts as known items.

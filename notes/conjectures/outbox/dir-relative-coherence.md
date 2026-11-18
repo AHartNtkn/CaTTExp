@@ -56,3 +56,419 @@ There is no fullness condition. With no n-dimensional hypotheses, every parallel
 - Uemura, *Normalization and coherence for ∞-type theories* (arXiv 2212.11764): free models are 0-truncated; no higher generators.
 - Ozornova–Rovelli–Walde (arXiv 2603.11005): the 1-core adjunction.
 - No relative coherence theorem for cartesian closed structure with non-invertible higher generators was found.
+
+# Researcher Response
+
+**Question 1 has a positive answer.** In fact, the Dir restriction is unnecessary for its uniqueness assertion:
+
+> **Relative coherence theorem for a primitive 2-generator.**  
+> Let \(\mathcal F\) be the free pseudo cartesian closed \((\infty,2)\)-category on atomic types, arbitrary primitive 1-generators, and one 2-generator
+> \[
+> \alpha:f\Rightarrow g
+> \]
+> between distinct primitive parallel 1-generators. For any \(U,V\) and \(u,v:U\to V\), the space
+> \[
+> \operatorname{Map}_{\mathcal F(U,V)}(u,v)
+> \]
+> of 2-cells is either empty or contractible.
+>
+> Consequently, any two existing parallel 2-cells have a contractible space of invertible 3-cells between them.
+
+The same argument applies when the 2-generators form disjoint finite directed chains of primitive 1-generators. It also proves existence for Dir-accepted 2-goals in those contexts.
+
+The qualification to your expected argument is that **\(\alpha\) need not appear once**. A long normal form can have any finite number \(m\) of addresses labelled by \(f\) or \(g\). Their transformations are governed by the poset \([1]^m\).
+
+Here is the proof. The higher semantic comparison is included because a calculation in a strict 2-category alone would not establish the requested contractibility.
+
+## 1. Reduction to \((\infty,2)\)
+
+Use the core adjunction from your background, with \(2\) in place of \(1\):
+\[
+I_2:\mathrm{Cat}_{(\infty,2)}
+\rightleftarrows
+\mathrm{Cat}_{(\infty,\omega)}:R_2.
+\]
+The \(2\)-core retains all cells through dimension \(2\), and only invertible cells above that dimension. The finite-dimensional adjunctions and this description of their cores are Ozornova–Rovelli–Walde, Theorem 2.20 and Lemma 2.23; here we use their extension to the higher-category convention in your question. [arxiv.org](https://arxiv.org/pdf/2603.11005?utm_source=chatgpt.com)
+
+The adjunction restricts to cartesian closed categories and cartesian closed functors. Indeed, applying the appropriate core to the hom-category equivalences defining products and exponentials preserves those equivalences. Moreover, whether the comparison maps of a functor are equivalences is unchanged by taking the core.
+
+If \(\Gamma\) has no generators above dimension \(2\), its interpretation spaces satisfy
+\[
+\operatorname{Int}_{\Gamma}(R_2\mathcal E)
+\simeq
+\operatorname{Int}_{\Gamma}(\mathcal E).
+\]
+Therefore, if \(\mathcal F\) is free in the \((\infty,2)\)-setting,
+\[
+\begin{aligned}
+\operatorname{Fun}_{\mathrm{ccc}}(I_2\mathcal F,\mathcal E)
+&\simeq
+\operatorname{Fun}_{\mathrm{ccc}}(\mathcal F,R_2\mathcal E)\\
+&\simeq
+\operatorname{Int}_{\Gamma}(R_2\mathcal E)\\
+&\simeq
+\operatorname{Int}_{\Gamma}(\mathcal E).
+\end{aligned}
+\]
+Here \(\operatorname{Fun}_{\mathrm{ccc}}\) denotes the space of cartesian closed functors and their equivalences.
+
+Thus the free \((\infty,\omega)\)-category in Question 1 is \(I_2\mathcal F\). In particular, its cells above dimension \(2\) are invertible. It remains to prove the displayed theorem about \(\mathcal F\).
+
+## 2. A normal-form lemma
+
+Fix the atomic types and the types of the primitive constants.
+
+For a family of sets \(X=(X_\sigma)\), where every label in \(X_\sigma\) denotes a primitive constant of a fixed simple type \(T_\sigma\), let \(F(X)\) be the ordinary free cartesian closed category on these constants.
+
+Use canonical **β-normal, η-long** forms, with de Bruijn indices for bound variables. The required uniqueness of these normal forms for products, terminal type, and function types is the standard normalization theorem; see Fiore, particularly Theorem 21 and the normalization conclusion preceding it. Primitive constants can be treated as additional free variables for this purpose. [arxiv.org](https://arxiv.org/pdf/2207.08777?utm_source=chatgpt.com)
+
+For fixed types \(U,V\), erase the constant labels from a long normal form of a morphism \(U\to V\), retaining:
+
+- the typed syntax tree;
+- all bound-variable indices;
+- the sort \(\sigma\) at each primitive-constant address.
+
+Write \(\mathcal N(U,V)\) for these trees, \(P_\nu\) for the finite set of constant addresses in \(\nu\), and \(\sigma(p)\) for the sort at address \(p\). There is then a bijection
+\[
+F(X)(U,V)
+\cong
+\coprod_{\nu\in\mathcal N(U,V)}
+\prod_{p\in P_\nu}X_{\sigma(p)}.
+\tag{1}
+\]
+
+**This bijection is natural in relabellings of constants.** Relabelling a primitive constant preserves the long-normal-form grammar: constants remain neutral heads of the same type. Consequently,
+\[
+\operatorname{nf}(h(t))=h(\operatorname{nf}(t)).
+\tag{2}
+\]
+
+The use of *long* forms matters. For example, identifying \(f\) and \(g\) can turn
+\[
+\langle\pi_1 f,\pi_2 g\rangle
+\]
+into an η-redex if one uses η-short forms. In a long form, it remains a pair with two distinct syntax-tree addresses. Relabelling changes their labels, not their addresses.
+
+Thus (1) is a coproduct of finite products, with **no quotient by permutations of addresses**.
+
+## 3. A simplicially enriched model
+
+Apply \(F\) degreewise to a family of simplicial sets \(X_\sigma\). Define a simplicially enriched category \(\mathcal K_X\), with formal simple types as its objects, by
+\[
+\mathcal K_X(U,V)_k=F(X_k)(U,V).
+\tag{3}
+\]
+
+Faces and degeneracies are induced by relabelling constants. Composition and identities are defined degreewise. Since the ordinary cartesian closed bijections are natural in relabelling, they give actual isomorphisms of simplicial sets:
+\[
+\begin{aligned}
+\mathcal K_X(T,1)&\cong\Delta^0,\\
+\mathcal K_X(T,U\times V)
+&\cong
+\mathcal K_X(T,U)\times\mathcal K_X(T,V),\\
+\mathcal K_X(T,V^U)
+&\cong
+\mathcal K_X(T\times U,V).
+\end{aligned}
+\tag{4}
+\]
+
+For the signature in Question 1, put \(f,g\) in one constant family and set
+\[
+X_*=\Delta^1,
+\]
+with vertices \(f,g\) and edge \(\alpha\). Give each other primitive generator its own constant family \(\Delta^0\). Denote the resulting enriched category by \(\mathcal K\).
+
+Equation (1) now gives
+\[
+\mathcal K(U,V)
+\cong
+\coprod_{\nu}(\Delta^1)^{m_\nu}
+\cong
+N\!\left(\coprod_\nu[1]^{m_\nu}\right),
+\tag{5}
+\]
+where \(m_\nu\) counts the addresses of the distinguished constant family.
+
+Every hom of \(\mathcal K\) is therefore the nerve of a poset. In particular, every hom is a quasicategory, so \(\mathcal K\) presents a cartesian closed \((\infty,2)\)-category.
+
+The remaining issue is to compare this model with the stipulated free **pseudo** cartesian closed category.
+
+## 4. The semantic comparison lemma
+
+We need the following fact.
+
+> **Lemma.** Every small pseudo cartesian closed \((\infty,2)\)-category is equivalent, as a cartesian closed \((\infty,2)\)-category, to a small category \(\mathcal D\) strictly enriched in simplicial sets, with quasicategory homs, whose product and exponential universal properties are actual isomorphisms of simplicial sets.
+
+“Actual isomorphisms” refers to the enriched universal properties in (4). The homs of \(\mathcal D\) can be arbitrary quasicategories.
+
+### Enriched presentation and presheaves
+
+Let
+\[
+\mathcal V=\mathbf{sSet}_{\mathrm{Joyal}}.
+\]
+Haugseng’s rectification theorem, Theorem 5.8, allows a \(\mathrm{Cat}_\infty\)-enriched category to be presented by a category strictly enriched in \(\mathcal V\). We can take that presentation \(\mathcal C\) to have fibrant, hence quasicategory, homs. [arxiv.org](https://arxiv.org/pdf/1312.3881?utm_source=chatgpt.com)
+
+The needed model structures are available: the Joyal model category is excellent, and enriched diagram categories have injective model structures which remain enriched model categories. These are HTT Example A.3.2.23, Proposition A.3.3.2, and Remark A.3.3.4. [math.ias.edu](https://www.math.ias.edu/~lurie/papers/HTT.pdf?utm_source=chatgpt.com)
+
+Set
+\[
+\mathcal M=[\mathcal C^{\mathrm{op}},\mathcal V]
+\]
+with its enriched injective model structure. Cofibrations are pointwise monomorphisms; weak equivalences are pointwise categorical equivalences. In particular, every presheaf is cofibrant.
+
+The enriched presheaf category is cartesian closed. Products are pointwise, and its exponential is given by
+\[
+(G^F)(c)
+=
+\underline{\operatorname{Hom}}_{\mathcal M}(yc\times F,G).
+\tag{6}
+\]
+Enriched co-Yoneda gives the actual isomorphism
+\[
+\underline{\operatorname{Hom}}_{\mathcal M}(P,G^F)
+\cong
+\underline{\operatorname{Hom}}_{\mathcal M}(P\times F,G).
+\tag{7}
+\]
+
+The cartesian pushout-product axiom holds pointwise. Because every presheaf is cofibrant, the injectively fibrant presheaves are closed under the actual terminal presheaf, products, and exponentials. Their enriched homs are quasicategories.
+
+### An enriched fibrant Yoneda functor
+
+We need a fibrant replacement of Yoneda that remains an enriched functor. Construct it in a diagram category.
+
+Regard
+\[
+y:\mathcal C\longrightarrow\mathcal M
+\]
+as an enriched diagram and take an injective fibrant replacement
+\[
+i:y\longrightarrow j
+\]
+in \([\mathcal C,\mathcal M]\). Then \(j\) is an actual enriched functor, each \(jc\) is injectively fibrant, and each
+\[
+i_c:yc\longrightarrow jc
+\]
+is a trivial cofibration. Injectively fibrant enriched diagrams are pointwise fibrant by HTT Remark A.3.3.5. [math.ias.edu](https://www.math.ias.edu/~lurie/papers/HTT.pdf?utm_source=chatgpt.com)
+
+For \(a,b\in\mathcal C\), restriction along \(i_a\) gives a categorical equivalence
+\[
+\underline{\operatorname{Hom}}_{\mathcal M}(ja,jb)
+\longrightarrow
+\underline{\operatorname{Hom}}_{\mathcal M}(ya,jb)
+\cong jb(a).
+\tag{8}
+\]
+The composite
+\[
+\mathcal C(a,b)
+\longrightarrow
+\underline{\operatorname{Hom}}_{\mathcal M}(ja,jb)
+\longrightarrow
+jb(a)
+\]
+is \(i_b(a)\), by naturality and enriched Yoneda. It is a categorical equivalence. Two-out-of-three proves that \(j\) is fully faithful as an \((\infty,2)\)-functor.
+
+### Preservation of cartesian closed structure
+
+The product comparison
+\[
+j(A\times B)\longrightarrow jA\times jB
+\tag{9}
+\]
+is a weak equivalence: before fibrant replacement this is precisely the product universal property, evaluated at each \(c\), and replacement preserves that conclusion. The terminal comparison is handled identically.
+
+For exponentials, use evaluation and a homotopy inverse of the product comparison to construct
+\[
+\theta:j(B^A)\longrightarrow(jB)^{jA}.
+\tag{10}
+\]
+Mapping out of \(jX\) identifies the effect of \(\theta\), up to equivalence, with
+\[
+\begin{aligned}
+\underline{\operatorname{Hom}}_{\mathcal M}(jX,j(B^A))
+&\simeq \mathcal C(X,B^A)\\
+&\simeq \mathcal C(X\times A,B)\\
+&\simeq
+\underline{\operatorname{Hom}}_{\mathcal M}(jX\times jA,jB)\\
+&\cong
+\underline{\operatorname{Hom}}_{\mathcal M}(jX,(jB)^{jA}).
+\end{aligned}
+\tag{11}
+\]
+
+These tests detect weak equivalences between fibrant presheaves. Indeed, for fibrant \(Q\),
+\[
+\underline{\operatorname{Hom}}_{\mathcal M}(jX,Q)
+\simeq
+\underline{\operatorname{Hom}}_{\mathcal M}(yX,Q)
+\cong Q(X).
+\tag{12}
+\]
+Thus (11) implies that \(\theta\) is a pointwise categorical equivalence.
+
+Finally, take the small full enriched subcategory generated by the \(jX\) under the actual terminal object, products, and exponentials. Call it \(\mathcal D\). Every newly added object is equivalent to some \(jX\), by (9)–(10). Hence
+\[
+\mathcal C\simeq\mathcal D
+\]
+is a cartesian closed equivalence, and \(\mathcal D\) has the required strict enriched universal properties. This proves the lemma.
+
+## 5. Interpreting the simplicial model
+
+Let \(\mathcal D\) be as in the lemma, equipped with an interpretation of the generating signature.
+
+The interpreted 2-generator is exactly a simplicial map
+\[
+\Delta^1\longrightarrow\mathcal D(A,B).
+\tag{13}
+\]
+
+For every simplicial degree \(k\), the sets
+\[
+\mathcal D(U,V)_k
+\]
+form the hom-sets of an ordinary category \(\mathcal D_k\), with the same objects as \(\mathcal D\). Evaluating the enriched universal-property isomorphisms in degree \(k\) makes \(\mathcal D_k\) an ordinary cartesian closed category.
+
+The ordinary free-syntax interpretation therefore gives
+\[
+F(X_k)\longrightarrow\mathcal D_k.
+\]
+Uniqueness of interpretation with the chosen cartesian closed operations makes these functors commute with faces and degeneracies. They assemble into an enriched cartesian closed functor
+\[
+s:\mathcal K\longrightarrow\mathcal D.
+\tag{14}
+\]
+
+This uses the entire simplicial generator \(\Delta^1\). It does not require a choice of a strictly associative composition operation on the arrows of an arbitrary hom quasicategory.
+
+## 6. The retract proves contractibility
+
+Let \(\mathcal F\) be the free pseudo cartesian closed \((\infty,2)\)-category on the signature.
+
+Since \(\mathcal K\) interprets that signature, freeness gives
+\[
+q:\mathcal F\longrightarrow\mathcal K.
+\tag{15}
+\]
+
+Apply the semantic lemma to obtain a cartesian closed equivalence
+\[
+e:\mathcal F\simeq\mathcal D.
+\]
+Interpret the generators of \(\mathcal K\) using their images under \(e\), obtaining \(s\) as in (14). The functors \(e\) and \(sq\) induce the same interpretation of the generating signature. The higher universal property of \(\mathcal F\) therefore gives
+\[
+e\simeq sq.
+\tag{16}
+\]
+
+Put \(r=e^{-1}s\). Then
+\[
+rq\simeq\operatorname{id}_{\mathcal F}.
+\tag{17}
+\]
+
+Fix \(u,v:U\to V\). After transporting endpoints along (17), the space
+\[
+X=\operatorname{Map}_{\mathcal F(U,V)}(u,v)
+\]
+is a homotopy retract of
+\[
+Y=
+\operatorname{Map}_{\mathcal K(qU,qV)}(qu,qv).
+\tag{18}
+\]
+By (5), \(Y\) is empty or contractible. Consequently, \(X\) is empty or contractible.
+
+The retract also transfers existence: if \(Y\) is nonempty, apply \(r\) to a 2-cell and transport its endpoints using (17).
+
+Now suppose
+\[
+p,q:u\Rightarrow v
+\]
+are the two 2-terms of the proposed 3-goal. They are points of \(X\), so \(X\) is nonempty and contractible. Therefore
+\[
+\operatorname{Fill}_3(p,q)
+\simeq
+\operatorname{Path}_X(p,q)
+\simeq *.
+\tag{19}
+\]
+The same applies to all iterated higher comparison spaces.
+
+This proves Question 1.
+
+It also gives an explicit existence criterion for arbitrary 1-terms in the single-generator context: their long normal forms must have the same typed tree after erasing the distinction between \(f\) and \(g\), and at every distinguished address their labels must be ordered by
+\[
+f<g.
+\]
+When this condition holds, the 2-filler space is contractible; otherwise it is empty.
+
+## 7. Directed chains and Dir-accepted 2-goals
+
+Suppose the 2-generators form disjoint chains
+\[
+f_0\Rightarrow f_1\Rightarrow\cdots\Rightarrow f_r
+\]
+of primitive parallel 1-generators.
+
+Replace the corresponding constant family \(\Delta^1\) by
+\[
+N[r]=\Delta^r.
+\]
+The normal-form calculation now makes each hom a coproduct of nerves of finite products of chains. It is again a poset nerve.
+
+The semantic interpretation step still works. An interpreted chain gives a map from the spine of \(\Delta^r\) into a hom quasicategory, and this extends to \(\Delta^r\), since the spine inclusion is inner anodyne. [kerodon.net](https://kerodon.net/tag/0218?utm_source=chatgpt.com)
+
+Thus the retract proves the same empty-or-contractible assertion for 2-filler spaces.
+
+For a **Dir-accepted 2-goal**, existence follows as well:
+
+1. Collapse each chain to a single primitive constant, retaining isolated generators.
+2. The source context, which retains chain roots, and the target context, which retains chain sinks, become renamed copies of this collapsed 1-dimensional context.
+3. By the pasting-type condition and Mimram’s Theorem 15, the allowed source and target terms become βη-equal after this collapse.
+4. Naturality of long normalization implies that their normal forms have the same typed tree. At each constant address, the labels are either the root and sink of the same chain, or the same isolated generator.
+5. The corresponding product of chain posets has a unique arrow from the source tuple to the target tuple.
+
+The retract transfers that arrow to the free pseudo cartesian closed category. Its entire filler space is contractible.
+
+Hence the argument establishes the part of Question 2 where all generating cells have dimension at most \(2\): the accepted 2-goals are fillable, and all subsequent parallel comparisons have contractible filler spaces.
+
+## 8. The duplication example
+
+Your proposed obstruction gives the two composites
+\[
+\begin{aligned}
+\rho:\quad
+\langle f,f\rangle
+&\xRightarrow{\langle\alpha,1_f\rangle}
+\langle g,f\rangle
+\xRightarrow{\langle1_g,\alpha\rangle}
+\langle g,g\rangle,\\[2mm]
+\sigma:\quad
+\langle f,f\rangle
+&\xRightarrow{\langle1_f,\alpha\rangle}
+\langle f,g\rangle
+\xRightarrow{\langle\alpha,1_g\rangle}
+\langle g,g\rangle.
+\end{aligned}
+\]
+
+In the normal-form model these are two factorizations of the unique arrow
+\[
+(0,0)\longrightarrow(1,1)
+\]
+in \([1]^2\). Equation (19) proves that the space of invertible 3-cells
+\[
+\rho\Rrightarrow\sigma
+\]
+is contractible.
+
+More generally, \(m\) independently labelled addresses give \([1]^m\). Duplication supplies additional coordinates; omission discards coordinates. Neither creates an ambiguity between parallel 2-cells.
+
+## Scope
+
+This proves **Question 1**, and proves the stated extension to contexts whose noninvertible generators are all 2-dimensional and form disjoint chains. **Question 2 with generators in dimension \(3\) or higher remains unresolved by this argument.**
+
+A related published construction is Hirschowitz’s free strict cartesian closed 2-category on a 2-signature, presented using proof terms modulo permutation equivalence; its free/forgetful adjunction is Theorem 7.11. The contractibility assertion here additionally uses the enriched presheaf comparison and retract above. [arxiv.org](https://arxiv.org/pdf/1307.6318?utm_source=chatgpt.com)

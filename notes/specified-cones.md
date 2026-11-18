@@ -204,6 +204,26 @@ which is exactly the **diagram-index-first** colimit row of `limits-metatheory.m
 
 That note conjectures `Tr_n(Γ) = Cone(Dⁿ ⊗ Γ)[π]` up to unit coherences. Already for Γ a point and n = 1, the cone over `D¹ ⊗ x = (x⁻ —x↑→ x⁺)` has `p_{x↑} : p_{x⁺} ⇒ p_{x⁻} ∗₀ x↑`, which collapses to `p_{x⁺} ⇒ p_{x⁻} ∗₀ id_x`. That is a transfor from the **+** cone to the **−** cone, the reverse of Tr₁'s `m_x : p⁻ ⇒ p⁺`. The reason is that lax cone cells over a 1-cell run from the target's projection to the source's. So the statement needs `(D¹)^op`, or the reversed transfor direction, in the first factor. Since `D¹ ⊗ Γ` for 1-dimensional Γ has composite boundaries of dimension 1 only, its cone exists by Prop. 5.2. A full syntactic comparison for graphs is therefore within reach; it is follow-up S4.
 
+**The arrow, worked out (B23).** Let `J = (+ —j→ −)` and let `J ⊗ Γ` have, for each variable t of Γ, copies t⁺, t⁻ and a cell t↑ = j ⊗ t. With the Steiner sign `∂(j ⊗ f) = ∂j ⊗ f − j ⊗ ∂f` (`conventions.md` §2, Steiner Example 3.10; so `∂⁺(j ⊗ f) = (∂⁺j ⊗ f) ∪ (j ⊗ ∂⁻f)`), for `f : x → y` this gives
+
+```
+x↑ : x⁺ → x⁻        f↑ : f⁺ ∗₀ y↑ ⇒ x↑ ∗₀ f⁻.
+```
+
+The cone over this context exists by Prop. 5.2: its only composite boundaries are 1-dimensional. Its cells are
+
+```
+p_{x↑} : p_{x⁻} ⇒ p_{x⁺} ∗₀ x↑
+p_{f↑} : P(x↑ ∗₀ f⁻) ⇛ P(f⁺ ∗₀ y↑) ∗₁ (p_{x⁺} ∗₀ f↑),
+```
+
+with `P(a ∗₀ b) = (p_b ∗₁ (p_a ∗₀ b)) ∗₁ κ`. Now substitute π: `t^± ↦ t`, `x↑ ↦ id_x`, and `f↑ ↦` the unit coherence `f ∗₀ id_y ⇒ id_x ∗₀ f`. Up to unitors and the κ's:
+
+- `p_{x↑}` becomes `p⁻_x ⇒ p⁺_x ∗₀ id_x ≅ p⁺_x`, matching `m_x : p⁻_x ⇒ p⁺_x`;
+- `p_{f↑}` becomes `p⁻_f ∗₁ (m_x ∗₀ f) ⇛ m_y ∗₁ p⁺_f`, matching `m_f`.
+
+With the other orientation of f↑ (that is, `D¹ ⊗ Γ`), the 2-cell runs the other way. So the corrected statement is `Tr₁(Γ) ≃ Cone(J ⊗ Γ; c)[π]` with J pointing from the + end to the − end, which is `(D¹)^op ⊗ Γ`. For graphs the generators correspond one to one, and their types agree up to the unitors and κ's. Turning this into an equivalence of contexts needs comparison 3-cells between parallel 2-terms with equal strict images. Theorem A of `relative-coherence.md` (RC(2) in every context) supplies those. The two-sided homotopies are not written out; that is B23's remainder.
+
 ---
 
 ## 5. Cones over arbitrary contexts

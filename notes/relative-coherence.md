@@ -373,7 +373,7 @@ This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whos
   - `H = coh_{P,A}[δ]` is a term of the retained one-column context R;
   - `H[η] ≡ T` holds by `refl`.
 
-  - η is a well-typed substitution `R → S`. Agda has no substitution checker, so this is witnessed by the coherence `coh_{R, u → u}[η]`, where u is the unbiased composite of R. u is full, and the certified checker accepts the coherence only if every entry of η has the type R requires.
+  - η is a well-typed substitution `R → S`. The generated module does not call `CheckWith.checkSub`; instead it witnesses this by the coherence `coh_{R, u → u}[η]`, where u is the unbiased composite of R. u is full, and the certified checker accepts the coherence only if every entry of η has the type R requires.
 
   That each generated term has strict image F is guaranteed by the generator, not checked by Agda. Agda checks only the typing and the syntactic equalities above. Stability is checked in Python on two instances: for u over `C_2` and σ into S, the H of `u[σ]` is literally the H of u.
 - *The crux exchange.* Let α and β be the parallel 3-terms `(b ∗₁ F) ∗₂ c` and `c′ ∗₂ ((b′ ∗₁ F) ∗₁ 1_q)`. Here b and b′ are two different path 3-cells, which split `f⁻ | y↑` inside the chain `C(f⁻, y↑)`, and c, c′ are the right unitor of the vertical word, in which F is a whole 2-disc. The 4-term `α ⇛ β` is built as naturality (4), a coherence over `V(1,0)` with b substituted as a whole into the 3-disc, followed by the path 4-cell `b ⇛ b′` (Proposition P∞), whiskered into the column. The certified checker gives it exactly the type `α → β`. With the two sides swapped, it is rejected.

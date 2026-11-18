@@ -28,6 +28,12 @@ For a finite computad Γ, write `Free(Γ)` for the free (∞,ω)-category it gen
   - The induction needs a "transport along invertible boundary" operation that is compatible with substitution. Benjamin–Markakis ([2406.12127](https://arxiv.org/abs/2406.12127)) develop the needed invertibility calculus.
   - **The stall** is checking that the cocone rules actually produce the whiskered types claimed. This needs the precise dual of Mikhail's σCond/τCond.
 
+### Literature search (2026-11-18)
+- **The (∞,1) case is known.** Gepner–Haugseng–Nikolaus, *Lax colimits and free fibrations in ∞-categories* (Documenta Math.), Cor. 7.5: "Any ∞-category C is the oplax colimit of the constant functor C → Cat∞ with value ∗."
+  - Their Thm 1.1 identifies the lax colimit of a functor with its (co)cartesian unstraightening.
+  - So with the oplax convention there is no opposite in dimension 1.
+- **Open:** the (∞,ω) statement and the syntactic form. Loubaton's lax Grothendieck construction (Thm 4.1.4.2 of [2406.05425](https://arxiv.org/abs/2406.05425)) is the natural tool for extending the GHN argument.
+
 ## Why it matters
 
 If it holds, "the free category on a finite presentation" does not need its own rule in a type theory with lax colimits: it is the lax colimit of the point. Its defining universal property (maps out are presentation-shaped families of elements) is then a special case of the colimit's universal property.

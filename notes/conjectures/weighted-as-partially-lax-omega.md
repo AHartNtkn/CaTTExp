@@ -26,6 +26,11 @@ Let 𝒞 be an (∞,ω)-category. Let `W : I → (∞,ω)Cat` be a weight and `F
 - Dimension ω: Loubaton's lax Grothendieck construction appears to be the main ingredient. The question is whether his partial-laxness parameter matches marked cones.
 - **Side result, settled in the design note.** For marked cones, no closure condition on the marking is needed. Cone cells over composites of marked generators, over identities and over coherences are composites of invertible cells, hence invertible.
 
+### Literature search (2026-11-18)
+- **Known in dimension 2:** Abellán–Haugseng–Martini, as above.
+- *The higher algebra of weighted colimits* ([arXiv 2406.08925](https://arxiv.org/abs/2406.08925)) treats (op)lax colimits of (∞,n)-categories, for all n, as weighted colimits (its Cor. 1.4). That is the easy direction. It does not express general weighted colimits as partially lax ones.
+- **Open for n > 2 and for ω:** the converse (weighted ⇒ partially lax over the Grothendieck construction). Nothing found.
+
 ## Why it matters
 
 If true, a type theory with lax limits and a per-variable "this cell must be invertible" flag gets all weighted limits with no further rule.

@@ -284,16 +284,39 @@ _ = refl
 _ : nth (var 0) (snd Horn₁inst) 12 ≡ var 12
 _ = refl
 
--- Marked declarations of Horn₁: under P, every comparison over a
--- positive-dimensional generator; under L, those over the marked
--- generators μ (f is level 2). Horn₀ has no comparison variables.
+-- Marked declarations of Horn₁, computed from Tr₁'s data through inst.
+-- Ctrf.topLvls lists Tr₁'s comparison variable over each generator of
+-- the diagram (in order x, y, f); its image in Horn₁ is a variable.
+private
+  Tr₁data : Ctrf
+  Tr₁data = from-just (ctrf 1 Arr)
+
+  imgVar : Nat → List Nat
+  imgVar l with nth (var 0) (snd Horn₁inst) l
+  ... | var j = j ∷ []
+  ... | _     = []
+
+  zipIx : Nat → List Nat → List (Nat × Nat)
+  zipIx i []       = []
+  zipIx i (l ∷ ls) = (i , l) ∷ zipIx (suc i) ls
+
+-- P: Cones' marked list (comparisons over positive-dimensional
+-- generators), carried to Horn₁.
 marksP₁ : List Nat
-marksP₁ = 12 ∷ []
+marksP₁ = concatMap imgVar (Ctrf.marked Tr₁data)
 
+-- L: the comparisons over the marked generators μ, carried to Horn₁.
 marksL₁ : List Nat → List Nat
-marksL₁ μ = if elem 2 μ then marksP₁ else []
+marksL₁ μ = concatMap (λ gl → if elem (fst gl) μ then imgVar (snd gl) else [])
+                      (zipIx 0 (Ctrf.topLvls Tr₁data))
 
+_ : marksP₁ ≡ (12 ∷ [])
+_ = refl
+-- f unmarked: nothing to certify; f marked: exactly P's marks.
 _ : (marksL₁ [] ∷ marksL₁ (2 ∷ []) ∷ []) ≡ ([] ∷ marksP₁ ∷ [])
+_ = refl
+-- Marking objects too marks their comparisons (coherent marking).
+_ : marksL₁ (0 ∷ 1 ∷ 2 ∷ []) ≡ (10 ∷ 11 ∷ 12 ∷ [])
 _ = refl
 
 -- Sizes: the boundary variables were substituted, the others kept.

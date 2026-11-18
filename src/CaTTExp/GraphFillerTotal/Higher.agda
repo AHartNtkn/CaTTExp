@@ -959,3 +959,171 @@ mutual
                (sym (lookupₛ-here L₀ y' n (sym lL)))
     df' : chainC K ⊢tm liftN f ox ∶ C [ L₀ ,ₛ y' ]ty
     df' = subst (chainC K ⊢tm liftN f ox ∶_) (cong₃ arr e1 e2 e3) (liftN-ty gr f ox df tt bnf)
+
+------------------------------------------------------------------------
+-- Substituting the walk back into the lift gives the original cell.
+
+private
+  seg-pre : ∀ {Γ σ o x p Q} → Seg Γ σ o x Q → p ⊑ Q → Seg Γ σ o x p
+  seg-pre {Γ} {σ} {o} {x} {p} sg (r , refl) = fst (seg-split p r sg)
+
+  seg-mid : ∀ {Γ σ o x p q Q} → Seg Γ σ o x Q → p ++ q ⊑ Q → Seg Γ σ (∣ p ∣ + o) (endOf Γ x p) q
+  seg-mid {Γ} {σ} {o} {x} {p} {q} sg h = snd (seg-split p q (seg-pre sg h))
+
+  walk-nil : ∀ {Γ x y} → Walk Γ x [] y → x ≡ y
+  walk-nil nil = refl
+
+mutual
+  liftN-sub : ∀ {Γ} → Graph Γ → ∀ t {A} o → Γ ⊢tm t ∶ A → NS A → ∀ {σ} →
+              Seg Γ σ o (o₀Ty A) (π A t) → liftN t o [ σ ]tm ≡ t
+  liftN-sub gr (var i) {arr ⋆ a b} o d _ (_ , he , _) = he
+  liftN-sub gr (var i) {arr (arr _ _ _) _ _} o (var-wf _ eq) _ _ = ⊥-elim (gr i eq)
+  liftN-sub {Γ} gr (coh Θ (arr A' s' t') τ) o (coh-wf (ps p₀) w a ok sτ) _ {σ} sg =
+    cong (coh Θ A'') (liftSN-sub gr p₀ w τ o sτ sg' (λ c lc → snd (bd c lc)))
+    where
+    A'' = arr A' s' t'
+    pe  = pedge gr p₀ τ sτ
+    open Bd τ sτ p₀ pe A' s' t' a ok
+    cl  = coh-len sτ p₀ pe a ok
+    x0 : o₀Ty (A'' [ τ ]ty) ≡ vi (lookupₛ τ 0)
+    x0 = trans (o₀-sub A'' τ a tt)
+           (sym (walk-nil (subst (λ q → Walk Γ (vi (lookupₛ τ 0)) q (vi (lookupₛ τ (o₀Ty A''))))
+                                 start (walkpp p₀ w τ sτ (o₀Ty A'') (o₀-obj A'' a tt)))))
+    sg' : Seg Γ σ o (vi (lookupₛ τ 0)) (pp Θ τ (o₁Ty A''))
+    sg' = subst₂ (Seg Γ σ o) x0 (sym cl) sg
+      where
+      subst₂ : ∀ {A B : Set} (R : A → B → Set) {a a' b b'} → a ≡ a' → b ≡ b' → R a b → R a' b'
+      subst₂ R refl refl r = r
+  liftN-sub gr (cst ()) _ _ _ _
+
+  liftSN-sub : ∀ {Γ Θ x A} → Graph Γ → Θ ⊢ps x ∶ A → Θ ⊢ctx → ∀ τ o → Γ ⊢sub τ ∶ Θ → ∀ {σ Q} →
+               Seg Γ σ o (vi (lookupₛ τ 0)) Q → (∀ c → lookup Θ c ≡ just ⋆ → pp Θ τ c ⊑ Q) →
+               liftSN Θ τ o ∘ σ ≡ τ
+  liftSN-sub gr p w ⟨⟩ o (⟨⟩-wf _) sg bq = refl
+  liftSN-sub gr p w (⟨⟩ ,ₛ a) o (,-wf (⟨⟩-wf _) da) {Q = Q} sg bq with ps-one p
+  ... | refl with ⋆-var da refl
+  ...   | m , refl = cong (⟨⟩ ,ₛ_) (seg-head Q sg)
+  liftSN-sub gr p w@(▸-wf (▸-wf w₀ bB) bC) (τ₀ ,ₛ y ,ₛ f) o s@(,-wf (,-wf sτ₀ dy) df) sg bq with ps-inv p
+  ... | x' , p' , refl = liftSN-sub-step gr _ p' w₀ bB bC w τ₀ y f o sτ₀ dy df s sg bq
+
+  liftSN-sub-step : ∀ {Γ} → Graph Γ → ∀ B {Θ₀ x'} → Θ₀ ⊢ps x' ∶ B → Θ₀ ⊢ctx → Θ₀ ⊢ty B →
+                    (Θ₀ ▸ B) ⊢ty arr B (var x') (var (len Θ₀)) →
+                    (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) ⊢ctx → ∀ τ₀ y f o → Γ ⊢sub τ₀ ∶ Θ₀ →
+                    Γ ⊢tm y ∶ B [ τ₀ ]ty → Γ ⊢tm f ∶ arr B (var x') (var (len Θ₀)) [ τ₀ ,ₛ y ]ty →
+                    Γ ⊢sub τ₀ ,ₛ y ,ₛ f ∶ Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀)) → ∀ {σ Q} →
+                    Seg Γ σ o (vi (lookupₛ (τ₀ ,ₛ y ,ₛ f) 0)) Q →
+                    (∀ c → lookup (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) c ≡ just ⋆ →
+                       pp (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) (τ₀ ,ₛ y ,ₛ f) c ⊑ Q) →
+                    liftSN (Θ₀ ▸ B ▸ arr B (var x') (var (len Θ₀))) (τ₀ ,ₛ y ,ₛ f) o ∘ σ ≡ τ₀ ,ₛ y ,ₛ f
+  liftSN-sub-step {Γ} gr ⋆ {Θ₀} {x'} p' w₀ bB bC wF τ₀ y f o sτ₀ dy df sF {σ} {Q} sg bq
+    with ⋆-var dy refl
+  ... | z , refl =
+    cong₃ (λ a b c → a ,ₛ b ,ₛ c) ih objEq (liftN-sub gr f ox df tt sgf)
+    where
+    n   = len Θ₀
+    C   = arr ⋆ (var x') (var n)
+    P₀  = pp Θ₀ τ₀
+    ox  = ∣ P₀ x' ∣ + o
+    lx  = snd (good p')
+    x<n : x' < n
+    x<n = lookup-< {Θ₀} lx
+    lτ  = sub-len' sτ₀
+    0<n : 0 < n
+    0<n = lookup-< {Θ₀} (ps-0 p')
+    x0  : vi (lookupₛ (τ₀ ,ₛ var z ,ₛ f) 0) ≡ vi (lookupₛ τ₀ 0)
+    x0  = cong vi (lk-old2 τ₀ (var z) f lτ 0<n)
+    sg₀ : Seg Γ σ o (vi (lookupₛ τ₀ 0)) Q
+    sg₀ = subst (λ t → Seg Γ σ o t Q) x0 sg
+    bq₀ : ∀ c → lookup Θ₀ c ≡ just ⋆ → P₀ c ⊑ Q
+    bq₀ c lc = subst (_⊑ Q) (upd-old P₀ n (P₀ x' ++ path f) (P₀ x') c (lookup-< {Θ₀} lc))
+                     (bq c (lookup-wk {Θ₀ ▸ ⋆} {C} (lookup-wk {Θ₀} {⋆} lc)))
+    ih = liftSN-sub gr p' w₀ τ₀ o sτ₀ sg₀ bq₀
+    bn : P₀ x' ++ path f ⊑ Q
+    bn = subst (_⊑ Q) (upd-n P₀ n (P₀ x' ++ path f) (P₀ x'))
+               (bq n (lookup-wk {Θ₀ ▸ ⋆} {C} (lookup-here Θ₀ ⋆ n refl)))
+    Wn : Walk Γ (vi (lookupₛ τ₀ 0)) (P₀ x' ++ path f) z
+    Wn = subst₂' (λ a q → Walk Γ a q z) x0 (upd-n P₀ n (P₀ x' ++ path f) (P₀ x'))
+           (subst (λ t → Walk Γ _ _ (vi t)) (lk-mid2 τ₀ (var z) f lτ)
+             (walkpp (pse p') wF (τ₀ ,ₛ var z ,ₛ f) sF n (lookup-wk {Θ₀ ▸ ⋆} {C} (lookup-here Θ₀ ⋆ n refl))))
+      where
+      subst₂' : ∀ {A B : Set} (R : A → B → Set) {a a' b b'} → a ≡ a' → b ≡ b' → R a b → R a' b'
+      subst₂' R refl refl r = r
+    objEq : var (vtx (∣ path f ∣ + ox)) [ σ ]tm ≡ var z
+    objEq = trans (cong (λ m → lookupₛ σ (vtx m)) (sym (∣++∣+ (P₀ x') (path f) o)))
+             (trans (seg-end (P₀ x' ++ path f) (seg-pre sg₀ bn)) (cong var (walk-end Wn)))
+    Wx : endOf Γ (vi (lookupₛ τ₀ 0)) (P₀ x') ≡ vi (lookupₛ τ₀ x')
+    Wx = walk-end (walkpp p' w₀ τ₀ sτ₀ x' lx)
+    sgf : Seg Γ σ ox (o₀Ty (C [ τ₀ ,ₛ var z ]ty)) (path f)
+    sgf = subst (λ t → Seg Γ σ ox t (path f))
+                (trans Wx (cong vi (sym (lk₁-old {y = var z} sτ₀ x<n))))
+                (seg-mid sg₀ bn)
+  liftSN-sub-step {Γ} gr (arr B₀ s₀ t₀) {Θ₀} {x'} p' w₀ bB bC wF τ₀ y f o sτ₀ dy df sF {σ} {Q} sg bq =
+    cong₃ (λ a b c → a ,ₛ b ,ₛ c) ih (liftN-sub gr y ox dy tt sgy) (liftN-sub gr f ox df tt sgf)
+    where
+    n   = len Θ₀
+    B   = arr B₀ s₀ t₀
+    C   = arr B (var x') (var n)
+    P₀  = pp Θ₀ τ₀
+    ox  = ∣ P₀ x' ∣ + o
+    lx  = snd (good p')
+    x<n : x' < n
+    x<n = lookup-< {Θ₀} lx
+    lτ  = sub-len' sτ₀
+    0<n : 0 < n
+    0<n = lookup-< {Θ₀} (ps-0 p')
+    pe₀ = pedge gr p' τ₀ sτ₀
+    x0  : vi (lookupₛ (τ₀ ,ₛ y ,ₛ f) 0) ≡ vi (lookupₛ τ₀ 0)
+    x0  = cong vi (lk-old2 τ₀ y f lτ 0<n)
+    sg₀ : Seg Γ σ o (vi (lookupₛ τ₀ 0)) Q
+    sg₀ = subst (λ t → Seg Γ σ o t Q) x0 sg
+    bq₀ : ∀ c → lookup Θ₀ c ≡ just ⋆ → P₀ c ⊑ Q
+    bq₀ c lc = subst (_⊑ Q) (upd-old P₀ n (P₀ x') (P₀ x') c (lookup-< {Θ₀} lc))
+                     (bq c (lookup-wk {Θ₀ ▸ B} {C} (lookup-wk {Θ₀} {B} lc)))
+    ih = liftSN-sub gr p' w₀ τ₀ o sτ₀ sg₀ bq₀
+    xo : P₀ x' ≡ P₀ (o₀Ty B)
+    xo = snd (snd (ent p' τ₀ o sτ₀ x') lx)
+    ob₀ = o₀-obj B bB tt
+    ob₁ = o₁-obj B bB tt
+    o₀<n : o₀Ty B < n
+    o₀<n = lookup-< {Θ₀} ob₀
+    o₁<n : o₁Ty B < n
+    o₁<n = lookup-< {Θ₀} ob₁
+    bB' : (Θ₀ ▸ B) ⊢ty B
+    bB' = wk-ty bB (▸-wf w₀ bB)
+    eBy : B [ τ₀ ,ₛ y ]ty ≡ B [ τ₀ ]ty
+    eBy = ext-ty' sτ₀ bB
+    eBτ : B [ τ₀ ,ₛ y ,ₛ f ]ty ≡ B [ τ₀ ]ty
+    eBτ = trans (ext-ty' (,-wf sτ₀ dy) bB') eBy
+    PF  = pp (Θ₀ ▸ B ▸ C) (τ₀ ,ₛ y ,ₛ f)
+    πyF : PF (o₁Ty B) ≡ PF (o₀Ty B) ++ π (B [ τ₀ ,ₛ y ,ₛ f ]ty) (lookupₛ (τ₀ ,ₛ y ,ₛ f) n)
+    πyF = πty (pedge gr (pse p') (τ₀ ,ₛ y ,ₛ f) sF) sF B (var n)
+              (var-wf wF (lookup-wk {Θ₀ ▸ B} {C} (lookup-here Θ₀ B n refl))) tt
+    πy : P₀ (o₁Ty B) ≡ P₀ (o₀Ty B) ++ π (B [ τ₀ ]ty) y
+    πy = trans (sym (upd-old P₀ n (P₀ x') (P₀ x') _ o₁<n))
+          (trans πyF (cong₂ _++_ (upd-old P₀ n (P₀ x') (P₀ x') _ o₀<n)
+                                 (cong₂ π eBτ (lk-mid2 τ₀ y f lτ))))
+    πx : P₀ (o₁Ty B) ≡ P₀ (o₀Ty B) ++ π (B [ τ₀ ]ty) (lookupₛ τ₀ x')
+    πx = πty pe₀ sτ₀ B (var x') (var-wf w₀ lx) tt
+    b₁ : P₀ (o₁Ty B) ⊑ Q
+    b₁ = bq₀ (o₁Ty B) ob₁
+    W₀ : endOf Γ (vi (lookupₛ τ₀ 0)) (P₀ (o₀Ty B)) ≡ o₀Ty (B [ τ₀ ]ty)
+    W₀ = trans (walk-end (walkpp p' w₀ τ₀ sτ₀ (o₀Ty B) ob₀)) (sym (o₀-sub B τ₀ bB tt))
+    oxe : ∣ P₀ (o₀Ty B) ∣ + o ≡ ox
+    oxe = cong (λ q → ∣ q ∣ + o) (sym xo)
+    sgy : Seg Γ σ ox (o₀Ty (B [ τ₀ ]ty)) (π (B [ τ₀ ]ty) y)
+    sgy = subst₂' (λ m t → Seg Γ σ m t (π (B [ τ₀ ]ty) y)) oxe W₀
+            (seg-mid sg₀ (subst (_⊑ Q) πy b₁))
+      where
+      subst₂' : ∀ {A B : Set} (R : A → B → Set) {a a' b b'} → a ≡ a' → b ≡ b' → R a b → R a' b'
+      subst₂' R refl refl r = r
+    oC : o₀Ty (C [ τ₀ ,ₛ y ]ty) ≡ o₀Ty (B [ τ₀ ]ty)
+    oC = cong o₀Ty eBy
+    πC : π (C [ τ₀ ,ₛ y ]ty) f ≡ π (B [ τ₀ ]ty) (lookupₛ τ₀ x')
+    πC = cong₂ π eBy (lk₁-old {y = y} sτ₀ x<n)
+    sgf : Seg Γ σ ox (o₀Ty (C [ τ₀ ,ₛ y ]ty)) (π (C [ τ₀ ,ₛ y ]ty) f)
+    sgf = subst₃' (λ m t q → Seg Γ σ m t q) oxe (trans W₀ (sym oC)) (sym πC)
+            (seg-mid sg₀ (subst (_⊑ Q) πx b₁))
+      where
+      subst₃' : ∀ {A B C : Set} (R : A → B → C → Set) {a a' b b' c c'} →
+                a ≡ a' → b ≡ b' → c ≡ c' → R a b c → R a' b' c'
+      subst₃' R refl refl refl r = r

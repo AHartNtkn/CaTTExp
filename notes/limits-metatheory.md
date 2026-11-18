@@ -414,7 +414,7 @@ See `conjectures/answered/finite-fibration-test-2d-base-2026-11-18.md` (PR #76).
 
 ### 9.4 Open: higher bases (FT_n)
 
-The next prompt is `conjectures/outbox/finite-fibration-test-higher-base.md` (unsent). It covers the walking 3-cell, weights valued in 2-categories, regular bases (Chanavat Cor. 3.38), and whether regularity is necessary.
+That prompt was answered (`conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md`; the round-2 prompt is `conjectures/outbox/finite-fibration-test-higher-base-r2.md`). It covers the walking 3-cell, weights valued in 2-categories, regular bases (Chanavat Cor. 3.38), and whether regularity is necessary.
 
 ---
 
@@ -428,4 +428,4 @@ The next prompt is `conjectures/outbox/finite-fibration-test-higher-base.md` (un
 | 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
-| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base.md` ready to send |
+| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base-r2.md` ready to send (round 1 answered) |

@@ -175,7 +175,11 @@ U ∈ 𝓜    U ⊢ t →_A u    Δ ⊢ σ : U
 - **Gain:** ∂^α(x⊗y) is a single unbiased term coh_{∂^α(x⊗y)}. G1 becomes a statement about molecules, not about chosen bracketings.
 - **Cost:** this answers survey §12 Q3 ("how far may non-ps shapes go?") with "to molecules". Pruning, insertion and rehydration would have to be re-examined for molecules.
 
-Option (i) is less invasive and fits the "admissible before primitive" principle. Option (ii) is more uniform and makes the user-facing syntax much nicer. A reasonable plan: **use (i) as the kernel and (ii) as the surface syntax, with (i) as the elaboration target.** This mirrors CaTT_sua over CaTT via rehydration.
+**(i) and (ii) are the same question.** Molecular coh (ii) is a conservative extension of CaTT exactly when every molecule's composites exist and are unique up to invertible cells in plain CaTT, which is what (i) needs. This is stated as Conjecture G(n) in [`conjectures/gray-contexts-in-catt.md`](conjectures/gray-contexts-in-catt.md). Status:
+- **G(1)** is proved.
+- **Existence in G(2)** is proved, using Chanavat's result that all molecules of dimension ≤ 3 are frame-acyclic. So **every Gray generator of dimension ≤ 3 has a plain-CaTT type**, including the Gray cube.
+- **Uniqueness in G(2)** has a proof sketch: linear extensions are connected by swaps, and each swap is an exchange coherence. One bookkeeping gap remains. Granting it, every Gray generator of dimension 4 is covered too.
+- **G(n) for n ≥ 3** is open. The missing step is translating Chanavat's contractible subdivision poset (arXiv 2603.22242, Thm. 2.52) into CaTT cells. The problem statement there is written for external researchers.
 
 ---
 
@@ -214,6 +218,13 @@ There are two ways to generate these cells:
 - **Covariance in Θ.** A substitution τ : Θ′ → Θ induces a restriction [τ, C] : [Θ, C] → [Θ′, C], defined by Λ((–)♭ ∘ (Δ ⊗ τ)).
 - **Style.** The rule is a shape plus a bijection with no new side conditions beyond G1 and G2. It is the hom-version of Mikhail's cone rule: a representing object for a family of Gray-shaped diagrams.
 - **D⁰ check.** Points of [Θ, C], i.e. D⁰ ⊳ [Θ, C], are Θ-diagrams in C, since D⁰ ⊗ Θ ≅ Θ.
+- **Correction: the bijection is between maps, not between whole hom-categories.**
+  - Native higher cells of the ambient are cartesian. A 2-cell between φ, φ′ : ⟦Δ⟧ → [Θ, C] is a map (⟦Δ⟧ × D¹) ⊗ Θ → C, *not* a 2-cell between the transposes in Fun(⟦Δ⊗Θ⟧, C). Gagna–Harpaz–Lanari (2006.14495), Rem. 2.20, show these differ in general.
+  - So (lhom-Λ/♭) must be read as a correspondence of *maps* Δ ⊳ –. Higher cells are reached by letting Δ range over marked cylinders: ⟦Δ⟧ × D¹ ≃ ⟦(Δ ⊗ D¹)^μ⟧, which is Conjecture C1 below.
+  - The β-, η- and naturality cells are invertible ambient cells, consistent with this reading.
+  - See [`conjectures/planar-pasting-types.md`](conjectures/planar-pasting-types.md) §4 for the precise form of the obstruction.
+- **Cotensors turn colimits of shapes into limits** (handed over from limits-representables.md §10.6). This is formal from the rule: a map into [Θ, C] is a map out of Δ ⊗ Θ, and ⊗ preserves colimits of contexts in each variable (G3 is the case of a wedge). So [colim Θᵢ, C] ≃ lim [Θᵢ, C], provided the limit exists.
+- **Role under P** (limits-representables.md §10.1). Cone-style limits cannot produce lax cotensors or hom objects Hom_C(a, b) under a pseudo ambient. Under P, these come from this rule. In particular, Hom_C(a, b) is the fibre of [D¹, C] → C × C over (a, b).
 
 ### 5.2 Lax transformations between arbitrary functors
 
@@ -265,7 +276,10 @@ Here ΣΔ → Γ means a ΣΔ-shaped tuple of terms of the ambient context. So "
 
 Here Δ ⊗ₘ Θ is Δ ⊗ Θ with every *mixed* generator x⊗y (dim x, dim y ≥ 1) marked invertible in the sense of ICaTT. Equivalently, ⟦Δ⟧ × ⟦Θ⟧ is the localisation of ⟦Δ ⊗ Θ⟧ at the mixed generators.
 
-- **Evidence:** GHL Prop. 2.12 in dimension 2, and the strict pseudo-Gray story **[recall]**. It is unverified for weak ω.
+- **Status:** the full problem statement and attempts are in [`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md) (Conjecture C1). Campion lists the comparison as future work, so it appears to be open.
+  - **Proved:** reduction to globes Dᵏ ⊗ Dˡ, by density and cocontinuity; the cases k = 0 or l = 0; and the case k = l = 1 (the Gray square localises to the commutative square).
+  - **Dimension 2:** follows from GHL Prop. 2.12. The exact match of markings has not been checked line by line.
+  - **General case:** an induction via Loubaton's suspension formula stalls at one lemma (S3), which is stated there.
 - **If (P) holds,** [⟦Θ⟧, C] (pseudo) embeds in [Θ, C]ₗₐₓ as the "mixed-invertible" part. The two homs then share one rule schema, [Θ, C]_μ for a marking policy μ ∈ {lax, pseudo}:
   - only the context operation changes (⊗ vs ⊗ₘ);
   - the λ/♭ rules are identical;
@@ -299,7 +313,7 @@ Points to settle:
 - **Orientation.** The limits note writes Γ ⊗ D¹. With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
 - **Status.**
   - Under Option A (option P of the limits notes), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
-  - Its semantic justification is the localisation statement in (P): GHL Prop. 2.12 in dimension 2, unverified for weak ω.
+  - Its semantic justification is Conjecture C1 ([`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md)): proved for the Gray square, and in dimension 2 via GHL, with the general case open.
   - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
 - **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
   - For arbitrary domains B, the same question becomes whether the disks are jointly dense, i.e. whether a 1-cell B → [D¹, C] is determined by its restrictions along all elements Dⁿ ⊳ B.
@@ -339,11 +353,12 @@ Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](ht
 - **Neutral between P and L** (see `pseudo-vs-gray.md`, R9): each option needs both a cartesian version and a planar/linear version.
 - It suggests a route to the **lax** hom too. The Gray tensor is biclosed and *non-symmetric*. An unbiased CCCaTT-style theory for it would need pasting types without duplication or exchange, i.e. a Lambek-calculus-like, planar, linear criterion. Mimram lists closed, linear and planar variants as future work.
   - This lines up with the recurring linearity theme (survey §13; Mikhail's x ∝ t).
-  - The guess "lax closed structure = linear, planar pasting types" is worth testing on small cases: is the type of lax-hom evaluation pasting while the type of a diagonal is not?
+  - **1-dimensional case proved** ([`conjectures/planar-pasting-types.md`](conjectures/planar-pasting-types.md) §2). Take pasting types to be the balanced, Lambek-provable sequents. They are contractible: erase the residuals to → and apply the Babaev–Solov'ev coherence theorem. They are also complete: rename the atoms of each axiom link. So an unbiased theory built on them is equivalent to the Lambek calculus modulo βη. Only type substitution is needed, not term substitution.
+  - **Open:** the tensor and unit (PL1), and the ω-version (PL-ω). The ω-version has a precise obstruction: Gray closure is an equivalence on mapping spaces but not on mapping (∞,ω)-categories. So a pasting-type theory must track where each higher cell's time direction sits among the tensor factors.
 
 **Caveats.**
 - CCCaTT works *inside* one cartesian closed category, whereas §5.4 internalises the ambient ωCat's hom. To match, the pasting types must range over ambient object variables B, C : ⋆, with [B, C] a type former of the ambient. This seems direct.
-- The higher-dimensional criterion, which the paper says needs dependent types, is the unknown. Until it appears, the rules of §5.1 and §5.4, with β/η as invertible cells, remain the conservative fallback.
+- The higher-dimensional criterion, which the paper says needs dependent types, is unpublished. Working it out for the cartesian case, and the Gray case via PL-ω, is a next step. The rules of §5.1 and §5.4 do not compete with it: they are what a pasting-type theory would have to derive.
 
 ## 6. What about ⊗ of arbitrary objects?
 
@@ -351,7 +366,7 @@ Architecture A never forms B ⊗ C for non-representable B and C.
 
 - **What would be lost:** an object-level ⊗ is needed for lax-functor-category currying [B ⊗ C, D] ≃ [B, [C, D]ₗₐₓ] with *both* B and C arbitrary.
 - **Why it is hard:** its mapping-out property is a Day-convolution coend, so it is not finitary. In style, it would have to come from a colimit principle (lax colimits of computads, survey §13 Q3) plus "⊗ preserves colimits in each variable".
-- **Suggestion:** leave ⊗ as a context operation. Revisit once the colimits thread exists, because B ⊗ C := colim over cells of B and C of ⟦x ⊗ y⟧ is then a definition, not a rule.
+- **Next step:** once colimits exist, define B ⊗ C as the colimit, over cells of B and C, of ⟦x ⊗ y⟧. Then check that it has the Gray tensor's universal property. The cocontinuity argument of `conjectures/gray-vs-cartesian.md` §3.1 is the template.
 
 ---
 

@@ -272,6 +272,21 @@ Conjecture N is therefore a special case of molecular conservativity, but a targ
 
 ---
 
+
+---
+
+## Literature status (searched 2026-11-18)
+
+**Status: open. The depth ≤ 1 case (BMOSV) is still the frontier. The latest version of BMOSV ([arXiv 2501.11620v3](https://arxiv.org/abs/2501.11620)) says explicitly that "the higher-depth cases ... are beyond our present work". No follow-up was found.**
+
+Related results:
+- **Molecular conservativity (§8).** This is problem G of `gray-contexts-in-catt.md`, also open. That file's §6 (Mikhail's Gray rules, formerly `gray-contexts-steiner.md`) asks for the same contexts `Γ ⊗ D¹`, and higher `Γ ⊗ Dⁿ`, through free-variable side conditions instead of explicit naturality terms.
+- **The semantic analogue in (∞,ω)-categories is known.** For a pasting context P, the strict Gray cylinder `P ⊗ D¹` is free as an (∞,ω)-category, and it is Campion's Gray tensor (Campion, [arXiv 2311.00205](https://arxiv.org/abs/2311.00205), Example 3.2 and Cor. 3.5; Chanavat, [arXiv 2603.22242](https://arxiv.org/abs/2603.22242), Thm 3.29). So in (∞,ω)-categorical semantics every cell c has a naturality cell `c ⊗ D¹` between the two composites `a_c` and `b_c`, at every depth. This does not transfer to CaTT's models, Grothendieck–Maltsiniotis weak ω-categories, because no comparison between those and (∞,ω)-categories is known.
+- **The groupoidal case.** In homotopy type theory, naturality of any operation along paths holds by path induction. BMOSV's exports to HoTT make this concrete only up to depth 1.
+- **Uniqueness and invertibility.** Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and Benjamin–Champin–Markakis's ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)) give tools to show that the cells built by the sliding argument are invertible, once they exist.
+- **Higher transformations of weak ω-categories, defined semantically.** Kachour, *Globular weak (n,∞)-transformations in the sense of Grothendieck* ([arXiv 2106.11458](https://arxiv.org/abs/2106.11458)), defines higher transformations through coherators. It does not construct naturality terms for given coherences.
+- **Path objects and model structures.** Fujii–Hoshino–Maehara study weakly invertible cells and ω-equifibrations ([arXiv 2303.14907](https://arxiv.org/abs/2303.14907), [arXiv 2406.13240](https://arxiv.org/abs/2406.13240), [arXiv 2511.09849](https://arxiv.org/abs/2511.09849)). They build a coherent walking equivalence, but not the lax cylinder `Γ ⊗ D¹` needed here.
+
 ## References
 
 - E. Finster, S. Mimram. *A type-theoretical definition of weak ω-categories.* LICS 2017. [arXiv 1706.02866](https://arxiv.org/abs/1706.02866)

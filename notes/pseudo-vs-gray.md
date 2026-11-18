@@ -472,7 +472,7 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 - The rule of §3.3 reads: operation case if supp(t) = Supp(∂⁻T) and supp(u) = Supp(∂⁺T); coherence case if supp(t) = supp(u) = all of Kᵢⱼ. Here T := ⟨Θⱼ⟩ ⊗ … ⊗ ⟨Θᵢ₊₁⟩ is the **total cell**, the Gray tensor of the composites of the pasting diagrams.
 - Everything is computable: tables of finite chains, and chain maps for substitutions.
 
-**Three combinatorial lemmas**, about any Steiner complex K, in particular Gray tensors of pasting diagrams. They are posed precisely, with proof sketches, in `notes/conjectures/steiner-support-determines-cells.md`.
+**Three combinatorial lemmas**, about any Steiner complex K, in particular Gray tensors of pasting diagrams. They are posed precisely, with proof sketches, in `notes/conjectures/steiner-support-determines-cells.md`. *Literature update (2026-11-18): (A)–(C) hold for Gray tensors of pasting diagrams. They follow from Hadzihasanovic (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18; see that file's "Literature status".*
 
 - **(A) 0/1 chains.** Every chain in the table of a cell of ν(K) has coefficients in {0, 1}.
 - **(B) Support determines the cell.** Two cells of ν(K) of the same dimension with the same support are equal.
@@ -494,7 +494,7 @@ where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara
 
 **What is proved outright** (no lemma needed): the decidability of the side condition, the non-degeneracy argument in 2, and substitution admissibility. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
 
-**Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`:
+**Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`. *Literature update (2026-11-18): (D) and (E) are known (Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5; Chanavat, arXiv 2603.22242, Thm 3.29), and (F) follows. So the hypotheses (D)–(F) of Theorem 2 are discharged; see that file's "Literature status".*
 
 - **(D)** For K = λΘₙ ⊗ … ⊗ λΘ₁, the free (∞,n)-category on K's generators is equivalent to ν(K). This is Campion's pasting theorem, if K is torsion-free; Campion's theorem covers lax Gray cubes, and the question is whether it covers Gray tensors of pasting diagrams.
 - **(E)** Campion's Gray tensor of the free (∞,n)-categories on λΘᵢ is the free one on their Steiner tensor.

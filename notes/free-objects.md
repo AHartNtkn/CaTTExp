@@ -351,10 +351,10 @@ The Gray shapes `Γ ⊗ Dᵏ` that A1, A2 (via its decomposition theorem) and R-
 
 **Under P and under L.** Under P, lax cells of diagrams are maps out of `Γ ⊗ Dᵏ`, so these contexts are needed as written. Under L, the naturality cells would instead come from L's native lax interchange coherences, whose correctness is lemma S1 of `pseudo-vs-gray.md`. N is the CaTT-side instance of the same claim: a coherence is laxly natural in its variables.
 
-**Related problem statements.** Two other files in `conjectures/` overlap with this one.
+**Related problem statements.** One other file in `conjectures/` overlaps with this one, in two places.
 
 - **`gray-contexts-in-catt.md` (G(n)).** It asks whether coherences over frame-acyclic molecules are conservative over CaTT. Conjecture N with all variables duplicated is a special case of that, for the molecules `P ⊗ D¹` (conjecture file §8). The left-unitor proof uses the same layering idea as G's §3.2.
-- **`gray-contexts-steiner.md` (1).** It asks for Mikhail's Gray contexts in all dimensions. Items 1 and 2 above give an explicit candidate, conditional on N.
+- **`gray-contexts-in-catt.md` §6 (1)** (formerly `gray-contexts-steiner.md`). It asks for Mikhail's Gray contexts in all dimensions. Items 1 and 2 above give an explicit candidate, conditional on N.
 
 **What remains.** The general depth-≥2 case. A proposed induction on the dimension of Q is described in the conjecture file, together with the precise missing ingredient: a relative form of the conjecture strong enough to be the induction hypothesis. The next concrete checks are the associator over three arrows with all variables, then the first 2-dimensional Q.
 

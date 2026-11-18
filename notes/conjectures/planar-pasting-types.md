@@ -80,3 +80,25 @@ Cartesian closed structure has an unbiased presentation in which all structure m
 Any of the following:
 - for PL1, a proof, a counterexample, or a reference (non-commutative MLL coherence for balanced sequents);
 - for PL-ω, a candidate criterion that passes the evaluation test case, or an argument that no pasting-type criterion can avoid producing inverses.
+
+## 7. Literature status (searched 2026-11-18)
+
+**PL1: very likely true, and assembled from known results. One lemma still needs a precise citation. PL-ω: open, but Gepner–Heine's "bioriented" enrichment is a published framework for exactly the obstruction in §4.**
+
+**PL1.** The argument has three ingredients.
+1. **Proof nets are canonical for unit-free non-commutative MLL.** For unit-free multiplicative linear logic, a cut-free proof modulo the usual permutations (βη and commuting conversions for ⊗) is determined by its proof net. The net is the formula trees together with the axiom linking.
+   - Symmetric case, categorically: Blute–Cockett–Seely–Trimble, *Natural deduction and coherence for weakly distributive categories* (JPAA 113, 1996).
+   - Non-symmetric (planar) case: Schneck, *Natural deduction and coherence for non-symmetric linearly distributive categories* (TAC 6, 1999, [link](https://geodesic.mathdoc.fr/item/TAC_1999_6_a8/)). Coherence holds without units; units need restrictions.
+   - A recent self-contained unit-free coherence proof: [arXiv 2605.03113](https://arxiv.org/abs/2605.03113).
+   - Lambek-calculus proof nets (Roorda; Lamarche–Retoré, [overview](https://www.lirmm.fr/~retore/ARTICLES/LaReRoma96.pdf)) identify sequent proofs exactly when they give the same net.
+2. **In a balanced sequent the axiom linking is forced.** Each atom has exactly one positive and one negative occurrence. So there is at most one proof net, hence at most one proof modulo the equations.
+3. **The lemma still to pin down: the intuitionistic (biclosed) fragment.** The free unit-free biclosed monoidal category must map *faithfully* into the free non-symmetric linearly distributive category, so that equality of nets implies equality of biclosed proofs. Faithfulness holds in the symmetric case by Kelly–Mac Lane and BCST. A non-symmetric reference was not located.
+
+Units: Heijltjes–Houston, *No proof nets for MLL with units* (2014), together with Kelly–Mac Lane's counterexamples, confirm that units need a separate criterion, as §3 says.
+
+**PL-ω.** No pasting-type theory for Gray-closed structure was found. Two results bear directly on §4.
+- **The currying obstruction is the subject of Gepner–Heine's "bioriented categories".** Gepner–Heine, *Oriented category theory* ([arXiv 2510.10504](https://arxiv.org/abs/2510.10504)), Cor. 4.1.11:
+  - the morphism object between X and Y is the presheaf (S, T) ↦ Map(S ⊠ X ⊠ T, Y) on ∞Cat × ∞Cat;
+  - that is, a "k-cell" records where its shape sits among the tensor factors, on the left or on the right.
+  - This is the "time direction tracked as a tensor position" that PL-ω asks for, at the semantic level. A pasting-type criterion would have to reproduce their left and right morphism objects LMor and RMor.
+- **Mimram's own extensions.** Mimram's cartesian construction (CSL 2026) and the earlier slides ([cccatt](https://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt_slides_coreact.pdf)) sketch a higher-dimensional "cartesian closed CaTT". No linear or planar version was found.

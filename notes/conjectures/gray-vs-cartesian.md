@@ -1,6 +1,6 @@
 # Conjecture: the cartesian product of globes is the Gray product with mixed cells inverted
 
-*Self-contained problem statement. No knowledge of the surrounding project is assumed. Partial results and proof attempts are in §3–§4. Status: open. As far as we can tell, Campion (arXiv 2311.00205) lists the comparison with the cartesian product as future work.*
+*Self-contained problem statement. No knowledge of the surrounding project is assumed. Partial results and proof attempts are in §3–§4. Status: partly solved. The case l = 1, for every A, is Loubaton (arXiv 2406.05425), Prop. 3.1.3.1. §7 gives a sketch of the general case from published results, still to be checked.*
 
 ## 1. Setting
 
@@ -97,3 +97,37 @@ Any of the following:
 - a proof of C1 for all k and l, or of lemma S3 together with a general-l argument;
 - a counterexample, e.g. specific k and l for which the localisation is not equivalent to Dᵏ × Dˡ;
 - a reference where this is proved, in any model of (∞,n)-categories.
+
+## 7. Literature status (searched 2026-11-18)
+
+**Status: partly solved in the literature. The case l = 1 is proved, for every A and every (∞,1)-category B. The general case seems to follow from published results by a short argument (sketch below, not yet checked line by line).**
+
+**Proved results.**
+- **l = 1, any k (in fact any A).** Loubaton, *Categorical theory of (∞,ω)-categories* ([arXiv 2406.05425](https://arxiv.org/abs/2406.05425)), Prop. 3.1.3.1, gives C♯ ⊗ K♯ ≃ C♯ × K♯ for every (∞,ω)-category C and every (∞,1)-category K. The same result is in his thesis ([arXiv 2307.11931](https://arxiv.org/abs/2307.11931), Ch. 5).
+  - Here C♯ marks every cell of positive dimension. By Construction 3.1.2.1, the underlying (∞,ω)-category of C ⊗ K♯ is the pushout of C ⊗ K along ∐ Dⁿ ⊗ K → ∐ τⁱₙ(Dⁿ ⊗ K), one summand for each marked n-cell of C. The intelligent truncation τⁱₙ inverts the cells of dimension above n. For K = D¹ the only such cell of Dⁿ ⊗ D¹ is the mixed generator x ⊗ i.
+  - So the underlying statement is exactly (C ⊗ D¹)[{x ⊗ i : dim x ≥ 1}⁻¹] ≃ C × D¹. This is C1′ with B = D¹, and with A arbitrary. Loubaton states it this way in his introduction: "the underlying (∞,ω)-category of A♯ ⊗ [1]♯ is A × [1]."
+  - **Lemma S3 of §4 follows.** Also invert the components x ⊗ i for objects x. That turns C × D¹ into C × E¹ ≃ C.
+  - Loubaton's Gray cylinder is the cocontinuous extension of the strict Steiner Gray cylinder on Θ. By Campion's Cor. 3.5 (see below) it therefore agrees with Campion's ⊗ D¹.
+- **n = 2.** Gagna–Harpaz–Lanari ([arXiv 2006.14495](https://arxiv.org/abs/2006.14495)), Prop. 2.12, already cited in §3.4.
+- **The comparison map is an epimorphism, and the strong-to-lax inclusion is a monomorphism, in all dimensions.** Gepner–Heine, *Oriented category theory* ([arXiv 2510.10504](https://arxiv.org/abs/2510.10504)), §4.1:
+  - Thm 4.1.9: Fun(A, C) → Fun^lax(A, C) and Fun(A, C) → Fun^oplax(A, C) are inclusions. That is, they are embeddings on maximal subspaces and on all mapping spaces.
+  - Thm 4.1.10: A₁ ⊠ ⋯ ⊠ Aₙ → A₁ × ⋯ × Aₙ is an epimorphism.
+  - This gives the "inclusion" half of C1″. It does not identify the image as the cells with invertible naturality cells.
+- **Comical and complicial models.** In Campion–Kapulkin–Maehara ([arXiv 2005.07603](https://arxiv.org/abs/2005.07603)), Def. 2.13 and Remark 2.14, the *pseudo* Gray tensor of marked cubical sets is by definition the lax one with exactly the mixed cubes x ⊗ y (dim x, dim y ≥ 1) marked. Its triangulation is the cartesian product of marked simplicial sets (§1, Notation 1.27, and Thm 6.10). Doherty–Kapulkin–Maehara ([arXiv 2106.09428](https://arxiv.org/abs/2106.09428)) prove that triangulation is a Quillen equivalence. In the saturated models, marking a cell is localising at it.
+  - So C1 holds in the comical model, for its own lax Gray tensor.
+  - Campion (2311.00205, introduction) notes that no comparison is known between the comical or complicial Gray tensor and his universal one for n ≥ 3. Keidar–Neuhauser ([arXiv 2606.27574](https://arxiv.org/abs/2606.27574)) compare a new lax-grid model with Campion's, but not with the comical one.
+
+**Sketch of the general case from these results (to be checked).**
+1. Campion ([arXiv 2209.09376](https://arxiv.org/abs/2209.09376)): the Gray cubes are dense in flagged (∞,ω)-categories. Run the reduction of §3.1 with cubes in place of Θ. It then suffices to prove C1 for A = □ᵃ and B = □ᵇ, where □ᵐ = (D¹)^{⊗m}.
+2. Induct on b, writing □ᵇ = □ᵇ⁻¹ ⊗ D¹. Loubaton, Prop. 3.1.3.2: (D♯ × C) ⊗ K♯ ≃ D♯ × (C ⊗ K♯). A cell of a product is marked when both components are. With D = A, C = (□ᵇ⁻¹)♭ and K = D¹, this reads:
+
+   A × (□ᵇ⁻¹ ⊗ D¹) ≃ ((A × □ᵇ⁻¹) ⊗ D¹)[{(x, b) ⊗ i : dim x ≥ 1, b an object}⁻¹].
+3. By induction, A × □ᵇ⁻¹ ≃ (A ⊗ □ᵇ⁻¹)[mixed⁻¹]. Now − ⊗ D¹ preserves pushouts, and Eᵏ ⊗ D¹ ≃ Dᵏ⁻¹ ⊗ D¹. So tensoring with D¹ inverts s ⊗ 0, s ⊗ 1 and s ⊗ i for every mixed cell s = x ⊗ y.
+4. The cells inverted in steps 2 and 3 together are exactly x ⊗ w with dim x ≥ 1 and w a cell of □ᵇ⁻¹ ⊗ D¹ of dimension ≥ 1. These are the mixed cells of A ⊗ □ᵇ. ∎ (sketch)
+
+The steps that need care:
+- the density reduction with cubes, including functoriality of "invert images of mixed generators" along degeneracies, where degenerate images are identities;
+- flagged versus complete (∞,ω)-categories;
+- the marking convention on products in Loubaton.
+
+**Recommended next step:** check this sketch in detail. If it holds, C1 becomes a theorem with a literature proof.

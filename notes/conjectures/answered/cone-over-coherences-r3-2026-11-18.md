@@ -754,3 +754,53 @@ The properties used are more specific than strong Steiner loop-freeness:
 These properties give the finite fusion argument above. They do not hold in this form for arbitrary \(c\star Q\), so this proof does not settle Questions 2 or 3.
 
 There is an all-dimensional geometric result relevant to those questions: Campion’s Theorem 5.11 says that the cellular attachment pushouts of a torsion-free complex remain pushouts on passage to flagged weak \((\infty,n)\)-categories, and his Remark 5.13 explicitly includes loop-free Steiner complexes. It therefore applies to the strict point joins under discussion. Its conclusion is in that homotopical model; identifying its weak cellular presentation with the CaTT term model is an additional step. No such identification is used in the proof above. [arxiv.org](https://arxiv.org/pdf/2311.00200?utm_source=chatgpt.com)
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** Question 1. RC(3) holds for Cone(D²; c), so a cone cell exists over every 3-dimensional coherence over D², for any lower choices.
+- **Open:** Questions 2 and 3.
+- **New, general tool:** the support lemma (1). It makes inactive columns literal in any context.
+
+Checked step by step:
+
+1. **The setup.** p_f : p_{τf} ⇒ p_{σf} ∗₀ f gives u : b ⇒ a∗₀f and v : b ⇒ a∗₀g, and p_α : p_g ⇛ p_f ∗₁ (p_x ∗₀ α) gives M : v ⇛ u ∗₁ w = d. This matches the prompt.
+2. **The support lemma (1).** Strict support is invariant under the strict axioms. A unit law only removes an identity whose support is already contained in the other operand's. Equation (2) holds for strict functors between free computads.
+
+   The induction on derivations is sound:
+   - a composition head strictifies to the total composite of P;
+   - a coherence head strictifies to 1_{πs}, with s full in P, so its support is Var(P) by the induction hypothesis.
+
+   This is the total-support form of Benjamin–Markakis Lemma 36, now stated for every context.
+
+   **Consequence.** Any term whose strict image is supported in a dependency-closed sub-context *is* a term of that sub-context.
+   - Example: S = D¹(a) ∗₀ D²(α) for 1_w.
+   - So (3) is a legal full coherence over S.
+   - In the active-column factorisation (6), passive columns are point-supported. Their γ-images use only the point c or y, so renaming that point to X or Y is literal and δ[σ] = γ holds exactly.
+3. **§2, strict cells.**
+   - The nonidentity strict 2-cells are exactly α, u, v, w and d:
+     - α has only the left whisker a, since a is the only edge into x and nothing leaves y;
+     - the only vertically composable nonidentity pair is (u, w);
+     - all of u, v, w, d go c → y, so nothing composes horizontally.
+   - The only nonidentity strict 3-cell is M:
+     - M has no whiskers, since no 2-cell enters b, none leaves ag, nothing enters c and nothing leaves y;
+     - M cannot compose with itself, since d ≠ v.
+   - K has no 3-generators and Δ has no 4-generators, so by Benjamin–Markakis Prop. 35 their 3-cells (respectively 4-cells) are invertible. Hence ≃ is an equivalence relation and cancellation is legal.
+4. **§3–4, normalisers.** Strict images u, v and d span c → y, so the arity has exactly one non-point root column. That column is a vertical chain C_n, because the arity has dimension 2. Keeping the head P and factoring γ = δ[σ] is literal by the support lemma. The recursion in (10) calls only on the active 2-arguments, which are proper subterms.
+5. **§5, fusion.** The structure checks out:
+   - the active arguments restrict to consecutive subchains (12) by the strict vertical-chain structure and (1);
+   - the induction runs on the formal term r;
+   - the fold comparisons are direct coherences on 1-composites of D³ ∗₂ D³ columns, or on path contexts.
+
+   The naturality used is in 2-variables only, which is depth 1 and within BMOSV Thm 3.1. I checked the case list (reassociation, fold interchange, cancellation order, boundary paths, final word u, v, w or uw) but did not write out every 4-cell.
+6. **§6, RC(3, K).** π A = π B because K has no 3-generators. Composition heads of arity 3 are compared with a boundary-corrected binary evaluation (14) by one full coherence. The dimension-0 case with a varying point argument is handled over D²(p), so no arbitrary endo-2-generator is needed.
+7. **§7, adjoining M.**
+   - Level-1 whiskers δ of a term with image M have πδ = 1_b, and (18) uses depth-1 naturality in the 2-variable P.
+   - Level-0 whiskers are point-supported, and (19) is one full coherence over the generic 3-disc.
+   - Sequentialisation (20) and the "exactly one M" count give (16). A_U and A_V are parallel 3-terms of K, so RC(3, K) connects them.
+   - Undoing the transport uses naturality of ε_P in the 2-variable P.
+8. **§8, scope.** The response is honest about what it uses. The four properties are specific to D², so Questions 2 and 3 remain open. The pointer to Campion Thm 5.11 and Rem. 5.13 (attachment pushouts of loop-free Steiner complexes stay pushouts in flagged weak (∞,n)-categories) is a homotopical statement. Using it for CaTT's term model needs a comparison that is not available.
+
+**Note for the naturality and Gray-contexts problems.** The support lemma (1) holds in every CaTT context. It gives the literal point-column factorisations of rounds 2 and 3 and the inactive-column lifting of gray-contexts r4 directly.
+
+Follow-up prompt: `outbox/cone-over-coherences-r4.md` (round 4, unsent).

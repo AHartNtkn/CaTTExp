@@ -740,4 +740,4 @@ Script: `scripts/e6/triple_tensor_r5_check.py`.
 9. **Obstruction (15)–(17) and the μ repair (18)–(19).** Correct: two distinct sources cannot both be reached from a common G. The equation cλ_x p = (μp);χ_ac is typed, and (24) follows from (18) by direct substitution.
 10. **Q3 normalization caveat.** The substitution (21) assumes that crossing against a composite hom-1 path is the composite of the pairwise crossings. The response flags this correctly. In a Gray category this is the usual naturality of the interchanger in a composite 1-cell. Whether a tensor-shaped lax theory should impose it upstairs is a design choice, and the follow-up asks about it.
 
-Follow-up prompt: `outbox/directed-interchange-every-level-r6.md` (round 6, unsent).
+Follow-up prompt: `directed-interchange-every-level-r6-2026-11-18.md` (round 6, answered).

@@ -7,3 +7,5 @@ import CaTTExp.Generated.UnitorNaturality
 import CaTTExp.Generated.ExchangeTwoBigons
 import CaTTExp.Generated.AssociatorNaturality
 import CaTTExp.Generated.LaxSquareRC3
+import CaTTExp.Generated.WedgeRC3
+import CaTTExp.Generated.ChainCylinderRC3

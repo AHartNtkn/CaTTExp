@@ -430,7 +430,8 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
   - **Lemma.** X[S⁻¹] ⊗ I ≃ (X ⊗ I)[s⊗0, s⊗1, s⊗i]⁻¹. "Gray localised at the mixed generators ≃ product" holds for 2-category fibres when all mixed dimensions are included.
   - **Positivity is not necessary.** Q = (∗; t; η : 1 ⇒ t) is non-positive with Free(Q) ≃ F₂ = BΔ_+^inj, and its suspension is a non-positive homotopical 3-computad. The hypothesis is "homotopical" (§9.3).
   - **Open.** General FT_n: gluing totals gives attaching maps only into the localised category, and lifting them to Free(Ψ) is the missing step. Also open: a decidable homotopicality criterion for 2- and 3-computads.
-- Round 3: `conjectures/outbox/finite-fibration-test-higher-base-r3.md` (unsent).
+- Round 3 (verified, `conjectures/answered/finite-fibration-test-higher-base-r3-2026-11-18.md`): attaching maps lift along δ_r : I → [r], so FT holds over every homotopical base of dimension ≤ 2 with fibres of any finite dimension; an operadic criterion and an obstruction for homotopical 2-computads; a 3-dimensional attachment rule.
+- Round 4: `conjectures/outbox/finite-fibration-test-higher-base-r4.md` (unsent).
 
 ---
 
@@ -444,4 +445,4 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
 | 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
-| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases, and 2-category-valued weights over the walking 2-cell are solved (§9.4). The rule's hypothesis is "homotopical base" (Free ≃ F_n), not positivity; some non-positive bases admit no finite presentation (§9.3). Open: general FT_n lifting step, and a homotopicality criterion. | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base-r3.md` ready to send (rounds 1 and 2 answered) |
+| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases, and 2-category-valued weights over the walking 2-cell are solved (§9.4). The rule's hypothesis is "homotopical base" (Free ≃ F_n), not positivity; some non-positive bases admit no finite presentation (§9.3). Open: general FT_n lifting step, and a homotopicality criterion. | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base-r4.md` ready to send (rounds 1–3 answered; round 3 settles FT over homotopical bases of dimension ≤ 2) |

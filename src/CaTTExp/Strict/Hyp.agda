@@ -2,7 +2,8 @@
 -- Definitions shared by strict-model soundness and the proofs of its
 -- hypotheses: the total cell's tower twT, set equality of supports,
 -- and the statements TCell (proved in Strict.Bridge), BSupp and its
--- instance BBdry (the remaining hypothesis of Strict.Soundness). Split
+-- instance BBdry (proved in Strict.Recon; formerly hypotheses of
+-- Strict.Soundness). Split
 -- from Strict.Soundness so that the proofs can be imported there.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Hyp where
@@ -169,7 +170,8 @@ endsV→endsTy (arr (arr B s t) _ _) e = endsV→endsTy (arr B s t) e
 closed : S.Closed
 closed ()
 
--- The two hypotheses, named so that every module using them states the
+-- The two facts soundness uses (now theorems: Strict.Bridge.T-cell and
+-- Strict.Recon.b-supp / b-bdry), named so that every module states the
 -- same thing.
 TCell : Set
 TCell = ∀ {Θ} → Θ ⊢ps → ∀ A x y → T (endsOK Θ A) → endsTy A ≡ just (var x , var y) →

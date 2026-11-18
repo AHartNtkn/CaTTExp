@@ -753,4 +753,4 @@ Step by step.
 - **The unitor instance of dimension 3 is settled by an explicit term.**
 - **The obstruction is a single fixed incoming edge p_x.** The naturality round-3 answer (`answered/naturality-arbitrary-depth-r3-2026-11-18.md`, fixed-edge extension lemma, retained arities D¹(h) ∗₀ C_n with h sent literally to an edge variable) handles exactly this shape for cylinders. It is the natural next tool.
 
-Follow-up prompt: `outbox/cone-over-coherences-r3.md` (round 3, unsent).
+Follow-up prompt: `cone-over-coherences-r3-2026-11-18.md` (round 3, answered).

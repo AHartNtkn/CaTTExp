@@ -17,9 +17,8 @@
 -- Count the basis element f′⊗β: ∂⁺(α⊗β) = f′⊗β + α⊗g, ∂⁻(α⊗β) = f⊗β +
 -- α⊗g′, so the left side has |c| + 1 copies and the right side none.
 --
--- The result depends on one explicit module parameter, B-bdry (a cell
--- with the support of a boundary of the total cell is that boundary),
--- as soundness does. Nothing is postulated.
+-- The result rests on no hypothesis: soundness does not, and nothing is
+-- postulated.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.ReverseInterchanger where
 
@@ -120,9 +119,9 @@ private
   n+1≢0 zero    ()
   n+1≢0 (suc n) ()
 
-module _ (B-bdry : BBdry) where
+module _ where
 
-  open Soundness B-bdry
+  open Soundness
 
   -- Theorem 1(2): no term has the reverse interchanger's type.
   no-reverse-interchanger : ∀ t → ¬ (HComp ⊢tm t ∶ ichTy⁻)

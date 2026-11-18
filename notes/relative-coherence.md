@@ -1,6 +1,6 @@
 # Relative coherence in CaTT: dimension 2, and what it gives for Gray contexts and naturality
 
-*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r5.md`.*
+*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts-r6.md`.*
 
 Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (dimension ≤ 2 closed; rest reduced), D3, D3a, D4, C2 (progress).
 
@@ -24,6 +24,11 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | **RC(3) for the cylinder of a composable pair** x → y → z; hence N for every 3-dimensional coherence over that pair | proved by a researcher at the round-2 standard (fixed-edge extension lemma), verified (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`); generalised factorisations machine-checked (§7.5) |
 | **RC(3) for the 2-disc cylinder** (the only strict 3-cell is πU); hence N for every 3-dimensional coherence over the 2-disc | proved by a researcher, verified at paper level (`conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md`) |
 | Suspension descent: RC(r+1) on `(ΣQ)↑ΣY` ⇒ RC(r) on `Q↑Y`, so RC(n) on all cylinders gives N through dimension n | proved by a researcher, verified at paper level (same file) |
+| **RC(3) on every finite full chain cylinder**, on the partial selections Y={z,g} and Y={y,z,f,g} over x→y→z, and on the cylinder of D²∗₁D² | proved by a researcher, verified at paper level (`conjectures/answered/naturality-arbitrary-depth-r5-2026-11-18.md`); constructors and fold machine-checked on x₀→⋯→x₃ (§7.7) |
+| Gray cube: X-free 3-loops contractible; the factorisation of inactive columns extends to 3-dim contexts whose 3-generators have 2-supported 2-sources (incl. the D² cylinder and c⋆D²) | proved by a researcher, verified at paper level (`conjectures/answered/gray-contexts-r5-2026-11-18.md`) |
+| An acyclic 1-graph is **not** enough for RC(3): (x, a : 1_x→1_x) is acyclic and RC(3) fails | counterexample (same file); the open condition is now "no 2-generator from an identity to an identity" |
+| Fusion when two generator letters can be exchanged: Y={x,f,g} | proof sketch here (§7.6): y is a cut vertex, so horizontal normal forms remove the exchange; key constructors machine-checked. Not verified |
+| Fusion when two generator letters can be exchanged: the 2×2 grid (no cut vertex) | open; asked in both r6 prompts |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
@@ -354,7 +359,7 @@ Source: `conjectures/answered/gray-contexts-round2-2026-11-18.md`. Partial answe
 - **Proved (any context, no acyclicity):** parallel 3-terms that are both *literally suspended* coherences `coh_{ΣC,ΣA}[τ]` over vertical chains ΣC are connected by a 4-term. The proof desuspends to the hom computad, using Benjamin–Markakis hom freeness (relied on at statement level, not re-read), lifts to the path chain `C_w` by item 4 / Proposition P∞, and re-suspends.
 - **Refuted shortcut:** "equal global strict image ⇒ equal hom strict image". Over D₂, take `W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g`, `r = coh(A → W(A))`, `ℓ = coh(W(A) → A)` and `κ = r ∗₂ ℓ`. Then κ is not `1_A` in the hom strictification, yet `coh(κ → 1_A)` exists globally. The same example transports to the lax square S.
 - **Consistency with §6.1.** The steps r and ℓ re-parse the atom A into a whiskered expression `W(A)`. This is exactly the step the column-loop lemma excludes, because there atoms stay fixed syntactic pieces. So the column-loop lemma and D14 are unaffected, and the remaining gap is the same in both accounts.
-- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 answer (`conjectures/answered/gray-contexts-r3-2026-11-18.md`) shows this replacement is impossible in general (a hom-word length invariant), so normalisers must keep boundary-adjusting terms, as in §7.4; round 4 is `conjectures/outbox/gray-contexts-r5.md`.
+- **What remains:** boundary-preserving 4-comparisons that replace an arbitrary F-bearing 3-term by a suspended one. Equivalently, these are the normalisers that Rice (arXiv 2502.17068, §4.5.2) leaves open. The round-3 answer (`conjectures/answered/gray-contexts-r3-2026-11-18.md`) shows this replacement is impossible in general (a hom-word length invariant), so normalisers must keep boundary-adjusting terms, as in §7.4; rounds 4 and 5 are answered (`conjectures/answered/gray-contexts-r4-2026-11-18.md`, `conjectures/answered/gray-contexts-r5-2026-11-18.md`: the Gray cube's X-free loops are contractible), and round 6 is `conjectures/outbox/gray-contexts-r6.md`.
 
 ### 7.4 RC(3) for the lax square: settled (C1 round 2, verified 2026-11-18)
 
@@ -366,7 +371,7 @@ The proof has four steps.
 3. **Evaluation fusion.** A connecting cell `Λ_G : G ∗₂ ν_{T′} → ν_T` is built by induction on the syntax of the 3-term G, through 2- and 3-dimensional arities.
 4. **Right cancellation.** This uses the invertibility of coherence composites.
 
-This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); round 4 answered: `conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md` (2-disc cylinder settled, suspension descent); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r5.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
+This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); round 4 answered: `conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md` (2-disc cylinder settled, suspension descent); round 5 answered: `conjectures/answered/naturality-arbitrary-depth-r5-2026-11-18.md` (all finite full chains, two forced-order proper selections, D² ∗₁ D²); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r6.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
 
 ### 7.5 Machine checks of the lax-square proof, and the cylinder of a composable pair (2026-11-18)
 
@@ -393,6 +398,89 @@ With these two changes, the rest of the lax-square proof goes through as far as 
 
 *Status: sketch.* The generalised folding laws have not been written out in full. The 2-disc cylinder (question 1 of round 3) is different again: it has a 3-generator α↑, so 3-terms can contain a 3-variable, and that needs a dimension-3 analogue of Theorem A's sequentialization and exchange.
 
+### 7.6 Exchangeable letters: the cylinder with Y = {x, f, g} (attempt, 2026-11-18)
+
+This is question 1 of `conjectures/outbox/naturality-arbitrary-depth-r6.md`, the smallest case where two generator letters can be applied in either order. I attacked it while the prompt is out. **Outcome:** the exchange problem disappears in this case, because the unselected vertex y is a cut vertex. Normal forms can be *horizontal*, `N₁ ∗₀ N₂`, instead of a chosen vertical order. The remaining work is the forced-order machinery of rounds 2 and 5, applied on each side of y, plus one interchange coherence. What follows is a proof sketch. Status is at the end.
+
+**The context.** `W = (x⁻, x⁺, X : x⁻ → x⁺, y, z, f⁻ : x⁻ → y, f⁺ : x⁺ → y, F : f⁻ ⇒ X ∗₀ f⁺, g⁻, g⁺ : y → z, G : g⁻ ⇒ g⁺)`. This is §1.3 of the prompt, with the factors `y↑` and `z↑` omitted. Every directed path from `{x⁻, x⁺}` to z passes through y, and there is no edge out of z or into x⁻. So `W = W₁ ∨_y W₂`, where
+- `W₁ = (x⁻, x⁺, X, y, f⁻, f⁺, F)` is a single-letter context, and
+- `W₂ = (y, z, g⁻, g⁺, G) = D²`.
+
+**Lemma W0 (the summands).**
+- (a) A term of W whose 0-boundary lies in W₁ is literally a term of W₁. This follows from the support lemma (§4.3), because hom-sets of the free strict ω-category on a wedge between objects of W₁ use only generators of W₁. The same holds for W₂.
+- (b) RC(n) holds in W₂ = D² for every n. The support of a term of D² is one of D⁰, D¹ (either edge) or D², because no strict cell has support `{y, z}` or `{y, z, g⁻, g⁺}`. Each of these is a pasting context, so two parallel terms with the same strict image are full in the same pasting context and are joined by one coherence there.
+- (c) RC(3) holds in W₁ by the round-2 method (§7.4). x⁻ is the unique source and y the unique sink, and every 2-term containing F spans x⁻ → y. So inactive columns are point-supported, exactly as in the lax square, and W₁ is the lax square with `y↑` collapsed. *(Same method; not re-derived line by line.)*
+
+**Lemma W1 (cut-vertex column lemma).** Let `t = coh_{P,A}[γ]` be a term of any dimension whose 0-boundary runs from `{x⁻, x⁺}` to z. Rank the 0-variables x⁻ < x⁺ < y < z. Then:
+- the images `γ(v₀), …, γ(v_m)` of P's 0-vertices are non-decreasing, because each column contains a 1-variable and 1-terms only go forward;
+- either some `γ(v_j) = y` (a *split*), or exactly one column crosses y;
+- in a split, `P = P₁ ∨ P₂` with `γ = γ₁ ∨ γ₂`, where γ₁ lands in W₁ and γ₂ in W₂ by W0(a). Each side has at most one active column (one whose entries contain a 2-variable). On the left it spans x⁻ → y, on the right y → z, and all other columns are point or path columns;
+- with a crossing column, every other column is inactive.
+
+*Proof.* Monotonicity is as stated. If no vertex goes to y, the rank jumps from ≤ 1 to 3 at exactly one column. A term containing F has, by the support lemma, a strict image containing F, so it spans x⁻ → y; likewise G spans y → z. ∎
+
+So **two active columns occur only in a split, one on each side of y**. That is the "two letters in different columns" configuration of the r6 prompt, and it is always a horizontal composite at the level of the arity.
+
+**Normal forms.** Let A be a crossing 1-term with `π(A) = l · r`, where l ∈ {f⁻, X f⁺} and r ∈ {g⁻, g⁺}. Its canonical split is `Â := l̂ ∗₀ r̂`, with `l̂ ∈ {f⁻, X ∗₀ f⁺}` and `r̂ ∈ {g⁻, g⁺}` fixed literal terms; Â depends only on π(A). A crossing 2-term with `π = α ∗₀ β` (α ∈ {id, F}, β ∈ {id, G}) gets
+
+```
+N(A, B) := κ(A, Â) · ( N₁(α) ∗₀ N₂(β) ) · κ(B̂, B)
+```
+
+where N₁ is the round-2 normal form of W₁ between l̂ and l̂′, and N₂(G) = G, N₂(id_r) = κ(r̂, r̂). Both exchange orders have the same strict image F ∗₀ G, so they get the same normal form. Nothing chooses an order. The two orders are joined to the horizontal composite by the exchange coherences, which are single coherences over `D² ∗₀ D²`:
+
+```
+χ_L : (F ∗₀ g⁻) · ((X ∗₀ f⁺) ∗₀ G) ⇛ F ∗₀ G,      χ_R : (f⁻ ∗₀ G) · (F ∗₀ g⁺) ⇛ F ∗₀ G.
+```
+
+**Normalisers** `ν_T : T ⇛ N(σT, τT)`, for a crossing 2-term T, are built by induction on T, on the round-5 pattern `ν_T = v_H[η] ; D`.
+- *No 2-variables.* Proposition P∞: one coherence over the path context.
+- *Split.* Factor literally, `T = H[η]`, through a frame `R = R_L ∗₀ R_R` with at most one retained column on each side; point and path columns are pulled back as in §7.5. Then `v_H : H ⇛ κ · (LF(z₁, …) ∗₀ LF(w₁, …)) · κ` is one coherence over the pasting context R. After evaluation, the left entries `η(zᵢ)` are W₁-terms, normalised and folded by the W₁ theory; the right entries are W₂-terms, normalised by W0(b). The outer κ's are merged by the fixed-whiskering cells ρ and the multiplication μ of round 5.
+- *Crossing column.* `T = H[η]` through `R = (path) ∗₀ C_n`, `v_H : H ⇛ κ · LF(z) · κ`, and each `η(zᵢ)` is a crossing 2-term, normalised by induction. The vertical product of horizontal normal forms is folded in three steps.
+  1. Contract the κ's at each join (μ). The inner comparison is `κ(Ŝ, Ŝ)` with literally equal endpoints, because canonical splits depend only on the strict path.
+  2. Apply the **horizontal fold** `μ^h : (z₁ ∗₀ w₁) · (z₂ ∗₀ w₂) ⇛ (z₁ · z₂) ∗₀ (w₁ · w₂)`, one coherence over `C₂ ∗₀ C₂`.
+  3. Fold each side.
+
+**3-terms and fusion.** W1 holds for arities of every dimension. For a 3-term `G : T ⇛ T′`, build `Λ_G : G ; ν_{T′} ⇛ ν_T` by induction on G, as in round 5.
+- *A split head* is a ∗₀-composite, at the level of its frame, of a W₁ 3-column and a W₂ 3-column. Its Λ is the W₁ Λ (round 2) and the W₂ Λ (one coherence), joined by the 4-coherence that relates μ^h to 3-cells in each factor. That is a coherence over `V(k₁, …) ∗₀ V(k′₁, …)`, which is a pasting context.
+- *A crossing head* has crossing 3-term entries. Their Λ's exist by induction, and the vertical fold needs μ^h to be natural in 3-cells. That is again a 4-coherence over `V(𝐤) ∗₀ V(𝐤′)`.
+
+Right cancellation of the invertible ν then gives RC(3), exactly as in §7.4.
+
+**What is new, and what is not written out.**
+- *New, and complete on paper:*
+  - Lemma W1;
+  - the horizontal normal form, which makes exchange classes a non-issue here;
+  - χ_L, χ_R and μ^h, all explicit coherences over pasting contexts.
+- *Written as a sketch:*
+  - the evaluation-fusion cells `E_{u,σ}` for split frames (the 4-cells comparing the normaliser of `u[σ]` with the evaluated relative normaliser);
+  - the 4-laws for μ^h.
+
+  Each needed cell is a full coherence over a pasting context of the form `V(𝐤) ∗₀ V(𝐤′)` or `C_n ∗₀ C_m`. I have not checked that the induction closes with no hidden cell of another shape, which is the step the round-5 verification checked line by line. So the status is **proof sketch, at the round-3 standard; not verified.**
+
+**Scope.**
+- *Chains.* The argument uses only that y is a cut vertex. On a chain, an unselected vertex x_i is always a cut vertex of `Q↑Y`, so every selection on a chain splits as a wedge of segments, each a forced-order piece in the sense of round 5. So I expect **RC(3) for every up-closed selection on every finite chain**, given the wedge fusion above and forced-order RC(3) for segments with unselected ends.
+- *The 2 × 2 grid* (question 2 of the r6 prompt, and the Gray-contexts case) has no cut vertex: y is selected, so `y⁻ ≠ y⁺`. Exchange there is not removed by this device and stays open.
+
+**Machine checks** (`tools/rc3_wedge.py`, `src/CaTTExp/Generated/WedgeRC3.agda`, 381 checks, about 13 s):
+- *Python:* Lemma W1 on 688 crossing subterms of generated 2-, 3- and 4-terms (380 splits, 308 crossing columns), and frame stability on 15 instances.
+- *Agda:*
+  - 56 literal factorisations `γ = δ[η]` through one- or two-column frames, with H typed and η a well-typed substitution;
+  - 50 frame normalisers `v_H`, typed over R, and their instances in W;
+  - χ_L, χ_R, the two 3-terms relating the exchange orders, and a 4-term between them;
+  - μ^h over `C₂ ∗₀ C₂`, and its instance on the layers of `(F ∗₀ g⁻) · ((X ∗₀ f⁺) ∗₀ G)`.
+- *Negative control:* a swapped type on the exchange 3-term is rejected.
+
+### 7.7 Machine checks of the chain-cylinder construction (round 5, 2026-11-18)
+
+`tools/rc3_chain.py` and `src/CaTTExp/Generated/ChainCylinderRC3.agda` (172 checks, about 36 s) instantiate §§1–2 of the round-5 answer on the full cylinder of `x₀ → x₁ → x₂ → x₃`. The Agda checker accepts:
+- the raw letters `E_i^{a,b} = L_i⁻ ∗₀ (F_i ∗₀ R_i⁺)`, and 22 normal forms N_w (3), for every forced word on the endpoint pairs (0,3), (1,3) and (0,2). This includes the boxed three-letter form (5), with its seven list entries;
+- the multiplication `μ_{u,v} : N_u(A,B) · N_v(B,C) ⇛ N_{uv}(A,C)` (7), for all 20 splits of all words on (0,3), including the empty-word cases. Each is the reassociation coherence on `C_N`, followed by the contraction `m_p` inserted as a composition coherence on `V_N(0,…,1,…,0)`. Each has exactly the stated type;
+- the two fold 4-cells of §2.2: overlapping pairs (a direct 4-coherence on the path `P₃`) and disjoint pairs (interchange on `V(1,1)`);
+- 42 literal frame factorisations of generated 2-terms, each with exactly one active column (asserted), H typed over the frame `P_ℓ ∗₀ C_n ∗₀ P_r`, and η well typed.
+
+Negative control: a swapped type on a μ is rejected. These checks cover the constructors and the fold (§2 of the answer). The normalisers, fusion and the 3-term induction (§§4–5) are not generated.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).
@@ -410,6 +498,8 @@ With these two changes, the rest of the lax-square proof goes through as far as 
 | `ExchangeTwoBigons` | Theorem A with one exchange move (two side-by-side bigons) | typechecks (~3 min) |
 | `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | typechecks (5121 definitions, about 1 MB; 17 min and about 10 GB with `+RTS -M12G`) |
 | `LaxSquareRC3` | Checks toward RC(3) for the lax square (§7.4–7.5): 43 active-column factorisations `γ = δ[η]` (2- and 3-dimensional arities, refl) with H typed over the retained column and η a well-typed substitution `R → S` (witnessed by the coherence `coh_{R, u→u}[η]`, u the unbiased composite of R); an exchange 4-term between a path 3-cell and a column coherence carrying F; the mixed law Ω_R (11) instantiated in S; 19 generalised factorisations for the composable-pair cylinder | typechecks (~11 s); negative control (swapped fill type) rejected |
+| `WedgeRC3` | Checks toward RC(3) for Y={x,f,g} on x→y→z (§7.6): 56 factorisations through one- and two-column frames, 50 frame normalisers, the exchange coherences and a 4-term between the two exchange routes, the horizontal fold μ^h | typechecks (~13 s); negative control rejected |
+| `ChainCylinderRC3` | Round-5 constructors on the cylinder of x₀→x₁→x₂→x₃ (§7.7): letters, 22 normal forms incl. (5), μ for all 20 splits, the fold 4-cells, 42 one-active-column frame factorisations | typechecks (~36 s); negative control rejected |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

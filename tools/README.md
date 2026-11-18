@@ -8,6 +8,7 @@ These Python scripts *generate* CaTT terms, which are then checked by the certif
 - `ladder.py`: the cylinder `L(Q)` of a chain, BMOSV-style lifts of binary composites, and the associator's naturality 3-cell (C1b).
 - `unitor.py`, `exch_test.py`: the other generated checks.
 - `rc3_square.py`, `rc3_pair.py`: checks for RC(3) on the lax square (`notes/relative-coherence.md` §7.4–7.5) and the generalised active-column factorisation on the composable-pair cylinder.
+- `rc3_wedge.py`: the cut-vertex reduction for Y = {x, f, g} on x → y → z (§7.6). `rc3_chain.py`: the round-5 chain-cylinder constructors for x₀ → ⋯ → x₃ (§7.7). Run either with `emit` to write its module, or with `neg` to write a negative control (`NegWedge.agda`, `NegChain.agda`, not committed) that Agda must reject.
 - `emit_agda.py`: writes a module with hash-consed definitions (one Agda definition per distinct subterm).
 
 Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are not imported by `Everything.agda`, because they take minutes to check.
@@ -18,6 +19,8 @@ Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are n
 | `ExchangeTwoBigons` | Theorem A with one exchange move: `(a ∗₀ g) ∗₁ (f′ ∗₀ b) ⇛ (f ∗₀ b) ∗₁ (a ∗₀ g′)` | ~3 min |
 | `AssociatorNaturality` | Associator's naturality 3-cell over the fully selected 3-chain (the ladder theorem's example) | ~17 min, about 10 GB (`+RTS -M12G`) |
 | `LaxSquareRC3` | Checks toward RC(3) on the lax square: active-column factorisations, an exchange 4-term, the mixed law (11); generalised factorisations on the composable-pair cylinder (`rc3_square.py`, `rc3_pair.py`) | ~11 s |
+| `WedgeRC3` | Y = {x, f, g} on x → y → z: two-column factorisations, frame normalisers, exchange coherences and a 4-term between the exchange routes, horizontal fold (`rc3_wedge.py`) | ~13 s |
+| `ChainCylinderRC3` | Full cylinder of x₀ → ⋯ → x₃: letters, normal forms N_w, μ for every split, fold 4-cells, frame factorisations (`rc3_chain.py`) | ~36 s |
 
 Negative control: swapping source and target in `expected` of `UnitorNaturality` makes Agda reject the module (`3 != 1 of type Nat … refl`).
 

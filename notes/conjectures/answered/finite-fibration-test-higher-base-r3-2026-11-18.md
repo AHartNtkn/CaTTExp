@@ -799,3 +799,49 @@ Starting with regular 3-polygraphs and applying this rule gives a sufficient cla
 - For \(\Sigma Q\), take \(D=\Sigma K\), where \(K\) is the free category on the loop \(t\), and \(K'=F_2(Q)\). The operadic criterion supplies the relative homotopical attachment. The same argument applies to suspensions of the entire operadic class in §4.
 
 The general FT statement for base dimension \(n\ge3\), and the assertion that every positive 3-computad is homotopical, remain unproved here.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Question 1 is solved**, by substituting along δ₂ : I → [2].
+- **Question 2 is solved for every homotopical base of dimension ≤ 2**, with fibres of any finite dimension m, generator count (30) and dimension ≤ m + 2. This closes the attaching-map gap of item 11 for 2-dimensional bases.
+- **Question 3 is answered in part.** There is a one-vertex operadic criterion, an obstruction R = (∗; t; η : 1 ⇒ t, ε : t ⇒ 1), and a 3-dimensional attachment rule.
+- **Still open:** FT_n for bases of dimension n ≥ 3, and whether every positive 3-computad is homotopical.
+
+Checked step by step:
+
+1. **§1.2, the path cylinder.** A ⊗ [2] ≃ (A ⊗ I) ∐_A (A ⊗ I), and precomposing with A ⊗ δ₂ gives a map A ⊗ I → P_gr *before* localisation.
+
+   I typed (10):
+   - η^f_p : f_x;Fp ⇒ p;f_y and η^g_{Fp} : g_{Fx};GFp ⇒ Fp;g_{Fy};
+   - so (f_x ∗ η^g_{Fp}) · (η^f_p ∗ g_{Fy}) goes τ_x;GFp ⇒ f_x;Fp;g_{Fy} ⇒ p;τ_y, with no inverses.
+
+   (11) is the corresponding 3-dimensional pasting, κ^f first and then κ^g_{Fρ}, with κ^g_{Fρ} the image of a mixed cell under Fρ ⊗ I. It is not a new generator.
+2. **§2, the generators over α.**
+   - P_p = (λ_x ∗ Hp) · η^h_p and Q_p = (η^{fg}_p ∗ a_y) · (p ∗ λ_y) are both 2-cells ending at p;h_y.
+   - Their sources τ_x;a_x;Hp and τ_x;GFp;a_y agree by the strict naturality (18). Strictness holds because free finite-dimensional strict categories are gaunt, so invertible comparisons into them are identities.
+   - (20)–(26) follow the walking-2-cell pattern of round 2, with κ^{fg} given by (11).
+3. **§3, the general 2-dimensional theorem.**
+   - J_p along δ_r : I → [r] handles every path, including identity paths (r = 0). Positivity plays no role beyond giving the homotopical-base hypothesis.
+   - All base 2-cells are attached at once in (38), with every boundary landing in the unlocalised P_gr.
+   - Localisation commutes with the pushout by the mapping property, and Loubaton Cor. 3.2.3.16 assembles the pullbacks over (40).
+   - The count (30) is one generator per (base cell, source-fibre generator).
+
+   One step rests on references I did not re-derive: that the round-2 localisation (37) and the mixed-localisation lemma hold for fibre dimension m > 2, and the relative cellularity of R_σ → W_σ (Chanavat Cor. 3.27, Thm 3.29).
+4. **§4, the operadic criterion.**
+   - When every 2-generator has a single generating arrow as target, the 2-cells of F₂(Γ) are planar forests modulo interchange, so F₂(Γ) ≅ B Env_{E1}(P) for the free planar coloured operad P.
+   - Coherent freeness of P (Cisinski–Moerdijk Cor. 3.8, arity 0 allowed) plus the envelope adjunction (Blans–Linskens) gives the mapping-space universal property of Free(Γ).
+   - The criterion covers Q and (∗; t; η : 1 ⇒ t, μ : tt ⇒ t), and excludes (∗; σ : 1 ⇒ 1).
+5. **§5, the obstruction R.**
+   - Set i(σ) = η · ε : 1 ⇒ 1, and let r send t ↦ 1, η ↦ σ, ε ↦ 1. Both are well typed and ri = id. So K(ℤ,2) is a retract of the groupoidification of F₂(R), whose homology is then unbounded.
+   - A finite Free(Ψ)[S⁻¹] groupoidifies to a finite CW complex, so F₂(R) has no finite presentation. In particular Free(R) ≄ F₂(R).
+   - So "no generator has both boundaries identities" is not enough. A *composite* 1 ⇒ 1 already obstructs.
+6. **§6, the 3-dimensional attachment rule.**
+   - The condition is that no nonidentity 1-cell enters s or leaves t, and D(s,s) = D(t,t) = 1. Then a Θ-cell of D′ not in D is forced to lie in ΣK′, so N_Θ D′ = N_Θ D ∐_{N_Θ ΣK} N_Θ ΣK′. That is a pushout of monomorphisms, hence a homotopy pushout.
+   - Both examples check:
+     - ζ, with K the free category on the parallel pair α▷r, β▷r, and ζ a positive 2-cell attachment in that hom;
+     - ΣQ, with K = Bℕ on the loop and K′ = F₂(Q).
+
+**Remark.** Every homotopical 2-computad now known (positive ones, the operadic class, its opposite) has F₂(Γ) with no nonidentity 2-cell from an identity 1-cell to an identity 1-cell. The non-homotopical ones (σ, R) have one. The follow-up asks whether this characterises homotopical 2-computads.
+
+Follow-up prompt: `outbox/finite-fibration-test-higher-base-r4.md` (round 4, unsent).

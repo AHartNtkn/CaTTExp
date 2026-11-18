@@ -189,6 +189,11 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
   - Practical consequence: a lemma proved once and dualised may land in the oplax theory, so a second proof may be needed. CaTT's proof-size savings from opposites shrink accordingly.
   - Mitigation: a kernel parameterised by orientation, so proofs transfer between the lax and oplax theories. This reduces the loss but does not remove it.
   - Which reversals survive is a short computation, and it is PR #3's experiment 3. Under two-tier L, dualities used only inside one object (e.g. the Eckmann–Hilton development) are unaffected.
+  - **Done (2026-11-18, `closed-structure.md` Part D, Agda `GrayDuality.agda`).**
+    - Symmetries of two-tier L: J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}.
+    - Lax ↔ oplax swaps: J ∈ {{1}, all, even, {3,5,7,…}}.
+    - Every other J lands in a mixed-orientation theory L_ε.
+    - The orientation-parameterised kernel is the family L_ε, on which all dualities act. Implementing it costs one sign per dimension in the support computation.
 
 ### R6. "P and L coincide for functors into 1-categories" (PR #2 §3.2)
 

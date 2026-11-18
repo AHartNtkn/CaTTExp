@@ -10,3 +10,4 @@ import CaTTExp.Check
 import CaTTExp.Pure
 import CaTTExp.Examples
 import CaTTExp.Sketch.Representables
+import CaTTExp.GrayDuality

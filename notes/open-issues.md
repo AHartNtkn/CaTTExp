@@ -24,6 +24,7 @@ Thread ids used below:
 | FREE | free ω-categories as objects `cmsg_018pe2CvdFGDdsWgn8Tjn5gb7LiQb6yikB1xjtm14CaXMG` | done |
 | LIMN | limits and representables notes `cmsg_018pe2CvdFGDdsWgn8Tjn5gb6zYn9ewLrPvp4YL8AfJHKN` | done |
 | PVG | pseudo vs Gray-style core `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKP6yrjEAYBPgxDoAc2gq3F` | done |
+| CLOSED | "Develop closed structure via pasting types" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb9dQGktBpKCBMmR6ra86Q6R` | done 2026-11-18 (`closed-structure.md`) |
 | LIT | literature / conjecture verification `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKdRdpEiQuvAuEvTAURBqhf` | done |
 
 ---
@@ -81,18 +82,20 @@ Thread ids used below:
 | D4 | Side conditions of the Gray tensor of contexts: **G2** functoriality in substitutions (needed for nat-Δ), **G4** associativity up to coherence (may need CaTT_sua), **G5** whether linearity (x ∝ t) is needed. | `internal-hom.md` §4.2 | unowned | former area IHOM |
 | D5 | Agda targets for Gray contexts: Γ ⊗ D¹ for Γ a pasting scheme as a function on syntax, proved well formed; G3 (wedges); vertical composition of lax transformations as a substitution, recording which non-ps composites are needed; D¹ ⊗ D¹ ⊗ D¹ under both orientations. | `internal-hom.md` §7 | unowned (LCORE's Gray-cube test is the L-side analogue, not this) | former area IHOM |
 | D6 | If molecular coh is adopted: re-examine **pruning, insertion and rehydration** for molecules. | `internal-hom.md` §4.3(ii) | unowned (conditional on D2 outcome) | former area IHOM |
-| D7 | **Gray tensor of arbitrary objects** B ⊗ C as a colimit of ⟦x ⊗ y⟧, then check the Gray tensor's universal property. Needed for lax currying with both factors arbitrary. | `internal-hom.md` §6; `pseudo-vs-gray.md` §4.3 | blocked on general colimits (B12); adjacent work: state the target universal property | former area IHOM |
-| D8 | **Dualities under L**: which reversals stay symmetries and which swap lax/oplax (PR #3 experiment 3), including the even-duality formula for ⊗ (marked [recall]); design an orientation-parameterised kernel so proofs transfer. | `pseudo-vs-gray.md` R5; `internal-hom.md` §5.6 | unowned | former area PVG |
-| D9 | **PL1**: pin down the faithfulness lemma (free unit-free biclosed monoidal category → free non-symmetric linearly distributive category); write out steps 2–3 of the 1-dimensional theorem carefully. | `conjectures/planar-pasting-types.md` §2, §7 | unowned | former area IHOM |
-| D10 | **Units** for planar pasting types: a separate criterion. | `planar-pasting-types.md` §3 | unowned | former area IHOM |
-| D11 | **PL-ω**: a class of Gray pasting types; first test, a criterion whose 2-cells are exactly the lax naturality cells of evaluation Fun^lax(B, C) ⊗ B → C, without inverses; compare Gepner–Heine's LMor/RMor. | `planar-pasting-types.md` §4, §7 | unowned | former area IHOM |
-| D12 | **Mimram's CCCaTT**: work out the higher-dimensional cartesian pasting criterion (unpublished), and re-check the rule details against the PDF (they were read via a summary). | `internal-hom.md` §5.7 | unowned | former area IHOM |
+| D7 | **Gray tensor of arbitrary objects** B ⊗ C. **Partly done** (`closed-structure.md` Part E): the higher-cell universal property is stated via the pseudo cotensor; the naive all-levels rule is shown unsound (counterexample B = C = D¹); B ⊗ ⟦Θ⟧ for arbitrary B and representable Θ is given by a colimit-free representability rule over (lhom), sound by Campion. Remaining: both factors arbitrary, which needs [C, –]_lax for arbitrary C. | `internal-hom.md` §6; `closed-structure.md` E.3 | blocked on F5 (object-indexed limits) or D11 (PL-ω) or B12 (colimits); adjacent: implement E.2's rule | former area CLOSED |
+| D8 | ~~Dualities under L~~ **Closed for two-tier L** (`closed-structure.md` Part D; Agda `GrayDuality.agda`, reviewed). D_K commutes with ⊗ iff K ∈ {∅, all}, reverses it iff K ∈ {odd, even}; symmetries of two-tier L are J ∈ {∅, {2,3,…}, odd, {1,2,4,…}}, lax↔oplax swaps J ∈ {{1}, all, even, {3,5,…}}, all other J give mixed theories L_ε. Orientation-parameterised kernel = the family L_ε. Remaining: redo for uniform L once E6 exists; implementing L_ε belongs to E1. | `pseudo-vs-gray.md` R5 | blocked (uniform-L part) on E6 | former area CLOSED |
+| D9 | ~~PL1~~ **Closed**: proved directly (`closed-structure.md` Part A, Theorem A); the faithfulness lemma is Corollary A3; steps 2–3 written out (Theorem A4). Python check of the combinatorial lemmas on all balanced sequents up to 4 atoms. | `planar-pasting-types.md` §3 | closed | — |
+| D9a | Write out in full the **generalization lemma** of Theorem A4 (every UL⊗ term is a substitution instance of a term of its balanced principal typing). | `closed-structure.md` A.3 step 3 | unowned | former area CLOSED |
+| D10 | **Units**: balanced is not enough (triple-dual counterexample); the unit-pasting class (normalizes to a unit-free pasting sequent or to ⊢ I) is **proved contractible** (`closed-structure.md` Part B, Theorem B). | `planar-pasting-types.md` §3 | closed except D10a | — |
+| D10a | **Completeness of UL_I**: check the generation statement of `closed-structure.md` B.3 (the free biclosed monoidal category with unit is generated by unit-free structure maps, unitors, ⊗ and the functors B\(–), (–)/B). | `closed-structure.md` B.3 | unowned | former area CLOSED |
+| D11 | **PL-ω**. A candidate "Gray criterion" (inversion-set containment on event orders) passes the first test: it produces the lax naturality cell of evaluation and never its inverse. Mimram's own directed criterion fails it (`closed-structure.md` Part F). Open: event order across residuals; ω-version (conjecturally the higher Bruhat orders, i.e. homs of ν(D¹⊗…⊗D¹)); soundness and completeness. | `planar-pasting-types.md` §4, §4.1 | ready to send (§4); internal attempt unowned | former area CLOSED |
+| D12 | **Mimram's higher criteria**: extracted from the tool source (reversible for (∞,1), directed globular); §5.7 re-checked against the PDF (4 corrections); directed criterion sound in dimension 2 over graphs by Fiore–Saville (`closed-structure.md` Part C). Remaining: soundness beyond, posed as `conjectures/cartesian-closed-higher-coherence.md`. | `internal-hom.md` §5.7 | ready to send; internal attempt unowned | former area CLOSED |
 
 ## E. Lax-interchange (L) core
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| E1 | Implement Steiner chains and the Gray unfolding; checker with decidability; **supp = Var on a single hom** (conservativity over CaTT). | `pseudo-vs-gray.md` §7.1 step 2, §3.6 Thm 1(3) | in progress | LCORE |
+| E1 | Implement Steiner chains and the Gray unfolding; checker with decidability; **supp = Var on a single hom** (conservativity over CaTT). | `pseudo-vs-gray.md` §7.1 step 2, §3.6 Thm 1(3) | in progress (also: compute supports for the orientation family L_ε, one sign per dimension, `closed-structure.md` D.3) | LCORE |
 | E2 | Two-object cases mechanically: D²∨D² (interchanger one way only), D¹∨D² (whiskering), D²∨D²∨D² (cube 4-cell from ps-terms); validate against the strict AM model. | `pseudo-vs-gray.md` §7.1 step 3, §3.4 | in progress | LCORE |
 | E3 | Substitution admissibility and **non-derivability of the reverse interchanger** for L. | `pseudo-vs-gray.md` §3.6 Thm 1(2) | in progress | LCORE |
 | E4 | **Invertibility markings**: port ICaTT's judgment; state "pseudo transformation" with the *recursive* marking (every cell in every dimension marked, since the pseudo hom is not locally full); propagation rules ("an interchanger with an invertible factor is invertible" [conj]; "C has only invertible 2-cells" propagating to interchangers into C). | `pseudo-vs-gray.md` §7.1 step 4, §2.4, §3.5, §5.3, Example 5 | unowned | former area PVG |
@@ -121,7 +124,7 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| G1 | **Re-check every claim marked [recall]** against its source, e.g.: AM Gray tensor biclosedness and its naming; Steiner's "tensors of loop-free complexes are loop-free"; ν(K ⊗ L) ≅ ν(K) ⊗ ν(L); "a lax transformation's naturality cell at an equivalence is invertible"; the even-duality formula for ⊗; Haugseng on lax transformations; Gray 1974; Markakis's generalised signatures. | `internal-hom.md`, `pseudo-vs-gray.md`, `free-objects.md`, `limits-representables.md` (search "[recall]") | unowned | former area LIT |
+| G1 | **Re-check every claim marked [recall]** (the even-duality formula for ⊗ is now proved, `closed-structure.md` D.1) against its source, e.g.: AM Gray tensor biclosedness and its naming; Steiner's "tensors of loop-free complexes are loop-free"; ν(K ⊗ L) ≅ ν(K) ⊗ ν(L); "a lax transformation's naturality cell at an equivalence is invertible"; Haugseng on lax transformations; Gray 1974; Markakis's generalised signatures. | `internal-hom.md`, `pseudo-vs-gray.md`, `free-objects.md`, `limits-representables.md` (search "[recall]") | unowned | former area LIT |
 | G2 | **One place for conventions**: lax vs oplax and factor order. `pseudo-vs-gray.md` §3.1 fixes L's order from the limit rules; `internal-hom.md` §4.1 ("Mikhail's Γ ⊗ Dⁿ is Dⁿ ⊗ Γ in AM orientation") and `limits-representables.md` §1 use their own. Write a single conventions section and make the other notes cite it. | `internal-hom.md` §4.1; `pseudo-vs-gray.md` §3.1, §7.1 step 1 | unowned | former area PVG |
 | G3 | **Steiner support lemma for arbitrary Steiner complexes** (beyond acyclic ones). Not needed by any current design; recorded so it is not lost. | `conjectures/steiner-support-determines-cells.md` | unowned (low priority) | — |
 
@@ -133,7 +136,7 @@ Thread ids used below:
 
 **Responses received, awaiting verification:** `naturality-arbitrary-depth.md` (C1a), `strict-lax-interchange-at-every-level.md` (E6a).
 
-**Ready to send** (self-contained, literature-checked): `gray-contexts-in-catt.md` G and §6 (D1–D3). After C1a and E6a are verified, the remaining open parts of N (C1) and of the corrected uniform-L question (E6) can be restated and sent again.
+**Ready to send** (self-contained, literature-checked): `gray-contexts-in-catt.md` G and §6 (D1–D3); `planar-pasting-types.md` §4 with the candidate of §4.1 (D11); `cartesian-closed-higher-coherence.md` (D12). After C1a and E6a are verified, the remaining open parts of N (C1) and of the corrected uniform-L question (E6) can be restated and sent again.
 
 ## Closed
 
@@ -145,5 +148,6 @@ Kept briefly for orientation; details are in the linked files.
 - `catt-lim-pseudo-vs-gray.md`: answered (researcher, verified). Leaves B1–B4, B9, B10.
 - `lax-colimit-of-point.md`: semantic claim solved; arbitrary-derivation syntactic form refuted. Leaves B5, B6.
 - `free-infinity-gray-of-pasting-diagrams.md`: solved in the literature. Discharges (D)–(F) of `pseudo-vs-gray.md` §3.6.
+- `planar-pasting-types.md` PL1 (D9): proved directly, `closed-structure.md` Part A. Units (D10): contractible criterion, Part B.
 - `steiner-support-determines-cells.md`: solved for the needed case (Hadzihasanovic). Discharges (A)–(C). Leaves G3.
 - `limits-representables.md` §10.2: marking needs no closure condition.

@@ -40,7 +40,9 @@
 
 ## Precisions to `pseudo-vs-gray.md` §3
 
-None of the note's claims failed. Writing the rule down exactly fixed three details, now recorded in the note.
+One classification in §3.6 was wrong; it is now corrected there. §3.6 listed "the non-degeneracy argument in 2" among the results proved outright, with no lemma needed. But its last step, "every derivable term is interpreted", is soundness, and soundness uses (B). Non-degeneracy therefore holds under the same hypotheses as Theorem 1. Those hypotheses are now discharged in the literature, so the conclusion stands.
+
+Writing the rule down exactly also fixed three details:
 
 - **Support convention.** supp(t : A) is type-directed: the top support of t together with that of every cell in A, as for Var(t : A). Side conditions compare **downward closures** in K(Γ), as §3.6 says ("the downward-closed set"). That is also the form in which lemma (B) is known: molecules are determined by their closed subsets (Hadzihasanovic).
   - Closures are needed. The table support of the total cell misses the 0-cells f⊗g′ and f′⊗g of D¹ ⊗ D¹, and on a single hom it misses the middle 1-cell g of f ⇒ g ⇒ h. So supp = Var (§3.2 [conj]) is false for table supports and can only hold for closed ones.
@@ -53,8 +55,12 @@ None of the note's claims failed. Writing the rule down exactly fixed three deta
 
 - **The non-negativity bridge.** Supports are computed on sets: the support of a sum is the union, and the support of a tensor is the product. This is correct only if every chain involved has non-negative coefficients. They do: T's chains are sums of basis elements, and F_σ maps basis elements to supports of top chains of the same kind. But this is argued in `Gray/Support.agda`'s header, not proved in Agda; the integer chains are never built. The side condition as implemented is a precise decidable rule either way. The bridge is needed only to connect it to the strict model, i.e. for Theorem 1 soundness.
 
-- **Conservativity on a single hom, in general.** For Γ = ΣΘ, supp(t : A) ∪ {a₀, a₁} = Var(t : A) for derivable t, and hence L's side condition = CaTT's.
-  - Checked on the PR #4 examples only.
-  - Proof plan, in progress: (i) top supports commute with substitution, topS(t[σ]) = F_σ(topS t), which holds by construction; (ii) entries(supp) ⊆ Var for all terms; (iii) ⊇ for derivable terms, using that both coh cases have full table support and that 1-cells have non-empty top support.
+- **Conservativity on a single hom.** For Γ = ΣΘ, L's side condition should equal Finster–Mimram's. This splits into two halves.
+  - *Rule-level half: checked for all small diagrams.* The closed supports of T, ∂⁻T and ∂⁺T must be exactly the non-object variables of Γ, ∂⁻Γ and ∂⁺Γ, using PR #4's `srcVars`/`tgtVars`. `Gray/Bounded.agda` checks this by evaluation for all 196 pasting diagrams Θ with 1–6 edges, and checks that the test distinguishes ∂⁻ from ∂⁺ on each. It also checks, for every pasting context with 1–5 edges and any number of homs, that ↓Supp(T) is all of K(Γ).
+  - *Term-level half: not proved.* For derivable t : A over ΣΘ, ↓supp(t : A) should equal the non-object part of Var(t : A).
+  - The inclusion ⊆ (entries of supports are free variables) is syntactic and holds for all terms.
+  - The inclusion ⊇ is where a proof gets stuck. F_σ does not commute with downward closure when σ sends a cell to an identity-like term, i.e. a coherence-case coh, whose top support is empty. Then F_σ(α) = ∅ while F_σ(∂α) ≠ ∅. Example: the middle 1-cell g of f ⇒ g ⇒ h lies in the closure of the vertical composite's support but not in its table support.
+  - So the induction needs the invariant "a derivable cell with empty top support has boundaries with equal closed supports". That is the support-level shadow of "coherence-case cohs are identities in the strict model", i.e. of Theorem 1 soundness, which needs lemma (B).
+  - **Finding:** conservativity (Thm 1(3)) and non-degeneracy (Thm 1(2)) share one missing layer, the strict interpretation with (B). They are not independent proofs, as §3.6 suggests for (3).
 - **Non-derivability of the reverse interchanger as any term** (Theorem 1(2)). What is proved is that the reverse *coh* has no derivation. Excluding every composite term needs strict-model soundness. That needs integer chain tables, chain maps for substitutions, and lemma (B) "support determines the cell", which is known in the literature (Hadzihasanovic) but not formalized. The plan is soundness as an Agda theorem with (B) as an explicit hypothesis.
 - **Validation against the strict model on examples** (chain-level, not just supports): not done. It needs the same integer-chain layer.

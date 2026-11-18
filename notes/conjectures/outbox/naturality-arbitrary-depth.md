@@ -115,3 +115,790 @@ A construction of the terms in question 1 or 2, a proof of RC(3) or RC(n) for lo
 - Campion and Chanavat (above): the (∞,ω) analogue holds. Chanavat also proves that frame-acyclic molecules have essentially unique composites in (∞,n)-categories.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs: from rewriting to higher categories* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): free 2-categories on 2-polygraphs as 2-paths modulo exchange; Squier-style coherence.
+
+# Researcher Response
+
+**Question 2 has a construction, provided the identity and vertical-composition lifts are chosen by the universal formulas below.** Specializing that construction gives a non-endomorphism example for question 1, including an example whose outer constructor is literally \(\operatorname{coh}_{Q,B}[\mathrm{id}_Q]\) for the one-arrow context \(Q\).
+
+The qualification about lower lifts is substantive. These formulas are fixed in their universal contexts before any specialization, so they respect the recursive substitution rule. The argument does not establish independence from an arbitrary previously fixed family of \(K_2\)’s.
+
+The construction uses only coherences over globular pasting contexts, substitution, and binary composition. It does not require RC(3).
+
+## 1. Notation and how the displayed comparisons expand into CaTT terms
+
+During the calculation, write
+\[
+uv:=u*_1v
+\]
+for composition of 2-cells and for the corresponding whiskering of a 3-cell by a 2-cell. Write
+\[
+r;s:=r*_2s
+\]
+for composition of 3-cells. Composition of 4-cells remains \(*_3\).
+
+Let
+\[
+\mathfrak a_{u,v,w}:(uv)w\longrightarrow u(vw),
+\qquad
+\lambda_u:\mathbf1u\longrightarrow u,
+\qquad
+\rho_u:u\mathbf1\longrightarrow u
+\]
+be the usual 3-dimensional associators and unitors. They are direct coherences over a chain of three 2-discs or a single 2-disc, followed by substitution.
+
+For a primitive coherence \(r\), write \(r^{\mathrm{rev}}\) for the coherence over the same pasting context with its endpoints exchanged. This notation specifies another term; it does not impose inverse equations.
+
+### A convention for constructing 4-cells
+
+When \(P\) is a stated pasting context and \(r,s\) are the stated parallel full 3-terms over \(P\), use
+\[
+[r\Rightarrow s]_P[\theta]
+:=
+\operatorname{coh}_{P,r\to s}[\theta].
+\tag{1}
+\]
+Assignments to the maximal variables of \(P\) determine the assignments to their globular boundaries.
+
+Every semicolon word below has fixed left-associated brackets. Rebracketing is implemented by (1) over a chain of 3-discs. More explicitly, to replace a consecutive block of a semicolon word by a parallel term:
+
+1. use a 4-coherence on the corresponding 3-cell chain to put parentheses around the block;
+2. whisker the proposed 4-cell by the prefix and suffix;
+3. use another such 4-coherence to restore left association.
+
+Empty prefixes or suffixes are omitted. Thus the replacement sequences below specify finite CaTT terms, including their necessary reassociations.
+
+The underlying coherence rule is exactly the full-support rule in BMOSV §2; no coherence rule on the cylinder context is being added. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+## 2. Fix two universal lower-dimensional lifts
+
+These choices are part of the construction.
+
+Write
+\[
+L(\xi)=\xi^-*_0Y,
+\qquad
+R(\xi)=X*_0\xi^+,
+\]
+where \(X=x^\uparrow\) and \(Y=y^\uparrow\). The same notation applies to the relevant cells in each dimension.
+
+### 2.1. The lift of vertical composition
+
+Start with the universal vertical chain
+\[
+\alpha:f\Rightarrow g,
+\qquad
+\beta:g\Rightarrow h.
+\]
+Its fully selected cylinder has
+\[
+F:Lf\Rightarrow Rf,\quad
+G:Lg\Rightarrow Rg,\quad
+H:Lh\Rightarrow Rh
+\]
+and
+\[
+A:(L\alpha)G\Rightarrow F(R\alpha),
+\qquad
+B:(L\beta)H\Rightarrow G(R\beta).
+\]
+
+Choose the distributivity coherences
+\[
+\phi_L:
+L(\alpha\beta)\Rightarrow (L\alpha)(L\beta),
+\]
+\[
+\phi_R:
+(R\alpha)(R\beta)\Rightarrow R(\alpha\beta).
+\]
+The arity of \(\phi_L\) is
+\[
+(D^2*_1D^2)*_0D^1,
+\]
+and that of \(\phi_R\) is
+\[
+D^1*_0(D^2*_1D^2).
+\]
+They are therefore ordinary CaTT coherences.
+
+Define the universal vertical-composition lift by
+\[
+\boxed{
+\begin{aligned}
+C(A,B)={}&
+(\phi_LH);
+\mathfrak a_{L\alpha,L\beta,H};
+((L\alpha)B);
+\mathfrak a^{\mathrm{rev}}_{L\alpha,G,R\beta};\\
+& (A(R\beta));
+\mathfrak a_{F,R\alpha,R\beta};
+(F\phi_R).
+\end{aligned}}
+\tag{2}
+\]
+Its successive 2-boundaries are
+\[
+\begin{aligned}
+L(\alpha\beta)H
+&\longrightarrow ((L\alpha)(L\beta))H\\
+&\longrightarrow (L\alpha)((L\beta)H)\\
+&\longrightarrow (L\alpha)(G(R\beta))\\
+&\longrightarrow ((L\alpha)G)(R\beta)\\
+&\longrightarrow (F(R\alpha))(R\beta)\\
+&\longrightarrow F((R\alpha)(R\beta))\\
+&\longrightarrow F(R(\alpha\beta)).
+\end{aligned}
+\]
+Thus (2) has exactly the required cylinder type.
+
+### 2.2. The lift of an identity 2-cell
+
+For a 1-variable \(g\), put
+\[
+e=L(\mathbf1_g),\qquad
+h=R(\mathbf1_g),\qquad b=G.
+\]
+Choose
+\[
+\kappa:e\Rightarrow\mathbf1_{Lg},
+\qquad
+\ell:h\Rightarrow\mathbf1_{Rg}.
+\tag{3}
+\]
+Here:
+
+- \(\kappa\) is a direct 3-coherence on the path \(g^-,Y\);
+- \(\ell\) is a direct 3-coherence on the path \(X,g^+\).
+
+Their sources and targets are parallel full 2-terms on those paths. Choose the reversed coherences on the same paths.
+
+Define
+\[
+\boxed{
+J=(\kappa b);\lambda_b;\rho_b^{\mathrm{rev}};(b\ell^{\mathrm{rev}})
+:
+eb\Rightarrow bh.
+}
+\tag{4}
+\]
+Its boundaries are verified by
+\[
+eb
+\longrightarrow \mathbf1_{Lg}b
+\longrightarrow b
+\longrightarrow b\mathbf1_{Rg}
+\longrightarrow bh.
+\]
+
+Equations (2) and (4) are universal definitions of the corresponding \(K_2\)’s. Consequently, under the substitution
+\[
+\beta\mapsto\mathbf1_g,
+\]
+the recursively defined lift of
+\[
+s=\alpha*_1\mathbf1_g
+\]
+is literally
+\[
+s^\uparrow=C(A,J).
+\tag{5}
+\]
+This is the required substitution compatibility. We have not selected a new lift of \(s\) specifically to force the unitor equation.
+
+## 3. The calculation in dimension 4
+
+Now work in the cylinder of the 2-disc
+\[
+Q=(x,y,f,g,\alpha:f\Rightarrow g).
+\]
+Abbreviate
+\[
+a=L\alpha,\qquad b=G,\qquad c=F,\qquad d=R\alpha.
+\]
+Their types are
+\[
+\begin{array}{ll}
+a:Lf\Rightarrow Lg,&b:Lg\Rightarrow Rg,\\
+c:Lf\Rightarrow Rf,&d:Rf\Rightarrow Rg,
+\end{array}
+\]
+and the cylinder generator is
+\[
+A:ab\Rightarrow cd.
+\]
+
+Retain \(e,h,\kappa,\ell,J\) from (3)–(4), and write
+\[
+i=\mathbf1_{Rg}.
+\]
+Thus
+\[
+\kappa:e\Rightarrow\mathbf1_{Lg},
+\qquad
+\ell:h\Rightarrow i.
+\]
+
+Define
+\[
+r_a=(a\kappa);\rho_a:ae\Rightarrow a,
+\qquad
+r_d=(d\ell);\rho_d:dh\Rightarrow d.
+\tag{6}
+\]
+
+The central comparison is between the following 3-terms:
+\[
+\mathcal L=(r_a b);A,
+\tag{7}
+\]
+\[
+\mathcal R=
+\mathfrak a_{a,e,b};
+(aJ);
+\mathfrak a^{\mathrm{rev}}_{a,b,h};
+(Ah);
+\mathfrak a_{c,d,h};
+(cr_d).
+\tag{8}
+\]
+Both have type
+\[
+(ae)b\Rightarrow cd.
+\]
+
+We will construct
+\[
+K_{\mathrm{mid}}:\mathcal L\Rightarrow\mathcal R
+\]
+by connecting both terms to one specified 3-term.
+
+### 3.1. Normalize the left side
+
+Put
+\[
+T=
+\mathfrak a_{a,e,b};
+a(\kappa b);
+(a\lambda_b)
+:
+(ae)b\Rightarrow ab.
+\tag{9}
+\]
+
+There is a 4-term
+\[
+L_4:\mathcal L\Rightarrow T;A.
+\tag{10}
+\]
+Its construction is:
+
+1. Distribute the right whisker \(b\) over the composite
+   \[
+   r_a=(a\kappa);\rho_a.
+   \]
+2. Replace
+   \[
+   \rho_a b
+   \quad\text{by}\quad
+   \mathfrak a_{a,\mathbf1_{Lg},b};(a\lambda_b).
+   \tag{11}
+   \]
+   This is a direct 4-coherence on the vertical 2-cell chain \(a,b\). Both endpoints of (11) have type
+   \[
+   (a\mathbf1_{Lg})b\Rightarrow ab.
+   \]
+3. Replace
+   \[
+   ((a\kappa)b);
+   \mathfrak a_{a,\mathbf1_{Lg},b}
+   \quad\text{by}\quad
+   \mathfrak a_{a,e,b};a(\kappa b).
+   \tag{12}
+   \]
+   Form this coherence over
+   \[
+   D^2*_1D^3*_1D^2,
+   \]
+   with the middle 3-variable having generic 2-source \(e\) and generic 2-target \(e'\). Then substitute
+   \[
+   e'\mapsto\mathbf1_{Lg},
+   \qquad
+   \text{middle 3-variable}\mapsto\kappa.
+   \]
+4. Reassociate the semicolon word and postcompose by \(A\).
+
+This gives (10). The potentially troublesome identity 2-cell in (12) is introduced only by substitution into a genuine globular pasting context.
+
+### 3.2. Expand the right side
+
+Expand \(J\) using (4), distribute whiskering, and reassociate. This gives a 4-term
+\[
+\mathcal R\Rightarrow T;\tau,
+\tag{13}
+\]
+where
+\[
+\begin{aligned}
+\tau={}&
+(a\rho_b^{\mathrm{rev}});
+a(b\ell^{\mathrm{rev}});
+\mathfrak a^{\mathrm{rev}}_{a,b,h};
+(Ah);\\
+&\mathfrak a_{c,d,h};
+c(d\ell);
+(c\rho_d).
+\end{aligned}
+\tag{14}
+\]
+Here \(\tau:ab\Rightarrow cd\).
+
+It remains to construct a 4-term
+\[
+\tau\Rightarrow A.
+\tag{15}
+\]
+
+### 3.3. Move the two copies of \(\ell\) next to the whiskering of \(A\)
+
+Associator naturality gives the two replacements
+\[
+a(b\ell^{\mathrm{rev}});
+\mathfrak a^{\mathrm{rev}}_{a,b,h}
+\quad\Longrightarrow\quad
+\mathfrak a^{\mathrm{rev}}_{a,b,i};
+((ab)\ell^{\mathrm{rev}}),
+\tag{16}
+\]
+\[
+\mathfrak a_{c,d,h};c(d\ell)
+\quad\Longrightarrow\quad
+((cd)\ell);\mathfrak a_{c,d,i}.
+\tag{17}
+\]
+
+Each is a direct 4-coherence over two 2-discs followed by a 3-disc, glued along their 1-faces:
+\[
+D^2*_1D^2*_1D^3.
+\]
+The last 3-variable is substituted by \(\ell^{\mathrm{rev}}\) or \(\ell\), respectively.
+
+Therefore \(\tau\) is connected to
+\[
+\begin{aligned}
+&(a\rho_b^{\mathrm{rev}});
+\mathfrak a^{\mathrm{rev}}_{a,b,i};
+((ab)\ell^{\mathrm{rev}});
+(Ah);\\
+&\hspace{30mm}
+((cd)\ell);
+\mathfrak a_{c,d,i};
+(c\rho_d).
+\end{aligned}
+\tag{18}
+\]
+
+Every adjacent pair in (16)–(18) has literally equal intermediate 2-boundaries.
+
+### 3.4. Interchange \(A\) and \(\ell^{\mathrm{rev}}\)
+
+Use the 4-coherence
+\[
+((ab)\ell^{\mathrm{rev}});(Ah)
+\quad\Longrightarrow\quad
+(Ai);((cd)\ell^{\mathrm{rev}}).
+\tag{19}
+\]
+
+Its arity is
+\[
+D^3*_1D^3.
+\]
+More explicitly, form the comparison using generic 3-variables
+\[
+Z:u\Rightarrow v,
+\qquad
+k:w\Rightarrow z,
+\]
+then substitute
+\[
+u\mapsto ab,\quad v\mapsto cd,\quad Z\mapsto A,
+\]
+\[
+w\mapsto i,\quad z\mapsto h,\quad
+k\mapsto\ell^{\mathrm{rev}}.
+\]
+
+Both sides of (19) have 2-source \((ab)i\) and 2-target \((cd)h\).
+
+This is the point at which a comparison involving \(A\) and a boundary adjustment is needed. The arity is two globular 3-discs; the square presenting \(A\) is used only through substitution.
+
+### 3.5. Cancel the two structural 3-cells
+
+After (19), the relevant part of the word is
+\[
+(Ai);((cd)\ell^{\mathrm{rev}});((cd)\ell).
+\]
+Combine the last two factors by the reversed whiskering-distribution coherence, obtaining
+\[
+(Ai);(cd)(\ell^{\mathrm{rev}};\ell).
+\]
+
+There is a direct 4-coherence
+\[
+\epsilon:
+\ell^{\mathrm{rev}};\ell
+\Longrightarrow
+\mathbf1_i
+\tag{20}
+\]
+over the original 1-dimensional path
+\[
+X,\ g^+.
+\]
+Both endpoints of (20) are 3-terms on that path, have type \(i\to i\), and have full typed support there.
+
+Whisker (20) by \(cd\). Then use the identity-preservation coherence
+\[
+(cd)\mathbf1_i\Longrightarrow\mathbf1_{(cd)i}
+\]
+over a vertical chain of two 2-discs, and remove the resulting identity 3-cell using a 4-unitor.
+
+Expression (18) has now been connected to
+\[
+(a\rho_b^{\mathrm{rev}});
+\mathfrak a^{\mathrm{rev}}_{a,b,i};
+(Ai);
+\mathfrak a_{c,d,i};
+(c\rho_d).
+\tag{21}
+\]
+
+The cancellation used here is fully specified by (20). It requires no inverse for the cylinder generator \(A\).
+
+### 3.6. Remove the remaining unitors
+
+Direct 4-coherences on the respective vertical 2-cell chains \(a,b\) and \(c,d\) give
+\[
+(a\rho_b^{\mathrm{rev}});
+\mathfrak a^{\mathrm{rev}}_{a,b,i}
+\Longrightarrow
+\rho_{ab}^{\mathrm{rev}},
+\tag{22}
+\]
+\[
+\mathfrak a_{c,d,i};(c\rho_d)
+\Longrightarrow
+\rho_{cd}.
+\tag{23}
+\]
+
+Thus (21) is connected to
+\[
+\rho_{ab}^{\mathrm{rev}};(Ai);\rho_{cd}.
+\]
+
+Finally, over a single generic 3-disc \(Z:u\Rightarrow v\), take the direct coherence
+\[
+\rho_u^{\mathrm{rev}};(Z\mathbf1);\rho_v
+\Longrightarrow Z.
+\]
+Substitute \(u=ab,v=cd,Z=A\). This completes (15).
+
+Combining (13) with the \(T\)-whiskering of (15) gives
+\[
+R_4:\mathcal R\Rightarrow T;A.
+\]
+Define
+\[
+\boxed{
+K_{\mathrm{mid}}=L_4*_3R_4^{\mathrm{rev}}.
+}
+\tag{24}
+\]
+Here \(R_4^{\mathrm{rev}}\) is obtained by reversing the sequence of constructed 4-coherences and reversing each primitive coherence’s endpoints.
+
+### Arity summary
+
+For reference, every comparison used in this calculation has one of the following arities:
+
+| Comparison | Pasting arity before substitution |
+|---|---|
+| Reassociation of semicolon words | A chain of 3-discs |
+| Preservation of 3-composition by a 2-whisker | A chain of 3-discs whiskered by a 2-disc |
+| Equation (12) | \(D^2*_1D^3*_1D^2\) |
+| Equations (16)–(17) | \(D^2*_1D^2*_1D^3\) |
+| Interchange (19) | \(D^3*_1D^3\) |
+| Equations (11), (22), (23) | \(D^2*_1D^2\) |
+| Cancellation (20) | The path \(X,g^+\) |
+| Identity preservation after (20) | \(D^2*_1D^2\) |
+| Final unitor conjugation | \(D^3\) |
+
+In each row, the terms being compared use every maximal generator of the stated arity, and their common type supplies the remaining boundary variables. This verifies the full-support side condition.
+
+## 4. Assemble the requested unitor naturality term
+
+Let
+\[
+\varrho_\alpha:
+\alpha*_1\mathbf1_g\Longrightarrow\alpha
+\]
+be the right unitor in question 2. Put
+\[
+W_L=L(\varrho_\alpha):
+L(\alpha\mathbf1_g)\Rightarrow a,
+\]
+\[
+W_R=R(\varrho_\alpha):
+R(\alpha\mathbf1_g)\Rightarrow d.
+\]
+
+The required cylinder endpoints are
+\[
+a_{\varrho_\alpha}=(W_Lb);A,
+\tag{25}
+\]
+\[
+b_{\varrho_\alpha}=C(A,J);(cW_R).
+\tag{26}
+\]
+
+### 4.1. The two outside comparisons
+
+There are direct 4-coherences
+\[
+H_L:
+W_L\Longrightarrow\phi_L;r_a,
+\tag{27}
+\]
+\[
+H_R:
+\phi_R;W_R\Longrightarrow r_d.
+\tag{28}
+\]
+
+For (27), use the pasting arity
+\[
+D^2(\alpha^-)*_0D^1(Y).
+\]
+Both endpoints are 3-terms from \(L(\alpha\mathbf1_g)\) to \(a\), and both have full support in that arity.
+
+For (28), use
+\[
+D^1(X)*_0D^2(\alpha^+).
+\]
+Both endpoints are 3-terms from \(dh\) to \(d\), with full support there.
+
+In particular, \(\phi_L,\phi_R,\kappa,\ell\) in these formulas are their already specified substitution instances. Equations (27)–(28) do not require new naturality terms for them.
+
+Set
+\[
+P=\phi_Lb.
+\tag{29}
+\]
+
+Applying (27), distributing the whisker \(b\), and reassociating gives
+\[
+E_L:
+a_{\varrho_\alpha}\Longrightarrow P;\mathcal L.
+\tag{30}
+\]
+
+Starting from (26), expand \(C(A,J)\) using (2). Its last two factors are
+\[
+(c\phi_R);(cW_R).
+\]
+Combine these into \(c(\phi_R;W_R)\), apply \(cH_R\), and reassociate. This gives
+\[
+E_R:
+b_{\varrho_\alpha}\Longrightarrow P;\mathcal R.
+\tag{31}
+\]
+
+### 4.2. The final term
+
+The requested 4-term is
+\[
+\boxed{
+K_{\varrho_\alpha}
+=
+\bigl(
+E_L*_3(P*_2K_{\mathrm{mid}})
+\bigr)
+*_3E_R^{\mathrm{rev}}.
+}
+\tag{32}
+\]
+
+Its sequence of 3-boundaries is
+\[
+a_{\varrho_\alpha}
+\longrightarrow
+P;\mathcal L
+\longrightarrow
+P;\mathcal R
+\longrightarrow
+b_{\varrho_\alpha}.
+\]
+
+Every primitive coherence in (32) has been specified above by its endpoints, pasting arity, and substitution. Hence
+\[
+\boxed{
+Q\uparrow\operatorname{Var}(Q)
+\vdash
+K_{\varrho_\alpha}:
+a_{\varrho_\alpha}\longrightarrow b_{\varrho_\alpha}.
+}
+\]
+
+This answers **question 2 for the universal lower lifts (2) and (4)**.
+
+## 5. A non-endomorphism example for question 1
+
+Now let
+\[
+Q_1=(x,y,f:x\to y)
+\]
+and let \(S=Q_1\uparrow\operatorname{Var}(Q_1)\) be its lax square.
+
+Put
+\[
+u=\mathbf1_f,\qquad v=u*_1u.
+\]
+Substitute in (32)
+\[
+f\mapsto f,\qquad
+g\mapsto f,\qquad
+\alpha\mapsto\mathbf1_f.
+\]
+The lifted substitution sends
+\[
+F,G\mapsto F,
+\qquad
+A\mapsto u^\uparrow,
+\]
+where \(u^\uparrow\) is precisely the universal identity lift (4).
+
+The result is a 4-term \(K_0\) witnessing naturality of
+\[
+c_0=\rho_u:v\Longrightarrow u.
+\tag{33}
+\]
+This is a non-endomorphism: \(v=u*_1u\) and \(u\) are different CaTT terms.
+
+### Requiring literal outer arity \(Q_1\)
+
+If the example must have the exact form in Conjecture N, take
+\[
+c=
+\operatorname{coh}_{Q_1,v\to u}[\mathrm{id}_{Q_1}].
+\tag{34}
+\]
+Its outer arity is \(Q_1\), whereas the outer arity of the term \(c_0\) in (33) is the 2-disc.
+
+Both have the same type \(v\to u\), with full support in \(Q_1\). Therefore define
+\[
+\delta=
+\operatorname{coh}_{Q_1,c\to c_0}[\mathrm{id}_{Q_1}],
+\qquad
+\delta^{\mathrm{rev}}=
+\operatorname{coh}_{Q_1,c_0\to c}[\mathrm{id}_{Q_1}].
+\tag{35}
+\]
+These are 4-terms.
+
+Let
+\[
+U=u^\uparrow,\qquad V=v^\uparrow
+\]
+be the lower lifts already determined by (2) and (4). Define
+\[
+\boxed{
+\begin{aligned}
+K_c={}&
+\left(
+ \left(
+   \bigl((\delta^-*_0Y)*_1F\bigr)*_2U
+ \right)
+ *_3K_0
+\right)\\
+&\quad *_3
+\left(
+ V*_2\bigl(F*_1(X*_0(\delta^{\mathrm{rev}})^+)\bigr)
+\right).
+\end{aligned}}
+\tag{36}
+\]
+
+The first factor changes \(a_c\) to \(a_{c_0}\); the last changes \(b_{c_0}\) to \(b_c\). Thus
+\[
+\boxed{S\vdash K_c:a_c\longrightarrow b_c.}
+\]
+
+Equation (36) supplies the requested nontrivial instance in question 1, with syntactically unequal 2-source and 2-target and the required literal coherence arity. It uses the copies of \(\delta\), not a naturality term for \(\delta\).
+
+## 6. An additional family that does not depend on the choice of lower lifts
+
+There is also a general endomorphism result.
+
+> **Endomorphism naturality.** Let \(Q\) be a pasting context, let \(u\) have full typed support in \(Q\), and let
+> \[
+> c:u\longrightarrow u.
+> \]
+> For every fixed valid lower lift \(U=u^\uparrow\), the type \(a_c\to b_c\) is inhabited. This holds in arbitrary dimension and with omitted staircase factors.
+
+Here is the construction.
+
+The coherence rule on \(Q\) gives
+\[
+\delta:c\longrightarrow\mathbf1_u,
+\qquad
+\delta^{\mathrm{rev}}:\mathbf1_u\longrightarrow c.
+\]
+Remove the final \(U\)-factor from the target staircase and the initial \(U\)-factor from the source staircase. Denote the resulting operations on \(c^\pm\) by \(T\) and \(S\). If \(\dim u=n\), then
+\[
+a_c=T(c^-)*_nU,
+\qquad
+b_c=U*_nS(c^+).
+\]
+
+For every staircase step, the comparison
+\[
+\mathbf1_a*_k b\longrightarrow\mathbf1_{a*_k b}
+\]
+or its left-handed version is a direct coherence on the pasting arity of the corresponding two discs. Apply these comparisons only to the factors actually present. Together with the whiskered copies of \(\delta\), they construct
+\[
+\ell:T(c^-)\longrightarrow\mathbf1_{a_u},
+\qquad
+r:\mathbf1_{b_u}\longrightarrow S(c^+).
+\]
+
+Now compose
+\[
+\boxed{
+(\ell*_nU)
+*_{n+1}\lambda_U
+*_{n+1}\rho_U^{\mathrm{rev}}
+*_{n+1}(U*_nr),
+}
+\tag{37}
+\]
+with fixed brackets. Its endpoints are exactly \(a_c,b_c\).
+
+Unlike the non-endomorphism unitor construction, (37) works with the existing lower lift \(U\) without prescribing its formula.
+
+## 7. Scope of the result
+
+The construction establishes:
+
+| Question | Result |
+|---|---|
+| Question 1: all parallel 3-terms of the lax square | Not established |
+| Question 1: one non-endomorphism 3-coherence with explicit naturality 4-term | Established by (34)–(36), for the lower choices (2) and (4) |
+| Question 2: vertical right unitor over the fully selected 2-disc | Established by (32), for those same universal choices |
+| Question 3: RC(3) on all loop-free contexts or cylinders | Not established |
+| Question 4: RC in all dimensions | Not established |
+| Naturality of full endomorphism coherences, conditional on their fixed lower lift | Established by (37), in arbitrary dimension |
+
+One refinement to §2.3 is needed for the broader induction: **strict compatibility and lower-dimensional boundary adjustment should be explicit induction invariants.** RC(\(n\)) applies only after the compared \(n\)-terms are literally parallel. It does not itself turn strict equality of their lower boundaries into syntactic equality. In dimension 2, path coherences supply that adjustment, so this does not obstruct your stated \(N_{\leq2}\) consequence.
+
+The new unitor calculation avoids that general lifting issue. Its only nontrivial cancellation occurs on the 1-path \(X,g^+\); the comparison that moves \(A\) past that cancellation is formed on \(D^3*_1D^3\). Those two facts allow the required 4-term to be constructed without first proving RC(3) for the lax square.

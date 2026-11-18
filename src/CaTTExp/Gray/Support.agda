@@ -209,21 +209,16 @@ open Hom public
 homAt : Ctx → Nat → Hom
 homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
 
+-- Hom indices 1 … n for n + 1 objects.
+homIdx : Nat → List Nat
+homIdx L = filter (λ k → (0 <ℕ k) ∧ (k <ℕ L)) (upto L)
+
+countL : List Nat → Nat
+countL []       = 0
+countL (_ ∷ xs) = suc (countL xs)
+
 homs : Ctx → List Hom
-homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
-  where
-  lengthN : List Nat → Nat
-  lengthN []       = 0
-  lengthN (_ ∷ xs) = suc (lengthN xs)
-  -- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
-  drop1 : List Nat → List Nat
-  drop1 []       = []
-  drop1 (_ ∷ xs) = dropLast xs
-    where
-    dropLast : List Nat → List Nat
-    dropLast []           = []
-    dropLast (x ∷ [])     = []
-    dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
+homs Γ = map (homAt Γ) (homIdx (countL (objs Γ)))
 
 -- d = Σ dim Θₖ, the dimension of K(Γ).
 dimK : List Hom → Nat

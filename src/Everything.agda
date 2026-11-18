@@ -73,3 +73,5 @@ import CaTTExp.Gray.OrientRev
 import CaTTExp.Gray.DownAgree
 import CaTTExp.Gray.Graded
 import CaTTExp.Gray.MarksFuel
+import CaTTExp.Gray.PsFacts
+import CaTTExp.Gray.CohDim

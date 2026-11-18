@@ -496,3 +496,68 @@ In an untruncated Gray-enriched theory, these are \(4\)-cells between composites
 For a fully specified strict comparison theory, Morehouse’s Definition 2.4 gives directed Gray-category axioms: interchanger boundaries, compatibility with identities and composites, extremal and medial whiskering, and naturality. It also specifies the reversed lax orientation. [arxiv.org](https://arxiv.org/pdf/2203.08783?utm_source=chatgpt.com)
 
 Identifying that comparison theory—or a cellular resolution of it—with \(L\) requires the actual replacement `coh` rule and its invertibility declarations. Those data are necessary to give the requested cellular presentation of \(L\), even through dimension \(3\).
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict.**
+- **Q1 is answered negatively, and the counterexample is correct.** There is a contractible algebraically fibrant Θ-space Y with S₀(Y) ≅ E, so a non-constant strict CaTT map S₀(Y) → E exists and the ordinary counit ε_Y fails.
+- **Q2 and Q3 are answered conditionally.** Under a homotopical-realisation hypothesis (H) there is a derived adjunction Λ ⊣ S̄, and the equivalence reduces to three precise conditions. None of the conditions is proved.
+- **Q4 is not answered.** The prompt did not state L's coh rule, and the response correctly says the presentation cannot be given without it. The orientation it derives for the interchanger agrees with the project's convention.
+
+Step by step.
+
+1. **Step 1: an injective reflexive globular set (§1).**
+   - G_r is the full subcategory of Θ_ω on the globes. Its hom-sets Hom(D_n, D_m) are the n-cells of D_m: the sources and targets of the top cell and identities of lower cells. So presheaves on it are reflexive globular sets. ✓
+   - C → 1 is a folk weak equivalence, and every strict ω-category is fibrant, so C → 1 is a trivial fibration. Hence C has a 0-cell and a filler for every parallel pair. ✓
+   - **Injectivity of V = j*NC.** The extension goes dimension by dimension.
+     - Identity cells go to identities.
+     - Remaining cells go to fillers of their already-assigned boundaries, which are parallel because the map preserves s and t.
+     - The consistency point is right: A_n ∩ e_n(B_{n−1}) = e_n(A_{n−1}), since s ∘ e = id, so an identity in A has its source in A. ✓
+
+2. **Step 2: I = j_*V.**
+   - j* preserves monomorphisms and j* ⊣ j_*, so I is injective against all monomorphisms of Θ-presheaves. ✓
+   - I(D_n) ≅ C_n by full faithfulness. ✓
+   - The unit NC → I is monic, because a strict functor P → C is determined by its functions on cells. ✓
+
+3. **Step 3: Ỹ = cosk₀ I.**
+   - cosk₀ is right adjoint to evaluation in simplicial degree 0, and monomorphisms of simplicial presheaves are levelwise monic. So Ỹ → 1 lifts against every monomorphism. ✓
+   - These are the cofibrations of the injective structure. A left Bousfield localisation (complete Segal) has the same trivial fibrations. So Ỹ is fibrant and Ỹ → 1 is a trivial fibration. ✓
+   - At the globes, i : NC → Ỹ is bijective on vertices. ✓
+
+4. **Step 4: chosen fillers.**
+   - The J-fillers of NC are unique. NC is discrete, so the mapping spaces are discrete, and a trivial fibration between discrete Kan complexes is a bijection. ✓
+   - Prescribing i ∘ (unique filler) on maps that factor through the monic i, and arbitrary fillers elsewhere, is consistent.
+   - Nikolaus's algebraically fibrant objects carry chosen fillers with no equations between different lifting problems, so i is an algebraic morphism. ✓
+
+5. **Step 5.**
+   - S₀(Y)_n = (UY)(D_n)₀ = C_n, and S₀(i) is bijective on globes.
+   - A morphism of CaTT models bijective on globes is bijective on all globular sums, hence an isomorphism. So S₀(Y) ≅ C. ✓
+   - With C = E (two distinct objects), S₀(i)⁻¹ : S₀(Y) → E is non-constant. ✓
+
+6. **The counit fails.**
+   - Each UY(P) is nonempty and contractible, so every map UY → NE factors through π₀UY = 1 and induces a constant CaTT map.
+   - If ε_Y were an equivalence, round-2's necessary test would make 𝒜(Y, NE) → Mod(S₀Y, E) a bijection. It is not, since S₀(i)⁻¹ is missed. ✓
+   - **This is compatible with Q3.** E ≃ 1 in 𝓗_CaTT and Q(NE) ≃ 1. So it refutes only the *underived* reconstruction, not the equivalence conjecture.
+
+7. **Q2: derived adjunction (§2).** The argument is formal.
+   - K is Markakis's computadic cofibrant-replacement comonad. Its counit and comultiplication are in W, and K preserves and reflects W (FHM Prop. 4.2.2).
+   - Its co-Kleisli category with weak maps localises to 𝓗.
+   - Composing ordinary adjunctions gives 𝓛_R K_* ⊣ J S₀, which descends to Λ ⊣ S̄ under (H). Λ[A] ≃ QU𝓛_R(KA). ✓
+   - (H) is a real hypothesis, not proved.
+   - **The reformulation of (R) is correct.** For a map into a coinductively complete target, Q f is an equivalence iff f is ∞-surjective. This uses that completion units are ∞-surjective and that equivalences are ∞-surjective (ORW Prop. 5.29, Cor. 5.31). So (R) is: U𝓛_R K S₀ Y → UY is ∞-surjective. ✓
+   - **The qualification is correct, and it corrects the prompt.** Full faithfulness of S̄ restricted to a full subcategory 𝓑 does not imply that the counits at 𝓑 are equivalences unless Λ S̄ (𝓑) ⊆ 𝓑. The free-group/trivial-group example shows this.
+
+8. **Q3 (§3).** (H), (R) for every coinductively complete C, and the unit condition together are exactly the derived counit and unit tests, so they imply 𝓗_CaTT ≃ Cat^coind_ω. ✓ This is a precise conjecture with its inputs named, which is what Q3 asked for.
+
+9. **Q4 (§4).**
+   - The table of tensor arities through global dimension 3 is correct: a global p-cell is a (p−1)-cell of a hom, so p, q give hom dimension p + q − 2 and global dimension p + q − 1.
+   - **The orientation agrees with the project's convention.** With α : f₀ ⇒ f₁ : x → y and β : g₀ ⇒ g₁ : y → z, χ_{α,β} goes from "β first, then α" to "α first, then β", i.e. (f₀◁β) ; (α▷g₁) ⇛ (α▷g₀) ; (f₁◁β). This is `pseudo-vs-gray.md` §3.4 and `conventions.md` §4. ✓
+   - **The point about dimension 4 is right and useful.** The interchanger naturality comparison and the three-interchanger cube are 4-cells in an untruncated theory, and equalities in a strict 3-truncation. So a 3-skeleton of L and a strict 3-dimensional presentation are different specifications.
+   - The missing input is L's actual coh rule. It is `pseudo-vs-gray.md` §3.3 (supports in the Gray unfolding U_{ij}(Γ)), and the round-4 prompt states it.
+
+**Consequences for E11.**
+- The underived reconstruction is dead. Any comparison must be derived.
+- The derived comparison reduces to (H), (R) and the unit condition.
+- Q4 needs the rule stated, and the round-4 prompt does that.
+
+Follow-up prompt: `outbox/catt-models-in-infinity-omega-r4.md` (round 4, unsent).

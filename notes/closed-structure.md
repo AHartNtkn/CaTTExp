@@ -449,7 +449,7 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 
 *Correction to our expectation:* a generator α need not occur only once in a term. Duplicated uses give cubes [1]^m.
 
-**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread and unsent: `conjectures/outbox/dir-relative-coherence-r2.md`.
+**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread: `conjectures/answered/dir-relative-coherence-r2-2026-11-18.md`, answered and verified 2026-11-18: Dir is sound in every dimension, so this is now closed.
 
 *Superseded:* Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
 - Fiore–Saville did the bicategorical version.

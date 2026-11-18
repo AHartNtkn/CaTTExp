@@ -459,6 +459,10 @@ count-∈ a (x ∷ X) p with eqT a x in e
 ... | inj₂ q with ∈-cm g X q
 ...   | y , my , py = y , tl∈ my , py
 
+∈-one : ∀ {A : Set} {a x : A} → a ∈ (x ∷ []) → a ≡ x
+∈-one hd∈     = refl
+∈-one (tl∈ ())
+
 consP : Tuple → Bag → Bag
 consP q = cm (λ u → (q ++ u) ∷ [])
 
@@ -563,3 +567,265 @@ filter-≈ Q X Y h = mk≈ λ a → go a (Q a) refl
   go a true  e = trans (count-filter-in Q a X (subst T (sym e) tt))
                   (trans (h a (subst T (sym e) tt)) (sym (count-filter-in Q a Y (subst T (sym e) tt))))
   go a false e = trans (count-filter-out Q a X e) (sym (count-filter-out Q a Y e))
+
+------------------------------------------------------------------------
+-- Boundaries of top tuples.
+
+faces-zT : ∀ m → hdimTy m ≡ 0 → facesTy m ≡ nothing
+faces-zT nothing                   _ = refl
+faces-zT (just ⋆)                  _ = refl
+faces-zT (just (arr ⋆ _ _))        _ = refl
+faces-zT (just (arr (arr B _ _) _ _)) ()
+
+consB-consP : ∀ v q X → consB v (consP q X) ≡ consP (v ∷ q) X
+consB-consP v q []      = refl
+consB-consP v q (u ∷ X) = cong ((v ∷ (q ++ u)) ∷_) (consB-consP v q X)
+
+-- Entries of hom dimension 0 contribute nothing to the boundary.
+∂T-zprefix : ∀ Γ b q x → AllZ Γ q → ∂T Γ b (q ++ x) ≡ consP q (∂T Γ b x)
+∂T-zprefix Γ b []      x _         = sym (cm-single (∂T Γ b x))
+∂T-zprefix Γ b (v ∷ q) x (hv , hq) =
+  trans (cong₂ (λ H n → here b H (q ++ x) ++ consB v (∂T Γ (flipN n b) (q ++ x))) (faces-zT (lookup Γ v) hv) hv)
+        (trans (cong (consB v) (∂T-zprefix Γ b q x hq)) (consB-consP v q (∂T Γ b x)))
+
+AllTop-at : ∀ Γ k p a r → AllTop Γ k (p ++ a ∷ r) → hdimV Γ a ≡ hd (homAt Γ (lengthN p + k))
+AllTop-at Γ k []      a r (h , _) = h
+AllTop-at Γ k (v ∷ p) a r (_ , h) =
+  trans (AllTop-at Γ (suc k) p a r h) (cong (λ j → hd (homAt Γ j)) (+-suc (lengthN p) k))
+
+suc-ne : ∀ n → ¬ (suc n ≡ n)
+suc-ne zero    ()
+suc-ne (suc n) e = suc-ne n (suc-inj e)
+
+-- A cell of positive hom dimension has variable faces, one dimension lower.
+record Faces (Γ : Ctx) (α : Nat) : Set where
+  constructor mkFaces
+  field
+    s t : Nat
+    fα  : facesTy (lookup Γ α) ≡ just (s , t)
+    dt  : suc (hdimV Γ t) ≡ hdimV Γ α
+    ltα : T (α <ℕ len Γ)
+
+pos-faces : ∀ {Γ} → PsInv Γ → ∀ α → T (0 <ℕ hdimV Γ α) → Faces Γ α
+pos-faces {Γ} inv α p = go (lookup Γ α) refl p
+  where
+  go : ∀ m → lookup Γ α ≡ m → T (0 <ℕ hdimTy m) → Faces Γ α
+  go nothing                    _ ()
+  go (just ⋆)                   _ ()
+  go (just (arr ⋆ _ _))         _ ()
+  go (just (arr (arr B a b) s t)) e _ with inv α _ e
+  ... | (s0 , t0 , refl , refl , _ , lt0) =
+    mkFaces s0 t0 (cong facesTy e) (trans (cong (λ m → suc (hdimTy m)) lt0) (sym (cong hdimTy e))) (lookup-lt Γ α e)
+
+All-elem' : ∀ {P : Tuple → Set} a (X : Bag) → Pos (count a X) → All P X → P a
+All-elem' a []      () _
+All-elem' a (x ∷ X) c (p , qs) with eqT a x in e
+... | true  = subst _ (sym (eqT-sound a x (subst T (sym e) tt))) p
+... | false = All-elem' a X c qs
+
+le-step : ∀ L α γ m → T (α <ℕ γ) → T (L <ℕ suc (α + suc m)) → T (L <ℕ suc (γ + m))
+le-step L α γ m lt h =
+  le-trans L (α + suc m) (γ + m) h
+    (subst (λ z → T (z <ℕ suc (γ + m))) (sym (+-suc α m)) (le-add (suc α) γ m m lt (n<suc m)))
+
+------------------------------------------------------------------------
+-- Injectivity of the boundary in top degree.
+--
+-- For d ≥ 1, write a top tuple as w = p ++ α ∷ r, with every entry of p
+-- of hom dimension 0 and α of positive hom dimension, and let
+-- f = p ++ t(α) ∷ r. Then f occurs in ∂⁺z, for z of top degree, only
+-- for z = w (once), and in ∂⁻z only for z = p ++ β ∷ r with
+-- s(β) = t(α), where α < β. So the coefficient of w in a top chain is
+-- determined by the boundary and the coefficients of tuples whose α is
+-- later; induction on α from the end.
+
+module TopInj {Γ : Ctx} (P : Γ ⊢ps) (dpos : T (0 <ℕ dimK (homs Γ))) where
+  open Shape (shape P)
+  open Facts (facts-ps P)
+
+  invΓ : PsInv Γ
+  invΓ = psInv P
+
+  Top : Tuple → Set
+  Top = Basis Γ (firstL (objs Γ)) (lastL (objs Γ)) (dimK (homs Γ))
+
+  L : Nat
+  L = lead Γ 1 (lengthN rest)
+
+  private
+    wf' : ∀ w → Top w → WFT Γ o (lastL (o ∷ rest)) w
+    wf' w b = subst₂ (λ a c → WFT Γ a c w) efst elst (fst b)
+
+    len-w : ∀ w → Top w → lengthN w ≡ lengthN rest
+    len-w w b = fst (walk P [] o rest eqo w (wf' w b))
+
+  abstract
+   tsplit : ∀ w → Top w → Split Γ 1 w
+   tsplit w b =
+    split-top Γ 1 w (top-shape P w b) (top-ns P [] o rest eqo w (wf' w b) (top-shape P w b))
+      (subst (λ m → T (0 <ℕ sumHd Γ 1 m)) (sym (len-w w b)) (subst (λ z → T (0 <ℕ z)) eqd dpos))
+
+  module W (w : Tuple) (bw : Top w) where
+    S = tsplit w bw
+    open Split S public
+    lenL : lengthN pre ≡ L
+    lenL = trans lenp (cong (lead Γ 1) (len-w w bw))
+    hα : hdimV Γ α ≡ hd (homAt Γ (L + 1))
+    hα = trans (AllTop-at Γ 1 pre α post (subst (AllTop Γ 1) eqw (top-shape P w bw)))
+               (cong (λ j → hd (homAt Γ (j + 1))) lenL)
+    FA = pos-faces invΓ α posα
+    open Faces FA public
+    f : Tuple
+    f = pre ++ t ∷ post
+    Y : Bool → Bag
+    Y b = consB α (∂T Γ (flipN (hdimV Γ α) b) post)
+    R : Bool → Bag
+    R b = ((if b then t else s) ∷ post) ∷ Y b
+    ∂-at : ∀ b → ∂T Γ b w ≡ consP pre (R b)
+    ∂-at b =
+      trans (cong (∂T Γ b) eqw)
+     (trans (∂T-zprefix Γ b pre (α ∷ post) zp)
+            (cong (λ H → consP pre (here b H post ++ consB α (∂T Γ (flipN (hdimV Γ α) b) post))) fα))
+
+  -- Where the face f of w can occur in the boundary of a top tuple z.
+  record Hit (w : Tuple) (bw : Top w) (z : Tuple) (bz : Top z) (b : Bool) : Set where
+    field
+      hpre  : W.pre z bz ≡ W.pre w bw
+      hpost : W.post z bz ≡ W.post w bw
+      ht    : W.t w bw ≡ (if b then W.t z bz else W.s z bz)
+
+  hit : ∀ w bw z bz b → W.f w bw ∈ ∂T Γ b z → Hit w bw z bz b
+  hit w bw z bz b m
+    with ∈-consP (Z.pre) (Z.R b) (subst (W.f w bw ∈_) (Z.∂-at b) m)
+    where module Z = W z bz
+  ... | u , e , mu
+    with ++-inj-len (W.pre w bw) (W.pre z bz) (W.t w bw ∷ W.post w bw) u
+                    (trans (W.lenL w bw) (sym (W.lenL z bz))) e
+  ... | ep , eu with ∈-++ (((if b then W.t z bz else W.s z bz) ∷ W.post z bz) ∷ []) (W.Y z bz b) mu
+  ...   | inj₁ m1 = record { hpre = sym ep ; hpost = sym (cong tail eu') ; ht = cong head0 eu' }
+    where
+    eu' : W.t w bw ∷ W.post w bw ≡ (if b then W.t z bz else W.s z bz) ∷ W.post z bz
+    eu' = trans eu (∈-one m1)
+    tail : Tuple → Tuple
+    tail []      = []
+    tail (_ ∷ x) = x
+    head0 : Tuple → Nat
+    head0 []      = 0
+    head0 (h ∷ _) = h
+  ...   | inj₂ mb with ∈-consB (W.α z bz) (∂T Γ (flipN (hdimV Γ (W.α z bz)) b) (W.post z bz)) mb
+  ...     | u' , eb = ⊥-elim (suc-ne (hdimV Γ (W.t w bw))
+                (trans (W.dt w bw) (trans (W.hα w bw) (trans (sym (W.hα z bz)) (cong (hdimV Γ) (sym tz))))))
+    where
+    tz : W.t w bw ≡ W.α z bz
+    tz = cong head0 (trans eu eb)
+      where
+      head0 : Tuple → Nat
+      head0 []      = 0
+      head0 (h ∷ _) = h
+
+  -- f occurs once in ∂⁺w.
+  self : ∀ w bw → count (W.f w bw) (∂T Γ true w) ≡ 1
+  self w bw = trans (cong (count f) (∂-at true)) (trans (count-consP pre (t ∷ post) (R true)) stp)
+    where
+    open W w bw
+    tne : ¬ (t ≡ α)
+    tne e = suc-ne (hdimV Γ t) (trans dt (cong (hdimV Γ) (sym e)))
+    stp : count (t ∷ post) ((t ∷ post) ∷ Y true) ≡ 1
+    stp = trans (cong (λ b → if b then suc (count (t ∷ post) (Y true)) else count (t ∷ post) (Y true)) (eqT-refl (t ∷ post)))
+                 (cong suc (count-consB-ne t α post (∂T Γ (flipN (hdimV Γ α) true) post) tne))
+
+  hit-true : ∀ w bw z bz → Hit w bw z bz true → z ≡ w
+  hit-true w bw z bz h =
+    trans (W.eqw z bz)
+   (trans (cong₂ _++_ hpre (cong₂ _∷_ (sym eα) hpost)) (sym (W.eqw w bw)))
+    where
+    open Hit h
+    eα : W.α w bw ≡ W.α z bz
+    eα = tu (W.α w bw) (W.α z bz) (W.fα w bw)
+            (subst (λ x → facesTy (lookup Γ (W.α z bz)) ≡ just (W.s z bz , x)) (sym ht) (W.fα z bz))
+            (W.nsα w bw) (W.nsα z bz)
+
+  hit-false : ∀ w bw z bz → Hit w bw z bz false → T (W.α w bw <ℕ W.α z bz)
+  hit-false w bw z bz h =
+    sl (W.α w bw) (W.α z bz) (W.fα w bw)
+       (subst (λ x → facesTy (lookup Γ (W.α z bz)) ≡ just (x , W.t z bz)) (sym (Hit.ht h)) (W.fα z bz))
+
+  count-true : ∀ w bw z bz → count (W.f w bw) (∂T Γ true z) ≡ (if eqT w z then 1 else 0)
+  count-true w bw z bz with eqT w z in e
+  ... | true with eqT-sound w z (subst T (sym e) tt)
+  ...   | refl = self w bw
+  count-true w bw z bz | false with count (W.f w bw) (∂T Γ true z) in c
+  ... | zero  = refl
+  ... | suc _ with hit-true w bw z bz (hit w bw z bz true (count-∈ (W.f w bw) (∂T Γ true z) (subst Pos (sym c) tt)))
+  ...   | refl = ⊥-elim (subst T (trans (sym (eqT-refl w)) e) tt)
+
+notz-pos : ∀ n → T (not (n ==ℕ 0)) → Pos n
+notz-pos zero    ()
+notz-pos (suc n) _ = tt
+
+swap-r : ∀ a b c → (a + b) + c ≡ (a + c) + b
+swap-r a b c = trans (+-assoc a b c) (trans (cong (a +_) (+-comm b c)) (sym (+-assoc a c b)))
+
+arith : ∀ P S N U P' N' → P + S ≡ N + U → P' + S ≡ N' + U → P + N' ≡ P' + N
+arith P S N U P' N' e1 e2 = +-cancelʳ S (P + N') (P' + N) (trans lhs (sym rhs))
+  where
+  lhs : (P + N') + S ≡ (N + N') + U
+  lhs = trans (swap-r P N' S) (trans (cong (_+ N') e1) (swap-r N U N'))
+  rhs : (P' + N) + S ≡ (N + N') + U
+  rhs = trans (swap-r P' N S) (trans (cong (_+ N) e2) (trans (swap-r N' U N) (cong (_+ U) (+-comm N' N))))
+
+module TopInj2 {Γ : Ctx} (P : Γ ⊢ps) (dpos : T (0 <ℕ dimK (homs Γ))) where
+  open TopInj P dpos
+  open Facts (facts-ps P)
+
+  module Ind (c c' : Bag) (ac : All Top c) (ac' : All Top c')
+             (H : ∀ a → count a (∂B Γ true c) + count a (∂B Γ false c') ≡ count a (∂B Γ true c') + count a (∂B Γ false c)) where
+
+    ptrue : ∀ w bw X → All Top X → count (W.f w bw) (∂B Γ true X) ≡ count w X
+    ptrue w bw X aX = cm-delta (W.f w bw) w (∂T Γ true) X aX (λ z bz → count-true w bw z bz)
+
+    -- Agreement on tuples with a positive count, given agreement on tops.
+    gen : ∀ a → (Top a → count a c ≡ count a c') →
+          ∀ n → count a c ≡ n → ∀ n' → count a c' ≡ n' → count a c ≡ count a c'
+    gen a k zero    e1 zero     e2 = trans e1 (sym e2)
+    gen a k (suc n) e1 _        _  = k (All-elem' a c (subst Pos (sym e1) tt) ac)
+    gen a k zero    _  (suc n') e2 = k (All-elem' a c' (subst Pos (sym e2) tt) ac')
+
+    ind : ∀ m z bz → T (len Γ <ℕ suc (W.α z bz + m)) → count z c ≡ count z c'
+    ind zero    z bz h = ⊥-elim (lt-le-absurd (W.α z bz) (len Γ) (W.ltα z bz)
+                                  (subst (λ x → T (len Γ <ℕ suc x)) (+-zero (W.α z bz)) h))
+    ind (suc m) z bz h =
+      +-cancelʳ Nc' (count z c) (count z c')
+        (trans (cong (_+ Nc') (sym (ptrue z bz c ac)))
+        (trans (H f)
+               (cong₂ _+_ (ptrue z bz c' ac') eqN)))
+      where
+      f = W.f z bz
+      Q : Tuple → Bool
+      Q y = not (count f (∂T Γ false y) ==ℕ 0)
+      Nc' = count f (∂B Γ false c')
+      agree : ∀ y → T (Q y) → count y c ≡ count y c'
+      agree y qy = gen y k (count y c) refl (count y c') refl
+        where
+        k : Top y → count y c ≡ count y c'
+        k by = ind m y by (le-step (len Γ) (W.α z bz) (W.α y by) m
+                 (hit-false z bz y by (hit z bz y by false (count-∈ f (∂T Γ false y) (notz-pos _ qy)))) h)
+      eqN : count f (∂B Γ false c) ≡ count f (∂B Γ false c')
+      eqN = trans (cm-filter f (∂T Γ false) c)
+           (trans (at (cm-cong (∂T Γ false) (filter Q c) (filter Q c') (filter-≈ Q c c' agree)) f)
+                  (sym (cm-filter f (∂T Γ false) c')))
+
+    inj : c ≈ c'
+    inj = mk≈ λ a → gen a (λ ba → ind (len Γ) a ba (le-+l (W.α a ba) (len Γ))) (count a c) refl (count a c') refl
+
+-- ∂ is injective on top-degree chains with the same lower boundary.
+top-inj : ∀ {Γ} (P : Γ ⊢ps) (dpos : T (0 <ℕ dimK (homs Γ))) → ∀ c c' s u →
+          All (TopInj.Top P dpos) c → All (TopInj.Top P dpos) c' →
+          ∂B Γ true c ++ s ≈ ∂B Γ false c ++ u → ∂B Γ true c' ++ s ≈ ∂B Γ false c' ++ u → c ≈ c'
+top-inj {Γ} P dpos c c' s u ac ac' p p' = TopInj2.Ind.inj P dpos c c' ac ac' H
+  where
+  H : ∀ a → count a (∂B Γ true c) + count a (∂B Γ false c') ≡ count a (∂B Γ true c') + count a (∂B Γ false c)
+  H a = arith (count a (∂B Γ true c)) (count a s) (count a (∂B Γ false c)) (count a u)
+              (count a (∂B Γ true c')) (count a (∂B Γ false c'))
+              (trans (sym (count-++ a (∂B Γ true c) s)) (trans (at p a) (count-++ a (∂B Γ false c) u)))
+              (trans (sym (count-++ a (∂B Γ true c') s)) (trans (at p' a) (count-++ a (∂B Γ false c') u)))

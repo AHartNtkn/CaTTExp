@@ -664,4 +664,4 @@ Checked step by step:
 - It reduces naturality's Question 2 (all cylinders of 2-dimensional Q) and gray-contexts' Question 3 (several 3-generators) to 2-skeleta.
 - **The RC(3) frontier is now entirely 2-dimensional.** What remains is exchange without a cut vertex in acyclic 2-dimensional contexts.
 
-Follow-up prompt: `outbox/cone-over-coherences-r6.md` (round 6, unsent).
+Follow-up prompt: `retired/cone-over-coherences-r6.md` (never sent; retired 2026-11-18 and superseded by the general prompt `outbox/relative-coherence-all-dimensions.md`).

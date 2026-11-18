@@ -707,4 +707,4 @@ Checked:
    - It uses closure of W under retracts, which holds for the FHM class.
 6. **§4.** The orientation of ρ through M = (α₁ ▷ g₀) ; (f₁ ◁ β) ; (α₂ ▷ g₁) matches the stated interchanger. g and ρ are parallel with equal image and no 3-cell between them in a strict 2-category, so ε⁺ is not a folk weak equivalence. Û_Γ → U_Γ is one by 2-out-of-3, since U_Γ → Û_Γ is a pushout of a folk trivial cofibration.
 
-Follow-up prompt: `outbox/catt-models-in-infinity-omega-r7.md` (round 7, unsent).
+Follow-up prompt: `retired/catt-models-in-infinity-omega-r7.md` (never sent; retired 2026-11-18 and superseded by the general prompt `outbox/catt-models-unit-condition.md`).

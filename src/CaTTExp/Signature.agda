@@ -2,7 +2,9 @@
 -- A signature of closed constants for CaTT.
 --
 -- `ty k` is the type of constant k, and `Valid k` is the side condition
--- under which k may be used. Pure CaTT uses the empty signature. A
+-- under which k may be used. Nothing here requires `ty k` to be well
+-- formed in ε; presupposition lemmas (Γ ⊢ t : A implies Γ ⊢ A) need that
+-- as an extra hypothesis on the signature. Pure CaTT uses the empty signature. A
 -- signature whose constants are the cells of a computad gives "CaTT
 -- over that computad".
 ------------------------------------------------------------------------

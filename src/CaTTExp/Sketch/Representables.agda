@@ -17,8 +17,9 @@
 --    represented as ambient maps ⟦Dⁿ⟧ → C;
 --  * the source of such an element is a plain CaTT composite with
 --    ⟦s⟧ : ⟦Dⁿ⁻¹⟧ → ⟦Dⁿ⟧;
---  * coh can NOT relate ⟦σ ∘ τ⟧ to ⟦τ⟧ ; ⟦σ⟧ (or ⟦id⟧ to id): laws
---    about the new objects must come from new rules. See notes/agda-sketch-findings.md.
+--  * one candidate coh relating ⟦s⟧ ; ⟦id⟧ to ⟦s⟧ is rejected. That no
+--    term at all relates them is argued informally (a strict model) in
+--    notes/agda-sketch-findings.md, not proved here. See notes/agda-sketch-findings.md.
 ------------------------------------------------------------------------
 module CaTTExp.Sketch.Representables where
 
@@ -128,8 +129,9 @@ _ = refl
 --  * a coh instantiated at these constants only yields laws that hold
 --    for *arbitrary* functors (e.g. id(⟦D₁⟧) ; f ⇒ f), and ⟦id_{D₁}⟧ is
 --    not syntactically the ambient identity id(⟦D₁⟧).
--- So functoriality of ⟦_⟧ (⟦id⟧ ≅ id, ⟦σ ∘ τ⟧ ≅ ⟦τ⟧ ; ⟦σ⟧) has to be
--- a new rule, either a definitional equality or invertible cells.
+-- The checker test below only rules out the direct attempt. That no term
+-- relates them is an informal argument (see the notes). If it holds,
+-- functoriality of ⟦_⟧ (⟦id⟧ ≅ id, ⟦σ ∘ τ⟧ ≅ ⟦τ⟧ ; ⟦σ⟧) needs a new rule.
 
 ⟦idD₁⟧ : Tm
 ⟦idD₁⟧ = cst (fun PE.D₁ PE.D₁ (P.idₛ PE.D₁))

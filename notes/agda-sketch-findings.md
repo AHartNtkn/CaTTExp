@@ -63,9 +63,14 @@ Validity of a constant is a pure CaTT judgment, decided by the pure checker.
 - This is natural rather than a restriction: a shape is a computad, whose generators' types are built from other generators, never from named objects.
 - It is not a universe either. ⟦Γ⟧ is a particular finitely presented object, not a code for one.
 
-**2. Functoriality of ⟦_⟧ is not derivable** (checked negative).
+**2. Functoriality of ⟦_⟧ is not derivable.** This is *argued informally*, not formally proved. What Agda checks is narrower: one candidate, a coh over D₀ with an empty substitution, is rejected.
 - Nothing relates ⟦σ ∘ τ⟧ to ⟦τ⟧ ; ⟦σ⟧, or ⟦id⟧ to the ambient identity.
 - `coh` only proves laws for *arbitrary* cells (variables). It never proves laws about named constants.
+- Argument for non-derivability:
+  - Interpret the ambient theory in a strict ω-category: the free category on the graph whose vertices are the ⟦Γ⟧ and whose edges are the ⟦σ⟧, with only identity cells above dimension 1.
+  - Strict ω-categories model CaTT, so every derivable term is interpreted.
+  - A cell ⟦s⟧ ; ⟦id_{D₁}⟧ ⇒ ⟦s⟧ would become an identity between two distinct paths, which is impossible.
+  - Making this rigorous needs soundness of that interpretation, which in turn needs substitution admissibility. That is not yet formalized.
 - Any law about a new object must come from a new rule. There are three options:
   - (a) definitional equalities, which pull in CaTT_su/sua-style strictness early, against the plan;
   - (b) invertible comparison cells, which need an invertibility judgment or type from the start (as in Mikhail's `⊨` or ICaTT);

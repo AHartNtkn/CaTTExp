@@ -66,6 +66,14 @@ import CaTTExp.GlobularTotal.TreeAlg
 import CaTTExp.GlobularTotal.FlatBd
 import CaTTExp.GlobularTotal.FlatBdExample
 import CaTTExp.GlobularTotal.MergeLaws
+import CaTTExp.GlobularTotal.FlatMerge
+import CaTTExp.GlobularTotal.FlatAssoc
+import CaTTExp.GlobularTotal.NfSub
+import CaTTExp.GlobularTotal.NfSubExample
+import CaTTExp.GlobularTotal.Uniq
+import CaTTExp.GlobularTotal.PsOrd
+import CaTTExp.GlobularTotal.ExGood
+import CaTTExp.GlobularTotal.LabEx
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing
@@ -151,6 +159,10 @@ import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
 import CaTTExp.Gray.BdryChar
 import CaTTExp.Gray.SingleHom
+import CaTTExp.Gray.Through
+import CaTTExp.Strict.LiftImage
+import CaTTExp.Strict.SigmaFacts
+import CaTTExp.Strict.SuppFV
 import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.CylGen

@@ -60,6 +60,7 @@ private
 
 ------------------------------------------------------------------------
 -- Suspension and elements elaboration (C8.1), with no hypothesis.
+-- Weakening is in CaTTExp.Weakening.
 
 import CaTTExp.Suspension ∅ as Σs
 open Σs public using (Σty; Σtm; Σsub; Σctx)
@@ -98,3 +99,17 @@ private
 elements : ∀ {Γ Δ t A γ} → Γ ⊢tm t ∶ A → Δ ⊢sub γ ∶ Σctx Γ →
            Δ ⊢tm Σtm t [ γ ]tm ∶ Σty A [ γ ]ty
 elements {Γ} {t = t} d g = Σs.elements closed d (fnc-ctx Γ) (fnc-tm t) g
+
+-- ΣΘ[a, b]: Δ followed by Θ's suspended variables, N ↦ a, S ↦ b.
+Σat : Ctx → Tm → Tm → Ctx → Ctx × Sub
+Σat = Σs.Σat closed
+
+-- ΣΘ[a, b] is well formed and every derivation over Θ lands there.
+Σat-wf : ∀ {Δ a b Θ} → Δ ⊢ctx → Δ ⊢tm a ∶ ⋆ → Δ ⊢tm b ∶ ⋆ → Θ ⊢ctx →
+         (fst (Σat Δ a b Θ) ⊢ctx) × (fst (Σat Δ a b Θ) ⊢sub snd (Σat Δ a b Θ) ∶ Σctx Θ)
+Σat-wf {Θ = Θ} w da db wΘ = Σs.Σat-wf closed w da db wΘ (fnc-ctx Θ)
+
+elements-at : ∀ {Δ a b Θ t A} → Δ ⊢ctx → Δ ⊢tm a ∶ ⋆ → Δ ⊢tm b ∶ ⋆ → Θ ⊢ctx →
+              Θ ⊢tm t ∶ A →
+              fst (Σat Δ a b Θ) ⊢tm Σtm t [ snd (Σat Δ a b Θ) ]tm ∶ Σty A [ snd (Σat Δ a b Θ) ]ty
+elements-at {Θ = Θ} {t} w da db wΘ d = Σs.elements-at closed w da db wΘ (fnc-ctx Θ) d (fnc-tm t)

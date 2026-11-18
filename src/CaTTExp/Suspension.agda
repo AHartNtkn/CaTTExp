@@ -29,6 +29,7 @@ module CaTTExp.Suspension (𝕊 : Signature) where
 open Signature 𝕊
 open import CaTTExp.Typing 𝕊
 import CaTTExp.Subst 𝕊 cattSide as Sb
+open import CaTTExp.Weakening 𝕊 cattSide using (_⧺_; ext; ext-wf)
 
 infixr 1 _⊎_
 data _⊎_ (A B : Set) : Set where
@@ -589,3 +590,35 @@ module _ (closed : Sb.Closed) where
   elements : ∀ {Γ Δ t A γ} → Γ ⊢tm t ∶ A → FNcCtx Γ → FNcTm t →
              Δ ⊢sub γ ∶ Σctx Γ → Δ ⊢tm Σtm t [ γ ]tm ∶ Σty A [ γ ]ty
   elements d nΓ nt g = Sb.tm[] closed (Σtm-wf d nΓ nt) g
+
+  -- The literal form of `limits-representables.md` §8 target 1: given
+  -- objects a, b in Δ (e.g. ⊤ and C), the context ΣΘ[a, b] is Δ
+  -- followed by Θ's suspended variables with N ↦ a, S ↦ b, and every
+  -- derivation over Θ lands there.
+
+  D⋆⋆ : Ctx
+  D⋆⋆ = ε ▸ ⋆ ▸ ⋆
+
+  ΣTail : Ctx → Ctx
+  ΣTail ε       = ε
+  ΣTail (Γ ▸ A) = ΣTail Γ ▸ Σty A
+
+  Σctx-split : ∀ Γ → Σctx Γ ≡ D⋆⋆ ⧺ ΣTail Γ
+  Σctx-split ε       = refl
+  Σctx-split (Γ ▸ A) = cong (_▸ Σty A) (Σctx-split Γ)
+
+  -- ΣΘ[a, b] and the substitution from it to ΣΘ.
+  Σat : Ctx → Tm → Tm → Ctx → Ctx × Sub
+  Σat Δ a b Θ = ext Δ (⟨⟩ ,ₛ a ,ₛ b) (ΣTail Θ)
+
+  Σat-wf : ∀ {Δ a b Θ} → Δ ⊢ctx → Δ ⊢tm a ∶ ⋆ → Δ ⊢tm b ∶ ⋆ → Θ ⊢ctx → FNcCtx Θ →
+           (fst (Σat Δ a b Θ) ⊢ctx) × (fst (Σat Δ a b Θ) ⊢sub snd (Σat Δ a b Θ) ∶ Σctx Θ)
+  Σat-wf {Δ} {a} {b} {Θ} w da db wΘ nΘ =
+    let (w′ , s′) = ext-wf closed (ΣTail Θ) w (,-wf (,-wf (⟨⟩-wf w) da) db)
+                      (subst _⊢ctx (Σctx-split Θ) (Σctx-wf wΘ nΘ))
+    in w′ , subst (fst (Σat Δ a b Θ) ⊢sub snd (Σat Δ a b Θ) ∶_) (sym (Σctx-split Θ)) s′
+
+  elements-at : ∀ {Δ a b Θ t A} → Δ ⊢ctx → Δ ⊢tm a ∶ ⋆ → Δ ⊢tm b ∶ ⋆ →
+                Θ ⊢ctx → FNcCtx Θ → Θ ⊢tm t ∶ A → FNcTm t →
+                fst (Σat Δ a b Θ) ⊢tm Σtm t [ snd (Σat Δ a b Θ) ]tm ∶ Σty A [ snd (Σat Δ a b Θ) ]ty
+  elements-at w da db wΘ nΘ d nt = elements d nΘ nt (snd (Σat-wf w da db wΘ nΘ))

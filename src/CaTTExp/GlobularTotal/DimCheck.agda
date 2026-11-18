@@ -216,3 +216,224 @@ bd-distinct τ k d q with top-var′ (ctxOf τ) d
   where
   Θ = ctxOf τ
   ord = ps-ord (snd (psOf τ))
+
+------------------------------------------------------------------------
+-- Dimension facts for the coh case of (1′).
+
+open import CaTTExp.GlobularTotal.TreeAlg using (WF; WFs; wf-bd)
+open import CaTTExp.GlobularFiller using (merge)
+open Lists using (headN)
+
+private
+  0+ : ∀ e → e ≡ e + 0
+  0+ zero    = refl
+  0+ (suc e) = cong suc (0+ e)
+
+  ∨-inl : ∀ a b → a ≡ true → (a ∨ b) ≡ true
+  ∨-inl true b e = refl
+
+  ∨-inr : ∀ a b → b ≡ true → (a ∨ b) ≡ true
+  ∨-inr true  b e = refl
+  ∨-inr false b e = e
+
+  ==-refl : ∀ a → (a ==ℕ a) ≡ true
+  ==-refl a = T-≡ (==ℕ-refl a)
+
+-- With no node of depth j having a branch, a tree is its own j-boundary.
+mutual
+  nokid-thin : ∀ j a → WF a → (HasKid j a → ⊥) → ∀ β → bd β j a ≡ a
+  nokid-thin zero    (lt os (c ∷ cs))  w nk β = ⊥-elim (nk tt)
+  nokid-thin zero    (lt [] [])        (() , _) nk β
+  nokid-thin zero    (lt (o ∷ []) [])  w nk false = refl
+  nokid-thin zero    (lt (o ∷ []) [])  w nk true  = refl
+  nokid-thin zero    (lt (o ∷ o' ∷ os) []) (() , _) nk β
+  nokid-thin (suc j) (lt os cs)        (_ , ws) nk β = bd-suc β
+    where
+    bd-suc : ∀ β → bd β (suc j) (lt os cs) ≡ lt os cs
+    bd-suc false = cong (lt os) (nokids-thin j cs ws nk false)
+    bd-suc true  = cong (lt os) (nokids-thin j cs ws nk true)
+
+  nokids-thin : ∀ j cs → WFs cs → (AnyKid j cs → ⊥) → ∀ β → bdL β j cs ≡ cs
+  nokids-thin j []       _        nk β = refl
+  nokids-thin j (c ∷ cs) (w , ws) nk β =
+    cong₂ _∷_ (nokid-thin j c w (λ h → nk (inl h)) β) (nokids-thin j cs ws (λ h → nk (inr h)) β)
+
+-- A k-boundary has no branches at depth ≥ k.
+mutual
+  bd-nokid : ∀ β k i a → HasKid (k + i) (bd β k a) → ⊥
+  bd-nokid false zero zero    (lt os cs) ()
+  bd-nokid true  zero zero    (lt os cs) ()
+  bd-nokid false zero (suc i) (lt os cs) ()
+  bd-nokid true  zero (suc i) (lt os cs) ()
+  bd-nokid false (suc k) i (lt os cs) h = bdL-nokid false k i cs h
+  bd-nokid true  (suc k) i (lt os cs) h = bdL-nokid true  k i cs h
+
+  bdL-nokid : ∀ β k i cs → AnyKid (k + i) (bdL β k cs) → ⊥
+  bdL-nokid β k i []       ()
+  bdL-nokid β k i (c ∷ cs) (inl h) = bd-nokid β k i c h
+  bdL-nokid β k i (c ∷ cs) (inr h) = bdL-nokid β k i cs h
+
+-- Boundaries above k of a k-boundary change nothing.
+bd-idem : ∀ β β' k i a → WF a → bd β (k + i) (bd β' k a) ≡ bd β' k a
+bd-idem β β' k i a w = nokid-thin (k + i) (bd β' k a) (wf-bd β' k a w) (bd-nokid β' k i a) β
+
+-- Every type in a context has dimension at most that of the context.
+private
+  ≤-maxl : ∀ a b → T (a <ℕ suc (max a b))
+  ≤-maxl zero    b       = tt
+  ≤-maxl (suc a) zero    = <-suc a
+  ≤-maxl (suc a) (suc b) = ≤-maxl a b
+
+  ≤-maxr : ∀ a b → T (b <ℕ suc (max a b))
+  ≤-maxr zero    b       = <-suc b
+  ≤-maxr (suc a) zero    = tt
+  ≤-maxr (suc a) (suc b) = ≤-maxr a b
+
+  ≤-trans : ∀ a b c → T (a <ℕ suc b) → T (b <ℕ suc c) → T (a <ℕ suc c)
+  ≤-trans zero    b       c       p q = tt
+  ≤-trans (suc a) zero    c       () q
+  ≤-trans (suc a) (suc b) zero    p ()
+  ≤-trans (suc a) (suc b) (suc c) p q = ≤-trans a b c p q
+
+  just-inj : ∀ {A : Set} {x y : A} → just x ≡ just y → x ≡ y
+  just-inj refl = refl
+
+var-dim-le : ∀ Γ y A → lookup Γ y ≡ just A → T (dim A <ℕ suc (dimCtx Γ))
+var-dim-le ε       y A ()
+var-dim-le (Γ ▸ C) y A e with y ==ℕ len Γ
+... | true rewrite just-inj (sym e) = ≤-maxl (dim C) (dimCtx Γ)
+... | false = ≤-trans (dim A) (dimCtx Γ) (max (dim C) (dimCtx Γ))
+                (var-dim-le Γ y A e) (≤-maxr (dim C) (dimCtx Γ))
+
+module _ (Θ : Ctx) where
+
+  private
+    allN-mem : ∀ {P : Nat → Set} y xs → AllN P xs → memL y xs ≡ true → P y
+    allN-mem y []       _        ()
+    allN-mem y (x ∷ xs) (p , pp) e with y ==ℕ x in eq
+    ... | true  = subst _ (sym (==ℕ-sound y x (≡-T eq))) p
+    ... | false = allN-mem y xs pp e
+
+    cell-dim : ∀ e par o → Cell Θ e par o → dimOf Θ o ≡ e
+    cell-dim e nothing        o (_ , d) = d
+    cell-dim e (just (p , q)) o (_ , d) = d
+
+    cell-lookup : ∀ e par o → Cell Θ e par o → Σ Ty λ A → lookup Θ o ≡ just A
+    cell-lookup e nothing        o (c , _) = c
+    cell-lookup e (just (p , q)) o ((B , eB) , _) = arr B (var p) (var q) , eB
+
+  -- Diagrams are well formed.
+  mutual
+    ex-wf : ∀ e par a → Ex Θ e par a → WF a
+    ex-wf e par (lt os cs) (_ , x) = exCs-wf e os cs x
+
+    exCs-wf : ∀ e os cs → ExCs Θ e os cs → WF (lt os cs)
+    exCs-wf e []            cs       ()
+    exCs-wf e (o ∷ [])      []       _ = refl , tt
+    exCs-wf e (o ∷ [])      (c ∷ cs) ()
+    exCs-wf e (o ∷ o' ∷ os) []       ()
+    exCs-wf e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) with exCs-wf e (o' ∷ os) cs xs
+    ... | l , ws = cong suc l , (ex-wf (suc e) _ c xc , ws)
+
+  -- Labels of a diagram are variables.
+  mutual
+    mem-cell : ∀ e par a y → Ex Θ e par a → mem y a ≡ true → Σ Ty λ A → lookup Θ y ≡ just A
+    mem-cell e par (lt os cs) y (oks , x) m with ∨-split (memL y os) (memCs y cs) m
+    ... | inl mo = cell-lookup e par y (allN-mem y os oks mo)
+    ... | inr mc = memCs-cell e os cs y x mc
+
+    memCs-cell : ∀ e os cs y → ExCs Θ e os cs → memCs y cs ≡ true → Σ Ty λ A → lookup Θ y ≡ just A
+    memCs-cell e os            []       y x ()
+    memCs-cell e []            (c ∷ cs) y () m
+    memCs-cell e (o ∷ [])      (c ∷ cs) y () m
+    memCs-cell e (o ∷ o' ∷ os) (c ∷ cs) y (xc , xs) m with ∨-split (mem y c) (memCs y cs) m
+    ... | inl mc = mem-cell (suc e) _ c y xc mc
+    ... | inr ms = memCs-cell e (o' ∷ os) cs y xs ms
+
+  -- A branch at depth k carries a label of dimension e + k + 1.
+  mutual
+    kid-deep : ∀ k e par a → Ex Θ e par a → HasKid k a →
+               Σ Nat λ y → (mem y a ≡ true) × (dimOf Θ y ≡ e + suc k)
+    kid-deep k e par (lt os cs) (_ , x) h = kids-deep k e os cs x h
+
+    kids-deep : ∀ k e os cs → ExCs Θ e os cs → HasKid k (lt os cs) →
+                Σ Nat λ y → (mem y (lt os cs) ≡ true) × (dimOf Θ y ≡ e + suc k)
+    kids-deep k e []            cs       () h
+    kids-deep k e (o ∷ [])      []       _ h with k
+    ... | zero  = ⊥-elim h
+    ... | suc _ = ⊥-elim h
+    kids-deep k e (o ∷ [])      (c ∷ cs) () h
+    kids-deep k e (o ∷ o' ∷ os) []       () h
+    kids-deep zero e (o ∷ o' ∷ os) (lt [] cs' ∷ cs) ((_ , ()) , xs) h
+    kids-deep zero e (o ∷ o' ∷ os) (lt (h' ∷ hs) cs' ∷ cs) (((ch , _) , _) , xs) h =
+      h' ,
+      ∨-inr (memL h' (o ∷ o' ∷ os)) _ (∨-inl (mem h' (lt (h' ∷ hs) cs')) _
+        (∨-inl (memL h' (h' ∷ hs)) _ (∨-inl (h' ==ℕ h') _ (==-refl h')))) ,
+      trans (cell-dim (suc e) (just (o , o')) h' ch) (sym (trans (+-suc e 0) (cong suc (sym (0+ e)))))
+    kids-deep (suc k) e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) (inl hc) with kid-deep k (suc e) _ c xc hc
+    ... | y , m , d =
+      y , ∨-inr (memL y (o ∷ o' ∷ os)) _ (∨-inl (mem y c) _ m) ,
+      trans d (sym (+-suc e (suc k)))
+    kids-deep (suc k) e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) (inr hs)
+      with kids-deep (suc k) e (o' ∷ os) cs xs hs
+    ... | y , m , d = y , move y o o' os c cs m , d
+      where
+      move : ∀ y o o' os c cs → mem y (lt (o' ∷ os) cs) ≡ true → mem y (lt (o ∷ o' ∷ os) (c ∷ cs)) ≡ true
+      move y o o' os c cs m with ∨-split (memL y (o' ∷ os)) (memCs y cs) m
+      ... | inl mo = ∨-inl (memL y (o ∷ o' ∷ os)) _ (∨-inr (y ==ℕ o) _ mo)
+      ... | inr mc = ∨-inr (memL y (o ∷ o' ∷ os)) _ (∨-inr (mem y c) _ mc)
+
+  -- A branch at depth k leaves a label of dimension e + k in the source.
+  mutual
+    kid-src : ∀ k e par a → Ex Θ e par a → HasKid k a →
+              Σ Nat λ y → (mem y (bd false k a) ≡ true) × (dimOf Θ y ≡ e + k)
+    kid-src zero e par (lt [] (c ∷ cs)) (_ , ()) h
+    kid-src zero e par (lt (o ∷ os) (c ∷ cs)) ((co , _) , _) h =
+      o , ∨-inl ((o ==ℕ o) ∨ false) false (∨-inl (o ==ℕ o) false (==-refl o)) ,
+      trans (cell-dim e par o co) (0+ e)
+    kid-src (suc k) e par (lt os cs) (_ , x) h with kids-src k e os cs x h
+    ... | y , m , d = y , ∨-inr (memL y os) _ m , d
+
+    kids-src : ∀ k e os cs → ExCs Θ e os cs → AnyKid k cs →
+               Σ Nat λ y → (memCs y (bdL false k cs) ≡ true) × (dimOf Θ y ≡ e + suc k)
+    kids-src k e []            cs       () h
+    kids-src k e (o ∷ [])      []       _ ()
+    kids-src k e (o ∷ [])      (c ∷ cs) () h
+    kids-src k e (o ∷ o' ∷ os) []       () h
+    kids-src k e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) (inl hc) with kid-src k (suc e) _ c xc hc
+    ... | y , m , d = y , ∨-inl (mem y (bd false k c)) _ m , trans d (sym (+-suc e k))
+    kids-src k e (o ∷ o' ∷ os) (c ∷ cs) (xc , xs) (inr hs) with kids-src k e (o' ∷ os) cs xs hs
+    ... | y , m , d = y , ∨-inr (mem y (bd false k c)) _ m , d
+
+-- The tree of a pasting context has the dimension of the context.
+private
+  no-big : ∀ d i n → n ≡ suc (d + i) → T (n <ℕ suc d) → ⊥
+  no-big zero    i .(suc (zero + i)) refl ()
+  no-big (suc d) i .(suc (suc d + i)) refl p = no-big d i _ refl p
+
+tree-dim : ∀ τ β i → bd β (dimCtx (ctxOf τ) + i) (idTree τ) ≡ idTree τ
+tree-dim τ β i =
+  nokid-thin (dimCtx Θ + i) (idTree τ) (ex-wf Θ 0 nothing (idTree τ) (lab-ex τ)) nk β
+  where
+  Θ = ctxOf τ
+  nk : HasKid (dimCtx Θ + i) (idTree τ) → ⊥
+  nk h with kid-deep Θ (dimCtx Θ + i) 0 nothing (idTree τ) (lab-ex τ) h
+  ... | y , m , d with mem-cell Θ 0 nothing (idTree τ) y (lab-ex τ) m
+  ...   | A , eA =
+    no-big (dimCtx Θ) i (dim A) (trans (sym (dimOf-just Θ y A eA)) d) (var-dim-le Θ y A eA)
+
+-- A context of dimension k+1: a label of dimension k+1, and a branch at depth k.
+top-label : ∀ τ k → dimCtx (ctxOf τ) ≡ suc k →
+            Σ Nat λ z → (mem z (idTree τ) ≡ true) × (dimOf (ctxOf τ) z ≡ suc k)
+top-label τ k d with top-var′ (ctxOf τ) d
+  where
+  top-var′ : ∀ Γ → dimCtx Γ ≡ suc k → Σ Nat λ z → Σ Ty λ B → (lookup Γ z ≡ just B) × (dim B ≡ suc k)
+  top-var′ ε ()
+  top-var′ (Γ ▸ A) d with top-var Γ A
+  ... | z , B , ez , dz = z , B , ez , trans dz d
+... | z , B , ez , dz =
+  z , trans (lab-all τ z) (T-≡ (lookup-lt (ctxOf τ) z B ez)) , trans (dimOf-just (ctxOf τ) z B ez) dz
+
+kid-top : ∀ τ k → dimCtx (ctxOf τ) ≡ suc k → HasKid k (idTree τ)
+kid-top τ k d with top-label τ k d
+... | z , m , dz = mem-kid (ctxOf τ) (ps-ord (snd (psOf τ))) 0 nothing (idTree τ) z k (lab-ex τ) m dz

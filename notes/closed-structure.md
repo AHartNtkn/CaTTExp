@@ -395,19 +395,37 @@ So D10b is now a statement purely about UL_I\* terms: the derived abstraction op
 
 Each inductive step needs one equation between coh composites over variables, with the induction hypotheses as holes. Where that equation's generalized sequent is UP\*, the coh rule gives it directly.
 
-**Where the naive induction meets a non-UP\* step.** In the β step for [x]coh_S[τ](t₁, t₂, …), with x in t₁, the equation needed is
+**Progress on (R\) (2026-11-18).** Write ≡ for UL_I\* equality. The non-UP\* step that the first draft of this section worried about (Y, Y\I, … ⊢ C) disappears once each step is split into smaller coh equations, each generalized separately.
 
-```
-ev(x, coh_K(a, coh_{S^c}(b⃗)))  =  coh_S(ev(x, a), b⃗)      over x : Y, a : Y\B₁, b⃗,
-```
+*β holds in T: ev(x, [x]t) ≡ t for every term t with leftmost variable x.* Induction on t, following the three clauses of bracket abstraction. Every equation below is the coh rule at a UP\* type, instantiated by type substitution and then by term substitution.
+- **[x]x = j.** ev(x, j) ≡ x has type X ⊢ X.
+- **x in the first argument.**
+  - First, ev(x, coh_K(a, c)) ≡ ev(ev(x, a), c), at type Y, Y\A, A\B ⊢ B with A and B atoms. This is unit-free and L-pasting, and it is applied at A := B₁[τ], which may be I.
+  - Then ev(w, coh_{S^c}(b⃗)) ≡ coh_S(w, b⃗), at type S itself.
+  - Chaining these with the induction hypothesis ev(x, [x]t₁) ≡ t₁ gives the clause. The single generalized equation of the first draft was never needed. Its type is not UP\* when B₁ = I, but the two halves are.
+- **Closed prefix.** The rebracketing coh_S(c⃗, s, …) ≡ coh_{S⊗}(coh_M(c⃗, s), …) has type S once c⃗ is abstracted to variables.
+  - The names of Prop. B5 satisfy ev(y, ⌜c⃗ ⊗ –⌝) ≡ coh_M(c⃗, y), by induction on c⃗. The steps are K-β (as above), ev(coh_M(v⃗, y), coh_{T_S}) ≡ coh_M(coh_S(v⃗), y), whose type is T_S uncurried (UP\*), and associativity of m's.
+  - Chaining K-β twice, the names' β, and ev against coh_{S⊗^c} gives the clause.
 
-and its type is S with the hypothesis B₁ replaced by Y, Y\B₁.
-- When N leaves B₁ alone, this type is UP\* (a cut of N(S) with an ev).
-- When B₁ = I, the type is Y, Y\I, B₂, … ⊢ C. Its normal form keeps Y\I, so it is not UP\*. The hom in F is still a singleton when the rest is unit-free (for B₂ = C = Z, cut-free search finds only L\ then L_I). More generally, the step can fail whenever N removes an I from B₁ through B₁'s hypothesis position. If S is I-free, the step is always UP\*: the type is then a cut of S with ev, so it is balanced, I-free and provable.
+*η holds syntactically: [y]ev(y, k) ≡ k when y ∉ k.*
+- [y]ev(y, k) = coh_K(j, coh_{ev^c}(k)).
+- coh_{ev^c} has the identity type Y\Z ⊢ Y\Z, so it is ≡ to the variable.
+- coh_K(j, w) ≡ w has type Y\Z ⊢ Y\Z.
 
-So the obstruction is the same phenomenon as the closed-term counterexample: sequents with a "dual" Y\I or Z\I linked to an adjacent hypothesis. Two ways forward:
-- Rearrange bracket abstraction so that it never abstracts through a slot whose type N rewrites. One way is to first replace coh_S by coh_{N(S)} pre- and post-composed with unit and tensor isomorphisms; those composites are UP\*, so equal to coh_S.
-- Or enlarge the contractible class by the rule that a hypothesis pair Y, Y\I (or I/Y, Y) whose Y's are linked to each other may be contracted to I, and prove Theorem B for that class. B.1's T ⊢ T shows that the contraction cannot be unrestricted. The right restriction is open.
+So k ↦ ev(y, k) is surjective in T, and [y] is a section of it. It is a bijection as soon as **[x] respects ≡**, a ξ-rule. Then ev(y, k) ≡ ev(y, k′) gives k ≡ [y]ev(y, k) ≡ [y]ev(y, k′) ≡ k′. The mirror (R/) is the same.
+
+*What the ξ-rule needs.* Induct on the derivation of ≡.
+- **Coh-rule instance u ≡ v at type S[τ].** [x]u and [x]v both have type S^c[τ], and S^c is UP\* with the same normal form. So they are ≡.
+- **Congruence in an argument containing x.** Immediate from the clause.
+- **Substitution instances u[σ] ≡ v[σ].** These need a substitution lemma [x](u[s/z, c⃗/w⃗]) ≡ coh_K([x]s, ([z]u)[c⃗/w⃗]), proved by induction on u with the same kind of UP\* steps.
+- **Congruence in a closed argument c that bracket abstraction moves into a name ⌜c ⊗ –⌝.** This is the only real case. It needs c ≡ c′ ⇒ ⌜c ⊗ –⌝ ≡ ⌜c′ ⊗ –⌝. Prop. B5 defines the name by recursion on the *syntax* of c, and there is no fixed coh U with ⌜c ⊗ –⌝ = coh_U(c): the would-be type Z ⊢ Y\(Z ⊗ Y) is not planar-provable. Closedness of c is exactly what B5 uses.
+
+**Reduction once (R\) and (R/) hold.** The other two conditions of Prop. B7 follow.
+- Any term h equals the uncurrying of its closed name n_h, i.e. a chain of ev's applied to the variables and n_h.
+- Abstracting n_h to a variable turns an equation in h into a coh equation over variables. For example, h(u, λ(i, d)) ≡ h(i, d) for (R_I), and h(m(a, b)) ≡ h′ ⇒ … for (R⊗).
+- Its type contains I only under the canonical isomorphisms (I\A ↦ A and so on), so it is UP\*.
+
+**Status of D10b.** It is reduced to one lemma: **names respect ≡.** That is, c ≡ c′ for closed terms implies ⌜c ⊗ –⌝ ≡ ⌜c′ ⊗ –⌝, and mirror. Everything else in Prop. B7 is now proved, modulo routine checks of the substitution lemma. A natural route is to prove ⌜c ⊗ –⌝ ≡ coh_{⊢ Y\(C⊗Y)}[τ] whenever c has a UP\* generalization ⊢ C, and then handle the general case by induction on the coh-rule instance.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

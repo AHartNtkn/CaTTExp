@@ -15,17 +15,18 @@
 --     u′[λ] = u, v′[λ] = v, A′[λ] = A, and nf u′ = nf v′ = I;
 --   * so by (1′) in Θ both u′ and v′ use every variable of Θ, which is
 --     the side condition in its coherence form.
--- This is the form `totalN` has for graphs. That the certified `fill`
--- then also returns it needs completeness of `infer` (a separate
--- check).
+-- This is the form `totalN` has for graphs. By completeness of the
+-- checker, the certified `fill` returns the same cell (`fill-of-raw`),
+-- so `fill-ok`: fill Γ u v A ≡ just (c , d).
 ------------------------------------------------------------------------
 module CaTTExp.GlobularTotal.FillTotal where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Pure
+import CaTTExp.Completeness
 open import CaTTExp.Derived using (tm-ctx; ps-ctx)
 open import CaTTExp.GlobularFiller
-  using (LT; lt; nf; fillRaw; image; fuelFor; ltEq; ltEqs; shape; idTree; zipLab; labSub;
+  using (LT; lt; nf; fillRaw; fill; image; fuelFor; ltEq; ltEqs; shape; idTree; zipLab; labSub;
          liftT; liftTy; depthTm; depthTy; module Lists)
 open Lists using (listEq)
 open import CaTTExp.GlobularTotal.Uniq using (mem; memL; Ex)
@@ -253,3 +254,28 @@ fill-total {Γ} {u} {v} {A} gΓ du dv N n n′ eu ev =
            (fst (snd (snd (snd (snd (snd (snd Lu)))))))
            (cong₂ _,_ (fst (snd (snd (snd (snd (snd Lu))))))
                       (fst (snd (snd (snd (snd (snd Lv)))))))
+
+------------------------------------------------------------------------
+-- The certified filler succeeds: whenever `fillRaw` returns a
+-- well-typed cell, `fill` re-checks it and returns that same cell.
+
+private
+  module Cp = CaTTExp.Completeness ∅ cattSide (λ ()) (λ ())
+
+fill-of-raw : ∀ {Γ u v A c} → fillRaw Γ u v A ≡ just c → Γ ⊢tm c ∶ arr A u v →
+              Σ (Γ ⊢tm c ∶ arr A u v) λ d → fill Γ u v A ≡ just (c , d)
+fill-of-raw {Γ} {u} {v} {A} {c} e dc rewrite e
+  with checkCtx Γ | Cp.checkCtx-complete (tm-ctx dc)
+... | just w | _ with inferTm Γ w c | Cp.inferTm-complete dc w
+... | just (B , d) | _ with Cp.tm-unique d dc
+... | refl with arr A u v ==Ty arr A u v | ==Ty-sound (arr A u v) (arr A u v) | Cp.==Ty-refl (arr A u v)
+... | true | s | _ = subst (Γ ⊢tm c ∶_) (s tt) d , refl
+
+-- Totality of the certified filler: on a globular context, two terms of
+-- the same type with the same normal form get a certified filler.
+fill-ok : ∀ {Γ u v A} → Glob Γ → Γ ⊢tm u ∶ A → Γ ⊢tm v ∶ A →
+          ∀ N n n′ → nf n Γ u ≡ just N → nf n′ Γ v ≡ just N →
+          Σ (Σ Tm λ c → Γ ⊢tm c ∶ arr A u v) λ r → fill Γ u v A ≡ just r
+fill-ok gΓ du dv N n n′ eu ev with fill-total gΓ du dv N n n′ eu ev
+... | c , e , dc with fill-of-raw e dc
+... | d , e′ = (c , d) , e′

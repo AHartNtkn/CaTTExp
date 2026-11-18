@@ -43,6 +43,8 @@ import CaTTExp.Cones
 import CaTTExp.ConesExamples
 import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
+import CaTTExp.Free.AssociatorDepth2
+import CaTTExp.Free.A2toA1
 import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.GraphFiller

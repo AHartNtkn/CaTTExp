@@ -21,7 +21,8 @@
    - Proved: CaTT_lim's universal property forces cone morphisms to be pseudo in a CaTT ambient. So its rules fit L as written, and fit P only with that modification.
    - Proved: marking needs no closure condition.
    - Partly proved: free objects as lax colimits of the point.
-   - Reduced to one semantic theorem each: weighted limits as marked limits, and discreteness of the ℕ-like object.
+   - Reduced to one semantic theorem: weighted limits as marked limits.
+   - Solved (external researcher, verified): the ℕ-like object is discrete (§10.5).
    - Remaining gaps are written up as problems in `notes/conjectures/`.
 
 ---
@@ -390,7 +391,7 @@ A cone with apex c is `p_x, p_y : c → ⊤` (trivial), `p_z : c → C`, an inve
   - `⟦L⟧` is the free ω-category on a loop, i.e. "Bℕ".
   - Its universal property: maps `⟦L⟧ → C` are pairs (element c, endo-arrow e on c). **This is iteration.**
 - `N := Hom_{⟦L⟧}(x, x)` (§6.2). Its elements are the arrows `sⁿ`, so N is the "object of natural numbers."
-  - It is **discrete, up to equivalence, if the free weak ω-category on a graph is equivalent to the free category**. §10.5 has a proof sketch with one gap.
+  - It is **equivalent to the discrete ω-category on ℕ** (§10.5, solved). Each hom of the free weak ω-category on a graph is equivalent to the discrete set of paths.
   - N needs the hom-object construction, which comes from the limit rules under L and from the Gray thread under P (§6.2).
 - **Operations:**
   - zero = `id_x`;
@@ -434,7 +435,7 @@ In order of cost to benefit:
 3. **Cone contexts exist for pasting-scheme diagrams.** This is Mikhail's Conj 3.6 restricted to ps-contexts. It is needed before CaTT_lim can be implemented at all.
 4. **Strict-model check of R-B.** In strict ω-categories via Steiner complexes, check `laxcolim(const 1) ≅ Free(Γ)` for small Γ (D¹, D², the loop, the composable pair). This settles the orientation convention.
 5. **§10.1 in CaTT_lim.** Derive an inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule. This would settle `conjectures/catt-lim-pseudo-vs-gray.md` mechanically.
-6. **The free-on-graph lifting lemma** (§10.5). Construct the canonical lifts to the chain pasting scheme.
+6. **The free-on-graph argument** (§10.5, solved on paper). Formalising the trivial-fibration argument would be a good warm-up for computad-level proofs, but nothing depends on it.
 ---
 
 ## 9. Open problems
@@ -516,13 +517,22 @@ Problems: `conjectures/lax-colimit-of-point.md` (Steps A and C) and `conjectures
 
 Problem: `conjectures/weighted-as-partially-lax-omega.md`.
 
-### 10.5 The ℕ-like object is discrete (§6.4): proof sketch
+### 10.5 The ℕ-like object is discrete (§6.4): solved
 
-- Every 2-cell of the free weak ω-category on a graph is a coherence, hence invertible.
-- Parallel cells over the same path are connected by a coherence over the linear chain pasting scheme, after factoring through it.
-- **Gap:** choosing canonical lifts when a loop is traversed more than once.
+**Result** (external researcher, checked here; full proof in `conjectures/free-on-graph.md`). For a graph G:
+- The comparison `F_ω(G) → F_1(G)` from the free weak ω-category to the free category is a trivial fibration, hence an ω-weak equivalence.
+- The proof combines the cartesian map `L ⇒ T` and its contraction (Leinster), DFMRV's identification of computad-free with Leinster-free, and Benjamin–Markakis homs.
+- Each `Hom(a, b)` is equivalent to the discrete ω-category on paths from a to b. For the loop, `Hom_{⟦L⟧}(x, x) ≃ ℕ_disc`, and composition induces addition.
 
-Problem: `conjectures/free-on-graph.md`.
+**What this settles:**
+- The intended *semantics* of N: in the free weak ω-category on the loop, N is the natural numbers, with all higher structure contractible.
+- More generally, any finite **1-dimensional** presentation (a graph) has homs that are the discrete sets of paths. So free categories on graphs behave exactly like their 1-categorical counterparts. This covers objects that act like ℕ, lists, words over an alphabet, and free categories on finite quivers.
+
+**What remains open downstream:**
+- **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it is the lax-colimit-of-the-point problem (§10.3).
+- **That the hom-object construction gives the semantic hom.** Under L this follows from the limit rules (§6.2). Under P it needs the Gray thread's lax cotensor (§10.1).
+- **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule.
+- **Induction on N** still needs a dependent eliminator [→ fibrations].
 
 ### 10.6 Smaller claims
 

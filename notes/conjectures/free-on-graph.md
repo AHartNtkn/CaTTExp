@@ -1,5 +1,8 @@
 # Is the free weak ω-category on a graph equivalent to the free category?
 
+> **Status: SOLVED (yes), 2026-11-18.** An external researcher's proof is at the end of this file, and it was checked in this project; see "Verification" below.
+> The comparison `F_ω(G) → F_1(G)` is a trivial fibration, hence an ω-weak equivalence. Each hom `Hom_{F_ω(G)}(a,b)` is equivalent to the discrete ω-category on the paths from a to b. For one loop, `Hom(x,x) ≃ ℕ_disc`.
+
 ## Background
 
 - A **graph** (1-dimensional computad) G has vertices and edges.
@@ -240,3 +243,18 @@ so
 \]
 
 The equivalence sends a \(1\)-cell to the length of its underlying path. Each fiber over \(k\) is contractible, and composition induces addition on the resulting equivalence classes.
+
+---
+
+# Verification (project, 2026-11-18)
+
+Each step was checked against the cited definitions.
+
+- **Cartesian comparison.** Leinster's L comes with a cartesian monad morphism `ar : L ⇒ T` whose component at 1 has a contraction; this is the definition of L as the initial contractible globular operad. Cartesianness gives `LX ≅ L1 ×_{T1} TX`, from the naturality square at `X → 1`. ✓
+- **Lifting step (*).** For parallel a, b, the cells `L!(a)` and `L!(b)` are parallel in L1, and `T!(d)` is a cell of T1 between their images. So the contraction applies, and the pair `(θ, d)` has the right source and target by the pullback description. ✓
+- **Identification `F_ω(G) = LG`.** This rests on DFMRV Prop. 4.1 and Cor. 7.36. That is the same notion of "free weak ω-category on a computad" that CaTT terms denote (Benjamin–Markakis–Sarti: CaTT contexts are finite computads). ✓, by citation; not re-derived here.
+- **Correction to our "What is known."** Not every 2-cell is a *coherence*: vertical composites are composition operations. Invertibility follows instead from Benjamin–Markakis Prop. 35 (empty top-dimensional generator support). The conclusion is unchanged.
+- **Canonical lifts (§3 of the response).** Uniqueness in the pullback `L Θ_k ≅ LG ×_{TG} TΘ_k`, over the fixed strict path τ, closes the non-injective-substitution gap in our sketch. ✓
+- **Homs (§4).** The trivial-fibration property passes to homs because a lifting problem in a hom is a lifting problem one dimension up. This applies to the Benjamin–Markakis hom, which lifts the globular hom. ✓
+
+**Scope note.** "≃" here is ω-weak equivalence of weak ω-categories (Fujii–Hoshino–Maehara). It is a statement about the free weak ω-category, i.e. about the *semantics* of a context. Consequences for the design are recorded in `limits-representables.md` §10.5.

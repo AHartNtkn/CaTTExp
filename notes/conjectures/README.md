@@ -13,7 +13,7 @@ Each file has the same parts:
 - **Why it matters:** one paragraph, with no project jargon.
 - **What would count as a solution:** a proof, a counterexample, or a reference.
 
-A literature search was done on 2026-11-18. Each file has a "Literature search" subsection. Summary: two problems are partly answered by existing work (the strict Gray tensor of free ω-categories is free; the (∞,1) version of the lax colimit of the point), and none is fully answered.
+A literature search was done on 2026-11-18. Each file has a "Literature search" subsection. Summary: two problems are partly answered by existing work, one has since been solved by an external researcher (free-on-graph), (the strict Gray tensor of free ω-categories is free; the (∞,1) version of the lax colimit of the point).
 
 | File | Problem | Origin |
 |---|---|---|
@@ -21,7 +21,7 @@ A literature search was done on 2026-11-18. Each file has a "Literature search" 
 | `gray-contexts-steiner.md` | Do Mikhail's Gray contexts `Γ ⊗ Dⁿ` exist for all n and present the Steiner Gray tensor? | `limits-representables.md` §10.3 |
 | `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | `limits-representables.md` §10.3 |
 | `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | `limits-representables.md` §10.4 |
-| `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | `limits-representables.md` §10.5 |
+| `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? **Solved: yes** (external researcher, verified) | `limits-representables.md` §10.5 |
 | `steiner-support-determines-cells.md` | In free strict ω-categories on Steiner complexes (e.g. Gray tensors of pasting diagrams), are cells determined by their dimension and set of generators? | `pseudo-vs-gray.md` §3.6, lemmas (A)–(C) |
 | `free-infinity-gray-of-pasting-diagrams.md` | Are Gray tensors of globular pasting diagrams free as (∞,n)-categories (scope of Campion's pasting theorem)? | `pseudo-vs-gray.md` §3.6, (D)–(F) |
 | `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by generators. | `pseudo-vs-gray.md` §2.5, §3.6 |

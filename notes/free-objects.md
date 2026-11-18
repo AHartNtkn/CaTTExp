@@ -1,6 +1,6 @@
 # Free ω-categories as objects
 
-*Design notes, second pass, 2026-11-18. Companion to `notes/catt-survey.md` (project files). Claims marked **[recall]** are from background knowledge and were not re-checked against the source. Claims marked **[conj]** are conjectures.*
+*Design notes, second pass, 2026-11-18. Companion to `notes/catt-survey.md` (project files). Claims once marked **[recall]** were re-checked against their sources on 2026-11-18 (ledger G1). Claims marked **[conj]** are conjectures.*
 
 This note started as "universes and size". After review, the universe question is closed (§0), and what remains is the problem of making free and presented ω-categories into objects of the ambient. The note sets out two ways to do that, A1 and A2, in full, and compares them.
 
@@ -241,7 +241,10 @@ At dimension 1 it says: given `G, G' : C[x : a → b] → D`, a transformation `
 ### 3.6 Semantics
 
 - **Strict model:** `C[x : a → b]` is the strict pushout of C along the boundary inclusion `∂Dⁿ → Dⁿ`. This is the standard "add one generator" step for polygraphs.
-- **Weak model:** the homotopy pushout along the boundary inclusion. Boundary inclusions are the generating cofibrations in the known model structures on ω-categories, so this pushout is well behaved **[recall: for the weak (GM) case, which model structure to cite]**.
+- **Weak model:** the homotopy pushout along the boundary inclusion.
+  - *Strict ω-categories:* boundary inclusions ∂Oₙ → Oₙ are the generating cofibrations of the folk model structure (Lafont–Métayer–Worytkiewicz, [0712.0617](https://arxiv.org/abs/0712.0617), §4) **[paper]**, so this pushout is a homotopy pushout there.
+  - *(∞,ω)-categories:* Cat_ω is presentable, so the pushout along ∂Dⁿ → Dⁿ exists and is the intended semantics.
+  - *GM / Batanin–Leinster weak ω-categories:* **no model structure is known to cite.** Boundary inclusions generate the weak factorisation system whose universal cofibrant replacement gives Leinster's operad (Garner, [0804.2663](https://arxiv.org/abs/0804.2663)), but a (left semi-)model structure with the ω-weak equivalences is still future work (Fujii–Hoshino–Maehara, [2406.13240](https://arxiv.org/abs/2406.13240), introduction) **[paper]**. *Correction:* an earlier version said the boundary inclusions are generating cofibrations in "the known model structures" in the weak case. Recorded as a semantics gap in `semantics-gaps.md` §2 and §5.
 
 ---
 

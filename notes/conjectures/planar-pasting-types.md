@@ -65,7 +65,7 @@ It does **not** extend naively to the mapping (∞,ω)-categories, whose higher 
 
 **Consequence.** A pasting-type theory whose coherence rule makes "currying" an equivalence on all higher cells would be **unsound** for the Gray structure. The higher cells of a closure must remember *where the Dᵏ sits* among the tensor factors.
 
-**Precise form**, assuming the companion conjecture C1 (`gray-vs-cartesian.md`), which says A × Dᵏ is A ⊗ Dᵏ with the mixed cells inverted:
+**Precise form**, using C1 (`gray-vs-cartesian.md`; proved 2026-11-18), which says A × Dᵏ is A ⊗ Dᵏ with the mixed cells inverted:
 - k-cells of Fun(A, Fun^lax(B, C)) are maps out of A ⊗ Dᵏ ⊗ B, with only the A–Dᵏ mixed cells inverted;
 - k-cells of Fun(A ⊗ B, C) are maps out of A ⊗ B ⊗ Dᵏ, with the (A⊗B)–Dᵏ mixed cells inverted.
 

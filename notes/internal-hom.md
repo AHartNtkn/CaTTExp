@@ -220,7 +220,7 @@ There are two ways to generate these cells:
 - **D⁰ check.** Points of [Θ, C], i.e. D⁰ ⊳ [Θ, C], are Θ-diagrams in C, since D⁰ ⊗ Θ ≅ Θ.
 - **Correction: the bijection is between maps, not between whole hom-categories.**
   - Native higher cells of the ambient are cartesian. A 2-cell between φ, φ′ : ⟦Δ⟧ → [Θ, C] is a map (⟦Δ⟧ × D¹) ⊗ Θ → C, *not* a 2-cell between the transposes in Fun(⟦Δ⊗Θ⟧, C). Gagna–Harpaz–Lanari (2006.14495), Rem. 2.20, show these differ in general.
-  - So (lhom-Λ/♭) must be read as a correspondence of *maps* Δ ⊳ –. Higher cells are reached by letting Δ range over marked cylinders: ⟦Δ⟧ × D¹ ≃ ⟦(Δ ⊗ D¹)^μ⟧, which is Conjecture C1 below.
+  - So (lhom-Λ/♭) must be read as a correspondence of *maps* Δ ⊳ –. Higher cells are reached by letting Δ range over marked cylinders: ⟦Δ⟧ × D¹ ≃ ⟦(Δ ⊗ D¹)^μ⟧, which is Theorem (P) below (formerly Conjecture C1, now proved).
   - The β-, η- and naturality cells are invertible ambient cells, consistent with this reading.
   - See [`conjectures/planar-pasting-types.md`](conjectures/planar-pasting-types.md) §4 for the precise form of the obstruction.
 - **Cotensors turn colimits of shapes into limits** (handed over from limits-representables.md §10.6). This is formal from the rule: a map into [Θ, C] is a map out of Δ ⊗ Θ, and ⊗ preserves colimits of contexts in each variable (G3 is the case of a wedge). So [colim Θᵢ, C] ≃ lim [Θᵢ, C], provided the limit exists.
@@ -268,7 +268,7 @@ Here ΣΔ → Γ means a ΣΔ-shaped tuple of terms of the ambient context. So "
 
 ### 5.5 Pseudo as marking
 
-**Conjecture (P).** For representable Θ,
+**Theorem (P)** (was a conjecture; proved 2026-11-18, see [`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md), C1/C1′). For representable Θ,
 
 ```
 Δ ⊳ [⟦Θ⟧, C]  ≃  (Δ ⊗ₘ Θ) ⊳ C
@@ -276,11 +276,16 @@ Here ΣΔ → Γ means a ΣΔ-shaped tuple of terms of the ambient context. So "
 
 Here Δ ⊗ₘ Θ is Δ ⊗ Θ with every *mixed* generator x⊗y (dim x, dim y ≥ 1) marked invertible in the sense of ICaTT. Equivalently, ⟦Δ⟧ × ⟦Θ⟧ is the localisation of ⟦Δ ⊗ Θ⟧ at the mixed generators.
 
-- **Status:** the full problem statement and attempts are in [`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md) (Conjecture C1). Campion lists the comparison as future work. *Literature update (2026-11-18):* the case l = 1, for every A, is Loubaton (arXiv 2406.05425), Prop. 3.1.3.1, and the general case appears to follow from published results (sketch in that file's §7).
-  - **Proved:** reduction to globes Dᵏ ⊗ Dˡ, by density and cocontinuity; the cases k = 0 or l = 0; and the case k = l = 1 (the Gray square localises to the commutative square).
-  - **Dimension 2:** follows from GHL Prop. 2.12. The exact match of markings has not been checked line by line.
-  - **General case:** an induction via Loubaton's suspension formula stalls at one lemma (S3), which is stated there.
-- **If (P) holds,** [⟦Θ⟧, C] (pseudo) embeds in [Θ, C]ₗₐₓ as the "mixed-invertible" part. The two homs then share one rule schema, [Θ, C]_μ for a marking policy μ ∈ {lax, pseudo}:
+- **Status: proved**, in (∞,ω) and for every finite n. The general statement is (A ⊗ B)[mixed⁻¹] ≃ A × B, where the localisation is at the images of mixed generators along all globe maps.
+  - The proof is by an external researcher; it was verified by the literature-search thread and merged as PR #14.
+  - It completes the earlier sketch with two lemmas: tensoring a localisation with the interval, and generated markings in Loubaton's marked cylinder.
+  - It then runs a cube induction and extends to all objects through Campion's cube density, using mapping spaces.
+  - Lemma S3 follows.
+- **Correction: the marking must reach the boundaries.** The pseudo hom is a sub-object of the lax hom, but it is **not locally full**.
+  - An r-cell σ of [Θ, C]ₗₐₓ is pseudo exactly when its adjunct inverts every mixed cell, *including those on its boundary faces*.
+  - So a cell between two pseudo cells can still fail to be pseudo. The counterexample is B = D¹, C = D³: a modification between two strong transformations with a non-invertible naturality 3-cell.
+  - In the rules, ⊗ₘ marks **all** mixed generators of Δ ⊗ Θ, boundary ones included. That is the correct condition. A rule that marked only the top cell and inherited membership from the endpoints would be wrong.
+- **Consequently,** [⟦Θ⟧, C] (pseudo) embeds in [Θ, C]ₗₐₓ as the part whose cells invert all mixed cells, including those on boundaries. The two homs then share one rule schema, [Θ, C]_μ for a marking policy μ ∈ {lax, pseudo}:
   - only the context operation changes (⊗ vs ⊗ₘ);
   - the λ/♭ rules are identical;
   - μ = pseudo needs ICaTT's invertibility judgment (Benjamin–Champin–Markakis) or Mikhail's ⊨ judgment.
@@ -295,7 +300,7 @@ Here Δ ⊗ₘ Θ is Δ ⊗ Θ with every *mixed* generator x⊗y (dim x, dim y 
 Hom(⟦Γ⟧, D)(u, v)  ≃  Hom(⟦(Γ ⊗ D¹)^μ⟧, D)        (fibre over the ends u, v)
 ```
 
-This is the case Δ = D¹ of Conjecture (P), read as a rule rather than a conjecture. It says that an ambient (pseudo) 2-cell between Γ-diagrams u, v is the same as a marked Gray cylinder with ends u and v. Here it is stated in this note's notation, for any shape Δ:
+This is the case Δ = D¹ of Theorem (P). It says that an ambient (pseudo) 2-cell between Γ-diagrams u, v is the same as a marked Gray cylinder with ends u and v. Here it is stated in this note's notation, for any shape Δ:
 
 ```
         Γ ⊢ φ : (Δ ⊗ₘ Θ) ⊳ C                    Γ ⊢ ψ : Δ ⊳ [⟦Θ⟧, C]
@@ -313,7 +318,7 @@ Points to settle:
 - **Orientation.** The limits note writes Γ ⊗ D¹. With every mixed cell marked, Γ ⊗ₘ D¹ and D¹ ⊗ₘ Γ should be equivalent, since both model Γ × D¹. So the orientation only matters for the unmarked (lax) version, where it decides lax vs oplax (§4.1, §5.6).
 - **Status.**
   - Under Option A (option P of the limits notes), this rule is the *definition* of how pseudo cells of the ambient relate to shapes.
-  - Its semantic justification is Conjecture C1 ([`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md)): proved for the Gray square, and in dimension 2 via GHL, with the general case open.
+  - Its semantic justification is Theorem (P), formerly Conjecture C1, now proved ([`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md)).
   - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
 - **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
   - For arbitrary domains B, the same question becomes whether the disks are jointly dense, i.e. whether a 1-cell B → [D¹, C] is determined by its restrictions along all elements Dⁿ ⊳ B.

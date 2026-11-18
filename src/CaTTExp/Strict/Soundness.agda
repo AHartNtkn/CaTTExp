@@ -47,9 +47,6 @@ open import CaTTExp.Strict.CohCase using (coh-top)
 open import CaTTExp.Strict.Recon using (b-bdry)
 
 module Soundness where
-  private
-    B-bdry : BBdry
-    B-bdry = b-bdry
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
   sound-op⋆ : ∀ {Γ Δ t u σ} → Δ ⊢ps → T (graySide Δ ⋆ t u) → Γ ⊢sub σ ∶ Δ → Cellular Γ σ Δ →
@@ -112,8 +109,8 @@ module Soundness where
     opcell sn .(suc n) refl cTT pt pu C refl =
       let c₋ = fst cTT
           c₊ = fst (snd cTT)
-          et = B-bdry psΔ e₁ e₂ n false (towerOf t A) (supp t A) sn cT c₋ (flat-supp t A₀ a₀ b₀) pt
-          eu = B-bdry psΔ e₁ e₂ n true (towerOf u A) (supp u A) sn cU c₊ (flat-supp u A₀ a₀ b₀) pu
+          et = b-bdry psΔ e₁ e₂ n false (towerOf t A) (supp t A) sn cT c₋ (flat-supp t A₀ a₀ b₀) pt
+          eu = b-bdry psΔ e₁ e₂ n true (towerOf u A) (supp u A) sn cU c₊ (flat-supp u A₀ a₀ b₀) pu
       in Cells.IsCell-≈ (∂T Δ) (Basis Δ e₁ e₂) (suc n) (twT hs true (suc n)) _
            (≈w-sym (towerOf t A) _ et , ≈w-sym (towerOf u A) _ eu , ≈-refl) cTT
     cellX : ∀ b → cohCase Δ A t u ≡ b → IsCellL Δ e₁ e₂ (dim A) (X₀ b)

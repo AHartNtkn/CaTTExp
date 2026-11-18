@@ -35,12 +35,6 @@ cm-consB v g Y = sym (cm-fuse (λ u → (v ∷ u) ∷ []) g Y)
  (≈-trans (cm-sum (here b (facesTy (lookup Γ v))) (λ y → consB v (∂T Γ (flipN (hdimV Γ v) b) y)) Y)
           (≡→≈ (cong (cm (here b (facesTy (lookup Γ v))) Y ++_) (cm-consB v (∂T Γ (flipN (hdimV Γ v) b)) Y)))))
 
-here-nothing : ∀ b Y → cm (here b nothing) Y ≡ []
-here-nothing b Y = cm-nil Y
-
-here-just : ∀ b s t Y → cm (here b (just (s , t))) Y ≡ consB (if b then t else s) Y
-here-just b s t Y = refl
-
 ------------------------------------------------------------------------
 -- Statement.
 

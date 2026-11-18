@@ -47,10 +47,6 @@ import CaTTExp.Gray.Graded ∅ as Gr
 ∈L-++l (a ∷ A) B (thereA m) = thereA (∈L-++l A B m)
 
 private
-  ≤-antisym : ∀ {m n} → m ≤ n → n ≤ m → m ≡ n
-  ≤-antisym z≤n     z≤n     = refl
-  ≤-antisym (s≤s p) (s≤s q) = cong suc (≤-antisym p q)
-
   suc-≰ : ∀ n → suc n ≤ n → ⊥
   suc-≰ zero    ()
   suc-≰ (suc n) (s≤s p) = suc-≰ n p

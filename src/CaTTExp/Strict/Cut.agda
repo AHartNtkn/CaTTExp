@@ -145,9 +145,6 @@ module _ {Γ : Ctx} (I : OInv Γ) where
     _<_ : Tuple → Tuple → Bool
     a < b = _<ₒ_ Γ a b
 
-    ge : Tuple → Tuple → Bool
-    ge a b = not (b < a)
-
   -- The part of c below a, and the part at or above a.
   below above : Tuple → Bag → Bag
   below a c = filter (λ b → b < a) c
@@ -299,6 +296,7 @@ module _ {Γ : Ctx} (inv : PsInv Γ) where
     s≢0 : ∀ {n} → suc n ≡ 0 → ⊥
     s≢0 ()
 
+  -- Like Strict.L.∂-deg0, but from the degree alone (no Basis).
   ∂-deg0' : ∀ σ w → deg Γ w ≡ 0 → ∂T Γ σ w ≡ []
   ∂-deg0' σ []      _ = refl
   ∂-deg0' σ (v ∷ w) d with vshape inv v | plus0 (hdimV Γ v) (deg Γ w) d

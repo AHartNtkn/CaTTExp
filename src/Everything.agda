@@ -26,3 +26,4 @@ import CaTTExp.Lim.Rules
 import CaTTExp.Lim.Terms
 import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
+import CaTTExp.Gray.Bounded

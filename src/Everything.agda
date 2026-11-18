@@ -69,3 +69,4 @@ import CaTTExp.Gray.SetFacts
 import CaTTExp.Gray.OrientRev
 import CaTTExp.Gray.DownAgree
 import CaTTExp.Gray.Graded
+import CaTTExp.Gray.MarksFuel

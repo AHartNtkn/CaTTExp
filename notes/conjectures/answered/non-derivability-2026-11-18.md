@@ -742,3 +742,35 @@ Therefore:
 - **Questions 1 and 3 have the countermodels above even with cartesian exponentials by the finite realized shapes and the corresponding product-parameterized R-A.**
 - **Question 2 has the countermodel above for enriched cotensors and the R-A correspondence as stated.**
 - **If the intended rules additionally impose (E), product-parameterized R-A, or universal coproducts under arbitrary base change, I have not established Question 2 for that strengthened theory.**
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** Q1 and Q3 are settled negatively, robustly (their models also satisfy the cartesian exponential law (E) and product-parameterised R-A). Q2 is settled negatively only for the enriched reading (C) of cotensors; for the reading the project actually uses, it stays open. Checked step by step.
+
+### Q3 (Pos with discrete homs)
+
+- **V1. Model.** Every hom is discrete, so every object is 0-truncated and Trunc₀ = id is a reflection. Internally (via maps out of ⟦D^n⟧ = Δk(D^n) = 1) every object looks like its discrete set of points, while maps are restricted to monotone ones. Lax and pseudo colimits reduce to ordinary colimits because the only comparison cells are identities. CaTT's `coh` is interpreted by identities. **Confirmed.**
+- **V2. R-A and cotensors.** Pos(Δk(Γ), C) ≅ Sub(Γ, C) because a 1-generator can be sent only to an identity; parameterised version Pos(T × Δk(Γ), C) ≅ Pos(T, C^{k(Γ)}) holds since Pos is cartesian closed. **Confirmed**, so (E) holds too.
+- **V3. The relation.** R = {0,1}² with the single strict comparison (0,0) < (1,1). Checked monotonicity of m (identity), e, i, and c; the only strict comparison in R ×_X R is ((0,0),(0,0)) < ((1,1),(1,1)) (any other candidate would need (0,1) or (1,0) below something in R). **Confirmed.**
+- **V4. Failure.** (0,1) ∈ R forces g(0) = g(1), so coeq = 1, and the kernel pair is X × X with the product order, where (0,0) < (0,1) but these are incomparable in R. The comparison is a bijective monotone map with non-monotone inverse, hence not an equivalence in a locally discrete model. **Confirmed.** So EX is independent; it must be a rule.
+
+### Q1 (categories with an auxiliary equivalence relation)
+
+- **V5. Ambient 2-category.** Limits with pulled-back relation, colimits with generated relation, cotensors C^J with pointwise relation and tensors J ⊗ A with relation "j = j′ and a E a′". Checked K(A, C^J) ≅ Fun(J, K(A,C)) and K(J ⊗ A, C) ≅ Fun(J, K(A,C)) directly; with Kelly 3.73 this gives all finite weighted limits and colimits. **Confirmed.**
+- **V6. R-A.** ⟦Γ⟧ = (P_Γ, =); every functor out of an equality-relation object preserves E, so K(⟦Γ⟧, C) = Fun(P_Γ, C). Internal cells of (C, E) are those of the 1-category C (the fibre of [⟦D¹⟧,C] over fixed endpoints has identity squares only), so this is the substitution category. Product law: the relation on A × ⟦Γ⟧ is "a E a′ and γ = γ′", so K(A × ⟦Γ⟧, C) ≅ Fun(P_Γ, K(A,C)). **Confirmed.**
+- **V7. N.** ⟦L⟧ = (Bℕ, =). [I, Bℕ] has objects ℕ and pointwise relation, which is total because Bℕ has one object. The fibre over (x, x) has identity squares only, so N = (Disc ℕ, total), a set; zero and succ preserve the total relation. **Confirmed.**
+- **V8. Failure.** Bool = ⊤ ⊔ ⊤ = (Disc{0,1}, =) (the generated relation is equality). Any r : N → Bool must preserve the total relation, so r is constant, contradicting r(0) = 0, r(1) = f(r(0)) = 1. **Confirmed.** So recursion (route II, F1c) is not derivable from R-A, finite limits, finite colimits and Trunc, even with (E). Consistency check: OMATH's Thm 4.4 derives recursion from G + DJ, so G or DJ must fail in this model (which one was not checked).
+
+### Q2 (comma ∞-category F ↓ id, F(X) = H₁(X; ℤ)[1])
+
+- **V9. F is a functor of ∞-categories:** F = τ_{≥1}τ_{≤1} C_*(−; ℤ). Mapping spaces (1), limits (2) (id preserves limits) and colimits (3) (pushout correction, no hypothesis on F) recomputed. **Confirmed.**
+- **V10. R-A.** T(G) = (G, F(G), id) is left adjoint to P = Map(1, −) and R-A holds as Map(T|Γ|, C) ≃ Map(|Γ|, X). Note ⟦D¹⟧ ≃ 1 in this model (it is locally groupoidal). **Confirmed.**
+- **V11. N and the failure.** N ≃ 1 ×_{⟦L⟧} 1 = (ℤ, ℤ[0], 0) (underlying space ΩS¹ = ℤ). For E = (∅, ℤ[−1], 0), Map(E, N) ≃ Map_{D(ℤ)}(ℤ[−1], ℤ) with π_k = H_{k−1}(ℤ[0]), so K(ℤ,1); Map(E, ⟦L⟧) ≃ K(ℤ,2). So N is not a set and ⟦L⟧ is not 1-truncated. **Confirmed.**
+- **V12. Sets, Bool, disjointness.** Sets are exactly (S, 0, 0) with S discrete (End(A) = π₁Map(A[−1], A) must vanish); Bool = (2, 0, 0); the injections are monos with pullback (∅, 0). **Confirmed.**
+- **V13. The qualification is real.** With E₂ = (∅, ℤ/2[0], 0) and T(2) = (2, 0, 0): E₂ × T(2) ≃ E₂, Map(E₂, E₂) has 2 points but Sub(2, Map(E₂, E₂)) has 4. So (E) and product-parameterised R-A fail. **Confirmed.**
+
+**Which reading the project uses.** `ordinary-math.md` uses (E) for ⟦D¹⟧ (§6.1, Prop. 6.1: "W × ⟦D¹⟧ is the tensor") and states recursion with a parameter object B (B × N), i.e. product-parameterised. So for the project's theory **Q2 is still open**. The Q2 model still shows that R-A with enriched cotensors alone does not make T-graph derivable, and that any derivation must use (E) or universality of coproducts.
+
+**Consequences.** F1c closed (recursion needs its own rule or G + DJ). F4b: EX is independent of 𝕋 + Trunc₀, so it stays a rule. F3b: open under (E); follow-up prompt `outbox/non-derivability-q2.md`, unsent.

@@ -460,3 +460,239 @@ module _ (closed : Closed) where
       go (inj₂ cl₀) (inj₂ _) (inj₁ ((k , ek , _) , _)) =
         ⊥-elim (closed-var (sc-lookup τ₀ i i< cl₀) (trans (sym (lookupₛ-wk τ₀ ty i i<)) ek))
       go (inj₂ cl₀) (inj₂ (scty , _)) (inj₂ (sctf , _)) = inj₂ ((cl₀ , scty) , sctf)
+
+------------------------------------------------------------------------
+-- Groups.
+
+record Group : Set₁ where
+  infixl 7 _·_
+  infix  8 _⁻¹
+  field
+    G     : Set
+    _·_   : G → G → G
+    e     : G
+    _⁻¹   : G → G
+    assoc : ∀ a b c → (a · b) · c ≡ a · (b · c)
+    idˡ   : ∀ a → e · a ≡ a
+    idʳ   : ∀ a → a · e ≡ a
+    invˡ  : ∀ a → a ⁻¹ · a ≡ e
+    invʳ  : ∀ a → a · a ⁻¹ ≡ e
+
+  -- a⁻¹ · (a · b) = b
+  cancelˡ : ∀ a b → a ⁻¹ · (a · b) ≡ b
+  cancelˡ a b = trans (sym (assoc (a ⁻¹) a b)) (trans (cong (_· b) (invˡ a)) (idˡ b))
+
+  -- (a⁻¹ · b) · (b⁻¹ · c) = a⁻¹ · c
+  telescope : ∀ a b c → (a ⁻¹ · b) · (b ⁻¹ · c) ≡ a ⁻¹ · c
+  telescope a b c =
+    trans (assoc (a ⁻¹) b (b ⁻¹ · c))
+      (cong (a ⁻¹ ·_) (trans (sym (assoc b (b ⁻¹) c)) (trans (cong (_· c) (invʳ b)) (idˡ c))))
+
+  -- (a⁻¹ · b)⁻¹ · (a⁻¹ · c) = b⁻¹ · c
+  relative : ∀ a b c → (a ⁻¹ · b) ⁻¹ · (a ⁻¹ · c) ≡ b ⁻¹ · c
+  relative a b c =
+    trans (cong ((a ⁻¹ · b) ⁻¹ ·_) (sym (telescope a b c))) (cancelˡ (a ⁻¹ · b) (b ⁻¹ · c))
+
+------------------------------------------------------------------------
+-- The model B G.
+
+module Model (closed : Closed) (𝔾 : Group) (M : K → Group.G 𝔾) where
+
+  open Group 𝔾
+
+  Env : Set
+  Env = Nat → G
+
+  -- Values of a substitution, in the same order.
+  data VS : Set where
+    []  : VS
+    _▹_ : VS → G → VS
+
+  lenV : VS → Nat
+  lenV []       = 0
+  lenV (vs ▹ _) = suc (lenV vs)
+
+  lookupV : VS → Env
+  lookupV []       i = e
+  lookupV (vs ▹ g) i = if i ==ℕ lenV vs then g else lookupV vs i
+
+  -- Potentials of the objects of a pasting context.
+  private
+    step? : Ty → Ty → Maybe Nat
+    step? ⋆ (arr ⋆ (var x) (var n)) = just x
+    step? _ _                       = nothing
+
+    stepWith : Maybe Nat → Nat → G → (Nat → G) → Nat → G
+    stepWith (just x) n w P i = if i ==ℕ n then P x · w else P i
+    stepWith nothing  n w P i = P i
+
+  pot : Ctx → Env → Nat → G
+  pot (Γ ▸ A ▸ B) η = stepWith (step? A B) (len Γ) (η (suc (len Γ))) (pot Γ η)
+  pot _           η = λ _ → e
+
+  -- A 1-dimensional coherence x → y over Θ is the composite along Θ.
+  cohVal : Ctx → Ty → Env → G
+  cohVal Θ (arr ⋆ (var a) (var b)) η = pot Θ η a ⁻¹ · pot Θ η b
+  cohVal Θ _                       η = e
+
+  mutual
+    ⟦_⟧ : Tm → Env → G
+    ⟦ var i ⟧     ρ = ρ i
+    ⟦ coh Θ A τ ⟧ ρ = cohVal Θ A (lookupV (⟦ τ ⟧s ρ))
+    ⟦ cst k ⟧     ρ = M k
+
+    ⟦_⟧s : Sub → Env → VS
+    ⟦ ⟨⟩ ⟧s     ρ = []
+    ⟦ σ ,ₛ t ⟧s ρ = ⟦ σ ⟧s ρ ▹ ⟦ t ⟧ ρ
+
+  -- Inhabitation of a type in B G.
+  Holds : Ty → Env → Set
+  Holds (arr (arr ⋆ _ _) f g) ρ = ⟦ f ⟧ ρ ≡ ⟦ g ⟧ ρ
+  Holds _                     ρ = ⊤
+
+  ValidEnv : Ctx → Env → Set
+  ValidEnv Γ ρ = ∀ i A → lookup Γ i ≡ just A → Holds A ρ
+
+  ----------------------------------------------------------------------
+  -- Environments.
+
+  Agree : Nat → Env → Env → Set
+  Agree n η η′ = ∀ i → T (i <ℕ n) → η i ≡ η′ i
+
+  mutual
+    env-tm : ∀ {n η η′} t → ScTm n t → Agree n η η′ → ⟦ t ⟧ η ≡ ⟦ t ⟧ η′
+    env-tm (var i)     p a = a i p
+    env-tm (coh Θ A τ) p a = cong (λ vs → cohVal Θ A (lookupV vs)) (env-sub τ p a)
+    env-tm (cst k)     _ _ = refl
+
+    env-sub : ∀ {n η η′} σ → ScSub n σ → Agree n η η′ → ⟦ σ ⟧s η ≡ ⟦ σ ⟧s η′
+    env-sub ⟨⟩       _       _ = refl
+    env-sub (σ ,ₛ t) (p , q) a = cong₂ _▹_ (env-sub σ p a) (env-tm t q a)
+
+  Holds-ext : ∀ {n η η′} A → ScTy n A → Agree n η η′ → Holds A η → Holds A η′
+  Holds-ext ⋆                       _               _ h = h
+  Holds-ext (arr ⋆ _ _)             _               _ h = h
+  Holds-ext (arr (arr ⋆ _ _) f g)   (_ , pf , pg)   a h =
+    trans (sym (env-tm f pf a)) (trans h (env-tm g pg a))
+  Holds-ext (arr (arr (arr _ _ _) _ _) _ _) _       _ h = h
+
+  lenV-⟦⟧ : ∀ σ ρ → lenV (⟦ σ ⟧s ρ) ≡ lenₛ σ
+  lenV-⟦⟧ ⟨⟩       ρ = refl
+  lenV-⟦⟧ (σ ,ₛ t) ρ = cong suc (lenV-⟦⟧ σ ρ)
+
+  lookupV-wk : ∀ vs g → Agree (lenV vs) (lookupV vs) (lookupV (vs ▹ g))
+  lookupV-wk vs g i p rewrite <→≢ i (lenV vs) p = refl
+
+  lookupV-top : ∀ vs g → lookupV (vs ▹ g) (lenV vs) ≡ g
+  lookupV-top vs g rewrite ==-refl (lenV vs) = refl
+
+  lookupV-⟦⟧ : ∀ σ ρ i → T (i <ℕ lenₛ σ) → lookupV (⟦ σ ⟧s ρ) i ≡ ⟦ lookupₛ σ i ⟧ ρ
+  lookupV-⟦⟧ (σ ,ₛ t) ρ i p rewrite lenV-⟦⟧ σ ρ with i ==ℕ lenₛ σ in eq
+  ... | true  = refl
+  ... | false = lookupV-⟦⟧ σ ρ i (<suc-≢ i (lenₛ σ) p eq)
+
+  ----------------------------------------------------------------------
+  -- Semantic substitution.
+
+  mutual
+    sem-tm : ∀ t σ ρ → ScTm (lenₛ σ) t → ⟦ t [ σ ]tm ⟧ ρ ≡ ⟦ t ⟧ (lookupV (⟦ σ ⟧s ρ))
+    sem-tm (var i)     σ ρ p = sym (lookupV-⟦⟧ σ ρ i p)
+    sem-tm (coh Θ A τ) σ ρ p = cong (λ vs → cohVal Θ A (lookupV vs)) (sem-sub τ σ ρ p)
+    sem-tm (cst k)     σ ρ _ = refl
+
+    sem-sub : ∀ τ σ ρ → ScSub (lenₛ σ) τ → ⟦ τ ∘ σ ⟧s ρ ≡ ⟦ τ ⟧s (lookupV (⟦ σ ⟧s ρ))
+    sem-sub ⟨⟩       σ ρ _       = refl
+    sem-sub (τ ,ₛ t) σ ρ (p , q) = cong₂ _▹_ (sem-sub τ σ ρ p) (sem-tm t σ ρ q)
+
+  Holds-sub : ∀ A σ ρ → ScTy (lenₛ σ) A → Holds (A [ σ ]ty) ρ → Holds A (lookupV (⟦ σ ⟧s ρ))
+  Holds-sub ⋆                     σ ρ _ h = h
+  Holds-sub (arr ⋆ _ _)           σ ρ _ h = h
+  Holds-sub (arr (arr ⋆ _ _) f g) σ ρ (_ , pf , pg) h =
+    trans (sym (sem-tm f σ ρ pf)) (trans h (sem-tm g σ ρ pg))
+  Holds-sub (arr (arr (arr _ _ _) _ _) _ _) σ ρ _ h = h
+
+  ----------------------------------------------------------------------
+  -- Potentials.
+
+  pot-ext : ∀ Γ {η η′} → Agree (len Γ) η η′ → ∀ o → pot Γ η o ≡ pot Γ η′ o
+  pot-ext ε           a o = refl
+  pot-ext (ε ▸ A)     a o = refl
+  pot-ext (Γ ▸ A ▸ B) {η} {η′} a o
+    rewrite a (suc (len Γ)) (<-suc-self (suc (len Γ))) with step? A B
+  ... | nothing = pot-ext Γ (λ i p → a i (<-suc i _ (<-suc i _ p))) o
+  ... | just x with o ==ℕ len Γ
+  ...   | true  = cong (_· η′ (suc (len Γ))) (pot-ext Γ (λ i p → a i (<-suc i _ (<-suc i _ p))) x)
+  ...   | false = pot-ext Γ (λ i p → a i (<-suc i _ (<-suc i _ p))) o
+
+  private
+    arr-dom : ∀ {X Y Z P Q R} → arr X Y Z ≡ arr P Q R → X ≡ P
+    arr-dom refl = refl
+
+    arr⋆≢ : ∀ {X Y Z Q R Q′ R′} → arr (arr X Y Z) Q R ≡ arr ⋆ Q′ R′ → ⊥
+    arr⋆≢ ()
+
+  -- In a pasting context with a valid environment, every 1-cell
+  -- variable x → y has value pot(x)⁻¹ · pot(y).
+  mutual
+    pot-var : ∀ {Θ z C η f i j} → Θ ⊢ps z ∶ C → ValidEnv Θ η →
+              lookup Θ f ≡ just (arr ⋆ (var i) (var j)) → η f ≡ pot Θ η i ⁻¹ · pot Θ η j
+    pot-var {f = f} pss V eq with f ==ℕ 0
+    pot-var pss V () | true
+    pot-var pss V () | false
+    pot-var (psd d) V eq = pot-var d V eq
+    pot-var (pse d) V eq = pot-var-pse d V eq (PsTy-base (ps-ty d))
+
+    pot-var-pse : ∀ {Γ x A η f i j} (d : Γ ⊢ps x ∶ A) →
+                  ValidEnv (Γ ▸ A ▸ arr A (var x) (var (len Γ))) η →
+                  lookup (Γ ▸ A ▸ arr A (var x) (var (len Γ))) f ≡ just (arr ⋆ (var i) (var j)) →
+                  (A ≡ ⋆) ⊎ (Σ Nat λ k → Σ Nat λ l → Base A (var k) (var l)) →
+                  η f ≡ pot (Γ ▸ A ▸ arr A (var x) (var (len Γ))) η i ⁻¹
+                        · pot (Γ ▸ A ▸ arr A (var x) (var (len Γ))) η j
+    pot-var-pse {Γ} {x} {.⋆} {η} {f} {i} {j} d V eq (inj₁ refl) with f ==ℕ suc (len Γ) in e₁
+    ... | true  = subst (λ g → η g ≡ _) (sym (==→≡ f (suc (len Γ)) e₁)) (top i j (just-inj eq))
+      where
+      n = len Γ
+      x< : T (x <ℕ n)
+      x< = lookup-< Γ x (fst (ps-facts d))
+      top : ∀ i j → arr ⋆ (var x) (var n) ≡ arr ⋆ (var i) (var j) →
+            η (suc n) ≡ pot (Γ ▸ ⋆ ▸ arr ⋆ (var x) (var n)) η i ⁻¹
+                        · pot (Γ ▸ ⋆ ▸ arr ⋆ (var x) (var n)) η j
+      top .x .n refl rewrite <→≢ x n x< | ==-refl n = sym (cancelˡ (pot Γ η x) (η (suc n)))
+    ... | false with f ==ℕ len Γ
+    ...   | true  = ⊥-elim (⋆≢arr eq)
+    ...   | false = rest (fst (snd (ps-facts d)) f ⋆ i j eq)
+      where
+      n = len Γ
+      V₀ : ValidEnv Γ η
+      V₀ k C e = V k C (lookup-wk′ (Γ ▸ ⋆) k _ (lookup-wk′ Γ k ⋆ e))
+      rest : (lookup Γ i ≡ just ⋆) × (lookup Γ j ≡ just ⋆) →
+             η f ≡ pot (Γ ▸ ⋆ ▸ arr ⋆ (var x) (var n)) η i ⁻¹
+                   · pot (Γ ▸ ⋆ ▸ arr ⋆ (var x) (var n)) η j
+      rest (ei , ej) rewrite <→≢ i n (lookup-< Γ i ei) | <→≢ j n (lookup-< Γ j ej) = pot-var d V₀ eq
+    pot-var-pse {Γ} {x} {arr ⋆ (var k) (var l)} {η} {f} {i} {j} d V eq (inj₂ (k , l , base1))
+      with f ==ℕ suc (len Γ)
+    ... | true  = ⊥-elim (arr⋆≢ (just-inj eq))
+    ... | false with f ==ℕ len Γ in e₂
+    ...   | true  = mid i j (just-inj eq)
+      where
+      n = len Γ
+      hold : η x ≡ η n
+      hold = V (suc n) _ (lookup-top (Γ ▸ arr ⋆ (var k) (var l)) _)
+      V₀ : ValidEnv Γ η
+      V₀ k′ C e = V k′ C (lookup-wk′ (Γ ▸ _) k′ _ (lookup-wk′ Γ k′ _ e))
+      mid : ∀ i j → arr ⋆ (var k) (var l) ≡ arr ⋆ (var i) (var j) →
+            η f ≡ pot Γ η i ⁻¹ · pot Γ η j
+      mid .k .l refl rewrite ==→≡ f n e₂ = trans (sym hold) (pot-var d V₀ (fst (ps-facts d)))
+    ...   | false = pot-var d V₀ eq
+      where
+      V₀ : ValidEnv Γ η
+      V₀ k′ C e = V k′ C (lookup-wk′ (Γ ▸ _) k′ _ (lookup-wk′ Γ k′ _ e))
+    pot-var-pse {Γ} {x} {arr A′ t u} {η} {f} {i} {j} d V eq (inj₂ (k , l , base+ r))
+      with f ==ℕ suc (len Γ)
+    ... | true  = ⊥-elim (base-not-⋆ (base+ {t = t} {u = u} r) (arr-dom (just-inj eq)))
+    ... | false with f ==ℕ len Γ
+    ...   | true  = ⊥-elim (base-not-⋆ r (arr-dom (just-inj eq)))
+    ...   | false = pot-var d V₀ eq
+      where
+      V₀ : ValidEnv Γ η
+      V₀ k′ C e = V k′ C (lookup-wk′ (Γ ▸ _) k′ _ (lookup-wk′ Γ k′ _ e))

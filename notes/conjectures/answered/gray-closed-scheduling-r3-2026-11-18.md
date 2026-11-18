@@ -526,4 +526,4 @@ Step by step.
   - the (∞,ω) centrality question;
   - the ω-version.
 
-Follow-up prompt: `outbox/gray-closed-scheduling-r4.md` (round 4, unsent).
+Follow-up prompt: `answered/gray-closed-scheduling-r4-2026-11-18.md` (round 4, answered).

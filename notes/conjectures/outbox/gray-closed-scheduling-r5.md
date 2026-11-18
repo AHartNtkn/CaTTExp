@@ -1,6 +1,6 @@
-# Schedules in free Gray-monoidal biclosed 2-categories, round 4
+# Schedules in free Gray-monoidal biclosed 2-categories, round 5
 
-*A self-contained problem. No knowledge of the project that posed it is assumed. Rounds 1–3 and their verified answers are archived in `answered/gray-closed-scheduling-2026-11-18.md`, `answered/gray-closed-scheduling-r2-2026-11-18.md` and `answered/gray-closed-scheduling-r3-2026-11-18.md`; nothing answered there is re-asked. The smallest open case is Question 1.*
+*A self-contained problem. No knowledge of the project that posed it is assumed. Rounds 1–4 and their verified answers are archived in `answered/gray-closed-scheduling-2026-11-18.md` and `answered/gray-closed-scheduling-r2-2026-11-18.md` through `-r4-2026-11-18.md`; nothing answered there is re-asked. The smallest open case is Question 1.*
 
 ## Background
 
@@ -76,7 +76,7 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
     - Whiskered interchangers give ι = (e⊗1) ∗ χ_{u,d} ∗ (1⊗v) : 1_T ⇒ H and π = [(e⊗1)(1⊗d)] ∗ χ_{u,v} : H ⇒ 1_T. The Gray axiom for χ_{u,dv} gives **π ∘ ι = 1**, so E = ι ∘ π is an idempotent on H.
     - **H^n are pairwise distinct.** In the model whose hom-categories are chaotic on the free group ⟨ℓ, r⟩ (objects integers, composition multiplication, left currying k ↦ ℓ^a k, right currying k ↦ r^a k), H ↦ ℓ⁻¹ r⁻¹ ℓ r.
     - All H^n have image 1_T in 𝓑_Σ, empty generator word and zero weight in every model of item 5. Since 2-cells H^m ⇒ 1_T ⇒ H^n exist, the category over 1_T is not isomorphic to any product of schedule categories.
-    - **The separation uses that left and right currying do not commute.** The model does not satisfy strict equality of the two mixed curryings of (A\C)/B = A\(C/B).
+    - This particular model does not satisfy strict equality of the two mixed curryings of (A\C)/B = A\(C/B). Item 14 removes that dependence.
     - **Forward comparisons.** Item 6's count factors each forward comparison as z₊ ∘ m ∘ z₋, with z_± using only interchangers with a generator-free argument and m a typed instance of the one generator–generator interchanger. Different typed instances of m must still be identified.
 12. **Evaluation is not central in 𝒢.** In the same model with a third free generator γ for a generating 1-cell g, (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) ↦ ℓ⁻¹γ and (C ⊗ g) ∘ (ev ⊗ Y) ↦ γℓ⁻¹, which are distinct. So χ_{ev,g} joins distinct 1-cells, and this uses only left closure. A complete invariant of 1-cells must schedule structural events (units, evaluations), not only generator events.
 
@@ -88,23 +88,51 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
     - **ev is not central.** Here d(ev_A) = P(A) + N(A) ≠ 0. With A ↦ (1, 0), C ↦ (0, 0), X ↦ (1, 1), X′ ↦ (0, 0) and g : X → X′, the 1-cells (X′ ⊗ ev) ∘ (g ⊗ A ⊗ A\C) and (g ⊗ C) ∘ (X ⊗ ev) have weights 1 and 2. The same separates the two orders of two independent evaluations, with no generator involved.
     - Together with item 12, the central quotient 𝒢_c of item 10 is a proper quotient of 𝒢.
 
+## What is known from round 4 (proved)
+
+14. **Strict mixed currying does not help, and left closure alone suffices.**
+    - *The model 𝒟.* Keep the chaotic free-group Gray monoid of item 11. Choose any k_c ∈ ⟨ℓ, r⟩ for c ∈ ℤ, put h_{a,c} = k_{c−a} k_c⁻¹, and let both curryings with bound object a and codomain c be f ↦ h_{a,c} f.
+    - *Properties.* The multipliers telescope, so the two mixed curryings are equal, R_b R_a = R_{a+b}, and h_{0,c} = 1.
+    - *Separation.* With |A| = |B| = 1, |C| = |D| = 2, k₁ = ℓ, k₄ = r⁻¹ and every other k_c = 1, H ↦ ℓ⁻¹r⁻¹ℓr. So H ≠ 1_T and the H^n are pairwise distinct even in the theory 𝒢_mix that imposes strict mixed currying.
+    - *Left closure only.* Replace v and d by v_L = 1_C ⊗ Λ_C(1_{C⊗D}) and d_L = ev, through W = C\(C⊗D). The resulting H_L also maps to ℓ⁻¹r⁻¹ℓr. So the free left-closed theory already has non-identity structural loops 1_T ⇒ H_L ⇒ 1_T with π ∘ ι = 1.
+15. **Countermodels for ι ∘ π = 1_H need non-invertible retractions.** In a Gray monoid, if f is strictly invertible, then χ_{f,g} is invertible, with inverse (f ⊗ B′) ∗ χ_{f⁻¹,g} ∗ (f ⊗ B). Hence in any model where u, e, v and d are strict isomorphisms, ι ∘ π = 1. That covers every refinement of the free-group, 𝒟 and 𝓟 models. A countermodel must have u ∘ e ≠ 1.
+16. **Two different "centrality" questions.**
+    - *Outer comparison.* For functors e, g between strict ω-categories, (e ⊗ 1)(1 ⊗ g) and (1 ⊗ g)(e ⊗ 1) are both e ⊗ g. So the interpretation of 𝒢's 1-cells as functors and its 2-cells as transformations sends every interchanger, generator or structural, to an identity, and cannot test directedness.
+    - *Internal interchanger.* Evaluation applied to an interchanger of internal cells can be non-invertible. For S = J ⊗ J (J = [1]) with square γ : h₁v₀ ⇒ v₁h₀, let q : J → S/J curry 1_S and let α : v₀ → v₁ be the image of the arrow of J. Then e(χ_{α,u}) = γ.
+17. **𝒢's two hom-category isomorphisms do not hold in the intended model.**
+    - In S/J there is an arrow α : v₀ → v₁.
+    - In J\S there is none: such an arrow would need the reverse of γ.
+    - A single 2-category of strict ω-categories, with one orientation of transformation as 2-cells and ℋ(I, Z) ≅ Z, would identify both S/J and J\S with ℋ(J, S), identically on objects. That is impossible.
+
+    So the Gray tensor's left and right closures are matched by 2-cells of opposite orientation (lax for one side, oplax for the other; Gagna–Harpaz–Lanari, Ex. 2.5). Campion's tensor gives (A\C)/B ≃ A\(C/B) canonically, but not literally.
+
 ## Questions
 
-1. **(Is ι ∘ π the identity?)** For H of item 11, is ι ∘ π = 1_H in 𝒢? If yes, ι and π are inverse and the H^n are uniquely isomorphic to 1_T. If no, the hom-category 𝒢(T, T) is not thin. A model with non-chaotic 2-cells (for instance, one built from schedules of structural and generator events) would decide this.
-2. **(Strict commutation of left and right currying.)** Suppose the theory also imposes that the two curryings into (A\C)/B = A\(C/B) agree strictly. Is H = 1_T then? Is there a separating example using only left closure (only units and evaluations of \)? Which choice, 𝒢 with or without this equation, matches the (∞,ω) Gray tensor's biclosedness?
-3. **(Forward uniqueness, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}, or show that they fail. This includes identifying the forward comparisons built from different typed instances of the crossing interchanger (item 11, last point). If Question 1 fails, the analogous statement may fail too; then describe 𝒢(t₁, t₂).
-4. **(1-cells within a component, up to equivalence.)** For a fixed arrow of 𝓑_Σ, is the category of 1-cells over it *equivalent* to a product of schedule posets S(P) whose events include structural events (units, evaluations, curry sides)? Give a complete invariant of 1-cells, or of their isomorphism classes.
-5. **(Centrality in the (∞,ω) setting.)** Item 12 shows that ev is not central in 𝒢. For the Gray tensor of (∞,ω)-categories (Campion; biclosed on mapping spaces), is the interchanger of evaluation with a generic cell invertible, or trivial? The answer decides whether 𝒢 or its central quotient 𝒢_c (item 10) is sound for that tensor.
-6. **(ω-version.)** With biclosedness on full hom ω-categories, are the hom ω-categories of the free Gray-monoidal biclosed (∞,ω)-category over a fixed arrow of 𝓑_Σ equivalent to products of ν(K_P)-homs for suitable P, now with structural events included?
+1. **(The right 2-dimensional biclosedness.)** By item 17, the axiom that both Φ are isomorphisms of hom-categories in one 2-category fails for the Gray tensor on strict ω-categories. State the correct structure.
+   - One candidate is a strict 2-category with two classes of 2-cells, lax and oplax, with left currying an isomorphism of the lax hom-categories and right currying an isomorphism of the oplax ones.
+   - Another is a Gray-monoidal *double* category.
+
+   Give the free unit-free version 𝒢′. Do the structural loops H and H_L of items 11 and 14 survive in 𝒢′, and is the interchanger 1_T ⇒ H still a 2-cell of the same kind as the generator interchangers?
+2. **(Is ι ∘ π the identity?)** For H of item 11, or H_L of item 14, is ι ∘ π = 1_H in 𝒢, or in 𝒢′ of Question 1? By item 15, a countermodel must have u ∘ e ≠ 1. If ι ∘ π = 1_H, are the isomorphisms H^n ≅ 1_T unique?
+3. **(Forward uniqueness, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}, or show that they fail, in 𝒢 or in 𝒢′. This includes identifying the forward comparisons built from different typed instances of the crossing interchanger (item 11, last point).
+4. **(1-cells within a component, up to equivalence.)** For a fixed arrow of 𝓑_Σ, is the category of 1-cells over it equivalent to a product of schedule posets S(P) whose events include structural events (units, evaluations, curry sides)? Give a complete invariant of 1-cells, or of their isomorphism classes.
+5. **(ω-version.)** With the corrected structure of Question 1, and biclosedness on full hom ω-categories, are the hom ω-categories of the free Gray-monoidal biclosed (∞,ω)-category over a fixed arrow of 𝓑_Σ equivalent to products of ν(K_P)-homs for suitable P, with structural events included? Is e(χ_{α,u}) of item 16 the only kind of interchanger involving evaluation that survives there?
 
 ## What counts as a solution
 
-A decision of Question 1 or 2; a proof of Question 3; a complete invariant for Question 4; a decision for Question 5; or a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories.
+Any of the following:
+- a definition of 𝒢′ with a model check for Question 1;
+- a decision of Question 2;
+- a proof or counterexample for Question 3;
+- a complete invariant for Question 4;
+- an answer to Question 5;
+- a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories or double categories.
 
 ## Literature (searched 2026-11-18)
 
 - Gordon–Power–Street, *Coherence for tricategories* (1995); Forest–Mimram, *Coherence of Gray categories via rewriting* (FSCD 2018; its Thm 11 uses invertible interchangers).
 - Garner–Hirschowitz–Pardon, *Graphical presentations of symmetric monoidal closed theories* (arXiv 0810.4420), §2: a premonoidal construction with central units and counits.
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
-- Gagna–Harpaz–Lanari (arXiv 2006.14495), Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
+- Gagna–Harpaz–Lanari (arXiv 2006.14495), Ex. 2.5, Rem. 2.6 and Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
+- Campion, *The Gray tensor product of (∞,n)-categories* (arXiv 2311.00205), Thm A.
 

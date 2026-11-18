@@ -20,7 +20,13 @@
 -- i + 1 of degree gd i + 1, with s (Σx) = ⊥, t (Σx) = ⊤ for objects x
 -- and s (Σi) = Σ (s i), t (Σi) = Σ (t i) otherwise.
 --
--- Examples: the arrow D¹, and Σ D¹, whose basis is `BasisCheck.BD²`.
+-- `Wedge` glues the last object of one presentation to the first object
+-- of another; `treeG` sends a Batanin tree (pasting diagram) to the
+-- wedge of the suspensions of its branches, so every pasting diagram
+-- gives an ordered globular presentation, hence λ of it with `Hyp`.
+--
+-- Examples: the arrow D¹, Σ D¹ and the tree of the 2-globe, whose
+-- bases are `BasisCheck.BD²`; the tree of two composable arrows.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.GlobBasis where
 
@@ -33,6 +39,7 @@ open import CaTTExp.Strict.Generation
 open import CaTTExp.Strict.BasisCheck
 open import CaTTExp.Strict.Bag using (+-comm; +-assoc; +-zero; +-suc)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
+open import CaTTExp.Strict.Trees using (Br; node; nil; cons) renaming (LT to Tree)
 
 ------------------------------------------------------------------------
 -- Vectors from functions.
@@ -490,3 +497,251 @@ D¹-basis = refl
 -- The suspension of the arrow is the 2-globe.
 ΣD¹-basis : GB.basis (Σg D¹) ≡ BD²
 ΣD¹-basis = refl
+
+------------------------------------------------------------------------
+-- Wedge: glue the last object of D to the first object of D′.
+--
+-- With N = M + 1 and N′ = M′ + 1, the wedge has M + M′ + 1 generators:
+-- i ≤ M is i in D, and j + M (j ≥ 1) is j in D′; M is both the last
+-- generator of D and the first of D′, which must be objects.
+
+private
+  +-lt : ∀ {a b} M → a < b → a + M < b + M
+  +-lt {a} {b} M l = subst₂ _<_ (+-comm M a) (+-comm M b) (go M l)
+    where
+    go : ∀ M → a < b → M + a < M + b
+    go zero    l = l
+    go (suc M) l = s≤s (go M l)
+    subst₂ : ∀ {A : Set} (R : A → A → Set) {x x′ y y′} → x ≡ x′ → y ≡ y′ → R x y → R x′ y′
+    subst₂ R refl refl r = r
+
+  +∸ : ∀ j M → (j + M) ∸ M ≡ j
+  +∸ j zero    = +-zero j
+  +∸ j (suc M) = trans (cong (_∸ suc M) (+-suc j M)) (+∸ j M)
+
+  lt-right : ∀ j M → 1 ≤ j → (j + M <ℕ suc M) ≡ false
+  lt-right (suc j) zero    _ = refl
+  lt-right (suc j) (suc M) p = trans (cong (_<ℕ suc (suc M)) (+-suc (suc j) M)) (lt-right (suc j) M p)
+
+  lt-left : ∀ i M → i ≤ M → (i <ℕ suc M) ≡ true
+  lt-left zero    M       _       = refl
+  lt-left (suc i) (suc M) (s≤s l) = lt-left i M l
+
+  bound-right : ∀ j M M′ → j < suc M′ → j + M < suc (M + M′)
+  bound-right j M M′ l = subst (j + M <_) (cong suc (+-comm M′ M)) (+-lt M l)
+
+  bound-right′ : ∀ j M M′ → j + M < suc (M + M′) → j < suc M′
+  bound-right′ j M M′ l with ≤-dec (suc M′) j
+  ... | inj₂ p = p
+  ... | inj₁ p = ⊥-elim (≤-<-⊥ (subst (_≤ j + M) (cong suc (+-comm M′ M)) (≤-trans (≤-+r p M) (≤-refl _))) l)
+    where
+    ≤-+r : ∀ {a b} → a ≤ b → ∀ M → a + M ≤ b + M
+    ≤-+r {a} {b} p M = subst₂′ (+-comm M a) (+-comm M b) (go M)
+      where
+      go : ∀ M → M + a ≤ M + b
+      go zero    = p
+      go (suc M) = s≤s (go M)
+      subst₂′ : ∀ {x x′ y y′} → x ≡ x′ → y ≡ y′ → x ≤ y → x′ ≤ y′
+      subst₂′ refl refl r = r
+
+  split : ∀ i M → (i ≤ M) ⊎ Σ Nat (λ j → (1 ≤ j) × (i ≡ j + M))
+  split i M with ≤-dec i M
+  ... | inj₁ p = inj₁ p
+  ... | inj₂ p = let (k , e) = <-split p in inj₂ (suc k , s≤s z≤n , trans e (+-comm M (suc k)))
+
+module Wedge (D D′ : GData) (M M′ : Nat)
+             (eN : GData.N D ≡ suc M) (eN′ : GData.N D′ ≡ suc M′)
+             (last0 : GData.gd D M ≡ 0) (first0 : GData.gd D′ 0 ≡ 0) where
+  open GData D
+  module D′ = GData D′
+
+  gdW sW tW : Nat → Nat
+  gdW i = if i <ℕ suc M then gd i else D′.gd (i ∸ M)
+  sW  i = if i <ℕ suc M then s i else (D′.s (i ∸ M) + M)
+  tW  i = if i <ℕ suc M then t i else (D′.t (i ∸ M) + M)
+
+  gdL : ∀ i → i ≤ M → gdW i ≡ gd i
+  gdL i l rewrite lt-left i M l = refl
+  sL : ∀ i → i ≤ M → sW i ≡ s i
+  sL i l rewrite lt-left i M l = refl
+  tL : ∀ i → i ≤ M → tW i ≡ t i
+  tL i l rewrite lt-left i M l = refl
+
+  gdR′ : ∀ j → 1 ≤ j → gdW (j + M) ≡ D′.gd j
+  gdR′ j p rewrite lt-right j M p = cong D′.gd (+∸ j M)
+  sR : ∀ j → 1 ≤ j → sW (j + M) ≡ D′.s j + M
+  sR j p rewrite lt-right j M p = cong (λ x → D′.s x + M) (+∸ j M)
+  tR : ∀ j → 1 ≤ j → tW (j + M) ≡ D′.t j + M
+  tR j p rewrite lt-right j M p = cong (λ x → D′.t x + M) (+∸ j M)
+
+  gdR : ∀ j → gdW (j + M) ≡ D′.gd j
+  gdR zero    = trans (gdL M (≤-refl M)) (trans last0 (sym first0))
+  gdR (suc j) = gdR′ (suc j) (s≤s z≤n)
+
+  private
+    inD : ∀ i → i ≤ M → i < N
+    inD i l = subst (i <_) (sym eN) (s≤s l)
+    inD′ : ∀ j → j < suc M′ → j < D′.N
+    inD′ j l = subst (j <_) (sym eN′) l
+    leM : ∀ i → i < N → i ≤ M
+    leM i l with subst (i <_) eN l
+    ... | s≤s p = p
+    ltM′ : ∀ j → j < D′.N → j < suc M′
+    ltM′ j l = subst (j <_) eN′ l
+    pos′ : ∀ j → 1 ≤ D′.gd j → 1 ≤ j
+    pos′ zero    p = ⊥-elim (absurd (subst (1 ≤_) first0 p))
+      where
+      absurd : 1 ≤ 0 → ⊥
+      absurd ()
+    pos′ (suc j) p = s≤s z≤n
+    NW = suc (M + M′)
+    jN : ∀ j → j + M < NW → j < D′.N
+    jN j l = inD′ j (bound-right′ j M M′ l)
+    ≤-of : ∀ {a b} → a ≡ b → a ≤ b
+    ≤-of refl = ≤-refl _
+    toW : ∀ i → i ≤ M → i < NW
+    toW i l = s≤s (≤-trans l (≤-+ M M′))
+      where
+      ≤-+ : ∀ a b → a ≤ a + b
+      ≤-+ zero    b = z≤n
+      ≤-+ (suc a) b = s≤s (≤-+ a b)
+
+  wedge : GData
+  wedge = record
+    { N = NW ; gd = gdW ; s = sW ; t = tW
+    ; sN = sN′ ; tN = tN′ ; ds = ds′ ; dt = dt′ ; s-lt = s-lt′ ; t-gt = t-gt′ ; gss = gss′ ; gtt = gtt′ }
+    where
+    sN′ : ∀ i → i < NW → 1 ≤ gdW i → sW i < NW
+    sN′ i l p with split i M
+    ... | inj₁ q = subst (_< NW) (sym (sL i q)) (toW (s i) (leM (s i) (sN i (inD i q) (subst (1 ≤_) (gdL i q) p))))
+    ... | inj₂ (j , q , refl) =
+      let jl = jN j l ; p′ = subst (1 ≤_) (gdR′ j q) p in
+      subst (_< NW) (sym (sR j q)) (bound-right (D′.s j) M M′ (ltM′ (D′.s j) (D′.sN j jl p′)))
+
+    tN′ : ∀ i → i < NW → 1 ≤ gdW i → tW i < NW
+    tN′ i l p with split i M
+    ... | inj₁ q = subst (_< NW) (sym (tL i q)) (toW (t i) (leM (t i) (tN i (inD i q) (subst (1 ≤_) (gdL i q) p))))
+    ... | inj₂ (j , q , refl) =
+      let jl = jN j l ; p′ = subst (1 ≤_) (gdR′ j q) p in
+      subst (_< NW) (sym (tR j q)) (bound-right (D′.t j) M M′ (ltM′ (D′.t j) (D′.tN j jl p′)))
+
+    ds′ : ∀ i → i < NW → 1 ≤ gdW i → gdW (sW i) ≡ gdW i ∸ 1
+    ds′ i l p with split i M
+    ... | inj₁ q = let iN = inD i q ; p′ = subst (1 ≤_) (gdL i q) p in
+      trans (cong gdW (sL i q)) (trans (gdL (s i) (leM (s i) (sN i iN p′))) (trans (ds i iN p′) (cong (_∸ 1) (sym (gdL i q)))))
+    ... | inj₂ (j , q , refl) = let jl = jN j l ; p′ = subst (1 ≤_) (gdR′ j q) p in
+      trans (cong gdW (sR j q)) (trans (gdR (D′.s j)) (trans (D′.ds j jl p′) (cong (_∸ 1) (sym (gdR′ j q)))))
+
+    dt′ : ∀ i → i < NW → 1 ≤ gdW i → gdW (tW i) ≡ gdW i ∸ 1
+    dt′ i l p with split i M
+    ... | inj₁ q = let iN = inD i q ; p′ = subst (1 ≤_) (gdL i q) p in
+      trans (cong gdW (tL i q)) (trans (gdL (t i) (leM (t i) (tN i iN p′))) (trans (dt i iN p′) (cong (_∸ 1) (sym (gdL i q)))))
+    ... | inj₂ (j , q , refl) = let jl = jN j l ; p′ = subst (1 ≤_) (gdR′ j q) p in
+      trans (cong gdW (tR j q)) (trans (gdR (D′.t j)) (trans (D′.dt j jl p′) (cong (_∸ 1) (sym (gdR′ j q)))))
+
+    s-lt′ : ∀ i → i < NW → 1 ≤ gdW i → sW i < i
+    s-lt′ i l p with split i M
+    ... | inj₁ q = subst (_< i) (sym (sL i q)) (s-lt i (inD i q) (subst (1 ≤_) (gdL i q) p))
+    ... | inj₂ (j , q , refl) = subst (_< j + M) (sym (sR j q)) (+-lt M (D′.s-lt j (jN j l) (subst (1 ≤_) (gdR′ j q) p)))
+
+    t-gt′ : ∀ i → i < NW → 1 ≤ gdW i → i < tW i
+    t-gt′ i l p with split i M
+    ... | inj₁ q = subst (i <_) (sym (tL i q)) (t-gt i (inD i q) (subst (1 ≤_) (gdL i q) p))
+    ... | inj₂ (j , q , refl) = subst (j + M <_) (sym (tR j q)) (+-lt M (D′.t-gt j (jN j l) (subst (1 ≤_) (gdR′ j q) p)))
+
+    -- In degree ≥ 2 the boundaries stay on the same side (and, on the
+    -- right, away from the glued object).
+    two-one : ∀ {g} → 2 ≤ g → 1 ≤ g
+    two-one (s≤s _) = s≤s z≤n
+    one-pred : ∀ {g} → 2 ≤ g → 1 ≤ g ∸ 1
+    one-pred (s≤s (s≤s _)) = s≤s z≤n
+
+    gss′ : ∀ i → i < NW → 2 ≤ gdW i → sW (sW i) ≡ sW (tW i)
+    gss′ i l p with split i M
+    ... | inj₁ q = let iN = inD i q ; p2 = subst (2 ≤_) (gdL i q) p ; p1 = two-one p2 in
+      trans (cong sW (sL i q)) (trans (sL (s i) (leM (s i) (sN i iN p1)))
+      (trans (gss i iN p2) (sym (trans (cong sW (tL i q)) (sL (t i) (leM (t i) (tN i iN p1)))))))
+    ... | inj₂ (j , q , refl) =
+      let jl = jN j l ; p2 = subst (2 ≤_) (gdR′ j q) p ; p1 = two-one p2
+          qs = pos′ (D′.s j) (subst (1 ≤_) (sym (D′.ds j jl p1)) (one-pred p2))
+          qt = pos′ (D′.t j) (subst (1 ≤_) (sym (D′.dt j jl p1)) (one-pred p2))
+      in trans (cong sW (sR j q)) (trans (sR (D′.s j) qs)
+         (trans (cong (_+ M) (D′.gss j jl p2)) (sym (trans (cong sW (tR j q)) (sR (D′.t j) qt)))))
+
+    gtt′ : ∀ i → i < NW → 2 ≤ gdW i → tW (sW i) ≡ tW (tW i)
+    gtt′ i l p with split i M
+    ... | inj₁ q = let iN = inD i q ; p2 = subst (2 ≤_) (gdL i q) p ; p1 = two-one p2 in
+      trans (cong tW (sL i q)) (trans (tL (s i) (leM (s i) (sN i iN p1)))
+      (trans (gtt i iN p2) (sym (trans (cong tW (tL i q)) (tL (t i) (leM (t i) (tN i iN p1)))))))
+    ... | inj₂ (j , q , refl) =
+      let jl = jN j l ; p2 = subst (2 ≤_) (gdR′ j q) p ; p1 = two-one p2
+          qs = pos′ (D′.s j) (subst (1 ≤_) (sym (D′.ds j jl p1)) (one-pred p2))
+          qt = pos′ (D′.t j) (subst (1 ≤_) (sym (D′.dt j jl p1)) (one-pred p2))
+      in trans (cong tW (sR j q)) (trans (tR (D′.s j) qs)
+         (trans (cong (_+ M) (D′.gtt j jl p2)) (sym (trans (cong tW (tR j q)) (tR (D′.t j) qt)))))
+
+------------------------------------------------------------------------
+-- Batanin trees: a tree is the wedge of the suspensions of its
+-- branches, so every Batanin tree (pasting diagram) gives an ordered
+-- globular presentation.
+
+point : GData
+point = record
+  { N = 1 ; gd = λ _ → 0 ; s = λ _ → 0 ; t = λ _ → 0
+  ; sN = λ _ _ () ; tN = λ _ _ () ; ds = λ _ _ () ; dt = λ _ _ () ; s-lt = λ _ _ () ; t-gt = λ _ _ ()
+  ; gss = λ _ _ () ; gtt = λ _ _ () }
+
+-- A presentation whose first and last generators are objects.
+record Pointed : Set where
+  field
+    G      : GData
+    M      : Nat
+    eN     : GData.N G ≡ suc M
+    first0 : GData.gd G 0 ≡ 0
+    last0  : GData.gd G M ≡ 0
+
+ptP : Pointed
+ptP = record { G = point ; M = 0 ; eN = refl ; first0 = refl ; last0 = refl }
+
+ΣP : GData → Pointed
+ΣP D = record { G = Σg D ; M = suc (GData.N D) ; eN = refl ; first0 = refl ; last0 = l0 }
+  where
+  l0 : (if GData.N D <ℕ GData.N D then suc (GData.gd D (GData.N D)) else 0) ≡ 0
+  l0 rewrite <ℕ-irr (GData.N D) = refl
+
+∨P : Pointed → Pointed → Pointed
+∨P P P′ = record
+  { G = W.wedge ; M = Pointed.M P + Pointed.M P′ ; eN = refl
+  ; first0 = trans (W.gdL 0 z≤n) (Pointed.first0 P)
+  ; last0 = trans (cong W.gdW (+-comm (Pointed.M P) (Pointed.M P′))) (trans (W.gdR (Pointed.M P′)) (Pointed.last0 P′)) }
+  where
+  module W = Wedge (Pointed.G P) (Pointed.G P′) (Pointed.M P) (Pointed.M P′)
+                   (Pointed.eN P) (Pointed.eN P′) (Pointed.last0 P) (Pointed.first0 P′)
+
+module _ {A : Set} where
+  mutual
+    treeP : Tree A → Pointed
+    treeP (node _ r) = branchP r
+
+    branchP : Br A → Pointed
+    branchP nil          = ptP
+    branchP (cons T _ r) = ∨P (ΣP (Pointed.G (treeP T))) (branchP r)
+
+  treeG : Tree A → GData
+  treeG T = Pointed.G (treeP T)
+
+-- The 2-globe as a tree: x —f→ y with the 2-cell α : f ⇒ g above f.
+private
+  T² : Tree Nat
+  T² = node 0 (cons (node 1 (cons (node 2 nil) 3 nil)) 4 nil)
+
+tree-D² : GB.basis (treeG T²) ≡ BD²
+tree-D² = refl
+
+-- Two composable arrows x → y → z.
+private
+  T¹¹ : Tree Nat
+  T¹¹ = node 0 (cons (node 1 nil) 2 (cons (node 3 nil) 4 nil))
+
+tree-comp : Hyp (GB.basis (treeG T¹¹))
+tree-comp = GB.hyp (treeG T¹¹)

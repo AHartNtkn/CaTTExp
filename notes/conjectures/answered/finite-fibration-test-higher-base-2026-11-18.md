@@ -603,4 +603,4 @@ Step by step.
 - **The proof method of §1.3 looks general.** It writes ∫T as a pushout of a universal total times the fibre, then localises a relative Gray tensor. Whenever the weight factors through a product with a universal total in this way, it should give FT_n.
 - **Regularity is not a necessary hypothesis.**
 
-Follow-up prompt: `outbox/finite-fibration-test-higher-base-r2.md` (round 2, unsent).
+Follow-up prompt: `finite-fibration-test-higher-base-r2-2026-11-18.md` (round 2, answered).

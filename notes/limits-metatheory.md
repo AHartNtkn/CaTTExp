@@ -425,7 +425,7 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
 - **2-category-valued weights over the walking 2-cell: a 4-generator (α ⊗ fibre 2-cell) is necessary.** Sufficiency is open.
 - **Regularity is not necessary.** A non-regular 3-computad (x, y, z; p, q : x → y; r : y → z; α, β : p ⇒ q; ζ : α▷r ⇛ β▷r) still has Free ≃ F₃.
 - **Pattern for the kernel.** Every case so far is "the Gray-tensor generators of the fibre against the base generator, with the over-identity ones marked and localised". This matches the Gray shapes the limit rules already use (§1, §5), so the weight test should be stated through the same shape construction (B5) rather than as a separate rule.
-- Round 2: `conjectures/outbox/finite-fibration-test-higher-base-r2.md` (unsent).
+- Round 2: `conjectures/answered/finite-fibration-test-higher-base-r2-2026-11-18.md` (answered). Round 3: `conjectures/outbox/finite-fibration-test-higher-base-r3.md` (unsent).
 
 ---
 
@@ -439,4 +439,4 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
 | 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
-| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base-r2.md` ready to send (round 1 answered) |
+| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base-r3.md` ready to send (rounds 1 and 2 answered) |

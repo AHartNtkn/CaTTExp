@@ -577,4 +577,4 @@ Step by step.
 - **New tool:** every RC witness in a join context strictifies to an identity.
 - In c ⋆ Q the apex c is the unique source object, which is the kind of hypothesis that known item 10 of the gray-contexts prompt (RC(3) for the lax square) uses. So the active-column method is a candidate for RC(3) on cone contexts.
 
-Follow-up prompt: `outbox/cone-over-coherences-r2.md` (round 2, unsent).
+Follow-up prompt: `cone-over-coherences-r2-2026-11-18.md` (round 2, answered).

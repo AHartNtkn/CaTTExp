@@ -688,3 +688,69 @@ That preceding column does not factor through a point context. A unique ambient 
 The cut translation above can discard such a column while lowering dimension, but it does not construct a comparison between an arbitrary term and a normal form in the original cone context. That additional comparison is still needed for general \(\mathrm{RC}(3)\).
 
 **Established here:** the explicit unitor 4-term (11), its strict-image clause (12), and the fixed-dimension descent (28). General \(\mathrm{RC}(3)\) for \(\operatorname{Cone}(D^2;c)\), question 2, and an unconditional all-dimensional construction remain unproved in this answer.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** The explicit unitor 4-term (§1) and the fixed-dimension descent (§2, Question 4) are proved. Question 1 in general (RC(3) for Cone(D²; c)), Question 2 and Question 3 remain open. One claim in the prompt was wrong and the researcher corrected it (§3).
+
+Step by step.
+
+1. **The generic lower choices (§1.1).**
+   - P(1_f) = R_{p_f} ; (p_f ∗₁ η) and P(α ∗₁ β) are chosen as generic schemes over the pasting contexts D¹ and D² ∗₁ D².
+   - This is necessary, because P(α ∗₁ 1_g) must come from substitution into a generic scheme, as the recursion in the Background demands.
+   - Their types are P(τt) → T(t), and their strict images are the joins. ✓
+
+2. **The specialisation to β = 1_g (§1.2).**
+   - The instance (4) = (r ; e) ; (m ; (h ; k)) is the substitution of the generic scheme.
+   - Each factor's source and target were checked against the specialised T(α ∗₁ 1_g). ✓
+
+3. **The six auxiliary 4-cells ℐ, 𝒩, 𝒜, 𝒰, ℱ, 𝒦 (§1.3).**
+   - Each is a coherence over the stated pasting context.
+   - Each source and target is full in that context, so the coherence rule applies.
+   - Their types match the places where the chain uses them. ✓
+
+4. **The term (§1.4).**
+   - The chain T₀ → … → T₁₀ composes: consecutive targets and sources agree literally.
+   - The parallel chain E₀ → … → E₉ for the boundary does too.
+   - The composite has the required type P(α ∗₁ 1_g) → P(α) ∗₂ (p_f ∗₁ (p_x ∗₀ c₀)).
+   - Its strict image is 1_{p_α}, which equals c ⋆ π(c₀), because π(c₀) = 1_α. So the strict-image clause (12) holds. ✓
+   - It works for every specified coherence c₀ of that type over D², so it does not depend on the choice of unitor.
+
+5. **The cut translation D (§2.1–2.2).**
+   - A colouring of the 0-variables in {0, 1}, nondecreasing along generating 1-cells, splits terms into same-side terms and crossing terms. D lowers each crossing term by one dimension.
+   - **Locality.** It is defined by recursion on ranks, so D of a term depends only on the term and the colouring. ✓
+   - **Decoding (clauses 1–3).**
+     - Clause 1: crossing 1-terms become 0-terms.
+     - Clause 2: a whiskered disk becomes its top variable.
+     - Clause 3: everything else becomes a coherence over the lowered arity.
+     - The clause is chosen on the generic coloured arity, before substitution. This is what makes (18) hold; testing after substitution would not. ✓
+   - **Admissibility.** The lowered arity is a pasting context, and the lowered type satisfies the same fullness side condition (coherence or composition) as the original. I checked this on the boundary decomposition (15). ✓
+   - **(18) Substitution compatibility.** D(t[γ]) ≡ D(t)[D(γ)] whenever γ respects the colouring. This follows by induction on t, because D commutes with each clause. ✓
+
+6. **Suspension and composition (§2.3).**
+   - (19) D(Σt) ≡ t holds: a suspended coherence has a generic arity with one root branch, so neither special clause fires and the constructor is reconstructed literally. ✓
+   - (20) D(e ∗₀ u) ≡ D(u) holds on the generic arity D¹ ∨ Dᵈ, by induction on d. ✓
+   - (21) D(u ∗_k v) ≡ D(u) ∗_{k−1} D(v) holds because the generic composition is a suspension. ✓
+   - These are equations about the translation, not weak-unit equations in CaTT. Nothing in the proof identifies a weak unit with an identity.
+
+7. **Raising and lowering (§2.4–2.5).**
+   - The substitution e_Q : J_Q ⊢ C_Q sends U ↦ d, V ↦ S, Σc ↦ p_S, Σq ↦ p_N ∗₀ q̄ and Σp_q ↦ p_{q̄}.
+   - Its typing uses that Q is globular. For example:
+     - Σp_x : p_S ⇒ p_N ∗₀ x̄ is the type of p_{x̄};
+     - Σp_f ↦ p_{ȳ} ⇛ p_{x̄} ∗₁ (p_N ∗₀ f̄) is the type of p_{f̄} in J_Q. ✓
+   - **The literal retraction.** D(J_Q) ≡ C_Q, and D(e_Q) is the identity on the variables in (22). With (18) and (19) this gives D(L_Q t) ≡ t, which is (25). ✓
+   - **The descent.** Parallel a, b with πa = πb give parallel L_Q a, L_Q b with equal strict images. RC(r+1, J_Q) gives H, and D(H) : a → b. So (13) holds, and iterating gives (27) and (28). ✓
+   - **The consequence (29).** RC(n) for all join contexts alone gives N^cone through dimension n, combined with the round-1 transport reduction. The round-1 reduction needed RC(1), …, RC(n); now RC(n) suffices.
+   - **The restriction stated in the response is real.** For computadic Q with composite boundaries, e_Q would need a whiskering-distribution comparison. This does not matter for N^cone, which only uses pasting contexts Q.
+
+8. **The correction (§3).**
+   - The prompt said that c ⋆ Q has in general more than one sink. That was wrong.
+   - A globular pasting context has vertices x₀, …, x_k with every generating 1-cell from x_{i−1} to x_i. So x_k is the unique 0-sink of Q and of c ⋆ Q.
+   - The real obstruction to the square argument is the column a = p_x : c → x in a ∗₀ α. It is a nonidentity edge, so it is not point-supported, and the square's factorisation through point contexts does not apply. ✓
+
+**Consequences for B19.**
+- **N^cone in dimension 3 now reduces to RC(3) on all join contexts**, because RC(1) and RC(2) follow (and were known anyway).
+- **The unitor instance of dimension 3 is settled by an explicit term.**
+- **The obstruction is a single fixed incoming edge p_x.** The naturality round-3 answer (`answered/naturality-arbitrary-depth-r3-2026-11-18.md`, fixed-edge extension lemma, retained arities D¹(h) ∗₀ C_n with h sent literally to an edge variable) handles exactly this shape for cylinders. It is the natural next tool.
+
+Follow-up prompt: `outbox/cone-over-coherences-r3.md` (round 3, unsent).

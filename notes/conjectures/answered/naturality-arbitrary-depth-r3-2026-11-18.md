@@ -913,3 +913,56 @@ The extension established here depends on three precise facts: the two fixed-edg
 
 **Verification scope:** the displayed distributor and expansion boundary schemas were checked symbolically without associativity or unit identifications. The complete recursive construction above is a proof on paper, not a CaTT-kernel verification.
 
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct as a paper proof, at the same standard as round 2.** Question 1 is answered: RC(3) holds on the cylinder of the composable pair, so K exists for every 3-dimensional coherence over that pair. The alternative smallest case (the 2-disc cylinder), Question 2 (global K, 5-cells), Question 3 (all cylinders) and Question 4 (RC(n)) remain open.
+
+Step by step.
+
+1. **Strict 2-cells (§1).**
+   - The strict 2-cells of F(Q↑Y) for the composable pair are the identities on paths and the cells F = F_f, G = F_g, L = f⁻ ∗₀ G, R = F ∗₀ g⁺ and H = L ∗₁ R.
+   - These are exactly the non-identity 2-cells of the strict Gray cylinder I ⊗ (x → y → z): the two generating squares, their whiskerings by the remaining edge, and their vertical composite.
+   - The middle boundary of H is C = (L ∗₁ s) ∗₁ R, where s is the identity on the shared middle path. It is computed correctly. ✓
+
+2. **The fixed-edge extension lemma (§2).**
+   - The 0-columns of an arity carrying F_f (or F_g) span common vertices a, b, c.
+   - A column (a, c) factors through a vertical chain C_k.
+   - A column (a, b) factors through D_k = C_k ∗₀ D¹(h), with h sent literally to the edge variable (y↑ in one case, g⁺ or f⁻ in the others). It does not go through a path context.
+   - **Stability (§2.2).** Every substitution C_n → Q↑Y that sends the full word to the given 2-cell also sends h to the same edge variable. So the factorised constructor is unchanged, which is exactly the property round 2 got from point support. ✓
+
+3. **The new 3- and 4-cell constructors (§3).**
+   - The typing of the fixed whiskering d_h in (6) is correct.
+   - The associativity comparison (7) is correct.
+   - The fold-compatibility cell φ^h in (12) has matching source and target.
+   - Each is a coherence over a pasting context of the shape C_n ∗₀ D¹(h) or its 3-dimensional version, so each is valid. ✓
+
+4. **Normalisers and evaluation fusion (§4).**
+   - The relative normal forms are defined over the retained arities.
+   - The evaluation fold is kept separate from the vertical fold, as it must be.
+   - The new fold-evaluation case is handled by φ^h. ✓
+
+5. **The 3-term induction (§5).**
+   - Retained arities of dimension 2 and 3 are treated as in round 2, with the fixed edge carried along.
+   - The filler (24) uses right cancellation by the invertible normalisers, which are composites of coherences and so invertible (ICaTT). ✓
+
+6. **The two-generator case H (§6).**
+   - In a term with strict image H, the discarded columns are point-supported again, because H spans the unique source x⁻ and the unique sink z⁺.
+   - L and R occur in a forced order (L before R), so the vertical fold needs only one more multiplication case, the fold (26). ✓
+
+7. **Consequence (§7).**
+   - K(Q, B, Var Q) = Fill(a_c, b_c) for every 3-dimensional coherence c over the pair, for any fixed lower lifts. ✓
+   - The researcher checked the distributor and expansion boundary schemas symbolically. The full construction is a paper proof, not a kernel check.
+
+**What the proof uses, and where it stops.**
+- It uses three specific facts:
+  - the two fixed-edge factorisations are literal;
+  - the H case has point-supported discarded columns;
+  - the 2-generators of H have a forced order.
+- None of these is established for a general cylinder. For example:
+  - a longer chain x → y → z → w has columns with a fixed edge on both sides;
+  - Q↑Y with Y proper has unlifted edges.
+- **The natural generalisation** is factorisation through "horizontal words" D¹(h₁) ∗₀ … ∗₀ C_n ∗₀ … ∗₀ D¹(h_k), with each hᵢ sent literally to an edge variable.
+- **A second tool now exists.** The cone round-2 answer (`answered/cone-over-coherences-r2-2026-11-18.md`, §2) gives a syntactic dimension-lowering translation D, with RC(r+1) on a suspended context implying RC(r). An analogue for cylinders, from RC on (ΣQ)↑Y′ to RC on Q↑Y, would reduce the fixed-dimension part of Question 4.
+
+Follow-up prompt: `outbox/naturality-arbitrary-depth-r4.md` (round 4, unsent).

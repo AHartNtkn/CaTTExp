@@ -12,8 +12,8 @@
 --     (`piece-Tb`), using that a cell is hit only by cells of its own
 --     hom (`eq-hit`) and that the hom dimension bounds every cell's;
 --   * so every hom table is a TabCell (`hom-cell`), which is
---     TotalCell's `HomCells`, and the hypothesis T-cell of
---     Strict.Soundness holds (`T-cell`).
+--     TotalCell's `HomCells`, and T-cell, used by Strict.Soundness,
+--     holds (`T-cell`).
 -- Nothing is postulated.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Bridge where
@@ -26,7 +26,7 @@ open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Tensor
 open import CaTTExp.Strict.Pasting
 open import CaTTExp.Strict.TotalCell using (Ph; HC; HomCells; T-cell-from)
-open import CaTTExp.Strict.Soundness using (TCell; BSupp; module Soundness)
+open import CaTTExp.Strict.Hyp using (TCell)
 open import CaTTExp.Gray.Pure hiding (Tuple)
 
 ------------------------------------------------------------------------
@@ -169,6 +169,29 @@ maxL-bound f []       = []ᴬ
 maxL-bound f (x ∷ xs) =
   le-max-l (f x) (maxL (map f xs)) ∷ᴬ
   AllL-map xs (λ c lt → le-trans (f c) (maxL (map f xs)) _ lt (le-max-r (f x) (maxL (map f xs)))) (maxL-bound f xs)
+
+AllL-head : ∀ {A : Set} {P : A → Set} {x} → AllL P (x ∷ []) → P x
+AllL-head (p ∷ᴬ _) = p
+
+AllL-++⁻ˡ : ∀ {A : Set} {P : A → Set} xs {ys} → AllL P (xs ++ ys) → AllL P xs
+AllL-++⁻ˡ []       _          = []ᴬ
+AllL-++⁻ˡ (x ∷ xs) (p ∷ᴬ ps') = p ∷ᴬ AllL-++⁻ˡ xs ps'
+
+AllL-++⁻ʳ : ∀ {A : Set} {P : A → Set} xs {ys} → AllL P (xs ++ ys) → AllL P ys
+AllL-++⁻ʳ []       a          = a
+AllL-++⁻ʳ (x ∷ xs) (_ ∷ᴬ ps') = AllL-++⁻ʳ xs ps'
+
+AllL-filter⁻ : ∀ {A : Set} {P : A → Set} (q : A → Bool) xs → AllL P (filter q xs) → AllL (λ e → T (q e) → P e) xs
+AllL-filter⁻ q []       _ = []ᴬ
+AllL-filter⁻ q (x ∷ xs) a with q x in e
+... | true  = (λ _ → AllL-head (AllL-++⁻ˡ (x ∷ []) a)) ∷ᴬ AllL-filter⁻ q xs (AllL-++⁻ʳ (x ∷ []) a)
+... | false = (λ t → ⊥-elim (subst T e t)) ∷ᴬ AllL-filter⁻ q xs a
+
+AllL-cm-rng : ∀ {B : Set} {P : B → Set} (f : Nat → List B) n → AllL P (concatMap f (rng n)) → ∀ v → T (v <ℕ n) → AllL P (f v)
+AllL-cm-rng f (suc n) a v lt with v ==ℕ n in e
+... | true rewrite ==→≡ v n e =
+  subst (AllL _) (++-[]L (f n)) (AllL-++⁻ʳ (concatMap f (rng n)) (subst (AllL _) (concatMap-++ f (rng n) (n ∷ [])) a))
+... | false = AllL-cm-rng f n (AllL-++⁻ˡ (concatMap f (rng n)) (subst (AllL _) (concatMap-++ f (rng n) (n ∷ [])) a)) v (lt-pred v n lt e)
 
 lengthN-snoc : ∀ xs x → lengthN (xs ++ x ∷ []) ≡ suc (lengthN xs)
 lengthN-snoc []       x = refl
@@ -587,6 +610,22 @@ module OneHom {Γ : Ctx} (P : Γ ⊢ps) (pre : List Nat) (o o' : Nat) (rest : Li
   bound : AllL (λ c → T (hdim c <ℕ suc (hd h))) H
   bound = maxL-bound hdim H
 
+  -- Every cell of the hom is bounded by the hom dimension.
+  v-bound : ∀ v A → lookup Γ v ≡ just A → endsV A ≡ just (o , o') → T ((dim A ∸ 1) <ℕ suc (hd h))
+  v-bound v ⋆ lv ()
+  v-bound v (arr B s t) lv ev =
+    AllL-head (subst (λ L → AllL (λ e → T (Hq e) → T (hdim e <ℕ suc (hd h))) L) gv
+                (AllL-filter⁻ Hq (g v) (AllL-cm-rng (λ w → filter Hq (g w)) n (subst (AllL _) (trans H-rng (filter-concatMap Hq g (rng n))) bound)
+                   v (lookup-lt Γ v lv)) ))
+      (subst T (sym mk) tt)
+    where
+    ci = cell-info v B s t lv
+    m = CellInfo.m ci
+    gv : g v ≡ el v m (dim (arr B s t) ∸ 1) (fst (elBdry (arr B s t))) (snd (elBdry (arr B s t))) ∷ []
+    gv = trans (cong (elsM os v) lv) (trans (mkEl-eq os v (arr B s t)) (cong (elsOf v (arr B s t)) (CellInfo.hom-eq ci)))
+    mk : (m ==ℕ k) ≡ true
+    mk = trans (hom-sel v (arr B s t) ci) (trans (cong (homM (o , o')) ev) (cong₂ _∧_ (==-true o) (==-true o')))
+
   -- At or above the top dimension nothing is hit.
   no-hit : ∀ i sg c → T (hd h <ℕ suc i) → any (hitsP i sg c) H ≡ false
   no-hit i sg c le = any-AllL-false (hitsP i sg c) H
@@ -666,5 +705,3 @@ homCells {Θ} P =
 T-cell : TCell
 T-cell = T-cell-from homCells
 
--- Strict-model soundness with its one remaining hypothesis.
-module SoundnessB (B-supp : BSupp) = Soundness T-cell B-supp

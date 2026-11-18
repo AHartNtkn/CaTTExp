@@ -23,8 +23,8 @@ open import CaTTExp.Gray.Support 𝕊
 open import CaTTExp.Gray.Cover hiding (Tuple)
 open import CaTTExp.Gray.SetFacts 𝕊
 open import CaTTExp.Gray.DownAgree 𝕊
-open import CaTTExp.Gray.Orient 𝕊 using (chainε; chainε-false)
-open import CaTTExp.Gray.OrientRev 𝕊 using (Path; nil; cons; path⇒)
+open import CaTTExp.Gray.Orient 𝕊 using (chainε; chainε-false; flipIf)
+open import CaTTExp.Gray.OrientRev 𝕊 using (Path; nil; cons; path⇒; path⇐)
 
 -- Every type in the context is a tower of variables.
 VT : Ctx → Ty → Set
@@ -182,6 +182,14 @@ bd-just : ∀ cs w {c} → findEl w cs ≡ just c → bdEl cs w ≡ (if hdim c =
 bd-just cs w e with findEl w cs
 bd-just cs w refl | just c = refl
 
+-- The hom dimension of a cell whose type ends at an object.
+hgt-pos : ∀ Γ i {A a b k} → lookup Γ i ≡ just A → endsTy A ≡ just (var a , var b) →
+          posOf b (objs Γ) ≡ just k → Faces.hgt (cells Γ) i ≡ dim A ∸ 1
+hgt-pos Γ i {A} eL eT eP = hgt-of Γ i eL (hom-from (objs Γ) A eT eP)
+  where
+  hom-from : ∀ os A {a b k} → endsTy A ≡ just (var a , var b) → posOf b os ≡ just k → homOf os A ≡ just k
+  hom-from os A eT eP rewrite eT = eP
+
 graded : ∀ Γ → Inv Γ → Faces.Graded (cells Γ)
 graded Γ inv w {b} mb = go (findEl w (cells Γ)) refl
   where
@@ -279,6 +287,71 @@ module Ranks (Γ : Ctx) where
   bdry-rank sg q with any-++⁻ (lowerT (N ∸ 1) (homs Γ)) q
   ... | inj₁ a = ≤-trans (≤-step (≤-refl _)) (≤-trans (lower-rank (N ∸ 1) a) (∸1≤ N))
   ... | inj₂ b = subst (_≤ N) (sym (chain-rank sg (N ∸ 1) b)) (∸1≤ N)
+
+  ----------------------------------------------------------------------
+  -- If some degree-0 table is inhabited, so is the top table: every hom
+  -- then has a cell, hence a cell of its top dimension.
+
+  private
+    o₀ : Nat → Bool
+    o₀ _ = false
+
+    sum0r : ∀ a b → a + b ≡ 0 → b ≡ 0
+    sum0r zero    b e = e
+    sum0r (suc a) b ()
+
+    path-cells : ∀ {s hs is x} → Path o₀ s hs is x → sumL is ≡ 0 →
+                 ∀ {h} → Any (h ≡_) hs → Σ El λ e → Any (e ≡_) (hcs h)
+    path-cells (cons {s = s} {h = h} {i = i} mc p) z (here refl) with piece-mem h i s mc
+    ... | e , me , _ = e , me
+    path-cells (cons {i = i} mc p) z (there m) = path-cells p (sum0r i _ z) m
+
+    max-either : ∀ a b → (max a b ≡ a) ⊎ (max a b ≡ b)
+    max-either zero    b       = inj₂ refl
+    max-either (suc a) zero    = inj₁ refl
+    max-either (suc a) (suc b) with max-either a b
+    ... | inj₁ e = inj₁ (cong suc e)
+    ... | inj₂ e = inj₂ (cong suc e)
+
+    max-z : ∀ a → max a 0 ≡ a
+    max-z zero    = refl
+    max-z (suc a) = refl
+
+    max-attain : ∀ (cs : List El) {e} → Any (e ≡_) cs →
+                 Σ El λ e' → Any (e' ≡_) cs × (hdim e' ≡ maxL (map hdim cs))
+    max-attain (c ∷ [])       _ = c , here refl , sym (max-z (hdim c))
+    max-attain (c ∷ c' ∷ cs) _ with max-attain (c' ∷ cs) (here refl) | max-either (hdim c) (maxL (map hdim (c' ∷ cs)))
+    ... | _ , _ , _   | inj₁ e = c , here refl , sym e
+    ... | e' , m , h' | inj₂ e = e' , there m , trans h' (sym e)
+
+    hd-max : ∀ L {h} → Any (h ≡_) (map (homAt Γ) L) → hd h ≡ maxL (map hdim (hcs h))
+    hd-max L m with any-witness (any-map⁻ (homAt Γ) L (subst (Any _) (map≡ (homAt Γ) L) m))
+    ... | k , _ , refl = refl
+
+    top-piece : ∀ h e sg → Any (e ≡_) (hcs h) → hdim e ≡ hd h → lvl e ∈ᴺ piece h (hd h) sg
+    top-piece h e sg me he with hd h ==ℕ hd h in q
+    ... | true  = subst (Any _) (sym (map≡ lvl (filter (λ c → hdim c ==ℕ hd h) (hcs h))))
+                    (any-map⁺ lvl (any-mono (λ { refl → refl }) (filter⇐ (λ c → hdim c ==ℕ hd h) (hcs h) me
+                      (subst (λ n → T (n ==ℕ hd h)) (sym he) (==ℕ-refl (hd h))))))
+    ... | false = ⊥-elim (subst T q (==ℕ-refl (hd h)))
+
+    mk-path : ∀ hs → (∀ {h} → Any (h ≡_) hs → Σ Nat λ c → ∀ sg → c ∈ᴺ piece h (hd h) sg) →
+              ∀ s → Σ Tuple λ x → Path o₀ s hs (map hd hs) x
+    mk-path []       W s = [] , nil
+    mk-path (h ∷ hs) W s with W (here refl) | mk-path hs (λ m → W (there m)) (flipIf (odd (hd h)) s)
+    ... | c , mc | x , p = c ∷ x , cons (mc s) p
+
+  top-ne : ∀ b sg {w} → w ∈L chainT b 0 (homs Γ) → Σ Tuple λ x → x ∈L chainT sg N (homs Γ)
+  top-ne b sg {w} m
+    with path⇒ o₀ (homs Γ) b 0 (subst (λ L → w ∈L L) (sym (chainε-false b 0 (homs Γ))) m)
+  ... | is , z , p = x , subst (λ L → x ∈L L) (chainε-false sg N (homs Γ)) (path⇐ o₀ q)
+    where
+    W : ∀ {h} → Any (h ≡_) (homs Γ) → Σ Nat λ c → ∀ sg → c ∈ᴺ piece h (hd h) sg
+    W {h} mh with path-cells p z mh
+    ... | e , me with max-attain (hcs h) me
+    ...   | e' , me' , he' = lvl e' , λ sg → top-piece h e' sg me' (trans he' (sym (hd-max _ mh)))
+    x = fst (mk-path (homs Γ) W sg)
+    q = snd (mk-path (homs Γ) W sg)
 
   -- Below entrywise means lower rank, in a graded context.
   rank-mono : Graded → ∀ {n s r} → Pw n s r → rank s ≤ rank r

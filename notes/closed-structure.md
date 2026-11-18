@@ -7,9 +7,9 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). | contractibility proved; completeness proof sketch to check |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness reduced to the closed-term lemma (D10a) |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
-| **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. The general case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md`). | criteria worked out; soundness beyond dim 2 out as a conjecture |
+| **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
 | **D11** PL-ω | **First test passed by a candidate.** Mimram's directed criterion produces the interchanger in *both* directions, so it fails the test. The candidate "Gray criterion" adds an inversion-set condition on the event order. It produces the lax naturality cell of evaluation and never its inverse (Part F). The ω-version is conjectured to be the higher Bruhat orders, recorded in `planar-pasting-types.md` §4. | candidate passes test; general definition and ω-version open |
 
@@ -266,7 +266,74 @@ Each operation preserves instances: B\(coh_S[τ]) = coh_{B′\S}[τ, B′ ↦ B]
 
 Both id_T and e of B.1 arise this way, as *different* generalized sequents (e = k_{A*} ∘ (k_A)* is a composite of two Y := I instances of L-pasting sequents). So UL_I does not identify them, which is correct.
 
-*To check:* that the generation statement holds for the free biclosed monoidal category with unit, i.e. that nothing beyond these generators and operations is needed. This is a standard presentation, but it has not been verified here.
+*Superseded by B.4,* which avoids the generation statement. Original note: *to check* that the generation statement holds for the free biclosed monoidal category with unit, i.e. that nothing beyond these generators and operations is needed. This is a standard presentation, but it has not been verified here.
+
+## B.4 D10a: empty antecedents, a larger contractible class, and fullness reduced to one closed-term lemma
+
+*Added 2026-11-18 (D10a, in progress).*
+
+**Theorem A\* (Theorem A with empty antecedents).** Let S be a balanced sequent with *no occurrence of I*, whose antecedent may be empty. Then |F_I(S)| ≤ 1 in the free biclosed monoidal category with unit, and |F_I(S)| = 1 iff S is provable in L\*, the Lambek calculus with product and empty antecedents.
+
+*Proof.*
+- A cut-free derivation of S in L\*_I uses no unit rule, by the subformula property. So it is an L\*-derivation.
+- Rerun Part A with empty antecedents allowed: in R\ and R/, in the Δ of L\ and L/, and in the two halves of R⊗.
+  - **Lemma C** still holds. The extra base situations only merge nodes: R\ on B ⊢ A gives the one-node sequent ⊢ B\A, and L\ with Δ = ∅ merges the one-node premise ⊢ B into H.
+  - What fails is "every sequent has at least two nodes", since ⊢ C has one. But every use of connectivity in A.2 has the form "a link-closed set of hypotheses of a connected premise that misses that premise's goal is empty". That form holds for one-node premises too.
+- **Lemma F\*** with Δ possibly empty. Only case 1 needs a new remark. If Δ = ∅, then B is self-linked. If the last rule's split were Δ_r ≠ ∅, the connected premise Δ_r ⊢ B would link B to Δ_r, which is impossible. So Δ_r = ∅ = Δ.
+- **Lemma T\*** with Γ₁ or Γ₂ empty: the same argument.
+- The semantic equations used are valid in biclosed representable multicategories with nullary maps, as already noted in B.2. ∎
+
+`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures; the 8-leaf run is recorded below.
+
+**Consequence: a larger unit-pasting class.** Call S **unit-pasting\*** (UP\*) if N(S) is I-free, balanced and L\*-provable, or N(S) = ⊢ I. Theorem B extends with the same proof, using Theorem A\* in place of step 3. The new class is strictly larger.
+- (X\X)\Y ⊢ Y is UP\* but not unit-pasting in the sense of B.2: it is L\*-provable but not L-provable.
+- So is ⊢ Y\((W\W)⊗Y), the name of y ↦ j_W ⊗ y.
+
+Below, UL_I\* is UL_I with coh over UP\* sequents.
+
+**Fullness reduces to currying.** Take a cut-free L\*_I-derivation. Every rule except R\, R/ and L⊗ is a grafting into a coh:
+- Ax and R_I are the coh's X ⊢ X and ⊢ I.
+- R⊗ grafts into m.
+- L\ and L/ graft k ∘_A ev(h, H) into ev (h may be closed).
+- L_I grafts the I into a neighbouring hypothesis through λ = coh_{I, X ⊢ X} or ρ = coh_{X, I ⊢ X}. If the context is empty, it is λ(u, t) with t the closed premise term. This is I_L(t), because plugging u : ⊢ I into the result gives t back, and plugging u is the bijection that I_L inverts.
+
+L⊗ reduces to currying:
+1. Curry Θ from the left and Θ′ from the right.
+2. Curry b and a, giving a closed g : ⊢ (E/B)/A.
+3. Graft g into the L-pasting coh ((Z/Y)/X, X⊗Y ⊢ Z).
+4. Uncurry by grafting into ev coh's.
+
+**So UL_I\* is full iff the denotable morphisms are closed under Λ**, on both sides.
+
+**Currying, by bracket abstraction.** Let t have leftmost free variable x. Define [x]t by induction:
+- [x]x = j = coh_{⊢ X\X} (UP\*).
+- If x occurs in the first argument, then [x]coh_S[τ](t₁, t₂, …) = coh_K([x]t₁, coh_{S^c}[τ](t₂, …)), where:
+  - K = (Y\Z, Z\W ⊢ Y\W) is L-pasting;
+  - S^c = (B₂, … ⊢ B₁\C) is S curried, with the same normal form;
+  - the equation is naturality of Λ in the remaining variables.
+- If closed arguments c₁, …, c_k precede the argument s containing x, first rebracket. With the L-pasting M = (B₁, …, B_k, Y ⊢ B₁⊗…⊗B_k⊗Y) and S⊗ the left-⊗ form of S (pasting iff S is),
+
+  ```
+  coh_S[τ](c⃗, s, …) = coh_{S⊗}[τ](coh_M(c⃗, s), …)        (denotationally).
+  ```
+
+  Then [x] of the right-hand side is coh_K(coh_K([x]s, ⌜c⃗ ⊗ –⌝), coh_{S⊗^c}[τ](…)), where ⌜c⃗ ⊗ –⌝ := Λ_y coh_M(c⃗, y) : ⊢ Y\(P⊗Y) and P = B₁⊗…⊗B_k[τ].
+
+So **UL_I\* is full iff, for every closed term c : ⊢ P, the closed "left tensoring name" ⌜c ⊗ –⌝ : ⊢ Y\(P⊗Y) is denotable, together with its mirror ⌜– ⊗ c⌝ : ⊢ (Y⊗P)/Y.**
+
+**Proved case.** Generalize c by Lemma A5 to c′ : ⊢ P′. The plugging lemma ignores the constant I. If ⊢ P′ is UP\*, then ⊢ Y\(P′⊗Y) is UP\*:
+- its normal form is Y ⊢ N(P′)⊗Y, or Y ⊢ Y when N(P′) = I;
+- it is balanced, and L\*-provable by R⊗ with split ∅ | Y.
+
+So ⌜c ⊗ –⌝ = coh_{⊢ Y\(P′⊗Y)}[σ_c]. In particular, UL_I\* is full on every term built only from I-free coh's. More generally it is full whenever the closed subterms met in bracket abstraction have UP\* generalizations.
+
+**The remaining point (D10a).** Is the generalization of every *closed* UL_I\* term UP\*?
+- For *open* terms the answer is no. The term coh_{I ⊢ I}(ev(x, h)) has generalization X, X\I ⊢ I: the unifier sends the atom Y of (X, X\Y ⊢ Y) to I. That is why the reduction above isolates closed terms.
+- For closed terms, unification can force an atom to I only through a bare I in a tame coh, i.e. a whole hypothesis I, the goal ⊢ I, or the I of I⊗A, A⊗I, I\A or A/I. The partner occurrence of such an atom lies inside the same closed tree.
+- What is missing is a lemma saying that this partner is never left in a result position (B\I, I/B, or a goal I with nonempty context).
+- A fallback would be a rule forming ⌜c ⊗ –⌝ from a closed term c. It is obviously sound, but it is a term former other than coh, so it would depart from standard 5. It is not adopted; the lemma is the open point.
+
+The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 
 **Comparison with Mimram.** CCCaTT normalizes products and the terminal type by the Bruce–Di Cosmo–Longo type isomorphisms before checking pasting. B.2 is the monoidal analogue for the unit, with one difference. The monoidal unit is not terminal, so I in a *result* position (A\I, duals) cannot be normalized away. Such I's are reached only by type substitution, never by the pasting check itself.
 
@@ -319,11 +386,54 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 
 **Dir in dimension 2, over a graph (no 2-dimensional hypotheses).** Sound for the cartesian closed mode. Fiore–Saville ([MSCS 2021](https://www.cambridge.org/core/journals/mathematical-structures-in-computer-science/article/coherence-for-bicategorical-cartesian-closed-structure/9AF32A2CDBDD01A5FB01D9D6DDCD80F0)) prove that in the free cartesian closed bicategory on a graph there is at most one 2-cell between parallel 1-cells. Every bicategory with cc structure is biequivalent to a 2-category with 2-categorical cc structure. And all inhabitants of a pasting type are βη-equal (Mimram, Thm 15), so the 2-cell exists and is invertible.
 
-**Everything beyond.** This covers Dir with 2-dimensional hypotheses, Dir in dimension ≥ 3, and Rev in all dimensions. Soundness needs a coherence theorem for free cartesian closed (∞,1)- or (∞,ω)-categories (with pseudo exponentials) on computads. None is known. It is posed, self-contained, in [`conjectures/cartesian-closed-higher-coherence.md`](conjectures/cartesian-closed-higher-coherence.md).
+**Everything beyond.** This covers Dir with 2-dimensional hypotheses, Dir in dimension ≥ 3, and Rev in all dimensions. Soundness needs a coherence theorem for free cartesian closed (∞,1)- or (∞,ω)-categories (with pseudo exponentials) on computads. For (∞,1), and hence Rev, see C.4 (proof sketch). For (∞,ω), none is known. It is posed, self-contained, in [`conjectures/cartesian-closed-higher-coherence.md`](conjectures/cartesian-closed-higher-coherence.md).
 
 **Consequences for the project.**
 - *Under P* (pseudo ambient), Dir with the CCC base is a candidate replacement for the λ/⌜⌝ rules of `internal-hom.md` §5.4, as §5.7 suggested. It is now an explicit criterion, not a guess. Its β/η cells are invertible coherences, which is what the pseudo hom needs.
 - *Under L / Gray*, Dir is the wrong shape. In monoidal mode, for hypotheses f : a → a′ and g : b → b′, both (f⊗b′)∘(a⊗g) → (a′⊗g)∘(f⊗b) and its reverse are accepted. The source and target contexts are the whole context, and no variable is forbidden. So Dir makes interchangers invertible and fails the PL-ω test (Part F). Part F's candidate is Dir plus one orientation condition.
+
+## C.4 Internal attempt: Rev is sound, via normalization by evaluation (D12, Questions 1–2)
+
+*Added 2026-11-18. Proof sketch; not yet independently reviewed.*
+
+**Theorem C1 (discreteness).** Let Σ be a set of base types together with a set of constants c : A → B between simple types over them; this covers Question 1's "set or directed graph". Let F(Σ) be the free cartesian closed (∞,1)-category on Σ. Then every mapping space of F(Σ) is discrete. Hence F(Σ) is equivalent to the free cartesian closed 1-category on Σ, i.e. simply typed λ-terms with constants modulo βη.
+
+*Proof sketch.* This is the Altenkirch–Hofmann–Streicher / Fiore normalization-by-gluing argument, with every input checked to survive in (∞,1). References: Altenkirch, Hofmann, Streicher, *Categorical reconstruction of a reduction free normalization proof* (CTCS 1995); Fiore, *Semantic analysis of normalisation by evaluation for typed lambda calculus* (PPDP 2002).
+
+1. **Renamings.** Let Ren be the 1-category of contexts (lists of types) and renamings. Let ι : Ren → F(Σ) send a context to the product of its types. The nerve N : F(Σ) → E := PSh(Ren) (presheaves of *spaces*), A ↦ Map(ι–, A), preserves finite products.
+2. **Gluing.** Let Gl be the comma ∞-category E ↓ N. Its objects are (P, A, p : P → N A). It is cartesian closed, and the projection Gl → F(Σ) preserves the structure.
+   - Products are computed componentwise.
+   - (Q, B, q)^(P, A, p) = (R, B^A, r) with R = N(B^A) ×_{(NB)^P} Q^P, a pullback in the ∞-topos E.
+   - The mapping-space check is a pasting of pullbacks of mapping spaces, verbatim as in the 1-categorical proof (Mitchell–Scedrov, *Notes on sconing and relators*, 1993). It uses only that E is cartesian closed with pullbacks and that N preserves finite products.
+3. **Section.** By the universal property, there is a cartesian closed s : F(Σ) → Gl sending a base type X to (Ne_X, X, emb) and a constant c to its action on neutrals.
+   - Here Ne and Nf are the *set-valued*, hence discrete, presheaves of η-long neutral and normal terms.
+   - The composite F(Σ) → Gl → F(Σ) is cartesian closed and is the identity on generators. The space of such functors is contractible, so the composite is equivalent to the identity.
+4. **Reflect and reify.** By induction on types A, build maps of presheaves of spaces reflect_A : Ne_A → P_A and reify_A : P_A → Nf_A over N A, where s(A) = (P_A, A, p_A). The clauses are the standard ones.
+   - For A → B: reify evaluates at the weakening Γ ↪ Γ, a : A and at reflect_A(var a), then applies reify_B and λ-abstracts.
+   - Each clause is a composite of Yoneda equivalences, exponential transposes in E, and maps out of or into the discrete presheaves Ne and Nf. So each is a map in E, with its homotopy over N A, and no further coherence data needs choosing.
+5. **Retract.** For f ∈ Map(ιΓ, A), apply s(f) to the generic element reflect_Γ(vars) ∈ P_Γ(Γ), then apply reify_A. This gives a map of spaces nf : Map(ιΓ, A) → Nf_A(Γ). By the commuting triangles, emb ∘ nf ≃ id. So Map(ιΓ, A) is a retract of a set, hence discrete.
+6. **Every object.** Every object of F(Σ) is equivalent to a type. The full subcategory of types is cartesian closed and contains Σ, so by the universal property it is everything.
+7. **Conclusion.** So F(Σ) is a 1-category. By its universal property among 1-categories, it is the free cartesian closed 1-category. ∎
+
+**Literature.**
+- Uemura, *Normalization and coherence for ∞-type theories* ([arXiv 2212.11764](https://arxiv.org/abs/2212.11764)), proves by the same strategy that free models of an ∞-type theory with dependent function types, a natural-number type and constants are 0-truncated. He says the strategy works heuristically for many fragments.
+- Uemura also remarks that Fiore–Saville's purely categorical proof "seems to scale to the ∞-dimensional setting". Theorem C1 is that scaling, written out for the simple (cartesian closed) case.
+- So Question 1 of the outbox prompt is answered positively, up to checking this sketch.
+
+**Corollary C2 (soundness of Rev; Question 2).** Every goal accepted by (Rev) has a contractible space of fillers in the free cartesian closed (∞,1)-category on its context.
+
+*Proof.*
+1. **Contraction is a trivial extension.** Contracting α : x → t, where x is a variable of dimension k − 1 ≥ 1 that is not free in t and occurs in no other type, removes a pushout Γ ⊔_{D^{k−1}} J.
+   - Here J is a pair of parallel (k−1)-cells with a k-cell between them, attached along t.
+   - In (∞,1), cells of dimension ≥ 2 are invertible, so D^{k−1} → J is an equivalence.
+   - The free cartesian closed functor is a left adjoint, so it preserves pushouts. A pushout of an equivalence is an equivalence. So the contracted context presents the same free cartesian closed (∞,1)-category, and goals transport along x := t.
+2. **The remaining context is 1-dimensional,** i.e. a Σ as in Theorem C1.
+3. **A goal of dimension 1** is a type whose inhabitants form a single βη-class, by Mimram's Theorem 15 (with the context's constants as free variables). By Theorem C1, its space of fillers is that one-point set.
+4. **A goal of dimension n ≥ 2** asks for a path, or a higher path, between points of a discrete space whose endpoints are equal, by step 3. That space is contractible, in both directions. ∎
+
+**What remains of D12.** Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
+- Fiore–Saville did the bicategorical version.
+- The obstacle is step 2. It needs pseudo exponentials in an (∞,ω)-categorical comma object. It also needs a statement that the presheaves of normal forms are discrete as (∞,ω)-categories, i.e. no non-identity cells between normal forms. That is exactly what Dir's directed hypotheses violate, because those hypotheses generate non-invertible cells between neutrals.
 
 ---
 

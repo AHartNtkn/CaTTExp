@@ -2,6 +2,12 @@
 
 *Self-contained problem statement, 2026-11-18. It asks whether two concrete, decidable criteria for "contractible" higher-dimensional types are sound. Both are implemented in Mimram's proof assistant cccatt, without proofs. No knowledge of the surrounding project is assumed.*
 
+> **Update 2026-11-18.** The (∞,1) questions have an internal proof sketch, `closed-structure.md` C.4, not yet independently reviewed.
+> - The free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces. The proof is normalization by gluing: each hom is a retract of a set of normal forms. Compare Uemura, arXiv 2212.11764.
+> - Hence CC-Rev holds.
+>
+> CC-Dir in (∞,ω) remains open.
+
 ## 1. Background
 
 **Simple types and pasting types.** Simple types are built from type variables X, Y, … with → and × (and 1).

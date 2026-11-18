@@ -156,7 +156,11 @@ The definitions are those of `conjectures/naturality-arbitrary-depth.md` §2–�
 
 It respects boundaries, because the complement of Y is down-closed and the omitted factors of `a_x, b_x` are exactly the generators sent to identities.
 
-By induction on terms, `π(t↑) = collapse(e ⊗ π(t))` for every term t whose lift is built from fillers with this property. Hence, for `c = coh_{Q,B}[id]` of dimension n, the strict cell `collapse(e ⊗ π(c))` goes from `π(a_c)` to `π(b_c)`.
+**Invariant.** `π(t↑) = collapse(e ⊗ π(t))` for every term t. It holds for variables by definition. For `t = coh[γ]` it follows by substitution, provided every filler K satisfies `π(K) = collapse(e ⊗ π(c))`. Fillers built as in Proposition R do:
+- For a **coherence** c of dimension n, the arity has dimension ≤ n−1, so `Q↑Y` has dimension ≤ n while K is an (n+1)-cell. Strict cells above the dimension of the computad are identities, so `π(K)` is an identity. So is `e ⊗ π(c) = e ⊗ id = id`.
+- For a **composition** c, `π(K)` is the composite of the layers, because the connecting cells are coherences with identity strict image, and that composite is `collapse(e ⊗ π(c))` by construction.
+
+The lower-dimensional instances of the invariant are what make `π(a_c)` and `π(b_c)` computable. (This was left implicit in the first version; the independent check asked for it to be stated.) Hence, for `c = coh_{Q,B}[id]` of dimension n, the strict cell `collapse(e ⊗ π(c))` goes from `π(a_c)` to `π(b_c)`.
 
 **Proposition R.** Suppose RC(n) holds for `Q↑Y`. Then N holds for c, i.e. `a_c → b_c` is inhabited, and the filler K can be chosen with `π(K) = collapse(e ⊗ π(c))`.
 
@@ -240,7 +244,7 @@ The layers are `Γ, Γ′`, then `P, P′, M` for n = 2, and in general 2n+1 lay
 
 ## 7. Dimension 3: why loop-freeness enters
 
-**RC(3) fails without loop-freeness (sketch).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the braiding of `Ω²S²` at that generator, which is a non-zero element of π₃(S²) [recall: it is the Whitehead square, up to sign; not checked here]. A 4-cell would give a null-homotopy. *Two claims are recalled and not checked: that fundamental ω-groupoids of spaces are models of CaTT, and the identification of the class.*
+**RC(3) fails without loop-freeness (sketch; checked in outline by the literature thread, still needs two citations).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the braiding of `Ω²S²` at that generator, which is a non-zero element of π₃(S²) [recall: it is the Whitehead square, up to sign; not checked here]. A 4-cell would make that class null. *Two claims still need citations before the "sketch" label can go: (a) the fundamental ω-groupoid of S² is a model of CaTT (Grothendieck–Maltsiniotis; Ara); (b) the Eckmann–Hilton term maps to the self-braiding of ι₂, which is η up to sign.*
 
 So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the molecules are loop-free, and for them RC holds in (∞,ω)-categorical semantics (Campion arXiv 2311.00205, Cor. 3.5; Chanavat arXiv 2603.22242, Thm 3.29). Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
 

@@ -1,11 +1,15 @@
 ------------------------------------------------------------------------
--- ν(λΓ) is the free strict ω-category on a globular set Γ (ledger A5,
--- (N3), first part: ν(λΓ) ≅ Free(Γ)).
+-- For an ordered globular basis, ν of it is free on its generators
+-- (ledger A5, (N3), first part: ν(λΓ) ≅ Free(Γ) when λΓ is presented
+-- by such a basis).
 --
 -- A globular basis: every basis element i of degree ≥ 1 has
 -- ∂⁻i = s i and ∂⁺i = t i, single basis elements of degree deg i − 1.
--- With the hypotheses `Hyp` (in particular the order s i < i < t i,
--- which is loop-freeness of Γ in its strong form), the boundaries of
+-- `Glob` takes the basis, s, t and `Hyp` as parameters; it does not
+-- build λΓ from a globular set Γ. `Hyp` includes the order
+-- s i < i < t i (strong loop-freeness), which excludes some globular
+-- sets, for example α : f ⇒ g together with β : g ⇒ f. Under these
+-- hypotheses, the boundaries of
 -- the atom ⟨g⟩ are the atoms of its source and target (`atom-src`,
 -- `atom-tgt`). So the attaching words of `Strict.Lift` are single
 -- generators, and a strict functor ν(λΓ) → 𝒟 is the same as a map of

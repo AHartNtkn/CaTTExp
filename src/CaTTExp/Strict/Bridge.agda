@@ -26,7 +26,7 @@ open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Tensor
 open import CaTTExp.Strict.Pasting
 open import CaTTExp.Strict.TotalCell using (Ph; HC; HomCells; T-cell-from)
-open import CaTTExp.Strict.Soundness using (TCell)
+open import CaTTExp.Strict.Soundness using (TCell; BSupp; module Soundness)
 open import CaTTExp.Gray.Pure hiding (Tuple)
 
 ------------------------------------------------------------------------
@@ -665,3 +665,6 @@ homCells {Θ} P =
 -- The first hypothesis of Strict.Soundness, now a theorem.
 T-cell : TCell
 T-cell = T-cell-from homCells
+
+-- Strict-model soundness with its one remaining hypothesis.
+module SoundnessB (B-supp : BSupp) = Soundness T-cell B-supp

@@ -6,8 +6,11 @@
 --                               dimension i, not the target (b = −)
 --                               resp. source (b = +) of any cell }
 -- is the composite ⟨Θ⟩ of the hom's pasting diagram Θ. We prove, by
--- induction on the pasting derivation, that it is a cell of ν(K(Γ))
--- between o and o' (`hom-cells`). Each pse step adds y : A and
+-- induction on the pasting derivation, the two cell conditions that
+-- need the pasting structure, augmentation and the chain equation
+-- (`hom-cores`), and that its entries are basis elements of the hom
+-- o → o' (`Tb-basis`). The dimension bound and the full TabCell are in
+-- CaTTExp.Strict.Bridge (`hom-cell`). Each pse step adds y : A and
 -- f : x → y at the cursor x; the table changes only in the hom of x:
 -- x leaves the + side of its dimension, y enters it, and f enters
 -- both sides one dimension up.

@@ -61,3 +61,418 @@ An answer to Question 1 with proof; an invariant and a product theorem (or count
 - **Oriented categories:** Gepner–Heine (arXiv 2510.10504), Cor. 4.1.11.
 - No paper on 2-cells of free Gray-closed structure was found.
 
+# Researcher Response
+
+**The reverse hom sets are empty in both generic atomic examples.** A model with an integer-valued monotone invariant proves this and shows that every forward 2-cell must use exactly one interchange involving both generators. Forward uniqueness remains unresolved.
+
+There are also two results concerning Question 2:
+
+- The image in the ordinary free biclosed monoidal category is a **complete invariant of undirected connected components of the full hom-category**.
+- That image together with \(W\) does **not** classify 1-cells. There is a unit-free example with two generators and three distinct 1-cells
+  \[
+  u\Longrightarrow m\Longrightarrow v,
+  \qquad W(u)=W(v),
+  \]
+  all having the same ordinary biclosed image.
+
+Here “generic atomic” means that the displayed type letters are distinct atoms. Below I give the precise condition under which the nonexistence proof extends to arbitrary formula instances.
+
+## 1. A directed biclosed model
+
+Define a strict 2-category \(\mathcal M\) whose objects are integers and whose hom-categories are
+\[
+\mathcal M(p,q)=
+\begin{cases}
+(\mathbb Z,\le),&q-p\ge 0,\\
+\varnothing,&q-p<0.
+\end{cases}
+\]
+
+Thus a 1-cell \(u:p\to q\) is specified by an integer weight \(w(u)\), subject to \(q\ge p\). Write
+\[
+\delta(u)=q-p.
+\]
+For parallel 1-cells,
+\[
+u\Longrightarrow v
+\quad\Longleftrightarrow\quad
+w(u)\le w(v),
+\]
+and such a 2-cell is unique.
+
+Identity 1-cells have weight \(0\), and composition adds weights:
+\[
+w(v\circ u)=w(u)+w(v).
+\]
+
+### Tensor and interchanger
+
+Tensor on objects is addition. Its two sections act by
+\[
+w(p\otimes u)=w(u)+p\,\delta(u),
+\qquad
+w(u\otimes q)=w(u).
+\tag{1}
+\]
+Both preserve displacement.
+
+These are strict 2-functors: composition preserves displacement additively, and translation preserves the order on weights. Their associativity and commutation equations hold literally:
+\[
+L_{p+q}=L_pL_q,\qquad
+R_{p+q}=R_qR_p,\qquad
+L_pR_q=R_qL_p.
+\]
+
+For \(f:p\to p'\) and \(g:q\to q'\), the right-factor-first composite has weight
+\[
+w\bigl((f\otimes q')\circ(p\otimes g)\bigr)
+=
+w(f)+w(g)+p\,\delta(g).
+\]
+The left-factor-first composite has weight
+\[
+w\bigl((p'\otimes g)\circ(f\otimes q)\bigr)
+=
+w(f)+w(g)+p'\,\delta(g).
+\]
+Their difference is
+\[
+\boxed{\delta(f)\delta(g)\ge 0.}
+\tag{2}
+\]
+Hence the required directed interchanger exists.
+
+All Gray coherence equations hold: they compare parallel 2-cells in poset hom-categories.
+
+### Both closed structures
+
+Set
+\[
+p\backslash r=r-p,\qquad r/q=r-q.
+\]
+
+The tensor sections are strict 2-isomorphisms:
+\[
+L_p^{-1}=L_{-p},
+\qquad
+R_q^{-1}=R_{-q}.
+\]
+Choose these inverses as right 2-adjoints. This gives the required hom-category isomorphisms, with identity units and counits.
+
+Explicitly, left currying acts by
+\[
+w(\Lambda_pu)=w(u)-p\,\delta(u),
+\tag{3}
+\]
+while right currying leaves the weight unchanged. Evaluations have displacement and weight \(0\).
+
+These are strictly natural in the context variable, including at the 2-cell level. For example, if \(k:b'\to b\) and \(u:p+b\to r\), then
+\[
+\begin{aligned}
+w\!\left(\Lambda_p(u\circ(p\otimes k))\right)
+&=w(u)+w(k)+p\delta(k)
+  -p\bigl(\delta(u)+\delta(k)\bigr)\\
+&=\bigl(w(u)-p\delta(u)\bigr)+w(k)\\
+&=w\!\left(\Lambda_p(u)\circ k\right).
+\end{aligned}
+\]
+The bound-variable comparisons are obtained by transposition of the interchangers, as required.
+
+Thus \(\mathcal M\) is a model of the stated structure. Its semantic unit \(0\) causes no problem for the unit-free syntax: distinct formula atoms may be interpreted by the same semantic object, including \(0\).
+
+## 2. Question 1: neither reverse 2-cell exists
+
+### 2.1 The primitive residual-valued generator
+
+Interpret the distinct atoms by
+\[
+|P|=|X|=0,\qquad |B|=1,\qquad |C|=2,
+\]
+and give \(\varphi\) and \(b\) weight \(0\).
+
+Then
+\[
+|C/B|=1,\qquad
+\delta(\varphi)=\delta(b)=1.
+\]
+Using (1), and the fact that evaluation has weight \(0\),
+\[
+w(t_1)=0,\qquad w(t_2)=1.
+\]
+A reverse 2-cell would have to map to a 2-cell from weight \(1\) to weight \(0\), which does not exist. Therefore
+\[
+\boxed{\mathcal G(P\otimes X,C)(t_2,t_1)=\varnothing.}
+\tag{4}
+\]
+
+This argument applies to every proposed reverse 2-cell expression, including expressions using currying, uncurrying and η-expansion, because all those operations are interpreted in \(\mathcal M\).
+
+### 2.2 The curried ordinary generator
+
+For
+\[
+a:X\to A,\qquad f:A\otimes B\to C,
+\]
+interpret
+\[
+|X|=|B|=0,\qquad |A|=1,\qquad |C|=2,
+\]
+again with generator weights \(0\).
+
+Both generators have displacement \(1\). For \(c=\Lambda_Af\), equation (3) gives
+\[
+w(c)=-1.
+\]
+Consequently,
+\[
+w(s)=-1,\qquad
+w(t)=w\bigl(f\circ(a\otimes B)\bigr)=0.
+\]
+Thus
+\[
+\boxed{\mathcal G(X\otimes B,C)(t,s)=\varnothing.}
+\tag{5}
+\]
+
+### Scope for arbitrary formulas
+
+Extend an integer assignment to atoms by
+\[
+|D\otimes E|=|D|+|E|,
+\qquad
+|D\backslash E|=|E|-|D|,
+\qquad
+|E/D|=|E|-|D|.
+\]
+
+For the first example, the argument works whenever
+\[
+|\!C|-|\!B|-|\!P|>0,
+\qquad
+|\!B|-|\!X|>0.
+\tag{6}
+\]
+Indeed,
+\[
+w(t_2)-w(t_1)
+=
+\bigl(|C|-|B|-|P|\bigr)\bigl(|B|-|X|\bigr)>0.
+\]
+
+For the second example, it works whenever
+\[
+|A|-|X|>0,
+\qquad
+|C|-|A|-|B|>0.
+\tag{7}
+\]
+
+The displayed atomic assignments satisfy these conditions. **This proof does not establish the result for formula identifications that prevent such an assignment**, for example when one of the tested generators is an endomorphism.
+
+## 3. Every forward comparison has exactly one interchange involving both generators
+
+Use either atomic assignment above. Each primitive generator has displacement \(1\). By induction on 1-cell terms,
+\[
+\delta(u)=N(u),
+\]
+where \(N(u)\) is the number of generator leaves in its syntax tree:
+
+- composition adds displacements;
+- tensoring by a formula and currying preserve displacement;
+- identities, evaluations and adjunction units have displacement \(0\).
+
+For any formal 2-cell expression \(\gamma:u\Rightarrow v\), equation (2) therefore gives
+\[
+\boxed{
+w(v)-w(u)
+=
+\sum_{\chi_{p,q}\text{ used in }\gamma}N(p)N(q).
+}
+\tag{8}
+\]
+Here derived bound-variable comparisons are expanded into their defining transposes of interchangers. Whiskering and currying preserve the increments, while composition adds them.
+
+In each requested forward hom set, the total increment is \(1\). Every summand in (8) is a nonnegative integer. Hence every forward 2-cell expression has:
+
+1. exactly one interchanger whose two arguments each have one generator leaf;
+2. every other interchanger with a generator-free argument.
+
+In particular, a competing forward comparison cannot exchange the two generators three times.
+
+There is a refinement recording the ordered generator pair. Replace object values by \(\mathbb Z^r\), allowed displacements by \(\mathbb N^r\), and weights by integer matrices ordered entrywise. Define
+\[
+w(p\otimes u)=w(u)+p\,\delta(u)^{\mathsf T}.
+\]
+An interchanger then increases the matrix by
+\[
+\delta(f)\delta(g)^{\mathsf T}.
+\]
+Assigning the two generators distinct basis displacements shows that their unique mutual interchange also has the same left/right assignment as the displayed \(\alpha\), or respectively \(\theta\).
+
+**This still does not prove forward uniqueness.** The unresolved part is whether the interchangers with a generator-free argument, surrounding that single mutual interchange, are identified by the Gray and closure equations. The model detects none of their possible differences.
+
+## 4. The complete invariant of undirected components
+
+Let \(\mathcal B_\Sigma\) be the free ordinary unit-free biclosed monoidal category on the same signature. There is a canonical interpretation
+\[
+Q:\mathcal G\longrightarrow\mathcal B_\Sigma^{\mathrm{disc}},
+\]
+where the target is regarded as a locally discrete 2-category.
+
+Then
+\[
+\boxed{
+\pi_0\bigl(\mathcal G(A,C)\bigr)
+\;\cong\;
+\mathcal B_\Sigma(A,C).
+}
+\tag{9}
+\]
+Here \(\pi_0\) means connected components using finite zigzags of 2-cells, with either orientation permitted.
+
+### Proof
+
+Construct an ordinary category \(\Pi\mathcal G\) with the same objects and
+\[
+(\Pi\mathcal G)(A,C)=\pi_0\bigl(\mathcal G(A,C)\bigr).
+\]
+
+Composition descends because it is functorial on hom-categories. The two tensor sections descend as well. The interchanger identifies their two composite orders in \(\Pi\mathcal G\), so tensor becomes an ordinary bifunctor.
+
+The currying isomorphisms descend to bijections
+\[
+(\Pi\mathcal G)(A\otimes B,C)
+\cong
+(\Pi\mathcal G)(B,A\backslash C),
+\]
+and similarly for the other residual. Thus \(\Pi\mathcal G\) is an ordinary biclosed monoidal category.
+
+For any ordinary biclosed monoidal category \(\mathcal D\), interpreting the signature in \(\mathcal D\) is equivalent, by freeness of \(\mathcal G\), to a structure-preserving 2-functor
+\[
+\mathcal G\longrightarrow\mathcal D^{\mathrm{disc}}.
+\]
+Such a functor factors uniquely through \(\Pi\mathcal G\). Therefore \(\Pi\mathcal G\) has the universal property of \(\mathcal B_\Sigma\), proving (9).
+
+Consequently,
+\[
+u\text{ and }v\text{ are connected by a zigzag of 2-cells}
+\quad\Longleftrightarrow\quad
+Q(u)=Q(v).
+\tag{10}
+\]
+
+This classifies components of the **full** hom-category. It does not automatically classify components of the full subcategory selected by a fixed word \(W\), since a connecting zigzag can use intermediate 1-cells with different words.
+
+## 5. The ordinary biclosed image together with \(W\) does not classify 1-cells
+
+Take distinct atoms \(L,R,A,B,C\) and generators
+\[
+f:A\to B,\qquad g:B\to C.
+\]
+Let
+\[
+m=L\otimes(g\circ f)\otimes R.
+\]
+
+We can curry \(g\) using either the right-hand padding \(R\) or the left-hand padding \(L\).
+
+### Currying with the right-hand padding
+
+Put
+\[
+U=B\backslash(C\otimes R),
+\qquad
+c=\Lambda_B^L(g\otimes R):R\to U,
+\]
+and define
+\[
+u=
+L\otimes
+\left[
+\operatorname{ev}^L
+\circ(f\otimes U)
+\circ(A\otimes c)
+\right].
+\]
+The interchanger between \(f\) and \(c\), followed by evaluation and β-reduction, gives
+\[
+u\Longrightarrow m.
+\tag{11}
+\]
+
+### Currying with the left-hand padding
+
+Put
+\[
+H=(L\otimes C)/B,
+\qquad
+d=\Lambda_B^R(L\otimes g):L\to H,
+\]
+and define
+\[
+v=
+\left[
+\operatorname{ev}^R
+\circ(H\otimes f)
+\circ(d\otimes A)
+\right]\otimes R.
+\]
+The interchanger between \(d\) and \(f\), with β-reduction on its source, gives
+\[
+m\Longrightarrow v.
+\tag{12}
+\]
+
+All three 1-cells have type
+\[
+L\otimes A\otimes R\longrightarrow L\otimes C\otimes R.
+\]
+Their generator words are
+\[
+W(u)=gf,\qquad W(m)=fg,\qquad W(v)=gf.
+\]
+Their ordinary biclosed images agree:
+\[
+Q(u)=Q(m)=Q(v).
+\]
+
+Nevertheless, interpret
+\[
+|L|=|R|=|A|=0,\qquad |B|=1,\qquad |C|=2,
+\]
+with both generator weights \(0\). The model gives
+\[
+\boxed{
+w(u)=-1,\qquad w(m)=0,\qquad w(v)=1.
+}
+\tag{13}
+\]
+Thus all three 1-cells are distinct. In particular,
+\[
+\boxed{
+Q(u)=Q(v),\qquad W(u)=W(v),\qquad u\ne v.
+}
+\tag{14}
+\]
+
+This has two consequences.
+
+First, even after specifying the ordinary biclosed arrow, the generator word omits information about the 1-cell. The side on which the currying is performed can matter.
+
+Second, schedules whose only event labels are the two actual generators \(f,g\) cannot describe this whole component: such a poset has at most two linear extensions, whereas (11)–(13) exhibit three distinct 1-cells. This does **not** refute an abstract product theorem permitting additional structural event labels or other data.
+
+The composite \(u\Rightarrow v\) also belongs to the full subcategory with fixed word \(gf\). Thus fixing \(W\) does not eliminate directed comparisons that interchange the same two generator symbols twice, once with each left/right assignment.
+
+## 6. What remains for a 2-cell normal form
+
+The results above leave the following specific gap:
+
+> Prove coherence for interchangers with a generator-free argument, including their interaction with the unique interchange involving both generators in Question 1.
+
+Neither component classification nor ordinary closed normalization supplies that theorem.
+
+A relevant additional reference is Garner–Hirschowitz–Pardon, *Graphical presentations of symmetric monoidal closed theories*, §2. Their auxiliary premonoidal category retains an ordered list of generator symbols and has full fixed-object right adjoints. However, its adjunction units and counits are **central**, an extra condition absent here. Its construction therefore cannot directly establish the requested normal form. [arxiv.org](https://arxiv.org/pdf/0810.4420?utm_source=chatgpt.com)
+
+There is also a limitation in applying Forest–Mimram’s rewriting theorem: their interchangers are invertible, and the proof of their Theorem 11 uses inverse normalization paths. That proof does not directly yield thinness for the directed interchangers in this question. [drops.dagstuhl.de](https://drops.dagstuhl.de/storage/00lipics/lipics-vol108-fscd2018/LIPIcs.FSCD.2018.15/LIPIcs.FSCD.2018.15.pdf?utm_source=chatgpt.com)
+
+I have not established forward uniqueness in Question 1, a general product decomposition, a terminating and confluent presentation of these 2-cells, or local thinness. Question 4 remains unresolved under its strengthened full-hom biclosedness assumption.

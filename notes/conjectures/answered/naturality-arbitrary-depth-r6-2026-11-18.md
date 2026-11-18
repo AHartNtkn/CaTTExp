@@ -999,3 +999,28 @@ Equation (36) supplies this particular generator-interchange comparison. Full RC
 - The new two-column construction is the combination of \(M\), \(\zeta\), \(\psi\), the \(4\)-cell (19), and the point-column clause (27).
 - Equation (36) supplies a concrete \(4\)-term needed for question 2.
 - Questions 2–5 in their full generality are not proved here. In particular, the construction does not supply the \(5\)-cell comparison between choices of \(K\).
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level, with the same caveat as rounds 3–5 (the fusion case list was checked, not every 4-cell written out).**
+- **Settled:** Question 1. RC(3) holds for the cylinder (x → y → z)↑{x, f, g}. So K(Q, B, Y) exists for every 3-dimensional coherence over x → y → z with Y = {x, f, g}, for any lower lifts. This is the first case with two independent letters (exchange).
+- **New ingredient:** the normal form uses the horizontal composite E_H = F ∗₀ G of the two letters, keeping horizontal identity factors, so the two evaluation orders become two multiplications of a 2 × 2 "matrix" of 2-cells. The new constructors are M (11), ζ (14), the horizontal fold ψ (18), the horizontal–vertical 4-cell (19) and the point-column clause B_q (27).
+- **Partial for Question 2:** an explicit 4-term (36) comparing the two orders of the cylinder generators U_A, U_B on the horizontal two-disc, with the seam K.
+- **Open:** Questions 2 (full RC(3) for D² ∗₀ D²), 3, 4, 5.
+
+Checked step by step:
+
+1. **The cylinder.** Y = {x, f, g} is up-closed (f's type contains x). By §1.3 of the prompt, τf = y is unselected, so a_f = f⁻ and F : f⁻ ⇒ X ∗₀ f⁺; g's endpoints are unselected, so G : g⁻ ⇒ g⁺. This matches §1.
+2. **Strict cells.** The paths a → d are p_ij = f_i g_j; F changes the first index, G the second, neither can repeat, and the two orders of doing both are equal by strict interchange. So the strict 2-cells between them form the product order on {0,1}², and the remaining values (2) each use at most one of F, G.
+3. **One-letter values.** By the support lemma these restrict to one-generator subcontexts. The F-triangle (a, b, c, X, f⁻, f⁺, F) has a unique source a and sink c and the two boundary paths share only endpoints, so the lax-square method applies; with a fixed edge g_j after it, the round-3 fixed-edge factorisation applies. The G-subcontexts with a fixed prefix f_0 or f_1 = X f⁺ are pasting contexts, so parallel full terms are joined by one coherence.
+4. **Raw exchange (7)–(8).** R_GF and R_FG are full and parallel in D²(u) ∗₀ D²(v); θ_GF, θ_FG and the compatibility (8) are coherences there. The substitution assigns the composite X ∗₀ f⁺ to r_1, which is allowed.
+5. **Multiplication and its laws (§3).** I is a coherence over C_2 ∗₀ C_2; M = I ; (m^F ∗₀ m^G) has the stated type for all transitions, including those with identity factors. The 4-laws are taken over the minimal arities of the table with f_i, g_j formal before substitution; I checked the support claim for each row. μ never splits an arbitrary intermediate 1-term at y; it contracts through path multiplication.
+6. **ζ and (15)–(16).** ζ is a path-only coherence on the concatenated path, and its endpoints have the displayed binary form, so no arbitrary 1-term is split. (15) and (16) share source and target and are path-only, so one coherence on the actual path compares them.
+7. **Horizontal fold and (19).** Z₃ is a coherence over C_3 ∗₀ C_3 with six independent 2-variables. The four steps of (19) are, in order, a full coherence over C_6 ∗₀ C_6, top-argument naturality in 2-arguments of 3-terms (depth 1), the path-only comparison (15)–(16), and a raw comparison over the table's minimal arity. Each step uses only constructions that are coherences over pasting contexts or depth-1 naturality.
+8. **Retained heads (§6).** The common vertices of f⁻g⁻ and X f⁺ g⁺ are a, c, d, and every 0-cut of a head with value H must go to a common vertex, so the retained forms are C_n or C_m ∗₀ C_n (and V_n(k), V_m(k) ∗₀ V_n(l) in dimension 3). The degeneration clause is necessary and correctly handled: when one column becomes point-supported at a or d, (27) absorbs it by a coherence over D²(z) formed before z is evaluated, so no appeal to RC(3) for H is made.
+9. **Fusion and the 3-term induction (§7–8).** The recursion in (28)–(30) calls normalisers only on proper original 2-arguments, and the variable case uses padded-disc naturality on D³ with the already constructed ν_Z. (32) and (33) are full coherences over the retained pasting (in (33) every retained 3-variable is in the support of 𝒲). Cancellation of the invertible ν_{T′} gives (34).
+10. **(36).** P = D³(v) ∗₁ D²(k) ∗₁ D³(u) is a pasting context; R_1, R_2 are full with the stated source and target. With v ↦ f₀⁻ ∗₀ U_B and u ↦ U_A ∗₀ g₁⁺, the 1-boundaries are f₀⁻ ∗₀ (Y ∗₀ g₁⁺) and (f₀⁻ ∗₀ Y) ∗₀ g₁⁺, so the seam K is needed and has the right type.
+
+**Relation to the internal attempt.** The project's internal sketch for this case (`relative-coherence.md` §7.6, cut vertex y, horizontal normal forms N₁ ∗₀ N₂, machine-checked constructors in `WedgeRC3`) used the same horizontal normal form. The response supplies the missing fusion, the degeneration clause, and the compatibility (19).
+
+Follow-up prompt: `outbox/naturality-arbitrary-depth-r7.md` (round 7, unsent).

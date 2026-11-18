@@ -871,3 +871,62 @@ module Model (closed : Closed) (𝔾 : Group) (M : K → Group.G 𝔾) where
       all₀ : AllObj Θ τ₀ Γ
       all₀ k ek = subst (Obj Θ) (lkS2 {τ₀} {ty} {tf} l (lookup-< Γ k ek))
                     (all k (lookup-wk′ (Γ ▸ A) k B (lookup-wk′ Γ k A ek)))
+
+  ----------------------------------------------------------------------
+  -- The coh rule is sound: a 2-dimensional coherence t ⇒ u over a
+  -- pasting context has ⟦t⟧ = ⟦u⟧ in every valid environment.
+
+  key : ∀ {Θ a b t u η} → Θ ⊢ps → Θ ⊢ty arr (arr ⋆ a b) t u →
+        T (cattSide Θ (arr ⋆ a b) t u) → ValidEnv Θ η → ⟦ t ⟧ η ≡ ⟦ u ⟧ η
+  key {Θ} {a} {b} {t} {u} P (arr-wf dt du) ok V with dich closed P dt base1
+  ... | inj₂ (sct , scA) = ⊥-elim (side-t-empty {Θ} {arr ⋆ a b} {t} {u} P (fvTmTy-0 {t} {arr ⋆ a b} sct scA) ok)
+  ... | inj₁ ((i , refl , _) , (j , refl , _)) = trans (val P V dt refl) (sym (val P V du refl))
+
+  ----------------------------------------------------------------------
+  -- Soundness. The hypothesis on constants: a constant of 2-cell type
+  -- f ⇒ g must have ⟦f⟧ = ⟦g⟧.
+
+  module Sound (M-ok : ∀ k → Valid k → ∀ ρ → Holds (ty k) ρ) where
+
+    mutual
+      sound : ∀ {Γ t A ρ} → Γ ⊢tm t ∶ A → ValidEnv Γ ρ → Holds A ρ
+      sound (var-wf w eq) V = V _ _ eq
+      sound {ρ = ρ} (cst-wf {k} _ v) V = M-ok k v ρ
+      sound (coh-wf {A = ⋆} _ _ _ _ _) V = tt
+      sound (coh-wf {A = arr (arr _ _ _) _ _} _ _ _ _ _) V = tt
+      sound {ρ = ρ} (coh-wf {Θ} {arr ⋆ a b} {t} {u} {τ} p w a′ ok s) V =
+        trans (sem-tm t τ ρ sct) (trans (key p a′ ok (transfer s w V)) (sym (sem-tm u τ ρ scu)))
+        where
+        sc : ScTy (lenₛ τ) (arr (arr ⋆ a b) t u)
+        sc = subst (λ n → ScTy n (arr (arr ⋆ a b) t u)) (sym (snd (sub-sc closed s))) (ty-sc closed a′)
+        sct = fst (snd sc)
+        scu = snd (snd sc)
+
+      -- A well-typed substitution carries valid environments to valid
+      -- environments.
+      transfer : ∀ {Γ τ Θ ρ} → Γ ⊢sub τ ∶ Θ → Θ ⊢ctx → ValidEnv Γ ρ →
+                 ValidEnv Θ (lookupV (⟦ τ ⟧s ρ))
+      transfer (⟨⟩-wf _) ε-wf V i A ()
+      transfer {Γ} {σ ,ₛ t} {Δ ▸ C} {ρ} (,-wf s d) (▸-wf wΔ c) V i X eq with i ==ℕ len Δ
+      ... | true  = subst (λ Y → Holds Y (lookupV (⟦ σ ⟧s ρ ▹ ⟦ t ⟧ ρ))) (just-inj eq)
+                      (Holds-ext C scC agree (Holds-sub C σ ρ scC (sound d V)))
+        where
+        l : lenₛ σ ≡ len Δ
+        l = snd (sub-sc closed s)
+        scC : ScTy (lenₛ σ) C
+        scC = subst (λ n → ScTy n C) (sym l) (ty-sc closed c)
+        agree : Agree (lenₛ σ) (lookupV (⟦ σ ⟧s ρ)) (lookupV (⟦ σ ⟧s ρ ▹ ⟦ t ⟧ ρ))
+        agree i p = lookupV-wk (⟦ σ ⟧s ρ) (⟦ t ⟧ ρ) i (subst (λ m → T (i <ℕ m)) (sym (lenV-⟦⟧ σ ρ)) p)
+      ... | false = Holds-ext X scX agree (transfer s wΔ V i X eq)
+        where
+        l : lenₛ σ ≡ len Δ
+        l = snd (sub-sc closed s)
+        scX : ScTy (lenₛ σ) X
+        scX = subst (λ n → ScTy n X) (sym l) (snd (ctx-lookup closed wΔ eq))
+        agree : Agree (lenₛ σ) (lookupV (⟦ σ ⟧s ρ)) (lookupV (⟦ σ ⟧s ρ ▹ ⟦ t ⟧ ρ))
+        agree i p = lookupV-wk (⟦ σ ⟧s ρ) (⟦ t ⟧ ρ) i (subst (λ m → T (i <ℕ m)) (sym (lenV-⟦⟧ σ ρ)) p)
+
+    -- In the empty context every environment is valid, so a closed
+    -- 2-cell t ⇒ u forces ⟦t⟧ = ⟦u⟧.
+    sound-closed : ∀ {a b t u s} → ε ⊢tm s ∶ arr (arr ⋆ a b) t u → ∀ ρ → ⟦ t ⟧ ρ ≡ ⟦ u ⟧ ρ
+    sound-closed d ρ = sound d (λ i A ())

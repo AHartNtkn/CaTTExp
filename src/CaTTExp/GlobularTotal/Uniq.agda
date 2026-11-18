@@ -194,7 +194,7 @@ module _ (Θ : Ctx)
   srcAt e y = iter (dimOf y ∸ e) src y
 
   Cell : Nat → Maybe (Nat × Nat) → Nat → Set
-  Cell e nothing         o = dimOf o ≡ e
+  Cell e nothing         o = (Σ Ty λ A → lookup Θ o ≡ just A) × (dimOf o ≡ e)
   Cell e (just (p , q))  o = (Σ Ty λ B → lookup Θ o ≡ just (arr B (var p) (var q))) × (dimOf o ≡ e)
 
   mutual
@@ -208,7 +208,7 @@ module _ (Θ : Ctx)
 
   private
     cell-dim : ∀ e par o → Cell e par o → dimOf o ≡ e
-    cell-dim e nothing        o d       = d
+    cell-dim e nothing        o (_ , d) = d
     cell-dim e (just (p , q)) o (_ , d) = d
 
     cell-src : ∀ e p q o → Cell e (just (p , q)) o → src o ≡ p
@@ -247,7 +247,7 @@ module _ (Θ : Ctx)
     br-src e o o' (lt os cs) y (ok , x) m with ∨-split (memL y os) (memCs y cs) m
     ... | inl mo =
       let cy = allN-mem y os ok mo in
-      trans (cong (λ n → iter n src y) (trans (cong (_∸ e) (cell-dim (suc e) _ y cy)) (suc∸ e)))
+      trans (cong (λ n → iter n src y) (trans (cong (_∸ e) (cell-dim (suc e) (just (o , o')) y cy)) (suc∸ e)))
             (cell-src (suc e) o o' y cy)
     ... | inr mc = brs-src e o o' os cs y ok x mc
 
@@ -394,6 +394,6 @@ private
   gfTree = lt (0 ∷ 1 ∷ 3 ∷ []) (lt (2 ∷ []) [] ∷ lt (4 ∷ []) [] ∷ [])
 
   exΔ : Ex Δ ordΔ 0 nothing gfTree
-  exΔ = (refl , refl , refl , tt)
+  exΔ = (((⋆ , refl) , refl) , ((⋆ , refl) , refl) , ((⋆ , refl) , refl) , tt)
       , (((((⋆ , refl) , refl) , tt) , tt)
       , ((((⋆ , refl) , refl) , tt) , tt) , tt)

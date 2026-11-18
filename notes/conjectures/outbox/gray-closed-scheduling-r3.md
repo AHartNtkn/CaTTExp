@@ -83,3 +83,387 @@ A proof of Question 1; a decision for Question 5; a complete invariant of 1-cell
 - Garner–Hirschowitz–Pardon, *Graphical presentations of symmetric monoidal closed theories* (arXiv 0810.4420), §2: a premonoidal construction with central units and counits.
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
+
+# Researcher Response
+
+**The proposed 1-cell invariants in Question 2 fail even without generating 1-cells.** There are infinitely many distinct structural 1-cells
+\[
+H^n:T\longrightarrow T,\qquad n\ge 0,
+\]
+with the same ordinary biclosed image, empty generator word, and zero value in every integer or matrix model of item 5. Moreover, there are 2-cells in both directions between any two of them.
+
+Consequently, the category over a fixed ordinary biclosed arrow need not be **isomorphic** to a product of schedule categories \(S(P)\). This does not rule out an equivalence to a poset: distinct 1-cells could be uniquely isomorphic. I do not establish forward uniqueness in Question 1 or non-thinness in Question 3.
+
+Here is the construction and its verification.
+
+## 1. Two structural retractions
+
+Choose atoms \(A,B,C,D\), and put
+\[
+\begin{aligned}
+U&=A\backslash(A\otimes B),&
+X&=A\otimes B,&
+X'&=A\otimes U,\\
+V&=(C\otimes D)/D,&
+Y&=C\otimes D,&
+Y'&=V\otimes D.
+\end{aligned}
+\]
+
+The adjunction units are
+\[
+\eta^L_{A,B}
+=\Lambda_A(1_{A\otimes B}):B\longrightarrow U,
+\]
+and
+\[
+\eta^R_{D,C}
+=\Lambda_D^R(1_{C\otimes D}):C\longrightarrow V.
+\]
+
+Define
+\[
+\begin{aligned}
+u&=1_A\otimes\eta^L_{A,B}:X\longrightarrow X',
+&
+e&=\operatorname{ev}^L_{A,A\otimes B}:X'\longrightarrow X,\\
+v&=\eta^R_{D,C}\otimes1_D:Y\longrightarrow Y',
+&
+d&=\operatorname{ev}^R_{C\otimes D,D}:Y'\longrightarrow Y.
+\end{aligned}
+\]
+The β equations give strict equalities of 1-cells
+\[
+eu=1_X,\qquad dv=1_Y. \tag{1}
+\]
+
+Write composition rightmost first, and set \(T=X\otimes Y\). Consider
+\[
+\boxed{
+H=
+(e\otimes1_Y)
+(1_{X'}\otimes d)
+(u\otimes1_{Y'})
+(1_X\otimes v)
+:T\longrightarrow T.
+} \tag{2}
+\]
+
+Its chronological order is \(v,u,d,e\). Every arrow in (2) is structural, and every formula is unit-free.
+
+## 2. There are structural 2-cells \(1_T\Rightarrow H\Rightarrow1_T\)
+
+For clarity, denote these comparisons by
+\[
+\iota:1_T\Rightarrow H,
+\qquad
+\pi:H\Rightarrow1_T.
+\]
+
+They are ordinary whiskered interchangers:
+\[
+\iota
+=
+(e\otimes1_Y)
+*
+\chi_{u,d}
+*
+(1_X\otimes v), \tag{3}
+\]
+and
+\[
+\pi
+=
+\bigl[(e\otimes1_Y)(1_{X'}\otimes d)\bigr]
+*
+\chi_{u,v}. \tag{4}
+\]
+
+For (3), the source before applying (1) is
+\[
+(e\otimes1_Y)
+(u\otimes1_Y)
+(1_X\otimes d)
+(1_X\otimes v)
+=1_T,
+\]
+while the target is exactly \(H\).
+
+For (4), the target before applying (1) is
+\[
+(e\otimes1_Y)
+(1_{X'}\otimes d)
+(1_{X'}\otimes v)
+(u\otimes1_Y)
+=1_T.
+\]
+
+There is also a definite equation between these comparisons:
+\[
+\boxed{\pi\circ\iota=1_{1_T}.} \tag{5}
+\]
+
+Indeed, the interchanger composition axiom says
+\[
+\chi_{u,dv}
+=
+\bigl[(1_{X'}\otimes d)*\chi_{u,v}\bigr]
+\circ
+\bigl[\chi_{u,d}*(1_X\otimes v)\bigr].
+\]
+Because \(dv=1_Y\), its left side is an identity 2-cell. Postwhiskering by \(e\otimes1_Y\) gives (5).
+
+Thus \(1_T\) is a retract of \(H\) in the hom-category \(\mathcal G(T,T)\). At this stage, nothing proves that \(H\) and \(1_T\) are distinct. That requires a model.
+
+## 3. A biclosed Gray model separating \(H\) from the identity
+
+Let
+\[
+F=\langle \ell,r\rangle
+\]
+be the free group on two generators. Define a strict 2-category \(\mathcal D\) as follows.
+
+### The underlying 2-category and tensor
+
+The objects are integers. For every pair \(m,n\), the hom-category \(\mathcal D(m,n)\) has:
+
+- one object for each element of \(F\), representing a 1-cell \(m\to n\);
+- exactly one morphism between each ordered pair of its objects.
+
+Composition of 1-cells is group multiplication:
+\[
+g\circ f=gf.
+\]
+The identity 1-cell has label \(1\in F\). All composition operations on 2-cells are uniquely determined.
+
+Tensor on objects is addition. Tensoring a 1-cell by an object translates its source and target and leaves its group label unchanged:
+\[
+a\otimes(k:m\to n)
+=
+(k:a+m\to a+n),
+\]
+and similarly on the right.
+
+Choose the unique 2-cell with the prescribed endpoints as each interchanger. The tensor sections and associativity are strict, and every Gray coherence equation holds because parallel 2-cells are unique. The tensor unit is \(0\).
+
+### Left closure
+
+Define
+\[
+a\backslash c=c-a.
+\]
+For fixed \(a\), the right adjoint to \(a\otimes-\) acts on 1-cell labels by
+\[
+R_a^L(k)=\ell^a k\ell^{-a}. \tag{6}
+\]
+
+The currying isomorphism
+\[
+\mathcal D(a+b,c)\longrightarrow\mathcal D(b,c-a)
+\]
+is
+\[
+\Lambda_a^L(k)=\ell^a k, \tag{7}
+\]
+with inverse
+\[
+\operatorname{uncurry}_a^L(k)=\ell^{-a}k. \tag{8}
+\]
+
+These are isomorphisms of categories: their maps on 1-cell labels are inverse bijections, and all 2-cells are unique.
+
+The required naturality equations hold strictly. With \(h=\ell^a\), context naturality is
+\[
+\Lambda_a^L(kq)
+=hkq
+=\Lambda_a^L(k)q.
+\]
+Codomain naturality is
+\[
+R_a^L(t)\Lambda_a^L(k)
+=(hth^{-1})(hk)
+=htk
+=\Lambda_a^L(tk).
+\]
+
+The unit and counit have labels
+\[
+\eta^L=h,\qquad \varepsilon^L=h^{-1}.
+\]
+Their naturality equations are
+\[
+R_a^L(k)h=hk,
+\qquad
+h^{-1}R_a^L(k)=kh^{-1},
+\]
+and their triangle identities reduce to
+\[
+h^{-1}h=1.
+\]
+Equivalently, β and η follow immediately from (7)–(8).
+
+### Right closure
+
+Define
+\[
+c/a=c-a,
+\]
+and use
+\[
+R_a^R(k)=r^a k r^{-a},
+\qquad
+\Lambda_a^R(k)=r^a k,
+\qquad
+\operatorname{uncurry}_a^R(k)=r^{-a}k.
+\]
+The verification is identical.
+
+All corresponding coherence equations on 2-cells hold by uniqueness. In particular, the bound-variable comparisons supplied by interchangers cause no additional constraint in this model.
+
+This construction also normalizes closure at the tensor unit:
+\[
+\ell^0=r^0=1.
+\]
+It therefore does not rely on choosing a nonidentity unit or counit for tensoring by the unit.
+
+### Evaluating the witness
+
+Interpret each of \(A,B,C,D\) as the integer \(1\). Then
+\[
+u\longmapsto\ell,\qquad
+e\longmapsto\ell^{-1},\qquad
+v\longmapsto r,\qquad
+d\longmapsto r^{-1}.
+\]
+Consequently,
+\[
+H\longmapsto \ell^{-1}r^{-1}\ell r.
+\]
+This is a nonempty reduced free-group word, so
+\[
+\boxed{H\ne1_T\quad\text{in }\mathcal G.} \tag{9}
+\]
+
+More generally,
+\[
+H^n\longmapsto
+(\ell^{-1}r^{-1}\ell r)^n.
+\]
+There is no cancellation between consecutive copies of the displayed word. Its \(n\)-th power has reduced length \(4n\). Hence
+\[
+\boxed{H^m\ne H^n\quad\text{whenever }m\ne n.} \tag{10}
+\]
+
+This model uses exactly the fixed-object adjunction formulation in the question. In particular, it does not impose strict naturality in the bound variable or strict equality of the two mixed residual composites.
+
+## 4. Why the proposed invariants all agree
+
+Let
+\[
+Q:\mathcal G\longrightarrow\mathcal B_\Sigma
+\]
+be the ordinary biclosed quotient from item 7.
+
+### Ordinary biclosed image
+
+In \(\mathcal B_\Sigma\), tensor is bifunctorial. Therefore
+\[
+Q(H)
+=(eu)\otimes(dv)
+=1_T.
+\]
+Thus
+\[
+Q(H^n)=1_T
+\qquad(n\ge0). \tag{11}
+\]
+
+The ordinary planar coherence statement in the question is consistent with this calculation: it identifies the ordinary images of these structural arrows.
+
+### Generator word and per-generator labels
+
+No generating 1-cell appears in \(H^n\). Therefore
+\[
+W(H^n)=\varepsilon.
+\]
+Any assignment of curry-side labels **only to generating 1-cells** is likewise empty for every \(H^n\).
+
+### Integer and matrix weights
+
+In every normalized integer or matrix model of item 5, the units and evaluations used above have displacement zero and weight zero.
+
+For example,
+\[
+|U|=|A\otimes B|-|A|=|B|,
+\]
+so \(|X'|=|X|\). The unit is the curry of an identity 1-cell; its weight is zero because the displacement entering the currying correction is zero. The evaluation is the uncurry of an identity, with the same conclusion. The right-closure calculation is identical.
+
+Tensoring these arrows by objects leaves their zero weights unchanged, and composition adds weights. Hence
+\[
+w(H^n)=0
+\]
+for every \(n\), every atom valuation, and every matrix dimension.
+
+Combining this with (10) proves:
+
+> The ordinary biclosed image, the generator word, all the matrix-valued weights from item 5, and all curry-side labels attached to generating 1-cells are jointly insufficient to classify 1-cells.
+
+This failure already occurs for the empty generating signature.
+
+## 5. The exact schedule-product obstruction
+
+Whiskering and composing \(\iota,\pi\) gives
+\[
+\iota_n:1_T\Rightarrow H^n,
+\qquad
+\pi_n:H^n\Rightarrow1_T.
+\]
+Therefore, for every \(m,n\), there is a 2-cell
+\[
+H^m\xRightarrow{\pi_m}1_T
+\xRightarrow{\iota_n}H^n.
+\]
+
+The category over the fixed ordinary arrow \(1_T\) thus has infinitely many distinct 1-cells, with 2-cells in both directions between every pair in this family.
+
+Every \(S(P)\) is a poset category, and any product of poset categories is again a poset category. In such a category, arrows in both directions force equality of their endpoints. Equations (9)–(10) therefore imply
+\[
+\boxed{
+Q^{-1}(1_T)\text{ is not isomorphic to any product of schedule categories }S(P).
+} \tag{12}
+\]
+
+This argument does not depend on the product being finite.
+
+The distinction between **isomorphism** and **equivalence** is essential. A thin category can have distinct, uniquely isomorphic objects. Consequently, (12) does not yet refute an equivalence with a product of schedule posets after passing to a skeleton.
+
+## 6. The remaining 2-cell question is explicit
+
+Equation (5) makes
+\[
+E=\iota\circ\pi:H\Rightarrow H
+\]
+an idempotent:
+\[
+E^2
+=\iota(\pi\iota)\pi
+=\iota\pi
+=E.
+\]
+
+The unresolved equality is
+\[
+\boxed{\iota\circ\pi\stackrel{?}{=}1_H.} \tag{13}
+\]
+
+If (13) fails, it gives two distinct parallel 2-cells and answers Question 3 negatively. If the hom-category is thin, (13) must hold, and \(\iota,\pi\) are inverse isomorphisms.
+
+The separating model above cannot decide (13): it has exactly one 2-cell between every pair of parallel 1-cells. Its purpose is to distinguish **1-cells**, and it does that.
+
+There is also a qualification to the proposed reduction in Question 1. The one-crossing count gives a factorization of each forward comparison of the form
+\[
+z_+\circ m\circ z_-,
+\]
+where \(z_\pm\) use interchangers with a generator-free argument, and \(m\) is a typed instance of the unique interchanger involving both generators. Thinness of the structural comparisons determines the transports for a **fixed** \(m\). A complete proof must additionally identify the comparisons obtained from different admissible typed instances of \(m\), using the Gray and closure equations. The crossing count alone does not supply that identification.
+
+Thus the established result here is the structural counterexample to the proposed invariants and to an exact schedule-product classification. Forward uniqueness, a complete invariant, the equality (13), and the equivalence formulation of the higher-dimensional question remain unresolved.

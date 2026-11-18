@@ -2,7 +2,7 @@
 
 > **To send to a researcher, use [`outbox/gray-contexts.md`](outbox/gray-contexts.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
 
-*Self-contained problem statement. Familiarity with the type theory CaTT (Finster–Mimram, LICS 2017, arXiv 1706.02866) is assumed, and the relevant parts are recalled in §1. Partial results are in §3. Status: G is open beyond the dimensions listed in §3. In §6 (formerly `gray-contexts-steiner.md`), parts (1)–(2) are open and part (3) is answered (§7).*
+*Self-contained problem statement. Familiarity with the type theory CaTT (Finster–Mimram, LICS 2017, arXiv 1706.02866) is assumed, and the relevant parts are recalled in §1. Partial results are in §3. Status (updated 2026-11-18): G(2) is proved and existence in G(3) is proved (`../relative-coherence.md` §3); the rest reduces to the relative coherence property RC(n), n ≥ 3, for loop-free contexts. In §6 (formerly `gray-contexts-steiner.md`), parts (1)–(2) are open and part (3) is answered (§7).*
 
 ## 1. Background
 
@@ -47,11 +47,11 @@ where ⌈−⌉ denotes a chosen U-composite of the lower-dimensional boundary, 
 - **(existence)** U-composites exist;
 - **(uniqueness)** any two U-composites are related by a CaTT term of type t → t′ that is invertible, i.e. has an inverse up to higher CaTT cells.
 
-**Corollary of G(n) for all n.**
+**Consequences and a stronger form.** (a) follows from G(n) for all n. (b) is a stronger statement; see the correction below.
 - (a) For pasting schemes P, Q, the Gray product P ⊗ Q is presentable as a CaTT context. Its generators' types are built from U-composites of the boundary molecules, by induction on dimension.
 - (b) Extending coh from pasting schemes to frame-acyclic molecules, with the same two side conditions, is a **conservative extension** of CaTT: every new term is equivalent to a CaTT term.
 
-The converse holds as well: (b) implies G(n). So G is exactly the question of whether "molecular coherences" add anything.
+The converse holds: (b) implies G(n). *Correction (2026-11-18, from the verified researcher response below):* the forward implication "(∀n G(n)) ⇒ (b)" is **not established**. Molecular coherences over an m-molecule U include d-cells for every d > m, and G compares only the m-dimensional U-composites. The implication needs a higher filling statement for parallel full d-terms over U, i.e. the relative comparison property RC of `../relative-coherence.md`. So (b) is equivalent to RC for molecule contexts, and G is its top-dimensional part.
 
 ## 3. Partial results
 
@@ -69,7 +69,9 @@ Consecutive layers meet along composites of the same 1-molecule, possibly bracke
 
 Consequence: **every Gray generator of dimension ≤ 3 has a CaTT type.** The boundary of a dimension-3 generator is a 2-molecule. This covers D¹⊗D¹, D²⊗D¹, D¹⊗D² and the Gray cube D¹⊗D¹⊗D¹. It reproduces and extends Mikhail's construction (arXiv 2412.13310, §4.1), which handles Γ ⊗ D¹ for globular Γ.
 
-### 3.3 Uniqueness in G(2), hence Gray generators of dimension 4 (proof sketch with one gap)
+### 3.3 Uniqueness in G(2), hence Gray generators of dimension 4
+
+**Update 2026-11-18: proved.** The gap below is closed by Theorem A of [`../relative-coherence.md`](../relative-coherence.md): in *every* CaTT context, two parallel 2-terms with the same strict image are connected by a 3-term. U-composites of a 2-molecule have the same strict image (§3.1 there), so G(2) holds. Existence in G(3) follows by layering (§3.2 there), which is what actually types the Gray generators of dimension 4. The original sketch is kept below.
 
 Two U-composites built from layerings L and L′:
 - Layerings of a frame-acyclic 2-molecule correspond to linear extensions of a partial order on its 2-cells (Chanavat, Prop. 2.18).
@@ -82,6 +84,8 @@ Two U-composites built from layerings L and L′:
 Granting it, G(2) holds, and every Gray generator of dimension 4 (e.g. D²⊗D², D³⊗D¹, D¹⊗D¹⊗D¹⊗D¹) has a CaTT type.
 
 ### 3.4 Where the induction stalls
+
+**Update 2026-11-18.** With Theorem A, existence in G(n) follows from RC(n−1) and uniqueness from RC(n) (`../relative-coherence.md` §3.3). RC(3) fails for non-loop-free contexts (Eckmann–Hilton, sketch in §7 there), so the remaining question is RC(n), n ≥ 3, on loop-free contexts. It is posed in `outbox/gray-contexts.md`.
 
 For G(n) with n ≥ 3, two layerings of an n-molecule may differ by moves that are not single swaps of independent atoms. The relevant combinatorics is Chanavat's contractibility of the subdivision poset (Thm. 2.52). The missing step is to **translate a contractible poset of subdivisions into a family of CaTT cells**, with:
 - a 1-dimensional CaTT cell for each edge of the poset;

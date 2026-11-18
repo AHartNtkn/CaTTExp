@@ -667,3 +667,9 @@ Checked step by step against Mikhail ([arXiv 2412.13310v2](https://arxiv.org/abs
 - (a) Repair Def. 4.15's τCond and variable renaming in `ctrf`, and prove substitution, composition and soundness for the corrected marked-declaration version.
 - (b) Classify the models of the original rules beyond the necessary condition "cells of dimension ≥ 3 are invertible".
 - (c) A lax-transfor variant with non-invertible interchange would need a different base theory than CaTT. This connects to `strict-lax-interchange-at-every-level.md` and to the L option in `pseudo-vs-gray.md`.
+
+*Follow-up status (2026-11-18, `../limits-metatheory.md`):*
+- (a) Substitution is proved, composition over arrows is explicit, and soundness under P reduces to Loubaton plus the specified shapes (§6).
+- (b) Classified: models are the (∞,ω)-categories with cells of dimension ≥ 3 invertible and with GHL/Loubaton lax limits (§4).
+- (c) Done for two-tier L, with a strict model (§1, §5).
+- The extension of the collapse to every dimension ≥ 3 is proved (§3).

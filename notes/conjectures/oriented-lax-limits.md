@@ -489,3 +489,9 @@ Equations (13) and (15) give the requested distinction. The oriented constructio
 - Settled: Problems 1 and 2, and Problem 3 as corrected. In an oriented ambient, cone-morphism comparison cells may be unrestricted on unmarked legs and must be coherently invertible on marked legs. Contrast the cartesian (CaTT) ambient of `limits-representables.md`, where every comparison cell over a positive-dimensional diagram variable has to be certified invertible.
 - Open (internal, design): restate the limit rules over the L core so that their cone and transfor shapes match the right side of (5). This is open-issues B7. Generic filler rules still need a comparison proof against the weighted limit (response §3, last paragraph).
 - Nothing in this file needs to go back to a researcher.
+
+## Internal strict proof for general diagrams (2026-11-18)
+
+`limits-metatheory.md` §1 (Theorem A) proves the strict analogue for **every finite computad**, not only the arrow. In strict ω-categories, self-enriched by the Ara–Maltsiniotis Gray tensor, build the lax limit by attaching generators: one pullback of a Gray cotensor per generator. Then `𝒦(c, lim) ≅ Cone(c)` is an isomorphism of strict ω-categories, by the same two facts used in §2 above (mixed currying and pullback preservation).
+
+Its marked case agrees with the corrected Problem 3. Making the marked cone cell an identity also makes every transfor comparison on that leg an identity, so the marking is respected coherently.

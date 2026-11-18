@@ -943,3 +943,38 @@ for every 3-dimensional coherence over the horizontal two-disc, with the lower l
 The finite checks performed for this construction verified the event-word branching calculation, the literal boundaries and full support of the serialization-multiplication and disjoint-swap schemes, and the literal types of the sixteen unary representatives and four corner edges. They are symbolic checks of these schemes, not a complete CaTT formalization.
 
 This settles question 1. The construction does not establish RC(3) for all cylinders, RC(4) for the 3-disc cylinder, or the 5-cell comparison required by question 5.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level.**
+- **Settled:** Question 1. RC(3) holds on the full cylinder Γ = (D² ∗₀ D²)↑Var, and on its 2-skeleton Γ₀.
+- **Consequence:** K(Q, B, Var Q) = Fill_Γ(a_c, b_c) for every 3-dimensional coherence over the horizontal two-disc.
+- **Open:** Question 2 (all cylinders), Question 3 (RC(4) for the 3-disc), Question 4 (all dimensions), Question 5 (global K, a 5-cell between choices).
+
+Checked step by step:
+
+1. **Events and orientation, §1.**
+   - The 2-skeleton has events A, B, F, G.
+   - The chosen exchange orientations are AB → BA, AG → GA and FB → BF.
+   - These agree with serialization at both nontrivial cuts.
+   - The measure m decreases along each oriented exchange, so rewriting terminates.
+   - I rechecked the critical pairs. The only branching is AGFB, with two disjoint swaps, and it closes by the disjoint-swap diamond.
+2. **Serialization, §2.** ρ and χ are full coherences over genuine pasting contexts. Their 4-dimensional laws (serialization versus multiplication) are full on both sides with equal 2-boundaries. The finite check reported in §8 agrees.
+3. **Sorting padded words, §3.** The one new sorting diamond is the AGFB branching above. The other diamonds are disjoint or come from item 24's local law.
+4. **Fusion on the 2-skeleton, §4.**
+   - Where a cut is lost, the head has one active column and reduces to a vertical chain, as in the grid argument.
+   - Normalisers are built from RC(2), then sorting.
+   - Arbitrary 3-heads are handled by the Ξ_P pattern (one coherence over the reduced 3-arity, plus fusion at both ends).
+5. **U_A and U_B, §5–7.**
+   - The sixteen unary representatives and the corners S_ij have the literal boundaries stated in (23).
+   - The two routes of (23) are exactly the boundary of the §2 item-21 interchange 4-cell.
+   - The middle pad between two unary terms is an endo-3-term of a framed S_ij, so RC(3)(Γ₀) removes it.
+   - This part also follows from the cone-over-coherences round-5 extension theorem (RC(3)(Γ) ⇔ RC(3)(Γ₀), since Γ₀ has dimension 2 and an acyclic 1-graph). That gives an independent check.
+
+**Consequences.**
+- By the extension theorem, RC(3) for every cylinder Q↑Y with dim Q ≤ 2 reduces to RC(3) on its 2-skeleton.
+- Those 2-skeleta are acyclic 2-dimensional contexts with exchange, which is exactly gray-contexts' general Question 2.
+- So the depth-2 part of Conjecture N in dimension 3 is now that one 2-dimensional problem.
+- Question 5 needs a 5-cell, the same kind of obligation as gray-contexts' (31)/(32).
+
+Follow-up prompt: `outbox/naturality-arbitrary-depth-r8.md` (round 8, unsent).

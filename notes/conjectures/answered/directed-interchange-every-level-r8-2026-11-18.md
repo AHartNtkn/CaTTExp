@@ -754,3 +754,46 @@ python3 r8_rank5_check.py
 ```
 
 All four checks passed. They use the Python standard library and the included unchanged earlier-round dependencies.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level. The runnable checks were not re-run, because the archive `directed_interchange_round8_checks.zip` has not been received.**
+- **Settled (negative), Q1:** the (K18) source-only completion fails requirement 5 under an actual globular substitution. Γ₃ = ΣD² ∨ ΣD² ∨ ΣD² → Γ₂ = ΣD² ∨ ΣD² collapses the third suspended globe to identities.
+  - This realises the (K24) degeneracy as a substitution of globular generators.
+  - It rules out every completion that adds (K18)'s triple joins while keeping the binary presentation (K10), where bap → abp is absent.
+  - It does **not** rule out completions that change the binary data. The forced reverse is a whiskered inner interchanger (after ▷ p), not the elementary one, so it does not yet give the impossibility asked in Q5.
+- **Progress, Q2:**
+  - five more fresh hom-4 lifts (A_{17,12}, A_{17,16}, A_{20,8}, A_{22,15}, A_{24,17}) have equations before quotienting, through directed rectangles (6);
+  - A_{24,17} needs one auxiliary hom-4 generator G with q₄(G) = x₁⁻ ⊗ y₂ ⊗ z₁⁻;
+  - six lifts remain;
+  - acyclicity and injective normal-form supports hold through hom-dimension 5 for the specified finite presentation. The proof is a finite-DAG lemma plus the grading ρ = ℓ(q₄) + θ.
+- **Progress, Q3:**
+  - a uniform four-sign variation formula for the six factorization families;
+  - 135 formal input-variation instances of the 45 contextual equations;
+  - 33 disjoint variation equations on the 240-word interval;
+  - 34 higher comparison types for D and N.
+  - Overlapping and iterated variables are not covered.
+- **Two completion attempts:**
+  - The 𝔽₂ parity completion is finite and natural for maps that send positive seeds to positive composites. It still fails the degeneration, and it creates opposite whiskered comparisons a[D] : X ⇒ Y, b[D] : Y ⇒ X one level up (12).
+  - Unrestricted free division is infinite on one inner diamond: the a_n of (14) have weights 1 + 4n.
+- **Open:** Q4 (K15) and Q5, unchanged.
+
+Checked:
+
+1. **The substitution, §1.**
+   - Every boundary matches: the third summand's 1-, 2- and 3-cells go to iterated identities on b₂.
+   - The induced map on hom-2 words of the triple tensor deletes c and the crossings q and r.
+   - I followed the argument: a surviving (K14) arrow into the source of a degenerated seed forces an image arrow bap → abp, after right whiskering by p.
+   - In (K10) the binary graph has bap as a sink, so that arrow is absent. This is the (K24) suffix condition failing.
+2. **Directed rectangles, §3.** Equation (6) equates two parallel hom-4 composites. It is legitimate, and after killing the kernel cells it gives F̄ = W̄. It does not express F as a composite (no cancellation), and the response says so correctly. The table's counts depend on the archive.
+3. **Support theorem, §4.** The finite-DAG lemma (an acyclic presentation in which every relation preserves a strictly monotone grading has injective normal-form supports) is sound as stated. The scope is stated honestly: arbitrary hom-2 word whiskering can turn D_i into a differently weighted D_j and is not covered.
+4. **Free division, §5.2.**
+   - Termination: each contraction removes one letter and one division constructor.
+   - Confluence: the rule neither duplicates nor deletes arguments.
+   - Distinctness: the weights 1 + 4n are pairwise distinct, so the a_n are distinct normal forms.
+   - I checked all three by hand.
+5. **Parity completion, §5.1.** The finite groupoid on edge-parity vectors is well defined because an inner path in a DAG is determined by its edge-parity vector. (11) contracts a positive arrow followed by an inner one, so left sides do not overlap. I checked the (12) obstruction from its boundary data.
+
+**Owner action.** Ask for the archive `directed_interchange_round8_checks.zip`. It holds `r8_lifts_check.py`, `r8_variation_check.py`, `r8_substitution_check.py` and `r8_rank5_check.py`. Re-run them as for round 7.
+
+Follow-up prompt: `outbox/directed-interchange-every-level-r9.md` (round 9, unsent).

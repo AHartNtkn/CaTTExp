@@ -443,7 +443,7 @@ In order of cost to benefit:
 1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. §10.1 adds a fact that bears on the choice: CaTT_lim as written is native to L, and needs a modification under P.
 2. **Self-contained problems** in `notes/conjectures/`. These can be worked on with no project context:
    - `catt-lim-pseudo-vs-gray.md`
-   - `gray-contexts-steiner.md`
+   - `gray-contexts-in-catt.md` (§6, Mikhail's Gray contexts; formerly `gray-contexts-steiner.md`)
    - `lax-colimit-of-point.md`
    - `weighted-as-partially-lax-omega.md`
    - `free-on-graph.md`
@@ -503,9 +503,9 @@ The claim splits into three steps.
 - **Stall:** the Gray contexts `Γ ⊗ Dⁿ` exist only for n = 1 (Mikhail Thm 4.4).
 
 **Step C (semantic). `⟦Γ⟧ ≃ Free(Γ)`.**
-- Both corepresent Γ-families. For Free(Γ) this is the universal property of free ω-categories on computads, with higher cells via `Free(Γ) ⊗ Dⁿ ≃ Free(Γ ⊗ Dⁿ)`. That equivalence follows from Loubaton's colimit-preserving Gray tensor if `Dᵏ ⊗ Dⁿ` is free on its Steiner basis.
+- Both corepresent Γ-families. For Free(Γ) this is the universal property of free ω-categories on computads, with higher cells via `Free(Γ) ⊗ Dⁿ ≃ Free(Γ ⊗ Dⁿ)`. That equivalence follows from Loubaton's colimit-preserving Gray tensor if `Dᵏ ⊗ Dⁿ` is free on its Steiner basis. That freeness is known: Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5 (see `conjectures/free-infinity-gray-of-pasting-diagrams.md`, Literature status).
 
-Problems: `conjectures/lax-colimit-of-point.md` (Steps A and C) and `conjectures/gray-contexts-steiner.md` (Step B).
+Problems: `conjectures/lax-colimit-of-point.md` (Steps A and C) and `conjectures/gray-contexts-in-catt.md` §6 (Step B).
 
 **What does not depend on any of this.** R-B's universal property is "maps out of ⟦Γ⟧ are cocones", and Step A turns cocones into Γ-families of elements. So *as rules*, R-A's universal property is derivable from R-B once Steps A and B hold, independently of Step C's semantics.
 

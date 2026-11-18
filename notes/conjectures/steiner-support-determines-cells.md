@@ -2,6 +2,8 @@
 
 *Self-contained problem statement. No project context needed.*
 
+> **Status: SOLVED for Gray tensors of globular pasting diagrams, and for any acyclic regular directed complex (2026-11-18).** The result follows from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18. Open for arbitrary Steiner complexes. See "Literature status" at the end.
+
 ## Background and definitions
 
 Throughout, we use Steiner's theory of augmented directed complexes:
@@ -75,3 +77,34 @@ Any of the following:
 - proofs of Problems 1–4, or references to them in the literature;
 - a counterexample to Problem 2, together with the largest natural class of Steiner complexes for which it holds;
 - a proof of Problem 2 just for Gray tensors of globular pasting diagrams.
+
+## Literature status (searched 2026-11-18)
+
+**Status: solved for the main case K = λΘ₁ ⊗ … ⊗ λΘₘ, and more generally for any K coming from an acyclic regular directed complex. The fully general Steiner-complex case is still open. Problems 1–4 follow from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* ([arXiv 2404.07273](https://arxiv.org/abs/2404.07273)).**
+
+The argument, assembled from that book:
+
+1. **Thetas and their Gray tensors are acyclic regular directed complexes.**
+   - Globes and thetas are acyclic molecules (Lemma 9.1.16).
+   - Acyclic oriented graded posets are closed under Gray products (Prop. 8.3.28) and joins (Prop. 8.3.32).
+   - So P := Θ₁ ⊗ … ⊗ Θₘ is an acyclic molecule.
+2. **Cells of ν(K) are molecules over P.**
+   - For P dimension-wise acyclic, ν(ℤP) ≅ Mol/P (Thm 11.2.18), and ℤP is the Steiner complex λΘ₁ ⊗ … ⊗ λΘₘ (Prop. 11.2.35 and 11.2.36).
+   - Here Mol/P is the strict ω-category whose cells are isomorphism classes [f : U → P] of morphisms from molecules (Def. 5.2.8), with pasting as composition.
+3. **For acyclic P, every morphism from a molecule is an inclusion** (Prop. 8.3.17).
+   - So each cell is a closed subset U ⊆ P that is a molecule, with its orientation induced from P, together with a dimension k ≥ dim U (k > dim U means a degenerate cell).
+   - Its chain table is xⱼ^± = Σ (∂ⱼ^± U)ⱼ, i.e. the j-dimensional elements of the j-boundaries, all with coefficient 1.
+4. **Problem 1.** Every coefficient is 0 or 1, since chains are sums over subsets.
+5. **Problem 2.** U is the downward closure of the supports of the chains: every element of U lies below a maximal element, and the maximal elements occur in the chains. So Supp(x) = U, and the pair (dim, Supp) determines the cell.
+6. **Problem 4.**
+   - The total cell T is [P ⊆ P], so Supp(T) = P = B.
+   - The cells ∂^±T are the boundary submolecules ∂^±P. Any (d−1)-cell with the same support is the same subset, hence equal by Problem 2.
+7. **Problem 3** (when L is also acyclic). Composition in Mol/P is union of subsets, and boundaries are closed subsets. Write x as a pasting of atoms ⟨b⟩, b ∈ Supp(x). Then:
+   - Supp(Fx) is the union of the Supp(F⟨b⟩) over the top-dimensional atoms used;
+   - each lower b in Supp(x) lies in the boundary of a higher atom b′, so Supp(F⟨b⟩) ⊆ Supp(∂F⟨b′⟩) ⊆ Supp(F⟨b′⟩).
+
+   This is a short derivation, not a quoted theorem.
+
+**General Steiner complexes.** Hadzihasanovic, Example 11.2.19, shows that for regular directed complexes that are *not* dimension-wise acyclic, ν(ℤP) is a "more degenerate quotient" of Mol/P. Comment 11.2.37 records that compatibility with Gray products is not expected beyond the acyclic case. Problem 2 for arbitrary strongly loop-free Steiner complexes was not found in the literature. The case the project needs is covered.
+
+Related: Campbell, *Parity complexes redux* ([arXiv 2605.09427](https://arxiv.org/abs/2605.09427)), shows that parity complexes are equivalent to strong Steiner complexes. In Street's parity complexes, cells are given as pairs of subsets.

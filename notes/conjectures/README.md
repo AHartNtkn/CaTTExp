@@ -1,5 +1,7 @@
 # Conjectures and open problems
 
+**The repository copy (`notes/conjectures/` on `main` of AHartNtkn/CaTTExp) is canonical.** The shared project folder holds a synced copy. Edits made there are folded back into the repository.
+
 This folder holds problem statements written to be **self-contained**: a reader who knows higher category theory but nothing about this project should be able to work on any file here alone.
 
 **Project standard (adopted 2026-11-18).** "Unproved" is a reason to investigate, never a reason to reject a design. When a design note rests on an unproved claim:
@@ -13,19 +15,40 @@ Each file has the same parts:
 - **Why it matters:** one paragraph, with no project jargon.
 - **What would count as a solution:** a proof, a counterexample, or a reference.
 
-A literature search was done on 2026-11-18. Each file has a "Literature search" subsection. Summary: two problems are partly answered by existing work, one has since been solved by an external researcher (free-on-graph), (the strict Gray tensor of free ω-categories is free; the (∞,1) version of the lax colimit of the point).
+Literature searches were done on 2026-11-18. Each file ends with a "Literature status" or "Literature search" section, with citations.
 
-| File | Problem | Origin |
-|---|---|---|
-| `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | `limits-representables.md` §10.1 |
-| `gray-contexts-steiner.md` | Do Mikhail's Gray contexts `Γ ⊗ Dⁿ` exist for all n and present the Steiner Gray tensor? | `limits-representables.md` §10.3 |
-| `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | `limits-representables.md` §10.3 |
-| `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | `limits-representables.md` §10.4 |
-| `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? **Solved: yes** (external researcher, verified) | `limits-representables.md` §10.5 |
-| `steiner-support-determines-cells.md` | In free strict ω-categories on Steiner complexes (e.g. Gray tensors of pasting diagrams), are cells determined by their dimension and set of generators? | `pseudo-vs-gray.md` §3.6, lemmas (A)–(C) |
-| `free-infinity-gray-of-pasting-diagrams.md` | Are Gray tensors of globular pasting diagrams free as (∞,n)-categories (scope of Campion's pasting theorem)? | `pseudo-vs-gray.md` §3.6, (D)–(F) |
-| `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by generators. | `pseudo-vs-gray.md` §2.5, §3.6 |
-| `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | `internal-hom.md` §5.5 |
-| `gray-contexts-in-catt.md` | Do frame-acyclic molecules (e.g. boundaries of Gray generators) have composites in CaTT, unique up to invertible cells? | `internal-hom.md` §4.3 |
-| `planar-pasting-types.md` | Unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dim proved); tensor/unit and ω-version open | `internal-hom.md` §5.7 |
-| `naturality-arbitrary-depth.md` | Does every CaTT coherence over a pasting context have a naturality cell for every up-closed set of variables, of any depth? (Extends BMOSV beyond depth 1; one depth-2 case settled.) | `free-objects.md` §7.1 |
+## Status at a glance
+
+- **Solved:**
+  - `free-on-graph.md`: proved by an external researcher, and verified here.
+  - `free-infinity-gray-of-pasting-diagrams.md`: in the literature (Campion 2311.00205, Cor. 3.5; Chanavat 2603.22242, Thm 3.29).
+  - `steiner-support-determines-cells.md`: the main case follows from Hadzihasanovic's book (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18.
+- **Partly solved:**
+  - `gray-vs-cartesian.md`: the case l = 1 is Loubaton 2406.05425, Prop. 3.1.3.1. A sketch of the general case from published results is included and needs checking.
+  - `planar-pasting-types.md`: PL1 follows from unit-free proof-net coherence, up to one lemma.
+  - `lax-colimit-of-point.md`: the (∞,1) case is known.
+  - `weighted-as-partially-lax-omega.md`: dimension 2 is known.
+  - `gray-contexts-in-catt.md` §6: the (∞,ω) part is answered.
+- **Open:**
+  - `gray-contexts-in-catt.md`: G(n), and Mikhail's rules.
+  - `naturality-arbitrary-depth.md`
+  - `strict-lax-interchange-at-every-level.md`
+  - `catt-lim-pseudo-vs-gray.md`
+
+## Index (each distinct problem once)
+
+| File | Problem | Status | Depends on / related to | Origin |
+|---|---|---|---|---|
+| `gray-contexts-in-catt.md` | **Gray contexts in CaTT.** (G) Do frame-acyclic molecules have CaTT composites, unique up to invertible cells (equivalently, is "molecular coh" conservative over CaTT)? (§6) Do Mikhail's Gray rules give contexts `M ⊗ Dⁿ` for every context M and every n, presenting the Steiner Gray tensor? *Merges the former `gray-contexts-steiner.md`.* | G open (G(1) proved, G(2) up to bookkeeping); §6 (1)–(2) open, with the strict half of (2) known; §6 (3) answered | G implies `naturality-arbitrary-depth.md`. §6 (3) is `free-infinity-gray-of-pasting-diagrams.md`. Needed for `lax-colimit-of-point.md` Step B. | `internal-hom.md` §4.3; `limits-representables.md` §10.3 |
+| `naturality-arbitrary-depth.md` | Does every CaTT coherence over a pasting context have a naturality cell for every up-closed set of variables, of any depth? This gives `Γ ⊗ D¹` for every context Γ. | Open beyond depth 1 (BMOSV). One depth-2 case settled. | A special case of G in `gray-contexts-in-catt.md`. It gives §6 (1) there for n = 1. | `free-objects.md` §7.1 |
+| `free-infinity-gray-of-pasting-diagrams.md` | Are Gray tensors of globular pasting diagrams free as (∞,n)-categories, and equal to Campion's Gray tensor? | **Solved** (literature) | Answers `gray-contexts-in-catt.md` §6 (3). Used by `pseudo-vs-gray.md` (D)–(F) and `limits-representables.md`. | `pseudo-vs-gray.md` §3.6 |
+| `steiner-support-determines-cells.md` | In free strict ω-categories on Steiner complexes (e.g. Gray tensors of pasting diagrams), is a cell determined by its dimension and its set of generators? | **Solved** for Gray tensors of pasting diagrams (literature). Open for arbitrary Steiner complexes. | The k = 0 case of requirement 2 in `strict-lax-interchange-at-every-level.md` | `pseudo-vs-gray.md` §3.6 |
+| `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by their generators. | Open | Generalises `steiner-support-determines-cells.md` to all levels | `pseudo-vs-gray.md` §2.5, §3.6 |
+| `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | Partly solved: l = 1 proved; general case sketched from the literature | Assumed by `planar-pasting-types.md` §4. Bears on `catt-lim-pseudo-vs-gray.md`. | `internal-hom.md` §5.5 |
+| `planar-pasting-types.md` | An unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dimensional case proved). PL1: tensor. PL-ω: Gray version. | PL1 very likely true (known coherence results, one lemma to cite). PL-ω open. | PL-ω uses `gray-vs-cartesian.md` | `internal-hom.md` §5.7 |
+| `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | Open | Related to `gray-vs-cartesian.md` | `limits-representables.md` §10.1 |
+| `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | (∞,1) case known; (∞,ω) open | Step B uses `gray-contexts-in-catt.md` §6. A special case of `weighted-as-partially-lax-omega.md`. | `limits-representables.md` §10.3 |
+| `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | Dimension 2 known; n > 2 open | Generalises `lax-colimit-of-point.md` | `limits-representables.md` §10.4 |
+| `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | **Solved: yes** (external researcher, verified) | None | `limits-representables.md` §10.5 |
+
+**Which files to send out.** Files marked solved need no external work. Their literature sections say exactly which published results to cite. The best candidates for external researchers are G in `gray-contexts-in-catt.md`, `naturality-arbitrary-depth.md` (the smallest open instances are listed in its §7), `strict-lax-interchange-at-every-level.md`, and a check of the sketch in `gray-vs-cartesian.md` §7.

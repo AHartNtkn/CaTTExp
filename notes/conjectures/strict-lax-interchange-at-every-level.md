@@ -50,3 +50,22 @@ A negative answer is equally valuable: an argument that no notion satisfies 1–
 Either of the following:
 - a definition together with a combinatorial description of free objects satisfying requirements 1–5, even if limited to finite dimension;
 - an impossibility argument showing that requirements 1–3 cannot hold together.
+
+## Literature status (searched 2026-11-18)
+
+**Status: open. No construction that satisfies requirements 1–5 was found, and no impossibility result either. The closest work handles either "no interchange at all" in every dimension, or directed interchange in dimension ≤ 4 only.**
+
+- **No interchange at all, every dimension.** Interchange as a *generator* rather than a law is handled by these:
+  - n-sesquicategories: Araújo, *Simple string diagrams and n-sesquicategories* ([arXiv 2202.09293](https://arxiv.org/abs/2202.09293)), and *Computads and string diagrams for n-sesquicategories* ([arXiv 2210.07704](https://arxiv.org/abs/2210.07704)). Computads for them form a presheaf category, and there is a string-diagram normal form.
+  - Precategories: Forest–Mimram, *Free precategories as presheaf categories* ([arXiv 2211.16099](https://arxiv.org/abs/2211.16099)), and Forest–Mimram, *Rewriting in Gray categories with applications to coherence* (MSCS 2022).
+  - A strict lax-interchange ω-category would be an n-sesquicategory with directed interchange generators and coherence relations among them. Araújo's computads are the natural setting for requirement 1. Neither paper adds directed interchangers in all dimensions.
+- **Directed interchange up to dimension 4.**
+  - Crans's teisi.
+  - Bourke–Lobbia, *Semi-strict 4-categories as enriched categories* ([arXiv 2610.31448](https://arxiv.org/abs/2610.31448)). This defines several flavours of semi-strict 4-category through skew-monoidal enrichment over Gray-categories, and identifies Crans's 4-teisi among them. It also shows that Gray-categories and their higher transformations form a "left-sharp 4-category". This is the most recent dimension-4 answer to "iterate Gray enrichment". It does not address free objects or a support criterion.
+- **Weak alternatives without a fixed interchange.**
+  - Associative n-categories: Dorn, [arXiv 1812.10586](https://arxiv.org/abs/1812.10586), with normal forms in Heidemann–Reutter–Vicary, [arXiv 2205.08952](https://arxiv.org/abs/2205.08952). These are strictly associative and unital; interchangers are homotopies, so invertible, not directed.
+  - Diagrammatic sets: Hadzihasanovic.
+  - Both decide equality of diagrams combinatorially, which is related to requirement 2, but neither has directed interchange.
+- **Evidence for requirement 2 in the k = 0 case.** See the literature status of `steiner-support-determines-cells.md`, which settles it for Gray tensors of pasting diagrams.
+
+**Recommended next step:** take Araújo's n-sesquicategorical computads as the ambient. Add an interchange generator for each pair k < l, as in Forest–Mimram's Gray presentations, and test requirement 2 in dimension 4 against Bourke–Lobbia's semi-strict 4-categories.

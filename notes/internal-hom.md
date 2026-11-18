@@ -276,7 +276,7 @@ Here ΣΔ → Γ means a ΣΔ-shaped tuple of terms of the ambient context. So "
 
 Here Δ ⊗ₘ Θ is Δ ⊗ Θ with every *mixed* generator x⊗y (dim x, dim y ≥ 1) marked invertible in the sense of ICaTT. Equivalently, ⟦Δ⟧ × ⟦Θ⟧ is the localisation of ⟦Δ ⊗ Θ⟧ at the mixed generators.
 
-- **Status:** the full problem statement and attempts are in [`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md) (Conjecture C1). Campion lists the comparison as future work, so it appears to be open.
+- **Status:** the full problem statement and attempts are in [`conjectures/gray-vs-cartesian.md`](conjectures/gray-vs-cartesian.md) (Conjecture C1). Campion lists the comparison as future work. *Literature update (2026-11-18):* the case l = 1, for every A, is Loubaton (arXiv 2406.05425), Prop. 3.1.3.1, and the general case appears to follow from published results (sketch in that file's §7).
   - **Proved:** reduction to globes Dᵏ ⊗ Dˡ, by density and cocontinuity; the cases k = 0 or l = 0; and the case k = l = 1 (the Gray square localises to the commutative square).
   - **Dimension 2:** follows from GHL Prop. 2.12. The exact match of markings has not been checked line by line.
   - **General case:** an induction via Loubaton's suspension formula stalls at one lemma (S3), which is stated there.

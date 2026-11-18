@@ -2,6 +2,8 @@
 
 *Self-contained problem statement. No project context needed.*
 
+> **Status: SOLVED in the literature (2026-11-18).** Campion, arXiv 2311.00205, Example 3.2 and Cor. 3.5, with Campion's pasting theorem (arXiv 2311.00200). Independently, Chanavat, arXiv 2603.22242, Thm 3.29. See "Literature status" at the end.
+
 ## Background
 
 **Steiner complexes and ν.** A Steiner complex is an augmented directed complex with a unital, strongly loop-free basis (R. Steiner, *Omega-categories and chain complexes*, HHA 2004). For such K, the strict ω-category ν(K) is freely generated, as a polygraph, by the atoms ⟨b⟩ of the basis elements b.
@@ -50,3 +52,22 @@ Any of the following:
 - a proof that Gray tensors of globular pasting diagrams are torsion-free, or otherwise covered by Campion's theorem;
 - a reference establishing Problems 1–2;
 - a counterexample, with the obstruction identified.
+
+## Literature status (searched 2026-11-18)
+
+**Status: solved (Problems 1 and 2 are in the literature; Problem 3 follows).**
+
+- **Problem 1 (yes).**
+  - K = λΘ₁ ⊗ … ⊗ λΘₘ is a strongly loop-free Steiner complex. Steiner (HHA 2004) and Ara–Maltsiniotis (arXiv 1607.00668) show these complexes are closed under the Gray tensor, and λΘ is one. The thetas, their Gray products and their joins are all strong Steiner complexes (Hadzihasanovic, *Combinatorics of higher-categorical diagrams*, [arXiv 2404.07273](https://arxiv.org/abs/2404.07273), Prop. 11.2.35).
+  - Every loop-free Steiner complex is torsion-free (Forest, *Unifying notions of pasting diagrams*, Thm 3.4.4.22; quoted in Campion, [arXiv 2311.00205](https://arxiv.org/abs/2311.00205), §2). So Campion's pasting theorem ([arXiv 2311.00200](https://arxiv.org/abs/2311.00200)) applies, and ν(K) is free in flagged (∞,ω)-categories.
+- **Problem 2 (yes).** Campion, [arXiv 2311.00205](https://arxiv.org/abs/2311.00205):
+  - Example 3.2: the strongly loop-free Steiner complexes form a *monoidally suitable site*, a site of torsion-free complexes that contains Θ and is closed under the strict Gray tensor.
+  - Cor. 3.5: the inclusion of such a site into Cat^f_ω is **strong monoidal**, from the strict Gray tensor to Campion's Gray tensor.
+  - Hence ν(λΘ₁ ⊗ … ⊗ λΘₘ) ≃ Θ₁ ⊗ … ⊗ Θₘ in Cat^f_ω. The Gray tensor on Cat_n is the reflection of this one (Campion §3.2), so the same holds in Cat_n.
+  - An independent proof: Chanavat, *A strengthened (∞,n)-categorical pasting theorem* ([arXiv 2603.22242](https://arxiv.org/abs/2603.22242)), Thm 3.29. It shows that Mol/− from directed complexes with acyclic atoms to Cat^f_ω is strong monoidal for the Gray product. Globes and thetas are acyclic (Hadzihasanovic, Lemma 9.1.16), and Gray products of acyclic complexes are acyclic (Prop. 8.3.28). Corollary 3.27 in the same paper gives Problem 1 again.
+- **Problem 3 (follows).**
+  - Given Problems 1–2, F_∞(K) ≃ ν(K). Since K is loop-free, ν(K) has no non-identity invertible cells, i.e. it is gaunt.
+  - A gaunt (∞,n)-category has discrete spaces of k-cells. So two parallel cells with equal images in ν(K) are equal, and the space of invertible cells between them is contractible: it contains only the identity.
+  - One caveat: this is about cells of F_∞(K) itself. For an arbitrary enriched category, one still has to pull back along the map from F_∞(K).
+
+**What is left:** nothing at the level stated here. The remaining work is to cite these results correctly in `pseudo-vs-gray.md` §3.6, lemmas (D)–(F).

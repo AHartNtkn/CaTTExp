@@ -395,6 +395,20 @@ zero is `1_x`, successor is `– ; s`, predecessor is `– ; s⁻¹`, and **canc
 
 This justifies **T-loc** and gives ℤ trunc 0 by T-hom. It also gives a filler tactic for localised graphs in principle (paths become reduced words in G ∪ M̄), but the proof of §3 does not transfer as it stands: the weak-to-strict comparison for a localised graph is not a globular-set instance of the trivial-fibration theorem. Recorded as F4a.
 
+**Filler on 1-cells [agda] (2026-11-18, F4a).** `src/CaTTExp/LocalisedFiller.agda` works in plain CaTT. The context holds a graph together with the 2-dimensional part of a walking equivalence on each m ∈ M: `m̄`, `ρ : m;m̄ ⇒ 1`, `ρ̄ : 1 ⇒ m;m̄`, `λ : m̄;m ⇒ 1` and `λ̄ : 1 ⇒ m̄;m`. Under the marking of `invertibility-markings.md` §1.2, these are the destructors of `m inv` and their inverses. Two parallel 1-cells with the same **reduced word** are connected by an explicit 2-cell:
+
+```
+u ⇒ canon(path u) ⇒ … ⇒ canon(r) ⇒ … ⇒ canon(path v) ⇒ v
+```
+
+- The two outer steps are graph fillers (§3).
+- Each forward step cancels one adjacent pair m m̄ or m̄ m, as graph filler ; (whiskered ρ or λ) ; graph filler.
+- Each backward step inserts a pair with ρ̄ or λ̄.
+
+The certified checker decides the result. Examples in `LocalisedFillerExamples.agda` for ℤ: `s;s̄ ⇒ 1`, `s;(s̄;s) ⇒ s`, `(s;s);(s̄;s̄) ⇒ 1`, `s̄;s ⇒ s;s̄` (one cancellation each way), and `s̄;(s;s) ⇒ s;1`. There is also a two-object example with an uninverted edge, and the tactic rejects pairs whose reduced words differ.
+
+What remains of F4a is cells between parallel 2-cells and higher. Semantically they exist, since the localisation is a 1-category (Thm 5.1, T-loc). Syntactically they need the higher data of the walking equivalence (triangle identities and up), and the composite above is one choice among many, not a canonical lift.
+
 ### 5.2 Operations on ℤ
 
 Addition is composition in Hom(x, x), negation is inversion of loops (every loop of ⟦L⟧[s⁻¹] is invertible, being a composite of s and s⁻¹), and multiplication comes from recursion on N followed by the sign split. Ring axioms are cells between maps ℤᵏ → ℤ, and all their coherence is T-fill (§2.5). So ℤ "behaves like the integers", with cancellation given by the equivalence data, not by a definitional rule.

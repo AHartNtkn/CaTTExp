@@ -33,3 +33,511 @@
 ## What would help most
 
 A proof or counterexample for Q1 in any dimension; a precise statement of Q2 with references; for Q3, the construction of the analogue of R for a Gray-enriched coherator.
+
+# Researcher Response
+
+**The factorization part of Q2 has a positive answer, assuming the \(R,S\) construction stated in your background.** It follows from a recent characterization of coinductive completion and a lifting argument.
+
+I do **not** have a proof or counterexample for the exact counit in Q1, including its restriction to \((\infty,1)\)-categories. There is, however, a further obstruction: **the ordinary functor \(\mathcal L_R\) does not preserve \(W\) when its target has the inductive weak equivalences.** Thus its ordinary counit must be distinguished from a derived presentation theorem.
+
+For Q3, there is an explicit conditional construction using an enriched category of commuting squares. Its hypotheses specify the compatibility with Gray composition that independent choices of fillers do not provide.
+
+The propositions below are deductions from your stated construction and the cited results; I am not attributing the CaTT conclusions themselves to those papers.
+
+## 1. Q2: \(S\) factors through coinductive completion
+
+Write
+\[
+\mathcal C_{\mathrm{ind}}=\mathrm{Cat}^{\mathrm{ind}}_\omega,
+\qquad
+Q:\mathcal C_{\mathrm{ind}}
+\rightleftarrows
+\mathcal C_{\mathrm{coind}}:j
+\]
+for coinductive completion and its fully faithful right adjoint.
+
+Distinguish the model-level functor
+\[
+S_0:\mathcal A\longrightarrow\mathrm{Mod}(\mathrm{CaTT})
+\]
+from its localization
+\[
+S:\mathcal C_{\mathrm{ind}}\longrightarrow\mathcal H_{\mathrm{CaTT}}.
+\]
+
+### Proposition
+
+Under the hypotheses in your background, there is a functor
+\[
+\overline S:\mathcal C_{\mathrm{coind}}
+\longrightarrow\mathcal H_{\mathrm{CaTT}}
+\]
+and a natural equivalence
+\[
+\boxed{S\simeq \overline S\,Q.}
+\]
+One can take \(\overline S=Sj\).
+
+### The geometric input
+
+Ozornova–Rovelli–Walde, *Cores and localizations of \((\infty,\infty)\)-categories*, arXiv:2603.11005v2, revised November 9, 2026, prove:
+
+- Free cell attachments have the lifting property against \(\infty\)-surjective maps, with lifting interpreted in the \(\infty\)-category: Lemma 5.9.
+- Every completion unit \(C\to jQC\) is \(\infty\)-surjective: Proposition 5.29.
+- Coinductive completion is the localization at \(\infty\)-surjective maps; its equivalences are their 2-out-of-3 closure: Proposition 5.30 and Corollary 5.31. [arxiv.org](https://arxiv.org/html/2603.11005v2?utm_source=chatgpt.com)
+
+Here \(\infty\)-surjectivity means that every prescribed cell, with a prescribed boundary lift, lifts up to an equivalence relative to that boundary.
+
+The needed algebraic statement is:
+
+> **Lemma.** \(S\) sends every geometrically \(\infty\)-surjective map to an equivalence in \(\mathcal H_{\mathrm{CaTT}}\).
+
+### Proof of the lemma
+
+Define globular boundary presheaves by
+\[
+B_0=\varnothing,
+\qquad
+B_{n+1}=yD_n\amalg_{B_n}yD_n,
+\]
+with their canonical monomorphisms
+\[
+i_n:B_n\hookrightarrow yD_n.
+\]
+
+These are the **globular** boundaries. Their images in \(\mathcal C_{\mathrm{ind}}\) are
+\[
+\partial\mathbb G_n\longrightarrow\mathbb G_n.
+\]
+Indeed, the recursive pushouts are homotopy pushouts because the maps are cofibrations between cofibrant presheaves. This agrees with the suspension description of globes and their boundaries; see Campion, Remarks 1.8 and 1.13 and Definition 1.14. [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+First suppose
+\[
+p:Y\longrightarrow Z
+\]
+is an \(\mathcal A\)-fibration whose geometric image is \(\infty\)-surjective. Since \(U\) creates fibrations, \(Up\) is an \(\mathcal M\)-fibration. The simplicial model axiom gives a Kan fibration
+\[
+\begin{aligned}
+\Phi_n:\operatorname{Map}_{\mathcal M}(yD_n,UY)
+\longrightarrow{}&
+\operatorname{Map}_{\mathcal M}(B_n,UY)\\
+&\times_{\operatorname{Map}_{\mathcal M}(B_n,UZ)}
+\operatorname{Map}_{\mathcal M}(yD_n,UZ).
+\end{aligned}
+\tag{1}
+\]
+
+All presheaves are cofibrant, and \(UY,UZ\) are fibrant. The pullback in (1) therefore computes the corresponding homotopy pullback. Consequently, (1) models the derived relative mapping-space map for the globular boundary.
+
+Geometric \(\infty\)-surjectivity says that this map is surjective on \(\pi_0\). A Kan fibration surjective on \(\pi_0\) is surjective on vertices: choose a vertex whose image lies in the prescribed component, then lift an edge path to the prescribed vertex.
+
+Thus every **strict** lifting problem
+\[
+\begin{array}{ccc}
+B_n&\longrightarrow&UY\\
+\big\downarrow&&\big\downarrow Up\\
+yD_n&\longrightarrow&UZ
+\end{array}
+\]
+has a strict solution.
+
+Now use
+\[
+S_0(Y)_n=(UY)(D_n)_0.
+\]
+The recursive definition of \(B_n\) identifies maps \(B_n\to UY\) with parallel boundaries in the underlying globular set of \(S_0(Y)\). Therefore \(S_0(p)\) has the exact globular boundary lifting property in every dimension. It is an FHM trivial fibration, hence belongs to \(W\). This is precisely the lifting condition in FHM, arXiv:2511.09849, Definition 4.1.3; Proposition 4.1.5 identifies these maps with \(W\cap\{\omega\text{-equifibrations}\}\). [arxiv.org](https://arxiv.org/pdf/2511.09849?utm_source=chatgpt.com)
+
+For a general \(\mathcal A\)-map \(f\) representing an \(\infty\)-surjective map, factor
+\[
+f=p\,a
+\]
+with \(a\) a trivial cofibration and \(p\) a fibration. Because \(a\) is a geometric equivalence, \(p\) is still geometrically \(\infty\)-surjective. The established relativity of \(S_0\) gives \(S_0(a)\in W\), and the preceding argument gives \(S_0(p)\in W\). Hence \(S_0(f)\in W\).
+
+Maps in the localized geometric category can be represented this way after replacing their source. This proves the lemma.
+
+### Descent
+
+Apply the lemma to the completion unit
+\[
+\eta_C:C\longrightarrow jQC.
+\]
+Its image gives a natural equivalence
+\[
+S(C)\xrightarrow{\;\simeq\;}S(jQC).
+\]
+Taking \(\overline S=Sj\) proves the proposition.
+
+**No preservation of colimits by \(S\) is needed.** Nor does this proof require a comparison between geometric and algebraic notions of invertibility of individual cells.
+
+It also does not establish that \(\overline S\) is fully faithful or essentially surjective.
+
+## 2. Q1: what follows, and what does not
+
+### 2.1 The ordinary left adjoint exists as stated
+
+There is no problem with restricting the coend adjunction to CaTT models. Because that category is a full subcategory of presheaves and \(S_0(Y)\) is a model,
+\[
+\begin{aligned}
+\mathcal A\!\left(
+\int^{P\in\mathbb T}A(P)\cdot R(P),Y
+\right)
+&\cong
+\operatorname{Nat}\bigl(A,\mathcal A(R(-),Y)\bigr)\\
+&=
+\mathrm{Mod}(\mathrm{CaTT})(A,S_0Y).
+\end{aligned}
+\]
+Thus
+\[
+\mathcal L_R\dashv S_0
+\]
+is the asserted ordinary adjunction. No reflection into models changes the coend.
+
+The difficulty is its homotopical behavior.
+
+### 2.2 The ordinary \(\mathcal L_R\) is not relative for the inductive target
+
+This strengthens the raw-nerve obstruction from round 1.
+
+### Proposition
+
+Assume the comparison
+\[
+q:R\Rightarrow Np
+\]
+is natural over the strict interpretation \(p:\mathbb T\to\Theta\), as in the construction of \(R\). Then
+\[
+\mathcal L_R:\mathrm{Mod}(\mathrm{CaTT})\longrightarrow\mathcal A
+\]
+does **not** send every map in \(W\) to an inductive weak equivalence.
+
+### Proof
+
+Let \(C\) be a gaunt strict \(\omega\)-category, and write \(NC\) for its discrete \(\Theta\)-nerve. It is fibrant in the inductive model. Gaunt strict categories embed fully faithfully in the inductive theory; see Campion, Example 1.30 and the discussion preceding it. [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+Moreover, \(NC\) has unique \(J\)-fillers. For a generating trivial cofibration \(A\to B\), the restriction
+\[
+\operatorname{Map}_{\mathcal M}(B,NC)
+\longrightarrow
+\operatorname{Map}_{\mathcal M}(A,NC)
+\]
+is a trivial Kan fibration between discrete simplicial sets, hence a bijection. Give \(NC\) this canonical algebraic fibrant structure.
+
+The adjunction \(F\dashv U\) and naturality of \(q\) then identify
+\[
+S_0(NC)\cong C
+\tag{2}
+\]
+as CaTT models, not merely as globular sets. On a pasting shape \(P\),
+\[
+\mathcal A(F\operatorname{Sp}P,NC)
+\cong
+\mathcal M(\operatorname{Sp}P,NC)
+\cong
+\omega\mathrm{Cat}(P,C),
+\]
+and naturality over \(p\) identifies the operations with strict interpretation.
+
+For any \(X\in\mathcal A\),
+\[
+\pi_0\operatorname{Map}_{\mathcal A_\infty}(X,NC)
+\cong
+\mathcal A(X,NC).
+\tag{3}
+\]
+To verify this, use Nikolaus’s Quillen equivalence \(F\dashv U\). Its derived right adjoint sends \(X\) to \(UX\), since every \(\mathcal A\)-object is fibrant. Every \(\mathcal M\)-object is cofibrant, so the derived mapping space into \(NC\) is the ordinary simplicial mapping space. That space is discrete. Finally, every underlying map into \(NC\) preserves its unique fillers. No cofibrancy assumption on \(X\) in \(\mathcal A\) is required. [arxiv.org](https://arxiv.org/pdf/1003.1342?utm_source=chatgpt.com)
+
+Combining (2), (3), and the ordinary adjunction gives
+\[
+\boxed{
+\pi_0\operatorname{Map}_{\mathcal A_\infty}(\mathcal L_R A,NC)
+\cong
+\mathrm{Mod}(\mathrm{CaTT})(A,C).
+}
+\tag{4}
+\]
+
+Now take the coherent walking \(\omega\)-equivalence \(E\). It has two distinct objects, is gaunt, and
+\[
+w:E\longrightarrow 1
+\]
+is a folk weak equivalence, hence belongs to \(W\). The weak-equivalence statement is Hadzihasanovic–Loubaton–Ozornova–Rovelli, Theorem 1.33. [arxiv.org](https://arxiv.org/pdf/2404.14509?utm_source=chatgpt.com)
+
+If \(\mathcal L_R(w)\) were an inductive weak equivalence, precomposition into \(NE\), using (4), would give a bijection
+\[
+\mathrm{Mod}(\mathrm{CaTT})(1,E)
+\longrightarrow
+\mathrm{Mod}(\mathrm{CaTT})(E,E).
+\]
+Every map in its image is constant on objects. It therefore misses \(1_E\), a contradiction. ∎
+
+This proposition does **not** refute
+\[
+\varepsilon_Y:\mathcal L_R S_0(Y)\longrightarrow Y
+\]
+for \(Y\) presenting an \((\infty,2)\)-category. It does show that the ordinary \(\mathcal L_R\) cannot itself supply the global comparison
+\[
+\mathcal H_{\mathrm{CaTT}}\longrightarrow
+\mathrm{Cat}^{\mathrm{ind}}_\omega.
+\]
+
+Accordingly, the “equivalently” in Q1 needs qualification: an ordinary counit theorem is a specific reconstruction statement; it is not equivalent to essential surjectivity of an independently constructed comparison of localizations.
+
+### 2.3 \(S_0\) does preserve finite categorical level
+
+There is a smaller positive statement relevant to Q1:
+
+> **If \(Y\) presents an \((\infty,n)\)-category, every cell of \(S_0(Y)\) above dimension \(n\) is coinductively invertible.**
+
+Here is a proof that avoids having to compare the chosen composition operations directly.
+
+For \(k\geq1\), let
+\[
+I_k=N\bigl(\Sigma^{k-1}I\bigr),
+\]
+where \(I\) is the strict walking isomorphism. There are maps
+\[
+yD_k\xrightarrow{i}I_k\xrightarrow{r}yD_{k-1},
+\]
+where \(i\) is monic and \(r\) is a Rezk weak equivalence. These are the suspended Rezk maps used in the definition of the inductive theory. [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+Let \(a:yD_k\to UY\) be an inductively invertible cell. Rezk completeness says that its component meets the image of the identity degeneracy
+\[
+(UY)(D_{k-1})\longrightarrow(UY)(D_k).
+\]
+Since
+\[
+\operatorname{Map}(I_k,UY)\longrightarrow
+\operatorname{Map}(yD_k,UY)
+\]
+is a Kan fibration, and its image on \(\pi_0\) is precisely those components, \(a\) extends **strictly** to
+\[
+\alpha:I_k\longrightarrow UY.
+\]
+
+The adjunct
+\[
+q:FI_k\longrightarrow yD_{k-1}
+\]
+of \(r\) is an \(\mathcal A\)-weak equivalence: its composite with the unit \(I_k\to UFI_k\) is \(r\), and both the unit and \(r\) are weak equivalences.
+
+Let \(u\) be the universal \(k\)-cell in \(S_0(FI_k)\). Its image under \(S_0(q)\) is an identity in the strict \((k-1)\)-globe. Since \(S_0(q)\in W\), and FHM weak equivalences reflect coinductive invertibility, \(u\) is coinductively invertible. Applying the adjunct \(FI_k\to Y\) of \(\alpha\) sends \(u\) exactly to \(a\). Thus \(a\) is coinductively invertible in \(S_0(Y)\). The reflection result is FHM, arXiv:2406.13240v3, §3.1. [arxiv.org](https://arxiv.org/pdf/2406.13240v3?utm_source=chatgpt.com)
+
+This proves the stated claim when \(k>n\). It establishes the expected invertibility of the resulting algebraic cells, not reconstruction.
+
+### 2.4 The remaining reconstruction problem
+
+The ordinary counit is the map
+\[
+\operatorname*{colim}_{(P,a)\in\int_{\mathbb T}S_0(Y)}
+R(P)\longrightarrow Y.
+\tag{5}
+\]
+The objectwise equivalences \(R(P)\simeq yP\) do not establish that (5) is a weak equivalence.
+
+One possible proof would establish both:
+
+1. The corresponding homotopy colimit maps equivalently to \(Y\).
+2. The comparison from that homotopy colimit to the ordinary colimit in (5) is a weak equivalence.
+
+Neither follows from the construction already given. Also,
+\[
+S_0(\varepsilon_Y)\,\eta_{S_0Y}=1
+\]
+provides lifts at the boundaries selected by \(\eta\); it does not provide lifts for arbitrary boundaries in \(S_0\mathcal L_RS_0Y\).
+
+Equation (4) gives a concrete necessary test. If \(\varepsilon_Y\) is a weak equivalence, then for every gaunt strict \(C\),
+\[
+\mathcal A(Y,NC)
+\longrightarrow
+\mathrm{Mod}(\mathrm{CaTT})(S_0Y,C)
+\tag{6}
+\]
+must be bijective. In particular, if \(Y\simeq1\), every map on the right must be a constant CaTT map. A nonconstant strict CaTT map
+\[
+S_0(Y)\longrightarrow E
+\]
+for contractible \(Y\) would therefore refute Q1 already for a space. I have not constructed such a map.
+
+There are existing reconstruction results for fundamental Batanin groupoids, but they do not settle this ordinary counit. In particular, Cisinski’s Theorem 3.15 concerns **derived** realization, and Theorem 4.4 uses the weak equivalences defined in that paper. They cannot be substituted for a theorem about (5). [arxiv.org](https://arxiv.org/pdf/math/0604442?utm_source=chatgpt.com)
+
+## 3. Q2: the full equivalence and the marked formulation
+
+The positive result in §1 leaves the proposed equivalence
+\[
+\boxed{
+\overline S:
+\mathrm{Cat}^{\mathrm{coind}}_\omega
+\overset{?}{\simeq}
+\mathcal H_{\mathrm{CaTT}}
+}
+\tag{7}
+\]
+unproved.
+
+I did not find a theorem establishing (7), or an inverse extending the marked Street nerve. The cited algebraic results establish the relative category and lifting classes; the 2026 ICaTT paper still identifies construction of the algebraic model structure as open. That absence alone does not logically preclude an equivalence of localizations, but those results do not provide one. [arxiv.org](https://arxiv.org/pdf/2511.09849?utm_source=chatgpt.com)
+
+### What “marked inductive categories” must mean
+
+There are two different constructions:
+
+- Assign to each inductive category \(C\) the marking consisting of all its coinductively invertible cells.
+- Localize \(C\) at those marked cells.
+
+The first assignment alone does not change the homotopy theory: the marking is determined by \(C\), and functors preserve it. The second does change it. ORW Proposition 5.29 identifies
+\[
+C[\operatorname{Eq}_{\mathrm{coind}}(C)^{-1}]
+\simeq QC.
+\tag{8}
+\]
+Thus a marked formulation of the proposed target should specify weak equivalences by the localized categories in (8), or prove that its chosen marked model structure has that localization.
+
+Henry–Loubaton Proposition 4.58 proves that the Street nerve of **strict** \(\omega\)-categories, marking coinductively invertible cells, preserves folk weak equivalences and fibrations into the Verity model structure. This supplies a relative functor on strict categories; it does not extend that functor to arbitrary CaTT models or prove an equivalence. [arxiv.org](https://arxiv.org/pdf/2301.11424?utm_source=chatgpt.com)
+
+There is also a relevant geometric distinction: the October 2026 paper *Models of \(n\)-dimensional categories as \(n\to\infty\)* identifies saturated complicial sets with the **right/core limit**. Consequently, “saturated complicial sets” by itself does not specify the additional coinductive completion. [arxiv.org](https://arxiv.org/abs/2610.38698?utm_source=chatgpt.com)
+
+An extension of the marked Street nerve therefore needs its own compatibility statement, in addition to (7).
+
+## 4. Q3: an explicit conditional construction of an enriched \(R\)
+
+The description of \(L\) does not specify its complete admissibility predicate or an enriched cellular presentation. Those data are needed to verify an actual construction. The following theorem gives the lifting mechanism once they are supplied.
+
+First fix tensor orientation. Ara–Maltsiniotis’s \(\infty\text{-}\mathrm{Cat}_{\mathrm{lax}}\) is a **left Gray category**; Gepner–Heine distinguish right/oriented and left/antioriented enrichment. The order of the tensor factors and the choice of Gray versus reversed Gray must match the intended syntax. [arxiv.org](https://arxiv.org/pdf/1607.00668?utm_source=chatgpt.com)
+
+### 4.1 Enriched lifting theorem
+
+Let \(\mathcal V\) be a monoidal model category with the chosen Gray orientation, and let \(\mathcal K\) be a \(\mathcal V\)-enriched semantic category.
+
+For each arity \(a\), suppose given
+\[
+q_a:Q_a\longrightarrow Y_a.
+\]
+Assume that for every \(a,b\),
+\[
+\underline{\mathcal K}(Q_a,Q_b)
+\longrightarrow
+\underline{\mathcal K}(Q_a,Y_b)
+\tag{9}
+\]
+induced by \(q_b\) is a trivial fibration in \(\mathcal V\).
+
+A sufficient condition is that \(\mathcal K\) has a compatible enriched model structure, each \(Q_a\) is cofibrant, and each \(q_b\) is a trivial fibration.
+
+Define enriched categories with the arities as their common set of objects:
+\[
+\mathcal D(a,b)=\underline{\mathcal K}(Y_a,Y_b)
+\]
+and
+\[
+\mathcal E(a,b)=
+\underline{\mathcal K}(Q_a,Q_b)
+\times_{\underline{\mathcal K}(Q_a,Y_b)}
+\underline{\mathcal K}(Y_a,Y_b).
+\tag{10}
+\]
+
+Thus a pair \((u,v)\) in (10) satisfies
+\[
+q_bu=vq_a.
+\]
+Composition is induced by composition in \(\mathcal K\), because
+\[
+q_c(u_2u_1)
+=v_2q_bu_1
+=(v_2v_1)q_a.
+\]
+The units are \((1_{Q_a},1_{Y_a})\). These constructions define an enriched category, and the projection
+\[
+p:\mathcal E\longrightarrow\mathcal D
+\]
+is a trivial fibration on every hom by (9).
+
+Now suppose the proposed enriched coherator has a cellular presentation
+\[
+\mathbb T_0\longrightarrow\mathbb T_1
+\longrightarrow\cdots\longrightarrow\mathbb T_L
+\]
+in which successor stages freely adjoin hom-generators along cofibrations
+\[
+K_\alpha\hookrightarrow L_\alpha
+\]
+in \(\mathcal V\). Assume:
+
+- A strict interpretation \(N:\mathbb T_L\to\mathcal D\).
+- A compatible initial lift \(\widetilde R_0:\mathbb T_0\to\mathcal E\).
+- Existence of the stated free extensions and their transfinite colimits.
+
+At a successor stage, extension of the lift is precisely
+\[
+\begin{array}{ccc}
+K_\alpha&\longrightarrow&\mathcal E(a,b)\\
+\big\downarrow&&\big\downarrow p_{a,b}\\
+L_\alpha&\longrightarrow&\mathcal D(a,b).
+\end{array}
+\]
+A diagonal exists because the left map is a cofibration and the right map is a trivial fibration. The free-extension universal property gives the next enriched functor. At limit stages, use the colimit.
+
+This produces
+\[
+\widetilde R:\mathbb T_L\longrightarrow\mathcal E.
+\]
+Projection to the \(Q\)-coordinate gives
+\[
+R_L:\mathbb T_L\longrightarrow\mathcal K,
+\qquad
+R_L(a)=Q_a,
+\]
+together with an enriched natural comparison to \(N\).
+
+The result preserves composition as an equality of enriched structure maps:
+\[
+(R_L)_{a,c}\,m_{\mathbb T_L}
+=
+m_{\mathcal K}
+\bigl((R_L)_{b,c}\otimes(R_L)_{a,b}\bigr),
+\tag{11}
+\]
+and preserves units. This is how compatibility is enforced throughout the choices of fillers.
+
+The same method has an operadic formulation through relative endomorphism operads; Gutiérrez, Lemma 4.1, proves the corresponding transfer statement for cofibrant colored operads under a trivial-fibration hypothesis on operation spaces. [arxiv.org](https://arxiv.org/pdf/1104.0584?utm_source=chatgpt.com)
+
+### 4.2 What must be added for the intended \(L\)
+
+Equation (11) addresses enriched composition. Three further requirements remain.
+
+**Arity colimits.** To obtain set-valued models by
+\[
+S_L(Y)(a)=\mathcal K(R_L(a),Y),
+\]
+the realization must preserve the colimits specified by the syntax. In the round-1 construction, those colimits are in the algebraically fibrant category \(\mathcal A\). They need not be preserved by \(U\). Thus one needs the relevant Gray enrichment on that semantic category, or a replacement construction preserving the same arity colimits.
+
+**Actual tensor domains.** Interchange involves domains such as
+\[
+D^r\otimes D^s,
+\]
+as in Gepner–Heine Definition 3.2.5. An enriched functor does not automatically identify
+\[
+R_L(A\otimes B)
+\quad\text{with}\quad
+R_L(A)\otimes R_L(B).
+\]
+The ordered tensor domains must be specified in the theory. One way is to use a colored operadic presentation whose operation spaces are
+\[
+\operatorname{Map}\!\left(
+Q_{a_k}\otimes\cdots\otimes Q_{a_1},Q_b
+\right),
+\]
+and perform the lifting in that operadic category. Substitution, associativity, and unit compatibility then belong to the structure being lifted. [arxiv.org](https://arxiv.org/pdf/2510.10504?utm_source=chatgpt.com)
+
+For cellular tensor domains, this requires control of maps such as
+\[
+(\partial A\otimes B)
+\amalg_{\partial A\otimes\partial B}
+(A\otimes\partial B)
+\longrightarrow A\otimes B.
+\]
+The strict side has relevant machinery: Ara–Lucas prove that the folk model structure on strict \(\omega\)-categories is monoidal for the Gray tensor. That theorem does not itself identify a model category presenting all the intended oriented categories. [tac.mta.ca](https://tac.mta.ca/tac/volumes/35/21/35-21abs.html?utm_source=chatgpt.com)
+
+**Invertibility declarations.** A disk lifting problem produces a cell. If the syntax requires that cell to be invertible, the presentation must additionally encode inverse-and-witness data, use marked equivalence arities, or supply a theorem proving the required invertibility. Directed interchange generators should remain directed.
+
+Under these hypotheses, the enriched construction produces the analogue of \(R\), hence a strict-substitution \(S_L\). Strict support soundness supplies the strict interpretation, but does not by itself supply the enriched cellular presentation, the tensor lifting properties, or preservation of arity colimits. A presentation theorem would then require a reconstruction result beyond this construction—the directed counterpart of the unresolved counit problem in Q1.

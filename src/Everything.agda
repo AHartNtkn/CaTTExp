@@ -49,6 +49,14 @@ import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.Strict.Bag
+import CaTTExp.Strict.Complex
+import CaTTExp.Strict.Cell
+import CaTTExp.Strict.Subst
+import CaTTExp.Strict.L
+import CaTTExp.Strict.Soundness
+import CaTTExp.Strict.ReverseInterchanger
+import CaTTExp.Strict.CheckCells
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

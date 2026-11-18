@@ -37,6 +37,34 @@ open import CaTTExp.Strict.StdSem using (module StdSem)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
 open import CaTTExp.Strict.Bag using (+-zero)
 
+------------------------------------------------------------------------
+-- Re-bracketing around a replaced pair: a #ᵣ (b #ᵣ c) becomes
+-- a′ #ᵣ (b′ #ᵣ c) when a #ᵣ b = a′ #ᵣ b′.
+
+module Rot (𝒞 : ωCat) where
+  open ωCat 𝒞
+  open Basics 𝒞 using (comp-cong)
+
+  pab : ∀ r a b c (p₁ : tgt r b ≡ src r c) → tgt r a ≡ src r (comp r b c p₁) → tgt r a ≡ src r b
+  pab r a b c p₁ p = trans p (src-comp r b c p₁)
+
+  rot : ∀ r a b c (p₁ : tgt r b ≡ src r c) (p : tgt r a ≡ src r (comp r b c p₁)) a′ b′ (pab′ : tgt r a′ ≡ src r b′) →
+        comp r a b (pab r a b c p₁ p) ≡ comp r a′ b′ pab′ →
+        Σ (tgt r b′ ≡ src r c) λ p₃ → Σ (tgt r a′ ≡ src r (comp r b′ c p₃)) λ p₄ →
+        comp r a (comp r b c p₁) p ≡ comp r a′ (comp r b′ c p₃) p₄
+  rot r a b c p₁ p a′ b′ pab′ E = p₃ , p₄ ,
+    trans (sym (assoc r a b c q pabc p₁ p)) (trans (comp-cong r pabc pabc′ E refl) (assoc r a′ b′ c pab′ pabc′ p₃ p₄))
+    where
+    q = pab r a b c p₁ p
+    pabc : tgt r (comp r a b q) ≡ src r c
+    pabc = trans (tgt-comp r a b q) p₁
+    pabc′ : tgt r (comp r a′ b′ pab′) ≡ src r c
+    pabc′ = trans (cong (tgt r) (sym E)) pabc
+    p₃ : tgt r b′ ≡ src r c
+    p₃ = trans (sym (tgt-comp r a′ b′ pab′)) pabc′
+    p₄ : tgt r a′ ≡ src r (comp r b′ c p₃)
+    p₄ = trans pab′ (sym (src-comp r b′ c p₃))
+
 module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
             (𝒟 : ωCat) (κ : AtomG B H L → ωCat.C 𝒟)
             (W : Sd → AtomG B H L → Expr (AtomG B H L)) where
@@ -319,3 +347,81 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
       p₂D = fst (snd spD)
       qD′ = fst (snd (snd spD))
       eqD = snd (snd (snd spD))
+
+    ------------------------------------------------------------------
+    -- Moving the least label to the front.
+
+    data Fr (r : Nat) (x : ν.C) (y : 𝔇.C) (c : Vec Nat N) (m : Nat) : Set where
+      fr1 : Rel x y → Lab r x m → c ≡ unit m → Fr r x y c m
+      fr∷ : ∀ {x₁ y₁ x₂ y₂ c′} → Rel x₁ y₁ → Lab r x₁ m → Ch r x₂ y₂ c′ →
+            (p : ν.tgt r x₁ ≡ ν.src r x₂) (q : 𝔇.tgt r y₁ ≡ 𝔇.src r y₂) →
+            x ≡ ν.comp r x₁ x₂ p → y ≡ 𝔇.comp r y₁ y₂ q → c ≡ unit m +c c′ → Fr r x y c m
+
+    Least : Vec Nat N → Nat → Set
+    Least c m = (1 ≤ at0 c m) × (∀ g → 1 ≤ at0 c g → m ≤ g)
+
+    private
+      module Rν = Rot (nu K L)
+      module RD = Rot 𝒟
+
+      at-ug : ∀ g c k → at0 (unit {N} g +c c) k ≡ at0 (unit {N} g) k + at0 c k
+      at-ug g c k = at-+c (unit {N} g) c k
+
+      1≤+l : ∀ a b → 1 ≤ b → 1 ≤ a + b
+      1≤+l zero    b h = h
+      1≤+l (suc a) b h = s≤s z≤n
+
+      1≤+r : ∀ a b → 1 ≤ a → 1 ≤ a + b
+      1≤+r (suc a) b h = s≤s z≤n
+
+      at-self : ∀ g → g < N → 1 ≤ at0 (unit {N} g) g
+      at-self g gN = subst (1 ≤_) (sym (at-unit-self′ g gN)) (≤-refl 1)
+        where
+        at-unit-self′ : ∀ g → g < N → at0 (unit {N} g) g ≡ 1
+        at-unit-self′ g gN = go g gN
+          where
+          go : ∀ {m} g → g < m → at0 (unit {m} g) g ≡ 1
+          go {suc m} zero    _       = refl
+          go {suc m} (suc g) (s≤s l) = go {m} g l
+
+      at-other : ∀ k g → (k ≡ g → ⊥) → at0 (unit {N} k) g ≡ 0
+      at-other k g ne with tri k g
+      ... | tri< l = unit-Lo {N} k g l
+      ... | tri≡ e = ⊥-elim (ne e)
+      ... | tri> l = unit-Hi {N} k g l
+
+      ¬1≤0 : 1 ≤ 0 → ⊥
+      ¬1≤0 ()
+
+      swap4 : (a b c : Vec Nat N) → a +c (b +c c) ≡ b +c (a +c c)
+      swap4 a b c = trans (sym (+c-assoc a b c)) (trans (cong (_+c c) (+c-comm a b)) (+c-assoc b a c))
+
+    front : ∀ r → Lf r → ∀ {x y c} → Ch r x y c → ∀ m → Least c m → Fr r x y c m
+    front r Pr (ch1 {g = g} R l) m (cm , _) with tri g m
+    ... | tri≡ refl = fr1 R l refl
+    ... | tri< gm = ⊥-elim (¬1≤0 (subst (1 ≤_) (at-other g m (λ e → ≤-<-⊥ (≤-of e) gm)) cm))
+      where
+      ≤-of : ∀ {a b} → a ≡ b → b ≤ a
+      ≤-of refl = ≤-refl _
+    ... | tri> mg = ⊥-elim (¬1≤0 (subst (1 ≤_) (at-other g m (λ e → ≤-<-⊥ (≤-of e) mg)) cm))
+      where
+      ≤-of : ∀ {a b} → a ≡ b → a ≤ b
+      ≤-of refl = ≤-refl _
+    front r Pr (ch∷ {x = x} {y = y} {g = g} {c = c′} R l ch p q) m (cm , mn) with tri g m
+    ... | tri≡ refl = fr∷ R l ch p q refl refl refl
+    ... | tri< gm = ⊥-elim (≤-<-⊥ (mn g (subst (1 ≤_) (sym (at-ug g c′ g)) (1≤+r _ _ (at-self g (fst (snd (snd l))))))) gm)
+    ... | tri> mg with front r Pr ch m (cm′ , λ g′ h → mn g′ (subst (1 ≤_) (sym (at-ug g c′ g′)) (1≤+l _ _ h)))
+      where
+      cm′ : 1 ≤ at0 c′ m
+      cm′ = subst (1 ≤_) (trans (at-ug g c′ m) (cong (_+ at0 c′ m) (at-other g m (λ e → ≤-<-⊥ (≤-of e) mg)))) cm
+        where
+        ≤-of : ∀ {a b} → a ≡ b → a ≤ b
+        ≤-of refl = ≤-refl _
+    ... | fr1 R′ l′ refl =
+      let S = swap r Pr R l R′ l′ mg p q in
+      fr∷ (Sw.R₁ S) (Sw.l₁ S) (ch1 (Sw.R₂ S) (Sw.l₂ S)) (Sw.p S) (Sw.q S) (Sw.eν S) (Sw.eD S) (+c-comm (unit {N} g) (unit {N} m))
+    ... | fr∷ {x₁ = x₁} {y₁ = y₁} {x₂ = x₂} {y₂ = y₂} {c′ = c₂} R₁ l₁ ch₂ p₁ q₁ refl refl refl =
+      let S = swap r Pr R l R₁ l₁ mg (Rν.pab r x x₁ x₂ p₁ p) (RD.pab r y y₁ y₂ q₁ q)
+          (p₃ , p₄ , eν) = Rν.rot r x x₁ x₂ p₁ p (Sw.x₁ S) (Sw.x₂ S) (Sw.p S) (Sw.eν S)
+          (q₃ , q₄ , eD) = RD.rot r y y₁ y₂ q₁ q (Sw.y₁ S) (Sw.y₂ S) (Sw.q S) (Sw.eD S)
+      in fr∷ (Sw.R₁ S) (Sw.l₁ S) (ch∷ (Sw.R₂ S) (Sw.l₂ S) ch₂ p₃ q₃) p₄ q₄ eν eD (swap4 (unit {N} g) (unit {N} m) c₂)

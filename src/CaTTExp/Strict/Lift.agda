@@ -71,7 +71,7 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
   open Basis B
   open Hyp H
   open Atom B
-  open Gen B H L hiding (W)
+  open Gen B H L hiding (W; Functor)
   open Rows B H L
   open TabAt (ADC.𝕄 K)
   open Sum B H L
@@ -720,3 +720,59 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
     -- in ν(K) have the same value in 𝒟.
     unique : ∀ x → UnFor x
     unique x = Lf-all L x nothing tt (λ j Lj jL → ⊥-elim (≤-<-⊥ jL Lj))
+
+    ------------------------------------------------------------------
+    -- All expressions: boundaries are eliminated (L1), then (Inv) is
+    -- unique lifting and (Def) follows from (Inv) on boundaries.
+
+    elim : Expr G → Expr G
+    elim (gen g)     = gen g
+    elim (cmp k a b) = cmp k (elim a) (elim b)
+    elim (bsrc n e)  = bd σ⁻ L n (elim e)
+    elim (btgt n e)  = bd σ⁺ L n (elim e)
+
+    elim-co : ∀ e → CO (elim e)
+    elim-co (gen g)     = co-gen g
+    elim-co (cmp k a b) = co-cmp k (elim-co a) (elim-co b)
+    elim-co (bsrc n e)  = bd-co σ⁻ L n (elim e) (elim-co e)
+    elim-co (btgt n e)  = bd-co σ⁺ L n (elim e) (elim-co e)
+
+    private
+      module ElimSem (𝒞 : ωCat) (ι : G → ωCat.C 𝒞) (dimι : ∀ g → ωCat.src 𝒞 (degG g) (ι g) ≡ ι g)
+                     (W-ev : ∀ s g → 1 ≤ degG g → Eval.Ev 𝒞 ι (W s g) (Sem.bdC 𝒞 ι s (degG g ∸ 1) (ι g))) where
+        open Eval 𝒞 ι
+        open Sem 𝒞 ι using (sound)
+
+        elim-ev : ∀ {e x} → Ev e x → Ev (elim e) x
+        elim-ev (ev-gen g)      = ev-gen g
+        elim-ev (ev-cmp n u v p) = ev-cmp n (elim-ev u) (elim-ev v) p
+        elim-ev (ev-src n {e} u) = sound W-deg dimι W-ev σ⁻ L n (elim e) (co-deg (elim-co e)) (elim-ev u)
+        elim-ev (ev-tgt n {e} u) = sound W-deg dimι W-ev σ⁺ L n (elim e) (co-deg (elim-co e)) (elim-ev u)
+
+      module Elν = ElimSem (nu K L) (ιν B H L) dimν W-evν
+      module ElD = ElimSem 𝒟 κ dimκ W-evD
+
+    module FW = FromWords (nu K L) 𝒟 (ιν B H L) κ
+
+    inv : FW.Inv
+    inv e e′ x y y′ u u′ v v′ =
+      unique x (elim e , elim-co e , Elν.elim-ev u , ElD.elim-ev v) (elim e′ , elim-co e′ , Elν.elim-ev u′ , ElD.elim-ev v′)
+
+    def : FW.Def
+    def (gen g)     _ (Eν.ev-gen _)     = κ g , ED.ev-gen g
+    def (cmp n a b) _ (Eν.ev-cmp .n {x = x} {y = x′} u u′ p) =
+      let (y₁ , v₁) = def a x u
+          (y₂ , v₂) = def b x′ u′
+          q = inv (btgt n a) (bsrc n b) (ν.tgt n x) (𝔇.tgt n y₁) (𝔇.src n y₂)
+                  (Eν.ev-tgt n u) (subst (Eν.Ev (bsrc n b)) (sym p) (Eν.ev-src n u′))
+                  (ED.ev-tgt n v₁) (ED.ev-src n v₂)
+      in 𝔇.comp n y₁ y₂ q , ED.ev-cmp n v₁ v₂ q
+    def (bsrc n e)  _ (Eν.ev-src .n {x = x} u) = let (y , v) = def e x u in 𝔇.src n y , ED.ev-src n v
+    def (btgt n e)  _ (Eν.ev-tgt .n {x = x} u) = let (y , v) = def e x u in 𝔇.tgt n y , ED.ev-tgt n v
+
+    -- Existence in (N2): a strict functor ν(K) → 𝒟 extending κ.
+    functor : Functor (nu K L) 𝒟
+    functor = FW.functor (generated B H L) def inv
+
+    functor-gen : ∀ g → Functor.F functor (ιν B H L g) ≡ κ g
+    functor-gen = FW.F-gen (generated B H L) def inv

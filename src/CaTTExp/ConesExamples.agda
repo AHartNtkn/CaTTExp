@@ -184,3 +184,37 @@ _ : (ctrf 1 Arr >>= λ T → just (Ctrf.marked T)) ≡ just (12 ∷ [])
 _ = refl
 _ : (ctrf 2 Arr >>= λ T → just (Ctrf.marked T)) ≡ just (16 ∷ 17 ∷ 18 ∷ [])
 _ = refl
+
+------------------------------------------------------------------------
+-- 7. Duality: the cocone is the O_odd-dual of the cone of the dual
+--    diagram (a syntactic identity, not just a check).
+
+_ : all (λ Γ → ok (dualCtx Γ)) shapes ≡ true
+_ = refl
+
+okCoctrf : Nat → ExCtx → Bool
+okCoctrf k Γ with coctrf k Γ
+... | nothing = false
+... | just T  = ok (Ctrf.ctx T)
+
+_ : all (okCoctrf 1) oneDim ≡ true
+_ = refl
+_ : all (okCoctrf 2) oneDim ≡ true
+_ = refl
+
+------------------------------------------------------------------------
+-- 8. Free object = lax colimit of the point, for 1-dimensional shapes.
+
+okConst : ExCtx → Bool
+okConst Γ = ConstPoint.okφ Γ ∧ ConstPoint.okψ Γ ∧ ConstPoint.okH Γ ∧ ConstPoint.okH′ Γ
+
+_ : okConst Arr ≡ true
+_ = refl
+_ : all okConst oneDim ≡ true
+_ = refl
+
+-- Non-vacuity: the naive identification q ↦ s is not a substitution
+-- ΣΓ → K (q_f's target is id_⊤ ∗₀ q_y, not q_y), so φ has real content.
+_ : is-just (checkCtx (ConstPoint.ΣΓ Arr) >>= λ w →
+             checkSub (ConstPoint.ΣΓ Arr) w (idₛ (ConstPoint.ΣΓ Arr)) (ConstPoint.𝒦 Arr)) ≡ false
+_ = refl

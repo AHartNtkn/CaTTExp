@@ -635,3 +635,200 @@ module KE (Δ : Ctx) where
     walk : Nat → Nat → List Nat → Bool
     walk zero    x Π = true
     walk (suc k) x Π = okProj n Π x (suc (n + x)) ∧ walk k (suc x) (Π ++ (suc (n + x) ∷ []))
+
+------------------------------------------------------------------------
+-- Dualities. O_J reverses the cells of every dimension in J. On the
+-- expressions used here it is structural: a type of n-cells has its
+-- source and target swapped when n ∈ J, and a composite along k-cells
+-- has its factors swapped when k+1 ∈ J (Benjamin–Markakis, 2402.01611).
+-- We use J = the odd dimensions.
+
+oddJ : Nat → Bool
+oddJ zero          = false
+oddJ (suc zero)    = true
+oddJ (suc (suc n)) = oddJ n
+
+dualE : Ex → Ex
+dualE (v i)      = v i
+dualE (idn e)    = idn (dualE e)
+dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dualE u) (dualE w)
+
+dualTy : ExTy → ExTy
+dualTy ob          = ob
+dualTy (hom A s t) =
+  if oddJ (dimE (hom A s t)) then hom (dualTy A) (dualE t) (dualE s)
+  else hom (dualTy A) (dualE s) (dualE t)
+
+dualCtx : ExCtx → ExCtx
+dualCtx = map dualTy
+
+-- Cocone transfors: the O_odd-dual of the cone transfors of the dual
+-- diagram. This gives the diagram-index-first Gray order required for
+-- colimits (notes/limits-metatheory.md §8.2):
+--   m_f : m_x ∗₁ q′_f ⇛ q_f ∗₁ (f ∗₀ m_y).
+coctrf : Nat → ExCtx → Maybe Ctrf
+coctrf k Γ = ctrf k (dualCtx Γ) >>= λ T →
+             just (mkCtrf (dualCtx (Ctrf.ctx T)) (Ctrf.topLvls T) (Ctrf.marked T))
+
+------------------------------------------------------------------------
+-- Free object = lax colimit of the point, for 1-dimensional Γ (B6).
+--
+-- ΣΓ := susp Γ is the context of Γ-families of elements: ⊤, c, and
+-- s_x : ⊤ → c, s_f : s_x ⇒ s_y. K := constCocone Γ is the constant
+-- instance of the specified cocone: q_x : ⊤ → c, q_f : q_x ⇒ id_⊤ ∗₀ q_y.
+-- Levels: ⊤ = 0, c = 1, and the variable over x ∈ Γ at level 2 + x in
+-- both. We give
+--   φ : ΣΓ ⊢ φ : K      (a family is a cocone)
+--   ψ : K ⊢ ψ : ΣΓ      (a cocone is a family)
+--   H  : ΣΓ ⊢ H  : ΣΓ↑Y   with H⁻ = ψ∘φ, H⁺ = id
+--   H′ : K  ⊢ H′ : K↑Y    with H′⁻ = φ∘ψ, H′⁺ = id
+-- where Y is everything but ⊤ and c. Every component of H and H′ is a
+-- coherence, an identity, or a composite of whiskered coherences, hence
+-- invertible (Benjamin–Markakis–Sarti). The paper proof that these are
+-- well typed for every 1-dimensional Γ is notes/specified-cones.md §6;
+-- the checker confirms it on the shapes in ConesExamples.
+
+module ConstPoint (Γ : ExCtx) where
+  private
+    D¹ D² V3 : Ctx
+    D¹ = Disk 1
+    D² = Disk 2
+    -- three vertically composable 2-cells
+    V3 = ctxOf (node (node (leaf ∷ leaf ∷ leaf ∷ []) ∷ []))
+
+    cohC : Ctx → Ty → List Tm → Cell
+    cohC P A ts = coh P A ⟪ ts ⟫ , A [ ⟪ ts ⟫ ]ty
+
+    asTy : Cell → Cell → Ty      -- the type s → t of parallel cells
+    asTy s t = arr (snd s) (fst s) (fst t)
+
+    -- In D¹ = (x₀, y₀, w): the unitor λ : id ∗₀ w ⇒ w and its inverse.
+    x₀ y₀ : Cell
+    x₀ = gen D¹ 0
+    y₀ = gen D¹ 1
+    idw : Cell                       -- id_{x₀} ∗₀ w
+    idw = binC 0 (idC x₀) (gen D¹ 2)
+    λT λiT : Ty
+    λT  = asTy idw (gen D¹ 2)
+    λiT = asTy (gen D¹ 2) idw
+    
+  -- λ and λ⁻¹ at a 1-cell (any context).
+  lam lami : Cell → Cell
+  lam  w = cohC D¹ λT  (diskList w)
+  lami w = cohC D¹ λiT (diskList w)
+
+  private
+    -- Generic cells of D² = (x₀, y₀, a, b, u : a ⇒ b).
+    gA gB gU : Cell
+    gA = gen D² 2
+    gB = gen D² 3
+    gU = gen D² 4
+    idB : Cell                       -- id_{x₀} ∗₀ b in D²
+    idB = binC 0 (idC (gen D² 0)) gB
+    -- The unary operation U : a ⇒ id ∗₀ b over D² (operation case:
+    -- the source uses exactly ∂⁻D², the target exactly ∂⁺D²).
+    UT : Ty
+    UT = asTy gA idB
+    Ugen : Cell
+    Ugen = cohC D² UT (map var (range 5))
+    lamB lamiB : Cell
+    lamB  = lam gB
+    lamiB = lami gB
+
+  -- U applied to a 2-cell u : a ⇒ b.
+  Uop : Cell → Cell
+  Uop u = cohC D² UT (diskList u)
+
+  n = length Γ
+  isOb : Nat → Bool
+  isOb x = dimE (nth ob Γ x) ==ℕ 0
+  bnd : Nat → Nat × Nat
+  bnd x = idxE (srcE (nth ob Γ x)) , idxE (tgtE (nth ob Γ x))
+
+  ΣΓ 𝒦 : Ctx
+  ΣΓ = evCtx (susp Γ)
+  𝒦  = evCtx (constCocone Γ)
+
+  cellΣ cellK : Nat → Cell     -- the variable over x
+  cellΣ x = gen ΣΓ (2 + x)
+  cellK x = gen 𝒦 (2 + x)
+
+  -- φ: ⊤, c, q_x ↦ s_x, q_f ↦ U(s_f).
+  φ : Sub
+  φ = ⟪ var 0 ∷ var 1 ∷ map (λ x → if isOb x then var (2 + x) else fst (Uop (cellΣ x))) (range n) ⟫
+
+  -- ψ: ⊤, c, s_x ↦ q_x, s_f ↦ q_f ∗₁ λ_{q_y}.
+  ψf : Nat → Cell
+  ψf x = binC 1 (cellK x) (lam (cellK (snd (bnd x))))
+
+  ψ : Sub
+  ψ = ⟪ var 0 ∷ var 1 ∷ map (λ x → if isOb x then var (2 + x) else fst (ψf x)) (range n) ⟫
+
+  Y : List Nat
+  Y = rangeFrom 2 n
+
+  -- Components of H over s_f, generically in D²:
+  --   (U(u) ∗₁ λ_b) ∗₁ id_b  ⇛  id_a ∗₁ u          (full coherence)
+  private
+    HgenT : Ty
+    HgenT = asTy (binC 1 (binC 1 Ugen lamB) (idC gB)) (binC 1 (idC gA) gU)
+
+  Hf : Nat → Cell
+  Hf x = cohC D² HgenT (diskList (cellΣ x))
+
+  -- Components of H′ over q_f: c₁ ∗₂ c₂ ∗₂ (q_f ∗₁ c₃) ∗₂ c₄.
+  private
+    -- c₁ over D² (u ↦ ψ(s_f)):  U(u) ∗₁ (id_{x₀} ∗₀ id_b) ⇛ u ∗₁ λ⁻¹_b
+    c₁T : Ty
+    c₁T = asTy (binC 1 Ugen (binC 0 (idC (gen D² 0)) (idC gB))) (binC 1 gU lamiB)
+    -- c₂ over V3: (u ∗₁ v) ∗₁ v′ ⇛ u ∗₁ (v ∗₁ v′)
+    c₂T : Ty
+    c₂T = asTy (binC 1 (binC 1 (gen V3 4) (gen V3 6)) (gen V3 8))
+               (binC 1 (gen V3 4) (binC 1 (gen V3 6) (gen V3 8)))
+    -- c₃ over D¹: λ_w ∗₁ λ⁻¹_w ⇛ id_{id ∗₀ w}
+    c₃T : Ty
+    c₃T = asTy (binC 1 (lam (gen D¹ 2)) (lami (gen D¹ 2))) (idC idw)
+    -- c₄ over D²: u ∗₁ id_b ⇛ id_a ∗₁ u
+    c₄T : Ty
+    c₄T = asTy (binC 1 gU (idC gB)) (binC 1 (idC gA) gU)
+
+  H′f : Nat → Cell
+  H′f x = binC 2 (binC 2 (binC 2 c₁ c₂) (binC 1 qf c₃)) c₄
+    where
+    qf = cellK x
+    qy = cellK (snd (bnd x))
+    idqy = binC 0 (idC (gen 𝒦 0)) qy
+    c₁ = cohC D² c₁T (diskList (ψf x))
+    c₂ = cohC V3 c₂T (fst (gen 𝒦 0) ∷ fst (gen 𝒦 1) ∷ fst (cellK (fst (bnd x)))
+                       ∷ fst idqy ∷ fst qf ∷ fst qy ∷ fst (lam qy) ∷ fst idqy ∷ fst (lami qy) ∷ [])
+    c₃ = cohC D¹ c₃T (diskList qy)
+    c₄ = cohC D² c₄T (diskList qf)
+
+  -- The homotopies as substitutions into the cylinder contexts. The
+  -- cylinder layout keeps ⊤ and c, then for each x: x⁻, x⁺, x↑.
+  H H′ : Sub
+  H  = ⟪ var 0 ∷ var 1 ∷ concatMap (λ x →
+          lookupₛ (ψ ∘ φ) (2 + x) ∷ var (2 + x)
+          ∷ (if isOb x then fst (idC (cellΣ x)) else fst (Hf x)) ∷ []) (range n) ⟫
+  H′ = ⟪ var 0 ∷ var 1 ∷ concatMap (λ x →
+          lookupₛ (φ ∘ ψ) (2 + x) ∷ var (2 + x)
+          ∷ (if isOb x then fst (idC (cellK x)) else fst (H′f x)) ∷ []) (range n) ⟫
+
+  cylΣ cylK : Maybe Ctx
+  cylΣ = CylOf.cyl (susp Γ) Y >>= λ C → just (evCtx (Cyl.ctx C))
+  cylK = CylOf.cyl (constCocone Γ) Y >>= λ C → just (evCtx (Cyl.ctx C))
+
+  -- Decisions, each backed by the certified checker.
+  okφ okψ okH okH′ : Bool
+  okφ = is-just (checkCtx ΣΓ >>= λ w → checkSub ΣΓ w φ 𝒦)
+  okψ = is-just (checkCtx 𝒦 >>= λ w → checkSub 𝒦 w ψ ΣΓ)
+  okH = okSub ΣΓ H cylΣ
+    where
+    okSub : (Γ' : Ctx) → Sub → Maybe Ctx → Bool
+    okSub Γ' σ nothing  = false
+    okSub Γ' σ (just C) = is-just (checkCtx Γ' >>= λ w → checkSub Γ' w σ C)
+  okH′ = okSub 𝒦 H′ cylK
+    where
+    okSub : (Γ' : Ctx) → Sub → Maybe Ctx → Bool
+    okSub Γ' σ nothing  = false
+    okSub Γ' σ (just C) = is-just (checkCtx Γ' >>= λ w → checkSub Γ' w σ C)

@@ -550,3 +550,39 @@ A countermodel separating \(\iota\pi\) from \(1_H\) must therefore permit the st
 
 Finally, even a proof of \(\iota\pi=1_H\) would establish that the **specified** \(\iota,\pi\) are inverse isomorphisms. Uniqueness of isomorphisms \(H^n\cong1_T\) would still require an additional coherence argument.
 
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** The response answers Question 2: imposing strict mixed currying does not make H = 1_T, and left closure alone already separates H from 1_T. It reframes Question 5 and finds a real obstruction to the intended semantics of 𝒢. It also proves a constraint on countermodels for Question 1. Questions 1, 3, 4 and 6 stay open.
+
+Checked step by step.
+
+1. **The model 𝒟 (§1.1).**
+   - The underlying Gray monoid is the free-group model of round 3. Its homs are chaotic, so every Gray equation holds.
+   - Currying multiplies by h_{a,c} = k_{c−a} k_c⁻¹ on the left.
+   - Strict context naturality holds: Λ(f q) = h f q.
+   - Strict codomain naturality holds with R_a(t) = h_{a,d} t h_{a,c}⁻¹. R_a is a strict 2-functor.
+   - The triangle identities reduce to h⁻¹h = 1.
+   - The bound-variable naturality "up to interchanger" only needs some action s\c on 1-cells, plus a 2-cell. In chaotic homs that 2-cell always exists uniquely, so the model satisfies the axioms of 𝒢.
+2. **Strict mixed currying (4).** The two mixed curryings are h_{b,c−a} h_{a,c} and h_{a,c−b} h_{b,c}, and both telescope to k_{c−a−b} k_c⁻¹. So the two currying functors are equal. Same-side iteration also telescopes: R_b R_a = R_{a+b}.
+3. **H in 𝒟 (5).** With |A| = |B| = 1, |C| = |D| = 2, k₁ = ℓ, k₄ = r⁻¹ and every other k_c = 1:
+   - u is a left unit with bound object 1 and codomain 2, so its label is h_{1,2} = ℓ, and e has label ℓ⁻¹;
+   - v is a right unit with bound object 2 and codomain 4, so its label is h_{2,4} = r, and d has label r⁻¹;
+   - so H ↦ ℓ⁻¹r⁻¹ℓr, and its powers are distinct reduced words.
+4. **Left-only example H_L (§2).** v_L = 1_C ⊗ Λ_C(1) is a left unit with bound object 2 and codomain 4, so its label is again h_{2,4} = r. Hence H_L ↦ ℓ⁻¹r⁻¹ℓr ≠ 1.
+
+   This **corrects item 11's last bullet**: the separation does not need left and right currying to fail to commute. The round-3 model needed that only because its multiplier depended on the bound object alone.
+5. **(8), Campion's biclosedness.** The Yoneda derivation is standard. It gives a canonical equivalence (A\C)/B ≃ A\(C/B), not a literal equality.
+6. **(9), outer comparison.** Correct, and degenerate. For strict functors e and g, both composites are the functor e ⊗ g, since the Gray tensor is a functor of two variables.
+
+   This holds for every pair of functors, generators included. So interpreting 𝒢's 1-cells as functors and its 2-cells as transformations sends every interchanger of 𝒢 to an identity. It cannot test directedness.
+7. **(10), evaluation of an internal interchanger.** Take S = J ⊗ J with Steiner orientation ∂(x⊗y) = ∂x⊗y − x⊗∂y. Its square cell is γ : h₁v₀ ⇒ v₁h₀. Since e ∘ (q ⊗ 1) = 1_S, the interchanger of α ⊗ u in (S/J) ⊗ J is the image of the square of J ⊗ J under q ⊗ 1. So e(χ_{α,u}) = γ, which is not invertible. I checked this.
+8. **§5, the obstruction.** I checked the orientation.
+   - An arrow v₀ → v₁ in J\S is a functor F : J ⊗ J → S with the coordinates swapped, F(i, j) = (j, i). F sends the square of J ⊗ J to a cell from v₁h₀ to h₁v₀, which is the reverse of γ and does not exist.
+   - S/J does contain α : v₀ → v₁.
+   - Suppose a single hom-category ℋ(J, S) were isomorphic to both S/J and J\S, identically on objects, via the two curryings at the tensor unit. Then the hom-sets from v₀ to v₁ would be in bijection, but one is empty and the other is not.
+
+   **Consequence for 𝒢.** The intended semantic model is strict ω-categories with the Gray tensor, with transformations of a single orientation as 2-cells. That model does not satisfy 𝒢's axiom that *both* Φ are isomorphisms of hom-categories in the same 2-category. Left and right closure are matched by lax and oplax transformations respectively (Gagna–Harpaz–Lanari, Ex. 2.5). The argument uses the unit of the model, which the unit-free syntax lacks, but the model has one.
+9. **§6, the constraint on countermodels.** If f is strictly invertible, then (f ⊗ B′) ∗ χ_{f⁻¹,g} ∗ (f ⊗ B) has the reversed endpoints of χ_{f,g}. The Gray axiom for χ_{ff⁻¹,g} = χ_{1,g} = 1 shows the two are inverse. So in any model where u, e, v and d are strict isomorphisms, ι is invertible, and π ∘ ι = 1 forces ι ∘ π = 1. A countermodel for Question 1 therefore needs u ∘ e ≠ 1.
+
+Follow-up prompt: `outbox/gray-closed-scheduling-r5.md` (round 5, unsent).

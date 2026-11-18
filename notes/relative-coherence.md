@@ -242,18 +242,60 @@ The layers are `Γ, Γ′`, then `P, P′, M` for n = 2, and in general 2n+1 lay
 - Promoting "types connected by invertible cells" to an equivalence of contexts needs coherent transport of dependent generators along those cells. That is again RC in higher dimensions, and is not written out here.
 - Strict equality would need strictly associative composites (CaTT_su/sua).
 
+### 6.1 D14: the Gray cube's two bracketings are inverse up to 4-cells (sketch, 2026-11-18)
+
+**Setting.** `GrayCtx/Cube.agda` (PR #55) checks two substitutions:
+- `CubeR ⊢ toL : CubeL`;
+- `CubeL ⊢ toR : CubeR`.
+
+Each is the renaming on the 26 lower generators. It sends the other cube cell X to `K₁ ∗₂ (W ∗₁ X ∗₁ W′) ∗₂ K₂`, where:
+- `W, W′` are associator 2-cells (`a`, `b`, or `A1`, `B3`);
+- `K₁, K₂` are X-free 3-cells built from three kinds of step: regroupings of vertical chains (`regroup`), unitors on whiskered squares, and a cancellation `Φ` of an associator pair inserted by `stepAt`.
+
+**Claim.** Both composites `toR ∘ toL` and `toL ∘ toR` send the cube cell to a cell connected to it by a 4-term. So the two bracketings of `D¹ ⊗ D¹ ⊗ D¹` are equivalent contexts, with this explicit pair of substitutions. Both composites are the identity on the lower generators.
+
+**Atoms and column cells.** Every 2-term met here is a vertical composite of *atoms*. An atom is either a whiskered square (P▹, ◃Q, …), which contains a 2-variable, or an associator 2-cell, which contains none. A **column ps** Π is the pasting context made of a 1-cell column and a vertical chain of 2-discs, one per atom. The 3-cells of `K₁` and `K₂` are of two kinds:
+- (i) **column coherences.** These are substitutions of 3-terms over a column ps, with atoms sent to its discs. Regroupings and unitors on squares are of this kind, and so is any whiskering of a column coherence.
+- (ii) **segment rewrites.** These are column 3-terms with one 3-disc slot, filled with a 3-cell between two 2-terms with no 2-variable. The cancellations `Φ : a ∗₁ A1 ⇛ id` and their inverses are of this kind.
+
+**Column-loop lemma (any context).** A 3-loop made of steps of kinds (i) and (ii) is connected to the identity by a 4-term.
+
+*Proof sketch.*
+1. *Flat words and segments.* The **flat word** of a column word lists its atoms with identities dropped.
+   - Kind (i) steps leave the flat word unchanged, because column coherences cannot reorder atoms.
+   - Kind (ii) steps change only atoms without 2-variables.
+   - So the 2-variable atoms of the flat word, and their order, are fixed along the loop. They cut the flat word into **segments** with no 2-variable.
+2. *Normalization.* Define `ν(word) := R(word) ∗₂ N(flat word)`, where:
+   - R is the column coherence to the right-nested flat word;
+   - N normalizes each segment u to `κ²(σu, τu)`, by the 3-cell between 2-terms without 2-variables given by Proposition P∞ (§7.2), whiskered into the column.
+3. *(CN) for each step b, i.e. `ν(src b) ⇛ b ∗₂ ν(tgt b)`.*
+   - **Kind (i).** `R(src b)` and `b ∗₂ R(tgt b)` are full parallel 3-terms over the same column ps, so the coherence rule there connects them. The N-parts are equal.
+   - **Kind (ii)**, with b rewriting a subword u. First factor `R(src)` through the column ps in which u is one disc; the coherence rule over the finer ps allows this. Then slide b through R, by the naturality of R in that disc: a coherence over the column ps with the disc promoted to a 3-disc. Finally, `N(seg) ⇛ b ∗₂ N(seg′)` compares two parallel 3-cells between 2-terms without 2-variables. Proposition P∞ connects them, and the resulting 4-cell is whiskered into the column through a 4-disc slot.
+4. *Telescoping.* Telescope with the cancellation 4-cells for the inverses of coherence-built cells (Benjamin–Markakis–Sarti). ∎
+
+The key point is that no step ever needs a pasting context in which a square's composite 1-boundary is split. Squares are always whole discs. Associator arithmetic happens only inside segments with no 2-variables, over chains.
+
+**Proof of the claim.** Take `toR ∘ toL` on `X_R`. The other composite is symmetric.
+1. Distribute the outer whiskering `A1 ∗₁ (−) ∗₁ B3` over `∗₂`. This is a coherence over a column ps with a stack of 3-discs.
+2. Collect `A1 ∗₁ (a ∗₁ X_R ∗₁ b) ∗₁ B3` into `W ∗₁ X_R ∗₁ W′`, with `W = A1;a` and `W′ = b;B3`. This is a regrouping over a column ps with X_R as a 3-disc. The result is `K₁ ∗₂ (W ∗₁ X_R ∗₁ W′) ∗₂ K₂`, with K₁ and K₂ made of steps of kinds (i) and (ii).
+3. Let `ι_Z : Z ⇛ W ∗₁ Z ∗₁ W′` be the uniform insertion cell: inverse unitors, then `Φ⁻¹` whiskered next to Z. Each factor is a coherence over a ps with Z as a 2-disc and `Φ⁻¹` substituted wholesale into a 3-disc. So ι is natural in Z. Promoting Z's disc to a 3-disc X gives coherences over D³, or over `D³ ∗₁ D³` for the exchange with the `Φ` slot. Hence `ι_S ∗₂ (W ∗₁ X_R ∗₁ W′) ⇛ X_R ∗₂ ι_T`.
+4. `K₁ ∗₂ ι_S⁻¹` and `ι_T ∗₂ K₂` are 3-loops of kinds (i) and (ii), so the column-loop lemma sends both to identities.
+5. Altogether, `K₁ ∗₂ (W ∗₁ X_R ∗₁ W′) ∗₂ K₂ ⇛ ι_S ∗₂ (W ∗₁ X_R ∗₁ W′) ∗₂ ι_T⁻¹ ⇛ X_R ∗₂ ι_T ∗₂ ι_T⁻¹ ⇛ X_R`. ∎
+
+**Status.** This is a sketch on paper; the 4-terms have not been generated. Two things in it are not yet written out in full: the positional pull-back in Proposition P∞ (for the cube, the 1-skeleton is acyclic, so the round-1 support argument, answered/gray-contexts-2026-11-18.md §2, covers it), and the factorization of R through coarser column ps's. A mechanical check needs the GrayCtx elaborator plus the `tools/` generator. For the general RC(3) question, the column-loop lemma covers every X-free loop that keeps its 2-variable atoms as fixed syntactic pieces. What it does not cover is a loop whose steps re-parse the same 2-term into different atoms, for example a coherence `coh_Q[τ]` whose middle 2-terms `τ(ξ_k)` are big composites containing F, compared with a step that splits them. This is exactly the remaining F-boundary case for the lax square.
+
 ## 7. Dimension 3: why loop-freeness enters
 
 **RC(3) fails without loop-freeness (sketch; checked in outline by the literature thread).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the self-braiding at that generator, a non-zero element of π₃(S²) ≅ ℤ **[conj, G1 check]**. The candidates are η and the Whitehead square `[ι₂, ι₂] = ±2η`; both are non-zero, and the argument needs only that. A 4-cell would make that class null. *Two claims still need citations before the "sketch" label can go: (a) the fundamental ω-groupoid of S² is a model of CaTT (Grothendieck–Maltsiniotis; Ara); (b) which of the two classes the Eckmann–Hilton term represents.*
 
-So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the molecules are loop-free, and for them RC holds in (∞,ω)-categorical semantics (Campion arXiv 2311.00205, Cor. 3.5; Chanavat arXiv 2603.22242, Thm 3.29). Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
+So the conjecture must assume some acyclicity of the context. The cylinders `Q↑Y` are Steiner loop-free, and frame-acyclic molecules have essentially unique composites. For both, RC holds in (∞,ω)-categorical semantics: see Campion's pasting theorem (arXiv 2311.00200) and Chanavat (arXiv 2603.22242), Thm 3.17. Thm 3.29 there is Gray monoidality, and Campion's arXiv 2311.00205 Cor. 3.5 is strong monoidality. Frame-acyclicity is *not* Steiner loop-freeness (Hadzihasanovic arXiv 2404.07273, Comment 8.3.5 and Ex. 8.3.12), so a proof for one class does not automatically cover the other. Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
 
 **Where the proof of Theorem A stops in dimension 3.**
 - Sequentialization extends: every arity is a pasting context, which can be layered.
 - Normal forms of whiskered 3-generators extend: whiskers are compared by Theorem A, and moving a whisker comparison past a generator is an interchange over a pasting context.
 - Exchange of 3-generators extends: exchange moves are coherences over pasting contexts with two 3-discs.
 - What fails is the analogue of Lemma P: runs of 3-cells with no 3-variable, between 2-terms with equal strict image, in a 2-dimensional context that is not a pasting context. Such runs need not pull back to any pasting context. The natural attack is a Squier-style critical branching analysis. The hard branchings pair a 3-cell that moves a 2-generator F with a reassociation that splits F's boundary composite (e.g. `f⁻ ∗₀ y↑` in the lax square), and no pasting context contains both.
-- Smallest instance: RC(3) for the lax square, question 1 of both outbox prompts.
+- Smallest instance: RC(3) for the lax square, question 1 of both outbox prompts. Round 1 (`conjectures/answered/gray-contexts-2026-11-18.md`) settled its identity-boundary case and reduced 2-dimensional coherence arities to vertical 2-chains. The round-2 prompts (`conjectures/outbox/gray-contexts.md`, `conjectures/outbox/naturality-arbitrary-depth.md`) ask for the F-boundary case.
 
 ### 7.1 A reduction of RC(3) to coherent normalization (progress, 2026-11-18)
 
@@ -271,6 +313,30 @@ Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gi
 
 **Where (CN) is hard.** Suppose the cells of `δ` avoid the 2-generators of Γ, or contain them only as whole arguments, i.e. a 2-variable of R is sent to a normal form. Then both 3-terms of (CN) are obtained by substitution from 3-terms over one pasting context, built from R by subdividing the 1-variables along the paths of their images. The coherence rule there gives the 4-cell. *(Sketch; not yet written as a general lemma.)* The remaining case is a basic cell whose arity separates the composite boundary of a 2-generator. In S, an example is an associator moving `v_y` relative to `f⁻` inside the source `f⁻ ∗₀ v_y` of F, whiskered next to a column that contains F. There, `ν` treats `f⁻ ∗₀ v_y` as one abstracted edge `z⁻`, while b splits it, and no pasting context contains both. This is the Squier-style critical branching described above, now isolated as the single family that must be closed.
 
+### 7.2 Two partial results toward RC(3) for the lax square (2026-11-18)
+
+**Proposition P∞ (RC in every dimension without 2-variables).** Let Γ be any context, with cycles allowed. Let T, T′ be parallel n-terms of Γ, n ≥ 1, with no variable of dimension ≥ 2 in their support. Then T and T′ are connected by an (n+1)-term. In particular, **RC(n) holds for every n in every 1-dimensional context.** This does not contradict §7: the Eckmann–Hilton cell needs a 2-variable.
+
+(For the lax square this is also proved in round 1, `conjectures/answered/gray-contexts-2026-11-18.md` §2, by a total-support form of Benjamin–Markakis Lemma 36.)
+
+*Proof sketch.* Lemma P (Step 1) works in every dimension.
+- Let w be the flattened path of the 1-dimensional boundary.
+- Induct on terms. In `coh_{R}[γ]`, each column of R is sent to a segment of w, at a position fixed by the pasting structure. Each variable of R of dimension ≥ 1 is sent to a term with no 2-variables, which pulls back to that segment by induction.
+- A pull-back at a given position is unique. The 0-variables of `C(w)` are distinct, so each entry of the assembled substitution has a prescribed type, and the induction determines the entry from that type.
+- So T and T′ pull back to parallel terms over the chain `C(w)`, with the same pulled-back boundary. Their types traverse all of w, so they are full, and the coherence rule over `C(w)` connects them. ∎
+
+**Column lemma for S.** Every 0-path in S that passes through `y⁻` or `x⁺` runs from `x⁻` to `y⁺`. Let `coh_R[δ]` be a term of S, R a pasting context, with F in the support of δ. Then all of R's 1-columns except one are sent to empty paths, that is, to identities at `x⁻` or `y⁺`. The remaining column carries all of the F-occurrence, and its two ends are sent to `x⁻` and `y⁺`. Hence a coherence that touches F never separates `f⁻` from `y↑`, or `x↑` from `f⁺`, into different columns.
+
+*Proof.* A variable of R sent to a term containing F has a 1-dimensional boundary path of length 2, from `x⁻` to `y⁺`. It sits over one column of R, so that column covers the whole of `x⁻ → y⁺`. Nothing composes before `x⁻` or after `y⁺` except identities. ∎
+
+**Consequence for (CN).** The critical branching of §7.1 in S can only take one shape: a whiskered basic cell `b ∗₁ W`, where b is F-free and splits `f⁻ ∗₀ y↑`, and W is a 2-term containing F. By the column lemma, it cannot be a cell set beside F's column. Now compare b with the part of `ν` that absorbs b's source run into `κ`. These are parallel F-free 3-cells between F-free 2-terms, so Proposition P∞ connects them. (CN) for S therefore reduces to one compatibility: **ν commutes with `∗₁`-composition by F-containing 2-terms**, i.e. `ν_{u ∗₁ W}` is connected to `(ν_u ∗₁ ν_W) ∗₂ (flattening of N(u) ∗₁ N(W))`. The flattening is a coherence over a pasting context.
+
+Two routes to that compatibility looked natural, and each runs back into an RC(3) or N(3) statement:
+- *Define ν by structural recursion on terms, using naturality lifts of `coh_R`.* For 2-dimensional R this uses N for terms of dimension ≤ 2, which is proved. But (CN) then asks for the lift of the 3-cell b, which is N for 3-terms over a pasting context of dimension ≤ 2.
+- *Use the retraction S → D².* Let φ : D² → S send `s, t, Φ` to `f⁻∗₀y↑`, `x↑∗₀f⁺`, F. Let ψ : S → D² send `y⁻, x⁺ ↦ b`, `f⁻ ↦ s`, `x↑ ↦ t`, `y↑, f⁺ ↦ id_b`, and F to F conjugated by unitors. There is a transformation `id_S ⇒ φψ`. Its endpoint components are identities, its 1-components are `y↑` and `f⁺`, and its higher components are coherences. RC in D² (a pasting context, so the coherence rule applies directly) then gives RC(3) for the F-touching terms of S, *provided* every 3-term of S has a naturality lift along this transformation. That is N for 3-terms with Y = all of S.
+
+Status: open. The remaining gap is the single compatibility stated above.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).
@@ -286,7 +352,7 @@ Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gi
 |---|---|---|
 | `UnitorNaturality` | the left unitor's naturality 3-cell at depth 2 over the lax square (§6 "partial progress" case of the N file), via Theorem A | typechecks (~50 s) |
 | `ExchangeTwoBigons` | Theorem A with one exchange move (two side-by-side bigons) | typechecks (~3 min) |
-| `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | generated (5121 definitions, about 1 MB); Agda check in progress, uses about 10 GB |
+| `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | typechecks (5121 definitions, about 1 MB; 17 min and about 10 GB with `+RTS -M12G`) |
 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 

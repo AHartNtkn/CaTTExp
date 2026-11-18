@@ -2,7 +2,7 @@
 
 > **Update 2026-11-18.** N now holds for every term of dimension ≤ 2 (any Q, any up-closed Y), and N in dimension n follows from RC(n) on cylinders; see [`../relative-coherence.md`](../relative-coherence.md) §4. That note also proves the support lemma and repairs the §8 argument for composites (§4.3 there).
 >
-> **The standalone prompt of 2026-11-18 was answered: see [`answered/naturality-arbitrary-depth-2026-11-18.md`](answered/naturality-arbitrary-depth-2026-11-18.md)** for the prompt, the response and its verification. §7 case 3 (the 3-dimensional unitor) is settled there. An updated prompt for what remains goes in `outbox/`. This file keeps the history, earlier responses and verifications.
+> **Round 2 prompt: [`outbox/naturality-arbitrary-depth.md`](outbox/naturality-arbitrary-depth.md).** The standalone prompt of 2026-11-18 was answered: see [`answered/naturality-arbitrary-depth-2026-11-18.md`](answered/naturality-arbitrary-depth-2026-11-18.md) for the prompt, the response and its verification. §7 case 3 (the 3-dimensional unitor) is settled there. An updated prompt for what remains goes in `outbox/`. This file keeps the history, earlier responses and verifications.
 
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 
@@ -258,7 +258,7 @@ What is missing is a precise *relative* form of the conjecture: a statement abou
 
 The left unitor at depth 2 is settled in §6 (partial progress). **Cases 1 and 2 below are now settled** by the relative ladder theorem in the researcher response (verified 2026-11-18). Case 3 is the smallest open instance; also open are arbitrary up-closed Y on a chain.
 
-1. **The associator** `(f ∗₀ g) ∗₀ h → f ∗₀ (g ∗₀ h)` over three composable arrows, with Y = all variables. BMOSV Example 1.3 treats it for `Y = {f, g, h}` only; including the objects raises the depth to 2. The sliding argument of §6 (partial progress) should apply, since Q is 1-dimensional, but it has not been checked in detail. Three cylinder cells must be slid, and one must verify that each residual comparison lies along a single path.
+1. **The associator** `(f ∗₀ g) ∗₀ h → f ∗₀ (g ∗₀ h)` over three composable arrows, with Y = all variables. *Machine-checked 2026-11-18* by the sliding argument: `src/CaTTExp/Free/AssociatorDepth2.agda` (certified by the compiled checker (author's run; trusts MAlonzo/GHC; not reproduced in review), `tools/run/RunAssoc.agda`). The three cylinder cells f↑, g↑, h↑ are slid, and each residual comparison lies along a single path; every coherence used is certified at typecheck time. The ladder construction's cell is certified independently at typecheck time (`src/CaTTExp/Generated/AssociatorNaturality.agda`). BMOSV Example 1.3 treats it for `Y = {f, g, h}` only; including the objects raises the depth to 2.
 2. **All 2-dimensional coherences over 1-dimensional Q**, with Y = all variables. This is the general case of the §6 (partial progress) argument.
 3. **First case with dim Q = 2.** For example, Q the 2-disc `(x, y, f, g, α : f ⇒ g)`, Y = all variables, and c the right unitor for vertical composition `α ∗₁ id_g → α`, a 3-cell of depth 3. This is where the induction of §6 (proposed induction) is needed.
 

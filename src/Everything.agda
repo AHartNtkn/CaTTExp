@@ -157,6 +157,7 @@ import CaTTExp.Strict.BdElim
 import CaTTExp.Strict.StdSem
 import CaTTExp.Strict.Std
 import CaTTExp.Strict.NuRows
+import CaTTExp.Strict.LowerCut
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

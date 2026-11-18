@@ -25,6 +25,10 @@
 --          {Uⁿ_T, Cⁿ_T}[ι] in one step instead of by the recursive
 --          suspension Σκ; the two agree because suspension commutes
 --          with standard types and coherences.
+--          The insert constructor is defined through insertAt, so its
+--          agreement with FRV Defs. 18–29 holds by construction of
+--          insertAt plus the checked examples (CaTTExp.SUExamples); it
+--          is not proved.
 --
 -- Here Dₙ is the n-disc context, Uₙ the type of its top variable, and
 -- id A s = coh Dₙ (dₙ → dₙ) ⟨A, s⟩ with n = dim A.
@@ -33,8 +37,9 @@
 -- terms, where an identity in σ(f) is automatically the identity on
 -- σ(x). `nf` is one strategy (bottom-up, then disc, endo, prune at the
 -- head, then insertion, repeated) with a fuel bound; it returns a reduction sequence.
--- `_==su_` compares normal forms and is sound: a positive answer gives
--- a common reduct. It is not claimed complete.
+-- `_==su_` compares normal forms and is sound for this relation: a
+-- positive answer gives a common reduct under ⟶*. It is not claimed
+-- complete.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

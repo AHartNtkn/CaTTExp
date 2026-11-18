@@ -271,6 +271,28 @@ Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gi
 
 **Where (CN) is hard.** Suppose the cells of `δ` avoid the 2-generators of Γ, or contain them only as whole arguments, i.e. a 2-variable of R is sent to a normal form. Then both 3-terms of (CN) are obtained by substitution from 3-terms over one pasting context, built from R by subdividing the 1-variables along the paths of their images. The coherence rule there gives the 4-cell. *(Sketch; not yet written as a general lemma.)* The remaining case is a basic cell whose arity separates the composite boundary of a 2-generator. In S, an example is an associator moving `v_y` relative to `f⁻` inside the source `f⁻ ∗₀ v_y` of F, whiskered next to a column that contains F. There, `ν` treats `f⁻ ∗₀ v_y` as one abstracted edge `z⁻`, while b splits it, and no pasting context contains both. This is the Squier-style critical branching described above, now isolated as the single family that must be closed.
 
+### 7.2 Two partial results toward RC(3) for the lax square (2026-11-18)
+
+**Proposition P∞ (RC in every dimension without 2-variables).** Let Γ be any context, with cycles allowed. Let T, T′ be parallel n-terms of Γ, n ≥ 1, with no variable of dimension ≥ 2 in their support. Then T and T′ are connected by an (n+1)-term. In particular, **RC(n) holds for every n in every 1-dimensional context.** This does not contradict §7: the Eckmann–Hilton cell needs a 2-variable.
+
+*Proof sketch.* Lemma P (Step 1) works in every dimension.
+- Let w be the flattened path of the 1-dimensional boundary.
+- Induct on terms. In `coh_{R}[γ]`, each column of R is sent to a segment of w, at a position fixed by the pasting structure. Each variable of R of dimension ≥ 1 is sent to a term with no 2-variables, which pulls back to that segment by induction.
+- A pull-back at a given position is unique. The 0-variables of `C(w)` are distinct, so each entry of the assembled substitution has a prescribed type, and the induction determines the entry from that type.
+- So T and T′ pull back to parallel terms over the chain `C(w)`, with the same pulled-back boundary. Their types traverse all of w, so they are full, and the coherence rule over `C(w)` connects them. ∎
+
+**Column lemma for S.** Every 0-path in S that passes through `y⁻` or `x⁺` runs from `x⁻` to `y⁺`. Let `coh_R[δ]` be a term of S, R a pasting context, with F in the support of δ. Then all of R's 1-columns except one are sent to empty paths, that is, to identities at `x⁻` or `y⁺`. The remaining column carries all of the F-occurrence, and its two ends are sent to `x⁻` and `y⁺`. Hence a coherence that touches F never separates `f⁻` from `y↑`, or `x↑` from `f⁺`, into different columns.
+
+*Proof.* A variable of R sent to a term containing F has a 1-dimensional boundary path of length 2, from `x⁻` to `y⁺`. It sits over one column of R, so that column covers the whole of `x⁻ → y⁺`. Nothing composes before `x⁻` or after `y⁺` except identities. ∎
+
+**Consequence for (CN).** The critical branching of §7.1 in S can only take one shape: a whiskered basic cell `b ∗₁ W`, where b is F-free and splits `f⁻ ∗₀ y↑`, and W is a 2-term containing F. By the column lemma, it cannot be a cell set beside F's column. Now compare b with the part of `ν` that absorbs b's source run into `κ`. These are parallel F-free 3-cells between F-free 2-terms, so Proposition P∞ connects them. (CN) for S therefore reduces to one compatibility: **ν commutes with `∗₁`-composition by F-containing 2-terms**, i.e. `ν_{u ∗₁ W}` is connected to `(ν_u ∗₁ ν_W) ∗₂ (flattening of N(u) ∗₁ N(W))`. The flattening is a coherence over a pasting context.
+
+Two routes to that compatibility looked natural, and each runs back into an RC(3) or N(3) statement:
+- *Define ν by structural recursion on terms, using naturality lifts of `coh_R`.* For 2-dimensional R this uses N for terms of dimension ≤ 2, which is proved. But (CN) then asks for the lift of the 3-cell b, which is N for 3-terms over a pasting context of dimension ≤ 2.
+- *Use the retraction S → D².* Let φ : D² → S send `s, t, Φ` to `f⁻∗₀y↑`, `x↑∗₀f⁺`, F. Let ψ : S → D² send `y⁻, x⁺ ↦ b`, `f⁻ ↦ s`, `x↑ ↦ t`, `y↑, f⁺ ↦ id_b`, and F to F conjugated by unitors. There is a transformation `id_S ⇒ φψ`. Its endpoint components are identities, its 1-components are `y↑` and `f⁺`, and its higher components are coherences. RC in D² (a pasting context, so the coherence rule applies directly) then gives RC(3) for the F-touching terms of S, *provided* every 3-term of S has a naturality lift along this transformation. That is N for 3-terms with Y = all of S.
+
+Status: open. The remaining gap is the single compatibility stated above.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

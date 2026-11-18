@@ -13,21 +13,19 @@
 --   * the identity on its source (coherence case).
 -- This is Theorem 1(1) of notes/pseudo-vs-gray.md §3.6.
 --
--- One fact about Steiner complexes is taken as an explicit module
--- parameter, not postulated:
---
---  (B-bdry) a cell of ν(K(Θ)) in a hom x → y (in use, from the first
---      to the last object), of dimension d − 1 (d = dim K(Θ)), whose downward-closed
---      support (CaTTExp.Gray.Support's `down`) equals that of a boundary
---      ∂^sg T of the total cell T, is that boundary. It is the instance
---      of "support determines the cell" (Hadzihasanovic, arXiv
---      2404.07273, Prop. 8.3.17 and Thm 11.2.18) that the operation case
---      needs; Hyp.bsupp→bbdry derives it from the general form BSupp.
---
--- The other facts are theorems:
+-- It rests on no hypothesis. The facts about Steiner complexes it uses
+-- are theorems:
 --  * the table T of the Gray tensor ⟨Θ₁⟩ ⊗ … ⊗ ⟨Θₙ⟩ is a cell
 --    (CaTTExp.Strict.Bridge, `T-cell`; also checked by evaluation on 18
 --    shapes in CaTTExp.Strict.CheckCells);
+--  * in the operation case, a cell in a hom x → y whose downward-closed
+--    support (CaTTExp.Gray.Support's `down`) equals that of a boundary
+--    ∂^sg T of the total cell T is that boundary (BBdry). This is an
+--    instance of "support determines the cell" (BSupp), proved without
+--    atoms in CaTTExp.Strict.Recon (`b-supp`, `b-bdry`), following
+--    notes/conjectures/answered/steiner-support-formalizable-2026-11-18.md;
+--    the literature proof is Hadzihasanovic, arXiv 2404.07273,
+--    Prop. 8.3.17 and Thm 11.2.18;
 --  * in the coherence case, two cells whose supports both equal T's
 --    have equal top chains (CaTTExp.Strict.CohCase, `coh-top`).
 ------------------------------------------------------------------------
@@ -46,8 +44,12 @@ import CaTTExp.Gray.Graded ∅ as Gr
 open import CaTTExp.Strict.Hyp public
 open import CaTTExp.Strict.Bridge using (T-cell)
 open import CaTTExp.Strict.CohCase using (coh-top)
+open import CaTTExp.Strict.Recon using (b-bdry)
 
-module Soundness (B-bdry : BBdry) where
+module Soundness where
+  private
+    B-bdry : BBdry
+    B-bdry = b-bdry
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
   sound-op⋆ : ∀ {Γ Δ t u σ} → Δ ⊢ps → T (graySide Δ ⋆ t u) → Γ ⊢sub σ ∶ Δ → Cellular Γ σ Δ →

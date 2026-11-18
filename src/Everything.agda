@@ -71,6 +71,10 @@ import CaTTExp.Strict.TotalCell
 import CaTTExp.Strict.Bridge
 import CaTTExp.Strict.TopCell
 import CaTTExp.Strict.CohCase
+import CaTTExp.Strict.DD
+import CaTTExp.Strict.Cut
+import CaTTExp.Strict.Rad
+import CaTTExp.Strict.Recon
 import CaTTExp.Strict.ReverseInterchanger
 import CaTTExp.Strict.CheckCells
 import CaTTExp.Strict.PsFacts

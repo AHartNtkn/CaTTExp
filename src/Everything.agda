@@ -31,6 +31,7 @@ import CaTTExp.Lim.Rules
 import CaTTExp.Lim.Terms
 import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
+import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples

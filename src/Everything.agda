@@ -12,9 +12,17 @@ import CaTTExp.Subst
 import CaTTExp.PastingTrees
 import CaTTExp.CheckWith
 import CaTTExp.Check
+import CaTTExp.PastingCheck
+import CaTTExp.Completeness
+import CaTTExp.ConstSub
+import CaTTExp.Weakening
+import CaTTExp.Suspension
+import CaTTExp.GroupModel
 import CaTTExp.Pure
+import CaTTExp.PureMetatheory
 import CaTTExp.Examples
 import CaTTExp.Sketch.Representables
+import CaTTExp.Sketch.NonDerivable
 import CaTTExp.Free.Reflect
 import CaTTExp.Free.Builders
 import CaTTExp.Free.Cylinder

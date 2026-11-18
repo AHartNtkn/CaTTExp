@@ -1,7 +1,8 @@
 ------------------------------------------------------------------------
 -- A certified typechecker, for any decidable coh side condition: every
 -- `just` it returns carries a derivation, so a successful run *is* a
--- proof that the input is well typed. (It is not proved complete; a `nothing` proves nothing.)
+-- proof that the input is well typed. It is also complete: see
+-- CaTTExp.Completeness.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature
@@ -13,21 +14,20 @@ module CaTTExp.CheckWith
 
 open Signature 𝕊
 open import CaTTExp.TypingWith 𝕊 side
-open import CaTTExp.PastingTrees 𝕊 using (checkPs)
+open import CaTTExp.PastingCheck 𝕊 using (checkPs)
 
-private
-  -- Decide syntactic equality of types and transport along it.
-  castTy : ∀ {Γ t} A B → Γ ⊢tm t ∶ A → Maybe (Γ ⊢tm t ∶ B)
-  castTy A B d = go (A ==Ty B) (==Ty-sound A B)
-    where
-    go : (b : Bool) → (T b → A ≡ B) → Maybe _
-    go true  eq = just (subst (_ ⊢tm _ ∶_) (eq tt) d)
-    go false _  = nothing
+-- Decide syntactic equality of types and transport along it.
+castWith : ∀ {Γ t A B} (b : Bool) → (T b → A ≡ B) → Γ ⊢tm t ∶ A → Maybe (Γ ⊢tm t ∶ B)
+castWith true  eq d = just (subst (_ ⊢tm _ ∶_) (eq tt) d)
+castWith false _  _ = nothing
 
-  inferVar : ∀ Γ i → Γ ⊢ctx → (m : Maybe Ty) → lookup Γ i ≡ m →
-             Maybe (Σ Ty (Γ ⊢tm var i ∶_))
-  inferVar Γ i w nothing  _  = nothing
-  inferVar Γ i w (just A) eq = just (A , var-wf w eq)
+castTy : ∀ {Γ t} A B → Γ ⊢tm t ∶ A → Maybe (Γ ⊢tm t ∶ B)
+castTy A B d = castWith (A ==Ty B) (==Ty-sound A B) d
+
+inferVar : ∀ Γ i → Γ ⊢ctx → (m : Maybe Ty) → lookup Γ i ≡ m →
+           Maybe (Σ Ty (Γ ⊢tm var i ∶_))
+inferVar Γ i w nothing  _  = nothing
+inferVar Γ i w (just A) eq = just (A , var-wf w eq)
 
 mutual
   checkCtx : (Γ : Ctx) → Maybe (Γ ⊢ctx)

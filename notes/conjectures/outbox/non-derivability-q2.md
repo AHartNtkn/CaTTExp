@@ -1,5 +1,3 @@
-**Status: unsent** (written 2026-11-18; follows `answered/non-derivability-2026-11-18.md`, Question 2).
-
 # Is ℕ provably a set in a coherence-style theory of ω-categories with limits and exponentials by shapes?
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. It is the one question left open by an earlier answer; §"What is known" says exactly what that answer proved.*

@@ -1,8 +1,6 @@
-**Status: unsent** (ready to send).
+# Problem: composites of molecules in CaTT (Gray contexts), round 3
 
-# Problem: composites of molecules in CaTT (Gray contexts), round 2
-
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/gray-contexts-2026-11-18.md`; this prompt does not re-ask anything answered there.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Rounds 1 and 2 and their verified answers are archived in `answered/gray-contexts-2026-11-18.md` and `answered/gray-contexts-round2-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -61,38 +59,24 @@ Existence in G(n) follows from RC(n−1) for U's (n−1)-skeleton. Uniqueness in
    - *2-dimensional arity: reduced.* Let `c = coh_{P,u→v}[σ]` be a coherence 3-term with `dim P = 2` and strict 2-boundary F. Then exactly one 2-variable of P goes to a term with image F. All of P's columns except that one lie over `x⁻` or `y⁺`. A coherence over P's middle column, read as a vertical 2-chain Q, connects c to `coh_{Q,ū→v̄}[τ]`.
    - *One coherence never splits F's boundary.* In any `coh_R[δ]` with F in the support of δ, exactly one 1-column of R has a non-empty path, and that path runs from `x⁻` to `y⁺`. So `f⁻` and `y↑` are never separated into different columns inside a single coherence.
 6. **The Gray cube's loops reduce to one hemisphere.** Let U be the Gray cube, X its 3-cell, and `A = ⌈∂⁻U⌉`. By item 3, a 3-term `H : A → A` without X has support in the negative hemisphere `∂⁻U`, which has three faces.
+7. **Suspended coherences over vertical chains (round 2, proved).** Let Γ be any context and α = coh_{ΣC,ΣA}[τ], β = coh_{ΣC′,ΣA′}[τ′] parallel 3-terms with 0-boundary (a, b), where C, C′ are 1-dimensional path contexts and both the arity **and the type** are literal syntactic suspensions; the substituted 2-terms are arbitrary. Then there is a 4-term α → β. Proof: by Benjamin–Markakis, the hom H = Hom(a, b) is free on its indecomposable cells and decomposable hom cells are exactly coh_{ΣP,ΣB}[σ]; so α, β desuspend to hom 2-terms over a finite graph of hom generators, which lift to full-support 2-terms α̂, β̂ over a path context C_w (item 4 in the hom), and `coh_{ΣC_w, Σα̂ → Σβ̂}[δ_w]` is the required term.
+8. **The hom shortcut fails in general (round 2, proved).** Over D₂ = (x, y, f, g, A : f → g) put W(A) = (λ_f⁻¹ ∗₁ (1_{1_x} ∗₀ A)) ∗₁ λ_g, r = coh_{D₂, A → W(A)}, ℓ = coh_{D₂, W(A) → A}, κ = r ∗₂ ℓ. Then r, ℓ are indecomposable hom 2-generators (their types contain ∗₀, so are not suspensions), κ ≠ 1_A in the strictification of the hom computad, yet coh_{D₂, κ → 1_A} exists globally; substituting into S gives the same in the lax square. So "equal global strict image ⇒ equal hom strict image" is false, and item 7 does not by itself settle the F-boundary case.
+9. **Literature on normalisers.** Rice's thesis (arXiv 2502.17068) proves rehydration of semistrict CaTT over pasting contexts (Thm 4.5.3); §4.5.2 explains that extending it to arbitrary contexts needs normalisers that are not single coherences and comparisons between normalisation choices, and leaves this open. The BMOSV naturality construction (arXiv 2501.11620) covers depth ≤ 1 only.
 
-## 3. What remains, and why
+## 3. What remains
 
-In dimension 2, the runs of cells with no top variable live over a single path, and the coherence rule settles them. In dimension 3 they live over a 2-dimensional context, such as S, which is not a pasting context.
-
-Item 5 settles S except in one case. Both parallel 3-terms have strict 2-boundary F, and at least one of them is a composite over a **3-dimensional** arity, or is a coherence whose middle-column 2-terms `τ(ξ_k)` are arbitrary.
-
-The Squier-style route needs one normalization 3-cell `ν_P : P → N(P)` for each 2-term P with image F, chosen once and for all (Theorem A gives one). It must be compatible, up to 4-cells, with every whiskered elementary 3-cell b, i.e. `ν_{src b}` must be connected to `b ∗₂ ν_{tgt b}`. Item 4 settles the part of this inside F-free runs. So the remaining compatibility is with `∗₁`-composition by 2-terms that contain F.
-
-RC(3) fails in general. In `(x : ⋆, a : id_x → id_x)`, the Eckmann–Hilton 3-cell and the identity are expected not to be connected, since they give a non-zero class in π₃(S²). (This is a sketch, not checked in detail.) So any proof must use some acyclicity of the context, and which notion it needs is part of question 3.
+For the lax square S, RC(3) is settled when the strict 2-boundary is an identity (item 5) and when both 3-terms are literally suspended coherences over vertical chains (item 7). The remaining F-boundary terms are those whose hom expressions use hom 2-generators: global coherences whose types contain ∗₀-whiskers (as r, ℓ in item 8), and composites over 3-dimensional arities. RC(3) fails for loopy contexts such as (x, a : 1_x → 1_x) (π₃(S²) = ℤ: the weak free object groupoidifies to S², the strict one to K(ℤ,2)), so a proof must use some acyclicity.
 
 ## 4. Questions
 
-Each question asks for explicit CaTT terms, built with the coherence rule over pasting contexts and substitution.
-
-1. **Smallest open case: the F-boundary case of the lax square.** Let `α, β : t → t′` be parallel 3-terms of S with `π(t) = π(t′) = F`. Construct a 4-term `α → β`.
-   - *Smaller first step:* take α and β to be coherences over 2-dimensional arities. By item 5, both reduce to coherences over vertical 2-chains Q, Q′ whose middle 2-terms are arbitrary. Connect them.
-   - *Equivalent form:* exhibit a choice of `ν_P` for 2-terms P with image F, and prove that `ν_{u ∗₁ W}` is connected to `(ν_u ∗₁ ν_W) ∗₂ (flattening coherence)` whenever W contains F.
-2. **The Gray cube.** Let `U = D¹ ⊗ D¹ ⊗ D¹`, presented with hexagon composites. Prove that every X-free 3-term `H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉` is connected to the identity. By item 6, this is RC(3) for 3-loops over the three-face negative hemisphere. This gives uniqueness in G(3) for the cube.
-3. **RC(3) for acyclic contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule, or its skeleta. Or prove it for every finite Steiner loop-free computad, and say which hypothesis the proof uses.
-4. **G(n) for all n.** Prove RC(n), or the weaker G(n), for such contexts.
-   - Chanavat's contractible subdivision poset (Thm 2.52, non-atoms) indexes composites but does not construct them.
-   - A proof must give a CaTT composite for each subdivision, comparisons for refinements, and higher comparisons for chains of refinements.
-   - It must also show that **arbitrary** CaTT composites are controlled by those comparisons.
+1. **The reduction step (smallest open case).** For S, construct, for every 3-term α with strict 2-boundary F, a 3-term α′ with the same boundary that is a literally suspended coherence over a vertical chain (or a composite of such), together with a 4-term α → α′. Item 7 then finishes the F-boundary case. The first instance: α = r[x ↦ x⁻, y ↦ y⁺, f ↦ p, g ↦ q, A ↦ F] from item 8.
+2. **A hom-level formulation.** Equivalently, show that every indecomposable hom 2-generator of Hom_S(x⁻, y⁺) whose strict image is an identity is connected, by a global 4-term, to a composite of decomposable hom cells. Is this true for every context, or only for loop-free ones?
+3. **The Gray cube.** Let U = D¹ ⊗ D¹ ⊗ D¹, presented with hexagon composites. Prove that every X-free 3-term H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉ is connected to the identity (RC(3) for 3-loops over the three-face negative hemisphere).
+4. **RC(3) and RC(n) for acyclic contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule (or every finite Steiner loop-free computad), and say which hypothesis the proof uses; then RC(n), or the weaker G(n).
 
 ## 5. What counts as a solution
 
-Any of the following counts:
-- explicit terms for question 1 or 2;
-- a proof of RC(3) or RC(n) on acyclic contexts;
-- a counterexample: an acyclic context with two parallel terms of equal strict image and no term between them;
-- a published reference.
+Explicit terms for question 1, 2 or 3; a proof of RC(3) or RC(n) on acyclic contexts; a counterexample (an acyclic context with two parallel terms of equal strict image and no term between them); or a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
@@ -106,246 +90,3 @@ Any of the following counts:
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
 
-# Researcher Response
-
-**I have a partial construction for Question 1, with arbitrary substituted 2-terms, but it requires an additional syntactic hypothesis: both the arity and the coherence type must be literal suspensions.** A suspended arity alone is insufficient.
-
-I do not obtain the unrestricted first step, the full F-boundary case, or Questions 2–4. The construction below identifies a subclass that is settled and gives an explicit example explaining why the hom-category argument does not settle the rest.
-
-## 1. A restricted version of Question 1
-
-Write \(\Sigma\) for **syntactic suspension**, acting on contexts, types and terms.
-
-### Proposition
-
-Let \(\Gamma\) be any CaTT context, and fix \(a,b:\star\) in \(\Gamma\). Suppose
-\[
-\alpha=\operatorname{coh}_{\Sigma C,\Sigma A}[\tau],
-\qquad
-\beta=\operatorname{coh}_{\Sigma C',\Sigma A'}[\tau']
-\]
-are parallel \(3\)-terms with \(0\)-source \(a\) and \(0\)-target \(b\), where \(C,C'\) are \(1\)-dimensional path contexts. The one-vertex path context is also allowed.
-
-Here the hypothesis concerns the displayed syntax:
-
-- the arities are \(\Sigma C,\Sigma C'\);
-- the coherence types, including their boundary terms, are \(\Sigma A,\Sigma A'\).
-
-The substituted \(2\)-terms \(\tau(\xi)\) and \(\tau'(\xi')\) are arbitrary.
-
-Then one can construct a CaTT \(4\)-term
-\[
-\chi_{\alpha,\beta}:\alpha\longrightarrow\beta.
-\]
-
-This applies to the square \(S\), but requires no acyclicity assumption on \(\Gamma\).
-
-### Construction
-
-Let
-\[
-H=\operatorname{Hom}_{F_{\mathrm w}(\Gamma)}(a,b).
-\]
-Benjamin–Markakis prove that \(H\) is free on a computad of indecomposable cells. Their construction sends a hom coherence to a global coherence with both its arity and its type suspended. This is Theorem 4.5 and the calculation in its proof. [api.repository.cam.ac.uk](https://api.repository.cam.ac.uk/server/api/core/bitstreams/bca694d1-41be-4afb-b058-ba7369bdca83/content?utm_source=chatgpt.com)
-
-Consequently, the displayed terms desuspend to hom \(2\)-terms
-\[
-\bar\alpha=\operatorname{coh}_{C,A}[\bar\tau],
-\qquad
-\bar\beta=\operatorname{coh}_{C',A'}[\bar\tau'].
-\]
-
-**Step 1: reduce to a finite graph of hom generators.**
-
-Every value of \(\bar\tau\) and \(\bar\tau'\) has dimension at most \(1\). Decompose these finitely many cells into terms of the hom computad. Only finitely many generators of dimensions \(0\) and \(1\) are used.
-
-Let \(K\) be the finite graph consisting of those generators and their endpoints. Then \(\bar\alpha,\bar\beta\) are terms over \(K\). In particular, **neither uses a hom \(2\)-variable**.
-
-There is no restriction here on the original substituted \(2\)-terms: they become arbitrary hom \(1\)-terms, whose decompositions can use hom \(1\)-generators.
-
-**Step 2: unfold their common path.**
-
-Let \(\bar t\) be their common source, a hom \(1\)-term, and let
-\[
-w=e_1\cdots e_r
-\]
-be its image in the free category on \(K\).
-
-Both hom \(2\)-terms have strict image \(1_w\). Apply the path-chain lifting result from your §2(4), now in the hom computad. It gives:
-
-- the path context \(C_w\);
-- a substitution \(\eta\) assigning its edge variables to \(e_1,\ldots,e_r\);
-- parallel, full-support \(2\)-terms
-  \[
-  \widehat\alpha,\widehat\beta:B_w
-  \]
-  over \(C_w\), satisfying
-  \[
-  \widehat\alpha[\eta]=\bar\alpha,
-  \qquad
-  \widehat\beta[\eta]=\bar\beta.
-  \]
-
-The lifts use the same chosen lifts of the common source and target. Thus their parallelism holds syntactically before substitution.
-
-If a generator appears more than once in \(w\), the corresponding positions of \(C_w\) are distinct variables with equal substitution images. If \(w\) is empty, \(C_w\) has one vertex.
-
-**Step 3: suspend the lifted comparison.**
-
-Define the substitution
-\[
-\Gamma\vdash\delta_w:\Sigma C_w
-\]
-as follows:
-
-- its two \(0\)-variables map to \(a,b\);
-- its \(1\)-variables map to the global \(1\)-terms labeling the vertices of \(w\);
-- its \(2\)-variables map to the global \(2\)-terms labeling the edges of \(w\).
-
-The required term is
-\[
-\boxed{
-\chi_{\alpha,\beta}
-=
-\operatorname{coh}_{
- \Sigma C_w,\,
- \Sigma\widehat\alpha
- \;\to_{\Sigma B_w}\;
- \Sigma\widehat\beta
-}[\delta_w].
-}
-\]
-
-This is well-typed because:
-
-1. \(\Sigma C_w\) is a pasting context;
-2. \(\Sigma\widehat\alpha\) and \(\Sigma\widehat\beta\) are parallel;
-3. both have full support in \(\Sigma C_w\);
-4. the hom-operation formula gives the syntactic equalities
-   \[
-   (\Sigma\widehat\alpha)[\delta_w]=\alpha,
-   \qquad
-   (\Sigma\widehat\beta)[\delta_w]=\beta.
-   \]
-
-Therefore
-\[
-\Gamma\vdash\chi_{\alpha,\beta}:\alpha\to\beta.
-\]
-
-The argument uses the hom computad’s own path decomposition. It does **not** identify its strictification with the hom of the global strictification.
-
-## 2. Why a vertical-chain arity is insufficient
-
-The extra hypothesis on the coherence type cannot be inferred from the arity. The following explicit example also shows why applying \(\mathrm{RC}(2)\) to the hom computad does not prove general \(\mathrm{RC}(3)\).
-
-Work first over the \(2\)-disk
-\[
-D_2=
-(x,y:\star,\ f,g:x\to y,\ A:f\to g).
-\]
-
-For a \(1\)-term \(h:x\to y\), choose the two disk coherences
-\[
-\lambda_h:(1_x*_0h)\to h,
-\qquad
-\lambda_h^{-1}:h\to(1_x*_0h).
-\]
-The superscript here denotes the chosen reverse coherence; no definitional inverse equation is being asserted.
-
-Define
-\[
-W(A)=
-\bigl(\lambda_f^{-1}*_1(1_{1_x}*_0A)\bigr)
-*_1\lambda_g
-:
-f\to g.
-\]
-
-Both \(W(A)\) and \(A\) use every variable of \(D_2\). Hence the following are valid \(3\)-terms:
-\[
-r=\operatorname{coh}_{D_2,\ A\to W(A)}[\mathrm{id}],
-\qquad
-\ell=\operatorname{coh}_{D_2,\ W(A)\to A}[\mathrm{id}].
-\]
-Put
-\[
-\kappa=r*_2\ell:A\to A.
-\]
-
-### The arities suspend, but the types do not
-
-We have
-\[
-D_2=\Sigma D_1.
-\]
-Nevertheless, the types \(A\to W(A)\) and \(W(A)\to A\) are not literal suspensions. The expression \(W(A)\) uses a \(0\)-composition operation, and syntactic suspension increases every composition direction by one.
-
-In the Benjamin–Markakis hom structure, a decomposable cell has the syntax
-\[
-\operatorname{coh}_{\Sigma P,\Sigma B}[\sigma].
-\]
-Both the arity and the type are suspended. Injectivity of the coherence constructor therefore prevents \(r\) and \(\ell\) from being hom coherences. They are indecomposable hom \(2\)-generators. [api.repository.cam.ac.uk](https://api.repository.cam.ac.uk/server/api/core/bitstreams/bca694d1-41be-4afb-b058-ba7369bdca83/content?utm_source=chatgpt.com)
-
-Let
-\[
-\lambda:H\longrightarrow F_{\mathrm{str}}(\Omega D_2)
-\]
-denote the hom computad’s own strictification. Then
-\[
-\lambda(\kappa)\neq\lambda(1_A).
-\]
-Indeed, the former uses the two generating hom \(2\)-cells corresponding to \(r,\ell\), while the latter is an identity. Counting generating \(2\)-cells distinguishes them in the free strict category.
-
-### Yet the global \(4\)-filler exists
-
-Directly in CaTT,
-\[
-\boxed{
-\operatorname{coh}_{D_2,\ \kappa\to1_A}[\mathrm{id}]
-:
-\kappa\to1_A
-}
-\]
-is valid: its two boundary terms are parallel and have full \(D_2\)-support.
-
-Substitute
-\[
-x\mapsto x^-,
-\quad
-y\mapsto y^+,
-\quad
-f\mapsto p,
-\quad
-g\mapsto q,
-\quad
-A\mapsto F.
-\]
-This gives the same example in the lax square, with both \(3\)-terms having the literal boundary \(F\to F\).
-
-Thus:
-
-- the global strict images agree;
-- a global \(4\)-term connects them;
-- their images under the hom computad’s strictification differ.
-
-This is **not** a counterexample to Question 1. It is a counterexample to the proposed shortcut
-\[
-\text{equal global strict images}
-\ \Longrightarrow\
-\text{equal strict images in the free hom computad}.
-\]
-
-It also shows that the additional restriction in §1 is substantive, even when the arity is a single \(2\)-disk.
-
-## 3. A reference locating the remaining normalization problem
-
-A relevant source absent from the supplied list is Alexander Rice’s thesis, [*A type-theoretic approach to semistrict higher categories*](https://arxiv.org/abs/2502.17068).
-
-Theorem 4.5.3 proves rehydration over pasting contexts. Section 4.5.2, “Towards generalised rehydration,” explicitly discusses extending it to arbitrary contexts. It identifies the missing normalizers and the need to compare different normalization choices by higher cells; it also proposes contractibility of the family of rehydrations. The section does not prove that extension. [arxiv.org](https://arxiv.org/pdf/2502.17068?utm_source=chatgpt.com)
-
-Consequently, normalizing a term in semistrict CaTT and then appealing to a general rehydration theorem is not an established way to complete the present argument.
-
-Similarly, the published BMOSV naturality construction covers depth at most \(1\). A proposed reduction that changes \(1\)-dimensional arguments of a \(3\)-coherence has depth \(2\), so that particular step needs an additional construction. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
-
-The unresolved step for the approach above is therefore precise: construct boundary-preserving \(4\)-comparisons that replace arbitrary F-bearing \(3\)-terms by terms whose hom expressions use no hom \(2\)-generators. The restricted proposition supplies the final comparison once that has been done, but neither vertical-chain arities nor equal global strict images establish the required reduction.

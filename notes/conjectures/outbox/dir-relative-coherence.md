@@ -1,5 +1,3 @@
-**Status: unsent** (ready to send).
-
 # Relative coherence for cartesian closed higher categories: Mimram's directed criterion with non-invertible generators
 
 *A self-contained problem (2026-11-18). No knowledge of the project that posed it is assumed. The smallest open case is Question 1.*

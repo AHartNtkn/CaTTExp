@@ -108,6 +108,17 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
 - **Proved:** the symbolic checker covers every L_ε. `Gray/Fast.agda` is now parameterised by the orientation (`Oriented o`): each SHom entry lists the twisted pieces, each table starts from the sign flipped by ε(k+1), and `fastSideε-correct : Oriented.fastSide o Θ A t u ≡ graySideε o Θ A t u` for all inputs. L's `fastSide-correct` is the instance o = λ _ → false composed with `graySideε-const`.
 - **Not proved:** the "only if" directions ("L_ε = L^rev only if ε alternates", "L_ε = L only if ε is constant"). Both are true at the level of the D_K dualities (`GrayDuality.agda`); here they would need a separating table for each other ε.
 
+## Source-only joining completions (`src/CaTTExp/Join/`, E6)
+
+See `joining-completion.md`.
+- `Quiver`: in any acyclic quiver, paths with the same vertex and arrow memberships are equal.
+- `Completion`: r7's completion. It has the diamond property, so it is confluent with unique normal forms for any quiver. It also proves normalisation, the embedding of Path(Q), seed invariance, acyclicity from a rank, injective supports, and (5) as a universal property.
+- `Finite`: finiteness and the count (2), via a pigeonhole bound.
+- `Natural`, `NotNatural`: restricted naturality and r7 §2.
+- `Cospan`, `CospanNatural`: the cospan completion j_{α,I,R} and its naturality under seed-to-composite maps.
+- `Forced`: why its new generators are needed.
+- `Degenerate`: the identity obstruction.
+
 ## Not yet proved
 
 - **The non-negativity bridge.** *Now done* (2026-11-18): the strict layer keeps chains as bags, so they are non-negative by construction, and `Strict/Subst.topS-sub` proves that the set-level supports of `Gray/Support.agda` are the supports of these chains (see the last section).

@@ -188,3 +188,12 @@ import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune
 import CaTTExp.GrayCtx.Show
 import CaTTExp.GrayCtx.Checks
+import CaTTExp.Join.Quiver
+import CaTTExp.Join.Completion
+import CaTTExp.Join.Natural
+import CaTTExp.Join.NotNatural
+import CaTTExp.Join.Finite
+import CaTTExp.Join.Cospan
+import CaTTExp.Join.CospanNatural
+import CaTTExp.Join.Forced
+import CaTTExp.Join.Degenerate

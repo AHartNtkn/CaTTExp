@@ -84,3 +84,4 @@ import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
+import CaTTExp.Strict.Order

@@ -560,10 +560,57 @@ For arbitrary B and representable Θ, [⟦Θ⟧, D]_lax exists for every D, by r
 All cells are invertible (written with ⊨). There are no definitional equations, and fillers are unique up to a contractible space. This is CaTT_lim's `uni` pattern, but only at the level of maps into an arbitrary D, per E.1. The higher-cell universal property is the instance D := [⟦Dᵏ⟧, D].
 
 - **Soundness:** Campion's biclosedness, applied with the representable factor.
-- **Consistency:** for B = ⟦Δ⟧, B ⊗ Θ and the Gray context ⟦Δ ⊗ Θ⟧ represent the same functor, so they are equivalent. This needs a comparison cell rule.
+- **Consistency:** for B = ⟦Δ⟧, B ⊗ Θ and the Gray context ⟦Δ ⊗ Θ⟧ represent the same functor, so they are equivalent. The comparison is *derivable* (E.4, Prop. E2); no extra rule is needed.
 - **Mirror:** ⟦Θ⟧ ⊗ C via the oplax hom, which is derivable by `internal-hom.md` §5.6.
 
 **Payoff.** Lax transformations between arbitrary functors are maps B ⊗ D¹ → C. That is a cleaner presentation than the fibre definition LaxTr(F, G) of §5.2, and it composes by (⊗Θ-fill).
+
+## E.4 Derived structure of the B ⊗ Θ rule (D7, adjacent)
+
+*Added 2026-11-18.* Everything below is derived from (⊗Θ-form, unit, fill, uni) and the lhom rules of `internal-hom.md` §5.1. All cells are invertible and no definitional equation is added.
+
+**Auxiliary maps.**
+- [Θ, F] := Λ(F ∘ id♭) : [Θ, C] → [Θ, D], for F : C → D.
+- [τ, C] := Λ(id♭ ∘ (Δ ⊗ τ)) : [Θ, C] → [Θ′, C], for τ : Θ′ → Θ (§5.1).
+- From nat-C, β and η: [Θ, G ∘ F] ≅ [Θ, G] ∘ [Θ, F], [Θ, id] ≅ id, and [Θ, F] ∘ Λφ ≅ Λ(F ∘ φ).
+
+**Prop. E1 (functoriality).**
+- For F : B → B′, put F ⊗ Θ := (u_{B′} ∘ F)♯ : B ⊗ Θ → B′ ⊗ Θ.
+- For τ : Θ′ → Θ, put B ⊗ τ := ([τ, B ⊗ Θ] ∘ u_B)♯ : B ⊗ Θ′ → B ⊗ Θ.
+- These preserve composites and identities up to invertible cells, and the two variables interchange: (F ⊗ Θ) ∘ (B ⊗ τ) ≅ (B′ ⊗ τ) ∘ (F ⊗ Θ′).
+
+*Proof.* Each pair of sides g, g′ has [Θ, g] ∘ u ≅ [Θ, g′] ∘ u, by ε, the auxiliary isomorphisms and naturality of u. Then (⊗Θ-uni), applied twice, gives g ≅ (…)♯ ≅ g′. ∎
+
+**Prop. E2 (comparison with Gray contexts).** For B = ⟦Δ⟧, the maps
+
+```
+c := (u_B)♭ : ⟦Δ ⊗ Θ⟧ → ⟦Δ⟧ ⊗ Θ      (u_B read as a substitution Δ ⊳ [Θ, ⟦Δ⟧ ⊗ Θ])
+d := (Λ id_{Δ⊗Θ})♯ : ⟦Δ⟧ ⊗ Θ → ⟦Δ ⊗ Θ⟧
+```
+
+are inverse equivalences.
+
+*Proof.*
+- **d ∘ c ≅ id.** We have Λ(d ∘ c) ≅ [Θ, d] ∘ Λ(c) by nat-C. Then [Θ, d] ∘ Λ(c) ≅ [Θ, d] ∘ u_B by η, and [Θ, d] ∘ u_B ≅ Λ id by ε. Applying ♭ and β gives d ∘ c ≅ id.
+- **c ∘ d ≅ id.** We have [Θ, c ∘ d] ∘ u_B ≅ [Θ, c] ∘ Λ id. Then [Θ, c] ∘ Λ id ≅ Λ(c) by nat-C, and Λ(c) ≅ u_B by η. Also [Θ, id] ∘ u_B ≅ u_B. So (⊗Θ-uni) identifies both c ∘ d and id with (u_B)♯. ∎
+
+**Prop. E3 (unit).** B ⊗ D⁰ ≃ B, because [D⁰, D] ≃ D by the D⁰ check of §5.1, and representing objects are unique up to equivalence.
+
+**Lax transformations and their algebra.** Let a lax transformation from F to G : B → C be a map α : B ⊗ D¹ → C with cells α ∘ (B ⊗ 0) ≅ F and α ∘ (B ⊗ 1) ≅ G (via E3).
+- *Agreement with §5.2.* By (fill) and (uni), these are equivalent, as a space, to maps B → [D¹, C] over (F, G), i.e. to points of LaxTr(F, G).
+- *Whiskering.* Postwhiskering by H : C → C′ is H ∘ α. Prewhiskering by K : B′ → B is α ∘ (K ⊗ D¹).
+- *Vertical composition.*
+  1. [D¹ ∨ D¹, C] ≃ [D¹, C] ×_C [D¹, C], because cotensors turn the wedge (G3) into a pullback (§5.1). So a composable pair (α, β), together with its matching cell, is a map B → [D¹ ∨ D¹, C].
+  2. Fill it to B ⊗ (D¹ ∨ D¹) → C.
+  3. Precompose with B ⊗ κ, where κ : D¹ → D¹ ∨ D¹ is the composition coherence.
+
+  Unit and associativity hold up to invertible cells, by E1 and the corresponding coherences in Θ.
+- *Modifications.* These are maps B ⊗ D² → C. The same construction gives their vertical and horizontal composites through B ⊗ Θ for the relevant pasting shapes Θ.
+- *This is the "Payoff" of E.2, made explicit.* The bicategory-level algebra of lax transformations between arbitrary functors comes from substitutions of representables, transported along B ⊗ –.
+
+**What remains of the adjacent item.**
+- Implementing (⊗Θ) in the type-checker belongs to whichever thread implements lhom (§5.1).
+- On paper, the remaining question is the higher-cell version of E1–E3 at D := [⟦Dᵏ⟧, D]. It is formal once the pseudo cotensor of §5.4 is available, and that is the E.1 reading.
 
 ## E.3 What still blocks both factors arbitrary
 
@@ -571,7 +618,7 @@ B ⊗ C with C arbitrary needs [C, –]_lax for arbitrary C as an object. Two ro
 - an end over C's cells, [C, D]_lax ≃ lim_{⟦Θ⟧→C} [Θ, D], which is an object-indexed limit (F5) and connects to C9 (density);
 - the PL-ω route (Part F): give ⊗ and [–, –]_lax together as type formers whose structure maps are coherences over Gray pasting types.
 
-The colimit route of `internal-hom.md` §6 (B12) remains a third option. **Status:** partly done. The remainder is blocked on F5, or on D11's general criterion. Owner: unowned after this thread.
+The colimit route of `internal-hom.md` §6 (B12) remains a third option. **Status:** partly done. The remainder is blocked on F5, or on D11's general criterion. The adjacent derived structure is done (E.4).
 
 ---
 

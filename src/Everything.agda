@@ -53,6 +53,9 @@ import CaTTExp.GraphFillerExamples
 import CaTTExp.GraphFillerTotal.Chains
 import CaTTExp.GraphFillerTotal
 import CaTTExp.GraphFillerTotalExamples
+import CaTTExp.GraphFillerTotal.Range
+import CaTTExp.GraphFillerTotal.Higher
+import CaTTExp.GraphFillerTotal.HigherExamples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell

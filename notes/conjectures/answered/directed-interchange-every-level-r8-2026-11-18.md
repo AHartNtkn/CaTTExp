@@ -811,4 +811,4 @@ Checked by hand: the four-sign rule (by boundary calculation), the free-division
 
 These depend on the response's archive, which was not used. Nothing in the notes builds on their specific data; the ledger and the round-9 prompt use them only as reported results.
 
-Follow-up prompt: `outbox/directed-interchange-every-level-r9.md` (round 9, unsent).
+Follow-up prompt: `retired/directed-interchange-every-level-r9.md` (never sent; retired 2026-11-18 and superseded by the general prompt `outbox/lax-interchange-construction-or-impossibility.md`).

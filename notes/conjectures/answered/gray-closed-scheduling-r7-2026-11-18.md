@@ -604,4 +604,4 @@ Checked:
 
 **Consequence for D11.** In 𝒢′, transformation-level homs over endo-generators contain positive braid monoids, not schedule posets. The open structural question is fullness of F.
 
-Follow-up prompt: `outbox/gray-closed-scheduling-r8.md` (round 8, unsent).
+Follow-up prompt: `retired/gray-closed-scheduling-r8.md` (never sent; retired 2026-11-18 and superseded by the general prompt `outbox/gray-biclosed-coherence.md`).

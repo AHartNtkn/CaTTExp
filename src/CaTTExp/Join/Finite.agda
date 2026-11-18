@@ -353,3 +353,29 @@ module Paths {V : Set} (E : V → V → Set)
     count-J-any : (e : Enum JAll) → lengthL (elems e) ≡
                   sumL (mapL (λ α → lengthL (elems (enumPathsTo (tgt α)))) (elems eP))
     count-J-any e = trans (count-unique e enumJ) count-J
+
+    -- The cospan completion (CaTTExp.Join.Cospan) is finite too: its
+    -- joining generators are a seed α, a vertex m, an inner path
+    -- t α → m and an inner path into m.
+    JAll⁺ : Set
+    JAll⁺ = Σ Seed λ α → Σ V λ m → Σ (Path E (tgt α) m) λ _ → PathsTo m
+
+    enumJ⁺ : Enum JAll⁺
+    enumJ⁺ = Enum-Σ eP (λ α → Enum-Σ eV (λ m →
+               Enum-Σ (enumPath (tgt α) m) (λ _ → enumPathsTo m)))
+
+    count-J⁺ : lengthL (elems enumJ⁺) ≡
+               sumL (mapL (λ α → sumL (mapL (λ m →
+                 sumL (mapL (λ _ → lengthL (elems (enumPathsTo m)))
+                            (elems (enumPath (tgt α) m))))
+                 (elems eV))) (elems eP))
+    count-J⁺ = trans (Enum-Σ-count eP _)
+                 (cong sumL (mapL-cong (elems eP) (λ α →
+                   trans (Enum-Σ-count eV _)
+                     (cong sumL (mapL-cong (elems eV) (λ m →
+                       Enum-Σ-count (enumPath (tgt α) m) (λ _ → enumPathsTo m)))))))
+      where
+      mapL-cong : ∀ {A : Set} (xs : List A) {f g : A → Nat} → (∀ x → f x ≡ g x) →
+                  mapL f xs ≡ mapL g xs
+      mapL-cong []       h = refl
+      mapL-cong (x ∷ xs) h = cong₂ _∷_ (h x) (mapL-cong xs h)

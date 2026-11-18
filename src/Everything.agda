@@ -175,3 +175,7 @@ import CaTTExp.Join.Completion
 import CaTTExp.Join.Natural
 import CaTTExp.Join.NotNatural
 import CaTTExp.Join.Finite
+import CaTTExp.Join.Cospan
+import CaTTExp.Join.CospanNatural
+import CaTTExp.Join.Forced
+import CaTTExp.Join.Degenerate

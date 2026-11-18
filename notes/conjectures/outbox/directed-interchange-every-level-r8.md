@@ -159,6 +159,10 @@ On the 240-word interval of (K14) a rank with values 0, …, 7 exists; there are
 - Bourke–Lobbia, arXiv 2610.31448: their §4.2.6 lax 4-categories have non-invertible outer interchangers, but invertible interchange inside homs.
 - Bourke–Gurski's cocategorical obstruction needs hypotheses not assumed here.
 
+**(K23) A substitution-natural source-only completion (proved, machine-checked).** In the setting of (K18), for α : s → t in P and inner paths I : t → m and R : u → m, adjoin j_{α,I,R} : s → u ("α ; I ; R⁻¹"), with j_{α,1,1} = α and the equations j_{α,I,e;R} ; e = j_{α,I,R} and j_{α,I,1} = α ; I. (K18) is the case I = 1. The left-hand sides never overlap, so the oriented system has the diamond property. It is confluent with unique normal forms for any quiver, Path(Q) embeds, seed lists are invariant, every j raises φ (so the completion is acyclic and normal forms have injective supports), killing E gives the original inner quotient, and the generators are finite. Every map of comparison categories that sends inner arrows to inner paths and each seed to a word containing a seed (pre ; β ; post, β the last seed) extends by j_{α,I,R} ↦ pre ; j_{β, post;F(I), F(R)}. This includes the map of (K19), where j_{τ,1,e} ↦ j_{h_z,f,e}. The generators are forced: in (K18)'s completion, α ; I has no right division by an inner path R when I, R are nonempty with different last arrows. Indexing by reduced cospans (common suffix cancelled) gives the minimal form; on the 240-word interval of (K14) it has 4,549 joining generators beyond the 264 seeds.
+
+**(K24) Degenerate maps (proved).** In (K23)'s completion, a nonempty inner path R : u → a has no H : a → u with H ; R = 1. So no source-joining completion containing (K18)'s generators extends a map that sends a seed α to an identity while sending some inner path into t(α) to a nonempty path. More generally, a seed sent to an inner path I₀ requires F(R) to be a suffix of I₀ ; F(I) for every cospan (I, R) at α.
+
 ## 3. Requirements
 
 A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary interchangers χ : L ⇛ R for (l+1)-cells with no reverse cell in free objects; one naturality cell per varying argument, oriented by the Leibniz sign; higher cells between routes of lower naturality cells; and coherence equations to be determined. The free objects F(Γ) must satisfy:
@@ -170,9 +174,10 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (a completion compatible with substitution).** (K18) is canonical on a fixed comparison graph, and (K19) shows it is not natural under maps sending a generator to a composite. Either:
-- give a joining rule (possibly with sink divisions, handling critical pairs such as (K20)) that is natural under the maps induced by substituting cells for generators of Γ, so that requirement 5 holds, with injective supports; or
-- realise a failure of the type in (K19) as an actual substitution between free objects, and show that no completion satisfying requirements 1–4 is closed under it.
+**Q1 (from comparison categories to substitutions).** (K23) is natural under every map of comparison categories that sends inner arrows to inner paths and seeds to words containing a seed. (K24) rules out maps that send a seed to an identity while keeping an inner arrow into its target.
+- Show that substituting cells for generators of Γ induces maps of the comparison graphs (here the K14 interval) in the class of (K23). That means tensor arrows go to words containing a tensor arrow and inner interchangers go to inner paths (using (K15)). Or give a substitution that does not.
+- For substitutions sending a generator to an identity, check the suffix condition of (K24): every inner path into the target of a degenerated seed must degenerate compatibly. Or give a degeneracy that violates it, which would make every source-joining completion fail requirement 5.
+- Extend (K23) one level up: are the hom-4 cells of (K21)–(K22) natural under the same maps?
 
 **Q2 (exactness through hom-dimension 6).** For the triple tensor λD² ⊗ λD² ⊗ λD² of (K14)/(K17), with the data of (K18), (K21) and (K22):
 - identify the remaining eleven fresh lifts before quotienting, or show some need new hom-3 data;
@@ -190,7 +195,7 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 ## 5. What counts as a solution
 
 Any of the following:
-- a substitution-natural completion, or an impossibility proof, for Q1;
+- the induced maps and degeneracy check for Q1, or a substitution outside the class of (K23);
 - the identifications and support check for Q2;
 - the variation data for Q3;
 - a proof or model for Q4;

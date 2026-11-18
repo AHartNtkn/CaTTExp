@@ -16,6 +16,8 @@ import CaTTExp.PastingCheck
 import CaTTExp.Completeness
 import CaTTExp.ConstSub
 import CaTTExp.Weakening
+import CaTTExp.Derived
+import CaTTExp.DerivedBoundary
 import CaTTExp.Suspension
 import CaTTExp.GroupModel
 import CaTTExp.Pure

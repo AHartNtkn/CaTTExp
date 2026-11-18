@@ -827,4 +827,11 @@ Checked step by step:
 
 **Design reading.** The source-only completion is a canonical, order-independent rule on a fixed comparison graph, which answers the "closure rule" part of Q3. Its failure of naturality under generator-to-composite maps is the concrete obstacle to requirement 5 that the uniform definition must now address.
 
-Follow-up prompt: `outbox/directed-interchange-every-level-r8.md` (round 8, unsent). The round-7 archive was not attached to the response; Anthony has been asked whether he can supply it.
+**Addendum: the researcher's archive (2026-11-18).** Anthony supplied `directed_interchange_round7_checks.zip`, now committed with its extracted files in `scripts/e6/r7_archive/`. Its SHA256SUMS all match. Re-run here with Python 3 (standard library only), every assertion passes and the regenerated certificates are byte-identical to the shipped ones:
+- `r7_join_closure_check.py`: K14 source-only completion 877 positive records (264 seeds, 613 new, 1,117 arrows), FIFO = LIFO, acyclic; two-sided completion 2,203 records, also order-independent; the critical pair h ; e ; k and the failed lift under τ ↦ h_z ; c (exactly one candidate H, wrong normal form), also on the full K14 graph.
+- `r7_kernel4_check.py`: 258 D records (50 expanded), 62 N records (8 pure-inner), 40,412 hom-3 paths, 60,961 D/N relation instances, directed comparison graph acyclic; per-sink path and chain counts (T = apqbrc: 1,226 paths, 25 chains; brcaqp: 87 paths, 2 weak components with D and N).
+- `r7_exactness_check.py`: 152 classes over 116 tableaux with D only (36 split fibres); with N, 54 objects, 116 arrows, 54 two-arrow equations, 1,974 quotient paths in 874 classes = all 874 positive 3-tableaux; all 15 fresh hom-4 lifts have old-W expressions after the quotient; A(1,0), A(3,2), A(6,5) eliminated directly and A(2,1) through H.
+
+So the items above that rested on the archive (the D/N enumeration, the 874-class presentation count, the 15-row table and H's tableau label) are now machine-checked as stated. This checks the computations, not the scope: the response's own limits (no support injectivity after the H equation, no exactness through hom-dimension 6, K15 used as a convention) stand.
+
+Follow-up prompt: `outbox/directed-interchange-every-level-r8.md` (round 8, unsent).

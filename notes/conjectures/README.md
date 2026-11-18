@@ -26,3 +26,4 @@ Each file has the same parts:
 | `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | `internal-hom.md` §5.5 |
 | `gray-contexts-in-catt.md` | Do frame-acyclic molecules (e.g. boundaries of Gray generators) have composites in CaTT, unique up to invertible cells? | `internal-hom.md` §4.3 |
 | `planar-pasting-types.md` | Unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dim proved); tensor/unit and ω-version open | `internal-hom.md` §5.7 |
+| `naturality-arbitrary-depth.md` | Does every CaTT coherence over a pasting context have a naturality cell for every up-closed set of variables, of any depth? (Extends BMOSV beyond depth 1; one depth-2 case settled.) | `free-objects.md` §7.1 |

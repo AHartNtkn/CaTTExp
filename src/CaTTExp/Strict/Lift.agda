@@ -634,3 +634,89 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
                 (subst (_≤ 1) (sym (sumv-unit a aN)) (≤-refl 1))
       ... | tri≡ e = go nothing tt (λ j rj jL → trans (ag′ j rj jL) (ent-zero a j (subst (_< j) e rj)))
       ... | tri> ar = go nothing tt (λ j rj jL → trans (ag′ j rj jL) (ent-zero a j (≤-trans (s≤s (<→≤ ar)) rj)))
+
+    ------------------------------------------------------------------
+    -- Atoms are distinct.
+
+    private
+      ≤-prop : ∀ {a b} (p q : a ≤ b) → p ≡ q
+      ≤-prop z≤n     z≤n     = refl
+      ≤-prop (s≤s p) (s≤s q) = cong s≤s (≤-prop p q)
+
+      1≢0 : 1 ≡ 0 → ⊥
+      1≢0 ()
+
+      top1 : ∀ k → k < N → at0 (fst (ent k (deg k))) k ≡ 1
+      top1 k kN = trans (cong (λ z → at0 (fst z) k) (Cells.Deg.ent-in dd deg-dp deg-dm k (deg k) 0 (sym (+-zero (deg k)))))
+                        (go k kN)
+        where
+        go : ∀ {m} g → g < m → at0 (unit {m} g) g ≡ 1
+        go {suc m} zero    _       = refl
+        go {suc m} (suc g) (s≤s l) = go {m} g l
+
+      top0 : ∀ k i → (k ≡ i → ⊥) → at0 (fst (ent k (deg k))) i ≡ 0
+      top0 k i ne = trans (cong (λ z → at0 (fst z) i) (Cells.Deg.ent-in dd deg-dp deg-dm k (deg k) 0 (sym (+-zero (deg k)))))
+                          (at-other k i ne)
+
+      above0 : ∀ k j i → deg k < j → at0 (fst (ent k j)) i ≡ 0
+      above0 k j i l = trans (cong (λ z → at0 (fst z) i) (ent-zero k j l)) (at-0c {N} i)
+
+    ιν-inj : ∀ g g′ → ιν B H L g ≡ ιν B H L g′ → g ≡ g′
+    ιν-inj (i , iN , iL) (i′ , iN′ , iL′) e with ii
+      where
+      co : ∀ j → j ≤ L → ∀ k → at0 (fst (ent i j)) k ≡ at0 (fst (ent i′ j)) k
+      co j jL k = cong (λ z → at0 (fst z) k)
+                    (trans (sym (rows-atom i iN iL j jL)) (trans (cong (λ z → rows z j) e) (rows-atom i′ iN′ iL′ j jL)))
+      ii : i ≡ i′
+      ii with tri (deg i) (deg i′)
+      ... | tri< l = ⊥-elim (1≢0 (trans (sym (top1 i′ iN′)) (trans (sym (co (deg i′) iL′ i′)) (above0 i (deg i′) i′ l))))
+      ... | tri> l = ⊥-elim (1≢0 (trans (sym (top1 i iN)) (trans (co (deg i) iL i) (above0 i′ (deg i) i l))))
+      ... | tri≡ d with tri i i′
+      ...   | tri≡ q = q
+      ...   | tri< q = ⊥-elim (1≢0 (trans (sym (top1 i iN))
+                         (trans (co (deg i) iL i) (trans (cong (λ t → at0 (fst (ent i′ t)) i) d)
+                           (top0 i′ i (λ z → ≤-<-⊥ (≤-of z) q))))))
+        where
+        ≤-of : ∀ {a b} → a ≡ b → a ≤ b
+        ≤-of refl = ≤-refl _
+      ...   | tri> q = ⊥-elim (1≢0 (trans (sym (top1 i iN))
+                         (trans (co (deg i) iL i) (trans (cong (λ t → at0 (fst (ent i′ t)) i) d)
+                           (top0 i′ i (λ z → ≤-<-⊥ (≤-of z) q))))))
+        where
+        ≤-of : ∀ {a b} → a ≡ b → b ≤ a
+        ≤-of refl = ≤-refl _
+    ... | refl = cong₂ (λ a b → i , a , b) (≤-prop iN iN′) (≤-prop iL iL′)
+
+    ------------------------------------------------------------------
+    -- The induction.
+
+    base-at : ∀ e {x y A} → CO e → Eν.Ev e x → ED.Ev e y → AOKL A → Agree 0 (rows x) (Arow A) →
+              Σ G (λ g → (x ≡ ιν B H L g) × (y ≡ κ g))
+    base-at e {A = A} co u v ok ag = go (St.std e) (WFP.std-wf e co) (SPν.std-sem e co u) (SPD.std-sem e co v) ag
+      where
+      go : ∀ R {x y} → St.WF R → Eν.Ev (St.toE R) x → ED.Ev (St.toE R) y → Agree 0 (rows x) (Arow A) →
+           Σ G (λ g → (x ≡ ιν B H L g) × (y ≡ κ g))
+      go (St.one g) _ (Eν.ev-gen _) (ED.ev-gen _) _ = g , refl , refl
+      go (St.many r′ f fs) (a , l , t) u′ v′ ag′ with toCh r′ f fs a u′ v′
+      ... | c , ch , sc = ⊥-elim (many-absurd 0 r′ z≤n ch (subst (2 ≤_) (sym sc) (s≤s l)) ok ag′)
+
+    Lf0 : Lf 0
+    Lf0 x A ok ag (e , co , u , v) (e′ , co′ , u′ , v′) with base-at e co u v ok ag | base-at e′ co′ u′ v′ ok ag
+    ... | g , ex , ey | g′ , ex′ , ey′ = trans ey (trans (cong κ (ιν-inj g g′ (trans (sym ex) ex′))) (sym ey′))
+
+    LfS : ∀ r → Lf r → Lf (suc r)
+    LfS r Pr x A ok ag (e , co , u , v) (e′ , co′ , u′ , v′) with shape r e co u v | shape r e′ co′ u′ v′
+    ... | sh-low A′ ok′ ag′ | _                  = Pr x A′ ok′ ag′ (e , co , u , v) (e′ , co′ , u′ , v′)
+    ... | sh-ch _ _         | sh-low A′ ok′ ag′  = Pr x A′ ok′ ag′ (e , co , u , v) (e′ , co′ , u′ , v′)
+    ... | sh-hi r′ rr ch two | _                 = ⊥-elim (many-absurd (suc r) r′ rr ch two ok ag)
+    ... | sh-ch _ _         | sh-hi r′ rr ch two = ⊥-elim (many-absurd (suc r) r′ rr ch two ok ag)
+    ... | sh-ch ch _        | sh-ch ch′ _        = chUn r Pr _ (≤-refl _) ch ch′
+
+    Lf-all : ∀ r → Lf r
+    Lf-all zero    = Lf0
+    Lf-all (suc r) = LfS r (Lf-all r)
+
+    -- Unique lifting: composition-only expressions with the same value
+    -- in ν(K) have the same value in 𝒟.
+    unique : ∀ x → UnFor x
+    unique x = Lf-all L x nothing tt (λ j Lj jL → ⊥-elim (≤-<-⊥ jL Lj))

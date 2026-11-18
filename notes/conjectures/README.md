@@ -22,6 +22,7 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
 - **Solved:**
   - `free-on-graph.md`: proved by an external researcher, and verified here.
   - `weighted-as-partially-lax-omega.md`: proved by an external researcher in Loubaton's model, and verified here. A finite computad test is still open.
+  - `catt-lim-pseudo-vs-gray.md`: answered by an external researcher, and verified here. The intended CaTT_lim forces pseudo cone morphisms, and even all cells of dimension ≥ 3 invertible. The corrected universal property is identified. The printed `ctrf` rules need repair.
   - `free-infinity-gray-of-pasting-diagrams.md`: in the literature (Campion 2311.00205, Cor. 3.5; Chanavat 2603.22242, Thm 3.29).
   - `steiner-support-determines-cells.md`: the main case follows from Hadzihasanovic's book (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18.
 - **Partly solved:**
@@ -33,7 +34,6 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
   - `gray-contexts-in-catt.md`: G(n), and Mikhail's rules.
   - `naturality-arbitrary-depth.md`
   - `strict-lax-interchange-at-every-level.md`
-  - `catt-lim-pseudo-vs-gray.md`
 
 ## Index (each distinct problem once)
 
@@ -46,7 +46,7 @@ Literature searches were done on 2026-11-18. Each file ends with a "Literature s
 | `strict-lax-interchange-at-every-level.md` | Construct free strict ω-categories in which *every* interchange law is a directed cell, with cells determined by their generators. | Open | Generalises `steiner-support-determines-cells.md` to all levels | `pseudo-vs-gray.md` §2.5, §3.6 |
 | `gray-vs-cartesian.md` | Is Dᵏ × Dˡ the Gray product Dᵏ ⊗ Dˡ with mixed cells inverted ("pseudo = lax + marking")? | Partly solved: l = 1 proved; general case sketched from the literature | Assumed by `planar-pasting-types.md` §4. Bears on `catt-lim-pseudo-vs-gray.md`. | `internal-hom.md` §5.5 |
 | `planar-pasting-types.md` | An unbiased theory of biclosed monoidal categories via balanced Lambek types (1-dimensional case proved). PL1: tensor. PL-ω: Gray version. | PL1 very likely true (known coherence results, one lemma to cite). PL-ω open. | PL-ω uses `gray-vs-cartesian.md` | `internal-hom.md` §5.7 |
-| `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | Open | Related to `gray-vs-cartesian.md` | `limits-representables.md` §10.1 |
+| `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | **Answered: yes** (researcher, verified). It even forces cells of dimension ≥ 3 invertible. Corrected universal property given; printed `ctrf` rules need repair. Follow-ups open. | Related to `gray-vs-cartesian.md` | `limits-representables.md` §10.1 |
 | `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? Syntactically, is the constant cocone context equivalent to the suspension? | Semantic: **solved**. Syntactic: **false** for arbitrary derivations of Mikhail's judgment (counterexample verified); open for a specified cocone construction | Step B uses `gray-contexts-in-catt.md` §6. A special case of `weighted-as-partially-lax-omega.md`. | `limits-representables.md` §10.3 |
 | `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | **Solved** in Loubaton's model (researcher, verified). Finite computad test open. | Generalises `lax-colimit-of-point.md` | `limits-representables.md` §10.4 |
 | `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | **Solved: yes** (external researcher, verified) | None | `limits-representables.md` §10.5 |

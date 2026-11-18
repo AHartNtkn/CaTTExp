@@ -1,5 +1,12 @@
 # Does CaTT_lim force cone morphisms to be pseudo?
 
+> **Status (2026-11-18): ANSWERED (researcher response, verified below).**
+> - Yes, in Mikhail's intended calculus, cone-morphism cells over diagram arrows are forced invertible. With all levels of `uni` this even forces ambient cells of dimension ≥ 3 to be invertible.
+> - The cartesian semantics fails (finite counterexample), and oriented categories do not model unchanged CaTT_lim.
+> - The corrected universal property marks only the comparison cells over positive-dimensional diagram variables.
+> - Mikhail's printed `ctrf` rules (Def. 4.15) need a repair.
+> - Follow-ups are listed at the end.
+
 ## Background
 
 **CaTT** (Finster–Mimram, [arXiv 1706.02866](https://arxiv.org/abs/1706.02866)) is a dependent type theory whose models are Grothendieck–Maltsiniotis weak ω-categories (Benjamin–Finster–Mimram, [2106.04475](https://arxiv.org/abs/2106.04475)).
@@ -603,3 +610,60 @@ For the finite \(C\) used above, the difference is
 \]
 
 The oplax arrow fibre retains \(\alpha\); the cartesian arrow fibre does not.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.**
+- Steps (1) and (2) hold for the cone calculus Mikhail intends (§§4.3–4.4).
+- Step (3) holds: there is a finite cartesian counterexample.
+- The Gray/oriented reading in (4) is refuted.
+- The response also gives a stronger result than conjectured: if the intended universal property holds at every level, ambient cells of dimension ≥ 3 must be invertible. The 3-cell case is checked below; the extension to higher cells is plausible but was not checked line by line.
+- Separately, the printed rules of Mikhail's Def. 4.15 do not recognise the expected cone morphisms and need a repair.
+
+Checked step by step against Mikhail ([arXiv 2412.13310v2](https://arxiv.org/abs/2412.13310)) and Benjamin–Markakis ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)):
+
+1. **The interchange cell (§1).**
+   - Over the pasting scheme of two horizontally composable 2-cells β and φ, the two 2-cells (u◁φ);(β▷v′) and (β▷v);(u′◁φ) are parallel and each uses every variable. So `coh` gives a cell in each direction, and these are invertible (Benjamin–Markakis).
+   - Substituting φ ↦ λ_f gives the f-comparison of F(β), up to associators, which are also invertible.
+   - Confirmed.
+2. **The inverse of m_f (§2).** E_f : R;B ⇛ A;N, with A, B whiskerings of the invertible E_x, E_y, and N invertible by step 1.
+   - The types check: R : s → t, A : s → s′, B : t → t′, N : s′ → t′. So R⁻¹ := B;N⁻¹;A⁻¹ : t → s.
+   - Both cancellations follow from E_f together with the cancellation data of A, B and N.
+   - The reduction from arbitrary endpoints to image endpoints uses dimension-1 `uni` and composition of cone transfors. That composition is assumed, not taken from the printed rules.
+   - Confirmed for the intended calculus.
+3. **"Derivable inverse data" is not "derivable ⊨".** In the printed rules, ⊨ is produced only by `uni`, `inv`, `eta` and `eps` (Def. 4.15, rules for ⊨). A variable m_f can never be ⊨-marked. Confirmed.
+4. **The printed `ctrf`/`pctrf` rule rejects the intended m_f (§3).**
+   - The source s of a new connecting cell must satisfy τCond(s, x, FV(M₂ᵢ₊₁)). That condition selects earlier connecting cells p only when some y ∈ FV(τ(x) : ∂X) has y ∝ τ(p).
+   - For x = p_f: τ(p_f) = p_x f, while τ(m_x) = q_x and τ(m_y) = q_y. Neither q_x nor q_y occurs in FV(p_x f : c → y).
+   - So FV(s) would have to be {c}, but s = p_f;(m_x▷f) uses m_x.
+   - The rule also duplicates x : X as x′ : X with the *same* type X, so q_f gets the boundaries of p_f.
+   - Both points were confirmed against the rule text, which is printed twice in the paper (§4.2 and Def. 4.15). They look like typos rather than design choices. They should still be repaired before any formalisation.
+5. **Every ambient 3-cell is forced invertible (§4).**
+   - CaTT_lim provides lim for every diagram, including the diagram 1_Y.
+   - Take cones with p_x = p_y = r and q_x = q_y = s, comparisons the inverse right unitors, m_x = a and m_y = b.
+   - Up to invertible unit coherences, m_f is any 3-cell z : a ⇛ b. Since whiskering with invertible cells reflects invertibility, step 2 forces z to be invertible. Confirmed.
+   - The extension to all dimensions ≥ 3 cites Benjamin–Markakis Prop. 35. It is plausible, but I did not check it line by line.
+6. **The cartesian counterexample (§4).**
+   - The 2-category C has C(b,a) = (f →α g), C(a,b) = ∅, and trivial endomorphisms.
+   - Cones over the arrow a : 1 → C with apex 1 are the 1-cells b → a. α is a lax cone morphism between the cones f and g.
+   - A universal cone with a pseudonatural connector τ would need an h : x_f → x_g with P(h) = 1_b. The comparison of F(h) with the given morphism would then make α ≅ (an invertible pseudonaturality cell), so α would be invertible. It is not.
+   - Confirmed. As the response says, this is a counterexample to general soundness, not to every non-identity arrow.
+7. **Oriented categories (§6).** CaTT already derives an *invertible* interchanger (step 1). A Gray-enriched (oriented) category's interchanger need not be invertible (Gepner–Heine, [arXiv 2510.10504](https://arxiv.org/abs/2510.10504), Remark 3.2.3 and Thm 4.2.7). So unchanged CaTT_lim cannot be interpreted in general oriented categories. Confirmed.
+8. **Arrow-object fibres (§7).**
+   - The fibre of Ar^oplax(C) → C × C is Hom_C(b,a). The fibre of Fun([1], C) → C × C is its core.
+   - This was checked by the boundary calculation in the response: in the cartesian case the comparison 1∘f ⇒ g∘1 must be invertible.
+   - It agrees with Gagna–Harpaz–Lanari ([arXiv 2012.04537](https://arxiv.org/abs/2012.04537)), §1.3. The recalled fact in "A consequence to check" is correct.
+
+**Resolution of the four items.**
+- (1) Yes.
+- (2) Yes, in the intended calculus, as derivable inverse data. It is not a ⊨ judgment, and the printed `ctrf` rules need repair first.
+- (3) Yes, by the finite counterexample.
+- (4) The corrected universal property is (6) of the response:
+  - Hom(c, L) ≃ the cones that are lax at the vertices, with *invertible* comparison cells indexed by the **positive-dimensional diagram variables** (not by every positive-dimensional cone projection).
+  - This is to be implemented as marked declarations, whose substitutions must supply equivalence certificates. A rule asserting invertibility of an arbitrary variable would not do.
+  - The original rules do **not** model oriented categories. With CaTT's interchange they force invertibility in every dimension ≥ 3.
+
+**Open after this response.**
+- (a) Repair Def. 4.15's τCond and variable renaming in `ctrf`, and prove substitution, composition and soundness for the corrected marked-declaration version.
+- (b) Classify the models of the original rules beyond the necessary condition "cells of dimension ≥ 3 are invertible".
+- (c) A lax-transfor variant with non-invertible interchange would need a different base theory than CaTT. This connects to `strict-lax-interchange-at-every-level.md` and to the L option in `pseudo-vs-gray.md`.

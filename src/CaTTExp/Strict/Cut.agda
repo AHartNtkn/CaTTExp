@@ -62,6 +62,16 @@ private
     go (just (arr (arr B a b) s t)) e with inv v _ e
     ... | (i , j , refl , refl , li , lj) = deep B a b i j e li lj
 
+-- A public view: an entry of hom-dimension 0, or one with faces.
+data VShape' (Γ : Ctx) (v : Nat) : Set where
+  flatS' : hdimV Γ v ≡ 0 → VShape' Γ v
+  deep'  : ∀ s t → facesTy (lookup Γ v) ≡ just (s , t) → VShape' Γ v
+
+vshape' : ∀ {Γ} → PsInv Γ → ∀ v → VShape' Γ v
+vshape' inv v with vshape inv v
+... | flatS _ h          = flatS' h
+... | deep B a b s t lv _ _ = deep' s t (cong facesTy lv)
+
 face-wft : ∀ {Γ} → PsInv Γ → ∀ σ x y w {z} → WFT Γ x y w → z ∈L ∂T Γ σ w →
            WFT Γ x y z × (suc (deg Γ z) ≡ deg Γ w)
 face-wft inv σ x y [] _ ()

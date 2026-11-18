@@ -24,7 +24,7 @@
 
 ### 1.1 Setting
 
-- **ωCat** is the category of strict ω-categories, and ⊗ is the Ara–Maltsiniotis Gray tensor. It is monoidal and biclosed **[recall; ledger G1]**. Write `⟦A, –⟧ˡ` for the right adjoint of `A ⊗ –` and `⟦B, –⟧ʳ` for the right adjoint of `– ⊗ B`:
+- **ωCat** is the category of strict ω-categories, and ⊗ is the Ara–Maltsiniotis Gray tensor. It is monoidal and biclosed **[paper: AM Thm A.15, §A.18; G1 check]**. Write `⟦A, –⟧ˡ` for the right adjoint of `A ⊗ –` and `⟦B, –⟧ʳ` for the right adjoint of `– ⊗ B`. In AM's names (`conventions.md` §3.2), ⟦A, C⟧ˡ = Hom_lax(A, C) and ⟦B, C⟧ʳ = Hom_oplax(B, C):
 
   ```
   ωCat(A ⊗ B, C)  ≅  ωCat(B, ⟦A, C⟧ˡ)  ≅  ωCat(A, ⟦B, C⟧ʳ).

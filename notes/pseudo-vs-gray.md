@@ -81,7 +81,7 @@ The standard notions (adjunction L ⊣ R : A ⇄ B, monad T on C) use pseudo tra
 
 - **P.** Written exactly as in CaTT, with no annotations. Triangle laws and higher coherences (the swallowtail; associativity of μ at arity 4, which uses μ ⋆ μ) are cohs, and horizontal composites like μ ⋆ μ are canonical.
 - **L, unmarked.** η, ε and μ are lax, so the user gets a weaker notion: a "lax adjunction" or "lax-natural monad". All of its theorems also hold for real adjunctions and monads. But some standard theorems need invertible naturality and fail for it, for example the hom-isomorphism Hom(Lx, y) ≅ Hom(x, Ry) being natural in both variables. The higher coherences involve μ ⋆ μ and η ⋆ ε, which have two non-equivalent layerings, so the user must write them in a specific orientation.
-- **L, with "pseudo" marks on η, ε, μ.** Behaves like P. The cost is one mark per structure cell, plus a marking-propagation rule that makes every interchanger involving them invertible.
+- **L, with "pseudo" marks on η, ε, μ.** Behaves like P. The cost is one mark per structure cell, plus a marking-propagation rule that makes every interchanger involving them invertible. Higher structure cells (e.g. modifications in the triangle laws) need their own marks, because pseudo-ness does not propagate upward (§2.4).
 - **Gained by L:** monads and adjunctions whose structure cells are genuinely lax become statable directly. These are rare in practice.
 
 **Verdict:** P wins on the standard notions. L matches it only with marks. L's advantage here is narrow.
@@ -343,7 +343,10 @@ Consequences:
 
 - Everything L proves holds in every CaTT model. **L is a weaker theory with more models**, including both ωCat_lax and ωCat_pseudo.
 - **[conj]** L plus a rule "every interchanger is invertible" is equivalent to P, in the sense of having the same models, with a conservative translation of P-terms. Horizontal composites become definable by a chosen layering, and the two layerings are related by an invertible cell.
-- PR #3's principle "pseudo = lax + marking" (Conjecture P, GHL Prop. 2.12) becomes uniform. It applies to the ambient's own cells, not only to shapes.
+- PR #3's principle "pseudo = lax + marking" becomes uniform. It applies to the ambient's own cells, not only to shapes.
+  - **Now proved** (researcher response, verified; `notes/conjectures/gray-vs-cartesian.md`, PR #14). (A ⊗ B)[mixed⁻¹] ≃ A × B in every Cat_n and in (∞,ω). Strong transformations, and their higher cells, are exactly the lax ones whose adjunct inverts every mixed cell, *including on boundary faces*.
+  - **Caveat: the marking must be recursive.** The strong internal hom is **not** a locally full sub-ω-category of the lax one. Between two strong transformations there can be lax modifications whose naturality 3-cell is not invertible (counterexample with B = D¹, C = D³).
+  - So "pseudo" cannot be a mark on a 2-cell alone. It must be a mark *on every cell in every dimension*: a pseudo transformation, pseudo modifications between those, and so on, each requiring its own mixed cells to be invertible. Equivalently, P ≈ L + "every interchanger, of every dimension, is invertible". The [conj] above is meant in this recursive sense.
 
 ### 2.5 Uniform L, and where generality stops
 
@@ -470,7 +473,7 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 | Composites (operation case, n = 1) | no, as in CaTT | |
 | Interchangers y ⊗ x with dim x, dim y ≥ 1 | **no** | The source and target supports are different halves of ∂U. |
 | Interchanger where one factor is invertible | yes **[conj]** | For 2-categories, a lax transformation's naturality cell at an equivalence is invertible **[recall]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
-| Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. |
+| Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
 
 ### 3.6 Soundness: proof attempt
 
@@ -635,7 +638,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Strict test model | strict ω-Cat with the cartesian hom (strictly natural transformations) | strict ω-Cat with the AM Gray tensor. This model is exactly the one used to compute supports, so the side condition and the test model coincide. |
 | Is ωCat itself a model? | open (algebraic weak ω-cats vs (∞,ω)) | open, same gap |
 | Invertibility, Σ, opposites, naturality meta-operations | done | to redo. Σ is admissible (§3.4). Some opposites swap lax and oplax instead of being symmetries (see R5). The naturality meta-operation (BMOSV) becomes the interchange coh. |
-| Biggest open lemma | G1 for Gray contexts (PR #3 §4.3); Conj. (P) "pseudo = marked Gray" for weak ω | Steiner lemmas (A)–(C) and the (∞,ω) transfer (D)–(F), §3.6 |
+| Biggest open lemma | G1 for Gray contexts (PR #3 §4.3). "Pseudo = marked Gray" is now proved (§2.4). | Steiner lemmas (A)–(C) and the (∞,ω) transfer (D)–(F), §3.6 |
 
 ---
 
@@ -659,7 +662,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Future universe | kind-correct (pseudo) | pseudo only (mismatch) | kind-correct (lax) |
 | Established semantics | (∞,ω)-categories | oriented categories | none of its own yet; frontier (bioriented) |
 | Decidable | yes | yes; cost grows with horizontal width | yes; cost grows at every level |
-| Central open problems | G1 + Conj. (P) | (A)–(C), (D)–(F) | the same, plus constructing the free structure with lax interchange at every level |
+| Central open problems | G1 | (A)–(C), (D)–(F) | the same, plus constructing the free structure with lax interchange at every level |
 
 ---
 

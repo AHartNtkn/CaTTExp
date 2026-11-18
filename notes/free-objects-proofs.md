@@ -117,6 +117,8 @@ So the comparison holds at level 0 of `Diag` (objects), which is all that A2's L
 6. ATTACH's LIFT₀ gives `⟨F, y'⟩ : ⟦Γ, x : A⟧ → C`, with `β' : ⟨F, y'⟩ ∘ ι ≅ F` and `β'_x` relating `⟨F, y'⟩ x` to y'.
 7. The new β is `(β ∘ (β' η_Γ), β'_x ∘ (transport cylinder of step 5))`. It is invertible by I1.
 
+**All dimensions, as a chain of equivalences.** `src/CaTTExp/Free/A2toA1.agda` proves, by induction on the context, that the chain of `free-objects.md` §3.3 gives A1's LIFT schema at every dimension, from three explicit hypotheses: A2's LIFT (for 0 and for each ATTACH), the decomposition map being an equivalence (C3), and pullback stability (an equivalence `R_Γ` induces an equivalence on the pullbacks; this is where the boundary restriction must be an ω-equifibration, C3b). The content proved is that LIFT-equivalences compose (coinductively) and that the induction goes through. Pullback stability remains the open hypothesis.
+
 **Finding.** Even dimension 0 of the derivation needs step 3, the action of β on the boundary terms of A. So "A2 gives A1's LIFT₀" depends on Conjecture N for the coherences in Γ's types, not just on (Dec) at higher dimensions as `free-objects.md` §3.3 suggests. It is unconditional for globular Γ (step 3 is then a list of components) and, at each depth, wherever N is known.
 
 ---
@@ -200,12 +202,14 @@ This is the non-collapse half: for instance, no closed cell relates two distinct
 
 ## 7. Machine-checked parts
 
-Under `src/CaTTExp/Free/`, typechecked locally with Agda 2.6.3 (`--safe`, plus `--guardedness` for `Reflect`); no postulates. *Status: submitted for independent review; this section is updated when the review is done.*
+Under `src/CaTTExp/Free/`, typechecked locally with Agda 2.6.3 (`--safe`, plus `--guardedness` for `Reflect`); no postulates. *Status:* `Reflect`, `Builders`, `Cylinder`, `LeftUnitorDepth2` reviewed and merged (PR #28). `A2toA1` and `AssociatorDepth2` submitted for review.
 
 - `Reflect.agda` (C4): Theorem 1 (`reflect`) and Corollary 1 (`lift-inv`) of §1, by guarded corecursion, for an abstract tower of hom-sets with composition, identities and whiskering. The hypotheses I1, I2 and I4 are record arguments; I3 is derived (`conn-inv`). A terminal-tower instance shows the hypotheses are jointly satisfiable.
 - `Builders.agda`: unbiased composites over Batanin trees, binary composites and whiskerings `u ∗ₖ v` of any dimensions, identities, and `certify`, which turns a successful run of the certified checker into a typing derivation at typechecking time.
 - `Cylinder.agda` (C3, C7): `cyl Γ = Γ↑Var(Γ)` for globular contexts, as a function on syntax. Certified well formed for D⁰, D¹ (the lax square), D², the composable pair, the loop and a 2-loop. Lemma 2 checked by `refl` on the loop, the 2-loop and the composable pair, comparing the whole extension (x⁻, x⁺, x↑) with the disc cylinder's pulled back along τ_A↑; the general statement is proved on paper in §2.1 only.
 - `LeftUnitorDepth2.agda` (C7, C1): the depth-2 naturality 3-cell of the left unitor (`naturality-arbitrary-depth.md` §6), built by the sliding argument and certified: `K-λ-wf : Sq ⊢tm K-λ ∶ L → R`. Also certified: the depth-1 naturality term `K_comp` for binary composition, and ι for identities. Negative checks show the cell has the claimed direction and is not a single coherence over the lax square.
+- `A2toA1.agda` (C7): LIFT-equivalences compose (`Equiv-∘`, guarded corecursion, with "functors preserve invertibles" as a record argument); A1's LIFT for every context from A2's, by induction (`A1-lift`), under the hypotheses listed in §3.
+- `AssociatorDepth2.agda` (C7, C1/C1b): the depth-2 naturality 3-cell of the associator over three arrows with every variable selected, built by the sliding argument (distribute; slide f↑, g↑, h↑ by naturality of the associator in its top argument; compare four segments along single paths of the ladder, the last being the pentagon). Every coherence it uses is certified at typecheck time in its own pasting context. The assembled cell has about 3.6·10⁵ syntax nodes, which exhausts Agda's typecheck-time normaliser, so it is certified by running the same checker compiled (`tools/run/RunAssoc.agda`, with a negative and a consistency control); this trusts the MAlonzo/GHC compilation in addition to Agda.
 
 ## References
 

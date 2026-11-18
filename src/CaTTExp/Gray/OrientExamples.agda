@@ -6,6 +6,7 @@ module CaTTExp.Gray.OrientExamples where
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Pure
 open import CaTTExp.Gray.Orient ∅
+import CaTTExp.Gray.Fast
 open import CaTTExp.Gray.Examples using (HComp; Txz; fg; f'g'; βα; αβ)
 
 v : Nat → Tm
@@ -117,4 +118,14 @@ _ = refl
 _ : isL only2 (1 ∷ 2 ∷ 1 ∷ []) ≡ false
 _ = refl
 _ : isRev only2 (1 ∷ 2 ∷ 1 ∷ []) ≡ false
+_ = refl
+
+------------------------------------------------------------------------
+-- The fast checker for L_ε (Gray.Fast.Oriented) on the interchanger.
+
+private
+  module F = CaTTExp.Gray.Fast.Oriented ∅
+_ : F.fastSide oddO HComp (arr Txz fg f'g') αβ βα ≡ true
+_ = refl
+_ : F.fastSide oddO HComp (arr Txz fg f'g') βα αβ ≡ false
 _ = refl

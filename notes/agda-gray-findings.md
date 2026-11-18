@@ -105,7 +105,7 @@ The list version grows by about 3.7× per step, i.e. exponentially. The symbolic
   - On the interchanger, alternating ε rejects βα ⇛ αβ and accepts αβ ⇛ βα. The nine-wedge table comparison is now a special case of `OrientRev`.
   - Reversing hom-dimension 2 only (the D_{3} image) reverses the interchanger itself, because it is a hom-2 cell.
   - The D.1 example (K = {2} on D¹ ⊗ D³) is confirmed. α⊗s₂ has the codimension-1 chains of ⊗^rev, not of ⊗, and α⊗c₃ has those of ⊗, not of ⊗^rev. On D¹ ⊗ D² ⊗ D¹, this ε is neither L nor L^rev.
-- **Not done:** the symbolic checker of `Gray/Fast.agda` is for L only. Extending it to L_ε means swapping the two pieces of an SHom entry when ε(i+1) holds, and the starting sign by ε(k+1).
+- **Proved:** the symbolic checker covers every L_ε. `Gray/Fast.agda` is now parameterised by the orientation (`Oriented o`): each SHom entry lists the twisted pieces, each table starts from the sign flipped by ε(k+1), and `fastSideε-correct : Oriented.fastSide o Θ A t u ≡ graySideε o Θ A t u` for all inputs. L's `fastSide-correct` is the instance o = λ _ → false composed with `graySideε-const`.
 - **Not proved:** the "only if" directions ("L_ε = L^rev only if ε alternates", "L_ε = L only if ε is constant"). Both are true at the level of the D_K dualities (`GrayDuality.agda`); here they would need a separating table for each other ε.
 
 ## Not yet proved

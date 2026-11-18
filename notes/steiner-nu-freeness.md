@@ -36,7 +36,11 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
 
 ## 4. Plan
 
-1. **(N0)** Build ν(K) as an `ωCat`. Chains need a canonical form so that cells can be compared with `≡`: sorted lists with multiplicities over a decidable total order on the basis, or tables over a finite basis. The bag/≈ representation of `Strict/Cell.agda` will be bridged to it.
+1. **(N0) Done.**
+   - `Strict/Tables.agda`: tables over any commutative monoid satisfy the `ωCat` axioms entry by entry. No cell condition is needed, and composition is x + y − ∂⁺ₙx, with no subtraction.
+   - `Strict/Nu.agda`: for an abstract complex (`ADC`: cancellative commutative monoid of chains, additive ∂^±, degree projections, augmentation), Steiner's cells of dimension < L are closed under boundaries and composites. Being a cell is a proposition, so `nu K L : ωCat`.
+   - `Strict/FreeADC.agda`: the instance for a finite basis (chains as vectors of naturals, ∂ extended linearly), with the atom of D¹ checked by evaluation.
+   - Still to do: bridge the bag/≈ representation of `Strict/Cell.agda` to these tables.
 2. **(N1)** Atom generation by Steiner's decomposition index, or by the cut lemma of the answered support prompt if that gives a shorter route.
 3. **(N2)** Freeness. Uniqueness of the extension uses (N1). Existence follows Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms).
 4. **(N3)** Discharge the citations of C8(4), and connect the L strict model to `ωCat`.

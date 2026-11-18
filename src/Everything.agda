@@ -105,6 +105,7 @@ import CaTTExp.Strict.OmegaSound
 import CaTTExp.Strict.LaxColimPoint
 import CaTTExp.Strict.Tables
 import CaTTExp.Strict.Nu
+import CaTTExp.Strict.FreeADC
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

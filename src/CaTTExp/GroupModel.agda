@@ -504,6 +504,7 @@ module Model (closed : Closed) (𝔾 : Group) (M : K → Group.G 𝔾) where
   Env = Nat → G
 
   -- Values of a substitution, in the same order.
+  infixl 5 _▹_
   data VS : Set where
     []  : VS
     _▹_ : VS → G → VS
@@ -696,3 +697,177 @@ module Model (closed : Closed) (𝔾 : Group) (M : K → Group.G 𝔾) where
       where
       V₀ : ValidEnv Γ η
       V₀ k′ C e = V k′ C (lookup-wk′ (Γ ▸ _) k′ _ (lookup-wk′ Γ k′ _ e))
+
+  ----------------------------------------------------------------------
+  -- Index bookkeeping for one pse step.
+
+  private
+    lkS2 : ∀ {τ₀ a b o n} → lenₛ τ₀ ≡ n → T (o <ℕ n) → lookupₛ (τ₀ ,ₛ a ,ₛ b) o ≡ lookupₛ τ₀ o
+    lkS2 {τ₀} {a} {b} {o} refl p =
+      trans (lookupₛ-wk (τ₀ ,ₛ a) b o (<-suc o _ p)) (lookupₛ-wk τ₀ a o p)
+
+    lkSn : ∀ {τ₀ a b n} → lenₛ τ₀ ≡ n → lookupₛ (τ₀ ,ₛ a ,ₛ b) n ≡ a
+    lkSn {τ₀} {a} {b} refl =
+      trans (lookupₛ-wk (τ₀ ,ₛ a) b (lenₛ τ₀) (<-suc-self (lenₛ τ₀))) (lookupₛ-top τ₀ a)
+
+    lk2 : ∀ {Γ A B o} → (B ≡ ⋆ → ⊥) → lookup (Γ ▸ A ▸ B) o ≡ just ⋆ →
+          ((o ≡ len Γ) × (A ≡ ⋆)) ⊎ (lookup Γ o ≡ just ⋆)
+    lk2 {Γ} {A} {B} {o} hB eq with o ==ℕ suc (len Γ)
+    ... | true  = ⊥-elim (hB (just-inj eq))
+    ... | false with o ==ℕ len Γ in e
+    ...   | true  = inj₁ (==→≡ o (len Γ) e , just-inj eq)
+    ...   | false = inj₂ eq
+
+    lV2 : ∀ vs a b → Agree (lenV vs) (lookupV vs) (lookupV (vs ▹ a ▹ b))
+    lV2 vs a b i p = trans (lookupV-wk vs a i p) (lookupV-wk (vs ▹ a) b i (<-suc i _ p))
+
+    lVtop : ∀ vs a b → lookupV (vs ▹ a ▹ b) (suc (lenV vs)) ≡ b
+    lVtop vs a b = lookupV-top (vs ▹ a) b
+
+    0< : ∀ {x n} → T (x <ℕ n) → T (0 <ℕ n)
+    0< {n = suc n} _ = tt
+
+    arr-tm : ∀ {a b c d} → arr ⋆ a b ≡ arr ⋆ c d → (a ≡ c) × (b ≡ d)
+    arr-tm refl = refl , refl
+
+  -- Potentials read through τ.
+  Qt : Ctx → Env → Tm → G
+  Qt Θ η (var i) = pot Θ η i
+  Qt Θ η _       = e
+
+  ----------------------------------------------------------------------
+  -- Value of 1-cell terms in a pasting context (1-dimensional
+  -- contractibility of pasting contexts in B G).
+
+  mutual
+    val : ∀ {Θ η s T′ i j} → Θ ⊢ps → ValidEnv Θ η →
+          Θ ⊢tm s ∶ T′ → T′ ≡ arr ⋆ (var i) (var j) →
+          ⟦ s ⟧ η ≡ pot Θ η i ⁻¹ · pot Θ η j
+    val (ps dΘ) V (var-wf w eq) refl = pot-var dΘ V eq
+    val {i = i} dΘ V (cst-wf {k} _ _) e =
+      ⊥-elim (closed-not-var {i} (fst (snd (subst (ScTy 0) e (closed k)))))
+    val dΘ V (coh-wf {A = arr _ _ _} _ _ _ _ _) e = ⊥-elim (arr⋆≢ e)
+    val {Θ} {η = η} {i = i} {j} dΘ V (coh-wf {Θ″} {⋆} {t′} {u′} {τ} p″ w″ a″ ok″ s″) e
+      with bv closed p″ a″ ok″ base1
+    ... | ((x′ , refl , ex′) , (y′ , refl , ey′)) with conn′ closed p″ s″ dΘ
+    ...   | inj₂ cl = ⊥-elim (closed-var (sc-lookup τ x′ x<τ cl) (fst (arr-tm e)))
+      where
+      x<τ : T (x′ <ℕ lenₛ τ)
+      x<τ = subst (λ m → T (x′ <ℕ m)) (sym (snd (sub-sc closed s″))) (lookup-< Θ″ x′ ex′)
+    ...   | inj₁ all = goal p″
+      where
+      Q0 = Qt Θ η (lookupₛ τ 0)
+      goal : Θ″ ⊢ps → pot Θ″ (lookupV (⟦ τ ⟧s η)) x′ ⁻¹ · pot Θ″ (lookupV (⟦ τ ⟧s η)) y′
+                      ≡ pot Θ η i ⁻¹ · pot Θ η j
+      goal (ps d″)
+        rewrite potT dΘ V d″ s″ all x′ ex′ | potT dΘ V d″ s″ all y′ ey′
+              | fst (arr-tm e) | snd (arr-tm e) = relative Q0 (pot Θ η i) (pot Θ η j)
+
+    potT : ∀ {Θ η Γ x A τ} → Θ ⊢ps → ValidEnv Θ η →
+           Γ ⊢ps x ∶ A → Θ ⊢sub τ ∶ Γ → AllObj Θ τ Γ →
+           ∀ o → lookup Γ o ≡ just ⋆ →
+           pot Γ (lookupV (⟦ τ ⟧s η)) o ≡ Qt Θ η (lookupₛ τ 0) ⁻¹ · Qt Θ η (lookupₛ τ o)
+    potT {Θ} {η = η} dΘ V pss (,-wf {t = t₀} (⟨⟩-wf _) d₀) all o eo with o ==ℕ 0 in e₀
+    ... | true  = sym (invˡ (Qt Θ η t₀))
+    potT dΘ V pss (,-wf (⟨⟩-wf _) d₀) all o () | false
+    potT dΘ V (psd d) s all = potT dΘ V d s all
+    potT dΘ V (pse d) (,-wf (,-wf s₀ dy) df) all =
+      potT-pse dΘ V d s₀ dy df all (PsTy-base (ps-ty d))
+
+    potT-pse : ∀ {Θ η Γ x A τ₀ ty tf} → Θ ⊢ps → ValidEnv Θ η →
+               (d : Γ ⊢ps x ∶ A) (s₀ : Θ ⊢sub τ₀ ∶ Γ)
+               (dy : Θ ⊢tm ty ∶ A [ τ₀ ]ty)
+               (df : Θ ⊢tm tf ∶ arr A (var x) (var (len Γ)) [ τ₀ ,ₛ ty ]ty) →
+               AllObj Θ (τ₀ ,ₛ ty ,ₛ tf) (Γ ▸ A ▸ arr A (var x) (var (len Γ))) →
+               (A ≡ ⋆) ⊎ (Σ Nat λ k → Σ Nat λ l → Base A (var k) (var l)) →
+               ∀ o → lookup (Γ ▸ A ▸ arr A (var x) (var (len Γ))) o ≡ just ⋆ →
+               pot (Γ ▸ A ▸ arr A (var x) (var (len Γ))) (lookupV (⟦ τ₀ ,ₛ ty ,ₛ tf ⟧s η)) o
+                 ≡ Qt Θ η (lookupₛ (τ₀ ,ₛ ty ,ₛ tf) 0) ⁻¹ · Qt Θ η (lookupₛ (τ₀ ,ₛ ty ,ₛ tf) o)
+    potT-pse {Θ} {η = η} {Γ} {x} {.⋆} {τ₀} {ty} {tf} dΘ V d s₀ dy df all (inj₁ refl) o eo
+      with lk2 {Γ} {⋆} {arr ⋆ (var x) (var (len Γ))} {o} (λ ()) eo
+    ... | inj₁ (refl , _) =
+      -- the newly attached object n, with arrow f : x → n
+      trans (cong (λ b → (if len Γ ==ℕ len Γ then pot Γ η″ x · b else pot Γ η″ (len Γ))) top)
+        (trans (cong (λ b → if b then pot Γ η″ x · ⟦ tf ⟧ η else pot Γ η″ (len Γ)) (==-refl (len Γ)))
+          (trans (cong (_· ⟦ tf ⟧ η) (trans (pot-ext Γ agree x) (IH x ex)))
+            (trans (cong ((Q0′ ⁻¹ · Qx) ·_) vf)
+              (trans (telescope Q0′ Qx (Qt Θ η (var kn)))
+                (cong₂ (λ a b → Qt Θ η a ⁻¹ · Qt Θ η b) (sym e0) (sym ekn))))))
+      where
+      n = len Γ
+      η₀ = lookupV (⟦ τ₀ ⟧s η)
+      η″ = lookupV (⟦ τ₀ ,ₛ ty ,ₛ tf ⟧s η)
+      l : lenₛ τ₀ ≡ n
+      l = snd (sub-sc closed s₀)
+      lV : lenV (⟦ τ₀ ⟧s η) ≡ n
+      lV = trans (lenV-⟦⟧ τ₀ η) l
+      ex : lookup Γ x ≡ just ⋆
+      ex = fst (ps-facts d)
+      x< : T (x <ℕ n)
+      x< = lookup-< Γ x ex
+      agree : Agree n η″ η₀
+      agree i p = sym (lV2 (⟦ τ₀ ⟧s η) (⟦ ty ⟧ η) (⟦ tf ⟧ η) i (subst (λ m → T (i <ℕ m)) (sym lV) p))
+      top : η″ (suc n) ≡ ⟦ tf ⟧ η
+      top = trans (cong (λ m → η″ (suc m)) (sym lV)) (lVtop (⟦ τ₀ ⟧s η) (⟦ ty ⟧ η) (⟦ tf ⟧ η))
+      all₀ : AllObj Θ τ₀ Γ
+      all₀ k ek = subst (Obj Θ) (lkS2 {τ₀} {ty} {tf} l (lookup-< Γ k ek))
+                    (all k (lookup-wk′ (Γ ▸ ⋆) k _ (lookup-wk′ Γ k ⋆ ek)))
+      IH : ∀ o → lookup Γ o ≡ just ⋆ → pot Γ η₀ o ≡ Qt Θ η (lookupₛ τ₀ 0) ⁻¹ · Qt Θ η (lookupₛ τ₀ o)
+      IH = potT dΘ V d s₀ all₀
+      Q0′ = Qt Θ η (lookupₛ τ₀ 0)
+      e0 : lookupₛ (τ₀ ,ₛ ty ,ₛ tf) 0 ≡ lookupₛ τ₀ 0
+      e0 = lkS2 {τ₀} {ty} {tf} l (0< {x} {n} x<)
+      Qx = Qt Θ η (lookupₛ τ₀ x)
+      -- the images of x and n are variables
+      okx = all₀ x ex
+      kx = fst okx
+      ekx : lookupₛ τ₀ x ≡ var kx
+      ekx = fst (snd okx)
+      okn = all n (trans (lookup-wk {Γ ▸ ⋆} {n} _ (<-suc-self n)) (lookup-top Γ ⋆))
+      kn = fst okn
+      ekn : lookupₛ (τ₀ ,ₛ ty ,ₛ tf) n ≡ var kn
+      ekn = fst (snd okn)
+      eX : lookupₛ (τ₀ ,ₛ ty) x ≡ var kx
+      eX = trans (lookupₛ-wk τ₀ ty x (subst (λ m → T (x <ℕ m)) (sym l) x<)) ekx
+      eY : lookupₛ (τ₀ ,ₛ ty) n ≡ var kn
+      eY = trans (trans (cong (lookupₛ (τ₀ ,ₛ ty)) (sym l)) (lookupₛ-top τ₀ ty))
+                 (trans (sym (lkSn {τ₀} {ty} {tf} l)) ekn)
+      vf : ⟦ tf ⟧ η ≡ Qx ⁻¹ · Qt Θ η (var kn)
+      vf = trans (val dΘ V df (cong₂ (arr ⋆) eX eY))
+                 (cong (λ t → Qt Θ η t ⁻¹ · pot Θ η kn) (sym ekx))
+    ... | inj₂ eo′ rewrite <→≢ o (len Γ) (lookup-< Γ o eo′) = potT-old dΘ V d s₀ all o eo′
+    potT-pse {Γ = Γ} {x} {arr ⋆ (var k) (var l)} dΘ V d s₀ dy df all (inj₂ (k , l , base1)) o eo
+      with lk2 {Γ} {arr ⋆ (var k) (var l)} {arr (arr ⋆ (var k) (var l)) (var x) (var (len Γ))} {o} (λ ()) eo
+    ... | inj₁ (_ , ())
+    ... | inj₂ eo′ = potT-old dΘ V d s₀ all o eo′
+    potT-pse {Γ = Γ} {x} {arr A′ t u} dΘ V d s₀ dy df all (inj₂ (k , l , base+ r)) o eo
+      with lk2 {Γ} {arr A′ t u} {arr (arr A′ t u) (var x) (var (len Γ))} {o} (λ ()) eo
+    ... | inj₁ (_ , ())
+    ... | inj₂ eo′ = potT-old dΘ V d s₀ all o eo′
+
+    -- Objects that were already there.
+    potT-old : ∀ {Θ η Γ x A B τ₀ ty tf} → Θ ⊢ps → ValidEnv Θ η →
+               (d : Γ ⊢ps x ∶ A) (s₀ : Θ ⊢sub τ₀ ∶ Γ) →
+               AllObj Θ (τ₀ ,ₛ ty ,ₛ tf) (Γ ▸ A ▸ B) →
+               ∀ o → lookup Γ o ≡ just ⋆ →
+               pot Γ (lookupV (⟦ τ₀ ,ₛ ty ,ₛ tf ⟧s η)) o
+                 ≡ Qt Θ η (lookupₛ (τ₀ ,ₛ ty ,ₛ tf) 0) ⁻¹ · Qt Θ η (lookupₛ (τ₀ ,ₛ ty ,ₛ tf) o)
+    potT-old {Θ} {η} {Γ} {x} {A} {B} {τ₀} {ty} {tf} dΘ V d s₀ all o eo =
+      trans (pot-ext Γ agree o)
+        (trans (potT dΘ V d s₀ all₀ o eo)
+          (cong₂ (λ a b → Qt Θ η a ⁻¹ · Qt Θ η b) (sym e0) (sym (lkS2 {τ₀} {ty} {tf} l o<))))
+      where
+      n = len Γ
+      l : lenₛ τ₀ ≡ n
+      l = snd (sub-sc closed s₀)
+      lV : lenV (⟦ τ₀ ⟧s η) ≡ n
+      lV = trans (lenV-⟦⟧ τ₀ η) l
+      agree : Agree n (lookupV (⟦ τ₀ ,ₛ ty ,ₛ tf ⟧s η)) (lookupV (⟦ τ₀ ⟧s η))
+      agree i p = sym (lV2 (⟦ τ₀ ⟧s η) (⟦ ty ⟧ η) (⟦ tf ⟧ η) i (subst (λ m → T (i <ℕ m)) (sym lV) p))
+      o< : T (o <ℕ n)
+      o< = lookup-< Γ o eo
+      e0 : lookupₛ (τ₀ ,ₛ ty ,ₛ tf) 0 ≡ lookupₛ τ₀ 0
+      e0 = lkS2 {τ₀} {ty} {tf} l (0< {o} {n} o<)
+      all₀ : AllObj Θ τ₀ Γ
+      all₀ k ek = subst (Obj Θ) (lkS2 {τ₀} {ty} {tf} l (lookup-< Γ k ek))
+                    (all k (lookup-wk′ (Γ ▸ A) k B (lookup-wk′ Γ k A ek)))

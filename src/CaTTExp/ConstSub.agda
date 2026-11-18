@@ -10,7 +10,7 @@
 --
 -- Hypotheses. The signature's constants have closed types (needed for
 -- substitution, CaTTExp.Subst). Γ must be *constant free* outside coh
--- bodies (`NcCtx`). Some hypothesis is necessary: with two unrelated
+-- bodies (`NcCtx`). Some hypothesis is needed (argued, not formalised): with two unrelated
 -- constants c₀ c₁ : ⋆, the context (x : c₀ → c₁) is well formed but has
 -- no constant substitution, since nothing has type c₀ → c₁. Pure CaTT
 -- contexts are constant free, so for pure CaTT the theorem holds for

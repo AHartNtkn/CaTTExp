@@ -46,7 +46,7 @@ Rejected:
 
 - Substitution admissibility, `CaTTExp.Subst` (PR #20); pure instance in `CaTTExp.PureMetatheory`.
 - Checker completeness and decidability of the four judgments, `CaTTExp.Completeness`. The pasting judgment is decided by `CaTTExp.PastingCheck` (read left to right, descend with psd to the dimension of the next object). Hypotheses: the equality test on constants is reflexive and `valid?` is complete; both hold for pure CaTT.
-- Constant substitutions `(c : ⋆) ⊢ !_Γ ∶ Γ`, `CaTTExp.ConstSub`, for constant-free Γ in any signature, hence for every pure Γ. The hypothesis is necessary: Γ = (x : c₀ → c₁) with two unrelated constants has no such substitution.
+- Constant substitutions `(c : ⋆) ⊢ !_Γ ∶ Γ`, `CaTTExp.ConstSub`, for constant-free Γ in any signature, hence for every pure Γ. Some hypothesis is needed (argued, not formalised): Γ = (x : c₀ → c₁) with two unrelated constants should have no such substitution, since nothing has type c₀ → c₁.
 - Weakening and context extension along a substitution, `CaTTExp.Weakening`.
 - Suspension, `CaTTExp.Suspension`: Σ preserves all four judgments for constant-free syntax (all syntax in pure CaTT), including both side conditions and the pasting judgment. `elements-at` puts any derivation over Θ in the context ΣΘ[a, b] (`limits-representables.md` §8 target 1).
 - Soundness for the one-object, locally discrete strict models B G (G a group, constants allowed), `CaTTExp.GroupModel`. General strict ω-categories are ledger item A3a.

@@ -40,6 +40,7 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
    - `Strict/Tables.agda`: tables over any commutative monoid satisfy the `ωCat` axioms entry by entry. No cell condition is needed, and composition is x + y − ∂⁺ₙx, with no subtraction.
    - `Strict/Nu.agda`: for an abstract complex (`ADC`: cancellative commutative monoid of chains, additive ∂^±, degree projections, augmentation), Steiner's cells of dimension < L are closed under boundaries and composites. Being a cell is a proposition, so `nu K L : ωCat`.
    - `Strict/FreeADC.agda`: the instance for a finite basis (chains as vectors of naturals, ∂ extended linearly), with the atom of D¹ checked by evaluation.
+   - `Strict/Atoms.agda`: the atom ⟨b⟩ of a basis element (Steiner Def. 3.4: ⟨b⟩ₖ⁻ = (∂⟨b⟩ₖ₊₁⁻)₋, ⟨b⟩ₖ⁺ = (∂⟨b⟩ₖ₊₁⁺)₊, with positive and negative parts by pointwise truncated subtraction) is a cell of ν(K) when ∂∂ = 0 holds on chains, ∂ lowers degree by one, the basis element is unital (ε⟨b⟩₀^± = 1), and deg b ≤ L (`atom-cell`).
    - Still to do: bridge the bag/≈ representation of `Strict/Cell.agda` to these tables.
 2. **(N1)** Atom generation by Steiner's decomposition index, or by the cut lemma of the answered support prompt if that gives a shorter route.
 3. **(N2)** Freeness. Uniqueness of the extension uses (N1). Existence follows Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms).

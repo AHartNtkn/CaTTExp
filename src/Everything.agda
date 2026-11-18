@@ -32,3 +32,5 @@ import CaTTExp.Lim.Terms
 import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
 import CaTTExp.Lim.Linearity
+import CaTTExp.Free.AssociatorDepth2
+import CaTTExp.Free.A2toA1

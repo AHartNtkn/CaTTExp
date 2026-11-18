@@ -653,3 +653,65 @@ It supplies finite contextual normal forms, injective supports, directed interch
 The remaining issue is uniformity. In larger diagrams, the contextual reductions can acquire additional whiskerings and overlapping applications. A recursive construction must prove that those operations preserve the normal forms and that the resulting completion remains directed and support-injective. The finite argument above does not establish those properties for the three-summand example or for arbitrary \(\Gamma\).
 
 Accordingly, this is a solution to the first finite test in Q1 and a forcing substitution for Q2. Q3 and the general impossibility question Q4 remain unresolved here.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** The response answers the first test case of Q1 (Γ = ΣD³ ∨ ΣD²) through hom-dimension 4, with the lift of the top cell Ω ⊗ B, and gives a forcing substitution for Q2. It does not treat the three-summand case or a uniform rule (Q1's general part, Q3), or Q4; it says so itself.
+
+The data, in short:
+- the round-3 repair on both layers: h^ε with d^ε = h^ε e^ε;
+- one hom-4 generator H : h⁰ z_{U₀} ⇛ z_S h¹, with the variation equation H e¹ = (h⁰ 𝖤) ; 𝖣;
+- one hom-4 generator K : a⁰ z_{V₀} b¹ c¹ ⇛ z_S h¹ f¹, with the equation z_S W¹ = (𝖠 b¹ c¹) ; K;
+- the top hom-5 generator Z : L ⇛ R.
+
+Step by step.
+
+1. **The hom-3 graph (§1).** Raising the first factor from D² to D³ adds no fourth coordinate. The maximal hom-3 interval is two copies (ε = 0, 1) of the repaired hexagon a, b, c, h, e, f, with d^ε eliminated by (1). The copies are joined by six variations z_X : X⁰ → X¹, which replace the unique A-edge of each path X by Ω whiskered. The tensor hom-3 generators are Ω ⊗ g_j, A^ε ⊗ β_j and α_i ⊗ B, 8 in all, which matches the inventory.
+
+2. **The hom-4 faces (§2), with orientations checked.**
+   - 𝖠 and 𝖥 are inner interchangers along a hom-1 cell, of t₀ (left) with Ω ⊗ g (right) and of Ω ⊗ g (left) with t₁ (right). "Right cell first ⇛ left cell first" gives z_S a¹ ⇛ a⁰ z_{V₀} and f⁰ z_T ⇛ z_{U₀} f¹. ✓
+   - **R_j = Ω ⊗ β_j.** Its source contains r_j⁰ and the variation at the target side, and its target contains the variation at the source side and r_j¹. That gives ∂R_j = (A¹ − A⁰) ⊗ β_j − Ω ⊗ (g₁ − g₀), matching (5). ✓
+   - **N₁, N₂.** In χ₁ the A-cell is the left input, and in χ₂ it is the right input. In the Gray case of (K3), varying the left input gives "χ first ⇛ variation first" (as for r_j), and varying the right input gives the reverse (as for t_i). N₁ and N₂ in (6) follow exactly this pattern, so the orientation is the Leibniz-signed one that requirement 4 already fixes. ✓
+   - **The orientation of N₁ matters.** With B reversed, the route R of (13) would not exist.
+
+3. **H and equation (8).** Both sides of (8) have type h⁰ z_{U₀} e¹ ⇛ z_S h¹ e¹, and 𝖣 is R₁ whiskered on d = h e. In the Gray quotient, e¹ and 𝖤 become identities, so q(H) = q(𝖣). ✓
+
+4. **K and equation (12).** 𝖠 b¹ c¹ : x₄ ⇛ x₃ and z_S W¹ : x₄ ⇛ x₇ share the source x₄. So this is a k-type factorization (d = e ; k) one dimension up. ✓
+
+5. **Counts, supports and directedness (§6), recomputed by script** (scratch Python, independent of the response's checker). The generators and faces were entered as listed. All results match the response:
+   - 68 hom-3 cells on the maximal interval, identities included, with 68 distinct supports;
+   - 23 contextual hom-4 records, 21 after the two eliminations;
+   - 98 hom-4 cells, 30 of them non-identity, with pairwise distinct supports;
+   - no cycles;
+   - exactly the two routes L and R from x₁ to x₇.
+   
+   The two reductions of (15) have no overlaps: their sources have no incoming arrows and their targets no outgoing arrows.
+
+6. **Gray quotient (§7).** Correct.
+   - Killing b, e, 𝖠, 𝖡, 𝖤 and 𝖥 gives q(h) = q(d), q(H) = q(𝖣) and q(K) = q(z_S W¹).
+   - That leaves exactly R₀, R₁, W⁰ and W¹.
+   - ∂(Ω ⊗ B) = W¹ − W⁰ − R₁ + R₀. L uses W⁰ and 𝖣 (that is, R₁); R uses 𝖢 (R₀) and K (W¹). So Z has the right orientation.
+
+7. **Forcing substitution (§8).** Correct. σ : A⁰, A¹ ↦ A and Ω ↦ 1_A is boundary-compatible and respects (1), (8) and (12). The hom-4 cells of the round-3 presentation are W and identities. So:
+   - σ(H) must be 1_h, since its boundary is h ⇛ h;
+   - σ(K) must be W, since its boundary is abc ⇛ hf;
+   - σ(Z) must be 1_W, since there are no hom-5 cells.
+   
+   K is therefore not a cell that degenerations always kill.
+
+8. **Additional check (mine): the k-repair needs the same hom-4 step.** Repeat the computation with the mirror repair in hom-dimension 3: k^ε : U₁ ⇛ T, f^ε = e^ε k^ε, and a variation K′ : k⁰ z_T ⇛ z_{U₁} k¹ with e⁰ K′ = 𝖥 ; (𝖤 k¹). Then the hom-4 graph over S⁰ → T¹ again has two sources (a⁰b⁰c⁰z_T and z_S a¹b¹c¹) and two sinks (a⁰ z_{V₀} b¹ c¹ and z_S d¹ k¹). Its two routes are still not joined.
+   
+   In both variants the face 𝖠, an inner interchanger whose pair flips relative to the tensor faces, creates a second source and a second sink one dimension up. One more joining factorization is then needed. With either hom-3 repair, a sink-joining one (K) works.
+   
+   This supports the source/sink reading in `invertibility-markings.md` §7: each dimension needs one joining step per position-flipping face. It also shows the choice of side can differ between dimensions; here source-joining in dimension 3 and sink-joining in dimension 4 is what works, and source-joining in dimension 4 would have to factor a composite. Checked only on this example.
+
+**Consequences for E6.**
+- The first larger test case is completed through the top cell. The data are factorizations in dimensions 3 and 4, plus variation equations for the dimension-3 factorizations under the new top variable (H, (8)).
+- The candidate rule needs two parts: (i) a joining factorization for each source/sink pair created by a position-flipping face, in every dimension; (ii) a variation cell and equation for each existing factorization under each higher variable.
+- Still open:
+  - the three-summand case ΣD² ∨ ΣD² ∨ ΣD²;
+  - a uniform rule (h/k choice per dimension);
+  - closure under all substitutions;
+  - Q4.
+
+Follow-up prompt: `outbox/directed-interchange-every-level-r5.md` (round 5, unsent).

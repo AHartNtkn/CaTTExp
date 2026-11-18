@@ -90,3 +90,480 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 ## 5. What counts as a solution
 
 Explicit generators for Q1 or Q2; a definition for Q3, even in finite dimension; an impossibility proof for Q4; or a reference to a published construction.
+
+# Researcher Response
+
+**The stipulated skeleton has a finite repair: add one hom-3 generator and one hom-3 equation.** The equation is essential for the exact Gray quotient, and the contextual support basis must be refined.
+
+Write
+\[
+d=\bar r_1:S\longrightarrow U_1,
+\qquad
+e=\bar\chi_2:U_0\longrightarrow U_1.
+\]
+Adjoin
+\[
+\boxed{h:S\longrightarrow U_0}
+\]
+and impose
+\[
+\boxed{h *_2 e=d.} \tag{F}
+\]
+Then the lifted top generator has boundary
+\[
+\boxed{
+W:
+\bar t_0 *_2\bar\chi_1 *_2\bar r_0
+\;\Longrightarrow\;
+h *_2\bar t_1.
+} \tag{W}
+\]
+
+Below I prove support injectivity, directedness, and the exact Gray quotient for this finite presentation. This answers Q1–Q2 at the level of the prescribed skeleton. Making the factorization (F) compatible with substitution into arbitrary diagrams remains the missing step for Q3.
+
+## 1. The repaired hom-3 presentation
+
+Abbreviate the six contextual hom-3 cells as follows.
+
+| Symbol | Cell | Boundary |
+|---|---|---|
+| \(a\) | \(\bar t_0\) | \(S\to V_0\) |
+| \(b\) | \(\bar\chi_1\) | \(V_0\to V_1\) |
+| \(c\) | \(\bar r_0\) | \(V_1\to T\) |
+| \(d\) | \(\bar r_1\) | \(S\to U_1\) |
+| \(e\) | \(\bar\chi_2\) | \(U_0\to U_1\) |
+| \(f\) | \(\bar t_1\) | \(U_0\to T\) |
+
+In this section, concatenation means hom-3 composition \(*_2\).
+
+The repaired presentation is
+\[
+\langle a,b,c,d,e,f,h\mid d=he\rangle.
+\]
+Eliminating \(d\) gives the free category on this graph:
+
+```mermaid
+flowchart LR
+    S -->|a| V0
+    V0 -->|b| V1
+    V1 -->|c| T
+    S -->|h| U0
+    U0 -->|e| U1
+    U0 -->|f| T
+```
+
+Its nonidentity arrows are exactly
+\[
+\boxed{
+a,\ b,\ c,\ h,\ e,\ f,\ ab,\ bc,\ abc,\ he,\ hf.
+} \tag{1}
+\]
+In particular, its two \(S\to T\) arrows are
+\[
+abc,\qquad hf.
+\]
+
+The old cell \(d\) remains present, with normal form \(he\). No two old arrows are identified: the old nonidentity arrows were
+\[
+a,b,c,d,e,f,ab,bc,abc,
+\]
+and their images under \(d\mapsto he\) are distinct members of (1).
+
+### Minimality
+
+This is minimal **among repairs that retain the hom-2 skeleton** and obtain the exact Gray quotient by killing the existing inner interchangers.
+
+With no new hom-3 generator, the only existing \(S\to T\) arrow is \(abc\). Equations among existing hom-3 cells cannot create another arrow.
+
+For the repair using \(h\), a relation is also necessary. Without (F), killing \(e\) leaves two independent arrows
+\[
+q(h),q(d):S\longrightarrow U
+\]
+in the quotient. Equation (F) identifies precisely those arrows after \(e\) becomes an identity.
+
+Thus one new hom-3 generator and one hom-3 equation suffice, and neither can be omitted from this repair.
+
+However, **\(h\) itself is not forced**. Another repair is
+\[
+k:U_1\longrightarrow T,
+\qquad
+f=ek,
+\]
+with top boundary
+\[
+W_k:abc\Longrightarrow dk.
+\]
+Its Gray image satisfies \(q(k)=q(f)\). These are two choices of which existing contextual cell to factor through the directed interchanger.
+
+## 2. Why the calculation extends beyond the six displayed 2-cells
+
+The relevant hom-2 paths are paths in an oriented 3-cube. Its vertices are
+\[
+P_{ij},Q_{ij},
+\]
+and its twelve directed edges are
+\[
+a_j^\pm,\qquad b_i^\pm,\qquad c_{ij}.
+\]
+
+Use \(A,B,C\) for the three coordinate changes. The six maximal paths are
+\[
+\begin{array}{c|cccccc}
+\text{Path}&S&V_0&V_1&T&U_0&U_1\\ \hline
+\text{Word}&BCA&CBA&CAB&ACB&ABC&BAC.
+\end{array}
+\]
+
+The six original hom-3 generators are the six square-face comparisons. Every proper interval of this cube varies at most two coordinates. Consequently, a proper interval has at most one nonidentity hom-3 arrow. All interactions between several face comparisons therefore occur in the maximal interval \(P_{00}\to Q_{11}\), and are exactly the graph used above.
+
+There are no additional contexts in which the equation \(d=he\) must be reduced:
+
+1. **Hom-2 whiskering:** its hom-1 boundary is \(P_{00}\to Q_{11}\), the initial-to-terminal interval of the cube. No nonidentity hom-2 path can be prefixed or suffixed.
+2. **External whiskering:** its hom-0 boundary spans the entire external square. No nonidentity external hom-1 path extends it.
+3. **Hom-3 composition:** \(S\) has no incoming nonidentity hom-3 arrow, and \(U_1\) has no outgoing one.
+
+Moreover, two nonidentity square-face comparisons cannot occupy consecutive, disjoint lower-composition intervals: that would require at least four coordinate changes, whereas the cube has three.
+
+Thus orienting (F) as
+\[
+d\longmapsto he
+\]
+gives a terminating reduction with no overlaps in this finite skeleton. The proper-interval arrows remain unchanged; the maximal-interval normal forms are exactly (1).
+
+This uses the composition-of-whiskers presentation convention. Forest–Mimram’s Theorem 1.8.3 provides the corresponding normal-form formalism for free precategories; the additional reduction here is the explicitly checked contextual rule \(d\mapsto he\). [arxiv.org](https://arxiv.org/pdf/2109.05369?utm_source=chatgpt.com)
+
+## 3. Support injectivity requires a refined contextual basis
+
+The support cannot remain the old support function with an independent extra label \(h\). In particular, one cannot simultaneously declare
+
+- \(d\) to be an independent contextual support atom;
+- \(he\) to have support \(\{h,e\}\);
+- \(d=he\);
+
+and obtain a well-defined support function with those declarations.
+
+The repair instead makes the contextual copy \(d\) composite.
+
+### The basis
+
+Retain the lower-dimensional contextual basis. In hom-dimension 3, use:
+
+- the six square-face generators on proper intervals;
+- the six maximal-context generators
+  \[
+  a,b,c,h,e,f.
+  \]
+
+The unwhiskered \(r_1\) remains a generator on its proper interval. Its particular whiskering
+\[
+d=b_0^-\triangleright r_1
+\]
+has normal form \(he\).
+
+This distinction is essential: **a generator on one interval can be sent by whiskering to a composite on a larger interval**. No cancellation of \(b_0^-\) is used.
+
+### Definition of support
+
+Give each contextual basis generator its own graded label. Define support recursively:
+
+\[
+\operatorname{supp}(g)
+=
+\{\text{label of }g\}
+\cup\operatorname{supp}(s g)
+\cup\operatorname{supp}(t g)
+\]
+for a basis generator \(g\);
+
+\[
+\operatorname{supp}(g_1\cdots g_m)
+=
+\bigcup_{i=1}^{m}\operatorname{supp}(g_i)
+\]
+for a nonempty normal-form path; and
+\[
+\operatorname{supp}(1_x)=\operatorname{supp}(x).
+\]
+
+In particular,
+\[
+\operatorname{supp}(d)
+=
+\operatorname{supp}(he).
+\]
+
+These labels index generators and specified whiskering contexts. They do not index every composite cell.
+
+### Proof of injectivity
+
+At hom-dimension 2, a nonempty directed cube path is determined by its set of directed edges. A path in an acyclic graph cannot repeat a vertex, and the directed edges of a path determine their order. Identities are distinguished by their lower-dimensional supports.
+
+At hom-dimension 3:
+
+- a proper-interval nonidentity cell has its proper-face label;
+- a maximal-interval nonidentity cell has the labels of one of the eleven words in (1);
+- those eleven words have pairwise distinct sets of labels;
+- proper-interval and maximal-context labels are distinct;
+- identities have no hom-3 labels and are distinguished recursively.
+
+This proves requirement 2 for the repaired finite hom-3 skeleton. The remaining edge homs are unchanged.
+
+The refinement changes the support of the contextual cell \(d\). It does not assert that arbitrary whiskering preserves support by union, which would reintroduce the obstruction in K4.
+
+## 4. Directedness and the exact Gray quotient
+
+### Directedness
+
+The repaired maximal graph is acyclic. In particular,
+\[
+\operatorname{Hom}(V_1,V_0)=\varnothing,
+\qquad
+\operatorname{Hom}(U_1,U_0)=\varnothing.
+\]
+Thus neither \(b\) nor \(e\) acquires a reverse.
+
+The unwhiskered \(\chi_1,\chi_2\) lie on proper square intervals, where their directed-arrow presentations are unchanged. The new equation on the maximal interval does not identify their endpoints.
+
+Likewise, the hom-2 cube remains directed in its \(C\)-coordinate, so no reverse of an outer \(c_{ij}\) is introduced.
+
+### Exactness of the quotient
+
+Let \(q\) kill the inner interchangers. On the maximal graph,
+\[
+q(b)=1,\qquad q(e)=1.
+\]
+Their endpoints are identified:
+\[
+V_0=V_1=:V,\qquad U_0=U_1=:U.
+\]
+
+Equation (F) becomes
+\[
+q(d)=q(h).
+\]
+
+Eliminating \(b,e,d\) from the quotient presentation leaves exactly
+\[
+S\xrightarrow{q(a)}V\xrightarrow{q(c)}T,
+\qquad
+S\xrightarrow{q(h)}U\xrightarrow{q(f)}T.
+\]
+
+This is the free Gray diamond. There is an isomorphism of presentations, rather than merely a comparison functor onto that diamond.
+
+In particular,
+\[
+\boxed{q(h)=q(\bar r_1).}
+\]
+The image is also forced by its boundary: the Gray diamond has exactly one arrow \(S\to U\).
+
+On proper intervals, the quotient kills the two inner square-face comparisons and retains the four tensor comparisons \(r_j,t_i\). Thus the contextual calculation agrees with the prescribed Gray quotient throughout the finite hom-3 skeleton.
+
+## 5. Q2: the hom-4 generator
+
+Use the original top tensor label \(A\otimes B\) for the generator
+\[
+W:abc\Longrightarrow hf.
+\]
+
+Both boundaries are hom-3 arrows \(S\to T\), so this is globularly well typed.
+
+Its Gray image is
+\[
+q(W):
+q(a)q(c)\Longrightarrow q(d)q(f),
+\]
+namely
+\[
+\bar t_0;\bar r_0
+\Longrightarrow
+\bar r_1;\bar t_1,
+\]
+with the prescribed orientation of \(A\otimes B\).
+
+There are no nonidentity contexts for \(W\) in this finite presentation:
+
+- its lower intervals are maximal;
+- no nonidentity hom-3 arrow enters \(S\) or leaves \(T\);
+- it cannot compose vertically with itself, because \(abc\ne hf\).
+
+Consequently, adjoining \(W\) introduces exactly one nonidentity hom-4 cell. Add one hom-4 basis label for \(W\); all hom-4 identities inherit their hom-3 supports. Support injectivity follows immediately.
+
+There are also no nonidentity naturality instances for \(h\) obtained by placing it beside another nonidentity cell in this finite shape. Its lower endpoints already span the full relevant intervals. Naturality under substitutions into larger diagrams is additional data for Q3.
+
+### Why a 4-cell alone does not replace equation (F)
+
+One could instead adjoin
+\[
+H:he\Longrightarrow d.
+\]
+But killing \(b,e\) would leave
+\[
+q(H):q(h)\Longrightarrow q(d)
+\]
+and two distinct hom-3 arrows \(q(h),q(d)\).
+
+A higher comparison does not equate its boundaries. Therefore \(H\) repairs the exact quotient only if the quotient is additionally required to send \(H\) to an identity. That would introduce a new designated class of structural comparisons.
+
+The strict equation (F) avoids that extra choice.
+
+## 6. What kind of cell is \(h\)?
+
+**It is factorization data, not an ordinary elementary interchanger of two hom-2 cells in this shape.**
+
+The event-word change
+\[
+BCA\longrightarrow ABC
+\]
+alone is insufficient to prove this: it could suggest exchanging the blocks \(BC\) and \(A\). The typing obstruction is stronger.
+
+Every hom-2 path using a \(c_{ij}\) spans the entire external hom-0 interval. Such a path cannot be one member of a hom-0-composable pair with another nonidentity hom-2 cell.
+
+At either nontrivial cut of the external square, the adjacent edge homs supply only the relevant \(A\)- and \(B\)-variations. Their interchangers are precisely \(\chi_1,\chi_2\). This excludes composite inputs involving \(c_{ij}\), as well as atomic inputs.
+
+Thus the uniform operation suggested by this repair would have to assign a factorization
+\[
+\bar r_1=h;\bar\chi_2
+\]
+through a specified intermediate hom-2 cell. Existence of that factorization is an additional axiom; it does not follow from having the elementary directed interchangers.
+
+## 7. The alternative equation \(U_0=U_1\)
+
+There is no valid cancellation argument from
+\[
+(a_0^-;b_1^-);c_{11}
+=
+(b_0^-;a_1^-);c_{11}
+\]
+to
+\[
+a_0^-;b_1^-=b_0^-;a_1^-.
+\]
+
+Consequently, \(U_0=U_1\) does **not by itself** contradict directedness of the unwhiskered elementary \(\chi_2\). It makes its particular whiskering
+\[
+e=\bar\chi_2
+\]
+an endomorphism.
+
+It does, however, create another support problem. Without further equations,
+\[
+e,\ e^2,\ e^3,\ldots
+\]
+are distinct arrows in the presented category, while ordinary set-valued path support gives
+\[
+\operatorname{supp}(e^n)=\operatorname{supp}(e)
+\qquad(n\ge1).
+\]
+Hence requirement 2 forces at least
+\[
+e^2=e
+\]
+under that support convention. The stronger equation \(e=1\) also resolves this particular problem.
+
+Neither equation logically forces the unwhiskered \(\chi_2\) to be an identity: whiskering has not been assumed faithful. In this cube, equations imposed only on the maximal interval cannot be transported back to a proper face by cancelling the common context.
+
+There are therefore two distinct conclusions:
+
+- **Keeping the hom-2 skeleton:** the factorization repair above gives an explicit support-injective solution.
+- **Imposing \(U_0=U_1\):** the equation alone is insufficient; further hom-3 equations and a revised hom-2 support calculation are required.
+
+If directedness were required for *every whiskered interchanger*, the endomorphism \(e\) would already violate it, since its identity would be a reverse arrow. Your stated requirement concerns elementary interchangers, so that stronger condition cannot be assumed.
+
+## 8. Reproducible check of the central presentation
+
+This complete Haskell program checks the eleven normal forms, distinct top-dimensional supports, absence of reverses for \(b,e\), and the exact underlying-arrow quotient to the Gray diamond.
+
+```haskell
+import Data.List (nub, sort)
+
+data V = S | V0 | V1 | T | U0 | U1
+  deriving (Eq, Ord, Enum, Bounded, Show)
+
+type Edge = (V, Char, V)
+type Cell = (V, V, String)
+
+repaired :: [Edge]
+repaired =
+  [ (S,  'a', V0), (V0, 'b', V1), (V1, 'c', T)
+  , (S,  'h', U0), (U0, 'e', U1), (U0, 'f', T)
+  ]
+
+walk :: [Edge] -> V -> [(V, String)]
+walk es x =
+  (x, "") :
+  [ (z, e : p)
+  | (u, e, v) <- es, u == x
+  , (z, p) <- walk es v
+  ]
+
+cells :: [V] -> [Edge] -> [Cell]
+cells vs es = [(x, z, p) | x <- vs, (z, p) <- walk es x]
+
+qVertex :: V -> V
+qVertex V1 = V0
+qVertex U1 = U0
+qVertex x  = x
+
+qWord :: String -> String
+qWord = map rename . filter (`notElem` "be")
+  where
+    rename 'h' = 'd'
+    rename x   = x
+
+qCell :: Cell -> Cell
+qCell (s, t, p) = (qVertex s, qVertex t, qWord p)
+
+gray :: [Edge]
+gray =
+  [ (S, 'a', V0), (V0, 'c', T)
+  , (S, 'd', U0), (U0, 'f', T)
+  ]
+
+checks :: [(String, Bool)]
+checks =
+  [ ("eleven nonidentity arrows", length nonidentity == 11)
+  , ("distinct top supports",
+      length (nub (map sort nonidentity)) == 11)
+  , ("two S-to-T routes",
+      sort [p | (S, T, p) <- ps] == ["abc", "hf"])
+  , ("no reverse of b",
+      null [p | (V1, V0, p) <- ps])
+  , ("no reverse of e",
+      null [p | (U1, U0, p) <- ps])
+  , ("exact Gray quotient",
+      sort (nub (map qCell ps))
+        == sort (cells [S, V0, U0, T] gray))
+  ]
+  where
+    ps = cells [minBound .. maxBound] repaired
+    nonidentity = [p | (_, _, p) <- ps, not (null p)]
+
+main :: IO ()
+main = mapM_ check checks
+  where
+    check (name, True)  = putStrLn (name ++ ": OK")
+    check (name, False) = error name
+```
+
+The recursive support argument in §3 handles identities and the proper intervals; the program verifies the nontrivial maximal-interval calculation.
+
+## 9. What remains for Q3 and Q4
+
+The finite repair establishes that **K8 can be resolved without reversing either inner interchanger**, while retaining an injective contextual support and the exact Gray quotient.
+
+For a substitution-closed theory, every allowed substitution \(F\) would have to preserve
+\[
+F(d)=F(h);F(e).
+\]
+A recursive construction must therefore specify the factor \(F(h)\), prove that these factorizations are compatible with composition and substitution, and prove support injectivity after the resulting additional relations. The absence of overlapping contexts in this cube does not establish those properties for larger diagrams.
+
+I do not have that recursive construction or a general impossibility proof for requirements 1–3. The concrete result is the finite presentation
+\[
+\boxed{
+h:S\to U_0,\qquad
+\bar r_1=h;\bar\chi_2,\qquad
+W:\bar t_0;\bar\chi_1;\bar r_0\Longrightarrow h;\bar t_1,
+}
+\]
+with the refined contextual basis and normal forms proved above.

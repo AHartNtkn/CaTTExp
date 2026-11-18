@@ -1058,7 +1058,7 @@ This is a draft. The data:
 - **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
 
 **Open (D17).**
-- (a) Fix PL-ω's reading in `planar-pasting-types.md` §4 and in F.1–F.4. The project's use of PL-ω is the type formers of (II).
+- (a) ~~Fix PL-ω's reading in `planar-pasting-types.md` §4~~ done: §4 now names both readings. F.1–F.4 are reading (I). The project's use of PL-ω is the type formers of (II).
 - (b) Check that the B ⊗ Θ rule (E.2) and its mirror are exactly the reading-(II) rules above with one factor representable.
 - (c) Decide whether reading (I) is still needed. If it is not, D11's r5 questions become reading-(I) side questions and should say so.
 

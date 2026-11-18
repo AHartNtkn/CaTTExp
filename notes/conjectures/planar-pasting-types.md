@@ -78,6 +78,12 @@ It does **not** extend naively to the mapping (∞,ω)-categories, whose higher 
 - k-cells of Fun(A, Fun^lax(B, C)) are maps out of A ⊗ Dᵏ ⊗ B, with only the A–Dᵏ mixed cells inverted;
 - k-cells of Fun(A ⊗ B, C) are maps out of A ⊗ B ⊗ Dᵏ, with the (A⊗B)–Dᵏ mixed cells inverted.
 
+**Which structure (added 2026-11-18, D17).** "Monoidal biclosed with the Gray tensor" has two readings (`closed-structure.md` F.7).
+- **(I) Internal:** a Gray *monoid* whose left and right tensoring both have right adjoints. Here both curryings are isomorphisms of hom ω-categories, and 1-cells have non-trivial interchangers.
+- **(II) Ambient:** ∞Cat with ⊗ and Fun^lax/Fun^oplax. Left currying is an isomorphism on lax cells (X ⊗ Dᵏ) and right currying on oplax cells (Dᵏ ⊗ X), and 1-cell interchange is strict.
+
+The test case and §4.1 below are about 1-cell interchangers, so they are reading (I). The project's type formers (two-tier L, D7) need reading (II), where the same scheduling content sits in the hom-objects. Question PL-ω is stated for both; an answer should say which it treats.
+
 **Question PL-ω.** Is there a class of "Gray pasting types" with the following property: the ω-dimensional coherence rule over them generates exactly the cells of the free monoidal biclosed (∞,ω)-category on a set of objects, with each higher cell's "time" direction tracked as a tensor position in this sense? A first test case: is there a pasting-type criterion whose 2-cells are exactly the lax naturality cells of evaluation, Fun^lax(B, C) ⊗ B → C, and which does not also produce their inverses?
 
 ### 4.1 Candidate criterion and the first test (2026-11-18)

@@ -188,11 +188,19 @@ module _ (𝕄 : CMon) where
   s-comp (suc n) (e ∷ r)       (e′ ∷ s)      = cong (e ∷_) (s-comp n r s)
 
   -- Composability, entry by entry.
-  hd≡ : ∀ {L} {e e′ : P} {r r′ : Tab L} → e ∷ r ≡ e′ ∷ r′ → e ≡ e′
-  hd≡ refl = refl
+  -- The equation's type is given explicitly: `_∷_` is overloaded
+  -- (lists and vectors), and some Agda versions leave it unsolved.
+  hdT : ∀ {L} → Tab (suc L) → P
+  hdT (e ∷ _) = e
 
-  tl≡ : ∀ {L} {e e′ : P} {r r′ : Tab L} → e ∷ r ≡ e′ ∷ r′ → r ≡ r′
-  tl≡ refl = refl
+  tlT : ∀ {L} → Tab (suc L) → Tab L
+  tlT (_ ∷ r) = r
+
+  hd≡ : ∀ {L} {e e′ : P} {r r′ : Tab L} → _≡_ {A = Tab (suc L)} (e ∷ r) (e′ ∷ r′) → e ≡ e′
+  hd≡ = cong hdT
+
+  tl≡ : ∀ {L} {e e′ : P} {r r′ : Tab L} → _≡_ {A = Tab (suc L)} (e ∷ r) (e′ ∷ r′) → r ≡ r′
+  tl≡ = cong tlT
 
   fst≡ : ∀ {a b c d : M} → (a , b) ≡ (c , d) → a ≡ c
   fst≡ refl = refl

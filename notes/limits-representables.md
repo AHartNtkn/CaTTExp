@@ -211,9 +211,16 @@ What stands from this note:
 
 ## 4. Limits and colimits
 
-### 4.1 Base: CaTT_lim as is [proposal]
+### 4.1 Base: repaired CaTT_lim [proposal]
 
-Take Definition 4.15 of Mikhail wholesale for finite diagrams.
+Mikhail's Definition 4.15, used for finite diagrams, with three repairs. §10.1 and §10.3 give the reasons.
+1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5).
+   - For globular Γ, the construction is Mikhail's Thm 3.3.
+   - For general Γ, it should be checked against the Steiner Gray product (`gray-contexts-in-catt.md`).
+2. **Certified comparison cells.** In cone morphisms and higher transfors, the comparison cells over positive-dimensional diagram variables are marked declarations. Any substitution into them must supply an equivalence certificate. Cones themselves stay lax at the vertices.
+   - Without this, the unchanged universal property forces every ambient cell of dimension ≥ 3 to be invertible (§10.1).
+3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they must be re-stated over the Gray core, which is open.
+
 
 Kernel-level simplifications worth trying, since they are aesthetic, not semantic:
 - **Merge the star/pstar/uni bookkeeping into a single "lifting" judgment.** The rule's content is: for every ctrf shape M and every partial filler θ of the "M-shaped cell of cones," produce the next variable. This is a generic *horn-filling* statement: the filler schema is "each conical-transfor horn has a filler, which is invertible except at its top cell." Stating it as a horn judgment `M horn(Γ; c) ⊢ x` would bring it close to how `coh` reads.

@@ -603,3 +603,44 @@ This is a negative answer using requirements 4–5. It does **not** establish th
 **Q3 is not settled for a further revised theory.** No finite diagram forcing an infinite tower of nonidentity cells has been established here. The current formulation fails at dimension 4, so its failure is not a finiteness obstruction.
 
 The necessary correction is more specific than adjusting boundaries to make them parallel: higher comparison shapes must respect the opposite naturality directions in (16) and (17). The simultaneous interaction is represented in the Gray quotient by the global 5-cell (18), comparing two routes of global 4-cells, rather than by either global 4-cell proposed in (N).
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. A mandatory comparison for every joint instance of (N) is incompatible with requirements 4 and 5. The one-variable naturality cells have opposite directions for the two variables. The joint variation is a 5-cell between routes of 4-cells, not a 4-cell between U and V.** Q1 is answered negatively for this formulation only. Q3 is untouched.
+
+**§1, the tensor basis.** λD² has basis f₀, f₁ (degree 0), α₀, α₁ (degree 1) and A (degree 2), with ∂α_i = f₁ − f₀ and ∂A = α₁ − α₀; the same holds for B. The tensor has 4 + 8 + 8 + 4 + 1 = 25 basis elements. I recomputed every differential with `∂(x⊗y) = ∂x⊗y + (−1)^{|x|} x⊗∂y`:
+- `∂c_ij = b_1j − b_0j − a_i1 + a_i0`;
+- `∂r_j = c_1j − c_0j + u₁ − u₀`;
+- `∂t_i = v₁ − v₀ − c_i1 + c_i0`;
+- `∂w = r₁ + t₁ − r₀ − t₀`.
+
+All match (1)–(3). The orientation `c_ij : P_ij ⇒ Q_ij` matches the problem's `χ_{α,β}`.
+
+**§2, no 4-cell either way.**
+- U and V are well typed and parallel, `P₀₀ ⇒ Q₁₁`. I checked each composite's endpoints.
+- A hom 3-cell `U ⇛ V` would need a non-negative `z ∈ K₃` with `∂z = [V]₂ − [U]₂`. The u₀-coefficient of the right side is +1, but every r_j contributes −u₀ and no t_i contains u₀. The reverse direction fails at v₀ in the same way.
+- This is Steiner's definition of cells of ν(K): non-negative coordinates, with ∂ of each coordinate equal to the difference of the coordinates below. Correct.
+
+**§3, these are forced images of (N).**
+- *Unit instances fix the horizontal product.* (α, 1, 1, β) gives h → Q, and (1, α, β, 1) gives h → P. The hom ν(λD¹ ⊗ λD¹) has the 1-cells P and Q and the single non-identity 2-cell c : P ⇒ Q. So h = P and χ(α, 1, 1, β) = c.
+- *Transfer to the faces.* This uses requirement 5 (substitution of α_i, β_j) and requirement 4 (the substitution commutes with the Gray quotient). It is an assumption-level step, but it is exactly what requirements 4 and 5 assert.
+- *The higher product.* The functional q (1 on a_i0, 0 elsewhere) has `q(∂c_ij) = 1`, `q(∂u_j) = q(∂v_i) = 0`, and `q([P₁₁]₁ − [P₀₀]₁) = 0`. So no c_ij occurs, and the remaining coefficients give `[A ∗₀ B]₂ = v₀ + u₁`. Recomputed; correct.
+- *Applying (N).* With the quadruple (A, 1, 1, B), `L_A ↦ v₀ ∘₀ u₁`, `R_A ↦ u₀ ∘₀ v₁`, `χ_a ↦ c₀₀`, `χ_{a′} ↦ c₁₁`. So the two sides of (N) map to U and V. Correct.
+
+**§4, Q4.** From (2), r_j has source chain `c_0j + u₀` and target `c_1j + u₁`, so in the U/V notation it goes V ⇒ U. t_i has source `c_i1 + v₀` and target `c_i0 + v₁`, so it goes U ⇒ V. Both checked against explicit composites. D²⊗D¹ and D¹⊗D² each have a single degree-3 basis element, so positivity forces these directions. Correct.
+
+**§5, the 5-cell.**
+- S and T are well typed, `P₀₀ ⇒ Q₁₁`.
+- Whiskered r₁ takes S to U, using strict interchange inside the hom. The other three arrows of the square are checked the same way.
+- ∂w gives the orientation (18). The table's degree-1 rows are P₀₀ and Q₁₁. Correct.
+- The remark on Bourke–Lobbia agrees with the earlier verification.
+
+**What this settles, and what it opens.**
+- Settled: requiring a comparison for every joint instance of (N) is impossible under requirements 4–5, and the orientation of (N) is not uniform. The correct higher structure in the Gray quotient is tensor-shaped:
+  - one naturality 4-cell per variable, with the sign from the Leibniz rule (A varies: V ⇛ U; B varies: U ⇛ V);
+  - for the joint variation, a 5-cell between the two routes S → U → T and S → V → T.
+- The earlier "precise reading" of `strict-lax-interchange-at-every-level.md`, which made (N) the shape of the higher comparisons, is therefore wrong as a requirement.
+- Open: Q1 for a tensor-shaped formulation (per-variable naturality with Leibniz signs, joint cells as higher cells between routes); Q3; and whether requirements 1–3 alone can hold.
+- The natural next problem: does iterating "interchanger plus Leibniz-signed naturality in each variable" give the free objects? That is, is F(Γ) for ΣD² ∨ ΣD² generated, up to dimension 5, by the 25 tensor atoms plus atoms for interchange inside the hom, with all naturality cells oriented by the Leibniz signs?

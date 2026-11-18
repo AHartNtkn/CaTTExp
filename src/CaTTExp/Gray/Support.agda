@@ -35,8 +35,23 @@
 -- Under soundness (Theorem 1 of the note) this is the union of the
 -- chains of ⟦t⟧'s table. The side condition compares *downward
 -- closures* ↓S in K(Γ) (close under replacing an entry of a tuple by
--- its source or target), as in §3.6 of the note: "the downward-closed
--- set of basis elements used by ⟦t⟧ and its boundaries". This is also
+-- its source or target), as in §3.6 of the note. ↓S = ↓R is decided
+-- on generators (`sameDown`: every element of S is below one of R and
+-- vice versa, in the entrywise face order `leqL`), so no closure is
+-- built; `down` computes closures and is kept for Gray.Bounded.
+--
+-- DEFINITION CHANGE (PR #68). Earlier versions compared `down`
+-- closures (`sameDownClosure`). The two differ in their step budget:
+-- `sameDown` allows up to dim K(Γ) face steps *per entry*, `down` at
+-- most dim K(Γ) single-entry steps *in total*. Gray.DownAgree proves
+-- that closure-equality implies sameDown always, and that the two are
+-- equal when Γ is graded and every tuple has rank ≤ dim K(Γ)
+-- (`sameDown≡Closure`); Gray.Graded proves those hypotheses for every
+-- comparison graySide makes in a pasting context. Every L result stated with graySide (no-ich⁻,
+-- substitution under L, the marks, everything over L) refers to the
+-- new definition. `agreeSide` checks agreement on given cohs by
+-- evaluation (Gray.Examples, Gray.Cube). The note: "the
+-- downward-closed set of basis elements used by ⟦t⟧ and its boundaries". This is also
 -- the form in which lemma (B) "support determines the cell" is known
 -- (Hadzihasanovic: molecules are determined by their closed subsets).
 --
@@ -162,23 +177,22 @@ record El : Set where
     tgt  : Nat
 open El public
 
-private
-  varLvl : Tm → Maybe Nat
-  varLvl (var i) = just i
-  varLvl _       = nothing
+varLvl : Tm → Maybe Nat
+varLvl (var i) = just i
+varLvl _       = nothing
 
-  bdry : Ty → Nat × Nat
-  bdry (arr (arr _ _ _) (var s) (var t)) = s , t
-  bdry _                                 = 0 , 0
+elBdry : Ty → Nat × Nat
+elBdry (arr (arr _ _ _) (var s) (var t)) = s , t
+elBdry _                                 = 0 , 0
 
-  mkEl : List Nat → Nat × Ty → List El
-  mkEl os (v , A) with endsTy A
-  ... | nothing      = []
-  ... | just (_ , b) with varLvl b
-  ...   | nothing = []
-  ...   | just b' with posOf b' os
-  ...     | nothing = []
-  ...     | just k  = el v k (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) ∷ []
+mkEl : List Nat → Nat × Ty → List El
+mkEl os (v , A) with endsTy A
+... | nothing      = []
+... | just (_ , b) with varLvl b
+...   | nothing = []
+...   | just b' with posOf b' os
+...     | nothing = []
+...     | just k  = el v k (dim A ∸ 1) (fst (elBdry A)) (snd (elBdry A)) ∷ []
 
 cells : Ctx → List El
 cells Γ = concatMap (mkEl (objs Γ)) (entries Γ)
@@ -191,23 +205,26 @@ record Hom : Set where
     hcs : List El
 open Hom public
 
+lengthN : List Nat → Nat
+lengthN []       = 0
+lengthN (_ ∷ xs) = suc (lengthN xs)
+
+dropLast : List Nat → List Nat
+dropLast []           = []
+dropLast (x ∷ [])     = []
+dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
+
+-- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
+drop1 : List Nat → List Nat
+drop1 []       = []
+drop1 (_ ∷ xs) = dropLast xs
+
+-- Hom k of Γ: its cells and its dimension.
+homAt : Ctx → Nat → Hom
+homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
+
 homs : Ctx → List Hom
-homs Γ = map one (drop1 (upto (lengthN (objs Γ))))
-  where
-  lengthN : List Nat → Nat
-  lengthN []       = 0
-  lengthN (_ ∷ xs) = suc (lengthN xs)
-  -- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
-  drop1 : List Nat → List Nat
-  drop1 []       = []
-  drop1 (_ ∷ xs) = dropLast xs
-    where
-    dropLast : List Nat → List Nat
-    dropLast []           = []
-    dropLast (x ∷ [])     = []
-    dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
-  one : Nat → Hom
-  one k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
+homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
 
 -- d = Σ dim Θₖ, the dimension of K(Γ).
 dimK : List Hom → Nat
@@ -217,17 +234,17 @@ dimK hs = sumL (map hd hs)
 -- Tables of the ⟨Θₖ⟩ and of their tensor T.
 
 -- ⟨Θ⟩^sg_i as a set of levels (sg = true is +, false is −).
+-- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
+-- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
+hitsP : Nat → Bool → El → El → Bool
+hitsP i sg c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
+
 piece : Hom → Nat → Bool → List Nat
 piece h i sg =
   if i ==ℕ hd h then map lvl (filter (λ c → hdim c ==ℕ i) (hcs h))
   else if i <ℕ hd h then
-    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hits c) (hcs h))) (hcs h))
+    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hitsP i sg c) (hcs h))) (hcs h))
   else []
-  where
-  -- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
-  -- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
-  hits : El → El → Bool
-  hits c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
 
 -- T^sg_k.
 chainT : Bool → Nat → List Hom → TSet
@@ -256,32 +273,61 @@ bdryT sg hs = lowerT (dimK hs ∸ 1) hs ++ chainT sg (dimK hs ∸ 1) hs
 
 -- Downward closure in K(Γ).
 
-private
-  findEl : Nat → List El → Maybe El
-  findEl n []       = nothing
-  findEl n (c ∷ cs) = if lvl c ==ℕ n then just c else findEl n cs
+findEl : Nat → List El → Maybe El
+findEl n []       = nothing
+findEl n (c ∷ cs) = if lvl c ==ℕ n then just c else findEl n cs
 
-  -- Boundary elements of one entry (none for a cell of dimension 0).
-  bdEl : List El → Nat → List Nat
-  bdEl cs w with findEl w cs
-  ... | nothing = []
-  ... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
+-- Boundary elements of one entry (none for a cell of dimension 0).
+bdEl : List El → Nat → List Nat
+bdEl cs w with findEl w cs
+... | nothing = []
+... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
 
-  -- Codimension-1 faces of a tuple.
-  faces : List El → Tuple → TSet
-  faces cs []       = []
-  faces cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (faces cs ws)
+-- Codimension-1 faces of a tuple.
+facesT : List El → Tuple → TSet
+facesT cs []       = []
+facesT cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (facesT cs ws)
 
-  nubT : TSet → TSet
-  nubT []       = []
-  nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
+nubT : TSet → TSet
+nubT []       = []
+nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
 
-  closeN : Nat → List El → TSet → TSet
-  closeN zero    cs S = S
-  closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (faces cs) S))
+closeN : Nat → List El → TSet → TSet
+closeN zero    cs S = S
+closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (facesT cs) S))
 
 down : Ctx → TSet → TSet
 down Γ S = closeN (dimK (homs Γ)) (cells Γ) (nubT S)
+
+-- The face order on entries: a ≤ b if a is reached from b by at most
+-- n source/target steps. Tuples are compared entrywise.
+mutual
+  leqL : List El → Nat → Nat → Nat → Bool
+  leqL cs zero    a b = a ==ℕ b
+  leqL cs (suc n) a b = (a ==ℕ b) ∨ leqAny cs n a (bdEl cs b)
+
+  -- a is below one of bs.
+  leqAny : List El → Nat → Nat → List Nat → Bool
+  leqAny cs n a []       = false
+  leqAny cs n a (c ∷ bs) = leqL cs n a c ∨ leqAny cs n a bs
+
+leqT : List El → Nat → Tuple → Tuple → Bool
+leqT cs n []       []       = true
+leqT cs n (a ∷ x)  (b ∷ y)  = leqL cs n a b ∧ leqT cs n x y
+leqT cs n _        _        = false
+
+-- ↓S ⊆ ↓R, decided on generators: every s ∈ S is below some r ∈ R.
+covers : Ctx → TSet → TSet → Bool
+covers Γ S R =
+  all (λ s → any (leqT (cells Γ) (dimK (homs Γ)) s) R) S
+
+-- ↓S = ↓R.
+sameDown : Ctx → TSet → TSet → Bool
+sameDown Γ S R = covers Γ S R ∧ covers Γ R S
+
+-- The earlier definition, by explicit closures.
+sameDownClosure : Ctx → TSet → TSet → Bool
+sameDownClosure Γ S R = ≈T (down Γ S) (down Γ R)
 
 nth : Nat → List TSet → TSet
 nth _       []       = []
@@ -301,13 +347,12 @@ isVarAt (var i) n = i ==ℕ n
 isVarAt _       _ = false
 
 -- The first and last objects.
-private
-  firstL lastL : List Nat → Nat
-  firstL []       = 0
-  firstL (x ∷ _)  = x
-  lastL []           = 0
-  lastL (x ∷ [])     = x
-  lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
+firstL lastL : List Nat → Nat
+firstL []       = 0
+firstL (x ∷ _)  = x
+lastL []           = 0
+lastL (x ∷ [])     = x
+lastL (_ ∷ y ∷ ys) = lastL (y ∷ ys)
 
 -- The ⋆-endpoints of A are a₀ and aₙ.
 endsOK : Ctx → Ty → Bool
@@ -340,8 +385,8 @@ mutual
   cohCase : Ctx → Ty → Tm → Tm → Bool
   cohCase Θ ⋆ t u = false
   cohCase Θ A@(arr _ _ _) t u =
-    endsOK Θ A ∧ ≈T (down Θ (supp t A)) (down Θ (fullT (homs Θ)))
-               ∧ ≈T (down Θ (supp u A)) (down Θ (fullT (homs Θ)))
+    endsOK Θ A ∧ sameDown Θ (supp t A) (fullT (homs Θ))
+               ∧ sameDown Θ (supp u A) (fullT (homs Θ))
 
 -- The operation case.
 opCase : Ctx → Ty → Tm → Tm → Bool
@@ -349,9 +394,22 @@ opCase Θ ⋆ t u =
   (dimK (homs Θ) ==ℕ 0) ∧ isVarAt t (firstL (objs Θ)) ∧ isVarAt u (lastL (objs Θ))
 opCase Θ A@(arr _ _ _) t u =
   endsOK Θ A ∧ (dim A ==ℕ dimK (homs Θ))
-  ∧ ≈T (down Θ (supp t A)) (down Θ (bdryT false (homs Θ)))
-  ∧ ≈T (down Θ (supp u A)) (down Θ (bdryT true (homs Θ)))
+  ∧ sameDown Θ (supp t A) (bdryT false (homs Θ))
+  ∧ sameDown Θ (supp u A) (bdryT true (homs Θ))
 
 -- The side condition of two-tier L.
 graySide : Ctx → Ty → Tm → Tm → Bool
 graySide Θ A t u = cohCase Θ A t u ∨ opCase Θ A t u
+
+-- The two definitions of ↓S = ↓R agree on the four comparisons that
+-- the side condition makes for coh_{Θ, t →_A u}.
+agreeSide : Ctx → Ty → Tm → Tm → Bool
+agreeSide Θ ⋆ t u = true
+agreeSide Θ A@(arr _ _ _) t u =
+  all (λ p → eqb (sameDown Θ (fst p) (snd p)) (sameDownClosure Θ (fst p) (snd p)))
+      ((supp t A , fullT (homs Θ)) ∷ (supp u A , fullT (homs Θ))
+       ∷ (supp t A , bdryT false (homs Θ)) ∷ (supp u A , bdryT true (homs Θ)) ∷ [])
+  where
+  eqb : Bool → Bool → Bool
+  eqb true  b = b
+  eqb false b = not b

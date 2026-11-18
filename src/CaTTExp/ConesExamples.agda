@@ -121,6 +121,11 @@ okCtrf k Γ with ctrf k Γ
 ... | nothing = false
 ... | just T  = ok (Ctrf.ctx T)
 
+ctrfDefined : Nat → ExCtx → Bool
+ctrfDefined k Γ with ctrf k Γ
+... | nothing = false
+... | just _  = true
+
 _ : all (okCtrf 1) oneDim ≡ true
 _ = refl
 _ : all (okCtrf 2) oneDim ≡ true
@@ -173,11 +178,26 @@ _ = refl
 _ : nonCanonical ≡ ConeOf.cone Loop → ⊥
 _ = λ ()
 
--- The depth boundary: over a 2-dimensional shape, ctrf₁ needs the
--- naturality of p_x ∗₀ α in p_x, a depth-1 term (BMOSV), which the
--- depth-0 lift does not produce. The construction does not detect this
--- itself: it returns a context, and the certified checker rejects it.
-_ : okCtrf 1 (DiskEx 2) ≡ false
+-- Depth 1 (ledger B18): over a 2-dimensional shape, ctrf₁ needs the
+-- naturality of p_x ∗₀ α in p_x (an interchange coherence) and of
+-- p_f ∗₁ (p_x ∗₀ α) (the pasting of m_f and that interchange through
+-- associators). With those lifts, ctrf₁ is well typed on every
+-- 2-dimensional shape of the suite, and so is the cocone version.
+twoDim : List ExCtx
+twoDim = DiskEx 2 ∷ Loop ∷ Par2 ∷ []
+
+_ : all (okCtrf 1) twoDim ≡ true
+_ = refl
+
+-- The next level needs naturality of those coherences themselves
+-- (depth 1 in a 3-dimensional coherence, BMOSV), which is not
+-- implemented: the lift returns nothing and no context is produced.
+_ : ctrfDefined 2 (DiskEx 2) ≡ false
+_ = refl
+
+-- Over a 3-dimensional shape even ctrf₁ needs depth-2 lifts (p_x ∗₀ θ
+-- for a 3-cell θ), which are not implemented.
+_ : ctrfDefined 1 (DiskEx 3) ≡ false
 _ = refl
 
 module Show where
@@ -207,9 +227,18 @@ _ : all (okCoctrf 1) oneDim ≡ true
 _ = refl
 _ : all (okCoctrf 2) oneDim ≡ true
 _ = refl
+-- Cocone transfors over 2-dimensional shapes (B18), via the duals of
+-- the interchange and associator lifts.
+_ : all (okCoctrf 1) (DiskEx 2 ∷ Loop ∷ Par2 ∷ []) ≡ true
+_ = refl
 
 ------------------------------------------------------------------------
 -- 8. Free object = lax colimit of the point, for 1-dimensional shapes.
+
+okCylK : ExCtx → Bool
+okCylK Γ with CylOf.cyl (constCocone Γ) (rangeFrom 2 (length Γ))
+... | nothing = false
+... | just C  = ok (Cyl.ctx C)
 
 okConst : ExCtx → Bool
 okConst Γ = ConstPoint.okφ Γ ∧ ConstPoint.okψ Γ ∧ ConstPoint.okH Γ ∧ ConstPoint.okH′ Γ
@@ -217,6 +246,15 @@ okConst Γ = ConstPoint.okφ Γ ∧ ConstPoint.okψ Γ ∧ ConstPoint.okH Γ ∧
 _ : okConst Arr ≡ true
 _ = refl
 _ : all okConst oneDim ≡ true
+_ = refl
+
+-- Dimension 2 (ledger B20): ψ (cocone ⇒ family) and the homotopy
+-- H : ψφ ≃ id on the family side, on every shape of dimension ≤ 2.
+-- The cocone-side homotopy H′ is open; its cylinder is built and well
+-- typed (the lift of id²_⊤ ∗₀ q_y is the reversed interchange).
+_ : all (λ Γ → ConstD2.okψ Γ ∧ ConstD2.okH Γ) (twoDim ++ oneDim) ≡ true
+_ = refl
+_ : all (λ Γ → okCylK Γ) twoDim ≡ true
 _ = refl
 
 -- Non-vacuity: the naive identification q ↦ s is not a substitution

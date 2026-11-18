@@ -392,18 +392,29 @@ This fact is passed to D8.
 
 **Completeness.** Every functor `Free(Γ) → FinSet` is a graph action (one function per edge). Its category of elements is the free category on the covering graph. So **every finite-set-valued weight on a free category on a graph has a finite presentation passing this test.** Weighted limits by such weights include products indexed by finite sets, and the conical limits used in `limits-representables.md` §6.
 
-### 9.2 Open: category-valued and higher weights
+### 9.2 Category-valued weights over graphs: solved (researcher, verified)
 
-The difficulty appears at the next step. For `W : Free(Γ) → Cat` with Γ a graph, ∫W is a 1-category in which every square `β ; u_{e′} = u_e ; W(u)(β)` commutes. That is not free. A finite computad presentation must add 2-generators `θ_{u,β}` filling these squares, and these must be **marked** ("cartesian 2-cells" in the alternating table).
+See `conjectures/answered/finite-fibration-test-2026-11-18.md`.
+- **(Loc) holds in every positive dimension.** Inverting a set S of marked cells is a pushout of Loubaton's marked trivialisations `D_{k+1}^t → D_k^♭`, hence initial and final (Def. 3.2.1.6, Prop. 3.2.1.7). So the whole cone (∞,ω)-categories over J and J[S⁻¹] agree (Lemmas 4.2.3.15, 4.2.3.23).
+- **FT₂ is the test.** Vertical generators are unmarked, μ = horizontals ∪ θ's, one marked horizontal lift per (vertex, base edge), and one marked filler θ_{u,β} per (vertical edge, base edge). Then the localisation is the Grothendieck construction of the transport functor. The test is complete for weights valued in categories free on finite graphs, and a checker may index by the unlocalised computad.
+- **Use in the horn rules (§5.3).** By (Loc), a marked index cell that every diagram sends to an equivalence may be inverted in the index without changing the limit. In particular, marked diagram generators of dimension ≥ 1 can be treated as invertible index cells when comparing shapes.
 
-A candidate finite criterion (FT), for π : Ψ → Γ with marking μ:
-1. Each generator of Γ has exactly one μ-marked lift at each source vertex.
-2. Each vertical generator β, together with each base edge u, has exactly one marked filler `θ_{u,β}`, whose boundary is the transported square.
-3. The same pattern holds one dimension up, with the variance flipped.
+### 9.3 2-dimensional bases (FT₃): solved for positive bases (researcher, verified)
 
-The step that needs proof is a **localisation lemma**: a marked lax limit over `Ψ^μ` is unchanged by inverting marked generators of dimension ≥ 2 whose image under π is an identity.
+See `conjectures/answered/finite-fibration-test-2d-base-2026-11-18.md` (PR #76).
 
-This is posed, self-contained, in `conjectures/finite-fibration-test.md`.
+**The data FT₃ needs for each base 2-generator α : u ⇒ v:**
+- vertical paths `a_{α,e}` satisfying finitely many path equalities (naturality on generators);
+- marked lifts `λ_{α,e} : τ_{u,e};a_{α,e} ⇒ τ_{v,e}`, with prescribed target;
+- a marked 3-generator Ξ_{α,β} for each 3-dimensional naturality relation, inverted together with the θ's.
+
+**Results:**
+- **Positive bases.** A 2-computad is *positive* when no 2-generator has an identity in its boundary. For positive bases, Free(Γ) ≃ F₂(Γ) (Chanavat 2603.22242, Cor. 3.39), and FT₃ holds. On the walking 2-cell, the homs are intervals or points. The general positive case follows from Loubaton Thm 3.2.3.15.
+- **Non-positive bases admit no finite presentation at all.** Take σ : 1_x ⇒ 1_x. The localisation of B²ℕ is K(ℤ,2), but every finite `Free(Ψ)[S⁻¹]` groupoidifies to a finite CW complex. **So positivity is a necessary hypothesis of the weighted-limit rule.**
+
+### 9.4 Open: higher bases (FT_n)
+
+The next prompt is `conjectures/outbox/finite-fibration-test-higher-base.md` (unsent). It covers the walking 3-cell, weights valued in 2-categories, regular bases (Chanavat Cor. 3.38), and whether regularity is necessary.
 
 ---
 
@@ -417,4 +428,4 @@ This is posed, self-contained, in `conjectures/finite-fibration-test.md`.
 | 4 | (∞,ω) version of Theorem A for general Γ, matched to the specified shapes. The arrow case is done (researcher, verified). | ledger B17, LMETA |
 | 5 | Composition of transfors over higher generators (B4.2). | C1 / B5 |
 | 6 | Dualities under L: the parity table of §8.3, extended to higher Gray cells. | D8 |
-| 7 | Finite fibration test beyond set-valued weights. | this thread, with the conjecture file ready to send |
+| 7 | Finite fibration test over higher bases (FT_n). FT₃ is solved for positive bases; non-positive bases admit no finite presentation (§9.3). | ledger B14, LMETA; prompt `conjectures/outbox/finite-fibration-test-higher-base.md` ready to send |

@@ -79,10 +79,13 @@ renRL = go ⟨⟩ triples
 mismatches : List Triple
 mismatches = filter bad triples
   where
+  -- A plain helper, not `with`: Agda 2.8 runs out of memory on the
+  -- `with` version.
+  cmp : Maybe Ty → Maybe Ty → Bool
+  cmp (just A) (just B) = not ((A [ renRL ]ty) ==Ty B)
+  cmp _        _        = true
   bad : Triple → Bool
-  bad t with CubeR >>= (λ Γ → lookup Γ (levelR t)) | CubeL >>= (λ Γ → lookup Γ (levelL t))
-  ... | just A | just B = not ((A [ renRL ]ty) ==Ty B)
-  ... | _      | _      = true
+  bad t = cmp (CubeR >>= (λ Γ → lookup Γ (levelR t))) (CubeL >>= (λ Γ → lookup Γ (levelL t)))
 
 ------------------------------------------------------------------------
 -- G4 up to coherence: CubeR ⊢ toL : CubeL and CubeL ⊢ toR : CubeR.
@@ -233,7 +236,8 @@ renSq = go ⟨⟩ pairs
 squareMismatches : List (Nat × Nat)
 squareMismatches = filter bad pairs
   where
+  cmp : Maybe Ty → Maybe Ty → Bool
+  cmp (just S) (just T) = not ((S [ renSq ]ty) ==Ty T)
+  cmp _        _        = true
   bad : Nat × Nat → Bool
-  bad (A , B) with lookup Square (A + 3 * B) | lookup SquareL (B + 3 * A)
-  ... | just S | just T = not ((S [ renSq ]ty) ==Ty T)
-  ... | _      | _      = true
+  bad (A , B) = cmp (lookup Square (A + 3 * B)) (lookup SquareL (B + 3 * A))

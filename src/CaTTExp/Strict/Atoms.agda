@@ -76,9 +76,9 @@ private
 ∸c-eq (a ∷ u) (d ∷ x) (c ∷ v) (b ∷ y) p =
   cong₂ _∷_ (∸-eq a b c d (hd p)) (∸c-eq u x v y (tl p))
   where
-  hd : ∀ {m} {a b : Nat} {u v : Vec Nat m} → a ∷ u ≡ b ∷ v → a ≡ b
+  hd : ∀ {m} {a b : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (a ∷ u) (b ∷ v) → a ≡ b
   hd refl = refl
-  tl : ∀ {m} {a b : Nat} {u v : Vec Nat m} → a ∷ u ≡ b ∷ v → u ≡ v
+  tl : ∀ {m} {a b : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (a ∷ u) (b ∷ v) → u ≡ v
   tl refl = refl
 
 ------------------------------------------------------------------------
@@ -196,9 +196,9 @@ module Atom {N : Nat} (B : Basis N) where
         if-same true  x = refl
         if-same false x = refl
 
-        hdV : ∀ {m} {a b : Nat} {u v : Vec Nat m} → a ∷ u ≡ b ∷ v → a ≡ b
+        hdV : ∀ {m} {a b : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (a ∷ u) (b ∷ v) → a ≡ b
         hdV refl = refl
-        tlV : ∀ {m} {a b : Nat} {u v : Vec Nat m} → a ∷ u ≡ b ∷ v → u ≡ v
+        tlV : ∀ {m} {a b : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (a ∷ u) (b ∷ v) → u ≡ v
         tlV refl = refl
 
       unit-deg′ : ∀ {m} (gs : Vec Nat m) i → prj (at 0 gs i) gs (unit i) ≡ unit i

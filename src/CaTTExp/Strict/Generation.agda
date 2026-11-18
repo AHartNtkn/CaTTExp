@@ -837,13 +837,13 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   ... | true  | snd₁ = snd₁ tt
   ... | false | _    = ⊥-elim (z≢s (trans (hd p) e))
     where
-    hd : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → x ≡ y
+    hd : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → x ≡ y
     hd refl = refl
     z≢s : 0 ≡ suc k → ⊥
     z≢s ()
   deg-of j (g ∷ gs) (a ∷ w) (suc c) k p e = deg-of j gs w c k (tl p) e
     where
-    tl : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tl : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tl refl = refl
 
   -- Degree-0 chains with augmentation 0 or 1.
@@ -852,12 +852,12 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   aug-zero (g ∷ gs) (a ∷ w) p e with g ==ℕ 0
   aug-zero (g ∷ gs) (zero ∷ w) p e | true  = cong (0 ∷_) (aug-zero gs w (tlV p) e)
     where
-    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tlV refl = refl
   aug-zero (g ∷ gs) (suc a ∷ w) p () | true
   aug-zero (g ∷ gs) (zero ∷ w) p e | false = cong (0 ∷_) (aug-zero gs w (tlV p) e)
     where
-    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tlV refl = refl
   aug-zero (g ∷ gs) (suc a ∷ w) () e | false
 
@@ -868,18 +868,18 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   aug-one (g ∷ gs) (zero ∷ w) p e | true | _ =
     let (i , u , l , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , s≤s l , d
     where
-    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tlV refl = refl
   aug-one (g ∷ gs) (suc zero ∷ w) p e | true | g0 =
     0 , cong (1 ∷_) (aug-zero gs w (tlV p) (suc-inj e)) , s≤s z≤n , g0 tt
     where
-    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tlV refl = refl
   aug-one (g ∷ gs) (suc (suc a) ∷ w) p () | true | _
   aug-one (g ∷ gs) (zero ∷ w) p e | false | _ =
     let (i , u , l , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , s≤s l , d
     where
-    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
+    tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (x ∷ u) (y ∷ v) → u ≡ v
     tlV refl = refl
   aug-one (g ∷ gs) (suc a ∷ w) () e | false | _
 

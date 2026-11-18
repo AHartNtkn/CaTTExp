@@ -56,7 +56,7 @@ private
     +-suc′ zero    n = refl
     +-suc′ (suc m) n = cong suc (+-suc′ m n)
 
-  ∷-inj : ∀ {m} {a b : Nat} {u v : Vec Nat m} → a ∷ u ≡ b ∷ v → (a ≡ b) × (u ≡ v)
+  ∷-inj : ∀ {m} {a b : Nat} {u v : Vec Nat m} → _≡_ {A = Vec Nat (suc m)} (a ∷ u) (b ∷ v) → (a ≡ b) × (u ≡ v)
   ∷-inj refl = refl , refl
 
   mid : ∀ {m} (a b c d : Vec Nat m) → (a +c b) +c (c +c d) ≡ (a +c c) +c (b +c d)

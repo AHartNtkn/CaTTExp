@@ -64,6 +64,7 @@ import CaTTExp.GlobularTotal.Trees
 import CaTTExp.GlobularTotal.Surj
 import CaTTExp.GlobularTotal.TreeAlg
 import CaTTExp.GlobularTotal.FlatBd
+import CaTTExp.GlobularTotal.FlatBdExample
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

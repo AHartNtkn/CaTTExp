@@ -137,11 +137,14 @@ _ : ok (ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ hom (hom ob (v 0) (v 1)) (v 2) (v 0
 _ = refl
 
 -- (KE) rejects a projection whose target forgets the arrow: over x → y,
--- p_f : p_y → p_x (instead of p_x ∗₀ f).
+-- p_f : p_y ⇒ p_y (instead of p_y ⇒ p_x ∗₀ f). The context is well typed,
+-- so the rejection is (KE)'s, not the type checker's.
 badCone : ExCtx
 badCone = Arr ++ (ob ∷ hom ob (v 3) (v 0) ∷ hom ob (v 3) (v 1)
-                 ∷ hom (hom ob (v 3) (v 1)) (v 5) (v 4) ∷ [])
+                 ∷ hom (hom ob (v 3) (v 1)) (v 5) (v 5) ∷ [])
 
+_ : ok badCone ≡ true
+_ = refl
 _ : KE.okConeAll (evCtx badCone) 3 ≡ false
 _ = refl
 
@@ -164,13 +167,16 @@ _ : ok nonCanonical ≡ true
 _ = refl
 _ : KE.okConeAll (evCtx nonCanonical) 3 ≡ true
 _ = refl
--- It is not the specified cone.
+-- It is not the specified cone (which is also well typed).
 _ : ok (ConeOf.cone Loop) ≡ true
 _ = refl
+_ : nonCanonical ≡ ConeOf.cone Loop → ⊥
+_ = λ ()
 
 -- The depth boundary: over a 2-dimensional shape, ctrf₁ needs the
 -- naturality of p_x ∗₀ α in p_x, a depth-1 term (BMOSV), which the
--- depth-0 lift does not produce. The construction honestly fails here.
+-- depth-0 lift does not produce. The construction does not detect this
+-- itself: it returns a context, and the certified checker rejects it.
 _ : okCtrf 1 (DiskEx 2) ≡ false
 _ = refl
 

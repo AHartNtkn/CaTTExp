@@ -13,7 +13,7 @@ The printed CaTT_lim cone judgment admits non-canonical cones (`conjectures/lax-
 | Result | Scope | Status |
 |---|---|---|
 | **Specified cone** `Cone(Γ; c)` (Def. 2.1): a total function, Mikhail's Thm 3.3 formula | every **globular** Γ (each variable's boundary is a variable: all pasting contexts, loops, parallel cells) | **proved** (Lemma 2.2); machine-checked on 12 shapes up to dimension 4 |
-| It is one of the cones Mikhail's printed (KE) admits | globular Γ | **proved** (Prop. 2.3); machine-checked by two independent (KE) checkers (ours and the CaTT_lim thread's `cone?`) |
+| It is one of the cones Mikhail's printed (KE) admits | globular Γ | **proved** (Prop. 2.3); machine-checked by our (KE) checker; the CaTT_lim thread also reports its `cone?` accepts all 12 (run on its side, not a test in this repository) |
 | Its strict free ω-category is the Ara–Maltsiniotis join `c ⋆ Γ` | globular Γ with a Steiner (loop-free) basis | **proved**, modulo the join's sign convention [recall] (Prop. 2.5) |
 | **Specified cocone** `Cocone(Γ; c) := O(Cone(OΓ; c))`, O reversing odd dimensions | globular Γ | **proved**; the closed formula (Def. 3.1) equals the dual syntactically (machine-checked by `refl`) |
 | **Transfor shapes** `Tr_k(Γ; c)`: iterated cylinder of the cone in the projection direction (transfor index first, `Dᵏ ⊗ Dᵐ`); cocone transfors by duality (diagram index first) | globular Γ, dim Γ ≤ 1: all k | **proved** with plain CaTT coherences only (Thm 4.3); machine-checked k = 1, 2, 3 |
@@ -89,7 +89,7 @@ For j = 1 both factors of `T_t = p_{σt} ∗_{m−1} V⁽²⁾_t` have dimension
 - *Target.* Likewise `U_σ = cl(p_{σt})`, and `FV(T_t : A) = cl(t) ∪ {p_{σᵏt}}_k ∪ their closures = cl(t) ∪ cl(p_{σt})`. Equal.
 - *Linearity.* t occurs once in T_t, in the innermost composite, at top dimension, and every enclosing composite has exactly one argument (the inner composite, of dimension m) containing it. ∎
 
-**Machine checks.** `KE.okConeAll` (ours) holds for every shape. Independently, the CaTT_lim formalisation thread ran its certified recogniser `cone? printedLin`, and the strict multiplicity-one variant, on all 12 shapes: all accepted, and where its own `coneC` applies (dimension ≤ 2) the two cones are syntactically equal.
+**Machine checks.** `KE.okConeAll` (ours) holds for every shape. Independently, the CaTT_lim formalisation thread reports that it ran its certified recogniser `cone? printedLin`, and the strict multiplicity-one variant, on all 12 shapes: all accepted, and where its own `coneC` applies (dimension ≤ 2) the two cones are syntactically equal. That cross-check was run in that thread's workspace; it is not a test in this repository.
 
 **Non-vacuity.** Our checker rejects a cone whose `p_f` forgets f, and *accepts* the researcher's non-canonical cone over the loop (`ConesExamples` §6): that is exactly why a construction, not the judgment, is needed.
 
@@ -183,7 +183,7 @@ which is exactly the **diagram-index-first** colimit row of `limits-metatheory.m
 
 *Proof.* The boundary terms of the cone variables are variables and `p_x ∗₀ f`. At level 1, Y = {p}: the only composite, `p_x ∗₀ f`, has affected factor p_x of its own dimension 1, so its lift is `m_x ∗₀ f`. Inductively, the types at level k contain only variables and binary composites in which the level-k variables (the new Y) occur as factors of the composite's own dimension (`m_x ∗₀ f`, `p⁻_f ∗₁ (m_x ∗₀ f)`, `m_y ∗₁ p⁺_f`, …). For Γ of dimension ≤ 1, the level-k variable over an object has dimension k and the composites in level-k types have dimension k too, so the depth is always 0. Lemma 1 (with the support fact (7) of the researcher response) gives well-formedness. ∎ Machine-checked for k = 1, 2, 3 (cone and cocone) on point, arrow, cospan, parallel pair, endo-arrow, composable pair.
 
-**Dimension 2.** Over a 2-dimensional Γ, Tr₁ needs the lift of `p_x ∗₀ α` (depth 1) and of `p_f ∗₁ (p_x ∗₀ α)` (depth 1, all 1-cells affected). These are terms of dimension 2, so `relative-coherence.md` §4.2 (N for every term of dimension ≤ 2, any up-closed Y; paper, not yet independently checked) supplies them, and BMOSV Thm 3.1 [cited] covers depth 1 in general. In general the depth of the projection variables in the level-k types is `dim Γ − 1`, independent of k. The Agda construction honestly fails here: `ctrf 1 (DiskEx 2)` is rejected by the checker (a recorded test). Implementing depth-1 lifts is follow-up item S3 (§8).
+**Dimension 2.** Over a 2-dimensional Γ, Tr₁ needs the lift of `p_x ∗₀ α` (depth 1) and of `p_f ∗₁ (p_x ∗₀ α)` (depth 1, all 1-cells affected). These are terms of dimension 2, so `relative-coherence.md` §4.2 (N for every term of dimension ≤ 2, any up-closed Y; paper, not yet independently checked) supplies them, and BMOSV Thm 3.1 [cited] covers depth 1 in general. In general the depth of the projection variables in the level-k types is `dim Γ − 1`, independent of k. The Agda construction does not detect this itself: `ctrf 1 (DiskEx 2)` returns a context, and the certified checker rejects it (a recorded test). Implementing depth-1 lifts is follow-up item S3 (§8).
 
 **Dimension ≥ 3** needs Conjecture N at depth `dim Γ − 1`, for **nested whiskerings only** (composition constructors). This is a much narrower instance than general N. It is recorded under C1 (`conjectures/outbox/naturality-arbitrary-depth.md`).
 

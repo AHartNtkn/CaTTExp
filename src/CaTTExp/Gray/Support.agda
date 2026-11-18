@@ -162,23 +162,22 @@ record El : Set where
     tgt  : Nat
 open El public
 
-private
-  varLvl : Tm → Maybe Nat
-  varLvl (var i) = just i
-  varLvl _       = nothing
+varLvl : Tm → Maybe Nat
+varLvl (var i) = just i
+varLvl _       = nothing
 
-  bdry : Ty → Nat × Nat
-  bdry (arr (arr _ _ _) (var s) (var t)) = s , t
-  bdry _                                 = 0 , 0
+bdry : Ty → Nat × Nat
+bdry (arr (arr _ _ _) (var s) (var t)) = s , t
+bdry _                                 = 0 , 0
 
-  mkEl : List Nat → Nat × Ty → List El
-  mkEl os (v , A) with endsTy A
-  ... | nothing      = []
-  ... | just (_ , b) with varLvl b
-  ...   | nothing = []
-  ...   | just b' with posOf b' os
-  ...     | nothing = []
-  ...     | just k  = el v k (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) ∷ []
+mkEl : List Nat → Nat × Ty → List El
+mkEl os (v , A) with endsTy A
+... | nothing      = []
+... | just (_ , b) with varLvl b
+...   | nothing = []
+...   | just b' with posOf b' os
+...     | nothing = []
+...     | just k  = el v k (dim A ∸ 1) (fst (bdry A)) (snd (bdry A)) ∷ []
 
 cells : Ctx → List El
 cells Γ = concatMap (mkEl (objs Γ)) (entries Γ)
@@ -191,23 +190,25 @@ record Hom : Set where
     hcs : List El
 open Hom public
 
+lengthN : List Nat → Nat
+lengthN []       = 0
+lengthN (_ ∷ xs) = suc (lengthN xs)
+
+dropLast : List Nat → List Nat
+dropLast []           = []
+dropLast (x ∷ [])     = []
+dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
+
+-- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
+drop1 : List Nat → List Nat
+drop1 []       = []
+drop1 (_ ∷ xs) = dropLast xs
+
+homAt : Ctx → Nat → Hom
+homAt Γ k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
+
 homs : Ctx → List Hom
-homs Γ = map one (drop1 (upto (lengthN (objs Γ))))
-  where
-  lengthN : List Nat → Nat
-  lengthN []       = 0
-  lengthN (_ ∷ xs) = suc (lengthN xs)
-  -- hom indices 1 … n (n + 1 objects); upto gives 0 … n+1.
-  drop1 : List Nat → List Nat
-  drop1 []       = []
-  drop1 (_ ∷ xs) = dropLast xs
-    where
-    dropLast : List Nat → List Nat
-    dropLast []           = []
-    dropLast (x ∷ [])     = []
-    dropLast (x ∷ y ∷ ys) = x ∷ dropLast (y ∷ ys)
-  one : Nat → Hom
-  one k = let cs = filter (λ c → hom c ==ℕ k) (cells Γ) in mkHom (maxL (map hdim cs)) cs
+homs Γ = map (homAt Γ) (drop1 (upto (lengthN (objs Γ))))
 
 -- d = Σ dim Θₖ, the dimension of K(Γ).
 dimK : List Hom → Nat
@@ -217,17 +218,17 @@ dimK hs = sumL (map hd hs)
 -- Tables of the ⟨Θₖ⟩ and of their tensor T.
 
 -- ⟨Θ⟩^sg_i as a set of levels (sg = true is +, false is −).
+-- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
+-- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
+hitsP : Nat → Bool → El → El → Bool
+hitsP i sg c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
+
 piece : Hom → Nat → Bool → List Nat
 piece h i sg =
   if i ==ℕ hd h then map lvl (filter (λ c → hdim c ==ℕ i) (hcs h))
   else if i <ℕ hd h then
-    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hits c) (hcs h))) (hcs h))
+    map lvl (filter (λ c → (hdim c ==ℕ i) ∧ not (any (hitsP i sg c) (hcs h))) (hcs h))
   else []
-  where
-  -- c ∉ ⟨Θ⟩^-_i iff c is the target of some (i+1)-cell, and
-  -- c ∉ ⟨Θ⟩^+_i iff c is the source of some (i+1)-cell.
-  hits : El → El → Bool
-  hits c w = (hdim w ==ℕ suc i) ∧ (if sg then (src w ==ℕ lvl c) else (tgt w ==ℕ lvl c))
 
 -- T^sg_k.
 chainT : Bool → Nat → List Hom → TSet

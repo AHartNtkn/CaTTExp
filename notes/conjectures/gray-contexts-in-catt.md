@@ -101,7 +101,7 @@ Any of the following:
 - a proof of the bookkeeping step in §3.3 together with a positive answer to G-alg;
 - a counterexample: two composites of a frame-acyclic molecule that are not related by any invertible CaTT cell.
 
-*This file merges two earlier problem files: the former `gray-contexts-steiner.md` is now §6. §1–§5 ask the general syntactic question for pasting schemes. §6 asks whether one specific published rule set (Mikhail's) produces Gray contexts `M ⊗ Dⁿ` for every context M and every n. Problem N in `naturality-arbitrary-depth.md` is the case n = 1 for arbitrary contexts, stated as an explicit family of cells. G(n) for all n implies N (see that file, §8).*
+*This file merges two earlier problem files: the former `gray-contexts-steiner.md` is now §6. §1–§5 ask the general syntactic question for pasting schemes. §6 asks whether one specific published rule set (Mikhail's) produces Gray contexts `M ⊗ Dⁿ` for every context M and every n. Problem N in `naturality-arbitrary-depth.md` is the case n = 1 for arbitrary contexts, stated as an explicit family of cells. G(n) for all n should imply N (see that file, §8); a verified review found that §8's argument fails as written for composition constructors, so the implication needs re-checking (open-issues D3a).*
 
 ## 6. Second form: Mikhail's Gray rules for arbitrary contexts
 

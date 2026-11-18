@@ -375,6 +375,11 @@ Finer supports map onto coarser ones under the collapse X ⊗ Y → X × Y, so e
 
 **What has to be done, and what it costs.**
 1. **No construction yet of the free structure the side condition needs** (above). This is open, not a reason against: the problem is posed and being worked on. If it is solved, the two-tier proof of §3.6 should transfer with Steiner chains replaced by the new generator sets.
+   - **Constraints now known** (researcher response, verified 2026-11-18; see the end of `notes/conjectures/strict-lax-interchange-at-every-level.md`):
+     - *Higher interchangers must be boundary-adjusted.* A raw cell `(a ∗ₗ b) ∗ₖ (c ∗ₗ d) → (a ∗ₖ c) ∗ₗ (b ∗ₖ d)` for cells of dimension above l+1 forces strict interchange two dimensions down, so it kills directedness. The higher instances must be naturality comparisons such as `L_A ∗₂ χ_{a′} ⇛ χ_a ∗₂ R_A`. Uniform L's side condition must compute supports in a structure built that way. Under that corrected reading the problem is open, not refuted.
+     - *Supports live in the expanded basis.* If support of a composite were the union of supports, every interchange would be forced strict. This is already how §3.2 computes supports for k = 0.
+     - *Finiteness.* If F(Γ) has one finite generator set with injective support, it has only finitely many non-identity cells, so the tower of higher comparisons must stop in each F(Γ).
+     - *Dimension 4.* Bourke–Lobbia's lax 4-categories (arXiv 2610.31448 §4.2.6) direct the outer interchanger but keep Gray-category homs, so they are two-tier, not uniform, in dimension 4.
 2. **Usability, unless markings are cheap.** Plain CaTT reasoning inside an object (elements, the post's §Functors) now has directed interchange. The fix is a marking "C is an ordinary ω-category" that restores invertible interchange in C. The marking must be easy enough that ordinary use never notices it.
 3. **Cost.** Unfoldings now multiply at every level, not only across objects. Symbolic supports should keep this polynomial **[conj]**, but it is a real constant-factor cost.
 
@@ -717,7 +722,7 @@ The reasons for L over P (first version, still valid):
 **If something is refuted.**
 - A counterexample to (B) would mean the support rule has to be refined, e.g. to compare chains instead of supports, which is still decidable. The worked cases of §3.4 do not change.
 - A refutation of (D)/(E) would mean (∞,ω) models need a different rule, while the strict theory stands.
-- A negative answer to the uniform construction problem, i.e. a proof that no free structure with properties 1–3 exists, would be a genuine reason to stop at two-tier.
+- A negative answer to the uniform construction problem, i.e. a proof that no free structure with properties 1–3 exists, would be a genuine reason to stop at two-tier. The one no-go proved so far (2026-11-18) is for raw higher interchange cells, which uniform L does not need; it is not such a negative answer.
 
 Each of these is a finding to act on. An open status is not.
 

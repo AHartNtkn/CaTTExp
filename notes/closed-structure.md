@@ -1052,6 +1052,37 @@ This is a draft. The data:
 - **Naturality:** both are strictly natural in every variable at the level of 1-cells. There are no interchangers to be lax about.
 - **Higher cells:** the lax and oplax cells at dimension k are maps X ⊗ Dᵏ → Y and Dᵏ ⊗ X → Y. Higher cells of mixed shape are the hom-objects of `internal-hom.md` §5, with the lax/oplax duality §5.6 relating the two sides.
 
+**Refinement from the verified round-5 answer** (`conjectures/answered/gray-closed-scheduling-r5-2026-11-18.md`, 2026-11-18). That answer confirms reading (II) and states it more sharply.
+- **The full structure is two-sided.** For each pair of objects there is the family ℍ(A, C)(P, Q) = Hom(P ⊗ A ⊗ Q, C), with probes P and Q. This is Gepner–Heine's bienrichment (§1.5, Ex. 3.2.6).
+- **The two cell families are its one-sided restrictions.**
+  - ℍ_r(A, C) has Q = Dᵏ and P = I, i.e. cells A ⊗ Dᵏ → C. These are the "lax cells" 𝒢^λ above.
+  - ℍ_ℓ(A, C) has P = Dᵏ and Q = I, i.e. cells Dᵏ ⊗ A → C. These are the "oplax cells" 𝒢^ο.
+  - The answer names them by parameter position to avoid the lax/oplax naming conventions; this note follows it.
+  - Cells with both probes non-trivial form the **double hom**: lax and oplax arrows meeting in squares. These are the mixed-shape cells listed above.
+- **Currying laws** (r5 eqs. (3), (4)). These agree with Φ_L and Φ_R above:
+
+  ```
+  ℍ_r(A⊗B, C) ≅ ℍ_r(B, A\C),        ℍ_ℓ(A⊗B, C) ≅ ℍ_ℓ(A, C/B).
+  ```
+
+- **Probe absorption** (r5 eq. (5)). With both probes present, a probe next to a curried variable is absorbed into the residual:
+
+  ```
+  Hom(P⊗A⊗B⊗Q, C)  ≅  Hom(B⊗Q, (P⊗A)\C)  ≅  Hom(P⊗A, C/(B⊗Q)).
+  ```
+
+  So currying on the "wrong" side is still an isomorphism, but it moves the probe into the residual's argument and does not preserve the probe position. This is the rule for every mixed currying. The rule set includes it as a third clause next to Φ_L and Φ_R.
+- **What survives of reading (I)'s phenomena.** In 𝒢′ the round-5 answer proves H = H_L = 1_T. Non-invertible Gray interchange survives, as a modification between schedules of transformations rather than of functors. This matches "schedules move into the homs" below.
+
+**Check of E.2 against these rules (D17 (b), done).**
+- E.2 represents B ⊗ Θ by maps B → [Θ, D], with [Θ, D] = Hom_oplax(Θ, D) = D/Θ in AM's naming (`conventions.md` §4). That is right currying of Θ.
+- Its higher-cell clause, "the instance D := [Dᵏ, D]", reads Hom(B⊗Θ⊗Dᵏ, D) ≅ Hom(B, D/(Θ⊗Dᵏ)). This is exactly probe absorption with P = I and Q = Dᵏ.
+- It is **not** the false one-sided claim ℍ_r(B⊗Θ, D) ≅ ℍ_r(B, D/Θ), and E.2 never states that claim.
+- Its "Payoff", lax transformations as B ⊗ D¹ → C, is ℍ_r(B, C) at k = 1.
+- The mirror, ⟦Θ⟧ ⊗ C via the oplax hom, is the same check with the sides exchanged.
+
+So E.2 and E.4 are instances of the corrected rule set with one representable factor, and no change is needed.
+
 **Consequences.**
 - **Pasting types for (II).** A pasting type for reading (II) must record, for each cell, which side its time direction sits on: X ⊗ Dᵏ versus Dᵏ ⊗ X. This is the "time as a tensor position" of PL-ω, now with a side.
 - **Schedules move into the homs.** The schedule categories S(P) of F.5 reappear inside hom-objects, as the cells of Fun^lax(Δ, –) for Gray contexts Δ, not as 1-cell interchange. F.5's monoidal-core result transfers on that reading: the cells of ν(I^⊗n) between its extreme vertices.
@@ -1059,8 +1090,8 @@ This is a draft. The data:
 
 **Open (D17).**
 - (a) ~~Fix PL-ω's reading in `planar-pasting-types.md` §4~~ done: §4 now names both readings. F.1–F.4 are reading (I). The project's use of PL-ω is the type formers of (II).
-- (b) Check that the B ⊗ Θ rule (E.2) and its mirror are exactly the reading-(II) rules above with one factor representable.
-- (c) Decide whether reading (I) is still needed. If it is not, D11's r5 questions become reading-(I) side questions and should say so.
+- (b) ~~Check E.2~~ done (above): E.2 is probe absorption with Q = Dᵏ.
+- (c) Decided: the project's type theory needs only reading (II), and round 5 confirms this. D11's remaining reading-(I) questions (the original 𝒢, ι∘π, forward uniqueness) are research side questions. They stay under D11 and do not block D7 or E.3.
 
 ---
 

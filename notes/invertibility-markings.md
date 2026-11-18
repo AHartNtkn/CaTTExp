@@ -52,7 +52,7 @@ plus ICaTT's destructors as **term formers without equations**:
 
 (The names t⁻ˡ etc. are ICaTT's linv(e), …, with the evidence e erased: since inv is a judgment, the destructors depend on t only. There is no β or η, so there is nothing for ICaTT's can/rec equations to say.)
 
-**Marked declarations.** A context may declare a variable with marks: `(x : A)^inv`, `(x : A)^ps`, and for objects `(C : ★)^{grpd_k}` (k ≥ 1). Rules: `(x:A)^m ∈ Γ ⇒ Γ ⊢ x m`. A substitution `Δ ⊢ γ : Γ` must send every marked variable to a term with the same mark: `Δ ⊢ x[γ] m`. This is the marked-computad style of Benjamin–Champin–Markakis (`icatt-and-rice-rules.md` §3).
+**Marked declarations.** A context may declare a variable with marks: `(x : A)^inv`, `(x : A)^ps`, and for objects `(C : ★)^{grpd_k}` (k ≥ 1). Rules: `(x:A)^m ∈ Γ ⇒ Γ ⊢ x m`. A substitution `Δ ⊢ γ : Γ` must send every marked variable to a term with the same mark: `Δ ⊢ x[γ] m`. This is the marked-computad style of Benjamin–Champin–Markakis (`icatt-and-rice-rules.md` §3). *Precision from the Agda encoding (PR #41):* a variable marked `grpd_k` must be sent to an object **variable** marked `grpd_k′` with k′ ≤ k, since (OBJ-k) reads the mark off the object variable and object constants carry no marks.
 
 **Propagation rules.** Below, `Δ ⊢ coh_{Γ,A}[γ] : A[γ]` is an L-coh (operation or coherence case), and g ranges over the generators of U(Γ) of the top dimension D := dim U(Γ) (in the op-case, hd of the coh is D; in the coherence case it is D + 1).
 
@@ -274,6 +274,10 @@ So under L the honest statement is: **strict CT is false from dimension 3 (three
 
 ---
 
+**Measurement (L-core thread, 2026-11-18, PR #41).** The explicit closed-support check on ΣD¹ ∨ … ∨ ΣD¹ (↓∂⁻T of size 3ⁿ − 2ⁿ, ↓T of size 3ⁿ) took 0.34 s, 0.27 s, 0.32 s, 0.70 s, 5.3 s, 58 s for n = 1…6. For n = 7 it was still running after 11 minutes. From n = 4 on, each step costs about 9×, i.e. roughly (3ⁿ)², because the explicit supports have size 3ⁿ and the set operations are quadratic. This confirms in practice that explicit supports are exponential. It says nothing yet about E9′, which needs a representation that never materialises ↓T.
+
+**Candidate for E9′.** For a wedge, ∂^±U and U are unions of at most n *boxes* (products of down-closed sets, one per factor; Leibniz formula). If the supports of terms can be kept as short unions of boxes, closed under substitution, and compared factorwise, the check is polynomial. The risk: deciding whether a union of boxes equals a given box is coNP-hard in general (it is DNF tautology when every factor is a 2-element chain). So the question becomes whether the unions that arise from valid terms stay structured, for example as layerings. Open; owned here.
+
 ## 6. Surface defaults (E10), settled by counts
 
 The questions were `pseudo-vs-gray.md` §8 Q2–Q3: marking defaults for objects and transformations, and the default layering of horizontal composites. Per project standard 3, these are settled by a worked comparison.
@@ -312,7 +316,7 @@ For a composite of two cells across objects, the two layerings are ∂⁻ and �
 
 ## 7. E6: an attempt on the uniform construction
 
-*Problem: `conjectures/strict-lax-interchange-at-every-level.md`, corrected (boundary-adjusted) reading. The researcher-ready version is `conjectures/outbox/directed-interchange-every-level.md`; this section's Observation 7.1 is its (K5), and the case below is its Q2.*
+*Problem: `conjectures/strict-lax-interchange-at-every-level.md`, corrected (boundary-adjusted) reading. The prompt, answered 2026-11-18, is `conjectures/answered/directed-interchange-every-level-2026-11-18.md`; this section's Observation 7.1 is its (K5), and the case below is its Q2.*
 
 **Observation 7.1 (no single-complex presentation) [proved].** Let K be any augmented directed complex with basis containing 2-cells α : f ⇒ f′ and β : g ⇒ g′ with f, f′ : x → y and g, g′ : y → z. In ν(K), the cells (α ▷ g) ; (f′ ◁ β) and (f ◁ β) ; (α ▷ g′) have the same table: top chain α + β, 1-chains f + g and f′ + g′, 0-chains x and z. So they are equal, and interchange along 0-cells is strict in ν(K).
 

@@ -36,11 +36,26 @@ A consequence of D1, D3 and D4 together: the researcher's collapse argument is a
 - All the intended examples still pass with the copy, selector and linearity repairs together (`fixedStrict`; L4).
 - Strict linearity does not remove the D5 cone, whose repeated `r` sits in the source, which carries no linearity condition (L3). So the specified construction is still needed.
 
+**O. The limit rules over two-tier L (B7, first slice; `OverL.agda`).** The shared schema of `limits-metatheory.md` §5.3 differs between P and L only in which transfor comparison variables are marked:
+- **The switch.** Under P, the comparisons over every positive-dimensional diagram generator are marked. Under L, only those over *marked* generators are. Here the switch is implemented on the cone-morphism shapes.
+- **O1.** The collapse instance is also a well-typed substitution in the L core.
+- **O2.** Under L with f unmarked, the instance is admitted with nothing to certify (`CertSubL`, whose typing is the L core's). These are the unrestricted lax transfors.
+- **O3.** Under L with f marked, the instance is rejected unless z is certified, as under P.
+- **O4. Why the collapse argument does not go through over L.** The reverse interchanger `N⁻¹` cannot be formed as a coh in L, in any context and for any substitution (the L core's `no-ich⁻`). Cited from `limits-metatheory.md` §5.2 and not formalized: the image comparison `F(β)_f` is the interchanger over `ΣD¹ ∨ ΣD¹` at `(β, λ_f)`. So the inverse `R⁻¹ = B ; N⁻¹ ; A⁻¹` used by the collapse is not available by coherence. That no term of L inverts `F(β)_f` at all is Thm 1(2), still open (§3).
+
+This is the syntactic side of `limits-metatheory.md` §1, which gives the semantic counterpart: strict ωCat with the Gray tensor has unrestricted lax limits and non-invertible `m_f`.
+
+**C. The d = 4 collapse instance on the specified shapes (B16, first slice; `Collapse4.agda`).** This is step 1 of the B9 proof (`limits-metatheory.md` §3) for k = 2, run on `Cones.ctrf 2` over the arrow, the shape the cone-constructions thread specifies:
+- **C1.** Let `z : a ⇛ b` be an arbitrary 4-cell, so Ω₄ = D⁴. The diagram is substituted by `(Y, Y, 1_Y)`. The x- and y-components are the boundaries of a and b. The lower f-components are coherences: the inverse right unitor `ρ` and its naturality `N`. The top f-component is `μ_f = C_a ;₃ G(z)`, where `C_a` is a full-support coherence over D³ and `G(u) = (ρ_r ∗₁ (u ∗₀ 1_Y)) ∗₂ N_{α₁}`. This is a well-typed substitution `Ω₄ → Tr₂` in the CaTT core. So with unrestricted transfors the instance is admitted, and the rest of the argument applies to it.
+- **C2.** The check is not vacuous: putting `a` for `b` at `μ_x` is rejected.
+- **C3.** Under P, and under L with f marked, `μ_f` is marked (the shape marks `m⁻_f`, `m⁺_f`, `μ_f`). Its image has no certificate unless z is certified, so the repaired rule refuses the instance. The other marked images, the coherences `N`, are certified.
+
+
 ## 3. What is not formalized
 
-- **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 checks the input to that argument, not its algebra.
+- **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 (d = 3) and C1 (d = 4, on the specified `Tr₂`) check the input to that argument, step 1 of the B9 proof, not its algebra. Steps 2–5 (`uni`, the endpoint reduction, and `F(w)_f` being a coherence-case coh) are not formalized.
 - **Non-derivability in the repaired theory.** R2 shows the repaired rule refuses the specific instance. That *no* derivation makes uncertified 3-cells invertible is a soundness statement and needs a model (open item (a) of `conjectures/catt-lim-pseudo-vs-gray.md`).
 - **Generality.** The constructions cover cones over globular diagrams of dimension ≤ 2 and cone morphisms over diagrams of dimension ≤ 1. The judgments are the n = 1 instance of Mikhail's schema. That the specified construction passes the fixed rules for every globular diagram (the analogue of Thm 3.3/4.4) is checked on examples only.
 - **Certificates.** `cert` is sound on the strength of Benjamin–Markakis ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)): coherences are invertible, and composites and whiskerings of invertible cells are invertible. That is cited.
-- **The two-tier L variant** (`pseudo-vs-gray.md` R11) is not attempted here. It needs the Gray core being built in a separate thread (`CaTTExp.TypingWith` with the L side condition).
+- **Over L,** only the marking switch, the collapse instance and the absence of the reverse interchanger as a coh are checked. That no term of L inverts the image comparison `F(β)_f` is Thm 1(2) of `limits-metatheory.md`, still open: it needs strict soundness of L with (B). The identification of `F(β)_f` with the interchanger is cited from §5.2. The horn-form filler rule itself (B15) awaits the transfor shapes of the cone-constructions thread.
 - **Orientation.** The literature thread notes that the cylinder formula `a_x → b_x` presents `I ⊗ Γ` under Steiner's convention. Mikhail's gray components `p_x : x → x′` have that form. Settled in `conventions.md` §5: Mikhail's "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the Steiner/Ara–Maltsiniotis orientation (so `I ⊗ Γ`), checked on the generator i ⊗ f, and his transformations are Bénabou-oplax.

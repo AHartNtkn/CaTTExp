@@ -180,7 +180,7 @@ U ∈ 𝓜    U ⊢ t →_A u    Δ ⊢ σ : U
 - **G(1)** is proved.
 - **Existence in G(2)** is proved, using Chanavat's result that all molecules of dimension ≤ 3 are frame-acyclic. So **every Gray generator of dimension ≤ 3 has a plain-CaTT type**, including the Gray cube.
 - **Uniqueness in G(2)** is proved (Theorem A of `relative-coherence.md`: parallel 2-terms with equal strict image are connected, in any context). **Existence in G(3)** follows, so every Gray generator of dimension 4 has a plain-CaTT type.
-- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It is posed for researchers in `conjectures/outbox/gray-contexts.md`.
+- **G(n) for n ≥ 3** reduces to the relative coherence property RC(n) for loop-free contexts, which is open. It was posed to researchers; the first response (verified, `conjectures/answered/gray-contexts-2026-11-18.md`) settles special cases of RC(3) only.
 
 ---
 
@@ -339,11 +339,18 @@ So oplax is *derivable* from the lax rule and the opposites meta-operation of Be
 
 The other dualities, now checked **[paper: AM Props. A.20, A.22, A.23; re-derived in `conventions.md` §3.3]**: the even dual also reverses factors, (X ⊗ Y)^co ≅ Y^co ⊗ X^co, so it also swaps lax and oplax: [Θ, C]ₒₚₗₐₓ ≃ ([Θ^co, C^co]ₗₐₓ)^co. The total dual keeps the order, (X ⊗ Y)° ≅ X° ⊗ Y°, so it maps the lax rule to itself: [Θ, C]ₗₐₓ ≃ ([Θ°, C°]ₗₐₓ)°. By AM Remark A.21 these are the only dualities of this kind.
 
+The same classification is proved independently, together with the consequences for two-tier L (which ambient dualities are symmetries, which swap lax and oplax, and the twisted tensors that every other duality produces), in `closed-structure.md` Part D, with an Agda check (`GrayDuality.agda`).
+
 ---
 
 ### 5.7 Alternative: closed structure by contractible types (Mimram's CCCaTT)
 
-Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt.pdf), [Agda](https://github.com/smimram/agda-ccatt/)). Read from the PDF via a summary, so rule details are approximate.
+Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt.pdf), [Agda](https://github.com/smimram/agda-ccatt/)). **Re-checked against the PDF and the tool source on 2026-11-18** (`closed-structure.md` Part C). The summary below is confirmed. Corrections:
+- the implicational system is CCaTT₁;
+- terms carry both type and term substitutions;
+- transitivity of equality is an explicit rule;
+- "cartesian closed ∞-categories" means (∞,1);
+- the tool has two higher criteria, a reversible one and a directed one, written out in Part C.2 there.
 
 **What it does.** It is the 1-categorical truncation of CaTT for cartesian closed categories.
 - **Pasting types replace pasting contexts.** A type is *pasting* if a deterministic proof search derives `Θ \ ∅ | ∅ ⊢ A`. The rules are `→ps I`, with the side condition that tgt(A) is not already a used target, and `→ps E`, which consumes the head hypothesis. This is a decidable subclass of the contractible types (exactly one βη-inhabitant).
@@ -376,6 +383,11 @@ Architecture A never forms B ⊗ C for non-representable B and C.
 - **What would be lost:** an object-level ⊗ is needed for lax-functor-category currying [B ⊗ C, D] ≃ [B, [C, D]ₗₐₓ] with *both* B and C arbitrary.
 - **Why it is hard:** its mapping-out property is a Day-convolution coend, so it is not finitary. In style, it would have to come from a colimit principle (lax colimits of computads, survey §13 Q3) plus "⊗ preserves colimits in each variable".
 - **Next step:** once colimits exist, define B ⊗ C as the colimit, over cells of B and C, of ⟦x ⊗ y⟧. Then check that it has the Gray tensor's universal property. The cocontinuity argument of `conjectures/gray-vs-cartesian.md` §3.1 is the template.
+- **Update 2026-11-18** (`closed-structure.md` Part E):
+  - B ⊗ ⟦Θ⟧ for arbitrary B and representable Θ needs no colimits. It is the representing object of B ⊳ [Θ, –] over rule (lhom). So lax transformations between arbitrary functors are maps B ⊗ D¹ → C.
+  - The universal property holds on mapping spaces only. Higher cells go through the pseudo cotensor [⟦Dᵏ⟧, D].
+  - A rule asserting the bijection on all cells is unsound: counterexample at B = C = D¹.
+  - Both factors arbitrary still needs [C, –]_lax for arbitrary C, either from object-indexed limits (F5) or from PL-ω.
 
 ---
 

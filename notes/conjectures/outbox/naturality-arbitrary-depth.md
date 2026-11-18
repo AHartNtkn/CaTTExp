@@ -1,6 +1,6 @@
-# Problem: naturality of CaTT coherences at depth ≥ 2
+# Problem: naturality of CaTT coherences at depth ≥ 2, round 2
 
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/naturality-arbitrary-depth-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -68,50 +68,66 @@ Given N, every CaTT context Γ (not only pasting ones) gets cylinder contexts `�
 
 ## 2. What is known
 
-1. **Depth ≤ 1** (depth of Y at most 1 in both Q and c): BMOSV, Theorem 3.1.
-2. **Relative coherence in dimension 2 (proved).** Write RC(n) for the property:
+Write RC(n) for the property:
 
-   > **RC(n) for a context Γ.** Any two parallel n-terms `T, T'` of Γ with `π(T) = π(T')` are connected by an (n+1)-term `T → T'`.
+> **RC(n) for a context Γ.** Any two parallel n-terms `T, T′` of Γ with `π(T) = π(T′)` are connected by an (n+1)-term `T → T′`.
 
-   **Theorem A.** RC(2) holds for every CaTT context Γ.
+1. **Depth ≤ 1.** BMOSV, Theorem 3.1.
+2. **RC(2) holds in every CaTT context** (Theorem A).
+   - Normalize every 2-term to a vertical composite of whiskered 2-variables.
+   - 2-terms without 2-variables pull back to the chain of their path.
+   - Two such composites with the same strict image are related by exchange moves, each a coherence over a pasting context.
+3. **N follows from RC.** Under the strict collapse `F(I ⊗ Q) → F(Q↑Y)`, the cell `e ⊗ π(c)` goes `π(a_c) → π(b_c)`.
+   - If c is a coherence, then `π(a_c) = π(b_c)`, and RC(n) for `Q↑Y` gives K.
+   - If c is a composition, realise each whiskered top generator of the strict cell as a layer, and connect consecutive layers by RC(n).
+   - So **RC(n) on the cylinders `Q↑Y` implies N for coherences of dimension n.**
+4. **N holds for every term of dimension ≤ 2**, for every Q and every up-closed Y. This gives `Γ ⊗ D¹` for every Γ of dimension ≤ 3, and `Γ ⊗ Dⁿ` for every n when `dim Γ ≤ 2`.
+5. **Explicit 3-dimensional instances** (round 1).
+   - Fix the lower lifts universally: the lift `C(A, B)` of a vertical composite, and the lift `J` of an identity 2-cell. Then the 3-dimensional unitor `α ∗₁ id_g → α` over the 2-disc has an explicit K.
+   - One explicit non-endomorphism 3-dimensional instance over the single arrow `(x, y, f)` is also known.
+   - The 3-dimensional associator naturality over the fully selected 3-chain has been built and machine-checked.
+6. **Endomorphism coherences, every dimension.** For `c : u → u` with u full in Q, N holds for any choice of lower lifts. The coherence rule gives `c → 1_u`, and unit absorption finishes.
+7. **Partial RC(3) for the lax square S** (the §1.3 example, with `F := f↑`).
+   - Every 2-cell of `F(S)` is either an identity on a path or F.
+   - **Identity 2-boundary: settled.** Parallel 3-terms whose strict 2-boundary is an identity do not use F. By the total-support form of Benjamin–Markakis Lemma 36, they live over the path context `C_w`, and one coherence there connects them.
+   - **F-boundary, 2-dimensional coherence arity: reduced.** Such a coherence is connected to a coherence over a vertical 2-chain, but the 2-terms substituted into that chain are arbitrary.
+   - **Terms without 2-variables:** connected in every dimension, in any context.
+   - In any coherence touching F, F's boundary `f⁻ ∗₀ y↑` is never split across columns.
 
-   *Proof sketch* (this generalises an unpublished "relative ladder theorem" of an external referee, which is the case of the cylinder of a chain):
-   - *Paths.* A 1-term has a flattened path (word in 1-variables). Two 1-terms with the same endpoints and the same path w are full parallel terms over the chain context `C(w)`, pulled back along `C(w) → Γ`, so the coherence rule gives `κ_w(a, b) : a → b`. Likewise any 2-term with no 2-variables pulls back to `C(w)` and is connected to the κ with the same boundary.
-   - *Sequentialization.* Every 2-term is connected, in both directions, to a vertical composite of factors that are either (G) a 2-variable x whiskered by 1-terms, or (I) 2-terms with no 2-variable. (Replace each composite over a 2-dimensional arity by a column-by-column composite, by the coherence rule over that arity; flatten binary composites by interchange, distributivity and associativity coherences over small pasting contexts.)
-   - *Normal form of a whiskered generator.* For a whiskered generator with whisker paths λ, ρ, let `P_g` be the pasting context "chain of length |λ|, a 2-disc `z⁻ ⇒ z⁺`, chain of length |ρ|", and `H_g` the composition coherence over it. Substitute `z^± ↦ σx, τx`, the disc ↦ x. Fixing one bracketing `B_w` per path w gives `e_g : B_{λ·σx·ρ} → B_{λ·τx·ρ}`. Every factor of kind (G) with the same (λ, x, ρ) is connected to `κ ∗₁ e_g ∗₁ κ` by a coherence over `P_g`, where all comparisons happen over the *expanded* paths. So T is connected to `κ ∗₁ e_{g₁} ∗₁ … ∗₁ e_{g_k} ∗₁ κ`, where `g₁ … g_k` is the 2-path of whiskered generators that T traces in `F(Γ)`.
-   - *Exchange.* In the free strict 2-category on a 2-polygraph, two 2-paths represent the same 2-cell iff they are related by exchange moves of two whiskered generators in disjoint horizontal positions. Each exchange move is realised by a coherence over the pasting context "chain, 2-disc, chain, 2-disc, chain", substituted, then normalised as above.
-   - No loop-freeness is used. ∎
-3. **Reduction of N to RC (proved).** Fix Q, B, Y and let `n = dim c`. Under the strict collapse `F(I ⊗ Q) → F(Q↑Y)` (which sends `e ⊗ x` to an identity for `x ∉ Y`), the strict cell `e ⊗ π(c)` goes `π(a_c) → π(b_c)`.
-   - If c is a **coherence**, `π(c)` is an identity, so `π(a_c) = π(b_c)`, and RC(n) for `Q↑Y` gives K.
-   - If c is a **composition**, write the strict cell as a sequence of whiskered top generators `q↑`. Realise each layer by an (n+1)-term `U₁ ∗ (a ∗₀ q↑ ∗₀ b) ∗ U₂` (whiskers chosen with the right strict images, boundaries adjusted by κ), and connect consecutive layers, and the two ends to `a_c`, `b_c`, by RC(n).
-   
-   So **RC(n) on the cylinder contexts implies N for coherences of dimension n.**
-4. **Consequence: N holds for every term of dimension ≤ 2**, every pasting context Q and every up-closed Y, by Theorem A and item 3. This includes the associator and every 2-dimensional coherence over a chain with any up-closed Y. It gives `Γ ⊗ D¹` for every context Γ of dimension ≤ 3, and `Γ ⊗ Dⁿ` for every n when `dim Γ ≤ 2`.
+## 3. What remains, and why
 
-## 3. Why dimension 3 is different
+RC(3) fails for arbitrary contexts. In `(x : ⋆, a : id_x → id_x)`, the Eckmann–Hilton 3-cell and the identity are expected not to be connected, since they give a non-zero class in π₃(S²). (This is a sketch, not checked in detail.) So a proof must use acyclicity of the context. The cylinders `Q↑Y` present Steiner complexes with loop-free bases.
 
-RC(3) is false for arbitrary contexts. In `Γ = (x : ⋆, a : id_x → id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a → a ∗₀ a` and the identity are parallel, with equal strict images, but are expected not to be connected: in the fundamental weak ω-groupoid of S², with a sent to a generator of π₂, the Eckmann–Hilton cell represents a non-zero element of π₃(S²). *(Sketch; not checked in detail.)* So any proof of RC(3) must use **loop-freeness** of the context. The cylinder contexts `Q↑Y` are loop-free: they present Steiner complexes with loop-free bases, whose free strict ω-categories are also their free (∞,ω)-categories (Campion, [arXiv 2311.00205](https://arxiv.org/abs/2311.00205), Cor. 3.5; Chanavat, [arXiv 2603.22242](https://arxiv.org/abs/2603.22242), Thm 3.29). So RC holds for them semantically in (∞,ω)-categories; the question is whether CaTT proves it.
+In dimension 3, runs of 3-cells without 3-variables live over a 2-dimensional context such as S, where no single pasting context covers them. For S, everything except the F-boundary case is settled (item 7). What is left is the compatibility of a chosen normalization `ν_P : P → N(P)`, for 2-terms P with image F, with `∗₁`-composition by 2-terms containing F.
 
-**Where the dimension-2 proof stops.** Sequentialization and generator normal forms extend to dimension 3. What does not extend is the comparison of runs of 3-cells of kind (I) (no 3-variables) between 2-terms with equal strict image. In dimension 2 these runs live over one path and are settled by the coherence rule over a chain. In dimension 3 they live over a 2-dimensional context that is not a pasting context, such as the lax square. A natural attack is a Squier-style argument: show that critical branchings between elementary 3-cells close up to 4-cells. The hard branchings are those where one elementary 3-cell moves a 2-generator, say `f↑`, and the other reassociates a composite that splits its boundary `f⁻ ∗₀ y↑`. No pasting context contains both.
+Separately, N as stated lets K be chosen for each (Q, B, Y). It is not known whether one family of choices, with the lower lifts fixed universally as in item 5, works for all instances at once.
 
 ## 4. Questions
 
-Each question asks for an explicit CaTT term, built only with the coherence rule over pasting contexts and substitution.
+Each question asks for explicit CaTT terms, built only with the coherence rule over pasting contexts and substitution.
 
-1. **Smallest open case.** Let S be the lax square (§1.3 example). Are any two parallel 3-terms of S connected by a 4-term? (This is RC(3) above the top dimension of S. It gives N for every 3-dimensional coherence over the single arrow `Q = (x, y, f)`.) Even one non-trivial instance is useful: for a 3-dimensional coherence c over `(x, y, f)` with `Y = Var(Q)`, construct `K : a_c → b_c` explicitly.
-2. **The 3-dimensional unitor over the 2-disc.** `Q = (x, y, f, g, α : f → g)`, `Y = Var(Q)`, and `c : α ∗₁ id_g → α` the unitor. Construct `K : a_c → b_c` in `Q↑Y`. (By §2.3 this follows from RC(3) for the 3-dimensional context `Q↑Y`.)
-3. **RC(3) in general.** Prove RC(3) for every finite context whose computad is loop-free in Steiner's sense (or at least for every cylinder `Q↑Y`), or give a loop-free counterexample.
-4. **All dimensions.** Prove RC(n) for all n on loop-free contexts (or on all cylinders `Q↑Y`). By §2.3 this proves Conjecture N at every depth.
+1. **Smallest open case: the F-boundary case of RC(3) for the lax square S.** Let `α, β : t → t′` be parallel 3-terms of S with `π(t) = π(t′) = F`. Construct a 4-term `α → β`. This gives N for every 3-dimensional coherence over the single arrow `(x, y, f)` with `Y = Var(Q)`.
+   - *Smaller first step:* take α and β to be coherences over 2-dimensional arities. They reduce to coherences over vertical 2-chains whose middle 2-terms are arbitrary. Connect those.
+2. **Global choice of K in dimension 3.** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with `Y = Var(Q)`, such that the naturality terms `t↑` it defines are compatible with substitution. The minimal requirement: two choices for the same `(Q, B, Y)` are connected by a 4-term.
+3. **RC(3) on the cylinders.** Prove RC(3) for every cylinder `Q↑Y`, or for every finite Steiner loop-free context. Or give a loop-free counterexample.
+4. **All dimensions.** Prove RC(n) for all n on the cylinders `Q↑Y`. By item 3 of §2, this proves Conjecture N at every depth.
 
 ## 5. What counts as a solution
 
-A construction of the terms in question 1 or 2, a proof of RC(3) or RC(n) for loop-free contexts, or a counterexample: a loop-free context (preferably a cylinder `Q↑Y`) with two parallel n-terms of equal strict image and no term between them. A reference to a published proof also counts.
+Any of the following counts:
+- explicit terms for question 1 or 2;
+- a proof of RC(3) or RC(n) for the cylinders, or for loop-free contexts;
+- a counterexample: a cylinder `Q↑Y`, or a loop-free context, with two parallel n-terms of equal strict image and no term between them;
+- a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
 - BMOSV, *Naturality for higher-dimensional path types*, [arXiv 2501.11620](https://arxiv.org/abs/2501.11620): depth ≤ 1. Its v3 says higher-depth cases are beyond the paper.
-- Benjamin–Markakis–Sarti, *Invertible cells in ω-categories*, [arXiv 2406.12127](https://arxiv.org/abs/2406.12127), and Benjamin–Champin–Markakis, ICaTT, [arXiv 2602.16602](https://arxiv.org/abs/2602.16602): every cell built here is a composite of coherences, hence invertible.
+- Benjamin–Markakis–Sarti, *Invertible cells in ω-categories*, [arXiv 2406.12127](https://arxiv.org/abs/2406.12127), including Lemma 36, the support lemma. ICaTT, [arXiv 2602.16602](https://arxiv.org/abs/2602.16602): composites of coherences are invertible.
 - Mikhail, *A type-theoretic definition of lax (∞,∞)-limits*, [arXiv 2412.13310](https://arxiv.org/abs/2412.13310), Thm 4.4: the contexts `Γ ⊗ D¹` for globular Γ, without the terms K.
-- Campion and Chanavat (above): the (∞,ω) analogue holds. Chanavat also proves that frame-acyclic molecules have essentially unique composites in (∞,n)-categories.
+- The (∞,ω) analogue:
+  - Campion's pasting theorem, [arXiv 2311.00200](https://arxiv.org/abs/2311.00200);
+  - Chanavat, [arXiv 2603.22242](https://arxiv.org/abs/2603.22242), Thm 3.17.
+  - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
-- Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs: from rewriting to higher categories* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): free 2-categories on 2-polygraphs as 2-paths modulo exchange; Squier-style coherence.
+- Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.

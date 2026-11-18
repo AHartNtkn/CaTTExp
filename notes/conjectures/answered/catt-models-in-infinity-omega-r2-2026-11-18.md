@@ -541,3 +541,56 @@ The strict side has relevant machinery: Ara–Lucas prove that the folk model st
 **Invertibility declarations.** A disk lifting problem produces a cell. If the syntax requires that cell to be invertible, the presentation must additionally encode inverse-and-witness data, use marked equivalence arities, or supply a theorem proving the required invertibility. Directed interchange generators should remain directed.
 
 Under these hypotheses, the enriched construction produces the analogue of \(R\), hence a strict-substitution \(S_L\). Strict support soundness supplies the strict interpretation, but does not by itself supply the enriched cellular presentation, the tensor lifting properties, or preservation of arity colimits. A presentation theorem would then require a reconstruction result beyond this construction—the directed counterpart of the unresolved counit problem in Q1.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, and conditional where the response says so.**
+- **Q2, factorisation part:** answered positively. S factors through coinductive completion, S ≃ (S j) Q. This is conditional on Ozornova–Rovelli–Walde (arXiv 2603.11005).
+- **Q1:** not answered. The response adds three things:
+  - an obstruction: the underived 𝓛_R is not relative;
+  - a partial positive result: S₀ preserves (∞,n)-level;
+  - a concrete necessary test for the counit.
+- **Q3:** answered conditionally, by an enriched lifting theorem plus a list of the extra data the syntax of L must supply.
+- **Still open:** the equivalence 𝓗_CaTT ≃ Cat^coind_ω.
+
+Step by step.
+
+1. **S inverts ∞-surjections (§1).** Correct, given the cited ORW results.
+   - For an 𝒜-fibration p, the map Φ_n of (1) is a Kan fibration whose target computes the homotopy pullback, since all presheaves are cofibrant and UY, UZ are fibrant.
+   - ∞-surjectivity means Φ_n is surjective on π₀. A Kan fibration that hits every component is surjective on vertices, so strict globular boundary lifts exist.
+   - Vertices of Map(B_n, UY) are parallel (n−1)-cells of the globular set n ↦ (UY)(D_n)₀ = S₀(Y)_n. So S₀(p) has the FHM trivial-fibration lifting property (arXiv 2511.09849, Def. 4.1.3), hence lies in W.
+   - A general map factors as a trivial cofibration followed by a fibration, and S₀ is relative.
+   - Applied to the completion unit, this gives S ≃ S j Q.
+   - **Not re-derived:** ORW Lemma 5.9, Prop. 5.29 and Prop. 5.30 / Cor. 5.31 (completion units are ∞-surjective; Q is the localisation at the ∞-surjections). I did not check those statements against the paper.
+
+2. **The ordinary adjunction 𝓛_R ⊣ S₀ (§2.1).** Correct: it is a coend into the full subcategory of models.
+
+3. **The underived 𝓛_R is not relative (§2.2).** Correct.
+   - For gaunt strict C, NC has unique J-fillers, so it carries a canonical algebraically fibrant structure and every map into it preserves fillers. Naturality of q over the strict interpretation gives S₀(NC) ≅ C as CaTT models.
+   - Hence π₀ Map(𝓛_R A, NC) ≅ Mod(CaTT)(A, C), naturally in A.
+   - For w : E → 1, if 𝓛_R(w) were an equivalence, then precomposition Mod(1, E) → Mod(E, E) would be a bijection. But its image consists of maps constant on objects, and E has two objects, so 1_E is missed.
+   - This strengthens round 1's raw-nerve obstruction. It concerns the underived functor only. It does not refute the counit on (∞,2)-objects, and the response says so.
+
+4. **S₀ preserves (∞,n)-level (§2.3).** Correct.
+   - An inductively invertible k-cell a of Y extends strictly to I_k = N(Σ^{k−1} I) → UY. Rezk completeness puts a in the component of a degenerate cell, and Map(I_k, UY) → Map(yD_k, UY) is a Kan fibration.
+   - The universal k-cell u of S₀(F I_k) maps to an identity under S₀(q) ∈ W. FHM weak equivalences reflect coinductive invertibility (arXiv 2406.13240 §3.1, not re-checked), so u is invertible, and so is its image a.
+   - So S₀ of an (∞,n)-category has all cells above n coinductively invertible.
+
+5. **The reconstruction test (§2.4).** Correct as a necessary condition. If ε_Y is an equivalence, then 𝒜(Y, NC) → Mod(S₀Y, C) is a bijection for every gaunt strict C. In particular, a non-constant strict CaTT map S₀(Y) → E with Y contractible would refute Q1 already for a space. The "equivalently" in round-2 Q1 was too strong: an ordinary counit theorem is not the same as essential surjectivity of a comparison of localisations.
+
+6. **Marked target (§3).** The distinction is correct. Marking the coinductive equivalences of C changes nothing. Localising at them gives QC (ORW Prop. 5.29). So a marked formulation must use the localised categories. Henry–Loubaton Prop. 4.58 covers strict ω-categories only.
+
+7. **Q3 (§4).** The enriched lifting theorem is correct and formal:
+   - the category 𝓔 of commuting squares over 𝓓 has trivial-fibration homs;
+   - cell attachments along cofibrations then lift;
+   - the result is an enriched functor, so (11) holds.
+   
+   The three listed gaps are real. The syntax of L must supply: arity colimits in the semantic category, the ordered tensor domains D^r ⊗ D^s (for example via a coloured operad), and invertibility declarations. Strict soundness of L does not supply them.
+
+**Consequences for E11.**
+- (S2) gains the factorisation S ≃ S̄ Q through coinductive completion. This is consistent with (S3).
+- Reconstruction (Q1) stays open. The underived 𝓛_R is ruled out as the inverse, and a concrete test via gaunt targets exists.
+- (S1): S₀ preserves finite categorical level.
+- The directed version has a conditional construction, with explicit missing syntax.
+
+Follow-up prompt: `outbox/catt-models-in-infinity-omega-r3.md` (round 3, unsent).

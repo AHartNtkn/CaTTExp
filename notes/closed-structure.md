@@ -988,25 +988,79 @@ So:
 - **Q2:** confirmed. A complete invariant must schedule structural events too.
 - **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
 
-**5. The axioms of 𝒢 do not fit the intended model; corrected setting 𝒢′.** *(Added 2026-11-18, after the verified r4 answer, `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`.)*
-
-*Obstruction (r4 §5).*
+**5. The r4 obstruction.** *(Added 2026-11-18, after the verified r4 answer, `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`.)*
 - Take strict ω-categories with the Gray tensor and one orientation of transformations, and let S = J ⊗ J.
 - S/J has an arrow v₀ → v₁, but J\S has none, since that arrow would need the reverse of the square γ.
-- So left closure corresponds to lax transformations and right closure to oplax ones. The two Φ's cannot both be isomorphisms of hom-categories of *one* 2-category with one orientation, which is what 𝒢 assumes.
-- The argument uses the model's unit; the unit-free syntax has none, but the model does.
+- So in ωCat itself, left closure matches lax transformations and right closure matches oplax ones. The two Φ's are not both isomorphisms of hom-categories of one 2-category with one orientation.
 
-*Corrected setting.* Let 𝒢′ be 𝒢 with the right closure taken in the 2-cell-reversed hom:
-
-```
-Φ_L : 𝒢′(A⊗B, C) ≅ 𝒢′(B, A\C),      Φ_R : 𝒢′(B⊗A, C) ≅ 𝒢′(B, C/A)^co,
-```
-
-each strictly natural in the context variable. The double-category variant asked about in r5 Q1 is the other natural candidate. 𝒢′ only changes the 2-cells that Φ_R transports. So:
-- **1-cell results survive.** Item 4 (𝓟, evaluation not central) holds verbatim, since 𝓟 has codiscrete homs and every orientation condition holds there. So χ_{g,ev} and χ_{ev,ev′} still join distinct 1-cells in 𝒢′. The same goes for the word invariant W and for any model with chaotic homs.
-- **Results about directed 2-cells must be re-checked in 𝒢′.** These are the emptiness of reverse homs (round 2, item 6), the structural loops H and H_L (r3, r4), and Q1 forward uniqueness. A 2-cell built through Φ_R now runs the other way. Whether H and H_L survive is r5 Q1.
+What this means for 𝒢, and the corrected rule set, are in **F.7**. A first version of this item proposed taking Φ_R into the 2-cell-reversed hom 𝒢(B, C/A)^co. **That proposal is withdrawn.** Oplax transformations are maps D¹ ⊗ X → Y, not reversed lax ones (X ⊗ D¹ → Y), so reversing 2-cells does not turn one kind into the other.
 
 *Correction.* r3 known item 11's last bullet said that separation needs non-commuting curryings. That is false. r4's model 𝒟 has strictly equal mixed curryings and still separates H, and left closure alone separates H_L.
+
+## F.7 Orientation of the closed structure: audit and corrected rules (D17)
+
+*Added 2026-11-18.* This section is prompted by r4 §5 (F.6 item 5).
+
+### F.7.1 Two readings of "monoidal biclosed with the Gray tensor"
+
+**(I) Internal.** M is a monoid in (Cat_ω, ⊗_Gray), i.e. a Gray monoid, and its objects are formulas.
+- M ⊗ M → M is a functor, so both A ⊗ – and – ⊗ A are ω-functors M → M.
+- Biclosed means both have right adjoints as ω-functors. The adjunctions then give isomorphisms of hom ω-categories on *both* sides: M(A⊗B, C) ≅ M(B, A\C) and M(B⊗A, C) ≅ M(B, C/A).
+- Interchangers χ_{f,g} of 1-cells are genuine non-identity 2-cells of M.
+- This is the structure 𝒢 of F.5 and F.6 and of the r1–r4 prompts, and **its axioms are correct for this reading**.
+- r4 §5 shows that ωCat itself, with lax 2-cells, is *not* an instance: there, – ⊗ A is not a 2-functor on lax cells, since it sends X ⊗ D¹ to X ⊗ D¹ ⊗ A.
+
+**(II) Ambient.** This is the project's two-tier L ambient ∞Cat_lax (`conventions.md` §3–4). Objects are ω-categories, 1-cells are functors, and the hom-objects are Fun^lax. The ambient is Gray-gauche enriched.
+- ⊗ of functors is strictly functorial in both variables, so 1-cell interchangers are identities (r4 Q5).
+- Closure is one-sided at each orientation (`conventions.md` §4, AM):
+  ```
+  Hom(A⊗B, C) ≅ Hom(B, Hom_lax(A, C)) ≅ Hom(A, Hom_oplax(B, C)).
+  ```
+  Left currying is an isomorphism of *lax*-cell homs, and right currying of *oplax*-cell homs.
+- The Gray content (schedules) lives inside the hom-objects, not in 1-cell interchange.
+
+**The defect.** Several notes say "monoidal biclosed (∞,ω)-category with the Gray tensor" without choosing a reading. They then use (I)'s symmetric hom-isomorphisms while motivating the work by (II)'s type formers.
+
+### F.7.2 Audit
+
+| Item | Uses | Affected? |
+|---|---|---|
+| PL1 / D9 (Theorem A, A4, UL⊗) | 1-categorical biclosed monoidal category | **No.** Both readings have the same underlying biclosed 1-category; (II)'s hom-*sets* are isomorphic on both sides. |
+| D10 (Theorems B, B6, B8, UL_I\*) | same, with unit | **No**, for the same reason. |
+| D12 (cartesian closed, Rev/Dir) | symmetric cartesian product, pseudo cells | **No.** No Gray tensor is involved. |
+| `conventions.md`, `internal-hom.md` §5, E.2/E.4 (B ⊗ Θ rule, mirror via the oplax hom) | reading (II), one orientation per side | **No.** Already one-sided and correct; these are the reference for the fix. |
+| `planar-pasting-types.md` §4 obstruction | mapping spaces | **No**, at mapping-space level. |
+| `planar-pasting-types.md` §4 Question PL-ω, §4.1, F.1–F.4 (Gray criterion, first test) | "free monoidal biclosed (∞,ω)-category"; t₁ ⇒ t₂ as a 1-cell interchanger | **Wording.** The test's cell is a 1-cell interchanger, so it is reading (I). In (II) the analogous t₁ and t₂ are equal functors, and the cell appears one level up, in Fun^lax. PL-ω must name its reading. |
+| F.5–F.6, the r1–r4 prompts and answers (𝒢) | reading (I) | **No** for (I). These results are about (I). They do **not** transfer to (II) without the rules below. |
+| E.3 (D7, both factors arbitrary via PL-ω) | wants (II)'s type formers | **Yes.** It needs the reading-(II) rule set below, not 𝒢. |
+
+### F.7.3 Corrected rule set for reading (II): "Gray-gauche biclosed"
+
+This is a draft. The data:
+- **Underlying 1-category.** Objects and 1-cells, with ⊗ strictly associative and strictly functorial in both variables. There are no 1-cell interchangers.
+- **Two families of 2-cells on the same 1-cells:**
+  - lax cells 𝒢^λ(X, Y), the transformations X ⊗ D¹ → Y;
+  - oplax cells 𝒢^ο(X, Y), the transformations D¹ ⊗ X → Y.
+
+  Each family forms a 2-category with these 1-cells. Pseudo cells, those invertible in both, embed in both families.
+- **Whiskering by tensoring:**
+  - A ⊗ – : 𝒢^λ → 𝒢^λ is a 2-functor, but not on 𝒢^ο;
+  - – ⊗ B : 𝒢^ο → 𝒢^ο is a 2-functor, but not on 𝒢^λ;
+  - tensoring a lax cell on the right, or an oplax cell on the left, gives a *mixed-shape* cell, which is not a cell of either family. Its type is the Gray cylinder of `gray-cylinders.md`.
+- **Left closure:** Φ_L : 𝒢^λ(A⊗B, C) ≅ 𝒢^λ(B, A\C), with A\C = Hom_lax(A, C) in AM's naming.
+- **Right closure:** Φ_R : 𝒢^ο(B⊗A, C) ≅ 𝒢^ο(B, C/A), with C/A = Hom_oplax(A, C).
+- **Naturality:** both are strictly natural in every variable at the level of 1-cells. There are no interchangers to be lax about.
+- **Higher cells:** the lax and oplax cells at dimension k are maps X ⊗ Dᵏ → Y and Dᵏ ⊗ X → Y. Higher cells of mixed shape are the hom-objects of `internal-hom.md` §5, with the lax/oplax duality §5.6 relating the two sides.
+
+**Consequences.**
+- **Pasting types for (II).** A pasting type for reading (II) must record, for each cell, which side its time direction sits on: X ⊗ Dᵏ versus Dᵏ ⊗ X. This is the "time as a tensor position" of PL-ω, now with a side.
+- **Schedules move into the homs.** The schedule categories S(P) of F.5 reappear inside hom-objects, as the cells of Fun^lax(Δ, –) for Gray contexts Δ, not as 1-cell interchange. F.5's monoidal-core result transfers on that reading: the cells of ν(I^⊗n) between its extreme vertices.
+- **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
+
+**Open (D17).**
+- (a) Fix PL-ω's reading in `planar-pasting-types.md` §4 and in F.1–F.4. The project's use of PL-ω is the type formers of (II).
+- (b) Check that the B ⊗ Θ rule (E.2) and its mirror are exactly the reading-(II) rules above with one factor representable.
+- (c) Decide whether reading (I) is still needed. If it is not, D11's r5 questions become reading-(I) side questions and should say so.
 
 ---
 

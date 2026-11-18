@@ -471,27 +471,37 @@ With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (clos
    - A coh-rule instance has the form u′[τ] ≡ v′[τ] with u′, v′ : S. A term whose type is S[τ] need not be such an instance; the closed-term counterexample above is one. Ť_{u′} and Ť_{v′} both have type T_S, so they are ≡, and then apply τ.
 4. **β for tuples.** ev(p, Ť_σ) ≡ the right-nested tensor of σ's terms with y. It is proved like lemma 1, and is needed for prefixes of several closed terms.
 
-**The ξ-rule, written out.** ≡ is the least congruence closed under term and type substitution that contains the coh-rule instances. So it is the equivalence closure of one-step rewriting C[l[ρ]] ↦ C[r[ρ]], where C is a one-hole context, l ≡ r is a coh-rule instance (l = l′[τ], r = r′[τ] with l′, r′ : S UP\*), and ρ is a term substitution. It suffices that [x] respects one step. Induct on C.
-- **The redex does not contain x.**
-  - If it sits in a closed-prefix slot, use lemma 4 (Ť respects ≡).
-  - Otherwise it sits in an argument that bracket abstraction copies unchanged, and congruence applies.
-- **The redex contains x, and C is a context around it.** Each clause of [x] applies [x] to the argument containing x, so this reduces to C = hole.
-- **C = hole.** Let z be the variable of l whose ρ-image s contains x. ρ sends the variables left of z to closed terms c⃗, and the variables right of z to x-free terms ρ_>. Three lemmas finish the case.
-  - **Lemma A (right substitutions commute, syntactically).** [x](t[q/y]) = ([x]t)[q/y] for y right of x. The same clause of [x] fires on both sides.
-  - **Lemma B (abstraction through a leftmost variable).** [x](t[s/z]) ≡ coh_K([x]s, [z]t) when z is leftmost in t. Induct on t:
-    - First-argument clause: by the induction hypothesis and K-associativity.
-    - Prefix clause: lemma 4 and β of Ť.
-  - **Lemma D (closed prefix).** For t with variables w⃗, z, γ⃗ in this order and closed c⃗,
+**Lemma D has a gap; the revised abstraction below avoids it.** The LIT thread's check of Lemma D (2026-11-18) found a gap in its prefix case. There, the right-hand side meets names Ť_{[w⃗′]tᵢ} of *curried* closed subterms. Relating these to Ť_{tᵢ} needs a further lemma, and that lemma's inductive step compares T_R with T_{R^c}. The two are not interdefinable by a generic coh: (B₁⊗B₂⊗Y)\(C⊗Y) ⊢ (B₂⊗Y)\((B₁\C)⊗Y) is not planar-provable. The fix is to stop using syntactic bracket abstraction in Prop. B7 at all.
 
-    ```
-    [z](t[c⃗/w⃗])  ≡  E(Ť_{c⃗}[Y := Z], [z][w_k]…[w₁]t).
-    ```
+**Revised abstraction.** For t : X, Γ′ ⊢ A, with x the leftmost variable and γ⃗ the rest, set
 
-    Here E is the coh over a : Z\(W⃗⊗Z), h : Z\(W_k\…(W₁\A)) ⊢ Z\A. Its normal form is Z, Z\(W⃗⊗Z), Z\(W_k\…) ⊢ A, which is unit-free L-pasting. Lemma D is proved by induction on t, using lemmas 1 and 2 and β for tuples.
+```
+[x]t  :=  coh_F(γ⃗, Ť_t[Y := I]),   F = (Γ′, (X⊗Γ′⊗I)\(A⊗I) ⊢ X\A),
+```
 
-  Then [x](l[ρ]) ≡ coh_K([x]s, E(Ť_{c⃗}, [z][w⃗]l))[ρ_>], and likewise for r. The iterated abstractions [z][w⃗]l′ and [z][w⃗]r′ both have the fully curried type of S, which is UP\* with the same normal form. So they are ≡, and τ and ρ_> preserve ≡.
+with Γ′ generalized to fresh atoms. F is UP\*: its normal form is X, Γ′, (X⊗Γ′)\A ⊢ A. Nothing about t enters except through Ť_t. Then:
+- **ξ is immediate.** t ≡ t′ ⇒ Ť_t ≡ Ť_{t′} by lemma 4 ⇒ Ť_t[I] ≡ Ť_{t′}[I] (closure under type substitution) ⇒ [x]t ≡ [x]t′.
+- **β.**
+  1. ev(x, coh_F(γ⃗, n)) ≡ ρ(ev(m(x, γ⃗, u), n)), where u = coh_{⊢ I} and ρ = coh_{Z⊗I ⊢ Z}. This is one coh equation over x, γ⃗ and n, at the UP\* type X, Γ′, (X⊗Γ′⊗I)\(A⊗I) ⊢ A.
+  2. By lemma 1 at Y := I, ev(m(x, γ⃗, u), Ť_t[I]) ≡ m(t, u).
+  3. ρ(m(t, u)) ≡ t holds at type A ⊢ A.
+- **η.** [y]ev(y, k) ≡ k for y ∉ k.
+  1. By lemma 1 at Y := I, k ≡ ρ(ev(m(γ⃗, u), Ť_k[I])).
+  2. Ť_{ev(y,k)}[I] is a K-chain of Ť_y, L_Y(Ť_k[I]) and T_ev.
+  3. With n := Ť_k[I] abstracted to a variable, both sides of η are coh composites over γ⃗ and n, at the type Γ, (Γ⊗I)\((Y\Z)⊗I) ⊢ Y\Z. Its normal form is Y, Γ, Γ\(Y\Z) ⊢ Z, which is L-pasting, so the type is UP\*.
 
-*Status.* Lemmas 1–4 are independently checked. The ξ-rule is written out above, and Lemmas A and B are routine. Lemma D carries the remaining bookkeeping and has not been independently checked. D10b closes once Lemma D is checked.
+So k ↦ ev(y, k) is a bijection in T, with inverse [y]: (R\) holds, and (R/) holds by the mirror construction with Ť′. Only lemmas 1 and 4 are used, and those are independently checked. Lemmas A, B and D and the one-step-rewriting argument are no longer needed. `scripts/d10a/abstraction_types.py` checks the types F and U and their mirrors for |Γ′| ≤ 4 (no failures). It rejects a control in which Γ′ and X are in the wrong order.
+
+**(R⊗) and (R_I).** Let n_h := [y₁]…[y_r]h be the closed name of a term h, so that h ≡ ev(y_r, … ev(y₁, n_h)) by β, with the variables in the order the iterated abstraction needs.
+- **(R⊗) injectivity.** Suppose h ∘ m ≡ h′ ∘ m.
+  - Abstract the variables a, b and the context on both sides. By ξ the results are ≡.
+  - [b][a](ev(m(a, b), n)) ≡ Q(n), for the coh Q : (A⊗B)\C ⊢ B\(A\C). Both sides become ≡ after two applications of ev, by a coh equation at A, B, (A⊗B)\C ⊢ C. Then use injectivity of (R\) twice.
+  - So Q(n_h) ≡ Q(n_{h′}). Q has a coh inverse, so n_h ≡ n_{h′}, and then h ≡ h′.
+- **(R⊗) surjectivity.** h′ := ev(p, Q⁻¹([b][a]h)). Then h′ ∘ m ≡ h by β.
+- **(R_I).** The same, with the coh I\C ⊢ C in place of Q.
+- **Contexts Γ and Δ.** Abstract them too; the coh's needed are unit-free L-pasting.
+
+**Theorem B8 status.** The proof is complete at paper level. Lemmas 1–4 are independently checked. The revised abstraction argument above is new and short, and it uses only lemmas 1 and 4 and coh equations whose types are checked by script. It needs one independent read before D10b is closed.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

@@ -424,3 +424,142 @@ split-top Γ k (v ∷ w) (hv , ht) (nv , nw) pos with hd (homAt Γ k) ==ℕ 0 in
   nz-pos : ∀ n → (n ==ℕ 0) ≡ false → T (0 <ℕ n)
   nz-pos zero    ()
   nz-pos (suc n) _ = tt
+
+------------------------------------------------------------------------
+-- Counting and membership in bags.
+
+data _⊎_ (A B : Set) : Set where
+  inj₁ : A → A ⊎ B
+  inj₂ : B → A ⊎ B
+
+Pos : Nat → Set
+Pos zero    = ⊥
+Pos (suc _) = ⊤
+
+T-true : ∀ {b} → T b → b ≡ true
+T-true {true} _ = refl
+
+count-∈ : ∀ a X → Pos (count a X) → a ∈ X
+count-∈ a []      ()
+count-∈ a (x ∷ X) p with eqT a x in e
+... | true  = subst (λ z → a ∈ (z ∷ X)) (eqT-sound a x (subst T (sym e) tt)) hd∈
+... | false = tl∈ (count-∈ a X p)
+
+∈-++ : ∀ {A : Set} {a : A} xs ys → a ∈ (xs ++ ys) → (a ∈ xs) ⊎ (a ∈ ys)
+∈-++ []       ys m       = inj₂ m
+∈-++ (x ∷ xs) ys hd∈     = inj₁ hd∈
+∈-++ (x ∷ xs) ys (tl∈ m) with ∈-++ xs ys m
+... | inj₁ p = inj₁ (tl∈ p)
+... | inj₂ q = inj₂ q
+
+∈-cm : ∀ {a} g X → a ∈ cm g X → Σ Tuple λ x → (x ∈ X) × (a ∈ g x)
+∈-cm g []      ()
+∈-cm g (x ∷ X) m with ∈-++ (g x) (cm g X) m
+... | inj₁ p = x , hd∈ , p
+... | inj₂ q with ∈-cm g X q
+...   | y , my , py = y , tl∈ my , py
+
+consP : Tuple → Bag → Bag
+consP q = cm (λ u → (q ++ u) ∷ [])
+
+∈-consP : ∀ {a} q X → a ∈ consP q X → Σ Tuple λ u → (a ≡ q ++ u) × (u ∈ X)
+∈-consP q X m with ∈-cm (λ u → (q ++ u) ∷ []) X m
+... | u , mu , hd∈ = u , refl , mu
+... | u , mu , tl∈ ()
+
+∈-consB : ∀ {a} v Y → a ∈ consB v Y → Σ Tuple λ u → (a ≡ v ∷ u)
+∈-consB v Y m with ∈-cm (λ u → (v ∷ u) ∷ []) Y m
+... | u , _ , hd∈ = u , refl
+... | u , _ , tl∈ ()
+
+eqT-++ : ∀ p x u → eqT (p ++ x) (p ++ u) ≡ eqT x u
+eqT-++ []      x u = refl
+eqT-++ (a ∷ p) x u = trans (cong (_∧ eqT (p ++ x) (p ++ u)) (T-true (==ℕ-refl a))) (eqT-++ p x u)
+
+count-consP : ∀ p x X → count (p ++ x) (consP p X) ≡ count x X
+count-consP p x []      = refl
+count-consP p x (u ∷ X) =
+  trans (cong (λ b → if b then suc (count (p ++ x) (consP p X)) else count (p ++ x) (consP p X)) (eqT-++ p x u))
+        (go (eqT x u))
+  where
+  go : ∀ b → (if b then suc (count (p ++ x) (consP p X)) else count (p ++ x) (consP p X)) ≡
+             (if b then suc (count x X) else count x X)
+  go true  = cong suc (count-consP p x X)
+  go false = count-consP p x X
+
+ne→false : ∀ a v → ¬ (a ≡ v) → (a ==ℕ v) ≡ false
+ne→false a v ne with a ==ℕ v in e
+... | true  = ⊥-elim (ne (==→≡ a v e))
+... | false = refl
+
+count-consB-ne : ∀ a v x Y → ¬ (a ≡ v) → count (a ∷ x) (consB v Y) ≡ 0
+count-consB-ne a v x []      ne = refl
+count-consB-ne a v x (u ∷ Y) ne =
+  trans (cong (λ b → if b ∧ eqT x u then suc (count (a ∷ x) (consB v Y)) else count (a ∷ x) (consB v Y))
+              (ne→false a v ne))
+        (count-consB-ne a v x Y ne)
+
+++-inj-len : ∀ (p q x y : Tuple) → lengthN p ≡ lengthN q → p ++ x ≡ q ++ y → (p ≡ q) × (x ≡ y)
+++-inj-len []      []      x y _ e = refl , e
+++-inj-len []      (_ ∷ _) x y () _
+++-inj-len (_ ∷ _) []      x y () _
+++-inj-len (a ∷ p) (b ∷ q) x y l e with ++-inj-len p q x y (suc-inj l) (cong (dropH a) e)
+  where
+  dropH : Nat → Tuple → Tuple
+  dropH _ []      = []
+  dropH _ (_ ∷ t) = t
+... | refl , ex = cong (_∷ p) (cong (headD a) e) , ex
+  where
+  headD : Nat → Tuple → Nat
+  headD z []      = z
+  headD _ (h ∷ _) = h
+
+-- Σ over a bag where every summand counts one fixed element.
+cm-delta : ∀ {P : Tuple → Set} (f w : Tuple) (g : Tuple → Bag) (X : Bag) → All P X →
+           (∀ z → P z → count f (g z) ≡ (if eqT w z then 1 else 0)) →
+           count f (cm g X) ≡ count w X
+cm-delta f w g []      _        _ = refl
+cm-delta f w g (x ∷ X) (p , qs) h =
+  trans (count-++ f (g x) (cm g X))
+        (trans (cong₂ _+_ (h x p) (cm-delta f w g X qs h)) (go (eqT w x)))
+  where
+  go : ∀ b → (if b then 1 else 0) + count w X ≡ (if b then suc (count w X) else count w X)
+  go true  = refl
+  go false = refl
+
+-- Only the summands that hit f matter.
+cm-filter : ∀ f g X → count f (cm g X) ≡ count f (cm g (filter (λ z → not (count f (g z) ==ℕ 0)) X))
+cm-filter f g []      = refl
+cm-filter f g (x ∷ X) = trans (count-++ f (g x) (cm g X)) (go (count f (g x)) refl)
+  where
+  Fx = filter (λ z → not (count f (g z) ==ℕ 0)) X
+  go : ∀ n → count f (g x) ≡ n →
+       n + count f (cm g X) ≡ count f (cm g (if not (n ==ℕ 0) then x ∷ Fx else Fx))
+  go zero    e = cm-filter f g X
+  go (suc n) e = trans (cong₂ _+_ (sym e) (cm-filter f g X)) (sym (count-++ f (g x) (cm g Fx)))
+
+count-filter-in : ∀ Q a X → T (Q a) → count a (filter Q X) ≡ count a X
+count-filter-in Q a []      q = refl
+count-filter-in Q a (x ∷ X) q with eqT a x in e
+... | true with eqT-sound a x (subst T (sym e) tt)
+...   | refl rewrite T-true q | e = cong suc (count-filter-in Q a X q)
+count-filter-in Q a (x ∷ X) q | false with Q x
+... | true  rewrite e = count-filter-in Q a X q
+... | false = count-filter-in Q a X q
+
+count-filter-out : ∀ Q a X → Q a ≡ false → count a (filter Q X) ≡ 0
+count-filter-out Q a []      q = refl
+count-filter-out Q a (x ∷ X) q with eqT a x in e
+... | true with eqT-sound a x (subst T (sym e) tt)
+...   | refl rewrite q = count-filter-out Q a X q
+count-filter-out Q a (x ∷ X) q | false with Q x
+... | true  rewrite e = count-filter-out Q a X q
+... | false = count-filter-out Q a X q
+
+filter-≈ : ∀ Q X Y → (∀ z → T (Q z) → count z X ≡ count z Y) → filter Q X ≈ filter Q Y
+filter-≈ Q X Y h = mk≈ λ a → go a (Q a) refl
+  where
+  go : ∀ a b → Q a ≡ b → count a (filter Q X) ≡ count a (filter Q Y)
+  go a true  e = trans (count-filter-in Q a X (subst T (sym e) tt))
+                  (trans (h a (subst T (sym e) tt)) (sym (count-filter-in Q a Y (subst T (sym e) tt))))
+  go a false e = trans (count-filter-out Q a X e) (sym (count-filter-out Q a Y e))

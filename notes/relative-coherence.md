@@ -1,6 +1,6 @@
 # Relative coherence in CaTT: dimension 2, and what it gives for Gray contexts and naturality
 
-*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/outbox/naturality-arbitrary-depth.md` and `conjectures/outbox/gray-contexts.md`.*
+*Thread "Prove naturality and Gray context conjectures", 2026-11-18. Paper proofs, not yet independently checked. They extend the verified relative ladder theorem (`conjectures/naturality-arbitrary-depth.md`, researcher response and verification) and reuse its steps wherever they apply unchanged. The open remainder is stated for researchers in `conjectures/answered/naturality-arbitrary-depth-2026-11-18.md` and `conjectures/outbox/gray-contexts.md`.*
 
 Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (dimension ≤ 2 closed; rest reduced), D3, D3a, D4, C2 (progress).
 
@@ -119,7 +119,7 @@ The definitions are those of `conjectures/gray-contexts-in-catt.md` §1–§2.
 ### 3.1 G(2) (closes D1)
 
 Let U be a 2-molecule presented in CaTT.
-- **Uniqueness.** Let t be a U-composite. Its strict image is a strict 2-cell `∂⁻U ⇒ ∂⁺U` of `F(U)`, represented by a 2-path. That 2-path uses each 2-cell of U exactly once. Its 2-chain c (counting uses) satisfies `∂c = [∂⁺U] − [∂⁻U]`, and the 2-cycles of a molecule are 0: molecules are contractible, so `Z₂ = H₂ = 0` for a 2-dimensional regular complex **[conj, G1 check: no exact citation located yet; the induction on pastings is the self-contained route and should be written out here]**. So c is the sum of all 2-cells.
+- **Uniqueness.** Let t be a U-composite. Its strict image is a strict 2-cell `∂⁻U ⇒ ∂⁺U` of `F(U)`, represented by a 2-path. That 2-path uses each 2-cell of U exactly once. Its 2-chain c (counting uses) satisfies `∂c = [∂⁺U] − [∂⁻U]`, and the 2-cycles of a molecule are 0: molecules are contractible, so `Z₂ = H₂ = 0` for a 2-dimensional regular complex (no general citation located; for regular 2-molecules this is proved directly by the verified referee argument in `conjectures/gray-contexts-in-catt.md`, verification §2.4: `∂₂` is injective, by taking a flow-minimal face with non-zero coefficient and one of its input edges). So c is the sum of all 2-cells.
   - A 2-path that uses each 2-cell once is a layering. Layerings of a frame-acyclic molecule correspond to linear extensions of a partial order (Chanavat, arXiv 2603.22242, Prop. 2.18).
   - Any two linear extensions are connected by adjacent transpositions of incomparable elements.
   - Two incomparable consecutive 2-cells in a 2-dimensional layering sit side by side, so the transposition is an exchange move.
@@ -156,7 +156,11 @@ The definitions are those of `conjectures/naturality-arbitrary-depth.md` §2–�
 
 It respects boundaries, because the complement of Y is down-closed and the omitted factors of `a_x, b_x` are exactly the generators sent to identities.
 
-By induction on terms, `π(t↑) = collapse(e ⊗ π(t))` for every term t whose lift is built from fillers with this property. Hence, for `c = coh_{Q,B}[id]` of dimension n, the strict cell `collapse(e ⊗ π(c))` goes from `π(a_c)` to `π(b_c)`.
+**Invariant.** `π(t↑) = collapse(e ⊗ π(t))` for every term t. It holds for variables by definition. For `t = coh[γ]` it follows by substitution, provided every filler K satisfies `π(K) = collapse(e ⊗ π(c))`. Fillers built as in Proposition R do:
+- For a **coherence** c of dimension n, the arity has dimension ≤ n−1, so `Q↑Y` has dimension ≤ n while K is an (n+1)-cell. Strict cells above the dimension of the computad are identities, so `π(K)` is an identity. So is `e ⊗ π(c) = e ⊗ id = id`.
+- For a **composition** c, `π(K)` is the composite of the layers, because the connecting cells are coherences with identity strict image, and that composite is `collapse(e ⊗ π(c))` by construction.
+
+The lower-dimensional instances of the invariant are what make `π(a_c)` and `π(b_c)` computable. (This was left implicit in the first version; the independent check asked for it to be stated.) Hence, for `c = coh_{Q,B}[id]` of dimension n, the strict cell `collapse(e ⊗ π(c))` goes from `π(a_c)` to `π(b_c)`.
 
 **Proposition R.** Suppose RC(n) holds for `Q↑Y`. Then N holds for c, i.e. `a_c → b_c` is inhabited, and the filler K can be chosen with `π(K) = collapse(e ⊗ π(c))`.
 
@@ -240,7 +244,7 @@ The layers are `Γ, Γ′`, then `P, P′, M` for n = 2, and in general 2n+1 lay
 
 ## 7. Dimension 3: why loop-freeness enters
 
-**RC(3) fails without loop-freeness (sketch).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the braiding of `Ω²S²` at that generator, which is a non-zero element of π₃(S²) **[conj, G1 check]**: π₃(S²) ≅ ℤ is generated by the Hopf map η and the Whitehead square is [ι₂, ι₂] = ±2η, so either candidate (η or the Whitehead square) is non-zero; which one the Eckmann–Hilton cell represents is not checked, and the argument only needs non-zero. A 4-cell would give a null-homotopy. *Two claims are recalled and not checked: that fundamental ω-groupoids of spaces are models of CaTT, and the identification of the class.*
+**RC(3) fails without loop-freeness (sketch; checked in outline by the literature thread).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the self-braiding at that generator, a non-zero element of π₃(S²) ≅ ℤ **[conj, G1 check]**. The candidates are η and the Whitehead square `[ι₂, ι₂] = ±2η`; both are non-zero, and the argument needs only that. A 4-cell would make that class null. *Two claims still need citations before the "sketch" label can go: (a) the fundamental ω-groupoid of S² is a model of CaTT (Grothendieck–Maltsiniotis; Ara); (b) which of the two classes the Eckmann–Hilton term represents.*
 
 So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the molecules are loop-free, and for them RC holds in (∞,ω)-categorical semantics (Campion arXiv 2311.00205, Cor. 3.5; Chanavat arXiv 2603.22242, Thm 3.29). Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
 
@@ -251,9 +255,39 @@ So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the
 - What fails is the analogue of Lemma P: runs of 3-cells with no 3-variable, between 2-terms with equal strict image, in a 2-dimensional context that is not a pasting context. Such runs need not pull back to any pasting context. The natural attack is a Squier-style critical branching analysis. The hard branchings pair a 3-cell that moves a 2-generator F with a reassociation that splits F's boundary composite (e.g. `f⁻ ∗₀ y↑` in the lax square), and no pasting context contains both.
 - Smallest instance: RC(3) for the lax square, question 1 of both outbox prompts.
 
+### 7.1 A reduction of RC(3) to coherent normalization (progress, 2026-11-18)
+
+Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gives, for every 2-term P, a normal form `N(P)` and a 3-cell `ν_P : P ⇛ N(P)` built from coherences. Its inverse `ν_P⁻¹` exists, with cancellation 4-cells, because coherence cells are invertible (Benjamin–Markakis–Sarti). Call a 3-cell **basic** if it is `coh_{R, u → u′}[δ]` with R a pasting context of dimension ≤ 2 (so u, u′ are full parallel 2-terms over R). A **whiskered basic cell** is a basic cell composed with 2-terms by `∗₁` and with 1-terms by `∗₀`.
+
+**Proposition (reduction).** RC(3) holds for Γ provided:
+
+> **(CN) coherent normalization.** For every whiskered basic cell `b : P₁ ⇛ P₂` in Γ, the 3-terms `ν_{P₁}` and `b ∗₂ ν_{P₂}` (both `P₁ ⇛ N`) are connected by a 4-term.
+
+*Proof.*
+- Sequentialization works in dimension 3 exactly as in Step 2 of Theorem A. Every arity is a pasting context and can be layered, and binary composites are flattened by interchange coherences over pasting contexts. So every 3-term `T : P ⇛ Q` is connected by 4-cells to a vertical composite `b₁ ∗₂ ⋯ ∗₂ b_k` of whiskered basic cells. Γ has no 3-variables, so no other factor occurs.
+- By (CN), each `bᵢ` is connected to `ν_{P_{i−1}} ∗₂ ν_{P_i}⁻¹`.
+- Telescoping with the cancellation 4-cells gives `T ⇛ ν_P ∗₂ ν_Q⁻¹`.
+- So any two parallel 3-terms are connected. ∎
+
+**Where (CN) is hard.** Suppose the cells of `δ` avoid the 2-generators of Γ, or contain them only as whole arguments, i.e. a 2-variable of R is sent to a normal form. Then both 3-terms of (CN) are obtained by substitution from 3-terms over one pasting context, built from R by subdividing the 1-variables along the paths of their images. The coherence rule there gives the 4-cell. *(Sketch; not yet written as a general lemma.)* The remaining case is a basic cell whose arity separates the composite boundary of a 2-generator. In S, an example is an associator moving `v_y` relative to `f⁻` inside the source `f⁻ ∗₀ v_y` of F, whiskered next to a column that contains F. There, `ν` treats `f⁻ ∗₀ v_y` as one abstracted edge `z⁻`, while b splits it, and no pasting context contains both. This is the Squier-style critical branching described above, now isolated as the single family that must be closed.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).
 - C1b, mechanical check in the Agda checker (now including Theorem A's exchange step on a small instance): NGC.
 - Mikhail's printed-rule defects: ledger D3b, owned by LIM-F.
 - Agda for Gray contexts (D5) is unchanged.
+
+## 9. Machine checks (C1b)
+
+`tools/` contains a Python implementation of Theorem A as a term generator (`rc2.py`), for contexts with an acyclic 1-skeleton. It covers sequentialization, Lemma G, Lemma P, and exchange (Lemma E). It emits Agda modules that ask the certified checker `CaTTExp.Check` to infer each generated term's type, and assert by `refl` that the inferred type is the stated one. The Python side is untrusted. See `tools/README.md`.
+
+| Generated module | Checks | Result |
+|---|---|---|
+| `UnitorNaturality` | the left unitor's naturality 3-cell at depth 2 over the lax square (§6 "partial progress" case of the N file), via Theorem A | typechecks (~50 s) |
+| `ExchangeTwoBigons` | Theorem A with one exchange move (two side-by-side bigons) | typechecks (~3 min) |
+| `AssociatorNaturality` | the associator's naturality 3-cell over the fully selected 3-chain: the ladder theorem's example, C1b | generated (5121 definitions, about 1 MB); Agda check in progress, uses about 10 GB |
+
+There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
+
+The generator does not implement positional pull-back for 1-skeleta with cycles, so Eckmann–Hilton is not generated. The proof covers that case.

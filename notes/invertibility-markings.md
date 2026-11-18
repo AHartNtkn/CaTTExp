@@ -316,7 +316,7 @@ For a composite of two cells across objects, the two layerings are ∂⁻ and �
 
 ## 7. E6: an attempt on the uniform construction
 
-*Problem: `conjectures/strict-lax-interchange-at-every-level.md`, corrected (boundary-adjusted) reading. The researcher-ready version is `conjectures/outbox/directed-interchange-every-level.md`; this section's Observation 7.1 is its (K5), and the case below is its Q2.*
+*Problem: `conjectures/strict-lax-interchange-at-every-level.md`, corrected (boundary-adjusted) reading. The prompt, answered 2026-11-18, is `conjectures/answered/directed-interchange-every-level-2026-11-18.md`; this section's Observation 7.1 is its (K5), and the case below is its Q2.*
 
 **Observation 7.1 (no single-complex presentation) [proved].** Let K be any augmented directed complex with basis containing 2-cells α : f ⇒ f′ and β : g ⇒ g′ with f, f′ : x → y and g, g′ : y → z. In ν(K), the cells (α ▷ g) ; (f′ ◁ β) and (f ◁ β) ; (α ▷ g′) have the same table: top chain α + β, 1-chains f + g and f′ + g′, 0-chains x and z. So they are equal, and interchange along 0-cells is strict in ν(K).
 

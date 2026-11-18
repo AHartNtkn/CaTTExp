@@ -283,14 +283,17 @@ module InsideAHom where
   _ : is-just (infer E.VComp E.vcomp) ≡ true
   _ = refl
 
-  -- …and the negative ones are still rejected.
-  _ : is-just (infer E.D₁ (coh E.D₁ (arr ⋆ (v 1) (v 0)) (idₛ E.D₁))) ≡ false
+  -- …and the negative ones are still excluded: their side conditions
+  -- are false, so no derivation of these cohs exists (not merely a
+  -- checker rejection).
+  _ : graySide E.D₁ ⋆ (v 1) (v 0) ≡ false
   _ = refl
-  _ : is-just (infer E.Comp₂ (coh E.Comp₂ (arr ⋆ (v 0) (v 1)) (idₛ E.Comp₂))) ≡ false
+  _ : graySide E.Comp₂ ⋆ (v 0) (v 1) ≡ false
   _ = refl
 
   -- The one PR #4 example that composes across objects, horizontal
-  -- composition of 2-cells, is exactly what L removes.
+  -- composition of 2-cells, is exactly what L removes (its side
+  -- condition is false: see hcomp above).
   _ : is-just (infer E.HComp E.hcomp) ≡ false
   _ = refl
 

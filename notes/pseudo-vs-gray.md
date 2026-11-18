@@ -481,8 +481,8 @@ For a term t : A in context Γ with endpoints aᵢ, aⱼ (dimension ≥ 1), defi
 | Anything inside a single hom | as in CaTT | §3.4, last case |
 | Composites (operation case, n = 1) | no, as in CaTT | |
 | Interchangers y ⊗ x with dim x, dim y ≥ 1 | **no** | The source and target supports are different halves of ∂U. |
-| Interchanger where one factor is invertible | yes **[conj]** | For 2-categories, a lax transformation's naturality cell at an equivalence is invertible **[recall]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
-| Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
+| Interchanger where one factor is invertible | yes **[proved]** | Rule (INV-fac) of `invertibility-markings.md` §1.2, sound by Lemma 2.1 there (Dᵐ ⊗ Eᵏ ≃ Dᵐ ⊗ Dᵏ⁻¹). |
+| Interchangers with a transformation marked *pseudo* (as the **later** factor; `invertibility-markings.md` §1.6c) | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. Modifications between pseudo transformations are *not* automatically pseudo (§2.4, verified counterexample), so higher cells carry their own marks. |
 
 ### 3.6 Soundness: proof attempt
 
@@ -569,6 +569,8 @@ Then every oriented (∞,ω)-category (Gepner–Heine), in particular ∞Cat wit
 
 This is the largest concrete simplification L offers. It is also the place where the earlier threads underestimated L.
 
+*Correction (2026-11-18, `invertibility-markings.md` §4.3).* "G1 disappears" holds for *using* lax cells (their Gray-shaped components are derivable L-terms), not for *introducing* a lax cell from component data, which still needs a Gray-shaped context with syntactically matching boundaries. That residue is Conjecture CT, `conjectures/canonical-gray-terms.md`.
+
 ### 4.3 Internal homs
 
 | | P | L |
@@ -629,7 +631,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 ### 5.2 Cost
 
 - U for a row of n horizontally composable 2-cells is the n-cube, with 3ⁿ cells. Computed naively, supports blow up exponentially in the *horizontal width* of a pasting scheme.
-- Computed symbolically, as sums of tensors of chains touching only the cells a term uses, the cost should be polynomial in term size **[conj]**.
+- ~~Computed symbolically … the cost should be polynomial in term size **[conj]**.~~ *Corrected (2026-11-18):* false for explicit supports, since the coh over n side-by-side 2-cells is a term of size O(n) with support of size 3ⁿ. The restated question (polynomial in shared term size) is E9′ in `invertibility-markings.md` §5.
 - In practice horizontal width is small. Plain CaTT has no such cost.
 
 ### 5.3 Usability

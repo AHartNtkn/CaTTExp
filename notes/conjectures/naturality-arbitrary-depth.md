@@ -1,5 +1,7 @@
 # Naturality of CaTT coherences with respect to variables of arbitrary depth
 
+> **To send to a researcher, use [`outbox/naturality-arbitrary-depth.md`](outbox/naturality-arbitrary-depth.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 
 ---

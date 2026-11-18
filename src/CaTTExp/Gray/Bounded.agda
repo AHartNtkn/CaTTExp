@@ -6,7 +6,7 @@
 -- the non-object variables of Γ, ∂⁻Γ, ∂⁺Γ (Finster–Mimram's
 -- boundaries), and (ii) supp(t : A) = Var(t : A) for derivable terms
 -- (the term-level half, not checked here). This file checks (i) for
--- every pasting diagram Θ with at most 6 edges (197 contexts), by
+-- every pasting diagram Θ with at most 6 edges (196 contexts), by
 -- evaluation.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Bounded where

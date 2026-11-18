@@ -55,6 +55,23 @@ import CaTTExp.Subst ∅ cattSide as S
 Graph : Ctx → Set
 Graph Γ = ∀ i {A s t u v} → lookup Γ i ≡ just (arr (arr A s t) u v) → ⊥
 
+-- Being a graph context is decidable.
+isGraph : Ctx → Bool
+isGraph ε                         = true
+isGraph (Γ ▸ ⋆)                   = isGraph Γ
+isGraph (Γ ▸ arr ⋆ _ _)           = isGraph Γ
+isGraph (Γ ▸ arr (arr _ _ _) _ _) = false
+
+isGraph-ok : ∀ Γ → T (isGraph Γ) → Graph Γ
+isGraph-ok ε _ i ()
+isGraph-ok (Γ ▸ ⋆) h i eq with i ==ℕ len Γ
+isGraph-ok (Γ ▸ ⋆) h i () | true
+isGraph-ok (Γ ▸ ⋆) h i eq | false = isGraph-ok Γ h i eq
+isGraph-ok (Γ ▸ arr ⋆ _ _) h i eq with i ==ℕ len Γ
+isGraph-ok (Γ ▸ arr ⋆ _ _) h i () | true
+isGraph-ok (Γ ▸ arr ⋆ _ _) h i eq | false = isGraph-ok Γ h i eq
+isGraph-ok (Γ ▸ arr (arr _ _ _) _ _) () i eq
+
 ------------------------------------------------------------------------
 -- Positions: the path from the first object of a pasting context to
 -- (the leftmost object of) each variable, under a substitution τ.
@@ -1127,3 +1144,142 @@ mutual
       subst₃' : ∀ {A B C : Set} (R : A → B → C → Set) {a a' b b' c c'} →
                 a ≡ a' → b ≡ b' → c ≡ c' → R a b c → R a' b' c'
       subst₃' R refl refl refl r = r
+
+------------------------------------------------------------------------
+-- Substituting σ back into the lifted type gives the original type.
+
+private
+  arr-l′ : ∀ {Θ A a b} → Θ ⊢ty arr A a b → Θ ⊢tm a ∶ A
+  arr-l′ (arr-wf da _) = da
+
+  arr-r′ : ∀ {Θ A a b} → Θ ⊢ty arr A a b → Θ ⊢tm b ∶ A
+  arr-r′ (arr-wf _ db) = db
+
+liftTy-sub : ∀ {Γ σ} → Graph Γ → ∀ A t o o' → ∣ π A t ∣ + o ≡ o' → Γ ⊢tm t ∶ A → NS A →
+             Seg Γ σ o (o₀Ty A) (π A t) → liftTy A o o' [ σ ]ty ≡ A
+liftTy-sub {Γ} {σ} gr (arr ⋆ a b) t o o' e dt _ sg with tm-ty dt
+... | arr-wf da db with ⋆-var da refl | ⋆-var db refl
+...   | x , refl | y , refl =
+  cong₂ (arr ⋆) (seg-head (path t) sg)
+    (trans (cong (λ n → lookupₛ σ (vtx n)) (sym e))
+      (trans (seg-end (path t) sg) (cong var (walk-end (walk t dt refl)))))
+liftTy-sub {Γ} {σ} gr (arr (arr ⋆ s₀ t₀) a b) t o o' e dt _ sg =
+  cong₃ arr (liftTy-sub gr (arr ⋆ s₀ t₀) a o o' e da tt sg)
+            (liftN-sub gr a o da tt sg)
+            (liftN-sub gr b o db tt (subst (Seg Γ σ o (o₀Ty (arr ⋆ s₀ t₀))) (PI gr t dt refl) sg))
+  where
+  da = arr-l′ (tm-ty dt)
+  db = arr-r′ (tm-ty dt)
+liftTy-sub gr (arr (arr (arr B s₁ t₁) s₀ t₀) a b) t o o' e dt _ sg =
+  cong₃ arr (liftTy-sub gr (arr (arr B s₁ t₁) s₀ t₀) a o o' e da tt sg)
+            (liftN-sub gr a o da tt sg)
+            (liftN-sub gr b o db tt sg)
+  where
+  da = arr-l′ (tm-ty dt)
+  db = arr-r′ (tm-ty dt)
+
+------------------------------------------------------------------------
+-- Full support: the lifted cell and its type use every variable of Θ_k.
+
+private
+  ∧-intro : ∀ {a b} → T a → T b → T (a ∧ b)
+  ∧-intro {true} _ q = q
+
+  sc-fvTy : ∀ n A {m} → S.ScTy n A → m ∈ fvTy A → m < n
+  sc-fvTy n ⋆ _ ()
+  sc-fvTy n (arr A t u) (hA , ht , hu) mem with ∈-++ (fvTy A) (fvTm t ++ fvTm u) mem
+  ... | inj₁ q = sc-fvTy n A hA q
+  ... | inj₂ q with ∈-++ (fvTm t) (fvTm u) q
+  ...   | inj₁ r = sc-fv n t ht r
+  ...   | inj₂ r = sc-fv n u hu r
+
+-- Every level of the segment of the 1-dimensional source occurs.
+coverN : ∀ {Γ} A t o o' → ∣ π A t ∣ + o ≡ o' → Γ ⊢tm t ∶ A → NS A → ∀ m → InSeg o ∣ π A t ∣ m →
+         m ∈ fvTmTy (liftN t o) (liftTy A o o')
+coverN (arr ⋆ a b) t o o' e dt _ m h rewrite liftN-eq t o dt refl with lift-fs t o dt refl m h
+... | inj₁ q        = ∈-++l (fvTm (lift t o)) _ q
+... | inj₂ (inj₁ q) = ∈-++r (fvTm (lift t o)) _
+                        (subst (_∈ vtx o ∷ vtx o' ∷ []) (sym q) (∈-here (vtx o) (vtx o' ∷ [])))
+... | inj₂ (inj₂ q) = ∈-++r (fvTm (lift t o)) _
+                        (∈-there {m} (vtx o) (vtx o' ∷ [])
+                          (subst (_∈ vtx o' ∷ []) (sym (trans q (cong vtx e))) (∈-here (vtx o') [])))
+coverN (arr (arr B s₀ t₀) a b) t o o' e dt _ m h
+  with ∈-++ (fvTm (liftN a o)) (fvTy (liftTy (arr B s₀ t₀) o o'))
+            (coverN (arr B s₀ t₀) a o o' e (arr-l′ (tm-ty dt)) tt m h)
+... | inj₁ q = ∈-++r (fvTm (liftN t o)) _
+                 (∈-++r (fvTy (liftTy (arr B s₀ t₀) o o')) _ (∈-++l (fvTm (liftN a o)) _ q))
+... | inj₂ q = ∈-++r (fvTm (liftN t o)) _ (∈-++l (fvTy (liftTy (arr B s₀ t₀) o o')) _ q)
+
+fs-cellN : ∀ {Γ K} A t → Γ ⊢tm t ∶ A → NS A → ∣ π A t ∣ ≡ K →
+           chainC K ⊢tm liftN t 0 ∶ liftTy A 0 K →
+           T (≈? (fvTmTy (liftN t 0) (liftTy A 0 K)) (varsCtx (chainC K)))
+fs-cellN {K = K} A t dt ns e d̃ =
+  ∧-intro (all-intro (λ x → elem x ys) xs (λ m mem → elem-downFrom (bound m mem)))
+          (all-intro (λ x → elem x xs) ys
+            (λ m mem → coverN A t 0 K (trans (+-zero _) e) dt ns m (inseg m (downFrom-mem (len (chainC K)) mem))))
+  where
+  ũ  = liftN t 0
+  Ã  = liftTy A 0 K
+  xs = fvTmTy ũ Ã
+  ys = downFrom (len (chainC K))
+  bound : ∀ m → m ∈ xs → m < len (chainC K)
+  bound m mem with ∈-++ (fvTm ũ) (fvTy Ã) mem
+  ... | inj₁ q = sc-fv (len (chainC K)) ũ (S.tm-sc closed d̃) q
+  ... | inj₂ q = sc-fvTy (len (chainC K)) Ã (S.tm-ty-sc closed d̃) q
+  inseg : ∀ m → m < len (chainC K) → InSeg 0 ∣ π A t ∣ m
+  inseg m h = subst (λ n → InSeg 0 n m) (sym e) (inseg-all K m (subst (m <_) (len-chain K) h))
+
+------------------------------------------------------------------------
+-- The filler and the theorem.
+
+-- The 1-dimensional source of a cell, with its type.
+src1 : ∀ {Γ} A t → Γ ⊢tm t ∶ A → NS A →
+       Σ Tm λ s → Σ Nat λ y → (Γ ⊢tm s ∶ arr ⋆ (var (o₀Ty A)) (var y)) × (π A t ≡ path s)
+src1 (arr ⋆ a b) t dt _ with tm-ty dt
+... | arr-wf da db with ⋆-var da refl | ⋆-var db refl
+...   | x , refl | y , refl = t , y , dt , refl
+src1 (arr (arr B s₀ t₀) a b) t dt _ = src1 (arr B s₀ t₀) a (arr-l′ (tm-ty dt)) tt
+
+fillN : Ctx → Tm → Tm → Ty → Tm
+fillN Γ u v A =
+  coh (chainC ∣ π A u ∣) (arr (liftTy A 0 ∣ π A u ∣) (liftN u 0) (liftN v 0))
+      (wsub Γ (o₀Ty A) (π A u))
+
+totalN : ∀ {Γ u v B s t a b} → Graph Γ →
+         Γ ⊢tm u ∶ arr (arr B s t) a b → Γ ⊢tm v ∶ arr (arr B s t) a b →
+         Γ ⊢tm fillN Γ u v (arr (arr B s t) a b) ∶ arr (arr (arr B s t) a b) u v
+totalN {Γ} {u} {v} {B} {s} {t} {a} {b} gr du dv =
+  subst (Γ ⊢tm fillN Γ u v A ∶_) tyEq
+    (coh-wf (ps (chainC-ps k)) (chainC-wf k) (arr-wf tu tv)
+            (∨-inl (isOp (chainC k) Ã ũ ṽ)
+                   (∧-intro (fs-cellN A u du tt refl tu) (fs-cellN A v dv tt refl tv)))
+            sσ)
+  where
+  A  = arr (arr B s t) a b
+  p  = π A u
+  k  = ∣ p ∣
+  Ã  = liftTy A 0 k
+  ũ  = liftN u 0
+  ṽ  = liftN v 0
+  σ  = wsub Γ (o₀Ty A) p
+  le : ∣ p ∣ + 0 ≤ k
+  le = subst (_≤ k) (sym (+-zero k)) ≤-refl
+  tu : chainC k ⊢tm ũ ∶ Ã
+  tu = subst (λ n → chainC k ⊢tm ũ ∶ liftTy A 0 n) (+-zero k) (liftN-ty gr u 0 du tt le)
+  tv : chainC k ⊢tm ṽ ∶ Ã
+  tv = subst (λ n → chainC k ⊢tm ṽ ∶ liftTy A 0 n) (+-zero k) (liftN-ty gr v 0 dv tt le)
+  sr = src1 A u du tt
+  s₁ = fst sr
+  y₁ = fst (snd sr)
+  ds₁ : Γ ⊢tm s₁ ∶ arr ⋆ (var (o₀Ty A)) (var y₁)
+  ds₁ = fst (snd (snd sr))
+  wk : Walk Γ (o₀Ty A) p y₁
+  wk = subst (λ q → Walk Γ (o₀Ty A) q y₁) (sym (snd (snd (snd sr)))) (walk s₁ ds₁ refl)
+  sσ : Γ ⊢sub σ ∶ chainC k
+  sσ = subst (λ n → Γ ⊢sub σ ∶ chainC n) (+-zero k)
+             (wgo-ty (,-wf (⟨⟩-wf (tm-ctx du)) (fst (ends ds₁ refl))) refl wk)
+  sg : Seg Γ σ 0 (o₀Ty A) p
+  sg = wgo-seg p refl refl
+  tyEq : arr Ã ũ ṽ [ σ ]ty ≡ arr A u v
+  tyEq = cong₃ arr (liftTy-sub gr A u 0 k (+-zero k) du tt sg)
+                   (liftN-sub gr u 0 du tt sg) (liftN-sub gr v 0 dv tt sg)

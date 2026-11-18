@@ -13,7 +13,7 @@
 | Item | Proposal | Status |
 |---|---|---|
 | **F3** h-levels | A judgment `C trunc n` ("C is an n-category"; n = 0 is "C is a set") with a filler rule, an invertibility rule, and closure rules: limits, hom objects (which lower the level by one), coproducts, and two semantic base rules (free objects on graphs, and on graphs with inverted edges, are 1-categories). §2. | Closure under limits and homs **[proved here]** (sketches at the level of the other notes). Base rules sound by `free-on-graph.md` and Dwyer–Kan **[paper]**. T-graph is not derivable from R-A, even under this note's reading with cotensors as exponentials (E) (researcher countermodels, verified: `conjectures/answered/non-derivability-2026-11-18.md` Q2 for enriched cotensors, `conjectures/answered/non-derivability-q2-2026-11-18.md` under (E)). So T-graph stays a rule (Prop. 2.5). |
-| **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`); total on 1-cells **[agda]** (`CaTTExp.GraphFillerTotal`). Extension to globular contexts **[proved here]** semantically, not implemented. |
+| **F2** filler tactic | An admissible meta-operation: in a graph context, two parallel cells with the same path are connected by one coherence over the chain Θ_k. No new rule. §3. | **[proved here]** on paper; implemented with certified output and examples **[agda]** (`CaTTExp.GraphFiller`); total in every dimension **[agda]** (`CaTTExp.GraphFillerTotal`, `.Higher`). Extension to globular contexts **[proved here]** semantically, not implemented. |
 | **F1** families, induction | Families are maps p : E → B, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (Awodey–Gambino–Sojakova's argument). §4. Three routes to ℕ's recursion, compared in §4.5. The one that adds no ℕ-specific rule (route III) uses two general principles: lax colimits are Grothendieck constructions (G), and comma objects are free cocartesian fibrations (DJ, "directed J"). | Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion **[proved here]**. Induction, and hence recursion with uniqueness, for ℕ from G + DJ **[proved here, Thm 4.4]** (a circular uniqueness step in the first version is corrected). G and DJ are sound semantically **[paper/recall]**. |
 | **F4** integers | ℤ := Hom(x, x) in the localisation of the loop ⟦L⟧ at s, a finite pushout. Discreteness: proved, by Dwyer–Kan's comparison lemma. General quotients (ℚ, quotient sets) need an n-truncation rule Trunc (two levels; the higher levels and dependent elimination are derived), and effectiveness needs a further rule EX. §5. | ℤ ≃ ℤ_disc semantically **[proved here]**, from DK 1980 Prop. 2.3 **[paper]** and `free-on-graph.md`. Trunc's derived levels and the quotient's universal property **[proved here]**. EX is not derivable **[paper, researcher-verified]**: a countermodel in posets (`conjectures/answered/non-derivability-2026-11-18.md`). |
 | **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3, Gepner–Haugseng–Nikolaus and Gepner–Heine **[recall / abstract-level]**. |
@@ -220,7 +220,22 @@ total : Γ ⊢ u ∶ a → b   →   Γ ⊢ v ∶ a → b   →   path u ≡ pat
 
 It uses the scoping lemmas and `lookup-sub` from `CaTTExp.Subst`, and weakening; it does not need the full substitution theorem.
 
-**What is not machine-checked:** totality for parallel n-cells with n ≥ 2 (the dimension-2, 3 and 4 examples are checked instances only). That case needs the path invariant for higher cells (a 2-cell between 1-cells relates terms of the same path), the lift of cells whose coherences are over pasting contexts of any dimension, and the offsets of §3.2 computed along a pasting derivation. Recorded as F2a (higher cells).
+**Totality for higher cells [agda] (2026-11-18).** `src/CaTTExp/GraphFillerTotal/Higher.agda` proves Theorem 3.1 for parallel n-cells, n ≥ 2, in every graph context (no variable of dimension ≥ 2; `Graph Γ`, decidable by `isGraph`):
+
+```
+totalN : Graph Γ → Γ ⊢ u ∶ A → Γ ⊢ v ∶ A → Γ ⊢ fillN Γ u v A ∶ u →_A v      (A = (B, s, t) → … of dimension ≥ 2)
+```
+
+There is no path hypothesis: parallel cells of dimension ≥ 2 share their 1-dimensional source, so their paths agree. `fillN Γ u v A = coh Θ_k (liftTy A 0 k → liftN u 0 → liftN v 0) [σ]`, with k the length of the path of A's 1-dimensional source and σ the walk along it. A coherence over any pasting context Θ is lifted argument by argument; each argument is lifted at the position of its leftmost object, i.e. the length of the path from the image of Θ's first object to the image of that object (`pp`). It agrees with `GraphFiller.fill` on the dimension-3 and dimension-4 examples (`refl` in `GraphFillerTotal/HigherExamples.agda`). The proof:
+1. **path invariant** (`PI`): in a graph context a 2-cell s ⇒ t has path s = path t, so parallel edges of a pasting context are sent to equal paths (`pedge`); the path of the image of a 1-cell of Θ joins the positions of its ends (`D'`, `πty`);
+2. **range lemma** (`GraphFillerTotal/Range.agda`): the type of a valid coherence spans its whole pasting context: its source starts at Θ's first object and every object of Θ lies between the ends of its 1-dimensional boundary (in the prefix order of positions). So the lift starts at offset 0 and stays inside Θ_k;
+3. **lifting commutes with substitution** (`Comm.comm-tm`, `comm-ty`), which makes the lifted arguments well typed (`liftN-ty`, `liftSN-ty`);
+4. **substituting σ back** gives the original cell and type (`liftN-sub`, `liftSN-sub`, `liftTy-sub`);
+5. **full support** of the lifted cell in Θ_k, through the lift of its 1-dimensional source (`coverN`, `fs-cellN`).
+
+The graph hypothesis is what this construction uses: in `x, y, f, g : x → y, α : f ⇒ g` the path invariant fails for α itself (path f ≠ path g), and the variable α has no lift into a chain, so `fillN` is not defined there. Globular contexts are F2b.
+
+Together, `total` (1-cells with equal paths, any context) and `totalN` (n ≥ 2, graph contexts) machine-check Theorem 3.1 in every dimension.
 
 ---
 
@@ -531,7 +546,7 @@ So dcoh has the same shape as L's rule (`pseudo-vs-gray.md` §3), with the lesso
 
 All rows are added to `notes/open-issues.md` under F.
 
-- **F2a** Agda: totality of the graph filler (Theorem 3.1). Done for 1-cells (`GraphFillerTotal.agda`); open for parallel n-cells, n ≥ 2.
+- **F2a** Agda: totality of the graph filler (Theorem 3.1). Done in every dimension: 1-cells (`GraphFillerTotal.agda`), parallel n-cells for n ≥ 2 in graph contexts (`GraphFillerTotal/Higher.agda`).
 - **F2b** Filler for globular contexts (Theorem 3.2): implement strict normal forms (labelled trees) and the lift.
 - **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0` (§2.3, after Prop. 2.5: it reduces to F8 or to a parameter-varying induction). **Closed:** non-derivability is proved for enriched cotensors and under (E) (`conjectures/answered/non-derivability-q2-2026-11-18.md`); T-graph stays a rule.
 - **F1c** Closed: recursion in route II is not derivable (§4.5, countermodel).

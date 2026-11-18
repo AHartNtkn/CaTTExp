@@ -654,3 +654,47 @@ It establishes the ordinary cellular presentation (12)–(13). It does **not** y
 Those are additional assertions. In particular, the existence of an ordinary free-extension tower does not prove that it is a cellular tower in the relevant category of Gray-enriched theories.
 
 Once such an enriched presentation is supplied, and the hom maps in round 2 are trivial fibrations, the stated lifting theorem applies to it. The ordinary presentation above and those hom trivial fibrations alone do not yet establish an enriched \(R_L\) for the literal rule.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, partial.**
+- The response reduces the whole comparison 𝓗_CaTT ≃ Cat^coind_ω to one assertion, (11): the unit η_{A_𝔠} is in W for every finite computad 𝔠.
+- It proves that assertion for coherator representables and for free models on graphs. This gives (H) in the bounded-generator (∞,1) case.
+- For L, it gives an ordinary cellular presentation and a generator classification through dimension 3, but not the enriched presentation.
+- (R) for general Kan complexes or quasi-categories, (U) for general finite computads, and the enriched R_L stay open.
+
+Checked step by step.
+
+1. **(1), units on representables.** B1 → T1 has the lifting property against positive-dimensional globe boundaries by contraction, and is bijective in dimension 0. Since B → T is cartesian, BG → TG is a pullback of it, so α_G is a globular trivial fibration and lies in W.
+
+   For the identifications:
+   - h_P ≅ F_w G_P because Mod(h_P, A) ≅ A(P) ≅ GSet(G_P, UA), since models send globular sums to globular products;
+   - 𝓛_R h_P ≅ R(P) by co-Yoneda;
+   - S₀(yP) is the strict P.
+
+   So (S₀q_P)η = α_{G_P}, and 2-out-of-3 gives η ∈ W.
+2. **(3), units on graphs.** 𝓛_R F_w G ≅ F|G| by adjunction.
+   - c_G is a weak equivalence: graph → nerve of free category is inner anodyne (Rezk 26.5).
+   - The inclusion of (∞,1)-categories into Cat_ω is a left adjoint (its right adjoint is the 1-core), so it preserves the incidence pushout.
+   - Then 2-out-of-3 gives η ∈ W.
+3. **§1.3, the bounded-generator case.** If every cell above dimension 1 is invertible and generator dimensions are bounded, then by Benjamin–Markakis Prop. 37 (invertible ⇔ empty top support) there are no generators above dimension 1. So the model is free on a graph.
+
+   **Scope note:** this needs B and B′ to be *free* on such computads. A general computad-cofibrant B is only a retract of KB, and KB has generators in every dimension. So this is (H) for free models on graphs, not for all computad-cofibrant (∞,1)-models.
+4. **(4), detection lemma.** For each identity or composition head m, the algebraic cell a_m and the geometric cell b_m have the same image under q_P and agree on B_n. The relative lifting space of B_n ↪ yD_n against the trivial fibration q_P is contractible, so a_m and b_m are joined relative to the boundary.
+
+   The rest relies on ORW Prop. 5.42 (maximality of coinductive isomorphisms) and Prop. 5.30 (Q inverts exactly the maps that are ∞-surjective up to coinductive isomorphism). I checked the structure of the argument but not those propositions.
+5. **(8), (U) ⇒ (H), (R) and the comparison.**
+   - (H): 2-out-of-3 on S₀𝓛_R(f)η_B = η_{B′}f, then (4).
+   - (R): (6) holds by naturality and the triangle identity, S₀(ε_Y)S₀𝓛_R(q_A)η_{KA} = S₀(ε_Y)η_A q_A = q_A. So S₀(d_Y) ∈ W, and then (4) applies.
+   - Reduction to KA′: B is a retract of KB, η_B is a retract of η_{KB}, and W is closed under retracts.
+6. **(9), reduction to finite computads.**
+   - Finite subcomputads form a filtered poset, since terms are finite and boundaries lower dimension.
+   - The comparison θ ∈ W by (10). The lemma's partial-filler argument with mono transition maps is Nikolaus §2.3.
+   - colim η_{A_𝔡} ∈ W by FHM Prop. 3.4.4.
+
+   Composition gives η_{A_𝔠} ∈ W. §3.1, that filtered colimits of fibrant complete Segal Θ_ω-spaces are fibrant, is plausible from finitely presentable test maps; I did not check Loubaton's presentation. The response is right that (11) is an infinite family, not finitely many checks.
+7. **§4.2, proper intervals.** Correct, and a real issue with the stated rule. With Γ = ΣD⁰ ∨ ΣD^{m−1}, the interval [0, 1] makes c_Γ : a₀ → a₁ a head over all of Γ that does not use ξ. Then c_Γ[id] and c_Γ[σ], where σ replaces ξ by a unary m-operation, are formally distinct 1-terms with a coherence 2-head between them. So low-dimensional heads depend formally on high-dimensional ones. The prompt said "in practice (i, j) = (0, n)". Making that **part of the rule** restores a filtration by output dimension.
+8. **§4.3 and §4.4.** For the table: operation heads have d = r − 1, and coherence endpoints are hom (r − 2)-cells, so d ≤ r − 2. For the interchanger, the Leibniz boundary of α ⊗ β with |α| = 1 is f₁⊗β − f₀⊗β − α⊗g₁ + α⊗g₀. So χ : (g₁α)∘(βf₀) ⇒ (βf₁)∘(g₀α), which agrees with round 3 and with our orientation. The reverse pair fails both clauses.
+9. **§4.5 and §4.6.** The dimension-4 profiles are right. Correct that the ordinary tower is not yet a cellular tower of Gray-enriched theories.
+
+Follow-up prompt: `outbox/catt-models-in-infinity-omega-r5.md` (round 5, unsent).

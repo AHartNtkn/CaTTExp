@@ -548,4 +548,4 @@ Step by step.
   - the cube contraction;
   - RC(3)/RC(n).
 
-Follow-up prompt: `outbox/gray-contexts-r5.md` (round 5, unsent).
+Follow-up prompt: `gray-contexts-r5-2026-11-18.md` (round 5, answered).

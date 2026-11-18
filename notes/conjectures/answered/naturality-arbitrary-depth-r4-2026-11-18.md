@@ -934,3 +934,49 @@ The constructions above establish:
 They do not establish RC(3) on all cylinders, RC in all dimensions, or the 5-dimensional comparison required in Question 6.
 
 The strict 2-cell classification and the displayed local interchanger, unit, and point-whisker boundary formulas were checked symbolically without associativity or unit identifications. The complete constructions are proofs on paper, not CaTT-kernel verifications.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at paper level. It settles Q1 and Q4 and part of Q2.** RC(3) holds on the cylinder of the 2-disc, so K exists for every 3-dimensional coherence over the 2-disc for arbitrary lower lifts. Suspension descent RC(r+1, (ΣQ)↑ΣY) ⇒ RC(r, Q↑Y) holds with the poles unselected. Full chain cylinders have forced 2-words and literal frames. Q3, Q5, Q6 and the normaliser/fusion part of Q2 stay open.
+
+Checked step by step.
+
+**§1, the 2-disc cylinder.**
+1. **Setup.** From §1.3 of the prompt, a_A = (A⁻ ∗₀ y↑) ∗₁ g↑ = c·G = L and b_A = f↑ ∗₁ (x↑ ∗₀ A⁺) = F·d = R, so U = A↑ : L → R as stated.
+2. **§1.1, strict cells.** The 1-paths x⁻ → y⁺ are p, q, r, s, and the generating rewrites are c : p→q, F : p→r, G : q→s, d : r→s. With a and b, this gives exactly the eight nonidentity strict 2-cells. πL ≠ πR in the free strict ω-category.
+3. **The only strict 3-cell is πU.** U can't be composed with itself, and it can't take a nonidentity whisker: nothing enters p, nothing leaves s, x⁻ is initial and y⁺ is terminal.
+4. **U-count.** A 3-dimensional coherence over a 3-dimensional arity is always a composition, because its 2-dimensional endpoints can't be full. So each syntactic leaf contributes to the strict image without cancellation, and a term of image πU uses U exactly once.
+5. **§1.2, RC(3, Γ₀).** The value-by-value restriction is the round-2 support argument (Lemma 36). The cases a, b, c and d are direct coherences, and F and G are squares.
+
+   For L and R, the outer paths meet only at x⁻ and y⁺, so discarded columns are point-supported. The round-3 two-letter construction then applies with the letters c, G (respectively F, d) in forced order.
+
+   I checked this transfer at the level of its inputs (point support, forced order, smaller cases available). I did not re-derive the round-3 induction for these letters.
+6. **§1.4, sequentialization.** Both H and B_H are full in P and parallel, so (5) is a legal 4-coherence. The inserted 3-bridges live in P_{≤2} and cannot contain U after substitution. (6) and (7) are direct coherences on D³ ∗_k D³ and (D³ ∗₂ D³) ∗_k D². This yields the form I₀;ω(U);I₁ of (8).
+7. **§1.5, whiskering normalization.**
+   - Case A ((10)) is the interchanger on D³ ∗₁ D³.
+   - Case B ((11), (12)) uses direct coherences on D²(a) ∗₀ D²(T) and D²(a) ∗₀ D³(U).
+   - Case C: any 1-term into x⁻ is a point-supported loop l : x⁻ → x⁻, since no generator enters x⁻. I typed the five steps of χ_T in (16) one by one: inverse associator, J·ℓ_s, associator, (κp)·ℓ_T, inverse associator. They compose (l∗₀T)·d to u·T.
+   - The cancellation data in (17) depend only on p, s, l and κ, so naturality follows from (14), the naturality of (15), and (10).
+   - Whiskers by 3-terms are removed by (6). Since x⁻ is initial and y⁺ terminal, cases A–C exhaust ω.
+8. **§1.6.** Combining (9) with RC(3, Γ₀) gives v → 𝒩(t, t′). The target normal form depends only on t and t′. Reversing the normaliser of w reverses only coherence steps, each of which has a reverse coherence or an RC(3, Γ₀) filler, and keeps U as a fixed argument. So RC(3, Γ) follows.
+
+**§2, descent.**
+1. **(21).** For x of dimension n in Q, the dimension-0 factor of a_{Σx} is the pole S↑ (respectively N↑ in b_{Σx}). The pole is unselected, so the factor is omitted. The remaining factors are the suspended factors of a_x, with ∗_k replaced by ∗_{k+1}, by induction on (Σw)↑ = Σ(w↑).
+
+   For a selected 0-variable x, this gives (Σx)↑ : (Σx)⁻ → (Σx)⁺ = Σ(x↑ : x⁻ → x⁺). So (ΣQ)↑ΣY = Σ(Q↑Y).
+2. **The decoder D (§2.2–2.5).** This is the cut translation already verified in `answered/cone-over-coherences-r2-2026-11-18.md` §2, now stated for arbitrary coloured contexts. Two points are new and both correct:
+   - the dimension-1 clause (25), needed because (26) would produce a coherence of type ⋆;
+   - the case dim R ≤ d − 2 in §2.4, where a decoded composition becomes a full-endpoint coherence.
+
+   In ΣΔ the only 0-variables are the poles, so every non-crossing subterm is a point-supported loop at N or S and uses no crossing variable. D(Σt) = t holds because ΣP has a single root column.
+3. **(31).** H : Σt → Σt′ has a crossing type, so DH : t → t′. Strict images are preserved by (30).
+
+   The useful consequence: RC(n) on **all** cylinders, including partial selections with unselected poles, gives RC(r) on all cylinders for r ≤ n, hence Conjecture N through dimension n. RC(n) on fully selected cylinders alone is not enough.
+
+**§3, chains.**
+1. The strict 1-paths x_a⁻ → x_b⁺ are the P_j, and F_i sends P_i to P_{i−1}. So every nonidentity strict 2-cell has the forced word F_r … F_{s+1}, and the frames (33) are literal under the stated fixed-edge condition.
+2. The proper selection Y = {a₁, a₂} is up-closed. Its cylinder is D² ∗₀ D² with A_i : a_i⁻ ⇒ a_i⁺, so a one-chain frame cannot hold both generators.
+
+   This is not a counterexample to RC(3): the exchange is one direct coherence. It does show that Q2 for proper Y needs frames with several retained chains.
+
+Follow-up prompt: `outbox/naturality-arbitrary-depth-r5.md` (round 5, unsent).

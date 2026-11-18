@@ -702,3 +702,42 @@ There is a general distinction here. Declaring \(h,H,K,\mu,\ldots\) as typed ope
 The calculations establish the ambient source/sink counterexample, the six displayed factorization families, the tensor hom-4 boundaries, and the finite hom-3 support result.
 
 They do not provide the complete hom-4 presentation for the triple tensor, support injectivity in hom dimensions four and five, the lift of \(x_2\otimes y_2\otimes z_2\), or a substitution-closed theory satisfying requirements 1–5. They also give no inconsistency proof for requirements 1–3 and 5.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct as far as it goes. This is a partial answer.** The response refutes the source/sink count proposed in Q2. It shows alternation is not forced by the local factorization problem. For Q1 it gives a verified hom-3 presentation of the triple tensor and typed lifts of the eighteen tensor hom-4 generators. It finds a new kind of step: a joining generator (λ_x) must itself be factored (by μ). For Q3 it gives one composite-valued substitution that explains μ. Not done: the full hom-4 presentation, supports in hom-dimensions 4 and 5, the top cell x₂ ⊗ y₂ ⊗ z₂, the uniform rule, and Q4.
+
+The researcher's checker was not attached. I rebuilt the 240-word interval independently from the rules stated in §2:
+- tensor naturalities (the lower-index update moves earlier);
+- inner interchangers directed right-first ⇛ left-first by the current hom-1 order;
+- the 24 contextual instances of τ : rqp → pqr.
+
+Script: `scripts/e6/triple_tensor_r5_check.py`.
+
+1. **Counting rule (1)–(2).** Correct: reversing u → v changes only the degrees of u and v, and the indicator formulas follow.
+2. **The 24-word interval, table (4).** Reproduced exactly. The constant rule gives one source, DBCA, and one sink, ACBD. The position-dependent rule (3) gives the sources {DBCA, DABC} and the sinks {ACBD, BACD}. The three reversed arrows are exactly those listed. So "one extra source/sink pair per flipped face" fails for the ambient graph. The isolated-hexagon calculation of round 4 is unaffected.
+3. **Source-only construction (5).** The telescoping is correct, and h_{r−1};p_{r−1} and q_{r−1} are parallel s₀ → t_{r−1}. For r = 2 it is exactly the (K10) h-repair. **Caveat:** for r ≥ 3 the equations h_i;p_i = h_{i+1};q_i identify two composites, neither of them a generator. Then the hom-3 category is no longer free on a graph, so requirement 2 (set support) needs a separate argument. The claim that "alternation is not forced" therefore holds only if such composite–composite equations are admissible.
+4. **Counts (7).** There are 8, 40 and 240 words for m = 1, 2, 3. All interleavings are typed, since updates do not change the hom-1 state.
+5. **Original graph.** It has 240 naturality arrows, 240 inner interchangers and 24 τ-arrows, 504 in total. Reproduced.
+6. **The six factorization families.** Applying them in the stated order in every context where both the old arrow and the final inner arrow exist gives 8, 8, 8, 12, 6 and 3 contexts, as claimed. Before μ, the full interval has two sources, acrqbp and crqbpa, which matches (15) with b inserted. After μ it has one source, crqbpa. The retained basis again has 504 arrows. The graph is acyclic and has 40,172 non-identity paths. In a DAG distinct paths have distinct edge sets, so set support is injective on hom-3 paths. All of this is reproduced.
+7. **New observation: ten sinks.** The repaired 240-word interval has **10 sinks**:
+   - apqbrc, apqcbr, bapqrc, braqpc, brcaqp;
+   - capqbr, cbapqr, cbraqp, raqpbc, rcaqpb.
+
+   Only sources were joined. This is the triple-tensor version of (K10), where U₁ and T are both sinks. Lifting the top cell x₂ ⊗ y₂ ⊗ z₂ will need its target routes to end at a common hom-2 word. So sink-joining data in the K-style of (K11) is likely needed in hom-dimension 4 or 5.
+8. **The routes of W_x, W_y, W_z, (10)–(13).** Every displayed hom-3 step is an arrow of the factored graph, in the 40-word subgraphs. The arrow kinds are:
+
+   | Route | Arrow kinds |
+   |---|---|
+   | W_x source | τ, inner, nat, nat |
+   | W_x target | nat, λ_x, τ |
+   | W_y source | inner, nat, τ, nat, inner |
+   | W_y target | nat, τ, nat |
+   | W_z source | nat, nat, inner, τ |
+   | W_z target | h_z, nat, nat |
+
+   I did not independently recheck the Leibniz signs of target minus source.
+9. **Obstruction (15)–(17) and the μ repair (18)–(19).** Correct: two distinct sources cannot both be reached from a common G. The equation cλ_x p = (μp);χ_ac is typed, and (24) follows from (18) by direct substitution.
+10. **Q3 normalization caveat.** The substitution (21) assumes that crossing against a composite hom-1 path is the composite of the pairwise crossings. The response flags this correctly. In a Gray category this is the usual naturality of the interchanger in a composite 1-cell. Whether a tensor-shaped lax theory should impose it upstairs is a design choice, and the follow-up asks about it.
+
+Follow-up prompt: `outbox/directed-interchange-every-level-r6.md` (round 6, unsent).

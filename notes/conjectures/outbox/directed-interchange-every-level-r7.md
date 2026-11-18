@@ -172,3 +172,635 @@ Any of the following:
 - a proof or model for Q4;
 - a definition or an impossibility proof for Q5;
 - a reference to a published construction.
+
+# Researcher Response
+
+**There is a finite, confluent source-joining completion for a fixed comparison graph, but it fails under a concrete map sending a generator to a composite.** This gives a restricted answer to Q3 and identifies a specific obstacle to substitution closure.
+
+For Q1–Q2, I also obtain:
+
+- 258 disjoint-operation comparisons and 62 naturality comparisons on the full 240-word interval;
+- an exact calculation of the resulting quotient through hom-dimension 3, for the top atom’s fixed hom-1 boundary;
+- three direct replacements of fresh hom-4 lifts by existing \(W\)-cells;
+- one further hom-4 factorization equation, identifying \(A_{2,1}\) in the quotient without changing hom-3 data.
+
+The hom-4 and hom-5 support checks required to complete Q1 remain unresolved.
+
+All finite calculations, exact boundaries, and verification programs are in directed_interchange_round7_checks.zip[directed_interchange_round7_checks.zip](sandbox:/workspace/scratch/81530e09e7cd/directed_interchange_round7_checks.zip). The programs use only Python’s standard library. All dimensions below are **hom dimensions**.
+
+## 1. Q3: a finite source-only completion with unique normal forms
+
+Let \(Q\) be a finite quiver whose generating arrows are partitioned into:
+
+- \(E\): inner-interchanger arrows;
+- \(P\): the remaining generating arrows.
+
+Assume:
+
+1. the subquiver consisting of \(E\) is acyclic;
+2. there is a function
+   \[
+   \phi:V(Q)\longrightarrow\mathbb Z
+   \]
+   such that
+   \[
+   \phi(s(e))=\phi(t(e))\quad(e\in E),
+   \qquad
+   \phi(s(\alpha))<\phi(t(\alpha))\quad(\alpha\in P).
+   \]
+
+The second assumption is stronger than acyclicity of \(Q\). It holds for the K14 graph, as verified below.
+
+### Construction
+
+For every generating arrow \(\alpha:s\to t\) in \(P\), and every **literal directed \(E\)-path**
+\[
+R:u\longrightarrow t,
+\]
+adjoin a generator
+\[
+j_{\alpha,R}:s\longrightarrow u.
+\]
+
+Identify the empty-path case with the original generator:
+\[
+j_{\alpha,1_t}=\alpha.
+\]
+
+For an inner arrow \(e:u\to v\) and an inner path \(R:v\to t\), impose
+\[
+\boxed{
+j_{\alpha,e;R};e=j_{\alpha,R}.
+}
+\tag{1}
+\]
+
+Thus a previously added joining arrow can itself be factored. Distinct paths \(R\) remain distinct indices, even when they have the same endpoints.
+
+### Termination and order independence of adjoining generators
+
+There are finitely many directed paths in the finite acyclic quiver \(E\). Hence the number of positive generators is exactly
+\[
+|J|
+=
+\sum_{\alpha\in P}
+\#\{\text{directed \(E\)-paths ending at }t(\alpha)\}.
+\tag{2}
+\]
+
+Starting with empty-path indices and repeatedly prepending an inner arrow generates every pair \((\alpha,R)\), by induction on the length of \(R\). A fair saturation procedure that identifies records by the exact pair \((\alpha,R)\) therefore terminates with the same generators and equations, independently of processing order.
+
+This is a rule on the entire comparison graph; it does not count sources or sinks face by face.
+
+### Confluence of the equations
+
+Orient (1) as contraction:
+\[
+j_{\alpha,e;R};e\longrightarrow j_{\alpha,R}.
+\tag{3}
+\]
+
+Every contraction decreases path length by one.
+
+Every left-hand side has arrow types
+\[
+(\text{positive},\text{inner}).
+\]
+Two such left-hand sides cannot overlap in one arrow: that arrow would have to be both positive and inner. Disjoint contractions commute. Moreover, a left-hand side determines its right-hand side uniquely because its recorded path has a specified first edge.
+
+Induction on path length now proves that every path has a unique normal form. In particular, equations applied within longer paths preserve that normal form.
+
+Every original path is irreducible: its positive generators have empty path indices. Consequently, the original free path category embeds faithfully in the completed category.
+
+### Injective supports
+
+For \(R:u\to t(\alpha)\),
+\[
+\phi(u)=\phi(t(\alpha))>\phi(s(\alpha)).
+\]
+Thus every new positive generator strictly increases \(\phi\). A directed cycle using a positive generator is impossible; an all-inner cycle is excluded by assumption. The completed quiver is acyclic.
+
+Define support from the **unique normal path**, using its vertex IDs and actual generating-arrow IDs:
+\[
+\operatorname{supp}(f)
+=
+\operatorname{Vert}(\operatorname{NF}(f))
+\;\sqcup\;
+\operatorname{Edges}(\operatorname{NF}(f)).
+\tag{4}
+\]
+
+A directed path in an acyclic quiver is determined by its edge set: a topological ordering recovers the order of those edges. Vertex IDs distinguish identity paths. Therefore (4) is injective.
+
+This uses actual generators \(j_{\alpha,R}\), rather than arbitrary labels assigned to completed cells. As in K16, support is taken **after normalization**. Composition is concatenation followed by normalization; support is not union of the letters in arbitrary expressions.
+
+### Exact preservation of the inner quotient
+
+Making \(E\) identities also identifies their source and target vertices. In that quotient, repeated use of (1) gives
+\[
+j_{\alpha,R}=\alpha.
+\]
+
+The inclusion of the original presentation and the assignment
+\[
+e\longmapsto 1,\qquad j_{\alpha,R}\longmapsto\alpha
+\]
+therefore induce inverse functors:
+\[
+\boxed{
+C(Q)/(E=1)
+\cong
+\operatorname{Path}(Q)/(E=1).
+}
+\tag{5}
+\]
+
+Thus the completion preserves an already established inner quotient. It does not establish that the original quotient was the desired Gray category.
+
+### Application to K14
+
+After eliminating the arrows defined by K14’s factorization equations, its comparison category is free on the stated 504-arrow graph. The executable calculation gives:
+
+| Quantity | Value |
+|---|---:|
+| Vertices | 240 |
+| Inner arrows | 240 |
+| Positive seed arrows | 264 |
+| Positive generators after completion | 877 |
+| New joining generators | 613 |
+| New equations | 613 |
+| Total generating arrows | 1,117 |
+
+The equivalence relation on vertices generated by the inner arrows has 54 classes. The underlying simple directed graph of positive arrows between those classes is acyclic and gives a valid rank
+\[
+\phi:V(Q)\longrightarrow\{0,\ldots,7\}.
+\]
+
+These counts, the rank hypothesis, and agreement of FIFO and LIFO saturation are checked by `r7_join_closure_check.py`.
+
+**Scope:** this theorem concerns a free comparison category and its explicitly stated equations. Additional equations coming from higher globular compositions require a separate argument.
+
+## 2. Why this completion does not give substitution closure
+
+There is a concrete failure under a generator-to-composite map using the existing \(h_z\)-factorization.
+
+Use these five word vertices:
+\[
+\begin{aligned}
+x&=\texttt{bacrqp},&
+u&=\texttt{abpcqr},\\
+w_1&=\texttt{abcpqr},&
+w_2&=\texttt{bapcqr},&
+v&=\texttt{bacpqr}.
+\end{aligned}
+\]
+
+The inner graph has arrows
+\[
+p:u\to w_1,\qquad e:w_1\to v,
+\qquad
+q:u\to w_2,\qquad f:w_2\to v.
+\]
+
+The original tensor arrow
+\[
+\tau:x\to v
+\]
+has the K14 factorization
+\[
+\tau=A;f,
+\qquad
+A=h_z:x\to w_2.
+\tag{6}
+\]
+
+Consider the comparison-category functor fixing the four inner arrows and sending \(\tau\) to \(A;f\).
+
+The source completion has
+\[
+j_{\tau,e}:x\to w_1,
+\qquad
+j_{\tau,e};e=\tau.
+\]
+An extension of the functor would require an arrow \(H:x\to w_1\) in the target completion satisfying
+\[
+H;e=A;f.
+\tag{7}
+\]
+
+No such \(H\) exists.
+
+### Proof
+
+Every contraction (3) preserves the ordered list of positive seed IDs. Therefore equality with \(A;f\) forces \(H\) to use exactly one positive generator, whose seed is \(A\).
+
+Its initial inner path would run from \(x\) to \(x\), so it is empty. Write
+\[
+H=j_{A,R};P
+\]
+for inner paths \(R,P\).
+
+The path \(A;f\) is irreducible. For \(j_{A,R};P;e\) to normalize to \(A;f\), contractions must consume exactly \(R\) and leave exactly \(f\). Hence the literal inner-edge words would have to satisfy
+\[
+P;e=R;f.
+\]
+Their final edges differ, since \(e\ne f\). This is impossible.
+
+The argument also applies to the full K14 target completion: introducing another positive seed into \(H\) cannot help, because its ID survives normalization. The checker independently verifies the actual arrows and enumerates the sole candidate in the relevant subgraph.
+
+This proves that the completion is **not natural under arbitrary comparison-category functors sending generators to composites**. Restricted naturality does hold when positive seeds map to positive seeds and inner arrows map to inner paths.
+
+I have not realized the displayed functor as a substitution of the original globular generators of \(\Gamma\). Therefore this is a counterexample to the proposed completion’s stronger functoriality, not an impossibility proof for requirement 5.
+
+## 3. Adding both source and sink divisions creates a critical pair
+
+A second problem already appears on surviving K14 generators:
+\[
+\begin{aligned}
+\alpha &: \texttt{bapcqr}\longrightarrow\texttt{bapqcr},\\
+e &: \texttt{abpqcr}\longrightarrow\texttt{bapqcr},\\
+\beta &: \texttt{abpqcr}\longrightarrow\texttt{abpqrc},
+\end{aligned}
+\]
+where \(e\) is inner and \(\alpha,\beta\) are tensor arrows.
+
+Adjoin
+\[
+h:\texttt{bapcqr}\to\texttt{abpqcr},
+\qquad
+k:\texttt{bapqcr}\to\texttt{abpqrc},
+\]
+with
+\[
+h;e=\alpha,\qquad e;k=\beta.
+\]
+
+The basic contraction rules then give
+\[
+h;e;k\longrightarrow\alpha;k,
+\qquad
+h;e;k\longrightarrow h;\beta.
+\tag{8}
+\]
+
+Both results consist of two positive arrows. Neither admits another basic contraction, and they are distinct words. Thus the two-sided contraction system is terminating but not confluent.
+
+The presented category necessarily satisfies the composite–composite equation
+\[
+\alpha;k=h;\beta.
+\tag{9}
+\]
+A normal-form construction must account for it.
+
+This produces one forced composite–composite equation. It does **not** produce the pair of crossed equations
+\[
+a;c=b;d,\qquad a;d=b;c
+\]
+from Q3, and does not prove that every completion loses injective support.
+
+## 4. Q2: explicit hom-4 comparisons on all 240 words
+
+The following two families can be enumerated without restricting to paths ending at \(T=\texttt{apqbrc}\).
+
+### Disjoint-operation comparisons \(D\)
+
+Suppose two hom-3 operations act on disjoint contiguous intervals of a hom-2 word. Let \(\alpha\) act on the left interval and \(\beta\) on the right. Adjoin
+\[
+D_{\alpha,\beta}:
+\bigl(\beta;\alpha^\beta\bigr)
+\Longrightarrow
+\bigl(\alpha;\beta^\alpha\bigr),
+\tag{10}
+\]
+where the superscripts denote the residual operations after the first operation.
+
+This is right-region-first \(\Rightarrow\) left-region-first.
+
+The enumeration uses both surviving and eliminated operations. Eliminated operations are then expanded recursively using K14’s six factorization equations. This produces **258 distinct local boundary pairs**, 50 requiring such expansion.
+
+### Inner naturality comparisons \(N\)
+
+Let \(\alpha:U\Rightarrow V\) be a hom-3 operation and let \(z\) be an independent hom-2 update on disjoint factor positions. Compare:
+
+- sliding \(z\) across \(U\) by inner arrows and then applying \(\alpha\);
+- applying \(\alpha\) and then sliding \(z\) across \(V\).
+
+Using degrees in the next lower hom, the directions are:
+
+| Factor degrees | Direction |
+|---|---|
+| \((2,1)\) | inner crossing first \(\Rightarrow\) operation first |
+| \((1,2)\) | operation first \(\Rightarrow\) inner crossing first |
+
+This gives **62 distinct local comparisons**:
+
+- 48 involving an original tensor naturality;
+- six involving \(h_p,h_q,h_r\);
+- eight involving an inner arrow.
+
+The last eight are precisely the pure-inner three-update comparisons, with positional swap sequence
+\[
+010\Longrightarrow101.
+\]
+
+This specification **uses K15 as a chosen convention**: sliding across a composite word is the sequence of pairwise crossings. It does not derive K15 from requirements 4 and 5.
+
+### Verification
+
+`r7_kernel4_check.py` enumerates every negative and positive boundary and verifies:
+
+1. literal equality of their raw hom-2 endpoints;
+2. equality of their tensor hom-3 tableaux;
+3. acyclicity of the directed comparison graph after all hom-3 prefix and suffix contexts are applied.
+
+There are 40,412 raw hom-3 paths, including identities. The \(D,N\) comparisons relate 60,961 distinct ordered pairs of those paths.
+
+These comparisons therefore introduce no reverse path in that generated comparison graph. This is not yet a verification of all higher compositions or of support after further hom-4 equations.
+
+### The other nine sinks
+
+They do not require sink-joining merely to supply the selected top atom’s target. They still participate in the comparisons required on the whole interval.
+
+For example, among paths from \(S\) to the other sink \(\texttt{brcaqp}\), there are 87 raw paths and two tensor hom-3 chains. Disjoint comparisons alone leave 11 weak equivalence classes; adding \(N\) leaves two. Thus the comparisons away from \(T\) affect the quotient.
+
+The files supply all these comparisons. They do not yet supply every variation of all six factorization families requested in Q2.
+
+## 5. The lower quotient is exact on the fixed hom-1 boundary
+
+Here it is essential to quotient the lower-dimensional cells before counting higher paths. Killing inner hom-3 arrows identifies hom-2 words and permits compositions that had no common raw endpoint.
+
+Consider the category with:
+
+- vertices: hom-2 cells having the top atom’s fixed hom-1 boundary;
+- arrows: hom-3 cells;
+- composition: \(\ast_2\).
+
+Impose
+\[
+I=D=N=1.
+\tag{11}
+\]
+
+The explicit inclusion of \(N\) in (11) matters: this calculation assumes the proposed theory makes these inner naturality cells identities in its Gray quotient.
+
+### Disjoint comparisons alone do not suffice
+
+After \(I=1\), the 240 words give 54 hom-2 classes, and there are 264 non-inner generating arrows.
+
+Projecting \(D\) yields:
+
+- 122 equations between single arrows;
+- 48 empty equations;
+- 88 equations between two-arrow paths.
+
+The single-arrow equations leave **152 generator classes**, but their tensor tableaux take only **116 values**. There are 36 split tableau fibres.
+
+The two-arrow equations cannot repair these discrepancies: every equation preserves the number of non-inner arrows, and a two-arrow equation cannot apply to a one-arrow path.
+
+### Adding \(N\) gives the exact hom-3 category
+
+With \(N\), the calculation is:
+
+| Quantity | Count |
+|---|---:|
+| Hom-2 classes | 54 |
+| Generating hom-3 arrows after single-arrow equations | 116 |
+| Nontrivial two-arrow equations | 54 |
+| Paths before those equations, including identities | 1,974 |
+| Equivalence classes of paths | 874 |
+| Positive hom-3 tensor tableaux | 874 |
+| Tableau fibres left disconnected | 0 |
+
+Surjectivity onto the tensor tableaux is checked independently of the path presentation. For each relevant dimension, the program constructs a rational cochain \(f\) satisfying
+\[
+f(\partial b)=1
+\]
+for every basis vector \(b\). Consequently, a nonnegative chain \(c\) with prescribed boundary satisfies
+\[
+\sum_b c_b=f(\partial c).
+\]
+This proves the finite search bounds: coefficient sum six in dimension 2 and at most seven in dimension 3.
+
+The program then enumerates all nonnegative solutions of the tableau equations. These are exactly the cells specified by Steiner’s definition of \(\nu\), with the fixed lower boundaries. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+Thus (11) gives exactly the relevant hom-3 truncation of \(\nu(K)\). This calculation is in `r7_exactness_check.py`.
+
+## 6. Q1: all 15 quotient identifications exist, and four can be addressed before quotienting
+
+### All 15 have existing-\(W\) expressions after the lower quotient
+
+After (11), the interval from the class of \(S\) to the class of \(T\) has:
+
+- 156 hom-3 paths;
+- **26** tensor hom-3 chains, rather than the 25 attained with the fixed raw endpoints;
+- 132 existing-\(W\) instances;
+- all 42 elementary hom-4 tableau edges between those 26 chains.
+
+The additional hom-3 chain arises from compositions newly permitted by the lower quotient. It does not contradict K17’s count of raw paths.
+
+Every one of the 15 fresh \(A_{ij}\) has an existing-\(W\) expression with its full quotient boundary. The certificate provides the hom-3 equation witnesses. One chosen word context for each is:
+
+| Fresh lift | Existing \(W\) | Word prefix | Word suffix |
+|---|---|---|---|
+| \(A_{1,0}\) | \(W_{xy}\) | `crq` | empty |
+| \(A_{2,1}\) | \(W_x\) | `c` | `b` |
+| \(A_{3,2}\) | \(W_{xz}\) | `p` | `rb` |
+| \(A_{4,0}\) | \(W_y\) | `ac` | empty |
+| \(A_{5,4}\) | \(W_x\) | `bc` | empty |
+| \(A_{6,5}\) | \(W_{xy}\) | empty | `qrc` |
+| \(A_{8,3}\) | \(W_y\) | `c` | `a` |
+| \(A_{15,13}\) | \(W_{xz}\) | `r` | `pb` |
+| \(A_{17,12}\) | \(W_z\) | empty | `ab` |
+| \(A_{17,16}\) | \(W_x\) | empty | `bc` |
+| \(A_{20,8}\) | \(W_z\) | `b` | `a` |
+| \(A_{22,15}\) | \(W_y\) | `a` | `c` |
+| \(A_{22,21}\) | \(W_{xz}\) | `r` | `bp` |
+| \(A_{23,22}\) | \(W_x\) | `b` | `c` |
+| \(A_{24,17}\) | \(W_y\) | empty | `ac` |
+
+The requisite hom-3 prefixes, suffixes, and boundary-identification witnesses are recorded separately in the certificate.
+
+These are **well-typed equations available in the lower quotient**. They are not consequences of equal tensor images alone. In particular, the equations \(I=D=N=1\) do not identify a freely adjoined \(A_{ij}\) with an expression using no \(A_{ij}\).
+
+### Three direct replacements
+
+Three fresh generators admit replacements before quotienting:
+\[
+\begin{aligned}
+A_{1,0}
+&:=[W_{xy}(\texttt{crq},\varnothing)]
+   \ast_3\kappa_1,\\
+A_{3,2}
+&:=[W_{xz}(\texttt p,\texttt{rb})]
+   \ast_3\kappa_2,\\
+A_{6,5}
+&:=[W_{xy}(\varnothing,\texttt{qrc})]
+   \ast_3\kappa_3\ast_3\kappa_4.
+\end{aligned}
+\tag{12}
+\]
+
+Here brackets include the existing hom-3 whiskerings. Each \(\kappa_i\) is a forward disjoint-operation comparison. Their full paths are in `r7_exactness_notes.md` §1 and the certificate.
+
+These definitions preserve the original raw boundaries and full tensor tableaux. If the original \(A\)-generators are retained, (12) must instead be imposed as equations.
+
+### A fourth identification by lower whiskering
+
+The case \(A_{2,1}\) cannot be obtained by simply inserting an existing \(W\) between the selected raw \(S\)-to-\(T\) paths. It can nevertheless be handled without adding hom-3 data.
+
+Put
+\[
+u=\texttt{apcqrb},\qquad v=\texttt{capqrb},
+\]
+and let
+\[
+L:\texttt{crqbpa}
+\xrightarrow{T}\texttt{crqpba}
+\xrightarrow{I}\texttt{crqpab}.
+\]
+
+Define existing hom-3 routes \(B_-,B_+:S\to u\) by
+\[
+\begin{aligned}
+B_-={}&L;
+\bigl(
+\texttt{crqpab}
+\xrightarrow{h_z}\texttt{pcqrab}
+\xrightarrow{I}\texttt{pcqarb}
+\xrightarrow{h_q}\texttt{pacqrb}
+\xrightarrow{T}\texttt{apcqrb}
+\bigr),\\[2mm]
+B_+={}&L;
+\bigl(
+\texttt{crqpab}
+\xrightarrow{T}\texttt{crqapb}
+\xrightarrow{\mu}\texttt{acrqpb}
+\xrightarrow{h_z}\texttt{apcqrb}
+\bigr).
+\end{aligned}
+\tag{13}
+\]
+
+Their common suffix to \(T\) is
+\[
+R:
+\texttt{apcqrb}
+\xrightarrow{T}\texttt{apqcrb}
+\xrightarrow{h_r}\texttt{apqbcr}
+\xrightarrow{T}\texttt{apqbrc}.
+\tag{14}
+\]
+Thus the selected K17 paths satisfy literally
+\[
+P_2=B_-\ast_2R,\qquad P_1=B_+\ast_2R.
+\]
+
+There is also the existing inner route
+\[
+\gamma:
+u\xrightarrow{I}\texttt{acpqrb}\xrightarrow{I}v.
+\tag{15}
+\]
+
+Let \(W\) be the existing \(W_x\) in word context with prefix `c` and suffix `b`. Its hom-3 boundaries \(W^-,W^+\) run from `crqpab` to \(v\).
+
+The specified \(D,N\) cells give forward comparisons
+\[
+\begin{aligned}
+\kappa_- &: B_-\ast_2\gamma
+   \Longrightarrow L\ast_2 W^-,\\
+\kappa_+ &: B_+\ast_2\gamma
+   \Longrightarrow L\ast_2 W^+.
+\end{aligned}
+\tag{16}
+\]
+
+The factors are:
+
+| Composite | Forward comparisons, in order |
+|---|---|
+| \(\kappa_-\) | naturality of \(T(pa)\) with \(c\); disjoint \(T(qa)\) and \(I(pc)\); disjoint \(I(ra)\) and \(I(pc)\) |
+| \(\kappa_+\) | disjoint \(\tau(rqp)\) and \(I(ac)\) |
+
+The original operations in this table are expanded by the existing \(h_q\) and \(h_z\) equations where necessary. The certificate records every intermediate route and substitution position.
+
+Adjoin
+\[
+H:B_-\Longrightarrow B_+
+\]
+and impose the hom-4 equation
+\[
+\boxed{
+\kappa_-\ast_3(1_L\ast_2 W)
+=
+(H\ast_2 1_\gamma)\ast_3\kappa_+.
+}
+\tag{17}
+\]
+
+Both sides have **literally the same raw hom-3 source**
+\[
+B_-\ast_2\gamma
+\]
+and **literally the same raw hom-3 target**
+\[
+L\ast_2 W^+.
+\]
+
+Assign \(H\) the tensor basis label
+\[
+x_2\otimes y_1^-\otimes z_1^+.
+\]
+The checker verifies every tableau boundary equation and equality of the tensor images of the two sides of (17).
+
+Now replace the independent generator \(A_{2,1}\) by
+\[
+\boxed{
+A_{2,1}:=H\ast_2 1_R.
+}
+\tag{18}
+\]
+If \(A_{2,1}\) is retained as an independent generator, impose (18) as a second equation.
+
+After \(I=D=N=1\), \(\gamma\) and \(\kappa_\pm\) become identities. Equation (17) reduces by unit laws to
+\[
+\overline H=1_{\overline L}\ast_2\overline W.
+\]
+Consequently,
+\[
+\overline{A}_{2,1}
+=
+(1_{\overline L}\ast_2\overline W)\ast_2 1_{\overline R},
+\]
+which is the required existing-\(W\) expression.
+
+No inner arrow was reversed or cancelled. Before quotienting, \(W\) ends at \(v\), whereas \(R\) starts at \(u\), so their direct whiskered composite is not defined. The new \(H\) supplies the correctly typed comparison before quotienting.
+
+Equations (17)–(18) impose no new hom-3 equation. Their compatibility with the tensor map is verified. **Support injectivity after imposing them is not proved.**
+
+## 7. What remains unresolved
+
+The results above establish:
+
+- a finite, order-independent source-only graph completion with injective normal-form support;
+- a concrete failure of that completion under a composite-valued comparison functor;
+- a nonconfluent critical pair for basic two-sided contractions;
+- explicit \(D,N\) data throughout the 240-word interval;
+- the exact quotient through hom-dimension 3 on the specified boundary;
+- four prequotient identifications of selected fresh hom-4 lifts.
+
+They do not establish the remaining raw identifications and variation equations, support injectivity in hom-dimensions 4 and 5, or exactness through hom-dimension 6.
+
+For **Q4**, K15 remains an assumption in the naturality construction above. I have neither derived it from requirements 4 and 5 nor constructed a complete model satisfying requirements 1–5 in which it fails.
+
+For **Q5**, these calculations give neither a recursive tensor of towers nor an impossibility theorem.
+
+To reproduce the finite results, extract the archive and run:
+
+```bash
+python3 r7_join_closure_check.py
+python3 r7_kernel4_check.py
+python3 r7_exactness_check.py
+```
+
+The archive includes the unchanged earlier-round dependencies, the generated certificates, and the complete paths used in (12) and (17).

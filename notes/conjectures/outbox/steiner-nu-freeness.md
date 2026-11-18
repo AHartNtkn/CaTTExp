@@ -23,7 +23,7 @@ Boundaries truncate the table. For ∂⁺ₖx = ∂⁻ₖy the composite x #ₖ 
 - *Loop-free:* for each p ≥ 0, on basis elements of dimension > p, the relation a <ₚ b iff supp⟨a⟩ₚ⁺ and supp⟨b⟩ₚ⁻ meet generates a strict partial order (Steiner Def. 3.5).
 - *Strongly loop-free:* the relation a ∈ supp(∂b)₋ or b ∈ supp(∂a)₊ generates a strict partial order on the whole basis (Def. 3.6).
 
-The motivating instances are the complexes λΘ of finite globular pasting diagrams and finite globular sets without loops, and their tensor products, with the Leibniz boundary ∂(a ⊗ b) = ∂a ⊗ b + (−1)^{dim a} a ⊗ ∂b. Their bases are unital and strongly loop-free. In the presentation used by the formalisation, each pasting diagram is built by "start with one 0-cell; at a current cell x of type A, add a new cell y of type A and a new cell f : x → y", and tensor products carry an explicit lexicographic total order with the negative faces before and the positive faces after.
+The motivating instances are the complexes λΘ of finite globular pasting diagrams and finite globular sets without loops, and their tensor products, with the Leibniz boundary ∂(a ⊗ b) = ∂a ⊗ b + (−1)^{dim a} a ⊗ ∂b. Their bases are unital and strongly loop-free. In a convenient explicit presentation, each pasting diagram is built by "start with one 0-cell; at a current cell x of type A, add a new cell y of type A and a new cell f : x → y", and tensor products carry an explicit lexicographic total order with the negative faces before and the positive faces after.
 
 ## Statement
 
@@ -49,7 +49,7 @@ Useful known tools:
 
 ## Questions
 
-**Already formalised (N1, strongly loop-free case).** Suppose the basis is listed b₀, …, b_{N−1} so that supp(∂b_i)₋ ⊆ {b_j : j < i} and supp(∂b_i)₊ ⊆ {b_j : j > i}. Then every cell is a composite of atoms, by the following induction on a level s.
+**A short proof of (N1) in the strongly loop-free case (known, given for reference).** Suppose the basis is listed b₀, …, b_{N−1} so that supp(∂b_i)₋ ⊆ {b_j : j < i} and supp(∂b_i)₊ ⊆ {b_j : j > i}. Then every cell is a composite of atoms, by the following induction on a level s.
 - Suppose the rows of x above s+1 are those of an atom ⟨a⟩ (or zero). Then row s+1 is ⟨a⟩_{s+1} + w with w ≥ 0, so the rows above s are those of ⟨a⟩ + Σ_{c ∈ w} ⟨c⟩ (Steiner Prop. 5.2).
 - Peel off the least of these atoms in the basis order: x = y #ₛ z. The rows of y above s are those of that one atom, and the rows of z above s are those of the rest (Steiner Prop. 5.1 for two pieces; the order gives the disjointness it needs).
 - At s = 0, unitality makes the cell an atom (Prop. 5.5).
@@ -73,7 +73,7 @@ The difficulty is that the decomposition of y #ₖ z is unrelated to the decompo
 
 ## Why it matters
 
-A proof assistant development has proved soundness of a type theory for weak ω-categories in every strict ω-category, and computed a lax colimit at the level of chain complexes. To transfer the chain-level computation to strict ω-categories, and to apply the general soundness theorem to the strict model built from Steiner complexes, it needs (N1) and (N2). Chains in the formalisation are finite multisets of basis elements over a decidable total order, so proofs by induction on lists, extremal elements and counting are the easiest to check.
+Freeness of ν(K) on its atoms is what lets computations made at the level of chain complexes (for example lax colimits, joins and Gray cylinders) be transferred to strict ω-categories, and it is the step that lets general results about strict ω-categories be applied to the models ν(K). A machine-checked version needs a proof by induction on explicit data. Chains there are finite multisets of basis elements over a decidable total order, so proofs by induction on lists, extremal elements and counting are the easiest to check.
 
 ## What would count as a solution
 

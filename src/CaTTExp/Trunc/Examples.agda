@@ -15,31 +15,33 @@ open import CaTTExp.Signature
 open import CaTTExp.Pure using (∅; ⟪_⟫)
 open Signature ∅
 open import CaTTExp.GraphFillerExamples using (vcomp; id₂)
-import CaTTExp.Trunc.Check as TC
 
 v : Nat → Tm
 v = var
 
--- Marks: C = var 1 is a set (m = 2), a proposition (m = 1), contractible
--- (m = 0), or unmarked.
-markAt1 : Nat → Tm → Maybe Nat
-markAt1 m (var (suc zero)) = just m
-markAt1 m _                = nothing
+open import CaTTExp.Trunc.Check ∅
 
-module Set′  = TC ∅ (markAt1 2)
-module Prop′ = TC ∅ (markAt1 1)
-module Ctr′  = TC ∅ (markAt1 0)
-module None  = TC ∅ (λ _ → nothing)
+-- Marks are per context. In the contexts below C = var 1 is a set
+-- (m = 2), a proposition (m = 1), contractible (m = 0), or unmarked.
+at1 : Nat → Marks
+at1 m (suc zero) = just m
+at1 m _          = nothing
+
+-- A context with its marks shifted: the same variable index (var 1) is
+-- unmarked in another context, so marks are per declaration.
+at2 : Nat → Marks
+at2 m (suc (suc zero)) = just m
+at2 m _                = nothing
 
 -- The rules as term formers, in pure syntax.
 fill : Nat → List Tm → Tm
-fill k ts = coh (Set′.TF k) (Set′.TFty k) ⟪ ts ⟫
+fill k ts = coh (TF k) (TFty k) ⟪ ts ⟫
 
 inv : Nat → List Tm → Tm
-inv j ts = coh (Set′.TI j) (Set′.TIty j) ⟪ ts ⟫
+inv j ts = coh (TI j) (TIty j) ⟪ ts ⟫
 
 ctr : Tm → Tm → Tm
-ctr c C = coh Set′.TC Set′.TCty ⟪ c ∷ C ∷ [] ⟫
+ctr c C = coh TC TCty ⟪ c ∷ C ∷ [] ⟫
 
 ------------------------------------------------------------------------
 -- 1. A set C, two maps f g : c → C and two cells α β : f ⇒ g.
@@ -55,59 +57,58 @@ private
 hom : Ty
 hom = arr ⋆ c C
 
-open Set′ using (_⊢tm_∶_; check)
 
 -- T-fill at level 1: any two parallel cells are connected, both ways.
-fill-αβ : S ⊢tm fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []) ∶ arr (arr hom f g) α β
-fill-αβ = from-just (check S _ _)
+fill-αβ : S ∣ at1 2 ⊢tm fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []) ∶ arr (arr hom f g) α β
+fill-αβ = from-just (check S (at1 2) _ _)
 
-fill-βα : S ⊢tm fill 1 (c ∷ C ∷ f ∷ g ∷ β ∷ α ∷ []) ∶ arr (arr hom f g) β α
-fill-βα = from-just (check S _ _)
+fill-βα : S ∣ at1 2 ⊢tm fill 1 (c ∷ C ∷ f ∷ g ∷ β ∷ α ∷ []) ∶ arr (arr hom f g) β α
+fill-βα = from-just (check S (at1 2) _ _)
 
 -- T-inv at level 1: α has an inverse g ⇒ f.
 α⁻ : Tm
 α⁻ = inv 0 (c ∷ C ∷ f ∷ g ∷ α ∷ [])
 
-inv-α : S ⊢tm α⁻ ∶ arr hom g f
-inv-α = from-just (check S _ _)
+inv-α : S ∣ at1 2 ⊢tm α⁻ ∶ arr hom g f
+inv-α = from-just (check S (at1 2) _ _)
 
 -- The inverse laws are T-fill instances at level 1.
 αα⁻ : Tm
 αα⁻ = vcomp c C f g α f α⁻
 
-law-l : S ⊢tm fill 1 (c ∷ C ∷ f ∷ f ∷ αα⁻ ∷ id₂ c C f ∷ []) ∶ arr (arr hom f f) αα⁻ (id₂ c C f)
-law-l = from-just (check S _ _)
+law-l : S ∣ at1 2 ⊢tm fill 1 (c ∷ C ∷ f ∷ f ∷ αα⁻ ∷ id₂ c C f ∷ []) ∶ arr (arr hom f f) αα⁻ (id₂ c C f)
+law-l = from-just (check S (at1 2) _ _)
 
 -- A level-2 filler between the two fillers α ⇛ β (T-fill at level 2).
-fill₂ : S ⊢tm fill 2 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ [])
+fill₂ : S ∣ at1 2 ⊢tm fill 2 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ [])
                         ∷ fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []) ∷ [])
              ∶ arr (arr (arr hom f g) α β) (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))
                                            (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))
-fill₂ = from-just (check S _ _)
+fill₂ = from-just (check S (at1 2) _ _)
 
 -- Negatives.
 -- Level 0 is below a set's filler level: no cell f ⇒ g.
-_ : is-just (check S (fill 0 (c ∷ C ∷ f ∷ g ∷ [])) (arr hom f g)) ≡ false
+_ : is-just (check S (at1 2) (fill 0 (c ∷ C ∷ f ∷ g ∷ [])) (arr hom f g)) ≡ false
 _ = refl
 
 -- Unmarked C: nothing fills α ⇛ β.
-_ : is-just (None.infer S (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))) ≡ false
+_ : is-just (infer S none (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))) ≡ false
 _ = refl
 
 -- No contraction for a set.
-_ : is-just (Set′.infer S (ctr c C)) ≡ false
+_ : is-just (infer S (at1 2) (ctr c C)) ≡ false
 _ = refl
 
 ------------------------------------------------------------------------
 -- 2. Lower marks.
 
 -- A proposition: any two maps f g : c → C are connected (level 0).
-prop-fg : S Prop′.⊢tm fill 0 (c ∷ C ∷ f ∷ g ∷ []) ∶ arr hom f g
-prop-fg = from-just (Prop′.check S _ _)
+prop-fg : S ∣ at1 1 ⊢tm fill 0 (c ∷ C ∷ f ∷ g ∷ []) ∶ arr hom f g
+prop-fg = from-just (check S (at1 1) _ _)
 
 -- Contractible: a map c → C exists.
-ctr-c : S Ctr′.⊢tm ctr c C ∶ hom
-ctr-c = from-just (Ctr′.check S _ _)
+ctr-c : S ∣ at1 0 ⊢tm ctr c C ∶ hom
+ctr-c = from-just (check S (at1 0) _ _)
 
 ------------------------------------------------------------------------
 -- 3. Eckmann–Hilton for free: two endo-cells α β : f ⇒ f of a map into
@@ -124,8 +125,8 @@ private
   _·_ : Tm → Tm → Tm
   a · b = vcomp c C f f a f b
 
-swap : E ⊢tm fill 1 (c ∷ C ∷ f ∷ f ∷ (e₁ · e₂) ∷ (e₂ · e₁) ∷ []) ∶ arr (arr hom f f) (e₁ · e₂) (e₂ · e₁)
-swap = from-just (check E _ _)
+swap : E ∣ at1 2 ⊢tm fill 1 (c ∷ C ∷ f ∷ f ∷ (e₁ · e₂) ∷ (e₂ · e₁) ∷ []) ∶ arr (arr hom f f) (e₁ · e₂) (e₂ · e₁)
+swap = from-just (check E (at1 2) _ _)
 
 ------------------------------------------------------------------------
 -- 4. The §2.5 payoff, abstracted from products. For a monoid in a set R
@@ -150,9 +151,37 @@ private
   lhs = vcomp c C p₁ p₂ a₁ p₃ a₂
   rhs = vcomp c C p₁ p₅ (vcomp c C p₁ p₄ a₃ p₅ a₄) p₃ a₅
 
-pentagon : Pent ⊢tm fill 1 (c ∷ C ∷ p₁ ∷ p₃ ∷ lhs ∷ rhs ∷ []) ∶ arr (arr hom p₁ p₃) lhs rhs
-pentagon = from-just (check Pent _ _)
+pentagon : Pent ∣ at1 2 ⊢tm fill 1 (c ∷ C ∷ p₁ ∷ p₃ ∷ lhs ∷ rhs ∷ []) ∶ arr (arr hom p₁ p₃) lhs rhs
+pentagon = from-just (check Pent (at1 2) _ _)
 
 -- Without the mark the same question has no answer from these rules.
-_ : is-just (None.infer Pent (fill 1 (c ∷ C ∷ p₁ ∷ p₃ ∷ lhs ∷ rhs ∷ []))) ≡ false
+_ : is-just (infer Pent none (fill 1 (c ∷ C ∷ p₁ ∷ p₃ ∷ lhs ∷ rhs ∷ []))) ≡ false
+_ = refl
+
+-- Marks are per declaration: marking var 2 (the map f) instead of var 1
+-- does not make C a set, so the same filler is rejected.
+_ : is-just (infer S (at2 2) (fill 1 (c ∷ C ∷ f ∷ g ∷ α ∷ β ∷ []))) ≡ false
+_ = refl
+
+------------------------------------------------------------------------
+-- 5. Higher cells in a localisation (F4a). T-loc makes L = ⟦Γ⟧[M⁻¹]
+-- a 1-category (m = 3). Its elements are maps c → L (level 0), its
+-- arrows level-1 cells, and any two parallel 2-cells α β : f ⇒ g
+-- between arrows f g : x → y are connected by T-fill at level 2, and
+-- so on above. Level 1 is not covered (that is LocalisedFiller's job).
+
+Loc : Ctx
+Loc = ε ▸ ⋆ ▸ ⋆ ▸ hom ▸ hom ▸ arr hom (v 2) (v 3) ▸ arr hom (v 2) (v 3)
+        ▸ arr (arr hom (v 2) (v 3)) (v 4) (v 5) ▸ arr (arr hom (v 2) (v 3)) (v 4) (v 5)
+
+private
+  x y φ ψ a b : Tm
+  x = v 2 ; y = v 3 ; φ = v 4 ; ψ = v 5 ; a = v 6 ; b = v 7
+
+loc-3cell : Loc ∣ at1 3 ⊢tm fill 2 (c ∷ C ∷ x ∷ y ∷ φ ∷ ψ ∷ a ∷ b ∷ [])
+                          ∶ arr (arr (arr hom x y) φ ψ) a b
+loc-3cell = from-just (check Loc (at1 3) _ _)
+
+-- But a 1-category gives nothing at level 1: no arrow φ ⇒ ψ.
+_ : is-just (infer Loc (at1 3) (fill 1 (c ∷ C ∷ x ∷ y ∷ φ ∷ ψ ∷ []))) ≡ false
 _ = refl

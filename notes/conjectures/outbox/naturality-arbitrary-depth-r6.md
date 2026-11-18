@@ -177,3 +177,825 @@ Any of the following:
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
+
+# Researcher Response
+
+**Question 1 admits a construction using \(F*_0G\) as the normal representative of the two-letter strict cell.** The two evaluation orders then become two ways of multiplying matrices of \(2\)-cells. Their comparison is built on ordinary pasting contexts.
+
+The new ingredients are:
+
+- a uniform normal form that retains horizontal identity \(2\)-factors;
+- a path comparison that separates two displayed horizontal factors;
+- a horizontal fold on \(C_3*_0C_3\);
+- its compatibility with vertical folding, formed first on \(C_6*_0C_6\);
+- a separate clause for a column that becomes point-supported under substitution.
+
+Together with the results accepted in §2, these give RC(3) for the requested cylinder. I also give an explicit \(4\)-cell for the basic two-generator interchange in question 2, without claiming the full RC(3) statement there.
+
+## 1. The strict values and the only new case
+
+Write
+\[
+a=x^-,\qquad b=x^+,\qquad c=y,\qquad d=z.
+\]
+The generating \(1\)-cells are
+\[
+X:a\to b,\quad f^-:a\to c,\quad f^+:b\to c,\quad
+g^-,g^+:c\to d,
+\]
+with
+\[
+F:f^-\Rightarrow X*_0f^+,\qquad
+G:g^-\Rightarrow g^+.
+\]
+
+Set, as actual bracketed \(1\)-terms,
+\[
+f_0=f^-,
+\qquad f_1=X*_0f^+,
+\qquad g_0=g^-,
+\qquad g_1=g^+,
+\]
+and
+\[
+p_{ij}=f_i*_0g_j.
+\tag{1}
+\]
+
+The strict \(1\)-paths from \(a\) to \(d\) are exactly \(\pi p_{ij}\). A strict \(2\)-cell between them exists exactly when
+\[
+(i,j)\le(i',j')
+\quad\Longleftrightarrow\quad
+i\le i',\ j\le j',
+\]
+and is unique.
+
+Indeed, \(F\) changes the first coordinate from \(0\) to \(1\), and \(G\) changes the second. Neither change can be repeated. The two orders for changing both coordinates are identified by strict interchange.
+
+Denote the diagonal strict \(2\)-cell by
+\[
+H:\pi p_{00}\Rightarrow\pi p_{11}.
+\]
+
+The other nonidentity strict \(2\)-values are
+\[
+F,\quad G,\quad f^+*_0G,
+\]
+and
+\[
+F*_0g_0,\quad F*_0g_1,\quad f_0*_0G,\quad f_1*_0G.
+\tag{2}
+\]
+
+Every value in (2) uses at most one of \(F,G\). By the support lemma in §2.16, terms with those values restrict literally to the corresponding one-generator subcontexts.
+
+For the triangle \(F\), its two boundary paths \(f^-\) and \(Xf^+\) have only their endpoints in common. Thus the one-column construction applies exactly as in the square case. Its fixed-path extensions are covered by the finite-path construction. The \(G\)-subcontexts are genuine pastings, possibly with fixed path prefixes.
+
+Consequently, **only the \(H\)-case needs a new proof**. A comparison whose strict \(2\)-boundary is not \(H\) can use the established one-column RC(3).
+
+## 2. Uniform normal forms
+
+Write
+\[
+\cdot=*_{1},\qquad ;=*_{2}.
+\]
+For parallel full terms on a pasting context \(P\), put
+\[
+\mathsf C_P(s,t)=\operatorname{coh}_{P,s\to t}[\mathrm{id}].
+\]
+
+Write \(\kappa(A,B)\) for the fixed path \(2\)-comparison on the common literal edge word of \(A,B\).
+
+Define local raw \(2\)-terms
+\[
+a_{00}=1_{f_0},\qquad a_{11}=1_{f_1},\qquad a_{01}=F,
+\]
+\[
+b_{00}=1_{g_0},\qquad b_{11}=1_{g_1},\qquad b_{01}=G.
+\tag{3}
+\]
+
+For a transition
+\[
+\delta:(i,j)\longrightarrow(i',j'),
+\]
+define
+\[
+E_\delta=a_{ii'}*_0b_{jj'}.
+\tag{4}
+\]
+
+In particular,
+\[
+E_H=F*_0G.
+\]
+For a one-letter transition, (4) retains an identity \(2\)-factor. For an identity transition,
+\[
+E_{\mathrm{id}_{ij}}=1_{f_i}*_01_{g_j}.
+\]
+These are not identified definitionally with mixed whiskerings or identities.
+
+For actual \(1\)-terms \(A,B\) with the appropriate strict paths, put
+\[
+\boxed{
+N_\delta(A,B)
+=
+\bigl(\kappa(A,p_{ij})\cdot E_\delta\bigr)
+\cdot\kappa(p_{i'j'},B).
+}
+\tag{5}
+\]
+
+Use the corresponding local normal forms
+\[
+N^F_{ii'}(A,A')
+=
+\bigl(\kappa(A,f_i)\cdot a_{ii'}\bigr)
+\cdot\kappa(f_{i'},A'),
+\tag{6}
+\]
+and similarly \(N^G\).
+
+For an empty transition these normal forms are path-only. Hence the old empty-word normal form \(\kappa(A,B)\) can be changed to (5) or (6) by a direct path \(3\)-coherence; comparisons between those changes are direct path \(4\)-coherences.
+
+### The raw exchange
+
+Let \(P=D^2(u)*_0D^2(v)\), with
+\[
+u:r_0\Rightarrow r_1,\qquad v:s_0\Rightarrow s_1.
+\]
+The two terms
+\[
+R_{GF}=(r_0*_0v)\cdot(u*_0s_1),
+\]
+\[
+R_{FG}=(u*_0s_0)\cdot(r_1*_0v)
+\]
+are literally parallel and full in \(P\). Thus
+\[
+\chi=\mathsf C_P(R_{GF},R_{FG})
+\tag{7}
+\]
+is the exchange \(3\)-cell.
+
+Substitute
+\[
+r_0\mapsto f_0,\quad r_1\mapsto f_1,\quad
+s_0\mapsto g_0,\quad s_1\mapsto g_1,\quad
+u\mapsto F,\quad v\mapsto G.
+\]
+The whole composite \(X*_0f^+\) is assigned to \(r_1\).
+
+Both orders also have direct \(3\)-comparisons
+\[
+\theta_{GF}:R_{GF}\Rightarrow u*_0v,
+\qquad
+\theta_{FG}:R_{FG}\Rightarrow u*_0v
+\]
+on \(P\). Their compatibility with exchange is the explicit \(4\)-term
+\[
+\mathsf C_P(\chi;\theta_{FG},\theta_{GF}).
+\tag{8}
+\]
+
+The remaining issue is extending this comparison through arbitrary substituted arguments. The following folds do that.
+
+## 3. Raw multiplication and the vertical fold
+
+For \(i\le j\le k\), choose
+\[
+m^F_{ijk}:a_{ij}\cdot a_{jk}\Longrightarrow a_{ik}.
+\tag{9}
+\]
+If \(F\) is present, this is a coherence on \(D^2(F)\). Otherwise it is a coherence on \(D^1(f_i)\). Define \(m^G\) similarly.
+
+Let
+\[
+I_{\alpha,\alpha';\beta,\beta'}:
+(\alpha*_0\beta)\cdot(\alpha' *_0\beta')
+\Longrightarrow
+(\alpha\cdot\alpha')*_0(\beta\cdot\beta')
+\tag{10}
+\]
+be the direct \(3\)-coherence on \(C_2*_0C_2\).
+
+For composable transitions \(\delta,\epsilon\), define
+\[
+\boxed{
+M_{\delta,\epsilon}
+=
+I;\bigl(m^F*_0m^G\bigr):
+E_\delta\cdot E_\epsilon
+\Longrightarrow E_{\delta\epsilon}.
+}
+\tag{11}
+\]
+
+Here and below, juxtaposition of transition indices denotes diagrammatic composition.
+
+### Raw \(4\)-laws
+
+The associative comparison for (11), with the required associator inserted, is a direct \(4\)-coherence on the following minimal arity:
+
+| Total transition | Arity |
+|---|---|
+| \(H\) | \(D^2(F)*_0D^2(G)\) |
+| Only \(F\) | \(D^2(F)*_0D^1(g_j)\) |
+| Only \(G\) | \(D^1(f_i)*_0D^2(G)\) |
+| Identity | \(D^1(f_i)*_0D^1(g_j)\) |
+
+For example, compare
+\[
+(M_{\delta,\epsilon}*_1E_\eta);
+M_{\delta\epsilon,\eta}
+\]
+with
+\[
+\mathfrak a;
+(E_\delta*_1M_{\epsilon,\eta});
+M_{\delta,\epsilon\eta},
+\tag{12}
+\]
+where
+\[
+\mathfrak a:
+(E_\delta\cdot E_\epsilon)\cdot E_\eta
+\Longrightarrow
+E_\delta\cdot(E_\epsilon\cdot E_\eta).
+\]
+
+Both routes have the same literal source and target. If the total transition is \(H\), both are full on \(D^2(F)*_0D^2(G)\). The other rows are identical support checks.
+
+These comparisons are formed with \(f_i,g_j\) as formal \(1\)-variables. Only afterward is \(f_1\) assigned \(X*_0f^+\).
+
+### Multiplication of padded normal forms
+
+Construct
+\[
+\mu_{\delta,\epsilon}:
+N_\delta(A,B)\cdot N_\epsilon(B,C)
+\Longrightarrow
+N_{\delta\epsilon}(A,C)
+\tag{13}
+\]
+by this fixed procedure:
+
+1. Reassociate the two three-entry lists.
+2. Contract the middle pair
+   \[
+   \kappa(p,B)\cdot\kappa(B,p)
+   \Longrightarrow\kappa(p,p)
+   \]
+   by the path multiplication.
+3. Use a path \(3\)-coherence
+   \[
+   \kappa(p,p)\Longrightarrow1_p.
+   \]
+4. Remove that identity by specified unit \(3\)-coherences.
+5. Apply \(M_{\delta,\epsilon}\) to the two central raw terms.
+6. Restore the association in (5).
+
+The \(4\)-laws for (13) use the already established path-contraction comparisons, unit and reassociation naturality on vertical pastings, and the raw comparisons (12).
+
+An arbitrary intermediate \(1\)-term \(B\) is removed by path multiplication. It is never assumed to split at \(y\).
+
+## 4. Separating path comparisons at a displayed cut
+
+For actual paths \(u,v\), suppose
+\[
+a,a'\text{ have path }u,\qquad b,b'\text{ have path }v.
+\]
+Define
+\[
+\boxed{
+\zeta:
+\kappa(a*_0b,a' *_0b')
+\Longrightarrow
+\kappa(a,a')*_0\kappa(b,b').
+}
+\tag{14}
+\]
+This is a direct \(3\)-coherence on the actual concatenated path \(uv\).
+
+The endpoints in (14) must have the displayed binary form. The construction does not split an arbitrary \(1\)-term.
+
+The essential \(4\)-compatibility compares
+\[
+(\zeta^{-1}_{01}\cdot\zeta^{-1}_{12});m_{uv}
+\tag{15}
+\]
+with
+\[
+I;(m_u*_0m_v);\zeta^{-1}_{02}.
+\tag{16}
+\]
+Their common source is
+\[
+\bigl(\kappa(a_0,a_1)*_0\kappa(b_0,b_1)\bigr)
+\cdot
+\bigl(\kappa(a_1,a_2)*_0\kappa(b_1,b_2)\bigr),
+\]
+and their common target is
+\[
+\kappa(a_0*_0b_0,a_2*_0b_2).
+\]
+
+All terms in (15)–(16) are path-only. Their comparison is therefore one direct \(4\)-coherence on the actual path \(uv\). The unit variants, including comparison of \(1_a*_01_b\) with \(1_{a*_0b}\), are formed on that path as well.
+
+## 5. The new horizontal fold
+
+For two composable three-entry lists
+\[
+L=\operatorname{LF}[L_1,L_2,L_3],
+\qquad
+R=\operatorname{LF}[R_1,R_2,R_3],
+\]
+let
+\[
+Z_3:
+L*_0R
+\Longrightarrow
+\operatorname{LF}
+[L_1*_0R_1,L_2*_0R_2,L_3*_0R_3]
+\tag{17}
+\]
+be the direct \(3\)-coherence on \(C_3*_0C_3\).
+
+Evaluate its columns at the local normal forms (6). The middle pair is exactly \(E_\delta\). Apply \(\zeta^{-1}\) to the first and last pairs. This defines
+\[
+\boxed{
+\psi:
+N^F_{ii'}(A,A')*_0N^G_{jj'}(B,B')
+\Longrightarrow
+N_\delta(A*_0B,A' *_0B').
+}
+\tag{18}
+\]
+
+The six entries are independent \(2\)-variables when (17) is formed. Their path-only status is used only after evaluation.
+
+Identity \(2\)-factors remain explicit, so (18) includes one-letter and empty transitions.
+
+### 5.1 The horizontal–vertical \(4\)-cell
+
+Let \(L_1,L_2\) be composable local left normal forms and \(R_1,R_2\) composable local right normal forms. The required comparison is
+\[
+\boxed{
+(\psi_1*_1\psi_2);\mu
+\Longrightarrow_4
+I(L_1,L_2;R_1,R_2);
+(\mu^F*_0\mu^G);
+\psi.
+}
+\tag{19}
+\]
+
+Both routes start at
+\[
+(L_1*_0R_1)\cdot(L_2*_0R_2)
+\]
+and end at the same literal normal form.
+
+Here is a construction of (19).
+
+#### First: align the pure interchange recipes
+
+Write the concatenated columns as six independent entries
+\[
+l_1,\ldots,l_6,\qquad r_1,\ldots,r_6.
+\]
+
+On \(C_6*_0C_6\), compare these two \(3\)-routes:
+
+- apply \(Z_3\) to each three-entry block and reassociate the resulting two lists;
+- apply \(I\) to the two blocks, reassociate each column to six entries, and apply \(Z_6\).
+
+Both end at
+\[
+\operatorname{LF}[l_1*_0r_1,\ldots,l_6*_0r_6].
+\]
+Both have every marked \(2\)-variable in their free-variable sets. Their comparison is
+\[
+\mathsf C_{C_6*_0C_6}(\text{first route},\text{second route}).
+\tag{20}
+\]
+
+#### Second: group the middle path pairs
+
+After evaluation, the middle pair in each column consists of its outgoing and incoming path comparisons. Group each such pair as one \(2\)-argument.
+
+Moving its \(3\)-contraction through the zip uses top-argument naturality on
+\[
+V_5(0,0,1,0,0)*_0V_5(0,0,1,0,0).
+\tag{21}
+\]
+
+These are naturalities in top-dimensional \(2\)-arguments of \(3\)-terms, hence within the already established depth-\(\le1\) case. For the explicit word recipes, they can equivalently be formed as direct \(4\)-coherences on these duplicated pastings. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+Grouping precedes the substitution into (21). Thus a composite path comparison is assigned as a whole \(2\)-argument.
+
+#### Third: compare the middle path operations
+
+The global route contracts
+\[
+\kappa(p,B_L*_0B_R)\cdot\kappa(B_L*_0B_R,p)
+\]
+to \(1_p\).
+
+The columnwise route first interchanges the two pairs, contracts them separately, and then compares
+\[
+1_{f_i}*_01_{g_j}
+\]
+with \(1_p\).
+
+These are precisely the path-only routes (15)–(16), followed by their unit comparisons. Use their direct actual-path \(4\)-coherence.
+
+The middle term here is literally \(B_L*_0B_R\), because it was produced by (18). No arbitrary \(1\)-term is being split.
+
+#### Fourth: compare the raw multiplication
+
+After the path operations, the central comparison is between raw unit/interchange recipes for
+\[
+E_\delta\cdot E_\epsilon\Longrightarrow E_{\delta\epsilon}.
+\]
+Use the appropriate minimal pasting from the table in §3.
+
+Finally, move the two exterior path repairs past these central operations using vertical pastings such as
+\[
+V_5(1,0,1,0,1).
+\]
+
+This completes (19).
+
+In this construction, \(\zeta\) is kept as a whole path-only comparison. It is not treated as a generic \(3\)-variable while simultaneously exposing its horizontal target factors. Only componentwise repairs are moved through the horizontal interchanger; the remaining comparisons are made on actual paths.
+
+### 5.2 Arbitrarily long retained columns
+
+Although the actual state set has only two coordinates taking values \(0,1\), a retained arity may have arbitrarily many slots.
+
+On a reference frame \(C_m*_0C_n\), use
+\[
+a_{ii'}=\operatorname{LF}[z_{i+1},\ldots,z_{i'}],
+\qquad
+b_{jj'}=\operatorname{LF}[w_{j+1},\ldots,w_{j'}],
+\tag{22}
+\]
+with identities for empty intervals.
+
+Local multiplication is the fixed concatenation/reassociation \(3\)-term on the corresponding vertical chain. Equations (10), (11), (17), and (19) apply with these whole column words as arguments.
+
+Comparing two block decompositions is done on the expanded genuine pasting
+\[
+C_M*_0C_N,
+\]
+before evaluation. Every expanded slot is retained.
+
+After evaluation, the required comparisons are exactly:
+
+- vertical-fold associativity and units;
+- (19);
+- top-argument naturality;
+- the actual-path laws (15)–(16).
+
+This includes a marked slot assigned a long word. It does not require normalizing a newly assembled composite recursively.
+
+## 6. Retained heads and the necessary degeneration clause
+
+For the strict value \(H\), the two boundary paths are
+\[
+f^-g^-,
+\qquad Xf^+g^+.
+\]
+Their common vertices are exactly
+\[
+a,\ c,\ d.
+\tag{23}
+\]
+
+Every original \(0\)-cut of an evaluated pasting must be assigned a common vertex of its two boundary paths. Hence a head with value \(H\) has one of these retained forms:
+
+\[
+C_n
+\qquad\text{or}\qquad
+C_m*_0C_n,
+\tag{24}
+\]
+and in dimension \(3\),
+\[
+V_n(\mathbf k)
+\qquad\text{or}\qquad
+V_m(\mathbf k)*_0V_n(\mathbf l).
+\tag{25}
+\]
+
+In the two-column case the nondegenerate cut is \(c=y\). The left column has value \(F\), the right column value \(G\). Other columns are point-supported.
+
+The literal factorization follows from §2.12 and §2.16:
+
+- copy every variable in each active original column;
+- replace an inactive column by the literal lift of its assigned terms to their path context;
+- retain every slot in a surviving active column, even if that individual slot evaluates to a path-only term.
+
+This gives a literal equality of substitutions
+\[
+\gamma=\kappa[\eta].
+\tag{26}
+\]
+
+There is no literal refinement that splits an arbitrary merged slot of value \(H\) into an \(F\)-slot and a \(G\)-slot. Such a slot is left intact until its recursive normalizer has been applied.
+
+### 6.1 A column may disappear
+
+Unlike the one-column case, one active column can become inactive while the total value remains nonempty.
+
+If the resulting value is not \(H\), the support lemma restricts the comparison to an already settled one-generator subcontext.
+
+If the result remains \(H\), the cut in (24) can be assigned only \(a,c,d\):
+
+- at \(c\), both columns remain active and (18)–(19) apply;
+- at \(a\) or \(d\), one column is point-supported.
+
+The point-supported column must be partially evaluated literally before forming the common reduced-frame comparison. A direct coherence on the unreduced frame would have the wrong support if one route had already omitted that column.
+
+### 6.2 Explicit absorption of a point-supported column
+
+This case does not require RC(3) for \(H\).
+
+Suppose
+\[
+q:\ell_0\Rightarrow\ell_1
+\]
+is a \(2\)-term supported at the source point of a marked \(2\)-variable
+\[
+z:s\Rightarrow t.
+\]
+On \(D^2(z)\), form
+\[
+\boxed{
+B_q(z):
+q*_0z
+\Longrightarrow
+\bigl(\kappa(\ell_0*_0s,s)\cdot z\bigr)
+\cdot\kappa(t,\ell_1*_0t).
+}
+\tag{27}
+\]
+
+Here \(q,\ell_0,\ell_1\) are literal terms on the source point. Therefore both endpoints of (27) are terms on \(D^2(z)\), and both are full there. Take their direct \(3\)-coherence.
+
+After assigning \(z\) an actual term, repair the two evaluated path comparisons to the fixed comparisons on the expanded actual paths. The right-point version is analogous. A point-supported \(1\)-whisker is handled by the same construction with its mixed composite.
+
+The required laws are formed before evaluating \(z\):
+
+- naturality in \(z\) on \(D^3\);
+- comparison with a vertical word on \(C_N\), with every word entry kept independent;
+- comparisons between point-supported coefficients on that point, then inserted beside the marked word.
+
+Only afterward are the actual-path repairs applied.
+
+In particular, if \(z\) is assigned a whole \(H\)-term, it remains one marked argument during this comparison. There is no appeal to RC(3) for its evaluated value.
+
+Allow \(C_0=D^1\) in the relative frames. A zero-slot column assigned a point-supported \(1\)-loop is covered by this same clause.
+
+## 7. Normalizers and fusion
+
+For values other than \(H\), use the established one-column normalizers, transported to conventions (5)–(6).
+
+For a \(2\)-term \(T\) of value \(H\), use (26) to write it exactly as
+\[
+T=H_0[\eta]
+\]
+on one of the retained pastings (24).
+
+Choose its reference expression \(B_{H_0}\):
+
+- for \(C_n\), the vertical word in all retained \(2\)-variables;
+- for \(C_m*_0C_n\), the horizontal product of the two vertical words;
+- in both cases, outer path comparisons matching the exact \(1\)-boundaries of \(H_0\).
+
+Both \(H_0\) and \(B_{H_0}\) are full in the retained pasting. Define
+\[
+v_{H_0}=\mathsf C_R(H_0,B_{H_0}).
+\]
+
+The evaluator has these clauses:
+
+\[
+\begin{array}{c|l}
+\text{Reference expression} & \text{Evaluation comparison}\\ \hline
+z & \nu_{\eta z}\\
+K\text{ path-only} & \text{direct actual-path normalizer}\\
+U\cdot V & (D_U*_1D_V);\mu\\
+U*_0V\text{ at the nondegenerate cut} & (D_U*_0D_V);\psi\\
+\text{point-supported column} & \text{the construction }B_q\text{ and its path repairs}\\
+\text{fixed path whiskering} & \text{the established fixed-path comparison}.
+\end{array}
+\tag{28}
+\]
+
+Put
+\[
+\boxed{
+\nu_T=v_{H_0}[\eta];D_{B_{H_0},\eta}.
+}
+\tag{29}
+\]
+
+The only recursive normalizer calls in (28) are on the proper original \(2\)-arguments assigned to the retained slots. Evaluation of a reference word is a finite fold.
+
+### Fusion
+
+Define relative normalizers on the retained pastings using the arbitrary finite reference grids (22). Then construct
+\[
+\boxed{
+\mathcal F_{u,\sigma}:
+\nu_{u[\sigma]}
+\Longrightarrow_4
+\lambda_u[\sigma];D_{B_u,\sigma}.
+}
+\tag{30}
+\]
+
+The induction is on the relative term \(u\).
+
+For a nonvariable head, apply the induction hypotheses to its proper arguments. The remaining comparisons are exhausted by the expression grammar (28):
+
+- repeated vertical folds use the laws of \(\mu\);
+- horizontal folding followed by vertical folding uses (19);
+- changes in marked \(2\)-arguments use top-argument naturality;
+- path comparisons use (15)–(16);
+- fixed paths use the established laws;
+- a vanished column uses the explicit point-absorption construction (27).
+
+If the evaluated value is a one-letter value, the established RC(3) in its support subcontext also supplies the comparison directly.
+
+When a column disappears but the total value remains \(H\), partially evaluate that point column first. Compare the resulting head recipes on the surviving \(C_n\), with all surviving marked slots still independent. The reference-word change is the explicit point-absorption recipe, not an arbitrary new \(3\)-coherence whose fusion would remain to be proved.
+
+For the variable case, a relative variable may be assigned an arbitrary \(H\)-term \(Z\). Use the generic padded-disc naturality on
+\[
+D^3(h:Z\Rightarrow N_H),
+\qquad h\mapsto\nu_Z.
+\]
+Move the padding insertion across \(\nu_Z\), then use the three-entry word-unit calculation. This uses the already constructed \(\nu_Z\); it does not call the normalizer on \(N_H\).
+
+Thus (30) is well founded.
+
+## 8. The \(3\)-term induction
+
+For every \(3\)-term \(J:T\Rightarrow T'\) with strict \(2\)-boundary \(H\), construct
+\[
+\Lambda_J:
+J;\nu_{T'}\Longrightarrow_4\nu_T.
+\tag{31}
+\]
+
+For a head on a retained \(2\)-pasting \(R\), the relative boundary normalizers end at the same reference normal form. Hence
+\[
+\mathsf C_R
+\bigl(H_0;\lambda_{\tau H_0},\lambda_{\sigma H_0}\bigr)
+\tag{32}
+\]
+is a full \(4\)-coherence.
+
+For a head on a retained \(3\)-pasting from (25), let \(\mathcal W\) update every retained \(3\)-link in the reference expression. In two columns, form the two column actions and then their horizontal composite. Slots without a \(3\)-link contribute their identity \(3\)-terms.
+
+Every retained \(3\)-variable belongs to the support of \(\mathcal W\). Therefore
+\[
+\mathsf C_R
+\bigl(
+H_0;\lambda_{\tau H_0},
+\lambda_{\sigma H_0};\mathcal W
+\bigr)
+\tag{33}
+\]
+is full.
+
+After evaluation, move the final fold backward through \(\mathcal W\):
+
+- vertical positions use the \(\mu\)-laws;
+- horizontal positions use (19) and top-argument naturality of \(\psi\);
+- collapsed columns use (27);
+- each marked \(3\)-argument uses its proper-argument \(\Lambda\).
+
+Every proper argument of a split head at \(y\) is in an already settled one-letter case. A proper argument of a merged head can have value \(H\), but is smaller in the syntax.
+
+Together with (30), this constructs (31) for every \(3\)-term.
+
+### The requested \(4\)-term
+
+Let
+\[
+\alpha,\beta:T\Rightarrow T'
+\]
+be parallel \(3\)-terms. In the \(H\)-case, form
+\[
+\Lambda_\alpha *_3\overline{\Lambda_\beta}:
+\alpha;\nu_{T'}
+\Longrightarrow
+\beta;\nu_{T'}.
+\]
+Right-cancel the invertible normalizer \(\nu_{T'}\), using the same explicit cancellation construction as in the earlier rounds.
+
+Thus
+\[
+\boxed{
+\operatorname{Fill}(\alpha,\beta)
+=
+\operatorname{Cancel}_{\nu_{T'}}
+\bigl(\Lambda_\alpha *_3\overline{\Lambda_\beta}\bigr)
+:
+\alpha\Longrightarrow\beta.
+}
+\tag{34}
+\]
+
+The other strict \(2\)-boundary cases were settled in §1. Hence
+\[
+\boxed{
+\mathrm{RC}(3)_{\,
+(x\to y\to z)\uparrow\{x,f,g\}}.
+}
+\]
+
+In this \(2\)-dimensional context, every strict \(3\)-cell is an identity, so the construction connects every pair of parallel \(3\)-terms.
+
+For a \(3\)-dimensional coherence \(c\) over this chain and selection, the requested naturality term is the instance
+\[
+K(Q,B,Y)=\operatorname{Fill}(a_c,b_c),
+\]
+for any fixed lower lifts.
+
+## 9. An explicit interchange \(4\)-cell for question 2
+
+The horizontal two-disc cylinder has one useful new comparison that can be constructed independently of its full RC(3) theorem.
+
+Use
+\[
+A:f_0\Rightarrow f_1,\qquad B:g_0\Rightarrow g_1,
+\]
+and their cylinder generators \(U_A,U_B\). Set
+\[
+V=f_0^-*_0U_B,
+\qquad
+U=U_A*_0g_1^+.
+\]
+
+Their \(1\)-boundaries at the intended interface are
+\[
+\partial_1^+V=f_0^-*_0(Y*_0g_1^+),
+\]
+\[
+\partial_1^-U=(f_0^-*_0Y)*_0g_1^+.
+\]
+Choose the path \(2\)-coherence
+\[
+K:
+f_0^-*_0(Y*_0g_1^+)
+\Rightarrow
+(f_0^-*_0Y)*_0g_1^+.
+\tag{35}
+\]
+
+On the genuine pasting
+\[
+P=D^3(v)*_1D^2(k)*_1D^3(u),
+\]
+define
+\[
+R_1=
+\bigl((v*_1k)*_1\sigma u\bigr);
+\bigl((\tau v*_1k)*_1u\bigr),
+\]
+\[
+R_2=
+\bigl((\sigma v*_1k)*_1u\bigr);
+\bigl((v*_1k)*_1\tau u\bigr).
+\]
+Both have exact source
+\[
+(\sigma v\cdot k)\cdot\sigma u
+\]
+and exact target
+\[
+(\tau v\cdot k)\cdot\tau u.
+\]
+Both are full in \(P\). Therefore
+\[
+\boxed{
+\mathsf C_P(R_1,R_2)
+[v\mapsto V,\ k\mapsto K,\ u\mapsto U]
+}
+\tag{36}
+\]
+compares the \(U_B\)-then-\(U_A\) and \(U_A\)-then-\(U_B\) routes.
+
+The seam \(K\) is part of the term. Omitting it would make the raw composition ill typed.
+
+Equation (36) supplies this particular generator-interchange comparison. Full RC(3) for the horizontal two-disc cylinder still requires normalization and fusion for all exchange classes in its \(2\)-skeleton.
+
+## What this settles
+
+- **Question 1 is settled:** RC(3) holds for the specified proper-selection cylinder.
+- The new two-column construction is the combination of \(M\), \(\zeta\), \(\psi\), the \(4\)-cell (19), and the point-column clause (27).
+- Equation (36) supplies a concrete \(4\)-term needed for question 2.
+- Questions 2–5 in their full generality are not proved here. In particular, the construction does not supply the \(5\)-cell comparison between choices of \(K\).

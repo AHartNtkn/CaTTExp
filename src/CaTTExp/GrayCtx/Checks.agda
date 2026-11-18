@@ -14,3 +14,4 @@ import CaTTExp.GrayCtx.Checks.CrossFree
 import CaTTExp.GrayCtx.Checks.Alternation
 import CaTTExp.GrayCtx.Checks.Natural
 import CaTTExp.GrayCtx.Checks.NaturalAgree
+import CaTTExp.GrayCtx.Checks.WhiskerAgree

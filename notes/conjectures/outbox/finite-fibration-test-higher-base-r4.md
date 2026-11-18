@@ -90,3 +90,631 @@ Any of the following:
 - a proof or counterexample for any question;
 - a reference to a published recognition theorem for Grothendieck constructions over free strict n-categories presented by polygraphs;
 - a reference to a published characterisation of homotopical polygraphs in low dimension.
+
+# Research Response
+
+**Question 1 has an affirmative answer.** The required attaching map is induced by
+\[
+\Sigma\delta_2:D_2=\Sigma I\longrightarrow\Sigma[2].
+\]
+It gives explicit pastings before localization.
+
+There are also three further results:
+
+- For **every homotopical suspension base**, in any finite dimension, the proposed presentation works for free category fibres, with dimension bound \(n+1\).
+- The condition in question 3 is **necessary and undecidable**. Its sufficiency is not proved here.
+- Question 4’s stated positivity condition has a connected counterexample. If positivity is also required in dimension \(2\), that counterexample does not apply.
+
+## 1. The composite boundary \(\Omega:\alpha\Rrightarrow\beta\cdot\gamma\)
+
+Write
+\[
+A=T(0),\qquad C=T(1),
+\]
+\[
+U=T(u),\quad W=T(w),\quad V=T(v),
+\]
+and
+\[
+b=T(\beta):U\Rightarrow W,\qquad
+c=T(\gamma):W\Rightarrow V,\qquad
+a=T(\alpha):U\Rightarrow V.
+\]
+Since \(T(\Omega)\) is an identity,
+\[
+a=b;c,\qquad a_x=b_x;c_x.
+\]
+
+Use chronological composition: \(;\) for \(1\)-cells, \(\cdot\) for \(2\)-cells, and \(\odot\) for \(3\)-cells. Write \(*\) for whiskering. For a \(3\)-cell \(H:p\Rightarrow q\), put
+\[
+\operatorname{wh}(L,H,R):
+L\cdot p\cdot R\Longrightarrow L\cdot q\cdot R.
+\]
+
+All tensor constructions below are formed before imposing the specified markings and localizations.
+
+### 1.1 The existing presentation in dimensions at most \(3\)
+
+Use the orientation from known item 9. For each generating arrow \(f:x\to y\) of \(A\), the edge comparisons are
+\[
+\eta^e_f:e_x;T(e)f\Longrightarrow f;e_y,
+\qquad e\in\{u,w,v\}.
+\]
+
+The three families of marked lifts are
+\[
+\lambda_{\beta,x}:u_x;b_x\Longrightarrow w_x,
+\]
+\[
+\lambda_{\gamma,x}:w_x;c_x\Longrightarrow v_x,
+\]
+\[
+\lambda_{\alpha,x}:u_x;a_x\Longrightarrow v_x.
+\]
+
+For \(\sigma:e\Rightarrow e'\), let \(d=T(\sigma)\) and define
+\[
+\begin{aligned}
+P_{\sigma,f}
+&=(\lambda_{\sigma,x}*T(e')f)\cdot\eta^{e'}_f,\\
+Q_{\sigma,f}
+&=(\eta^e_f*d_y)\cdot(f*\lambda_{\sigma,y}).
+\end{aligned}
+\]
+Naturality,
+\[
+d_x;T(e')f=T(e)f;d_y,
+\]
+makes these parallel \(2\)-cells. The existing structural generator is
+\[
+\Xi_{\sigma,f}:P_{\sigma,f}\Longrightarrow Q_{\sigma,f}.
+\]
+
+Let \(P_{\leq2}\) denote this unlocalised presentation.
+
+### 1.2 The composite lift and its naturality cell
+
+Put \(\delta=\beta\cdot\gamma\). Define the following **composites of existing cells**:
+\[
+\boxed{
+\lambda_{\delta,x}
+=(\lambda_{\beta,x}*c_x)\cdot\lambda_{\gamma,x}.
+}
+\tag{1}
+\]
+Its boundary is
+\[
+u_x;a_x=u_x;b_x;c_x\Longrightarrow v_x.
+\]
+
+For a generating arrow \(f:x\to y\), define
+\[
+\boxed{
+\begin{aligned}
+\Xi_{\delta,f}
+={}&
+\operatorname{wh}
+\bigl(\lambda_{\beta,x}*c_x*Vf,\ \Xi_{\gamma,f},\ 1\bigr)\\
+&\odot
+\operatorname{wh}
+\bigl(1,\ \Xi_{\beta,f}*c_y,\ f*\lambda_{\gamma,y}\bigr).
+\end{aligned}}
+\tag{2}
+\]
+
+Thus the first step uses \(\Xi_{\gamma,f}\), and the second uses \(\Xi_{\beta,f}\).
+
+Here is the boundary verification. Expanding (1),
+\[
+P_{\delta,f}
+=(\lambda_{\beta,x}*c_x*Vf)\cdot P_{\gamma,f}.
+\]
+The first step of (2) produces
+\[
+(\lambda_{\beta,x}*c_x*Vf)\cdot Q_{\gamma,f}.
+\]
+Using the literal equality of paths in \(C\)
+\[
+c_x;Vf=Wf;c_y,
+\]
+this is
+\[
+(P_{\beta,f}*c_y)\cdot(f*\lambda_{\gamma,y}).
+\]
+The second step produces
+\[
+\begin{aligned}
+(Q_{\beta,f}*c_y)\cdot(f*\lambda_{\gamma,y})
+&=(\eta^u_f*b_y*c_y)
+  \cdot(f*\lambda_{\beta,y}*c_y)
+  \cdot(f*\lambda_{\gamma,y})\\
+&=(\eta^u_f*a_y)\cdot(f*\lambda_{\delta,y})\\
+&=Q_{\delta,f}.
+\end{aligned}
+\]
+Consequently,
+\[
+\Xi_{\delta,f}:P_{\delta,f}\Longrightarrow Q_{\delta,f}
+\]
+is defined in \(P_{\leq2}\), without inverses.
+
+### 1.3 The actual map of double cylinders
+
+The formulas above arise from a functor between the unlocalised constructions.
+
+Let
+\[
+d=\delta_2:I\longrightarrow[2],
+\qquad d(0)=0,\quad d(1)=2.
+\]
+Its suspension
+\[
+\Sigma d:\Sigma I\longrightarrow\Sigma[2]
+\]
+sends the walking \(2\)-cell to the composite of the two generating \(2\)-cells.
+
+For \(D=I\) or \([2]\), set
+\[
+H_D=A\otimes D.
+\]
+There are maps
+\[
+r_D:H_D\longrightarrow A
+\]
+and
+\[
+\epsilon_D:H_D\longrightarrow A\times D\longrightarrow C.
+\]
+For \(I\), the evaluation uses \(a:U\Rightarrow V\). For \([2]\), it uses
+\[
+U\xRightarrow{b}W\xRightarrow{c}V.
+\]
+The equality \(a=b;c\) gives
+\[
+r_I=r_{[2]}(A\otimes d),
+\qquad
+\epsilon_I=\epsilon_{[2]}(A\otimes d).
+\tag{3}
+\]
+
+Form the raw double-cylinder pushouts
+\[
+\mathcal P_D
+=
+A\amalg_{H_D\otimes\{0\}}
+(H_D\otimes I_{\mathrm{out}})
+\amalg_{H_D\otimes\{1\}}C.
+\tag{4}
+\]
+Equation (3) induces
+\[
+\boxed{\Phi_d:\mathcal P_I\longrightarrow\mathcal P_{[2]}.}
+\tag{5}
+\]
+
+The relative generators of \(\mathcal P_{[2]}\) are precisely the existing \(u,w,v\) transports, their \(\eta\)-cells, the \(\beta,\gamma\) lifts, and their \(\Xi\)-cells. On the two relevant families, (5) is
+\[
+\lambda_{a,x}\longmapsto\lambda_{\delta,x},
+\qquad
+\Xi_{a,f}\longmapsto\Xi_{\delta,f}.
+\]
+It fixes the \(u,v\) transports and their comparisons.
+
+Equivalently, this is the functoriality of
+\[
+D\longmapsto1^{\mathrm{co}}\star D
+\]
+under \(d\), followed by tensoring and evaluation. Loubaton defines this co-cone by collapsing \(D\otimes\{0\}\) in \(D\otimes I\), in Construction 2.3.1.21. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+Because (5) is an actual functor before localization, it supplies the compatibilities for composite fibre paths as well.
+
+### 1.4 The generators over \(\Omega\)
+
+Take the raw boundary of the established walking-\(3\)-cell construction. Map its first \(2\)-face to the \(\alpha\)-construction and its second \(2\)-face by
+\[
+\mathcal P_I\xrightarrow{\Phi_d}\mathcal P_{[2]}
+\longrightarrow P_{\leq2}.
+\]
+These maps agree on the raw \(u,v\) edge presentation. This defines the required attaching map before localization.
+
+For each vertex \(x\) of \(A\), adjoin the marked \(3\)-generator
+\[
+\boxed{
+\omega_x:\lambda_{\alpha,x}\Longrightarrow\lambda_{\delta,x}.
+}
+\tag{6}
+\]
+
+For each generating arrow \(f:x\to y\), define
+\[
+\begin{aligned}
+P^\omega_f
+&=\operatorname{wh}(1,\omega_x*Vf,\eta^v_f):
+P_{\alpha,f}\Longrightarrow P_{\delta,f},\\
+Q^\omega_f
+&=\operatorname{wh}(\eta^u_f*a_y,f*\omega_y,1):
+Q_{\alpha,f}\Longrightarrow Q_{\delta,f}.
+\end{aligned}
+\]
+Adjoin the marked \(4\)-generator
+\[
+\boxed{
+K_f:
+P^\omega_f\odot\Xi_{\delta,f}
+\Longrightarrow
+\Xi_{\alpha,f}\odot Q^\omega_f.
+}
+\tag{7}
+\]
+Both sides are \(3\)-cells from \(P_{\alpha,f}\) to \(Q_{\delta,f}\). In (7), \(\Xi_{\delta,f}\) means the explicit pasting (2).
+
+The projection sends
+\[
+\omega_x\longmapsto\Omega,
+\qquad
+K_f\longmapsto1_\Omega.
+\]
+Localize at
+\[
+\boxed{
+S=
+\{\eta^u_f,\eta^w_f,\eta^v_f,\,
+  \Xi_{\alpha,f},\Xi_{\beta,f},\Xi_{\gamma,f},\,
+  K_f\}.
+}
+\tag{8}
+\]
+The transports, \(\lambda\)-cells and \(\omega\)-cells remain marked without being inverted.
+
+There are exactly \(|A_0|\) new \(3\)-generators and \(|A_1|\) new \(4\)-generators. Neither \(\lambda_\delta\) nor \(\Xi_\delta\) is an additional generator.
+
+### 1.5 Identification with the Grothendieck construction
+
+Let \(R_\Omega\to W_\Omega\) be the raw boundary inclusion for the walking-\(3\)-cell construction from known item 6. The presentation just constructed is
+\[
+P=P_{\leq2}\amalg_{R_\Omega}W_\Omega.
+\tag{9}
+\]
+
+The base attachment
+\[
+B=B_{\leq2}\amalg_{\partial D_3}D_3
+\tag{10}
+\]
+is a homotopy pushout: this is a regular \(3\)-polygraph, so Chanavat’s Corollary 3.38 applies. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+After localization, the three terms on the right of (9) are the Grothendieck totals over the three terms on the right of (10), by known items 6 and 12. Their attaching maps agree with the restriction maps of \(T\), by the raw construction (5).
+
+Localization commutes with (9) by its mapping-out universal property. The required compatibility holds because the image of a structural \(\Xi\)-generator under (5) is the composite (2) of structural cells already being inverted.
+
+Loubaton’s Corollary 3.2.3.16 identifies the total over a colimit base with the colimit of its pullbacks. Applying it to (10) gives
+\[
+\boxed{
+\operatorname{Free}(\Psi_T)[S^{-1}]
+\simeq
+\int_B T
+}
+\]
+as marked categories over \(B^\sharp\). [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+For this case, the finite certificate consists of:
+
+1. The finite functor data \(U,W,V\), naturality equalities for \(a,b,c\) on generating arrows, and \(a_x=b_x;c_x\) on vertices.
+2. The prescribed lower generators and the boundaries (1), (2), (6), (7).
+3. The marking and localization set (8), with the stated projections.
+
+All equalities in the fibre \(C\) are equalities of finite words in a free category. The theorem above then supplies \((★)\); the presentation has dimension at most \(4=3+1\).
+
+## 2. An all-dimensional result for suspension bases
+
+The same construction gives a class of cases of question 2 beyond the particular composite boundary.
+
+### Theorem
+
+Let \(\Lambda\) be a finite homotopical \(d\)-computad, put
+\[
+Q=F_d(\Lambda),\qquad B=\Sigma Q,\qquad n=d+1,
+\]
+and let \(T:B\to\omega\) have fibres \(A,C\) free on finite graphs.
+
+Then \(\int_B T\) has a finite presentation with the fibre generators and, for each \(q\in\Lambda_i\),
+
+- one marked generator of dimension \(i+1\) for each vertex of \(A\);
+- one marked generator of dimension \(i+2\) for each generating arrow of \(A\), which is inverted.
+
+Its dimension is at most
+\[
+\boxed{d+2=n+1.}
+\]
+
+### Construction and proof
+
+The weight gives an evaluation
+\[
+h:Q\times A\longrightarrow C.
+\]
+Form
+\[
+K=1^{\mathrm{co}}\star Q
+  =1\amalg_{Q\otimes\{0\}}(Q\otimes I).
+\tag{11}
+\]
+The inclusion \(Q\to K\) uses \(Q\otimes\{1\}\).
+
+For each \(q\in\Lambda_i\), the relative cylinder filtration gives one cone generator
+\[
+\kappa_q,\qquad \dim\kappa_q=i+1.
+\]
+Besides these, \(K\) has the generators of \(Q\) and the cone vertex. The homotopical presentation of \(Q\) and the globe-cylinder filtration give this finite presentation of \(K\). Loubaton’s Theorem 2.3.3.22 identifies the coherent cone with the strict cone. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+For this construction, take the fibre as the second tensor factor and define
+\[
+P=(K\otimes A)\amalg_{Q\otimes A}C,
+\tag{12}
+\]
+using the raw attaching map
+\[
+Q\otimes A\longrightarrow Q\times A\xrightarrow{h}C.
+\tag{13}
+\]
+
+The relative generators surviving (12) are exactly:
+
+| Generator | Dimension | Treatment |
+|---|---:|---|
+| Fibre generators of \(A,C\) | \(0,1\) | Vertical arrows unmarked |
+| \(\kappa_q\otimes x\), \(x\in A_0\) | \(i+1\) | Marked |
+| \(\kappa_q\otimes f\), \(f\in A_1\) | \(i+2\) | Marked and inverted |
+
+Set
+\[
+S=\{\kappa_q\otimes f\}.
+\]
+The projection sends
+\[
+\kappa_q\otimes x\longmapsto\Sigma q,
+\qquad
+\kappa_q\otimes f\longmapsto1_{\Sigma q}.
+\tag{14}
+\]
+
+The mixed-localization lemma for a category fibre gives
+\[
+(K\otimes A)[M_K^{-1}]\simeq K\times A,
+\qquad
+(Q\otimes A)[M_Q^{-1}]\simeq Q\times A.
+\]
+Here \(M_K,M_Q\) are the positive-dimensional first-factor generator/arrow pairs. This follows from the interval comparison in Loubaton’s Proposition 3.1.3.1 and the decomposition of \(A\) into its generating intervals. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The map (13) already sends \(M_Q\) to identities. Therefore the universal property of localization gives
+\[
+\begin{aligned}
+P[S^{-1}]
+&\simeq
+(K\times A)\amalg_{Q\times A}C\\
+&\simeq
+\int_{\Sigma Q}T.
+\end{aligned}
+\tag{15}
+\]
+The second equivalence is the suspension-base classification, Loubaton’s Corollary 4.1.2.19. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+For the marking, equip \(K\) with
+\[
+1^{\mathrm{co}}\star Q^\flat.
+\]
+Its marking is generated by the cone cells \(\kappa_q\). After mixed localization, the specified marking becomes that of
+\[
+(1^{\mathrm{co}}\star Q^\flat)\times A^\flat,
+\]
+and then the marked pushout along \(Q^\flat\times A^\flat\to C^\flat\). This is the marking in the suspension classification.
+
+Every attaching map in this proof is supplied by the cone functor and the raw evaluation (13). No lift from a previously localized presentation is required.
+
+This proves the expected bound \(n+m\) for this class with \(m=1\). **It does not prove question 2 for arbitrary bases or arbitrary \(m\).** In that generality, compatible substitution across different fibres and higher compositions still needs a construction or a bounded relative rectification theorem.
+
+## 3. The proposed \(2\)-computad criterion
+
+Call a nonidentity \(2\)-cell
+\[
+q:1_x\Longrightarrow1_x
+\]
+a *bubble*. This is Guetta’s terminology, Definitions 6.6.1 and 6.6.3. [arxiv.org](https://arxiv.org/pdf/2104.12662?utm_source=chatgpt.com)
+
+### 3.1 A bubble obstructs every finite coherent presentation
+
+Let \(C=F_2(\Gamma)\), and suppose \(q\) is a bubble.
+
+Define a strict \(2\)-functor
+\[
+r:C\longrightarrow B^2\mathbb N
+\]
+by sending every vertex to the unique vertex, every generating arrow to the identity, and every generating \(2\)-cell to \(1\in\mathbb N\).
+
+Then
+\[
+r(q)=k>0.
+\]
+Indeed, \(k\) is the total number of generating \(2\)-cells in an expression for \(q\). Associativity, units and interchange preserve this number, and a term with count zero is an identity \(2\)-cell.
+
+The bubble also defines a strict functor
+\[
+i:B^2\mathbb N\longrightarrow C,\qquad i(1)=q.
+\]
+This is well-defined because the two compositions of \(2\)-endomorphisms of \(1_x\) coincide and commute by interchange. Thus
+\[
+ri=[k],
+\tag{16}
+\]
+where \([k]\) is multiplication by \(k\).
+
+Write \(|C|\) for groupoidification. Ara’s Theorem 4.9 and Example 4.10 identify \(|B^2\mathbb N|\) with \(K(\mathbb Z,2)\), naturally through \(B^2\mathbb N\to B^2\mathbb Z\). Hence (16) gives
+\[
+K(\mathbb Z,2)\xrightarrow{|i|}|C|
+\xrightarrow{|r|}K(\mathbb Z,2),
+\]
+with composite multiplication by \(k\) on \(\pi_2\). [arxiv.org](https://arxiv.org/pdf/1808.02650?utm_source=chatgpt.com)
+
+Now
+\[
+H^*(K(\mathbb Z,2);\mathbb Q)=\mathbb Q[c],
+\qquad |c|=2.
+\]
+This is the cohomology calculation for \(\mathbb{CP}^{\infty}\), which is a \(K(\mathbb Z,2)\). [pi.math.cornell.edu](https://pi.math.cornell.edu/~hatcher/AT/ATch3.pdf?utm_source=chatgpt.com)
+
+Consequently, \([k]\) acts by \(k^j\) on \(H_{2j}(-;\mathbb Q)\). Since \(k^j\ne0\), the factorization through \(|C|\) implies
+\[
+\boxed{
+H_{2j}(|C|;\mathbb Q)\ne0
+\quad\text{for every }j\ge1.
+}
+\tag{17}
+\]
+
+The groupoidification of a coherent free \(2\)-computad is a \(2\)-dimensional CW complex. Thus \(\Gamma\) cannot be homotopical. More strongly, by the finite-CW obstruction in known item 4, \(C\) cannot have **any** finite coherent presentation of the stipulated form, in any finite dimension and with any additional localizations.
+
+Therefore
+\[
+\boxed{
+\Gamma\text{ homotopical}
+\ \Longrightarrow\
+F_2(\Gamma)\text{ bubble-free}.
+}
+\tag{18}
+\]
+
+A strict retraction onto \(B^2\mathbb N\) is unnecessary; the positive multiplication map (16) suffices.
+
+### 3.2 Bubble-freeness is undecidable
+
+Reduce from reachability for a finite positive semi-Thue system \(R\): given words \(w,v\), determine whether
+\[
+w\Longrightarrow_R^*v.
+\]
+Here every rule has nonempty source and target. This problem is undecidable; Kaminski’s Theorem 7 states the reachability result, and its footnote 5 explicitly records that the system used in Post’s undecidability result is positive. [Springer Nature Link](https://link.springer.com/article/10.1007/s00153-024-00921-w?utm_source=chatgpt.com)
+
+Adjoin fresh letters \(L,Z\), absent from the alphabet of \(R\), and two rules
+\[
+\mathrm{ins}:1\Longrightarrow LwZ,
+\qquad
+\mathrm{del}:LvZ\Longrightarrow1,
+\tag{19}
+\]
+where \(1\) is the empty word.
+
+Regard the resulting finite rewriting system as a one-vertex \(2\)-computad \(\Gamma_{R,w,v}\). Then
+\[
+\boxed{
+F_2(\Gamma_{R,w,v})\text{ has a bubble}
+\quad\Longleftrightarrow\quad
+w\Longrightarrow_R^*v.
+}
+\tag{20}
+\]
+
+**If reachability holds**, there is a nonempty derivation
+\[
+1\xRightarrow{\mathrm{ins}}LwZ
+\Longrightarrow_R^*LvZ
+\xRightarrow{\mathrm{del}}1.
+\]
+Its generating-cell count is positive, so it is a bubble.
+
+**Conversely**, express a bubble as a vertical composite of whiskered generating \(2\)-cells. This gives a nonempty rewriting derivation \(1\Rightarrow^+1\).
+
+The original rules cannot apply to the initial empty word. Thus the derivation uses \(\mathrm{ins}\), and it must eventually use \(\mathrm{del}\), since only \(\mathrm{del}\) removes marker letters.
+
+Consider its **first** use of \(\mathrm{del}\). Before that step, the marker sequence is formed solely by insertions of balanced pairs \(LZ\). In the factor \(LvZ\) being deleted, the two displayed markers must therefore be a matched pair created by one application of \(\mathrm{ins}\).
+
+No subsequent insertion can have taken place between that pair: its markers would still be present, since no earlier deletion occurred. Original rules cannot cross either marker. Thus the word between the pair evolved from \(w\) to \(v\) using only \(R\)-rules. This proves the reverse implication in (20).
+
+It follows that bubble-freeness is undecidable even for finite one-vertex \(2\)-computads **with no generating bubble**. Bubble existence is semidecidable by enumerating finite derivations.
+
+### 3.3 What remains of the proposed equivalence
+
+Guetta’s Conjecture 6.6.5 states that a free strict \(2\)-category is *homologically coherent* if and only if it is bubble-free. Homological coherence compares polygraphic homology with the homology of the Street nerve. [arxiv.org](https://arxiv.org/pdf/2104.12662?utm_source=chatgpt.com)
+
+Your proposed sufficiency statement is stronger. An equivalence
+\[
+\operatorname{Free}(\Gamma)\simeq F_2(\Gamma)
+\]
+would identify the strict realization’s homology with that of the cellular \(2\)-complex, whose cellular chain complex is the polygraphic chain complex.
+
+I do not have a proof or counterexample for
+\[
+F_2(\Gamma)\text{ bubble-free}
+\ \Longrightarrow\
+\Gamma\text{ homotopical}.
+\]
+The undecidability result above concerns bubble-freeness; without the converse, it does not establish undecidability of homotopicality.
+
+## 4. Positive \(3\)-computads and incoming arrows
+
+### 4.1 Counterexample under the stated definition of positivity
+
+Consider the connected \(3\)-computad
+\[
+\Gamma_0=\{*\},\qquad
+\Gamma_1=\varnothing,
+\]
+\[
+\Gamma_2=\{b:1_*\Rightarrow1_*\},
+\qquad
+\Gamma_3=\{\Omega:b\Rrightarrow b\}.
+\tag{21}
+\]
+Both \(2\)-boundaries of \(\Omega\) are nonidentity. Thus (21) is positive under question 4’s definition.
+
+Let \(D=F_3(\Gamma)\). There are strict functors
+\[
+B^2\mathbb N\xrightarrow{i}D\xrightarrow{r}B^2\mathbb N,
+\qquad ri=1,
+\]
+where \(i\) includes the \(2\)-skeleton and
+\[
+r(\Omega)=1_b.
+\]
+Therefore \(|D|\) has \(K(\mathbb Z,2)\) as a retract. In particular,
+\[
+H_4(|D|;\mathbb Q)\ne0.
+\]
+
+On the other hand, \(|\operatorname{Free}(\Gamma)|\) is a CW complex of dimension at most \(3\), so its fourth homology vanishes. Hence
+\[
+\boxed{
+\operatorname{Free}(\Gamma)\not\simeq F_3(\Gamma).
+}
+\]
+The same retract shows that \(D\) has no finite coherent presentation in any dimension.
+
+This example has a non-positive \(2\)-skeleton. **If positivity is required in every dimension, it does not answer that stronger question.** I have no proof or counterexample for that version. Chanavat’s Comment 3.40 states the expected extension to arbitrary positive polygraphs; the proved results immediately preceding it concern regular \(3\)-polygraphs and positive \(2\)-polygraphs. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+### 4.2 An incoming arrow forces other homs to change
+
+Start with the free \(2\)-category generated by
+\[
+k:r\to s,\qquad f,g:s\to t,\qquad
+\alpha,\beta:f\Rightarrow g,
+\]
+and attach
+\[
+\Omega:\alpha\Rrightarrow\beta.
+\]
+
+Replacing only \(D(s,t)\), while retaining the old \(D(r,t)\), does not define a strict \(3\)-category. Precomposition by \(k\) must send \(\Omega\) to
+\[
+k*\Omega:k*\alpha\Rrightarrow k*\beta,
+\]
+but the old \(D(r,t)\) has no such \(3\)-cell.
+
+The correctly extended attachment is nevertheless homotopical in this example. It is
+\[
+I\vee\partial D_3\longrightarrow I\vee D_3.
+\]
+More generally, for a homotopical attachment \(Q\to Q'\), the functor
+\[
+Q\longmapsto I\vee\Sigma Q
+\]
+carries its homotopy pushout to a homotopy pushout. The relevant colimit-preserving wedge-suspension functor is Loubaton’s Lemma 2.2.1.32. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+Thus item 14 extends to this incoming-arrow class, with both \(D(s,t)\) and \(D(r,t)\) updated. An extension for arbitrary incoming contexts would need to account for every forced whiskering and prove that the resulting strict attachment is homotopical; the single-hom replacement argument does not establish that.

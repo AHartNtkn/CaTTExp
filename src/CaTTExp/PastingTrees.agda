@@ -41,7 +41,9 @@ ctxOf t = fst (psOf t)
 ------------------------------------------------------------------------
 -- From a context back to a tree.
 
-private
+-- The parser, in a named module so that proofs about it
+-- (CaTTExp.GlobularTotal.Trees) can refer to its parts.
+module Parse where
   -- The edge depths of the (y, f) pairs following the first object.
   pairDepths : Ctx → Maybe (List Nat)
   pairDepths ε                 = nothing
@@ -66,6 +68,8 @@ private
        just (node cs ∷ ts , rest') } })
     else if d <ℕ lvl then just ([] , d ∷ ds)
     else nothing
+
+open Parse
 
 treeOf : Ctx → Maybe Tree
 treeOf Γ =

@@ -467,3 +467,63 @@ z_+\circ m\circ z_-,
 where \(z_\pm\) use interchangers with a generator-free argument, and \(m\) is a typed instance of the unique interchanger involving both generators. Thinness of the structural comparisons determines the transports for a **fixed** \(m\). A complete proof must additionally identify the comparisons obtained from different admissible typed instances of \(m\), using the Gray and closure equations. The crossing count alone does not supply that identification.
 
 Thus the established result here is the structural counterexample to the proposed invariants and to an exact schedule-product classification. Forward uniqueness, a complete invariant, the equality (13), and the equivalence formulation of the higher-dimensional question remain unresolved.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** Question 2's proposed invariants fail, already with no generating 1-cells. There are infinitely many distinct structural endo-1-cells H^n of T over the identity of 𝓑_Σ, joined pairwise by 2-cells in both directions. So the category over a fixed ordinary arrow is not isomorphic to a product of schedule categories. Questions 1 and 3 are not settled, but the response reduces Question 3 to one explicit equation (13). This response predates Question 5. Its model answers the 2-categorical half of Question 5, as shown below.
+
+Step by step.
+
+1. **The retractions (§1).**
+   - η^L = Λ_A(1) : B → A\(A ⊗ B), and e = ev = Φ⁻¹(1). Strict naturality of Φ in the context variable gives Φ⁻¹(k) = ev ∘ (A ⊗ k), so e u = ev ∘ (A ⊗ Λ(1)) = 1. Likewise d v = 1. ✓
+   - **The types of H.** 1_X ⊗ v : X⊗Y → X⊗Y′, u ⊗ 1 : X⊗Y′ → X′⊗Y′, 1 ⊗ d : X′⊗Y′ → X′⊗Y and e ⊗ 1 : X′⊗Y → X⊗Y. ✓
+
+2. **The 2-cells ι, π and π∘ι = 1 (§2).** The interchanger goes from "right factor first" to "left factor first".
+   - **ι.** χ_{u,d} : (u⊗Y)(X⊗d) ⇒ (X′⊗d)(u⊗Y′). Whiskered, its source is (e⊗Y)(u⊗Y)(X⊗d)(X⊗v) = (eu⊗Y)(X⊗dv) = 1 by sesquifunctoriality, and its target is H. ✓
+   - **π.** χ_{u,v} : (u⊗Y′)(X⊗v) ⇒ (X′⊗v)(u⊗Y). Whiskered, its source is H and its target is (e⊗Y)(X′⊗dv)(u⊗Y) = 1. ✓
+   - **(5).** The Gray axiom χ_{u,dv} = [(X′⊗d) ∗ χ_{u,v}] ∘ [χ_{u,d} ∗ (X⊗v)] holds, and I checked the intermediate 1-cell. χ_{u,1} is an identity, so whiskering by e⊗Y gives π ∘ ι = 1. ✓
+
+3. **The separating model 𝒟 (§3).**
+   - Objects are integers. Each hom-category is chaotic on the free group F = ⟨ℓ, r⟩. Composition is multiplication, and tensoring a 1-cell by an object only translates it.
+   - **Gray monoid.** Sesquifunctoriality and strict associativity hold on labels. Every 2-cell equation holds by chaoticity, and the interchangers are the unique 2-cells. ✓
+   - **Left closure.** Λ_a(k) = ℓ^a k and R_a(k) = ℓ^a k ℓ^{−a}.
+     - Context naturality: Λ(f k) = Λ(f) k. ✓
+     - Target naturality: R_a(t) Λ(k) = Λ(t k). ✓
+     - Iterated curryings agree with currying by a sum: ℓ^{a′} ℓ^a = ℓ^{a+a′}. ✓
+     - Bound-variable naturality up to the interchanger is automatic. ✓
+   - **Right closure.** The same with r. ✓
+   - **Interpretation.** With every atom ↦ 1: u ↦ ℓ, e ↦ ℓ⁻¹, v ↦ r and d ↦ r⁻¹, so H ↦ e d u v = ℓ⁻¹ r⁻¹ ℓ r. This is a cyclically reduced commutator, so H^n has reduced length 4n and the H^n are pairwise distinct. ✓
+   - **One assumption is essential.** The separation uses that left and right currying do not commute. 𝒟 does not satisfy strict equality of the two mixed curryings (A\C)/B = A\(C/B), and the response says so. If 𝒢 is meant to impose that equality, H maps to 1 in every such quotient of 𝒟 (ℓ and r would commute), and the separation is lost. The round-3 prompt did not impose it. Whether the intended theory should is a design question.
+
+4. **The invariants agree on all H^n (§4).**
+   - In 𝓑_Σ, tensor is a bifunctor, so Q(H) = (eu) ⊗ (dv) = 1. ✓
+   - The generator word W(H^n) is empty, and there are no generator labels. ✓
+   - **Weights.** Units and evaluations are curryings of identities with zero displacement, so every additive weight of item 5 vanishes on them. This also follows from item 9. ✓
+   - **(12).** Products of poset categories are posets, and π_m then ι_n gives 2-cells H^m ⇒ H^n for all m and n. So Q⁻¹(1_T) is not isomorphic to any product of S(P). ✓
+   - The response correctly notes that this does not exclude an *equivalence* with a poset.
+
+5. **What remains (§6).**
+   - E = ι ∘ π is idempotent.
+   - Thinness forces (13), ι ∘ π = 1_H. A failure of (13) would refute thinness.
+   - 𝒟 cannot decide this, because it is chaotic on 2-cells.
+   - **The qualification to Question 1 is correct.** Item 6's count factors each forward comparison as z₊ ∘ m ∘ z₋. Different typed instances of the crossing interchanger m must still be identified.
+
+6. **Question 5 (added after this response was sent), my derivation from the same model.**
+   - Extend 𝒟's group to F = ⟨ℓ, r, γ⟩ and send a generator g : Y → Y′ to γ.
+   - ev_A at |A| = 1 is uncurry(1) ↦ ℓ⁻¹. So (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) ↦ ℓ⁻¹γ and (C ⊗ g) ∘ (ev ⊗ Y) ↦ γℓ⁻¹. These are distinct.
+   - So **ev is not central in 𝒢 as specified**, and χ_{ev,g} joins distinct 1-cells.
+   - This model also does not impose the mixed-currying equality, but this example uses only left closure. In the left-closed part of 𝒟, all labels ℓ^a commute with each other but not with γ, so the non-centrality does not depend on mixing left and right.
+   - The (∞,ω) half of Question 5 is open.
+
+**Consequences for D11.**
+- **Structural maps are events.** A complete invariant of 1-cells must schedule structural events (units, evaluations) as well as generator events. Without a mixed-currying equality, it must also record the order of left and right closure events.
+- **ev is not central in 𝒢.** So the choice between 𝒢 and its central quotient 𝒢_c is a real design choice.
+- **Item 9 of the prompt was too broad.** It holds only for models whose residual is subtraction (like 𝓜). The polarized model 𝓟 of `closed-structure.md` F.6 item 4 (A\C = C + swap(A)) gives d(ev) ≠ 0 and separates both χ_{g,ev} and χ_{ev,ev′}. This independently confirms point 6, with integer weights. Round 4 narrows item 9 and states 𝓟.
+- **Open:**
+  - (13) and thinness;
+  - forward uniqueness, including the identification of typed instances;
+  - whether H = 1 once left and right curryings commute strictly, and whether a left-only analogue of H is separated;
+  - the (∞,ω) centrality question;
+  - the ω-version.
+
+Follow-up prompt: `outbox/gray-closed-scheduling-r4.md` (round 4, unsent).

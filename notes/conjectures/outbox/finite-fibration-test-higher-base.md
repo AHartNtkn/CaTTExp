@@ -58,3 +58,494 @@ For a base n-computad Γ and a weight T valued in free m-categories, the natural
 ## 5. What would count as an answer
 
 A proof or counterexample for any question; a reference to a published recognition theorem for Grothendieck constructions over free strict n-categories presented by polygraphs.
+
+# Researcher Response
+
+**Question 1 has a finite 4-dimensional presentation:** add one marked 3-generator over \(\Omega\) for each vertex of \(T(0)\), and one invertible 4-generator for each generating arrow of \(T(0)\). The 3-generators alone do not suffice.
+
+**Regularity is not necessary:** there is a positive, non-regular 3-computad whose strict free category is already its homotopy-cellular realization. This answers the final question in Question 4.
+
+I prove both statements below. For Question 2, I give a corresponding obstruction to stopping in dimension three; I do not establish its full presentation theorem or general \(FT_n\).
+
+## 1. Question 1: the corrected finite presentation
+
+Write
+\[
+A=T(0),\qquad C=T(1),\qquad U=T(u),\qquad V=T(v).
+\]
+Since \(T(\Omega)\) is an identity, write
+\[
+a=T(\alpha)=T(\beta):U\Rightarrow V.
+\]
+For a generating arrow \(f:e\to e'\) of \(A\), naturality says
+\[
+U(f);a_{e'}=a_e;V(f).
+\tag{1}
+\]
+
+Composition is diagrammatic. Below, \(;\) denotes vertical composition in the dimension dictated by its arguments; \(\triangleleft\) and \(\triangleright\) denote left and right whiskering.
+
+### 1.1 Generators and their boundaries
+
+Include the generating graphs of \(A\) and \(C\), with disjoint vertex sets. Their nonidentity arrows are unmarked.
+
+For each vertex \(e\) of \(A\), add
+\[
+u_e:e\to Ue,\qquad v_e:e\to Ve,
+\]
+and
+\[
+\lambda_{\gamma,e}:u_e;a_e\Rightarrow v_e,
+\qquad \gamma\in\{\alpha,\beta\}.
+\]
+
+For each generating arrow \(f:e\to e'\), add
+\[
+\theta_{u,f}:f;u_{e'}\Rightarrow u_e;U(f),
+\qquad
+\theta_{v,f}:f;v_{e'}\Rightarrow v_e;V(f).
+\]
+
+Define parallel 2-cells
+\[
+\begin{aligned}
+L_{\gamma,f}
+&=(f\triangleleft\lambda_{\gamma,e'});\theta_{v,f},\\
+R_{\gamma,f}
+&=(\theta_{u,f}\triangleright a_{e'});
+  (\lambda_{\gamma,e}\triangleright V(f)).
+\end{aligned}
+\tag{2}
+\]
+Both have source \(f;u_{e'};a_{e'}\) and target \(v_e;V(f)\); equation (1) identifies the intermediate paths in the second expression.
+
+Choose the orientation
+\[
+\Xi_{\gamma,f}:R_{\gamma,f}\Rrightarrow L_{\gamma,f}.
+\tag{3}
+\]
+These are the naturality 3-generators already required for the two base 2-cells.
+
+The new generators over \(\Omega\) are
+\[
+\boxed{
+\omega_e:\lambda_{\alpha,e}\Rrightarrow\lambda_{\beta,e}.
+}
+\tag{4}
+\]
+
+They induce 3-cells
+\[
+L_{\omega,f}:L_{\alpha,f}\Rrightarrow L_{\beta,f},
+\qquad
+R_{\omega,f}:R_{\alpha,f}\Rrightarrow R_{\beta,f},
+\tag{5}
+\]
+obtained from (2) by whiskering \(\omega_{e'}\) and \(\omega_e\), respectively, with the indicated fixed cells.
+
+For every generating arrow \(f\), add the 4-generator
+\[
+\boxed{
+K_{\Omega,f}:
+\bigl(\Xi_{\alpha,f};L_{\omega,f}\bigr)
+\Longrightarrow
+\bigl(R_{\omega,f};\Xi_{\beta,f}\bigr).
+}
+\tag{6}
+\]
+Both boundaries in (6) are 3-cells
+\[
+R_{\alpha,f}\Rrightarrow L_{\beta,f}.
+\]
+
+Thus the complete additional data are:
+
+| Dimension | Generators |
+|---|---|
+| \(1\) | \(u_e,v_e\), for each source-fibre vertex \(e\) |
+| \(2\) | \(\theta_{u,f},\theta_{v,f}\), for each source-fibre generating arrow \(f\); \(\lambda_{\alpha,e},\lambda_{\beta,e}\) |
+| \(3\) | \(\Xi_{\alpha,f},\Xi_{\beta,f}\); \(\omega_e\) |
+| \(4\) | \(K_{\Omega,f}\) |
+
+Mark these generators and localize at
+\[
+S=
+\{\theta_{u,f},\theta_{v,f},
+  \Xi_{\alpha,f},\Xi_{\beta,f},K_{\Omega,f}\}.
+\tag{7}
+\]
+
+Their projections are identity cells:
+\[
+p(\theta_{u,f})=1_u,\qquad
+p(\Xi_{\gamma,f})=1_\gamma,\qquad
+p(K_{\Omega,f})=1_\Omega.
+\]
+The generators \(\lambda_{\gamma,e}\) and \(\omega_e\) remain marked without being inverted:
+\[
+p(\lambda_{\gamma,e})=\gamma,\qquad p(\omega_e)=\Omega.
+\]
+
+**Claim.** If \(\Psi_T\) is this finite computad, then
+\[
+\boxed{
+\operatorname{Free}(\Psi_T)[S^{-1}]
+\simeq \int_B T
+}
+\tag{8}
+\]
+over \(B^\sharp\), with the cartesian marking. No independent generator above dimension four is required.
+
+### 1.2 The resulting homs
+
+Here is the strict total category that (8) presents.
+
+Its vertices are
+\[
+(0,e)\quad(e\in A_0),
+\qquad
+(1,c)\quad(c\in C_0).
+\]
+The same-fibre homs are discrete higher categories on the corresponding hom-sets:
+\[
+\begin{aligned}
+E((0,e),(0,e'))&=A(e,e')_{\mathrm{disc}},\\
+E((1,c),(1,c'))&=C(c,c')_{\mathrm{disc}},
+\end{aligned}
+\]
+and
+\[
+E((1,c),(0,e))=\varnothing.
+\]
+
+For the remaining hom, set
+\[
+M_{e,c}=E((0,e),(1,c)).
+\]
+This is a strict 2-category. Its vertices are
+\[
+(u,h),\quad h:Ue\to c,
+\qquad
+(v,k),\quad k:Ve\to c.
+\]
+Its hom categories are exactly
+\[
+M_{e,c}((r,h),(s,k))=
+\begin{cases}
+\mathbf 1,&(r,h)=(s,k),\\[2mm]
+[1],&r=u,\ s=v,\ h=a_e;k,\\[2mm]
+\varnothing,&\text{otherwise}.
+\end{cases}
+\tag{9}
+\]
+In the middle case, the two vertices of \([1]\) are
+\[
+\alpha_k,\beta_k:(u,a_e;k)\longrightarrow(v,k),
+\]
+and its nonidentity arrow is
+\[
+\Omega_k:\alpha_k\longrightarrow\beta_k.
+\]
+These are respectively 2-cells and a 3-cell of \(E\).
+
+Precomposition by \(f:e'\to e\) sends
+\[
+(r,h)\longmapsto(r,T(r)(f);h)
+\]
+and sends the three cells indexed by \(k\) to those indexed by \(V(f);k\). Postcomposition by \(g:c\to c'\) replaces \(h,k\) by \(h;g,k;g\). Equation (1) makes these operations well typed.
+
+The marked cross-fibre 1-cells are
+\[
+(u,1_{Ue}),\qquad(v,1_{Ve});
+\]
+all cross-fibre 2- and 3-cells are marked.
+
+These formulas verify the alternating variance directly:
+
+- The marked lifts of \(u,v\) have prescribed source.
+- The lifts of \(\alpha,\beta\) with prescribed target \((v,k)\) have source \((u,a_e;k)\).
+- The further hom map governing \(\Omega_k\) is \([1]\to[1]\), so the lift of \(\Omega\) has prescribed source.
+
+For example, composition with \(u_e\) identifies
+\[
+C(Ue,c)_{\mathrm{disc}}
+\]
+with the fibre of \(M_{e,c}\to B(0,1)\) over \(u\), giving the required cancellation square. The other cases follow from (9) in the same way. Loubaton’s recursive criterion, Theorem 3.2.2.24(5), therefore identifies this projection as the left cartesian fibration classified by \(T\). [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+### 1.3 Proof of the coherent presentation
+
+The proof uses a relative Gray tensor, so it identifies the homotopical localization rather than merely a strict quotient.
+
+Let \(I=[1]\). Define \(K\) by the finite generators
+\[
+\begin{gathered}
+x,y_0,y_1,\\
+u:x\to y_0,\qquad a:y_0\to y_1,\qquad v:x\to y_1,\\
+\lambda_\alpha,\lambda_\beta:u;a\Rightarrow v,\\
+\omega:\lambda_\alpha\Rrightarrow\lambda_\beta .
+\end{gathered}
+\tag{10}
+\]
+The arrow \(a\) identifies \(I\) with the full subcategory on \(y_0,y_1\).
+
+The projection \(K\to B\) is the special case of (9) with fibres \(\mathbf1,I\). It classifies the weight sending the source vertex to \(\mathbf1\), the target vertex to \(I\), and both \(\alpha,\beta\) to the arrow of \(I\).
+
+The data \(U,V,a\) determine
+\[
+F:A\times I\longrightarrow C.
+\]
+There is an equivalence
+\[
+\boxed{
+\int_B T\simeq
+(K\times A)\amalg_{I\times A}C,
+}
+\tag{11}
+\]
+where the map to \(C\) is \(F\), after exchanging the Cartesian factors.
+
+One can obtain (11) directly from Loubaton’s formula over a suspension: \(B=\Sigma D_2\), and its action
+\[
+A\times D_2\longrightarrow C
+\]
+factors through \(A\times I\). In the cone formula of Corollary 4.1.2.19, push out \(1^{\mathrm{co}}\!\star D_2\) along the map \(D_2\to I\) identifying its two arrows and sending its 2-cell to an identity. This gives precisely (10). The cone-pushout strictness is covered by Theorem 2.3.3.22. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+Now use the **unlocalized** Gray tensor and set
+\[
+Q=K\otimes A,\qquad R=I\otimes A.
+\]
+
+Both have finite homotopy-cellular presentations. Here is the relevant check for the 4-dimensional tensor. The generating 3-cell of \(K\) has an acyclic oriented incidence graph: one topological order is
+\[
+x<u<y_0<a<\lambda_\alpha<\omega<\lambda_\beta<v<y_1.
+\]
+Its lower-dimensional faces inherit acyclicity. Each generating edge of the graph presenting \(A\) also has an acyclic abstract shape. Chanavat’s Corollary 3.27 and monoidality theorem, Theorem 3.29, therefore apply to these directed complexes and their Gray tensor. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+Localize \(Q\) at the mixed generators
+\[
+k\otimes f,
+\qquad
+k\in\{u,a,v,\lambda_\alpha,\lambda_\beta,\omega\},
+\quad f\in A_1^{\mathrm{gen}}.
+\tag{12}
+\]
+The result is \(K\times A\). Likewise, localizing \(R\) at \(a\otimes f\) gives \(I\times A\). This is the underlying-category content of Loubaton’s marked tensor construction and Proposition 3.1.3.1. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+It suffices to use the generators in (12): the comparison for \(u;a\) is the pasting of those for \(u\) and \(a\), and the comparison against a path in \(A\) is the pasting of those against its generating edges.
+
+The map
+\[
+R\longrightarrow I\times A\longrightarrow C
+\]
+already sends \(a\otimes f\) to an identity, by (1). Therefore the universal properties of localization and pushout give
+\[
+(K\times A)\amalg_{I\times A}C
+\simeq
+\bigl(Q\amalg_R C\bigr)
+\bigl[(\theta,\Xi,K)^{-1}\bigr].
+\tag{13}
+\]
+Explicitly, maps from the right-hand side into a target \(Z\) are compatible maps \(Q\to Z\) and \(C\to Z\) that invert the remaining mixed generators. They are exactly compatible maps \(K\times A\to Z\) and \(C\to Z\) agreeing on \(I\times A\).
+
+The relative generators of \(R\to Q\), after the pushout to \(C\), are:
+
+| Relative tensor generator | Generator in \(\Psi_T\) |
+|---|---|
+| \(x\otimes e,\ x\otimes f\) | Source-fibre vertices and arrows |
+| \(u\otimes e,\ v\otimes e\) | \(u_e,v_e\) |
+| \(u\otimes f,\ v\otimes f\) | \(\theta_{u,f},\theta_{v,f}\) |
+| \(\lambda_\gamma\otimes e\) | \(\lambda_{\gamma,e}\) |
+| \(\lambda_\gamma\otimes f\) | \(\Xi_{\gamma,f}\) |
+| \(\omega\otimes e\) | \(\omega_e\) |
+| \(\omega\otimes f\) | \(K_{\Omega,f}\) |
+
+The tensor boundary of the final row is (6). Equations (11)–(13) prove (8).
+
+The auxiliary sharp markings used in the Gray–Cartesian comparison serve to establish the underlying equivalence. The marking on the presented fibration is the one specified in §1.1 and verified by (9); in particular, nonidentity fibre arrows remain unmarked.
+
+This argument permits identity values and arbitrary finite path lengths for \(U(f),V(f),a_e\): those choices enter the attaching map \(R\to C\), and (13) is a homotopy-pushout argument.
+
+### 1.4 Why the 3-generators alone fail
+
+Take the constant weight
+\[
+A=C=I,\qquad U=V=\mathrm{id}_I,\qquad a=\mathrm{id}.
+\]
+Its total is
+\[
+B\times I.
+\]
+
+The proposed presentation consisting of the existing data and the two generators \(\omega_e\), **without** \(K_{\Omega,f}\), has generator counts
+\[
+(c_0,c_1,c_2,c_3)=(4,6,6,4).
+\]
+Indeed, it has:
+
+- four vertices;
+- two vertical and four horizontal arrows;
+- two \(\theta\)'s and four \(\lambda\)'s;
+- two \(\Xi\)'s and two \(\omega\)'s.
+
+Its groupoidification consequently has Euler characteristic
+\[
+4-6+6-4=0.
+\tag{14}
+\]
+Localizing any of its cells leaves its groupoidification unchanged, since groupoidification already inverts every cell.
+
+But \((B\times I)^{\mathrm{gpd}}\) is contractible: projection to \(B\) is a homotopy equivalence after groupoidification, and the groupoidification of the globe \(B=D_3\) is contractible. Its Euler characteristic is \(1\), contradicting (14).
+
+Thus **the specified presentation with only the vertex-indexed \(\omega_e\)'s is incorrect**. This argument does not exclude every conceivable alternative presentation of dimension at most three.
+
+## 2. Question 4: a non-regular 3-computad with a finite presentation
+
+Consider the finite 3-computad \(\Delta\):
+\[
+\begin{array}{c|l}
+\text{Dimension}&\text{Generators}\\ \hline
+0&x,y,z\\
+1&p,q:x\to y,\qquad r:y\to z\\
+2&\alpha,\beta:p\Rightarrow q\\
+3&\zeta:(\alpha\triangleright r)
+       \Rrightarrow(\beta\triangleright r).
+\end{array}
+\tag{15}
+\]
+It has nine generators. Every generating cell has nonidentity source and target in the dimensions relevant to positivity.
+
+I claim
+\[
+\boxed{
+\operatorname{Free}(\Delta)\simeq F_3(\Delta),
+}
+\tag{16}
+\]
+although \(\Delta\) is not regular. Thus the requested presentation is simply
+\[
+\Psi=\Delta,\qquad S=\varnothing.
+\]
+
+### 2.1 Failure of regularity
+
+The generic 2-polyplex for the source of \(\zeta\) is a 2-globe post-whiskered by an edge:
+\[
+W=D_2\mathbin{\#_0}D_1.
+\]
+Its 1-source and 1-target are
+\[
+p;r,\qquad q;r,
+\]
+and its 0-source and 0-target are \(x,z\).
+
+The spherical-boundary condition for a regular 3-plex requires the canonical map
+\[
+(p;r)\amalg_{\{x,z\}}(q;r)\longrightarrow W
+\tag{17}
+\]
+to be a monomorphism. This is the relevant instance of the definition of spherical boundaries recalled in Chanavat §1.51. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+Map (17) is not monic. Its domain has two distinct generating arrows \(r^-,r^+\), while both map to the same arrow \(r\) of \(W\). Its two intermediate vertices likewise both map to \(y\).
+
+This failure concerns the generic arity of the whiskered 2-cell. It is not merely an identification of labels in a map from a regular shape. Therefore the top 3-plex is non-regular.
+
+### 2.2 The top-cell attachment is nevertheless homotopical
+
+Set
+\[
+M=F_3(\Delta),\qquad
+M_2=F_2(\Delta_{\leq2}).
+\]
+The nonidentity hom categories of \(M_2\) are
+\[
+\begin{aligned}
+M_2(x,y)&=(p\overset{\alpha,\beta}{\rightrightarrows}q),\\
+M_2(y,z)&=\mathbf1,\\
+M_2(x,z)&=
+\bigl(p;r\overset{\alpha\triangleright r,\,
+                         \beta\triangleright r}
+                    {\rightrightarrows}q;r\bigr).
+\end{aligned}
+\tag{18}
+\]
+The only change on passing to \(M\) is the addition of \(\zeta\) to the last hom.
+
+Consequently, the full strict subcategory \(G\subseteq M\) on \(x,z\) is a 3-globe:
+\[
+G\cong D_3,\qquad M_2\cap G\cong\partial D_3.
+\]
+Its two 1-generators map to the composite arrows \(p;r,q;r\) of \(M\).
+
+The defining strict pushout is therefore
+\[
+M=M_2\amalg_{\partial D_3}D_3.
+\tag{19}
+\]
+
+To prove that (19) is a homotopy pushout, use the ordinary \(\Theta_\omega\)-nerve
+\[
+\nu M(\tau)=
+\operatorname{Hom}_{\mathrm{sCat}_\omega}(\tau,M).
+\]
+A theta has the form
+\[
+\tau=[m](\tau_1,\ldots,\tau_m).
+\]
+A strict functor \(\tau\to M\) is specified by a vertex sequence
+\[
+(c_0,\ldots,c_m)
+\]
+and functors
+\[
+\tau_i\longrightarrow M(c_{i-1},c_i).
+\]
+This is the suspension decomposition of theta shapes recalled in Chanavat Example 2.24. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+Every such vertex sequence is weakly increasing for
+\[
+x<y<z,
+\]
+because the reverse hom categories are empty.
+
+There are two cases.
+
+1. **The sequence uses \(y\).** It cannot have an adjacent pair \((x,z)\). Every adjacent hom used by the functor is unchanged from \(M_2\) to \(M\), so the functor factors through \(M_2\).
+
+2. **The sequence does not use \(y\).** It factors through the full subcategory \(G\cong D_3\).
+
+The intersection of these two subpresheaves is \(\nu\partial D_3\). Hence
+\[
+\boxed{
+\nu M
+=
+\nu M_2\amalg_{\nu\partial D_3}\nu D_3
+}
+\tag{20}
+\]
+as an equality of set-valued presheaves.
+
+Both maps from \(\nu\partial D_3\) are monomorphisms. Thus (20) is also a homotopy pushout of space-valued presheaves, and remains a pushout after localization to higher categories. Campion’s Lemma 2.16 gives precisely this preservation statement for unions of subpresheaves; Remark 2.12 covers passage from finite dimension to dimension \(\omega\). [arxiv.org](https://arxiv.org/pdf/2311.00200?utm_source=chatgpt.com)
+
+Finally, \(\Delta_{\leq2}\) is a positive 2-polygraph, so its strict cellular construction is homotopical by Chanavat Corollary 3.39. Combining this with the verified top-cell attachment (20) proves (16). [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+Therefore **regularity is not necessary for finite coherent presentation, even with an actual 3-generator and with no localization at all**. This example is positive, so it does not settle whether some positivity hypothesis is necessary.
+
+## 3. What these results establish for Questions 2 and 3
+
+For Question 2, the constant weight with fibre \(D_2\) gives a diagnostic parallel to §1.4. The full generator-pair construction for
+\[
+D_2\times D_2
+\]
+has counts
+\[
+(4,8,8,4,1).
+\]
+Omitting the generator indexed by the pair of top 2-cells leaves Euler characteristic
+\[
+4-8+8-4=0,
+\]
+whereas the actual product groupoidifies to a contractible space. Thus the construction truncated after dimension three fails: a 4-dimensional compatibility indexed by the fibre 2-generator is required.
+
+That necessity does not itself prove sufficiency for arbitrary positive 2-category fibres. I have not completed that sufficiency proof here.
+
+For Question 3, the proved extension is the walking-3-cell, Cat-valued case above. Its finite test is explicit: verify the finitely many path equalities (1), construct the boundaries (2)–(6), and localize the specified set (7). A general \(FT_n\) recognition theorem is not established by these arguments.

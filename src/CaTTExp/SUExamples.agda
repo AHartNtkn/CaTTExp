@@ -53,3 +53,51 @@ private
 _ : T (coh Comp₃ assocTy ⟪ a ∷ b ∷ c ∷ b ∷ id b ∷ d ∷ g ∷ [] ⟫
        ==su idTm (arr ⋆ a d) (comp a b c d g))
 _ = tt
+
+------------------------------------------------------------------------
+-- Insertion (CaTT_sua).
+
+private
+  T₂ T₃ : Tree
+  T₂ = node (leaf ∷ leaf ∷ [])
+  T₃ = node (leaf ∷ leaf ∷ leaf ∷ [])
+
+-- Standard types and coherences agree with the hand-written ones.
+_ : stdTy 1 T₂ ≡ compTy
+_ = refl
+_ : stdCoh 1 T₂ ≡ comp (v 0) (v 1) (v 2) (v 3) (v 4)
+_ = refl
+
+-- Both bracketings of a ternary composite insert to the unbiased one.
+_ : nf₀ fg-h ≡ stdCoh 1 T₃
+_ = refl
+_ : nf₀ f-gh ≡ stdCoh 1 T₃
+_ = refl
+
+-- Hence the associator is an identity in CaTT_sua.
+_ : T (assoc ==su idTm (arr ⋆ (v 0) (v 5)) (stdCoh 1 T₃))
+_ = tt
+
+-- Vertical associativity: insertion along branches of height 1.
+private
+  V₂ V₃ : Tree
+  V₂ = node (node (leaf ∷ leaf ∷ []) ∷ [])
+  V₃ = node (node (leaf ∷ leaf ∷ leaf ∷ []) ∷ [])
+
+  vc : List Tm → Tm
+  vc ts = coh (ctxOf V₂) (stdTy 2 V₂) ⟪ ts ⟫
+
+  -- in ⌊V₃⌋: x y f g α h β k γ = 0 … 8
+  αβ-γ α-βγ : Tm
+  αβ-γ = vc (v 0 ∷ v 1 ∷ v 2 ∷ v 5 ∷ vc (v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 5 ∷ v 6 ∷ []) ∷ v 7 ∷ v 8 ∷ [])
+  α-βγ = vc (v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 7 ∷ vc (v 0 ∷ v 1 ∷ v 3 ∷ v 5 ∷ v 6 ∷ v 7 ∷ v 8 ∷ []) ∷ [])
+
+_ : nf₀ αβ-γ ≡ stdCoh 2 V₃
+_ = refl
+_ : nf₀ α-βγ ≡ stdCoh 2 V₃
+_ = refl
+
+-- The terms above are well typed (so the checks are not vacuous).
+_ : T (is-just (infer (ctxOf V₃) αβ-γ) ∧ is-just (infer (ctxOf V₃) α-βγ)
+       ∧ is-just (infer (ctxOf V₃) (stdCoh 2 V₃)) ∧ is-just (infer Comp₃ (stdCoh 1 T₃)))
+_ = tt

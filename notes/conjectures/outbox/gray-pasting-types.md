@@ -60,9 +60,11 @@ Two events are **independent** if neither's output is (transitively) an input of
 ## Questions
 
 1. **(Smallest open case: soundness and completeness in dimension 2, one nesting level.)** Let 𝒢 be the free Gray-monoidal biclosed strict 2-category on a set of objects and a set of generating 1-cells. Interchangers are non-invertible 2-cells, and the closed structure is an isomorphism of hom-categories, strictly natural. Is it true that:
-   - for 1-cells t, u with the same source, target and generators, and no closures containing events, there is a 2-cell t ⇒ u in 𝒢 iff inv(u) ⊆ inv(t); and
+   - for 1-cells t, u with the same source and target, the same image in the free (strict, biclosed) monoidal category, i.e. the same string diagram, and no closures containing events, there is a 2-cell t ⇒ u in 𝒢 iff inv(u) ⊆ inv(t); and
    - such a 2-cell is then unique?
-   Equivalently: is each hom-category of 𝒢 between such 1-cells the weak-Bruhat interval described above?
+   Equivalently: is each hom-category of 𝒢, restricted to such 1-cells, a disjoint union of the weak-Bruhat intervals described above, one per string diagram?
+
+   *Erratum (2026-11-18, after sending).* The sent version required only "the same generators". That is too weak: for f, g : A → A, the 1-cells f;g and g;f have the same generators and empty inversion sets, but no 2-cell relates them. The question is meant for a fixed string diagram, as stated above.
 2. **(Closures.)** Is the nested event order an invariant of 1-cells of 𝒢? Does Question 1's statement hold level by level? In particular, is there an interchanger between an outer event and a compound (closure) event, and is it the only 2-cell relating orders across levels?
 3. **(ω-version.)** For n fully independent events, conjecture that the k-cells between event orders are the cells of the hom ω-category of the strict Gray cube ν(D¹ ⊗ … ⊗ D¹) (Steiner complexes) between its bottom and top vertices. Its 1-dimensional part is the weak Bruhat order on Sₙ, and the higher Bruhat orders of Manin–Schechtman (see also Kapranov–Voevodsky, Ziegler) should appear in higher dimensions. Is this right? What is the general (dependent, planar, nested) version?
 4. **(Comparison.)** Gepner–Heine (*Oriented category theory*, arXiv 2510.10504, Cor. 4.1.11) describe the morphism object of an oriented category as the presheaf (S, T) ↦ Map(S ⊠ X ⊠ T, Y), recording whether time sits on the left or right. Does criterion G (or its ω-version) present the free bioriented / Gray-closed structure in their sense?

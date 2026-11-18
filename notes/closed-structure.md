@@ -676,21 +676,23 @@ These are recorded in `conjectures/planar-pasting-types.md` §4, which is ready 
 
 *Added 2026-11-18.*
 
-**Prop. F1 (Gray monoids).** Let 𝒢₀ be the free strict Gray monoid on a set of objects and a set of generating 1-cells. This is a monoid in (2-Cat, ⊗_Gray) with lax interchange and no closed structure. Let t, u be 1-cells of 𝒢₀ with the same source, target and events. Then:
+**Prop. F1 (Gray monoids).** Let 𝒢₀ be the free strict Gray monoid on a set of objects and a set of generating 1-cells. This is a monoid in (2-Cat, ⊗_Gray) with lax interchange and no closed structure. Let t, u be 1-cells of 𝒢₀ with the same source and target and the **same image in the free strict monoidal category**, i.e. the same string diagram. Then:
 - there is a 2-cell t ⇒ u iff inv(u) ⊆ inv(t); and
 - that 2-cell is unique.
 
-So each hom-category is a poset, isomorphic to an interval of the weak Bruhat order.
+So each hom-category is a poset: a disjoint union of weak-Bruhat-order intervals, one per string diagram.
+
+*Correction (independent review, `reviews/closed-structure-F5-2026-11-18.md`).* The first version assumed only "the same events", which is too weak. For f, g : A → A, the 1-cells f;g and g;f have the same events and inv = ∅, but no 2-cell relates them. In planar form, compare f on the left then g on the right with g on the left then f on the right, on A⊗A. Interchangers preserve the string diagram, so the diagram must be fixed.
 
 *Proof.*
-1. **Generators.** 2-cells of 𝒢₀ are composites of whiskered interchangers X_{f,g} for *generating* f, g. An interchanger at composite 1-cells decomposes by the Gray-monoid axioms X_{f, g′∘g} = (X_{f,g′} ∗ g)·(g′ ∗ X_{f,g}) and X_{f, b⊗g} = b ⊗ X_{f,g}, and symmetrically in f. Compare Forest–Mimram's presentation of free Gray categories (FSCD 2018), here without inverses. **[recall: the directed presentation is the same generators and relations, minus the inverse generators]**
+1. **Generators.** 2-cells of 𝒢₀ are composites of whiskered interchangers X_{f,g} for *generating* f, g. An interchanger at composite 1-cells decomposes by the Gray-monoid axioms X_{f, g′∘g} = (X_{f,g′} ∗ g)·(g′ ∗ X_{f,g}) and X_{f, B⊗g} = X_{f⊗B, g} for an object B between f and g, and symmetrically in f. Compare Forest–Mimram's presentation of free Gray categories (FSCD 2018), here without inverses. **[recall: the directed presentation is the same generators and relations, minus the inverse generators]**
 2. **Each generator removes one inversion.** A whiskered X_{f,g} swaps two events that are consecutive in time and independent, from "right factor first" to "left factor first". It deletes exactly the pair (f, g) from the inversion set and changes no other pair. So t ⇒ u implies inv(u) ⊆ inv(t). Every 2-path has length |inv(t)| − |inv(u)|.
-3. **Existence.** The event orders of 1-cells with given events are the linear extensions of the dependency order. Adding left/right for independent pairs makes it a 2-dimensional poset. Its linear extensions form an interval of the weak order (Björner–Wachs 1991). In the weak order, inv(u) ⊆ inv(t) iff u ≤ t, and then there is a saturated chain of adjacent swaps between them. That chain stays in the interval, so every step is an interchanger.
+3. **Existence.** Over a fixed string diagram, the event orders of the 1-cells are the linear extensions of the dependency order. Adding left/right for independent pairs makes it a 2-dimensional poset. Its realizer is the pair of linear orders "precedence, then left first" and "precedence, then right first" (the planar st-graph / dominance fact, **[recall]**). Its linear extensions form an interval of the weak order (Björner–Wachs 1991, theorem number **[recall]**). In the weak order, inv(u) ⊆ inv(t) iff u ≤ t, and then there is a saturated chain of adjacent swaps between them. That chain stays in the interval, so every step is an interchanger.
 4. **Uniqueness.**
    - A 2-path from t to u is a maximal chain of [u, t], i.e. a reduced word of the permutation u⁻¹t.
    - By Matsumoto–Tits, any two reduced words are connected by commutation moves s_i s_j = s_j s_i (|i − j| ≥ 2) and braid moves s_i s_{i+1} s_i = s_{i+1} s_i s_{i+1}. Each intermediate word is again a chain of [u, t], so it is again a 2-path of 𝒢₀.
    - Commutation moves are the interchange law of the underlying 2-category: the two swaps act on disjoint time slots.
-   - Braid moves involve three pairwise independent events. Their two hexagon composites are equal in a Gray monoid, because (D¹ ⊗ D¹ ⊗ D¹) is a commuting cube in Gray's 2-categorical tensor. In the ω-version this equality becomes the 3-cell of Question 3.
+   - Braid moves involve three pairwise independent events. Their two hexagon composites are equal in a Gray monoid, by naturality of X_{f,–} with respect to X_{g,h} together with the decomposition axioms; equivalently, D¹ ⊗ D¹ ⊗ D¹ is a commuting cube in Gray's 2-categorical tensor. In the ω-version this equality becomes the 3-cell of Question 3.
    - Hence any two 2-paths are equal. ∎
 
 **What the closed structure adds (remaining for Question 1).**

@@ -804,6 +804,29 @@ Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11
 
 Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
 
+## F.6 Internal notes toward round 3 (D11, closed part)
+
+*Added 2026-11-18.*
+
+**1. Additive models cannot see generator-free interchangers.**
+- Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = target − source is additive, and an interchanger adds a bilinear term β(δ(f), δ(g)). The integer model 𝓜 and its matrix version are additive.
+- Every structural 1-cell has δ = 0, because it is a coh of a balanced sequent.
+- So in every additive model, an interchanger χ_{f,g} in which f or g is structural (ev, curried evaluation, associators) has weight 0, and lands in a hom where it is forced to be an identity once the hom is a poset.
+- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with weight models. It needs a rewriting or coherence argument, or a non-additive model.
+
+**2. Structural interchangers are not forced trivial by the stated axioms.**
+- Take ev : A⊗(A\C) → C and a generator g : Y → Y′. Compare (ev⊗Y′)∘(A⊗(A\C)⊗g) with (C⊗g)∘(ev⊗Y).
+- Apply Φ, currying A on the left, using its strict naturality in the context variable and in the target. The question becomes whether m_{Y′}∘((A\C)⊗g) = (A\C⊗g)∘m_Y, for m_Y := Φ(ev⊗Y).
+- That is again an instance of the same question, so Φ only transports it.
+- So χ_{ev,g} is a 2-cell between 1-cells that the axioms do not identify. The same holds for χ_{ev,ev′} between two evaluations at independent positions. Structural maps are therefore *non-central events* in 𝒢 unless centrality is imposed, as in Garner–Hirschowitz–Pardon's premonoidal construction.
+- **Consequence for round-3 Q2:** a complete invariant of 1-cells will have to schedule structural events as well as generator events. Round 2's item 8 (the curry side is data) is the simplest instance.
+
+**3. A design choice this exposes.** There are two candidate theories for the project's PL-ω:
+- (a) the free Gray-monoidal biclosed 2-category 𝒢 as posed, where structural maps are non-central;
+- (b) its quotient in which structural 1-cells are central, i.e. every interchanger with a structural argument is an identity.
+
+In (b), the reduction of round-3 Q1 to item 6 of round 2 is immediate: every forward 2-cell between t₁ and t₂ is a single generator interchanger, so 𝒢_b(t₁, t₂) = {α}. Whether (b) is still sound for the Gray tensor of (∞,ω)-categories, i.e. whether ev is central there, is the real question. Campion's biclosedness is only on mapping spaces (GHL Rem. 2.20), which suggests it is not. This is recorded for the round-3 answer to settle.
+
 ---
 
 # Part G. Open items left by this note

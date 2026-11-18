@@ -924,3 +924,23 @@ The argument does not establish RC(3) for general cylinders or loop-free context
 For Question 2, there is also a dimension correction: a \(K\) for a 3-dimensional coherence is a **4-cell**, so a comparison between two choices of \(K\) is a **5-cell**. The RC(3) construction above does not supply that uniqueness statement.
 
 This is a metatheoretic construction with specified pasting arities and substitutions; it has not been run through a CaTT implementation.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, as a paper construction; Question 1 is settled.** RC(3) holds for the lax square S (every pair of parallel 3-terms is connected by a 4-term), hence K(Q, B, Var Q) exists for every 3-dimensional coherence over the single arrow (x, y, f). Questions 2–4 remain open. The construction has not been run through a CaTT implementation; it uses the path-support and path-filling results of prompt §2 item 7 as inputs. Checked step by step:
+
+- **V1. Active-column factorisation (13), the key lemma.** For T = coh_{P,A}[γ] with π(T) = F and dim P = 2: P is a horizontal sequence of vertical 2-columns; the F-count is additive and F is a generator whose 0-boundary is x⁻ → y⁺, so exactly one column carries F and every other column has strict image an identity on an empty path, i.e. both 0-endpoints x⁻ (before) or y⁺ (after). S has no nonempty directed path from x⁻ to x⁻ or y⁺ to y⁺, and the support input puts those columns' terms over the point context, so they factor literally through D⁰(x) or D⁰(y). Hence γ = δ[η] syntactically and H = coh_{P,A}[δ] is a full 2-term on C_k. **Confirmed.** The square hypothesis enters exactly here: x⁻ is the unique source and y⁺ the unique sink.
+- **V2. Stability.** For u on C_n and σ : C_n → S sending the full word to F, σ must send x, y to x⁻, y⁺; the column analysis of u on C_n (one column spans x → y, the others sit at x or y) is the same after σ, so H is literally unchanged. **Confirmed.**
+- **V3. Folding (§2).** N_F(A,B) = (κ_p(A,p)·F)·κ_q(q,B); μ_L, μ_R typecheck (7)–(9). The 4-cells are coherences on path contexts, on vertical chains with F substituted for a 2-variable (10), and on R = V(1,0,1) for the mixed law (11) (r_LR, r_RL full and parallel). **Confirmed** at the level of arities and support; the "different folding orders by tree rotations" step is standard and not expanded.
+- **V4. Normalisers (§4) and evaluation fusion (§5).** ν_T recursion terminates (the F-valued retained argument is a proper subterm). Case analysis of (21): path-only (direct coherence), variable (naturality (4) plus unit laws), constructor (common prefix v_H[η[σ]] by V2, then the folding lemma). **Confirmed.**
+- **V5. 2-dimensional arities (§6).** B(u) = B(v) for parallel full u, v on C_n (22); Ξ_H = coh_{C_n, (H;λ_v) → λ_u} is a valid coherence (both sides full); (24) follows from (21). This settles the "smaller first step" with arbitrary middle 2-terms. **Confirmed.**
+- **V6. 3-dimensional arities (§7).** A 0-column of a 3-dimensional pasting context is exactly V(k₁,…,k_m). H;λ_V and λ_U;W are parallel (outer pads agree) and full on R, so Ξ_H (27) exists; (28) uses the induction hypothesis on the proper 3-subterms M_{i,j}[σ] and word functoriality (3). Induction on the syntax of G is well founded (S has no 3-variables). **Confirmed.**
+- **V7. Cancellation (§8).** r = ν_{T′} is a composite of whiskered coherences, hence invertible with a cancellation 4-cell (Benjamin–Markakis–Sarti, composites of coherences are invertible). (31) gives Fill_S(α, β). **Confirmed.**
+- **V8. Dimension correction for Question 2.** A K for a 3-dimensional coherence is a 4-cell, so comparing two choices is a 5-cell, not a 4-term as the prompt said. **Correct; the prompt was wrong.**
+
+**Consequences.**
+- C1: N holds for every 3-dimensional coherence over the single arrow, with Y = Var(Q), by (32).
+- D2: RC(3) for the lax square is fully settled (this also answers question 1 of the unsent `outbox/gray-contexts-r3.md`, which was revised accordingly).
+- The method needs discarded columns to be point-supported; general cylinders Q↑Y and loop-free contexts remain open (RC(3) there, RC(n)). Follow-up prompt: `outbox/naturality-arbitrary-depth-r3.md` (unsent).

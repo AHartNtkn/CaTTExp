@@ -189,6 +189,11 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
   - Practical consequence: a lemma proved once and dualised may land in the oplax theory, so a second proof may be needed. CaTT's proof-size savings from opposites shrink accordingly.
   - Mitigation: a kernel parameterised by orientation, so proofs transfer between the lax and oplax theories. This reduces the loss but does not remove it.
   - Which reversals survive is a short computation, and it is PR #3's experiment 3. Under two-tier L, dualities used only inside one object (e.g. the Eckmann–Hilton development) are unaffected.
+  - **Done (2026-11-18, `closed-structure.md` Part D, Agda `GrayDuality.agda`).**
+    - Symmetries of two-tier L: J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}.
+    - Lax ↔ oplax swaps: J ∈ {{1}, all, even, {3,5,7,…}}.
+    - Every other J lands in a mixed-orientation theory L_ε.
+    - The orientation-parameterised kernel is the family L_ε, on which all dualities act. Implementing it costs one sign per dimension in the support computation.
 
 ### R6. "P and L coincide for functors into 1-categories" (PR #2 §3.2)
 
@@ -377,7 +382,7 @@ Finer supports map onto coarser ones under the collapse X ⊗ Y → X × Y, so e
 **What has to be done, and what it costs.**
 1. **No construction yet of the free structure the side condition needs** (above). This is open, not a reason against: the problem is posed and being worked on. If it is solved, the two-tier proof of §3.6 should transfer with Steiner chains replaced by the new generator sets.
    - **Constraints now known** (researcher response, verified 2026-11-18; see the end of `notes/conjectures/strict-lax-interchange-at-every-level.md`):
-     - *Higher interchangers must be boundary-adjusted.* A raw cell `(a ∗ₗ b) ∗ₖ (c ∗ₗ d) → (a ∗ₖ c) ∗ₗ (b ∗ₖ d)` for cells of dimension above l+1 forces strict interchange two dimensions down, so it kills directedness. The higher instances must be naturality comparisons such as `L_A ∗₂ χ_{a′} ⇛ χ_a ∗₂ R_A`. Uniform L's side condition must compute supports in a structure built that way. Under that corrected reading the problem is open, not refuted.
+     - *Higher interchangers must be boundary-adjusted.* A raw cell `(a ∗ₗ b) ∗ₖ (c ∗ₗ d) → (a ∗ₖ c) ∗ₗ (b ∗ₖ d)` for cells of dimension above l+1 forces strict interchange two dimensions down, so it kills directedness. The higher instances must be naturality comparisons. Not of the joint form `L_A ∗₂ χ_{a′} ⇛ χ_a ∗₂ R_A`: a second verified response (2026-11-18, `conjectures/answered/directed-interchange-every-level-2026-11-18.md`) shows that this has no image in the Gray quotient. Instead they are tensor-shaped: one Leibniz-signed naturality cell per variable, and higher cells between routes. Uniform L's side condition must compute supports in a structure built that way. Under that corrected reading the problem is open, not refuted.
      - *Supports live in the expanded basis.* If support of a composite were the union of supports, every interchange would be forced strict. This is already how §3.2 computes supports for k = 0.
      - *Finiteness.* If F(Γ) has one finite generator set with injective support, it has only finitely many non-identity cells, so the tower of higher comparisons must stop in each F(Γ).
      - *Dimension 4.* Bourke–Lobbia's lax 4-categories (arXiv 2610.31448 §4.2.6) direct the outer interchanger but keep Gray-category homs, so they are two-tier, not uniform, in dimension 4.

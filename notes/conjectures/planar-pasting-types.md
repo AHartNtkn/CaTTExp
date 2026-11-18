@@ -1,6 +1,6 @@
 # Planar pasting types: an unbiased theory of biclosed monoidal categories
 
-*Self-contained problem statement with partial results. It adapts Mimram, *An unbiased simply typed combinatory logic* (CSL 2026), from cartesian closed categories to biclosed monoidal categories, which are non-symmetric and have no diagonal. §2 is a theorem with a proof sketch. §3 and §4 are open.*
+*Self-contained problem statement with partial results. It adapts Mimram, *An unbiased simply typed combinatory logic* (CSL 2026), from cartesian closed categories to biclosed monoidal categories, which are non-symmetric and have no diagonal. §2 is a theorem. **§3 (PL1) is now proved, and units have a contractible criterion** (2026-11-18, `notes/closed-structure.md` Parts A–B). **§4 (PL-ω) is open**; a candidate criterion passing the first test is in §4.1. §4 is the part ready for an external researcher.*
 
 ## 1. Background: Mimram's construction, in brief
 
@@ -37,13 +37,22 @@
    - Interpret coh_{Γ⊢A}[τ] as the unique proof of Γ ⊢ A, substituted by τ. The equality rule is sound by step 1.
    - Two UL-terms with the same interpretation have the same link structure. So both are UL-equal to coh of the same generalised sequent from step 2.
 
-∎ (Steps 2–3 are standard but should be written out carefully.)
+∎ Steps 2–3 are written out, for the theory with ⊗, as Theorem A4 of `notes/closed-structure.md`. Step 1 is also subsumed by Theorem A there, which does not need Babaev–Solov'ev.
 
 **Remarks.**
 - Unlike Mimram's cartesian case, *type* substitution suffices. Linearity removes the need for term substitution, which repairs Komori's conjecture in the cartesian case.
 - **This is the "linearity" principle in exact form.** For non-symmetric closed structure, the contractible shapes are exactly the balanced (linear) and planar ones.
 
-## 3. Open: tensor and unit
+## 3. Tensor and unit (PL1: proved)
+
+**Update 2026-11-18.** PL1 is proved directly (`notes/closed-structure.md`, Theorem A). The proof uses two factorization lemmas for the cut-free Lambek calculus with product, plus connectivity of the link graph; no proof nets are needed. Consequences:
+- the non-symmetric unit-free Kelly–Mac Lane theorem: equal linking ⇒ equal morphism;
+- the faithfulness lemma of §7 item 3, as a corollary.
+
+**Units:** balancedness is not enough. The triple-dual idempotent is a second morphism of a balanced provable sequent. A unit-pasting class (normalize by the canonical unit isomorphisms to a unit-free pasting sequent or to ⊢ I) is contractible: `closed-structure.md` Part B.
+
+The original statement follows.
+
 
 **Conjecture PL1.** Add A ⊗ B, with sequent rules non-commutative. Then balanced provable sequents still have at most one proof modulo the usual βη and commuting conversions for ⊗.
 
@@ -71,6 +80,28 @@ It does **not** extend naively to the mapping (∞,ω)-categories, whose higher 
 
 **Question PL-ω.** Is there a class of "Gray pasting types" with the following property: the ω-dimensional coherence rule over them generates exactly the cells of the free monoidal biclosed (∞,ω)-category on a set of objects, with each higher cell's "time" direction tracked as a tensor position in this sense? A first test case: is there a pasting-type criterion whose 2-cells are exactly the lax naturality cells of evaluation, Fun^lax(B, C) ⊗ B → C, and which does not also produce their inverses?
 
+### 4.1 Candidate criterion and the first test (2026-11-18)
+
+Details are in `notes/closed-structure.md` Part F.
+
+**Setting.** Generators fᵢ : Pᵢ → Qᵢ between formulas, each used once. A planar 1-term t over them has an **event order** (the order in which generators are applied). Independent events (neither feeds the other) have a left/right position, by planarity.
+
+**Gray criterion.** Let inv(t) be the set of independent pairs (e left of e′) with e′ applied first. A 2-goal t ⇒ u between terms of the same planar pasting 1-type is a coherence iff inv(u) ⊆ inv(t).
+
+**First test.** With φ : P → C/B and b : X → B:
+- t₁ = ev∘(φ⊗B)∘(P⊗b) has inv = {(φ, b)};
+- t₂ = ev∘(C/B⊗b)∘(φ⊗X) has inv = ∅.
+
+The criterion gives t₁ ⇒ t₂, the lax naturality cell of evaluation (orientation as in two-tier L), and not its inverse. Mutual acceptance happens only between terms with the same event order, which are related by invertible structural coherences.
+
+**Mimram's own directed criterion fails the test.** It accepts both directions, because it has no fullness or orientation condition (`closed-structure.md` C.2).
+
+**Open questions for a researcher.**
+1. Define left/right for events inside arguments of residuals; a candidate is the planar proof net with generator boxes.
+2. **ω-version:** are the k-cells between event orders the cells of the hom ω-category of ν(D¹ ⊗ … ⊗ D¹) between its bottom and top vertices? In the fully independent case these are the higher Bruhat orders (Manin–Schechtman, Kapranov–Voevodsky).
+3. Soundness and completeness of the resulting theory for the free Gray-monoidal biclosed (∞,ω)-category on a set of objects.
+4. Comparison with Gepner–Heine's LMor/RMor, of which inv is the 1-dimensional shadow.
+
 ## 5. Why it matters
 
 Cartesian closed structure has an unbiased presentation in which all structure maps and laws come from a single contractibility rule (Mimram). The Gray tensor product, which governs lax transformations, is closed but neither symmetric nor cartesian. §2 shows that the 1-dimensional planar analogue works, with linearity built in. The open parts decide whether the same pattern scales to tensors and units, and to higher dimensions, where closure is only an equivalence on mapping spaces.
@@ -83,7 +114,7 @@ Any of the following:
 
 ## 7. Literature status (searched 2026-11-18)
 
-**PL1: very likely true, and assembled from known results. One lemma still needs a precise citation. PL-ω: open, but Gepner–Heine's "bioriented" enrichment is a published framework for exactly the obstruction in §4.**
+**PL1: proved directly (2026-11-18, `closed-structure.md` Part A); the lemma below is now a corollary (Corollary A3 there). Cockett–Seely (TAC 3, 1997, p. 108) remark that unit-free coherence is "trivial" but state no theorem for the biclosed fragment. PL-ω: open, but Gepner–Heine's "bioriented" enrichment is a published framework for exactly the obstruction in §4.**
 
 **PL1.** The argument has three ingredients.
 1. **Proof nets are canonical for unit-free non-commutative MLL.** For unit-free multiplicative linear logic, a cut-free proof modulo the usual permutations (βη and commuting conversions for ⊗) is determined by its proof net. The net is the formula trees together with the axiom linking.

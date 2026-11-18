@@ -1,6 +1,6 @@
-# Problem: composites of molecules in CaTT (Gray contexts), round 4
+# Problem: composites of molecules in CaTT (Gray contexts), round 5
 
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Rounds 1–3 and their verified answers are archived in `answered/gray-contexts-2026-11-18.md`, `answered/gray-contexts-round2-2026-11-18.md` and `answered/gray-contexts-r3-2026-11-18.md`; this prompt does not re-ask anything answered there.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Rounds 1–4 and their verified answers are archived in `answered/gray-contexts-2026-11-18.md`, `answered/gray-contexts-round2-2026-11-18.md`, `answered/gray-contexts-r3-2026-11-18.md` and `answered/gray-contexts-r4-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -66,19 +66,31 @@ Existence in G(n) follows from RC(n−1) for U's (n−1)-skeleton. Uniqueness in
 11. **Suspended chain coherences are not a normal form (round 3, proved).** Let 𝓔 be the class of 3-terms generated from literally suspended coherences over 1-dimensional path contexts and identities by the ordinary compositions and whiskerings (and inverses). Let L(t) be the length of the hom-1 word of a 2-term t under the intrinsic strictification of the Benjamin–Markakis hom computad. Every γ ∈ 𝓔 has L(s₂γ) = L(t₂γ), because ∗₀-composites of 2-terms are indecomposable hom 1-cells of length 1. But L(F) = 1 and L(W(F)) ≥ 3, so no γ ∈ 𝓔 has boundary F → W(F), already over D₂. Any normalisation proof of RC(3) must use boundary-adjusting 3-terms, as item 10's normalisers do.
 12. **The hom-level reformulation is not a route (round 3, proved).** For every 3-term α : u → v in every context, coh_{D₃, z → (z ∗₂ 1_v) ∗₂ 1_v} gives α → (α ∗₂ 1_v) ∗₂ 1_v, a composite of decomposable hom cells. So "connected to a composite of decomposable hom cells" is trivially true, while the recursive reading (no indecomposable hom 2-generator anywhere) is false by item 11.
 
+13. **RC(3) on the cylinder of a composable pair (proved on paper, 2026-11-18).** For Q = (x → y → z) and the cylinder Q↑Var(Q) (two lax squares F, G glued along the middle edge), any two parallel 3-terms are connected. The method extends item 10: a column carrying F or G that does not span the unique source and sink factors literally through `C_n ∗₀ D¹(h)` or `D¹(h) ∗₀ C_n`, with h sent to a fixed edge variable; the composite case H = (f⁻ ∗₀ G) ∗₁ (F ∗₀ g⁺) is point-supported with a forced order. Source: `answered/naturality-arbitrary-depth-r3-2026-11-18.md`.
+14. **Literal inactive-column factorisation (round 4, proved).** Let Γ have dimension ≤ 2 and an acyclic directed graph of generating 1-cells, and let σ : Γ ⊢ P with P a pasting context of dimension ≤ 3, P = Q₁ ∨₀ … ∨₀ Q_k in 0-columns. Call Q_j *inactive* if no image of its 2-variables contains a 2-variable of Γ.
+    - All 1-variables of an inactive column have images with one strict path w_j. All its assigned terms use only the vertices and edges of w_j (total support lemma). The path labelling ι_j : C_{w_j} → Γ is injective by acyclicity, so the column lifts literally: σ|_{Q_j} = θ_j[ι_j].
+    - Replacing every inactive column by its path context gives a pasting context R_σ (a horizontal word of retained active columns and linear paths) and σ = κ_σ[δ_σ] syntactically, with ⋃ supp κ_σ(x) = Var(R_σ).
+    - **Comparison.** χ_σ = coh_{R_σ, p_σ → r_σ}[id][δ_σ] : coh_{P,A}[σ] → coh_{R_σ, A[κ_σ]}[δ_σ], where p_σ = coh_{P,A}[κ_σ] and r_σ = coh_{R_σ, A[κ_σ]}[id] (a 3-term for 2-dimensional heads, a 4-term for 3-dimensional ones).
+    - **Stability.** For ρ : Γ′ ⊢ Γ (Γ′ also acyclic of dimension ≤ 2) there is λ_{σ,ρ} : R_{σ[ρ]} ⊢ R_σ with δ_σ[ρ] = λ[δ_{σ[ρ]}], κ_{σ[ρ]} = κ_σ[λ], λ_{σ,id} = id and λ_{σ,ρ[τ]} = λ_{σ,ρ}[λ_{σ[ρ],τ}]. Coherences ζ_{σ,ρ} (old reduced head transported vs new one) and Θ_{σ,ρ} (the triangle of comparisons) exist.
+    - On the Gray cube's negative hemisphere, height i + j + k shows that every arity has at most one active 0-column, so reduced 2-dimensional arities are V, D¹ ∨₀ V or V ∨₀ D¹ with V a vertical 2-chain.
+    - Source: `answered/gray-contexts-r4-2026-11-18.md`.
+15. **Whiskering distributes over vertical composites, coherently (round 4, proved).** Over P_m = V_m ∨₀ D¹ (V_m a vertical chain of m 2-cells, D¹ an edge e) there is a coherence D_m : W_e(C_m(α_i)) → C_m(W_e(α_i)). Over P_m↑ = (D³ ∨₁ … ∨₁ D³) ∨₀ D¹ (3-cells η_i : α_i⁻ ⇛ α_i⁺) there is a coherence 4-term Ω_m : W³(C³(η)) ∗₂ D_m⁺ → D_m⁻ ∗₂ C³(W³(η)). It can be substituted with arbitrary terms, and the left-whiskering version is symmetric. No acyclicity is needed.
+
 ## 3. What remains
 
-RC(3) for the lax square is settled (item 10). In larger acyclic contexts, the columns of an arity that do not carry the active 2-generator may carry nonidentity paths, so item 10's point-support step fails. RC(3) fails for loopy contexts such as (x, a : 1_x → 1_x) (π₃(S²) = ℤ: the weak free object groupoidifies to S², the strict one to K(ℤ,2)), so a proof must use some acyclicity.
+Item 14 removes inactive columns literally and stably in every acyclic context of dimension ≤ 2. What is missing is the treatment of **active** columns: the 2-terms substituted into the retained vertical chain V are arbitrary composites of 2-generators and edge whiskers. A normaliser for such a column must be compared with the composite of the normalisers of its inputs ("evaluation fusion"). Replacing a 2-variable of V by a whiskered 2-term gives declarations with composite 1-boundaries, which are not a pasting context, so no single coherence performs this comparison. Item 15 handles one such interaction (a fixed whisker across a vertical composite). RC(3) fails for loopy contexts such as (x, a : 1_x → 1_x), so a proof must use acyclicity.
 
 ## 4. Questions
 
-1. **The Gray cube (smallest open case).** Let U = D¹ ⊗ D¹ ⊗ D¹, presented with hexagon composites. Prove that every X-free 3-term H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉ is connected to the identity (RC(3) for 3-loops over the three-face negative hemisphere). Here the three faces are lax squares glued along edges, so item 10 applies to each face separately but not to composites that whisker one face by edges of another.
-2. **Beyond point-supported columns.** Generalise item 10's active-column factorisation to contexts where the inactive columns carry nonidentity paths, e.g. two lax squares glued along an edge (the cylinder of x → y → z). Is there a substitution-stable factorisation through a "horizontal word of vertical chains"?
-3. **RC(3) and RC(n) for acyclic contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule (or every finite Steiner loop-free computad), and say which hypothesis the proof uses; then RC(n), or the weaker G(n).
+1. **The Gray cube (smallest open case).** Let U = D¹ ⊗ D¹ ⊗ D¹, presented with hexagon composites. Prove that every X-free 3-term H : ⌈∂⁻U⌉ → ⌈∂⁻U⌉ is connected to the identity. By item 14 every arity has at most one active column; the remaining task is the active column.
+2. **Evaluation fusion for active columns.** In an acyclic context of dimension ≤ 2, define normalisers ν_T : T → N(T) for 2-terms T (for instance, a fixed vertical composite of whiskered 2-generators, built from item 14's reduced heads and item 10's square normalisers), and construct for every coherence head c = coh_{V,A}[σ] over a vertical chain a 4-term relating ν_c to the composite of the ν_{σ(z)}. How should the non-globular declarations (2-variables replaced by whiskered terms) be handled: by refining V with item 14 applied to each input, by cells of the shape of item 15 for every head, or otherwise?
+3. **RC(3) for acyclic contexts of dimension ≤ 2.** With items 14 and 15, prove RC(3) for every finite context of dimension ≤ 2 with acyclic generating 1-graph (or every finite Steiner loop-free 2-computad), or give a counterexample. The cylinders of 1-dimensional pasting contexts are the main examples.
+4. **Contexts with 3-variables.** Extend item 14 to contexts of dimension 3, such as the cylinder of the 2-disc or the join context c ⋆ D², where an inactive 3-term no longer has the support of its 2-source.
+5. **RC(n) or G(n).** Prove RC(n) for acyclic contexts, or the weaker G(n) for frame-acyclic molecules.
 
 ## 5. What counts as a solution
 
-Explicit terms for question 1, 2 or 3; a proof of RC(3) or RC(n) on acyclic contexts; a counterexample (an acyclic context with two parallel terms of equal strict image and no term between them); or a published reference.
+Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) on acyclic contexts; a counterexample (an acyclic context with two parallel terms of equal strict image and no term between them); or a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 

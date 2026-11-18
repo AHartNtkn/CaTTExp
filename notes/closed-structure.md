@@ -7,7 +7,7 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness reduced to the closed-term lemma (D10a) |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness proved in sketch (Theorem B8, D10b), awaiting independent check |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
@@ -327,11 +327,171 @@ So **UL_I\* is full iff, for every closed term c : ⊢ P, the closed "left tenso
 
 So ⌜c ⊗ –⌝ = coh_{⊢ Y\(P′⊗Y)}[σ_c]. In particular, UL_I\* is full on every term built only from I-free coh's. More generally it is full whenever the closed subterms met in bracket abstraction have UP\* generalizations.
 
-**The remaining point (D10a).** Is the generalization of every *closed* UL_I\* term UP\*?
-- For *open* terms the answer is no. The term coh_{I ⊢ I}(ev(x, h)) has generalization X, X\I ⊢ I: the unifier sends the atom Y of (X, X\Y ⊢ Y) to I. That is why the reduction above isolates closed terms.
-- For closed terms, unification can force an atom to I only through a bare I in a tame coh, i.e. a whole hypothesis I, the goal ⊢ I, or the I of I⊗A, A⊗I, I\A or A/I. The partner occurrence of such an atom lies inside the same closed tree.
-- What is missing is a lemma saying that this partner is never left in a result position (B\I, I/B, or a goal I with nonempty context).
-- A fallback would be a rule forming ⌜c ⊗ –⌝ from a closed term c. It is obviously sound, but it is a term former other than coh, so it would depart from standard 5. It is not adopted; the lemma is the open point.
+**The closed-term lemma is false, but fullness does not need it.** *(Updated 2026-11-18.)*
+
+*Counterexample to "every closed term has a UP\* generalization".*
+- Take the closed coh c = coh_{⊢ C}, with C = ((Z ⊗ (Z\X)) \ (X ⊗ W)) / W. The sequent ⊢ C is UP\*: it is balanced and I-free, and its normal form Z ⊗ (Z\X), W ⊢ X ⊗ W is L-provable.
+- Take the unary UP\* coh S = (((P \ (I ⊗ Q)) / R) ⊢ (P \ Q) / R). Its normal form is an identity sequent.
+- Unifying the hypothesis of S with C sends X to I. The closed term coh_S(c) then has generalization ⊢ ((Z ⊗ (Z\I)) \ W) / W, which contains the unremovable Z\I. So it is not UP\*.
+- No single UP\* coh denotes this morphism either: any generalization must keep that I.
+- `scripts/d10a/cex.py` checks all of this mechanically. `scripts/d10a/closed_tame.py` found no counterexample in 108k random closed trees, so the counterexample is not generic.
+
+**Prop. B5 (tensoring names are always coh composites).** For every closed UL_I\* term c : ⊢ P, the names ⌜c ⊗ –⌝ : ⊢ Y\(P ⊗ Y) and ⌜– ⊗ c⌝ : ⊢ (Y ⊗ P)/Y are denoted by UL_I\* terms.
+
+*Proof.* Induction on c = coh_S[τ](c₁, …, c_k), with S = (B₁, …, B_k ⊢ C) UP\* and every cᵢ closed. Put Bᵢ′ = Bᵢ[τ] and C′ = C[τ].
+- **The prefix.** The map y ↦ c₁ ⊗ … ⊗ c_k ⊗ y is a composite of the maps y ↦ cᵢ ⊗ y′. Their names exist by induction, and they compose with the L-pasting coh K = (Y\A, A\B ⊢ Y\B):
+
+  ```
+  ⌜c₁ ⊗ c₂ ⊗ –⌝ = coh_K(⌜c₂ ⊗ –⌝, ⌜c₁ ⊗ –⌝[Y := B₂′ ⊗ Y]),
+  ```
+
+  and so on for longer prefixes. For k = 0 the prefix is the name of the identity, j_Y.
+- **The coh itself.** c ⊗ y = (S[τ] ⊗ Y)(c₁ ⊗ … ⊗ c_k ⊗ y). The name of S ⊗ Y is a single coh, over the sequent
+
+  ```
+  T_S = ⊢ (B₁ ⊗ … ⊗ B_k ⊗ Y) \ (C ⊗ Y),   instantiated at τ.
+  ```
+
+  T_S is UP\*. Its normal form is nf(B₁), …, nf(B_k), Y ⊢ nf(C) ⊗ Y, or Y ⊢ Y when N(S) = ⊢ I. Since N(S) is I-free, the hypotheses nf(Bᵢ) are I-free and nf(C) is either I-free or I. The normal form is provable by R⊗ with split (hypotheses | Y), from the provability of N(S). It is balanced.
+- **Conclusion.** ⌜c ⊗ –⌝ = coh_K(⌜prefix⌝, coh_{T_S}[τ]). The mirror case is symmetric, with T′_S = ⊢ (Y ⊗ C) / (Y ⊗ B₁ ⊗ … ⊗ B_k).
+- The argument never uses a generalization of c, so the counterexample above does not affect it. ∎
+
+`scripts/d10a/tens_names.py` checks that T_S and T′_S are UP\* for 3,003 random UP\* coh's, with no failures.
+
+**Theorem B6 (fullness of UL_I\*; D10a).** Every morphism of the free biclosed monoidal category with unit is the denotation of a UL_I\* term.
+
+*Proof.* By the reduction above, fullness follows from closure under Λ. Bracket abstraction gives that closure, given the names ⌜c⃗ ⊗ –⌝ and their mirrors, and Prop. B5 supplies those names. ∎
+
+**What remains (D10b): faithfulness of UL_I\*.** Do equal denotations imply equality in UL_I\*?
+- The unit-free proof (A4) went through a single coh per term. With units, a morphism need not be a single coh: the counterexample above is one such morphism, and B.1's e is another. So A4's argument does not apply.
+
+**Prop. B7 (faithfulness is representability of the term model).** *(Added 2026-11-18.)* Let T be the syntactic multicategory of UL_I\*: objects are formulas, T(Γ; A) is the set of terms Γ ⊢ t : A modulo UL_I\* equality, and composition is substitution. Chosen arrows are m = coh_{X,Y ⊢ X⊗Y}, u = coh_{⊢ I}, ev = coh_{Y, Y\Z ⊢ Z} and ev′ = coh_{Z/Y, Y ⊢ Z}, each instantiated by type substitution. Then the following are equivalent:
+1. UL_I\* is faithful.
+2. T is a biclosed representable multicategory with these chosen arrows. That is, the maps below are bijections in T, not only after interpretation:
+   - (R⊗) h ↦ h ∘_i m from T(Γ, A⊗B, Δ; C) to T(Γ, A, B, Δ; C);
+   - (R_I) h ↦ h ∘_i u from T(Γ, I, Δ; C) to T(Γ, Δ; C);
+   - (R\) k ↦ ev(y, k) from T(Γ; B\C) to T(B, Γ; C), and (R/) its mirror.
+
+*Proof.* (1 ⇒ 2) The interpretation ⟦–⟧ : T → F is full (Theorem B6), and faithful by assumption, so it is an isomorphism of multicategories carrying the chosen arrows of T to the structure maps of F. F has the bijections, so T has them.
+
+(2 ⇒ 1) The free biclosed monoidal category with unit F, viewed as a multicategory with F(Γ; A) = F(⊗Γ, A) and ⊗∅ = I, is the initial biclosed representable multicategory with chosen arrows and a map from the set of atoms. It is the syntactic multicategory of L\*_I with cut, modulo the β/η equations of the universal properties. So:
+- There is a unique strict map G : F → T that fixes formulas and sends chosen arrows to chosen arrows.
+- ⟦–⟧ : T → F is also strict: ⟦coh_m⟧ = m, and so on. So ⟦G(f)⟧ = f by initiality.
+- For a type substitution τ, both G ∘ τ_F and τ_T ∘ G are strict maps F → T that agree on atoms. So they are equal. Here τ_T preserves the chosen arrows because coh's are closed under substitution.
+
+Now show G(⟦t⟧) = t in T by induction on t.
+- A variable is sent to itself.
+- For t = coh_S[τ](t₁, …, tₙ), multifunctoriality gives G(⟦t⟧) = τ_T(G(⟦coh_S⟧)) ∘ (G⟦t₁⟧, …, G⟦tₙ⟧).
+- By induction, G⟦tᵢ⟧ = tᵢ.
+- G(⟦coh_S⟧) and coh_S are two terms of the UP\* type S, so the coh-equality rule makes them equal.
+
+Hence ⟦t⟧ = ⟦t′⟧ implies t = G⟦t⟧ = G⟦t′⟧ = t′. ∎
+
+So D10b is now a statement purely about UL_I\* terms: the derived abstraction operations must satisfy β and η *as UL_I\* equations*. Concretely, define [x]t by the bracket abstraction of B.4, and splitting and unit-elimination from it as in the fullness reduction. Then show, by induction on terms:
+- **(β)** ev(x, [x]t) = t;
+- **(η)** [x]ev(x, k) = k when x ∉ k;
+- the mirror equations for /;
+- the analogous pair for (R⊗) and (R_I).
+
+Each inductive step needs one equation between coh composites over variables, with the induction hypotheses as holes. Where that equation's generalized sequent is UP\*, the coh rule gives it directly.
+
+**Progress on (R\) (2026-11-18).** Write ≡ for UL_I\* equality. Done naively, each inductive step is one generalized equation, and that equation's type can fail to be UP\* (for instance Y, Y\I, … ⊢ C when the abstracted slot has type I). The failure disappears once each step is split into smaller coh equations, each generalized separately.
+
+*β holds in T: ev(x, [x]t) ≡ t for every term t with leftmost variable x.* Induction on t, following the three clauses of bracket abstraction. Every equation below is the coh rule at a UP\* type, instantiated by type substitution and then by term substitution.
+- **[x]x = j.** ev(x, j) ≡ x has type X ⊢ X.
+- **x in the first argument.**
+  - First, ev(x, coh_K(a, c)) ≡ ev(ev(x, a), c), at type Y, Y\A, A\B ⊢ B with A and B atoms. This is unit-free and L-pasting, and it is applied at A := B₁[τ], which may be I.
+  - Then ev(w, coh_{S^c}(b⃗)) ≡ coh_S(w, b⃗), at type S itself.
+  - Chaining these with the induction hypothesis ev(x, [x]t₁) ≡ t₁ gives the clause. The single combined equation is not UP\* when B₁ = I, but its two halves are.
+- **Closed prefix.** The rebracketing coh_S(c⃗, s, …) ≡ coh_{S⊗}(coh_M(c⃗, s), …) has type S once c⃗ is abstracted to variables.
+  - The names of Prop. B5 satisfy ev(y, ⌜c⃗ ⊗ –⌝) ≡ coh_M(c⃗, y), by induction on c⃗. The steps are K-β (as above), ev(coh_M(v⃗, y), coh_{T_S}) ≡ coh_M(coh_S(v⃗), y), whose type is T_S uncurried (UP\*), and associativity of m's.
+  - Chaining K-β twice, the names' β, and ev against coh_{S⊗^c} gives the clause.
+
+*η holds syntactically: [y]ev(y, k) ≡ k when y ∉ k.*
+- [y]ev(y, k) = coh_K(j, coh_{ev^c}(k)).
+- coh_{ev^c} has the identity type Y\Z ⊢ Y\Z, so it is ≡ to the variable.
+- coh_K(j, w) ≡ w has type Y\Z ⊢ Y\Z.
+
+So k ↦ ev(y, k) is surjective in T, and [y] is a section of it. It is a bijection as soon as **[x] respects ≡**, a ξ-rule. Then ev(y, k) ≡ ev(y, k′) gives k ≡ [y]ev(y, k) ≡ [y]ev(y, k′) ≡ k′. The mirror (R/) is the same.
+
+*What the ξ-rule needs.* Induct on the derivation of ≡.
+- **Coh-rule instance u ≡ v at type S[τ].** [x]u and [x]v both have type S^c[τ], and S^c is UP\* with the same normal form. So they are ≡.
+- **Congruence in an argument containing x.** Immediate from the clause.
+- **Substitution instances u[σ] ≡ v[σ].** These need a substitution lemma [x](u[s/z, c⃗/w⃗]) ≡ coh_K([x]s, ([z]u)[c⃗/w⃗]), proved by induction on u with the same kind of UP\* steps.
+- **Congruence in a closed argument c that bracket abstraction moves into a name ⌜c ⊗ –⌝.** This is the only real case. It needs c ≡ c′ ⇒ ⌜c ⊗ –⌝ ≡ ⌜c′ ⊗ –⌝. Prop. B5 defines the name by recursion on the *syntax* of c, and there is no fixed coh U with ⌜c ⊗ –⌝ = coh_U(c): the would-be type Z ⊢ Y\(Z ⊗ Y) is not planar-provable. Closedness of c is exactly what B5 uses.
+
+**Reduction once (R\) and (R/) hold.** The other two conditions of Prop. B7 follow.
+- Any term h equals the uncurrying of its closed name n_h, i.e. a chain of ev's applied to the variables and n_h.
+- Abstracting n_h to a variable turns an equation in h into a coh equation over variables. For example, h(u, λ(i, d)) ≡ h(i, d) for (R_I), and h(m(a, b)) ≡ h′ ⇒ … for (R⊗).
+- Its type contains I only under the canonical isomorphisms (I\A ↦ A and so on), so it is UP\*.
+
+**Closing the last lemma: generalized names (2026-11-18, proof sketch).** B5's names are defined by recursion on closed syntax. Comparing two of them runs into an interchange of names taken at different instances of Y, which is not a coh equation over variables. The fix is to define names for *open* terms, uniformly in a type variable Y, and to use them in the closed-prefix clause of bracket abstraction.
+
+*Definition.* For a term u : Γ ⊢ C, define a closed term Ť_u : ⊢ (⊗Γ ⊗ Y)\(C ⊗ Y), by recursion on u (⊗∅ ⊗ Y := Y). For B5's closed terms it plays the role of ⌜u ⊗ –⌝.
+- Ť_x = coh_{⊢ (X⊗Y)\(X⊗Y)}.
+- For u = coh_S[τ](u₁, …, u_k) with uᵢ : Γᵢ ⊢ Bᵢ′, take the K-composite, in this order, of:
+  - Ť_{u₁}[Y := Γ₂ ⊗ … ⊗ Γ_k ⊗ Y];
+  - L_{B₁′}(Ť_{u₂}[Y := Γ₃ ⊗ … ⊗ Y]);
+  - …;
+  - L_{B₁′⊗…⊗B_{k−1}′}(Ť_{u_k});
+  - coh_{T_S}[τ].
+
+  Here L_B(s) = coh_{Z\W ⊢ (B⊗Z)\(B⊗W)}(s). That type is planar: its normal form is B, Z, Z\W ⊢ B ⊗ W. This is the step that is impossible for an open term on the left of y, as with ⌜u ⊗ –⌝, and it is why Ť_u carries Γ in its domain.
+
+*Lemmas.* Each is proved by induction, and each inductive step is one coh equation at a UP\* type, with the induction hypotheses abstracted as variables.
+1. **β:** ev(p, Ť_u) ≡ m(u, y), when p is the tensor of u's variables and y. The steps are K-β, ev against L_B, and ev against T_S, as in the β proof above.
+2. **Naturality in Y:** for s : (D⊗Y)\(G⊗Y),
+   ```
+   K(Ť_u[Y := D⊗Y], L_C(s)) ≡ K(L_{⊗Γ}(s), Ť_u[Y := G⊗Y]).
+   ```
+   - For Ť_x the step type is Z\W ⊢ (X⊗Z)\(X⊗W).
+   - For the T_S piece it is Z\W ⊢ (B₁⊗…⊗B_k⊗Z)\(C⊗W). Its normal form is N(B⃗), Z, Z\W ⊢ N(C) ⊗ W, which is UP\* when S is.
+   - For the L_B pieces, functoriality L_B(K(a, b)) ≡ K(L_B a, L_B b) is unit-free L-pasting.
+3. **Substitution:** Ť_{u[σ]} ≡ K(Ť_σ, Ť_u), where Ť_σ is the parallel name of σ, built in the same left-to-right order. The inductive step reorders pieces Ť_{u₁}, L(Ť_{σ₂}). That reordering is exactly lemma 2. The remaining steps are K-associativity and unit laws, and L_B functoriality.
+4. **Congruence:** u ≡ v implies Ť_u ≡ Ť_v. Induct on the derivation of ≡.
+   - **A coh-rule instance at S[τ].** Ť_u and Ť_v both have type T_S[τ], which is UP\*. So the coh rule applies.
+   - **Congruence.** Ť is compositional.
+   - **Substitution instances.** Use lemma 3.
+   - **Refl, sym, trans.** Trivial.
+
+With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (closed c, Γ = ∅) instead of B5's name, the β proof above goes through unchanged, by lemma 1. The ξ-rule's last case is lemma 4. So (R\) and (R/) hold, and Prop. B7 gives:
+
+**Theorem B8 (faithfulness of UL_I\*; D10b), proof sketch.** If two UL_I\* terms have the same denotation in the free biclosed monoidal category with unit, then UL_I\* proves them equal. Together with Theorem B6, the syntactic multicategory of UL_I\* *is* the free biclosed representable multicategory with unit.
+
+*Checks.*
+- `scripts/d10a/natural_names.py` checks the only step type that depends on S, the naturality step Z\W ⊢ (B⃗⊗Z)\(C⊗W) and its mirror. It is UP\* for 3,003 random UP\* coh's, with no failures. The checker rejects the non-planar Z ⊢ Y\(Z⊗Y).
+- The β-step types depending on S, namely S itself and T_S uncurried, were already checked (`tens_names.py`).
+- The remaining step types are fixed unit-free L-pasting sequents.
+
+*Independent check (LIT thread, 2026-11-18).* Lemmas 1–4 were re-derived step by step and are correct at paper level. The check asked for four additions, made here.
+1. **Bracketing.** All lists are right-nested: ⊗Γ = Γ₁ ⊗ (Γ₂ ⊗ (… ⊗ Y)), and L_{B₁′⊗…⊗B_{k−1}′} means iterated L, i.e. L_{B₁′}(L_{B₂′}(…)). Otherwise, use L_B(L_{B′}s) ≡ L_{B⊗B′}s, which is unit-free and L-pasting.
+2. **Lemma 2 is stated for an arbitrary s : Z\W**, not only for names. The induction uses s′ = L_{Γ_k}(s) with Z′ = Γ_k ⊗ Z.
+3. **Lemma 4 uses two facts.**
+   - ≡ is closed under type substitution, and Ť_{u[τ]} = Ť_u[τ] syntactically.
+   - A coh-rule instance has the form u′[τ] ≡ v′[τ] with u′, v′ : S. A term whose type is S[τ] need not be such an instance; the closed-term counterexample above is one. Ť_{u′} and Ť_{v′} both have type T_S, so they are ≡, and then apply τ.
+4. **β for tuples.** ev(p, Ť_σ) ≡ the right-nested tensor of σ's terms with y. It is proved like lemma 1, and is needed for prefixes of several closed terms.
+
+**The ξ-rule, written out.** ≡ is the least congruence closed under term and type substitution that contains the coh-rule instances. So it is the equivalence closure of one-step rewriting C[l[ρ]] ↦ C[r[ρ]], where C is a one-hole context, l ≡ r is a coh-rule instance (l = l′[τ], r = r′[τ] with l′, r′ : S UP\*), and ρ is a term substitution. It suffices that [x] respects one step. Induct on C.
+- **The redex does not contain x.**
+  - If it sits in a closed-prefix slot, use lemma 4 (Ť respects ≡).
+  - Otherwise it sits in an argument that bracket abstraction copies unchanged, and congruence applies.
+- **The redex contains x, and C is a context around it.** Each clause of [x] applies [x] to the argument containing x, so this reduces to C = hole.
+- **C = hole.** Let z be the variable of l whose ρ-image s contains x. ρ sends the variables left of z to closed terms c⃗, and the variables right of z to x-free terms ρ_>. Three lemmas finish the case.
+  - **Lemma A (right substitutions commute, syntactically).** [x](t[q/y]) = ([x]t)[q/y] for y right of x. The same clause of [x] fires on both sides.
+  - **Lemma B (abstraction through a leftmost variable).** [x](t[s/z]) ≡ coh_K([x]s, [z]t) when z is leftmost in t. Induct on t:
+    - First-argument clause: by the induction hypothesis and K-associativity.
+    - Prefix clause: lemma 4 and β of Ť.
+  - **Lemma D (closed prefix).** For t with variables w⃗, z, γ⃗ in this order and closed c⃗,
+
+    ```
+    [z](t[c⃗/w⃗])  ≡  E(Ť_{c⃗}[Y := Z], [z][w_k]…[w₁]t).
+    ```
+
+    Here E is the coh over a : Z\(W⃗⊗Z), h : Z\(W_k\…(W₁\A)) ⊢ Z\A. Its normal form is Z, Z\(W⃗⊗Z), Z\(W_k\…) ⊢ A, which is unit-free L-pasting. Lemma D is proved by induction on t, using lemmas 1 and 2 and β for tuples.
+
+  Then [x](l[ρ]) ≡ coh_K([x]s, E(Ť_{c⃗}, [z][w⃗]l))[ρ_>], and likewise for r. The iterated abstractions [z][w⃗]l′ and [z][w⃗]r′ both have the fully curried type of S, which is UP\* with the same normal form. So they are ≡, and τ and ρ_> preserve ≡.
+
+*Status.* Lemmas 1–4 are independently checked. The ξ-rule is written out above, and Lemmas A and B are routine. Lemma D carries the remaining bookkeeping and has not been independently checked. D10b closes once Lemma D is checked.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 
@@ -751,7 +911,7 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 is `conjectures/outbox/gray-closed-scheduling-r3.md` (unsent).
+Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 was answered too (`conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`); round 4 is `conjectures/outbox/gray-closed-scheduling-r4.md` (unsent).
 
 **Round-2 results (verified).**
 1. **A weight model.** The integer-weight model 𝓜 is a Gray-monoidal biclosed 2-category.
@@ -769,7 +929,54 @@ Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11
 - the 1-cells within a component;
 - thinness of the hom-categories.
 
-Round 3 (unsent): `conjectures/outbox/gray-closed-scheduling-r3.md`.
+Round 3 (answered): `conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`; round 4 (unsent): `conjectures/outbox/gray-closed-scheduling-r4.md`.
+
+## F.6 Internal notes toward round 3 (D11, closed part)
+
+*Added 2026-11-18.*
+
+**1. Additive models with group-subtraction residuals cannot see generator-free interchangers.** *(Scope narrowed 2026-11-18; see item 4.)*
+- Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = target − source is additive, and an interchanger adds a bilinear term β(δ(f), δ(g)). The integer model 𝓜 and its matrix version are additive.
+- Every structural 1-cell has δ = 0 *when the residual is group subtraction* (p\r = r − p, as in 𝓜), because it is a coh of a balanced sequent. Item 4 drops this assumption, and the conclusion fails.
+- So in every additive model, an interchanger χ_{f,g} in which f or g is structural (ev, curried evaluation, associators) has weight 0, and lands in a hom where it is forced to be an identity once the hom is a poset.
+- **Consequence for round-3 Q1:** the reduction "only generator-free interchangers remain" cannot be finished with models of this kind. It needs a rewriting or coherence argument, or a model like 𝓟 of item 4.
+
+**2. Structural interchangers are not forced trivial by the stated axioms.**
+- Take ev : A⊗(A\C) → C and a generator g : Y → Y′. Compare (ev⊗Y′)∘(A⊗(A\C)⊗g) with (C⊗g)∘(ev⊗Y).
+- Apply Φ, currying A on the left, using its strict naturality in the context variable and in the target. The question becomes whether m_{Y′}∘((A\C)⊗g) = (A\C⊗g)∘m_Y, for m_Y := Φ(ev⊗Y).
+- That is again an instance of the same question, so Φ only transports it.
+- So χ_{ev,g} is a 2-cell between 1-cells that the axioms do not identify. The same holds for χ_{ev,ev′} between two evaluations at independent positions. Structural maps are therefore *non-central events* in 𝒢 unless centrality is imposed, as in Garner–Hirschowitz–Pardon's premonoidal construction.
+- **Consequence for round-3 Q2:** a complete invariant of 1-cells will have to schedule structural events as well as generator events. Round 2's item 8 (the curry side is data) is the simplest instance.
+
+**3. A design choice this exposes.** There are two candidate theories for the project's PL-ω:
+- (a) the free Gray-monoidal biclosed 2-category 𝒢 as posed, where structural maps are non-central;
+- (b) its quotient in which structural 1-cells are central, i.e. every interchanger with a structural argument is an identity.
+
+In (b), the reduction of round-3 Q1 to item 6 of round 2 is immediate: every forward 2-cell between t₁ and t₂ is a single generator interchanger, so 𝒢_b(t₁, t₂) = {α}. Whether (b) is still sound for the Gray tensor of (∞,ω)-categories, i.e. whether ev is central there, is the real question. Campion's biclosedness is only on mapping spaces (GHL Rem. 2.20), which suggests it is not. This is recorded for the round-3 answer to settle.
+
+**4. Evaluation is not central in 𝒢 (proved).** *(Added 2026-11-18.)*
+
+*The polarized model 𝓟.* It is a strict 2-category with codiscrete homs, so every 2-cell equation holds automatically and only the 1-cell structure needs checking.
+- **Objects:** pairs (P, N) ∈ ℤ².
+- **Tensor and residuals:** A ⊗ B = A + B, and A\C = C/A = C + swap(A), where swap(P, N) = (N, P). So the residual swaps polarity instead of subtracting, unlike 𝓜.
+- **1-cells:** a 1-cell X → Y exists iff (P − N)(X) = (P − N)(Y), and is then an integer weight w. Composition adds weights.
+- **Grading:** put d(u) = P(source) − P(target).
+- **Whiskering:** w(A ⊗ u) = w(u) + P(A)·d(u) and w(u ⊗ B) = w(u).
+- **Currying:** left currying is Φ_A(u) = w(u) − P(A)·d(u), and right currying leaves the weight unchanged.
+
+*It is a model of the setting of r3.*
+- A⊗– is a functor, ⊗ is strictly associative, and (A⊗v)⊗B = A⊗(v⊗B).
+- Φ is a bijection, strictly natural in the context variable and in the target. Naturality in A holds up to the (codiscrete) interchanger.
+- The interchanger exists because the homs are codiscrete. It is an identity only when the weights agree, and w(A′⊗g)(f⊗B) − w(f⊗B′)(A⊗g) = (P(A′) − P(A))·d(g) = −d(f)·d(g).
+- `scripts/d11/polar_model.py` checks these laws on 20,000 random instances, with no failures.
+
+*Consequence.* Here ev_A = Φ⁻¹(id) has d(ev_A) = P(A) + N(A), which is not 0 in general. Take atoms with A ↦ (1, 0), C ↦ (0, 0), X ↦ (1, 1) and X′ ↦ (0, 0), and a generator g : X → X′. Then the 1-cells (X′ ⊗ ev) ∘ (g ⊗ A ⊗ A\C) and (g ⊗ C) ∘ (X ⊗ ev) have weights 1 and 2. So they are **distinct 1-cells of the free 𝒢**, and χ_{g,ev} is not an identity. The same computation separates the two orders of two evaluations at independent positions, χ_{ev,ev′}, which involves no generator at all.
+
+So:
+- **Round-3 Q5, first half: answered, no.** Evaluation is not central in 𝒢, and the quotient 𝒢_c of item 3(b) is a proper quotient.
+- **Q1:** structural interchangers really are events between distinct 1-cells. The open part is that any two 2-cells between the same 1-cells built from them are equal, which is a coherence statement and not a triviality.
+- **Q2:** confirmed. A complete invariant must schedule structural events too.
+- **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
 
 ---
 

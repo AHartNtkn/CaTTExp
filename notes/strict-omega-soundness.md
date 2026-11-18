@@ -38,7 +38,7 @@ What is left is soundness in an arbitrary strict ω-category C, given by the usu
    - the coh case uses that the ν-interpretation of a coh is the ν-pasting composite of its substitution, and that F_λ commutes with pasting composites (step 3, folded over the tree).
 6. **Soundness.** For a coh over Θ with substitution σ, the coh is sent to F_{⟦σ⟧ρ}(c_Θ), where c_Θ is the coh at η_Θ. That is a cell of ν(λΘ) by A3a. Its boundaries are F of the boundaries, which are ⟦s⟧ and ⟦u⟧ by step 5. Constants are handled as in `Strict.Sound`, by the hypothesis that each constant is a cell with its type's boundary.
 
-Steps 1–3 are independent of CaTT and are the expected bulk of the formalisation. Steps 4–5 reuse A3a's support lemma and need the dictionary between cells of ν(λΘ) and sub-pasting diagrams of Θ. An outside prompt asking for a shorter route through steps 3–5 is `conjectures/outbox/strict-omega-pasting-formal.md`.
+Steps 1–3 are independent of CaTT and are the expected bulk of the formalisation. Steps 4–5 reuse A3a's support lemma and need the dictionary between cells of ν(λΘ) and sub-pasting diagrams of Θ. An outside prompt asking for a shorter route through steps 3–5 was answered and verified: `conjectures/answered/strict-omega-pasting-formal-2026-11-18.md` (step 4 can be dropped; see its verification section).
 
 ## 5. Formalisation plan
 

@@ -53,6 +53,11 @@ import CaTTExp.GraphFillerExamples
 import CaTTExp.GraphFillerTotal.Chains
 import CaTTExp.GraphFillerTotal
 import CaTTExp.GraphFillerTotalExamples
+import CaTTExp.GraphFillerTotal.Range
+import CaTTExp.GraphFillerTotal.Higher
+import CaTTExp.GraphFillerTotal.HigherExamples
+import CaTTExp.GlobularFiller
+import CaTTExp.GlobularFillerExamples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell
@@ -95,6 +100,7 @@ import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
+import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.Cylinder
 import CaTTExp.GrayCtx.VComp

@@ -28,6 +28,12 @@
 -- marked context must respect the marks (`Resp`), and with that
 -- certificate substitution is admissible (CaTTExp.Trunc.Subst).
 -- Constants of the signature carry no marks.
+-- Narrower than T-var: Resp lets a marked variable go only to a
+-- *variable* with a mark at most as high. T-var allows any object
+-- term C[σ] with a derivation of `C[σ] trunc n`; here only variables
+-- carry marks, so a marked variable cannot yet be sent to a compound
+-- object (e.g. a limit). Marks on compound objects need the closure
+-- rules (T-lim, T-hom, …) as rules of the judgment.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

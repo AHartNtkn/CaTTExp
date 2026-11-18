@@ -164,14 +164,25 @@ uniq A a f h hz hs = coh RU uniqTy ⟪ A ∷ a ∷ f ∷ h ∷ hz ∷ hs ∷ [] 
 
 ------------------------------------------------------------------------
 -- Every declaration is well formed: its context is a context and its
--- type a type in it (checked once, by the certified checker).
+-- type a type in it, checked by the certified checker *with only the
+-- earlier declarations available*. So no declaration is used to
+-- justify itself or a declaration before it.
 
-wfOp : Σ Ctx (λ _ → Ty) → Bool
-wfOp (Δ , B) = is-just (checkCtx Δ >>= λ w → checkTy Δ w B)
+import CaTTExp.Ops.Check as OC
 
-allWf : List (Σ Ctx (λ _ → Ty)) → Bool
-allWf []       = true
-allWf (o ∷ os) = wfOp o ∧ allWf os
+Decl : Set
+Decl = Σ Ctx (λ _ → Ty)
 
-_ : allWf ops ≡ true
+wfIn : List Decl → Decl → Bool
+wfIn prev (Δ , B) = is-just (OC.checkCtx ℕsig prev Δ >>= λ w → OC.checkTy ℕsig prev Δ w B)
+
+orderedWf : List Decl → List Decl → Bool
+orderedWf prev []       = true
+orderedWf prev (o ∷ os) = wfIn prev o ∧ orderedWf (prev ++ (o ∷ [])) os
+
+_ : orderedWf [] ops ≡ true
+_ = refl
+
+-- Moving rec after recZ breaks the order, and the check sees it.
+_ : orderedWf [] ((RC , recZTy) ∷ (RC , recTy) ∷ []) ≡ false
 _ = refl

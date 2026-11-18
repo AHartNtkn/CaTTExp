@@ -59,6 +59,37 @@ Writing the rule down exactly also fixed three details:
 - **Substitution preserves marks** (`Gray/MarksSubst.agda`, proved). The judgments take fuel (for the descent into boundaries that ps* needs), and the theorem is fuel-shifted. Say σ respects the marks at fuel N (`Resp N`): for every k, inv variables go to terms that are inv at fuel k + N, ps variables go to terms that are ps at fuel k + N, and grpd_k objects go to variables marked grpd_k' with k' ≤ k. Then for a derivable Γ ⊢ t : A and Δ ⊢ σ : Γ, and each m ∈ {inv, ps, ps*}: if t is m at fuel k, then t[σ] is m at fuel k + N (`inv-[]`, `ps-[]`, `ps*-[]`, for closed signatures). The user-facing judgments `⊢ t inv` etc. use fuel = dim t. That this fuel suffices for derivable terms (fuel stability, which would turn the shifted form into `Γ ⊢ t inv ⇒ Δ ⊢ t[σ] inv`) is argued, not proved; inv depends on the fuel through the ps* premises of PS-fac. The proof is monotonicity of every rule premise in the judgments of γ. The side conditions are unchanged because the coh's Θ, A, t and u are not touched by σ.
 - **A precision.** The objects' requirement has to be "σ sends grpd_k objects to *variables* with a mark at least as strong". If an object went to a general term, OBJ-k could not be read off its marks. Objects in L are variables or signature constants, and constants carry no marks. So the only thing this rules out is sending a grpd object to a constant.
 
+## Fast side condition (E9′)
+
+**Definition change.** `Gray/Support.agda` now decides ↓S = ↓R on generators (`sameDown`): every element of S lies below an element of R in the face order, and vice versa. The face order is computed entrywise by `leqL`. Before, both closures were built with `down` and compared. The two agree whenever the closure is the order ideal, i.e. on graded contexts with tuples of rank ≤ dim K(Γ). The new form is the definition in `pseudo-vs-gray.md` §3.2 read literally, and it builds no closure. All existing examples (Examples, Cube, MarksExamples) re-check unchanged. `down` stays for the rule-level checks of `Gray/Bounded.agda`.
+
+**Symbolic supports** (`Gray/Cover.agda`, `Gray/Fast.agda`, proved). A support is described by a sequence of items: a literal set of cells for one hom, a union of sequences, or a *substituted chain* chain(sg, k, homs). The last follows the recursion of the AM tensor table T^sg_k, with every cell already replaced by a symbolic set. The pieces fit together as follows:
+
+- The top support of an operation-case coh is the top chain of K(Θ), with each cell w replaced by the support of ρ(w). The tables of T are the same chains with literal cells. So supports are linear in the size of the term as a tree, and in the number of homs.
+- The meaning of a sequence is given by its first-entry decomposition (`nullS`, `heads`).
+- The cover check "∀ x ∈ E ∃ y ∈ F, x ≤ y" propagates pairs (residual of E, set of residuals of F) one entry at a time, with duplicates removed. This is an on-the-fly subset construction over a layered automaton.
+- `cover-sound` and `cover-complete` prove the check exact for any entry order.
+- `fastSide-correct : fastSide Θ A t u ≡ graySide Θ A t u` holds for **all** inputs. There are no well-formedness assumptions and no postulates.
+
+**Benchmark** (n-fold wedge ΣD¹ ∨ … ∨ ΣD¹; the four comparisons ↓∂⁻T = ↓∂⁻T, ↓T = ↓T, ↓∂⁻T ≠ ↓T and ↓∂⁻T ≠ ↓∂⁺T, compiled with the GHC backend):
+
+| n | generator lists (`sameDown`) | symbolic (`fastSame`) |
+|---|---|---|
+| 6 | 0.03 s | 0.06 s |
+| 8 | 0.11 s | 0.21 s |
+| 10 | 1.3 s | 0.66 s |
+| 11 | 5.0 s | — |
+| 12 | — | 1.6 s |
+| 16 | — | 7.5 s |
+| 20 | — | 27 s |
+| 24 | — | 77 s |
+| 28 | — | 195 s |
+
+The list version grows by about 3.7× per step, i.e. exponentially. The symbolic version grows polynomially, roughly n⁶ on this family: from n = 20 to 28 the local exponent is 5.6–6.0. On the Gray cube both are instantaneous. The old closure-based checker took 58 s at n = 6 inside the type checker.
+
+- **Caveat on the type checker.** Evaluating the symbolic check *inside the type checker* (a `refl` proof) still grows about 2.2× per step: 0.6 s at n = 1, 50 s at n = 8. The type checker's evaluator does not share the residual sets that later rounds reuse, so they are recomputed. This is a property of Agda's evaluator, not of the algorithm. Large instances should be checked with the compiled checker.
+- **What is not proved.** A polynomial bound. The check is exact, so on arbitrary unions of boxes it decides DNF tautology, which is coNP-hard. A polynomial bound for *valid* terms needs the structural statement the markings thread is working on: residuals of a molecule's support are again supports of molecules of the remaining factors. Polynomial behaviour on the wedges is measured, not proved.
+
 ## Not yet proved
 
 - **The non-negativity bridge.** Supports are computed on sets: the support of a sum is the union, and the support of a tensor is the product. This is correct only if every chain involved has non-negative coefficients. They do: T's chains are sums of basis elements, and F_σ maps basis elements to supports of top chains of the same kind. But this is argued in `Gray/Support.agda`'s header, not proved in Agda; the integer chains are never built. The side condition as implemented is a precise decidable rule either way. The bridge is needed only to connect it to the strict model, i.e. for Theorem 1 soundness.

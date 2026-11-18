@@ -35,8 +35,11 @@
 -- Under soundness (Theorem 1 of the note) this is the union of the
 -- chains of ⟦t⟧'s table. The side condition compares *downward
 -- closures* ↓S in K(Γ) (close under replacing an entry of a tuple by
--- its source or target), as in §3.6 of the note: "the downward-closed
--- set of basis elements used by ⟦t⟧ and its boundaries". This is also
+-- its source or target), as in §3.6 of the note. ↓S = ↓R is decided
+-- on generators (`sameDown`: every element of S is below one of R and
+-- vice versa), so no closure is built; `down` computes closures and
+-- is kept for the rule-level checks of Gray.Bounded. The note: "the
+-- downward-closed set of basis elements used by ⟦t⟧ and its boundaries". This is also
 -- the form in which lemma (B) "support determines the cell" is known
 -- (Hadzihasanovic: molecules are determined by their closed subsets).
 --
@@ -256,17 +259,17 @@ bdryT sg hs = lowerT (dimK hs ∸ 1) hs ++ chainT sg (dimK hs ∸ 1) hs
 
 -- Downward closure in K(Γ).
 
+findEl : Nat → List El → Maybe El
+findEl n []       = nothing
+findEl n (c ∷ cs) = if lvl c ==ℕ n then just c else findEl n cs
+
+-- Boundary elements of one entry (none for a cell of dimension 0).
+bdEl : List El → Nat → List Nat
+bdEl cs w with findEl w cs
+... | nothing = []
+... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
+
 private
-  findEl : Nat → List El → Maybe El
-  findEl n []       = nothing
-  findEl n (c ∷ cs) = if lvl c ==ℕ n then just c else findEl n cs
-
-  -- Boundary elements of one entry (none for a cell of dimension 0).
-  bdEl : List El → Nat → List Nat
-  bdEl cs w with findEl w cs
-  ... | nothing = []
-  ... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
-
   -- Codimension-1 faces of a tuple.
   faces : List El → Tuple → TSet
   faces cs []       = []
@@ -282,6 +285,30 @@ private
 
 down : Ctx → TSet → TSet
 down Γ S = closeN (dimK (homs Γ)) (cells Γ) (nubT S)
+
+-- The face order on entries: a ≤ b if a is reached from b by at most
+-- n source/target steps. Tuples are compared entrywise.
+leqL : List El → Nat → Nat → Nat → Bool
+leqL cs zero    a b = a ==ℕ b
+leqL cs (suc n) a b = (a ==ℕ b) ∨ anyB (bdEl cs b)
+  where
+  anyB : List Nat → Bool
+  anyB []       = false
+  anyB (c ∷ bs) = leqL cs n a c ∨ anyB bs
+
+leqT : List El → Nat → Tuple → Tuple → Bool
+leqT cs n []       []       = true
+leqT cs n (a ∷ x)  (b ∷ y)  = leqL cs n a b ∧ leqT cs n x y
+leqT cs n _        _        = false
+
+-- ↓S ⊆ ↓R, decided on generators: every s ∈ S is below some r ∈ R.
+covers : Ctx → TSet → TSet → Bool
+covers Γ S R =
+  all (λ s → any (leqT (cells Γ) (dimK (homs Γ)) s) R) S
+
+-- ↓S = ↓R.
+sameDown : Ctx → TSet → TSet → Bool
+sameDown Γ S R = covers Γ S R ∧ covers Γ R S
 
 nth : Nat → List TSet → TSet
 nth _       []       = []
@@ -340,8 +367,8 @@ mutual
   cohCase : Ctx → Ty → Tm → Tm → Bool
   cohCase Θ ⋆ t u = false
   cohCase Θ A@(arr _ _ _) t u =
-    endsOK Θ A ∧ ≈T (down Θ (supp t A)) (down Θ (fullT (homs Θ)))
-               ∧ ≈T (down Θ (supp u A)) (down Θ (fullT (homs Θ)))
+    endsOK Θ A ∧ sameDown Θ (supp t A) (fullT (homs Θ))
+               ∧ sameDown Θ (supp u A) (fullT (homs Θ))
 
 -- The operation case.
 opCase : Ctx → Ty → Tm → Tm → Bool
@@ -349,8 +376,8 @@ opCase Θ ⋆ t u =
   (dimK (homs Θ) ==ℕ 0) ∧ isVarAt t (firstL (objs Θ)) ∧ isVarAt u (lastL (objs Θ))
 opCase Θ A@(arr _ _ _) t u =
   endsOK Θ A ∧ (dim A ==ℕ dimK (homs Θ))
-  ∧ ≈T (down Θ (supp t A)) (down Θ (bdryT false (homs Θ)))
-  ∧ ≈T (down Θ (supp u A)) (down Θ (bdryT true (homs Θ)))
+  ∧ sameDown Θ (supp t A) (bdryT false (homs Θ))
+  ∧ sameDown Θ (supp u A) (bdryT true (homs Θ))
 
 -- The side condition of two-tier L.
 graySide : Ctx → Ty → Tm → Tm → Bool

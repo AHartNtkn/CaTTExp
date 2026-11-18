@@ -95,3 +95,10 @@ import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
+import CaTTExp.GrayCtx.Elab
+import CaTTExp.GrayCtx.Cylinder
+import CaTTExp.GrayCtx.VComp
+import CaTTExp.GrayCtx.Cube
+import CaTTExp.GrayCtx.Prune
+import CaTTExp.GrayCtx.Show
+import CaTTExp.GrayCtx.Checks

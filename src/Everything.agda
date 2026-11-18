@@ -92,6 +92,7 @@ import CaTTExp.GlobularTotal.NfCoh
 import CaTTExp.GlobularTotal.SplitMerge
 import CaTTExp.GlobularTotal.LabDistinct
 import CaTTExp.GlobularTotal.Relabel
+import CaTTExp.GlobularTotal.LamTyped
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

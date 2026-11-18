@@ -434,10 +434,10 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 **Researcher response (verified, `conjectures/answered/cartesian-closed-higher-coherence-2026-11-18.md`).**
 - Q1 and Q2 are proved by a different route: a strict simplicial model plus a retract. It agrees with C1 and C2, and the verifier found no error in C.4 as a sketch.
 - **Q3 is proved over graphs in every dimension.** The 1-core R₁ is right adjoint to the inclusion of (∞,1) into higher categories (Ozornova–Rovelli–Walde, arXiv 2603.11005, Thm 2.20), and it inherits cartesian closed structure. So the free higher cartesian closed category on a graph is the free (∞,1) one, hence the 1-category. In particular this proves coherence for cartesian closed tricategories over a graph.
-- **cccatt@69bb11af has two implementation bugs:**
-  - The unordered Dir duplicate check compares position-carrying terms (`pasting.ml` ll. 597–602). It accepts a 3-goal with no filler, refuted in Cat.
-  - The Rev side condition tests the hypothesis name rather than the endpoint (l. 474).
-  Reporting them upstream is Anthony's call.
+- **cccatt@69bb11af has one implementation bug.**
+  - The unordered Dir duplicate check compares position-carrying terms (`pasting.ml` ll. 597–602). It therefore accepts a 3-goal that has no filler, which is refuted in Cat.
+  - It is filed upstream as [smimram/cccatt#15](https://github.com/smimram/cccatt/issues/15), reproduced at master 69bb11a. The fix `var x = var x'` passes cccatt's test suites.
+  - *Correction (2026-11-18):* the Rev side condition at l. 474, which tests the hypothesis name, is **not** a bug. `add_rule` rejects every cycle, and any higher hypotheses left over fail `check1`, so no wrong acceptance is possible. It differs only from our paraphrase of Rev in C.2 ("x has not been rewritten before"), which describes the intended behaviour, not that line.
 
 **What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/outbox/dir-relative-coherence.md`.
 

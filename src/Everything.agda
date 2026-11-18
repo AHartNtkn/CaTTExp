@@ -11,6 +11,9 @@ import CaTTExp.Subst
 import CaTTExp.PastingTrees
 import CaTTExp.CheckWith
 import CaTTExp.Check
+import CaTTExp.PastingCheck
+import CaTTExp.Completeness
 import CaTTExp.Pure
+import CaTTExp.PureMetatheory
 import CaTTExp.Examples
 import CaTTExp.Sketch.Representables

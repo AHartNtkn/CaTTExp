@@ -442,6 +442,7 @@ All rows are added to `notes/open-issues.md` under F.
 - **F4a** Filler tactic for localised graphs (reduced words).
 - **F4b** Effectiveness of quotients under Trunc.
 - **F5a** Check §6.1–6.3 against the (∞,ω) sources (Gepner–Heine, Loubaton) at the level of statements, not abstracts.
+- **F5b** Θ-density (from C9) as an instance of §6.1: B as the localised Grothendieck construction of its disk elements, giving extensionality of transformations.
 - **F6a** `conjectures/lax-functor-refinement.md`.
 - **F8** Exponentials of sets.
 - **Formalisation (standard 9):** an Agda encoding of the `trunc` judgment and T-fill as signature-level rules, with the §2.5 ring example checked; an encoding of the recursion rule over a parameter context. Both need the syntax to carry operations "over a context applied to a substitution" beyond `coh`, i.e. an extension of `CaTTExp.Syntax`.

@@ -395,14 +395,14 @@ So D10b is now a statement purely about UL_I\* terms: the derived abstraction op
 
 Each inductive step needs one equation between coh composites over variables, with the induction hypotheses as holes. Where that equation's generalized sequent is UP\*, the coh rule gives it directly.
 
-**Progress on (R\) (2026-11-18).** Write ≡ for UL_I\* equality. The non-UP\* step that the first draft of this section worried about (Y, Y\I, … ⊢ C) disappears once each step is split into smaller coh equations, each generalized separately.
+**Progress on (R\) (2026-11-18).** Write ≡ for UL_I\* equality. Done naively, each inductive step is one generalized equation, and that equation's type can fail to be UP\* (for instance Y, Y\I, … ⊢ C when the abstracted slot has type I). The failure disappears once each step is split into smaller coh equations, each generalized separately.
 
 *β holds in T: ev(x, [x]t) ≡ t for every term t with leftmost variable x.* Induction on t, following the three clauses of bracket abstraction. Every equation below is the coh rule at a UP\* type, instantiated by type substitution and then by term substitution.
 - **[x]x = j.** ev(x, j) ≡ x has type X ⊢ X.
 - **x in the first argument.**
   - First, ev(x, coh_K(a, c)) ≡ ev(ev(x, a), c), at type Y, Y\A, A\B ⊢ B with A and B atoms. This is unit-free and L-pasting, and it is applied at A := B₁[τ], which may be I.
   - Then ev(w, coh_{S^c}(b⃗)) ≡ coh_S(w, b⃗), at type S itself.
-  - Chaining these with the induction hypothesis ev(x, [x]t₁) ≡ t₁ gives the clause. The single generalized equation of the first draft was never needed. Its type is not UP\* when B₁ = I, but the two halves are.
+  - Chaining these with the induction hypothesis ev(x, [x]t₁) ≡ t₁ gives the clause. The single combined equation is not UP\* when B₁ = I, but its two halves are.
 - **Closed prefix.** The rebracketing coh_S(c⃗, s, …) ≡ coh_{S⊗}(coh_M(c⃗, s), …) has type S once c⃗ is abstracted to variables.
   - The names of Prop. B5 satisfy ev(y, ⌜c⃗ ⊗ –⌝) ≡ coh_M(c⃗, y), by induction on c⃗. The steps are K-β (as above), ev(coh_M(v⃗, y), coh_{T_S}) ≡ coh_M(coh_S(v⃗), y), whose type is T_S uncurried (UP\*), and associativity of m's.
   - Chaining K-β twice, the names' β, and ev against coh_{S⊗^c} gives the clause.

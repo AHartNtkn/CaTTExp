@@ -441,6 +441,16 @@ There is **no fullness condition**. With no n-dimensional hypotheses, *every* pa
 
 **What remains of D12 (updated).** Abstract Dir with *non-invertible* higher hypotheses. That needs a relative coherence theorem; prompt: `conjectures/outbox/dir-relative-coherence.md`.
 
+**Answer to the follow-up prompt (verified, `conjectures/answered/dir-relative-coherence-2026-11-18.md`): Dir is sound whenever the non-invertible generators have dimension ≤ 2.** Take the free pseudo cartesian closed (∞,2)-category on a graph together with 2-generators forming chains. Every space of 2-cells is empty or contractible. The proof has four steps:
+1. Long βη-normal forms, natural in relabelling, with no permutation quotient needed.
+2. A degreewise simplicial cartesian closed category 𝒦 whose homs are nerves of posets ∐∏[r].
+3. Haugseng rectification to a strict enriched cartesian closed category.
+4. A retract 𝓕 → 𝒦 → 𝓕.
+
+*Correction to our expectation:* a generator α need not occur only once in a term. Duplicated uses give cubes [1]^m.
+
+**Still open (D12):** non-invertible generators of dimension ≥ 3. Round-2 prompt, written by the verifying thread and unsent: `conjectures/outbox/dir-relative-coherence.md`.
+
 *Superseded:* Question 3: Dir in (∞,ω), with directed hypotheses. Its smallest case is dimension 3 over a graph, i.e. coherence for free cartesian closed tricategories. The natural attack is Theorem C1's argument in (∞,ω): glue along a nerve into presheaves of (∞,ω)-categories.
 - Fiore–Saville did the bicategorical version.
 - The obstacle is step 2. It needs pseudo exponentials in an (∞,ω)-categorical comma object. It also needs a statement that the presheaves of normal forms are discrete as (∞,ω)-categories, i.e. no non-identity cells between normal forms. That is exactly what Dir's directed hypotheses violate, because those hypotheses generate non-invertible cells between neutrals.

@@ -460,3 +460,167 @@ module Std {G : Set} (deg : G → Nat) (W : Sd → G → Expr G) where
     std-wf : ∀ e → CO e → WF (std e)
     std-wf (gen g)     _              = tt
     std-wf (cmp k a b) (co-cmp _ x y) = comb-wf k (std a) (std b) (std-wf a x) (std-wf b y)
+
+  ----------------------------------------------------------------------
+  -- Soundness in a strict ω-category.
+
+  module SemProof (𝒞 : ωCat) (ι : G → ωCat.C 𝒞)
+                  (W-co : ∀ s g → CO (W s g)) (W-deg : ∀ s g → DegLe (deg g ∸ 1) (W s g))
+                  (dimι : ∀ g → ωCat.src 𝒞 (deg g) (ι g) ≡ ι g)
+                  (W-ev : ∀ s g → 1 ≤ deg g → Eval.Ev 𝒞 ι (W s g) (Sem.bdC 𝒞 ι s (deg g ∸ 1) (ι g))) where
+    open ωCat 𝒞
+    open Eval 𝒞 ι
+    open StdSem 𝒞 ι
+    open Sem 𝒞 ι using (bdC) renaming (sound to sound₀)
+
+    sound : ∀ s f n e {x} → DegLe f e → Ev e x → Ev (bd s f n e) (bdC s n x)
+    sound = sound₀ W-deg dimι W-ev
+    open WFProof W-co W-deg
+
+    private
+      Ev-sub : ∀ {e x y} → x ≡ y → Ev e x → Ev e y
+      Ev-sub refl v = v
+
+    -- Generators of degree ≤ r give r-dimensional values.
+    dimLe : ∀ {r e y} → DegLe r e → Ev e y → Dim r y
+    dimLe {r} (dl-gen {g} l) (ev-gen .g) =
+      trans (cong (src r) (sym (dimι g))) (trans (src-src-≥ (ι g) l) (dimι g))
+    dimLe {r} (dl-cmp {k} da db) (ev-cmp .k {x = x} {y = y} u v p) with tri k r
+    ... | tri< l = trans (src-comp-> x y p l q) (comp-cong k q p (dimLe da u) (dimLe db v))
+      where
+      q : tgt k (src r x) ≡ src k (src r y)
+      q = trans (tgt-src-< x l) (trans p (sym (src-src-< y l)))
+    ... | tri≡ refl = trans (src-comp k x y p) (trans (dimLe da u) (sym (absorb-r (dimLe db v) p)))
+    ... | tri> l = trans (src-comp-< x y p l) (trans (dimLe da u) (sym (absorb-r dyk p)))
+      where
+      dyk : Dim k y
+      dyk = trans (cong (src k) (sym (dimLe db v))) (trans (src-src-≥ y (<→≤ l)) (dimLe db v))
+
+    -- What a group gives: its r-composite has the child's value.
+    GS : Nat → List (Expr G) → C → Set
+    GS r []       y = ⊤
+    GS r (f ∷ fs) y = Ev (cmpR r f fs) y
+
+    grp-sem : ∀ r R {y} → WF R → hi (suc r) (toE R) ≤ 1 → Ev (toE R) y → GS r (grp r R) y
+    grp-sem r R w t v = go R w t v (cls (hi r (toE R)))
+      where
+      go : ∀ R {y} → WF R → hi (suc r) (toE R) ≤ 1 → Ev (toE R) y → (c : Cls (hi r (toE R))) → GS r (grp′ r R c) y
+      go R w t v (c0 _) = tt
+      go R w t v (c1 _) = v
+      go (one g) w t v (c2 h) = ⊥-elim (≤-<-⊥ (hiG≤1 (tri r (deg g))) h)
+      go (many r′ f fs) w t v (c2 h) = same (cut-unique (cmpR r′ f fs) (fst mc) (snd mc) h t) v
+        where
+        mc = many-counts r′ f fs w
+        same : ∀ {y} → r′ ≡ r → Ev (cmpR r′ f fs) y → Ev (cmpR r f fs) y
+        same refl v = v
+
+    private
+      ++-[] : ∀ (xs : List (Expr G)) → xs ++ [] ≡ xs
+      ++-[] []       = refl
+      ++-[] (x ∷ xs) = cong (x ∷_) (++-[] xs)
+
+    -- What the result of a cut gives.
+    MS : Nat → List (Expr G) → C → Set
+    MS r []       v = ⊥
+    MS r (f ∷ fs) v = Ev (cmpR r f fs) v
+
+    lst-sem : ∀ k r A B {y z} (p : tgt k y ≡ src k z) → CO A → CO B → Ev A y → Ev B z →
+              ∀ Ga Gb → GS r Ga y → GS r Gb z → len Ga ≡ hi r A → len Gb ≡ hi r B →
+              2 ≤ len Ga + len Gb → 1 ≤ hi k A → 1 ≤ hi k B → k ≤ r → (t : Tri k r) →
+              MS r (lst k r A B Ga Gb t) (comp k y z p)
+    lst-sem k r A B p cA cB vA vB []       Gb sa sb la lb two hA hB kr (tri≡ refl) =
+      ⊥-elim (≤-<-⊥ (subst (1 ≤_) (sym la) hA) (s≤s z≤n))
+    lst-sem k r A B p cA cB vA vB (g ∷ gs) []       sa sb la lb two hA hB kr (tri≡ refl) =
+      ⊥-elim (≤-<-⊥ (subst (1 ≤_) (sym lb) hB) (s≤s z≤n))
+    lst-sem k r A B p cA cB vA vB (g ∷ gs) (h ∷ hs) sa sb la lb two hA hB kr (tri≡ refl) =
+      cat r g gs h hs sa sb p
+    lst-sem k r A B p cA cB vA vB Ga Gb sa sb la lb two hA hB kr (tri> l) = ⊥-elim (≤-<-⊥ kr l)
+    lst-sem k r A B p cA cB vA vB [] [] sa sb la lb () hA hB kr (tri< l)
+    lst-sem k r A B {y} {z} p cA cB vA vB [] (h ∷ hs) sa sb la lb two hA hB kr (tri< l) =
+      Ev-sub (comp-cong k p′ p (Dim-tgt dy) refl)
+        (dist-l l h hs (D⁺ k r A B) sb vDp (src-tgt-≥ y (≤-refl r)) p′)
+      where
+      dy : Dim r y
+      dy = dimLe (hi→DegLe cA (sym la)) vA
+      vDp = sound σ⁺ (mx A) r A (DegLe-mx cA) vA
+      p′ : tgt k (tgt r y) ≡ src k z
+      p′ = trans (tgt-tgt-< y l) p
+    lst-sem k r A B {y} {z} p cA cB vA vB (g ∷ gs) [] sa sb la lb two hA hB kr (tri< l) =
+      subst (λ L → MS r L (comp k y z p)) (sym (++-[] (mapE (λ y → cmp k y (D⁻ k r A B)) (g ∷ gs))))
+        (Ev-sub (comp-cong k p′ p refl dz)
+          (dist-r l g gs (D⁻ k r A B) sa vDm (src-src-≥ z (≤-refl r)) p′))
+      where
+      dz : Dim r z
+      dz = dimLe (hi→DegLe cB (sym lb)) vB
+      vDm = sound σ⁻ (mx B) r B (DegLe-mx cB) vB
+      p′ : tgt k y ≡ src k (src r z)
+      p′ = trans p (sym (src-src-< z l))
+    lst-sem k r A B {y} {z} p cA cB vA vB (g ∷ gs) (h ∷ hs) sa sb la lb two hA hB kr (tri< l) =
+      let (p₁ , p₂ , q , eq) = split l y z p
+      in Ev-sub (sym eq)
+           (cat r (cmp k g Dm) (mapE (λ y → cmp k y Dm) gs) (cmp k Dp h) (mapE (λ z → cmp k Dp z) hs)
+                (dist-r l g gs Dm sa vDm (src-src-≥ z (≤-refl r)) p₁)
+                (dist-l l h hs Dp sb vDp (src-tgt-≥ y (≤-refl r)) p₂) q)
+      where
+      Dm = D⁻ k r A B
+      Dp = D⁺ k r A B
+      vDm = sound σ⁻ (mx B) r B (DegLe-mx cB) vB
+      vDp = sound σ⁺ (mx A) r A (DegLe-mx cA) vA
+
+    mk-ev : ∀ r L R {v} → MS r L v → Ev (toE (mk r L R)) v
+    mk-ev r (f ∷ fs) R m = m
+
+    cc-sem : ∀ k Ra Rb → WF Ra → WF Rb → 1 ≤ hi k (toE Ra) → 1 ≤ hi k (toE Rb) →
+             ∀ {y z} → Ev (toE Ra) y → Ev (toE Rb) z → (p : tgt k y ≡ src k z) →
+             Ev (toE (cc k Ra Rb)) (comp k y z p)
+    cc-sem k Ra Rb wa wb hA hB vA vB p =
+      mk-ev r L Ra (lst-sem k r A B p cA cB vA vB Ga Gb
+                      (grp-sem r Ra wa tA vA) (grp-sem r Rb wb tB vB)
+                      (GrpOK.g-len gA) (GrpOK.g-len gB) two′ hA hB (CutOK.c-ge co) (tri k r))
+      where
+      A = toE Ra
+      B = toE Rb
+      cA = co-toE Ra wa
+      cB = co-toE Rb wb
+      r = cutOf k Ra Rb
+      Ga = grp r Ra
+      Gb = grp r Rb
+      L = lst k r A B Ga Gb (tri k r)
+      co = cut-ok k A B cA cB hA hB
+      tA = ≤-trans (≤-+l (hi (suc r) A) (hi (suc r) B)) (CutOK.c-top co)
+      tB = ≤-trans (≤-+r (hi (suc r) A) (hi (suc r) B)) (CutOK.c-top co)
+      gA = grp-ok r Ra wa tA
+      gB = grp-ok r Rb wb tB
+      two′ : 2 ≤ len Ga + len Gb
+      two′ = subst (2 ≤_) (sym (cong₂ _+_ (GrpOK.g-len gA) (GrpOK.g-len gB))) (CutOK.c-two co)
+
+    private
+      pos1 : ∀ {n} → n ≡ 1 → 1 ≤ n
+      pos1 refl = s≤s z≤n
+      pos2 : ∀ {n} → 2 ≤ n → 1 ≤ n
+      pos2 (s≤s _) = s≤s z≤n
+
+    comb-sem : ∀ k Ra Rb → WF Ra → WF Rb → ∀ {y z} → Ev (toE Ra) y → Ev (toE Rb) z →
+               (p : tgt k y ≡ src k z) → Ev (toE (combine k Ra Rb)) (comp k y z p)
+    comb-sem k Ra Rb wa wb {y} {z} vA vB p with cls (hi k (toE Ra))
+    ... | c0 ha = Ev-sub (sym (absorb-l (dimLe (hi→DegLe (co-toE Ra wa) ha) vA) p)) vB
+    ... | c1 ha = cbs (pos1 ha)
+      where
+      cbs : 1 ≤ hi k (toE Ra) → Ev (toE (cb k Ra Rb (cls (hi k (toE Rb))))) (comp k y z p)
+      cbs hA with cls (hi k (toE Rb))
+      ... | c0 hb = Ev-sub (sym (absorb-r (dimLe (hi→DegLe (co-toE Rb wb) hb) vB) p)) vA
+      ... | c1 hb = cc-sem k Ra Rb wa wb hA (pos1 hb) vA vB p
+      ... | c2 hb = cc-sem k Ra Rb wa wb hA (pos2 hb) vA vB p
+    ... | c2 ha = cbs (pos2 ha)
+      where
+      cbs : 1 ≤ hi k (toE Ra) → Ev (toE (cb k Ra Rb (cls (hi k (toE Rb))))) (comp k y z p)
+      cbs hA with cls (hi k (toE Rb))
+      ... | c0 hb = Ev-sub (sym (absorb-r (dimLe (hi→DegLe (co-toE Rb wb) hb) vB) p)) vA
+      ... | c1 hb = cc-sem k Ra Rb wa wb hA (pos1 hb) vA vB p
+      ... | c2 hb = cc-sem k Ra Rb wa wb hA (pos2 hb) vA vB p
+
+    -- Standardisation preserves values.
+    std-sem : ∀ e {x} → CO e → Ev e x → Ev (toE (std e)) x
+    std-sem (gen g)     _              v                = v
+    std-sem (cmp k a b) (co-cmp _ x y) (ev-cmp .k u v p) =
+      comb-sem k (std a) (std b) (std-wf a x) (std-wf b y) (std-sem a x u) (std-sem b y v) p

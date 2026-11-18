@@ -437,3 +437,19 @@ so \(\llbracket L\rrbracket\) is not \(1\)-truncated.
 The \(\mathbb Z\) indexing in (23) reflects the locally groupoidal interpretation: the loop generator is invertible. This is permitted by the stated rules. The failure of discreteness is the additional \(K(\mathbb Z,1)\) factor, detected already by maps from the terminal algebra.
 
 Therefore both proposed truncation rules are **non-derivable under the strengthened assumptions**, including after adjoining \(\operatorname{Trunc}_0\). The same countermodel satisfies full cartesian closure.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct. Question 2 is settled negatively even under the strengthened rules:** there is a model with (E), parameterised R-A, universal disjoint coproducts, Trunc₀, and in fact full cartesian closure, in which N is not a set and ⟦L⟧ is not 1-truncated. Checked step by step:
+
+- **V1. The monad (1)–(4).** M(X) = ∐_c X_c × K(H₁(X_c), 2). Each component of MX is X_c × K(B,2) with H₁ = H₁(X_c) (K(B,2) is simply connected), giving (2); unit inserts 0, multiplication adds. The strict model on Kan complexes with simplicial abelian K(−,2) satisfies the monad laws (the composite M³X → MX computed both ways agrees), and all functors preserve weak equivalences, so it descends to a monad on 𝒮. **Confirmed** (the descent of a homotopical strict monad to a coherent one is standard; not re-derived).
+- **V2. Preservation.** H₁(X_c × Y_d) = H₁(X_c) ⊕ H₁(Y_d) for connected spaces, so M preserves finite products; M(*) = *; M preserves coproducts by construction; H₁ and K(−,2) commute with filtered colimits, so M is accessible; M(S) = S for discrete S. **Confirmed.**
+- **V3. Algebras (§2).** 𝒞 = Alg_M(𝒮) is presentable (Henry–Meadows Cor. 6.8, not re-read); U creates limits, U-split simplicial resolutions (HA 4.7.3.5). F preserves finite products because U creates them and M preserves them; Map(1, A) ≃ UA (7). **Confirmed.**
+- **V4. Products with free algebras are copowers (8).** For A = FY: X ⊗ FY ≃ F(X × Y) ≃ FX × FY. For general A, B × − preserves the U-split bar resolution (extra degeneracy survives the product), so (9) holds and the comparison realises. Hence B × − ≃ colim_n (X_n ⊗ −) preserves colimits, so 𝒞 is cartesian closed. **Confirmed.**
+- **V5. R-A and (E) (§4).** ⟦Γ⟧ = F|Γ|; Map(A × ⟦Γ⟧, C) ≃ Map(|Γ| ⊗ A, C) ≃ Map(|Γ|, Map(A, C)) is parameterised R-A at every level; [⟦D⟧, C] := lim_{|D|} C satisfies (E) by (15). **Confirmed.**
+- **V6. Coproducts and sets (§5).** U creates coproducts and pullbacks and reflects equivalences, so coproducts are disjoint and universal for all algebras. Map(A, S) ≃ Set(π₀UA, S) for discrete S (the action is the inverse of π₀UA ≅ π₀MUA; coherences into a discrete target are unique), so 𝒞_{≤0} ≃ Set, Bool = F(2) = 2, and π₀U is the Trunc₀ reflector. **Confirmed.**
+- **V7. The failure (§6).** U⟦L⟧ = M(S¹) = S¹ × K(ℤ,2). In the locally groupoidal model [⟦D¹⟧, C] ≃ C (|D¹| contractible), so N = 1 ×_{⟦L⟧} 1 and UN ≃ Ω(S¹ × K(ℤ,2)) ≃ ℤ × K(ℤ,1). By (7), π₁ Map(1, N) = ℤ and π₂ Map(1, ⟦L⟧) = ℤ. **Confirmed.**
+
+**Consequences for F3b.** `N trunc 0` and "⟦Γ⟧ is 1-truncated for finite graphs Γ" are **not derivable** from 𝕋 + (E) + parameterised R-A + universal disjoint coproducts + Trunc₀, nor with full cartesian closure (so F8, exponentials of sets, does not by itself give them). `ordinary-math.md` Prop. 2.5 (T-graph not derivable from R-A) is now proved for the project's reading, and T-graph must stay a rule. The Hedberg route (§2.3) can only succeed with rules beyond these (recursion and DJ; recursion is itself not derivable, `non-derivability-2026-11-18.md` Q1). No follow-up prompt.

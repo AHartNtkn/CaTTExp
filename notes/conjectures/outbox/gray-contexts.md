@@ -24,7 +24,7 @@ CaTT (Finster–Mimram, LICS 2017, [arXiv 1706.02866](https://arxiv.org/abs/1706
 
 > **Conjecture G(n).** For every frame-acyclic molecule U of dimension ≤ n presented in CaTT: (existence) U-composites exist; (uniqueness) any two U-composites are connected by a CaTT term `t → t′` (which is then invertible, being built from coherences).
 
-G(n) for all n is equivalent to the statement that extending the coherence rule from pasting contexts to frame-acyclic molecules, with the same two side conditions, is conservative over CaTT.
+A related statement is **conservativity**: extending the coherence rule from pasting contexts to frame-acyclic molecules, with the same two side conditions, adds no new cells up to invertible CaTT cells. Conservativity implies G(n) for all n. The converse is *not* known: molecular coherences over an m-molecule include cells of every dimension above m, which needs RC (§2) above the top dimension and not only G.
 
 ## 2. What is known
 
@@ -33,13 +33,13 @@ Write RC(n) for the property:
 > **RC(n) for a context Γ.** Any two parallel n-terms `T, T′` of Γ with `π(T) = π(T′)` are connected by an (n+1)-term `T → T′`.
 
 1. **G(1)**: 1-molecules are paths, which are pasting contexts.
-2. **Theorem A (proved): RC(2) holds for every CaTT context.** Proof sketch:
+2. **Theorem A (proved): RC(2) holds for every CaTT context.** (An external referee independently proved the special case of 2-molecules by the same route: normalize to atomic generators, show each face is used once via injectivity of ∂₂, then apply adjacent swaps.) Proof sketch:
    - Two 1-terms with the same flattened path w are full parallel terms over the chain context of w, so the coherence rule connects them. Any 2-term with no 2-variable pulls back to that chain and is connected to the comparison cell with the same boundary.
    - Every 2-term is connected to a vertical composite of whiskered 2-variables and 2-terms without 2-variables (coherences over its arity and over small pasting contexts).
    - Each whiskered 2-variable x, with whisker paths λ and ρ, is connected to a fixed normal form built from one composition coherence over the pasting context "chain, 2-disc, chain", with the disc sent to x and all comparisons made over the expanded paths.
    - Two 2-paths of whiskered generators give the same strict 2-cell iff they are related by exchange moves. Each exchange move is a coherence over "chain, 2-disc, chain, 2-disc, chain", substituted and normalised. ∎
 3. **G(2) (proved).** In a 2-molecule, every 2-path from `∂⁻U` to `∂⁺U` uses each 2-cell exactly once (the 2-cycles of a molecule are zero), and two such paths are related by exchange moves (linear extensions are connected by adjacent swaps, and two incomparable consecutive 2-cells sit side by side). So any two U-composites have the same strict image, and Theorem A connects them. Existence is by a layering, with Theorem A's 1-dimensional comparison cells between layers.
-4. **Existence in G(3) (proved).** Take a layering of the 3-molecule. Realise each layer as a 3-term `U₁ ∗₁ (a ∗₀ X ∗₀ b) ∗₁ U₂` (X the layer's 3-cell, whiskers chosen with the right strict images, boundaries adjusted by 2-dimensional comparison cells). Consecutive layers meet at 2-terms with equal strict images, so Theorem A connects them. Hence **every Gray generator of dimension ≤ 4** (e.g. of `D²⊗D²`, `D³⊗D¹`, `D¹⊗D¹⊗D¹⊗D¹`) has a CaTT type.
+4. **Existence in G(3) (proved; also proved independently by a referee, by padding with fixed binary composites).** Take a layering of the 3-molecule. Realise each layer as a 3-term `U₁ ∗₁ (a ∗₀ X ∗₀ b) ∗₁ U₂` (X the layer's 3-cell, whiskers chosen with the right strict images, boundaries adjusted by 2-dimensional comparison cells). Consecutive layers meet at 2-terms with equal strict images, so Theorem A connects them. Hence **every Gray generator of dimension ≤ 4** (e.g. of `D²⊗D²`, `D³⊗D¹`, `D¹⊗D¹⊗D¹⊗D¹`) has a CaTT type.
 5. **General pattern.** The same argument shows: existence in G(n) follows from RC(n−1) for the (n−1)-skeleton of U, and uniqueness in G(n) follows from RC(n) for U.
 
 ## 3. Why dimension 3 is different

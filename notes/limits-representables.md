@@ -2,7 +2,7 @@
 
 *Design notes, revised 2026-11-18 (§3 and §5.2 rewritten as practical comparisons). Companion to `catt-survey.md` (project files). Scope: representables, Yoneda-style principles, and (weighted, lax, ω-)limits and colimits as CaTT-style rules. Internal hom / Gray tensor and fibrations are handled in other threads; the interfaces are marked **[→ Gray]** and **[→ fibrations]**. Fixed constraints: no universes, the ambient may stay external, and no definitional β/η rules. Universal properties are witnessed by generated cells.*
 
-*Markers. **[paper]**: checked against the cited paper this session. **[recall]**: from background knowledge, not re-checked. **[conj]**: unproved; every such claim has a proof attempt in §10 and, where the attempt stalls, a self-contained problem in `notes/conjectures/`. **[proposal]**: a design choice being put forward. Unproved claims are investigated, never used as reasons to reject an option.*
+*Markers. **[paper]**: checked against the cited paper this session. Every claim once marked **[recall]** was re-checked on 2026-11-18 (ledger G1) and now carries its source or a proof. **[conj]**: unproved; every such claim has a proof attempt in §10 and, where the attempt stalls, a self-contained problem in `notes/conjectures/`. **[proposal]**: a design choice being put forward. Unproved claims are investigated, never used as reasons to reject an option.*
 
 ---
 
@@ -33,7 +33,7 @@
 
 - **The ambient.** We are working "CaTT over ωCat": the base type ⋆ is read as "ω-categories", 1-cells as functors, and higher cells as transfors. `Ob` in Mikhail's paper is our ⋆.
 - **Diagrams are substitutions.** A diagram of shape Γ in the ambient is a substitution `Δ ⊢ γ : Γ`, as in CaTT_lim. A *generic* diagram is the identity on Γ, so `lim_Γ` is the limit of the generic diagram and `lim_Γ[γ]` is the limit of γ. This is a big ergonomic win of the context-as-diagram design and should be kept.
-- **Orientation.** "Lax" follows Mikhail. For `f : x → y` in Γ, the cone cell is `p_f : p_y → p_x ∗ f` (diagrammatic composition). "Oplax" is the opposite in dimension 1, and other variants come from opposites in other dimensions (Benjamin–Markakis, [2402.01611](https://arxiv.org/abs/2402.01611)).
+- **Orientation.** "Lax" follows Mikhail. For `f : x → y` in Γ, the cone cell is `p_f : p_y → p_x ∗ f` (diagrammatic composition). "Oplax" is the opposite in dimension 1, and other variants come from opposites in other dimensions (Benjamin–Markakis, [2402.01611](https://arxiv.org/abs/2402.01611)). The project-wide conventions are in `conventions.md`. In particular (§5 there), Mikhail's "lax cones" are, cell for cell, **Bénabou-oplax** transformations Δc ⇒ d, and his "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the Ara–Maltsiniotis orientation. This note keeps Mikhail's word "lax" for his limits.
 
 ---
 
@@ -145,18 +145,18 @@ Source: *Fibrations and lax limits of (∞,2)-categories*, [arXiv 2012.04537](ht
 
 Relevance: cofinality is the tool for proving that our derived constructions (§6) agree with the intended ones.
 
-### 2.6 Coherators and representables [recall]
+### 2.6 Coherators and representables [paper]
 
-Grothendieck–Maltsiniotis (as made precise for CaTT by BFM, [2106.04475](https://arxiv.org/abs/2106.04475)):
-- A weak ω-category is a presheaf on the coherator Θ_CaTT that sends globular sums to limits.
-- Read in the other direction: **disks are co-ω-category objects**, and `Hom(D^•, C)` is an ω-category for any C.
+Grothendieck–Maltsiniotis (as made precise for CaTT by BFM, [2106.04475](https://arxiv.org/abs/2106.04475), abstract and §3):
+- A weak ω-category is a presheaf on a cat-coherator that sends globular sums to globular products (BFM §3). Models of CaTT are exactly these, for the coherator built from CaTT's syntax (BFM, main theorem).
+- Read in the other direction: **disks are co-ω-category objects**, and `Hom(D^•, C)` is an ω-category for any C. *[proved]* This is immediate from the definition: if a functor F from the coherator to a category 𝒞 preserves globular sums, then for any object C of 𝒞, Hom_𝒞(F(−), C) sends globular sums to globular products.
 
 This is the semantic content of §5. The CaTT judgment `Γ ⊢ t : A` *is* a co-operation on disks, `⟦Dⁿ⟧ → ⟦Γ⟧`.
 
-### 2.7 Directed Yoneda in simplicial HoTT [recall]
+### 2.7 Directed Yoneda in simplicial HoTT [paper, abstract level]
 
-Riehl–Shulman and GWB ([2407.09146](https://arxiv.org/abs/2407.09146), [2602.02218](https://arxiv.org/abs/2602.02218)):
-- *Dependent* Yoneda is directed path induction for covariant families.
+Riehl–Shulman ([1705.07442](https://arxiv.org/abs/1705.07442)) and GWB ([2407.09146](https://arxiv.org/abs/2407.09146), [2602.02218](https://arxiv.org/abs/2602.02218)):
+- *Dependent* Yoneda is directed path induction for covariant families: Riehl–Shulman prove a "dependent Yoneda lemma" for covariant fibrations over Segal types, "a directed form of the usual elimination rule for identity types" (abstract). GWB build directed univalence and the ∞-category of ∞-categories on top of this, using a universe, which this project excludes.
 - It needs type families, so it belongs to the fibrations story [→ fibrations].
 - Its non-dependent shadow, "a natural transformation out of a representable is determined by the image of the identity", is what §5 targets.
 
@@ -181,9 +181,9 @@ x y : ⊤ → C,   f : x → y                       (f is an arrow of C, see §
 
 That coherence is α's naturality square at f. Since it is invertible, **every 2-cell of a CaTT ambient is a pseudo transformation**: its naturality squares commute up to invertible cells. A lax transformation, whose squares are filled by a cell in one direction only, cannot be a 2-cell of the ambient unless the core rule changes.
 
-The semantics agrees **[recall]**:
-- 2-categories with lax transformations do not form a tricategory. They form a "lax Gray-category", where interchange across a functor composition is a one-way cell (Gray 1974).
-- Loubaton's ω-category of ω-categories has cartesian hom-objects. Lax transformations there are maps out of the Gray cylinder `A ⊗ [1]`, not 2-cells.
+The semantics agrees **[paper]**:
+- 2-categories with lax transformations do not form a tricategory. They form a "lax Gray-category", where interchange across a functor composition is a one-way cell. This goes back to Gray's lax tensor product of 2-categories (Gray 1974, *Formal category theory*, LNM 391; Lack's companion, [math/0702535](https://arxiv.org/abs/math/0702535), §7.5, credits the Gray tensor product to Gray and mentions its lax version). For strict ω-categories, Ara–Maltsiniotis construct it: ∞-Cat_lax is enriched over the (transposed) Gray tensor with homs Hom_lax, and its 2-cells are lax transformations ([1607.00668](https://arxiv.org/abs/1607.00668), Ex. C.18); the 2-categorical case is its truncation (AM §A.25). *Why not a tricategory [proved]:* a horizontal composition Lax(B, C) × Lax(A, B) → Lax(A, C) out of the cartesian product would give invertible interchange cells; at A = 1 these are the naturality cells of a lax β : B → C, which need not be invertible.
+- Loubaton's ω-category of ω-categories has cartesian hom-objects: (∞,ω)-cat is cartesian closed ([2406.05425](https://arxiv.org/abs/2406.05425), Prop. 2.2.1.54 and Def. 2.2.1.55). Lax transformations there are maps out of the Gray cylinder `A ⊗ [1]`, not 2-cells (same paper, introduction to Ch. 4).
 
 So there are two coherent designs: a pseudo ambient (P) and a lax ambient (L).
 
@@ -219,7 +219,7 @@ Mikhail's Definition 4.15, used for finite diagrams, with three repairs. §10.1 
    - For general Γ, it should be checked against the Steiner Gray product (`gray-contexts-in-catt.md`).
 2. **Certified comparison cells.** In cone morphisms and higher transfors, the comparison cells over positive-dimensional diagram variables are marked declarations. Any substitution into them must supply an equivalence certificate. Cones themselves stay lax at the vertices.
    - Without this, the unchanged universal property forces every ambient cell of dimension ≥ 3 to be invertible (§10.1).
-3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they must be re-stated over the Gray core, which is open.
+3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they are re-stated over the Gray core in `limits-metatheory.md` §5: the same shapes and one filler rule, with no marks on the transfor comparisons. They are proved sound in the strict model there (Theorem A, §1).
 
 
 Kernel-level simplifications worth trying, since they are aesthetic, not semantic:
@@ -267,7 +267,7 @@ Opposites are a meta-operation on *terms in one ambient*. They are not a symmetr
 
 ### 4.4 Orientation variants
 
-- Mikhail notes the other lax/oplax variants come from opposites. With marking, the rule schema needs only {lax, oplax} × {lim, colim}.
+- Mikhail notes the other lax/oplax variants come from opposites. With marking, the rule schema needs only {lax, oplax} × {lim, colim}. Which dual swaps which variance is recorded in `conventions.md` §3.3.
 - The other orientations come from cotensors by opposite shapes, `[⟦Γ^{op_S}⟧, C]` (§10.6).
 
 ---
@@ -290,7 +290,7 @@ f : x →_C y    means   f : x →_{⊤→C} y          (an ambient 2-cell)
 - **Functor action** is whiskering: `F x := F ∘ x`, `F f := F ∘ f`. Then `F(g·f) ≅ F g · F f`, `F(id) ≅ id`, and all higher functoriality are ambient coherences. This is exactly the post's §"Functors" observation, now with C, D as *variables*.
 - **Components** of `α : F ⇒ G` are `α_x := α ∘ x`. Naturality cells are interchange coherences, hence pseudo (§3).
 
-**Semantic check [recall/conj].** In ωCat with cartesian homs, `Hom(1, C) ≃ C`, since `1 × Dⁿ = Dⁿ`. So "elements of C" are elements of C.
+**Semantic check [proved].** In ωCat with cartesian homs, `Hom(1, C) ≃ C`, since `1 × X ≅ X` for the terminal object 1 and the internal hom is right adjoint to ×. So "elements of C" are elements of C.
 
 **What does not follow without more rules.**
 - **Extensionality / density:** "if `F x ≅ G x` naturally in elements x, then `F ≅ G`." That needs `⊤` and the disks to be jointly dense, which is the internal-hom/Gray thread's problem [→ Gray]. *Answered 2026-11-18* (`free-objects-proofs.md` §6): disks are not dense; pasting diagrams Θ are, so the principle must be indexed by Θ (a colimit rule, F5).
@@ -410,6 +410,7 @@ A cone with apex c is `p_x, p_y : c → ⊤` (trivial), `p_z : c → C`, an inve
 - **What is missing:**
   - Primitive recursion and induction need a *dependent* eliminator, which needs families [→ fibrations].
   - "N is discrete" is a property we can state (all 2-cells invertible, and all parallel arrows equal up to a higher cell) but cannot *prove* inside the theory without an h-level discipline.
+  - *Update 2026-11-18:* both are addressed in `ordinary-math.md`: an h-level judgment that derives `N trunc 0` (§2 there), and induction derived from recursion, with recursion itself derived from two general principles in one of three compared routes (§4 there).
 - This fits the limited-normalisation constraint: nothing computes, and recursion is a universal property only.
 - **Also:** the poset `(ℕ, ≤)` is the slice `x ↓ ⟦L⟧`, a finite comma object (§6.2). So "sequence-shaped" indexing objects exist; what is missing is colimits indexed by them (§7).
 
@@ -420,7 +421,7 @@ But a structure with *equations*, such as a vector space, needs either:
 - (a) colimits that impose equations as invertible cells (coequaliser- or localisation-style), which fits here; or
 - (b) a notion of "algebra for a presented theory." The latter skirts Anthony's "no algebraic structure in the meta-theory" rule unless the theory is itself just a context.
 
-Option (a) is the in-style route: a presentation is a context plus a marking, and the presented object is its marked colimit. **This should be explored next, starting with the integers, where cancellation shows up.**
+Option (a) is the in-style route: a presentation is a context plus a marking, and the presented object is its marked colimit. **This should be explored next, starting with the integers, where cancellation shows up.** *Done in `ordinary-math.md` §5:* ℤ is the hom of the loop localised at s, and it is discrete by Dwyer–Kan; general quotients need a set-truncation rule.
 
 ---
 
@@ -493,7 +494,7 @@ This replaces my earlier "put the `ctrf` connecting cells in `⊨`". It is the s
 - **Under P,** the repaired rules are the limit rules. Hom(c, lim) is lax cones with invertible comparison cells.
   - Hom objects and lax cotensors are *not* produced by these limits: the comma of two points has only invertible 2-cells as arrows, which is point 3.
   - They come from the Gray thread's constructions (§6.2, §6.3).
-- **Under L,** the limit rules must be re-stated over the Gray core, with directed interchangers in place of CaTT's invertible ones. If that is done, §6.2 and §6.3 should hold, with hom objects and lax cotensors coming directly from limits. That restatement has not been written down by anyone. It is the main open item for L on the limits side.
+- **Under L,** the limit rules must be re-stated over the Gray core, with directed interchangers in place of CaTT's invertible ones. If that is done, §6.2 and §6.3 should hold, with hom objects and lax cotensors coming directly from limits. *Update (2026-11-18):* the restatement is now in `limits-metatheory.md` §5. Theorem A there proves, in strict ω-categories with the Gray tensor, that the unrestricted universal property holds as an isomorphism, with non-invertible comparison cells, and that hom objects are the full homs.
 - **The kernel needs canonical shapes** (§10.3). The printed `ctrf` rules both over-admit (they accept non-canonical cones) and under-admit (they reject the intended source in point 5). The cone and transfor shapes should therefore be given by a specified construction, checked against the Steiner Gray product, not by permissive free-variable judgments.
 
 ### 10.2 Marking closure (§4.2, M1): resolved, no closure condition needed
@@ -540,9 +541,9 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 
 **Consequences for §4.2:**
 - **The per-variable flag is the right primitive.** Marking a k-generator makes its (k+1)-dimensional cone cell invertible (Loubaton Remark 4.2.3.7). That is exactly the marked KE rule.
-- **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. The marked-limit schema must therefore fix lax/oplax per dimension in the alternating pattern of the response's §4, not uniformly.
+- **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. *Correction (2026-11-18, `limits-metatheory.md` §8.1):* this alternation is a condition on the index (π, μ), i.e. on which cells of ∫W are marked. The cone schema itself keeps one variance, because marking a k-generator inverts its (k+1)-cone cell uniformly in k.
 - **The cone categories must present Loubaton's `Hom_⊖`**, including the marked Gray product in higher dimensions. Under L, the candidate is a Gray-core version of the repaired `ctrf`. Under P, it is the certified-marking version of §10.1. Matching either to `Hom_⊖` is the remaining syntax-to-semantics step, as for every semantic result here.
-- **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite, generator-level test on `π : Ψ → Γ` is open.
+- **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite test is proved for set-valued weights over graphs (π a discrete opfibration of graphs, `limits-metatheory.md` §9). The general case is `conjectures/finite-fibration-test.md`.
 - It agrees with §10.2: no closure condition on the marking is needed.
 
 ### 10.5 The ℕ-like object is discrete (§6.4): solved
@@ -559,7 +560,7 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 **What remains open downstream:**
 - **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it holds semantically (§10.3, Loubaton), and syntactically it needs the specified cocone construction.
 - **That the hom-object construction gives the semantic hom.** Under L this follows from a Gray-core version of the limit rules (§6.2, §10.1). Under P it needs the Gray thread's lax cotensor (§10.1).
-- **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule.
+- **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule. *Done:* `ordinary-math.md` §3 and `src/CaTTExp/GraphFiller.agda` (certified output). Discreteness for *arbitrary* cells into ⟦L⟧ is a rule, T-graph (§2 there).
 - **Induction on N** still needs a dependent eliminator [→ fibrations].
 
 ### 10.6 Smaller claims

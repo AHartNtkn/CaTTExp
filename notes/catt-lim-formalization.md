@@ -29,6 +29,13 @@
 
 A consequence of D1, D3 and D4 together: the researcher's collapse argument is a theorem about the *intended* calculus. The printed rules cannot run it, because over an arrow they never produce the cone morphisms it uses. Once the selector and copy are fixed, the argument applies, and the certified marking is what blocks it.
 
+**D3b. The printed linearity test does not enforce multiplicity one** (`Linearity.agda`, open issue D3b, first found by the gray-contexts researcher).
+- In Def. 3.1's OP case only the number of *linear* arguments is counted, so for a loop `ℓ`, `ℓ ∝ (ℓ·ℓ)·ℓ` holds (L1).
+- Consequently the printed (KE) accepts the projection `p_ℓ : p_x ⇒ (p_x·(ℓ·ℓ))·ℓ` over the loop (L2).
+- The repair is a strict test (`linear₁`): exactly one argument is linear in x, *and* x occurs in exactly one argument. The strict cone rule rejects that projection.
+- All the intended examples still pass with the copy, selector and linearity repairs together (`fixedStrict`; L4).
+- Strict linearity does not remove the D5 cone, whose repeated `r` sits in the source, which carries no linearity condition (L3). So the specified construction is still needed.
+
 ## 3. What is not formalized
 
 - **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 checks the input to that argument, not its algebra.
@@ -36,4 +43,4 @@ A consequence of D1, D3 and D4 together: the researcher's collapse argument is a
 - **Generality.** The constructions cover cones over globular diagrams of dimension ≤ 2 and cone morphisms over diagrams of dimension ≤ 1. The judgments are the n = 1 instance of Mikhail's schema. That the specified construction passes the fixed rules for every globular diagram (the analogue of Thm 3.3/4.4) is checked on examples only.
 - **Certificates.** `cert` is sound on the strength of Benjamin–Markakis ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)): coherences are invertible, and composites and whiskerings of invertible cells are invertible. That is cited.
 - **The two-tier L variant** (`pseudo-vs-gray.md` R11) is not attempted here. It needs the Gray core being built in a separate thread (`CaTTExp.TypingWith` with the L side condition).
-- **Orientation.** The literature thread notes that the cylinder formula `a_x → b_x` presents `I ⊗ Γ` under Steiner's convention. Mikhail's gray components `p_x : x → x′` have that form; matching the orientation to `Γ ⊗ I` is unchecked here.
+- **Orientation.** The literature thread notes that the cylinder formula `a_x → b_x` presents `I ⊗ Γ` under Steiner's convention. Mikhail's gray components `p_x : x → x′` have that form. Settled in `conventions.md` §5: Mikhail's "Γ ⊗ Dⁿ" is Dⁿ ⊗ Γ in the Steiner/Ara–Maltsiniotis orientation (so `I ⊗ Γ`), checked on the generator i ⊗ f, and his transformations are Bénabou-oplax.

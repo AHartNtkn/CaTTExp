@@ -2,7 +2,7 @@
 
 *Self-contained problem statement. No project context needed.*
 
-> **Status: SOLVED for Gray tensors of globular pasting diagrams, and for any acyclic regular directed complex (2026-11-18).** The result follows from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18. Open for arbitrary Steiner complexes. See "Literature status" at the end.
+> **Status: SOLVED for Gray tensors of globular pasting diagrams, and for any acyclic regular directed complex (2026-11-18).** The result follows from Hadzihasanovic, *Combinatorics of higher-categorical diagrams* (arXiv 2404.07273), Prop. 8.3.17 and Thm 11.2.18. For arbitrary Steiner complexes, Problem 1 is in the literature (Forest; Campbell) and Problem 2 is reduced to one combinatorial step ("Progress on the general case" at the end). See "Literature status" at the end.
 
 ## Background and definitions
 
@@ -106,5 +106,33 @@ The argument, assembled from that book:
    This is a short derivation, not a quoted theorem.
 
 **General Steiner complexes.** Hadzihasanovic, Example 11.2.19, shows that for regular directed complexes that are *not* dimension-wise acyclic, ν(ℤP) is a "more degenerate quotient" of Mol/P. Comment 11.2.37 records that compatibility with Gray products is not expected beyond the acyclic case. Problem 2 for arbitrary strongly loop-free Steiner complexes was not found in the literature. The case the project needs is covered.
+
+## Progress on the general case (2026-11-18, ledger G3)
+
+Not needed by any current design; recorded so that the general statement can be finished or refuted. K is a Steiner complex throughout (unital, strongly loop-free basis). For a cell x and m < dim x write **R_m(x) := x_m⁻ ∧ x_m⁺** (the part of the m-boundary present in both the source and the target).
+
+**Problem 1 holds in general [paper].** Every x_m^± of every cell is *well-formed*, in particular *radical* (a sum of distinct basis elements): Forest, *Unifying notions of pasting diagrams* (HHA 2022), Lemma 3.4.5, for Steiner complexes; Campbell, *Parity complexes redux* ([2605.09427](https://arxiv.org/abs/2605.09427)), Prop. 2.20, for weakly loop-free bases. Well-formed also means: distinct basis elements y, z ≤ x_m^± share no element of ∂⁻ and none of ∂⁺ (Campbell Def. 2.19).
+
+**A second tool [paper].** For every cell x, every m < dim x and every basis element b ≤ x_{m+1}^±: x_m⁻ ∧ ∂⁺b = 0 and x_m⁺ ∧ ∂⁻b = 0 (Forest Lemma 3.4.11; Campbell Prop. 2.23). Call this **(F2)**. In words, nothing produced by a top-level generator is in the source, and nothing consumed is in the target.
+
+**Reduction of Problem 2 [proved].** Problem 2 follows from:
+
+> **(G)** For every cell x, every m < dim x and every (m+1)-dimensional c ∈ Supp(x): R_m(x) ∧ (∂⁻c + ∂⁺c) = 0.
+
+*Proof of the reduction.* Rebuild x from n = dim x and Supp(x) top-down. The top chain x_n is the sum of the n-dimensional elements of Supp(x) (by Problem 1, and because lower atoms only contribute lower dimensions). Suppose x_{m+1}^± are known, and write ∂x_{m+1}⁻ = P − N with P, N disjoint and non-negative. Since x_m^± are radical and x_m⁺ − x_m⁻ = P − N, we get x_m⁻ = N + R and x_m⁺ = P + R with R = R_m(x). Let F be the set of m-dimensional basis elements that are faces (in ∂⁻ or ∂⁺) of some (m+1)-dimensional element of Supp(x). Every m-dimensional element of Supp(x) lies in x_m⁻, in x_m⁺ or in F, and P, N ⊆ F. Hence R ⊇ Supp_m(x) ∖ F, and (G) says R ∩ F = ∅, so R = Supp_m(x) ∖ F is determined by Supp(x). ∎
+
+**(G) in most cases [proved].** Induction on Steiner's decomposition index (Steiner 2004, Def. 5.3; index −1 means x is an atom, Prop. 5.5).
+- *Atoms.* For x = ⟨b⟩ and m < dim b, ⟨b⟩_m⁻ = (∂⟨b⟩_{m+1}⁻)₋ and ⟨b⟩_m⁺ = (∂⟨b⟩_{m+1}⁻)₊ are disjoint, so R_m = 0. For m ≥ dim b there is no (m+1)-dimensional element in Supp. So (G) holds.
+- *Index r ≥ 0.* By Steiner Prop. 5.4, x = x_1 #_r ⋯ #_r x_k with each x_i ≡ ⟨b_i⟩ modulo chains of degree ≤ r, |b_i| > r, and |b_i| > r + 1 for at most one i (call it j, with b_j = e if it exists). Each x_i has index < r. Since composition along r keeps chains below r, takes the source from x_1 and the target from x_k in degree r, and adds chains above r, Supp(x) ⊆ ⋃ Supp(x_i).
+  - *m < r.* R_m(x) = R_m(x_i) for every i, and c ∈ Supp(x_i) for some i. Apply the induction hypothesis to x_i.
+  - *m = r.* First, R_r(x) ≤ R_r(x_i) for every i: if a ≤ R_r(x) were missing from some intermediate r-chain, some later generator e′ ≤ x_{r+1} would have to produce it again, a ≤ ∂⁺e′, while a ≤ x_r⁻, contradicting (F2) for x. Then apply the induction hypothesis to the x_i containing c.
+  - *m ≥ r + 2.* Only x_j has elements of dimension > r + 1, x_m^± = (x_j)_m^±, and Supp_{≥ r+1}(x_j) = Supp_{≥ r+1}(⟨e⟩) because x_j and ⟨e⟩ agree in degrees > r. Apply the induction hypothesis to x_j.
+  - *m = r + 1.* x_{r+1}^± = (x_j)_{r+1}^± + B with B := Σ_{i≠j} b_i, so R_{r+1}(x) = R_{r+1}(x_j) + B. The (r+2)-dimensional c lie in Supp(⟨e⟩). The part R_{r+1}(x_j) is handled by the induction hypothesis for x_j. **What remains is the B part.**
+
+**The remaining step [open].** It is equivalent to the following "convexity" statement, since b_i ∉ ⟨e⟩_{r+1}^± already (x_{r+1}^± is radical):
+
+> **(Conv)** In a decomposition x = x_1 #_r ⋯ #_r x_k as in Steiner Prop. 5.4, with x_j ≡ ⟨e⟩ and x_i ≡ ⟨b_i⟩ (|b_i| = r + 1) for i ≠ j, no b_i lies in Supp(⟨e⟩).
+
+In words: a generator whiskered beside an atom along r is not an internal face of that atom. It holds whenever K comes from an acyclic regular directed complex (by the solved case above). A proof would presumably use strong loop-freeness: an internal (r+1)-face b of e is produced and consumed inside e (c ◁ b ◁ c′ for (r+2)-dimensional c, c′ ∈ Supp(⟨e⟩)), while b is also composed beside ⟨e⟩. A counterexample would have to be a strongly loop-free complex that is not dimension-wise acyclic in Hadzihasanovic's sense (`2404.07273` §8.3), and Example 11.2.19 there is the natural place to look.
 
 Related: Campbell, *Parity complexes redux* ([arXiv 2605.09427](https://arxiv.org/abs/2605.09427)), shows that parity complexes are equivalent to strong Steiner complexes. In Street's parity complexes, cells are given as pairs of subsets.

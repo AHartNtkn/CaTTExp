@@ -1,6 +1,6 @@
 # Free ω-categories as objects
 
-*Design notes, second pass, 2026-11-18. Companion to `notes/catt-survey.md` (project files). Claims marked **[recall]** are from background knowledge and were not re-checked against the source. Claims marked **[conj]** are conjectures.*
+*Design notes, second pass, 2026-11-18. Companion to `notes/catt-survey.md` (project files). Claims once marked **[recall]** were re-checked against their sources on 2026-11-18 (ledger G1). Claims marked **[conj]** are conjectures.*
 
 This note started as "universes and size". After review, the universe question is closed (§0), and what remains is the problem of making free and presented ω-categories into objects of the ambient. The note sets out two ways to do that, A1 and A2, in full, and compares them.
 
@@ -241,7 +241,10 @@ At dimension 1 it says: given `G, G' : C[x : a → b] → D`, a transformation `
 ### 3.6 Semantics
 
 - **Strict model:** `C[x : a → b]` is the strict pushout of C along the boundary inclusion `∂Dⁿ → Dⁿ`. This is the standard "add one generator" step for polygraphs.
-- **Weak model:** the homotopy pushout along the boundary inclusion. Boundary inclusions are the generating cofibrations in the known model structures on ω-categories, so this pushout is well behaved **[recall: for the weak (GM) case, which model structure to cite]**.
+- **Weak model:** the homotopy pushout along the boundary inclusion.
+  - *Strict ω-categories:* boundary inclusions ∂Oₙ → Oₙ are the generating cofibrations of the folk model structure (Lafont–Métayer–Worytkiewicz, [0712.0617](https://arxiv.org/abs/0712.0617), §4) **[paper]**, so this pushout is a homotopy pushout there.
+  - *(∞,ω)-categories:* Cat_ω is presentable, so the pushout along ∂Dⁿ → Dⁿ exists and is the intended semantics.
+  - *GM / Batanin–Leinster weak ω-categories:* **no model structure is known to cite.** Boundary inclusions generate the weak factorisation system whose universal cofibrant replacement gives Leinster's operad (Garner, [0804.2663](https://arxiv.org/abs/0804.2663)), but a (left semi-)model structure with the ω-weak equivalences is still future work (Fujii–Hoshino–Maehara, [2406.13240](https://arxiv.org/abs/2406.13240), introduction) **[paper]**. *Correction:* an earlier version said the boundary inclusions are generating cofibrations in "the known model structures" in the weak case. Recorded as a semantics gap in `semantics-gaps.md` §2 and §5.
 
 ---
 
@@ -360,7 +363,9 @@ The Gray shapes `Γ ⊗ Dᵏ` that A1, A2 (via its decomposition theorem) and R-
 - **`gray-contexts-in-catt.md` (G(n)).** It asks whether coherences over frame-acyclic molecules are conservative over CaTT. Conjecture N with all variables duplicated is a special case of that, for the molecules `P ⊗ D¹` (conjecture file §8). The left-unitor proof uses the same layering idea as G's §3.2.
 - **`gray-contexts-in-catt.md` §6 (1)** (formerly `gray-contexts-steiner.md`). It asks for Mikhail's Gray contexts in all dimensions. Items 1 and 2 above give an explicit candidate, conditional on N.
 
-**What remains.** The general depth-≥2 case. The next concrete checks are the 3-dimensional unitor over the 2-disc (the first 2-dimensional Q), and arbitrary up-closed sets on a chain. The ladder theorem is the dimension-2 instance of a proposed induction hypothesis, the relative comparison property (RC) recorded in the conjecture file's verification section; RC in general is open.
+**Update 2026-11-18** (`relative-coherence.md` §4–§5). N holds for every term of dimension ≤ 2, every pasting context and every up-closed Y, including arbitrary up-closed sets on a chain. In general, N in dimension n follows from the relative coherence property RC(n) on the cylinder contexts. So `Γ ⊗ D¹` exists for every context of dimension ≤ 3, and `Γ ⊗ Dⁿ` for every n when dim Γ ≤ 2, by iterated top-layer cylinders whose layers match Mikhail's `gray` contexts. The open part is RC(n), n ≥ 3; the smallest case is the lax square. Posed in `conjectures/outbox/naturality-arbitrary-depth.md`.
+
+**What remained before that update.** The general depth-≥2 case. The next concrete checks are the 3-dimensional unitor over the 2-disc (the first 2-dimensional Q), and arbitrary up-closed sets on a chain. The ladder theorem is the dimension-2 instance of a proposed induction hypothesis, the relative comparison property (RC) recorded in the conjecture file's verification section; RC in general is open.
 
 ### 7.2 Other open problems
 

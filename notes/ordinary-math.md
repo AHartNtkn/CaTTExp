@@ -557,6 +557,31 @@ Dually, ambient limits indexed by a cartesian fibration are sections (the lax li
 
 **F8 (new): exponentials of sets.** Under P the cartesian internal hom of ωCat restricted to sets, `[A, B]` with `Hom(C × A, B) ≃ Hom(C, [A, B])` for all C, is semantically fine (Set is cartesian closed inside ωCat). In-style candidate: Mimram's cartesian closed CaTT rules (`internal-hom.md` §5.7, D12) restricted to targets with `trunc 0`, so the higher-dimensional cartesian pasting criterion is not needed (every cell above level 0 is T-fill). Nobody owns this yet.
 
+### 6.6 Θ-density as an object-indexed colimit (F5b)
+
+`free-objects-proofs.md` §6 (C9) found that disks are not dense and that Θ is. It asked for the Θ-density principle as an instance of §6.1: B as the localised Grothendieck construction of its Θ-elements. Here is what that takes. Standard 3 applies: two routes, compared, none chosen.
+
+**(i) Extensionality needs nothing new.** In generalised-element form ("two transformations α, β : F ⇒ G : B → C agree if they agree after every `x : W → B`"), the statement is trivial: take W = B. The *shape* restriction (only `x : ⟦P⟧ → B` for pasting contexts P) is about **existence**: building a map or transformation out of B from data given on its Θ-elements. Only existence needs density. **[proved here]**
+
+**(ii) Density as §6.1 needs Θ as an object.** The elements of B are pairs (P, x : ⟦P⟧ → B), and the diagram is `(P, x) ↦ ⟦P⟧`. As an instance of §6.1 the index must be an object, so Θ itself must be internal:
+- *Objects of Θ:* Batanin trees, i.e. rose trees, `node : List(T) → T`. This is the §4.8(b) construction with one constructor whose arity is the length of its list. The word encoding allows a letter to carry its own arity (`ar : A → ℕ`, here A = ℕ), and the proof of Theorem 4.6 is unchanged: "pop ar(a)" in place of "pop n_i". **[proved here, as a variant of Thm 4.6]**
+- *Morphisms of Θ:* strict functors `⟦S⟧ → ⟦T⟧`, which are finite combinatorial data (maps of trees, Berger; Joyal's description of Θ) and form a set-level object over `Θ₀ × Θ₀`. Defining it is routine recursion on trees, but long. **[not written]**
+- *The universal pasting diagram* `U → Θ₀`, with fibre `⟦T⟧` over T. By §6.1 it is a cocartesian fibration, and the localisation of its total space at all cocartesian arrows is the colimit of all shapes.
+
+**(iii) The elements need a relative cotensor.** The object of Θ-elements of B is `el(B) := Σ_{T : Θ₀} [⟦T⟧, B]`, i.e. the **cotensor of B by the family** `U → Θ₀`, relative to Θ₀. For a single shape this is a finite limit (the cotensor `[⟦P⟧, B]`). For the family it is a dependent product along `U → Θ₀`, which is not finite. Two routes:
+- **Route A, a fibrewise-shape cotensor (R-cot⁺) [proposal].** For a family of shapes, meaning a map `q : U → I` whose fibres are pasting shapes, uniformly in i (the fibration of §6.1 for a diagram `I → shapes`), there is an object `[q, B] → I` with fibre `[⟦q_i⟧, B]`. Its universal property is the cotensor's, parametrised over I. Every fibre is a finite cotensor, so this is "finite limits, uniformly in a parameter". It is strictly weaker than an internal hom (F8), since its exponent ranges only over families of finite shapes. Semantics: fibrewise right adjoint to pullback, which exists because the fibres are finite and `Cat_(∞,ω)` is cartesian closed (§6.1) **[proved here, sketch]**.
+- **Route B, F8 in general.** An internal hom along arbitrary maps (dependent products). It covers R-cot⁺ and much more, at the cost of F8's open questions (D12).
+
+**(iv) The density statement [proposal; semantics proved].** With Θ internal and R-cot⁺, let `E_B → el(B)` be the pullback of U along the projection `el(B) → Θ₀`, mapped to B by evaluation. Then
+
+```
+(Θ-dens)    E_B[W⁻¹] ≃ B        (W = cocartesian arrows of E_B over el(B), §6.1)
+```
+
+and maps out of B are cocones over the Θ-elements, which is the existence half of extensionality. Semantically, (∞,ω)-categories are Θ-presheaves satisfying the Segal and completeness conditions (Loubaton's definition [paper]). Every presheaf is the colimit of the representables over its elements (HTT Cor. 5.1.5.8 [recall]). The Segal-complete ones are a reflective localisation, and the reflector preserves colimits and fixes representables, so B ≃ colim over Θ/B of ⟦P⟧ in `Cat_(∞,ω)`. By §6.1 that colimit is `E_B[W⁻¹]`. **[proved here, relative to the cited facts]**
+
+**Verdict.** Θ-density *is* an instance of §6.1, but not a finite one. It needs Θ as an internal object (available from §4.8, with the morphisms still to be written) and the relative cotensor R-cot⁺ (route A) or F8 (route B). Extensionality in generalised-element form needs neither (i). Recorded in the ledger as F5b's remaining parts.
+
 ---
 
 ## 7. Lax functors (F6)
@@ -611,7 +636,7 @@ All rows are added to `notes/open-issues.md` under F.
 - **F4a** 1-cells done (2026-11-18): `LocalisedFiller.agda` (§5.1). Open: cells between parallel 2-cells and higher.
 - **F4b** Trunc written in full (§5.3). Effectiveness of quotients needs EX; EX is not derivable (§5.3, countermodel), so it is a rule.
 - **F5a** Done (2026-11-18): §6.1–6.3 checked at statement level (Loubaton, Gepner–Heine, AHM). "Lax colimit = total space" holds in the fully lax sense; AHM's convention inverts cartesian 2-morphisms (§6.1).
-- **F5b** Θ-density (from C9) as an instance of §6.1: B as the localised Grothendieck construction of its disk elements, giving extensionality of transformations.
+- **F5b** Analysed (2026-11-18, §6.6): extensionality in generalised-element form is trivial; Θ-density for existence is a non-finite instance of §6.1, needing Θ internal (§4.8 variant; morphisms not yet written) and a relative cotensor R-cot⁺ (or F8).
 - **F6a** Answered (refuted as stated; rule revised to `dcoh_S`, §7.3). Remaining: the CaTT-side comparison, part of the semantic gap.
 - **F8** Exponentials of sets.
 - **Formalisation (standard 9):** an Agda encoding of the `trunc` judgment and T-fill as signature-level rules, with the §2.5 ring example checked; an encoding of the recursion rule over a parameter context. Both need the syntax to carry operations "over a context applied to a substitution" beyond `coh`, i.e. an extension of `CaTTExp.Syntax`.

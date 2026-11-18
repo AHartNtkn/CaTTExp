@@ -108,7 +108,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 ### What none of the three gives
 
-**Lax functors**, meaning maps preserving composition only up to a directed cell. In all three options functors preserve composition up to invertible cells. Lax functors would need yet another rule (e.g. Gray-shaped "lax functor" contexts) in any of them.
+**Lax functors**, meaning maps preserving composition only up to a directed cell. In all three options functors preserve composition up to invertible cells. Lax functors would need yet another rule (e.g. Gray-shaped "lax functor" contexts) in any of them. *Update 2026-11-18:* `ordinary-math.md` §7 proposes maps out of glued orientals for finite loop-free shapes (no new rule) and a directed refinement-coherence rule for lax-functor variables (`conjectures/lax-functor-refinement.md`).
 
 ### Gains and losses, side by side
 

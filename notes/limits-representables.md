@@ -410,6 +410,7 @@ A cone with apex c is `p_x, p_y : c → ⊤` (trivial), `p_z : c → C`, an inve
 - **What is missing:**
   - Primitive recursion and induction need a *dependent* eliminator, which needs families [→ fibrations].
   - "N is discrete" is a property we can state (all 2-cells invertible, and all parallel arrows equal up to a higher cell) but cannot *prove* inside the theory without an h-level discipline.
+  - *Update 2026-11-18:* both are addressed in `ordinary-math.md`: an h-level judgment that derives `N trunc 0` (§2 there), and induction derived from recursion, with recursion itself derived from two general principles in one of three compared routes (§4 there).
 - This fits the limited-normalisation constraint: nothing computes, and recursion is a universal property only.
 - **Also:** the poset `(ℕ, ≤)` is the slice `x ↓ ⟦L⟧`, a finite comma object (§6.2). So "sequence-shaped" indexing objects exist; what is missing is colimits indexed by them (§7).
 
@@ -420,7 +421,7 @@ But a structure with *equations*, such as a vector space, needs either:
 - (a) colimits that impose equations as invertible cells (coequaliser- or localisation-style), which fits here; or
 - (b) a notion of "algebra for a presented theory." The latter skirts Anthony's "no algebraic structure in the meta-theory" rule unless the theory is itself just a context.
 
-Option (a) is the in-style route: a presentation is a context plus a marking, and the presented object is its marked colimit. **This should be explored next, starting with the integers, where cancellation shows up.**
+Option (a) is the in-style route: a presentation is a context plus a marking, and the presented object is its marked colimit. **This should be explored next, starting with the integers, where cancellation shows up.** *Done in `ordinary-math.md` §5:* ℤ is the hom of the loop localised at s, and it is discrete by Dwyer–Kan; general quotients need a set-truncation rule.
 
 ---
 
@@ -559,7 +560,7 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 **What remains open downstream:**
 - **That `⟦L⟧` denotes `F_ω(L)`.** Under R-A this holds by definition. Under R-B it holds semantically (§10.3, Loubaton), and syntactically it needs the specified cocone construction.
 - **That the hom-object construction gives the semantic hom.** Under L this follows from a Gray-core version of the limit rules (§6.2, §10.1). Under P it needs the Gray thread's lax cotensor (§10.1).
-- **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule.
+- **Discreteness inside the theory.** The theory can state "every parallel pair of cells in N has a filler", but proving it internally needs a rule or meta-theorem that transfers the semantic fact. The natural candidate is an *admissible* meta-operation: for a 1-dimensional context, fill any parallel pair of cells of dimension ≥ 2 by a coherence over the chain pasting scheme, using the canonical lift of §3 of the response. That is exactly the researcher's syntactic argument (DFMRV Prop. 7.19 and 7.32), so it should be implementable as a tactic with no new rule. *Done:* `ordinary-math.md` §3 and `src/CaTTExp/GraphFiller.agda` (certified output). Discreteness for *arbitrary* cells into ⟦L⟧ is a rule, T-graph (§2 there).
 - **Induction on N** still needs a dependent eliminator [→ fibrations].
 
 ### 10.6 Smaller claims

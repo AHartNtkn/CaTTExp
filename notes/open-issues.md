@@ -31,6 +31,7 @@ Thread ids used below:
 | MARK | "Design invertibility markings for lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbQhMQC4fsaRjMJypHXq4ZVv` | active |
 | FOBJ | "Develop free-object rules" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbUxJhXTzhRJEWFkLNmH5acC` | active |
 | CONV | "Clean up recalled claims and conventions" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1EVjAv52BfW2yu9RrGQaFH` | done |
+| OMATH | "Extend toward ordinary mathematics" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb372mKMHNCxwDtepUMwRs3d` | active (2026-11-18) |
 
 ---
 
@@ -109,20 +110,37 @@ Thread ids used below:
 
 ## F. Ordinary mathematics and further extensions
 
+Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are its proposals; the lettered rows are what it leaves open.
+
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| F1 | **Dependent eliminators**: induction/primitive recursion on the ℕ-like object N, directed J. Needs a fibrations story without universes (fibrations as maps plus a (co)cartesian lifting rule, or fibration-shaped contexts). No thread has ever owned fibrations. | `limits-representables.md` §6.4, §7, §10.5; `catt-survey.md` §10, §13 | unowned | — |
-| F2 | **Discreteness filler tactic**: an admissible meta-operation that fills any parallel pair of cells of dimension ≥ 2 in a 1-dimensional context by a coherence over the chain pasting scheme (DFMRV Prop. 7.19, 7.32). Gives "N is discrete" inside the theory. | `limits-representables.md` §10.5 | unowned | former area LIMN |
-| F3 | **h-level discipline**: stating and proving truncation properties (e.g. a ring object is discrete) inside the theory. Needed under every option. | `pseudo-vs-gray.md` Example 5; `limits-representables.md` §6.4 | unowned | — |
-| F4 | **Presentations with equations** via marked colimits (coequaliser/localisation style). Test case: the integers, where cancellation appears. Then vector-space-like objects. | `limits-representables.md` §6.5, §9.3 | unowned (needs colimit rules, B12) | former area LIMN |
-| F5 | **Object-indexed colimits** (sequential colimits, Kan extensions along non-shapes): left adjoint to C → [I, C], or localised Grothendieck constructions (AHM Thm F). First test case (from C9): the Θ-density rule, B as the colimit of its pasting-diagram elements, which gives extensionality of transformations for arbitrary domains. | `limits-representables.md` §7, §9.4 | unowned | former area LIMN |
-| F6 | **Lax functors** (composition preserved only up to a directed cell): no option provides them; needs a new rule family, e.g. Gray-shaped lax-functor contexts. | `pseudo-vs-gray.md` "What none of the three gives" | unowned | — |
+| F1 | **Dependent eliminators.** Families are maps, sections are maps with an invertible cell; dependent elimination is *derived* from non-dependent universal properties (AGS argument). Proved on paper: dependent elimination for shapes ⟦Γ⟧ from R-A (Thm 4.1); induction for N from recursion (Thm 4.3); recursion for N := Hom_{⟦L⟧}(x,x) from two general principles, G (lax colimits are Grothendieck constructions) and DJ (comma objects are free cocartesian fibrations) (Thm 4.4). Three routes compared (§4.5). | `ordinary-math.md` §4 | proposal written | OMATH (proposal); open parts F1a, F1b |
+| F1a | Write G and DJ as rules with their `uni`-style higher levels; check the uniqueness step of Thm 4.4 in detail. | `ordinary-math.md` §4.6 | unowned | former area OMATH |
+| F1b | Tree-shaped inductive objects, and lists over an arbitrary object, in route III (no ℕ-specific rule). | `ordinary-math.md` §4.7 | unowned | former area OMATH |
+| F2 | **Discreteness filler tactic** for graph contexts: proved on paper (Thm 3.1), implemented with certified output and checked examples in `src/CaTTExp/GraphFiller*.agda`. | `ordinary-math.md` §3 | done (paper + certified instances) | — |
+| F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | blocked on A1; adjacent: more instances | former area OMATH |
+| F2b | Filler for **globular** contexts (Thm 3.2, semantic proof done): implement strict normal forms (labelled trees) and the lift. | `ordinary-math.md` §3.3 | unowned | former area OMATH |
+| F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written | OMATH; open parts F3b, F3c |
+| F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3 | unowned | former area OMATH |
+| F3c | Full proofs of T-lim and T-hom against the specified `ctrf` construction. | `ordinary-math.md` §2.3 | blocked on B5; adjacent: F3b | former area OMATH |
+| F4 | **The integers**: ℤ := Hom(x,x) in ⟦L⟧ localised at s (a finite pushout). ℤ ≃ ℤ_disc proved from Dwyer–Kan 1980 Prop. 2.3 and `free-on-graph.md`. General quotients need a set-truncation rule (proposed, §5.3). | `ordinary-math.md` §5 | done for ℤ; quotients proposed | — ; open parts F4a, F4b |
+| F4a | Filler tactic for localised graphs (reduced words). | `ordinary-math.md` §5.1 | unowned | former area OMATH |
+| F4b | Effectiveness of quotients under the Trunc rule. | `ordinary-math.md` §5.3 | unowned | former area OMATH |
+| F5 | **Object-indexed colimits**: diagrams as cocartesian fibrations; lax colimit = total space, pseudo colimit = finite localisation, left Kan extension = comma + localisation; sequential colimits = pseudo coequaliser of the total family. No new rule. Colimits *inside* an object are declared structure (§6.4). First test case carried over from C9: the Θ-density rule, B as the colimit of its pasting-diagram elements, which gives extensionality of transformations for arbitrary domains (now expressible as an ambient colimit over the cocartesian fibration of elements, §6.1; not yet worked out, F5b). | `ordinary-math.md` §6 | proposal written | — ; open part F5a |
+| F5b | Θ-density as an instance of §6.1: write B as the localised Grothendieck construction of its disk elements and derive extensionality of transformations (C9). | `ordinary-math.md` §6.1; `limits-representables.md` §7 | unowned | former area OMATH |
+| F5a | Check §6.1–6.3 against the (∞,ω) sources (Gepner–Heine, Loubaton) at statement level, not abstracts. | `ordinary-math.md` §6 | unowned | former area OMATH |
+| F6 | **Lax functors**: out of finite loop-free shapes, maps out of the glued orientals P^lax (no new rule); lax-functor variables via a directed refinement-coherence rule. | `ordinary-math.md` §7 | proposal written | — ; open part F6a |
+| F6a | `conjectures/lax-functor-refinement.md`: are lax-functor comparison cells decided by Steiner supports of the oriental complex? Ready to send to a researcher. | `conjectures/lax-functor-refinement.md` | unowned (ready to send) | former area OMATH |
+| F7 | Write out **ICaTT's and Rice's (CaTT_su/sua) rules in full** from the papers; the survey paraphrased them. Needed by E4, by the walking-equivalence quotients of `limits-representables.md` §6.1, and by ⟦J⟧ in F4 and F5. | `catt-survey.md` "Possible next steps" | unowned | — |
+| F8 | **Exponentials of sets** (function sets ℕ → ℕ, sequences for ℝ): an internal hom restricted to `trunc 0` targets, e.g. Mimram's cartesian closed rules (D12) for sets. | `ordinary-math.md` §6.5 | unowned | — |
+| F9 | **Formalise the h-level and recursion rules** (standard 9): encode `trunc` and T-fill and check the ring example of §2.5; encode recursion over a parameter context. Needs syntax for operations "over a context applied to a substitution" beyond `coh`. | `ordinary-math.md` §8 | unowned | former area OMATH |
 
 ## G. Verification debt
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
 | G3 | **Steiner support lemma for arbitrary Steiner complexes** (beyond acyclic ones). Not needed by any current design. Progress 2026-11-18: 0/1 chains hold in general (Forest Lemma 3.4.5; Campbell 2605.09427 Prop. 2.20); "support determines the cell" is reduced, by induction on Steiner's decomposition index, to one step **(Conv)**: a generator whiskered beside an atom along r is not an internal face of that atom. | `conjectures/steiner-support-determines-cells.md`, "Progress on the general case" | unowned (low priority) | former area CONV |
+| G4 | **Re-check the [recall] and abstract-level claims of `ordinary-math.md`** (added after G1 closed): Riehl–Verity's characterisation of cocartesian fibrations and fibrational Yoneda; Lurie HTT 3.3.4.3; Gepner–Haugseng–Nikolaus free fibrations; T-coprod; homs of orientals are Gray cubes; and DK 1980 Prop. 2.3 against a clean copy (read here through an OCR scan). | `ordinary-math.md` | unowned | former area OMATH |
 
 ---
 
@@ -135,7 +153,7 @@ Thread ids used below:
 
 **Responses received, awaiting verification:** none. (`naturality-arbitrary-depth.md` and `strict-lax-interchange-at-every-level.md` were verified 2026-11-18.)
 
-**Ready to send** (self-contained, literature-checked): `outbox/finite-fibration-test.md` (B14; paste as is). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
+**Ready to send** (self-contained, literature-checked): `outbox/lax-functor-refinement.md` (F6a; paste as is). `outbox/finite-fibration-test.md` (B14; paste as is). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
 
 ## Closed
 

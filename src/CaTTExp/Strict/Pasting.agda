@@ -769,3 +769,279 @@ module PseArr (Γ : Ctx) (x : Nat) (B : Ty) (a c : Nat) (inv : PsInv Γ)
   ... | true  = core-x o o' ha c
   ... | false = Core-≈ Γ' (o , o') (Tb Γ (o , o')) (Tb Γ' (o , o'))
                   (λ b i → ≈-sym (Tb-other (o , o') ha b i)) (Core-lift o o' c)
+
+------------------------------------------------------------------------
+-- Objects and their consecutive pairs.
+
+isStarM : Maybe Ty → Bool
+isStarM (just ⋆) = true
+isStarM _        = false
+
+objL : Ctx → List Nat
+objL Γ = filter (λ v → isStarM (lookup Γ v)) (rng (len Γ))
+
+pairs : List Nat → List (Nat × Nat)
+pairs []           = []
+pairs (o ∷ [])     = []
+pairs (o ∷ o' ∷ os) = (o , o') ∷ pairs (o' ∷ os)
+
+data AllL {A : Set} (P : A → Set) : List A → Set where
+  []ᴬ  : AllL P []
+  _∷ᴬ_ : ∀ {x xs} → P x → AllL P xs → AllL P (x ∷ xs)
+
+data _∈_ {A : Set} (a : A) : List A → Set where
+  hd∈  : ∀ {xs} → a ∈ (a ∷ xs)
+  tl∈ : ∀ {x xs} → a ∈ xs → a ∈ (x ∷ xs)
+
+AllL-++ : ∀ {A : Set} {P : A → Set} xs ys → AllL P xs → AllL P ys → AllL P (xs ++ ys)
+AllL-++ []       ys []ᴬ       q = q
+AllL-++ (x ∷ xs) ys (p ∷ᴬ rs) q = p ∷ᴬ AllL-++ xs ys rs q
+
+AllL-map : ∀ {A : Set} {P Q : A → Set} xs → (∀ x → P x → Q x) → AllL P xs → AllL Q xs
+AllL-map []       f []ᴬ       = []ᴬ
+AllL-map (x ∷ xs) f (p ∷ᴬ rs) = f x p ∷ᴬ AllL-map xs f rs
+
+∈-++ˡ : ∀ {A : Set} {a : A} xs ys → a ∈ xs → a ∈ (xs ++ ys)
+∈-++ˡ (x ∷ xs) ys hd∈      = hd∈
+∈-++ˡ (x ∷ xs) ys (tl∈ m) = tl∈ (∈-++ˡ xs ys m)
+
+∈-++ʳ : ∀ {A : Set} {a : A} xs ys → a ∈ ys → a ∈ (xs ++ ys)
+∈-++ʳ []       ys m = m
+∈-++ʳ (x ∷ xs) ys m = tl∈ (∈-++ʳ xs ys m)
+
+lastO' : List Nat → Nat
+lastO' = lastL
+
+pairs-snoc : ∀ o os y → pairs ((o ∷ os) ++ (y ∷ [])) ≡ pairs (o ∷ os) ++ ((lastL (o ∷ os) , y) ∷ [])
+pairs-snoc o []        y = refl
+pairs-snoc o (o' ∷ os) y = cong ((o , o') ∷_) (pairs-snoc o' os y)
+
+lastL-snoc : ∀ os y → lastL (os ++ (y ∷ [])) ≡ y
+lastL-snoc []            y = refl
+lastL-snoc (o ∷ [])      y = refl
+lastL-snoc (o ∷ o' ∷ os) y = lastL-snoc (o' ∷ os) y
+
+rng-lt : ∀ n → AllL (λ v → T (v <ℕ n)) (rng n)
+rng-lt zero    = []ᴬ
+rng-lt (suc n) = AllL-++ (rng n) (n ∷ []) (AllL-map (rng n) (λ v lt → <-suc v n lt) (rng-lt n)) (n<suc n ∷ᴬ []ᴬ)
+
+filter-AllL : ∀ {P : Nat → Set} (q : Nat → Bool) xs → AllL P xs → AllL P (filter q xs)
+filter-AllL q []       []ᴬ       = []ᴬ
+filter-AllL q (x ∷ xs) (p ∷ᴬ rs) with q x
+... | true  = p ∷ᴬ filter-AllL q xs rs
+... | false = filter-AllL q xs rs
+
+pairs-AllL : ∀ {P : Nat → Set} os → AllL P os → AllL (λ e → P (snd e)) (pairs os)
+pairs-AllL []            _                    = []ᴬ
+pairs-AllL (o ∷ [])      _                    = []ᴬ
+pairs-AllL (o ∷ o' ∷ os) (p ∷ᴬ (p' ∷ᴬ rs)) = p' ∷ᴬ pairs-AllL (o' ∷ os) (p' ∷ᴬ rs)
+
+objL-lt : ∀ Γ → AllL (λ e → T (snd e <ℕ len Γ)) (pairs (objL Γ))
+objL-lt Γ = pairs-AllL (objL Γ) (filter-AllL _ (rng (len Γ)) (rng-lt (len Γ)))
+
+AllL-zip : ∀ {A : Set} {P Q R : A → Set} xs → AllL P xs → AllL Q xs → (∀ x → P x → Q x → R x) → AllL R xs
+AllL-zip []       []ᴬ       []ᴬ       f = []ᴬ
+AllL-zip (x ∷ xs) (p ∷ᴬ rs) (q ∷ᴬ qs) f = f x p q ∷ᴬ AllL-zip xs rs qs f
+
+∈-pairs-snoc : ∀ {e} o os y → e ∈ pairs (o ∷ os) → e ∈ pairs ((o ∷ os) ++ (y ∷ []))
+∈-pairs-snoc o os y m rewrite pairs-snoc o os y = ∈-++ˡ (pairs (o ∷ os)) _ m
+
+-- The object a pasting cursor ends at.
+objEndArr : Ty → Maybe Nat
+objEndArr (arr ⋆ s (var b))          = just b
+objEndArr (arr (arr B s' t') s t)    = objEndArr (arr B s' t')
+objEndArr _                          = nothing
+
+objEnd : Nat → Ty → Maybe Nat
+objEnd x ⋆           = just x
+objEnd x (arr A s t) = objEndArr (arr A s t)
+
+TgtChain : Ctx → Ty → Set
+TgtChain Γ ⋆                 = ⊤
+TgtChain Γ (arr B s (var c)) = NotSrc Γ c × (lookup Γ c ≡ just B) × TgtChain Γ B
+TgtChain Γ (arr B s _)       = ⊥
+
+NonEmpty : List Nat → Set
+NonEmpty []      = ⊥
+NonEmpty (_ ∷ _) = ⊤
+
+record Inv (Γ : Ctx) (x : Nat) (A : Ty) : Set where
+  field
+    cores  : AllL (λ p → Core Γ p (Tb Γ p)) (pairs (objL Γ))
+    nsx    : NotSrc Γ x
+    tch    : TgtChain Γ A
+    lastOK : objEnd x A ≡ just (lastL (objL Γ))
+    ne     : NonEmpty (objL Γ)
+    homsOK : ∀ v {e} → endsL (lookup Γ v) ≡ just e → e ∈ pairs (objL Γ)
+
+private
+  cases3 : ∀ (P : Nat → Set) n w → T (w <ℕ suc (suc n)) →
+           (∀ w → T (w <ℕ n) → P w) → P n → P (suc n) → P w
+  cases3 P n w lt old pn psn with w ==ℕ suc n in e1
+  ... | true rewrite ==→≡ w (suc n) e1 = psn
+  ... | false with w ==ℕ n in e2
+  ...   | true rewrite ==→≡ w n e2 = pn
+  ...   | false = old w (lt-pred w n (lt-pred w (suc n) lt e1) e2)
+
+  ⊥-true : true ≡ false → ⊥
+  ⊥-true ()
+
+module PseCommon (Γ : Ctx) (x : Nat) (A : Ty) (inv : PsInv Γ) (lx : lookup Γ x ≡ just A) where
+  open Pse Γ x A inv lx
+
+  notsrc-new : ∀ v → (∀ w → T (w <ℕ len Γ) → hitB Γ true v w ≡ false) →
+               hitM true v (facesTy (just A)) ≡ false → hitM true v (facesTy (just F)) ≡ false → NotSrc Γ' v
+  notsrc-new v old hy0 hf0 w lt =
+    cases3 (λ w → hitB Γ' true v w ≡ false) (len Γ) w lt
+      (λ w lt' → trans (cong (λ m → hitM true v (facesTy m)) (lk-old w lt')) (old w lt'))
+      (trans (cong (λ m → hitM true v (facesTy m)) lk-y) hy0)
+      (trans (cong (λ m → hitM true v (facesTy m)) lk-f) hf0)
+
+  objL' : objL Γ' ≡ objL Γ ++ (if isStarM (just A) then y ∷ [] else [])
+  objL' =
+    trans (filter-++ q (rng (len Γ) ++ (y ∷ [])) (f ∷ []))
+   (trans (cong₂ _++_ (filter-++ q (rng (len Γ)) (y ∷ [])) (cong (λ m → if isStarM m then f ∷ [] else []) lk-f))
+   (trans (++-[]L _)
+          (cong₂ _++_ (filter-rng-ext (len Γ) q _ (λ v lt → cong isStarM (lk-old v lt)))
+                      (cong (λ m → if isStarM m then y ∷ [] else []) lk-y))))
+    where
+    q : Nat → Bool
+    q v = isStarM (lookup Γ' v)
+
+  homs-new : ∀ v {e} → endsL (lookup Γ' v) ≡ just e →
+             (∀ v {e} → endsL (lookup Γ v) ≡ just e → e ∈ pairs (objL Γ')) →
+             (∀ {e} → endsL (just A) ≡ just e → e ∈ pairs (objL Γ')) →
+             (∀ {e} → endsL (just F) ≡ just e → e ∈ pairs (objL Γ')) →
+             e ∈ pairs (objL Γ')
+  homs-new v {e} ev old hyA hfF with lookup Γ' v in lv
+  ... | just C =
+    cases3 (λ v → lookup Γ' v ≡ just C → e ∈ pairs (objL Γ')) (len Γ) v (lookup-lt Γ' v lv)
+      (λ w lt' lw → old w (trans (cong endsL (trans (sym (lk-old w lt')) lw)) ev))
+      (λ lw → hyA (trans (cong endsL (trans (sym lk-y) lw)) ev))
+      (λ lw → hfF (trans (cong endsL (trans (sym lk-f) lw)) ev))
+      lv
+
+module InvStar (Γ : Ctx) (x : Nat) (inv : PsInv Γ) (lx : lookup Γ x ≡ just ⋆) (I : Inv Γ x ⋆) where
+  open PseStar Γ x inv lx
+  open PseCommon Γ x ⋆ inv lx
+  open Inv I
+
+  os = objL Γ
+
+  objL'' : objL Γ' ≡ os ++ (y ∷ [])
+  objL'' = objL'
+
+  x-last : x ≡ lastL os
+  x-last = just-inj lastOK
+
+  inv' : Inv Γ' f F
+  inv' = record
+    { cores  = subst (λ l → AllL (λ p → Core Γ' p (Tb Γ' p)) (pairs l)) (sym objL'') cores'
+    ; nsx    = notsrc-new f (λ w lt → hit-big Γ inv true f w f-big) refl refl
+    ; tch    = notsrc-new y (λ w lt → hit-big Γ inv true y w y-big) refl refl , lk-y , tt
+    ; lastOK = cong just (sym (trans (cong lastL objL'') (lastL-snoc os y)))
+    ; ne     = subst NonEmpty (sym objL'') (ne-snoc os)
+    ; homsOK = λ v ev → homs-new v ev
+                 (λ w ew → subst (λ l → _ ∈ pairs l) (sym objL'') (old∈ w ew))
+                 (λ ())
+                 (λ { refl → subst (λ l → (x , y) ∈ pairs l) (sym objL'') new∈ })
+    }
+    where
+    ne-snoc : ∀ l → NonEmpty (l ++ (y ∷ []))
+    ne-snoc []      = tt
+    ne-snoc (_ ∷ _) = tt
+    snocP : ∀ l → NonEmpty l → pairs (l ++ (y ∷ [])) ≡ pairs l ++ ((lastL l , y) ∷ [])
+    snocP (o ∷ l) _ = pairs-snoc o l y
+    cores' : AllL (λ p → Core Γ' p (Tb Γ' p)) (pairs (os ++ (y ∷ [])))
+    cores' = subst (AllL (λ p → Core Γ' p (Tb Γ' p))) (sym (snocP os ne))
+               (AllL-++ (pairs os) _
+                  (AllL-zip (pairs os) cores (objL-lt Γ) (λ { (o , o') c lt → core-old o o' lt c }))
+                  (subst (λ z → Core Γ' (z , y) (Tb Γ' (z , y))) x-last core-new ∷ᴬ []ᴬ))
+    old∈ : ∀ w {e} → endsL (lookup Γ w) ≡ just e → e ∈ pairs (os ++ (y ∷ []))
+    old∈ w ew = subst (λ l → _ ∈ l) (sym (snocP os ne)) (∈-++ˡ (pairs os) _ (homsOK w ew))
+    new∈ : (x , y) ∈ pairs (os ++ (y ∷ []))
+    new∈ = subst (λ l → (x , y) ∈ l) (sym (snocP os ne))
+             (∈-++ʳ (pairs os) _ (subst (λ z → (x , y) ∈ ((z , y) ∷ [])) x-last hd∈))
+
+module InvArr (Γ : Ctx) (x : Nat) (B : Ty) (a c : Nat) (inv : PsInv Γ)
+              (lx : lookup Γ x ≡ just (arr B (var a) (var c))) (I : Inv Γ x (arr B (var a) (var c))) where
+  open Inv I
+  open PseArr Γ x B a c inv lx nsx
+  open PseCommon Γ x (arr B (var a) (var c)) inv lx
+
+  objL-same : objL Γ' ≡ objL Γ
+  objL-same = trans objL' (++-[]L (objL Γ))
+
+  m+suc≢m : ∀ m n → m + suc n ≡ m → ⊥
+  m+suc≢m zero    n ()
+  m+suc≢m (suc m) n e = m+suc≢m m n (suc-inj e)
+    where
+    suc-inj : ∀ {p q} → suc p ≡ suc q → p ≡ q
+    suc-inj refl = refl
+
+  A = arr B (var a) (var c)
+
+  -- A cell of a lower dimension than x is not x.
+  not-x : ∀ c' C n → dim C + suc n ≡ dim A → lookup Γ c' ≡ just C → (x ==ℕ c') ≡ false
+  not-x c' C n e lc with x ==ℕ c' in ex
+  ... | false = refl
+  ... | true rewrite sym (==ℕ-sound x c' (subst T (sym ex) tt)) =
+    ⊥-elim (m+suc≢m (dim A) n (subst (λ D → dim D + suc n ≡ dim A) (just-inj (trans (sym lc) lx)) e))
+
+  tchExt : ∀ A' n → dim A' + n ≡ dim A → TgtChain Γ A' → TgtChain Γ' A'
+  tchExt ⋆ n e _ = tt
+  tchExt (arr B' s' (var c')) n e (nsc , lc' , rest) =
+    notsrc-new c' (λ w lt → nsc w lt)
+      (trans (cong (λ m → hitM true c' (facesTy m)) (sym lx)) (nsc x x<len))
+      (not-x c' B' n (trans (+-suc (dim B') n) e) lc') ,
+    trans (lk-old c' (lookup-lt Γ c' lc')) lc' ,
+    tchExt B' (suc n) (trans (+-suc (dim B') n) e) rest
+  tchExt (arr B' s' (coh _ _ _)) n e ()
+  tchExt (arr B' s' (cst _)) n e ()
+
+  inv' : Inv Γ' f F
+  inv' = record
+    { cores  = subst (λ l → AllL (λ p → Core Γ' p (Tb Γ' p)) (pairs l)) (sym objL-same)
+                 (AllL-map (pairs (objL Γ)) (λ { (o , o') cr → core-step' o o' cr }) cores)
+    ; nsx    = notsrc-new f (λ w lt → hit-big Γ inv true f w f-big) (hy-f true) (lt-ge-neq x f (len Γ) x<len f-big)
+    ; tch    = notsrc-new y (λ w lt → hit-big Γ inv true y w y-big) (hy-y true) (lt-ge-neq x y (len Γ) x<len y-big) ,
+               lk-y , tchExt A 0 (+-zero (dim A)) tch
+    ; lastOK = trans lastOK (cong (λ l → just (lastL l)) (sym objL-same))
+    ; ne     = subst NonEmpty (sym objL-same) ne
+    ; homsOK = λ v ev → homs-new v ev
+                 (λ w ew → subst (λ l → _ ∈ pairs l) (sym objL-same) (homsOK w ew))
+                 (λ ey → subst (λ l → _ ∈ pairs l) (sym objL-same) (homsOK x (trans (cong endsL lx) ey)))
+                 (λ ef → subst (λ l → _ ∈ pairs l) (sym objL-same) (homsOK x (trans (cong endsL lx) ef)))
+    }
+
+------------------------------------------------------------------------
+-- The induction.
+
+inv-ps : ∀ {Γ x A} → Γ ⊢ps x ∶ A → Inv Γ x A
+inv-ps pss = record
+  { cores = []ᴬ ; nsx = ns ; tch = tt ; lastOK = refl ; ne = tt ; homsOK = hm }
+  where
+  ns : NotSrc (ε ▸ ⋆) 0
+  ns zero    _  = refl
+  ns (suc w) ()
+  hm : ∀ v {e} → endsL (lookup (ε ▸ ⋆) v) ≡ just e → e ∈ pairs (objL (ε ▸ ⋆))
+  hm zero    ()
+  hm (suc v) ()
+inv-ps (psd {Γ} {f} {A} {x} {y} d) = record
+  { cores = cores ; nsx = fst tch ; tch = snd (snd tch) ; lastOK = trans (end A) lastOK ; ne = ne ; homsOK = homsOK }
+  where
+  open Inv (inv-ps d)
+  end : ∀ A → objEnd y A ≡ objEnd f (arr A (var x) (var y))
+  end ⋆           = refl
+  end (arr _ _ _) = refl
+inv-ps (pse {Γ} {x} {⋆} d) = InvStar.inv' Γ x (fst (ps-inv d)) (snd (ps-inv d)) (inv-ps d)
+inv-ps (pse {Γ} {x} {arr B s t} d) with fst (ps-inv d) x _ (snd (ps-inv d))
+... | (a , c , refl , refl , _ , _) = InvArr.inv' Γ x B a c (fst (ps-inv d)) (snd (ps-inv d)) (inv-ps d)
+
+-- Every hom of a pasting context has a cell as its table (Core part).
+hom-cores : ∀ {Γ} → Γ ⊢ps → AllL (λ p → Core Γ p (Tb Γ p)) (pairs (objL Γ))
+hom-cores (ps d) = Inv.cores (inv-ps d)
+
+-- Every hom cell lies between consecutive objects.
+hom-ends : ∀ {Γ} → Γ ⊢ps → ∀ v {e} → endsL (lookup Γ v) ≡ just e → e ∈ pairs (objL Γ)
+hom-ends (ps d) = Inv.homsOK (inv-ps d)

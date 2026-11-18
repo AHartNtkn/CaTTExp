@@ -102,6 +102,7 @@ import CaTTExp.Strict.TrFlat
 import CaTTExp.Strict.Support
 import CaTTExp.Strict.Key
 import CaTTExp.Strict.OmegaSound
+import CaTTExp.Strict.LaxColimPoint
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst

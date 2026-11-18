@@ -1,0 +1,3 @@
+name: cattexp
+include: src
+flags: --safe

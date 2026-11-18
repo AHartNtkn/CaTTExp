@@ -153,7 +153,7 @@ Riehl–Shulman and GWB ([2407.09146](https://arxiv.org/abs/2407.09146), [2602.0
 
 ---
 
-## 3. Pseudo or lax ambient: what each option is, and what it costs
+## 3. Pseudo or lax ambient
 
 ### 3.1 The fact that forces a choice
 
@@ -176,7 +176,7 @@ The semantics agrees **[recall]**:
 - 2-categories with lax transformations do not form a tricategory. They form a "lax Gray-category", where interchange across a functor composition is a one-way cell (Gray 1974).
 - Loubaton's ω-category of ω-categories has cartesian hom-objects. Lax transformations there are maps out of the Gray cylinder `A ⊗ [1]`, not 2-cells.
 
-So there are two coherent designs. The rest of this section describes each, then compares them.
+So there are two coherent designs: a pseudo ambient (P) and a lax ambient (L).
 
 ### 3.2 The comparison lives in `pseudo-vs-gray.md`
 

@@ -1,5 +1,3 @@
-**Status: unsent** (written 2026-11-18; third round, follows `answered/directed-interchange-every-level-round2-2026-11-18.md`).
-
 # Free higher categories with directed interchange in every dimension (third round)
 
 *A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1 and 2, with their answers, are in `answered/`. Questions are in §4, smallest first.*

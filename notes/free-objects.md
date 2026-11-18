@@ -138,7 +138,7 @@ Let `A = (x : ⋆, y : ⋆, f : x → y)` and `P = (x, y, z : ⋆, f : x → y, 
 
 ### 2.5 What A1 needs from elsewhere
 
-- Diagrams `Γ ⇒ C` and their higher cells `Diag(Γ, C)` **for every finite context Γ**. That needs the Gray shapes `Γ ⊗ Dᵏ` for arbitrary Γ. Mikhail constructs these generally only conditionally: cones over arbitrary contexts rest on his Conjecture 3.6, and existence of Gray shapes is proved only for n = 1 (survey §9a).
+- Diagrams `Γ ⇒ C` and their higher cells `Diag(Γ, C)` **for every finite context Γ**. That needs the Gray shapes `Γ ⊗ Dᵏ` for arbitrary Γ. Mikhail constructs these generally only conditionally: cones over arbitrary contexts rest on his Conjecture 3.6, and existence of Gray shapes is proved only for n = 1 (survey §9a). §7.1 reduces the general case to one conjecture and records progress on it.
 - Transfor action on arbitrary diagrams (D4).
 
 ### 2.6 Semantics
@@ -255,8 +255,9 @@ So **A2 = A1 + pushouts along boundary inclusions**, and nothing more. If the co
 | Indexed by | CaTT syntax, like `coh` | a sphere in an arbitrary object |
 | Side condition | Γ closed and well formed | a, b parallel |
 | Universal property compares Hom with | `Diag(Γ, C)`, for any finite Γ | `Hom(C, D) ×_{Diag(∂Dⁿ, D)} Diag(Dⁿ, D)` |
-| Gray shapes needed | `Γ ⊗ Dᵏ` for every finite Γ | `Dⁿ ⊗ Dᵏ` only |
-| Status of those shapes | general case open (Mikhail's Conjecture 3.6; existence only for n = 1) | the case existing work covers |
+| Gray shapes used in the rules | `Γ ⊗ Dᵏ` for every finite Γ | `Dⁿ ⊗ Dᵏ` only |
+| Gray shapes used to get ⟦Γ⟧'s universal property | `Γ ⊗ Dᵏ` (in the rule itself) | `Γ ⊗ Dᵏ` (in the decomposition theorem) |
+| Status of `Γ ⊗ Dᵏ` for general Γ | reduces to Conjecture N (§7); being investigated | same conjecture |
 | ⟦Γ⟧ | primitive | defined by recursion on Γ |
 | Universal property of ⟦Γ⟧ | primitive | theorem, needing the decomposition of Diag |
 | Adjoining a cell to a non-free object | needs pushouts | direct |
@@ -270,10 +271,12 @@ So **A2 = A1 + pushouts along boundary inclusions**, and nothing more. If the co
 
 **Fit with the existing rules.** Both are CaTT-shaped: each is a judgment with a syntactic side condition plus one filler schema, and neither adds equations or breaks linearity. A1 is indexed by contexts, which matches how `coh_{Γ,A}` is indexed by pasting schemes. A2 is indexed by one generator at a time, which matches how contexts themselves are formed. Neither is obviously closer to the aesthetic. The difference is whether the object language sees whole contexts or context extension.
 
-**Dependence on open machinery.** This is the sharpest difference.
+**Dependence on the Gray shapes.** Both options need the Gray shapes `Γ ⊗ Dᵏ` for arbitrary Γ, in different places.
 
-- A1's universal property quantifies over lax transformations between Γ-diagrams for *every* finite Γ. So it presupposes the Gray shapes `Γ ⊗ Dᵏ` in general, which is exactly the part of Mikhail's work that is still conjectural.
-- A2's universal property only mentions cylinders on globes. The general case is pushed into a *theorem* (the decomposition of `Diag`), which can be proved or left open without blocking the rules.
+- A1's universal property quantifies over lax transformations between Γ-diagrams for every finite Γ, so the shapes appear in the rule itself.
+- A2's rules only mention cylinders on globes. But deriving the universal property of ⟦Γ⟧ from them needs the decomposition of `Diag((Γ, x), C)`, whose higher cells are again shaped like `Γ ⊗ Dᵏ`.
+
+So this is not a difference in what the two options ultimately rest on. It is a difference in whether the shapes enter as part of a rule or as part of a theorem. §7 reduces the existence of these shapes to a single conjecture, now under investigation.
 
 **Expressivity.** On its own, A2 is strictly stronger, because it adjoins cells to arbitrary objects. Constructing "an object that behaves like" a structure constantly adjoins to objects that are not free: a cell to an internal hom, a cell to a limit, a relation to a presented object. Without pushouts, A1 can only build free objects from nothing.
 
@@ -281,14 +284,14 @@ So **A2 = A1 + pushouts along boundary inclusions**, and nothing more. If the co
 
 **When the difference disappears.** If general pseudo pushouts are added for other reasons, A1 + pushouts and A2 + pushouts are the same theory. A1 then has the smaller statement for the common case.
 
-### 4.4 Assessment
+### 4.4 Status
 
-The comparison turns on two facts about the rest of the design. Neither is a matter of taste.
+Both options remain open. What separates them is structural, not evidential:
 
-1. **Will general pushouts be in the theory?** If yes, A1 is the smaller addition and ATTACH is redundant. If no, A1 cannot adjoin to non-free objects, and A2 is needed for "construct an object that behaves like a structure".
-2. **Will `Diag(Γ, C)` for arbitrary Γ be available?** Today it is not established in the literature. A2's rules avoid it; A1's rules depend on it.
+1. **General pushouts.** If the theory has general pseudo pushouts, A1 is the smaller addition and ATTACH is redundant. If it does not, A1 cannot adjoin a cell to a non-free object, while A2 can.
+2. **Where the Gray shapes enter.** A1 uses `Γ ⊗ Dᵏ` inside a rule; A2 uses it inside a theorem. Both need it to give ⟦Γ⟧ its universal property.
 
-Given what is established today, A2 rests only on proven pieces (cylinders on globes), and A1 rests on a conjecture. A reasonable plan is to **formalise A2's rules and prove A1's universal property from them**. Then ⟦Γ⟧ is available to users with A1's interface either way, and the A1 rules can replace A2 later if general pushouts land.
+The next step is not to choose but to settle the shared dependency: the existence of `Γ ⊗ Dᵏ` for arbitrary Γ. §7 records what has been proved and the precise conjecture that remains.
 
 ### 4.5 Relation to `limits-representables.md` §5 (PR #2)
 
@@ -300,9 +303,9 @@ The limits and representables note compares two kernel options for the same goal
 
 How A2 sits next to R-A and R-B:
 
-1. **Dependence on general Gray shapes.** R-A has it for the reason given in §4.3. R-B has it too, because a lax cocone over an arbitrary context Γ is built from the same cone and Gray machinery, including Mikhail's Conjecture 3.6. A2 is the only one of the three whose rules mention only globe-shaped cylinders.
+1. **Dependence on general Gray shapes.** All three need them. R-A needs them in its rule (§4.3). R-B needs them because a lax cocone over an arbitrary context Γ is built from Mikhail's cone machinery, including his Conjecture 3.6. A2 needs them in the decomposition theorem. §7 shows that Conjecture 3.6 and the Gray shapes reduce to the same conjecture.
 2. **Lax or pseudo.** R-B uses *lax* colimits, which Mikhail's framework already provides. ATTACH is a *pseudo* pushout: the cell relating `G ∘ ι` to F must be invertible. A lax pushout of the span `C ← ⟦∂Dⁿ⟧ → ⟦Dⁿ⟧` would instead add non-invertible cells between the two copies of the boundary. So under R-B, adjoining a cell to a non-free object needs either pseudo colimits or lax colimits with marked (invertible) legs. Which of these is available depends on the pseudo-versus-lax choice for the ambient (`notes/pseudo-vs-gray.md`).
-3. **Staging.** That note proposes R-A first, then R-B once colimits exist. A2 fits the same staging: its rules can come first too, and they give R-A's interface as a theorem (§3.3). If R-B's conjecture is proved and pseudo colimits are available, both A1 and A2 become derived.
+3. **Staging.** If R-B's conjecture is proved and pseudo colimits are available, both A1 and A2 become derived rules.
 
 ---
 
@@ -320,15 +323,37 @@ How A2 sits next to R-A and R-B:
 
 ## 6. Notes for the other threads
 
-- **Agda formalisation.** The postulated sketch should postulate INIT and ATTACH, with ι, x and the dimension-0 and dimension-1 parts of LIFT, rather than ⟦Γ⟧ directly. ⟦Γ⟧ is then defined by recursion on contexts, and A1's LIFT₀ for ⟦Γ⟧ becomes the first thing to prove. The conservativity statement of §5 can then be stated.
-- **Limits and representables.** Both options need the diagram judgment of §1.2. Primitive elements make strict boundaries automatic. The Yoneda reading needs homotopy fibers. ATTACH is a pseudo pushout along a boundary inclusion: if general pseudo colimits are adopted there, ATTACH should become an instance of them, and A1 becomes the better primitive (§4.4).
+- **Agda formalisation.** Both options can be postulated side by side: ⟦Γ⟧ with A1's LIFT, and INIT/ATTACH with A2's LIFT. Deriving A1's LIFT₀ from A2's rules (§3.3) is then a concrete statement to prove, and the conservativity statement of §5 can be stated for either. The cylinder contexts `Q↑Y` of §7.1 are syntactic and could be formalised directly, which would let the depth-2 cases be machine-checked.
+- **Limits and representables.** Both options need the diagram judgment of §1.2. Primitive elements make strict boundaries automatic. The Yoneda reading needs homotopy fibers. ATTACH is a pseudo pushout along a boundary inclusion: if general pseudo colimits are adopted there, ATTACH becomes an instance of them (§4.4).
 - **Internal hom and Gray tensor.** Neither option needs `[C, D]`. If internal homs exist, attaching to them gives free transformations and free modifications.
 
 ---
 
 ## 7. Open technical problems
 
-1. **Decomposition of diagrams.** Prove `Diag((Γ, x : A), C) ≃ Diag(Γ, C) ×_{Diag(∂D, C)} Diag(D, C)` at every dimension. This is the one step between A2's rules and A1's universal property.
+### 7.1 The shared dependency: Gray shapes for arbitrary contexts
+
+The Gray shapes `Γ ⊗ Dᵏ` that A1, A2 (via its decomposition theorem) and R-B all need reduce to one conjecture, written up for external analysis in [`conjectures/naturality-arbitrary-depth.md`](conjectures/naturality-arbitrary-depth.md).
+
+**The conjecture (N).** For every pasting context Q, every full type B over Q, and every up-closed set Y of variables of Q, the coherence `coh_{Q,B}` has a naturality cell in the cylinder context `Q↑Y`. This extends BMOSV's naturality construction (arXiv 2501.11620), which is proved only when Y has depth at most 1. "Depth" means how many dimensions below the coherence the duplicated variables sit.
+
+**What has been established** (proof sketches in the conjecture file):
+
+1. **Reduction to pasting contexts.** Given N, cylinder contexts `Γ↑X` and naturality terms exist for *every* CaTT context Γ, by recursion through substitutions. The general type of a cylinder cell is the nested-whiskering formula of the conjecture file, §2.2, which agrees with BMOSV at depth ≤ 1 and with Mikhail's cone formula after collapsing one end.
+2. **Gray shapes for all k.** Applying N to `Γ↑X` with the up-closed set of cylinder variables gives `Γ ⊗ D²`, and iterating gives `Γ ⊗ Dᵏ`. *To check:* that these coincide with the contexts generated by Mikhail's `gray` judgment.
+3. **Mikhail's Conjecture 3.6 (cones).** A cone over Γ is the cylinder `Γ↑Var(Γ)` with its source end collapsed to the apex. The cone terms `p_t` are obtained from the naturality terms by substituting `x⁻ ↦` identities on the apex and correcting with unitor coherences. *To check:* Mikhail's free-variable condition on `p_t`.
+4. **First case beyond the literature.** The left unitor over a single arrow, with all variables duplicated (depth 2), is proved by a "sliding" argument. It uses only coherences over pasting contexts and BMOSV's depth-0 case.
+
+**Related problem statements.** Two other files in `conjectures/` overlap with this one.
+
+- **`gray-contexts-in-catt.md` (G(n)).** It asks whether coherences over frame-acyclic molecules are conservative over CaTT. Conjecture N with all variables duplicated is a special case of that, for the molecules `P ⊗ D¹` (conjecture file §8). The left-unitor proof uses the same layering idea as G's §3.2.
+- **`gray-contexts-steiner.md` (1).** It asks for Mikhail's Gray contexts in all dimensions. Items 1 and 2 above give an explicit candidate, conditional on N.
+
+**What remains.** The general depth-≥2 case. A proposed induction on the dimension of Q is described in the conjecture file, together with the precise missing ingredient: a relative form of the conjecture strong enough to be the induction hypothesis. The next concrete checks are the associator over three arrows with all variables, then the first 2-dimensional Q.
+
+### 7.2 Other open problems
+
+1. **Decomposition of diagrams.** Prove `Diag((Γ, x : A), C) ≃ Diag(Γ, C) ×_{Diag(∂D, C)} Diag(D, C)` at every dimension. This is the one step between A2's rules and A1's universal property. Its higher cells are shaped like `Γ ⊗ Dᵏ`, so it depends on §7.1.
 2. **Lifts of invertible cells are invertible.** The LIFT schema should imply that the lift of an invertible cell is invertible, so that maps out of ⟦Γ⟧ agreeing on generators are related by an invertible cell. This is expected from the coinductive definition of equivalence, but it needs a proof in the rule system.
 3. **Conservativity.** Prove that the cells of ⟦Γ⟧ between CaTT terms are exactly CaTT terms.
 4. **Weak model of ATTACH.** Identify the model structure on weak ω-categories in which boundary inclusions are cofibrations, so that the homotopy pushout of §3.6 is justified.

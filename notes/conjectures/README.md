@@ -1,0 +1,22 @@
+# Conjectures and open problems
+
+This folder holds problem statements written to be **self-contained**: a reader who knows higher category theory but nothing about this project should be able to work on any file here alone.
+
+**Project standard (adopted 2026-11-18).** "Unproved" is a reason to investigate, never a reason to reject a design. When a design note rests on an unproved claim:
+1. The note attempts a proof and records how far the attempt got.
+2. Where the attempt stalls, the remaining gap is written up here as a well-posed problem.
+
+Each file has the same parts:
+- **Background:** the definitions needed, with references.
+- **Statement:** precise, with any choices of convention made explicit.
+- **What is known:** related results and partial arguments.
+- **Why it matters:** one paragraph, with no project jargon.
+- **What would count as a solution:** a proof, a counterexample, or a reference.
+
+| File | Problem | Origin |
+|---|---|---|
+| `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | `limits-representables.md` §10.1 |
+| `gray-contexts-steiner.md` | Do Mikhail's Gray contexts `Γ ⊗ Dⁿ` exist for all n and present the Steiner Gray tensor? | `limits-representables.md` §10.3 |
+| `lax-colimit-of-point.md` | Is the lax colimit of the constant point diagram over a free (∞,ω)-category the category itself? | `limits-representables.md` §10.3 |
+| `weighted-as-partially-lax-omega.md` | Are weighted (co)limits in (∞,ω)-categories partially lax (co)limits over the Grothendieck construction of the weight? | `limits-representables.md` §10.4 |
+| `free-on-graph.md` | Is the free weak ω-category on a graph equivalent to the free category? | `limits-representables.md` §10.5 |

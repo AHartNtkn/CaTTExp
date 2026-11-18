@@ -950,3 +950,22 @@ for the direct CaTT proof, or
 \]
 
 when reusing the checked \(\nu\)-proof.
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct, and it answers all three questions.** Q1: yes, step 4 can be dropped. Q2: the interval-tuple category N(T) is the economical description, and the response gives it in full. Q3: interchange is used for every pair m < n, always in rectangular 2×2 form. No follow-up prompt is needed. What remains is formalisation work on the A3a general case.
+
+Checked step by step:
+
+1. **§1, globularity convention.** Correct, and it catches a typo in our prompt. Our prompt put the split at m ≤ n versus m > n. With m = n in the first clause, s_n t_n x = s_n x, so the unit law x #_n t_n x = x needs t_n x = s_n(t_n x) = s_n x for every x, which collapses each cell to an identity. The standard split (m < n versus m ≥ n, Steiner Def. 2.1) is the one to formalise. The dimension bound C_n = {x : s_n x = x} in the type interpretation is also needed, for the reason given: without it the identity coherence on x : ⋆ is not interpretable when ρ(x) is not a 0-cell.
+2. **Lemma 1 (ps-derivation to tree).** Standard; the invariant (current branch as a stack of open positions) is the one used in our existing `PsFacts` development.
+3. **Lemma 2 (N(T)).** N(T) is the free strict ω-category on the pasting diagram T: an n-cell is an interval (a, b) of root-children together with tuples in the hom-categories N(T_i), and the hom between consecutive vertices is the product of the N(T_i). Boundaries, concatenation (#_0) and coordinatewise composition (#_{k+1}) satisfy the axioms by induction on T; no axioms of the target C are used.
+4. **Lemma 3 (evaluation fold E_{T,ρ}).** The fold composes the interval's coordinates by #_0 after interpreting each coordinate recursively in the hom. Preservation of #_0 is associativity; preservation of #_{k+1} is the rectangular interchange (2) applied ℓ − 1 times for an interval of length ℓ. Units and boundaries handle degenerate intervals. Correct.
+5. **Lemma 4 (support injectivity).** Correct: the vertex part of the support determines a and b, and the tagged subtree parts determine each coordinate by induction.
+6. **Lemma 5 (full composite c_T and boundary supports B_n^±).** Immediate by tree induction, as stated.
+7. **Lemma 6 (support under evaluation).** Equation (14) follows from strictness of E and the generating-cell expression; checked.
+8. **Lemmas 7–9 (CaTT induction).** Formula (23), V_P(q[σ]) = FV(σ), holds by induction on terms. In the full-support case both endpoints have full support at their dimension, so by injectivity both equal the relevant boundary of c_T. In the composition case S(⟦s⟧) = B_d^- = S(s_d c_T), so again injectivity gives ⟦s⟧ = s_d c_T, and likewise for u. Interpreting coh Θ A σ as E_{T,⟦σ⟧}(c_T) (or its identity at the required dimension) then has the right boundaries by strictness of E. The recursion is well founded because the support invariant is only invoked at generic environments of strictly smaller pasting contexts. Correct.
+9. **§5 (ν-route).** The path-flow equation (26) is right: a nonnegative 0-chain with augmentation 1 is a single basis vertex, and the positive-cycle lemma (25) kills the rows outside the interval. This gives a second route that reuses `CaTTExp.Strict.Sound` without the support/sub-diagram dictionary.
+10. **§6 (interchange).** Correct that the proof uses interchange for all m < n, not only adjacent indices, since the fold at tree depth k turns a #_{k+1} in a hom into #_{m+k} in C.
+
+**Caveat carried from the response.** The "top chain equals variables of dimension dim B" statement in our prompt is the ν-specific form; in a general C the invariant is the support statement S_P(⟦t⟧_η) = FV(t) ∪ FV(A), which is what the direct route uses.

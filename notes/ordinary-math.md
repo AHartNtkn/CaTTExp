@@ -310,7 +310,7 @@ Standard 3: what each route can and cannot do, without asking which is preferred
 | New rules | ℕ, rec (+ levels), trunc | rec (+ levels) | G, DJ (general) |
 | N's truncation | a rule | derived (T-graph, T-hom) | derived |
 | Numerals computed by the §3 tactic | no (ℕ is not a presentation) | yes | yes |
-| Other inductive objects | one rule per signature (§4.7) | one rule per signature | lists, words, paths in any graph come from the same two principles; trees do not (§4.7) |
+| Other inductive objects | one rule per signature (§4.7) | one rule per signature | lists, words, paths in any graph come from the same two principles; with R-A⁺ and G⁺, lists over any object and every finitary signature (trees included) too (§4.8) |
 | Algebra in the meta-theory | an "algebra" (a, f) appears in the rule, though only as a linear context | same | none |
 | Semantic justification | ℕ_disc is the NNO of ωCat [recall] | same, plus `free-on-graph.md` | Grothendieck construction (Loubaton Thm 4.1.4.2; AHM Thm F) [abstract-level, F5a] and fibrational Yoneda (Riehl–Verity, *Fibrations and Yoneda's lemma in an ∞-cosmos*, Thm 6.0.1) [paper, G4] |
 | Cost to implement | smallest | small | largest: needs cocartesian fibrations as structure, and cotensors by ⟦D¹⟧ |
@@ -365,8 +365,42 @@ So route III gives exactly the content of the recursion rule of routes I and II,
 ### 4.7 Other inductive objects
 
 - **Routes I/II, generalised.** Finitary polynomial signatures `P(X) = Σ_i B_i × X^{n_i}` (a list of arities n_i and parameter objects B_i): an initial-algebra rule per signature, with the same cells, Proposition 4.2 and Theorem 4.3 (the AGS argument is uniform in the signature). Covers Bool (two nullary constructors), Fin k, lists over B, binary trees.
-- **Route III** covers what is a hom object of a free object on a graph: ℕ, lists and words over a finite alphabet (one loop per letter), paths in finite graphs. **It does not cover binary trees**, which are not paths. Trees would need a free object whose homs are trees: hom objects of free *operad-like* or *monoidal* objects, i.e. `Hom_{⟦Γ⟧}` for Γ a 2-dimensional computad with a binary generator `m : x ⊗ x → x`, which needs a tensor. Recorded as F1b: an in-style source of tree-shaped inductive objects for route III.
-- Lists over an *arbitrary* object B (not a finite alphabet) need parameters in route III: the free monoid on B as the hom of a free object "with a B-indexed family of loops", which is a family-indexed colimit (§6). Plausible but not worked out; part of F1b.
+- **Route III** directly covers what is a hom object of a free object on a graph: ℕ, lists and words over a finite alphabet (one loop per letter), paths in finite graphs. Binary trees are not paths. The first idea was to get them as homs of free *operad-like* objects (a 2-computad with `m : a;a ⇒ a`), which needs a tensor or deloopings to state recursion. §4.8 takes a different route: **lists over an arbitrary object** (F1b, part a), and then **every finitary polynomial inductive object, trees included, as a subobject of lists** (F1b, part b).
+
+### 4.8 Lists over an arbitrary object, and trees from lists (F1b)
+
+**(a) Lists over B.** For any object B, let L_B be the free object on the one-vertex graph whose loops are labelled by B: one object x, and maps `L_B → Z` are pairs `(z : ⊤ → Z, B → Hom_Z(z, z))`. Two ways to have it:
+- **(R-A⁺) [proposal]**, R-A for *object-labelled* finite graphs. Vertices v, edges `e : v → w` with a parameter object `B_e`, and maps out of the free object `⟦G⟧` are points `z_v` with maps `B_e → Hom_Z(z_v, z_w)`. The case where every B_e = ⊤ is R-A for graphs. This is a declared universal object, like the shapes of R-A.
+- **As a finite colimit, given the Gray tensor.** `L_B = ⊤ ⊔_{⊤ ⊔ ⊤} ΣB`, where the suspension `ΣB` is `B ⊗ ⟦D¹⟧` with `B ⊗ {0}` and `B ⊗ {1}` collapsed (Loubaton Prop. 2.3.3.6, as used in `conjectures/gray-vs-cartesian.md`). The *cartesian* `B × ⟦D¹⟧` does not work: collapsing its ends gives the wrong hom already for `B = ⟦D¹⟧`, because the square commutes.
+
+Put `List(B) := Hom_{L_B}(x, x)`. For B = ⊤, L_B = ⟦L⟧ and List(⊤) = N. For a finite set B it is the one-vertex graph with B loops.
+
+**Proposition 4.5 [proved here, from the literature].** `List(B) ≃ ∐_{n ≥ 0} B^n`, with concatenation as composition.
+
+*Proof.* Present (∞,ω)-categories as categories enriched in V := Cat_(∞,ω) (cartesian, so ⊗ = × preserves colimits in each variable). In Gepner–Haugseng's enriched ∞-categories (arXiv:1312.3178), the free V-category on a V-graph is a left adjoint, so it preserves pushouts. L_B is the free V-category on the one-object V-graph with loop object B: this is R-A⁺'s universal property, and also the pushout description, since ΣB is free on the graph with objects {0, 1} and one hom object B from 0 to 1 (their Def. 4.3.3; their worked example: the free V-category on a linear graph 0 → 1 → … has homs `V_i ⊗ … ⊗ V_j`) **[paper]**, and pushing the objects out to a point is a pushout of graphs. The free V-category on the one-object graph is i.e. the free associative algebra on B in V. That is `∐_n B^{⊗n}` (Lurie, HA Prop. 4.1.1.18) **[recall]**. Completion is a left adjoint and a Dwyer–Kan equivalence, so the pushout of complete objects has the same homs. ∎
+
+**Recursion for List(B) in route III** needs G for diagrams indexed by L_B. A diagram over L_B is an object C with an *action* `a : B × C → C`: a functor out of L_B is a functor out of the free category on the loop graph, i.e. an object together with `B → End(C)` (by (E), `B × C → C`). So the proposal extends G:
+
+- **(G⁺) [proposal].** G is stated for finite diagrams over shapes ⟦Γ⟧. G⁺ states it over *object-labelled graphs*: vertices v with objects C_v, and edges e : v → w with a parameter object B_e and a map `γ_e : B_e × C_v → C_w`. Its free object is R-A⁺'s ⟦G⟧ (L_B is the one-vertex, one-edge case; ⟦Γ⟧ for a finite graph Γ is the case where every B_e = ⊤). The lax colimit T, its projection to the free category, the fibres and G-nat are as in G. G-transport becomes: for `(b, c) : ⊤ → B_e × C_v`, the cell `q_v(c) → q_w(γ_e(b, c))` is cocartesian over the arrow b of ΣB_e. Semantics: the same straightening theorems, since a functor out of the free category is exactly this data.
+
+With R-A⁺, G⁺ and DJ, **Theorem 4.4 and Corollary 4.4.1 hold for List(B)** with the same proof **[proved here, relative to R-A⁺, G⁺ and DJ]**. Replace (N, succ) by (List(B), cons), where `cons : B × List(B) → List(B)` is composition with the arrow b, i.e. `n ↦ n ; b`, read as snoc in diagrammatic order. Replace the step-3 cells `n ; s ⇒ (n;s)` by the family `n ; b ⇒ (n;b)`, which is a map `B × List(B) → [⟦D¹⟧, x ↓ L_B]` given by the comma's universal property. Every step that used "the arrow s" now uses "the arrow b, uniformly in `b : ⊤ → B`", and is a map out of `B × List(B)`. So the recursion principle is: for `(A, nil_A, cons_A : B × A → A)`, there is a unique algebra map List(B) → A, with all higher levels.
+
+**(b) Finitary inductive objects from lists.** Fix a finitary polynomial signature: constructors i ∈ {1 … k}, each with a parameter object B_i and an arity n_i ∈ ℕ. Let `A := ∐_i B_i` (a finite coproduct) and, for any object C, let
+
+```
+S_C := List(C) ⊔ ⊤      (a stack, or failure)
+```
+
+`fold_C : List(A) → S_C` is the list recursion with `nil ↦ inl []` and, for a letter `(i, b)`, the step "pop n_i elements c₁ … c_{n_i} (c_{n_i} on top), push `c_i(b, c₁, …, c_{n_i})`, or fail if fewer than n_i are on the stack". Here C carries an algebra structure `c_i : B_i × C^{n_i} → C`. The step is a map `A × S_C → S_C`: coproduct elimination on A, and n_i rounds of the uncons `List(C) → ⊤ ⊔ C × List(C)` (itself a list recursion).
+
+- **The object of trees.** Take C := ⊤ with its unique algebra structure. Then `S_⊤ = List(⊤) ⊔ ⊤ = N ⊔ ⊤` is a set, and `W := List(A) ×_{S_⊤} ⊤`, the pullback of `fold_⊤` along the point `inl [∗]`, is a **subobject** of List(A): it is the pullback of a point of a set, so the inclusion is (−1)-truncated. W is the object of well-formed words, i.e. trees in reverse Polish notation.
+- **Constructors.** Words are in *reverse* Polish notation, since cons is snoc (`n ↦ n ; b`) and the recursion reads a word left to right: `con_i(b, w₁, …, w_{n_i}) := w₁ ++ … ++ w_{n_i} ++ [(i, b)]`. This lands in W because `fold(u ++ w) ≅ run_w(fold(u))`, where `run_w` runs the steps of w from a given stack (a list induction).
+- **Recursion.** For an algebra C, the forgetful map `S_C → S_⊤` commutes with the folds (uniqueness of list-algebra maps), so on W the fold lands in the fibre over `inl [∗]`, which is C. This gives `rec_C : W → C` as the induced map into a pullback. It is an algebra map by the concatenation lemma.
+- **Induction, hence uniqueness, at all levels.** Let `p : P → W` carry an algebra structure lying over that of W. Then `σ := rec_P` is a section: `p_* ∘ fold_P ≅ fold_W` (both are list-algebra maps `List(A) → S_W`, so uniqueness for List(A) connects them), and `fold_W(w) ≅ inl [w]` for w ∈ W. The second holds because a list induction on w shows that `fold_W(w) = inl [t₁, …, t_k]` implies `t₁ ++ … ++ t_k ≅ w`, and the inclusion W → List(A) is a mono. So `p ∘ σ ≅ 1_W`, with the constructor cells. Uniqueness and its higher levels then follow as in Corollary 4.4.1, using the path objects `[⟦J⟧, C]`.
+
+**Theorem 4.6 [proved here, sketch; relative to R-A⁺, G⁺ and DJ].** Every finitary polynomial signature (Bool, Fin k, binary trees, trees with B-labelled nodes, …) has an initial algebra in route III, namely the subobject W of `List(∐_i B_i)` of well-formed reverse-Polish words, with induction and recursion with uniqueness at all levels. No signature-specific rule is added. R-A⁺ and G⁺ are needed only for lists over the *carriers* `C`, which are arbitrary.
+
+This closes the gap recorded in §4.5's table ("trees do not"): with R-A⁺ and G⁺ in place of R-A and G, route III covers every finitary inductive object. What route III still does not give is **infinitary** signatures (W-types with infinite arities, e.g. countably branching trees): the encoding by words needs finite arities. Those would need exponentials (F8).
 
 ---
 
@@ -568,13 +602,13 @@ So dcoh has the same shape as L's rule (`pseudo-vs-gray.md` §3), with the lesso
 All rows are added to `notes/open-issues.md` under F.
 
 - **F2a** Agda: totality of the graph filler (Theorem 3.1). Done in every dimension: 1-cells (`GraphFillerTotal.agda`), parallel n-cells for n ≥ 2 in graph contexts (`GraphFillerTotal/Higher.agda`).
-- **F2b** Filler for globular contexts (Theorem 3.2): implement strict normal forms (labelled trees) and the lift.
+- **F2b** Implemented (2026-11-18): `GlobularFiller.agda`, a certified tactic (§3.3). **F2c**: Agda totality of it.
 - **F3b** Non-derivability of T-graph from R-A (Prop. 2.5), or the Hedberg-style derivation of `N trunc 0` (§2.3, after Prop. 2.5: it reduces to F8 or to a parameter-varying induction). **Closed:** non-derivability is proved for enriched cotensors and under (E) (`conjectures/answered/non-derivability-q2-2026-11-18.md`); T-graph stays a rule.
 - **F1c** Closed: recursion in route II is not derivable (§4.5, countermodel).
 - **F3c** Full proofs of Props. 2.2 and 2.3 against the specified `ctrf` construction once it exists (B5).
 - **F1a** Done (2026-11-18): G and DJ written as rules (§4.6), the uniqueness gap in Theorem 4.4 found and corrected (induction is proved directly from G + DJ; recursion and its uniqueness follow).
-- **F1b** Tree-shaped inductive objects and lists over an arbitrary object in route III.
-- **F4a** Filler tactic for localised graphs (reduced words).
+- **F1b** Proposed and proved relative to R-A⁺ and G⁺ (§4.8): lists over any object, and every finitary signature as well-formed reverse-Polish words. Open: an independent check of Thm 4.6, and infinitary signatures (F8).
+- **F4a** 1-cells done (2026-11-18): `LocalisedFiller.agda` (§5.1). Open: cells between parallel 2-cells and higher.
 - **F4b** Trunc written in full (§5.3). Effectiveness of quotients needs EX; EX is not derivable (§5.3, countermodel), so it is a rule.
 - **F5a** Check §6.1–6.3 against the (∞,ω) sources (Gepner–Heine, Loubaton) at the level of statements, not abstracts.
 - **F5b** Θ-density (from C9) as an instance of §6.1: B as the localised Grothendieck construction of its disk elements, giving extensionality of transformations.

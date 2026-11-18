@@ -887,3 +887,29 @@ The generic term checks verified literal boundaries and full support for:
 Finite rewriting checks also covered every up-closed selection in the three proposed small shapes: 40 selections for the horizontal two-disc, 208 for three horizontal discs, and 88 for a vertical pair followed by a disc. All legal ascending event pairs exchanged, and all tested ascending critical triples admitted the six execution orders with the same result. These are checks of the construction, not a complete CaTT implementation.
 
 The result establishes question 1 and Conjecture N through dimension three. It does not establish RC(4) for the 3-disc cylinder, preservation under adjoining 4-generators from RC(4) alone, or the 5-dimensional comparison between arbitrary choices of \(K\).
+
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at the level of a paper proof. This is a major result.**
+- **RC(3)(Q↑Y) holds for every pasting context Q and every up-closed Y.** So Conjecture N holds for every coherence of dimension ≤ 3.
+- **It gives the same conditional RC(4) extension theorem** as `gray-contexts-r8` §II.
+
+Checked:
+
+1. **Physical column rank and the adjacent inversion lemma.** I checked the key case: two cylinder events adjacent in ascending column order cannot occur. The plus and minus copies of a selected cell force the lower-rank event to be emitted first. So every inversion is witnessed by an adjacent pair.
+2. **Stable column sort.** The measure I(w), the inversion count, strictly decreases at each exchange step.
+   - There are two kinds of critical branching: disjoint swaps, closed by the disjoint square (8), and the three-event braid β_{u,v,w} = [L, R] over D² ∗₀ D² ∗₀ D² (7).
+   - Both are coherences over pasting contexts.
+   - By Newman's lemma, the sorts are confluent up to these 4-cells.
+3. **Nat_ρ (9)** transports whole sorts along the cylinder of a coherence ρ. Ω_{M,N,L} (11) and block refinement compare sorts of nested blocks.
+4. **The evaluator.** Point absorption (16) handles the unselected 0-cells. Fusion (17), Ξ_H (18) and Fill (20) close the 3-loops as in the r7 construction for D² ∗₀ D². I found no gap.
+5. **Arbitrary dimension.** The reduction to the 2-skeleton plus the cone-r5 extension theorem is valid. That theorem needs dim ≤ 2 and an acyclic 1-graph, and the 2-skeleton of Q↑Y satisfies both.
+6. **Finite checks.** The response reports finite checks of the sort and branching data for 40, 208 and 88 selections. These were not rerun here. The proof does not depend on them.
+
+**Open.**
+- RC(4) for the 3-disc cylinder, and so Conjecture N in dimension 4.
+- The extension theorem from RC(4) alone.
+- 5-cells between different choices of K (global K).
+
+Follow-up: no incremental round-9 prompt. The open items pass to the consolidated RC(n) prompt (thread "Consolidate researcher prompts into ambitious asks").

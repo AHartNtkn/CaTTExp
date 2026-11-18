@@ -752,3 +752,31 @@ I have no proof or counterexample for bubble-free or one-sided \(2\)-computads, 
 (*;s,t;\eta:1\Rightarrow st,\ \mu:ts\Rightarrow t).
 \]
 I also have none for positivity in every dimension in the \(3\)-dimensional question. Chanavat’s Comment 3.40 describes the extension to arbitrary regular and positive polygraphs as an expected extension; it does not prove that case. [arxiv.org](https://arxiv.org/html/2603.22242v2?utm_source=chatgpt.com)
+
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at the level of a paper proof.**
+- **Question 1 is answered.** Item 8's ζ admits 2-category fibres, with generators of dimension ≤ 5.
+  - The triple cylinder W_z (4) is attached along Ψ (6).
+  - The new generators are χ_e (dim 3, marked), χ_f (dim 4, inverted) and χ_ρ (dim 5, inverted), with χ_e : L^R_{a,e} ⇛ (u_e ∗ z_e) · L^R_{b,e}.
+- **General mixed-localisation lemma (13)** for finite homotopical X and Y.
+- **FT_{3,m}** holds for 3-dimensional bases satisfying item 23's hypotheses, with generators of dimension ≤ m + 3.
+- **FT_{n,m}** holds for suspension bases, for every m.
+
+Checked:
+
+1. **Attaching data.** The boundary of χ_e is well typed. Both sides go from the left-whiskered to the right-whiskered lift over e. χ_f and χ_ρ fill the next two boundaries of the triple cylinder.
+   - The dimension count is dim fibre (2) + dim base cell + 1, which gives ≤ 5.
+   - This matches the r2 pattern (one Ω_ρ per fibre 2-cell) lifted one cylinder level.
+2. **Lemma (13).** It generalises the r5 𝓡_A(X) to arbitrary finite homotopical X and Y. The proof is the tensor-localisation lemma of r2 applied factorwise. The finiteness and homotopicality hypotheses are exactly the ones used.
+3. **FT_{3,m}.** The left/right whiskering subdivisions reduce every 3-generator of the base to a cylinder over its 2-dimensional boundary data, where the r3 2-dimensional theorem applies. Item 23's hypotheses are what make the subdivision finite.
+4. **Suspension bases.** These reduce to the hom-level case via Loubaton Cor. 4.1.2.19 and 3.2.3.16, as in r4, now for all fibre dimensions.
+
+**Open.**
+- General n ≥ 4. The obstacle is compatible substitution of higher boundary expressions.
+- Whether bubble-freeness is sufficient.
+- One-sided 2-computads beyond the partition test (for example η : 1 ⇒ st, μ : ts ⇒ t).
+- Positive 3-computads.
+
+Follow-up: no incremental round-7 prompt. The open items pass to the consolidation thread ("Consolidate researcher prompts into ambitious asks").

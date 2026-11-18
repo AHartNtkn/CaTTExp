@@ -26,7 +26,8 @@ open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Tensor
 open import CaTTExp.Strict.Pasting
 open import CaTTExp.Strict.TotalCell using (Ph; HC; HomCells; T-cell-from)
-open import CaTTExp.Strict.Soundness using (TCell; BSupp; module Soundness)
+open import CaTTExp.Strict.Hyp using (TCell; BSupp)
+open import CaTTExp.Strict.Soundness using (module Soundness)
 open import CaTTExp.Gray.Pure hiding (Tuple)
 
 ------------------------------------------------------------------------

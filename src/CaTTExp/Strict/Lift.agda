@@ -776,3 +776,204 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
 
     functor-gen : ∀ g → Functor.F functor (ιν B H L g) ≡ κ g
     functor-gen = FW.F-gen (generated B H L) def inv
+
+------------------------------------------------------------------------
+-- The ν(K) half of hypothesis (19) holds (L7): every boundary of an
+-- atom ⟨g⟩ is a composite of atoms of degree < deg g.
+
+module Words {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
+  open Basis B
+  open Hyp H
+  open Atom B
+  open Gen B H L hiding (W; Functor)
+  open Rows B H L
+  open TabAt (ADC.𝕄 K)
+  open Det K L using (Above; det)
+
+  G : Set
+  G = AtomG B H L
+
+  degG : G → Nat
+  degG (i , _ , _) = deg i
+
+  private
+    module ν = ωCat (nu K L)
+    module Eν = Eval (nu K L) (ιν B H L)
+
+    tab-ext : ∀ {m} (x y : Tab (ADC.𝕄 K) m) → (∀ j → j < m → at 0R x j ≡ at 0R y j) → x ≡ y
+    tab-ext []      []      h = refl
+    tab-ext (e ∷ x) (e′ ∷ y) h = cong₂ _∷_ (h 0 (s≤s z≤n)) (tab-ext x y (λ j l → h (suc j) (s≤s l)))
+
+    above-of : ∀ {m} n (x y : Tab (ADC.𝕄 K) m) → (∀ j → n < j → j < m → at 0R x j ≡ at 0R y j) → Above n x y
+    above-of n       []      []       h = tt
+    above-of zero    (e ∷ x) (e′ ∷ y) h = tab-ext x y (λ j l → h (suc j) (s≤s z≤n) (s≤s l))
+    above-of (suc n) (e ∷ x) (e′ ∷ y) h = above-of n x y (λ j l l′ → h (suc j) (s≤s l) (s≤s l′))
+
+    ≤-pred′ : ∀ {a b} → suc a ≤ suc b → a ≤ b
+    ≤-pred′ (s≤s q) = q
+
+    1≢0 : 1 ≡ 0 → ⊥
+    1≢0 ()
+
+    plus0 : ∀ a b → a + b ≡ 0 → a ≡ 0
+    plus0 zero    b e = refl
+
+    +c0 : (a b : Vec Nat N) → a +c b ≡ 0c → a ≡ 0c
+    +c0 a b e = vext a 0c (λ d → trans (plus0 (at0 a d) (at0 b d) (trans (sym (at-+c a b d)) (trans (cong (λ v → at0 v d) e) (at-0c {N} d))))
+                                     (sym (at-0c {N} d)))
+
+    +R0 : ∀ (u v : Row) → u +R v ≡ 0R → u ≡ 0R
+    +R0 u v e = cong₂ _,_ (+c0 (fst u) (fst v) (cong fst e)) (+c0 (snd u) (snd v) (cong snd e))
+
+    +R0′ : ∀ (u v : Row) → u +R v ≡ 0R → v ≡ 0R
+    +R0′ u v e = +R0 v u (trans (cong₂ _,_ (+c-comm (fst v) (fst u)) (+c-comm (snd v) (snd u))) e)
+
+  above : ∀ r (x y : ν.C) → Agree r (rows x) (rows y) → Above r (fst x) (fst y)
+  above r x y h = above-of r (fst x) (fst y) (λ j l jL → h j l (≤-pred′ jL))
+
+  rows-tgt : ∀ n x j → n < j → rows (ν.tgt n x) j ≡ 0R
+  rows-tgt n (x , _) j l = at-tgt n x j l
+
+  ----------------------------------------------------------------------
+  -- Cells with zero rows above t.
+
+  Z : Nat → ν.C → Set
+  Z t x = Agree t (rows x) (λ _ → 0R)
+
+  Z→dim : ∀ t x → Z t x → ν.src t x ≡ x
+  Z→dim t x z = ≡-cell K L (det t (fst (ν.src t x)) (fst x) (snd (ν.src t x)) (snd x)
+                              (cong fst (ν.src-src-≥ x (≤-refl t)))
+                              (above t (ν.src t x) x (λ j tj jL → trans (rows-src t x j tj) (sym (z j tj jL)))))
+
+  Z-comp : ∀ t n x y p → Z t (ν.comp n x y p) → Z t x × Z t y
+  Z-comp t n x y p z with tri n t
+  ... | tri< nt = (λ j tj jL → +R0 _ _ (trans (sym (rows-comp n x y p j (≤-trans (s≤s (<→≤ nt)) tj))) (z j tj jL))) ,
+                  (λ j tj jL → +R0′ _ _ (trans (sym (rows-comp n x y p j (≤-trans (s≤s (<→≤ nt)) tj))) (z j tj jL)))
+  ... | tri≡ refl = (λ j tj jL → +R0 _ _ (trans (sym (rows-comp n x y p j tj)) (z j tj jL))) ,
+                    (λ j tj jL → +R0′ _ _ (trans (sym (rows-comp n x y p j tj)) (z j tj jL)))
+  ... | tri> tn = subst (Z t) (sym x≡) z , subst (Z t) (sym y≡) z
+    where
+    c = ν.comp n x y p
+    hx : Z n x
+    hx j nj jL = +R0 _ _ (trans (sym (rows-comp n x y p j nj)) (z j (≤-trans (s≤s (<→≤ tn)) nj) jL))
+    hy : Z n y
+    hy j nj jL = +R0′ _ _ (trans (sym (rows-comp n x y p j nj)) (z j (≤-trans (s≤s (<→≤ tn)) nj) jL))
+    dt : ν.src t c ≡ c
+    dt = Z→dim t c z
+    x≡ : x ≡ c
+    x≡ = trans (sym (Z→dim n x hx))
+           (trans (sym (ν.src-comp n x y p))
+             (trans (cong (ν.src n) (sym dt)) (trans (ν.src-src-≥ c (<→≤ tn)) dt)))
+    y≡ : y ≡ c
+    y≡ = trans (sym (Z→dim n y hy))
+           (trans (sym p) (trans (cong (ν.tgt n) x≡)
+             (trans (cong (ν.tgt n) (sym dt)) (trans (ν.tgt-src-≥ c (<→≤ tn)) dt))))
+
+  Z-gen : ∀ t g → Z t (ιν B H L g) → degG g ≤ t
+  Z-gen t (i , iN , iL) z with tri (deg i) t
+  ... | tri< l    = <→≤ l
+  ... | tri≡ refl = ≤-refl _
+  ... | tri> l    = ⊥-elim (1≢0 (trans (sym top) (trans (cong (λ r → at0 (fst r) i) (sym (rows-atom i iN iL (deg i) iL)))
+                                   (trans (cong (λ r → at0 (fst r) i) (z (deg i) l iL)) (at-0c {N} i)))))
+    where
+    top : at0 (fst (ent i (deg i))) i ≡ 1
+    top = trans (cong (λ r → at0 (fst r) i) (Cells.Deg.ent-in dd deg-dp deg-dm i (deg i) 0 (sym (+-zero (deg i))))) (go i iN)
+      where
+      go : ∀ {m} g → g < m → at0 (unit {m} g) g ≡ 1
+      go {suc m} zero    _       = refl
+      go {suc m} (suc g) (s≤s l) = go {m} g l
+
+  ----------------------------------------------------------------------
+  -- Expressions of generation trees.
+
+  glE : ∀ {b x} → GenL b x → Expr G
+  glE (gl-atom i iN iL)     = gen (i , iN , iL)
+  glE (gl-comp n _ gy gz m) = cmp n (glE gy) (glE gz)
+
+  glE-ev : ∀ {b x} (t : GenL b x) (cx : IsCell K L x) → Eν.Ev (glE t) (x , cx)
+  glE-ev (gl-atom i iN iL) cx = subst (Eν.Ev (gen (i , iN , iL))) (≡-cell K L refl) (Eν.ev-gen (i , iN , iL))
+  glE-ev (gl-comp n _ gy gz m) cx =
+    subst (Eν.Ev (cmp n (glE gy) (glE gz))) (≡-cell K L refl)
+      (Eν.ev-cmp n (glE-ev gy (gen-cell (forget gy))) (glE-ev gz (gen-cell (forget gz))) (≡-cell K L m))
+
+  module _ (W′ : Sd → G → Expr G) where
+    open Syn degG W′
+
+    glE-co : ∀ {b x} (t : GenL b x) → CO (glE t)
+    glE-co (gl-atom i iN iL)     = co-gen _
+    glE-co (gl-comp n _ gy gz m) = co-cmp n (glE-co gy) (glE-co gz)
+
+    Z-deg : ∀ t e {x} → CO e → Eν.Ev e x → Z t x → DegLe t e
+    Z-deg t (gen g) _ (Eν.ev-gen _) z = dl-gen (Z-gen t g z)
+    Z-deg t (cmp n a b) (co-cmp _ ca cb) (Eν.ev-cmp .n {x = x} {y = y} u v p) z =
+      let (zx , zy) = Z-comp t n x y p z in dl-cmp (Z-deg t a ca u zx) (Z-deg t b cb v zy)
+
+  ----------------------------------------------------------------------
+  -- The words.
+
+  bdν : Sd → Nat → ν.C → ν.C
+  bdν σ⁻ = ν.src
+  bdν σ⁺ = ν.tgt
+
+  bcell : Sd → G → ν.C
+  bcell s g = bdν s (degG g ∸ 1) (ιν B H L g)
+
+  private
+    ∸≤ : ∀ d → d ∸ 1 ≤ d
+    ∸≤ zero    = z≤n
+    ∸≤ (suc d) = ≤-suc (≤-refl d)
+
+    degL : ∀ g → degG g ≤ L
+    degL (i , iN , iL) = iL
+
+    bcell-Z : ∀ s g → Z (degG g ∸ 1) (bcell s g)
+    bcell-Z σ⁻ g j l _ = rows-src (degG g ∸ 1) (ιν B H L g) j l
+    bcell-Z σ⁺ g j l _ = rows-tgt (degG g ∸ 1) (ιν B H L g) j l
+
+  tree : ∀ s g → GenL (degG g ∸ 1) (tabG (rows (bcell s g)) 0)
+  tree s g = gen-at (degG g ∸ 1) (≤-trans (∸≤ (degG g)) (degL g)) (rows (bcell s g))
+               (IsCell→CellF (fst (bcell s g)) (snd (bcell s g))) nothing tt (bcell-Z s g)
+
+  Wν : Sd → G → Expr G
+  Wν s g = glE (tree s g)
+
+  Wν-ev : ∀ s g → Eν.Ev (Wν s g) (bcell s g)
+  Wν-ev s g = subst (Eν.Ev (Wν s g)) (≡-cell K L (sym (tab-at 0R (fst (bcell s g)))))
+                (glE-ev (tree s g) (gen-cell (forget (tree s g))))
+
+  Wν-co : ∀ s g → Syn.CO degG Wν (Wν s g)
+  Wν-co s g = glE-co Wν (tree s g)
+
+  Wν-deg : ∀ s g → Syn.DegLe degG Wν (degG g ∸ 1) (Wν s g)
+  Wν-deg s g = Z-deg Wν (degG g ∸ 1) (Wν s g) (Wν-co s g) (Wν-ev s g) (bcell-Z s g)
+
+------------------------------------------------------------------------
+-- Existence in (N2) for ordered unital bases: ν(K) is free on its
+-- atoms. A strict functor to 𝒟 extending κ exists as soon as κ g has
+-- dimension deg g and its boundaries are the values in 𝒟 of the words
+-- `Words.Wν`, which compute the boundaries of ⟨g⟩ in ν(K).
+
+module Free {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
+            (𝒟 : ωCat) (κ : AtomG B H L → ωCat.C 𝒟) where
+  open Words B H L
+  private
+    module 𝔇 = ωCat 𝒟
+    module ED = Eval 𝒟 κ
+    module SD = Syn.Sem degG Wν 𝒟 κ
+    ν′ = nu (Atom.K B) L
+    ι′ = ιν B H L
+
+    ev : ∀ s g → 1 ≤ degG g → Eval.Ev ν′ ι′ (Wν s g) (Syn.Sem.bdC degG Wν ν′ ι′ s (degG g ∸ 1) (ι′ g))
+    ev σ⁻ g _ = Wν-ev σ⁻ g
+    ev σ⁺ g _ = Wν-ev σ⁺ g
+
+  module _ (dimκ : ∀ g → 𝔇.src (degG g) (κ g) ≡ κ g)
+           (W-evD : ∀ s g → 1 ≤ degG g → ED.Ev (Wν s g) (SD.bdC s (degG g ∸ 1) (κ g))) where
+    private
+      module LH = Lift.Hyps B H L 𝒟 κ Wν Wν-co Wν-deg ev dimκ W-evD
+
+    functor : Functor ν′ 𝒟
+    functor = LH.functor
+
+    functor-gen : ∀ g → Functor.F functor (ι′ g) ≡ κ g
+    functor-gen = LH.functor-gen

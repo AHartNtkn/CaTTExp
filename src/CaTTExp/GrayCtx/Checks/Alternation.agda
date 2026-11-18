@@ -8,7 +8,6 @@ open import CaTTExp.Prelude
 open import CaTTExp.Pure
 open import CaTTExp.GrayCtx.Elab
 open import CaTTExp.GrayCtx.Cylinder
-open import CaTTExp.GrayCtx.Cube using (fromJust)
 -- D² ⊗ D¹: x0 y1 f2 g3 α4 | x5 y6 f7 g8 α9 | xe10 ye11 fe12 ge13 αe14
 Γ : Ctx
 Γ = dropLast (fromJust (cyl right 1 (ctxOf (chain 2))))

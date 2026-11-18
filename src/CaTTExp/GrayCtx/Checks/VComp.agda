@@ -6,7 +6,6 @@ open import CaTTExp.GrayCtx.Elab
 open import CaTTExp.GrayCtx.Cylinder
 open import CaTTExp.GrayCtx.Checks.Base
 open import CaTTExp.GrayCtx.VComp
-open import CaTTExp.GrayCtx.Cube using (fromJust)
 
 ------------------------------------------------------------------------
 -- 4. Vertical composition of lax transformations as a substitution

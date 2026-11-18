@@ -13,7 +13,6 @@ open import CaTTExp.Prelude
 open import CaTTExp.Pure
 open import CaTTExp.GrayCtx.Elab using (length)
 open import CaTTExp.GrayCtx.Cylinder
-open import CaTTExp.GrayCtx.Cube using (fromJust)
 open import CaTTExp.GrayCtx.Checks.Base using (D; HComp; VComp)
 import CaTTExp.Free.Cylinder as Free
 

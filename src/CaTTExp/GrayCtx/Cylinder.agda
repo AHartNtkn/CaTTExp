@@ -177,6 +177,11 @@ cyl sd p Γ =
   edge : Ctx → Nat → Maybe Ctx
   edge Γ' e = foldM (λ Δ x → Gen.genTy sd Γ p e Δ x >>= λ A → just (Δ ▸ A)) Γ' (upto N)
 
+-- Unwrap a constructed context (ε on failure; every use is certified).
+fromJust : Maybe Ctx → Ctx
+fromJust (just Γ) = Γ
+fromJust nothing  = ε
+
 -- Γ ⊗ D¹ and D¹ ⊗ Γ.
 _⊗D¹ D¹⊗_ : Ctx → Maybe Ctx
 Γ ⊗D¹ = cyl right 1 Γ

@@ -6,7 +6,7 @@ open import CaTTExp.GrayCtx.Elab
 open import CaTTExp.GrayCtx.Cylinder
 open import CaTTExp.GrayCtx.Checks.Base
 open import CaTTExp.GrayCtx.VComp
-open import CaTTExp.GrayCtx.Cube using (fromJust)
+open import Agda.Builtin.Nat using (_*_)
 
 ------------------------------------------------------------------------
 -- 3. G3: Γ ⊗ (D¹ ∨ D¹) contains two copies of Γ ⊗ D¹, glued along the
@@ -34,3 +34,30 @@ G3-≤3 {t} m =
   let h = all-∈ okG3 (trees≤ 3) allG3 m in
   cert (g3? right (ctxOf t)) (∧-fst h) , cert (g3? left (ctxOf t)) (∧-snd {is-just (g3? right (ctxOf t))} h)
 
+
+------------------------------------------------------------------------
+-- Cover and meet. Γ ⊗ (D¹ ∨ D¹) has 5N variables (three copies of Γ,
+-- two edge blocks), and the images of ι₁, ι₂ cover all of them and meet
+-- exactly in copy 1 (levels N … 2N−1). The images depend only on N, so
+-- this is checked for every N ≤ 12; the length 5N is checked on the
+-- same trees as G3-≤3.
+
+private
+  inMid : Nat → Nat → Bool
+  inMid N x = not (x <ℕ N) ∧ (x <ℕ (2 * N))
+  coverMeet : Nat → Bool
+  coverMeet N = all (λ x → let a = elem x (fvSub (ι₁ N)) ; b = elem x (fvSub (ι₂ N)) in
+                           (a ∨ b) ∧ (if a ∧ b then inMid N x else not (inMid N x)))
+                    (upto (5 * N))
+              ∧ all (λ x → x <ℕ (5 * N)) (fvSub (ι₁ N) ++ fvSub (ι₂ N))
+  len5 : Nat → Maybe Ctx → Bool
+  len5 N (just Δ) = len Δ ==ℕ 5 * N
+  len5 N nothing  = false
+
+G3-cover-meet : T (all coverMeet (upto 13))
+G3-cover-meet = tt
+
+G3-length : T (all (λ t → len5 (len (ctxOf t)) (cyl right 2 (ctxOf t))
+                       ∧ len5 (len (ctxOf t)) (cyl left 2 (ctxOf t)))
+                   (trees≤ 3))
+G3-length = tt

@@ -30,10 +30,6 @@ open import CaTTExp.GrayCtx.Elab
 open import CaTTExp.GrayCtx.Cylinder
 open import Agda.Builtin.Nat using (_*_)
 
-fromJust : Maybe Ctx → Ctx
-fromJust (just Γ) = Γ
-fromJust nothing  = ε
-
 D¹ : Ctx
 D¹ = ctxOf (chain 1)
 
@@ -89,27 +85,35 @@ mismatches = filter bad triples
   ... | _      | _      = true
 
 ------------------------------------------------------------------------
--- G4 up to coherence: CubeR ⊢ toL : CubeL.
+-- G4 up to coherence: CubeR ⊢ toL : CubeL and CubeL ⊢ toR : CubeR.
+--
+-- The construction is split into small top-level pieces (a record of
+-- the 2-cells and associators, then one definition per rewriting step)
+-- to keep elaboration cheap.
 
-module ToL (Γ : Ctx) where
-  -- Γ is meant to be CubeR. Generators by triple, with e = 2.
+-- The 2-cells of the two hexagons and the associators between them,
+-- in a context Γ whose generators sit at levels lev(a, b, c).
+-- P = 0ee, Q = e1e, R = ee0 (source squares); P′ = 1ee, Q′ = e0e, R′ = ee1.
+record Hex : Set where
+  field
+    P▹ ◃Q R▹ ◃R′ Q′▹ ◃P′ : Tm
+    a A1 A2 A3 b B1 B2 B3 : Tm
+
+module HexOf (lev : Triple → Nat) (Γ : Ctx) where
   g : Nat → Nat → Nat → Tm
-  g a b c = var (levelR (a , b , c))
+  g x y z = var (lev (x , y , z))
 
   e = 2
 
-  _▹'_ _◃'_ : Tm → Tm → Maybe Tm
-  c ▹' z = (Γ ▹ c) z
-  z ◃' c = (Γ ◃ z) c
+  whR whL : Tm → Tm → Maybe Tm
+  whR c z = (Γ ▹ c) z
+  whL z c = (Γ ◃ z) c
 
-  -- The image of CubeL's cube cell: a 3-cell  S_L ⇒ T_L  in CubeR, built
-  -- from the cube cell  g e e e : S_R ⇒ T_R  of CubeR.
-  cubeL : Maybe Tm
-  cubeL =
-    -- 2-cells of the source and target hexagons (squares whiskered by edges)
-    (g 0 e e ▹' g e 1 1) >>= λ P▹ → (g 0 e 0 ◃' g e 1 e) >>= λ ◃Q → (g e e 0 ▹' g 1 1 e) >>= λ R▹ →
-    (g 0 0 e ◃' g e e 1) >>= λ ◃R' → (g e 0 e ▹' g 1 e 1) >>= λ Q'▹ → (g e 0 0 ◃' g 1 e e) >>= λ ◃P' →
-    -- associators
+  hex : Maybe Hex
+  hex =
+    whR (g 0 e e) (g e 1 1) >>= λ p → whL (g 0 e 0) (g e 1 e) >>= λ q →
+    whR (g e e 0) (g 1 1 e) >>= λ r → whL (g 0 0 e) (g e e 1) >>= λ r′ →
+    whR (g e 0 e) (g 1 e 1) >>= λ q′ → whL (g e 0 0) (g 1 e e) >>= λ p′ →
     assoc  Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ a  →
     assoc⁻ Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ A1 →
     assoc  Γ (g 0 e 0) (g 0 1 e) (g e 1 1) >>= λ A2 →
@@ -118,117 +122,94 @@ module ToL (Γ : Ctx) where
     assoc⁻ Γ (g 0 0 e) (g e 0 1) (g 1 e 1) >>= λ B1 →
     assoc  Γ (g e 0 0) (g 1 0 e) (g 1 e 1) >>= λ B2 →
     assoc⁻ Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ B3 →
-    -- CubeR's hexagons:  S_R = [[A1, P▹, A2, ◃Q, A3], R▹],  T_R = [◃R', [B1, Q'▹, B2, ◃P', B3]]
-    vcomp Γ (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []) >>= λ M →
-    vcomp Γ (B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ []) >>= λ N →
-    vcomp Γ (M ∷ R▹ ∷ []) >>= λ S_R → vcomp Γ (◃R' ∷ N ∷ []) >>= λ T_R →
-    -- CubeL's hexagons (renamed):  S_L = [P▹, [A2, ◃Q, A3, R▹, b]],  T_L = [[a, ◃R', B1, Q'▹, B2], ◃P']
-    vcomp Γ (A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) >>= λ M' →
-    vcomp Γ (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ []) >>= λ N' →
-    -- S_L ⇒ flat
-    regroup false Γ (P▹ ∷ []) (A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) [] >>= λ r₀ →
-    let ch₀ = P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ [] in
-    -- P▹ ⇒ id ; P▹ ⇒ (a ; A1) ; P▹
-    srcOf Γ P▹ >>= λ u → idc Γ u >>= λ idu →
-    unitor true false Γ P▹ >>= λ Φ₁ →
-    stepAt Γ [] (P▹ ∷ []) (A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) Φ₁ (idu ∷ P▹ ∷ []) >>= λ s₁ →
-    cancel false false Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ Φ₂ →
-    stepAt Γ [] (idu ∷ []) (P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) Φ₂ (a ∷ A1 ∷ []) >>= λ s₂ →
-    -- flat ⇒ [a, S_R, b]
-    regroup true Γ (a ∷ []) (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []) (R▹ ∷ b ∷ []) >>= λ r₃ →
-    regroup true Γ (a ∷ []) (M ∷ R▹ ∷ []) (b ∷ []) >>= λ r₄ →
-    -- the cube cell of CubeR, whiskered
-    whiskIn Γ (a ∷ []) (g e e e) (b ∷ []) >>= λ w₅ →
-    -- [a, T_R, b] ⇒ flat
-    regroup false Γ (a ∷ []) (◃R' ∷ N ∷ []) (b ∷ []) >>= λ r₆ →
-    regroup false Γ (a ∷ ◃R' ∷ []) (B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ []) (b ∷ []) >>= λ r₇ →
-    let ch₇ = a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ b ∷ [] in
-    -- B3 ; b ⇒ id ; ◃P' ; id ⇒ ◃P'
-    tgtOf Γ ◃P' >>= λ w → idc Γ w >>= λ idw →
-    cancel true true Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ Φ₈ →
-    stepAt Γ (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ []) (B3 ∷ b ∷ []) [] Φ₈ (idw ∷ []) >>= λ s₈ →
-    unitor false true Γ ◃P' >>= λ Φ₉ →
-    stepAt Γ (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ []) (◃P' ∷ idw ∷ []) [] Φ₉ (◃P' ∷ []) >>= λ s₉ →
-    -- flat ⇒ T_L
-    regroup true Γ [] (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ []) (◃P' ∷ []) >>= λ r₁₀ →
-    vcomp Γ (r₀ ∷ snd s₁ ∷ snd s₂ ∷ r₃ ∷ r₄ ∷ w₅ ∷ r₆ ∷ r₇ ∷ snd s₈ ∷ snd s₉ ∷ r₁₀ ∷ [])
+    just (record { P▹ = p ; ◃Q = q ; R▹ = r ; ◃R′ = r′ ; Q′▹ = q′ ; ◃P′ = p′
+                 ; a = a ; A1 = A1 ; A2 = A2 ; A3 = A3 ; b = b ; B1 = B1 ; B2 = B2 ; B3 = B3 })
+
+  -- Hexagons as chains:
+  --   S_R = [[A1, P▹, A2, ◃Q, A3], R▹]     T_R = [◃R′, [B1, Q′▹, B2, ◃P′, B3]]
+  --   S_L = [P▹, [A2, ◃Q, A3, R▹, b]]      T_L = [[a, ◃R′, B1, Q′▹, B2], ◃P′]
+  module _ (h : Hex) where
+    open Hex h
+    M N M′ N′ : List Tm
+    M  = A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []
+    N  = B1 ∷ Q′▹ ∷ B2 ∷ ◃P′ ∷ B3 ∷ []
+    M′ = A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []
+    N′ = a ∷ ◃R′ ∷ B1 ∷ Q′▹ ∷ B2 ∷ []
+
+    snd′ : Maybe (List Tm × Tm) → Maybe Tm
+    snd′ m = snd <$> m
+
+    -- toL: the image of CubeL's cube cell, from CubeR's cube cell X.
+    stepsL : Tm → List (Maybe Tm)
+    stepsL X =
+      -- S_L ⇒ flat
+      regroup false Γ (P▹ ∷ []) M′ [] ∷
+      -- P▹ ⇒ id ; P▹
+      (unitor true false Γ P▹ >>= λ Φ → srcOf Γ P▹ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ [] (P▹ ∷ []) M′ Φ (i ∷ P▹ ∷ []))) ∷
+      -- id ⇒ a ; A1
+      (cancel false false Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ Φ →
+       srcOf Γ P▹ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ [] (i ∷ []) (P▹ ∷ M′) Φ (a ∷ A1 ∷ []))) ∷
+      -- flat ⇒ [a, S_R, b]
+      regroup true Γ (a ∷ []) M (R▹ ∷ b ∷ []) ∷
+      (vcomp Γ M >>= λ m → regroup true Γ (a ∷ []) (m ∷ R▹ ∷ []) (b ∷ [])) ∷
+      whiskIn Γ (a ∷ []) X (b ∷ []) ∷
+      -- [a, T_R, b] ⇒ flat
+      (vcomp Γ N >>= λ n → regroup false Γ (a ∷ []) (◃R′ ∷ n ∷ []) (b ∷ [])) ∷
+      regroup false Γ (a ∷ ◃R′ ∷ []) N (b ∷ []) ∷
+      -- B3 ; b ⇒ id
+      (cancel true true Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ Φ →
+       tgtOf Γ ◃P′ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ (a ∷ ◃R′ ∷ B1 ∷ Q′▹ ∷ B2 ∷ ◃P′ ∷ []) (B3 ∷ b ∷ []) [] Φ (i ∷ []))) ∷
+      -- ◃P′ ; id ⇒ ◃P′
+      (unitor false true Γ ◃P′ >>= λ Φ → tgtOf Γ ◃P′ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ N′ (◃P′ ∷ i ∷ []) [] Φ (◃P′ ∷ []))) ∷
+      -- flat ⇒ T_L
+      regroup true Γ [] N′ (◃P′ ∷ []) ∷ []
+
+    -- toR: the image of CubeR's cube cell, from CubeL's cube cell X.
+    stepsR : Tm → List (Maybe Tm)
+    stepsR X =
+      regroup false Γ [] M (R▹ ∷ []) ∷
+      (unitor false false Γ R▹ >>= λ Φ → tgtOf Γ R▹ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ M (R▹ ∷ []) [] Φ (R▹ ∷ i ∷ []))) ∷
+      (cancel false false Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ Φ →
+       tgtOf Γ R▹ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ (M ++ R▹ ∷ []) (i ∷ []) [] Φ (b ∷ B3 ∷ []))) ∷
+      regroup true Γ (A1 ∷ P▹ ∷ []) M′ (B3 ∷ []) ∷
+      (vcomp Γ M′ >>= λ m → regroup true Γ (A1 ∷ []) (P▹ ∷ m ∷ []) (B3 ∷ [])) ∷
+      whiskIn Γ (A1 ∷ []) X (B3 ∷ []) ∷
+      (vcomp Γ N′ >>= λ n → regroup false Γ (A1 ∷ []) (n ∷ ◃P′ ∷ []) (B3 ∷ [])) ∷
+      regroup false Γ (A1 ∷ []) N′ (◃P′ ∷ B3 ∷ []) ∷
+      (cancel true true Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ Φ →
+       srcOf Γ ◃R′ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ [] (A1 ∷ a ∷ []) (◃R′ ∷ N) Φ (i ∷ []))) ∷
+      (unitor true true Γ ◃R′ >>= λ Φ → srcOf Γ ◃R′ >>= idc Γ >>= λ i →
+       snd′ (stepAt Γ [] (i ∷ ◃R′ ∷ []) N Φ (◃R′ ∷ []))) ∷
+      regroup true Γ (◃R′ ∷ []) N [] ∷ []
+
+  run : (Hex → Tm → List (Maybe Tm)) → Maybe Tm
+  run steps = hex >>= λ h → mapM (λ m → m) (steps h (g e e e)) >>= vcomp Γ
+
+-- the renaming on the first 26 generators of a cube (the cube cell is
+-- last in both contexts), listed along `order`, sent to levels `lev`
+private
+  initRen : List Triple → (Triple → Nat) → Sub
+  initRen order lev = go ⟨⟩ order
+    where
+    go : Sub → List Triple → Sub
+    go σ []           = σ
+    go σ (_ ∷ [])     = σ
+    go σ (t ∷ u ∷ ts) = go (σ ,ₛ var (lev t)) (u ∷ ts)
 
 toL : Maybe (Ctx × Sub)
-toL = CubeR >>= λ Γ → ToL.cubeL Γ >>= λ c → just (Γ , (init ,ₛ c))
-  where
-  -- the renaming on the first 26 generators of CubeL (the cube cell is
-  -- last in both contexts)
-  init : Sub
-  init = go ⟨⟩ triplesL
-    where
-    go : Sub → List Triple → Sub
-    go σ []            = σ
-    go σ (_ ∷ [])      = σ
-    go σ (t ∷ u ∷ ts)  = go (σ ,ₛ var (levelR t)) (u ∷ ts)
-
--- The converse: CubeL ⊢ toR : CubeR.
-module ToR (Γ : Ctx) where
-  -- Γ is meant to be CubeL.
-  g : Nat → Nat → Nat → Tm
-  g a b c = var (levelL (a , b , c))
-
-  e = 2
-
-  _▹'_ _◃'_ : Tm → Tm → Maybe Tm
-  c ▹' z = (Γ ▹ c) z
-  z ◃' c = (Γ ◃ z) c
-
-  cubeR : Maybe Tm
-  cubeR =
-    (g 0 e e ▹' g e 1 1) >>= λ P▹ → (g 0 e 0 ◃' g e 1 e) >>= λ ◃Q → (g e e 0 ▹' g 1 1 e) >>= λ R▹ →
-    (g 0 0 e ◃' g e e 1) >>= λ ◃R' → (g e 0 e ▹' g 1 e 1) >>= λ Q'▹ → (g e 0 0 ◃' g 1 e e) >>= λ ◃P' →
-    assoc  Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ a  →
-    assoc⁻ Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ A1 →
-    assoc  Γ (g 0 e 0) (g 0 1 e) (g e 1 1) >>= λ A2 →
-    assoc⁻ Γ (g 0 e 0) (g e 1 0) (g 1 1 e) >>= λ A3 →
-    assoc  Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ b  →
-    assoc⁻ Γ (g 0 0 e) (g e 0 1) (g 1 e 1) >>= λ B1 →
-    assoc  Γ (g e 0 0) (g 1 0 e) (g 1 e 1) >>= λ B2 →
-    assoc⁻ Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ B3 →
-    vcomp Γ (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []) >>= λ M →
-    vcomp Γ (A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) >>= λ M' →
-    vcomp Γ (P▹ ∷ M' ∷ []) >>= λ S_L →
-    vcomp Γ (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ []) >>= λ N' →
-    -- S_R ⇒ flat
-    regroup false Γ [] (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []) (R▹ ∷ []) >>= λ r₀ →
-    -- R▹ ⇒ R▹ ; id ⇒ R▹ ; (b ; B3)
-    tgtOf Γ R▹ >>= λ w → idc Γ w >>= λ idw →
-    unitor false false Γ R▹ >>= λ Φ₁ →
-    stepAt Γ (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ []) (R▹ ∷ []) [] Φ₁ (R▹ ∷ idw ∷ []) >>= λ s₁ →
-    cancel false false Γ (g e 0 0) (g 1 e 0) (g 1 1 e) >>= λ Φ₂ →
-    stepAt Γ (A1 ∷ P▹ ∷ A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ []) (idw ∷ []) [] Φ₂ (b ∷ B3 ∷ []) >>= λ s₂ →
-    -- flat ⇒ [A1, S_L, B3]
-    regroup true Γ (A1 ∷ P▹ ∷ []) (A2 ∷ ◃Q ∷ A3 ∷ R▹ ∷ b ∷ []) (B3 ∷ []) >>= λ r₃ →
-    regroup true Γ (A1 ∷ []) (P▹ ∷ M' ∷ []) (B3 ∷ []) >>= λ r₄ →
-    whiskIn Γ (A1 ∷ []) (g e e e) (B3 ∷ []) >>= λ w₅ →
-    -- [A1, T_L, B3] ⇒ flat
-    regroup false Γ (A1 ∷ []) (N' ∷ ◃P' ∷ []) (B3 ∷ []) >>= λ r₆ →
-    regroup false Γ (A1 ∷ []) (a ∷ ◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ []) (◃P' ∷ B3 ∷ []) >>= λ r₇ →
-    -- A1 ; a ⇒ id ; id ; ◃R' ⇒ ◃R'
-    srcOf Γ ◃R' >>= λ u → idc Γ u >>= λ idu →
-    cancel true true Γ (g 0 0 e) (g 0 e 1) (g e 1 1) >>= λ Φ₈ →
-    stepAt Γ [] (A1 ∷ a ∷ []) (◃R' ∷ B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ []) Φ₈ (idu ∷ []) >>= λ s₈ →
-    unitor true true Γ ◃R' >>= λ Φ₉ →
-    stepAt Γ [] (idu ∷ ◃R' ∷ []) (B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ []) Φ₉ (◃R' ∷ []) >>= λ s₉ →
-    -- flat ⇒ T_R
-    regroup true Γ (◃R' ∷ []) (B1 ∷ Q'▹ ∷ B2 ∷ ◃P' ∷ B3 ∷ []) [] >>= λ r₁₀ →
-    vcomp Γ (r₀ ∷ snd s₁ ∷ snd s₂ ∷ r₃ ∷ r₄ ∷ w₅ ∷ r₆ ∷ r₇ ∷ snd s₈ ∷ snd s₉ ∷ r₁₀ ∷ [])
+toL = CubeR >>= λ Γ → HexOf.run levelR Γ (HexOf.stepsL levelR Γ) >>= λ c →
+      just (Γ , (initRen triplesL levelR ,ₛ c))
 
 toR : Maybe (Ctx × Sub)
-toR = CubeL >>= λ Γ → ToR.cubeR Γ >>= λ c → just (Γ , (init ,ₛ c))
-  where
-  init : Sub
-  init = go ⟨⟩ triples
-    where
-    go : Sub → List Triple → Sub
-    go σ []            = σ
-    go σ (_ ∷ [])      = σ
-    go σ (t ∷ u ∷ ts)  = go (σ ,ₛ var (levelL t)) (u ∷ ts)
+toR = CubeL >>= λ Γ → HexOf.run levelL Γ (HexOf.stepsR levelL Γ) >>= λ c →
+      just (Γ , (initRen triples levelL ,ₛ c))
 
 ------------------------------------------------------------------------
 -- Consistency of the two orientations on the square: `cyl right 1 D¹`

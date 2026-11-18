@@ -4,7 +4,6 @@ open import CaTTExp.Prelude
 open import CaTTExp.Pure
 open import CaTTExp.GrayCtx.Elab
 open import CaTTExp.GrayCtx.Cylinder
-open import CaTTExp.GrayCtx.Cube using (fromJust)
 open import CaTTExp.GrayCtx.Prune
 open import CaTTExp.GrayCtx.Checks.Base
 

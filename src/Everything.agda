@@ -99,6 +99,7 @@ import CaTTExp.GlobularTotal.AssignTyped
 import CaTTExp.GlobularTotal.AssignUnique
 import CaTTExp.GlobularTotal.LiftSub
 import CaTTExp.GlobularTotal.Lift
+import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

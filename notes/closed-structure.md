@@ -283,7 +283,7 @@ Both id_T and e of B.1 arise this way, as *different* generalized sequents (e = 
 - **Lemma T\*** with Γ₁ or Γ₂ empty: the same argument.
 - The semantic equations used are valid in biclosed representable multicategories with nullary maps, as already noted in B.2. ∎
 
-`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. An 8-leaf run is pending; its result will be added to the D10a ledger row.
+`scripts/pl1star_check.py` reruns `pl1_check.py` with empty antecedents. It checks Lemma C, Lemma B, forced splits and the F\*/T\* shadow. With 6 leaves it covers 35,967 balanced sequents (2,381 provable) with no failures. With 8 leaves it covers 11,460,087 balanced sequents (126,344 provable), again with no failures.
 
 **Consequence: a larger unit-pasting class.** Call S **unit-pasting\*** (UP\*) if N(S) is I-free, balanced and L\*-provable, or N(S) = ⊢ I. Theorem B extends with the same proof, using Theorem A\* in place of step 3. The new class is strictly larger.
 - (X\X)\Y ⊢ Y is UP\* but not unit-pasting in the sense of B.2: it is L\*-provable but not L-provable.

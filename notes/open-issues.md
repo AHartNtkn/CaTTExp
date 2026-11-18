@@ -24,6 +24,7 @@ Thread ids used below:
 | FREE | free ω-categories as objects `cmsg_018pe2CvdFGDdsWgn8Tjn5gb7LiQb6yikB1xjtm14CaXMG` | done |
 | LIMN | limits and representables notes `cmsg_018pe2CvdFGDdsWgn8Tjn5gb6zYn9ewLrPvp4YL8AfJHKN` | done |
 | PVG | pseudo vs Gray-style core `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKP6yrjEAYBPgxDoAc2gq3F` | done |
+| NGC | "Prove naturality and Gray context conjectures" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbS5xgSTBGTmnfCd1k5DprsS` | active |
 | LIT | literature / conjecture verification `cmsg_018pe2CvdFGDdsWgn8Tjn5gbKdRdpEiQuvAuEvTAURBqhf` | done |
 
 ---
@@ -60,9 +61,9 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| C1 | **Conjecture N** (naturality of coherences for up-closed variable sets of depth ≥ 2), which gives Γ ⊗ Dᵏ for every context. Settled (researcher, verified 2026-11-18): every 2-dimensional coherence over a fully selected chain, via the relative ladder theorem. Still open: the 3-dimensional unitor over the 2-disc (§7 case 3); arbitrary up-closed subsets of a chain; arbitrary depth; the proposed induction hypothesis (RC)_{d,r} plus a relative existence statement for composition constructors. | `conjectures/naturality-arbitrary-depth.md` §7 and "Verification"; `free-objects.md` §7.1 | unowned (ready to restate and send to a researcher) | former area FREE |
-| C1b | **Run the ladder construction mechanically**: build the associator's naturality 3-cell over a fully selected chain (conjecture file, response §3) in a CaTT checker, to confirm the paper proof's generated terms typecheck. | `naturality-arbitrary-depth.md` "Verification", last bullet | unowned (needs a checker that handles 3-cells over non-pasting contexts by substitution) | former area AGDA0 |
-| C2 | Check that iterated N-cylinders coincide with **Mikhail's `gray` contexts**, and that the cone terms p_t obtained from naturality terms satisfy Mikhail's free-variable condition. | `free-objects.md` §7.1 items 2–3 | unowned (needs C1 for general Γ) | former area FREE |
+| C1 | **Conjecture N** (naturality of coherences for up-closed variable sets of depth ≥ 2), which gives Γ ⊗ Dᵏ for every context. Settled: every term of dimension ≤ 2, any pasting context, any up-closed Y (NGC, 2026-11-18: Theorem A, relative 2-coherence for every context, plus the reduction N ⇐ RC; extends the verified ladder theorem). Open: dimension ≥ 3, reduced to RC(n) on cylinder contexts; smallest cases a 3-dim coherence over one arrow (RC(3) on the lax square) and the 3-dim unitor over the 2-disc. | `conjectures/naturality-arbitrary-depth.md` §7 and "Verification"; `free-objects.md` §7.1 | out to researcher (prompt: `conjectures/outbox/naturality-arbitrary-depth.md`); internal attempts in progress | NGC |
+| C1b | **Run the ladder construction mechanically**: build the associator's naturality 3-cell over a fully selected chain (conjecture file, response §3) in a CaTT checker, to confirm the paper proof's generated terms typecheck. | `naturality-arbitrary-depth.md` "Verification", last bullet | in progress | NGC |
+| C2 | Check that iterated N-cylinders coincide with **Mikhail's `gray` contexts**, and that the cone terms p_t obtained from naturality terms satisfy Mikhail's free-variable condition. | `free-objects.md` §7.1 items 2–3 | in progress (Mikhail's printed rules extracted; layer structure matches) | NGC |
 | C3 | **Decomposition of diagrams**: Diag((Γ, x : A), C) ≃ Diag(Γ, C) ×_{Diag(∂D, C)} Diag(D, C) at every dimension. The step from A2's rules to A1's universal property. | `free-objects.md` §3.3, §7.2.1 | unowned (higher cells need C1) | former area FREE |
 | C4 | **Lifts of invertible cells are invertible** under the LIFT schema. | `free-objects.md` §7.2.2 | unowned | former area FREE |
 | C5 | **Conservativity**: cells of ⟦Γ⟧ between CaTT terms are exactly CaTT terms. "The key theorem to formalise." | `free-objects.md` §2.6, §5, §7.2.3 | unowned | former area FREE |
@@ -75,11 +76,11 @@ Thread ids used below:
 
 | ID | Item | Source | Status | Owner |
 |---|---|---|---|---|
-| D1 | **G(2) uniqueness bookkeeping gap**: check that the cell built from exchange coherences has exactly the type t → t′. Closes Gray generators of dimension 4. | `conjectures/gray-contexts-in-catt.md` §3.3 | unowned | former area IHOM |
-| D2 | **G(n), n ≥ 3, and G-alg**: translate Chanavat's contractible subdivision poset into substituted CaTT coherences (conservativity of molecular coh). Ready to send to a researcher. | `gray-contexts-in-catt.md` §3.4 | unowned | former area IHOM |
-| D3 | **Mikhail's Gray rules for every context and every n**: existence with an explicit formula, and presentation of the Steiner Gray tensor. Must be a specified construction, since the raw judgment is permissive. | `gray-contexts-in-catt.md` §6 | unowned (related to C1, B5) | former area IHOM |
-| D3a | **Re-check "G implies N"** (`gray-contexts-in-catt.md` intro, README, `naturality-arbitrary-depth.md` §8). The verified review found §8's whole-cylinder fullness argument false for composition constructors (for c = f ∗₀ g, a_c and b_c miss f↑, g↑). The implication needs a separate argument for composites and a support theorem for the boundary lifts. | `naturality-arbitrary-depth.md` §8 (corrected) and "Verification" | unowned | former area IHOM / LIT |
-| D4 | Side conditions of the Gray tensor of contexts: **G2** functoriality in substitutions (needed for nat-Δ), **G4** associativity up to coherence (may need CaTT_sua), **G5** whether linearity (x ∝ t) is needed. | `internal-hom.md` §4.2 | unowned | former area IHOM |
+| D1 | **G(2) uniqueness bookkeeping gap**: check that the cell built from exchange coherences has exactly the type t → t′. Closes Gray generators of dimension 4. | `conjectures/gray-contexts-in-catt.md` §3.3 | closed (proved by Theorem A, NGC 2026-11-18) | NGC |
+| D2 | **G(n), n ≥ 3, and G-alg**: translate Chanavat's contractible subdivision poset into substituted CaTT coherences (conservativity of molecular coh). Ready to send to a researcher. | `gray-contexts-in-catt.md` §3.4 | existence in G(3) proved (hence Gray generators of dim ≤ 4 typed); G(n≥3) uniqueness and G-alg reduced to RC(n); out to researcher (prompt: `conjectures/outbox/gray-contexts.md`) | NGC |
+| D3 | **Mikhail's Gray rules for every context and every n**: existence with an explicit formula, and presentation of the Steiner Gray tensor. Must be a specified construction, since the raw judgment is permissive. | `gray-contexts-in-catt.md` §6 | in progress (explicit construction via iterated top-layer cylinders for dim Γ ≤ 2, all n) | NGC |
+| D3a | **Re-check "G implies N"** (`gray-contexts-in-catt.md` intro, README, `naturality-arbitrary-depth.md` §8). The verified review found §8's whole-cylinder fullness argument false for composition constructors (for c = f ∗₀ g, a_c and b_c miss f↑, g↑). The implication needs a separate argument for composites and a support theorem for the boundary lifts. | `naturality-arbitrary-depth.md` §8 (corrected) and "Verification" | in progress (N ⇐ RC proved directly; G ⇒ N repair via a support lemma being written up) | NGC |
+| D4 | Side conditions of the Gray tensor of contexts: **G2** functoriality in substitutions (needed for nat-Δ), **G4** associativity up to coherence (may need CaTT_sua), **G5** whether linearity (x ∝ t) is needed. | `internal-hom.md` §4.2 | in progress (G2 for D¹ by structural induction; G5 not needed; G4 reduced to RC) | NGC |
 | D5 | Agda targets for Gray contexts: Γ ⊗ D¹ for Γ a pasting scheme as a function on syntax, proved well formed; G3 (wedges); vertical composition of lax transformations as a substitution, recording which non-ps composites are needed; D¹ ⊗ D¹ ⊗ D¹ under both orientations. | `internal-hom.md` §7 | unowned (LCORE's Gray-cube test is the L-side analogue, not this) | former area IHOM |
 | D6 | If molecular coh is adopted: re-examine **pruning, insertion and rehydration** for molecules. | `internal-hom.md` §4.3(ii) | unowned (conditional on D2 outcome) | former area IHOM |
 | D7 | **Gray tensor of arbitrary objects** B ⊗ C as a colimit of ⟦x ⊗ y⟧, then check the Gray tensor's universal property. Needed for lax currying with both factors arbitrary. | `internal-hom.md` §6; `pseudo-vs-gray.md` §4.3 | blocked on general colimits (B12); adjacent work: state the target universal property | former area IHOM |
@@ -128,6 +129,10 @@ Thread ids used below:
 ---
 
 ## Out to external researchers
+
+**Paste-ready prompts live in `conjectures/outbox/`.** Each is standalone: definitions, what is proved, numbered questions with the smallest open case first.
+- `outbox/naturality-arbitrary-depth.md` (C1)
+- `outbox/gray-contexts.md` (D2)
 
 - `conjectures/oriented-lax-limits.md` (B8), sent 2026-11-18.
 

@@ -1,5 +1,7 @@
 # Conjecture: Gray contexts in CaTT (composites of molecules, and Mikhail's Gray rules)
 
+> **To send to a researcher, use [`outbox/gray-contexts.md`](outbox/gray-contexts.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+
 *Self-contained problem statement. Familiarity with the type theory CaTT (Finster–Mimram, LICS 2017, arXiv 1706.02866) is assumed, and the relevant parts are recalled in §1. Partial results are in §3. Status: G is open beyond the dimensions listed in §3. In §6 (formerly `gray-contexts-steiner.md`), parts (1)–(2) are open and part (3) is answered (§7).*
 
 ## 1. Background

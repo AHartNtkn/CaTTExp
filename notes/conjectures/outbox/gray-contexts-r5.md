@@ -103,3 +103,722 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) on acyclic context
 - Hadzihasanovic's diagrammatic sets ([arXiv 1909.07639](https://arxiv.org/abs/1909.07639), [arXiv 2007.14505](https://arxiv.org/abs/2007.14505)) take unique weak composites of round molecules as the definition of a weak higher category.
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
+
+# Researcher Response
+
+**Question 1 follows from the two-square result in item 13.** The missing evaluation-fusion argument can be carried out relative to a formal vertical chain: its \(2\)-variables remain variables during the proof, and their substituted terms are treated as fixed inputs. No whiskered term’s arity is inserted into that chain.
+
+I give the construction below. It proves RC(3) for the negative hemisphere, hence gives the requested \(4\)-term \(H\to1_A\). I then give an extension of item 14 that applies to both examples in Question 4.
+
+The generating-\(1\)-graph hypothesis in Question 3 needs correction: the stated counterexample \((x:\star,a:1_x\to1_x)\) already has an acyclic generating \(1\)-graph.
+
+# 1. The hemisphere and its proper intervals
+
+Write \(\mathcal H\) for the negative hemisphere. Label the coordinate directions so that its paths from \(000\) to \(111\) are
+\[
+321,\qquad231,\qquad213,\qquad123,
+\]
+and its generating rewrites, with their necessary edge whiskers, are
+\[
+321\xRightarrow{E_1}231
+\xRightarrow{E_2}213
+\xRightarrow{E_3}123.
+\tag{1}
+\]
+
+These are all the paths and all the elementary rewrites between them: the missing cube vertex excludes the other two permutations. Consequently, a strict \(2\)-cell between these endpoints is an interval of the word \(E_1E_2E_3\), including an empty interval.
+
+Fix literal bracketed \(1\)-terms \(p_0,p_1,p_2,p_3\) for these four paths, and literal terms
+\[
+E_i:p_{i-1}\to p_i.
+\]
+For example, choose left-associated paths. Then \(E_1,E_3\) are the right-whiskered faces, and \(E_2\) is the left-whiskered middle face preceded and followed by the required path associators.
+
+## Proper intervals satisfy RC(3)
+
+The unions of the first two faces and of the last two faces are rectangular two-square contexts. One has the cylinder orientation of item 13; the other has its \(2\)-opposite. Reversing dimension \(2\) transfers RC(3), using the opposite construction on computads and their cells. [arxiv.org](https://arxiv.org/html/2402.01611v2?utm_source=chatgpt.com)
+
+A single face with its external edge whisker is a retract of an adjacent rectangle. Here are the substitutions explicitly. Write a two-square cylinder as
+\[
+F:f^-e_1\to e_0f^+,\qquad
+G:g^-e_2\to e_1g^+.
+\]
+
+For the subcontext consisting of \(F\) and \(g^+\), fix its variables and send
+\[
+c^-\mapsto b^-,
+\qquad
+g^-\mapsto1_{b^-},
+\qquad
+e_2\mapsto e_1g^+,
+\]
+and send \(G\) to
+\[
+\lambda_{e_1g^+}:1_{b^-}(e_1g^+)\to e_1g^+.
+\]
+This is a literal retraction.
+
+For the subcontext consisting of \(f^-\) and \(G\), fix its variables and send
+\[
+a^+\mapsto a^-,
+\qquad
+e_0\mapsto1_{a^-},
+\qquad
+f^+\mapsto f^-e_1,
+\]
+and send \(F\) to the reverse left unitor
+\[
+f^-e_1\to1_{a^-}(f^-e_1).
+\]
+
+Thus the proper nonempty intervals of (1), including their necessary whiskers, satisfy RC(3). Empty intervals are covered by item 4.
+
+The support restriction used here follows from the supplied support lemma and positivity of free strict \(2\)-composition. In a \(2\)-term, each generating \(2\)-cell contributes positively to its strict image: composition adds these contributions and exchange preserves them. Hence a term with a proper interval as strict image uses only that interval’s faces. Its remaining support consists of their boundary paths and the required external whisker. A \(3\)-term has the same support as its \(2\)-source by item 3.
+
+# 2. Two universal constructions
+
+The proof needs two families of \(4\)-terms. Both are constructed over globular pasting contexts.
+
+## 2.1 Varying the \(2\)-inputs of a vertical context
+
+Let
+\[
+V_m=
+\bigl(x,y;\ f_0,\ldots,f_m:x\to y;\
+\alpha_i:f_{i-1}\to f_i\bigr).
+\]
+Replace each \(\alpha_i\) by
+\[
+\alpha_i^-,\alpha_i^+:f_{i-1}\to f_i,
+\qquad
+\eta_i:\alpha_i^-\to\alpha_i^+.
+\]
+The resulting context is
+\[
+V_m^\uparrow=D^3\vee_1\cdots\vee_1D^3.
+\]
+
+For any full \(2\)-term \(a\) over \(V_m\), define
+\[
+\mathsf A_a
+=
+\operatorname{coh}_{V_m^\uparrow,\ a[-]\to a[+]}[\mathrm{id}].
+\tag{2}
+\]
+The composition condition holds: \(a[-]\) uses exactly the negative \(2\)-boundary, and \(a[+]\) exactly the positive one.
+
+If \(\chi:a\to b\) is a \(3\)-term over \(V_m\), with \(a,b\) full, define
+\[
+\boxed{
+\Omega_\chi=
+\operatorname{coh}_{V_m^\uparrow,\,
+(\chi[-]*_2\mathsf A_b)
+\to
+(\mathsf A_a*_2\chi[+])}
+[\mathrm{id}].
+}
+\tag{3}
+\]
+Both boundary \(3\)-terms have the literal type \(a[-]\to b[+]\). Each uses every \(\eta_i\), and therefore every variable of \(V_m^\uparrow\). This is a valid \(4\)-coherence.
+
+The \(\eta_i\) may be substituted by arbitrary \(3\)-terms. In particular, they may be the normalizers of arbitrary whiskered \(2\)-terms. Their \(1\)-boundaries remain fixed.
+
+We also need the following operations, constructed by the same rule.
+
+* **Action on \(4\)-cells:** replace each \(\eta_i\) by two parallel \(3\)-variables and a \(4\)-variable between them. The arity is a sequence of \(4\)-discs glued along dimension \(1\); the composition rule gives the action.
+* **Compatibility with composition of \(3\)-inputs:** use
+  \[
+  (D^3\vee_2D^3)\vee_1\cdots\vee_1(D^3\vee_2D^3).
+  \]
+  A full-support \(4\)-coherence compares
+  \[
+  \mathsf A_a(\eta*_2\theta)
+  \quad\text{and}\quad
+  \mathsf A_a(\eta)*_2\mathsf A_a(\theta).
+  \]
+* **Compatibility with substitution of \(2\)-expressions:** if \(\tau\) assigns \(2\)-terms over \(V_m\), then
+  \[
+  \mathsf A_{a[\tau]}
+  \quad\text{and}\quad
+  \mathsf A_a[\tau^\uparrow]
+  \]
+  are parallel \(3\)-terms over \(V_m^\uparrow\). When \(a[\tau]\) is full, both are full, so a coherence over \(V_m^\uparrow\) compares them.
+
+These supply the action, composition, and substitution comparisons below. They do not require naturality in a \(1\)-input.
+
+## 2.2 Coherent normalization of path-only gaps
+
+Fix a parenthesization convention for vertical composites, denoted \(C\). A singleton composite is its term.
+
+Consider an expression assembled from fixed event terms and path-only \(2\)-terms. Associate it into the form
+\[
+C(G_0,E_1,G_1,E_2,G_2,E_3,G_3),
+\tag{4}
+\]
+omitting absent events. Each \(G_i\) uses only the edges of the single path \(p_i\). An internal \(G_i\) has type \(p_i\to p_i\).
+
+Choose \(3\)-normalizations
+\[
+h_i:G_i\to H_i,
+\]
+where an internal \(H_i\) is \(1_{p_i}\), and an outside \(H_i\) is the prescribed endpoint correction. Item 4 constructs these terms over individual path contexts.
+
+Normalize the gaps in left-to-right order, remove the resulting internal identities, and associate the remaining factors to the fixed convention. Call this \(3\)-term \(\Phi\).
+
+There is a specified \(4\)-comparison between a nested application of this procedure and a single application to the expanded expression.
+
+Here is its construction.
+
+1. Use associativity comparisons to fix the literal source expression for each \(G_i\). Moving these associators past a gap \(3\)-term uses (3).
+2. Compose all operations on a given gap into one \(3\)-term \(G_i\to H_i\). Any two such terms are compared by item 4 over that path.
+3. Compare the orders of the resulting gap operations over
+   \[
+   P_{\mathrm{gap}}
+   =
+   D^3(h_0)\vee_1D^2(E_1)\vee_1D^3(h_1)
+   \vee_1D^2(E_2)\vee_1D^3(h_2)
+   \vee_1D^2(E_3)\vee_1D^3(h_3).
+   \]
+   If several successive operations on one gap have not yet been composed, use a chain of \(3\)-discs there instead.
+
+   The two formal \(3\)-terms \(L,R\) apply the same gap operations in different orders. Choose their source and target parenthesizations identically. Both use every displayed generator, so
+   \[
+   \boxed{\operatorname{coh}_{P_{\mathrm{gap}},\,L\to R}[\mathrm{id}]}
+   \tag{5}
+   \]
+   is a \(4\)-term.
+4. After substitution, the internal targets \(H_i\) are identity \(2\)-terms. Comparisons between their removal and the final reassociations are coherences over the vertical context of the remaining event and endpoint factors.
+
+Thus (5) does not identify a formal \(2\)-variable with an identity. Identity removal is performed after substitution and compared over the appropriate smaller vertical arity.
+
+This construction compares only path-gap operations and vertical associativity operations. It never requires commuting \(4\)-fillers obtained from the two overlapping rectangles.
+
+# 3. Choose normal forms and normalizers
+
+For every \(1\)-term \(r\) whose strict path is \(p_i\), choose
+\[
+\gamma_r:r\to p_i,
+\qquad
+\bar\gamma_r:p_i\to r
+\]
+by lifting to the path context. When \(r=p_i\) literally, omit that endpoint factor.
+
+If \(T:r\to s\) has strict event word
+\[
+w=E_{i+1}\cdots E_j,
+\]
+put
+\[
+N(T)=C(\gamma_r,E_{i+1},\ldots,E_j,\bar\gamma_s).
+\tag{6}
+\]
+An empty list denotes the appropriate identity. This convention fixes all bracketings.
+
+For proper intervals, choose
+\[
+\nu_T:T\to N(T)
+\]
+using RC(2). Any required comparison between such normalizers is supplied by the proper-interval RC(3) established in §1.
+
+For the full word, define \(\nu_T\) recursively.
+
+Write \(T=\operatorname{coh}_{Q,B}[\sigma]\). Item 14 gives
+\[
+\sigma=\kappa[\delta].
+\]
+Because \(T\) uses all three faces, the unique active column spans \(000\to111\). Every other column is point-supported. Therefore its reduced arity is a pure vertical context \(V_m\).
+
+In \(V_m\), write
+\[
+\widetilde T=\operatorname{coh}_{Q,B}[\kappa].
+\]
+Its strict \(2\)-image is the entire vertical chain. If its exact \(1\)-boundaries are \(r,s\), define
+\[
+K(\widetilde T)
+=
+C(\gamma_r^{V_m},\alpha_1,\ldots,\alpha_m,\bar\gamma_s^{V_m}),
+\]
+where the superscript means that the path corrections are formed in \(V_m\). Here the canonical paths are the individual formal \(1\)-variables \(f_i\).
+
+Both terms are full, so take
+\[
+b_{\widetilde T}
+=
+\operatorname{coh}_{V_m,\,
+\widetilde T\to K(\widetilde T)}[\mathrm{id}].
+\tag{7}
+\]
+
+Let \(T_i=\delta(\alpha_i)\). Define \(\nu_T\) by the composite
+\[
+\boxed{
+T
+\xrightarrow{\,b_{\widetilde T}[\delta]\,}
+K(\widetilde T)[\delta]
+\xrightarrow{\,C^3(\nu_{T_i})\text{ with the fixed framing}\,}
+C(\gamma_r^{V_m}[\delta],N(T_i),\bar\gamma_s^{V_m}[\delta])
+\xrightarrow{\,\Phi\,}
+N(T).
+}
+\tag{8}
+\]
+The middle arrow uses ordinary vertical composition of the \(3\)-normalizers, with identity \(3\)-terms on the framing factors.
+
+This recursion is well founded: every full-word \(T_i\) is a proper syntactic subterm of \(T\); the other \(T_i\) already have chosen normalizers.
+
+The flattening \(\Phi\) includes the endpoint comparisons
+\[
+\gamma_r^{V_m}[\delta]*_1\gamma_{\delta(f_0)}
+\longrightarrow \gamma_{r[\delta]},
+\tag{9}
+\]
+and
+\[
+\bar\gamma_{\delta(f_m)}*_1\bar\gamma_s^{V_m}[\delta]
+\longrightarrow\bar\gamma_{s[\delta]}.
+\]
+Both sides of each comparison are path-only \(2\)-terms with identical boundaries, so item 4 supplies the \(3\)-term. They are not identified definitionally.
+
+# 4. Relative evaluation fusion
+
+This is the central lemma.
+
+> **Relative fusion lemma.** Let \(u\) be a full \(2\)-term over a formal vertical context \(V_m\), and let
+> \[
+> \mathcal H\vdash\delta:V_m
+> \]
+> send its endpoints to \(000,111\).
+> Choose the generic comparison
+> \[
+> b_u:u\to K(u)
+> \]
+> as in (7), using the identity when \(u\) is a variable. Let
+> \[
+> f_{u,\delta}:K(u)[\delta]\to N(u[\delta])
+> \]
+> first apply the normalizers \(\nu_{\delta(\alpha_i)}\), then apply the fixed flattening \(\Phi\).
+> There is a constructible \(4\)-term
+> \[
+> \boxed{
+> E(u,\delta):
+> \nu_{u[\delta]}
+> \longrightarrow
+> b_u[\delta]*_2 f_{u,\delta}.
+> }
+> \tag{10}
+> \]
+
+## Proof
+
+Induct on the syntax of \(u\). The substituted terms \(\delta(\alpha_i)\) remain fixed inputs throughout this induction.
+
+If \(u[\delta]\) has a proper event interval, the two sides of (10) are parallel \(3\)-terms over the corresponding proper-interval context. Its RC(3) supplies (10).
+
+If \(u=\alpha_i\), both sides use the same \(\nu_{\delta(\alpha_i)}\). The comparison is the appropriate \(4\)-unitor. No arity of \(\delta(\alpha_i)\) is expanded.
+
+Now suppose
+\[
+u=\operatorname{coh}_{Q,A}[\tau]
+\]
+and \(u[\delta]\) has the full word.
+
+### The head reduction is stable
+
+In the formal context \(V_m\), a nonidentity strict \(2\)-term uses a consecutive subchain of the \(\alpha_i\). Its \(0\)-boundary is the pair of formal endpoints \(x,y\).
+
+Therefore the head of \(u\), evaluated into \(V_m\), has one active \(0\)-column spanning \(x\to y\); all other columns are point-supported. After substituting \(\delta\), that column remains active, since otherwise \(u[\delta]\) would have no \(2\)-generator in its support.
+
+Consequently the reduced head arity is unchanged. With fixed positional names, the refinement \(\lambda\) of item 14 is the identity here. Alternatively, its supplied refinement comparison gives the same result.
+
+Thus the initial head comparison in the recursive definition of \(\nu_{u[\delta]}\) is precisely the substitution of the corresponding generic head comparison.
+
+### Replace the input normalizers
+
+Let \(u_i\) be the generic \(2\)-inputs of that reduced head, restricted to their supporting vertical subchains. Write
+\[
+b_i:u_i\to K(u_i).
+\]
+The induction gives
+\[
+\nu_{u_i[\delta]}
+\longrightarrow b_i[\delta]*_2 f_{u_i,\delta}.
+\tag{11}
+\]
+For a proper image, this is instead the proper-interval filler.
+
+Transport (11) through the head’s composition operation using the action on \(4\)-cells from §2.1. Use its composition comparison to separate the \(b_i[\delta]\) from the \(f_{u_i,\delta}\).
+
+### Compare the generic evaluations
+
+Let \(h\) be the generic reduced-head comparison. Let \(\mathcal C\) denote the framed vertical-composition expression at this head.
+
+Over \(V_m\), define
+\[
+a_0=\mathcal C(K(u_i)).
+\]
+Let
+\[
+\chi_{\mathrm{gen}}:a_0\to K(u)
+\]
+be the explicit generic gap flattening of §2.2, formed in \(V_m\).
+
+Then
+\[
+b_{\mathrm{eval}}
+=
+h*_2\mathcal C^3(b_i)*_2\chi_{\mathrm{gen}}
+\]
+has the same type as \(b_u\). Both are full in \(V_m\): their source is the full term \(u\). Hence
+\[
+\operatorname{coh}_{V_m,\,b_{\mathrm{eval}}\to b_u}[\mathrm{id}]
+\tag{12}
+\]
+is a valid \(4\)-term.
+
+### The actual fusion calculation
+
+Put
+\[
+\eta_j=\nu_{\delta(\alpha_j)},
+\qquad
+\delta^+(\alpha_j)=N(\delta(\alpha_j)),
+\]
+leaving the \(0\)- and \(1\)-assignments unchanged.
+
+By definition, each \(f_{u_i,\delta}\) is the action on the relevant \(\eta_j\), followed by its gap flattening \(\Phi_i\). Let \(\Phi_{\mathrm{head}}\) be the outer flattening, and let \(\Phi_u\) be the flattening used in \(f_{u,\delta}\).
+
+The gap lemma gives
+\[
+\mathcal C^3(\Phi_i)*_2\Phi_{\mathrm{head}}
+\longrightarrow
+\chi_{\mathrm{gen}}[\delta^+]*_2\Phi_u.
+\tag{13}
+\]
+Indeed, after replacing each base input by \(N(\delta(\alpha_j))\), every event factor is one of the fixed \(E_i\). All remaining factors are path-only. Both sides of (13) are therefore nested or flat normalizations of the same expanded expression.
+
+Now perform the following \(4\)-dimensional calculation:
+\[
+\begin{aligned}
+\mathcal C^3(f_{u_i,\delta})*_2\Phi_{\mathrm{head}}
+&\Longrightarrow
+\mathsf A_{a_0}(\eta)*_2
+\mathcal C^3(\Phi_i)*_2\Phi_{\mathrm{head}}\\
+&\Longrightarrow
+\mathsf A_{a_0}(\eta)*_2
+\chi_{\mathrm{gen}}[\delta^+]*_2\Phi_u\\
+&\Longrightarrow
+\chi_{\mathrm{gen}}[\delta]*_2
+\mathsf A_{K(u)}(\eta)*_2\Phi_u\\
+&=
+\chi_{\mathrm{gen}}[\delta]*_2 f_{u,\delta}.
+\end{aligned}
+\tag{14}
+\]
+The first arrow uses the composition and substitution comparisons of §2.1. The second is (13). The third is the reverse of (3), applied to \(\chi_{\mathrm{gen}}\).
+
+When the expression is a framed vertical composite, its explicit action by ordinary compositions and the action (2) are compared by a full-support \(4\)-coherence on \(V_m^\uparrow\). Thus the use of \(\mathsf A\) in (14) agrees with the middle arrow chosen in (8), up to a specified \(4\)-term.
+
+Combining (11), (14), and (12), with the fixed associators, constructs (10). This completes the induction.
+
+The proof expands the **chosen normal forms** \(N(\delta(\alpha_i))\) into their vertical words. It never expands the original arities of the arbitrary terms \(\delta(\alpha_i)\).
+
+# 5. Compatibility with every \(3\)-term
+
+We now construct, for every \(3\)-term \(H:u\to v\) in the hemisphere,
+\[
+\boxed{
+I_H:\nu_u\longrightarrow H*_2\nu_v.
+}
+\tag{15}
+\]
+Since the hemisphere has no \(3\)-variables, \(u,v\) have the same strict \(2\)-image. Their exact \(1\)-boundaries agree, so \(N(u)=N(v)\) literally.
+
+If their event word is proper, (15) is supplied by proper-interval RC(3).
+
+For the full word, induct on the syntax of \(H\). Apply item 14 to its head. Its reduced arity is one suspended column, with every other column point-supported. The supplied \(4\)-comparison transfers (15) between the original and reduced heads.
+
+Write the reduced formal head as
+\[
+\mathfrak h=\operatorname{coh}_{P,u_0\to v_0}[\mathrm{id}],
+\qquad
+H=\mathfrak h[\delta].
+\]
+
+## 5.1 A comparison over the formal \(3\)-arity
+
+Suppose first that \(\dim P=3\). The context \(P\) has \(1\)-variables \(f_0,\ldots,f_m\); for each \(j\), its \(2\)- and \(3\)-variables form a chain
+\[
+\alpha_{j,0}
+\xrightarrow{\xi_{j,1}}
+\alpha_{j,1}
+\longrightarrow\cdots
+\xrightarrow{\xi_{j,r_j}}
+\alpha_{j,r_j},
+\]
+where every \(\alpha_{j,k}\) has type \(f_{j-1}\to f_j\).
+
+Let
+\[
+D_j=\xi_{j,1}*_2\cdots *_2\xi_{j,r_j},
+\]
+using \(1_{\alpha_{j,0}}\) when \(r_j=0\). Compose the \(D_j\) along dimension \(1\), and add the same endpoint framing as in the generic normal forms. This gives an explicit \(3\)-term
+\[
+D:K^-\to K^+.
+\]
+Here \(K^-\) and \(K^+\) are the framed composites of the negative and positive \(2\)-boundary rows.
+
+Choose
+\[
+b_{u_0}:u_0\to K^-,
+\qquad
+b_{v_0}:v_0\to K^+
+\]
+over the corresponding vertical \(2\)-boundary contexts.
+
+Both
+\[
+b_{u_0}*_2D,
+\qquad
+\mathfrak h*_2b_{v_0}
+\]
+have the exact type \(u_0\to K^+\), and both are full in \(P\). For the first, every \(\xi_{j,k}\) is used by \(D\); an empty chain retains its \(\alpha_{j,0}\) through its identity term. The second is full because \(\mathfrak h\) is full.
+
+Therefore
+\[
+\boxed{
+\Xi_P=
+\operatorname{coh}_{P,\,
+(b_{u_0}*_2D)\to
+(\mathfrak h*_2b_{v_0})}[\mathrm{id}]
+}
+\tag{16}
+\]
+is legal.
+
+If \(\dim P=2\), use \(K^-=K^+=K\) and \(D=1_K\). The same formula is legal.
+
+## 5.2 Normalize the substituted \(3\)-inputs
+
+For fixed \(j\), all terms \(\alpha_{j,k}[\delta]\) have the same exact \(1\)-boundaries and the same strict event word. Thus their normal form is one literal term \(N_j\).
+
+The inductive comparisons for the proper subterms \(\xi_{j,k}[\delta]\) compose to
+\[
+\nu_{\alpha_{j,0}[\delta]}
+\longrightarrow
+D_j[\delta]*_2\nu_{\alpha_{j,r_j}[\delta]}.
+\tag{17}
+\]
+Include the \(4\)-associators for the chosen bracketing of \(D_j\). For an empty chain, (17) is the inverse \(4\)-unitor.
+
+Compose (17) along dimension \(1\), using the ordinary \(4\)-dimensional interchange coherence. Its arity consists of two successive \(3\)-cells in each position, with those positions glued along dimension \(1\). This is a globular pasting context.
+
+We obtain
+\[
+G^-\longrightarrow D[\delta]*_2G^+,
+\tag{18}
+\]
+where
+\[
+G^-:K^-[\delta]\to L,\qquad
+G^+:K^+[\delta]\to L,
+\]
+and
+\[
+L=C(\gamma_s[\delta],N_1,\ldots,N_m,\bar\gamma_t[\delta]).
+\]
+The terms \(s,t\) are common to \(u_0,v_0\), so \(L\) is literally the same on both sides.
+
+Choose one flattening
+\[
+\Phi:L\to N(u_0[\delta])=N(v_0[\delta]).
+\]
+Appending it to (18) gives
+\[
+f_u\longrightarrow D[\delta]*_2 f_v,
+\qquad
+f_u=G^-*_2\Phi,\quad f_v=G^+*_2\Phi.
+\tag{19}
+\]
+
+## 5.3 Assemble the compatibility term
+
+Apply relative fusion to the two boundary terms. Then compose
+\[
+\begin{aligned}
+\nu_{u_0[\delta]}
+&\xRightarrow{E_u}
+b_{u_0}[\delta]*_2f_u\\
+&\Longrightarrow
+b_{u_0}[\delta]*_2(D[\delta]*_2f_v)\\
+&\Longrightarrow
+(b_{u_0}[\delta]*_2D[\delta])*_2f_v\\
+&\xRightarrow{\Xi_P[\delta]}
+(\mathfrak h[\delta]*_2b_{v_0}[\delta])*_2f_v\\
+&\Longrightarrow
+\mathfrak h[\delta]*_2(b_{v_0}[\delta]*_2f_v)\\
+&\xRightarrow{E_v^\dagger}
+\mathfrak h[\delta]*_2\nu_{v_0[\delta]}.
+\end{aligned}
+\tag{20}
+\]
+The unlabelled arrows are (19), whiskered as required, and \(4\)-associators. The superscript \(\dagger\) means the reverse-directed construction; no \(5\)-dimensional inverse equation is needed.
+
+This proves (15) for the reduced head. The head comparison from item 14 proves it for the original head and completes the induction.
+
+# 6. The requested cube contraction
+
+Now let
+\[
+H:A\to A
+\]
+be \(X\)-free. Item 6 places it literally in the hemisphere context. Equation (15) gives
+\[
+I_H:\nu_A\longrightarrow H*_2\nu_A.
+\]
+
+Choose the inverse normalizer and its cancellation witness
+\[
+\bar\nu_A:N(A)\to A,
+\qquad
+\varepsilon:\nu_A*_2\bar\nu_A\to1_A.
+\]
+These are constructed by reversing the primitive full-support coherences in \(\nu_A\), taking their cancellation coherences over the same arities, and composing the witnesses using the ordinary associators and interchange terms.
+
+The following composite is the required \(4\)-term:
+\[
+\boxed{
+\begin{aligned}
+H
+&\longrightarrow H*_2 1_A\\
+&\longrightarrow H*_2(\nu_A*_2\bar\nu_A)\\
+&\longrightarrow (H*_2\nu_A)*_2\bar\nu_A\\
+&\xrightarrow{\,I_H^\dagger\text{ whiskered by }\bar\nu_A\,}
+\nu_A*_2\bar\nu_A\\
+&\xrightarrow{\varepsilon}1_A.
+\end{aligned}}
+\tag{21}
+\]
+The first three arrows are the inverse unitor, the whiskering of \(\varepsilon^\dagger\), and the associator.
+
+This is a recursive construction from the syntax of \(H\), using the supplied proper-interval RC(3) terms and the displayed coherence constructors.
+
+# 7. Extension to contexts with \(3\)-variables
+
+There is also a sufficient condition for retaining item 14’s original inactivity test.
+
+Write
+\[
+\operatorname{supp}_k(t)=\operatorname{supp}(t)\cap\operatorname{Var}_k(\Gamma).
+\]
+Assume \(\dim\Gamma\leq3\) and
+\[
+\boxed{
+\operatorname{supp}_2(s_2z)\ne\varnothing
+\quad\text{for every \(3\)-variable }z\text{ of }\Gamma.
+}
+\tag{22}
+\]
+
+Then
+\[
+\boxed{
+\operatorname{supp}_2(s_2t)=\varnothing
+\quad\Longrightarrow\quad
+\operatorname{supp}_{\geq2}(t)=\varnothing
+}
+\tag{23}
+\]
+for every \(3\)-term \(t\).
+
+## Proof of the boundary-support assertion
+
+Induct on \(t\).
+
+For a variable, the premise contradicts (22).
+
+For \(t=\operatorname{coh}_{P,u\to v}[\sigma]\) with \(\dim P\leq2\), the coherence condition makes \(u\) full in \(P\). Thus
+\[
+\operatorname{supp}(u[\sigma])
+=
+\bigcup_{a\in\operatorname{Var}(P)}
+\operatorname{supp}(\sigma(a)).
+\]
+If its \(2\)-support is empty, every assignment is \(2\)-generator-free. Those assignments have dimension at most \(2\), so they also use no \(3\)-generator.
+
+For \(\dim P=3\), the constructor uses the composition condition. The images of all \(2\)-variables in \(\partial^-_2P\) therefore have empty \(2\)-support.
+
+The graph whose vertices are the \(2\)-variables of \(P\) and whose edges are its \(3\)-variables is a disjoint union of directed chains, allowing isolated vertices. Its initial vertices are precisely the \(2\)-variables of \(\partial^-_2P\). This follows from the globular pasting construction: composition along dimension \(2\) concatenates these chains, while composition along lower dimensions places chains alongside one another.
+
+Proceed along each chain. If \(z:a\to b\) is a formal \(3\)-variable and \(\sigma(a)\) has empty \(2\)-support, the induction hypothesis applies to the proper subterm \(\sigma(z)\). It has support only in dimensions \(0,1\). Its target \(\sigma(b)\) consequently has empty \(2\)-support as well.
+
+This proves (23) for all assignments and hence for \(t\).
+
+Condition (22) is also necessary for this particular one-sided assertion: apply (23) to a \(3\)-variable.
+
+## Consequence for factorization
+
+Suppose additionally that the generating \(1\)-graph of \(\Gamma\) is acyclic. In an inactive column, every assigned \(2\)-term is \(2\)-generator-free. For each assigned \(3\)-term, its \(2\)-source is one of those assignments, so (23) places the entire \(3\)-term on the \(1\)-skeleton.
+
+The literal path lift from item 14 therefore applies unchanged. Its constructions
+\[
+R_\sigma,\quad\kappa_\sigma,\quad\delta_\sigma,\quad
+\chi_\sigma,\quad\lambda_{\sigma,\rho},\quad
+\zeta_{\sigma,\rho},\quad\Theta_{\sigma,\rho}
+\]
+remain valid. For stability, require both ambient contexts to satisfy (22). An old inactive column stays path-supported; a column that becomes inactive is handled by (23) in the new context.
+
+### Cylinder of \(D^2\)
+
+Use \(A^\pm:f^\pm\to g^\pm\), vertical edges \(h,k\), and squares
+\[
+F:f^-k\to hf^+,\qquad G:g^-k\to hg^+.
+\]
+Its \(3\)-generator is
+\[
+Z:(A^-*_0k)*_1G
+\longrightarrow
+F*_1(h*_0A^+).
+\]
+Its source \(2\)-support is \(\{A^-,G\}\), and its target \(2\)-support is \(\{F,A^+\}\). This is the cylinder presentation in BMOSV, Figure 18. Its generating \(1\)-graph is a directed square with parallel horizontal arrows, hence acyclic. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### The join \(c\star D^2\)
+
+Write
+\[
+f,g:x\to y,\qquad A:f\to g,\qquad
+p:c\to x,\qquad q:c\to y,
+\]
+with
+\[
+\beta_f:q\to p*_0f,\qquad
+\beta_g:q\to p*_0g,
+\]
+and
+\[
+Z:\beta_g\longrightarrow\beta_f*_1(p*_0A).
+\]
+This orientation follows from the join differential
+\[
+d(c\star A)=A-(c\star g)+(c\star f).
+\]
+Thus the source \(2\)-support is \(\{\beta_g\}\); the target \(2\)-support is \(\{\beta_f,A\}\). The generating \(1\)-graph increases along \(c<x<y\). [arxiv.org](https://arxiv.org/pdf/1607.00668?utm_source=chatgpt.com)
+
+Both examples satisfy both the source and target versions of (22).
+
+Without a condition of this kind, the old test fails. In
+\[
+(x,y,\ f:x\to y,\ Z:1_f\to1_f),
+\]
+map the two \(2\)-boundary variables of \(D^3\) to \(1_f\) and its top variable to \(Z\). The sole column is inactive according to the old test, but no literal factorization through the path context of \(f\) can produce the variable \(Z\).
+
+# 8. Scope of the result
+
+The proof establishes the cube case and evaluation fusion for its active vertical columns. It uses the forced three-event order, the proper-interval cylinder results, and the fact that a full-word head reduces to one pure vertical column.
+
+It does not prove general RC(3) from acyclicity of the generating \(1\)-graph. That hypothesis is already refuted by the counterexample supplied in §3:
+\[
+(x:\star,\ a:1_x\to1_x)
+\]
+has one vertex and no generating \(1\)-edges. If a nonempty connected graph is required, adjoin \(y\) and \(f:x\to y\); the substitution \(y\mapsto x,\ f\mapsto1_x\) retracts it to the same counterexample.
+
+The Steiner loop-free alternative and the general \(RC(n)\)/\(G(n)\) statements are not established by this argument.

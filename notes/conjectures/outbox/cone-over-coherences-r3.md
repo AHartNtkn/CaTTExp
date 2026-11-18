@@ -89,3 +89,668 @@ A proof of RC(3) for Cone(D²; c) or for all join contexts; a proof of RC(n); a 
 - T. Benjamin, I. Markakis, W. Offord, C. Sarti, J. Vicary, *Naturality for higher-dimensional path types*, arXiv 2501.11620 (§2.2–2.3: binary compositions and suspension).
 - E. Finster, S. Mimram, *A type-theoretical definition of weak ω-categories*, LICS 2017.
 - T. J. Mikhail, *A type-theoretic definition of lax (∞,∞)-limits*, arXiv 2412.13310.
+
+# Researcher Response
+
+**Question 1 admits a normalisation proof.** The key is to keep the literal 1-boundaries of a 2-term while normalising it. This lets the necessary 4-dimensional comparisons use naturality only in 2-variables.
+
+I prove
+\[
+\boxed{\mathrm{RC}(3,\operatorname{Cone}(D^2;c)).}
+\]
+The proof does not establish RC(3) for every join context, or RC in arbitrary dimensions.
+
+Write
+\[
+\begin{aligned}
+a&=p_x:c\to x,& b&=p_y:c\to y,\\
+u&=p_f:b\Rightarrow a*_0f,&
+v&=p_g:b\Rightarrow a*_0g,\\
+w&=a*_0\alpha,&d&=u*_1w,\\
+M&=p_\alpha:v\Rrightarrow d .
+\end{aligned}
+\]
+Let \(K\) be the context obtained by omitting \(M\), and let
+\[
+\Delta=K,(M:v\Rrightarrow d)=\operatorname{Cone}(D^2;c).
+\]
+
+The proof has two parts:
+
+1. Construct substitution-compatible normalisers in \(K\), proving \(\mathrm{RC}(3,K)\).
+2. Show that adjoining this particular \(M\) preserves RC(3).
+
+Throughout, binary compositions are the direct compositions specified in the question.
+
+## 1. Support is preserved by strictification
+
+The following lemma makes the fixed-edge case substantially simpler.
+
+### Support lemma
+
+For every CaTT context \(\Gamma\) and term \(t\), strictification preserves the dependency-closed set of generating variables:
+\[
+\boxed{\operatorname{supp}_{\pi\Gamma}(\pi t)
+      =\operatorname{supp}_{\Gamma}(t).}
+\tag{1}
+\]
+
+Here strict support is defined by
+\[
+\begin{aligned}
+\operatorname{supp}(g)
+  &=\{g\}\cup\operatorname{supp}(\sigma g)
+                  \cup\operatorname{supp}(\tau g),\\
+\operatorname{supp}(1_z)&=\operatorname{supp}(z),\\
+\operatorname{supp}(z*_kz')
+  &=\operatorname{supp}(z)\cup\operatorname{supp}(z').
+\end{aligned}
+\]
+For a 0-generator, its support is its singleton.
+
+These equations are invariant under the strict category axioms. Associativity and interchange preserve unions. A unit equation removes only an identity on a face, whose support is already a subset of the support of the other operand. The latter inclusion follows by induction on strict expressions.
+
+For a strict functor \(F\) between free strict computads, consequently,
+\[
+\operatorname{supp}(Fz)
+=
+\bigcup_{g\in\operatorname{supp}(z)}
+\operatorname{supp}(Fg).
+\tag{2}
+\]
+
+Now prove (1) by induction on CaTT derivations. The variable case follows from the induction hypothesis on its declared boundaries. For a coherence term, its syntactic support is
+\[
+\operatorname{supp}\bigl(\operatorname{coh}_{P,A}[\gamma]\bigr)
+=
+\bigcup_{q\in\operatorname{Var}(P)}
+\operatorname{supp}(\gamma q).
+\]
+A composition head strictifies to the total composite of \(P\), whose support is all of \(P\). A coherence-case head strictifies to \(1_{\pi s}\), where its formal source \(s\) is full in \(P\). The induction hypothesis on \(s\) gives
+\[
+\operatorname{supp}(1_{\pi s})
+=\operatorname{supp}(\pi s)
+=\operatorname{Var}(P).
+\]
+Equation (2), followed by the induction hypotheses on the substitution entries, proves (1).
+
+This induction uses the formal boundary term as a premise of the coherence derivation; it does not assume the assertion being proved.
+
+### Consequence for the fixed edge
+
+Put
+\[
+S=D^1(a)*_0D^2(\alpha)
+  =(c,x,a,y,f,g,\alpha)
+\]
+in pasting-context order. Its variables are exactly the strict support of \(w=a*_0\alpha\).
+
+Thus every 3-term \(H\) with
+\[
+\pi H=1_w
+\]
+restricts literally to a full term \(H_S\) over \(S\). In particular, none of \(b,u,v,M\) can appear in any substitution entry of \(H\).
+
+For parallel such terms \(H,H'\), the required filler is directly
+\[
+\boxed{
+\operatorname{coh}_{S,\;H_S\to H'_S}[\iota]
+:
+H\longrightarrow H',
+}
+\tag{3}
+\]
+where \(\Delta\vdash\iota:S\) is the variable inclusion.
+
+This settles the isolated \(a*_0\alpha\) case. The same observation applies to every higher iterated-identity fibre over \(w\).
+
+It also handles weak words with strict image \(a\): they restrict to \(D^1(a)\). Retaining a variable \(h\) and subsequently substituting \(h\mapsto a\) therefore accommodates these words without changing the retained edge variable.
+
+## 2. The strict cells that the normalisation must handle
+
+The nonidentity strict 2-cells in \(K\) are precisely:
+
+| Cell | 1-source | 1-target |
+|---|---|---|
+| \(\alpha\) | \(f\) | \(g\) |
+| \(u\) | \(b\) | \(af\) |
+| \(v\) | \(b\) | \(ag\) |
+| \(w=a\alpha\) | \(af\) | \(ag\) |
+| \(d=uw\) | \(b\) | \(ag\) |
+
+Indeed, \(\alpha\) has only the additional nonidentity whiskering \(a\alpha\). The only vertically composable pair of nonidentity 2-cells is \(u,w\). Every nonidentity 2-cell has 0-target \(y\), so no two are horizontally composable.
+
+In \(\pi\Delta\), the only nonidentity strict 3-cell is \(M\). It has no nonidentity strict whiskers: there is no nonidentity 2-cell into \(b\), none out of \(ag\), no nonidentity 1-cell into \(c\), and none out of \(y\). Two copies of \(M\) cannot compose because \(d\ne v\).
+
+We will write
+\[
+U\simeq V
+\]
+for the existence of a 4-term between parallel 3-terms. All 3-cells of \(K\), and all 4-cells of \(\Delta\), are invertible: their supports have no generators in their own dimensions. This is the computadic invertibility criterion of Benjamin–Markakis, Proposition 35. Thus \(\simeq\) is an equivalence relation compatible with composition, and cancellation of a \(K\)-3-cell is legitimate. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+All folds below have a fixed left association. Whenever a displayed string changes its 2-dimensional association, the indicated construction inserts 3-associators. Such changes are not treated as definitional equalities.
+
+## 3. Normal forms with literal boundaries
+
+Choose a representative \(p^0\) for each strict 1-path. For example,
+\[
+(af)^0=a*_0f,\qquad (ag)^0=a*_0g.
+\]
+For every 1-term \(p\), choose
+\[
+\kappa_p:p\Rightarrow p^0,
+\qquad
+\kappa_p^{-1}:p^0\Rightarrow p
+\]
+over the path pasting context of \(\pi p\). Choose identities when \(p=p^0\).
+
+Their inverse-law 3-cells, and comparisons between the resulting parallel 3-paths, are direct coherences over that same path context.
+
+For a 2-term
+\[
+A:p\Rightarrow q,\qquad \pi A=e,
+\]
+use the displayed representatives of \(\alpha,u,v,w,d\), and identities for identity strict 2-cells. Define
+\[
+\widehat e_{p,q}
+=
+(\kappa_p*_1e^0)*_1\kappa_q^{-1}.
+\tag{4}
+\]
+Its type is **literally** \(p\Rightarrow q\).
+
+We construct
+\[
+N_A:A\Rrightarrow\widehat e_{p,q}.
+\tag{5}
+\]
+
+If \(e\) is an identity, \(\alpha\), or \(w\), both endpoints of (5) are full terms over, respectively,
+
+\[
+\text{the path context of }\pi p,\qquad
+D^2(\alpha),\qquad
+D^1(a)*_0D^2(\alpha).
+\]
+
+Choose \(N_A\) by the full coherence rule there. The support lemma justifies these restrictions, including restrictions of all substitution entries.
+
+The remaining strict images are \(u,v,d\).
+
+## 4. The active-column construction
+
+Let
+\[
+C_n=
+\bigl(
+X,Y;\ z_0,\ldots,z_n:X\to Y;\
+e_i:z_{i-1}\Rightarrow z_i
+\bigr)
+\]
+be a vertical chain of \(n\) 2-disks.
+
+Suppose
+\[
+A=\operatorname{coh}_{P,B}[\gamma]
+\]
+has strict image \(u,v\), or \(d\). Its arity has dimension 2.
+
+Some 2-dimensional argument has a strict image involving \(u\) or \(v\), and hence has 0-source \(c\) and 0-target \(y\). Since the root columns of \(P\) are ordered, and their images are monotone in
+\[
+c<x<y,
+\]
+there is exactly one non-point root column. All preceding columns evaluate at \(c\); all following columns evaluate at \(y\).
+
+Let the active column be \(C_n\). There is a literal factorisation of substitutions
+\[
+C_n\vdash\delta:P,\qquad
+K\vdash\sigma:C_n,\qquad
+\gamma=\delta[\sigma].
+\tag{6}
+\]
+The substitution \(\delta\) sends active variables to the corresponding variables of \(C_n\). It sends passive variables to their point-supported \(\gamma\)-images, renamed to \(X\) or \(Y\). The substitution \(\sigma\) assigns the original images to the active variables.
+
+In particular,
+\[
+r=\operatorname{coh}_{P,B}[\delta]
+\]
+is a full 2-term over \(C_n\), and
+\[
+A=r[\sigma]
+\]
+holds syntactically. **The head remains \(P\).**
+
+Suppose \(r:p\Rightarrow q\). Its strict endpoints are \(z_0,z_n\). Let \(L_n\) be the chosen fold of the \(e_i\). Choose
+\[
+k_p:p\Rightarrow z_0,\qquad k_q:q\Rightarrow z_n
+\]
+over the two boundary 1-disks, and put
+\[
+H_n^B=(k_p*_1L_n)*_1k_q^{-1}:p\Rightarrow q.
+\tag{7}
+\]
+Define the generic comparison
+\[
+\chi_r:r\Rrightarrow H_n^B
+\tag{8}
+\]
+by full coherence in \(C_n\).
+
+### Evaluating the corrected fold
+
+Write
+\[
+A_i=e_i[\sigma]:p_{i-1}\Rightarrow p_i,\qquad
+e_i'=\pi A_i.
+\]
+Assuming the recursively constructed \(N_{A_i}\), construct
+\[
+E(\sigma;B):
+H_n^B[\sigma]\Rrightarrow
+\widehat e_{p[\sigma],q[\sigma]}
+\tag{9}
+\]
+by the following finite sequence.
+
+1. Apply the \(N_{A_i}\) through the vertical fold. Their targets retain the literal 1-boundaries \(p_{i-1},p_i\).
+2. Reassociate to expose every internal pair
+   \[
+   \kappa_{p_i}^{-1}*_1\kappa_{p_i}.
+   \]
+3. Cancel those pairs using their chosen path-supported 3-cells.
+4. Compare the outer boundary normalisers
+   \[
+   k_p[\sigma]*_1\kappa_{p_0}
+   \quad\text{and}\quad
+   \kappa_{p[\sigma]},
+   \]
+   and the corresponding target expressions, by 3-coherences in their actual path contexts.
+5. Remove identity labels and reassociate the remaining canonical word.
+
+For total strict image \(u\) or \(v\), that word has one nonidentity label. For total image \(d\), expand the chosen representative \(d^0=u*_1w\); the remaining word is exactly \(u,w\), in that order.
+
+Set
+\[
+N_A=\chi_r[\sigma]*_2E(\sigma;B).
+\tag{10}
+\]
+The only recursive calls are on the active 2-dimensional substitution entries \(A_i\), which are proper syntax arguments of the original head. There is no recursive call on the newly constructed fold.
+
+For the variables \(u,v\), use the unit comparisons from the variable to its expression (4), obtained by substitution from a 2-disk. Thus the recursion is well founded.
+
+## 5. The fusion lemma
+
+The essential compatibility is the following.
+
+> **Fusion lemma.** Let \(r:B\) be a full 2-term over \(C_n\), and let \(K\vdash\sigma:C_n\). With the common corrected fold (7) and evaluation (9), there is a 4-term
+> \[
+> \boxed{
+> F(r,\sigma):
+> N_{r[\sigma]}
+> \longrightarrow
+> \chi_r[\sigma]*_2E(\sigma;B).
+> }
+> \tag{11}
+> \]
+> The tail \(E(\sigma;B)\) is the same for every full \(r:B\).
+
+Here are the comparisons used in its proof.
+
+### 5.1 Fusion of padded vertical folds
+
+Normalising a vertical list in consecutive blocks, then normalising the resulting list, is 4-connected to normalising the flat list.
+
+The construction uses five kinds of comparisons.
+
+**Reassociation and units.** Naturality of reassociation in 3-inputs is a direct 4-coherence on a pasting context
+\[
+D^3(P_1)*_1\cdots *_1D^3(P_m).
+\]
+The corresponding unit comparisons use the same construction with identity slots.
+
+**Fold interchange.** The comparison
+\[
+\operatorname{fold}(P_i*_2Q_i)
+\simeq
+\operatorname{fold}(P_i)*_2\operatorname{fold}(Q_i)
+\]
+is a direct 4-coherence on the pasting obtained by taking the 1-composite of the columns
+\[
+D^3(P_i)*_2D^3(Q_i).
+\]
+
+**Cancellation order.** After expanding the partitioned fold, both procedures cancel the same indexed pairs of boundary normalisers. Disjoint cancellations commute by 4-interchange. Overlapping cancellations use only normalisers of one strict 1-path, so their parallel 3-paths are compared by a direct 4-coherence in that path context.
+
+**Boundary-path choices.** Expressions such as
+\[
+k_p[\sigma]*_1\kappa_{p_0}
+\quad\text{and}\quad
+\kappa_{p[\sigma]}
+\]
+lie in the same actual path context. Their 3-comparisons and all comparisons between the resulting parallel 3-paths are therefore available there. Moving such a fixed 3-comparison through the fold uses 4-interchange.
+
+**The final canonical word.** After cancellation and expansion of \(d^0\), the nonidentity word is one of
+\[
+u,\quad v,\quad w,\quad u,w.
+\]
+Comparisons between its associativity and unit-reduction paths are direct 4-coherences over \(C_1\) or \(C_2\), followed by substitution. In the last case, the middle 1-variable of \(C_2\) is substituted by \(a*_0f\).
+
+If an input with strict image \(w\) was normalised differently, compare the two 3-paths directly in \(D^1(a)*_0D^2(\alpha)\). That 4-cell can then be whiskered with \(u\); its construction never requires a pasting context declaring \(u:b\Rightarrow af\).
+
+These comparisons cover the entire difference between the two fold procedures: reassociation, factoring composites of input normalisers, cancellation order, boundary-path choices, and canonical-word reduction.
+
+In particular, throughout this procedure the \(N_{A_i}\) have unchanged literal 1-boundaries. Passing a generic 3-comparison through them varies only 2-variables. This is depth-1 naturality, within the scope of BMOSV Theorem 3.1; it is not naturality in the underlying 1-variables. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### 5.2 Proof of evaluation fusion
+
+If the strict image of \(r[\sigma]\) is an identity, \(\alpha\), or \(w\), both sides of (11) restrict to the corresponding actual path, disk, or whiskered-disk context. Their 4-comparison is direct.
+
+For strict images \(u,v,d\), induct on the syntax of the **formal term \(r\)**.
+
+For a full variable term, the context is \(C_1\). Expand the evaluation of the padded one-entry fold. Its construction uses \(N_{\sigma e_1}\), identity-entry normalisers, and path cleanup. Naturality of the generic unit comparisons in the 3-cell \(N_{\sigma e_1}\), followed by path-supported 4-comparisons, proves (11). This does not invoke an induction hypothesis on the arbitrary substituted term \(\sigma e_1\). Nor does it require \(\chi_{e_1}\) to be an identity: its comparison with the chosen unit path is a direct coherence over the generic 2-disk.
+
+For a constructor, factor its head substitution through its active column \(C_m\). This factorisation is computed in \(C_n\). Its passive columns are point-supported, so the same factorisation remains literal after \(\sigma\).
+
+The active 2-arguments \(r_1,\ldots,r_m\) have strict images
+\[
+e_{i_{j-1}+1}\cdots e_{i_j},
+\qquad
+0=i_0\le i_1\le\cdots\le i_m=n.
+\tag{12}
+\]
+They therefore restrict to consecutive subchains of \(C_n\), including empty subchains. This follows from the strict vertical-chain structure, with restriction justified by (1).
+
+Apply the induction hypothesis to each nonempty subchain; use its path context for an empty one. Lift these 4-comparisons through the outer fold, and use fold interchange to separate the generic comparisons from the evaluations.
+
+The generic head comparison, the comparisons for the subchains, and their boundary corrections assemble to a full 3-term
+\[
+\chi'_r:r\Rrightarrow H_n^B
+\]
+in \(C_n\). Consequently
+\[
+\chi'_r\simeq\chi_r
+\]
+by a direct 4-coherence in \(C_n\), which can then be substituted by \(\sigma\).
+
+The remaining difference is precisely blockwise versus flat padded-fold evaluation. Section 5.1 supplies its 4-comparison. This proves (11).
+
+Every inductive call is on a proper formal argument \(r_j\). The proof uses neither RC(3) in \(K\) nor naturality of a 3-coherence in 1-variables.
+
+## 6. RC(3) for \(K\)
+
+For every 3-term
+\[
+T:A\Rrightarrow B
+\]
+in \(K\), construct
+\[
+L_T:T*_2N_B\longrightarrow N_A.
+\tag{13}
+\]
+Because \(K\) has no 3-generators, \(\pi A=\pi B\); their normal forms (4) are literally identical.
+
+### Coherence heads of arity at most 2
+
+For strict image an identity, \(\alpha\), or \(w\), use the corresponding support pasting context directly.
+
+For \(u,v,d\), factor the arity through \(C_n\), retaining the original head. Let the resulting formal 3-term be
+\[
+\theta:r\Rrightarrow s,
+\qquad r,s:B_0.
+\]
+The 3-terms
+\[
+\theta*_2\chi_s,\qquad \chi_r
+\]
+are parallel and full in \(C_n\). Their comparison is a direct 4-coherence.
+
+After substitution, combine this comparison with the two fusion cells
+\[
+F(r,\sigma),\qquad F(s,\sigma)
+\]
+and their common tail \(E(\sigma;B_0)\). This gives (13).
+
+### Composition heads of arity 3
+
+First compare the generic head with a binary evaluation of its pasting diagram. The lower boundaries must be corrected before making this comparison.
+
+If \(E\) is the binary evaluation, choose 2-cells on its boundary 1-paths
+\[
+\lambda:s_1(\text{head})\Rightarrow s_1E,
+\qquad
+\rho:t_1E\Rightarrow t_1(\text{head}),
+\]
+and replace \(E\) by
+\[
+E'=(\lambda*_1E)*_1\rho.
+\tag{14}
+\]
+It now has the literal 1-boundaries of the head.
+
+Next choose 3-comparisons from the head’s 2-source to \(s_2E'\), and from \(t_2E'\) to its 2-target, over the source and target 2-pasting contexts. The corrected binary evaluation and the original head are parallel full 3-terms over the original 3-pasting context. A direct 4-coherence compares them.
+
+After substitution, the 3-boundary corrections have arity at most 2 and are covered above. Apply induction to the proper 3-dimensional substitution arguments. Compatibility with the binary evaluation follows as follows.
+
+- For composition at dimension 2, concatenate (13) using 4-associativity.
+- For composition at dimension 1, use the two-entry instance of fusion (11), followed by 4-interchange.
+- For composition at dimension 0 with strict 2-image \(u,v,d\), the non-point argument spans \(c\to y\), so the other argument is point-supported. For a fixed point argument, retain the active generic 3-disk; the point-removal naturality comparison is a direct 4-coherence there, with the actual boundary-path corrections supplied as in Section 5.1.
+
+There is also a varying-point case. If
+\[
+h:\delta_0\Rrightarrow\delta_1
+\]
+is a point-supported 3-term, whisker it with a generic 2-cell \(p\). The resulting 3-term and the two point-removal comparisons are terms over \(D^2(p)\): the point terms use only an endpoint vertex. Their two composites are parallel and full there, so a direct 4-coherence compares them. This handles a varying point argument without introducing an arbitrary endo-2-generator.
+
+For the remaining strict images—identities, \(\alpha,w\)—the dimension-0 compatibility lies directly in their support pasting contexts.
+
+This completes the induction proving (13).
+
+If \(T,U:A\Rrightarrow B\) are parallel, then
+\[
+T*_2N_B\simeq N_A\simeq U*_2N_B.
+\]
+Cancel the invertible \(N_B\). Therefore
+\[
+\boxed{\mathrm{RC}(3,K).}
+\tag{15}
+\]
+
+## 7. Adjoining \(M\)
+
+It remains to compare terms whose strict image is \(M\). The identity-image case already belongs to \(K\), by the support lemma.
+
+### 7.1 Fix the 1-boundaries
+
+For every 1-term \(s\) with strict image \(b\), choose
+\[
+L_s:b\Rightarrow s.
+\]
+For every 1-term \(t\) with strict image \(ag\), choose
+\[
+R_t:t\Rightarrow a*_0g.
+\]
+Choose them over the corresponding path contexts, with identity choices at the canonical paths.
+
+For \(P:s\Rightarrow t\), put
+\[
+\mathcal T(P)=(L_s*_1P)*_1R_t,
+\]
+and apply the same fixed whiskers to 3-cells.
+
+I claim that every \(U:P\Rrightarrow Q\) with \(\pi U=M\) has a normalisation
+\[
+\boxed{
+\mathcal T(U)\simeq A_U*_2M*_2B_U,
+}
+\tag{16}
+\]
+where
+\[
+A_U:\mathcal T(P)\Rrightarrow v,
+\qquad
+B_U:d\Rrightarrow\mathcal T(Q)
+\]
+are 3-terms of \(K\).
+
+### 7.2 Remove level-1 whiskers
+
+Consider a left 2-whisker
+\[
+\delta:s'\Rightarrow s
+\]
+of such a \(U\). The strict-cell calculation in Section 2 forces
+\[
+\pi\delta=1_b.
+\]
+The terms \(L_{s'}*_1\delta\) and \(L_s\) are parallel 2-terms in the path context of \(b\). Choose there
+\[
+D:L_{s'}*_1\delta\Rrightarrow L_s.
+\]
+
+For a 2-variable \(P:s\Rightarrow t\), define \(J_P\) by reassociation followed by \(D\):
+\[
+\begin{aligned}
+\bigl(L_{s'}*_1(\delta*_1P)\bigr)*_1R_t
+&\Rrightarrow
+\bigl((L_{s'}*_1\delta)*_1P\bigr)*_1R_t\\
+&\Rrightarrow
+(L_s*_1P)*_1R_t .
+\end{aligned}
+\tag{17}
+\]
+Apply depth-1 naturality to this 3-term in the 2-variable \(P\), along \(U:P\Rrightarrow Q\). It gives
+\[
+\mathcal T(\delta*_1U)*_2J_Q
+\simeq
+J_P*_2\mathcal T(U).
+\]
+Thus
+\[
+\mathcal T(\delta*_1U)
+\simeq
+J_P*_2\mathcal T(U)*_2J_Q^{-1}.
+\tag{18}
+\]
+Both \(J_P,J_Q\) belong to \(K\).
+
+For a right whisker \(\delta:t\Rightarrow t'\), use the path-supported comparison
+\[
+\delta*_1R_{t'}\Rrightarrow R_t
+\]
+and the corresponding reassociation. The same argument applies.
+
+Only a 2-variable varies in these 3-terms.
+
+### 7.3 Remove level-0 whiskers
+
+A level-0 whisker adjacent to \(M\) is point-supported at \(c\) or \(y\).
+
+Let \(F\) be one fixed such whiskering operation. Apply it to the generic 3-globe
+\[
+p,q:s\Rightarrow t,\qquad m:p\Rrightarrow q.
+\]
+Every additional argument of \(F\) is a term over an endpoint vertex.
+
+Choose path-supported 2-normalisers \(\ell_s,\rho_t\) so that
+\[
+F^\sharp(P)=(\ell_s*_1F(P))*_1\rho_t
+\]
+has the literal 1-boundaries \(s,t\). Over the generic 2-disks choose
+\[
+a_p:F^\sharp(p)\Rrightarrow p,
+\qquad
+b_q:q\Rrightarrow F^\sharp(q).
+\]
+Then
+\[
+F^\sharp(m)
+\quad\text{and}\quad
+a_p*_2m*_2b_q
+\]
+are parallel full 3-terms over the generic 3-disk. Hence a direct 4-coherence gives, after substitution,
+\[
+F^\sharp(U)\simeq a_P*_2U*_2b_Q.
+\tag{19}
+\]
+The substituted \(a_P,b_Q\) belong to \(K\), since their arguments have dimension at most 2.
+
+Finally compare the combined boundary normalisers with the fixed choices \(L_{s'},R_{t'}\). These comparisons are 3-cells in the actual path contexts. Changing a fixed pair of normalisers is natural in the intervening 2-cell: explicitly, a comparison \(D:L\Rrightarrow L'\) gives
+\[
+((L*_1P)*_1R)\Rrightarrow((L' *_1P)*_1R),
+\]
+and its naturality along a 3-cell uses depth 1 in \(P\). Thus (19) remains a conjugation by \(K\)-3-cells after returning to the fixed normalisation \(\mathcal T\).
+
+This proves stability of (16) under level-0 and level-1 whiskering.
+
+### 7.4 Sequentialise and use the unique \(M\)
+
+Use the generic binary-evaluation comparison from Section 6, including the 1-boundary correction (14). Recursively, every 3-term is 4-connected to an expression built from:
+
+- \(M\);
+- 3-terms of \(K\);
+- binary compositions and lower-dimensional whiskerings.
+
+For \(k=0,1\), a binary composite of 3-cells can be sequentialised by the generic 4-interchange:
+\[
+U*_kV
+\simeq
+\bigl(U*_k1_{s_2V}\bigr)
+ *_2
+\bigl(1_{t_2U}*_kV\bigr).
+\tag{20}
+\]
+
+The multiplicity of \(M\) is additive under these evaluations. The strict calculation shows that an expression with strict image \(M\) has exactly one copy of \(M\). After (20), it is a vertical word of \(K\)-3-cells with one iterated whiskering of \(M\).
+
+Each such whiskering still has strict image \(M\), so Sections 7.2–7.3 remove it, introducing only \(K\)-3-cells. Absorb these cells into the prefix and suffix. This proves (16).
+
+### 7.5 Compare and undo the boundary transport
+
+Let \(U,V:P\Rrightarrow Q\) be parallel with strict image \(M\). Using the same fixed boundary normalisers,
+\[
+\mathcal T(U)\simeq A_U*_2M*_2B_U,
+\qquad
+\mathcal T(V)\simeq A_V*_2M*_2B_V.
+\]
+The pairs \(A_U,A_V\) and \(B_U,B_V\) are parallel 3-terms in \(K\). By (15),
+\[
+A_U\simeq A_V,\qquad B_U\simeq B_V.
+\]
+Consequently
+\[
+\mathcal T(U)\simeq\mathcal T(V).
+\tag{21}
+\]
+
+Whisker back by chosen inverses of \(L_s,R_t\). Their 3-cancellation comparisons, associators, and unitors give a 3-term
+\[
+\varepsilon_P:\mathcal S\mathcal T(P)\Rrightarrow P.
+\]
+Naturality of \(\varepsilon_P\) in the 2-variable \(P\) supplies the 4-comparison needed to cancel this boundary transport from (21). Hence \(U\simeq V\).
+
+Together with the identity-image case, this proves
+\[
+\boxed{\mathrm{RC}(3,\operatorname{Cone}(D^2;c)).}
+\]
+
+## 8. What this establishes, and what it uses
+
+The proof supplies a finite recursive construction of the required 4-term. Its substitution compatibility is the explicit fusion cell (11); it does not assert that the chosen normalisers commute with substitution by definitional equality.
+
+For the two expressions singled out in Question 1:
+
+- \(a*_0\alpha\) is handled directly by its pasting-context support.
+- \(u*_1(a*_0\alpha)\) is handled by the active vertical column, padded-fold fusion, and the direct comparison for the \(a*_0\alpha\) input.
+
+The generator \(M=p_\alpha\) adds the separate conjugation argument of Section 7. Thus the result covers arbitrary parallel 3-terms of the cone, not just structural 3-terms in its 2-dimensional context. In particular, it supplies the cone cell for every valid 3-dimensional coherence over \(D^2\), extending the particular unitor construction from round 2.
+
+The properties used are more specific than strong Steiner loop-freeness:
+
+1. A strict 2-cell involving \(u\) or \(v\) spans \(c\to y\), forcing every other root column to be point-supported.
+2. The remaining non-point whiskering \(a\alpha\) has a genuine globular pasting context as its support.
+3. The nonidentity vertical word is uniquely one of \(u,v,w,u,w\).
+4. \(M\) cannot acquire nonidentity strict whiskers or compose with another copy of itself.
+
+These properties give the finite fusion argument above. They do not hold in this form for arbitrary \(c\star Q\), so this proof does not settle Questions 2 or 3.
+
+There is an all-dimensional geometric result relevant to those questions: Campion’s Theorem 5.11 says that the cellular attachment pushouts of a torsion-free complex remain pushouts on passage to flagged weak \((\infty,n)\)-categories, and his Remark 5.13 explicitly includes loop-free Steiner complexes. It therefore applies to the strict point joins under discussion. Its conclusion is in that homotopical model; identifying its weak cellular presentation with the CaTT term model is an additional step. No such identification is used in the proof above. [arxiv.org](https://arxiv.org/pdf/2311.00200?utm_source=chatgpt.com)

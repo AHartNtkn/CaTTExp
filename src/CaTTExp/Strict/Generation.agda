@@ -771,14 +771,31 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
               Gen (tabG (Split.y S) 0) → Gen (tabG (Split.z S) 0) → Gen (tabG f 0)
   gen-split S gy gz = subst Gen (Split.comp S) (g-comp _ gy gz (Split.match S))
 
+  -- Generation with every composition level below a bound b.
+  data GenL (b : Nat) : Tb → Set where
+    gl-atom : ∀ i → i < N → deg i ≤ L → GenL b (atomT L i)
+    gl-comp : ∀ n {x y : Tb} → n < b → GenL b x → GenL b y → tgtT 𝕄 n x ≡ srcT 𝕄 n y → GenL b (compT 𝕄 n x y)
+
+  forget : ∀ {b x} → GenL b x → Gen x
+  forget (gl-atom i iN iL)     = g-atom i iN iL
+  forget (gl-comp n _ gx gy m) = g-comp n (forget gx) (forget gy) m
+
+  GenL-up : ∀ {b b′ x} → b ≤ b′ → GenL b x → GenL b′ x
+  GenL-up l (gl-atom i iN iL)      = gl-atom i iN iL
+  GenL-up l (gl-comp n nb gx gy m) = gl-comp n (≤-trans nb l) (GenL-up l gx) (GenL-up l gy) m
+
+  genL-split : ∀ {s f p q} (S : Split s f p q) →
+               GenL (suc s) (tabG (Split.y S) 0) → GenL (suc s) (tabG (Split.z S) 0) → GenL (suc s) (tabG f 0)
+  genL-split {s} S gy gz = subst (GenL (suc s)) (Split.comp S) (gl-comp s (≤-refl _) gy gz (Split.match S))
+
   Agree : Nat → RF → RF → Set
   Agree s f r = ∀ j → s < j → j ≤ L → f j ≡ r j
 
   -- A table that agrees with an atom on all rows is that atom.
-  gen-atom : ∀ f a → a < N → deg a ≤ L → (∀ j → j ≤ L → f j ≡ ent a j) → Gen (tabG f 0)
+  gen-atom : ∀ f a → a < N → deg a ≤ L → (∀ j → j ≤ L → f j ≡ ent a j) → GenL 0 (tabG f 0)
   gen-atom f a aN aL h =
-    subst Gen (trans (atomT≡ (ent a) 0) (tabG-ext (ent a) f 0 (λ i _ q → sym (h i (subst (λ k → i ≤ k) (+-zero L) (≤-pred q))))))
-      (g-atom a aN aL)
+    subst (GenL 0) (trans (atomT≡ (ent a) 0) (tabG-ext (ent a) f 0 (λ i _ q → sym (h i (subst (λ k → i ≤ k) (+-zero L) (≤-pred q))))))
+      (gl-atom a aN aL)
 
   ----------------------------------------------------------------------
   -- Chain lemmas.
@@ -990,10 +1007,14 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   -- Prop. 5.4: peel the atoms of ⟨A⟩ + Σ_{c ∈ w} ⟨c⟩ in the basis order.
 
   GenAt : Nat → Set
-  GenAt s = ∀ f → CellF f → ∀ A → AOKL A → Agree s f (Arow A) → Gen (tabG f 0)
+  GenAt s = ∀ f → CellF f → ∀ A → AOKL A → Agree s f (Arow A) → GenL s (tabG f 0)
 
-  peel-all : ∀ s → s < L → GenAt s → ∀ n f A w → CellF f → AOK s A → InD (suc s) w →
-             sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+  -- GenAt s, with the bound raised to suc s.
+  GenAt⁺ : Nat → Set
+  GenAt⁺ s = ∀ f → CellF f → ∀ A → AOKL A → Agree s f (Arow A) → GenL (suc s) (tabG f 0)
+
+  peel-all : ∀ s → s < L → GenAt⁺ s → ∀ n f A w → CellF f → AOK s A → InD (suc s) w →
+             sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → GenL (suc s) (tabG f 0)
   peel-all s sL G n f A w cf aok dw en ag with least w
   ... | inj₁ e = G f cf A (aokl A aok)
                    (λ j h hL → trans (ag j h hL) (trans (cong (λ x → Arow A j +R W s x j) e)
@@ -1022,9 +1043,9 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     -- Peel ⟨c⟩.
     peel-c : ∀ n A → AOK s A → sumv w′ + bit A ≡ n →
              (∀ d → d < c → at0 (dp (snd (Arow A (suc s)))) d ≼ at0 (dm (snd (Arow A (suc s)))) d) →
-             Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+             Agree s f (λ j → Arow A j +R W s w j) → GenL (suc s) (tabG f 0)
     peel-c n A aok en key ag =
-      gen-split S (G (Split.y S) (Split.cy S) (just c) (cN , subst (λ k → k ≤ L) (sym dc) sL)
+      genL-split S (G (Split.y S) (Split.cy S) (just c) (cN , subst (λ k → k ≤ L) (sym dc) sL)
                      (λ j h _ → trans (Split.yp S j h) (W-unit-ent s c dc j h)))
                   (peel-all s sL G n (Split.z S) A w′ (Split.cz S) aok dw′ en (λ j h _ → Split.zq S j h))
       where
@@ -1061,9 +1082,9 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
     -- Peel ⟨a⟩ (when a comes no later than every element of w).
     peel-a : ∀ n a → s < deg a → deg a ≤ L → a < N → a ≤ c → sumv w ≡ n →
-             Agree s f (λ j → ent a j +R W s w j) → Gen (tabG f 0)
+             Agree s f (λ j → ent a j +R W s w j) → GenL (suc s) (tabG f 0)
     peel-a n a h aL aN ac en ag =
-      gen-split S (G (Split.y S) (Split.cy S) (just a) (aN , aL) (λ j h′ _ → Split.yp S j h′))
+      genL-split S (G (Split.y S) (Split.cy S) (just a) (aN , aL) (λ j h′ _ → Split.yp S j h′))
                   (peel-all s sL G n (Split.z S) nothing w (Split.cz S) tt dw (trans (+-zero (sumv w)) en)
                      (λ j h′ _ → trans (Split.zq S j h′) (sym (+R-idl (W s w j)))))
       where
@@ -1077,7 +1098,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
                (λ d → disj-LH a (dm (fst (ent a (suc s))) ∸c dp (fst (ent a (suc s))))
                                   (dp (snd (W s w (suc s))) ∸c dm (snd (W s w (suc s)))) lo hi d)
 
-    go : ∀ n A → AOK s A → sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
+    go : ∀ n A → AOK s A → sumv w + bit A ≡ n → Agree s f (λ j → Arow A j +R W s w j) → GenL (suc s) (tabG f 0)
     go zero A aok en ag = ⊥-elim (z≢s (trans (sym en) (cong (_+ bit A) sw)))
       where
       z≢s : ∀ {t} → 0 ≡ suc t → ⊥
@@ -1120,7 +1141,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
       ≤-antisym (s≤s p) (s≤s q) = cong suc (≤-antisym p q)
     ... | inj₂ jL′ = let (_ , _ , b , _) = Ent-at (z jL′) (entF cf j jL′) in over-zero (fst (f j)) (snd (f j)) b
 
-  base-none : ∀ f → CellF f → Agree 0 f (λ _ → 0R) → Gen (tabG f 0)
+  base-none : ∀ f → CellF f → Agree 0 f (λ _ → 0R) → GenL 0 (tabG f 0)
   base-none f cf ag =
     gen-atom f i (fst (snd (snd i-data))) (subst (λ k → k ≤ L) (sym di) z≤n) rows
     where
@@ -1136,7 +1157,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
                             (sym (ent-in i 0 0 di))
     rows (suc j) jL = trans (ag (suc j) (s≤s z≤n) jL) (sym (ent-zero i (suc j) (subst (λ k → k < suc j) (sym di) (s≤s z≤n))))
 
-  base-atom : ∀ f → CellF f → ∀ a → a < N → 0 < deg a → deg a ≤ L → Agree 0 f (ent a) → Gen (tabG f 0)
+  base-atom : ∀ f → CellF f → ∀ a → a < N → 0 < deg a → deg a ≤ L → Agree 0 f (ent a) → GenL 0 (tabG f 0)
   base-atom f cf a aN h aL ag = gen-atom f a aN aL rows
     where
     oL : 0 < L
@@ -1173,7 +1194,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   -- Prop. 5.2 and the induction on the level.
 
   gen-suc : ∀ s → suc s ≤ L → GenAt s → GenAt (suc s)
-  gen-suc s sL G f cf nothing _ ag = peel-all s sL G (sumv u + 0) f nothing u cf tt du refl agree
+  gen-suc s sL G f cf nothing _ ag = peel-all s sL (λ f cf A ok ag → GenL-up (≤-suc (≤-refl s)) (G f cf A ok ag)) (sumv u + 0) f nothing u cf tt du refl agree
     where
     u : Vec Nat N
     u = fst (f (suc s))
@@ -1188,7 +1209,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     ... | vgt h′   = trans (ag j h′ hL) (sym (trans (cong (0R +R_) (W-above s u j h′)) (+R-idl 0R)))
   gen-suc s sL G f cf (just a) (aN , aL) ag with ≤-dec (deg a) (suc s)
   ... | inj₁ da = gen-suc s sL G f cf nothing tt (λ j h hL → trans (ag j h hL) (ent-zero a j (≤-trans (s≤s da) h)))
-  ... | inj₂ h  = peel-all s sL G (sumv w + 1) f (just a) w cf (≤-trans (≤-suc (≤-refl _)) h , aL , aN) dw refl agree
+  ... | inj₂ h  = peel-all s sL (λ f cf A ok ag → GenL-up (≤-suc (≤-refl s)) (G f cf A ok ag)) (sumv w + 1) f (just a) w cf (≤-trans (≤-suc (≤-refl _)) h , aL , aN) dw refl agree
     where
     s2L : suc s < L
     s2L = ≤-trans h aL
@@ -1226,7 +1247,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   generation : ∀ (x : Tb) → IsCell K L x → Gen x
   generation x cx =
     subst Gen (sym (tab-at 0R x))
-      (gen-at L (≤-refl L) (at 0R x) (IsCell→CellF x cx) nothing tt (λ j h hL → ⊥-elim (≤-<-⊥ hL h)))
+      (forget (gen-at L (≤-refl L) (at 0R x) (IsCell→CellF x cx) nothing tt (λ j h hL → ⊥-elim (≤-<-⊥ hL h))))
 
   ----------------------------------------------------------------------
   -- Composites of atoms are cells; functors agreeing on atoms agree

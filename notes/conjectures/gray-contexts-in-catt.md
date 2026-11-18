@@ -47,7 +47,7 @@ where ⌈−⌉ denotes a chosen U-composite of the lower-dimensional boundary, 
 - **(existence)** U-composites exist;
 - **(uniqueness)** any two U-composites are related by a CaTT term of type t → t′ that is invertible, i.e. has an inverse up to higher CaTT cells.
 
-**Corollary of G(n) for all n.**
+**Consequences and a stronger form.** (a) follows from G(n) for all n. (b) is a stronger statement; see the correction below.
 - (a) For pasting schemes P, Q, the Gray product P ⊗ Q is presentable as a CaTT context. Its generators' types are built from U-composites of the boundary molecules, by induction on dimension.
 - (b) Extending coh from pasting schemes to frame-acyclic molecules, with the same two side conditions, is a **conservative extension** of CaTT: every new term is equivalent to a CaTT term.
 

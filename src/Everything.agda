@@ -58,6 +58,7 @@ import CaTTExp.GraphFillerTotal.Higher
 import CaTTExp.GraphFillerTotal.HigherExamples
 import CaTTExp.GlobularFiller
 import CaTTExp.GlobularFillerExamples
+import CaTTExp.GlobularTotal.Trees
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

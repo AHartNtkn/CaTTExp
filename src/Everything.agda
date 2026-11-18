@@ -20,3 +20,9 @@ import CaTTExp.Gray.Check
 import CaTTExp.Gray.Pure
 import CaTTExp.Gray.Examples
 import CaTTExp.Gray.Cube
+import CaTTExp.Lim.Named
+import CaTTExp.Lim.Conditions
+import CaTTExp.Lim.Rules
+import CaTTExp.Lim.Terms
+import CaTTExp.Lim.Defects
+import CaTTExp.Lim.Repaired

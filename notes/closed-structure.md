@@ -988,6 +988,26 @@ So:
 - **Q2:** confirmed. A complete invariant must schedule structural events too.
 - **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
 
+**5. The axioms of 𝒢 do not fit the intended model; corrected setting 𝒢′.** *(Added 2026-11-18, after the verified r4 answer, `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`.)*
+
+*Obstruction (r4 §5).*
+- Take strict ω-categories with the Gray tensor and one orientation of transformations, and let S = J ⊗ J.
+- S/J has an arrow v₀ → v₁, but J\S has none, since that arrow would need the reverse of the square γ.
+- So left closure corresponds to lax transformations and right closure to oplax ones. The two Φ's cannot both be isomorphisms of hom-categories of *one* 2-category with one orientation, which is what 𝒢 assumes.
+- The argument uses the model's unit; the unit-free syntax has none, but the model does.
+
+*Corrected setting.* Let 𝒢′ be 𝒢 with the right closure taken in the 2-cell-reversed hom:
+
+```
+Φ_L : 𝒢′(A⊗B, C) ≅ 𝒢′(B, A\C),      Φ_R : 𝒢′(B⊗A, C) ≅ 𝒢′(B, C/A)^co,
+```
+
+each strictly natural in the context variable. The double-category variant asked about in r5 Q1 is the other natural candidate. 𝒢′ only changes the 2-cells that Φ_R transports. So:
+- **1-cell results survive.** Item 4 (𝓟, evaluation not central) holds verbatim, since 𝓟 has codiscrete homs and every orientation condition holds there. So χ_{g,ev} and χ_{ev,ev′} still join distinct 1-cells in 𝒢′. The same goes for the word invariant W and for any model with chaotic homs.
+- **Results about directed 2-cells must be re-checked in 𝒢′.** These are the emptiness of reverse homs (round 2, item 6), the structural loops H and H_L (r3, r4), and Q1 forward uniqueness. A 2-cell built through Φ_R now runs the other way. Whether H and H_L survive is r5 Q1.
+
+*Correction.* r3 known item 11's last bullet said that separation needs non-commuting curryings. That is false. r4's model 𝒟 has strictly equal mixed curryings and still separates H, and left closure alone separates H_L.
+
 ---
 
 # Part G. Open items left by this note

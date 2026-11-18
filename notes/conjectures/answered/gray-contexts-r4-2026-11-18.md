@@ -493,3 +493,59 @@ This still leaves the essential problem: the terms assigned to the \(2\)-variabl
 To prove the cube contraction, one must additionally compare the fixed normalizer of a substituted \(2\)-term with the normalizer obtained by first normalizing its \(2\)-inputs and then composing. Formula (12) handles one interaction in that comparison. It does not handle every active-column coherence head. In particular, replacing a \(2\)-variable in a vertical chain by a whiskered \(2\)-term replaces its primitive \(1\)-boundaries by composite \(1\)-terms; the resulting declarations need not form a globular pasting context, so a direct coherence over those declarations is unavailable.
 
 Thus the construction proves the substitution-stable inactive-column factorization in Question 2 and its explicit coherence terms. **The contraction of arbitrary cube loops and the RC statements in Question 3 remain unproved here.**
+
+# Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** Question 2 is answered for contexts of dimension ≤ 2 whose generating 1-graph is acyclic. Inactive columns factor literally through their paths, stably under substitution, with explicit comparison terms. Question 1 (the cube) and Question 3 (RC(3)/RC(n) on acyclic contexts) remain open. The response names the missing step precisely.
+
+Step by step.
+
+1. **The literal lift of an inactive column (§1).**
+   - **All 1-variables of an inactive column have images with the same strict path w_j.** The images of its 2- (and 3-)variables contain no 2-variable, so their strict images are identities, and their two 1-boundaries have equal paths. These equalities link all the 1-variables of the column. ✓
+   - **The support of a 1-term is exactly the vertices and edges of its strict path.** By induction: a 1-dimensional coh is either a composite over a path context (supports concatenate) or a coherence over a point. A 1-dimensional coh over an arity of dimension ≥ 2 cannot satisfy either side condition. ✓
+   - **Higher terms.** 2- and 3-terms of the column have the support of their 1-source, by the total support lemma; Γ has no 3-variables. ✓
+   - **Injectivity.** Acyclicity forces w_j to have no repeated vertex, so ι_j : C_{w_j} → Γ is an injective renaming. Lifts are therefore unique and literal, and (1) σ|_{Q_j} = θ_j[ι_j] holds. ✓
+   - **(3).** σ = κ_σ[δ_σ] holds syntactically. The endpoint assignments agree at the gluing vertices, and consecutive path factors concatenate. ✓
+
+2. **The comparison with the reduced head (§2).**
+   - **(4).** Each lifted 1-variable image traverses its whole path, so the supports of the κ_σ(x) cover R_σ. ✓
+   - **Admissibility of A[κ_σ] over R_σ.**
+     - The coherence case follows from (4).
+     - In the composition case, each boundary of an inactive column maps onto its whole path (the path is both boundaries of a 1-dimensional column), and active columns are retained. If dim R_σ < d, both boundary supports are all of R_σ and the coherence case applies. ✓
+   - **(5).** p_σ and r_σ have literally the same type and full support, so χ̄_σ is a coherence and χ_σ = χ̄_σ[δ_σ] : coh_{P,A}[σ] → coh_{R_σ,A[κ_σ]}[δ_σ]. It is a 3-term for 2-dimensional heads and a 4-term for 3-dimensional ones. ✓
+
+3. **Stability (§3).**
+   - **Inactive columns stay inactive under ρ.** Their assigned terms contain only 0- and 1-variables of Γ, whose images are 0- and 1-terms of Γ′, which contain no 2-variables. ✓
+   - **The three cases of λ_{σ,ρ}** (active→active, active→inactive, inactive→inactive) are as stated.
+     - In the last case, the old path's vertices go to the partial-sum positions of the new path, and each old edge goes to the lift of e_i[ρ] over its interval. Empty intervals are allowed.
+     - The first equation of (6) holds by construction.
+     - The second holds because both sides become equal after the injective path labelling, which reflects syntactic equality. Injectivity is used only on the path context. ✓
+   - **(7)** follows the same way. ✓
+   - **(8)–(10).**
+     - q = r_σ[λ] has type A[κ_{σ[ρ]}] by (6) and full support by (8). So ζ_{σ,ρ} : q → r is a coherence.
+     - χ̄_σ[λ] ∗_d ζ and χ̄_{σ[ρ]} are parallel full terms p → r, so Θ_{σ,ρ} is a coherence. Θ is a 4-cell for 2-dimensional heads and a 5-cell for 3-dimensional ones. ✓
+
+4. **Whiskering distributes over vertical composites (§4).** This does not need acyclicity.
+   - **D_m.** W_e²(C_m²(α_i)) and C_m²(W_e²(α_i)) are both 2-terms f₀ ∗₀ e → f_m ∗₀ e, full in P_m = V_m ∨₀ D¹. So D_m is a coherence 3-term. ✓
+   - **Ω_m.** P_m↑ = (D³ ∨₁ … ∨₁ D³) ∨₀ D¹ is a pasting context.
+     - C_m³ and W_e³ are composition-case cohs with the stated boundaries.
+     - L_m = W³(C³η) ∗₂ D_m⁺ and R_m = D_m⁻ ∗₂ C³(W³η) both go W(C(α⁻)) ⇛ C(W(α⁺)), and both use every variable.
+     - So Ω_m is a coherence 4-term. ✓
+   - It can be substituted with arbitrary 2-, 3- and 1-terms, including the lax-square normalisers, and the left-whiskering version is symmetric.
+
+5. **The cube hemisphere (§5).**
+   - **At most one active column.** Height i + j + k increases by 1 along every edge, and every face generator has 0-boundaries of height difference 2. So an active column spans a height difference ≥ 2, and since differences add up to ≤ 3, there is at most one active column. ✓
+   - So reduced 2-dimensional arities have the forms V, D¹ ∨₀ V or V ∨₀ D¹.
+   - **The gap is real.** The 2-terms substituted into V are arbitrary composites of the faces and edge whiskers, and the factorisation does not normalise them. Replacing a 2-variable of V by a whiskered 2-term gives declarations with composite 1-boundaries, which are not a pasting context, so no single coherence compares the normaliser of a composite with the composite of normalisers.
+
+**Consequences for D2 (and C1).**
+- **The inactive-column factorisation now holds for every acyclic context of dimension ≤ 2.** This includes the cylinders Q↑Y of 1-dimensional Q (two or more lax squares) and the Gray cube's 2-skeleton.
+- **It subsumes the fixed-edge factorisation of the naturality round-3 answer.** That factorisation is the special case of one inactive column with a single fixed edge, and the new version is literal and substitution-stable for arbitrary inactive paths. It answers the "horizontal words" part of `outbox/naturality-arbitrary-depth-r4.md` Question 2 for dimension-≤ 2 contexts.
+- **Ω_m** is one of the evaluation-fusion cells needed for active columns.
+- **Remaining:**
+  - normalisers for active columns whose 2-variables carry arbitrary composites (a fusion statement relating the normaliser of a composite to the composite of normalisers, around non-globular declarations);
+  - contexts with 3-variables (the 2-disc cylinder, cone contexts), where the total support lemma no longer gives the support of inactive 3-terms;
+  - the cube contraction;
+  - RC(3)/RC(n).
+
+Follow-up prompt: `outbox/gray-contexts-r5.md` (round 5, unsent).

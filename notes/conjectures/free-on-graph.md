@@ -40,3 +40,203 @@ It would give an object that behaves like the natural numbers, built only from a
 ## What would count as a solution
 
 A proof (possibly short, via the coherence rule and Benjamin–Markakis), or a counterexample, or a reference.
+
+# Researcher Response
+
+**Yes. The canonical comparison is a globular trivial fibration, hence an \(\omega\)-weak equivalence.** Your proposed lifting argument also works: the required canonical lifts follow from cartesianness, or directly from DFMRV’s generic–free factorization theorem.
+
+The relevant literature is stronger than the invertibility result you identified. Fujii–Hoshino–Maehara explicitly establish the boundary-lifting property for the free-weak-to-free-strict comparison in §2.3 of *Weakly invertible cells in a weak \(\omega\)-category*. Their **Remark 3.2.6** then describes contractible spaces of composites using the induced trivial fibrations on homs. [arxiv.org](https://arxiv.org/pdf/2303.14907?utm_source=chatgpt.com)
+
+## 1. The comparison has every boundary lift
+
+Write \(L\) for the free weak \(\omega\)-category monad and \(T\) for the free strict \(\omega\)-category monad on globular sets.
+
+Regard your graph \(G\) as a globular set with \(G_n=\varnothing\) for \(n\geq2\). Its associated free computad has precisely the vertices and edges of \(G\) as generators. Consequently,
+\[
+F_\omega(G)=LG.
+\]
+This uses DFMRV’s free-computad adjunction, Proposition 4.1; their **Corollary 7.36** identifies the resulting monad with Leinster’s. [arxiv.org](https://arxiv.org/pdf/2208.08719?utm_source=chatgpt.com)
+
+The defining operadic structure provides a cartesian monad morphism
+\[
+\operatorname{ar}:L\Longrightarrow T
+\]
+whose map at the terminal globular set,
+\[
+\operatorname{ar}_{\mathbf1}:L\mathbf1\longrightarrow T\mathbf1,
+\]
+has a contraction. Here “cartesian” means that every naturality square is a pullback; “contraction” supplies lifts against \(\partial D^n\hookrightarrow D^n\) for \(n\geq1\). These properties are recalled explicitly in Fujii–Hoshino–Maehara, *\(\omega\)-weak equivalences between weak \(\omega\)-categories*, §2.2. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+For any globular set \(X\), cartesianness gives
+\[
+LX\cong L\mathbf1\times_{T\mathbf1}TX.
+\]
+Thus an \(n\)-cell of \(LX\) is uniquely specified by a pair
+\[
+(\theta,d),\qquad
+\operatorname{ar}_{\mathbf1}(\theta)=T!(d),
+\]
+and \(\operatorname{ar}_X\) projects to \(d\).
+
+Here is the resulting lifting argument. Suppose \(a,b\in(LX)_{n-1}\) are parallel and
+\[
+d:\operatorname{ar}_X(a)\longrightarrow\operatorname{ar}_X(b)
+\]
+is an \(n\)-cell of \(TX\). The contraction gives an operation
+\[
+\theta:L!(a)\longrightarrow L!(b)
+\]
+with arity \(T!(d)\). The pair \((\theta,d)\) is then an \(n\)-cell \(\widetilde d\) satisfying
+\[
+s\widetilde d=a,\qquad
+t\widetilde d=b,\qquad
+\operatorname{ar}_X(\widetilde d)=d.
+\tag{*}
+\]
+
+This supplies every positive-dimensional boundary lift. Surjectivity in dimension zero follows from
+\[
+\operatorname{ar}_X\eta^L_X=\eta^T_X,
+\]
+since \(\eta^T_X\) is bijective on \(0\)-cells.
+
+Therefore \(\operatorname{ar}_X:LX\to TX\) is a **trivial fibration** for every globular set \(X\). It is a strict morphism of weak \(\omega\)-categories by the monad-morphism axioms.
+
+For a graph, \(TG\) is exactly the path category \(F_1(G)\), with identity cells in all dimensions above \(1\): strict composition produces paths, and there are no higher generators from which to produce nonidentity higher cells. Moreover, \(\operatorname{ar}_G\) sends every generating edge to that same edge, so it is your canonical comparison \(q_G\).
+
+Every trivial fibration is an \(\omega\)-weak equivalence: its exact lifts satisfy the weaker requirement of essential surjectivity in every dimension. This implication is stated explicitly immediately after Definition 4.2.1 of the equivalences paper. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+## 2. The concrete coherence statements follow
+
+Write \(p^{[n]}\) for the \((n-1)\)-fold identity on a path \(p\), with \(p^{[1]}=p\). Every positive-dimensional cell of \(TG\) has this form.
+
+### Two \(1\)-cells are connected exactly when their paths agree
+
+If \(u,v:a\to b\) satisfy
+\[
+q_G(u)=q_G(v)=p,
+\]
+apply \((*)\) to the strict identity \(1_p:p\to p\). It gives a \(2\)-cell
+\[
+u\longrightarrow v.
+\]
+
+Conversely, any \(2\)-cell \(u\to v\) maps to a \(2\)-cell of \(TG\). Since those are identities, \(q_G(u)=q_G(v)\).
+
+### Every parallel pair in dimension at least \(2\) has a filler
+
+Suppose \(u,v\) are parallel \(n\)-cells with \(n\geq2\). Their images in \(TG\) are identities with the same source, hence equal:
+\[
+q_G(u)=q_G(v).
+\]
+Lifting the identity of this common image gives
+\[
+u\longrightarrow v
+\]
+in dimension \(n+1\).
+
+Thus the argument supplies fillers in **every** higher dimension.
+
+### Every cell of dimension at least \(2\) is weakly invertible
+
+This also follows immediately from Benjamin–Markakis, **Proposition 35**: a \(d\)-cell with empty \(d\)-dimensional generator support is invertible. For a graph computad, that support is empty whenever \(d\geq2\). [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+There is a small correction to your “What is known” formulation. The constructor `coh` also constructs composition operations. Benjamin–Markakis distinguish compositions, where the arity tree has dimension \(d\), from coherences, where its dimension is less than \(d\). The constructor name alone does not establish invertibility; Proposition 35 gives the precise justification here. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+## 3. The noninjective substitution gap closes canonically
+
+Your position-indexed lifting can be stated as a direct consequence of the same cartesianness.
+
+Let
+\[
+p=(g_1,\ldots,g_k)
+\]
+be a path in \(G\). Let \(\Theta_k\) have distinct vertices \(0,\ldots,k\) and edges
+\[
+e_i:i-1\longrightarrow i,
+\]
+and let \(\sigma:\Theta_k\to G\) send \(e_i\) to \(g_i\). Repeated edges or vertices in \(p\) are allowed.
+
+Let \(\tau\) be the path \((e_1,\ldots,e_k)\) in \(T\Theta_k\). Cartesianness of \(\operatorname{ar}\) for the map \(\sigma\) gives
+\[
+L\Theta_k
+\cong
+LG\times_{TG}T\Theta_k.
+\tag{**}
+\]
+
+Consequently, for every \(n\geq1\) and every \(c\in(LG)_n\) with
+\[
+q_G(c)=p^{[n]},
+\]
+there is a **unique** cell \(\widetilde c\in(L\Theta_k)_n\) satisfying both
+\[
+L\sigma(\widetilde c)=c,
+\qquad
+q_{\Theta_k}(\widetilde c)=\tau^{[n]}.
+\tag{***}
+\]
+
+This is the precise canonical choice by position along the path.
+
+Now let \(u,v\) be parallel \(n\)-cells, \(n\geq2\), over \(p\). Both \(s\widetilde u\) and \(s\widetilde v\):
+
+- map to the same cell \(su=sv\) under \(L\sigma\);
+- map to \(\tau^{[n-1]}\) under \(q_{\Theta_k}\).
+
+Uniqueness in the degree-\((n-1)\) instance of \((**)\) therefore gives
+\[
+s\widetilde u=s\widetilde v.
+\]
+The same argument gives
+\[
+t\widetilde u=t\widetilde v.
+\]
+
+For \(n=1\), both lifts have source \(0\) and target \(k\). The empty path is covered by taking \(\Theta_0\) to be a single vertex.
+
+**No injectivity of \(\sigma\) is required.** The argument uses the prescribed strict path \(\tau\), together with pullback uniqueness.
+
+There is also an exact syntactic reference for your full-support formulation:
+
+- **DFMRV Proposition 7.19** gives the unique generic–generator-preserving factorization, and its proof establishes compatibility with source and target.
+- **Corollary 7.21** identifies generic maps between free computads on trees with covers.
+- **Proposition 7.32** characterizes full spheres through those covers. [arxiv.org](https://arxiv.org/pdf/2208.08719?utm_source=chatgpt.com)
+
+Applied to a cell of \(LG\), the generator-preserving map into \(G\) forces the intervening tree to have dimension at most \(1\), hence to be a chain \(\Theta_k\). Its generic cell has full support. Boundary compatibility gives precisely the parallel lifts you need, and Proposition 7.32 then permits
+\[
+\operatorname{coh}_{\Theta_k,\widetilde u\to\widetilde v}[\sigma].
+\]
+
+So your step 2 follows from an established factorization theorem.
+
+## 4. Homs and the one-loop test case
+
+For vertices \(a,b\), applying the hom functor gives
+\[
+q_{a,b}:
+\operatorname{Hom}_{F_\omega(G)}(a,b)
+\longrightarrow
+\operatorname{Disc}\bigl(\operatorname{Paths}_G(a,b)\bigr).
+\]
+
+A boundary-lifting problem in this hom is a boundary-lifting problem one dimension higher for \(q_G\). Thus \(q_{a,b}\) is itself a trivial fibration.
+
+This applies specifically to the **Benjamin–Markakis hom construction**: their hom functor lifts the usual hom functor on underlying globular sets. The argument therefore does not require identifying their chosen hom operations with those of another construction. [arxiv.org](https://arxiv.org/pdf/2402.01611?utm_source=chatgpt.com)
+
+For each path \(p:a\to b\), the fiber of \(q_{a,b}\) over \(p\) is nonempty and has a filler for every parallel pair of cells. Its map to the terminal weak \(\omega\)-category is a trivial fibration. This gives the asserted contractibility, including all higher coherence data.
+
+For one vertex \(x\) and one loop \(s\), the paths are exactly
+\[
+s^0,s^1,s^2,\ldots,
+\]
+so
+\[
+\boxed{
+\operatorname{Hom}_{F_\omega(G)}(x,x)
+\;\simeq\;
+\mathbb N_{\mathrm{disc}}.
+}
+\]
+
+The equivalence sends a \(1\)-cell to the length of its underlying path. Each fiber over \(k\) is contractible, and composition induces addition on the resulting equivalence classes.

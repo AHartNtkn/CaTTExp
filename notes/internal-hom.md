@@ -323,7 +323,8 @@ Points to settle:
   - It needs ICaTT-style marking (Benjamin–Champin–Markakis), or Mikhail's ⊨ judgment, to state.
 - **Density / extensionality.** The limits note defers to this thread the question of whether components plus naturality determine a transformation. For *representable* domains ⟦Θ⟧, (cyl-Λ) is exactly that principle.
   - For arbitrary domains B, the same question becomes whether the disks are jointly dense, i.e. whether a 1-cell B → [D¹, C] is determined by its restrictions along all elements Dⁿ ⊳ B.
-  - In style, that would need a colimit principle presenting B from its cells (§6). It stays open here.
+  - In style, that would need a colimit principle presenting B from its cells (§6).
+  - *Answered 2026-11-18* (`free-objects-proofs.md` §6): the disks are not dense (counterexample over the composable pair), while pasting diagrams Θ are. The extensionality principle for arbitrary B is therefore Θ-density, a colimit rule tracked under F5.
 - **Relation to the lax rule.** (lhom) of §5.1 is the same schema with no marking. Both rules are one schema [Θ, C]_μ with μ ∈ {lax, pseudo}, and the marked Gray cylinder is its μ = pseudo instance.
 
 ### 5.6 Oplax and other variances

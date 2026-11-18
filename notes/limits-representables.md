@@ -214,7 +214,7 @@ What stands from this note:
 ### 4.1 Base: repaired CaTT_lim [proposal]
 
 Mikhail's Definition 4.15, used for finite diagrams, with three repairs. §10.1 and §10.3 give the reasons.
-1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5).
+1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5). The same typo makes the printed `gray` judgment reject Mikhail's own Example 4.1. All of this is machine-checked in `catt-lim-formalization.md`, together with the repaired rules on examples.
    - For globular Γ, the construction is Mikhail's Thm 3.3.
    - For general Γ, it should be checked against the Steiner Gray product (`gray-contexts-in-catt.md`).
 2. **Certified comparison cells.** In cone morphisms and higher transfors, the comparison cells over positive-dimensional diagram variables are marked declarations. Any substitution into them must supply an equivalence certificate. Cones themselves stay lax at the vertices.
@@ -293,7 +293,7 @@ f : x →_C y    means   f : x →_{⊤→C} y          (an ambient 2-cell)
 **Semantic check [proved].** In ωCat with cartesian homs, `Hom(1, C) ≃ C`, since `1 × X ≅ X` for the terminal object 1 and the internal hom is right adjoint to ×. So "elements of C" are elements of C.
 
 **What does not follow without more rules.**
-- **Extensionality / density:** "if `F x ≅ G x` naturally in elements x, then `F ≅ G`." That needs `⊤` and the disks to be jointly dense, which is the internal-hom/Gray thread's problem [→ Gray].
+- **Extensionality / density:** "if `F x ≅ G x` naturally in elements x, then `F ≅ G`." That needs `⊤` and the disks to be jointly dense, which is the internal-hom/Gray thread's problem [→ Gray]. *Answered 2026-11-18* (`free-objects-proofs.md` §6): disks are not dense; pasting diagrams Θ are, so the principle must be indexed by Θ (a colimit rule, F5).
 - I suggest an explicit rule only if needed. It would read: *a family of components indexed by the generic element, plus naturality, is a transfor.* That is the cylinder rule `Hom(⟦Γ⟧,D)(u,v) ≃ Hom(⟦(Γ ⊗ D¹)^μ⟧, D)` restricted to representable domains. Here `(Γ ⊗ D¹)^μ` is Mikhail's `gray` context with its cylinder cells *marked*: under Option P the ambient's 2-cells are pseudo, so the marked Gray cylinder (≈ Γ × D¹) is the right shape, and the unmarked one classifies lax transformations instead. It is well-formed because the `gray` judgment generates `Γ ⊗ D¹` as a finite context.
 
 ### 5.2 Shapes as objects: two kernel options and one surface layer
@@ -444,7 +444,7 @@ In order of cost to benefit:
 2. **Constant substitutions exist.** For every Γ there is `(c:⋆) ⊢ !_Γ : Γ`. This follows from the contractibility of the one-point context and is needed by R-B.
 3. **Cone contexts exist for pasting-scheme diagrams.** This is Mikhail's Conj 3.6 restricted to ps-contexts. It is needed before CaTT_lim can be implemented at all.
 4. **Strict-model check of R-B.** In strict ω-categories via Steiner complexes, check `laxcolim(const 1) ≅ Free(Γ)` for small Γ (D¹, D², the loop, the composable pair). This settles the orientation convention.
-5. **§10.1 in CaTT_lim.** Derive an inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule. This would settle `conjectures/catt-lim-pseudo-vs-gray.md` mechanically.
+5. **§10.1 in CaTT_lim.** Partly done (`catt-lim-formalization.md`): the printed-rule defects and the repaired rules are checked, and the collapse instance is shown to be a well-typed cone morphism that the certified marking rejects. Still open: deriving the inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule.
 6. **The free-on-graph argument** (§10.5, solved on paper). Formalising the trivial-fibration argument would be a good warm-up for computad-level proofs, but nothing depends on it.
 ---
 

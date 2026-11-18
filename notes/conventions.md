@@ -55,11 +55,13 @@ Hom(A ⊗ B, C)  ≅  Hom(A, Hom_oplax(B, C))  ≅  Hom(B, Hom_lax(A, C))
 Hom_oplax(A, B)_i = Hom(Dⁱ ⊗ A, B)            Hom_lax(A, B)_i = Hom(A ⊗ Dⁱ, B)
 ```
 
-So the 1-cells of Hom_lax(A, B) are lax transformations, and those of Hom_oplax(A, B) are oplax ones.
+So the 1-cells of Hom_lax(A, B) are lax transformations, and those of Hom_oplax(A, B) are oplax ones. Gepner–Heine use the same names in the (∞,ω) setting: C ⊠ (−) ⊣ Fun^lax(C, −) and (−) ⊠ C ⊣ Fun^oplax(C, −) (*Colimits in oriented category theory*, [2608.02592](https://arxiv.org/abs/2608.02592), Notation 3.1.3, as checked in `conjectures/oriented-lax-limits.md`, verification section).
 
 **Hazard.** A *map into* a hom classifies the other variance:
 - maps Δ → Hom_oplax(D¹, C) are maps Δ ⊗ D¹ → C, i.e. **lax** transformations between Δ-diagrams;
 - maps Δ → Hom_lax(D¹, C) are **oplax** transformations (AM Remark 1.10).
+
+**L's hom-objects** 𝒦(Θ, C) = Fun^lax(Θ, C) are AM's Hom_lax(Θ, C): their 1-cells are lax transformations, and maps Δ → 𝒦(Θ, C) are maps Θ ⊗ Δ → C (`invertibility-markings.md` §4.1–4.2).
 
 `internal-hom.md` §5.1 calls `[Θ, C]` (defined by Δ ⊳ [Θ, C] ↔ (Δ ⊗ Θ) ⊳ C) the "lax hom", because maps into [D¹, C] are lax transformations. In AM's naming it is **Hom_oplax(Θ, C)**: its own 1-cells are oplax transformations between Θ-diagrams. Notes keep the name "lax hom [Θ, C]" for the rule of `internal-hom.md` §5.1 and write Hom_lax / Hom_oplax only in AM's sense.
 
@@ -108,4 +110,6 @@ Mikhail ([2412.13310](https://arxiv.org/abs/2412.13310)) uses his own names. The
 | `pseudo-vs-gray.md` | §2.2, §3.1, R5, R11 | §4 (L's factor order), §3.3 (dualities) |
 | `internal-hom.md` | §1.1, §1.3, §4.1, §5.1, §5.5a, §5.6 | §2, §3.2 (hazard), §3.3, §5 |
 | `limits-representables.md` | §1, §4.4 | §5 (Mikhail) |
+| `invertibility-markings.md` | §1, §4.1–4.2 | §4, §3.2 |
+| `catt-lim-formalization.md` | "Orientation" | §5 |
 | `conjectures/catt-lim-pseudo-vs-gray.md` | eq. (2) | §4 |

@@ -320,6 +320,32 @@ So oplax is *derivable* from the lax rule and the opposites meta-operation of Be
 
 ---
 
+### 5.7 Alternative: closed structure by contractible types (Mimram's CCCaTT)
+
+Source: Mimram, *An unbiased simply typed combinatory logic* (CSL 2026; [PDF](http://www.lix.polytechnique.fr/Labo/Samuel.Mimram/docs/mimram_cccatt.pdf), [Agda](https://github.com/smimram/agda-ccatt/)). Read from the PDF via a summary, so rule details are approximate.
+
+**What it does.** It is the 1-categorical truncation of CaTT for cartesian closed categories.
+- **Pasting types replace pasting contexts.** A type is *pasting* if a deterministic proof search derives `Θ \ ∅ | ∅ ⊢ A`. The rules are `→ps I`, with the side condition that tgt(A) is not already a used target, and `→ps E`, which consumes the head hypothesis. This is a decidable subclass of the contractible types (exactly one βη-inhabitant).
+- **One rule gives all combinators.** For a pasting type A there is `coh_A : A`. For example, I, K, S and application (`X, Y | f : X → Y, x : X ⊢ Y`) are all coh.
+- **One rule gives all equations.** Any two terms of a pasting type are equal (`ps=`), so β and η come out as instances.
+- **No λ/app rule.** Abstraction is meta-level only.
+- **Results.** Bijections with STLC (Thm. 19) and with STLC with finite products (Thm. 21), both up to βη. The paper says that an unbiased variant axiomatises cartesian closed ∞-categories. That variant is unpublished; its pasting criterion is implemented in the tool but not yet studied.
+
+**Why it matters here.**
+- It is the first CaTT-line treatment of an **exponential**, which is not a limit, so Mikhail's CaTT_lim does not cover it.
+- It is in exactly the style Anthony asked for: the universal property is *not* a λ/♭ bijection. Instead, a shape class (pasting types) is declared contractible, and every structure map and law is a coherence over it.
+- It is a candidate replacement for the λ/⌜⌝ rules of §5.4. Cartesian closure is the *pseudo* hom, which is what the ambient needs under architecture A. In the ω-version:
+  - `ps=` would become a coherence cell, invertible as usual;
+  - β and η would become higher cells, not definitional equalities;
+  - so the "limited normalisation" requirement of survey §13 would be respected.
+- It suggests a route to the **lax** hom too. The Gray tensor is biclosed and *non-symmetric*. An unbiased CCCaTT-style theory for it would need pasting types without duplication or exchange, i.e. a Lambek-calculus-like, planar, linear criterion. Mimram lists closed, linear and planar variants as future work.
+  - This lines up with the recurring linearity theme (survey §13; Mikhail's x ∝ t).
+  - The guess "lax closed structure = linear, planar pasting types" is worth testing on small cases: is the type of lax-hom evaluation pasting while the type of a diagonal is not?
+
+**Caveats.**
+- CCCaTT works *inside* one cartesian closed category, whereas §5.4 internalises the ambient ωCat's hom. To match, the pasting types must range over ambient object variables B, C : ⋆, with [B, C] a type former of the ambient. This seems direct.
+- The higher-dimensional criterion, which the paper says needs dependent types, is the unknown. Until it appears, the λ/♭ rules of §5.1 and §5.4 remain the conservative fallback.
+
 ## 6. What about ⊗ of arbitrary objects?
 
 Architecture A never forms B ⊗ C for non-representable B and C.

@@ -71,7 +71,9 @@ Take α : F ⇒ G and α′ : G ⇒ G′, both from B to C, and β : H ⇒ K fro
   - Under P, the cells of Hom(X, f ↓ g) are built from pseudo transformations. The question "what does a *lax* transformation into C//c correspond to?" can be asked only through [D¹, –]ₗₐₓ again.
   - Under L it is a direct statement about native cells.
 
-**Verdict:** for building limits, a wash. L only matters once lax transformations are mapped into them.
+- **Correction from the limits thread (R11).** Under P, Mikhail's rules as written force the arrows of a comma or hom object built this way to be *invertible*. P has to modify the rules, and then still needs the Gray machinery for genuine hom objects (whose arrows are non-invertible). Under L the rules work as written.
+
+**Verdict:** not a wash, as an earlier version said. L gets comma and hom objects directly from the limit rules. P needs modified rules plus Gray tensors for them.
 
 ### Example 4: adjunctions and monads between ω-categories
 
@@ -143,7 +145,10 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
   - On a single hom the test is expected to coincide with Finster–Mimram's Var **[conj]**, which is step 2 of the plan in §7.1.
 
   So experiment 2 has an answer in the CaTT aesthetic.
-- **What PR #2 and PR #3 got right.** Stating the test is not the same as knowing it is *correct*. Correctness is lemma S1 (§3.6): in the intended models, any two parallel terms with full support over a Gray unfolding are connected by an invertible cell. Nobody has proved a weak-ω coherence theorem of this kind. It is an open research problem, as they say.
+- **What PR #2 and PR #3 got right.** Stating the test is not the same as knowing it is *correct*. Correctness is lemma S1: in the intended models, any two parallel terms with full support over a Gray unfolding are connected by an invertible cell. When PR #2 and PR #3 were written, nobody had attempted it. §3.6 now attempts it:
+  - for the strict model it is proved modulo three combinatorial lemmas;
+  - for (∞,ω) models it is reduced to the scope of Campion's pasting theorem;
+  - uniform L first needs a construction.
 
   The earlier summary of this note ("a small, decidable change") was accurate about the rule and silent about S1. The summary now says both.
 
@@ -173,7 +178,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 - **Earlier claims.** PR #2: "none directly; each needs reproving." PR #3: "most existing CaTT results need to be redone."
 - **Settled: partly.**
   - The single-hom fragment of two-tier L *is* CaTT (given the [conj] in R1). So the existing checker, models of hom-ω-categories, suspension, and the invertibility argument for the coherence case all carry over.
-  - What needs new work is everything about composition across objects: computads, models, S1, substitution (S3), and the interaction with markings.
+  - What needs new work is everything about composition across objects: computads, models, S1, and the interaction with markings.
   - Anthony has said redoing results is not a cost, so this matters only as a schedule question.
 
 ### R5. Dualities
@@ -195,7 +200,7 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 - **Settled: the cheap direction is the other way round.**
   - P sits inside L as the marked fragment (§2.4). Embedding is cheap.
   - Elaborating L into P would require P to have lax homs for arbitrary domains, Gray composition maps between them, and all their coherence cells via `uni`. Those are the most expensive parts of P, so this direction is costly.
-- **PR #2's underlying aim survives.** Its aim was to start from existing foundations. The two-tier milestone does that: step 2 of §7.1 *is* the existing checker, re-expressed through supports.
+- **PR #2's underlying aim survives.** Its aim was to start from existing foundations. Two-tier L does that: step 2 of §7.1 *is* the existing checker, re-expressed through supports.
 - **The Agda thread agrees** (PR #4, finding 4 and suggested next steps):
   - it lists "a Gray-CaTT whose invertible fragment is CaTT" as option (c), which is this note's conclusion;
   - it proposes the same first experiment: orient the full-coherence case and check that naturality typechecks in one direction only.
@@ -223,20 +228,31 @@ A monoidal category M as a one-object 2-category BM: f ⊗ g is the horizontal c
 
 PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed: it is heavier than both P and L. It is subsumed by L with markings, where pseudo 2-cells are marked lax ones.
 
+### R11. CaTT_lim's universal property is native to L (finding from the limits thread)
+
+`limits-representables.md` §10.1 (on main) finds the following **[conj, attempted there]**:
+- In a CaTT ambient (P), the 2-dimensional instance of Mikhail's `uni` makes every connecting cell of a cone morphism derivably invertible. The cell of `ucone_*(β)` is an interchange coherence, and essential surjectivity transfers invertibility to every cone morphism.
+- So **Mikhail's rules as written fit L**, where that interchange is directed.
+- Under P, the connecting cells must be moved into `⊨`, which gives pseudo morphisms of lax cones.
+- Consequence for P: comma objects and hom objects built from cone-style limits have only invertible 2-cells as arrows. Genuine hom objects and lax cotensors then need the Gray tensor, not limits.
+
+The open part is the exact orientation of the ctrf cells, posed in `notes/conjectures/catt-lim-pseudo-vs-gray.md`.
+
+This **adds a practical point for L** to Example 3 above. Under P, building hom objects needs the Gray machinery (G1). Under L, they come straight from the limit rules.
+
 ### Settled conclusion
 
 1. **Stating L is solved.** The coherence side condition for lax interchange can be stated in the CaTT aesthetic, as an equality-of-supports test on pasting-scheme contexts, and it is decidable. No new context shapes are needed.
-2. **Correctness of L is open.** That the rule is correct for the intended models (S1) is an open research problem. The ∞-categorical target exists for two-tier L; an algebraic coherence theory does not, and nothing yet exists for uniform L.
+2. **Correctness of L: the attempt is in §3.6.**
+   - **Two-tier L, strict model.** Proved, modulo three combinatorial lemmas about Steiner complexes that are stated as a self-contained problem. This covers soundness, non-degeneracy (the reverse interchanger is not derivable) and conservativity over CaTT on a single hom.
+   - **Two-tier L, (∞,ω) models.** Reduced to whether Campion's pasting theorem covers Gray tensors of pasting diagrams (a second problem).
+   - **Uniform L.** Needs a definition before it can be proved: §2.5's recursive formula was wrong. Stated as a construction problem.
 3. **Practical trade-off.** P is cheapest for pseudo-heavy and standard work and clumsy for lax transformations. L reverses this. Uniform L adds marks inside objects.
 4. **Real losses of L that remain:**
    - fewer dualities (R5);
    - annotations for pseudo work and for 1-categorical targets (R6);
    - non-canonical horizontal composites.
-5. **Recommendation, unchanged but conditional.** Pursue L, uniform as the goal and two-tier as the first milestone, *because* its first steps are cheap and decisive:
-   - the single-hom fragment reproduces the existing checker;
-   - the two-object cases of §3.4 and the strict model test S1 on small shapes.
-
-   If those experiments fail, fall back to P, which loses nothing already built (R7).
+5. **Recommendation.** Pursue uniform L, and work on the open problems of §3.6 in parallel rather than treating them as gates (§7).
 
 ---
 
@@ -245,11 +261,11 @@ PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed:
 1. **The target is not an ω-category.** The ω-category of ω-categories with lax transformations is a category *enriched over ωCat with the lax Gray tensor*, which Gepner–Heine call an **oriented category** ([2510.10504](https://arxiv.org/abs/2510.10504), §1.8, with ∞Cat's hom-objects being Fun^lax(S, T)) **[paper, intro level]**. A CaTT model is enriched over the *cartesian* product. So under P the ambient is a different object (ωCat with pseudo transformations), and the lax one appears only as a family of objects and maps inside it.
 2. **Two versions of L.** In ωCat_lax only the outermost composition is Gray, since each hom Fun^lax(B, C) is an ordinary ω-category.
    - **Two-tier L** matches that exactly: plain CaTT inside homs, directed interchange only for composition across objects.
-   - **Uniform L** makes interchange directed at every level. Its rule is the same algorithm applied recursively (§2.5).
+   - **Uniform L** makes interchange directed at every level. Its side condition needs a free "lax at every level" structure to compute supports in, and that structure still has to be constructed (§2.5).
    - Uniform L is weaker than two-tier L, which is weaker than P. Each stronger theory is the weaker one plus an invertibility marking, so every model of the stronger theory is a model of the weaker one, ωCat_lax included **[conj]**.
    - *Revised 2026-11-18 after Anthony clarified that "lax by default" means "the most general version until there is a concrete reason otherwise". The first version recommended two-tier L.*
 3. **The L rule is a small syntactic change.** Contexts stay pasting schemes, and the coh rule keeps its shape. What changes is the side condition: free-variable sets are replaced by **supports in the Gray unfolding** of the pasting scheme. For Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, that unfolding is the hom-level shape Θₙ ⊗ … ⊗ Θ₁. Supports are Steiner chains, so the check is integer linear algebra and decidable (§3).
-   - *Stating* the rule is the small part. Whether it is *correct* is the open coherence lemma S1, and that part is research (see "Reconciliation").
+   - *Stating* the rule is the small part. Its correctness for two-tier L is proved in the strict model modulo three combinatorial lemmas, and reduced to a known theorem's scope for (∞,ω) models (§3.6). The open pieces are written up as self-contained problems in `notes/conjectures/`.
 4. **L absorbs the hardest open item of P.** Under P, lax homs [Θ, C]ₗₐₓ need a Gray *context former* whose generators x⊗y must be typed by composites of non-pasting molecules. PR #3 calls this "the biggest open technical point" (G1). Under L, a lax square in C is just the interchanger of a native 2-cell with an arrow of C, so lax homs are the native hom made into an object and Gray contexts become derivable (§4.2).
 5. **L is the weaker theory, and P is recoverable from it.** Every cartesian-enriched model is also Gray-enriched, through the comparison map X ⊗ Y → X × Y. So **P ≈ L + "interchangers are invertible"** **[conj]**. "Pseudo = lax + marking", which PR #3 adopted for shapes, then holds for the ambient as well. Choosing L does not close off P; the reverse is false.
 6. **L's real costs.**
@@ -262,9 +278,9 @@ PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed:
 7. **Is there an unambiguous path?**
    - **P:** unambiguous to build, but it is the least general option.
    - **Two-tier L:** a target in the literature (oriented categories; the strict model of Ara–Maltsiniotis), a pinned-down rule change, and a finite list of lemmas.
-   - **Uniform L:** the syntax is just as well defined, as the recursive Gray unfolding. What is missing is an established *semantics* of its own: iterated Gray enrichment fails as a construction (Crans; Bourke–Lobbia). That is a risk for the soundness proofs, not a reason the theory is wrong. Its intended models, ωCat_lax among them, are still models.
+   - **Uniform L:** the side condition needs the free strict structure with directed interchange at every level, which has not been constructed. Iterated Gray enrichment does not give it (Crans; Bourke–Lobbia). This is a construction problem, now posed in `notes/conjectures/strict-lax-interchange-at-every-level.md`. It is not a reason to drop uniform L.
 
-**Recommendation (revised): uniform L as the kernel**, with "ordinary ω-category" (interchange invertible inside an object) and "pseudo" as markings (§2.5, §7). Two-tier L is its first milestone, since the two differ only in whether the unfolding recurses. Both two-tier L and P remain reachable by marking.
+**Recommendation (revised): uniform L as the kernel**, with "ordinary ω-category" (interchange invertible inside an object) and "pseudo" as markings (§2.5, §7). Both two-tier L and P remain reachable by marking. The open problems behind each version are worked on in parallel, not used as gates.
 
 ---
 
@@ -322,16 +338,13 @@ Consequences:
 
 ### 2.5 Uniform L, and where generality stops
 
-**The rule.** Recurse the Gray unfolding of §3.1 into the hom pieces:
+**The rule.** The coh rule of §3.3 is unchanged. Only the structure in which supports are computed changes.
+- Two-tier L computes supports in ν(Θₙ ⊗ … ⊗ Θ₁), a strict ω-category, so composition *inside* the hom interchanges strictly.
+- Uniform L needs, in its place, the **free strict structure on Γ in which every interchange is directed**. Each hom is then itself such a structure, not an ω-category.
 
-```
-U(ΣΘ₁ ∨ … ∨ ΣΘₙ)  :=  U(Θₙ) ⊗ … ⊗ U(Θ₁)          U(point) := point
-```
+**Correction (2026-11-18).** An earlier version of this section defined uniform L by the recursion U(ΣΘ₁ ∨ … ∨ ΣΘₙ) := U(Θₙ) ⊗ … ⊗ U(Θ₁). That formula is wrong. U(Θ) is the shape of a *single hom* of Θ's free structure, so the recursion throws away all of Θ's lower-dimensional structure. For example, it sends a vertical composable pair of 2-cells to a point.
 
-Two-tier L is the case where U(Θᵢ) is replaced by Θᵢ itself.
-
-- Tensors and suspensions of loop-free Steiner complexes are loop-free **[recall]**, so supports are computed exactly as in §3.2 and the check stays decidable.
-- The rule (§3.3) is unchanged. Only U changes.
+The right object is not a Steiner complex at all, because ν always produces strict ω-categories. Constructing it is a problem in its own right. Iterated Gray enrichment does not give it (Crans; Bourke–Lobbia), and Forest–Mimram's Gray presentations do it in dimension 3 only. The problem, with the properties the rule needs, is posed in `notes/conjectures/strict-lax-interchange-at-every-level.md`.
 
 **What it does.**
 - Example: inside a single object C, take two 2-cells composable along a 1-cell, i.e. Γ = Σ(D¹ ∨ D¹) in C's own cells. This now gets a directed interchanger one dimension up, just as transformations do in two-tier L.
@@ -348,8 +361,8 @@ Finer supports map onto coarser ones under the collapse X ⊗ Y → X × Y, so e
 - The ambient and its objects are the same *kind* of structure again. This removes the universe mismatch of §4.7: a universe object can be lax.
 - One rule at every level, with no special status for dimension 0. That is closer to the CaTT aesthetic than two-tier L.
 
-**Concrete reasons it could fail (none decisive now).**
-1. **No established semantics of its own.** The obvious construction, iterated Gray enrichment, breaks at dimension 4: there is no monoidal biclosed structure on Gray-categories for weak transformations (Crans; Bourke–Lobbia). Gepner–Heine's bioriented categories are the closest current work. This makes S1 (§3.6) harder to *prove*, because there is no ∞-categorical model class to check against. It does not make the theory inconsistent, since its intended models are models.
+**What has to be done, and what it costs.**
+1. **No construction yet of the free structure the side condition needs** (above). This is open, not a reason against: the problem is posed and being worked on. If it is solved, the two-tier proof of §3.6 should transfer with Steiner chains replaced by the new generator sets.
 2. **Usability, unless markings are cheap.** Plain CaTT reasoning inside an object (elements, the post's §Functors) now has directed interchange. The fix is a marking "C is an ordinary ω-category" that restores invertible interchange in C. The marking must be easy enough that ordinary use never notices it.
 3. **Cost.** Unfoldings now multiply at every level, not only across objects. Symbolic supports should keep this polynomial **[conj]**, but it is a real constant-factor cost.
 
@@ -444,15 +457,58 @@ These are in diagrammatic order, with one choice of convention.
 | Interchanger where one factor is invertible | yes **[conj]** | For 2-categories, a lax transformation's naturality cell at an equivalence is invertible **[recall]**. Needs an ICaTT-style invertibility judgment ([2602.16602](https://arxiv.org/abs/2602.16602)) with a propagation rule. |
 | Interchangers with a transformation marked *pseudo* | yes, by marking | A pseudo transformation is a 2-cell whose interchangers are all marked invertible. |
 
-### 3.6 Soundness: what has to be proved
+### 3.6 Soundness: proof attempt
 
-- **S1. Coherence case.** In the free Gray-enriched weak ω-category on Γ, any two parallel cells of full support are connected by an invertible coherence. Evidence:
-  - in the strict model this holds on the nose (Steiner: cells of a free strict ω-category on a loop-free basis are determined by their chains);
-  - Campion's pasting theorem ([2311.00200](https://arxiv.org/abs/2311.00200)) gives contractible spaces of composites for torsion-free complexes, which include Gray cubes **[paper, abstract]**.
+**Precise form of §3.2.** Fix a pasting scheme Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ with objects a₀, …, aₙ. Let **𝔉(Γ)** be the free strict Gray-enriched category on Γ: the free category enriched in (strict ω-Cat, ⊗_AM) on the chain of hom-generators ν(λΘ₁), …, ν(λΘₙ). Because the underlying graph is a chain, its homs are
 
-  This is **[conj]** for weak ω, and it is the central lemma.
-- **S2. Freeness.** The hom 𝒦(a₀, aₙ) of the free Gray-enriched category on Γ is Free(Θₙ) ⊗ … ⊗ Free(Θ₁) ≃ Free(Θₙ ⊗ … ⊗ Θ₁). This holds in the strict case (Ara–Maltsiniotis; Steiner) **[recall]**, and for (∞,ω) via Campion's generator-wise construction **[conj]**.
-- **S3. Substitution.** Supports must be computed for substituted terms. A substitution induces a chain map between Gray unfoldings, which is tensor-functorial. This is the L analogue of the substitution-admissibility metatheorem, which PR #4 lists as open for plain CaTT too.
+```
+𝔉(Γ)(aᵢ, aⱼ)  =  ν(λΘⱼ) ⊗ … ⊗ ν(λΘᵢ₊₁)  ≅  ν(Kᵢⱼ),      Kᵢⱼ := λΘⱼ ⊗ … ⊗ λΘᵢ₊₁
+```
+
+where λ is the Steiner complex of a pasting diagram, and the isomorphism is Ara–Maltsiniotis's ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) **[recall]**.
+
+- Every L-term t over Γ has a **strict interpretation** ⟦t⟧, a cell of some 𝔉(Γ)(aᵢ, aⱼ), defined by induction on derivations (coh cases below; substitutions act through the strict Gray functors they induce).
+- **supp(t : A)** := Supp(⟦t⟧), the downward-closed set of basis elements of Kᵢⱼ used by ⟦t⟧ and its boundaries. Supports of objects are the objects themselves.
+- The rule of §3.3 reads: operation case if supp(t) = Supp(∂⁻T) and supp(u) = Supp(∂⁺T); coherence case if supp(t) = supp(u) = all of Kᵢⱼ. Here T := ⟨Θⱼ⟩ ⊗ … ⊗ ⟨Θᵢ₊₁⟩ is the **total cell**, the Gray tensor of the composites of the pasting diagrams.
+- Everything is computable: tables of finite chains, and chain maps for substitutions.
+
+**Three combinatorial lemmas**, about any Steiner complex K, in particular Gray tensors of pasting diagrams. They are posed precisely, with proof sketches, in `notes/conjectures/steiner-support-determines-cells.md`.
+
+- **(A) 0/1 chains.** Every chain in the table of a cell of ν(K) has coefficients in {0, 1}.
+- **(B) Support determines the cell.** Two cells of ν(K) of the same dimension with the same support are equal.
+- **(C) Support is functorial.** For a strict functor F : ν(K) → ν(L), Supp(Fx) = ⋃_{b ∈ Supp(x)} Supp(F⟨b⟩).
+
+**Theorem 1 (two-tier L, strict model), assuming (A)–(C).**
+
+1. *Soundness.* Every derivable term has a strict interpretation. So every strict Gray-enriched category models two-tier L, by mapping 𝔉(Γ) into it.
+   - *Operation case.* ⟦t⟧ and ∂⁻T have the same dimension and the same support, so ⟦t⟧ = ∂⁻T by (B). Likewise ⟦u⟧ = ∂⁺T. Interpret the coh as T, which has the right source and target.
+   - *Coherence case.* ⟦t⟧ and ⟦u⟧ have the same dimension and full support, so they are equal by (B). Interpret the coh as the identity on ⟦t⟧.
+   - *Substitution.* ⟦coh[σ]⟧ is the image of ⟦coh⟧ under the strict functor that σ induces between free objects.
+2. *Non-degeneracy.* The reverse interchanger is not derivable. Take Γ = ΣD¹ ∨ ΣD¹ and K₀₂ = λD¹ ⊗ λD¹. A 2-cell from the ∂⁺-path to the ∂⁻-path would need a top chain z with z + σ a 2-cycle. But K₀₂ has the homology of a point, and degree 2 is its top degree, so z = −σ, which is not a non-negative chain. Since every derivable term is interpreted, no derivable term has that type.
+   - The same argument works for every interchanger y ⊗ x with dim x, dim y ≥ 1. So L does not collapse to P.
+3. *Conservativity on one hom.* For Γ = ΣΘ, supp(t : A) = Var(t : A).
+   - "⊆": ⟦t⟧ is built from the images of the variables of t.
+   - "⊇": induction on t, using (C) and the fact that both coh cases interpret with full support of their own context.
+
+   So on a single hom, the rule *is* Finster–Mimram's rule, and L restricted to one hom is CaTT. The existing Agda checker is that fragment.
+
+**What is proved outright** (no lemma needed): the decidability of the side condition, the non-degeneracy argument in 2, and substitution admissibility. Side conditions are checked only on the coh's own pasting-scheme context Γ, never on the context Δ substituted into, so substitution cannot invalidate them, exactly as in CaTT.
+
+**Theorem 2 (two-tier L, (∞,ω) models), conditional.** Assume (A)–(C) and the following three statements, posed in `notes/conjectures/free-infinity-gray-of-pasting-diagrams.md`:
+
+- **(D)** For K = λΘₙ ⊗ … ⊗ λΘ₁, the free (∞,n)-category on K's generators is equivalent to ν(K). This is Campion's pasting theorem, if K is torsion-free; Campion's theorem covers lax Gray cubes, and the question is whether it covers Gray tensors of pasting diagrams.
+- **(E)** Campion's Gray tensor of the free (∞,n)-categories on λΘᵢ is the free one on their Steiner tensor.
+- **(F)** The free oriented ∞-category on Γ has homs given by tensoring along the chain. This is the ∞-version of the formula for 𝔉(Γ), and is expected from the description of free enriched ∞-categories on graphs **[recall]**.
+
+Then every oriented (∞,ω)-category (Gepner–Heine), in particular ∞Cat with lax transformations, interprets two-tier L:
+- operation-case cohs go to lifts of T;
+- coherence-case cohs go to the invertible cells that (D) provides between parallel cells with equal strict image.
+
+*Caveat shared with CaTT.* Interpreting a dependent type theory in an (∞,ω)-category needs a strictification or coherent-choice argument. That gap is not specific to L: it is open for CaTT in (∞,ω)-categories too.
+
+**Uniform L.** The theorem above cannot even be stated yet, because the strict structure 𝔉ᵤ(Γ) (lax interchange at every level) in which supports would be computed has not been constructed. That is the problem in `notes/conjectures/strict-lax-interchange-at-every-level.md`. Its requirements (support determines cells; reverse interchange uninhabited; substitution) are exactly what the proof of Theorem 1 uses. So a solution should give Theorem 1 for uniform L by the same argument.
+
+**Every model of two-tier L is a model of uniform L [conj].** The uniform side condition is meant to be stricter: a uniform-admissible pair should stay admissible after collapsing the inner interchanges. Once 𝔉ᵤ is defined, this becomes a checkable statement about its collapse map to 𝔉. If it holds, Theorem 2 already shows that ∞Cat with lax transformations models uniform L.
 
 ---
 
@@ -497,6 +553,7 @@ So each option makes one hom native and gets the other from an extra rule family
 ### 4.4 Limits (CaTT_lim)
 
 - **P.** Mikhail's rules apply as published ([2412.13310](https://arxiv.org/abs/2412.13310)). Lax cones have non-invertible ambient 2-cells p_f, so they are lax limits in ωCat_pseudo. Transfors between cones are Gray-shaped *contexts* (`ctrf`), whose existence is proved only for n = 1.
+- **Finding from the limits thread (R11).** As written, Mikhail's 2-dimensional universal property forces cone-morphism cells to be invertible in a CaTT ambient. So under P the rules need modifying (connecting cells in `⊨`), and hom/comma objects from limits have only invertible arrows.
 - **L.** The cone *shapes* are the same: a cone over Γ is the same context. The universal property becomes a Gray-enriched one, quantifying over native lax cells.
   - **[conj]** The `ctrf` shapes (transfors between cones) become native cells of the hom 𝒦(c, ·), so the `ctrf`/`star` machinery may shrink. A cone transfor would be a native cell between cones, with interchangers supplying the Gray squares.
   - Gray-enriched weighted limits are standard in dimension 2 (Street; Lack) **[recall]**.
@@ -563,7 +620,7 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Strict test model | strict ω-Cat with the cartesian hom (strictly natural transformations) | strict ω-Cat with the AM Gray tensor. This model is exactly the one used to compute supports, so the side condition and the test model coincide. |
 | Is ωCat itself a model? | open (algebraic weak ω-cats vs (∞,ω)) | open, same gap |
 | Invertibility, Σ, opposites, naturality meta-operations | done | to redo. Σ is admissible (§3.4). Some opposites swap lax and oplax instead of being symmetries (see R5). The naturality meta-operation (BMOSV) becomes the interchange coh. |
-| Biggest open lemma | G1 for Gray contexts (PR #3 §4.3); Conj. (P) "pseudo = marked Gray" for weak ω | S1 (coherence case over Gray unfoldings, §3.6) |
+| Biggest open lemma | G1 for Gray contexts (PR #3 §4.3); Conj. (P) "pseudo = marked Gray" for weak ω | Steiner lemmas (A)–(C) and the (∞,ω) transfer (D)–(F), §3.6 |
 
 ---
 
@@ -582,12 +639,12 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 | Horizontal composite | canonical | chosen across objects; laws are directed | chosen everywhere unless marked |
 | Internal hom with cartesian currying | yes (pseudo) | yes for the marked pseudo hom | yes for the marked pseudo hom |
 | Internal hom, lax | needs Gray tensor of objects | native; currying needs Gray tensor of objects | same |
-| Limits | CaTT_lim as published | CaTT_lim re-read Gray-enriched; ctrf may simplify **[conj]** | same |
+| Limits | CaTT_lim with cone-morphism cells moved into ⊨; hom objects need Gray tensors (R11) | CaTT_lim as written (R11) | same |
 | Free objects, elements | yes | yes; naturality comes out lax | yes |
 | Future universe | kind-correct (pseudo) | pseudo only (mismatch) | kind-correct (lax) |
 | Established semantics | (∞,ω)-categories | oriented categories | none of its own yet; frontier (bioriented) |
 | Decidable | yes | yes; cost grows with horizontal width | yes; cost grows at every level |
-| Central open lemma | G1 + Conj. (P) | S1 | S1, without a model class to check against |
+| Central open problems | G1 + Conj. (P) | (A)–(C), (D)–(F) | the same, plus constructing the free structure with lax interchange at every level |
 
 ---
 
@@ -599,11 +656,12 @@ PR #1 recommends no universe for now, so this is a long-term cost of two-tier L,
 
 Two-tier L and P are then fragments obtained by marking. The working rule is "steer toward the most general version until there is a concrete reason otherwise", and §2.5 found no decisive reason against uniform L. The one reason found against going further, dropping interchangers altogether, is concrete: it loses naturality cells that every lax transformation has.
 
-**Order of work: two-tier first.** Two-tier L is the *first milestone* toward uniform L, not a competing choice:
-- it has a model class in the literature to check S1 against;
-- the only change from two-tier to uniform is letting the unfolding recurse (§2.5).
+**How the open problems are handled.** Following the project standard, an unproved step is investigated, not used as a reason to stop short or fall back. The three open problems of §3.6 are worked on in parallel:
+- the Steiner lemmas (A)–(C);
+- the (∞,ω) transfer (D)–(F);
+- the construction of the free strict structure with directed interchange at every level.
 
-If the recursive version hits a concrete problem, such as S1 failing for an unfolding inside a hom or marking overhead that makes ordinary CaTT reasoning unusable, that is the concrete reason to stop at two-tier.
+The implementation work (§7.1) proceeds at the same time. A refutation would change the plan. An open problem does not.
 
 The reasons for L over P (first version, still valid):
 
@@ -616,12 +674,12 @@ The reasons for L over P (first version, still valid):
 
 *The first version advised against uniform L because "it describes something other than ωCat_lax". Under the generality principle that is not a reason: ωCat_lax remains a model. The dimension-4 literature (Crans; Bourke–Lobbia) is a risk for its semantics (§2.5), not a refutation.*
 
-**Honest residual risks of L:**
-- S1 could fail for some endo-coherence in a Gray unfolding. The direct analogue for pasting schemes took real work (Finster–Mimram; Benjamin–Finster–Mimram).
-- Usability of directed horizontal composition could be worse than expected in practice.
-- The universe mismatch (§4.7) means a later universe story starts from a pseudo universe.
+**Open problems** (none of them is a reason to delay):
+- the lemmas and constructions of §3.6, now posed in `notes/conjectures/`;
+- the usability of directed horizontal composition, which will show up in practice in the §7.1 experiments;
+- the universe question (§4.7), which uniform L addresses once its free structure exists.
 
-### 7.1 Staged plan, with a fallback
+### 7.1 Work plan
 
 1. **Fix conventions.** Choose lax vs oplax, i.e. the factor order in U, once, consistently with Mikhail and with PR #3 §4.1.
 2. **Supports and conservativity (Agda).**
@@ -631,16 +689,19 @@ The reasons for L over P (first version, still valid):
    - Check §3.4 mechanically: D²∨D² (interchanger accepted one way, rejected the other); D¹∨D² (whiskering); D²∨D²∨D² (the cube's 4-cell typed from ps-terms only).
    - Validate against the strict AM model.
 4. **Invertibility markings.** Port ICaTT's judgment, add the interchange propagation rule, and state "pseudo transformation".
-5. **S3 (substitution) and S1 on paper,** starting from Steiner's strict result and Campion's pasting theorem.
+5. **The §3.6 problems,** in parallel: lemmas (A)–(C), the (∞,ω) transfer (D)–(F), and the uniform construction. Each is posed in `notes/conjectures/` for external analysis, and attempted internally as well.
 6. **Representables and lax homs.** Restate PR #2's R-B and PR #3's §5.4 hom rule over L. Check the [conj] in §4.2 that Gray-shaped diagrams are derivable.
-7. **Go uniform.**
-   - Let the unfolding recurse (§2.5) and add the "ordinary ω-category" marking.
+7. **Uniform L,** in parallel with steps 2–6.
+   - Use the construction of the free structure with lax interchange at every level (§2.5) as it develops, and add the "ordinary ω-category" marking.
    - Re-run steps 2–3 for the case Σ(D¹ ∨ D¹) *inside* an object, i.e. directed Eckmann–Hilton-type interchange.
    - Check that marking an object restores exactly plain CaTT inside it.
 
-**Fallback criteria.** Each fallback adds a marking globally, so under §2.4 and §2.5 work done earlier carries over.
-- If the recursive step fails (S1 inside homs, or marking overhead), stay at two-tier.
-- If S1 fails already for two-tier, or step 3 shows the support condition admits an interchanger in both directions or rejects a needed whiskering law, fall back to P.
+**If something is refuted.**
+- A counterexample to (B) would mean the support rule has to be refined, e.g. to compare chains instead of supports, which is still decidable. The worked cases of §3.4 do not change.
+- A refutation of (D)/(E) would mean (∞,ω) models need a different rule, while the strict theory stands.
+- A negative answer to the uniform construction problem, i.e. a proof that no free structure with properties 1–3 exists, would be a genuine reason to stop at two-tier.
+
+Each of these is a finding to act on. An open status is not.
 
 ---
 

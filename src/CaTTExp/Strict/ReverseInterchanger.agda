@@ -17,9 +17,9 @@
 -- Count the basis element f′⊗β: ∂⁺(α⊗β) = f′⊗β + α⊗g, ∂⁻(α⊗β) = f⊗β +
 -- α⊗g′, so the left side has |c| + 1 copies and the right side none.
 --
--- The result depends on one explicit module parameter, B-supp
--- (support determines cells), as soundness does; T-cell is a theorem
--- (CaTTExp.Strict.Bridge). Nothing is postulated.
+-- The result depends on one explicit module parameter, B-bdry (a cell
+-- with the support of a boundary of the total cell is that boundary),
+-- as soundness does. Nothing is postulated.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.ReverseInterchanger where
 
@@ -30,7 +30,6 @@ open import CaTTExp.Strict.Cell
 open import CaTTExp.Strict.Subst
 open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Soundness
-open import CaTTExp.Strict.Bridge using (T-cell)
 open import CaTTExp.Gray.Pure hiding (Tuple)
 open import CaTTExp.Gray.Examples using (HComp; ichTy⁻; αβ; βα)
 
@@ -121,9 +120,9 @@ private
   n+1≢0 zero    ()
   n+1≢0 (suc n) ()
 
-module _ (B-supp : BSupp) where
+module _ (B-bdry : BBdry) where
 
-  open Soundness T-cell B-supp
+  open Soundness B-bdry
 
   -- Theorem 1(2): no term has the reverse interchanger's type.
   no-reverse-interchanger : ∀ t → ¬ (HComp ⊢tm t ∶ ichTy⁻)

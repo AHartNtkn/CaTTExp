@@ -13,23 +13,23 @@
 --   * the identity on its source (coherence case).
 -- This is Theorem 1(1) of notes/pseudo-vs-gray.md §3.6.
 --
--- Two facts about Steiner complexes are taken as explicit module
--- parameters, not postulated:
+-- One fact about Steiner complexes is taken as an explicit module
+-- parameter, not postulated:
 --
---  (T-cell) the table T of the Gray tensor ⟨Θ₁⟩ ⊗ … ⊗ ⟨Θₙ⟩ of the
---      composites of the pasting diagrams, as computed by
---      CaTTExp.Gray.Support's chainT, is a cell of ν(K(Θ)) between the
---      first and last object. (Ara–Maltsiniotis, arXiv 1607.00668,
---      §A.16 and Prop. 4.13; Steiner 2004.)
---  (B-supp) "support determines the cell": two cells of ν(K(Θ)) of the
---      same dimension in the same hom whose downward-closed supports
---      (CaTTExp.Gray.Support's `down`) agree are equal. (Hadzihasanovic,
---      arXiv 2404.07273, Prop. 8.3.17 and Thm 11.2.18, for these
---      complexes; notes/conjectures/steiner-support-determines-cells.md
---      proves it for every Steiner complex.)
--- (T-cell) is proved in CaTTExp.Strict.Bridge (`T-cell`); it stays a
--- parameter here only because Bridge imports this module's TCell.
--- CaTTExp.Strict.CheckCells also checks it by evaluation on 18 shapes.
+--  (B-bdry) a cell of ν(K(Θ)) in the hom from the first to the last
+--      object, of dimension d − 1 (d = dim K(Θ)), whose downward-closed
+--      support (CaTTExp.Gray.Support's `down`) equals that of a boundary
+--      ∂^sg T of the total cell T, is that boundary. It is the instance
+--      of "support determines the cell" (Hadzihasanovic, arXiv
+--      2404.07273, Prop. 8.3.17 and Thm 11.2.18) that the operation case
+--      needs; Hyp.bsupp→bbdry derives it from the general form BSupp.
+--
+-- The other facts are theorems:
+--  * the table T of the Gray tensor ⟨Θ₁⟩ ⊗ … ⊗ ⟨Θₙ⟩ is a cell
+--    (CaTTExp.Strict.Bridge, `T-cell`; also checked by evaluation on 18
+--    shapes in CaTTExp.Strict.CheckCells);
+--  * in the coherence case, two cells whose supports both equal T's
+--    have equal top chains (CaTTExp.Strict.CohCase, `coh-top`).
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Soundness where
 
@@ -44,8 +44,10 @@ import CaTTExp.Subst ∅ graySide as S
 import CaTTExp.Gray.Graded ∅ as Gr
 
 open import CaTTExp.Strict.Hyp public
+open import CaTTExp.Strict.Bridge using (T-cell)
+open import CaTTExp.Strict.CohCase using (coh-top)
 
-module Soundness (T-cell : TCell) (B-supp : BSupp) where
+module Soundness (B-bdry : BBdry) where
 
   -- Composites of 1-cells (the coh's type is a 1-cell type).
   sound-op⋆ : ∀ {Γ Δ t u σ} → Δ ⊢ps → T (graySide Δ ⋆ t u) → Γ ⊢sub σ ∶ Δ → Cellular Γ σ Δ →
@@ -101,17 +103,15 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
     cU = subst (λ e' → IsCellL Δ (fst e') (snd e') n (towerOf u A)) (just-inj (trans (sym ee') ee)) cU'
     X₀ : Bool → Tower
     X₀ b = step (towerOf t A) (towerOf u A) (if b then [] else topT hs)
-    opcell : ∀ m → suc n ≡ m → IsCellL Δ e₁ e₂ m (twT hs true m) →
+    opcell : suc n ≡ dimK hs → ∀ m → suc n ≡ m → IsCellL Δ e₁ e₂ m (twT hs true m) →
              T (≈T (down Δ (supp t A)) (down Δ (lowerT (m ∸ 1) hs ++ chainT false (m ∸ 1) hs))) →
              T (≈T (down Δ (supp u A)) (down Δ (lowerT (m ∸ 1) hs ++ chainT true (m ∸ 1) hs))) →
              ∀ C → C ≡ chainT true m hs → IsCellL Δ e₁ e₂ (suc n) (step (towerOf t A) (towerOf u A) C)
-    opcell .(suc n) refl cTT pt pu C refl =
+    opcell sn .(suc n) refl cTT pt pu C refl =
       let c₋ = fst cTT
           c₊ = fst (snd cTT)
-          et = B-supp psΔ e₁ e₂ n (towerOf t A) (twT hs false n) (supp t A) (lowerT n hs ++ chainT false n hs) cT c₋
-                 (flat-supp t A₀ a₀ b₀) (flat-twT hs false n) pt
-          eu = B-supp psΔ e₁ e₂ n (towerOf u A) (twT hs true n) (supp u A) (lowerT n hs ++ chainT true n hs) cU c₊
-                 (flat-supp u A₀ a₀ b₀) (flat-twT hs true n) pu
+          et = B-bdry psΔ e₁ e₂ n false (towerOf t A) (supp t A) sn cT c₋ (flat-supp t A₀ a₀ b₀) pt
+          eu = B-bdry psΔ e₁ e₂ n true (towerOf u A) (supp u A) sn cU c₊ (flat-supp u A₀ a₀ b₀) pu
       in Cells.IsCell-≈ (∂T Δ) (Basis Δ e₁ e₂) (suc n) (twT hs true (suc n)) _
            (≈w-sym (towerOf t A) _ et , ≈w-sym (towerOf u A) _ eu , ≈-refl) cTT
     cellX : ∀ b → cohCase Δ A t u ≡ b → IsCellL Δ e₁ e₂ (dim A) (X₀ b)
@@ -119,11 +119,8 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
       let cc = subst T (sym ec) tt
           pt = HD.coh-t (∧-fst (∧-snd {endsOK Δ A} cc))
           pu = HD.coh-u (∧-snd {sameDown Δ (supp t A) (fullT hs)} (∧-snd {endsOK Δ A} cc))
-          eTU = B-supp psΔ e₁ e₂ n (towerOf t A) (towerOf u A) (supp t A) (supp u A) cT cU
-                  (flat-supp t A₀ a₀ b₀) (flat-supp u A₀ a₀ b₀)
-                  (≈T-via (down Δ (supp t A)) (down Δ (supp u A)) (down Δ (fullT hs)) pt pu)
       in cT , cU , Par-same t u A₀ a₀ b₀ ,
-         ≈w-top (towerOf t A) (towerOf u A) eTU , tt
+         coh-top psΔ A₀ a₀ b₀ t u e₁ e₂ (∧-fst cc) ee cT cU pt pu , tt
     cellX false ec =
       let oc = subst (λ b → T (b ∨ opCase Δ A t u)) ec ok
           okE = ∧-fst oc
@@ -131,7 +128,7 @@ module Soundness (T-cell : TCell) (B-supp : BSupp) where
           rest = ∧-snd {dim A ==ℕ dimK hs} (∧-snd {endsOK Δ A} oc)
           pt = HD.op-t (∧-fst rest)
           pu = HD.op-u (∧-snd {sameDown Δ (supp t A) (bdryT false hs)} rest)
-      in opcell (dimK hs) dA (T-cell psΔ A e₁ e₂ okE (endsV→endsTy A ee)) pt pu (topT hs) refl
+      in opcell dA (dimK hs) dA (T-cell psΔ A e₁ e₂ okE (endsV→endsTy A ee)) pt pu (topT hs) refl
 
   mutual
     sound-tm : ∀ {Γ t A} → PsInv Γ → Γ ⊢tm t ∶ A → IsCellTm Γ t A

@@ -6,6 +6,9 @@
 --     cell from each hom in order, so its degree is at most
 --     d = dimK (homs Γ) (`deg-bound`), and a tuple of degree d takes a
 --     top-dimensional cell from every hom (`top-shape`).
+--   * The boundary is injective on top-degree chains with the same
+--     lower boundary (`top-inj`), by counting the face that replaces
+--     the first positive-dimensional entry by its target.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.TopCell where
 

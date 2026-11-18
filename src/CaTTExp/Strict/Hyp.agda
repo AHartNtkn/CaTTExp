@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------
 -- Definitions shared by strict-model soundness and the proofs of its
 -- hypotheses: the total cell's tower twT, set equality of supports,
--- and the hypotheses TCell and BSupp. Split from Strict.Soundness so
--- that the proofs (Strict.Bridge) can be imported there.
+-- and the statements TCell (proved in Strict.Bridge), BSupp and its
+-- instance BBdry (the remaining hypothesis of Strict.Soundness). Split
+-- from Strict.Soundness so that the proofs can be imported there.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Hyp where
 
@@ -179,6 +180,20 @@ BSupp : Set
 BSupp = ∀ {Θ} → Θ ⊢ps → ∀ x y n X Y L M →
         IsCellL Θ x y n X → IsCellL Θ x y n Y →
         SetEq (flat X) L → SetEq (flat Y) M → T (≈T (down Θ L) (down Θ M)) → X ≈w Y
+
+-- The instance soundness uses: a cell with the same closed support as
+-- a boundary ∂^sg T of the total cell T (dimension d = n + 1) is that
+-- boundary. (Q3a of notes/conjectures/outbox/steiner-support-formalizable.md.)
+BBdry : Set
+BBdry = ∀ {Θ} → Θ ⊢ps → ∀ x y n sg X L → suc n ≡ dimK (homs Θ) →
+        IsCellL Θ x y n X → IsCellL Θ x y n (twT (homs Θ) sg n) →
+        SetEq (flat X) L →
+        T (≈T (down Θ L) (down Θ (lowerT n (homs Θ) ++ chainT sg n (homs Θ)))) →
+        X ≈w twT (homs Θ) sg n
+
+bsupp→bbdry : BSupp → BBdry
+bsupp→bbdry B {Θ} P x y n sg X L _ cX cT fX p =
+  B P x y n X (twT (homs Θ) sg n) L (lowerT n (homs Θ) ++ chainT sg n (homs Θ)) cX cT fX (flat-twT (homs Θ) sg n) p
 
 -- The side condition compares downsets on generators (Support's
 -- `sameDown`); B-supp is about the closures `down`. In a pasting

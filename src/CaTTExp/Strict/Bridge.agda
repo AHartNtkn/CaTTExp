@@ -12,8 +12,8 @@
 --     (`piece-Tb`), using that a cell is hit only by cells of its own
 --     hom (`eq-hit`) and that the hom dimension bounds every cell's;
 --   * so every hom table is a TabCell (`hom-cell`), which is
---     TotalCell's `HomCells`, and the hypothesis T-cell of
---     Strict.Soundness holds (`T-cell`).
+--     TotalCell's `HomCells`, and T-cell, used by Strict.Soundness,
+--     holds (`T-cell`).
 -- Nothing is postulated.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.Bridge where
@@ -26,8 +26,7 @@ open import CaTTExp.Strict.L
 open import CaTTExp.Strict.Tensor
 open import CaTTExp.Strict.Pasting
 open import CaTTExp.Strict.TotalCell using (Ph; HC; HomCells; T-cell-from)
-open import CaTTExp.Strict.Hyp using (TCell; BSupp)
-open import CaTTExp.Strict.Soundness using (module Soundness)
+open import CaTTExp.Strict.Hyp using (TCell)
 open import CaTTExp.Gray.Pure hiding (Tuple)
 
 ------------------------------------------------------------------------
@@ -706,5 +705,3 @@ homCells {Θ} P =
 T-cell : TCell
 T-cell = T-cell-from homCells
 
--- Strict-model soundness with its one remaining hypothesis.
-module SoundnessB (B-supp : BSupp) = Soundness T-cell B-supp

@@ -6,3 +6,4 @@ module CaTTExp.Generated.All where
 import CaTTExp.Generated.UnitorNaturality
 import CaTTExp.Generated.ExchangeTwoBigons
 import CaTTExp.Generated.AssociatorNaturality
+import CaTTExp.Generated.LaxSquareRC3

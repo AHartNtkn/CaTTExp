@@ -96,8 +96,44 @@ private
     rewrite ==ℕ-sound v (len Γ) (subst T (sym q) tt) = any-++r (entries Γ) (here refl)
   ... | false = any-++l (lookup-entries Γ e)
 
+  -- The tail of upto r: 1 … r.
+  utail : Nat → List Nat
+  utail zero    = []
+  utail (suc r) = utail r ++ (suc r ∷ [])
+
+  upto≡ : ∀ r → upto r ≡ 0 ∷ utail r
+  upto≡ zero    = refl
+  upto≡ (suc r) = cong (_++ (suc r ∷ [])) (upto≡ r)
+
+  dropLast-snoc : ∀ xs x → dropLast (xs ++ x ∷ []) ≡ xs
+  dropLast-snoc []           x = refl
+  dropLast-snoc (y ∷ [])     x = refl
+  dropLast-snoc (y ∷ z ∷ zs) x = cong (y ∷_) (dropLast-snoc (z ∷ zs) x)
+
+  idx≡ : ∀ r → homIdx (suc r) ≡ utail r
+  idx≡ r rewrite upto≡ r = dropLast-snoc (utail r) (suc r)
+
+  utail⇒ : ∀ r {k} → k ∈ᴺ utail r → T (0 <ℕ k) × T (k <ℕ suc r)
+  utail⇒ (suc r) {k} m with any-++⁻ (utail r) m
+  ... | inj₁ a with utail⇒ r a
+  ...   | p , q = p , lt-step k r q
+  utail⇒ (suc r) m | inj₂ (here refl) = tt , lt-refl (suc r)
+
+  utail⇐ : ∀ r k → T (0 <ℕ k) → T (k <ℕ suc r) → k ∈ᴺ utail r
+  utail⇐ zero    zero    () _
+  utail⇐ zero    (suc k) _ ()
+  utail⇐ (suc r) k p q with lt-split k r q
+  ... | inj₁ q' = any-++l (utail⇐ r k p q')
+  ... | inj₂ refl = any-++r (utail r) (here refl)
+
+  idx⇒ : ∀ L {k} → k ∈ᴺ homIdx L → T (0 <ℕ k) × T (k <ℕ L)
+  idx⇒ zero    ()
+  idx⇒ (suc r) m = utail⇒ r (subst (λ l → _ ∈ᴺ l) (idx≡ r) m)
+
   pos-in-idx : ∀ k L → T (0 <ℕ k) → T (k <ℕ L) → k ∈ᴺ homIdx L
-  pos-in-idx k L p q = filter⇐ _ (upto L) (upto⇐ k L (weak< k L q)) (∧-in p q)
+  pos-in-idx k (suc r) p q = subst (λ l → k ∈ᴺ l) (sym (idx≡ r)) (utail⇐ r k p q)
+  pos-in-idx zero    zero p q = ⊥-elim p
+  pos-in-idx (suc k) zero p ()
 
 ------------------------------------------------------------------------
 -- Cells of a pasting context.
@@ -179,8 +215,8 @@ module Cells (Θ : Ctx) (P : PsFacts Θ) where
   top-cell : ∀ {h} → Any (h ≡_) (homs Θ) → Σ Nat λ c → c ∈ᴺ piece h (hd h) true
   top-cell {h} m with any-witness (any-map⁻ (homAt Θ) (homIdx (countL os))
                                    (subst (Any _) (map≡ (homAt Θ) (homIdx (countL os))) m))
-  ... | k , mk , refl with filter⇒ (λ k → (0 <ℕ k) ∧ (k <ℕ countL os)) (upto (countL os)) mk
-  ...   | _ , pq with nonE P k (∧-fst {0 <ℕ k} pq) (∧-snd {0 <ℕ k} pq)
+  ... | k , mk , refl with idx⇒ (countL os) mk
+  ...   | p0 , pq with nonE P k p0 pq
   ...     | v , C , e , d , hk = top
     where
     H = homAt Θ k

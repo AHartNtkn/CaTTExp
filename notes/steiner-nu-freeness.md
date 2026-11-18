@@ -50,6 +50,7 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
      - `peel-all` (Prop. 5.4): peel the least of these atoms in the basis order, recursing on |w|. The order makes every disjointness condition a support comparison.
      - `gen-0` (Prop. 5.5): at s = 0 unitality forces the cell to be the atom.
    - Equations between chains use a small commutative-monoid solver (`Strict/CMonSolver.agda`).
+   - **Instances** (`Strict/BasisCheck.agda`). `mkHyp` builds `Hyp B` from finite checks on the basis elements, each decided by evaluation: ∂∂ = 0, degrees of ∂^±bᵢ, the order, ε∂ = 0 in degree 1, and unitality for i < N. The arrow and the 2-globe are checked, and `gen-D²` applies `generation` to ν(λD²). An earlier version asked unitality for every index i, including i ≥ N, where the "atom" is the zero table; no basis satisfied that. The instances confirm the corrected `Hyp` is satisfiable.
 3. **(N2)** Freeness.
    - **Uniqueness: done** (`Gen.uniqueness`). Two strict functors out of `nu K L` (record `Functor`, preserving sources, targets and composites) that agree on the atoms of dimension ≤ L agree everywhere, by induction on `generation`. `gen-cell` shows that composites of atoms are cells.
    - **Existence: open.** It would follow Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms). The outside prompt asks for a shorter route.

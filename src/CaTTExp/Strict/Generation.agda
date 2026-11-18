@@ -240,7 +240,7 @@ record Hyp {N : Nat} (B : Basis N) : Set where
     -- ε∂ = 0 on 1-chains.
     aug1   : ∀ c → prj 1 (Basis.gdeg B) c ≡ c → augm (Basis.gdeg B) (dP B c) ≡ augm (Basis.gdeg B) (dM B c)
     -- Unital basis (Steiner Def. 3.4).
-    unital : ∀ i → Atom.Cells.Deg.Unital B dd deg-dp deg-dm i
+    unital : ∀ i → i < N → Atom.Cells.Deg.Unital B dd deg-dp deg-dm i
 
 module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   open Basis B
@@ -764,7 +764,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   -- Composites of atoms.
 
   data Gen : Tb → Set where
-    g-atom : ∀ i → deg i ≤ L → Gen (atomT L i)
+    g-atom : ∀ i → i < N → deg i ≤ L → Gen (atomT L i)
     g-comp : ∀ n {x y : Tb} → Gen x → Gen y → tgtT 𝕄 n x ≡ srcT 𝕄 n y → Gen (compT 𝕄 n x y)
 
   gen-split : ∀ {s f p q} (S : Split s f p q) →
@@ -775,10 +775,10 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   Agree s f r = ∀ j → s < j → j ≤ L → f j ≡ r j
 
   -- A table that agrees with an atom on all rows is that atom.
-  gen-atom : ∀ f a → deg a ≤ L → (∀ j → j ≤ L → f j ≡ ent a j) → Gen (tabG f 0)
-  gen-atom f a aL h =
+  gen-atom : ∀ f a → a < N → deg a ≤ L → (∀ j → j ≤ L → f j ≡ ent a j) → Gen (tabG f 0)
+  gen-atom f a aN aL h =
     subst Gen (trans (atomT≡ (ent a) 0) (tabG-ext (ent a) f 0 (λ i _ q → sym (h i (subst (λ k → i ≤ k) (+-zero L) (≤-pred q))))))
-      (g-atom a aL)
+      (g-atom a aN aL)
 
   ----------------------------------------------------------------------
   -- Chain lemmas.
@@ -806,6 +806,11 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   sumv : ∀ {m} → Vec Nat m → Nat
   sumv []      = 0
   sumv (a ∷ u) = a + sumv u
+
+  at-lt : ∀ {m} (w : Vec Nat m) c k → at0 w c ≡ suc k → c < m
+  at-lt []      c       k ()
+  at-lt (a ∷ w) zero    k e = s≤s z≤n
+  at-lt (a ∷ w) (suc c) k e = s≤s (at-lt w c k e)
 
   -- The least basis element in the support of a chain.
   least : ∀ {m} (w : Vec Nat m) → (w ≡ 0c) ⊎ Σ Nat (λ c → Hi c w × Σ Nat (λ k → at0 w c ≡ suc k))
@@ -857,22 +862,22 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   aug-zero (g ∷ gs) (suc a ∷ w) () e | false
 
   aug-one : ∀ {m} (gs w : Vec Nat m) → prj 0 gs w ≡ w → augm gs w ≡ 1 →
-            Σ Nat (λ i → (w ≡ unit i) × (at 0 gs i ≡ 0))
+            Σ Nat (λ i → (w ≡ unit i) × (i < m) × (at 0 gs i ≡ 0))
   aug-one []       []      p ()
   aug-one (g ∷ gs) (a ∷ w) p e with g ==ℕ 0 | ==ℕ-sound g 0
   aug-one (g ∷ gs) (zero ∷ w) p e | true | _ =
-    let (i , u , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , d
+    let (i , u , l , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , s≤s l , d
     where
     tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
     tlV refl = refl
   aug-one (g ∷ gs) (suc zero ∷ w) p e | true | g0 =
-    0 , cong (1 ∷_) (aug-zero gs w (tlV p) (suc-inj e)) , g0 tt
+    0 , cong (1 ∷_) (aug-zero gs w (tlV p) (suc-inj e)) , s≤s z≤n , g0 tt
     where
     tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
     tlV refl = refl
   aug-one (g ∷ gs) (suc (suc a) ∷ w) p () | true | _
   aug-one (g ∷ gs) (zero ∷ w) p e | false | _ =
-    let (i , u , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , d
+    let (i , u , l , d) = aug-one gs w (tlV p) e in suc i , cong (0 ∷_) u , s≤s l , d
     where
     tlV : ∀ {m} {x y : Nat} {u v : Vec Nat m} → x ∷ u ≡ y ∷ v → u ≡ v
     tlV refl = refl
@@ -927,11 +932,11 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
   AOK : Nat → Maybe Nat → Set
   AOK s nothing  = ⊤
-  AOK s (just a) = (s < deg a) × (deg a ≤ L)
+  AOK s (just a) = (s < deg a) × (deg a ≤ L) × (a < N)
 
   AOKL : Maybe Nat → Set
   AOKL nothing  = ⊤
-  AOKL (just a) = deg a ≤ L
+  AOKL (just a) = (a < N) × (deg a ≤ L)
 
   ent-zero : ∀ a j → deg a < j → ent a j ≡ 0R
   ent-zero a j h with <-split h
@@ -947,7 +952,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
   Good-A : ∀ s A → AOK s A → Good s (Arow A)
   Good-A s nothing  _       = Good-0 s
-  Good-A s (just a) (p , q) = Good-ent a s p q
+  Good-A s (just a) (p , q , _) = Good-ent a s p q
 
   W-unit-ent : ∀ s c → deg c ≡ suc s → ∀ j → s < j → W s (unit c) j ≡ ent c j
   W-unit-ent s c dc j h with view3 j (suc s)
@@ -996,7 +1001,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     where
     aokl : ∀ A → AOK s A → AOKL A
     aokl nothing  _       = tt
-    aokl (just a) (_ , q) = q
+    aokl (just a) (_ , q , r) = r , q
   ... | inj₂ (c , hc , k , ec) = go n A aok en ag
     where
     w′ : Vec Nat N
@@ -1009,6 +1014,8 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     dw′ = ∸c-deg (suc s) gdeg w (unit c) dw
     du : InD (suc s) (unit c)
     du = subst (λ j → prj j gdeg (unit c) ≡ unit c) dc (unit-deg′ gdeg c)
+    cN : c < N
+    cN = at-lt w c k ec
     hw′ : Hi c w′
     hw′ = ∸c-Hi {N} {c} w (unit c) hc
 
@@ -1017,7 +1024,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
              (∀ d → d < c → at0 (dp (snd (Arow A (suc s)))) d ≼ at0 (dm (snd (Arow A (suc s)))) d) →
              Agree s f (λ j → Arow A j +R W s w j) → Gen (tabG f 0)
     peel-c n A aok en key ag =
-      gen-split S (G (Split.y S) (Split.cy S) (just c) (subst (λ k → k ≤ L) (sym dc) sL)
+      gen-split S (G (Split.y S) (Split.cy S) (just c) (cN , subst (λ k → k ≤ L) (sym dc) sL)
                      (λ j h _ → trans (Split.yp S j h) (W-unit-ent s c dc j h)))
                   (peel-all s sL G n (Split.z S) A w′ (Split.cz S) aok dw′ en (λ j h _ → Split.zq S j h))
       where
@@ -1053,10 +1060,10 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
         ... | inj₂ p = inj₂ (hi d p)
 
     -- Peel ⟨a⟩ (when a comes no later than every element of w).
-    peel-a : ∀ n a → s < deg a → deg a ≤ L → a ≤ c → sumv w ≡ n →
+    peel-a : ∀ n a → s < deg a → deg a ≤ L → a < N → a ≤ c → sumv w ≡ n →
              Agree s f (λ j → ent a j +R W s w j) → Gen (tabG f 0)
-    peel-a n a h aL ac en ag =
-      gen-split S (G (Split.y S) (Split.cy S) (just a) aL (λ j h′ _ → Split.yp S j h′))
+    peel-a n a h aL aN ac en ag =
+      gen-split S (G (Split.y S) (Split.cy S) (just a) (aN , aL) (λ j h′ _ → Split.yp S j h′))
                   (peel-all s sL G n (Split.z S) nothing w (Split.cz S) tt dw (trans (+-zero (sumv w)) en)
                      (λ j h′ _ → trans (Split.zq S j h′) (sym (+R-idl (W s w j)))))
       where
@@ -1078,9 +1085,9 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     go (suc n) nothing aok en ag =
       peel-c n nothing tt (suc-inj (trans (sym (cong (_+ 0) sw)) en))
         (λ d _ → at0 (dm 0c) d , cong (_+ at0 (dm 0c) d) (trans (pt d (lin-0 bplus)) (at-0c {N} d))) ag
-    go (suc n) (just a) (h , aL) en ag with ≤-dec a c
-    ... | inj₁ ac = peel-a n a h aL ac (trans (sym (+-zero (sumv w))) (suc-inj (trans (sym (+-suc (sumv w) 0)) en))) ag
-    ... | inj₂ ca = peel-c n (just a) (h , aL) (suc-inj (trans (sym (cong (_+ 1) sw)) en)) key ag
+    go (suc n) (just a) (h , aL , aN) en ag with ≤-dec a c
+    ... | inj₁ ac = peel-a n a h aL aN ac (trans (sym (+-zero (sumv w))) (suc-inj (trans (sym (+-suc (sumv w) 0)) en))) ag
+    ... | inj₂ ca = peel-c n (just a) (h , aL , aN) (suc-inj (trans (sym (cong (_+ 1) sw)) en)) key ag
       where
       a⁺ : Vec Nat N
       a⁺ = snd (ent a (suc s))
@@ -1115,7 +1122,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
   base-none : ∀ f → CellF f → Agree 0 f (λ _ → 0R) → Gen (tabG f 0)
   base-none f cf ag =
-    gen-atom f i (subst (λ k → k ≤ L) (sym di) z≤n) rows
+    gen-atom f i (fst (snd (snd i-data))) (subst (λ k → k ≤ L) (sym di) z≤n) rows
     where
     uv : fst (f 0) ≡ snd (f 0)
     uv = diag f cf 0 z≤n (λ h → ag 1 (s≤s z≤n) h)
@@ -1123,14 +1130,14 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     i : Nat
     i = fst i-data
     di : deg i ≡ 0
-    di = snd (snd i-data)
+    di = snd (snd (snd i-data))
     rows : ∀ j → j ≤ L → f j ≡ ent i j
     rows zero    _  = trans (cong₂ _,_ (fst (snd i-data)) (trans (sym uv) (fst (snd i-data))))
                             (sym (ent-in i 0 0 di))
     rows (suc j) jL = trans (ag (suc j) (s≤s z≤n) jL) (sym (ent-zero i (suc j) (subst (λ k → k < suc j) (sym di) (s≤s z≤n))))
 
-  base-atom : ∀ f → CellF f → ∀ a → 0 < deg a → deg a ≤ L → Agree 0 f (ent a) → Gen (tabG f 0)
-  base-atom f cf a h aL ag = gen-atom f a aL rows
+  base-atom : ∀ f → CellF f → ∀ a → a < N → 0 < deg a → deg a ≤ L → Agree 0 f (ent a) → Gen (tabG f 0)
+  base-atom f cf a aN h aL ag = gen-atom f a aN aL rows
     where
     oL : 0 < L
     oL = ≤-trans h aL
@@ -1148,7 +1155,7 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     w = u ∸c u0
     aw : augm gdeg w ≡ 0
     aw = sym (suc-inj (trans (sym (fst (snd (snd (fst cf)))))
-                   (trans (cong (augm gdeg) (fst ex)) (trans (augm-+ gdeg u0 w) (cong (_+ augm gdeg w) (fst (unital a)))))))
+                   (trans (cong (augm gdeg) (fst ex)) (trans (augm-+ gdeg u0 w) (cong (_+ augm gdeg w) (fst (unital a aN)))))))
     w0 : w ≡ 0c
     w0 = aug-zero gdeg w (∸c-deg 0 gdeg u u0 (fst (fst cf))) aw
     rows : ∀ j → j ≤ L → f j ≡ ent a j
@@ -1158,9 +1165,9 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
 
   gen-0 : GenAt 0
   gen-0 f cf nothing  _  ag = base-none f cf ag
-  gen-0 f cf (just a) aL ag with ≤-dec (deg a) 0
+  gen-0 f cf (just a) (aN , aL) ag with ≤-dec (deg a) 0
   ... | inj₁ d0 = base-none f cf (λ j h hL → trans (ag j h hL) (ent-zero a j (≤-trans (s≤s d0) h)))
-  ... | inj₂ h  = base-atom f cf a h aL ag
+  ... | inj₂ h  = base-atom f cf a aN h aL ag
 
   ----------------------------------------------------------------------
   -- Prop. 5.2 and the induction on the level.
@@ -1179,9 +1186,9 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     ... | vlt h′   = ⊥-elim (≤-<-⊥ h h′)
     ... | veq refl = trans (cong₂ _,_ refl (sym uv)) (sym (trans (cong (0R +R_) (W-top s u)) (+R-idl (u , u))))
     ... | vgt h′   = trans (ag j h′ hL) (sym (trans (cong (0R +R_) (W-above s u j h′)) (+R-idl 0R)))
-  gen-suc s sL G f cf (just a) aL ag with ≤-dec (deg a) (suc s)
+  gen-suc s sL G f cf (just a) (aN , aL) ag with ≤-dec (deg a) (suc s)
   ... | inj₁ da = gen-suc s sL G f cf nothing tt (λ j h hL → trans (ag j h hL) (ent-zero a j (≤-trans (s≤s da) h)))
-  ... | inj₂ h  = peel-all s sL G (sumv w + 1) f (just a) w cf (≤-trans (≤-suc (≤-refl _)) h , aL) dw refl agree
+  ... | inj₂ h  = peel-all s sL G (sumv w + 1) f (just a) w cf (≤-trans (≤-suc (≤-refl _)) h , aL , aN) dw refl agree
     where
     s2L : suc s < L
     s2L = ≤-trans h aL
@@ -1226,11 +1233,11 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   -- (the uniqueness half of Steiner Thm 5.7).
 
   gen-cell : ∀ {x} → Gen x → IsCell K L x
-  gen-cell (g-atom i iL) = let (k , e) = ≤→+ iL in atom-cell L i (unital i) k e
+  gen-cell (g-atom i iN iL) = let (k , e) = ≤→+ iL in atom-cell L i (unital i iN) k e
   gen-cell (g-comp n gy gz m) = cell-comp K L n _ _ m (gen-cell gy) (gen-cell gz)
 
-  atom : ∀ i → deg i ≤ L → Cell K L
-  atom i iL = atomT L i , gen-cell (g-atom i iL)
+  atom : ∀ i → i < N → deg i ≤ L → Cell K L
+  atom i iN iL = atomT L i , gen-cell (g-atom i iN iL)
 
   private
     module ν = ωCat (nu K L)
@@ -1253,14 +1260,14 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
     comp-cong n q q′ refl refl = cong (𝒞.comp n _ _) (uip q q′)
 
     uniqueness : (Φ Ψ : Functor 𝒞) →
-                 (∀ i (iL : deg i ≤ L) → Functor.F Φ (atom i iL) ≡ Functor.F Ψ (atom i iL)) →
+                 (∀ i (iN : i < N) (iL : deg i ≤ L) → Functor.F Φ (atom i iN iL) ≡ Functor.F Ψ (atom i iN iL)) →
                  ∀ x → Functor.F Φ x ≡ Functor.F Ψ x
     uniqueness Φ Ψ h (x , cx) = go (generation x cx) cx
       where
       open Functor
       go : ∀ {x} → Gen x → (cx : IsCell K L x) → F Φ (x , cx) ≡ F Ψ (x , cx)
-      go (g-atom i iL) cx =
-        trans (cong (F Φ) (≡-cell K L refl)) (trans (h i iL) (cong (F Ψ) (≡-cell K L refl)))
+      go (g-atom i iN iL) cx =
+        trans (cong (F Φ) (≡-cell K L refl)) (trans (h i iN iL) (cong (F Ψ) (≡-cell K L refl)))
       go (g-comp n {y} {z} gy gz m) cx =
         trans (cong (F Φ) (≡-cell K L refl))
           (trans (F-comp Φ n (y , cy) (z , cz) (≡-cell K L m) qΦ)

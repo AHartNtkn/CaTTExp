@@ -794,6 +794,21 @@ Checked:
    - I checked all three by hand.
 5. **Parity completion, §5.1.** The finite groupoid on edge-parity vectors is well defined because an inner path in a DAG is determined by its edge-parity vector. (11) contracts a positive arrow followed by an inner one, so left sides do not overlap. I checked the (12) obstruction from its boundary data.
 
-**Owner action.** Ask for the archive `directed_interchange_round8_checks.zip`. It holds `r8_lifts_check.py`, `r8_variation_check.py`, `r8_substitution_check.py` and `r8_rank5_check.py`. Re-run them as for round 7.
+**Independent recomputation (2026-11-18, without the archive).** `scripts/e6/r8_degeneration_check.py` rebuilds the (K14) graph from `triple_tensor_r5_check.py` and the (K10) binary graph from the same rules, then erases c, q, r. It confirms:
+- the binary graph is exactly (2) of §1, with sinks apb and bap;
+- every (K14) arrow maps to an identity or a binary path;
+- h_z : bacrqp → bapcqr and the inner arrow e : abpcqr → bapcqr exist;
+- the join j_{h_z,e} would need bap → abp, which does not exist.
+
+So the §1 obstruction is verified independently. In addition, 36 of the 184 one-step (K18) joins have no image under the degeneration.
+
+Checked by hand: the four-sign rule (by boundary calculation), the free-division weights 1 + 4n, and the parity-completion construction.
+
+**Not independently recomputed** (taken from the response):
+- the five lift equations and the auxiliary G (§3);
+- the counts 135, 33 and 34 (§2);
+- the hom-4 graph sizes and the hom-5 grading ρ = ℓ(q₄) + θ (§4).
+
+These depend on the response's archive, which was not used. Nothing in the notes builds on their specific data; the ledger and the round-9 prompt use them only as reported results.
 
 Follow-up prompt: `outbox/directed-interchange-every-level-r9.md` (round 9, unsent).

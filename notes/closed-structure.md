@@ -7,7 +7,7 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness reduced to the closed-term lemma (D10a) |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness open (D10b) |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
@@ -327,11 +327,44 @@ So **UL_I\* is full iff, for every closed term c : ⊢ P, the closed "left tenso
 
 So ⌜c ⊗ –⌝ = coh_{⊢ Y\(P′⊗Y)}[σ_c]. In particular, UL_I\* is full on every term built only from I-free coh's. More generally it is full whenever the closed subterms met in bracket abstraction have UP\* generalizations.
 
-**The remaining point (D10a).** Is the generalization of every *closed* UL_I\* term UP\*?
-- For *open* terms the answer is no. The term coh_{I ⊢ I}(ev(x, h)) has generalization X, X\I ⊢ I: the unifier sends the atom Y of (X, X\Y ⊢ Y) to I. That is why the reduction above isolates closed terms.
-- For closed terms, unification can force an atom to I only through a bare I in a tame coh, i.e. a whole hypothesis I, the goal ⊢ I, or the I of I⊗A, A⊗I, I\A or A/I. The partner occurrence of such an atom lies inside the same closed tree.
-- What is missing is a lemma saying that this partner is never left in a result position (B\I, I/B, or a goal I with nonempty context).
-- A fallback would be a rule forming ⌜c ⊗ –⌝ from a closed term c. It is obviously sound, but it is a term former other than coh, so it would depart from standard 5. It is not adopted; the lemma is the open point.
+**The closed-term lemma is false, but fullness does not need it.** *(Updated 2026-11-18.)*
+
+*Counterexample to "every closed term has a UP\* generalization".*
+- Take the closed coh c = coh_{⊢ C}, with C = ((Z ⊗ (Z\X)) \ (X ⊗ W)) / W. The sequent ⊢ C is UP\*: it is balanced and I-free, and its normal form Z ⊗ (Z\X), W ⊢ X ⊗ W is L-provable.
+- Take the unary UP\* coh S = (((P \ (I ⊗ Q)) / R) ⊢ (P \ Q) / R). Its normal form is an identity sequent.
+- Unifying the hypothesis of S with C sends X to I. The closed term coh_S(c) then has generalization ⊢ ((Z ⊗ (Z\I)) \ W) / W, which contains the unremovable Z\I. So it is not UP\*.
+- No single UP\* coh denotes this morphism either: any generalization must keep that I.
+- `scripts/d10a/cex.py` checks all of this mechanically. `scripts/d10a/closed_tame.py` found no counterexample in 108k random closed trees, so the counterexample is not generic.
+
+**Prop. B5 (tensoring names are always coh composites).** For every closed UL_I\* term c : ⊢ P, the names ⌜c ⊗ –⌝ : ⊢ Y\(P ⊗ Y) and ⌜– ⊗ c⌝ : ⊢ (Y ⊗ P)/Y are denoted by UL_I\* terms.
+
+*Proof.* Induction on c = coh_S[τ](c₁, …, c_k), with S = (B₁, …, B_k ⊢ C) UP\* and every cᵢ closed. Put Bᵢ′ = Bᵢ[τ] and C′ = C[τ].
+- **The prefix.** The map y ↦ c₁ ⊗ … ⊗ c_k ⊗ y is a composite of the maps y ↦ cᵢ ⊗ y′. Their names exist by induction, and they compose with the L-pasting coh K = (Y\A, A\B ⊢ Y\B):
+
+  ```
+  ⌜c₁ ⊗ c₂ ⊗ –⌝ = coh_K(⌜c₂ ⊗ –⌝, ⌜c₁ ⊗ –⌝[Y := B₂′ ⊗ Y]),
+  ```
+
+  and so on for longer prefixes. For k = 0 the prefix is the name of the identity, j_Y.
+- **The coh itself.** c ⊗ y = (S[τ] ⊗ Y)(c₁ ⊗ … ⊗ c_k ⊗ y). The name of S ⊗ Y is a single coh, over the sequent
+
+  ```
+  T_S = ⊢ (B₁ ⊗ … ⊗ B_k ⊗ Y) \ (C ⊗ Y),   instantiated at τ.
+  ```
+
+  T_S is UP\*. Its normal form is nf(B₁), …, nf(B_k), Y ⊢ nf(C) ⊗ Y, or Y ⊢ Y when N(S) = ⊢ I. Since N(S) is I-free, the hypotheses nf(Bᵢ) are I-free and nf(C) is either I-free or I. The normal form is provable by R⊗ with split (hypotheses | Y), from the provability of N(S). It is balanced.
+- **Conclusion.** ⌜c ⊗ –⌝ = coh_K(⌜prefix⌝, coh_{T_S}[τ]). The mirror case is symmetric, with T′_S = ⊢ (Y ⊗ C) / (Y ⊗ B₁ ⊗ … ⊗ B_k).
+- The argument never uses a generalization of c, so the counterexample above does not affect it. ∎
+
+`scripts/d10a/tens_names.py` checks that T_S and T′_S are UP\* for 3,003 random UP\* coh's, with no failures.
+
+**Theorem B6 (fullness of UL_I\*; D10a).** Every morphism of the free biclosed monoidal category with unit is the denotation of a UL_I\* term.
+
+*Proof.* By the reduction above, fullness follows from closure under Λ. Bracket abstraction gives that closure, given the names ⌜c⃗ ⊗ –⌝ and their mirrors, and Prop. B5 supplies those names. ∎
+
+**What remains (D10b, new): faithfulness of UL_I\*.** Do equal denotations imply equality in UL_I\*?
+- The unit-free proof (A4) went through a single coh per term. With units, a morphism need not be a single coh: the counterexample above is one such morphism, and B.1's e is another.
+- So faithfulness needs a different argument. One route is a normal form for terms modulo the coh-equality rule. Another is a Kelly–Mac Lane-style argument that two terms with the same denotation are connected through composites of UP\* coh's.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

@@ -33,17 +33,19 @@
 --   supp(t : A) = topS t ∪ topS(s) ∪ topS(s') ∪ supp(type of s) …
 --
 -- Under soundness (Theorem 1 of the note) this is the union of the
--- chains of ⟦t⟧'s table. It is *not* downward closed: a basis element
--- that occurs only in the boundary of another one is not added. The
--- coherence case compares with the table support of T, so the two
--- conventions are used consistently.
+-- chains of ⟦t⟧'s table. The side condition compares *downward
+-- closures* ↓S in K(Γ) (close under replacing an entry of a tuple by
+-- its source or target), as in §3.6 of the note: "the downward-closed
+-- set of basis elements used by ⟦t⟧ and its boundaries". This is also
+-- the form in which lemma (B) "support determines the cell" is known
+-- (Hadzihasanovic: molecules are determined by their closed subsets).
 --
 -- Side condition for coh_{Γ, t →_A u}, with d = Σ dim Θₖ:
 --   A = ⋆:   d = 0, t = a₀, u = aₙ                       (composites of
 --                                                        1-cells, identity)
 --   A ≠ ⋆:   the ⋆-endpoints of A are a₀ and aₙ, and either
---     (coherence) supp(t:A) = supp(u:A) = Supp(T)
---     (operation) dim A = d, supp(t:A) = Supp(∂⁻T), supp(u:A) = Supp(∂⁺T)
+--     (coherence) ↓supp(t:A) = ↓supp(u:A) = ↓Supp(T)   (all of K(Γ))
+--     (operation) dim A = d, ↓supp(t:A) = ↓Supp(∂⁻T), ↓supp(u:A) = ↓Supp(∂⁺T)
 --
 -- T's table is the Steiner/Ara–Maltsiniotis tensor of the tables of the
 -- ⟨Θₖ⟩:  (x⊗y)^ε_k = Σ_{i+j=k} x^ε_i ⊗ y^{(-1)^i ε}_j, with x_i^± = x_i
@@ -252,6 +254,35 @@ bdryT sg hs = lowerT (dimK hs ∸ 1) hs ++ chainT sg (dimK hs ∸ 1) hs
 ------------------------------------------------------------------------
 -- Supports of terms.
 
+-- Downward closure in K(Γ).
+
+private
+  findEl : Nat → List El → Maybe El
+  findEl n []       = nothing
+  findEl n (c ∷ cs) = if lvl c ==ℕ n then just c else findEl n cs
+
+  -- Boundary elements of one entry (none for a cell of dimension 0).
+  bdEl : List El → Nat → List Nat
+  bdEl cs w with findEl w cs
+  ... | nothing = []
+  ... | just c  = if hdim c ==ℕ 0 then [] else (src c ∷ tgt c ∷ [])
+
+  -- Codimension-1 faces of a tuple.
+  faces : List El → Tuple → TSet
+  faces cs []       = []
+  faces cs (w ∷ ws) = map (_∷ ws) (bdEl cs w) ++ map (w ∷_) (faces cs ws)
+
+  nubT : TSet → TSet
+  nubT []       = []
+  nubT (x ∷ xs) = if memT x xs then nubT xs else (x ∷ nubT xs)
+
+  closeN : Nat → List El → TSet → TSet
+  closeN zero    cs S = S
+  closeN (suc n) cs S = closeN n cs (nubT (S ++ concatMap (faces cs) S))
+
+down : Ctx → TSet → TSet
+down Γ S = closeN (dimK (homs Γ)) (cells Γ) (nubT S)
+
 nth : Nat → List TSet → TSet
 nth _       []       = []
 nth zero    (x ∷ _)  = x
@@ -309,7 +340,8 @@ mutual
   cohCase : Ctx → Ty → Tm → Tm → Bool
   cohCase Θ ⋆ t u = false
   cohCase Θ A@(arr _ _ _) t u =
-    endsOK Θ A ∧ ≈T (supp t A) (fullT (homs Θ)) ∧ ≈T (supp u A) (fullT (homs Θ))
+    endsOK Θ A ∧ ≈T (down Θ (supp t A)) (down Θ (fullT (homs Θ)))
+               ∧ ≈T (down Θ (supp u A)) (down Θ (fullT (homs Θ)))
 
 -- The operation case.
 opCase : Ctx → Ty → Tm → Tm → Bool
@@ -317,7 +349,8 @@ opCase Θ ⋆ t u =
   (dimK (homs Θ) ==ℕ 0) ∧ isVarAt t (firstL (objs Θ)) ∧ isVarAt u (lastL (objs Θ))
 opCase Θ A@(arr _ _ _) t u =
   endsOK Θ A ∧ (dim A ==ℕ dimK (homs Θ))
-  ∧ ≈T (supp t A) (bdryT false (homs Θ)) ∧ ≈T (supp u A) (bdryT true (homs Θ))
+  ∧ ≈T (down Θ (supp t A)) (down Θ (bdryT false (homs Θ)))
+  ∧ ≈T (down Θ (supp u A)) (down Θ (bdryT true (homs Θ)))
 
 -- The side condition of two-tier L.
 graySide : Ctx → Ty → Tm → Tm → Bool

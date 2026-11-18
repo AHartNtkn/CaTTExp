@@ -42,10 +42,10 @@
 
 None of the note's claims failed. Writing the rule down exactly fixed three details, now recorded in the note.
 
-- **Support convention.** supp(t : A) is type-directed: the top support of t together with that of every cell in A. Under soundness this is the union of the chains of ⟦t⟧'s table, *not* its downward closure.
-  - With this convention, the coherence case must compare with Supp(T), the table support of the total cell, not with "all generators of U".
-  - Example: in D¹ ⊗ D¹ the 0-cells f⊗g′ and f′⊗g occur only in boundaries of atoms. If the coherence case asked for all generators, it could never fire over ΣD¹ ∨ ΣD¹.
-  - Comparing downward closures on both sides would also be consistent. The code uses table supports.
+- **Support convention.** supp(t : A) is type-directed: the top support of t together with that of every cell in A, as for Var(t : A). Side conditions compare **downward closures** in K(Γ), as §3.6 says ("the downward-closed set"). That is also the form in which lemma (B) is known: molecules are determined by their closed subsets (Hadzihasanovic).
+  - Closures are needed. The table support of the total cell misses the 0-cells f⊗g′ and f′⊗g of D¹ ⊗ D¹, and on a single hom it misses the middle 1-cell g of f ⇒ g ⇒ h. So supp = Var (§3.2 [conj]) is false for table supports and can only hold for closed ones.
+  - Checked: the closure of Supp(T) for ΣD¹ ∨ ΣD¹ is all 9 basis elements, and f⊗g′ ∉ Supp(T).
+  - An earlier draft of this PR compared table supports. All examples give the same verdicts under both conventions.
 - **Dimension in the operation case.** The rule requires dim A = d := Σ dim Θₖ explicitly, i.e. the composite is a (d+1)-cell (§3.3 "the dimension changes"). Given soundness this follows from the support equalities. Without soundness it is an extra, harmless check.
 - **The cube's hexagons need associators.** With unbiased ternary composites of 1-cells as boundaries, a hexagon is a vertical composite of whiskered interchangers *and associators* (coherences). The faces are cohs over three-factor contexts with one point factor, e.g. ΣD¹ ∨ ΣD¹ ∨ ΣD⁰. Substituting the two-factor interchanger would produce binary composites of 1-cells, which then need further associators.
 

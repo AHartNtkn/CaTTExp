@@ -65,6 +65,18 @@ _ = refl
 _ : chainT true 1 (homs HComp) ≡ ((3 ∷ 8 ∷ []) ∷ (4 ∷ 6 ∷ []) ∷ [])
 _ = refl
 
+-- The closed support of T is all nine basis elements of D¹ ⊗ D¹, while
+-- its table support misses f⊗g' and f'⊗g (boundaries of atoms only).
+private
+  len' : TSet → Nat
+  len' []       = 0
+  len' (_ ∷ xs) = suc (len' xs)
+
+_ : len' (down HComp (fullT (homs HComp))) ≡ 9
+_ = refl
+_ : memT (2 ∷ 7 ∷ []) (fullT (homs HComp)) ≡ false
+_ = refl
+
 ------------------------------------------------------------------------
 -- Basic operations (all single cohs).
 

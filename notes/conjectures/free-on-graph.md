@@ -28,6 +28,11 @@ The canonical comparison `F_ω(G) → F_1(G)` (viewing `F_1(G)` as a weak ω-cat
 
   **The gap is step 2 when σ is not injective**, e.g. a loop traversed twice. The lifts `u'`, `v'` must be chosen *canonically*, by position along the path, so that their boundaries agree in `Θ_k` and not just after σ. This seems routine but has not been written out.
 
+### Literature search (2026-11-18)
+- **No answer found.**
+- Benjamin–Markakis ([2402.01611](https://arxiv.org/abs/2402.01611)) show that homs of free weak ω-categories are free on their indecomposable cells. Their Remark 12 notes that these homs can have infinitely many generators. They say nothing about contractibility over a fixed path.
+- Fujii–Hoshino–Maehara, *Weakly invertible cells in a weak ω-category* ([arXiv 2303.14907](https://arxiv.org/abs/2303.14907)), show that weakly invertible cells are closed under globular pasting. That may shorten the "all higher cells invertible" part of the proof sketch.
+
 ## Why it matters
 
 It would give an object that behaves like the natural numbers, built only from a finite presentation and a hom-object construction, with no inductive types or computation rules.

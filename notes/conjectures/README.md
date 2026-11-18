@@ -13,6 +13,8 @@ Each file has the same parts:
 - **Why it matters:** one paragraph, with no project jargon.
 - **What would count as a solution:** a proof, a counterexample, or a reference.
 
+A literature search was done on 2026-11-18. Each file has a "Literature search" subsection. Summary: two problems are partly answered by existing work (the strict Gray tensor of free ω-categories is free; the (∞,1) version of the lax colimit of the point), and none is fully answered.
+
 | File | Problem | Origin |
 |---|---|---|
 | `catt-lim-pseudo-vs-gray.md` | Does Mikhail's CaTT_lim universal property force cone-morphism cells to be invertible in a CaTT ambient? | `limits-representables.md` §10.1 |

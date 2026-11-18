@@ -32,6 +32,10 @@ If (1)–(3) hold, take the cartesian setting and the partially lax limit of `�
 - Step 2 uses invertibility of `⊨` cells and closure of coinductive equivalences under composition (Benjamin–Markakis).
 - The worry is whether the paper's `ctrf` connecting cells are oriented so that the cell in step 1 is literally the one in the `ctrf` context. Rules KE and pctrf of Def. 4.15 fix this through σCond/τCond.
 
+### Literature search (2026-11-18)
+- **No answer found.** Mikhail's thesis (*Type Theory for (∞,∞)-Categories, and Decomposition Spaces*, UAB; [record](https://ddd.uab.cat/record/321550)) restates the arXiv results. It does not discuss whether cone morphisms are invertible, or pseudo vs lax limits.
+- No follow-up paper on CaTT_lim was found.
+
 ## Why it matters
 
 A type theory for higher categories with limits has to decide whether its ambient's 2-cells are pseudo or lax transformations. If CaTT_lim's universal property already forces one choice, that decides which semantics the rules can have and which constructions (hom objects, lax functor objects) they can produce.

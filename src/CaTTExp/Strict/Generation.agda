@@ -26,7 +26,7 @@
 module CaTTExp.Strict.Generation where
 
 open import CaTTExp.Prelude
-open import CaTTExp.Strict.Omega using (_≤_; z≤n; s≤s; _<_; ≤-refl; ≤-trans; ≤-suc; <→≤; <-irrefl; ≤-<-⊥)
+open import CaTTExp.Strict.Omega using (ωCat; uip; _≤_; z≤n; s≤s; _<_; ≤-refl; ≤-trans; ≤-suc; <→≤; <-irrefl; ≤-<-⊥)
 open import CaTTExp.Strict.Tables
 open import CaTTExp.Strict.Nu
 open import CaTTExp.Strict.FreeADC
@@ -1220,3 +1220,58 @@ module Gen {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat) where
   generation x cx =
     subst Gen (sym (tab-at 0R x))
       (gen-at L (≤-refl L) (at 0R x) (IsCell→CellF x cx) nothing tt (λ j h hL → ⊥-elim (≤-<-⊥ hL h)))
+
+  ----------------------------------------------------------------------
+  -- Composites of atoms are cells; functors agreeing on atoms agree
+  -- (the uniqueness half of Steiner Thm 5.7).
+
+  gen-cell : ∀ {x} → Gen x → IsCell K L x
+  gen-cell (g-atom i iL) = let (k , e) = ≤→+ iL in atom-cell L i (unital i) k e
+  gen-cell (g-comp n gy gz m) = cell-comp K L n _ _ m (gen-cell gy) (gen-cell gz)
+
+  atom : ∀ i → deg i ≤ L → Cell K L
+  atom i iL = atomT L i , gen-cell (g-atom i iL)
+
+  private
+    module ν = ωCat (nu K L)
+
+  -- A strict functor out of ν(K). Composites are preserved for every
+  -- proof of composability (these are all equal by uip).
+  record Functor (𝒞 : ωCat) : Set where
+    private module 𝒞 = ωCat 𝒞
+    field
+      F      : Cell K L → 𝒞.C
+      F-src  : ∀ n x → F (ν.src n x) ≡ 𝒞.src n (F x)
+      F-tgt  : ∀ n x → F (ν.tgt n x) ≡ 𝒞.tgt n (F x)
+      F-comp : ∀ n x y p q → F (ν.comp n x y p) ≡ 𝒞.comp n (F x) (F y) q
+
+  module _ {𝒞 : ωCat} where
+    private module 𝒞 = ωCat 𝒞
+
+    comp-cong : ∀ n {x x′ y y′ : 𝒞.C} (q : 𝒞.tgt n x ≡ 𝒞.src n y) (q′ : 𝒞.tgt n x′ ≡ 𝒞.src n y′) →
+                x ≡ x′ → y ≡ y′ → 𝒞.comp n x y q ≡ 𝒞.comp n x′ y′ q′
+    comp-cong n q q′ refl refl = cong (𝒞.comp n _ _) (uip q q′)
+
+    uniqueness : (Φ Ψ : Functor 𝒞) →
+                 (∀ i (iL : deg i ≤ L) → Functor.F Φ (atom i iL) ≡ Functor.F Ψ (atom i iL)) →
+                 ∀ x → Functor.F Φ x ≡ Functor.F Ψ x
+    uniqueness Φ Ψ h (x , cx) = go (generation x cx) cx
+      where
+      open Functor
+      go : ∀ {x} → Gen x → (cx : IsCell K L x) → F Φ (x , cx) ≡ F Ψ (x , cx)
+      go (g-atom i iL) cx =
+        trans (cong (F Φ) (≡-cell K L refl)) (trans (h i iL) (cong (F Ψ) (≡-cell K L refl)))
+      go (g-comp n {y} {z} gy gz m) cx =
+        trans (cong (F Φ) (≡-cell K L refl))
+          (trans (F-comp Φ n (y , cy) (z , cz) (≡-cell K L m) qΦ)
+            (trans (comp-cong n qΦ qΨ (go gy cy) (go gz cz))
+              (trans (sym (F-comp Ψ n (y , cy) (z , cz) (≡-cell K L m) qΨ)) (cong (F Ψ) (≡-cell K L refl)))))
+        where
+        cy = gen-cell gy
+        cz = gen-cell gz
+        q′ : ν.tgt n (y , cy) ≡ ν.src n (z , cz)
+        q′ = ≡-cell K L m
+        qΦ : 𝒞.tgt n (F Φ (y , cy)) ≡ 𝒞.src n (F Φ (z , cz))
+        qΦ = trans (sym (F-tgt Φ n (y , cy))) (trans (cong (F Φ) q′) (F-src Φ n (z , cz)))
+        qΨ : 𝒞.tgt n (F Ψ (y , cy)) ≡ 𝒞.src n (F Ψ (z , cz))
+        qΨ = trans (sym (F-tgt Ψ n (y , cy))) (trans (cong (F Ψ) q′) (F-src Ψ n (z , cz)))

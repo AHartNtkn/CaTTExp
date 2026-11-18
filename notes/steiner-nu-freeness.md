@@ -50,7 +50,9 @@ Let K be an augmented directed complex with a basis, as in `Strict/Cell.agda`.
      - `peel-all` (Prop. 5.4): peel the least of these atoms in the basis order, recursing on |w|. The order makes every disjointness condition a support comparison.
      - `gen-0` (Prop. 5.5): at s = 0 unitality forces the cell to be the atom.
    - Equations between chains use a small commutative-monoid solver (`Strict/CMonSolver.agda`).
-3. **(N2)** Freeness. Uniqueness of the extension uses (N1). Existence follows Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms).
+3. **(N2)** Freeness.
+   - **Uniqueness: done** (`Gen.uniqueness`). Two strict functors out of `nu K L` (record `Functor`, preserving sources, targets and composites) that agree on the atoms of dimension ≤ L agree everywhere, by induction on `generation`. `gen-cell` shows that composites of atoms are cells.
+   - **Existence: open.** It would follow Steiner's Thm 5.7 proof (standard forms, transposing consecutive atoms). The outside prompt asks for a shorter route.
 4. **(N3)** Discharge the citations of C8(4), and connect the L strict model to `ωCat`.
 
 Step 3 is now the bulk. An outside prompt asking for the shortest formalisable route to (N1)–(N2), in the style of the support prompt, is in `conjectures/outbox/steiner-nu-freeness.md`. Internal work proceeds in parallel, starting from (N0).

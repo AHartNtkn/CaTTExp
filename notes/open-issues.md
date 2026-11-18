@@ -135,7 +135,7 @@ Thread ids used below:
 
 **Responses received, awaiting verification:** none. (`naturality-arbitrary-depth.md` and `strict-lax-interchange-at-every-level.md` were verified 2026-11-18.)
 
-**Ready to send** (self-contained, literature-checked): `finite-fibration-test.md` (B14, category-valued case and the localisation lemma). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
+**Ready to send** (self-contained, literature-checked): `outbox/finite-fibration-test.md` (B14; paste as is). `outbox/directed-interchange-every-level.md` (E6; paste as is). `canonical-gray-terms.md` (CT, from E8). `gray-contexts-in-catt.md` G and §6 (D1–D3). The remaining open parts of N (C1) and the corrected uniform-L question (E6) are now restated in their files and can be sent again.
 
 ## Closed
 

@@ -246,14 +246,14 @@ The layers are `Γ, Γ′`, then `P, P′, M` for n = 2, and in general 2n+1 lay
 
 **RC(3) fails without loop-freeness (sketch; checked in outline by the literature thread).** In `Γ = (x : ⋆, a : id_x ⇒ id_x)`, the Eckmann–Hilton 3-cell `a ∗₀ a ⇛ a ∗₀ a` and the identity are parallel with equal strict images (both identities). Interpret Γ in the fundamental weak ω-groupoid of S², sending a to a generator of π₂(S²). The Eckmann–Hilton cell then represents the self-braiding at that generator, a non-zero element of π₃(S²) ≅ ℤ **[conj, G1 check]**. The candidates are η and the Whitehead square `[ι₂, ι₂] = ±2η`; both are non-zero, and the argument needs only that. A 4-cell would make that class null. *Two claims still need citations before the "sketch" label can go: (a) the fundamental ω-groupoid of S² is a model of CaTT (Grothendieck–Maltsiniotis; Ara); (b) which of the two classes the Eckmann–Hilton term represents.*
 
-So the conjecture must assume a loop-free context. The cylinders `Q↑Y` and the molecules are loop-free, and for them RC holds in (∞,ω)-categorical semantics (Campion arXiv 2311.00205, Cor. 3.5; Chanavat arXiv 2603.22242, Thm 3.29). Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
+So the conjecture must assume some acyclicity of the context. The cylinders `Q↑Y` are Steiner loop-free, and frame-acyclic molecules have essentially unique composites. For both, RC holds in (∞,ω)-categorical semantics: see Campion's pasting theorem (arXiv 2311.00200) and Chanavat (arXiv 2603.22242), Thm 3.17. Thm 3.29 there is Gray monoidality, and Campion's arXiv 2311.00205 Cor. 3.5 is strong monoidality. Frame-acyclicity is *not* Steiner loop-freeness (Hadzihasanovic arXiv 2404.07273, Comment 8.3.5 and Ex. 8.3.12), so a proof for one class does not automatically cover the other. Dimension 2 is special because exchange is the only relation and it is realised by one pasting context.
 
 **Where the proof of Theorem A stops in dimension 3.**
 - Sequentialization extends: every arity is a pasting context, which can be layered.
 - Normal forms of whiskered 3-generators extend: whiskers are compared by Theorem A, and moving a whisker comparison past a generator is an interchange over a pasting context.
 - Exchange of 3-generators extends: exchange moves are coherences over pasting contexts with two 3-discs.
 - What fails is the analogue of Lemma P: runs of 3-cells with no 3-variable, between 2-terms with equal strict image, in a 2-dimensional context that is not a pasting context. Such runs need not pull back to any pasting context. The natural attack is a Squier-style critical branching analysis. The hard branchings pair a 3-cell that moves a 2-generator F with a reassociation that splits F's boundary composite (e.g. `f⁻ ∗₀ y↑` in the lax square), and no pasting context contains both.
-- Smallest instance: RC(3) for the lax square, question 1 of both outbox prompts.
+- Smallest instance: RC(3) for the lax square, question 1 of both outbox prompts. Round 1 (`conjectures/answered/gray-contexts-2026-11-18.md`) settled its identity-boundary case and reduced 2-dimensional coherence arities to vertical 2-chains. The round-2 prompts (`conjectures/outbox/gray-contexts.md`, `conjectures/outbox/naturality-arbitrary-depth.md`) ask for the F-boundary case.
 
 ### 7.1 A reduction of RC(3) to coherent normalization (progress, 2026-11-18)
 
@@ -274,6 +274,8 @@ Fix a loop-free 2-dimensional context Γ, such as the lax square S. Theorem A gi
 ### 7.2 Two partial results toward RC(3) for the lax square (2026-11-18)
 
 **Proposition P∞ (RC in every dimension without 2-variables).** Let Γ be any context, with cycles allowed. Let T, T′ be parallel n-terms of Γ, n ≥ 1, with no variable of dimension ≥ 2 in their support. Then T and T′ are connected by an (n+1)-term. In particular, **RC(n) holds for every n in every 1-dimensional context.** This does not contradict §7: the Eckmann–Hilton cell needs a 2-variable.
+
+(For the lax square this is also proved in round 1, `conjectures/answered/gray-contexts-2026-11-18.md` §2, by a total-support form of Benjamin–Markakis Lemma 36.)
 
 *Proof sketch.* Lemma P (Step 1) works in every dimension.
 - Let w be the flattened path of the 1-dimensional boundary.

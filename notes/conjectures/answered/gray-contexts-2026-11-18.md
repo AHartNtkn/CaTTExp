@@ -53,10 +53,6 @@ The dimension-2 argument fails at one step. Between two consecutive 3-generators
 Each question asks for explicit CaTT terms, built with the coherence rule over pasting contexts and substitution.
 
 1. **Smallest open case: RC(3) for the lax square.** Let S be the context `x⁻, x⁺, y⁻, y⁺ : ⋆; x↑ : x⁻ → x⁺; y↑ : y⁻ → y⁺; f⁻ : x⁻ → y⁻; f⁺ : x⁺ → y⁺; F : f⁻ ∗₀ y↑ → x↑ ∗₀ f⁺`. Are any two parallel 3-terms of S connected by a 4-term?
-   - *Already known here:*
-     - Parallel n-terms with no 2-variable in their support are connected, in any context and for every n. They pull back to the chain of their path, where the coherence rule applies.
-     - In S, any coherence `coh_R[δ]` with F in δ has exactly one 1-column of R with a non-empty path, from `x⁻` to `y⁺`. So F's boundary composite is never split inside a single coherence.
-     - What remains is to show that a canonical normalization 3-cell `ν_P : P ⇛ N(P)` (Theorem A's, or any other choice) is compatible, up to 4-cells, with `∗₁`-composition by 2-terms containing F.
 2. **Uniqueness in G(3) for the Gray cube.** For `U = D¹ ⊗ D¹ ⊗ D¹`, presented with hexagon composites as the boundary of its 3-cell X, show that any two U-composites are connected. The essential case: a 3-term from `⌈∂⁻U⌉` to itself built from coherences only (no X) is connected to the identity. This is RC(3) for the boundary 2-sphere of the cube.
 3. **RC(3) for loop-free contexts.** Prove RC(3) for every context presenting a frame-acyclic molecule (or its skeleta), or for every finite loop-free computad. Equivalently for molecules: uniqueness in G(3), and hence existence in G(4).
 4. **G(n) for all n.** Prove RC(n) for loop-free contexts for all n, or the weaker G(n). In particular: does Chanavat's contractibility of the subdivision poset (Thm 2.52) translate into CaTT cells, with a 1-cell for each edge of the poset and higher cells for its higher simplices, each a substituted coherence over a pasting context?

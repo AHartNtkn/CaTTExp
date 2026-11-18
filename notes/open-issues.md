@@ -158,8 +158,8 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 **Paste-ready prompts live in `conjectures/outbox/`.** Each is standalone: definitions, what is proved, numbered questions with the smallest open case first.
 - `outbox/gray-pasting-types.md` (D11), **sent 2026-11-18**.
 - `outbox/cartesian-closed-higher-coherence.md` (D12), **sent 2026-11-18**.
-- D2: the prompt `gray-contexts.md` was answered on 2026-11-18 and moved, with the response and verification, to `conjectures/answered/`. An updated prompt (F-boundary case of the lax square) is owed by NGC.
-- C1: the first prompt was answered on 2026-11-18 and moved, with the response and verification, to `conjectures/answered/`. An updated prompt for what remains is owed by NGC.
+- `outbox/gray-contexts.md` (D2, round 2: the F-boundary case of RC(3) for the lax square, the cube's hemisphere loops, RC(3)/RC(n) for acyclic contexts), **ready to send** (paste as is). Round 1 is in `conjectures/answered/`.
+- `outbox/naturality-arbitrary-depth.md` (C1, round 2: the same F-boundary case, a global choice of K in dimension 3, RC(n) on the cylinders), **ready to send** (paste as is). Round 1 is in `conjectures/answered/`.
 
 
 **Responses received, awaiting verification:** none. (`naturality-arbitrary-depth.md`, `strict-lax-interchange-at-every-level.md` and `gray-contexts.md` were verified 2026-11-18.)

@@ -116,12 +116,13 @@ fvTmTy : Tm → Ty → List Nat
 fvTmTy t A = fvTm t ++ fvTy A
 
 -- All variables of a context.
+-- n-1, …, 1, 0
+downFrom : Nat → List Nat
+downFrom zero    = []
+downFrom (suc n) = n ∷ downFrom n
+
 varsCtx : Ctx → List Nat
-varsCtx Γ = go (len Γ)
-  where
-  go : Nat → List Nat
-  go zero    = []
-  go (suc n) = n ∷ go n
+varsCtx Γ = downFrom (len Γ)
 
 ------------------------------------------------------------------------
 -- Source and target of a pasting context (as sets of levels).
@@ -133,14 +134,13 @@ varsCtx Γ = go (len Γ)
 -- Var(t : A) = Var(∂⁻Γ) is equivalent to typing it in ∂⁻Γ, because the
 -- boundary is downward closed.
 
-private
-  dropLast : List Nat → List Nat
-  dropLast []           = []
-  dropLast (x ∷ [])     = []
-  dropLast (x ∷ y ∷ xs) = x ∷ dropLast (y ∷ xs)
+dropLastᴸ : List Nat → List Nat
+dropLastᴸ []           = []
+dropLastᴸ (x ∷ [])     = []
+dropLastᴸ (x ∷ y ∷ xs) = x ∷ dropLastᴸ (y ∷ xs)
 
-  snoc : List Nat → Nat → List Nat
-  snoc xs x = xs ++ (x ∷ [])
+snoc : List Nat → Nat → List Nat
+snoc xs x = xs ++ (x ∷ [])
 
 -- ∂⁻ᵢ
 srcVars : Nat → Ctx → List Nat
@@ -159,7 +159,7 @@ tgtVars i (Γ ▸ A ▸ B)     =
   if i <ℕ dim A                  -- dim A > i
   then tgtVars i Γ
   else if dim A ==ℕ i
-  then snoc (dropLast (tgtVars i Γ)) (len Γ)
+  then snoc (dropLastᴸ (tgtVars i Γ)) (len Γ)
   else snoc (snoc (tgtVars i Γ) (len Γ)) (suc (len Γ))
 
 ∂⁻ ∂⁺ : Ctx → List Nat

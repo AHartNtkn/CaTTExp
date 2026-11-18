@@ -15,77 +15,50 @@
 -- valid) and the composability proofs. It is deterministic (`cp-det`).
 --
 -- Proved here, from the axioms of Strict.Omega:
---   * boundary lemma: s_j and t_j of a composite are the composites of
---     the truncations of the tree at height j (`cp-src`, `cp-tgt`);
+--   * boundary lemma: for a tree at level k, s_{d+k} and t_{d+k} of its
+--     composite are the composites of its truncations at relative height
+--     d (`cp-src`, `cp-tgt`);
 --   * binary pasting lemma: the composite of two trees glued along
---     their common j-boundary is the #_j-composite of their composites
---     (`cp-glue`). The j = k case is associativity, the j > k case is
---     interchange of #ₖ with #_j, folded along the spine.
+--     their common boundary at relative height d is the #_{d+k}-composite
+--     of their composites (`cp-glue`). The d = 0 case is associativity,
+--     the d > 0 case is interchange of #ₖ with #_{d+k}, folded along the
+--     spine.
 ------------------------------------------------------------------------
 open import CaTTExp.Strict.Omega
 
 module CaTTExp.Strict.OmegaPasting (𝒞 : ωCat) where
 
 open import CaTTExp.Prelude
+open import CaTTExp.Strict.Trees
 open ωCat 𝒞
 open Basics 𝒞
 
-------------------------------------------------------------------------
--- Labelled trees.
-
-mutual
-  data LT : Set where
-    node : C → Br → LT
-
-  data Br : Set where
-    nil  : Br
-    cons : LT → C → Br → Br
-
-lastv : C → Br → C
-lastv x nil          = x
-lastv x (cons _ y r) = lastv y r
-
-infixr 5 _++B_
-_++B_ : Br → Br → Br
-nil          ++B r′ = r′
-cons T y r   ++B r′ = cons T y (r ++B r′)
-
 private
-  rootLT : LT → C
-  rootLT (node x _) = x
+  +-suc : ∀ d k → d + suc k ≡ suc (d + k)
+  +-suc zero    k = refl
+  +-suc (suc d) k = cong suc (+-suc d k)
 
-  kidsLT : LT → Br
-  kidsLT (node _ r) = r
+  ≤-+ : ∀ d k → k ≤ d + k
+  ≤-+ zero    k = ≤-refl k
+  ≤-+ (suc d) k = ≤-suc (≤-+ d k)
 
-  hdB : LT → Br → LT
-  hdB d nil          = d
-  hdB d (cons T _ _) = T
+  <-+ : ∀ d k → k < suc d + k
+  <-+ d k = s≤s (≤-+ d k)
 
-  vB : C → Br → C
-  vB d nil          = d
-  vB d (cons _ y _) = y
-
-  tlB : Br → Br
-  tlB nil          = nil
-  tlB (cons _ _ r) = r
-
-  ==→≡ : ∀ m n → (m ==ℕ n) ≡ true → m ≡ n
-  ==→≡ m n e = ==ℕ-sound m n (subst T (sym e) tt)
-
-  ≤-≢→< : ∀ {k j} → k ≤ j → (j ==ℕ k) ≡ false → k < j
-  ≤-≢→< {zero}  {zero}  z≤n     ()
-  ≤-≢→< {zero}  {suc j} z≤n     _ = s≤s z≤n
-  ≤-≢→< {suc k} {suc j} (s≤s p) e = s≤s (≤-≢→< p e)
+-- Composition does not depend on how its index is written.
+comp-idx : ∀ {j j′} → j ≡ j′ → ∀ x y (p : tgt j x ≡ src j y) (p′ : tgt j′ x ≡ src j′ y) →
+           comp j x y p ≡ comp j′ x y p′
+comp-idx refl x y p p′ = cong (comp _ x y) (uip p p′)
 
 ------------------------------------------------------------------------
 -- Composites.
 
 mutual
-  data Cp (k : Nat) : LT → C → Set where
+  data Cp (k : Nat) : LT C → C → Set where
     cp : ∀ {x r c} → CpB k x r c → Cp k (node x r) c
 
   -- CpB k x r c: the spine starting at x with branches r composes to c.
-  data CpB (k : Nat) : C → Br → C → Set where
+  data CpB (k : Nat) : C → Br C → C → Set where
     cnil  : ∀ {x} → Dim≤ k x → CpB k x nil x
     ccons : ∀ {x T y r a b} → Cp (suc k) T a → src k a ≡ x → CpB k y r b →
             (p : tgt k a ≡ src k b) → CpB k x (cons T y r) (comp k a b p)
@@ -107,78 +80,47 @@ mutual
   cpB-det {k} (ccons ca _ cb p) (ccons ca′ _ cb′ p′) = comp-cong k p p′ (cp-det ca ca′) (cpB-det cb cb′)
 
 ------------------------------------------------------------------------
--- Truncation at absolute height j (the tree being at level k ≤ j).
+-- Boundary lemma: truncating at relative height d takes the boundary at
+-- d + k.
 
 mutual
-  bdm : Nat → Nat → LT → LT
-  bdm j k (node x r) with j ==ℕ k
-  ... | true  = node x nil
-  ... | false = node x (bdmB j (suc k) r)
+  cp-src : ∀ d k {T c} → Cp k T c → Cp k (bdm d T) (src (d + k) c)
+  cp-src zero k {node x r} {c} (cp u) =
+    cp (subst (λ z → CpB k z nil (src k c)) (cpB-src u) (cnil (src-dim k c)))
+  cp-src (suc d) k {node x r} (cp u) = cp (srcB d k u)
 
-  bdmB : Nat → Nat → Br → Br
-  bdmB j k nil          = nil
-  bdmB j k (cons T y r) = cons (bdm j k T) y (bdmB j k r)
-
-mutual
-  bdp : Nat → Nat → LT → LT
-  bdp j k (node x r) with j ==ℕ k
-  ... | true  = node (lastv x r) nil
-  ... | false = node x (bdpB j (suc k) r)
-
-  bdpB : Nat → Nat → Br → Br
-  bdpB j k nil          = nil
-  bdpB j k (cons T y r) = cons (bdp j k T) y (bdpB j k r)
-
-------------------------------------------------------------------------
--- Boundary lemma.
-
-mutual
-  cp-src : ∀ j k {T c} → k ≤ j → Cp k T c → Cp k (bdm j k T) (src j c)
-  cp-src j k {node x r} {c} le (cp u) with j ==ℕ k in e
-  ... | true with ==→≡ j k e
-  ...   | refl = cp (subst (λ z → CpB k z nil (src k c)) (cpB-src u) (cnil (src-dim k c)))
-  cp-src j k {node x r} le (cp u) | false = cp (srcB j k (≤-≢→< le e) u)
-
-  srcB : ∀ j k {x r c} → k < j → CpB k x r c → CpB k x (bdmB j (suc k) r) (src j c)
-  srcB j k lt (cnil {x} d) = subst (CpB k x nil) (sym (dim-up (<→≤ lt) d)) (cnil d)
-  srcB j k {x} lt (ccons {T = T} {y} {r} {a} {b} ca e cb p) =
-    subst (CpB k x (cons (bdm j (suc k) T) y (bdmB j (suc k) r))) (sym (src-comp-> a b p lt q))
-      (ccons (cp-src j (suc k) lt ca) (trans (src-src-< a lt) e) (srcB j k lt cb) q)
+  srcB : ∀ d k {x r c} → CpB k x r c → CpB k x (bdmB d r) (src (suc d + k) c)
+  srcB d k (cnil {x} dx) = subst (CpB k x nil) (sym (dim-up (<→≤ (<-+ d k)) dx)) (cnil dx)
+  srcB d k {x} (ccons {T = T} {y} {r} {a} {b} ca e cb p) =
+    subst (CpB k x (cons (bdm d T) y (bdmB d r))) (sym (src-comp-> a b p lt q))
+      (ccons (subst (λ j → Cp (suc k) (bdm d T) (src j a)) (+-suc d k) (cp-src d (suc k) ca))
+             (trans (src-src-< a lt) e) (srcB d k cb) q)
     where
-    q : tgt k (src j a) ≡ src k (src j b)
+    lt = <-+ d k
+    q : tgt k (src (suc d + k) a) ≡ src k (src (suc d + k) b)
     q = trans (tgt-src-< a lt) (trans p (sym (src-src-< b lt)))
 
 mutual
-  cp-tgt : ∀ j k {T c} → k ≤ j → Cp k T c → Cp k (bdp j k T) (tgt j c)
-  cp-tgt j k {node x r} {c} le (cp u) with j ==ℕ k in e
-  ... | true with ==→≡ j k e
-  ...   | refl = cp (subst (λ z → CpB k z nil (tgt k c)) (cpB-tgt u) (cnil (tgt-dim k c)))
-  cp-tgt j k {node x r} le (cp u) | false = cp (tgtB j k (≤-≢→< le e) u)
+  cp-tgt : ∀ d k {T c} → Cp k T c → Cp k (bdp d T) (tgt (d + k) c)
+  cp-tgt zero k {node x r} {c} (cp u) =
+    cp (subst (λ z → CpB k z nil (tgt k c)) (cpB-tgt u) (cnil (tgt-dim k c)))
+  cp-tgt (suc d) k {node x r} (cp u) = cp (tgtB d k u)
 
-  tgtB : ∀ j k {x r c} → k < j → CpB k x r c → CpB k x (bdpB j (suc k) r) (tgt j c)
-  tgtB j k lt (cnil {x} d) = subst (CpB k x nil) (sym (dim-tgt-up (<→≤ lt) d)) (cnil d)
-  tgtB j k {x} lt (ccons {T = T} {y} {r} {a} {b} ca e cb p) =
-    subst (CpB k x (cons (bdp j (suc k) T) y (bdpB j (suc k) r))) (sym (tgt-comp-> a b p lt q))
-      (ccons (cp-tgt j (suc k) lt ca) (trans (src-tgt-< a lt) e) (tgtB j k lt cb) q)
+  tgtB : ∀ d k {x r c} → CpB k x r c → CpB k x (bdpB d r) (tgt (suc d + k) c)
+  tgtB d k (cnil {x} dx) = subst (CpB k x nil) (sym (dim-tgt-up (<→≤ (<-+ d k)) dx)) (cnil dx)
+  tgtB d k {x} (ccons {T = T} {y} {r} {a} {b} ca e cb p) =
+    subst (CpB k x (cons (bdp d T) y (bdpB d r))) (sym (tgt-comp-> a b p lt q))
+      (ccons (subst (λ j → Cp (suc k) (bdp d T) (tgt j a)) (+-suc d k) (cp-tgt d (suc k) ca))
+             (trans (src-tgt-< a lt) e) (tgtB d k cb) q)
     where
-    q : tgt k (tgt j a) ≡ src k (tgt j b)
+    lt = <-+ d k
+    q : tgt k (tgt (suc d + k) a) ≡ src k (tgt (suc d + k) b)
     q = trans (tgt-tgt-< a lt) (trans p (sym (src-tgt-< b lt)))
 
 ------------------------------------------------------------------------
--- Gluing along height j.
+-- Gluing.
 
-mutual
-  glue : Nat → Nat → LT → LT → LT
-  glue j k (node x r₁) (node _ r₂) with j ==ℕ k
-  ... | true  = node x (r₁ ++B r₂)
-  ... | false = node x (glueB j (suc k) r₁ r₂)
-
-  glueB : Nat → Nat → Br → Br → Br
-  glueB j k nil            _                = nil
-  glueB j k (cons T y r)   nil              = cons T y r
-  glueB j k (cons T₁ y r₁) (cons T₂ _ r₂)   = cons (glue j k T₁ T₂) y (glueB j k r₁ r₂)
-
--- Gluing along the spine (j = k) is associativity.
+-- Gluing along the spine (d = 0) is associativity.
 cat : ∀ k {x y r₁ r₂ c₁ c₂} → CpB k x r₁ c₁ → CpB k y r₂ c₂ → lastv x r₁ ≡ y →
       ∀ p → CpB k x (r₁ ++B r₂) (comp k c₁ c₂ p)
 cat k {x} {r₂ = r₂} {c₂ = c₂} (cnil d) v refl p =
@@ -197,68 +139,55 @@ cat k {x} {r₂ = r₂} {c₂ = c₂} (ccons {T = T} {y₁} {r₁} {a} {b} ca e 
   q : tgt k a ≡ src k (comp k b c₂ p′)
   q = trans p₁ (sym (src-comp k b c₂ p′))
 
-private
-  cons-T : ∀ {T T′ y y′ r r′} → cons T y r ≡ cons T′ y′ r′ → T ≡ T′
-  cons-T {T = T} e = cong (hdB T) e
-
-  cons-y : ∀ {T T′ y y′ r r′} → cons T y r ≡ cons T′ y′ r′ → y ≡ y′
-  cons-y {y = y} e = cong (vB y) e
-
-  cons-r : ∀ {T T′ y y′ r r′} → cons T y r ≡ cons T′ y′ r′ → r ≡ r′
-  cons-r e = cong tlB e
-
-  node-x : ∀ {x x′ r r′} → node x r ≡ node x′ r′ → x ≡ x′
-  node-x e = cong rootLT e
-
-  node-r : ∀ {x x′ r r′} → node x r ≡ node x′ r′ → r ≡ r′
-  node-r e = cong kidsLT e
-
 mutual
   -- Binary pasting lemma.
-  cp-glue : ∀ j k {S₁ S₂ c₁ c₂} → k ≤ j → Cp k S₁ c₁ → Cp k S₂ c₂ → bdp j k S₁ ≡ bdm j k S₂ →
-            ∀ p → Cp k (glue j k S₁ S₂) (comp j c₁ c₂ p)
-  cp-glue j k {node x r₁} {node y r₂} le (cp u) (cp v) eb p with j ==ℕ k in e
-  ... | true with ==→≡ j k e
-  ...   | refl = cp (cat k u v (node-x eb) p)
-  cp-glue j k {node x r₁} {node y r₂} le (cp u) (cp v) eb p | false
-    with node-x eb
-  ... | refl = cp (zipB j k (≤-≢→< le e) u v (node-r eb) p)
+  cp-glue : ∀ d k {S₁ S₂ c₁ c₂} → Cp k S₁ c₁ → Cp k S₂ c₂ → bdp d S₁ ≡ bdm d S₂ →
+            ∀ p → Cp k (glue d S₁ S₂) (comp (d + k) c₁ c₂ p)
+  cp-glue zero    k {node x r₁} {node y r₂} (cp u) (cp v) eb p = cp (cat k u v (node-x eb) p)
+  cp-glue (suc d) k {node x r₁} {node y r₂} (cp u) (cp v) eb p with node-x eb
+  ... | refl = cp (zipB d k u v (node-r eb) p)
 
-  zipB : ∀ j k {x r₁ r₂ c₁ c₂} → k < j → CpB k x r₁ c₁ → CpB k x r₂ c₂ →
-         bdpB j (suc k) r₁ ≡ bdmB j (suc k) r₂ → ∀ p → CpB k x (glueB j (suc k) r₁ r₂) (comp j c₁ c₂ p)
-  zipB j k {x} lt (cnil d) (cnil _) _ p = subst (CpB k x nil) (sym eq) (cnil d)
+  zipB : ∀ d k {x r₁ r₂ c₁ c₂} → CpB k x r₁ c₁ → CpB k x r₂ c₂ →
+         bdpB d r₁ ≡ bdmB d r₂ → ∀ p → CpB k x (glueB d r₁ r₂) (comp (suc d + k) c₁ c₂ p)
+  zipB d k {x} (cnil dx) (cnil _) _ p = subst (CpB k x nil) (sym eq) (cnil dx)
     where
+    j = suc d + k
     dj : src j x ≡ x
-    dj = dim-up (<→≤ lt) d
+    dj = dim-up (<→≤ (<-+ d k)) dx
     p″ : tgt j (src j x) ≡ src j x
     p″ = tgt-src-≥ x (≤-refl j)
     eq : comp j x x p ≡ x
     eq = trans (comp-cong j p p″ (sym dj) refl) (unit-l j x p″)
-  zipB j k _ (cnil _) (ccons _ _ _ _) () p
-  zipB j k _ (ccons _ _ _ _) (cnil _) () p
-  zipB j k {x} lt (ccons {T = T₁} {y₁} {r₁} {a₁} {b₁} ca₁ e₁ cb₁ p₁)
-                  (ccons {T = T₂} {y₂} {r₂} {a₂} {b₂} ca₂ e₂ cb₂ p₂) eb p
+  zipB d k (cnil _) (ccons _ _ _ _) () p
+  zipB d k (ccons _ _ _ _) (cnil _) () p
+  zipB d k {x} (ccons {T = T₁} {y₁} {r₁} {a₁} {b₁} ca₁ e₁ cb₁ p₁)
+               (ccons {T = T₂} {y₂} {r₂} {a₂} {b₂} ca₂ e₂ cb₂ p₂) eb p
     with cons-y eb
   ... | refl =
-    subst (CpB k x (cons (glue j (suc k) T₁ T₂) y₁ (glueB j (suc k) r₁ r₂)))
+    subst (CpB k x (cons (glue d T₁ T₂) y₁ (glueB d r₁ r₂)))
       (interchange a₁ a₂ b₁ b₂ lt pa pb q p₁ p₂ p)
-      (ccons (cp-glue j (suc k) lt ca₁ ca₂ (cons-T eb) pa)
+      (ccons (subst (Cp (suc k) (glue d T₁ T₂)) (comp-idx (+-suc d k) a₁ a₂ pa₀ pa)
+                    (cp-glue d (suc k) ca₁ ca₂ (cons-T eb) pa₀))
              (trans (src-comp-< a₁ a₂ pa lt) e₁)
-             (zipB j k lt cb₁ cb₂ (cons-r eb) pb)
+             (zipB d k cb₁ cb₂ (cons-r eb) pb)
              q)
     where
+    j  = suc d + k
+    lt = <-+ d k
+    pa₀ : tgt (d + suc k) a₁ ≡ src (d + suc k) a₂
+    pa₀ = cp-det (subst (λ S → Cp (suc k) S (tgt (d + suc k) a₁)) (cons-T eb) (cp-tgt d (suc k) ca₁))
+                 (cp-src d (suc k) ca₂)
     pa : tgt j a₁ ≡ src j a₂
-    pa = cp-det (subst (λ S → Cp (suc k) S (tgt j a₁)) (cons-T eb) (cp-tgt j (suc k) lt ca₁))
-                (cp-src j (suc k) lt ca₂)
+    pa = subst (λ i → tgt i a₁ ≡ src i a₂) (+-suc d k) pa₀
     pb : tgt j b₁ ≡ src j b₂
-    pb = cpB-det (subst (λ R → CpB k y₁ R (tgt j b₁)) (cons-r eb) (tgtB j k lt cb₁))
-                 (srcB j k lt cb₂)
+    pb = cpB-det (subst (λ R → CpB k y₁ R (tgt j b₁)) (cons-r eb) (tgtB d k cb₁))
+                 (srcB d k cb₂)
     q : tgt k (comp j a₁ a₂ pa) ≡ src k (comp j b₁ b₂ pb)
     q = trans (tgt-comp-< a₁ a₂ pa lt)
           (trans p₂ (trans (cpB-src cb₂) (trans (sym (cpB-src cb₁)) (sym (src-comp-< b₁ b₂ pb lt)))))
 
 -- Composability of glued trees follows from the boundary condition.
-glue-ok : ∀ j k {S₁ S₂ c₁ c₂} → k ≤ j → Cp k S₁ c₁ → Cp k S₂ c₂ → bdp j k S₁ ≡ bdm j k S₂ →
-          tgt j c₁ ≡ src j c₂
-glue-ok j k {c₁ = c₁} le d₁ d₂ eb =
-  cp-det (subst (λ S → Cp k S (tgt j c₁)) eb (cp-tgt j k le d₁)) (cp-src j k le d₂)
+glue-ok : ∀ d k {S₁ S₂ c₁ c₂} → Cp k S₁ c₁ → Cp k S₂ c₂ → bdp d S₁ ≡ bdm d S₂ →
+          tgt (d + k) c₁ ≡ src (d + k) c₂
+glue-ok d k {c₁ = c₁} d₁ d₂ eb =
+  cp-det (subst (λ S → Cp k S (tgt (d + k) c₁)) eb (cp-tgt d k d₁)) (cp-src d k d₂)

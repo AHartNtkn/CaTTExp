@@ -22,6 +22,8 @@ open import CaTTExp.Prelude
 ------------------------------------------------------------------------
 -- Order on Nat.
 
+infix 4 _≤_ _<_
+
 data _≤_ : Nat → Nat → Set where
   z≤n : ∀ {n} → zero ≤ n
   s≤s : ∀ {m n} → m ≤ n → suc m ≤ suc n

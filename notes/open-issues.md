@@ -133,7 +133,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 | F2a | Agda: totality of the graph filler (every parallel pair with the same path gets a filler). | `ordinary-math.md` §3.4 | **1-cells done** (2026-11-18): `GraphFillerTotal.agda` proves `total` for any two 1-cells with the same path in any pure context, structural filler `fill₁`, no fuel, `--safe`; independently reviewed and merged (PR #74). In progress: parallel n-cells, n ≥ 2 | OMATH |
 | F2b | Filler for **globular** contexts (Thm 3.2, semantic proof done): implement strict normal forms (labelled trees) and the lift. | `ordinary-math.md` §3.3 | unowned | former area OMATH |
 | F3 | **h-level discipline**: judgment `C trunc n` with T-fill/T-inv and closure rules; T-lim and T-hom proved (sketch); base rules T-graph and T-loc sound by `free-on-graph.md` and Dwyer–Kan. Gives `N trunc 0`, `ℤ trunc 0`, automatic coherence for set-level algebra. | `ordinary-math.md` §2 | proposal written (PR #35) | — ; open parts F3b, F3c |
-| F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3; `conjectures/non-derivability.md` Q2 | Hedberg route attempted with DJ: goes through except decode, which needs Π over N (F8) or parameter-varying induction. Researcher (verified 2026-11-18, `conjectures/answered/non-derivability-2026-11-18.md` Q2): **not derivable with enriched cotensors only** (comma model F ↓ id, N not a set); **open** under the project's reading (cotensors as exponentials (E), parameterised R-A, universal coproducts). Follow-up prompt: `conjectures/outbox/non-derivability-q2.md` (unsent) | OMATH |
+| F3b | Non-derivability of T-graph from R-A (argued, Prop. 2.5), or a Hedberg-style derivation of `N trunc 0`. | `ordinary-math.md` §2.3; `conjectures/non-derivability.md` Q2 | Hedberg route attempted with DJ: goes through except decode, which needs Π over N (F8) or parameter-varying induction. Researcher (verified 2026-11-18, `conjectures/answered/non-derivability-2026-11-18.md` Q2): **not derivable with enriched cotensors only** (comma model F ↓ id, N not a set); **open** under the project's reading (cotensors as exponentials (E), parameterised R-A, universal coproducts). **Closed under (E) too** (researcher, verified 2026-11-18, `conjectures/answered/non-derivability-q2-2026-11-18.md`): the algebras of the monad M(X) = ∐ X_c × K(H₁(X_c),2) on spaces form a cartesian closed model with (E), parameterised R-A, universal disjoint coproducts and Trunc₀, where UN ≃ ℤ × K(ℤ,1) and U⟦L⟧ ≃ S¹ × K(ℤ,2). So T-graph and `N trunc 0` are **not derivable**; T-graph stays a rule | OMATH |
 | F3c | Full proofs of T-lim and T-hom against the specified `ctrf` construction. | `ordinary-math.md` §2.3 | blocked on B5; adjacent: F3b | former area OMATH |
 | F4 | **The integers**: ℤ := Hom(x,x) in ⟦L⟧ localised at s (a finite pushout). ℤ ≃ ℤ_disc proved from Dwyer–Kan 1980 Prop. 2.3 and `free-on-graph.md`. General quotients need the truncation rule Trunc_n (written in full, §5.3) and, for effectiveness, EX. | `ordinary-math.md` §5 | done for ℤ; quotients proposed | — ; open parts F4a, F4b |
 | F4a | Filler tactic for localised graphs (reduced words). | `ordinary-math.md` §5.1 | unowned | former area OMATH |
@@ -161,7 +161,6 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 
 **Sent, awaiting response:**
 - `outbox/cone-over-coherences.md` (B19, N^cone), sent 2026-11-18.
-- `outbox/non-derivability-q2.md` (F3b: is N a set under exponentials by shapes?), sent 2026-11-18.
 
 **Unsent (ready to send, paste as is):**
 - `outbox/directed-interchange-every-level-r3.md` (E6, third round: the repaired 3-skeleton for ΣD² ∨ ΣD²).
@@ -173,7 +172,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 - `outbox/catt-models-in-infinity-omega-r2.md` (E11, round 2: reconstruction for (∞,2), the coinductive target, L).
 - Also ready, outside the outbox: `canonical-gray-terms.md` (CT, from E8), `gray-contexts-in-catt.md` §6 (D3).
 
-**Answered 2026-11-18 and verified** (in `conjectures/answered/`): naturality-arbitrary-depth, directed-interchange-every-level (rounds 1 and 2), gray-contexts (rounds 1 and 2), gray-closed-scheduling, dir-relative-coherence, catt-models-in-infinity-omega, finite-fibration-test, finite-fibration-test-2d-base, lax-functor-refinement, gray-pasting-types, cartesian-closed-higher-coherence, non-derivability.
+**Answered 2026-11-18 and verified** (in `conjectures/answered/`): naturality-arbitrary-depth, directed-interchange-every-level (rounds 1 and 2), gray-contexts (rounds 1 and 2), gray-closed-scheduling, dir-relative-coherence, catt-models-in-infinity-omega, non-derivability-q2, finite-fibration-test, finite-fibration-test-2d-base, lax-functor-refinement, gray-pasting-types, cartesian-closed-higher-coherence, non-derivability.
 
 **Responses received, awaiting verification:** none.
 

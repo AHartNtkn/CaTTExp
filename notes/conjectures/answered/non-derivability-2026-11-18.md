@@ -773,4 +773,4 @@ Therefore:
 
 **Which reading the project uses.** `ordinary-math.md` uses (E) for ⟦D¹⟧ (§6.1, Prop. 6.1: "W × ⟦D¹⟧ is the tensor") and states recursion with a parameter object B (B × N), i.e. product-parameterised. So for the project's theory **Q2 is still open**. The Q2 model still shows that R-A with enriched cotensors alone does not make T-graph derivable, and that any derivation must use (E) or universality of coproducts.
 
-**Consequences.** F1c closed (recursion needs its own rule or G + DJ). F4b: EX is independent of 𝕋 + Trunc₀, so it stays a rule. F3b: open under (E); follow-up prompt `outbox/non-derivability-q2.md`, unsent.
+**Consequences.** F1c closed (recursion needs its own rule or G + DJ). F4b: EX is independent of 𝕋 + Trunc₀, so it stays a rule. F3b: open under (E); follow-up `answered/non-derivability-q2-2026-11-18.md`: also not derivable under (E).

@@ -638,6 +638,22 @@ and maps out of B are cocones over the Θ-elements, which is the existence half 
 
 With 1 and 2, (Θ-dens) holds as stated in (iv), with el(B) read as the realised category of elements, and the semantic argument of (iv) applies unchanged.
 
+**(vi) Draft of the two missing rules (2026-11-18, ledger F5c and F5d).**
+
+*F5c, the universal shape family (R-U) [proposal].* This is the one genuinely new principle. Θ₀ is the rose-tree object (ii), and the rule declares an object `U` with `q : U → Θ₀`, with three parts.
+- **Fibres by constructor.** For a list of trees `ts = (T₁ … T_k)`, the fibre of q over `node(ts)` is `Σ U_{T₁} ∨ … ∨ Σ U_{T_k}`, the wedge of suspensions: the same recursion that builds ⟦T⟧ from its subtrees (PastingTrees' `build`). Over a closed tree T it is therefore ⟦T⟧. Stated over generalised elements `t : W → Θ₀`, the fibre is a pullback, and the rule gives a specified invertible comparison with the wedge-of-suspensions construction, natural in W.
+- **Mapping out.** Maps `U → C` over nothing are sections of R-cot⁺ (over the set Θ₀, sound by (v)). So R-U needs no separate elimination rule beyond the fibre law and R-cot⁺.
+- **Functoriality along Θ₁.** For a morphism `φ : S → T` in Θ₁, a map `U_S → U_T` over φ is given by the same recursion on the morphism datum (Berger's wreath description): monotone f on the outer chain, recursively on the hom-pieces. With this, q is a cocartesian fibration over the realised Θ, by the criterion of §6.1.
+
+Semantics: U is `∐_T ⟦T⟧` with the Yoneda/realisation action of Θ, which exists. Status: R-U is **object-valued recursion along rose trees**. There is no universe, so it cannot be derived from recursion into a set, and it is added as a declared rule. In Agda it is an object former and its fibre comparisons are declared operations (`CaTTExp.Ops`), so the encoding mechanism exists; the declaration is not written.
+
+*F5d, realisation of internal categories in sets: reduced to F5c and §6.1 [proposal; proved here, sketch].* Let X = (X₀, X₁, …) be an internal category in sets.
+1. Its nerve is a set-family over ℕ: the composable words, a subobject of List(X₁) (F1b) cut out by a decidable predicate, with length to N.
+2. Chains are linear trees, so `N → Θ₀` (n ↦ the linear tree of height 1 with n leaves) pulls R-U back to the universal chain family over N.
+3. Pull that back to the nerve, giving `E_X → Nerve(X)` with fibre `⟦[n]⟧` over each n-simplex.
+4. Localise the total space at its cocartesian arrows (§6.1). The result is |X|.
+Semantically, every 1-category is the colimit of its simplices in `Cat_(∞,1)`, because Δ is dense there through complete Segal spaces **[recall]**. The inclusion `Cat_(∞,1) ⊂ Cat_(∞,ω)` is a left adjoint, with right adjoint the underlying (∞,1)-category **[recall]**, so it preserves that colimit. So F5d needs **no rule of its own** once R-U exists. Recorded separately because el(B) (§6.6(v)) uses it.
+
 ---
 
 ## 7. Lax functors (F6)

@@ -88,6 +88,8 @@ import CaTTExp.GlobularTotal.EndsNf
 import CaTTExp.GlobularTotal.NfFuel
 import CaTTExp.GlobularTotal.ImgTyped
 import CaTTExp.GlobularTotal.CohParts
+import CaTTExp.GlobularTotal.NfCoh
+import CaTTExp.GlobularTotal.SplitMerge
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

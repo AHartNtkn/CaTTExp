@@ -69,3 +69,358 @@ Either of the following:
 - **Evidence for requirement 2 in the k = 0 case.** See the literature status of `steiner-support-determines-cells.md`, which settles it for Gray tensors of pasting diagrams.
 
 **Recommended next step:** take Araújo's n-sesquicategorical computads as the ambient. Add an interchange generator for each pair k < l, as in Forest–Mimram's Gray presentations, and test requirement 2 in dimension 4 against Bourke–Lobbia's semi-strict 4-categories.
+
+# Researcher Response
+
+**There is a no-go theorem for the literal replacement of every interchange equation by a higher globular cell. It appears already in dimension 4 and does not depend on the support requirement.** However, it does **not** rule out the interpretation in which higher comparisons have lower interchangers composed onto their boundaries. For that corrected interpretation, I do not have a construction satisfying 1–5 or a proof of impossibility.
+
+The distinction matters here: the literal schema forces interchange to become strict, whereas your recursive guess could avoid that schema.
+
+## 1. Direct comparisons between the raw interchange expressions force strict interchange
+
+Write \(n\) for the dimension of \(a,b,c,d\), and let \(k<\ell<n\). Define
+
+\[
+\begin{aligned}
+L^n_{k,\ell}(a,b,c,d)
+  &=(a\ast_\ell b)\ast_k(c\ast_\ell d),\\
+R^n_{k,\ell}(a,b,c,d)
+  &=(a\ast_k c)\ast_\ell(b\ast_k d).
+\end{aligned}
+\]
+
+A direct comparison between these expressions would be an **\((n+1)\)-cell**. Thus the literal all-dimensional schema is
+
+\[
+\chi^n_{k,\ell}(a,b,c,d):
+L^n_{k,\ell}(a,b,c,d)
+\longrightarrow
+R^n_{k,\ell}(a,b,c,d).
+\tag{1}
+\]
+
+Assume that the compositions have the usual globular boundaries. In particular, for \((m+1)\)-cells \(u,v\) and \(j<m\),
+
+\[
+s(u\ast_jv)=s(u)\ast_j s(v).
+\tag{2}
+\]
+
+### Proposition
+
+If (1) exists for every admissible dimension and composable quadruple, then every ordinary interchange equation holds strictly.
+
+### Proof
+
+Fix composable \(m\)-cells \(a,b,c,d\) and \(k<\ell<m\). Consider their identity \((m+1)\)-cells
+
+\[
+1_a,\qquad 1_b,\qquad 1_c,\qquad 1_d.
+\]
+
+Applying (1) one dimension higher gives an \((m+2)\)-cell
+
+\[
+\chi^{m+1}_{k,\ell}(1_a,1_b,1_c,1_d):
+\widetilde L\longrightarrow\widetilde R,
+\]
+
+where
+
+\[
+\begin{aligned}
+\widetilde L
+  &=(1_a\ast_\ell1_b)\ast_k(1_c\ast_\ell1_d),\\
+\widetilde R
+  &=(1_a\ast_k1_c)\ast_\ell(1_b\ast_k1_d).
+\end{aligned}
+\]
+
+The source and target of a globular cell must be parallel. Consequently,
+
+\[
+s(\widetilde L)=s(\widetilde R).
+\tag{3}
+\]
+
+Since \(k,\ell<m\), equation (2) applies to every composition displayed above. Using \(s(1_a)=a\), and similarly for the other identities, equation (3) becomes
+
+\[
+(a\ast_\ell b)\ast_k(c\ast_\ell d)
+=
+(a\ast_k c)\ast_\ell(b\ast_k d).
+\]
+
+This is strict interchange. ∎
+
+The proof does not use associativity, support, freeness, or coherence equations. It does not even require
+
+\[
+1_u\ast_j1_v=1_{u\ast_jv};
+\]
+
+the source equations suffice.
+
+**Finite-dimensional consequence.** In an \(N\)-dimensional structure satisfying the raw schema, all interchange equations in dimensions \(m\leq N-2\) are forced to hold strictly. In particular, a raw four-dimensional theory already forces strict interchange of 2-cells.
+
+### A finite pasting diagram witnessing the conflict with directedness
+
+Use chronological composition in this example: \(u\ast_kv\) means first \(u\), then \(v\).
+
+Take the finite globular pasting diagram with
+
+\[
+f_0,f_1,f_2:x\to y,
+\qquad
+g_0,g_1,g_2:y\to z,
+\]
+
+and generating 2-cells
+
+\[
+a:f_0\Rightarrow f_1,\quad
+b:f_1\Rightarrow f_2,\quad
+c:g_0\Rightarrow g_1,\quad
+d:g_1\Rightarrow g_2.
+\]
+
+Set
+
+\[
+p=(a\ast_1b)\ast_0(c\ast_1d),
+\qquad
+q=(a\ast_0c)\ast_1(b\ast_0d).
+\]
+
+The requested directed interchange supplies a 3-cell \(p\to q\). The raw four-dimensional schema applied to \(1_a,1_b,1_c,1_d\) forces \(p=q\). Hence \(1_p\) is also a 3-cell \(q\to p\), contradicting the requirement that no reverse cell exist.
+
+This is not merely the observation that an exchange of identity inputs can be degenerate: identity inputs **one dimension higher force the exchange of the original nonidentity generators to have equal endpoints**.
+
+One can also avoid identity inputs to the higher exchange. Take four generating 3-cells
+
+\[
+A:a\Rightarrow a',\quad B:b\Rightarrow b',
+\quad C:c\Rightarrow c',\quad D:d\Rightarrow d',
+\]
+
+arranged in the finite pasting shape
+
+\[
+(D^3\ast_1D^3)\ast_0(D^3\ast_1D^3).
+\]
+
+A raw 4-cell between \(L^3_{0,1}(A,B,C,D)\) and \(R^3_{0,1}(A,B,C,D)\) again forces \(p=q\), by taking their 2-sources.
+
+Thus **the literal raw schema cannot satisfy the intended nontrivial directedness condition**, independently of requirements 1 and 2.
+
+## 2. The correctly typed higher comparison escapes this theorem
+
+Suppose
+
+\[
+A:a\Rightarrow a',\quad B:b\Rightarrow b',
+\quad C:c\Rightarrow c',\quad D:d\Rightarrow d'
+\]
+
+are 3-cells. Abbreviate their two composite 3-cells by
+
+\[
+L_A:L_a\Rightarrow L_{a'},
+\qquad
+R_A:R_a\Rightarrow R_{a'},
+\]
+
+where, for example,
+
+\[
+L_a=L^2_{0,1}(a,b,c,d).
+\]
+
+The lower interchangers are
+
+\[
+\chi_a:L_a\Rightarrow R_a,
+\qquad
+\chi_{a'}:L_{a'}\Rightarrow R_{a'}.
+\]
+
+The expressions \(L_A\) and \(R_A\) generally are **not parallel**. But the following expressions are parallel:
+
+\[
+L_A\ast_2\chi_{a'}
+\quad\text{and}\quad
+\chi_a\ast_2R_A.
+\]
+
+Both are 3-cells
+
+\[
+L_a\longrightarrow R_{a'}.
+\]
+
+Consequently, a possible directed naturality comparison has the well-typed boundary
+
+\[
+\boxed{
+L_A\ast_2\chi_{a'}
+\;\Longrightarrow\;
+\chi_a\ast_2R_A.
+}
+\tag{4}
+\]
+
+Here \(\ast_2\) is again chronological composition. The opposite orientation is another possible choice; its compatibility with the remaining axioms would need to be established.
+
+When \(A,B,C,D\) are identities, the two boundaries in (4) reduce to \(\chi_a\). They do **not** force \(L_a=R_a\).
+
+This distinction is also present in established Gray-category calculations: Di Vittorio–Lobbia’s generalized interchange result compares 3-cell composites after accounting for the isomorphism between their boundary composites. It does not assert interchange between arbitrary unadjusted expressions. [arxiv.org](https://arxiv.org/abs/2310.03503?utm_source=chatgpt.com)
+
+Therefore:
+
+- If “every interchange law is replaced by a directed cell” means (1) at every dimension, the proposition gives a negative answer.
+- If it means elementary exchanges together with recursively adjusted comparisons such as (4), the proposition does not give a negative answer.
+
+Your recursive guess is compatible with the second interpretation. The missing higher boundary formulas are substantive mathematical data.
+
+## 3. A support obstruction exists under an additional hypothesis—but that hypothesis excludes your Gray example
+
+There is a second elementary obstruction worth isolating.
+
+Suppose a support function satisfies
+
+\[
+\operatorname{supp}(u\ast_jv)
+=
+\operatorname{supp}(u)\cup\operatorname{supp}(v)
+\tag{5}
+\]
+
+for **every** composition dimension \(j\), with values in the subsets of one fixed generating set.
+
+Then
+
+\[
+\begin{aligned}
+\operatorname{supp}(L^n_{k,\ell}(a,b,c,d))
+&=
+\operatorname{supp}(a)\cup\operatorname{supp}(b)
+ \cup\operatorname{supp}(c)\cup\operatorname{supp}(d)\\
+&=
+\operatorname{supp}(R^n_{k,\ell}(a,b,c,d)).
+\end{aligned}
+\]
+
+Support injectivity therefore forces strict interchange immediately.
+
+So a nontrivial theory satisfying requirement 2 **cannot also have a support function satisfying (5) for every composition**.
+
+However, this does not refute your proposed tensor support. In the Gray-enriched construction, composition along dimension \(0\) changes the tensor factors indexing the relevant generators. Its effect on support is not the union operation in (5).
+
+For example, take adjacent generating 2-cells
+
+\[
+\alpha:f_0\Rightarrow f_1:x\to y,
+\qquad
+\beta:g_0\Rightarrow g_1:y\to z.
+\]
+
+In the tensor hom from \(x\) to \(z\), the two paths have respective one-dimensional tensor-basis supports
+
+\[
+\{\,g_0\otimes\alpha,\ \beta\otimes f_1\,\}
+\]
+
+and
+
+\[
+\{\,\beta\otimes f_0,\ g_1\otimes\alpha\,\}.
+\]
+
+These sets differ. Identifying both with the original-label set \(\{\alpha,\beta\}\) discards the endpoint indices that distinguish the tensor generators.
+
+Steiner’s subset description concerns the basis of the directed complex: Theorem 6.2 establishes the relevant coefficient-\(0/1\) property for loop-free unital bases. It is not a theorem that arbitrary original-label support is injective after forgetting tensor indices. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+Thus a support-based impossibility argument must address **the expanded basis itself**. Counting only the original generators of \(\Gamma\) is insufficient.
+
+## 4. A finite support set imposes a stronger finiteness condition than finite generation
+
+There is another necessary consequence of your proposed finite-basis version.
+
+### Proposition
+
+Let \(C\) be a reflexive globular set. Suppose one finite set \(B\) admits injective functions
+
+\[
+\operatorname{supp}_n:C_n\hookrightarrow\mathcal P(B)
+\]
+
+for every \(n\). Then \(C\) has only finitely many nonidentity cells in total. In particular, all sufficiently high-dimensional cells are identities.
+
+### Proof
+
+Put
+
+\[
+c_n=|C_n|,
+\qquad M=2^{|B|}.
+\]
+
+Support injectivity gives \(c_n\leq M\). The identity map
+
+\[
+i_n:C_n\longrightarrow C_{n+1}
+\]
+
+is injective because \(s\,i_n=\mathrm{id}\). Hence
+
+\[
+c_n\leq c_{n+1}\leq M.
+\]
+
+Let
+
+\[
+N_{n+1}=C_{n+1}\setminus i_n(C_n)
+\]
+
+be the set of nonidentity \((n+1)\)-cells. Then
+
+\[
+|N_{n+1}|=c_{n+1}-c_n.
+\]
+
+For every \(r\),
+
+\[
+\sum_{n=0}^{r-1}|N_{n+1}|
+=c_r-c_0
+\leq M-c_0.
+\]
+
+The total number of positive-dimensional nonidentity cells is therefore at most \(M-c_0\). Only finitely many dimensions can have any such cells. ∎
+
+No compatibility between support and identities was assumed.
+
+This gives a precise route to the negative result you proposed:
+
+> Find one finite pasting diagram \(\Gamma\) for which the required directed exchanges and coherences force infinitely many nonidentity cells. That would contradict a globally finite support set together with requirement 2.
+
+I have not established such a diagram. The proposition also does not apply if the generating set is merely finite in each degree, rather than finite altogether.
+
+## 5. What the cited constructions establish
+
+Three details delimit the remaining problem.
+
+**Araújo supplies the ambient composition syntax, not the required completion.** His basic operations are top-dimensional composition and mixed-dimensional whiskering,
+
+\[
+C_i\times_{C_{\min(i,j)-1}}C_j\longrightarrow C_{\max(i,j)}.
+\]
+
+The subsequent computad paper proves its normal-form and presheaf results, while explicitly separating them from the addition of coherent weak interchange. Consequently, adjoining higher generators requires checking their parallel boundaries; it cannot mean simply adjoining (1) in every degree. [arxiv.org](https://arxiv.org/html/2202.09293v4?utm_source=chatgpt.com)
+
+**Bourke–Lobbia’s 2026 paper goes further on existence than your status note indicates, but does not meet directedness at every level.** Section 4.2.6 explicitly defines lax variants: their designated 3-cell interchangers need not be equivalences, and certain 4-cell comparisons need not be invertible. Their homs nevertheless remain ordinary Gray-categories, so the interchangers supplied by those homs are invertible. Thus these definitions do not meet requirement 3 at every composition level. Section 4.3 also states that their flavours are monadic over 4-dimensional globular sets, which gives abstract free structures; this is distinct from the requested finite combinatorial description and support theorem. [arxiv.org](https://arxiv.org/html/2610.31448v2?utm_source=chatgpt.com)
+
+**The cocategorical obstruction has additional hypotheses.** Bourke–Gurski constrain cocontinuous tensor bifunctors on Gray-categories and derive obstructions to the desired biclosed and model-compatible tensor structures. Those hypotheses are not consequences of requirements 1–5. Their result therefore cannot establish nonexistence of every algebraic theory contemplated here. [arxiv.org](https://arxiv.org/pdf/1412.1320?utm_source=chatgpt.com)
+
+The proved obstruction is consequently specific: **direct higher comparisons of the raw rectangular composites force lower interchange to be strict.** Once higher boundaries are adjusted as in (4), the unresolved question is whether one can choose all those comparisons and coherence equations so that free structures admit a finite expanded basis, injective support, and substitution. None of the arguments above settles that corrected question.

@@ -15,11 +15,7 @@
    - *elements* of an object C are 1-cells `⊤ → C`, and their composition is CaTT in the hom `Hom(⊤, C)` via suspension (§5.1);
    - *free ω-categories on contexts* `⟦Γ⟧` can be either a primitive with its own universal property (R-A) or derived as `laxcolim_Γ (const ⊤)` (R-B, **[conj]**). §5.2 compares the two;
    - in both, the Yoneda principle "maps `⟦Γ⟧ → C` are Γ-shaped families of elements of C" is a universal property witnessed by generated cells, with no definitional β/η.
-5. **Pseudo or lax ambient.** If the ambient ωCat is a model of CaTT, its own 2-cells are forced to be *pseudo* transformations, because every CaTT coherence, interchange included, is invertible. That leaves two designs:
-   - **P:** keep CaTT unchanged, and get lax transformations as functors into lax arrow objects. All existing theory carries over, but lax transformations become derived and verbose.
-   - **L:** change the core to a Gray-style rule with one-way interchange. Lax transformations become variables and their laws become coherences, but no existing metatheory applies and side conditions stop being purely free-variable checks.
-
-   §3 describes both with a worked example and compares them question by question. For functors into 1-categories, which covers most ordinary mathematics, the two coincide.
+5. **Pseudo or lax ambient.** If the ambient is a model of CaTT, its 2-cells are forced to be *pseudo* transformations, because every coherence, interchange included, is invertible (§3.1). The two ways out, a pseudo ambient (P) and a Gray-style lax ambient (L), are compared in `notes/pseudo-vs-gray.md`. §4–§6 hold under either.
 6. **What this reaches.** All finite (lax, pseudo, weighted) limits and colimits; cotensors by shapes; hom objects; an ℕ-like object `Hom_{⟦x, s:x→x⟧}(x, x)` with iteration (§6). **What it does not reach:** colimits indexed by an *object* rather than a context (sequential colimits, general Kan extensions) and induction (dependent elimination). Both need internal hom [→ Gray] or fibrations [→ fibrations].
 
 ---
@@ -182,83 +178,25 @@ The semantics agrees **[recall]**:
 
 So there are two coherent designs. The rest of this section describes each, then compares them.
 
-### 3.2 Option P: pseudo ambient, lax structure by construction
+### 3.2 The comparison lives in `pseudo-vs-gray.md`
 
-**The kernel** is ordinary CaTT plus the limit and colimit rules of §4. 2-cells between functors are pseudo transformations, and higher cells are pseudo transfors.
+The full description of the two designs and their practical comparison is now in `notes/pseudo-vs-gray.md` (PR #5), which is the project's single pseudo-vs-lax note:
+- **P:** a pseudo (cartesian) ambient, with lax structure obtained by construction;
+- **L:** a lax (Gray-enriched) ambient with a Gray-style coherence rule.
 
-**A lax transformation** from F to G (both `C → D`) is not a 2-cell. It is a functor into the object of arrows of D:
+An earlier version of this section made four claims that that note's "Reconciliation" section settles differently:
+- **R1.** L's side condition is still equality of supports, computed on the Gray unfolding of the pasting scheme, and it is decidable. Its correctness (lemma S1) is open.
+- **R2.** L's contexts stay pasting schemes. The open Gray-shape problem for n > 1 belongs to P's lax function objects, not to L's kernel.
+- **R4.** The single-hom fragment of L is CaTT, so part of the existing metatheory carries over.
+- **R7.** The cheap direction of embedding is P into L, since P is L plus a marking that makes interchangers invertible.
 
-```
-Arr(D) := [⟦x → y⟧, D]_lax          (lax limit of the constant diagram at D over one arrow, §6.3)
-ev₀, ev₁ : Arr(D) → D               (the two projections)
+What stands from this note:
+- §3.1's obstruction.
+- P and L coincide semantically for functors into 1-categories. Under L this costs a syntactic annotation (R6).
 
-H  : C → Arr(D)
-e₀ : ev₀ ∘ H ≅ F,    e₁ : ev₁ ∘ H ≅ G          (invertible 2-cells)
-```
-
-- **Components.** `H ∘ x` is an element of `Arr(D)`, which is an arrow of D from `F x` to `G x` (up to e₀, e₁).
-- **Lax naturality.** `H ∘ f` is an arrow of `Arr(D)`. The universal property of the lax limit unpacks an arrow of `Arr(D)` into a square in D filled by a one-way cell. So the lax naturality cell is derived from `uni`, not assumed.
-- **Composing two lax transformations** `H : F ⇝ G` and `K : G ⇝ G'` takes several steps:
-  1. The composable-pair shape `⟦x → y → z⟧` has a "composite" map `⟦x → z⟧ → ⟦x → y → z⟧`, which is the image of CaTT's composition coherence under ⟦-⟧ (§5.2).
-  2. Applying `[-, D]_lax` turns it into `[⟦x→y→z⟧, D]_lax → Arr(D)`.
-  3. `[⟦x→y→z⟧, D]_lax` is the pullback `Arr(D) ×_D Arr(D)`. This uses the fact that `⟦x→y→z⟧` is a pushout of two arrows, and that cotensors turn colimits into limits; both are `uni` cells, with the second still **[conj]** in general.
-  4. Pair H and K into the pullback and compose.
-- **Laws for lax transformations** (associativity of their composition, whiskering by functors) are cells produced by the universal properties. They are explicit cells, not definitional equalities, as for everything else in the theory.
-
-**Practical gains:**
-- Everything proved about CaTT applies unchanged: the Grothendieck–Maltsiniotis models (BFM), the computad description of contexts, decidable type checking, Rice's semistrict variants, the Benjamin–Markakis invertibility criterion, and Mikhail's CaTT_lim as written.
-- The side conditions stay free-variable checks.
-- Equivalences of categories are simply invertible 1-cells of the ambient, and their data (functors, pseudo-natural unit and counit) are ordinary cells.
-- **For ordinary mathematics the restriction costs nothing.** For functors into a 1-category, the naturality cells live in a category with only identity 2-cells, so lax and pseudo transformations coincide. The difference appears only for functors into a genuinely higher category, such as Cat itself.
-
-**Practical losses:**
-- A lax transformation cannot be a context variable `α : F ⇒ G`. It is a context fragment `(H, e₀, e₁)`.
-- Composing lax transformations and their laws are derived through four or so `uni` steps, instead of being a single coherence. Without help from the elaborator this is verbose.
-- Structures that are lax by nature (lax cones, lax slices, Gray tensors) are always objects built by universal properties, never shapes the core rule sees directly.
-
-**Mitigation without kernel changes.** The surface language can let users write `α : F ⇒_lax G` and elaborate it to `(H, e₀, e₁)`. Composition and whiskering of lax transformations can then be precomputed meta-operations, the way suspension and functorialisation already are in this research line. What cannot be hidden is that their laws are explicit cells from `uni`, not coherences.
-
-### 3.3 Option L: lax ambient, Gray-style core
-
-**The kernel changes.** The ambient is a Gray-style ω-category:
-- Each hom `Hom(C, D)` is an ordinary weak ω-category. Inside a single hom, CaTT works as it does now (on suspended pasting schemes, as in §5.1).
-- Composing cells *across* a 0-cell (whiskering a transformation by a functor, or composing transformations horizontally) goes through a Gray tensor. Interchange across a 0-cell is a one-way cell.
-
-So the core needs two kinds of coherence:
-- **invertible coherences**, given by the current rule, for shapes that lie within one hom; and
-- **directed interchange cells**, for shapes that straddle a 0-cell. These go only from one composite to the other, in a fixed orientation.
-
-The context grammar must grow to match. A pasting diagram with two transformations side by side no longer has one composite up to invertible cells. Instead it has a family of composites ordered by directed interchanges. Mikhail's `gray` judgment generates such shapes for `Γ ⊗ Dⁿ`, but the core would need Gray tensors of arbitrary pasting schemes, `Θ ⊗ Θ'`. Mikhail proves existence only for n = 1.
-
-**In the running example,** `α : F ⇒ G` *is* a lax transformation. The naturality cell is a directed interchange `(α∘y)·(F∘f) → (G∘f)·(α∘x)` with no inverse. Composition of lax transformations is ordinary vertical composition in `Hom(C, D)`, and its laws are ordinary coherences inside that hom.
-
-**Practical gains:**
-- Lax transformations, modifications and higher lax transfors are context variables.
-- Their components, naturality cells, composites and laws are coherences, so nothing has to be derived.
-- Lax limits become more natural: Mikhail's Gray-shaped transfors are shapes the core already understands, which may simplify `ctrf`/`star`.
-
-**Practical losses:**
-- **No existing metatheory applies.** There is no published weak-ω notion of Gray-enriched category with a CaTT-style syntax that I know of. Models, the computad description, decidability, semistrictness and the invertibility criterion would all have to be redone.
-- **Side conditions stop being purely free-variable checks.** To tell an invertible coherence from a directed interchange, the rule has to know whether the shape straddles a 0-cell and which composite comes first in the Gray order. That is an orientation condition, not a free-variable condition.
-- **Gray tensors of pasting schemes are not pasting schemes.** The core would need a new shape class, whose well-formedness and contractibility are open for n > 1.
-- **Pseudo transformations become the derived notion.** Anything that needs them (equivalences of ω-categories, ordinary natural isomorphisms) needs an invertibility marking on the 2-cell and on its naturality cells, for example ICaTT's invertibility type.
-
-### 3.4 Side by side
-
-| Practical question | Option P (pseudo ambient) | Option L (lax ambient) |
-|---|---|---|
-| How a lax transformation F ⇝ G is written | context fragment `(H : C → Arr(D), e₀, e₁)`; surface sugar possible | context variable `α : F ⇒ G` |
-| How a pseudo transformation is written | context variable `α : F ⇒ G` | variable plus an invertibility marking |
-| Composing lax transformations and their laws | derived from `uni` (several steps, explicit cells) | coherences |
-| Composing pseudo transformations and their laws | coherences | coherences, plus checking that markings are preserved |
-| Functors into 1-categories (most ordinary math) | no difference from L | no difference from P |
-| Core rule | unchanged CaTT | new rule with directed interchange and an orientation side condition |
-| Context shapes | pasting schemes, as now | pasting schemes plus Gray products of them |
-| Existing results that carry over | all (models, computads, decidability, semistrictness, invertibility, CaTT_lim) | none directly; each needs reproving |
-| Effect on §4–§6 | as written | limits and representables carry over; §6.3 simplifies, since lax functor categories are then plain cotensors |
-| Main open risk | elaborating lax transformations stays verbose | existence and contractibility of Gray shapes for n > 1, and a semantics |
-
-**One way to stage the work.** P and L are not exclusive over time. P can be built first on existing foundations. Option L could later be justified as a *surface* theory, by showing that L-style terms elaborate into P with lax transformations interpreted as `(H, e₀, e₁)`. If that translation works, L becomes a convenience layer over P. If it fails, the failure says exactly which lax phenomena P cannot express. Either outcome is informative, and this note keeps both readings open. §4–§6 are written so that they hold under either.
+**How §4–§6 read under each option.** §4–§6 hold under either option.
+- Under P, lax cells (cone 2-cells, lax naturality) come from the universal properties of lax limits and lax function objects, as written.
+- Under L, cone 2-cells and the 2-dimensional universal property use native lax cells (`pseudo-vs-gray.md` §4.4). Lax function objects (§6.3) are then the native homs made into objects.
 
 ---
 
@@ -483,7 +421,7 @@ Option (a) is the in-style route: a presentation is a context plus a marking, an
 
 In order of cost to benefit:
 
-1. **Elements elaboration (R-C → §5.1) is well-typed.** Prove that a CaTT derivation in a context fibred over C translates to an ambient derivation in `ΣΘ[⊤, C]`. This is pure syntax with no new rules, and it pins down Option P versus L concretely.
+1. **Elements elaboration (R-C → §5.1) is well-typed.** Prove that a CaTT derivation in a context fibred over C translates to an ambient derivation in `ΣΘ[⊤, C]`. This is pure syntax with no new rules. It is the same under P and L, since elements live in a single hom, where L is CaTT (R4).
 2. **Constant substitutions exist.** For every Γ there is `(c:⋆) ⊢ !_Γ : Γ`. This follows from the contractibility of the one-point context and is needed by R-B.
 3. **Cone contexts exist for pasting-scheme diagrams.** This is Mikhail's Conj 3.6 restricted to ps-contexts. It is needed before CaTT_lim can be implemented at all.
 4. **Strict-model check of R-B.** In strict ω-categories via Steiner complexes, check `laxcolim(const 1) ≅ Free(Γ)` for small Γ (D¹, D², the loop, the composable pair). This settles the orientation convention.
@@ -495,7 +433,7 @@ In order of cost to benefit:
 
 These are open mathematical or design problems, ordered by how much of the rest depends on them.
 
-1. **Can Option L be elaborated into Option P?** (§3.4) If lax-ambient terms translate into pseudo-ambient terms with lax transformations as `(H, e₀, e₁)`, then L is a surface layer over P. If not, the obstruction is the precise expressive gap between them.
+1. **Pseudo vs lax ambient.** Open items are tracked in `pseudo-vs-gray.md`. The one that bears most on this note is S1, the correctness of L's support condition.
 2. **The closure condition for markings** (§4.2, M1). This is needed before marked limits can be stated as rules.
 3. **Is `laxcolim(const ⊤) ≃ Free(Γ)`?** (§5.2) This decides whether R-A is a primitive or a derived rule.
 4. **Presentations with equations** (§6.5). Do marked colimits suffice to build objects that act like structures with laws, such as monoids with associativity or the integers? The integers are the test case where cancellation shows up.

@@ -351,3 +351,76 @@ facts (psd d) = facts d
 
 facts-ps : ∀ {Γ} → Γ ⊢ps → Facts Γ
 facts-ps (ps d) = facts d
+
+------------------------------------------------------------------------
+-- Top cells are sources of nothing.
+
+AllNS : Ctx → Tuple → Set
+AllNS Γ []      = ⊤
+AllNS Γ (v ∷ w) = NotSrc Γ v × AllNS Γ w
+
+private
+  ns-top : ∀ {Γ} (P : Γ ⊢ps) pre o o' r (eq : objL Γ ≡ pre ++ o ∷ o' ∷ r) v →
+           endsL (lookup Γ v) ≡ just (o , o') → hdimV Γ v ≡ hd (homAt Γ (suc (lengthN pre))) → NotSrc Γ v
+  ns-top {Γ} P pre o o' r eq v ev hv β lt with lookup Γ β in lβ
+  ... | nothing = refl
+  ... | just ⋆  = refl
+  ... | just (arr ⋆ _ _) = refl
+  ... | just (arr (arr B a b) s t) with psInv P β _ lβ
+  ...   | (s0 , t0 , refl , refl , ls0 , _) with s0 ==ℕ v in e
+  ...     | false = refl
+  ...     | true with ==→≡ s0 v e
+  ...       | refl =
+    ⊥-elim (lt-irr (suc (dim B))
+      (subst (λ z → T (suc (dim B) <ℕ suc z)) (trans (sym hv) (cong hdimTy ls0))
+        (OneHom.v-bound P pre o o' r eq β _ lβ (trans (cong endsL (sym ls0)) ev))))
+
+top-ns : ∀ {Γ} (P : Γ ⊢ps) pre o rest → objL Γ ≡ pre ++ o ∷ rest → ∀ w →
+         WFT Γ o (lastL (o ∷ rest)) w → AllTop Γ (suc (lengthN pre)) w → AllNS Γ w
+top-ns P pre o rest eq [] _ _ = tt
+top-ns {Γ} P pre o [] eq (v ∷ w) wf _ with walk P pre o [] eq (v ∷ w) wf
+... | () , _
+top-ns {Γ} P pre o (o' ∷ r) eq (v ∷ w) (z , ev , p) (hv , ht)
+  with pairs-unique-src _ (subst Inc eq (Inc-objL Γ)) (subst (λ xs → (o , z) ∈ pairs xs) eq (hom-ends P v ev))
+                        (pairs-mid pre o o' r)
+... | refl =
+  ns-top P pre o o' r eq v ev hv ,
+  top-ns P (pre ++ o ∷ []) o' r (trans eq (sym (++-assocL pre (o ∷ []) (o' ∷ r)))) w p
+         (subst (λ j → AllTop Γ (suc j) w) (sym (lengthN-snoc pre o)) ht)
+
+------------------------------------------------------------------------
+-- The first position with a positive hom dimension.
+
+lead : Ctx → Nat → Nat → Nat
+lead Γ k zero    = 0
+lead Γ k (suc m) = if hd (homAt Γ k) ==ℕ 0 then suc (lead Γ (suc k) m) else 0
+
+AllZ : Ctx → Tuple → Set
+AllZ Γ []      = ⊤
+AllZ Γ (v ∷ w) = (hdimV Γ v ≡ 0) × AllZ Γ w
+
+record Split (Γ : Ctx) (k : Nat) (w : Tuple) : Set where
+  constructor mkSplit
+  field
+    pre  : Tuple
+    α    : Nat
+    post : Tuple
+    eqw  : w ≡ pre ++ α ∷ post
+    lenp : lengthN pre ≡ lead Γ k (lengthN w)
+    zp   : AllZ Γ pre
+    posα : T (0 <ℕ hdimV Γ α)
+    nsα  : NotSrc Γ α
+
+split-top : ∀ Γ k w → AllTop Γ k w → AllNS Γ w → T (0 <ℕ sumHd Γ k (lengthN w)) → Split Γ k w
+split-top Γ k []      _          _          ()
+split-top Γ k (v ∷ w) (hv , ht) (nv , nw) pos with hd (homAt Γ k) ==ℕ 0 in e
+... | true  =
+  let S = split-top Γ (suc k) w ht nw (subst (λ z → T (0 <ℕ z + sumHd Γ (suc k) (lengthN w))) (==→≡ (hd (homAt Γ k)) 0 e) pos)
+      open Split S
+  in mkSplit (v ∷ pre) α post (cong (v ∷_) eqw)
+       (trans (cong suc lenp) (sym (cong (λ b → if b then suc (lead Γ (suc k) (lengthN w)) else 0) e))) (trans hv (==→≡ (hd (homAt Γ k)) 0 e) , zp) posα nsα
+... | false = mkSplit [] v w refl (sym (cong (λ b → if b then suc (lead Γ (suc k) (lengthN w)) else 0) e)) tt (subst (λ z → T (0 <ℕ z)) (sym hv) (nz-pos (hd (homAt Γ k)) e)) nv
+  where
+  nz-pos : ∀ n → (n ==ℕ 0) ≡ false → T (0 <ℕ n)
+  nz-pos zero    ()
+  nz-pos (suc n) _ = tt

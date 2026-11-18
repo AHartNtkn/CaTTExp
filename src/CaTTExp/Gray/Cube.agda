@@ -275,5 +275,13 @@ cube⁻-side : graySide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src
                        (M hex⁺) (M hex⁻) ≡ false
 cube⁻-side = refl
 
+-- The generator-based and closure-based comparisons agree on both.
+_ : agreeSide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁻) (M hex⁺) ≡ true
+_ = refl
+_ : agreeSide Γ₃ (arr (arr (arr ⋆ a0 a3) (s (Src hex⁻)) (t (Src hex⁻))) (m (Src hex⁻)) (m (Tgt hex⁻)))
+              (M hex⁺) (M hex⁻) ≡ true
+_ = refl
+
 no-cube⁻ : ∀ {Γ σ B} → ¬ (Γ ⊢tm coh Γ₃ cubeTy⁻ σ ∶ B)
 no-cube⁻ (coh-wf _ _ _ ok _) = subst T cube⁻-side ok

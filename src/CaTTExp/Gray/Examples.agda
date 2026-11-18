@@ -189,6 +189,15 @@ _ = refl
 -- The reverse coh is not derivable: its side condition is false, and
 -- the coh rule demands it. This is a proof about every context Γ, every
 -- substitution and every claimed type.
+-- The generator-based and closure-based comparisons agree here.
+_ : agreeSide HComp (arr Txz fg f'g') βα αβ ≡ true
+_ = refl
+_ : agreeSide HComp (arr Txz fg f'g') αβ βα ≡ true
+_ = refl
+_ : agreeSide HComp (arr ⋆ (v 0) (v 5)) (comp (v 0) (v 1) (v 2) (v 5) (v 6))
+                                        (comp (v 0) (v 1) (v 3) (v 5) (v 7)) ≡ true
+_ = refl
+
 ich⁻-side : graySide HComp (arr Txz fg f'g') αβ βα ≡ false
 ich⁻-side = refl
 

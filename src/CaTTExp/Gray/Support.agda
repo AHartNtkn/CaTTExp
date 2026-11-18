@@ -37,8 +37,18 @@
 -- closures* ↓S in K(Γ) (close under replacing an entry of a tuple by
 -- its source or target), as in §3.6 of the note. ↓S = ↓R is decided
 -- on generators (`sameDown`: every element of S is below one of R and
--- vice versa), so no closure is built; `down` computes closures and
--- is kept for the rule-level checks of Gray.Bounded. The note: "the
+-- vice versa, in the entrywise face order `leqL`), so no closure is
+-- built; `down` computes closures and is kept for Gray.Bounded.
+--
+-- DEFINITION CHANGE (PR #68). Earlier versions compared `down`
+-- closures (`sameDownClosure`). The two differ in their step budget:
+-- `sameDown` allows up to dim K(Γ) face steps *per entry*, `down` at
+-- most dim K(Γ) single-entry steps *in total*. They agree when every
+-- tuple has rank ≤ dim K(Γ) (then both are the order ideal); that is
+-- argued, not proved. Every L result stated with graySide (no-ich⁻,
+-- substitution under L, the marks, everything over L) refers to the
+-- new definition. `agreeSide` checks agreement on given cohs by
+-- evaluation (Gray.Examples, Gray.Cube). The note: "the
 -- downward-closed set of basis elements used by ⟦t⟧ and its boundaries". This is also
 -- the form in which lemma (B) "support determines the cell" is known
 -- (Hadzihasanovic: molecules are determined by their closed subsets).
@@ -310,6 +320,10 @@ covers Γ S R =
 sameDown : Ctx → TSet → TSet → Bool
 sameDown Γ S R = covers Γ S R ∧ covers Γ R S
 
+-- The earlier definition, by explicit closures.
+sameDownClosure : Ctx → TSet → TSet → Bool
+sameDownClosure Γ S R = ≈T (down Γ S) (down Γ R)
+
 nth : Nat → List TSet → TSet
 nth _       []       = []
 nth zero    (x ∷ _)  = x
@@ -382,3 +396,16 @@ opCase Θ A@(arr _ _ _) t u =
 -- The side condition of two-tier L.
 graySide : Ctx → Ty → Tm → Tm → Bool
 graySide Θ A t u = cohCase Θ A t u ∨ opCase Θ A t u
+
+-- The two definitions of ↓S = ↓R agree on the four comparisons that
+-- the side condition makes for coh_{Θ, t →_A u}.
+agreeSide : Ctx → Ty → Tm → Tm → Bool
+agreeSide Θ ⋆ t u = true
+agreeSide Θ A@(arr _ _ _) t u =
+  all (λ p → eqb (sameDown Θ (fst p) (snd p)) (sameDownClosure Θ (fst p) (snd p)))
+      ((supp t A , fullT (homs Θ)) ∷ (supp u A , fullT (homs Θ))
+       ∷ (supp t A , bdryT false (homs Θ)) ∷ (supp u A , bdryT true (homs Θ)) ∷ [])
+  where
+  eqb : Bool → Bool → Bool
+  eqb true  b = b
+  eqb false b = not b

@@ -33,7 +33,7 @@ open import CaTTExp.Strict.Lifting
 open import CaTTExp.Strict.LowerCut
 open import CaTTExp.Strict.AtomSum
 import CaTTExp.Strict.Std as S
-open import CaTTExp.Strict.StdSem using (module StdSem)
+open import CaTTExp.Strict.StdSem using (module StdSem; cmpR)
 open import CaTTExp.Gray.Cover using (_⊎_; inj₁; inj₂)
 open import CaTTExp.Strict.Bag using (+-zero; +-assoc; +-comm)
 
@@ -548,3 +548,89 @@ module Lift {N : Nat} (B : Basis N) (H : Hyp B) (L : Nat)
         ≤-pred″ : ∀ {a b} → suc a ≤ suc b → a ≤ b
         ≤-pred″ (s≤s l) = l
       y2 = chUn r Pr n lt ch₂ (ch-sub (sym e₂) ch₂′)
+
+    ------------------------------------------------------------------
+    -- Standard forms as chains.
+
+    private
+      module St = S.Std degG W
+      module Sg = Single W
+      module WFP = St.WFProof W-co W-deg
+      module SPν = St.SemProof (nu K L) (ιν B H L) W-co W-deg dimν W-evν
+      module SPD = St.SemProof 𝒟 κ W-co W-deg dimκ W-evD
+      module DPν = St.DimProof (nu K L) (ιν B H L) dimν
+
+    open St using (_∷ᶠ_)
+
+    toCh : ∀ r f fs {x y} → St.AllF r (f ∷ fs) → Eν.Ev (cmpR r f fs) x → ED.Ev (cmpR r f fs) y →
+           Σ (Vec Nat N) (λ c → Ch r x y c × (sumv c ≡ St.len (f ∷ fs)))
+    toCh r f [] ((cf , hf) ∷ᶠ _) u v with Sg.single-rows r f cf hf u
+    ... | (i , iN , iL) , ri , ag = unit i , ch1 (f , cf , u , v) (ri , iL , iN , ag) , sumv-unit i iN
+    toCh r f (g ∷ gs) ((cf , hf) ∷ᶠ a) (Eν.ev-cmp .r u u′ p) (ED.ev-cmp .r v v′ q) with Sg.single-rows r f cf hf u
+    ... | (i , iN , iL) , ri , ag =
+      let (c , ch , sc) = toCh r g gs a u′ v′ in
+      unit i +c c , ch∷ (f , cf , u , v) (ri , iL , iN , ag) ch p q ,
+      trans (sumv-+ (unit {N} i) c) (trans (cong (_+ sumv c) (sumv-unit i iN)) (cong suc sc))
+
+    private
+      case01 : ∀ n → n ≤ 1 → (n ≡ 0) ⊎ (n ≡ 1)
+      case01 zero          _         = inj₁ refl
+      case01 (suc zero)    _         = inj₂ refl
+      case01 (suc (suc n)) (s≤s ())
+
+      agree-up : ∀ {t r f g} → t ≤ r → Agree t f g → Agree r f g
+      agree-up tr ag j rj jL = ag j (≤-trans (s≤s tr) rj) jL
+
+    -- At most one generator above t: the value agrees above t with an
+    -- atom or zero.
+    low-shape : ∀ t e {x} → CO e → St.hi t e ≤ 1 → Eν.Ev e x → Σ (Maybe Nat) (λ A → AOKL A × Agree t (rows x) (Arow A))
+    low-shape t e {x} co h u with case01 (St.hi t e) h
+    ... | inj₁ h0 = nothing , tt , λ j tj _ →
+            trans (cong (λ z → rows z j) (sym (DPν.dimLe (St.hi→DegLe co h0) u))) (rows-src t x j tj)
+    ... | inj₂ h1 with Sg.single-rows t e co h1 u
+    ...   | (i , iN , iL) , _ , ag = just i , (iN , iL) , ag
+
+    data Shape (r : Nat) (x : ν.C) (y : 𝔇.C) : Set where
+      sh-low : ∀ A → AOKL A → Agree r (rows x) (Arow A) → Shape r x y
+      sh-ch  : ∀ {c} → Ch r x y c → 2 ≤ sumv c → Shape r x y
+      sh-hi  : ∀ r′ {c} → r < r′ → Ch r′ x y c → 2 ≤ sumv c → Shape r x y
+
+    shape : ∀ r e {x y} → CO e → Eν.Ev e x → ED.Ev e y → Shape r x y
+    shape r e co u v = go (St.std e) (WFP.std-wf e co) (SPν.std-sem e co u) (SPD.std-sem e co v)
+      where
+      go : ∀ R {x y} → St.WF R → Eν.Ev (St.toE R) x → ED.Ev (St.toE R) y → Shape r x y
+      go (St.one (i , iN , iL)) _ (Eν.ev-gen _) _ = sh-low (just i) (iN , iL) (λ j _ jL → rows-atom i iN iL j jL)
+      go (St.many r′ f fs) {x} (a , l , t) u′ v′ with toCh r′ f fs a u′ v′
+      ... | c , ch , sc with tri r′ r
+      ...   | tri≡ refl = sh-ch ch two
+        where
+        two : 2 ≤ sumv c
+        two = subst (2 ≤_) (sym sc) (s≤s l)
+      ...   | tri> rr = sh-hi r′ rr ch (subst (2 ≤_) (sym sc) (s≤s l))
+      ...   | tri< rr =
+        let (A , ok , ag) = low-shape (suc r′) (cmpR r′ f fs) (St.co-cmpR r′ f fs a)
+                              (subst (_≤ 1) (sym (St.hi-cmpR (suc r′) r′ f fs)) t) u′
+        in sh-low A ok (agree-up rr ag)
+
+    -- A chain of at least two factors at r′ does not agree above r′
+    -- with an atom or zero.
+    many-absurd : ∀ t r′ {x y c A} → t ≤ r′ → Ch r′ x y c → 2 ≤ sumv c → AOKL A → Agree t (rows x) (Arow A) → ⊥
+    many-absurd t r′ {x} {c = c} {A} tr ch two ok ag = go A ok (agree-up tr ag)
+      where
+      tooMany : ∀ c′ → c ≡ c′ → sumv c′ ≤ 1 → ⊥
+      tooMany c′ e h = ≤-<-⊥ h (subst (1 <_) (cong sumv e) two)
+      go : ∀ A → AOKL A → Agree r′ (rows x) (Arow A) → ⊥
+      go nothing _ ag′ =
+        tooMany 0c (esum-inj r′ c 0c (ch-supp ch) (λ k _ → at-0c {N} k)
+                      (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (trans (ag′ j rj jL) (sym (RS0 j))))))
+                (subst (_≤ 1) (sym (sumv-0 {N})) z≤n)
+        where
+        RS0 : ∀ j → RS 0c j ≡ 0R
+        RS0 j = cong₂ _,_ (esum-0 {N} fst 0 j) (esum-0 {N} snd 0 j)
+      go (just a) (aN , aL) ag′ with tri r′ (deg a)
+      ... | tri< ra =
+        tooMany (unit a) (esum-inj r′ c (unit a) (ch-supp ch) (unit-supp r′ a ra aL)
+                            (λ j rj jL → cong fst (trans (sym (rowsCh ch j rj jL)) (trans (ag′ j rj jL) (sym (RS-unit a j aN))))))
+                (subst (_≤ 1) (sym (sumv-unit a aN)) (≤-refl 1))
+      ... | tri≡ e = go nothing tt (λ j rj jL → trans (ag′ j rj jL) (ent-zero a j (subst (_< j) e rj)))
+      ... | tri> ar = go nothing tt (λ j rj jL → trans (ag′ j rj jL) (ent-zero a j (≤-trans (s≤s (<→≤ ar)) rj)))

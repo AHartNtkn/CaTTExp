@@ -29,6 +29,13 @@
 
 A consequence of D1, D3 and D4 together: the researcher's collapse argument is a theorem about the *intended* calculus. The printed rules cannot run it, because over an arrow they never produce the cone morphisms it uses. Once the selector and copy are fixed, the argument applies, and the certified marking is what blocks it.
 
+**D3b. The printed linearity test does not enforce multiplicity one** (`Linearity.agda`, open issue D3b, first found by the gray-contexts researcher).
+- In Def. 3.1's OP case only the number of *linear* arguments is counted, so for a loop `ℓ`, `ℓ ∝ (ℓ·ℓ)·ℓ` holds (L1).
+- Consequently the printed (KE) accepts the projection `p_ℓ : p_x ⇒ (p_x·(ℓ·ℓ))·ℓ` over the loop (L2).
+- The repair is a strict test (`linear₁`): exactly one argument is linear in x, *and* x occurs in exactly one argument. The strict cone rule rejects that projection.
+- All the intended examples still pass with the copy, selector and linearity repairs together (`fixedStrict`; L4).
+- Strict linearity does not remove the D5 cone, whose repeated `r` sits in the source, which carries no linearity condition (L3). So the specified construction is still needed.
+
 ## 3. What is not formalized
 
 - **The collapse derivation itself.** Building `z⁻¹` and its cancellation 4-cells from the `uni`/`⊨` output needs the star and `⊢uni` judgments and sizeable pasting terms. R2 checks the input to that argument, not its algebra.

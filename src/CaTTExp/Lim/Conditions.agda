@@ -55,8 +55,46 @@ mutual
     (if (dim B ==ℕ d) ∧ lin K x d t then 1 else 0) + countLin K x d Δ γ
   countLin K x d _ _ = 0
 
+linearP : NCtx → Name → Tm → Bool
+linearP K x t = (dimOf K x ==ℕ dimTm K t) ∧ lin K x (dimOf K x) t
+
+------------------------------------------------------------------------
+-- Strict linearity (repair of open issue D3b). The printed OP case only
+-- asks that exactly one argument be linear in x; x may still occur in
+-- other arguments. E.g. for a loop ℓ, ℓ ∝ (ℓ·ℓ)·ℓ holds, since only the
+-- right argument is linear in ℓ. The strict test also asks that x occur
+-- in exactly one argument (multiplicity one).
+
+mutual
+  lin₁ : NCtx → Name → Nat → Tm → Bool
+  lin₁ K x d (var y)     = x ==ℕ y
+  lin₁ K x d (coh Δ A γ) = (countLin₁ K x d Δ γ ==ℕ 1) ∧ (countOcc x γ ==ℕ 1)
+  lin₁ K x d (cst ())
+
+  countLin₁ : NCtx → Name → Nat → Ctx → Sub → Nat
+  countLin₁ K x d (Δ ▸ B) (γ ,ₛ t) =
+    (if (dim B ==ℕ d) ∧ lin₁ K x d t then 1 else 0) + countLin₁ K x d Δ γ
+  countLin₁ K x d _ _ = 0
+
+  -- Number of arguments in which x occurs at all.
+  countOcc : Name → Sub → Nat
+  countOcc x ⟨⟩       = 0
+  countOcc x (γ ,ₛ t) = (if elem x (fvTm t) then 1 else 0) + countOcc x γ
+
+linear₁ : NCtx → Name → Tm → Bool
+linear₁ K x t = (dimOf K x ==ℕ dimTm K t) ∧ lin₁ K x (dimOf K x) t
+
+-- Which linearity test the rules use.
+data Lin : Set where
+  printedLin strictLin : Lin
+
+linearBy : Lin → NCtx → Name → Tm → Bool
+linearBy printedLin = linearP
+linearBy strictLin  = linear₁
+
+-- The printed test (Def. 3.1).
 linear : NCtx → Name → Tm → Bool
-linear K x t = (dimOf K x ==ℕ dimTm K t) ∧ lin K x (dimOf K x) t
+linear = linearBy printedLin
 
 ------------------------------------------------------------------------
 -- Boundaries.
@@ -87,31 +125,41 @@ concatMap f []       = []
 concatMap f (x ∷ xs) = f x ++ concatMap f xs
 
 -- Does some y ∈ Y satisfy y ∝ via(p)?
-selects : NCtx → Side → List Name → Name → Bool
-selects K via Y p with typeOf K p
+selectsBy : Lin → NCtx → Side → List Name → Name → Bool
+selectsBy lm K via Y p with typeOf K p
 ... | nothing = false
 ... | just T  with bdry via T
 ...   | nothing = false
-...   | just u  = any (λ y → linear K y u) Y
+...   | just u  = any (λ y → linearBy lm K y u) Y
 
 -- ⋃ { FV(p : T_p) | p ∈ Π, y ∈ Y, y ∝ via(p) }
+selectorBy : Lin → NCtx → Side → List Name → List Name → List Name
+selectorBy lm K via Y Π = concatMap (λ p → if selectsBy lm K via Y p then fvVar K p else []) Π
+
 selector : NCtx → Side → List Name → List Name → List Name
-selector K via Y Π = concatMap (λ p → if selects K via Y p then fvVar K p else []) Π
+selector = selectorBy printedLin
 
 ------------------------------------------------------------------------
 -- The conditions, evaluated in the context K in which s →_A t is formed.
 
 -- δCond(t : A, x : X, Π) with the selector testing `via`.
-cond : NCtx → (δ via : Side) → Tm → Ty → Name → List Name → Bool
-cond K δ via t A x Π with typeOf K x
+condBy : Lin → NCtx → (δ via : Side) → Tm → Ty → Name → List Name → Bool
+condBy lm K δ via t A x Π with typeOf K x
 ... | nothing = false
-... | just X  = linear K x t ∧ ≈? (fvTmTy t A) (fvVar K x ++ selector K via (fvBdry δ X) Π)
+... | just X  = linearBy lm K x t ∧
+               ≈? (fvTmTy t A) (fvVar K x ++ selectorBy lm K via (fvBdry δ X) Π)
+
+cond : NCtx → (δ via : Side) → Tm → Ty → Name → List Name → Bool
+cond = condBy printedLin
 
 -- δCond‾(t : A, x : X, c : Ob, Π): no linearity, FV(x : X) replaced by {c}.
-condBar : NCtx → (δ : Side) → Tm → Ty → Name → Name → List Name → Bool
-condBar K δ t A x c Π with typeOf K x
+condBarBy : Lin → NCtx → (δ : Side) → Tm → Ty → Name → Name → List Name → Bool
+condBarBy lm K δ t A x c Π with typeOf K x
 ... | nothing = false
-... | just X  = ≈? (fvTmTy t A) (c ∷ selector K τ (fvBdry δ X) Π)
+... | just X  = ≈? (fvTmTy t A) (c ∷ selectorBy lm K τ (fvBdry δ X) Π)
+
+condBar : NCtx → (δ : Side) → Tm → Ty → Name → Name → List Name → Bool
+condBar = condBarBy printedLin
 
 ------------------------------------------------------------------------
 -- Facts used to refute side conditions with an abstract term.

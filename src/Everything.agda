@@ -81,6 +81,7 @@ import CaTTExp.GlobularTotal.LabBd
 import CaTTExp.GlobularTotal.FvSub
 import CaTTExp.GlobularTotal.Wrap
 import CaTTExp.GlobularTotal.NfTyped
+import CaTTExp.GlobularTotal.ExMerge
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

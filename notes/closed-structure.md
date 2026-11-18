@@ -7,7 +7,7 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness open (D10b) |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness open, reduced to β/η in the term model (D10b, Prop. B7) |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
@@ -362,9 +362,52 @@ So ⌜c ⊗ –⌝ = coh_{⊢ Y\(P′⊗Y)}[σ_c]. In particular, UL_I\* is full
 
 *Proof.* By the reduction above, fullness follows from closure under Λ. Bracket abstraction gives that closure, given the names ⌜c⃗ ⊗ –⌝ and their mirrors, and Prop. B5 supplies those names. ∎
 
-**What remains (D10b, new): faithfulness of UL_I\*.** Do equal denotations imply equality in UL_I\*?
-- The unit-free proof (A4) went through a single coh per term. With units, a morphism need not be a single coh: the counterexample above is one such morphism, and B.1's e is another.
-- So faithfulness needs a different argument. One route is a normal form for terms modulo the coh-equality rule. Another is a Kelly–Mac Lane-style argument that two terms with the same denotation are connected through composites of UP\* coh's.
+**What remains (D10b): faithfulness of UL_I\*.** Do equal denotations imply equality in UL_I\*?
+- The unit-free proof (A4) went through a single coh per term. With units, a morphism need not be a single coh: the counterexample above is one such morphism, and B.1's e is another. So A4's argument does not apply.
+
+**Prop. B7 (faithfulness is representability of the term model).** *(Added 2026-11-18.)* Let T be the syntactic multicategory of UL_I\*: objects are formulas, T(Γ; A) is the set of terms Γ ⊢ t : A modulo UL_I\* equality, and composition is substitution. Chosen arrows are m = coh_{X,Y ⊢ X⊗Y}, u = coh_{⊢ I}, ev = coh_{Y, Y\Z ⊢ Z} and ev′ = coh_{Z/Y, Y ⊢ Z}, each instantiated by type substitution. Then the following are equivalent:
+1. UL_I\* is faithful.
+2. T is a biclosed representable multicategory with these chosen arrows. That is, the maps below are bijections in T, not only after interpretation:
+   - (R⊗) h ↦ h ∘_i m from T(Γ, A⊗B, Δ; C) to T(Γ, A, B, Δ; C);
+   - (R_I) h ↦ h ∘_i u from T(Γ, I, Δ; C) to T(Γ, Δ; C);
+   - (R\) k ↦ ev(y, k) from T(Γ; B\C) to T(B, Γ; C), and (R/) its mirror.
+
+*Proof.* (1 ⇒ 2) The interpretation ⟦–⟧ : T → F is full (Theorem B6), and faithful by assumption, so it is an isomorphism of multicategories carrying the chosen arrows of T to the structure maps of F. F has the bijections, so T has them.
+
+(2 ⇒ 1) The free biclosed monoidal category with unit F, viewed as a multicategory with F(Γ; A) = F(⊗Γ, A) and ⊗∅ = I, is the initial biclosed representable multicategory with chosen arrows and a map from the set of atoms. It is the syntactic multicategory of L\*_I with cut, modulo the β/η equations of the universal properties. So:
+- There is a unique strict map G : F → T that fixes formulas and sends chosen arrows to chosen arrows.
+- ⟦–⟧ : T → F is also strict: ⟦coh_m⟧ = m, and so on. So ⟦G(f)⟧ = f by initiality.
+- For a type substitution τ, both G ∘ τ_F and τ_T ∘ G are strict maps F → T that agree on atoms. So they are equal. Here τ_T preserves the chosen arrows because coh's are closed under substitution.
+
+Now show G(⟦t⟧) = t in T by induction on t.
+- A variable is sent to itself.
+- For t = coh_S[τ](t₁, …, tₙ), multifunctoriality gives G(⟦t⟧) = τ_T(G(⟦coh_S⟧)) ∘ (G⟦t₁⟧, …, G⟦tₙ⟧).
+- By induction, G⟦tᵢ⟧ = tᵢ.
+- G(⟦coh_S⟧) and coh_S are two terms of the UP\* type S, so the coh-equality rule makes them equal.
+
+Hence ⟦t⟧ = ⟦t′⟧ implies t = G⟦t⟧ = G⟦t′⟧ = t′. ∎
+
+So D10b is now a statement purely about UL_I\* terms: the derived abstraction operations must satisfy β and η *as UL_I\* equations*. Concretely, define [x]t by the bracket abstraction of B.4, and splitting and unit-elimination from it as in the fullness reduction. Then show, by induction on terms:
+- **(β)** ev(x, [x]t) = t;
+- **(η)** [x]ev(x, k) = k when x ∉ k;
+- the mirror equations for /;
+- the analogous pair for (R⊗) and (R_I).
+
+Each inductive step needs one equation between coh composites over variables, with the induction hypotheses as holes. Where that equation's generalized sequent is UP\*, the coh rule gives it directly.
+
+**Where the naive induction meets a non-UP\* step.** In the β step for [x]coh_S[τ](t₁, t₂, …), with x in t₁, the equation needed is
+
+```
+ev(x, coh_K(a, coh_{S^c}(b⃗)))  =  coh_S(ev(x, a), b⃗)      over x : Y, a : Y\B₁, b⃗,
+```
+
+and its type is S with the hypothesis B₁ replaced by Y, Y\B₁.
+- When N leaves B₁ alone, this type is UP\* (a cut of N(S) with an ev).
+- When B₁ = I, the type is Y, Y\I, B₂, … ⊢ C. Its normal form keeps Y\I, so it is not UP\*. The hom in F is still a singleton when the rest is unit-free (for B₂ = C = Z, cut-free search finds only L\ then L_I). More generally, the step can fail whenever N removes an I from B₁ through B₁'s hypothesis position. If S is I-free, the step is always UP\*: the type is then a cut of S with ev, so it is balanced, I-free and provable.
+
+So the obstruction is the same phenomenon as the closed-term counterexample: sequents with a "dual" Y\I or Z\I linked to an adjacent hypothesis. Two ways forward:
+- Rearrange bracket abstraction so that it never abstracts through a slot whose type N rewrites. One way is to first replace coh_S by coh_{N(S)} pre- and post-composed with unit and tensor isomorphisms; those composites are UP\*, so equal to coh_S.
+- Or enlarge the contractible class by the rule that a hypothesis pair Y, Y\I (or I/Y, Y) whose Y's are linked to each other may be contracted to I, and prove Theorem B for that class. B.1's T ⊢ T shows that the contraction cannot be unrestricted. The right restriction is open.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 

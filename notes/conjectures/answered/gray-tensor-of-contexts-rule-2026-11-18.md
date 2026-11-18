@@ -653,3 +653,33 @@ The strict presentation of the right side is correct by (10) and associativity o
 It does not assert that arbitrary, independently chosen CaTT lifts of the same strict presentation are weakly equivalent. Q1’s equality of strict boundary images alone would not establish that stronger statement.
 
 The resulting repair consists of the two finite support conditions **(B)** and **(C)**, the connecting-type formula **(6)**, and the structural translation **(7)–(8)**. The permitted connection theorem is used only to prove that the universal template searches terminate.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct at the level of a paper proof, conditional exactly as the prompt allowed.** Q1 and Q2 are answered by a specified construction plus a finite syntactic check; the only black box is the connection statement (relative coherence RC in Steiner loop-free contexts), and it is used only to show that the template searches terminate. Q3 is answered in a weaker, definitional form (see point 7).
+
+**The proposed repair.** Replace Mikhail's free-variable recognition conditions by:
+- **(B)** for each pair (p, q), one *boundary template* type B_{p,q} over the context U_{p,q} of proper generator pairs of D^p ⊗ D^q, accepted iff for every k < p + q and sign ε the k-dimensional free variables of its ε-endpoint at dimension k are exactly the support of the tensor-atom row θ^ε_{p,q;k} = Σ_{i+j=k} a_i^ε ⊗ b_j^{(−1)^i ε};
+- **(C)** for each generic coherence h = coh_{P,A}[id] of dimension p and each q, one *coherence template* term C_{P,A,q} over P ⊗ D^q, of type B_{p,q}[Θ_{h,e_q}], accepted iff its top-dimensional free variables are exactly {z ⊗ e_q : z ∈ Var_p(P)};
+- the connecting types x_y : B_{p,q}[Θ_{x,y}] and the translation ⟦coh_{P,A}[σ], y⟧ = C_{P,A,q}[σ̂_y], σ̂_y(z ⊗ v) = ⟦σ(z), j_y(v)⟧ (equations (5)–(8)).
+
+Checked:
+1. **Lemma 1** (supp of the top chain of π(t) = FV_r(t), in every context). Correct: a coherence-case head has dim P < r, a composition-case head of dimension r has dim P = r and top chain Σ_{z ∈ Var_r(P)} z, and chains of strict composites have nonnegative coefficients. This is the top-dimensional part of the support lemma already in `relative-coherence.md` / `cone-over-coherences.md` item 11.
+2. **(2): signed free-variable profiles determine strict cells in Steiner contexts.** Follows from Lemma 1 applied to the boundary terms and the 0/1 coefficients of tableau rows in strongly loop-free unital complexes. *Citation to Steiner's Thm 6.2(iii) taken from the response, not re-read.*
+3. **Lemma 2 (relative lifting from RC).** Correct. Lower faces are corrected one dimension at a time by composing with RC connections (identity strict image, so π is unchanged), and initial lifts come from an atomic expression of the cell. The truncations Δ_{≤k} of a Steiner context are Steiner, so the black box is applied only where the prompt allowed. This is a useful general lemma: **RC(≤ d−1) in a Steiner context implies every strict d-cell lifts with any prescribed lifted boundary.**
+4. **Tableau formula (4).** Machine-checked for all p, q ≤ 4 against the Leibniz differential with Steiner's sign convention (`tools/tensor_atom_tableau.py`, 0 mismatches; all rows have 0/1 coefficients).
+5. **Typing of the translation.** (6)–(8) are well typed provided ⟦t, w⟧[σ̂_y] ≡ ⟦t[σ], j_y(w)⟧ for every term t over P, generator w of D^q and σ : M ⊢ P. The response proves this only for fixed y (its (12)); the general form follows by the same structural induction, using σ(z)_i^ε ≡ σ(z_i^ε) (σ is well typed) and j_{j_y(w)} = j_y ∘ j_w (checked here). Well-foundedness by (total dimension, syntax size) is correct.
+6. **Soundness and canonicity.** By (9), every connecting variable's type has the strict boundary of x ⊗ y, and the Gray tensor of free strict ω-categories is free on the pairs of generators (Ara–Lucas, arXiv 1909.13564, Cor. 3.11), so F(T_n M) ≅ F(M) ⊗ Dⁿ, which is ν(K ⊗ λDⁿ) when F(M) = ν(K) with K strong Steiner. Any template family satisfying (B), (C) works; two outputs differ only in boundary terms with equal strict images. Neither uses RC.
+7. **Q3.** Naturality T_n(σ) is literal and functorial (correct; the choices are confined to universal templates). Associativity is obtained by *defining* M ⊗ (D^m ⊗ D^n) as T_n ∘ T_m, so the two bracketings are literally isomorphic. This does not compare T_n ∘ T_m with a construction that treats D^m ⊗ D^n as a single shape, nor does it settle the Gray-cube bracketing question of ledger D4 (two independently chosen presentations inverse up to higher cells), which remains reduced to RC.
+
+**Where the existence proof is unconditional.** Lemma 2 for a d-cell uses RC(k) for k ≤ d − 1. RC(1), RC(2) hold in every context, and RC(3) holds on every full cylinder P ↑ Var(P) = D¹ ⊗ P (naturality r8). So for n = 1 all C-templates of total dimension ≤ 4 and all B-templates of dimension ≤ 5 exist unconditionally, i.e. M ⊗ D¹ is constructed for every context M of dimension ≤ 3. Beyond that, existence is conditional on RC in the universal contexts U_{p,q} and P ⊗ D^q, which is asked in `outbox/relative-coherence-all-dimensions.md`.
+
+**Convention note.** The response points out that the prompt's Known 1 square (f ; v ⇒ u ; f′) uses the D¹ ⊗ M orientation, while the prompt's Leibniz formula for M ⊗ Dⁿ gives u ; f′ ⇒ f ; v. The project's cylinders Q↑Y use D¹ ⊗ Q (`relative-coherence.md` §1.3), so the construction should be read with the factors reversed. The response handles both.
+
+**Consequences.**
+- Ledger D3: existence with an explicit (search-based) formula and the presentation statement are settled modulo RC; Mikhail's printed conditions are replaced by (B), (C). D3b (printed-rule defects) is unchanged as a finding.
+- Standard 9: the repaired rule should be formalised. Owner: the Gray-contexts Agda thread (GCTX): encode (B) and (C), generate the templates for small (p, q) with the existing term generator, and check M ⊗ D¹ for the walking arrow, the triangle and the lax square.
+
+**Follow-up.** No new prompt. The remaining open part (RC in all dimensions) is already in `outbox/relative-coherence-all-dimensions.md`; the "single-shape" associativity comparison is an RC instance as well.

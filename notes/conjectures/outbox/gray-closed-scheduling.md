@@ -1,3 +1,5 @@
+**Status: unsent** (ready to send).
+
 # Schedules in free Gray-monoidal biclosed 2-categories: does the closed structure add 2-cells?
 
 *A self-contained problem (2026-11-18). No knowledge of the project that posed it is assumed. The smallest open case is Question 1.*

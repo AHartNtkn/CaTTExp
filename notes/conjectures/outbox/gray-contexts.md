@@ -1,3 +1,5 @@
+**Status: unsent** (ready to send).
+
 # Problem: composites of molecules in CaTT (Gray contexts), round 2
 
 *Standalone problem statement. It assumes familiarity with globular weak ω-categories, strict ω-categories and Hadzihasanovic's molecules, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/gray-contexts-2026-11-18.md`; this prompt does not re-ask anything answered there.*

@@ -1,3 +1,5 @@
+**Status: unsent** (ready to send).
+
 # Interpreting CaTT in (∞,ω)-categories: coherent choice, and which (∞,ω)
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. The questions are Q1–Q4 under "Questions"; the most useful partial answer is Q2 for a fixed small fragment (Q2a).*

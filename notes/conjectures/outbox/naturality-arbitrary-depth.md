@@ -1,3 +1,5 @@
+**Status: unsent** (ready to send).
+
 # Problem: naturality of CaTT coherences at depth ≥ 2, round 2
 
 *Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Round 1 and its verified answer are archived in `answered/naturality-arbitrary-depth-2026-11-18.md`; this prompt does not re-ask anything answered there.*

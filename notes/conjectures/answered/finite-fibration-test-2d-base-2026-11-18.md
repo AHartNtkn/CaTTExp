@@ -587,3 +587,20 @@ B^2\mathbb N
 Therefore no complete presentation scheme of the proposed form can cover **all** finite strict \(2\)-computad bases, even for the constant terminal weight. The same obstruction applies to an unrestricted FT\(_n\) scheme for \(n\ge2\), since these bases are also \(n\)-computads with no generators in higher dimensions.
 
 A higher-dimensional criterion restricted to positive bases and suitably restricted fibres is not decided by this obstruction. For the positive \(2\)-dimensional bases and free categorical fibres in your question, (33) supplies the requested finite presentation theorem.
+
+---
+
+## Verification of the researcher response (2026-11-18)
+
+**Verdict: correct.** FT₃ holds for positive 2-computad bases (both boundary paths of every 2-generator nonempty), and no finite presentation scheme of this form exists for all finite 2-computad bases. Checked step by step, with the sources read at statement level:
+
+- **V1. Q1, base comparison (20).** Chanavat, arXiv 2603.22242v2, Corollary 3.39 reads "Let C be a positive 2-polygraph. Then C is a homotopy polygraph", and Definition 3.10 is the preservation of cellular-extension squares as homotopy pushouts. So Free(Γ) ≃ F₂(Γ) for positive Γ. **Confirmed.** (The same paper, Cor. 3.38, gives all *regular 3-polygraphs* as homotopy polygraphs; used in the follow-up prompt.)
+- **V2. Q2, the walking 2-cell.** The tree argument holds: every vertex other than the root has out-degree 1 (the last edge of its path), and the root is terminal, so the transport graph contracts. The cylinder (25) has the stated boundaries. Localising gives (27), which is Hom in the 2-categorical Grothendieck construction (Hörmann, Def. 2.14: a 2-cell (u,r) ⇒ (v,s) exists iff r = a_α ; s). Left cancellation in the free D makes each hom an interval or a point. The hom-wise localisation step is justified by the collage/bimodule argument given. **Confirmed.**
+- **V3. Q3, general positive base.** Pullback of the cellular pushout along a left cartesian fibration: Loubaton, arXiv 2406.05425, Thm 3.2.3.15 (pullback along a cartesian fibration preserves colimits) is as cited. Prop. 3.1.2.34 concerns a colimit-preserving functor; its use here (♯ preserves colimits) is correct. **Confirmed.**
+- **V4. Q4, counts.** The generator counts in the table were recomputed for the walking 2-cell and the two-2-cell examples. **Confirmed.**
+- **V5. §5, non-positive bases.** For Γ = {x; σ : 1_x ⇒ 1_x}, the strict free object is B²ℕ and L(B²ℕ) ≃ K(ℤ,2) (Ara, *A Quillen Theorem B for strict ∞-categories*, Thm 4.9 and Ex. 4.10, read), while the weak cellular construction groupoidifies to * ⊔_{S¹} * = S². The finite-CW lemma is correct: L preserves the cellular pushouts, L(∂D_k) ≃ S^{k−1}, and localisation does not change L. Hence (36): B²ℕ is not Free(Ψ)[S⁻¹] for any finite Ψ. **Confirmed.**
+
+**Consequences.**
+- **B14 closed for positive 2-computad bases** with free finitely generated categorical fibres; FT₃ with the positivity hypothesis is the rule. Bases with a 2-generator with an empty boundary path admit no finite presentation of this form at all, so the rule must keep the hypothesis (not a gap that more generators could fill).
+- **Evidence for C1/D2 (NGC):** loopy contexts such as (x, σ : 1_x ⇒ 1_x) have weak free object with groupoidification S², not K(ℤ,2); π₃(S²) = ℤ, so the weak free object on such a context has nontrivial higher structure that the strict one lacks. This strongly suggests that relative coherence RC(3) fails for contexts with identity-boundary generators, consistent with the Eckmann–Hilton obstruction.
+- Open: FT_n for n ≥ 3 over positive/regular bases. Follow-up prompt: `outbox/finite-fibration-test-higher-base.md`, unsent.

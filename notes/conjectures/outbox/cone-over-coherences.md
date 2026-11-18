@@ -1,3 +1,5 @@
+**Status: sent 2026-11-18**, awaiting response.
+
 # Cones over coherence terms in CaTT (N^cone)
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. The question is Conjecture N^cone in "Statement"; the smallest open cases are listed at the end.*

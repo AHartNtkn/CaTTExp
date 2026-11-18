@@ -1,6 +1,6 @@
-# Problem: naturality of CaTT coherences at depth ≥ 2, round 4
+# Problem: naturality of CaTT coherences at depth ≥ 2, round 5
 
-*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Rounds 1–3 and their verified answers are archived in `answered/naturality-arbitrary-depth-2026-11-18.md`, `answered/naturality-arbitrary-depth-r2-2026-11-18.md` and `answered/naturality-arbitrary-depth-r3-2026-11-18.md`; this prompt does not re-ask anything answered there.*
+*Standalone problem statement. It assumes familiarity with globular weak ω-categories and dependent type theory, and nothing else. Questions are in §4, smallest first. Rounds 1–4 and their verified answers are archived in `answered/naturality-arbitrary-depth-2026-11-18.md` and `answered/naturality-arbitrary-depth-r2-2026-11-18.md` through `-r4-2026-11-18.md`; this prompt does not re-ask anything answered there.*
 
 ## 1. Setting
 
@@ -109,24 +109,55 @@ Write RC(n) for the property:
 11. **A dimension-lowering translation (from the cone problem).** For join contexts `Cone(Q; c)` (Q a pasting context, with an apex c and cone cells p_q), there is a syntactic *cut translation* D: colour the 0-variables 0/1, nondecreasing along generating 1-cells; D deletes same-side variables and lowers each crossing term by one dimension, decoding a coherence over its unique crossing root branch. It satisfies D(Σt) ≡ t, D(u ∗_k v) ≡ D(u) ∗_{k−1} D(v), D(e ∗₀ u) ≡ D(u) and D(t[θ]) ≡ D(t)[D(θ)], and with a raising substitution it gives `RC(r+1, Cone(ΣQ; d)) ⇒ RC(r, Cone(Q; c))`. Details: `answered/cone-over-coherences-r2-2026-11-18.md`, §2.
 12. **Literal inactive-column factorisation (from the Gray-contexts problem).** In every context Γ of dimension ≤ 2 with an acyclic graph of generating 1-cells (for example Q↑Y for 1-dimensional Q), an arity column none of whose 2-variables receives a term containing a 2-variable lifts literally to the path context of its common strict path (the path labelling is injective by acyclicity). Replacing such columns gives a reduced pasting context R_σ with σ = κ_σ[δ_σ], comparison terms coh_{P,A}[σ] → coh_{R_σ,A[κ_σ]}[δ_σ], and refinement substitutions λ_{σ,ρ} that are functorial under further substitution, with coherence cells between iterated reductions. A coherence 4-term also distributes a fixed whisker across a vertical composite of 3-cells. Details: `answered/gray-contexts-r4-2026-11-18.md`. The open part is the treatment of active columns, whose 2-variables carry arbitrary composites.
 
+13. **RC(3) on the cylinder of the 2-disc (round 4, proved on paper).** Q = (x, y, f, g : x → y, A : f ⇒ g), Y = Var(Q).
+    - Write X = x↑, Y = y↑, F = f↑, G = g↑, c = A⁻ ∗₀ Y, d = X ∗₀ A⁺, L = c ∗₁ G and R = F ∗₁ d, so that U = A↑ : L → R.
+    - *Strict cells.* The strict 2-cells are a, b, c, d, F, G, L, R and identities. The only nonidentity strict 3-cell is πU, and every term with that image uses U exactly once.
+    - *RC(3) on the 2-skeleton Γ₀.* Restrict by value. The values a, b, c, d are direct coherences, F and G are squares, and L and R use the round-3 two-letter construction (point-supported, forced order).
+    - *Sequentialization.* Any 3-head over a 3-dimensional arity is 4-connected to a binary composite B_H with RC(2)-bridges in P_{≤2}. Interchange with identities then extracts every term of image πU to I₀ ; ω(U) ; I₁, where I₀ and I₁ are structural and ω is a whiskering by terms of dimension ≤ 2.
+    - *Whiskering normalization.* ω is normalized by three local constructions: path coefficients (the interchanger on D³ ∗₁ D³), point-supported 2-coefficients (D²(a) ∗₀ D³(U)), and point-supported 1-loops l : x⁻ → x⁻ (D²(κ) ∗₀ D³(U) with unitors).
+    - So K exists for every 3-dimensional coherence over the 2-disc, for any lower lifts.
+14. **Suspension descent (round 4, proved on paper).** With ΣY selected and the poles N, S unselected, (ΣQ)↑ΣY = Σ(Q↑Y). The cut decoder of item 11 handles arbitrary coloured contexts, with a dimension-1 clause D coh[γ] = D(γ(e)) and with full-endpoint decoding when the cut column has dimension ≤ d − 2. It satisfies D(Σt) = t. Hence
+    ```
+    RC(r+1, (ΣQ)↑ΣY)  ⇒  RC(r, Q↑Y).
+    ```
+    So RC(n) on all cylinders, **including partial selections**, gives Conjecture N through dimension n.
+15. **Chains (round 4).**
+    - *Full chain cylinders.* With vᵢ = xᵢ↑ and Fᵢ : aᵢ⁻vᵢ → vᵢ₋₁aᵢ⁺, the strict 1-paths x_a⁻ → x_b⁺ are P_j = a⁻ … a_j⁻ v_j a⁺_{j+1} …, and Fᵢ sends P_i to P_{i−1}. So every nonidentity strict 2-cell has the forced word F_r … F_{s+1}, and arities factor literally through frames P_left ∗₀ C_n ∗₀ P_right or P_left ∗₀ V(k) ∗₀ P_right.
+    - *Proper selections.* A one-chain frame is not enough. For Y = {a₁, a₂} on x₀ → x₁ → x₂, the cylinder is D² ∗₀ D² with two independent 2-generators.
+
 ## 3. What remains, and why
 
-RC(3) fails for loopy contexts such as (x : ⋆, a : id_x → id_x), so a proof must use acyclicity. Rounds 2 and 3 handle cylinders in which every column carrying a 2-generator either spans the unique source and sink (point-supported discarded columns) or has exactly one fixed edge on one side. In longer cylinders a column can have nonidentity paths on both sides, several 2-generators can occur in more than one order, and for Q of dimension 2 the cylinder has 3-variables (e.g. A↑ for A : f ⇒ g), so parallel 3-terms need not have equal strict images automatically.
+RC(3) fails for loopy contexts such as (x : ⋆, a : id_x → id_x), so any proof must use acyclicity. The cylinders done so far are the square, the composable pair, and the 2-disc. In each of them every column carrying a nonidentity cell either spans the unique source and sink, or has one fixed edge on one side.
+
+Three things change in larger cases:
+- Longer full chains produce forced words of length ≥ 3, whose letters sit in different vertical chains.
+- Proper selections produce several independent chains, as in item 15.
+- 2-dimensional Q with more than one 2-cell produce several 3-variables. Their strict 3-cells can then compose and interchange, so the "exactly one U" count of item 13 fails.
+
+Item 14 reduces the whole conjecture to RC(n) on all cylinders.
 
 ## 4. Questions
 
 Each question asks for explicit CaTT terms, built only with the coherence rule over pasting contexts and substitution.
 
-1. **Smallest open case: RC(3) on the cylinder of the 2-disc.** Q = (x, y, f, g : x → y, A : f ⇒ g), Y = Var(Q). Q↑Y has the 2-variables f↑, g↑ and the 3-variable A↑. Prove that any two parallel 3-terms of Q↑Y with equal strict image are connected by a 4-term. (This gives K for every 3-dimensional coherence over the 2-disc, for instance the unitor `A ∗₁ id_g → A`, now for arbitrary lower lifts.)
-2. **Longer cylinders.** For the cylinder of a chain x₀ → x₁ → … → x_k (k ≥ 3), or of any 1-dimensional pasting context with Y a proper up-closed subset, item 12 removes inactive columns literally. Complete item 10's construction for the active columns: normalisers for vertical chains whose 2-variables carry arbitrary composites, compatible with evaluation ("fusion"), including several 2-generators in more than one order.
-3. **RC(3) on all cylinders.** Prove RC(3) for every cylinder Q↑Y, or for every finite Steiner loop-free context. Or give a loop-free counterexample.
-4. **Fixed dimension for cylinders.** Is there an analogue of item 11 for cylinders, giving `RC(r+1, (ΣQ)↑Y′) ⇒ RC(r, Q↑Y)` for a suitable Y′? Combined with item 3 of §2, this would reduce Conjecture N through dimension n to RC(n) on cylinders.
-5. **All dimensions.** Prove RC(n) for all n on the cylinders Q↑Y. By §2 item 3, this proves Conjecture N at every depth.
+1. **Forced words of length 3.** Q = (x₀ → x₁ → x₂ → x₃), Y = Var(Q). Using the frames of item 15, give normalisers and evaluation fusion for 2-terms whose strict image is F₃F₂F₁, or any forced word of length ≥ 3. Item 10's H case is the length-2 instance. Conclude RC(3) for this cylinder.
+2. **Proper selections.** Give RC(3) for the cylinder of a 1-dimensional pasting context with Y proper, where several vertical chains must be retained. Start with the smallest case that is not a pasting context: x → y → z with Y = {z, g}, or Y = {y, z, f, g}. The frames retain several chains, and the fusion must handle the exchange between them.
+3. **Two 3-variables.** RC(3) on the full cylinder of
+   - Q = D² ∗₀ D² (two 2-cells side by side), and
+   - Q = D² ∗₁ D² (two 2-cells composed vertically).
+
+   Here the cylinder has two 3-variables, and their strict images can be composed (∗₂ for the vertical case) or interchanged (∗₀ for the horizontal case). The 2-disc proof of item 13 then needs a normal form for several uses of 3-variables.
+4. **RC(3) on all cylinders.** Prove RC(3) for every Q↑Y, or for every finite Steiner loop-free context. Or give a loop-free counterexample.
+5. **All dimensions.** Prove RC(n) on all cylinders Q↑Y, including partial selections. By item 14, this proves Conjecture N at every depth. A first target is RC(4) on the cylinder of the 3-disc, or on (ΣD²)↑ΣY.
 6. **Global choice of K in dimension 3.** With the universal lower lifts of item 5, give one rule that picks K for every 3-dimensional coherence over every 2-dimensional pasting context Q, with Y = Var(Q), compatible with substitution. Two choices of K for the same (Q, B, Y) are 4-cells; the minimal requirement is a **5-cell** between them (item 9).
 
 ## 5. What counts as a solution
 
-Explicit terms for question 1, 2 or 6; a proof of RC(3) or RC(n) for the cylinders or for loop-free contexts; a proof of the descent in question 4; a counterexample (a cylinder Q↑Y, or a loop-free context, with two parallel n-terms of equal strict image and no term between them); or a published reference.
+Any of the following:
+- explicit terms for question 1, 2, 3 or 6;
+- a proof of RC(3) or RC(n) for the cylinders or for loop-free contexts;
+- a counterexample: a cylinder Q↑Y, or a loop-free context, with two parallel n-terms of equal strict image and no term between them;
+- a published reference.
 
 ## 6. Literature (searched 2026-11-18)
 
@@ -139,3 +170,4 @@ Explicit terms for question 1, 2 or 6; a proof of RC(3) or RC(n) for the cylinde
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
+

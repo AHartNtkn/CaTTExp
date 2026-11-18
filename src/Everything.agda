@@ -58,6 +58,11 @@ import CaTTExp.GraphFillerTotal.Higher
 import CaTTExp.GraphFillerTotal.HigherExamples
 import CaTTExp.GlobularFiller
 import CaTTExp.GlobularFillerExamples
+import CaTTExp.LocalisedFiller
+import CaTTExp.LocalisedFillerExamples
+import CaTTExp.Trunc.Typing
+import CaTTExp.Trunc.Check
+import CaTTExp.Trunc.Examples
 import CaTTExp.Strict.Bag
 import CaTTExp.Strict.Complex
 import CaTTExp.Strict.Cell
@@ -116,9 +121,14 @@ import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
 import CaTTExp.Gray.SuppVars
+import CaTTExp.Gray.BdryChar
+import CaTTExp.Gray.SingleHom
 import CaTTExp.Strict.Order
 import CaTTExp.GrayCtx.Elab
+import CaTTExp.GrayCtx.CylGen
 import CaTTExp.GrayCtx.Cylinder
+import CaTTExp.GrayCtx.Natural
+import CaTTExp.GrayCtx.NaturalWF
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

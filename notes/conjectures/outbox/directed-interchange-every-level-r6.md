@@ -1,6 +1,6 @@
-# Free higher categories with directed interchange in every dimension (fifth round)
+# Free higher categories with directed interchange in every dimension (sixth round)
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1–4, with their answers, are in `answered/`. Questions are in §4, smallest first.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Rounds 1–5, with their answers, are in `answered/`. Questions are in §4, smallest first.*
 
 ## 1. Setting
 
@@ -84,6 +84,44 @@ h is **not forced**. The mirror repair k : U₁ ⇛ T with t̄₁ = χ̄₂ ∗�
 - **Forcing substitution.** A⁰, A¹ ↦ A, Ω ↦ 1_A sends H ↦ 1_h, K ↦ W and Z ↦ 1_W, so K is not a cell that every degeneration kills.
 - **The source/sink pattern.** In both the h-repair and the k-repair of (K10), the face 𝖠 (whose pair flips relative to the tensor faces) creates a second source and a second sink one dimension up. With source-joining (h) in hom-dimension 3, the one-face joining that works in hom-dimension 4 is sink-joining (K); a source-joining alternative would have to factor a composite. Each existing factorization also needs a variation cell and equation under each higher variable (H).
 
+**(K12) The source/sink count fails in the ambient graph (round 5, proved).** Reversing one arrow u → v of a finite directed graph changes the number of sources by 1[d⁻(v)=1] − 1[d⁻(u)=0], and the number of sinks by 1[d⁺(u)=1] − 1[d⁺(v)=0].
+- Take the interval of λD² ⊗ λD² ⊗ λD² with hom-1 boundary (β₀α₀)γ₀ → (α₁β₁)γ₁. Its hom-2 paths are the 24 orderings of A, B (updates of the first two factors), C (the crossing βα → αβ) and D (the third-factor update).
+- Its arrows are BC → CB, CA → AC and DX → XD. The arrow between A and B is positional: AB → BA when C follows the pair, and BA → AB when C precedes it.
+- Compare with the graph that uses BA → AB everywhere, which has one source, DBCA, and one sink, ACBD. The positional graph has sources {DBCA, DABC} and sinks {ACBD, BACD}.
+- Of the three reversed arrows, BADC → ABDC creates neither a source nor a sink.
+
+So a flipped face does not create one extra source/sink pair in the full comparison graph. It does so only for an isolated polygon.
+
+**(K13) Local factorization does not force alternation (round 5).** For a simple oriented polygon with arms pᵢ : sᵢ → tᵢ and qᵢ : sᵢ₊₁ → tᵢ (indices mod r), add hᵢ : s₀ → sᵢ for 1 ≤ i < r, with p₀ = h₁;q₀ and hᵢ;pᵢ = hᵢ₊₁;qᵢ for 1 ≤ i < r − 1. The boundary telescopes to h_{r−1}+p_{r−1}−q_{r−1}, a pair of parallel paths s₀ → t_{r−1}. So source-joining alone always works locally. For r = 2 this is (K10). For r ≥ 3 the equations identify two composites, neither of them a generator, so the hom-3 category is no longer free on a graph and requirement 2 needs a separate argument.
+
+**(K14) The triple tensor through hom-dimension 3 (round 5, proved; counts re-checked independently).**
+- *Words.* Write a, b, c for the hom-2 updates of the three factors. Start from hom-1 order zyx, with crossings p : yx → xy, q : zx → xz and r : zy → yz. The tensor hom-3 generator is τ : rqp → pqr.
+- *The maximal interval.* Its hom-2 words are the 240 orderings of a, b, c, p, q, r whose crossings occur as rqp or pqr. Its hom-3 arrows are:
+  - the tensor naturalities, where the lower-index update moves earlier past a crossing involving its factor and the higher-index update moves later;
+  - the inner interchangers, oriented right-first ⇛ left-first by the current hom-1 order;
+  - the contextual instances of τ.
+
+  That makes 240 + 240 + 24 = 504 arrows.
+- *Added data.* Six families of new hom-3 arrows, each with an equation old = new ; inner, applied in every typed context:
+
+  | New arrow | Factors | Contexts |
+  |---|---|---|
+  | h_p : bpa → abp | bpa → bap | 8 |
+  | h_q : cqa → acq | cqa → caq | 8 |
+  | h_r : crb → bcr | crb → cbr | 8 |
+  | λ_x : rqa → arq | rqa → raq | 12 |
+  | h_z : crqp → pcqr | the τ-instance crqp → cpqr | 6 |
+  | μ : crqa → acrq | cλ_x, that is crqa → carq | 3 |
+
+  μ factors a previously added joining arrow. Without it the interval has two sources, crqbpa and acrqbp, and a composite-valued substitution A ↦ a, B ↦ c;r of the binary h-repair has no image.
+- *Result.* The retained basis has 504 arrows, the graph is acyclic, and there are 40,172 non-identity hom-3 paths with pairwise distinct edge sets. The unique source is crqbpa. There are **ten sinks**: apqbrc, apqcbr, bapqrc, braqpc, brcaqp, capqbr, cbapqr, cbraqp, raqpbc and rcaqpb. Killing the inner interchangers gives the same quotient as the unrepaired presentation.
+- *Hom-4 lifts.* The eighteen tensor hom-4 generators have typed lifts. Six of them, of pattern (2,2,0), are as in (K10). The other twelve take the three shapes W_x, W_y, W_z of patterns (2,1,1), (1,2,1) and (1,1,2), with four choices each:
+  - W_x : rqpa → pqra → pqar → paqr → apqr ⇛ rqpa → rqap → arqp → apqr, through λ_x p;
+  - W_y : rqbp → rbqp → brqp → bpqr → pbqr → pqbr ⇛ rqbp → rqpb → pqrb → pqbr;
+  - W_z : crqp → rcqp → rqcp → rqpc → pqrc ⇛ crqp → pcqr → pqcr → pqrc, through h_z.
+
+**(K15) The interchanger-of-a-composite convention.** The substitution in (K14) assumes that crossing against a composite hom-1 path is the composite of the pairwise crossings. That holds in Gray categories, but it does not follow from (B), associativity and units alone.
+
 **Literature.** No construction and no impossibility result is known.
 - Closest: n-sesquicategories, which have no interchange at all (Araújo, arXiv 2202.09293 and 2210.07704; Forest–Mimram, arXiv 2211.16099 and *Rewriting in Gray categories*, MSCS 2022).
 - Crans's teisi.
@@ -101,25 +139,33 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (three summands).** For Γ = ΣD² ∨ ΣD² ∨ ΣD², hom ν(λD² ⊗ λD² ⊗ λD²): the hom-2 paths are words in more coordinates, interchangers of different pairs meet, and square 2-faces (disjoint transpositions) appear. Give the added generators and equations through hom-dimension 4 (or 5), following the pattern of (K10)–(K11): one joining factorization for each extra source/sink pair created by a position-flipping face, and variation cells with equations for existing factorizations. Check requirements 2–4 and give the top-cell lift.
+**Q1 (complete the triple tensor through hom-dimension 4).** Using (K14), give the remaining hom-4 data on the 240-word interval:
+- comparisons for disjoint hom-3 operations;
+- variation cells and equations for the six factorization families, in the style of H in (K11);
+- any further joining factorizations.
 
-**Q2 (the uniform rule).** State a rule, uniform in dimension, for the two kinds of data in (K11):
-- (i) which joining factorizations to add, and on which side (source- or sink-joining) in each dimension;
-- (ii) which variation cells and equations accompany existing factorizations.
+Then check support injectivity on hom-4 cells, the absence of reverse interchangers, and the Gray quotient (requirement 4).
 
-Does the source/sink pattern of (K11) hold in general: does every position-flipping face create exactly one extra source/sink pair one dimension up? Does the side alternate with dimension?
+**Q2 (the ten sinks and the top cell).** The repaired hom-3 interval of (K14) has one source and ten sinks. Which sink-joining data (in the style of K in (K11)) does the lift of x₂ ⊗ y₂ ⊗ z₂ need? Lift that hom-6 generator, or show that the (K14) skeleton cannot be extended to it without changing hom-3 data.
 
-**Q3 (substitution).** Extend the forcing substitution of (K11) to a proof that the rule of Q2 is closed under substitution of cells for generators (requirement 5), including degenerate and composite-valued substitutions. Alternatively, find a substitution that forces two incompatible choices.
+**Q3 (a closure rule instead of a counting rule).** (K12) shows that counting sources and sinks per flipped face fails. Is there a rule stated on whole comparison graphs that adds joining factorizations, including factorizations of earlier joining arrows such as μ, until each maximal interval has the source and sink structure that the tensor top cells need? For example, saturate under composite-valued substitutions. Does it terminate on every finite Γ, and is its output independent of the order of steps?
 
-**Q4 (definition and impossibility).**
-- Is there a recursive "Gray tensor of towers" whose generators include these factorizations uniformly, giving F(Γ) with requirements 1–5 up to some finite dimension N ≥ 5?
+**Q4 (composite–composite equations).** In (K13) with r ≥ 3, are the equations hᵢ;pᵢ = hᵢ₊₁;qᵢ compatible with requirement 2? For example, does every hom-3 cell keep a well-defined set support in some expanded basis? If yes, show whether source-only joining is consistent globally, in every dimension. If no, show that sink-joining is forced from some dimension on.
+
+**Q5 (substitution closure).**
+- Should the convention of (K15) be imposed in the lax theory itself, or is it forced by requirement 5 together with requirement 4?
+- Prove that the rule of Q3 is closed under substitution of cells for generators, including degenerate and composite-valued substitutions. Alternatively, find a substitution that forces two incompatible choices.
+
+**Q6 (definition and impossibility).** Unchanged from earlier rounds:
+- Is there a recursive "Gray tensor of towers" that includes these factorizations uniformly and gives F(Γ) with requirements 1–5 up to some finite dimension N ≥ 5?
 - Conversely, can requirements 1–3 and 5 be shown inconsistent without requirement 4?
 
 ## 5. What counts as a solution
 
 Any of the following:
-- explicit generators and equations for Q1;
-- a rule with a proof for Q2;
-- a closure proof or a conflicting substitution for Q3;
-- a definition or an impossibility proof for Q4;
+- explicit generators and equations for Q1 or Q2;
+- a rule with a termination and confluence proof for Q3;
+- an answer to Q4;
+- a closure proof or a conflicting substitution for Q5;
+- a definition or an impossibility proof for Q6;
 - a reference to a published construction.

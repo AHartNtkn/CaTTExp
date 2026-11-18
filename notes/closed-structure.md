@@ -7,7 +7,7 @@
 | Item | Result | Status |
 |---|---|---|
 | **D9** PL1 | **Proved.** In the free unit-free biclosed monoidal category, a balanced sequent has at most one morphism (Part A, Theorem A). The proof is a direct sequent-calculus argument: two factorization lemmas plus connectivity. The "faithfulness lemma" the literature route needed is no longer an input; it becomes a corollary (Corollary A3), as does the non-symmetric Kelly–Mac Lane theorem (equal linking ⇒ equal morphism). Steps 2–3 of `planar-pasting-types.md` §2 are written out in full, for the theory with ⊗ (Theorem A4, with the generalization Lemma A5 proved by a sign invariant on unification). | closed |
-| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness proved in sketch (Theorem B8, D10b), awaiting independent check |
+| **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness proved (Theorem B8, D10b closed): the term model of UL_I\* is the free biclosed monoidal multicategory with unit |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
 | **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
@@ -471,27 +471,37 @@ With the closed-prefix clause of bracket abstraction rewritten to use Ť_c (clos
    - A coh-rule instance has the form u′[τ] ≡ v′[τ] with u′, v′ : S. A term whose type is S[τ] need not be such an instance; the closed-term counterexample above is one. Ť_{u′} and Ť_{v′} both have type T_S, so they are ≡, and then apply τ.
 4. **β for tuples.** ev(p, Ť_σ) ≡ the right-nested tensor of σ's terms with y. It is proved like lemma 1, and is needed for prefixes of several closed terms.
 
-**The ξ-rule, written out.** ≡ is the least congruence closed under term and type substitution that contains the coh-rule instances. So it is the equivalence closure of one-step rewriting C[l[ρ]] ↦ C[r[ρ]], where C is a one-hole context, l ≡ r is a coh-rule instance (l = l′[τ], r = r′[τ] with l′, r′ : S UP\*), and ρ is a term substitution. It suffices that [x] respects one step. Induct on C.
-- **The redex does not contain x.**
-  - If it sits in a closed-prefix slot, use lemma 4 (Ť respects ≡).
-  - Otherwise it sits in an argument that bracket abstraction copies unchanged, and congruence applies.
-- **The redex contains x, and C is a context around it.** Each clause of [x] applies [x] to the argument containing x, so this reduces to C = hole.
-- **C = hole.** Let z be the variable of l whose ρ-image s contains x. ρ sends the variables left of z to closed terms c⃗, and the variables right of z to x-free terms ρ_>. Three lemmas finish the case.
-  - **Lemma A (right substitutions commute, syntactically).** [x](t[q/y]) = ([x]t)[q/y] for y right of x. The same clause of [x] fires on both sides.
-  - **Lemma B (abstraction through a leftmost variable).** [x](t[s/z]) ≡ coh_K([x]s, [z]t) when z is leftmost in t. Induct on t:
-    - First-argument clause: by the induction hypothesis and K-associativity.
-    - Prefix clause: lemma 4 and β of Ť.
-  - **Lemma D (closed prefix).** For t with variables w⃗, z, γ⃗ in this order and closed c⃗,
+**Lemma D has a gap; the revised abstraction below avoids it.** The LIT thread's check of Lemma D (2026-11-18) found a gap in its prefix case. There, the right-hand side meets names Ť_{[w⃗′]tᵢ} of *curried* closed subterms. Relating these to Ť_{tᵢ} needs a further lemma, and that lemma's inductive step compares T_R with T_{R^c}. The two are not interdefinable by a generic coh: (B₁⊗B₂⊗Y)\(C⊗Y) ⊢ (B₂⊗Y)\((B₁\C)⊗Y) is not planar-provable. The fix is to stop using syntactic bracket abstraction in Prop. B7 at all.
 
-    ```
-    [z](t[c⃗/w⃗])  ≡  E(Ť_{c⃗}[Y := Z], [z][w_k]…[w₁]t).
-    ```
+**Revised abstraction.** For t : X, Γ′ ⊢ A, with x the leftmost variable and γ⃗ the rest, set
 
-    Here E is the coh over a : Z\(W⃗⊗Z), h : Z\(W_k\…(W₁\A)) ⊢ Z\A. Its normal form is Z, Z\(W⃗⊗Z), Z\(W_k\…) ⊢ A, which is unit-free L-pasting. Lemma D is proved by induction on t, using lemmas 1 and 2 and β for tuples.
+```
+[x]t  :=  coh_F(γ⃗, Ť_t[Y := I]),   F = (Γ′, (X⊗Γ′⊗I)\(A⊗I) ⊢ X\A),
+```
 
-  Then [x](l[ρ]) ≡ coh_K([x]s, E(Ť_{c⃗}, [z][w⃗]l))[ρ_>], and likewise for r. The iterated abstractions [z][w⃗]l′ and [z][w⃗]r′ both have the fully curried type of S, which is UP\* with the same normal form. So they are ≡, and τ and ρ_> preserve ≡.
+with Γ′ generalized to fresh atoms. F is UP\*: its normal form is X, Γ′, (X⊗Γ′)\A ⊢ A. Nothing about t enters except through Ť_t. Then:
+- **ξ is immediate.** t ≡ t′ ⇒ Ť_t ≡ Ť_{t′} by lemma 4 ⇒ Ť_t[I] ≡ Ť_{t′}[I] (closure under type substitution) ⇒ [x]t ≡ [x]t′.
+- **β.**
+  1. ev(x, coh_F(γ⃗, n)) ≡ ρ(ev(m(x, γ⃗, u), n)), where u = coh_{⊢ I} and ρ = coh_{Z⊗I ⊢ Z}. This is one coh equation over x, γ⃗ and n, at the UP\* type X, Γ′, (X⊗Γ′⊗I)\(A⊗I) ⊢ A.
+  2. By lemma 1 at Y := I, ev(m(x, γ⃗, u), Ť_t[I]) ≡ m(t, u).
+  3. ρ(m(t, u)) ≡ t holds at type A ⊢ A.
+- **η.** [y]ev(y, k) ≡ k for y ∉ k.
+  1. By lemma 1 at Y := I, k ≡ ρ(ev(m(γ⃗, u), Ť_k[I])).
+  2. Ť_{ev(y,k)}[I] is a K-chain of Ť_y, L_Y(Ť_k[I]) and T_ev.
+  3. With n := Ť_k[I] abstracted to a variable, both sides of η are coh composites over γ⃗ and n, at the type Γ, (Γ⊗I)\((Y\Z)⊗I) ⊢ Y\Z. Its normal form is Y, Γ, Γ\(Y\Z) ⊢ Z, which is L-pasting, so the type is UP\*.
 
-*Status.* Lemmas 1–4 are independently checked. The ξ-rule is written out above, and Lemmas A and B are routine. Lemma D carries the remaining bookkeeping and has not been independently checked. D10b closes once Lemma D is checked.
+So k ↦ ev(y, k) is a bijection in T, with inverse [y]: (R\) holds, and (R/) holds by the mirror construction with Ť′. Only lemmas 1 and 4 are used, and those are independently checked. Lemmas A, B and D and the one-step-rewriting argument are no longer needed. `scripts/d10a/abstraction_types.py` checks the types F and U and their mirrors for |Γ′| ≤ 4 (no failures). It rejects a control in which Γ′ and X are in the wrong order.
+
+**(R⊗) and (R_I).** Let n_h := [y₁]…[y_r]h be the closed name of a term h, so that h ≡ ev(y_r, … ev(y₁, n_h)) by β, with the variables in the order the iterated abstraction needs.
+- **(R⊗) injectivity.** Suppose h ∘ m ≡ h′ ∘ m.
+  - Abstract the variables a, b and the context on both sides. By ξ the results are ≡.
+  - [b][a](ev(m(a, b), n)) ≡ Q(n), for the coh Q : (A⊗B)\C ⊢ B\(A\C). Both sides become ≡ after two applications of ev, by a coh equation at A, B, (A⊗B)\C ⊢ C. Then use injectivity of (R\) twice.
+  - So Q(n_h) ≡ Q(n_{h′}). Q has a coh inverse, so n_h ≡ n_{h′}, and then h ≡ h′.
+- **(R⊗) surjectivity.** h′ := ev(p, Q⁻¹([b][a]h)). Then h′ ∘ m ≡ h by β.
+- **(R_I).** The same, with the coh I\C ⊢ C in place of Q.
+- **Contexts Γ and Δ.** Abstract them too; the coh's needed are unit-free L-pasting.
+
+**Theorem B8 status: proved at paper level, D10b closed (2026-11-18).** Lemmas 1–4 and the revised abstraction argument were each read independently by the LIT thread, and no gap was found. `scripts/d10a/abstraction_types.py` now checks every step type: F, U and their mirrors, the η type, A, B, (A⊗B)\C ⊢ C, Q, Q⁻¹ and the (R_I) cohs. That is 30 types, with no failures.
 
 The generation statement of B.3 is now no longer needed: the reduction goes through cut-free L\*_I derivations directly.
 
@@ -911,7 +921,7 @@ The researcher findings on the closed part are listed after the next two bullets
 - the correct component invariant (W is a candidate);
 - the ω-version. Mapping-space biclosedness is too weak there (GHL Rem. 2.20).
 
-Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 was answered too (`conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`); round 4 is `conjectures/outbox/gray-closed-scheduling-r4.md` (unsent).
+Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11-18.md` (verified); round 3 was answered too (`conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`); round 4 was answered too (`conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`); round 5 is `conjectures/outbox/gray-closed-scheduling-r5.md` (unsent).
 
 **Round-2 results (verified).**
 1. **A weight model.** The integer-weight model 𝓜 is a Gray-monoidal biclosed 2-category.
@@ -929,7 +939,7 @@ Round-2 prompt answered: `conjectures/answered/gray-closed-scheduling-r2-2026-11
 - the 1-cells within a component;
 - thinness of the hom-categories.
 
-Round 3 (answered): `conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`; round 4 (unsent): `conjectures/outbox/gray-closed-scheduling-r4.md`.
+Round 3 (answered): `conjectures/answered/gray-closed-scheduling-r3-2026-11-18.md`; round 4 (answered): `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`; round 5 (unsent): `conjectures/outbox/gray-closed-scheduling-r5.md`.
 
 ## F.6 Internal notes toward round 3 (D11, closed part)
 
@@ -977,6 +987,80 @@ So:
 - **Q1:** structural interchangers really are events between distinct 1-cells. The open part is that any two 2-cells between the same 1-cells built from them are equal, which is a coherence statement and not a triviality.
 - **Q2:** confirmed. A complete invariant must schedule structural events too.
 - **Item 3's design choice:** it is now a real choice between two different theories. The (∞,ω) half of Q5 still decides which theory matches the Gray tensor.
+
+**5. The r4 obstruction.** *(Added 2026-11-18, after the verified r4 answer, `conjectures/answered/gray-closed-scheduling-r4-2026-11-18.md`.)*
+- Take strict ω-categories with the Gray tensor and one orientation of transformations, and let S = J ⊗ J.
+- S/J has an arrow v₀ → v₁, but J\S has none, since that arrow would need the reverse of the square γ.
+- So in ωCat itself, left closure matches lax transformations and right closure matches oplax ones. The two Φ's are not both isomorphisms of hom-categories of one 2-category with one orientation.
+
+What this means for 𝒢, and the corrected rule set, are in **F.7**. A first version of this item proposed taking Φ_R into the 2-cell-reversed hom 𝒢(B, C/A)^co. **That proposal is withdrawn.** Oplax transformations are maps D¹ ⊗ X → Y, not reversed lax ones (X ⊗ D¹ → Y), so reversing 2-cells does not turn one kind into the other.
+
+*Correction.* r3 known item 11's last bullet said that separation needs non-commuting curryings. That is false. r4's model 𝒟 has strictly equal mixed curryings and still separates H, and left closure alone separates H_L.
+
+## F.7 Orientation of the closed structure: audit and corrected rules (D17)
+
+*Added 2026-11-18.* This section is prompted by r4 §5 (F.6 item 5).
+
+### F.7.1 Two readings of "monoidal biclosed with the Gray tensor"
+
+**(I) Internal.** M is a monoid in (Cat_ω, ⊗_Gray), i.e. a Gray monoid, and its objects are formulas.
+- M ⊗ M → M is a functor, so both A ⊗ – and – ⊗ A are ω-functors M → M.
+- Biclosed means both have right adjoints as ω-functors. The adjunctions then give isomorphisms of hom ω-categories on *both* sides: M(A⊗B, C) ≅ M(B, A\C) and M(B⊗A, C) ≅ M(B, C/A).
+- Interchangers χ_{f,g} of 1-cells are genuine non-identity 2-cells of M.
+- This is the structure 𝒢 of F.5 and F.6 and of the r1–r4 prompts, and **its axioms are correct for this reading**.
+- r4 §5 shows that ωCat itself, with lax 2-cells, is *not* an instance: there, – ⊗ A is not a 2-functor on lax cells, since it sends X ⊗ D¹ to X ⊗ D¹ ⊗ A.
+
+**(II) Ambient.** This is the project's two-tier L ambient ∞Cat_lax (`conventions.md` §3–4). Objects are ω-categories, 1-cells are functors, and the hom-objects are Fun^lax. The ambient is Gray-gauche enriched.
+- ⊗ of functors is strictly functorial in both variables, so 1-cell interchangers are identities (r4 Q5).
+- Closure is one-sided at each orientation (`conventions.md` §4, AM):
+  ```
+  Hom(A⊗B, C) ≅ Hom(B, Hom_lax(A, C)) ≅ Hom(A, Hom_oplax(B, C)).
+  ```
+  Left currying is an isomorphism of *lax*-cell homs, and right currying of *oplax*-cell homs.
+- The Gray content (schedules) lives inside the hom-objects, not in 1-cell interchange.
+
+**The defect.** Several notes say "monoidal biclosed (∞,ω)-category with the Gray tensor" without choosing a reading. They then use (I)'s symmetric hom-isomorphisms while motivating the work by (II)'s type formers.
+
+### F.7.2 Audit
+
+| Item | Uses | Affected? |
+|---|---|---|
+| PL1 / D9 (Theorem A, A4, UL⊗) | 1-categorical biclosed monoidal category | **No.** Both readings have the same underlying biclosed 1-category; (II)'s hom-*sets* are isomorphic on both sides. |
+| D10 (Theorems B, B6, B8, UL_I\*) | same, with unit | **No**, for the same reason. |
+| D12 (cartesian closed, Rev/Dir) | symmetric cartesian product, pseudo cells | **No.** No Gray tensor is involved. |
+| `conventions.md`, `internal-hom.md` §5, E.2/E.4 (B ⊗ Θ rule, mirror via the oplax hom) | reading (II), one orientation per side | **No.** Already one-sided and correct; these are the reference for the fix. |
+| `planar-pasting-types.md` §4 obstruction | mapping spaces | **No**, at mapping-space level. |
+| `planar-pasting-types.md` §4 Question PL-ω, §4.1, F.1–F.4 (Gray criterion, first test) | "free monoidal biclosed (∞,ω)-category"; t₁ ⇒ t₂ as a 1-cell interchanger | **Wording.** The test's cell is a 1-cell interchanger, so it is reading (I). In (II) the analogous t₁ and t₂ are equal functors, and the cell appears one level up, in Fun^lax. PL-ω must name its reading. |
+| F.5–F.6, the r1–r4 prompts and answers (𝒢) | reading (I) | **No** for (I). These results are about (I). They do **not** transfer to (II) without the rules below. |
+| E.3 (D7, both factors arbitrary via PL-ω) | wants (II)'s type formers | **Yes.** It needs the reading-(II) rule set below, not 𝒢. |
+
+### F.7.3 Corrected rule set for reading (II): "Gray-gauche biclosed"
+
+This is a draft. The data:
+- **Underlying 1-category.** Objects and 1-cells, with ⊗ strictly associative and strictly functorial in both variables. There are no 1-cell interchangers.
+- **Two families of 2-cells on the same 1-cells:**
+  - lax cells 𝒢^λ(X, Y), the transformations X ⊗ D¹ → Y;
+  - oplax cells 𝒢^ο(X, Y), the transformations D¹ ⊗ X → Y.
+
+  Each family forms a 2-category with these 1-cells. Pseudo cells, those invertible in both, embed in both families.
+- **Whiskering by tensoring:**
+  - A ⊗ – : 𝒢^λ → 𝒢^λ is a 2-functor, but not on 𝒢^ο;
+  - – ⊗ B : 𝒢^ο → 𝒢^ο is a 2-functor, but not on 𝒢^λ;
+  - tensoring a lax cell on the right, or an oplax cell on the left, gives a *mixed-shape* cell, which is not a cell of either family. Its type is the Gray cylinder of `gray-cylinders.md`.
+- **Left closure:** Φ_L : 𝒢^λ(A⊗B, C) ≅ 𝒢^λ(B, A\C), with A\C = Hom_lax(A, C) in AM's naming.
+- **Right closure:** Φ_R : 𝒢^ο(B⊗A, C) ≅ 𝒢^ο(B, C/A), with C/A = Hom_oplax(A, C).
+- **Naturality:** both are strictly natural in every variable at the level of 1-cells. There are no interchangers to be lax about.
+- **Higher cells:** the lax and oplax cells at dimension k are maps X ⊗ Dᵏ → Y and Dᵏ ⊗ X → Y. Higher cells of mixed shape are the hom-objects of `internal-hom.md` §5, with the lax/oplax duality §5.6 relating the two sides.
+
+**Consequences.**
+- **Pasting types for (II).** A pasting type for reading (II) must record, for each cell, which side its time direction sits on: X ⊗ Dᵏ versus Dᵏ ⊗ X. This is the "time as a tensor position" of PL-ω, now with a side.
+- **Schedules move into the homs.** The schedule categories S(P) of F.5 reappear inside hom-objects, as the cells of Fun^lax(Δ, –) for Gray contexts Δ, not as 1-cell interchange. F.5's monoidal-core result transfers on that reading: the cells of ν(I^⊗n) between its extreme vertices.
+- **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
+
+**Open (D17).**
+- (a) ~~Fix PL-ω's reading in `planar-pasting-types.md` §4~~ done: §4 now names both readings. F.1–F.4 are reading (I). The project's use of PL-ω is the type formers of (II).
+- (b) Check that the B ⊗ Θ rule (E.2) and its mirror are exactly the reading-(II) rules above with one factor representable.
+- (c) Decide whether reading (I) is still needed. If it is not, D11's r5 questions become reading-(I) side questions and should say so.
 
 ---
 

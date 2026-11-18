@@ -540,7 +540,7 @@ Step by step.
 
 **Consequences for D2 (and C1).**
 - **The inactive-column factorisation now holds for every acyclic context of dimension ≤ 2.** This includes the cylinders Q↑Y of 1-dimensional Q (two or more lax squares) and the Gray cube's 2-skeleton.
-- **It subsumes the fixed-edge factorisation of the naturality round-3 answer.** That factorisation is the special case of one inactive column with a single fixed edge, and the new version is literal and substitution-stable for arbitrary inactive paths. It answers the "horizontal words" part of `outbox/naturality-arbitrary-depth-r4.md` Question 2 for dimension-≤ 2 contexts.
+- **It subsumes the fixed-edge factorisation of the naturality round-3 answer.** That factorisation is the special case of one inactive column with a single fixed edge, and the new version is literal and substitution-stable for arbitrary inactive paths. It answers the "horizontal words" part of `answered/naturality-arbitrary-depth-r4-2026-11-18.md` Question 2 for dimension-≤ 2 contexts.
 - **Ω_m** is one of the evaluation-fusion cells needed for active columns.
 - **Remaining:**
   - normalisers for active columns whose 2-variables carry arbitrary composites (a fusion statement relating the normaliser of a composite to the composite of normalisers, around non-globular declarations);

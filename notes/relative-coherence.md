@@ -22,6 +22,8 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | RC(3) fails for non-loop-free contexts (Eckmann–Hilton) | sketch (§7) |
 | **RC(3) for the lax square S**, every pair of parallel 3-terms; hence N for every 3-dimensional coherence over one arrow | proved by a researcher, verified as a paper construction (§7.4) |
 | **RC(3) for the cylinder of a composable pair** x → y → z; hence N for every 3-dimensional coherence over that pair | proved by a researcher at the round-2 standard (fixed-edge extension lemma), verified (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`); generalised factorisations machine-checked (§7.5) |
+| **RC(3) for the 2-disc cylinder** (the only strict 3-cell is πU); hence N for every 3-dimensional coherence over the 2-disc | proved by a researcher, verified at paper level (`conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md`) |
+| Suspension descent: RC(r+1) on `(ΣQ)↑ΣY` ⇒ RC(r) on `Q↑Y`, so RC(n) on all cylinders gives N through dimension n | proved by a researcher, verified at paper level (same file) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
 
@@ -364,7 +366,7 @@ The proof has four steps.
 3. **Evaluation fusion.** A connecting cell `Λ_G : G ∗₂ ν_{T′} → ν_T` is built by induction on the syntax of the 3-term G, through 2- and 3-dimensional arities.
 4. **Right cancellation.** This uses the invertibility of coherence composites.
 
-This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r4.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
+This is exactly the (CN) programme of §7.1. The researcher's choice of ν, whose normal form folds F with path comparisons, satisfies the compatibility that §7.2 isolated. The method needs the discarded columns to be point-supported. That is why general cylinders `Q↑Y` remain open, for example a composable pair, where inactive columns carry paths, and the 2-disc. They were asked in the round-3 prompt (`conjectures/answered/naturality-arbitrary-depth-r3-2026-11-18.md`, answered: composable pair settled); round 4 answered: `conjectures/answered/naturality-arbitrary-depth-r4-2026-11-18.md` (2-disc cylinder settled, suspension descent); the rest is in `conjectures/outbox/naturality-arbitrary-depth-r5.md` (unsent). Comparing two choices of K is a 5-cell, not a 4-cell; this corrects round 2's question 2.
 
 ### 7.5 Machine checks of the lax-square proof, and the cylinder of a composable pair (2026-11-18)
 

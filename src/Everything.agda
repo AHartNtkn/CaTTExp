@@ -19,3 +19,9 @@ import CaTTExp.Free.Reflect
 import CaTTExp.Free.Builders
 import CaTTExp.Free.Cylinder
 import CaTTExp.Free.LeftUnitorDepth2
+import CaTTExp.Lim.Named
+import CaTTExp.Lim.Conditions
+import CaTTExp.Lim.Rules
+import CaTTExp.Lim.Terms
+import CaTTExp.Lim.Defects
+import CaTTExp.Lim.Repaired

@@ -44,7 +44,7 @@ So v has an inverse w whose witnesses p, q lie in W, i.e. `v ∈ Φ(W)`. ∎
 
 This is the rule-level form of FHM, *ω-weak equivalences between weak ω-categories* (arXiv 2406.13240), Prop. 3.1.7 ("ω-weak equivalences reflect invertible cells"), whose definition of ω-weak equivalence (essential surjectivity on every hom) is exactly the LIFT schema.
 
-**Machine check (§7).** `src/CaTTExp/Free/Reflect.agda` proves Theorem 1 and Corollary 1 by guarded corecursion, for an abstract tower of hom-sets with composition, identities and whiskering, and with I1–I5 taken as explicit module parameters (no postulates). See §7.
+**Machine check (§7).** `src/CaTTExp/Free/Reflect.agda` proves Theorem 1 and Corollary 1 by guarded corecursion, for an abstract tower of hom-sets with composition, identities and whiskering, and with I1, I2 and I4 taken as record arguments; I3 is derived from them and I5 is not needed (no postulates). See §7.
 
 ---
 
@@ -81,7 +81,7 @@ as an equality of contexts, where `d` is the top variable of Dⁿ, `A^± = (∂D
 - contexts whose variables all have variable boundaries (globular contexts, the computads of globular sets, including all pasting contexts and the loop): there a_x and b_x use only variable cylinders and binary composites, so no K is needed;
 - every k ≤ 1 context whose boundary terms have depth ≤ 1 in the BMOSV sense (arXiv 2501.11620, Thm 3.1).
 
-**Machine check (§7).** `src/CaTTExp/Free/Cylinder.agda` defines `Γ↑` for globular contexts as a function on syntax, checks the resulting contexts (lax square, cylinder on the 2-disc, the loop, the 2-loop, the composable pair) with the certified checker, and checks Lemma 2 on instances by `refl`.
+**Machine check (§7).** `src/CaTTExp/Free/Cylinder.agda` defines `Γ↑` for globular contexts as a function on syntax, checks the resulting contexts (lax square, cylinder on the 2-disc, the loop, the 2-loop, the composable pair) with the certified checker, and checks Lemma 2 on instances (the full three-variable extension) by `refl`; the general statement is the paper proof above.
 
 **What Theorem 3 does not cover.** It is a statement about cells of Diag and their boundaries. The *composition* of Diag (vertical composition of lax transformations, and their higher analogues) is not yet defined in the notes (it belongs to D3 of `free-objects.md` §1.2). Whatever it is, if it is given by co-operations between cylinder contexts built by the same recursion (as for Mikhail's `gray` rules), it commutes with (Dec) by the same argument. This is recorded as part of C3's remaining work.
 
@@ -204,7 +204,7 @@ Under `src/CaTTExp/Free/`, typechecked locally with Agda 2.6.3 (`--safe`, plus `
 
 - `Reflect.agda` (C4): Theorem 1 (`reflect`) and Corollary 1 (`lift-inv`) of §1, by guarded corecursion, for an abstract tower of hom-sets with composition, identities and whiskering. The hypotheses I1, I2 and I4 are record arguments; I3 is derived (`conn-inv`). A terminal-tower instance shows the hypotheses are jointly satisfiable.
 - `Builders.agda`: unbiased composites over Batanin trees, binary composites and whiskerings `u ∗ₖ v` of any dimensions, identities, and `certify`, which turns a successful run of the certified checker into a typing derivation at typechecking time.
-- `Cylinder.agda` (C3, C7): `cyl Γ = Γ↑Var(Γ)` for globular contexts, as a function on syntax. Certified well formed for D⁰, D¹ (the lax square), D², the composable pair, the loop and a 2-loop. Lemma 2 checked by `refl` on the loop, the 2-loop and the composable pair (the general statement is proved on paper in §2.1).
+- `Cylinder.agda` (C3, C7): `cyl Γ = Γ↑Var(Γ)` for globular contexts, as a function on syntax. Certified well formed for D⁰, D¹ (the lax square), D², the composable pair, the loop and a 2-loop. Lemma 2 checked by `refl` on the loop, the 2-loop and the composable pair, comparing the whole extension (x⁻, x⁺, x↑) with the disc cylinder's pulled back along τ_A↑; the general statement is proved on paper in §2.1 only.
 - `LeftUnitorDepth2.agda` (C7, C1): the depth-2 naturality 3-cell of the left unitor (`naturality-arbitrary-depth.md` §6), built by the sliding argument and certified: `K-λ-wf : Sq ⊢tm K-λ ∶ L → R`. Also certified: the depth-1 naturality term `K_comp` for binary composition, and ι for identities. Negative checks show the cell has the claimed direction and is not a single coherence over the lax square.
 
 ## References

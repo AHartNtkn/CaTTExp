@@ -214,12 +214,12 @@ What stands from this note:
 ### 4.1 Base: repaired CaTT_lim [proposal]
 
 Mikhail's Definition 4.15, used for finite diagrams, with three repairs. §10.1 and §10.3 give the reasons.
-1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5).
+1. **Specified shapes.** The cone, cocone and `ctrf` contexts are produced by a fixed construction from the diagram context, not by a judgment that admits every gluing passing the free-variable checks. The printed judgment admits non-canonical cones, whose universal objects are not the intended limits (§10.3). It also rejects the intended `ctrf` source because of the τCond typo (§10.1, point 5). The same typo makes the printed `gray` judgment reject Mikhail's own Example 4.1. All of this is machine-checked in `catt-lim-formalization.md`, together with the repaired rules on examples.
    - For globular Γ, the construction is Mikhail's Thm 3.3.
    - For general Γ, it should be checked against the Steiner Gray product (`gray-contexts-in-catt.md`).
 2. **Certified comparison cells.** In cone morphisms and higher transfors, the comparison cells over positive-dimensional diagram variables are marked declarations. Any substitution into them must supply an equivalence certificate. Cones themselves stay lax at the vertices.
    - Without this, the unchanged universal property forces every ambient cell of dimension ≥ 3 to be invertible (§10.1).
-3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they must be re-stated over the Gray core, which is open.
+3. **Core-dependent interchange.** Under P the rules sit over the CaTT core as above. Under L they are re-stated over the Gray core in `limits-metatheory.md` §5: the same shapes and one filler rule, with no marks on the transfor comparisons. They are proved sound in the strict model there (Theorem A, §1).
 
 
 Kernel-level simplifications worth trying, since they are aesthetic, not semantic:
@@ -444,7 +444,7 @@ In order of cost to benefit:
 2. **Constant substitutions exist.** For every Γ there is `(c:⋆) ⊢ !_Γ : Γ`. This follows from the contractibility of the one-point context and is needed by R-B.
 3. **Cone contexts exist for pasting-scheme diagrams.** This is Mikhail's Conj 3.6 restricted to ps-contexts. It is needed before CaTT_lim can be implemented at all.
 4. **Strict-model check of R-B.** In strict ω-categories via Steiner complexes, check `laxcolim(const 1) ≅ Free(Γ)` for small Γ (D¹, D², the loop, the composable pair). This settles the orientation convention.
-5. **§10.1 in CaTT_lim.** Derive an inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule. This would settle `conjectures/catt-lim-pseudo-vs-gray.md` mechanically.
+5. **§10.1 in CaTT_lim.** Partly done (`catt-lim-formalization.md`): the printed-rule defects and the repaired rules are checked, and the collapse instance is shown to be a well-typed cone morphism that the certified marking rejects. Still open: deriving the inverse for the `ctrf` connecting cell from the 2-dimensional `uni` rule.
 6. **The free-on-graph argument** (§10.5, solved on paper). Formalising the trivial-fibration argument would be a good warm-up for computad-level proofs, but nothing depends on it.
 ---
 
@@ -493,7 +493,7 @@ This replaces my earlier "put the `ctrf` connecting cells in `⊨`". It is the s
 - **Under P,** the repaired rules are the limit rules. Hom(c, lim) is lax cones with invertible comparison cells.
   - Hom objects and lax cotensors are *not* produced by these limits: the comma of two points has only invertible 2-cells as arrows, which is point 3.
   - They come from the Gray thread's constructions (§6.2, §6.3).
-- **Under L,** the limit rules must be re-stated over the Gray core, with directed interchangers in place of CaTT's invertible ones. If that is done, §6.2 and §6.3 should hold, with hom objects and lax cotensors coming directly from limits. That restatement has not been written down by anyone. It is the main open item for L on the limits side.
+- **Under L,** the limit rules must be re-stated over the Gray core, with directed interchangers in place of CaTT's invertible ones. If that is done, §6.2 and §6.3 should hold, with hom objects and lax cotensors coming directly from limits. *Update (2026-11-18):* the restatement is now in `limits-metatheory.md` §5. Theorem A there proves, in strict ω-categories with the Gray tensor, that the unrestricted universal property holds as an isomorphism, with non-invertible comparison cells, and that hom objects are the full homs.
 - **The kernel needs canonical shapes** (§10.3). The printed `ctrf` rules both over-admit (they accept non-canonical cones) and under-admit (they reject the intended source in point 5). The cone and transfor shapes should therefore be given by a specified construction, checked against the Steiner Gray product, not by permissive free-variable judgments.
 
 ### 10.2 Marking closure (§4.2, M1): resolved, no closure condition needed
@@ -540,9 +540,9 @@ The proof uses Loubaton's Cor. 4.2.2.6, Cor. 4.2.3.18 and Thm 4.1.4.2.
 
 **Consequences for §4.2:**
 - **The per-variable flag is the right primitive.** Marking a k-generator makes its (k+1)-dimensional cone cell invertible (Loubaton Remark 4.2.3.7). That is exactly the marked KE rule.
-- **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. The marked-limit schema must therefore fix lax/oplax per dimension in the alternating pattern of the response's §4, not uniformly.
+- **Variance alternates by dimension.** The hom maps of a left cartesian fibration are right cartesian, and so on. *Correction (2026-11-18, `limits-metatheory.md` §8.1):* this alternation is a condition on the index (π, μ), i.e. on which cells of ∫W are marked. The cone schema itself keeps one variance, because marking a k-generator inverts its (k+1)-cone cell uniformly in k.
 - **The cone categories must present Loubaton's `Hom_⊖`**, including the marked Gray product in higher dimensions. Under L, the candidate is a Gray-core version of the repaired `ctrf`. Under P, it is the certified-marking version of §10.1. Matching either to `Hom_⊖` is the remaining syntax-to-semantics step, as for every semantic result here.
-- **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite, generator-level test on `π : Ψ → Γ` is open.
+- **Display condition on π.** There is an exact criterion: unique right lifting against Loubaton's initial-map generators. It is an infinite schema. A finite test is proved for set-valued weights over graphs (π a discrete opfibration of graphs, `limits-metatheory.md` §9). The general case is `conjectures/finite-fibration-test.md`.
 - It agrees with §10.2: no closure condition on the marking is needed.
 
 ### 10.5 The ℕ-like object is discrete (§6.4): solved

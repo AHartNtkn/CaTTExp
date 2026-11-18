@@ -1,5 +1,9 @@
 # Naturality of CaTT coherences with respect to variables of arbitrary depth
 
+> **Update 2026-11-18.** N now holds for every term of dimension ≤ 2 (any Q, any up-closed Y), and N in dimension n follows from RC(n) on cylinders; see [`../relative-coherence.md`](../relative-coherence.md) §4. That note also proves the support lemma and repairs the §8 argument for composites (§4.3 there).
+>
+> **To send to a researcher, use [`outbox/naturality-arbitrary-depth.md`](outbox/naturality-arbitrary-depth.md)**, a clean standalone prompt with the current status (2026-11-18). This file keeps the history, earlier responses and verifications.
+
 *Self-contained problem statement. No prior context is assumed beyond basic familiarity with dependent type theory and globular higher categories.*
 
 ---

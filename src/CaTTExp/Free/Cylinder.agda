@@ -17,8 +17,10 @@
 -- `cyl` is that construction as a function on syntax. Well-formedness
 -- of the result (Lemma 1 of the conjecture file) is certified by the
 -- checker on each example below. Lemma 2 of free-objects-proofs.md
--- (cylinders commute with context extension) is checked by `refl` on
--- the examples, including the non-pasting loop.
+-- (cylinders commute with context extension: the three variables added
+-- for x : A are those of the disc cylinder pulled back along τ_A↑) is
+-- checked by `refl` on instances only, including the non-pasting loop;
+-- the general statement is proved on paper.
 ------------------------------------------------------------------------
 module CaTTExp.Free.Cylinder where
 
@@ -142,27 +144,36 @@ _ : lastTy (cyl D²) ≡
 _ = refl
 
 ------------------------------------------------------------------------
--- Lemma 2 of free-objects-proofs.md on instances: the cylinder type of
--- a new variable x : A is the cylinder type of the top variable of the
--- disc, substituted along τ_A↑ (the cylinder of the substitution
--- classifying A), extended by x⁻, x⁺.
+-- Lemma 2 of free-objects-proofs.md on instances: the whole extension
+-- (x⁻ : A[in⁻], x⁺ : A[in⁺], x↑ : a_x → b_x) that `cyl` adds for a new
+-- variable x : A is the extension (d⁻, d⁺, d↑) of the disc cylinder,
+-- substituted along τ_A↑ (the cylinder of the substitution classifying
+-- A), extended by x⁻, x⁺.
+
+-- The last three types of a context.
+last3 : Ctx → Ty × Ty × Ty
+last3 (Γ ▸ A ▸ B ▸ C) = A , B , C
+last3 _               = ⋆ , ⋆ , ⋆
+
+sub3 : Ty × Ty × Ty → Sub → Ty × Ty × Ty
+sub3 (A , B , C) σ = A [ σ ]ty , B [ σ ]ty , C [ σ ]ty
 
 -- Loop: e : x → x. τ_A↑ sends the D¹-cylinder variables
 -- (x⁻ x⁺ x↑ y⁻ y⁺ y↑ f⁻ f⁺) to (x⁻ x⁺ x↑ x⁻ x⁺ x↑ e⁻ e⁺).
-_ : lastTy (cyl Loop) ≡
-    lastTy (cyl D¹) [ ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ [] ⟫ ]ty
+_ : last3 (cyl Loop) ≡
+    sub3 (last3 (cyl D¹)) ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ [] ⟫
 _ = refl
 
 -- 2-loop: α : e ⇒ e. τ_A↑ sends the D²-cylinder variables
 -- (x y f g, each as ⁻ ⁺ ↑, then α⁻ α⁺) to (x x e e, ..., α⁻ α⁺).
-_ : lastTy (cyl Loop²) ≡
-    lastTy (cyl D²) [ ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 0 ∷ v 1 ∷ v 2
-                      ∷ v 3 ∷ v 4 ∷ v 5 ∷ v 3 ∷ v 4 ∷ v 5
-                      ∷ v 6 ∷ v 7 ∷ [] ⟫ ]ty
+_ : last3 (cyl Loop²) ≡
+    sub3 (last3 (cyl D²)) ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 0 ∷ v 1 ∷ v 2
+                          ∷ v 3 ∷ v 4 ∷ v 5 ∷ v 3 ∷ v 4 ∷ v 5
+                          ∷ v 6 ∷ v 7 ∷ [] ⟫
 _ = refl
 
 -- Composable pair: g : y → z is pulled back from D¹ along
 -- (x y f) ↦ (y z g), i.e. levels (3 4 5 9 10 11 12 13).
-_ : lastTy (cyl Pair) ≡
-    lastTy (cyl D¹) [ ⟪ v 3 ∷ v 4 ∷ v 5 ∷ v 9 ∷ v 10 ∷ v 11 ∷ v 12 ∷ v 13 ∷ [] ⟫ ]ty
+_ : last3 (cyl Pair) ≡
+    sub3 (last3 (cyl D¹)) ⟪ v 3 ∷ v 4 ∷ v 5 ∷ v 9 ∷ v 10 ∷ v 11 ∷ v 12 ∷ v 13 ∷ [] ⟫
 _ = refl

@@ -108,3 +108,445 @@ A decision of Question 1 or 2; a proof of Question 3; a complete invariant for Q
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
 
+# Researcher Response
+
+**Strict commutation of left and right currying does not imply \(H=1_T\).** A model satisfying that additional equation still separates the original \(H\) from the identity. The same model separates a version of \(H\) constructed using only left units and evaluations.
+
+For Question 5, the outer comparison between evaluation and another **functor** is invertible, and is an identity in the strict tensor model. Evaluation applied to an interchanger between **internal cells** can be noninvertible. These have different types. I give the distinction and a finite obstruction to the proposed full-hom interpretation below.
+
+I do not decide whether \(\iota\pi=1_H\).
+
+## 1. A model with strictly commuting curryings and \(H\ne1_T\)
+
+Retain the underlying Gray monoid of the free-group model, but change its chosen closed structure.
+
+Let
+\[
+F=\langle \ell,r\rangle
+\]
+be the free group. Define \(\mathcal D\) by:
+
+- its objects are integers;
+- for every \(m,n\), \(\mathcal D(m,n)\) is the category whose objects are elements of \(F\), with exactly one arrow between every ordered pair;
+- composition of 1-cells is multiplication, with \(g\circ f=gf\);
+- tensor on objects is addition;
+- tensoring by an object preserves the group label of a 1-cell.
+
+The interchanger is the unique 2-cell between its prescribed endpoints. Thus all Gray equations hold.
+
+### 1.1 The new closed structure
+
+Choose an arbitrary family
+\[
+k_c\in F\qquad(c\in\mathbb Z),
+\]
+and define
+\[
+h_{a,c}=k_{c-a}k_c^{-1}. \tag{1}
+\]
+
+Use the residual objects
+\[
+a\backslash c=c-a,\qquad c/a=c-a.
+\]
+For **both** left and right currying, with bound object \(a\) and codomain \(c\), set
+\[
+\boxed{\Lambda_{a,c}(f)=h_{a,c}f.} \tag{2}
+\]
+Uncurrying is multiplication on the left by \(h_{a,c}^{-1}\).
+
+The corresponding fixed-object right adjoint sends
+\[
+t:c\longrightarrow d
+\]
+to
+\[
+R_a(t)=h_{a,d}\,t\,h_{a,c}^{-1}:c-a\longrightarrow d-a. \tag{3}
+\]
+This is a strict 2-functor. On 1-cells, for example,
+\[
+\begin{aligned}
+R_a(s)R_a(t)
+&=h_{a,e}s\,h_{a,d}^{-1}h_{a,d}t\,h_{a,c}^{-1}\\
+&=h_{a,e}st\,h_{a,c}^{-1}\\
+&=R_a(st).
+\end{aligned}
+\]
+
+The hom-category maps in (2) are isomorphisms: their maps on objects are inverse bijections, and their maps on arrows are uniquely determined.
+
+Strict context naturality is
+\[
+\Lambda_{a,c}(fq)
+=h_{a,c}fq
+=\Lambda_{a,c}(f)q.
+\]
+Strict codomain naturality is
+\[
+\begin{aligned}
+R_a(t)\Lambda_{a,c}(f)
+&=(h_{a,d}t h_{a,c}^{-1})(h_{a,c}f)\\
+&=h_{a,d}tf\\
+&=\Lambda_{a,d}(tf).
+\end{aligned}
+\]
+
+The unit at \(b\) and counit at \(c\) have labels
+\[
+\eta_b^a=h_{a,a+b},
+\qquad
+\varepsilon_c^a=h_{a,c}^{-1}.
+\]
+The first triangle is multiplication by
+\[
+h_{a,a+b}^{-1}h_{a,a+b}=1.
+\]
+For the second,
+\[
+R_a(\varepsilon_c^a)=h_{a,c}^{-1},
+\qquad
+\eta_{c-a}^a=h_{a,c},
+\]
+so their composite is also \(1\). All equations on 2-cells follow from uniqueness.
+
+Thus this is a model of the stated full hom-category adjunctions.
+
+### 1.2 Mixed currying commutes strictly
+
+Take a 1-cell
+\[
+f:a+z+b\longrightarrow c.
+\]
+The two mixed curryings have labels
+\[
+h_{b,c-a}h_{a,c}f
+\quad\text{and}\quad
+h_{a,c-b}h_{b,c}f.
+\]
+But
+\[
+\begin{aligned}
+h_{b,c-a}h_{a,c}
+&=k_{c-a-b}k_{c-a}^{-1}k_{c-a}k_c^{-1}\\
+&=k_{c-a-b}k_c^{-1}\\
+&=k_{c-a-b}k_{c-b}^{-1}k_{c-b}k_c^{-1}\\
+&=h_{a,c-b}h_{b,c}.
+\end{aligned} \tag{4}
+\]
+The target objects also agree:
+\[
+(c-a)-b=(c-b)-a.
+\]
+Hence the two currying functors are **equal**, including their action on 2-cells.
+
+The model satisfies the additional normalizations
+\[
+h_{0,c}=1,
+\qquad
+h_{b,c-a}h_{a,c}=h_{a+b,c},
+\qquad
+R_bR_a=R_{a+b}.
+\]
+Thus neither normalization at the tensor unit nor strict normalization of iterated same-side currying removes the example.
+
+### 1.3 The original \(H\) remains nonidentity
+
+Interpret the atoms by
+\[
+|A|=|B|=1,\qquad |C|=|D|=2,
+\]
+and choose
+\[
+k_1=\ell,\qquad k_4=r^{-1},
+\qquad k_c=1\text{ for }c\notin\{1,4\}.
+\]
+In particular, \(k_2=1\).
+
+For the four structural arrows of item 11,
+\[
+\begin{aligned}
+\llbracket u\rrbracket
+&=h_{1,2}=k_1k_2^{-1}=\ell,
+&
+\llbracket e\rrbracket&=\ell^{-1},\\
+\llbracket v\rrbracket
+&=h_{2,4}=k_2k_4^{-1}=r,
+&
+\llbracket d\rrbracket&=r^{-1}.
+\end{aligned}
+\]
+Tensor sections preserve these labels, so
+\[
+\boxed{\llbracket H\rrbracket=\ell^{-1}r^{-1}\ell r\ne1.} \tag{5}
+\]
+
+Therefore, writing \(\mathcal G_{\mathrm{mix}}\) for the theory with the additional strict mixed-currying equation,
+\[
+\boxed{H\ne1_T\quad\text{in }\mathcal G_{\mathrm{mix}}.} \tag{6}
+\]
+
+Moreover, the words
+\[
+(\ell^{-1}r^{-1}\ell r)^n
+\]
+are reduced and have lengths \(4n\). Thus the original \(H^n\) remain pairwise distinct even after imposing strict mixed currying.
+
+The distinction from the round-three separator is exact: its currying multiplier depended only on the bound object. Here it depends on both the bound object and the codomain. Equation (4) makes successive multipliers telescope, while the units used in \(H\) have different codomains and can receive noncommuting labels.
+
+## 2. A separating example using only left closure
+
+Keep \(X,X',u,e\) from item 11. Replace the right-closure retraction by
+\[
+W=C\backslash(C\otimes D),
+\qquad
+Y=C\otimes D,
+\qquad
+Y'_L=C\otimes W,
+\]
+and
+\[
+v_L
+=
+1_C\otimes\Lambda_C^L(1_{C\otimes D})
+:Y\longrightarrow Y'_L,
+\qquad
+d_L
+=
+\operatorname{ev}^L_{C,C\otimes D}
+:Y'_L\longrightarrow Y.
+\]
+Then
+\[
+d_Lv_L=1_Y.
+\]
+
+Define
+\[
+H_L=
+(e\otimes1_Y)
+(1_{X'}\otimes d_L)
+(u\otimes1_{Y'_L})
+(1_X\otimes v_L).
+\]
+This term uses only tensor, left currying, left evaluation, and composition.
+
+In the same model and under the same atom interpretation,
+\[
+\llbracket v_L\rrbracket=h_{2,4}=r,
+\qquad
+\llbracket d_L\rrbracket=r^{-1}.
+\]
+Consequently,
+\[
+\boxed{\llbracket H_L\rrbracket=\ell^{-1}r^{-1}\ell r\ne1.} \tag{7}
+\]
+
+Thus:
+
+- the free theory with only left closure already has such nonidentity structural endomorphisms;
+- they remain distinct in the biclosed theory with strictly commuting mixed curryings;
+- their powers are pairwise distinct;
+- the same interchanger construction gives
+  \[
+  1_T\Rightarrow H_L\Rightarrow1_T
+  \]
+  with the composite on \(1_T\) equal to its identity.
+
+This answers the algebraic parts of Question 2.
+
+## 3. What mixed currying means for Campion’s tensor
+
+For the monoidal biclosed \(\infty\)-category supplied by Campion, the intrinsic statement is a **canonical equivalence**
+\[
+\boxed{(A\backslash C)/B\simeq A\backslash(C/B).} \tag{8}
+\]
+Campion’s Theorem A supplies the monoidal biclosed structure on the external \(\infty\)-category of higher categories. [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+Here is the derivation, using only its mapping-space adjunctions. Naturally in \(Z\),
+\[
+\begin{aligned}
+\operatorname{Map}\bigl(Z,(A\backslash C)/B\bigr)
+&\simeq \operatorname{Map}(Z\otimes B,A\backslash C)\\
+&\simeq \operatorname{Map}(A\otimes(Z\otimes B),C)\\
+&\simeq \operatorname{Map}((A\otimes Z)\otimes B,C)\\
+&\simeq \operatorname{Map}(A\otimes Z,C/B)\\
+&\simeq \operatorname{Map}\bigl(Z,A\backslash(C/B)\bigr).
+\end{aligned}
+\]
+Yoneda gives (8). No exchange of \(A\) and \(B\) is involved.
+
+The two double-curried maps agree after transport along this comparison. Literal equality of their displayed codomains and currying operations is an additional presentation condition. In Gagna–Harpaz–Lanari’s point-set model, the corresponding comparison is explicitly a natural **isomorphism**, in Remark 2.6. [arxiv.org](https://arxiv.org/html/2006.14495v1?utm_source=chatgpt.com)
+
+Thus Campion’s biclosedness supplies coherent mixed commutation. It does not, by itself, select a presentation with literal equality or supply the full enriched adjunctions assumed in \(\mathcal G\).
+
+## 4. Question 5: the outer comparison is invertible
+
+Let
+\[
+e:(C/B)\otimes B\longrightarrow C,
+\qquad
+g:X\longrightarrow Y
+\]
+be **functors between higher categories**.
+
+Tensor bifunctoriality gives the comparison
+\[
+\begin{aligned}
+(e\otimes1_Y)
+(1_{(C/B)\otimes B}\otimes g)
+&\simeq e\otimes g\\
+&\simeq
+(1_C\otimes g)
+(e\otimes1_X).
+\end{aligned} \tag{9}
+\]
+These are equivalences in a mapping space of the external \(\infty\)-category. In the strict Gray tensor on strict higher categories, both composites are literally the functor \(e\otimes g\).
+
+Therefore, for this outer functor-level interpretation,
+\[
+\boxed{\text{the comparison is invertible; in the strict model it is an identity.}}
+\]
+
+This calculation applies to any pair of functors. Evaluation has no special role in it.
+
+### 4.1 Evaluation of an internal interchanger can be noninvertible
+
+A different expression is
+\[
+e(\chi_{\alpha,u}),
+\]
+where \(\alpha\) is a 1-cell **of the internal hom** \(C/B\), and \(u\) is a 1-cell **of** \(B\). This is a 2-cell of \(C\), not an outer comparison between two functors.
+
+A finite example shows that it need not be invertible.
+
+Let \(J=[1]\) and
+\[
+S=J\otimes J.
+\]
+Write its generating arrows as
+\[
+\begin{aligned}
+h_0 &:00\to10,&h_1 &:01\to11,\\
+v_0 &:00\to01,&v_1 &:10\to11.
+\end{aligned}
+\]
+Using the orientation in the question, its generating 2-cell is
+\[
+\gamma:h_1v_0\Longrightarrow v_1h_0,
+\]
+with no reverse 2-cell. The directed square and the resulting opposite transformation directions in the two internal homs are described in Gagna–Harpaz–Lanari, Example 2.5 and the following paragraphs. [arxiv.org](https://arxiv.org/html/2006.14495v1?utm_source=chatgpt.com)
+
+Curry the identity
+\[
+1_S:J\otimes J\longrightarrow S
+\]
+in its right argument:
+\[
+q:J\longrightarrow S/J.
+\]
+The generating arrow of \(J\) maps to a transformation
+\[
+\alpha:v_0\longrightarrow v_1
+\]
+whose two components are \(h_0,h_1\).
+
+For evaluation \(e:(S/J)\otimes J\to S\), β gives
+\[
+e(q\otimes1_J)=1_S.
+\]
+Applying this equality to the generating square gives
+\[
+\boxed{e(\chi_{\alpha,u})=\gamma.} \tag{10}
+\]
+Thus (10) is noninvertible.
+
+This finite example also applies to Campion’s tensor: his Theorem A preserves the Gray cubes, and the inclusion of gaunt strict higher categories is fully faithful, so passing to that setting does not introduce a reverse cell to \(\gamma\). [arxiv.org](https://arxiv.org/html/2311.00205v1?utm_source=chatgpt.com)
+
+Equations (9) and (10) therefore answer different questions:
+\[
+\chi_{e,g}
+\qquad\text{versus}\qquad
+e(\chi_{\alpha,u}).
+\]
+
+## 5. A finite obstruction to the proposed full-hom interpretation
+
+The distinction above does not merely concern notation. The same square prevents the usual Gray residuals from serving as both adjoints for **one common full hom enrichment**.
+
+Consider the two fixed functors
+\[
+v_0,v_1:J\longrightarrow S.
+\]
+
+In the right residual \(S/J\), there is an arrow
+\[
+v_0\longrightarrow v_1,
+\]
+namely \(\alpha\) above.
+
+In the left residual \(J\backslash S\), there is **no** arrow from \(v_0\) to \(v_1\). Such an arrow would correspond to a functor
+\[
+J\otimes J\longrightarrow S
+\]
+with the argument and parameter axes exchanged. Its components are forced to be \(h_0,h_1\), but the generating square would then require
+\[
+v_1h_0\Longrightarrow h_1v_0,
+\]
+the nonexistent reverse of \(\gamma\).
+
+Now suppose there were a common full hom enrichment \(\mathscr H\), using the usual currying maps, with both enriched adjunctions and
+\[
+\mathscr H(I,Z)\simeq Z
+\]
+at the tensor unit. The two adjunctions would give
+\[
+\mathscr H(J,S)
+\simeq \mathscr H(I,S/J)
+\simeq S/J
+\]
+and
+\[
+\mathscr H(J,S)
+\simeq \mathscr H(I,J\backslash S)
+\simeq J\backslash S.
+\]
+On objects, both curryings identify a functor \(J\to S\) with that same functor regarded as a point of the residual.
+
+They would therefore identify the homs from \(v_0\) to \(v_1\). One is nonempty and the other empty. This is impossible.
+
+Accordingly, the proposed semantic test in Question 5 needs a qualification:
+
+> Outer functoriality makes the evaluation comparison invertible. It does not supply a common full hom enrichment satisfying both of \(\mathcal G\)’s adjunctions. The finite square already obstructs that interpretation.
+
+This does not preclude a coarser interpretation in an ordinary biclosed category that sends syntactic 2-cells to identities. It does prevent using such an interpretation to decide the intended directed coherence questions.
+
+## 6. A constraint on countermodels for Question 1
+
+The new model does not decide
+\[
+\iota\pi\stackrel{?}{=}1_H.
+\]
+Neither can a non-chaotic refinement that keeps the 1-cell algebra of the free-group model or of the polarized integer-weight model unchanged.
+
+The reason is stronger than thinness of their homs: **all their 1-cells have strict inverses**.
+
+In any lax Gray monoid, if \(f\) is strictly invertible, then \(\chi_{f,g}\) is invertible. An inverse is
+\[
+(f\otimes B')
+*
+\chi_{f^{-1},g}
+*
+(f\otimes B).
+\]
+Its endpoints reduce to those of \(\chi_{f,g}\) in reverse order. The two inverse equations follow from the Gray composition equations for \(ff^{-1}=1\) and \(f^{-1}f=1\).
+
+Hence, in any refinement retaining those 1-cells, the interpretations of \(\iota\) and \(\pi\) are invertible. Since
+\[
+\pi\iota=1,
+\]
+their other composite must also be the identity.
+
+A countermodel separating \(\iota\pi\) from \(1_H\) must therefore permit the structural retractions used in \(H\) to fail to be strict 1-cell isomorphisms.
+
+Finally, even a proof of \(\iota\pi=1_H\) would establish that the **specified** \(\iota,\pi\) are inverse isomorphisms. Uniqueness of isomorphisms \(H^n\cong1_T\) would still require an additional coherence argument.
+

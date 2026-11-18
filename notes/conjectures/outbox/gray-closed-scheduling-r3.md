@@ -60,16 +60,22 @@ Formulas are built from atoms with ⊗ and the residuals B\A and A/B, with no un
    - Their weights (with |L| = |R| = |A| = 0, |B| = 1, |C| = 2) are −1, 0 and 1, so the three 1-cells are distinct.
    - The side of currying is data of the 1-cell, and schedules with only generator events cannot describe this component.
 
+## Two further observations (proved)
+
+9. **Additive models cannot see interchangers with a structural argument.** Call a model *additive* if 1-cells carry a weight in an ordered abelian group, δ(u) = weight(target) − weight(source) is additive under composition and tensor, and an interchanger χ_{f,g} adds a bilinear term β(δ(f), δ(g)). The model 𝓜 of item 5 and its matrix version are additive. Every structural 1-cell (ev, curried evaluations, associators, unitors) has δ = 0, so every interchanger with a structural argument has weight 0 in every additive model. Such models therefore cannot decide whether two 2-cells differing in those interchangers are equal.
+10. **The axioms do not make evaluation central.** For ev : A ⊗ (A\C) → C and a generator g : Y → Y′, compare (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) and (C ⊗ g) ∘ (ev ⊗ Y), related by χ_{ev,g}. Currying A on the left (using strict naturality in the context variable and the target) turns this into the same question for m_Y := Φ(ev ⊗ Y) and g, so currying only transports it. Likewise for χ_{ev,ev′} at independent positions. Unless centrality is imposed (as in Garner–Hirschowitz–Pardon's premonoidal construction), structural maps are non-central events in 𝒢. In the quotient 𝒢_c of 𝒢 in which every interchanger with a structural argument is an identity, Question 1 follows at once from item 6.
+
 ## Questions
 
-1. **(Forward uniqueness, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}. By item 6 it suffices to show that interchangers with a generator-free argument are coherent: any two 2-cells between the same 1-cells that differ only in such interchangers are equal by the Gray and closure equations.
-2. **(1-cells within a component.)** For a fixed arrow of 𝓑_Σ, describe the 1-cells of 𝒢 over it. Is a 1-cell determined by its image together with the matrix-valued weight of item 5, or with a "curry side" label on each generator? Is each hom-category a product of schedule categories S(P) whose events include curry-side choices, as for u ⇒ m ⇒ v of item 8?
+1. **(Forward uniqueness, smallest case.)** Prove 𝒢(t₁, t₂) = {α} and 𝒢(s, t) = {θ}, or show that they fail. By item 6 it suffices to show that interchangers with a generator-free argument are coherent: any two 2-cells between the same 1-cells that differ only in such interchangers are equal by the Gray and closure equations. By item 9 this needs a rewriting or coherence argument, or a non-additive model; by item 10 it is not automatic, since structural interchangers need not be identities.
+2. **(1-cells within a component.)** For a fixed arrow of 𝓑_Σ, describe the 1-cells of 𝒢 over it. Is a 1-cell determined by its image together with the matrix-valued weight of item 5, or with a "curry side" label on each generator? Is each hom-category a product of schedule categories S(P) whose events include curry-side choices, as for u ⇒ m ⇒ v of item 8? By item 10, should the invariant schedule structural events (evaluations, curried evaluations) as well as generator events?
 3. **(Thinness and rewriting.)** Is every hom-category of 𝒢 thin? Give a terminating and confluent presentation of its 2-cells, or a pair of distinct parallel 2-cells.
 4. **(ω-version.)** With biclosedness on full hom ω-categories, are the hom ω-categories of the free Gray-monoidal biclosed (∞,ω)-category over a fixed arrow of 𝓑_Σ products of ν(K_P)-homs for suitable P?
+5. **(Is evaluation central?)** In the free Gray-monoidal biclosed 2-category 𝒢, is χ_{ev,g} an identity (equivalently, is ev central), or are (ev ⊗ Y′) ∘ (A ⊗ (A\C) ⊗ g) and (C ⊗ g) ∘ (ev ⊗ Y) distinct 1-cells? In the (∞,ω) setting, is evaluation for Campion's Gray tensor (biclosed on mapping spaces) central, i.e. is the corresponding interchanger invertible or trivial? The answer decides whether the right theory is 𝒢 or its quotient 𝒢_c of item 10, and whether 𝒢_c is still sound for the (∞,ω) Gray tensor.
 
 ## What counts as a solution
 
-A proof of Question 1; a complete invariant of 1-cells for Question 2; a rewriting system or a non-thin example for Question 3; or a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories.
+A proof of Question 1; a decision for Question 5; a complete invariant of 1-cells for Question 2; a rewriting system or a non-thin example for Question 3; or a reference treating 2-cells of free Gray-monoidal (bi)closed 2-categories.
 
 ## Literature (searched 2026-11-18)
 

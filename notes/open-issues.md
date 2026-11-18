@@ -172,7 +172,7 @@ Design note: `ordinary-math.md` (added 2026-11-18 by OMATH). Rows F1–F6 are it
 - `outbox/gray-contexts-r5.md` (D2, round 5: the Gray cube, evaluation fusion for active columns, RC(3) on acyclic 2-dimensional contexts, contexts with 3-variables, RC(n)/G(n)).
 - `outbox/cone-over-coherences-r3.md` (B19, round 3: RC(3) for Cone(D²; c) via fixed-edge factorisations, all join contexts, RC(n)).
 - `outbox/naturality-arbitrary-depth-r4.md` (C1, round 4: RC(3) on the 2-disc cylinder, horizontal-word factorisations, all cylinders, a fixed-dimension descent for cylinders, RC(n), global K).
-- `outbox/gray-closed-scheduling-r3.md` (D11, round 3: forward uniqueness, 1-cells within a component, thinness).
+- `outbox/gray-closed-scheduling-r3.md` (D11, round 3: forward uniqueness, 1-cells within a component, thinness, whether evaluation is central (F.6)).
 - `outbox/catt-models-in-infinity-omega-r4.md` (E11, round 4: (H) and (R) for (∞,1)-categories, the unit, the general equivalence, L's coherator through dimension 3 with L's rule stated).
 - Also ready, outside the outbox: `canonical-gray-terms.md` (CT, from E8), `gray-contexts-in-catt.md` §6 (D3).
 

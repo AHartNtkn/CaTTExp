@@ -153,3 +153,784 @@ Explicit terms for question 1 or 2; a proof of RC(3) or RC(n) under a stated hyp
 - Hadzihasanovic's diagrammatic sets ([arXiv 1909.07639](https://arxiv.org/abs/1909.07639), [arXiv 2007.14505](https://arxiv.org/abs/2007.14505)) take unique weak composites of round molecules as the definition of a weak higher category.
 - Benjamin–Markakis–Sarti ([arXiv 2406.12127](https://arxiv.org/abs/2406.12127)) and ICaTT ([arXiv 2602.16602](https://arxiv.org/abs/2602.16602)): composites of coherences are invertible.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): 2-cells of free 2-categories as 2-paths modulo exchange, and Squier-style coherence.
+
+# Researcher Response
+
+There are two results.
+
+1. **RC(3) holds for the \(2\times3\) grid.** The additional comparisons are a comparison between block exchange and individual exchanges, and one 4-cell filling the square in the graph of event orders.
+2. **Adjoining 4-generators preserves RC(4) if the base also satisfies RC(3)** and has an acyclic generating 1-graph. This does not establish the extension theorem from RC(4) alone.
+
+I give the constructions below. The general positive-computad statement, the \(3\times3\) grid, and RC(4) for the triangle and lax square are not proved here.
+
+# I. RC(3) for the \(2\times3\) grid
+
+Write
+\[
+V_m=D^2\vee_1\cdots\vee_1D^2
+\]
+for a vertical chain of \(m\) formal 2-cells. All composites below have fixed bracketings.
+
+For parallel full-support terms \(a,b\) over a pasting context \(P\), use the notation
+\[
+[a,b]_P:=\operatorname{coh}_{P,a\to b}[\mathrm{id}].
+\]
+Thus, when \(a,b\) are 3-terms, \([a,b]_P\) is a 4-term.
+
+Inverses below are the constructed weak inverses, with their cancellation cells. They are available for the 3-terms used here because the grid has no 3-generators. The invertibility criterion supplies the inverse and cancellation data without assuming RC(3). 
+
+## 1. The event orders and the required proper fibres
+
+Use vertices \((i,j)\), with \(0\le i\le2\), \(0\le j\le3\), and orient every square \(hv\Rightarrow vh\). Label the faces
+\[
+a=e_{10},\quad b=e_{11},\quad c=e_{12},\qquad
+d=e_{00},\quad e=e_{01},\quad f=e_{02}.
+\]
+
+The order constraints on the six events are
+\[
+a<b<c<f,\qquad a<d<e<f,\qquad b<e.
+\]
+Consequently the full composite has exactly five event words:
+\[
+\begin{aligned}
+w_0&=abcdef,&
+w_1&=abdcef,&
+w_2&=abdecf,\\
+w_3&=adbcef,&
+w_4&=adbecf.
+\end{aligned}
+\]
+
+Orient exchanges towards alphabetical order. The complete reduction graph is:
+
+| Word | Reductions |
+|---|---|
+| \(adbecf\) | \(abdecf\), by \(db\mapsto bd\); \(adbcef\), by \(ec\mapsto ce\) |
+| \(abdecf\) | \(abdcef\), by \(ec\mapsto ce\) |
+| \(adbcef\) | \(abdcef\), by \(db\mapsto bd\) |
+| \(abdcef\) | \(abcdef\), by \(dc\mapsto cd\) |
+| \(abcdef\) | None |
+
+There is one square and one additional edge.
+
+Here is also the required classification of proper fibres. A frontier path determines an ideal of the event poset. For ideals \(I\subseteq J\), the events between their frontiers are
+\[
+R=J\setminus I
+\]
+with the induced order. Fixing words on \(I\) and on its complementary final segment embeds the event-order graph of \(R\) into the five-word graph above. The regions with at least three faces are precisely:
+
+| Event set | Treatment |
+|---|---|
+| \(abc,def\) | Three-square strips |
+| \(abd,bce,bde,cef\) | Established \(2\times2\) fibres, with fixed paths |
+| \(bcd,cde\) | A square beside a two-square strip |
+| \(abcd,cdef\) | New fibres with a three-vertex exchange graph |
+| \(abde,bcef\) | Established \(2\times2\) fibres |
+| \(bcde\) | New four-face fibre |
+| \(abcde,bcdef\) | New five-face fibres |
+| \(abcdef\) | Full six-face fibre |
+
+The new fibres in the last four rows have boundary paths meeting only at their external endpoints. Thus every reduced head for any of those fibres has one nonconstant 0-column. A reduced 2-head has arity \(V_m\); a reduced 3-head retains its actual one-column 3-dimensional pasting arity.
+
+The three-square strips also have this property after removing their fixed exterior paths: their extreme paths are \(hvvv\) and \(vvvh\). They have a unique event word, and their proper intervals are two-square strips or single faces. Item 17’s construction therefore applies: its geometric requirements are one retained column, a unique event word, and RC(3) for proper intervals. No full-span face is needed once the one-column assertion has been established directly.
+
+We next handle the two cut fibres \(bcd,cde\), and then construct the new exchange comparisons.
+
+## 2. The two cut fibres
+
+The persistent cuts are
+\[
+bcd=d\ast_0(bc)\quad\text{at }(1,1),
+\qquad
+cde=(de)\ast_0c\quad\text{at }(1,2).
+\]
+
+The factor fibres are single squares and two-square strips. Their RC(3) results, including their subfibres, are already available.
+
+For a literal intermediate 1-term \(q\), let \(q_L,q_R\) be the chosen path terms on the two sides of the cut, and choose a path coherence
+\[
+\kappa_q:q\longrightarrow q_L\ast_0q_R.
+\]
+For a 2-term \(T_i:q_{i-1}\to q_i\), whose strict factors are \(l_i,r_i\), use the row normal form
+\[
+\kappa_{q_{i-1}}
+\ast_1
+\bigl(K_L(l_i)\ast_0K_R(r_i)\bigr)
+\ast_1
+\kappa_{q_i}^{\dagger}.
+\tag{1}
+\]
+Rows with an identity factor are retained.
+
+For a vertical sequence of such rows:
+
+1. Cancel the internal \(\kappa_{q_i}^{\dagger}\ast_1\kappa_{q_i}\) using path-context comparisons.
+2. Apply
+   \[
+   I_m:
+   C(A_1\ast_0B_1,\ldots,A_m\ast_0B_m)
+   \longrightarrow
+   C(A_1,\ldots,A_m)\ast_0 C(B_1,\ldots,B_m).
+   \tag{2}
+   \]
+3. Normalize the two factor composites.
+
+The term \(I_m\) is the full-support coherence on \(V_m\vee_0V_m\).
+
+A head with one retained column uses this row construction. A head with two retained columns is split at the persistent cut and normalized factorwise. The comparisons between these constructions are exactly the matrix fusion comparisons on \(V_3\vee_0V_3\) and \(V_6\vee_0V_6\) from item 25, together with factorwise RC(3) and the path comparisons. Their formal entries may be arbitrary 2-terms; replacing one square factor by a two-square strip changes none of their arities.
+
+If one input row has all three events, its normalizer is defined recursively on that input’s smaller 2-term derivation. Its own RC(3) is not used.
+
+The same construction gives the needed fixed-path variants. A path factor has only identity strict 2-cells, so its comparisons come from item 4. The generic folds have arities
+\[
+C_u\vee_0V_m\vee_0C_v,
+\]
+and their naturality comparisons have the corresponding arities with \(V_m\) replaced by \(V_m^\uparrow\). Item 14 handles the literal path lifts, and the point-collapse clause handles empty paths.
+
+For later use, choose explicit serializations of the two product normal forms:
+
+- From \(K_d\ast_0K_{bc}\), use the inverse of (2) with rows
+  \[
+  (1,b),\quad(1,c),\quad(d,1).
+  \]
+  This gives the order \(bcd\).
+- From \(K_{de}\ast_0K_c\), use rows
+  \[
+  (1,c),\quad(d,1),\quad(e,1).
+  \]
+  This gives \(cde\).
+
+Insert the fixed factor unitors, path transports and reassociations. These serializations are specified composites, not arbitrary applications of RC(2).
+
+This proves RC(3) for \(bcd,cde\) by the same relative-fusion and actual-3-arity argument as item 25.
+
+## 3. A block exchange is compared with its individual exchanges
+
+This is a useful generic term beyond this particular grid.
+
+On
+\[
+P_{m,n}=V_m\vee_0V_n,
+\]
+write the formal variables as
+\[
+\alpha_i:f_{i-1}\to f_i,\qquad
+\beta_j:g_{j-1}\to g_j,
+\]
+and put
+\[
+A=C(\alpha_1,\ldots,\alpha_m),\qquad
+B=C(\beta_1,\ldots,\beta_n).
+\]
+
+Define
+\[
+\begin{aligned}
+L&=(A\ast_0 1_{g_0})\ast_1(1_{f_m}\ast_0 B),\\
+R&=(1_{f_0}\ast_0 B)\ast_1(A\ast_0 1_{g_n}),
+\end{aligned}
+\]
+and take the block exchange
+\[
+\chi_{m,n}=[L,R]_{P_{m,n}}.
+\]
+
+Let
+\[
+d_L:L\to E_L,\qquad d_R:R\to E_R
+\]
+be the specified distributors and reassociations expanding \(A,B\) into their individual 2-variables. Define
+\[
+G_{m,n}:E_L\to E_R
+\]
+by moving \(\beta_1\) left across \(\alpha_m,\ldots,\alpha_1\), then moving \(\beta_2\) across the same list, and so on. Every step is an explicitly framed instance of the two-variable exchange.
+
+Both
+\[
+\chi_{m,n}
+\quad\text{and}\quad
+d_L\ast_2G_{m,n}\ast_2d_R^\dagger
+\]
+are 3-terms with literal source \(L\), literal target \(R\), and full support \(P_{m,n}\). Therefore
+\[
+\boxed{
+B_{m,n}
+=
+\bigl[
+\chi_{m,n},
+d_L\ast_2G_{m,n}\ast_2d_R^\dagger
+\bigr]_{P_{m,n}}
+}
+\tag{3}
+\]
+is a valid 4-term.
+
+A fixed path between the factors uses
+\[
+V_m\vee_0C_w\vee_0V_n
+\]
+instead. The same construction and support check apply. Empty event lists are handled by the path/unit cases.
+
+Formula (3) matters because it reduces a horizontal serialization comparison to individual exchanges **before substitution**. After substitution of chosen event terms, each individual exchange is syntactically a framed two-face exchange. No locality assertion is inferred from the support of an entire six-face 3-term.
+
+## 4. Choose literal evaluations of event words
+
+Fix:
+
+- a literal 1-term \(\ell_p\) for each frontier path \(p\);
+- a 2-term
+  \[
+  t_{p,x}:\ell_p\to\ell_{px}
+  \]
+  for each enabled face \(x\), obtained from that face by its fixed edge whiskers and path-boundary corrections;
+- a local 3-term
+  \[
+  \epsilon_{p,x,y}:
+  t_{p,x}\ast_1t_{px,y}
+  \longrightarrow
+  t_{p,y}\ast_1t_{py,x}
+  \tag{4}
+  \]
+  for each enabled independent pair.
+
+The local context for (4) includes all its fixed path segments.
+
+There are three independent pairs:
+
+- \(b,d\), with a fixed final vertical edge;
+- \(c,e\), with a fixed initial vertical edge;
+- \(c,d\), with the intervening edge
+  \[
+  v_{(1,1)}:(1,1)\to(1,2).
+  \]
+
+For the last pair, the physical path order is
+\[
+d,\quad v_{(1,1)},\quad c.
+\]
+Its two-face domain has source and target paths
+\[
+(hv)\,v_{(1,1)}\,(hv),
+\qquad
+(vh)\,v_{(1,1)}\,(vh).
+\]
+The fixed-path cut construction above applies to this domain.
+
+Write \(\operatorname{ev}(w)\) for the chosen composite of the \(t_{p,x}\) along \(w\). A graph edge is **defined** as the corresponding \(\epsilon\), framed by the specified earlier and later event terms and the fixed reassociations.
+
+Consequently:
+
+- alternative implementations of a bare exchange can be compared in its two-face context;
+- the resulting 4-term can then be framed;
+- an arbitrary 3-term between two whole-word evaluations is not presumed to have this form.
+
+That last class will be handled by relative fusion.
+
+## 5. The square in the exchange graph has a direct 4-cell
+
+The relevant frontiers are
+\[
+p_1=hvhvv,\qquad p_3=vhvhv,\qquad p_5=vvhvh.
+\]
+Put
+\[
+\begin{aligned}
+X_0&=\operatorname{ev}(bd):\ell_{p_1}\to\ell_{p_3},&
+X_1&=\operatorname{ev}(db):\ell_{p_1}\to\ell_{p_3},\\
+Y_0&=\operatorname{ev}(ce):\ell_{p_3}\to\ell_{p_5},&
+Y_1&=\operatorname{ev}(ec):\ell_{p_3}\to\ell_{p_5}.
+\end{aligned}
+\]
+
+Choose the sorting-oriented instances of (4):
+\[
+\alpha:X_1\to X_0,\qquad
+\beta:Y_1\to Y_0.
+\]
+
+Bracket the four middle events of each cycle vertex as \(X_i\ast_1Y_j\), with optional outer \(a,f\). Thus the four vertices have these literal expressions.
+
+On
+\[
+P_\square=D^3\vee_1D^3
+\]
+form
+\[
+\begin{aligned}
+L_\square
+&=
+(\alpha\ast_1 1_{Y_1})
+\ast_2
+(1_{X_0}\ast_1\beta),\\
+R_\square
+&=
+(1_{X_1}\ast_1\beta)
+\ast_2
+(\alpha\ast_1 1_{Y_0}).
+\end{aligned}
+\]
+Both are 3-terms
+\[
+X_1\ast_1Y_1\longrightarrow X_0\ast_1Y_0
+\]
+of full support. Hence
+\[
+\boxed{
+S_\square=[L_\square,R_\square]_{P_\square}
+}
+\tag{5}
+\]
+is a 4-term.
+
+After substitution and optional framing by \(a,f\), it compares
+\[
+w_4\to w_2\to w_1
+\qquad\text{with}\qquad
+w_4\to w_3\to w_1.
+\]
+
+For a formula whose boundaries are already the complete framed composites, use the full-support coherence on
+\[
+D^2\vee_1(D^3\vee_1D^3)\vee_1D^2,
+\]
+omitting either exterior \(D^2\) when absent.
+
+Choose the sorting paths
+\[
+\begin{aligned}
+\phi_{w_0}&=1,\\
+\phi_{w_1}&=(w_1\to w_0),\\
+\phi_{w_2}&=(w_2\to w_1)\ast_2\phi_{w_1},\\
+\phi_{w_3}&=(w_3\to w_1)\ast_2\phi_{w_1},\\
+\phi_{w_4}&=(w_4\to w_2)\ast_2\phi_{w_2}.
+\end{aligned}
+\]
+For every graph edge \(e:v\to w\), there is now a 4-term
+\[
+e\ast_2\phi_w\longrightarrow\phi_v.
+\tag{6}
+\]
+For the four chosen tree edges this uses associators, unitors and cancellation. The remaining edge uses (5). Reversed edges use the chosen inverse data.
+
+Induction on a graph path gives the corresponding comparison for every evaluated path. The same argument applies to proper-region graphs: they are trees or have this same square, with the appropriate optional exterior events removed.
+
+No general Squier theorem is required for this finite graph.
+
+## 6. The flattening comparison
+
+For a strict fibre \(R\) without an interior cut, choose
+\[
+K_R=\operatorname{ev}(w_R),
+\]
+where \(w_R\) is the alphabetically ordered event word. Its serialization is the identity. For the cut fibres, use the explicit serializations from §2.
+
+Define a selected flattening by the following operations, in this order:
+
+1. Expand the **chosen normal forms** of its inputs.
+2. Apply the specified product serializations.
+3. Merge boundary-path factors and reassociate.
+4. Apply the selected sorting path in the event-order graph.
+
+The comparison between two hierarchical applications of this construction is assembled as follows.
+
+| Comparison required | 4-term used |
+|---|---|
+| Moving an input normalizer through a generic 3-operation | Its \(\Omega\)-term on the lifted pasting arity |
+| Reassociation or another generic head route | Full-support coherence on the stated generic pasting arity |
+| Merging or cancelling path factors | Item 4, with item 14’s substitution comparisons |
+| Regrouping matrix rows, including identity rows | Item 25’s matrix fusion |
+| Replacing block exchange by individual exchanges | \(B_{m,n}\) from (3) |
+| Replacing a bare individual exchange by the selected \(\epsilon\) | RC(3) of its two-face context |
+| Comparing evaluated exchange paths | \(S_\square\), (6), and backtrack cancellation |
+
+This list is exhaustive for the selected flattenings: their constructors are path transports, vertical reassociations, the matrix folds, distributors, and the explicitly chosen exchanges.
+
+There are two distinct uses of support here.
+
+First, a residual 3-term belonging to a proper input can be strengthened to that **entire proper fibre**, including its fixed exterior paths, and compared there by the induction hypothesis.
+
+Second, a whole-word graph edge is local only because it was defined as a framed \(\epsilon\). Exact support alone would not provide that factorization.
+
+Thus the flattening comparison never invokes RC(3) of the fibre currently being proved.
+
+## 7. Relative fusion, with explicit decreasing inductions
+
+For a 2-term \(T:r\to s\), of strict image \(w:p\Rightarrow q\), set
+\[
+N(T)=
+C\bigl(
+\kappa(r,\ell_p),
+K_w,
+\kappa(\ell_q,s)
+\bigr).
+\tag{7}
+\]
+
+For each event count, define
+\[
+\nu_T:T\to N(T)
+\]
+by induction on the **actual 2-term derivation**. On already settled proper fibres one may use the established normalizers and comparisons.
+
+For a new full-fibre head, apply item 14. Its reduced 2-arity is \(V_m\). For the resulting full formal 2-term \(u\), let \(K(u)\) be the boundary-corrected vertical composite of the formal variables, and take
+\[
+b_u=[u,K(u)]_{V_m}.
+\]
+After substitution, follow \(b_u\) by the input normalizers and the flattening of §6. Recursive calls to \(\nu\) concern only the 2-images in the displayed outer substitution of \(T\).
+
+The required relative-fusion term is
+\[
+\boxed{
+E(u,\delta):
+\nu_{u[\delta]}
+\longrightarrow
+b_u[\delta]\ast_2 f_{u,\delta},
+}
+\tag{8}
+\]
+where \(f_{u,\delta}\) is input normalization followed by the selected flattening.
+
+Prove (8) by induction on the **original generic derivation of \(u\)**:
+
+- For a variable \(u=x\), leave \(\nu_{\delta x}\) unchanged; the comparison is a unitor.
+- For a coherence, apply the induction hypothesis only to its original substitution-image terms \(u_i\).
+- A manufactured expression resulting from head reduction or path folding is handled by its generic comparison, not by a recursive call.
+
+In particular, \(u_i[\delta]\) may have the entire event set. This is harmless: \(u_i\) is a smaller generic derivation, and its normalizer is attached to an actual input derivation of \(u[\delta]\).
+
+Here is the central comparison in this induction. Put
+\[
+\eta_j=\nu_{\delta(\alpha_j)},\qquad
+\delta^+(\alpha_j)=N(\delta(\alpha_j)),
+\]
+leaving the 0- and 1-assignments unchanged. After applying the input induction hypotheses, the remaining expression has the form
+\[
+C^3(f_i)\ast_2\Phi_{\mathrm{head}}.
+\]
+Let \(a_0\) be the generic expression assembled from the \(K(u_i)\), and let
+\[
+\chi:a_0\to K(u)
+\]
+be the specified generic vertical reassociation and path-gap flattening. Then the comparison is
+\[
+\begin{aligned}
+C^3(f_i)\ast_2\Phi_{\mathrm{head}}
+&\;\Longrightarrow_4\;
+A_{a_0}(\eta)
+ \ast_2 C^3(\Phi_i)
+ \ast_2\Phi_{\mathrm{head}}\\
+&\;\Longrightarrow_4\;
+A_{a_0}(\eta)
+ \ast_2\chi[\delta^+]
+ \ast_2\Phi_u\\
+&\;\Longrightarrow_4\;
+\chi[\delta]
+ \ast_2A_{K(u)}(\eta)
+ \ast_2\Phi_u.
+\end{aligned}
+\tag{9}
+\]
+
+The first arrow is the generic comparison for composing actions on the inputs. The second is §6’s flattening comparison. The third is the reverse of \(\Omega_\chi\) on \(V_m^\uparrow\).
+
+The remaining generic 3-term \(b_{\mathrm{eval}}:u\to K(u)\) is compared with \(b_u\) by
+\[
+[b_{\mathrm{eval}},b_u]_{V_m}.
+\]
+Substituting \(\delta\) completes (8).
+
+The formal input variables have therefore stayed formal until the input normalizers have been moved through the generic operations. Only their selected normal-form targets were expanded.
+
+## 8. Arbitrary 3-heads
+
+After constructing \(\nu\) and (8), induct on the 3-term derivation to construct
+\[
+I_H:\nu_T\longrightarrow H\ast_2\nu_{T'}
+\qquad(H:T\to T').
+\tag{10}
+\]
+
+For a reduced coherence head \(h:u\to v\), retain its actual reduced 3-arity \(P\). Let \(D\) be the boundary-corrected composite of its formal 3-variables, with identities on the remaining maximal 2-declarations. The generic comparison is
+\[
+\boxed{
+\Xi_P=
+[b_u\ast_2D,\;h\ast_2b_v]_P.
+}
+\tag{11}
+\]
+Its two boundaries are literally parallel and have full support \(P\).
+
+After substitution, use the induction hypothesis on the proper 3-inputs. Since the grid has no 3-generators, their two 2-boundaries have the same strict image. Their selected normal forms are therefore literally the same terms. This gives
+\[
+f_u\Longrightarrow_4D[\delta]\ast_2f_v.
+\]
+Together with (8) at both ends and (11), it gives
+\[
+\begin{aligned}
+\nu_{u[\delta]}
+&\Longrightarrow_4 b_u[\delta]\ast_2f_u\\
+&\Longrightarrow_4
+(b_u[\delta]\ast_2D[\delta])\ast_2f_v\\
+&\Longrightarrow_4
+h[\delta]\ast_2(b_v[\delta]\ast_2f_v)\\
+&\Longrightarrow_4
+h[\delta]\ast_2\nu_{v[\delta]}.
+\end{aligned}
+\]
+Item 14’s 4-dimensional head comparison transfers this to the original head.
+
+This is the step covering arbitrary 3-terms. They have not been assumed to be composites of exchanges.
+
+Finally, for parallel \(\alpha,\beta:T\to T'\), put \(\nu=\nu_{T'}\), choose its inverse \(\bar\nu\), and let
+\[
+c_\alpha:(\alpha\ast_2\nu)\ast_2\bar\nu\to\alpha
+\]
+be the constructed cancellation 4-term; define \(c_\beta\) similarly. A required filler is
+\[
+\boxed{
+c_\alpha^\dagger
+\ast_3
+\Bigl(
+(I_\alpha^\dagger\ast_3I_\beta)
+\ast_2 1_{\bar\nu}
+\Bigr)
+\ast_3 c_\beta.
+}
+\tag{12}
+\]
+
+The event-count induction follows the table in §1: first the three-event cases, then the new four-event fibres, then the five-event fibres, and finally \(abcdef\). Therefore
+\[
+\boxed{\mathrm{RC}(3)(\Gamma_{2,3}).}
+\]
+
+By item 30, the same holds after adjoining any finite family of 3-generators to this grid.
+
+# II. A conditional 4-dimensional extension theorem
+
+The following is the dimension-four analogue of item 30 with an explicit lower-coherence hypothesis.
+
+> **Theorem.** Let \(\dim\Lambda\le3\), let its generating 1-graph be acyclic, and assume \(\mathrm{RC}(3)(\Lambda)\). For any well-typed extension by 4-generators
+> \[
+> \Gamma=(\Lambda,z_i:A_i\to B_i)_{i\in I},
+> \]
+> one has
+> \[
+> \boxed{
+> \mathrm{RC}(4)(\Gamma)
+> \iff
+> \mathrm{RC}(4)(\Lambda).
+> }
+> \]
+> There are no restrictions on the whiskering, composability or order of the \(z_i\).
+
+## 1. Fresh formal 3-variables are controlled
+
+Put \(\Delta=\Lambda_{\le2}\).
+
+Exact support shows that RC(3) for \(\Lambda\) implies RC(3) for \(\Delta\). Indeed, a 4-term between 3-terms of \(\Delta\) has strict image an identity on a 3-cell supported in \(\Delta\), so it cannot use a 3-generator of \(\Lambda\).
+
+Every 3-generator of \(\Lambda\), and every fresh formal 3-variable \(X\), has its declaration type over \(\Delta\). Item 30 therefore gives
+\[
+\boxed{\mathrm{RC}(3)(\Lambda,X).}
+\tag{13}
+\]
+The same applies to finitely many fresh 3-variables.
+
+This formal-variable conclusion is needed below; RC(3) for \(\Lambda\) alone is not applied directly to a term depending on \(X\).
+
+## 2. Normalize in a quotient category
+
+Fix literal parallel 2-terms \(S,T\). Form the category whose:
+
+- objects are 3-terms \(A:S\to T\);
+- arrows are 4-terms, modulo existence of a 5-term;
+- composition is induced by \(\ast_3\).
+
+Every 5-term in \(\Gamma\) is invertible, and every 4-term over \(\Lambda\) is invertible, by the empty-top-support criterion. The generic 5-dimensional associators and unitors make this quotient a category.
+
+For each strict 3-cell \(q:\pi S\to\pi T\), choose a lift
+\[
+\widehat q:S\to T.
+\]
+Such lifts are obtained by evaluating a strict composite and aligning its literal boundaries: path 2-cells align its 1-boundaries, and RC(2) supplies 3-cells aligning its 2-boundaries.
+
+By RC(3), choose
+\[
+r_A:A\to\widehat{\pi A}.
+\]
+For \(U:A\to B\), define its normalized arrow
+\[
+\mathcal N(U)
+=
+[\,r_A^\dagger\ast_3U\ast_3r_B\,].
+\tag{14}
+\]
+
+Assume RC(4) for \(\Lambda\). If \(U\) is a 4-term over \(\Lambda\), its strict image is an identity. Hence
+\[
+\boxed{\mathcal N(U)=1.}
+\tag{15}
+\]
+The inverse data for \(r_B\) also gives
+\[
+\mathcal N(U\ast_3V)=\mathcal N(U)\mathcal N(V).
+\]
+
+## 3. The exact context-replacement 5-term
+
+Suppose
+\[
+\Lambda,X\vdash F(X),G(X):S\to T,
+\qquad
+\pi F(X)=\pi G(X)
+\]
+with \(X\) retained as a formal 3-generator.
+
+By (13), choose
+\[
+J(X):F(X)\to G(X).
+\]
+Here \(\dim J=4\), and \(X\) has depth one in \(J\).
+
+For a 4-term \(U:A\to B\), depth-zero naturality defines \(F(U),G(U)\). Depth-one naturality of \(J\) then gives
+\[
+\boxed{
+N_J(U):
+J(A)\ast_3G(U)
+\longrightarrow
+F(U)\ast_3J(B).
+}
+\tag{16}
+\]
+Both boundaries are literally 4-terms \(F(A)\to G(B)\).
+
+This is an application of Theorem 3.1 of Benjamin–Markakis–Offord–Sarti–Vicary with an upward-closed singleton consisting of a 3-variable. Their substitution lemma also supplies compatibility of the context action with substitution. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+Both \(J(A)\) and \(J(B)\) are over \(\Lambda\). Applying (15) to (16) gives
+\[
+\boxed{\mathcal N(F(U))=\mathcal N(G(U)).}
+\tag{17}
+\]
+Thus normalized evaluation is independent of the chosen weak lift of a strict 3-context.
+
+Only depth-one naturality is used here.
+
+## 4. Adjacent exchange has a generic 5-cell
+
+Let
+\[
+U:A\to B,\qquad V:C\to D
+\]
+be \(k\)-composable 4-terms, \(0\le k<3\). On the generic pasting context
+\[
+P_{4,k}=D^4\vee_kD^4
+\]
+form
+\[
+\begin{aligned}
+L&=(U\ast_k1_C)\ast_3(1_B\ast_kV),\\
+R&=(1_A\ast_kV)\ast_3(U\ast_k1_D).
+\end{aligned}
+\]
+Both are full-support 4-terms
+\[
+A\ast_kC\longrightarrow B\ast_kD.
+\]
+Consequently
+\[
+\boxed{[L,R]_{P_{4,k}}}
+\tag{18}
+\]
+is the required 5-term.
+
+The same full-support rule compares \(U\ast_kV\) with either sequential expression. Thus (18) supplies both exchange and sequentialization. Further contexts act on these 5-terms by iterated depth-zero naturality.
+
+## 5. Arbitrary 4-heads can be expanded before substitution
+
+Let
+\[
+H=\operatorname{coh}_{P,u\to v}[\mathrm{id}],
+\qquad \dim P=4.
+\]
+
+Choose the fixed binary composite \(B_P\) of the 4-discs of the globular tree of \(P\), inserting identities on its lower-dimensional maximal declarations.
+
+Its boundaries need not initially equal those of \(H\) syntactically. Correct them in this order:
+
+1. **Align 1-boundaries.** Use 2-coherences on the relevant 1-boundary pasting contexts, and whisker \(B_P\) by their depth-zero actions.
+2. **Align 2-boundaries.** Use 3-coherences on the relevant 2-boundary pasting contexts, again applying their depth-zero actions.
+3. **Align 3-boundaries.** The resulting source \(a\) is now literally parallel to \(u\), and its target \(b\) to \(v\). Choose
+   \[
+   \ell:u\to a,\qquad r:b\to v
+   \]
+   by full-support coherences on \(\partial^-_3P,\partial^+_3P\).
+
+The corrected term
+\[
+K_P=\ell\ast_3 B'_P\ast_3r
+\]
+has literally the same type as \(H\), and both terms have full support \(P\). Hence
+\[
+\boxed{
+E_P=[H,K_P]_P:H\to K_P
+}
+\tag{19}
+\]
+is a 5-term.
+
+After a substitution into \(\Gamma\), every padding term in this construction is a 4-term over \(\Lambda\): its defining arity has dimension at most three. Equation (15) removes these padding terms in normalized evaluation.
+
+Apply (18) repeatedly to sequentialize the remaining binary composite. Induction on the original substituted 4-inputs reduces it to a sequence of contextual applications of the \(z_i\).
+
+If \(\dim P\le3\), the entire 4-head already belongs to \(\Lambda\), so (15) applies directly.
+
+This proves head expansion without assuming RC(4) in a context with fresh 4-generators.
+
+## 6. Evaluation respects the strict presentation
+
+For a strict elementary 4-cell \(C[z_i]\), choose a weak formal 3-context \(F(X)\) lifting \(C\), with its literal boundaries aligned, and define
+\[
+\mathcal E(C[z_i])=\mathcal N(F(z_i)).
+\tag{20}
+\]
+
+Equation (17) makes this independent of the lift.
+
+The strict presentation required here is the one in *Polygraphs*, Appendix D: expressions sequentialize into elementary steps; equality of elementary steps reduces to equality of their labels and lower-dimensional contexts; equality of sequential expressions is generated by replacement and adjacent exchange. These are Propositions D.3.6, D.3.9 and D.3.12. [arxiv.org](https://arxiv.org/pdf/2312.00429?utm_source=chatgpt.com)
+
+Replacement is respected by (17), and adjacent exchange by (18). Therefore (20) extends to a well-defined evaluation of strict 4-cells.
+
+Induction on term syntax, using (19), proves
+\[
+\mathcal N(U)=\mathcal E(\pi U).
+\]
+Thus, if \(U,V:A\to B\) satisfy \(\pi U=\pi V\), then
+\[
+\mathcal N(U)=\mathcal N(V).
+\]
+Undoing the \(r_A,r_B\) normalization yields a 5-term \(U\to V\).
+
+Every equality used in this quotient proof has a specified 5-term witness: (16), (18), (19), an RC(4) comparison in \(\Lambda\), or a composition/whiskering of those terms. Consequently the proof supplies a CaTT filler, rather than only a semantic equality.
+
+For the converse, a 5-term in \(\Gamma\) between 4-terms over \(\Lambda\) has no 4-generator in its strict support. Exact support strengthens it to \(\Lambda\).
+
+This proves the theorem.
+
+For example,
+\[
+\mathrm{RC}(4)\bigl(D^3+\text{arbitrary 4-generators}\bigr)
+\]
+follows. RC(3) and RC(4) for \(D^3\) follow directly from support: the support of a term with a fixed strict image is one of its subglobes, and parallel terms lift to full-support terms on that subglobe.
+
+## What the extension proof does not establish
+
+The additional RC(3) assumption is used twice:
+
+- to choose \(r_A:A\to\widehat{\pi A}\);
+- to construct \(J(X)\) between equal strict formal 3-contexts.
+
+Choosing representatives separately in existing 4-cell connected classes does not supply the second comparison. Therefore this argument neither proves the extension from RC(4) alone nor proves that the additional assumption is necessary.
+
+It also does not supply the missing RC(4) fusion for the triangle or square. Moving 3-inputs of a 4-term is covered by depth-one naturality; moving its 2-inputs through the chosen 3-normalizers is the additional compatibility still required.

@@ -203,3 +203,687 @@ Any of the following:
   - No comparison with CaTT's models is known.
 - Steiner, *Omega-categories and chain complexes*, HHA 6 (2004): loop-free bases and Gray tensors.
 - Ara, Burroni, Guiraud, Lafont, Métayer, *Polygraphs* ([arXiv 2312.00429](https://arxiv.org/abs/2312.00429)): Squier-style coherence.
+
+# Researcher Response
+
+**Question 1 has a uniform affirmative answer.** Using the proved results in §2, in particular the 3-generator extension theorem, one obtains
+\[
+\boxed{\mathrm{RC}(3)(Q\uparrow Y)}
+\]
+for every pasting context \(Q\) and every up-closed \(Y\). The argument first proves RC(3) for the 2-skeleton. Its ordering rule works for arbitrary partial selections.
+
+Consequently, **Conjecture N holds through dimension \(3\)**. This does not supply the 5-dimensional comparison required for RC(4) or for uniqueness of the choices of \(K\).
+
+The priority is the **physical column number**. Within one physical column, the exact sequence of generator labels is retained. The new critical comparison is the braid for three independent events. The substitution argument requires an additional distinction: an internal sorting 3-cell is transported as a whole before a cross-column exchange is expanded into individual swaps.
+
+I give the construction below, followed by a conditional answer to question 3.
+
+## 1. The 2-skeleton of a partial cylinder
+
+First suppose \(\dim Q\leq2\). Write \(Q\) as a horizontal sequence of vertical chains:
+\[
+Q=C_{m_1}*_0\cdots *_0C_{m_n}.
+\]
+Its variables are
+\[
+x_0,\ldots,x_n,
+\]
+\[
+e_{i,j}:x_{i-1}\to x_i
+\quad(0\leq j\leq m_i),
+\]
+and
+\[
+\alpha_{i,j}:e_{i,j-1}\Rightarrow e_{i,j}
+\quad(1\leq j\leq m_i).
+\]
+The case \(m_i=0\) is allowed. Call \(i\) the *physical column* of these generators.
+
+Put
+\[
+\Lambda=\operatorname{sk}_2(Q\uparrow Y).
+\]
+
+For unselected variables, superscripts \(+\) and \(-\) denote the same retained variable. For selected variables, they denote distinct copies. Write \(v_i:x_i^-\to x_i^+\) when \(x_i\in Y\).
+
+The 2-generators of \(\Lambda\) are exactly:
+
+1. The retained \(\alpha_{i,j}\), when \(\alpha_{i,j}\notin Y\).
+2. The distinct copies
+   \[
+   \alpha_{i,j}^{\pm}:
+   e_{i,j-1}^{\pm}\Rightarrow e_{i,j}^{\pm},
+   \]
+   when \(\alpha_{i,j}\in Y\).
+3. For every selected \(e_{i,j}\), its cylinder generator
+   \[
+   r_{i,j}:e_{i,j}^-d_i\Rightarrow d_{i-1}e_{i,j}^+,
+   \tag{1}
+   \]
+   where \(d_i=v_i\) if \(x_i\) is selected, and otherwise \(d_i\) is the empty path.
+
+Formula (1) describes boundary **words**. An empty \(d_i\) means literal omission of that factor in the CaTT type.
+
+All these 2-generators have physical column \(i\). Each has exactly one horizontal 1-generator of column \(i\) in each 1-boundary.
+
+The copies \(\alpha^-_{i,j},\alpha^+_{i,j}\) remain distinct labels even when their boundaries are identical. Selecting a 2-variable without selecting either boundary edge therefore introduces two alternatives, not an equation between them.
+
+## 2. Rank, exchanges, and normal words
+
+Assign ranks
+\[
+\operatorname{rk}(x_i)
+=\operatorname{rk}(x_i^-)
+=\operatorname{rk}(x_i^+)=i.
+\]
+
+Horizontal edges increase rank by one. Vertex connectors \(v_i\) preserve rank. Thus every strict 1-path traverses a physical column at most once.
+
+An elementary 2-event is an application of one generating 2-cell to a contiguous factor of the current strict 1-path.
+
+### 2.1 Every legal ascending pair exchanges
+
+Consider consecutive events
+\[
+A_iB_j,\qquad i<j,
+\tag{2}
+\]
+where subscripts indicate physical columns.
+
+If \(j\geq i+2\), their rewritten factors are disjoint. If \(j=i+1\) and at least one event is an \(\alpha\)-event, the factors are again disjoint: an \(\alpha\)-event changes only its horizontal edge.
+
+The remaining possibility consists of two adjacent cylinder events.
+
+If \(x_i\notin Y\), there is no \(v_i\), so their factors are disjoint.
+
+If \(x_i\in Y\), the order (2) is impossible. The left cylinder event requires a source factor
+\[
+e_{i,a}^-v_i.
+\]
+The horizontal edge immediately following this factor starts at \(x_i^+\), so it is a plus copy. Applying the left event does not change that edge. The right cylinder event, however, requires a minus copy starting at \(x_i^-\). Up-closure makes these copies distinct.
+
+Therefore:
+
+> **Adjacent inversion lemma.** Every legal consecutive pair with strictly increasing physical-column indices is an independent exchange.
+
+The interacting order of adjacent cylinder events is right before left, which already has decreasing column order.
+
+This argument allows multiple cylinder events at different heights in one physical column. Partial selections can permit that; their existing order is preserved.
+
+### 2.2 Stable column sorting
+
+Orient exchanges by
+\[
+A_iB_j\longrightarrow B_jA_i
+\qquad(i<j).
+\tag{3}
+\]
+The measure
+\[
+I(w)=\#\{(p,q):p<q,\ \operatorname{col}(w_p)<\operatorname{col}(w_q)\}
+\]
+decreases by one at every step.
+
+The terminal word is
+\[
+n(w)=w_nw_{n-1}\cdots w_1,
+\tag{4}
+\]
+where \(w_i\) is the original subsequence of labels in physical column \(i\).
+
+There are exactly two kinds of local branching:
+
+- two disjoint swaps;
+- overlapping swaps on
+  \[
+  A_iB_jC_k,\qquad i<j<k.
+  \]
+
+In the second case the outer events are in nonadjacent columns. All three applications are simultaneously disjoint, giving the usual two routes
+\[
+ABC\to BAC\to BCA\to CBA,
+\]
+\[
+ABC\to ACB\to CAB\to CBA.
+\tag{5}
+\]
+
+No equal-column exchange is possible: every event in column \(i\) uses the unique horizontal position \(i\) in the current path.
+
+Consequently, **the strict 1-source path together with the ordered column subsequences classifies a strict 2-cell**. The source path is necessary: empty words on different paths are different identity cells. Once the source path is fixed, each generator label has at most one application position, so the sorted word determines all its strict whiskering factors.
+
+### 2.3 Cuts preserve the ordering
+
+Suppose a substituted horizontal factorization has successive 0-boundaries
+\[
+z_0,z_1,\ldots,z_s,
+\qquad b_a=\operatorname{rk}(z_a).
+\]
+Every event assigned to its \(a\)-th factor has physical column in
+\[
+(b_{a-1},b_a].
+\tag{6}
+\]
+
+Indeed, its horizontal edge is a factor of a path from \(z_{a-1}\) to \(z_a\), and rank is nondecreasing along that path.
+
+These half-open intervals are disjoint and ordered. Thus:
+
+- events assigned to distinct reference columns cannot interleave their physical columns;
+- serializing reference columns right to left agrees with physical-column sorting;
+- a repeated rank contributes no 2-events.
+
+A repeated-rank factor need not be a point. It can be the path \(v_i:x_i^-\to x_i^+\). This case uses inactive **path** factorization, separately from point absorption.
+
+This is the substitution property needed below.
+
+## 3. CaTT terms for the new critical diagrams
+
+Write
+\[
+a\cdot b=a*_1b,\qquad H;K=H*_2K.
+\]
+For parallel full terms on a genuine pasting context \(P\), write
+\[
+[s,t]_P=\operatorname{coh}_{P,s\to t}[\mathrm{id}].
+\]
+
+Use the padded word convention of §2 item 17, retaining every prescribed \(\kappa\), including \(\kappa(U,U)\).
+
+### 3.1 The three-event braid
+
+Take
+\[
+P=D^2(u)*_0D^2(v)*_0D^2(w),
+\]
+with
+\[
+u:a_0\Rightarrow a_1,\quad
+v:b_0\Rightarrow b_1,\quad
+w:c_0\Rightarrow c_1.
+\]
+
+Fix the literal 1-source and target
+\[
+(a_0*_0b_0)*_0c_0,
+\qquad
+(a_1*_0b_1)*_0c_1.
+\]
+
+For each permutation \(\pi\), form the serialized 2-term \(S_\pi\) by applying its three events in that order. At state \((i,j,k)\), the three possible raw factors are
+\[
+(u*_0b_j)*_0c_k,\qquad
+(a_i*_0v)*_0c_k,\qquad
+(a_i*_0b_j)*_0w.
+\]
+Their boundaries are the corresponding left-associated 1-paths. Insert the fixed path comparisons required by the padded-word convention.
+
+Use the binary exchange construction to obtain the two three-swap paths
+\[
+\begin{aligned}
+L:\quad
+S_{uvw}&\longrightarrow S_{vuw}
+\longrightarrow S_{vwu}
+\longrightarrow S_{wvu},\\
+R:\quad
+S_{uvw}&\longrightarrow S_{uwv}
+\longrightarrow S_{wuv}
+\longrightarrow S_{wvu}.
+\end{aligned}
+\]
+They are literally parallel 3-terms. Each uses \(u,v,w\) and their boundaries. Hence
+\[
+\boxed{\beta_{u,v,w}=[L,R]_P}
+\tag{7}
+\]
+is a 4-term.
+
+If the actual three events have intervening path factors, retain those factors between the three discs. The same full-support argument applies. Substitute the actual events only after constructing (7).
+
+### 3.2 Disjoint swaps
+
+Retain the intervening 2-word as a formal argument \(k\). On
+\[
+P=D^3(s)*_1D^2(k)*_1D^3(t),
+\]
+with \(s:S_0\Rightarrow S_1\) and \(t:T_0\Rightarrow T_1\), compare
+\[
+\begin{aligned}
+D_1&=((s*_1k)*_1T_0);
+      ((S_1*_1k)*_1t),\\
+D_2&=((S_0*_1k)*_1t);
+      ((s*_1k)*_1T_1).
+\end{aligned}
+\]
+Their common 2-source and target are
+\[
+(S_0\cdot k)\cdot T_0,
+\qquad
+(S_1\cdot k)\cdot T_1.
+\]
+Thus
+\[
+[D_1,D_2]_P
+\tag{8}
+\]
+gives the disjoint-swap square, including the case where \(k\) is subsequently assigned an identity.
+
+Equations (7) and (8) give a constructive comparison between any two sorting paths: compare their first reductions by the appropriate local diagram, then recurse on the smaller inversion number. No comparison between the resulting 4-cells is required.
+
+## 4. Serialization for arbitrarily many reference columns
+
+Two further comparisons extend the binary evaluator to arbitrary products.
+
+### 4.1 Transport a whole internal sort
+
+On \(D^2(U)*_0D^2(V)\), use the right-first serialization
+\[
+R(U,V)
+=(1_{\sigma U}*_0V)\cdot(U*_01_{\tau V}),
+\]
+and its full coherence
+\[
+\rho_{U,V}:U*_0V\Rightarrow R(U,V).
+\]
+
+For a generic 3-cell \(h:U\Rightarrow U'\), work on
+\[
+D^3(h)*_0D^2(V).
+\]
+Let
+\[
+R(h,V)
+=(1_{\sigma U}*_0V)*_1(h*_01_{\tau V}).
+\]
+Then
+\[
+(h*_0V);\rho_{U',V}
+\quad\text{and}\quad
+\rho_{U,V};R(h,V)
+\]
+are full parallel 3-terms. Their comparison is therefore a 4-coherence on that genuine pasting context:
+\[
+\boxed{
+\mathsf{Nat}_\rho(h,V):
+(h*_0V);\rho_{U',V}
+\Longrightarrow
+\rho_{U,V};R(h,V).
+}
+\tag{9}
+\]
+There is a corresponding comparison for the right argument.
+
+In (9), substitute the **entire** internal normalization or sorting 3-cell for \(h\). The comparison does not require that its individual swaps be expressible on a formal vertical chain.
+
+This is a depth-1 naturality instance, also covered by BMOSV Theorem 3.1. [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+### 4.2 Product parenthesization, with actual boundary framing
+
+Let
+\[
+P=C_M*_0C_N*_0C_L,
+\]
+and let \(A,B,C\) be the selected full column words.
+
+The terms
+\[
+H_\ell=(A*_0B)*_0C,
+\qquad
+H_r=A*_0(B*_0C)
+\]
+need not be parallel as 2-terms. Choose the path associator at the source and the reverse associator at the target:
+\[
+\alpha_s:\sigma H_\ell\Rightarrow\sigma H_r,
+\qquad
+\bar\alpha_t:\tau H_r\Rightarrow\tau H_\ell.
+\]
+Set
+\[
+H_r^{\mathrm{fr}}
+=(\alpha_s\cdot H_r)\cdot\bar\alpha_t,
+\qquad
+a=[H_\ell,H_r^{\mathrm{fr}}]_P.
+\tag{10}
+\]
+
+Fix one padded right-first 2-word \(S\), with the literal 1-boundaries of \(H_\ell\).
+
+Construct:
+
+- \(L_\rho:H_\ell\Rightarrow S\), using the left binary serialization recipe;
+- \(R_\rho:H_\ell\Rightarrow S\), using \(a\), the framed right binary recipe, and the full 3-coherence from its resulting padded word to \(S\).
+
+Both are explicit 3-terms formed from the binary recipes and path comparisons. Both use every marked variable of \(P\). Hence
+\[
+\boxed{\Omega_{M,N,L}=[L_\rho,R_\rho]_P}
+\tag{11}
+\]
+is the required 4-cell.
+
+The same construction compares multiplication recipes after their source and target have been framed identically. For finitely many columns, fix a sequence of adjacent parenthesis rotations and apply (11) at each rotation. This constructs a particular 4-comparison; it does not require a 5-dimensional coherence between rotation sequences.
+
+### 4.3 Refinement of a block exchange
+
+Suppose two normalized blocks have serial entries
+\[
+U=u_1\cdots u_M,\qquad
+V=v_1\cdots v_N.
+\]
+After whole internal sorts have been moved using (9), regard these entries as independent marked variables of
+\[
+C_M*_0C_N.
+\]
+
+The whole-block exchange and the sequence of its \(MN\) elementary crossings are parallel full 3-terms on that genuine pasting context. Their comparison is a 4-coherence there, formed before evaluation.
+
+Every evaluated crossing is legal: by (6), every physical column used by the left block lies left of every physical column used by the right block.
+
+The order of this construction is essential:
+
+1. Normalize a child as a whole.
+2. Move its whole normalization 3-cell through the outer operation by (9).
+3. Expand the resulting serial word into marked variables.
+4. Refine cross-block exchanges.
+5. Compare any remaining sorting routes using (7) and (8).
+
+An internal physical-column permutation is never asserted to be a permutation of the slots of a formal \(C_M\).
+
+## 5. Normalizers and evaluation fusion
+
+For a strict 2-cell \(\delta\), its normal data consists of its strict 1-source and its exact column words. Let \(n(\delta)\) be the decreasing-column serialization.
+
+For a word \(w=e_1\cdots e_k\), use
+\[
+\begin{aligned}
+\langle w\rangle_{A,B}
+=\operatorname{LF}\bigl[
+&\kappa(A,S_{e_1}),E_{e_1},
+\kappa(T_{e_1},S_{e_2}),E_{e_2},\ldots,\\
+&E_{e_k},\kappa(T_{e_k},B)
+\bigr],
+\end{aligned}
+\tag{12}
+\]
+where \(E_e\) is the fixed raw whiskered generator, and
+\(S_e=\sigma E_e,\ T_e=\tau E_e\).
+The empty word uses the fixed path normal form.
+
+Define
+\[
+N_\delta(A,B)=\langle n(\delta)\rangle_{A,B}.
+\]
+
+Vertical multiplication is
+\[
+\mu_{\delta,\epsilon}
+=
+\mu^{\mathrm{flat}}_{\delta,\epsilon};
+\operatorname{sort}_{n(\delta)n(\epsilon)}.
+\tag{13}
+\]
+The flat fold is the construction already proved in §2 item 17.
+
+The associativity 4-cell for (13) is constructed as follows:
+
+1. Use flat-fold associativity and the path-fold comparisons to put both routes over the same padded concatenation.
+2. Move whole internal sorting cells past the outer operations using (9) and the corresponding vertical whole-slot laws.
+3. Compare the resulting sorting paths using (7)–(8).
+
+The same procedure supplies unit and subdivision comparisons.
+
+### 5.1 Retained heads
+
+Every \(0\)-column of a pasting context of dimension at most three has the form
+\[
+C_m
+\quad\text{or}\quad
+V_m(k_1,\ldots,k_m).
+\]
+Here \(V_m(\mathbf k)\) retains all parallel 2-variables in each slot and every intervening 3-link; the \(k_i\) are arbitrary nonnegative integers.
+
+For a head substitution:
+
+- copy every active original column completely;
+- replace each inactive column by its literal actual path context, using §2 items 12 and 16.
+
+This gives a genuine pasting context \(R\) and a literal factorization
+\[
+\gamma=\kappa[\eta].
+\tag{14}
+\]
+
+Activity is determined by the assigned strict 2-values. In a 3-head, a retained column keeps all its 3-links even though those links evaluate to identity strict 3-cells in \(\Lambda\).
+
+For a 2-head put
+\[
+H=\operatorname{coh}_{P,A}[\kappa].
+\]
+Choose the fixed reference expression \(B_H\), using all retained marked variables and having the same literal 1-boundaries as \(H\). Then
+\[
+v_H=[H,B_H]_R,
+\qquad
+\nu_T=v_H[\eta];D_{B_H,\eta}.
+\tag{15}
+\]
+
+### 5.2 The evaluator
+
+The evaluator has the following finite clauses.
+
+| Reference expression | Evaluation |
+|---|---|
+| Marked 2-variable | Its proper-child normalizer |
+| Path comparison or identity | The proved path evaluator |
+| Vertical product | Child evaluations followed by (13) |
+| Horizontal product | Child evaluations, right-first serialization, and the framed product comparisons |
+| Inactive nonpoint column | Literal path factorization and the path comparison \(\zeta\) |
+| Point column | Point absorption before the surviving marked argument is evaluated |
+
+For the last clause, with \(q:\ell_0\Rightarrow\ell_1\) a term over a point, use
+\[
+B_q(z):
+q*_0z
+\Rightarrow
+\bigl(\kappa(\ell_0*_0s,s)\cdot z\bigr)
+\cdot\kappa(t,\ell_1*_0t),
+\qquad z:s\Rightarrow t.
+\tag{16}
+\]
+This is a full coherence on \(D^2(z)\). Its naturality is formed on \(D^3(h)\). Thus \(z\) can later be assigned a term using an arbitrarily large part of the cylinder.
+
+If a column has equal endpoint ranks but evaluates to \(v_i\), use the inactive nonpoint-path clause, not (16).
+
+### 5.3 Fusion
+
+For a relative 2-term \(u\), let
+\[
+\lambda_u:u\Rightarrow B_u
+\]
+be the recursive relative normalizer. The required comparison is
+\[
+\Phi_{u,\sigma}:
+\nu_{u[\sigma]}
+\Longrightarrow
+\lambda_u[\sigma];D_{B_u,\sigma}.
+\tag{17}
+\]
+
+Construct it by induction on the syntax of \(u\).
+
+**Variable.** Use the insertion and unit 4-cell on \(D^3(h)\), with
+\[
+h=\nu_{\sigma z}.
+\]
+Even when \(B_z=z\), the comparison with \(1_z;\nu_{\sigma z}\) is a unit 4-cell, not syntactic equality.
+
+**Path expression.** Use literal path fusion.
+
+**Vertical product.** Apply child fusion, whole-slot naturality, the multiplication comparison for (13), and the sorting-path comparison.
+
+**Horizontal product.** Apply child fusion and (9). Refine the cross-block shuffles only afterward. Equation (6) guarantees that their order agrees with global physical-column order. Use (11) for different parenthesizations.
+
+**Coherence head.** Use the literal factorization (14). Move child normalizers through the generic head comparison while their arguments remain whole. Expand their resulting serial words into genuine products of marked vertical chains. Compare the structural recipes there by full coherences, and compare their actual sorting continuations by (7)–(8).
+
+If a column becomes inactive under further substitution, first reflect it literally into its path context. If it becomes point-supported, apply (16) before evaluating the surviving arguments. The resulting head comparison is on the surviving genuine product of chains and paths.
+
+These are all cases. The rank intervals in (6) are what make the horizontal induction valid for an arbitrary number of reference columns.
+
+## 6. From fusion to RC(3) of the 2-skeleton
+
+For a retained 3-head
+\[
+H:S\Rightarrow T
+\]
+on a genuine frame \(R\), form
+\[
+\lambda_S:S\Rightarrow B_S,
+\qquad
+\lambda_T:T\Rightarrow B_T.
+\]
+Let
+\[
+W:B_S\Rightarrow B_T
+\]
+update every retained formal 3-link. Slots with no 3-link contribute identity 3-terms.
+
+Then
+\[
+H;\lambda_T
+\quad\text{and}\quad
+\lambda_S;W
+\]
+are parallel and full in \(R\). The first uses every retained variable through \(H\); the second uses every retained 3-link through \(W\), as well as all remaining marked slots. Hence
+\[
+\Xi_H=[H;\lambda_T,\lambda_S;W]_R
+\tag{18}
+\]
+is an admissible 4-term.
+
+Evaluate (18), apply fusion (17), and use the comparisons for the proper 3-arguments. Structural induction gives
+\[
+\Lambda_G:
+G;\nu_T\Longrightarrow\nu_S
+\tag{19}
+\]
+for every 3-term \(G:S\Rightarrow T\) of \(\Lambda\).
+
+The normalizers \(\nu_T\) have reverse terms and 4-dimensional cancellation comparisons. Each primitive is a coherence between full 2-terms on a genuine pasting context; reverse it there, and form the cancellation comparison there before substitution.
+
+For parallel \(G,G':S\Rightarrow T\), compose
+\[
+G;\nu_T
+\xRightarrow{\Lambda_G}
+\nu_S
+\xRightarrow{\overline{\Lambda_{G'}}}
+G';\nu_T
+\]
+and cancel \(\nu_T\). This defines the recursive term
+\[
+\boxed{\operatorname{Fill}_{\Lambda}(G,G'):G\longrightarrow G'.}
+\tag{20}
+\]
+
+Thus
+\[
+\boxed{\mathrm{RC}(3)\bigl(\operatorname{sk}_2(Q\uparrow Y)\bigr)}
+\]
+holds uniformly for every \(Q\) of dimension at most two and every up-closed \(Y\).
+
+The construction applies to all three proposed next cases: three horizontal discs, a vertical pair followed horizontally by a disc, and arbitrary partial selections on the horizontal two-disc.
+
+## 7. Arbitrary arities and Conjecture N through dimension 3
+
+The argument also allows several distinct parallel generators
+\[
+\alpha_{i,j,\ell}:e_{i,j-1}\Rightarrow e_{i,j}
+\]
+at a vertical step. They simply give distinct labels in the preserved column word.
+
+This describes the 2-truncation of an arbitrary-dimensional pasting context. Induction on the pasting rules gives:
+
+- extending a focused 1-variable creates the next 1-level and a 2-generator to that level;
+- extending a focused 2-variable adds a parallel 2-variable with the same adjacent 1-boundaries;
+- higher extensions add no variables of dimension at most two;
+- descending the focus does not return to an earlier 1-level.
+
+Therefore the rank and sorting proof applies to
+\[
+\operatorname{sk}_2(Q\uparrow Y)
+\]
+for arbitrary-dimensional \(Q\).
+
+Its generating 1-graph is acyclic. For example, grade \(x_i^-\) by \(2i\), \(x_i^+\) by \(2i+1\), and an unselected \(x_i\) by \(2i\). Every generating 1-cell increases grade.
+
+Apply the proved 3-generator extension theorem to obtain
+\[
+\mathrm{RC}(3)\bigl(\operatorname{sk}_3(Q\uparrow Y)\bigr).
+\]
+A 3-term uses no generators above dimension three, and adjoining higher generators does not change equality of strict 3-cells. The same fillers therefore give
+\[
+\boxed{\mathrm{RC}(3)(Q\uparrow Y)}
+\tag{21}
+\]
+for every pasting \(Q\) and up-closed \(Y\).
+
+Now apply §2 item 3.
+
+For a 3-dimensional **coherence** constructor,
+\[
+K(Q,B,Y)=\operatorname{Fill}_{Q\uparrow Y}(a_c,b_c).
+\]
+For a 3-dimensional **composition** constructor, use the specified realization of the strict cylinder as layers, and use (20) to connect consecutive 3-boundaries and the two endpoints.
+
+Hence
+\[
+\boxed{\text{Conjecture N holds in dimensions }0,1,2,3.}
+\]
+
+Fixing the bracketing conventions, path comparisons, leftmost-inversion sorting, and the displayed generic coherences gives one rule for these choices. The substitution compatibility of the resulting naturality operation is the recursive compatibility in §1.4 and the fusion construction above. A 5-cell between different choices remains a separate requirement.
+
+## 8. A conditional 4-dimensional extension theorem
+
+For question 3, the same extension argument gives the following precise result:
+
+> Let \(\dim\Lambda\leq3\), with acyclic generating 1-graph. If both \(\mathrm{RC}(3)(\Lambda)\) and \(\mathrm{RC}(4)(\Lambda)\) hold, then adjoining arbitrary 4-generators preserves RC(4).
+
+Here is the construction.
+
+First, use RC(2) for lower-boundary transports and RC(3) to choose 4-normalizers for old 3-terms. Work with 4-terms modulo 5-terms. After transport to these normal representatives, every old 4-term becomes an identity by RC(4) of \(\Lambda\).
+
+For a fresh 3-variable \(X\), item 25 implies
+\[
+\mathrm{RC}(3)(\Lambda,X:s\to t):
+\]
+both contexts are 3-generator extensions of their common 2-skeleton.
+
+Consequently, if two elementary 3-contexts satisfy
+\[
+\pi F(X)=\pi G(X),
+\]
+choose
+\[
+J(X):F(X)\longrightarrow G(X)
+\]
+in dimension four. Depth-1 naturality of \(J\) in the top-dimensional variable \(X\) gives a 5-term. Substitute
+\[
+X^-=A_i,\qquad X^+=B_i,\qquad X^\uparrow=z_i.
+\]
+This compares the two elementary actions on the adjoined 4-generator \(z_i\). The boundary factors \(J(A_i),J(B_i)\) are old 4-terms, so RC(4) of \(\Lambda\) removes them after transport.
+
+Adjacent independent 4-generators are handled by the generic interchange 5-term. Replacement of equal elementary contexts and exchange of adjacent independent atoms generate strict equality: this is the molecular presentation in *Polygraphs*, Appendix D, Propositions D.3.9 and D.3.12. [arxiv.org](https://arxiv.org/pdf/2312.00429?utm_source=chatgpt.com)
+
+This proves the stated conditional theorem.
+
+It does **not** prove the assertion from RC(4) alone. That assumption compares existing parallel 4-terms; it does not supply the 4-terms \(J(X)\) between 3-contexts or the endpoint normalizers used above.
+
+## 9. Verification and remaining scope
+
+The generic term checks verified literal boundaries and full support for:
+
+- the three-event braid;
+- the framed three-column product comparison;
+- serialization naturality in a whole 3-argument.
+
+Finite rewriting checks also covered every up-closed selection in the three proposed small shapes: 40 selections for the horizontal two-disc, 208 for three horizontal discs, and 88 for a vertical pair followed by a disc. All legal ascending event pairs exchanged, and all tested ascending critical triples admitted the six execution orders with the same result. These are checks of the construction, not a complete CaTT implementation.
+
+The result establishes question 1 and Conjecture N through dimension three. It does not establish RC(4) for the 3-disc cylinder, preservation under adjoining 4-generators from RC(4) alone, or the 5-dimensional comparison between arbitrary choices of \(K\).

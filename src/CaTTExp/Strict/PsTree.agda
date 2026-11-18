@@ -19,84 +19,88 @@ module CaTTExp.Strict.PsTree (𝕊 : Signature) where
 open Signature 𝕊
 open import CaTTExp.Pasting 𝕊
 
-------------------------------------------------------------------------
--- Insertion at the end of the rightmost node at height n.
+module _ {A : Set} where
 
-mutual
-  insert : Nat → Nat → Nat → LT Nat → LT Nat
-  insert zero    y f (node s br) = node s (br ++B cons (node f nil) y nil)
-  insert (suc n) y f (node s br) = node s (insLast n y f br)
+  ------------------------------------------------------------------------
+  -- Insertion at the end of the rightmost node at height n.
 
-  insLast : Nat → Nat → Nat → Br Nat → Br Nat
-  insLast n y f nil                         = nil
-  insLast n y f (cons T z nil)              = cons (insert n y f T) z nil
-  insLast n y f (cons T z (cons T′ z′ r))   = cons T z (insLast n y f (cons T′ z′ r))
+  mutual
+    insert : Nat → A → A → LT A → LT A
+    insert zero    y f (node s br) = node s (br ++B cons (node f nil) y nil)
+    insert (suc n) y f (node s br) = node s (insLast n y f br)
+
+    insLast : Nat → A → A → Br A → Br A
+    insLast n y f nil                         = nil
+    insLast n y f (cons T z nil)              = cons (insert n y f T) z nil
+    insLast n y f (cons T z (cons T′ z′ r))   = cons T z (insLast n y f (cons T′ z′ r))
+
+
+  ------------------------------------------------------------------------
+  -- The rightmost node at height k ends with x.
+
+  mutual
+    RM : Nat → LT A → A → Set
+    RM zero    (node s br) x = lastv s br ≡ x
+    RM (suc k) (node s br) x = RMB k br x
+
+    RMB : Nat → Br A → A → Set
+    RMB k nil                       x = ⊥
+    RMB k (cons T z nil)            x = RM k T x
+    RMB k (cons T z (cons T′ z′ r)) x = RMB k (cons T′ z′ r) x
+
+  private
+    lastv-++1 : ∀ s (br : Br A) T y → lastv s (br ++B cons T y nil) ≡ y
+    lastv-++1 s nil          T y = refl
+    lastv-++1 s (cons U z r) T y = lastv-++1 z r T y
+
+    rmb-snoc : ∀ k (br : Br A) T y x → RM k T x → RMB k (br ++B cons T y nil) x
+    rmb-snoc k nil                       T y x p = p
+    rmb-snoc k (cons U z nil)            T y x p = p
+    rmb-snoc k (cons U z (cons U′ z′ r)) T y x p = rmb-snoc k (cons U′ z′ r) T y x p
+
+    lastv-insLast : ∀ n y f s (br : Br A) → lastv s (insLast n y f br) ≡ lastv s br
+    lastv-insLast n y f s nil                       = refl
+    lastv-insLast n y f s (cons T z nil)            = refl
+    lastv-insLast n y f s (cons T z (cons T′ z′ r)) = lastv-insLast n y f z (cons T′ z′ r)
+
+  mutual
+    rm-ins-top : ∀ n T x y f → RM n T x → RM (suc n) (insert n y f T) f
+    rm-ins-top zero    (node s br) x y f p = rmb-snoc 0 br (node f nil) y f refl
+    rm-ins-top (suc n) (node s br) x y f p = rmB-ins-top n br x y f p
+
+    rmB-ins-top : ∀ n br x y f → RMB n br x → RMB (suc n) (insLast n y f br) f
+    rmB-ins-top n nil                       x y f ()
+    rmB-ins-top n (cons T z nil)            x y f p = rm-ins-top n T x y f p
+    rmB-ins-top n (cons T z (cons T′ z′ nil)) x y f p = rmB-ins-top n (cons T′ z′ nil) x y f p
+    rmB-ins-top n (cons T z (cons T′ z′ (cons T″ z″ r))) x y f p = rmB-ins-top n (cons T′ z′ (cons T″ z″ r)) x y f p
+
+  mutual
+    rm-ins-same : ∀ n T x y f → RM n T x → RM n (insert n y f T) y
+    rm-ins-same zero    (node s br) x y f p = lastv-++1 s br (node f nil) y
+    rm-ins-same (suc n) (node s br) x y f p = rmB-ins-same n br x y f p
+
+    rmB-ins-same : ∀ n br x y f → RMB n br x → RMB n (insLast n y f br) y
+    rmB-ins-same n nil                       x y f ()
+    rmB-ins-same n (cons T z nil)            x y f p = rm-ins-same n T x y f p
+    rmB-ins-same n (cons T z (cons T′ z′ nil)) x y f p = rmB-ins-same n (cons T′ z′ nil) x y f p
+    rmB-ins-same n (cons T z (cons T′ z′ (cons T″ z″ r))) x y f p = rmB-ins-same n (cons T′ z′ (cons T″ z″ r)) x y f p
+
+  mutual
+    rm-ins-low : ∀ {j n} T z y f → j < n → RM j T z → RM j (insert n y f T) z
+    rm-ins-low {zero}  {suc n} (node s br) z y f _ p = trans (lastv-insLast n y f s br) p
+    rm-ins-low {suc j} {suc n} (node s br) z y f (s≤s l) p = rmB-ins-low br z y f l p
+
+    rmB-ins-low : ∀ {j n} br z y f → j < n → RMB j br z → RMB j (insLast n y f br) z
+    rmB-ins-low nil                       z y f l ()
+    rmB-ins-low (cons T w nil)            z y f l p = rm-ins-low T z y f l p
+    rmB-ins-low (cons T w (cons T′ w′ nil)) z y f l p = rmB-ins-low (cons T′ w′ nil) z y f l p
+    rmB-ins-low (cons T w (cons T′ w′ (cons T″ w″ r))) z y f l p = rmB-ins-low (cons T′ w′ (cons T″ w″ r)) z y f l p
+
 
 tr : Ctx → LT Nat
 tr ε             = node 0 nil
 tr (ε ▸ _)       = node 0 nil
 tr (Γ ▸ A ▸ B)   = insert (dim A) (len Γ) (suc (len Γ)) (tr Γ)
-
-------------------------------------------------------------------------
--- The rightmost node at height k ends with x.
-
-mutual
-  RM : Nat → LT Nat → Nat → Set
-  RM zero    (node s br) x = lastv s br ≡ x
-  RM (suc k) (node s br) x = RMB k br x
-
-  RMB : Nat → Br Nat → Nat → Set
-  RMB k nil                       x = ⊥
-  RMB k (cons T z nil)            x = RM k T x
-  RMB k (cons T z (cons T′ z′ r)) x = RMB k (cons T′ z′ r) x
-
-private
-  lastv-++1 : ∀ s (br : Br Nat) T y → lastv s (br ++B cons T y nil) ≡ y
-  lastv-++1 s nil          T y = refl
-  lastv-++1 s (cons U z r) T y = lastv-++1 z r T y
-
-  rmb-snoc : ∀ k (br : Br Nat) T y x → RM k T x → RMB k (br ++B cons T y nil) x
-  rmb-snoc k nil                       T y x p = p
-  rmb-snoc k (cons U z nil)            T y x p = p
-  rmb-snoc k (cons U z (cons U′ z′ r)) T y x p = rmb-snoc k (cons U′ z′ r) T y x p
-
-  lastv-insLast : ∀ n y f s (br : Br Nat) → lastv s (insLast n y f br) ≡ lastv s br
-  lastv-insLast n y f s nil                       = refl
-  lastv-insLast n y f s (cons T z nil)            = refl
-  lastv-insLast n y f s (cons T z (cons T′ z′ r)) = lastv-insLast n y f z (cons T′ z′ r)
-
-mutual
-  rm-ins-top : ∀ n T x y f → RM n T x → RM (suc n) (insert n y f T) f
-  rm-ins-top zero    (node s br) x y f p = rmb-snoc 0 br (node f nil) y f refl
-  rm-ins-top (suc n) (node s br) x y f p = rmB-ins-top n br x y f p
-
-  rmB-ins-top : ∀ n br x y f → RMB n br x → RMB (suc n) (insLast n y f br) f
-  rmB-ins-top n nil                       x y f ()
-  rmB-ins-top n (cons T z nil)            x y f p = rm-ins-top n T x y f p
-  rmB-ins-top n (cons T z (cons T′ z′ nil)) x y f p = rmB-ins-top n (cons T′ z′ nil) x y f p
-  rmB-ins-top n (cons T z (cons T′ z′ (cons T″ z″ r))) x y f p = rmB-ins-top n (cons T′ z′ (cons T″ z″ r)) x y f p
-
-mutual
-  rm-ins-same : ∀ n T x y f → RM n T x → RM n (insert n y f T) y
-  rm-ins-same zero    (node s br) x y f p = lastv-++1 s br (node f nil) y
-  rm-ins-same (suc n) (node s br) x y f p = rmB-ins-same n br x y f p
-
-  rmB-ins-same : ∀ n br x y f → RMB n br x → RMB n (insLast n y f br) y
-  rmB-ins-same n nil                       x y f ()
-  rmB-ins-same n (cons T z nil)            x y f p = rm-ins-same n T x y f p
-  rmB-ins-same n (cons T z (cons T′ z′ nil)) x y f p = rmB-ins-same n (cons T′ z′ nil) x y f p
-  rmB-ins-same n (cons T z (cons T′ z′ (cons T″ z″ r))) x y f p = rmB-ins-same n (cons T′ z′ (cons T″ z″ r)) x y f p
-
-mutual
-  rm-ins-low : ∀ {j n} T z y f → j < n → RM j T z → RM j (insert n y f T) z
-  rm-ins-low {zero}  {suc n} (node s br) z y f _ p = trans (lastv-insLast n y f s br) p
-  rm-ins-low {suc j} {suc n} (node s br) z y f (s≤s l) p = rmB-ins-low br z y f l p
-
-  rmB-ins-low : ∀ {j n} br z y f → j < n → RMB j br z → RMB j (insLast n y f br) z
-  rmB-ins-low nil                       z y f l ()
-  rmB-ins-low (cons T w nil)            z y f l p = rm-ins-low T z y f l p
-  rmB-ins-low (cons T w (cons T′ w′ nil)) z y f l p = rmB-ins-low (cons T′ w′ nil) z y f l p
-  rmB-ins-low (cons T w (cons T′ w′ (cons T″ w″ r))) z y f l p = rmB-ins-low (cons T′ w′ (cons T″ w″ r)) z y f l p
 
 ------------------------------------------------------------------------
 -- The whole rightmost path of the tree of a context under construction

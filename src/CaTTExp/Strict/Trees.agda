@@ -98,3 +98,67 @@ module _ {A : Set} where
   node-r : ∀ {x x′ r r′} → node x r ≡ node x′ r′ → r ≡ r′
   node-r e = cong kidsLT e
 
+
+------------------------------------------------------------------------
+-- Relabelling.
+
+module _ {A B : Set} (f : A → B) where
+
+  mutual
+    mapLT : LT A → LT B
+    mapLT (node x r) = node (f x) (mapB r)
+
+    mapB : Br A → Br B
+    mapB nil          = nil
+    mapB (cons T y r) = cons (mapLT T) (f y) (mapB r)
+
+  map-lastv : ∀ x r → f (lastv x r) ≡ lastv (f x) (mapB r)
+  map-lastv x nil          = refl
+  map-lastv x (cons T y r) = map-lastv y r
+
+  map-++ : ∀ r₁ r₂ → mapB (r₁ ++B r₂) ≡ mapB r₁ ++B mapB r₂
+  map-++ nil          r₂ = refl
+  map-++ (cons T y r) r₂ = cong (cons (mapLT T) (f y)) (map-++ r r₂)
+
+  mutual
+    map-bdm : ∀ d T → mapLT (bdm d T) ≡ bdm d (mapLT T)
+    map-bdm zero    (node x r) = refl
+    map-bdm (suc d) (node x r) = cong (node (f x)) (map-bdmB d r)
+
+    map-bdmB : ∀ d r → mapB (bdmB d r) ≡ bdmB d (mapB r)
+    map-bdmB d nil          = refl
+    map-bdmB d (cons T y r) = cong₂ (λ a b → cons a (f y) b) (map-bdm d T) (map-bdmB d r)
+
+  mutual
+    map-bdp : ∀ d T → mapLT (bdp d T) ≡ bdp d (mapLT T)
+    map-bdp zero    (node x r) = cong (λ z → node z nil) (map-lastv x r)
+    map-bdp (suc d) (node x r) = cong (node (f x)) (map-bdpB d r)
+
+    map-bdpB : ∀ d r → mapB (bdpB d r) ≡ bdpB d (mapB r)
+    map-bdpB d nil          = refl
+    map-bdpB d (cons T y r) = cong₂ (λ a b → cons a (f y) b) (map-bdp d T) (map-bdpB d r)
+
+  mutual
+    map-glue : ∀ d S₁ S₂ → mapLT (glue d S₁ S₂) ≡ glue d (mapLT S₁) (mapLT S₂)
+    map-glue zero    (node x r₁) (node _ r₂) = cong (node (f x)) (map-++ r₁ r₂)
+    map-glue (suc d) (node x r₁) (node _ r₂) = cong (node (f x)) (map-glueB d r₁ r₂)
+
+    map-glueB : ∀ d r₁ r₂ → mapB (glueB d r₁ r₂) ≡ glueB d (mapB r₁) (mapB r₂)
+    map-glueB d nil            _              = refl
+    map-glueB d (cons T y r)   nil            = refl
+    map-glueB d (cons T₁ y r₁) (cons T₂ _ r₂) =
+      cong₂ (λ a b → cons a (f y) b) (map-glue d T₁ T₂) (map-glueB d r₁ r₂)
+
+------------------------------------------------------------------------
+-- The labels of a tree, in the order x₀, x₁, labels of T₁, x₂, labels
+-- of T₂, …
+
+module _ {A : Set} where
+
+  mutual
+    flat : LT A → List A
+    flat (node x r) = x ∷ flatB r
+
+    flatB : Br A → List A
+    flatB nil          = []
+    flatB (cons T y r) = y ∷ (flat T ++ flatB r)

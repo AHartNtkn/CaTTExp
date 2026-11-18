@@ -19,7 +19,7 @@
 | **F5** object-indexed colimits | Diagrams indexed by an object I are cocartesian fibrations E → I. Lax colimits are then the total space, pseudo colimits are a finite localisation of it, and left Kan extensions are a comma object followed by a localisation. **No new rule.** Sequential colimits are a pseudo coequaliser. Colimits *inside* an object C are a declared universal structure (a marking with a filler rule). §6. | The constructions are finite **[proved here]**; agreement with the semantic colimits rests on Lurie HTT 3.3.4.3 and Gepner–Haugseng–Nikolaus **[paper, G4]** and on Loubaton and Gepner–Heine **[paper, F5a]**. |
 | **F6** lax functors | For loop-free finite shapes P, lax functors ⟦P⟧ ⇝ C are maps out of a finite context P^lax glued from Street's orientals: no new rule. For lax-functor *variables* between arbitrary objects, a directed coherence rule `dcoh_S` that names its support S (a set of generators of the oriental complex with the right boundary), parallel to L's interchange rule. §7. | The oriental classifier is in the literature for dimension ≤ 3 (Gagna) and as a definition in general. The support rule is exact for `c_∞N(A)` **[paper, researcher-verified]**; the first version (a cell whenever supports allow, unique) was **refuted** (two distinct 2-cells in O₃). |
 
-**New open item found:** function sets. Ordinary mathematics needs exponentials of sets (ℕ → ℕ, Cauchy sequences). Shapes give cotensors, but `[A, B]` for an arbitrary set A is an internal hom. Recorded as **F8** (§6.5).
+**New open item found:** function sets. Ordinary mathematics needs exponentials of sets (ℕ → ℕ, Cauchy sequences). Shapes give cotensors, but `[A, B]` for an arbitrary set A is an internal hom. Recorded as **F8** and proposed in §6.5.1: a product-parametrised exponential rule (exp-λ, exp-uni) for any A and B, sound under P, with `[A, B]` a set whenever B is (Prop. 6.3, T-exp), and Mimram's CCCaTT over sets as an admissible tactic on top.
 
 ---
 
@@ -86,6 +86,7 @@ Introduction rules (how a truncation is established):
            ⟹  ⟦Γ⟧ trunc 1
 (T-loc)    the same, with a set M of edges inverted (§5.1)  ⟹  ⟦Γ⟧[M⁻¹] trunc 1
 (T-trunc)  ‖X‖_n trunc n, for the n-truncation of §5.3
+(T-exp)    B trunc n  ⟹  [A, B] trunc n, for any A   (derived from F8's rule, Prop. 6.3)
 ```
 
 *Stability.* Every rule is stable under substitution: the premises mention only C, its diagram and its declared marks, and substitution into a declared mark requires a certificate (T-var). This is the same discipline as certified comparison cells.
@@ -555,7 +556,46 @@ Pointwise-ness (stability under restriction along comma squares, which ∞-cosmo
 
 Dually, ambient limits indexed by a cartesian fibration are sections (the lax limit, a "dependent product"), which need the object of maps `[I, E]`. For a shape I it is a cotensor; for an arbitrary object I it is an **internal hom**, not a finite limit. Ordinary mathematics needs exactly this for sets: ℕ → ℕ, sequences in ℚ (for ℝ), power sets (functions into the proposition classifier, which needs a universe and is out of scope; predicates are monos, §2.4).
 
-**F8 (new): exponentials of sets.** Under P the cartesian internal hom of ωCat restricted to sets, `[A, B]` with `Hom(C × A, B) ≃ Hom(C, [A, B])` for all C, is semantically fine (Set is cartesian closed inside ωCat). In-style candidate: Mimram's cartesian closed CaTT rules (`internal-hom.md` §5.7, D12) restricted to targets with `trunc 0`, so the higher-dimensional cartesian pasting criterion is not needed (every cell above level 0 is T-fill). Nobody owns this yet.
+**F8: exponentials of sets.** Under P the cartesian internal hom of ωCat restricted to sets, `[A, B]` with `Hom(C × A, B) ≃ Hom(C, [A, B])` for all C, is semantically fine (Set is cartesian closed inside ωCat). In-style candidate: Mimram's cartesian closed CaTT rules (`internal-hom.md` §5.7, D12) restricted to targets with `trunc 0`, so the higher-dimensional cartesian pasting criterion is not needed (every cell above level 0 is T-fill).
+
+#### 6.5.1 Proposal (F8, 2026-11-18)
+
+**Ownership.** The ambient's pseudo internal hom `[B, C]` is already proposed in `internal-hom.md` §5.4 (IHOM, done), parametrised by representable Δ only ("currying with × waits on products"). Mimram's rules (D12, thread CLOSED) work *inside* one cartesian closed category. F8 is the product-parametrised exponential law for the ambient plus its interaction with h-levels, which is this note's area, so it stays here. Nothing is handed over.
+
+**Rules (route A, generalised elements).** Standard 4 asks for the most general version, so the rule is stated for every exponent A and every target B, and sets are a corollary.
+
+```
+(exp)      Γ ⊢ A : ⋆    Γ ⊢ B : ⋆   ⟹   Γ ⊢ [A, B] : ⋆,   ev : [A, B] × A → B
+
+(exp-λ)    Γ ⊢ W : ⋆    Γ ⊢ f : W × A → B
+           ⟹  λf : W → [A, B]   and an invertible   β_f : ev ∘ (λf × A) → f
+
+(exp-uni)  for g, h : W → [A, B] and a cell θ : ev ∘ (g × A) → ev ∘ (h × A),
+           a cell θ̂ : g → h and an invertible cell  ev ∘ (θ̂ × A) → θ,
+           and the same at every level (coinductively, as for `uni`
+           in limits-representables.md; θ invertible ⟹ θ̂ invertible)
+```
+
+This is the `uni`/`colim-marked` pattern of §6.4 with the variance reversed: a universal property quantified over every parameter object W, no λ-term former inside B, no β or η as definitional equalities (β_f is a cell, η is the instance of exp-uni with θ = β). Restricted to W = ⟦Δ⟧ it is `internal-hom.md` §5.4's hom-⌜⌝/hom-⌞⌟ (a Δ-cell of [A, B] is a ΣΔ-diagram of functors A → B, i.e. a map `⟦Δ⟧ × A → B`). Restricted to A = ⟦P⟧ it is the cotensor law (E) that §6.1 already uses.
+
+**Soundness under P [proved here, relative to cited facts].** `Cat_(∞,ω)` is cartesian closed [paper, F5a: Gepner–Heine arXiv:2608.02592 §1]. The k-cells of the ambient hom `Hom(W, X)` are pseudo transfors, i.e. maps `⟦Dᵏ⟧ × W → X` (`internal-hom.md` §5.5, Theorem (P), the pseudo cotensor). So k-cells `W → [A, B]` are maps `Dᵏ × W → [A, B]`, which are maps `Dᵏ × W × A → B`, which are k-cells `W × A → B`, naturally in W. That bijection at every level is exactly (exp-λ) plus (exp-uni). Under L the rule is **not** sound as stated for the lax hom (the Gray analogue fails on higher cells, `closed-structure.md` Part E, counterexample B = C = D¹); for discrete targets P and L agree (§1), so the set fragment below is sound under both.
+
+**Proposition 6.3 (T-exp) [proved here].** If `B trunc n`, then `[A, B] trunc n`, for every object A.
+
+*Proof.* A level-k cell into [A, B] from c is, by exp-λ/exp-uni at level k, a level-k cell into B from `c × A`, with the transposition preserving parallelism (it is a bijection on boundaries, level by level). T-fill for B at level ≥ n + 1 gives a filler of the transposed pair; exp-uni transposes it back, and its invertibility is preserved because exp-uni reflects invertibility (the same coinductive argument as Prop. 2.1). T-inv at level n + 1 transfers the same way. For n = −2, T-ctr: a map `c → [A, B]` is λ of the composite `c × A → ⊤ → B`. ∎
+
+So `[A, B]` is a **set** whenever B is, for *any* A. Semantically [proved here]: for B a set, `[A, B] ≃ Set(π₀A, B)` with π₀A the set of objects of A modulo the equivalence relation generated by 1-cells. Indeed maps from any X into a discrete set factor through π₀X [recall], and π₀(X × A) = π₀X × π₀A, because 1-cells of a product are pairs and a pair (f, g) is the composite of (f, 1) and (1, g), so the generated relation on pairs is the product of the generated relations. Hence `Map(X × A, B) = Set(π₀X × π₀A, B) = Set(π₀X, Set(π₀A, B)) = Map(X, Set(π₀A, B))`, naturally in X. This does not even need cartesian closure of `Cat_(∞,ω)`.
+
+**Consequences.**
+- **Function sets.** `[N, N]`, `[N, ℚ]` (sequences, for ℝ as Cauchy sequences modulo a relation, with Trunc₀ from §5.3) and `[N × N, Bool]` are sets by T-exp.
+- **Global dependent products.** For a family `p : E → I` (any I), the object of sections `Π_I E := [I, E] ×_{[I, I]} ⊤`, the pullback of `[I, p]` along `λ(π₂) : ⊤ → [I, I]` (the element id), is a finite limit after exp. It is a set when E is (T-lim, T-exp). Its universal property: maps `W → Π_I E` are maps `W × I → E` over I, by exp-uni and the pullback's `uni`.
+- **What it does not give.** Dependent products *along* maps (local cartesian closure, Π_f for `f : I → J`) are not the pullback above; they would need exp in slices. F3b: the cartesian closed countermodel of Prop. 2.5 has these global Π and N is still not a set there, so F8 does not change F3b's verdict (as recorded in §2.3). Infinitary inductive objects (F1b) need exp *and* an initial-algebra principle for `X ↦ ∐_i [B_i, X]`; exp alone gives only the polynomial functor.
+
+**Route B, compared (standard 3; not chosen).** Mimram's unbiased CCCaTT restricted to sets: object variables `A, B : ⋆^{≤0}`, simple types built from them with × and [–, –], and `coh_T : T` for every pasting type T (decidable, `internal-hom.md` §5.7). Mimram's `ps=` becomes T-fill, which is available because every such type denotes a set (T-exp, T-lim). Since targets are sets, only Mimram's 1-dimensional criterion (published, Thms 15 and 19) is used, not the higher criteria of D12.
+- *Soundness* is then a corollary of route A: the sets form a full subcategory closed under × and [–, –] (T-lim, T-exp), hence a cartesian closed 1-category, where any two terms of a pasting type are βη-equal (Mimram Thm 15), so they are interpreted equal and T-fill supplies the cell.
+- *Gains:* no λ-rule at all; combinators (S, K, composition, currying) are single coherences; equations are instances of T-fill.
+- *Losses:* exponent and target must both be sets (route A allows any A, e.g. `[⟦L⟧, B]`, maps out of the loop into a set), and it says nothing about [A, B] for non-set B.
+- *Relation:* every route-B coherence is a route-A term (ev, λ, pairing and projections compose to it), and every route-A term between sets is βη-equal to a route-B coherence by Mimram Thm 19 (completeness for STLC). So over sets the two routes have the same terms up to cells, and route B is a convenient *admissible tactic* over route A, in the same way the graph filler is over coh (§3).
 
 ### 6.6 Θ-density as an object-indexed colimit (F5b)
 

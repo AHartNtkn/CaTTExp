@@ -247,7 +247,7 @@ renSq = go ⟨⟩ pairs
   where
   go : Sub → List (Nat × Nat) → Sub
   go σ []             = σ
-  go σ ((A , B) ∷ ps) = go (σ ,ₛ var (B + 3 * A)) ps
+  go σ ((A , B) ∷ qs) = go (σ ,ₛ var (B + 3 * A)) qs
 
 squareMismatches : List (Nat × Nat)
 squareMismatches = filter bad pairs

@@ -24,33 +24,11 @@ comp-D²-right = cert (wfSub? _ _) tt
 comp-D²-left : VC left (D 2)
 comp-D²-left = cert (wfSub? _ _) tt
 
--- All pasting schemes of dimension ≤ 2 with at most 3 edges.
-private
-  depth : Tree → Nat
-  depth t = go 4 t
-    where
-    go : Nat → Tree → Nat
-    go zero    _         = 0
-    go (suc f) (node ts) = goL f ts
-      where
-      goL : Nat → List Tree → Nat
-      goL f []       = 0
-      goL f (t ∷ ts) = max (suc (go f t)) (goL f ts)
-
-  dim≤2 : List Tree
-  dim≤2 = filter (λ t → depth t <ℕ 3) (trees≤ 3)
-
-  okVC : Tree → Bool
-  okVC t = is-just (wfSub? (compSub right (ctxOf t)) (fromJust (cyl right 1 (ctxOf t))))
-         ∧ is-just (wfSub? (compSub left (ctxOf t)) (fromJust (cyl left 1 (ctxOf t))))
-  allVC : T (all okVC dim≤2)
-  allVC = tt
-
-_ : length dim≤2 ≡ 8
-_ = refl
-
-comp-≤3 : ∀ {t} → t ∈ dim≤2 → VC right (ctxOf t) × VC left (ctxOf t)
-comp-≤3 {t} m =
-  let h = all-∈ okVC dim≤2 allVC m in
-  cert (wfSub? _ _) (∧-fst h) , cert (wfSub? _ _) (∧-snd {is-just (wfSub? (compSub right (ctxOf t)) (fromJust (cyl right 1 (ctxOf t))))} h)
-
+-- Two more shapes: a composable pair of 1-cells, and a horizontal pair
+-- of 2-cells (the shape of horizontal composition).
+comp-Comp₂-right : VC right Comp₂
+comp-Comp₂-right = cert (wfSub? _ _) tt
+comp-Comp₂-left : VC left Comp₂
+comp-Comp₂-left = cert (wfSub? _ _) tt
+comp-HComp-right : VC right HComp
+comp-HComp-right = cert (wfSub? _ _) tt

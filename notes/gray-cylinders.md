@@ -6,15 +6,15 @@
 
 | Target (`internal-hom.md` §7) | Result |
 |---|---|
-| 1. Γ ⊗ D¹ for Γ a pasting scheme, as a function on syntax, well formed | **Done for both orientations** (Γ ⊗ D¹ and D¹ ⊗ Γ), for every *globular* context Γ (pasting schemes and more). Well-formedness **checked** for D¹–D⁵, the horizontal pair, the 1-sphere, and **every pasting scheme with at most 4 edges** (all 23). A general proof for all Γ is not done (see "Open"). |
+| 1. Γ ⊗ D¹ for Γ a pasting scheme, as a function on syntax, well formed | **Done for both orientations** (Γ ⊗ D¹, lax, and D¹ ⊗ Γ, oplax), for every *globular* context Γ (pasting schemes and more). Well-formedness **checked** for D¹–D⁵, the horizontal pair, the 1-sphere, and **every pasting scheme with at most 4 edges** (all 23). A general proof for all Γ is not done (see "Open"). **Cross-checked:** D¹ ⊗ Γ agrees syntactically, up to renaming, with the independent `CaTTExp.Free.Cylinder` (free-objects thread) on D¹–D⁴, the vertical and horizontal pairs, the 1-sphere, the loop and the 2-loop. |
 | 2. G3: Γ ⊗ (D¹ ∨ D¹) ≅ (Γ ⊗ D¹) ∨ (Γ ⊗ D¹) | **Holds on the nose.** The two inclusions are well-typed renamings, so every generator of Γ ⊗ (D¹ ∨ D¹) has literally the renamed type of the corresponding generator of Γ ⊗ D¹. **Checked** for every pasting scheme with at most 3 edges, both orientations. |
-| 3. Vertical composition of lax transformations as a substitution Γ ⊗ (D¹ ∨ D¹) ⊢ comp : Γ ⊗ D¹ | **Done for every globular Γ of dimension ≤ 2, both orientations.** **Checked** for D¹, D² and every pasting scheme of dimension ≤ 2 with at most 3 edges. **No non-pasting-scheme composite is needed**: everything is a substituted coherence over a pasting scheme (list below). |
+| 3. Vertical composition of lax transformations as a substitution Γ ⊗ (D¹ ∨ D¹) ⊢ comp : Γ ⊗ D¹ | **Done for every globular Γ of dimension ≤ 2, both orientations.** **Checked** for D¹, D² and the composable pair (both orientations) and the horizontal pair of 2-cells (lax orientation). **No non-pasting-scheme composite is needed**: everything is a substituted coherence over a pasting scheme (list below). |
 | 4. D¹ ⊗ D¹ ⊗ D¹ under both orientations, G4 syntactically | Both bracketings ((a⊗b)⊗c via the right cylinder, a⊗(b⊗c) via the left cylinder) are **checked** well formed. **G4 fails on the nose, exactly at the cube cell**: 26 of the 27 generators have syntactically equal types under the renaming; the cube cell's types differ. **G4 holds up to coherence**: substitutions in both directions, the renaming on the 26 lower generators, are **checked**. |
 | D6 (pruning, insertion, rehydration for molecules) | Analysis below. Under layering (option (i) of `internal-hom.md` §4.3) nothing needs re-examination; under molecular coh (option (ii)) pruning must be restricted to factor-wise collapses. First datum **checked**: the cylinder of an identity is coherently an identity. |
 
 ## 1. The construction
 
-**Layout.** For Γ with N variables and the path Pₚ = (0 → 1 → … → p), `cyl sd p Γ` lists p+1 copies of Γ (copy c of x at level c·N + x), then one block of cylinder generators per edge (generator of x over edge e at (p+1)·N + e·N + x). `sd = right` gives Γ ⊗ Pₚ (generators x⊗e) and `sd = left` gives Pₚ ⊗ Γ (generators e⊗x), both in the Steiner / Ara–Maltsiniotis orientation, ∂^α(x⊗y) = (∂^α x ⊗ y) ∪ (x ⊗ ∂^{(−1)^{dim x} α} y). `Γ ⊗D¹ = cyl right 1 Γ`, `D¹⊗ Γ = cyl left 1 Γ`. Which of the two is "lax" depends on the convention of `internal-hom.md` §4.1; that naming is being unified under ledger item G2, so this note says right/left only.
+**Layout.** For Γ with N variables and the path Pₚ = (0 → 1 → … → p), `cyl sd p Γ` lists p+1 copies of Γ (copy c of x at level c·N + x), then one block of cylinder generators per edge (generator of x over edge e at (p+1)·N + e·N + x). `sd = right` gives Γ ⊗ Pₚ (generators x⊗e) and `sd = left` gives Pₚ ⊗ Γ (generators e⊗x), both in the Steiner / Ara–Maltsiniotis orientation, ∂^α(x⊗y) = (∂^α x ⊗ y) ∪ (x ⊗ ∂^{(−1)^{dim x} α} y). `Γ ⊗D¹ = cyl right 1 Γ`, `D¹⊗ Γ = cyl left 1 Γ`. By `conventions.md` §3, maps out of Γ ⊗ D¹ are **lax** transformations (f⊗e : xₑ ; f_b ⇒ fₐ ; yₑ is the lax row α_x ; Gf ⇒ Ff ; α_y) and maps out of D¹ ⊗ Γ are **oplax** ones. Mikhail's "Γ ⊗ D¹" is `cyl left 1 Γ` (`conventions.md` §5).
 
 **Types.** Write xₐ, x_b for the copies of x at the ends of edge e and x⊗e for its cylinder generator. For a 0-cell, x⊗e : xₐ → x_b. For x of dimension m ≥ 1 with x : s → t, writing ";" for composition along dimension m−1:
 
@@ -50,7 +50,11 @@ left:   e⊗(u;v) = assoc ; (uₐ ◃ e⊗v) ; assoc⁻ ; (e⊗u ▹ v_b) ; asso
 
 This is the G(2) existence construction of `conjectures/gray-contexts-in-catt.md` §3.2, specialised. It is exactly what the Gray cube needs. Other composite boundaries are not handled (`cyl` returns `nothing`); that general case is the naturality construction of Conjecture N (ledger C1).
 
-**What the checker establishes.** That the output context is well formed (G1 for these instances). It does *not* establish that the output presents the Steiner Gray tensor (that is `gray-contexts-in-catt.md` §6.2(2)). The orientations were derived by hand from Steiner's formula; the consistency checks below (G3, vertical composition, the cube, and agreement of `cyl right 1 D¹` with `cyl left 1 D¹` as the same square) are evidence that they are right.
+**What the checker establishes.** That the output context is well formed (G1 for these instances). It does *not* establish that the output presents the Steiner Gray tensor (that is `gray-contexts-in-catt.md` §6.2(2)). The orientations were derived by hand from Steiner's formula. Evidence that they are right:
+
+- `Checks.CrossFree`: `cyl left 1 Γ` agrees syntactically, up to the renaming of variables, with `CaTTExp.Free.Cylinder.cyl Γ`, which another thread wrote independently from Lemma 1 of `conjectures/naturality-arbitrary-depth.md`, on D¹, D², D³, D⁴, the vertical and horizontal pairs, the 1-sphere, the loop and the 2-loop. As a non-vacuity check, `cyl right 1 D¹` does not agree with it.
+- `Checks.Cube`: `cyl right 1 D¹` and `cyl left 1 D¹` are the same square A ⊗ B up to renaming (as they must be: the first has factors D¹ ⊗ e, the second e ⊗ D¹).
+- G3, vertical composition and the cube below all typecheck, which constrains the orientations: for instance, using the same end copy in every dimension of Γ ⊗ D¹ (no alternation) does not give well-typed generators from dimension 2 on, since the boundary of α⊗e would not be parallel.
 
 ## 2. G3
 
@@ -99,7 +103,7 @@ CubeL:  [P▹, [A, ◃Q, A, R▹, A]]   ⇛   [[A, ◃R′, A, Q′▹, A], ◃P
 
 The same three squares are pasted in the same order on each side, but the boundary 3-paths are bracketed differently and the associators sit at the other end. This is the "layering choices bite" of `internal-hom.md` §7 item 4, located precisely: it is the choice of **composite of the 1-dimensional boundary path**, which the two bracketings of the tensor make differently. Over CaTT_sua (strict associativity and units) both sides would become [P▹, ◃Q, R▹] ⇛ [◃R′, Q′▹, ◃P′] [conj: not machine-checked, no CaTT_sua here].
 
-**G4 up to coherence holds.** `toL : CubeR ⊢ toL : CubeL` and `toR : CubeL ⊢ toR : CubeR` are **checked**. Each is the renaming on the 26 lower generators and sends the cube cell to the other cube cell conjugated by coherences: insert an associator and its inverse with a unitor, regroup, whisker the cube cell, regroup, cancel an associator pair with a unitor, regroup. Not checked: that toL and toR are mutually inverse up to higher cells (the composite's image of the cube cell is related to the cube cell by a 4-cell). That is a G(2)-uniqueness instance (`gray-contexts-in-catt.md` §3.3, ledger D1).
+**G4 up to coherence holds.** `toL : CubeR ⊢ toL : CubeL` and `toR : CubeL ⊢ toR : CubeR` are **checked**. Each is the renaming on the 26 lower generators and sends the cube cell to the other cube cell conjugated by coherences: insert an associator and its inverse with a unitor, regroup, whisker the cube cell, regroup, cancel an associator pair with a unitor, regroup. Not checked: that toL and toR are mutually inverse up to higher cells (the composite's image of the cube cell is related to the cube cell by a 4-cell). That is a uniqueness statement for 3-dimensional composites containing a generator, the shape reduced to RC(3) in `relative-coherence.md` (ledger D2, D4).
 
 ## 5. D6: pruning, insertion and rehydration for Gray shapes
 
@@ -125,13 +129,13 @@ Both are encodable with the code here once there is an Agda CaTT_su (no thread h
 
 - `GrayCtx.Elab` is an **uncertified** elaborator: raw type inference, the whiskerings `rw`/`lw`, unbiased composites `vcomp`, associators, identities, unitors, `cohT` (a coh over a tree from a source/target builder and the images of the tree's locally maximal variables), and `stepAt` (rewrite a segment of a vertical chain by a higher cell). Nothing it produces is trusted; `Checks` re-checks everything with the certified checker.
 - `Checks` returns typing derivations (`WF`, `WFSub`). The exhaustive results quantify over an explicit enumeration of plane trees, `trees≤ n`, with a refl-checked Catalan count. **Completeness of that enumeration is not proved in Agda**, so the theorems say "every tree in the list", and the count is the evidence that the list is all trees of that size.
-- Typechecking `Everything.agda` runs all of this; the checks take a few minutes in total.
+- Typechecking `Everything.agda` runs all of this; the GrayCtx checks take about four minutes in total (most of it the exhaustive cylinder check and G3). An exhaustive vertical-composition check over small pasting schemes was dropped because it took over ten minutes.
 
-## Open (added to `open-issues.md`)
+## Open (recorded in `open-issues.md`)
 
-1. **General well-formedness of the cylinder** (G1 for n = 1, all globular Γ, both orientations): a proof for every Γ, not instances. Needs typing of substitution (A1) and a lemma that `rw`/`lw`/`vcomp` produce well-typed terms with the expected types.
-2. **Cylinder of arbitrary composite boundaries** (Γ ⊗ D¹ for non-globular Γ). Only binary 1-composites are handled. In general this is Conjecture N (C1).
-3. **toL and toR mutually inverse up to higher cells** (G(2)-uniqueness instance, D1).
-4. **Vertical composition for Γ of dimension ≥ 3**, and associativity/unit laws for it as coherences between substitutions (`internal-hom.md` §5.3).
-5. **D6 checks 1–2 above**, which need an Agda CaTT_su.
-6. **Cross-check with the cone thread's `CylOf.cyl`** (branch `claude/project-thread-b03ys3`): for globular Γ it should agree with `cyl left 1 Γ` up to renaming.
+1. **D13. General well-formedness of the cylinder** (G1 for n = 1, all globular Γ, both orientations): a proof for every Γ, not instances. Needs typing lemmas for `rw`/`lw`/`vcomp` on top of `CaTTExp.Subst`.
+2. **Cylinder of arbitrary composite boundaries** (Γ ⊗ D¹ for non-globular Γ). Only binary 1-composites are handled here; the general case is Conjecture N (C1) and the explicit construction of D3, both owned by NGC.
+3. **D14. toL and toR mutually inverse up to higher cells.**
+4. **D15. Vertical composition for Γ of dimension ≥ 3**, and associativity and unit laws for it as coherences between substitutions (`internal-hom.md` §5.3).
+5. **D16. An Agda CaTT_su**, to run the two D6 checks of §5.
+6. **Cross-check with the cone thread's `CylOf.cyl`** (branch `claude/project-thread-b03ys3`, not yet on main): for globular Γ it should agree with `cyl left 1 Γ` up to renaming, as `Free.Cylinder` does. Part of D5's follow-up, owned here.

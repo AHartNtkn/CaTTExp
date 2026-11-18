@@ -35,3 +35,10 @@ import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
+import CaTTExp.GrayCtx.Elab
+import CaTTExp.GrayCtx.Cylinder
+import CaTTExp.GrayCtx.VComp
+import CaTTExp.GrayCtx.Cube
+import CaTTExp.GrayCtx.Prune
+import CaTTExp.GrayCtx.Show
+import CaTTExp.GrayCtx.Checks

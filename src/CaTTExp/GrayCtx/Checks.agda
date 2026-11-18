@@ -10,3 +10,5 @@ import CaTTExp.GrayCtx.Checks.G3
 import CaTTExp.GrayCtx.Checks.VComp
 import CaTTExp.GrayCtx.Checks.Cube
 import CaTTExp.GrayCtx.Checks.Prune
+import CaTTExp.GrayCtx.Checks.CrossFree
+import CaTTExp.GrayCtx.Checks.Alternation

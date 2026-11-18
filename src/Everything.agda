@@ -14,6 +14,7 @@ import CaTTExp.Check
 import CaTTExp.PastingCheck
 import CaTTExp.Completeness
 import CaTTExp.ConstSub
+import CaTTExp.Suspension
 import CaTTExp.GroupModel
 import CaTTExp.Pure
 import CaTTExp.PureMetatheory

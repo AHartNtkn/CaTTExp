@@ -57,3 +57,44 @@ private
 
 !-wf : ∀ {Γ} → Γ ⊢ctx → D₀ ⊢sub ! Γ ∶ Γ
 !-wf {Γ} w = fst (K.!-wf closed w (nc-ctx Γ))
+
+------------------------------------------------------------------------
+-- Suspension and elements elaboration (C8.1), with no hypothesis.
+
+import CaTTExp.Suspension ∅ as Σs
+open Σs public using (Σty; Σtm; Σsub; Σctx)
+
+private
+  mutual
+    fnc-ty : ∀ A → Σs.FNcTy A
+    fnc-ty ⋆           = tt
+    fnc-ty (arr A t u) = fnc-ty A , fnc-tm t , fnc-tm u
+
+    fnc-tm : ∀ t → Σs.FNcTm t
+    fnc-tm (var _)     = tt
+    fnc-tm (coh Θ A σ) = fnc-ctx Θ , fnc-ty A , fnc-sub σ
+    fnc-tm (cst ())
+
+    fnc-sub : ∀ σ → Σs.FNcSub σ
+    fnc-sub ⟨⟩       = tt
+    fnc-sub (σ ,ₛ t) = fnc-sub σ , fnc-tm t
+
+    fnc-ctx : ∀ Γ → Σs.FNcCtx Γ
+    fnc-ctx ε       = tt
+    fnc-ctx (Γ ▸ A) = fnc-ctx Γ , fnc-ty A
+
+Σctx-wf : ∀ {Γ} → Γ ⊢ctx → Σctx Γ ⊢ctx
+Σctx-wf {Γ} w = Σs.Σctx-wf w (fnc-ctx Γ)
+
+Σty-wf : ∀ {Γ A} → Γ ⊢ty A → Σctx Γ ⊢ty Σty A
+Σty-wf {Γ} {A} a = Σs.Σty-wf a (fnc-ctx Γ) (fnc-ty A)
+
+Σtm-wf : ∀ {Γ t A} → Γ ⊢tm t ∶ A → Σctx Γ ⊢tm Σtm t ∶ Σty A
+Σtm-wf {Γ} {t} d = Σs.Σtm-wf d (fnc-ctx Γ) (fnc-tm t)
+
+Σsub-wf : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → Σctx Γ ⊢sub Σsub σ ∶ Σctx Δ
+Σsub-wf {Γ} {σ} s = Σs.Σsub-wf s (fnc-ctx Γ) (fnc-sub σ)
+
+elements : ∀ {Γ Δ t A γ} → Γ ⊢tm t ∶ A → Δ ⊢sub γ ∶ Σctx Γ →
+           Δ ⊢tm Σtm t [ γ ]tm ∶ Σty A [ γ ]ty
+elements {Γ} {t = t} d g = Σs.elements closed d (fnc-ctx Γ) (fnc-tm t) g

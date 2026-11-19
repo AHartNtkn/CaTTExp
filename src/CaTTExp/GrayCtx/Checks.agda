@@ -19,3 +19,4 @@ import CaTTExp.GrayCtx.Checks.ExplicitAgree
 import CaTTExp.GrayCtx.Checks.Templates
 import CaTTExp.GrayCtx.Checks.VCompAll
 import CaTTExp.GrayCtx.Checks.VCompAgree
+import CaTTExp.GrayCtx.Checks.VCompLift

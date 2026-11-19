@@ -129,8 +129,31 @@ The same disk reduction as §1a, for Γ ⊗ (D¹ ∨ D¹) ⊢ comp : Γ ⊗ D¹.
 - `Checks.VCompAll` certifies the disk hypothesis for k = 2, in both orientations. **Corollary `vcomp-wf`**: Γ ⊗ (D¹ ∨ D¹) ⊢ compE : Γ ⊗ D¹, and the same for D¹ ⊗ Γ, for every well-formed globular Γ of dimension ≤ 2.
 
 **What is not covered.**
-- The disk images for dimension ≥ 3 do not exist, because the elaborator's composite is defined only up to dimension 2. That is D15.
+- The elaborator's composite is defined only up to dimension 2. Dimension ≥ 3 is §3b.
 - Agreement with `compSub` is checked on the listed shapes, not proved for all Γ. The theorem is about the explicit compE.
+
+## 3b. D15: disk images in every dimension, by naturality lifts
+
+**Idea.** In D^{n+1} ⊗ (D¹ ∨ D¹), the top cell x : a → b sits over a. The image of a ⊗ e is a term comp(a) in the copies of a (copies 0, 1, 2, a⊗i, a⊗j) and in generators below a. The image of x ⊗ e is the *naturality lift* of comp(a) along x: move each copy of a to the copy of b, with the copies of x as the lifts. x₀, x₁, x₂ are *derivatives* (a cell a_k → b_k). x⊗i, x⊗j are *squares*: their own boundaries travel. For the right side the square convention is L(c) : c ; L(∂⁺c) → L(∂⁻c) ; b(c); for the left side it is the reverse. These conventions are read off `TsE sd m` and checked for m = 3, 4.
+
+**The lift engine** (`GrayCtx.Lift`, uncertified like `Elab`). It extends L from variables to coherence terms in three cases:
+1. **Every travelling argument is a derivative.** L is one coherence over the pasting scheme with those arguments raised by one dimension. It is a composite when the term's boundary does not travel, and an invertible coherence otherwise. Its sides are computed by L inside the raised scheme.
+2. **A vertical chain of squares.** L pastes the squares: a regrouping, one `stepAt` per square, then a regrouping.
+3. **A whiskering of one square** (rw, lw, whiskIn). L is the whiskered square, written as a composite over the raised tree, between two functoriality coherences over the tree with that position doubled.
+
+Anything else, such as a square as an argument of an associator, returns an error.
+
+`GrayCtx.VCompLift` iterates this. `imgs sd k` uses the elaborator's images up to dimension 2, then lifts k times. `imgN sd m` is the image for D^m, and `compL sd k Γ` is the substitution built from them.
+
+**What is checked.**
+- **D³, both sides: accepted by the certified checker.** The checker (`Check`: `checkCtx`, `inferTm`, `castTy`) accepts cyl2E(D³) ⊢ imgN sd 3 : TsE sd 3 [compL sd 1 (D³)] (`Checks.VCompLift.diskOK`). This is a **compiled run** (`tools/vcomp-check`, MAlonzo + GHC, about a minute in total), **not an Agda-checked certificate.** The D³ image is a term of about 110 MB written out without sharing (the D² image is 0.66 MB). Agda's type checker did not finish evaluating the checker on it within 30 minutes.
+- **D⁴, both sides: the raw type is the required one** (`typeOK`, compiled). The certified checker on D⁴ ran out of memory at 15 GB.
+- **Agda-checked** (`Checks.VCompLift.vcomp3-wf`, `--safe`): suppose the D³ certificate holds, that is, `DiskCertW sd (imgs sd 1) 3`. Then Γ ⊗ (D¹ ∨ D¹) ⊢ compL sd 1 Γ : Γ ⊗ D¹ for every well-formed globular Γ of dimension ≤ 3, in both orientations. This is `compW-wf` of §3a with k = 3. The D⁰–D² certificates of `Checks.VCompAll` serve for j ≤ 2.
+
+**Status.**
+- Vertical composition in dimension 3 is constructed, and the certified checker accepts it in a compiled run.
+- Every dimension is conjectured. The engine closes under iteration because squares occur only inside whiskerings and vertical chains. See `conjectures/vertical-composition-by-lifts.md`, which also gives the proof route: a typing theorem for the three cases of the engine.
+- Associativity and unit laws (the rest of D15) are not started.
 
 ## 4. The Gray cube and G4
 
@@ -186,6 +209,6 @@ Both are encodable with the code here once there is an Agda CaTT_su (no thread h
 1. **D13.** Done: the cylinder is proved well formed for every globular Γ of every dimension (§1a), and the explicit vertical composition compE is proved well typed for every globular Γ of dimension ≤ 2 (§3a; it is the elaborator's compSub on the checked shapes).
 2. **Cylinder of arbitrary composite boundaries** (Γ ⊗ D¹ for non-globular Γ). Only binary 1-composites are handled here; the general case is Conjecture N (C1) and the explicit construction of D3, both owned by NGC.
 3. **D14. toL and toR mutually inverse up to higher cells.**
-4. **D15. Vertical composition for Γ of dimension ≥ 3**, and associativity and unit laws for it as coherences between substitutions (`internal-hom.md` §5.3).
+4. **D15. Vertical composition for Γ of dimension ≥ 3** (§3b: constructed by naturality lifts; dimension 3 accepted by the certified checker in a compiled run, not yet an Agda-checked certificate; every dimension conjectured), and associativity and unit laws for it as coherences between substitutions (`internal-hom.md` §5.3, not started).
 5. **D16. An Agda CaTT_su**, to run the two D6 checks of §5.
 6. **Cross-check with the cone thread's `CylOf.cyl`** (branch `claude/project-thread-b03ys3`, not yet on main): for globular Γ it should agree with `cyl left 1 Γ` up to renaming, as `Free.Cylinder` does. Part of D5's follow-up, owned here.

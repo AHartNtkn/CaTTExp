@@ -418,4 +418,4 @@ The sufficient direction for bubble-free 2-contexts, the all-dimensional attachm
 - (Q2, higher) An n-bubble with n ≥ 3 ⇒ ¬RC_id(∞)? The same argument needs an n-fold delooping. For n ≥ 3 that means an E₃ = symmetric structure, where β must satisfy β² = 1. A ℤ/2-valued version (β_{p,q} = pq mod 2) would only detect odd weight. It would also need an explicit weak (n+1)-categorical CaTT model of that shape, which the Gray-operad argument does not supply.
 - (Q3) The bubble-free 2-dimensional case in every dimension.
 
-The follow-up prompt is `outbox/relative-coherence-all-dimensions-r3.md`.
+The follow-up prompt is `outbox/relative-coherence-all-dimensions-r3.md` (answered 2026-11-19: `answered/relative-coherence-all-dimensions-r3-2026-11-19.md`).

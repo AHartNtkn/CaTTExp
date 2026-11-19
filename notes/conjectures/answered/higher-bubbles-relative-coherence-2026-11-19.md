@@ -6,7 +6,7 @@ A nonidentity cell on an iterated identity obstructs relative coherence in every
 \[
 q:1_b\longrightarrow 1_b,\qquad q\ne 1_{1_b},\quad n\ge2,
 \]
-where b is an (n−2)-cell, possibly itself an iterated identity. Then π is not a globular trivial fibration. Hence Γ fails RC_id(∞) by item 7 of the [relative-coherence problem](../outbox/relative-coherence-all-dimensions-r3.md).
+where b is an (n−2)-cell, possibly itself an iterated identity. Then π is not a globular trivial fibration. Hence Γ fails RC_id(∞) by item 7 of the [relative-coherence problem](relative-coherence-all-dimensions-r3-2026-11-19.md).
 
 The literal boundary in the hypothesis matters. We first construct a model in which the suspended Eckmann–Hilton operation on a nonempty list acts nontrivially. We then use the assumed lifting property to obtain the precise weak boundary required by that operation.
 

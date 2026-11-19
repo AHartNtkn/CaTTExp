@@ -165,7 +165,7 @@ def instantiate(expr, assignment):
     return (expr[0], *(instantiate(child,assignment) for child in expr[1:]))
 
 
-def check_native_rule(rule, cut):
+def check_native_rule(rule, cut, theory="P"):
     from interchange_free import FreeAlgebra
     from reachability_theory import EQUATIONS
 
@@ -175,7 +175,7 @@ def check_native_rule(rule, cut):
     env = {v:"/".join(["0"]*cut + [str(i)] + ["0"]*(dim-cut))
            for i,(v,dim) in enumerate(rule.variables)}
     lhs,rhs = (instantiate(x,env) for x in (rule.left,rule.right))
-    free = FreeAlgebra(tree)
+    free = FreeAlgebra(tree, theory)
     model,a,b = free.query(lhs,rhs)
     yes,no = solve(model,a,b), solve(model,b,a)
     assert a != b and yes.reachable and verify(model,a,b,yes), rule.name

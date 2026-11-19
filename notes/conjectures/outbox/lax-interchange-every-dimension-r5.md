@@ -3247,3 +3247,57 @@ Run `python3 -B scripts/e6/interchange_component_runs.py`. The general
 argument concerns every diagram. A rectangle whose two active inputs
 act entirely in the same run can still have distinct slots and mixed
 atoms; the run word does not decide that case.
+
+# Researcher Response 18
+
+**The two-moving-slot, two-partner theorem of Response 16 holds in the completed theory of Response 12.** Take consecutive moving slots \(x,y\) in one outer branch, each with an arbitrary finite string of unary advances, and consecutive stationary slots \(z,w\) in the other. On the full interval \(zwxy\to xyzw\), with no higher input generators, the degree-five rectangle \(CDAB\Rightarrow CADB\) has no reverse whenever \(A,D\) are proper and each temporal half contains a crossing. In particular both inactive inputs \(B,C\) may be mixed. The completion does introduce a new path on this very grid.
+
+### Extending the degree-five decision procedure
+
+The [tree compiler](../../../scripts/e6/interchange_free.py) now accepts the JSON field `"theory": "response12"`. In addition to the input globes and the six schemes of \(P\), it grounds the [five additional directed boundaries](../../../scripts/e6/response12_degree_five.py) on arbitrary typed arguments. These are the cut-one shifted join and the outer auxiliaries \(H_L,H_R,K,J\). Responses 8–10 specify their unit values as identities or existing paths. In particular \(J\) at a unit right variation is \(K\), and at a unit left variation its boundary is realized by a contextual \(W\) followed by a contextual \(H_R\). Grounding these specialized boundaries preserves reachability. The free 4-skeleton is the one used in Response 16. The extra equations on parallel 5-paths in Responses 9–12 leave existence of a path between 4-cells unchanged.
+
+Response 4's original integer weight \(w\) still bounds this search. Write \(X:A^0\to A^1\), \(Y:B^0\to B^1\), let \(m\) count 3-events, and let \(D(X)\) be the nonnegative difference of the 3-moments of its faces. The new source-minus-target weights are as follows.
+
+| Generator | Weight drop |
+| --- | --- |
+| Shifted join on \(X,Y\) | \(0\) |
+| \(H_L(X,B)\) | \(\lvert tB\rvert D(X)\) |
+| \(H_R(A,Y)\) | \(0\) |
+| \(K(X,B)\) | \(2m(A^1)m(B)\) |
+| \(J(X,Y)\) | \(2m(A^1)m(B^1)\) |
+
+In the shifted join each variation occurs once on each side, and the inner squares have equal product weight because a variation preserves 3-mass. For \(H_L\), the weight of the outer join changes only through the moment of its left history. For \(H_R\), the mass of the right history and the length of its target 2-word are unchanged. For \(K,J\), cancel the occurrences of the variations. The remaining difference is the drop of \(W\) on the indicated final histories. Changing the left layer of \(t_0\) leaves its stationary 2-face fixed, and changing the right layer of \(h\) leaves its weight fixed. Each 4-argument occurs under fixed whiskers in the source, so its own weight lies within the source bound. Thus the finite grounding and closure under contexts of Response 4 decide **each specified degree-five reachability query** in the completed theory.
+
+### The new path on the four-slot grid
+
+The stationary right branch has no positive 3-history or 4-variation. At cut zero \(H_L\) specializes to the existing \(U_r\), while \(H_R,K,J\) specialize to identities here. At cut one a proper shifted join needs two positive 4-paths on disjoint spatial intervals. Each such path uses at least two slots. With four slots total, each operand must therefore use one moving slot and one stationary partner. An operand containing both moving slots would leave the other without an advance or a crossing. The two positive operands are paths of mixed moves of an advance across its own crossing. The [grid solver](../../../scripts/e6/interchange_response12_rectangles.py) grounds the shifted join for every pair of such paths, in its actual spatial and temporal context. With one unit operand its boundary specializes to an identity or the old \(N_L\).
+
+Use Response 16's names \(p=wx,q=zx,r=wy,s=zy\). At one advance per moving slot there is exactly one proper instance after projection. Just after \(p\) the spatial word is \(zxwy\). Its left operand can do \(qX\to Xq\), and its right operand can do \(rY\to Yr\). With \(p,s\) as fixed temporal context, the shifted join goes from the **first 4-path** below to the **second**.
+\[
+\begin{aligned}
+prYqXs&\to pYrqXs\to pqXYrs\to pXqYrs,\\
+prYqXs&\to prYXqs\to pYrXqs\to pXqYrs .
+\end{aligned}
+\]
+The native terms give these intermediate histories and this orientation. In \(P\) the solver certifies a closed set of seven paths excluding the second path when started at the first. In Response 12 it replays the new one-step comparison. In the reverse direction six paths form a closed set in the completed graph. This example distinguishes the two theories on the grid used for the theorem.
+
+### Why the rectangle theorem survives
+
+Retain one positive primitive-edge witness from each of \(A,D\) as in Response 16. If their requests use more than two advances, one witness is an inner exchange of two unary advances, and the other needs at most one stationary partner. Contract to the two moving slots and that one partner. On three slots a proper shifted join would require four distinct slots. The cut-zero specializations above still apply, so Response 14's one-partner obstruction holds in the completion. This verifies the branch of the reduction that uses a different diagram.
+
+Otherwise retain all four slots and at most two advances. The surviving witnesses keep both active composites proper by positivity of their 4-weight. Each half still has a crossing. Appending any missing advances as a common terminal 3-suffix gives two in total. A reverse would survive these substitutions and whiskerings. The resulting input enumeration is exactly Response 16's. For each boundary pair the solver now checks a forward path and a closed reverse cut using all the applicable completed-theory moves, including moves across the chosen temporal cut.
+
+| Retained advances \((x,y)\) | Proper shifted join rules | Rectangle placements | Distinct boundary pairs | Largest reverse cut |
+| --- | ---: | ---: | ---: | ---: |
+| \((2,0)\) | 0 | 230 | 208 | 18 |
+| \((1,1)\) | 1 | 464 | 420 | 34 |
+| \((0,2)\) | 0 | 202 | 180 | 34 |
+
+For \((1,1)\) the program also replays the original 420 reverse certificates directly against the enlarged graph. The source of the new join occurs in **none** of those closed sets, even inside a top prefix or suffix. The all-mixed example retains its 14-path reverse cut, and the example with two inner active inputs and two mixed inactive inputs retains its 10-path cut. As in Response 16, the grid computation merges some parallel primitive occurrences, so exclusion in its graph implies exclusion for the original terms. This proves all 808 boundary pairs and, by the contraction, the arbitrary-length theorem. General degree-five directedness on other diagrams remains open.
+
+Run the native boundary checks and the completed grid census from the repository root.
+
+~~~sh
+python3 -B scripts/e6/check_response12_degree_five.py --all-disks
+python3 -B scripts/e6/interchange_response12_rectangles.py
+~~~

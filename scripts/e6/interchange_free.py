@@ -1,4 +1,8 @@
-"""Compile the graded fragment of P on a globular pasting tree to a finite graph."""
+"""Decide degree-five reachability on a finite globular pasting tree.
+
+The optional JSON field "theory" selects "P" (default) or "response12".
+Both have the same free algebra through dimension four.
+"""
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from itertools import product
@@ -58,7 +62,14 @@ def selector(name):
 
 class FreeAlgebra:
     """Ground operation tables, modulo congruence, one dimension at a time."""
-    def __init__(self, tree):
+    def __init__(self, tree, theory='P'):
+        if theory == 'P':
+            self.rules = RULES
+        elif theory == 'response12':
+            from response12_degree_five import EXTRA_RULES
+            self.rules = RULES + EXTRA_RULES
+        else:
+            raise ValueError(f'unknown theory {theory!r}, expected "P" or "response12"')
         generators, self.globes = tree_generators(tree)
         self.generators = {}
         self.data = []
@@ -195,25 +206,48 @@ class FreeAlgebra:
         self.table[key] = self.new(data) if result is None else self.root(result)
 
     def assignments(self, schema, domains):
-        # Test each guard as soon as its last variable is bound. This matters
-        # for equations on several consecutive, often noncomposable, cells.
+        # Index each variable by the faces that must match earlier operands.
+        # For a composite guard whose two sides both use the new variable,
+        # test it after binding the variable. Tables are stable while an
+        # equation or rule is grounded.
         def names(expr):
             return {expr} if isinstance(expr, str) else set().union(*(names(x) for x in expr[1:]))
         variables = schema.variables
         position = {v: i for i, (v, _) in enumerate(variables)}
-        by_last = defaultdict(list)
+        matches = defaultdict(list)
+        residual = defaultdict(list)
         for a, b in schema.guards:
-            last = max(position[v] for v in names(a) | names(b))
-            by_last[last].append((a, b))
+            lhs, rhs = names(a), names(b)
+            i = max(position[v] for v in lhs | rhs)
+            var = variables[i][0]
+            if lhs == {var} and var not in rhs:
+                matches[i].append((a, b))
+            elif rhs == {var} and var not in lhs:
+                matches[i].append((b, a))
+            else:
+                residual[i].append((a, b))
+        indexes = {}
+        for i, tests in matches.items():
+            var, dim = variables[i]
+            index = defaultdict(list)
+            for x in domains[dim]:
+                key = tuple(self.value(current, {var: x}) for current, _ in tests)
+                if None not in key:
+                    index[key].append(x)
+            indexes[i] = index
         env = {}
         def extend(i):
             if i == len(variables):
                 yield env
                 return
             var, dim = variables[i]
-            for x in domains[dim]:
+            candidates = domains[dim]
+            if i in indexes:
+                key = tuple(self.value(earlier, env) for _, earlier in matches[i])
+                candidates = indexes[i].get(key, ())
+            for x in candidates:
                 env[var] = x
-                if self.compatible(by_last[i], env):
+                if self.compatible(residual[i], env):
                     yield from extend(i+1)
         yield from extend(0)
 
@@ -294,6 +328,11 @@ class FreeAlgebra:
             del self.parent[mark:]
         if p.dimension != 4 or q.dimension != 4 or (p.source,p.target) != (q.source,q.target):
             raise ValueError('the query requires parallel 4-terms')
+        # In both theories every 5-rule is weight-nonincreasing. Every
+        # 4-argument occurs in its source under fixed whiskers (same weight)
+        # and top compositions (additive, nonnegative), so the source bound
+        # also covers its arguments and every nested contextual application.
+        # Include a heavier query target so it can be represented normally.
         self.cap = max(p.size, q.size)
         self.complete(4)
         a, b = self.query_term(source), self.query_term(target)
@@ -309,7 +348,7 @@ class FreeAlgebra:
             x, y = self.generators[s], self.generators[t]
             if self.data[x].size <= self.cap:
                 record(self.root(x),self.root(y),'globe '+name)
-        for rule in RULES:
+        for rule in self.rules:
             for env in self.assignments(rule, domains):
                 x, y = self.value(rule.left,env), self.value(rule.right,env)
                 if x is not None and y is not None:
@@ -339,12 +378,12 @@ class FreeAlgebra:
         return Presentation(map(str, domains[3]),edges,rules),path(a),path(b)
 
 
-def compile_query(tree, source, target):
-    return FreeAlgebra(tree).query(source,target)
+def compile_query(tree, source, target, theory='P'):
+    return FreeAlgebra(tree, theory).query(source,target)
 
 
 def read_query(data):
-    return compile_query(data['tree'], data['source'], data['target'])
+    return compile_query(data['tree'], data['source'], data['target'], data.get('theory', 'P'))
 
 
 if __name__ == '__main__':

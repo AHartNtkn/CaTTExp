@@ -210,6 +210,17 @@ def check_rectangle(presentation, start, finish, inputs, cut_size):
           f'{len(negative.visited)} paths in reverse cut: {dict(uses)}.')
 
 
+def check_mixed_examples(presentation):
+    check_rectangle(presentation, 'pqXrsY', 'XpqYrs', (
+        Move('r', 1, 2, 3), Move('r', 0, 1, 2),
+        Move('r', 4, 5, 6), Move('r', 3, 4, 5)), 14)
+    # A acts on rX -> Xr by iota(X,r); after C, D acts on Yq -> qY
+    # by iota(q,Y). B and C are mixed, with C sliding Y across qs.
+    check_rectangle(presentation, 'prXqsY', 'XprqYs', (
+        Move('i', 1, 2, 3), Move('r', 0, 1, 2),
+        Move('r', 3, 5, 6), Move('i', 3, 4, 5)), 10)
+
+
 def check():
     for m, n in ((2, 0), (1, 1), (0, 2)):
         presentation = ground_all(m, n)
@@ -219,15 +230,7 @@ def check():
         print(f'{m} X and {n} Y: {len(raw_histories(m,n))} raw histories, '
               f'{len(presentation.vertices)} history classes, '
               f'{len(presentation.edges)} projected 4-edges, {len(presentation.rules)} ground rules.')
-    presentation = ground_all()
-    check_rectangle(presentation, 'pqXrsY', 'XpqYrs', (
-        Move('r', 1, 2, 3), Move('r', 0, 1, 2),
-        Move('r', 4, 5, 6), Move('r', 3, 4, 5)), 14)
-    # A acts on rX -> Xr by iota(X,r); after C, D acts on Yq -> qY
-    # by iota(q,Y). B and C are mixed, with C sliding Y across qs.
-    check_rectangle(presentation, 'prXqsY', 'XprqYs', (
-        Move('i', 1, 2, 3), Move('r', 0, 1, 2),
-        Move('r', 3, 5, 6), Move('i', 3, 4, 5)), 10)
+    check_mixed_examples(ground_all())
 
 
 if __name__ == '__main__':

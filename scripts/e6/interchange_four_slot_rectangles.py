@@ -12,7 +12,7 @@ from interchange_reachability import solve, verify
 
 
 @cache
-def window_paths(raw, lo, hi):
+def window_paths(raw, lo, hi, moves_at=primitive_moves):
     """Every nonempty path supported in [lo,hi), on the specified raw history."""
     # A crossing in the complementary window prevents a full K15 block here.
     # Detect a cycle explicitly before using finite path enumeration.
@@ -20,7 +20,7 @@ def window_paths(raw, lo, hi):
     todo = [(raw, (), frozenset({raw}))]
     while todo:
         state, path, seen = todo.pop()
-        for move in primitive_moves(state):
+        for move in moves_at(state):
             if lo <= move.lo and move.hi <= hi:
                 target = move.target(state)
                 if target in seen:
@@ -52,8 +52,9 @@ def rectangle_queries(m, n):
                             yield source, target, is_mixed(b) and is_mixed(c)
 
 
-def certify(m, n):
-    presentation = ground_all(m, n)
+def certify(m, n, presentation=None):
+    if presentation is None:
+        presentation = ground_all(m, n)
     counts = Counter()
     checked = {}
     for source, target, mixed_inactive in rectangle_queries(m, n):

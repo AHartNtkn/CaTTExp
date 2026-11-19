@@ -156,7 +156,7 @@ For the one-vertex context, LA and NC are both a point and relative coherence ho
 
 # Verification (2026-11-19)
 
-Status: **verified, partial**. The researchers report that they stalled on this round and are focusing elsewhere for now. No r5 is written. The line is blocked on external researchers, and the open directions are worked internally (row C1, owner RCX).
+Status: **verified, partial**. The open directions are also worked internally (row C1, owner RCX). Follow-up: [`outbox/relative-coherence-all-dimensions-r5.md`](../outbox/relative-coherence-all-dimensions-r5.md).
 
 **Inductive reconstruction fails at every nonempty target: correct.** This answers item 22's sufficient condition negatively in its inductive form.
 - *The test category D.* D is the free strict ω-category with one object p, a loop ℓ, and in each dimension k ≥ 2 one generator for each ordered parallel pair of (k−1)-cells. It is gaunt: top-generator counts are additive, so an invertible cell has count 0, and a cell with count 0 is an identity. Every (k−1)-cell already exists when the k-generators are attached, so D → 1 has boundary lifting in every dimension.

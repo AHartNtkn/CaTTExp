@@ -8,7 +8,8 @@
 -- `OmegaSound.sound-in`. Here the two meet:
 --
 --   * `KΓ Γ x y : ADC` is K(Γ)(x, y) on sorted bags, with the decidable
---     basis test `isBasis Γ x y` (Basis → T isBasis is `basis→`);
+--     basis test `isBasis Γ x y` (it accepts exactly the basis:
+--     `basis→`, `basis←`);
 --   * `term-cell`: every derivable t : arr A s u over a pasting context
 --     gives, for every L ≥ dim A, a cell of `nu (KΓ Γ x y) L`, namely
 --     `tabOf L (towerOf t (arr A s u))`.
@@ -55,6 +56,27 @@ isBasis Γ x y k w = isWFT Γ x y w ∧ (deg Γ w ==ℕ k)
 
 basis→ : ∀ Γ x y k w → Basis Γ x y k w → T (isBasis Γ x y k w)
 basis→ Γ x y k w (p , refl) = ∧-intro (wft→ Γ x y w p) (==T (deg Γ w))
+
+-- The converse: the test accepts exactly the basis.
+private
+  ∧-l : ∀ {a b} → T (a ∧ b) → T a
+  ∧-l {true} _ = tt
+
+  ∧-r : ∀ {a b} → T (a ∧ b) → T b
+  ∧-r {true} q = q
+
+mutual
+  →wft : ∀ Γ x y w → T (isWFT Γ x y w) → WFT Γ x y w
+  →wft Γ x y []      p = ==ℕ-sound x y p
+  →wft Γ x y (v ∷ w) p = →step Γ x y w (endsL (lookup Γ v)) p
+
+  →step : ∀ Γ x y w (m : Maybe (Nat × Nat)) → T (wftStep Γ x y w m) →
+          Σ Nat λ z → (m ≡ just (x , z)) × WFT Γ z y w
+  →step Γ x y w nothing        ()
+  →step Γ x y w (just (a , z)) p rewrite ==ℕ-sound x a (∧-l p) = z , refl , →wft Γ z y w (∧-r p)
+
+basis← : ∀ Γ x y k w → T (isBasis Γ x y k w) → Basis Γ x y k w
+basis← Γ x y k w p = →wft Γ x y w (∧-l p) , ==ℕ-sound (deg Γ w) k (∧-r p)
 
 ------------------------------------------------------------------------
 -- K(Γ)(x, y) as an augmented directed complex, and the cells of L in it.

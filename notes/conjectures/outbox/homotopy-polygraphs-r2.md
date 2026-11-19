@@ -35,9 +35,13 @@ Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can b
 12. **Positivity in the top dimension alone is not enough.** One vertex, b : 1 ⇒ 1, Ω : b ⇛ b: Ω has non-identity boundaries, but b is a bubble.
 13. **Strict versus "stricter".** Chanavat (*Homotopy theory of stricter n-categories*, arXiv 2509.26563, Comment 2.67) gives a 4-dimensional regular directed complex whose molecules do not form a polygraph under strict composition. This is **not** a counterexample to the positive case: the extra equations appear in the passage from the free strict category to molecules, not in the free strict category itself.
 
+14. **Higher bubbles obstruct in every dimension.** If a nonidentity n-cell is an endomorphism of an iterated identity on any k-cell, k ≤ n − 2, then the strict n-skeleton has nonzero mod-p cohomology in arbitrarily high degrees for some prime p. The free cellular n-skeleton has cohomological dimension at most n, and homotopicality passes to skeleta. This covers composite bubbles and positive-dimensional bases. [Proof of the higher-bubble obstruction](../answered/higher-bubble-obstruction-2026-11-19.md)
+
 ## 4. Questions
 
 **Question 1 (main: the all-dimensional characterisation).** Is a finite polygraph Γ homotopical **iff F(Γ) is bubble-free in every dimension** (no iterated-identity endo-cell, §1)? This is the all-dimensional form of item 5. "Only if" for endo-cells of 1_x^{n−1} at a vertex x should follow by the argument of item 2 (an endo-cell q of 1^{n−1}_x gives Bⁿℕ → F(Γ) → Bⁿℕ with nonzero degree); please prove or refute it for endo-cells of 1^{n−1−k}_c with c of positive dimension k. For "if", the expected route is item 5's method one dimension up: a mesh or Θ-presheaf model of the free (∞,n)-category in which the fibres over each shape are classifying spaces of combinatorial complexes of "encodings" of a pasting diagram, contractible under the bubble-free hypothesis.
+
+**Status, 2026-11-19.** Item 14 settles the “only if” conjecture over every base cell. The open direction is whether bubble-freeness suffices.
 
 **Question 2 (positivity in every dimension).** If Question 1 is out of reach, prove that every finite polygraph that is positive in every dimension (§1) is homotopical — the "positive" half of Chanavat's Comment 3.40, which is a sub-case of Question 1 because positive polygraphs are bubble-free in every dimension. If it fails, give the smallest counterexample with a proof of non-homotopicality.
 

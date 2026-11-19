@@ -226,12 +226,103 @@ confluentOn : Nat → Word → Bool
 confluentOn n w with nfs n w
 ... | ws , finished = finished ∧ allSame ws
 
--- At least two redex occurrences: the term contains an overlap.  (In
--- some rows of the table the two reducts coincide syntactically, as in
--- the β/η shared-curry row.)
-overlapping : Word → Bool
-overlapping w = go (reducts w)
+------------------------------------------------------------------------
+-- Typing.  `typeOf S w` is the target of w from source S when every
+-- triple is well typed (generator sources and targets, evaluation and
+-- curry types, curry bodies from T_a X to Z), and nothing otherwise.
+
+tgtP : Prim → Formula
+tgtP (gen _ _ t)     = t
+tgtP (ev _ _ Z)      = Z
+tgtP (cur d A Z _ _) = Hf d A Z
+
+mutual
+  typeOf : Formula → Word → Maybe Formula
+  typeOf S []                 = just S
+  typeOf S (tri l q r ∷ ws)   =
+    guard (eqFo S (l ++ srcP q ++ r) ∧ primOK q) λ _ →
+      typeOf (l ++ tgtP q ++ r) ws
+
+  primOK : Prim → Bool
+  primOK (gen _ _ _)        = true
+  primOK (ev _ _ _)         = true
+  primOK (cur d A Z X body) = nonempty X ∧ nonempty Z ∧ bodyOK (typeOf (Tf d A X) body)
+    where
+      bodyOK : Maybe Formula → Bool
+      bodyOK nothing   = false
+      bodyOK (just Z') = eqFo Z Z'
+
+wellTyped : Formula → Word → Bool
+wellTyped S w = is-just (typeOf S w)
+
+------------------------------------------------------------------------
+-- Redex occurrences and genuine overlaps.  An occurrence is the path of
+-- curry bodies it sits in (list of word positions), its start position
+-- in that word and its length (1 for η, 2 for N and β).  Two
+-- occurrences overlap when they share a triple: same path and
+-- intersecting intervals, or one sits (at any depth) inside the body of
+-- a triple covered by the other.
+
+record Occ : Set where
+  constructor occ
+  field
+    path  : List Nat
+    start : Nat
+    len   : Nat
+
+mutual
+  occs : List Nat → Nat → Word → List Occ
+  occs p i []       = []
+  occs p i (t ∷ ws) =
+       (if is-just (etaAt t) then occ p i 1 ∷ [] else [])
+    ++ pairOccs p i t ws
+    ++ bodyOccs p i t
+    ++ occs p (suc i) ws
+
+  pairOccs : List Nat → Nat → Triple → Word → List Occ
+  pairOccs p i t []      = []
+  pairOccs p i t (u ∷ _) =
+       (if is-just (nAt t u) then occ p i 2 ∷ [] else [])
+    ++ (if is-just (betaAt t u) then occ p i 2 ∷ [] else [])
+
+  bodyOccs : List Nat → Nat → Triple → List Occ
+  bodyOccs p i (tri _ (cur _ _ _ _ body) _) = occs (p ++ (i ∷ [])) 0 body
+  bodyOccs p i _ = []
+
+eqPath : List Nat → List Nat → Bool
+eqPath []       []       = true
+eqPath (x ∷ xs) (y ∷ ys) = (x ==ℕ y) ∧ eqPath xs ys
+eqPath _ _ = false
+
+ltℕ : Nat → Nat → Bool
+ltℕ m n = m <ℕ n
+
+covers : Occ → Nat → Bool      -- the occurrence's interval contains position j
+covers (occ _ s n) j = not (ltℕ j s) ∧ ltℕ j (s + n)
+
+-- is q at or below path p ++ [j] for some j covered by o?
+below : Occ → Occ → Bool
+below o@(occ p _ _) (occ q _ _) = go p q
   where
-    go : List Word → Bool
-    go (_ ∷ _ ∷ _) = true
-    go _           = false
+    go : List Nat → List Nat → Bool
+    go []       (j ∷ _)  = covers o j
+    go (x ∷ xs) (y ∷ ys) = (x ==ℕ y) ∧ go xs ys
+    go _ _ = false
+
+overlapOcc : Occ → Occ → Bool
+overlapOcc o@(occ p s n) o'@(occ p' s' n') =
+     (eqPath p p' ∧ ltℕ s (s' + n') ∧ ltℕ s' (s + n))
+  ∨ below o o' ∨ below o' o
+
+anyPair : List Occ → Bool
+anyPair []       = false
+anyPair (o ∷ os) = any (overlapOcc o) os ∨ anyPair os
+  where
+    any : (Occ → Bool) → List Occ → Bool
+    any f []       = false
+    any f (x ∷ xs) = f x ∨ any f xs
+
+-- The term contains two distinct redex occurrences that share a triple:
+-- a genuine critical overlap, not two disjoint redexes.
+overlapping : Word → Bool
+overlapping w = anyPair (occs [] 0 w)

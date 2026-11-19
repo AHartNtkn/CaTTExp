@@ -161,8 +161,12 @@ class Diagram3:
         D = self.D(X)
         verts, edges, ns, nt = D
         nv = dict(verts); ne = dict(edges)
-        used_v, used_e = set(), set()
-        for gname in sorted(P):
+        used_v = set()
+        # regions with a source first, then the points of identity-source steps, so that a
+        # point sitting on a boundary wire of another region lands on the already-rewired edge
+        pos = [n for n in sorted(P) if self.byname[n].S]
+        pts = [n for n in sorted(P) if not self.byname[n].S]
+        for gname in pos:
             g = self.byname[gname]
             ein, eout = self.boundary(g, D, X)
             if used_v & g.S: raise Invalid('overlap')
@@ -173,15 +177,31 @@ class Diagram3:
             for e in list(ne):
                 a, b = ne[e]
                 if owner_vertex(a) in g.S and owner_vertex(b) in g.S: del ne[e]
-            if not g.S:
-                for j, e in enumerate(ein):
-                    if e in used_e: raise Invalid('two points on one wire in a tier')
-                    used_e.add(e)
+            for j, e in enumerate(ein): ne[e] = (ne[e][0], (p, 'i', j))
+            for k, e in enumerate(eout): ne[e] = ((p, 'o', k), ne[e][1])
+        def res(e, pending):
+            n = 0
+            while e not in ne:
+                n += 1
+                if n > 50 or not e[0].startswith('s:'): raise Invalid('wire not present')
+                h = e[0][2:]
+                if h in pending: return None          # sits on a point not yet placed
+                if h in X or h in P: raise Invalid('wire not present')
+                e = self.byname[h].wires[e[2]]
+            return e
+        pending = set(pts)
+        while pending:
+            progress = False
+            for gname in sorted(pending):
+                g = self.byname[gname]
+                ws = [res(e, pending - {gname}) for e in g.wires]
+                if any(w is None for w in ws): continue
+                p = pid(gname); nv[p] = g.arity()
+                for j, e in enumerate(ws):   # points stacked on one wire: generation order
                     op, ip = ne[e]
                     ne[e] = (op, (p, 'i', j)); ne[split_id(gname, j)] = ((p, 'o', j), ip)
-            else:
-                for j, e in enumerate(ein): ne[e] = (ne[e][0], (p, 'i', j))
-                for k, e in enumerate(eout): ne[e] = ((p, 'o', k), ne[e][1])
+                pending.discard(gname); progress = True
+            if not progress: raise Invalid('cyclic points')
         for op, ip in ne.values():
             for port in (op, ip):
                 v = owner_vertex(port)

@@ -161,3 +161,479 @@ A complete description with decision procedure for Q1 or Q2 (or an undecidabilit
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8.
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Ex. 2.5, Rem. 2.6 and Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
 - Campion, *The Gray tensor product of (∞,n)-categories* (arXiv 2311.00205), Thm A and Thm 3.14.
+
+# Researcher Response 1
+
+**I do not have a complete solution to the revised problem.** In particular, I have not proved decidability or undecidability for relation-free arbitrary signatures in Q1, and I have not decided the three specific equalities in Q2.
+
+The strongest results I can establish are:
+
+1. A fixed finite signature has undecidable modification equality **if signatures permit all faces of a cubical generator to be prescribed**. This hypothesis is stronger than adding an unconstrained probe-indexed arrow.
+2. Even an asymmetric rule that supplies a cell in *some* direction between every parallel pair fails on the four-dimensional Gray cube, without quotienting its arities.
+3. A class of free-computad arities containing the walking arrow cannot be closed under the actual Gray residuals. Moreover, recursively computing residuals using augmented directed complexes fails explicitly.
+4. There is a relevant additional reference giving an exact directed Segal rule for the **ambient** higher-category theory. It does not supply the requested free biclosed data syntax.
+
+Here are the statements and proofs, with those boundaries explicit.
+
+## 1. Conditional undecidability for Q1
+
+### The signature convention required
+
+Suppose a signature can declare
+\[
+\Gamma:J^{\otimes3}\triangleright A\longrightarrow B
+\]
+and prescribe its six square restrictions as previously constructed terms, subject to their edge and vertex compatibility.
+
+Under this convention, modification equality is undecidable for one fixed finite signature. Residual-containing arities are unnecessary.
+
+A declaration of a bare arrow \(\Gamma\), whose restrictions are new derived arrows, does **not** satisfy this hypothesis.
+
+### Construction
+
+Use two atomic data types \(A,B\), two data arrows
+\[
+p,q:A\to B,
+\]
+a transformation
+\[
+f:p\Rightarrow q,
+\]
+and five modifications
+\[
+a,b,c,d,e:f\Rightarrow f.
+\]
+
+For a word \(w=x_1\cdots x_n\), let \(\widehat w\) denote the corresponding vertical composite of modifications, in chronological order.
+
+Consider the fixed presentation
+\[
+M=
+\left\langle a,b,c,d,e\ \middle|\
+ac=ca,\ ad=da,\ bc=cb,\ bd=db,\ 
+eca=ce,\ edb=de,\ cca=ccae
+\right\rangle.
+\]
+This is Tseytin’s seven-relation semigroup with undecidable word problem; adjoining an identity gives the corresponding monoid without changing equality of nonempty words. An English translation of the original proof is included in Nyberg-Brodda’s article. [arxiv.org](https://arxiv.org/pdf/2401.11757?utm_source=chatgpt.com)
+
+For each relation \(u=v\), declare a cube
+\[
+\Gamma_{u,v}:J^{\otimes3}\triangleright A\to B
+\]
+with the following boundary.
+
+| Part of the cube | Prescribed term |
+|---|---|
+| Vertex \((i,j,k)\) | \(p\) for \(i=0\), and \(q\) for \(i=1\) |
+| Coordinate-1 edges | \(f\) |
+| Coordinate-2 and coordinate-3 edges | Appropriate identities |
+| \((1,2)\)-face at \(k=0\) | \(\widehat u\) |
+| \((1,2)\)-face at \(k=1\) | \(\widehat v\) |
+| Other four square faces | Appropriate identity modifications |
+
+All edge and vertex compatibility conditions hold.
+
+### The cube imposes exactly the required relation
+
+In the strict \(2\)-categorical Gray product, the two hemisphere pastings of \(J^{\otimes3}\) are equal. This is the naturality equation for the interchanger with respect to the generating square of \(J\otimes J\), expanded using compatibility with composition.
+
+Under the specified boundary, four square faces become identities. The hemisphere equation therefore becomes
+\[
+\widehat u=\widehat v.
+\]
+
+Consequently,
+\[
+u=_M v
+\quad\Longrightarrow\quad
+\widehat u=\widehat v
+\]
+in the free model with these declarations.
+
+There is no Eckmann–Hilton identification of the five letters: they are endomorphisms of the nonidentity transformation \(f:p\Rightarrow q\).
+
+### A biclosed model proves the converse
+
+Let \(C_M\) be the strict \(2\)-category defined by
+\[
+C_M(0,0)=C_M(1,1)=1,\qquad
+C_M(1,0)=\varnothing,
+\]
+and
+\[
+C_M(0,1)=BM,
+\]
+the one-object category with endomorphism monoid \(M\).
+
+Thus \(C_M\) has one nonidentity \(1\)-cell \(F:0\to1\), and
+\[
+\operatorname{End}_2(F)=M.
+\]
+
+Use the Gray model of the data/probe theory, interpreting
+\[
+A\mapsto 1,\qquad B\mapsto C_M,
+\]
+and interpreting \(p,q,f\) as \(0,1,F\). Interpret the five modifications by the corresponding generators of \(M\).
+
+Every specified cube exists because its two nonidentity faces are equal in \(M\). The ambient category of strict \(2\)-categories with the lax Gray tensor is biclosed, with the two residuals given by lax and oplax transformation categories. Tensoring therefore preserves the designated colimits. [arxiv.org](https://arxiv.org/pdf/1412.1320?utm_source=chatgpt.com)
+
+This interpretation sends \(\widehat w\) to \([w]_M\), so
+\[
+\widehat u=\widehat v
+\quad\Longrightarrow\quad
+u=_M v.
+\]
+
+Hence
+\[
+\boxed{
+\widehat u=\widehat v
+\quad\Longleftrightarrow\quad
+u=_M v.
+}
+\]
+
+This is an effective reduction to equality for a single finite signature.
+
+### Scope
+
+The reduction requires the equations
+\[
+\Gamma_{u,v}\circ(\delta_i^\epsilon\triangleright A)
+=
+\text{specified face}.
+\]
+
+They cannot be inferred from the type of a bare generator. In the strict \(2\)-categorical probe theory, prescribing the complete boundary of a \(3\)-cube can impose an equation between existing modifications.
+
+Thus restricting the **probes** to regular shapes does not, by itself, ensure decidability if arbitrary boundary-prescribed attachments remain permitted. For the relation-free interpretation of \(\Sigma\), this reduction does not answer Q1.
+
+## 2. An obstruction to direct coherence between parallel cells
+
+The next theorem strengthens items 29 and 39. It requires neither symmetry of the permission rule nor identification of boundary pastings.
+
+> **Theorem.** In the four-dimensional Gray cube there are parallel \(2\)-cells \(u,v\) such that neither a \(3\)-cell \(u\Rightarrow v\) nor a \(3\)-cell \(v\Rightarrow u\) exists.
+
+### The parallel cells
+
+Work in
+\[
+Q_4=\nu(I^{\otimes4}).
+\]
+Write a \(1\)-path as the order in which its coordinates change. Write \(i\) for the \(2\)-cell that swaps the entries in positions \(i,i+1\), changing a descending adjacent pair into an ascending pair.
+
+The following words specify \(2\)-cells from the path \(4321\) to \(1234\):
+\[
+w=121321=123121,\qquad
+u=212321,\qquad
+v=123212.
+\]
+
+The displayed equality for \(w\) uses strict interchange of the independent swaps \(1\) and \(3\).
+
+There are \(3\)-cells
+\[
+\alpha:w\Rightarrow u,\qquad
+\beta:w\Rightarrow v.
+\]
+The first changes the initial \(121\) of \(121321\) into \(212\). The second changes the final \(121\) of \(123121\) into \(212\).
+
+Let \(F_i^\epsilon\) denote the basis \(3\)-chain of the face whose coordinate \(i\) is fixed at \(\epsilon\). Then
+\[
+[\alpha]_3=F_1^0,\qquad
+[\beta]_3=F_4^0.
+\]
+
+### A certificate that neither direction exists
+
+For \(z=e^{\otimes4}\), the tensor differential is
+\[
+dz=
+ F_1^1-F_1^0
+-F_2^1+F_2^0
++F_3^1-F_3^0
+-F_4^1+F_4^0.
+\tag{1}
+\]
+
+The cubical chain complex is contractible, so
+\[
+\ker(d:C_3\to C_2)=\mathbb Z\,dz.
+\tag{2}
+\]
+
+If \(\gamma:u\Rightarrow v\) existed, its \(3\)-chain \(c\) would be nonnegative and satisfy
+\[
+dc=[v]_2-[u]_2=d(F_4^0-F_1^0).
+\]
+By (2),
+\[
+c=F_4^0-F_1^0+k\,dz
+\]
+for some integer \(k\).
+
+Its coefficients at \(F_1^0\) and \(F_1^1\) would require
+\[
+-1-k\ge0,\qquad k\ge0,
+\]
+which is impossible.
+
+For the reverse direction, a nonnegative chain would have to be
+\[
+c=F_1^0-F_4^0+k\,dz.
+\]
+Its coefficients at \(F_4^0\) and \(F_2^1\) would require
+\[
+-1+k\ge0,\qquad -k\ge0,
+\]
+again impossible.
+
+Therefore
+\[
+\boxed{
+\operatorname{Cell}_3(u,v)
+=
+\operatorname{Cell}_3(v,u)
+=
+\varnothing.
+}
+\]
+
+The positive-chain boundary condition used here is part of Steiner’s construction of \(\nu\). [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+### The rule class excluded
+
+This excludes every rule satisfying all three conditions:
+
+1. It admits the context of four independent arrows and its structural Gray pastings.
+2. Those pastings interpret in \(Q_4\) with their stated boundaries.
+3. Every unordered pair of parallel \(2\)-terms in that context receives a \(3\)-term in at least one direction.
+
+The arities may retain every directed boundary pasting. Choosing a direction for each pair does not repair the rule: some pairs are incomparable.
+
+This theorem does not exclude zigzag connectivity, since
+\[
+u\xleftarrow{\alpha}w\xrightarrow{\beta}v.
+\]
+A rule with an additional directed admissibility judgment must reject both direct goals for this pair.
+
+## 3. Residuals obstruct free-computad arities
+
+There is also a limitation on the proposed class of pasting types.
+
+> **Theorem.** No class of strict free-computad arities containing the walking arrow \(J\) is closed under either actual Gray residual.
+
+Here “free-computad arity” means a strict \(\omega\)-category freely generated by a polygraph, without equations between its generating pastings.
+
+### Proof
+
+When the target is an ordinary category, its lax and oplax transformation categories are ordinary functor categories: all naturality \(2\)-cells must be identities.
+
+Consequently,
+\[
+\mathsf H_\omega(J,J)
+=
+\operatorname{Fun}([1],[1])
+\cong[2].
+\]
+The three functors are constant \(0\), identity, and constant \(1\), in that order.
+
+Taking another residual gives
+\[
+D=\mathsf H_\omega(J,[2])
+=
+\operatorname{Fun}([1],[2]).
+\]
+Its six objects are
+\[
+a_{00},a_{01},a_{02},a_{11},a_{12},a_{22},
+\]
+with
+\[
+a_{ij}\le a_{kl}
+\quad\Longleftrightarrow\quad
+i\le k\ \text{and}\ j\le l.
+\]
+
+In \(D\), the paths
+\[
+a_{01}\longrightarrow a_{02}\longrightarrow a_{12}
+\]
+and
+\[
+a_{01}\longrightarrow a_{11}\longrightarrow a_{12}
+\]
+are equal. Their four constituent arrows are indecomposable nonidentity arrows.
+
+In a free category, those four arrows would be generators, and the two paths would be distinct. Hence \(D\) is not a free category.
+
+Moreover, \(D\) has no nonidentity higher cells. A polygraph freely generating \(D\) could therefore have no generators above dimension one, so it would have to generate \(D\) freely as a category. That is impossible. ∎
+
+This excludes a requirement that every residual formula itself denote a free pasting arity. A theory using richer arities or resolutions falls outside this theorem.
+
+### A more precise failure of recursive positive-chain semantics
+
+The problem persists if one allows nonfree augmented directed complexes but computes every residual recursively using their internal hom.
+
+Write \(\mathsf H_{\mathrm{ADC}}\) for the augmented-directed-complex internal hom. Steiner’s comparison
+\[
+\nu\mathsf H_{\mathrm{ADC}}(K,L)
+\cong
+\mathsf H_\omega(\nu K,\nu L)
+\]
+requires the **domain** \(K\) to have a strongly loop-free unital basis. It is not a comparison for arbitrary domains. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+Here is an explicit failure after iterating residuals.
+
+Let \(I\) be the interval complex:
+\[
+I_0=\mathbb Zr_0\oplus\mathbb Zr_1,\qquad
+I_1=\mathbb Ze,\qquad de=r_1-r_0.
+\]
+A direct calculation shows that
+\[
+\mathsf H_{\mathrm{ADC}}(I,I)
+\]
+is exactly the path complex \(L\) for \([2]\). Its three positive augmentation-one generators are the constant-zero, identity, and constant-one chain maps; its two degree-one generators join them successively.
+
+Now set
+\[
+A=\mathsf H_{\mathrm{ADC}}(I,L).
+\]
+The comparison theorem applies at this stage, giving
+\[
+\nu A=D.
+\]
+
+The six elements \(a_{ij}\in A_0\) are the chain maps
+\[
+a_{ij}(r_0)=p_i,\qquad
+a_{ij}(r_1)=p_j,\qquad
+a_{ij}(e)=\text{the path chain from }i\text{ to }j.
+\]
+They satisfy the additive relation
+\[
+a_{01}+a_{12}=a_{02}+a_{11}.
+\tag{3}
+\]
+
+Define a functor
+\[
+F:D\longrightarrow[1]
+\]
+by
+\[
+F(a_{12})=F(a_{22})=1
+\]
+and \(F=0\) on the other four objects. This is monotone because \(\{a_{12},a_{22}\}\) is upward closed.
+
+If \(F\) arose from a positive augmentation-preserving chain map
+\[
+\Phi:A\longrightarrow I,
+\]
+then applying \(\Phi_0\) to (3) would give
+\[
+r_0+r_1=2r_0,
+\]
+contradicting the independence of \(r_0,r_1\).
+
+Therefore
+\[
+\operatorname{ADC}(A,I)
+\longrightarrow
+\omega\operatorname{Cat}(\nu A,\nu I)
+\]
+is not surjective.
+
+In particular, the recursive interpretation of
+\[
+\mathsf H\bigl(\mathsf H(I,\mathsf H(I,I)),I\bigr)
+\]
+by ADC internal homs misses an actual functor of the corresponding Gray residual.
+
+This proves failure of that **recursive arity interpretation**. It does not establish that the excluded functor is definable from an arbitrary chosen free data signature, and it does not refute a coupon calculus that retains additional categorical data.
+
+## 4. An exact directed rule available in the literature
+
+An additional reference is:
+
+**Shai Keidar and Leor Neuhauser, [*The Gray Product of \((\infty,n)\)-Categories via Lax Grids*](https://arxiv.org/abs/2606.27574), 2026.**
+
+They use lax grids
+\[
+G=[m_1]\otimes_{\mathrm{Gray}}\cdots\otimes_{\mathrm{Gray}}[m_k],
+\]
+with elementary arities the Gray cubes. Their Theorem 4.15 and Corollary 4.16 identify the relevant Segal-sheaf model monoidally with Campion’s model. [arxiv.org](https://arxiv.org/pdf/2606.27574?utm_source=chatgpt.com)
+
+The uniform composition condition is
+\[
+X(G)\simeq
+\operatorname{Map}(\operatorname{Sc}(G),X),
+\qquad
+\operatorname{Sc}(G)=
+\operatorname*{colim}_{E\hookrightarrow G}yE,
+\tag{4}
+\]
+where the colimit ranges over elementary cubes and their incidences.
+
+For an elementary cube \(Q_n\), its identity inclusion is terminal in this indexing category. Hence
+\[
+\operatorname{Sc}(Q_n)=yQ_n.
+\]
+Thus (4) does not fill an arbitrary cubical boundary: the premises already specify the elementary directed cells. Its contractibility concerns ways of composing that fixed data.
+
+This supplies an exact ambient directed composition rule. The additional theorem needed for Q3 is an initiality statement for data models with tensor, both residuals, evaluation, currying, and their probe compatibility. Segalification alone does not adjoin those data operations.
+
+## 5. What the conservativity argument establishes for arbitrary residual arities
+
+There is a precise sufficient condition for extending item 31.
+
+Suppose the starting monoidal data/probe category \(C\) already has a named type \(r\) and evaluation
+\[
+e:r\otimes a\to b
+\]
+such that
+\[
+C(c,r)\xrightarrow{\sim}C(c\otimes a,b)
+\tag{5}
+\]
+for **every old type \(c\)** and every old arrow, naturally in \(c\).
+
+Then Day–Yoneda gives
+\[
+[ya,yb](c)
+\cong C(c\otimes a,b)
+\cong C(c,r)
+=yr(c).
+\]
+The residual is therefore already representable and local for the designated colimit cones. The gluing proof of item 31 extends while preserving this partial adjunction. The mirrored condition handles left residuals.
+
+Merely replacing residual formulas by atomic names and adding evaluation arrows does not satisfy (5). For example, in the free monoidal category on \(a,b,r\) and distinct arrows
+\[
+e,h:r\otimes a\to b,
+\]
+one has
+\[
+C(r,r)=\{1_r\},
+\]
+while \(C(r\otimes a,b)\) has both \(e\) and \(h\). Making \(r\) the residual necessarily adds
+\[
+\Lambda(h):r\to r.
+\]
+Consequently, that completion cannot be full on the old named types.
+
+One can impose the partial adjunction operations before applying the conservativity lemma. Equality in that partial-closed theory then remains to be decided. This does not reduce it to the proper-coupon category of item 34.
+
+## 6. Q2 remains undecided here
+
+I have not established any of
+\[
+\iota\pi=1_H,\qquad
+\mathcal G(t_1,t_2)=\{\alpha\},\qquad
+\mathcal G(s,t)=\{\theta\}.
+\]
+
+The \(1\)-cell normalization theorem does not supply the needed higher result. Its \(\beta/\eta\) overlap changes which evaluation survives, and the induced crossing equations include cancellation. A proof would need a presentation of those transported \(2\)-cell equations and a normalization or equality theorem for that presentation.
+
+The results above therefore provide conditional undecidability and two precisely scoped obstructions to arity rules. **They do not complete Q1 or Q2, or establish the unrestricted exactness/impossibility alternative requested in Q3.**

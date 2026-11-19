@@ -716,3 +716,60 @@ on the two-slot histories with two advances on the left and two or
 three on the right. It checks 539 ordered exchanges, 172 join
 factorizations and 34 strict drops with two inner markers. The argument
 with the nonnegative count \(j\) handles arbitrary chain lengths.
+
+# Researcher Response 6
+
+**A single nonidentity Gray 4-cell must have infinitely many lifts
+between fixed, distinct 3-boundaries** in any theory satisfying the
+hypotheses of Response 1's dimension-six finiteness obstruction. In the
+support-free construction of round five one can also determine the exact
+5-reachability relation on an infinite family of lifts of a triangle.
+
+For the necessary condition, take a 4-loop \(D\) on \(\Gamma_{2,4}\)
+with pairwise distinct positive powers, supplied by Response 1. Append a
+fresh 4-globe \(J\) at the terminal object and place its update on the
+temporal interval after the old one. Use the fixed whiskerings of
+Response 1's independent-globe construction. For every \(n\ge1\)
+perform \(D^n\) on the old interval followed by \(J\) on the new one.
+All these cells have the same 3-source and the same 3-target, because
+\(D\) is a loop. Contracting the fresh factor recovers \(D^n\), hence
+the cells are pairwise distinct by substitution. Contracting the old
+factors recovers the distinct 3-faces of the fresh globe, so the common
+source differs from the common target. In the Gray quotient the image
+of the loop is an endomorphism in a loop-free Steiner hom and therefore
+an identity. Every lift has exactly the image of the same whiskered
+\(J\), which survives by contraction to the fresh globe. Thus even a
+bound on the number of labels *over one nonidentity Gray cell with
+specified raw faces* cannot replace the unbounded expanded basis.
+
+For an explicit family, use the presentation of [round five, Response
+12](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-12).
+On the first two outer factors take the complete two-by-two crossing
+with its positive loop \(H\). On three further slots \(a,b,c\) take
+the triangle \(T\) from crossing order \((bc,ac,ab)\) to
+\((ab,ac,bc)\). First traverse the complete grid block with the
+triangle slots stationary, then traverse the three crossings with
+the grid slots stationary. For \(0\le i\le n\), let \(P_{n,i}\)
+schedule \(i\) copies of \(H\), then \(T\), then \(n-i\) copies
+of \(H\) on these two temporal intervals. The Gray projection is the
+same whiskered triangle for every \(n,i\). In the full theory,
+\[
+             P_{n,i}\longrightarrow P_{m,j}\text{ by a 5-cell}
+             \quad\Longleftrightarrow\quad n=m\ \text{and}\ i\le j .
+\]
+Indeed, conservation of the positive length \(m_4\) gives \(n=m\):
+each path has length \(n\,m_4(H)+m_4(T)\), with the weights calculated
+after the fixed exterior whiskerings. In the slot graph of [round five,
+Response 17](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-17)
+all four grid slots lie in the early run and all three triangle slots
+in the late run. The inversion count for \(P_{n,i}\) is
+\((n-i)m_4(H)m_4(T)\). It cannot increase on any 5-path in this
+fiber, including a path through lifts outside the displayed family.
+This forces \(i\le j\). Conversely each step from \(i\) to \(i+1\)
+is the contextual elementary exchange of \(T\) with the following
+copy of \(H\). Composing these steps proves the equivalence.
+
+The first conclusion is necessary for any solution to Q1 with (K15).
+The exact reachability calculation uses the stated presentation.
+Strong directedness when both active updates lie in the same temporal
+run on a general diagram remains the open case of the follow-up.

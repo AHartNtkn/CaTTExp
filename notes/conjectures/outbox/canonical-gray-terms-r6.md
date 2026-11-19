@@ -439,3 +439,48 @@ agda --safe -i /tmp -i src /tmp/GrayTricategoryCorrection.agda
 ~~~
 
 For products of unbounded dimension, the uniqueness argument settles the final declaration once the preceding dimensions have been lifted. The tricategorical comparison supplies the correction at cut three. Composite 5-cells in larger tensors can require a correction at cut four; neither top-atom uniqueness nor faithfulness on 3-cells supplies that comparison. Q1 and the uniform alternatives in Q2 remain open.
+
+# Researcher Response 7
+
+**Two path boundaries can be fixed at once.** Let $X=D^{a+2}\otimes D^{b+2}$, $a,b\ge0$. Write $A_- ,A_+$ and $B_- ,B_+$ for the generating 1-faces of the factors. Use traversal order for words. Let $K$ be the strict $\omega$-category of cells from the path $B_-A_-$ to the path $A_+B_+$, with degrees lowered by two. There is a strict map
+$$
+ D^a\otimes I\otimes I\otimes D^b\longrightarrow K
+$$
+with an identity-preserving globular section. The section sends the atom on $(S^2p,S^2q)$ to the atom on $(p,e,e,q)$, simultaneously for all generators $p,q$ and with literal agreement on each signed face. The middle square suffices even when the two outside globes have arbitrarily large dimensions.
+
+### Recovering the cell from its three projections
+
+Put $U=D^a\otimes I$, $V=I\otimes D^b$, $P=D^{a+1}$ and $Q=D^{b+1}$. Write $\bar q$ for the interchange of the two generators in every rank strictly below the top of $D^b$, fixing its top. Identify the total opposite of $Q$ with an ordinary globe by the same interchange of labels. The two positive chain maps to the ordinary globes are
+$$
+ l(p,e)=Sp,\quad l(p,i)=\epsilon(p)i,
+ \qquad r(e,q)=S\bar q,\quad r(j,q)=\epsilon(q)j .
+$$
+Here $i,j$ are interval vertices and augmentation is extended by zero. The sign on the differential of $q$ in $e\otimes q$ accounts for the label reversal. Then
+$$
+ K\cong (U\times V)\times_{P\times Q}(P\otimes Q).
+$$
+The maps to the base are $(l,r)$ and the two ordinary tensor projections.
+
+Here are row formulas proving the assertion. Denote a basis entry of a tableau of $X$ by $(A_{i,s},B_{j,t})$, with ranks $i,j$ and face tags $s,t$. Discard the prescribed vertex and path rows. On every remaining signed chain take the following three projections.
+
+- For $u$, keep $i\ge2$ and $j\le1$. Lower $i$ by two. Keep the vertex label at $j=0$ and send either rank-one generator at $j=1$ to the interval edge.
+- For $v$, keep $j\ge2$ and $i\le1$. Lower $j$ by two and apply the same interval projection in the first position.
+- For $w$, keep $i,j\ge1$, lower both ranks by one, and interchange the second tag in every rank below its top.
+
+These operations commute with the tableau differential above the bottom row. In the first two projections, collapsing the two rank-one generators kills the boundary coming from rank two in the collapsed factor. In the third, desuspending the first factor changes the sign of the second differential, which is precisely the tag interchange. The bottom mass of $u$ is one because projecting the original 2-row to the first globe gives a 2-cell from $A_-$ to $A_+$, whose chain is one 2-generator. The second globe gives the same argument for $v$. Projecting both globes to intervals sends each signed 2-row to the unique square from $BA$ to $AB$, so $w$ also has bottom mass one. The row formulas give $l(u)=\pi_Pw$ and $r(v)=\pi_Qw$.
+
+Conversely, restore every entry of positive rank in both factors from $w$. Take the entries with second rank zero from the vertex column of $u$, and those with first rank zero from the vertex column of $v$. Reinstate the two fixed rows. The two compatibility equations give back the edge columns of $u,v$, including the augmentations at their interval vertices. All coefficients are positive or zero. The three projections are jointly injective on integer chains in each degree at least two by this disjoint reconstruction. Hence the higher boundary equations and equality of the top rows follow from those of the inputs, padding them to a common degree.
+
+For the bottom boundary, a signed 2-row with mixed term $A_{1,s}\otimes B_{1,t}$ has exactly the two additional terms $A_{2,h}\otimes B_{0,s}$ and $A_{0,1-t}\otimes B_{2,k}$. This follows from the two compatibility equations on vertices. Applying Leibniz gives the chain of $A_+B_+$ minus that of $B_-A_-$ for each $s,t,h,k$. This verifies the boundary at the exceptional degree as well. Row truncation, identity padding and addition above a common cut commute with all three projections. Thus the bijection is a strict isomorphism.
+
+### Why the square has a section
+
+In the pullback coordinates the comparison is $x\mapsto(\pi_Ux,\pi_Vx,(l\otimes r)x)$ on $U\otimes V$. For the section, first apply the pinned section of item 11 to the diagonal hom of $X$. The two fixed paths lift to the two extreme vertices of $D^{a+1}\otimes I\otimes D^{b+1}$. Indeed the order of a path fixes the middle vertex, and the two 1-generator labels fix the outer vertices. The lifted cell therefore belongs to the precise hom to which the pinned hexagon section of Response 4 applies. Applying that section gives a cell of $D^a\otimes H\otimes D^b$.
+
+Send $H$ to the square by sending an order of the three letters $A,B,C$ to the pair of truth values $([A\text{ before }B],[B\text{ before }C])$. On each of the two hexagon routes the middle edge swaps $A,C$ and goes to an identity. The first and last edges go to the corresponding square edges. Send the hexagon face to the square atom. The two routes map in order to the two signed square paths, so this defines a positive chain map and a strict functor $c$. Apply $1\otimes c\otimes1$ to the hexagon lift.
+
+To check the section equation it suffices to check that the two successive strict comparisons factor through $1\otimes c\otimes1$ by the displayed square comparison. On a labelled hexagon basis $(p,h,q)$ use the trace of $h$ in Response 4 followed by $F$ of item 10. At a vertex with truth values $i,j$, the two pure columns give $(p,i)\epsilon(q)$ and $\epsilon(p)(j,q)$. The mixed column gives $(i,j)\epsilon(p)\epsilon(q)$. On an $AB$ edge the left column is $(p,e)\epsilon(q)$, the right vanishes, and the mixed column is $(Sp,j)\epsilon(q)$. On a $BC$ edge the right column is $\epsilon(p)(e,q)$, the left vanishes, and the mixed column is $\epsilon(p)(i,S\bar q)$. On an $AC$ edge both active labels in its trace are suspended, while $B$ is a vertex. Both augmentation terms of $F$ vanish. On the hexagon face only the mixed column survives and equals $(Sp,S\bar q)$. These are precisely the three square projections in each case. Both sides have the two prescribed bottom rows. This proves the factorization, hence the section equation. Face and identity preservation follow by composition. For the claimed pins, the two successive sections select the atom on $(p,h_{\rm top},q)$, and the square collapse selects the atom on $(p,e,e,q)$. The latter equality also follows by applying the tensor-atom formula to the two signed hexagon paths.
+
+Both margins matter for a term construction. Already in $D^2\otimes D^3$, take the two atoms on the top $A_2$ and the parallel $B_{2,-},B_{2,+}$. Their iterated 2-sources have the same mixed term $A_{1,-}\otimes B_{1,+}$. Their pure terms at $A_{0,-}$ are respectively $A_{0,-}\otimes B_{2,-}$ and $A_{0,-}\otimes B_{2,+}$. Thus a section from the middle tensor alone cannot pin these two atoms and respect their faces. For the square source the strict pins exist. To use them in CaTT still requires a typed substitution for the four edge blocks with their shared vertex terms, as well as terms on the square source. The strict section does not settle Q2.
+
+The checker constructs the pullback triples and the actual cells of $K$ independently, compares them exactly, checks the factorization on every labelled hexagon atom, and checks the composite section on every cell and face and every prescribed atom. For $D^4\otimes D^4$ the numbers in hom degrees zero through six, with identity towers counted only at their first occurrence, are **16, 216, 652, 426, 126, 18, 1**. Run `python3 tools/gray_crossing_paths.py 2 2` for that case. [Exhaustive checker](../../../tools/gray_crossing_paths.py)

@@ -127,3 +127,32 @@ The factorization equations (15)–(16) need a varying argument whiskered by a n
 - A mirror repair through t is equally possible.
 
 Open: whether the h-extension is directed with injective supports, and closed under substitution, on the triple tensor, given the degeneration obstruction (K24)–(K25).
+
+## 6. 4-endomorphisms after (C)
+
+*Script: `scripts/e6/t_endomorphisms.py`. Source: the r2 response, `conjectures/answered/lax-interchange-every-dimension-r2-2026-11-19.md`. Recorded in the r3 prompt as (K37).*
+
+The script computes, exactly, the 4-endomorphisms of F_T(Σ[m] ∨ Σ[n]) through global dimension 4.
+- 3-cells: crossing paths modulo the composite-crossing laws.
+- 4-cells: ι-paths modulo three things: the restricted composition laws, the support equations, and optionally (C) or (C⁺) in every context and substitution instance.
+- It works one strongly connected component at a time, with a congruence closure over (3-cell, edge-set) states. A state cap leaves the largest component of Σ[3] ∨ Σ[3] and of Σ[2] ∨ Σ[5] undecided.
+
+| Γ | T: endos / pairs | T/(C): endos / pairs | T/(C⁺): endos / pairs |
+|---|---|---|---|
+| Σ[1] ∨ Σ[n], n ≤ 3 | 0 / 0 | 0 / 0 | 0 / 0 |
+| Σ[2] ∨ Σ[2] | 1 / 0 | 0 / 0 | 0 / 0 |
+| Σ[2] ∨ Σ[3] | 6 / 0 | 1 / 0 | 0 / 0 |
+| Σ[2] ∨ Σ[4] | 27 / 1 (r2's X, Y) | 11 / 0 | 7 / 0 |
+| Σ[3] ∨ Σ[3] (21 undecided) | 82 / 0 | 12 / 0 | 0 / 0 |
+| Σ[2] ∨ Σ[5] (25 undecided) | 86 / 9 | 40 / 0 | 28 / 0 |
+
+"Endos" counts 3-cells carrying a nonidentity endomorphism. "Pairs" counts pairs of such 3-cells composable along a 2-cell. (C⁺) is (C) together with every rotation of every H instance.
+
+**Findings.**
+- No composable pair survives (C) where the computation decides.
+- Endomorphisms do survive (C). On Σ[2] ∨ Σ[3], H(a₁, a₂; b₁, b₂b₃) = e₁ · e₂ is a loop of two ι-edges, and its rotation e₂ · e₁ is not identified with 1.
+- **Doubling (proved):** a nonidentity endomorphism E on a 3-cell from BA to AB gives the composable pair b₁…bₙ E(a; bₙ₊₁…b₂ₙ), E(a; b₁…bₙ) bₙ₊₁…b₂ₙ on Σ[2] ∨ Σ[2n]. The degenerating substitutions of r2 §5 show both are nonidentity.
+- So (C) leaves an obstruction pair on Σ[2] ∨ Σ[6]. (C⁺) still leaves endomorphisms on the extreme 3-cell of Σ[2] ∨ Σ[4], hence an obstruction on Σ[2] ∨ Σ[8].
+- The forced repair is therefore not a finite list of loop equations. The candidate is (C∞), every 4-endomorphism an identity. Its consistency through dimension 4 is plausible by the (K36) argument (4-cycles consist of cut-neutral ι-moves, and inverting an edge on a cycle adds no new homs), but this has not been checked.
+
+**Scope.** These are computations for two-factor chains only. Three factors, where τ appears, and Γ with generating 3-cells are not covered. The model's 4-equations are T's for this Γ, as listed in (K30); a missed equation would only remove endomorphisms.

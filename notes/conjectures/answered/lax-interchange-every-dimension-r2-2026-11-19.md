@@ -754,3 +754,24 @@ For Q2, the proof uses T’s particular raw support equations, which force endom
 For Q3, imposing the generic inner composite-crossing law alone does not remove this obstruction—the separating Boolean algebra satisfies that law. Conversely, killing \(H\) does not force the generic law through dimension 4: the K31 model has \(\chi=0\), so it already satisfies \(H=1\). Neither observation decides Q3 in all dimensions.
 
 **The unresolved step is an all-dimensional extension, or an obstruction, after adjoining the necessary equation (C) together with the missing joining data. The argument above does not establish either.**
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: partial answer, verified.** Neither (A) nor (B) of Q1 is settled. The response proves a **necessary repair**: any extension of T that keeps T's equations, is closed under substitution and satisfies the elementary no-reverse requirement in global dimension 5 must impose the 4-equation (C) H(a₁, a₂; b₁, b₂) = 1. Consequently no extension that is faithful on T's 4-cells works, and the h-repair of (K32) alone does not suffice. The follow-up prompt is `../outbox/lax-interchange-every-dimension-r3.md`.
+
+**§2, idempotent endomorphisms block dimension-5 directedness. Checked.**
+- T's support equations identify parallel 4-paths with the same set of contextual edges. For an endomorphism F represented by a path P, P and P ; P have the same edge set, so F ∗₃ F = F. (This is a consequence of the raw edge-set form of T's support equations; requirement 2 in its expanded-basis form does not imply it, as the response says.)
+- For non-identity endomorphisms X : u ⇒ u, Y : v ⇒ v with u ∗₂ v defined, L(X, X, Y, Y) = (X ∗₃ X) ∗₂ (Y ∗₃ Y) = X ∗₂ Y and R(X, X, Y, Y) = (X ∗₂ Y) ∗₃ (X ∗₂ Y) = X ∗₂ Y. So the elementary interchanger χ_{2,3}(X, X, Y, Y) is an endomorphism and the identity is a reverse cell, contradicting requirement 3.
+
+**§3, the loop H. Checked by expanding both composite-crossing equations.** With F = χ(a₁, b₁), G = χ(a₂, b₂), p = b₁ χ(a₁, b₂) a₂ and q = a₁ χ(a₂, b₁) b₂: expanding the second argument of w = χ(a₁a₂, b₁b₂) first gives p ; (b₁a₁ G) ; (F a₂b₂) ; q, and the first argument first gives p ; (F b₂a₂) ; (a₁b₁ G) ; q. After p the 2-word is (b₁a₁)(b₂a₂), and ι(F, G) : (b₁a₁ G) ; (F a₂b₂) ⇒ (F b₂a₂) ; (a₁b₁ G) has exactly the orientation of (K30) (right interval first ⇒ left interval first, u = b₁a₁, v = b₂a₂). So H = [p | ι(F, G) | q] : w ⇒ w.
+- The Boolean model separating H from 1_w was checked against the equations of (K30) listed in the response: composite crossings and the composition laws are distributivity of ∧ over ∨, the τ equation has weight a ∧ b ∧ d on both sides, a contextual 4-path evaluates to the join of its edge weights (so the support equations hold), and with all 2-generators ↦ 1, H ↦ (1, 1, 1) while 1_w ↦ (1, 1, 0). The model also satisfies the unrestricted inner composite-crossing law, so imposing that law (Q3) does not remove H.
+
+**§§4–5, Γ_{2,4} and substitution. Checked.** X = b₁b₂ H(a₁, a₂; b₃, b₄) : u ⇒ u and Y = H(a₁, a₂; b₁, b₂) b₃b₄ : v ⇒ v with u : P ⇒ Q, v : Q ⇒ R composable along the 2-cell Q. The two degenerating substitutions (14)–(15) respect all boundaries and send (X, Y) to (H, 1) and (1, H), using that an interchanger with an identity input is an identity. So if H ≠ 1 in an extension, X and Y are non-identity idempotent endomorphisms there, and §2 gives the contradiction. Hence (17).
+
+**§6, the h-repair is vacuous on these diagrams. Checked:** Γ_{2,2} and Γ_{2,4} have no generating 3-cells, every non-identity 3-cell spans both factors, and h(A, 1) = r(A, β) with β an identity there.
+
+**§7, (C) is a consistent repair through dimension 4. Checked:** it adds no cells in dimensions ≤ 3, cannot create a reverse 4-cell, holds already when ι is killed (so both quotients of (K30) are unchanged), and injective supports can be re-chosen as least old supports per class. The cited Bourke–Lobbia (A₁, A₂ : B₁, B₂) axiom has the same four-variable shape, under different invertibility assumptions.
+
+**Effect on the project.** E6's dimension-4 theory T must be amended by (C) before any extension to dimension 5. More generally, §2 shows that under T's raw support equations **every pair of non-identity 4-endomorphisms composable along a 2-cell is an obstruction**; whether (C) removes all of them in every F_T(Γ) is not known. That is a finite computation per Γ and is in-house work (LCORE; scripts in `scripts/e6/`): enumerate 4-endomorphisms of F_T(Γ)/(C) on small Γ.
+
+**Open (carried into the r3 prompt).** An all-dimensional construction or impossibility, now for theories containing (C) (and its higher analogues) and the missing joining data; whether requirement 2 should be read with T's raw support equations (which force idempotence) or an expanded basis; Q3.

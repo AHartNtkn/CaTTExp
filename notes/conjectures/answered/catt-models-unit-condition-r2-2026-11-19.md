@@ -573,3 +573,21 @@ For the exact syntax, the missing theorem is a uniform construction of boundary-
 Nor does the failure of this construction prove impossibility: a filler excluded as a primitive head can still be a derived term. The strict-enrichment obstruction in Known (V) therefore cannot be promoted to an obstruction to every weak enrichment.
 
 Thus (A) and (B) are the general implications established here. I have not proved the unrestricted unit condition, produced a counterexample to it, proved its equivalence with FEA or Henry’s condition, or constructed the requested coherator for the exact \(L\).
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: partial answer, verified at the level of the arguments.** Q1 is not decided and Q2 (a coherator for L in every dimension) is not constructed. Two implications are new. The follow-up prompt is `../outbox/catt-models-unit-condition-r3.md`.
+
+**(A) U_gpd ⟺ 𝕋^bi is a Grothendieck groupoid coherator satisfying Henry's pushout condition.** The forward direction is Known (VII). The converse was checked step by step:
+- (C)/(D): S₀(f) ∈ W ⟺ QU(f) is an equivalence, using an algebraic completion map r_Z built by factoring UZ → Z^c and extending Z's algebraic fillers along the monomorphism. Correct.
+- (E): Φ(B) is a space for groupoidal cofibrant B (every characteristic globe factors through the core X^≃, so id_X factors through the monomorphism X^≃ → X, which is then an equivalence). Correct. (F) follows by reflection of invertibility along W (FHM Prop. 3.1.7).
+- (G)–(J): v_B ∈ W via Lanari's Prop. 4.5 applied at Z with VZ = B; the use of c_Z = ε^{bi}_Z ∘ J q_{VZ} (rather than ε^{bi}_Z, whose domain need not be cofibrant) is a correct and necessary precaution; saturation of W_gpd follows.
+- (K)–(L): the realization E V is identified with Henry's comparison because a colimit-preserving endofunctor of spaces fixing the point is the identity. Then the derived unit is an equivalence, and two-out-of-three gives η_B ∈ W.
+
+**(B) U ⇒ FEA ⟺ the canonical left semi-model structure (Cof = I-cof, Fib = J^⋔, WE = W) exists ⇒ (H).** Checked: (M) is the semantic calculation from ORW Construction 5.35 and Lemmas 5.38, 5.23 (cited correctly as statements; not re-derived); U ⇒ FEA by naturality of η; FEA ⇒ semi-model axioms by the standard retract argument with W ∩ J^⋔ = I^⋔ (FHM); FEA ⇒ (H) since Φ inverts relative J-cell complexes.
+
+**The obstruction (§3) is stated precisely.** FEA ⇒ U needs the right adjoint S̄ to preserve the generating homotopy pushouts ((N)); left properness alone does not give it. The walking-arrow example shows why groupoidal comparisons do not control directed homs ((O)).
+
+**Q2.** No construction; the response correctly notes that freely adjoining relative fillers gives a larger theory whose equivalence with L's exact rule is unproved, and that a filler excluded as a head may still be a derived term, so the strict-enrichment obstruction of Known (V) does not extend to weak enrichments.
+
+**Effect on the project.** E11-Q1 now has a precise target: FEA ⇒ U, i.e. the comparison (N). The groupoidal half is settled up to the homotopy hypothesis for 𝕋^bi (an equivalence, not just an implication). For computads whose strict free category is homotopical (now including all bubble-free 2-dimensional ones, `homotopy-polygraphs-2026-11-19.md`), the unit condition is the relative-coherence statement RC_id(∞), which is the r2 relative-coherence prompt.

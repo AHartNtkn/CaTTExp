@@ -398,3 +398,18 @@ with exactly the boundary of the prescribed \(F^1(u)\). What remains is a term
 The checked construction does not produce this term in general, nor the higher compatibility needed when several such changes are composed.
 
 Thus the results above establish an all-dimensional family of cases and an exact suspension closure theorem. They do **not** decide CT for arbitrary pairs, prove a counterexample, or identify equations forced by such a counterexample. The general construction and Q3 remain unresolved in this analysis.
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: partial answer, verified.** CT is proved for an infinite family in every dimension, by a suspension-closure theorem; CT for all pairs, a counterexample, and Q3 remain open. The follow-up prompt is `../outbox/canonical-gray-terms-r2.md`.
+
+**Suspension closure CT(I ⊗ P) ⇒ CT(I ⊗ ΣP), checked.**
+- The whiskerings R_r, L_r over D^r ∨₀ D¹ and D¹ ∨₀ D^r with recursively chosen types satisfy (1) literally, and the composition-case support condition holds (the source uses exactly ∂⁻(D^r ∨₀ D¹)).
+- The hom decomposition (2) and the strict isomorphism Φ : I ⊗ P ≅ (I ⊗ ΣP)(A, D) of (3)–(6) were checked on the chain level: ∂ f_r = f_{r−1} ∂ including the degree-0 case written out, f_r is a bijection of bases for r > 0, and at degree 0 the image is exactly the two kinds of A → D paths. Example: P = D⁰ gives the square, whose (A, D) hom is [1] = I ⊗ D⁰.
+- The context Γ′ and substitution σ : Γ′ → Σ_{A,D} Γ: the key point is that in a globular pasting diagram every positive-dimensional generator has generators as its source and target, so by CT(a) the endpoint declarations of Γ have variable boundaries, and substituting (7) gives exactly the types (1). Mixed variables are declared by σ-substituted suspended types, so they are literally well formed. T′(c) = (ΣT(c̄))[σ] then satisfies (c) by stability of typing under suspension and substitution; the other homs use ordinary globular composites and identity towers.
+- Consequences: CT for I ⊗ Dⁿ and Dⁿ ⊗ I (the latter by the odd-dimensional opposite, with the chain isomorphism (12) checked), and for I ⊗ Σ^r[m]. This includes the known D² ⊗ D¹ case and goes beyond dimension 4 without any relative-coherence input.
+- Consistency with the known failure: D¹ ⊗ D¹ ⊗ D¹ = I ⊗ (I ⊗ I) is not covered, because I ⊗ I is not a suspension. The response does not contradict item 3 (which only rules out layered terms).
+
+**Not established.** Closure under wedges P ∨ Q (the response identifies the precise failure: derived pair-comparison terms in a common arity are not syntactically the selected ones), CT for general pairs, and iterated tensors (Q3).
+
+**In-house follow-up (standard 9).** Generate Fam(I ⊗ Dⁿ) and the terms T′ by the suspension construction for n ≤ 4 and run them through the certified checker (owner: E8 line, MARK; see `../../open-issues.md`).

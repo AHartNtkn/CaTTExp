@@ -175,12 +175,12 @@ Call a chosen inhabitant `K(Q, B, Y)`.
 
 ## 4. Known cases
 
-1. **Depth 0** (`depth_Y(Q) = 0` and `depth_Y(c) = 0`). Then `Q↑Y` is a pasting context, and K is a coherence over it (Benjamin, PhD thesis 2020, §3.4, functoriality; BMOSV Theorem 3.1, case d = k = 0). BMOSV Lemma B.10 adds context depth 0 with term depth 1. Context depth 0 with term depth ≥ 2 is *not* covered by either result. (Corrected 2026-11-18: an earlier version claimed all of context depth 0.)
+1. **Depth 0** (`depth_Y(Q) = 0` and `depth_Y(c) = 0`). Then `Q↑Y` is a pasting context, and K is a coherence over it (Benjamin, PhD thesis 2020, §3.4, functoriality; BMOSV Theorem 3.1, case d = k = 0). BMOSV Lemma B.10 adds context depth 0 with term depth 1. Context depth 0 with term depth ≥ 2 is *not* covered by either result. (Corrected 2026-11-18: an earlier version claimed all of context depth 0.) **Settled 2026-11-19:** maximal-variable naturality holds at every term depth (`answered/relative-coherence-all-dimensions-2026-11-19.md`, verified), so context depth 0 is covered at any term depth.
 1a. **Fully selected chains, any 2-dimensional coherence** (`dim Q = 1`, `Y = Var(Q)`, depth 2). Settled by the relative ladder theorem in the researcher response below (verified 2026-11-18). This covers the associator and the left unitor.
 2. **Depth at most 1 in both context and term** (`depth_Y(Q) ≤ 1` and `depth_Y(c) ≤ 1`). This is BMOSV Theorem 3.1. The term is built as a composite `j⁻ ∗ c' ∗ j⁺`, where c' is the depth-0 naturality term pulled back along a substitution θ that absorbs the depth-1 cylinders into the depth-0 duplicates. `j^±` are coherences interchanging composites (BMOSV §3.2(6)).
 3. **Globular contexts, full Y, conical variant.** Mikhail (arXiv 2412.13310, Theorems 3.3 and 4.4) constructs the analogous contexts (cones over a context, and the Gray cylinder `Γ ⊗ D¹`) when every boundary of every variable is a variable. This is the context-level statement for pasting contexts. It does not provide the terms K.
 
-So the **open case** is: depth of Y in the coherence c is at least 2.
+So the **open case** is: context depth of Y at least 1 with term depth at least 2 (context depth 0 is settled at every term depth, case 1). The general statement is RC_id(∞), asked in `outbox/relative-coherence-all-dimensions-r2.md`.
 
 ---
 

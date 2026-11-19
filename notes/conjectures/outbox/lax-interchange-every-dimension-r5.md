@@ -3478,3 +3478,45 @@ For the 478 distinct boundary pairs among them the checker searches the
 full Response 18 presentation and verifies the reverse cuts, totaling
 1,862 cut vertices. Run `python3 -B scripts/e6/interchange_mark_windows.py`.
 Failure of the separation test gives no conclusion.
+
+# Researcher Response 21
+
+**Two consecutive moving slots may cross arbitrarily many stationary partners in the completed theory of Response 12.** Let one outer branch contain two 2-slots \(x,y\) with arbitrary finite strings of unary 3-advances. Let the other contain an arbitrary finite 2-word of stationary slots. There are no higher input generators. On the full interval from stationary-word-first to moving-word-first, every temporal rectangle \(CDAB\Rightarrow CADB\) with both active inputs \(A,D\) proper has no reverse. The two inactive inputs may be arbitrary composites, including unbounded powers of crossing loops. Responses 18–19 give the result through two partners. The new case that suffices for every larger width has **three partners and a single retained advance**. A finite system of integer inequalities decides the needed order on paths of every length in that case.
+
+### Why three partners suffice
+
+Choose one positive contextual 4-edge in each active input. In this family these edges are outer \(r\)'s or inner exchanges. To keep an \(r\) proper, retain one advance and one partner that it crosses. For an inner exchange, retain one event in each disjoint spatial operand. These are advances or named crossings. The Response 5 branch contractions retain the chosen slots and advances, send other advances to identities, and preserve all operations. Each chosen edge keeps positive 4-weight on the new shape, so the active composite containing it remains proper. The following cases exhaust the two witness requests.
+
+- If together they require at most two stationary partners, apply Responses 14, 18 and 19. An otherwise unused partner can be retained when one exists.
+- A request for two distinct partners must be an inner exchange of two crossing events. If both requests have this form, retain their partners and collapse all advances. This is the pure two-row grid of Responses 2 and 8. Its degree-five directedness persists in Response 12: the stationary chain factors have no varying outer history, and the completion preserves the grid result.
+- In the remaining case there is one two-crossing request and the other request uses a third partner. The latter is either an \(r\) or an inner exchange of an advance with a crossing. Keep all three partners, both moving slots and just that one advance. This gives one of the two strip presentations below. Empty stationary width is already the one-factor case of Response 4.
+
+The images of the inactive paths in this argument have no length bound. The reduction applies equally to a subinterval of the indicated shuffle grid. Prepend a fixed 3-history from the stationary-first word and append one to the moving-first word, using adjacent crossings and padding the unary strings at their ends. Fixed temporal whiskering preserves the positive witnesses and takes any reverse to a reverse. On more general diagrams the same obstruction applies whenever a branch contraction to this family preserves both active inputs.
+
+### A score valid in every top context
+
+Number the three partners in the order encountered by each moving slot. Write \(a,b,c\) for their crossings with \(x\), and \(d,e,f\) for their crossings with \(y\). The one advance is either \(X\) on \(x\) or \(Y\) on \(y\). The [strip grounder](../../../scripts/e6/interchange_strip_ground.py) inserts the advance into every crossing schedule and takes the contextual (K15) closure of every rectangular block expansion. For example, the five schedules on the six crossings alone do not all represent the same 3-cell. The checker independently recovers the 3-classes on both sides of the unary event and executes the two padded faces of every primitive 4-move.
+
+The positive 4-edges are the variations across a rectangular block and the exchanges of histories on disjoint spatial intervals. The stationary outer branch specializes the cut-zero auxiliaries as in Response 18. A proper cut-one shifted join would require disjoint positive 4-inputs. Its unary-free input would exchange two disjoint crossings and already use four slots. A positive second input needs at least two more, and the strip has five. The single advance also excludes a proper variation internal to the moving branch. Thus the remaining directed ground rules are temporal exchanges and inner naturalities. The grounder includes the applicable 4-equations, all representatives and lower contexts. As in Response 16 it may identify parallel primitive occurrences with the same full boundaries, weight and labels. Every legal original rewrite has an image.
+
+Assign an integer \(s(e)\) to each projected contextual 4-edge and add these scores along a path. For each grounded 4-equation require equality of the two sums. For each directed rule require source sum at least target sum, with a margin of at least one on every proper primitive temporal exchange. Adding a common prefix or suffix adds the same integer on both sides, even if that context contains loops. Thus a solution certifies an order on arbitrarily long paths. Negative edge scores are allowed because the argument compares the two endpoints of a finite proposed reverse and needs no lower bound on all paths.
+
+| Retained advance | Raw histories | 3-classes | 4-edges | 4-equations | Inner naturalities | Strict temporal exchanges | Range of strict drops |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| \(X\) | 35 | 25 | 99 | 45 | 9 | 43 | 1–4 |
+| \(Y\) | 35 | 25 | 99 | 45 | 9 | 43 | 1–4 |
+
+The [rank checker and saved certificates](../../../scripts/e6/interchange_regular_rectangles.py) give the nonzero scores for 31 and 33 edges, respectively, and verify every inequality by exact arithmetic. No path enumeration or optimizer is required to replay them. A forward rectangle can exchange the individual edges of \(A,D\) one pair at a time in the specified inactive contexts. If their chosen presentations have \(i,j>0\) positive edges, its score drops by at least \(ij\). Every possible return path is nonincreasing. This proves the assertion on both strips and completes the width reduction.
+
+### Two five-slot solver queries
+
+Use the early block \(adbe=abde\) on the first two partners. Its middle exchange \(db\to bd\) supplies the loop \(H\). Set \(A=H^2\) and \(B=H\). For late history \(cfX\), take \(C:cfX\to cXf\) inner and \(D:cXf\to Xcf\) mixed. For \(cfY\), take \(C:cfY\to Ycf\) mixed and \(D:Ycf\to cYf\) inner. In each case all four inputs are positive, and retaining the two designated edges requires all five slots. The Response 12 path solver replays the two-step forward comparison and verifies a nine-path closed set excluding the reverse on each strip.
+
+Run the grounding and certificate replay from the repository root.
+
+~~~sh
+python3 -B scripts/e6/interchange_strip_ground.py
+python3 -B scripts/e6/interchange_regular_rectangles.py
+~~~
+
+Adding `--synthesize` to the second command asks GLPK to find fresh scores and checks them exactly. The proof covers arbitrary stationary width with the advances in one two-slot branch. When both outer branches advance, a proper outer binary join and its variations can occur. Directedness for those general diagrams remains open.

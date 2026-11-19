@@ -1043,3 +1043,50 @@ agda --safe -i /tmp -i src /tmp/GrayCornerPrisms.agda
 ~~~
 
 For $m,n\ge3$ the subpresentation still omits the $(3,3)$ atoms. Response 10 gives other subpresentations that include them. Extending a *single* section to arbitrary bidegrees, or deciding CT for all cubes, remains open.
+
+# Researcher Response 17
+
+**The strict inputs to a single-generator attachment admit a product description in every dimension.** Up to inclusions of signed face globes, the number of inputs for a top label of bidegree $(i,j)$ is $s_i s_j$, where $s_h$ is the little Schröder number ($s_1=1,s_2=3,s_3=11,s_4=45$). In particular, adjoining $(3,3)$ to the section of Response 16 requires the atom and 120 padded shapes. Both the parametrization and the exact signed faces are explicit.
+
+### Reconstructing every cell from its maximal bidegrees
+
+Omit identity padding and let $S$ be the nonempty downwards closed set of occupied bidegrees. List its maximal elements as $(a_0,b_0),\ldots,(a_t,b_t)$ with $a$ strictly increasing and $b$ strictly decreasing. Work first in the minimal face globes, of dimensions $a_t,b_0$. Choose an arbitrary bit $x_h$ for each $0\le h<t$. Set $x_t=*$, $y_0=*$ and
+\[
+                   y_{h+1}=(a_h\bmod 2)\mathbin{\mathrm{XOR}}(1-x_h).
+\]
+In a larger pair replace the two stars by the tags of the chosen face globes. For the entry at $(r,s)\in S$ in signed row $r+s$ of sign $\delta\in\{0,1\}$, use the following two tags.
+
+| Coordinate | When its successor belongs to $S$ | Otherwise |
+| --- | --- | --- |
+| First | $\delta$ if $(r+1,s)\in S$ | $x_h$ at the unique peak with $a_h=r$ |
+| Second | $(r\bmod2)\mathbin{\mathrm{XOR}}\delta$ if $(r,s+1)\in S$ | $y_h$ at the unique peak with $b_h=s$ |
+
+To prove the formula, take the differential of either signed row one degree higher and look just at the site $(r,s)$. The $(r+1,s)$ entry contributes an edge changing the first tag from zero to one. The $(r,s+1)$ entry contributes an edge changing the second tag, starting at $r\bmod2$. Each occurs at most once by Response 8. If a coordinate does not change, the corresponding tag is constant in both signs. It propagates along the other successor until reaching the indicated peak. If both coordinates change, the two increments must concatenate from the negative to the positive tag pair. Let $u$ be the second tag at $(r+1,s)$ and $v$ the first tag at $(r,s+1)$, in the same higher sign. When the horizontal move comes first, $u=r\bmod2$ and $v=1$; in the other order both bits are reversed. This is exactly $u=(r\bmod2)\mathbin{\mathrm{XOR}}(1-v)$. When the join $(r+1,s+1)$ is present it holds automatically, since $v=\delta$ and $u=((r+1)\bmod2)\mathbin{\mathrm{XOR}}\delta$. When the join is absent these two tags are stationary. The site is then the notch $(a_h,b_{h+1})$ between two consecutive peaks, and the equation is precisely the displayed formula for $y_{h+1}$.
+
+Conversely, these checks handle zero, one and two incoming increments at every site, so the stated rows satisfy all the tableau differential equations for both signs. Their coefficients are positive, each bottom row contains one vertex and the highest rows agree. They define a strict cell. The peak tags recover the arbitrary bits, proving uniqueness. A signed $k$-face keeps all rows below $k$ and duplicates the indicated sign at $k$. If expressed again as a peak list, its ideal is $S\cap\{r+s\le k\}$ and its new peak tags are read from these retained rows. This determines the actual labelled faces even when taking a face creates several new peaks.
+
+For example, with the two projection face globes fixed at ranks $m,n$, there are $\sum_t 2^t\binom mt\binom nt$ cells projecting to their top cells up to identity padding. Choose the $t$ first coordinates below $m$ and the $t$ second coordinates below $n$, pair them in the indicated monotone order, and choose the $t$ bits.
+
+### The two truncations form a strict pullback
+
+For $m\ge i\ge1$ and $n\ge j\ge1$ let $X$ be the subpresentation missing $(i+1,j)$ and $(i,j+1)$, interpreting an out-of-range site as absent. Its only possible bidegree with first rank at least $i$ and second rank at least $j$ is $(i,j)$. Let $L$ be the corresponding subpresentation in $D^m\otimes D^j$, $R$ the one in $D^i\otimes D^n$, and $C=D^i\otimes D^j$. Collapse a globe to rank $k$ by identifying the rank-$k$ labels and sending higher basis elements to zero on chains. This gives a strict isomorphism
+\[
+                         X\ \longrightarrow\ L\times_C R.
+\]
+
+Indeed, given compatible signed tableaux, pad them to common height. In each signed row take entries with second rank below $j$ from $L$, and entries with first rank below $i$ and second rank at least $j$ from $R$. At $(i,j)$ take the first tag from $L$ and the second from $R$. Equality in $C$ and multiplicity at most one ensure that both tags exist or both are absent. These chains project back to the two inputs. To check the equations, the two truncations together detect every integer coefficient away from $(i,j)$, since at least one projection retains *both* labels there. At $(i,j)$ the differential from one degree higher is zero by the two missing successors. The negative and positive labels coincide in each input, hence so does their reconstructed pair. This proves the tableau equations, augmentation, and agreement of the top rows. The inverse is unique entry by entry. The forward map preserves all strict operations since both its coordinates do.
+
+Now require the intrinsic top row in degree $i+j$ to consist of just the $(i,j)$ generator. Its projection to $C$ is the top atom by the rectangle property. Conversely any two such single steps in $L,R$ therefore match, and their reconstruction has exactly one entry in its top row. The attachment inputs of Response 9 are the entire Cartesian product of these two one-sided lists. Collapsing one coordinate preserves every rank and tag on the extended part of the other side, so this product also holds up to the minimal face renamings.
+
+### Counting and locating the next obligations
+
+Relative to the rectangle below $(i,j)$, any additional site on the side of higher first rank has the form $(i+a,s)$ with $a\ge1$, $s\ge0$, and $a+s\le j-1$. It gives a downwards closed diagram in this staircase. If there are $q$ additional peaks there, each contributes one of the free bits in the first construction. The independently chosen other side uses the staircase with $i$ in place of $j$. The count on the first side is the weighted count of Dyck paths of semilength $j$, with weight two per valley. Explicitly, place a valley at $(a,j-1-s)$ for every maximal additional box. These are exactly the possible strictly increasing interior valley coordinates on or above the diagonal, and they recover the path uniquely. Mark each valley by its bit. This is the little Schröder count: compressing each marked east-then-north valley to a diagonal step gives a Schröder path with no diagonal step along the main diagonal (the new step starts one unit left of the valley). Conversely every such diagonal expands uniquely. Thus the two-sided count is $s_i s_j$.
+
+For $(3,3)$ all these inputs fit in $D^5\otimes D^5$. There are 16 labelled single steps on each side there, giving 256 pairs. Passing to minimal face globes gives 11 on each side. Of the 121 pairs, one is pinned, 20 have padding on just one side, and 100 have padding on both. The checker independently reconstructs all 8,987 intrinsic tableaux of the full $(5,5)$ globe pair from their peaks and compares them with closure under strict composition. It tests the pullback in both directions on all 8,126 cells of the subpresentation and compares the single-step product with the actual tableaux. [Tableau and pullback checker](../../../tools/gray_globe_corner_pullback.py)
+
+~~~sh
+python3 tools/gray_globe_corner_pullback.py 5 5 3 3
+python3 tools/gray_globe_corner_pullback.py 4 5 2 3
+~~~
+
+To apply this description in CaTT one still needs a 6-term at the prescribed 5-faces of each padded $(3,3)$ input. The strict pullback determines the joint tags. It does not supply a term that performs the shared generator once with both sides of padding.

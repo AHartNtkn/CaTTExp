@@ -406,3 +406,30 @@ Their identity is a reverse in dimension 6, a contradiction. In fact some 4-endo
 - **Remaining general question.** The inference in (K35) from directedness to (C) uses T's raw support equations. For a theory omitting those equations, this proof makes (C) **forbidden**, but supplies no implication forcing it. In particular it neither rules out a theory retaining a nonidentity \(H\) nor constructs one. Q1(B) for every choice of lower-dimensional data, minimality of a universal witness, the all-dimensional compatibility and optimal weakening in Q2, and necessity of the inner law for a theory outside T remain open here.
 
 **Reproducible check.** Run `python3 scripts/e6/absorbed_interchanger.py` from the repository root. It executes both schedules of every displayed swap, checks left/right position and all intermediate word boundaries, applies the four contractions, and checks that the surviving contextual 4-edge agrees in the two orders of (1). It also checks the four extreme corners on Γ₃,₂ and enumerates both projected three-step intervals. The two assumptions it uses to reduce the 3 × 3 boundary are respectively (C) and the second case's equality \(p e=1\). The proof by cases supplies their logical role independently of the computation.
+
+# Verification (2026-11-19)
+
+Status: **verified**. This is a negative answer to Q1(A) and to Q3, and a strong partial answer to Q1(B) and Q2.
+
+**The absorbed-interchanger lemma (1): correct.** For 4-cells X : x₀ ⇒ x₁ and Y : y₀ ⇒ y₁ on consecutive 3-path intervals, the elementary 5-interchanger runs (x₀Y)·(Xy₁) ⇛ (Xy₀)·(x₁Y). If Xq = 1 and Y = qJ, both Xyᵢ are identities and both xᵢY equal x₀qJ. So the source and target coincide, and the identity is a reverse. The dual case (pY = 1, X = Jp) works the same way. Only associative whiskering and units are used.
+
+**The main theorem (T + (C) fails in dimension 5 on Γ₃,₃): correct.** The word bookkeeping was checked by hand and by the script.
+- p = 12 takes b₁b₂a₁a₂ to b₁a₁b₂a₂. Both u = 22 11 and v = 11 22 reach a₁b₁a₂b₂, and q = 21 finishes the rectangle.
+- Case 1 starts at b₀b₁b₂a₁a₂a₃ and ends at b₀a₁a₂b₁b₂a₃. Case 2 starts at b₁a₀b₂a₁b₃a₂, and J takes it to a₀b₁b₂a₁a₂b₃.
+- In each case the two contractions are globular substitutions (requirement 5) that send the inputs to cells known to be non-identity (pe by the case hypothesis, or a bare interchanger of disjoint crossings by requirement 3).
+- The case split covers every theory, because whichever case holds, (C) together with that case gives an absorbed elementary 5-interchanger with non-identity, non-endomorphism inputs.
+- Combined with (K35), where T's support equations force (C), **no extension of T satisfies requirements 3–5 through dimension 5**. This holds whatever further equations, including 3-equations such as (R∞), are added.
+
+**Smaller witness for the thin-block principle on Γ₃,₂: correct.** Under (R∞) the four corners x_i y_j are the same extreme block (the script confirms all four are extreme), and the 4-level thin-block principle makes the four whiskered edges identities. The inputs X, Y have distinct endpoints, so they are not identities. They are not endomorphisms, and they have no reverse. So the Q2 candidate "no reverse of an interchanger with non-identity, non-invertible, non-endomorphism arguments" also fails here. The thin-block principle (Q1(A)) is refuted.
+
+*Independent reproduction (LCORE, 2026-11-19):* in LCORE's model T + (R∞) + (C) + thin on Σ[3] ∨ Σ[2], u = 12 22 11 and u′ = 12 11 22 are distinct 3-cells, v = 32 21 31 and v′ = 21 32 31 are distinct, and all four composites are the single block χ(a₁a₂a₃, b₁b₂). So the four whiskered edges are single-edge loops at that block, thin sets them to 1, and both sides of the (X, Y) 5-interchanger are the identity on the block. The collapse uses only (R∞) and thin.
+
+**Finiteness obstruction without (C) (Γ₂,₄): correct, with a scope note.**
+- The two directedness consequences are proved by adjoining a fresh globe J as an independent test cell, followed by contractions: composites along dimension n−1 that equal an identity have identity factors, and whiskering reflects identities.
+- Idempotent powers x, y of the doubled endomorphisms are non-identity by the composite lemma. I : d ⇒ d² comes from the rectangle, as in (K33). For P = d^k idempotent, Z : P ⇒ P is non-identity, and Z′ = PZP satisfies PZ′ = Z′ = Z′P, so the (3,4)-interchanger on (Z′, Z′) has equal boundaries Z′·Z′.
+- Scope: the last step uses an interchanger whose inputs are **endomorphisms**. So this part refutes requirement 3 as stated together with a finite degree-4 expanded basis, but not the weakened requirement 3 that excludes endomorphism inputs. The main theorem has no such restriction.
+- Its conclusion (some 4-endomorphism on Γ₂,₄ has pairwise distinct positive powers) needs (K15) and the 3 × 3 theorem for H ≠ 1, and both are taken from §2.
+
+**Script.** `python3 scripts/e6/absorbed_interchanger.py` was re-run (0.1 s): both 3 × 3 squares type-check and reduce to the same contextual probe, all four 3 × 2 corners are extreme, and each projected interval has exactly two paths.
+
+**What is left open.** Every obstruction found so far has one shape: an **absorbed elementary interchanger**, meaning one whose source and target coincide because a whiskered input became an identity. Two questions remain. (a) Can a theory that omits T's raw support equations keep H ≠ 1, with no (C) and an infinite degree-4 basis, and satisfy requirements 1, 3, 4 and 5 in every dimension? (b) Is the natural weakening, requirement 3′ ("an elementary interchanger is the identity when its source and target coincide, and has no reverse otherwise"), consistent with T + (C) + the forced 3-equations in every dimension? Follow-up: [`outbox/lax-interchange-every-dimension-r5.md`](../outbox/lax-interchange-every-dimension-r5.md).

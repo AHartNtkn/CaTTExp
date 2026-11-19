@@ -3520,3 +3520,229 @@ python3 -B scripts/e6/interchange_regular_rectangles.py
 ~~~
 
 Adding `--synthesize` to the second command asks GLPK to find fresh scores and checks them exactly. The proof covers arbitrary stationary width with the advances in one two-slot branch. When both outer branches advance, a proper outer binary join and its variations can occur. Directedness for those general diagrams remains open.
+
+# Researcher Response 22
+
+**If either active 4-input contains a generating 4-update, the elementary
+degree-five rectangle has no reverse on any finite diagram in the
+presentation of Response 12.** The other active input can be any
+nonidentity 4-cell, including a loop. Both inactive inputs can be
+arbitrary. Two ingredients are needed: a grading counting work in one
+temporal interval, and an order property at the occurrence of the input
+update.
+
+## A positive weight on the selected interval
+
+Color the permanent 3-events by the two temporal intervals of the
+rectangle. Let \(\lambda(e)\) equal one on the color being counted and
+zero on the other. All underlying events of every positive Gray 4-atom
+in the total chain have one color, because the four original 4-inputs
+act within their own intervals. This remains a constraint on all
+4-paths and re-presentations along a return, since its Gray 5-image
+would be an identity. We construct a nonnegative integer weight on
+this fiber. It vanishes on updates supported entirely on events of
+the other color and is strictly positive on every nonidentity update
+supported entirely on the counted color.
+
+Write \(m_\lambda(A)=\sum_{e\in A}\lambda(e)\). For an event \(e\)
+in a varying history \(A\), let \(P_e,Q_e\) be the slots strictly
+before and after the active slot or pair, in the varying operand's
+2-word at that event. For a stationary slot \(y\) put
+\[
+   j_y(e)=\sum_{z\in Q_e}\lambda(zy)-\sum_{z\in P_e}\lambda(zy),
+\]
+where \(zy\) is the named crossing of the two slots in the outer
+block. For any positive instance those crossings exist in its
+3-history. As in Response 4 take \(c=L+M+1\), where \(L\) bounds
+2-word length and \(M\) bounds 3-history length. Use the weights
+\[
+\begin{aligned}
+ R_\lambda(A,b)&=\sum_{y\in b,e\in A}\lambda(e)(c+j_y(e)),\\
+ T_\lambda(a,B)&=\sum_{y\in a,e\in B}\lambda(e)(c-j_y(e)),\\
+ I_\lambda(A,B)&=m_\lambda(A)m_\lambda(B),\\
+ K_\lambda(A,B)&=R_\lambda(A,b')-I_\lambda(A,B).
+\end{aligned}
+\]
+Give an input 4-globe the weight of its unary event. Keep the weights
+under fixed whiskering, using the actual event names, and add along
+4-paths. Since \(|j_y(e)|\le L\), a join with nonempty stationary
+word has weight at least \(m_\lambda(A)((c-L)|b'|-M)\).
+The other bounds and the two assertions on single-color windows follow
+directly, including after whiskering.
+
+These formulas respect the 4-equations on the stated fiber. During a
+(K15) block, the slots preceding a particular pair crossing are
+exactly the earlier slots in each operand's fixed order. The same
+holds for following slots. Thus even the *sets* used in the colored
+moment are invariant. Splitting a moving history or a stationary
+2-word partitions the corresponding sum. A spatial 2-whisker adds
+its slots to \(P_e\) or \(Q_e\). Its moment correction is precisely
+the product of the counted events of the varying history with the
+counted crossings of the whisker and stationary operand. These are
+the signed inner terms of (14)–(17). In (18) each triple of slots from
+the three nonempty operands supplies a triangle of the fixed chain.
+Each triangle's three events have one color; changing one slot of
+a triple retains the crossing between its other two. Hence all
+pair crossings in the whole three-way block have the same color.
+Here both weights are either zero or the original equal weights
+of Response 4. Inner splits partition their product; the join
+factorization holds by the formula for \(K_\lambda\). These checks
+also apply when an input is composite or some surrounding slots are
+stationary.
+
+The weight is conserved by every 5-step on a return. A temporal exchange,
+inner naturality or shifted join carries its variations once on either
+route and has the same event sets in its inner products. In an outer
+unary variation of zero Gray top chain the variation is a path of
+inner moves. Moving two independent histories past each other leaves
+the set of slots on either side of each event unchanged: all slots
+of the other window stay on the same side, in whichever order. Thus
+each colored moment in the outer weight stays fixed. This also checks
+a zero-Gray \(H_L\). For \(H_R\) the varying right history has the same
+event set on both faces, and the outer sum depends on the stationary
+*set of slots*. A proper \(W,K,J\) or input 5-globe has positive
+Gray chain. Degenerate instances give the normalized operations. This
+proves conservation without requiring a positive lower bound on paths
+of the uncounted color.
+
+## What can pass an input update
+
+Choose a generating 4-update in one active input. By the contractions
+of Response 5, retain its unary advance \(v\) and its single chosen
+4-branch. Keep also the requests of one proper edge of the other
+active input. Its temporal interval cannot traverse \(v\), so it
+does not need another 4-branch over \(v\). The two active inputs
+stay proper. The retained update \(z\) changes the layer of \(v\) from
+zero to one. Every representative on a reverse has exactly one \(z\):
+only the generating update changes that layer, and the two outside
+3-faces prescribe the change. Equivalently its input-globe coefficient
+in the fixed Gray chain is one. No positive mixed 4-edge has that
+input-globe atom.
+
+At the occurrence of \(z\) record the set \(S\) of named 3-events
+before \(v\) in its current history. This is well-defined on 4-cells.
+A (K15) equation cannot permute anything across the unary event
+\(v\). The nonstructural 4-equations have no input globe on either
+side. They replace portions before or after \(z\) without changing
+the 3-cell at its occurrence. The structural laws transport its
+actual prefix.
+
+**Along any proposed return, \(S\) can only grow.** A step entirely
+before or after \(z\) preserves it. For a temporal swap with \(z\),
+the other subinterval has exactly the same event set before and after
+its variation. In an inner naturality with the flag in the left
+spatial operand, the flag goes from after the inner exchange to
+before it: its history now has the independent right history before
+\(v\). With the flag in the right operand it goes from before the
+exchange to after it: the independent left history is now before
+\(v\). Both changes add every event of a proper independent operand
+to \(S\). In \(H_R\) a flag in the right variation goes later across
+\(h\): changing \(BCA\) to \(ABC'\) puts all events of \(A\) before
+\(v\) in \(B\), losing none. Here \(C,C'\) are the two block crossings.
+For a composite variation these calculations use one varying edge
+at a time: the inner products, or the joining cells, at adjacent
+layers give the same intermediate state, so the smaller forward
+moves paste to the prescribed endpoints. An outer unary variation
+or \(H_L\) varying a path containing the flag has positive Gray
+top chain when its stationary operand is proper.
+
+For the shifted join write its two schedules as \(Y I X\) and
+\(X Y I'\), where \(X\) varies the left spatial history and \(Y\)
+the right. The products interchange the underlying right-first and
+left-first histories at the appropriate layers. For a flag inside
+\(X\), moving it from after the product to before it adds the entire
+right history to \(S\). For a flag inside \(Y\), it is before the
+product on both schedules; the left history is after \(v\) at the
+flag on both, so \(S\) is unchanged. This directly handles whole
+4-path inputs of the shifted join. These are all zero-Gray cases.
+
+The two schedules of the original rectangle have *identical* \(S\).
+Only updates on the opposite temporal interval have changed their
+4-order relative to \(z\), and that interval stays on the same side
+of \(v\). Consequently every step on a return preserves \(S\)
+exactly. In particular every opposite-color event stays on its
+designated side **at the flag**. No proper inner naturality crossing
+the flag, \(H_R\) crossing the flag, or shifted join with the flag
+in \(X\) can occur there.
+
+One further fact is needed for the shifted join with the flag in
+\(Y\). Suppose \(v\) is early and the left history includes a late
+event \(f\). On the source 4-route its inner product exchanges the
+spatially right history containing \(v\) with the spatially left one
+containing \(f\). It puts \(f\) before \(v\). **There is no
+continuation of that 4-route to the designated outside 3-target,**
+where \(v\) precedes \(f\). To prove this, let \(d\) be the slot
+of \(v\), and take a slot \(y\) of \(f\). At any inner exchange of
+these events, the relative spatial order of \(d,y\) is the same.
+If \(dy\) does not cross, this is immediate. If \(dy\) is early it
+must precede \(f\) on slot \(y\); if late it must follow \(v\) on
+slot \(d\). Here we use the incidence test of Response 5: exchanging
+the order of opposite-color incidences on one slot would require
+a bichromatic mixed atom in the fixed chain. The crossing \(dy\)
+cannot be inside two disjoint spatial operand histories containing
+\(d,y\) respectively. This determines their spatial order at the
+exchange. In particular the product just observed puts \(d\) to the
+right of every slot of \(f\). No later inner move can bring \(v\)
+ahead of \(f\).
+
+A (K15) cannot move the unary \(v\). Of the outer 4-edges only
+\(r\) or \(h\), with \(v\) in the varying left history, could bring
+it forward across \(f\); a unary event cannot be in a block crossing,
+and \(t\) moves its varying history later. In either possible case
+some slot \(y\) of \(f\) belongs to the stationary right operand:
+use its stationary slot if \(f\) is a block crossing, or any slot
+of \(f\) in the other history of the join. The chain would contain
+the mixed atom pairing \(v\) with \(y\). Thus \(d\) is in an outer
+factor to the left of \(y\) and the crossing \(dy\) is early.
+It must already have occurred at the observed product, since it
+precedes \(f\) on \(y\). There \(d\) would be spatially to the
+left of \(y\), a contradiction. Input globes do not change the
+event order. This proves the no-continuation assertion, including
+when \(f\) is itself a crossing. It follows that a shifted join
+with an early flag in \(Y\) can move only a left 4-path \(X\) with
+*no late 3-events* from after the flag to before it.
+
+## The strict inequality
+
+Set \(\lambda=1\) on the interval opposite the flag, and let \(P\)
+be the colored weight of the 4-prefix before \(z\). At a step
+entirely before the flag, conservation preserves \(P\); a step after
+it has no effect. For a temporal exchange we may transpose the
+constituent 4-edges one pair at a time in their disjoint intervals.
+When an early flag is moved later past a temporally earlier update,
+all events of that update are before \(v\) at the flag. None can
+be late since \(S\) is fixed. Its weight is zero. Moving the early
+flag earlier can only decrease \(P\). For a late flag the dual
+inequality applies: moving it earlier across a temporally later
+update loses zero weight because all early events are before the
+flag. Moving it later can only increase \(P\).
+
+The only remaining proper move crossing the flag is the shifted join
+with \(z\) in \(Y\). It adds the weight of \(X\) to the prefix,
+retaining the same initial portion of \(Y\) in fixed whiskerings.
+For a late flag this is nonnegative, and for an early flag it is
+zero by the no-continuation assertion. Thus along a return \(P\)
+is nonincreasing for an early flag and nondecreasing for a late
+flag. In the designated forward comparison \(CDAB\to CADB\), a
+flag in \(A\) loses the strictly positive weight of \(D\), and a
+flag in \(D\) gains the strictly positive weight of \(A\).
+A return contradicts the corresponding inequality. The transported
+inputs of a nonadjacent cut give the same test after Godement
+expansion.
+
+**Validation.** The [colored-weight and flag checker](../../../scripts/e6/interchange_flag_cut.py)
+evaluates the two routes of four-slot rules on all assignments of
+zero and one to their named events compatible with the mixed atoms.
+This includes 1,232 varying-whisker corrections, 40 zero-Gray outer
+unary variations and 16 shifted joins. On the double flagged disk it
+checks 612 inclusions of the sets at a flag and 132 prefix inequalities
+under the outside-cut hypotheses, 52 strict. Run
+`python3 -B scripts/e6/interchange_flag_cut.py`.
+
+In particular, any remaining counterexample can be taken on a diagram
+of height at most three. If neither active input has a generating
+4-update, retain a proper structural edge in each by the requests of
+Response 5 and contract all branches of depth four and above. This
+keeps both inputs positive and would carry a return to a return.
+There are still both kernel and mixed structural cases on those
+diagrams.

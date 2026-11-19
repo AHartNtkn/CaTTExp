@@ -1099,6 +1099,13 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
     - The position-rigidity test (distinct endpoints, no endo-transformation generators) does **not** give a product of schedule categories.
     - **Constraint on any PL-ω rule (Q4 no-go):** an endpoint-symmetric coherence rule produces a reverse of the Gray square, and a boundary-lifting rule cannot be exact on Gray cubes if its arities identify the two boundary pastings of some cube (e.g. braid-relation quotients). So the rule must be asymmetric and keep those pastings distinct, as L's two-case rule and the support-based `dcoh_S` rule do.
     - Open: 𝒢′ for arbitrary residual arities, 2-cells of 𝒢, the directed rule in every dimension (`conjectures/outbox/gray-biclosed-coherence-r2.md`).
+    - **Mechanical checks (2026-11-19, in-house, standard 9).**
+      - `scripts/d11/nbe_rewrite.py` implements the N/β/η system on typed context-decorated words, with left and right tags and curry bodies. It builds 3,000 random terms from generator seeds by random N-, β- and η-expansions, including inside curry bodies; terms have up to 27 nodes, and 1,326 of them contain at least two redexes.
+      - Every expansion and every reduction step type-checks. Every step preserves the weight in the polarized model 𝓟 of F.6 item 4, so the rules are sound in a non-trivial model.
+      - Every term has a single normal form: 2,816 terms were checked exhaustively over all reduction orders, and the rest by 8 random strategies each. That normal form equals the seed's.
+      - No reduction sequence exceeds C(n,2)+⌊n/2⌋ steps.
+      - Control: with rule N disabled, the confluence check fails.
+      - `scripts/d11/coupon_invariant.py` runs random walks with the defining equations of positive braids with proper coupons: disjoint interchange, Yang–Baxter, and both coupon naturalities in both directions. That is 2,000 diagrams × 200 steps, including 58,833 naturality steps that change length. L(D) and the labelled coupon data are invariant, the flow law (5) holds, and #crossings ≤ L(D) always. Controls: the plain crossing count changes, and weights r(e)+r(f) in place of r(e)r(f) are not invariant.
 - **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
 
 **Open (D17).**

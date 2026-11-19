@@ -35,21 +35,26 @@ def is_mixed(moves):
     return any(m.kind == 'r' for m in moves)
 
 
-def rectangle_queries(m, n):
+def factorized_inputs(histories, moves_at):
     crossings = frozenset('pqrs')
-    for raw in raw_histories(m, n):
+    for raw in histories:
         for cut in range(1, len(raw)):
             if crossings.isdisjoint(raw[:cut]) or crossings.isdisjoint(raw[cut:]):
                 continue
-            for early in window_paths(raw, 0, cut):
-                for late in window_paths(raw, cut, len(raw)):
+            for early in window_paths(raw, 0, cut, moves_at):
+                for late in window_paths(raw, cut, len(raw), moves_at):
                     for i in range(1, len(early) + 1):
                         a, b = early[:i], early[i:]
                         for j in range(len(late)):
                             c, d = late[:j], late[j:]
-                            source = walk(raw, c + d + a + b)
-                            target = walk(raw, c + a + d + b)
-                            yield source, target, is_mixed(b) and is_mixed(c)
+                            yield raw, a, b, c, d
+
+
+def rectangle_queries(m, n):
+    for raw, a, b, c, d in factorized_inputs(raw_histories(m, n), primitive_moves):
+        source = walk(raw, c + d + a + b)
+        target = walk(raw, c + a + d + b)
+        yield source, target, is_mixed(b) and is_mixed(c)
 
 
 def certify(m, n, presentation=None):

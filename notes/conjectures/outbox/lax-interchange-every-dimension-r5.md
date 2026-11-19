@@ -3746,3 +3746,50 @@ Response 5 and contract all branches of depth four and above. This
 keeps both inputs positive and would carry a return to a return.
 There are still both kernel and mixed structural cases on those
 diagrams.
+
+# Researcher Response 23
+
+**Two unary mixed atoms between the same two outer factors suffice for directedness in Response 12.** In the temporal rectangle \(CDAB\Rightarrow CADB\), suppose each of the active inputs \(A,D\) contains a mixed atom pairing a unary 3-advance in one of those factors with a 2-slot in the other. The advances may belong to opposite factors. The rectangle has no reverse on any finite diagram satisfying this witness condition. The two factors may have arbitrary widths, other factors and higher input generators may be present, and the inactive paths \(B,C\) may be arbitrary. In particular the result includes rectangles where a binary join factorization is available on the return search.
+
+### Four finite certificates for two varying branches
+
+First take two slots \(x,y\) in the left branch and two slots \(z,w\) in the right. Start at \(zwxy\) and finish at \(xyzw\). Write \(p=wx, q=zx, r=wy, s=zy\) for the four crossings. Retain exactly one named advance in each branch. On each of the resulting four placements **every** proper temporal rectangle is directed, including those with no mixed active mark and those with all four crossings in the same temporal half.
+
+The [two-branch grounder](../../../scripts/e6/interchange_bilateral_ground.py) interleaves the two advances with the two crossing schedules \(pqrs,prqs\). Equation (K15) identifies these schedules wherever the whole four-letter block is contiguous. No smaller block has two expansions on these slots. A positive contextual 4-edge exchanges histories on disjoint spatial intervals, varies one branch past a crossing block by \(r\) or \(t\), or joins two varying histories by \(h\). For the last case the source subword is \(V\chi U\) and the target is \(UV\chi\), where \(U\) is the left advance and \(V\) the right. The grounder evaluates both native faces with their globular guards, lower contexts and full outside 3-boundaries.
+
+Here is why checking this presentation suffices. Atomic expansion supplies the two raw representatives of a full crossing and all occurrences of the smaller rectangular blocks. For an inner exchange the two operand supports determine the spatial cut up to the balancing equation (9). The grounder allows every such exchange. Its edge labels retain the full endpoints, operation, weight and constituent pairs of events or slots, all unchanged under re-presentation of a fixed generator. Identifying parallel occurrences with these data gives a projection of genuine paths. The ground rules include the applicable splits (10)–(17), (20)–(21), binary join factorization in both directions, and the directed \(W\) boundary. Each individual branch has only one advance, so there is no proper 4-variation *inside* either branch for an outer naturality or join variation. A triple requires a third branch. The temporal exchange and inner naturalities on composite variations paste from their single-edge instances, keeping the other operands fixed. Changes of (K15) representative in disjoint temporal windows can be made simultaneously. For the shifted join the grounder enumerates both whole paths on disjoint spatial windows. Neither window can contain a full four-slot block when the other is positive. These cases exhaust the Response 12 rules in this arity. Arbitrary chronological contexts are still allowed.
+
+For each placement assign an integer to every contextual 4-edge and sum along a path, as in Response 21. The [rectangle checker](../../../scripts/e6/interchange_bilateral_rectangles.py) supplies the scores and checks every grounded rule with exact integer arithmetic. Every 4-equation preserves the sum, every directed rule weakly lowers it, and every proper primitive temporal exchange strictly lowers it.
+
+| Advances | 3-classes | 4-edges | Ground rules | Proper \(W\) | Proper shifted joins | Strict temporal exchanges | Score drops on those exchanges |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| \(X,Z\) | 54 | 193 | 179 | 5 | 0 | 76 | 1–8 |
+| \(X,W\) | 54 | 191 | 162 | 5 | 1 | 77 | 2–15 |
+| \(Y,Z\) | 54 | 191 | 162 | 5 | 1 | 77 | 2–14 |
+| \(Y,W\) | 54 | 193 | 179 | 5 | 0 | 76 | 2–15 |
+
+Transpose the individual edges of \(D\) past those of \(A\) in their disjoint temporal windows. Every such step strictly lowers the sum. Adding a matching prefix or suffix preserves each difference, including when that context contains arbitrarily many loops. Since both active paths are proper, at least one such step occurs. A return would have to increase the sum. This proves the four claims without any bound on path length.
+
+For a concrete example take \(Wpq\mid rsY\). In the early half let \(A\) move \(W\) past \(p\) by \(t\), then let \(B\) exchange \(Wq\) to \(qW\). In the late half let \(C,D\) move \(Y\) past \(s,r\), successively, by \(r\). All four inputs are positive. The solver replays the single forward temporal step and verifies a closed set of 17 paths excluding its source from the return search. A binary join factorization occurs inside that set. Across the four placements the independent path searches with crossings in both halves verify 1,676 distinct boundary pairs.
+
+### Advances in the same branch
+
+Responses 18–19 treat the left branch. For two advances in the **right** branch we ground the native \(t\) faces, its varying-whisker corrections and \(U_t\) in their stated orientations. Here the left input of an outer join is stationary. The proper primitive edges are inner exchanges and \(t\). A branch variation with both advances on distinct right slots can also give \(U_t\) and a cut-one shifted join. With a crossing in each half there is no complete (K15) block in either half. The checker traverses every nonempty path in each window, checking for cycles, and every factorization into active and inactive inputs. It searches for a reverse in the full presentation, including rewrites across the cut.
+
+| Right advances | Four-input placements | Distinct boundary pairs | Largest verified reverse cut |
+| --- | ---: | ---: | ---: |
+| \(Z,Z\) | 202 | 180 | 55 |
+| \(Z,W\) | 464 | 420 | 32 |
+| \(W,W\) | 230 | 208 | 19 |
+
+When all crossings are in one half, the other half must contain the proper exchange \(T:WZ\to ZW\), consuming both advances. The crossing half has only powers of the middle exchange \(H:prqs\to pqrs\) at the common 3-class. For each temporal order the checker intersects forward and backward reachability in the entire directed 4-graph between the outside histories. The interval consists of two vertices with one loop each and the edge \(T\) between them. Every route has the form \(H_0^j T H_1^{n-j}\). The only nonidentity rewrite inside the interval is the directed temporal exchange. It increases \(j\) by one for crossings early and decreases it by one for crossings late. This proves the obstruction for arbitrary \(n\), including arbitrary inactive loop powers. Together the ten advance placements cover every way of distributing exactly two advances on this full four-slot shuffle.
+
+The [right-variation checker](../../../scripts/e6/interchange_right_witness.py) substitutes concrete cells into the native equations (11), (13), (16), (17), \(U_t\) and a shifted join with two positive inputs. It also constructs a rectangle from \(WprZqs\) to \(prWqsZ\) in which all four inputs are proper \(t\) variations. Its reverse cut has 10 paths. Run `python3 -B scripts/e6/interchange_right_witness.py`.
+
+### From two advances to arbitrary inputs
+
+In each active path choose the stated mixed atom. In a join choose the left varying event and a slot of the right operand, as in Response 5. Keep these two unary events, their slots, and their selected partners. Each temporal half supplies a distinct event. Both marks use the same two outer factors, so the requests need at most two slots **per factor**. Contract every other branch and advance by the prefix-closed pruning of Response 5. A marked join whose right history contracts to a unit specializes to \(r\). Both marked edges have positive weight on the projected diagram, hence so do both active paths. A reverse would project to a reverse with the entire images of the inactive inputs.
+
+For completeness, if a surviving factor has only one slot, subdivide that slot into two consecutive slots in the same factor. Substitute their composite for the old slot and whisker its advances on one chosen subslot by the identity on the other. Contracting the extra subslot recovers the original generators. Thus a reverse on the smaller shape would map to a reverse with both active inputs still proper on the four-slot shape. If the projected interval uses only some of the crossings, prepend and append fixed histories extending its endpoint shuffles to the full shuffle, as in Response 21. The selected 4-edges keep positive weight in those fixed temporal contexts. The two-advance results now exclude the projected reverse in all cases.
+
+Run `python3 -B scripts/e6/interchange_bilateral_ground.py` and `python3 -B scripts/e6/interchange_bilateral_rectangles.py` from the repository root. Add `--synthesize` to the second command to recompute the four ranks using GLPK. For Q1 the proof leaves open rectangles whose active inputs admit no such common pair of outer factors and no witness covered by earlier responses. In particular a triangle uses three outer factors, and an inner exchange can stay proper without carrying any unary mixed atom.

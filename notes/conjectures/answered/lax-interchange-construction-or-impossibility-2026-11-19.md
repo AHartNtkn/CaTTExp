@@ -1055,7 +1055,7 @@ Thus requirements 1–5 **through dimension \(4\)** do not force the convention 
 - **Equations.**
   - Outer composite-crossing (7), which is the (K15) convention, imposed for χ.
   - Whiskering and balancing equations, and eight naturality-composition equations.
-  - (15)–(16), the positive factorization equations. These are the uniform form of the (K10) repair: r(a₁A, b) plays the role of h.
+  - (15)–(16), the positive factorization equations. ~~These are the uniform form of the (K10) repair: r(a₁A, b) plays the role of h.~~ [Erratum 2026-11-19, LCORE: they need a varying argument whiskered by a nontrivial 2-cell, so they are vacuous on ΣD² ∨ ΣD². There T's 4-cells form the bare (K8) skeleton and no 5-cell lifts A ⊗ B. See `../../joining-completion.md` §5 and `scripts/e6/t_binary_interval.py`.]
   - τ = r(χ, d) = t(a, χ) for (K14)'s rqp ⇛ pqr.
   - Restricted composition laws (20)–(21) for ι against a literal χ.
 - **Fixing the quotients.** The 5-cells δ, N_L, N_R, U_r and U_t specify the two quotients K_in and K_all.

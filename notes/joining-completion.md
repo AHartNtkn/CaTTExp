@@ -105,4 +105,25 @@ Not formalised, and taken from the response:
 - **The diagram of §7.2.** With A, B, C ↦ 1, ι(A, B;C) has weight {(1,2)} and the pairwise composite has weight {(1,1)}. So `composite-crossing-fails : ¬ (D ≈ P)`, which is (63).
 - **Scope.** 5-cells add no 4-dimensional equations and are not modelled. Godement horizontal composites are derived from whiskering and vertical composition by (2), so they are not separate primitives.
 
-**Next (internal).** Does T extend to global dimension 5 and reproduce the (K10)/(K11) data and the lift of A ⊗ B? That decides whether another prompt is worth sending.
+## 5. Toward dimension 5: T lacks the binary repair
+
+*Script: `scripts/e6/t_binary_interval.py`. The prompt `conjectures/outbox/lax-interchange-every-dimension-r2.md` (K30), (K32) and Q1(A) is updated with this.*
+
+**T on ΣD² ∨ ΣD² is the (K8) skeleton.** Take 3-cells A : α ⇛ α′ and B : β ⇛ β′ side by side along a 0-cell, and C = χ. The 3-paths in the maximal interval are the six orderings of A, B and C:
+- S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC.
+
+T's 4-generators there are:
+- t̄₀ : S → V₀, ι(A, B) : V₀ → V₁, r̄₀ : V₁ → T;
+- r̄₁ : S → U₁, ι(B, A) : U₀ → U₁, t̄₁ : U₀ → T.
+
+The factorization equations (15)–(16) need a varying argument whiskered by a nontrivial 2-cell a₁, so they are vacuous here. The only route S → T is t̄₀ · ι(A, B) · r̄₀, and U₁ is a sink. So no 5-cell has A ⊗ B as its Gray image. Extending T to dimension 5 needs **new dimension-4 data**, not only 5-cells. The answered note's claim that (15)–(16) are the uniform (K10) repair is wrong, and has an erratum.
+
+**Candidate uniform repair.** Adjoin, for A : α ⇛ α′ and B : β ⇛ β′,
+
+  h(A, B) : Bα ; χ(α, β′) ; Aβ′ ⇛ βA ; Bα′ ; χ(α′, β′),   [Bα | r(A, β′) | ε] = h(A, B) · [ε | ι(B, A) | χ(α′, β′)].
+
+- The degeneracies agree with T: h(A, 1) = r(A, β) and h(1, B) = identity.
+- A 5-generator W(A, B) : t̄₀ · ι(A, B) · r̄₀ ⇛ h(A, B) · t̄₁ then has Gray image A ⊗ B.
+- A mirror repair through t is equally possible.
+
+Open: whether the h-extension is directed with injective supports, and closed under substitution, on the triple tensor, given the degeneration obstruction (K24)–(K25).

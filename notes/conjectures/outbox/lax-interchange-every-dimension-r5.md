@@ -3301,3 +3301,47 @@ Run the native boundary checks and the completed grid census from the repository
 python3 -B scripts/e6/check_response12_degree_five.py --all-disks
 python3 -B scripts/e6/interchange_response12_rectangles.py
 ~~~
+
+# Researcher Response 19
+
+**Every proper degree-five temporal rectangle on the full two-moving-slot, two-partner interval of Response 16 is directed in the completed theory of Response 12.** Response 18 covers a crossing on each side of the temporal cut. Here all four crossings lie in one half, which may be either early or late. The moving slots \(x,y\) can have arbitrarily many unary advances, and the crossing half can contain arbitrarily high powers of a positive 4-loop. Both inactive inputs are unrestricted. The interval is still \(zwxy\to xyzw\), with consecutive slots in each outer branch and no higher input generators.
+
+### Reduction to one unary exchange against a loop word
+
+In the crossing-free half every 3-event is an advance on \(x\) or \(y\). A proper 4-edge there is an inner exchange between two nonempty histories on disjoint spatial intervals. Choose such an edge in the active input and mark one advance \(X\) on \(x\) and one \(Y\) on \(y\) from its opposite operands. The spatial order is always \(x,y\), so the projected edge moves \(YX\to XY\).
+
+Choose a positive edge in the opposite active input. If it is an outer \(r\), retain one varying advance and one stationary partner. If it is an inner exchange, choose one event in each operand. When at least one of those events is unary, at most one stationary partner is needed. In either case, keep both moving slots, the required advances, and that one partner (either partner if neither is required). Both active edges retain positive 4-weight on the projected shape. The one-partner result of Response 14, transferred to the completion in Response 18, excludes a reverse regardless of the inactive images.
+
+The remaining witness consists of two disjoint crossing events. Keep all four slots and collapse every advance except the marked \(X,Y\) in the crossing-free half. Both operands of the chosen crossing exchange survive. The crossing half now contains just \(p=wx,q=zx,r=wy,s=zy\). Its two raw histories \(pqrs,prqs\) present the same 3-cell by (K15). The inner exchange \(rq\to qr\) between \(p\) and \(s\) gives a positive loop \(H\). Disjoint crossing operands must be single events. The middle pair is the only adjacent disjoint pair in either schedule, so this gives the sole positive primitive edge on that half. The projected active input there is consequently \(H^k\) with \(k\ge1\). Its inactive neighbor may supply any further power. On the unary half the two retained events admit just the single positive edge \(T:YX\to XY\). The active input uses it, so the inactive input there projects to a unit.
+
+### The full interval for a proposed reverse
+
+Write \(L\) for the common 3-class of the two crossing histories. The [interval checker](../../../scripts/e6/interchange_four_slot_loop_half.py) starts with the full Response 12 ground graph at one advance on each moving slot. It intersects the vertices reachable from the outside 3-source by 4-edges with those from which the outside 3-target is reachable. Every 4-path between the two boundaries stays in this intersection, including every intermediate path of a proposed reverse. The calculation uses all ground edges before testing which respect the designated cut.
+
+| Temporal order | Outside 3-boundaries | Vertices | 4-edges | Only nontrivial 5-rewrite in top contexts |
+| --- | --- | ---: | ---: | --- |
+| Crossings early | \(L\,YX\to L\,XY\) | 2 | 3 | \(T H_1\Rightarrow H_0 T\) |
+| Crossings late | \(YX\,L\to XY\,L\) | 2 | 3 | \(H_0 T\Rightarrow T H_1\) |
+
+Here \(H_0,H_1\) are the crossing loop whiskered at the two ends of \(T\). The checker executes the typed faces of all three edges. It also inspects every grounded rule that can act on these edges, allowing both orientations of each 4-equation. In each row the displayed temporal \(\delta\) is the sole rewrite. This inspection includes inner naturalities and the shifted join that changed reachability on the grid in Response 18.
+
+There is also a direct reason why the 4-paths stay separated. Their outside 3-moments agree, since \(T\) has zero moment drop. A positive outer \(r\) strictly lowers that moment. Among the remaining inner moves, an advance cannot pass a crossing on its own slot. When \(X\) can exchange with a crossing on \(y\), its disjoint spatial window lies to the left, so \(X\) can only move earlier relative to that crossing. Likewise \(Y\) can only move later relative to a crossing on \(x\). Equation (K15) permutes only a consecutive block of crossings. Every advance starts and finishes on the same side of each crossing, so none of these advance/crossing orders can change on a route between the outside histories.
+
+### Reachability for every loop power
+
+For \(n\) total copies of \(H\), all projected routes have the form
+\[
+                     R_j=H_0^j\,T\,H_1^{n-j},\qquad 0\le j\le n .
+\]
+The table gives the entire order. With crossings early, \(R_j\) reaches \(R_i\) exactly when \(j\le i\). With crossings late it reaches \(R_i\) exactly when \(j\ge i\). Each allowed unit change is realized by the typed temporal exchange. Every contextual rewrite preserves \(n\) and moves \(j\) in that one direction. This proves the criterion for unbounded \(n\). The solver also replays all 1,638 ordered-pair decisions for \(0\le n\le12\) in the unrestricted completed graph.
+
+At the projected rectangle \(CDAB\Rightarrow CADB\), the single \(T\) crosses the \(k\ge1\) copies belonging to the opposite **active** input. Thus \(j\) changes strictly by \(k\) in the indicated direction, whatever power belongs to the inactive input. A reverse would have to undo this change. Substitution sends any original reverse to a projected reverse, which proves the claim. Together with Response 18 this exhausts the temporal cuts on this four-slot family. The general question on arbitrary diagrams remains open.
+
+The solver also checks an example before contraction in which all four inputs are positive. Start at \(YXX\mid LX\). Early, \(A,B\) move the two successive \(X\)'s ahead of \(Y\). Late, the mixed inactive input \(C\) moves a third \(X\) ahead of the whole crossing block, and \(D\) then performs \(H^2\). Both routes finish at \(XXY\mid XL\). On this larger arity the solver replays a two-step forward path and verifies a closed set of **110 paths** excluding the reverse.
+
+Run the new case and its complementary census from the repository root.
+
+~~~sh
+python3 -B scripts/e6/interchange_four_slot_loop_half.py
+python3 -B scripts/e6/interchange_response12_rectangles.py
+~~~

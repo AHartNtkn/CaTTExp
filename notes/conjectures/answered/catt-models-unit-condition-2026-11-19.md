@@ -1068,4 +1068,6 @@ This resolves Q2 in the forward direction for Lanari’s explicitly specified ex
 - E11: the general unit condition (11) implies the homotopy hypothesis for 𝕋^bi. So Q1 in general should not be expected soon; the realistic target for the project is the torsion-free class via RC.
 - Open and not re-asked: (11) for computads that are not torsion-free; a converse from the homotopy hypothesis; the comparison (G) with an arbitrary coherator; Q4 (L's coherator in every dimension).
 
-**Follow-up.** No new prompt. Q3's remainder is RC, already in the outbox. Q1 in general now contains the homotopy hypothesis for a specified coherator, which another round would not settle. Q4 was not attempted; it stays in the ledger under E11 and can be posed again later in a general form if the L line needs it.
+**Follow-up (corrected 2026-11-19).** The general follow-up is `outbox/catt-models-unit-condition-r2.md`: decide (11) in general (proof, counterexample beyond torsion-free, or equivalence with the homotopy hypothesis for 𝕋^bi or another named statement), and L's coherator in every dimension. The torsion-free case stays in `outbox/relative-coherence-all-dimensions.md`. The earlier note below is superseded.
+
+~~No new prompt. Q3's remainder is RC, already in the outbox. Q1 in general now contains the homotopy hypothesis for a specified coherator, which another round would not settle. Q4 was not attempted; it stays in the ledger under E11 and can be posed again later in a general form if the L line needs it.~~

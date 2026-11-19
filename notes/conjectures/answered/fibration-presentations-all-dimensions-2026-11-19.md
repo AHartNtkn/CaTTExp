@@ -919,3 +919,40 @@ For the terminal weight, the presentation is simply
 \Psi=\Gamma,\qquad S=\varnothing,
 \]
 with all positive-dimensional generators marked. Its total is the identity fibration, and the comparison equivalence is its correctness certificate.
+
+---
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: Question 1 is refuted; Questions 2 and 3 are answered.** Correct at the level of a paper proof. The counterexample's finite computation was re-run independently.
+
+**Results.**
+- **Q1 (false).** The relative Gray-generator presentation of §2 does not exist for base dimension 4 and fibre dimension 3. Base Γ: b, a : b → b, μ : aa ⇒ a, associator α, pentagon P. Fibre Π: x, g, δ : g ⇒ gg, κ. Weight T(a) = Z, the constant functor at x, with T(μ)_x = g, T(α)_x = δ, T(P)_x = κ. Over the short side R → E → L of the pentagon, the unlocalised 3-skeleton has no 3-cell starting at R. The only route needs M⁻¹, where M = μ ⊗ g. So the generator P ⊗ x has no attaching map. This is an obstruction in the strict 3-skeleton, so no choice of weak attaching map can repair it.
+- **Q2 (positive, with auxiliary generators).** Every finite homotopical base and every (∞,ω)-functor T whose values have finite weak polygraphic presentations (localisations allowed) give a finite presentation (Free(Ψ), ⟨Q ∪ S⟩)[S⁻¹] ≃ ∫T over F(Γ), keeping the cartesian marking. It has **no** n + m dimension bound and no prescribed base–fibre generator count. Route: finite complicial models are closed under finite homotopy pushouts and products; L_d turns a finite stratified simplicial set into a finite semisimplicial one, whose oriental polygraph is homotopical by Chanavat; induct over the base cells with Loubaton's pullback–colimit theorem and the suspension classification for globes. First response, literal Q2: weights with values ≃ F(Π_b) rectify to strict weights, because the homs of ω between gaunt strict categories are gaunt.
+- **Q3 (answered: no example exists).** Γ is homotopical if and only if every skeleton is. The skeletal inclusion F(Γ_{≤r}) ↪ F(Γ) is discrete Conduché (supports of strict cells), so pullback along it preserves colimits (Loubaton Thm 2.2.2.10). Pulling back the cellular construction of Free(Γ) removes every attachment above dimension r, so c_r is a pullback of c_Γ. The terminal weight is presented by Ψ = Γ, S = ∅.
+
+**Checked.**
+1. **Boundaries of the mixed generators** c, u, D, M, V. Recomputed from the fibre-first Leibniz formula ∂(g ⊗ q) = ∂g ⊗ q + (−1)^{|g|} g ⊗ ∂q, with T(a) = Z killing the fibre on the target side. All five agree with table (1). The fibre-first ordering is the one the project's proved cylinders use (§3 item 3, A ⊗ I). M's direction is the one that matters, and it follows from that sign.
+2. **Lifts of the base composites.** T(μ₁;μ₀)_x = g and T(μ₀;μ₀)_x = g², so V : c₁;u₂;u₀ ⇛ δ₀;u₁;u₀ has the right endpoints. The pentagon's 2-source has 1-boundary gt⁴ → t.
+3. **The finite graph.** `tools/fibration_pentagon_counterexample.py`, written independently of the researcher's script (which was not supplied):
+   - All 2-paths gt⁴ ⇒ t have length 5, and there are 18 of them, giving 8 strict 2-cells modulo interchange.
+   - Every contextual instance of D, M, V and κ gives exactly 8 edges, the same as (3)–(4).
+   - The V-successors of R are B_δ and E_early, and E_early has no outgoing edge.
+   - So no positive 3-cell over R → E → L exists. Both L-vertices are reachable from R only through B, which lies over the long side.
+4. **Skeleta (Q3).** The support argument is correct: generator sets of strict cells are well defined and union-additive. Equation (4) needs only that the cells of D_d outside ∂D_d contain q in their support. Correct.
+5. **L_d conversion.** L_dΔ[p] is the nerve of P_{p,d}. The section s(x) = (x, x) and the comparison through F(x, i) = (x, max(i, x)) work as stated. Checked by hand.
+
+**Taken from the response, not re-read against the sources:**
+- Chanavat (arXiv 2603.22242) Thm 3.35. Its introduction states it for every semisimplicial set (checked); the body was not read. The counterexample needs it for the one-simplex-per-dimension sets X_{≤3} and X_{≤4}, and needs the claim that the even duality preserves homotopy polygraphs.
+- Loubaton (arXiv 2406.05425) Thm 2.2.2.10, Def. 2.2.2.2, (4.1.1.24), Cor. 4.1.2.19, Thm 3.2.4.9, Prop. 3.1.1.19, and (arXiv 2207.08504) Thm 3.3.1.7, Constr. 3.3.2.4 and Thm 3.3.2.9.
+- Ozornova–Rovelli, and Ara–Guetta §7.
+
+The Q2 existence proof is a sketch at the level of "finite colimit closure plus a conversion lemma". Its certificate leans on reusable rules (elementary anodyne extensions, the L_d lemma, the semisimplicial pasting theorem) that a proof checker would have to accept as axioms.
+
+**Consequences.**
+- B14: the uniform statement FT_{n,m} with one generator q ⊗ g per pair is **false from base dimension 4**. The proved cases (base dimension ≤ 3, suspension bases) are unaffected. A checker for higher bases needs auxiliary generators, for example by adjoining inverse data for the mixed generators that the pentagon needs, or the complicial route of the Followup §2.
+- The hypothesis "all skeleta homotopical" in B14 and in `limits-metatheory.md` §9 can be weakened to "Γ homotopical".
+- §1.3's motivation is met: finite presentations, and so checkable weighted limits, exist for every finite weight with finitely presented values over every homotopical finite base. They do not have the prescribed shape or dimension bound.
+- Standard 9: the counterexample is a finite rewriting computation, a good Agda target. Owner: FTX.
+
+**Follow-up.** No new prompt. What is left is design work on our side: choose which auxiliary generators a proof checker accepts, either a restricted Gray presentation with inverse data on mixed generators or the complicial certificate. A further question would be another incremental round.

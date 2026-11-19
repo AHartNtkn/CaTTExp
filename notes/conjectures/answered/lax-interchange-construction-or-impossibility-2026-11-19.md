@@ -1042,3 +1042,52 @@ These are distinct. Therefore
 Both sides become the same identity under the inner-interchange quotient.
 
 Thus requirements 1–5 **through dimension \(4\)** do not force the convention K15. At that finite stage, the generic composite-crossing equation is an additional coherence equation. Whether higher-dimensional requirements force it in every full \(\omega\)-theory is not established by this countermodel.
+
+---
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: Q1 and Q2 are not decided. Q3 is answered in its finite-dimensional form.** The first response reports no solution. The Followup gives a uniform theory T whose free algebras satisfy requirements 1–5 through **global dimension 4**, for every finite globular pasting diagram and every substitution. In T, the inner interchanger does **not** satisfy the composite-crossing law. Correct at the level of a paper proof.
+
+**The construction.**
+- **Base.** ω-sesquicategories, with ∗ₖ defined by the right-factor-first Godement formula (2).
+- **Generators.** The outer crossing χ(a, b) : ba ⇛ ab; its two naturalities r(A, b) and t(a, B), with the opposite directions of (K3); and the inner interchanger ι(F, G), right interval first ⇛ left interval first.
+- **Equations.**
+  - Outer composite-crossing (7), which is the (K15) convention, imposed for χ.
+  - Whiskering and balancing equations, and eight naturality-composition equations.
+  - (15)–(16), the positive factorization equations. These are the uniform form of the (K10) repair: r(a₁A, b) plays the role of h.
+  - τ = r(χ, d) = t(a, χ) for (K14)'s rqp ⇛ pqr.
+  - Restricted composition laws (20)–(21) for ι against a literal χ.
+- **Fixing the quotients.** The 5-cells δ, N_L, N_R, U_r and U_t specify the two quotients K_in and K_all.
+- **Requirement 2.** Imposed by a uniform family of support equations: parallel 4-paths with the same set of contextual edges are equal.
+
+**Checked.**
+1. **Substitution closure of the support equations (38).** Images of equal edge sets have equal edge sets, and an edge sent to an identity contributes nothing. So the support equations form one theory, and requirement 5 holds, including degenerate substitutions. Correct.
+2. **Support equations do not change the Gray quotient (§5.1).** A nonidentity edge cannot occur twice in a 4-path. The loop between two occurrences would be a positive 4-chain with ∂ = 0, which (32) excludes in strongly loop-free complexes. Two nonidentity edges cannot occur in opposite orders. So the Gray images agree. Correct.
+3. **Directedness (§6).** A reverse of an inner 4-interchanger has identity Gray image. So it contains no r, t or input steps, whose top chains are positive and nonzero, and consists of ι-moves only. The cut-inversion count (47) never increases under ι, by (49), and strictly drops on a proper elementary instance, by (50). Correct, given that (47) is invariant under the 3-equations. That invariance is argued from the fact that ba and ab share no interior state.
+4. **χ_{0,2} via ι (44).** It has the positional orientation forced by (K9). Checked.
+5. **The separating algebra M (§7).** Checked by hand:
+   - M has 3-cells {0, 1, 2} under capped addition and 4-cells (m, S) with weights S ⊆ {1, 2}².
+   - Every equation of §2 holds, because each ι occurring in (14)–(17) and (20)–(21) has an argument χ ↦ 0 and so weight ∅.
+   - The support equations hold, since weights are unions.
+   - The 5-cell boundaries agree. For N_L and N_R this uses the fact that a 4-cell X : F ⇒ F′ in M forces F = F′.
+   - ι(A, B;C) ↦ (2, {(1,2)}), while the pairwise composite ↦ (2, {(1,1)}). So (63) holds in the free algebra.
+
+**Taken from the response, not re-checked:**
+- Exactness (§5.2–5.3) through hom-dimension 3. It cites Crans's generators-and-relations presentation of the Gray tensor (§§7–8, not re-read), plus a short surjectivity argument from the composition equations.
+- Araújo's recursive description of ω-sesquicategories.
+- The finiteness bounds (34) and (37). These are generous, not efficient.
+
+**What this settles.**
+- **Q3.** Requirements 1–5 through global dimension 4 do not force the composite-crossing law for the inner interchanger ι. So that law is extra coherence data. The outer form, (K15) as used in (K14) and later rounds, is consistent: T imposes it. Whether higher dimensions force the ι form is open.
+- **E6.** This is the first uniform construction, valid for every Γ, but it stops at global dimension 4. That is below the (K8) obstruction, where A ⊗ B is a global 5-cell. The 5-cells of T are only used to specify the quotients. No directedness or exactness is claimed in dimension 5. The case-by-case results of (K10)–(K29) live in hom-dimensions 3–6, so they test the next stage, not this one.
+- **Q1 and Q2:** open. Neither a construction in every dimension nor an impossibility result is given.
+
+**Standard 9.** T through dimension 4 is small enough to formalise:
+- the separating algebra M and the inequality (63);
+- the cut invariant of §6.3;
+- the substitution closure (38).
+
+Owner: LCORE (the E6 Agda thread, `src/CaTTExp/Join/`).
+
+**Follow-up.** No new prompt now. The open question is extending T to global dimension 5, where the (K8)–(K10) data and A ⊗ B's lift must appear uniformly. That is the same main question as before. Re-asking it with T as a Known item would be one more round of the same line. It should wait until the internal check of T (LCORE) shows whether T's equations reproduce the (K10)/(K11) data at the next dimension.

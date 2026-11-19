@@ -1872,3 +1872,495 @@ factorization using a third, nonnegative count of pairs of advances.
 Together with the upper window argument this gives strong directedness
 and both exact quotients in every degree on those shapes.
 [Round 4, Response 5](../answered/lax-interchange-every-dimension-r4-2026-11-19.md#researcher-response-5)
+
+# Researcher Response 10
+
+**All binary globe tensors admit signed lifts at every cut in one
+presentation.** This includes the missing \((3,3)\)-atom. There is a
+single dimension step for the higher bidegrees. It preserves the
+absence of reverses for all elementary rectangles of output degree at
+least six on every shape. Both quotients are exact in every degree on
+every pair of globes, and strong directedness holds there in degree five
+as well. The proof below distinguishes the globe-pair theorem from
+exactness on general pasting diagrams.
+
+## The two variations at once
+
+Use Response 9 and the notation \(abc,hf\) of Response 8. Write
+\(x:A^0\to A^1\), \(y:B^0\to B^1\) for the two global 4-variations.
+In a word, each of \(x,y\) varies its own occurrence in the current
+3-history; letters preceding that variation are in layer zero for its
+variable and letters following it are in layer one. All the words below
+are global 4-paths from the history \(B^0 C A^0\) to \(A^1 C B^1\),
+where \(C\) is the crossing. Use the common initial and final words
+\[
+                            yabcx,qquad xhfy .
+\]
+Here are the local global 5-moves, written as replacements of consecutive
+letters in such a word.
+
+| Name | Replacement | Name | Replacement |
+|---|---|---|---|
+| \(a_y,b_y,c_y\) | \(ya\to ay,\ yb\to by,\ yc\to cy\) | \(c_x,b_x\) | \(cx\to xc,\ bx\to xb\) |
+| \(h_y,f_y\) | \(yh\to hy,\ yf\to fy\) | \(f_x,h_x\) | \(fx\to xf,\ hx\to xh\) |
+| \(W\) | \(abc\to hf\) | \(K\) | \(axbc\to xhf\) |
+| \(s\) | \(yx\to xy\) at \(T=ACB\) | \(J\) | \(yaxbc\to xhyf\) |
+
+All except \(J\) are available. In particular \(s\) is forward because
+the varying \(A\) occurs before \(B\) at \(T\); the opposite positional
+orientation holds at \(S=BCA\). Declare \(J\) with the displayed
+boundary. Its Gray image is the contextual \(yK\). Indeed \(yK\) ends
+at \(yxhf\); in the strict hom the variations commute at \(S\), and
+\(h_y\) has identity image. Thus its endpoint agrees in Gray with
+\(xhyf\). This argument also gives an *undirected* path between the
+two raw endpoints of \(J\), by using \(K\), the exchange at \(S\)
+backwards, and \(h_y\). Consequently their degree-four lengths agree in
+every fixed context.
+
+The following are five actual paths between the displayed common words,
+each read from left to right.
+\[
+\begin{array}{c|l}
+ P &a_y\ b_y\ c_y\ s\ W\ f_x\ h_x\\
+ P'&a_y\ b_y\ c_y\ W\ s\ f_x\ h_x\\
+ L &W\ h_y\ f_y\ s\ f_x\ h_x\\
+ R &a_y\ b_y\ c_y\ s\ c_x\ b_x\ K\\
+ D &c_x\ b_x\ J\ f_y .
+\end{array}
+\]
+For example the successive words of \(D\) are \(yabcx,yabxc,yaxbc,
+xhyf,xhfy\). On \(P\to P'\), exchange \(s\) on the suffix and
+\(W\) on the prefix of \(abcyx\); this is the forward positional
+6-cell. On \(P'\to L\) use the old right variation \(Z_B\) with
+\(A=A^0\) and \(x\) on its right. On \(P\to R\) use the old left
+variation \(Z_A\) with \(B=B^0\), after the common first four moves
+and with \(y\) on its right. Add \(G:L\to D\) and \(H:R\to D\).
+The new global 7-cell has negative and positive routes respectively
+\[
+                      P\to P'\to L\to D,qquad P\to R\to D .
+\]
+
+Here is the Gray calculation, in hom degrees. Both routes have the same
+lower boundaries by construction. On a move of a 5-path, \(a_y,f_y\)
+contribute \(\alpha_0\otimes y,\alpha_1\otimes y\);
+\(c_x,h_x\) contribute \(x\otimes\beta_0,x\otimes\beta_1\).
+The ordinary \(W\) contributes \(A^i\otimes B^j\) at its current
+layers, \(K\) contributes the same tensor at \(i=1\), and \(J\)
+contributes it at \((1,1)\). The other moves have zero 4-chain.
+Consequently the chains on \(P,D\) are the negative and positive
+degree-four rows of the disk. Going from \(L\) to \(D\) changes the
+chain by \(\partial(x\otimes B^1)\); going from \(R\) to \(D\)
+changes it by \(\partial(A^1\otimes y)\). In each case the table
+with these lower rows and the indicated single positive 5-basis tensor
+is a Steiner cell: the lower rows already satisfy the table identities,
+and the displayed difference verifies the new one. Use these tables
+for \(G,H\). The top routes now have chains
+\[
+             A^0\otimes y+x\otimes B^1,qquad
+             x\otimes B^0+A^1\otimes y ,
+\]
+as required by the odd first degree.
+
+When \(x\) is a unit, take \(J\) to be \(W\) followed by \(h_y\);
+when \(y\) is a unit take \(J=K\). At two units these agree.
+With \(x\) a unit the paths \(P,P',R\) specialize to the negative
+route of \(Z_B\), and \(L,D\) to its positive route. Set \(G=1\)
+and \(H=Z_B\). With \(y\) a unit, \(P,P',L\) are the negative route
+of \(Z_A\) and \(R,D\) its positive route. Set \(G=Z_A,H=1\).
+In both cases the new top operation is the identity on the surviving
+6-cell. These are typed substitutions of paths, including the
+whisker on \(W\) in the unit value of \(J\).
+
+Use the same declarations by suspension at every cut. Give proper
+\(J,G,H\) charges \(4,1,2\), and the top atom charge one. At cut
+zero put \(u=|\alpha_0|m_4(y)\), \(v=m_4(x)|\beta_0|\).
+All five paths have charge \(u+v+5\) by the displayed lists and the
+charges of Response 9. At positive cuts the same calculation uses
+unit charges for the unary faces and the earlier auxiliary charges.
+The top routes have charges \(1+1+1\) and \(1+2\).
+For the shifted \(J\), the source windows of \(a,b\) cover the
+three-event history with overlap on \(B\), as for \(K\) in Response 8.
+The intervening \(x\) varies only \(A\). For \(H\), the first four
+moves of \(R\) slide \(y\) past \(a,b,c,x\) in succession. They cover
+the whole interval, with consecutive overlaps on \(y\). For \(G\),
+\(W\) covers the middle \(hf\) in \(yhfx\); moving \(y\) across
+\(h,f\) and then \(x\) extends this coverage to both endpoints.
+Each overlap uses a positive common letter at the same intermediate
+state. All these checks therefore work with transported lengths under
+fixed lower whiskerings. The negative route of the top atom contains
+the unpadded \(G\). These are precisely the conservation, positivity
+and source-window tests of Responses 8–9. In degree five the only new
+proper generator at cut zero is \(J\); its Gray image has positive
+top chain because both global 3-faces have positive 3-event length.
+It cannot occur on a reverse to an elementary 5-comparison.
+
+## Raising a globe in arbitrary bidegree
+
+The induction is given here in hom degrees at the chosen cut. Write
+\(p\) for the degree of the *moving* input and \(q\) for the fixed
+degree, also when the moving input is on the right. First extend both
+strips with fixed degree two from their Response 8 seeds \((3,2),(2,3)\).
+Next extend the right input from \((3,3)\) with fixed left degree three.
+Finally extend the left input from each resulting \((3,q)\), \(q\ge3\).
+In each step \(p\ge3\). Together with the unaries this lists every
+ordered positive bidegree once.
+
+Let \(E(x)\) be the old disk operation and \(r_a^\epsilon(x)\) its
+\(a\)-source or target, \(\epsilon=0,1\), taking both to be \(E\)
+at \(a=p+q\). Use \(v:x^0\to x^1\) for the higher moving input.
+The following recursion constructs two fixed whiskering contexts
+\(C_a^0,C_a^1\). They can also be applied to a higher cell by lifting
+their fixed parts by identities. Put
+\[
+ D_a^{i,\epsilon}=C_a^i[r_a^\epsilon(x^i)],\qquad
+ \sigma_a=\begin{cases}
+ +1&\text{left input moving},\\
+ (-1)^{a-p}&\text{right input moving}.
+ \end{cases}
+\]
+For each \(a=p,\dots,p+q\) form a bridge \(b_a^\epsilon\) between
+\(D_a^{0,\epsilon}\) and \(D_a^{1,\epsilon}\), in that order when
+\(\sigma_a=+1\) and in the opposite order otherwise.
+
+At \(a=p\) the contexts are empty. Each old \(p\)-face has one pure
+occurrence of \(x\) in fixed contexts, so the bridge is insertion of
+\(v\) there. This single-occurrence condition will be verified below.
+At \(a>p\) declare the bridge as an auxiliary generator, except at
+the final rank where there is **one** bridge, the new principal disk
+operation. To pass from rank \(a\) to \(a+1\), let \(i=0\) for a
+positive sign and \(i=1\) for a negative sign, and put \(j=1-i\).
+In chronological order set
+\[
+ C_{a+1}^i[z]= C_a^i[z]\; ;\; b_a^1,qquad
+ C_{a+1}^j[z]= b_a^0\; ;\; C_a^j[z] .
+\]
+The composition is at hom cut \(a\) when the operand has degree
+\(a+1\); higher uses are its fixed whiskerings. Both paths at the
+next rank go from \(D_a^{i,0}\) to \(D_a^{j,1}\). This verifies
+parallelism in the actual sesquicategorical syntax at **each** stage.
+At the last rank the two bridge declarations coincide because the old
+hemispheres are the same top cell and the contexts are independent
+of \(\epsilon\). Its two faces are the displayed routes through the
+old principal cells in their layers and the preceding bridges.
+
+Here is the signed boundary check. Use signs as bits when selecting
+a face, with bit zero denoting source. For a fixed globe \(z\) write
+\(z_d^t\) for its degree-\(d\) hemisphere, using the globe itself at
+the top. The chain of a bridge is one basis tensor,
+\[
+ \begin{cases}
+    v\otimes z_{a-p}^{\epsilon\,\mathrm{xor}\,(p\bmod 2)}
+                                   &\text{left moving},\\
+    z_{a-p}^{\epsilon}\otimes v &\text{right moving}.
+ \end{cases}                                                     \tag{1}
+\]
+At the bottom this is the pure occurrence at its vertex. At higher
+rank the only old top summand changing between the two layers is the
+one using \(x^0\) or \(x^1\). Whiskering in \(C_{a-1}\) leaves
+that top chain unchanged. In addition the two routes carry one of the
+preceding bridges each. For left variation their target-minus-source
+contribution is \(b_{a-1}^0-b_{a-1}^1\) in chains, giving
+\((-1)^{p+1}v\otimes\partial z_{a-p}\). For right variation the
+previous sign is opposite to the present one, so their contribution
+in the oriented difference is \(\partial z_{a-p}\otimes v\); the
+old varying summand gives \((-1)^{a-p}z_{a-p}^\epsilon\otimes
+(x^1-x^0)\). These are exactly the differentials of (1).
+
+More explicitly the new degree-\(a\) hemisphere is the source of
+\(b_a^0\) or the target of \(b_a^1\), respectively. Its top chain
+has the old degree-\(a\) row evaluated at the selected layer and
+one extra summand from \(b_{a-1}\) if \(a>p\). For left variation
+the selected layer is \(\epsilon\); for right variation it is
+\(\epsilon\,\mathrm{xor}\,((a-p)\bmod2)\). This is exactly the
+layer of the old moving \(p\)-face in the tensor row. The extra
+summand is the term with moving degree \(p+1\), at the opposite
+fixed-face choice on the left-moving strip and the same first-factor
+hemisphere on the right-moving strip, as given by the context formula.
+Below \(p\) the rows are unchanged. Thus the *whole tableau* of the
+new principal operation is the disk atom. The intermediate bridges
+give the corresponding single summand with its actual contextual
+lower rows.
+
+Three details make this a recursion on globular operations.
+
+1. In each of the three seeds, the moving degree-three input occurs
+   purely once in each degree-three face: in \(abcx,xhf\), in
+   \(yabc,hfy\), or in \(yabcx,xhfy\). After any raising step
+   the two degree-\((p+1)\) faces each contain \(v\) once in its
+   insertion at the bottom, the rest lying in a fixed layer. This
+   proves the single-occurrence condition at the next step. When
+   switching from right to left raises at \((3,q)\), the left
+   occurrence in the two degree-three faces of \((3,3)\) is still
+   present once: the first right raise just selects the two layers
+   at rank three, and subsequent right raises are above that rank.
+2. No low generator requires a higher input to determine its boundary
+   or its indexing. If the fixed right degree exceeds \(a\), the
+   rank-\(a\) bridge uses only the fixed degree-\(a\) hemisphere of
+   the indicated side. Use the declaration on that face. To check
+   this restriction, right raising above rank \(a\) leaves that row
+   unchanged; raising *at* \(a\) selects the layer of the pure right
+   input, which has first-factor degree zero and hence side \(\epsilon\).
+   Subsequent left raising uses the same old hemisphere and its two
+   lower hemispheres in the context formula. Induction gives exactly
+   the declaration on the smaller fixed face. All such ranks requiring
+   a new bridge are at least four. In the right-raising families the
+   fixed degree is at most three. Thus all new proper auxiliary
+   declarations have inputs of strictly lower degree than their output.
+3. At a unit moving variation take the bridges to be identities;
+   both contexts reduce to the old cell with its fixed whiskers.
+   At a unit fixed input use the same construction on its lower face.
+   In detail, the old top specializes to the identity on the smaller
+   principal cell. Through that smaller cell's rank the recurrence
+   is identical, with its single top bridge used on both sides.
+   At the extra rank elevating an identity in either fixed context
+   gives an identity, so both next routes equal that same bridge.
+   Take its identity. Iteration handles all further units. At the
+   boundary with fixed degree one this construction is exactly the
+   unary recursion of Response 8: there is one pure insertion and
+   one old mixed face in each route, with the right-variable order
+   reversed. With fixed degree zero there are only pure whiskerings.
+   The two unit specializations commute since a unit moving variation
+   makes all these bridges identities on the corresponding old
+   specialization. The two specializations of the \((3,3)\) seed
+   were checked explicitly above. In particular switching the order
+   of the *construction* at the strips calls for no choice between
+   competing top operations.
+
+## Quotient equations and the window induction
+
+For each proper auxiliary above the bottom rank use a conditional
+equation identifying it with a contextual lift of (1) in the inner
+quotient. For \(J,G,H\) use the three contextual tables computed
+above. The premises are definedness of both expressions, parallelism,
+and identity of the bare inner test on the global 3-source histories
+of the two operands from Response 9 (suspended by the cut). Here and
+below “global 3” in a suspended test means relative to its outer cut.
+One can use the same conditions for any two defined parallel top pastes
+of principal mixed generators of fixed output degree with both operand
+degrees at least two and the same universal Gray table, using a test
+for every occurrence as in Response 9.
+
+There is an explicit noncircular way to choose the right side of an
+auxiliary equation. In its two-globe arity express the indicated
+table as a strict atomic paste. It has exactly one positive top
+occurrence, of the indicated bidegree, and otherwise only fixed lower
+contexts. Expand each such context by its own strict atomic expression.
+Use pure actions and principal disk operations on the corresponding
+faces as lifts. One may enumerate strict pastes in the finite table
+until one is found, by the atomic presentation used in Response 8.
+For an auxiliary bridge the top bidegree in (1) has *smaller total
+degree* than the principal disk being raised; the needed atom has the
+output degree of the auxiliary itself. For \(G,H\) these are the
+previous two degree-six atoms. The expressions need only type under
+the specified premises. In the quotient they do type, by induction
+on output degree: every matching lower face has already been identified
+with its Gray value on the generic pair. This is a simultaneous
+induction covering the two-globe arities, followed by term substitution.
+At a positive cut the same disk calculation applies relative to that
+cut; when the entire cut is killed each positive mixed occurrence
+there has its prescribed identity value.
+
+Here is why the equations impose no extra identifications in the free
+objects before quotienting. For proper operands their 3-source histories
+are positive, as in Response 9, so the test is a proper inner comparison
+(positive degree-four weight, or a positive suspended occurrence). If
+the test *is* an identity, some operand reduces through identities
+to at most an edge in hom degrees. A unit moving variation makes the
+bridge an identity, as is its proposed representative with a degenerate
+top atom. If instead the fixed input reduces to an edge, repeated use
+of the fixed-unit rule makes a bridge above the unary rank an identity.
+At the unary rank it gives the actual unary cylinder. Its chosen
+representative in this case also reduces to that cylinder whenever
+defined. To see the last point, specialize the atomic paste in Gray.
+It contains the one surviving unary atom and equals its *unwhiskered*
+table. Any external nonunit whisker on that atom would add a positive
+lower chain: take the greatest degree of a nonunit fixed whisker in a
+Godement expansion, suppressing units at their attachment cuts.
+At that rank lower compositions add chains and a composition at a
+higher cut retains their common row. This excludes any such exterior
+contribution. Each fixed context was lifted using only globular inputs,
+pure actions and principal atoms on individual faces. On this edge
+degeneration a generating disk face either survives with positive top
+chain or specializes by its unit rule. Thus a fixed context that becomes
+a unit down to its attaching cut does so as an actual term: descend
+through its identity rows, using positivity at each remaining atomic
+occurrence. This proves the asserted reduction also before quotienting.
+If the edge is a vertex all mixed occurrences normalize to identities.
+For \(J,G,H\) a test with an operand reduced to at most an edge
+makes the corresponding \(W,Z_A,Z_B\) identity, including in the
+specified specializations of the auxiliaries; the same holds on the
+representing side. For the equations between mixed pastes, all tested
+top occurrences become identities and the parallel terms are equal.
+This verifies the rules under arbitrary free substitutions, not only
+on generating inputs. The finite terms with the stated operation
+arities, boundaries and equations consequently give a presentation
+closed under substitution.
+
+For conservation in the new families give each proper bridge above the
+bottom, including the principal operation, charge one. Degenerate
+operations always have the charges of their prescribed values.
+The bottom insertions of the proper variation \(v\) have the same
+charge on both sides, since all their outside whiskers are fixed and
+their global degree is at least five. For a proper higher bridge
+both preceding bridges are proper with equal charges. The two old
+hemispheres of the *same* side evaluated at \(x^0,x^1\) have equal
+charge at every rank \(a>p\). Here are the details needed for
+substituted inputs. In a seed, at these ranks the only nonconstant
+structural charges in the displayed paths are the unary charges and
+the left auxiliary charge of Response 9. They involve the intrinsic
+mass of the relevant input times the length of a fixed edge. Replacing
+the moving input by its parallel face preserves that mass by (C), in
+particular by the degree-four calculation when starting at \(p=3\).
+The layers of the fixed input have the same edge length. In later
+hemispheres the context recurrence carries exactly one old hemisphere
+in fixed lower whiskerings and adds one bridge at the preceding
+rank. This adds a constant for a proper auxiliary, or the intrinsic
+charge of a transported pure input for a bottom insertion. A lower
+hemisphere of the replaced input is common to its parallel faces.
+These observations inductively prove the equality of charges, also
+when switching from right to left raises or restricting a fixed face.
+All ranks in this comparison have global degree at least five, where
+the charge of an occurrence is retained under exterior whiskering.
+Consequently the two routes of the new declaration have equal length.
+This verifies (C) on the entire enlarged signature. Positivity of
+immediate boundaries follows at the same induction: the proper
+bottom occurrence and all proper previous bridges have positive
+source and target, and both new routes are nonempty. Thus proper
+higher inputs have the proper lower faces used in the test and charge
+checks. As in Response 8 one may first perform the induction in the
+syntax with unit rules and the unary subdivisions, then verify the
+conditional equations there.
+
+The necessary window property is that **both** rank-\((p+1)\)
+hemispheres of the old atom, viewed as paths, cover the interior of
+their whole immediate time interval by source windows. For \((3,2)\)
+the negative route has the overlapping \(W,f_x\) windows and the
+positive route has the unpadded \(K\). For \((2,3)\) the negative
+route slides \(y\) successively across \(a,b,c\); on the positive
+route \(W\) covers the suffix and \(h_y\) overlaps it on \(h\)
+and reaches the beginning. For \((3,3)\), the four successive
+slides in \(P\) reach across \(a,b,c,x\), and \(D\) contains
+the unpadded \(J\). In the first new bridge above the bottom the
+old path of the indicated side is present in a chronological
+concatenation with a pure insertion. It has the stated coverage
+also if the insertion comes first, by conservation at the common
+state. At each subsequent rank **both** new routes contain an
+unpadded proper bridge from the preceding rank. This proves coverage
+for their sources and preserves the induction hypothesis for the
+next raise, since the next bottom is one rank higher. At the switch
+of moving sides, the degree-four hemispheres of the first right raise
+of \((3,3)\) still contain an entire \(P\) or \(D\) in chronological
+concatenation with a pure insertion; subsequent right raises merely
+select its layers or leave it unchanged. This supplies the needed
+hypothesis for the left raises from \((3,q)\). Each argument works
+under fixed lower contexts by the positive-overlap and conservation
+checks. The target of each bridge has a nonempty path on the same
+whole interval. Thus every new proper generator of output degree
+at least six passes the separation test of Responses 8–9, including
+the suspensions. The bidirectional check for the unary subdivision
+equations there is unchanged. Strong directedness in those degrees
+follows on every finite diagram.
+
+## Exact quotients on the disks and a degree-five decision
+
+In the inner quotient on a pair of globes, the two adjacent homs
+are strict globes. Every proper outer principal operation is now
+its indicated basis pair on generating faces. Every auxiliary is
+its prescribed contextual paste by the test equations and induction
+on the lower faces. Every term, including a term first composable
+after strictification, is therefore a strict paste of basis lifts.
+Conversely assigning the lifts to the atoms of the strict tensor
+respects all their faces by the signed row induction. The free
+atomic presentation gives the inverse to projection, in every
+degree. The same proof with the subdivision argument of Response 9
+works on \(D^p[m]\) against \(D^q[n]\) for \(p,q\ge2\): expand a
+higher unary on a moving interval by its subdivision; for a mixed
+principal generator compare it with a strict atomic paste of its
+tableau, using the mixed-paste tests after lower exactness. Every
+positive top occurrence in such a paste has the generator's own
+bidegree. In the all-cuts quotient on any shape every new auxiliary
+is an identity by its contextual equation and every new principal
+operation is killed. Strict evaluation validates every relation, so
+the original strict quotient remains exact.
+
+For degree five on the pair of 3-globes there is a small exhaustive
+reachability test. Pad a 3-history by stationary 3-prefix and suffix
+so that it goes all the way from the initial right-first 2-word to
+the final left-first 2-word. Such padding exists since the two unary
+advances \(A,B\) and crossing \(C\) can be performed in any order.
+If the 2-word traverses at most one slot, every proper 4-update
+needs its single unary 3-event, so two disjoint temporal intervals
+cannot both have proper inputs. This also covers an adjacent hom alone.
+On the full interval, a 3-history is a permutation of \(A,B,C\)
+and a bit for the layer of each unary event. The 4-moves change a
+bit from zero to one, act by \(CA\to AC\), \(BC\to CB\), by
+positional exchange of \(A,B\) (in opposite directions before and
+after \(C\)), or by \(BCA\to ABC\). The join equation expands
+the contextual \(r\) on \(BCA\) into the join followed by positional
+exchange. No block split is proper with one advance per slot, and
+the other varying-whisker and triple equations require a third slot.
+These moves enumerate all 4-paths on the interval, keeping both
+representatives of the join equation.
+
+A reverse has zero Gray 5-chain. Besides both directions of the
+4-equation, the following list exhausts its possible moves in
+chronological and fixed contexts.
+
+- Exchange two 4-moves on disjoint temporal subwords, putting the
+  earlier subword first. Exchanging composite updates has a path of
+  such atomic exchanges: move each earlier step past the later steps
+  in their given lists. A proper four-slot rectangle contains at least
+  one such exchange between active steps, with its inactive contexts.
+- At an inner square \(i\), write \(l,r\) for the 4-variations of
+  its spatially left and right events. The two naturalities give
+  \(il\to li\) and \(ri\to ir\); the shifted join gives
+  \(ril\to lri\). The two spatial positions are determined by
+  whether the square is before or after \(C\).
+- The outer right variation of the join gives \(yh\to hy\).
+  All other proper outer 5-moves, including \(J\), have positive
+  Gray chain on these disks. A proper independent operand for an
+  inner naturality or shifted join must be on the other single
+  slot; a 4-move spanning both slots has no such operand. There is
+  no input 5-globe.
+
+The finite graph has 338 paths and 193 contextual rewrites including
+the equation steps. From the target of each of its 79 distinct
+contextual atomic exchanges the source is unreachable. Thus no
+proper composite rectangle has a reverse either: composing such a
+reverse with the rest of its forward atomic route would reverse a
+tested exchange. This also tests the stationary contexts used for
+padding. Nonadjacent cuts use the Godement expansion on the transported
+inputs as in Response 8.
+
+Finally any pair of higher globes projects to this test: send both
+parallel 3-faces of each higher hom globe to the generating 3-cell,
+and its higher faces to identities. For a smaller hom globe use a
+face inclusion. These assignments preserve all proper atomic
+4-inputs on the pair: a generating update remains a generating
+update, and the bases of \(r,t,h,\iota\) retain their required
+advances or edges. A composite containing a retained update remains
+proper by the positive degree-four grading. Substitution would send
+any reverse to a reverse on the tested disk. Lower directedness
+is that of the original low skeleton (on a proper inner square in
+these disks the two slot histories can only exchange forwards in its
+fixed zero-Gray fiber). This proves strong directedness in every
+degree on every pair of globes.
+
+**Validation.** `python3 -B scripts/e6/interchange_double_variation.py`
+checks the five raw \((3,3)\) paths in their actual layers, both
+unit specializations, both complete signed top faces, and 22,842
+interior cuts in the sources of \(G,H\). It also pastes both strip
+faces through moving input degree fifteen, and compares every
+hemisphere produced by the general context recursion with independent
+disk tableaux in 84 extensions, testing both sign rules.
+`python3 -B scripts/e6/interchange_double_disk_paths.py` enumerates
+the graph above from its 24 three-dimensional states and performs the
+79 reachability searches with both join equations and all allowed
+zero-chain generators in context.
+
+The disk induction supplies all the mixed arities. Two distinct
+requirements of unrestricted Q1 still need proofs: Gray exactness
+under composition and whiskering in arbitrary multi-span input homs,
+and strong degree-five directedness on arbitrary diagrams with
+inactive mixed contexts. The globe-pair reachability result tests
+the complete degree-five graph for that family only.

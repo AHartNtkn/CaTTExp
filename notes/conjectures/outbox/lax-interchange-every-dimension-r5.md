@@ -3345,3 +3345,136 @@ Run the new case and its complementary census from the repository root.
 python3 -B scripts/e6/interchange_four_slot_loop_half.py
 python3 -B scripts/e6/interchange_response12_rectangles.py
 ~~~
+
+# Researcher Response 20
+
+**There is a finite separation test for an elementary rectangle even
+when all slots lie in one component of Response 17 and its diagram
+admits unbounded 4-paths.** It uses only the two designated inputs, the
+total Gray 4-chain of all four inputs, and the finite lower skeleton.
+The conclusion is absence of a reverse in the full theory of Response 12.
+
+Choose one mark from each active input. For a positive Gray 4-atom use
+its type and permanent event names, ignoring spectator vertices, and
+choose one of its underlying 3-events as anchor. For an inner exchange
+choose one event in each operand. The mark then counts this unordered
+pair in inner products and has both events as anchors. Call the marks
+early and late according to their input intervals. The anchor names
+from opposite intervals are distinct.
+
+Enumerate the active 3-event windows of the contextual proper outer
+4-edges \(r,t,h\) on the overall 2-word interval whose positive Gray
+top chain is contained in the fixed total chain. Omit the fixed temporal
+prefix and suffix from each window. A superset of these windows also gives
+a valid test. **If no window contains two distinct chosen anchors, the
+rectangle has no reverse.** In particular the test never enumerates the
+4-path operands of a possible return. The list of 3-histories and their
+atomic representatives is finite on a fixed diagram. The fixed chain
+applies throughout a reverse because the complete Gray 5-image must be
+an identity.
+
+Here is the proof. For each pair of distinct anchors record its multiplicity
+among all pairs exchanged by inner edges of a 4-path. Every such count is
+invariant under the 4-equations and every step on a reverse. Inner splits
+partition the Cartesian product. In a varying-whisker correction all
+events of the correcting product belong to the window of the wide mixed
+edge on one side of the equation. The binary join correction is contained
+in the window of the join. Thus none of these corrections supplies two
+anchors. The other outer equations have no inner contribution. A (K15)
+redescription preserves the event set of each argument. Temporal exchange
+carries the inputs, and an inner naturality or shifted join carries the
+same variations and the product of the same two sets of events on each
+side. The outer unary and join variations carry their varying path once
+and have only outer edges in addition. A proper \(W,K,J\) or input
+5-globe has positive Gray top chain. This checks the counts in every
+context, including the normalized unit cases. In particular an inner
+product anywhere on a reverse cannot separate an early anchor from a
+late anchor: all such counts are zero initially.
+
+Read the two marks along each 4-path. For Gray marks read the atom
+multiplicities; for inner marks use the pair multiplicities just defined.
+A proper outer edge has at most one anchor in its window. An input
+4-globe has only one event. An inner product carrying a pair mark has
+one of its anchors in each spatial operand, so it cannot even *contain*
+an opposite anchor, by the zero counts. These observations make each
+edge monochromatic or unmarked. The word is invariant under 4-equations:
+the two sides of a proper outer relation are in its wide window, with
+the same mark totals, and a split inner product partitions its marks.
+The structural laws just transport occurrences. Gray multiplicities
+under temporal or spatial padding are read with the transported event
+names.
+
+Every non-temporal 5-step on the reverse preserves the word. In a
+proper outer unary or join variation, its whole active history has the
+event set of the displayed mixed edge (use the full join for \(H_L,H_R\)).
+Thus this window cannot contain both colors, even if the variation is
+composite. In an inner naturality or shifted join the product on the
+two operand histories would exchange opposite anchors if one operand
+carried an early mark and the other a late one. If the product itself
+carries a mark, neither operand contains any opposite anchor. If both
+colors occur together, they must therefore be in a single unchanged
+4-path operand, with no marks contributed elsewhere. This proves word
+invariance also for these generators.
+
+To constrain a temporal exchange, fix one early anchor \(v\). At every
+late-marked edge, \(v\) has already occurred in the fixed 3-prefix
+before that edge's active window. This holds at the designated schedules.
+The status is meaningful: the window of a late-marked edge excludes
+\(v\) by the mixed-window test or the zero pair counts. Whether a
+named advance or crossing occurred in its prefix is determined by the
+prefix's terminal 2-state. In a mixed 4-equation or outer 5-step
+containing a late mark, the entire active window excludes \(v\); an
+inner split carrying a late mark also excludes it. At a temporal
+exchange the two subintervals retain their event sets and endpoints.
+At an inner naturality or shifted join with the late mark in a varying
+4-path, the independent operand cannot contain \(v\), since the product
+would pair it with a late anchor there. Moving that operand, or changing
+its 3-history without changing its event set, therefore preserves the
+status of \(v\) at each late occurrence. If the late mark is supplied
+by the product, the whole window excludes \(v\). These checks prove
+the assertion inductively through both re-presentations and forward
+moves on a proposed return. They do not require chronological order of
+two arbitrary disjoint crossings to be invariant under (K15).
+
+A temporal exchange cannot have a late-marked edge in its earlier input
+and an early-marked edge in its later input: juxtaposing their histories
+at the common 2-state would put \(v\) after that late window. Thus the
+number of late-before-early pairs never increases. At the given exchange
+it drops strictly, because the selected active inputs contribute their
+respective marks and the inactive arguments have the same positions on
+both sides. Godement expansion gives the result for transported inputs
+at a nonadjacent cut.
+
+A useful sufficient condition uses only the mixed atoms of the total
+chain. Join the underlying slots of each positive **mixed** atom in a
+graph. In any proper outer edge every slot of a varying event is joined
+to *every* stationary slot, by its tensor chain. Use its associated
+\(r\) for a join. Every event in the active window meets this one
+component: block crossings meet a stationary slot, and events in the
+join's other history are on stationary slots. Consequently no two
+anchors supported entirely in distinct components can occupy such a
+window. One may first join the two slots of each proposed anchor if it
+is itself a crossing; this only coarsens the test.
+
+For example, start at \(gfedcba\), cross the groups \(cba\) and
+\(gfed\) as one complete block, perform the triangle on \(cba\),
+perform the two independent crossings in \(gf\) and \(ed\), then
+cross \(de\) and \(fg\) as a block to finish at \(abcdefg\). Take
+the triangle in the early active input and the inner exchange of the
+two independent crossings in the late one. The two inactive inputs
+can carry arbitrary powers of the inner loops in the initial and final
+blocks, respectively. All 21 pairs of slots cross, so the component
+string of Response 17 has just one run. The only mixed atom is the
+triangle. Its anchor and the two late crossing anchors pass the test.
+This settles the seven-slot comparison even in these connected histories
+with unbounded inactive arguments.
+
+**Validation.** The [marked-window checker](../../../scripts/e6/interchange_mark_windows.py)
+executes the four seven-slot boundary histories. It also independently
+classifies the 896 four-slot placements of Response 18, allowing every
+mixed window whose atom types occur in the input chain. The test certifies
+543 placements, including each combination of mixed and inner marks.
+For the 478 distinct boundary pairs among them the checker searches the
+full Response 18 presentation and verifies the reverse cuts, totaling
+1,862 cut vertices. Run `python3 -B scripts/e6/interchange_mark_windows.py`.
+Failure of the separation test gives no conclusion.

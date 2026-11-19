@@ -2364,3 +2364,73 @@ under composition and whiskering in arbitrary multi-span input homs,
 and strong degree-five directedness on arbitrary diagrams with
 inactive mixed contexts. The globe-pair reachability result tests
 the complete degree-five graph for that family only.
+
+# Researcher Response 11
+
+**In the support-free presentation \(P\) of Response 3, every proper four-input temporal interchange is directed on the following family of intervals.** One slot undergoes a string of unary advances and crosses any number of stationary slots in order. All four inputs may be positive mixed composites. On a subfamily, the entire degree-five reachability relation is the weak order on multiset shuffles. An implementation of Response 4's decision procedure accepts a finite pasting tree and any two parallel 4-terms. The computations below use an additional exact enumeration of the indicated intervals.
+
+## One moving slot and a temporal cut
+
+Take an outer string with one traversed 2-slot in each branch, ordered \(x,z_1,\ldots,z_k\) from left to right. On \(x\) take \(m\) consecutive generating 3-advances along the string of parallel 2-generators. Each \(z_i\) has a single 2-generator. There are no input generators above degree three. Fix the 2-endpoints with slot orders \(z_k\cdots z_1 x\) and \(x z_k\cdots z_1\), and with the initial and final values of \(x\), respectively. Every 3-history is a shuffle of the \(m\) advances and the \(k\) crossings of \(x\) with \(z_1,\ldots,z_k\). Each list has fixed internal order. Indeed, every pair of slots can cross only once and the passive slots have the same relative order at both ends. The block equations (K15) do not identify distinct shuffles here. In any block crossing occurring on this interval all crossing events share \(x\), hence have a unique order. Write \(u\) for the next advance and \(c\) for the next crossing.
+
+Between these histories the complete positive 4-move list, up to the stationary whiskers and unit laws, is
+\[
+                  c^w u^h\ \longrightarrow\ u^h c^w
+                  \qquad(w,h>0).
+\]
+This is \(r\) on a string of advances of \(x\) and a stationary word of width \(w\). An inner comparison or a proper binary join requires two independent nonempty histories, whereas every event uses \(x\). A proper outer variation whose varying operand includes a crossing would cross a passive slot against another passive slot. The varying operand can therefore contain only advances, with no other active 2-slot carried across the stationary operand. The outer order puts these advances on the left, giving the displayed direction. Splitting the advance run by (10) or the stationary word by (12) gives all tile splits. The 1-whiskering laws transport the same tile. A proper correcting inner product in a varying-whisker equation is excluded by the same common-slot test. The triple equation requires a passive-passive crossing. These checks account also for degenerate instances of the join equation.
+
+In degree five only temporal exchanges \(\delta\) and their contexts can act nontrivially. The inner naturalities and \(W\) need disjoint positive histories. For a proper outer naturality, its positive varying 4-cell already uses \(x\) and a passive slot. Moving its operand across another positive stationary operand would cross two passive slots. For enumeration one can split every tile inside each of two disjoint temporal windows and then exchange the elementary moves one by one. All intermediate routes exist since the two windows have fixed endpoints. This constructs the same pair of boundary classes as the composite exchange; reachability requires no equation between the two 5-paths.
+
+Now fix **any** four-input temporal rectangle on this interval. Color the 3-events before its time cut early and the others late. At both outside 3-boundaries all early events precede all late events. A 4-move changes each affected crossing/advance pair in only one direction. No such pair of opposite colors can therefore change anywhere on a 4-route between these boundaries. Since a tile changes the full Cartesian product of its crossing and advance runs, every entry of a positive tile has one color. Record its color \(wh\) times. The two splits and the whiskering laws preserve this word, so it is defined on 4-classes, including inside either inactive input. At every intermediate 3-history the early events still precede the late ones. A temporal exchange moves the updates of the earlier window ahead of those of the later window. Its earlier window cannot carry a late mark while its later window carries an early one. Thus the number of late-before-early pairs in the word never increases. On the specified exchange \(CDAB\to CADB\) it drops by the product of the positive marked lengths of \(D\) and \(A\), regardless of \(C\) and \(B\). This proves the assertion for arbitrary sizes and for arbitrary positive active 4-paths in the family.
+
+## Two computations of reachability
+
+For positive block sizes \(m_1,\ldots,m_k\), specialize the 3-boundaries to
+\[
+ (c u^{m_1})\cdots(c u^{m_k})
+       \quad\text{and}\quad
+ (u^{m_1}c)\cdots(u^{m_k}c).
+\]
+Only advance/crossing pairs in the same designated block can change. Every tile therefore uses one crossing. Splitting its advance run expresses a 4-route as a word containing \(m_i\) occurrences of label \(i\). Every such shuffle is realized, and every 4-equation preserves the word. Moves in different blocks have disjoint temporal windows, while moves with the same label traverse the same crossing. The directed exchanges are exactly adjacent swaps putting the smaller label first. Label the occurrences within each block in their original order. A target is reachable precisely when its inversion set is contained in that of the source. To construct the path, bubble the first desired occurrence leftwards, passing only larger labels, then proceed on the suffix. The program independently exhausts the grounded path rules, including unexpanded tiles, and compares with this criterion.
+
+| Block sizes | 4-classes | Reachable ordered pairs, including identities |
+|---|---:|---:|
+| 2, 2 | 6 | 20 |
+| 3, 3 | 20 | 175 |
+| 2, 2, 2 | 90 | 1,762 |
+
+A second test includes a genuine ambiguity of tile expansion on **both** sides of the cut. Use the 3-histories \(ccuuccuu\) and \(uuccuucc\). The program obtains 36 intermediate histories, 132 contextual 4-edges, 72 split equations and 48 elementary directed exchanges. It enumerates all 1,530 raw 4-paths, takes their equation components, and computes reachability on the resulting 262 classes. There are **14,378 reachable ordered pairs** including identities, and every strongly connected component is a singleton. Taking the two elementary expansions of each \(2\times2\) tile and each of their three proper cut positions gives 36 distinct four-positive-input rectangles. All 36 have a forward path and exclude a reverse.
+
+For example, write the zero-based index of the crossing passed by each advance. The routes \(32321010\to32103210\) have a four-step forward certificate. For the reverse, the program returns 554 raw routes containing the starting route, excluding the proposed target, and closed under both directions of every applicable split and every forward exchange. Verification checks these conditions directly. This example allows the two expansions of a \(2\times2\) tile to be identified inside longer paths throughout the search.
+
+## General decision procedure and reproduction
+
+The [tree compiler](../../../scripts/e6/interchange_free.py) takes a finite globular pasting diagram as a nested list. A list denotes a wedge of suspensions of its children; the empty list is a point. At each node the vertices are numbered from zero, so generator names are slash-separated addresses. Terms are generator names or JSON arrays with the operation name first. The [signature](../../../scripts/e6/reachability_theory.py) spells out the composability guards, boundaries, sesquicategory equations, support-free equations of (K30), join equation and degeneracies, and the six structural 5-families. Tree 5-generators contribute their directed face pairs. Higher input dimensions do not change existence of a 5-path.
+
+The compiler closes the operation tables modulo congruence in dimensions one through three. It uses the resulting maximum 2-length and 3-mass to set Response 4's grading constant. In degree four it constructs representatives up to the larger endpoint weight, instantiates equations on typed arguments, and identifies equal terms under their operations. A 4-composite adds weights, fixed whiskering preserves weight, and the other 4-constructors have lower-dimensional inputs. Thus every needed positive-dimensional 4-subterm lies within the bound after taking projections by the declared face formulas. Every equational derivation stays at the same weight. For termination, choose one term for each true class in the finite bounded algebra. Each defined bounded operation on these representatives has a finite equational derivation to its chosen representative. All such terms, derivations, and guard equalities occur after finitely many rounds of table generation and congruence closure. At that stage every generated term reduces to a chosen representative by induction on formation; hence the tables stabilize. The same argument applies to the finite lower skeleta. Distinct parallel arguments retain distinct representatives until a declared equation or congruence identifies them.
+
+On these classes the compiler grounds the input 5-globes and the six directed schemes, then closes their edges under all defined fixed whiskers and composition contexts. The source-summand argument of Response 4 bounds the active 4-arguments of every necessary nonunit instance. Godement expansion and top composition give exactly graph reachability. The [path solver](../../../scripts/e6/interchange_reachability.py) also accepts a grounded presentation directly. There it traverses contextual equations both ways and 5-steps forward, including every chronological prefix and suffix. States below the target weight cannot return to it. Positive certificates give rule applications with position and direction. Negative certificates supply a set closed under every successor still within the target weight range. The general compiler can be expensive because it constructs the whole bounded algebra on its tree. The moving-slot enumeration uses the interval proof above to ground a smaller, complete graph.
+
+Run the [native and certificate checks](../../../scripts/e6/check_interchange_reachability.py) and the [mixed-rectangle experiments](../../../scripts/e6/interchange_mixed_rectangles.py) from the repository root:
+
+~~~sh
+python3 -B scripts/e6/check_interchange_reachability.py --all-disks
+python3 -B scripts/e6/interchange_mixed_rectangles.py
+~~~
+
+The native checks compile the generic arity of each of the six structural 5-families. They recover the generating forward step and certify the absence of a reverse in each case. On the binary disk they also identify the direct \(r\)-route with the composite of the join and its correcting inner exchange in the degree-four table. Additional tests use consecutive input 5-globes and a nonidentity composition context. The optional `--loop` check compares \(H\) with \(H^2\) on the two-by-two grid.
+
+For the 554-route reverse certificate, save the following as a query and pass its filename to the mixed-rectangle program with `--certificate cert.json`. Run again with `--verify cert.json` to replay it.
+
+~~~json
+{"histories":["ccuuccuu","uuccuucc"],"source":[3,2,1,0,3,2,1,0],"target":[3,2,3,2,1,0,1,0]}
+~~~
+
+The general entry point is `python3 -B scripts/e6/interchange_free.py query.json`, with the same certificate options. For example, the following asks whether the source 4-face of a single generating 5-globe reaches its target.
+
+~~~json
+{"tree":[[[[[[]]]]]],"source":"0/0/0/0/0","target":"0/0/0/0/1"}
+~~~
+
+The uniform moving-slot theorem and the decision procedure concern \(P\). In the larger presentations of Responses 8–10, extra equations or directed operations must also be accounted for before an unreachable pair yields a negative conclusion. Degree-five directedness with arbitrary inactive mixed contexts on general diagrams remains open.

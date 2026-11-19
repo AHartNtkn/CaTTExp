@@ -221,3 +221,824 @@ Two directions that the known results suggest, offered only as suggestions:
 ## 5. What counts as a solution
 
 A definition with proofs for (A), an inconsistency proof for (B), a construction for Q2, or a proof or model for Q3. A reference to a published construction or impossibility result is also a solution.
+
+# Researcher Response
+
+**I do not have a solution meeting §5.** I have neither an all-dimensional construction satisfying 1–5 nor an impossibility proof for a stated subset. I also have no proof or countermodel settling Q3 with the required quantification over all finite globular pasting diagrams.
+
+The attempted general obstruction stops at two distinct steps:
+
+1. **Forcing the joining equation.** The degeneration argument applies once a presentation includes \(J;e=A\). I have not derived the existence of such a \(J\), or an equivalent factorization, from requirements 1–5 independently of the chosen completion. Substitution transports existing cells and equations; applying it here first requires that existence argument.
+
+2. **Removing the whiskering.** Suppose an elementary interchanger is \(e:P\to Q\), and a completion forces
+   \[
+   r:C[Q]\longrightarrow C[P].
+   \]
+   A contradiction to requirement 3 would follow from an allowed substitution \(\sigma\) for which
+   \[
+   \sigma(C[P])=P',\qquad \sigma(C[Q])=Q',
+   \]
+   where \(P'\to Q'\) is a nondegenerate elementary interchanger: then \(\sigma(r):Q'\to P'\). For the comparison
+   \[
+   \bar\chi _2=\chi _2 *_1 1_{c_{11}}
+   \]
+   in (K25), I have not constructed such a substitution. Removing \(c_{11}\) constrains \(\alpha _1,\beta _1\), which also enter the boundaries of the arguments of \(\chi _2\). Strict units alone do not supply the required substitution.
+
+For **Q3**, equality in the Gray quotient remains insufficient for the proposed argument. To use requirement 2, one must establish equality of the two supports **before quotienting, in the chosen expanded basis**. I have not established that. Conversely, adjoining an independent crossing against a composite does not establish independence until substitution closure and the exact Gray quotient have both been proved for the resulting theory.
+
+The literature check did not provide a decision:
+
+- **Bourke–Gurski, Theorem 4.3**, assumes a separately cocontinuous bifunctor on ordinary \(\mathrm{Gray\text{-}Cat}\) with natural unit **isomorphisms**. It does not require an associator, but those remaining hypotheses still have not been deduced from your requirements. Its obstruction therefore does not settle Q1. [arxiv.org](https://arxiv.org/pdf/1412.1320?utm_source=chatgpt.com)
+- **Bourke–Lobbia, §4.2.6**, permits noninvertible outer comparisons while retaining ordinary Gray-categories as homs; their inner interchange is invertible. [arxiv.org](https://arxiv.org/html/2610.31448v2?utm_source=chatgpt.com)
+- **Gepner–Heine, Definitions 3.2.1–3.2.5**, supplies oriented interchange through enrichment in \((\infty\mathrm{Cat},\boxtimes)\), with ordinary \(\infty\)-categories as homs. It does not supply the recursively directed homs requested here. [arxiv.org](https://arxiv.org/html/2510.10504v2?utm_source=chatgpt.com)
+
+Consequently, I cannot identify a smallest contradictory dimension or diagram, or a requirement whose removal yields the requested Q2 construction. The analysis above identifies where my arguments fail; it is not a decision of the problem.
+
+# Followup
+
+## A solution to the finite-dimensional alternative in Q3
+
+There is a **uniform theory whose free algebras satisfy requirements 1–5 through global dimension \(4\), but whose inner interchanger does not preserve composition in an argument**.
+
+The construction below works for every finite globular pasting diagram, with arbitrary substitutions, including substitutions to identities. Its quotient statements concern the \(4\)-skeletons of the quotients. Some \(5\)-cells must therefore be specified: killing a \(5\)-cell can impose an equation between \(4\)-cells.
+
+This resolves the truncated-model alternative explicitly allowed in Q3 and §5. It does **not** decide Q1 or Q2, or show that this finite stage extends to an \(\omega\)-theory satisfying all five requirements.
+
+Write \(G(\Gamma)\) for the free Gray-enriched category in §1 and \(S(\Gamma)\) for the free strict \(\omega\)-category. We will construct one globular algebraic theory \(T\), with specified comparison operations through dimension \(5\), such that
+\[
+\begin{aligned}
+\bigl(F_T(\Gamma)/K_{\mathrm{in}}\bigr)_{\leq4}
+&\cong G(\Gamma)_{\leq4},\\
+\bigl(F_T(\Gamma)/K_{\mathrm{all}}\bigr)_{\leq4}
+&\cong S(\Gamma)_{\leq4}.
+\end{aligned}
+\tag{1}
+\]
+The two families being killed will be listed explicitly.
+
+As in the Gray example, unit instances of comparison operations are identities; the no-reverse assertion concerns proper elementary comparisons.
+
+---
+
+## 1. Composition and the comparison generators
+
+### 1.1 Underlying composition
+
+Use \(\omega\)-sesquicategories as the underlying structures. Concretely, these have vertical composition and whiskering, with strict associativity, units, and functorial whiskering, without Godement interchange. They can be defined recursively by lifting the ordinary hom functor of a category to sesquicategories of one lower dimension. This is the recursive description in Araújo, §2. [arxiv.org](https://arxiv.org/pdf/2210.07704?utm_source=chatgpt.com)
+
+Define the same-dimensional compositions required in the question by the recursive Godement formula
+\[
+u*_k v
+=
+\bigl(s_{k+1}u\mathbin{\triangleleft_k}v\bigr)
+*_{k+1}
+\bigl(u\mathbin{\triangleright_k}t_{k+1}v\bigr),
+\qquad k<n-1,
+\tag{2}
+\]
+with \(*_{n-1}\) the vertical composition of \(n\)-cells.
+
+Induction using the whiskering axioms proves strict associativity, units, and (B). Expanding a three-factor product gives the same ordered sequence of whiskered factors under either parenthesization.
+
+The order in (2) matters. For \(2\)-cells, it gives the right-factor-first path \(ba\). Consequently, for \(3\)-cells \(A:a\Rightarrow a'\) and \(C:b\Rightarrow b'\),
+\[
+A*_0C=(bA);(Ca').
+\tag{3}
+\]
+Here \(A\) acts first: it acts on the right positional interval of the actual \(2\)-word \(ba\).
+
+### 1.2 Notation
+
+All words are chronological.
+
+- \(ab\) denotes a composable \(2\)-word, including the necessary \(1\)-whiskerings.
+- \(xFy\) denotes \(2\)-whiskering of a \(3\)-cell.
+- \(F;G\) denotes composition of \(3\)-cells along \(2\)-cells.
+- For a \(4\)-cell \(\Theta:F\Rightarrow F'\),
+  \[
+  [p\mid\Theta\mid q]:p;F;q\Longrightarrow p;F';q.
+  \]
+- \(\epsilon\) denotes the identity \(3\)-cell at the boundary dictated by the formula.
+- A dot denotes composition of \(4\)-cells along \(3\)-cells.
+
+### 1.3 Generators through dimension \(4\)
+
+Adjoin the outer \(3\)-cell
+\[
+\chi(a,b):ba\Longrightarrow ab.
+\tag{4}
+\]
+
+For \(A:a\Rightarrow a'\) and \(B:b\Rightarrow b'\), adjoin
+\[
+\begin{aligned}
+r(A,b)&:
+\chi(a,b);Ab
+\Longrightarrow
+bA;\chi(a',b),\\
+t(a,B)&:
+Ba;\chi(a,b')
+\Longrightarrow
+\chi(a,b);aB.
+\end{aligned}
+\tag{5}
+\]
+These are exactly the two opposite directions in K3.
+
+For \(3\)-cells \(F:u\Rightarrow u'\) and \(G:v\Rightarrow v'\) acting on adjacent intervals of a \(2\)-word, adjoin
+\[
+\iota(F,G):
+(uG);(Fv')
+\Longrightarrow
+(Fv);(u'G).
+\tag{6}
+\]
+Thus \(\iota\) performs the positional change “right interval first” to “left interval first.”
+
+Normalize each operation when one of its displayed inputs is an identity of that input’s own dimension.
+
+---
+
+## 2. The equations through dimension \(4\)
+
+### 2.1 Outer crossing equations
+
+Impose
+\[
+\begin{aligned}
+\chi(a_1a_2,b)
+&=(\chi(a_1,b)a_2);(a_1\chi(a_2,b)),\\
+\chi(a,b_1b_2)
+&=(b_1\chi(a,b_2));(\chi(a,b_1)b_2).
+\end{aligned}
+\tag{7}
+\]
+
+For \(J=\chi,r,t\), impose the appropriately typed \(1\)-whiskering equations
+\[
+J(fx,y)=fJ(x,y),\qquad
+J(xg,y)=J(x,gy),\qquad
+J(x,y)h=J(x,yh).
+\tag{8}
+\]
+
+Require \(1\)-whiskering to preserve \(\iota\). Also impose the corresponding balancing equations for \(2\)-whiskering:
+\[
+\iota(zF,G)=z\iota(F,G),\qquad
+\iota(Fz,G)=\iota(F,zG),\qquad
+\iota(F,G)z=\iota(F,Gz).
+\tag{9}
+\]
+
+There is no general composition equation for \(\iota\).
+
+### 2.2 The eight outer naturality-composition equations
+
+The following are equations between parallel \(4\)-cells. Every displayed \(\iota\) has its forward orientation.
+
+For \(A:a\Rightarrow a'\), \(A':a'\Rightarrow a''\),
+\[
+r(A;A',b)
+=
+[\epsilon\mid r(A,b)\mid A'b]\cdot
+[bA\mid r(A',b)\mid\epsilon].
+\tag{10}
+\]
+
+For \(B:b\Rightarrow b'\), \(B':b'\Rightarrow b''\),
+\[
+t(a,B;B')
+=
+[Ba\mid t(a,B')\mid\epsilon]\cdot
+[\epsilon\mid t(a,B)\mid aB'].
+\tag{11}
+\]
+
+For composition of the other argument,
+\[
+\begin{aligned}
+r(A,b_1b_2)
+={}&[b_1\chi(a,b_2)\mid r(A,b_1)b_2\mid\epsilon]\\
+&\cdot[\epsilon\mid b_1r(A,b_2)\mid\chi(a',b_1)b_2],
+\end{aligned}
+\tag{12}
+\]
+and
+\[
+\begin{aligned}
+t(a_1a_2,B)
+={}&[\epsilon\mid t(a_1,B)a_2\mid a_1\chi(a_2,b')]\\
+&\cdot[\chi(a_1,b)a_2\mid a_1t(a_2,B)\mid\epsilon].
+\end{aligned}
+\tag{13}
+\]
+
+For whiskering of the varying argument,
+\[
+\begin{aligned}
+r(Aa_2,b)
+={}&[\chi(a,b)a_2\mid\iota(A,\chi(a_2,b))\mid\epsilon]\\
+&\cdot[\epsilon\mid r(A,b)a_2\mid a'\chi(a_2,b)],
+\end{aligned}
+\tag{14}
+\]
+\[
+\begin{aligned}
+&r(a_1A,b)\cdot
+[\epsilon\mid\iota(\chi(a_1,b),A)\mid a_1\chi(a',b)]\\
+&\hspace{20mm}
+=[\chi(a_1,b)a\mid a_1r(A,b)\mid\epsilon],
+\end{aligned}
+\tag{15}
+\]
+\[
+\begin{aligned}
+&[\epsilon\mid\iota(B,\chi(a,b_2))\mid\chi(a,b')b_2]
+\cdot t(a,Bb_2)\\
+&\hspace{20mm}
+=[b\chi(a,b_2)\mid t(a,B)b_2\mid\epsilon],
+\end{aligned}
+\tag{16}
+\]
+and
+\[
+\begin{aligned}
+t(a,b_1B)
+={}&[\epsilon\mid b_1t(a,B)\mid\chi(a,b_1)b']\\
+&\cdot[b_1\chi(a,b)\mid\iota(\chi(a,b_1),B)\mid\epsilon].
+\end{aligned}
+\tag{17}
+\]
+
+Equations (15) and (16) are positive factorization equations. They do not use inverses or cancellation.
+
+For three outer factors, impose
+\[
+r(\chi(a,b),d)=t(a,\chi(b,d)).
+\tag{18}
+\]
+Call this common \(4\)-cell \(\tau(a,b,d)\). Its source and target are
+\[
+\begin{aligned}
+&\chi(b,d)a\ ;\ b\chi(a,d)\ ;\ \chi(a,b)d,\\
+&d\chi(a,b)\ ;\ \chi(a,d)b\ ;\ a\chi(b,d).
+\end{aligned}
+\tag{19}
+\]
+Thus it has the orientation \(rqp\Rightarrow pqr\) of K14.
+
+### 2.3 Composition of context naturalities
+
+We can additionally require composition laws for the context naturalities below without imposing the general composite-crossing convention.
+
+For \(F:u\Rightarrow u'\), \(F':u'\Rightarrow u''\), impose
+\[
+\iota(F;F',G)
+=
+[\epsilon\mid\iota(F,G)\mid F'v']
+\cdot
+[Fv\mid\iota(F',G)\mid\epsilon]
+\tag{20}
+\]
+**with the literal term \(G=\chi(a,b)\) substituted in this equation**.
+
+Dually, impose
+\[
+\iota(F,G;G')
+=
+[uG\mid\iota(F,G')\mid\epsilon]
+\cdot
+[\epsilon\mid\iota(F,G)\mid u'G']
+\tag{21}
+\]
+with the literal term \(F=\chi(a,b)\).
+
+These are ordinary universal equation schemes. The restriction is not a predicate on cells of an algebra. Substitution preserves the literal \(\chi\)-term.
+
+### 2.4 All four arguments of a rectangular interchanger
+
+For four \(2\)-cells, define
+\[
+\Xi(a,b,c,d)=c\,\chi(a,d)\,b:
+cdab\Longrightarrow cadb.
+\tag{22}
+\]
+This is the elementary \(\chi_{0,1}:L\Rightarrow R\) for the Godement composition (2).
+
+Writing \(x=\chi(a,d)\), its four single-variable naturalities are:
+
+| Varied argument | Naturality \(4\)-cell | Direction |
+|---|---|---|
+| \(A:a\Rightarrow a'\) | \(c\,r(A,d)\,b\) | \(\Xi\) first \(\Rightarrow A\) first |
+| \(B:b\Rightarrow b'\) | \(c\,\iota(x,B)\) | \(B\) first \(\Rightarrow\Xi\) first |
+| \(C:c\Rightarrow c'\) | \(\iota(C,x)b\) | \(\Xi\) first \(\Rightarrow C\) first |
+| \(D:d\Rightarrow d'\) | \(c\,t(a,D)b\) | \(D\) first \(\Rightarrow\Xi\) first |
+
+The context-variable directions also follow the Leibniz rule, applied at the inner tensor operation. For example,
+\[
+\partial(C\otimes x)
+=c'x-cx-C(ad)+C(da).
+\tag{23}
+\]
+Its negative boundary is “\(x\), then \(C\),” and its positive boundary is “\(C\), then \(x\).” This gives \(\iota(C,x)\). Similarly,
+\[
+\partial(x\otimes B)
+=(ad)B-(da)B-xb'+xb
+\tag{24}
+\]
+gives the displayed suffix-variable direction.
+
+Thus the active crossing variables use the outer tensor signs; the whiskering variables use the inner tensor signs. Applying one outer-factor sign uniformly to both kinds of variable would require reverse inner interchangers.
+
+---
+
+## 3. The \(5\)-cells used to specify the quotients
+
+Adjoin the following actual \(5\)-cells. Their boundaries are parallel before taking either quotient.
+
+First, for \(4\)-cells on adjacent intervals of a \(3\)-word, adjoin
+\[
+\delta(X,Y):
+(uY)\cdot(Xv')
+\Longrightarrow
+(Xv)\cdot(u'Y),
+\quad X:u\Rightarrow u',\ Y:v\Rightarrow v'.
+\tag{25}
+\]
+
+Next, adjoin the two single-variable naturalities of \(\iota\). For \(X:F\Rightarrow F'\),
+\[
+\begin{aligned}
+N_L(X,G):\quad
+&\iota(F,G)\cdot[\epsilon\mid Xv\mid u'G]\\
+&\Longrightarrow
+[uG\mid Xv'\mid\epsilon]\cdot\iota(F',G).
+\end{aligned}
+\tag{26}
+\]
+For \(Y:G\Rightarrow G'\),
+\[
+\begin{aligned}
+N_R(F,Y):\quad
+&[\epsilon\mid uY\mid Fv']\cdot\iota(F,G')\\
+&\Longrightarrow
+\iota(F,G)\cdot[Fv\mid u'Y\mid\epsilon].
+\end{aligned}
+\tag{27}
+\]
+These are the dimension-shifted versions of (5).
+
+Finally, for parallel \(A,A':a\Rightarrow a'\) and \(\Lambda:A\Rightarrow A'\), adjoin
+\[
+\begin{aligned}
+U_r(\Lambda,b):\quad
+&r(A,b)\cdot[\epsilon\mid b\Lambda\mid\chi(a',b)]\\
+&\Longrightarrow
+[\chi(a,b)\mid\Lambda b\mid\epsilon]\cdot r(A',b).
+\end{aligned}
+\tag{28}
+\]
+For parallel \(B,B':b\Rightarrow b'\) and \(\Theta:B\Rightarrow B'\), adjoin
+\[
+\begin{aligned}
+U_t(a,\Theta):\quad
+&[\epsilon\mid\Theta a\mid\chi(a,b')]\cdot t(a,B')\\
+&\Longrightarrow
+t(a,B)\cdot[\chi(a,b)\mid a\Theta\mid\epsilon].
+\end{aligned}
+\tag{29}
+\]
+Their directions are the Leibniz directions for hom bidegrees \((3,1)\) and \((1,3)\).
+
+Normalize these operations when a displayed input is an identity of its own dimension. In those cases the two displayed boundary \(4\)-cells already agree by units and the preceding normalizations.
+
+The quotient families in (1) are
+\[
+K_{\mathrm{in}}=\{\iota,\delta,N_L,N_R\}
+\tag{30}
+\]
+and
+\[
+K_{\mathrm{all}}
+=
+K_{\mathrm{in}}\cup\{\chi,r,t,U_r,U_t\}.
+\tag{31}
+\]
+Derived comparisons, including \(\tau\), are killed accordingly. This treats naturality cells as part of the interchange structure being killed, as in K21.
+
+No five-dimensional directedness or exactness assertion is being made.
+
+---
+
+## 4. A uniform finite construction of the free \(4\)-skeleton
+
+One more family of equations will ensure injective expanded supports. Its definition is uniform and substitution-stable.
+
+### 4.1 Finiteness below dimension \(4\)
+
+For a finite globular pasting diagram \(\Gamma\), \(1\)-cells form a finite set of paths. The graph of contextual input \(2\)-generators is finite and acyclic, so the \(2\)-cells are finite.
+
+There is a comparison to \(G(\Gamma)\) sending \(\iota\) to identities and sending \(\chi,r,t\) to the corresponding tensor cells. Equations (7)–(18) hold under this comparison.
+
+The directed complexes for finite globular pasting diagrams are strong Steiner complexes, and this class is closed under tensor products. Thus the relevant Gray homs have strongly loop-free unital bases. [normalesup.org](https://www.normalesup.org/~ara/files/steinercat.pdf?utm_source=chatgpt.com)
+
+Here is the positivity consequence needed below. If \(z\neq0\) is a positive chain, choose a maximal basis element \(b\) in its support and a positive face \(y\) of \(b\). Unitality ensures such a face exists. Cancellation at \(y\) would require another supported basis element \(b'\) with
+\[
+b<y<b',
+\]
+contradicting maximality. Hence
+\[
+z\geq0,\quad \partial z=0\quad\Longrightarrow\quad z=0.
+\tag{32}
+\]
+In particular, the corresponding comparison categories have no directed cycle involving a nonidentity cell.
+
+After evaluating unit instances as identities, every contextual \(3\)-generator—an input generator or an outer crossing—has nonzero positive image. The finite graph of these \(3\)-generators is therefore acyclic. Enumerate its paths and take the congruence generated by (7)–(8). This computes the finite set \(S_3\) of \(3\)-cells. Write \(S_i\) for the already computed cells in dimensions \(i\leq3\).
+
+### 4.2 The expanded \(4\)-generator graph
+
+Instantiate all input \(4\)-generators and all \(r,t,\iota\) generators at admissible arguments in the finite lower-dimensional sets.
+
+Every contextual \(4\)-generator has a representative
+\[
+u_3*_2
+\Bigl(
+u_2*_1
+(u_1*_0\gamma*_0v_1)
+*_1v_2
+\Bigr)
+*_2v_3,
+\qquad u_i,v_i\in S_i.
+\tag{33}
+\]
+This follows by moving lower-dimensional whiskerings through higher compositions and combining consecutive whiskerings by associativity.
+
+Normalize these contexts using the sesquicategory whiskering equations. This is a finite computation on the tuples in (33). Distinct tuples must not be identified merely because they happen to act identically on \(3\)-cells.
+
+Let \(E_\Gamma\) be the resulting finite set of contextual edge identifiers. Each identifier has an explicit \(3\)-source and \(3\)-target. Before typing restrictions,
+\[
+|E_\Gamma|
+\leq
+|G_4(\Gamma)|\,|S_1|^2|S_2|^2|S_3|^2,
+\tag{34}
+\]
+where \(G_4(\Gamma)\) denotes the instantiated unwhiskered generators.
+
+### 4.3 A finite category of path supports
+
+Construct a finite category \(K_\Gamma\) as follows.
+
+Its vertices are \(S_3\). Its arrows are triples
+\[
+(x,y,A),\qquad A\subseteq E_\Gamma,
+\tag{35}
+\]
+admitted by this finite closure procedure:
+
+1. Include \((x,x,\varnothing)\).
+2. For each \(e\in E_\Gamma\), include \((s(e),t(e),\{e\})\).
+3. From \((x,y,A)\) and \((y,z,B)\), include \((x,z,A\cup B)\).
+
+Composition is
+\[
+(x,y,A);(y,z,B)=(x,z,A\cup B).
+\tag{36}
+\]
+
+Thus
+\[
+|K_\Gamma{}_1|\leq |S_3|^2\,2^{|E_\Gamma|}.
+\tag{37}
+\]
+
+Equivalently, \(K_\Gamma\) is the path category on \(E_\Gamma\) modulo equality of parallel paths having the same edge-identifier set. This definition permits loops and repeated edges.
+
+Whiskering acts by the corresponding maps on contextual edges; the other compositions are given by (2). Now take the finite congruence generated by all the equations in §2, including the whiskering equations. The resulting arrows are the \(4\)-cells of \(F_T(\Gamma)\).
+
+This is an explicit finite algorithm. It does not require termination or confluence of an orientation of (10)–(21).
+
+### 4.4 Why this defines one theory and respects every substitution
+
+The support equations are fixed syntactic equations:
+
+> For every finite globular pasting diagram \(P\), and every pair of parallel \(E_P\)-paths having the same edge-identifier set, impose equality of those two finite terms.
+
+Take this family over a fixed set of representatives of finite pasting diagrams. No semantic “same support” predicate is imposed on arbitrary algebras.
+
+Under substitution, each contextual edge \(e\) is sent to a \(4\)-path. Choose one path representative for each edge image. Then
+\[
+\operatorname{Edges}(\sigma p)
+=
+\bigcup_{e\in\operatorname{Edges}(p)}
+\operatorname{Edges}(\sigma e).
+\tag{38}
+\]
+Equal edge sets consequently give equal image edge sets. An edge sent to an identity contributes the empty set.
+
+Therefore every substitution instance of a support equation is already imposed by the direct construction for the target diagram. Together with the ordinary term-algebra universal property, this proves that the construction is the free algebra of one uniform theory. It includes substitutions of generators to composites and identities.
+
+### 4.5 Injective expanded supports
+
+In dimensions at most \(3\), use the least path representative after the relevant finite congruence. An edge set determines a path in a DAG, giving the support construction of K28.
+
+For a \(4\)-cell \(f\), choose the least edge set \(A_f\) representing its congruence class in \(K_\Gamma\). Define
+\[
+\begin{aligned}
+\operatorname{Supp}_4(f)
+={}&\{(\mathrm{top},e):e\in A_f\}\\
+&\cup\{(\mathrm{source},b):b\in\operatorname{Supp}_3(sf)\}\\
+&\cup\{(\mathrm{target},b):b\in\operatorname{Supp}_3(tf)\}.
+\end{aligned}
+\tag{39}
+\]
+
+The three kinds of labels are disjoint. Equal supports imply equal sources, equal targets, and equal selected top edge sets. The corresponding paths are equal in \(K_\Gamma\), hence the \(4\)-cells are equal.
+
+These labels are contextual generator identifiers and tagged copies of lower-dimensional basis labels. They are not labels assigned separately to resulting cells.
+
+The final support function need not preserve unions under composition: the least representative is selected **after** the equations in §2. Thus this does not introduce the obstruction in K4.
+
+---
+
+## 5. The two quotients are exact through dimension \(4\)
+
+### 5.1 The support equations preserve the Gray quotient
+
+Consider parallel raw \(4\)-paths with the same contextual edge set.
+
+An edge with nonidentity Gray image can occur at most once. Moreover, any two such edges have the same order in both paths; opposite orders would give a positive directed cycle in the Gray target, contrary to (32). All remaining edge images are identities.
+
+The two paths therefore have equal Gray images. Every support equation already holds in \(G(\Gamma)\), so adjoining them does not change the Gray quotient.
+
+### 5.2 Killing the inner families
+
+Setting \(\delta=1\) gives strict \(4\)-cell interchange in indices \(2,3\). Setting \(\iota=1\) gives \(3\)-cell interchange in indices \(1,2\), and \(N_L=N_R=1\) supplies its naturality in \(4\)-cells. Thus each hom, through hom dimension \(3\), is a strict \(3\)-category.
+
+After this quotient, equations (15) and (16) become ordinary composition equations, since their \(\iota\)-terms are identities. The complete list of positive tensor-degree patterns through hom dimension \(3\) is
+\[
+(1,1),\qquad (2,1),\qquad (1,2),\qquad (1,1,1),
+\tag{40}
+\]
+in addition to the patterns with one nonzero degree. They are represented respectively by
+\[
+\chi,\qquad r,\qquad t,\qquad\tau.
+\tag{41}
+\]
+
+Equations (7)–(18) are their identity, composition, whiskering, and associativity relations. The underlying tensor presentation is the generators-and-relations presentation in Crans, §§7–8. [ncatlab.org](https://ncatlab.org/nlab/files/thten.pdf?utm_source=chatgpt.com)
+
+There is also a direct freeness argument. In each Gray hom, choose the tensor atoms as generators. Lift the atoms of patterns (40) by (41), and lift the one-factor atoms by the input generators. Their boundaries agree inductively in lower dimensions. The free strict hom therefore maps back to the quotient.
+
+Conversely, (7) and (10)–(17) expand every comparison with composite arguments into these atomic generators; (18) identifies the two names for the \((1,1,1)\)-atom. The map back is consequently surjective. Its composite with the Gray comparison is the identity on every atom, so the two maps are inverse.
+
+This proves the first isomorphism in (1).
+
+### 5.3 Killing all comparison families
+
+The cells \(\chi,r,t\) supply the lower-dimensional strict interchange equations. For strictification in global dimension \(4\), the remaining relevant positive tensor bidegrees are
+\[
+(3,1),\qquad(2,2),\qquad(1,3).
+\tag{42}
+\]
+
+The actual \(5\)-cells \(U_r,U_t\) impose the boundary equations for \((3,1)\) and \((1,3)\). The \((2,2)\)-boundary is composed from \(r,t,\iota\), so after those are identities it is an identity equation. No additional \(4\)-equation is needed from that pattern.
+
+Together with the inner quotient, these equations make all compositions strict through dimension \(4\). All structural generators through dimension \(4\) have become identities, leaving precisely the input generators with the strict category axioms.
+
+The map to \(S(\Gamma)\) shows that no extra relation on those generators has been imposed. Conversely, freeness of the strict category gives the inverse map. This proves the second isomorphism in (1).
+
+---
+
+## 6. No elementary interchanger has a reverse through dimension \(4\)
+
+The support completion and all equations in §2 identify only parallel \(4\)-paths. They neither identify additional \(3\)-cells nor create new reachable pairs of \(3\)-cells.
+
+### 6.1 Dimension \(3\)
+
+A proper outer interchanger has nonzero positive Gray image. A reverse would produce a positive directed cycle in a Gray hom, contradicting (32).
+
+### 6.2 The elementary \(4\)-interchangers
+
+For \(\chi_{1,2}\), the two chronological \(3\)-paths are
+\[
+c;d;a;b
+\quad\text{and}\quad
+c;a;d;b.
+\tag{43}
+\]
+The comparison is a contextual \(\iota(a,d)\).
+
+For \(\chi_{0,2}\), take
+\[
+A:a_0\Rightarrow a_1,\quad B:a_1\Rightarrow a_2,
+\qquad
+C:b_0\Rightarrow b_1,\quad D:b_1\Rightarrow b_2.
+\]
+Using (3), define
+\[
+\chi_{0,2}(A,B,C,D)
+=
+[b_0A\mid\iota(C,B)\mid Da_2].
+\tag{44}
+\]
+Its source and target are
+\[
+\begin{aligned}
+&b_0A;b_0B;Ca_2;Da_2,\\
+&b_0A;Ca_1;b_1B;Da_2.
+\end{aligned}
+\tag{45}
+\]
+In the middle \(2\)-word \(b_0a_1\), \(C\) acts on the left interval and \(B\) on the right interval. Thus (44) uses the positional direction required by K9.
+
+### 6.3 A cut invariant
+
+Expand every composite outer crossing using (7). An atomic \(3\)-step is then either an input \(3\)-generator or a crossing of two input \(2\)-generators.
+
+Let \(N_2(a)\) be the number of input \(2\)-steps in \(a\), and put
+\[
+N_3(A_{\mathrm{input}})=1,\qquad
+N_3(\chi(a,b))=N_2(a)N_2(b).
+\tag{46}
+\]
+Extend \(N_3\) additively. The \(3\)-equations preserve it.
+
+Fix a \(1\)-cell \(h\) at a positional cut. Say that a \(3\)-path respects \(h\) when its initial \(2\)-path passes through \(h\) and every atomic \(3\)-step acts wholly before or wholly after that cut. Label those steps \(L\) and \(R\), and define
+\[
+\operatorname{inv}_h
+=
+\#\{(i,j):i<j,\ \text{step }i\text{ is }R,\ \text{step }j\text{ is }L\}.
+\tag{47}
+\]
+
+This is invariant under the \(3\)-equations. The point requiring proof is (7). For nonidentity \(a,b\), the two \(2\)-paths \(ba\) and \(ab\) have no common interior \(1\)-state. Indeed, split a \(1\)-path at the intervening \(0\)-object. The two routes traverse opposite sides of the product of the two directed state paths; since neither state path returns to a previous state, their only common states are their endpoints.
+
+Consequently, a full crossing expansion in a path respecting \(h\) lies wholly on one side of \(h\). Replacing it using (7) preserves both its side and its atomic length (46). The other \(3\)-equations normalize whiskering and units without changing the atomic order.
+
+Now consider any inner move \(\iota(U,V)\), at any positional cut. Write \(L_h(X),R_h(X)\) for the numbers of its atomic steps on the two sides of \(h\). The move changes \(V;U\) to \(U;V\), so
+\[
+\Delta\operatorname{inv}_h
+=
+L_h(V)R_h(U)-R_h(V)L_h(U).
+\tag{48}
+\]
+The positional interval of \(U\) precedes that of \(V\). Therefore
+\[
+L_h(V)R_h(U)=0,
+\]
+and
+\[
+\Delta\operatorname{inv}_h=-R_h(V)L_h(U)\leq0.
+\tag{49}
+\]
+This also proves preservation of the cut condition. It applies to composite \(U,V\), including the case where one interval spans \(h\).
+
+At the cut of the designated elementary interchanger, the decrease is
+\[
+-N_3(U)N_3(V)<0
+\tag{50}
+\]
+for a proper instance.
+
+Finally, a proposed reverse maps to an identity in the Gray quotient. Each nonunit input \(4\)-generator, \(r(A,b)\), or \(t(a,B)\) has nonzero positive top chain; for \(r,t\) these are respectively
+\[
+A_{\mathrm{top}}\otimes b_{\mathrm{top}},
+\qquad
+a_{\mathrm{top}}\otimes B_{\mathrm{top}}.
+\tag{51}
+\]
+Such steps cannot appear in a path whose Gray image is an identity. A reverse must therefore consist entirely of inner moves. But (49) prevents the increase needed to reverse (50).
+
+This proves the required directedness for every finite globular pasting diagram, not only the binary example.
+
+---
+
+## 7. The composite-crossing equation fails
+
+### 7.1 A finite separating algebra
+
+Define an algebra \(M\) with one cell in each of dimensions \(0,1,2\).
+
+Its \(3\)-cells are
+\[
+P=\{0,1,2\},\qquad m\oplus n=\min(2,m+n),
+\tag{52}
+\]
+with every \(3\)-composition given by \(\oplus\), and identity \(0\).
+
+Put
+\[
+W=\mathcal P(\{1,2\}\times\{1,2\}).
+\]
+Its \(4\)-cells are
+\[
+(m,S):m\Longrightarrow m,\qquad m\in P,\ S\in W.
+\tag{53}
+\]
+There are \(3\cdot16=48\) such cells.
+
+For \(k<3\), define
+\[
+(m,S)*_k(n,T)=(m\oplus n,S\cup T).
+\tag{54}
+\]
+For top composition, when the bases agree,
+\[
+(m,S)*_3(m,T)=(m,S\cup T).
+\tag{55}
+\]
+The identity on \(m\) is \((m,\varnothing)\).
+
+Interpret
+\[
+\chi(a,b)=0,
+\]
+and interpret every \(r,t\) as the appropriate identity \(4\)-cell. Define
+\[
+\iota(m,n)=
+\begin{cases}
+(m\oplus n,\{(m,n)\}),&m,n>0,\\
+(m\oplus n,\varnothing),&m=0\text{ or }n=0.
+\end{cases}
+\tag{56}
+\]
+
+All equations in §2 hold:
+
+- The composition and whiskering equations follow from associativity of \(\oplus\) and union.
+- Every \(\iota\) in (14)–(17) has a \(\chi\)-argument, hence an argument \(0\), and has empty weight.
+- The restricted equations (20)–(21) likewise have empty weights throughout.
+- Every support equation holds because a path’s weight is the union of its contextual edge weights.
+
+The \(5\)-operations can all be interpreted as identities. The two boundaries of \(\delta\) have the same union of weights. Those of \(N_L,N_R\) have the same interchange weight and variation weight. Those of \(U_r,U_t\) both have precisely the variation’s weight.
+
+Thus \(M\) is an algebra of the entire specified theory. It is used to separate free cells; directedness of the free algebras was proved independently above.
+
+### 7.2 The finite pasting diagram
+
+Take two \(0\)-cells \(x,y\), three \(1\)-cells
+\[
+f_0,f_1,f_2:x\to y,
+\]
+and \(2\)-cells
+\[
+\alpha_0,\alpha_1:f_0\Rightarrow f_1,
+\qquad
+\beta_0,\beta_1,\beta_2:f_1\Rightarrow f_2.
+\]
+Take three input \(3\)-cells
+\[
+A:\alpha_0\Rightarrow\alpha_1,\qquad
+B:\beta_0\Rightarrow\beta_1,\qquad
+C:\beta_1\Rightarrow\beta_2.
+\tag{57}
+\]
+There are no input \(4\)-cells.
+
+In its free \(T\)-algebra, compare
+\[
+D=\iota(A,B;C)
+\tag{58}
+\]
+with
+\[
+P=
+[\alpha_0B\mid\iota(A,C)\mid\epsilon]
+\cdot
+[\epsilon\mid\iota(A,B)\mid\alpha_1C].
+\tag{59}
+\]
+
+Both go from the \(3\)-schedule \(BCA\) to \(ABC\). The second uses the intermediate schedule \(BAC\).
+
+Map every \(1\)- and \(2\)-generator to the unique corresponding cell of \(M\), and map
+\[
+A\mapsto1,\qquad B\mapsto1,\qquad C\mapsto1.
+\tag{60}
+\]
+All globular boundaries match, so freeness gives a map to \(M\).
+
+Since \(1\oplus1=2\),
+\[
+D\longmapsto(2,\{(1,2)\}),
+\tag{61}
+\]
+whereas both pairwise crossings in \(P\) have tag \((1,1)\), giving
+\[
+P\longmapsto(2,\{(1,1)\}).
+\tag{62}
+\]
+These are distinct. Therefore
+\[
+\boxed{
+\iota(A,B;C)\neq
+[\alpha_0B\mid\iota(A,C)\mid\epsilon]
+\cdot
+[\epsilon\mid\iota(A,B)\mid\alpha_1C].
+}
+\tag{63}
+\]
+
+Both sides become the same identity under the inner-interchange quotient.
+
+Thus requirements 1–5 **through dimension \(4\)** do not force the convention K15. At that finite stage, the generic composite-crossing equation is an additional coherence equation. Whether higher-dimensional requirements force it in every full \(\omega\)-theory is not established by this countermodel.

@@ -67,12 +67,46 @@ Plan, following the dimension-2 proof (Followup 2 of the answered file):
 3. **Combinatorial core.** Each component of B P_G is contractible when G has no closed component, and bubble-freeness in every dimension excludes closed components and automorphisms.
 4. **π₀ is the strict cell.** Components of ⊔_G B P_G are exactly the n-cells of F(Γ).
 
-Step 3 in dimension 3 is being tested by machine (`tools/layering3_check.py`, §4). Step 4 is where strictness enters: in dimension ≥ 3 the strict interchange identifies diagrams that are not isotopic as framed diagrams in general, and bubble-freeness has to exclude that.
+Step 3 in dimension 3 is being tested by machine (`tools/layering3_check.py`, §4); the fibre turns out to be an infinite category in dimension 3 (§4). Step 4 is where strictness enters: in dimension ≥ 3 the strict interchange identifies diagrams that are not isotopic as framed diagrams in general, and bubble-freeness has to exclude that.
 
 ## 4. Dimension-3 layering complexes (machine check)
 
-*To be filled in with the checker's results.*
+`tools/layering3_check.py` builds random marked 3-dimensional diagrams G (a planar diagram D₀ followed by 3-steps g : S_g ⇛ T_g, each replacing a whiskerable block; 3-positive steps, identity sources 1_w ⇛ T and identity targets S ⇛ 1_w; never both, which would be an endo-cell excluded by Theorem N) and enumerates layerings.
+
+**Model K = 0 (the poset P_G).** A layering is a 3-tier sequence T₁ | ⋯ | T_r (sets of steps fired simultaneously), a 2-dimensional tier encoding of every singular slice S_i (L_{i−1} with each S_g, g ∈ T_i, contracted to a point), and **one** 2-dimensional encoding of every regular slice L_i, such that the legs S_i → L_{i−1}, S_i → L_i (expanding points to S_g, resp. T_g) are maps of 2-trusses. Order: refinement of 3-tiers together with the induced 2-truss maps of all slices. The script checks that the relation is a partial order, removes beat points, and computes Z/2 homology of the core.
+
+Controls: with no 3-steps it reproduces the dimension-2 complexes; two floating scalars give a circle; two floating components, one rewritten by a 3-step, give a circle.
+
+Results (2026-11-19):
+
+| batch | diagrams tested | step kinds | non-contractible | poset size (max) |
+|---|---|---|---|---|
+| seed 4, 3-positive only | 101 | 1–3 positive steps | 0 | 427 |
+| seed 3, all kinds | 79 | positive, identity source, identity target, mixed | 0 | 475 |
+| seed 11, Quillen fibres | 79 (≥ 2 steps) | all kinds | 0 (Π_G and every upper fibre over a 3-tier sequence contractible) | 300 |
+| further seeds | *see PR* | | | |
+
+So in every case P_G is contractible when it is non-empty, and the forgetful map P_G → Π_G to 3-tier sequences has contractible upper fibres, which suggests the proof route "Quillen's Theorem A over Π_G, plus contractibility of Π_G" (Π_G is the 3-dimensional analogue of the dimension-2 tier complex, with steps in place of vertices).
+
+**Finding: P_G is not the whole fibre.** One generated diagram (seed 5; an identity-source step g₀ that caps a wire and creates a floating vertex, then a positive step g₁ whose source contains a p = 0 vertex) has **no** K = 0 layering at all, although it is a valid strict 3-cell: between g₀ and g₁ the slice must be isotoped (the p = 0 vertex moves past the new cap), and K = 0 allows no isotopy between consecutive 3-tiers. In Heidemann's normal meshes such isotopies are *interchange slices*: artificial singular slices L ← A → L′ with A a common coarsening and not both legs identities. They cannot be normalised away (the two regular slices differ), so the true fibre over the 3-cube is the classifying space of an **infinite** category of layerings (zigzags of any length). Truncating at K interchange slices per gap is not a homotopy-correct approximation: for D₀ = two parallel vertices and no steps, K = 0 gives a point, K = 1 a wedge of two circles, and K = 2 is not even a poset (`meshes_k`, `analyse_k`).
+
+**Consequence for the plan.** (B₃) must be proved for the infinite category. The expected argument: fibre it over 3-tier sequences; between consecutive singular slices the interchange zigzags form path spaces in a regular slice's encoding complex, which is contractible by the dimension-2 theorem whenever that slice is bubble-free, so each gap contributes a contractible factor; what is left is a finite complex built from 3-tier sequences and singular-slice encodings. A first attempt at that finite model (singular encodings only, with an existential condition on the regular slice between split tiers) is not transitive, so the reduction has to be done as a homotopy colimit, not as a poset. **Open (owned):** state and prove that reduction, then rerun the check on the reduced model.
 
 ## 5. Heidemann inputs to the dimension-2 proof
 
-The dimension-2 theorem takes four inputs from Heidemann (arXiv 2411.04870) on trust: active/inert factorisation, terminal labelled degeneracies (normal forms), atomic Segal descent, and the regularity pushout (5) (Lemma 4.1.0.12). Owned here: re-derive or machine-check them. *Plan and progress to be recorded here.*
+The dimension-2 theorem takes four inputs from Heidemann, *Manifold diagrams for higher categories* (arXiv 2411.04870v1, a thesis), on trust: active/inert factorisation of truss maps, terminal labelled degeneracies (normal forms), atomic Segal descent, and the regularity pushout (5) of the answered file. Owned here (B24(c)): re-derive or machine-check them.
+
+**What the thesis states** (read from the arXiv PDF, 2026-11-19):
+- **Lemma 4.1.0.5.** For an open n-truss E, Grid(E) = Ṫn(⊞(−), E) is the free n-uple Segal space with one generator per atom A ↪ E. Proof by induction on n: E is a zigzag R₀ ← S₀ → R₁ ⋯ of (n−1)-trusses, Grid(E) is the free Segal object on the graph ⊔Grid(S_i) ⇉ ⊔Grid(R_i), and atoms of E correspond to atoms of the R_i (if stype_n = 0) or of the S_i (if stype_n = 1).
+- **Corollary 4.1.0.6** (atomic covers go to colimits in Seg(Δⁿ)) and **Lemma 4.1.0.12** (Grid(A) ≃ Grid(∂A) ⊔_{Grid(∂□A)} Grid(□A) in Seg(Δⁿ), for every atom A) are immediate from 4.1.0.5: both sides are free on the same generators.
+- **Theorem 4.1.0.13**: restriction gives Seg^r(Ṫn) ≃ Seg(Δⁿ) (regular Segal presheaves on trusses = n-uple Segal spaces).
+- **§4.4.3**: for every n-diagrammatic computad Σ, a free (∞,n)-category 𝔽(Σ) whose values are spaces of Σ-labelled n-manifold diagrams (Theorem 4.4.2.5, Construction 4.4.3.1), with a right adjoint (Prop. 4.4.3.3).
+
+**How the dimension-2 proof uses them.** Equation (5) of the answered file is Lemma 4.1.0.12 after the localisation L₂ (a left adjoint, so it keeps pushouts) and restriction j* (which keeps colimits). Atomic Segal descent (8) is Corollary 4.1.0.6 mapped into a complete C. So the analytic input reduces to **Lemma 4.1.0.5**, a statement about set-valued presheaves (Grid(E) is discrete), plus the truss combinatorics (active/inert factorisation, normal forms) used in §§4.2–5.3.
+
+**Plan.**
+1. Machine-check Lemma 4.1.0.5 for open 2-trusses up to a size bound: enumerate maps from grids [k₁, k₂] into E and compare with the nerve of the free double category on the atoms of E (the free Segal object on a discrete graph is levelwise the set of composable strings). Also machine-check active/inert factorisation and uniqueness of terminal labelled degeneracies on the same trusses.
+2. Write the induction of Lemma 4.1.0.5 out in full for n = 2 (it is short).
+3. With 1–2, the dimension-2 theorem depends on Heidemann only through standard definitions, and the Guetta Conj. 6.6.5 consequence is unconditional up to these checks.
+
+**Consequence for every dimension.** §4.4.3 gives the all-dimensional analogue of the dimension-2 model directly: 𝔽(Σ_Γ) for the diagrammatic computad Σ_Γ whose atoms are the generators of Γ. Sufficiency in dimension n then reduces to (A_n) 𝔽(Σ_Γ) ≃ Free(Γ) (the cell-attachment property, which follows from Lemma 4.1.0.12 as in dimension 2) and (B_n) on each cell shape X, the evaluation from the space of Σ_Γ-labelled diagrams to the strict cells of F(Γ) has contractible fibres and is a bijection on π₀. (B₃) is what `tools/layering3_check.py` tests.

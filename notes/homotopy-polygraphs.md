@@ -85,7 +85,7 @@ Results (2026-11-19):
 | seed 4, 3-positive only | 101 | 1–3 positive steps | 0 | 427 |
 | seed 3, all kinds | 79 | positive, identity source, identity target, mixed | 0 | 475 |
 | seed 11, Quillen fibres | 79 (≥ 2 steps) | all kinds | 0 (Π_G and every upper fibre over a 3-tier sequence contractible) | 300 |
-| further seeds | *see PR* | | | |
+| seed 1, all kinds | 84 | all kinds | 0 (one further diagram with no K = 0 layering, two identity-source steps; see below) | 487 |
 
 So in every case P_G is contractible when it is non-empty, and the forgetful map P_G → Π_G to 3-tier sequences has contractible upper fibres, which suggests the proof route "Quillen's Theorem A over Π_G, plus contractibility of Π_G" (Π_G is the 3-dimensional analogue of the dimension-2 tier complex, with steps in place of vertices).
 

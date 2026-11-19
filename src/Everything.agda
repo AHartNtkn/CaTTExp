@@ -44,6 +44,7 @@ import CaTTExp.Gray.NBE.Termination
 import CaTTExp.Gray.NBE.Lemmas
 import CaTTExp.Gray.NBE.Confluence
 import CaTTExp.Gray.NBE.Decide
+import CaTTExp.Gray.NBE.Typing
 import CaTTExp.Gray.NBE.Examples
 import CaTTExp.Lim.Named
 import CaTTExp.Lim.Conditions

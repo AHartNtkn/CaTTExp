@@ -27,8 +27,9 @@
 -- earlier blocks ∂⁻k⊗l and in block k at k⊗∂^{∓}l, which comes earlier
 -- in either direction of the block). So `TensorAll.hyp⊗` gives
 -- `Hyp (K ⊗ L)` from unitality of its atoms alone. Unitality
--- (Steiner's ⟨k⊗l⟩ = ⟨k⟩⊗⟨l⟩) is not proved here in general; for
--- λD¹ ⊗ λD² and λD² ⊗ λD² it is checked, with the rest, by the
+-- (Steiner's ⟨k⊗l⟩ = Σ ⟨k⟩ᵢ⊗⟨l⟩ⱼ) is proved in `TensorUnit`, which
+-- uses `TensorOrd.gen⊗` (generator i of the layout is k ⊗ l); for
+-- λD¹ ⊗ λD² and λD² ⊗ λD² it is also checked, with the rest, by the
 -- decision procedures of `BasisCheck`.
 ------------------------------------------------------------------------
 module CaTTExp.Strict.TensorBasis where
@@ -1391,6 +1392,70 @@ module TensorOrd {N M : Nat} (B : Basis N) (C : Basis M) (HB : Hyp B) (HC : Hyp 
         +mono : ∀ a {x y} → x ≤ y → a + x ≤ a + y
         +mono zero    p = p
         +mono (suc a) p = s≤s (+mono a p)
+
+    -- Generators of K ⊗ L as flattened k ⊗ l.
+    fI : Vec Nat N → Vec Nat M → Vec Nat (N * M)
+    fI u v = flatA gK (outer u v)
+
+    famI : Vec (Vec (Vec Nat (N * M)) M) N
+    famI = mapV (λ u → mapV (fI u) (units M)) (units N)
+
+    linR-I : ∀ {P} (us : Vec (Vec Nat N) P) (X : Mat P M) →
+             linR X (mapV (λ u → mapV (fI u) (units M)) us) ≡ flatA gK (osum us X)
+    linR-I []       []      = sym (flat-0 gK)
+    linR-I (u ∷ us) (x ∷ X) =
+      trans (cong₂ _+c_ (trans (lin-hom (fI u) fI-+ fI-0 x (units M)) (cong (fI u) (lin-units x))) (linR-I us X))
+            (sym (flat-+ gK (outer u x) (osum us X)))
+      where
+      fI-+ : ∀ v w → fI u (v +c w) ≡ fI u v +c fI u w
+      fI-+ v w = trans (cong (flatA gK) (outer-+r u v w)) (flat-+ gK (outer u v) (outer u w))
+      fI-0 : fI u 0c ≡ 0c
+      fI-0 = trans (cong (flatA gK) (outer-0r u)) (flat-0 gK)
+
+    unit-flat : ∀ c → lin c (flatA gK famI) ≡ c
+    unit-flat c =
+      trans (cong (λ c′ → lin c′ (flatA gK famI)) (sym (flat-unflat gK c)))
+        (trans (lin-flat gK (unflat gK c) famI)
+          (trans (linR-I (units N) (unflat gK c))
+            (trans (cong (flatA gK) (osum-units (unflat gK c))) (flat-unflat gK c))))
+
+    atI : ∀ k r → k < N → r < M → at 0c (flatA gK famI) (k * M + r) ≡ fI (unit {N} k) (unit {M} (lpos k r))
+    atI k r kN rM =
+      trans (at-flat 0c (rowf 0c) gK famI k r kN rM)
+      (trans (cong (λ R → at 0c (rv (odd (g k)) R) r) (trans (at-map rowf 0c (rowf 0c) refl (units N) k) (cong rowf (at-units N k kN))))
+      (trans (at-rv 0c (odd (g k)) (rowf (unit {N} k)) r rM)
+      (trans (at-def 0c (fI (unit {N} k) 0c) (rowf (unit {N} k)) (lpos k r) (lpos< k r rM))
+      (trans (at-map (fI (unit {N} k)) 0c (fI (unit {N} k) 0c) refl (units M) (lpos k r))
+             (cong (fI (unit {N} k)) (at-units M (lpos k r) (lpos< k r rM)))))))
+      where
+      rowf : Vec Nat N → Vec (Vec Nat (N * M)) M
+      rowf u = mapV (fI u) (units M)
+
+  -- Generator i of K ⊗ L is k ⊗ l, of degree deg k + deg l.
+  gen⊗ : ∀ i → i < N * M →
+         Σ Nat (λ k → Σ Nat (λ l → (k < N) × ((l < M) ×
+           ((flatA gK (outer (unit {N} k) (unit {M} l)) ≡ unit {N * M} i) × (at 0 gdeg⊗ i ≡ at 0 gK k + at 0 C.gdeg l)))))
+  gen⊗ i iNM = go M refl
+    where
+    *0 : ∀ n → n * 0 ≡ 0
+    *0 zero    = refl
+    *0 (suc n) = *0 n
+    lt0 : ∀ {j} → j < 0 → ⊥
+    lt0 ()
+    go : ∀ M′ → M ≡ M′ →
+         Σ Nat (λ k → Σ Nat (λ l → (k < N) × ((l < M) ×
+           ((flatA gK (outer (unit {N} k) (unit {M} l)) ≡ unit {N * M} i) × (at 0 gdeg⊗ i ≡ at 0 gK k + at 0 C.gdeg l)))))
+    go zero    e = ⊥-elim (lt0 (subst (i <_) (trans (cong (N *_) e) (*0 N)) iNM))
+    go (suc M′) refl with divM M′ i
+    ... | (k , r , rM , refl) with ≤-dec N k
+    ...   | inj₁ Nk = ⊥-elim (≤-<-⊥ (≤-trans (*-mono M Nk) (≤-+r (k * M) r)) iNM)
+    ...   | inj₂ kN = k , lpos k r , kN , lpos< k r rM ,
+                      trans (sym (atI k r kN rM)) (trans (sym (lin-unit (k * M + r) iNM (flatA gK famI))) (unit-flat (unit (k * M + r)))) ,
+                      trans (at-flat 0 (degRow 0) gK (mapV degRow gK) k r kN rM)
+                      (trans (cong (λ R → at 0 (rv (odd (g k)) R) r) (at-map degRow 0 (degRow 0) refl gK k))
+                      (trans (at-rv 0 (odd (g k)) (degRow (g k)) r rM)
+                      (trans (at-def 0 (g k + 0) (degRow (g k)) (lpos k r) (lpos< k r rM))
+                             (at-map (g k +_) 0 (g k + 0) refl C.gdeg (lpos k r)))))
 
   ordm′ : ∀ i d → i ≤ d → at0 (at 0c (flatA gK (fam false)) i) d ≡ 0
   ordm′ i d p = go M refl

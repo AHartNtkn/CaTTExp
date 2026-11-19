@@ -198,7 +198,7 @@ def path_chain(word):
     return tuple(sorted(result))
 
 
-def square_orientations(start, end, negative, positive, cubes, square, outer_first):
+def lift_by_rewrites(start, end, negative, positive, cubes, square=None, outer_first=None):
     """Reachability allowing both directions at every other thin square."""
     n = len(start)
 
@@ -269,6 +269,27 @@ def five_cube_obstruction():
     assert (len(sources), len(targets), len(targets - images)) == (183212, 7752, 14)
     print(f'5-cube: {len(sources)} source 2-cells, {len(images)}/{len(targets)} images')
 
+    def path_order(edges):
+        remaining = set(edges)
+        order = []
+        while remaining:
+            edge, = (g for g in remaining if {i for i, tag in enumerate(g) if tag == (0, 1)}
+                     == set(order))
+            axis, = (i for i, tag in enumerate(edge) if tag == (1, 2))
+            order.append(axis)
+            remaining.remove(edge)
+        return tuple(order)
+
+    def labels(row):
+        result = frozenset(''.join('*' if d else str(t) for d, t in g) for g in row)
+        assert len(result) == len(row)
+        return result
+
+    for y in targets - images:
+        assert lift_by_rewrites(path_order(y[1][0]), path_order(y[1][1]),
+                                labels(y[2][0]), labels(y[2][1]), labels(y[3][0]))
+    print('5-cube: two-way interchanges lift all 14 remaining cells')
+
     cases = [
         ('43210', '03124', '000** 00*1* 0*11* 0**10 *00*0 *111* *1*10 **010',
          '100** 10*1* 1*11* 1**10 *000* *00*1 *0*11 **111', '*00** *0*1* **11* ***10',
@@ -287,9 +308,9 @@ def five_cube_obstruction():
         if not required:
             assert witness not in images
         for outer_first in (False, True):
-            allowed = square_orientations(tuple(map(int, start)), tuple(map(int, end)),
-                                          frozenset(neg.split()), frozenset(pos.split()),
-                                          frozenset(top.split()), square, outer_first)
+            allowed = lift_by_rewrites(tuple(map(int, start)), tuple(map(int, end)),
+                                       frozenset(neg.split()), frozenset(pos.split()),
+                                       frozenset(top.split()), square, outer_first)
             assert allowed == (outer_first == required)
         print(f'{start} to {end}: only ' + ('outer' if required else 'inner')
               + '-pair-first to the reverse order can lift the 3-cell')

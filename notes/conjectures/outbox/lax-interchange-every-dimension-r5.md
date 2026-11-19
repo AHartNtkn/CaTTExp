@@ -1604,3 +1604,271 @@ For the two next mixed disks it pastes the contextual faces and compares
 both complete tableaux with the disk faces, tests the source routes at
 5,994 interior cuts, and enumerates the three-state right-variation fiber.
 The degree induction and the window argument supply the unbounded claims.
+
+# Researcher Response 9
+
+**The entire subdivision fiber of Response 7 can be identified in the
+inner quotient while preserving every original free cell.** This gives an
+exact all-dimensional Gray quotient on every pair of two-dimensional
+pasting diagrams. A second set of equations, expanding a unary cylinder
+in its varying argument, gives exactness also on pairs of vertically
+composed globes in the bidegrees of Response 8. These latter equations
+hold before passing to the quotient. The directedness proof needs a new
+length and an invariant of paths under subdivision.
+
+## An inner comparison detecting a proper outer pair
+
+Start with the full presentation of Response 8. First consider an outer
+\(W(A,B)\). Write the outer 1-boundaries of the two spans as
+\(f_0,f_1\) and \(g_0,g_1\), respectively. In the 2-word that traverses
+the right slot first and then the left slot, take the bare inner square
+on
+\[
+                   f_0\mathbin{\triangleleft} B,\qquad
+                   A\mathbin{\triangleright}g_1 .
+\]
+The two intervals meet at the 1-word \(f_0g_1\); these are precisely the
+operands in the second square of (K9). Denote this 4-cell by \(I(A,B)\).
+The same test for either outer mixed generator of bidegree \((3,2)\)
+or \((2,3)\) uses the iterated global 3-sources of the arguments, taking
+the input itself in dimension three. In a free object the test can be
+an identity only if an argument is an identity. Indeed a nonidentity
+4-input has nonidentity 3-source by Response 8. The stationary
+1-whiskerings preserve the positive 3-length of each history, and the
+4-weight of the resulting square in Response 4 is the product of those
+lengths. Only this implication is needed; a unit *higher* input can
+itself have a positive 3-source.
+
+Use the following conditional equations, in each finite globular pasting
+context. Take two expressions in the same degree whose top occurrences
+are all outer mixed generators from the preceding list. Here a top
+expression is built from those occurrences and identities by fixed
+whiskering and chronological composition, with arbitrary terms in the
+arguments and in the lower contexts. Use Godement expansion for a lower
+composition. Require the following premises.
+
+1. Both expressions and all their indicated arguments and tests are
+   defined, and their two immediate boundaries agree pairwise.
+2. For each displayed mixed occurrence the corresponding \(I\) is an
+   identity.
+
+Equate the expressions if their universal Gray tableaux agree. The latter
+is an index condition for the schema, computed in the free Gray object
+on the chosen context. The premises are ordinary finite conditions on
+an assignment in an algebra. This distinction allows pastes that first
+type in a quotient. Every equation is valid in Gray by substitution.
+In every free object of Response 8 satisfying the premises, all displayed
+operations are their unit instances, hence identities. Whiskering and
+pasting identities gives identities; parallelism makes the two results
+equal. Thus **all the previous free objects are still free**, by the
+universal property on their generators. In particular there is no
+identification of the two schedules on the doubled loops. Once the inner
+families are identities every test holds, for any assignment whatsoever.
+
+Let the outer shape be \(\Sigma P\vee\Sigma Q\), with arbitrary finite
+globular pasting diagrams \(P,Q\) of dimension at most two. In the inner
+quotient the adjacent homs are the original free strict homs: there is
+no nontrivial outer split on a single span, and all its internal
+operations strictify. In the long hom all the positive global 5-operations
+therefore reduce to \(W\) on two 2-cells of the strict homs. In particular
+\(K\) on a unit left variation reduces to that same \(W\); the other
+auxiliaries contribute only their prescribed degeneracies. For a split
+involving an empty interval the mixed operation is degenerate. There are
+no input globes of that degree. Thus every 5-cell in the quotient has
+a top expression of the indicated kind. This statement uses generation
+*in the quotient*: start with a term there, normalize its operations and
+expand its structural compositions. No lift of its pasting as a whole to
+the original free object is necessary.
+
+Two such expressions with the same Gray tableau have equal immediate
+boundaries by exactness through degree four. Applying the schema in this
+very shape gives equality. Surjectivity holds by the atomic lifting of
+Response 7. Above global degree five there are only identities in both
+long homs: each outer higher family needs an operand above hom degree
+two, and the inner families are identities. This proves exactness in
+all degrees on the stated shapes. It includes arbitrary horizontal
+compositions and stationary pieces in either surface. On \(C_{m,n}\)
+it identifies every tagged tiling from Response 7 with the direct cell.
+
+## Subdividing the varying argument of a unary cylinder
+
+For every *outer* unary cylinder \(U(Z,b)\) of bidegree \((p,1)\)
+or \((1,p)\), \(p\ge3\), allow subdivision at a top composite
+\(Z=Z_1;Z_2\). In the right-variable case the notation puts the
+varying argument first just in this paragraph. Write \(E_i\) for the
+preceding mixed cell on the three successive faces, and \(L_i,T_i\)
+for the two pure insertion contexts of Response 8 evaluated on \(Z_i\).
+For left variation impose the paste of the following two elementary
+cylinders as the value on the composite:
+\[
+ E_0 T_1 T_2\ \longrightarrow\ L_1 E_1 T_2
+                  \ \longrightarrow\ L_1 L_2 E_2 .
+\]
+For right variation start at the right and use the two right-variable
+cylinders in reverse index order, each in its declared forward direction.
+The common middle state specifies the whiskers. These equations are
+parallel before quotienting because insertion into each pure fixed
+context preserves top concatenation. In Gray their two top chains are
+equal by additivity in \(Z\), and their common boundaries determine
+the remaining rows. The strict evaluation satisfies them as well.
+
+Here is the change to the grading theorem for the resulting theory.
+Fix a shape and keep its \(m_4\) from Response 8. Inductively in each
+degree \(d=p+2\ge5\) give a proper outer unary cylinder the charge
+\[
+                            m_{d-1}(Z)\,|b|.
+\]
+The length on the right is taken in the moving operand's hom before any
+outside whiskers on the cylinder. In global degree five give a proper
+outer \(H_L(\Omega,B)\) charge \(m_4(\Omega)|s_2B|\); this is also
+\(m_4(\Omega)|t_2B|\). Keep all other charges of Response 8.
+A unit declaration uses the charge of its specified value. Sum charges
+over chronological occurrences, retaining each occurrence's intrinsic
+charge under fixed outside whiskering. In particular the formula does
+not require that the cochain primitive defining \(m_4\) be independent
+of the ambient input hom. Subdivision preserves the sum by additivity
+in \(Z\). The two identity-input cases specialize the subdivision to
+unit laws. The resulting sums are strictly positive on nonempty paths.
+
+For completeness check conservation between the boundaries of a generator
+one degree higher. A unary cylinder carries the higher varying input
+once on each route in fixed insertion contexts. For an outer cylinder
+the two preceding mixed cells have equal charges by conservation on the
+two faces of that input (use the degree-four calculation to start).
+For a shifted cylinder the two preceding mixed occurrences have their
+original charges. The first outer case whose preceding cell is \(r\)
+or \(t\) is already covered by conservation of \(m_4\). The outer
+\((3,2)\) boundary is the exceptional comparison of 5-charges. In the
+notation of Response 8 its two sums are
+\[
+       1+1+m_4(\Omega)|\beta_1|,
+                  \qquad m_4(\Omega)|\beta_0|+1+1 .
+\]
+Here the ones on the left are \(W^0\) and positional exchange, and on
+the right inner naturality and \(K\). The \(\beta\)-edges have equal
+length. In the outer \((2,3)\) boundary the two unary charges are
+\(|a_0|m_4(\Theta)\) and \(|a_1|m_4(\Theta)\), also equal; the remaining
+totals are \(1+1+1\) and \(1+2\). These are the only mixed top boundaries
+with an outer unary face of the newly weighted degrees. A shifted join,
+mixed atom or auxiliary uses its old structural charges and transports
+any pure varying input with the same charge on both sides. The same
+transport argument handles an elementary exchange, and input faces of
+an input globe retain their old charges. Degeneracies are the normalized
+lower operations. This proves (C) in every degree, also in fixed lower
+contexts. In this induction one can form the paths provisionally with
+the unary subdivisions and structural laws first. Positive immediate
+boundaries and reflection of units by fixed whiskers follow as in
+Response 8, since each proper generator still has positive boundary
+lengths. Consequently the conditional join and auxiliary equations still
+only act by their prescribed degeneracies in the free objects. The tests
+for the mixed equations above are in degree four and are unaffected.
+This verifies the use of the provisional computation in the full theory.
+
+The *list* of windows of a path can now change. Fix a cut in its
+immediate boundary length. On a representative with every window wholly
+on one side, record the word of early and late windows, contracting each
+maximal run of a single letter to one letter. Both the property of being
+separated this way and, when separated, the contracted word are invariant
+under every new equation **in either direction**. To check a proper
+subdivision, its direct occurrence has the whole local window. In the
+middle state \(L_1 E_1 T_2\) the two subcylinders use \(L_1 E_1\) and
+\(E_1 T_2\). Their windows cover the local interval and overlap in
+positive length: \(E_1\) is proper since the common face of the proper
+inputs and the fixed edge are proper. This uses the transported lengths
+at the *same middle state*, with equality of window endpoints before
+and after each move supplied by (C). It applies verbatim in the opposite
+order. Thus if either expression is separated the whole interval lies
+on one side and each expression supplies a nonempty run on that side.
+A unit factor only inserts a unit step. Exterior temporal whiskers
+translate both intervals equally; fixed lower whiskers preserve positivity
+and the common middle state. Replacement inside the argument of a
+primitive keeps its boundary lengths and unit status, and replacement
+in a transported prefix keeps its length. This deals with congruence
+as well as replacements in a chronological list.
+
+Now apply the two forward-step checks in Response 8 to representatives.
+At a source that is separated, any representative exposing the generator
+is separated by the preceding bidirectional argument. Positional exchange
+moves earlier windows forward. Every other generating step has a source
+whose windows cover its active interior, as checked there using positive
+overlaps in common intermediate states. Its target is nonempty on the
+same side. These checks only use positivity and conservation; the
+calculations above supply them for the new charges. Hence separation and
+the existence of an early occurrence before a late one persist along a
+forward path from the target of the designated rectangle. Its source
+has no such pair. This proves strong directedness in every output degree
+at least six, including four-slot rectangles and nonadjacent cuts.
+Degrees through four have their old free cells. The new 5-equations
+only equate parallel paths, so existence of a 5-path between fixed
+4-cells is unchanged; every original degree-five directedness result
+continues to hold. Strictification still gives the free strict object,
+since it did so before and every new equation holds there.
+
+## Exactness on stacks of globes
+
+Write \(D^p[m]\) for \(m\ge1\) consecutive \(p\)-globes joined at
+their \((p-1)\)-faces. Consider two outer spans with these as their
+adjacent hom diagrams. If \(p,q\ge2\), the Gray quotient is exact
+through global degree six, and in every degree if \(p+q\le5\).
+For \(D^p[m]\) against a *single* edge in either order, with \(p\ge2\),
+it is exact in every degree.
+
+Indeed, in each strict adjacent hom the positive cells are individual
+lower faces or consecutive intervals of top generators. In particular
+every edge is a single edge for the listed shapes. In the long strict
+hom assign the Gray basis atoms their designated lifts, inductively
+in degree. Their signed faces are the disk faces of Response 8 evaluated
+on generating faces; lower exactness ensures any strict atomic expression
+for such a face has the correct value. This defines a strict functor
+from the available skeleton of the Gray hom by its presentation on
+atoms and their boundaries, and the Gray projection is its left inverse.
+To prove the other inverse it suffices to express *every* surviving
+operation in those lifts, including operations on composite inputs
+formed in the quotient.
+
+For pure actions this is functoriality of fixed whiskering. The square
+and the two lowest unary families have the composition laws of (K30).
+For a higher unary family, split the varying interval repeatedly by the
+new subdivision. Every resulting outer occurrence is a basis atom,
+with contexts already accounted for. For a mixed family with both
+degrees at least two, take any strict atomic paste for its disk tableau
+on the two intervals. Every positive top occurrence has the very same
+bidegree as the displayed mixed family: its top chain is exactly the
+sum of the basis pairs in those two operands, with positive coefficients,
+and top chains add in strict pasting. Lift the paste using the basis
+lifts. The direct cell and the lifted paste are parallel by the induction,
+and both top expressions use only the indicated mixed generators.
+The inner tests are identities, so their equality is exactly one of
+the conditional equations. The outer auxiliaries evaluate to the
+contextual cells specified in Response 8. Thus all operations are
+generated as required. This induction starts with exactness through
+degree four. All bidegrees of total at most five occur, and on the
+listed all-degree shapes every basis pair occurs. Above the sum of the
+two dimensions, every surviving outer family has a unit input and the
+strict hom has only identities. This proves the claims.
+
+**Validation.** `python3 -B scripts/e6/interchange_subdivision.py`
+pastes the two contextual unary cylinders at their actual cuts and
+compares the entire tableau with the direct disk image in 420 instances,
+in both orders for operand degrees three through twelve. It also
+checks 132 tile pastes in horizontally composed surfaces, varying the
+order of advances in independent slots and allowing unchanged slots.
+`python3 -B scripts/e6/interchange_quotient_fibers.py` checks the
+original vertical subdivisions and the contrasting order of independent
+schedules. The guard-weight argument, the bidirectional window check
+and the generation proof above supply the general claims.
+
+On the pair of single 3-globes the global degree-seven atom of
+bidegree \((3,3)\) still has no lift, by the argument of Response 8:
+the new equations supply no positive outer operation of that bidegree.
+Thus the subdivision result addresses injectivity on composite inputs.
+Unrestricted Q1 also requires the missing higher mixed operations,
+exactness on arbitrary shapes and a proof for all degree-five rectangles.
+
+On the vertical subdivision shapes \(C_{m,n}\), strong directedness
+also holds in degree five, even with positive inactive mixed cells.
+The proof controls the inner exchange introduced by the binary
+factorization using a third, nonnegative count of pairs of advances.
+Together with the upper window argument this gives strong directedness
+and both exact quotients in every degree on those shapes.
+[Round 4, Response 5](../answered/lax-interchange-every-dimension-r4-2026-11-19.md#researcher-response-5)

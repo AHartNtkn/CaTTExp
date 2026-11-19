@@ -591,3 +591,128 @@ presentation needs composition equations. These results constrain both
 directions of a repair: some lifts must be identified for exactness, and
 unboundedly many parallel lifts must survive before quotienting. They leave
 Q1 for an unrestricted infinite presentation open.
+
+# Researcher Response 5
+
+**Strong directedness and both exact quotients hold simultaneously on
+every pair of vertically composed 2-globes.** More precisely, take
+\(C_{m,n}=\Sigma(\Sigma[m])\vee\Sigma(\Sigma[n])\) for any
+\(m,n\ge1\), and the presentation of
+[round 5, Response 9](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-9).
+Every elementary rectangle with proper active arguments has no reverse
+in every degree, including when the two inactive arguments are nonunits.
+The new case here is global degree five. In particular on these shapes
+exactness for the positive subdivided \((2,2)\)-cell is compatible with
+strong directedness for comparisons whose *two* active cells have zero
+Gray chain even when the inactive cells have positive Gray chain.
+
+Each long 2-word uses at most one slot in each outer span. Denote the
+ordered advances of the left slot by \(A_i\), those of the right by
+\(B_j\), and their possible unique crossing by \(c\). A 3-history
+records a chronological order of these events; (K15) introduces no
+alternative order on one slot per operand. The adjacent homs have only
+single-slot histories and no positive 4-cells: on each span the higher
+globes are just the successive generating advances. In the long hom
+every proper 4-step is an inner exchange of two blocks of unary advances,
+an \(r\) or \(t\) moving advances past \(c\), or the join \(h\).
+Every such step uses both slots. Consequently no positive 4-variation
+can have a spatially independent positive 3-operand for an inner
+naturality. Nor can two spatially independent 4-variations support the
+shifted join. The outer auxiliaries and unary cylinders with a 4-input
+are degenerate on the adjacent spans. The only proper 5-generators left
+are the positional exchanges and \(W\). On a reverse to an elementary
+rectangle the whole Gray 4-cell stays fixed, because its projected
+5-path is an endomorphism in a free Steiner hom. A proper \(W\) has
+positive Gray top chain and is excluded. Thus only positional exchanges
+can act, but their operands can be re-presented by the actual
+4-equations, including \(h e=\bar r_1\).
+
+Consider the two consecutive temporal intervals of a four-slot rectangle.
+When the fixed Gray 4-chain is zero, the separated-event proof of
+[round 5, Response 4](../outbox/lax-interchange-every-dimension-r5.md#a-degree-five-sector-on-arbitrary-pasting-diagrams)
+applies, including both inactive slots. Otherwise \(c\) occurs in
+exactly one interval. Color all events of that interval M, and all
+events of the other interval P. The positive mixed Gray atoms in the
+fixed chain specify exactly which advances are varied against \(c\),
+with multiplicity. In particular every varied advance in any \(r,t\)
+or in the left operand of \(h\) has color M. An inner exchange leaves
+each of its advances on the same side of \(c\). In a join, whose two
+orders are \(B c A\) and \(A B c\), only the advances of \(A\) cross
+\(c\). Thus throughout every representative of a 4-path in this fiber,
+all P events stay on their designated temporal side of \(c\). Within
+each slot the chain order likewise always puts the designated earlier
+advances before the later ones.
+
+For an inner exchange write \(A,B\) for its sets of advances, naming
+them by **outer slot** on either side of \(c\). Subscripts select a
+color. Give the step the three counts
+\[
+       p=|A_P||B_P|,\qquad m=|A_M||B_M|,\qquad
+       j=|A_P||B_M|.
+\]
+Set \(p=j=0\) on all mixed steps. Fix \(N=n+1\). On an \(r\) or
+\(t\) set \(m=N\) times the number of advances in its varying history.
+Set \(m=N|A|-|A||B_M|\) on \(h(A,B)\). This is strictly positive
+for a proper join. Fixed contexts carry the counts, and a path adds
+them. In the binary factorization the correcting inner exchange has
+\(A_P=\varnothing\); its sole contribution is \(|A||B_M|\) to
+\(m\). The sum is exactly the weight of the contextual \(r\).
+Subdivision of a varying history in \(r,t\) preserves its number of
+advances. Inner block subdivisions partition the three products, and
+balancing preserves their slot labels. Nonunit varying-whisker
+corrections and triple relations require a third slot. This checks the
+counts for all applicable 4-equations. A positional 5-exchange carries
+the same two inputs once each on either route and preserves their counts.
+
+In the designated 4-path each inner exchange is confined to one temporal
+interval, hence its \(j\) is zero. Nonnegativity and the preceding
+invariance imply that **every** representative reachable in a reverse
+has zero \(j\) on every edge. No edge there has both \(p>0\) and
+\(m>0\): for an inner edge that would give \(A_P,B_M\ne\varnothing\).
+Read a word with \(p\) letters P or \(m\) letters M from each edge.
+It is invariant under the 4-equations. For an inner subdivision a
+monochromatic or empty edge contributes the same pure word after
+partitioning, by the count equalities. The join and its correcting
+edge contribute only M, and the other mixed equations only subdivide
+that color. Structural equations transport the fixed contexts.
+
+A P-marked edge traverses a P advance on *each* slot. An inner M-marked
+edge traverses an M advance on each slot, whereas a mixed M-marked edge
+traverses \(c\). Two temporally disjoint marked windows of different
+colors must consequently occur in the designated temporal order. For
+two inner windows use the fixed order on either common slot; for
+a mixed window use the established position of P advances relative to
+\(c\). This applies to marks inside 4-path operands as well: their two
+intermediate histories can be juxtaposed at the common fixed 2-state of
+the temporal intervals. Call the colors early or late in that designated
+order. A positional exchange moves its earlier temporal operand to the
+front, so the number of late-before-early pairs in the word cannot
+increase. At the specified four-slot rectangle it decreases strictly:
+every proper active edge on the P side has \(p>0\), and every proper
+active edge on the M side has \(m>0\), including a purely inner one.
+The inactive prefix and suffix supply the same letters on both sides.
+This strict drop excludes a reverse. For a lower cut the Godement
+expansion gives the same argument on the transported inputs; nonunit
+4-inputs survive fixed lower whiskerings by positivity of the degree-four
+grading.
+
+In the lower degrees, the elementary crossing is directed by the Gray
+projection, and an inner comparison in degree four swaps histories of
+the two slots. A reverse to the latter can use only inner moves, by
+the zero Gray 4-chain. These moves reorder opposite-slot advances in
+the specified direction on each side of the fixed crossing. Counting
+the out-of-order opposite-slot pairs separately on each side gives a
+strict drop at the designated exchange, also in its fixed contexts.
+Higher output degrees use the subdivision-invariant window proof of
+round 5, Response 9. That response proves exactness of the inner
+quotient on every pair of two-dimensional hom diagrams and of the
+strict quotient on all shapes. This completes the assertion for all
+\(m,n\); the missing mixed arities on higher-dimensional spans still
+prevent an unrestricted answer to Q1.
+
+**Validation.** `python3 -B scripts/e6/interchange_subdivision.py`
+executes the positional exchanges and both sides of the join equation
+on the two-slot histories with two advances on the left and two or
+three on the right. It checks 539 ordered exchanges, 172 join
+factorizations and 34 strict drops with two inner markers. The argument
+with the nonnegative count \(j\) handles arbitrary chain lengths.

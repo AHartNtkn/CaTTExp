@@ -320,3 +320,89 @@ A definition with proofs for (A), an inconsistency proof for (B), a decision for
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange, Appendix A and Rem. 4.10).
 - Campion, arXiv 2311.00205 (Gray tensor of (∞,n)-categories); Gepner–Heine, arXiv 2510.10504.
 
+
+# Researcher Response 1
+
+**Theorem.** On the free 2-cell grids of the question, equation (C) is incompatible with proper elementary interchange in dimensions 4 and 5 and substitution, with the positional interchangers and whiskering of (K30). A witness is the two-dimensional pasting diagram Γ₃,₃ = Σ[3] ∨ Σ[3]. The proof allows arbitrary further generators and equations, including equations between 3-cells. In particular, Q1(A) fails for every proposed extension of T + (C). The joint consistency question in Q3 has a negative answer already in dimension 5.
+
+The point is that a pair of **nonidentity inputs** can give a 5-interchanger with equal boundaries even when neither input is required to be idempotent. Equation (C) makes a particular 4-cell disappear between a prefix and a suffix. An adjacent 4-cell can test this equality on the boundary of an elementary interchanger.
+
+## The equality on a 5-boundary
+
+Write 3-path concatenation in diagrammatic order by juxtaposition. For 4-cells \(X:x_0\Rightarrow x_1\) and \(Y:y_0\Rightarrow y_1\) on consecutive 3-path intervals, the elementary \((2,3)\)-interchanger goes between the following 4-cells, in the displayed order.
+\[
+ (x_0Y)\mathbin{\cdot}(Xy_1)
+ \quad\Longrightarrow\quad
+ (Xy_0)\mathbin{\cdot}(x_1Y).                                      \tag{1}
+\]
+This is the adjacent binary comparison, obtained by taking the two inactive rectangular slots to be units. Its two active inputs are \(X,Y\).
+
+Suppose \(Xq\) is an identity for a 3-path \(q\). Its boundary gives \(x_0q=x_1q\). Take \(Y=qJ\) with \(J:j_0\Rightarrow j_1\). In (1), both \(Xy_i=(Xq)j_i\) are identities, and both \(x_iY=(x_iq)J\) are the same cell. Thus the identity on that cell is a reverse to (1). Dually, if \(pY\) is an identity, take \(X=Jp\). Both \(x_iY=j_i(pY)\) are identities and \(Xy_0=J(py_0)=J(py_1)=Xy_1\). These calculations use associative whiskering and units. To contradict requirement 3 one must still prove that **both inputs survive**. This is where the choice of diagram matters.
+
+## Two placements in the same 3 × 3 grid
+
+Start in Γ₂,₂ and abbreviate the contextual crossing of \(a_i,b_j\) by \(ij\). It replaces the adjacent letters \(b_j a_i\) by \(a_i b_j\). In (K34) take
+\[
+ p=12,\qquad u=22\,11,\qquad v=11\,22,\qquad q=21 .
+\]
+After \(p\) the word is \(b_1a_1b_2a_2\). The crossings \(11\) and \(22\) act on its left and right pairs. Let \(e:u\Rightarrow v\) be their bare elementary 4-interchanger. Each crossing is proper by dimension-3 directedness, so dimension-4 directedness gives \(u\ne v\) and \(e\ne1\). Equation (C) says precisely that \(p e q\) is an identity. Decide whether \(p e\) is an identity **in the proposed theory** on Γ₂,₂.
+
+1. **Suppose \(p e\) is nonidentity.** Insert an earlier right-factor letter \(b_0\) and a later left-factor letter \(a_3\). Whisker the old calculation by these letters, starting at \(b_0 b_1 b_2 a_1 a_2 a_3\). Immediately after the old rectangle the word is
+   \[
+     b_0 a_1\; a_2 b_1\; b_2 a_3 .
+   \]
+   Here \(J\) is the positional 4-interchanger of \(10\) on the left and \(32\) on the right, with the intervening letters as spectators. Take \(X=p e\) and \(Y=qJ\), suppressing the fixed letter whiskerings. Contracting \(b_0,a_3\) sends \(X\) to the nonidentity \(p e\) of Γ₂,₂. Contracting \(a_2,b_1\) sends \(q\) to a unit and \(Y\) to the bare interchanger of \(10,32\) on \(b_0 a_1 b_2 a_3\). Its endpoints are distinct by requirement 3. Thus \(X,Y\) are nonidentity. Since \(Xq=1\) by (C), the first calculation gives a reverse to their elementary 5-interchanger.
+
+2. **Suppose \(p e\) is an identity.** Insert an earlier left-factor letter \(a_0\) and a later right-factor letter \(b_3\). Start at
+   \[
+      b_1 a_0\; b_2 a_1\; b_3 a_2 .
+   \]
+   Let \(J\) interchange \(01\) on the left and \(23\) on the right. Both schedules end at \(a_0 b_1 b_2 a_1 a_2 b_3\), where the old rectangle begins. Take \(X=Jp\) and \(Y=e\). Contracting \(a_1,b_2\) sends \(p\) to a unit and \(X\) to the bare interchanger of \(01,23\) on \(b_1 a_0 b_3 a_2\). Contracting \(a_0,b_3\) sends \(Y\) to the original bare \(e\). Both images are nonidentity. The hypothesized equality \(p e=1\) holds also in its fixed letter context, so the dual calculation gives a reverse to this elementary 5-interchanger.
+
+All four contractions send selected generating 2-cells of chains to identities and identify their endpoint 1-cells. They are globular substitutions by requirement 5. Each uncontracted pair retains its order. Consequently the nonidentity tests work even if additional equations change which case holds. This proves the theorem. ∎
+
+## A smaller witness for the proposed thin blocks
+
+For T + (C) + the stated thin blocks, take Γ₃,₂ and split the path \(V\) of (K38) after its third crossing. The two consecutive intervals carry the 4-cells
+\[
+\begin{aligned}
+ X &: 12\,22\,11 \Rightarrow 12\,11\,22,\\
+ Y &: 32\,21\,31 \Rightarrow 21\,32\,31 .
+\end{aligned}
+\]
+The left input interchanges \(11,22\) after the prefix \(12\). The right input interchanges \(21,32\) before the suffix \(31\). Every concatenation \(x_i y_j\) takes \(b_1b_2a_1a_2a_3\) to \(a_1a_2a_3b_1b_2\). By (R∞) all four are the same block. Each of the four whiskered edges in (1) is consequently a pure inner-interchanger loop at that block. By the 4-dimensional part of the thin-block principle, all four are identities. The two sides of (1) are the same identity 4-cell.
+
+Here **both inputs have distinct endpoints and no reverse**. Contract \(a_3\) to test \(X\), or \(a_1\) to test \(Y\). After reindexing, the images are \(p e\) and \(e q\) on Γ₂,₂. On the first interval the initial step is forced and the remaining two crossings can be taken in either order. On the second interval the final step is forced and the first two can be taken in either order. A nontrivial block equation on two chains needs at least two letters of each kind and all four crossings. Thus the two three-step paths in each interval remain distinct. The only nonidentity 4-move exchanges \(22,11\) into \(11,22\). The third step shares a letter with each, so grouping it with either supplies no further independent pair. There are no active \(r,t,\tau\) here. Thus neither image has a reverse, which proves the assertion for the inputs. In particular, the suggested restriction in Q2 to nonidentity, non-invertible, non-endomorphism arguments still fails for this presentation.
+
+Five generating letters are minimal **among two-chain grids for this test with two consecutive nonidentity 4-inputs**. With at most four letters only the \(2\times2\) grid can have a pair of disjoint crossings. Using one such pair before and another after a temporal cut would use four crossings in total. The full rectangle has only one place where the order can vary, between its forced first and last steps. This minimality statement concerns the specified presentation and test.
+
+## What a finite expanded basis would imply without (C)
+
+There is also a finiteness obstruction that does not assume (C) or T's raw support equations. Work with the Godement compositions and functorial whiskerings of (K30). Suppose (K15) holds, requirements 3–5 hold through dimension 6, and the data in dimensions 3–5 are otherwise arbitrary. **There must be infinitely many 4-cells on Γ₂,₄.** Thus even finiteness of the *degree-4* expanded basis on that one diagram is incompatible with these hypotheses and requirement 2.
+
+We first give two consequences of directedness that will be used for \(n=4,5\). On the full 0-interval of a two-factor diagram, a composite of \(n\)-cells along dimension \(n-1\) can be an identity only if each factor is an identity. Also, whiskering an \(n\)-cell on either side by a composable \((n-1)\)-cell reflects identities.
+
+Here is how to supply an independent test cell for both assertions. Append a fresh \(n\)-globe along the terminal 0-object of the old pasting diagram. Write \(J_0\) for the new top generator and \(z^-,z^+\) for its \((n-2)\)-source and target. Put a stationary \(z^-\) beside the old calculation for a test **after** it, and \(z^+\) for a test **before** it. Explicitly, padding an old cell \(d\) means \(d*_0 1^{\dim d-(n-2)}_z\) for \(\dim d\ge n-2\). Above fixed \((n-3)\)-boundaries this acts by ordinary whiskering. In the Godement expansion, at each level above \(n-2\) the step in the stationary variable is an identity. The remaining fixed whiskerings preserve top composition, units and whiskering by \((n-1)\)-cells. At an old \((n-2)\)-state \(w\) the cell \(J=1^2_w *_0 J_0\) has its parallel \( (n-1) \)-boundaries from \(w*_0 z^-\) to \(w*_0 z^+\). Contracting the fresh factor recovers the old cells. Contracting the old factors sends the padded old \((n-1)\)-paths to identities and \(J\) to the globe generator, which survives by requirement 4.
+
+For reflection under right whiskering, suppose \(Dq=1\) with \(D\ne1\). Apply (1), shifted to dimension \(n+1\), to the padded \(D\) and \(qJ\). Both are nonidentity by the two contractions. Their comparison has an identity reverse by the same calculation as (1). Left whiskering uses \(Jp\) and the dual calculation. For top composition suppose \(A\cdot B=1\) with \(A\ne1\), so also \(B\ne1\). Place \(J\) on the following interval. Use the rectangle with left column \(A,B\) and right column \(1,J\). Write only the order of active steps, with their uniquely specified stationary whiskerings. Its sides are \(JAB=J\) and \(AJB\). The elementary comparison of \(B,J\), after the prefix \(A\), takes \(AJB\) to \(ABJ=J\). This reverses the proper rectangle with active inputs \(A,J\). The binary assertion implies the assertion for any finite composite.
+
+Now (K15) makes \(H\) a 4-endomorphism. The 3 × 3 theorem forces \(H\ne1\). Double it on Γ₂,₄ as in (K35), giving nonidentity 4-endomorphisms on consecutive 3-paths \(u,v\). Suppose this diagram has only finitely many 4-cells. In a finite monoid every element has an idempotent positive power. Its powers are eventually periodic, so choose an exponent in the periodic range divisible by the period. Apply this separately to the two endomorphisms to obtain idempotents \(x\) on \(u\) and \(y\) on \(v\). The assertion about top composition shows both are nonidentity.
+
+Let \(d=(u y)\cdot(x v)\), a 4-endomorphism of \(uv\). The elementary rectangle on \((x,x,y,y)\) gives \(I:d\Rightarrow d^2\), by the same expansion as (K33). Directedness makes \(I\) nonidentity. Take an idempotent positive power \(P=d^k\). Replacing each of the \(k\) occurrences of \(d\) in turn by \(d^2\) gives a 5-cell
+\[
+    Z:d^k\Rightarrow d^{2k}=P .
+\]
+Every step is a top whiskering of \(I\), hence nonidentity by reflection. Their composite \(Z:P\Rightarrow P\) is nonidentity by the top-composition assertion. Whisker it on both sides by \(P\) to obtain \(Z'=P Z P\), still nonidentity and still based at \(P\). Whiskering associativity and \(P^2=P\) give \(P Z'=Z'=Z' P\). Since \(P\) is itself a 4-endomorphism, \(Z'\) can occupy *both* active slots of the adjacent \((3,4)\)-interchanger. Its two 5-dimensional boundaries are
+\[
+    (PZ')\cdot(Z'P) = Z'\cdot Z' = (Z'P)\cdot(PZ').
+\]
+Their identity is a reverse in dimension 6, a contradiction. In fact some 4-endomorphism on Γ₂,₄ has pairwise distinct positive powers. If both doubled inputs have a repeated power, eventual periodicity supplies \(x,y\). If \(d\) also has a repeated power, the same contradiction follows. ∎
+
+## Consequences and scope
+
+- **Q1.** Combining the theorem with (K35) rules out *every extension retaining T's equations*. Dimension 5 is sharp for this statement by (K30) and (K36). The thin-block principle enforces (C) on the rectangle, so its dimension-5 failure is independent of the proposed joins or the lift of the (2,2)-atom. Even a proof of the proposed test about pairs of 4-endomorphisms would leave the obstruction (1).
+- **Q2.** The obstruction with (C) uses neither support equations nor finiteness. Expanded supports are the appropriate interpretation by (K4). They are compatible with imposing the 3-dimensional block equations at the level of 3-cells. In (K30) the finite set of old 3-cells in each new equivalence class has a least old expanded support in any fixed total order. Two classes with the same least support contain the same old cell by injectivity, hence coincide. This constructs an injective support from a representative using the old labels. The obstruction occurs when the contextual **4-equation** is also required. With (K15), the dimension-6 argument further rules out every finite degree-4 expanded basis on Γ₂,₄. It also rules out a code consisting of the literal contextual edge set and a tag with finitely many values for that set. Repeating a fixed representative of a 4-loop gives exactly the same literal edge set for all its positive powers.
+- **Q3.** Imposing the inner composite-crossing law together with the outer law, the proposed 3-equations and (C) is inconsistent with 1–5. The proof already applies before imposing the inner law.
+- **Remaining general question.** The inference in (K35) from directedness to (C) uses T's raw support equations. For a theory omitting those equations, this proof makes (C) **forbidden**, but supplies no implication forcing it. In particular it neither rules out a theory retaining a nonidentity \(H\) nor constructs one. Q1(B) for every choice of lower-dimensional data, minimality of a universal witness, the all-dimensional compatibility and optimal weakening in Q2, and necessity of the inner law for a theory outside T remain open here.
+
+**Reproducible check.** Run `python3 scripts/e6/absorbed_interchanger.py` from the repository root. It executes both schedules of every displayed swap, checks left/right position and all intermediate word boundaries, applies the four contractions, and checks that the surviving contextual 4-edge agrees in the two orders of (1). It also checks the four extreme corners on Γ₃,₂ and enumerates both projected three-step intervals. The two assumptions it uses to reduce the 3 × 3 boundary are respectively (C) and the second case's equality \(p e=1\). The proof by cases supplies their logical role independently of the computation.

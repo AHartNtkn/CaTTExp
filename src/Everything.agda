@@ -35,6 +35,8 @@ import CaTTExp.Gray.Check
 import CaTTExp.Gray.Pure
 import CaTTExp.Gray.Examples
 import CaTTExp.Gray.Cube
+import CaTTExp.Gray.BiclosedNF
+import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Lim.Named
 import CaTTExp.Lim.Conditions
 import CaTTExp.Lim.Rules

@@ -152,3 +152,890 @@ Some routes, offered only as suggestions:
 ## What would count as a solution
 
 A proof of (11), or a counterexample; a precise implication between (11) and a known form of the homotopy hypothesis; a proof of Q3 for a named class; a coherator for L or an impossibility proof; or a published reference.
+
+# Researcher Response
+
+I can prove a precise implication for **Q2**, and the equivalence of the criteria in **Q3** for finite torsion-free computads, including strongly loop-free Steiner computads. I do not obtain the general unit condition (11), a counterexample to it, or the coherator requested in Q4.
+
+The distinction that matters for Q2 is between **finite ordinary CaTT computads whose free models happen to be groupoidal** and **arbitrary groupoidal computad-cofibrant models**. The former have no positive-dimensional generators.
+
+## 1. A precise groupoidal implication
+
+Let
+\[
+\mathcal C=\operatorname{Mod}(\mathrm{CaTT}),
+\qquad
+\mathcal G\subseteq\mathcal C
+\]
+be the full subcategory of models whose positive-dimensional cells are all coinductively invertible, and put
+\[
+W_{\mathcal G}=W\cap\operatorname{Mor}(\mathcal G).
+\]
+This is the category of Batanin–Leinster weak \(\omega\)-groupoids defined by Fujii–Hoshino–Maehara in §3.4 of *Weakly invertible cells in a weak \(\omega\)-category*. [arxiv.org](https://arxiv.org/html/2303.14907v3?utm_source=chatgpt.com)
+
+Consider the condition
+\[
+\tag{\(U_{\mathrm{gpd}}\)}
+\eta_B\in W
+\quad
+\text{for every computad-cofibrant }B\in\mathcal G,
+\]
+where the computad may have generators in arbitrarily high dimensions.
+
+**Proposition.** Under your Known (I)–(IV),
+\[
+\boxed{
+(U_{\mathrm{gpd}})
+\ \Longrightarrow\
+\mathcal G[W_{\mathcal G}^{-1}]\simeq\mathcal S,
+}
+\]
+where \(\mathcal S\) is the \(\infty\)-category of spaces. The equivalence is induced by the stipulated semantic construction, with left functor
+\[
+G\longmapsto QU\mathcal L_R(KG).
+\]
+
+Consequently,
+\[
+\boxed{
+(11)\text{ for all finite computads}
+\ \Longrightarrow\
+(U_{\mathrm{gpd}})
+\ \Longrightarrow\
+\mathcal G[W_{\mathcal G}^{-1}]\simeq\mathcal S.
+}
+\]
+
+The first implication uses your finite-to-arbitrary reduction. The second can be proved without assuming the unit condition for nongroupoidal cofibrant models.
+
+### 1.1. Groupoidality is invariant under \(W\)
+
+Write \(kX\) for the core weak \(\omega\)-groupoid of \(X\). Its cells are the hereditarily invertible cells: all vertices, and those invertible positive-dimensional cells whose boundaries are again hereditarily invertible. FHM prove that this defines a right adjoint to the inclusion \(\mathcal G\hookrightarrow\mathcal C\). We also use their reflection-of-invertibility theorem, Proposition 3.1.7, and invariance of invertibility under an invertible comparison cell, Corollary 2.4.10. [arxiv.org](https://arxiv.org/html/2303.14907v3?utm_source=chatgpt.com)
+
+First, \(k\) preserves \(W\). Suppose \(f:X\to Y\) belongs to \(W\). Given parallel \((n-1)\)-cells \(a,b\) of \(kX\) and an \(n\)-cell
+\[
+v:fa\longrightarrow fb
+\]
+of \(kY\), essential surjectivity with this prescribed boundary gives
+\[
+u:a\longrightarrow b,
+\qquad
+\alpha:fu\xrightarrow{\sim}v.
+\]
+Because \(v\) is invertible, so is \(fu\); reflection of invertibility then makes \(u\) invertible. Its boundaries belong to \(kX\), so \(u\in kX\). Moreover, \(\alpha\in kY\), since it is invertible and its boundaries are hereditarily invertible. The dimension-zero essential-surjectivity witnesses also belong to \(kY\). Thus \(kf\in W\).
+
+Now let \(f:G\to X\) belong to \(W\), with \(G\) groupoidal. Factor it as
+\[
+G=kG\xrightarrow{kf}kX\xrightarrow{i_X}X.
+\]
+Two-out-of-three gives \(i_X\in W\).
+
+Inductively, every cell of \(X\) belongs to \(kX\). This is immediate for vertices. If it holds below dimension \(n\), an \(n\)-cell \(x\) has its boundary in \(kX\). Essential surjectivity of \(i_X\) supplies an \(n\)-cell \(u\in kX\) with that same boundary and an invertible comparison
+\[
+i_Xu\xrightarrow{\sim}x.
+\]
+Therefore \(x\) is invertible and belongs to \(kX\).
+
+The reverse direction is immediate: if \(X\to G\) belongs to \(W\) and \(G\) is groupoidal, reflection of invertibility makes \(X\) groupoidal.
+
+### 1.2. The required constructions restrict to groupoidal models
+
+For \(G\in\mathcal G\), the counit
+\[
+q_G:KG\longrightarrow G
+\]
+belongs to \(W\). Reflection of invertibility therefore shows that \(KG\) is groupoidal. In particular, \(K\) restricts to \(\mathcal G\).
+
+Next, let \(B\) be groupoidal and computad-cofibrant. Under \(U_{\mathrm{gpd}}\), the map
+\[
+\eta_B:B\longrightarrow S_0\mathcal L_RB
+\]
+belongs to \(W\), so the preceding lemma makes \(S_0\mathcal L_RB\) groupoidal.
+
+By Known (I),
+\[
+(S_0Y)_n=(UY)(D_n)_0.
+\]
+Thus every positive-dimensional globe vertex of \(U\mathcal L_RB\) is an invertible algebraic cell. The algebraic-to-geometric invertibility argument from Known (IV) makes each such cell geometrically coinductively invertible. After coinductive completion, every positive-dimensional cell is invertible. Hence
+\[
+QU\mathcal L_RB\in\mathcal S.
+\]
+
+This establishes the closure needed to restrict the derived construction to spaces; it is not an assumption that \(\mathcal L_R\) preserves categorical level.
+
+### 1.3. The restricted left functor is homotopical
+
+For \(f:B\to B'\) between groupoidal computad-cofibrant models, naturality gives
+\[
+S_0\mathcal L_R(f)\circ\eta_B
+=
+\eta_{B'}\circ f.
+\]
+If \(f\in W\), then \(U_{\mathrm{gpd}}\) and two-out-of-three give
+\[
+S_0\mathcal L_R(f)\in W.
+\]
+Detection, Known (IV), consequently gives
+\[
+QU\mathcal L_R(f)\text{ is an equivalence}.
+\]
+
+This is precisely the restriction of (H) needed for the co-Kleisli construction in Known (III). Since \(K\) preserves groupoidality and \(S_0\) sends semantic spaces to groupoidal models, that construction yields
+\[
+\Lambda_{\mathrm{gpd}}:
+\mathcal G[W_{\mathcal G}^{-1}]
+\rightleftarrows
+\mathcal S:
+\overline S_{\mathrm{gpd}}.
+\]
+
+### 1.4. Both derived comparison maps are equivalences
+
+For a groupoidal cofibrant \(B\), the derived unit is represented by
+\[
+B\xrightarrow{\eta_B}S_0\mathcal L_RB
+\longrightarrow
+\overline S_{\mathrm{gpd}}\bigl(QU\mathcal L_RB\bigr).
+\]
+The first map belongs to \(W\) by \(U_{\mathrm{gpd}}\). The second belongs to \(W\) by the completion result in Known (II).
+
+For the counit, let \(Y\) present a space and set \(A=S_0Y\). Then \(A\) and \(KA\) are groupoidal. The adjunct
+\[
+d_Y=\varepsilon_Y\circ\mathcal L_R(q_A):
+\mathcal L_R(KA)\longrightarrow Y
+\]
+satisfies the literal adjunction identity
+\[
+S_0(d_Y)\circ\eta_{KA}=q_A.
+\]
+Both \(\eta_{KA}\) and \(q_A\) belong to \(W\). Hence \(S_0(d_Y)\in W\), and detection gives
+\[
+QU(d_Y)\text{ is an equivalence}.
+\]
+
+These are the derived unit and counit, proving the proposition. No saturation assumption is used.
+
+## 2. Why the restriction to finite groupoidal computads does not give this hypothesis
+
+Benjamin–Markakis prove that, in a finite-dimensional computad \(\mathfrak c\), a positive-dimensional cell \(u\) is invertible exactly when its support in its own dimension is empty:
+\[
+u\in(A_{\mathfrak c})_d\text{ invertible}
+\quad\Longleftrightarrow\quad
+\operatorname{supp}_d(u)=\varnothing.
+\]
+This is Proposition 37; Proposition 35 gives the sufficient direction without the finite-dimensional assumption. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+For a \(d\)-generator \(g\),
+\[
+\operatorname{supp}_d(\operatorname{var}g)=\{g\}.
+\]
+Therefore, for finite ordinary CaTT computads,
+\[
+\boxed{
+A_{\mathfrak c}\text{ is groupoidal}
+\quad\Longleftrightarrow\quad
+\mathfrak c\text{ has no positive-dimensional generators}.
+}
+\]
+
+The reverse implication follows because every positive-dimensional term then has empty support in its own dimension.
+
+Thus the literal statement
+\[
+\eta_{A_{\mathfrak c}}\in W
+\quad
+\text{for finite }\mathfrak c\text{ with }A_{\mathfrak c}\text{ groupoidal}
+\]
+tests only free CaTT models on finite sets of vertices. Those free models still have positive-dimensional identity and coherence terms, but no positive-dimensional generators.
+
+This restriction is already covered by your graph case. It does not provide the finite-to-arbitrary reduction needed for \(U_{\mathrm{gpd}}\): if an infinite groupoidal computad has a positive-dimensional generator \(g\), every finite subcomputad retaining \(g\) has a nongroupoidal free model.
+
+Accordingly, the substantive implication is from **all finite computads**, or directly from **all groupoidal cofibrant models with infinite computads allowed**.
+
+## 3. Relation to Henry’s and Taylor’s formulations
+
+The conclusion in §1 is the homotopy hypothesis for the specified **Batanin–Leinster groupoidal relative category**. Identifying it with the formulation for a chosen Grothendieck groupoid coherator requires another comparison.
+
+### Henry
+
+For a fixed Grothendieck groupoid coherator \(C\), Henry’s Conjecture 5.3.3 concerns
+\[
+X\longrightarrow X\amalg_{D_n}D_{n+1},
+\]
+where \(X\) is finitely cellular and \(D_n\to D_{n+1}\) is a source inclusion. His Theorem 5.3.5 derives the canonical semi-model structure from this condition; Corollary 5.3.13 derives the homotopy hypothesis. [arxiv.org](https://arxiv.org/pdf/1609.04622?utm_source=chatgpt.com)
+
+Here \(D_n\) is a free **\(C\)-groupoid**. Finite cellularity counts attachments in the groupoid theory. It is different from requiring an ordinary finite CaTT computad to have a groupoidal free model.
+
+To transfer §1 to this formulation, the missing statement is an equivalence
+\[
+\tag{G}
+\operatorname{Gpd}_C[W_C^{-1}]
+\simeq
+\mathcal G[W_{\mathcal G}^{-1}].
+\]
+With (G), the proposition immediately gives
+\[
+\operatorname{Gpd}_C[W_C^{-1}]\simeq\mathcal S.
+\]
+If one also wants to identify a particular fundamental-groupoid functor, (G) must be compatible with that functor.
+
+The categorical comparison in your background does not itself establish (G). Nor would an abstract equivalence of these localizations, by itself, identify Henry’s **ordinary pushouts** with homotopy pushouts.
+
+### Taylor
+
+Taylor’s condition concerns specified free functors between successive inductive theories. Definition 9.8 requires the free image of an elementary pushout map to be a weak equivalence at the next stage. Proposition 10.6 makes this equivalent to the next canonical model structure, assuming the preceding one; Corollary 11.6 obtains the homotopy-hypothesis comparison from the conditions at all stages. [arxiv.org](https://arxiv.org/html/2604.09867v1?utm_source=chatgpt.com)
+
+Deriving that condition from \(U_{\mathrm{gpd}}\) would require comparison with those particular free functors and their pushouts. The proposition in §1 supplies no such identification.
+
+### A current-reference qualification
+
+A September 24, 2026 preprint, [*The Grothendieck homotopy hypothesis via elementary expansions*](https://github.com/openai/math/blob/main/preprints/The-Grothendieck-homotopy-hypothesis-via-elementary-expansions-September-24-2026/paper.pdf), states Henry’s elementary-expansion assertion for every coherator in the Ara–Henry convention and derives the groupoid homotopy hypothesis. Its accompanying formalization notes specify that the formalized result is the elementary-expansion theorem; the semi-model structure and comparison with spaces are outside that formalization’s scope. [github.com](https://github.com/openai/math/tree/main/preprints/The-Grothendieck-homotopy-hypothesis-via-elementary-expansions-September-24-2026?utm_source=chatgpt.com)
+
+I have not used that preprint’s proof above. Its stated theorem does not supply (G) or the CaTT unit condition.
+
+## 4. Q3: the equivalence of criteria for torsion-free computads
+
+Here is an all-dimensional reduction, including the prescribed-boundary lifting argument.
+
+Let \(\mathfrak c\) be a finite computad arising from a torsion-free complex, and write
+\[
+A=A_{\mathfrak c},
+\qquad
+T=F(\mathfrak c),
+\qquad
+\pi:A\to T.
+\]
+
+Define
+\[
+\tag{RC}
+\forall n,\ \forall a,b\in A_n,\qquad
+a\parallel b,\ \pi a=\pi b
+\ \Longrightarrow\
+\exists u:a\to b.
+\]
+
+Then, under your stipulated realization properties,
+\[
+\boxed{
+\eta_A\in W
+\iff
+\pi\in W
+\iff
+\pi\text{ is a globular trivial fibration}
+\iff
+\mathrm{RC}.
+}
+\]
+
+This proves the requested equivalence of criteria for the class. It does not prove that these equivalent conditions hold.
+
+### 4.1. The semantic comparison
+
+Let
+\[
+e_{\mathfrak c}:\mathcal L_RA_{\mathfrak c}\longrightarrow NT
+\]
+be the adjunct of \(\pi_{\mathfrak c}\), using the canonical algebraic structure on the discrete nerve of the gaunt strict category \(T\).
+
+Both sides realize the same cellular presentation:
+
+* By Known (VI), \(\mathcal L_R\) turns a generator attachment into the corresponding semantic homotopy pushout.
+* Campion’s Theorem 5.11 says that the strict cellular attachments of a torsion-free complex are preserved as homotopy pushouts in flagged \((\infty,N)\)-categories, including \(N=\omega\). His class includes loop-free Steiner complexes. [arxiv.org](https://arxiv.org/html/2311.00200v1?utm_source=chatgpt.com)
+
+Induction over the cellular presentation therefore makes \(e_{\mathfrak c}\) a semantic weak equivalence. At each attachment, the maps on the boundary and globe are the canonical comparison maps, so this identifies the specific adjunct of \(\pi_{\mathfrak c}\).
+
+The adjunction identity gives
+\[
+S_0(e_{\mathfrak c})\circ\eta_A=\pi.
+\]
+Since \(S_0(e_{\mathfrak c})\in W\), two-out-of-three proves
+\[
+\eta_A\in W\iff\pi\in W.
+\]
+
+The same argument applies to another homotopy-polygraph class whenever its canonical strict realization preserves the specified cellular attachments.
+
+### 4.2. Why an equal-image filler maps to an identity
+
+Campion’s Definition 1.8 and Proposition 1.10 imply that \(T\) is \(\mathbb G\)-regular. In particular, every strict \((n+1)\)-cell
+\[
+w:x\longrightarrow x
+\]
+is the identity on \(x\). [arxiv.org](https://arxiv.org/html/2311.00200v1?utm_source=chatgpt.com)
+
+Consequently, if \(u:a\to b\) and \(\pi a=\pi b\), then
+\[
+\pi u=1_{\pi a}.
+\]
+
+Thus RC implies the stronger condition
+\[
+\tag{I}
+a\parallel b,\ \pi a=\pi b
+\ \Longrightarrow\
+\exists u:a\to b
+\text{ with }\pi u=1_{\pi a}.
+\]
+
+The identity-image clause is what permits boundary correction without changing the strict image.
+
+### 4.3. A boundary-correction lemma
+
+Let \(p:X\to Y\) be a strict morphism of weak \(\omega\)-categories, with \(Y\) strict. Suppose \(p\) satisfies (I).
+
+Use standard binary compositions and identities in \(X\). Their literal source and target formulas are given by FHM, Proposition 2.3.6. No associativity or unit equality in \(X\) is assumed. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+Suppose \(v\in X_n\), and \(a,b\in X_{n-1}\) are parallel with
+\[
+p(a)=p(sv),
+\qquad
+p(b)=p(tv).
+\]
+We construct \(v':a\to b\) with \(p(v')=p(v)\).
+
+Correct the boundaries successively in dimensions
+\[
+k=0,\ldots,n-1.
+\]
+At stage \(k\), all boundaries below dimension \(k\) already have their desired values. Hence the current \(k\)-source is parallel to the desired \(k\)-source, with the same image under \(p\); likewise for the targets.
+
+Condition (I) supplies
+\[
+L_k:\text{desired \(k\)-source}\longrightarrow
+       \text{current \(k\)-source},
+\]
+\[
+R_k:\text{current \(k\)-target}\longrightarrow
+       \text{desired \(k\)-target},
+\]
+both mapping to identities.
+
+Let \(\iota_n(L_k)\) denote \(L_k\) raised to dimension \(n\) by identities; when \(k=n-1\), it denotes \(L_k\) itself. Replace the current cell by the explicitly bracketed term
+\[
+\bigl(\iota_n(L_k)*_k v\bigr)*_k\iota_n(R_k).
+\]
+
+Its \(k\)-source and \(k\)-target are now the desired ones. Its lower boundaries remain fixed. Its image under \(p\) remains \(p(v)\), because the added cells become strict units in \(Y\).
+
+After stage \(n-1\), the resulting cell has precisely boundary \((a,b)\).
+
+### 4.4. Initial lifts of strict expressions
+
+For \(p=\pi:A\to T\), every strict generator has its specified weak generator as a lift. Every vertex also has a lift.
+
+Induct on a strict expression for a cell of \(T\):
+
+* An identity lifts by applying the chosen weak identity to a lift of its underlying cell.
+* For a composite \(y*_kz\), first choose lifts \(v,w\) of \(y,z\).
+* Correct \(w\) through dimensions below \(k\) so that its lower boundaries agree with those of \(t_kv\).
+* At dimension \(k\), apply (I) to obtain
+  \[
+  L:t_kv\longrightarrow s_kw
+  \]
+  mapping to an identity, and replace \(w\) by \(\iota_n(L)*_kw\).
+
+The corrected \(w\) has \(k\)-source literally equal to \(t_kv\), so \(v*_kw\) is defined and maps to \(y*_kz\).
+
+Thus every strict cell has some lift. Applying §4.3 then gives a lift with any prescribed parallel boundary having the correct strict image. Therefore \(\pi\) is a globular trivial fibration, and in particular belongs to \(W\).
+
+### 4.5. The reverse implication
+
+Suppose \(\pi\in W\), and let \(a,b\in A_n\) be parallel with \(\pi a=\pi b\). Apply FHM essential surjectivity with prescribed boundary \((a,b)\) to the target cell
+\[
+1_{\pi a}:\pi a\longrightarrow\pi b.
+\]
+It supplies an \((n+1)\)-cell \(u:a\to b\). This is RC.
+
+Hence
+\[
+\mathrm{RC}
+\Longrightarrow
+\text{globular trivial fibration}
+\Longrightarrow
+W
+\Longrightarrow
+\mathrm{RC},
+\]
+completing the claimed equivalence.
+
+The remaining assertion for this class is exactly **existence of the RC fillers**. Campion’s semantic pasting theorem proves the realization comparison in §4.1; it does not prove that algebraic existence assertion.
+
+## 5. What remains unresolved here
+
+The results above give:
+
+* a precise implication from the full finite-computad unit condition to the Batanin–Leinster groupoid homotopy hypothesis, with the stronger observation that \(U_{\mathrm{gpd}}\) alone suffices;
+* the exact reason that restricting to finite groupoidal ordinary computads loses the required content;
+* the all-dimensional equivalence of the Q3 criteria for finite torsion-free computads.
+
+They do not establish the general unit condition, relative coherence for every torsion-free computad, the comparison (G) with a specified Grothendieck groupoid coherator, or the weak Gray coherator for \(\mathsf L\). In particular, the strict-enrichment obstruction already in your background does not establish impossibility of the weak enrichment requested in Q4.
+
+**There is a precise forward implication for Q2:** the unit condition implies Henry’s pushout condition for an explicitly specified extension of the CaTT coherator. The argument also constructs the comparison between its Grothendieck groupoids and groupoidal CaTT models.
+
+The statement is:
+
+\[
+\boxed{
+(11)\text{ for all finite ordinary computads}
+\ \Longrightarrow\
+\begin{cases}
+\mathbb T^{\mathrm{bi}}\text{ is a Grothendieck groupoid coherator},\\
+\text{Henry’s pushout condition holds for }\mathbb T^{\mathrm{bi}}.
+\end{cases}}
+\]
+
+Here \(\mathbb T^{\mathrm{bi}}\) is Lanari’s theory \(\mathbb T^W\): the CaTT categorical coherator with freely chosen, independent left and right inverse data. Consequently,
+
+\[
+\operatorname{Mod}(\mathbb T^{\mathrm{bi}})
+  [W_{\mathrm{bi}}^{-1}]
+\simeq
+\operatorname{Mod}(\mathrm{CaTT})_{\mathrm{gpd}}
+  [W_{\mathrm{gpd}}^{-1}]
+\simeq \mathcal S.
+\]
+
+This proves the implication requested in Q2 for a specified theory. The proof below uses your Known results, Bourke’s algebraic-injectivity results, and Henry’s comparison theorem. It does not assume a model structure on CaTT models or saturation of \(W\).
+
+## 1. Precise hypothesis
+
+Write
+
+\[
+\mathcal C=\operatorname{Mod}(\mathrm{CaTT}),\qquad
+\mathcal G\subseteq\mathcal C
+\]
+
+for the full subcategory whose positive-dimensional cells are all coinductively invertible. Consider
+
+\[
+(U_{\mathrm{gpd}})
+\qquad
+\eta_B:B\longrightarrow S_0\mathcal L_RB\in W
+\quad
+\text{for every computad-cofibrant }B\in\mathcal G.
+\]
+
+**Infinite computads are included in this quantifier.** Known (IV) gives
+
+\[
+(11)_{\mathrm{finite}}\Longrightarrow(U)
+\Longrightarrow(U_{\mathrm{gpd}}).
+\]
+
+We will prove the stronger assertion that \(U_{\mathrm{gpd}}\) suffices for both conclusions in the box.
+
+Put
+
+\[
+\mathbb D_n=F_wD_n,\qquad
+I=\{F_w\partial D_n\longrightarrow\mathbb D_n\}_{n\geq0}.
+\]
+
+“Cellular” below means built from these boundary inclusions, or their images under the explicitly specified free functor.
+
+## 2. The specified theory with inverse data
+
+Fix CaTT’s chosen compositions and identities. For \(k\geq1\), let
+
+\[
+\beta_k:\mathbb D_k\longrightarrow I_k
+\]
+
+adjoin to the distinguished \(k\)-cell \(f:a\to b\) four generators:
+
+\[
+\ell,r:b\to a,\qquad
+\lambda:\ell\circ f\Rightarrow 1_a,\qquad
+\rho:f\circ r\Rightarrow 1_b.
+\]
+
+Here \(v\circ u\) means \(u\) followed by \(v\). The generators \(\ell,r\) have dimension \(k\); \(\lambda,\rho\) have dimension \(k+1\). In particular, \(I_k\) is a finite ordinary computad, and \(\beta_k\) is \(I\)-cellular.
+
+Let \(\mathbb T^{\mathrm{bi}}\) be the cellular globular theory obtained by adjoining these operations for every positive dimension. This is Lanari’s Definition 4.3, with independent left and right inverses. His discussion explicitly distinguishes this from choosing one inverse with two cancellation cells. [arxiv.org](https://arxiv.org/pdf/1809.07923?utm_source=chatgpt.com)
+
+There is an identification
+
+\[
+\mathcal B:=\operatorname{Mod}(\mathbb T^{\mathrm{bi}})
+\cong
+\operatorname{Inj}_{\mathcal C}
+   \{\beta_k\}_{k\geq1},
+\]
+
+where the right side denotes **algebraic** injectives: for every map \(\mathbb D_k\to X\), one chooses an extension \(I_k\to X\). Thus a model chooses the displayed inverse and cancellation data for every positive-dimensional cell, including cells produced by those choices.
+
+Write the resulting adjunction as
+
+\[
+J:\mathcal C\rightleftarrows\mathcal B:V.
+\]
+
+Every \(VX\), for \(X\in\mathcal B\), is groupoidal. Indeed, the inverse and cancellation choices apply to every positive-dimensional cell, including the cancellation cells themselves; coinduction therefore proves their invertibility. The independent left and right inverses can be converted into two-sided inverses using composition and the unit constraints.
+
+We need three algebraic facts:
+
+1. The unit \(v_A:A\to VJA\) is \(\{\beta_k\}\)-cellular.
+2. \(V\) sends \(J(I)\)-cellular maps to \(I\)-cellular maps.
+3. If \(b:A\hookrightarrow B\) is a monomorphism, the underlying map of a pushout of \(Jb\) factors as an ordinary pushout of \(b\), followed by a \(\{\beta_k\}\)-cellular map.
+
+These are Bourke’s Theorems 4.3–4.4 and Corollary 4.2. Their hypotheses hold here: the \(\beta_k\) are cellular with finitely presentable domains, and ordinary cellular maps are monomorphisms. In particular, a cellular \(\mathbb T^{\mathrm{bi}}\)-model has a computad-cofibrant underlying CaTT model. None of these facts requires contractibility of \(\mathbb T^{\mathrm{bi}}\). [arxiv.org](https://arxiv.org/pdf/1811.09532?utm_source=chatgpt.com)
+
+## 3. Two semantic lemmas
+
+### 3.1. Reflection into \(W\), without saturation
+
+First, Known (II)–(III) imply the following useful strengthening:
+
+\[
+QUf\text{ is an equivalence}
+\quad\Longrightarrow\quad
+S_0f\in W
+\tag{A}
+\]
+
+for every map \(f:Y\to Z\) in \(\mathcal A\).
+
+The issue is obtaining a completion map that preserves the chosen algebraic fillers. Here is a construction.
+
+Represent the completion unit of \(UZ\) by a strict map
+
+\[
+UZ\longrightarrow Z_c,
+\]
+
+where \(Z_c\) is fibrant in the original injective model structure and presents \(jQUZ\). Such a representative exists because every presheaf is cofibrant. Factor it in the original model structure as
+
+\[
+UZ\ \xhookrightarrow{i}\ Z_1\ \xrightarrow[\sim]{p}\ Z_c,
+\]
+
+with \(i\) a cofibration and \(p\) a trivial fibration. Then \(Z_1\) is fibrant.
+
+Give \(Z_1\) algebraic fillers as follows. For a generating lifting input that factors through \(i\), use the image of its prescribed filler in \(Z\). That factorization is unique because \(i\) is monic. Choose fillers for the remaining inputs using fibrancy of \(Z_1\). This produces an algebraic map
+
+\[
+r:Z\longrightarrow Z^+
+\]
+
+whose underlying map presents the completion unit and whose target is coinductively complete.
+
+If \(QUf\) is an equivalence, both \(QUr\) and \(QU(rf)\) are equivalences. By the criterion in Known (III), both \(Ur\) and \(U(rf)\) are \(\infty\)-surjective. Known (II) then gives
+
+\[
+S_0r,\ S_0(rf)\in W.
+\]
+
+Two-out-of-three proves (A).
+
+Consequently, whenever \(\eta_B,\eta_{B'}\in W\),
+
+\[
+QU\mathcal L_R(f)\text{ is an equivalence}
+\quad\Longrightarrow\quad f\in W.
+\tag{B}
+\]
+
+Indeed, apply (A) to \(\mathcal L_R(f)\) and use
+
+\[
+S_0\mathcal L_R(f)\,\eta_B=\eta_{B'}f.
+\]
+
+This proves membership in \(W\) itself.
+
+### 3.2. Realization of groupoidal computads
+
+Define the space-valued realization
+
+\[
+E(B):=gQU\mathcal L_RB.
+\]
+
+For a groupoidal computad-cofibrant \(B\), hypothesis \(U_{\mathrm{gpd}}\) implies that \(S_0\mathcal L_RB\) is groupoidal.
+
+Here is the required invariance argument. If \(A\to C\) is in \(W\) and \(A\) is groupoidal, factor it through the core \(C^{\simeq}\). The first factor is still essentially \(\omega\)-surjective: its comparison cells are invertible and have boundaries in the core. Two-out-of-three makes \(C^{\simeq}\to C\) a weak equivalence. Induction on dimension then shows that every cell of \(C\) is equivalent to a core cell and hence invertible. This uses the core construction and invariance of invertibility under invertible comparison. [arxiv.org](https://arxiv.org/html/2303.14907v3?utm_source=chatgpt.com)
+
+By the algebraic-to-geometric invertibility comparison in Known (IV), every semantic cell of \(U\mathcal L_RB\) is therefore coinductively invertible. Its coinductive completion is a space. Thus
+
+\[
+QU\mathcal L_RB\xrightarrow{\;\simeq\;}E(B).
+\]
+
+Combining this with (B) gives the reflection principle we will use:
+
+\[
+\boxed{
+\begin{gathered}
+B,B'\text{ groupoidal and computad-cofibrant},\\
+E(f)\text{ an equivalence}
+\end{gathered}
+\quad\Longrightarrow\quad f\in W.}
+\tag{C}
+\]
+
+## 4. The inverse-data attachments are equivalences after groupoidification
+
+We next prove, without using \(U_{\mathrm{gpd}}\), that
+
+\[
+E(\beta_k):E(\mathbb D_k)\longrightarrow E(I_k)
+\]
+
+is an equivalence.
+
+First record the necessary continuity statement. Known (VI) identifies the images of the generating cofibrations with
+
+\[
+\mathcal L_R(F_w\partial D_n\to F_wD_n)
+=
+F_{\mathrm{af}}(\partial_\Theta D_n\to yD_n),
+\]
+
+where \(F_{\mathrm{af}}\) is Nikolaus’s free algebraically fibrant functor. These are cofibrations in \(\mathcal A\). Therefore \(\mathcal L_R\) sends computad-cellular filtrations to cofibrant cellular diagrams, including at transfinite limit stages.
+
+Their colimits present homotopy colimits. The derived forgetful functor \(U\) is an equivalence of the presented \(\infty\)-categories, so it preserves these homotopy colimits. Applying the left adjoints \(Q\) and \(g\) preserves them as well. Hence \(E\) sends the cellular pushouts and transfinite compositions used below to colimits of spaces.
+
+Now map into an arbitrary space \(Z\). Fix a point of
+
+\[
+\operatorname{Map}(E(\mathbb D_k),Z),
+\]
+
+that is, an interpreted \(k\)-cell \(f:a\to b\), together with its boundary. The homotopy fiber of
+
+\[
+\operatorname{Map}(E(I_k),Z)
+\longrightarrow
+\operatorname{Map}(E(\mathbb D_k),Z)
+\]
+
+is the space of choices
+
+\[
+(\ell,\lambda:\ell\circ f\Rightarrow1_a)
+\quad\text{and}\quad
+(r,\rho:f\circ r\Rightarrow1_b).
+\]
+
+The cellular homotopy-pushout calculation identifies this fiber with
+
+\[
+\operatorname{hofib}_{1_a}\bigl(({-})\circ f\bigr)
+\times
+\operatorname{hofib}_{1_b}\bigl(f\circ({-})\bigr).
+\tag{D}
+\]
+
+The composition maps here are maps between the appropriate iterated path spaces of \(Z\). Composition with a path is an equivalence, so each homotopy fiber is contractible. The two choices are independent, making their product contractible.
+
+The compatibility of the interpreted compositions with geometric composition relative to the boundary is exactly the compatibility supplied in Known (IV). Thus the calculation applies to the specified \(R\).
+
+It follows that \(E(\beta_k)\) is an equivalence. Preservation of the cellular homotopy colimits now shows that \(E\) inverts every \(\{\beta_k\}\)-cellular map with computad-cofibrant source. In particular,
+
+\[
+E(A)\xrightarrow[\ E(v_A)\ ]{\;\simeq\;}E(VJA)
+\qquad
+(A\text{ computad-cofibrant}).
+\tag{E}
+\]
+
+The conclusion so far concerns realization in spaces. Algebraic weak equivalences follow from (C) when both endpoints are groupoidal.
+
+## 5. The theory \(\mathbb T^{\mathrm{bi}}\) is contractible
+
+Let \(P\) be a globular pasting scheme, and let \(A_P\) denote its free CaTT model. Put
+
+\[
+B_P:=VJA_P.
+\]
+
+By the algebraic facts in Section 2, \(B_P\) is computad-cofibrant. It is groupoidal because it underlies a \(\mathbb T^{\mathrm{bi}}\)-model.
+
+Equation (E) gives
+
+\[
+E(B_P)\simeq E(A_P)\simeq *.
+\tag{F}
+\]
+
+For the second equivalence, a globular pasting scheme is a finite globular amalgamation of globes. After groupoidification, its globes and gluing globes are contractible; the corresponding amalgamations are homotopy pushouts by the cellular realization property.
+
+Choose a vertex of \(B_P\). It determines
+
+\[
+u:\mathbb D_0\longrightarrow B_P.
+\]
+
+Both endpoints are groupoidal and computad-cofibrant, and both have contractible \(E\)-realizations. Therefore (C) gives \(u\in W\). Since \(\mathbb D_0\to1\) is in \(W\),
+
+\[
+B_P\longrightarrow1\in W.
+\tag{G}
+\]
+
+For a map to the terminal model, the FHM weak-equivalence test is exactly strict globular boundary lifting: the target has one cell in each dimension, so essential surjectivity requires a cell with each prescribed boundary. Thus (G) gives
+
+\[
+B_P\longrightarrow1\in I^{\pitchfork}.
+\]
+
+The free \(\mathbb T^{\mathrm{bi}}\)-model on \(P\) is \(JA_P\). This follows directly from the adjunction and Yoneda:
+
+\[
+\mathcal B(JA_P,Y)
+\cong\mathcal C(A_P,VY)
+\cong Y(P).
+\]
+
+Its \(n\)-cells are therefore
+
+\[
+(B_P)_n=\mathbb T^{\mathrm{bi}}(D_n,P).
+\]
+
+Strict boundary lifting for \(B_P\to1\) says that every parallel pair of theory arrows into \(P\) has a filler. In particular, every admissible pair has a filler.
+
+Hence \(\mathbb T^{\mathrm{bi}}\) is contractible. Its cellularity was part of its construction, so it is a Grothendieck coherator. This establishes, under \(U_{\mathrm{gpd}}\), the recognition assertion discussed in Lanari’s Remark 4.11. [arxiv.org](https://arxiv.org/pdf/1809.07923?utm_source=chatgpt.com)
+
+## 6. Henry’s pushout condition
+
+Let \(X\) be any cellular \(\mathbb T^{\mathrm{bi}}\)-model, let \(a\) be an \(n\)-cell of \(X\), and form
+
+\[
+h:X\longrightarrow
+X':=X\amalg_{J\mathbb D_n}J\mathbb D_{n+1},
+\]
+
+where \(\mathbb D_n\to\mathbb D_{n+1}\) is the source inclusion.
+
+Bourke’s pushout factorization gives
+
+\[
+VX
+\longrightarrow
+VX\amalg_{\mathbb D_n}\mathbb D_{n+1}
+\longrightarrow
+VX',
+\tag{H}
+\]
+
+with the second map \(\{\beta_k\}\)-cellular.
+
+Apply \(E\).
+
+The first map in (H) becomes a homotopy pushout of
+
+\[
+E(\mathbb D_n)\longrightarrow E(\mathbb D_{n+1}).
+\]
+
+Both spaces are contractible, so this map and its pushout are equivalences.
+
+The second map in (H) becomes an equivalence by Section 4. Consequently,
+
+\[
+E(Vh)\text{ is an equivalence}.
+\]
+
+Both \(VX\) and \(VX'\) are groupoidal and computad-cofibrant. Reflection (C) therefore gives
+
+\[
+Vh\in W.
+\tag{I}
+\]
+
+Now that \(\mathbb T^{\mathrm{bi}}\) is known to be a Grothendieck coherator, its usual Grothendieck weak equivalences coincide with the underlying FHM weak equivalences. All positive-dimensional cells are invertible, and Ara’s Theorem 4.18(4) expresses weak equivalence by precisely the corresponding surjectivity on cells up to higher-cell homotopy. [normalesup.org](https://www.normalesup.org/~ara/files/homgr.pdf?utm_source=chatgpt.com)
+
+Thus (I) proves
+
+\[
+\boxed{
+X\longrightarrow
+X\amalg_{D_n^{\mathrm{bi}}}D_{n+1}^{\mathrm{bi}}
+\in W_{\mathrm{bi}}
+}
+\]
+
+for every cellular \(X\), every \(n\), and every attaching map.
+
+This is Henry’s Conjecture 5.3.3 for \(\mathbb T^{\mathrm{bi}}\), with arbitrary cellular sources in place of his finitely cellular sources. His Theorem 5.3.5 and Corollary 5.3.13 then supply the canonical semi-model structure and the homotopy hypothesis. [arxiv.org](https://arxiv.org/pdf/1609.04622?utm_source=chatgpt.com)
+
+## 7. The comparison with groupoidal CaTT models is explicit
+
+The proof also supplies the comparison that cannot be inferred merely from the terminology “weak groupoid.”
+
+Let
+
+\[
+K:\mathcal G\longrightarrow\mathcal G
+\]
+
+be the restriction of the computadic replacement from Known (III). It does restrict: \(q_X:KX\to X\) lies in \(W\), and weak equivalences reflect invertibility. Define
+
+\[
+L:=JK:\mathcal G\longrightarrow\mathcal B.
+\]
+
+For \(X\in\mathcal G\), the map
+
+\[
+v_{KX}:KX\longrightarrow VJKX
+\]
+
+has groupoidal, computad-cofibrant endpoints. Equation (E) and reflection (C) give \(v_{KX}\in W\). Hence there is a natural zigzag
+
+\[
+\operatorname{id}_{\mathcal G}
+\xleftarrow{\ q\ }K
+\xrightarrow{\ v_K\ }VL
+\tag{J}
+\]
+
+with every component in \(W\).
+
+For \(Y\in\mathcal B\), define
+
+\[
+h_Y=\epsilon_Y\circ J(q_{VY}):JKVY\longrightarrow Y,
+\]
+
+where \(\epsilon\) is the counit of \(J\dashv V\). The triangle identity gives
+
+\[
+Vh_Y\circ v_{KVY}=q_{VY}.
+\]
+
+Both \(v_{KVY}\) and \(q_{VY}\) belong to \(W\), so \(h_Y\in W_{\mathrm{bi}}\).
+
+Naturality of these maps also shows that \(L\) preserves weak equivalences. Therefore \(L\) and \(V\) induce inverse equivalences of \(\infty\)-localizations. Combining this with Section 6 yields
+
+\[
+\boxed{
+\mathcal G[W_{\mathrm{gpd}}^{-1}]
+\simeq
+\operatorname{Mod}(\mathbb T^{\mathrm{bi}})
+  [W_{\mathrm{bi}}^{-1}]
+\simeq\mathcal S.
+}
+\]
+
+## Scope of the conclusion
+
+The proved implication is
+
+\[
+\boxed{
+(11)_{\mathrm{finite}}
+\Longrightarrow U_{\mathrm{gpd}}
+\Longrightarrow
+\left[
+\mathbb T^{\mathrm{bi}}\text{ is a coherator and satisfies Henry’s pushout condition}
+\right].
+}
+\]
+
+The infinite-computad quantifier in \(U_{\mathrm{gpd}}\) is essential: \(VJA_P\) generally has inverse and cancellation generators in unbounded dimensions. Restricting to finite **ordinary** computads whose free models are already groupoidal would not suffice. Indeed, Benjamin–Markakis’s Proposition 37 implies that a positive-dimensional generator of a finite-dimensional ordinary computad is not invertible, because its support in its own dimension is nonempty. [arxiv.org](https://arxiv.org/pdf/2406.12127?utm_source=chatgpt.com)
+
+This resolves Q2 in the forward direction for Lanari’s explicitly specified extension of the CaTT coherator. It does **not** prove (11), establish a converse from the homotopy hypothesis, or assert the pushout condition for an arbitrary independently chosen Grothendieck coherator.

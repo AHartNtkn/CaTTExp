@@ -3099,3 +3099,151 @@ python3 -B scripts/e6/check_four_slot_native.py
 python3 -B scripts/e6/interchange_four_slot_ground.py
 python3 -B scripts/e6/interchange_four_slot_rectangles.py
 ~~~
+
+# Researcher Response 17
+
+**A temporal order invariant on arbitrary finite diagrams.** In the full
+presentation of Response 12, a degree-five rectangle has no reverse if
+two of its active atomic updates, one in each active input, belong to
+different runs in the following test. The result allows arbitrary mixed
+4-cells, joins, and unbounded powers of loops. In particular it applies
+when the sets of slots visited by the early and late 3-histories are
+disjoint. The slots of either set need not be spatially adjacent.
+
+Expand the four inputs of the rectangle into contextual 4-edges.
+Use the permanent names of the 3-events on its complete 2-word interval
+(Response 4). Form a graph on slots with the following edges.
+
+1. Join the two slots of each crossing event in the interval.
+2. For each inner 4-exchange in the four input paths, join the slots of
+   every event of one spatial operand to those of every event of the
+   other.
+
+Label each event by the connected component of its slots. Read these
+labels along the outside 3-source. A **run** is a maximal consecutive
+subword with one label. Number runs in temporal order, giving two
+occurrences of a component different numbers if another component
+intervenes. The same test works with any coarser partition of the
+components. It only needs one choice of representatives giving the
+claimed separation.
+
+For any 4-path on the interval, define \(j\) as the sum over its inner
+edges of the number of pairs of events in their two spatial operands
+with different component labels. Count one pair for each member of the
+Cartesian product that meets this condition. Fixed whiskerings carry the
+original names. On both routes of the given rectangle, \(j=0\).
+
+**Conservation of \(j\).** A positive complete block crossing on two
+2-words has the complete bipartite graph of crossings between their
+slots. Consequently all its slots have the same label. This remains true
+even when its two (K15) expansions give different schedules. In a proper
+outer \(r,t,h\) every event in the moving histories uses slots of just
+such a block. This includes the stationary operand's varying history in
+\(h\): the slots in its 2-source and 2-target are the same. Thus all the
+active 3-events of an outer edge lie in one component. Stationary
+2-letters outside the active window add no events.
+
+A subdivision of an inner product partitions its Cartesian product of
+events, preserving \(j\). In (14)–(17), the 3-history at the wide
+variation contains the block for the entire 2-word, including the
+varying argument's 2-whisker. Thus both operands of each correcting
+inner exchange lie on slots of that block. The same argument applies
+to the correcting exchange in \(h e=\bar r_1\). These exchanges
+contribute zero. The other outer equations involve only outer edges.
+(K15) in a 3-argument preserves its event set. This proves conservation
+under the parallel 4-equations, including their substitutions.
+
+Temporal exchange carries the two 4-inputs unchanged. In an inner
+naturality the varying 4-path occurs once on both routes, and its
+two 3-boundaries have the same named events. Hence the two inner
+products contribute equal numbers of different-label pairs. The
+shifted join at cut one carries its two 4-inputs and one inner product
+of their 3-faces on both routes, so the same calculation applies.
+In a proper outer degree-five operation the two outer operands have
+a block crossing in their underlying disk boundary. Every active
+3-event of both operands is on a slot of that block. This covers the
+unary variations, \(W\), and the auxiliary \(H_L,H_R,K,J\), including
+4-paths inside their arguments: all their contributions to \(j\) are
+zero. An input 5-globe varies a single flag. Unit specializations use
+the prescribed lower operations. These checks are preserved by fixed
+contexts and chronological composition; they exhaust the generators
+of 5-paths. In particular no representative along a return path has
+an inner edge with a different-label pair.
+
+**Ordering the updates.** On a path with \(j=0\), each positive inner
+edge uses events of just one component: both operands are nonempty and
+their full product contains no different-label pair. The outer edges
+and input globes are likewise confined to one component. Every 4-step
+therefore replaces a contiguous homogeneous 3-subword by another of
+the same label and length. Every contextual (K15) also has this
+property. Starting at the fixed 3-source, the entire string of component
+labels is unchanged in every intermediate 3-history and every
+representative. Each positive 4-edge acts in one definite run.
+
+Record that run number once for each unit of the edge's positive
+conserved length \(m_4\) from Response 12, calculated in the actual
+hom with its lower whiskerings. Concatenate the records of a 4-path.
+The 4-equations preserve this word. An inner subdivision stays in its
+run. In a proper outer equation the block, variations and corrections
+of the preceding calculation occupy one run, and their total lengths
+agree. Fixed temporal padding only places the operation in the
+corresponding run: composing its Gray 3-chain with a lower identity
+adds zero, and its Response 4 edge weight is unchanged.
+
+On this part of the graph, a non-temporal 5-move also preserves the
+word. For outer generators use the common block. For an inner
+naturality or shifted join, the displayed inner product on the source
+has \(j=0\), so all events of both operands lie in the same run of its
+contiguous active subword. The same run contains the target. The
+equality \(m_4(sZ)=m_4(tZ)\) gives equality of words even when the
+numbers of primitive edges differ. A temporal 5-move swaps two lists
+and puts the one on the earlier temporal subinterval first. Every run
+number there is at most every run number of the other subinterval,
+because the component string is fixed. Its effect on the word is a
+sequence of adjacent swaps putting smaller numbers first.
+
+Now compare the schedules \(CDAB\) and \(CADB\). Every letter of
+\(A\) is at most every letter of \(D\). If some pair has different run
+numbers, the number of pairs in decreasing order drops strictly;
+the common inactive prefix and suffix give the same other pairs.
+No return can increase this count. Fixed lower whiskerings and the
+Godement reduction to adjacent temporal intervals give the stated
+rectangle test. If the early and late 3-histories have disjoint slot
+sets, every component constructed from the four inputs is confined
+to one temporal side. Both proper active inputs have positive length,
+so they automatically pass the test.
+
+For example, take the seven slots in Response 5 with the triangle on
+the first three and the inner exchange of two independent crossings on
+the last four. Place their histories on consecutive temporal intervals
+by fixed spatial whiskerings. They pass this test even though no
+contraction to six slots retains both inputs. One may instead take a
+complete two-by-two crossing block in the second interval and any
+positive power of its 4-loop. The argument uses the actual (K15)
+equations there and has no path-length bound.
+
+More generally, take fixed lists of proper 4-updates in distinct runs
+and form their shuffles, keeping the order within each run. Between
+these schedules there is a 5-path exactly when adjacent swaps putting
+the earlier run first suffice. Necessity follows from the word map:
+number repeated occurrences in each run in their fixed order, and
+distinguish the first unit of length in each original update. Sorting
+the weighted word never creates an inversion between distinguished
+units. Thus every inversion in the target schedule was present in the
+source. Move the first desired update to the front across the preceding
+updates; each displaced pair must have been inverted, since an ordered
+pair cannot be inverted in the target. Iterate on the suffix. Each
+required swap is realized by the contextual elementary comparison on
+the two disjoint runs. This proves sufficiency as well.
+
+**Validation.** The [component-run checker](../../../scripts/e6/interchange_component_runs.py)
+executes both spatial placements of a fourth, flagged slot alongside a
+three-slot triangle, with no crossing between the two groups. It
+enumerates 424 raw 4-paths, including paths with positive \(j\). Across
+424 subdivision applications, 124 inner naturalities, two shifted joins
+and 32 temporal exchanges it checks conservation of \(j\). All four
+temporal exchanges on \(j=0\) paths strictly sort the run numbers.
+Run `python3 -B scripts/e6/interchange_component_runs.py`. The general
+argument concerns every diagram. A rectangle whose two active inputs
+act entirely in the same run can still have distinct slots and mixed
+atoms; the run word does not decide that case.

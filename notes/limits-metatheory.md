@@ -474,6 +474,27 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
 
 With option 1 alone (M reversed), this example also passes. The Agda file records that M as prescribed has no inverse path, which is what forces one of the two options.
 
+**Update 2026-11-19: the n + m bound and the uniform presentation Ω** (`conjectures/answered/fibration-presentations-characterization-r2-2026-11-19.md`, verified).
+
+This supersedes the "existence" paragraph above, i.e. the compactness sketch, the open bound on inverse-data depth, and the open question whether n + m survives.
+
+- **Every pair has a presentation of dimension ≤ n + m, and n + m is optimal.**
+  - *Hypotheses.* Γ is a finite homotopical n-polygraph. T is a coherent weight whose values are Free(Π_b)[W_b⁻¹] with dim Π_b ≤ m.
+  - *Conclusion.* There are a finite homotopical Ψ of dimension ≤ n + m and finite sets Q (cartesian marking) and S (localisation) such that `(Free(Ψ), ⟨Q ∪ S⟩)[S⁻¹] ≃ (∫T, Cart)` over the base.
+  - *Optimality.* Take base ∂D_{n+1}, fibre ∂D_{m+1} and the constant weight. The total groupoidifies to Sⁿ × S^m, which has H_{n+m} ≠ 0.
+  - *The pentagon example* has a presentation of dimension ≤ 7.
+- **The uniform presentation Ω.** This is the form the checker should accept in general.
+  - The original fibre polygraphs Π_b are literal subpolygraphs.
+  - For each base k-generator q and source-fibre j-generator g there is a designated generator z_{q,g} of dimension k + j. Its 0-endpoints are the original fibre vertices. It is cartesian-marked, and it is in S when j > 0.
+  - The positive-dimensional faces of z_{q,g} are **auxiliary face copies**. These are related to the required composites by explicitly localised **comparison cylinders**.
+  - dim Ω ≤ n + m. Ω itself need not be homotopical.
+- **How Ω relates to option 2.**
+  - Ω's comparison cylinders are a uniform version of option 2's inverse data. Instead of an inverse of each offending mixed generator, every face gets an auxiliary copy with an inverted comparison to the composite it stands for. Both are conservative for the same reason: inverted data with contractible choice does not change the localisation.
+  - Option 2 is cheaper when it applies, since it needs no auxiliary face copies. The pentagon needs only r_M and ρ_M. Ω always applies.
+  - **Recommended rule:** accept presentations of Ω's shape, with the §8 certificate of that answer: finite incidence tables, elementary-anodyne steps, the generator and localisation lists, and a check that every localisation generator projects to an identity. Option 2 is the special case where the comparison cylinders are inverse data on existing mixed generators.
+  - The certificate's own proof witnesses have unbounded size and dimension. Only the output presentation is bounded by n + m.
+- **Still open: recognising the unaugmented presentation.** Is the plain relative-Gray presentation, with Leibniz attaching expressions and no auxiliary generators, correct for a given (Γ, T)? Once attaching terms are supplied, this is only positively semi-decidable (§10 of the answer). A terminating criterion, or an undecidability proof, is the round-3 prompt `conjectures/outbox/fibration-presentations-characterization-r3.md`. The pentagon shows the plain presentation can fail. The Agda file shows it fails *as prescribed*.
+
 ---
 
 ## 10. Open items, owners and hand-offs

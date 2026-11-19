@@ -206,8 +206,8 @@ So bubble-freeness is exactly the hypothesis this picture needs. Making it a pro
 ## 6. Open items left by this note
 
 1. ~~Independent check of Theorem A~~: done by round 5 §1 and §2.3.
-2. Full write-up of Theorem A′ (§4).
-3. FT_n with fibres of dimension ≥ 2 (R5 Question 2, unchanged).
-4. Conjecture C (one-sided ⇒ homotopical), and bubble-free ⇒ homotopical in general (§5). Round 5 §3 proves a decidable partition test (internally positive or single-vertex operadic parts) that covers some one-sided computads. The rest is in `outbox/finite-fibration-test-higher-base-r6.md`.
-5. Check §5.2 against the post-2021 literature on Guetta's conjecture.
+2. Theorem A′ (§4) for n ≥ 4 in its unaugmented form (no auxiliary generators) is an instance of the open recognition question. That question is posed in `outbox/fibration-presentations-characterization-r3.md`. Presentations of dimension ≤ n + m *with* auxiliary generators exist for every pair (`answered/fibration-presentations-characterization-r2-2026-11-19.md`), so A′ is no longer needed for existence.
+3. ~~FT_n with fibres of dimension ≥ 2~~: settled by the same r2 answer (dimension ≤ n + m, optimal).
+4. ~~Conjecture C and bubble-free ⇒ homotopical~~: `answered/homotopy-polygraphs-2026-11-19.md` proves that a finite 2-polygraph is homotopical iff it is bubble-free (Heidemann inputs taken on trust). Since one-sided implies bubble-free (§5.4), Conjecture C follows. Since homotopical implies homologically coherent, and §5.2 gives the converse half, this settles Guetta's Conjecture 6.6.5 for finite 2-polygraphs, modulo the same trusted inputs.
+5. Check §5.2, and the consequence for Guetta's conjecture in item 4, against the post-2021 literature before citing either outside the project.
 6. (2026-11-19) The uniform relative-Gray presentation fails from base dimension 4 (pentagon counterexample, `answered/fibration-presentations-all-dimensions-2026-11-19.md` §1). It is machine-checked in `src/CaTTExp/Fibration/PentagonCounterexample.agda`. The checker policy for bases of dimension ≥ 4 is in `limits-metatheory.md` §9.5. The counterexample's fibre is 3-dimensional, so it does not refute Theorem A′ (§4, Cat-valued fibres). But A′'s "lifts of composites" step for n ≥ 4 makes the same kind of unchecked assumption, namely that positive lifts exist. A′ is therefore only a conjecture for n ≥ 4. With one-sided inverse data allowed (§9.5), the existence part goes through by the compactness sketch there.

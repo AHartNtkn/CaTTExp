@@ -108,3 +108,65 @@ Its strict value is c by the section equation. If c has dimension one, its endpo
 Above dimension four every cell is the identity on its sole face, so iterating the CaTT identity on the selected term proves the assertion in all higher dimensions. Agda 2.8.0 accepted the prescribed types for all 61 objects and nonidentity cells. Run `python3 tools/canonical_gray_two_discs.py --emit` to check the tableaux and regenerate the certificate. [Term construction](../../../tools/canonical_gray_two_discs.py) · [Agda type checks](../../../src/CaTTExp/Generated/CanonicalGrayTwoDiscs.agda)
 
 For general m,n the transfer requires CT on Dᵐ⁻¹ ⊗ I ⊗ Dⁿ⁻¹ and a pinned globular section in those dimensions. The two-disc result discharges both hypotheses for m=n=2. A uniform construction for Q2 and the general assertion in Q1 remain open here.
+
+# Researcher Response 2
+
+CT holds for **every iterated tensor of globes of total dimension at most four**, including the four-cube with the same terms for every parenthesization. It also holds for **D³ ⊗ D² and D² ⊗ D³**. There is a further all-dimensional result about the strict section in Known 10. For arbitrary finite globular P and Q, every prescribed mixed atom and all its iterated faces have compatible prescribed lifts. The proof below reconstructs each such lift from its image alone.
+
+## Choosing the three-skeleton and the top cell
+
+Start with the object variables. In degree d, once terms have been chosen below d, declare each d-generator between the terms already chosen for its strict source and target. Those terms are parallel by globularity. For d ≤ 3 one can then select terms for *every* strict d-cell with exactly its prescribed boundary. Here is the argument, including the role of the dimension bound.
+
+Use the variable on an atom and the CaTT identity on an identity. For any remaining cell choose an expression of minimum size in atoms, identities on lower cells, and binary strict compositions. The operands of its last composition have smaller minimum size. Their selected terms can be composed at the indicated cut since the required faces are literally the terms on the same strict cell. Call the resulting term u. Its strict value is correct. To correct its outside faces, proceed in order of dimension j from 1 to d−1. The object faces already agree. At stage j, the desired j-source and the actual j-source are parallel and have equal strict images, as do the actual and desired j-targets. In the subcontext of dimension at most j choose a (j+1)-term from the desired source to the actual source and one from the actual target to the desired target. This uses RC(1) or RC(2), proved for every context. Their strict values are identities since the subcontext has no (j+1)-generators. Compose u at cut j with the first correction on its left and the second on its right, padding the corrections with identities up to dimension d. The binary composition over two globes glued at j has the outside j-faces of its operands literally. Hence the correction sets both j-faces, preserves all earlier choices, and leaves the strict value of u fixed. This constructs the required section through degree three. [RC(1) and RC(2), Known 1](../answered/relative-coherence-all-dimensions-r4-2026-11-19.md) · [Relative lifting, in particular formula (3)](../answered/gray-tensor-of-contexts-rule-2026-11-18.md)
+
+If every nonidentity four-cell is an atom and there are no generators above degree four, only the declaration step is needed in degree four. All other selections are iterated identities. For the globe tensors of total dimension four the following exhaustive calculation verifies exactly this hypothesis. Unit factors D⁰ can be omitted. The rows cover all ordered compositions of four. Each strict degree-four cell with nonempty top chain was compared with the full atom as an entire tableau.
+
+| Ordered dimensions | Cells in degree three | Cells in degree four | Nonidentity four-cells |
+|---|---:|---:|---:|
+| (4) | 8 | 9 | 1 |
+| (1,3), (3,1) | 38 | 39 | 1 |
+| (2,2) | 60 | 61 | 1 |
+| (1,1,2), (2,1,1) | 172 | 173 | 1 |
+| (1,2,1) | 166 | 167 | 1 |
+| (1,1,1,1) | 520 | 521 | 1 |
+
+To reproduce the last column, for each row take `shape` to be the indicated tuple and run the following with `PYTHONPATH=tools`. The enumeration closes all padded atoms under all compositions at cuts below degree four. Atomic generation of the Steiner tensor gives exhaustiveness. For total dimension below four the three-skeleton construction already covers all nonidentity cells. Fix the choices on the single complex with flattened ordered basis tuples and use them under every tensor associator, which only changes the bracketing of those tuples. This gives literal agreement up to the prescribed renaming.
+
+```python
+from gray_globe_comparison import atom, strict_cells
+
+top = atom(tuple((d, 2) for d in shape))
+assert {x for x in strict_cells(shape, 4) if x[-1][0]} == {top}
+```
+
+Apply Response 1 with (P,Q) = (D²,I) and (I,D²). The needed input tensors have ordered dimensions (2,1,1) and (1,1,2), respectively. The pinned section checks for (m,n) = (3,2) and (2,3) each cover 48, 94, 106 and 107 diagonal cells in hom degrees one through four, as well as all eight vertices. The transfer therefore gives CT for both ordered two-globe tensors of total dimension five with both factors of dimension at least two. [Strict cell enumeration and section checks](../../../tools/gray_globe_comparison.py)
+
+## Recovering the prescribed mixed faces in every dimension
+
+Let X be the globular subset of P ⊗ I ⊗ Q generated by the atoms on p ⊗ e ⊗ q under the two face maps. The restriction of Φ to X is an isomorphism onto the globular subset of the diagonal hom generated under faces by the corresponding mixed atoms. Surjectivity onto this subset follows from the atom formula and preservation of faces. For injectivity it suffices to recover each signed row of a tableau in X. A face truncates the tableau and duplicates the chosen row at the cut, so every row encountered is a row of a mixed atom.
+
+Write α for the sign of such a row, and pᵢᵅ for the i-dimensional α-face generator of p, with the two signs agreeing at the top. Use the same convention for q. In source degree k the summands with middle factor e are visible individually in the target chain. After desuspension of their outer factors these give the pairs
+
+$$
+ (p_i^α,q_j^{(-1)^{i+1}α}),\qquad i+j=k-1.
+$$
+
+Record them at their bidegrees (i,j). A pair occurs exactly when the two indices are within the dimensions of p and q. Each remaining source summand has middle factor an endpoint v, with outer bidegree (i,j) of sum k. Here v is the endpoint with sign (−1)ⁱα, using 0 for minus and 1 for plus. The following rules only use the visible target row. [Tensor-atom row formula (4)](../answered/gray-tensor-of-contexts-rule-2026-11-18.md)
+
+- In degree zero the two edges of the target path determine both outer vertices and the route v.
+- For k > 0 and j = 0, the pure P-side term in the image supplies the suspended first factor and endpoint 1−v. The recorded pair at (k−1,0) supplies the missing q-vertex with exactly the required sign (−1)ᵏα. For i = 0 the pure Q-side term gives v and the suspended last factor, and the pair at (0,k−1) supplies the missing p-vertex.
+- For i,j > 0, a summand occurs precisely when both (i−1,j) and (i,j−1) are recorded. The former supplies its q-factor and the latter its p-factor. The former also gives pᵢ₋₁ᵅ. This is the α-face of the recovered pᵢᵅ. Its two immediate faces are distinct generators in a globular pasting diagram, so the two visible p-generators determine α and hence v. This determines even the summands that map to zero under the endpoint augmentation.
+
+Thus two prescribed faces with the same image have identical rows in every degree, even if they come from different atoms or different signs of truncation. This proves injectivity and gives a uniform, face-preserving inverse on the stated subset. It extends to the identities on that subset by padding both tableaux with empty rows. The globe implementation of the inverse independently recovered all 3,459 distinct prescribed atoms and faces for D¹⁰ ⊗ D¹¹. [Row reconstruction](../../../tools/gray_globe_comparison.py)
+
+**Extension over the endpoint routes and all diagonal arrows.** Each pure route in the diagonal hom is a copy of P × Q. In fact, a cell in the extreme hom of the wedge of the two suspensions decomposes into its two coordinates by restricting its tableau to each side of the seam. Conversely, horizontal composition of the suspended coordinates gives back the tableau, since in positive degrees the two sides have disjoint bases. For a pair of d-cells (a,b) in these coordinates and d > 0 choose the following lift in the v-panel, writing #₀ in traversal order and identifying vertices with their iterated identities when needed:
+
+$$
+(a ⊗ v ⊗ s_0 b)\ \#_0\ (t_0 a ⊗ v ⊗ b).
+$$
+
+In this formula fixing the two vertex factors means applying the strict inclusion of the remaining factor. At d = 0 take the vertex (a,v,b). Projection to each coordinate gives a and b respectively. The source and target of the displayed path in degree one are the selected vertices. In higher degrees taking either face commutes with #₀ and preserves the outer 0-endpoints used in the formula. This gives a globular section on both routes in every degree. Their only intersections with the prescribed mixed faces and their identities are vertices and their identity towers, since each positive-dimensional face of a mixed atom goes from route 0 to route 1 at hom level.
+
+Every remaining arrow of the diagonal hom also has a lift with its prescribed vertices. In C it is a strict 2-cell. Expand it as a vertical sequence of generating 2-cells whiskered by edge paths, using strict exchange to expand a horizontal composite. Each intermediate A-to-Z path consists of two edges. A pure step changes one edge and keeps the other vertex label fixed, giving an edge of P or Q in the appropriate panel of B. A mixed step at (p,q) lifts to the edge on p ⊗ e ⊗ q. The endpoint of each lifted step is the unique vertex over the intermediate path, so the lifts compose. Make one choice for each arrow still unassigned, keeping the choices already made on the pure routes and the prescribed faces. This extends the section to the union with the whole one-skeleton, and then to its identity towers.
+
+The remaining strict section problem concerns higher cells outside this union that must fit all the selected faces. Transfer for arbitrary globe dimensions also requires CT on Dᵐ⁻¹ ⊗ I ⊗ Dⁿ⁻¹. The three-skeleton argument uses only established relative coherence in degrees one and two. Extending its correction step to arbitrary d would require further coherence results.

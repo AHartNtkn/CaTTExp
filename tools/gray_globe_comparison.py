@@ -108,6 +108,40 @@ def face(tableau, side):
     return tableau[:-2] + ((boundary_chain, boundary_chain),)
 
 
+def mixed_face_preimage(tableau):
+    """Recover a mixed atom or any of its iterated faces, using only its image."""
+    def desuspend(cell):
+        return (cell[0] - 1, cell[1])
+
+    def recover(chain, k):
+        middle = {(p[0] - 1, q[0] - 1): (desuspend(p), desuspend(q))
+                  for p, q in chain if p[0] and q[0]}
+        lifted = [(p, (1, 2), q) for p, q in middle.values()]
+        if k == 0:
+            p, complement = next((p, q) for p, q in chain if p[0])
+            side, q = next((p, q) for p, q in chain if q[0])
+            assert side[1] == 1 - complement[1]
+            return ((desuspend(p), side, desuspend(q)),)
+        for p, q in chain:
+            if not q[0]:
+                lifted.append((desuspend(p), (0, 1 - q[1]), middle[k - 1, 0][1]))
+            elif not p[0]:
+                lifted.append((middle[0, k - 1][0], p, desuspend(q)))
+        for i in range(1, k):
+            j = k - i
+            if (i - 1, j) in middle and (i, j - 1) in middle:
+                lower_p, q = middle[i - 1, j]
+                p, lower_q = middle[i, j - 1]
+                side = lower_p[1] ^ (i % 2)
+                assert lower_q[1] == 1 - side
+                lifted.append((p, (0, side), q))
+        return tuple(sorted(lifted))
+
+    assert tableau[0] == CORNERS
+    return tuple(tuple(recover(chain, k) for chain in row)
+                 for k, row in enumerate(tableau[1:]))
+
+
 def verify(m, n):
     if min(m, n) < 1:
         raise ValueError('both suspended globes must have positive dimension')
@@ -119,6 +153,7 @@ def verify(m, n):
         while pending:
             x = pending.pop()
             y = image(x)
+            assert mixed_face_preimage(y) == x
             if y in lifts:
                 assert lifts[y] == x
                 continue

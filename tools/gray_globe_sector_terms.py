@@ -159,16 +159,17 @@ def boundary_bridge(ctx, evaluate, names, source, target):
     return result
 
 
-def verify(m, n, emitter):
+def verify(m, n, emitter, *, required=None):
     ctx, names, chosen = edge_context(m, n)
     evaluate = strict_interpreter(ctx, tuple(names))
     poles = atom(((m, 2), (n, 2)))[:2]
-    domain = {c for c in cells((m,n)) if c[:2] == poles and (2,2) not in profile(c)}
     comparisons = {}
+    cases = Counter()
+    emitted = set()
 
     def paste(c, hole):
         (x, y), = hole_split(c, *hole)
-        return comp2(ctx, sum(hole)-2, chosen[x], chosen[y])
+        return comp2(ctx, sum(hole)-2, term_for(x), term_for(y))
 
     def corner(c, side):
         row = c[2][side]
@@ -177,16 +178,17 @@ def verify(m, n, emitter):
     def bridge(c, side):
         z = corner(c, side)
         if (z, side) not in comparisons:
-            ends = [chosen[z], paste(z, (2, 1))]
+            ends = [term_for(z), paste(z, (2, 1))]
             if side:
                 ends.reverse()
             comparisons[z, side] = boundary_bridge(ctx, evaluate, names, *ends)
         return comparisons[z, side]
 
-    cases = Counter()
-    emitted = set()
-    for c in sorted(domain, key=lambda x: (len(x), len(profile(x)), x)):
+    def term_for(c):
+        if c in chosen:
+            return chosen[c]
         ranks = profile(c)
+        assert c[:2] == poles and (2, 2) not in ranks
         if (1, 2) not in ranks:
             term, case = paste(c, (1, 2)), 'A'
         elif (2, 1) not in ranks:
@@ -198,14 +200,20 @@ def verify(m, n, emitter):
                 term = comp2(ctx, 2, term, last)
         else:
             term, case = paste(c, (2, 2)), 'route'
-        wanted = arrow(ctx, *(chosen[face(c, s)] for s in (0, 1)))
+        wanted = arrow(ctx, *(term_for(face(c, s)) for s in (0, 1)))
         assert infer(ctx, term) == wanted and evaluate(term) == c
         chosen[c] = term
         cases[case] += 1
         if emitter is not None and (case, len(c)) not in emitted:
             emitter.check_type(f'sector-{case}-{len(c)-1}', ctx, term, wanted)
             emitted.add((case, len(c)))
-    print(f'Checked all {len(domain)} crossing-sector terms: {dict(cases)}')
+        return term
+
+    domain = (required if required is not None else
+              (c for c in cells((m, n)) if c[:2] == poles and (2, 2) not in profile(c)))
+    for c in sorted(domain):
+        term_for(c)
+    print(f'Checked {sum(cases.values())} crossing-sector terms: {dict(cases)}')
     return ctx, names, chosen
 
 

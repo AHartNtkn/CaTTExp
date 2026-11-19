@@ -108,7 +108,7 @@ So the bubble is not a counterexample to (11) by the RC route, and it illustrate
 
 - On homotopical computads: RC_id, which is the RC program (owner RCX; prompt `relative-coherence-all-dimensions.md`, Question 2 now to be phrased with RC_id).
 - On non-homotopical computads: (11)_𝔠 is not an RC statement. The cellular-induction route (pushouts along F_w ∂Dₙ → F_w Dₙ preserve W between cofibrant models, close to (12) and (FEA) of the response) is the only general route known, and it contains the homotopy hypothesis for 𝕋^bi. Not targeted, per the coordinator's brief.
-- Proposition D's check (EH-odd).
+- ~~Proposition D's check (EH-odd).~~ **Closed 2026-11-19:** the relative-coherence r2 researcher response (verified; filed by thread "Process seven round-3 researcher responses") proves ¬RC_id(3) for every context with a bubble in its 2-skeleton, so π ∉ W for the bubble computad. Consistent with (11) by Theorem C; (11) for the bubble stays undecided (asked in the unit-condition r4 prompt).
 
 ---
 

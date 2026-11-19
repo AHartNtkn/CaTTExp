@@ -34,7 +34,11 @@ Every context Γ is a polygraph. Write `F(Γ)` for the free strict ω-category o
 
 Because coherence terms are invertible, RC(n) is symmetric. Write **RC(∞)(Γ)** for "RC(n) holds for Γ for every n ≥ 1".
 
-*Equivalent form (easy).* Every strict cell of F(Γ) is the image of some term. Given that, RC(∞)(Γ) is equivalent to: **π_Γ : Free(Γ) → F(Γ) is a trivial fibration of CaTT models**, i.e. for every pair of parallel (n−1)-terms u, v and every strict n-cell c : π(u) → π(v) there is an n-term t : u → v with π(t) = c. (Lift c with some boundary, then conjugate by RC connections, which have identity image.) In particular RC(∞)(Γ) makes π_Γ an ω-equivalence.
+> **RC_id(n) for Γ.** As RC(n), with the connecting term required to have identity image: `π(T → T′) = 1_{π T}`. Write RC_id(∞) as above.
+
+RC_id implies RC. They agree when every endo-(n+1)-cell on an n-cell of F(Γ) is an identity, which holds in the loop-free class of Question 1. With loops, plain RC is too weak: in (x; f : x → x; α : f ⇒ f), the pair (f, f) is joined by α itself, whose image is not an identity. Wherever loops can occur, RC_id is the statement that matters.
+
+*Equivalent form (proved for every finite context).* Every strict cell of F(Γ) is the image of some term. Given that, RC_id(∞)(Γ) is equivalent to: **π_Γ : Free(Γ) → F(Γ) is a trivial fibration of CaTT models**, and also to π_Γ being a weak equivalence (F(Γ) is gaunt: its only invertible cells are identities, since the multiset of top generators is additive). The trivial-fibration form says, i.e. for every pair of parallel (n−1)-terms u, v and every strict n-cell c : π(u) → π(v) there is an n-term t : u → v with π(t) = c. (Lift c with some boundary, then conjugate by RC connections, which have identity image.) 
 
 ### 1.3 Contexts we need
 
@@ -82,8 +86,9 @@ The proof should be uniform in the dimension. Any of these routes would do; we l
 - **(c) Relative higher rewriting.** Guiraud–Malbos (*Higher-dimensional normalisation strategies for acyclicity*, Adv. Math. 2012) build acyclic polygraphic extensions in all dimensions at once from a convergent presentation and a normalisation strategy. A relative version, normalising CaTT terms towards the strict cells of F(Γ) using a convergent presentation of F(Γ) (item 6 is its 2-dimensional case), would give RC(∞).
 - **(d) Semantics.** Combine item 9 with a proof that the free CaTT model on Γ presents the free (∞,ω)-category on Γ, and that a CaTT-model map inducing an equivalence of the presented (∞,ω)-categories satisfies RC. This needs a comparison between CaTT models and (∞,ω)-categories, which is open.
 
-**Question 2 (the right hypothesis).** Determine the largest natural class of finite contexts for which RC(∞) holds. In particular:
-- Does RC(∞) hold for every finite context whose polygraph is a homotopy polygraph (the strict F(Γ) is the free (∞,ω)-category on Γ), for example every positive 2-polygraph? Conversely, does RC(∞)(Γ) imply that Γ is a homotopy polygraph?
+**Question 2 (the right hypothesis).** Determine the largest natural class of finite contexts for which RC_id(∞) holds. In particular:
+- Does RC_id(∞) hold for every finite context whose polygraph is a homotopy polygraph (the strict F(Γ) is the free (∞,ω)-category on Γ), for example every positive 2-polygraph? Conversely, does RC_id(∞)(Γ) imply that Γ is a homotopy polygraph?
+  - *Known reduction.* Let η be the unit, at the free CaTT model on Γ, of the realization adjunction between CaTT models and (∞,ω)-categories. On homotopy polygraphs, "η is a weak equivalence" is equivalent to RC_id(∞). On polygraphs that are not homotopical, "η is a weak equivalence" implies that RC_id(∞) fails. So the converse half follows from the statement that η is a weak equivalence for every finite context. A direct proof that RC_id(∞) fails for (x; α : 1_x ⇒ 1_x) is welcome; item 8 gives RC(3) failing there.
 - Does RC(∞) hold for regular directed complexes with frame-acyclic molecules that are not Steiner loop-free (Hadzihasanovic, *Combinatorics of higher-categorical diagrams*, arXiv 2404.07273, Ex. 8.3.12)?
 - Chanavat (arXiv 2509.26563, Comment 2.67) gives a 4-dimensional regular directed complex whose molecules do not form a polygraph under strict composition, so that strict ω-categories impose more relations than the directed complex does. Does such a complex give a counterexample to RC(n) for some n, with Γ positive in every dimension?
 
@@ -92,7 +97,7 @@ The proof should be uniform in the dimension. Any of these routes would do; we l
 ## 5. What counts as a solution
 
 - A proof of Question 1, or of Question 3 together with the all-dimensional extension theorem, under a stated hypothesis. Explicit terms are welcome but not required: an existence proof for the connecting cells is enough, provided it is a proof about CaTT terms (or about CaTT models, via the trivial-fibration form).
-- A counterexample: a finite context in the class of Question 1 (or in a class named in Question 2) with two parallel n-terms of equal strict image and no (n+1)-term between them, with a proof that none exists (for example an invariant of a model).
+- A counterexample: a finite context in the class of Question 1 (or in a class named in Question 2) with two parallel n-terms of equal strict image and no (n+1)-term between them, with a proof that none exists (for example an invariant of a model). Where loops can occur, the counterexample should be to RC_id.
 - A published reference.
 
 ## 6. Literature (searched 2026-11-18)

@@ -1,4 +1,4 @@
-"""Exhaustive finite checks for Researcher Response 5 on relative coherence.
+"""Exhaustive finite checks for Researcher Responses 5 and 6 on relative coherence.
 
 Every wire has the same generating type. An ordinary gate is identified by
 its type and ordered incoming wire occurrences. Its outputs have distinct port
@@ -7,7 +7,7 @@ determines the whole planar circuit up to interchange.
 """
 from collections import Counter, defaultdict
 from functools import cache
-from itertools import product
+from itertools import combinations, permutations, product
 
 
 ARITY = {
@@ -25,7 +25,8 @@ FACES = {
 
 
 class Circuits:
-    def __init__(self, inputs, faces):
+    def __init__(self, inputs, faces, arities=ARITY):
+        self.arities = arities
         self.inputs = tuple(range(-inputs, 0))
         self.faces = faces
         self.outputs = {}
@@ -33,7 +34,7 @@ class Circuits:
         self.markers = {wire: frozenset() for wire in self.inputs}
 
     def apply(self, gate, offset, frontier):
-        n, m = ARITY[gate]
+        n, m = self.arities[gate]
         ports = frontier[offset:offset + n]
         assert len(ports) == n
         key = gate, ports
@@ -49,8 +50,9 @@ class Circuits:
                 self.markers[wire] = markers
         return frontier[:offset] + self.outputs[key] + frontier[offset + n:]
 
-    def enumerate(self, bound):
-        alphabet = ("a", "b", "s", "r", "p", *self.faces)
+    def enumerate(self, bound, alphabet=None):
+        if alphabet is None:
+            alphabet = ("a", "b", "s", "r", "p", *self.faces)
         layer = {self.inputs}
         for size in range(bound + 1):
             next_layer = set()
@@ -59,11 +61,11 @@ class Circuits:
                 yield frontier, sorted(markers)
                 if size < bound:
                     for gate in alphabet:
-                        for offset in range(len(frontier) + 1 - ARITY[gate][0]):
+                        for offset in range(len(frontier) + 1 - self.arities[gate][0]):
                             next_layer.add(self.apply(gate, offset, frontier))
             layer = next_layer
 
-    def expand(self, frontier, choices, retain=None):
+    def expand(self, frontier, choices, retain=()):
         @cache
         def wire_image(wire):
             if wire < 0:
@@ -75,7 +77,7 @@ class Circuits:
         def node_image(key):
             gate, ports = key
             ports = tuple(wire_image(port) for port in ports)
-            if gate in self.faces and key != retain:
+            if gate in self.faces and key not in retain:
                 gate, offset = self.faces[gate][choices[key]]
                 return self.apply(gate, offset, ports)
             return self.apply(gate, 0, ports)
@@ -90,7 +92,7 @@ def audit_links(inputs, bound, rules):
         for signs in product(range(2), repeat=len(markers)):
             choices = dict(zip(markers, signs))
             vertex = diagrams.expand(frontier, choices)
-            germs = frozenset((choices[key], diagrams.expand(frontier, choices, key))
+            germs = frozenset((choices[key], diagrams.expand(frontier, choices, (key,)))
                               for key in markers)
             assert len(germs) == len(markers)
             corners[vertex][germs] += 1
@@ -125,8 +127,8 @@ def two_event_components(inputs, bound, rules):
         start = dict.fromkeys(markers, 0)
         end = dict.fromkeys(markers, 1)
         a, b = markers
-        ab = diagrams.expand(frontier, start, a), diagrams.expand(frontier, end, b)
-        ba = diagrams.expand(frontier, start, b), diagrams.expand(frontier, end, a)
+        ab = diagrams.expand(frontier, start, (a,)), diagrams.expand(frontier, end, (b,))
+        ba = diagrams.expand(frontier, start, (b,)), diagrams.expand(frontier, end, (a,))
         neighbors[ab].append(ba)
         neighbors[ba].append(ab)
 
@@ -148,6 +150,80 @@ def two_event_components(inputs, bound, rules):
     return result
 
 
+def singleton_facets(diagrams, frontiers, degree):
+    """Peel cells with a private extreme facet; also count all facet parities."""
+    columns = []
+    incident = defaultdict(set)
+    parities = Counter()
+    for frontier in frontiers:
+        markers = frozenset().union(*(diagrams.markers[wire] for wire in frontier))
+        if len(markers) != degree:
+            continue
+        start = dict.fromkeys(markers, 0)
+        end = dict.fromkeys(markers, 1)
+        facets = set()
+        for size in range(1, degree):
+            for first in combinations(markers, size):
+                prefix = frozenset(first)
+                face = (diagrams.expand(frontier, start, prefix),
+                        diagrams.expand(frontier, end, markers - prefix))
+                parities[face] += 1
+                if size in (1, degree - 1):
+                    incident[face].add(len(columns))
+                    facets.add(face)
+        columns.append(facets)
+    remaining = set(range(len(columns)))
+    private = [face for face, cells in incident.items() if len(cells) == 1]
+    while private:
+        cells = incident[private.pop()]
+        if not cells:
+            continue
+        cell, = cells
+        remaining.remove(cell)
+        for face in columns[cell]:
+            incident[face].remove(cell)
+            if len(incident[face]) == 1:
+                private.append(face)
+    return len(columns), len(remaining), sum(n % 2 for n in parities.values())
+
+
+def fixed_four_events(intervals):
+    # Unique lane types force each named event to its own offset. The gate
+    # on each face is unary, so executing a box preserves the frontier size.
+    faces, arities = {}, ARITY.copy()
+    for i, (left, right, source, target) in enumerate(intervals):
+        name = str(i)
+        arities[name] = (right - left + 1,) * 2
+        faces[name] = (("a", source - left), ("b", target - left))
+    diagrams = Circuits(1 + max(right for _, right, _, _ in intervals), faces, arities)
+    frontiers = set()
+    for order in permutations(range(len(intervals))):
+        frontier = diagrams.inputs
+        for i in order:
+            frontier = diagrams.apply(str(i), intervals[i][0], frontier)
+        frontiers.add(frontier)
+    return singleton_facets(diagrams, frontiers, len(intervals))
+
+
+def check_four_events():
+    faces = {gate: FACES[gate] for gate in "UAB"}
+    faces["A"] = tuple(reversed(faces["A"]))
+    diagrams = Circuits(6, faces)
+    frontiers = (front for front, _ in diagrams.enumerate(4, tuple(faces)))
+    variable = singleton_facets(diagrams, frontiers, 4)
+    print("four-event cells, survivors, odd facets (variable arity)", variable)
+    assert variable[0] > 0 and variable[1] == 0
+
+    cyclic = fixed_four_events([(3, 5, 5, 3), (5, 7, 7, 7),
+                                (1, 4, 1, 1), (3, 5, 3, 5)])
+    print("four-event cells, survivors, odd facets (cyclic preferences)", cyclic)
+    assert cyclic[0] > 0 and cyclic[1] == 0
+
+    persistent = fixed_four_events([(n, n + 2, n + 1, n + 1) for n in (0, 2, 4, 6)])
+    print("four-event cells, survivors, odd facets (two-sided overlaps)", persistent)
+    assert persistent == (8, 8, 0)
+
+
 def main():
     for inputs, bound, rules in [(5, 3, "UA"), (5, 3, "UAB"), (4, 4, "UA")]:
         sizes, multiple, missing = audit_links(inputs, bound, rules)
@@ -165,6 +241,8 @@ def main():
         assert counts[(1, 1)] and counts.keys() <= {(1, 1), (1, 1, 2), (2, 2)}
         assert bool(counts[(1, 1, 2)]) == ("B" in rules)
         assert bool(counts[(2, 2)]) == ("V" in rules)
+
+    check_four_events()
 
 
 if __name__ == "__main__":

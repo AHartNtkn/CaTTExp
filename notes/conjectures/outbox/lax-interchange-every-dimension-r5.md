@@ -3050,3 +3050,52 @@ The hypothesis on the opposite input is essential to this reduction.
 For example, a triangle on \(a,b,c\) and an inner exchange of crossings
 on four other slots lose the latter input under this contraction. The
 unrestricted degree-five assertion in Q1 remains open.
+
+# Researcher Response 16
+
+**Two moving slots crossing two stationary partners give a directed degree-five rectangle in the support-free presentation \(P\) whenever both active inputs are proper and each temporal half contains a crossing.** In particular this settles the case with both inactive inputs mixed, even when both active inputs are inner exchanges. The moving slots \(x,y\) are consecutive in one outer branch and carry arbitrary finite strings of unary 3-advances. The stationary partners \(z,w\) are consecutive in the other branch. The interval runs from \(zwxy\) to \(xyzw\), with both moving slots going from initial to final value. There are no higher input generators.
+
+### A rectangle whose active inputs require all four slots
+
+Write \(p=wx,\ q=zx,\ r=wy,\ s=zy\) for crossing events, and \(X,Y\) for advances. Use the outside 3-histories \(pqX\mid rsY\) and \(Xpq\mid Yrs\). Each of the four inputs in the following table is a single contextual mixed 4-edge.
+
+| Temporal half | First input | Second input |
+| --- | --- | --- |
+| Early | \(A\colon pqX\to pXq\) | \(B\colon pXq\to Xpq\) |
+| Late | \(C\colon rsY\to rYs\) | \(D\colon rYs\to Yrs\) |
+
+The comparison \(CDAB\Rightarrow CADB\) exchanges \(A\) with \(D\). Their mixed atoms are \((X,z)\) and \((Y,w)\), so deleting any slot loses an active input. The [native-term check](../../../scripts/e6/check_four_slot_native.py) constructs both faces of the contextual \(\delta(A,D)\) and checks all 16 subsets of slots. In the reverse search the solver finds a closed set of **14 projected 4-paths** containing \(CADB\) and excluding \(CDAB\). It includes applications of the stationary split (12), the varying-whisker equation (15), and temporal exchange. The ambiguity in the order of crossings is present in this search. For instance, the intermediate history \(XpqrsY=XprqsY\) uses the row and column expansions of the same block \(\chi(x_1y_0,zw)\).
+
+There is also a rectangle with **two inner active inputs**. Its outside histories are \(prX\mid qsY\) and \(Xpr\mid qYs\). Early, \(A\) takes \(prX\to pXr\) by inner exchange and \(B\) takes \(pXr\to Xpr\) by a mixed edge. Late, \(C\) takes \(qsY\to Yqs\) by a mixed edge with a stationary moving-branch whisker, and \(D\) takes \(Yqs\to qYs\) by inner exchange. The reverse cut has **10 paths** and is closed under both (14) and (15) as well as the applicable directed moves.
+
+### Why two retained advances suffice
+
+Choose a positive primitive 4-edge in each active composite. On these two branches the choices are an outer \(r\) or an inner \(\iota\). To keep an \(r\) proper, mark one varying advance and one stationary partner. To keep an \(\iota\) proper, mark one event in each disjoint spatial operand. Each event is either a unary advance or a crossing. Retain the slots of the marked events. Under a branch contraction these requests give the selected edges positive Response 4 weight, so the whole active composites stay proper.
+
+If the two requests together mark more than two advances, one request is an inner exchange of two unary advances. It needs no stationary partner. The other request also marks an advance, so it needs at most one stationary partner. Keep both moving slots and that partner, choosing either partner if neither is required. Response 14 excludes a reverse on the resulting three-slot interval.
+
+Otherwise keep **all four slots** and the at most two marked advances. Collapse every other advance to an identity along its generating string. Each crossing survives, including a crossing in each temporal half. The inactive inputs may become units, which is why the finite test below allows arbitrary inactive inputs. If fewer than two advances survive, extend one moving string at its terminal end and append the missing advances as a common chronological 3-suffix to the late half. This leaves both projected active edges positive. The three arities in the table now suffice. A proposed reverse would give a reverse after substitution and whiskering.
+
+### The finite reverse test
+
+An expanded 3-history interleaves the two advance strings with either \(pqrs\) or \(prqs\). Equation (K15) identifies the two orders when all four crossings form a consecutive block. Every smaller crossing block has just one order. Each half of a tested cut contains at most three crossings, so its inputs can be enumerated on raw words. The reverse search uses the full history classes, including the positive 4-loops that become possible on the complete block.
+
+The [grounding](../../../scripts/e6/interchange_four_slot_ground.py) takes moves on every representative. An \(r\) moves a nonempty word of advances before a rectangular block crossing its moving operand. An \(\iota\) interchanges adjacent nonempty histories on disjoint spatial intervals in their typed 2-word. The right outer branch has no varying 3-input, and there is no third outer branch. The positive 4-equations therefore come from (10), (12), (14), (15), and the restricted inner splits (20) and (21). The ground rules include \(\delta,N_L,N_R,U_r\) in every lower context. A composite variation slides one edge at a time with the independent operand fixed, as in Response 14. The solver applies these rules in arbitrary top prefixes and suffixes.
+
+For the negative test, primitive edges with the same source and target history classes, Response 4 weight, and multiset of mixed advance/partner labels are identified. Fixed whiskering laws preserve the projected edge with its full context attached. The two expansions of a block give the same projected edge, and taking moves on both representatives includes the split exposed by either expansion. Every legal path and every rewrite in \(P\) thus has an image in the search. Further identifications can create extra returns, so a verified closed set excluding the proposed source proves nonreachability in \(P\).
+
+| Advances on \((x,y)\) | 3-classes | Projected 4-edges | Ground rules | Rectangle placements | Distinct boundary pairs | Largest reverse cut |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| \((2,0)\) | 27 | 92 | 91 | 230 | 208 | 18 |
+| \((1,1)\) | 54 | 192 | 161 | 464 | 420 | 34 |
+| \((0,2)\) | 27 | 92 | 91 | 202 | 180 | 34 |
+
+For every raw outside source and every cut with a crossing on each side, the [rectangle checker](../../../scripts/e6/interchange_four_slot_rectangles.py) enumerates all nonempty early and late 4-paths inside their own windows. It checks for a repeated state on every such path. It splits the early path as \(AB\) with \(A\) nonempty and the late path as \(CD\) with \(D\) nonempty, including empty \(B\) or \(C\). It then searches the unrestricted graph in both directions. For all **808 distinct boundary pairs** across **896 placements**, it replays a forward certificate and checks closure of the reverse cut. The cut between the inputs imposes no restriction on a proposed reverse. The reduction proves the assertion for arbitrary advance lengths in \(P\). The additional degree-five operations in later presentations lie outside this computation.
+
+Run from the repository root.
+
+~~~sh
+python3 -B scripts/e6/check_four_slot_native.py
+python3 -B scripts/e6/interchange_four_slot_ground.py
+python3 -B scripts/e6/interchange_four_slot_rectangles.py
+~~~

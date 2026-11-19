@@ -1,8 +1,8 @@
-# Free higher categories with directed interchange in every dimension: construction or impossibility
+# Free higher categories with directed interchange: from dimension 4 to every dimension, or an impossibility from dimension 5
 
 *A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked.*
 
-**What we are asking for.** A decision. Either a definition, valid in every dimension, whose free objects satisfy the requirements of §3, or a proof that the requirements (or a named subset of them) are inconsistent. Section 2 records many hand-built completions of particular comparison graphs (for ΣD² ∨ ΣD², ΣD³ ∨ ΣD², the triple tensor λD² ⊗ λD² ⊗ λD²) and several ways in which such completions fail. More completions of particular shapes, more lifts, or more support checks in a fixed hom-dimension are not what we want. They are listed so that a general construction can be tested against them, and so that an impossibility proof can start from the failure patterns (K19), (K20), (K24), (K25), (K29).
+**What we are asking for.** A decision in **every** dimension. §2 now contains a uniform theory T whose free algebras satisfy requirements 1–5 of §3 for every finite globular pasting diagram, but only through **global dimension 4** ((K30)–(K32)). The known obstruction patterns ((K8), (K19), (K20), (K24), (K25), (K29)) live in global dimension 5 and above (hom-dimension 4 and above), where the lift of A ⊗ B for two 3-cells side by side must appear. So we ask: extend T (or replace it) to every dimension, or prove that no extension of T, and more generally no theory, satisfies requirements 1–5 in global dimension 5. Hand completions of further particular shapes, or another theory that stops at a fixed dimension, are not what we want.
 
 ## 1. Setting
 
@@ -195,6 +195,46 @@ On the 240-word interval of (K14) a rank with values 0, …, 7 exists; there are
 - *Parity completion.* For a weak inner class K, let G₂(E)(u, v) = {g ∈ 𝔽₂^{E_K} : ∂g = [u] + [v]}. Adjoin j[α, g] : s → u for every positive seed α : s → t and g : t → u, with j[α, 0] = α and j[α, g] ; e = j[α, g + [e]]. This is finite, terminating and confluent, it embeds the path category, and it is natural for maps sending positive seeds to positive composite paths. It still fails the degeneration of (K25), and on the inner diamond P = p ; e, Q = q ; f with comparison D : P ⇒ Q and A = h_z, the joins a = j[A, [q]] and b = j[A, [p]+[e]+[f]] give whiskered comparisons a[D] : X ⇒ Y and b[D] : Y ⇒ X in opposite directions one level up.
 - *Free division.* Freely adjoining D_e(f) with D_e(f) ; e = f for arbitrary positive f terminates and is confluent, but on the same diamond a₀ = A, a_{n+1} = D_p(D_e(a_n ; f)) ; q are pairwise distinct parallel normal forms of weight 1 + 4n. So unrestricted division is infinite on a finite comparison diagram.
 
+**(K30) A uniform theory through global dimension 4 (proved).** Work with ω-sesquicategories (vertical composition and whiskering, strictly associative and unital, functorial whiskering, no Godement interchange; Araújo, arXiv 2210.07704, §2). Define ∗ₖ for k < n − 1 by the right-factor-first Godement formula u ∗ₖ v = (s_{k+1}u ◁ₖ v) ∗_{k+1} (u ▷ₖ t_{k+1}v). Words below are chronological; xFy is whiskering, F ; G composition of 3-cells along 2-cells, [p | Θ | q] : p;F;q ⇒ p;F′;q for a 4-cell Θ : F ⇒ F′, and · is composition of 4-cells along 3-cells. Adjoin:
+- the outer crossing χ(a, b) : ba ⇛ ab for 2-cells a, b side by side along a 0-cell;
+- its naturalities, for A : a ⇛ a′ and B : b ⇛ b′: r(A, b) : χ(a,b) ; Ab ⇒ bA ; χ(a′,b) and t(a, B) : Ba ; χ(a,b′) ⇒ χ(a,b) ; aB (the opposite directions of (K3));
+- the inner interchanger, for 3-cells F : u ⇛ u′, G : v ⇛ v′ on adjacent intervals of a 2-word: ι(F, G) : (uG) ; (Fv′) ⇒ (Fv) ; (u′G) ("right interval first ⇒ left interval first").
+
+Operations with an identity input are identities. Impose:
+- the outer composite-crossing equations χ(a₁a₂, b) = (χ(a₁,b)a₂) ; (a₁χ(a₂,b)) and χ(a, b₁b₂) = (b₁χ(a,b₂)) ; (χ(a,b₁)b₂) (this is (K15) for χ);
+- 1-whiskering equations for χ, r, t, ι, and balancing equations for 2-whiskering of ι;
+- composition laws for r and t in each argument (four equations), and four equations for whiskering the varying argument. Two of these are positive factorization equations, r(a₁A, b) · [ε | ι(χ(a₁,b), A) | a₁χ(a′,b)] = [χ(a₁,b)a | a₁r(A,b) | ε] and its mirror for t(a, Bb₂). They need a varying argument whiskered by a nontrivial 2-cell a₁, so they are vacuous on ΣD² ∨ ΣD² and do **not** supply the repair (F) of (K10) there (see (K32));
+- r(χ(a,b), d) = t(a, χ(b,d)) =: τ(a, b, d), the (K14) cell rqp ⇒ pqr;
+- composition laws for ι in one argument **only when the other argument is a literal χ-term**: ι(F;F′, χ(a,b)) and ι(χ(a,b), G;G′) split as composites. These are ordinary equation schemes, stable under substitution;
+- **support equations**: for every finite pasting diagram P and every pair of parallel 4-paths, built from contextual 4-generators of P's free algebra, that have the same set of contextual edge identifiers, the two paths are equal. Under a substitution each contextual edge goes to a 4-path, and equal edge sets go to equal edge sets (an edge sent to an identity contributes nothing). So these equations are substitution-stable, and the construction is the free algebra of one theory, including for substitutions to composites and identities.
+
+To specify the quotients, adjoin 5-cells: δ(X, Y) (4-cells on adjacent intervals), the two naturalities N_L, N_R of ι in 4-cells, and U_r(Λ, b), U_t(a, Θ) (naturalities of r, t in a 4-cell between parallel 3-cells, with the Leibniz directions for bidegrees (3,1) and (1,3)). Put K_in = {ι, δ, N_L, N_R} and K_all = K_in ∪ {χ, r, t, U_r, U_t}. Then, for every finite globular pasting diagram Γ, with G(Γ) the free Gray-enriched category and S(Γ) the free strict ω-category:
+- (F_T(Γ)/K_in)_{≤4} ≅ G(Γ)_{≤4} and (F_T(Γ)/K_all)_{≤4} ≅ S(Γ)_{≤4} (exactness through global dimension 4; Crans's generators-and-relations presentation of the tensor; the patterns through hom-dimension 3 are (1,1), (2,1), (1,2), (1,1,1), represented by χ, r, t, τ);
+- 3-cells and 4-cells are finite sets computed by an explicit algorithm, and the expanded support Supp₄(f) = {(top, e) : e ∈ A_f} ∪ tagged Supp₃(sf) ∪ tagged Supp₃(tf), with A_f the least edge set in f's class, is injective (requirement 2);
+- every elementary interchanger through dimension 4 exists: χ_{0,1} = cχ(a,d)b : cdab ⇛ cadb; χ_{1,2} is a contextual ι; χ_{0,2}(A,B,C,D) = [b₀A | ι(C,B) | Da₂], with the positional direction forced by (K9);
+- none has a reverse (requirement 3). The 3-dimensional case follows from positivity in Steiner complexes: z ≥ 0 and ∂z = 0 imply z = 0. For the 4-dimensional ones, a reverse has identity Gray image, so it consists of ι-moves only. Fix a cut h and let inv_h count pairs of atomic 3-steps where a step right of the cut precedes a step left of it. inv_h is invariant under the 3-equations and never increases under an ι-move, and the designated proper instance strictly decreases it.
+
+No directedness or exactness is claimed in global dimension 5. The 5-cells above only specify the quotients.
+
+**(K31) The inner composite-crossing law is not forced through dimension 4 (proved).** In the free T-algebra on the diagram with 3-cells A : α₀ ⇛ α₁ and B : β₀ ⇛ β₁, C : β₁ ⇛ β₂ (all 2-cells x → y between f₀ → f₁ → f₂), ι(A, B;C) ≠ [α₀B | ι(A,C) | ε] · [ε | ι(A,B) | α₁C]. A finite T-algebra separates them. It has one cell in each of dimensions 0–2, 3-cells {0, 1, 2} under capped addition, and 4-cells (m, S) with S ⊆ {1,2}² and union as composition, with χ ↦ 0, r, t ↦ identities, and ι(m, n) ↦ (m ⊕ n, {(m,n)}) for m, n > 0. Every equation of (K30) holds there, the 5-cells can be read as identities, and with A, B, C ↦ 1 the two sides go to (2, {(1,2)}) and (2, {(1,1)}). So in T the outer law (K15) holds but the inner law is extra coherence data. Whether a theory satisfying requirements 1–5 in all dimensions forces it is open.
+
+**(K32) What dimension 5 must contain.** For ΣD² ∨ ΣD² with 3-cells A, B side by side, the tensor atom A ⊗ B is a global 5-cell between two routes of 4-cells ((K3), (K8)). T as stated does not reach this cell (checked by hand and by `scripts/e6/t_binary_interval.py`). Write the six orderings of A, B and C = χ(α, β) as S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC. The 4-generators of T in this interval are exactly
+  - t̄₀ : S → V₀, ι(A, B) : V₀ → V₁, r̄₀ : V₁ → T;
+  - r̄₁ : S → U₁, ι(B, A) : U₀ → U₁, t̄₁ : U₀ → T.
+
+The factorization equations need a whiskered varying argument a₁A, so they are vacuous here. So T's 4-skeleton on ΣD² ∨ ΣD² is the bare (K8) skeleton. The only route S → T is t̄₀ · ι(A, B) · r̄₀, and U₁ is a sink. No 5-cell can have A ⊗ B as Gray image, so **any extension of T must add dimension-4 data**, not only 5-cells.
+
+A candidate uniform repair is (K10) made uniform. For A : α ⇛ α′ and B : β ⇛ β′, adjoin
+  h(A, B) : Bα ; χ(α, β′) ; Aβ′ ⇛ βA ; Bα′ ; χ(α′, β′),
+with the equation [Bα | r(A, β′) | ε] = h(A, B) · [ε | ι(B, A) | χ(α′, β′)].
+- The degeneracies are consistent with T: h(A, 1) = r(A, β) and h(1, B) = identity.
+- Then a 5-generator W(A, B) : t̄₀ · ι(A, B) · r̄₀ ⇛ h(A, B) · t̄₁ has Gray image A ⊗ B.
+- The mirror repair k(A, B), through t instead of r, is equally possible.
+
+Whether the h-extension stays directed and substitution-closed on the triple tensor, given (K24)–(K25), is open.
+
+So no 5-generator is adjoined in T and no 5-dimensional directedness is proved. (K10)–(K11) give one hand-made completion through that cell. (K14)–(K29) show that the triple-tensor analogue needs joining data whose naturality under substitution is the open point. Specifically: the (K18) joins are not natural under generator-to-composite maps (K19); a substitution-natural cospan completion exists at the level of comparison categories (K23); and an actual globular degeneration obstructs every completion that keeps the binary data (K10) and adds the (K18) joins (K24)–(K25).
+
 ## 3. Requirements
 
 A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary interchangers χ : L ⇛ R for (l+1)-cells with no reverse cell in free objects; one naturality cell per varying argument, oriented by the Leibniz sign; higher cells between routes of lower naturality cells; and coherence equations to be determined. The free objects F(Γ) must satisfy:
@@ -206,18 +246,21 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (main: decide).** Do one of the following.
-- **(A) Construction.** Give a definition of tensor-shaped lax-interchange ω-categories, valid in every dimension and for interchange along k-cells for every k, together with an explicit description of the free object F(Γ) on every finite globular pasting diagram Γ, and prove requirements 1–5 for all Γ and all dimensions.
-- **(B) Impossibility.** Prove that requirements 1–5 cannot all hold, or that a named subset of them (for example 1–3 and 5, without 4; or 2, 3 and 5) cannot. Identify the smallest dimension and the smallest Γ where the contradiction appears.
+**Q1 (main: decide in every dimension).** Do one of the following.
+- **(A) Construction.** Give a definition of tensor-shaped lax-interchange ω-categories, valid in every dimension and for interchange along k-cells for every k, with an explicit description of the free object on every finite globular pasting diagram, and prove requirements 1–5 for all Γ and all dimensions. Extending T of (K30) is the natural route. Say what the generators and equations are in global dimension n + 1 in terms of those in dimension n, and prove the inductive step once, not shape by shape. The step from dimension 4 to 5 must, uniformly in Γ:
+  - add the dimension-4 data that (K32) shows T lacks (such as h(A, B)), and adjoin the (2,2)-atom (A ⊗ B in (K32)) with its Leibniz boundary;
+  - make the δ, N, U cells of (K30) directed with injective supports;
+  - keep exactness of both quotients;
+  - keep substitution closure, including degenerations such as (K25).
+- **(B) Impossibility.** Prove that no theory satisfies requirements 1–5 through global dimension 5 (or a stated higher dimension), or that no theory extending T does, or that a named subset of the requirements is inconsistent there. Identify the smallest Γ where the contradiction appears. (K24)–(K25) and (K29) are the failure patterns to start from. An impossibility proof must cover all choices of lower-dimensional data, including all theories that agree with T through dimension 4.
 
-Two directions that the known results suggest, offered only as suggestions:
-- *For (B).* (K24) and (K25) show that substitutions sending generators to identities (requirement 5) force, in the image, arrows that reverse a whiskered inner interchanger, and that every source-joining completion containing the (K18) joins fails for that reason while the binary presentation (K10) is kept. A general version would say: for every family of presentations satisfying requirements 2 and 5, some degenerate substitution forces either the reverse of an elementary interchanger (against 3) or an identification of two cells with different supports (against 2). The case analysis would have to cover all choices of binary data, not only (K10) and its mirror.
-- *For (A).* A recursive definition: lax-interchange (n+1)-categories as categories enriched in lax-interchange n-categories for a Gray-type tensor ⊠ₙ on the latter, with the free objects computed hom by hom ("a Gray tensor of towers", as forced by (K6)). The tensor need not be associative on the nose; skew or lax monoidal enrichment is acceptable (compare Bourke–Lobbia, arXiv 2212.12358, for Gray-categories). The construction must reproduce the χ of §1 at every level, the orientation forced by (K9), and the forced extra data of (K8)/(K10) in the smallest case.
+**Q2 (the best consistent theory).** If (B) holds, say which requirement fails, and give the strongest consistent weakening with a construction in every dimension. Candidates:
+- requirement 2 with bounded extra data;
+- requirement 3 weakened to "no reverse of an elementary interchanger, but some whiskered reverses allowed";
+- requirement 4 up to equivalence.
 
-**Q2 (the best consistent theory).** If (B) holds, say which requirement is the culprit, and give the strongest consistent weakening with a construction in every dimension. Natural candidates: replace requirement 2 (cells determined by their generators) by "cells determined by their generators together with bounded additional data"; or keep 2 and weaken 3 to "no reverse of an elementary interchanger, but reverses of some whiskered interchangers are allowed" (the second bullet of (K25) asks whether that is consistent); or weaken 4 to require the Gray quotient only up to equivalence.
-
-**Q3 (the convention (K15)).** Requirements 4 and 5 give q(L[σ]) = q(R[σ]) for the interchanger of a cell with a composite. Prove that crossing against a composite is the composite of the pairwise crossings in any structure satisfying 1–5, or exhibit a structure satisfying 1–5 up to some dimension where it fails. (This is needed for any construction under (A), and several known lifts assume it.)
+**Q3 (composite crossings in all dimensions).** (K31) shows that the composite-crossing law for the inner interchanger is not forced through dimension 4. Decide whether any theory satisfying 1–5 in all dimensions forces it, and whether imposing it (together with the outer law (K15)) is consistent with 1–5 in all dimensions.
 
 ## 5. What counts as a solution
 
-A definition with proofs for (A), an inconsistency proof for (B), a construction for Q2, or a proof or model for Q3. A reference to a published construction or impossibility result is also a solution.
+A definition with proofs for (A), an inconsistency proof for (B), a construction for Q2, or a decision of Q3 in all dimensions. A reference to a published construction or impossibility result is also a solution.

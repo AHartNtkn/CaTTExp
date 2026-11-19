@@ -170,6 +170,16 @@ import CaTTExp.Strict.Collapse
 import CaTTExp.Strict.Kill
 import CaTTExp.Strict.Split
 import CaTTExp.Strict.CylSplit
+import CaTTExp.Strict.CollapseFree
+import CaTTExp.Strict.PsGlob
+import CaTTExp.Strict.TensorBasis
+import CaTTExp.Strict.TensorUnit
+import CaTTExp.Strict.SortBag
+import CaTTExp.Strict.TowerNu
+import CaTTExp.Strict.StrictNu
+import CaTTExp.Strict.HomTops
+import CaTTExp.Strict.HomCore
+import CaTTExp.Strict.HomAgree
 import CaTTExp.Strict.Expr
 import CaTTExp.Strict.NuWords
 import CaTTExp.Strict.Lifting
@@ -231,3 +241,6 @@ import CaTTExp.Join.Cospan
 import CaTTExp.Join.CospanNatural
 import CaTTExp.Join.Forced
 import CaTTExp.Join.Degenerate
+import CaTTExp.Join.SupportSubst
+import CaTTExp.Join.CutInvariant
+import CaTTExp.Join.SepAlgebra

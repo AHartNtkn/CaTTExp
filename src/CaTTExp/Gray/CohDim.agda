@@ -419,6 +419,25 @@ module _ (closed : S.Closed) (sig : SigOK) where
         (≤-trans (Ranks.rank-mono Θ (graded Θ (inv P)) (Faces.leqT⇒ (cells Θ) (dimK (homs Θ)) f r q))
                  (≤-step (supp-all dt mr)))
 
+  -- The coh case, strictly: dim K(Θ) < dim A (used by Strict.HomAgree).
+  cohB< : ∀ Θ (P : PsFacts Θ) B s s' t → Θ ⊢tm t ∶ arr B s s' → ∀ u → T (cohCase Θ (arr B s s') t u) →
+          suc (dimK (homs Θ)) ≤ dim (arr B s s')
+  cohB< Θ P B s s' t dt u c with Cells.top-tuple Θ P
+  ... | f , mf , rf
+    with any-witness (anyS⇒ (leqT (cells Θ) N f) (supp t A)
+           (All-T (λ s → any (leqT (cells Θ) N s) (supp t A)) (fullT hs) cov (any-++r (lowerT N hs) mf)))
+    where
+    A  = arr B s s'
+    hs = homs Θ
+    N  = dimK hs
+    cov : T (covers Θ (fullT hs) (supp t A))
+    cov = ∧-snd {covers Θ (supp t A) (fullT hs)}
+            (∧-fst {sameDown Θ (supp t A) (fullT hs)} (∧-snd {endsOK Θ A} c))
+  ... | r , mr , q =
+    s≤s (subst (_≤ dim B) rf
+      (≤-trans (Ranks.rank-mono Θ (graded Θ (inv P)) (Faces.leqT⇒ (cells Θ) (dimK (homs Θ)) f r q))
+               (supp-all dt mr)))
+
   -- DimOK for two-tier L.
   dimOK : DimOK
   dimOK {Θ} {A} {t} {u} (ps d) (arr-wf dt du) side =

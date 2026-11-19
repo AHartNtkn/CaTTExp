@@ -149,11 +149,11 @@ The verifier constructs generic raw constant-end cylinders, forms the two normal
 
 A separate checker enumerates *all* disk cylinders in a test diagram from their cap cells, side cylinders and positive top chains. It joins these at equal caps, fixes the two exterior caps, and compares the reconstructed stacks with an independent closure of the tensor atoms. For a two-edge path and a branching diagram of height three, it obtains exactly 112, 2,564, 6,842, 7,500 and 7,500 spanning cells in degrees 1 through 5. [Strict stack verifier](../../../tools/gray_path_stacks.py)
 
-Agda 2.8.0 accepted the generated module through degree four with its safe checker. The code below regenerates that certificate. The all-dimensional result uses the two comparison constructions and the cylinder theorems above.
+Agda 2.8.0 accepted the generated module through degree five with its safe checker. The code below regenerates that certificate. The all-dimensional result uses the two comparison constructions and the cylinder theorems above.
 
 ~~~sh
 python3 tools/gray_path_stacks.py 2 '[[[[]]],[],[[],[]]]'
-python3 tools/gray_constant_cylinder.py 4 --agda /tmp/ConstantCylinder.agda
+python3 tools/gray_constant_cylinder.py 5 --agda /tmp/ConstantCylinder.agda
 agda --safe -i /tmp -i src /tmp/ConstantCylinder.agda
 ~~~
 
@@ -188,6 +188,6 @@ For endpoints strictly on opposite sides, use the three strict columns of item 1
 
 Stack the three typed cylinders by Theorem 4.3 and normalize the two constant ends by $N$ from Response 1. Item 17 and the strict value of stacking identify the result with the original crossing cell. The face equations for stacking and $N$ give its chosen globular boundaries literally. Every tensor generator lies in a single piece, so all pins were settled before making these crossing choices. This proves the implication.
 
-The moving-cap check in the normalization verifier starts with the two distinct cap generators of the generic cylinder on a 2-globe. It adjoins a second parallel raw filler, then two parallel ordinary variables at each higher degree. In each degree it applies the ascending corrections and checks that both terms inhabit the prescribed cylinder type. The original ordinary variable has a different type. A check with maximum degree five exercises both the first new cut and its whiskering through the following cut. [Moving-cap verifier](../../../tools/gray_constant_cylinder.py)
+The moving-cap check in the normalization verifier starts with the two distinct cap generators of the generic cylinder on a 2-globe. It adjoins a second parallel raw filler, then two parallel ordinary variables at each higher degree. In each degree it applies the ascending corrections and checks that both terms inhabit the prescribed cylinder type. The original ordinary variable has a different type. Agda checked both literal types in degrees four and five, exercising the first new cut and its whiskering through the following cut. The degree-five command under Response 1 reproduces these checks in the same certificate. [Moving-cap verifier](../../../tools/gray_constant_cylinder.py)
 
 For $K=P\otimes I$ of arbitrary dimension the lifting lemma requires comparisons through $\dim K$ unless additional information on its cap diagrams is available. The general suspension step in item 18 also remains open. The two responses establish the path-factor theorem and the stated wedge implication. Q1 and the two uniform alternatives in Q2 remain unresolved.

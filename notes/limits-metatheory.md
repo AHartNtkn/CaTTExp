@@ -493,6 +493,13 @@ This supersedes the "existence" paragraph above, i.e. the compactness sketch, th
   - Option 2 is cheaper when it applies, since it needs no auxiliary face copies. The pentagon needs only r_M and ρ_M. Ω always applies.
   - **Recommended rule:** accept presentations of Ω's shape, with the §8 certificate of that answer: finite incidence tables, elementary-anodyne steps, the generator and localisation lists, and a check that every localisation generator projects to an identity. Option 2 is the special case where the comparison cylinders are inverse data on existing mixed generators.
   - The certificate's own proof witnesses have unbounded size and dimension. Only the output presentation is bounded by n + m.
+- **Update (r3 answer, `conjectures/answered/fibration-presentations-characterization-r3-2026-11-19.md`, checked by the processing thread): correctness of the unaugmented presentation reduces to a boundary check.**
+  - Suppose every q ⊗ g has an actual globular Gray attaching map in the unlocalised Free(Ψ), meaning a positive pasting with the Leibniz boundary, not just a cell with matching endpoints.
+  - Then Free(Ψ)[S⁻¹] ≃ ∫T, with the marking included, whichever positive representatives are chosen.
+  - *Why:* totals of gaunt bases and fibres are gaunt (Loubaton Prop. 3.2.2.6); marked factors are determined by projection and distinguished face; the comparison is made after base change to E_{k−1}; the argument closes with Loubaton Thm 3.2.3.15.
+  - **Checker consequence:** for an unaugmented presentation, the certificate is just the attaching expressions. The checker verifies that each has the Gray boundary. No equivalence certificate and no fibrewise comparison step are needed.
+  - The Φ_k checks (a)–(d) above remain the rule only for presentations with auxiliary generators (option 2 and Ω).
+  - What remains open is pure existence: is it decidable whether positive attachments exist (the pentagon shows they need not), and is there a criterion on the base alone?
 - **Still open: recognising the unaugmented presentation.** Is the plain relative-Gray presentation, with Leibniz attaching expressions and no auxiliary generators, correct for a given (Γ, T)? Once attaching terms are supplied, this is only positively semi-decidable (§10 of the answer). A terminating criterion, or an undecidability proof, is the round-3 prompt `conjectures/outbox/fibration-presentations-characterization-r3.md`. The pentagon shows the plain presentation can fail. The Agda file shows it fails *as prescribed*.
 
 ---

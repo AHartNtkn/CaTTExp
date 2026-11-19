@@ -103,6 +103,79 @@ def hole_split(c, i, j):
             yield a, b
 
 
+def first_hole(ranks):
+    """Choose the least missing join, breaking equal degrees by the first rank."""
+    candidates = [(i+1, j) for i, j in ranks
+                  if j and (i+1, j) not in ranks and (i+1, j-1) in ranks]
+    return min(candidates, key=lambda h: (sum(h), h[0]), default=None)
+
+
+def truncate(c, degree, side):
+    if len(c) <= degree+1:
+        return c
+    chain = c[degree][side]
+    return c[:degree] + ((chain, chain),)
+
+
+def check_first_holes(profiles):
+    """Check the inherited split and count endpoints that need another choice."""
+    preferred = {c: first_hole(ranks) for c, ranks in profiles.items()}
+    splits = {}
+
+    def split(c, h):
+        if (c, h) not in splits:
+            pair, = hole_split(c, *h)
+            splits[c, h] = pair
+        return splits[c, h]
+
+    comparisons = Counter()
+    prescriptions = set()
+    for c, hole in preferred.items():
+        if hole is None:
+            assert c == atom(c[-1][0][0])
+            continue
+        degree = sum(hole)-1
+        parts = split(c, hole)
+        assert all(len(t) >= degree+1 for t in parts)
+        for side in (0, 1):
+            if len(c)-1 > degree+1:
+                assert preferred[face(c, side)] == hole
+            if len(c)-1 <= degree:
+                continue
+            end = truncate(c, degree, side)
+            assert sum(preferred[end]) == sum(hole)
+            assert split(end, hole) == tuple(truncate(t, degree, side) for t in parts)
+            if preferred[end] != hole:
+                comparisons[degree] += 1
+                prescriptions.add((end, hole))
+    distinct = Counter(len(end)-1 for end, _ in prescriptions)
+    print('Alternative splits by endpoint degree (incidences, distinct prescriptions):',
+          [(d, comparisons[d], distinct[d]) for d in sorted(comparisons)])
+
+
+def check_top_facet_conflict(m, n):
+    """The two factors of a top facet force different cuts on their shared face."""
+    degree = m+n-2
+    top = atom(((m, 2), (n, 2)))
+    for side in (0, 1):
+        facet = face(top, side)
+        (x, y), = hole_split(facet, m, n)
+        z = truncate(x, degree, 1)
+        assert z == truncate(y, degree, 0)
+        cuts = []
+        for t in (x, y):
+            proper = [(k, a, b) for k in range(len(t)-1)
+                      for a, b in factorizations(t, profile(t), k)
+                      if min(len(a), len(b)) > k+1]
+            (k, a, b), = proper
+            assert k == degree-1
+            boundary_side = 1 if t == x else 0
+            cuts.append(tuple(truncate(u, degree, boundary_side) for u in (a, b)))
+        partitions = [frozenset(frozenset(rank(g) for g in part[-1][0])
+                                for part in pair) for pair in cuts]
+        assert partitions[0].isdisjoint(partitions[1])
+
+
 def check_crossing(c, ranks):
     if (1, 2) not in ranks:
         hole, name = (1, 2), 'fixed second coordinate'
@@ -146,6 +219,7 @@ def check_crossing(c, ranks):
 def check(m, n):
     all_cells = cells((m, n)) - {()}
     profiles = {c: profile(c) for c in all_cells}
+    check_first_holes(profiles)
     for c, ranks in profiles.items():
         corners = [(i, j) for i, j in ranks
                    if (i+1, j) not in ranks and (i, j+1) not in ranks]
@@ -153,6 +227,7 @@ def check(m, n):
             assert len(c[-1][0]) == 1 and c == atom(c[-1][0][0])
 
     if min(m, n) >= 2:
+        check_top_facet_conflict(m, n)
         poles = atom(((m, 2), (n, 2)))[:2]
         sectors = Counter(check_crossing(c, ranks) for c, ranks in profiles.items() if c[:2] == poles)
         print('Crossing hom:', dict(sorted(sectors.items())))

@@ -773,3 +773,141 @@ The first conclusion is necessary for any solution to Q1 with (K15).
 The exact reachability calculation uses the stated presentation.
 Strong directedness when both active updates lie in the same temporal
 run on a general diagram remains the open case of the follow-up.
+
+# Researcher Response 7
+
+**A degree-five separation theorem with mixed inactive inputs.** Work in
+the completed presentation of [round five, Response 12](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-12).
+By [the eight-strand reduction](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-24),
+its remaining universal test can be made on a pure sorting interval. The
+following argument applies to such intervals of any size. Fix the Gray
+4-chain of a four-input rectangle. Select any set \(F\) of named
+crossings subject to this exclusion. For each triangle on \(x<y<z\)
+in the chain, exclude \(xy\) and \(yz\). Its diagonal \(xz\) remains
+eligible unless another triangle excludes it.
+
+Suppose each of the two active 4-inputs has an inner exchange with an
+\(F\)-event in **each** of its spatial operands. Then the rectangle has
+no reverse. There is no restriction on the two inactive inputs or on the
+number of inner loops. In particular one need not disconnect the slots
+of the two witnesses or exclude wide joins containing all four marked
+events.
+
+### Measuring a temporal cut
+
+For a 3-history \(p\) write \(d(p)=|F\cap\mathrm{events}(p)|\).
+Crossings have permanent names and each occurs at most once. The
+block equations preserve the set of events, and concatenation adds
+lengths. All 3-histories on the same 2-interval have the same set,
+determined by the pairs whose order changes between its endpoints.
+These facts apply after transporting the names through lower contexts.
+
+On a putative return the Gray 5-image is an identity, so the Gray
+4-chain stays fixed, including in every representative. In any proper
+outer edge \(r,t,h\), every event of its moving history pairs with
+every stationary slot. For the join use the left history and its
+associated \(r\). The two slots of a moving crossing lie strictly
+on one side of each stationary slot in outer order. The moving crossing
+is therefore a short side of a triangle in the fixed chain. Its whole
+moving history has \(d=0\). The block being crossed and the right
+history of a join can have positive \(d\).
+
+Record a window for an inner edge with operand histories \(p,q\) just
+when \(d(p)d(q)>0\). Start the window after the length of its fixed
+3-prefix, give it extent \(d(p)+d(q)\), and give it weight
+\(d(p)d(q)\). Record nothing for the other edges. Fixed immediate
+prefix whiskering translates windows and suffix whiskering leaves
+them in place. A lower fixed whisker transports the event names and
+preserves the counts. Thus concatenation, units and the structural
+whiskering equations respect this readout. Take the cut after the
+\(F\)-length of the earlier 2-interval. A path is separated if every
+recorded window lies on one side of the cut. Read a separated path
+as a word by repeating its side letter once per unit of weight.
+
+The 4-equations preserve separation in both directions and preserve
+the word when separated. To see the only case involving positive
+windows, split an inner operand at lengths \(a,b\) against length
+\(c\). Its two windows have weights \(ac,bc\). When all three lengths
+are positive the windows cover the original interval with overlap of
+length \(c\), as measured at the shared intermediate history. If
+\(a\) or \(b\) is zero, the surviving window occupies the full original
+interval. If \(c=0\) all are invisible. The same calculation in the
+opposite operand order proves the second subdivision. Moving a fixed
+spatial 2-whisker between operands adds no event. In every outer
+whisker correction and the binary join factorization one operand of
+the correcting inner product is the moving history just shown to
+have length zero. Every other outer equation has invisible edges on
+both sides. Replacing a 3-argument or fixed prefix by (K15) preserves
+its event set. A replacement elsewhere in a path retains the common
+3-endpoints, so later windows keep their prefix lengths.
+
+### Directed moves
+
+In a temporal 5-exchange the two 4-inputs retain their windows on
+their own temporal subintervals. Their 3-boundaries have equal
+\(d\)-lengths. The forward move puts the temporally earlier input
+first. It preserves separation and cannot increase the number of
+late-before-early pairs in the word.
+
+For an inner naturality or shifted join, first suppose both spatial
+histories have positive length. The inner product on the source
+covers the whole interval. Thus a separated source puts the whole
+move on one side. On the target the variations occur once each and
+the inner product has the same weight. If one history has zero
+length, no variation *in that history* can record a window, since
+all its representatives have the same event set. Moving a variation
+of the other history past the zero-length history translates it by
+zero. This checks both naturality directions and the two-variation
+shifted join, including when both lengths vanish.
+
+At a proper zero-Gray outer unary variation, or a left variation of
+the outer join, the varied history is a moving history of the mixed
+edge on its boundary. Its length is zero throughout, so no window
+is transported. In a right variation of the join the varied path
+acts inside \(B\). The two histories at that variation have the forms
+\(B C A\) and \(A B C'\), with the block after \(B\) in both.
+The prefix gained at \(B\) has length \(d(A)=0\). Thus *every*
+window of the right variation keeps its position, even when it
+straddles several crossings also present in the join window.
+A proper \(W,K,J\) has positive Gray 5-chain. There are no input
+globes in these dimensions on a pure sorting interval. Unit cases
+give the corresponding normalized moves. This exhausts the
+degree-five generators available on a return. The checks also apply
+in exterior contexts because both the total recorded weight and the
+endpoints are preserved.
+
+Both designated schedules are separated. In the forward move from
+\(CDAB\) to \(CADB\), the inversion count drops by the product of the
+recorded weights of \(A\) and \(D\). This is positive by hypothesis.
+The preceding inequalities exclude a return.
+
+### A join that contains both active windows
+
+Use six outer slots \(a<b<c<d<e<f\), initially in order \(fedcba\).
+On the four right slots take an early inner update on the two
+crossings \(fe,dc\), then cross \(fc\). This reaches \(ecfd\).
+Cut here. The late inner update exchanges the independent crossings
+\(ec,fd\), reaching \(cedf\). After them place the block crossing
+against \(ba\), followed by the crossing \(ba\). Let the late inactive
+input perform the outer \(r\) moving \(ba\) before the block, and use
+the two inner updates as the active inputs. The early inactive input
+is an identity. The only triangles are \(abz\) for
+\(z\in\{c,d,e,f\}\). All five named events internal to the right
+four slots are eligible. The two recorded windows have extents
+\([0,2]\) and \([3,5]\), with the cut at three. Both have weight one.
+
+Indeed the join with left history \(ba\) and right history consisting
+of all five internal events has this same mixed chain. Its factorization
+by the correcting inner exchange gives precisely the outer \(r\)
+after the right history. Thus a representative genuinely has a mixed
+window containing both witnesses. The projected cut still detects a
+strict drop of one.
+
+**Validation.** The [filtered-window checker](../../../scripts/e6/interchange_filtered_windows.py)
+executes both schedules, the four joins at the possible operand layers
+and both sides of each join factorization. It checks the two temporal
+placements of a split product at every cut for constituent lengths
+zero through four, giving 1,750 comparisons. Run
+`python3 -B scripts/e6/interchange_filtered_windows.py`. The proof
+above treats arbitrary lengths. A rectangle can still have an active
+path with no recorded window. Unrestricted Q1 remains open.

@@ -7,6 +7,8 @@
 --   orders; a template of the wrong order is rejected.
 -- * (C): the template for binary composition of 1-cells passes rule
 --   (C), both orders; the template of the wrong order is rejected.
+--   The checker also certifies that it is a well-typed term of T₁P of
+--   the prescribed type B_{1,1}[Θ_{h,e}] (`C-typed-left/right`).
 -- * M ⊗ D¹ (T₁M, built by equations (5)–(8) of the answer) is a
 --   well-formed CaTT context, certified by the checker, for the
 --   walking arrow, the triangle α : f ; g ⇒ h and the lax square
@@ -54,6 +56,47 @@ C-ok-left = tt
 C-ok-right : T (compOK right)
 C-ok-right = tt
 
+-- The template is a well-typed term of T₁P of the type that (C)
+-- prescribes, B_{1,1}[Θ_{h,e}] (certified by the checker; `checkC`
+-- itself reads the type of a coherence off syntactically).
+
+⊗D¹-pre : Side → Ctx → Maybe Ctx
+⊗D¹-pre sd = T1.T1 sd (Ctmpl sd)
+
+typedAt : (Q : Ctx) (C : Tm) (B : Ty) → Maybe ((Q ⊢ctx) × (Q ⊢tm C ∶ B))
+typedAt Q C B =
+  checkCtx Q >>= λ w → inferTm Q w C >>= λ { (B' , d) →
+  castTy B' B d >>= λ e → just (w , e) }
+
+private
+  hComp : Tm
+  hComp = coh Comp₂P compA (idₛ Comp₂P)
+
+module CTyped (sd : Side) where
+  Q₁ : Maybe Ctx
+  Q₁ = ⊗D¹-pre sd Comp₂P
+  θ₁ : Maybe Sub
+  θ₁ = Tr.Θe (Ctmpl sd) (len Comp₂P) hComp compA
+  Cert : Set
+  Cert = Σ Ctx λ Q → Σ Tm λ C → Σ Sub λ θ →
+           (Q₁ ≡ just Q) × (compC sd ≡ just C) × (θ₁ ≡ just θ) ×
+           (Q ⊢ctx) × (Q ⊢tm C ∶ (Btmpl sd 1 [ θ ]ty))
+  certificate : Maybe Cert
+  certificate = go Q₁ refl (compC sd) refl θ₁ refl
+    where
+    go : (mQ : Maybe Ctx) → Q₁ ≡ mQ → (mC : Maybe Tm) → compC sd ≡ mC →
+         (mθ : Maybe Sub) → θ₁ ≡ mθ → Maybe Cert
+    go (just Q) eQ (just C) eC (just θ) eθ =
+      typedAt Q C (Btmpl sd 1 [ θ ]ty) >>= λ { (w , d) →
+      just (Q , C , θ , eQ , eC , eθ , w , d) }
+    go _ _ _ _ _ _ = nothing
+
+C-typed-left : CTyped.Cert left
+C-typed-left = cert (CTyped.certificate left) tt
+
+C-typed-right : CTyped.Cert right
+C-typed-right = cert (CTyped.certificate right) tt
+
 C-wrong-order : (compC right >>= λ C → just (checkC left Comp₂P compA C)) ≡ just false
 C-wrong-order = refl
 
@@ -83,7 +126,7 @@ LaxSquare =
                                   (comp (var 0) (var 5) (var 6) (var 3) (var 7))
 
 ⊗D¹ : Side → Ctx → Maybe Ctx
-⊗D¹ sd = T1.T1 sd (Ctmpl sd)
+⊗D¹ = ⊗D¹-pre
 
 arrow-left : WF (⊗D¹ left Arrow)
 arrow-left = cert (wf? (⊗D¹ left Arrow)) tt

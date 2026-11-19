@@ -282,6 +282,7 @@ So the forced repair is not a finite list of loop equations. A natural candidate
 - In the expanded basis (supports of 3-cells as sets of contextual 3-edges (word, crossing)), V's six edges lie inside the union of the edge sets of W's four representatives, but no representative has V's edge set and the four sets differ pairwise. So requirement 2 read in the expanded basis does not by itself force (R).
 - On 3 × 3 (Σ[3] ∨ Σ[3]), T + (R) + (C) and T + (R∞) + (C) leave no endomorphisms on the part the computation decides; one cell remains undecided, presumably the extreme one.
 - (R∞) + (C) + "every single-edge 4-loop is an identity" leaves no non-identity 4-endomorphisms on Σ[2] ∨ Σ[3] and Σ[2] ∨ Σ[4]. Under (R∞), every ι-edge between two extreme paths of a block is such a loop.
+- T + (R∞) + the thin-block principle of Q1(A), **without** (C), already leaves no non-identity 4-endomorphisms on Σ[2] ∨ Σ[3] and Σ[2] ∨ Σ[4]. So on these diagrams the thin-block principle subsumes (C).
 These survivals are computed, not proved; they depend on the completeness of the list of T's equations used.
 
 **(K40) Why the candidate is restricted.** A uniform statement that subsumes (R∞) and the 4-level repair must be restricted in two ways.

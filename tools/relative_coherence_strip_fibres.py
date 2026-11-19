@@ -30,7 +30,7 @@ def lane_charts(word, order, rules, lane):
                 yield word[:k] + event + tail
 
 
-def chains(initial, final, rules):
+def chains(initial, final, rules, well_typed=None):
     @cache
     def visit(state, remaining):
         if not remaining:
@@ -44,6 +44,8 @@ def chains(initial, final, rules):
                              for i, word in enumerate(state)]
                     charts.update(product(*words))
                 for tier in charts:
+                    if well_typed is not None and not well_typed(tier):
+                        continue
                     after = substitute(tier, rules, (), 1)
                     for suffix in visit(after, remaining.difference(block)):
                         result.add((tier,) + suffix)
@@ -62,8 +64,8 @@ def boundary(cell, rules):
 
 
 class Complex:
-    def __init__(self, initial, final, rules):
-        self.cells = sorted(chains(initial, final, rules))
+    def __init__(self, initial, final, rules, well_typed=None):
+        self.cells = sorted(chains(initial, final, rules, well_typed))
         index = {cell: i for i, cell in enumerate(self.cells)}
         self.facets = [tuple(index[face] for face in boundary(cell, rules)) for cell in self.cells]
         self.degrees = [len(rules) - len(cell) for cell in self.cells]

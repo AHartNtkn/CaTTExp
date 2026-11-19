@@ -422,6 +422,8 @@ Status: **verified**. This is a negative answer to Q1(A) and to Q3, and a strong
 
 **Smaller witness for the thin-block principle on Γ₃,₂: correct.** Under (R∞) the four corners x_i y_j are the same extreme block (the script confirms all four are extreme), and the 4-level thin-block principle makes the four whiskered edges identities. The inputs X, Y have distinct endpoints, so they are not identities. They are not endomorphisms, and they have no reverse. So the Q2 candidate "no reverse of an interchanger with non-identity, non-invertible, non-endomorphism arguments" also fails here. The thin-block principle (Q1(A)) is refuted.
 
+*Independent reproduction (LCORE, 2026-11-19):* in LCORE's model T + (R∞) + (C) + thin on Σ[3] ∨ Σ[2], u = 12 22 11 and u′ = 12 11 22 are distinct 3-cells, v = 32 21 31 and v′ = 21 32 31 are distinct, and all four composites are the single block χ(a₁a₂a₃, b₁b₂). So the four whiskered edges are single-edge loops at that block, thin sets them to 1, and both sides of the (X, Y) 5-interchanger are the identity on the block. The collapse uses only (R∞) and thin.
+
 **Finiteness obstruction without (C) (Γ₂,₄): correct, with a scope note.**
 - The two directedness consequences are proved by adjoining a fresh globe J as an independent test cell, followed by contractions: composites along dimension n−1 that equal an identity have identity factors, and whiskering reflects identities.
 - Idempotent powers x, y of the doubled endomorphisms are non-identity by the composite lemma. I : d ⇒ d² comes from the rectangle, as in (K33). For P = d^k idempotent, Z : P ⇒ P is non-identity, and Z′ = PZP satisfies PZ′ = Z′ = Z′P, so the (3,4)-interchanger on (Z′, Z′) has equal boundaries Z′·Z′.

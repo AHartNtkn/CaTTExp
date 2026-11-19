@@ -121,14 +121,14 @@ def catt_context(k):
 
         if j % 2:
             q, p = edge(), edge()
-            arrow(q, p)
-            rows.append(dict(q=identity(q), p=identity(p), d=arrow(p, p), e=arrow(p, p)))
+            prefix = arrow(q, p)
+            rows.append(dict(t=prefix, q=identity(q), p=identity(p), d=arrow(p, p), e=arrow(p, p)))
         else:
             u, w = edge(), edge()
             cells = {name: arrow(u, w) for name in "lmr"}
             if j not in (0, 2 * k):
                 q = edge()
-                arrow(q, u)
+                cells["t"] = arrow(q, u)
                 cells["q"] = identity(q)
             rows.append(cells)
     for i in range(k):
@@ -139,7 +139,7 @@ def catt_context(k):
     bridge = arrow(horizontal([rows[0]["l"], *middle, rows[-1]["m"]]),
                    horizontal([rows[0]["m"], *middle, rows[-1]["r"]]))
     check_ctx(ctx)
-    return ctx, bridge
+    return ctx, bridge, rows
 
 
 def check_other_labels():
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     if sys.argv[1:] == ["--agda"]:
         from emit_agda import Emitter
         emitter = Emitter()
-        context, bridge = catt_context(4)
+        context, bridge, _ = catt_context(4)
         emitter.check_typed("bridge", context, bridge)
         print(emitter.module("SphericalFibre", "Four-seam CaTT presentation."))
     else:

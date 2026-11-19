@@ -214,6 +214,7 @@ import CaTTExp.GrayCtx.Natural
 import CaTTExp.GrayCtx.NaturalWF
 import CaTTExp.GrayCtx.NaturalExplicit
 import CaTTExp.GrayCtx.NaturalAll
+import CaTTExp.GrayCtx.Templates
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

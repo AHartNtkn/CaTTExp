@@ -172,3 +172,404 @@ For computads that are not torsion-free, an answer must say how the realization 
 ## What would count as a solution
 
 A proof of (11) or of the cellular-pushout statement; a counterexample; an equivalence of (11) or (U) with a named open problem; a coherator for L or an impossibility proof; or a published reference.
+
+# Researcher Response
+
+I do not have a full resolution of Q1 or Q2. I can establish a converse for the **entire groupoidal condition**, including infinite computads:
+\[
+\boxed{
+(U_{\mathrm{gpd}})
+\iff
+\left(
+\mathbb T^{bi}\text{ is a Grothendieck groupoid coherator satisfying Henry’s pushout condition}
+\right).
+}
+\tag{A}
+\]
+This removes one of the “Not known” statements in Known (VII). It does **not** replace \(U_{\mathrm{gpd}}\) by \(U\), so it does not meet Q1(c) as stated.
+
+I can also establish
+\[
+\boxed{
+(U)\Longrightarrow(\mathrm{FEA})
+\iff
+\text{the canonical left semi-model structure exists}
+\Longrightarrow(H).
+}
+\tag{B}
+\]
+The missing implication remains \(\mathrm{FEA}\Rightarrow U\). Below are the proofs and the precise obstruction to extending them.
+
+## 1. The groupoidal converse
+
+Write
+\[
+\mathcal C=\operatorname{Mod}(\mathrm{CaTT}),\qquad
+\mathcal G=\mathcal C_{\mathrm{gpd}},\qquad
+\mathcal B=\operatorname{Mod}(\mathbb T^{bi}),
+\]
+and distinguish the two realizations
+\[
+\Phi=QU\mathcal L_R,\qquad E=g\Phi.
+\]
+Let
+\[
+J:\mathcal C\rightleftarrows\mathcal B:V
+\]
+be the inverse-adjoining adjunction, with unit \(v\) and counit \(\epsilon^{bi}\). These are different from the semantic unit \(\eta\).
+
+Assume throughout this section that \(\mathbb T^{bi}\) is a Grothendieck coherator satisfying Henry’s pushout condition. Henry’s Theorem 5.3.5 supplies its canonical semi-model structure, and Corollary 5.3.13 supplies the comparison with spaces. The cylinder-coherator comparison is a Quillen equivalence, so it also gives an equivalence of the associated \(\infty\)-categories. [arxiv.org](https://arxiv.org/pdf/1609.04622?utm_source=chatgpt.com)
+
+### 1.1. A semantic equivalence test
+
+The detection assertion in Known (IV) has the following converse:
+\[
+QU(f)\text{ is an equivalence}\quad\Longrightarrow\quad S_0(f)\in W
+\qquad(f\text{ in }\mathcal A).
+\tag{C}
+\]
+
+Here is the argument, including the issue of algebraic fillers.
+
+For \(Z\in\mathcal A\), represent its coinductive completion by a map
+\[
+UZ\longrightarrow Z^{c}
+\]
+with fibrant, coinductively complete target. Factor this map in the original injective model structure as a monomorphism followed by a trivial fibration. The intermediate target is still fibrant and presents the same coinductive completion.
+
+Equip that intermediate target with algebraic fillers extending those of \(Z\). For a generating lifting problem that factors through the monomorphism, use the existing filler in \(Z\); the factorization is unique because the map is monic. Choose fillers for the remaining problems. This produces an algebraic map
+\[
+r_Z:Z\longrightarrow T Z
+\]
+representing coinductive completion.
+
+Now suppose \(QU(f)\) is an equivalence. Both \(r_Z\) and \(r_Zf\) are maps into a coinductively complete target inverted by \(Q\). By Known (III), their underlying maps are \(\infty\)-surjective. Known (II) therefore gives
+\[
+S_0(r_Z),\ S_0(r_Zf)\in W.
+\]
+Two-out-of-three proves (C).
+
+Together with Known (IV), this yields
+\[
+S_0(f)\in W\quad\Longleftrightarrow\quad QU(f)\text{ is an equivalence}.
+\tag{D}
+\]
+
+### 1.2. Realizing a groupoidal cofibrant model gives a space
+
+This assertion does not require \(U_{\mathrm{gpd}}\):
+\[
+B\in\mathcal G,\ B\text{ computad-cofibrant}
+\quad\Longrightarrow\quad
+\Phi B\in\mathcal S.
+\tag{E}
+\]
+
+Set \(X=\Phi B\). Each characteristic globe of a computad generator gives a map
+\[
+D_n\longrightarrow X.
+\]
+Every positive-dimensional cell of \(B\) is coinductively invertible. Its image under the always-defined unit \(\eta_B\) is algebraically coinductively invertible. By the comparison of algebraic and geometric invertibility in Known (IV), its image in \(X\) is invertible.
+
+Consequently, every characteristic globe factors through the maximal groupoidal core
+\[
+i:X^\simeq\longrightarrow X.
+\]
+This inclusion is monic: for any \(Z\), the map
+\[
+\operatorname{Map}(Z,X^\simeq)\longrightarrow\operatorname{Map}(Z,X)
+\]
+identifies the union of components consisting of functors that send all positive-dimensional cells to invertible cells.
+
+The factorizations of characteristic globes therefore agree coherently on their attaching boundaries. The cellular homotopy-colimit description from Known (VI) gives a factorization
+\[
+\operatorname{id}_X:
+X\longrightarrow X^\simeq\overset{i}{\longrightarrow}X.
+\]
+A monomorphism with a right inverse is an equivalence. Thus \(X\simeq X^\simeq\), proving (E).
+
+There is a second consequence:
+\[
+S_0\mathcal L_RB\in\mathcal G.
+\tag{F}
+\]
+Indeed, apply the algebraic completion constructed above to \(\mathcal L_RB\). Its completed target presents the space \(\Phi B\), so its \(S_0\)-model is groupoidal by Known (II). The map from \(S_0\mathcal L_RB\) to that model lies in \(W\), by (C). FHM weak equivalences reflect invertibility, so \(S_0\mathcal L_RB\) is groupoidal. The reflection result is FHM Proposition 3.1.7. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+### 1.3. The inverse-adjoining unit is a weak equivalence on groupoidal cofibrant models
+
+Let \(B\in\mathcal G\) be cofibrant. Choose independent inverse and cancellation data for its cells, making it the underlying CaTT model of some \(Z\in\mathcal B\):
+\[
+VZ=B.
+\]
+
+The model \(JB\) is cofibrant. Its diagonal admits a path-object factorization in the canonical semi-model structure on \(\mathcal B\). Lanari’s Proposition 4.5, applied at \(Z\), then gives
+\[
+\epsilon^{bi}_Z:JB\longrightarrow Z\in W_{bi}.
+\]
+The proof of that proposition uses a path object at \(JVZ=JB\); a path-object construction on all noncofibrant models is unnecessary here. [arxiv.org](https://arxiv.org/pdf/1809.07923?utm_source=chatgpt.com)
+
+The triangle identity is
+\[
+V\epsilon^{bi}_Z\,v_B=\operatorname{id}_B.
+\]
+Hence
+\[
+v_B:B\longrightarrow VJB\in W.
+\tag{G}
+\]
+
+The choices of inverse data establish that the already-defined map \(v_B\) belongs to \(W\). They do not enter its definition.
+
+### 1.4. Comparison of all groupoidal models, and saturation
+
+The forgetful functor \(V\) creates weak equivalences. Ara’s boundarywise characterization of groupoidal weak equivalences is precisely FHM essential \(\omega\)-surjectivity when all cells are invertible; \(V\) changes neither the cells nor their boundaries. [arxiv.org](https://arxiv.org/pdf/1206.2941?utm_source=chatgpt.com)
+
+For every \(X\in\mathcal G\), the cofibrant replacement \(KX\) is groupoidal, since \(q_X:KX\to X\) belongs to \(W\) and reflects invertibility. Therefore
+\[
+X\xleftarrow[\sim]{q_X}KX
+\xrightarrow[\sim]{v_{KX}}VJKX
+\tag{H}
+\]
+is a natural zigzag in \(\mathcal G\).
+
+For an arbitrary \(Z\in\mathcal B\), use
+\[
+c_Z=\epsilon^{bi}_Z\circ Jq_{VZ}:JKVZ\longrightarrow Z.
+\]
+Naturality and the triangle identity give the strict equality
+\[
+Vc_Z\circ v_{KVZ}=q_{VZ}.
+\tag{I}
+\]
+Both maps on the right-hand side of this factorization belong to \(W\), so \(Vc_Z\in W\), and therefore \(c_Z\in W_{bi}\).
+
+This use of \(c_Z\) matters: directly applying Lanari’s proposition to \(\epsilon^{bi}_Z\) would require \(JVZ\) to be cofibrant, which has not been assumed.
+
+Naturality of (H) also proves that \(JK\) preserves weak equivalences. Thus \(JK\) and \(V\) induce inverse equivalences
+\[
+\mathcal G[W_{\mathrm{gpd}}^{-1}]
+\simeq
+\mathcal B[W_{bi}^{-1}].
+\tag{J}
+\]
+
+Moreover, \(W_{\mathrm{gpd}}\) is saturated. To see this explicitly, suppose \(f\) becomes invertible in \(\mathcal G[W_{\mathrm{gpd}}^{-1}]\). Then \(JKf\) becomes invertible in the semi-model localization of \(\mathcal B\), and consequently \(JKf\in W_{bi}\). Hence \(VJKf\in W\). Applying two-out-of-three to the natural zigzags (H) gives \(f\in W\).
+
+### 1.5. Identifying the specified realization
+
+An abstract equivalence with spaces would not suffice to identify the specified unit. We must check that \(EK\) is the realization equivalence.
+
+Let \(\beta_k:\mathbb D_k\to I_k\) be the independent inverse-data attachments of Known (VII). That heading supplies the unconditional calculation
+\[
+E(\beta_k)\simeq\operatorname{id}.
+\]
+Bourke’s algebraic-injectivity construction makes \(v_B\) a \(\beta\)-cell extension. Since \(E\) preserves the cellular homotopy colimits in question,
+\[
+E(v_B):EB\longrightarrow EVJB
+\]
+is an equivalence for cofibrant \(B\). Bourke also proves that forgetting a pushout of a free map gives the corresponding underlying pushout followed by such a cellular extension. [arxiv.org](https://arxiv.org/pdf/1811.09532?utm_source=chatgpt.com)
+
+Apply this to a generating trivial cofibration of the groupoidal semi-model structure,
+\[
+J\mathbb D_n\longrightarrow J\mathbb D_{n+1}.
+\]
+After forgetting, a pushout of this map is a CaTT pushout of
+\(\mathbb D_n\to\mathbb D_{n+1}\), followed by a \(\beta\)-cell extension. Applying \(E\) inverts both stages: the realized globes are contractible, and the inverse-data extensions are inverted by the preceding calculation.
+
+It follows that \(EV\) inverts trivial cofibrations between cofibrant models, hence all weak equivalences between cofibrant models. The latter implication can be checked directly. For a trivial fibration \(p:X\to Y\) between cofibrant models, choose a section \(s\), and factor
+\[
+[s,\operatorname{id}_X]:Y\amalg X\longrightarrow X
+\]
+as a cofibration followed by a trivial fibration. Both coprojections into the intermediate model are trivial cofibrations. Inverting those coprojections successively inverts the second factor, \(s\), and \(p\). Factoring an arbitrary weak equivalence proves the assertion.
+
+The same underlying-pushout calculation shows that the derived functor \(EV\) preserves homotopy pushouts; coproducts and cellular colimits are preserved as well. Thus its derived functor preserves colimits.
+
+Henry’s comparison identifies \(\mathcal B[W_{bi}^{-1}]\) with spaces and sends the free vertex \(J\mathbb D_0\) to a point. Our derived \(EV\) also sends \(J\mathbb D_0\) to a point. Under Henry’s equivalence, it is therefore a colimit-preserving endofunctor of spaces sending the point to the point. Such a functor is the identity up to equivalence: every space \(X\) is the colimit of the constant point diagram indexed by \(X\).
+
+Consequently,
+\[
+EV:\mathcal B_{\mathrm{cof}}[W_{bi}^{-1}]
+\xrightarrow{\sim}\mathcal S
+\]
+is the specified realization equivalence. Combining this with (J) and \(E(v_{KX})\) gives
+\[
+EK:\mathcal G[W_{\mathrm{gpd}}^{-1}]
+\xrightarrow{\sim}\mathcal S.
+\tag{K}
+\]
+
+By (E), \(\Phi\) and \(E\) agree on groupoidal cofibrant models. Thus the hypothesis (H) of Known (III) holds on this restricted domain.
+
+### 1.6. Recovering the literal units
+
+Known (III) now restricts to an adjunction
+\[
+EK:
+\mathcal G[W_{\mathrm{gpd}}^{-1}]
+\rightleftarrows
+\mathcal S:
+\overline S_{\mathrm{space}}.
+\tag{L}
+\]
+Its left adjoint is an equivalence by (K), so its derived unit is an equivalence.
+
+For a groupoidal cofibrant \(B\), that unit is represented by
+\[
+B\xleftarrow{q_B}KB
+\xrightarrow{\eta_{KB}}S_0\mathcal L_RKB,
+\]
+possibly followed by \(S_0\) of an algebraic completion map. The latter belongs to \(W\), by (C), and can be removed in the localization.
+
+Both ends of \(\eta_{KB}\) are groupoidal by (F). Saturation from §1.4 therefore gives
+\[
+\eta_{KB}\in W.
+\]
+
+Finally, naturality gives
+\[
+\eta_Bq_B=(S_0\mathcal L_Rq_B)\eta_{KB}.
+\]
+The map \(q_B\) is a weak equivalence between groupoidal cofibrant models. Restricted homotopicality gives that \(\Phi(q_B)\) is an equivalence, and (C) then gives
+\[
+S_0\mathcal L_R(q_B)\in W.
+\]
+Two-out-of-three proves \(\eta_B\in W\).
+
+This proves the reverse implication in (A). The forward implication is Known (VII).
+
+## 2. What FEA gives
+
+### 2.1. The semantic walking-equivalence calculation is unconditional
+
+For the FHM generating maps
+\[
+j_n:\mathcal C^n\longrightarrow\mathcal E^{n+1},
+\]
+one has
+\[
+\Phi(j_n)\text{ is an equivalence}.
+\tag{M}
+\]
+
+The cellular realization of the independent inverse-and-cancellation presentation is the semantic walking coinductive equivalence, in the appropriate hom dimension. The agreement of algebraic and geometric compositions relative to boundaries, supplied in Known (IV), identifies its attaching maps.
+
+ORW Construction 5.35 gives this cell complex; Lemma 5.38 proves that its finite stages become contractible after the indicated finite localization, and Corollary 5.39 proves that the resulting complex maps \(\infty\)-surjectively to a point. Lemma 5.23 identifies its suspensions as maps inverted by coinductive completion. [arxiv.org](https://arxiv.org/pdf/2603.11005v2?utm_source=chatgpt.com)
+
+This establishes (M) semantically. It does not assume that \(j_n\) is an algebraic weak equivalence.
+
+### 2.2. \(U\Rightarrow\mathrm{FEA}\)
+
+Let
+\[
+i:B\longrightarrow B'=B\amalg_{\mathcal C^n}\mathcal E^{n+1}
+\]
+be an FEA attachment. Both models are computad-cofibrant.
+
+By (M) and preservation of cellular homotopy pushouts,
+\[
+\Phi(i)\text{ is an equivalence}.
+\]
+Consequently \(S_0\mathcal L_R(i)\in W\), by (C). Naturality gives
+\[
+\eta_{B'}i=(S_0\mathcal L_Ri)\eta_B.
+\]
+Under \(U\), both units belong to \(W\), so \(i\in W\).
+
+### 2.3. FEA is equivalent to existence of the canonical left semi-model structure
+
+Here “canonical” means
+\[
+\mathrm{Cof}=I\text{-cof},\qquad
+\mathrm{Fib}=J^\pitchfork,\qquad
+\mathrm{WE}=W,
+\]
+with \(I\) the computadic boundary inclusions and \(J=\{j_n\}\).
+
+Assume FEA. By the filtered-colimit argument in Known (VI), every relative \(J\)-cell complex with cofibrant source belongs to \(W\).
+
+The small-object argument for \(I\) gives the cofibration–trivial-fibration factorization. The small-object argument for \(J\) gives, for cofibrant sources, a factorization
+\[
+f=pj
+\]
+with \(j\) a relative \(J\)-cell complex and \(p\in J^\pitchfork\). Thus \(j\in W\).
+
+To verify the remaining lifting axiom, let \(i\in I\text{-cof}\cap W\) have cofibrant source, and factor it as \(i=pj\) in this way. Then \(p\in W\) by two-out-of-three, so
+\[
+p\in W\cap J^\pitchfork=I^\pitchfork.
+\]
+The lifting property of \(i\) against \(p\) makes \(i\) a retract of \(j\). Hence \(i\) lifts against every fibration. These are the left semi-model axioms; all models are fibrant.
+
+Conversely, in that canonical semi-model structure each \(j_n\) is a trivial cofibration. Its pushouts with cofibrant source are weak equivalences, which gives FEA.
+
+Finally, (M) shows that \(\Phi\) inverts relative \(J\)-cell complexes and their retracts. The same cofibrant-source argument used in §1.5 then shows that it inverts every weak equivalence between cofibrant models. Hence FEA implies (H).
+
+## 3. Why these results do not decide \(U\)
+
+There are two distinct missing comparisons.
+
+### Cellular induction needs more than the semi-model axioms
+
+Suppose
+\[
+B'=B\amalg_C D
+\]
+is a generating cellular attachment. Even if this square is a homotopy pushout in \(\mathcal C[W^{-1}]\), and the units at \(B,C,D\) are equivalences, the induction still needs the comparison
+\[
+\operatorname*{hocolim}
+\bigl(
+\overline S\Phi B
+\leftarrow\overline S\Phi C
+\rightarrow\overline S\Phi D
+\bigr)
+\longrightarrow
+\overline S\!\left(
+\Phi B\amalg_{\Phi C}\Phi D
+\right)
+\tag{N}
+\]
+to be an equivalence.
+
+The semi-model axioms establish the algebraic homotopy pushout. They do not establish (N), which concerns preservation of that homotopy pushout by the right adjoint. Thus I cannot justify \(\mathrm{FEA}\Rightarrow U\) from left properness on cofibrant models alone.
+
+The relevant general comparison theorems retain this extra requirement. Barwick–Schommer-Pries distinguish canonical homotopical density from existence of cellular decompositions. Caviglia–Horel’s unit induction explicitly uses preservation of generating pushout squares by their nerve; their theorem concerns internal algebras and does not identify their model structure with the FHM localization of set-based CaTT models. [webhomes.maths.ed.ac.uk](https://webhomes.maths.ed.ac.uk/~cbarwick/papers/unicity.pdf?utm_source=chatgpt.com)
+
+### The groupoidal converse does not identify directed homs
+
+To extend §1 by taking homs, one needs a comparison of the form
+\[
+\Phi\bigl(B(x,y)\bigr)
+\longrightarrow
+\Phi(B)(\eta x,\eta y)
+\tag{O}
+\]
+and a proof that it is an equivalence, with the prescribed boundaries retained.
+
+Neither the core argument nor absolute groupoidal comparison proves (O). The distinction already appears for groupoidification of the ordinary walking arrow:
+\[
+g\,\operatorname{Hom}_{[1]}(1,0)=\varnothing,
+\qquad
+\operatorname{Hom}_{g[1]}(1,0)\simeq *.
+\]
+The first equality holds because \([1]\) has no arrow \(1\to0\); the second holds because its groupoidification is a contractible groupoid.
+
+This calculation does not disprove (O) for \(\Phi\). It shows why replacing directed data by groupoidal data cannot itself prove it.
+
+All realizations in the arguments above are \(\Phi\) or \(E\). None identifies the realization of an arbitrary computad with the nerve of its strict reflection; the bubble distinction specified in Q1 remains intact.
+
+## 4. The exact directed coherator remains unconstructed
+
+I can obtain uniform replacements of the semantic arity diagram, and I can obtain a larger semistrict theory with relative fillers. Neither establishes the requested result for the stated \(L\).
+
+The unresolved distinction is this:
+
+- A functorial replacement of the semantic arity diagram gives equivalences to the tensor arities and maps for the existing substitutions.
+- Freely adjoining every relative globe-boundary filler can make all arity augmentations trivial fibrations and close substitution under the added operations.
+- The second construction adds heads beyond the operation/coherence rule of \(L\). To call it a coherator for the given \(L\), one must prove that the added operations are eliminable, or prove an appropriate equivalence of model theories.
+
+That last assertion has not been proved.
+
+For the exact syntax, the missing theorem is a uniform construction of boundary-matching elementary pastes for arbitrary whole-grid heads, together with comparisons compatible with arbitrary substitution. Full-support coherence supplies a comparison once the required terms with literal matching boundaries have been constructed. It does not by itself construct those terms.
+
+Nor does the failure of this construction prove impossibility: a filler excluded as a primitive head can still be a derived term. The strict-enrichment obstruction in Known (V) therefore cannot be promoted to an obstruction to every weak enrichment.
+
+Thus (A) and (B) are the general implications established here. I have not proved the unrestricted unit condition, produced a counterexample to it, proved its equivalence with FEA or Henry’s condition, or constructed the requested coherator for the exact \(L\).

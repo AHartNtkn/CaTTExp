@@ -151,3 +151,2057 @@ A proof of the conjecture of Q1, or a counterexample with a replacement descript
 - Björner–Wachs, JCTA 58 (1991), Thm 6.8 (weak order on linear extensions).
 - Gagna–Harpaz–Lanari (arXiv 2006.14495), Ex. 2.5, Rem. 2.6 and Rem. 2.20; Gepner–Heine (arXiv 2510.10504).
 - Campion, *The Gray tensor product of (∞,n)-categories* (arXiv 2311.00205), Thm A.
+
+# Researcher Response
+
+**I do not have the complete description requested in Q1 or Q3.** I can establish two results: a no-go theorem for Q4’s literal “every well-typed goal” rule, and a precise conditional answer to the thinness claim in Q2. The no-go theorem does **not** exclude a coherence rule with an asymmetric boundary-admissibility condition.
+
+## 1. Q4: endpoint-symmetric coherence cannot generate directed interchange
+
+The obstruction concerns the eligibility condition of the coherence rule. It is independent of the grammar of the shape formulas.
+
+### Theorem
+
+Suppose a globular syntax has:
+
+1. Ordinary hom-type formation: if \(u,v:T\) are parallel terms in a context, both \(u\Rightarrow_T v\) and \(v\Rightarrow_T u\) are well-formed types.
+2. Substitution preserving sources and targets.
+3. A coherence rule
+   \[
+   \frac{
+      \mathsf{Past}(P,\tau)
+      \qquad P^\tau\vdash u,v:T
+      \qquad \mathsf{Adm}(P,\tau;u,v)
+      \qquad \Delta\vdash\sigma:P^\tau
+   }{
+      \Delta\vdash
+      \operatorname{coh}_{P,\tau}(u,v)[\sigma]:
+      u[\sigma]\Rightarrow_{T[\sigma]}v[\sigma]
+   },
+   \tag{C}
+   \]
+   where \(\tau\) records the designated tensor position of time.
+
+Assume that admissibility is symmetric in the endpoints:
+\[
+\mathsf{Adm}(P,\tau;u,v)
+\Longrightarrow
+\mathsf{Adm}(P,\tau;v,u).
+\tag{S}
+\]
+
+Then no instance of \((C)\) can interpret as the directed interchanger of the walking Gray square in a sound interpretation preserving that square.
+
+In particular, this applies when admissibility means only that the shape is designated and the goal is well typed.
+
+### Proof
+
+Write \(\mathbb Q=J\otimes J\), and let \(p,q\) be its two paths from \((0,0)\) to \((1,1)\), ordered so that its interchanger is
+\[
+\gamma:p\Rightarrow q.
+\]
+
+The relevant hom-category is
+\[
+\mathbb Q((0,0),(1,1))\cong[p\longrightarrow q].
+\]
+Consequently,
+\[
+\operatorname{Hom}_{\mathbb Q((0,0),(1,1))}(q,p)=\varnothing.
+\tag{1}
+\]
+This is the explicit Gray-cube description in Campion–Maehara, §1.3; their Corollary 3.5 preserves these cubes in the \((\infty,2)\)-categorical tensor. [arxiv.org](https://arxiv.org/pdf/2304.05965?utm_source=chatgpt.com)
+
+Suppose
+\[
+a=\operatorname{coh}_{P,\tau}(u,v)[\sigma]
+\]
+interprets as \(\gamma\). By ordinary hom formation, \(v\Rightarrow_T u\) is well formed. By \((S)\), the same rule and substitution give
+\[
+b=\operatorname{coh}_{P,\tau}(v,u)[\sigma]:
+v[\sigma]\Rightarrow u[\sigma].
+\]
+Its interpretation would be a cell \(q\Rightarrow p\), contradicting (1). \(\square\)
+
+**The proof does not require the square itself to be a designated pasting type.** Whatever shape and substitution produce the interchanger also produce its reverse.
+
+Nor does defining the interchanger as a composite of such coherences resolve the obstruction. Existence of reverse cells is preserved by composition, whiskering and functorial operations such as currying. For example, if
+\[
+a:u\Rightarrow v,\qquad b:v\Rightarrow w
+\]
+have reverse cells \(a^r,b^r\), then
+\[
+a^r\circ b^r:w\Rightarrow u
+\]
+reverses the direction of \(b\circ a\). Thus any construction using only those operations and endpoint-symmetric coherence instances still has a reverse. A directed probe cell supplied independently would be an additional source of cells, outside this hypothesis.
+
+### Why the time position does not prevent the reversal
+
+The two judgments
+\[
+P^\tau\vdash u\Rightarrow_T v
+\qquad\text{and}\qquad
+P^\tau\vdash v\Rightarrow_T u
+\]
+use the **same tensor context and the same time position**.
+
+Exchanging the endpoints of a globular hom type does not permute tensor factors. It does not invoke an exchange rule for a noncommutative context. It reuses the same derivations of \(u:T\) and \(v:T\) in the opposite endpoint positions.
+
+Therefore a tensor-position annotation cannot, by itself, make the reverse goal ill formed under ordinary globular hom formation.
+
+### When this also produces weak inverses
+
+A reverse cell alone need not be an inverse. The stronger blanket rule supplies the inverse laws as well.
+
+If every higher parallel goal over the permitted context receives a filler, then for \(a:u\Rightarrow v\) it supplies
+\[
+b:v\Rightarrow u,
+\]
+followed by
+\[
+\varepsilon:b\circ a\Rightarrow 1_u,
+\qquad
+\eta:a\circ b\Rightarrow 1_v.
+\]
+Applying the same rule to \(\varepsilon,\eta\), their reverse cells and their cancellation composites supplies the corresponding witnesses at every higher dimension. This gives the recursive witness structure for weak invertibility.
+
+The contradiction with the Gray square occurs earlier: merely producing \(b\) is already impossible. It does not depend on a particular definition of weak invertibility.
+
+### The exact escape from the theorem
+
+A possible directed rule must have an admissibility condition that distinguishes
+\[
+\mathsf{Adm}(P,\tau;u,v)
+\quad\text{from}\quad
+\mathsf{Adm}(P,\tau;v,u).
+\tag{2}
+\]
+
+For example, eligibility might require that \(u\) realize the prescribed negative boundary and \(v\) the prescribed positive boundary. This condition might be computable from the formula and its time position; the theorem does **not** prove that further primitive shape data are necessary.
+
+Such a rule no longer fills every ordinarily well-typed parallel goal. It fills the goals satisfying a directed boundary condition.
+
+The distinction already appears in CaTT: the composition clause uses the prescribed source and target boundaries in their specified order, whereas the coherence clause uses a symmetric full-support condition. Benjamin–Finster–Mimram explicitly state that the latter produces invertible cells. [arxiv.org](https://arxiv.org/pdf/2106.04475?utm_source=chatgpt.com)
+
+Thus the conclusion for Q4 is:
+
+> **The literal blanket rule is impossible under ordinary globular hom formation. A sound rule generating directed interchangers must have asymmetric boundary eligibility.**
+
+If “well-typed goal” in Q4 is intended to include that asymmetric eligibility already, the theorem does not settle the resulting existence question. It identifies a necessary condition; it does not construct a complete directed coherator.
+
+## 2. Q2: the precise consequence of one-way crossings
+
+There is a complete combinatorial statement under the crossing-presentation hypothesis. It separates thinness from the stronger identification with the particular schedule categories in the question.
+
+### The crossing category with fixed permissions
+
+Let:
+
+- \(E\) be a finite set of distinct event labels;
+- \(P\) be a dependency partial order on \(E\);
+- \(R\subseteq E\times E\) specify permitted swaps, with
+  \[
+  (a,b)\in R\Longrightarrow a\parallel_P b,
+  \qquad
+  (a,b)\in R\Longrightarrow(b,a)\notin R.
+  \tag{3}
+  \]
+
+Distinct labels may name applications of the same generating transformation. The labels must remain distinguishable throughout a crossing sequence.
+
+Define \(\mathsf C(P,R)\) by:
+
+- States: the linear extensions of \(P\).
+- Generating arrows:
+  \[
+  xaby\longrightarrow xbay
+  \qquad\text{when }(a,b)\in R.
+  \]
+- Equations: disjoint commuting squares and braid hexagons whenever their constituent swaps are permitted.
+
+This specifies both the typing of event orders and the assumption that crossing permission depends only on the two event labels.
+
+For two states \(w,v\), let
+\[
+D(w,v)=
+\bigl\{\{a,b\}\subseteq E:
+\text{\(a,b\) have opposite relative orders in \(w\) and \(v\)}\bigr\}.
+\]
+
+### Proposition
+
+\[
+\mathsf C(P,R)(w,v)=
+\begin{cases}
+\{*\},
+&
+\begin{array}{l}
+\text{for every pair in \(D(w,v)\), the change from its}\\
+\text{order in \(w\) to its order in \(v\) is permitted by \(R\);}
+\end{array}
+\\[6pt]
+\varnothing,&\text{otherwise.}
+\end{cases}
+\tag{4}
+\]
+
+In particular, \(\mathsf C(P,R)\) is a poset category.
+
+### Proof
+
+**Necessity.** The relative order of two labels changes exactly when those labels are swapped. After their first permitted swap, swapping them again would require the prohibited opposite direction. Hence each pair is swapped at most once.
+
+A path \(w\to v\) therefore swaps exactly the pairs in \(D(w,v)\), each in its permitted direction.
+
+**Existence.** Transform \(w\) into \(v\) from left to right. At the first position where they differ, move the required label of \(v\) leftwards through the intervening labels.
+
+Every such swap corrects a pair ordered differently in the current word and \(v\). The pair is \(P\)-incomparable because both words are linear extensions. The procedure never reverses an already corrected pair, so each swap is one of the permitted changes specified by \(D(w,v)\).
+
+The procedure terminates at \(v\).
+
+**Uniqueness.** Relabel the events numerically in the order in which they appear in \(v\). Every path \(w\to v\) now decreases inversions at every step, so it is a path in the corresponding ordinary schedule category \(\mathsf S(P)\).
+
+Conversely, every inversion-decreasing path from \(w\) to \(v\) swaps only pairs in \(D(w,v)\), in their required directions. Thus every such path uses only swaps permitted by \(R\).
+
+The schedule theorem supplied in the question identifies any two of these paths by commuting squares and braid hexagons. Every intermediate path in that identification still runs from \(w\) to \(v\) and therefore still uses only permitted swaps. The identification consequently holds in \(\mathsf C(P,R)\). \(\square\)
+
+In braid terminology, every path here is a positive permutation braid: each pair of labelled strands crosses at most once, and such a braid is determined by its endpoint permutation. The corresponding standard statements are *Ordering Braids*, Chapter VI, Lemmas 1.2–1.3. [dehornoy.lmno.cnrs.fr](https://dehornoy.lmno.cnrs.fr/Books/Ordering/Dhr.pdf?utm_source=chatgpt.com)
+
+### Decision procedure
+
+For this presentation, the decision procedure is explicit:
+
+1. Record each label’s position in \(w\) and \(v\).
+2. Inspect every unordered pair of labels.
+3. If its relative order differs, check that \(R\) permits the required change.
+4. Reject if a check fails; otherwise the left-to-right sorting procedure above gives a canonical arrow.
+
+The existence test uses \(O(|E|^2)\) pair checks. Any two parallel arrow expressions are equal. A canonical expression has exactly \(|D(w,v)|\) swaps.
+
+This is a decision procedure for the stipulated crossing presentation, not yet for arbitrary modification terms involving closure and probe gluing.
+
+### When this is the stated \(\mathsf S(P)\)
+
+Suppose there is a total spatial order \(\prec\) on \(E\), and the permitted swaps are exactly
+\[
+R=\{(b,a):a\prec b,\ a\parallel_P b\}.
+\tag{5}
+\]
+Then relabelling by \(\prec\) gives
+\[
+\mathsf C(P,R)\cong\mathsf S(P).
+\]
+
+But the pairwise condition “at most one direction” does not itself imply (5). Pairwise preferred orders can be cyclic:
+\[
+a\prec b,\qquad b\prec c,\qquad c\prec a.
+\]
+Condition (3) prohibits reversing an individual preference; it does not prohibit this cycle.
+
+When every incomparable pair has a permitted direction, existence of a total spatial order satisfying (5) is equivalent to acyclicity of the directed graph of preferred post-swap orders. A topological ordering then supplies \(\prec\).
+
+This is a distinction about the combinatorial hypothesis. It is **not** a constructed counterexample in \(\mathcal G'_\Sigma\). Proving that a specified class of typed transformations enforces a consistent spatial order remains necessary if that consistency is not part of “position-rigid.”
+
+Likewise, a **product** of schedule categories requires a factorization of the actual states and crossing operations into independent coordinates. A partition of event labels or dependencies alone does not establish that factorization: interleavings between the parts must also be accounted for.
+
+### What follows for Q2
+
+Under Q1’s conjectured presentation, with fixed event labels and the dependency-word typing just specified:
+
+- Fixed one-way permissions imply the thin category \(\mathsf C(P,R)\).
+- A consistent total spatial order gives the stated \(\mathsf S(P)\).
+- A factorization of states and crossing operations gives a product of those schedule categories.
+
+If Q1 fails, the argument still describes the category **generated by crossings**, provided its equations are the stated ones. It describes the **full modification category** only if the crossing inclusion is full on the particular family of words being considered.
+
+Failure of fullness elsewhere neither proves nor disproves fullness on a position-rigid family. One-way crossing permissions constrain crossings; they do not exclude additional modifications whose existence is precisely what Q1 asks to decide.
+
+## 3. What remains unresolved
+
+The braid retraction in item 26 gives
+\[
+F:\mathsf{Br}^{+}_S\longrightarrow\mathcal C_S,
+\qquad
+R:\mathcal C_S\longrightarrow\mathsf{Br}^{+}_S,
+\qquad
+RF=1.
+\]
+This proves faithfulness of \(F\). To obtain the conjecture on this full subcategory, one must additionally prove
+\[
+m=F(R(m))
+\tag{6}
+\]
+for **every** modification \(m\) between its words. In the general typed setting, one must also prove that the braid extracted from \(m\) is realizable through well-typed intermediate words.
+
+I have not proved (6), a normalization theorem eliminating the additional closure and gluing constructions, or an undecidability result. Accordingly, these arguments do not decide
+\[
+\iota\circ\pi=1_H,
+\qquad
+\mathcal G(t_1,t_2)=\{\alpha\},
+\qquad
+\mathcal G(s,t)=\{\theta\}.
+\]
+They establish the endpoint-symmetry obstruction for Q4 and the conditional crossing classification for Q2, while leaving the requested complete descriptions in Q1 and Q3 unresolved.
+
+# Followup 1
+
+I have not resolved all four questions. In particular, I do not have a complete description for arbitrary residual-containing signatures, or a decision procedure or undecidability result for Q3.
+
+The continuation does establish a **full positive-braid theorem for the entire endotransformation signature of item 26**, under the representable probe-enrichment formulation below. Its proof accounts for closure detours and probe gluing. It also shows that the proposed endpoint test in Q2 is insufficient.
+
+## 1. A complete theorem for the endotransformation signature
+
+Consider the signature consisting of one data atom \(A\) and arbitrary generators
+\[
+\alpha_s:1_A\Rightarrow1_A,\qquad s\in S,
+\]
+all left-parameter transformations. There are no other data generators.
+
+For this theorem, use the following precise formulation of the probe structure:
+
+1. The designated probe gluings are connected, nonempty pasting colimits, preserved by tensor actions.
+2. One-sided homs are represented by strict \(2\)-categories:
+   \[
+   \mathcal C(P\triangleright X,Y)
+   \cong
+   2Cat\!\left(P,H_{\mathcal C}(X,Y)\right),
+   \]
+   compatibly with reindexing and Gray-enriched composition.
+3. Adjoining biclosed structure is the relative free extension requiring residuals only between data types, and preserving the designated probe-action gluings for every data type.
+
+These hypotheses specify the representable version of the two-sided enrichment in item 18. If item 19 instead intends a weaker probe-presheaf theory without this representability, the theorem below does not establish the identification for that weaker theory.
+
+### Theorem
+
+Under these hypotheses,
+\[
+H_{\mathcal G'}(A,A)
+\cong
+B\mathsf{Br}^{+}_S,
+\]
+where \(B\mathsf{Br}^{+}_S\) is the strict \(2\)-category with:
+
+- one \(0\)-cell;
+- words in \(S\) as \(1\)-cells;
+- coloured positive braids as \(2\)-cells.
+
+Consequently:
+
+- the only data arrow \(A\to A\) is \(1_A\);
+- every left-parameter transformation \(1_A\Rightarrow1_A\) is a unique word in \(S\);
+- every modification between such words is a crossing composite;
+- equality of those modifications is exactly equality of coloured positive braids.
+
+The assertion concerns **all terms of those types**, including terms using residuals, currying, evaluation and the designated probe gluings.
+
+The proof has two parts: an explicit description before closure, followed by a relative-conservativity theorem.
+
+### 1.1 The theory before adjoining residuals
+
+Let
+\[
+T=B\mathsf{Br}^{+}_S.
+\]
+The noninvertible braiding gives \(T\) a strict monoid structure for the lax Gray tensor:
+\[
+\mu:T\otimes_{\mathrm{Gray}}T\longrightarrow T.
+\]
+
+Construct a nonclosed two-sort model \(\mathcal C_T\).
+
+Its data types are strings
+\[
+P_0\,A\,P_1\,A\cdots A\,P_n,\qquad n\geq1,
+\]
+with \(P_i\) admitted probes. Adjacent probe factors are combined by Gray tensor. A string with \(n=0\) is a probe type.
+
+There are no arrows between strings with different numbers of \(A\)'s. For equal numbers, define
+\[
+\begin{aligned}
+&\mathcal C_T(P_0A\cdots AP_n,\ Q_0A\cdots AQ_n)\\
+&\qquad =
+\prod_{i<n}2Cat(P_i,Q_i\otimes T)
+\times 2Cat(P_n,Q_n).
+\end{aligned}
+\tag{1}
+\]
+
+Composition in each of the first \(n\) factors is
+\[
+P\xrightarrow{f}Q\otimes T
+\xrightarrow{g\otimes1_T}R\otimes T\otimes T
+\xrightarrow{1_R\otimes\mu}R\otimes T.
+\tag{2}
+\]
+The last factor uses ordinary composition of probe maps.
+
+Tensor concatenates the strings. At the joining position, it tensors the final probe map of the left string with the first factor map of the right string. Associativity and bifunctoriality follow from associativity of \(\mu\) and bifunctoriality of Gray tensor on strict functors.
+
+This construction preserves the designated gluings. Tensoring a probe cone into one of these strings varies one factor of (1). That factor sends the colimit to a limit by representability in \(2Cat\). The other factors are constant, and a constant diagram indexed by a connected nonempty category has its given value as limit.
+
+In particular,
+\[
+\mathcal C_T(P\triangleright A,A)=2Cat(P,T).
+\tag{3}
+\]
+Interpret \(\alpha_s\) by the functor \(J\to T\) selecting \(s\).
+
+Now let \(\mathcal C\) be the initial nonclosed model on this signature, and put
+\[
+M=H_{\mathcal C}(A,A).
+\]
+The full strict \(2\)-subcategory of \(M\) on \(1_A\) is closed under its Gray-monoid multiplication. By the prebraiding laws of item 26, the generators induce a monoid map
+\[
+j:T\longrightarrow M.
+\tag{4}
+\]
+
+There is an interpretation back from \(\mathcal C_T\) to \(\mathcal C\). The identity of \(Q\triangleright A\) gives a canonical functor
+\[
+Q\longrightarrow H_{\mathcal C}(A,Q\triangleright A).
+\]
+Composition with endomorphisms of \(A\) gives
+\[
+Q\otimes M\longrightarrow H_{\mathcal C}(A,Q\triangleright A).
+\]
+Therefore a map \(f:P\to Q\otimes T\) determines
+\[
+P\longrightarrow Q\otimes T
+\longrightarrow Q\otimes M
+\longrightarrow H_{\mathcal C}(A,Q\triangleright A),
+\]
+and hence, by representability, a data arrow
+\[
+P\triangleright A\longrightarrow Q\triangleright A.
+\]
+Tensor these interpretations for the factors in (1), and append the final probe map. This defines
+\[
+G:\mathcal C_T\longrightarrow\mathcal C.
+\]
+
+Enriched associativity verifies (2); tensor is preserved by construction; and designated cones are sent to the corresponding designated cones. Initiality supplies
+\[
+F:\mathcal C\longrightarrow\mathcal C_T.
+\]
+Since \(GF\) fixes every probe, \(A\), and every \(\alpha_s\),
+\[
+GF=1_{\mathcal C}.
+\]
+
+On \(H(A,A)\), the functor \(F\) induces \(r:M\to T\). The composite \(rj\) fixes the generating letters and crossings of \(T\), so \(rj=1_T\). The equation \(GF=1_{\mathcal C}\) gives \(jr=1_M\). Thus
+\[
+H_{\mathcal C}(A,A)\cong T.
+\tag{5}
+\]
+
+This proves generation before closure. It accounts for arbitrary admitted probe maps and designated gluings through an inverse interpretation, rather than only a separating interpretation.
+
+### 1.2 Freely adjoining residuals is conservative on existing types
+
+The required extension of (5) follows from this proposition.
+
+**Relative-conservativity proposition.** Let \(\mathcal C\) be a small nonclosed two-sort model with designated nonempty pasting colimits and their tensor translates. Let
+\[
+i:\mathcal C\longrightarrow\mathcal F
+\]
+freely adjoin data residuals while preserving the specified probe-action gluings. Then \(i\) is fully faithful.
+
+Here the residual adjunctions are tested only against data types. No adjunction at a probe-only type is asserted.
+
+The proof is a nonsymmetric, colimit-preserving version of the gluing argument used by Hasegawa for relative free closed completion. His Theorem 5.4 proves the symmetric monoidal case. [kurims.kyoto-u.ac.jp](https://www.kurims.kyoto-u.ac.jp/~hassei/papers/full.pdf?utm_source=chatgpt.com)
+
+**Proof.** Combine the probe and data sorts into an ordinary monoidal category, retaining no maps between the two sorts. The tensor unit belongs to the probe sort. Let \(\mathcal K\) be the designated cones, including the specified tensor translates.
+
+Let
+\[
+\mathcal L=
+\left\{
+U:\mathcal C^{op}\to\mathbf{Set}
+\mid
+U\text{ sends every cone in }\mathcal K\text{ to a limit}
+\right\}.
+\]
+This is the reflective subcategory obtained by imposing orthogonality to
+\[
+\operatorname*{colim}_j yD_j
+\longrightarrow
+y\!\left(\operatorname*{colim}_jD_j\right)
+\]
+for the specified cones.
+
+Yoneda lands in \(\mathcal L\), and
+\[
+y:\mathcal C\longrightarrow\mathcal L
+\]
+preserves those colimits. Indeed, for local \(U\),
+\[
+\mathcal L(y\operatorname{colim}D,U)
+\cong U(\operatorname{colim}D)
+\cong\lim_jU(D_j)
+\cong\lim_j\mathcal L(yD_j,U).
+\]
+
+Under Day convolution,
+\[
+(yc\backslash U)(d)\cong U(c\otimes d),
+\qquad
+(U/yc)(d)\cong U(d\otimes c).
+\]
+These presheaves remain local because the tensor translates of the designated cones are imposed. Residuals against arbitrary presheaves are limits of residuals against representables. Hence \(\mathcal L\) is an exponential ideal on both sides. Day reflection gives it a biclosed structure for which \(y\) is strong monoidal. [arxiv.org](https://arxiv.org/pdf/0705.3485?utm_source=chatgpt.com)
+
+Define
+\[
+N:\mathcal F\longrightarrow\mathcal L,
+\qquad
+N(X)(c)=\mathcal F(ic,X).
+\]
+It lands in \(\mathcal L\) because \(i\) preserves the designated cones. Tensor of arrows gives \(N\) a lax monoidal structure.
+
+Form the comma category
+\[
+\mathcal E=(\mathcal L\downarrow N).
+\]
+A data type is a triple
+\[
+(X,U,u:U\to NX).
+\]
+For probes retain the canonical triples
+\[
+j(P)=(iP,yP,\varphi_P).
+\]
+
+For data triples \(a=(X,U,u)\) and \(b=(Y,V,v)\), define
+\[
+a\backslash b
+=
+\left(
+X\backslash Y,\,
+(U\backslash V)
+\times_{U\backslash NY}
+N(X\backslash Y),\,
+\operatorname{pr}_2
+\right).
+\tag{6}
+\]
+The map from \(N(X\backslash Y)\) to the pullback base is adjoint to
+\[
+U\otimes N(X\backslash Y)
+\longrightarrow NX\otimes N(X\backslash Y)
+\longrightarrow N(X\otimes(X\backslash Y))
+\longrightarrow NY.
+\]
+The other map is \(U\backslash v\). The pullback condition is exactly the comma compatibility condition after currying. Thus (6) supplies the left residual; the right residual is analogous.
+
+The projection
+\[
+\pi:\mathcal E\to\mathcal F
+\]
+preserves these residuals.
+
+It also preserves the required action gluings. For a probe cone \(P_j\to P\) acting on a data triple \((X,U,u)\), the two coordinates are
+\[
+P_j\triangleright X,
+\qquad
+yP_j\otimes_{\mathcal L}U.
+\]
+The first has the required colimit by the gluing axiom of \(\mathcal F\), applied to \(X\). The second has it because \(y\) preserves the probe cone and tensor in \(\mathcal L\) preserves colimits. These give a colimit in the comma category: its structure map is induced from
+\[
+U_j\longrightarrow NX_j\longrightarrow N(\operatorname{colim}X_j).
+\]
+There is no requirement that \(N\) preserve colimits.
+
+The functor
+\[
+j(c)=(ic,yc,\varphi_c)
+\]
+preserves the initial nonclosed structure and designated cones. Relative freeness therefore gives a lift
+\[
+K:\mathcal F\longrightarrow\mathcal E,
+\qquad
+Ki=j,\qquad \pi K=1_{\mathcal F}.
+\]
+
+Given \(m:ic\to id\), write
+\[
+K(m)=(m,p),\qquad p:yc\to yd.
+\]
+Yoneda gives \(p=yf\) for a unique \(f:c\to d\). Comma compatibility says
+\[
+\varphi_d\circ yf=N(m)\circ\varphi_c.
+\]
+Evaluation at \(1_c\) yields
+\[
+m=i(f).
+\]
+Thus \(i\) is full.
+
+If \(i(f)=i(g)\), applying \(K\) gives \(y(f)=y(g)\), hence \(f=g\). Thus \(i\) is faithful. ∎
+
+The argument uses ordinary bifunctorial tensor on data arrows. It therefore applies to the corrected theory \(\mathcal G'\), not directly to the original \(\mathcal G\).
+
+Apply the proposition to
+\[
+D_2\triangleright A\longrightarrow A.
+\]
+Fullness gives a preclosed representative for every modification. Faithfulness preserves its two prescribed boundary transformations. Combining this with (5) proves the theorem.
+
+### 1.3 An equality decision procedure in this sector
+
+Assume the finite probes, their maps, designated cones and equational rules are effectively presented.
+
+Given a modification term \(m:w\Rightarrow v\):
+
+1. Enumerate positive braid words \(b:w\to v\) and equational derivations.
+2. Search for a derivation
+   \[
+   m=F(b).
+   \]
+3. The theorem guarantees that this search terminates.
+
+For two terms, obtain braid words \(b,c\). If their lengths differ, they are unequal. Otherwise search the finite graph of words of that common length under
+\[
+\sigma_i\sigma_j=\sigma_j\sigma_i
+\quad(|i-j|\ge2),
+\qquad
+\sigma_i\sigma_{i+1}\sigma_i
+=
+\sigma_{i+1}\sigma_i\sigma_{i+1}.
+\]
+The relations preserve length, so this finite search decides equality. Colours are transported along the strands.
+
+This gives termination, without a useful complexity bound.
+
+### Why this does not settle general Q1
+
+A generator whose declared type uses \(A\backslash B\) cannot be moved into the preceding nonclosed signature by treating \(A\backslash B\) as a fresh atomic name. The relative completion would create a new residual; identifying it with the old name imposes additional representability requirements.
+
+For example, once
+\[
+f:A\otimes X\to B
+\]
+is present, that identification requires
+\[
+\Lambda_A(f):X\to A\backslash B
+\]
+with the already declared codomain. The relative-conservativity proposition does not justify this identification.
+
+The remaining general problem is therefore the normalization of **prescribed residual arities**, not closure detours in a signature already formulated without residuals.
+
+## 2. The proposed endpoint test in Q2 is insufficient
+
+The condition “pairwise distinct endpoint data arrows and no endotransformation generator” does not imply position rigidity after structural whiskering.
+
+Put
+\[
+X=A\otimes A\otimes B
+\]
+and use its two decompositions
+\[
+(K_1,L_1)=(A,A\otimes B),
+\qquad
+(K_2,L_2)=(A\otimes A,B).
+\]
+Define
+\[
+U_i=K_i\otimes(K_i\backslash X),
+\]
+\[
+u_i
+=
+1_{K_i}\otimes\Lambda_{K_i}(1_X)
+:X\to U_i,
+\qquad
+e_i=\operatorname{ev}_{K_i,X}:U_i\to X.
+\]
+Then
+\[
+e_i u_i=1_X.
+\]
+Write \(p_i=u_i e_i\), and adjoin independent left-parameter generators
+\[
+\alpha_i:p_i\Rightarrow1_{U_i}.
+\tag{7}
+\]
+
+### The generators in (7) are genuinely nonendomorphic
+
+A separating model must also interpret the transformations in (7). Interpreting everything as discrete categories would not do so.
+
+Instead use the following two-sort model:
+
+- data types and maps are sets and functions, with cartesian tensor and exponentials;
+- probe actions are
+  \[
+  P\triangleright X=\operatorname{Ob}(P)\times X,
+  \qquad
+  X\triangleleft P=X\times\operatorname{Ob}(P).
+  \]
+
+The object-set functor is strong monoidal for Gray tensor. It preserves colimits because
+\[
+2Cat(P,\nabla S)\cong
+\mathbf{Set}(\operatorname{Ob}P,S),
+\]
+where \(\nabla S\) is the chaotic \(2\)-category on \(S\). Cartesian product preserves colimits separately, so the designated action gluings hold.
+
+A \(J\)-parameter transformation is an arbitrary pair of functions, since \(\operatorname{Ob}J=\{0,1\}\). Thus \(\alpha_i\) is interpreted by the function with slices \(p_i\) and \(1_{U_i}\).
+
+Choose \(|A|=2\) and \(|B|=1\). Then
+\[
+|X|=4,\qquad
+|U_1|=2\cdot4^2=32,\qquad
+|U_2|=4\cdot4^4=1024.
+\]
+Each \(p_i\) factors through a four-element set, so
+\[
+p_i\ne1_{U_i}.
+\]
+The four typed endpoint arrows in (7) are pairwise distinct.
+
+### Whiskering nevertheless creates braid loops
+
+Define
+\[
+a_i=e_i\alpha_i u_i.
+\]
+Its endpoints are
+\[
+e_i p_i u_i=(e_i u_i)^2=1_X,
+\qquad
+e_i1_{U_i}u_i=1_X.
+\]
+Hence
+\[
+a_i:1_X\Rightarrow1_X.
+\]
+
+Both crossings exist:
+\[
+c_{a_1,a_2}:a_1a_2\Rightarrow a_2a_1,
+\qquad
+c_{a_2,a_1}:a_2a_1\Rightarrow a_1a_2.
+\]
+Their composite
+\[
+q=c_{a_2,a_1}\circ c_{a_1,a_2}
+\]
+is nonidentity.
+
+To prove this, use the positive-braid detector from item 26. Interpret \(A\) as terminal and \(B\) as that detector. Both \(K_i\) become terminal, and all \(u_i,e_i,p_i\) become identities under the canonical identifications. Interpret the two \(\alpha_i\) as its two generating endotransformations. Then
+\[
+q^n\longmapsto\sigma_1^{2n}.
+\]
+Positive braid length distinguishes these images. Thus the modification category has infinitely many distinct endomorphisms of \(a_1a_2\).
+
+This refutes the proposed test based on the **declared generator endpoints**. It does not refute the actual position-rigidity hypothesis: the whiskered \(a_i\) explicitly violate it. A usable rigidity condition must quantify over the permitted structural whiskerings.
+
+Under the braid conjecture and genuine position rigidity, the crossing category is thin by the schedule argument. If the general conjecture fails, that argument still describes the crossing-generated subcategory; it does not establish fullness in the complete modification category.
+
+## 3. A computability restriction relevant to Q4
+
+There is also a rigorous obstruction to any proposed description that decides **global existence of data arrows**. This obstruction uses only finite signatures with tensor-word endpoints.
+
+### Proposition
+
+Uniformly over finite unit-free signatures \(\Sigma\), the problem
+\[
+\mathcal B_\Sigma(U,V)\ne\varnothing
+\]
+is undecidable, even when \(U,V\) and all generator endpoints are nonempty tensor words.
+
+**Proof.** Start with a finite Thue presentation. Equivalence for such presentations is undecidable. [wolframscience.com](https://wolframscience.com/prizes/tm23/images/Post2.pdf?utm_source=chatgpt.com)
+
+To eliminate empty words, introduce a delimiter \(\#\) and encode
+\[
+E(a_1\cdots a_n)=\#a_1\#\cdots\#a_n\#,
+\qquad
+E(\varepsilon)=\#.
+\]
+Replace each relation \(u=v\) by both directed rules
+\[
+E(u)\to E(v),\qquad E(v)\to E(u).
+\]
+All endpoints are nonempty. Matches start and end at delimiter positions, so
+\[
+u\equiv_{\mathrm{Thue}}v
+\iff E(u)\to^*E(v).
+\tag{8}
+\]
+
+For every directed rule \(U_r\to V_r\), declare a generator
+\[
+f_r:\bigotimes U_r\to\bigotimes V_r.
+\]
+Every rewrite sequence gives an arrow in \(\mathcal B_\Sigma\).
+
+For the converse, let \(R\) be the monoidal preorder of words and rewrite reachability:
+\[
+R(U,V)=
+\begin{cases}
+\{*\},&U\to^*V,\\
+\varnothing,&\text{otherwise}.
+\end{cases}
+\]
+Tensor is concatenation.
+
+The presheaf category \([R^{op},\mathbf{Set}]\), with Day convolution, is biclosed, and Yoneda is fully faithful and strong monoidal. Interpret the generators by their Yoneda images. An arrow \(U\to V\) in \(\mathcal B_\Sigma\) would therefore give
+\[
+yU\to yV,
+\]
+which by Yoneda requires \(R(U,V)\ne\varnothing\). Together with (8),
+\[
+\mathcal B_\Sigma(E(u),E(v))\ne\varnothing
+\iff u\equiv_{\mathrm{Thue}}v.
+\]
+∎
+
+The same existence obstruction transfers to \(\mathcal G\) by item 7, and to the ordinary-data signature in \(\mathcal G'\) by the probe-erasure interpretation.
+
+Its scope is limited:
+
+- It rules out a uniform decision procedure for global inhabitation.
+- It does **not** prove undecidability of equality of supplied cells.
+- It does **not** rule out a locally decidable shape grammar with unbounded proof search.
+
+For Q4, the endpoint-symmetry obstruction remains valid: a rule admitting a filler for both orders of the boundary of the walking Gray square produces its forbidden reverse. An asymmetric rule indexed by directed boundary incidence escapes that argument. I have not constructed a complete biclosed arity system for that asymmetric case.
+
+## 4. What remains unresolved
+
+The results above do not supply the requested complete resolution.
+
+- **Q1:** The theorem proves fullness and decidable equality for the entire endotransformation signature under the stated representable probe hypotheses. Arbitrary residual-containing generator arities remain untreated.
+- **Q2:** The proposed endpoint test is false. The schedule conclusion under genuine position rigidity still depends on fullness of the crossing description. I have not proved that fullness in the general case.
+- **Q3:** I have not decided
+  \[
+  \iota\pi=1_H,
+  \qquad
+  \mathcal G(t_1,t_2)=\{\alpha\},
+  \qquad
+  \mathcal G(s,t)=\{\theta\}.
+  \]
+  Nor have I obtained the requested general normal forms or an equality-undecidability reduction. The ordinary relative-completion proof above does not apply to its nonbifunctorial tensor.
+- **Q4:** Symmetric blanket filling is obstructed, and globally decidable inhabitation is obstructed. A complete asymmetric coherence-over-directed-shapes construction, or an impossibility theorem covering every such construction, remains unproved.
+
+# Followup 2
+
+I now have **a complete normalization theorem for the 1-cells of \(\mathcal G\)**, and **a counterexample to the event-only braid conjecture for \(\mathcal G'\), with a complete replacement for a uniform family of signatures**. The latter also shows what is missing from Q2’s stated dependency-order description.
+
+The general equality problem for \(\mathcal G\)’s 2-cells, including \(\iota\pi=1_H\), and the unrestricted all-dimensional question remain unresolved here.
+
+## 1. A complete normal form for the 1-cells of \(\mathcal G\)
+
+This result applies to the original theory in the Setting: both fixed-bound hom-category adjunctions are strict, context naturality is strict, and dependence on the bound argument is lax.
+
+### Theorem
+
+For an effectively given signature, equality of arbitrary 1-cells of \(\mathcal G\) is decidable.
+
+There is a terminating, confluent rewrite system with three rule schemes: context naturality, \(\beta\), and \(\eta\). If the initial expression has \(n\) primitive syntax nodes, every reduction sequence has length at most
+\[
+\binom n2+\left\lfloor\frac n2\right\rfloor.
+\]
+This is a bound on the number of reductions, not on the total cost of manipulating type annotations.
+
+The construction retains structural evaluations and curryings. It applies when the generator word is empty and when generators have arbitrary residual-containing types.
+
+### 1.1 Syntax
+
+Write \(f;g\) for first \(f\), then \(g\).
+
+Normalize formulas recursively by flattening tensor associativity. Thus a formula is a nonempty tensor word whose factors have an atom or a residual at their root.
+
+A tensor context is a pair of words
+\[
+C=(L,R),\qquad C[X]=L\otimes X\otimes R.
+\]
+Either word may be empty. This denotes an absent context, not a data-unit formula. Context composition is
+\[
+(L,R)\circ(L',R')=(LL',R'R).
+\]
+
+Use a tag \(a=(\delta,A)\), where \(\delta\in\{L,R\}\), and define
+\[
+\begin{array}{c|cc}
+ &T_a(X)&H_a(Z)\\ \hline
+\delta=L&A\otimes X&A\backslash Z\\
+\delta=R&X\otimes A&Z/A.
+\end{array}
+\]
+The corresponding evaluation and currying operations are
+\[
+e_{a,Z}:T_a(H_aZ)\longrightarrow Z,
+\qquad
+\kappa_a(f):X\longrightarrow H_aZ
+\quad(f:T_aX\to Z).
+\]
+
+An arrow expression is a finite typed word of triples
+\[
+(L,q,R),
+\]
+abbreviated \(C[q]\), where \(q\) is one of:
+
+- a generating 1-cell;
+- an evaluation \(e_{a,Z}\);
+- a curry \(\kappa_a(f)\), whose body \(f\) is recursively an arrow word.
+
+The empty arrow word denotes an identity. Composition concatenates words. Tensor whiskering adds the appropriate prefix and suffix to every triple at the outer word level.
+
+The order of triples is retained. Independent triples are related by interchangers; their exchange is not a 1-cell equation.
+
+### 1.2 The three reductions
+
+Apply these rules at any word position or recursively in a curry body. All displayed instances must be well typed.
+
+**Context naturality**
+\[
+\tag{N}
+C[g];C[\kappa_a(f)]
+\;\longrightarrow\;
+C[\kappa_a(T_a[g];f)].
+\]
+Here \(g\) is one triple, possibly with its own tensor context.
+
+Matching is explicit. If the preceding triple has context \(D\) and the curry triple has context \(C\), require
+\[
+D=C\circ D_0.
+\]
+The factor \(D_0\), when it exists, is uniquely obtained by prefix and suffix cancellation.
+
+**Beta**
+\[
+\tag{\(\beta\)}
+C[T_a[\kappa_a(f)]];C[e_{a,Z}]
+\;\longrightarrow\;
+C[f].
+\]
+
+**Eta**
+\[
+\tag{\(\eta\)}
+C[\kappa_a(T_a[g];e_{a,Z})]
+\;\longrightarrow\;
+C[g].
+\]
+Here \(g\) may be an arbitrary word, including the empty word. Matching \(T_a[g]\) requires stripping the indicated bound-object context from every triple of that prefix.
+
+Repeated naturality reductions give
+\[
+\tag{\(N^*\)}
+C[h];C[\kappa_a(f)]
+\;\longrightarrow^*\;
+C[\kappa_a(T_a[h];f)]
+\]
+for an arbitrary compatible word \(h\). Apply \(N\) to its triples from right to left; their execution order is preserved.
+
+### 1.3 Termination
+
+Let \(n(t)\) count primitive syntax nodes recursively: generators, evaluations and curries. Let \(a(t)\) count pairs \((v,w)\) where \(v\) is a curry node and \(w\) is a primitive node descended from its body.
+
+Consider
+\[
+\mu(t)=
+\left(
+n(t),\,
+\binom{n(t)}2-a(t)
+\right)
+\]
+with lexicographic order.
+
+A \(\beta\)- or \(\eta\)-reduction deletes exactly one curry and one evaluation, so the first coordinate decreases by two.
+
+An \(N\)-reduction preserves the primitive nodes. It makes the receiving curry an ancestor of every node in the preceding triple’s subtree. It removes no existing ancestor relation. Consequently, the second coordinate strictly decreases.
+
+Both coordinates are nonnegative integers, so reduction terminates.
+
+There is also the stated quadratic reduction-length bound. Label the initial primitive nodes distinctly and retain those labels during reduction. No rule creates a primitive node. Moreover, every ancestor relation between surviving nodes persists:
+
+- \(N\) adds ancestor relations;
+- \(\beta\) and \(\eta\) can remove an ancestor relation only by deleting its curry node.
+
+Every \(N\)-step therefore uses at least one previously unrelated unordered pair of original nodes. That pair cannot be used again. Hence
+\[
+\#N\leq\binom n2,
+\qquad
+\#\beta+\#\eta\leq\left\lfloor\frac n2\right\rfloor.
+\]
+
+### 1.4 Confluence
+
+First observe the following context property:
+
+> Applying a fixed tensor context preserves and reflects reductions.
+
+For reductions in curry bodies, contextualization leaves the body unchanged. For reductions involving adjacent outer triples, cancel the fixed prefix and suffix in the matching equations.
+
+In particular, reducing a word of the form \(T_a[g]\) preserves its ability to be stripped.
+
+The following table lists every nonvariable overlap. A common outer tensor context is omitted. The tags \(a,b\) may independently be left or right tags.
+
+| Overlap | Term with the two reductions | Common reduct |
+|---|---|---|
+| \(N/N\) | \(D[h];D[\kappa_a(f)];\kappa_b(g)\) | \(\kappa_b(T_bD[\kappa_a(T_a[h];f)];g)\) |
+| \(N/\beta\), shared curry | \(T_a[h];T_a[\kappa_a(f)];e_a\) | \(T_a[h];f\) |
+| \(N/\beta\), shared evaluation | \(D[T_a[\kappa_a(f)]];D[e_a];\kappa_b(g)\) | \(\kappa_b(T_bD[f];g)\) |
+| \(N/\eta\), eta-curry on the right | \(h;\kappa_a(T_a[g];e_a)\) | \(h;g\) |
+| \(N/\eta\), eta-curry on the left | \(D[\kappa_a(T_a[g];e_a)];\kappa_b(f)\) | \(\kappa_b(T_bD[g];f)\) |
+| \(\beta/\eta\), shared curry | \(T_a[\kappa_a(T_a[g];e_a)];e_a\) | \(T_a[g];e_a\) |
+| \(\beta/\eta\), beta uses eta’s final evaluation | \(\kappa_a(T_a[g;\kappa_a(f)];e_a)\) | \(\kappa_a(T_a[g];f)\) |
+
+Here evaluation targets are inferred from typing.
+
+For example, in the shared-evaluation overlap, reducing \(\beta\) first gives
+\[
+D[f];\kappa_b(g)
+\longrightarrow^*
+\kappa_b(T_bD[f];g).
+\]
+Reducing \(N\) first gives
+\[
+D[T_a[\kappa_a(f)]];
+\kappa_b(T_bD[e_a];g).
+\]
+Absorb the preceding triple into \(\kappa_b\), then contract the resulting contextual \(\beta\)-redex in its body. The same reduct follows.
+
+The other rows are direct applications of the displayed rules and \(N^*\).
+
+To see that the list is exhaustive:
+
+- \(N\) ends in a curry triple, whereas \(\beta\) ends in an evaluation triple. Their overlapping word intervals are therefore exactly the listed ones.
+- Two \(\beta\)-redexes cannot overlap in one triple: that triple would have to be both a curry and an evaluation.
+- An \(\eta\)-decomposition is unique: its final evaluation fixes the closure tag, and context stripping reconstructs the prefix.
+- Every remaining overlap is disjoint or lies within one of the linear body variables \(f,g,h\). No rule duplicates such a variable. The context property supplies the required reductions when a variable is tensor-whiskered.
+
+This includes mixed left/right cases. The joins use composition of tensor contexts; they do not exchange independent events or impose an equation between mixed curryings.
+
+Thus reduction is locally confluent. Termination then gives confluence, by well-founded induction on the first steps of a pair of reduction sequences.
+
+### 1.5 Completeness for the stated 1-cell equality
+
+Every original 1-cell expression translates into the syntax above. Units are represented by
+\[
+\eta_X^a=\kappa_a(1_{T_aX}).
+\]
+The categorical and tensor-whiskering laws are built into word concatenation and context composition.
+
+The inverse to currying is
+\[
+g\longmapsto T_a[g];e_{a,Z}.
+\]
+Consequently, \(\beta\) and \(\eta\) are precisely the inverse equations for the hom-category isomorphisms. Rule \(N\), iterated, is precisely strict naturality in the context variable.
+
+Target functoriality adds no further equations. Define the residual action on a target arrow by
+\[
+H_a(k)=\kappa_a(e_a;k).
+\]
+Then
+\[
+\begin{aligned}
+\kappa_a(f);H_a(k)
+&=\kappa_a(f);\kappa_a(e_a;k)\\
+&\longrightarrow_N
+\kappa_a(T_a[\kappa_a(f)];e_a;k)\\
+&\longrightarrow_\beta
+\kappa_a(f;k).
+\end{aligned}
+\]
+The same calculation gives
+\[
+H_a(k);H_a(l)=H_a(k;l),
+\]
+and \(\eta\) gives \(H_a(1)=1\).
+
+The bound-variable action is the derived lax action from the Setting. Its composition comparison is a 2-cell, not an additional equation between these words.
+
+Thus every reduction is sound, and every defining 1-cell equation is generated by these reductions considered as equations. The equations between parallel 2-cell terms do not identify additional 1-cells: their source and target 1-cells are already fixed in the typed presentation.
+
+Therefore
+\[
+\boxed{f=g\text{ in }\mathcal G
+\quad\Longleftrightarrow\quad
+\operatorname{nf}(f)=\operatorname{nf}(g).}
+\]
+
+The algorithm is complete:
+
+1. Normalize formulas and translate the arrow into words of context-decorated primitives.
+2. Repeatedly apply any available \(N,\beta,\eta\) reduction.
+3. Compare the resulting finite syntax, including closure tags, formula annotations, tensor contexts and word order.
+
+Structural normal forms can have arbitrarily many nodes even when the generator word is empty. The procedure’s bound is in terms of the supplied expression, so the structural loops in your examples cause no conflict with decidability.
+
+## 2. The braid conjecture fails for permitted probe-dependent data arities
+
+The counterexample uses a single degree-\(J\) transformation generator. It uses the probe-action data types allowed in item 24 and only the probe \(J\).
+
+Take distinct data atoms \(X,Y\), a data generator
+\[
+f:X\longrightarrow Y,
+\]
+and the structural collapse
+\[
+p=!\triangleright1_X:J\triangleright X\longrightarrow X.
+\]
+
+Adjoin one generating transformation
+\[
+\alpha:J\triangleright(J\triangleright X)\longrightarrow Y
+\]
+whose two **outer** \(J\)-faces are both \(fp\). Thus \(\alpha\) is an endotransformation of the data arrow \(fp\).
+
+Restrict its inner parameter to either vertex:
+\[
+a_\varepsilon
+=
+\alpha\circ
+\bigl(1_J\triangleright(i_\varepsilon\triangleright1_X)\bigr)
+:
+J\triangleright X\longrightarrow Y.
+\]
+Both restrictions are endotransformations
+\[
+a_\varepsilon:f\Rightarrow f.
+\]
+
+Now apply the Gray square:
+\[
+\mu=
+\alpha\circ(\kappa\triangleright1_X)
+:
+D_2\triangleright X\longrightarrow Y.
+\]
+
+The two inner-\(J\) edges on the outer faces are degenerate, because those faces are \(fp\). With the specified orientation, right factor first \(\Rightarrow\) left factor first, the remaining boundary is
+\[
+\boxed{\mu:a_1\Longrightarrow a_0.}
+\]
+
+Put
+\[
+b=a_1,\qquad c=a_0.
+\]
+Both \(b\) and \(c\) use the original generator \(\alpha\) once and are obtained by ordinary data whiskering.
+
+A positive braid on one strand supplies only an identity. It cannot supply a modification between these distinct one-event transformations.
+
+### Separation in the Gray model
+
+Let \(K\) be the walking arrow
+\[
+b\xrightarrow{\mu}c,
+\]
+and let \(\mathsf{Mon}(K)\) be the free strict monoidal category on \(K\). Explicitly,
+\[
+\mathsf{Mon}(K)(x_1\cdots x_n,y_1\cdots y_m)
+=
+\begin{cases}
+\displaystyle\prod_{i=1}^{n}K(x_i,y_i),&n=m,\\[1ex]
+\varnothing,&n\ne m.
+\end{cases}
+\]
+
+Interpret \(X\) as the terminal strict 2-category and \(Y\) as the one-object strict 2-category
+\[
+\Sigma\mathsf{Mon}(K).
+\]
+Interpret \(f\) as the functor selecting that sole object.
+
+There is a strict 2-functor
+\[
+J\otimes J\longrightarrow\Sigma\mathsf{Mon}(K)
+\]
+whose outer faces are constant, whose two remaining edges are \(b,c\), and whose square is the generating arrow \(\mu:b\to c\). Use it to interpret \(\alpha\).
+
+Then \(b\) and \(c\) remain distinct, \(\mu\) is nonidentity, and there is no modification \(c\Rightarrow b\).
+
+This establishes failure of the proposed braid description on the words of generating transformation events. The Gray square used to construct \(\mu\) has an additional parameter direction in the **data source** of \(\alpha\); its effect on the resulting one-event words is a change of state, not a permutation of event positions.
+
+## 3. A complete replacement for a uniform family: categories of event states
+
+The preceding example extends to arbitrary admitted pasting probes.
+
+For each probe \(P_i\), adjoin
+\[
+\alpha_i:
+J\triangleright(P_i\triangleright X)\longrightarrow Y
+\]
+with both outer faces
+\[
+f\,p_{P_i},
+\qquad
+p_{P_i}=!_{P_i}\triangleright1_X.
+\]
+
+Define
+\[
+K=\coprod_i(\tau_1P_i)^{op},
+\]
+where \(\tau_1P_i\) is intelligent 1-truncation: parallel probe 1-cells joined by a probe 2-cell are identified.
+
+Under the represented probe homs and action-gluing axioms used in the preceding relative-completion theorem, the complete answer is
+\[
+\boxed{\operatorname{End}_2(f)\cong\mathsf{Mon}(K).}
+\]
+Here the objects of \(\operatorname{End}_2(f)\) are transformations \(f\Rightarrow f\), and its arrows are all modifications between them, including modifications expressed using residuals.
+
+### 3.1 Why a probe gives a category of states
+
+Write \(M=H_\ell(X,Y)\). The generator \(\alpha_i\) corresponds to a strict 2-functor
+\[
+J\otimes P_i\longrightarrow M
+\]
+whose two outer faces are constant at \(f\).
+
+The generators and relations of the Gray tensor identify this with a functor
+\[
+(\tau_1P_i)^{op}\longrightarrow M(f,f).
+\]
+
+Concretely:
+
+- A vertex \(x\) of \(P_i\) gives a transformation \(a_x:f\Rightarrow f\).
+- A probe arrow \(r:x\to y\) gives a modification
+  \[
+  m_r:a_y\Rightarrow a_x.
+  \]
+- Probe composition gives
+  \[
+  m_{sr}=m_r\circ m_s.
+  \]
+- A probe 2-cell \(r\Rightarrow r'\) imposes
+  \[
+  m_r=m_{r'}.
+  \]
+
+The opposite category is required by the specified Gray orientation. The source path first performs the probe arrow and then the outer \(J\)-edge at \(y\); after the degenerate edge is removed, this is \(a_y\). The target path reduces to \(a_x\).
+
+This correspondence is in the full represented hom 2-category. It includes naturality in the data argument.
+
+### 3.2 Normal forms and equality
+
+Every transformation \(f\Rightarrow f\) is a word
+\[
+x_1\cdots x_n,\qquad x_i\in\operatorname{Ob}(K).
+\]
+
+Every modification has the unique form
+\[
+(h_1,\ldots,h_n),
+\qquad
+h_i:x_i\longrightarrow y_i\text{ in }K.
+\]
+There are no modifications between words of different lengths. Composition is positionwise composition in \(K\), and composition of transformations concatenates words.
+
+Thus equality reduces to finitely many equalities in \(K\).
+
+For \(P=J\), this becomes
+\[
+\boxed{\operatorname{End}_2(f)\cong\coprod_{n\ge0}[1]^n.}
+\]
+The length-one category is exactly
+\[
+b\xrightarrow{\mu}c.
+\]
+The length-two category has four states \(bb,bc,cb,cc\), with independent applications of \(\mu\) at the two fixed positions.
+
+### 3.3 At an identity data arrow, the replacement is \(\mathsf{Br}^{+}(K)\)
+
+If \(X=Y=A\) and \(f=1_A\), the corresponding complete answer is
+\[
+\boxed{\operatorname{End}_2(1_A)\cong\mathsf{Br}^{+}(K).}
+\]
+
+This is the free strict monoidal category with a possibly noninvertible braiding generated by the **category** \(K\). A morphism in \(K\) is attached to an individual strand; it may change that strand’s state.
+
+For input and output words
+\[
+x=(x_1,\ldots,x_n),
+\qquad
+y=(y_1,\ldots,y_n),
+\]
+a normal form is
+\[
+\left(\beta,(h_i)_{i=1}^{n}\right),
+\]
+where
+\[
+\beta\in B_n^+,
+\qquad
+h_i:x_i\longrightarrow y_{\pi_\beta(i)}
+\quad\text{in }K.
+\]
+The permutation \(\pi_\beta\) sends an input position to its output position.
+
+Composition is
+\[
+(\gamma,(k_j))\circ(\beta,(h_i))
+=
+\left(
+\gamma\beta,\,
+\bigl(k_{\pi_\beta(i)}\circ h_i\bigr)_i
+\right).
+\]
+
+To obtain this form, use braiding naturality to move all state morphisms to the output ends of the strands. The category defined by these pairs satisfies the free prebraided universal property, proving uniqueness.
+
+Consequently,
+\[
+\left(\beta,(h_i)\right)
+=
+\left(\beta',(h_i')\right)
+\]
+if and only if
+\[
+\beta=\beta'\text{ in }B_n^+,
+\qquad
+h_i=h_i'\text{ in }K\text{ for every }i.
+\]
+
+Braid equality is decidable directly by finite search: far commutation and Yang–Baxter preserve crossing-word length, so there are only finitely many words of the relevant length on \(n-1\) adjacent-crossing generators. Combine that search with equality in \(K\).
+
+For finite pasting probes with acyclic underlying 1-generating graphs, equality in \(K\) is also a finite calculation: enumerate the finitely many probe 1-paths and close the generating 2-cell identifications under composition.
+
+When every \(P_i=I\), the category \(K\) is discrete. This recovers the positive-braid description without state morphisms.
+
+## 4. Why these descriptions include all closed modifications
+
+A separating model would establish only inequality. Completeness requires a reverse interpretation. The following construction supplies it.
+
+### 4.1 Free monoidal completion of an enriched category
+
+Let \(E\) be a small category enriched in
+\[
+(2\text{-}\mathbf{Cat},\otimes_{\mathrm{Gray}}).
+\]
+
+Form a two-sort category \(\mathcal C_E\) with strings
+\[
+P_0Z_1P_1\cdots Z_nP_n,
+\qquad Z_i\in\operatorname{Ob}(E).
+\]
+The \(P_i\) are probes. Strings with \(n=0\) have probe sort; strings with \(n\ge1\) have data sort.
+
+There are no arrows between strings having different numbers of data letters. For equal numbers, set
+\[
+\begin{aligned}
+&\mathcal C_E(P_0Z_1P_1\cdots Z_nP_n,\,
+Q_0W_1Q_1\cdots W_nQ_n)\\
+&\qquad=
+\prod_{i=1}^{n}
+2\mathbf{Cat}\!\left(
+P_{i-1},\,Q_{i-1}\otimes E(Z_i,W_i)
+\right)
+\times
+2\mathbf{Cat}(P_n,Q_n).
+\end{aligned}
+\]
+
+Composition in an active factor is
+\[
+\begin{aligned}
+P
+&\xrightarrow{u}
+Q\otimes E(Z,W)\\
+&\xrightarrow{v\otimes1}
+R\otimes E(W,U)\otimes E(Z,W)\\
+&\xrightarrow{1_R\otimes\circ_E}
+R\otimes E(Z,U).
+\end{aligned}
+\]
+Identities use the enriched units. Tensor concatenates strings and merges the adjacent probe factors.
+
+Associativity and identity laws follow from the enriched composition laws. Tensor is bifunctorial on data arrows.
+
+A connected nonempty designated probe colimit varies one factor in the displayed hom-set. That factor converts the colimit to a limit; the other factors are constant, and connectedness makes their limit constant. Hence the required action-gluing laws hold.
+
+Now give an enriched interpretation
+\[
+j:E\longrightarrow H_{\mathcal D}
+\]
+in another model. A factor
+\[
+u:P\longrightarrow Q\otimes E(Z,W)
+\]
+is interpreted through
+\[
+P
+\longrightarrow Q\otimes E(Z,W)
+\longrightarrow Q\otimes H_{\mathcal D}(Z,W)
+\longrightarrow H_{\mathcal D}(Z,Q\triangleright W).
+\]
+The last arrow composes with the parameterized identity of \(Q\triangleright W\). Representability converts this to a data arrow
+\[
+P\triangleright Z\longrightarrow Q\triangleright W.
+\]
+Tensor these arrows with the final pure-probe factor.
+
+This interpretation preserves composition, tensor and the designated cones. In \(\mathcal C_E\) itself,
+\[
+H_{\mathcal C_E}(Z,Q\triangleright W)
+=
+Q\otimes E(Z,W),
+\]
+so the construction returns \(u\) itself. This gives the reverse interpretation and the universal property, with
+\[
+H_{\mathcal C_E}(Z,W)=E(Z,W).
+\]
+
+For the \(X\to Y\) family, take
+\[
+E(X,Y)=\Sigma\mathsf{Mon}(K),\qquad
+E(X,X)=E(Y,Y)=I,\qquad
+E(Y,X)=\varnothing.
+\]
+Composition only involves identities. The generator correspondence in §3.1 makes this precisely the free enriched category for that signature.
+
+For the identity-arrow family, take
+\[
+E(A,A)=\Sigma\mathsf{Br}^{+}(K),
+\]
+with enriched composition supplied by its prebraiding. The same argument applies.
+
+### 4.2 Adjoining residuals preserves these homs
+
+The relative biclosed-completion lemma from the preceding answer applies here:
+
+> Adjoining data residuals to a small monoidal two-sort model is fully faithful on its old data-arrow homs, when the designated action colimits and their tensor translates are preserved, including actions on the newly adjoined data types.
+
+For clarity, the fullness argument is stronger than a retraction argument. Let
+\[
+i:\mathcal C\longrightarrow\mathcal F
+\]
+be the relative free completion. Use the category \(\mathcal L\) of presheaves on \(\mathcal C\) that convert the designated cones to limits. Tensor stability makes \(\mathcal L\) biclosed by reflected Day convolution, with fully faithful Yoneda embedding \(y\). The reflection criterion is the standard biclosed Day-reflection criterion. [arxiv.org](https://arxiv.org/pdf/0705.3485?utm_source=chatgpt.com)
+
+Let
+\[
+NX(c)=\mathcal F(ic,X).
+\]
+Glue along \(N\). A data type of the glued model is a triple
+\[
+(X,U,u:U\to NX).
+\]
+Residuals are constructed by pullbacks. For example, the presheaf coordinate of the left residual of \((X,U,u)\) into \((Y,V,v)\) is
+\[
+(U\backslash V)
+\times_{U\backslash NY}
+N(X\backslash Y).
+\]
+The second map into the pullback target is the transpose of evaluation using \(u\). This gives precisely the compatibility required after currying.
+
+The designated action colimits hold coordinatewise. Freeness therefore lifts \(\mathcal F\) into this glued model, fixing each old type as
+\[
+(ic,yc,yc\to N(ic)).
+\]
+This is the presheaf-gluing method used for relative full-completeness arguments; Hasegawa gives the corresponding construction for free symmetric monoidal closed extensions. [kurims.kyoto-u.ac.jp](https://www.kurims.kyoto-u.ac.jp/~hassei/papers/full.pdf?utm_source=chatgpt.com)
+
+Given
+\[
+m:ic\longrightarrow id,
+\]
+its lift has a presheaf map
+\[
+yc\longrightarrow yd.
+\]
+Yoneda identifies that map with \(y(h)\) for a unique old arrow \(h:c\to d\). The glued compatibility equation, evaluated at \(1_c\), gives
+\[
+m=i(h).
+\]
+This proves fullness. The same lift and Yoneda prove faithfulness.
+
+Apply this to
+\[
+D_k\triangleright X\longrightarrow Y.
+\]
+These are old data-arrow types. Full faithfulness therefore preserves transformations, modifications and their boundary fibres. Arbitrary curry–evaluation expressions cannot add further modifications to the categories computed in §3.
+
+The limitation is precise: this argument adjoins residuals **after** the stated signature has been given. It does not replace an arbitrary pre-existing residual-containing generator arity by an atom while preserving that arity’s universal property.
+
+## 5. Consequence for Q2
+
+For the \(X\to Y\) example with \(P=J\), there are no exchanges of event positions in
+\[
+\operatorname{End}_2(f)\cong\coprod_{n\ge0}[1]^n.
+\]
+The data arrow \(f:X\to Y\) cannot compose horizontally with itself, and the complete description proves that closure introduces no additional exchanges over \(f\).
+
+Thus the condition “each pair can be crossed in at most one direction” is satisfied: no pair can be crossed in either direction.
+
+Nevertheless, for one prescribed use of the original generator \(\alpha\), the modification category is
+\[
+[1],
+\]
+whereas the schedule category for its one-event dependency order is terminal. These categories are not equivalent: \(b\) and \(c\) are not isomorphic.
+
+Therefore **position rigidity alone does not give Q2’s schedule category for the prescribed event dependency order**, when ordinary data whiskerings of generators are included.
+
+This is a statement about that prescribed dependency order. As an unlabelled category, \([1]\) is itself a schedule category for two incomparable events. Replacing the original event set by an unrelated larger one would change the proposed description.
+
+The corrected product statement, when crossing permissions are independent of event state, is
+\[
+\boxed{
+\text{schedule category}
+\;\times\;
+\prod_{e\in E}K_e.
+}
+\]
+Here \(E\) is the fixed set of indexed event uses, and \(K_e\) is the state category for use \(e\). Naturality moves the state morphisms to the outputs of the schedule, giving this product decomposition.
+
+Recovering just \(S(P)\) requires the relevant state categories to contribute no nonidentity morphisms, in addition to the condition on crossing directions.
+
+## 6. What remains
+
+The new results settle the following parts:
+
+| Question | Result established here |
+|---|---|
+| **Q1** | The event-only braid conjecture fails for the permitted probe-action data arities above. The complete replacements for the two uniform families are \(\mathsf{Mon}(K)\) and \(\mathsf{Br}^{+}(K)\), with equality algorithms. |
+| **Q2** | The crossing-direction condition alone does not recover the schedule category for the prescribed event dependency order. Event-state morphisms supply additional factors. |
+| **Q3, 1-cells** | Complete normal forms and an equality algorithm for arbitrary signatures and both residuals. |
+| **Q3, 2-cells** | Still unresolved: general equality, \(\iota\pi=1_H\), and uniqueness of the two forward comparisons. |
+| **Q4** | Still unresolved for a general directed arity theory capable of expressing the required Gray tensor and biclosure. |
+
+For Q1, the remaining general case is a signature whose declared generator arities already involve residuals. For Q3, normalizing the boundary 1-cells does not yet normalize the interchanger pastings between them. Those are the two unresolved coherence steps.
+
+# Followup 3
+
+The replacement description now extends to **positive braids with modifications between words of different lengths**, with a complete equality procedure for that class. There is also a precise obstruction to the proposed coherence rules in Q4.
+
+**The general residual-arity case of Q1 and the 2-cell equality problem in Q3 remain unresolved.** The results below do not justify claiming otherwise.
+
+## 1. Q1: the replacement must allow modifications between words of different lengths
+
+Write \(\boxtimes\) for chronological composition of endotransformations of \(1_A\). Thus \(x\boxtimes y\) means “first \(x\), then \(y\),” and corresponds to \(y\cdot x\) in the question’s notation. This distinguishes composition of transformations from the data tensor \(\otimes\).
+
+Start with generating left-parameter endotransformations of \(1_A\). Suppose \(u,v:J\triangleright A\to A\) are words in transformations already defined. Adjoin a further **degree-\(J\) generator**
+\[
+\alpha:J\triangleright(J\triangleright A)\longrightarrow A
+\]
+whose two outer \(J\)-faces are \(u\) and \(v\).
+
+Its two inner vertex restrictions give transformations
+\[
+c=\alpha|_{\text{inner }0},
+\qquad
+d=\alpha|_{\text{inner }1}.
+\]
+Applying \(\alpha\) to the Gray square gives
+\[
+\theta_\alpha:
+u\boxtimes d\longrightarrow c\boxtimes v.
+\tag{1}
+\]
+Equivalently,
+\[
+\theta_\alpha:d\cdot u\Longrightarrow v\cdot c.
+\]
+
+Only the outer faces were prescribed. No equation identifying an inner face with a previously defined transformation has been added.
+
+For example, take \(u=1\) and \(v=a\boxtimes a\). Then
+\[
+\theta_\alpha:d\longrightarrow c\boxtimes a\boxtimes a.
+\tag{2}
+\]
+This modification changes a word of length one into a word of length three. An ordinary coloured positive braid cannot have those boundaries.
+
+### Exact description of this family
+
+For a finite sequence of extensions of this form, the full modification category on endotransformations of \(1_A\) is the free strict monoidal category with normal, noninvertible braiding generated by:
+
+- the initial transformation letters;
+- the two fresh letters \(c_\alpha,d_\alpha\) for each extension;
+- the morphisms \(\theta_\alpha\) in (1).
+
+I will call these additional generating morphisms **coupons**. Each coupon has a specified input word and output word. This terminology introduces no additional equations.
+
+Here is the universal-property argument. For any strict monoidal category \(M\), a strict 2-functor
+\[
+J\otimes J\longrightarrow \Sigma M
+\]
+with specified outer faces \(u,v\) is exactly the choice of two objects \(c,d\) of \(M\) and a morphism
+\[
+u\boxtimes d\longrightarrow c\boxtimes v.
+\]
+There are no further conditions: these are precisely the edge and square data of the walking Gray square.
+
+Taking the free normally lax-braided category on this data therefore gives the free enriched atomic endomorphism theory. The relative biclosed-completion result established earlier applies to its probe-action presentation: adjoining the data residuals is fully faithful on the existing arrows
+\[
+D_k\triangleright A\longrightarrow A.
+\]
+Consequently, this description includes modifications expressed using currying, evaluation, and the designated gluing operations. It is a description of the full category in this family, not merely an embedding of its explicitly drawn diagrams.
+
+The free category itself separates (2) from crossing words. In particular, its coupon-count function assigns \(1\) to \(\theta_\alpha\) and \(0\) to every crossing word.
+
+## 2. A complete equality procedure for positive braids with proper coupons
+
+The equality procedure works more generally than the preceding family.
+
+### Theorem
+
+Let \(S\) be a set of letters and let
+\[
+r:u_r\longrightarrow v_r
+\]
+be generating coupons, with both \(u_r\) and \(v_r\) nonempty words. Equality is decidable in the free strict monoidal category with a normal noninvertible braiding on this signature.
+
+For any particular equality question, only the finitely many letters and coupons written in its two expressions need to be considered.
+
+### A finite elementary presentation
+
+Expand every block crossing using the two hexagon equations. Flatten tensor products and compositions into sequences of elementary layers. Each layer is either:
+
+- one crossing of adjacent letters, with identity words on its sides; or
+- one coupon, with identity words on its sides.
+
+The complete relations between these layer sequences are:
+
+1. interchange of layers acting on disjoint intervals;
+2. the coloured Yang–Baxter equation;
+3. the two naturality equations for each coupon \(r:u\to v\) and letter \(x\):
+   \[
+   c_{v,x}\circ(r\boxtimes1_x)
+   =
+   (1_x\boxtimes r)\circ c_{u,x},
+   \tag{3}
+   \]
+   \[
+   c_{x,v}\circ(1_x\boxtimes r)
+   =
+   (r\boxtimes1_x)\circ c_{x,u}.
+   \tag{4}
+   \]
+
+The block crossings in (3)–(4) are expanded into adjacent crossings.
+
+These relations suffice because naturality for a composite follows by composing naturality squares; naturality for a tensor product follows from the hexagons; and naturality for a crossing is Yang–Baxter together with disjoint interchange. Thus the presented category has exactly the required universal property.
+
+### A finite bound on all equivalent expressions
+
+Given a layer sequence \(D\), erase its crossings while retaining which wire continues through each crossing. Retain:
+
+- the ordered boundary ports;
+- each coupon vertex and its label;
+- the ordered input and output ports of each coupon;
+- the directed wire incidences.
+
+Call the resulting directed graph \(G_D\). Every defining equation preserves its isomorphism class.
+
+The graph is acyclic: coupon vertices inherit the vertical order of a layer sequence. Since every coupon has at least one input and one output, every wire extends backwards to an input boundary port and forwards to an output boundary port.
+
+For each wire \(e\), define
+\[
+r(e)=
+\#\{\text{directed input-boundary-to-output-boundary paths traversing }e\}.
+\]
+A path reaching a coupon may continue through any output port of that coupon.
+
+These are positive integers. At every coupon vertex \(z\),
+\[
+\sum_{e\text{ entering }z}r(e)
+=
+\sum_{e\text{ leaving }z}r(e).
+\tag{5}
+\]
+Both sides count the complete directed paths passing through \(z\).
+
+Give a crossing of wires \(e,f\) the weight \(r(e)r(f)\), and put
+\[
+L(D)=\sum_{\text{crossings in }D}r(e)r(f).
+\tag{6}
+\]
+
+This integer is invariant under every defining equation:
+
+- disjoint interchange preserves the crossing contributions;
+- Yang–Baxter preserves the three pairwise products;
+- pulling a crossing through a coupon replaces
+  \[
+  r(f)\sum_{\text{inputs }e}r(e)
+  \quad\text{by}\quad
+  r(f)\sum_{\text{outputs }e}r(e),
+  \]
+  which is equal by (5).
+
+Because each crossing contributes at least \(1\), every expression equal to \(D\) has at most \(L(D)\) crossings. It also has exactly the same labelled coupon vertices as \(D\).
+
+If \(N(D)\) is the number of coupon vertices, every equivalent elementary layer sequence therefore has length at most
+\[
+N(D)+L(D).
+\tag{7}
+\]
+
+### Decision procedure
+
+For parallel expressions \(D,E\):
+
+1. Compute \(G_D,G_E\). If they are not isomorphic as labelled port graphs, return unequal.
+2. Compute \(L(D),L(E)\). If they differ, return unequal.
+3. Enumerate the finite set of typed layer sequences with the prescribed boundaries, graph isomorphism class, and length bounded by (7).
+4. Join two sequences when one elementary defining equation transforms one into the other.
+5. Decide whether \(D\) and \(E\) belong to the same connected component of this finite graph.
+
+Completeness follows because **every intermediate expression in any equational proof satisfies the same bound**. Choosing the lexicographically least layer sequence in each connected component gives canonical forms.
+
+This argument uses the positive crossing presentation directly. It does not require an embedding into a category with invertible braidings. The latter graphical conservativity question is explicitly posed as a conjecture by Jeffrey–Rathke, §2.6. [drops.dagstuhl.de](https://drops.dagstuhl.de/storage/00lipics/lipics-vol012-csl2011/LIPIcs.CSL.2011.292/LIPIcs.CSL.2011.292.pdf?utm_source=chatgpt.com)
+
+The nonempty-input/nonempty-output hypothesis matters. A coupon with empty input can move through crossings by naturality without preserving this positive-flow argument.
+
+## 3. Extension to general finite pasting probes in the atomic endomorphism theory
+
+The preceding result also extends beyond square parameters.
+
+Suppose the current endomorphism category \(M\) has a finite presentation and positive integer grades:
+
+- each transformation letter has a positive weight \(w\);
+- every generating modification has a positive grade;
+- a crossing of letters \(x,y\) has grade \(w(x)w(y)\);
+- all equations preserve word weight and modification grade.
+
+Adjoin
+\[
+\alpha:J\triangleright(P\triangleright A)\longrightarrow A
+\]
+with prescribed outer faces
+\[
+u,v:P\triangleright A\longrightarrow A.
+\]
+
+Assume \(P\) has a finite cellular presentation with:
+
+1. an acyclic graph of generating 1-cells;
+2. vanishing integral \(H^1\) and \(H^2\) for the cellular cochain complex.
+
+These are explicit hypotheses on the designated probes, rather than an assumption that every unspecified gluing has these properties.
+
+The new presentation has:
+
+- a letter \(a_x\) for each vertex \(x\) of \(P\);
+- for each generating arrow \(r:x\to y\), a coupon
+  \[
+  \theta_r:
+  u(r)\boxtimes a_y
+  \longrightarrow
+  a_x\boxtimes v(r);
+  \tag{8}
+  \]
+- the naturality equations supplied by the generating 2-cells of \(P\).
+
+This follows by spelling out a strict 2-functor
+\[
+J\otimes P\longrightarrow\Sigma M
+\]
+with outer faces \(u,v\): it is exactly a lax transformation between those two functors, with its full naturality data.
+
+There is a constructive positive grading of this presentation.
+
+Let \(u_1,v_1\) record the weights of the images of generating 1-cells. Choose integer vertex weights satisfying
+\[
+w(a_y)-w(a_x)=v_1(r)-u_1(r).
+\tag{9}
+\]
+The right-hand side is a 1-cocycle, so \(H^1=0\) supplies a solution. Adding a common sufficiently large integer makes every \(w(a_x)\) positive.
+
+Let \(u_2,v_2\) record the grades of the images of generating 2-cells. Assign coupon grades \(\ell_r\) satisfying
+\[
+d\ell=v_2-u_2.
+\tag{10}
+\]
+The right-hand side is a 2-cocycle because \(u,v\) respect the generating 3-cell equations. The hypothesis \(H^2=0\) supplies an integer solution.
+
+Choose a vertex height \(h\) strictly increasing along every generating arrow. Replacing \(\ell\) by
+\[
+\ell+k\,dh
+\]
+preserves (10), and sufficiently large \(k\) makes every coupon grade positive.
+
+Now all defining equations preserve:
+
+- the positive total weight \(W\) of every intermediate word;
+- the positive total modification grade \(G\).
+
+Hence every equivalent layer sequence has at most \(W\) letters at each stage and at most \(G\) nonidentity layers. Finite congruence search again decides equality.
+
+This yields an exact description and decision procedure for finite towers of these atomic probe-parameter extensions. It still does not establish the corresponding presentation when the generating data arities themselves involve arbitrary residuals.
+
+## 4. A proved lemma for arbitrary residual-containing data arities
+
+There is now a positive-flow result for those arities. It removes a genuine obstruction to extending the preceding argument, but does not by itself supply the missing higher-dimensional presentation.
+
+### Proposition
+
+For every finite unit-free biclosed term, its polarized atomic-port graph admits strictly positive integral wire weights conserved at every generating-arrow vertex.
+
+Directed cycles in that graph are permitted.
+
+Here the graph is defined by expanding formula ports to atomic ports, reversing polarity in the bound argument of either residual. Identity and evaluation connect matching ports; composition identifies matching intermediate ports; tensor takes disjoint union; currying repositions boundary ports. A generator \(f:P\to Q\) is a vertex with incoming ports \(P^+,Q^-\) and outgoing ports \(P^-,Q^+\).
+
+### Proof by a positive-graded relational model
+
+Use grades in \(\mathbb Q_{>0}\). A semantic type \(X\) consists of disjoint fibers \(X_d\), together with an upward-closed, nonempty family \(\mathcal T_X(d)\) of nonempty subsets of each fiber.
+
+An arrow is a degree-preserving relation carrying total subsets to total subsets.
+
+Define
+\[
+(X\otimes Y)_d
+=
+\bigsqcup_{p+q=d,\ p,q>0}X_p\times Y_q,
+\]
+with total subsets upward generated by rectangles
+\[
+U\times V,
+\qquad
+U\in\mathcal T_X(p),\quad V\in\mathcal T_Y(q).
+\]
+
+Define
+\[
+(A\backslash C)_d
+=
+\bigsqcup_{p>0}A_p\times C_{p+d}.
+\]
+A subset \(R\) of this fiber is total precisely when
+\[
+R[U]\in\mathcal T_C(p+d)
+\]
+for every \(p>0\) and every \(U\in\mathcal T_A(p)\).
+
+Relational currying is
+\[
+b\,(\Lambda_A f)\,(a,c)
+\quad\Longleftrightarrow\quad
+(a,b)\,f\,c.
+\tag{11}
+\]
+Its totality condition is exactly the totality condition before currying:
+\[
+(\Lambda_A f)[V][U]=f[U\times V].
+\]
+Thus currying and uncurrying are mutually inverse on the allowed arrows. The mirrored construction supplies right closure. Tensor associativity uses tuple reassociation, or flattened tuples for a strict version.
+
+Give each atom a singleton fiber at every positive rational degree. Induction on formulas shows that every full fiber is nonempty and total, while the empty subset is never total. For tensor, use \(d=d/2+d/2\). For a residual, the full degree-\(d\) relation sends every nonempty total subset of \(A_p\) onto \(C_{p+d}\).
+
+Interpret every generator \(f:P\to Q\) by the full equal-degree relation. It preserves totality. Therefore every term denotes a nonempty relation.
+
+Choose one membership witness in this denotation. It specifies finitely many atomic values:
+
+- composition supplies intermediate values;
+- tensor supplies factor witnesses;
+- currying merely reindexes them;
+- identity and evaluation equate matching values.
+
+Give an atomic port the positive rational grade of its value. Matching wire endpoints receive equal grades. At a generator \(f:P\to Q\), equality of total degrees says
+\[
+\sum_{P^+}w+\sum_{Q^-}w
+=
+\sum_{P^-}w+\sum_{Q^+}w,
+\]
+which is precisely conservation. Clearing the finitely many denominators gives positive integral weights. ∎
+
+The restriction excluding a data unit and empty-context abstraction is essential to this proof.
+
+What is still missing for general Q1 is a theorem identifying arbitrary two-sided higher terms with a complete event-diagram presentation, compatible with beta–eta equality, probe gluing, and the changes of parameter side under currying. Positive weights alone do not establish that presentation, nor prove that every transported crossing contributes positively to a common grade.
+
+## 5. Q2: the proposed sufficient condition is false
+
+The parenthetical condition
+
+> endpoint data arrows are pairwise distinct and no generator is an endo-transformation
+
+does **not** imply position rigidity after structural whiskering.
+
+Set
+\[
+X=A\otimes B\otimes C,
+\]
+and define
+\[
+X_1=A\otimes(A\backslash X),
+\qquad
+X_2=(A\otimes B)\otimes((A\otimes B)\backslash X).
+\]
+
+The units and evaluations give retractions
+\[
+u_i:X\longrightarrow X_i,
+\qquad
+e_i:X_i\longrightarrow X,
+\qquad
+e_i u_i=1_X.
+\]
+Explicitly, the bound objects are \(A\) and \(A\otimes B\), respectively.
+
+Adjoin generating left-parameter transformations
+\[
+\alpha_i:u_i e_i\Longrightarrow1_{X_i},
+\qquad i=1,2.
+\tag{12}
+\]
+These are non-endo transformations with four pairwise distinct typed endpoint arrows.
+
+The endpoint inequalities can be checked in a model that also interprets the transformations. Take data to be sets with cartesian tensor and exponentials, and let a probe act by
+\[
+P\triangleright Z=\operatorname{Ob}(P)\times Z.
+\]
+A \(J\)-parameter map is then a function on \(\{0,1\}\times Z\), so the two endpoint functions in (12) can be prescribed independently.
+
+Interpret \(A,B\) as two-element sets and \(C\) as a singleton. Then
+\[
+|X|=4,\qquad |X_1|=32,\qquad |X_2|=1024.
+\]
+The function \(u_i e_i\) has image of cardinality at most \(4\), so it differs from \(1_{X_i}\). The two \(X_i\) also have distinct types.
+
+Nevertheless, whiskering gives
+\[
+\tau_i=e_i\,\alpha_i\,u_i:1_X\Longrightarrow1_X.
+\tag{13}
+\]
+Both endpoints are exactly \(1_X\), by \(e_i u_i=1_X\).
+
+The two crossings
+\[
+c_{\tau_1,\tau_2}:
+\tau_1\boxtimes\tau_2\longrightarrow\tau_2\boxtimes\tau_1,
+\]
+\[
+c_{\tau_2,\tau_1}:
+\tau_2\boxtimes\tau_1\longrightarrow\tau_1\boxtimes\tau_2
+\]
+are therefore available.
+
+They are detected by the positive-braid model from item 26: send \(A,B\) to the terminal strict 2-category and \(C\) to \(\mathcal X_{\{a,b\}}\). The \(u_i,e_i\) become identities, and interpret \(\alpha_1,\alpha_2\) as \(T_a,T_b\). The double-crossing powers remain distinct.
+
+Thus the category over the fixed data arrow \(1_X\) is not equivalent to a poset, despite the original generators satisfying the stated endpoint test.
+
+This does **not** refute position rigidity when rigidity is defined by quantifying over all derived composites and whiskerings: (13) violates that stronger condition. It refutes the proposed sufficient test.
+
+There are consequently two separate requirements for a schedule theorem:
+
+- structural operations must preserve the asserted crossing rigidity;
+- every modification must actually be generated by the permitted crossings.
+
+The probe-state and coupon descriptions above show why the second requirement does not follow from the first. When both requirements hold with a fixed left/right order and fixed dependency-labelled events, the schedule theorem in the Background applies.
+
+## 6. Q4: a precise no-go theorem for relative coherence rules
+
+The obstruction can be stated without choosing a convention for weak invertibility.
+
+### Reverse-cell criterion
+
+Let \(p:E\to B\) be a map of globular sets. Suppose that for every pair of parallel \((n-1)\)-cells \(x,y\), every cell
+\[
+\phi:px\longrightarrow py
+\]
+in \(B\) has a lift
+\[
+a:x\longrightarrow y
+\]
+in \(E\).
+
+Then
+\[
+E_n(y,x)\ne\varnothing
+\quad\Longleftrightarrow\quad
+B_n(py,px)\ne\varnothing.
+\tag{14}
+\]
+
+The forward implication applies \(p\); the reverse implication is the lifting condition with the ordered boundary \((y,x)\). This is the positive-dimensional globe-boundary lifting condition; no surjectivity on vertices is needed. Its strict categorical formulation appears in Lafont–Métayer–Worytkiewicz, §4.1. [arxiv.org](https://arxiv.org/pdf/0712.0617?utm_source=chatgpt.com)
+
+A weaker rule already gives the main obstruction:
+\[
+px=py
+\quad\Longrightarrow\quad
+\text{there is }x\to y\text{ over }1_{px}.
+\tag{15}
+\]
+Applying (15) to both ordered pairs gives cells in both directions.
+
+Thus **identifying boundary arities is incompatible with preserving a missing reverse cell**, even if the arity theory has other directed higher cells.
+
+### Application to every Gray cube
+
+Let
+\[
+Q_n=J^{\otimes n}\cong\nu(I^{\otimes n}),
+\qquad de=1-0.
+\]
+The tensor identification is supplied by Steiner’s construction. [arxiv.org](https://arxiv.org/pdf/math/0403237?utm_source=chatgpt.com)
+
+The top basis element is \(z=e^{\otimes n}\), with
+\[
+dz=
+\sum_{i=1}^n(-1)^{i-1}
+e^{\otimes(i-1)}\otimes(1-0)\otimes e^{\otimes(n-i)}
+\ne0.
+\]
+A cell reversing the top cell’s boundary would have positive top chain \(kz\), \(k\in\mathbb N\), satisfying
+\[
+k\,dz=-dz.
+\]
+Since \(dz\ne0\) in a free abelian group, this would require \(k=-1\). Hence the top cell has no reverse.
+
+This obstruction persists for Campion’s cubes: the cube inclusion is strong monoidal, and the gaunt strict categories embed fully faithfully. [arxiv.org](https://arxiv.org/pdf/2311.00205?utm_source=chatgpt.com)
+
+### Why an ordinary braid quotient cannot index the full rule
+
+The two 2-dimensional boundary pastings of \(Q_3\) map to
+\[
+\sigma_1\sigma_2\sigma_1,
+\qquad
+\sigma_2\sigma_1\sigma_2.
+\]
+An ordinary positive-braid category identifies them by the Artin relation.
+
+If these are the arities of the two boundary terms, rule (15) supplies a reverse 3-cell. The cube has no such cell.
+
+Adding a directed 3-loop above their common braid does not repair this: the identity 3-cell is still available, so (15) still supplies the prohibited reverse. The arity theory must retain the two boundary pastings as **distinct 2-arities**, joined by an appropriately directed 3-arity.
+
+More generally, an arity category of uniformly finite categorical level cannot support a boundary-lifting rule exact on Gray cubes in every dimension: above that level, the image of a cube’s top cell has a reverse, and (14) lifts it.
+
+This excludes:
+
+- type-only arities that identify the relevant boundary terms;
+- ordinary braid quotients as the complete higher arity theory;
+- uniformly finite-dimensional arity theories with full boundary lifting.
+
+It does not exclude a finite grammar generating unbounded directed shapes, nor a rule whose eligibility judgment retains specified oriented face embeddings.
+
+There is also a reflection theorem for **coinductive reversibility** under full boundary lifting, obtained by lifting inverse witnesses recursively. That must not be silently substituted for equivalence in Campion’s default \(\mathrm{Cat}_\omega\): his inductive and coinductive conventions differ at infinite categorical level. The reverse-cell obstruction above avoids that distinction altogether. [arxiv.org](https://arxiv.org/pdf/2311.00205?utm_source=chatgpt.com)
+
+## 7. Q3: the unresolved step is genuinely at the level of 2-cells
+
+The established normalizer for 1-cells gives canonical boundaries for interchangers. It does not yet normalize composites of interchangers.
+
+One specific obstruction to a direct extension is the beta–eta peak
+\[
+T_a\!\left[
+\kappa_a\!\left(T_a[g];e_a^{\mathrm{inner}}\right)
+\right];
+e_a^{\mathrm{outer}}.
+\tag{16}
+\]
+Both reductions give \(T_a[g];e_a\), but:
+
+- beta reduction retains the inner evaluation;
+- eta reduction retains the outer evaluation.
+
+A literal record of “which evaluation was crossed” therefore does not descend through 1-cell normalization.
+
+There is also an essential cancellation equation: crossing another arrow through
+\[
+T_a\kappa_a(h);e_a=h
+\]
+identifies a two-crossing pasting with \(\chi_{h,-}\). When \(h\) is an identity, that two-crossing pasting is an identity. The equation \(\pi\iota=1\) is an instance. Consequently, the positive crossing-count argument used above cannot simply be transferred to \(\mathcal G\).
+
+I have not completed a convergent treatment of these cancellations and their interactions with eta and context naturality. Therefore I do not have a valid decision of
+\[
+\iota\pi=1_H,
+\qquad
+\mathcal G(t_1,t_2)=\{\alpha\},
+\qquad
+\mathcal G(s,t)=\{\theta\},
+\]
+nor a general decision procedure or an undecidability proof for 2-cell equality in \(\mathcal G\).
+
+The exact remaining gap in Q1 is the complete presentation for arbitrary residual-containing generating arities. The exact remaining gap in Q3 is coherence for the higher equations induced by the 1-cell normalization. The results above settle larger restricted families and exclude precise classes of Q4 rules; they do not settle those two general problems.

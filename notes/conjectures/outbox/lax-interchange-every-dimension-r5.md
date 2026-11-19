@@ -2434,3 +2434,310 @@ The general entry point is `python3 -B scripts/e6/interchange_free.py query.json
 ~~~
 
 The uniform moving-slot theorem and the decision procedure concern \(P\). In the larger presentations of Responses 8–10, extra equations or directed operations must also be accounted for before an unreachable pair yields a negative conclusion. Degree-five directedness with arbitrary inactive mixed contexts on general diagrams remains open.
+
+# Researcher Response 12
+
+**There is a completion of Response 10 whose inner quotient is exactly
+Gray on every finite pasting diagram in every degree.** In particular
+the conclusion holds for composites first formed in the quotient. The
+additional equations preserve the all-dimensional strict quotient and
+the existing directedness results. The remaining directedness question
+is in global degree five. The proof uses unguarded equations for
+subdividing the stationary edge of a unary cylinder and transporting it
+past a fixed outer 1-arrow. Equations for whiskering its moving input
+require a different argument.
+
+## A grading invariant under exterior 1-whiskering
+
+Work on a fixed finite diagram. Use the same constant in the positive
+weight \(w\) of Response 4 on all its subintervals, by taking the bounds
+on the entire diagram. Recall \(w(sZ)-w(tZ)=\mu(q_4Z)\) from
+Response 8. For this proof choose the following nonnegative primitive
+of \(\mu\). For each multidegree \(d\) of total four with all entries
+at most two, select an index \(i\).
+If \(d\) has an entry two, select its first two; if it has four ones,
+select its second one. On basis tuples of multidegree \(d-e_i\) add
+\[
+  2h_i\quad\hbox{if }\sum_{j<i}d_j\hbox{ is even},\qquad
+  2(M-h_i)\quad\hbox{if that sum is odd}.
+\]
+Here \(h_i\) is the vertex or arrow height of Response 8 and \(M\)
+bounds all such heights on the diagram. Denote the sum of these
+contributions by \(f\). On a boundary at index \(i\) the height goes
+up by one. The sign of its cochain difference cancels the tensor
+differential sign. Faces at every other index have equal values for
+the relevant summand. Therefore \(f\partial=\mu\).
+
+Padding a degree-three basis tuple by any exterior vertex factors on
+either side does not change \(f\). For an upper multidegree with a
+two, its chosen entry remains positive after lowering. For four ones
+the lowered entry lies strictly between two positive entries. Thus
+none of the new exterior vertices is eligible, and the choices among
+the old entries and their signs are unchanged. It follows that
+\(m_4=w+f(q_3-)\) is positive on nonidentity cells, conserved along
+5-cells, additive on 4-paths, and invariant under exterior
+1-whiskering. Use this choice of \(m_4\) in the charge formulas of
+Responses 9–10. Those proofs need positivity, conservation and
+additivity; in particular the undirected endpoint check for the
+bridge \(J\) still applies with this choice.
+
+## Unary cylinders on an edge subdivided in two
+
+Write \(E_p(x,b)\) for the outer unary cylinder with moving hom degree
+\(p\) and fixed edge \(b\); the notation names the moving input first
+for both operand orders. Keep the moving-input subdivision of Response 9.
+Impose stationary subdivision on \(b=b_1b_2\) as follows. At the
+square use (K15). At each stage the old subdivision comprises two
+successive contextual cylinders
+\[
+ P_0(x)\xrightarrow{g_1(x)} P_1(x)\xrightarrow{g_2(x)}P_2(x).
+\]
+Each state has one pure occurrence of \(x\), and the two cylinders
+each use one of the stationary pieces. For left variation
+\(v:x^0\to x^1\) take the paste
+\[
+ g_1^0 g_2^0 P_2[v]\ \longrightarrow g_1^0 P_1[v]g_2^1\ \longrightarrow P_0[v]g_1^1g_2^1 .
+\]
+For right variation take the opposite order of states, applying the
+right-variable cylinders in their own forward directions. Brackets
+elevate the unique input in the fixed context by \(v\). The first
+square subdivision has exactly these linear contexts: it moves the
+one slot across the two stationary pieces in the order of (7).
+At the next stage the middle state has one pure occurrence of \(v\);
+everything else uses its proper faces. The elevated common context
+of one step is therefore the beginning context of the next, including
+its stationary whiskers. This proves typing and linearity by induction.
+At moving degree two this is exactly (12) or (13). Above it, equate
+the displayed paste to the cylinder on the composite. The charges
+add since \(|b_1b_2|=|b_1|+|b_2|\), and the Gray tableaux agree
+by their common boundaries and additivity of the top chain.
+
+Include also the three exterior 1-whiskering equations (8) for all
+outer unary cylinders: a fixed 1-arrow outside the pair can be moved
+outside the operation, and an intervening 1-arrow can be attached to
+either operand. The boundaries match in the raw theory by induction:
+these equations hold for the square and its first naturalities, and
+fixed 1-whiskering respects chronological composition and the two
+pure insertion contexts in the unary boundary. Their Gray images
+agree by tensoring with a vertex. The new gradings make the charges
+agree as well. In degree five use the exterior invariance of \(m_4\)
+just proved and invariance of edge length. In subsequent degrees the
+charge of a generating occurrence is transported by any fixed
+exterior whisker; moving such a whisker *into* a unary operation now
+gives the same value by induction on its moving argument's degree.
+All properness tests survive these equations. In a unit case use
+the structural unit laws.
+
+These two schemas preserve the bidirectional separation test of
+Response 9. For stationary subdivision the two contextual windows
+cover the whole local interval and overlap in \(P_1[v]\), measured
+at the common middle state. This transported pure occurrence is
+positive whenever the subdivision is proper. When either edge is a
+unit there is just the remaining step. For the exterior equations it
+is the same full window on the transported boundary on both sides.
+Consequently any use in a separated path preserves separation and
+its early/late word with consecutive repeats contracted, even in
+reverse. Conservation for the existing generators remains true by
+the charge calculations in Responses 8–10. No new path between
+4-cells is introduced by these equations between parallel 5-paths
+or higher paths. In particular strong directedness in degrees at
+least six still holds on all diagrams.
+
+## The test for whiskering the moving input
+
+All dimensions in this paragraph are relative to the outer hom. Take
+a basic whiskering of a \(p\)-cell \(x\) by an \((i+1)\)-cell
+\(z\), at cut \(i\), on either side, where \(0\le i<p-1\).
+Pair it with an edge \(b\) in the other outer span. On this generic
+arity there is a conditional equation between the direct unary
+operation and a strict atomic paste for its Gray tableau. Lift the
+atoms of the paste by the principal operations on the individual
+generating faces, with pure actions for vertex factors. Impose the
+equation when defined and parallel and when the following internal
+elementary comparison is an identity. The test only serves as a
+premise; it need not occur in the conclusion.
+
+For \(i=0\), use the square on the 1-face of \(x\) concatenated
+with \(z\), against \(b\). In its two-step expansion the crossing
+of \(z,b\) has the \(x\)-slot alongside its two slots. The
+2-face of \(x\) acts there independently. Take their positional
+comparison inside the long hom. The order of the two spatial
+windows is their order in that 1-word, in either placement of \(z\).
+For \(i\ge1\), take the \((i+1)\)-face \(u\) of \(x\) used as
+source of its \((i+2)\)-face \(v\). Form the cylinder on the top
+composite of \(z,u\), against \(b\), in their given order. Its
+moving-input subdivision exhibits \(E_{i+1}(z,b)\) on one
+temporal interval with a pure insertion of \(u\) on the other.
+Explicitly the left-variable schedule for two pieces has states
+\(E_0 T_1 T_2,L_1 E_1 T_2,L_1 L_2 E_2\) in the notation of
+Response 9. The move on piece one has piece two stationary in
+\(T_2\); the move on piece two has piece one stationary in \(L_1\).
+The same intervals occur in the reversed order of states for right
+variation. At \(i=1\) this is (10) or (11). The insertion of \(v\)
+in that stationary occurrence and the move on the \(z\)-piece are
+therefore disjoint updates. Use their internal positional comparison.
+All these tests on the generating arity can be substituted into
+arbitrary free objects.
+
+When \(x,z,b\) are proper the test is a proper occurrence in the
+free syntax. For \(i=0\) the two histories have positive lengths
+and their square has positive product weight. For \(i\ge1\) the
+cylinder on \(z,b\) is proper, and the indicated face of \(x\) is
+proper by positive immediate boundaries down through degree two of
+the hom. Fixed contexts preserve this properness. Their internal
+comparison has positive charge. These tests only require a
+nonidentity comparison, even in output degree five.
+
+It remains to check the equation when a test succeeds before quotienting.
+If \(b\) or \(x\) is a unit every top occurrence is a unit: the
+strict top chain of the generic paste has just the basis pair of the
+\(p\)-globe with the edge. If \(z\) is a unit, contract the
+whiskering globe onto the attaching \(i\)-face. The direct term
+specializes to \(E_p(x,b)\) by the unit law at cut \(i\).
+The atomic paste has exactly one top occurrence, that same cylinder
+in exterior lower contexts. Its specialized Gray tableau is the
+unwhiskered atom on the pair of globes. Hence each exterior context
+specializes to a unit at its attaching cut. Indeed a nonunit fixed
+whisker of greatest effective rank would add a positive chain in
+that row; higher identity whiskerings at their attaching cuts are
+units there. This is the atomic-context argument of Response 10.
+In this particular contraction the lifts used in the contexts reduce
+as actual terms: each generating face goes to a face or its identity;
+the other factor is a single edge or vertex. A unary cylinder on a
+unit moving variation is the identity on the lower unary cell, and
+the square on a unit is the identity on its pure boundary. Thus any
+positive occurrence left on descending through identity rows would
+have a positive chain in its own rank. This verifies the contraction
+on the generic face arity, and substitution gives the same reduction
+for composite values of \(x,b\). The two parallel terms already
+agree. This proves that the conditional equations are conservative
+on all free shapes of the presentation with the two unguarded unary
+schemas. In the inner quotient the tests always succeed.
+
+## Associativity and the quotient universal property
+
+For three positive hom-degree inputs impose equality of the two
+bracketed tensors when they are defined and parallel. If their total
+degree exceeds three, include this additional premise. Choose an
+input of degree at least two and take its 2-source (itself in degree
+two). On a consecutive 1-word interval take the crossing of the
+1-faces of the other two inputs. Both are histories in the full
+outer hom: perform the first on its own slot with the other two
+at their source vertices; perform the crossing with the chosen
+slot at its target vertex. If the chosen slot lies in the middle,
+attach that target 1-arrow to the left crossing operand before
+crossing it with the right one. Thus the two histories meet at
+the same 0-word and have an internal elementary square. The
+premise is identity of that square. It has positive weight in a
+free shape whenever all three inputs are proper. If an input is
+a unit, both bracketings specialize to identities in the top rank
+by the principal unit rules and are equal when parallel. Total
+degree three is the existing triple equation (18). With one
+vertex and two positive operands use the exterior and balancing
+equations: for two degrees at least two, guard the equation by the
+Response 9 comparison on their 2-sources transported across the
+vertex. The same positive-weight or unit argument applies. For a
+positive degree paired with an edge use the unguarded unary exterior
+equations. The cases with two vertices are the associativity of fixed
+whiskerings. This gives all three-factor equations under the inner
+identities and imposes no further raw path equalities.
+
+Write \(Q\) for the quotient theory making the internal families
+identities. Its homs are strict by Response 8, and it maps to the
+Gray theory because all the new equations hold there. We prove
+exactness on *all* finite shapes by induction in global degree,
+starting with the known exactness through four. Suppose it holds
+through \(n-1\). In degree \(n\) we shall use lower injectivity on
+generic finite arities as well as on the diagram under consideration.
+
+For a basic test take an adjacent pair of strict hom diagrams, each
+a globe, a top composite of two globes, or a globe with one basic
+whiskering. In the long hom assign each Gray basis pair to the
+principal operation on its two generating faces, using the pure
+actions when one is a vertex. Through degree \(n\) this defines
+a strict hom functor from the disk or test tensor into the
+quotient on the generic arity. Indeed its prescribed atomic faces
+match the already constructed lower images by lower injectivity.
+The atomic presentation of the strict Steiner tensor then extends
+the assignment over every strict paste. It also works for assignments
+of the test into any quotient algebra, by substitution.
+
+Here are all the compatibility checks for these functors. On two
+globes they are the functors of Response 10. On selecting a generating
+component or face in one test they agree on generators by definition.
+On selecting a composite in one variable, compare the image of
+each disk atom with its image under the corresponding test functor.
+
+* A vertex on the stationary side gives the strict functor of fixed
+  whiskering. For two positive degrees at least two, every top
+  occurrence of the atomic paste has their bidegree: its chain is
+  the sum of the relevant input generators tensored with the fixed
+  generator. Therefore the mixed-paste equations of Responses 9–10
+  apply. Lower injectivity types the paste and identifies its two
+  immediate boundaries with those of the direct operation.
+* With an edge on one side, top composition of the moving input
+  uses (7), (10)–(11) or the subdivision of Response 9. Top
+  composition of the stationary edge uses the stationary subdivision
+  above. In both cases the elementary paste contains only basis
+  operations in lower contexts. Through lower exactness those contexts
+  have their atomic images, and the paste has the specified strict
+  tableau. A basic whiskering of the moving input is precisely the
+  guarded test just proved. Unit substitutions are the prescribed
+  pure or identity actions. This covers composites of arbitrary
+  positive dimension in either variable. When testing with a second
+  basic diagram it is enough to check its generating faces, since
+  its tensor with the first test is generated by the basis pairs.
+
+For clarity, these compatibility checks imply a Gray action on the
+quotient through the degree in question. Work in the individual
+strict homs through hom degree \(N=n-1\); if a full target is wanted,
+adjoin a unique cell on every parallel boundary above \(N\), recursively.
+The globes, unit, top-composition and basic-whiskering diagrams present
+a strict hom as their colimit: a compatible map on them preserves
+top composition and fixed whiskering and hence every Godement composite.
+The tensor preserves colimits separately. The compatible test functors
+consequently give a strict functor from the Gray tensor of any two
+adjacent quotient homs to the composite hom through \(N\). Equivalently
+one can use their completions just described: an input globe above
+\(N\) is evaluated on its lower faces and the higher outputs are
+unique. The preceding checks provide the compatible cocone by
+evaluating the atomic assignments on both basic tests; compatibility
+with two changes of variable follows by applying the one-variable
+checks successively. This uses the colimit argument of Response 1,
+now with equations proved in the actual strong construction's quotient.
+Associativity can be tested on triples of globes by the same separate
+colimits. On each basis triple the two functors evaluate the two
+bracketings just checked; lower injectivity supplies their parallelism.
+The unit diagrams reduce to the vertex actions. Thus these completed
+homs give a Gray enrichment with precisely the required truncated
+operations.
+
+On any finite diagram the free Gray object therefore maps into the
+completed quotient on its generators. Through degree \(n\) it is
+inverse to the projection. One composite fixes the Gray atoms and
+their pastings. The other fixes globular generators, fixed whiskerings,
+Godement compositions and every outer principal operation by evaluation
+on its disk pair. The internal families are identities; each outer
+auxiliary equals its specified contextual value by its quotient
+equation on the generic disk and substitution. This checks all terms
+in the quotient, including those whose lower matching faces agree
+only there. It proves the induction step. The strict quotient likewise
+remains exact, since it was exact before and every added equation is
+valid in the strict evaluation.
+
+**Validation.** `python3 -B scripts/e6/interchange_gray_composition.py`
+checks the new primitive on 2,349 signed basis differentials and
+54,208 exterior vertex pairs, including all eight ordered positive
+degree patterns. It constructs the two actual contextual subcylinders
+and composes their complete tableaux in 66 stationary subdivisions,
+in both argument orders through moving degree twelve. On 180 basic
+whiskerings it checks the unique top atom and compares every row
+after the attaching-face contraction with the unwhiskered disk.
+The arbitrary-degree and arbitrary-arity assertions follow from the
+context and colimit inductions above.
+
+This settles requirement 4 globally for the enlarged presentation.
+Strong degree-five directedness with general inactive mixed contexts
+is still required for unrestricted Q1. In particular a quotient
+calculation cannot decide whether there is a reverse inside a fiber
+of that very quotient.

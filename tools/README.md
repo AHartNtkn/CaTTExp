@@ -25,6 +25,7 @@ Generated modules (`src/CaTTExp/Generated/`, entry point `All.agda`). They are n
 | `GridRC3` | 2 × 2 grid: 20 normal forms, 50 multiplications (8 block merges), exchange and its compatibility 4-term, raw law (12), Z₃, ζ, an interchange 4-cell, 61 frames (`rc3_grid.py`) | ~3 min |
 | `TwoDiscCylinderRC3` | D² ∗₀ D² cylinder 2-skeleton: 67 normal forms, 203 multiplications (4 through χ_M), χ_M, transfers, 64 frames; (36) on the full cylinder (`rc3_d2d2.py`) | ~10 min |
 | `ExchangeLaws` | block-form hexagon and square 4-coherences; `rc3_exch.py` also checks event posets and the square/hexagon homotopy basis on grids up to 3 × 3 (§7.11) | ~4 s |
+| `GrayIntervalDisc` | CT for I ⊗ Dⁿ, n ≤ 4, by the suspension construction of `notes/conjectures/answered/canonical-gray-terms-2026-11-19.md`: Fam(I ⊗ Dⁿ) is a well-formed context and all 536 cells of dimension ≤ n + 2 (identity towers included) have T(c) : T(∂⁻c) → T(∂⁺c) literally (`ct_suspension.py`; `neg` writes a control that swaps one boundary and is rejected) | ~15 min on first run (including the core library) |
 | `RoundSixChecks` | cone r4 (2), (14); gray-contexts r6 (3), (6), (11), (24); naturality r6 (11), (14), (18), (20), routes of (19) (`rc3_r6.py`) | ~21 s |
 
 Negative control: swapping source and target in `expected` of `UnitorNaturality` makes Agda reject the module (`3 != 1 of type Nat … refl`).

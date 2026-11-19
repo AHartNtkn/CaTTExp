@@ -165,6 +165,11 @@ import CaTTExp.Strict.BasisCheck
 import CaTTExp.Strict.Cylinder
 import CaTTExp.Strict.GlobBasis
 import CaTTExp.Strict.NuMap
+import CaTTExp.Strict.GlobAtoms
+import CaTTExp.Strict.Collapse
+import CaTTExp.Strict.Kill
+import CaTTExp.Strict.Split
+import CaTTExp.Strict.CylSplit
 import CaTTExp.Strict.Expr
 import CaTTExp.Strict.NuWords
 import CaTTExp.Strict.Lifting

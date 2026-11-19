@@ -109,3 +109,293 @@ A proof of Question 1 (or of Question 3 with the extension theorem) under a stat
 - Dean, thesis (globular multicategories with homomorphism types), Conj. 5.4.0.9.
 - Delpeuch–Vicary, arXiv 1804.07832; Heidemann, arXiv 2411.04870 (used for the 2-dimensional homotopicality theorem of item 8).
 - No published comparison of free weak ω-categories with free strict ones on non-globular computads was found.
+
+# Researcher Response 1
+
+The general bubble obstruction requested in Question 2 admits a direct proof. It also persists under arbitrary higher-dimensional extensions:
+
+\[
+\boxed{
+F(\Gamma_{\le 2})\text{ has a nonidentity bubble}
+\quad\Longrightarrow\quad
+\neg\mathrm{RC}_{\mathrm{id}}(3)(\Gamma).
+}
+\]
+
+For a 2-dimensional context, the proof rules out **every** connecting 4-term, regardless of its image. Thus, using your homotopicality criterion, it establishes
+\[
+\boxed{
+\dim\Gamma\le2,\quad
+\mathrm{RC}(3)(\Gamma)
+\quad\Longrightarrow\quad
+\Gamma\text{ is homotopical}.
+}
+\]
+
+This proves the necessity direction of Question 2 for all finite 2-dimensional contexts, including contexts whose bubbles are composites. It does not provide the contraction required by Questions 1 and 3.
+
+## 1. The obstruction theorem
+
+**Theorem.** Let \(\Lambda\) be a finite CaTT context of dimension at most \(2\). Suppose that \(F(\Lambda)\) has a nonidentity 2-cell
+\[
+c:1_x\Rightarrow1_x.
+\]
+Then there are parallel 3-terms \(T,T'\) of \(\Lambda\) such that
+\[
+\pi(T)=\pi(T')
+\]
+and there is no 4-term \(T\to T'\).
+
+The proof uses an explicit CaTT model in which the two 3-terms evaluate to distinct integers.
+
+### 1.1. The detecting model
+
+Define a strict braided monoidal groupoid \(\mathcal B\) by
+\[
+\operatorname{Ob}(\mathcal B)=\mathbb N,
+\qquad
+\mathcal B(p,q)=
+\begin{cases}
+\mathbb Z,&p=q,\\
+\varnothing,&p\ne q.
+\end{cases}
+\]
+
+Composition of morphisms is addition, with identity \(0\). Define the tensor product by addition on both objects and morphisms:
+\[
+p\otimes q=p+q,
+\qquad
+k\otimes\ell=k+\ell.
+\]
+Its unit is \(0\). Define the braiding by
+\[
+\beta_{p,q}=pq\in\operatorname{End}_{\mathcal B}(p+q).
+\]
+
+These data satisfy the braided monoidal axioms. Naturality follows from commutativity of integer addition. The two hexagon equations are
+\[
+p(q+r)=pq+pr,
+\qquad
+(p+q)r=pr+qr,
+\]
+and the unit equations are \(p0=0=0p\).
+
+The double delooping of a braided strict monoidal category is a Gray category; this is stated explicitly in *Gray categories with duals and their diagrams*, Lemma 2.18. Thus \(\mathcal B\) determines a Gray 3-category \(\mathcal G\). [nottingham-repository.worktribe.com](https://nottingham-repository.worktribe.com/preview/36291483/1-s2.0-S000187082400255X-main.pdf?utm_source=chatgpt.com) Its cells are:
+
+- One 0-cell \(*\).
+- One 1-cell \(I\).
+- A 2-cell \(n:I\Rightarrow I\) for each \(n\in\mathbb N\).
+- A 3-cell \(k:n\Rightarrow n\) for each \(k\in\mathbb Z\), and no 3-cells between distinct natural numbers.
+
+The 2-cell compositions are addition. The 3-cell compositions are induced by addition, and the Gray tensorator on \(p,q\) is \(pq\).
+
+We use \(\mathcal G\) as a CaTT model, with only identity cells above dimension \(3\). Here is the justification for that step.
+
+Batanin–Cisinski–Weber identify the globular operad for Gray categories in Example 3.6 of *Multitensor lifting and strictly unital higher category theory*. Example 5.7 states its contractibility and supplies choices of contractions compatible with strict units. Their finite-dimensional contractibility condition includes uniqueness in the top dimension, as explained in §4.6. [arxiv.org](https://arxiv.org/pdf/1209.2776?utm_source=chatgpt.com)
+
+Fix their left-to-right column-order contraction. Top-dimensional uniqueness concerns **parallel 3-operations with the same arity**, not arbitrary parallel 3-cells of an algebra. It permits the identity extension above dimension \(3\): when the 4-dimensional inputs are identities, the two boundary operations evaluate equally, and the resulting 4-operation is interpreted by the identity on that value. Higher operations are then interpreted by iterated identities. Restriction along the initial contractible globular operad supplies the CaTT interpretation; the identification of the relevant free weak \(\omega\)-category monad with that initial operad is recorded in Benjamin–Markakis, Remark 26. [arxiv.org](https://arxiv.org/pdf/2402.01611?utm_source=chatgpt.com)
+
+Consequently, in this model,
+\[
+\text{a 4-cell }(k:n\Rightarrow n)\longrightarrow(k':n\Rightarrow n)
+\text{ exists}
+\quad\Longleftrightarrow\quad
+k=k'.
+\tag{1}
+\]
+
+### 1.2. Every nonidentity bubble has positive weight
+
+Let \(B^2\mathbb N\) denote the strict 2-category with one object, one 1-cell, and 2-cells the commutative monoid \((\mathbb N,+)\).
+
+Define a strict functor
+\[
+w:F(\Lambda)\longrightarrow B^2\mathbb N
+\]
+by sending every 2-generator to \(1\), and every 0- and 1-generator to the unique corresponding cell.
+
+Set
+\[
+N=w(c).
+\]
+Then
+\[
+N>0.
+\tag{2}
+\]
+
+Indeed, \(w\) counts the total number of 2-generator uses in a strict composite expression. Associativity, units and exchange preserve this count. An expression of weight \(0\) uses only identity 2-cells, and hence evaluates to an identity 2-cell. Since \(c\) is nonidentity, its weight is positive.
+
+Interpret \(\Lambda\) in \(\mathcal G\) by assigning
+\[
+x\longmapsto *,
+\qquad
+f\longmapsto I,
+\qquad
+\alpha\longmapsto 1
+\]
+to its generators in dimensions \(0,1,2\), respectively. Every declared 2-generator has a valid interpretation because all 1-terms evaluate to \(I\).
+
+The projection
+\[
+\mathcal G\longrightarrow B^2\mathbb N
+\]
+is the identity on 2-cells and sends every 3-cell to an identity. It preserves the chosen CaTT operations. The two maps from the free CaTT model of \(\Lambda\) to \(B^2\mathbb N\) agree on generators, so they agree everywhere. Thus every 2-term \(t\) satisfies
+\[
+\llbracket t\rrbracket=w(\pi t).
+\tag{3}
+\]
+
+### 1.3. Give the bubble literal weak identity boundaries
+
+By the given surjectivity of strictification, choose a 2-term
+\[
+U:u\Rightarrow v,
+\qquad
+\pi(U)=c.
+\]
+Its boundaries satisfy
+\[
+\pi(u)=\pi(v)=1_x.
+\]
+
+By the support lemma, \(u\) and \(v\) are terms of the one-object context \((x)\). The coherence rule there gives
+\[
+r:1_x\Rightarrow u,
+\qquad
+s:v\Rightarrow1_x,
+\]
+both with identity strict image.
+
+Define
+\[
+a=(r*_1U)*_1s.
+\]
+Then
+\[
+a:1_x\Rightarrow1_x,
+\qquad
+\pi(a)=c,
+\qquad
+\llbracket a\rrbracket=N.
+\tag{4}
+\]
+
+The first assertion is an assertion about the **literal type** of \(a\). This allows substitution into an Eckmann–Hilton term without any additional boundary-comparison theorem.
+
+### 1.4. The two 3-terms
+
+Benjamin–Markakis, §6.1, construct the clockwise Eckmann–Hilton term
+\[
+\operatorname{eh}(a,b):
+a*_1b\longrightarrow b*_1a
+\]
+for \(a,b:1_x\Rightarrow1_x\), using unitors, associators and interchangers. Their construction has precisely these endpoints. [arxiv.org](https://arxiv.org/pdf/2402.01611?utm_source=chatgpt.com)
+
+Set
+\[
+p=a*_1a,
+\qquad
+T=\operatorname{eh}(a,a):p\longrightarrow p,
+\qquad
+T'=1_p:p\longrightarrow p.
+\tag{5}
+\]
+
+We now compute their interpretations.
+
+Under the chosen Gray interpretation, the unit and associativity comparisons in the Eckmann–Hilton construction become identities. Its remaining contribution is a Gray tensorator.
+
+More explicitly, write the interchange convention as
+\[
+\chi(a,b,c,d):
+(a*_1b)*_0(c*_1d)
+\longrightarrow
+(a*_0c)*_1(b*_0d).
+\]
+For left-column-first composition, its integer value is \(bc\), up to reversing the tensorator orientation: it exchanges the middle two entries. In the Eckmann–Hilton construction, one interchange has middle entries \(0,0\), while the other has middle entries \(N,N\). Therefore
+\[
+\llbracket T\rrbracket=\pm N^2
+\in\operatorname{End}_{\mathcal B}(2N),
+\qquad
+\llbracket T'\rrbracket=0.
+\tag{6}
+\]
+The sign depends only on the orientation convention and does not affect the argument.
+
+By (2), these integers differ. By (1), there is no 4-cell between them in \(\mathcal G\). Soundness of the interpretation therefore gives
+\[
+\text{there is no CaTT 4-term }T\longrightarrow T'.
+\tag{7}
+\]
+
+Finally, \(\Lambda\) has no generators above dimension \(2\), so \(F(\Lambda)\) has only identity 3-cells. Consequently,
+\[
+\pi(T)=\pi(T')=1_{\,c*_1c}.
+\tag{8}
+\]
+Equations (7) and (8) prove the theorem. \(\square\)
+
+## 2. The obstruction persists under all higher attachments
+
+The support lemma gives the following hereditary property.
+
+**Lemma.** Let \(\Delta\subseteq\Gamma\) be a dependency-closed subcontext. If \(\mathrm{RC}_{\mathrm{id}}(n)(\Gamma)\) holds, then \(\mathrm{RC}_{\mathrm{id}}(n)(\Delta)\) holds.
+
+**Proof.** Let \(T,T'\) be parallel \(n\)-terms of \(\Delta\) with equal strict image \(d\). An identity-image filler in \(\Gamma\) would be a term
+\[
+H:T\longrightarrow T',
+\qquad
+\pi(H)=1_d.
+\]
+The support lemma gives
+\[
+\operatorname{supp}(H)
+=
+\operatorname{supp}(\pi H)
+=
+\operatorname{supp}(1_d)
+=
+\operatorname{supp}(d)
+\subseteq\operatorname{Var}(\Delta).
+\]
+Thus \(H\) is literally a term of \(\Delta\). \(\square\)
+
+Now let \(\Gamma\) have arbitrary finite dimension and put
+\[
+\Lambda=\Gamma_{\le2}.
+\]
+If \(F(\Lambda)\) has a nonidentity bubble, the theorem supplies \(T,T'\) in \(\Lambda\) with no connecting 4-term there. The lemma prevents an identity-image connecting 4-term from appearing in \(\Gamma\). Hence
+\[
+\boxed{
+F(\Gamma_{\le2})\text{ has a nonidentity bubble}
+\Longrightarrow
+\neg\mathrm{RC}_{\mathrm{id}}(3)(\Gamma).
+}
+\tag{9}
+\]
+
+This is where requiring identity image matters: the support argument excludes higher generators from an identity-image filler.
+
+## 3. Consequence for the exact-class question
+
+For finite \(\Lambda\) of dimension at most \(2\), your item 8 gives
+\[
+\Lambda\text{ is homotopical}
+\quad\Longleftrightarrow\quad
+F(\Lambda)\text{ is bubble-free}.
+\]
+Combining this with the theorem yields
+\[
+\boxed{
+\mathrm{RC}_{\mathrm{id}}(\infty)(\Lambda)
+\Longrightarrow
+\mathrm{RC}_{\mathrm{id}}(3)(\Lambda)
+\Longrightarrow
+\Lambda\text{ is homotopical}.
+}
+\]
+
+The argument applies to a bubble assembled from arbitrarily many differently typed 2-generators. No individual generator needs to have two identity boundaries: the positive weight \(N\) of the composite bubble gives the nonzero obstruction \(\pm N^2\).
+
+The sufficient direction for bubble-free 2-contexts, the all-dimensional attachment theorem, and the converse in arbitrary finite dimension remain unresolved here. No equivalence with Dean’s conjecture has been established.

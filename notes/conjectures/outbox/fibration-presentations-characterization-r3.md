@@ -71,3 +71,330 @@ A terminating recognition procedure with proof, or an undecidability proof, for 
 - Campion, arXiv 2311.00205 and 2311.00200; Chanavat, arXiv 2603.22242 (homotopy polygraphs, semisimplicial pasting theorem).
 - Ara–Guetta, arXiv 2503.08832, §7 (strict Grothendieck construction with Gray functoriality).
 - No published recognition theorem for Gray-generator presentations of Grothendieck constructions over polygraphs was found.
+
+# Researcher Respons 1
+
+**Question 3 has an affirmative answer for the actual globular Leibniz boundaries stipulated in the question.** Once those attaching maps exist in the unlocalised presentation, localisation gives the required Grothendieck construction.
+
+The proof compares each new relative cellular construction **after localising the completed lower base skeleton**. Uniqueness of marked lifts identifies the old boundary data there. The Gray tensor determines the dependence on the new generators, so this comparison does not require a compatible unlocalised map from an entire boundary block.
+
+This resolves Question 3. It does not supply a terminating procedure or an undecidability reduction for Question 1, or an exact base criterion for Question 2.
+
+## Theorem: automatic correctness
+
+Let \(\Gamma\) and \(T\) satisfy the hypotheses of Question 1. Suppose the unaugmented relative Gray-generator presentation \(\Psi\) is well defined: its generators have the **actual globular Gray attaching maps**, read through \(T\), with positive expressions in the previously constructed unlocalised stages.
+
+Let
+\[
+S=\{q\otimes g:\dim q>0,\ \dim g>0\}.
+\]
+Then there is an equivalence
+\[
+\boxed{\operatorname{Free}(\Psi)[S^{-1}]\simeq \int T}
+\]
+of marked \((\infty,\omega)\)-categories over \(F(\Gamma)^\sharp\), compatible with the prescribed fibre maps.
+
+Consequently, two choices of positive expressions realising the prescribed Gray boundaries give equivalent localised presentations.
+
+Here “actual globular Gray boundary” has its usual map-valued meaning. It specifies the Gray pasting and its attaching map, including the compositions involving previously adjoined pair generators. Equality of signed generator counts, parallelism of the two faces, or equality only after mapping to the *final* total would be weaker conditions. None of those weaker conditions is used below.
+
+## 1. Gauntness of the actual total
+
+We first establish the rigidity needed for the comparison.
+
+### Lemma 1
+
+Let
+\[
+p:E\longrightarrow B^\sharp
+\]
+be a left or right cartesian fibration. If \(B\) and every vertex fibre \(E_b\) are gaunt, then \(E\) is gaunt.
+
+### Proof
+
+Prove simultaneously for left and right cartesian fibrations, by induction on \(r\), that the space
+\[
+\operatorname{Map}(D_r,E)
+\]
+is \(0\)-truncated.
+
+For \(r=0\), its map to the discrete space \(\operatorname{Map}(D_0,B)\) has fibres
+\[
+\operatorname{Map}(D_0,E_b),
+\]
+which are discrete by hypothesis.
+
+For the induction step, fix vertices \(x,y\) of \(E\). The induced map
+\[
+\operatorname{hom}_E(x,y)
+\longrightarrow
+\operatorname{hom}_B(px,py)
+\tag{1}
+\]
+is a cartesian fibration of the opposite variance, by Loubaton’s Proposition 3.2.2.6. In the left cartesian case, choose a marked lift
+\[
+x\longrightarrow f_!x
+\]
+of a base arrow \(f:px\to py\). The cancellability square for that lift identifies the fibre of (1) over \(f\) with
+\[
+\operatorname{hom}_{E_{py}}(f_!x,y).
+\tag{2}
+\]
+For a right cartesian fibration, the corresponding fibre is
+\[
+\operatorname{hom}_{E_{px}}(x,f^*y).
+\tag{3}
+\]
+These identifications follow from Definition 3.2.2.15 and Theorem 3.2.2.24(5). [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+The base of (1) is gaunt, and its vertex fibres (2) or (3) are gaunt. The induction hypothesis therefore applies to (1). Using \(D_r=\Sigma D_{r-1}\), we obtain
+\[
+\operatorname{Map}(D_r,E)
+\simeq
+\coprod_{x,y\in E_0}
+\operatorname{Map}
+\bigl(D_{r-1},\operatorname{hom}_E(x,y)\bigr),
+\]
+a discrete space.
+
+All globular evaluations of \(E\) are therefore discrete. The Segal identities then make every globular-sum evaluation discrete, which is precisely the gauntness criterion; compare Loubaton’s Proposition 2.3.3.2.  ∎
+
+In our setting, every free strict base skeleton and every free strict fibre is gaunt. Lemma 1 consequently applies to
+\[
+E_k:=\int\!\left(T|_{F(\Gamma_{\le k})}\right)
+\]
+for every \(k\). This conclusion concerns the actual classified fibration and does not assume correctness of the proposed presentation.
+
+### Lemma 2: uniqueness of marked factors
+
+In a gaunt left cartesian fibration \(p:E\to B^\sharp\), a marked \(d\)-cell is determined by:
+
+1. its projection to \(B\);
+2. the distinguished \((d-1)\)-face specified by the alternating globular lifting condition.
+
+Indeed, Theorem 3.2.2.24(4) gives the unique lifting property against
+\[
+i_{d-1}^{\epsilon_d}:D_{d-1}\longrightarrow D_d^t,
+\]
+where, in Loubaton’s notation, \(\epsilon_d=+\) when \(d-1\) is even and \(\epsilon_d=-\) when \(d-1\) is odd. Gauntness allows the resulting uniqueness to be expressed as equality in a strict model of \(E\). [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+In particular, two positive expressions for the same prescribed marked factor have equal images in \(E\) once their distinguished faces have equal images.
+
+Apply this only to **marked factors**. A complete weighted face can include unmarked fibre arrows supplied by \(T\). For example, the word \(gtt\) in the stated counterexample need not be marked. Its fibre factor \(g\) is fixed by \(T\); marked-lift uniqueness applies to the relevant cartesian factors.
+
+## 2. What the globular Leibniz rule fixes
+
+The next point ensures that localisation of the old stage does not discard information about the new pair generators.
+
+Use the fibre-first tensor convention, while retaining the question’s label \(q\otimes g\). For \(j,k\geq 0\), put
+\[
+K_{j,k}
+=
+(D_j\otimes\partial D_k)
+\amalg_{\partial D_j\otimes\partial D_k}
+(\partial D_j\otimes D_k).
+\tag{4}
+\]
+
+The tensor polygraph \(D_j\otimes D_k\) has one generator for each pair of generators of its factors. The only generator absent from (4) is the pair of top generators. Thus it has a specified globular attaching map
+\[
+\lambda_{j,k}:\partial D_{j+k}\longrightarrow K_{j,k}.
+\tag{5}
+\]
+The pair-generator description is Henry–Loubaton, Proposition 2.13; their construction also supplies tensor functoriality and preservation of colimits. [arxiv.org](https://arxiv.org/pdf/2301.11424?utm_source=chatgpt.com)
+
+We use the corresponding Gray cellular models when interpreting (4)–(5) in \((\infty,\omega)\)-categories. In particular, the gluing in (4) carries its homotopy-pushout meaning and its structural coherence.
+
+Now fix a base \(k\)-generator \(q\) and a fibre \(j\)-generator \(g\). The two terms in (4) have distinct roles.
+
+### The proper-base-face part
+
+Every tensor generator of
+\[
+D_j\otimes\partial D_k
+\]
+has a proper base face as its base factor. After reading the boundary of \(q\) through \(T\), its expression uses the completed lower base stage.
+
+The fibre terms introduced by \(T\), including components of \(T(q)\), also belong to that stage: all fibre presentations have already been adjoined.
+
+### The proper-fibre-face part
+
+Write the fibre attachment as
+\[
+a_g:\partial D_j\longrightarrow
+\operatorname{Free}(\Pi_{b,<j}).
+\]
+The other part of (4) is read through the map
+\[
+a_g\otimes\operatorname{id}_{D_k}.
+\tag{6}
+\]
+
+Hence its new-base generators are precisely the already named
+\[
+q\otimes h,\qquad \dim h<j.
+\]
+More than their support is specified: (6) determines their compositions and whiskerings. This uses the Gray construction **before** mixed localisation.
+
+Thus the actual globular Leibniz rule has the following triangular form:
+
+> The boundary of \(q\otimes g\) uses old-stage expressions and previously adjoined \(q\otimes h\), with \(\dim h<\dim g\). Its dependence on those new generators is fixed by the fibre attaching map and Gray functoriality.
+
+This is a consequence of (4)–(6), not an additional compatibility assumption.
+
+The intersection
+\[
+\partial D_j\otimes\partial D_k
+\tag{7}
+\]
+uses only proper base faces. Consequently, the agreement needed to glue the two parts can be established entirely in the completed old stage.
+
+## 3. Independent positive choices become compatible after localisation
+
+Fix \(k>0\). Assume the presentation over \(\Gamma_{\le k-1}\) has already been proved correct, and write
+\[
+A=\operatorname{Free}(\Psi_{\le k-1}),
+\qquad
+\varepsilon:A\longrightarrow E_{k-1}
+\]
+for its comparison map. Thus
+\[
+A[S_{\le k-1}^{-1}]\simeq E_{k-1}.
+\tag{8}
+\]
+
+For a new base generator \(q\), let
+\[
+C_q\longrightarrow L_q
+\tag{9}
+\]
+be the local relative Gray presentation over
+\[
+\partial D_k\hookrightarrow D_k.
+\]
+Its correctness is among the accepted globe and suspension cases. Relative to \(C_q\), the generators of \(L_q\) are exactly
+\[
+q\otimes g,\qquad g\in\Pi_{s_0q}.
+\]
+There is a canonical marked map
+\[
+\beta_q:C_q\longrightarrow E_{k-1}
+\tag{10}
+\]
+obtained by restricting the actual fibration along the attaching map of \(q\).
+
+Consider a prescribed old factor in an attaching expression. Different substitutions in different expressions may use different positive representatives. We claim that every such representative has its canonical image under \(\varepsilon\).
+
+Prove this by induction on the dimension of the formal factor.
+
+- A fibre vertex has its prescribed image.
+- A pure fibre expression has the image specified by the fibre map and \(T\).
+- For a marked factor, its projection is prescribed. Its distinguished face is a composite of lower-dimensional formal factors and prescribed fibre expressions. Their images agree with the canonical images by induction. Lemma 2 therefore identifies the image of the marked factor with its canonical image.
+
+Composition then identifies the images of the complete old expressions, including weighted expressions that are not themselves marked.
+
+This argument applies separately to each substitution. It does **not** require a common choice of positive representative for a formal factor throughout the presentation. Nor does it construct or assume an unlocalised map
+\[
+C_q\longrightarrow A.
+\tag{11}
+\]
+
+The compatible map needed for the proof is (10), after localisation.
+
+## 4. Comparing the relative cellular constructions
+
+We now prove the comparison while retaining the previously adjoined generating disks. This prevents an equivalence of completed categories from concealing a change in a later attaching map.
+
+Order the generators over each new base \(k\)-generator by fibre dimension. Suppose the relative stages through fibre dimension \(j-1\) have already been identified after base change along \(\varepsilon\), under \(E_{k-1}\) and compatibly with their generating disks.
+
+For a fibre \(j\)-generator \(g\), compare the attaching map of \(q\otimes g\) with the canonical local attaching map.
+
+On the proper-base-face part of (4), Section 3 identifies all marked factors and all prescribed fibre terms with their canonical values in \(E_{k-1}\).
+
+On the proper-fibre-face part, the map is induced by (6). The induction hypothesis identifies the preceding relative stages compatibly with their generating disks. Gray functoriality therefore identifies this entire face map, including its compositions involving \(q\otimes h\).
+
+Their restrictions to (7) agree through \(E_{k-1}\). The comparison data there have no further ambiguity: mapping spaces into the gaunt category \(E_{k-1}\) are \(0\)-truncated. The homotopy-pushout property of (4) now identifies the maps from \(K_{j,k}\). Precomposing with (5) identifies the two attaching maps.
+
+Adjoining the generating disk extends the identification of relative cellular diagrams. Induction on \(j\) gives
+\[
+E_{k-1}\amalg_A
+\operatorname{Free}(\Psi_{\le k})
+\;\simeq\;
+E_{k-1}
+\amalg_{\coprod_{q\in\Gamma_k}C_q}
+\coprod_{q\in\Gamma_k}L_q.
+\tag{12}
+\]
+
+Equation (12) is the essential step. Its proof never replaces equality in a partially constructed stage by equality in the final total. The new generators remain part of the relative cellular diagram throughout.
+
+A different written expression for a prescribed Gray face causes no problem: a genuine equality or homotopy of attaching maps is preserved by base change, and equivalent attaching diagrams have equivalent pushouts. What matters is that it denotes the prescribed globular face in the relevant relative stage.
+
+## 5. Localisation and the base induction
+
+Let \(S_k^{\mathrm{new}}\) denote the mixed generators belonging to the new base \(k\)-generators. By (8) and the universal property of localisation,
+\[
+\operatorname{Free}(\Psi_{\le k})
+[S_{\le k}^{-1}]
+\simeq
+\left(
+E_{k-1}\amalg_A
+\operatorname{Free}(\Psi_{\le k})
+\right)
+[(S_k^{\mathrm{new}})^{-1}].
+\tag{13}
+\]
+
+Substitute (12). The map \(C_q\to E_{k-1}\) already inverts the mixed boundary generators. Therefore localisation of the right-hand side of (12) gives
+\[
+E_{k-1}
+\amalg_{\coprod_q E_{\partial q}}
+\coprod_q E_q,
+\tag{14}
+\]
+where \(E_{\partial q}\) and \(E_q\) are the actual restricted totals over \(\partial D_k\) and \(D_k\). This uses the accepted correctness of the local presentations in (9).
+
+Homotopicality of the base skeleta identifies the base attachment with the corresponding pushout in \((\infty,\omega)\)-categories:
+\[
+F(\Gamma_{\le k})
+\simeq
+F(\Gamma_{\le k-1})
+\amalg_{\coprod_q\partial D_k}
+\coprod_qD_k.
+\tag{15}
+\]
+Pullback along the classified cartesian fibration preserves this colimit, so (14) is \(E_k\). This is Loubaton’s Theorem 3.2.3.15 and Corollary 3.2.3.16. [arxiv.org](https://arxiv.org/pdf/2406.05425?utm_source=chatgpt.com)
+
+Combining (13)–(15),
+\[
+\operatorname{Free}(\Psi_{\le k})[S_{\le k}^{-1}]
+\simeq E_k.
+\]
+
+The initial stage \(k=0\) is the coproduct of the fibre presentations, and is correct by homotopicality of the \(\Pi_b\). Induction proves the theorem.
+
+All constructions and comparisons above take place in the category of **marked** \((\infty,\omega)\)-categories over the base. Thus the equivalence includes the cartesian marking. ∎
+
+## 6. The resulting finite certificate
+
+For the unaugmented presentation, a separate equivalence certificate of the kind in item 15 is unnecessary once the prescribed attaching expressions have been supplied and checked.
+
+A certificate consists of:
+
+1. **The input data:** the base and fibre polygraphs, their homotopicality certificates, and the finite strict weight data.
+2. **The prescribed generators:** the fibre generators and the pairs \(q\otimes g\), with their dimensions, cartesian markings, and mixed localisation list.
+3. **The attaching expressions:** finite positive expressions for both globular faces of each pair generator, ordered by base dimension and then fibre dimension.
+4. **The Gray-boundary verification:** finite typed pasting data, or finite derivations, showing that these expressions realise (5) after reading the labels through \(T\). This checks the fibre-boundary map (6), the prescribed projections, markings of the marked factors, and the globular face identifications.
+
+Different substitutions for a proper-base factor may be recorded separately. The checker does not need an additional compatible unlocalised map (11): Section 3 proves the required compatibility after localisation.
+
+The mathematical implication is therefore
+\[
+\boxed{
+\text{well-defined actual globular Gray attachments}
+\quad\Longrightarrow\quad
+\text{correct unaugmented presentation}.
+}
+\]
+
+The unresolved recognition issue is the existence of those positive attachments. The proof gives neither a bound on their length nor a terminating negative test, so Questions 1 and 2 remain unresolved here.

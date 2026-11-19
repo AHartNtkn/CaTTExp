@@ -201,3 +201,157 @@ A proof of (N), (FEA) or (U); a counterexample to (11) with a separating invaria
 - Campion, arXiv 2311.00200 and 2311.00205; Gepner–Heine, arXiv 2510.10504; Ara–Maltsiniotis, arXiv 1607.00668.
 - Lanari, arXiv 1809.07923; Henry, arXiv 1609.04622; Bourke, arXiv 1811.09532; Rădulescu-Banu, arXiv math/0610009.
 - Barwick–Schommer-Pries, *On the unicity of the theory of higher categories*; Caviglia–Horel (unit induction for internal algebras); Taylor, arXiv 2604.09867.
+
+# Researcher Response
+
+**I have not obtained a full resolution.** I have not proved (N), (FEA), or (U), found a counterexample, or established the requested directed comparison. Two candidate proofs failed at specific compatibility conditions. Treating either condition as automatic would leave a gap.
+
+## 1. The attempted proof of (N) still requires relative coherence
+
+Assume (FEA), and put
+\[
+G_n=F_{\mathrm w}D_n,\qquad
+M_B(T)=\operatorname{Map}_{\mathcal H_{\mathrm{CaTT}}}(T,B).
+\]
+Consider the derived arity nerve
+\[
+N_{\mathcal H}B(P)=M_B(h_P).
+\]
+
+The attempted argument was to realize a natural transformation
+\[
+\alpha:N_{\mathcal H}A\longrightarrow N_{\mathcal H}B
+\]
+by a strict map \(f:A\to B\), for computad-cofibrant \(A\). One would choose the images of generators and then extend comparisons through the syntax.
+
+Here is the unresolved step. Write a coherence term as
+\[
+t=\sigma h,\qquad
+h:G_n\longrightarrow h_P,\qquad
+\sigma:h_P\longrightarrow A.
+\]
+Suppose comparisons for the arguments of \(\sigma\) have already been chosen. The Segal equivalence gives a path
+\[
+\gamma_\sigma:f\sigma\rightsquigarrow\alpha_P(\sigma)
+\quad\text{in }M_B(h_P).
+\]
+Naturality of \(\alpha\) along \(h\) then gives a candidate comparison
+\[
+\delta_t:f(t)\rightsquigarrow\alpha_n(t)
+\quad\text{in }M_B(G_n).
+\]
+
+But the induction has already chosen a comparison
+\[
+\delta_{\partial t}
+\quad\text{in }M_B(\partial G_n)
+\]
+for the literal boundary of \(t\). If
+\[
+i_n:\partial G_n\longrightarrow G_n,
+\]
+the construction must prove
+\[
+i_n^*(\delta_t)\simeq\delta_{\partial t}
+\tag{*}
+\]
+relative to the comparisons on all lower faces.
+
+The two paths in \((*)\) have the same endpoints. That does not establish \((*)\): their difference is a loop in \(M_B(\partial G_n)\), for which a compatible nullhomotopy is required.
+
+A fibration model for
+\[
+M_B(G_n)\longrightarrow M_B(\partial G_n)
+\]
+does not supply that nullhomotopy. For a new generator, path lifting permits changing its chosen image. For a composite term, strict substitution has already fixed
+\[
+f(t)=\operatorname{coh}(P,T,f\sigma).
+\]
+Its image cannot be changed independently.
+
+This distinction is substantive. For the covering map
+\[
+\mathbb R\longrightarrow\mathbb R/\mathbb Z,
+\]
+the constant base path lifts from \(0\) to \(0\), whereas the loop \(s\mapsto s\bmod\mathbb Z\) lifts from \(0\) to \(1\). A lifting property does not identify those paths while fixing both lifted endpoints.
+
+Thus this argument needs a system of comparison homotopies compatible with **every term operation and substitution**, including the higher relative compatibilities in \((*)\). I have not constructed that system. Unique raw constructors do not by themselves establish it, because the boundary terms already have their own substitution presentations.
+
+Consequently, this argument does not prove (N) or \((\mathrm{FEA})\Rightarrow(U)\).
+
+## 2. The ordinary directed adjunction exists, but the homotopical extension is unproved
+
+Using your established \(R_L\), the ordinary left adjoint is
+\[
+\mathcal L_{R_L}(A)
+=
+\int^{P\in\mathbb T_L} A(P)\cdot R_L(P),
+\]
+where the dot denotes the coproduct indexed by the set \(A(P)\). Its adjunction follows directly from the coend:
+\[
+\begin{aligned}
+\mathcal A_{\mathrm{or}}(\mathcal L_{R_L}A,Y)
+&\cong
+\int_{P\in\mathbb T_L}
+\operatorname{Set}\!\left(
+A(P),\mathcal A_{\mathrm{or}}(R_L(P),Y)
+\right)\\
+&\cong
+\operatorname{Mod}(\mathbb T_L)(A,S_LY).
+\end{aligned}
+\]
+This proves the ordinary adjunction requested in Q2. It does not establish its homotopical properties.
+
+The intrinsic candidate for weak equivalences is
+\[
+f:X\to Y\in W_L
+\]
+when \(f\) is essentially surjective on objects up to coinductively invertible \(1\)-cells and every hom map
+\[
+X(x,x')\longrightarrow Y(fx,fx')
+\]
+is an FHM weak equivalence.
+
+The unresolved step in my attempt to prove \(2\)-out-of-\(6\) for this class is **transport along an invertible \(1\)-cell**:
+\[
+e:x\to y
+\quad\Longrightarrow\quad
+e^*:X(y,z)\longrightarrow X(x,z)
+\text{ is essentially }\omega\text{-surjective},
+\]
+and its right-whiskering counterpart.
+
+For CaTT, this is FHM Theorem 3.2.14. The proof uses an invertible comparison moving an inverse-unit witness \(q\) past an arbitrary higher cell; the relevant transition is between equations (3.2.20) and (3.2.21). In L, that transition cannot be justified merely by the existence of a directed interchanger. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
+
+I investigated proving that the interchanger becomes invertible whenever either input is invertible. Chanavat proves the corresponding statement for Gray products of diagrammatic sets in Theorem 3.22. That proof uses the tensor’s specified boundary and pasting formulas. [arxiv.org](https://arxiv.org/html/2505.01387v1?utm_source=chatgpt.com)
+
+The attempted transfer to L requires, in every pair of hom-dimensions \(p,q\):
+
+1. Literally well-typed terms \(\tau_{p,q}(u,v)\) for the elementary tensor operations.
+2. A literally typed comparison between
+   \[
+   \tau_{p,q}(u'\circ u,v)
+   \]
+   and the appropriate paste of \(\tau_{p,q}(u,v)\) and \(\tau_{p,q}(u',v)\).
+
+The support calculation works **after** compatible boundary paddings have made the terms parallel: both strict images then have full support in
+\[
+(D_p\amalg_{D_{p-1}}D_p)\otimes D_q,
+\]
+so L’s coherence rule admits the comparison.
+
+I did not construct those boundary paddings uniformly. Equality of strict images does not supply their literal types. The existing CaTT naturality construction cannot simply be cited to fill this gap: its hypotheses restrict varied variables to depth at most \(1\), whereas the two inputs of \(\tau_{p,q}\) have depths \(q\) and \(p\). [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
+
+This is a failure of the attempted proof, **not a proof that \(S_L\) cannot participate in a comparison**. Your established unenriched realization remains available. I have not supplied either the intrinsic \(2\)-out-of-\(6\) theorem or the finite-computad unit theorem needed to finish Q2.
+
+## 3. The bubble does not provide a verified counterexample
+
+I have not established an invariant separating
+\[
+A_\sigma
+\quad\text{from}\quad
+S_0\mathcal L_R A_\sigma.
+\]
+The stipulated distinction between \(S^2\) and \(K(\mathbb Z,2)\) distinguishes the semantic realization from strictification. It does not decide the unit without additional control of the free CaTT model.
+
+Accordingly, the bubble’s unit remains undecided in this analysis. I did not locate a reference proving the requested general unit condition or the directed comparison.

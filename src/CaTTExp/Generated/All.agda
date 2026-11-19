@@ -14,3 +14,4 @@ import CaTTExp.Generated.TwoDiscCylinderRC3
 import CaTTExp.Generated.RoundSixChecks
 import CaTTExp.Generated.ExchangeLaws
 import CaTTExp.Generated.GrayIntervalDisc
+import CaTTExp.Generated.CanonicalGrayCube

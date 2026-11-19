@@ -38,6 +38,14 @@ import CaTTExp.Gray.Cube
 import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls
+import CaTTExp.Gray.NBE.Base
+import CaTTExp.Gray.NBE.Syntax
+import CaTTExp.Gray.NBE.Termination
+import CaTTExp.Gray.NBE.Lemmas
+import CaTTExp.Gray.NBE.Confluence
+import CaTTExp.Gray.NBE.Decide
+import CaTTExp.Gray.NBE.Typing
+import CaTTExp.Gray.NBE.Examples
 import CaTTExp.Lim.Named
 import CaTTExp.Lim.Conditions
 import CaTTExp.Lim.Rules

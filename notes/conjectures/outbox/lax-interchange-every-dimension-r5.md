@@ -4286,3 +4286,33 @@ quartet graph, the order table and the eight-strand bound. In the
 remaining cases the early active input can be taken to consist only
 of inner exchanges and some late input must carry a triangle. The
 late triangle may belong solely to the inactive input.
+
+# Researcher Response 28
+
+**Every proper degree-five elementary rectangle in the pure five-strand sorting interval of Response 12 has no reverse.** Both inactive paths are arbitrary. On any finite diagram the same conclusion holds whenever the two active inputs admit witnesses of *joint* retaining cost at most five in Response 24. For example, an early inner exchange on two disjoint crossings and a late triangle sharing two of their four strands suffice. So do two inner exchanges whose supporting quartets share at least three strands. Other triangles in the inactive inputs may use arbitrarily many strands before the substitution.
+
+**Reduction to cut-labelled comparisons.** Apply the substitution of Response 24, pad to five strands if necessary, and extend the outside 2-words to the full reversal by its fixed prefix and suffix. These operations preserve a proposed reverse and the selected proper images. In the five-strand interval, fix the permutation at the temporal cut. A crossing is early exactly when its two letters have increasing order there. At either original schedule every triangle uses three crossings of one color. A return preserves the positive Gray 4-chain, so the same condition holds on every intervening route, including representatives of its 4-equations.
+
+For each cut, start from all complete raw 3-histories through that permutation. In the graph allowing all monochromatic triangles, inner exchanges, and both directions of (K15), take the intersection of their forward and backward reachable sets. Both outside histories of a proposed return are among the seeds, so every intermediate history on every 4-route lies in the intersection. In particular the computation allows intermediate histories which do not visit the cut. Ground the equations and zero-Gray directed rules there by the five-strand construction of Response 25. Its equation tests allow extra parallel identifications. A proper shifted join requires at least three strands in each of two disjoint operands. The proper positive-Gray 5-rules cannot occur on a return. Composite variations paste from the elementary ones.
+
+At every seed, choose a proper generating 4-occurrence wholly inside each temporal half, act with each first in turn, and transport the other to its unchanged window. The common terminal raw history concatenates the new early and late histories. Independent representatives on either side of the cut concatenate, so this enumerates every elementary swap needed to exchange the two active paths. The counts before quotienting by the edge labels are
+
+| Early and late occurrences | Raw swaps |
+|---|---:|
+| Inner and inner | 16,424 |
+| One inner and one mixed, in either order | 9,000 |
+| Mixed and mixed | 2,008 |
+
+The 768 complete histories give 8,448 history/cut positions over 120 permutations. Exactly 86 cuts admit a proper occurrence on both sides. At those cuts there are 10,976 distinct cut-labelled swaps. The largest seed set has 112 histories and the largest restricted graph has 138 raw histories.
+
+**Why finite certificates cover unbounded loops.** For each active cut the solver finds an integer vector charge \(q(e)\) and an integer scalar score on paths
+\[
+ S(e_1\cdots e_n)=\sum_i l(e_i)+\sum_{i<j}\omega(q(e_i),q(e_j))
+\]
+with a skew bilinear form \(\omega\). It checks equal total charge on both sides of each rule, equality of scores for every equation, weak decrease for every directed rule, and strict decrease for *every* designated swap at that cut. For any common prefix and suffix the extra bilinear terms depend only on total charge, so the score difference survives all such contexts. At 54 cuts a linear edge sum suffices for the checker; at the other 32 it uses the ordered-pair term. Exchange the active paths one constituent at a time. Properness gives at least one strict swap, and the inactive prefix and suffix preserve its drop. A return would have to recover that drop. This argument imposes no bound on the length of any input or return.
+
+**Tracking a chosen inner input beyond five strands.** There is also a way to mark an inner occurrence that may repeat as a loop. Project its two crossing events to their four strands \(a<b<c<d\). The quartet checker supplies three nonnegative integer edge charges on all 53 projected edge labels. Each is conserved by all 53 grounded comparisons, including equations. On inner edges the first two charges distinguish the two spatial orders of the pair \(ab,cd\); the third counts each inner loop once. Exactly one of the three charges assigns one unit to the chosen inner edge. Mixed edges can carry units, so their entries also enter the conservation check.
+
+For every quartet cut admitting an inner witness in a given half, its charge vanishes on *every* cut-supported edge in the opposite half. The check includes 15 choices of cut and charge over 12 cuts in each temporal orientation. Thus the first unit of an early inner witness's charge lies in the active path \(A\) at both original schedules \(CDAB,CADB\): the late paths carry zero and the early inactive \(B\) follows \(A\). Dually the last unit of a late witness's charge lies in \(D\). On every representative along a proposed return the same ordinal has a unique carrier edge and an offset within it, by positivity and conservation. Two such marks on different quartet projections can therefore be followed even when both original inputs repeat the same loop arbitrarily often. Proving that the order of these carriers obstructs a return still requires controlling moves on their combined support.
+
+**Reproduction.** Run `python3 -B scripts/e6/interchange_five_cut_ranks.py` with `glpsol` on PATH. It synthesizes each score, clears denominators and checks the integer inequalities. Run `python3 -B scripts/e6/interchange_quartet_charges.py` to replay the stored quartet charges and their opposite-half vanishing checks. For Q1 a counterexample surviving Response 27 must require at least six retained strands for *every* choice of jointly proper witnesses; Response 24 bounds the necessary number by eight.

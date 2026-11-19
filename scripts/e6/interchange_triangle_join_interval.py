@@ -50,7 +50,7 @@ from itertools import product
 
 from interchange_path_grading import History, word
 from interchange_reachability import Edge, Path, Presentation, Rule, solve, verify
-from interchange_sorting_fiber import moves, raw_histories, reachable
+from interchange_sorting_fiber import moves, raw_histories
 
 
 START = 'edcba'
@@ -69,23 +69,44 @@ def closure(start, neighbors):
     return seen
 
 
+def restrict_interval(start, sources, targets, allowed_states, allow_edge):
+    """Cut out the union of directed 4-intervals and retain full K15 classes."""
+    forward, backward = defaultdict(set), defaultdict(set)
+    permitted = {}
+    for raw in allowed_states:
+        group = tuple(e for e in moves(start, raw) if e.target in allowed_states and allow_edge(e))
+        permitted[raw] = group
+        for e in group:
+            forward[raw].add(e.target)
+            backward[e.target].add(raw)
+
+    def cone(seeds, adjacency):
+        seen = set(seeds) & set(allowed_states)
+        pending = list(seen)
+        while pending:
+            extra = adjacency[pending.pop()] - seen
+            seen.update(extra)
+            pending.extend(extra)
+        return seen
+
+    active = cone(sources, forward) & cone(targets, backward)
+    classes, at = {}, {}
+    for raw in sorted(active):
+        if raw not in classes:
+            component = closure(raw, lambda q: (e.target for e in moves(start, q) if e.family == 'K15'))
+            assert component <= active
+            classes.update((q, min(component)) for q in component)
+        at[raw] = tuple(e for e in permitted[raw] if e.target in active and e.family != 'K15')
+    return classes, at
+
+
 @cache
 def interval():
-    backward = defaultdict(set)
-    for p in raw_histories(START):
-        for e in moves(START, p):
-            backward[e.target].add(p)
-    active = reachable(START, INITIAL) & closure(FINAL, backward.__getitem__)
-    cut = [p for p in raw_histories(START) if p[:3] in (NEG, POS)]
-    assert len(cut) == 28 and set(cut) <= active
-    eq = {}
-    at = {}
-    for p in sorted(active):
-        if p not in eq:
-            component = closure(p, lambda q: (e.target for e in moves(START, q) if e.family == 'K15'))
-            eq.update((q, min(component)) for q in component)
-        at[p] = tuple(e for e in moves(START, p) if e.target in active and e.family != 'K15')
-    return eq, at
+    raws = raw_histories(START)
+    classes, at = restrict_interval(START, (INITIAL,), (FINAL,), set(raws), lambda e: True)
+    cut = [p for p in raws if p[:3] in (NEG, POS)]
+    assert len(cut) == 28 and set(cut) <= classes.keys()
+    return classes, at
 
 
 def pairs(e):
@@ -172,7 +193,17 @@ def three_blocks(r, t):
 
 @cache
 def ground(loose=False):
-    classes, at = interval()
+    return ground_interval(*interval(), loose=loose)
+
+
+def ground_interval(classes, at, loose=False):
+    """Ground zero-Gray rules on a pure interval with at most five slots.
+
+    classes maps raw histories to K15 classes. at contains every permitted
+    positive occurrence out of each history. Any restrictions supplied by a
+    caller must be necessary on all routes and equation representatives under
+    study, including intermediate routes when pasting a composite variation.
+    """
     keys = {e: (classes[e.source], classes[e.target], signature(e))
             for group in at.values() for e in group}
     names = {k: str(i) for i, k in enumerate(sorted(set(keys.values())))}

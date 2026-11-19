@@ -199,3 +199,10 @@ lex-wf (a , b) = go a (<-wf a) b
             helper : ∀ y → y <lex (a , b) → Acc _<lex_ y
             helper (c , d)  (fst< p) = go c (ra c p) d
             helper (.a , d) (snd< p) = inner d (rb d p)
+
+------------------------------------------------------------------------
+-- Decisions
+
+data Dec (A : Set) : Set where
+  yes : A → Dec A
+  no  : ¬ A → Dec A

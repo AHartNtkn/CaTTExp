@@ -15,10 +15,15 @@ from gray_globe_comparison import (atom, face, globe, image, strict_cells,
 
 def strict_interpreter(context, generators):
     """Evaluate the whole tableau, including lower whiskers and identities."""
+    return tableau_interpreter(context, lambda index: atom(generators[index]))
+
+
+def tableau_interpreter(context, variable_value):
+    """Evaluate raw syntax with a specified strict tableau for each variable."""
     @cache
     def evaluate(term):
         if term[0] == 'v':
-            return atom(generators[term[1]])
+            return variable_value(term[1])
         _, arity, generic_type, args = term
         degree = tdim(generic_type) + 1
         # A strict composite uses all generators of its arity in top degree

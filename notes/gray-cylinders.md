@@ -90,7 +90,7 @@ Not done: templates for q ≥ 2 (M ⊗ Dⁿ, n ≥ 2) and C-templates beyond bin
 
 ## 3. Vertical composition
 
-`compSub sd Γ` is defined for every globular Γ of dimension ≤ 2. **Proved well typed for every such Γ** (§3a); Γ of dimension ≥ 3 is D15. It sends copy 0 to copy 0, copy 1 to copy 2, and the cylinder generator of x to a composite "x⊗(i;j)":
+`compSub sd Γ` is defined for every globular Γ of dimension ≤ 2. Its explicit form `compE` is **proved well typed for every such Γ** (§3a). `compSub` is literally `compE` on the shapes checked in `Checks.VCompAgree`; that they agree for every Γ is not proved. Γ of dimension ≥ 3 is D15. It sends copy 0 to copy 0, copy 1 to copy 2, and the cylinder generator of x to a composite "x⊗(i;j)":
 
 - **x a 0-cell:** xᵢ ; xⱼ.
 - **f : x → y (right):** (xᵢ;xⱼ);f₂ ⇒ xᵢ;(xⱼ;f₂) ⇒ xᵢ;(f₁;yⱼ) ⇒ (xᵢ;f₁);yⱼ ⇒ (f₀;yᵢ);yⱼ ⇒ f₀;(yᵢ;yⱼ): associator, xᵢ ◃ fⱼ, associator, fᵢ ▹ yⱼ, associator. Left is the mirror image.
@@ -183,7 +183,7 @@ Both are encodable with the code here once there is an Agda CaTT_su (no thread h
 
 ## Open (recorded in `open-issues.md`)
 
-1. **D13.** Done: the cylinder is proved well formed for every globular Γ of every dimension (§1a), and vertical composition is proved well typed for every globular Γ of dimension ≤ 2 (§3a).
+1. **D13.** Done: the cylinder is proved well formed for every globular Γ of every dimension (§1a), and the explicit vertical composition compE is proved well typed for every globular Γ of dimension ≤ 2 (§3a; it is the elaborator's compSub on the checked shapes).
 2. **Cylinder of arbitrary composite boundaries** (Γ ⊗ D¹ for non-globular Γ). Only binary 1-composites are handled here; the general case is Conjecture N (C1) and the explicit construction of D3, both owned by NGC.
 3. **D14. toL and toR mutually inverse up to higher cells.**
 4. **D15. Vertical composition for Γ of dimension ≥ 3**, and associativity and unit laws for it as coherences between substitutions (`internal-hom.md` §5.3).

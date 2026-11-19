@@ -13,8 +13,5 @@ import CaTTExp.Generated.GridRC3
 import CaTTExp.Generated.TwoDiscCylinderRC3
 import CaTTExp.Generated.RoundSixChecks
 import CaTTExp.Generated.ExchangeLaws
-<<<<<<< HEAD
 import CaTTExp.Generated.GrayIntervalDisc
-=======
 import CaTTExp.Generated.CanonicalGrayCube
->>>>>>> cedf8b3 (Resolve Gray wedge closure and construct the full cube section)

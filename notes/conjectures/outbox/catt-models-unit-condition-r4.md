@@ -2,7 +2,7 @@
 
 *A self-contained problem. No knowledge of the project that posed it is assumed. Everything under the "Known" headings is proved and is not re-asked.*
 
-**What we are asking for.** The most general statement: a decision of the unit condition (U) for **all** computad-cofibrant CaTT models (equivalently (11) for all finite computads), and the directed comparison for the variant L in every dimension, built on the realization of L's coherator in the last Known item. Known (VIII) below reduces (U) to one comparison, (N), on top of the left semi-model structure (FEA). Special computads or one more degree are not what we want.
+**What we are asking for.** The most general statement: a decision of the unit condition (U) for **all** computad-cofibrant CaTT models (equivalently (11) for all finite computads), and the directed comparison for the variant L in every dimension, built on the realization of L's coherator in Known (VIII). Known (VIII) below reduces (U) to one comparison, (N), on top of the left semi-model structure (FEA). Special computads or one more degree are not what we want.
 
 ## Background
 
@@ -175,6 +175,12 @@
 - **Free strict ω-categories on finite polygraphs are gaunt** (top-dimensional generator content is additive under every composition and zero on identities; induct downward from the top dimension). Hence, for **every** finite computad 𝔠 (no torsion-freeness), π_𝔠 ∈ W ⟺ π_𝔠 is a globular trivial fibration ⟺ RC_id(𝔠): any two parallel n-cells a, b of A_𝔠 with π a = π b are joined by an (n+1)-cell u with π u = 1 (the boundary-correction and initial-lift arguments of Known (VII) use only this). With e_𝔠 : 𝓛_R A_𝔠 → N F(𝔠) the adjunct of π_𝔠, S₀(e_𝔠) ∘ η = π_𝔠 and S₀(e_𝔠) ∈ W ⟺ QU(e_𝔠) is an equivalence ⟺ 𝔠 is homotopical (after completion). So on homotopical 𝔠, (11)_𝔠 ⟺ RC_id(𝔠); on non-homotopical 𝔠, (11)_𝔠 ⇒ ¬RC_id(𝔠), and **a non-homotopical finite computad satisfying RC_id is a counterexample to (11)**.
 - **L: an unenriched realization exists in every dimension.** Let 𝕋_L be the raw coherator of L (free globular extensions adjoining every admissible head once). Gepner–Heine (arXiv 2510.10504, Thm 2.4.8) prove: for a presentably monoidal 𝒲 and a small dense full monoidal V ⊂ 𝒲, the wedges of suspensions Θ(V) ⊂ 𝒲-Cat are dense, and a presheaf on Θ(V) is a nerve iff it satisfies the wedge Segal condition and its morphism presheaves are 𝒲-nerves. Take 𝒲 = (∞Cat, lax Gray ⊠), oriented categories being left ⊠-enriched (their §1.6), and V = W_Θ, the closure of Θ under Gray products. By Campion (arXiv 2311.00205, Thm A: the Gray tensor is the unique biclosed monoidal structure making the Gray-cube inclusion strong monoidal; Cor. 3.5: strongly loop-free Steiner complexes include strong monoidally), W_Θ consists of the strict Steiner products, and Gepner–Heine's ⊠ (descended from cubes, their Cor. 3.1.1) is Campion's, up to matching their (∞,ω) notion and cube orientation. Put Θ^or = Θ(W_Θ). Every pasting context Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ lies in Θ^or with hom from aᵢ to aⱼ equal to Θᵢ₊₁ ⊗ … ⊗ Θⱼ (their Cor. 2.2.8). Θ^or is a 1-category (strict oriented categories embed fully faithfully, their Rem. 3.5.4), so representables yΓ are discrete and fibrant in the localised injective model structure 𝓜_or on simplicial presheaves on Θ^or, and spine inclusions Sp(Γ) → yΓ are weak equivalences. With 𝒜_or its algebraically fibrant objects (Nikolaus) and F ⊣ U, F(Sp Γ) → yΓ is a trivial fibration. L's strict soundness (every head over Γ has a strict filler in the strict Gray-category Γ: the top cell for an operation head, an identity for a coherence head) then gives, by lifting head by head exactly as for R in Known (I), a functor R_L : 𝕋_L → 𝒜_or with R_L(Γ) = F(Sp Γ), preserving globular sums, in every dimension. So S_L(Y) := 𝒜_or(R_L(−), Y) is an L-model with strict substitution and S_L(Y)ₙ = (UY)(Dₙ)₀. No Gray enrichment of 𝕋_L and no resolved tensor arities are used: the whole-grid head and the elementary paste of Known (VI) are two lifts over the same strict cell, joined by the contractible fibres of F(Sp Γ) → yΓ (and by coherence heads in 𝕋_L). Freely adjoining relative fillers, and the strict-enrichment obstruction of Known (V), are therefore not on this route.
 
+**Known (IX): two obstacles located, and the bubble's strict comparison.**
+- **The ordinary directed adjunction.** 𝓛_{R_L}(A) = ∫^{P ∈ 𝕋_L} A(P) · R_L(P) is left adjoint to S_L (coend calculation). Its homotopical properties are not known.
+- **What a proof of (N) by realizing nerve maps needs.** Assume (FEA) and try to realize a map α : N_𝓗A → N_𝓗B of derived arity nerves (N_𝓗B(P) = Map_{𝓗_CaTT}(h_P, B)) by a strict map f : A → B, by choosing images of generators and comparisons δ_t : f(t) ⇝ α(t) term by term. For a composite term t = σh (h : G_n → h_P, σ : h_P → A), naturality gives a candidate δ_t. It must restrict along i_n : ∂G_n → G_n to the comparison δ_{∂t} already chosen for the literal boundary of t, relative to all lower faces. The two agree only up to a loop in Map(∂G_n, B). Strict substitution fixes f(t) = coh(P, T, fσ), so path lifting in Map(G_n, B) → Map(∂G_n, B) cannot absorb that loop: compare the covering ℝ → ℝ/ℤ, where the constant path and the loop s ↦ s mod ℤ have lifts with different endpoints. What is needed is a system of comparison homotopies compatible with every term operation and every substitution, with all higher relative compatibilities.
+- **What 2-out-of-6 for directed weak equivalences needs.** The intrinsic candidate W_L (essentially surjective on objects up to coinductively invertible 1-cells, FHM weak equivalences on all homs) needs the *transport lemma*: for an invertible 1-cell e : x → y, e^* : X(y, z) → X(x, z) (and its right-whiskering counterpart) is essentially ω-surjective. For CaTT this is Fujii–Hoshino–Maehara (arXiv 2406.13240) Thm 3.2.14, whose step (3.2.20) → (3.2.21) moves an inverse-unit witness past a higher cell by an invertible comparison. In L that step needs "an interchanger with an invertible input is invertible", as Chanavat proves for Gray products of diagrammatic sets (arXiv 2505.01387, Thm 3.22). That in turn needs, for all hom-dimensions p, q, literally typed elementary tensor terms τ_{p,q}(u, v) and literally typed comparisons between τ_{p,q}(u′ ∘ u, v) and the paste of τ_{p,q}(u, v) and τ_{p,q}(u′, v). Once boundary paddings make the two parallel, their strict images have full support in (D_p ∐_{D_{p−1}} D_p) ⊗ D_q and L's coherence rule applies. The paddings are not available uniformly. Naturality of CaTT coherences is known only for varied variables of depth ≤ 1 (Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620).
+- **The bubble's strict comparison fails.** For 𝔠 = (x; σ : 1_x ⇒ 1_x), RC_id(3) fails: with a : 1_x ⇒ 1_x a literal lift of σ, the Eckmann–Hilton 3-term eh(a, a) and 1_{a∗₁a} are parallel with identity strict image, and they take values ±1 and 0 in the CaTT model given by the Gray category doubly delooping the braided monoidal groupoid (ℕ, End = ℤ, β_{p,q} = pq). So π_𝔠 ∉ W. By the homotopical-computads bullet of Known (VIII) this is consistent with (11)_𝔠 and does not decide it.
+
 ## Questions
 
 **Q1 (main: decide (U)).** Decide
@@ -183,11 +189,11 @@
 (U)  η_B ∈ W for every computad-cofibrant CaTT model B   (equivalently (11) for every finite computad).
 ```
 
-- **(a) Proof via (N).** Prove (N) for the generating attachments, and prove (FEA). Then (U) follows by cellular induction. A proof of (N) alone, giving (FEA) ⟺ (U), is also a substantial answer. A route: show that S̄ sends the semantic pushouts F(∂_Θ Dₙ) → F(yDₙ) of algebraically fibrant objects to homotopy pushouts, for instance by computing S̄ on such pushouts through the algebraic completion map of (A).
-- **(b) Counterexample.** By the homotopical-computads bullet a counterexample must lie outside the homotopical polygraphs, or else is a failure of relative coherence. The natural candidate is the bubble (x; σ : 1_x ⇒ 1_x): decide whether η_{A_σ} ∈ W, by comparing A_σ with S₀ of the free (∞,ω)-category on one bubble (whose groupoidification is S²).
+- **(a) Proof via (N).** Prove (N) for the generating attachments, and prove (FEA). Then (U) follows by cellular induction. A proof of (N) alone, giving (FEA) ⟺ (U), is also a substantial answer. Known (IX) locates the step: a coherent system of comparison homotopies, compatible with every term operation and substitution. A route that avoids it (for instance computing S̄ on the semantic pushouts F(∂_Θ Dₙ) → F(yDₙ) through the algebraic completion map of Known (VIII)(A), or a resolution of the coherator in which comparison data are part of the structure) is equally welcome.
+- **(b) Counterexample.** A counterexample must lie outside the homotopical polygraphs (otherwise it is a failure of relative coherence, a separate problem). The natural candidate is the bubble (x; σ : 1_x ⇒ 1_x): decide whether η_{A_σ} ∈ W, by comparing A_σ with S₀ of the free (∞,ω)-category on one bubble (whose groupoidification is S²). Known (IX) shows π_σ ∉ W, so the answer turns on S₀(e_σ) ∘ η = π_σ with S₀(e_σ) ∉ W.
 - **(c) Equivalence.** Prove (U) ⟺ (FEA), or (U) ⟺ a named open statement such as Henry's pushout condition for a directed coherator, or Taylor's free pushout condition (arXiv 2604.09867).
 
-**Q2 (the directed comparison in every dimension).** With R_L and S_L as in the last Known item, build the directed analogue of the whole comparison: a class W_L of weak equivalences on L-models (an FHM-type definition in which comparison cells across objects may be directed, invertibility being required only where L's rule makes cells invertible) with 2-out-of-6; the realization 𝓛_{R_L} ⊣ S_L; and the reduction of an equivalence Mod(𝕋_L)[W_L⁻¹] ≃ OrCat (oriented categories, coinductively completed as needed) to a unit condition on finite computads, as Known (IV) does for CaTT. Then decide that unit condition, at least for every finite computad whose strict free Gray-category is its free oriented category, where the analogue of Known (VII) should make it a relative-coherence statement for L. Or show that S_L cannot be part of such a comparison, and say exactly which step fails.
+**Q2 (the directed comparison in every dimension).** With R_L, S_L and 𝓛_{R_L} as above, build the directed analogue of the whole comparison: a class W_L of weak equivalences on L-models with 2-out-of-6, the homotopical realization adjunction, and the reduction of an equivalence Mod(𝕋_L)[W_L⁻¹] ≃ OrCat (oriented categories, coinductively completed as needed) to a unit condition on finite computads, as Known (IV) does for CaTT. Then decide that unit condition, at least for every finite computad whose strict free Gray-category is its free oriented category. The first step is the transport lemma of Known (IX). One candidate route: for an invertible 1-cell α (whose inverse α⁻¹ is a term), show that the composite of the interchangers χ_{α,β} and χ_{α⁻¹,β} is joined to identities by coherence heads whose supports are full, so that interchange with an invertible input is invertible. Alternatively, show that S_L cannot be part of such a comparison, and say exactly which step fails.
 
 ## What would count as a solution
 
@@ -200,158 +206,6 @@ A proof of (N), (FEA) or (U); a counterexample to (11) with a separating invaria
 - Loubaton, arXiv 2406.05425; Ozornova–Rovelli–Walde, arXiv 2603.11005; Henry–Loubaton, arXiv 2301.11424; Hadzihasanovic–Loubaton–Ozornova–Rovelli, arXiv 2404.14509.
 - Campion, arXiv 2311.00200 and 2311.00205; Gepner–Heine, arXiv 2510.10504; Ara–Maltsiniotis, arXiv 1607.00668.
 - Lanari, arXiv 1809.07923; Henry, arXiv 1609.04622; Bourke, arXiv 1811.09532; Rădulescu-Banu, arXiv math/0610009.
+- Chanavat, arXiv 2505.01387 (Thm 3.22); Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620; Batanin–Cisinski–Weber, arXiv 1209.2776.
 - Barwick–Schommer-Pries, *On the unicity of the theory of higher categories*; Caviglia–Horel (unit induction for internal algebras); Taylor, arXiv 2604.09867.
 
-# Researcher Response
-
-**I have not obtained a full resolution.** I have not proved (N), (FEA), or (U), found a counterexample, or established the requested directed comparison. Two candidate proofs failed at specific compatibility conditions. Treating either condition as automatic would leave a gap.
-
-## 1. The attempted proof of (N) still requires relative coherence
-
-Assume (FEA), and put
-\[
-G_n=F_{\mathrm w}D_n,\qquad
-M_B(T)=\operatorname{Map}_{\mathcal H_{\mathrm{CaTT}}}(T,B).
-\]
-Consider the derived arity nerve
-\[
-N_{\mathcal H}B(P)=M_B(h_P).
-\]
-
-The attempted argument was to realize a natural transformation
-\[
-\alpha:N_{\mathcal H}A\longrightarrow N_{\mathcal H}B
-\]
-by a strict map \(f:A\to B\), for computad-cofibrant \(A\). One would choose the images of generators and then extend comparisons through the syntax.
-
-Here is the unresolved step. Write a coherence term as
-\[
-t=\sigma h,\qquad
-h:G_n\longrightarrow h_P,\qquad
-\sigma:h_P\longrightarrow A.
-\]
-Suppose comparisons for the arguments of \(\sigma\) have already been chosen. The Segal equivalence gives a path
-\[
-\gamma_\sigma:f\sigma\rightsquigarrow\alpha_P(\sigma)
-\quad\text{in }M_B(h_P).
-\]
-Naturality of \(\alpha\) along \(h\) then gives a candidate comparison
-\[
-\delta_t:f(t)\rightsquigarrow\alpha_n(t)
-\quad\text{in }M_B(G_n).
-\]
-
-But the induction has already chosen a comparison
-\[
-\delta_{\partial t}
-\quad\text{in }M_B(\partial G_n)
-\]
-for the literal boundary of \(t\). If
-\[
-i_n:\partial G_n\longrightarrow G_n,
-\]
-the construction must prove
-\[
-i_n^*(\delta_t)\simeq\delta_{\partial t}
-\tag{*}
-\]
-relative to the comparisons on all lower faces.
-
-The two paths in \((*)\) have the same endpoints. That does not establish \((*)\): their difference is a loop in \(M_B(\partial G_n)\), for which a compatible nullhomotopy is required.
-
-A fibration model for
-\[
-M_B(G_n)\longrightarrow M_B(\partial G_n)
-\]
-does not supply that nullhomotopy. For a new generator, path lifting permits changing its chosen image. For a composite term, strict substitution has already fixed
-\[
-f(t)=\operatorname{coh}(P,T,f\sigma).
-\]
-Its image cannot be changed independently.
-
-This distinction is substantive. For the covering map
-\[
-\mathbb R\longrightarrow\mathbb R/\mathbb Z,
-\]
-the constant base path lifts from \(0\) to \(0\), whereas the loop \(s\mapsto s\bmod\mathbb Z\) lifts from \(0\) to \(1\). A lifting property does not identify those paths while fixing both lifted endpoints.
-
-Thus this argument needs a system of comparison homotopies compatible with **every term operation and substitution**, including the higher relative compatibilities in \((*)\). I have not constructed that system. Unique raw constructors do not by themselves establish it, because the boundary terms already have their own substitution presentations.
-
-Consequently, this argument does not prove (N) or \((\mathrm{FEA})\Rightarrow(U)\).
-
-## 2. The ordinary directed adjunction exists, but the homotopical extension is unproved
-
-Using your established \(R_L\), the ordinary left adjoint is
-\[
-\mathcal L_{R_L}(A)
-=
-\int^{P\in\mathbb T_L} A(P)\cdot R_L(P),
-\]
-where the dot denotes the coproduct indexed by the set \(A(P)\). Its adjunction follows directly from the coend:
-\[
-\begin{aligned}
-\mathcal A_{\mathrm{or}}(\mathcal L_{R_L}A,Y)
-&\cong
-\int_{P\in\mathbb T_L}
-\operatorname{Set}\!\left(
-A(P),\mathcal A_{\mathrm{or}}(R_L(P),Y)
-\right)\\
-&\cong
-\operatorname{Mod}(\mathbb T_L)(A,S_LY).
-\end{aligned}
-\]
-This proves the ordinary adjunction requested in Q2. It does not establish its homotopical properties.
-
-The intrinsic candidate for weak equivalences is
-\[
-f:X\to Y\in W_L
-\]
-when \(f\) is essentially surjective on objects up to coinductively invertible \(1\)-cells and every hom map
-\[
-X(x,x')\longrightarrow Y(fx,fx')
-\]
-is an FHM weak equivalence.
-
-The unresolved step in my attempt to prove \(2\)-out-of-\(6\) for this class is **transport along an invertible \(1\)-cell**:
-\[
-e:x\to y
-\quad\Longrightarrow\quad
-e^*:X(y,z)\longrightarrow X(x,z)
-\text{ is essentially }\omega\text{-surjective},
-\]
-and its right-whiskering counterpart.
-
-For CaTT, this is FHM Theorem 3.2.14. The proof uses an invertible comparison moving an inverse-unit witness \(q\) past an arbitrary higher cell; the relevant transition is between equations (3.2.20) and (3.2.21). In L, that transition cannot be justified merely by the existence of a directed interchanger. [arxiv.org](https://arxiv.org/pdf/2406.13240?utm_source=chatgpt.com)
-
-I investigated proving that the interchanger becomes invertible whenever either input is invertible. Chanavat proves the corresponding statement for Gray products of diagrammatic sets in Theorem 3.22. That proof uses the tensor’s specified boundary and pasting formulas. [arxiv.org](https://arxiv.org/html/2505.01387v1?utm_source=chatgpt.com)
-
-The attempted transfer to L requires, in every pair of hom-dimensions \(p,q\):
-
-1. Literally well-typed terms \(\tau_{p,q}(u,v)\) for the elementary tensor operations.
-2. A literally typed comparison between
-   \[
-   \tau_{p,q}(u'\circ u,v)
-   \]
-   and the appropriate paste of \(\tau_{p,q}(u,v)\) and \(\tau_{p,q}(u',v)\).
-
-The support calculation works **after** compatible boundary paddings have made the terms parallel: both strict images then have full support in
-\[
-(D_p\amalg_{D_{p-1}}D_p)\otimes D_q,
-\]
-so L’s coherence rule admits the comparison.
-
-I did not construct those boundary paddings uniformly. Equality of strict images does not supply their literal types. The existing CaTT naturality construction cannot simply be cited to fill this gap: its hypotheses restrict varied variables to depth at most \(1\), whereas the two inputs of \(\tau_{p,q}\) have depths \(q\) and \(p\). [arxiv.org](https://arxiv.org/pdf/2501.11620?utm_source=chatgpt.com)
-
-This is a failure of the attempted proof, **not a proof that \(S_L\) cannot participate in a comparison**. Your established unenriched realization remains available. I have not supplied either the intrinsic \(2\)-out-of-\(6\) theorem or the finite-computad unit theorem needed to finish Q2.
-
-## 3. The bubble does not provide a verified counterexample
-
-I have not established an invariant separating
-\[
-A_\sigma
-\quad\text{from}\quad
-S_0\mathcal L_R A_\sigma.
-\]
-The stipulated distinction between \(S^2\) and \(K(\mathbb Z,2)\) distinguishes the semantic realization from strictification. It does not decide the unit without additional control of the free CaTT model.
-
-Accordingly, the bubble’s unit remains undecided in this analysis. I did not locate a reference proving the requested general unit condition or the directed comparison.

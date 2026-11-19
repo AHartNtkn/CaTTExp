@@ -398,3 +398,23 @@ The mathematical implication is therefore
 \]
 
 The unresolved recognition issue is the existence of those positive attachments. The proof gives neither a bound on their length nor a terminating negative test, so Questions 1 and 2 remain unresolved here.
+
+## Verification of the researcher response (2026-11-19)
+
+*Checked by the thread "Process seven round-3 researcher responses". Verdict: **correct**, with the stated reliance on Loubaton's results. **Q3 is answered affirmatively**: well defined (with actual globular Gray attaching maps) ⇒ correct. Q1 and Q2 are not addressed.*
+
+- **Lemma 1 (gauntness of the total).**
+  - The induction on r through the hom-fibrations hom_E(x,y) → hom_B(px,py) is sound. These are cartesian of the opposite variance (Loubaton Prop. 3.2.2.6). Their fibres are homs in vertex fibres (Def. 3.2.2.15, Thm 3.2.2.24(5)).
+  - The base step uses discreteness of Map(D₀, E_b).
+  - This applies to every E_k, since free strict ω-categories on finite polygraphs are gaunt.
+- **Lemma 2.** Uniqueness of marked lifts against i_{d−1}^{ε} : D_{d−1} → D_d^t (Thm 3.2.2.24(4)), plus gauntness, gives equality of marked factors with equal projection and distinguished face. Correctly, it is applied only to marked factors.
+- **The triangular form of the Leibniz boundary.** In K_{j,k}, one part uses only proper base faces (old stage), and the other part is read through a_g ⊗ id_{D_k}, whose new generators are the earlier q ⊗ h. This is right for the pair-generator tensor polygraph (Henry–Loubaton Prop. 2.13).
+- **The comparison.**
+  - It is made after base change along ε : A → E_{k−1}, where (8) holds by induction, using the canonical β_q : C_q → E_{k−1}. No unlocalised C_q → A is needed, which is exactly the item-6 obstacle and is avoided here.
+  - Agreement on ∂D_j ⊗ ∂D_k is a property, because E_{k−1} is gaunt.
+  - (13) holds because localisation is a pushout.
+  - (14) uses correctness over D_k, which is a suspension base (item 5).
+  - (15) uses homotopicality of the base skeleta, and Loubaton Thm 3.2.3.15 / Cor. 3.2.3.16 finishes.
+- **Hypothesis.** The theorem needs the attaching expressions to realise the structural Gray pasting (5) through T. Matching boundaries or equality only in the final total is not enough. The certificate in §6 checks exactly this, so item 15's equivalence certificate is unnecessary for the unaugmented presentation.
+
+**Consequence.** Whether the unaugmented presentation works is now a pure existence problem: do positive attaching expressions for all q ⊗ g exist in the unlocalised stages? Correctness is then automatic. Q1 (decidability, or a bound on the expressions to search) and Q2 (a base-only criterion) remain open. The follow-up prompt is `outbox/fibration-presentations-characterization-r4.md`.

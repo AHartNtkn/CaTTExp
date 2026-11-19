@@ -2208,7 +2208,7 @@ The exact remaining gap in Q1 is the complete presentation for arbitrary residua
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: partial answer, verified.** The braid conjecture of Q1 is **false as stated** (event-only words miss state-changing modifications), and the correct description is found for uniform families; the 1-cells of 𝒢 have a complete decidable normal form; Q2's proposed sufficient test is false; Q4's literal rule is impossible. Open: general residual-containing arities in 𝒢′, 2-cells of 𝒢 (including ι ∘ π = 1_H and the forward-comparison uniqueness), and an asymmetric directed coherence rule. The follow-up prompt is `../outbox/gray-biclosed-coherence-r2.md`.
+**Verdict: partial answer, verified.** The braid conjecture of Q1 is **false as stated** (event-only words miss state-changing modifications), and the correct description is found for uniform families; the 1-cells of 𝒢 have a complete decidable normal form; Q2's proposed sufficient test is false; Q4's literal rule is impossible. Open: general residual-containing arities in 𝒢′, 2-cells of 𝒢 (including ι ∘ π = 1_H and the forward-comparison uniqueness), and an asymmetric directed coherence rule. The follow-up prompt is `gray-biclosed-coherence-r2-2026-11-19.md`.
 
 **Main response.**
 - §1, endpoint-symmetric coherence cannot produce a directed interchanger. Correct and short: if Adm(u, v) ⇒ Adm(v, u), the same rule produces a cell q ⇒ p in the walking Gray square, whose hom (0,0) → (1,1) is [p → q]. Reverse cells are closed under composition and whiskering, so composites do not help. This matches the project's own design: L's operation case is asymmetric (∂⁻/∂⁺ supports), its coherence case is symmetric and gives invertible cells.

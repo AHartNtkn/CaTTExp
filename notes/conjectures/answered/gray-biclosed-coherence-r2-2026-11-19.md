@@ -637,3 +637,24 @@ I have not established any of
 The \(1\)-cell normalization theorem does not supply the needed higher result. Its \(\beta/\eta\) overlap changes which evaluation survives, and the induced crossing equations include cancellation. A proof would need a presentation of those transported \(2\)-cell equations and a normalization or equality theorem for that presentation.
 
 The results above therefore provide conditional undecidability and two precisely scoped obstructions to arity rules. **They do not complete Q1 or Q2, or establish the unrestricted exactness/impossibility alternative requested in Q3.**
+
+## Verification of the researcher response (2026-11-19)
+
+*Checked by the thread "Process seven round-3 researcher responses". Verdict: **correct as scoped**.*
+
+- **§1 (Q1, conditional undecidability).**
+  - The presentation is Tseytin's seven-relation semigroup (Nyberg-Brodda, arXiv 2401.11757, checked to exist with this title). Adjoining a unit preserves undecidability of equality of nonempty words.
+  - In the strict 2-categorical Gray product the two hemisphere pastings of J^{⊗3} are equal. With four faces sent to identities, this gives û = v̂, and equality is a congruence under vertical composition, so u =_M v ⇒ û = v̂.
+  - The converse holds in the Gray model with A ↦ 1 and B ↦ C_M (C_M(0,1) = BM), where the cube exists iff the two faces are equal in M.
+  - Scope: the reduction needs generators whose cube faces are prescribed terms. Items 33–34 of the prompt already admit prescribed outer faces, so **Q1 as posed has a negative answer: equality is undecidable for a fixed finite Σ**. Signatures of bare declarations (faces are new arrows) are not covered.
+- **§2 (Q3, the 4-cube).** Recomputed with a script on the Steiner complex of I^{⊗4}. The words w = 121321 = 123121, u = 212321 and v = 123212 from 4321 to 1234 satisfy d F₁⁰ = [u] − [w] and d F₄⁰ = [v] − [w], so α : w ⇒ u and β : w ⇒ v as stated. The formula for dz matches (1), and ker d₃ = ℤ dz because C₄ = ℤz and the cube is acyclic. The two infeasibility arguments are correct, and a brute-force search over nonnegative 3-chains with coefficients ≤ 2 also finds none. So no rule that supplies a cell in some direction for every parallel pair is exact on Gray cubes, even with directed arities and no quotient.
+- **§3 (residuals).** Fun([1],[2]) has the commuting square a01 → a02 → a12 = a01 → a11 → a12 of indecomposable arrows and no higher cells, so it is not free. The ADC computation is correct: a01 + a12 = a02 + a11 in A₀, and the up-closed set {a12, a22} gives a functor D → [1] that no augmentation-preserving positive chain map induces. Steiner's comparison needs a strongly loop-free unital basis in the domain.
+- **§4.** Keidar–Neuhauser, arXiv 2606.27574 (2026-06-25), *The Gray Product of (∞,n)-Categories via Lax Grids*, exists. The abstract confirms the Segal-sheaf model on lax grids and agreement with Campion. The claim that it gives no data syntax is the response's own assessment.
+- **§5.** The partial-adjunction sufficient condition (5) and the counterexample with two evaluations e, h are correct.
+
+**Open after this response.**
+- Q1 for relation-free signatures, where every generator is a bare declaration.
+- Q2 (ι∘π = 1_H? 𝒢(t₁, t₂) = {α}? 𝒢(s, t) = {θ}?), untouched. CLOSED's internal attempt on ι∘π is in `closed-structure.md`.
+- Q3 with a directed admissibility judgment.
+
+The follow-up prompt is `outbox/gray-biclosed-coherence-r3.md`.

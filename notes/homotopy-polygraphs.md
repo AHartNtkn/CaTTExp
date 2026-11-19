@@ -8,10 +8,10 @@
 
 | Direction | Dimension 2 | Every dimension |
 |---|---|---|
-| homotopical ⟹ bubble-free | proved (researcher, verified) | **proved, all k**: Theorem N (§1, in-house) and independently the researcher (`conjectures/outbox/homotopy-polygraphs-r2.md` Responses 1–2; `conjectures/answered/higher-bubble-obstruction-2026-11-19.md`) |
+| homotopical ⟹ bubble-free | proved (researcher, verified) | **proved, all k**: Theorem N (§1, in-house) and independently the researcher (`conjectures/answered/homotopy-polygraphs-r2-2026-11-19.md` Responses 1–2; `conjectures/answered/higher-bubble-obstruction-2026-11-19.md`) |
 | bubble-free ⟹ homotopical | proved (researcher, verified; Heidemann inputs on trust) | proved for positive-to-one polygraphs and their dimensionwise duals (researcher, r2 Response 1 Thm 2); open in general; §3–4 |
 
-Sources: `conjectures/answered/homotopy-polygraphs-2026-11-19.md` (dimension 2, Theorems A–C); follow-up prompt `conjectures/outbox/homotopy-polygraphs-r2.md`.
+Sources: `conjectures/answered/homotopy-polygraphs-2026-11-19.md` (dimension 2, Theorems A–C); follow-up prompt `conjectures/answered/homotopy-polygraphs-r2-2026-11-19.md`.
 
 ---
 
@@ -54,7 +54,7 @@ Fix e : 1^{n−1−k}_c ⇒ 1^{n−1−k}_c in F(Γ), non-identity, and put q = 
 
 ## 2. Relation to the r2 researcher responses
 
-The r2 prompt was sent and answered in parallel with this work (responses appended to `conjectures/outbox/homotopy-polygraphs-r2.md`). Response 1 Theorem 1 and Response 2 prove the same statement as Theorem N. Their route differs only in using the d = n − 2 fold hom, so that the scalar is always 2-dimensional (B² ℕ, ℂP^∞), where Theorem N uses B^{n−k} ℕ and the cohomology suspension down to ι₂. Response 1 also gives:
+The r2 prompt was sent and answered in parallel with this work (responses appended to `conjectures/answered/homotopy-polygraphs-r2-2026-11-19.md`). Response 1 Theorem 1 and Response 2 prove the same statement as Theorem N. Their route differs only in using the d = n − 2 fold hom, so that the scalar is always 2-dimensional (B² ℕ, ℂP^∞), where Theorem N uses B^{n−k} ℕ and the cohomology suspension down to ι₂. Response 1 also gives:
 - **Theorem 2** (sufficiency for positive-to-one polygraphs: every d-generator, d ≥ 2, has a generating (d−1)-cell as target and a non-identity source; plus dimensionwise duals). This covers FTX's priority case (1) only when the 3-generators have generator targets; item 8's ζ : α ▷ r ⇛ β ▷ r has a whiskered target, so it is **not** covered.
 - **Groupoidification is not a recognition test from dimension 3**: Π = (x; a : 1_x ⇒ 1_x; ε : a ⇛ 1_{1_x}) has contractible strict and weak groupoidifications but is not homotopical (it has a bubble in its 2-skeleton).
 - The open step is contractibility of encoding spaces over a fixed strict cell, the same step §4 isolates.

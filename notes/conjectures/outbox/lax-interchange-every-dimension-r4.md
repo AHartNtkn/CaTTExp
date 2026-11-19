@@ -1,8 +1,8 @@
-# Free higher categories with directed interchange: every dimension, after the necessary 4-dimensional repair
+# Free higher categories with directed interchange: every dimension, after the forced 3-dimensional equation
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked, except statements explicitly marked as computed.*
 
-**What we are asking for.** The most general decision: a theory of tensor-shaped lax-interchange ω-categories valid in **every** dimension, or a proof that none exists. §2 contains a uniform theory T satisfying requirements 1–5 of §3 through global dimension 4 ((K30)–(K32)), and a proof ((K33)–(K35)) that T must be amended by a 4-dimensional equation (C) before any extension to dimension 5 can exist. Hand completions of particular shapes, or a theory that stops at a fixed dimension, are not what we want.
+**What we are asking for.** The most general decision: a theory of tensor-shaped lax-interchange ω-categories valid in **every** dimension, or a proof that none exists. §2 contains a uniform theory T satisfying requirements 1–5 of §3 through global dimension 4 ((K30)–(K32)). It also proves that T must be amended before any extension to dimension 5 can exist: first by a 4-dimensional equation (C) ((K33)–(K35)), and then necessarily by **new 3-dimensional equations**, because no repair confined to dimension ≥ 4 works ((K37)–(K38)), and these must form an infinite family ((K39)). Hand completions of particular shapes, or a theory that stops at a fixed dimension, are not what we want.
 
 ## 1. Setting
 
@@ -218,7 +218,7 @@ No directedness or exactness is claimed in global dimension 5. The 5-cells above
 
 **(K31) The inner composite-crossing law is not forced through dimension 4 (proved).** In the free T-algebra on the diagram with 3-cells A : α₀ ⇛ α₁ and B : β₀ ⇛ β₁, C : β₁ ⇛ β₂ (all 2-cells x → y between f₀ → f₁ → f₂), ι(A, B;C) ≠ [α₀B | ι(A,C) | ε] · [ε | ι(A,B) | α₁C]. A finite T-algebra separates them. It has one cell in each of dimensions 0–2, 3-cells {0, 1, 2} under capped addition, and 4-cells (m, S) with S ⊆ {1,2}² and union as composition, with χ ↦ 0, r, t ↦ identities, and ι(m, n) ↦ (m ⊕ n, {(m,n)}) for m, n > 0. Every equation of (K30) holds there, the 5-cells can be read as identities, and with A, B, C ↦ 1 the two sides go to (2, {(1,2)}) and (2, {(1,1)}). So in T the outer law (K15) holds but the inner law is extra coherence data. Whether a theory satisfying requirements 1–5 in all dimensions forces it is open.
 
-**(K32) What dimension 5 must contain.** For ΣD² ∨ ΣD² with 3-cells A, B side by side, the tensor atom A ⊗ B is a global 5-cell between two routes of 4-cells ((K3), (K8)). T as stated does not reach this cell (checked by hand and by `scripts/e6/t_binary_interval.py`). Write the six orderings of A, B and C = χ(α, β) as S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC. The 4-generators of T in this interval are exactly
+**(K32) What dimension 5 must contain.** For ΣD² ∨ ΣD² with 3-cells A, B side by side, the tensor atom A ⊗ B is a global 5-cell between two routes of 4-cells ((K3), (K8)). T as stated does not reach this cell (checked by hand and by computer). Write the six orderings of A, B and C = χ(α, β) as S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC. The 4-generators of T in this interval are exactly
   - t̄₀ : S → V₀, ι(A, B) : V₀ → V₁, r̄₀ : V₁ → T;
   - r̄₁ : S → U₁, ι(B, A) : U₀ → U₁, t̄₁ : U₀ → T.
 
@@ -252,14 +252,35 @@ No extension faithful on T's 4-cells works. The h-repair of (K32) is vacuous on 
 
 **(K36) (C) is a consistent repair through dimension 4.** T₄/(H = 1) adds no cells in dimensions ≤ 3, cannot create a reverse 4-cell (a hom is non-empty after the quotient iff before), holds already when ι is killed (so both quotients of requirement 4 are unchanged), and admits injective supports (least old support per class). Bourke–Lobbia (arXiv 2610.31448, Appendix A, the (A₁, A₂ : B₁, B₂) axiom and Rem. 4.10) impose an equation of the same four-variable shape, under different invertibility assumptions. (C) alone does not remove every pair of non-identity 4-endomorphisms composable along a 2-cell; see (K37).
 
-**(K37) (C) does not suffice, and neither do its rotations (computed; the doubling step is proved).** `scripts/e6/t_endomorphisms.py` computes the 4-endomorphisms of F_T(Σ[m] ∨ Σ[n]) exactly, through global dimension 4.
+**(K37) (C) does not suffice, and neither do its rotations (computed; the doubling step is proved).** A computer calculation gives the 4-endomorphisms of F_T(Σ[m] ∨ Σ[n]) exactly, through global dimension 4.
 - *The model.* 3-cells are paths of elementary crossings modulo the composite-crossing laws in every context. 4-cells are paths of contextual ι-generators modulo three things: the restricted composition laws, T's support equations, and optionally (C) in every context and substitution instance. In this Γ, r, t and τ are identities.
 - *Sanity check.* Without (C), on Σ[2] ∨ Σ[4] the only pair of nonidentity endomorphisms composable along a 2-cell is (K35)'s pair. With (C) it is gone.
-- *A rotation survives.* With (C) there is no composable pair on Σ[2] ∨ Σ[n] for n ≤ 4, and none on the parts of Σ[3] ∨ Σ[3] and Σ[2] ∨ Σ[5] that the computation decides. But nonidentity endomorphisms survive. The smallest is on Σ[2] ∨ Σ[3]: H(a₁, a₂; b₁, b₂b₃) = e₁ · e₂ is a loop of two contextual ι-edges, and (C) makes it 1. Its rotation R = e₂ · e₁, a loop at the intermediate 3-cell, is not a substitution instance of H and stays non-identity in the computed quotient. This depends on the script's list of T's 4-equations for two-factor Γ being complete (the (K30) equations as instantiated there: the restricted composition laws, the support equations and (C)). No separating invariant for R is given, so "R ≠ 1 in T + (C)" is computed, not proved. The zero-pair results do not depend on this, since a missed equation could only remove endomorphisms. Its base is a 3-cell from b₁b₂b₃a₁a₂ to a₁a₂b₁b₂b₃.
+- *A rotation survives.* With (C) there is no composable pair on Σ[2] ∨ Σ[n] for n ≤ 4, and none on the parts of Σ[3] ∨ Σ[3] and Σ[2] ∨ Σ[5] that the computation decides. But nonidentity endomorphisms survive. The smallest is on Σ[2] ∨ Σ[3]: H(a₁, a₂; b₁, b₂b₃) = e₁ · e₂ is a loop of two contextual ι-edges, and (C) makes it 1. Its rotation R = e₂ · e₁, a loop at the intermediate 3-cell, is not a substitution instance of H and stays non-identity in the computed quotient. This depends on the script's list of T's 4-equations for two-factor Γ being complete (the (K30) equations as instantiated there: the restricted composition laws, the support equations and (C)). No separating invariant for R is given, so "R ≠ 1 in T + (C)" was computed here; it is proved in (K38), for the mirror diagram. The zero-pair results do not depend on this, since a missed equation could only remove endomorphisms. Its base is a 3-cell from b₁b₂b₃a₁a₂ to a₁a₂b₁b₂b₃.
 - *Doubling.* Any nonidentity endomorphism E on a 3-cell from BA to AB doubles as in (K35). On Σ[2] ∨ Σ[2n], X = b₁…bₙ E(a; bₙ₊₁…b₂ₙ) and Y = E(a; b₁…bₙ) bₙ₊₁…b₂ₙ are composable along a 2-cell. The two degenerating substitutions send them to (E, 1) and (1, E). So R gives a surviving obstruction pair on Σ[2] ∨ Σ[6], and every extension must also impose R = 1.
 - *Rotations are not enough.* Add R = 1 and every rotation of every H instance, written (C⁺). This clears Σ[2] ∨ Σ[3] and the decided part of Σ[3] ∨ Σ[3]. But Σ[2] ∨ Σ[4] keeps 7 nonidentity endomorphisms, some on the extreme 3-cell χ(a₁a₂, b₁b₂b₃b₄) itself. By doubling, each forces a new equation on Σ[2] ∨ Σ[8].
 
-So the forced repair is not a finite list of loop equations. The natural candidate is **(C∞): every 4-endomorphism of F_T(Γ) is an identity**, which, given T's support equations (every endomorphism is idempotent), is equivalent to every 4-edge on a 4-cycle being invertible. Doubling shows that every endomorphism on a 3-cell between extreme words BA and AB must die. Every 4-cycle consists of cut-neutral ι-moves (the cut-inversion invariant of (K30)), and inverting an edge on a cycle adds no new homs. So the (K36) consistency argument plausibly carries over, but this has not been checked.
+So the forced repair is not a finite list of loop equations. A natural candidate was **(C∞): every 4-endomorphism of F_T(Γ) is an identity**, refuted by (K38), which, given T's support equations (every endomorphism is idempotent), is equivalent to every 4-edge on a 4-cycle being invertible. Doubling shows that every endomorphism on a 3-cell between extreme words BA and AB must die. Every 4-cycle consists of cut-neutral ι-moves (the cut-inversion invariant of (K30)), and inverting an edge on a cycle adds no new homs. So the (K36) consistency argument plausibly carries over, but this has not been checked.
+
+**(K38) A 3-dimensional equation is forced (proved).** Work on Γ_{3,2} = Σ[3] ∨ Σ[2] (the mirror of (K37)'s Σ[2] ∨ Σ[3]) and write ij = χ(aᵢ, bⱼ).
+- *The 3-cells.* The 3-cells from b₁b₂a₁a₂a₃ to a₁a₂a₃b₁b₂ are the five fully expanded crossing paths, i.e. the linear extensions of the 3 × 2 grid: P₁ = 12 11 22 21 32 31, P₂ = 12 11 22 32 21 31, P₃ = 12 22 11 21 32 31, V = 12 22 11 32 21 31, P₅ = 12 22 32 11 21 31.
+- T's outer composite-crossing laws give P₁ = P₂ = P₃ = P₅ = W := χ(a₁a₂a₃, b₁b₂). They do not identify V with W, since no side of a rectangle relation is a contiguous subword of V.
+- *The 4-cells.* The atomic ι-arrows are e : P₅ → V, f : V → P₃, g : V → P₂, ℓ : P₃ → P₁ and m : P₂ → P₁. This list is exhaustive: every active ι(F, G) has an argument with exactly one crossing, because there are only five generating 2-cells.
+- The four (C)-instances give ℓ = m = 1 and e;f = e;g = 1_W. The support equations give f = g.
+- So the hom of 4-cells over {W, V} is exactly the **walking retraction**: e;f = 1_W and p := f;e is a non-identity idempotent on V. Non-identity is shown by the model W = {0}, V = {0,1}, e(0) = 0, f constant, which satisfies every relation: in it, every non-empty loop at V passes through W.
+- *No repair in dimension ≥ 4.* Let an extension keep T's equations and (C), be closed under substitution, satisfy requirement 3 in dimension 5, and keep V ≠ W.
+  - If p ≠ 1, then on Γ_{3,4} with A = a₁a₂a₃, B = b₁b₂, C = b₃b₄, the cells X = B p(A,C) and Y = p(A,B) C are non-identity 4-endomorphisms composable along a 2-cell. Raw support makes X, Y and X ∗₂ Y idempotent, so the elementary 5-interchanger on (X, X, Y, Y) is an endomorphism with the identity as a reverse.
+  - If p = 1, then e is invertible and non-identity. The *inverse-input lemma* then gives a reverse elementary 5-interchanger for E = B e(A,C) and K = e(A,B) C: for an invertible E : u → u′, whisker I₅(E⁻¹, K) by Ev on the left and Ev′ on the right and cancel.
+  In particular "(C∞): every 4-endomorphism is an identity" is refuted: it forces p = 1 while keeping V ≠ W.
+- *Hence* every extension must impose **(R): 12 22 11 32 21 31 = χ(a₁a₂a₃, b₁b₂)**, as a scheme under substitution. Requirement 4 allows (R), since both sides have the same Gray image. None of its degenerations (aᵢ = 1 or bⱼ = 1) is a bare interchange equation: each is already a composite-crossing expansion of a smaller rectangle.
+- *Limits of the argument.* The case p ≠ 1 uses T's raw edge-set support equations. Idempotence of X and Y alone would not give idempotence of X ∗₂ Y (in ⟨x, y | x² = x, y² = y⟩ the words (yx)ⁿ are distinct), so requirement 2 in the expanded basis is not refuted.
+
+**(K39) (R) alone is not enough, and neither is (R∞) with (C) (computed).** Computer calculations with the same model as (K37), adding (R) in all substitution instances and both orientations:
+- The non-rectangular ("non-guillotine") linear extensions of the smallest grids are V on 3 × 2 and its mirror 13 12 23 11 22 21 on 2 × 3; the latter is the base of (K37)'s rotation R.
+- In T + (R) + (C), Σ[2] ∨ Σ[≤3] and Σ[3] ∨ Σ[2] have no non-identity 4-endomorphisms. Σ[2] ∨ Σ[4] keeps 2, on the extreme 3-cell BA → AB, and these double (as in (K37)) to an obstruction pair on Σ[2] ∨ Σ[8].
+- (R) does not make all extreme crossing paths BA → AB equal. Classes of paths before → after (R): 2 × 4 (14 paths) 7 → 2; 3 × 3 (42 paths) 21 → 13; 2 × 5 (42 paths) 25 → 10. The dichotomy of (K38) applies to each remaining pair, so the 3-level repair must be at least **(R∞): every crossing path BA → AB equals χ(A, B)**, an infinite family of base patterns.
+- Even T + (R∞) + (C) keeps one extreme endomorphism on Σ[2] ∨ Σ[4]. Under (R∞) every ι-edge between extreme paths is a loop at χ(A, B), and support makes its endomorphism monoid a join-semilattice, so (C) kills each edge of an H instance; but some edges lie in no H instance (e.g. ι((1,3),(2,4)) at b₁b₂b₃a₁b₄a₂). Doubling again gives an obstruction on Σ[2] ∨ Σ[8]. So the 4-level repair must grow too, plausibly to "every ι-loop at a block χ(A, B) is an identity". The refutation of (C∞) in (K38) does not apply once (R∞) makes the endpoints equal.
+- In the expanded basis (supports of 3-cells as sets of contextual 3-edges (word, crossing)), V's six edges lie inside the union of the edge sets of W's four representatives, but no representative has V's edge set and the four sets differ pairwise. So requirement 2 read in the expanded basis does not by itself force (R).
+These survivals are computed, not proved; they depend on the completeness of the list of T's equations used.
 
 ## 3. Requirements
 
@@ -273,13 +294,13 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-**Q1 (main: decide in every dimension, with (C)).** Do one of the following.
-- **(A) Construction.** Give a definition of tensor-shaped lax-interchange ω-categories, valid in every dimension and for interchange along k-cells for every k, with an explicit description of the free object on every finite globular pasting diagram, and prove requirements 1–5 for all Γ and all dimensions. The natural route is T + (C) + its higher analogues: state the generators and equations in global dimension n + 1 in terms of those in dimension n, including the general form of (C) in dimension n (killing every endomorphism produced by expanding an interchanger of composites in two orders), the joining data of (K32), and the (2,2)-atom A ⊗ B with its Leibniz boundary, and prove the inductive step once. By (K37), (C) must be strengthened. A proof that T + (C∞) (or a stated weaker repair) has no non-identity 4-endomorphisms composable along a 2-cell, for every Γ, and is consistent through dimension 4, is the first step.
-- **(B) Impossibility.** Prove that no theory satisfies requirements 1–5 through global dimension 5 (or a stated higher dimension), covering every choice of lower-dimensional data, in particular every theory that agrees with T + (C) or T + (C∞) through dimension 4 and every theory that imposes further 4-equations. Identify the smallest Γ where the contradiction appears.
+**Q1 (main: decide in every dimension, with the forced 3-equations).** By (K38), every extension of T + (C) to dimension 5 must change T's 3-cells. Do one of the following.
+- **(A) Construction.** Determine the full 3-dimensional equation scheme that directedness forces. (R) identifies one non-rectangular crossing word in a 3 × 2 grid with the composite crossing. By (K39) the natural candidate is (R∞): *every* crossing path between BA and AB equals χ(A, B), i.e. the 3-cells between the extreme words are unique, together with a matching 4-level repair such as "every ι-loop at a block χ(A, B) is an identity". Give a definition of tensor-shaped lax-interchange ω-categories valid in every dimension and for interchange along k-cells for every k, built from T with the corrected 3-cells, (C), its higher analogues, the joining data of (K32) and the (2,2)-atom A ⊗ B with its Leibniz boundary. Give an explicit description of the free object on every finite globular pasting diagram, and prove requirements 1–5 for all Γ and all dimensions, with the inductive step from global dimension n to n + 1 proved once. The first step is to show that T + (R∞) + (C) + the 4-level repair has no non-identity 4-endomorphisms composable along a 2-cell, for every Γ, and that it is consistent with requirements 1–5 through dimension 4 (in particular that the new 3-equations create no reverse cells and leave requirement 4 intact).
+- **(B) Impossibility.** Prove that no theory satisfies requirements 1–5 through global dimension 5 (or a stated higher dimension), covering every choice of lower-dimensional data. This includes every theory that changes T's 3-cells by (R) or further 3-equations. Identify the smallest Γ where the contradiction appears.
 
-**Q2 (which requirement, and the best consistent theory).** (K33) uses T's raw edge-set support equations, which force idempotence of endomorphisms; requirement 2 in the expanded basis does not. Decide whether requirement 2 should be read in the expanded basis, and whether, so read, it is consistent with requirements 1, 3, 4 and 5 in every dimension. If (B) holds, say which requirement fails and give the strongest consistent weakening with a construction in every dimension (candidates: requirement 2 with bounded extra data; requirement 3 weakened to "no reverse of an elementary interchanger with non-identity, non-endomorphism arguments"; requirement 4 up to equivalence).
+**Q2 (which requirement, and the best consistent theory).** The obstruction of (K33)/(K38) uses T's raw edge-set support equations, which force idempotence of endomorphisms; requirement 2 in the expanded basis does not. Decide whether requirement 2 should be read in the expanded basis, whether so read it is compatible with the 3-equations of Q1(A) (by (K39) it does not force them), and whether it is consistent with requirements 1, 3, 4 and 5 in every dimension. If Q1(B) holds, say which requirement fails and give the strongest consistent weakening with a construction in every dimension. Candidates: requirement 2 with bounded extra data; requirement 3 weakened to "no reverse of an elementary interchanger with non-identity, non-invertible, non-endomorphism arguments"; requirement 4 up to equivalence.
 
-**Q3 (composite crossings in all dimensions).** Through dimension 4 the composite-crossing law for the inner interchanger is not forced ((K31)), and imposing it does not remove H ((K34)), while (C) does not force it (the (K31) model has χ = 0 and satisfies H = 1). Decide whether any theory satisfying 1–5 in all dimensions forces it, and whether imposing it together with (C) and the outer law (K15) is consistent with 1–5 in all dimensions.
+**Q3 (composite crossings in all dimensions).** Through dimension 4 the composite-crossing law for the inner interchanger is not forced ((K31)), and imposing it does not remove H ((K34)), while (C) does not force it (the (K31) model has χ = 0 and satisfies H = 1). Decide whether any theory satisfying 1–5 in all dimensions forces it, and whether imposing it together with the 3-equations of Q1(A), (C) and the outer law (K15) is consistent with 1–5 in all dimensions.
 
 ## 5. What counts as a solution
 
@@ -291,347 +312,3 @@ A definition with proofs for (A), an inconsistency proof for (B), a decision for
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange, Appendix A and Rem. 4.10).
 - Campion, arXiv 2311.00205 (Gray tensor of (∞,n)-categories); Gepner–Heine, arXiv 2510.10504.
 
-# Researcher Response
-
-I have not resolved Q1–Q3 in their full generality. I can prove a stronger obstruction to the proposed starting theory:
-
-> **\(T+(C)\) has a nonidentity idempotent 4-endomorphism. Moreover, no addition of 4-generators and parallel 4-equations can make it extend to dimension 5 while preserving T’s 3-cells. A new 3-dimensional equation is necessary.**
-
-Thus the first step proposed in Q1(A)—proving that \(T+(C)\) has no surviving pairs of the relevant 4-endomorphisms—is false.
-
-The obstruction below uses only T’s equations, (C), substitution, and directed elementary interchange in dimension 5. It does **not** exclude theories that change the 3-dimensional equations or replace T’s raw support equations. I will distinguish that limitation explicitly.
-
-## 1. A split retraction forced by (C)
-
-Work on
-\[
-\Gamma_{3,2}=\Sigma[3]\vee\Sigma[2].
-\]
-Write
-\[
-ij=\chi(a_i,b_j),
-\]
-with its uniquely determined 2-whiskerings suppressed.
-
-Consider 3-cells from the 2-word
-\[
-b_1b_2a_1a_2a_3
-\]
-to
-\[
-a_1a_2a_3b_1b_2.
-\]
-
-There are exactly five fully expanded positive crossing paths:
-
-| Name | Chronological list of crossings |
-|---|---|
-| \(P_1\) | \(12\,11\,22\,21\,32\,31\) |
-| \(P_2\) | \(12\,11\,22\,32\,21\,31\) |
-| \(P_3\) | \(12\,22\,11\,21\,32\,31\) |
-| \(V\) | \(12\,22\,11\,32\,21\,31\) |
-| \(P_5\) | \(12\,22\,32\,11\,21\,31\) |
-
-For exhaustiveness, the first crossing must be \(12\). The second is either \(11\) or \(22\). If it is \(11\), the two remaining choices give \(P_1,P_2\). If it is \(22\), the remaining choices give \(P_3,V,P_5\).
-
-Put
-\[
-W=\chi(a_1a_2a_3,b_1b_2).
-\]
-T’s outer composite-crossing equations give
-\[
-P_1=P_2=P_3=P_5=W.
-\tag{1}
-\]
-
-They do **not** identify \(V\) with \(W\). To see this directly, expand every composite \(\chi\)-term into elementary crossings. The nontrivial 3-relations replace the two orders of a complete rectangular expansion. On this diagram, the possible rectangles use:
-
-\[
-\{a_1,a_2\}\times\{b_1,b_2\},\qquad
-\{a_2,a_3\}\times\{b_1,b_2\},\qquad
-\{a_1,a_2,a_3\}\times\{b_1,b_2\}.
-\]
-
-These relations connect precisely the four paths in (1). No side of such a relation is a contiguous subword of \(V\): \(32\) interrupts the first two-row rectangle, \(11\) interrupts the last two-row rectangle, and \(V\) is neither full rectangular expansion. Hence
-\[
-V\ne W
-\quad\text{in }F_T(\Gamma_{3,2})_3.
-\tag{2}
-\]
-
-Adding (C), an equation between parallel 4-cells, does not change (2).
-
-Now apply (C) with left inputs \(a_1a_2,a_3\) and right inputs \(b_1,b_2\). Its central interchanger has arguments
-\[
-F=\chi(a_1a_2,b_1)=11;21,
-\qquad
-G=\chi(a_3,b_2)=32.
-\]
-Because \(G\) is a literal \(\chi\)-term, **T’s existing restricted composition law for \(\iota\)** applies. No unrestricted inner composite-crossing law is needed.
-
-With prefix \(12;22\) and suffix \(31\), that law expands the instance of (C) as
-\[
-P_5\xrightarrow{e}V\xrightarrow{f}P_3,
-\]
-where \(e\) exchanges \(32\) with \(11\), and \(f\) exchanges \(32\) with \(21\).
-
-Using (1), equation (C) therefore says
-\[
-e:W\longrightarrow V,\qquad
-f:V\longrightarrow W,\qquad
-e;f=1_W.
-\tag{3}
-\]
-
-Consequently,
-\[
-p:=f;e:V\longrightarrow V
-\]
-is idempotent:
-\[
-p;p=f;(e;f);e=f;e=p.
-\tag{4}
-\]
-
-The remaining issue is whether \(p\) is already an identity. It is not.
-
-## 2. The relevant 4-category is exactly the walking retraction
-
-Here is the complete calculation, including all relations that could identify \(p\) with \(1_V\).
-
-Before the 3-identifications (1), the atomic inner-interchanger arrows are:
-
-| Arrow | Source | Target |
-|---|---|---|
-| \(e\) | \(P_5\) | \(V\) |
-| \(f\) | \(V\) | \(P_3\) |
-| \(g\) | \(V\) | \(P_2\) |
-| \(\ell\) | \(P_3\) | \(P_1\) |
-| \(m\) | \(P_2\) | \(P_1\) |
-
-This list is exhaustive for the following reasons.
-
-First, \(\Gamma_{3,2}\) has no generating 3-cells. Every nonidentity 3-cell is a crossing path using both outer 0-factors. Thus there are no nondegenerate \(r\)- or \(t\)-instances on this diagram.
-
-Second, the two arguments of an active \(\iota(F,G)\) act on disjoint intervals of a 2-word. A crossing path with at least two elementary crossings requires at least three generating 2-cells. If both arguments had at least two crossings, they would require at least six generating 2-cells on those disjoint intervals. This diagram has only five.
-
-Therefore every active \(\iota(F,G)\) has an argument with one elementary crossing, and T’s restricted composition laws expand it into arrows in the table.
-
-There is no ambiguity in those argument expansions: a nontrivial rectangular ambiguity needs four generating 2-cells, while the other nonidentity argument needs two more.
-
-After (1), the table becomes
-\[
-e:W\to V,\qquad f,g:V\to W,\qquad
-\ell,m:W\to W.
-\]
-
-The complete list of nondegenerate (C)-instances gives
-\[
-\ell=1_W,\qquad m=1_W,\qquad
-e;f=1_W,\qquad e;g=1_W.
-\tag{5}
-\]
-
-Indeed, the right inputs must use \(b_1,b_2\), and the possible left input intervals are exactly
-\[
-(a_1,a_2),\quad
-(a_2,a_3),\quad
-(a_1a_2,a_3),\quad
-(a_1,a_2a_3).
-\]
-These give the four equations in (5), respectively. There is no further instance based at \(V\), since \(V\) admits no contiguous complete rectangular expansion.
-
-T’s support equations also give
-\[
-f=g.
-\tag{6}
-\]
-Specifically, the two parallel paths
-\[
-f;e;g,\qquad g;e;f
-\]
-have the same contextual-edge set \(\{e,f,g\}\). By (5), they reduce respectively to \(f\) and \(g\).
-
-The resulting 4-category therefore has exactly the following arrows:
-
-| 3-source | 3-target | 4-cells |
-|---|---|---|
-| \(W\) | \(W\) | \(1_W\) |
-| \(W\) | \(V\) | \(e\) |
-| \(V\) | \(W\) | \(f\) |
-| \(V\) | \(V\) | \(1_V,p=f;e\) |
-
-Their composition satisfies
-\[
-e;f=1_W,\qquad
-f;e=p,\qquad
-p;p=p,\qquad
-e;p=e,\qquad
-p;f=f.
-\tag{7}
-\]
-
-To distinguish \(p\) from \(1_V\), interpret this category by functions:
-\[
-W=\{0\},\qquad V=\{0,1\},
-\]
-\[
-e(0)=0,\qquad f(0)=f(1)=0.
-\]
-Then \(e;f=1_W\), whereas \(f;e\) is the constant-zero endomap of \(V\), so
-\[
-p\ne1_V.
-\tag{8}
-\]
-
-This interpretation respects the support equations. The only hom-set where it distinguishes two arrows is \(\operatorname{End}(V)\). An empty \(V\)-loop maps to \(1_V\); every nonempty atomic \(V\)-loop must traverse \(f\) or \(g\), followed eventually by \(e\), and maps to \(p\). Equal contextual-edge sets cannot equate those two cases.
-
-Thus (8) holds in \(F_{T+(C)}(\Gamma_{3,2})\), not merely in an incomplete selection of its relations.
-
-## 3. Further 4-equations cannot repair this while \(W\ne V\)
-
-Consider any proposed extension that retains T’s equations and (C), is closed under substitution, and has the directed elementary interchangers required in dimension 5.
-
-Assume that its free algebra still satisfies
-\[
-W\ne V.
-\tag{9}
-\]
-
-There are two possibilities.
-
-### Case 1: \(p\ne1_V\) remains true
-
-Work on
-\[
-\Gamma_{3,4}=\Sigma[3]\vee\Sigma[4].
-\]
-Let
-\[
-A=a_1a_2a_3,\qquad B=b_1b_2,\qquad C=b_3b_4.
-\]
-
-Use \(p(A,B)\) and \(p(A,C)\) for the two copies of the term above, and form
-\[
-X=B\,p(A,C),\qquad
-Y=p(A,B)\,C.
-\tag{10}
-\]
-
-These are 4-endomorphisms whose 3-bases compose along a 2-cell:
-\[
-BCA\longrightarrow BAC\longrightarrow ABC.
-\]
-
-Both are nonidentity. The substitution that sends \(b_1,b_2\) to identities recovers \(p\) from \(X\); the substitution sending \(b_3,b_4\) to identities recovers \(p\) from \(Y\). If either cell in (10) were an identity, substitution would make \(p\) an identity.
-
-T’s raw support equations imply
-\[
-X\ast_3X=X,\qquad
-Y\ast_3Y=Y,\qquad
-(X\ast_2Y)\ast_3(X\ast_2Y)=X\ast_2Y.
-\]
-These are equations between old T-terms, so adding generators or imposing further equations preserves them.
-
-Hence, with \(Z=X\ast_2Y\),
-\[
-\begin{aligned}
-L(X,X,Y,Y)
-&=(X\ast_3X)\ast_2(Y\ast_3Y)=Z,\\
-R(X,X,Y,Y)
-&=(X\ast_2Y)\ast_3(X\ast_2Y)=Z.
-\end{aligned}
-\]
-The required elementary 5-interchanger is therefore a cell \(Z\to Z\). Its reverse boundary is witnessed by \(1_Z\), contrary to requirement 3.
-
-Thus this case is impossible.
-
-### Case 2: further equations impose \(p=1_V\)
-
-Equations (3) and \(p=1_V\) make \(e\) and \(f\) inverse:
-\[
-e;f=1_W,\qquad f;e=1_V.
-\tag{11}
-\]
-By (9), neither is an identity.
-
-The following general observation now applies.
-
-**Inverse-input lemma.** Suppose \(E:u\to u'\) is an invertible 4-cell and \(K:v\to v'\) is a 4-cell on a 2-composable interval. Write the elementary 5-interchanger as
-\[
-I_5(E,K):
-uK;Ev'\longrightarrow Ev;u'K.
-\]
-The interchanger
-\[
-I_5(E^{-1},K):
-u'K;E^{-1}v'\longrightarrow E^{-1}v;uK
-\]
-can be whiskered on the left by \(Ev\) and on the right by \(Ev'\). Cancelling the inverse pairs gives
-\[
-Ev;u'K\longrightarrow uK;Ev',
-\]
-a reverse of \(I_5(E,K)\).
-
-This uses associativity and functorial whiskering; it does not use a composite-crossing law for \(I_5\).
-
-On \(\Gamma_{3,4}\), take
-\[
-E=B\,e(A,C),\qquad K=e(A,B)\,C.
-\tag{12}
-\]
-Their 3-bases compose along a 2-cell, as in (10). Both are nonidentity by the same two degenerating substitutions. Equation (11) makes \(E\) invertible. The inverse-input lemma supplies a reverse elementary 5-interchanger, again contradicting requirement 3.
-
-Thus this case is impossible as well.
-
-We have proved:
-
-> **Necessary lower equation.** Every extension of \(T+(C)\) retaining T’s equations, closed under substitution, and satisfying requirement 3 in dimension 5 must impose
-> \[
-> \boxed{
-> 12\,22\,11\,32\,21\,31
-> =
-> \chi(a_1a_2a_3,b_1b_2).
-> }
-> \tag{R}
-> \]
-> In particular, no repair confined to new 4-generators, parallel 4-equations, and higher-dimensional data can work.
-
-The free-algebra universal property makes (R) an equation scheme: once it holds on \(\Gamma_{3,2}\), substitution gives every typed instance.
-
-The residual loop occurs on \(\Gamma_{3,2}\); the dimension-5 contradiction uses \(\Gamma_{3,4}\). I have not proved that these witnesses are minimal among all finite globular pasting diagrams.
-
-## 4. Why this still leaves the general question unresolved
-
-Equation (R) is an available escape from the argument. Once \(W=V\), the proof that \(e\) and \(f\) must remain nonidentity no longer applies.
-
-Requirement 4 does not prohibit (R): its two sides already have the same Gray image. The paths \(e\) and \(f\) use inner interchangers, which the Gray quotient kills.
-
-Nor do the immediate identity substitutions turn (R) into a forbidden bare interchange equation. For example, deleting a row or column gives:
-
-| Substitution | Remaining left-hand crossing word |
-|---|---|
-| \(a_1=1\) | \(22\,32\,21\,31\) |
-| \(a_2=1\) | \(12\,11\,32\,31\) |
-| \(a_3=1\) | \(12\,22\,11\,21\) |
-| \(b_1=1\) | \(12\,22\,32\) |
-| \(b_2=1\) | \(11\,21\,31\) |
-
-Each is already a composite-crossing expansion of the corresponding smaller rectangle.
-
-The raw support equations are also essential to the argument. In Case 1, idempotence of \(X\) and \(Y\) alone does not imply idempotence of \(X\ast_2Y\). Even in an ordinary monoid,
-\[
-x^2=x,\qquad y^2=y
-\]
-does not imply \((yx)^2=yx\): in the presentation
-\[
-\langle x,y\mid xx=x,\ yy=y\rangle,
-\]
-the alternating words \((yx)^n\) are distinct normal forms. Thus this obstruction does not establish inconsistency of requirement 2 in its more general expanded-basis interpretation.
-
-The conclusions for the questions are consequently limited but definite:
-
-- **Q1’s proposed first step is false.** \(T+(C)\) retains the explicit nonidentity idempotent \(p\). Preserving T’s 3-cells is incompatible with a dimension-5 extension, even after arbitrary additional 4-generators and parallel 4-equations.
-- **The general Q1 decision remains unresolved here.** The argument does not exclude theories imposing (R), further lower equations, or different support equations.
-- **Q2 remains unresolved in every dimension.** The proof identifies a failure of T’s raw support equations together with its retained 3-theory; it does not identify expanded-basis support injectivity itself as the culprit.
-- **Q3 remains unresolved in every dimension.** The obstruction already uses only T’s restricted inner composition laws. Adding the unrestricted law cannot repair it while \(W\ne V\), but this does not decide its consistency after the necessary lower equations are imposed.

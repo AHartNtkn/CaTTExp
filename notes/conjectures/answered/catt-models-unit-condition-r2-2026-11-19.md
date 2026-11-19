@@ -576,7 +576,7 @@ Thus (A) and (B) are the general implications established here. I have not prove
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: partial answer, verified at the level of the arguments.** Q1 is not decided and Q2 (a coherator for L in every dimension) is not constructed. Two implications are new. The follow-up prompt is `../outbox/catt-models-unit-condition-r3.md`.
+**Verdict: partial answer, verified at the level of the arguments.** Q1 is not decided and Q2 (a coherator for L in every dimension) is not constructed. Two implications are new. The follow-up prompt is `catt-models-unit-condition-r3-2026-11-19.md`.
 
 **(A) U_gpd ⟺ 𝕋^bi is a Grothendieck groupoid coherator satisfying Henry's pushout condition.** The forward direction is Known (VII). The converse was checked step by step:
 - (C)/(D): S₀(f) ∈ W ⟺ QU(f) is an equivalence, using an algebraic completion map r_Z built by factoring UZ → Z^c and extending Z's algebraic fillers along the monomorphism. Correct.

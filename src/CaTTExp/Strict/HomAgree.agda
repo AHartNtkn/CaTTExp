@@ -15,7 +15,7 @@
 --
 -- So in the hom 0 → 1 the strict model's top chain of every term,
 -- including every coh image (the σ-image of T in the operation case,
--- 0 in the coherence case), is the CaTT composite: the sum of the
+-- 0 in the coherence case), is the top chain of the CaTT composite: the sum of the
 -- σ-images of the top-dimensional variables of Δ when dim A + 1 =
 -- dim Δ, and 0 otherwise. In a hom x → x both read the term as an
 -- identity (CaTT: top chain 0; strict model: the unit of K(Γ)(x, x)
@@ -354,7 +354,7 @@ module _ {Θ : Ctx} (PΘ : Θ ⊢ps) where
   ends dt with Soundness.sound-tm invΓ dt
   ... | e , ee , _ , _ , c = e , ee , ends-cell _ _ c
 
-  -- The strict model's top chain is the CaTT composite.
+  -- The strict model's top chain is the CaTT composite's.
   agree : ∀ {t A s u x y} → Γ ⊢tm t ∶ arr A s u → endsV (arr A s u) ≡ just (x , y) →
           (x ≡ y → top (⟦ t ⟧ ηΓ) ≈ []) × ((x ≡ y → ⊥) → topS t ≈ top (⟦ t ⟧ ηΓ))
   agree dt e = agree-tm dt _ _ e

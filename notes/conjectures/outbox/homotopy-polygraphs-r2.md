@@ -61,3 +61,26 @@ A proof of Question 1, 2 or 3; a counterexample with a proof of non-homotopicali
 - Loubaton, arXiv 2406.05425.
 - Blans–Linskens, arXiv 2605.03150.
 - No published recognition theorem for homotopy polygraphs in dimension ≥ 3 beyond the classes in item 1 was found.
+
+# Researcher Response 2
+
+**Higher bubbles obstruct homotopicality over any base cell.** Let Γ be a finite polygraph. Suppose its free strict category contains a nonidentity n-cell $q:1^{n-1-k}_c\to 1^{n-1-k}_c$, where $0\le k\le n-2$. Then Γ is not homotopical. The proof uses the same space $K(\mathbb Z,2)$ for every base dimension.
+
+**Proof.** Put $d=n-2$, $b=1^{d-k}_c$ (with $1^0_c=c$), and $C=F(\Gamma_{\le n})$. In the d-fold hom specified by the faces of b, q is a 2-endomorphism of the identity arrow on b. Its horizontal and vertical powers agree by Eckmann–Hilton. Sending the generator of $B^2\mathbb N$ to q in this hom, then using categorical suspension, gives the first of two strict functors
+$$
+\Sigma^d B^2\mathbb N \xrightarrow{i} C \xrightarrow{r} B^n\mathbb Z.
+$$
+The second sends each n-generator to 1 and each lower generator to the unique cell of its degree. Thus $m=r(q)$ counts the n-generators in q with multiplicity. Since a composite of identity n-cells is an identity, $m>0$.
+
+Write $|-|$ for groupoidification. The source of $|i|$ is homotopy equivalent to $\Sigma^d\mathbb{CP}^{\infty}$ and the target of $|r|$ to $K(\mathbb Z,n)$. Let x and u be their respective unsuspended degree-two and degree-n fundamental classes. On the bottom sphere $\Sigma^d\mathbb{CP}^1$, the composite represents m in $\pi_n K(\mathbb Z,n)$ because its top globe maps to m. Restriction to that sphere is an isomorphism in degree n, so $|i|^*|r|^*u=m\,\sigma^d x$, where σ is cohomology suspension.
+
+Choose an odd prime p not dividing m and reduce coefficients modulo p. Starting with $a_0=|r|^*u$, set $a_{j+1}=P^{p^j}a_j$. Naturality, stability under suspension, and the top-power identity for Steenrod reduced powers give
+$$
+|i|^*a_j=(m\bmod p)\,\sigma^d(x^{p^j})\ne0
+\qquad\text{in degree }n-2+2p^j .
+$$
+Nonvanishing follows from $H^*(\mathbb{CP}^{\infty};\mathbb F_p)=\mathbb F_p[x]$. Already $j=1$ distinguishes $|C|$ from the groupoidification of the free cellular n-skeleton, which has a CW model of dimension n. The skeletal comparison therefore fails. Since homotopicality passes to skeleta, Γ cannot be homotopical. ∎ [Detailed proof and references](../answered/higher-bubble-obstruction-2026-11-19.md)
+
+For a composite example, let f be a path of two arrows, take a 2-generator $\alpha:f\Rightarrow f$, and adjoin 3-generators $1_f\to\alpha$ and $\alpha\to1_f$. Their composite is a bubble of count two. With $p=3$, the first reduced power detects $2\sigma(x^3)$ in degree seven, above the dimension of the free cellular realization.
+
+This proves the necessity direction of Question 1. Researcher Response 1 gives sufficiency for positive-to-one polygraphs and their dimensionwise duals. Whether bubble-freeness suffices for every finite polygraph remains open.

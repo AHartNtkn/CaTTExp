@@ -837,3 +837,226 @@ For a finite submonoid containing \(u,v\), choose an idempotent \(e\) minimal un
 **Validation and remaining scope.** `python3 -B scripts/e6/interchange_unary_fiber.py` checks 216 intermediate states on 24 nonempty four-slot cuts for two disjoint unary marks. It tests the stationary-left order barrier on 355 concrete transitions, including 76 changes by block equations, on permutations of up to five slots. It also enumerates all 40 three-dimensional histories on the disjoint seven-slot example of Response 5. The graph of 3-boundary schedules through which a 4-route can pass has exactly two routes between the designated endpoints. The check executes the inner products required by each sign of naturality and compares their event-pair labels. A separate finite check forms minimal idempotent sandwiches for all 729 ordered pairs of three-point transformations. The dimension-independent local obstruction follows from the idempotent argument, not a size bound on these examples.
 
 The directedness theorem concerns the bare adjacent comparison in the specified \(P\). An arbitrary four-input rectangle also has an inactive 4-prefix and suffix. Changing the marked pair to use different witnesses in those inactive inputs need not give a strict drop on the active pair. Exact quotients for a full five-dimensional extension and a construction or a support-independent impossibility proof in all dimensions remain to be established.
+
+# Researcher Response 7
+
+**In degree five the inner quotient of the support-free presentation \(P\)
+maps onto Gray, but the map is not injective.** With two composable
+3-generators on the left and one on the right, the direct binary atom on the
+composite and the paste of the two individual atoms are distinct even after
+all declared inner families are identities. More generally one Gray cell on
+a strip of length \(m\) has at least \(2^{m-1}\) lifts in this quotient.
+This is a composition issue for the positive atom \(W\); making the
+individual homs strict in the top degree still leaves it.
+
+## Lifting after imposing the inner identities
+
+Let \(Q=P/K_{\rm in}\) in the declared degrees of Response 3. Through
+global degree four its free object on each diagram is the Gray object, by
+the exactness theorem there. Consider a hom-degree-four basis tensor in the
+Gray object. Ignore its degree-zero factors initially, attaching them as
+object whiskerings in the hom. A single positive factor is an input globe
+with its contexts. If there are several, split the ordered factors into two
+consecutive blocks of positive total degrees \(p,q\). At the top their
+possible degree pairs are \((3,1),(1,3),(2,2)\). Use \(U_r,U_t,W\),
+respectively, on lifts of the two blocks. Their Gray images are the indicated
+tensors by the disk boundary formulas. A lower split uses \(\chi,r,t\),
+or a pure input. A zero-degree factor between positive ones can be included
+at the end of either adjoining block by whiskering before the split. This
+also treats intervals strictly inside the diagram. The disk map classifying
+each block sends its top basis element to the selected atom, so multilinearity
+and associativity give exactly the intended basis tensor.
+
+Every Gray cell is a strict hom pasting of these generators and lower
+identities. Use the Godement expression for each of its composites.
+Inductively the two lower matching faces in each pasting really agree in
+\(Q\), since their global degrees are at most four and the projection is
+injective there. The expressions therefore type in \(Q\), including pastes
+first made composable by quotienting. This proves surjectivity. It supplies
+no equation between two different expressions for the same top cell.
+
+## A separating algebra and its signed tableaux
+
+Take an outer string of two spans. The left strict hom is the suspension of
+\([m]\) with objects \(x_-,x_+\), arrows \(a_0,\ldots,a_m\) and
+successive 2-generators \(A_i:a_{i-1}\to a_i\). Use \(b_j,B_j\) for
+the corresponding right hom on \([n]\). Denote this diagram by \(C_{m,n}\).
+In its long Gray hom consider the image of the disk-pair atom on the two
+composites. Its top chain is
+\[
+                    \sum_{i=1}^m\sum_{j=1}^n A_i\otimes B_j.
+\]
+Its two degree-three rows are
+\(a_0\otimes\sum B_j+\sum A_i\otimes b_0\) and
+\(a_m\otimes\sum B_j+\sum A_i\otimes b_n\).
+Indeed both summands of the top Leibniz boundary have positive sign on
+their target faces, since the first top input has degree two. All lower
+rows are those of that same disk image.
+
+For each row \(j\) partition \([0,m]\) into consecutive intervals in any
+way. Sweep the rows from 1 to \(n\), and each row from left to right.
+At tile \(([l,h],[j-1,j])\), the current degree-three chain contains
+\[
+ a_l\otimes B_j+\sum_{l<i\le h} A_i\otimes b_{j-1}.
+\]
+Replace this subchain by
+\(a_h\otimes B_j+\sum_{l<i\le h} A_i\otimes b_j\).
+The containment follows by induction on the sweep: the \(B_j\) edge is at
+the current horizontal position, and the advances in the unprocessed part
+of this row are still on its lower edge. The resulting step is a Steiner
+tableau. Take the common lower rows of the big atom, the two consecutive
+states in degree three, and \(\sum_{l<i\le h}A_i\otimes B_j\) in degree
+four. All rows are nonnegative and normalized in degree zero. The difference
+of the degree-three rows is the boundary of this top chain, so the lower
+boundary identities persist by \(\partial^2=0\). The first and last
+states are the displayed rows of the big atom. Top composition adds the
+tiles and therefore recovers its entire tableau.
+
+Each step has a lift with exactly one positive \(W\) on the entire selected
+tile. First merge the advances from \(l\) to \(h\) into one *input* in a
+coarser left chain. The step just constructed exists on that diagram too.
+In fact completed rows have their \(B\)-edges at the right endpoint and
+pending rows at the left; the current edge is at \(l\) or \(h\). Every
+advance in the chosen interval is on the same lower or upper horizontal
+edge on the respective face. Thus the original step is the substitution
+image of this coarse step, including the lower rows by the disk formula.
+In a strict atomic expression for the coarse step, its one nonzero top
+coefficient forces precisely one top atom. The others are lower steps or
+identities. Lift this expression by the preceding argument using \(W\) for
+that atom, then substitute the composite for the coarse input. The resulting
+lifts paste because \(Q\) is already exact on their lower faces.
+
+To distinguish them, use the free Gray object on \(C_{m,n}\) as base, and
+in global degree five decorate each cell by an element of the free
+commutative monoid on
+\[
+           ([l,h],[s,t]),\qquad 0\le l<h\le m,\quad 0\le s<t\le n .
+\]
+Faces ignore the decoration, identities have zero, and compositions add.
+These operations are the product with the strict 5-category having one
+cell through degree four and this commutative monoid in degree five.
+Interpret every structural operation in the base by Gray evaluation.
+Give \(\delta,N_L,N_R,U_r,U_t\) decoration zero. Give \(W\) on the
+two advances from \(a_l\) to \(a_h\) and from \(b_s\) to \(b_t\)
+the basis decoration \(([l,h],[s,t])\), and give its degeneracies zero.
+These are all positive placements of the two arguments: a positive
+outer pair must use the two adjacent spans, and each span has a chain
+of advances. Additional outer object contexts there are terminal.
+The faces of every declaration have their specified values, since they
+are below degree five. All lower equations hold in Gray, including the
+factorization defining \(h\). The five-dimensional structural laws for
+composition and whiskering hold in the product. The inner families are
+identities, and \(P\) specifies unit instances of \(W\) but no law making
+its decoration additive in an argument. This is consequently an algebra
+of \(Q\), already strict inside each hom.
+
+Under the generating assignment the tag of each pasted lift is exactly
+the multiset of its chosen tiles. Distinct choices of cuts produce distinct
+tags. This proves the lower bound \(2^{(m-1)n}\) in a single fiber. For
+\((m,n)=(2,1)\) the two tags are one basis element for the full interval
+and the sum of the two unit-width basis elements. The obstruction thus
+holds in an algebra of the actual quotient; counting different spellings
+of a term before quotienting would not suffice.
+
+## What an equality of parallel lifts can repair
+
+There is a precise top-degree repair for the *inner* quotient if local
+equations with definedness premises are allowed. For every finite pasting
+arity take two formal degree-five expressions which type in its free Gray
+table and have the same value there. In the variables of that arity impose
+their equality **when both expressions are defined and their two immediate
+faces agree**. These are finite typed premises: work up the two syntax
+trees requiring each matching face for composition or operation formation,
+then the two equalities for parallelism. The schema is enumerable by the
+finite Gray tables. This choice of a conditional presentation matters
+because a pair of pastings may first type after lower families become
+identities.
+
+The scheme holds under substitution in Gray. In a free shape before
+strictification it identifies exactly parallel 5-cells of the same Gray
+value. One inclusion follows by Gray soundness; for the other take their
+representatives on that very shape. No lower equation is added. More
+explicitly the lower free skeleton together with the triples
+\((sX,tX,qX)\) realized by actual degree-five terms is a model on the
+shape: composition, whiskering and substitution of terms respect the
+triples, and every instance with the stated premises has equal triples.
+Conversely each triple is represented, and the scheme identifies all
+its representatives. Thus existence of a 5-path and all the bare
+directedness results of Response 6 are preserved. After imposing the inner
+identities, the two faces of any terms with the same Gray image agree by
+lower exactness, and the terms satisfy the definedness premises in the
+quotient itself. The schema now proves injectivity. Surjectivity was
+proved above. This gives an exact inner quotient through degree five for
+this particular conditional completion.
+
+It also gives an explicit obstruction to extending this completion.
+On \(\Gamma_{2,4}\) take the proper degree-five comparison \(D:u\to v\)
+of the doubled loops. Its 4-faces are endomorphisms at the same 3-cell,
+so two copies of \(D\) compose on consecutive intervals. Performing them
+in the two orders gives parallel 5-cells with the same Gray image. The
+scheme identifies them already in the free object. The elementary
+6-comparison on \(D,D\) therefore has an identity reverse although both
+inputs survive. [Round 4, Response 4](../answered/lax-interchange-every-dimension-r4-2026-11-19.md#researcher-response-4)
+proves the stronger necessity: in every degree from five onward even a
+bounded number of lifts of each pair of faces and Gray image is
+insufficient on this fixed grid. Any all-dimensional repair must impose
+the positive subdivision equalities *in the quotient* while allowing these
+distinctions *before quotienting*.
+
+There is a more selective version of the repair. Use the same schema only
+on the arities \(C_{m,n}\). It still gives the exact degree-five inner
+quotient *on every one of those arities*, by applying its own schema there.
+It preserves the full degree-five algebra of \(P\) on every two-chain grid
+\(\Sigma[d]\vee\Sigma[e]\), including its parallel swap schedules. To see
+this, check the raw grid algebra against all assignments of the schema.
+When both outer spans of the test map to positive intervals of the grid,
+they are the two adjacent chain homs. All the 3-advances within them must
+map to identities. In a test 3-history only the one crossing of the two
+slots can then be active. An inner product on disjoint windows cannot use
+it twice. Each outer naturality or join requires an advance in an adjacent
+hom; hence all test 4-steps have identity value. If at most one outer span
+maps to a positive interval, the other has terminal image. The surviving
+test span is a single slot with a vertical string of 3-advances. It has no
+independent pair on disjoint slots; the assigned advances can be arbitrary
+composites, but a term on this arity can only perform them successively.
+Every test 4-step again evaluates to an identity. These checks also apply
+to formal expressions first composable in Gray: their operation windows
+are determined in degrees two and below, where the test has only these two
+slots. In all cases every declared degree-five operation on the test has
+identity value by its degeneracies: for \(W\) the two positive adjacent
+advances cannot both survive, and the other structural families need a
+positive 4-input. There are no input 5-globes on the test. Parallel
+degree-five expressions thus have equal values in the raw grid algebra.
+It is itself a model of the restricted scheme, so its free generating
+assignment detects every old distinction. This repairs the subdivision
+fibers without forcing the doubled-loop schedules to coincide.
+
+One more arity explains why this selective repair cannot give global
+exactness with just the displayed families. Take two 5-globes joined at
+cut three, \(D^5\vee_3D^5=\Sigma^3(D^2\vee_0D^2)\). In its
+5-truncation all the inner families of \(P\) already have identity values.
+At cuts zero and one there are no two positive branches. The nonidentity
+4-cells all have the same distinct 2-source and 2-target, so no two can
+be active on consecutive 2-intervals for \(\delta\). This remains true
+under any further parallel 5-equations. If such a presentation has exact
+inner quotient on this arity using only the families through degree five,
+its two Godement schedules on the input 5-globes must therefore be equal
+already. Indeed the free algebra itself satisfies the identity axioms, so
+passing to that quotient does nothing there. The two generating inputs
+survive by their Gray images. Their elementary 6-comparison would be
+absorbed. An extendible presentation retaining this skeleton must allow
+higher families to impose top equations *when they are made identities*.
+For this test the dimension-six elementary family does exactly that.
+The argument concerns the order of truncation and quotient; the
+all-dimensional quotient in requirement 4 is allowed to use those higher
+families.
+
+**Validation and scope.** `python3 -B scripts/e6/interchange_quotient_fibers.py`
+checks 685 tagged subdivisions on the 12 shapes with \(1\le m\le4\) and
+\(1\le n\le3\). For each step it computes the signed differential on
+basis tensors, verifies every tableau row and the augmentation, and checks
+that top composition gives the single disk image. The proof applies to all
+positive \(m,n\). The conditional completion addresses the inner quotient
+in degree five; it fails original directedness in degree six. This does not
+establish the unrestricted construction or the support-independent
+impossibility alternative of Q1.

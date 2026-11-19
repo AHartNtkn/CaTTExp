@@ -494,3 +494,100 @@ For example let the left slot admit consecutive unary events \(a_1,a_2\), with a
 **Validation.** `python3 -B scripts/e6/two_slot_interchange.py` executes the updates and the positional interchanges on all schedules of two successive events in each slot and the crossing, with both choices of face for each unary event. It checks 19,376 contextual rectangles, including 2,656 strict drops, and the endpoints and marker words of 784 binary factorizations. The all-length proof is the event and marker argument above.
 
 The general positive grading, the one-factor theorem and the proof that each specified degree-five reachability question is decidable are in [round 5, Researcher Response 4](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-4). The two-slot argument uses the fact that an inner comparison cannot move a unary event past the unique outer crossing. With a third slot, disjoint events can make exactly such a move. The original all-dimensional requirement for arbitrary diagrams remains unresolved.
+
+# Researcher Response 4
+
+**Unbounded multiplicity with fixed faces.** Suppose a theory as in Q1 has the
+Godement operations, (K15), substitution, the Gray projection and original
+directedness in all dimensions. On the *one fixed diagram* \(\Gamma_{2,4}\),
+for each \(n\ge5\) and each \(r\ge2\) there are \(r\) distinct parallel
+\(n\)-cells with the same Gray image. They form a directed chain, with no
+path back between any two of its members. In particular, even after
+specifying the two actual immediate faces and the whole Gray tableau, there
+is no bound depending only on the diagram and the degree on how many lifts
+can remain. The chosen faces may depend on \(r\).
+
+Here is the schedule argument. Suppose \(X_1,\ldots,X_r\) are nonidentity
+\(n\)-cells in the full hom of the grid, on consecutive intervals: their
+immediate source and target are \((n-1)\)-cells on the respective
+\((n-2)\)-intervals. Performing the \(X_i\)'s in any order with stationary
+faces in the other positions gives parallel \(n\)-cells. Start with the
+schedule \(r,\ldots,1\). Successively, for \(k=r-1,\ldots,1\), use
+the following **single elementary rectangle**:
+\[
+ (k+1,\ldots,r)\ k\ (k-1,\ldots,1)
+ \quad\Longrightarrow\quad
+ k\ (k+1,\ldots,r)\ (k-1,\ldots,1).
+\]
+The temporal cut is after position \(k\). On its earlier interval the first
+input performs \(X_k\) and the second performs the remaining
+\(X_{k-1},\ldots,X_1\). On its later interval the first input is the
+unit and the second performs \(X_{k+1},\ldots,X_r\). This gives exactly
+the two displayed schedules by Godement expansion. The two active inputs
+are nonidentity by immediate-whiskering reflection and the top-composition
+lemma of Response 1, applied in degree \(n\). These lemmas use the fresh
+globe of the matching degree. Original requirement 3 therefore forbids a
+reverse to each *displayed edge*, including the ones with a nonunit inactive
+input. Equal vertices at different stages, or a path back to any earlier
+vertex, would supply a reverse to one of those edges by composing forwards
+along the chain. Thus the \(r\) schedules are distinct. Numerical inversion
+counts on formal schedules alone would not prove this in an arbitrary theory
+with additional equations.
+
+For the starting list in degree five, take the two doubled copies of \(H\)
+in (K35). The bare inner crossing of the two independent 3-crossings is
+proper; whiskering reflection gives \(H\ne1\), and (K15) gives its equal
+3-faces. The two block contractions separately detect the doubled copies.
+Their elementary 5-comparison \(D:u\to v\) is proper and both \(u,v\)
+are 4-endomorphisms of the same 3-cell. Consequently *any number* of copies
+of \(D\) satisfy the interval condition above. For \(n>5\) start with
+\(r2^{n-5}\) copies. To raise a list one degree, pair consecutive inputs.
+In pair \((X_{2j-1},X_{2j})\), attach the target faces of all preceding
+inputs on the left of the first, and the source faces of all following inputs
+on the right of the second. Their bare comparison is proper by reflection.
+Its initial lower state has the preceding pairs performed, and its final
+lower state has this pair performed as well. The final state is exactly the
+initial state of the next pair. This halves the list, raises its degree by
+one and leaves the grid fixed. After \(n-5\) rounds apply the schedule
+argument. The long Gray hom of this grid is the tensor of two chains, so has
+no positive atom above hom degree two. Every \(n\)-cell in the displayed
+parallel family therefore has the same identity Gray image.
+
+**Independent copies give the whole permutation order.** On
+\(\Gamma_{2,4r}\), split the right chain into \(r\) consecutive four-letter
+blocks. Process them in crossing order, last block first. Make a copy of
+\(D\) in each block and attach the stationary crossing paths of the other
+blocks on either side, so each copy is based at the same complete 3-path.
+Write \(D_i\) for these 5-cells, in the chosen list order. Their 4-faces
+are endomorphisms there. Contracting any set of right blocks to units makes
+the corresponding comparisons identities on identity 4-cells and carries
+each retained comparison to its same construction on the smaller grid.
+Indeed each contraction acts on the four crossing letters defining the
+respective \(H\)'s and on their stationary whiskers. Keeping just block
+\(i\) sends \(D_i\) to \(D\), detecting nonidentity.
+
+Perform \(D_1,\ldots,D_r\) in permutation order. A 6-path between two such
+schedules exists **exactly when** the second can be obtained by successively
+swapping adjacent entries \(j,i\) with \(i<j\) to \(i,j\). Each such
+swap uses the positional comparison, with the faces of intervening temporal
+slots stationary and the chronological prefix and suffix attached. Conversely,
+if a pair acquired an inversion, contract all blocks except those two. The
+image would be a reverse to the bare elementary 6-comparison on the two
+surviving nonidentity 5-cells. Finally, inclusion of inversion sets in the
+decreasing direction suffices: move the desired first entry left to the
+front. Each passed entry has larger index, since their reversed order in the
+target could not be a new inversion. Repeat on the suffix. This proves the
+criterion, in particular \(r!\) distinct parallel lifts, even allowing
+6-paths outside the displayed schedules.
+
+**Validation.** `python3 -B scripts/e6/interchange_quotient_fibers.py`
+checks the cuts, active blocks, common endpoints and direction of the 496
+successive rectangles for list lengths two through 32. It independently compares
+adjacent-swap reachability with all two-block contractions on 533,416 pairs
+of schedules of up to six moves. The argument using
+requirement 3 proves separation uniformly. [Round 5, Response 7](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-7)
+also identifies a positive degree-five Gray fiber where the support-free
+presentation needs composition equations. These results constrain both
+directions of a repair: some lifts must be identified for exactness, and
+unboundedly many parallel lifts must survive before quotienting. They leave
+Q1 for an unrestricted infinite presentation open.

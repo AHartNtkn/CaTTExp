@@ -1060,3 +1060,547 @@ positive \(m,n\). The conditional completion addresses the inner quotient
 in degree five; it fails original directedness in degree six. This does not
 establish the unrestricted construction or the support-independent
 impossibility alternative of Q1.
+
+# Researcher Response 8
+
+**A positive length conserved by every 5-cell gives an all-dimensional
+extension for elementary interchange and the one-variable tensor
+operations.** It works on arbitrary finite globular pasting diagrams. In
+this extension every proper elementary rectangle of output degree at least
+six has no reverse, including rectangles with nonunit inactive arguments.
+The strict quotient is exact in every degree. On every two-row grid
+\(\Gamma_{2,s}\) strong directedness holds in *all* degrees and both
+quotients are exact there. In particular one can retain all the iterated
+proper comparisons on \(\Gamma_{2,4}\) in a single theory.
+
+The extension below also has the \((2,2)\)-atom with its two routes at
+every cut. At cut zero it keeps the actual factorization (K32). At higher
+cuts it uses a weaker equation for the auxiliary join. The construction
+also includes both mixed disk atoms of total hom degree five. One missing
+outer atom in the next degree has bidegree
+\((3,3)\). The equations on the joins matter for the directedness proof.
+
+## A conserved length on the actual degree-four presentation
+
+Fix a forward outer hom. Denote the top chain of a global 4-cell \(X\) by
+\(q_3 X\), using hom degrees for chains. The grading \(w\) of Response 4
+is positive and additive on 4-paths, but drops along \(W\). Define a
+degree-four cochain \(\mu\) of the Steiner tensor hom by giving a basis
+tuple value 2 if its entries all have degree at most two, and 0 otherwise.
+For every 5-cell \(Z\) of \(P\),
+\[
+                   w(sZ)-w(tZ)=\mu(q_4 Z).                 \tag{A}
+\]
+For \(W(A,B)\) the two top inputs have hom degree two, so each basis
+summand contributes 2, giving \(2m(A)m(B)\). For \(U_r(\Lambda,b)\) a
+one-factor top atom of \(\Lambda\) has degree three in its factor and
+contributes zero. All its mixed atoms contribute 2 for each step of \(b\).
+By the table for \(D(\Lambda)\) in Response 4, this is exactly
+\(|b|D(\Lambda)\): an inner edge contributes zero and a contextual
+\(r,t,h\) contributes twice the multiplicity of its mixed top chain.
+The same calculation applies on the other side to \(U_t\). An input
+5-globe has a one-factor top atom of degree four. The inner operations
+have zero top chain. These are precisely the remaining zero entries in
+that response's weight-drop table. Fixed contexts add degree-zero factors
+or keep the top-chain multiplicities, and top pasting adds both sides.
+
+Here \(\mu\) has an explicit *nonnegative* primitive \(f\). For each
+multidegree \(d\) of total four with \(\max d_i\le2\), let \(i\) be
+its first positive index. On tuples of multidegree \(d-e_i\), add to
+\(f\) twice the height of entry \(i\); add nothing on the other
+multidegrees for this summand. The height of a vertex is its index in
+the string of outer vertices of its factor. The height of a generating
+arrow in a suspended branch is the index of its defining vertex in that
+branch. These are the only two heights needed. The faces of a generating
+edge have consecutive vertex heights, and the faces of a generating
+2-cell have consecutive arrow heights. This follows directly from the
+string-of-suspensions description, including strings with several
+parallel arrows. In the signed boundary of a basis tuple, faces taken
+in any other factor make opposite equal contributions to this summand.
+Faces at \(i\) contribute just in multidegree \(d\), with sign
+\((-1)^{\sum_{j<i}d_j}=+1\). Thus \(f\partial=\mu\) on every basis
+tuple.
+
+Define \(m_4(X)=w(X)+f(q_3 X)\). It is a nonnegative integer, strictly
+positive on every nonidentity 4-cell and additive under top composition.
+Since \(\partial q_4 Z=q_3(tZ)-q_3(sZ)\), equation (A) proves
+\(m_4(sZ)=m_4(tZ)\). In particular the bound for 4-cells in Response 4
+now applies to a whole *undirected* component of the 5-cell graph with
+a given initial 4-cell: all its vertices have \(w\le m_4(sZ)\), using
+the common length of that component. Heights and lengths are calculated
+in the actual hom after attaching contexts; they need not be natural
+numbers preserved by a substitution into a different diagram.
+
+## The presentation and its boundaries
+
+Use \(P\) through degree four and keep all its degree-five declarations.
+At every cut \(k\) take the bare positional comparison, the disk families
+of hom bidegrees \((p,1),(1,p)\) for every \(p\ge1\), and the binary
+\(h,W\) of (K32) shifted to that cut. The \((1,1)\) operation is a single
+comparison. Use the existing declarations where present. Keep globular
+input generators, structural whiskering, Godement compositions and unit
+normalizations. For \(k\ge1\) impose
+\[
+                \bar\iota_-=1\quad\Longrightarrow\quad h=\bar r_1.
+                                                               \tag{B}
+\]
+This is the conditional equation for the join on its usual arity; the
+premise types the conclusion. No positive composition law on a new
+top-dimensional structural generator is needed. At cut zero retain the
+unconditional equation \(h\cdot\bar\iota_-=\bar r_1\) and the lower
+equations of \(P\). The two routes defining \(W\) are the actual routes
+\(S,V_0,V_1,T\) and \(S,U_0,T\). Their parallelism uses the types of
+the arrows of (K8), independently of the equation on the join.
+
+Here is the recursion giving *all* the one-variable boundaries. Start with
+the two orders of the elementary square. In each, the moving input occurs
+once in a pure whiskering context. Write \(L_p(x),T_p(x)\) for the two
+boundaries of the current mixed cell \(E_p(x)\) with fixed edge.
+For \(Z:x^-\to x^+\) write \(L_p[Z],T_p[Z]\) for insertion of the
+higher input, lifting the fixed parts by identities. Only proper faces of
+the moving input occur in the fixed parts, so these are the same on
+\(x^-\) and \(x^+\). The parallel routes, in chronological order, are
+\[
+    E_p(x^-);T_p[Z],\qquad L_p[Z];E_p(x^+).
+\]
+Use the displayed direction when the left argument varies and the opposite
+direction when the right argument varies. Each new route again has one
+pure occurrence of \(Z\). This proves typing and gives the next pair of
+insertion contexts. At a unit variation the two routes agree; at a unit
+stationary edge the recursion gives the same pure action on both sides.
+This recovers (26)–(29) at their respective cuts. In Gray the two
+mixed faces have coefficients \(-1,+1\) when varying the left factor,
+and \(+1,-1\) when varying the right factor across a degree-one
+left factor. More explicitly the initial two routes are the negative
+and positive edge rows of the square. Pasting at the next stage contributes
+one mixed face and one elevated pure input; on lower rows the pure
+contexts are exactly the preceding rows whiskered by the fixed faces.
+This gives the disk tableau by induction, equivalently by strict tableau
+composition and the signed tensor differential. All the definitions are
+on typed inputs and commute with term substitution.
+
+One may first construct the free terms without (B). In each degree
+\(d\ge5\) a top path has a chronological list of generating occurrences:
+an input globe or a normalized, nondegenerate structural operation in
+fixed contexts. The structural laws concatenate lists, insert no
+occurrence for an identity and transport occurrences by fixed whiskering.
+One way to compute this list is to use the Godement definition for lower
+composites, distribute fixed lower whiskers through top concatenations,
+and retain the prefix and suffix around each occurrence. In particular a
+fixed whisker of one nondegenerate generator still has one occurrence.
+Any terms inside the arguments of a structural generator are kept *as
+arguments*. In the provisional free syntax there is no equation expanding
+a nondegenerate top generator for \(d\ge5\). If both inputs of (B) are
+active its premise contains just such a whiskered elementary generator
+in degree \(k+4\ge5\). If an input is a unit the conclusion already holds
+by the two join normalizations. Thus the provisional free objects satisfy
+(B) under *all* their assignments. They are also the free objects with
+(B); the rule is available when forming quotients. This argument would
+not justify imposing the unconditional factorization at these higher cuts.
+
+Give each top occurrence in degree \(d\ge5\) charge one, except that a
+proper \(h\) has charge two. Let \(m_d\) be the sum. Every nonidentity
+cell has positive charge and every fixed whiskering preserves it. In all
+degrees \(d\ge4\),
+\[
+                         m_d(sZ)=m_d(tZ)                    \tag{C}
+\]
+for every cell one degree higher. For \(d=4\) the extra generator is the
+shifted join at cut one. Its source and target have a common further
+target by the old \(N_L\) and \(\bar\delta\) of its factorization
+diagram. Both of these preserve \(m_4\); the diagram suffices without
+equating its paths. This also works after any fixed whiskerings.
+
+For the induction, an elementary exchange permutes the two charged
+paths. In a proper unary naturality each route carries the varying input
+once and one mixed generator of charge one. For a proper join the two
+schedules each carry its two inputs and one elementary mixed generator.
+For a proper \(W\) the source route has charges \(1+1+1\) and the
+target has charges \(2+1\). An input globe compares two input faces of
+charge one. In this check all the displayed faces of proper inputs that
+must be active really are active: every proper 5-generator has nonempty
+4-source and 4-target. For the shifted join this follows from the inner
+crossing of its nonempty 3-faces, for the other generators from their
+displayed boundaries. The corresponding fact one dimension lower follows
+from the positive 3-mass of the source and target of every proper 4-edge.
+Inductively the same case list gives positive immediate boundary lengths
+for every proper new generator; additivity, conservation and fixed
+whiskering give the assertion for paths. In particular an identity face
+cannot change a proper mixed generator on just one side of the unary
+calculation into a unit. Degenerate operations have their normalized
+values. This proves (C).
+
+## Directedness in every degree above five
+
+Fix \(d\ge5\) and consider \(d\)-paths between fixed
+\((d-1)\)-boundaries. Treat their common length in (C) as an interval
+of integers. An occurrence in a path has a window in this interval:
+if it acts after a fixed \((d-1)\)-prefix \(u\), start at
+\(m_{d-1}(u)\); end there plus the length of its active
+\((d-1)\)-source, including its lower fixed spatial contexts. The
+active target has the same length. A nondegenerate window has nonempty
+interior as a real interval.
+
+For precision the window list can be evaluated *under any list of fixed
+lower whiskers* first. For a bare generating occurrence under such a
+context its window starts at zero and uses the whole transported source.
+Immediate prefix whiskering translates the windows by the length of the
+transported prefix. Immediate suffix whiskering does not move them.
+A whisker of dimension below \(d-1\) is included in the lower context
+of this calculation. Top concatenation concatenates lists. Associativity
+of prefix whiskering is additivity of length, and distributing a lower
+whisker through an immediate prefix gives the very same transported
+prefix. The unit, commutation of fixed left and right whiskers, and the
+other functorial whiskering laws give equal lower contexts or equal
+transported lower cells in these formulas. This checks invariance under
+the structural equations without choosing a parsing of a composite
+\((d-1)\)-cell into letters. A lower argument equation in a primitive
+changes neither its source length nor its status as a unit. There are no
+other top equations on these paths in the free objects, by the check of
+(B).
+
+At the intended adjacent rectangle choose the cut point between its
+earlier and later temporal intervals, measured by this length. Call a
+window early or late if it lies on the corresponding closed side. The
+two original paths have only such windows. We need two facts about a
+forward \((d+1)\)-step from any path with that property.
+
+* A bare elementary exchange swaps two lists in temporal order, putting
+  the earlier interval first. A window in the later input changes its
+  prefix from the source of the earlier input to its target. The lengths
+  are equal by (C), also in a fixed lower context. Windows of the earlier
+  input are unchanged. Thus no early-before-late pair becomes
+  late-before-early: a late window in the earlier temporal input cannot
+  lie to the left of an early window in the later one.
+* Every other proper generating step has source windows whose interiors
+  cover the interior of its entire active interval, and has at least one
+  target occurrence there. For an input globe the source and target are
+  single occurrences. A unary naturality has the old mixed generator as
+  one unpadded top occurrence on each route. This occurrence covers the
+  whole interval; elevating the varying input may include fixed prefixes
+  or suffixes, all inside it. In the source of a join the middle crossing
+  of the two input faces acts on their combined interval, with the two
+  input variations performed successively on that interval. The same
+  full crossing occurs on the target. For \(W\) the first two source
+  moves send \(BCA\) to \(CBA\) to \(CAB\), with \(C\) the crossing.
+  At the shared intermediate state their windows are the prefix \(CB\)
+  and the suffix \(BA\). Their interiors overlap in the positive
+  length of the transported \(B\), and together cover the interior
+  of the whole interval. The target has the full join. This argument uses
+  the *same intermediate state* to measure the overlap, so it still
+  applies after attaching lower whiskers. Positive lengths in those
+  contexts follow from the preceding positivity check. It follows that
+  if the source windows all lie on one side or the other of the chosen
+  cut, the entire active interval lies on **one** side. Its target
+  occurrences, with the same outside context, stay on that side.
+
+Both facts continue to hold in an immediate prefix or suffix and inside
+a longer top path, whose other occurrences retain their windows. It
+follows that separation persists and that the property “there is an early
+occurrence before a late occurrence” cannot be lost. For the second
+kind of move, replacing one nonempty list on a single side by another
+nonempty list there suffices; the numbers of occurrences need not agree.
+
+The forward rectangle itself goes from later updates followed by earlier
+updates to the schedule with its active earlier updates before its active
+later updates. In four-slot notation the orders are \(C D A B\) and
+\(C A D B\), where \(A,B\) are in the earlier interval. Its target
+has the persistent pair and its source does not. This proves the absence
+of a reverse, including with both inactive inputs present.
+
+For a rectangle at a lower cut \(k<d-2\), expand (2) once. Since the
+two cells in each column are top-composable, their \((k+1)\)-faces
+agree; the same fixed whiskerings therefore apply throughout that column
+in both schedules. Functoriality for top composition identifies the
+expanded rectangle with one at cut \(k+1\) on the two transported columns
+in the Godement order. Repeat up to \(d-2\). Proper inputs remain
+nonidentity by their transported positive occurrences. This proves the
+claim for all the elementary cuts in these degrees.
+
+## Strictification and the grid quotients
+
+Use the mixed-family convention of (K30) and Response 1 for setting
+interchangers and their higher families to identities. After imposing the
+inner identities, every positive-depth hom is strict; after imposing the
+outer ones as well the whole structure is strict. Here the unary cylinders
+at all degrees are essential. To see this, work in a fixed truncation from
+the deepest cut outward. Suppose the next-depth hom is strict. At the
+current cut setting the square to an identity lets an edge in one
+argument slide past an edge in the other. Setting the \((p,1)\) and
+\((1,p)\) cells to identities gives sliding of a \(p\)-cell past an
+edge in either order. Indeed in the boundary recursion the preceding
+mixed cell is an identity on the two equal lower pastings. Its composition
+acts as a unit, leaving the two pure insertion contexts of the previous
+stage elevated by the varying input. Induction reduces these to the
+two pure actions at the endpoints of the fixed edge.
+
+For two higher cells, expand their pure actions by Godement at cut zero
+relative to this strict hom. Slide one past the other's 1-source, then the
+other past the first's 1-target. Strict interchange in the hom identifies
+the resulting paste with the other order. Consequently the composite
+of the two actions defines a functor out of the cartesian product:
+it preserves compositions above zero by strict interchange, and composition
+at zero by exchanging the middle two actions. The unit and associativity
+follow from those of fixed whiskering. This is the original Godement
+composition on positive cells. Descending the cuts proves the strictness
+statements in every truncation. At a killed cut the accompanying join is
+an identity by (K32) or (B). In the all-cuts quotient no additional
+generator remains besides the globular inputs and strict composition.
+The ordinary strict evaluation validates every relation; freeness gives
+inverse maps on generators in this quotient and the free strict category.
+Thus the strict quotient is exact.
+
+On a two-row grid the adjacent outer homs are chains. The surviving
+outer square and its (K15) expansions give the directed grid squares;
+after the inner identities the hom is strict and there are exactly the
+grid regions of Response 2. There are no positive outer unary variations
+or binary atoms at higher degrees on the two adjacent chains, and the
+inner families and joins are identities. This gives exactness of the
+Gray quotient on the grid in every degree. For directedness through degree
+five, the possible extra \(h\) at cut one would require two spatially
+independent positive 4-cells. Each needs both left letters. Hence it has
+no proper instance there. Response 2's cut proof applies to all degree-five
+rectangles there, with the lower directedness of (K30). The proof above
+gives all subsequent degrees. This includes arbitrary numbers of the
+doubled loops and arbitrary depths of their elementary comparisons.
+
+## Both mixed disks in the next degree
+
+The preceding presentation by itself has no outer \((3,2)\) or \((2,3)\).
+The following extension supplies both **at every cut** while preserving
+the high-dimensional directedness theorem and the strict quotient. Use the
+hexagon notation of (K11): write \(abc\) for the three-move route
+\(t_0,\iota_+,r_0\), \(hf\) for the route \(h,t_1\), and \(e\) for
+the correcting inner comparison after \(h\). Write \(z\) for a variation
+of one input of \(W\), residing at the corresponding occurrence of that
+input in the current three-event history. In a word containing \(z\),
+letters before it are in layer 0 and those after it in layer 1.
+Whiskerings are the ones at those actual positions. All definitions on
+these two generic disk pairs extend to arbitrary inputs by substitution.
+
+For a left variation \(\Omega:A^0\to A^1\) use the typed (K11)
+boundaries for auxiliary generators \(H_L:hz\to zh\) and
+\(K:azbc\to zhf\). The global dimension at cut zero is five. The
+\((3,2)\)-operation has the following negative and positive routes:
+\[
+\begin{array}{ll}
+ abcz\to hfz\to hzf\to zhf, &
+ abcz\to abzc\to azbc\to zhf .
+\end{array}
+\]
+On the negative side the moves are \(W^0\), the positional exchange
+at \(f\), and \(H_L\); on the positive side they are the unary
+cylinder at \(c\), the inner naturality at \(b\), and \(K\).
+Use \(q(H_L)=q(\mathsf D)\), the indicated whiskering of
+\(\Omega\otimes\beta_1\), and \(q(K)=q(z_SW^1)\). These values
+have exactly the required lower faces in Gray by (K11). The resulting
+top boundary is \(W^1-W^0-R_1+R_0\). For the two factorization
+equations (8) and (12) in the [disk calculation](../answered/directed-interchange-every-level-r4-2026-11-18.md),
+impose (8) when its suffix \(e^1\) is an identity, and (12) when
+its prefix \(\bar{\mathsf A}\) is an identity, in each case with the
+two sides defined and parallel. These premises hold after the inner
+identities, using (B) at a shifted cut. With \(\Omega\) a unit take
+\(H_L=1, K=W\); with \(B\) a unit take \(H_L\) to be the remaining
+unary cylinder and \(K=1\). In both cases the top atom is the identity
+on the common specialized route, as follows by inserting the units in
+the displayed paths.
+
+For a **right** variation \(\Theta:B^0\to B^1\), adjoin just
+\(H_R:zh\to hz\). Use the following routes in the displayed direction
+for the \((2,3)\)-operation:
+\[
+\begin{array}{ll}
+ zabc\to azbc\to abzc\to abcz\to hfz, &
+ zabc\to zhf\to hzf\to hfz .
+\end{array}
+\]
+Here \(za\to az\) and \(zf\to fz\) are right-variable cylinders of
+\(t\). At \(b\) the actual order after the crossing has the moving
+\(B\) on the right, so the right-variable inner naturality is
+\(zb\to bz\). At \(c\) the independent \(r_0\) acts on the prefix
+\(CA\) while the variation is on the following \(B\). Positional
+exchange puts the earlier interval first, giving \(zc\to cz\).
+The remaining moves are \(W^0,W^1,H_R\) with their displayed
+contexts. These checks give all matching faces before any quotient.
+In Gray, \(h\) is the contextual \(r_1\) after \(B\); its action
+on \(CA\) and the variation on \(B\) commute by strict interchange
+inside the hom. Thus \(q(H_R)\) is the identity between those equal
+schedules. The negative top chain is \(a_0\otimes\Theta+W^0\);
+the positive one is \(W^1+a_1\otimes\Theta\), exactly the
+Leibniz boundary for an even first degree. Their lower rows are
+the common faces just computed. Set \(H_R=1\) when \(e^1=1\) and
+the immediate boundaries of \(H_R\) agree. With either varying-disk
+input \(A\) or \(\Theta\) a unit take \(H_R=1\) and the top
+operation to be the identity: the remaining routes are the same unary
+cylinder or the same \(W\), respectively.
+
+Here are the extra induction checks needed in free, potentially
+degenerate contexts.
+
+1. In a proper instance \(e^1\) interchanges two nonidentity faces
+   and is positive even with its fixed whiskers, by the degree-four
+   grading or by the occurrence list higher up. The prefix
+   \(\bar{\mathsf A}\) for \(K\) interchanges the nonidentity \(t_0\)
+   with the nonidentity variation. Thus none of the extra conditional
+   equations identifies proper free top occurrences. They give the
+   desired identifications at a killed cut, where \(H_L,K,H_R\) are
+   identities. This proves that the strict-quotient argument still applies.
+2. For the new global 5-cells, the two sources of the desired length
+   comparisons can be checked using the old 5-cells. For \(K\), both
+   endpoints are reached from \(zabc\) by the positional exchange
+   or by \(W^1\). For either \(H\), attach the common suffix \(e^1\).
+   The two resulting states are connected, ignoring direction, via
+   \(h^0e^0z_{U_1}\) by the naturality at \(e\) and the variation of
+   \(\bar r_1=h e\). In the right-variable case the latter is positional
+   exchange: the variation is on the preceding \(B\) and \(r_1\)
+   acts on the following \(CA\). The naturality at \(e\) varies its
+   left spatial operand in this case. This gives the common length
+   by (C) for the old operations, then subtract the length of \(e^1\).
+   This calculation at cut zero uses the actual (K32) equation.
+3. In the higher free lists give \(H_L,K\) charge one and \(H_R\)
+   charge two; give the new top atoms charge one. On shifted inputs,
+   \(H_L,H_R\) each move a variation across a proper join of charge
+   two. For \(K\) the boundary counts are \(3+m(z)\) and
+   \(m(z)+2+1\). In the left top atom both routes have charge three;
+   in the right top atom the charges are \(1+1+1+1\) and \(1+2+1\).
+   Degeneracies use the specified lower operations. Thus (C) continues
+   to hold, also when the varying input itself contains new generators.
+4. For the window argument, each \(H\) route contains the whole join
+   as an unpadded occurrence. In the source of \(K\), \(a\) moves
+   \(BCA\) to \(CBA\); \(z\) varies only the last \(A\); then \(b\)
+   moves the last two events. The first and third windows overlap on the
+   unchanged positive \(B\) and together cover the interior. For the
+   left top atom, after its first move the state is \(hfz\). That
+   move covers the prefix \(hf\), the next covers the suffix \(fz\);
+   the overlap is the positive \(f\). For the right top atom the
+   successive moves across \(a,b,c\) each share the positive window
+   of \(z\) with their neighbor, measured at their common state.
+   They reach both ends. All target routes are nonempty and lie within
+   the same total interval. These are precisely the coverage and positivity
+   hypotheses in the proof above. On a two-row grid the new *outer*
+   operations have no nondegenerate placement since the adjacent homs
+   are chains. The only new degree-five generators are these outer
+   auxiliaries. Thus the low-dimensional grid calculation is preserved
+   as well.
+
+**Exact disk quotients.** In fact on *every pair of globes* the enlarged
+inner quotient is exactly Gray through global degree six. If one hom
+globe is a point or edge, or the pair is \((2,2),(3,2),(2,3)\), this
+holds through all degrees. The adjacent quotient homs are the original
+strict globes: their single outer span has no positive outer pair and
+all inner operations are strict there. A positive input in such a globe
+is a generating face, so a positive outer operation gives its disk atom
+on those faces. Whiskering by an object of a factor gives the pure atoms.
+All ordered pairs of positive degrees of total at most five are now
+present. In the listed all-degree cases all positive basis pairs on the
+particular diagram are present. In the long strict quotient hom the
+auxiliaries reduce to the specified contextual cells by (K32), (B) and
+the new conditional equations. The positive-depth operations are
+identities there. Hence every term, also one formed after quotienting,
+is a strict paste of the indicated atoms. Conversely assign each Gray
+basis atom to that lift. In increasing degree its source and target are
+the required pastings: the signed routes were verified above and the
+inverse has already been defined on their lower rows. The presentation
+of the Steiner hom by its atoms and their boundary relations extends
+this assignment to a strict functor. The two composites fix the
+generators on both sides. This proves injectivity as well as surjectivity
+in the stated degrees. [Steiner, Theorem 6.1](https://arxiv.org/pdf/math/0403237#page=15)
+
+There is also strong **degree-five** directedness on every binary disk pair
+with at least one hom globe of degree at most two. On the two slots a
+3-history has at most three events: the two unary advances and their
+one crossing. This follows directly from the globe faces, even for a
+higher globe, where the two possible choices for an advance are
+parallel. In two nonempty consecutive temporal windows supporting
+4-updates, one window must have a single event. Its active update must
+be an input 4-globe on a unary advance. Only one slot can support such
+an update here. The opposite interval must therefore carry the outer
+crossing and the other unary advance, and can do just their one \(r\)
+or \(t\) move. A join needs all three events and an inner move on the
+two unary advances would leave only the crossing in the first window.
+Each active interval admits no second successive nonunit update; even
+the two possible input 4-faces in a higher globe are parallel. Thus
+any such four-slot rectangle is bare. Fixed lower whiskers for a
+nonadjacent cut preserve nonidentity by the positive 4-grading.
+
+A shifted join in degree five requires disjoint positive 4-inputs
+spatially and cannot occur here. If only the left slot has a 4-update,
+both new proper auxiliary moves \(H_L,K\) have positive Gray 5-chain
+on this disk: the adjacent hom is a globe, so its variation has positive
+chain. They cannot occur in a reverse, and Response 6 applies. If only
+the right slot has a 4-update, write it \(z\). When \(CA\) precedes
+\(B\), the mixed mark is \(r_0\) at the source 2-face of \(B\).
+A proper \(H_R\) uses \(h\) at its target 2-face, hence the other
+atom \(r_1\) in its Gray 4-chain. These faces are distinct in a globe.
+A reverse keeps that chain fixed, so again the old bare proof applies.
+
+When \(B\) precedes \(CA\), the comparison is the exchange of \(z\)
+and \(r_1\). In its fixed Gray 4-chain fiber the only nonunit marked
+steps are the selected \(z\) and the selected \(r_1\) or its lift
+\(h\). From \(BCA\) to \(BAC\) the latter factors as \(h;e\)
+through \(ABC\). There is no positive \(t\) or \(r_0\) in the chain.
+The only inner move on those three states is \(e:ABC\to BAC\):
+an inner move can only exchange the two unary events, in positional
+order, and no block equation acts on one slot per operand. Consequently
+the whole 4-path fiber consists of the three positions
+\[
+              zhe,\qquad hze,\qquad hez
+\]
+with the layers specified by \(z\). Besides identities, its 5-generators
+give \(hez\to zhe\) (the designated exchange), \(hez\to hze\)
+(left-variable naturality at \(e\)), and \(zhe\to hze\) (the new
+\(H_R\)). To see exhaustiveness, \(h\) uses the window of all three
+events and \(e\) uses \(B\), so neither is independent of \(z\);
+only the factored \(r_1\) can make the elementary exchange.
+Varying the inner square uses the specified operand of \(e\).
+An outer right-variable cylinder on the input globe, a proper \(W\)
+or an input 5-globe has positive Gray top chain. The two slots permit
+no other placement of the auxiliary. All these checks are unchanged for
+a specific choice among parallel input faces, which the fixed chain
+records. Thus there is no return to \(hez\). Together with the previous
+degree bounds this proves strong directedness in all degrees on the
+stated disk pairs for the operations of this presentation.
+
+The positive subdivision obstruction of Response 7 also persists in the
+*all-dimensional* inner quotient of this extension. Its separating algebra
+on \(C_{m,n}\) needs the tile tags only in the long hom. Use the indicated
+product with the commutative tag monoid in global degree five, restrict to
+zero tags on every other hom, and take only identities in higher degrees.
+This is closed under all fixed whiskerings and compositions: a long
+interval can be extended at an outer object only by a terminal interval.
+Each hom is strict, so interpret all inner mixed operations by identities.
+The two positive adjacent spans only have globular data through degree
+three. Thus an outer operation above degree five always has a unit input,
+and so do the new outer auxiliaries \(H_L,K,H_R\) in degree five. Their
+prescribed unit values apply, in particular \(K=W\) when the left
+variation is a unit. The two routes of each higher declaration then have
+the same value by the unit calculations, including that same tag on both
+routes when \(W\) survives. This is an algebra of the enlarged inner
+quotient, retaining the distinct subdivision tags. In particular exactness
+on a pair of globes cannot be extended to their composite inputs by a
+generation argument alone.
+
+This supplies both new outer disk atoms without identifying parallel
+degree-five schedules in the free object. It still leaves a concrete
+failure of global Gray exactness. On \(\Sigma D^3\vee\Sigma D^3\)
+the hom-degree-six basis element of bidegree \((3,3)\) is positive.
+Every global degree-seven term in the enlarged theory projects to an
+identity there. There is no input 7-globe and the only outer operations of
+that degree have bidegrees \((5,1),(1,5)\); neither adjacent globe has
+a positive hom-degree-five cell. Every positive-depth operation has
+identity Gray image. This argument applies also to terms first composable
+in the quotient. The next mixed arities, the full equations identifying
+composites in Gray, and strong degree-five directedness for all diagrams
+in the enlarged presentation remain to be established for unrestricted Q1.
+
+**Validation.** `python3 -B scripts/e6/interchange_cylinders.py` checks
+the primitive against the signed differential on 2,349 basis tensors,
+including all eight ordered positive degree patterns. It composes the two
+unary routes as actual Steiner tableaux and compares all rows with the
+two disk faces for both argument orders up to operand degree twelve.
+It checks every interior cut of both binary routes at 125 positive
+assignments of three window lengths (2,000 route/cut checks).
+For the two next mixed disks it pastes the contextual faces and compares
+both complete tableaux with the disk faces, tests the source routes at
+5,994 interior cuts, and enumerates the three-state right-variation fiber.
+The degree induction and the window argument supply the unbounded claims.

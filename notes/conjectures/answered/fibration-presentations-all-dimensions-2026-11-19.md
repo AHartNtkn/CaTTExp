@@ -955,4 +955,6 @@ The Q2 existence proof is a sketch at the level of "finite colimit closure plus 
 - §1.3's motivation is met: finite presentations, and so checkable weighted limits, exist for every finite weight with finitely presented values over every homotopical finite base. They do not have the prescribed shape or dimension bound.
 - Standard 9: the counterexample is a finite rewriting computation, a good Agda target. Owner: FTX.
 
-**Follow-up.** No new prompt. What is left is design work on our side: choose which auxiliary generators a proof checker accepts, either a restricted Gray presentation with inverse data on mixed generators or the complicial certificate. A further question would be another incremental round.
+**Follow-up (corrected 2026-11-19).** The general follow-up is `outbox/fibration-presentations-characterization-r2.md`: an exact characterization of the bases (and weights) with one-generator-per-pair or bounded-dimension presentations, and one explicit uniform localised presentation with certificate. The earlier note below is superseded.
+
+~~No new prompt. What is left is design work on our side: choose which auxiliary generators a proof checker accepts, either a restricted Gray presentation with inverse data on mixed generators or the complicial certificate. A further question would be another incremental round.~~

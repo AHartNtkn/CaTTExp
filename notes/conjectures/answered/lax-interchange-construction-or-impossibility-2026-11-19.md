@@ -1088,6 +1088,6 @@ Thus requirements 1–5 **through dimension \(4\)** do not force the convention 
 - the cut invariant of §6.3;
 - the substitution closure (38).
 
-Owner: LCORE (the E6 Agda thread, `src/CaTTExp/Join/`).
+Owner: LCORE (the E6 Agda thread, `src/CaTTExp/Join/`). Done 2026-11-19: `Join/SepAlgebra.agda` (M, T's dimension-4 schemas, (63)), `Join/CutInvariant.agda` (§6.3, (47)–(50)), `Join/SupportSubst.agda` ((38)); scope in `../../joining-completion.md` §4.
 
 **Follow-up.** No new prompt now. The open question is extending T to global dimension 5, where the (K8)–(K10) data and A ⊗ B's lift must appear uniformly. That is the same main question as before. Re-asking it with T as a Known item would be one more round of the same line. It should wait until the internal check of T (LCORE) shows whether T's equations reproduce the (K10)/(K11) data at the next dimension.

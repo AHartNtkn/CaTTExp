@@ -37,3 +37,5 @@ cd ../src && LC_ALL=C.UTF-8 agda +RTS -M12G -RTS CaTTExp/Generated/All.agda
 ```
 
 `tensor_atom_tableau.py` checks the tensor-atom tableau formula (4) of `notes/conjectures/answered/gray-tensor-of-contexts-rule-2026-11-18.md` for p, q ≤ 4 (Steiner sign convention). Run `python3 tools/tensor_atom_tableau.py`; it prints the number of mismatches (0).
+
+`fibration_pentagon_counterexample.py` re-checks the base-dimension-4 counterexample to the relative Gray-generator presentation (`notes/conjectures/answered/fibration-presentations-all-dimensions-2026-11-19.md`, Followup §1): it enumerates the 2-cells gt⁴ ⇒ t (18 paths, 8 cells modulo interchange), every contextual 3-generator instance (8 edges), and shows that no positive 3-cell starting at R lies over the short side of the pentagon. Run `python3 tools/fibration_pentagon_counterexample.py`.

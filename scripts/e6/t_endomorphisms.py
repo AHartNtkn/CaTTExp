@@ -36,7 +36,12 @@ A 4-cell from c to c' is an equivalence class of edge sets of paths c -> c'
 (support equations); the other equations are closed under pre- and
 post-composition by computing on all (c, c', E) triples.
 
-Usage: t_endomorphisms.py [m n] ...   (default: 1 1, 1 2, 2 2, 1 3, 2 3, 2 4, 3 3)
+Usage: t_endomorphisms.py [--R] [m n] ...   (default: 1 1, 1 2, 2 2, 1 3, 2 3, 2 4, 3 3)
+  --R  add the 3-equation scheme (R) of the r3 response: the non-guillotine
+       linear extension of the 3x2 and 2x3 crossing grids equals chi(A, B),
+       in all substitution instances and contexts.
+  --Rall  instead identify every crossing path from B A to A B with chi(A, B).
+  --thin  also set every single-edge 4-loop to the identity.
 """
 import sys
 from itertools import combinations
@@ -88,6 +93,52 @@ def expansions(A, B):
         for e1 in expansions(A, B[k:]):
             for e2 in expansions(A, B[:k]):
                 out.add(e1 + e2)
+    return frozenset(out)
+
+
+# (R) of the r3 response: the non-guillotine linear extension of the 3x2
+# (and, mirrored, 2x3) crossing grid equals chi(A, B). Base patterns, as
+# (run of A, run of B) pairs, chronological.
+R_BASE = {(3, 2): ((1, 2), (2, 2), (1, 1), (3, 2), (2, 1), (3, 1)),
+          (2, 3): ((1, 3), (1, 2), (2, 3), (1, 1), (2, 2), (2, 1))}
+
+
+def runs(xs, k):
+    """all splits of xs into k consecutive nonempty runs."""
+    if k == 1:
+        return [(xs,)]
+    return [(xs[:i],) + rest for i in range(1, len(xs) - k + 2)
+            for rest in runs(xs[i:], k - 1)]
+
+
+@lru_cache(maxsize=None)
+def r_instances(A, B):
+    """substitution instances of (R) whose right-hand side is chi(A, B)."""
+    out = set()
+    for (ka, kb), pat in R_BASE.items():
+        if len(A) < ka or len(B) < kb:
+            continue
+        for As in runs(A, ka):
+            for Bs in runs(B, kb):
+                out.add(sum((next(iter(sorted(expansions(As[i - 1], Bs[j - 1]))))
+                             for i, j in pat), ()))
+    return frozenset(out)
+
+
+@lru_cache(maxsize=None)
+def all_extensions(A, B):
+    """(R-all): every crossing path from B A to A B (all linear extensions)."""
+    w0 = tuple(('b', j) for j in B) + tuple(('a', i) for i in A)
+    goal = tuple(('a', i) for i in A) + tuple(('b', j) for j in B)
+    out = set()
+    def go(w, seq):
+        if w == goal:
+            out.add(seq); return
+        for k in range(len(w) - 1):
+            if w[k][0] == 'b' and w[k + 1][0] == 'a':
+                pr = (w[k + 1][1], w[k][1])
+                go(apply(w, pr), seq + (pr,))
+    go(w0, ())
     return frozenset(out)
 
 
@@ -164,7 +215,7 @@ class UF:
             self.p[a] = b
 
 
-def analyse(m, n, impose_C, state_cap=3_000_000):
+def analyse(m, n, impose_C, state_cap=3_000_000, impose_R=False, thin=False):
     W = words(m, n)
     # all 3-paths from every word
     paths = []
@@ -185,7 +236,8 @@ def analyse(m, n, impose_C, state_cap=3_000_000):
         w = P
         for t in range(len(seq) + 1):
             for (A, B) in blocks(w):
-                ex = expansions(A, B)
+                ex = (all_extensions(A, B) if impose_R == 'all' else
+                      expansions(A, B) | (r_instances(A, B) if impose_R else frozenset()))
                 L = len(A) * len(B)
                 if L >= 2 and seq[t:t + L] in ex:
                     for e in ex:
@@ -311,6 +363,12 @@ def analyse(m, n, impose_C, state_cap=3_000_000):
     comp = scc(nodes, {x: [y for _, y in out_edges.get(x, [])] for x in nodes})
     cyclic = {x for x in nodes
               if any(comp[y] == comp[x] for _, y in out_edges.get(x, []))}
+    if thin:
+        # every single-edge 4-loop is an identity (under R-all these are the
+        # iota-loops at a block chi(A, B))
+        for k_, (s_, t_) in list(edges.items()):
+            if s_ == t_:
+                eqs.append((s_, s_, (k_,), ()))
     if impose_C == 'plus':
         # (C+): every rotation of every H instance is an identity too
         for (d1, d2, L1, L2) in list(eqs):
@@ -388,11 +446,16 @@ def show(w):
 
 
 def main():
-    args = [int(x) for x in sys.argv[1:]]
+    withR = 'all' if '--Rall' in sys.argv else ('--R' in sys.argv)
+    thin = '--thin' in sys.argv
+    args = [int(x) for x in sys.argv[1:] if not x.startswith('--')]
     sizes = list(zip(args[::2], args[1::2])) or [(1, 1), (1, 2), (2, 2), (1, 3), (2, 3), (2, 4), (3, 3)]
     for (m, n) in sizes:
-        for C, tag in ((False, "F_T     "), (True, "F_T/(C) "), ('plus', "F_T/(C+)")):
-            R = analyse(m, n, C)
+        r = ("R∞" if withR == 'all' else "R") + (", thin" if thin else "")
+        modes = (((False, f"F_T+({r})     "), (True, f"F_T+({r})/(C) ")) if withR else
+                 ((False, "F_T     "), (True, "F_T/(C) "), ('plus', "F_T/(C+)")))
+        for C, tag in modes:
+            R = analyse(m, n, C, impose_R=withR, thin=thin)
             print(f"Sigma[{m}] v Sigma[{n}] {tag}: 3-cells on 4-cycles {R['classes3']}, "
                   f"irreducible 4-generators {R['edges']}, 4-equations {R['eqs']}; "
                   f"3-cells with nonidentity endomorphisms {len(R['endo'])}, "

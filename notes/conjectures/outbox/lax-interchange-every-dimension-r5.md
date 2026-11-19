@@ -2875,3 +2875,60 @@ endpoints of every rule and searches their directed reachability.
 two-update disk in case 2. The reduction does not cover a pair of
 active inputs for which every pair of preserving requests uses at
 least three slots.
+
+# Researcher Response 14
+
+**Every proper four-input temporal rectangle in the following two-moving-slot family has no reverse in the support-free presentation \(P\) of Response 3.** The left outer branch has two consecutive 2-slots \(x,y\), each with an arbitrary finite string of unary 3-advances. The right outer branch has one stationary 2-slot \(z\). There are no higher input generators. Take the 2-word interval from \(zxy\) to \(xyz\), with each moving slot going from its initial to its final value. The two active 4-inputs may be arbitrary nonidentity composites. Both inactive inputs may themselves be positive mixed composites.
+
+In particular, the two active witnesses can use \(\{x,z\}\) and \(\{y,z\}\), respectively. Keeping both then requires three slots. The independent advances on \(x\) and \(y\) admit inner exchanges and a proper outer naturality on such an exchange. These operations distinguish the calculation from both the two-slot test and the one-moving-slot calculation.
+
+## A rectangle with four mixed inputs
+
+Write \(a\) for the crossing of \(z\) with \(x\), \(b\) for its crossing with \(y\), and \(X,Y\) for the successive advances on the indicated slots. Repeated occurrences on a slot are distinguished in chronological order. Use the two outside 3-histories
+\[
+                    aXX\mid bYY \qquad\text{and}\qquad XXa\mid YYb .
+\]
+In the early half let \(A,B\) move the first and second \(X\) respectively before \(a\). In the late half let \(C,D\) move the first and second \(Y\) respectively before \(b\). Each is one contextual outer \(r\) with nonzero mixed chain. There is a one-step comparison \(CDAB\Rightarrow CADB\). In the reverse direction the solver found a closed set of **22 raw 4-routes** containing \(CADB\) and excluding \(CDAB\). Among the rewrites inside this set are twelve uses of (15), which trades a wide outer variation followed by an inner correction for the narrow variation, and eight uses of the restricted inner split (21), counting both directions. The [native-term check](../../../scripts/e6/check_two_moving_native.py) independently executes the four inputs and the substituted boundaries of \(\delta(A,D)\) with the actual inactive whiskers.
+
+The same solver verifies reverse obstructions of sizes 12 and 13 for the outside histories \(YaX\mid bYY\to XaY\mid YYb\) and \(aXX\mid bYX\to XXa\mid XYb\). Here the inactive \(B,C\) are still mixed. In the first example the early active input is inner, and the reverse search encounters \(N_L\). In the second the late active input is inner, and it encounters \(N_R\). A separate example in the checker exercises \(U_r\) inside a reverse cut.
+
+## The finite graph and its cut test
+
+A 3-history interleaves \(ab,X^m,Y^n\). The two crossings share \(z\), so their order is forced even in the expansion of a block crossing. The 2-states of the slots are successively \(zxy,xzy,xyz\). After taking out fixed temporal prefixes and suffixes, the positive 4-edges are exactly the following.
+
+- An \(r\)-edge moves a nonempty advance history before a consecutive block of crossings. The block is \(a\) for advances of \(x\), \(b\) for advances of \(y\), or \(ab\) for advances on the two-slot operand. The last case includes an operand with a stationary 2-whisker.
+- An \(\iota\)-edge interchanges adjacent positive histories whose slots occupy disjoint spatial intervals, putting the spatially earlier history first. Their slots are read in the actual 2-state just before the pair. Fixed spatial gaps can be placed using the whiskering and balancing equations.
+
+Indeed the only positive outer split is the left branch against \(z\). Its right operand has no positive history. Thus \(t\) is degenerate and \(h\) specializes to \(r\); a triple requires a third outer branch. The nontrivial 4-equations on these edges are (10), (14), (15), (20) and (21). The stationary operand of \(r\) has length one, so has no proper subdivision. A proper varying 2-whisker adds the other moving slot to its operand, exactly the wide cases of (14) and (15). An inner operand splits under (20) or (21) only when the opposite operand is a crossing term. In this interval a nonempty literal crossing has history \(a,b\), or \(ab\).
+
+The directed 5-moves are disjoint temporal exchange \(\delta\), the inner naturalities \(N_L,N_R\), and \(U_r\). The binary \(W\) and \(U_t\) have a unit input. For a variation consisting of several 4-edges, slide one edge at a time, retaining the entire independent operand of the naturality. The intermediate product on the target of one edge is the product on the source of the next; for right variation use the order of (27). This gives the prescribed pair of boundary routes. Likewise an exchange of two composite 4-paths has a forward path swapping their individual edges in their disjoint windows. These decompositions concern reachability and require no composition law on 5-cells. The [interval program](../../../scripts/e6/interchange_two_moving.py) generates these rules in lower contexts. The Response 11 solver applies them in every top prefix and suffix and uses 4-equations in both directions.
+
+The test arity has \(m=n=2\). Its 90 histories give 375 contextual 4-edges and 383 ground rules. The program executes both faces of all 375 edges on their labelled 2-words. All raw 4-paths are finite: count advances already before their *own* crossing, and then count ordered pairs with a letter of \(\{a,X\}\) before one of \(\{b,Y\}\). An \(r\)-edge strictly increases the first count. An inner edge preserves it and strictly increases the second, since its two disjoint spatial windows exchange right-group events with left-group events. Both counts are bounded.
+
+For each initial 3-history enumerate every 4-path out of it, including the empty path. On these vertices form the full graph of contextual equations and directed moves. Number its strongly connected components in topological order. A second pass checks the resulting integer rank against every legal rewrite. It must be nondecreasing everywhere. For the following test it must increase strictly:
+
+1. Take an elementary temporal exchange inside a 4-path, and let \(H\) be the 3-history just before its two edges act.
+2. Choose a temporal cut between the end of the earlier window and the start of the later one, allowing any intervening stationary events.
+3. Require that the prefix at this cut has the same event set in \(H\), the outside 3-source of the full path and its outside 3-target. Prefix counts identify the named events since each of the three lists \(ab,X^m,Y^n\) has fixed internal order.
+
+Across **191,280 raw 4-paths**, the program checked 221,217 contextual applications of \(\delta\). Exactly **2,887** admit such a common cut; every one strictly increases the rank. Every other rule remains available along a proposed reverse, even when it crosses the chosen cut. A return would have to decrease the rank. The [rank and reachability check](../../../scripts/e6/interchange_two_moving_cuts.py) also counts 10,438 contextual applications of \(N_L\), 6,108 of \(N_R\) and 5,182 of \(U_r\).
+
+The outside-cut condition matters. In a test beginning at \(aXbYYY\), first move \(X\) before \(a\), then move the first \(Y\) before the *whole* crossing \(ab\). At the resulting \(XYabYY\), the inner move \(Ya\to aY\) and outer move \(bY\to Yb\) have disjoint temporal windows. Compare their two orders, then move the final \(Y\) before \(b\) on both routes. Both exterior contexts are positive and mixed. The solver returns from the target to the source using just the 4-equations (15), (10), (15), (10), (21), (15), in that order with the appropriate orientations. Thus the two full routes are already equal in \(P\). The wide move in the prefix uses both crossings: the cut separating the active moves after that prefix does not divide the original inputs. This explains how an exchange can have a return in an arbitrary top context while every four-input rectangle in the theorem is directed.
+
+## Reduction from arbitrary advance counts
+
+Choose a positive 4-edge in each active input. For \(r\), retain one advance of its varying history. For \(\iota\), retain one event in each spatial operand: a crossing is already retained, and a unary event selects its particular advance. Disjoint spatial support means a single witness asks for at most one advance on each of \(x,y\). Keep all three slots and the advances selected by the two witnesses. Send every other unary advance to an identity, mapping the intervening 2-generators to the corresponding successive retained values. This is a globular substitution on each generating string. Each selected \(r\) still varies a positive history across \(z\); each selected inner edge still has two positive operands. Response 4's positive grading therefore keeps **both active composites** proper. There is no requirement on the images of the inactive inputs.
+
+The resulting strings have at most two advances per slot. Include them as initial substrings of the two-by-two arity. Append any missing terminal advances as one fixed chronological 3-suffix after the crossings, whiskering every 4-route and 5-comparison with that suffix. This extends the histories to the enumerated 2-endpoints and leaves the active edges positive.
+
+For a four-input rectangle there is a forward path that exchanges the elementary edges of the two active inputs in succession between their fixed early and late intervals. Throughout this construction all changes, including the inactive prefix and suffix, act inside their own interval. The separating cut consequently has the same event set at the three histories in the rank test. There is at least one exchange because both projected active inputs are proper. If the original rectangle had a reverse, substitution and the fixed whiskering would give a reverse between the projected endpoints. The strict rank increase along this forward path and nondecrease along every possible return rule exclude it. This proves the assertion for all advance counts, including active inputs of zero mixed Gray chain.
+
+Run from the repository root:
+
+~~~sh
+python3 -B scripts/e6/check_two_moving_native.py
+python3 -B scripts/e6/interchange_two_moving.py
+python3 -B scripts/e6/interchange_two_moving_cuts.py
+~~~
+
+The theorem is for the stated temporal rectangles of \(P\), with two independently advancing slots in one outer branch and one common stationary crossing partner. Additional stationary partners, crossings between the moving slots, and additional degree-five operations of larger presentations require their own rule analysis.

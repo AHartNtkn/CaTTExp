@@ -24,8 +24,8 @@ def boundary(basis):
 
 
 @cache
-def atom(basis, differential_of=boundary):
-    degree = sum(dim for dim, _ in basis)
+def atom(basis, differential_of=boundary, dimension=int):
+    degree = sum(dimension(rank) for rank, _ in basis)
     hemispheres = []
     for sign in (-1, 1):
         chain = Counter([basis])

@@ -104,7 +104,7 @@ def lift_two(cell, left, right):
     return with_boundaries(left, right, squares)
 
 
-def verify(r, s):
+def path_section(r, s):
     if min(r, s) < 0:
         raise ValueError('path lengths must be nonnegative')
     paths = path(r), path(s)
@@ -112,7 +112,6 @@ def verify(r, s):
     suspended = [[(0, 0), (0, 1)] + [(d + 1, i) for d, i in p] for p in paths]
     target_atoms = {atom(b, suspended_boundary) for b in product(*suspended)}
     lifts = {}
-    totals = []
     for degree in range(4):
         source = close_atoms(source_atoms, degree)
         target = {y for y in close_atoms(target_atoms, degree + 1) if y[0] == CORNERS}
@@ -138,12 +137,16 @@ def verify(r, s):
             if degree:
                 assert all(face(x, side) == lifts[face(y, side)] for side in (0, 1))
             lifts[y] = x
-        totals.append(len(target))
     for p, q in product(*paths):
         mixed = atom((p, (1, 0), q), grid_boundary)
         target = atom(((p[0] + 1, p[1]), (q[0] + 1, q[1])), suspended_boundary)
         assert lifts[target] == mixed
-    return totals
+    return lifts
+
+
+def verify(r, s):
+    counts = Counter(len(y) - 2 for y in path_section(r, s))
+    return [counts[k] for k in range(4)]
 
 
 if __name__ == '__main__':

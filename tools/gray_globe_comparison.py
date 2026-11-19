@@ -24,7 +24,7 @@ def boundary(basis):
 
 
 @cache
-def atom(basis):
+def atom(basis, differential_of=boundary):
     degree = sum(dim for dim, _ in basis)
     hemispheres = []
     for sign in (-1, 1):
@@ -33,7 +33,7 @@ def atom(basis):
         for _ in range(degree):
             differential = Counter()
             for generator, multiplicity in chain.items():
-                for face, coefficient in boundary(generator).items():
+                for face, coefficient in differential_of(generator).items():
                     differential[face] += sign * multiplicity * coefficient
             chain = +differential
             rows.append(tuple(sorted(chain.elements())))
@@ -43,10 +43,15 @@ def atom(basis):
 
 def strict_cells(shape, degree):
     """Generate a fixed level from all padded atoms and their strict composites."""
+    return close_atoms((atom(basis) for basis in product(*(globe(d) for d in shape))
+                        if sum(d for d, _ in basis) <= degree), degree)
+
+
+def close_atoms(atoms, degree):
+    """Enumerate one strict level of a Steiner category from its atom tableaux."""
     empty_row = ((), ())
     cells = set()
-    for basis in product(*(globe(dim) for dim in shape)):
-        rows = atom(basis)
+    for rows in atoms:
         if len(rows) <= degree + 1:
             cells.add(rows + (empty_row,) * (degree + 1 - len(rows)))
     pending = deque(cells)

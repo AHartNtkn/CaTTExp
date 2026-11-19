@@ -292,3 +292,34 @@ decide : ∀ u v → Dec (u ≈ v)
 decide u v with normalize u ≟W normalize v
 ... | yes e = yes (nf→≈ e)
 ... | no n  = no λ p → n (≈→nf p)
+
+------------------------------------------------------------------------
+-- The typed restriction (via subject reduction in `Typing`)
+
+open import CaTTExp.Gray.NBE.Typing Fac G using (NonEmpty; module Typed)
+
+module TypedDecide
+  (hom     : Dir → Formula → Formula → Fac)
+  (src tgt : G → Formula)
+  (src-ne  : ∀ x → NonEmpty (src x))
+  where
+
+  open Typed hom src tgt src-ne
+
+  -- Convertible typed words are joined through typed words only.
+  typed-church-rosser : ∀ {u v S T S' T'} → Ty u S T → Ty v S' T' → u ≈ v
+    → Σ Word λ w → (u ⟶* w) × (v ⟶* w) × Ty w S T × Ty w S' T'
+  typed-church-rosser tu tv p with church-rosser p
+  ... | w , a , b = w , a , b , sr* tu a , sr* tv b
+
+  -- The normal form of a typed word is typed, and `decide` decides
+  -- conversion of typed words.
+  normalize-typed : ∀ {u S T} → Ty u S T → Ty (normalize u) S T
+  normalize-typed {u} tu = sr* tu (fst (snd (nf u)))
+
+  -- The typing arguments are unused: this is `decide`.  It decides
+  -- conversion through typed words because, by typed-church-rosser,
+  -- untyped ≈ between typed words holds exactly when they are joined
+  -- by reductions that stay typed (and reductions are typed steps).
+  typed-decide : ∀ {u v S T} → Ty u S T → Ty v S T → Dec (u ≈ v)
+  typed-decide {u} {v} _ _ = decide u v

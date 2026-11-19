@@ -96,6 +96,21 @@ def incidence_rectangles():
         assert set(projection[:2]) == early and set(projection[2:]) == late
 
 
+def check_kernel_then_triangle():
+    x, a, b, c, z = (word(k) for k in 'XABCZ')
+    # Central slots stay ordered A,B,C. Z moves right and X moves left.
+    pure = i_faces(cross(a, z), cross(x, c).pad(left=b))
+    triangle = tuple(p.pad(left=a, right=c) for p in r_faces(cross(x, b), z))
+    assert pure[0].start == word('ZABCX')
+    assert pure[0].end == triangle[0].start == word('AZBXC')
+    for p, t in product(pure, triangle):
+        combined = p.then(t)
+        assert order_on('Z', combined)[0] == key('ZA')
+        assert order_on('X', combined)[0] == key('XC')
+        assert key('XZ') in order_on('Z', combined)[1:]
+        assert key('XZ') in order_on('X', combined)[1:]
+
+
 def local_edges(history, branch):
     """Instantiate the structural 4-edges on each spatial and temporal window."""
     n = history.mass
@@ -276,3 +291,5 @@ if __name__ == '__main__':
     check_shapes()
     right_operand_barrier()
     check_pair_projections(6)
+    check_kernel_then_triangle()
+    print('Checked the four corners for an inner exchange followed by a triple on a (1,3,1) shape.')

@@ -146,6 +146,7 @@ def verify(m, n):
             if k:
                 assert all(face(x, d) == lifts[face(y, d)] for d in (0, 1))
         print(k, len(source), len(target), sep=' | ')
+    return lifts
 
 
 if __name__ == '__main__':

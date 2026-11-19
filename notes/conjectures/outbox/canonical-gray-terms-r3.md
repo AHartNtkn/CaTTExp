@@ -94,3 +94,38 @@ Every formula has nonnegative coefficients. In positive source degree, ∂F = F�
 **Finite section check.** For all 16 ordered pairs 1 ≤ m,n ≤ 4, put P=D^{m−1}, Q=D^{n−1}. In each case Φ admits a section of the underlying globular sets that preserves identities and chooses the specified preimage of every mixed atom. The checker enumerates the two strict categories independently by closing their atoms under every admissible composition. It pins each mixed atom and all its faces, then chooses a preimage for each remaining cell with precisely the previously chosen faces. It verifies the section equation and both face equations for every cell. Above the top dimension the section extends by identities. For m=n=4 the target has 1,649 cells in degree seven including iterated identities, and every one has a verified lift. Run `python3 tools/gray_globe_comparison.py 4 4` for that case. [Reproduce the check](../../../tools/gray_globe_comparison.py)
 
 **What remains for CT.** The calculation constructs strict representatives. A proof by transfer would also need CaTT terms for the endpoint panels and their compatibility with the mixed declarations. For example, when P=Q=I, the two edge orders around an endpoint square have the same strict image; their substituted terms need a well-typed comparison. The strict section test does not supply that term. The general section and the all-dimensional CaTT assignment in Q2 remain open here.
+
+# Researcher Response 2
+
+**CT holds for D² ⊗ D², including all identity towers.** More generally, the strict comparison in Response 1 gives the following transfer theorem. Put B = P ⊗ I ⊗ Q, C = ΣP ⊗ ΣQ, A = (0,0), Z = (1,1) and H = C(A,Z). Suppose B has a CT assignment U and Φ has a section s of underlying globular sets with
+
+$$
+s(\langle Sp⊗Sq\rangle)=\langle p⊗e⊗q\rangle
+$$
+
+for every pair of basis elements. Then C has a CT assignment. Here the target atom in the formula is viewed as a cell of H. The section needs to commute with the two face maps. Composition preservation is unnecessary.
+
+**Interpreting the endpoint panels.** Start the context of C with its four vertices and its four pure sides, giving each side the usual suspended globular context. The two routes from A to Z through a third corner give pasting subcontexts R₀ = ΣQ ∨₀ ΣP and R₁ = ΣP ∨₀ ΣQ. Each is the wedge of two globular pasting diagrams at their consecutive endpoints. The formula for F in Response 1 puts the entire strict image of P ⊗ {v} ⊗ Q in the corresponding route Rᵥ. We use two facts here. A term has the support of its strict image, with dependent boundaries included, and strict interpretation on a globular pasting context lifts strict cells with prescribed parallel term boundaries. [Support and globular boundary lifting, Known 2](relative-coherence-all-dimensions-r4.md)
+
+Construct a substitution ρ from the context being built to the suspended family context Σ Fam(B), in order of generator dimension. Send the two suspension vertices to A and Z. For a variable of Fam(B) indexed by b, let E be its suspended type with all earlier entries of ρ substituted. If b belongs to the v-panel, the endpoints in E involve only variables from Rᵥ. Indeed, U on either face of b uses only variables in that panel by the support lemma. Their suspended images are already in Rᵥ by induction. For a vertex b the endpoints are just A and Z. Moreover the two terms have the same type by substitution, and by induction their strict images are the two faces of Φ(b), with the dimension shifted back to C. Apply boundary lifting *in Rᵥ* to this particular strict cell and these literal endpoints. Use the resulting term of type E as the entry of ρ. This includes panel cells whose image is an identity. It supplies the comparison between the two substituted edge orders in the last paragraph of Response 1.
+
+For b = p ⊗ e ⊗ q, declare the new variable for g = Sp ⊗ Sq with type E and take that variable as the entry of ρ. This gives exactly one declaration for each mixed generator. The atom calculation in Response 1 identifies its strict cell and both faces. Suspension and substitution preserve typing, so the induction constructs a well-formed context and substitution. By induction on terms, strictly interpreting a suspended term after ρ applies Φ to the original strict cell, viewed one dimension higher in C. This holds on the variables by construction and on strict composites and identities because Φ is a strict functor.
+
+**The section.** For a cell c from A to Z, write c̄ for the corresponding cell of H and set
+
+$$
+T(c)=(Σ U(s\bar c))[ρ].
+$$
+
+Its strict value is c by the section equation. If c has dimension one, its endpoints are literally A and Z. In higher dimensions the two substituted boundary terms are precisely T on its two faces, since s commutes with both faces. At a mixed atom the displayed formula reduces to its declared variable by the pinning condition and CT(a) for U. Every arrow outside this diagonal either stays at a vertex or lies on a single pure side. This follows by projecting its directed edge path to the two vertex coordinates. Higher cells with such endpoints stay there as well, since each mixed atom has A and Z as its 0-faces, and composition cannot reverse a coordinate. On each pure side use globular boundary lifting successively, selecting each generator variable and taking identities on vertex towers. The sides share just those vertex towers. This finishes all three CT conditions.
+
+**The two-disc calculation.** For P = Q = I, Known 8 gives U, and Response 1 provides the pinned section. There is also a direct term check of the resulting transfer. For a panel generator p ⊗ v ⊗ q, restrict its substituted type E to the wedge of the two individual globes on Sp and Sq in route order. The implementation builds a coherence with exactly this type over that wedge, substitutes its inclusion, and checks the CaTT support condition. For each target cell it computes the strict tableau of the chosen term, compares the entire tableau to the requested cell, and checks the inferred type against the terms independently selected at the two strict faces. The checks include all 25 generator variables.
+
+| Dimension in D² ⊗ D² | 0 | 1 | 2 | 3 | 4 |
+|---|---:|---:|---:|---:|---:|
+| Cells checked, including identities | 4 | 20 | 50 | 60 | 61 |
+| Objects or nonidentity cells | 4 | 16 | 30 | 10 | 1 |
+
+Above dimension four every cell is the identity on its sole face, so iterating the CaTT identity on the selected term proves the assertion in all higher dimensions. Agda 2.8.0 accepted the prescribed types for all 61 objects and nonidentity cells. Run `python3 tools/canonical_gray_two_discs.py --emit` to check the tableaux and regenerate the certificate. [Term construction](../../../tools/canonical_gray_two_discs.py) · [Agda type checks](../../../src/CaTTExp/Generated/CanonicalGrayTwoDiscs.agda)
+
+For general m,n the transfer requires CT on Dᵐ⁻¹ ⊗ I ⊗ Dⁿ⁻¹ and a pinned globular section in those dimensions. The two-disc result discharges both hypotheses for m=n=2. A uniform construction for Q2 and the general assertion in Q1 remain open here.

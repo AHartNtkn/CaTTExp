@@ -25,7 +25,10 @@
 --   * composite-crossing-fails: (63), ι(A, B;C) ≠ the pairwise
 --     composite, in the free algebra on the diagram of §7.2.
 --
--- 1-whiskering (by 1-cells) is included as labelled unary operators;
+-- 1-whiskering (by 1-cells) is included as labelled unary operators.
+-- The equations of dimension ≤ 2 and the congruence on 2-cell
+-- arguments are omitted: M ignores 2-cell arguments, so they hold there
+-- trivially;
 -- 5-cells add no 4-dimensional equations and are not modelled.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude

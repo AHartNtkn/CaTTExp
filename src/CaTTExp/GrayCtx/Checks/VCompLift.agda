@@ -91,3 +91,8 @@ vcomp3-wf : ∀ sd → DiskCertW sd (imgs sd 1) 3 →
             ∀ Γ → Γ ⊢ctx → T (globular Γ) → T (dimCtx Γ <ℕ 4) →
             (cyl2E sd Γ ⊢ctx) × (cyl2E sd Γ ⊢sub compW (imgs sd 1) Γ ∶ cylE sd Γ)
 vcomp3-wf sd h = compW-wf sd (imgs sd 1) 3 (λ j p → pick4 sd h j p _ refl _ refl _ refl _ refl)
+
+-- The judgement the compiled run decides (diskOK? sd 3) is the
+-- hypothesis of vcomp3-wf.
+DiskCertL-3 : ∀ sd → DiskCertL sd 3 ≡ DiskCertW sd (imgs sd 1) 3
+DiskCertL-3 sd = refl

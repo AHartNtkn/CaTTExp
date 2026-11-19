@@ -203,7 +203,7 @@ On the 240-word interval of (K14) a rank with values 0, …, 7 exists; there are
 Operations with an identity input are identities. Impose:
 - the outer composite-crossing equations χ(a₁a₂, b) = (χ(a₁,b)a₂) ; (a₁χ(a₂,b)) and χ(a, b₁b₂) = (b₁χ(a,b₂)) ; (χ(a,b₁)b₂) (this is (K15) for χ);
 - 1-whiskering equations for χ, r, t, ι, and balancing equations for 2-whiskering of ι;
-- composition laws for r and t in each argument (four equations), and four equations for whiskering the varying argument. Two of these are positive factorization equations, r(a₁A, b) · [ε | ι(χ(a₁,b), A) | a₁χ(a′,b)] = [χ(a₁,b)a | a₁r(A,b) | ε] and its mirror for t(a, Bb₂). They are the uniform form of the repair (F) of (K10): r(a₁A, b) plays the role of h;
+- composition laws for r and t in each argument (four equations), and four equations for whiskering the varying argument. Two of these are positive factorization equations, r(a₁A, b) · [ε | ι(χ(a₁,b), A) | a₁χ(a′,b)] = [χ(a₁,b)a | a₁r(A,b) | ε] and its mirror for t(a, Bb₂). They need a varying argument whiskered by a nontrivial 2-cell a₁, so they are vacuous on ΣD² ∨ ΣD² and do **not** supply the repair (F) of (K10) there (see (K32));
 - r(χ(a,b), d) = t(a, χ(b,d)) =: τ(a, b, d), the (K14) cell rqp ⇒ pqr;
 - composition laws for ι in one argument **only when the other argument is a literal χ-term**: ι(F;F′, χ(a,b)) and ι(χ(a,b), G;G′) split as composites. These are ordinary equation schemes, stable under substitution;
 - **support equations**: for every finite pasting diagram P and every pair of parallel 4-paths, built from contextual 4-generators of P's free algebra, that have the same set of contextual edge identifiers, the two paths are equal. Under a substitution each contextual edge goes to a 4-path, and equal edge sets go to equal edge sets (an edge sent to an identity contributes nothing). So these equations are substitution-stable, and the construction is the free algebra of one theory, including for substitutions to composites and identities.
@@ -218,7 +218,22 @@ No directedness or exactness is claimed in global dimension 5. The 5-cells above
 
 **(K31) The inner composite-crossing law is not forced through dimension 4 (proved).** In the free T-algebra on the diagram with 3-cells A : α₀ ⇛ α₁ and B : β₀ ⇛ β₁, C : β₁ ⇛ β₂ (all 2-cells x → y between f₀ → f₁ → f₂), ι(A, B;C) ≠ [α₀B | ι(A,C) | ε] · [ε | ι(A,B) | α₁C]. A finite T-algebra separates them. It has one cell in each of dimensions 0–2, 3-cells {0, 1, 2} under capped addition, and 4-cells (m, S) with S ⊆ {1,2}² and union as composition, with χ ↦ 0, r, t ↦ identities, and ι(m, n) ↦ (m ⊕ n, {(m,n)}) for m, n > 0. Every equation of (K30) holds there, the 5-cells can be read as identities, and with A, B, C ↦ 1 the two sides go to (2, {(1,2)}) and (2, {(1,1)}). So in T the outer law (K15) holds but the inner law is extra coherence data. Whether a theory satisfying requirements 1–5 in all dimensions forces it is open.
 
-**(K32) What dimension 5 must contain.** For ΣD² ∨ ΣD² with 3-cells A, B side by side, the tensor atom A ⊗ B is a global 5-cell between two routes of 4-cells ((K3), (K8)). In T its boundary routes exist because of the factorization equations, but no 5-generator is adjoined and no 5-dimensional directedness is proved. (K10)–(K11) give one hand-made completion through that cell. (K14)–(K29) show that the triple-tensor analogue needs joining data whose naturality under substitution is the open point. Specifically: the (K18) joins are not natural under generator-to-composite maps (K19); a substitution-natural cospan completion exists at the level of comparison categories (K23); and an actual globular degeneration obstructs every completion that keeps the binary data (K10) and adds the (K18) joins (K24)–(K25).
+**(K32) What dimension 5 must contain.** For ΣD² ∨ ΣD² with 3-cells A, B side by side, the tensor atom A ⊗ B is a global 5-cell between two routes of 4-cells ((K3), (K8)). T as stated does not reach this cell (checked by hand and by `scripts/e6/t_binary_interval.py`). Write the six orderings of A, B and C = χ(α, β) as S = BCA, V₀ = CBA, V₁ = CAB, T = ACB, U₀ = ABC, U₁ = BAC. The 4-generators of T in this interval are exactly
+  - t̄₀ : S → V₀, ι(A, B) : V₀ → V₁, r̄₀ : V₁ → T;
+  - r̄₁ : S → U₁, ι(B, A) : U₀ → U₁, t̄₁ : U₀ → T.
+
+The factorization equations need a whiskered varying argument a₁A, so they are vacuous here. So T's 4-skeleton on ΣD² ∨ ΣD² is the bare (K8) skeleton. The only route S → T is t̄₀ · ι(A, B) · r̄₀, and U₁ is a sink. No 5-cell can have A ⊗ B as Gray image, so **any extension of T must add dimension-4 data**, not only 5-cells.
+
+A candidate uniform repair is (K10) made uniform. For A : α ⇛ α′ and B : β ⇛ β′, adjoin
+  h(A, B) : Bα ; χ(α, β′) ; Aβ′ ⇛ βA ; Bα′ ; χ(α′, β′),
+with the equation [Bα | r(A, β′) | ε] = h(A, B) · [ε | ι(B, A) | χ(α′, β′)].
+- The degeneracies are consistent with T: h(A, 1) = r(A, β) and h(1, B) = identity.
+- Then a 5-generator W(A, B) : t̄₀ · ι(A, B) · r̄₀ ⇛ h(A, B) · t̄₁ has Gray image A ⊗ B.
+- The mirror repair k(A, B), through t instead of r, is equally possible.
+
+Whether the h-extension stays directed and substitution-closed on the triple tensor, given (K24)–(K25), is open.
+
+So no 5-generator is adjoined in T and no 5-dimensional directedness is proved. (K10)–(K11) give one hand-made completion through that cell. (K14)–(K29) show that the triple-tensor analogue needs joining data whose naturality under substitution is the open point. Specifically: the (K18) joins are not natural under generator-to-composite maps (K19); a substitution-natural cospan completion exists at the level of comparison categories (K23); and an actual globular degeneration obstructs every completion that keeps the binary data (K10) and adds the (K18) joins (K24)–(K25).
 
 ## 3. Requirements
 
@@ -233,7 +248,7 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 **Q1 (main: decide in every dimension).** Do one of the following.
 - **(A) Construction.** Give a definition of tensor-shaped lax-interchange ω-categories, valid in every dimension and for interchange along k-cells for every k, with an explicit description of the free object on every finite globular pasting diagram, and prove requirements 1–5 for all Γ and all dimensions. Extending T of (K30) is the natural route. Say what the generators and equations are in global dimension n + 1 in terms of those in dimension n, and prove the inductive step once, not shape by shape. The step from dimension 4 to 5 must, uniformly in Γ:
-  - adjoin the (2,2)-atom (A ⊗ B in (K32)) with its Leibniz boundary;
+  - add the dimension-4 data that (K32) shows T lacks (such as h(A, B)), and adjoin the (2,2)-atom (A ⊗ B in (K32)) with its Leibniz boundary;
   - make the δ, N, U cells of (K30) directed with injective supports;
   - keep exactness of both quotients;
   - keep substitution closure, including degenerations such as (K25).

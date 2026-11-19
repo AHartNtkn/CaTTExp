@@ -63,3 +63,34 @@ An explicit construction of T for all pairs and iterated tensors; the inductive 
 - Finster–Mimram, arXiv 1706.02866; Benjamin–Markakis, arXiv 2406.12127 (invertibility of coherences).
 - No paper on syntactically matched terms for non-globular molecules in a type theory without definitional equalities was found.
 
+
+# Researcher Response 1
+
+## A strict comparison for the diagonal hom of two suspensions
+
+Write ΣP for the suspension of a finite globular pasting diagram P. Denote its two vertices by 0 and 1, and write Sp for the suspended basis element corresponding to p in λP. For two such diagrams P,Q there is a strict functor
+
+$$
+  Φ:P⊗I⊗Q \longrightarrow (ΣP⊗ΣQ)((0,0),(1,1)).
+$$
+
+It sends the atom on p⊗e⊗q to the atom on Sp⊗Sq, viewed in the diagonal hom. Here e is the generating arrow of I. In particular this gives a source with one fewer dimension for every mixed atom of a tensor of two globes. Both endpoint copies of P⊗Q are needed.
+
+**Construction.** Extend the augmentation of each complex by zero on positive degrees and denote it by ε. On chains define F, of degree +1, by the formulas
+
+$$
+\begin{aligned}
+ F(p⊗e⊗q)&=Sp⊗Sq,\\
+ F(p⊗v⊗q)&=ε(q)\,Sp⊗(1-v)+ε(p)\,v⊗Sq \qquad(v=0,1).
+\end{aligned}
+$$
+
+In the second formula the bare vertices in the first and second tensor positions belong to ΣP and ΣQ respectively. At a source vertex this gives one of the two directed paths from (0,0) to (1,1). The path at v=0 first traverses Q, and the path at v=1 first traverses P.
+
+Every formula has nonnegative coefficients. In positive source degree, ∂F = F∂. To verify the middle-edge formula, expand ∂(Sp⊗Sq). The suspended differentials on positive-degree p and q give the first-factor and last-factor contributions to F∂, with signs 1 and (−1)^{|p|+1}. When p or q has degree zero, its suspended differential is the difference of the two vertices. The resulting contributions sum to (−1)^{|p|}(F(p⊗1⊗q) − F(p⊗0⊗q)). On an endpoint panel the identity follows directly from ε∂=0 and the suspended differential, except at total degree zero, where the boundary of the displayed path is (1,1) − (0,0). Thus applying F to each row of a Steiner tableau and prefixing the row ((0,0),(1,1)) gives a tableau. The row formula preserves identities, faces with the dimension shift, and composition by addition above the cut, giving the stated strict functor. [Steiner's tableau construction and tensor product](https://arxiv.org/abs/math/0403237)
+
+**Images of mixed atoms.** In the signed row of degree k of the atom on p⊗e⊗q, a term with middle degree 1 and outer degrees i,j has i+1+j=k. It maps to the (i+1,j+1) term in row k+1 of the atom on Sp⊗Sq. The sign on the q-face is twisted by (−1)^{i+1} on both sides. With middle degree 0, only terms with i=0 or j=0 survive the augmentation. These give respectively the (0,k+1) and (k+1,0) terms. For the latter the endpoint 1−v contributes the extra sign reversal required by (−1)^{k+1}. When i=j=0 both contributions occur, giving exactly the two edges in the appropriate boundary path. These are all terms of the target row. The prefixed row supplies its two vertices, proving the atom assertion in all dimensions. [Tensor-atom row formula (4)](../answered/gray-tensor-of-contexts-rule-2026-11-18.md)
+
+**Finite section check.** For all 16 ordered pairs 1 ≤ m,n ≤ 4, put P=D^{m−1}, Q=D^{n−1}. In each case Φ admits a section of the underlying globular sets that preserves identities and chooses the specified preimage of every mixed atom. The checker enumerates the two strict categories independently by closing their atoms under every admissible composition. It pins each mixed atom and all its faces, then chooses a preimage for each remaining cell with precisely the previously chosen faces. It verifies the section equation and both face equations for every cell. Above the top dimension the section extends by identities. For m=n=4 the target has 1,649 cells in degree seven including iterated identities, and every one has a verified lift. Run `python3 tools/gray_globe_comparison.py 4 4` for that case. [Reproduce the check](../../../tools/gray_globe_comparison.py)
+
+**What remains for CT.** The calculation constructs strict representatives. A proof by transfer would also need CaTT terms for the endpoint panels and their compatibility with the mixed declarations. For example, when P=Q=I, the two edge orders around an endpoint square have the same strict image; their substituted terms need a well-typed comparison. The strict section test does not supply that term. The general section and the all-dimensional CaTT assignment in Q2 remain open here.

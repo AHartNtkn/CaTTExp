@@ -178,7 +178,7 @@ is an L-model with strict substitution for every algebraically fibrant Y, with S
 ### B.4 What is left on the L side
 
 1. **The residual convention check in (G)**: Gepner–Heine's ∞Cat versus Campion's Cat_ω, and the orientation of their cubes. Also to re-read: the localising set for Thm 2.4.8's image (only its existence is used).
-2. **The comparison program for L.** With S_L in hand, the CaTT program (𝓛_{R_L} ⊣ S_L, coinductive completion, the derived adjunction, the unit condition) can be repeated for L. Its first missing ingredient is a class of weak equivalences on L-models (an FHM theory for L's directed cells: essential surjectivity with directed comparison cells, and invertibility only where L declares it). The L-analogue of Theorem A then reads: for a Gray loop-free context, π^L : A^L_Γ → ν_Gray(Γ) is a trivial fibration ⟺ L-relative coherence with identity image, and ν_Gray(Γ) is gaunt (Lemma A.2 applies to its hom complexes, which are Steiner).
+2. **The comparison program for L** (posed as Q2 of `conjectures/outbox/catt-models-unit-condition-r3.md`, which now states Theorem L as known, 2026-11-19). With S_L in hand, the CaTT program (𝓛_{R_L} ⊣ S_L, coinductive completion, the derived adjunction, the unit condition) can be repeated for L. Its first missing ingredient is a class of weak equivalences on L-models (an FHM theory for L's directed cells: essential surjectivity with directed comparison cells, and invertibility only where L declares it). The L-analogue of Theorem A then reads: for a Gray loop-free context, π^L : A^L_Γ → ν_Gray(Γ) is a trivial fibration ⟺ L-relative coherence with identity image, and ν_Gray(Γ) is gaunt (Lemma A.2 applies to its hom complexes, which are Steiner).
 
 ### B.5 Agda
 

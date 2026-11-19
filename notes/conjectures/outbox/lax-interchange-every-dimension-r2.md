@@ -264,3 +264,493 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 ## 5. What counts as a solution
 
 A definition with proofs for (A), an inconsistency proof for (B), a construction for Q2, or a decision of Q3 in all dimensions. A reference to a published construction or impossibility result is also a solution.
+
+# Researcher Response
+
+**I have a dimension-5 obstruction to extensions that preserve T’s existing 4-cell distinctions. It survives adding new 4-generators, including the stated \(h\)-repair. However, an extension allowed to impose additional 4-equations can evade it. Thus this does not establish the unrestricted impossibility requested in Q1, and I do not have an all-dimensional construction.**
+
+The obstruction gives a specific necessary coherence equation. It is independent of lifting \(A\otimes B\).
+
+## 1. Precise result
+
+Write \([m]\) for the directed chain of \(m\) generating 1-cells, and put
+\[
+\Gamma_{2,2}=\Sigma[2]\vee\Sigma[2],
+\qquad
+\Gamma_{2,4}=\Sigma[2]\vee\Sigma[4].
+\]
+Both are 2-dimensional globular pasting diagrams.
+
+There is an explicitly defined 4-endomorphism
+\[
+H(a_1,a_2;b_1,b_2):
+\chi(a_1a_2,b_1b_2)\Longrightarrow
+\chi(a_1a_2,b_1b_2)
+\]
+with these properties:
+
+1. \(H\ne 1\) in \(F_T(\Gamma_{2,2})\).
+2. Every extension retaining T’s equations and substitution, and satisfying the elementary no-reverse condition in dimension 5, must impose
+   \[
+   \boxed{
+   H(a_1,a_2;b_1,b_2)
+   =
+   1_{\chi(a_1a_2,b_1b_2)}.
+   }
+   \tag{C}
+   \]
+3. Consequently, no such extension can be faithful on T’s existing 4-cells.
+4. Adjoining just the \(h\)-operations, equation and degeneracies displayed in K32 does not impose (C). That repair therefore still fails dimension-5 directedness.
+
+The no-reverse condition used here excludes identity-input degeneracies, as in K30. The offending elementary instance has **four nonidentity arguments**. Its equal boundaries are a consequence of T’s equations, not an identity-input degeneration.
+
+Here is the proof.
+
+## 2. A general obstruction from idempotent endomorphisms
+
+Suppose
+\[
+X:u\Longrightarrow u,
+\qquad
+Y:v\Longrightarrow v
+\]
+are nonidentity 4-cells, with \(u*_2v\) defined. Set
+\[
+Z=X*_2Y.
+\]
+
+Assume
+\[
+X*_3X=X,\qquad
+Y*_3Y=Y,\qquad
+Z*_3Z=Z.
+\tag{1}
+\]
+
+Apply the prescribed elementary interchange for \(k=2,l=3\) to
+\[
+(a,b,c,d)=(X,X,Y,Y).
+\]
+Its source is
+\[
+\begin{aligned}
+L(X,X,Y,Y)
+&=(X*_3X)*_2(Y*_3Y)\\
+&=X*_2Y\\
+&=Z,
+\end{aligned}
+\]
+and its target is
+\[
+\begin{aligned}
+R(X,X,Y,Y)
+&=(X*_2Y)*_3(X*_2Y)\\
+&=Z*_3Z\\
+&=Z.
+\end{aligned}
+\]
+
+Thus the required elementary comparison has type
+\[
+\chi_{2,3}(X,X,Y,Y):Z\Longrightarrow Z.
+\tag{2}
+\]
+The identity \(1_Z\) is a cell in the reverse direction.
+
+This contradicts the required **absence of a reverse cell**. No assertion that (2) is invertible is needed.
+
+### Why T supplies (1)
+
+T’s raw support equations imply
+\[
+F*_3F=F
+\tag{3}
+\]
+for every 4-endomorphism \(F\).
+
+Indeed, choose a contextual 4-path \(P\) representing \(F\). Since \(F\) is an endomorphism, \(P;P\) is defined. The paths \(P\) and \(P;P\) are parallel and have exactly the same set of contextual edge identifiers. The support equation therefore identifies them.
+
+By the boundary formulas, \(Z=X*_2Y\) is also an endomorphism. Hence (3) applies to \(X,Y,Z\).
+
+There is also a binary formulation. Put
+\[
+x=X*_2 1_v,\qquad y=1_u*_2Y.
+\]
+These are 4-endomorphisms of \(u*_2v\). The two boundaries of the elementary \(\delta(X,Y)\) are
+\[
+y*_3x,\qquad x*_3y.
+\]
+Because \(X,Y\) are endomorphisms, both orders use precisely the same contextual edges: the \(X\)-path has fixed right context \(v\), and the \(Y\)-path has fixed left context \(u\). T’s support equation identifies these two paths directly.
+
+The four-argument version above avoids any issue about identity padding in the rectangular notation.
+
+## 3. The structural rectangle loop
+
+In \(\Gamma_{2,2}\), take
+\[
+a_1:f_0\Rightarrow f_1,\qquad
+a_2:f_1\Rightarrow f_2
+\]
+in the first suspended chain, and
+\[
+b_1:g_0\Rightarrow g_1,\qquad
+b_2:g_1\Rightarrow g_2
+\]
+in the second.
+
+All the following words are chronological, with the required 1-whiskerings understood.
+
+Define
+\[
+F=\chi(a_1,b_1),
+\qquad
+G=\chi(a_2,b_2),
+\]
+and
+\[
+p=b_1\chi(a_1,b_2)a_2,
+\qquad
+q=a_1\chi(a_2,b_1)b_2.
+\]
+
+After \(p\), the 2-word is
+\[
+(b_1a_1)(b_2a_2).
+\]
+Thus \(F\) acts on the left interval and \(G\) on the right interval. The inner interchanger has boundary
+\[
+\iota(F,G):
+(b_1a_1G);(Fa_2b_2)
+\Longrightarrow
+(Fb_2a_2);(a_1b_1G).
+\tag{4}
+\]
+
+Let
+\[
+w=\chi(a_1a_2,b_1b_2).
+\]
+Expanding the second argument of \(w\) first gives
+\[
+w
+=
+p;(b_1a_1G);(Fa_2b_2);q.
+\tag{5}
+\]
+Expanding the first argument first gives
+\[
+w
+=
+p;(Fb_2a_2);(a_1b_1G);q.
+\tag{6}
+\]
+These are applications of T’s two outer composite-crossing equations.
+
+Consequently,
+\[
+\boxed{
+H(a_1,a_2;b_1,b_2)
+=
+[p\mid\iota(F,G)\mid q]
+:w\Longrightarrow w.
+}
+\tag{7}
+\]
+
+This is a **whiskered** elementary 4-interchanger. It need not itself be an elementary component. Its being an endomorphism therefore does not contradict the distinction between elementary and whiskered comparisons already made in K25.
+
+### The loop is not an identity in T
+
+A finite algebra separates \(H\) from \(1_w\).
+
+Let \(\mathbb B=\{0,1\}\), with Boolean operations \(\vee,\wedge\). Use:
+
+- one 0-cell and one 1-cell;
+- 2-cells \(u\in\mathbb B\);
+- 3-cells
+  \[
+  (u,m):u\Longrightarrow u;
+  \]
+- 4-cells
+  \[
+  (u,m,e):(u,m)\Longrightarrow(u,m).
+  \]
+
+Composition is coordinatewise \(\vee\), subject to the relevant globular composability conditions. Identities introduce a final coordinate \(0\). For example,
+\[
+(u,m,e)*_3(u,m,e')=(u,m,e\vee e'),
+\]
+whereas
+\[
+(u,m,e)*_2(u,m',e')=(u,m\vee m',e\vee e').
+\]
+For composition along dimensions 0 and 1, all coordinates are joined.
+
+Define the structural operations by
+\[
+\chi(u,v)=(u\vee v,u\wedge v),
+\tag{8}
+\]
+\[
+r((u,m),v)
+=
+\bigl(u\vee v,\,(u\wedge v)\vee m,\,
+m\wedge v\bigr),
+\tag{9}
+\]
+\[
+t(u,(v,n))
+=
+\bigl(u\vee v,\,(u\wedge v)\vee n,\,
+u\wedge n\bigr),
+\tag{10}
+\]
+and
+\[
+\iota((u,m),(v,n))
+=
+\bigl(u\vee v,\,m\vee n,\,m\wedge n\bigr).
+\tag{11}
+\]
+
+These formulas satisfy T’s equations:
+
+- The two composite-crossing equations are distributivity of \(\wedge\) over \(\vee\).
+- The composition laws for \(r,t\), and even the unrestricted composition laws for \(\iota\), are the same distributive identities.
+- In the four whiskering equations for \(r,t\), the additional inner-interchanger weights have the form
+  \[
+  m\wedge a\wedge b
+  \quad\text{or}\quad
+  a\wedge b\wedge n.
+  \]
+  They are absorbed by the corresponding weight \(m\wedge b\) or \(a\wedge n\).
+- The equation
+  \[
+  r(\chi(a,b),d)=t(a,\chi(b,d))
+  \]
+  has weight \(a\wedge b\wedge d\) on both sides.
+- Whiskering and identity equations follow from the coordinatewise operations and the zero identity coordinates.
+- A contextual 4-path evaluates to the join of the weights of its contextual edges. Thus parallel paths with the same edge set have the same value, as required by T’s support equations.
+- The auxiliary 5-cells of K30 can be interpreted as identities: their two boundary values agree. For example, the \(\delta\)-boundaries have weight \(e\vee e'\), and the naturality boundaries have the same join of the varying-cell weight and the structural-operation weight.
+
+Now send all four generating 2-cells \(a_1,a_2,b_1,b_2\) to \(1\). Then
+\[
+w\longmapsto(1,1),
+\]
+and
+\[
+H\longmapsto(1,1,1),
+\qquad
+1_w\longmapsto(1,1,0).
+\]
+Therefore
+\[
+H\ne 1_w
+\quad\text{in }F_T(\Gamma_{2,2}).
+\tag{12}
+\]
+
+Notice that this separating algebra satisfies the full inner composite-crossing laws. Adding those laws alone would therefore not eliminate \(H\).
+
+## 4. Two composable loops on \(\Gamma_{2,4}\)
+
+The diagram \(\Gamma_{2,4}\) has three 0-cells \(x,y,z\), with
+\[
+f_0,f_1,f_2:x\to y,
+\qquad
+g_0,g_1,g_2,g_3,g_4:y\to z,
+\]
+and six generating 2-cells
+\[
+a_i:f_{i-1}\Rightarrow f_i\quad(i=1,2),
+\]
+\[
+b_j:g_{j-1}\Rightarrow g_j\quad(j=1,2,3,4).
+\]
+
+Consider the three parallel 2-cells
+\[
+\begin{aligned}
+P&=b_1b_2b_3b_4a_1a_2,\\
+Q&=b_1b_2a_1a_2b_3b_4,\\
+R&=a_1a_2b_1b_2b_3b_4.
+\end{aligned}
+\]
+There are 3-cells
+\[
+u=b_1b_2\chi(a_1a_2,b_3b_4):P\Longrightarrow Q,
+\]
+\[
+v=\chi(a_1a_2,b_1b_2)b_3b_4:Q\Longrightarrow R.
+\]
+
+Whisker the rectangle loops to obtain
+\[
+X=b_1b_2H(a_1,a_2;b_3,b_4):u\Longrightarrow u,
+\]
+\[
+Y=H(a_1,a_2;b_1,b_2)b_3b_4:v\Longrightarrow v.
+\tag{13}
+\]
+Both are nonidentity in \(T\): the Boolean algebra above sends each to a 4-cell with final coordinate \(1\).
+
+Their bases are composable along dimension 2. The argument of §2 now applies:
+\[
+\chi_{2,3}(X,X,Y,Y)
+\]
+has equal boundaries and hence an identity reverse.
+
+This proves:
+
+> **No extension faithful on T’s existing 4-cells can satisfy the elementary no-reverse requirement in dimension 5.**
+
+This remains true after adding arbitrarily many new 4-cells or higher cells. Faithfulness preserves the two nonidentity loops, and retaining T’s equations preserves their idempotence.
+
+The witness has six generating 2-cells, eight generating 1-cells and three 0-cells. Dimension 5 is the first possible failure of this type, given K30’s directedness result through dimension 4.
+
+I have not proved that this is the smallest diagram among *all* possible dimension-5 obstructions. Within the two-factor chain family, the two successive rectangle loops require eight distinct crossing pairs. If the factors have \(r,s\) generating 2-cells, then \(rs\ge8\), hence \(r+s\ge6\); \(\Gamma_{2,4}\) attains that bound.
+
+## 5. Substitution forces the equation \(H=1\)
+
+The result extends beyond faithful extensions.
+
+Let \(E\) be a theory retaining T’s equations, allowing additional operations and equations, and satisfying substitution and elementary dimension-5 directedness.
+
+Suppose, for contradiction, that the generic \(H\) remains nonidentity in
+\[
+F_E(\Gamma_{2,2}).
+\]
+
+There are two globular substitutions
+\[
+d_X,d_Y:\Gamma_{2,4}\longrightarrow F_E(\Gamma_{2,2}).
+\]
+Both fix the left chain. Write \(G_0,G_1,G_2\) and \(B_1,B_2\) for the right chain in the target.
+
+The first substitution erases \(b_1,b_2\):
+\[
+\begin{aligned}
+(g_0,g_1,g_2,g_3,g_4)
+&\longmapsto
+(G_0,G_0,G_0,G_1,G_2),\\
+(b_1,b_2,b_3,b_4)
+&\longmapsto
+(1_{G_0},1_{G_0},B_1,B_2).
+\end{aligned}
+\tag{14}
+\]
+The second erases \(b_3,b_4\):
+\[
+\begin{aligned}
+(g_0,g_1,g_2,g_3,g_4)
+&\longmapsto
+(G_0,G_1,G_2,G_2,G_2),\\
+(b_1,b_2,b_3,b_4)
+&\longmapsto
+(B_1,B_2,1_{G_2},1_{G_2}).
+\end{aligned}
+\tag{15}
+\]
+Every generator assignment respects its globular boundary.
+
+The unit equations give
+\[
+d_X(X)=H,\qquad d_X(Y)=1,
+\]
+and
+\[
+d_Y(X)=1,\qquad d_Y(Y)=H.
+\tag{16}
+\]
+Therefore \(H\ne1\) implies
+\[
+X\ne1,\qquad Y\ne1
+\]
+in \(F_E(\Gamma_{2,4})\). Otherwise one of the substitutions in (16) would send an identity to \(H\).
+
+The old support equations still imply
+\[
+X^2=X,\qquad Y^2=Y,\qquad (X*_2Y)^2=X*_2Y.
+\]
+The dimension-5 contradiction follows exactly as before.
+
+Consequently,
+\[
+H=1
+\quad\text{in }F_E(\Gamma_{2,2}).
+\]
+Substitution gives every instance of (C), including instances with composite arguments.
+
+Thus the uniform implication is
+\[
+\boxed{
+\begin{gathered}
+\text{T’s equations}\\
++\ \text{substitution}\\
++\ \text{elementary dimension-5 no-reverse}
+\end{gathered}
+\quad\Longrightarrow\quad
+H(a_1,a_2;b_1,b_2)=1.
+}
+\tag{17}
+\]
+
+The common 4-boundary in the contradiction is also nonidentity: either substitution sends \(X*_2Y\) to \(H\). Thus the argument does not concern only interchangers based at identity 4-cells.
+
+## 6. Why the stated \(h\)-repair does not suffice
+
+On \(\Gamma_{2,2}\) and \(\Gamma_{2,4}\), every nonidentity 3-cell is a composite of outer crossings and spans both outer factors. There are no generating 3-cells in either diagram.
+
+Hence there is no 0-composable pair of nonidentity 3-cells on which a nondegenerate \(h(A,B)\) can be evaluated.
+
+Every \(h\)-term on these diagrams reduces by the stated degeneracies:
+
+- \(h(1,B)=1\);
+- \(h(A,1)=r(A,\beta)\), and when \(A\) is a nonidentity 3-cell spanning both factors, the remaining adjacent outer argument \(\beta\) must be an identity, so this \(r\)-cell is an identity.
+
+The displayed factorization equation for \(h\) consequently reduces to existing unit equations on these diagrams. Therefore the pure \(h\)-extension does not kill the loops (13).
+
+It follows that adding \(h\), its displayed factorization, its degeneracies, and the proposed \(W\)-cells still requires the additional lower-dimensional coherence (C) before dimension-5 directedness is possible.
+
+## 7. Why this does not prove the requested unrestricted impossibility
+
+The equation (C) is an available repair.
+
+It is an equation between parallel 4-cells, and all its substitutions remain parallel by (5)–(6). Form the quotient
+\[
+\overline T_4=T_4/(H=1).
+\]
+
+This quotient changes no cells in dimensions \(0\)–\(3\). For every parallel pair of 3-cells \(s,t\),
+\[
+\overline T_4(s,t)_4
+=
+T_4(s,t)_4/{\sim}.
+\]
+In particular,
+\[
+\overline T_4(s,t)_4\ne\varnothing
+\quad\Longleftrightarrow\quad
+T_4(s,t)_4\ne\varnothing.
+\tag{18}
+\]
+Thus imposing (C) cannot create a previously absent reverse 4-cell.
+
+It also preserves the two quotient targets through dimension 4. The equation already holds when \(\iota\) is made an identity, so
+\[
+\bigl(T_4/(H=1)\bigr)/K_{\mathrm{in}}
+\cong T_4/K_{\mathrm{in}},
+\]
+and likewise for \(K_{\mathrm{all}}\).
+
+Nor does injective support through dimension 4 prevent this quotient. Since \(F_T(\Gamma)_{\le4}\) is finite and computable by K30, one can choose the least old support in each new parallel congruence class. Distinct new classes cannot choose the same old support, because the old support was injective. This supplies an injective support for the quotient, although the original support assignment does not descend unchanged.
+
+The four-variable equation is also consistent with the form of the sharp coherence discussed by Bourke–Lobbia: their Appendix A includes the \((A_1,A_2:B_1,B_2)\) axiom, and Remark 4.10 explains its reduction when the composite-crossing comparators are identities. Their construction has different invertibility assumptions, so it does not settle the present extension problem. [arxiv.org](https://arxiv.org/html/2610.31448v2?utm_source=chatgpt.com)
+
+Therefore **(17) is a necessary repair theorem, not a contradiction after every permitted repair**.
+
+For Q2, the proof uses T’s particular raw support equations, which force endomorphism idempotence. Requirement 2 in its general expanded-basis formulation does not itself imply those equations. This argument therefore does not identify one of requirements 1–5 as an absolute culprit or supply the requested strongest weakening.
+
+For Q3, imposing the generic inner composite-crossing law alone does not remove this obstruction—the separating Boolean algebra satisfies that law. Conversely, killing \(H\) does not force the generic law through dimension 4: the K31 model has \(\chi=0\), so it already satisfies \(H=1\). Neither observation decides Q3 in all dimensions.
+
+**The unresolved step is an all-dimensional extension, or an obstruction, after adjoining the necessary equation (C) together with the missing joining data. The argument above does not establish either.**

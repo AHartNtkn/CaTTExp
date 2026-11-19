@@ -740,7 +740,7 @@ So the rewriting is convergent, and squares and hexagons close all its local bra
 | D² ∗₀ D² cylinder, 2-skeleton | 120 | 149 | 5 | 1 | 0 | 0 |
 | two triangles and a bigon | 77 | 91 | 6 | 0 | 1 | 1 |
 
-So the 2 × 3 grid, the smallest open case of the r8 prompt, needs only squares, while the 3 × 3 grid is the smallest grid that needs hexagons. A path in an m × n grid has at most min(m, n) corners of the form hv, and three pairwise independent faces need three of them.
+So the 2 × 3 grid (since proved, `conjectures/answered/gray-contexts-r8-2026-11-18.md`) needs only squares, while the 3 × 3 grid is the smallest grid that needs hexagons. A path in an m × n grid has at most min(m, n) corners of the form hv, and three pairwise independent faces need three of them.
 
 **Lemma E3 (block-form laws).** Let a, b, c, d be the 2-variables of `D² ∨₀ D² ∨₀ D²` or of `D² ∨₀ D² ∨₀ D² ∨₀ D²`. The *block word* of an order of the letters is the vertical composite of the letters, each whiskered by the current source or target edges of the others. For two orders, the *block exchange* is the full coherence between their block words.
 - The two hexagon routes are parallel full 3-terms, so one coherence 4-term connects them.
@@ -785,7 +785,10 @@ This shows ν_u⁻¹ ; H ; ν_v is connected to an exchange path. By E2 and E3, 
 - (K), (F) and the assembly are a proof sketch at the round-3 standard, with the 4-terms not generated. **Not verified.**
 - If (K) and (F) hold, RC(3) holds under (H). With the cone round-5 extension theorem, RC(3) then holds for every 3-dimensional context whose 2-skeleton satisfies (H).
 - The point of the reduction is that exchange stops being the obstacle. All of it is handled by E2 and two coherences over pasting contexts. What remains is a uniform statement of the relative fusion that rounds 5–7 proved case by case for the lax square, the chain cylinders, the cube hemispheres and the 2 × 2 grid.
-- *Next:* generate (K) and the block normaliser explicitly for the hexagon triple S₀₀, S₁₁, S₂₂ of the 3 × 3 grid, and check them in Agda.
+- *Update after the RC r1–r4 answers (2026-11-19).* The 3 × 3 grid is positive, so by the polyplex reduction (`conjectures/answered/relative-coherence-all-dimensions-2026-11-19.md`; item 11 of the r4 prompt), RC(n) over a strict cell c is equivalent to RC(n) in c's generic polyplex P_c. For c = S₀₀ ∗₀ S₁₁ ∗₀ S₂₂ (the hexagon triple), P_c is the wedge of three lax squares at the cut vertices (1,1) and (2,2). So the hexagon instance of (K) in the grid is exactly RC(3) for that wedge. The same holds in general: by E1, an antichain of the event poset whose letters are adjacent in a word spans, in its polyplex, a wedge of single-generator contexts. Hence:
+  - (K) restricted to an antichain block is the **wedge lemma**: RC(3) for A₁ ∨₀ ⋯ ∨₀ A_k at cut vertices, given RC(3) for each A_i. For k = 2 this is the matrix argument for two independent letters with a cut vertex (item 25 of the prompt in `conjectures/answered/gray-contexts-r8-2026-11-18.md`).
+  - What remains of (K) is the forced-order part: letters joined by connectors that cross their boundary blocks. Its fibres have one linear extension, which is the line-word situation (item 22 of the same prompt).
+  So the in-house target for the hexagon is the k-fold matrix argument for the wedge of three lax squares, replacing I with the three-factor interchange `(α ∗₀ β ∗₀ γ) · (α′ ∗₀ β′ ∗₀ γ′) ⇛ (α·α′) ∗₀ (β·β′) ∗₀ (γ·γ′)` over C₂ ∗₀ C₂ ∗₀ C₂. Generating Agda checks for the hexagon in the grid before that is proved would only check single coherences, so it is deferred.
 
 ## 8. Follow-ups and owners
 

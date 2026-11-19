@@ -433,6 +433,47 @@ See `conjectures/answered/finite-fibration-test-higher-base-2026-11-18.md` (PR #
 - Round 3 (verified, `conjectures/answered/finite-fibration-test-higher-base-r3-2026-11-18.md`): attaching maps lift along δ_r : I → [r], so FT holds over every homotopical base of dimension ≤ 2 with fibres of any finite dimension; an operadic criterion and an obstruction for homotopical 2-computads; a 3-dimensional attachment rule.
 - Round 4: `conjectures/outbox/finite-fibration-test-higher-base-r4.md` (unsent).
 
+### 9.5 Bases of dimension ≥ 4: which auxiliary generators the checker accepts (FTX, 2026-11-19)
+
+**The problem.** The uniform presentation with one relative Gray generator q ⊗ g per (base generator, fibre generator) pair is **false** from base dimension 4. The counterexample is in `conjectures/answered/fibration-presentations-all-dimensions-2026-11-19.md` §1 (Followup). It is machine-checked in `src/CaTTExp/Fibration/PentagonCounterexample.agda`: every positive 3-cell of the relevant hom is enumerated, and the short side R → E → L of P ⊗ x has no positive lift, because it needs the inverse of the mixed generator M = μ ⊗ g. After localisation the boundary exists (V ; M⁻¹ ; V). What fails is only the attaching map in the unlocalised Free(Ψ).
+
+**Options.**
+
+1. **Orientation freedom only.** The checker accepts either orientation of each inverted generator. This is conservative by (Loc): `Free(s : a → b)[s⁻¹] ≃ Free(s′ : b → a)[s′⁻¹]`. It repairs the pentagon: reversing M gives the edge Ee → El, and the short side becomes V ; M′ ; V. It fails as soon as two faces of one base generator need the same mixed generator in opposite directions. Nothing rules that out from base dimension 5.
+2. **Inverse data on inverted generators (recommended).** For any generator s : a → b in the inverted set S, the presentation may add:
+   - a right inverse `r_s : b → a` with a witness `ρ_s : s · r_s → 1_a`;
+   - a left inverse `l_s : b → a` with a witness `λ_s : l_s · s → 1_b`.
+   
+   All four go into S, and the rule may be iterated (inverse data on a witness). For example, the pentagon uses r_M : c₂;u₀ ⇛ u₀;c₀, whose witness ρ_M is a 4-generator. Each step is conservative: the space of one-sided inverses of an equivalence is contractible, so the localisation does not change. (Quasi-inverse data, one inverse with both witnesses, is *not* contractible, and should not be the rule.) The data is generator-level, has the same rule class as the existing marking/inversion data, and each new boundary is determined syntactically by s.
+3. **The complicial route** (§2 of the same answer). This gives finite presentations for every homotopical base and every weak weight with finitely presented values, via anodyne expansions and the L_d conversion. The certificate consists of simplicial-set data and has no n + m bound. It is correct, but it is not generator-level, and it does not match the CaTT rule aesthetic (standard 5).
+
+**What the checker verifies with option 2.** The certificate lists the relative Gray generators g ⊗ c, their inverse data, and for each base generator of dimension k an explicit **attaching map** Φ_k. Φ_k is a computad map from the local block presentation over ∂D_k (R5 item 16, fully explicit) into Free(Ψ_{<k} + inverse data). The checks:
+
+- (a) Φ_k is a computad map, i.e. boundaries agree syntactically;
+- (b) it lies over the base attaching map;
+- (c) it sends marked generators to marked cells and inverted ones to cells built from S;
+- (d) it is the identity on the two end fibres.
+
+**Soundness** is the fibrewise-equivalence argument of `conjectures/fibration-test-nonsuspension.md` §3 step 5. After localisation, Φ_k is a map of left cartesian fibrations over ∂D_k that is the identity on fibres, hence an equivalence. The pushout then presents ∫T by Loubaton Cor. 3.2.3.16.
+
+**Existence** of certificates (completeness of the rule):
+
+- *Sketch.* The localisation Free(Ψ)[S⁻¹] is the sequential colimit of the presentations with n-fold iterated inverse data. The block over ∂D_k is a finite computad, hence compact. So its canonical map into the localisation factors through a finite stage.
+- *What is not yet established.*
+  - A written-out compactness proof in Loubaton's model.
+  - A bound on the iteration depth. For the pentagon, depth 1 suffices.
+  - Whether the n + m dimension bound survives. The pentagon stays within it.
+- These are tracked under B14.
+
+**Worked example (pentagon).** Base b; a; μ : aa ⇒ a; associator α; pentagon P. Fibre x, g, δ, κ. Weight T(a) = constant at x. The presentation is:
+
+- the generators of (1) in the answer;
+- the long-side boundary R →V B_δ →D B_c →V C →V L_r →κ L_l, which is positive;
+- the short-side boundary R →V E_early →r_M E_late →V L_l, which uses r_M;
+- r_M and ρ_M, both inverted, besides M.
+
+With option 1 alone (M reversed), this example also passes. The Agda file records that M as prescribed has no inverse path, which is what forces one of the two options.
+
 ---
 
 ## 10. Open items, owners and hand-offs

@@ -2741,3 +2741,137 @@ Strong degree-five directedness with general inactive mixed contexts
 is still required for unrestricted Q1. In particular a quotient
 calculation cannot decide whether there is a reverse inside a fiber
 of that very quotient.
+
+# Researcher Response 13
+
+**Every proper degree-five elementary rectangle on a two-slot interval
+has no reverse in the presentation of Response 12.** The two slots may
+have arbitrarily many advances, parallel choices, input 4-cells,
+and higher generators. Both inactive arguments may be present. More
+generally, on any finite diagram it suffices that each of the two
+active 4-inputs has a positive step detectable by the requests of
+Response 5 on a common set of at most two 2-slots. The rest of both
+active paths and both inactive paths are unrestricted.
+
+Use the branch contractions of Response 5. Retaining a selected
+generating 4-update requires its 2-slot, its unary advance and one
+4-branch over that advance. Parallel 3-faces map to its two successive
+values on the retained branch, and higher choices of the 4-generator
+on that branch map to the same update. For an inner edge retain one
+3-event in each of its two spatial windows. For an outer mixed edge
+retain one varying 3-event and one 2-slot of the stationary operand;
+in a join it is enough to retain a left event and a right slot because
+a unit right history specializes the join to \(r\). These selections
+keep the chosen edges proper under any further permitted retention,
+by the positive 4-grading on the projected shape. Thus they keep
+each entire active input proper. Every proposed reverse projects
+to a reverse by substitution. In particular, no bound on the lengths
+of the inactive paths is needed.
+
+After contracting to the selected slots, if both are in one outer
+span, the one-factor argument of Response 4 applies. It already
+covers the shifted join in degree five. The additional positive
+outer families require two positive outer operands and the new
+equations introduce no 5-path. If there are two different outer
+spans, call the slots \(A,B\). Each surviving 3-event is an advance
+of one slot or their one crossing \(C\). A positive inner exchange
+needs one advance on each slot; a crossing itself occupies both.
+A positive mixed edge uses a varying advance and \(C\). For a
+rectangle originally on two slots choose one such witness in each
+active input. For the general detection assertion apply this
+classification on the projected interval to the positive images.
+There are three possibilities.
+
+1. **Neither selected edge is a generating 4-update.** Contract all
+   4-branches. Each slot now has a chain of advances, and the two
+   selected moves survive by their 3-event requests. This is the
+   \(C_{m,n}\) result of round 4, Response 5. A stationary slot with
+   zero advances embeds as an edge face of the same test. No new
+   proper degree-five auxiliary of Response 10 occurs on these
+   chains, and Response 12 preserves the degree-five reachability
+   relation.
+2. **Both are generating 4-updates.** On the same slot contract the
+   entire other slot and use the one-factor result. On different
+   slots retain just their two advances and two 4-branches. This is
+   the pair of 3-globes tested in Response 10.
+3. **Exactly one is a generating 4-update.** Retain that advance
+   and one 4-branch. For the other edge, retain at most one more
+   advance on each slot and the two slots themselves. The active
+   temporal intervals cannot both traverse the same advance. On the
+   slot of the retained 4-update there are consequently at most two
+   advances, and on the other at most one. Embed the contracted
+   shape in one with exactly the larger counts by attaching a
+   further chain piece at an end on a slot with too few advances,
+   or by including its stationary edge as an edge face. All
+   retained generators go to generators or their chosen faces.
+   The positive grading again preserves both active inputs. This
+   leaves the distributions \((2,1),(1,2)\), with the single
+   varying advance chosen in any of the three positions.
+
+Here are full details of the finite test for case 3. Extend the
+temporal histories by fixed prefix and suffix to traverse all three
+advances and \(C\). Each slot's advances have fixed internal order;
+the crossing can be placed anywhere. A state is this four-event
+word and the layer of the one variable advance. For an interval
+traversing just one slot use the one-factor argument. On the full
+interval the 4-moves are as follows, with each capital block in
+these patterns denoting a nonempty consecutive run of advances of
+the indicated slot.
+
+- Change the layer of the designated advance from zero to one.
+- Use \(CA\to AC\), \(BC\to CB\), or the join \(BCA\to ABC\).
+- Use \(AB\to BA\) before the crossing and \(BA\to AB\) after it.
+
+This is a finite acyclic 4-move graph. For instance, the number of
+A advances before \(C\) plus the number of B advances after \(C\)
+never decreases, and increases on a proper outer move. With those
+counts fixed the inner moves sort opposite-slot pairs on each side
+of \(C\) in their respective directions. The layer can increase
+only once. The program enumerates *all* paths from every state,
+including paths starting and ending at intermediate states.
+
+The 4-equations can split a moving run in \(r,t\) and can replace a
+contextual \(r\) by the join and its correcting inner exchange, in
+either direction. The test also allows splitting inner block exchanges
+whenever two consecutive inner exchanges realize the same direct
+block move. This enlarges the equation graph and is sound for
+excluding a reverse. A varying-whisker correction or triple equation
+with all its slots positive would require a third slot.
+
+On a reverse, the Gray 5-image is an identity, so every traversed
+5-generator has zero top chain. Positional exchange on two disjoint
+temporal subwords puts the earlier move first. At an inner exchange
+the one retained input update can vary either spatial operand,
+including when its advance lies in a longer unary run. With the
+left operand varying, exchange followed by update goes to update
+followed by exchange; with the right operand varying the direction
+is reversed. Which operand is spatially left depends on the side
+of \(C\). The outer right join variation moves the update later
+across \(h\) when it varies its B run. These are all possibilities:
+a shifted join needs proper 4-updates on both separate slots, and
+every proper outer unary variation on one slot has positive Gray
+top chain there. A proper \(W,K,H_L,J\) also has positive Gray
+chain on any of the six projected diagrams. There are no input
+5-generators. Fixed contexts are included by performing the replacements
+at every position in every path.
+
+A proper four-input rectangle has a forward route exchanging atomic
+updates on the two disjoint temporal intervals one pair at a time,
+in its prescribed inactive contexts. If its target reached its
+source, each contextual atomic exchange on that route would have
+a return path. Across the six tests there are 2,607 paths and 693
+such contextual atomic exchanges. Searching from each target excludes
+its source in all 693 cases. The search graph includes 336 contextual
+factorization rewrites and 58 right join variations. This proves
+case 3. Nonadjacent cuts reduce by Godement expansion, with proper
+transported active inputs. Together with Responses 8–12 this gives
+strong directedness in every degree on two-slot intervals, in the
+theory with globally exact quotients.
+
+**Validation.** `python3 -B scripts/e6/interchange_two_slot_reduction.py`
+generates the six path graphs from typed subword moves, checks the
+endpoints of every rule and searches their directed reachability.
+`python3 -B scripts/e6/interchange_double_disk_paths.py` checks the
+two-update disk in case 2. The reduction does not cover a pair of
+active inputs for which every pair of preserving requests uses at
+least three slots.

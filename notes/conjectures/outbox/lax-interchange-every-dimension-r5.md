@@ -2932,3 +2932,121 @@ python3 -B scripts/e6/interchange_two_moving_cuts.py
 ~~~
 
 The theorem is for the stated temporal rectangles of \(P\), with two independently advancing slots in one outer branch and one common stationary crossing partner. Additional stationary partners, crossings between the moving slots, and additional degree-five operations of larger presentations require their own rule analysis.
+
+# Researcher Response 15
+
+**Suppose one active 4-input contains a Gray triangle on three slots, and
+the opposite active input is still nonidentity after contraction to those
+slots. Then the degree-five elementary rectangle has no reverse in the
+theory of Response 12.** This includes both choices of temporal order and
+arbitrary inactive inputs. In particular it handles every rectangle on
+three slots with a triangle in an active input.
+
+Retain the triangle's slots, one in each of three distinct outer factors,
+and label them \(a,b,c\) in outer order. Initially retain all branches on
+those slots. The chosen triangle survives because its varying crossing and
+its stationary slot survive. The crossing of each pair of these slots
+occurs just once in the combined 3-history, and all three crossings are
+in the temporal interval of the triangle. On the other interval all
+events are therefore unary advances. A positive edge there must be either
+a generating 4-update on one advance or an inner exchange of two nonempty
+histories on disjoint slots. An outer mixed edge would need a crossing.
+In the first case keep just the marked advance and its 4-branch. In the
+second keep one advance in each operand and contract all 4-branches.
+These are substitutions as in Response 5. In both cases the positive
+4-grading keeps the two selected 4-inputs nonidentity. No condition is
+being imposed on the images of the inactive inputs.
+
+There are now six diagrams to test, with one flagged advance on any one
+slot, or with one advance on each of any two slots. The initial spatial
+order must be \(cba\), and the final order \(abc\), since every pair
+crosses. Across all four rectangle inputs the only permitted mixed Gray
+4-atom is the triangle: every advance belongs to the opposite interval
+from the three crossings, so no input can vary an advance against a
+crossing. On a reverse the Gray 5-image would be an endomorphism and
+hence an identity. The same Gray 4-chain therefore restricts *every*
+4-path on a reverse, including alternate representatives under the
+4-equations.
+
+Here is the resulting finite computation. Write histories as words in
+the advances and the named crossings. The crossing subsequence is
+\(n=(bc,ac,ab)\) or its reversal \(p=(ab,ac,bc)\), by adjacency of the
+exchanged slots. A crossing block on three slots has at most one row or
+one column, so its equations leave this word well-defined. A flag has
+two layers, the parallel 3-faces of the retained 4-generator. Any
+stationary lower data can be stripped off when mapping actual paths to
+this graph. The following moves include every possible positive 4-edge.
+
+- A generating update changes the flag to its second layer.
+- An inner exchange moves a consecutive history ahead of its immediate
+  predecessor when all its slots lie strictly to the left of the
+  predecessor's slots. Compute positions at the beginning of the pair.
+- A triangle takes a contiguous \(n\) to \(p\). Its two presentations as
+  \(r\) and \(t\) have this same move by (18).
+- A nondegenerate join must have the crossing \(ab\) as its varying
+  left event and a unary advance \(u\) of \(c\) in its right argument.
+  It takes \(u\,bc\,ac\,ab\) to \(ab\,u\,ac\,bc\). Indeed any unary
+  advance in its varying left history would supply a forbidden mixed
+  atom. Two varying left slots leave just the one stationary right
+  slot. A unit right history gives the triangle itself.
+
+These moves give an acyclic graph. A triangle or join changes the braid
+order from \(n\) to \(p\) once and the flag changes at most once. Between
+such changes inner exchanges strictly decrease the spatial-position sum
+from Response 5. For the 4-equations allow a direct inner move to split
+into any two inner moves with the same endpoints, in either direction.
+This includes every applicable inner subdivision. The join followed by
+its correcting inner move is the triangle in context. There is no proper
+subdivision or varying-whisker correction of a triangle in this fiber:
+its moving argument already needs two slots for one crossing and its
+stationary argument needs the third. Adding an advance in that moving
+argument would introduce a forbidden mixed atom. Exterior whiskering,
+balancing and the triple equation preserve the recorded moves.
+
+An atomic temporal comparison puts the move on the earlier subword
+first. At an inner exchange a flag in the left operand can move earlier
+across the exchange, and a flag in the right operand can move later.
+The right join variation can move the flag on \(c\) later across the
+join. To check exhaustiveness, a variation of an inner exchange by a
+non-input 4-edge would require a further positive history spatially
+disjoint from that edge. A triangle or join occupies all three slots.
+An inner edge on two slots needs both advances, leaving no event on the
+remaining singleton. An inner edge using a crossing also needs the
+third slot for its other operand. The same count excludes a shifted
+join with two independent positive 4-inputs. In a zero-Gray outer
+unary variation the varying input can only be a path of inner edges.
+Within a proper outer operand of at most two slots those inner edges
+need unary advances; its outer cylinder faces would then have forbidden
+mixed atoms. This also excludes a proper zero-Gray left join variation.
+For the right join variation the stationary operand of the triangle
+is the singleton \(c\), whose only possible positive variation is its
+flag. A proper \(W,K,J\) or input 5-globe cannot act in this fiber.
+Unit specializations give the already listed moves. Equations on
+parallel 5-paths do not add reachability between 4-paths.
+
+The [triangle-fiber checker](../../../scripts/e6/interchange_triangle_fiber.py)
+generates the paths from every 3-history, attaches each rule in every
+chronological prefix and suffix, and searches from each exchanged
+path for its original order. The table counts contextual applications;
+equations are counted in both directions.
+
+| Retained advances | 4-paths | Temporal exchanges | Join factorizations | Inner splits | Inner naturalities | Right join variations | Returns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| One flagged advance | 139 | 8 | 8 | 0 | 9 | 2 | 0 |
+| Two advances on distinct slots | 337 | 22 | 14 | 80 | 0 | 0 | 0 |
+
+Run `python3 -B scripts/e6/interchange_triangle_fiber.py` from the
+repository root. The check is stronger than a bare exchange test: it
+allows arbitrary top contexts at every attempted return. A four-input
+rectangle admits a forward route that transposes each pair of active
+atomic updates in its inactive contexts. There is at least one
+transposition after projection. A reverse for the rectangle would give
+a return for that transposition by following the rest of the forward
+route around the cycle. The table excludes it. Godement expansion gives
+the same conclusion when the two active inputs are transported to
+adjacent cuts.
+
+The hypothesis on the opposite input is essential to this reduction.
+For example, a triangle on \(a,b,c\) and an inner exchange of crossings
+on four other slots lose the latter input under this contraction. The
+unrestricted degree-five assertion in Q1 remains open.

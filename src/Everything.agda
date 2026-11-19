@@ -177,6 +177,9 @@ import CaTTExp.Strict.TensorUnit
 import CaTTExp.Strict.SortBag
 import CaTTExp.Strict.TowerNu
 import CaTTExp.Strict.StrictNu
+import CaTTExp.Strict.HomTops
+import CaTTExp.Strict.HomCore
+import CaTTExp.Strict.HomAgree
 import CaTTExp.Strict.Expr
 import CaTTExp.Strict.NuWords
 import CaTTExp.Strict.Lifting

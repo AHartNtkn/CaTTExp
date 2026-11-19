@@ -230,3 +230,6 @@ import CaTTExp.Join.Cospan
 import CaTTExp.Join.CospanNatural
 import CaTTExp.Join.Forced
 import CaTTExp.Join.Degenerate
+import CaTTExp.Join.SupportSubst
+import CaTTExp.Join.CutInvariant
+import CaTTExp.Join.SepAlgebra

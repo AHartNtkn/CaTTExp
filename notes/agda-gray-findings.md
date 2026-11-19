@@ -118,6 +118,7 @@ See `joining-completion.md`.
 - `Cospan`, `CospanNatural`: the cospan completion j_{α,I,R} and its naturality under seed-to-composite maps.
 - `Forced`: why its new generators are needed.
 - `Degenerate`: the identity obstruction.
+- `SupportSubst`, `CutInvariant`, `SepAlgebra`: the dimension-4 theory T of the 2026-11-19 response. They cover substitution closure (38), the cut-inversion invariant (§6.3), and the separating algebra M with (63).
 
 ## Not yet proved
 

@@ -103,4 +103,4 @@ Status: **verified, partial**. The response gives a strict comparison, but no Ca
 - *Sections.* `python3 tools/gray_globe_comparison.py 4 4` re-run: it passes all assertions (section equation, both face equations, the mixed atoms pinned), with 1,649 target cells in degree 7. `2 3` was also run. Φ is not injective (for example 173 source cells against 107 target cells at m, n = 2, 3), so this is a section and not an isomorphism.
 - *Scope.* This gives strict representatives for the diagonal hom of ΣP ⊗ ΣQ in terms of the iterated tensor P ⊗ I ⊗ Q, for every finite globular P and Q (the functor), with a section checked only for globes of dimension ≤ 4. Turning it into CT(ΣP ⊗ ΣQ) needs (a) a section for all P and Q, (b) CT for the iterated tensor P ⊗ I ⊗ Q, and (c) CaTT comparison terms between the different representatives of the endpoint panels. For P = Q = I these are the two edge orders around an endpoint square. None of (a)–(c) is proved.
 
-Follow-up: [`outbox/canonical-gray-terms-r4.md`](../outbox/canonical-gray-terms-r4.md).
+Follow-up: [`canonical-gray-terms-r4-2026-11-19.md`](canonical-gray-terms-r4-2026-11-19.md) (answered).

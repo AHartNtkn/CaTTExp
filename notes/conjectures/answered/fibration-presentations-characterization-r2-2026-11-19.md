@@ -1157,3 +1157,25 @@ The same proof works over a fibrant base, requiring all maps and homotopies to c
 Applied to Question 1, this gives a finite correctness certificate **after actual ordered Gray attaching terms have been supplied**. Enumerating terms and certificates gives a positive search. Equality of alternating boundary chains is not a substitute for those attaching terms.
 
 What remains unproved is a finite bound on the positive mixed-generator expressions that must be searched. Additivity of base-generator support bounds the top base lifts, but does not by itself bound the lower mixed steps. I have neither proved the required bound nor obtained a valid undecidability reduction. Thus the uniform presentation and dimension questions are handled by the construction above; the terminating recognition characterization for the unaugmented presentation remains unresolved.
+
+## Verification of the researcher response (2026-11-19)
+
+**Verdict: Questions 2, 3 and 4 answered, verified; Question 1 (a terminating recognition criterion for the unaugmented Gray-generator presentation) open, with a positive semi-decision procedure.** The follow-up prompt is `../outbox/fibration-presentations-characterization-r3.md`.
+
+**Question 2: every pair has a presentation of dimension ≤ n + m, and n + m is optimal.**
+- Lemma 2.1 (bounded relative realization: a finite extension K ↪ K′ of dimension ≤ max{dim K, d + 1} realizing a map from a d-dimensional A). The key step is reflecting thin markings from the fibrant target after each horn stage, so that markings do not depend on higher-dimensional saturation derivations; marking certificates (Lemma 2.2) may be of any dimension but are proof data, not generators. Checked.
+- Dimension calculus: homotopy pushouts by the double mapping cylinder with A × Δ[1]^t give max{b, c, a + 1}; products add dimensions (the degeneracy-position count is right); globe attachments keep dimension ≤ r. The totals over globes (4.1)–(4.3) via Loubaton's Cor. 4.1.2.19 give m + k and m + k − 1, and cellular induction over the base gives n + m. Checked.
+- The conversion L_D: X_r = K_r × Inj([r], [D]). For K = Δ[p] its nerve with degeneracies is the nerve of the poset {(x, i)} with (x, i) < (y, j) iff x ≤ y and i < j; the homotopies id ⇒ F ⇐ sπ with F(x, i) = (x, max{i, x}) were checked monotone (if x < y and i < j then max{i, x} < max{j, y}). So L_D K → K is an equivalence, and the oriental polygraph of L_D K is homotopical by Chanavat's semisimplicial pasting theorem (Thm 3.35), with |Ψ_r| = |K_r| · C(D+1, r+1).
+- Optimality: Γ = ∂D_{n+1}, Π = ∂D_{m+1}, constant weight; the total groupoidifies to Sⁿ × S^m with H_{n+m} ≠ 0, while a localised finite d-polygraph groupoidifies to a CW complex of dimension ≤ d. Correct. In particular item 9's pentagon example has a presentation of dimension ≤ 7.
+
+**Question 3 (Followup): a uniform presentation that keeps the original fibre polygraphs and the original fibre vertices as endpoints of every named Gray cell z_{q,g}.**
+- The vertex-attachment lemma (adjoining fresh globes along two prescribed vertices, with no positive-dimensional identifications, preserves homotopicality; strict hom formula (3.1)) is correct and is the same mechanism as the graph-assembly theorem of `homotopy-polygraphs-2026-11-19.md` §1.
+- D_{r−1} → D_r[z⁻¹] is an equivalence, giving F(H) ≃ F(P)[M⁻¹] (4.7).
+- The strict maps u : F(R) → F(Ψ₀), v : F(R) → F(P) with ρu = πv, obtained from one common bounded realization and the cutoff inclusion L_a A → L_D K′ (using L_a rather than L_D keeps dim R ≤ D − 1), and the graph-base presentation of the span (6.1), give Ω with dim Ω ≤ D and the homotopy pushout (6.4), whose right leg is an equivalence. Checked. The cartesian marking is preserved and reflected through the central inclusion.
+- The certificate list (§8) is finite; its size and the dimension of the proof witnesses are unbounded, as stated.
+
+**Question 4.** Covered: coherent weights and localised fibre values, with finite roofs for the transport data.
+
+**Question 1.** Section 10 gives a finite certificate for equivalence of two specified finite complicial models, hence a positive semi-decision procedure for the unaugmented Gray presentation once attaching terms are supplied. A bound on the positive mixed-generator expressions to search, or an undecidability reduction, is not given.
+
+**Effect on the project.** B14's practical goal (checkable weighted limits over every finite homotopical base, with finite certificates) is met by the uniform presentation, with optimal dimension. The exact recognition question for the unaugmented presentation remains, and is posed in r3.

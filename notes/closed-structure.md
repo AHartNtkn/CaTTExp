@@ -1093,6 +1093,12 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
     - A model with hom Br⁺_S retracts the map F : Br⁺_S → modifications. So End(τⁿ) contains the positive braid monoid B⁺ₙ.
     - No modification changes a word's multiset of letters.
     - Open (r8): whether F is full, i.e. whether End(α·β) ≅ ℕ, and how the choice of probe stock affects this.
+  - **2026-11-19** (verified, `conjectures/answered/gray-biclosed-coherence-2026-11-19.md`):
+    - The positive-braid description is **not** complete. Generators of probe degree ≥ 2 in the data source (α : J ▷ (J ▷ X) → Y) act as state changes of one event, giving modifications with no braid counterpart. The replacement is a free strict monoidal category with non-invertible braiding, **coupons** (modifications between words of different lengths) and per-event **state categories** K = ⊔(τ₁P_i)^op: End₂(f) ≅ Mon(K), End₂(1_A) ≅ Br⁺(K). Equality is decidable for uniform families and for positive braids with proper coupons (length invariant L(D)). For the endotransformation signature without residuals, the hom is exactly B Br⁺_S (so F is full there).
+    - **1-cells of 𝒢 (reading I) have a decidable normal form**: N (context naturality), β, η form a terminating, confluent rewriting system. π ∘ ι = 1 is an instance of the cancellation T_a κ_a(h) ; e_a = h; ι ∘ π and forward uniqueness (2-cells of 𝒢) stay open.
+    - The position-rigidity test (distinct endpoints, no endo-transformation generators) does **not** give a product of schedule categories.
+    - **Constraint on any PL-ω rule (Q4 no-go):** an endpoint-symmetric coherence rule produces a reverse of the Gray square, and a boundary-lifting rule cannot be exact on Gray cubes if its arities identify the two boundary pastings of some cube (e.g. braid-relation quotients). So the rule must be asymmetric and keep those pastings distinct, as L's two-case rule and the support-based `dcoh_S` rule do.
+    - Open: 𝒢′ for arbitrary residual arities, 2-cells of 𝒢, the directed rule in every dimension (`conjectures/outbox/gray-biclosed-coherence-r2.md`).
 - **What to keep from F.5–F.6.** Those results are about (I) and keep their value there. The project's own type theory (two-tier L, D7/E.3) needs (II).
 
 **Open (D17).**

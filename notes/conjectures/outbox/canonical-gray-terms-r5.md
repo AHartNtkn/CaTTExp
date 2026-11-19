@@ -79,3 +79,56 @@ An explicit construction of T for all pairs and iterated tensors; CT for all thr
 - Campion, arXiv 2311.00205; Chanavat, arXiv 2603.22242.
 - Finster–Mimram, arXiv 1706.02866; Benjamin–Markakis, arXiv 2406.12127 (invertibility of coherences).
 - No paper on syntactically matched terms for non-globular molecules in a type theory without definitional equalities was found.
+
+# Researcher Response 1
+
+**Wedge closure with a finite path as the other factor.** For every finite path $J=[r]$ and finite globular pasting diagrams $P,Q$,
+$$
+  \mathrm{CT}(J\otimes P) \land \mathrm{CT}(J\otimes Q)
+  \quad\Longrightarrow\quad
+  \mathrm{CT}\bigl(J\otimes(P\vee_0 Q)\bigr).
+$$
+This gives closure under any finite sequence of such wedges. The proof uses the full sieve and cosieve in the single-interval case of item 7. The new feature for a path is that a cell can cross several time edges at the common vertex. Two cuts determined by its source and target paths suffice in every dimension.
+
+### Reconstructing a crossing cell
+
+Let $z$ be the common vertex. Fix outer endpoints $(i,a),(j,b)$ with $a$ strictly before $z$ in $P$, $b$ strictly after $z$ in $Q$, and $i\le j$. Write $H$ for their hom in the tensor with the wedge. Put
+$$
+ L=(J\otimes P)((i,a),(j,z)),\qquad R=(J\otimes Q)((i,z),(j,b)).
+$$
+Collapse $Q$ or $P$ to $z$ to get $H\to L\times R$. Every vertex $l$ of $L$ is a path. Let $A(l)$ be the time of its last $P$-edge. For a vertex $q$ of $R$, let $B(q)$ be the time of its first $Q$-edge. Both times exist by the choice of $a,b$.
+
+**Claim.** The collapse identifies $H$ with the full subcategory of $L\times R$ on the pairs $(l,q)$ with $A(l)\le B(q)$. In global Steiner tableaux the inverse on any admissible pair $(x,y)$ is $x+y-E_{ij}$, where $E_{ij}$ is the identity tower on the path from $(i,z)$ to $(j,z)$. Indeed, augmenting the second tensor factor sends both tableaux to the unique path $i\to j$ and its identities. On chains the two collapses jointly retain each off-seam coefficient once and count the common projection once too many. The displayed formula therefore inverts them, fixes the outer vertices, and satisfies the boundary equations by linearity. Positivity is automatic in degrees above one since there are no seam chains there. In each signed degree-one row the left path contains exactly the seam edges with starting times $A(l),\ldots,j-1$, and the right path those with starting times $i,\ldots,B(q)-1$. Subtracting one copy of every seam edge is possible exactly when these ranges cover the interval. Applying the test to both signed rows proves fullness, including $i=j$.
+
+Along an arrow of $H$, both $A$ and $B$ are nondecreasing. To see this at a threshold $i\le u<j$, collapse the time path to one interval, retaining just the edge at $u$. The resulting left path first traverses $P$ and then the seam edge exactly when $A(l)\le u$. Such paths form the full sieve of item 7, so the condition propagates from target to source. On the right, the path first traverses the seam edge and then $Q$ exactly when $B(q)>u$. The full cosieve propagates this condition from source to target. Taking all thresholds gives both inequalities. [Single-interval sieve and cosieve, §2](../answered/canonical-gray-terms-r2-2026-11-19.md)
+
+For a time $t$, take the full subcategory $G_t$ on pairs with $A(l)\le t\le B(q)$. Every cell $(x,y)$ there splits horizontally at $(t,z)$. Strip the seam suffix from $t$ to $j$ off both degree-one rows of $x$, changing its target vertex to $(t,z)$. Strip the seam prefix from $i$ to $t$ off both degree-one rows of $y$, changing its source to $(t,z)$. Leave all higher rows intact. These are positive tableaux in the respective pieces. The changed vertex accounts for the boundary of each stripped path, and the difference of the two degree-one rows is unchanged. Their horizontal composite restores $x+y-E_{ij}$, since the two stripped segments partition the seam path. At fixed $t$ this split commutes with signed hom faces in every positive hom dimension.
+
+Take a positive-dimensional cell $h=(\alpha,\beta)$ of $H$, with hom endpoints $x_-=(l_-,q_-)$ and $x_+=(l_+,q_+)$. The intermediate vertex $d=(l_-,q_+)$ is admissible since $A(l_-)\le B(q_-)\le B(q_+)$. In the product hom,
+$$
+ h=h_1\mathbin{\#_0^H}h_2,\qquad
+ h_1=(1_{l_-},\beta),\quad h_2=(\alpha,1_{q_+}),
+$$
+where identities have the dimension of $h$. This is composition at cut 1 in the tensor. The endpoints of $h_1$ belong to $G_{A(l_-)}$, and those of $h_2$ belong to $G_{B(q_+)}$. Fullness puts each factor inside the corresponding subcategory. Thus both factors split horizontally, even if no single time works for $h$. For hom dimension at least two, both immediate faces of $h$ inherit exactly the same $d$ and the same two times.
+
+### Choosing terms with literal boundaries
+
+Glue the two given family contexts on their seam generators. The seam is $J$, whose generator boundaries are object variables. Choose either section on the cells entirely in the seam. On other cells having both object endpoints in one piece keep that piece's section. This is consistent because all positive-dimensional faces retain the pair of object endpoints. A cell with object endpoints in one piece stays there. Its boundary paths cannot leave that piece and return, since all spatial edges are directed forward. For the higher rows, collapse the retained piece to $z$. The resulting tableau has object endpoints in the seam and both paths there. It has only identity higher rows there. Any positive second row would have zero differential, impossible for a nonzero positive chain in the strong Steiner basis by the sign test of item 7. The same argument applies inductively in each higher row. Every generator off the retained piece survives this projection. This also covers endpoints in the seam. Reverse crossings are empty and a wedge with a point is its other component.
+
+Choose a single bracketing $T(w)$ of the edge word of each crossing path $w$. For a cell $g\in G_t$ of global dimension $m\ge 1$, let $S_t(g)$ be the horizontal composition head on the two given terms for its stripped tableaux. Use the heads over $D^m\vee_0 D^m$ with recursively prescribed faces as in item 7. Thus each signed face of $S_t(g)$ above global dimension one is literally $S_t$ of the corresponding face. For every path $w\in G_t$, choose comparison 2-terms in both directions between $T(w)$ and $S_t(w)$. Each is a coherence over the globular context of the directed path $w$, substituted back into the tensor. The two terms can be read in that path context since their strict image is $w$ and their support is precisely its edges and vertices. Both use the full path, so the coherence rule applies. Their strict images are identities because the path context strictly has only identity 2-cells.
+
+For $m\ge 2$, pad $S_t(g)$ on the source side by the comparison from $T(w_-)$ and on the target side by the comparison to $T(w_+)$, where $w_-,w_+$ are its global 1-endpoints. Denote the resulting term by $U_t(g)$. In dimension two use ordinary vertical composition. In higher dimensions use the two composition heads on $D^2\vee_1D^m$ and $D^m\vee_1D^2$, retaining the comparison term when taking either higher face. Their recursive types are admissible by the composition rule because their signed faces use exactly the corresponding boundary of the arity. Consequently $U_t(g)$ strictly denotes $g$, its 1-endpoints are the chosen path terms, and its immediate faces for $m>2$ are literally the padded terms for the two faces. [Composition and whiskering heads, §§4–6](../answered/canonical-gray-terms-r2-2026-11-19.md)
+
+For every crossing cell of global dimension $m\ge 2$, take
+$$
+ T(h)=V_m\bigl(U_{A(l_-)}(h_1),\,U_{B(q_+)}(h_2)\bigr),
+$$
+with the cut-1 head $V_m$ on $D^m\vee_1D^m$. The common 1-term at the join is literally $T(d)$. In dimension two its outer faces are precisely the chosen path terms. Above dimension two the recursive type of $V_m$ applies the same construction to both immediate faces, since $d$ and both cuts are fixed. Its strict value is $h$ by the product factorization. Every tensor generator belongs to a piece, where the chosen generator term is its variable. These facts give (a)–(c), including identity towers.
+
+**Finite check.** The checker enumerates the strict tensor and its two pieces independently by composition of atoms. For every crossing hom it compares the reconstructed tableaux with the complete enumeration, checks each stripped factor in its piece, and recovers each positive-dimensional hom cell by the two indicated compositions. For $[3]$ with the branching trees below it checks 819, 28,225, 55,275 and 55,275 crossing cells in global dimensions 1 through 4, including identities. The literal CaTT boundary argument is the recursive construction above. [Tableau checker](../../../tools/gray_path_wedge.py)
+
+```sh
+python3 tools/gray_path_wedge.py 3 '[[[],[]],[]]' '[[],[[]]]'
+```
+
+This proves the path case of wedge closure in every dimension. In route (ii), the other factor $P\otimes I$ can itself have higher generators. Its overlap then contributes higher rows to the subtracted tableau, and the degree-one cut test above leaves the general three-factor case open.

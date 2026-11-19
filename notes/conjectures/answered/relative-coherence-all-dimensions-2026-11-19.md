@@ -1005,7 +1005,7 @@ have different weak boundaries. Removing the strict-identity factor requires tra
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: partial answer, verified.** Questions 1–3 are not resolved: there is no proof of RC(∞) and no counterexample. Four new results hold and are recorded below, together with two reductions and two corrections to the proposed routes. The follow-up prompt is `../outbox/relative-coherence-all-dimensions-r2.md`.
+**Verdict: partial answer, verified.** Questions 1–3 are not resolved: there is no proof of RC(∞) and no counterexample. Four new results hold and are recorded below, together with two reductions and two corrections to the proposed routes. The follow-up prompt is `relative-coherence-all-dimensions-r2-2026-11-19.md`.
 
 **Main response.**
 - §1 (an ω-weak equivalence into a gaunt target is a trivial fibration). Correct and elementary; it is the "equivalent form" already stated in the prompt (§1.2), with the generator-count argument for gauntness written out. Nothing new for the project, but it confirms that route (d) only needs π_Γ to be an FHM weak equivalence.

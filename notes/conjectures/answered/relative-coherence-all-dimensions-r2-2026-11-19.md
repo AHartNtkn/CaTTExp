@@ -399,3 +399,23 @@ Combining this with the theorem yields
 The argument applies to a bubble assembled from arbitrarily many differently typed 2-generators. No individual generator needs to have two identity boundaries: the positive weight \(N\) of the composite bubble gives the nonzero obstruction \(\pm N^2\).
 
 The sufficient direction for bubble-free 2-contexts, the all-dimensional attachment theorem, and the converse in arbitrary finite dimension remain unresolved here. No equivalence with Dean’s conjecture has been established.
+
+## Verification of the researcher response (2026-11-19)
+
+*Checked by the thread "Process seven round-3 researcher responses". Verdict: **correct**. Question 2 is settled for finite contexts of dimension ≤ 2, and the obstruction is hereditary to every context whose 2-skeleton has a bubble. Questions 1 and 3 are not addressed.*
+
+1. **The model.** I checked that 𝓑 (Ob ℕ, End(p) = ℤ, ⊗ = +, β_{p,q} = pq) is a strict braided monoidal groupoid. Naturality holds because ℤ is commutative. The hexagons are p(q+r) = pq + pr and (p+q)r = pr + qr. It is not symmetric, since β_{q,p}β_{p,q} = 2pq. Its double delooping is a Gray category (one object, one 1-cell). In it, ∗₀ and ∗₁ of 2-cells are both addition, and interchange is the braiding.
+2. **Gray categories are CaTT models.** I checked Batanin–Cisinski–Weber (arXiv 1209.2776) in the paper. Ex. 3.6 is the T≤3-operad for Gray categories. §4.5 defines contractibility by lifting against {∂(k) → k : k ≤ n} ∪ {∂(n+1) → n}, which includes top-dimensional uniqueness. Ex. 5.7 states that this operad is contractible. Extending by identities above dimension 3 is contractible: two parallel 3-operations with the same arity are equal, so the identity lifts every higher sphere. So the initial contractible ω-operad maps to it, and 𝒢 is a CaTT model with only identity 4-cells. This gives (1). Every 3-coherence is interpreted by the unique 3-operation of its arity, so [[eh(a,a)]] is the braiding β_{N,N}^{±1} = ±N² whatever contraction is chosen.
+3. **Weights.** The functor w : F(Λ) → B²ℕ (2-generators ↦ 1) is well defined, and w(c) = 0 iff c is an identity. All 2-operations of the Gray operad are strict composites at the level of 2-cells, so [[t]] = w(πt) for 2-terms.
+4. **Literal identity boundaries.** By the support lemma u and v are terms of (x), so r : 1_x ⇒ u and s : v ⇒ 1_x are coherences over the pasting context (x). This gives a : 1_x ⇒ 1_x literally, with π(a) = c.
+5. **No 4-term.** [[T]] = ±N² ≠ 0 = [[T′]], N > 0, and 𝒢 has only identity 4-cells. π(T) = π(T′) because F(Λ) has only identity 3-cells. So plain RC(3) fails for dim Λ ≤ 2.
+6. **Heredity.** An identity-image filler H in Γ has supp(H) = supp(πH) = supp(d) ⊆ Var(Δ). F(Δ) → F(Γ) is injective for a dependency-closed subcontext, so H is an identity-image filler in Δ.
+
+**Consequences.** For finite Λ with dim Λ ≤ 2: RC(3)(Λ) ⇒ bubble-free ⇔ homotopical. For any finite Γ: a bubble in Γ_{≤2} ⇒ ¬RC_id(3)(Γ). This gives a proof internal to CaTT models of the earlier π₃(S²) remark (Known item 6), and extends it to composite bubbles in every 2-dimensional context.
+
+**Open after this response.**
+- (Q1) The contraction: homotopical ⇒ RC_id(∞).
+- (Q2, higher) An n-bubble with n ≥ 3 ⇒ ¬RC_id(∞)? The same argument needs an n-fold delooping. For n ≥ 3 that means an E₃ = symmetric structure, where β must satisfy β² = 1. A ℤ/2-valued version (β_{p,q} = pq mod 2) would only detect odd weight. It would also need an explicit weak (n+1)-categorical CaTT model of that shape, which the Gray-operad argument does not supply.
+- (Q3) The bubble-free 2-dimensional case in every dimension.
+
+The follow-up prompt is `outbox/relative-coherence-all-dimensions-r3.md`.

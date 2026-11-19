@@ -1772,7 +1772,7 @@ Accordingly, the new result is a **proved sufficient recognition system in every
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: Question 2 answered (a finite 2-polygraph is homotopical iff it is bubble-free), verified with one input taken from the literature; Questions 1 and 3 partly answered.** The follow-up prompt is `../outbox/homotopy-polygraphs-r2.md`.
+**Verdict: Question 2 answered (a finite 2-polygraph is homotopical iff it is bubble-free), verified with one input taken from the literature; Questions 1 and 3 partly answered.** The follow-up prompt is `homotopy-polygraphs-r2-2026-11-19.md`.
 
 **Main response.**
 - §1, graph assembly B_Q(P_•) (homotopical iff every label is). Verified at the level of the argument. The strict hom formula (2) is the universal property of the free enriched category on a graph with labels F(P_e); the weak formula (3) is Haugseng's free enriched category; the strict nerve preserves the displayed products and the coproducts (a Θ-shape is connected). Reflection uses the length-one-path summand, which is A_e itself. Correct.

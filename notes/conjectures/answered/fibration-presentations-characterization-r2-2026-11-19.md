@@ -1160,7 +1160,7 @@ What remains unproved is a finite bound on the positive mixed-generator expressi
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: Questions 2, 3 and 4 answered, verified; Question 1 (a terminating recognition criterion for the unaugmented Gray-generator presentation) open, with a positive semi-decision procedure.** The follow-up prompt is `../outbox/fibration-presentations-characterization-r3.md`.
+**Verdict: Questions 2, 3 and 4 answered, verified; Question 1 (a terminating recognition criterion for the unaugmented Gray-generator presentation) open, with a positive semi-decision procedure.** The follow-up prompt is `fibration-presentations-characterization-r3-2026-11-19.md`.
 
 **Question 2: every pair has a presentation of dimension ≤ n + m, and n + m is optimal.**
 - Lemma 2.1 (bounded relative realization: a finite extension K ↪ K′ of dimension ≤ max{dim K, d + 1} realizing a map from a d-dimensional A). The key step is reflecting thin markings from the fibrant target after each horn stage, so that markings do not depend on higher-dimensional saturation derivations; marking certificates (Lemma 2.2) may be of any dimension but are proof data, not generators. Checked.

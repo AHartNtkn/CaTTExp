@@ -757,7 +757,7 @@ For Q3, imposing the generic inner composite-crossing law alone does not remove 
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: partial answer, verified.** Neither (A) nor (B) of Q1 is settled. The response proves a **necessary repair**: any extension of T that keeps T's equations, is closed under substitution and satisfies the elementary no-reverse requirement in global dimension 5 must impose the 4-equation (C) H(a₁, a₂; b₁, b₂) = 1. Consequently no extension that is faithful on T's 4-cells works, and the h-repair of (K32) alone does not suffice. The follow-up prompt is `../outbox/lax-interchange-every-dimension-r3.md`.
+**Verdict: partial answer, verified.** Neither (A) nor (B) of Q1 is settled. The response proves a **necessary repair**: any extension of T that keeps T's equations, is closed under substitution and satisfies the elementary no-reverse requirement in global dimension 5 must impose the 4-equation (C) H(a₁, a₂; b₁, b₂) = 1. Consequently no extension that is faithful on T's 4-cells works, and the h-repair of (K32) alone does not suffice. The follow-up prompt is `lax-interchange-every-dimension-r3-2026-11-19.md`.
 
 **§2, idempotent endomorphisms block dimension-5 directedness. Checked.**
 - T's support equations identify parallel 4-paths with the same set of contextual edges. For an endomorphism F represented by a path P, P and P ; P have the same edge set, so F ∗₃ F = F. (This is a consequence of the raw edge-set form of T's support equations; requirement 2 in its expanded-basis form does not imply it, as the response says.)

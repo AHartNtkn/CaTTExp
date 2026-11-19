@@ -401,7 +401,7 @@ Thus the results above establish an all-dimensional family of cases and an exact
 
 ## Verification of the researcher response (2026-11-19)
 
-**Verdict: partial answer, verified.** CT is proved for an infinite family in every dimension, by a suspension-closure theorem; CT for all pairs, a counterexample, and Q3 remain open. The follow-up prompt is `../outbox/canonical-gray-terms-r2.md`.
+**Verdict: partial answer, verified.** CT is proved for an infinite family in every dimension, by a suspension-closure theorem; CT for all pairs, a counterexample, and Q3 remain open. The follow-up prompt is `canonical-gray-terms-r2-2026-11-19.md`.
 
 **Suspension closure CT(I ⊗ P) ⇒ CT(I ⊗ ΣP), checked.**
 - The whiskerings R_r, L_r over D^r ∨₀ D¹ and D¹ ∨₀ D^r with recursively chosen types satisfy (1) literally, and the composition-case support condition holds (the source uses exactly ∂⁻(D^r ∨₀ D¹)).

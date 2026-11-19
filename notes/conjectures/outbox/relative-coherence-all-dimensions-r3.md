@@ -2,7 +2,7 @@
 
 *A self-contained problem. It assumes familiarity with globular weak ω-categories, strict ω-categories, polygraphs (computads) and Steiner complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** One theorem valid in every dimension: the exact class of finite computads on which the free weak ω-category is strict (in the sense of §1.2), ideally "exactly the homotopical ones". Individual new cases (one more context, one more dimension) are not useful to us. Several exact reductions are known (§3, items 9–14), and the obstruction in dimension 2 is now proved (items 17–18). What is missing is the contraction itself, and the obstruction for higher-dimensional endo-cells.
+**What we are asking for.** One theorem valid in every dimension: the exact class of finite computads on which the free weak ω-category is strict (in the sense of §1.2), ideally "exactly the homotopical ones". Individual new cases (one more context, one more dimension) are not useful to us. Several exact reductions are known (§3, items 9–14), and the higher-bubble obstruction now holds in every dimension (item 21). The exact-class question remains for bubble-free contexts.
 
 ## 1. Setting
 
@@ -90,6 +90,8 @@ RC is the single missing ingredient in several constructions in CaTT: lax natura
 19. **Higher endo-cells obstruct homotopicality.** If F(Γ) has a non-identity n-cell q : 1^{n−1−k}_c ⇒ 1^{n−1−k}_c (0 ≤ k ≤ n − 2, c a k-cell), then Γ is not homotopical. Proof: the n-skeleton inclusion is discrete Conduché, so homotopicality passes to Γ_{≤n}. Counting n-generators gives F(Γ_{≤n}) → Bⁿℤ, and q gives Σ^{n−2}B²ℕ → F(Γ_{≤n}). Steenrod powers then detect nonzero mod-p cohomology of the groupoidification in unboundedly many degrees, while the free cellular n-skeleton has dimension n. The converse ("no such endo-cell ⇒ homotopical") is proved in dimension 2 (item 8) and for positive-to-one polygraphs in every dimension, and is open in general.
 20. **Why the dimension-2 argument does not directly extend.** For an n-cell q on 1_b with b an (n−2)-cell, the analogous detecting model would be an n-fold delooping of a braided-type monoidal groupoid, i.e. an E_n structure. For n ≥ 3 that forces a symmetry (β² = 1), so the obvious ℤ/2-valued version β_{p,q} = pq mod 2 detects only odd generator counts, and no explicit CaTT model of that shape (a weak (n+1)-category with one cell below dimension n − 1) is known to us.
 
+21. **Higher bubbles obstruct relative coherence in every dimension.** An n-cell on an identity with positive n-generator count prevents π from being a trivial fibration. In a CaTT model of lists and colour-preserving bijections, the suspended Eckmann–Hilton term exchanges two nonempty blocks, while the identity fixes their positions. This includes composite bubbles of even weight and bubbles over positive-dimensional cells. [Proof](../answered/higher-bubbles-relative-coherence-2026-11-19.md)
+
 ## 4. Questions
 
 **Question 1 (main: the exact class).** Prove that for every finite CaTT context Γ,
@@ -103,7 +105,7 @@ equivalently (item 7) that π_Γ : Free(Γ) → F(Γ) is a trivial fibration of 
   - (b) describe the fibre of π_Γ over each strict cell as a CaTT-definable object and show it is contractible;
   - (c) a relative Guiraud–Malbos normalisation strategy towards the strict cells of F(Γ), producing all higher comparisons at once;
   - (d) an equivalence with Dean's Conj. 5.4.0.9 or another named open statement.
-- **(⇒, the obstruction in every dimension).** Prove that a non-identity n-cell q : 1^{n−1−k}_c ⇒ 1^{n−1−k}_c of F(Γ) (any n ≥ 2, 0 ≤ k ≤ n − 2) makes RC_id(∞)(Γ) fail. Item 17 does n = 2. A uniform route would be a CaTT model, or a family of models, in which some iterated Eckmann–Hilton term built from a literal lift of q and its identity-image partner take different values, for every generator count of q (compare item 20). Another route would be an invariant of CaTT models that sees the unbounded cohomology of item 19. Together with the open converse of item 19, this direction would also follow from the (⇐) direction plus "bubble-free in every dimension ⇒ homotopical"; a proof avoiding that converse is preferred.
+- **(⇒, the remaining necessity question).** Item 21 settles the obstruction for higher endo-cells. It remains to prove that a bubble-free context satisfying RC_id(∞) is homotopical, or exhibit a counterexample. Sufficiency of bubble-freeness for homotopicality would imply this direction.
 
 **Question 2 (fallback for (⇐), still every dimension).** If Question 1(⇐) is out of reach, prove RC_id(∞) for every finite context that is positive in every dimension, or at least for every finite strong-Steiner context, and give the counterexample that separates the classes if one exists.
 

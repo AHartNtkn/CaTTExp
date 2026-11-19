@@ -911,3 +911,10 @@ zero through four, giving 1,750 comparisons. Run
 `python3 -B scripts/e6/interchange_filtered_windows.py`. The proof
 above treats arbitrary lengths. A rectangle can still have an active
 path with no recorded window. Unrestricted Q1 remains open.
+
+The [four-strand order calculation and proof](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-27)
+further exclude every rectangle whose early active input has positive
+Gray chain and every rectangle with zero total late Gray chain, for this
+same candidate on every finite diagram. The obstruction still to decide
+has an early active input made only of inner exchanges and a late triangle
+in at least one of the two late inputs.

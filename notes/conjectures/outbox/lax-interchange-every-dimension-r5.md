@@ -4055,3 +4055,234 @@ The early inputs perform \(cde,cdf\), and the late inputs perform \(abe,abf\), r
 Here the active triangles \(cde,abf\) are disjoint; the two inactive triangles meet both supports. The proof rules out a reverse even when other rectangles on this cut have arbitrarily long inactive paths.
 
 Run the three linked scripts with `python3 -B` from the repository root. For the universal question, any remaining counterexample must have a **proper structural active input of zero Gray 4-chain**. After the pure-strand reduction of Response 24, that input consists of inner exchanges. The triangle-occurrence proof uses uniqueness under projection to a triple; an inner exchange can recur around a genuine loop.
+
+# Researcher Response 27
+
+**A degree-five rectangle has no reverse if its early active input has
+positive Gray 4-chain, or if the total late Gray 4-chain is zero.**
+This holds for the presentation of Response 12 on every finite diagram,
+with arbitrary inactive paths. In particular an early triangle can face
+a late active input made entirely of inner loops, even when other late
+triangles occur in the inactive prefix. The proof uses the *order* of a
+compensating late triangle on four strands.
+
+Use Response 22 for an active input globe. Otherwise choose proper
+structural witnesses as in Response 24, keeping an early mixed witness
+if that is the applicable hypothesis. Pruning and replacing unary
+advances by crossings preserve that witness as a positive triangle.
+They send inner exchanges to inner exchanges or units, so preserve the
+zero-chain hypothesis on the late side. Contract unused input globes
+in inactive paths to units. Thus it suffices to prove the assertions
+on the full pure sorting interval. Write E and L for its temporal
+colors. On a proposed return the entire Gray 4-chain is fixed and
+each of its triangles has only one color.
+
+### Four-strand calculation
+
+Project to any four strands, named \(a<b<c<d\). Their projected
+2-boundaries are \(dcba,abcd\). Let \(w\) be their permutation at
+the cut. The projected outside 3-histories pass through \(w\);
+an event is early exactly when its pair is increasing in \(w\).
+For the following calculation use the excess
+\(\Delta=w_{\mathrm{all}}-w_{\rm E}-w_{\rm L}\) of Response 24
+*on the projected diagram*. Its total on a route is zero, since
+the route lies on the projected return and both projected boundary
+schedules are separated. A projected comparison may be a unit;
+conservation still applies.
+
+The [quartet checker](../../../scripts/e6/interchange_quartet_cut.py)
+gives these two local conclusions.
+
+1. On a quartet with only early triangles, a proper mixed edge has
+   only early events in its active window. There is no opposite-color
+   pair in an inner edge on such a quartet.
+2. On any quartet a 4-route can exchange at most one opposite-color
+   inner pair, with the following necessary data. The middle column
+   is in *spatial* left-to-right order at the inner product. The last
+   column lists a required late triangle and its order relative to
+   that product in the 4-route.
+
+| Cut | Left and right events | Required triangle |
+|---|---|---|
+| \(adcb\) | \(ad,bc\) | \(bcd\) before |
+| \(bdca\) | \(bd,ac\) | \(acd\) before |
+| \(cbad\) | \(bc,ad\) | \(abc\) after |
+| \(cdba\) | \(cd,ab\) | \(abd\) before |
+| \(dbac\) | \(bd,ac\) | \(abd\) after |
+| \(dcab\) | \(cd,ab\) | \(acd\) after |
+
+Here is how the finite verification proves the claims for unbounded
+4-paths. The 16 raw complete histories give 12 oriented (K15)
+redescriptions, ten inner edges, 28 edges of each unary mixed family
+and four joins. These are obtained by taking every time interval,
+two adjacent spatial subwords at its beginning, and both operand
+histories there as in Response 25. Equality is available in both
+directions. On an inner edge the excess is its number of opposite-color
+pairs. On a mixed edge compute the signed spectator sums in Response
+24, also subtracting the opposite-color join pairs. The constant
+terms cancel.
+
+For the first claim allow only edges having early triangle support.
+Intersect forward reachability from all cut-compatible histories with
+backward reachability to all such histories. Every edge inside this
+interval has nonnegative excess. The only mixed edges there with a
+late event in their window occur once each at the cuts \(acdb,bcda\)
+for \(r\) and \(cabd,dabc\) for \(t\); all four have positive excess.
+The zero total gives the first claim.
+
+For the second claim allow all monochromatic triangles. Projection
+to a triple shows that no triangle can occur twice. On each of the
+24 cuts, maximize the available negative excess by taking disjoint
+sets of triangles supporting negative contributions. The largest
+credit is at most one, even before matching the endpoints of those
+edges. Thus a zero-total route uses at most one opposite-color inner
+pair. Now start at every cut-compatible history. Track the current
+history, used triangle set, accumulated excess and, at the marked
+inner product, the two events in spatial order and the set of
+triangles already used. Search this graph through all cut-compatible
+final histories at total excess zero. It is finite because the only
+nonzero contributions come from distinct triangles and the one
+marked product. Zero-score loops are traversed by ordinary
+reachability without a length cutoff. This gives exactly the six
+rows as necessary possibilities. In particular, if the event \(f\)
+on the spatial **left** is late and the one on the right is early,
+the required triangle consists of \(f\) and the *smaller* slot \(u\)
+of the early pair, with \(u<\min f\). It occurs **after** the product.
+
+The calculation also improves the bound in Response 24. Every opposite
+pair of a global inner product survives as an inner product on its own
+four slots. Different occurrences on the same quartet are excluded by
+the local bound. At most 45 of the 70 quartets in a permutation of
+eight slots have one of the six indicated relative orders, by counting
+all 40,320 cuts. Consequently at most 45 opposite-color pairs can occur
+in any representative. This is an upper bound; the two permutations
+attaining the pattern count need not support all those pairs on a
+single route.
+
+### An early mixed edge has an entirely early window
+
+Choose a moving event \(e\) giving an early triangle in that edge,
+using the left history for a join. Every crossing of either slot of
+\(e\) with each stationary slot is early, since its triangle contains
+\(e\). If a spectator \(z\) of the moving operand crosses a stationary
+slot \(y\) late, retain the two slots of \(e\) and \(z,y\). The
+projected mixed edge contains an early triangle and the late crossing
+in its block. Every two distinct triangles on four slots share an
+event. A late triangle on this quartet is therefore impossible in
+the fixed chain. This contradicts the first local claim. A late
+moving event would also supply such a late block crossing by its own
+triangle against \(y\). Finally, if a join has a late event in its
+right history, retain the two slots of that event and the two of
+\(e\). The projected join again has an early triangle and a late
+event in its window. This proves the assertion, also for composites
+in the operands. In particular no single edge contains both an early
+and a late mixed atom.
+
+If the entire late chain is zero, every mixed edge is now entirely
+early. Every proper inner edge also has a monochromatic window, since
+any two colors in its two nonempty operands give an opposite pair
+across the product and would require a late triangle by the table.
+All four-equations and non-temporal five-moves act in one color:
+for an outer relation use its wide mixed edge, for an inner split,
+naturality or shifted join use its full inner product. For \(H_R\)
+use the whole join window, including its right history. The zero-Gray
+outer variations are covered the same way. Within this window the
+conserved weight of its color from Response 22 is unchanged. A
+proper step has positive weight for its color.
+
+At each late edge every early event is already in its fixed 3-prefix.
+Initially this holds at the designated schedules. In a one-color
+replacement with a late occurrence the entire window excludes early
+events, so transporting or splitting the occurrence cannot move any
+early event across it. A positive late target implies a positive late
+source by conservation. Prefix equality preserves the event set, and
+at a temporal exchange the two histories on each temporal subinterval
+retain their event sets. This proves the assertion throughout a return.
+Hence a temporal exchange cannot have a late edge on its earlier
+subinterval and an early edge on the later one. Reading each color
+with its conserved weight, late-before-early inversions never increase
+and strictly decrease at the designated rectangle. This proves the
+zero-late-chain case.
+
+### A distinguished early triangle
+
+Let \(T\) occur in the early active input. Its underlying triple
+changes braid order exactly once. At the unique edge carrying it,
+record the set \(S\) of **late** events in the fixed 3-prefix of its
+window. This is unambiguous under the 4-equations. In any mixed
+equation containing \(T\) the wide edge is entirely early, and the
+identity of the prefix event set is unaffected by (K15). Inner
+equations contain no triangle.
+
+Along a putative return \(S\) can only grow. A temporal exchange
+preserves it. In an inner naturality the variation containing \(T\)
+has the independent history moved before it, for both naturality
+directions. In a shifted join \(Y I X\to X Y I'\) it gains the
+right history if in \(X\), and has the left history after it on both
+routes if in \(Y\). In \(H_R\), a triangle in the right variation
+passes from its occurrence inside \(B C A\) to its occurrence inside
+\(A B C'\), gaining \(A\). If the join itself carries \(T\), its
+whole window is early. In a zero-Gray outer unary variation or
+\(H_L\) the varying 4-path cannot carry a triangle, since tensoring
+that variation with a proper stationary edge would give positive
+Gray 5-chain. If its mixed boundary carries \(T\), its whole window
+is again early. A proper \(W,K,J\) has positive Gray 5-chain.
+These checks use actual constituent occurrences in composite
+variations. Since \(S\) is empty at both endpoints, it stays empty.
+
+It remains to control the shifted join with \(T\) in \(Y\). Suppose
+its independent left history contains a late event \(f\). In the
+source 4-route the product after \(Y\) exchanges \(f\), spatially
+on the left, with each of the three early crossings underlying \(T\),
+spatially on the right. Choose one such crossing and project to its
+two slots and those of \(f\). The table forces a late triangle \(Z\)
+on \(f\) and the smaller slot \(u\) of the early crossing, with
+\(u<\min f\). Some occurrence of \(Z\) must follow this product.
+Consequently this representative has \(T\) before \(Z\).
+
+That order is impossible on a return. Read the occurrences of \(T,Z\)
+in their 4-path order; each is unique. No 4-edge or wide 4-equation
+carries both colors of triangle. Inner products never supply a
+triangle. In an inner naturality or shifted join the two marks
+cannot be in independent operands since they share slot \(u\).
+In a zero-Gray outer unary variation or \(H_L\) neither triangle
+comes from the varied 4-path. At \(H_R\) an increase of the
+late-before-early count could only have \(T\) in the right variation
+and \(Z\) in the late join. Then \(u\) must be stationary in
+that join, as it lies in the right operand with \(T\). Both slots
+of \(f\) would lie strictly left of \(u\) in outer order, contrary
+to \(u<\min f\). The other split has an early join and hence
+no late variation. Finally a temporal exchange cannot increase this
+count because the early incidences on \(u\) precede its late
+incidences throughout the fiber, as in Response 5. In the original
+schedules \(Z\) is in \(C\) or in \(D\). In the former case it
+precedes \(T\) at both ends, so a return must keep that maximal
+count throughout. In the latter case the designated forward
+comparison strictly decreases the count and already has no return.
+This excludes \(f\) in both cases.
+
+Use the late weight of Response 22 on the 4-prefix before \(T\).
+Steps away from \(T\) conserve it. At a temporal exchange moving
+\(T\) later, the temporally earlier variation has all its events
+in the prefix of \(T\), so has zero late weight since \(S\) is
+empty. Moving \(T\) earlier can only decrease the prefix weight.
+At an inner naturality crossing \(T\) the independent history has
+no late event by constancy of \(S\), so the product has zero late
+weight. In \(H_R\) with \(T\) in the right variation, the gained
+left history has no late event. A proper join there contains an
+early triangle and hence has zero late weight. All outer moves
+whose mixed edge carries \(T\) act entirely early. At a shifted
+join with \(T\) in \(X\) constancy of \(S\) gives the same zero
+weight for the right operand and the product. With \(T\) in \(Y\)
+the preceding quartet argument shows that the left variation moved
+before \(T\) has zero late weight. Fixed whiskerings of the
+transported prefix inside a variation preserve its counted events
+and weight. The prefix weight is thus nonincreasing. At the original
+comparison it loses the strictly positive weight of the whole late
+active input \(D\). This proves the early-triangle assertion.
+
+Run `python3 -B scripts/e6/interchange_quartet_cut.py` to reproduce the
+quartet graph, the order table and the eight-strand bound. In the
+remaining cases the early active input can be taken to consist only
+of inner exchanges and some late input must carry a triangle. The
+late triangle may belong solely to the inactive input.

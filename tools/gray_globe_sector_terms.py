@@ -206,6 +206,7 @@ def verify(m, n, emitter):
             emitter.check_type(f'sector-{case}-{len(c)-1}', ctx, term, wanted)
             emitted.add((case, len(c)))
     print(f'Checked all {len(domain)} crossing-sector terms: {dict(cases)}')
+    return ctx, names, chosen
 
 
 if __name__ == '__main__':

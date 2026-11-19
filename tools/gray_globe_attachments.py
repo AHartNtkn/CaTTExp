@@ -19,6 +19,11 @@ def blocks(c, point):
     assert point in upper and (i+1, j) not in upper and (i, j+1) not in upper
     owner = {p: (p[0] > i) - (p[0] < i) for p in upper}
     assert {p for p in upper if owner[p] == 0} == {point}
+    return ordered_factors(c, cut, owner)
+
+
+def ordered_factors(c, cut, owner):
+    """Assign whole groups in precedence order and reconstruct their shared faces."""
     precedences = orders(c, cut, owner)
     pending = set(owner.values())
     source = c[cut][0]

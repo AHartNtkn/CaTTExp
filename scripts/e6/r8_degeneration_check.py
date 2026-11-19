@@ -7,7 +7,8 @@ Run: python3 scripts/e6/r8_degeneration_check.py
 """
 import sys,io,contextlib,itertools
 from collections import defaultdict
-src=open('/home/user/CaTTExp/scripts/e6/triple_tensor_r5_check.py').read()
+from pathlib import Path
+src=Path(__file__).with_name('triple_tensor_r5_check.py').read_text()
 src=src.split('# acyclicity and path counting')[0]
 g={}
 with contextlib.redirect_stdout(io.StringIO()): exec(src,g)
@@ -53,6 +54,14 @@ print('K14 arrows with no image:',len(bad))
 A=('bacrqp','bapcqr'); e=('abpcqr','bapcqr')
 print('h_z arrow present:',A in arr, label.get(A)); print('inner e present:',e in arr,label.get(e))
 print('J image needed:',er('bacrqp'),'->',er('abpcqr'),'exists:',reach(er('bacrqp'),er('abpcqr')))
+# The division of the original tensor seed uses the other incoming inner arrow.
+tau_end = 'bacpqr'
+tail = (A[1], tau_end)
+incoming = ('abcpqr', tau_end)
+assert A in arr and tail in arr and label[tail] == 'inner'
+assert incoming in arr and label[incoming] == 'inner'
+assert er(A[0]) == er(A[1]) == er(tau_end) == 'bap'
+assert er(incoming[0]) == 'abp' and barr[('abp','bap')] == 'inner'
 # all K18 single-step joins j_{alpha,e}: positive alpha:s->t, inner e:u->t
 inn=defaultdict(list)
 for (s,t) in arr:

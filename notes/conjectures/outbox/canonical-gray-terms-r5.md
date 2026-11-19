@@ -151,3 +151,77 @@ This argument applies to every strict expression for each cell. A strict 2-cell 
 The two cells are even the faces of **one 3-cell**. Apply the functor $I_A\otimes I_B\otimes I\to I_A\otimes I_B\otimes[2]$ taking the last edge to $CD$ to the generating cube. Its source performs the two spatial swaps past $B$, then the two past $A$, then the $BA$ swap at the initial vertex. This gives the second displayed cell, up to exchange of disjoint swaps. Its target performs the $BA$ swap at the terminal vertex, then the spatial swaps past $A$, then those past $B$. This gives the first cell. Equivalently, the top chain is $e_A\otimes e_B\otimes C+e_A\otimes e_B\otimes D$, whose signed degree-two boundaries give the two displayed square lists. Thus choosing the intermediate path separately for each 2-cell still cannot make that choice constant on the two faces of this 3-cell.
 
 The obstruction persists in $P\otimes I\otimes(Q\vee_0 Q')$ whenever $P,Q,Q'$ each have an edge. Choose one generating edge in $P$, one entering the seam in $Q$, and one leaving it in $Q'$. These choices include the example as a subtensor. It has a strict retraction: in $P$ project every edge over the chosen root segment to the edge of $I$, collapsing the other root segments; use the same two projections on $Q,Q'$, glued at $z$, to reach $[2]$. These are functors because parallel edges have the same image and all higher generators can be sent to identities. A common seam path in the larger tensor would project to one in the example, and any factorizations through it would project to factorizations of the displayed 2-cells. Thus a higher-dimensional treatment of the middle seam is already necessary throughout this family.
+
+# Researcher Response 2
+
+**A crossing strict cell factors uniquely through three cylinders with moving endpoints.** This works for every finite strong Steiner factor $K$, including $K=P\otimes I$ in route (ii). The middle cylinder records the motion at the wedge vertex. In particular, two faces of a cell can induce different paths there. There is also an exact pullback formula for the crossing hom under one-sided suspension with the same arbitrary $K$.
+
+### Cutting at a wedge vertex
+
+Write $W=U\vee_z V$ for two nontrivial globular pasting diagrams, $C=K\otimes W$, and fix endpoints $X=(x,a)$ and $Y=(y,b)$ strictly on opposite sides of $z$. Use the same letter for a strong Steiner category and its based complex when taking chains. An $n$-cell $h$ of $C(X,Y)$ has global dimension $n+1$. Its factorization is a strict map
+$$
+                 F_h:D^n\otimes[3]\longrightarrow C.
+$$
+The outer vertices of $[3]$ give constant maps at $X,Y$. The three edges give cylinders in $K\otimes U$, $K\otimes\{z\}$ and $K\otimes V$, respectively. On each globe generator tensored with an edge, the first and third cylinders use only basis terms off the seam. This last condition specifies the factorization uniquely. Restriction along the composite edge $I\to[3]$ gives the cylinder on $h$ with constant ends. The assignment commutes with both globular faces, identities and composition in the hom.
+
+Here is the formula. For a $k$-generator $g$ of $D^n$, let $c(g)$ be the corresponding signed global $(k+1)$-row of $h$, taking the common top row for the top generator. Split it as
+$$
+                 c(g)=L(g)+Z(g)+R(g)
+$$
+by whether the spatial basis element belongs to $U$ off the seam, equals $z$, or belongs to $V$ off the seam. The images of $g$ tensored with the three edges are these three chains in order. To get the two interior vertex images, sum coefficients over the spatial **1-edges entering** $z$ for $A(g)$ and **1-edges leaving** $z$ for $B(g)$, keeping their $K$ basis element and placing it over $z$. In dimension zero the path crosses each cut once, so both sums give a single vertex. In higher dimensions $A$ and $B$ are chain maps. Indeed, applying either edge-sum functional to the spatial differential of a 2-generator gives zero since its faces are parallel edges over the same root segment. Only the $K$ differential contributes.
+
+Write $E_X,E_Y$ for the constant maps on the globe. The boundary equations for the three columns, with $d$ the globe differential, are
+$$
+\begin{aligned}
+ \partial L(g)&=L(dg)+(-1)^k(A(g)-E_X(g)),\\
+ \partial Z(g)&=Z(dg)+(-1)^k(B(g)-A(g)),\\
+ \partial R(g)&=R(dg)+(-1)^k(E_Y(g)-B(g)).
+\end{aligned}
+$$
+For example, the component at $z$ of $\partial c(g)$ gets $(-1)^k A(g)$ from incoming spatial edges and $-(-1)^k B(g)$ from outgoing ones. Off the seam the global tableau equations restrict to their respective pieces. For $k=0$, $\partial c(g)=Y-X$ supplies the outer terms. These are exactly the tensor differential equations for $D^n\otimes[3]$. Every specified image is positive and the vertex augmentations are one, giving a strict map by the Steiner adjunction. [Steiner, §§2, 5, 7](https://arxiv.org/abs/math/0403237)
+
+Conversely, for such a normalized map, sum its three edge columns for each $g$. Telescoping gives the tableau equations with outer endpoints $X,Y$. The three disjoint supports recover the columns individually. Their boundaries at $z$ recover $A,B$, so the constructions are inverse. Face restriction truncates the same rows on both sides. Under a composition at hom cut $j$, the rows above $j$ in the globe coordinate add, the two exterior rows are selected at $j$, and the shared rows below $j$ are retained. This also computes pointwise globular composition in the Gray internal hom: in the two composable globes the composite top chain is the sum of the two top generators, including after tensoring with each vertex or edge of $[3]$. Identity padding adds zero rows.
+
+### Exact gluing test and its dimension bound
+
+Collapse $V$ or $U$ to $z$. Consider two resulting candidate cells $l,r$ in the respective pieces with endpoints $X,(y,z)$ and $(x,z),Y$. They must have the same projection $\theta$ to $K$ as whole tableaux. Include both pieces in $C$ and write $\theta_z$ for the projection placed at $z$. The only possible preimage is
+$$
+                            c=l+r-\theta_z .
+$$
+Indeed each collapse preserves all coefficients off its collapsed piece, and collapsing both spatial pieces counts the shared projection. This formula inverts both collapses on chains and has the required outer vertices. Its signed rows satisfy the differential equations. Its off-seam columns and its arrival and departure columns are positive. Hence the two cells glue **if and only if the middle column gives a directed cylinder** $D^n\otimes I\to K$, with endpoints $A,B$ and edge coefficients $(l+r-\theta_z)|_z$ in every signed row. All its chain equations already hold by the calculation above. When $K$ is a path the only edge-column test is in global degree one, recovering the arrival/departure inequality of Response 1.
+
+**Every positive degree can be the first failure.** Let $u$ be an $m$-atom of $K$, $m\ge1$, and take consecutive spatial edges $C,D$. In the left cylinder choose the $m$-face of $u\otimes C$ containing $u$ over the initial spatial vertex. In the right cylinder choose the $m$-face of $u\otimes D$ containing $u$ over the terminal spatial vertex. Each projects to $u$. The choice exists because the two terms of $u\otimes\partial C$ occur on opposite faces, with coefficient signs determined by $(-1)^m$; the same holds for $D$. In degree $m$ the seam coefficient of $u$ in the reconstructed row is $0+0-1=-1$.
+
+To verify that *every lower row* passes, map the generating $(m+1)$-cell of $D^m\otimes I$ by $u$ in the first slot and the composite $CD$ in the second. Its two $m$-faces have common proper boundaries. Collapsing either spatial edge recovers the corresponding elementary cylinder on $u$. Hence the prescribed candidate faces, whichever signs selected them, agree below degree $m$ with the projections of an actual global $m$-face. This also verifies the outer vertices when $m=1$. Taking $K=D^{m-1}\otimes I$ and its top atom realizes every first-failure degree in the three-factor family itself. Thus a test on a fixed finite number of lower rows cannot decide gluing uniformly.
+
+### The crossing hom of a one-sided suspension
+
+For any finite globular $P$, put $H_I=(K\otimes I)((x,0),(y,1))$. The coefficient of the interval edge in each signed row defines a strict functor $e:H_I\to K$, lowering the *global* degree by one. In degree zero of the hom it selects the point where the path crosses. Then there is a strict isomorphism
+$$
+ (K\otimes\Sigma P)((x,0),(y,1))
+       \ \cong\ H_I\times_{K}(K\otimes P),
+$$
+where the other map to $K$ augments $P$. Collapse $\Sigma P\to I$ for the first projection. For the second, discard the spatial vertex columns and replace each $k\otimes Sp$ by $k\otimes p$, dropping the global object row. On the mixed part of the differential this commutes with boundaries by the tensor rule and $\partial Sp=S(\partial p)$ for $|p|>0$. A crossing path contains exactly one suspended edge, so the new degree-zero row is augmented. These two projections agree over $K$ because the collapse retains exactly the suspended spatial vertices in the interval-edge column.
+
+For the inverse take the two vertex columns from the $H_I$ cell and suspend the spatial factor of each row of the $K\otimes P$ cell to obtain the mixed column. All rows are positive. The mixed components of their boundary equations hold in $K\otimes P$. The two vertex components are exactly the equations in $H_I$, since the term from $\partial Sp=1-0$ for $|p|=0$ contributes the augmented mixed column with the tensor sign. The pullback equality identifies that column with the interval-edge column. Truncation, identity padding and addition above a cut commute with this reconstruction. In particular, for the interval-in-the-middle problem one can take $K=P_0\otimes I$ without a globularity assumption on $K$.
+
+The same formula holds **in any tensor slot**. In $A\otimes\Sigma P\otimes B$, fix $X=(x,0,b)$ and $Y=(y,1,b')$. Let $B^{\mathrm{op}_{\rm all}}$ have the same based groups, augmentation and positive cones as $B$, with differential $-\partial$ in positive degrees. Write $B'$ for this total opposite. Then
+$$
+ (A\otimes\Sigma P\otimes B)(X,Y)
+ \ \cong\ (A\otimes I\otimes B)(X,Y)
+        \times_{A\otimes B'}(A\otimes P\otimes B').
+$$
+The right map augments the middle factor. For the left map take the interval-edge column and omit that edge. In the mixed column the sign on the differential of a generator of $B$ is $(-1)^{|a|+|p|+1}$ before replacing $Sp$ by $p$. The total opposite supplies exactly this sign afterward. The $A$ and $P$ differentials retain their signs. On the vertex columns one keeps the original $B$ differential throughout. The two conclusions about positivity and reconstruction therefore follow by the same row argument. The total opposite still has a unital strongly loop-free basis since exchanging the face signs reverses the loop-free order.
+
+### Checks and the remaining term problem
+
+The wedge checker independently enumerates the strict tensor by closure of its atoms. For *every* compatible pair of projected cells it tests the differential on every globe-times-path generator, records the first negative seam row, and compares the set of positive reconstructions with the enumeration. For $K=D^3\otimes I$, $U=V=I$, it recovers 46, 474, 1,498, 2,024, 2,045 and 2,045 crossing cells in global degrees 1 through 6. Exactly one candidate in degree 4 first fails in row 4. [Reproduce the wedge check](../../../tools/gray_wedge_cylinders.py)
+
+The suspension checker builds the three strict categories independently, matches the two projected tableaux, and compares every reconstructed cell with the target at each degree. For $A=B=I$ and the tree $P$ below, it verifies 54, 388, 963, 1,138, 1,144 and 1,144 cells in hom degrees 0 through 5, including identity padding. [Reproduce the suspension check](../../../tools/gray_suspension_pullback.py)
+
+~~~sh
+python3 tools/gray_wedge_cylinders.py '[[[[[]]]],[[]]]' '[[]]' '[[]]'
+python3 tools/gray_suspension_pullback.py '[[[]]]' '[[],[[]]]' '[[[]]]'
+~~~
+
+For CT the remaining wedge problem is to lift the three normalized strict cylinders to CaTT substitutions with the same chosen terms on their shared caps, and to obtain the selected globular boundaries at the two constant ends. Weak cylinder stacking takes already typed cylinders with matching caps. A CT section on each piece gives terms for individual strict cells, but its type for the image of a cylinder generator can use a different term for a composite boundary from the one required by the cylinder substitution. The strict factorization identifies the substitutions that need to be constructed. [Benjamin–Markakis–Offord–Sarti–Vicary, §4, Theorem 4.3](https://arxiv.org/pdf/2501.11620)

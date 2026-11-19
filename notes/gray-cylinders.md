@@ -90,7 +90,7 @@ Not done: templates for q ≥ 2 (M ⊗ Dⁿ, n ≥ 2) and C-templates beyond bin
 
 ## 3. Vertical composition
 
-`compSub sd Γ` is defined for every globular Γ of dimension ≤ 2. Well-typedness is **checked** only on D¹, D², the composable pair (both orientations) and the horizontal pair of 2-cells (right); a proof for all such Γ is open (D13), and Γ of dimension ≥ 3 is D15. It sends copy 0 to copy 0, copy 1 to copy 2, and the cylinder generator of x to a composite "x⊗(i;j)":
+`compSub sd Γ` is defined for every globular Γ of dimension ≤ 2. Its explicit form `compE` is **proved well typed for every such Γ** (§3a). `compSub` is literally `compE` on the shapes checked in `Checks.VCompAgree`; that they agree for every Γ is not proved. Γ of dimension ≥ 3 is D15. It sends copy 0 to copy 0, copy 1 to copy 2, and the cylinder generator of x to a composite "x⊗(i;j)":
 
 - **x a 0-cell:** xᵢ ; xⱼ.
 - **f : x → y (right):** (xᵢ;xⱼ);f₂ ⇒ xᵢ;(xⱼ;f₂) ⇒ xᵢ;(f₁;yⱼ) ⇒ (xᵢ;f₁);yⱼ ⇒ (f₀;yᵢ);yⱼ ⇒ f₀;(yᵢ;yⱼ): associator, xᵢ ◃ fⱼ, associator, fᵢ ▹ yⱼ, associator. Left is the mirror image.
@@ -110,6 +110,27 @@ Not done: templates for q ≥ 2 (M ⊗ Dⁿ, n ≥ 2) and C-templates beyond bin
   Each non-generator step is a coherence over a pasting scheme, substituted and whiskered into the chain ("regroup ; whisker ; regroup", `stepAt` in `GrayCtx.Elab`). Left is the mirror image (steps in the opposite order).
 
 **Answer to `internal-hom.md` §7 item 3.** For Γ = D¹ and D², and in fact every globular Γ of dimension ≤ 2, plain coh provides every needed term. The list of coherences used is: associator and inverse; naturality of the associator in each argument; functoriality of whiskering on each side; identities and unitors (only in the D6 datum). **No non-pasting-scheme composite is needed** at this level, so these targets give no case for molecular coh. The non-ps shapes appear only as *types of generators* (the hexagon boundary of the Gray cube), and those are handled by layering with associators.
+
+## 3a. D13 for vertical composition: every globular Γ of dimension ≤ 2
+
+The same disk reduction as §1a, for Γ ⊗ (D¹ ∨ D¹) ⊢ comp : Γ ⊗ D¹.
+
+**Construction** (`GrayCtx.VCompExplicit`).
+- `cyl2E sd Γ` is Γ ⊗ (D¹ ∨ D¹), built levelwise from Γ ⊗ D¹ (`cylE`). Every level is the image of a level of Γ ⊗ D¹ under one of the two inclusions ιI (onto copies 0, 1 and block i) and ιJ (onto copies 1, 2 and block j), with its type renamed along that inclusion.
+- `imgE sd m` is the image of the top generator of D^m ⊗ D¹ under the elaborator's composite (`VComp.Comp.compGen` run on the disk).
+- `compE sd Γ` sends copy 0 to copy 0 and copy 1 to copy 2. It sends x ⊗ e to imgE (dim x), renamed along χ_x ⊗ (D¹ ∨ D¹).
+- `Checks.VCompAgree`: cyl2E is literally `cyl sd 2`, and compE is literally `VComp.compSub`. This holds on D⁰–D², the composable pair, and the vertical and horizontal pairs of 2-cells, in both orientations.
+
+**Theorems** (`GrayCtx.VCompAll`, no postulates, `--safe`).
+- `cyl2E-wf`: Γ ⊗ (D¹ ∨ D¹) is well formed for every well-formed globular Γ, of any dimension. Each level is a type of Γ ⊗ D¹ (`cylE-wf`) renamed along the monotone, type-respecting map ιI or ιJ.
+- `compW-wf` / `compE-wf`: suppose the disk images are well typed, that is, `cyl2E (D^j) ⊢ img j : T_j[comp(D^j)]` for j ≤ k. Then cyl2E Γ ⊢ comp Γ : cylE Γ for every well-formed globular Γ of dimension ≤ k. The proof is for an arbitrary family img, so it never unfolds the elaborator. The steps are:
+  1. ρ_x = χ_x ⊗ (D¹ ∨ D¹) respects types from cyl2E(D^m) to cyl2E(Γ). This holds because ρ_x ∘ ι^D = ι^Γ ∘ (χ_x ⊗ D¹), together with §1a's renaming of the disk cylinder, including its top generator.
+  2. The type of the entry x ⊗ e is T_m[comp(D^m)] renamed along ρ_x. This uses (CC) of §1a on the boundary generators: comp Γ (χ_x d ⊗ e) = ρ_x(comp(D^m)(d ⊗ e)).
+- `Checks.VCompAll` certifies the disk hypothesis for k = 2, in both orientations. **Corollary `vcomp-wf`**: Γ ⊗ (D¹ ∨ D¹) ⊢ compE : Γ ⊗ D¹, and the same for D¹ ⊗ Γ, for every well-formed globular Γ of dimension ≤ 2.
+
+**What is not covered.**
+- The disk images for dimension ≥ 3 do not exist, because the elaborator's composite is defined only up to dimension 2. That is D15.
+- Agreement with `compSub` is checked on the listed shapes, not proved for all Γ. The theorem is about the explicit compE.
 
 ## 4. The Gray cube and G4
 
@@ -162,7 +183,7 @@ Both are encodable with the code here once there is an Agda CaTT_su (no thread h
 
 ## Open (recorded in `open-issues.md`)
 
-1. **D13, remaining part.** The cylinder is proved well formed for every globular Γ of every dimension (§1a). Still open: the analogous disk reduction for vertical composition (dimension ≤ 2, all Γ).
+1. **D13.** Done: the cylinder is proved well formed for every globular Γ of every dimension (§1a), and the explicit vertical composition compE is proved well typed for every globular Γ of dimension ≤ 2 (§3a; it is the elaborator's compSub on the checked shapes).
 2. **Cylinder of arbitrary composite boundaries** (Γ ⊗ D¹ for non-globular Γ). Only binary 1-composites are handled here; the general case is Conjecture N (C1) and the explicit construction of D3, both owned by NGC.
 3. **D14. toL and toR mutually inverse up to higher cells.**
 4. **D15. Vertical composition for Γ of dimension ≥ 3**, and associativity and unit laws for it as coherences between substitutions (`internal-hom.md` §5.3).

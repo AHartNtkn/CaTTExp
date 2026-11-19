@@ -17,3 +17,5 @@ import CaTTExp.GrayCtx.Checks.NaturalAgree
 import CaTTExp.GrayCtx.Checks.WhiskerAgree
 import CaTTExp.GrayCtx.Checks.ExplicitAgree
 import CaTTExp.GrayCtx.Checks.Templates
+import CaTTExp.GrayCtx.Checks.VCompAll
+import CaTTExp.GrayCtx.Checks.VCompAgree

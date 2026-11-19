@@ -156,3 +156,25 @@ The script computes, exactly, the 4-endomorphisms of F_T(Σ[m] ∨ Σ[n]) throug
 - The forced repair is therefore not a finite list of loop equations. The candidate is (C∞), every 4-endomorphism an identity. Given T's support equations, this is equivalent to every 4-edge on a 4-cycle being invertible. Its consistency through dimension 4 is plausible by the (K36) argument (4-cycles consist of cut-neutral ι-moves, and inverting an edge on a cycle adds no new homs), but this has not been checked.
 
 **Scope.** These are computations for two-factor chains only. Three factors, where τ appears, and Γ with generating 3-cells are not covered. The model's 4-equations are T's for this Γ, as listed in (K30) and instantiated by hand in the script. The zero-pair results do not depend on that list, since a missed equation could only remove endomorphisms. The positive claim does depend on it: that the rotation R survives (C), and with it the Σ[2] ∨ Σ[6] obstruction. Nothing certifies that the list is complete, and no separating invariant for R is given, so that claim is computed, not proved.
+
+## 7. The 3-equation repair (R) of the r3 response
+
+*Script options `--R`, `--Rall`, `--thin` of `scripts/e6/t_endomorphisms.py`. Source: `conjectures/answered/lax-interchange-every-dimension-r3-2026-11-19.md`; summarised as (K39) of the r4 prompt.*
+
+- **Guillotine expansions.** Call the expansions of χ(A, B) that T's outer laws produce "guillotine". The crossing paths from BA to AB that are not guillotine are exactly the response's V on 3×2, and its mirror (13)(12)(23)(11)(22)(21) on 2×3. The mirror is the base 3-cell of the rotation R of §6.
+- **T + (R) + (C)**, with (R) taken in all substitution instances, both orientations and in context. Σ[2] ∨ Σ[≤3] and Σ[3] ∨ Σ[2] are clean. Σ[3] ∨ Σ[3] is clean on its decided part (13 cells undecided). But Σ[2] ∨ Σ[4] keeps 2 endomorphisms on the extreme 3-cell, which doubles to an obstruction on Σ[2] ∨ Σ[8].
+- **(R) does not merge all extreme paths.** Classes of crossing paths BA → AB, without and then with (R):
+  - 2×4 (14 paths): 7, then 2;
+  - 3×3 (42 paths): 21, then 13;
+  - 2×5 (42 paths): 25, then 10.
+
+  So the 3-level repair must be R∞: every crossing path BA → AB equals χ(A, B).
+- **T + R∞ + (C)** still keeps 1 extreme endomorphism on Σ[2] ∨ Σ[4]. It is made of ι-loops at w in contexts that are not H instances.
+- **T + R∞ + (C) + "every single-edge 4-loop is 1"** is clean on Σ[2] ∨ Σ[3] and Σ[2] ∨ Σ[4], and on Σ[2] ∨ Σ[5] except for 1 undecided cell.
+- **Expanded-basis requirement 2 does not force (R).** Take contextual 3-edges to be (word, crossing). V's edge set lies inside the union of the four W representatives' sets, but equals none of them, and those four differ pairwise.
+
+**A single statement (proposed, unchecked):** thin blocks. The interchanger-only cells between the two extreme composites L(u⃗), R(u⃗) of an interchanger of composites form a contractible hom. It must be restricted in two ways:
+- to extreme words, because between intermediate words the 2-whiskered elementary ι must stay non-identity (requirement 3);
+- to interchanger cells, because otherwise the A ⊗ B atom between r/t routes would collapse.
+
+As with §6, every survival claim here is computed, not proved. Each depends on the script's equation list being complete.

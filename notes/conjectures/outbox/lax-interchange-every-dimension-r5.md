@@ -3793,3 +3793,161 @@ In each active path choose the stated mixed atom. In a join choose the left vary
 For completeness, if a surviving factor has only one slot, subdivide that slot into two consecutive slots in the same factor. Substitute their composite for the old slot and whisker its advances on one chosen subslot by the identity on the other. Contracting the extra subslot recovers the original generators. Thus a reverse on the smaller shape would map to a reverse with both active inputs still proper on the four-slot shape. If the projected interval uses only some of the crossings, prepend and append fixed histories extending its endpoint shuffles to the full shuffle, as in Response 21. The selected 4-edges keep positive weight in those fixed temporal contexts. The two-advance results now exclude the projected reverse in all cases.
 
 Run `python3 -B scripts/e6/interchange_bilateral_ground.py` and `python3 -B scripts/e6/interchange_bilateral_rectangles.py` from the repository root. Add `--synthesize` to the second command to recompute the four ranks using GLPK. For Q1 the proof leaves open rectangles whose active inputs admit no such common pair of outer factors and no witness covered by earlier responses. In particular a triangle uses three outer factors, and an inner exchange can stay proper without carrying any unary mixed atom.
+
+# Researcher Response 24
+
+**One fixed diagram and one pair of 2-boundaries suffice for the remaining
+universal directedness question about Response 12.** Take eight consecutive
+outer factors \(\Sigma[1]\), one 2-slot in each, with no generating cells
+in dimensions three or above. Take the 2-word interval from \(87654321\)
+to \(12345678\). Strong degree-five directedness on *all* four-input
+rectangles of this interval is equivalent to strong directedness on
+every finite diagram in every dimension for that presentation. Moreover,
+on a proposed return in this interval every representative has at most
+**56 mixed 4-steps and 280 inner event pairs of opposite temporal colors**.
+These are uniform bounds, including for rectangles with arbitrary powers
+of loops in their four inputs.
+
+## Replacing unary advances by crossings
+
+By Response 22 any counterexample has one whose two chosen proper edges
+are structural. Apply the retaining requests of Response 5, including
+the contractions above height three. The cost is the number of retained
+2-slots plus the number of retained unary advances, at most eight.
+This gives the following substitution, which also eliminates the unary
+advances. Its direction is from the pruned diagram *into* a pure
+crossing diagram, so a reverse on the former supplies one on the latter.
+
+Write the slots of each old outer factor in their chain order. A slot
+with \(k\) retained unary advances has \(k+1\) parallel generating
+2-faces, indexed \(0,\ldots,k\). Give it a bundle of \(k+1\)
+distinct, consecutive new outer factors. Concatenate the bundles in
+the old within-factor order and then the old outer order. Replace the
+old outer endpoints by the endpoints of their respective strings.
+The 1-face after the first \(i\) old slots goes to the 1-word with
+all strands of those bundles at their final 1-arrows and all later
+strands of that old factor at their initial 1-arrows.
+
+In a bundle call the smallest strand \(t\), and write the rest in
+increasing order as \(u_1,\ldots,u_k\). Send the \(j\)-th 2-face
+to the 2-word
+\[
+       u_1\cdots u_{k-j}\ t\ u_{k-j+1}\cdots u_k ,
+\]
+whiskered by the prescribed 1-arrows of the other bundles. These
+2-words have identical 1-boundaries. From face \(j\) to face \(j+1\)
+send the old unary advance to the contextual crossing that moves
+\(t\) left past \(u_{k-j}\). The case \(k=0\) gives a single
+generating 2-step. These formulas match every globular face and hence
+give a substitution on the entire pruned free object. In particular
+there is no assumption that an arbitrary composite 3-history is a
+generating input on the new shape.
+
+In an atomic expansion each old unary event becomes one crossing.
+A crossing of two old slots becomes the positive complete crossing
+of their two bundles: their outer spans are distinct and ordered.
+Thus every retained positive 3-event has positive image mass. For
+\(\iota\) the retained operands still occupy disjoint spatial windows
+and their two masses still give positive product weight. For \(r,t\)
+the retained varying event and stationary slot give a positive tensor
+chain, and the join has the same positive chain as its associated
+\(r\). The positive 4-grading on the *new* diagram keeps both complete
+active inputs nonidentity. Substitution carries both inactive paths,
+every equation and the proposed reverse. The number of new strands is
+exactly the retaining cost. In particular a request using an old
+unary event does not cost two strands in addition to the old slot.
+
+All strands of the retained bundles are traversed by the outside
+2-words, since every requested slot participates in a selected event.
+If there are fewer than eight strands, include their interval in the
+eight-factor string. Whisker by the fixed initial 1-arrows of the
+extra factors and then append their 2-steps by fixed 2-whiskering
+in the terminal spatial subword. Equivalently, adjoin those stationary
+letters to every current permutation; old histories act in the old
+subword. This preserves properness and the elementary rectangle by
+functoriality of fixed whiskerings and Godement expansion. The two
+outside 2-words are now permutations of all eight strands. Prepend
+a fixed 3-history from the decreasing permutation to the first one
+and append a fixed 3-history from the last one to the increasing
+permutation. Both exist by adjacent inversion removal: for the first
+extension sort the decreasing word stably into the order of the
+specified permutation, crossing only pairs out of that desired order.
+Whisker the early temporal input histories by the common prefix and
+the late histories by the common suffix. The four paths still factor
+at their original intermediate 2-state. The opposite implication is
+restriction to this particular diagram. Responses 8–12 handle the other
+degrees and the reduction of a nonadjacent cut.
+
+## A uniform bound independent of the four input lengths
+
+In the pure \(n\)-strand interval a proper outer 4-step, including
+a join, has a positive Gray chain consisting of triangles. The total
+multiplicity \(N\) of triangles in any 4-path is at most \(\binom n3\).
+Indeed contract to each chosen triple of strands. Its three pair
+crossings have just the two braid orders. All inner moves project to
+units and the triangle changes the first order to the second; it
+cannot change back. This recognizes each occurrence of that triple
+regardless of stationary factors. Equivalently this counts the
+corresponding coefficients of the positive Gray chain after contraction.
+Thus at most \(N\) proper mixed steps occur, and on a proposed reverse
+the chain and \(N\) are fixed.
+
+Use the two temporal colors E and L and the integer
+\(\Delta=w-w_{\rm E}-w_{\rm L}\), using the same \(c\) for the three
+weights of Responses 4 and 22. Every step on a return has zero Gray
+5-chain, so all three weights are conserved. In each of the four
+original inputs the entire active window has one color. Its filtered
+weight for that color is precisely the unfiltered weight, including
+the spectator crossings in the colored moment, which are themselves
+events of the same window. Hence \(\Delta=0\) on every representative
+of every path along a return.
+
+For an inner step \(\Delta\) is exactly the number of opposite-color
+pairs in its Cartesian product. For a proper \(r\) or \(t\) let
+\(u\ge2\) be the number of slots in the varying operand and \(s\ge1\)
+the number in the stationary one. If \(A\) is the varying history,
+the mixed chain has multiplicity \(a=m(A)s\). In the three formulas
+the constant terms cancel. For each varying event and stationary
+slot only spectator crossings of the opposite color contribute to
+the difference of moments. There are at most \(u-2\) such slots
+because the varying event itself occupies two. Thus
+\(\Delta\ge -(u-2)a\). In a join one must also subtract the number
+of opposite-color pairs between \(A\) and the right history \(B\).
+Since \(m(B)\le\binom s2\), this costs at most \(a(s-1)/2\).
+In every case, using \(u+s\le n\),
+\[
+     \Delta(\text{mixed step})
+       \ge -\bigl(u-2+(s-1)/2\bigr)a
+       \ \ge\ -(n-3)a .
+\]
+Adding over the 4-path proves the bound \((n-3)N\) on opposite-color
+inner pairs (for \(n\ge3\)). In particular at most 336 edges of any
+representative on eight strands can be mixed edges or inner edges
+with both colors in their active window. Every other positive edge
+is an inner exchange entirely on one temporal color. These observations
+concern all representatives, not just paths chosen during a search.
+
+The coefficient five per triangle on eight strands can occur. Use five
+consecutive spectator slots, then the moving crossing of slots 6 and 7,
+against stationary slot 8. Color the five crossings of the spectators
+and 8 early and the remaining triangle late. Equation (15) represents
+the narrow triangle after the spectator block by the wide triangle
+followed by its correcting inner product. In the wide triangle all
+five opposite-color spectators precede its varying crossing, giving
+\(\Delta=-5\). The correction exchanges exactly five opposite-color
+pairs. One can already place a proper early inner update on the first
+four spectator slots before their block. This shows why a uniform
+argument that simply excludes all opposite-color inner exchanges would
+lose genuine representatives.
+
+**Validation.** The [eight-strand substitution checker](../../../scripts/e6/interchange_eight_strands.py)
+checks all 3,280 ordered bundle and factor profiles of costs one through
+eight, including 7,108 generating advances and 50,644 choices of
+outer crossing faces. It executes the two routes of (15) just described
+and checks the source and target of their early padding. Dynamic
+programming on the 40,320 permutation states gives
+48,608,795,688,960 raw complete histories before (K15). Run
+`python3 -B scripts/e6/interchange_eight_strands.py`. The bounds do
+not limit the number of monochromatic inner steps. In particular the
+equivalence above does not by itself decide reachability for all four
+inputs on the fixed interval.

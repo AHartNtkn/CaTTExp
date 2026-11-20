@@ -675,3 +675,53 @@ The checker verified reflection and involutivity on all 8,987 intrinsic cells in
 python3 tools/gray_globe_distant_columns.py 10 --agda /tmp/GrayDistantColumns.agda
 agda --safe -i /tmp -i src /tmp/GrayDistantColumns.agda
 ~~~
+
+# Researcher Response 9
+
+**Every cell of a globe pair can be recovered from its collapse to a smaller globe pair by one signed substitution and at most one final change of a stationary variable.** This gives a different sufficient condition for Q2. Its inputs are substitutions on *generator declarations* in one column. Given those inputs, the construction supplies the terms for all composite cells, including the two distant orders in Response 7. The first nontrivial threshold gives an unconditional extension of an old signed section across the whole subpresentation omitting bidegree $(m-1,2)$.
+
+### The threshold maps
+
+Write $m=p+1$ with $p\ge1$, $X=D^p\otimes D^n$ and $Y=D^m\otimes D^n$. Collapse $\pi:Y\to X$ kills first rank $m$ and forgets the first tag at rank $p$. For $0\le t\le n$ and $e\in\{0,1\}$ define $F_t^e:X\to Y$ as the identity below first rank $p$. On $A_p B_j^y$ set $s=y\mathbin\oplus(p\bmod2)$ for $j<t$, and $s=e$ otherwise. The first rule only encounters bit tags. Set
+\[
+ F_t^e(A_p B_j^y)= A_p^{s}B_j^y
+    +[1\le j\le t]\, A_m B_{j-1}^{(1-s)\oplus(p\bmod2)} .
+\]
+In particular $F_0^e$ is the ordinary signed inclusion. To verify the differential, let $P(B_j^y)=s B_j^y$ and let $H=(-1)^p(P\partial-\partial P)$ on the unaugmented chains of the right globe. Then the displayed image is $A_p^- B+(A_p^+-A_p^-)P(B)+A_m H(B)$. Expanding the Leibniz differential and using $\partial H+H\partial=0$ proves the claim. Both maps preserve augmentation and positive chains, and $\pi F_t^e=1$. Further, $F_t^1-F_t^0=\partial K+K\partial$, where $K(A_pB_j^y)=[j\ge t]A_mB_j^y$ and $K$ vanishes at smaller first rank. This follows by subtracting the two formulas for $P,H$.
+
+### Reconstructing an arbitrary cell
+
+For a cell $w$ of $Y$, put $c=\pi w$. Let $u$ and $v$ be the largest transverse ranks occurring anywhere in its tableau at first ranks $m$ and $p$, respectively, with value $-1$ for an empty column. Downward closure gives $u\le v$.
+
+- If $v=-1$, then $w=c$.
+- If $u<v$, there is a unique $e$ such that $w=F_{u+1}^e(c)$. This includes the ordinary signed copies when $u=-1$.
+- If $0\le u=v$, put $d=p+u$. The degree-$d$ rows of $c$ contain the same stationary label $S=A_pB_u^y$. Put $r=A_mB_u^y$ and let $z$ be the terminal $d$-pole of $c$ (or $c$ itself in dimension $d$). There is an elementary $(d+1)$-cell $R(z)$ with top chain $r$ and faces $F_u^0(z),F_u^1(z)$. Then $w=F_u^0(c)*_d R(z)$ with strict identities understood. In dimension $d$ of $c$ this is just $R(c)$.
+
+Here is a proof of the tag assertions and the reconstruction. Every signed row of a globe pair has at most one label of each bidegree and its two sides have the same bidegrees. The projection already specifies the whole tableau except for the first tags at $p$ and the labels at $m$. At bidegree $(p,j)$ consider the differential from the next row. Its only possible contributors are $(p,j+1)$ and $(m,j)$. If both occur, their two directed edges in the square of tag pairs must cancel at one vertex, since the resulting difference has just one positive and one negative vertex. They therefore trace a path from $(0,p\bmod2)$ to $(1,1\oplus(p\bmod2))$. If $x$ is the first tag of $(p,j+1)$, the transverse tag of $(m,j)$ is $(1-x)\oplus(p\bmod2)$ on that same side of the next row. If only $(p,j+1)$ occurs, its first tag is inherited by both lower sides. If only $(m,j)$ occurs, both lower sides inherit its transverse tag and their first tags are $0,1$. If neither occurs, the two sides have identical labels at $(p,j)$.
+
+In the second case of the classification this fixes a common first tag $e$ from $v$ down through $u+1$. Below that threshold the two-edge rule gives exactly $F_{u+1}^e$. In the third case the one-edge rule at $j=u$ fixes $y$ and gives first tags $0,1$. The lower rows on each side of degree $d$ and the two degree-$d$ sides are consequently the ones prescribed by $F_u^0,F_u^1$ on the respective poles. The sole additional label at degree $d+1$ is $r$, and all higher rows come from $c$. These are precisely the rows of the asserted composite. The elementary $R(z)$ itself is obtained by using the common lower rows, its two specified caps and the single top label. Their difference is $\partial r$ by the homotopy formula, since $K$ vanishes below the cut and hits only $S$ there. This also shows that for $j\le t$ the image of the native atom $A_pB_j^y$ is the $s$-face of the atom $A_mB_j^y$. Indeed that face has top first tag $s$, the indicated other site when $j>0$, and collapses to the native old atom. The tag calculation gives all its lower rows.
+
+### A sufficient condition involving only old variables
+
+Start with an old section compatible with ordinary signed face inclusions. In the new presentation, suppose we can type substitutions $\sigma_t^e$ for the old generators with strict images $F_t^e$. Require the ordinary inclusions at $t=0$ and identical named variables below first rank $p$. Denote the image of $S=A_pB_j^y$ at its own threshold by $Y_j^e(S)=\sigma_j^e(S)$. Require that its image for any $t>j$ be literally $Y_j^{y\oplus(p\bmod2)}(S)$, and declare the new $A_mB_j^y$ with faces $Y_j^0(S),Y_j^1(S)$. The latter terms are parallel since the two substitutions at threshold $j$ agree on the attaching data of $S$.
+
+In a fixed or signed sector of the classification take the old term or its indicated substitution instance. In a crossing, use the depth-zero action on $T(z)$ at its maximal variable $S$. Substitute $\sigma_u^0$ on old variables, the term $Y_u^1(S)$ for the new endpoint of $S$, and the actual variable $r$ for its change. This gives a term for $R(z)$ with exactly the two required sector terms as faces. The two substitutions agree on every other variable in the support of $z$, by the cutoff and the stationary-tag calculation. The action has strict top chain $r$ because $S$ occurs once in the degree-$d$ chain of $z$. For $c$ above degree $d$, take $T(c)[\sigma_u^0]*_d R(z)$, using the usual binary whiskering heads with recursive faces. For $c=z$ use $R(z)$ directly. The new atom itself has $z=S$, so that this action is literally its declared variable.
+
+To see why this gives a *single* assignment, first take a face in a sector. As long as the old face contains a column label at transverse rank at least $t$, the same substitution applies. Otherwise let $j<t$ be its highest column rank. The signed label $A_pB_j^y$ there is stationary since it has no column successor. On its entire support the substitution now agrees literally with $\sigma_j^{y\oplus(p\bmod2)}$. This is precisely the sector selected for that face. Faces missing the column are fixed. For a crossing with $\dim c>d+1$, both faces are crossings with the same terminal $d$-pole, so the recursive whiskering heads give the required terms. At $\dim c=d+1$ the two exterior faces are the initial sector at the source and the final sector at the target. At $\dim c=d$ these are the two faces of the action itself. Identity towers use the ordinary iterated identity terms. All ordinary signed atoms are pinned by $\sigma_0^e$. This proves the criterion without requiring comparisons between different serializations.
+
+There is a triangular way to pose its input. At stage $t\ge1$ assume $\sigma_{t-1}^e$ available, and use $Z=A_pB_t^y$. Each $(p+t-1)$-pole $z_\alpha$ of $Z$ has a single stationary column variable of transverse rank $t-1$, with tag $\alpha\oplus(p\bmod2)$. Its change gives $R(z_\alpha)$ by the previous paragraph at threshold $t-1$. The two native cap terms can be taken to be
+\[
+ Y_t^0(Z)=\sigma_{t-1}^0(Z)*_{p+t-1}R(z_1),
+ \qquad
+ Y_t^1(Z)=R(z_0)*_{p+t-1}\sigma_{t-1}^1(Z).
+\]
+Their faces are exactly $T(z_0)[\sigma_{t-1}^0]$ and $T(z_1)[\sigma_{t-1}^1]$. These are also the lower substitutions required at threshold $t$, by the tag calculation. The extra top label from $R$ has exactly the transverse tag in $F_t^e$. We may therefore declare $A_mB_t^y$ immediately. What still needs a construction at stage $t$ is the image of each old $A_pB_j^y$ with $j>t$, in ascending $j$, between the two substituted attaching terms. Its prescribed top chain has just the signed old generator. This is a sufficient list of generator judgments for all globe pairs. It does not require retaining the choices of Response 4.
+
+In particular, if $(p,2)$ is absent, only $t=0,1$ are needed, and at $t=1$ there is no old column generator above the threshold. The construction gives CT on this whole subpresentation from CT on the corresponding old subpresentation. At an independent horizontal $(d+1)$-step with stationary $S$ in degree $d$, depth-one naturality at $S$ compares taking the right change before or after that step, with the actual four terms of this assignment. The theorem applies on the support subcontext because $S$ there is maximal and all other higher-dimensional generators in the step have first rank less than $p$. For the general criterion there can still be old column generators above the threshold. The existence of their typed images, and hence the all-dimensional Q2 assignment, remains open. [Naturality for higher-dimensional path types, Theorem 3.1](https://arxiv.org/pdf/2501.11620)
+
+The checker reconstructs all 8,987 intrinsic cells in the five-by-five box, including 1,683 crossings. Through bounds eight it verifies 83,840 signed basis images, 41,920 homotopy equations and both horizontal and both vertical boundaries on 182 distant squares. For the subpresentation of $D^3\otimes D^4$ omitting $(2,2)$, it independently evaluates all 488 raw terms as strict tableaux, checks every literal face and checks all 48 generator pins. It also emits the crossing judgments in dimensions four and five for Agda. [Threshold reconstruction and term checker](../../../tools/gray_globe_threshold_faces.py)
+
+~~~sh
+python3 tools/gray_globe_threshold_faces.py 8 --terms 4 --agda /tmp/GrayThresholdFaces.agda
+agda --safe -i /tmp -i src /tmp/GrayThresholdFaces.agda
+~~~

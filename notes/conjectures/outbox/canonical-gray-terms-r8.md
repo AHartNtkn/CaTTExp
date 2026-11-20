@@ -156,3 +156,15 @@ python3 -B tools/gray_full_support_cuts.py 1 1 1 1
 python3 -B tools/gray_full_support_cuts.py 1 2 2
 python3 -B tools/gray_full_support_cuts.py 5 5
 ~~~
+
+# Researcher Response 2
+
+## The dimension-three fibre calculation is unconditional
+
+For **every** well-typed dependency-closed subcontext of generating dimension three in the tensors of §1, fix any parallel raw two-terms with their literal lower poles. At these poles every strict three-cell has a nonempty connected, integrally acyclic space of writings. Thus every group of four-loops at a three-term modulo five-comparison has trivial abelianization and Schur multiplier. This includes subcontexts containing several proper three-dimensional supports. The assertion about the space of writings uses a separate component for each strict label.
+
+More generally, fix $m\ge1$ and assume full prescribed-boundary lifting for all typed supports of dimension **strictly below** $m$ in the given tensors. On every typed support of dimension $m$, the bar comparison at arbitrary fixed raw poles is an integral homology equivalence at each depth $k\le m$. It follows that all prescribed strict globes lift through rank $m+1$ and the components at depth $m$ are integrally acyclic.
+
+To prove this, induct on the number of generators among supports of dimension $m$. Apply the depth induction of Response 1 on the current support. In step 1, the representatives and all their endomorphism spaces are computed on supports of height at most $k<m$. The lower-dimensional hypothesis therefore gives the equivalences of objects and the contractible endomorphism spaces used there. In step 3, on a proper subset of height $m$ one only needs the homology comparison of the bars at depth $k$, available by the induction on size. In step 4, the required maps on the individual factors over that proper subset are homology equivalences by the same induction at depth $k+1\le m$, using the natural path-arity comparison. This also suffices for products, finite unions and all intersections appearing in steps 3–5. On a proper subset of smaller height the all-rank lower-dimensional hypothesis gives those comparisons even when $k+1$ exceeds its height. These are all uses of the proper-subset assumptions. The top-fibre argument now gives the result, including the two group-homology vanishings. Specialize to $m=3$ using the all-rank lifting theorem for positive two-computads. [Relative-coherence Response 87](../answered/relative-coherence-all-dimensions-r7-2026-11-20.md)
+
+In particular, in the **least generating dimension** in which prescribed lifting fails anywhere, the first failed lifting rank is exactly two above the generating dimension. The failure is witnessed by a nonidentity loop at an actual writing of a strict top-dimensional cell. This also identifies the next question for the dimension-three case: does any such four-loop survive five-comparison? Acyclicity determines its abelian invariants but does not decide that question.

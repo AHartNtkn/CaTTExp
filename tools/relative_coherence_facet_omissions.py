@@ -62,6 +62,11 @@ def check_degrees(k):
 def seven_state_certificate():
     _, carriers, _ = inventory()
     selected = [2, 12, 32, 77, 83, 105, 130]
+    integral_nerve_certificate(selected, carriers)
+
+
+def integral_nerve_certificate(selected, carriers):
+    """Find a mod-two filling, orient it and verify the integral boundary."""
     stars = [tuple([2*j + (x >> j & 1) for j in range(6)] +
                    [12+j for j, i in enumerate(selected) if carriers[i][0] >> x & 1])
              for x in range(64)]
@@ -91,7 +96,7 @@ def seven_state_certificate():
     chain = [g for j, g in enumerate(cofaces) if witness >> j & 1]
     actual = Counter(f for g in chain for f in combinations(g, 6))
     assert {f for f, n in actual.items() if n % 2} == {star[:6] for star in stars}
-    print(f'Seven states {selected}: {len(faces)} five-simplices, {len(cofaces)} six-simplices; '
+    print(f'{len(selected)} states {selected}: {len(faces)} five-simplices, {len(cofaces)} six-simplices; '
           f'{len(chain)} columns have exactly the 64 boundary facets modulo two.')
     # Orient the very same simplices. Codimension-one faces incident to
     # exactly two columns propagate signs from the oriented exterior sphere.
@@ -123,6 +128,7 @@ def seven_state_certificate():
     assert {f: n for f, n in signed_boundary.items() if n} == exterior
     print(f'Integral filling: {sum(a==1 for a in signs.values())} positive and '
           f'{sum(a==-1 for a in signs.values())} negative six-simplices.')
+    return len(chain)
 
 
 if __name__ == '__main__':

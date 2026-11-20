@@ -1949,3 +1949,28 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_state_symmetries.py --agda "$dir/StateSymmetries.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/StateSymmetries.agda"
 ~~~
+
+# Researcher Response 68
+
+## The twelve-class test is optimal for arbitrary signed colourings, and there are exactly two smallest lists
+
+Work with the 42 classes of whole strict labels from Response 67. Grant the four-term comparison in each class on a list \(P\), called the permission. On the other states and on all exterior facets require the proper-restriction condition of Response 29 on the colouring coefficients. **For every permission of at most nineteen classes, existence of a nonzero signed boundary degree is decided exactly**, over the integers and over every modulus \(m\ge2\). It holds precisely when \(P\) contains one of ten inclusion-minimal lists; two have size 12, two size 15, two size 17 and four size 18. Every positive case has an ordinary colouring of degree \(+1\) or \(-1\). The two smallest sufficient lists for disproving degree-eight RC on the ring by this rule are
+\[
+\begin{split}
+&2,3,4,5,37,38,41,42,46,57,58,61,\\
+&36,37,38,41,42,46,57,58,61,62,63,77 .
+\end{split}
+\]
+Here an entry represents the full signed class of that state. In the other direction there are exactly four pairs of protected classes capable of blocking **all** nonzero degrees, leaving every other class permitted. Their representatives are \((7,37),(13,37),(13,38),(24,38)\). No single protected class suffices. These sharp bounds apply to support restrictions; a direct construction of a missing five-comparison can use the actual attaching terms.
+
+**Why the exhaustive test works.** For each translated staircase triangulation of the six-cube and each top flag \(F\) in it, let \(L(F)\) be the set of classes of states containing all seven vertices of \(F\). A necessary condition for nonzero degree is that every triangulation have a flag with \(L(F)\subseteq P\). Otherwise every top simplex in that triangulation lies in a protected state. Its signed fundamental chain then fills the exterior cycle integrally inside the support complex, so every cocycle in Response 29 has zero pairing, over any coefficient ring. This is stronger than arguing separately about the individual colourings in a signed sum.
+
+The 32 origins up to reversal give 720 flags each. Start with the family containing the empty permission. At one triangulation take all unions of a retained permission with some \(L(F)\) in it, keeping just the inclusion-minimal sets. By induction the upward closure is exactly the permissions passing every processed triangulation. This leaves 120 minimal necessary sets over all 42 classes. Separately the priority solver gives 16 minimal sufficient sets. All ten necessary minima below size 20 are themselves sufficient; the solver prints their representatives, seed, axis order and degree. For each it checks the actual vertex map, properness on each exterior facet, its complete set of full-colour classes and the signed simplex count. Thus no gap between necessity and sufficiency can occur at size at most nineteen. For a positive case, Response 39 uses actual ordered comparisons on full states and proper auxiliary generators elsewhere; Response 67 transfers the comparisons throughout the permitted classes for arbitrary raw terms. All other weak inputs and any number of repeated loop factors are covered by those proofs. The finite counts concern supports and degrees.
+
+**The four exceptional pairs.** Among the \(\binom{42}{2}\) pairs only the four displayed ones meet every priority permission. For either middle pair every one of the 720 flags at origin 2 lies in at least one of its eight named states, yielding an integral filling. For the first and last pairs use the nerve of the twelve exterior facets and eight protected states. The solver finds a six-chain modulo two, propagates integer signs from the exterior and then sums every integral five-face coefficient independently. The first pair gives 336 six-simplices (168 of either sign), the last 320 (160 of either sign). In each case the resulting boundary is exactly the oriented 64-facet dual sphere. The nerve equivalence relative to the exterior subcover from Response 31 identifies its class with the ordinary exterior boundary. Every signed colouring with proper restrictions on those eight states therefore has zero degree. For every other pair an ordinary degree-one-in-absolute-value priority witness avoids both. In particular the hypothesis of exactly two inequivalent failing classes would force their representatives to be one of these four pairs; the support-degree test cannot decide which, or whether the ring hypothesis holds.
+
+The command below reproduces the ten lists, both bounds and all four integral certificates. The full decision at size twenty and above is open outside the explicit positive and negative certificates. [Permission and integral certificate solver](../../../tools/relative_coherence_orbit_permissions.py)
+
+~~~sh
+python3 -B tools/relative_coherence_orbit_permissions.py
+~~~

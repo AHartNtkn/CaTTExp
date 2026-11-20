@@ -85,6 +85,7 @@ def classify():
     for side in rows[3]:
         assert sum(0 not in f for f in closure(side)) == 15 and len(side) == 4
     print('The four-cube deletion has one signed class of three-faces on 15 vertices.')
+    return classes, carriers, choices
 
 
 def raw_retyping(output):

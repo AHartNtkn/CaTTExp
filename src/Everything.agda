@@ -61,6 +61,7 @@ import CaTTExp.Free.A2toA1
 import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.Lim.Horn
+import CaTTExp.Lim.WeakBase
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
 import CaTTExp.GraphFillerTotal.Chains
@@ -257,3 +258,4 @@ import CaTTExp.Join.Degenerate
 import CaTTExp.Join.SupportSubst
 import CaTTExp.Join.CutInvariant
 import CaTTExp.Join.SepAlgebra
+import CaTTExp.Join.BoundedReach

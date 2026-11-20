@@ -411,6 +411,7 @@ See `conjectures/answered/finite-fibration-test-2d-base-2026-11-18.md` (PR #76).
 **Results:**
 - **Positive bases.** A 2-computad is *positive* when no 2-generator has an identity in its boundary. For positive bases, Free(Γ) ≃ F₂(Γ) (Chanavat 2603.22242, Cor. 3.39), and FT₃ holds. On the walking 2-cell, the homs are intervals or points. The general positive case follows from Loubaton Thm 3.2.3.15.
 - **Some non-positive bases admit no finite presentation.** Take σ : 1_x ⇒ 1_x. The localisation of B²ℕ is K(ℤ,2), but every finite `Free(Ψ)[S⁻¹]` groupoidifies to a finite CW complex. This obstruction belongs to that base, not to non-positivity: round 2 (§9.4) shows that Q = (∗; t; η : 1 ⇒ t) is non-positive with Free(Q) ≃ F₂ = BΔ_+^inj. **So the right hypothesis of the weighted-limit rule is "homotopical" (Free(Γ) ≃ F_n(Γ)), not positivity.** Positivity is one sufficient condition for it (Chanavat).
+- **Superseded as a rule hypothesis (2026-11-20, `design-decisions.md` §2, ledger B25).** This obstruction concerns the strict base F(σ) = B²ℕ. A CaTT diagram is a map out of the weak Free(Γ), so bases are now read weakly and no rule checks homotopicality. Over Free(σ) the terminal weight's total is Free(σ) itself. Homotopicality survives only as the optional `⊢hpol` judgement that lets a presentation use the base instead of a resolution (Proposition W).
 
 ### 9.4 Higher bases (FT_n): partly solved (researcher, verified modulo cited Loubaton results)
 

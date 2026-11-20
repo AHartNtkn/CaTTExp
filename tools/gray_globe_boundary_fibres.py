@@ -230,7 +230,7 @@ def check_blocks(domain, emitter):
     print('Contiguity conflicts by number of rivals and forks:', dict(sorted(conflicts.items())))
 
 
-def sort_face_patches(w, face_word=None):
+def sort_face_patches(w, face_word=None, block_order=None):
     """The two-step patches along the prescribed sorting of the faces of one singleton."""
     d = len(w)-1
     p = rank(w[-1][0][0])
@@ -238,7 +238,7 @@ def sort_face_patches(w, face_word=None):
     cut = d-2
     owner = {q: -1 if q in predecessors or q == p else q[0]
              for q in profile(w) if sum(q) > cut}
-    pieces = ordered_factors(w, cut, owner)
+    pieces = (ordered_factors(w, cut, owner) if block_order is None else block_order(w, owner))
     core, = [c for c in pieces if len(c) == d+1]
     assert set(map(rank, core[-2][0])) == predecessors
     for side in (0, 1):
@@ -259,6 +259,72 @@ def sort_face_patches(w, face_word=None):
                 yield minimal_shape(patch)
                 parts[i:i+2] = ordered_factors(patch, cut, {rank(ga): 1, rank(gb): 0})
         assert tuple(parts) == wanted
+
+
+def matching_factors(w, d, parity):
+    """Contract pairs of degree-d sites whose right index has the indicated parity."""
+    owner = {}
+    for chain, _ in w[d:]:
+        for g in chain:
+            # A higher singleton has the same block as its incident sites.
+            i = min(rank(g)[0], d)
+            owner[rank(g)] = i-1 if i % 2 == parity else i
+    return ordered_factors(w, d-1, owner)
+
+
+def expand_pairs(groups, d, side):
+    letters = []
+    for group in groups:
+        z = truncate(group, d, side)
+        letters.extend(ordered_factors(z, d-1, {rank(g): rank(g)[0] for g in z[-1][0]}))
+    return tuple(letters)
+
+
+def check_matching_words(domain, bound):
+    forks = defaultdict(set)
+    attachments = 0
+    for w in domain:
+        d = len(w)-1
+        if d < 1:
+            continue
+        indices = [rank(g)[0] for g in w[-1][0]]
+        before = orders(w, d-1, {rank(g): rank(g)[0] for g in w[-1][0]})
+        forked = any(i+1 in indices and i+2 in indices and
+                     ((i, i+1) in before) != ((i+1, i+2) in before) for i in indices)
+        words = [expand_pairs(matching_factors(w, d, p), d, 0) for p in (0, 1)]
+        assert (words[0] != words[1]) == forked
+        if forked and indices == list(range(indices[0], indices[-1]+1)):
+            forks[d, indices[0], indices[-1]].add(minimal_shape(w))
+        if d < 2 or len(indices) != 1:
+            continue
+        h = d-1
+        p = rank(w[-1][0][0])
+        for parity in ((p[0] % 2,) if min(p) else (0, 1)):
+            groups = matching_factors(w, h, parity)
+            core, = [g for g in groups if len(g) == len(w)]
+            immediate = {q for q in ((p[0]-1, p[1]), (p[0], p[1]-1)) if min(q) >= 0}
+            if min(p):
+                assert set(map(rank, core[h][0])) == immediate
+            else:
+                owner = {rank(g): rank(g)[0] for g in core[h][0]}
+                owner[p] = next(iter(immediate))[0]
+                inside = ordered_factors(core, h-1, owner)
+                short, = [g for g in inside if len(g) == len(w)]
+                assert set(map(rank, short[h][0])) == immediate
+                for side in (0, 1):
+                    assert tuple(truncate(c, h, side) for c in inside) == expand_pairs((core,), h, side)
+            for side in (0, 1):
+                z = face(w, side)
+                assert expand_pairs(groups, h, side) == expand_pairs(matching_factors(z, h, parity), h, side)
+            attachments += 1
+    s = lambda i: small_schroeder(i) if i else 1
+    totals = {}
+    for d in range(2, bound+1):
+        for a in range(d-1):
+            for b in range(a+2, d+1):
+                assert len(forks[d, a, b]) == (2**(b-a)-2)*s(a)*s(d-b)
+        totals[d] = sum(len(shapes) for (h, _, _), shapes in forks.items() if h == d)
+    print('Matching-word attachment checks:', attachments, 'connected fork shapes by degree:', totals)
 
 
 def check_local_words(domain, bound):
@@ -308,6 +374,7 @@ if __name__ == '__main__':
     domain = cells((args.m, args.n)) - {()}
     check_fibres(domain, args.m, args.n)
     check_local_words(domain, min(args.m, args.n))
+    check_matching_words(domain, min(args.m, args.n))
     if min(args.m, args.n) >= 5:
         emitter = Emitter() if args.agda else None
         check_blocks(domain, emitter)

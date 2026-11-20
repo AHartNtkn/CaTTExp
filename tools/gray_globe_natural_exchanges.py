@@ -38,6 +38,82 @@ def central_word(z):
     return ordered_factors(z, 4, {p: priority.index(i) for p, i in owner.items()})
 
 
+def outer_relations(z):
+    sites = top_sites(z)
+    if not {1, 2, 3, 4} <= {q[0] for q in sites}:
+        return None
+    before = orders(z, 4, {q: q[0] for q in sites})
+    return (1, 2) in before, (3, 4) in before
+
+
+def chord_order(w, owner, precedence):
+    """Sort each consecutive run separately, with one extra order inside the mixed run."""
+    before = orders(w, 4, owner)
+    if precedence is not None:
+        a, b = (1, 4) if precedence else (4, 1)
+        before.add((owner[a, 5-a], owner[b, 5-b]))
+    # Give each group its true left index, including the active two-letter group.
+    left = {group: min(i for (i, j), g in owner.items() if g == group and i+j == 5)
+            for group in owner.values()}
+    pending = set(left)
+    priority = {}
+    while pending:
+        available = (g for g in pending if not any(a in pending and b == g for a, b in before))
+        g = min(available, key=left.__getitem__)
+        priority[g] = len(priority)
+        pending.remove(g)
+    return ordered_factors(w, 4, {q: priority[g] for q, g in owner.items()})
+
+
+def layer_word(z):
+    outer = outer_relations(z)
+    return chord_order(z, {q: q[0] for q in top_sites(z)}, outer[0] if outer else None)
+
+
+def layer_blocks(w, owner):
+    sides = [outer_relations(face(w, k)) for k in (0, 1)]
+    if sides == [None, None]:
+        return chord_order(w, owner, None)
+    # A face with equal exterior orientations prescribes the order of 1 and 4.
+    fixed = {a for a, b in sides if a == b}
+    assert len(fixed) <= 1
+    desired = next(iter(fixed)) if fixed else sides[0][0]
+    return chord_order(w, owner, desired)
+
+
+def check_forced_outer_swaps(expected):
+    domain = cells((4, 4)) - {()}
+    run = ((1, 4), (2, 3), (3, 2), (4, 1))
+    vertices = {}
+    for z in domain:
+        if top_sites(z) == run:
+            before = orders(z, 4, {q: q[0] for q in run})
+            key = tuple(int((i+1, i) in before) for i in (1, 2, 3))
+            assert key not in vertices
+            vertices[key] = z
+    edges = {(face(w, 0), face(w, 1)) for w in domain if len(w) == 7 and len(top_sites(w)) == 1}
+    found = set()
+    for first, second in [((0, 0, 1), (0, 1, 1)), ((1, 0, 0), (1, 1, 0))]:
+        path = [vertices[key] for key in ((0, 0, 0), first, second, (1, 1, 1))]
+        assert all((a, b) in edges for a, b in zip(path, path[1:]))
+        patches = set()
+        for z in path[1:3]:
+            before = orders(z, 4, {q: q[0] for q in run})
+            for seq in permutations(range(1, 5)):
+                if abs(seq.index(1)-seq.index(4)) != 1 or any(seq.index(a)>seq.index(b) for a, b in before):
+                    continue
+                i = min(seq.index(1), seq.index(4))
+                assert i == (2 if first[0] else 0)
+                parts = ordered_factors(z, 4, {q: seq.index(q[0]) for q in run})
+                patches.add(compose(*parts[i:i+2], 4))
+        patch, = patches
+        # In the spatial cut the (2,2) factor separates the two active blocks.
+        owner = {q: 0 if q[0] <= 1 else 1 if q == (2, 2) else 2 for q in profile(patch) if sum(q) > 3}
+        assert orders(patch, 3, owner) in ({(0, 1), (1, 2)}, {(2, 1), (1, 0)})
+        found.add(patch)
+    assert len(vertices) == 8 and found == expected
+
+
 def check_pure_squares(domain):
     count = 0
     for w in domain:
@@ -195,7 +271,13 @@ def check_bare(p, axis, emitter):
 
     pure3, pure4, edge3 = [(a, b) if axis else (b, a) for a, b in ((0, 3), (0, 4), (1, 3))]
     owner = {q: int(q[axis] >= 3) for q in profile(p) if sum(q) > 3}
-    P, E = ordered_factors(p, 3, owner)
+    ordered = ordered_factors(p, 3, owner)
+    reversed_blocks = top_sites(ordered[0])[0][axis] == 4
+    direction = 'exterior-first' if reversed_blocks else 'central-first'
+    def native_order(a, b):
+        return (b, a) if reversed_blocks else (a, b)
+
+    P, E = native_order(*ordered)
     assert top_sites(P)[0][axis] == 2 and top_sites(E)[0][axis] == 4
     ctx, variables, chosen = (), {}, {}
 
@@ -245,37 +327,41 @@ def check_bare(p, axis, emitter):
 
     # Inspect the native term in both temporal orders. The other spatial
     # factor is an existing edge lift at its prescribed boundaries.
-    spatial = [rep(P), rep(E)]
+    central, exterior = rep(P), rep(E)
+    spatial = native_order(central, exterior)
     def mul(a, b):
         return comp2(ctx, 3, a, b)
+
+    def product(a, b):
+        return mul(*native_order(a, b))
 
     for first in top_sites(p):
         steps = ordered_factors(p, 4, {q: int(q != first) for q in top_sites(p)})
         u, = [w for w in steps if top_sites(w) == top_sites(P)]
         native, = [w for w in leaves(pure_tree(u, (axis,))) if len(w) == 6]
         Y, = [w for w in leaves(pure_tree(u, (axis,))) if len(w) == 5]
-        Q, e = split(native, 3, 2)
+        Q, e = native_order(*split(native, 3, 2))
         assert top_sites(e) == (edge3,) and Q[-1] == P[-1]
         old = rep(u)
         qterm, eterm, yterm = (rep(c) for c in (Q, e, Y))
         side = int(first == top_sites(E)[0])
         if Q == P:
-            assert old == mul(mul(qterm, eterm), yterm)
-            assert (src, tgt)[side](ctx, spatial[1]) == mul(eterm, yterm)
+            assert old == product(product(qterm, eterm), yterm)
+            assert (src, tgt)[side](ctx, exterior) == product(eterm, yterm)
             continue
-        assert old == mul(yterm, mul(qterm, eterm))
-        y_at_seam, e_at_seam = split(face(E, side), 3, 3)
-        assert e_at_seam == e and rep(face(E, side)) == mul(rep(y_at_seam), eterm)
+        assert old == product(yterm, product(qterm, eterm))
+        y_at_seam, e_at_seam = native_order(*split(face(E, side), 3, 3))
+        assert e_at_seam == e and rep(face(E, side)) == product(rep(y_at_seam), eterm)
         # Both temporal orders of the local Y,Q change on the same cut-two tree.
-        patch = compose(Y+(EMPTY_ROW,), Q, 3)
-        assert compose(P, y_at_seam+(EMPTY_ROW,), 3) == patch
+        patch = compose(*native_order(Y+(EMPTY_ROW,), Q), 3)
+        assert compose(*native_order(P, y_at_seam+(EMPTY_ROW,)), 3) == patch
         factors = split(patch, 2, 2)
         H, = [c for c in factors if len(c) == 5]
         G, = [c for c in factors if len(c) == 6]
         assert top_sites(H) == (pure4,) and G == atom(P[-1][0][0])
         slots = [rep(c) for c in factors]
-        left = mul(yterm, qterm)
-        right = mul(spatial[0], rep(y_at_seam))
+        left = product(yterm, qterm)
+        right = product(central, rep(y_at_seam))
         corner_changes = []
         for op in (src, tgt):
             s, t = op(ctx, left), op(ctx, right)
@@ -290,7 +376,7 @@ def check_bare(p, axis, emitter):
         assert evaluate(s) == evaluate(t) == patch
         assert evaluate(active_square) == patch + (EMPTY_ROW,)
         if emitter:
-            emitter.check_type(f'bare-native-square-{axis}', ctx, active_square, infer(ctx, active_square))
+            emitter.check_type(f'bare-native-square-{axis}-{direction}', ctx, active_square, infer(ctx, active_square))
     # The outer exchange has the two actual spatial terms as its slots.
     a, b = spatial
     forward = comp2(ctx, 4, mul(a, src(ctx, b)), mul(tgt(ctx, a), b))
@@ -300,7 +386,7 @@ def check_bare(p, axis, emitter):
     evaluate = tableau_interpreter(ctx, values.__getitem__)
     assert evaluate(forward) == evaluate(backward) == p and evaluate(exchange) == p+(EMPTY_ROW,)
     if emitter:
-        emitter.check_type(f'bare-outer-exchange-{axis}', ctx, exchange, infer(ctx, exchange))
+        emitter.check_type(f'bare-outer-exchange-{axis}-{direction}', ctx, exchange, infer(ctx, exchange))
 
 
 def check(m, n, emitter):
@@ -319,12 +405,16 @@ def check(m, n, emitter):
     mixed = {p for patches in all_patches.values() for p in patches if all(min(q) for q in top_sites(p))}
     need = Counter(len(patches & mixed) for patches in all_patches.values())
     bases, changes = set(), Counter()
-    for patch in mixed:
+    near_sites = {((1, 4), (3, 2)), ((2, 3), (4, 1))}
+    near = {minimal_shape(w) for w in domain if top_sites(w) in near_sites}
+    assert len(near) == 12
+    for patch in near | mixed:
         pair = tuple(p[0] for p in top_sites(patch))
         axes = {(1, 3): (0,), (2, 4): (1,), (1, 4): ()}[pair]
         parts = leaves(pure_tree(patch, axes))
         q, = [c for c in parts if len(c) == 6]
-        bases.add(minimal_shape(q))
+        if patch in mixed:
+            bases.add(minimal_shape(q))
         if len(parts) > 1:
             for first in pair:
                 alt = ordered_factors(patch, 4, {r: int(r[0] != first) for r in top_sites(patch)})
@@ -338,10 +428,20 @@ def check(m, n, emitter):
                         if a != b:
                             heights = [len(c) for c in a]
                             assert heights == [len(c) for c in b] and heights in ([5, 5, 6], [6, 5, 5])
+                            assert compose(*[c for c in a if len(c) == 5], 3) == compose(
+                                *[c for c in b if len(c) == 5], 3)
                         changes['exchange' if a != b else 'rebracket'] += 1
     assert len(set.union(*all_patches.values())) == 37 and len(mixed) == 7 and len(bases) == 3
     for axis, sites in enumerate((((2, 3), (4, 1)), ((1, 4), (3, 2)))):
-        check_bare(next(z for z in bases if top_sites(z) == sites), axis, emitter)
+        pair = (4, 3) if axis == 0 else (3, 4)
+        signed = {w for w in cells(pair) if w and top_sites(w) == sites}
+        assert len(signed) == 2 and next(z for z in bases if top_sites(z) == sites) in signed
+        incident = []
+        for z in sorted(signed):
+            check_bare(z, axis, emitter)
+            incident.append({minimal_shape(c) for first in sites for c in ordered_factors(
+                z, 4, {q: int(q != first) for q in sites})})
+        assert len(incident[0]) == len(incident[1]) == 4 and incident[0].isdisjoint(incident[1])
     residual, = [z for z in bases if top_sites(z) == ((1, 4), (4, 1))]
     assert sum(residual not in patches for patches in all_patches.values()) == 112
     other_steps = set()
@@ -373,6 +473,25 @@ def check(m, n, emitter):
     print('Central inputs independent of the residual mixed exchange: 112 of 121')
     print('All 121 central word lifts use the proved exchanges after changing nine source words;',
           old_mixed_cases, 'use mixed exchanges')
+
+    singles = {minimal_shape(w) for w in domain if len(w) == 7 and len(top_sites(w)) == 1}
+    needed = set()
+    by_site = Counter()
+    for w in singles:
+        mixed_patches = {p for p in sort_face_patches(w, layer_word, layer_blocks)
+                         if all(min(q) for q in top_sites(p))}
+        far = mixed_patches - near
+        if far:
+            assert top_sites(w) == ((2, 4),)
+            by_site[top_sites(w)[0]] += 1
+        needed.update(far)
+    assert len(needed) == 2
+    assert {tuple((g[0][1], g[1][1]) for g in z[-1][0]) for z in needed} == {
+        ((0, 2), (2, 1)), ((1, 2), (2, 0))}
+    assert all(top_sites(z) == ((1, 4), (4, 1)) and (2, 2) in profile(z) for z in needed)
+    check_forced_outer_swaps(needed)
+    print('Layer word checked on', len(singles), 'six-singleton shapes. Two remaining exchange shapes;',
+          dict(by_site), 'inputs use them.')
 
 
 if __name__ == '__main__':

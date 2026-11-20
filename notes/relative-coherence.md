@@ -829,7 +829,7 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - *Why it does not close.* (E) for a pair of dimensions (j − 1, j) at input rank n is exactly fold naturality of depth n − j + 1. Applied to Γ↑Y, (E) at the pair (x⁺, x↑) has the same dimensions as the original pair (x, v), at rank n + 1. So depth grows by one at each step. The expansion route recurs at higher rank, not lower. The pair (v⁺, v↑) lowers the depth, but (x⁺, x↑) does not.
 - A working route has to break the (x⁺, x↑) step. One way is to construct the depth-(k + 1) fold action on a free pair directly, by recursion on terms with explicit heads, using that x occurs only through v. Another is to avoid naturality in the folds altogether. Neither is done.
 
-**Status: sketch, not verified.** (Update: §7.13 gives the explicit collapse, by a different matching than "descent by inversions", proves the combinatorial half of the localization lemma, and corrects the indexing in r10 item 65.)
+**Status: sketch, not verified.** (Update 2: r9 Response 6, verified, removes the fold-action hypothesis altogether; see §7.13(G).) (Update: §7.13 gives the explicit collapse, by a different matching than "descent by inversions", proves the combinatorial half of the localization lemma, and corrects the indexing in r10 item 65.)
 - The contractibility input is standard. Its search-free collapse and the level-k version of Response 4's steps 1–4 are not written out in detail.
 - No machine check yet.
 - New compared with Response 4: replacing the shift by localization at every identity level, which makes height a well-founded measure. That isolates the remaining obligation as fold naturality of all depths.
@@ -955,6 +955,8 @@ So the induction does not circle back to C(h, k) on more than k + 2 events.
 
 #### (E) Fold actions by recursion on heads: one more attempt (open)
 
+*Superseded (2026-11-20) by r9 Response 6; see (G). Fold actions no longer need a separate construction.*
+
 **Setup.** Write i : Γ′ ↪ Γ for the inclusion and f for the fold, so f ∘ i = id. There is an oplax transformation θ : i f ⇒ id with these components:
 - θ_x = v;
 - θ_y = 1_y for every other variable y;
@@ -972,6 +974,8 @@ The fold action on t, t′ would be the composite t ≅ θ·(i f t) ≅ θ·(i f
 **What is known.** Strong-Steiner contexts are homotopical (r9 item 8, Campion), so RC_id(∞) holds there by r8. Fold actions **exist**. What is open is only a **search-free** (structurally recursive) construction, which is r10 Question 1. Nothing found here changes that.
 
 #### (F) Substitution functoriality at level j, written out (thread RCX, 2026-11-20)
+
+*Update (2026-11-20), see (G).* r9 Response 7 proves F2. The claim in F3 and in the Accounting below, that join changes are old-arrow calls in height ≤ h − 1, is **wrong as stated**: Response 7 gives a counterexample over the one-globe.
 
 This is the remaining item of (D), step 3.1. It follows Response 3's "Sequentializing an arbitrary raw term" and "Sorting in a nonglobular lower skeleton" (r9; verified at level 0) and Response 4 steps 1–3 (verified at level 1), with each ingredient checked for dependence on the level.
 
@@ -1024,6 +1028,35 @@ All of them are smaller in the §7.12 order (input rank, height), refined by ter
 - Written out; not independently verified.
 - The Agda module checks only that grafted arities are pasting contexts, so the coherence rule is total there for pairs with equal normal forms; that the F2 composites form such a pair is unchecked. The raw-term recursion F1–F4 is not formalized: the Agda development models typing and the globular filler, not the marked contexts or old-arrow calls of Responses 3–4.
 - The remaining open input for RC in general is unchanged: fold actions in every depth, r10 Question 1(a), §7.13(E).
+
+#### (G) Reconciliation with r9 Responses 6–7 (verified 2026-11-20)
+
+**Response 6: localization alone suffices.** The induction runs on (n, n − l, h), lexicographically. Here G_l means that every iterated face of rank below l in every declaration is literally a variable. The induction shows that a raw localization hypothesis gives the general construction: connecting terms, fold actions and naturality of every depth. The hypothesis is that rank-n calls in height h reduce to smaller-input-rank calls plus block calls on at most b(n, h) top events. Three ingredients make this work:
+- naturality actions are prescribed-boundary lifts in partial cylinders that satisfy G_{s+1}, so the same-rank calls lower n − l;
+- reflection through lower whiskerings;
+- folds whose stationary pole keeps every stripped factor at cuts ≥ h.
+
+Consequences for this section:
+- §7.12's dependence on "fold actions of every depth" and the whole of (E) are superseded. r10 no longer asks the fold-action question.
+- §7.12's indexing gives b(n, h) = n − h + 2. Response 6 subdivides into b + 1 = n − h + 3 links, which agrees with the item 65 correction in the indexing paragraph above.
+
+**Response 7: the grafting step F2 is proved.**
+- *Strict row theorem.* F(ρ) ∗_k F(σ) = F(ρ ∗_k σ) whenever k exceeds every cut of F. It is proved by induction using strict interchange, and machine-checked as `graft-distributes` and `constant-column` in `CaTTExp.GraftedArity`.
+- *Raw correction.* The two raw evaluations can have different literal types, for example f ∗₀ (A ∗₁ B) against (f ∗₀ A) ∗₁ (f ∗₀ B). So F2 needs a boundary correction cut by cut, using Response 2 lifts on the globular graft, before the final lift. F2 as written in (F) skipped that correction. Response 7 supplies it.
+- This closes the ledger item "F2 composites have equal strict normal forms".
+
+**Response 7: the remaining gap is at the joins.** F3 claimed that comparing caps at a join is an old-arrow call in the skeleton of height ≤ h − 1. That is false in general.
+- *Counterexample.* Over the one-globe f, two distinct 2-tracks f → p(f) can only be compared by a 3-term whose typed support contains f. The same holds for any nonempty event row.
+- So a change at a join must be arranged in one of three ways: factored into bounded block calls; made trivial by choosing a common connector; or performed in one shared chart, as in Response 7's graft.
+- Response 6 adds a related point for (D) step 3. A head can have a non-identity generic top slot that becomes an identity on substitution. Contracting paths in the strict event poset does not compare the head with its cellular representative.
+
+**Status of lemma L after (G).**
+- (L-comb) is proved (A, B).
+- The grafting step is proved (Response 7).
+- Fold actions are not needed (Response 6).
+- **Open:** compatible resolutions of arbitrary raw inputs across frames at joins ("raw higher localization", r10 item 67 and Question 1). (D) and (F) without F3's height claim remain a correct reduction of lemma L to this one step.
+
+Ownership: the r10 outbox poses it to the researchers, and RCX keeps it in-house.
 
 ## 8. Follow-ups and owners
 

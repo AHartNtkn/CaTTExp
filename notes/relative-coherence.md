@@ -920,6 +920,57 @@ What is not checked in (C):
 - (C) is a **sketch**. Its circularity is controlled: face terms of dimension ≤ k are calls of smaller input rank, and the (k + 1)-dimensional single-block terms are exactly the block calls that §7.12 folds to C(h − 1, k + 1).
 - With (C), the §7.12 recursion is well-founded in (input rank, height) given fold actions of every depth (r10 Question 1(a)). That question is still open.
 
+#### (D) The algebraic half as a cellular map (sketch, sharper than (C))
+
+(C) chooses face terms by hand, and that leaves the compatibility in (C)(i). Working in a space removes that bookkeeping.
+
+**Setting.** Let W(d) be the fixed-pole hom of the derived nerve at d, using the relative globe cylinder (`conjectures/answered/catt-models-unit-condition-r4-2026-11-20.md`, Response 2). By r9 Response 1 item 1 (verified):
+- π₀ W(d) is the raw writings of d modulo comparison.
+- π_j W(d) at a writing is the based raw (h + j)-loops modulo comparison.
+
+So the calls C(h, j) for d, for all j ≤ k, say exactly that W(d) is k-connected.
+
+**Step 1: a cellular map Φ : X(P)^{(k+1)} → W(d), built one cell at a time.**
+- *Vertices.* Each linear extension goes to the chosen writing, the serial word with one event per factor.
+- *Product cells* (B₁, …, B_r). Temporal composition is a map of spaces W(d₁) × ⋯ × W(d_r) → W(d), whiskered by the fixed factors. Send the cell to the image of the product of the block cells. Products then agree on shared faces automatically, so the "disjoint sorting moves commute" step needs no separate argument.
+- *Single-block cells* on B, of dimension j = |B| − 1. Φ is already defined on the boundary sphere, which lies in the image of the local space W(d_B) whiskered into W(d). It extends over the cell exactly when that (j − 1)-sphere is null in W(d_B). For j ≤ k this is a call of smaller input rank. For j = k + 1 it is a **block call** with k + 2 events, the hypothesis of L.
+- *Gluing.* A regular CW complex maps into a Kan complex once each cell's boundary extends. Subdivide barycentrically and fill the cells in order of dimension. Every filler is a raw lift in a pasting context, so no search is needed.
+
+This replaces (C)(i).
+
+**Step 2: L ⟺ Φ is surjective on π_j for j ≤ k.** X(P)^{(k+1)} has the same π_j as X(P) for j ≤ k, and those groups vanish by (A). So surjectivity of Φ on π_j for j ≤ k is equivalent to π_j W(d) = 0 for j ≤ k. That is the conclusion of L, and the proof is constructive by (B): pull a raw sphere back to a cellular one, then contract it along the collapse.
+
+**Step 3: surjectivity is cellular approximation for raw terms.** Let t be a raw (h + j)-term whose boundary is already cellular. Show that t is homotopic, relative to that boundary, to a cellular j-chain. Use structural recursion on t, as in Response 4 steps 1–3. At a head with pasting arity A and substitution σ:
+1. **Inputs.** Resolve the inputs. This needs functoriality of substitution in comparisons of its arguments. Response 4 step 2 gets it by grafting the comparison columns onto A. The grafted arity is still a pasting context. This is the one ingredient used at level j that is not yet written out; it was item (C)(ii).
+2. **Generic term.** In W_A, which is contractible because π_A is a trivial fibration, the generic term is homotopic, relative to its boundary, to a cellular chain of X(P_A). P_A is the slot order of A, and the chain comes from (L-comb) on P_A.
+3. **Substitution.** After step 1 of Response 4, each slot carries at most one event, so σ sends cells of X(P_A) to cells of X(P). Idle slots give degenerate cells. σ_* of a slot-cell and Φ of its image fill the same sphere. Their difference is a block call on at most j + 1 ≤ k + 1 events, or a call of smaller input rank. Both are available.
+
+So the induction does not circle back to C(h, k) on more than k + 2 events.
+
+**Status of lemma L after (D).**
+- (L-comb) is proved.
+- Building Φ is reduced to block calls and smaller-rank calls. The compatibility in (C)(i) is gone.
+- Surjectivity of Φ on π_j has been reduced to one item: the grafted-arity functoriality of substitution at level j. Response 4 step 2 proves it at j = 1. For j ≥ 2 the argument is the same, with "rank-(m + 1) track" read as "rank-(h + j) term", but it is not written out.
+- No CaTT-level machine check yet.
+
+#### (E) Fold actions by recursion on heads: one more attempt (open)
+
+**Setup.** Write i : Γ′ ↪ Γ for the inclusion and f for the fold, so f ∘ i = id. There is an oplax transformation θ : i f ⇒ id with these components:
+- θ_x = v;
+- θ_y = 1_y for every other variable y;
+- θ_v the unitor v ∗ 1_p ⇛ v.
+
+The fold action on t, t′ would be the composite t ≅ θ·(i f t) ≅ θ·(i f t′) ≅ t′. The middle step is i of the given comparison. The outer steps are naturality fillers N_t of θ.
+
+**Building N_t by recursion on heads.** Take t = coh(A; u → w)[σ].
+- N_t is built from the fillers N_{σ(y)} of the arguments, together with one generic filler in the partial cylinder A↑Y_A. Here Y_A is the set of variables of A whose images involve x or v. It is up-closed, and A↑Y_A is strong Steiner.
+- So the recursion on heads is well-founded on terms. Each step needs Conjecture N for a partial cylinder over a **pasting context** A, at the depth fixed by the lowest rank in Y_A.
+- That is r10 Question 1(c) restricted to cylinders over pasting arities. It is the same reduction as r9's N ⇐ RC. The fold selection makes it no easier, because Y_A is a general up-closed set once σ spreads x over several slots.
+
+**Conclusion.** This route gives no new well-founded measure. As (B)–(D) show, the remaining content of RC sits in two places: the block calls, and the generic naturality on cylinders over pasting arities.
+
+**What is known.** Strong-Steiner contexts are homotopical (r9 item 8, Campion), so RC_id(∞) holds there by r8. Fold actions **exist**. What is open is only a **search-free** (structurally recursive) construction, which is r10 Question 1. Nothing found here changes that.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

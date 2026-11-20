@@ -57,24 +57,29 @@ def strip_head(chart, ty):
 
 
 @cache
-def hom_chain(ctx, term):
-    """Top occurrence vector. Keys are literal indecomposables, including hom objects."""
+def hom_chain(ctx, term, depth=1):
+    """Top counts after taking the specified number of successive weak homs."""
     degree = tdim(infer(ctx, term))
-    if degree < 0:
-        raise ValueError('a hom cell must have positive ambient dimension')
-    if term[0] == 'v' or strip_head(term[1], term[2]) is None:
+    if depth < 0 or degree+1 < depth:
+        raise ValueError('hom depth exceeds the ambient cell dimension or is negative')
+    if term[0] == 'v':
         return Counter({term: 1})
+    generic = term[1:3]
+    for _ in range(depth):
+        generic = strip_head(*generic)
+        if generic is None:
+            return Counter({term: 1})
     counts = Counter()
-    for ty, value in zip(term[1][2:], term[3][2:], strict=True):
+    for ty, value in zip(term[1][2*depth:], term[3][2*depth:], strict=True):
         if tdim(ty) == degree:
-            counts.update(hom_chain(ctx, value))
+            counts.update(hom_chain(ctx, value, depth))
     return counts
 
 
-def boundary(ctx, term):
+def boundary(ctx, term, depth=1):
     source, target = infer(ctx, term)[2:]
-    counts = hom_chain(ctx, target).copy()
-    counts.subtract(hom_chain(ctx, source))
+    counts = hom_chain(ctx, target, depth).copy()
+    counts.subtract(hom_chain(ctx, source, depth))
     return {cell: n for cell, n in counts.items() if n}
 
 

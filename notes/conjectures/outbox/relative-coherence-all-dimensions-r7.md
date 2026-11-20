@@ -1366,3 +1366,36 @@ Through generator dimension four these are unconditional identities on cellular 
 Concretely the old declarations come from the globular generators of the arity. The new edges are $p_x:a\to x$. For $f:x\to y$ the only new two-generator is $p_f:p_y\to p_x*_0 f$. For $\alpha:f\to g$ the only new three-generator is $p_\alpha:p_g\to p_f *_1(p_x *_0 \alpha)$. All higher declarations may be omitted in the test. These contexts are strong Steiner by the point-join construction and truncation. The binary description is a restriction on the generators in the entire possible counterexample; the raw terms being compared can have any size. Establishing RC(4) for this family remains open.
 
 **Checks.** Run `python3 -B tools/relative_coherence_point_joins.py`. It constructs the literal left point joins on all 186 planar trees of height at most four with at most six tree edges. It typechecks 2,212 mixed declarations in ranks one through five and verifies $\partial C+C\partial$ coefficient by coefficient for every variable. The rank counts are 601, 778, 547, 235 and 51. The existence of the generic head actions through rank three uses prescribed-boundary lifting, independently of this enumeration. [Point-join checker](../../../tools/relative_coherence_point_joins.py)
+
+# Researcher Response 47
+
+## The original 64-cube class detects every integral and modular six-seam degree
+
+Fix the unit-degree five-cube $g$ on the six positive names $I=\{1,\ldots,6\}$ from Response 9, choosing its chain sign for degree $+1$. Let $i:I\hookrightarrow J=\{0\}\cup I$, $E=\prod_{j\in I}(1-e_j)$, and $z=Eig$. For $R=\mathbb Z$ or $\mathbb Z/m$ the following test is **necessary and sufficient** for the relative degree $d\in R$ of Response 11:
+$$
+         d z+ Ei b=\partial w
+$$
+for an **absolute integral five-cycle** $b$ on the six positive names and a six-chain $w$ on $J$, with the equation interpreted over $R$. In particular a search over arbitrary relative lifts of the opposite five-simplex gains no new degrees beyond the fixed 64 signed labellings and absolute-cycle corrections. The result concerns exactly the degree obstruction; deciding whether the displayed relation holds at nonzero degree remains open.
+
+**Repairing the opposite boundary.** Perform the following construction on each nonempty face of the ordered simplex. Write $h$ for the support-preserving cellular projection to simplex chains. There is a chain section $s$ through dimension five. Set $s(v)=v$. On an oriented basis simplex $D$ of positive dimension take $s(D)=C_q(s(\partial D))$, using $q=\min D$ and the cone of Response 46. In dimension one use the augmentation-zero identity on the two endpoints. The identity $\partial C+C\partial=1$ gives $\partial s(D)=s(\partial D)$. The image $h s(D)$ equals $D$: they have the same boundary by induction and the top boundary of the simplex on $D$ is injective. All choices use only names of $D$.
+
+There is also a carried chain homotopy $K$ through dimension four satisfying $\partial K+K\partial=1-sh$. In degree zero take $K=0$. For a positive-dimensional generator $u$ of dimension at most four, take
+$$
+       K(u)=C_{\min\operatorname{supp}(u)}
+              \big(u-s h(u)-K(\partial u)\big).
+$$
+The expression in parentheses is a cycle by induction, so its cone has the required boundary. It lies in the support of $u$. Both formulas are integral; reduce coefficients afterwards.
+
+Response 26 characterizes degree $d$ by an opposite-face relative five-cycle $y$ of that degree with $Eiy$ a boundary. Let $b_0=y-dg$ using absolute cellular lifts over $R$. Its boundary lies in the proper union of $I$, and $h(b_0)=0$ since the simplex on $I$ has just one five-dimensional basis cell. Thus
+$$
+        r=K(\partial b_0),\qquad b=b_0-r
+$$
+satisfy $\partial r=\partial b_0$ and $\partial b=0$. Every generator of $r$ misses a positive name, so $Eir=0$ as a chain. This yields the displayed relation. Conversely any absolute $b$ on $I$ projects to zero as a five-chain since the top boundary on that simplex is injective over $R$. Therefore $dg+b$ has the required opposite degree, giving the converse by Response 26. For modular coefficients, every homology class of such $b$ lifts integrally by the universal coefficient theorem and $H_4X(I)=0$ from Response 46. Changing its representative by a boundary changes $w$ by the corresponding polarized chain, so an integral $b$ suffices. All substitutions act on the entire literal term, and the homotopy is linear at every finite multiplicity.
+
+**One integral group for every modulus.** Put
+$$
+ G= E H_5(X(J);\mathbb Z)\big/Ei_* H_5(X(I);\mathbb Z)
+$$
+and write $\bar z$ for the fixed class. The attainable integral degrees are exactly the integers $d$ with $d\bar z=0$ in $G$. Modulo $m$, they are exactly the residues of integers $n$ with $n\bar z\in mG$. Indeed $H_4$ vanishes on both vertex sets, so both fifth homology groups reduce by tensoring. The image of $E$ is a direct summand and tensor product preserves the cokernel in the definition of $G$. Under degree-eight RC the class in this quotient even has an integral retraction by Response 7 and its polarization in Response 9. The spaces $X(V)$ for $V\ne\varnothing$ are four-connected: the triangle relations of Response 45 give simple connectivity, and Response 46 and Hurewicz give the successive vanishings. Thus the same integral group $G$ can equivalently be computed from the ordinary fifth homotopy groups, naturally in the vertex maps.
+
+**Checks.** Run `python3 -B tools/relative_coherence_opposite_cycle.py`. In the three-dimensional opposite-face analogue the solver compares a typed cube to its relabelling by a three-cycle. Their equal-degree difference has ten nonzero boundary coordinates. The carried homotopy constructs a repair with fourteen proper coordinates and leaves an absolute cycle with sixteen coordinates. Polarization agrees coefficient by coefficient over the integers and modulo 2, 4 and 5. The same command checks the actual seven-name cubical incidence: 42 parameter cubes project to the 64 signed labellings of one cube, with ten separate facet cancellations. In degree five the existence of the repair on arbitrary input uses the all-arity argument of Response 46. [Carried repair and polarized-cycle checker](../../../tools/relative_coherence_opposite_cycle.py)

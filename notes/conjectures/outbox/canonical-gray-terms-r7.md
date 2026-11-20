@@ -1392,3 +1392,76 @@ python3 -B tools/gray_temporal_reassociation.py 3 --agda /tmp/TemporalFold.agda
 agda --safe --no-libraries -i /tmp -i src /tmp/ThinNormalizationHigher.agda
 agda --safe --no-libraries -i /tmp -i src /tmp/TemporalFold.agda
 ~~~
+
+# Researcher Response 22
+
+**The complete collapse in Response 21 passes the elementary substitution test in every dimension.** Moreover, a top argument labelled by an identity on *any* term can be eliminated, even if the other arguments have nonvariable lower boundaries. Thus every remaining test has a nonvariable lower label and can be taken to have no identity among its top labels. The point is to prove a unit law for the action of Response 20 on the *already chosen* temporal change. An identity value for the collapsed strict cell alone would not give this law.
+
+### A unit law at spatial depth one
+
+Let $r$ be the lowest spatially marked rank. Work through rank $r+1$ in a context $C$. Write $D_z$ for the ordinary depth-zero action on an active $r$-term $z$. For a term $f:s\to t$ of rank $r+1$, oppose rank $r+2$ in its ordinary spatial action, as in Response 20. Denote the result by $J_f$. Give the two spatial copies the same labelling in a context $G$ of height at most $r+1$. Write $\ast$ for cut $r$ and $\cdot$ for cut $r+1$, in order of traversal. The resulting square has type
+\[
+                    J_f:D_s\ast f\longrightarrow f\ast D_t .
+\]
+Here and below $f$ in a labelled formula stands for its common cap image. An inactive pole omits its factor. Use the bicategory of Response 21 with $r$-terms as objects and $(r+2)$-terms modulo invertible $(r+3)$-comparison as 2-cells.
+
+At each marked $r$-variable $x$ give a contraction $e_x:D_x\Rightarrow 1_x$. These extend to contractions $e_z$ on active $r$-terms by the construction below. Suppose that for each marked $(r+1)$-variable $f$, the labelled square obeys
+\[
+ (e_s\ast f)\cdot\lambda_f
+       = J_f\cdot(f\ast e_t)\cdot\rho_f .                       \tag{1}
+\]
+The unitors have direction towards $f$. Omit both the contraction and its unitor on an inactive side. Then **(1) holds for every active $(r+1)$-term**, including a coherence with nonvariable immediate poles.
+
+First consider an $r$-term $z$ on a pure pasting arity $B$ with a selection of top slots. Give those slots identity changes. In $B$ choose $U_z:D_z(1)\Rightarrow1_z$ by globular boundary lifting. Both sides are loops over the same strict identity since $B$ has height $r$ on the support in question. Their comparison is unique modulo the next comparison there. For labels with contractions $e_i$, vary the change labels in the term $D_z$ by these $e_i$. This is again depth zero, now in rank $r+1$. Follow the result by the labelled $U_z$ to obtain $e_z$. On arbitrary raw terms use this formula recursively at their generic heads. At a variable use the supplied contraction.
+
+This prescription commutes with substitution in the bicategory. Varying the change labels of $D_z$ respects a composite of two changes up to comparison: at every changing leaf graft two vertically composable $(r+2)$-cells. Both orders of evaluation on this globular tree have the same faces and strict value, so a comparison exists before labelling. For a substitution between pure arities, separate the contractions of the inner arguments into their variations of the individual change labels followed by their pure $U$'s. The first parts combine to the twice-differentiated substituted term by the ordinary substitution equation, applied once in each of the two top degrees. The remaining parts, including the outer $U$, are both comparisons from the action at identities to the identity on the substituted term in the pure source arity. They agree in the quotient there. Substituting the actual data gives the equation for one composite of generic heads. Induction on the outer expression gives it for arbitrary labellings, including labellings in $G$. The active slots at each step are exactly the pullbacks of the variable selection. [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1 and Lemma 3.3](https://arxiv.org/pdf/2501.11620)
+
+Now write $f=c[\sigma]$ with generic head $c$ on $Q$. Let $K$ be the opposed depth-one spatial cylinder of $Q$ at its pulled-back marks. Compare two labellings of $K$. The first evaluates the spatial actions recursively on the arguments of $\sigma$. For the second, first collapse $K$ into pure $Q$: both endpoint copies of an argument become that argument, a rank-$r$ change becomes its identity, and the opposed square on a rank-$(r+1)$ variable becomes the left unitor followed by the reversed right unitor, with missing factors omitted. Then apply $\sigma$. Call these labellings $a,b$.
+
+In $K$ mark **only the change variables**, retaining both sets of endpoint copies as fixed. This is up-closed, and its lowest possible rank is $r+1$. Give the variable on a rank-$r$ change its $e_{\sigma x}$ as the comparison from $a$ to $b$. At the square on a rank-$(r+1)$ argument $y$, the ordinary change declaration asks to compare
+\[
+     J_{\sigma y}\cdot(\sigma y\ast e_{\sigma t y})
+       \quad\text{with}\quad
+     (e_{\sigma s y}\ast\sigma y)\cdot J_y[b].
+\]
+These are precisely (1) for that proper argument after cancelling the common right unitor. Indeed changing the moving operand in the cap whisker acts by the higher whisker on its change, by the depth-zero graft formula. The induction hypothesis supplies an actual comparison since equality in this quotient is witnessed by an invertible cell. If neither pole moves, the declaration directly compares the two squares. This labels the second cylinder.
+
+Apply ordinary depth-one naturality in this second cylinder to the term $J_c$ of rank $r+2$. This step is available for the opposed term just as for any term at that rank. It relates $J_c[a]$ and $J_c[b]$ with the two variations of $D_s,D_t$ on their boundaries, leaving the cap copies of $c$ fixed. For $J_c[b]$, equation (1) with the pure $U_s,U_t$ already holds before applying $\sigma$: the two displayed routes have the same literal endpoints after the unitors, and the same strict identity on $c$ in pure $Q$. Globular boundary lifting compares them. Whisker and compose the two equalities. The preceding substitution calculation identifies the variation on each pole followed by its pure $U$ with exactly $e_{s[\sigma]}$ or $e_{t[\sigma]}$. Ordinary naturality commutes with substitution, and opposition in the highest degree commutes with the opposed labelling. Thus $J_c[a]$ is the prescribed $J_f$. This proves (1) by raw term induction. Every use of spatial naturality here has depth at most one. The temporal marks to which the lemma will be applied can begin arbitrarily far below $r$.
+
+### Collapsing the promotion of an existing temporal action
+
+Use the common truncation $S$ of Response 21, of height $r=k-1$, with its temporal context $G=S\uparrow Y$. Collapse each formal spatial arrow of the template to the identity on its slot. In the opposed spatial cylinder of $G$, the change of an endpoint copy of a spatial slot is now a weak identity. The square on its temporal change $H_x$ is the temporal disk action on $1_x$. Write $W^-,W^+$ for the two respective endpoint embeddings and their lists of lower temporal whiskers, through cut $r-1$.
+
+Take $e_x$ on each spatially moving cap variable to be the identity 2-cell on its identity change. For a pure $r$-term $v$ the collapse of $Dv$ is a loop $d_v:v\to v$. Take its pure comparison $p:d_v\to1_v$ to represent $e_v$. On either padded cap $W^e(v)$ the resulting contraction is, in the bicategory,
+\[
+             W^e(p)\cdot\bigl(W^e(1_v)\Rightarrow1_{W^e(v)}\bigr).
+\]
+For one lower whisker the top graft is literally the whisker on the moving operand, and its unit comparison is computed in the two-disk chart of that whisker. It can therefore be used as its pure $U$ in the preceding proof. Compose these formulas through the occupied cuts. All stationary proper-pole changes stay fixed. In particular at a change variable $H_x$ equation (1) holds by the disk formula itself: contract the padded minus identity against $H_x$ and expand the padded plus identity on its other side. This verifies the variable hypothesis in the actual mixed context.
+
+Apply (1) to $f=H_v$ with its previously assigned raw syntax. Its spatial square $J_f$ is exactly the evaluation of Response 20's promoted temporal action when all strings collapse. Put $L:W^-(1_v)\ast H_v\Rightarrow H_v$ and $R:H_v\ast W^+(1_v)\Rightarrow H_v$ for the two disk contractions. With $F=W^-(p)\ast H_v$ and $B=H_v\ast W^+(p)$ the equation reads
+\[
+                         F\cdot L=J_f\cdot B\cdot R .
+\]
+The disk action $H_{1_v}$ is $L\cdot R^{-1}$ in this quotient. Each reversed unit comparison used by the raw disk formula is inverse to its forward comparison in its globular chart, and whiskering preserves this cancellation. Consequently there is an actual CaTT cell
+\[
+                        F\cdot H_{1_v}\longrightarrow J_f\cdot B .
+\]
+This is the ordinary action on the pure comparison $p$ at the two **specified** actions on $d_v$ and $1_v$. Its strict value is an identity by the height of $G$.
+
+For a generic $k$-head on the original arity, first replace any grouped composites of identity blocks by a single identity per slot, using the recursive temporal-string result of Response 21 and its simultaneous top-slot replacement. The reference term now collapses to $b\ast d_v$, where $b:u\to v$ is the previously handled thin head on $S$. Use the comparison just constructed in the right input of this product, keeping the left input and its action fixed. This gives the comparison to $b\ast1_v$ with the recursive binary actions at its ends. The temporal right-unit law of Response 21 compares this to $b$ at its assigned action; it specializes from the one-arrow path with label $b$. When $u=v$ the reference is $d_v$ alone and its comparison goes directly to $1_v$. These are exactly the two normal writings on $S$. The pure cap adjustments used for the original generic head transport the comparison to that head by Response 19. This proves the complete-collapse test.
+
+### Eliminating units before testing a substitution
+
+In an elementary substitution $h[\sigma]$ suppose a top input is $1_z$. Its two formal positions have the *same raw label* $z$. Identify these positions and send the intervening top arrow to the weak identity. Then $\sigma$ factors through this pure degeneracy and a labelling of the shorter arity. The latter can have arbitrary lower labels. The corresponding temporal substitutions compose literally: the disk action on the formal identity specializes to the disk action on $1_z$ with the supplied $H_z$ and its own proper-pole changes. A missing change stays omitted by pullback of the marks.
+
+The pure degeneracy has its elementary comparison by Response 21 when another top arrow survives, and by the complete-collapse result when this was the last one. Specialize that comparison along the remaining labelling. Both writings have the same literal type and strict value in the final arity, so their normal writings coincide. It suffices to continue with the shorter head. A variable gives an already normalized argument; a normal identity gives the identity on the substituted pole. Otherwise the shorter normal writing is again a single head, with the remaining top labels still normalized. Each step eliminates one formal top arrow. This also handles substitutions in which the marked slot belongs to a different branch.
+
+One can further restrict the positive-height arities in the remaining tests to **binary temporal composition and trees having at most one top arrow per top string**. In a longer string first group all its top arrows into one block. The shortened tree has the same signed truncation, so give its generic head the original signed attaching terms. Its pure subdivision comparison on the original tree exists by Response 21. Specializing exhibits the old writing as comparable, at its assigned action, to the shortened head with the temporal products of the actual block labels. Normalize each product from the leaves of a binary bracketing. Each binary step uses the elementary binary test on its two normalized labels and the top-slot replacement on its arguments. The unbiased block writing compares to that bracketing by Response 21 with the actual input actions. Substitute these comparisons into the shortened head and apply its elementary test. Identity labels can again be eliminated as above. This is a sufficiency reduction: binary tests with arbitrary composable normalized labels remain, as do the stated one-arrow-per-string and lower-height tests with nonvariable lower labels. Neither the unrestricted globe-pair assertion nor Q1 follows yet.
+
+**Verification.** The checker constructs the second depth-one substitution on two composable opposed squares, with both the full and a one-sided choice of moving poles. It calculates the substituted boundary in two ways. In another case the immediate pole is a composite and the second variation has a concrete witness on a twice-promoted globular tree. The complete collapse uses an exterior temporal mark and a nonvariable operation with a nonidentity change. The checker also factors a collapse through a disk labelled by that nonvariable term and compares both specialized identity changes literally. Agda checks the mixed substitutions and representative judgments. The separate disk paste takes the normalized equation as a hypothesis and builds the comparison at the raw disk faces, including cancellation of the specific reversed right correction. [Checker and Agda certificate generator](../../../tools/gray_spatial_units.py)
+
+~~~sh
+python3 -B tools/gray_spatial_units.py 4
+python3 -B tools/gray_spatial_units.py 2 --paste --agda /tmp/GraySpatialUnitAll.agda
+agda --safe --no-libraries -i /tmp -i src /tmp/GraySpatialUnitAll.agda
+~~~

@@ -827,3 +827,101 @@ checked = snd (from-just (infer double _))
 ```
 
 </details>
+
+# Researcher Response 11
+
+## Directed boundary lifting through hom dimension two
+
+Let $A$ be the free $L$-model on a pasting arity, and let $H$ be one of its forward ordinary CaTT homs. Write $K$ for the strict hom, a tensor of globular trees. For **every strict cell of $K$ in dimensions zero, one and two**, strictification $H→K$ has a lift at every prescribed parallel raw boundary. Moreover, any two parallel writings of the same strict **path** are joined by a coinductively invertible 2-cell over its identity. A path can change direction between tensor factors any number of times. These dimensions are internal to the hom, so a lifted 2-cell is a global 3-cell. The constant and backwards homs are covered by the point and empty cases of Response 7.
+
+**Stationary whiskering in an arbitrary model.** Fix global 1-cells in a prefix and suffix of a composable string in an $L$-model $X$, with one hom between them left variable. There is a globular whiskering map $W$ from that hom to the hom of the whole string. In dimension zero choose a composition head. Construct its rank-$r$ operation on the globe $D^r$ in the variable slot and points in all the stationary slots. At the previously chosen faces, Response 8 lifts the total strict cell. The two restrictions to lower common faces agree because the choices in smaller globes were made first. Substitution thus gives a map in every dimension with literal globular face equations.
+
+This map preserves coinductive invertibility in every positive hom dimension. For two top-composable $r$-cells, compare $W(a*b)$ with $W(a)*W(b)$ in the generic two-globe pasting $D^r∐_{D^{r-1}}D^r$ in the variable slot. They are parallel by the face equations and have the same strict total. Response 8 gives an invertible comparison in either direction. For $W(1_a)$ and $1_{W(a)}$ use the single globe of $a$, now over the identity on its total. These comparisons specialize in every $X$.
+
+Here is the coinduction argument, since the whiskering map need only preserve these operations up to comparison. In the target ordinary hom let $I$ be its invertible cells and let $J$ be the smallest class containing $I$ and the images of the source invertibles, closed under ordinary globular pasting with its top inputs in the class. Write $Φ(J)$ for the cells having an inverse with both cancellations in $J$. The proof of FHM Theorem 3.3.7 establishes that $Φ(J)$ is pasting-closed whenever $I⊆J$ and $J$ is pasting-closed. It contains $I$. If $a$ is source-invertible, use $W(a^{-1})$ as inverse candidate. For either cancellation, first compare the composite of the images with the image of the composite, apply $W$ to the chosen source cancellation, then compare the image of the identity with the identity of the image. The outside cells belong to $I$, the middle cell belongs to $J$ by definition, and the paste belongs to $J$. Hence $Φ(J)$ also contains the images of the source invertibles. Minimality gives $J⊆Φ(J)$, so coinduction gives $J⊆I$. This proves the assertion. [Fujii–Hoshino–Maehara, proof of Theorem 3.3.7](https://arxiv.org/pdf/2303.14907)
+
+Write $h_1H$ for the category with all objects of an ordinary weak hom and arrows its 1-cells modulo invertible 2-cells. Transitivity, congruence, associativity and the unit laws follow by pasting and ordinary coherence. Each stationary whiskering induces a functor on these categories, by the preceding preservation and comparison results. As a first consequence for the transport in Q2, whiskering with an invertible global arrow $e:x→y$ is essentially surjective on hom objects. For $t:x→z$ take $e^{-1};t$. Reassociate $e;(e^{-1};t)$, whisker the invertible cancellation $e;e^{-1}⇒1_x$ by $t$, and apply the unitor. The associator and unitor are invertible by the point-factor case of Response 8. The same argument works at the other end of a string. [The transport test, Theorem 3.2.14](https://arxiv.org/pdf/2406.13240)
+
+**Paths with specified ends.** In $h_1H$, between two objects over the same strict vertex there is a unique arrow over its identity. It is an isomorphism: that vertex is a tensor of points, so Response 8 supplies the arrow, its reverse and comparisons with identities. Likewise there is exactly one arrow over a given generating strict edge at any prescribed lifts of its two ends. Here the relevant box is one generating interval with all other factors points. Choose a raw object at each strict vertex. Any strict path has a representative between specified raw ends, by composing the chosen edge lifts and the isomorphisms over vertices. A Steiner tensor is freely generated as a strict polygraph by its atoms, so its 1-cells are words in its generating edges. [Ara–Maltsiniotis, Theorem 2.12 and Appendix A](https://arxiv.org/pdf/1607.00668)
+
+We show that **every** raw 1-cell gives this arrow in $h_1H$, by induction on its expression, simultaneously in all the homs of the arity. For a variable its strict image is a generating edge, and the assertion follows from edge uniqueness. A coherence head of global dimension two has only point factors, by the dimension and full-support rules. Its strict image, also after substitution, is an identity. For an operation head of that dimension there is exactly one factor of dimension one, an ordinary path $[k]$; all others are points. Its top input labels in that factor are consecutive raw 1-cells $b_1,\ldots,b_k$ of a single inner hom. [Directed dimension and support rules](../../agda-gray-findings.md#precisions-to-pseudo-vs-graymd-3)
+
+First work in the head's own arity. Apply stationary whiskering to each successive edge of $[k]$ and compose the results in the outer hom. The composite has the head's strict path. Its two raw endpoints can differ from the head's chosen endpoints. Insert comparisons over the two endpoint vertices to match them literally. The composite so obtained and the head are parallel over the total of the box with active factor $[k]$. Response 8 compares them invertibly. Specialization expresses the original arrow in $h_1H$ as the composite of the $W(b_i)$ and the endpoint corrections. Each $b_i$ is a proper subexpression. By induction it is a composite of lifts of generating edges and vertex isomorphisms. Functoriality on $h_1$ permits this decomposition inside $W$. Strictly, the stationary cells contribute fixed tuples of vertices on either side. Thus $W$ takes each strict generating edge in the inner block to a generating edge in the enlarged block, and takes each vertex identity to a vertex identity. For an empty inner block only the identity case occurs.
+
+It remains to check independence of the intermediate raw objects. At each intermediate vertex insert the unique isomorphism over its identity to the chosen raw object there and its inverse. Each corrected edge is the unique arrow over that edge at the new ends. Vertex arrows compose to the unique such arrow, including for the empty word. This proves the assertion at the original prescribed ends. In particular $h_1H→K_{\leq1}$, where the latter retains all paths and their compositions, is fully faithful and surjective on isomorphism classes of objects. Equality of arrows in $h_1H$ yields an actual invertible 2-cell between the two parallel writings. Its strict image is an identity: $K$ has no nonidentity invertible positive cells by its strong Steiner basis. Equivalently, the top chains of an inverse pair in the highest occupied dimension must sum to zero, and descent in dimension forces identity at every rank.
+
+**Lifting a strict 2-cell.** Express it as a vertical composite of whiskered 2-atoms in the free strict polygraph. Every atom is a rectangular total, either one 2-generator or two 1-generators in different factors, with vertices elsewhere. At its two boundary paths choose representatives at the same raw objects, and use Response 8 to lift the atom at those paths. Lift the flanking paths and whisker inside the ordinary hom. This gives a 2-cell over the desired whiskered step. At joins, its two neighboring boundary writings have the same strict path. Choose common raw objects for the strict vertices throughout (using the prescribed outer objects) and insert the invertible path comparisons just proved. Apply the same correction at the two exterior paths to attain the specified literal faces. All corrections have strict identity image, so the vertical composite lifts exactly the requested cell. If both exterior objects lie over the same vertex, strong loop-freeness allows only an identity path and an identity 2-cell there; the point-box result gives the lift directly.
+
+For example, in $[2]⊗[1]$ the interchanger at a composite in the first slot and the paste of the two elementary interchangers can now be compared at prescribed parallel faces. Lift the two whiskered squares and join their intermediate paths as above. Compare the two exterior paths with the literal faces of the interchanger at the composite, and pad the paste with these invertible comparisons. Both resulting 2-cells lie over the total of the full rectangle, so Response 8 gives an invertible 3-cell between them. Specialization carries the comparison to arbitrary inputs in an $L$-model. Reversing the roles of the slots gives the corresponding splitting in the second slot with its prescribed Gray orientation. In higher dimensions the comparable exterior faces may themselves be different writings of a nonrectangular strict 2-cell. Uniqueness of such writings up to invertible 3-cell is the next lifting question.
+
+**Validation.** The following Agda 2.8.0 module compares two writings of the path that changes the first coordinate and then the second in the Gray square, with a stationary arrow on the right. One writing whiskers the whole corner; the other composes its whiskered steps. The direct coherence test in the three-slot arity returns false. Substitution of the two corner edges into the one-active-slot comparison gives a 3-cell in each direction at the displayed literal faces. The module then pastes the whiskered generating square with the correction and appends an edge in the third coordinate. Agda checks its prescribed faces and computes its strict top row: just the square at the initial third coordinate, with the final third-coordinate edge in its boundary. This is a nonrectangular strict 2-cell of the cube. The general invertibility and all-path assertions use the proofs above.
+
+<details>
+<summary>Agda check of the corner path</summary>
+
+```agda
+module CornerWhisker where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using (v; comp; lw; rw; vcomp; x; y; z; f; f'; α; g; g'; β; fg; f'g; f'g')
+
+-- A two-step path with a stationary arrow on its right.
+P = ctxOf (node (node (leaf ∷ leaf ∷ []) ∷ leaf ∷ []))
+wh : Tm → Tm
+wh a = comp (v 0) (v 1) a (v 7) (v 8)
+W : Tm → Tm → Tm → Tm
+W a b h = rw (v 0) (v 1) a b h (v 7) (v 8)
+whole = W (v 2) (v 5) (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6))
+parts = vcomp (v 0) (v 7) (wh (v 2)) (wh (v 3)) (W (v 2) (v 3) (v 4))
+              (wh (v 5)) (W (v 3) (v 5) (v 6))
+pole = arr (arr ⋆ (v 0) (v 7)) (wh (v 2)) (wh (v 5))
+comparison : Tm → Tm → Tm
+comparison a b = coh P (arr pole a b) (idₛ P)
+
+-- The two steps are now in different factors of the square.
+Q = ctxOf (node (node (leaf ∷ []) ∷ node (leaf ∷ []) ∷ leaf ∷ []))
+θ = ⟪ x ∷ z ∷ fg ∷ f'g ∷ rw x y f f' α z g ∷ f'g' ∷ lw x y f' z g g' β ∷ v 9 ∷ v 10 ∷ [] ⟫
+forward : Q ⊢tm (comparison whole parts [ θ ]tm) ∶ ((arr pole whole parts) [ θ ]ty)
+forward = snd (from-just (infer Q _))
+reverse : Q ⊢tm (comparison parts whole [ θ ]tm) ∶ ((arr pole parts whole) [ θ ]ty)
+reverse = snd (from-just (infer Q _))
+direct : graySide Q (pole [ θ ]ty) (whole [ θ ]tm) (parts [ θ ]tm) ≡ false
+direct = refl
+
+open import CaTTExp.Gray.Examples using (ich; βα; αβ)
+-- Whisker the generating square, then correct its target corner path.
+disk = ctxOf (node (node (node (leaf ∷ []) ∷ []) ∷ leaf ∷ []))
+face : Tm → Tm
+face a = rw (v 0) (v 1) (v 2) (v 3) a (v 7) (v 8)
+F = arr (arr ⋆ (v 0) (v 7)) (wh (v 2)) (wh (v 3))
+square = coh disk (arr F (face (v 4)) (face (v 5)))
+  ⟪ x ∷ z ∷ fg ∷ f'g' ∷ βα ∷ αβ ∷ ich ∷ v 9 ∷ v 10 ∷ [] ⟫
+start = rw x z fg f'g' βα (v 9) (v 10)
+chain = ctxOf (node (node (node (leaf ∷ leaf ∷ []) ∷ []) ∷ []))
+pasting = coh chain (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7))
+  ⟪ x ∷ v 9 ∷ comp x z fg (v 9) (v 10) ∷ comp x z f'g' (v 9) (v 10)
+  ∷ start ∷ (whole [ θ ]tm) ∷ square ∷ (parts [ θ ]tm) ∷ (comparison whole parts [ θ ]tm) ∷ [] ⟫
+atCorner : Q ⊢tm pasting ∶ arr (pole [ θ ]ty) start (parts [ θ ]tm)
+atCorner = snd (from-just (infer Q _))
+
+open import CaTTExp.Gray.Examples using (ΣTm)
+edge = node (leaf ∷ [])
+cube = ctxOf (node (edge ∷ edge ∷ edge ∷ []))
+a = comp x z fg (v 9) (v 10)
+b = comp x z f'g' (v 9) (v 10)
+c = comp x z f'g' (v 9) (v 11)
+lastEdge = lw x z f'g' (v 9) (v 10) (v 11) (v 12)
+finish : Tm → Tm
+finish k = vcomp x (v 9) a b k c lastEdge
+openFace = ΣTm (rw (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6))
+  [ ⟪ x ∷ v 9 ∷ a ∷ b ∷ start ∷ (parts [ θ ]tm) ∷ pasting ∷ c ∷ lastEdge ∷ [] ⟫ ]tm
+nonrectangular : cube ⊢tm openFace ∶ arr (arr (arr ⋆ x (v 9)) a c) (finish start) (finish (parts [ θ ]tm))
+nonrectangular = snd (from-just (infer cube _))
+squareRow : topS openFace ≡ ((4 ∷ 8 ∷ 10 ∷ []) ∷ [])
+squareRow = refl
+terminalEdge : memT (3 ∷ 7 ∷ 12 ∷ []) (topS (finish start)) ≡ true
+terminalEdge = refl
+```
+
+</details>

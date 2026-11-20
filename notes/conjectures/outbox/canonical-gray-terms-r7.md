@@ -464,3 +464,63 @@ agda --safe -i /tmp -i src /tmp/GrayShiftFaces.agda
 ~~~
 
 For larger grown bounds the new obligations start at transverse rank three. Even a lift for each face map separately would still need compatible comparisons where the two axes meet, and agreement with the end decompositions of Response 4. The displayed square supplies the first of those comparisons. The all-dimensional assignment requested in Q2 remains open.
+
+# Researcher Response 6
+
+**For the globe-pair alternative of Q2, four open comparisons per mixed rectangle and degree suffice.** Each compares two specified terms containing three degree-$k$ variables, each once in the strict top chain. The first and last are actual generators. The middle is a formal arrow between two specified $(k-1)$-terms. Substitution in this one arrow covers *all* choices of the internal notch bits. In degree $k\ge4$ this gives $2(k-2)(k-3)$ sufficient open comparisons, compared with the $2^k-4k+4$ closed inputs of Response 4. The open hypothesis asks for a witness valid under substitution.
+
+### The common middle input
+
+Write the minimal mixed rectangle as $(m,n)$, with $k>\max(m,n)$ and $h=m+n-k\ge2$. Put $a=k-n$ and $b=k-m$. The full $k$-row has first ranks $a,\ldots,m$. Denote its $h$ notch bits in increasing position order by $z_1,\ldots,z_h$ as in Response 1. The two end generators $l,r$ have ranks $(a,n),(m,b)$. Form the signed rectangle
+\[
+    B=D^{m-1}\otimes D^{n-1},\qquad
+    A_{m-1}^{*}\mapsto A_{m-1}^{z_h},\qquad
+    B_{n-1}^{*}\mapsto B_{n-1}^{z_1\oplus((a+1)\bmod2)}.
+\]
+The two signs are obtained by reading the first tag of the last middle site and the second tag of the first middle site. Let $x^-,x^+$ be the chosen terms of the two $(k-1)$-poles of the top atom of $B$, included by this signing. They are parallel. Introduce $p:x^-\to x^+$ in the ambient $(k-1)$-skeleton, and keep the two native $k$-variables $l,r$ with their actual declarations.
+
+Here are the two terms of the test. Start with the end writing that peels $l$ in Response 4. In its retained native block choose the writing that peels $r$; that rectangle is smaller, so the end comparison there is already available. In the inner remaining block insert $p$ into the preceding cut's open term. Use the native singleton terms on $r,l$, the two open operations for retained blocks, and the prescribed temporal orders at both cuts. Call the result $U(p)$. Define $V(p)$ by peeling $r$ and then $l$. When both sites of a two-site native block can be peeled, either description uses the same two factors in the same order.
+
+To check the types, peeling $l$ retains the interval $[a+1,m]$ at cut $k-1$. Its native box by Response 3 is $(m,n-1)$. Peeling $r$ there retains $[a+1,m-1]$ with native box $(m-1,n-1)$. In reverse the boxes are $(m-1,n)$ and $(m-1,n-1)$. Restriction reinstalls the native top atom's rows below the cut and keeps precisely the indicated top sites. Thus both innermost restrictions are the full $k$-cell $w$ of $B$ with bits $z_2,\ldots,z_{h-1}$. For $h=2$ it is the top atom. Both inclusions of $B$ have exactly the two signs displayed above, including on all lower variables. Consequently both innermost operations expect literally $x^-\to x^+$ by signed face compatibility. Both outer results have the chosen ambient $(k-1)$-poles.
+
+Every operation used to define $U,V$ is determined by $m,n,k,z_1,z_h$. In a two-block split the order is fixed by the one join between blocks. The intermediate $(k-1)$-row is obtained by adding the differential of the first block to the initial row. The full starting and ending rows are fixed; the singleton differential is fixed by its end tag. Subtracting it from the total differential therefore fixes the other block's differential as well. Apply this argument first in the ambient rectangle and then in the retained native rectangle. It fixes the two orders, all intermediate states, native signs and hence the actual earlier-cut templates. The two outer bits also determine the native singleton variables. Only the argument $T(w)$ of the inner template varies; this is the argument replaced by $p$.
+
+In particular $U(p),V(p)$ have the same strict image. Their lower faces agree by typing and their top chains are $l+p+r$: the transports use their formal arrow once and their endpoint corrections have identity image. The support lemma ensures that the two expressions typecheck with just the three indicated top variables. A $(k+1)$-term between them has identity image and is invertible in this $k$-dimensional context.
+
+Given such a comparison, substitute $T(w)$ for $p$. At each end it remains to go between the chosen writing of the retained native block and its writing peeling the opposite end. Use its comparison from the smaller rectangle, apply the outer open operation one level higher at its marked argument, and whisker with the stationary singleton. These have exactly the endpoints in Response 4, with inverse directions available. Composing gives its required closed comparison. Induction on the ambient bounds and then the cut now gives the reduction. For fixed $h=2,\ldots,k-2$ there are $k-h-1$ possible ordered pairs of bounds. Four choices per pair give the stated count.
+
+### Three atoms meeting along two facets
+
+The test can be taken in the union of the closures of $l,p,r$. The closure of $p$ consists of its new generator and the closures of the two signed $(k-1)$-rows of $B$. The end atoms meet it respectively in the closures of one generator of rank $(a,n-1)$ and one of rank $(m-1,b)$. Indeed in the left intersection the bounds force $i\le a$ and $j\le n-1$; the left atom fixes the tag at $i=a$ and the middle fixes it at $j=n-1$. One of the middle's two pole rows contains exactly this top label, so the whole intersection is that facet and its faces. The right intersection follows by the same bound and tag calculation. The two end atoms meet in their common $(a,b)$ face of dimension $k-h$, already in both shared facets.
+
+Every site of the exterior $(k-1)$-rows has an occupied successor in the full $k$-row. Its signed label occurs on an end atom or on a boundary of the middle block. Equivalently the two exterior $(k-1)$-rows are disjoint and their difference is the differential of $l+p+r$. Taking successive boundaries includes the lower poles as well. Thus the strict cell and the terms over it have support in this union.
+
+The resulting presentation is again strong Steiner. The differential of $p$ is its embedded positive pole minus its negative pole. Their supports are disjoint, and successive signed boundaries reproduce the lower rows of the native top atom, so the new generator is unital. For strong loop-freeness, order the ambient labels lexicographically by the first globe in its usual order (minus tags ascending in rank, top, plus tags descending), then by the second globe in its usual or reversed order according to the first rank's parity. In the two pole rows of $p$, every first rank below $m-1$ has a minus tag in the source and a plus tag in the target, since its left successor exists. At $m-1$ the fixed first tag is the same, and the second tags are in strictly increasing order for this parity convention. Hence every negative facet precedes every positive facet. Insert $p$ between those groups in the linear order. This verifies the condition also for the new differential.
+
+The following are the temporal orders after distributing each outer operation over its two native steps, with identity-image endpoint changes suppressed. Here $M$ denotes the middle slot. The bits prescribe the precedence at the two shared facets.
+
+| $(z_1,z_h)$ | Peel left, then right | Peel right, then left |
+| --- | --- | --- |
+| $(0,0)$ | $lMr$ | $lMr$ |
+| $(1,1)$ | $rMl$ | $rMl$ |
+| $(0,1)$ | $lrM$ | $rlM$ |
+| $(1,0)$ | $Mrl$ | $Mlr$ |
+
+Even in the first two cases, agreeing on the order of the three labels leaves a comparison of their actual terms and endpoint changes. There is also a strict obstruction to deducing the last two cases merely by substituting wider atoms into the width-two fork. In that fork one whole $(k-1)$-pole of the middle atom has exactly two top labels, the two facets shared with the end atoms. If a strict labelling sends the three bare atoms to the three bare atoms of a wider test, each shared facet can contribute at most the single top label in the corresponding target intersection. Indeed its image contributes positively to a pole of both incident atoms. Those two images must account for the whole pole of the target middle atom. That pole has $h$ top labels, which is impossible for $h>2$. This obstruction concerns preservation of the three bare atoms; terms with padding or endpoint corrections have additional possibilities.
+
+### Changing the middle arrow in a witness
+
+An open witness $E(p):U(p)\to V(p)$ also provides compatibility with higher native middle cells. For $q:p_0\to p_1$ use depth-one naturality on $E$ in the maximal variable $p$. Both of its faces contain $p$ once in top degree. In execution order the result compares
+\[
+       E(p_0)*_k V^\uparrow(q)
+          \quad\longrightarrow\quad
+       U^\uparrow(q)*_k E(p_1).
+\]
+Here the actions on the faces use the depth-zero operations of the same calculus. Both paths have $q$ once in their strict top chains. Repeat on the newly introduced highest variable: at each step it is maximal, the witness has depth one and its two faces have depth zero in that variable. The displayed construction therefore gives the boundary for the next step recursively in all dimensions, with identity strict value for each comparison by the dimension of the expanded context. Substitution supplies the actual native globes. [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1](https://arxiv.org/pdf/2501.11620)
+
+The checker compares both nested restrictions on all signed labels of the middle box, groups their complete operation data by the two exterior bits, and checks the three support intersections, Steiner order and precedence table. It uses independent closure under composition through bounds five. Through bounds eight it finds 1,272 closed states and 364 open tests across 91 rectangles with cut specified. Agda checked the first two higher changes of a sample open ternary reassociation, through degree six. That certificate checks the stated boundary convention; construction of $E(p)$ for the mixed rectangle terms remains open. [Checker and certificate generator](../../../tools/gray_globe_middle_parameter.py)
+
+~~~sh
+python3 tools/gray_globe_middle_parameter.py 8 --agda /tmp/GrayMiddleParameter.agda
+agda --safe -i /tmp -i src /tmp/GrayMiddleParameter.agda
+~~~

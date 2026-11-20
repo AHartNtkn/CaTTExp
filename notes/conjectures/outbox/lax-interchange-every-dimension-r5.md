@@ -4564,3 +4564,46 @@ The [block checker](../../../scripts/e6/interchange_inner_triangle_blocks.py) te
 **Six-strand cross-check.** The [right join checker](../../../scripts/e6/interchange_six_inner_join.py) also grounds the six ordered matchings where the right quartet makes only its two independent early crossings and then the left pair \(ab\) crosses the quartet and sorts. The eleven events are fixed by the 2-boundaries. The only possible monochromatic triangles are \(abx\), so no two independent triangle-bearing operands can form a proper shifted join. For each matching the checker verifies a context-stable strict rank on all 144 projected cut swaps and the proper \(H_R\), allowing the join factorization. A separate full-reversal interval with fixed right-quartet braid orientations exercises the crossing score on 46,446 comparisons: all three right join variations raise it, and each of its three decreases projects to the forbidden inner naturality. Run `python3 -B scripts/e6/interchange_six_inner_join.py`.
 
 For Q1 this localizes the remaining early-inner/late-mixed question to the listed placements with unrestricted path lengths. If both active witnesses are inner and all late triangles belong to the inactive input, the last late carrier can lie in \(C\) at both rectangle boundaries. The strict increase at the start of this proof then need not hold.
+
+# Researcher Response 31
+
+**Every proper degree-five elementary rectangle on the full pure six-strand sorting interval has no reverse in Response 12.** This includes two inner active inputs with triangles in either inactive input. By the substitution and padding argument of Response 24 the result holds on any finite diagram when some pair of proper active witnesses has joint retaining cost at most six.
+
+The new case has an early inner witness on a quartet \(G\) and a late inner witness on a quartet \(S\). More generally the following argument applies when \(G\cap S\ne\varnothing\) and every late triangle meets \(G\). It also applies when a late triangle disjoint from \(G\) occurs, provided its seven-strand projection with \(G\) lies outside the 36 placements of Response 30, for each such triangle.
+
+**The two restrictions on a cycle.** Suppose a reverse exists and close it with the designated forward comparison. Write \(p\) for early weight on projection to \(G\), and \(l\) for late weight on projection to \(S\), as in Response 22. Both are nonnegative, additive on paths and conserved under the equations and directed steps on this cycle. An inner edge of positive \(p\) uses two early events covering \(G\); one of positive \(l\) uses two late events covering \(S\).
+
+* No positive-\(p\) edge can occur before a late triangle in 4-path order. At \(CDAB\) the maximum \(p\)-prefix before a late triangle is zero, even if all late triangles occur in \(C\). Response 29 excludes a decrease of each prefix except at a temporal swap; incidence at the common strand excludes that swap whenever the late triangle meets \(G\). Under the seven-strand hypothesis use Response 30 at a decrease of the maximum: the last carrier on the source route projects to a last late carrier on \(G\cup T\). Its projected original carrier is cut-supported even if it belongs to \(C\). That response excludes the decrease. A nondecreasing quantity on a cycle is constant. If there are no late triangles the restriction is vacuous.
+* No early mixed edge can occur before positive \(l\). By the early-triangle prefix argument of Responses 27 and 29 the entire global late weight occurs before each early triangle on this cycle. An edge with positive \(l\) has positive global late weight: an inner edge retains a pair of late events, and a mixed edge retains a late triangle with a positive late moving event.
+
+A positive-\(p\) mixed edge carries an early triangle on \(G\); a positive-\(l\) mixed edge carries a late triangle on \(S\). A single inner edge cannot have *both* weights positive. It would exchange a late event on the spatial left with an early event on the spatial right. Response 27, projected to those four event strands, requires a late triangle **strictly after** that product. The product already carries positive \(p\), contrary to the first restriction. In fact the same quartet argument excludes any such product occurring at or after a positive-\(p\) edge in 4-path order.
+
+**Count early work before late work.** On a route \(v_1\cdots v_n\) use
+\[
+                  F=\sum_{i<j}p(v_i)l(v_j).
+\]
+Every positive term uses two inner edges, by the restrictions above. A local replacement preserves the terms involving an exterior context because the two total weights on the replaced subpath are conserved. For a 4-equation with a mixed edge and at most one inner edge on each side, every internal contribution vanishes. The same holds on a side made entirely of mixed edges. In an inner subdivision, a positive cross term between the pieces would give the unsplit edge both weights. Structural equalities preserve the event sets and the two weights. Thus \(F\) descends to 4-cells.
+
+At an elementary temporal exchange a decrease would require a positive-\(l\) inner edge in the chronologically earlier window and a positive-\(p\) inner edge in the later one. On a strand of \(G\cap S\) a late incidence would precede an early incidence, which is impossible throughout the fiber. For composite temporal inputs paste the elementary swaps.
+
+For the two inner naturalities and the shifted join write \(X\) for the left variation, \(Y\) for the right variation, and \(I\) for the product. The transported product \(I'\) has the same weights as \(I\) because its corresponding operands have the same event sets. Internal inversion counts in a transported variation agree under its fixed whiskers. These are all the source terms which can be lost when the groups are permuted.
+
+| Directed boundary | Possible lost contribution |
+|---|---|
+| \(I X\to X I'\) | \(p(I)l(X)\) |
+| \(Y I\to I'Y\) | \(p(Y)l(I)\) |
+| \(Y I X\to X Y I'\) | \((p(Y)+p(I))l(X)\) |
+
+If a listed term is positive, the source product has a late event on its left and an early event on its right. Indeed \(l(X)>0\) supplies a late underlying event of the left history, and \(p(Y)>0\) supplies an early one on the right. If the weight is on \(I\) itself, it supplies the appropriate event in *both* operands. The positive-\(p\) occurrence is either in \(Y\) before the product or is the product. The quartet argument excludes all three losses. This reasoning allows composites in both shifted-join operands.
+
+The outer unary and join variations carry one variation past a mixed edge. The mixed edge cannot participate in a positive cross term on either route. The internal contribution of the transported variation agrees. Proper \(W,K,J\) have positive Gray 5-chain, and the normalized unit cases use the rules already checked. Hence \(F\) never decreases. At \(CDAB\to CADB\) its increase is \(p(A)l(D)>0\): \(p\) vanishes on the late inputs and \(l\) on the early ones. This contradicts a cycle, with no bound on the input lengths.
+
+**Why this finishes six strands.** If the early active input is mixed, use Response 27. Otherwise choose its inner quartet \(G\). On at most six strands every triangle meets \(G\), so Response 29 treats a mixed late active input. If both active inputs are inner, any two quartets on these strands overlap, and the argument above applies regardless of which inactive paths supply triangles. The other cases in the reduction from finite diagrams, including a retained input globe, are covered in Responses 22 and 24.
+
+**An example with mixed inactive inputs.** Use the full six-strand interval with the following 3-source and cut:
+~~~text
+ef bc bd bf ac be ad af ae ab | df de cf ce cd
+~~~
+The early active step exchanges \(ac,be\) and its inactive successor is a \(t\) moving \(ef\) against \(b\). The late inactive \(r\) moves \(cd\) against \(ef\); its active successor exchanges \(df,ce\). The two inner quartets are \(abce\) and \(cdef\). The [two-inner checker](../../../scripts/e6/interchange_two_inner_weights.py) replays both schedules at the cut \(abefdc\), computes the projected weights, and checks the change from zero to one in \(F\). It also checks the lost coefficients in the three naturality and join boundaries and the required after-product order in the quartet table. Run `python3 -B scripts/e6/interchange_two_inner_weights.py` and `python3 -B scripts/e6/interchange_quartet_cut.py`.
+
+Any degree-five counterexample now requires at least seven retained strands for every pair of proper witnesses. At seven strands the remaining disjoint inner/triangle placements and the overlapping inner/inner case with a disjoint late triangle are confined to the cut list in Response 30. At eight strands the two inner quartets can themselves be disjoint; the shared incidence used at the temporal exchange is then unavailable.

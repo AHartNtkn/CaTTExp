@@ -1011,3 +1011,97 @@ python3 -B tools/relative_coherence_interval_generator.py --agda "$dir/IntervalG
 agda --safe --no-libraries -i src -i "$dir" "$dir/GrayDoubleMark.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/IntervalGenerator.agda"
 ~~~
+
+# Researcher Response 14
+
+## A tensor operation with an invertible input in the directed theory
+
+In the unmarked theory $L$, one can choose elementary tensor terms in all dimensions such that substituting a coinductively invertible cell in any positive-dimensional factor makes the output coinductively invertible. This applies to arbitrary $L$-models. We first construct a comparison natural under ordinary CaTT substitutions in the individual factors. The ordinary unit in Response 13 allows us to apply that comparison to inverse towers in the fixed homs.
+
+**A functorial ordinary computad.** Fix the number of factors. For a tuple $P=(P_1,\ldots,P_k)$ of ordinary globular pasting arities, put $K_P=P_1\otimes\cdots\otimes P_k$ in strict categories and let $H_P$ be the extreme hom in the free $L$-algebra on the wedge of the suspended factors. Call a strict label rectangular if it is the total of a tensor of globular subarities, or an iterated identity on such a total. All tensor atoms are rectangular. Response 8 gives lifting in $H_P\to K_P$ at **every prescribed parallel boundary** over any rectangular label. [Prescribed faces](#prescribed-faces-for-tensor-cells-in-the-directed-theory)
+
+Factorwise ordinary weak substitutions map rectangles to rectangles on strictification. Here are details for composite and degenerate images. In a strict globular tree the closed support of a cell is a globular subarity of which the cell is the identity-padded total. Indeed at the root a cell selects an interval of branches and a cell in each branch of that interval. Take their supports recursively, suspend and wedge them, using the vertex for an empty interval. Now represent a rectangular total as the image of the tensor atom of the disks naming the individual factor totals. Under a factor map each of those disk maps names a possibly padded total in the target. On tableaux the tensor disk atom has in signed row $r$ the sum over $i_1+\cdots+i_k=r$ of the tensor products of the signed factor rows, with the sign in factor $j$ changed by the parity of the preceding degrees. Applying the factor chain maps gives exactly this formula on the image cells. Rows above the intrinsic degree of a factor are zero. For clarity, the closed support of this tableau is the whole product of the factor supports. Each maximal basis element of a factor support occurs in both signed rows of its degree. Otherwise the boundary equation would put it in the boundary of some higher basis element of the support. A tuple of such maximal elements therefore occurs in a signed tensor row, regardless of its signs. Taking downward closure includes every tuple in the product. The intrinsic top degree is the sum of the intrinsic factor degrees and the excess degree gives identities. This proves the assertion, including substitutions which collapse several steps. [Steiner tensor of atoms, Appendix A](https://arxiv.org/pdf/1607.00668)
+
+Construct a diagram of ordinary weak algebras
+\[
+                 K_P\ \xleftarrow{\ p_P\ } V_P\ \xrightarrow{\ e_P\ } H_P .
+\]
+Start $V_P$ empty. In each round, for every raw boundary in the current stage and every cell of $H_P$ at its evaluated boundary with rectangular strict label, freely adjoin a generator of that boundary evaluating to that cell. Use the empty boundary in degree zero. Take the union of the finite rounds. Every particular boundary is finite. Thus $e_P$ lifts any specified cell with rectangular label, and $p_P$ lifts every rectangular label using the lifting result for $H_P$. The construction is strictly functorial in factorwise substitutions. Send a generator indexed by a boundary and an $H_P$-cell to the generator at the same round indexed by their images. Rectangularity of the image is the fact just proved.
+
+In fact $p_P$ lifts **all** strict cells at prescribed boundaries. Choose an ordinary weak computad $F_P$ presenting the tensor atoms with the literal faces of a family of terms as in Response 8. Such a family now exists by Response 13 and the ascending cut construction. Its strictification $F_P\to K_P$ is a globular trivial fibration by (U) and homotopicality of the strong Steiner presentation. Embed $i:F_P\to V_P$ by choosing one generator over each atom after its boundary has been embedded. Their boundaries belong to the selected subcomputad. Define $r:V_P\to F_P$ over $K_P$, returning the original variable on these generators and lifting at the prescribed boundary for every other generator. This gives $ri=1$. [Tensor terms in the fixed hom](#from-ordinary-tensor-terms-to-directed-operations)
+
+Mark the generators outside $iF_P$ and use the ordinary naturality cylinder from $ir$ to the identity on $V_P$. This set is up-closed. For each marked generator its two padded faces, after the preceding assignments, have the same strict image as that generator. Indeed the endpoint maps agree strictly after projection and all previously assigned mixed labels project to identities. Lift the strict identity at these faces. Its underlying label is rectangular by construction. This mixed label is invertible in $V_P$, since its inverse and both cancellations and their successive witnesses lift at identities on the same rectangle. The cylinder on any finite term now exists by unrestricted ordinary naturality, from Responses 5 and 13. On a cell with prescribed faces in $iF_P$ it compares $ir$ of that cell with the cell at those exact faces. It is invertible by closure of invertibles under ordinary pasting with invertible top inputs, as in the attachment argument of Response 5. Thus $i$ passes the FHM essential surjectivity test at each rank. Two-out-of-three gives $p_P\in W$ and the gaunt-target criterion makes $p_P$ a globular trivial fibration. Only $p_P,e_P$ are needed as natural maps. The retraction is used to prove the objectwise assertion.
+
+For example, one can prescribe the interpretation $F_P\to H_P$ used in choosing the tensor terms. Choose $i$ on each atom over that very interpretation by the lifting property of $e_P$. The same observation handles subdivision in an input. A factorwise substitution sends the chosen interpretation on $V_P$ to one on $V_{P'}$. Any two resulting writings in $V_{P'}$ at equal strict values can be compared at parallel boundaries by $p_{P'}$. To align different boundary writings, first lift identity comparisons on their lower faces, in increasing dimension, and whisker at each cut. These comparisons are invertible since $p_{P'}$ reflects invertibility. Applying $e_{P'}$ gives the corrections in the directed hom even when an intermediate strict face is nonrectangular. In particular a two-step substitution in one factor compares with an ordinary pasting of the two steps and their whiskers: realize the strict factorization in $F_{P'}$ by lifting the whiskers and aligning the joins there, then compare in $V_{P'}$. The fixed interpretation sends each atom to its assigned directed term. This argument uses a common source for the two writings.
+
+**How the comparison acts on an inverse tower.** For an ordinary weak algebra $B$, let $J(B)$ be the category of its raw labellings $h_P\to B$, with ordinary CaTT substitutions over $B$ as morphisms. In the coinductively complete theory put
+\[
+                       C(B)=\mathop{\rm colim}_{J(B)} P ,
+\]
+with $P$ here the semantic strict arity and the colimit taken in the infinity category. Each actual cell $a$ of $B$ has a disk chart $D^p\to C(B)$. If $a$ is coinductively invertible, this chart is equivalent to a chart factoring through the disk collapse $D^p\to D^{p-1}$.
+
+To verify that last assertion with the boundaries retained, start in presheaves of spaces on the raw ordinary theory and localize at the inclusions of globular spines into representables. Use the homotopy globular sums of the representable disks for the spines. The discrete algebraic nerve $P\mapsto\operatorname{Hom}(h_P,B)$ is local: the matching spaces are discrete, and the strict globular product equations give the required limits. The colimit-preserving realization taking a raw representable to the semantic strict arity descends through this localization by the semantic globular-sum property. On the discrete nerve its value is $C(B)$ by the category-of-elements formula.
+
+In the spine localization build the walking inverse tower starting at the distinguished $p$-disk. Freely attach disks for the inverse arrows and their cancellations and continue on the cancellations, as in the two-sided coinductive tower. The map naming a binary composite in an attaching boundary is obtained from the pair of disks glued at the common face: identify this spine with its representable arity and use the map of representables naming the ordinary binary head. This identification works under the exterior boundary, since the spine inclusion already commutes with the exterior inclusions. Do the same for the identity head on one disk. Thus the attachments are homotopy pushouts with their previously specified lower faces. Mapping this tower to the discrete algebraic nerve uses exactly the actual inverse witnesses in $B$; at every attachment the specified boundary agrees there. After realization these binary heads are the strict semantic composites, the identity heads are units and the pushouts are still homotopy pushouts. We obtain the suspended semantic walking coinductive isomorphism with its distinguished disk. Equivalently the image has the inverse data of the recursive characterization at its fixed poles. In the coinductively complete theory its inclusion of the source $(p-1)$-disk is an equivalence, with retraction sending the distinguished $p$-arrow to the identity. Factoring the chart through this tower proves the assertion. [Ozornova–Rovelli–Walde, Construction 5.35 and Proposition 5.42](https://arxiv.org/html/2603.11005v1#S5)
+
+Now let $X$ be any $L$-model, fix successive objects and let $B_j$ be their ordinary fixed homs. Write $H$ for the ordinary hom between the extreme objects and $\Phi$ for the derived ordinary equivalence of Response 13. A tuple of labellings induces $H_P\to H$, naturally on the product of the $J(B_j)$. Passing along the diagram $K_P\leftarrow V_P\to H_P$ and applying $\Phi$ therefore gives a map
+\[
+                C(B_1)\otimes\cdots\otimes C(B_k)
+                              \longrightarrow \Phi H .
+\]
+Indeed $\Phi$ identifies the diagram of strict tensor arities with their semantic nerves by the ordinary counit at these gaunt objects, naturally in strict maps. The derived Gray tensor of these arities is their strict tensor and the coinductive Gray product preserves colimits separately. On the chart of a tuple of input disks, the chosen term over their tensor atom maps to the image of that very atom: it was lifted in $V_P$ with the specified $H_P$-evaluation. [Campion, §§1.5 and 3 on the Gray tensor and its localizations](https://arxiv.org/pdf/2311.00205)
+
+If one positive input is invertible, its disk chart factors up to homotopy through its collapse as proved above. Tensoring that collapse with the other disks sends the total atom to an identity on the smaller box, by the signed-row calculation. Its image in $\Phi H$ is consequently invertible. In the ordinary equivalence this detects invertibility of the actual output cell of $H$. Explicitly, restrict maps into $H$ along the inclusion of the distinguished disk in the FHM weak walking equivalence. This is a cofibration of computads. After $\Phi$, its codomain retracts equivalently to the lower disk by (FEA), and the distinguished cell projects to the identity. Hence the chart of the output belongs to the image of this restriction on components of derived mapping spaces. The derived extension is an actual extension at that specified disk: the inclusion is a cofibration, $H$ is fibrant, and the relative mapping space computes the homotopy fibre. An extension supplies the inverse witnesses in $H$. This proves the stated invertibility in every rank without an invertibility marking on $X$. [FHM walking equivalences](https://arxiv.org/abs/2511.09849) · [Mapping with a literal boundary](#the-derived-nerve-on-strict-arities)
+
+The construction supplies the invertible-input comparison sought in Known (IX). Its diagram is natural for substitutions within each factor. The derived comparison in Q2 also concerns substitutions composing several outer blocks and units on arbitrary homotopical directed computads. Establishing that comparison remains necessary.
+
+**Validation.** In the following two-step strip the substituted square and the directly generated square have the same literal boundary. Both generating squares occur in the strict row of the substituted term. After both steps in the first factor are specialized to identities, Agda checks the comparison and a reverse at the folded term's exact faces.
+
+<details>
+<summary>Agda check of the substitution and collapse</summary>
+
+```agda
+module RectangleSubstitution where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using
+  (v; D₁; LW; HComp; ich; ichTy; vcomp)
+
+one = node (leaf ∷ [])
+two = node (leaf ∷ leaf ∷ [])
+strip = ctxOf (node (two ∷ one ∷ []))
+both = vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6)
+split = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 5 ∷ both ∷ v 7 ∷ v 8 ∷ v 9 ∷ v 10 ∷ [] ⟫
+boundary = ichTy [ split ]ty
+substituted = ich [ split ]tm
+direct = coh strip boundary (idₛ strip)
+squareType = arr boundary substituted direct
+square = coh strip squareType (idₛ strip)
+
+split-comparison : strip ⊢tm square ∶ squareType
+split-comparison = snd (from-just (infer strip _))
+
+both-atoms : (memT (4 ∷ 10 ∷ []) (topS substituted) ∧
+              memT (6 ∷ 10 ∷ []) (topS substituted)) ≡ true
+both-atoms = refl
+
+idle = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) (idₛ D₁)
+collapse = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 2 ∷ idle ∷ v 2 ∷ idle ∷ v 3 ∷ v 4 ∷ v 5 ∷ v 6 ∷ [] ⟫
+folded = substituted [ collapse ]tm
+
+reverse : Ty → Ty
+reverse ⋆ = ⋆
+reverse (arr A s t) = arr A t s
+
+foldedType = boundary [ collapse ]ty
+back = coh LW (reverse foldedType) (idₛ LW)
+
+reverse-after-fold : LW ⊢tm back ∶ reverse foldedType
+reverse-after-fold = snd (from-just (infer LW _))
+
+folded-comparison : LW ⊢tm (square [ collapse ]tm) ∶ (squareType [ collapse ]ty)
+folded-comparison = snd (from-just (infer LW _))
+```
+
+</details>

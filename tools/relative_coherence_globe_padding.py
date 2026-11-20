@@ -101,6 +101,16 @@ def verify(context, u, v_term, emitter, name):
     assert infer(taller, lower) == infer(taller, upper)
     assert subst_tm(lower, retract) == right_unit(context, u)
     assert subst_tm(upper, retract) == right_unit(context, v_term)
+    if rank >= 2 and not top_counts(context, u):
+        # Bring an arbitrarily high strict identity down to a first
+        # identity: its base now has a single fresh top-dimensional atom.
+        small, z, fold = append_globe(context, rank - 1, face(context, u, 0, True))
+        unit = identity(small, z)
+        for pole in (u, v_term):
+            shifted = comp2(small, 0, pole, unit)
+            assert not top_counts(small, shifted)
+            assert top_counts(small, src(small, shifted))[z[1]] == 1
+            assert subst_tm(shifted, fold) == right_unit(context, pole)
     # In the forward direction an actual old comparison gives the marked
     # filler by whiskering. Use a variable so the faces are independent.
     h_index = len(taller)

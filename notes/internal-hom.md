@@ -388,6 +388,7 @@ Architecture A never forms B ⊗ C for non-representable B and C.
   - The universal property holds on mapping spaces only. Higher cells go through the pseudo cotensor [⟦Dᵏ⟧, D].
   - A rule asserting the bijection on all cells is unsound: counterexample at B = C = D¹.
   - Both factors arbitrary still needs [C, –]_lax for arbitrary C, either from object-indexed limits (F5) or from PL-ω.
+- **Update 2026-11-20:** the PL-ω route is now available (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, Response 2, verified), so [C, –]_lax = C\– is a type former for arbitrary C; see `closed-structure.md` E.3.
 
 ---
 

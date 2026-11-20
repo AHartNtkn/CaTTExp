@@ -376,3 +376,36 @@ Three finite calculations exercise different parts of the proof.
 - Use the quantale of subsets of the four endomaps of a two-element set, with setwise composition. Enumerating all \(16^3=4096\) triples \((A,X,C)\) gives \(X\subseteq A\backslash C\) exactly when \(AX\subseteq C\), and \(X\subseteq C/A\) exactly when \(XA\subseteq C\). Exchanging the left and right rows changes the answer on 308 triples.
 
 This gives the generative form of Q1 over the univalent lax-grid model. The admissible data goals are contextual formula sequents at the distinguished corollas and at exposed vertices of the two-vertex pastings, with the relative sphere and collar boundaries above. Exactness uses the initial data model (3). It does not require the substituted formula to have finitely many cells or an algorithm for finding a derivation of an inhabited goal.
+
+# Verification (2026-11-20)
+
+**Finite checks re-run.** All reproduce, using an independent script in the session scratchpad.
+- Response 1, upsets: the componentwise poset on a_{ij}, 0 ≤ i ≤ j ≤ 2, has 8 upsets. Six satisfy f₀₁ + f₁₂ = f₀₂ + f₁₁, and the two exceptions are exactly {a₁₂, a₂₂} and {a₀₂, a₁₁, a₁₂, a₂₂}.
+- Response 1, obstruction: there are 1, 8 and 113 associative tables on labelled sets of sizes 1, 2 and 3, with 1, 14 and 267 triples satisfying the six premises, and qp = e holds in every case. The separating model is correct: with p(n) = max(n − 1, 0) and q(n) = n + 1 we get pq = 1 but qp(0) = 1.
+- Response 2, functions: there are 499 functions between sets of sizes 0–4, and 34 of them pass both extension tests. These are exactly the bijections, 0! + 1! + 2! + 3! + 4! = 34.
+- Response 2, quantale: on all 4,096 triples (A, X, C) in the quantale of subsets of End({0, 1}), both residual adjunctions hold. The left and right residuals differ on 308 triples.
+
+**Response 1.**
+- *Decision procedure.* For interpreted residuals of finite gaunt tables, maps into a gaunt target are computed by strict Gray tensors (Campion, *The Gray tensor product of (∞,n)-categories*, Thm 3.14 and Cor 3.15, as cited in the prompt's literature). Steiner presentations make the enumeration finite, and gaunt d-categories form an exponential ideal. Checked at the argument level.
+- *Obstruction.* This is a correct finite-monoid argument. It shows that inhabitation in every ambient model does not imply a map in the free data theory. So a rule cannot be justified by modelwise existence, and Q1's rule has to be generative.
+
+**Response 2 (answers Q1).** Checked at the argument level.
+- *Free data model.* 𝓕_Σ is the reflection of free corollas under the probe base U. The localization is at three sets of maps: the tree Segal maps, the grid Segal and completeness maps, and the three table maps r (pairing, left evaluation, right evaluation). It exists by presentability and has a cellular description, (5), by compactness of the test objects.
+- *Local objects.* Locality at the table maps says, in the first row, that the multicategory is representable, which gives a monoidal ∞-category. The other two rows say that A\– and –/A are right adjoints in the stated orders. The grid conditions make each one-hole hom a univalent grid sheaf.
+- *Initiality and probes.* (3) follows from the reflection and the free-corolla property. Pure-probe arities are preserved by the point-extension right adjoint.
+- *The rule.* The rule names the currying coherence c, at p_H, and its comparison ε, at p_B, in the generic context of (b, u, a). Its admissibility judgment is template recognition on finite incidence data, which is decidable, plus probe restrictions in finite grid tables. The extension lemma, that r is an equivalence iff every relative disk lifts, gives contractible solution spaces. So every admissible goal has a cell and admissible parallel cells are connected, which is the "coherence-over-shapes" requirement of Q1. The two-step attachment shows that naming c and ε gives the same reflection.
+- *Directed correctness.* The walking square has no reverse, and neither does item 41's four-cube pair. So the rule adds no reverse cells.
+
+**Citation check.**
+- Keidar–Neuhauser (arXiv 2606.27574) state "∞Cat ≃ Shv(⊞)^univ" as monoidal categories (their Thm 4.15 and Cor 4.16). Their Gray product is the reflection of a Day convolution, as Response 2 uses. Definitions 3.21–3.23 and §3.4 were not read line by line.
+- **Slip:** "Campion, Theorem A" is linked to arXiv 2209.09376, which is Campion's *Cubes are dense in (∞,∞)-categories*. That paper has no Theorem A of this kind. What it does give is density of cubes, which supports the remark that globes are retracts of cubes. The grid-sheaf model itself is Keidar–Neuhauser's theorem, which the response also cites, so the argument does not depend on the miscited reference.
+- Keidar–Neuhauser's ∞Cat is the (∞,∞) version, and the identification with the prompt's Cat_ω is taken from the prompt (item 44).
+- Gepner–Haugseng (arXiv 1312.3178) §2.2 treats non-symmetric ∞-operads. Def. 2.2.13 was not read verbatim.
+
+**Verdict.** Verified. **Q1 is answered positively** in the form it asked for: a generative coherence rule over Gray pasting types with a decidable admissibility judgment, exact by an initiality theorem for data models over the lax-grid model. The structure is one-sided: probes enter in a fixed order on each side and are never permuted, which is reading (II) of `closed-structure.md` F.7. Three limits:
+- the rule is relative to the ambient lax-grid calculus (item 44);
+- its data rules are a fixed list of templates, not a uniform contractibility test (Response 1 shows a test based on inhabitation cannot work);
+- deciding whether an arbitrary sequent is derivable remains undecidable (item 38), which the design does not need.
+
+**Consequence for the project.** The PL-ω route of `closed-structure.md` E.3 is available. ⊗, \ and / are type formers. Their structure maps (pairing, the two evaluations, currying with its comparison) are coherences at decidable generic sequents, and atoms may be interpreted as arbitrary objects. So [C, –]_lax = C\– (and the other-side hom –/C) for arbitrary C is settled at the level of design. What remains is internal: write these templates into the project's two-tier rule set, the reading-(II) draft of F.7.3, and reconcile them with the E.2/E.4 rule for B ⊗ Θ. No follow-up is written.
+

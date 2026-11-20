@@ -1,11 +1,11 @@
 """Check the cut count on strips and the two distinguishable loops on the 3 x 4 grid."""
 
-from collections import deque
+from collections import defaultdict, deque
 from itertools import permutations, product
 
-from interchange_comparison_fibres import check_strip
-from interchange_normal_form_check import complete
-from t_endomorphisms import expansions, run
+from interchange_comparison_fibres import add_column, check_strip
+from interchange_normal_form_check import complete, reduce_path, shortlex
+from t_endomorphisms import blocks, expansions, run, words
 
 
 def projected_rectangle(rows, columns, row_first=False):
@@ -132,7 +132,71 @@ def check_forbidden_patterns():
     print(f"Forbidden-pattern cut counts agree with all {components} permutation components.")
 
 
+def check_switch_settings(rows, columns):
+    """Positive cut of a suspended grid; the 3-inputs are pure advances."""
+    states = words(rows, columns)
+    start, end = states[-1], states[0]
+    targets, charges, pairs = {}, {}, []
+    for state in states:
+        for a, b in blocks(state):
+            edge = (state, a, b)
+            targets[edge] = run(state, min(expansions(a, b)))
+            charges[edge] = len(a) * len(b)
+    for edge in targets:
+        state, a, b = edge
+        splits = [("left", (a[:i], b), (a[i:], b)) for i in range(1, len(a))]
+        splits += [("right", (a, b[i:]), (a, b[:i])) for i in range(1, len(b))]
+        for kind, first, second in splits:
+            prefix = (state, *first)
+            pairs.append((kind, edge, (prefix, (targets[prefix], *second))))
+
+    def paths(state):
+        if state == end:
+            yield ()
+        else:
+            for a, b in blocks(state):
+                edge = (state, a, b)
+                for tail in paths(targets[edge]):
+                    yield (edge,) + tail
+
+    candidates = sorted(paths(start), key=shortlex)
+    indices = {word: i for i, word in enumerate(candidates)}
+    settings = {}
+    for inner, right in product((False, True), repeat=2):
+        splits = defaultdict(list)
+        equations = []
+        for kind, edge, unpacked in pairs:
+            if inner or (right and kind == "right"):
+                splits[edge].append(unpacked)
+                equations.append(((edge,), unpacked))
+        rules, _ = complete(charges, equations, rows * columns)
+        basis = {}
+        for i, word in enumerate(candidates):
+            for pos, edge in enumerate(word):
+                for unpacked in splits[edge]:
+                    j = indices[word[:pos] + unpacked + word[pos + 1:]]
+                    add_column(basis, {i: 1, j: -1})
+        augmented = basis.copy()
+        selected = [word for i, word in enumerate(candidates) if add_column(augmented, {i: 1})]
+        records = {word: reduce_path(word, rules) for word in candidates}
+        assert selected == sorted(set(records.values()), key=shortlex)
+        settings[inner, right] = records
+    for source, target in product(settings, repeat=2):
+        if all(a <= b for a, b in zip(source, target)):
+            for term, representative in settings[source].items():
+                assert settings[target][representative] == settings[target][term]
+    if rows == 1 and columns == 2:
+        # The two 4-paths acquire a common 5-identity exactly when the right split holds.
+        for flags, records in settings.items():
+            assert (len(set(records.values())) == 1) == any(flags)
+    counts = [len(set(settings[flags].values())) for flags in sorted(settings)]
+    print(f"Suspended {rows} x {columns}: {len(candidates)} raw paths, "
+          f"switch counts {counts}, all comparison maps commute.")
+
+
 if __name__ == "__main__":
     check_cut_counts()
     check_threshold_grid()
     check_forbidden_patterns()
+    check_switch_settings(1, 2)
+    check_switch_settings(2, 3)

@@ -110,30 +110,29 @@ The recursion into homs is the same statement one level up, so (L) and (I) for a
 **Step 2 (one variable: Lemma T).** Fix such an x, and suppose every boundary variable w of x already has w⁺ and an invertible w↑. Then a_x is x⁻ composed with invertible cells (the factors w↑, whiskered), and b_x is invertible cells composed with x⁺. *Lemma T:* there are an x⁺ with the prescribed boundary and an invertible x↑ : a_x → b_x.
 *Proof.* This is Lemma 4 with the variable-boundary sphere replaced by the composite boundary of x. Write b_x as u ∗ⱼ x⁺ ∗ⱼ v, composed in the dimensions j of x's boundary, with u and v invertible.
 - Put x⁺ := u⁻¹ ∗ⱼ a_x ∗ⱼ v⁻¹. This first has to be transported to x's prescribed boundary, by Lemma T one dimension down, which is the induction of Lemma 4.
-- Take x↑ to be the composite of the associators, the counits u ∗ u⁻¹ → id, and the unitors.
+- Take x↑ to be the composite of the associators, the counits u ∗ u⁻¹ → id, the unitors, and Lemma 4's transport cylinder from that first step.
 - x↑ is invertible because composites of invertible cells are invertible (Benjamin–Markakis, arXiv 2406.12127), and coherences are invertible.
 
 Steps 1 and 2 give (L), with all the new top components invertible.
 
-**Step 3 (I).** Componentwise-invertible cells of Diag(Dⁿ, C) are invertible: *(PI)* a (k + 1)-cell of Diag(X, C) whose variables x↑, for x over the generators of X ⊗ Dᵏ, are all invertible in C is invertible in Diag(X, C).
-*Sketch.*
-- The inverse is built by the same variable-by-variable recursion, with x↑ inverted and x⁻ and x⁺ swapped.
-- The unit and counit are (k + 2)-cells of Diag, again chosen variable by variable by Lemma T. Their own invertibility is (PI) one level up.
-- This is a guarded coinduction of the same form as `Free/Reflect.agda`.
+**Step 3 (I).** "φ̃ invertible in Diag(Dⁿ, C)" needs Diag's composition: an inverse ψ with ψ ∘ φ̃ and φ̃ ∘ ψ connected to identities. That is the vertical composite of lax squares and its higher analogues, which is C3a and is not yet defined (blocked on D3). So (I) **depends on C3a**, even at level 0. Only (L) is proved here. Defining invertibility componentwise would only move the question into C3a, so C3b is stated as depending on C3a instead.
 
-What is not checked: that the pieces chosen by Lemma T glue into cells with the *exact* boundaries the unit and counit types prescribe, at every variable. This is the analogue of C4's I1–I5 bookkeeping, and it is the point an independent check should look at.
+*Plan for (I), once composition is fixed (PI):* a (k + 1)-cell of Diag(X, C) whose components x↑ are all invertible in C is invertible in Diag(X, C). The construction cannot invert x↑ and swap x^±. ψ's component at x has type a^ψ_x → b^ψ_x, and both of those endpoints are built from ψ's own lower components, so x↑⁻¹ has the wrong boundary. The tool is Lemma 4 with *both* endpoints prescribed:
+- whisker x↑⁻¹ by the inverses of the lower cylinder cells;
+- transport the result along an invertible cylinder to the required boundary.
+That cylinder needs comparison cells between ψ's lower components and the naive inverses. So ψ, these comparisons, and the unit and counit, which also have fixed endpoints, must be built by **one simultaneous recursion** over the variables of X ⊗ Dᵏ, in the order of Lemma 2. The result is then a guarded coinduction, as in `Free/Reflect.agda`, for the higher levels. The independent check (2026-11-20) saw no obstruction to this restructured recursion. It is not yet written out.
 
 **Hypotheses.** Step 1 uses the cylinders on Dⁿ ⊗ Dᵏ. For k ≥ 1 these are not globular: their boundary terms are cylinder composites, so a_x needs naturality terms of depth ≥ 2 (C1). So:
-- (L) and (I) at level 0 of Diag (k = 0, objects) are **unconditional**: Dⁿ is globular, and this is Lemma 4.
-- At level k ≥ 1 they hold **given C1** for the coherences in the boundary terms of Dⁿ ⊗ Dᵏ. Its variables have dimension ≤ n + k, so their boundary terms have dimension ≤ 2 when n + k ≤ 3, and C1 is settled for those (Theorem A of NGC). So C3b holds at argument level for n + k ≤ 3. In general it waits on RC(n).
+- (L) at level 0 of Diag (k = 0, objects) is **unconditional**: Dⁿ is globular, and this is Lemma 4.
+- At level k ≥ 1, (L) holds **given C1** for the coherences in the boundary terms of Dⁿ ⊗ Dᵏ. Its variables have dimension ≤ n + k, so their boundary terms have dimension ≤ 2 when n + k ≤ 3, and C1 is settled for those (Theorem A of NGC). So (L) holds at argument level for n + k ≤ 3. This rests on NGC's Theorem A, which the C3b check did not re-check. In general it waits on RC(n).
 - In the strict model C3b holds outright. Ara–Lucas (arXiv 1909.13564) show the folk model structure is monoidal for the Gray tensor, so restriction along the cofibration ∂Dⁿ → Dⁿ into a fibrant C is a folk fibration, which lifts invertible cells.
 
-**Status.** C3b is reduced to C1 (for Dⁿ ⊗ Dᵏ) plus (PI). (PI) is sketched above, with its boundary bookkeeping left unchecked. Lemma T is proved at argument level.
+**Status (after independent check, 2026-11-20).** (L) is proved, given C1 on Dⁿ ⊗ Dᵏ: unconditional at level 0, at argument level for n + k ≤ 3. (I) depends on C3a (Diag's composition), and then on (PI) via the simultaneous recursion above. In the strict model C3b holds outright (Ara–Lucas; folk fibrations lift reversible cells, Lafont–Métayer–Worytkiewicz).
 
 ### 2.3 Remaining for C3
 
 - (C3a) Composition of Diag and its compatibility with (Dec): blocked on D3 (`free-objects.md` §1.2) being fixed; adjacent work: the vertical composite of two lax squares as a substitution, for the globular case.
-- (C3b) r is an ω-equifibration, syntactically: reduced in §2.2a to C1 for Dⁿ ⊗ Dᵏ plus (PI). Unconditional at level 0, and at argument level for n + k ≤ 3. Open: (PI)'s boundary bookkeeping, and RC(n) for larger n + k.
+- (C3b) r is an ω-equifibration, syntactically. Lifting (L) is done (§2.2a): unconditional at level 0, at argument level for n + k ≤ 3, and given C1 beyond that. Invertibility of the lift (I) depends on C3a, and then on (PI) by one simultaneous recursion, which is not yet written out.
 - (C3c) Higher-depth cylinders: C1.
 
 ---

@@ -265,7 +265,7 @@ So L moves G1 but does not remove it. Two things improve:
   - The certified checker (`Generated/GrayDiscDiscTransfer.agda`, about 2.5 min) accepts Γ′ (25 variables), both panel coherences at exactly the required types, and all 49 non-identity cube cells transferred as T′ = (ΣT)[σ]. A negative control (one panel with its boundary reversed) is rejected.
   - With the face-compatible section of Φ for P = Q = D¹ (`tools/gray_globe_comparison.py 2 2`, Python-checked, not certified) and identity cohs on identities, T′(c) := (ΣT(s c))[σ] satisfies (a)–(c) on the diagonal hom. All other homs are globular. So **CT(D² ⊗ D²) holds**; the only uncertified input is the section.
 
-So under L the honest statement is: **strict CT is false from dimension 3 (three factors); the weak form CT′, with coherences inserted, holds through dimension 4 and is open beyond, equivalent to the relative-coherence problem.**
+*Superseded (2026-11-20).* The statement that followed here ("strict CT is false from dimension 3; CT′ holds through dimension 4") is out of date. The D¹ ⊗ D¹ ⊗ D¹ failure is a failure of *layered* terms only. **Strict CT holds for every finite family of globular pasting diagrams**, with terms compatible with identities, closed faces and every parenthesization (`conjectures/answered/canonical-gray-terms-r8-2026-11-20.md`, Response 13, verified). The terms come from a fixed search over raw derivations, justified by strong-Steiner relative coherence. There is no size bound or structural recursion yet, which `outbox/canonical-gray-terms-r9.md` asks for. So G1 is resolved for L: Gray-shaped family contexts exist for every pair and every family.
 
 ### 4.4 Lax homs of arbitrary domain
 
@@ -364,7 +364,7 @@ So a structure with directed interchange along 0-cells can never be ν of a comp
 | Item | Status | Owner |
 |---|---|---|
 | Conjecture 3.2 (syntactic P ≈ L⁺), via the relative coherence lemma | open | this thread (E5) |
-| Conjecture CT (canonical Gray terms), the L form of G1 | open; self-contained statement in `conjectures/canonical-gray-terms.md` | this thread (E8) |
+| Conjecture CT (canonical Gray terms), the L form of G1 | **proved** for all finite families (r8 Response 13, 2026-11-20); open refinements (explicit size-bounded section, recognizer, degeneracies) in `conjectures/outbox/canonical-gray-terms-r9.md` | this thread (E8) |
 | E9′ (polynomial side-condition check with sharing) | open; experiment handed to LCORE | this thread + LCORE |
 | §1.4: rec admissible | open, low priority | this thread |
 | E6 first uniform case (ΣD² ∨ ΣD², dimension 5) | in progress | this thread |

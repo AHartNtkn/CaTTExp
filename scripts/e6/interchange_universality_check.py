@@ -1,6 +1,7 @@
-"""Finite witnesses for Researcher Response 2 on lax interchange, round 7."""
+"""Finite witnesses for the universality responses on lax interchange, round 7."""
 
 from itertools import product
+from math import gcd
 
 
 def check_square():
@@ -69,6 +70,48 @@ def check_powers():
     print(f"Powers: {cases} assignments, diagonal failures only; all right splits hold.")
 
 
+def check_cyclic_orders(limit):
+    """Evaluate the split on powers and test the subgroup maps on the marked table."""
+    primes = [p for p in range(2, limit + 1) if all(p % k for k in range(2, p))]
+    spectra = {}
+    assignments = 0
+    for n in range(1, limit + 1):
+        valid = set()
+        for d, p in product(range(1, limit + 1), primes):
+            failures = set()
+            for a, proper in product(range(n), (False, True)):
+                block = (a * d) % n
+                total, expanded = 0, False
+                for _ in range(p):
+                    total = (total + block) % n
+                    expanded |= bool(block and proper)
+                direct = bool(total and proper)
+                if direct != expanded:
+                    failures.add((a, proper))
+                assignments += 1
+            # Multiplication by d has gcd(n,d) lifts of each point in its image.
+            expected = gcd(n, d) * (gcd(n // gcd(n, d), p) - 1)
+            assert len(failures) == expected
+            if not failures:
+                valid.add((d, p))
+        spectra[n] = valid
+    inclusions = 0
+    for n, m in product(spectra, repeat=2):
+        assert (spectra[n] <= spectra[m]) == (n % m == 0)
+        if n % m:
+            continue
+        inc = [a * (n // m) for a in range(m)]
+        assert len(set(inc)) == m
+        for a, b in product(range(m), repeat=2):
+            assert inc[(a + b) % m] == (inc[a] + inc[b]) % n
+        for a, proper in product(range(m), (False, True)):
+            assert bool(a and proper) == bool(inc[a] and proper)
+        inclusions += 1
+    print(f'Cyclic orders through {limit}: {assignments} split assignments, '
+          f'{limit ** 2} ordered pairs, {inclusions} marked subgroup inclusions.')
+
+
 if __name__ == '__main__':
     check_square()
     check_powers()
+    check_cyclic_orders(32)

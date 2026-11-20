@@ -804,3 +804,43 @@ full right split in each cyclic test. The diagonal entries are the only
 failures. The [checker](../../../scripts/e6/interchange_universality_check.py)
 tests the finite witnesses. The quotient-table proof and the modular
 calculation above give the unbounded statements.
+
+# Researcher Response 3
+
+**Q2 has an infinite family even if we fix the right split and the truth value of every prime law $L_p$ in Response 2.** On the single $T_{12}$ signature there are admissible theories $U_N$, for positive integers $N$, with the following exact criterion for interpretations:
+\[
+     \text{an interpretation } U_N\longrightarrow U_M
+       \text{ over }P,\ \mathrm{Gray},\ \mathrm{strict}\text{ exists}
+        \quad\Longleftrightarrow\quad M\mid N.
+\]
+In particular $U_2,U_4,U_8,\ldots$ are pairwise interpretation-inequivalent. Every one of them satisfies the full right split, fails $L_2$, and satisfies all the odd-prime laws $L_p$. The distinction is already visible in the lower operations that an interpretation must fix.
+
+### The theories and their quotients
+
+Use the marked square table of Response 2 with the left arrow group changed to $C_N=\mathbb Z/N$. Its right short hom is $[1]$, and the long hom has one object, one arrow and two 2-endomorphisms under join. Pure actions send arrows to the unique arrow. The tag of a crossing of $a$ past $b$ is one precisely when $a\ne0$ and $b$ is proper. Use the once-suspended table so this crossing is the inner operation $\iota$ of $P$. Denote the resulting table by $M_N$, and take $U_N$ to be the common theory of the primary $T_{12}$ algebras and $M_N$ as in Response 2.
+
+For clarity, admissibility here uses only the group law, the unit test, and the strict join operations. Replacing the prime order by $N$ preserves those checks. Inside a short or long hom all cuts use the strict operations. A proper pair on distinct spans at the marked cut consists of a left group arrow and the single proper right arrow. The only decorated disk is their square. Its boundary schedules both evaluate to the unique long arrow. Unit partners have tag zero, and a right subdivision has at most one proper piece, proving the full right split. At the outer cut there is a terminal partner. This gives the strict or unit instances of the outer, balancing, and restricted split laws of $P$. Higher declarations use the same degeneracies as in the prime table, with only identity cells above degree four.
+
+Free objects of the common theory are the generated joint evaluations in the primary free object and the finite table on each assignment. Primary normal forms and the assignment-indexed finite values distinguish these evaluations, and evaluation respects substitution. The identity-reflection argument of Response 2 applies verbatim in every dimension because it uses the primary positive charges and the shared unit specializations. Thus proper elementary rectangles project to proper rectangles in $T_{12}$, where a reverse is impossible. The primary projection also detects $H\ne1$. After imposing inner identities, both full inner split laws hold. The other lower laws of $T_{12}$ already hold in the coordinates. Above degree four each $T_{12}$ law with the additional premises that its sides are defined and parallel holds in the table, since parallel cells there are equal. Induction on its typing derivation discharges those premises in the quotient, as in Response 2. Conversely every common law holds in the primary algebras. This gives the exact Gray quotient and then the exact strict quotient. Thus requirements 1–5 apply in all dimensions for each $U_N$.
+
+### Laws detecting prime powers
+
+For $d\ge1$ and a prime $p$, form the left split of Response 2 with $p$ equal blocks, each the chronological power $A^d$ of a 3-endomorphism. Call this law $D_{d,p}$. It equates the direct crossing of $A^{dp}$ past an adjacent $B$ to the paste of $p$ crossings of $A^d$ past $B$, with the whiskers of the left subdivision. Its two sides use only $P$. Powers may equivalently be written with consecutive variables and the equality premises of $L_p$. The primary theory satisfies the law by subdivision.
+
+In $M_N$ with $B$ proper, the direct tag is $[pda\ne0]$ and the expanded tag is $[da\ne0]$. For an identity right operand both vanish. A failure therefore occurs precisely when the image subgroup $d C_N$ contains an element of order $p$. This subgroup is cyclic of order $N/\gcd(N,d)$. Hence
+\[
+   U_N\models D_{d,p}
+       \quad\Longleftrightarrow\quad
+       p\nmid N/\gcd(N,d)
+       \quad\Longleftrightarrow\quad
+       v_p(N)\le v_p(d).
+\]
+For instance $D_{2,2}$ holds in $U_2$. In $U_4$ the assignment $a=1$ gives direct tag zero and expanded tag one. More generally $D_{2^s,2}$ distinguishes $U_{2^s}$ from every $U_{2^t}$ with $t>s$.
+
+If $M\mid N$, the injection $C_M\to C_N$, $a\mapsto (N/M)a$, preserves and reflects the zero test. Together with the identity maps on the right and long homs this embeds the entire marked table $M_M$ as a subalgebra of $M_N$, including all definedness tests. Every common law of $U_N$ consequently holds in $U_M$. The identity-on-signature interpretation has the required projections since both are the primary projections. If $M\nmid N$, choose a prime $p$ with $v_p(M)>v_p(N)$ and take $d=N$. Then $D_{N,p}$ holds in $U_N$ and fails in $U_M$. Any interpretation over $P$ would preserve it, regardless of how upper operations were interpreted. This proves the claimed criterion. Taking $d=1$ recovers the asserted fixed prime-law pattern on the powers of two. Together with the noninitiality and fixed-signature classification in Response 2, this also locates the family in the order asked for in Q1.
+
+The finite check evaluated 371,712 split assignments through cyclic order 32, including unit operands. It verified the exact number of failures for each law, checked preservation of composition and tags for all 119 subgroup inclusions, and compared the observed law inclusions with divisibility on all 1,024 ordered pairs. The valuation and subgroup arguments above prove the result for every order. [Reproducible checker](../../../scripts/e6/interchange_universality_check.py)
+
+~~~sh
+python3 -B scripts/e6/interchange_universality_check.py
+~~~

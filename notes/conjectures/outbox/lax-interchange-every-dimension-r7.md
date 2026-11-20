@@ -354,3 +354,453 @@ An answer to Q1 (a) or (b) in every dimension; an answer to Q2; or a published c
 - Ara–Maltsiniotis, arXiv 1607.00668 (lax Gray tensor of strict ω-categories); Steiner, *Omega-categories and chain complexes*, HHA 2004.
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange, Appendix A and Rem. 4.10).
 - Campion, arXiv 2311.00205 (Gray tensor of (∞,n)-categories); Gepner–Heine, arXiv 2510.10504.
+
+# Researcher Response 2
+
+**There is no initial theory for the interpretations in Q1(a).** There is
+an admissible target with an involution over \(P\), Gray and strict. The
+involution acts freely on the entire set of possible images of one required
+comparison. This obstructs uniqueness for *every* proposed initial object.
+
+**For Q1(b), the fixed-signature poset has a description by Boolean
+intervals.** Below we give the endpoints from finite proof supports and
+the operation tables of Gray and strict. It works for arbitrary selections
+of laws, including simultaneous additions and omissions. There are
+infinitely many independently selectable crossing laws already in the
+operations of \(P\). The right composite-crossing law can be selected
+independently of all of them.
+
+### A target with two possible images
+
+Write \(T=T_{12}\). Use two copies of its upper declarations, labelled
+0 and 1, sharing the structural operations and \(P\). In the declaration
+of a copy use its own copies of the operations in its faces. Thus each
+copy supplies all the signed face pastings, including the auxiliaries.
+In a primary coordinate use \(T\), with the two copies interpreted
+identically. Copy 0 can be designated as the required system of comparisons
+and copy 1 supplied as auxiliary operations. The morphisms in (a) fix
+only the specified lower structure and the two projections. We give
+one further, finite-in-each-degree coordinate \(M\).
+
+Take the arity
+\[
+             D=\Sigma^3(\Sigma[1]\vee\Sigma[1]).
+\]
+Relative to the branching cut there are three objects. The two short
+homs are \([1]\). In the long hom take the ordinary directed square
+grid, with paths from the southwest to the northeast corner in the two
+orders \(v,h\) (right-first and left-first, respectively). Give it
+**two** generating 2-cells \(b_0,b_1:v\to h\). This is a strict
+2-category. Both squares span the full grid, so their only contexts
+in this grid are units, and the only cells from \(v\) to \(h\) are these
+two. The pure actions of the short homs give the four edges. Endomorphism
+intervals at the three objects are terminal and backward intervals empty.
+Suspend this construction three times. The two squares now have global
+degree six. In copy \(i\), evaluate the mixed square of the two generating
+arrows at \(b_i\). At this cut the composition for copy \(i\) is the
+strict functor from \([1]\otimes[1]\) to the long hom that fixes
+both boundary paths and sends its generating square to \(b_i\).
+In particular all the relative Gray disk identities at that cut hold
+on arbitrary assignments.
+
+Here are the operation and law checks for this construction. At each
+suspension cut a composable pair has a terminal partner. At the marked
+cut a pair of proper inputs on distinct successive spans has to lie
+in the two short homs. There the only proper cells are the two arrows.
+Consequently the only proper positive-bidegree disk there is the chosen
+square. The higher disk and auxiliary declarations specialize by their
+unit rules on these inputs, with identities on the chosen faces. Inside
+each short or long hom use its strict operations. In particular either
+square is allowed as an *input*, regardless of which copy is being
+interpreted. Within the long hom strict interchange types all the
+degenerate pastings. Across spans its only possible partner is terminal.
+These observations check all ranks: on the two-globe arity at the
+marked cut the maps land on two edges and their identities, and on
+every other positive pair the cut is strict or a factor is a vertex.
+The split laws on the marked square have a unit piece, as do its
+exterior transport and balancing laws whenever there is a further span.
+The lower equations of \(P\) use the strict or unit cases. Equations of
+output degree greater than six hold on defined parallel sides because
+all cells there are identities. At degree six the only proper mixed
+occurrence in a single copy is its one square: on the grid its
+boundaries require exactly that occurrence, and the constructions
+inside the strict hom use only the strict operations. This verifies
+each single-copy \(T\)-structure. Equivalently this is the marked
+suspension check of (K51) on two *single* edges, where subdivision
+places no restriction on the choice of the square.
+
+Take the common term theory of the primary coordinate (all \(T\)-algebras
+with the diagonal interpretation) and \(M\). We recall how to compute
+its free objects, since two separately well-typed pastes need not match
+in the joint theory. On a diagram \(\Gamma\) generate the joint tuples
+in \(F_T(\Gamma)\) and one copy of \(M\) for every assignment
+\(\Gamma\to M\). Apply an operation only at jointly matching inputs.
+Term evaluation commutes with substitution. An equality of joint values
+is a common law on this arity: the first value tests all assignments
+in primary algebras by freeness, and the other values test all assignments
+in \(M\). Conversely the generated subalgebra satisfies the common
+laws. This gives the free evaluation property. The explicit boundaries
+are the copied face expressions. The normal-path basis (K52) for the
+primary value and the finite coordinate tables give expanded supports.
+For the marked grid use its path edges, the two distinct square labels,
+and its faces. Tag the supports by the assignment and coordinate.
+
+The projection to the primary coordinate reflects identities on these
+free objects. This is the positive-grading argument of (K51), which we
+will also use for other marked tables. Expand a term into chronological
+occurrences and apply the prescribed unit specializations. A unit case
+specializes in every coordinate to the same indicated operation, path
+or identity. For a normalized proper occurrence its proper defining
+inputs have proper primary values by the same argument on the operands.
+Either copy then contributes the positive primary charge of that
+generator, also under fixed whiskers. Input globes contribute positive
+charge. Additivity shows that a path with identity primary value has
+no proper occurrence: it is the identity on its joint face. This
+argument uses the unit-specialization recursion and positive charges
+of (K45), (K47) and (K50); it requires no directedness of the test
+algebra. Thus every proper rectangle projects to a proper rectangle,
+and a reverse would project to a reverse in \(T\). The primary value
+also witnesses \(H\ne1\).
+
+For exactness, each single-copy reduct satisfies the laws of \(T\).
+In the joint theory impose the inner identities. Each reduct then has
+the Gray structure of (K47). To identify the two structures, for each
+outer declaration take equality of its two evaluations **when defined
+and parallel on the same inputs**. This is a common law. In the primary
+coordinate the evaluations agree. In \(M\) the outer cut has a terminal
+partner, its pure actions are shared, and there is no proper outer
+mixed pair; above degree six parallel cells agree in any event. After
+the inner identities the inner families have their prescribed values
+in both copies. Following the face declarations, the two translated
+faces of every outer operation now agree: structural operations are
+shared, and occurrences in its faces have already been identified.
+The common law therefore identifies its two values. This is induction
+on the face construction with arbitrary assigned inputs. It applies
+also to terms first typed after the identities. Equivalently every
+joint term in the quotient can now be read in one copy, and the
+diagonal Gray evaluation is inverse to this inclusion on the generators
+and operations. Imposing the remaining outer identities gives the
+same argument with the strict quotient. Even if only copy 0 is
+initially designated, the rule equating a parallel copy-1 value to a
+copy-0 identity is common for inner declarations: the only unequal
+choices in the marked algebra on parallel outputs are its two
+*proper* squares. The same induction identifies the killed families.
+
+Swapping the copies is an automorphism of this theory: it is the
+identity on the primary value and is implemented on the test algebra
+by swapping \(b_0,b_1\) and their identities. It fixes \(P\) and
+commutes with both quotient projections. In any candidate \(I\) the
+bare comparison on \(D\) exists, with faces given by the two structural
+orders on the generating inputs. Every interpretation \(j:I\to
+T_{\rm joint}\) over \(P\) sends it to a term with exactly these faces.
+Evaluate that term at the generating assignment in \(M\). Its value
+is one of \(b_0,b_1\); the assignment itself is fixed by the swap.
+Hence the swapped interpretation differs from \(j\). No \(I\) has
+exactly one map to this target. The conclusion concerns initiality;
+the involution places no obstruction to *weak* initiality.
+
+There is also a free-object distinction here if upper signatures may
+vary. Use \(m\ge1\) copies and \(m\) squares in this construction. On
+\(D\) there are exactly \(m\) operations with the indicated faces. To
+see the upper bound, read a term on this arity from its inputs. Below
+the branching cut only unit partners are possible. In the short homs
+there is only one arrow apiece. In the long grid the proper square
+spans the whole interval and no pair of proper square updates occupies
+successive intervals. Thus, after unit specializations, a term of this
+boundary is a single copied square with unit contexts. This description
+is closed under all the declarations, including their higher identity
+specializations, and the test table distinguishes its \(m\) members.
+Mutually inverse interpretations over \(P\) induce a bijection on this
+fibre because its arity and its two structural faces are fixed. The
+resulting theories are pairwise interpretation-inequivalent.
+
+### The poset on the fixed signature
+
+Here is an infinitary classification with finite data for each of its
+indices. In particular it specifies a test for *sets* of additions and
+omissions; testing each law separately would not suffice. Use the fixed
+signature and the projections of Q1(b). The base consists of the
+structural rules, \(P\), and the domain and face declarations of the
+signature, with their prescribed unit values. Use one bit for each
+candidate law, allowing the finite definedness and equality premises
+used in (K47). Laws can be supplied as individual instances or as
+effectively enumerated schemes. For complete theories use individual
+laws and include the closure condition below.
+
+The following construction produces pairs \((F,\mathcal W)\), where
+\(F\) and every member of \(\mathcal W\) are **finite sets of bit
+indices**. The test on a set \(E\) of 1-bits is
+\[
+         F\not\subseteq E\quad\text{or}\quad
+                    (\exists W\in\mathcal W)\ W\subseteq E.       \tag{1}
+\]
+An empty family on the right forbids \(F\). An empty \(F\) on the left
+requires a witness. All catalogues in the construction are generated
+*before* choosing \(E\).
+
+Use three copies of the typed term calculus, with the base rules alone,
+with the inner identities, and with all the interchange identities,
+respectively. Denote them by \(0,i,a\). For a judgement \(J\), let
+\(C_c(J)\) be the following list of finite sets. Base axioms, generators
+and the extra identity axioms of copy \(c\) have label \(\varnothing\).
+Using candidate law number \(n\) contributes \(\{n\}\). At an inference
+take the union of the labels of all its premises and of the rule used.
+Include ordinary typing, faces, equality, congruence and substitution,
+with definedness of substituted terms. Enumerate finite inference trees,
+retaining their root labels at judgement \(J\). This is a uniform
+syntactic prescription; for example at a finite syntax and height cutoff
+it uses only finite unions and lists, and supersets of an already listed
+label for the same judgement can be discarded. In particular
+\[
+   J\text{ is derivable using }E\text{ in copy }c
+       \quad\Longleftrightarrow\quad
+       (\exists V\in C_c(J))\ V\subseteq E .                       \tag{2}
+\]
+The proof reads a finite derivation in either direction. The meaning
+of derivable judgements here is exact: defined terms modulo provable
+equality form a model, since a matched tuple in the term model has
+finite proofs of its matches and hence its operation can be formed.
+Evaluation is the unique map extending the generators. This is also
+the free partial-model construction of
+[Palmgren and Vickers](https://doi.org/10.1016/j.apal.2006.10.001).
+
+Generate (1) from the following data.
+
+1. **Projection kernels and the loop.** For each candidate \(n\) with
+   a falsifying assignment in a free Gray or free strict table on a
+   finite pasting diagram, emit \((\{n\},\varnothing)\). Evaluate
+   the premises as well as the conclusion. These assignments can be
+   enumerated in the known tables of §1. For each
+   \(F\in C_0(H=1_w)\) on the generic rectangle, emit
+   \((F,\varnothing)\).
+2. **Quotient tables.** For each finite \(\Gamma\) do the following
+   for \((c,Q)=(i,G),(a,S)\). For each cell \(z\) of the known table
+   \(Q(\Gamma)\), fix a word \(r_z\) in the completion signature
+   representing it in \(T/K_c\), where \(K_c\) denotes the corresponding
+   identities. Such words can be selected by enumerating the term
+   derivations for the *benchmark* (K47) and evaluating in the table.
+   The words for input generators can be the generators. Use the
+   following judgements \(J\):
+   \[
+       r_z\downarrow,\qquad r_{[x]}=x\ (x\in\Gamma),\qquad
+       f(r_{z_1},\ldots,r_{z_s})=r_{f(z_1,\ldots,z_s)}
+                                                        \tag{3}
+   \]
+   for **every defined table entry**. Include the faces, identities,
+   compositions and all auxiliary symbols. Iterate identity layers
+   as needed. For each \(J\) emit \((\varnothing,C_c(J))\).
+3. **Return paths.** In every finite pasting context enumerate raw
+   elementary rectangles \(e\) and raw terms \(d\) of their output
+   sort. Take finite derivations in copy 0 that type the rectangle
+   and prove \(d:t(e)\to s(e)\). For their joint support \(F\), emit
+   \[
+     \left(F,\ C_0(X=1_{sX})\ \cup\ C_0(Y=1_{sY})\right),        \tag{4}
+   \]
+   where \(X,Y\) are its two designated active inputs. Use the
+   original inputs in this test, with the given inactive slots;
+   absorption by an exterior context is not a unit proof for an
+   input. The notation \(sX,sY\) here denotes immediate source.
+4. **Deductive closure**, for the poset of *laws*. For every candidate
+   conclusion \(n\) emit \((F,\{\{n\}\})\) for each finite proof
+   support \(F\) for that law, reasoning with its formal premises.
+   For generating presentations omit this step and order their
+   deductive closures.
+
+**Interval form of the answer.** For each emitted pair, choose either
+one index from \(F\) to exclude or one member of \(\mathcal W\) to
+include. Let \(L\) be the union of the sets chosen for inclusion and
+\(N\) the set of excluded indices. Keep the choices with
+\(L\cap N=\varnothing\). The poset asked for in (b) is the union
+\[
+                  \bigcup [\,L,\ \mathbb N\setminus N\,]          \tag{5}
+\]
+with ordinary inclusion, using step 4 for closed laws. To prescribe
+additions \(A\) and omissions \(B\), use \(L\cup A\) and \(N\cup B\)
+in the disjointness test and in the endpoints. This gives all ways
+to complete those decisions. Equivalently the admissible points are
+an effective countable intersection of unions of finite bit conditions.
+Formula (5) is a syntactic classification; its indices require neither
+a prior list of admissible theories nor a directedness or word-problem
+oracle for a proposed theory.
+
+**Proof of the classification.** Step 1 is necessary since the two
+quotients themselves are algebras of the selected laws. Conversely it
+gives both evaluations out of the corresponding term quotients.
+Step 2 supplies inverse maps on cells, \(z\mapsto[r_z]\).
+Equations (3) make them homomorphisms on the *full* operation tables.
+One composite is the identity by the choice of the words. The other
+fixes all generators and commutes with operations, so is the identity
+by term induction. In particular no choice of representatives, or of
+which terms can compose, in the proposed unquotiented theory enters
+this test. Conversely, if the canonical projection is an isomorphism,
+every \(r_z\) types in the quotient: lift its evaluation in the table
+through the inverse isomorphism, inducting through its expression.
+The same argument gives every entry of (3), and (2) gives the required
+finite supports. This proves both directions, including surjectivity.
+
+In step 3 every reverse in the free algebra is represented by a term
+with finite proofs of its two endpoints. Conversely every triggered
+left side of (4) gives an actual reverse. The two lists on the right
+are exactly the ways this may happen without violating strong
+directedness. Testing only the original input alphabet for reverses
+would miss returns newly typed after an equation. The fixed formation
+rules supply the elementary cells and the signed higher operations.
+The free objects have an explicit generators-and-boundaries presentation
+by the typed syntax above, and substitution is evaluation. For expanded
+supports, order finite encodings of typed expressions by shortlex.
+Use the contextual generator occurrences of the least expression in
+a class, with their positions, operand and whisker trees, and tagged
+boundary data (the vertex for an empty path). Equivalently record
+the constructor tokens at their tree addresses in this expanded syntax.
+These labels reconstruct the expression, including repeated occurrences.
+This uses the expanded-basis reading of §3; it need not supply the
+effective normal-form algorithm specific to (K52). Thus no further
+test is required for 1, 2 or 5. For effectively specified presentations
+the term and boundary judgements are enumerable. Formula (5) may
+also be used relative to a specified axiom list. Finally (2) justifies
+step 4, and choosing a witness to each instance of (1) proves (5).
+
+For additions to an already admissible point, all its positive
+witnesses in step 2 are retained. Thus it suffices to check the
+projection kernels, the forbidden loop supports and the return clauses.
+For omissions the positive table witnesses must still be covered. For
+example, on the two-tile strip of (K46), (3) requires the equality of
+the direct \(W\) and the tile paste in copy \(i\). A guarded subdivision
+proof from (K47) contributes a witness there: the inner identities
+discharge its comparison tests. This does not demand the same equality
+in copy 0. Conversely an axiom identifying \(H\) with its unit has a
+singleton forbidden support in copy 0 even though its Gray and strict
+tables agree. A finite decision procedure for arbitrary effectively enumerated changes
+would be impossible: enumerate the axioms of \(T\) and also enumerate
+\(H=1_w\) if a given machine halts. The result is admissible exactly
+in the nonhalting case. The interval description allows these infinite
+choices without presupposing a decision procedure.
+
+### Independent equations on the fixed signature
+
+Let \(R\) be the unrestricted split in the **right** operand of
+\(\iota\) displayed in (K31). For every prime \(p\), take the
+following equation \(L_p\) in the **left** operand. Cross \(A^p\)
+past \(B\) directly, or paste the \(p\) individual crossings of
+\(A\) past \(B\) in the order of the left subdivision law, with
+the intervening source and target whiskers. Equate the two pastes.
+Here \(A\) is a 3-endomorphism for chronological 3-composition,
+and \(B\) is any adjacent 3-cell. This is an equation on the domain
+of the two displayed operations. In finite pasting contexts it has
+the equivalent spelling with \(p\) successive inputs
+\(A_1,\ldots,A_p\) and premises \(A_1=\cdots=A_p\).
+Thus it is a law in exactly the finite-premise sense allowed in the
+fixed-signature theories. The scope matters: a point of this poset
+contains laws on assignments in its algebras, even when a particular
+test assignment has loops. None of these schemes introduces an
+operation. \(T\) satisfies all of them by the two full split laws.
+
+For a prime \(q\) define a marked algebra \(M_q\). Suspend once the
+three-object construction, so the marked square is the global
+degree-four \(\iota\). Its left short hom is the one-object category
+with arrow group \(\mathbb Z/q\); its right short hom is \([1]\).
+The long hom is the strict 2-category with one object, one 1-cell,
+and 2-endomorphisms \(\{0,1\}\) under join in both directions.
+Pure actions send arrows to the unique 1-cell. On a left arrow \(a\)
+and a right arrow \(b\), the marked square has value
+\[
+                    [a\ne0]\,[b\text{ is proper}].
+\]
+Both its boundary schedules have the required common value. The two
+compositions of top cells satisfy strict interchange by commutative
+associativity of join. All other cuts are strict or have a terminal
+partner. Take iterated identities above global degree four.
+
+The verification on arbitrary assignments is as follows. Two proper
+inputs at the marked cut must lie in the two short homs. These have
+only arrows and their higher identities, so the proper binary disk
+there is the decorated square and the higher operations use their
+declared degeneracies. Inside the long hom use strict composition,
+also for its nonidentity 2-endomorphism. At the outer cut every
+composable pair has a terminal partner. Thus all operation boundaries
+and unit specializations are respected. Through degree four all the
+axioms of \(T\) except possibly the two full inner splits hold: an
+outer \(\chi\) is a unit, so the restricted splits of \(P\) hold,
+as do the outer naturality and join equations. An extra or intervening
+nonterminal object span in a proper marked square is impossible;
+this gives the balancing and exterior whiskering checks. The right
+split holds because a composable pair in \([1]\) has at most one
+proper arrow.
+
+On \(L_p\) with proper \(b\), the direct tag is \([pa\ne0]\) and the
+pasted tag is \([a\ne0]\). Consequently \(M_q\models L_p\) for
+\(p\ne q\), while \(a=1\in\mathbb Z/q\) separates the two sides
+when \(p=q\). For a separate test of \(R\) use the marked algebra
+of (K51). It fails \(R\) and satisfies every \(L_p\): its active
+left short hom \([1]\) has only identity endomorphisms. In all these
+calculations a square with a unit partner has empty or zero tag.
+
+Take the common theory of the primary \(T\) coordinate and the tests
+for just the laws one wants to *fail*. Every selected test is a model
+of that common theory. A law wanted true holds in every coordinate;
+a law wanted false fails at its indicated assignment. These are
+theories over the original \(P\) on the **single** completion
+signature. Their free objects are the generated joint tuples as
+above. The same identity-reflection proof gives strong directedness
+and the primary coordinate preserves the witness \(H\).
+
+For exactness use (K51)'s argument with all the selected tests at
+once. Under the inner identities both full split laws equate
+identities. Through degree four all the other axioms of \(T\) were
+common already. In degree \(d\ge5\) take each original equation of
+\(T\) with its original premises, additionally requiring both terms
+to be defined and parallel. This is a common law because every
+parallel pair in any of the marked tables at that degree is equal.
+Inductively in the inner quotient the original face and typing
+derivations give the extra premises, so the original equation holds.
+The primary algebras already satisfy all the common laws. Hence the
+two theories have the same inner-identity algebras and then the
+same all-identity algebras. This gives both exact quotients.
+
+Every finite Boolean pattern above uses finite tables. One can also
+use infinitely many primes at once with an explicit description of
+the joint values. For clarity, equality of any two specified terms
+in the whole prime family reduces to finitely many exceptional primes
+and a common answer for all larger primes. Fix the finite input
+diagram. Guess the discrete parts of an assignment, including the
+Boolean tags and the right arrows. Each remaining left arrow is a
+variable in \(\mathbb F_q\); composition adds these variables.
+Faces, definedness, identities and the mark test give only equalities
+and disequalities of integral linear forms modulo \(q\). Branch on
+these finitely many tests in the two expressions. Existence of a
+separating assignment is now a finite disjunction of linear systems
+with excluded hyperplanes. Away from the prime divisors of the
+nonzero minors of the coefficient and augmented matrices, consistency
+and containment of the solution space in each excluded hyperplane
+are the same as over the rationals. If no hyperplane contains that
+space, fewer than \(q\) proper hyperplanes cannot cover it, by counting
+points (the zero-dimensional case is immediate). This proves the
+assertion, and gives a finite computation for all primes or any
+specified infinite recursive selection, with a separate finite check
+for a finite selection. For general selections the description is
+relative to the index set. The discrete primary normal form and the
+assignment-indexed table entries give expanded supports; equivalently
+use the least occurrence tree as in (5).
+
+In particular even with \(R\) imposed there are infinitely many
+independent binary choices. Reversing inclusion of the sets of tests
+gives inclusion of their common laws; the displayed witnesses reflect
+that order. This Boolean family describes a subposet, and (5) describes
+the entire poset, including theories outside that family. The prime
+witnesses distinguish *laws*, and the power laws use only \(P\)-operations,
+so even mutually inverse interpretations fixing \(P\) must preserve
+their truth values. The multiple-square construction above
+separately distinguishes theories by the number of cells on a finite
+free pasting diagram.
+
+### Validation
+
+Run `python3 -B scripts/e6/interchange_universality_check.py`.
+On the entire two-square grid it checks the involution against every
+typed horizontal and vertical composition, and checks that neither
+filler is fixed. On the first eight primes it checks both sides of
+every power equation on all 1,232 operand assignments, as well as the
+full right split in each cyclic test. The diagonal entries are the only
+failures. The [checker](../../../scripts/e6/interchange_universality_check.py)
+tests the finite witnesses. The quotient-table proof and the modular
+calculation above give the unbounded statements.

@@ -16,8 +16,10 @@
 --
 --   * bubble-unspecified, mu-unspecified: the specified cone
 --     construction `coneC` (Repaired.agda) is defined only for
---     generators whose boundaries are variables. It is undefined on
---     the bubble, and also on the homotopical base  x, a : x → x,
+--     generators of dimension ≤ 2 whose boundaries are variables
+--     (`projTy`); the checks below are two instances of this. It is undefined on
+--     the bubble, and also on the (homotopical, by Chanavat Cor. 3.39;
+--     not checked here) base  x, a : x → x,
 --     μ : a · a ⇒ a. The restriction in the encoded repaired rule is
 --     therefore "variable boundaries", not homotopicality; extending
 --     `coneC` to term boundaries is the cone-over-coherences problem
@@ -74,6 +76,9 @@ bubble-unspecified = refl
 Γmu : NCtx
 Γmu = ∅ ▹ 0 ∶ ⋆ ▹ 1 ∶ (0 ⇒⋆ 0)
         ▹ 2 ∶ arr (0 ⇒⋆ 0) (comp (v 0) (v 0) (v 1) (v 0) (v 1)) (v 1)
+
+mu-wf : WfCtx Γmu
+mu-wf = from-just (wf? _)
 
 mu-unspecified : coneC Γmu 3 ≡ nothing
 mu-unspecified = refl

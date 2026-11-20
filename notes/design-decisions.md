@@ -50,7 +50,7 @@ J(S) is J with the laws in S switched back on, which means dropping their separa
 - Derives: what holds in every one of these models, which is everything T₁₂ derives except the catalogued laws and their consequences.
 - Rules out: nothing that L1 allows. Every T₁₂ model is a J model.
 - Decidable: yes (Lemma J-dec, §1.5).
-- Developments import upwards: a J(S) development is valid in J(S′) for S ⊆ S′, by transport along the identity-on-letters quotient (`Join/BoundedReach.agda`, `Transport`).
+- Developments import upwards: a J(S) development is valid in J(S′) for S ⊆ S′, because the identity-on-letters quotient sends steps to steps (argued in prose) and the abstract lemma that such a map sends paths to paths is machine-checked (`Join/BoundedReach.agda`, `Transport.transport`).
 
 **L3. J plus laws as hypotheses.** Keep J's side condition, and let the user declare a catalogued law as a signature cell over its generic context, marked invertible. All its instances then follow by substitution.
 - Derives: the law itself, but not its higher coherences. The side condition does not see a declared cell, so two different uses of it are not related by any coherence.
@@ -169,7 +169,7 @@ C4 needs the B14 theorems for bases Free(Γ) with Γ arbitrary.
 
 *Attempt.*
 - B[S⁻¹] is the pushout of B along marked trivialisations ∐ D_{k+1}^t → ∐ D_k^♭ (Loubaton Def. 3.2.1.6, Prop. 3.2.1.7; (Loc), `limits-metatheory.md` §9.2).
-- Pullback along the left cartesian fibration ∫T → B[S⁻¹]^♯ preserves colimits (Loubaton Thm 3.2.3.15, as in item 3).
+- Pullback along the left cartesian fibration ∫T → B[S⁻¹]^♯ preserves colimits (Loubaton Thm 3.2.3.15, as in item 3). This must be used in its marked form, for the marked trivialisation; that check in Loubaton is still to be done.
 - So ∫T is the pushout of ∫(T∘ℓ) along the totals over the trivialisations, and it remains to show that the total over D_{k+1}^t → D_k^♭ is the localisation at the lifts of the top cell.
 - Over a globe, the weight is determined by a k-cell of ω whose top part is invertible. Its total over D_{k+1} is a Gray cylinder on the fibre, and inverting the lifted top cell gives the total over D_k^♭ by item 2 (tensor-localisation). Item 2 is stated for X[S⁻¹] ⊗ I. The globe case needs it for D_k ⊗ fibre, which is the same lemma with the factors exchanged.
 
@@ -180,8 +180,8 @@ This last step is what remains. It is merged into `outbox/fibration-presentation
 ### 2.6 Machine check: what the encoded rules actually require
 
 `src/CaTTExp/Lim/WeakBase.agda` (type-checked locally, Agda 2.6.3, no postulates):
-- Mikhail's cone recognition rules, with both the printed and the strict linearity test, **accept the lax cone over the bubble** σ : 1_x ⇒ 1_x. Its projection over σ is p_σ : ρ⁻¹_q ⇛ ρ⁻¹_q ; (q ▷ σ), where ρ⁻¹_q is the cone cell over the coherence 1_x. So the encoded recognition rules already read bases weakly.
-- The **specified** cone construction `coneC` (the repaired rule, `Repaired.agda`) is undefined on the bubble. It is also undefined on the homotopical positive base μ : a·a ⇒ a, because it only handles generators whose boundaries are variables. So the restriction in the encoded repaired rule is "variable boundaries", not homotopicality.
+- Mikhail's cone recognition rules, with both the printed and the strict linearity test, **accept the lax cone over the bubble** σ : 1_x ⇒ 1_x. Its projection over σ is p_σ : ρ⁻¹_q ⇛ ρ⁻¹_q ; (q ▷ σ), where ρ⁻¹_q is the cone cell over the coherence 1_x. So the encoded rules accept a cone over a non-homotopical base, and nothing in them requires homotopicality. That is one instance, not a general theorem, and these rules are known to be permissive (Defects D5). An independent reviewer checked that the recognisers reject the reversed orientation and the σ-free cell.
+- The **specified** cone construction `coneC` (the repaired rule, `Repaired.agda`) is undefined on the bubble. It is also undefined on the well-formed positive base μ : a·a ⇒ a, which is homotopical by Chanavat Cor. 3.39 (a prose citation, not machine-checked). The reason is that `projTy` (Repaired.agda) only handles generators of dimension ≤ 2 whose boundaries are variables. So the restriction in the encoded repaired rule is "variable boundaries and dimension ≤ 2", not homotopicality. The Agda checks the two instances; the general statement is read off `projTy`.
 - Extending `coneC` to term boundaries is the cone-over-coherences problem N^cone (B5, CONE). That problem, not homotopicality, is what the limit rules depend on. It is dimension 1 proved, dimension 2 from RC(2). This finding goes to CONE and LIM-F.
 
 ### 2.7 Decision

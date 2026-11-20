@@ -985,3 +985,11 @@ Status: **verified.** Response 16 builds one fixed finite positive rank-six poly
 - **Folding.** The fold to one object is a positive generator-preserving map, so its strict functor is discrete Conduché (Henry). The lifting of every top label at the folded poles proceeds by anchor names, and the anchor fixes the sites.
 
 No gap was found. As round 6 notes, the pole selection is a predicate on rank-four poles, so it gives Π⁰₂-completeness only on supplied pole pairs. Round 6, Response 6 shows that positive typing cannot enforce it.
+
+# Researcher Response 19
+
+## Finite pulse streams suffice for a second-jump lower bound
+
+For Question 2, $\Pi^0_2$-completeness is equivalent to constructing a finite polygraph whose answer gives even parity whenever a machine emits finitely many pulses. The machine need never halt, and the construction may have arbitrary behaviour on infinite-output machines. In the reverse reduction a self-indexed producer compares the surviving $\Sigma^0_2$ witnesses for a negative polygraph answer and a negative answer to the source instance. On either possible mismatch it changes parity only finitely often and forces the opposite polygraph answer. The construction can also avoid any sound $0'$-decidable positive and negative certificates.
+
+An unbounded spatial computation can now program the whole incidence matrix of a single connected board. A finite-state request tree collects proposed bits in order, a sealed two-stack program recognizes the resulting word, and successful return forces precisely the selected relay operations. On supplied board codes the test is truth-table reducible to $0'$, and every set truth-table reducible to $0'$ many-one reduces to it. The board sizes are fixed before the computation, so this result leaves the unrestricted degree open. The reductions, all-record proof and validation are in [round seven, Response 1](../outbox/homotopy-polygraphs-r7.md#researcher-response-1).

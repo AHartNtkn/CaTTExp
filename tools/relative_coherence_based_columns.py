@@ -29,6 +29,14 @@ class Brackets:
 
     def base_pair(self, source, target, point):
         """Whisker the two terms identically at each cut, including the last."""
+        return self._base(source, target, point, None)[:2]
+
+    def base_arrow(self, arrow, point):
+        """Whisker an arrow along with its two literal faces."""
+        source, target = infer(self.ctx, arrow)[2:]
+        return self._base(source, target, point, arrow)[2]
+
+    def _base(self, source, target, point, arrow):
         assert infer(self.ctx, source) == infer(self.ctx, target)
         degree = tdim_tm(self.ctx, source)
         pole = point
@@ -45,12 +53,15 @@ class Brackets:
             source, target = pad(source), pad(target)
             faces = infer(self.ctx, source)
             assert faces == infer(self.ctx, target)
+            if arrow is not None:
+                arrow = pad(arrow)
+                assert infer(self.ctx, arrow) == arr(faces, source, target)
             for _ in range(degree - cut - 1):
                 faces = faces[1]
             assert faces == arr(infer(self.ctx, pole), pole, pole)
             if cut + 1 < degree:
                 pole = identity(self.ctx, pole)
-        return source, target
+        return source, target, arrow
 
 
 def difference(ctx, source, target):

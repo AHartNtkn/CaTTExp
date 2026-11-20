@@ -926,3 +926,62 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_head_degree.py --agda "$dir/HeadDegree.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/HeadDegree.agda"
 ~~~
+
+# Researcher Response 26
+
+## A relative degree extends by one colour exactly when its opposite-face chain bounds after relabelling
+
+Fix coefficients $R=\mathbb Z$ or $R=\mathbb Z/m$, $m\ge2$. Write $C(J)$ for the cellular chains of $X(J)$ from Response 9 and $D(J)$ for the quotient by chains supported on the union of the proper colour subcontexts. Order $J=(0,1,\ldots,k)$, put $I=J-\{0\}$, and let $i$ include $I$ into $J$. For $j\in I$ let $c_j$ replace $j$ by zero everywhere in a literal bracket, and put $E=\prod_{j\in I}(1-c_j)$. For $k\ge2$ and any $d\in R$, the following are equivalent.
+
+1. A relative $k$-cycle on $J$ has oriented simplex degree $d$.
+2. Some relative $(k-1)$-cycle $y$ on $I$ has degree $d$, and the absolute cycle $Eiy$ bounds in $C(J)$.
+
+Here $y$ can be given by any lift to cellular chains. In particular the degree images form a descending sequence of ideals in each fixed coefficient ring. A finite certificate of nonzero degree at **any** rank $k\ge6$ therefore disproves identity-image RC through degree eight on $\Gamma_6$, by repeated descent and Response 19. This transfers a homological obstruction between different seam rings.
+
+**Chain proof.** There is a short exact sequence
+$$
+ 0\longrightarrow D(I)\xrightarrow{Ei} EC(J)\xrightarrow{q}D(J)\longrightarrow0 .
+$$
+The collapses are commuting idempotent chain maps. The kernel of $E$ is precisely the span of generators missing some positive colour. Each such generator is fixed by its missing-colour collapse, and $x-Ex$ belongs to that span by expanding the product. Consequently $Ex$ lifts the class of every $x$ under $q$. On chains from $I$, all nonidentity summands of $Ei$ miss a positive colour. Restricting to generators with support exactly $I$ recovers every full coefficient of the input. This proves injectivity on $D(I)$. If $q(w)=0$ for $w=Ew$, decompose $w$ into its proper generators and apply $E$ once more. Only generators supported on exactly $I$ can survive, proving exactness in the middle.
+
+In (1) pick an absolute lift $x$ and take $y$ to be the restriction of $\partial x$ to generators of support exactly $I$. Exactness gives $\partial Ex=Eiy$ and $\partial y=0$ in $D(I)$. For the degree, apply the carried simplex chain map of Response 11 to $\partial x$. Only its $I$-supported summands can hit $[1,\ldots,k]$, whose coefficient in $\partial[0,\ldots,k]$ is $+1$. Conversely, if $\partial w=Eiy$, every boundary generator is proper, and on the opposite facet only the uncollapsed $y$ can contribute. Thus $w$ gives (1). Omitting the vertex in position $j$ of any increasing list multiplies the induced degree by $(-1)^j$. These proofs use finite cellular chains with arbitrary integer multiplicities. Collapses act on the entire typed substitution, including every inactive argument, and commute with the cellular boundary for every literal term.
+
+At six seams there is also a fixed-class version. Let $\delta:H_5D(I)\to R$ be degree, choose a degree-one class $b$ using the minimum-coloured five-cube of Response 9 with the appropriate orientation, and put
+$$
+ G=E H_5 C(J)\big/(Ei)_*(\ker\delta),\qquad z=(Ei)_*b\ \text{ in }G.
+$$
+Then the **exact image** of seven-colour degree is the ideal $\{r\in R:r z=0\}$. Indeed all classes of degree $r$ are $rb+\ker\delta$, and the preceding equivalence asks if one of them maps to zero in $H_5 C(J)$. The image of the idempotent on homology is the homology of its image subcomplex. The quotient here allows every relative degree-zero class on the opposite face, including one with a proper nonzero boundary. Response 9 tested a relation involving absolute cycles there.
+
+**Checks.** Run `python3 -B tools/relative_coherence_face_transfer.py --only descent`. On the minimum-coloured three-cube the four oriented opposite degrees are $(-1,+1,-1,+1)$. On the four-turn example all four are $2\bmod4$. In each case the checker uses raw bracket relabellings to verify $\partial Ex=Eiy$ on every cellular coefficient. At the first step each face has one lower cell, eight terms in its absolute cycle, and eight in the displayed primitive. It checks all four choices of first vertex and all twelve choices of ordered first and second vertices, independently in each example. The `--input` option accepts a typed context, colours and degree as in Response 19. [Face transfer solver](../../../tools/relative_coherence_face_transfer.py)
+
+# Researcher Response 27
+
+## One based bracket and its signed relabellings suffice for the absolute filling test
+
+In Response 26, for $k\ge3$ one can require $y$ to be a **single** bracket on the $k$ positive colours, based at any specified vertex of $I$. Over $\mathbb Z/m$ one can further require $y=[1,C]$, where $1$ is the iterated identity at that vertex and $C$ is a based $(k-2)$-term. Thus at six seams the modular test is to find a based **four-term on six colours** such that $[1,C]$ has proper boundary modulo $m$ and nonzero degree, and its **64 signed relabellings have an absolute filling on seven colours**. These conditions together are necessary and sufficient for a modular degree certificate. An integral certificate also supplies one modulo any $m$ not dividing its degree.
+
+**Preserving the absolute class.** More generally, for every integral $n$-chain $y$ in $C(V)$ with $n\ge2$, a single bracket $b$ between based $(n-1)$-terms satisfies $b-y=\partial w$ on the same vertex set. To see this, replace each occurrence of $-g$, for $g=[u,v]$, by the generator $g'=[v,u]$. The change $g'+g$ is the boundary of $[1_u,g*_{n-1}g']$. The composite goes from $u$ to $u$, so this is a literal $(n+1)$-bracket.
+
+Whisker each resulting $n$-arrow on both sides by the pads of Response 13 at cuts $0$ through $n-2$. The two $(n-1)$-faces undergo exactly the basing of that response. In a binary globe paste above the cut, the two immediate faces are the binary pastes of the corresponding faces, with a lower-dimensional factor kept stationary. This follows by restricting the defining binary pasting scheme to its two signed boundaries. The pads have dimension at most $n-1$, so each padded arrow still counts precisely its original $n$-generator. Compose the padded arrows at cut $n-2$. Their faces are endomorphisms of the same literal pole, so the resulting $T:A\to B$ exists and its faces are based. The last bracket $[T,[A,B]]$ has boundary $[A,B]-N_n(T)$. Adding the sign-change witnesses gives the asserted $w$. For the empty chain use the identity $n$-term for $T$. Working modulo $m$, do this first to an integral lift. In particular the change to the projected cycle $Eiy$ itself has the explicit primitive $Eiw$. Equality of boundaries alone, as in Response 13, would not give this conclusion.
+
+**Putting the source at the identity.** For a based bracket $g=[A,B]$, let $U$ be the iterated identity parallel to $A,B$, $a=[U,A]$, and $b=[U,B]$. The bracket $[a*_{n-1}g,b]$ has boundary $b-a-g$. Form the cut-$(n-2)$ product of $b$ followed by $m-1$ copies of $a$, with fixed parentheses. It goes from a product of $m$ copies of $U$ to the corresponding product $C$ of $B,A,\ldots,A$. The source product and $U$ are parallel terms over the singleton vertex. Both have full singleton support, so a raw point coherence gives an $n$-arrow from $U$ to that product, with zero $n$-generator counts. Precompose by it to obtain $T:U\to C$. The bracket $[T,[U,C]]$ together with the preceding triangle has total boundary $[U,C]-g-ma$. This proves the modular normalization including its absolute witness.
+
+For nonzero degree the normalized bracket has full support $I$. Its relabellings indexed by subsets $S\subseteq I$ are distinct since the positive names in each support are exactly $I-S$. The sum has $2^k$ coefficients $\pm1$ before reduction. By Response 13 a filling, when one exists, can itself be sought as **one** $k$-bracket on $J$ whose two literal $(k-1)$-faces have count difference $Eiy$ over $R$ (apply that response to an integral lift of a filling). All the constructions use raw terms and impose no bound on arities, multiplicities, or the syntax of inactive inputs.
+
+**Checks.** The descent command of Response 26 also replaces the opposite-face generator at zero in each example and constructs the new filling, checking all eight coefficients and the degree. In the mod-four case it uses the identity-source normalization. The following additionally checks a signed chain $2g-h$ at rank two, an empty rank-three chain, and all 64 relabellings of a literal five-loop over six positive names. That five-loop has degree zero. Agda checks the reverse $h'$, its cancellation bracket and the final comparison in the signed example.
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_face_transfer.py --only normalization --agda "$dir/ChainNormal.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/ChainNormal.agda"
+~~~
+
+# Researcher Response 28
+
+## Basing the six-arrow structural comparison gives zero facet weight in both directions
+
+Take the rank-five comparison of Response 25 on the six-arrow path, or its typed reverse, and apply the identical two-sided padding of Response 13 to make that term based. Its two rank-four faces use all seven colours, and its original rank-five generator count is zero. At cuts $0,1,2,3$ all pads have rank at most four. Both padded four-faces retain every original colour because the substituted face remains a literal argument of each binary paste. At cut four the two new five-brackets therefore both have full support. Their simplex images are coned at the minimum colour zero, so both have zero coefficient on the opposite facet. These are the entire five-count of the based term. Thus its weight $\omega$ is zero even though the original unbased structural head has signed unit degree.
+
+The argument applies to any comparison with full-colour immediate faces whose existing top counts are supported solely on full-colour generators. Arbitrary inactive labels and loop powers are allowed subject to these two hypotheses. In particular substituting paths with the original seven distinct root colours preserves the hypotheses for the six-arrow comparison, irrespective of path lengths or repeated visits. Padding retains the two full supports and only adds full generators at the last cut. Composing any finite list of such based terms, in either direction and with arbitrary powers at the top cut, adds their count vectors and leaves the weight zero. Thus this entire family cannot supply the based witness of Response 19.
+
+**Checks.** Run `python3 -B tools/relative_coherence_face_transfer.py --only basings`. For the actual six-arrow comparison the solver infers the two literal directions, checks the empty five-count in each, and pads their four-faces. At each of the seven basepoints and for each direction it constructs both final five-brackets, checks they are distinct, and computes their supports and their opposite-facet coefficients. All 28 coefficients are zero. The computation concerns these fourteen basings. The support and count argument gives the extension to arbitrary paths and powers. [Basing checker](../../../tools/relative_coherence_face_transfer.py)

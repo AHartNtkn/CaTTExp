@@ -1,10 +1,13 @@
 ------------------------------------------------------------------------
--- The law switches of J keep seed lists
--- (notes/design-decisions.md §1, ledger E12; joining-completion.md §8).
+-- The law switches keep seed lists
+-- (notes/design-decisions.md §1.7, ledger E12; joining-completion.md §8).
 --
--- J's catalogued optional laws are the inner composite-crossing law,
--- the right split R, and the prime left splits L_p. Each is a split
--- equation for the inner interchanger ι.
+-- The side condition computes in V + S, where the switch set S ranges
+-- over the laws visible on pasting diagrams (design-decisions.md §1.7):
+-- the inner composite-crossing law and the right split R. Each is a
+-- split equation for the inner interchanger ι. The left splits L_p and
+-- the D_{d,p} are invisible on pasting diagrams, so they are not
+-- switches. The settings offered are none (V) and all (T₁₂'s profile).
 --
 -- Part A (raw syntax of T, from CaTTExp.Join.SepAlgebra):
 --   Inner4         4-terms built from ι, identities, composition,
@@ -12,8 +15,8 @@
 --   Law sw X Y     the switched laws, as schemas on raw terms:
 --                  splitL / splitR (binary unrestricted splits of either
 --                  operand, the inner composite-crossing law),
---                  splitR alone (R), and the p-fold left split of A^p
---                  (L_p), each available when its switch is on;
+--                  and splitR alone (R), each available when its
+--                  switch is on;
 --   law-inner      both sides of every switched law are Inner4;
 --   seeds4         the seed list of a 4-term: its r, t and generator
 --                  letters, in order;
@@ -41,13 +44,21 @@ import CaTTExp.Join.SwitchCospan as SC
 
 module CaTTExp.Join.SwitchLaws where
 
--- Which optional laws are on.
+-- Which visible laws are on.
 record Switches : Set where
   field
     icc  : Bool          -- inner composite-crossing law (both splits)
     rsp  : Bool          -- right split R
-    lpow : Nat → Bool    -- left split L_p (meant for primes p)
 open Switches
+
+-- The settings offered (design-decisions.md §1.7): vS, no switch on,
+-- the default, where the side condition computes in V; and allS, both
+-- on, which has T₁₂'s pasting profile. The other two values of Switches
+-- (one law on) are expressible here but not endorsed: whether they are
+-- admissible waits on r9.
+vS allS : Switches
+vS   = record { icc = false ; rsp = false }
+allS = record { icc = true  ; rsp = true  }
 
 data IsTrue : Bool → Set where
   tt′ : IsTrue true
@@ -66,19 +77,6 @@ module PartA (G1 G2 G3 G4 : Set) where
     i-w1L  : ∀ f {X} → Inner4 X → Inner4 (w1L₄ f X)
     i-w1R  : ∀ {X} f → Inner4 X → Inner4 (w1R₄ X f)
 
-  -- Chronological power of a 3-cell, A^(suc n).
-  pow : Nat → T3 → T3
-  pow zero    A = A
-  pow (suc n) A = A ⨾ pow n A
-
-  -- The paste of the crossings of A past B, n+1 copies of A, in the
-  -- order of the left subdivision law, with free whisker parameters.
-  pasteL : Nat → T3 → T3 → (Nat → T2) → (Nat → T2) → (Nat → T3) → (Nat → T3) → T4
-  pasteL zero    A B v v′ e e′ = ι A B
-  pasteL (suc n) A B v v′ e e′ =
-    ctx (e (suc n)) (ι A B) (wr (pow n A) (v′ (suc n))) ·
-    ctx (wr A (v (suc n))) (pasteL n A B v v′ e e′) (e′ (suc n))
-
   -- The switched laws.
   data Law (sw : Switches) : T4 → T4 → Set where
     splitL : IsTrue (icc sw) → ∀ F F′ G v v′ e e′ →
@@ -90,13 +88,6 @@ module PartA (G1 G2 G3 G4 : Set) where
     splitR : IsTrue (rsp sw) → ∀ F G G′ u u′ e e′ →
              Law sw (ι F (G ⨾ G′))
                     (ctx (wl u G) (ι F G′) (id3 e) · ctx (id3 e′) (ι F G) (wl u′ G′))
-    Lp     : ∀ p → IsTrue (lpow sw p) → ∀ A B v v′ e e′ →
-             Law sw (ι (pow p A) B) (pasteL p A B v v′ e e′)
-
-  pasteL-inner : ∀ n A B v v′ e e′ → Inner4 (pasteL n A B v v′ e e′)
-  pasteL-inner zero    A B v v′ e e′ = i-ι A B
-  pasteL-inner (suc n) A B v v′ e e′ =
-    i-· (i-ctx _ _ (i-ι A B)) (i-ctx _ _ (pasteL-inner n A B v v′ e e′))
 
   law-inner : ∀ {sw X Y} → Law sw X Y → Inner4 X × Inner4 Y
   law-inner (splitL _ F F′ G v v′ e e′) =
@@ -105,7 +96,6 @@ module PartA (G1 G2 G3 G4 : Set) where
     i-ι _ _ , i-· (i-ctx _ _ (i-ι F G′)) (i-ctx _ _ (i-ι F G))
   law-inner (splitR _ F G G′ u u′ e e′) =
     i-ι _ _ , i-· (i-ctx _ _ (i-ι F G′)) (i-ctx _ _ (i-ι F G))
-  law-inner (Lp p _ A B v v′ e e′) = i-ι _ _ , pasteL-inner p A B v v′ e e′
 
   -- Seed letters of a 4-term.
   data Seed4 : Set where
@@ -169,14 +159,15 @@ module PartA (G1 G2 G3 G4 : Set) where
   -- Switching more laws on is the identity on terms and enlarges ≈L.
   _≤S_ : Switches → Switches → Set
   s ≤S s′ = (IsTrue (icc s) → IsTrue (icc s′)) ×
-            (IsTrue (rsp s) → IsTrue (rsp s′)) ×
-            (∀ p → IsTrue (lpow s p) → IsTrue (lpow s′ p))
+            (IsTrue (rsp s) → IsTrue (rsp s′))
 
   law-mono : ∀ {s s′} → s ≤S s′ → ∀ {X Y} → Law s X Y → Law s′ X Y
-  law-mono (i , _ , _) (splitL h F F′ G v v′ e e′)     = splitL (i h) F F′ G v v′ e e′
-  law-mono (i , _ , _) (splitR-icc h F G G′ u u′ e e′) = splitR-icc (i h) F G G′ u u′ e e′
-  law-mono (_ , j , _) (splitR h F G G′ u u′ e e′)     = splitR (j h) F G G′ u u′ e e′
-  law-mono (_ , _ , k) (Lp p h A B v v′ e e′)          = Lp p (k p h) A B v v′ e e′
+  law-mono (i , _) (splitL h F F′ G v v′ e e′)     = splitL (i h) F F′ G v v′ e e′
+  law-mono (i , _) (splitR-icc h F G G′ u u′ e e′) = splitR-icc (i h) F G G′ u u′ e e′
+  law-mono (_ , j) (splitR h F G G′ u u′ e e′)     = splitR (j h) F G G′ u u′ e e′
+
+  vS≤allS : vS ≤S allS
+  vS≤allS = (λ ()) , (λ ())
 
   ≈-mono : ∀ {s s′} → s ≤S s′ → ∀ {X Y} → s ⊢ X ≈L Y → s′ ⊢ X ≈L Y
   ≈-mono le (law l)       = law (law-mono le l)

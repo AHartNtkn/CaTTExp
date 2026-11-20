@@ -1,6 +1,10 @@
 ------------------------------------------------------------------------
--- The cospan completion is parametric in the law switches of J
--- (notes/design-decisions.md §1, ledger E12).
+-- The cospan completion is parametric in the law switches
+-- (notes/design-decisions.md §1.7, ledger E12). The side condition
+-- computes in V + S, where S ranges over the laws visible on pasting
+-- diagrams (the inner composite-crossing law and R); the default is
+-- V, no switch on. The settings offered, vS and allS, are in
+-- CaTTExp.Join.SwitchLaws.
 --
 -- A law setting S presents its comparison graph by step lists, as in
 -- CaTTExp.Join.BoundedReach: cells A_S, inner steps nextE_S and seed
@@ -26,7 +30,7 @@
 -- Where the law equations enter depends on the level. When the
 -- vertices are 3-cells, the laws (which relate 4-cells) are equations
 -- between inner words and the switch map is idS. CaTTExp.Join.SwitchLaws
--- machine-checks that the catalogued optional laws keep seed lists in
+-- machine-checks that the switched laws keep seed lists in
 -- raw T-syntax (Part A) and that inner-word equations keep seed lists
 -- in the completion (Part B); the link between the two, and that the
 -- 3-cell setting is switch-independent (Part C, a definition), are on

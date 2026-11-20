@@ -992,3 +992,317 @@ does not use overlaps or forbidden lists at smaller weights.
 These finite computations check the specified instances. The dimension
 induction, the quotient arguments, and the reductions establish the
 statements outside their enumerated ranges.
+
+# Researcher Response 2
+
+**Q1(a) has a negative answer. There are no inclusion-minimal admissible
+closed law sets on the fixed signature.** In fact, below each admissible
+law set there is a descending sequence of admissible theories with the
+minimum pasting profile of Response 1 and with no admissible lower bound.
+The failure of the intersection occurs on a single shifted pair of
+3-globes. The two auxiliary operations used below already belong to the
+signature. This distinction matters because (K57) uses additional symbols.
+
+## A pair of auxiliaries with a common top comparison
+
+Write \(K_i\) for the inner identity axioms and \(K_a\) for the all-cuts
+identity axioms. These use the mixed-family convention of (K47). Principal
+mixed disk operations at a killed cut are made identities. The auxiliary
+bridges are given contextual values by the *laws* of the completion.
+In particular the separate equations for \(G,H\) are among the laws
+one can vary in (K55). See [round 5, Response 10, quotient equations](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#quotient-equations-and-the-window-induction).
+
+Suspend the \((3,3)\) disk of Response 10 once, so its outer cut is 1.
+Call the arity \(C\). It has one outer span. Inside it are three consecutive
+1-arrows and two short intervals, each carrying a single relative
+3-globe. The varying top inputs \(x,y\) have global degree 5.
+The auxiliaries \(G,H\) have degree \(m=7\); here \(H\) names the
+Response 10 bridge, distinct from the degree-four loop of (K45).
+The two routes bounding the principal 8-cell are
+\[
+  P\xrightarrow{\rm exchange}P'\xrightarrow{Z_B}L\xrightarrow{G}D,
+  \qquad P\xrightarrow{Z_A}R\xrightarrow{H}D.
+\]
+In the free Gray table on \(C\) the two short factors compose inside a
+strict hom. The five vertices of these routes are 6-identities on the
+same 5-cell \(w\), the cartesian pair of the top inputs. Consequently,
+if \(G,H\) are given the *same* 7-loop on \(1_w\) and the other
+three arrows their identity values, the 8-cell can still be an identity.
+When one variation is a unit the prescribed values of \(G,H\) are
+respectively \(1,Z_B\) or \(Z_A,1\). The mark will be used only when
+both variations are proper. [The seed and its unit formulas](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#the-two-variations-at-once)
+
+We will also use a lower-boundary fact in a model of the raw base \(B\)
+of Response 1 with \(K_i\). For either \(g=G(x,y)\) or \(g=H(x,y)\),
+\[
+                         s_5 g=t_5 g .
+\]
+Indeed the two 5-paths are the words \(yabcx\) and \(xhfy\) of the
+seed. The entries \(a,b,c,f\) are killed mixed moves in their fixed
+contexts. At this cut the join \(h\) is an identity already from the
+faces of the killed principal \((2,2)\) operation \(W\): its first route
+is a paste of killed mixed moves and its second is \(h\) followed by
+the killed contextual unary. This leaves the two orders of the pure
+insertions of \(x,y\). They agree by strict interchange inside the hom.
+That structural strictness uses just the square and the successive unary
+sliding boundaries at killed cuts, as in [round 5, strictification](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#strictification-and-the-grid-quotients).
+Thus we may paste \(n\) copies of \(g\) **at cut 5** and compare this
+paste with \(g\) at cut 5. This requires no equality of its 6-faces.
+
+## Tables that detect the mark at a prescribed power
+
+Start with the free strict table on \(C\), denoted by \(S(C)\). Equip
+it with extra high cells only on the long 1-interval. Here are explicit
+structural operations. Take the product with the strict table having a
+singleton in degrees below \(m\), additive tags \(a\in\mathbb N\) in
+degree \(m\), and arrows \((a,b;l)\) from \(a\) to \(b\) in degree
+\(m+1\), with \(l\in\mathbb N\). Top concatenation adds arrow labels
+and keeps the outside endpoints. Lower compositions add all three
+entries. The identity at \(a\) is \((a,a;0)\). Fill each parallel
+pair uniquely above this degree. Commutativity of addition gives the
+strict interchanges, and the operations on fillers are determined by
+their faces. Restrict the product to trivial tags and their iterated
+identities off the long interval. It is closed under composition: a
+long interval stays long under every possible exterior whiskering on
+this diagram, and composition at higher cuts keeps its 1-boundary.
+Call the resulting strict category \(D^0\), with the canonical strict
+interpretation of the completion signature when used as a theory model.
+
+For each \(n\ge1\) put a second interpretation \(D_n\) on this same
+underlying strict category. Keep the \(S(C)\) coordinate. Use the
+following two changes in the other coordinate.
+
+* At cut 1 give \(G,H\) tag one when the two relative 3-inputs are
+  the proper top cells of the two short globes. Their faces have the
+  strict values. Use the prescribed unit values on degenerate inputs.
+* The bare square at cut \(m-2\) on consecutive \(m\)-cells with tags
+  \(a,b\) has value
+  \[
+           (a+b,a+b;\ [b>0\ \text{and}\ a=n b]).
+  \]
+  The two Godement schedules have tag \(a+b\). The formula has label
+  zero if either operand is a unit. A positive label is supported on
+  the long interval since both operand tags must be nonzero.
+
+More explicitly, use the fixed unit specializations throughout. On
+every other normalized nondegenerate mixed declaration through degree
+\(m\) use its strict value. At degree \(m+1\) use label zero between
+the declared faces except at the displayed square. Above that rank
+use the unique filler of the declared parallel faces. The declarations
+are globular by their boundary recursion; projections of the faces to
+\(S(C)\) agree with their prescribed strict projections. The same
+construction with the square label always zero defines \(D_\infty\).
+
+We record the checks on this definition because both the cut and the
+degree of a possible mark are important. At cut zero one positive
+interval would already use the entire outer span. A second operand
+lies in an identity interval, with the prescribed pure or unit values.
+At cut one two proper operands must be on the two short intervals.
+They have relative degrees at most three after taking out identities.
+The highest principal operation there is exactly the displayed
+\((3,3)\) disk. Its faces have equal tag one in the marked case, and
+its value is the identity on that loop. All other proper cut-one
+principals on these inputs have their strict values. An input on the
+long interval can only be paired at that cut with an identity interval.
+A unit specialization of a higher principal is an identity on the
+surviving lower cell, which may itself be marked. These facts cover
+unbounded formal input degrees on the short intervals.
+
+At cuts above one the only new nonzero label on a nondegenerate
+operation is the indicated bare square. In its own cut it is the only
+mixed declaration of output degree \(m+1\), of relative bidegree
+\((1,1)\). The unit formulas for the lower-cut auxiliaries reduce a
+join to a unary or a unit, a join variation to a unary or a unit,
+\(K\) to \(W\) or a unit, \(J\) to \(K\) or a contextual \(W\) followed
+by the join variation, and \(G,H\) to the indicated principals or
+units. In a raising step a unit moving variation gives an identity,
+and a unit fixed input restricts the same construction to its lower
+face. These reductions are on the same defining cut. In particular a
+degree-\(m+1\) unit reduction of an auxiliary at a different cut
+does not introduce the designated square as a top step. The fixed-face
+restriction of a recursive bridge retains moving degree at least four
+and cannot introduce the doubly marked seed on proper short inputs.
+This checks the potentially exceptional unit branches, including the
+boundaries on which the identity of a marked cell occurs. All these
+tables satisfy \(B\): the low equations of \(P\) lie below both marks,
+the structural operations are strict, and the unguarded outer unary
+and transport laws act by their strict values. No unrestricted inner
+subdivision at cut 5 is required in \(B\).
+
+In \(D_\infty\) all the principal mixed operations at positive cuts
+are identities. At cuts above one their entire recursion is strict,
+and cut one was checked on the short factors and the long interval
+above. The Godement expansions of elementary rectangles with inactive inputs
+are pastes of these mixed moves in fixed contexts, so they also have
+their killed values. Thus \(D_\infty\models K_i\), while \(G(x,y)\ne1\) on the
+generators of \(C\). Moreover each fixed term evaluation that is defined
+in \(D_\infty\) agrees with its evaluation in \(D_n\) for all sufficiently
+large \(n\), on the same assignment. Induct on its finite expression,
+including declared face terms and any unit reductions. For fixed finite
+tags \(a,b\), the exceptional label vanishes eventually. Partial operations
+are defined by the stated face matches, so definedness also persists.
+For a conclusion involving an undefined term, its first failed match
+persists by the same argument. Hence any finitary Horn law true in all
+the \(D_n\) is true in \(D_\infty\).
+
+## Why adjoining finitely many test tables preserves admissibility
+
+Let \(A\) be **any** admissible closed law set. For \(N\ge1\) take
+\(A_N\) to be the common finitary Horn theory of the following tables:
+all \(A\)-algebras, all ordinary \(F_B(\Delta)\) on finite pasting
+diagrams, and \(D_1,\ldots,D_N\). This uses the same operations,
+domains and faces throughout. Since all these models satisfy \(B\)
+and the tables \(F_B(\Delta)\) are among them, the free \(A_N\)-table
+on each such diagram is exactly \(F_B(\Delta)\), by its universal
+property. Response 1 gives requirements 1, 2, 3 and 5 and the proper
+degree-four loop. We check both quotients, including new matches.
+
+Fix a pasting diagram \(\Gamma\), let \(K\) be either \(K_i\) or
+\(K_a\), and let \(M=F_{A_N+K}(\Gamma)\). Its map to the corresponding
+benchmark \(Q(\Gamma)\) exists since that table is an \(A\)-algebra.
+Distinct elements of \(M\) can be separated by homomorphisms of the
+underlying signature into ultraproducts of the tables specifying
+\(A_N\). Here is the elementary diagram argument. Name the elements
+of \(M\) and record their sorts, faces and defined operation values.
+Every finite part of this positive diagram has a realization separating
+the given pair in one of the specified tables. Otherwise its implication
+to equality of the pair would be a common finite Horn law contradicted
+in \(M\). Use an ultrafilter containing the sets of finite parts that
+include each given entry. The resulting assignment preserves every
+defined operation and separates the pair. The finite partition by table
+type lets us consider an ultraproduct of \(A\)-algebras, an ultraproduct
+of ordinary free \(B\)-tables, or an ultrapower of one fixed \(D_n\).
+The maps are only required to preserve matches that hold in \(M\).
+
+**Ordinary free coordinates.** Write \(h:M\to U\) for a map to an
+ultraproduct of the \(F_B(\Delta)\). We claim that it factors through
+\(Q(\Gamma)\). Two positivity facts for these tables are used here.
+A proper positive-dimensional cell with faces of positive degree has
+proper immediate faces. Substitution carrying every generator of a
+pasting diagram to a proper cell in its degree carries every proper
+cell to a proper cell. For the second fact, normalize unit arguments
+and expand into contextual paths in \(B\). Each remaining proper
+constructor on proper inputs has positive charge, which survives fixed
+whiskering and adds under chronological composition. This is induction
+on the expression, using the positivity and identity reflection in
+Response 1. For the first fact use the positive boundary lengths of
+[round 5, Response 8](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-8);
+in degrees two and three these are the nonempty spatial words and
+event boundaries. The same facts hold in \(U\): the argument for a
+given substitution or pair of faces involves only finitely many tests.
+
+Reduce the assignment \(h|_\Gamma\) by collapsing its unit slots.
+Explicitly, write a pasting tree at each depth as a string of suspended
+smaller trees. In a slot the lowest generators are indexed by the
+vertices of its connected smaller tree. If one of their values is an
+identity, every incident next-degree generator is an identity by the
+first positivity fact. Connectedness propagates this to all the lowest
+generators in that slot, and then to its whole tree. Collapse that
+slot to a vertex. Recurse inside every retained slot. This gives
+a pasting diagram \(\Gamma'\), a degeneracy substitution \(\pi\)
+and a nondegenerate assignment \(b\) on \(\Gamma'\) with
+\(h|_\Gamma=b\pi\).
+
+There is a structural section \(j\) of \(\pi\), usable in \(M\).
+Partition the old string into consecutive blocks with one retained slot
+in each, attaching initial and trailing collapsed slots to the first
+and last block. In each collapsed slot in such a block choose a lowest
+arrow. Whisker the section in the retained slot on both sides by the
+corresponding fixed strings of these arrows. Use the block endpoints
+for the section on vertices. Fixed whiskering preserves the faces, and
+all padding goes to units under \(\pi\). Recurse in the smaller trees;
+when every slot collapses, choose any vertex for the section of the
+point. This gives \(\pi j=1\) using just structural terms.
+
+Every term of \(F_B(\Gamma')\) can now be evaluated in \(M\) on \(j\)
+of the generating assignment, and its image under \(h\) is evaluation
+on \(b\). That latter evaluation preserves properness by positivity.
+Since \(M\models K\), every instance of a killed family in
+\(F_B(\Gamma')\) must itself be a unit. This free table is the ordinary
+free \(V\)-table of Response 1. Being already a \(K\)-model, it is its
+own free \(K\)-quotient and hence equals \(Q(\Gamma')\). We obtain the
+claimed factorization by composing
+\[
+ M\longrightarrow Q(\Gamma)\xrightarrow{Q(\pi)}Q(\Gamma')
+       =F_B(\Gamma')\xrightarrow{b}U .
+\]
+It agrees with \(h\) on the generators, hence on every term of \(M\).
+
+**Marked coordinates.** Let \(h:M\to D_n^{\mathcal U}\) be a map to
+one of the fixed ultrapowers. For each \((3,3)\)-assignment in \(M\)
+put \(g=G(x,y)\). Its cut-5 power \(g^{[n]}\) from the lower-boundary
+calculation is defined. The bare square on \((g^{[n]},g)\) is a unit
+in \(M\). If the image of the inputs in the marked coordinate were
+the proper short pair, \(g\) would have tag one and the square would
+have label one. This contradiction excludes the proper short pair from
+the image on **every matching assignment in \(M\)**. The case distinction
+and the fixed integer \(n\) apply in the ultrapower as well.
+
+On the same underlying carrier, \(h\) is consequently a homomorphism
+to \((D^0)^{\mathcal U}\) with its strict interpretations. To check
+this, structural operations coincide. A cut-one call whose short
+inputs contain both top globes, even under iterated identities, would
+give the excluded pair by taking the relative 3-faces in \(M\). These
+faces preserve the cut-one match. Every other short-pair call and
+every long-interval unit specialization has the strict value. At cut
+zero the pure values always agree. Above cut one, all operations below
+the degree of the designated square are strict. The square itself on
+an image tuple has label zero because it is killed in \(M\). The other
+degree-\(m+1\) values have label zero on their declared faces, including
+the unit cases checked above. Induction on their face terms therefore
+identifies them with their strict values. At higher ranks parallel
+fillers are unique. This argument checks a homomorphism on its actual
+domain and never extends \(K\) to independently matching tuples in a
+coordinate. Since the new receiving table is strict, evaluation on
+the generators extends out of the free benchmark \(Q(\Gamma)\).
+Composition agrees with \(h\) on all terms of \(M\). This factorization
+does not require arbitrary strict algebras to satisfy every law of \(A\).
+
+**Exactness.** We may now use the single map to \(Q(\Gamma)\) in
+place of all ordinary-free and marked coordinates for separating
+elements. The remaining coordinates are \(A\)-algebras, and so is
+\(Q(\Gamma)\). Thus \(M\) embeds in a product of \(A\)-algebras.
+The embedding reflects the matching equalities that define the
+domains of the fixed operations. Hence the image is a subalgebra:
+for a tuple of image elements in a declared domain the match also
+holds in \(M\), where the operation has its value. Equivalently,
+induction on terms reflects the definedness and equalities in a
+Horn sequent. It follows that \(M\models A+K\). Its original free
+property and \(A_N\subseteq A\) now make it free for \(A+K\) on
+\(\Gamma\), hence the benchmark by admissibility of \(A\).
+This verifies requirement 4 in both cases.
+
+## Minimal laws and finite supports
+
+The \(A_N\) form a descending sequence below \(A\). Any common lower
+bound \(L\) has all its laws valid in every \(D_n\), hence in
+\(D_\infty\) by stabilization. Evaluation on the generators of \(C\)
+would therefore send the free \(L+K_i\)-table to \(D_\infty\) with
+\(G(x,y)\ne1\). The Gray table has \(G(x,y)=1\) there. Consequently
+no common lower bound is admissible. In particular at least one
+\(A_N\) is strictly below \(A\). This applies starting at *every*
+admissible \(A\), and rules out all minimal points.
+
+In the language of (K55), each finite stage covers every required
+quotient entry by a finite proof support. On the marked coordinates
+one can use the powers indexed by the finitely many table types.
+For the entry \(G(x,y)=1\) on \(C\) no finite support survives all
+stages. Indeed such a support would prove the entry using laws valid
+in \(D_\infty\) and the inner identities, contrary to its evaluation.
+Every lower endpoint of a nonempty Boolean interval in (5) therefore
+has a strictly smaller admissible point, and that point in turn
+contains another admissible lower endpoint. Thus the alternative
+support choices produce no inclusion-minimal closed law set, even
+though the minimum on ordinary pasting diagrams exists.
+
+**Validation.** The [shifted-disk and power checker](../../../scripts/e6/interchange_delayed_probe.py)
+replays the signed \((3,3)\) shell and its unit cases from round 5.
+The two proper routes have tag one, and all three degenerate cases
+give tag zero. On tags 0 through 2 and labels 0 through 1 it checks
+11,664 strict interchange squares and 36 parallel-boundary fillers.
+It tests probe indices and exponents 1 through 64 on tags 0 through
+32, checking both detection at the stated power and stabilization on
+bounded pairs. On 1,111 marked strings of suspended strings it also
+replays the section on vertices, arrows and 2-paths, checking both faces
+and the composites with the collapse. The preceding factorization and finite-diagram arguments
+give the results for arbitrary arities, theories and dimensions.

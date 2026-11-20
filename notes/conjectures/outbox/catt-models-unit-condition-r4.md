@@ -516,3 +516,30 @@ For a prescribed boundary over a strict cell $d$ of $F_sG$, use its generic pres
 As a finite check of the collapse used in the proof, augmenting all but one factor of the strict cell tables of shapes $(1,1),(2,1),(1,2),(2,2),(1,1,1),(1,0,2),(0,2,1)$ gave 545 cell-and-factor tests. In each, the downward-closed support after projection agreed with the projection of the original typed support. This includes proper faces and identity rows. The all-dimensional assertion uses the table formula and the tree recursion. [Table projection](../../../tools/gray_globe_section.py) · [Strict support calculation](../../../tools/gray_full_support_cuts.py)
 
 For two genuinely varying outer slots a strict cell can traverse the boundary of a tensor square. Its support can be a path made of two edges even though it uses both input intervals. The restriction to a single globular subarity in the last proof then no longer follows. The mixed-slot transport assertion and the unrestricted cylinder condition remain undecided.
+
+**Validation at literal faces.** The following Agda 2.8.0 module passes with `--safe --no-libraries` and the repository source include path. It specializes the directed interchanger by making the second slot stationary. The remaining slot is a two-globe. The checker accepts the reverse comparison at the two specialized raw faces and a four-cell between the specialized three-cell and the head constructed over the single remaining slot. Both checks use the exact terms in their displayed types.
+
+~~~agda
+module SuspensionCheck where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using (D₁; v; idc; ich; ichTy; ichTy⁻)
+
+P = ctxOf (node (node (leaf ∷ []) ∷ []))
+i = idc (v 1)
+ii = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ v 1 ∷ v 1 ∷ i ∷ [] ⟫
+ρ = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 1 ∷ i ∷ i ∷ ii ∷ [] ⟫
+A = ichTy [ ρ ]ty
+t = ich [ ρ ]tm
+u = coh P A (idₛ P)
+
+specialized : P ⊢tm t ∶ A
+specialized = snd (from-just (infer P t))
+
+reverseAtFaces : P ⊢tm coh P (ichTy⁻ [ ρ ]ty) (idₛ P) ∶ (ichTy⁻ [ ρ ]ty)
+reverseAtFaces = snd (from-just (infer P _))
+
+comparison : P ⊢tm coh P (arr A t u) (idₛ P) ∶ arr A t u
+comparison = snd (from-just (infer P _))
+~~~

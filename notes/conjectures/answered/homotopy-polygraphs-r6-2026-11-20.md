@@ -401,4 +401,4 @@ Status: **verified. Q2 and Q3 are answered with four generator-level decidable c
 - A generator-level class that contains all four classes above. Also, the exact complexity on the monotone class, between coNP-hard and the coarse bound.
 - A characterization of the fibres outside the sphere-product classes.
 - Whether Response 8's r.e.-complete table attainability can be turned into hardness of whole-presentation failure.
-- Follow-up: [`outbox/homotopy-polygraphs-r7.md`](../outbox/homotopy-polygraphs-r7.md).
+- Follow-up: [`outbox/homotopy-polygraphs-r7.md`], now answered: [`answered/homotopy-polygraphs-r7-2026-11-20.md`](homotopy-polygraphs-r7-2026-11-20.md).

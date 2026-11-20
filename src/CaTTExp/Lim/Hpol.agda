@@ -15,8 +15,10 @@
 -- in its boundary (a nonempty path of generators is never an identity
 -- in the free strict 2-category), i.e. a positive 2-polygraph, so it
 -- is homotopical by Chanavat (arXiv 2603.22242, Cor. 3.39). That
--- theorem is cited, not formalised: what this module proves is only
--- that the class is decided by `hpol?`, plus examples.
+-- theorem is cited, not formalised. `hpol?` is a boolean test (it
+-- also requires every bound name to be fresh); that it selects
+-- exactly the positive path 2-polygraphs among named contexts is
+-- argued informally here, not proved. The examples are checked.
 --
 -- Further base rules to add (design-decisions.md §2.2 and homotopy-
 -- polygraphs r5): pasting contexts, orientals, positive-to-one,
@@ -74,9 +76,14 @@ private
     isObj Γ a ∧ isObj Γ b ∧ sameEnds (path Γ s) (path Γ t) a b
   entryOK Γ _ = false
 
+private
+  bound : NCtx → Name → Bool
+  bound ∅ n = false
+  bound (K ▹ x ∶ _) n = (n ==ℕ x) ∨ bound K n
+
 hpol? : NCtx → Bool
 hpol? ∅           = true
-hpol? (Γ ▹ x ∶ A) = hpol? Γ ∧ entryOK Γ A
+hpol? (Γ ▹ x ∶ A) = hpol? Γ ∧ not (bound Γ x) ∧ entryOK Γ A
 
 -- The judgement Γ ⊢hpol (first base rule).
 _⊢hpol : NCtx → Set
@@ -118,3 +125,29 @@ bubble-not-hpol = refl
 
 bad-not-hpol : hpol? Γbad ≡ false
 bad-not-hpol = refl
+
+-- Shadowing is rejected (independent review counterexample).
+Γsh : NCtx
+Γsh = ∅ ▹ 0 ∶ ⋆ ▹ 1 ∶ ⋆ ▹ 2 ∶ (0 ⇒⋆ 1) ▹ 3 ∶ (1 ⇒⋆ 0) ▹ 1 ∶ (0 ⇒⋆ 0)
+        ▹ 4 ∶ arr (0 ⇒⋆ 0) (comp (v 0) (v 1) (v 2) (v 0) (v 3)) (v 1)
+
+sh-not-hpol : hpol? Γsh ≡ false
+sh-not-hpol = refl
+
+selfloop-not-hpol : hpol? (∅ ▹ 0 ∶ ⋆ ▹ 0 ∶ (0 ⇒⋆ 0)) ≡ false
+selfloop-not-hpol = refl
+
+-- Composites of length 2 on both sides: x, f g h k : x → x,
+-- β : f · g ⇒ h · k.
+Γsq : NCtx
+Γsq = ∅ ▹ 0 ∶ ⋆ ▹ 1 ∶ (0 ⇒⋆ 0) ▹ 2 ∶ (0 ⇒⋆ 0) ▹ 3 ∶ (0 ⇒⋆ 0) ▹ 4 ∶ (0 ⇒⋆ 0)
+        ▹ 5 ∶ arr (0 ⇒⋆ 0) (comp (v 0) (v 0) (v 1) (v 0) (v 2))
+                           (comp (v 0) (v 0) (v 3) (v 0) (v 4))
+
+sq-hpol : Γsq ⊢hpol
+sq-hpol = tt
+
+-- An identity on one side only is rejected.
+oneid-not-hpol : hpol? (∅ ▹ 0 ∶ ⋆ ▹ 1 ∶ (0 ⇒⋆ 0)
+                          ▹ 2 ∶ arr (0 ⇒⋆ 0) (v 1) (idc (v 0))) ≡ false
+oneid-not-hpol = refl

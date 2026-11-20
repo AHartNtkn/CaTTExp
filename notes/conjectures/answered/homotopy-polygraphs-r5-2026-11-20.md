@@ -848,9 +848,9 @@ There are finitely many possible process catalogues at these fixed parameters. E
 
 # Verification (2026-11-20)
 
-Status: **verified. Question 1 is answered: there is an exact last-step criterion in every dimension (Response 1). Question 2 is answered in part.** On general finite inputs, homotopicality is both Σ⁰₁-hard (Response 11) and Π⁰₁-hard (item 23). Moreover, every set truth-table reducible to 0′ many-one reduces to it (Response 12), so it has no computable approximation with a bounded number of mind changes. The Π⁰₂ upper bound stands, and whether a halting oracle decides it is still open. **Question 3 is answered by several classes:** finite strict cells with abelian group tests, top weight ≤ 2 in any dimension, and closure under graph assembly (Response 1); bounded top weight with a halting oracle (Response 2); and exact generator tests for the semaphore families (Responses 9, 10 and 13). There are thirteen responses.
+Status: **verified. Question 1 is answered: there is an exact last-step criterion in every dimension (Response 1). Question 2 is answered in part.** On general finite inputs, homotopicality is both Σ⁰₁-hard (Response 11) and Π⁰₁-hard (item 23). Moreover, every set truth-table reducible to 0′ many-one reduces to it (Response 12), so it has no computable approximation with a bounded number of mind changes. The Π⁰₂ upper bound stands, and whether a halting oracle decides it is still open. **Question 3 is answered by several classes:** finite strict cells with abelian group tests, top weight ≤ 2 in any dimension, and closure under graph assembly (Response 1); bounded top weight with a halting oracle (Response 2); exact generator tests for the semaphore families (Responses 9, 10, 13 and 14), and a finite list of complexes for reversal-bounded controls (Response 15). There are fifteen responses. Responses 14 and 15 arrived on main during the pass and are included.
 
-**What was re-run.** All 15 cited checkers exit 0, and both emitted Agda modules type-check under `agda --safe --without-K --no-libraries` (Agda 2.8.0). The printed counts match the responses.
+**What was re-run.** All 17 cited checkers exit 0, and both emitted Agda modules type-check under `agda --safe --without-K --no-libraries` (Agda 2.8.0). The printed counts match the responses.
 - `timed_charts`: 81 strings, 31 final faces, 297 comma objects.
 - `passive_gaps`: 169 labels at length 12, 13 circles and 156 intervals; 49 folded placements.
 - `counter_ring`: 512 strings with Betti (1,1); 125 with (1).
@@ -865,6 +865,8 @@ Status: **verified. Question 1 is answered: there is an exact last-step criterio
 - `guarded_boxes`: 262,144 cubes, 78,810 intervals of which 78,809 collapse; the cone has 1,048,576 cubes and all 313,009 intervals collapse. The checker prints "spatial dimension 8" where the text says seven-dimensional projected boxes, but the counts agree.
 - `conditional_switch`: 34 records, 262,144 cubes, 1,736,704 comparisons.
 - `parking`: 3,136 endpoint records; 149 strings (1,0,0,0); 82 strings (2,0,0); 6 isolated; 168 strings (1,1,0).
+- `two_resources` (Response 14): 219 declarations; two transfers give no histories, three give two points; 432 and 1,360 strings with Betti (1,1); 6,568 strings with both minima interior, still (1,1); five transfers have Euler characteristic 2 (S²); the covered controls are acyclic.
+- `mask_catalogue` (Response 15): 122 axis types, 36 needing more than three instructions; 290 → 242 cubes under compression, 6,584 and 3,064 strings, both with Betti (1,1).
 - `two_changes --agda`: 19 declarations, 22 decorated objects (1,0,1), (75,158,108), 1,473 and 96 histories.
 - Agda: TwoChanges and SemaphoreUniversal both type-check.
 
@@ -888,6 +890,10 @@ Status: **verified. Question 1 is answered: there is an exact last-step criterio
   - finite-strict-cell homotopicality is Σ⁰₁-complete (rank 10);
   - G(K, M) homotopical ⟺ M never halts or |K| is contractible, giving tt(0′) ≤_m;
   - one-resource semaphores are homotopical ⟺ at most two processes admit an excursion.
+- **Responses 14–15:**
+  - two-resource rings without excursions fail exactly when four processes can be given transfer directions with both directions represented (fibre S^{N−3} for N mixed transfers);
+  - for controls where no strongly connected component both acquires and releases one resource, there is an effective finite list of complexes (via axis compression and Ibarra's reversal-bounded counter machines), so the affirmative property is r.e. there and such controls cannot carry Response 12's lower bound;
+  - at fixed resource count and reversal bound, Dickson's lemma gives a nonuniform decision procedure.
 
 **What is left open.**
 - The exact degree: whether homotopicality is Δ⁰₂ (decidable with a halting oracle) or Π⁰₂-complete.

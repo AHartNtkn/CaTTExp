@@ -392,3 +392,5 @@ module TermCones where
   _ = refl
   _ : all (λ Γ → okM (coconeT Γ)) termShapes ≡ true
   _ = refl
+  _ : is-just (coconeT VComp) ≡ false
+  _ = refl

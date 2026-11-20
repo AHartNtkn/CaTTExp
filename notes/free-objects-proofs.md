@@ -95,10 +95,45 @@ as an equality of contexts, where `d` is the top variable of Dⁿ, `A^± = (∂D
 
 So the comparison holds at level 0 of `Diag` (objects), which is all that A2's LIFT₀ uses. At higher levels it needs Lemma 4 for `Dⁿ ⊗ Dᵏ`-cylinders; this is the statement "r is an ω-equifibration", open in the weak setting (FHM 2511.09849 prove that `X → 1` is an ω-equifibration for every X, but not this case). It holds in the strict model (§4.1).
 
+### 2.2a C3b: reduction to cylinders on Dⁿ ⊗ Dᵏ and one invertibility lemma
+
+*Added 2026-11-20.* Throughout, Diag(X, C)'s k-cells are substitutions into X ⊗ Dᵏ. r is restriction along ∂Dⁿ ⊗ Dᵏ ⊆ Dⁿ ⊗ Dᵏ, so on cells it is literally restriction of substitutions, and strict equalities over r are syntactic.
+
+**What has to be shown** (FHM 2511.09849, ω-equifibration, unfolded). For every k, every k-cell y of Diag(Dⁿ, C), and every invertible (k + 1)-cell φ of Diag(∂Dⁿ, C) with source r(y), there must be:
+- (L) a (k + 1)-cell φ̃ of Diag(Dⁿ, C) with source y and r(φ̃) = φ;
+- (I) such that φ̃ is invertible in Diag(Dⁿ, C).
+
+The recursion into homs is the same statement one level up, so (L) and (I) for all k are all that is needed.
+
+**Step 1 (shape).** By Lemma 2 applied to Dⁿ ⊗ Dᵏ (so Dⁿ ⊗ Dᵏ⁺¹ = (Dⁿ ⊗ Dᵏ)↑), the variables of Dⁿ ⊗ Dᵏ⁺¹ outside ∂Dⁿ ⊗ Dᵏ⁺¹ come as triples (x⁻, x⁺, x↑), one for each variable x of Dⁿ ⊗ Dᵏ over the top cell d of Dⁿ. Their types are A_x[in⁻], A_x[in⁺] and a_x → b_x. y fixes every x⁻, and φ fixes everything over ∂Dⁿ. So φ̃ amounts to choosing x⁺ and x↑ for these x, in the order of Lemma 2.
+
+**Step 2 (one variable: Lemma T).** Fix such an x, and suppose every boundary variable w of x already has w⁺ and an invertible w↑. Then a_x is x⁻ composed with invertible cells (the factors w↑, whiskered), and b_x is invertible cells composed with x⁺. *Lemma T:* there are an x⁺ with the prescribed boundary and an invertible x↑ : a_x → b_x.
+*Proof.* This is Lemma 4 with the variable-boundary sphere replaced by the composite boundary of x. Write b_x as u ∗ⱼ x⁺ ∗ⱼ v, composed in the dimensions j of x's boundary, with u and v invertible.
+- Put x⁺ := u⁻¹ ∗ⱼ a_x ∗ⱼ v⁻¹. This first has to be transported to x's prescribed boundary, by Lemma T one dimension down, which is the induction of Lemma 4.
+- Take x↑ to be the composite of the associators, the counits u ∗ u⁻¹ → id, and the unitors.
+- x↑ is invertible because composites of invertible cells are invertible (Benjamin–Markakis, arXiv 2406.12127), and coherences are invertible.
+
+Steps 1 and 2 give (L), with all the new top components invertible.
+
+**Step 3 (I).** Componentwise-invertible cells of Diag(Dⁿ, C) are invertible: *(PI)* a (k + 1)-cell of Diag(X, C) whose variables x↑, for x over the generators of X ⊗ Dᵏ, are all invertible in C is invertible in Diag(X, C).
+*Sketch.*
+- The inverse is built by the same variable-by-variable recursion, with x↑ inverted and x⁻ and x⁺ swapped.
+- The unit and counit are (k + 2)-cells of Diag, again chosen variable by variable by Lemma T. Their own invertibility is (PI) one level up.
+- This is a guarded coinduction of the same form as `Free/Reflect.agda`.
+
+What is not checked: that the pieces chosen by Lemma T glue into cells with the *exact* boundaries the unit and counit types prescribe, at every variable. This is the analogue of C4's I1–I5 bookkeeping, and it is the point an independent check should look at.
+
+**Hypotheses.** Step 1 uses the cylinders on Dⁿ ⊗ Dᵏ. For k ≥ 1 these are not globular: their boundary terms are cylinder composites, so a_x needs naturality terms of depth ≥ 2 (C1). So:
+- (L) and (I) at level 0 of Diag (k = 0, objects) are **unconditional**: Dⁿ is globular, and this is Lemma 4.
+- At level k ≥ 1 they hold **given C1** for the coherences in the boundary terms of Dⁿ ⊗ Dᵏ. Its variables have dimension ≤ n + k, so their boundary terms have dimension ≤ 2 when n + k ≤ 3, and C1 is settled for those (Theorem A of NGC). So C3b holds at argument level for n + k ≤ 3. In general it waits on RC(n).
+- In the strict model C3b holds outright. Ara–Lucas (arXiv 1909.13564) show the folk model structure is monoidal for the Gray tensor, so restriction along the cofibration ∂Dⁿ → Dⁿ into a fibrant C is a folk fibration, which lifts invertible cells.
+
+**Status.** C3b is reduced to C1 (for Dⁿ ⊗ Dᵏ) plus (PI). (PI) is sketched above, with its boundary bookkeeping left unchecked. Lemma T is proved at argument level.
+
 ### 2.3 Remaining for C3
 
 - (C3a) Composition of Diag and its compatibility with (Dec): blocked on D3 (`free-objects.md` §1.2) being fixed; adjacent work: the vertical composite of two lax squares as a substitution, for the globular case.
-- (C3b) Lemma 4 at all levels (r is an ω-equifibration), syntactically.
+- (C3b) r is an ω-equifibration, syntactically: reduced in §2.2a to C1 for Dⁿ ⊗ Dᵏ plus (PI). Unconditional at level 0, and at argument level for n + k ≤ 3. Open: (PI)'s boundary bookkeeping, and RC(n) for larger n + k.
 - (C3c) Higher-depth cylinders: C1.
 
 ---

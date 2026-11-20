@@ -571,3 +571,31 @@ python3 tools/fibration_nullary_wires.py 1 2 3 4
 ```
 
 [Typed nullary search](../../../tools/fibration_nullary_wires.py)
+
+## Researcher Response 13
+
+### A finite search interval when the intermediate 3-writings have unbounded length
+
+Fix a 4-factor over the double identity on a base 2-cell $B$, with prescribed total 3-faces $U,V$. Suppose we have an effective finite list of the total 2-cells at the outer 1-poles over $B$ (Response 8 is one way to obtain it). Form the directed graph of elementary **3-contexts**, including pure 3-steps, over $1_B$ on these cells. Count different one-marker contexts as different edges even if their labels and endpoints coincide; deduplicate by strict equality of the marker cells. Restrict to states reachable from the common 2-source $S$ of $U,V$. If each state has at most one outgoing edge, then **existence of the marked 4-factor is decidable, even with infinitely many reachable strict middle 3-cells**. The test allows an arbitrary specified subset of the marked 4-generators. Response 9 realises the answer at the specified weak faces.
+
+A serial 3-history from $S$ is determined by its top-generator count $n$: from any current state there is at most one elementary step. Every history from $S$ of that length is therefore the same strict cell; different lengths give different cells. Write $T$ for the common 2-target. The following reduction keeps the endpoints $S,T$ fixed.
+
+List each allowed 4-generator in each possible context made only of 2-cells and their lower faces. For this, take every reachable state $Q$ and enumerate one-marker 2-contexts in which substituting the initial 2-face of the generator gives $Q$. This is a bounded enumeration by Response 6. In each context the two parallel 3-sides have lengths $s,t$ and a common final state. Keep well-typed instances over the prescribed identity projection. Let $p$ be the length of the *first* visit to $Q$ from $S$. The instance gives the integer transition
+$$
+                      n\longmapsto n+t-s \quad\text{when } n\ge p+s .
+$$
+Indeed at that first visit the next $s$ actual steps of the history must agree with the source, by determinism. Substitute the target at that position and then use the original suffix. This constructs a new history ending at $T$. Conversely, serialize an elementary 4-step with a prefix and suffix of 3-steps around one of the listed lower contexts. To do this, expand a whiskering by a 3-cell along a lower cut using interchange: use its bounding 2-face in the context of the generator and move its 3-history into the serial prefix or suffix. Iterate over the whiskers of a one-generator writing. All remaining whiskers are lower cells. The occurrence's prefix has length at least $p$, so the indicated guard holds. Replacing at the first visit produces the same strict result since its source and length determine it. This proves exactness on reachable integers. In particular the argument does not identify independent contexts merely because their count vectors match.
+
+Let $H$ be the maximum guard and $J$ the maximum absolute change, with empty maxima zero. For a query of lengths $n_0,n_1$, ordinary reachability up to
+$$
+                       \max(n_0,n_1,H+2J)
+$$
+suffices. In a successful run consider each maximal consecutive stretch at heights at least $H$. Apart from the original endpoints its first and last heights are at most $H+J$. All transitions are enabled at these heights and throughout the stretch. Reorder the stretch's increments: below $H+J$ take a remaining positive increment, and at or above that threshold take a remaining negative one. If the indicated sign is exhausted, finish monotonically at the given end height; zero increments may be omitted. The reordered stretch stays above or at $H$, has the original endpoints, and obeys the displayed ceiling. The portions below $H$ already obey it. Each reordered move still has an actual context by the guard argument. Thus this bound is on a successful witness and does not require any bound on all runs or all intermediate cells.
+
+**A genuine Gray 4-disk on the infinite family of Response 6.** Take $u:1\Rightarrow a$, identity edge transport, and $h:1\Rightarrow g$ with identity base transformation. Write $A$ for insertion of $u,h$ in final order and $B'$ for insertion in opposite order followed by their crossing. Exhausting the exchange representatives and the one-marker contexts gives $A\xrightarrow{D}B'\xrightarrow{M}A$. The 4-generator $u\otimes h$ inserts $DM$ at $A$. To check its actual boundary, start with the strict tableau of the $D^2\otimes D^2$ atom and collapse the two source 1-arrows to identities. At both 2-poles there is just one $u$, one $h$ and no crossing, giving $A$. The negative 3-row has no surviving atom; the positive row has $D,M$ once each. Their order is forced at $A$. The 2-context has no additional step, since both $u,h$ are used and $A$ has no crossing. Consequently arbitrary prefixes and suffixes give exactly one integer transition, of change $+2$, available after the first visit to $A$. From $B'$ the length-zero history has no such step; a positive-length history can already use it. This distinguishes two inputs that differ only in the position of the first admissible context.
+
+```sh
+python3 tools/fibration_cyclic_four.py
+```
+
+The checker verifies the projected globe rows, the two elementary 3-contexts, and 256 parallel endpoint queries from the two initial states. It also exercises the bound with signed transitions for which a successful path must exceed both endpoints. [Deterministic-history solver](../../../tools/fibration_cyclic_four.py)

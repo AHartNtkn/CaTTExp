@@ -4316,3 +4316,214 @@ with a skew bilinear form \(\omega\). It checks equal total charge on both sides
 For every quartet cut admitting an inner witness in a given half, its charge vanishes on *every* cut-supported edge in the opposite half. The check includes 15 choices of cut and charge over 12 cuts in each temporal orientation. Thus the first unit of an early inner witness's charge lies in the active path \(A\) at both original schedules \(CDAB,CADB\): the late paths carry zero and the early inactive \(B\) follows \(A\). Dually the last unit of a late witness's charge lies in \(D\). On every representative along a proposed return the same ordinal has a unique carrier edge and an offset within it, by positivity and conservation. Two such marks on different quartet projections can therefore be followed even when both original inputs repeat the same loop arbitrarily often. Proving that the order of these carriers obstructs a return still requires controlling moves on their combined support.
 
 **Reproduction.** Run `python3 -B scripts/e6/interchange_five_cut_ranks.py` with `glpsol` on PATH. It synthesizes each score, clears denominators and checks the integer inequalities. Run `python3 -B scripts/e6/interchange_quartet_charges.py` to replay the stored quartet charges and their opposite-half vanishing checks. For Q1 a counterexample surviving Response 27 must require at least six retained strands for *every* choice of jointly proper witnesses; Response 24 bounds the necessary number by eight.
+
+# Researcher Response 29
+
+**An early inner witness and a late triangle sharing even one strand
+suffice for strong directedness.** This holds for Response 12 with
+arbitrary inactive inputs. The argument also excludes a move involving
+disjoint inputs on a return cycle: a late outer join cannot move before
+a right variation of positive early weight. In this statement early
+weight means the filtered grading of Response 22, including its value
+on inner exchanges.
+
+Use the pure-strand substitution of Response 24 and attach the
+designated forward comparison to a proposed reverse. All statements
+below concern a cycle through \(CDAB\). Its triangle chain is fixed
+and monochromatic on each triangle. By Response 27 an edge carrying
+any early triangle has an entirely early window. Call a proper mixed
+edge late if it carries a late triangle. All events of its moving
+history are late, since each pairs with every stationary strand.
+
+### A late triangle varying in an inner product
+
+On such a cycle neither inner naturality can transport a variation
+containing a late triangle across an independent 3-history containing
+an early crossing. Retain the three triangle strands and the two
+strands of that crossing. In these five strands the independent
+history consists of just the crossing, and the varying path contains
+just the triangle on its three strands. It can have different native
+presentations, which are included in the calculation below. At the
+product the two groups are spatially separated. The order between
+any two strands from opposite groups is the same there as at the
+designated cut. Indeed their crossing cannot occur in either
+independent history. If early it must already precede the late
+incidence on the triangle strand; if late it must follow the early
+incidence on the other strand. This uses incidence order from
+Response 5. Thus at the projected cut the pair is increasing, the
+triple is decreasing and the groups occur in their spatial order at
+the product. There are twenty such ordered placements.
+
+The [late naturality checker](../../../scripts/e6/interchange_late_naturality.py)
+allows every monochromatic triangle at each cut. Take the union of the
+4-intervals from cut-compatible histories with the designated triangle
+unflipped to cut-compatible histories with it flipped. Ground the
+equations and zero-Gray 5-rules there as in Responses 25 and 28.
+Select the appropriate \(N_L\) or \(N_R\) whose source contains
+both the triangle and the product exchanging its full three-event
+history with the independent event. On six placements this list is
+empty. On the other fourteen an additive rational edge score is equal
+under every equation, weakly decreases under every rule and strictly
+decreases on **every** selected naturality. The checker synthesizes and
+verifies the inequalities exactly, testing 72 strict comparisons and
+16,327 rules across the twenty placements. An arbitrary fixed 4-prefix
+and suffix add the same score to both sides. The projection of a cycle
+is a cycle, so none of the selected instances can occur. This also
+excludes a shifted join with the late triangle in its left variation
+\(X\) and an early event in the right history. On this projection the
+right variation is a unit, and \(Y I X\to X Y I'\) specializes to
+the detected \(N_L\).
+
+### The right variation of a late outer join
+
+Suppose \(H_R:Yh_1\to h_0Y\) moves early work in \(Y\) across a late
+join. Retain the two strands of one late moving crossing \(g=ab\)
+and a set \(G\) in its stationary right operand witnessing an early
+contribution of \(Y\). Take the three strands of an early triangle
+or the four strands of an early event pair in an inner exchange.
+Thus \(a,b\) precede every strand of \(G\) in outer order. All
+crossings of \(a,b\) with \(G\) are late, since the join contributes
+the triangle of \(g\) against every retained stationary strand.
+Work on that projection. It is enough to forbid this instance there.
+
+Give 4-paths the charge \(p\) obtained by projecting further to
+\(G\) and applying the **early** weight of Response 22. This is
+nonnegative, additive and conserved on the cycle, and \(p(Y)>0\).
+For an inner product its units of charge count the pairs of early
+\(G\)-events in its two operands. A late mixed edge has zero charge:
+it either disappears on projection or still has only late moving
+events. Define another score as follows.
+
+* For an early mixed edge count its charge if \(g\) has occurred in
+  its fixed 3-prefix, and zero otherwise. Its own window excludes \(g\).
+* For each counted early pair of an inner product give one point if
+  \(g\) is in its fixed prefix. If \(g\) is in a spatial operand
+  instead, give one point exactly when it precedes that operand's
+  selected early event in its own history. In a fixed suffix it gives
+  zero. Sum over all pairs and add along the 4-path.
+
+Two facts make this test well-defined. A (K15) block cannot reorder
+\(ab\) and a \(G\)-crossing: both events of such a block would have
+to straddle the same cut in *outer* order, whereas the two intervals
+of strand names are disjoint. Also \(g\) cannot occur in the spatially
+left operand of a product carrying a counted pair. At a juxtaposition
+with any independent early \(G\)-crossing, \(a,b\) are still to its
+right in the spatial word. The crossings between their strands are
+late, hence cannot have occurred before the early incidence and
+cannot occur inside the independent operands. This argument also fixes
+the spatial order whenever \(g\) and an early \(G\)-event are
+themselves exchanged by an inner edge.
+
+The score is invariant under 4-equations. In either inner subdivision
+each pair occurs in exactly one smaller product. If the split puts
+\(g\) outside its operand piece, the earlier piece is precisely a
+prefix and the later one a suffix at that pair, giving the same test.
+The fixed-whisker and structural laws retain the prefix event sets.
+For an outer equation whose wide edge is early the whole window
+excludes \(g\). Both sides consequently use the same prefix test
+and their charges agree. For a late wide edge the charge of the
+whole side consisting of that edge is zero. Conservation and
+nonnegativity of \(p\) make all edges on both sides score zero,
+including a possible inner correction.
+
+The score cannot decrease at any 5-step on the cycle.
+
+* A temporal exchange preserves the event set of each temporal
+  operand. An occurrence transported inside one of those operands
+  keeps its test for \(g\).
+* In either inner naturality, units counted **inside the varied
+  4-path** acquire the independent history in their 3-prefix, or
+  retain the same test if \(g\) is elsewhere. For units counted
+  by the product itself, a change requires \(g\) in its right
+  operand. The left naturality keeps that history. The right
+  naturality reads it at the product from the target layer back to
+  the source layer. In the varied path a (K15) cannot reorder \(g\)
+  with a counted crossing. An inner exchange of those two can only
+  move \(g\) *later*, by the spatial order just proved. An early
+  mixed edge excludes \(g\). A late mixed edge in that variation is
+  impossible by the five-strand naturality test, since the left
+  operand contains the other selected early crossing. Thus reading
+  the right history backwards can only increase the score. This
+  argument also applies to a composite variation.
+* At a shifted join \(Y I X\to X Y I'\), a counted occurrence in
+  \(X\) acquires the right history in its prefix. One inside \(Y\)
+  stays before the left history in both presentations. Both products
+  read the *same right history*, at the target layer of \(Y\).
+  When they count a pair, \(g\) cannot be in their left operand.
+  Hence the product contribution is unchanged.
+* A zero-Gray outer unary variation or \(H_L\) at a late mixed
+  edge varies an entirely late history, so has no charge there.
+  At an early mixed edge its whole window excludes \(g\) and the
+  total charge is conserved. The same early-window argument applies
+  to an early \(H_R\). At a late \(H_R\) the join contributes
+  zero. The occurrences in its right path pass from inside \(B\)
+  in \(B C A\) to inside \(B\) in \(A B C'\). Their 3-prefix
+  gains the left history and loses no event. The score cannot
+  decrease. These are all the proper zero-Gray cases.
+
+On the specific \(H_R\) used to select the projection, \(g\) *is*
+in that left history. It passes from after all counted occurrences
+of \(Y\) to before all of them. The increase is \(p(Y)>0\), which
+a cycle forbids. The checker executes a six-strand instance in which
+the right path exchanges \(fe,dc\) and the left moving event is
+\(ab\), and verifies both join factorizations and the change in
+the test at that inner exchange. The proof covers arbitrary histories
+on the other strands.
+
+### Measuring the prefix before a late triangle
+
+Choose the early inner witness in \(A\) on quartet \(G\), and a late
+triangle \(T\) in \(D\) with common strand \(x\in G\). Again take
+\(p\) to be early weight after contraction to \(G\), now on the
+whole diagram. The triangle \(T\) occurs exactly once. Read the
+total \(p\) before its carrier. Mixed edges carrying \(T\) are
+late and have zero \(p\); in an outer equation containing \(T\)
+the wide edge is late. Conservation and positivity show that every
+term of that equation has zero \(p\). Inner equations cannot contain
+\(T\). This proves invariance of the prefix under equations.
+
+On a cycle through \(CDAB\), **every early mixed atom remains after
+all positive late work**. To spell out the use of Response 27,
+choose any early triangle, including one in \(B\), and start the
+cycle at \(CDAB\). Its late prefix set there is empty. The set stays
+empty by the nondecrease proof. In the shifted-join exception the
+auxiliary pair \(T_{\rm early},Z_{\rm late}\) has maximal
+late-before-early count at \(CDAB\) regardless of which inputs
+supplied the triangles. Its nonincrease excludes the offending order
+throughout the cycle. The late prefix *weight* before the early
+triangle is therefore nonincreasing by that response. At \(CDAB\)
+it is the entire late weight, so on a cycle it retains that value.
+A late triangle has strictly positive late weight, including in a
+wide late join. In particular no early mixed edge can precede the
+chosen \(T\) in any representative.
+
+At a temporal swap that would decrease the \(p\)-prefix of \(T\),
+a positive-\(p\) edge must cross from before \(T\) to after it.
+Decompose composite operands into individual temporal swaps. The
+edge would be temporally *later* than \(T\). It cannot be early
+mixed by the preceding pin, or late mixed by zero charge. An inner
+edge of positive \(p\) exchanges two early \(G\)-crossings on
+disjoint pairs. Thus its window uses **all four** strands of \(G\),
+including \(x\). Its early incidence on \(x\) must precede the
+late incidence of \(T\) there, excluding the proposed temporal order.
+
+In an inner naturality carrying \(T\) in a variation, the independent
+history contains no early event by the five-strand test. The product
+then has zero \(p\). In a zero-Gray outer unary variation or \(H_L\)
+carrying \(T\) the varied history is late and has zero \(p\).
+In \(H_R\) with \(T\) in the join a right variation of positive
+\(p\) would have positive early work, just excluded. If \(T\) is
+in the right variation the join cannot be early and contributes
+zero. At the shifted join with \(T\) in \(X\) the right history
+has no early event by the projected \(N_L\) test. With \(T\) in
+\(Y\) the left 4-path moves before it and adds nonnegative charge.
+Thus the prefix never decreases. In the designated comparison it
+increases by \(p(A)>0\). This proves the assertion, including the
+one-strand intersection case which can require six retained strands.
+
+Run `python3 -B scripts/e6/interchange_late_naturality.py` with GLPK
+available. For disjoint \(G,T\) the same proof restricts a decrease of
+the prefix to a temporal swap with a late triangle temporally before a
+positive early inner pair on \(G\). Incidence on a shared strand is
+unavailable there. Rectangles with two active inner witnesses and mixed
+inactive inputs also remain for Q1.

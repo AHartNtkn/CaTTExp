@@ -251,4 +251,4 @@ There is one response.
 - The class of maps along which some section is strictly natural, independent of the section chosen.
 - Polynomial-size canonical forms with a recognizer that does not rely on padding. The search-free construction itself is relative-coherence r10 Question 1.
 - Explicit comparisons between arbitrary terms with the same strict value.
-- Follow-up: [`outbox/canonical-gray-terms-r10.md`](../outbox/canonical-gray-terms-r10.md).
+- Follow-up: [`answered/canonical-gray-terms-r10-2026-11-20.md`](canonical-gray-terms-r10-2026-11-20.md).

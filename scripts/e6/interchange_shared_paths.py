@@ -11,7 +11,20 @@ from dataclasses import dataclass
 
 def compressed_equal(rules, left, right):
     """Exact equality by block and pair recompression, with protected root rules."""
-    grammar = [list(rule) for rule in rules] + [[~left], [~right]]
+    # Work only on ancestors of the query. Slice and prefix queries commonly
+    # share an arena containing many unrelated path or context grammars.
+    used = set()
+    pending = [left, right]
+    while pending:
+        i = pending.pop()
+        if i not in used:
+            used.add(i)
+            pending.extend(~x for x in rules[i] if x < 0)
+    ordered = sorted(used)
+    indices = {old: i for i, old in enumerate(ordered)}
+    grammar = [[x if x >= 0 else ~indices[~x] for x in rules[i]] for i in ordered]
+    count = len(grammar)
+    grammar.extend(([~indices[left]], [~indices[right]]))
     limit = max((x for row in grammar for x in row if x >= 0), default=-1) + 1
     fresh = limit
 
@@ -50,7 +63,7 @@ def compressed_equal(rules, left, right):
                     append(*suffix)
 
             prefix = suffix = None
-            if i < len(rules):
+            if i < count:
                 if parts and parts[0][0] >= 0 and (
                         partition is None or partition(parts[0][0]) == 1):
                     prefix = parts.pop(0)

@@ -166,7 +166,7 @@ def check_switch_settings(rows, columns):
         splits = defaultdict(list)
         equations = []
         for kind, edge, unpacked in pairs:
-            if inner or (right and kind == "right"):
+            if (inner and kind == "left") or (right and kind == "right"):
                 splits[edge].append(unpacked)
                 equations.append(((edge,), unpacked))
         rules, _ = complete(charges, equations, rows * columns)
@@ -187,8 +187,11 @@ def check_switch_settings(rows, columns):
                 assert settings[target][representative] == settings[target][term]
     if rows == 1 and columns == 2:
         # The two 4-paths acquire a common 5-identity exactly when the right split holds.
-        for flags, records in settings.items():
-            assert (len(set(records.values())) == 1) == any(flags)
+        for (inner, right), records in settings.items():
+            assert (len(set(records.values())) == 1) == right
+    if rows == 2 and columns == 3:
+        # The inner law is the left split only, so the four settings are distinct here.
+        assert len({len(set(r.values())) for r in settings.values()}) == 4
     counts = [len(set(settings[flags].values())) for flags in sorted(settings)]
     print(f"Suspended {rows} x {columns}: {len(candidates)} raw paths, "
           f"switch counts {counts}, all comparison maps commute.")
@@ -199,4 +202,5 @@ if __name__ == "__main__":
     check_threshold_grid()
     check_forbidden_patterns()
     check_switch_settings(1, 2)
+    check_switch_settings(2, 1)
     check_switch_settings(2, 3)

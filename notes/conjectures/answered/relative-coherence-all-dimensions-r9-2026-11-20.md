@@ -633,3 +633,25 @@ For a word-length bound put $T=|w(u)|+|w(v)|+\sum_j|k_j|(|w(sR_j)|+|w(tR_j)|)$. 
 **Validation and remaining question.** The [raw loop-exchange checker](../../../tools/relative_coherence_loop_exchange.py) constructs the universal swap with two independent loop variables. It also builds a signed comparison above the point using columns $pp\to q$ and $pr\to q$ with coefficients $+1,-1$, followed by exchange to reach $rp$. It checks the signed boundary equation with a nonzero difference and checks the literal output type. Agda 2.8.0 checked both composite terms in safe mode. Run the checker with `--agda "$dir/LoopExchange.agda"` and Agda with `--safe --no-libraries -i src -i "$dir" "$dir/LoopExchange.agda"`.
 
 For the unrestricted construction it now suffices to produce, from each second-identity input, a finite collection of columns whose span contains its difference. Existence follows from relative coherence and the all-column criterion. Neither result selects the finite collection by recursion on that input. In particular there is no completeness proof here for the contiguous-subword tables. This is the remaining step in Question 2.
+
+# Verification addendum (2026-11-20, Response 5)
+
+**Checker re-run.** `python3 -B tools/relative_coherence_loop_exchange.py` passes. It checks the universal loop exchange on two independent loop variables, and a signed two-column comparison above the point with coefficients +1 and −1 and a nonzero difference. With `--agda "$dir/LoopExchange.agda"` it emits a 994-line module with no postulates, which `agda --safe --no-libraries -i src -i "$dir"` accepts.
+
+**Argument.**
+- *Abelian setting.* The swap is the Eckmann–Hilton argument made explicit.
+  - At the base 1_x, the steps are: slide the loops through the unitors, exchange the two horizontal factors, and slide back. Each step is a generic head on a disk or on two horizontally composable disks.
+  - For a general base f, conjugate by a raw inverse g, using Response 4's inverse data.
+  - To reflect the result back along post-whiskering, use the square for h_{b′}. It is assembled from an associator square, an exchange, and a unitor square.
+  - No triangle equation between the chosen cancellations is used.
+- *Integer realization.* Everything in D lies above the generating height, so it is invertible. A spanning tree turns edges into loops L_e at o, and comparisons between raw words then live in a free abelian group on the loops, modulo the relators. So "N(v) − N(u) is in the integer span of the M_j" is exactly the condition that the construction realizes. The steps are:
+  - insert relators;
+  - sort by the swap;
+  - cancel opposite signs;
+  - return along the sort of L(v).
+
+  The sign convention, attached to formal occurrences rather than to raw edge counts, avoids the obvious pitfall with inverse terms. The word-operation bound T(T − 1)/2 + T is correct. As stated, it does not bound term sizes.
+- *Columns from the input.* The contiguous-subword tables give a finite, input-determined matrix. The response does **not** claim they are complete.
+
+**Verdict.** Verified. For n ≥ m + 2, the comparison problem is now the following: given a finite set of columns whose integer span contains N(v) − N(u), the raw comparison is constructed without search. With no columns, equal counts already suffice. What remains is to produce, by recursion on a second-identity input, a finite set of columns that is guaranteed to suffice. RC r10 records this as item 66, as an alternative to the fold route of item 65.
+

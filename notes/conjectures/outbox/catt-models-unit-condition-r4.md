@@ -635,7 +635,19 @@ For clarity, form the groupoid with objects $(T,v)$, all paths of $G_T$ at each 
 
 Quotient this groupoid by all local vertex groups and their conjugates. Each local groupoid becomes thin and connected. Choosing one vertex of each $G_T$ now identifies the quotient, up to equivalence, with the edge-path groupoid of the nerve of $I$: an inclusion gives its transport between the chosen vertices via the unique local paths, and a chain of two inclusions gives its triangle relation. Conversely projection to $I$ inverts these choices after groupoid completion. Campion's contractibility theorem makes the quotient thin. Therefore a nontrivial vertex group of $G_c$ contains a nontrivial image of a local loop, up to change of basepoint. Conversely any such surviving loop obstructs (U) by the partial-cylinder criterion. One may test only maximal subdivisions, since the poset is finite and every local loop maps into a maximal one. Whether these local loops all contract **in $G_c$** is still open; connectivity proves the normal-generation assertion but does not contract them.
 
-There is a further distinction between a strict subdivision and a fixed raw labelling of it. For one nondegenerate lift $ρ:h_T→A_S$, the marked paths coming entirely from that lift form a thin subgroupoid in $G_c$. Indeed $ρ$ is injective on raw terms. Distinct variables have distinct strict values. If a nonvariable term and a variable $x$ had the same image, strict monicity would give that term the value $x$ in $T$. By support it contains $x$; since $x$ has the rank of the term, it occurs in the expression itself. After substitution the finite expression would contain $ρ(x)$ as a proper subterm of itself. For two heads, syntactic equality forces the same head and equality on each substituted argument, so induction proves injectivity. Mark the total in $h_T$ itself. Its marked pullback maps by a globular trivial fibration to the marked globe, by base change of $h_T→T$. Its presentation groupoid is thus thin by the fixed-pole description. The map induced by $ρ$ sends distinct vertex generators to distinct vertex generators: the raw terms remain distinct and their proper arguments still have proper values by monicity. It sends old terms to old terms and respects words and relations. A thin groupoid whose objects remain distinct has thin image. Consequently the surviving local loop requires paths from beyond any one such lift, even though a single **strict** subdivision suffices for all its letters. This leaves a question about comparing different raw labellings of the same strict data.
+There is a further distinction between a strict subdivision and a fixed raw labelling of it. For one nondegenerate lift $ρ:h_T→A_S$, the marked paths coming entirely from that lift form a thin subgroupoid already in $G_T$, and hence have thin image in $G_c$ since the vertex set still embeds. Indeed $ρ$ is injective on raw terms. Distinct variables have distinct strict values. If a nonvariable term and a variable $x$ had the same image, strict monicity would give that term the value $x$ in $T$. By support it contains $x$; since $x$ has the rank of the term, it occurs in the expression itself. After substitution the finite expression would contain $ρ(x)$ as a proper subterm of itself. For two heads, syntactic equality forces the same head and equality on each substituted argument, so induction proves injectivity. Mark the total in $h_T$ itself. Its marked pullback maps by a globular trivial fibration to the marked globe, by base change of $h_T→T$. Its presentation groupoid is thus thin by the fixed-pole description. The map induced by $ρ$ sends distinct vertex generators to distinct vertex generators: the raw terms remain distinct and their proper arguments still have proper values by monicity. It sends old terms to old terms and respects words and relations. A thin groupoid whose objects remain distinct has thin image. Consequently the surviving local loop requires paths from beyond any one such lift, even though a single **strict** subdivision suffices for all its letters. This leaves a question about comparing different raw labellings of the same strict data.
+
+### Combining nondegenerate labellings with a common vertex
+
+In fact the paths from **all** nondegenerate labellings of one embedded $T$, taken together, generate a thin groupoid on each connected component of their union. The raw labels may differ in every positive dimension. The point is that two such labellings whose images share a marked vertex both factor through a third raw labelling of the same $T$.
+
+Write the labellings as $σ,τ:h_T→A_S$. A shared vertex is a literal full-support raw writing $u[σ]=w[τ]$ coming from the two marked presentations of $h_T$. We first show that for each arity variable $x$, either $σ(x)$ is the evaluation of a term under $τ$, or $τ(x)$ is the evaluation of a term under $σ$.
+
+Read the two expressions for the common writing in parallel. When both sides have a head, the heads agree and each pair of corresponding arguments has equal evaluation. Descend into those pairs. When a side reaches a variable $y$, its image is the evaluation of the entire remaining term on the other side. That other term has strict value $y$ in $T$, by monicity. Its typed support is exactly the closed globe of $y$. Moreover the same direction of representability holds for every face $x$ of $y$: taking the corresponding iterated boundary of the remaining term gives an expression for the image of $x$, since the boundary declarations of $T$ are globular variables. If both sides are variables, they are the same variable by monicity. This accounts for every variable at a stopped branch, including those in its type. Equivalently one can also run the traversal on the common writing's iterated boundary terms. The writing has full typed support in $T$, so the branches account for every arity variable.
+
+For each $x$ choose the shorter of the two raw labels, by expression size, and call it $μ(x)$. If $σ(x)$ is represented under $τ$, the representing term has strict value $x$ and is either $x$ itself or contains $x$ as a proper literal subterm, as above. Thus the represented label is longer unless the labels agree. This settles all ties and shows that when $μ(x)=τ(x)$ with unequal labels, $σ(x)$ has an expression over $τ$ using only the closed globe of $x$. Taking its faces shows that $μ$ also selects the $τ$-labels on that globe, allowing ties. Equal labels have equal literal faces. The same reasoning holds with the roles interchanged. Therefore the chosen labels satisfy the variable boundary declarations and give a raw labelling $μ$ over the embedding of $T$. Each larger label now has its original expression over the selected smaller labels on that globe. These expressions define weak substitutions exhibiting the two factorizations through $μ$: the faces evaluate to the required ones, and evaluation under $μ$ is injective, so those face equalities already hold before evaluation.
+
+The two induced substitutions over the strict identity of $T$ preserve the mark and the property of a head having proper arguments. Thus both thin image groupoids are contained in the thin image for $μ$, with the same words in $G_T$. For any finite chain of overlapping images, combine the first two, then combine their common enlargement with the next at its shared vertex. This puts every path in the chain in a single thin image. In particular paths in such images cannot produce a surviving loop by alternating between different raw lower labellings of the *same* nondegenerate arity. Edges with degenerate argument diagrams, and edges from other subdivisions contained in $T$, still enter the full local presentation.
 
 ### Closed comparison paths under a degenerate labelling
 
@@ -649,10 +661,10 @@ Indeed the two staircases carry the end comparison and the mixed label of its ad
 
 The descending induction on the first rank allowed to vary now applies to this whole finite zigzag, with the same intermediate labellings as for connectivity. Consequently its word at $a$ is conjugate to its word at a labelling that factors through $h_T$ and the fixed $ρ$. At that labelling the zigzag lifts to a closed zigzag in $h_T$ over the total of $T$. The marked groupoid of $h_T$ is thin, and all its relations evaluate inside $G_T$. This proves the claim. The requirement that the path close before evaluation matters: an equality between two different evaluated names need not supply a closed path in the generic arity. The concurrent companion proof gives a presentation by such names and independently obtains the single-subdivision reduction by an absolute-space calculation. [Companion relative-coherence problem, Responses 10–12](relative-coherence-all-dimensions-r8.md#researcher-response-10)
 
-**Validation.** The following Agda 2.8.0 check splits the middle 1-cell of the arity for two vertically composable 2-cells. The two sections send opposite incident cells to composites. The comparison has the literal section images as its faces, and substituting an identity for the inserted edge preserves its type. The final declaration checks the square for moving a comparison from a binary composite to its padded writing. Its two 3-cell routes have exactly the same endpoints.
+**Validation.** The following Agda 2.8.0 check splits the middle 1-cell of the arity for two vertically composable 2-cells. The two sections send opposite incident cells to composites. The comparison has the literal section images as its faces, and substituting an identity for the inserted edge preserves its type. The final declaration checks the square for moving a comparison from a binary composite to its padded writing. Its two 3-cell routes have exactly the same endpoints. A second example changes the lower faces and top cell independently in the two columns of the horizontal 2-cell arity. Agda checks that the two raw readings of the shared writing coincide by definitional equality.
 
 <details>
-<summary>Agda check of the split and fold</summary>
+<summary>Agda checks of the split, fold and common writing</summary>
 
 ```agda
 module SplitVertex where
@@ -703,6 +715,22 @@ square = arr (arr M L PR) first second
 
 moveComparison : P ⊢tm coh P square (idₛ P) ∶ square
 moveComparison = snd (from-just (infer P _))
+
+open import CaTTExp.Examples using (HComp; hcomp)
+wrap : Tm → Tm → Tm → Tm
+wrap x y f = coh D₁ (arr ⋆ (v 0) (v 1)) ⟪ x ∷ y ∷ f ∷ [] ⟫
+D₂ = ctxOf (node (node (leaf ∷ []) ∷ []))
+wrap₂ : Tm → Tm → Tm → Tm → Tm → Tm
+wrap₂ x y f g a = coh D₂ (arr A (wrap (v 0) (v 1) (v 2)) (wrap (v 0) (v 1) (v 3)))
+  ⟪ x ∷ y ∷ f ∷ g ∷ a ∷ [] ⟫
+σ = ⟪ v 0 ∷ v 1 ∷ wrap (v 0) (v 1) (v 2) ∷ wrap (v 0) (v 1) (v 3)
+      ∷ wrap₂ (v 0) (v 1) (v 2) (v 3) (v 4) ∷ v 5 ∷ v 6 ∷ v 7 ∷ v 8 ∷ [] ⟫
+τ = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 5 ∷ wrap (v 1) (v 5) (v 6)
+      ∷ wrap (v 1) (v 5) (v 7) ∷ wrap₂ (v 1) (v 5) (v 6) (v 7) (v 8) ∷ [] ⟫
+shared = (hcomp [ τ ]tm) [ σ ]tm
+twoReadings : shared ≡ ((hcomp [ σ ]tm) [ τ ]tm)
+twoReadings = refl
+sharedWellTyped = snd (from-just (infer HComp shared))
 ```
 
 </details>

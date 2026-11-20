@@ -4,8 +4,8 @@ import argparse
 from itertools import product
 from pathlib import Path
 
-from catt import (STAR, arr, check_ctx, coh_between, comp2, disc_tree, infer,
-                  src, sub_from, subst_tm, tgt, tree_ctx, v)
+from catt import (STAR, arr, chain_tree, check_ctx, coh_between, comp2, disc_tree, infer,
+                  maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v)
 from ct_suspension import susp_ctx
 from emit_agda import Emitter
 from relative_coherence_hidden_seam import identity
@@ -53,6 +53,54 @@ def check_interchanges(emitter):
             emitter.check_type(label, extended, witness, expected)
 
 
+def check_repeated_paths(emitter):
+    for rank in (2, 3):
+        disk = tree_ctx(disc_tree(rank))
+        base = disk[:-1]
+        source, target = disk[-1][2:]
+        tree = disc_tree(rank - 1)
+        pole_disk = tree_ctx(tree)
+        pole = v(len(pole_disk) - 1)
+        padded = comp2(pole_disk, rank - 2, pole, identity(pole_disk, tgt(pole_disk, pole)))
+        unitor = coh_between(base, tree, [source], pole, padded)
+
+        def model(padding, endpoints):
+            ctx = base
+            writes, edges = [], []
+            for pad in padding:
+                a = tgt(base, unitor) if pad else source
+                vertex = v(len(ctx))
+                ctx += (arr(infer(base, source), a, target),)
+                writes.append(comp2(ctx, rank - 1, unitor, vertex) if pad else vertex)
+            for i, j in endpoints:
+                edges.append(v(len(ctx)))
+                ctx += (arr(infer(ctx, writes[i]), writes[i], writes[j]),)
+            check_ctx(ctx)
+            return ctx, edges
+
+        graph, edges = model((False, True), [(0, 1), (1, 0)])
+        interval, occurrences = model((False, True, False, True), [(0, 1), (1, 2), (2, 3)])
+        vertices = [v(len(base) + i) for i in (0, 1, 0, 1)]
+        word = [edges[0], edges[1], edges[0]]
+        projection = tuple(v(i) for i in range(len(base))) + tuple(vertices + word)
+        # The three input edges form a path at the m-cut. The middle vertex
+        # carries a whiskered source in both presentations.
+        path = chain_tree(3)
+        for _ in range(rank):
+            path = (path,)
+        arity = tree_ctx(path)
+        a, b, c = (v(i) for i in maximal_vars(arity))
+        left = comp2(arity, rank, comp2(arity, rank, a, b), c)
+        right = comp2(arity, rank, a, comp2(arity, rank, b, c))
+        upstairs = coh_between(interval, path, occurrences, left, right)
+        downstairs = coh_between(graph, path, word, left, right)
+        assert subst_tm(upstairs, projection) == downstairs
+        assert infer(graph, downstairs)[2] != infer(graph, downstairs)[3]
+        for name, ctx, cell in [('interval', interval, upstairs), ('cycle', graph, downstairs)]:
+            emitter.check_typed(f'{name}-{rank}', ctx, cell)
+        emitter.check_eq(f'fold-{rank}', upstairs, projection, downstairs)
+
+
 def compositions(total, length):
     if length == 1:
         yield (total,)
@@ -96,7 +144,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     emitter = Emitter()
     check_interchanges(emitter)
+    check_repeated_paths(emitter)
     count = check_grids()
     if args.agda:
         args.agda.write_text(emitter.module(args.agda.stem, 'Based loop interchanges.'))
-    print(f'8 based interchanges in ranks 1–4 and {count} marked grids checked')
+    print(f'8 based interchanges in ranks 1–4 and {count} marked grids checked; 2 repeated-edge folds checked')

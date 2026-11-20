@@ -360,3 +360,21 @@ face-degen {w} {suc n} {Pre} {Post} α pw refl =
               pw (T-σ (suc n)) (T-δ α (suc n)))
   (≈-trans (pc-cong (length Pre) ≈-refl (σδ-suc α n))
            (unit-r {P = Pre} {Y = D (suc n)} {Q = Post} pw)))
+
+------------------------------------------------------------------------
+-- Congruence in one argument; arguments taken and dropped
+
+cmpFrom-arg-cong : ∀ F i gs₁ {x x′} gs₂ → x ≈ x′ →
+                   cmpFrom F i (gs₁ ++ x ∷ gs₂) ≈ cmpFrom F i (gs₁ ++ x′ ∷ gs₂)
+cmpFrom-arg-cong F i []        gs₂ p = pc-cong i ≈-refl p
+cmpFrom-arg-cong F i (g ∷ gs₁) gs₂ p = pc-cong i (cmpFrom-arg-cong F (suc i) gs₁ gs₂ p) ≈-refl
+
+Args-take : ∀ n {gs Ms} → Args gs Ms → Args (take n gs) (take n Ms)
+Args-take zero    ps       = []
+Args-take (suc n) []       = []
+Args-take (suc n) (p ∷ ps) = p ∷ Args-take n ps
+
+Args-drop : ∀ n {gs Ms} → Args gs Ms → Args (drop n gs) (drop n Ms)
+Args-drop zero    ps       = ps
+Args-drop (suc n) []       = []
+Args-drop (suc n) (p ∷ ps) = Args-drop n ps

@@ -339,7 +339,7 @@ where $I(T)$ retains only components of dimension at least four containing a bas
 
 **Compatibility on the common graph.** Put $A_b=F(\Pi_b)$. The graph stage with its edge cylinders is prescribed up to equivalence under the vertex fibres. Its underlying object is the pushout of
 $$
- \coprod_b A_b\ longleftarrow \coprod_{a:b\to c} A_b\otimes\partial I \longrightarrow\ \coprod_{a:b\to c} A_b\otimes I .
+ \coprod_b A_b\ \longleftarrow \coprod_{a:b\to c} A_b\otimes\partial I \longrightarrow\ \coprod_{a:b\to c} A_b\otimes I .
 $$
 On the two ends use the identity at $b$ and $T(a)$ at $c$. To check this assertion for an arbitrary successful system of expressions, filter each cylinder by the fibre generators. For the pair $(a,g)$ the proper-fibre part is fixed by the attaching map of $g$ tensored with $I$, using the already specified disks. The proper-base part and the intersections with it are entirely in the endpoint fibres. Their prescribed strict values determine the weak maps there up to contractible choice because the fibre skeleta are homotopical and gaunt. In particular any marked factor over an identity at an endpoint is an equivalence there. These identifications respect the common subfaces. Induction by the defining cellular pushouts identifies the graph stages together with their named cylinders, including when an edge is a loop.
 
@@ -422,3 +422,66 @@ python3 tools/fibration_four_factors.py
 ```
 
 [Degree-four search and independent atom-closure check](../../../tools/fibration_four_factors.py)
+
+## Researcher Response 10
+
+### Question 2. The universal property of the base is undecidable
+
+Write $U(\Gamma)$ for the assertion that every strict weight in Question 2 has all the attaching maps of item 16. Given a finite string rewriting system $\mathcal R$ with nonempty rule sides and two nonempty words $w,v$, we construct a finite homotopical 4-polygraph with one generating 4-cell such that
+$$
+                         U(\Gamma)\ \Longleftrightarrow\ w\longrightarrow_{\mathcal R}^* v .
+$$
+Directed word accessibility is undecidable. The nonemptiness restriction can also be obtained directly by encoding a Turing machine configuration as a tape segment with end markers and a state immediately before its scanned letter. A move rewrites the state and scanned letter with the neighbouring letter or end marker, extending the segment by a blank at a boundary. On acceptance, change to a fresh cleanup state which absorbs adjacent tape letters on either side. Use the two end markers enclosing just this state as the fixed target. Every rule retains a state and has nonempty sides, and reaching the target entails entering the accepting state. [Matiyasevich and Sénizergues, *Decision problems for semi-Thue systems with a few rules*](https://www.sciencedirect.com/science/article/pii/S0304397504006127)
+
+**Construction.** In the base write paths in traversal order. There is one vertex, with edges $a,t,p$. Introduce
+$$
+ \nu:a\Rightarrow aa,\quad \mu:aa\Rightarrow a,\quad
+ d:a\Rightarrow a,\quad j:t\Rightarrow a,\quad
+ \tau_c:a\Rightarrow a\quad(c\in\Sigma\sqcup\{L,R\}),
+$$
+where $L,R$ are fresh. Write $b=\nu;\mu$, where the semicolon in formulas means serial composition. On the two wires $aa$ put
+$$
+ P=d*_0 1_a,\qquad Q=1_a*_0 b,\qquad
+ W_y=1_a*_0(\tau_{y_1};\cdots;\tau_{y_k}) .
+$$
+Include the following generating 3-cells:
+$$
+ P\Rightarrow P;Q,\qquad P;Q\Rightarrow P;W_{LwR},\qquad
+ P;W_{LvR}\Rightarrow P,\qquad
+ P;W_l\Rightarrow P;W_r\quad(l\to r\in\mathcal R).
+$$
+On $p$ take the multiplication $m:pp\Rightarrow p$ and associator $\alpha$ of item 9. Write $\mathsf R,\mathsf E,\mathsf L$ for its initial comb, balanced tree and final comb on four inputs. Write $s:\mathsf R\Rightarrow\mathsf L$ for the short side through $\mathsf E$, the prescribed composite of two contextual associators. Add a fresh generator $\zeta:\mathsf R\Rightarrow\mathsf L$ and the sole 4-generator $z:\zeta\Rightarrow s$. Finally add $X:taa\Rightarrow pp$, $Y:p\Rightarrow ta$ and a generating 3-cell in each direction between $X;m;Y$ and $1_t*_0\mu$.
+
+Every input yields a homotopical base. All 2-generators have nonempty path boundaries. For the generating 3-faces the only possible nonempty idle right suffix is $a$ in $P$, and the only possible nonempty idle left prefix is $t$ in $1_t*_0\mu$. Indeed, $P;Q$ and every displayed $P;W$ act on both wires, every tree acts on every input, and $X$ acts on the entire input of the transfer composite. An idle wire must persist untouched through the whole diagram, a condition invariant under exchange. The two idle words differ, so the no-matching-idle-path theorem applies. At the next rank the single-generator source theorem applies to $\zeta\Rightarrow s$, since $s$ has nonzero associator count. Thus this promise holds independently of word accessibility. [Positive 3-computads, Response 5](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#positive-3-computads-with-no-matching-idle-boundary-paths) · [Single-generator attachment, Response 12](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#the-target-map-computes-the-whole-fibre-for-many-to-one-attachments)
+
+**If the word is reachable.** Interchange moves $P$ past every prefix acting on the other wire. Thus the rule at a substring in $u l v'$ is applied to $W_u;P;W_l;W_{v'}$. Padding each word in the derivation by $L,R$ gives a 3-cell $P;Q\Rightarrow P$. The generator in the opposite direction was present from the start.
+
+Fix any weight with fibre $F(\Pi)$ and write $A=T(a)$. For an endotransformation $b:A\Rightarrow A$, the length $|b_y|$ of its component is constant on undirected components of the fibre graph. Indeed strict naturality at any edge equates two paths whose lengths include the same $|A(e)|$. Here $b_y=\nu_y;\mu_y$. The opposite 3-cells at a vertex $y$ give opposite fibre 2-cells between the paths
+$$
+                       A(d_y),\qquad A(d_y);b_{Ay}.
+$$
+If $A(d_y)$ is empty then their composite is a 2-cell on an empty path. The fibre 2-skeleton is homotopical by item 11 and hence bubble-free. Additivity of the count of generating 2-cells makes both 2-cells identities, so $b_{Ay}$ is empty.
+
+It suffices to handle the other case at $y=Ax$. The path $e=\nu_x;d_y;\mu_x$ is a loop at $y$ and $A(e)$ contains the nonempty $A(d_y)$. Naturality of $\nu$ at $e$ gives $|A^2(e)|=|A(e)|$. Write $h=A^2(e)$ and let $B$ be the component at $y$ of $P\Rightarrow P;Q$. Strict naturality of this modification at $e^n$ gives $1_{h^n}*_0 B=B*_0 1_{h^n}$ for every $n$, since both functors at the two ends are $A^2$.
+
+For a 2-cell $B:u\Rightarrow u'$ in a free strict 2-category, follow each input letter untouched by any rewriting step to its final position. The resulting partial matching is invariant under exchanging disjoint steps, including steps with empty input or output. For $|h^n|>|u|$, input position $|u|+1$ survives on both sides of the displayed equality. In the prefix $h^n$ it keeps its original position. In the suffix $h^n$ its final position is $|u'|+1$. Hence $|u|=|u'|$, so in this case too $b_{Ay}$ is empty. The edge path $\nu_x$ connects $y$ to $Ay$. Constancy of component lengths now makes $b_{Ax}$ empty for every $x$. The path $j_x$ connects $T(t)x$ to $Ax$, so $b_{T(t)x}$ is empty. Its last factor $\mu_{T(t)x}$ is therefore an identity.
+
+Evaluating the transfer 3-cells gives opposite fibre 2-cells between an identity and $X_x;m_x;Y_x$. The same bubble and count argument gives $|m_x|=0$ for every $x$. On the subbase generated by $p,m,\alpha,\zeta,z$ the only generating 2-transformation is consequently an identity. Response 7 supplies the raw attaching blocks in all degrees on this subbase. On the complementary subbase consisting of the graph, all 2-generators and all 3-generators except $\alpha,\zeta$, use items 3 and 4. Its 3-skeleton satisfies the same idle-path test.
+
+Here the two constructions must agree on $p,m$, since the transfer faces also use $m$. On the graph both use the edge cylinders. On each boundary path of $m$ both maps subdivide the interval by $I\to[r]$ and evaluate successive edge transports. For the disk itself the item 3 block is the double cylinder (10) of the walking 2-cell. When $m$ acts by the identity, its inner interval evaluates by projection at both outer ends, followed at the target by the common transport. Collapsing these two inner edges in $I_{\rm in}\otimes I_{\rm out}$ leaves two parallel edges and their generating 2-cell, the walking 2-globe. This follows by its cellular pushout, first adjoining the four edges and then the square. Tensor with the fibre, which preserves those pushouts, and attach the vertex fibres by the same endpoint maps. This identifies the double cylinder with the Response 7 block, under both boundary cylinders and with the same generator disks from the filtration by fibre cells. Thus the proper-fibre substitutions agree as well. Attaching the two families in rank order gives the maps of item 16 on their union. [Walking-2-cell block, equation (10)](../answered/finite-fibration-test-higher-base-r5-2026-11-18.md#13-the-actual-unlocalised-substitution-map)
+
+**If the word is unreachable.** Use a one-object fibre with edge letters $\{g,L,R\}\sqcup\Sigma$ and 2-generators
+$$
+ i:1\Rightarrow g,\quad \delta:g\Rightarrow gg,\quad
+ h:g\Rightarrow LwR,\quad f:LvR\Rightarrow1,\quad
+ \rho_{l,r}:l\Rightarrow r\quad(l\to r\in\mathcal R).
+$$
+There are no higher fibre generators. A nonempty rewriting from the empty word back to itself must use $f$, since all other targets are nonempty. Before the first $f$ all brackets come from $h$ in matched pairs, with subsequent insertions preserving nesting. The brackets in this first $LvR$ are adjacent in the bracket subsequence, hence form a matched pair. No $h$ occurred inside them after their creation, as its brackets would still be there. No $g$ was created inside them either, since only $h$ can dispose of the last such letter. Tape rules cannot cross the brackets. The intervening interior computation therefore takes $w$ to $v$, a contradiction. The fibre is bubble-free and hence homotopical by the dimension-two criterion. [Bubble criterion, item 5](homotopy-polygraphs-r5.md)
+
+Assign every edge of the base the constant erasing functor at the unique object. Assign $d,\nu,j,X,Y$ the empty component, assign $\mu,m$ the letter $g$, and assign $\tau_c$ its letter $c$. The four types of tester 3-cells then evaluate to $i,h,f,\rho_{l,r}$, respectively. The transfer faces both evaluate to $g$. Assign their comparison cells identities. Assign $\alpha$ the cell $\delta$, assign $\zeta$ the value of $s$, and assign $z$ its identity. These have the boundaries of item 9 on the short side. The assignments are strictly natural since every nonempty base edge path erases all positive-dimensional fibre inputs. This defines an admissible strict weight.
+
+We check that the extra fibre and base generators cannot supply the missing short side. In a positive lift of $s$ the base projection has only the two specified contextual $\alpha$ occurrences. Additivity of support on the projection and its lower faces restricts the base labels to $p,m,\alpha$; in particular $\zeta$ cannot occur. Use item 9's right-to-left notation for this calculation, writing $t'$ for the lift of $p$, $u:g t't'\Rightarrow t'$ for the lift of $m$, and $c:t'\Rightarrow t'g$ for its crossing at $g$. The starting lift of $\mathsf R$ is marked, with prescribed 1-boundary $g(t')^4\Rightarrow t'$. Its base multiplication corrections are 1-paths. Thus its marked 2-factors consist of object lifts and edge crossings. A crossing at any letter other than $g$ introduces that letter and no $u$ consumes it. The starting lift consequently belongs to the original calculation, which gives just one lift at $\mathsf R$. Likewise the only pure 2-correction in the associator disk is the specified $\delta$; its marked 2-parts have only crossings and object lifts, and their prescribed boundaries contain only $g,t'$. They are the same parts as in item 9.
+
+Starting in this subsystem, consider the first new label in a marked 3-writing over the short side. The source of an edge prism at a fibre 2-generator contains that very pure 2-generator. The source of the $m$ prism at a fibre letter contains its output-edge crossing. Thus neither type can apply first with a new label, even in context, by additivity of 2-occurrence counts. The fibre has no pure 3-cells of positive count. The remaining moves are precisely $D,M,V$ in the item 9 table. In their exchange graph the only first step over $\mathsf R\to\mathsf E$ lands at $\mathsf E_{\rm early}$, which has no outgoing edge; the graph also checks identity-projection steps before that first step. Hence no strict 3-cell realises the required target side of $z\otimes x$. A weak map would give such a cell on strictification. Setting $T(z)$ to an identity makes its fibre correction trivial, while its proper-base face still prescribes exactly $s$. This proves failure of $U(\Gamma)$. [Short-side graph and Gray boundaries](../answered/fibration-presentations-all-dimensions-2026-11-19.md#14-the-required-pentagon-boundary-does-not-exist)
+
+The two implications prove the undecidability assertion of this response. This reduction uses the universal quantifier in Question 2. On a reachable instance the displayed candidate fibre actually contains the bubble obtained by $i$, $h$, the padded computation and $f$. It therefore cannot be used as a promised input to a decision procedure for Question 1.

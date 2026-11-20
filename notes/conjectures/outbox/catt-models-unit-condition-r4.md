@@ -1105,3 +1105,100 @@ folded-comparison = snd (from-just (infer LW _))
 ```
 
 </details>
+
+# Researcher Response 15
+
+## Transport along an invertible global arrow and two-out-of-six
+
+For an invertible global arrow $e:x\to y$ in an arbitrary $L$-model $X$, stationary left whiskering $X(y,z)\to X(x,z)$ is essentially $\omega$-surjective, including at every prescribed pair of parallel cells. The right whiskering assertion holds as well. Consequently the intrinsic class $W_L$ of Q2 satisfies two-out-of-six. The proof uses the ordinary comparison of Response 13 to construct transport on the semantic realizations of the fixed homs.
+
+**A map into the colimit of charts.** For any ordinary weak algebra $B$, evaluation of the labelled arities gives $a_B:C(B)\to\Phi B$ in the notation of Response 14. It has a section $j_B$ natural on strict algebra maps up to coherent homotopy. At $h_P$ both maps identify with the identity of the strict arity $P$. We give the construction since applying a right adjoint to an arbitrary cellular pushout would not justify this assertion.
+
+Write $T$ for the raw ordinary theory, $\theta:T\to\Theta$ for strictification, and $N_wB$ for the discrete raw nerve. In the injective model of space-valued presheaves on $T$ localized at the spine inclusions, both $N_wB$ and each raw representable $y_wP$ are discrete local objects. Use its algebraically fibrant presentation. Construct a realization $R_w$ of the raw coherator by lifting into $F\operatorname{Sp}_w(P)\to y_wP$ exactly as in Known (I). The map is a weak equivalence by the spine localization, and it is a fibration since every map from a fibrant object to a discrete local object is a fibration (use the diagonal, as in Response 6). The augmentation is over the raw Yoneda diagram, so the resulting singular algebra of $N_wB$ is canonically $B$: a label on a spine extends uniquely to the corresponding label on its representable when evaluated in the discrete nerve. There is therefore a natural map $\mathcal L_{R_w}B\to N_wB$ in this model.
+
+Realize this map in the coinductive semantic theory by the colimit-preserving functor $D$ sending $y_wP$ to $P$. The codomain becomes $C(B)$. For computad-cofibrant $B$, its domain is naturally equivalent to $\Phi B$. The following joint presentation verifies this last identification at all attaching maps. Form the category with disjoint copies of $T,\Theta$, their original morphisms, and mixed morphisms $P_w\to Q_s$ given by $\Theta(\theta P,Q)$, composed by $\theta$. Take injective simplicial presheaves there, localized at the strict-site semantic equivalences and the maps $y_wP\to y_s\theta P$. An object of the resulting infinity category is a pair of presheaves with a natural equivalence from the strict presheaf restricted along $\theta$ to the raw presheaf, and with the strict presheaf local. Restriction to the strict site thus gives the semantic theory. Left Kan extension from the raw site presents $D$. Before localization it extends by the empty presheaf on strict objects. Left Kan extension from the strict site assigns the restricted presheaf on raw objects. Both therefore preserve monomorphisms and objectwise weak equivalences, and are left Quillen after the stated localizations. In particular the raw spines go to equivalences because the strict arities are homotopy globular sums. For the strict site one can start in the inductive presentation and impose coinductive completion in the joint one.
+
+These two left Quillen functors lift to the algebraically fibrant presentations. Include the images of the chosen trivial cofibrations of both sites in the filler set of the joint model. Restriction with these fillers gives each lifted right adjoint, and the left adjoint takes a free algebraic fibrant replacement to the free replacement of the left Kan extension. Its derived functor is the indicated left Kan extension followed by localization, by the free–forgetful Quillen equivalences. In the joint model the two resulting diagrams of arity realizations thus preserve globular sums, have cofibrant globe boundaries and cofibration attachments, and both augment naturally and equivalently to $y_s\theta P$. For the raw diagram use the map $y_wP\to y_s\theta P$. The strict representables are discrete local objects also on the joint site; their restriction to the raw site has its unique algebraic fillers.
+
+Apply the joint-boundary construction of Response 2 to these two diagrams over $y_s\theta P$. At a disk attach both disks to the already joined boundary and factor the augmentation as a cofibration followed by a trivial fibration. Extend to pasting arities by globular sums. Their augmentations are equivalences by gluing and fibrations by the discrete target. Every raw head now lifts with both endpoint interpretations fixed, giving a span of natural objectwise equivalences on the entire raw theory. Coends of this span at a computad-cofibrant algebra are equivalences by induction on the globe attachments. The two compared coends compute the derived images because these cellular algebras realize to cofibrant objects. This identifies $D\mathcal L_{R_w}B$ with $\Phi B$ on cofibrants, naturally including the attaching substitutions. The image of $N_wB$ here is taken by the derived left Kan extension, which has value $C(B)$ by Yoneda. [Joint-boundary comparison](#a-strict-comparison-compatible-with-all-coherence-operations)
+
+For arbitrary $B$ use $KB\to B$ to get $j_B:\Phi B\simeq\Phi KB\to C(KB)\to C(B)$. On a cofibrant arity naturality of the construction before replacement and the augmentation to $y_s\theta P$ identify its composite with $a_{h_P}$ with the identity. The endotransformation $a j$ of $\Phi$ descends to the localization since $\Phi$ is relative. On strict arities it is the identity by $h_P\xrightarrow{\sim}P$ and naturality. These identifications are coherent there because the mapping spaces between the gaunt strict arities are discrete. The arities are dense and the identity functor of the semantic theory preserves colimits, so $a j$ is the identity everywhere under the equivalence $\Phi$. This proves the section assertion.
+
+**Whiskering on the fixed homs.** Precompose the operation of Response 14 with the tensor of the sections $j$ to obtain operations
+\[
+ \mu_X:\Phi X(x_0,x_1)\otimes\cdots\otimes\Phi X(x_{k-1},x_k)
+                  \longrightarrow\Phi X(x_0,x_k)
+\]
+natural for strict $L$-maps. Their value on a chart of input disks is the assigned operation on that tuple, by naturality of $j$ and its value on a representable. In particular an actual global arrow $e$ fixes a point input and gives semantic left whiskering $T_e$ on a variable hom by binary $\mu_X$. It suffices below to establish associativity with two stationary arrows and the unit law with one variable hom.
+
+Let $e,f$ be composable before the variable and let $C$ denote that variable hom. Compare $T_eT_f$ with $T_{e;f}$, where $e;f$ is a chosen weak composite. Both maps on $\Phi C$ factor through $j_C$. On $C(C)$ the first uses the binary operation on charts for the inner whisker followed by $T_e$; the second uses the binary operation on charts with the stationary composite. To compare the cocones at a chart $h_P\to C$, perform both constructions first in the free directed arity with two stationary slots and variable slot $P$. They give maps from $P$ to the derived extreme hom there, naturally in $P$. The strict extreme hom is $P$, and every strict label in it is rectangular, by the tree support calculation. Response 8 therefore makes the projection of the extreme hom to $P$ a globular trivial fibration. After projection both cocones give the identity on $P$. For the inner operation this follows on the chart from the natural projection of the diagram $V$ to its strict tensor. For the outer stationary operation in the strict arity it holds on every chart of its input by the same projection and strict composition; precomposing chart evaluation with $j$ gives the identity. Thus the two cocones in the free arity agree up to coherent homotopy, since the projection is an objectwise equivalence of diagrams. Substitution into $X$ and the colimit give $T_eT_f\simeq T_{e;f}$. For a stationary identity evaluate the same comparison in the one-slot arity $\Sigma P$ with the identity at its pole. Projection to $P$ identifies the whiskering cocone there with the chart itself, by the strict unit law. It follows that $T_{1}\simeq a_Cj_C\simeq1$. The argument with the variable before the stationary slots uses the same one-active-factor projections.
+
+If $f$ is an inverse of $e$, its two cancellation cells are coinductively invertible in their ordinary fixed homs. Their endpoints thus give equivalent points of the corresponding $\Phi$-homs, by the ordinary comparison. The map $\mu_X$ takes a path of point inputs to a homotopy of functors on its variable input. Consequently $T_e$ and $T_f$ are mutually inverse equivalences. This proves semantic transport for all the fixed homs without assuming associativity of arbitrary operations with several varying blocks.
+
+For the raw transport statement choose the globular operations $W_e$ of Response 11. On input disks their charts in the generic one-active-slot arities and the charts obtained by $T_e$ agree coherently on all globular face inclusions. Indeed they agree after projection to the strict disk, and the projections in this diagram are equivalences. The original $W_e$ has the literal globular face equations. After any labelling, the comparison thus includes the boundary diagram of each disk. At a prescribed raw boundary the components of the homotopy fibre of disk restriction in the ordinary theory are exactly the cells at that boundary modulo invertible comparison, by the relative cylinder calculation of Response 2. In particular representatives exist at the literal boundary. The map between fibres induced by $T_e$, using the preceding coherent identification at that boundary, sends the class of each raw $b$ to the class of $W_e(b)$. It is an equivalence because $T_e$ is. This gives essential surjectivity at every prescribed boundary, including dimension zero, and injectivity on these classes. The right whisker has the same conclusion. [Globular whiskering operations](#directed-boundary-lifting-through-hom-dimension-two) · [Components at a prescribed boundary](#the-derived-nerve-on-strict-arities)
+
+**Two-out-of-six.** Write $hX$ for the category on the objects of $X$ whose arrows are the equivalence classes of objects of its ordinary fixed homs. Composition is induced by the point-input case of $\mu_X$, with the chosen global composite as representative. The preceding associativity and unit laws on points give the category laws. An isomorphism has precisely an actual inverse representative and invertible cancellation cells, by the component calculation in the ordinary homs. Thus global essential surjectivity in the definition of $W_L$ is essential surjectivity on $hX$. Each map in $W_L$ induces an equivalence on these categories since its local maps induce bijections on equivalence classes of objects.
+
+Suppose $g f$ and $h g$ are in $W_L$. Two-out-of-six for equivalences of categories first gives essential surjectivity for $f,g,h$ and their composite. At any two objects of the source of $f$, the three successive local maps lie in ordinary CaTT and both consecutive composites are ordinary weak equivalences. Ordinary two-out-of-six gives the local conclusion there for all three maps and their composite. To obtain it at arbitrary poles of the source of $g$, choose global equivalences from poles in the image of $f$, using its essential surjectivity. Left and right transport in the semantic fixed homs are equivalences, and the squares with $g$ commute up to homotopy by naturality of $\mu$. They transfer the local equivalence to the required poles. Apply the same argument at $h$ using $g f$. This proves two-out-of-six for the specified class on all $L$-models.
+
+The all-dimensional assertion rests on the one-active-factor equivalences of diagrams and the relative mapping-space calculation. The literal-face example of Response 11 checks a stationary whisker on a composite and its two-step form after substitution to a nonrectangular path. Response 14 checks the collapse of a moving input at the actual folded boundary. The remaining directed question is the homotopical realization and its unit on the computads of Q2.
+
+Agda also checked the following stationary associativity square. Its two boundary corrections are the associators at the distinct source and target of the varying cell.
+
+<details>
+<summary>Agda check at the two stationary slots</summary>
+
+```agda
+module StationaryAssociativity where
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using (v; comp; vcomp; lw)
+
+P = ctxOf (node (leaf ∷ leaf ∷ node (leaf ∷ []) ∷ []))
+Chain = ctxOf (node (leaf ∷ leaf ∷ leaf ∷ []))
+x = v 0
+y = v 1
+e = v 2
+z = v 3
+f = v 4
+t = v 5
+a = v 6
+b = v 7
+h = v 8
+ef = comp x y e z f
+nested : Tm → Tm
+nested d = comp x y e t (comp y z f t d)
+flat : Tm → Tm
+flat d = comp x z ef t d
+assoc : Tm → Tm
+assoc d = coh Chain (arr (arr ⋆ x t) (nested (v 6)) (flat (v 6)))
+            ⟪ x ∷ y ∷ e ∷ z ∷ f ∷ t ∷ d ∷ [] ⟫
+
+N = lw x y e t (comp y z f t a) (comp y z f t b) (lw y z f t a b h)
+F = lw x z ef t a b h
+left = vcomp x t (nested a) (nested b) N (flat b) (assoc b)
+right = vcomp x t (nested a) (flat a) (assoc a) (flat b) F
+A = arr (arr (arr ⋆ x t) (nested a) (flat b)) left right
+at-actual-poles : P ⊢tm coh P A (idₛ P) ∶ A
+at-actual-poles = snd (from-just (infer P _))
+```
+
+</details>
+
+## Composition on the realized homs is coherently associative
+
+In fact $a_B:C(B)\to\Phi B$ is an equivalence for every ordinary algebra $B$. It remains after the section argument to check $j_Ba_B$ on the colimit defining $C(B)$. On its cocone at a labelling $b:h_P\to B$, naturality of $j$ identifies the restriction with $C(b)j_{h_P}a_{h_P}$ on $C(h_P)=P$. At raw arities $j a$ is the identity coherently: the spaces of maps between their strict semantic arities are discrete. This identifies the entire restricted cocone, including the arrows in $J(B)$, with the defining cocone. The colimit property proves the other composite is the identity.
+
+Here is a consequence for composition before comparing with the specified realization adjunction. There is an enriched realization of any $L$-model $X$ with its given objects and with ordinary realized homs $\Phi X(x,y)$, natural on strict $L$-maps. The enrichment is in coinductively complete higher categories with the Gray tensor. Its underlying class of Dwyer–Kan equivalences is exactly $W_L$.
+
+To prove associativity in all profiles, for $k$ inputs allow natural operations on $L$-models with $k+1$ indicated objects. By the colimit just proved and separate colimit preservation of the tensor, the space of such operations from the tensor of the realized successive homs to the realized extreme hom is
+\[
+             \operatorname{Nat}_{P\in T^k}(K_P,\Phi H_P).
+\]
+Indeed the weight at a tuple $P$ is the product of the sets of ordinary labellings in the successive homs. As a functor of the pointed $L$-model this weight is represented by the free directed wedge on the suspended $P_i$ with its indicated objects. The colimit formula and Yoneda give the displayed equivalence of spaces, including all the coherences on substitutions. It uses the category of *factorwise* raw substitutions for the weight, even when indicated objects in the target coincide. In arity zero use the free object on a point.
+
+Restrict the displayed space to the homotopy fibre over the identity of the diagram $K$, using the natural maps $\Phi H_P\to K_P$. This fibre is contractible. To see the required relative lifting, let $P\to Q$ be any factorwise substitution. Present $K_P$ by successively attaching its tensor atoms as homotopy globe pushouts, using the torsion-free presentation. Each generator maps to a rectangular label in $K_Q$. In the ordinary theory $H_Q\to K_Q$ lifts at every prescribed boundary over such a label and at all its iterated identities. The derived space of lifts of the disk at that boundary and label is contractible. Its components are writings modulo invertible comparison at the boundary, and its higher homotopies are successive invertible comparisons at those same poles. Equivalently, pull back the ordinary algebra along the strict disk naming the label and fix the prescribed poles. The fixed hom of writings is groupoidal with lifts in every degree by Response 8. The point obtained from any writing includes by an equivalence into this space. The relative mapping-space calculation of Response 2 applies since a disk boundary is cofibrant and the map to a gaunt target is a fibration. Thus the restriction of lifting spaces at each atom attachment has contractible homotopy fibres. Starting with the empty presentation proves contractibility of the space of lifts of $K_P\to K_Q$ to $\Phi H_Q$. The end formula for natural transformations takes the limit of these mapping spaces over the twisted arrow category of $T^k$. Taking the fibre at the identity diagram gives precisely the limit of the contractible lifting spaces just computed.
+
+These fibres are stable under operadic substitution. Evaluate first in a strict oriented arity or in one of its consecutive blocks. For any tuple of raw labels there, naturality under the strict labelling sends a normalized operation to the given strict composition on its chart, since the generating operation projects to the identity on the generic $K_P$. The chart colimit computes the entire tensor of the input homs. Thus normalized operations agree with strict composition in each such strict target. For a composite of natural operations, project from the free directed arity to its strict oriented arity. By naturality the projected composite is the composite of strict compositions, hence it again has the identity projection on the generic tensor. These comparisons are coherent on the strict arities: all mapping spaces between the strict shapes in question are discrete. The ordinary identity operation satisfies the same condition. The nullary fibre is contractible by the point-hom test. Consequently these operations form a nonsymmetric operad of natural operations with contractible spaces in every arity. Its map to the associative operad is an equivalence. An inverse supplies all unit and associativity coherences simultaneously. Evaluating on the object strings of $X$ gives the asserted enriched category. Completion of the object space preserves the homs between the original objects and is essentially surjective on objects. A strict algebra map therefore induces an equivalence precisely when it induces equivalences of all ordinary realized homs and an essentially surjective map on $hX$, as claimed. [Enrichment and the Segal characterization, Gepner–Heine §2](https://arxiv.org/html/2510.10504v2#S2)
+
+This constructs a functor on the intrinsic directed localization. To identify it with the derived functor of $\mathcal L_{R_L}$ one still needs a comparison on free directed computads. In particular the contraction of the space of normalized operations lifts maps **from** the semantic tensor $K_P$ into $\Phi H_P$. The directed arity unit also tests all the cells already **in** $H_P$ over nonrectangular labels. The argument above gives the section of that projection and the coherent composition laws.

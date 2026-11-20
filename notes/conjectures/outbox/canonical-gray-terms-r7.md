@@ -399,3 +399,68 @@ python3 tools/gray_globe_double_shift.py 5 5
 ~~~
 
 The open issue is syntactic. A smaller comparison would solve its shifted test if its transport had the two specified end-decomposition terms as faces, up to established changes of writing. The positive chain section alone supplies neither that typed transport nor a comparison at those endpoints.
+
+# Researcher Response 5
+
+**The double shift has explicit face maps. Each map lifts to CaTT through transverse rank two for every bound. At bound one it lifts in every transverse rank for a compatible choice of cylinder presentations. The left and right maps commute strictly on tableaux, but no choice of CaTT substitutions realizing them can commute literally, even on the generating square.** The two orders on that square admit invertible comparisons with their prescribed endpoints.
+
+### Which inclusions the shift respects
+
+Write $A_i^xB_j^y$ for a basis element. The section $S_{P,Q}$ of Response 4 also makes sense for $P,Q\ge1$, using $D^0$ for a point. The same formula applies when a correction summand is absent at the bound. Ordinary signed inclusions cannot make a top-atom-preserving double shift natural. For example, embed the two copies of the lower $D^1\otimes D^1$ into $D^2\otimes D^1$ at the two left 1-faces. They share the vertex $(0,0)$. Its image is forced in either small box because it is the iterated source of the lower top atom. Its shifted 2-cell is consequently the 2-source of the upper $(2,2)$ atom. The ordinary upper signed inclusions send its pure left 2-site to $A_2^-B_0^0$ and $A_2^+B_0^0$, respectively. The two proposed values for the shared vertex are distinct strict cells.
+
+Instead, grow the left bound from $P$ to $P+1$ by a map $L^a$, with $a=0,1$. Fix every column of left rank below $P$. On the last rank use
+\[
+\begin{aligned}
+ A_P^*B_0^b &\longmapsto A_P^{b\oplus(P\bmod2)}B_0^b,\\
+ A_P^*B_1^y &\longmapsto A_P^aB_1^y+A_{P+1}^*B_0^{(1-a)\oplus(P\bmod2)},\\
+ A_P^*B_j^y &\longmapsto A_P^aB_j^y \qquad(j\ge2).
+\end{aligned}
+\]
+Grow the right bound from $Q$ to $Q+1$ by $R^b$, fixing smaller right ranks and using
+\[
+\begin{aligned}
+ A_0^xB_Q^* &\longmapsto A_0^xB_Q^x,\\
+ A_1^xB_Q^* &\longmapsto A_1^xB_Q^b+A_0^{1-b}B_{Q+1}^*,\\
+ A_i^xB_Q^* &\longmapsto A_i^xB_Q^b \qquad(i\ge2).
+\end{aligned}
+\]
+Here $\oplus$ is addition modulo two. Both maps preserve augmentation and commute with the differential. For $L^a$ at transverse rank one, the signed-face column has the required corner tag on exactly one endpoint of $B_1$. At the other endpoint the differential of the extra pure column changes that tag, with coefficient $(-1)^P$ on the positive $B_0$ endpoint. At rank two the identical pure corrections on the two transverse faces cancel. Higher ranks and the boundaries in the unchanged axis then give the chain equation directly. For $R^b$ the transverse difference is $A_0^1-A_0^0$ with positive sign. The identical calculation changes the corner $1-b$. Positivity gives strict functors by applying the maps to every row.
+
+These maps obey both coglobular identities. After a left growth the only newly introduced label of left rank $P+1$ is pure, whose value under the next left growth is independent of its sign. This proves $L^0 L^a=L^1 L^a$ with the bounds understood. The same argument gives the right identity. Also $R^b L^a=L^a R^b$. On a basis column both orders apply the indicated tag changes. An added pure column is fixed by growth on the other axis, and its coefficient and corner are independent of the sign of the transverse rank-one label. This includes $P=Q=1$, when both summands are added to the same square.
+
+For an ordinary signed inclusion $i^a$ on the **lower** left factor,
+\[
+ L^a S_{P,Q}=S_{P+1,Q}i^a .
+\]
+On a lower column of left rank $P-1$ the shifted interior gets tag $a$, and at right rank zero its new pure summand is exactly the one in $L^a$. At left rank $P-2$ the former pure correction has left rank $P$ and corner $x\oplus((P-2)\bmod2)$, so the map restores its required tag $x$. All other columns retain their tags. At $P=1$ the same corner rule also carries the two prefixed paths to the larger paths. The right equation is $R^b S_{P,Q}=S_{P,Q+1}i^{1-b}$ for the ordinary lower right inclusion. The complement comes from the interior column of the shift. The pure right correction at corner $y$ gets tag $y$ as required. Thus the double shift is natural on every signed face for these upper maps.
+
+### A typed lift through transverse rank two
+
+Use presentations respecting ordinary signed inclusions, as in Response 4. Write $p$ for the grown bound, $F$ for its ordinary signed inclusion of sign $a$, and $M$ for the corresponding map above. At transverse rank zero $M$ selects the indicated pure variables. It agrees with $F$ except at one pure corner variable $x$ of dimension $p$. Let $e$ be the new pure $(p+1)$-generator there, directed from the minus to the plus copy of $x$. All variables of main rank less than $p$ keep their names and types in every transverse rank.
+
+For a native atom $g$ of main rank $p$ and positive transverse rank, the following also describes $M(g)$ in all degrees. Take the signed atom $F(g)$. When $a=0$, append the pure change at its target $p$-pole at cut $p$. When $a=1$, prepend the pure change at its source $p$-pole. The change acts on the unique $x$ in that pole and fixes its other sites. Indeed the pure term of degree $p$ on each of the atom's two $p$-rows is at a different transverse vertex. Only the indicated endpoint gets a different tag under $M$. In degree $p+1$ each signed row contains exactly one site of transverse rank one and main rank $p$. This supplies the same extra pure $(p+1)$-generator on both rows. The higher rows agree with the signed atom. This proves the cut formula on entire tableaux.
+
+At transverse rank one apply depth-zero naturality in $x$ to the literal changed $p$-pole. Compose that action with the signed mixed variable in the stated order. Its type is the substituted attaching type because only that one pole contains $x$, and its strict value is the cut formula. Use the binary operation of the naturality calculus here.
+
+For transverse rank two take the source context through degree $p+1$. In this context the up-closure $X$ of $x$ consists of $x$ and the incident $(p,1)$ variables, in main/transverse order. This follows from support and the bound $p$ on main rank. Its depth is at most one. Label the two endpoint copies of the naturality context by $F,M$ for $a=0$, and by $M,F$ for $a=1$. Label the change of $x$ by $e$. For each marked rank-one mixed variable its change type now has literally the same composite on both sides: one side uses the pure action on the affected endpoint, and the other uses the rank-one value just defined. Use its identity. Unmarked variables have the same label on both copies.
+
+Let $u,v$ be the declared $(p+1)$-poles of the native rank-two variable. Their $p$-poles agree literally by typing. On each of $u,v$ the depth-one naturality term for $X$ now compares its $M$-substitution with its $F$-substitution preceded or followed by the common pure action. The other end is unmarked, so the naturality type has exactly this one boundary operation. These $(p+2)$-comparisons have identity strict image and are invertible: their potentially top-dimensional mixed labels were instantiated by identities, and the other labels have degree at most $p+1$. Whisker the signed $(p+2)$-variable by the common pure action, taking at its two faces the binary operations just used. These heads exist over the wedge of the pure-action globe and the mixed globe at cut $p$, in the indicated order. Put the two comparisons at its ends in the required directions. The result has literal faces $u[M],v[M]$. Its strict image is the cut formula. This construction is uniform in $p$, including arbitrary raw attaching terms compatible with the signed face presentation. [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1 and Lemma 3.3](https://arxiv.org/pdf/2501.11620)
+
+**Growing a bound of one.** Here a different induction realizes the same face map in every transverse rank. Start with the rank-one strip map on the square. In the target use the subcontext formed by the two ordinary signed copies of that strip and the two new pure 2-variables at transverse vertices. These contain every label used in the substitution. To grow the transverse bound from $j$ to $j+1$, $j\ge1$, mark all variables of transverse rank $j$ in the source and this target subcontext. The sets are up-closed. The only marked ranks are $(0,j),(1,j)$ in main/transverse order. The extra pure 2-variables and their boundaries are unmarked. The inverse image of the target marks under the substitution is exactly the source marks. On marked variables the image contains its signed mixed or pure label of transverse rank $j$. On the other variables support has smaller transverse projection. Both contexts and the substitution therefore have depth at most one with respect to these marks.
+
+Use the marked-column cylinder presentations for transverse growth. For growth in the first tensor slot these identify the two copies of a marked label with its two old signed faces and its change with the new variable; for growth in the second slot transport the construction through the odd-dimensional opposite and factor reversal. This is precisely the rank-zero and rank-one case of the signed column calculation. The unmarked pure variables are carried along as parameters. Apply naturality to the **substitution**. Lemma 3.3 gives literal agreement with the old substitution on both signed copies. For a changed variable the top chain has its single new signed label: there is exactly one top label of its marked bidegree in the old image. The extra pure label when $j=1$ is unmarked. The coefficient of the new label is one by the difference between its two old signed faces. The resulting faces and this top row determine the new tableau, which is $M$ of the new atom by the chain formula. This proves the induction. The argument makes a choice of cylinder declarations in both signed strips; it asserts existence with those choices. [Round 6, Response 10, including the signed column calculation](../answered/canonical-gray-terms-r6-2026-11-20.md#researcher-response-10)
+
+### Why a strict square of substitutions is impossible
+
+Start with the generating 2-variable of $D^1\otimes D^1$ and grow both bounds once. Its final strict top row consists of a mixed square $z$, a pure left 2-generator $l$ and a pure right 2-generator $r$, each with coefficient one. In **any** syntactic realization that first grows the left bound, the first image uses the intermediate mixed variable exactly once in its degree-two slots. After right substitution that occurrence is a subterm with strict top chain $z+r$. In the opposite order there is a subterm with top chain $z+l$. A single raw 2-term with the stated final top row cannot have both. Its tree of degree-two arguments counts top labels by addition: a composition head counts each degree-two slot once and a higher coherence on a lower arity contributes none. Two subtrees containing its unique $z$ must therefore be nested. Neither of these chains is contained in the other. This rules out literal commutation for every choice of representatives of the two functors.
+
+For the rank-one terms constructed above the two composites agree on the boundary of the generating square. Their top terms both serialize the three changes $l,z,r$. When the orders agree a rebracketing compares them. Otherwise the two pure steps are adjacent on independent edges of the same path. Compare their two orders over the horizontal wedge of two 2-globes, whisker with $z$, and rebracket to the specified ends. This gives both directed 3-terms over the strict identity for all four sign pairs. It explains why the failure of literal commutation alone does not refute CT.
+
+The checker verified the differential, the two coglobular identities, interchange, the shift equations and the cut formula on generator tableaux through bounds seven. At bound four it also checked 108 actual strip labels. Agda checked both directed comparisons on all four signed squares and the four transverse-rank-two substitutions at bound one, at their prescribed types. [Face-map checker and Agda certificate generator](../../../tools/gray_globe_shift_faces.py)
+
+~~~sh
+python3 tools/gray_globe_shift_faces.py 7 --strip 4 --agda /tmp/GrayShiftFaces.agda
+agda --safe -i /tmp -i src /tmp/GrayShiftFaces.agda
+~~~
+
+For larger grown bounds the new obligations start at transverse rank three. Even a lift for each face map separately would still need compatible comparisons where the two axes meet, and agreement with the end decompositions of Response 4. The displayed square supplies the first of those comparisons. The all-dimensional assignment requested in Q2 remains open.

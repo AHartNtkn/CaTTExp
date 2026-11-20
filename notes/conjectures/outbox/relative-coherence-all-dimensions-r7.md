@@ -1793,3 +1793,29 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_walking_graph.py --agda "$dir/WalkingGraph.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingGraph.agda"
 ~~~
+
+# Researcher Response 62
+
+## The walking graph would have fourth-group rank growing at least as the sixth power
+
+Let \(G_M\) denote the presentation of Response 61 on a root and a set \(M\) of positive names. Under the six-seam ring hypothesis there is a split inclusion
+\[
+      \mathbb Z^{(\binom M6)}\ \hookrightarrow\ \pi_4(G_M,0).
+\]
+Here the basis is indexed by the six-element subsets of \(M\). For \(m=|M|<\infty\) the presentation has only \(12(m+1)^2\) four-generators and \(24(m+1)^2\) five-generators. Its realization is contractible for every \(M\). Thus an upper bound \(o(m^6)\) on the rational algebraic fourth-group rank of this explicit family would already decide the six-seam test negatively. The argument gives a specific summand even if the ambient group has infinite rank.
+
+**Literal forgetting maps.** For \(A\subseteq M\), retain every walking attachment whose positive endpoints belong to \(A\). On any other attachment send its duplicate to the retracted anchor. Send the rest of its template to the trivial equivalence on that anchor as follows. In the source globe \(D^k\), give the duplicate the original \(k\)-variable as value, then for each higher declaration take the full-support coherence on that globe at its substituted faces. Both faces still use the original variable. Substitute the retracted anchor into this single fixed globe assignment. This constructs a raw retraction \(r_A\) with image in \(G_A\), including for an oriented edge whose anchor uses two distinct rays. For \(A,B\subseteq M\) one has \(r_A r_B=r_{A\cap B}\) literally. An attachment retained twice is unchanged. On an attachment first folded at either step the result is the fixed globe assignment evaluated on the twice-retracted anchor, by substitution; this is also the rule for the intersection. Induction over attachment order proves the identity on every generator. Rooted relabellings by injections commute with the construction on their images.
+
+On \(M=\{1,\ldots,6\}\) put \(E=\prod_i(1-(r_{M-\{i\}})_*)\) on the abelian fourth group. Its image is the intersection of the six kernels. Use Response 61 to choose \(x\) above the cubical class with value one under the detector \(\Phi\) of Response 48. Every nonidentity term in \(Ex-x\) maps into a single complete facet under \(q\); its value there is zero. Thus \(h=Ex\) still has \(\Phi q_*(h)=1\). In particular the split integral class can be chosen to vanish after *each* individual deletion. This argument requires no compatibility of \(q\) with folds in the bracket algebra.
+
+For each six-subset \(T\) of general \(M\), identify it with the six names in a chosen order. Include \(h\) on those names. To read its coordinate, retract to \(G_T\), relabel, and apply \(\Phi q_*\). On a class included from a different six-subset the composite factors through a proper rooted subset, giving zero. The diagonal gives one. For infinite \(M\) all but finitely many coordinates vanish on any single loop because it is a finite term. These coordinate maps supply the claimed retraction. Deleting a positive name \(a\) consequently has a kernel containing a split free group on the six-subsets containing \(a\). This uses the polarization argument of Response 9 on the *algebraic groups of the walking presentations* with the literal retractions just constructed.
+
+**Restriction on a chain calculation.** The integral chain homotopy of Response 61 commutes with every deletion. This is immediate on a retained block by its support. In a folded block each cell strictly above the anchor dimension has zero top chain after folding; on the duplicate the formula for \(H\) reduces exactly to \(H\) of the folded anchor. This also works on vertices relative to the root. In any fixed tensor power of the augmented cellular chains split off the root in each factor. On each summand with a reduced factor, the homotopy in its first reduced factor (with the tensor differential sign) contracts the summand and commutes with the deletions. Hence the image of \(E\) on each tensor power is integrally contractible. Even on the underlying graded groups \(E\) kills tensors of one or two generators, since at least one of the six names is absent. For three generator factors only the ordered perfect matchings of the six names can survive, since each carrier has at most two positive names. This restriction allows arbitrary multiplicities and loop powers. A character built using additional data of the weak terms would require a separate analysis.
+
+**Checks.** The solver constructs all four retractions on the two-positive-name graph through rank four, checks every image against its substituted type on all 203 declarations, and tests literal equality for all sixteen composites. It checks commutation with \(H\) in the range where the next rank is present. On all six names it counts zero full-support ordered carrier patterns for one or two factors and 90 for three factors, all disjoint pairs. Agda checked twelve images on a two-ray edge attachment, including the two single-name folds and their composite. Every walking generator is carried on a restriction with at most two positive names. The proof by substitution handles all ranks; the bound on fourth-group rank is conditional on the ring hypothesis. [Retraction and carrier solver](../../../tools/relative_coherence_walking_colours.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_walking_colours.py --agda "$dir/GraphColours.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/GraphColours.agda"
+~~~

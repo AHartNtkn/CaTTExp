@@ -71,6 +71,7 @@ class WalkingGraph:
         self.h = [Counter()]
         self.edges = {}
         self.attachments = Counter()
+        self.blocks = []
         self.points = [v(0)]
         self.carriers = [frozenset({0})]
         def attach(k, old, carrier):
@@ -78,6 +79,7 @@ class WalkingGraph:
             disk = work.ctx[:work.old+1]
             sigma = list(sub_from(disk, self.ctx, {work.old: old}))
             begin = len(self.ctx)
+            self.blocks.append((begin, work, old, frozenset(carrier)))
             types = []
             for ty in work.ctx[work.duplicate:]:
                 types.append(subst_ty(ty, sigma))

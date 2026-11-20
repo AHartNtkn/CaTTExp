@@ -834,6 +834,13 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - No machine check yet.
 - New compared with Response 4: replacing the shift by localization at every identity level, which makes height a well-founded measure. That isolates the remaining obligation as fold naturality of all depths.
 
+**Independent check (2026-11-20, researcher-response thread).**
+- *Combinatorics: checked.* Faces of the permutohedron with all vertices linear extensions of P are exactly the ordered partitions into antichain blocks consistent with P. The dimension is Σ(|Bᵢ| − 1), so a k-cell has blocks of at most k + 1 events. A script computed Z/2 cellular homology of this complex for every naturally labelled poset on at most 6 elements (5,231 posets): each is acyclic, and every cell meets the block bound. This is consistent with the oriented-matroid contractibility cited. The explicit collapse toward L₀ was not checked.
+- *Counts: checked.* A block of at most k + 2 links cannot contain all k + 3 links of one generator. The fold's varying set {x, v} has lowest rank h − 1 under terms of rank h + k, which is depth k + 1, and Response 4 is the case k = 1. After all folds, the height is h − 1 at the same input rank. So (input rank, height) decreases lexicographically, given the higher localization lemma and the fold actions.
+- *Lax-triangle route: checked.* Γ↑{x, v} collapses to Γ′ by the three free pairs, in the order stated. The pair (x⁺, x↑) has the dimensions (h − 1, h) of (x, v), now at rank n + 1, so the expansion lemma climbs in depth.
+- *One correction.* The folded value 1^{k+1}_{d′} need not have d′ intrinsic. The claim that the entry shift is never repeated needs C(h, k) to be stated for terms with any identity value in a height-h context, not only for an intrinsic h-cell. In that version, d′ simply has fewer events, possibly none, and Response 4's zero-event case puts every block in lower height. With that restatement no shift is needed at all.
+- *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/outbox/relative-coherence-all-dimensions-r10.md` (item 65, Question 1).
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

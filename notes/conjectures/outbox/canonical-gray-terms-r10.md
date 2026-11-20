@@ -1,8 +1,8 @@
-# Canonical CaTT terms for Gray tensors: functoriality and recognition
+# Canonical CaTT terms for Gray tensors: coherent functoriality and compact canonical forms
 
 *A self-contained problem. It assumes familiarity with the type theory CaTT, strict ω-categories and Steiner's directed complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** Conjecture CT is now proved for every finite family of globular pasting diagrams, compatibly with associativity and restriction to faces (item 39). The proof chooses each T(c) as the first raw derivation found by a fixed search over all raw terms of the required type and strict value. A witness is guaranteed by relative coherence of strong-Steiner contexts (item 38), so the search terminates, but it gives no bound on size or time and no structural description of the terms. A type checker that uses Gray tensors (cylinders, cones, lax transformations) needs the terms explicitly. The explicit, search-free construction of the section with a size bound, for tensors and for every other strong-Steiner shape, is the same step as explicit connecting terms for relative coherence and is asked there (`relative-coherence-all-dimensions-r9.md`, Question 2); it is not asked here. Here we ask for what is specific to the Gray tensor: **functoriality** of a canonical section beyond face inclusions, and **recognition** of canonical terms. Results for one more pair or one more dimension are not useful to us.
+**What we are asking for.** CT is proved for every finite family (item 39). Every shape map acts on canonical terms up to specified invertible comparisons, strict naturality is impossible in general, and the canonical terms have a polynomial-time recognizer (items 40–42). The recognizer works because the canonical term carries its own search time as identity padding, so canonical terms are as large as the search that found them. We now ask for the whole remaining line: comparisons that form a fully **coherent** functor on shape maps, the best possible strict class independent of the chosen section, and **compact** canonical forms whose size is polynomial in the tableau with a recognizer that does not rely on padding. The explicit, search-free construction of sections in general is asked in the companion relative-coherence problem; here we ask for what a type checker needs on top of it. Results for one more pair or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -107,22 +107,27 @@ The same question for iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k.
     - This satisfies (a)–(c), preserves identities, restricts to dependency-closed faces, and gives identical terms under every parenthesization.
     - It also extends any compatible section already given on a union of faces.
 
+40. **Functoriality up to comparison (r9).** For every strict shape map f : K → L between flattened tensors (indeed every strict functor between the presented strict categories) there is a typed substitution σ_f with π(t[σ_f]) = f(π t), sending x_g to T_L(fg) when that is well typed and otherwise to the first-witness lift at the substituted poles. For each cell c there is a specified comparison between T_K(c)[σ_f] and T_L(fc), given as a section of the globe cylinder I ⊗ Dⁿ over the strict collapse (so it also compares the boundaries); every entry over a strict identity is coinductively invertible. For composable f, g the four comparisons fill a square over I ⊗ I ⊗ Dⁿ, and the same extension gives comparisons for any finite number of parameters relative to chosen faces.
+41. **Strict naturality fails (r9).** For every CT section, the image is not closed under substitution: the collapse [2] → [1] sends the coherence-headed T(y ∘ x) to a coherence-headed term, while the section must give the variable z. No section is strictly natural even along injective ordinal maps [2] → [3] (a depth count of the first edge in the substitution-argument tree distinguishes t(t(x, y), z) from t(x, t(y, z))). So comparisons must in general also compare the poles.
+42. **A section with an exact strict class and a polynomial recognizer (r9).** Pad the first-witness term r : u → v of each proper cell c by an unbiased vertical composite r, then the bits of a prefix-free code w(c) of its ordered local support (0 as a weak identity, 1 as the unary composition coherence on it), then h + 1 weak identities, where h is the number of steps of a fixed machine that computes r from w(c). For this section, f is strictly natural on all cells iff for every proper c the restriction (S(c), c) → (S(fc), fc) is an order-preserving based isomorphism (a finite test; for monotone maps [r] → [s] with r ≥ 2 it means all increments are one). Its image has a recognizer polynomial in the size of the raw term. Checked: all 456 monotone maps between paths of length ≤ 4, of which 60 are strict, and Agda tests of the bit terms and the square collapse.
+
 ## 4. Questions
 
-**Q1 (main: functoriality).** The section of item 39 restricts along face inclusions. Extend a canonical section T to all maps of the relevant shapes, so that T(f(c)) = f(T(c)) syntactically (or up to a specified, canonical invertible cell) for every map f between iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k induced by maps of pasting diagrams Θ → Θ′. These include degeneracies, codegeneracies, and the globular maps used to build cones and cylinders. Decide which classes of maps admit syntactic compatibility and which force a comparison cell, and give that cell. If functoriality forces a particular choice of section, describe it.
+**Q1 (main: coherent functoriality).** Make the comparisons of item 40 into a homotopy-coherent functor: a specified system of higher comparisons for all finite strings of composable shape maps, compatible with faces and identities in all dimensions, from the category of strict maps between iterated tensors (or a natural subcategory containing degeneracies, coface maps, subdivisions and the maps used for cones and cylinders) to CaTT substitutions. State exactly which coherence laws hold strictly and which hold up to the specified cells. Then determine the section-independent strict class: the maps f for which **some** CT section is strictly natural along f (and along a whole subcategory at once), with the forced comparison cells for the remaining maps.
 
-**Q2 (recognition).** Give a decision procedure that recognizes the terms in the image of a canonical section (a canonical-form check for Gray-tensor cells), ideally in time polynomial in the term size, and decide whether a section exists whose image is closed under the substitutions of Q1.
+**Q2 (compact canonical forms).** Give a section whose terms have size bounded by a polynomial in the tableau of the cell (no padding by search time), together with a recognizer polynomial in the term size. If the polynomial-size section is only possible with a weaker notion of canonical form (for example canonical up to a specified invertible cell, or canonical relative to a normal form of the shape), describe that notion and decide it in polynomial time. If no polynomial-size section exists, prove a lower bound. (The construction of such a section without search is the companion problem's Question 2; a conditional answer assuming it is welcome.)
 
-(The explicit construction and size bound for the section itself, and the analogous sections for joins, orientals and lax cylinders Γ ⊗ D¹, are asked in `relative-coherence-all-dimensions-r9.md`, Question 2.)
+**Q3 (equality of tensor terms).** Given two CaTT terms over a tensor family context with the same strict value, compute an explicit comparison cell between them, compatible with the comparisons of item 40, and bound its size. Decide whether the comparisons of Q1 can be chosen so that every comparison between canonical terms is itself canonical.
 
 ## 5. What counts as a solution
 
 Any of the following:
-- functoriality of a canonical section along degeneracies and other maps, with the forced comparison cells when syntactic equality is impossible;
-- a polynomial-time recognizer for canonical terms;
+- a homotopy-coherent functoriality theorem with the strict and weak laws identified, or the section-independent strict class;
+- a polynomial-size section with a polynomial recognizer, or a lower bound;
+- explicit comparisons between arbitrary terms with equal strict value, with a size bound;
 - a published reference.
 
-## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-8 answers)
+## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-9 answers)
 
 - Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620, §4, Thm 4.3 (weak cylinder stacking).
 

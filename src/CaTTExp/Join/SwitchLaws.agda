@@ -51,13 +51,14 @@ record Switches : Set where
     rsp  : Bool          -- right split R
 open Switches
 
--- The settings offered (design-decisions.md §1.7): vS, no switch on,
--- the default, where the side condition computes in V; and allS, both
--- on, which has T₁₂'s pasting profile. The other two values of Switches
--- (one law on) are expressible here but not endorsed: whether they are
--- admissible waits on r9.
-vS allS : Switches
+-- The settings offered (design-decisions.md §1.7), all four admissible
+-- (lax r9, K73): vS, no switch on, the default, where the side condition
+-- computes in V; iccS, V + the inner composite-crossing law; rspS,
+-- V + R; and allS, both on, which has T₁₂'s pasting profile.
+vS iccS rspS allS : Switches
 vS   = record { icc = false ; rsp = false }
+iccS = record { icc = true  ; rsp = false }
+rspS = record { icc = false ; rsp = true  }
 allS = record { icc = true  ; rsp = true  }
 
 data IsTrue : Bool → Set where
@@ -165,6 +166,19 @@ module PartA (G1 G2 G3 G4 : Set) where
   law-mono (i , _) (splitL h F F′ G v v′ e e′)     = splitL (i h) F F′ G v v′ e e′
   law-mono (i , _) (splitR-icc h F G G′ u u′ e e′) = splitR-icc (i h) F G G′ u u′ e e′
   law-mono (_ , j) (splitR h F G G′ u u′ e e′)     = splitR (j h) F G G′ u u′ e e′
+
+  -- The order of the offered settings: vS ≤ iccS, rspS ≤ allS.
+  vS≤iccS : vS ≤S iccS
+  vS≤iccS = (λ ()) , (λ ())
+
+  vS≤rspS : vS ≤S rspS
+  vS≤rspS = (λ ()) , (λ ())
+
+  iccS≤allS : iccS ≤S allS
+  iccS≤allS = (λ h → h) , (λ ())
+
+  rspS≤allS : rspS ≤S allS
+  rspS≤allS = (λ ()) , (λ h → h)
 
   vS≤allS : vS ≤S allS
   vS≤allS = (λ ()) , (λ ())

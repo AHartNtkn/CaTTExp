@@ -70,19 +70,56 @@ def cover_nerve(axes, resources):
     return set(extend((), frozenset(), 0))
 
 
+def witness_product(axes, resources, order):
+    chains, guards = choices(axes, resources)
+    if any(not pairs for pairs in guards):
+        return []
+    endpoints = {e for chain in chains for e in chain}
+    base = frozenset((e,f) for e in endpoints for f in order.get(e, set()) & endpoints)
+    factors = [sorted({pair[side] for pair in pairs}) for pairs in guards for side in (0,1)]
+    subsets = [[s for n in range(1,len(f)+1) for s in combinations(f,n)] for f in factors]
+    levels = []
+    for cell in product(*subsets):
+        edges = base.union(*(product(a,b) for a,b in zip(cell[::2],cell[1::2])))
+        if feasible(chains,edges):
+            degree = sum(len(s)-1 for s in cell)
+            while len(levels) <= degree:
+                levels.append([])
+            levels[degree].append(cell)
+    return levels
+
+
+def product_boundary(cell):
+    offset = 0
+    for j, factor in enumerate(cell):
+        if len(factor) >= 2:
+            for k in range(len(factor)):
+                yield cell[:j]+(factor[:k]+factor[k+1:],)+cell[j+1:], (-1)**(offset+k)
+        offset += len(factor)-1
+
+
 def integral_profile(faces):
     """Return H0 rank and positive-degree (Betti, torsion factors)."""
     if not faces:
         return 0, ()
     levels = [sorted(f for f in faces if len(f) == d)
               for d in range(1, max(map(len, faces)) + 1)]
+    def boundary(cell):
+        return [(cell[:k] + cell[k+1:], (-1)**k) for k in range(len(cell))]
+    return cellular_profile(levels, boundary)
+
+
+def cellular_profile(levels, boundary):
+    """Integral cellular homology from oriented facets, by Smith reduction."""
+    if not levels:
+        return 0, ()
     ranks, torsion = [0], [()]
     for lower, upper in zip(levels, levels[1:]):
         indices = {f: i for i, f in enumerate(lower)}
         matrix = Matrix.zeros(len(lower), len(upper))
         for j, cell in enumerate(upper):
-            for k in range(len(cell)):
-                matrix[indices[cell[:k] + cell[k+1:]], j] = (-1)**k
+            for face, sign in boundary(cell):
+                matrix[indices[face], j] = sign
         smith = smith_normal_form(matrix, domain=ZZ)
         diag = [abs(int(smith[i, i])) for i in range(min(smith.shape)) if smith[i, i]]
         ranks.append(len(diag))
@@ -99,7 +136,7 @@ def integral_profile(faces):
 
 @cache
 def record_homology(axes, resources):
-    return integral_profile(cover_nerve(axes, resources))
+    return cellular_profile(witness_product(axes, resources, {}), product_boundary)
 
 
 def whole_presentation(controls, resources):
@@ -147,7 +184,7 @@ def check():
     for rows, expected in [(3, (1, ((1, ()),))), (4, (1, ()))]:
         programs, initial = incidence_record(rows, 3, [(i,i) for i in range(3)])
         axes = axes_at(programs, initial)
-        assert record_homology(axes, 4) == expected
+        assert integral_profile(cover_nerve(axes, 4)) == record_homology(axes, 4) == expected
         if rows == 4:
             initial[3][0] += 1  # retain the same word, suppress just its release witness
             assert record_homology(axes_at(programs, initial), 4) == (1, ((1, ()),))

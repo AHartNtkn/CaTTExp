@@ -1,8 +1,8 @@
-# Which polygraphs are homotopy polygraphs? Sufficiency of bubble-freeness in every dimension
+# Which polygraphs are homotopy polygraphs? An exact criterion in every dimension
 
 *A self-contained problem. It assumes familiarity with polygraphs (computads), strict ω-categories and (∞,ω)-categories, and nothing else. Everything under "What is known" is proved and is not re-asked, except item 17, which is marked as evidence.*
 
-**What we are asking for.** A proof, valid in every dimension, that bubble-freeness (§1) suffices for homotopicality, which would complete the exact characterisation of finite homotopy polygraphs (necessity is proved, item 14), or a counterexample. Failing that, the sharpest sufficient condition in every dimension. Isolated low-dimensional examples are of little use to us.
+**What we are asking for.** An exact characterisation of finite homotopy polygraphs, valid in every dimension. Bubble-freeness in every dimension (§1) is necessary (item 14) and is sufficient in dimension 2 (item 5), but it is **not** sufficient in dimension 3 (item 18): idle overlaps between top generators create circles and higher spheres in the fibres. We want the correct extra condition and a proof that it, together with bubble-freeness, is sufficient in every dimension. Isolated low-dimensional examples are of little use to us.
 
 ## 1. Setting
 
@@ -17,7 +17,7 @@
 
 ## 2. Why it matters
 
-Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can be computed strictly. Finite presentations of Grothendieck constructions over a free base, the comparison of weak and strict free objects in type theories for weak ω-categories, and pasting theorems for non-globular shapes all need this hypothesis, and at present each use checks it by hand. Dimension 2 is settled exactly (item 5 below) and necessity is settled in every dimension (item 14); sufficiency above dimension 2 is open beyond the classes of items 1, 9 and 16.
+Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can be computed strictly. Finite presentations of Grothendieck constructions over a free base, the comparison of weak and strict free objects in type theories for weak ω-categories, and pasting theorems for non-globular shapes all need this hypothesis, and at present each use checks it by hand. Dimension 2 is settled exactly (item 5 below), necessity of bubble-freeness is settled in every dimension (item 14), and bubble-freeness alone is not sufficient from dimension 3 (item 18).
 
 ## 3. What is known
 
@@ -39,23 +39,27 @@ Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can b
 
 15. **Groupoidification does not recognise homotopicality from dimension 3.** Π = (x; a : 1_x ⇒ 1_x; ε : a ⇛ 1_{1_x}) is not homotopical (its 2-skeleton has the bubble a, and homotopicality passes to skeleta), yet both groupoidifications are contractible. Free(Π) groupoidifies to S² ∪_{deg 1} D³. In F(Π) the hom on 1_{1_x} is the free commutative monoid in Cat on (a, ε : a → 0), whose morphisms reduce to ε^{⊗k} ⊗ 1_{a^n}, so it is the poset (ℕ, ≥) with terminal object 0. Π is also homologically coherent. Suspensions give such examples in every dimension ≥ 3.
 16. **Positive-to-one polygraphs are homotopical.** If every d-generator (d ≥ 2) has a generating (d−1)-cell as target and a non-identity source, Γ is homotopical. The proof: Zawadowski (arXiv 0708.2658, Cor. 13.5) identifies such polygraphs with presheaves on positive opetopes, which are acyclic atoms forming a full sieve (Leclerc; Hadzihasanovic); then Chanavat's Cor. 3.27 applies (directed complexes with acyclic atoms generate homotopy polygraphs). The same holds after choosing, independently in each dimension, source or target as the generator side (globular opposites). This gives a decidable sufficient test.
-17. **The combinatorial core in dimension 3 (evidence, not proved).** Following item 4 one dimension up, fix a 3-dimensional diagram G (a strict 3-cell of F(Γ) together with a representing composite). Its *3-tier sequences* (decompositions into layers of simultaneous 3-steps) appear to be the cells of a braid-fan subdivision of an open convex cone, cut out by a partial order on the 3-steps. Hence their poset Π_G would be contractible: this was checked by computer on about 550 random diagrams, and a proof is sketched but not written. The step "two 3-steps that can each fire first can fire together" has been checked but not proved. The true fibre of the free (∞,3)-category over the strict cell also contains *interchange slices* (2-dimensional exchanges between 3-steps), which make it an infinite category. Truncating it at K interchange slices is not homotopy-correct: K = 1 already gives a wedge of circles. So what is missing in dimension 3 is a homotopy-colimit (or path-space) reduction of that fibre to Π_G, using contractibility of the 2-dimensional encoding complexes (item 4) of the regular slices.
+17. **The combinatorial core in dimension 3 (evidence, not proved).** Following item 4 one dimension up, fix a 3-dimensional diagram G (a strict 3-cell of F(Γ) together with a representing composite). Its *3-tier sequences* (decompositions into layers of simultaneous 3-steps) are ordered by refinement; call the poset Π_G. When no 3-step has an idle boundary wire (every wire in the source region of a step is touched by it), Π_G appears to be the poset of braid-fan cells inside an open convex cone cut out by a partial order on the 3-steps, hence contractible: checked by computer on about 550 random diagrams of that kind. The step "two 3-steps that can each fire first can fire together" fails in general (item 18). The true fibre also contains *interchange slices* (2-dimensional exchanges between 3-steps), which make it an infinite category. Truncating at K interchange slices is not homotopy-correct (K = 1 already gives a wedge of circles).
+
+18. **Bubble-free does not suffice in dimension 3.** Objects 0 → 1 → 2 → 3, edges f₀, f₁ : 0 → 1, g : 1 → 2, h₀, h₁ : 2 → 3, 2-generators α₀, α₁ : f₀ ⇒ f₁, β₀, β₁ : h₀ ⇒ h₁, 3-generators A : α₀g ⇛ α₁g and B : gβ₀ ⇛ gβ₁. Γ is positive in every dimension, has an acyclic 1-graph and is bubble-free in every dimension (occurrence counts), but the fibre of Free(Γ) over the unique strict 3-cell α₀gβ₀ ⇛ α₁gβ₁ is S¹: the hom from 0 to 3 is (D × Q) ⊔_{Q×Q} (Q × D), with Q the walking parallel pair and D the walking 2-cell. In item 17's terms, A and B overlap on the idle wire g, so each can fire first but they cannot fire together, and the two serial orders are joined by two different exchanges. Further known facts for positive 3-polygraphs (all generating faces non-identity):
+    - If no idle right suffix of a generating 3-face equals an idle left prefix of a generating 3-face, every fibre is contractible, so Γ is homotopical. For width-preserving generators this matching test is exact.
+    - Every weight-two fibre is a point, an interval or a circle, and a circle occurs exactly when some path is an idle suffix of **both** faces of one generator and an idle prefix of **both** faces of another.
+    - For every k ≥ 2 there is a positive 3-polygraph with a full-support fibre ≃ S^{k−1} ("seam rings") whose weight-two fibres are all contractible, so no bounded-weight test is exact.
 
 ## 4. Questions
 
-**Question 1 (main: sufficiency in every dimension).** Prove that every finite polygraph Γ whose free strict ω-category F(Γ) is bubble-free in every dimension (§1) is homotopical. With item 14 this gives: a finite polygraph is homotopical iff it is bubble-free in every dimension. If it is false, give a counterexample with a proof of non-homotopicality.
+**Question 1 (main: exact criterion in every dimension).** Find a condition C on finite polygraphs such that Γ is homotopical iff F(Γ) is bubble-free in every dimension and Γ satisfies C, and prove it in every dimension. C must reduce to "nothing" in dimension 2 and must exclude item 18's idle overlaps and seam rings. A natural candidate is: no fibre contains a cycle of idle overlaps between top-dimensional steps, suitably defined for n-steps (overlaps along idle lower-dimensional sub-diagrams, not only wires). State whether the resulting criterion is decidable relative to bubble-freeness (bubble-freeness itself is undecidable, item 3).
 
-The expected route is item 5's method in every dimension:
-- a mesh or Θ-presheaf model X_Γ of the free (∞,n)-category (Heidemann's diagrammatic computads give free (∞,n)-categories in all dimensions), with the value over each shape a disjoint union, over the strict cells of that shape, of fibres;
-- a description of the fibre over a fixed strict n-cell as a classifying space of its encodings, including the interchange slices that make it infinite (item 17);
-- a reduction of that fibre to the poset of n-tier sequences, generalising the braid-fan / convex-cone description of item 17 to n-tier sequences, and a proof that the reduction is a homotopy equivalence using contractibility of the lower-dimensional encoding complexes;
-- contractibility of the n-tier poset under the bubble-free hypothesis (no closed component, no diagram automorphism).
+The expected route generalises item 5's method:
+- a mesh or Θ-presheaf model of the free (∞,n)-category (Heidemann's diagrammatic computads give free (∞,n)-categories in all dimensions), with the value over each shape a disjoint union, over the strict cells of that shape, of fibres;
+- a reduction of the fibre over a fixed strict n-cell, including interchange slices (item 17), to a finite complex built from n-tier sequences and exchanges between serial orders;
+- an identification of that complex, under C, with a contractible one (for example cells of the braid fan in a convex cone, as in item 17), and without C an explicit non-trivial cycle.
 
-Any other route to the statement is equally welcome.
+Any other route is equally welcome.
 
-**Question 2 (fallback: positivity in every dimension).** If Question 1 is out of reach, prove that every finite polygraph that is positive in every dimension (§1) is homotopical. This is the positive half of Chanavat's Comment 3.40, which reduces it to contractibility of Sd u for every regular (or positive) polyplex u that is not a plex. Item 16 covers positive-to-one polygraphs only. If it fails, give the smallest counterexample with a proof of non-homotopicality.
+**Question 2 (fallback: positive polygraphs in every dimension).** For polygraphs positive in every dimension, extend the dimension-3 sufficient condition of item 18 (no idle suffix of a face matching an idle prefix of a face) to every dimension, and prove it sufficient. Ideally, prove that a positive polygraph is homotopical exactly when its fibres contain no seam ring, with a finite test if one exists. Item 16 (positive-to-one) is a special case to recover.
 
-**Question 3 (last fallback: dimension 3).** Settle Question 1 for finite 3-polygraphs, i.e. prove the reduction of item 17 and the contractibility of Π_G.
+**Question 3 (last fallback: dimension 3).** Give the exact criterion for finite 3-polygraphs, with non-positive generators allowed. Item 18 covers the positive case under a width hypothesis only.
 
 ## 5. What counts as a solution
 

@@ -60,13 +60,19 @@ def tuple_connector(ambient, arities, labels, left, right):
 def readings(arity, labels, actual):
     results = [v(i) for i, t in enumerate(labels) if t == actual]
     if actual[0] == 'coh':
-        for args in product(*(readings(arity, labels, child) for child in actual[3])):
-            term = (*actual[:3], args)
+        # In a globular arity each maximal entry forces all its signed faces.
+        # Enumerating those faces independently duplicates dependent choices.
+        root = actual[1]
+        slots = maximal_vars(root)
+        for maxima in product(*(readings(arity, labels, actual[3][j]) for j in slots)):
             try:
+                args = sub_from(root, arity, dict(zip(slots, maxima, strict=True)))
+                term = (*actual[:3], args)
                 infer(arity, term)
             except TypeError_:
                 continue
-            results.append(term)
+            if all(subst_tm(t, labels) == x for t, x in zip(args, actual[3], strict=True)):
+                results.append(term)
     return tuple(results)
 
 

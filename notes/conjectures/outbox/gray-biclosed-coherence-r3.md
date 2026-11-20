@@ -170,3 +170,76 @@ A rule with an exactness proof, or an impossibility theorem covering every rule 
 - Tseytin (1958), seven-relation semigroup with undecidable word problem; English translation in Nyberg-Brodda, arXiv 2401.11757.
 - Steiner, *Omega-categories and chain complexes*, HHA 2004 (positive-chain description of ν, internal hom comparison).
 
+## Researcher Response 1
+
+### A boundary decision through nested residuals
+
+There is an exact directed test on a class of **interpreted** Gray pasting types that contains the non-free arity of item 42. It applies in every dimension and allows residuals in the bound argument of another residual. There is also an obstruction to using objectwise inhabitation in the ambient Gray model to transfer such a test to the free data theory.
+
+Write \(iK\) for a gaunt strict category regarded as an object of Campion’s \(\mathrm{Cat}_\omega\). Take as input any collection of finite-dimensional gaunt strict categories \(K\) given by their finite cell and composition tables, including the identities through the specified top dimension. For instance, one can use the walking arrow and finite Gray cubes. Use the following simultaneous grammar.
+
+\[
+ G ::= iK \mid P\backslash G \mid G/P,
+ \qquad P ::= G \mid P\otimes P.
+\]
+
+The distinction records where the algorithm needs a table. An argument \(P\) can be an arbitrary tensor word of previously computed \(G\)'s. A tensor in a result position can be supplied as a leaf when its ambient value is known with such a table, as for a Gray cube.
+
+**Theorem.** Each \(G\) admits an effective finite gaunt table. For parallel \((k-1)\)-cells \(u,v\) in that table, the following judgment is decidable from the ordered boundary alone. It enumerates precisely the \(k\)-cells from \(u\) to \(v\) in the ambient Gray residual.
+
+1. At a leaf, select the entries with source \(u\) and target \(v\).
+2. For \(P\backslash H\), flatten \(P\) into its ordered factors. Enumerate maps from the Gray tensor product of those factors followed by the globe \(D_k\) into \(H\). Prescribe the restrictions at the negative and positive faces of the globe to be the maps for \(u\) and \(v\), respectively.
+3. For \(H/P\), use the same prescription with \(D_k\) **before** the factors of \(P\). Admit the goal if the resulting list is nonempty. Distinct entries in the list retain their own boundaries for the next judgment.
+
+Here is the justification for the enumeration. Let \(B_1,\ldots,B_m,T\) have finite gaunt tables, and let \(S\) be the tensor of the \(iB_j\) in the indicated order. Then
+
+\[
+ \operatorname{Map}_{\mathrm{Cat}_\omega}(S,iT)
+ \simeq
+ \operatorname{Hom}_{\mathrm{str}\,\omega\mathrm{Cat}}
+   (B_1\otimes_{\rm str}\cdots\otimes_{\rm str}B_m,T)_{\rm disc}.
+\]
+
+Indeed, form the tensor first in flagged categories. Reflection to complete categories is strong monoidal, and mapping into the complete target \(iT\) computes the left side. Reflection from flagged categories to strict categories is also strong monoidal. The same target is strict, each factor is already strict, and the tensor in the reflected strict category is the usual strict Gray tensor. This gives the right side, naturally in the factors, including the face maps. This argument uses the universal property of the two reflections only when mapping into their common local target. [Campion, Examples 1.30 and 4.7, Theorem 3.14 and Corollaries 3.15 and 4.6](https://arxiv.org/pdf/2311.00205)
+
+For clarity, the strict hom-set on the right has the following terminating algorithm, even when a factor has relations.
+
+- Present each table as a finite colimit of globes and globular pastings of two composable cells. Use a globe for each cell, record its faces and identities, and for each table entry \(c=b\circ_j a\) use a composable-pair shape. Its two inclusions select \(a,b\), and its composite globe selects \(c\). A compatible family of maps into any strict category specifies exactly a table-preserving functor. Identities above the top dimension are forced.
+- Distribute the strict tensor over these finite diagrams, using biclosedness in each factor. The resulting pieces are tensors of globes and composable-pair shapes. Each has a finite strong Steiner presentation. The generators are the tuples of basis elements, and the signed tensor differential computes their faces. A map from a piece to \(T\) is an assignment of a target cell to each generator respecting its two composite boundaries. Enumerate assignments using the finite tables of \(T\), treating cells above its dimension as iterated identities. Keep the families agreeing on the finitely many diagram maps. This uses the relations of each *categorical* factor through its table. [Steiner, Examples 3.9 and 4.7, Theorem 6.1 and §7](https://arxiv.org/pdf/math/0403237)
+- All required restrictions can be evaluated effectively. On the pieces, a basis atom and its image under a globular incidence or composite map have computable Steiner arrays. To obtain a composition expression for such an array, one may enumerate typed expressions in the basis atoms until their array equals it. Generation by the atoms proves termination. In particular this subsidiary search never asks whether a prescribed boundary has a filler.
+
+To complete the induction on \(G\), suppose \(H\) has dimension at most \(d\). Gaunt \(d\)-categories form an exponential ideal in flagged categories, so either residual into \(H\) is again a gaunt \(d\)-category in the complete model. Compute its cells for \(0\le k\le d\) by the two adjunctions, using the enumeration above, with no face constraint at \(k=0\). Compute identities by precomposing with the globe collapse. To compute \(b\circ_j a\), use the composable-pair shape in place of the time globe, prescribe its two restrictions, then restrict along its composite globe. The pair has a unique extension because that shape represents composable pairs in the strict residual table. Thus the result of each induction step supplies *all* the data needed when it becomes a bound argument. For \(k>d\), the only filler is the identity when \(u=v\). The dimension bound is read from the result leaf. The same algorithm applies at every nesting depth. ∎
+
+**Two checks of the judgment.** In the walking square \(S=J\otimes J\), consider vertex assignments that fix or transpose the two axes. Their edges have adjacent endpoints and are forced. The identity vertex assignment for \(J\otimes J\to S\) extends uniquely. Transposing the two coordinates exchanges the two boundary paths, so extending that assignment would require the reverse of the unique nonidentity square. It has zero extensions. By currying, this computes the two orders of the parameter test in item 17.
+
+For the nested residual \(D=\operatorname{Fun}([1],[2])\) of item 42, the objects of either residual from \(D\) into \(J\) are exactly the upsets of the six-element componentwise poset \(a_{ij}\), \(0\le i\le j\le2\). There are eight. Six satisfy the degree-zero relation of item 42 after applying the characteristic function. The other two upsets are
+
+\[
+ \{a_{12},a_{22}\},\qquad
+ \{a_{02},a_{11},a_{12},a_{22}\}.
+\]
+
+One can reproduce the count by listing all \(2^6\) characteristic functions, discarding a function if it decreases on any comparable pair, then testing \(f_{01}+f_{12}=f_{02}+f_{11}\). Both exceptional maps occur in the categorical enumeration above.
+
+### An obstruction to deriving free admissibility from modelwise existence
+
+There is a fixed relation-free signature and a fixed data goal which has a map in **every interpretation in the ambient Gray category**, but has no map in the free data theory of Q1. The same example defeats testing nonemptiness in all data models with finitely many object classes for mutual reachability.
+
+Take atoms \(E,P,Q\). For each pair below declare two independent generating 1-cells, one in each direction. There are no equations on their composites. Juxtaposition denotes tensor.
+
+\[
+ (EE,E),\quad (EP,P),\quad (PE,P),\quad
+ (EQ,Q),\quad (QE,Q),\quad (PQ,E).
+\]
+
+The goal is \(QP\to E\). Either adjunction gives a residual formulation of exactly the same test, \(P\to Q\backslash E\) or \(Q\to E/P\).
+
+**Proof.** In a data model identify objects for this argument if there are maps in both directions. Composition makes this an equivalence relation and tensor makes its classes a semigroup \(S\). Write \(e,p,q\) for the classes of the atoms. The declarations give \(e^2=e\), \(p,q\in eSe\), and \(pq=e\). In the monoid \(eSe\), left multiplication by \(p\) has right inverse left multiplication by \(q\). If \(S\) is finite, both functions are bijections. Evaluating their other composite at \(e\) gives \(qp=e\), so the goal has a map. In particular the argument applies to the ambient Gray category itself, even allowing infinite interpretations of the atoms. Its object reachability has just two classes, empty and inhabited, since an object of a target supplies a constant functor.
+
+For a separating data model, take the monoid \(M\) of functions on \(\mathbb N\) generated under composition by \(p(n)=\max(n-1,0)\) and \(q(n)=n+1\). Let data objects be subsets of \(M\), arrows inclusions, and tensor setwise multiplication. The data residuals are \(A\backslash B=\{m:A\{m\}\subseteq B\}\) and \(B/A=\{m:\{m\}A\subseteq B\}\). Send each inhabited probe to \(\{1\}\) and the empty probe to \(\varnothing\), and act by setwise multiplication on the indicated side. This is functorial, and it is monoidal since a Gray product is inhabited exactly when both factors are inhabited. The latter follows from tensoring two points and from preservation of the initial object in each variable. For a fixed data boundary \(U,V\) and a varying probe \(Z\) on either side, the presheaf of maps is represented by the terminal category if \(U\subseteq V\), and by the empty category otherwise. Indeed, in the latter case there is exactly one map when \(Z\) is empty. The same argument works in a one-hole tensor context, since both multipliers are central and the empty multiplier is absorbing. Hence the probe homs satisfy grid gluing and completeness. The displayed residual formulas give the stipulated adjunctions also in every fixed probe context.
+
+Interpret \(E,P,Q\) as the singletons of \(1,p,q\). Every declaration is realized since \(pq=1\). But \(qp(0)=1\ne0\), hence \(\{qp\}\nsubseteq\{1\}\). Initiality would send any free map with the proposed boundary to this missing inclusion. ∎
+
+As a finite check on the obstruction, enumerate all binary operation tables on labelled sets of sizes 1, 2 and 3. Retain associative tables, then enumerate triples satisfying the six displayed premises. The respective numbers of tables are 1, 8 and 113. The numbers of qualifying triples summed over those tables are 1, 14 and 267, all satisfying \(qp=e\). The finite-monoid argument proves the implication at every size.
+
+The first theorem decides actual directed boundaries at the indicated interpreted arities. The second shows why even testing existence under **every** ambient assignment cannot establish that those fillers are generated uniformly from a signature. A rule on generic shapes can still use the occurrences of the generators and close its accepted instances under substitution and composition. To settle Q1 one must prove exactness for such uniform operations, or exclude those rules as well. Neither theorem supplies that step.

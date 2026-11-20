@@ -768,4 +768,4 @@ Status: **verified. Q1 is answered positively. CT holds for every finite family 
 - A recognizer for canonical terms.
 - Functoriality along degeneracies and other maps.
 - Explicit sections for joins and orientals.
-- Follow-up: [`outbox/canonical-gray-terms-r9.md`](../outbox/canonical-gray-terms-r9.md).
+- Follow-up: [`outbox/canonical-gray-terms-r9.md`](../outbox/canonical-gray-terms-r9.md) (functoriality and recognition). The explicit section with a size bound, and the sections for joins and orientals, are asked in [`outbox/relative-coherence-all-dimensions-r9.md`](../outbox/relative-coherence-all-dimensions-r9.md), Question 2.

@@ -2,7 +2,7 @@
 
 *A self-contained problem. It assumes familiarity with globular weak ω-categories, strict ω-categories, polygraphs (computads) and Steiner complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** The classification is now known: for every finite CaTT context Γ, RC_id(∞)(Γ) holds exactly when Γ is homotopical (item 56). Every finite strong-Steiner context is relatively coherent, and the naturality operation of Conjecture N exists at every depth (items 55, 57). The proof is an existence proof. It runs through bar spectral sequences, superperfect loop groups and a nested induction on height and number of generators, and the connecting terms it supplies are found by search. We now ask for the **effective** form of the theorem, uniform in the dimension: a degree bound beyond which nothing new can fail, an explicit (search-free) construction of the connecting cells with a size bound, and the extension beyond finite computads. Results for one more context or one more dimension are not useful to us.
+**What we are asking for.** The classification is now known: for every finite CaTT context Γ, RC_id(∞)(Γ) holds exactly when Γ is homotopical (item 56). Every finite strong-Steiner context is relatively coherent, and the naturality operation of Conjecture N exists at every depth (items 55, 57). The proof is an existence proof. It runs through bar spectral sequences, superperfect loop groups and a nested induction on height and number of generators, and the connecting terms it supplies are found by search. We now ask for the **effective** form of the theorem, uniform in the dimension: a degree bound beyond which nothing new can fail, an explicit (search-free) construction of the connecting cells and of canonical sections for all strong-Steiner shapes (including the canonical Gray terms) with a size bound, and the extension beyond finite computads. Results for one more context or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -157,7 +157,12 @@ RC is the single missing ingredient in several constructions in CaTT: lax natura
 - (b) If no such bound exists, give a family of homotopy-theoretic counterexamples. Here the failing degree is a function of Γ that is unbounded at fixed height, and a separating invariant should be given for each member.
 - (c) In either case, describe the first failing degree in terms of a homotopy invariant of the geometric fibres E_Γ(c) (connectivity, or the first nonvanishing homotopy group).
 
-**Question 2 (explicit connecting cells).** For every finite strong-Steiner context S, give a search-free construction of the connecting term: given parallel raw terms u, v of S and a strict cell c : πu → πv, produce a raw term of type u → v over c. The construction should be by structural recursion on the terms and on the Steiner tableau of c, and should come with a bound on its size as a function of the sizes of u, v and the tableau. Is a polynomial bound possible, or is there a family of instances forcing super-polynomial connecting terms? The same question applies to the depth-n naturality fillers of Conjecture N.
+**Question 2 (explicit connecting cells and canonical sections, one construction for all strong-Steiner shapes).** This question also carries the explicit-section question for canonical Gray terms (CT), which is the same step: CT holds for every finite family of globular pasting diagrams because each cell of the tensor is lifted at its two chosen faces by relative coherence of its strong-Steiner support (item 57), and that lift is currently found by search.
+- (a) **Connecting terms.** For every finite strong-Steiner context S, give a search-free construction of the connecting term: given parallel raw terms u, v of S and a strict cell c : πu → πv, produce a raw term of type u → v over c, by structural recursion on the terms and on the Steiner tableau of c, with a bound on its size in terms of the sizes of u, v and the tableau. The same for the depth-n naturality fillers of Conjecture N.
+- (b) **Canonical sections.** For every finite strong-Steiner complex K (in particular iterated Gray tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k of globular pasting diagrams, joins Cone(Q; c), orientals and their tensors with globes, and lax cylinders Γ ⊗ D¹), give a structurally recursive assignment T from cells of ν(K) to CaTT terms over the context with one variable per atom, such that T(atom) is its variable, T(c) has strict value c, T(c) : T(∂⁻c) → T(∂⁺c) holds syntactically, and T is compatible with identities, restriction to dependency-closed faces and, for tensors, every parenthesization. This is (a) applied cell by cell in increasing dimension; the point is to do it without search.
+- (c) **Size.** Is a polynomial bound possible in (a) and (b)? If not, give a family of contexts or tensors forcing super-polynomial terms. If explicitness holds for one family of shapes (say tensors) and fails for another (say joins or non-pasting cylinders), say where it breaks.
+
+Natural routes: make the existence proof constructive (the pole-loop, serial-word and signed-count contractions as explicit term rewrites); use the explicit low-dimensional ingredients (the hexagon section and wedge theorem for tensors, the interval cells) as the steps of a recursion on height and number of factors; or interpret the cells in an algebraic weak ω-category with a Gray-type multiplication and translate.
 
 **Question 3 (beyond finite computads).**
 - (a) Infinite and locally finite computads. Does RC_id(∞) ⟺ homotopical hold for every computad of finite generating height? What about unbounded height, where coinductive completion enters (Ozornova–Rovelli–Walde)?
@@ -168,7 +173,7 @@ RC is the single missing ingredient in several constructions in CaTT: lax natura
 
 Any of the following:
 - a degree bound with proof, or a family showing that none exists;
-- an explicit recursive construction of connecting terms for all finite strong-Steiner contexts, with a size bound or a lower bound;
+- an explicit recursive construction of connecting terms and canonical sections for all finite strong-Steiner contexts (or for all iterated Gray tensors), with a size bound or a lower bound;
 - the classification for infinite computads of finite height;
 - a relative extension criterion;
 - the directed analogue for one explicit theory T;

@@ -1,8 +1,8 @@
-# Canonical CaTT terms for Gray tensors: explicit, small and functorial
+# Canonical CaTT terms for Gray tensors: functoriality and recognition
 
 *A self-contained problem. It assumes familiarity with the type theory CaTT, strict ω-categories and Steiner's directed complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** Conjecture CT is now proved for every finite family of globular pasting diagrams, compatibly with associativity and restriction to faces (item 39). The proof chooses each T(c) as the first raw derivation found by a fixed search over all raw terms of the required type and strict value. A witness is guaranteed by relative coherence of strong-Steiner contexts (item 38), so the search terminates, but it gives no bound on size or time and no structural description of the terms. A type checker that uses Gray tensors (cylinders, cones, lax transformations) needs the terms explicitly. We therefore ask for the **explicit** form of the theorem, uniform in the dimension: a structurally recursive assignment with a size bound, a decidable recognizer for its terms, and functoriality beyond face inclusions. Results for one more pair or one more dimension are not useful to us.
+**What we are asking for.** Conjecture CT is now proved for every finite family of globular pasting diagrams, compatibly with associativity and restriction to faces (item 39). The proof chooses each T(c) as the first raw derivation found by a fixed search over all raw terms of the required type and strict value. A witness is guaranteed by relative coherence of strong-Steiner contexts (item 38), so the search terminates, but it gives no bound on size or time and no structural description of the terms. A type checker that uses Gray tensors (cylinders, cones, lax transformations) needs the terms explicitly. The explicit, search-free construction of the section with a size bound, for tensors and for every other strong-Steiner shape, is the same step as explicit connecting terms for relative coherence and is asked there (`relative-coherence-all-dimensions-r9.md`, Question 2); it is not asked here. Here we ask for what is specific to the Gray tensor: **functoriality** of a canonical section beyond face inclusions, and **recognition** of canonical terms. Results for one more pair or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -109,26 +109,17 @@ The same question for iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k.
 
 ## 4. Questions
 
-**Q1 (main: an explicit section).** Give a construction of T for all finite iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k, uniform in the dimension, that satisfies (a)–(c) of §2 and the compatibilities of item 39 (identities, faces, associativity), and that is **structurally recursive**. T(c) should be computed from the Steiner tableau of c by a recursion on its rows, layerings or atoms, without searching over raw terms.
-- (a) Bound the size of T(c) as a function of the tableau of c. Is a polynomial bound possible? If no polynomial-size section satisfying (c) exists, give a family of tensors forcing super-polynomial terms.
-- (b) Give a decision procedure that recognizes the terms in the image of T (a canonical-form check). Ideally it runs in polynomial time in the term size.
+**Q1 (main: functoriality).** The section of item 39 restricts along face inclusions. Extend a canonical section T to all maps of the relevant shapes, so that T(f(c)) = f(T(c)) syntactically (or up to a specified, canonical invertible cell) for every map f between iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k induced by maps of pasting diagrams Θ → Θ′. These include degeneracies, codegeneracies, and the globular maps used to build cones and cylinders. Decide which classes of maps admit syntactic compatibility and which force a comparison cell, and give that cell. If functoriality forces a particular choice of section, describe it.
 
-Natural routes:
-- (i) Make the existence proof of item 38 constructive on the tensor presentations: the contractions of items 35–39 (pole loops, serial words, signed counts) as explicit term rewrites.
-- (ii) Use the explicit low-dimensional ingredients (the hexagon section and wedge theorem of item 36, the interval cells and boundary test of item 37) as the steps of a recursion on the number of factors and on the height.
-- (iii) Use an algebraic weak ω-category with a Gray-type multiplication (for example a Gray-enriched or Batanin–Leinster operad), interpret the tensor cells there, and translate.
+**Q2 (recognition).** Give a decision procedure that recognizes the terms in the image of a canonical section (a canonical-form check for Gray-tensor cells), ideally in time polynomial in the term size, and decide whether a section exists whose image is closed under the substitutions of Q1.
 
-**Q2 (functoriality).** The section of item 39 restricts along face inclusions. Extend T to all maps of the relevant shapes, so that T(f(c)) = f(T(c)) syntactically (or up to a specified, canonical invertible cell) for every map f between iterated tensors induced by maps of pasting diagrams Θ → Θ′. These include degeneracies, codegeneracies, and the globular maps used to build cones and cylinders. Decide which classes of maps admit syntactic compatibility and which force a comparison cell, and give that cell.
-
-**Q3 (other shapes).** Item 38 applies to every finite strong-Steiner complex. Give an explicit section, with the same compatibilities, for the Steiner complexes used for joins (Cone(Q; c)), orientals and their tensors with globes, and for lax cylinders Γ ⊗ D¹ over a non-pasting context Γ in the sense of Conjecture N. If an explicit section exists for one family and not for another, say where explicitness breaks.
+(The explicit construction and size bound for the section itself, and the analogous sections for joins, orientals and lax cylinders Γ ⊗ D¹, are asked in `relative-coherence-all-dimensions-r9.md`, Question 2.)
 
 ## 5. What counts as a solution
 
 Any of the following:
-- an explicit recursive section for all finite iterated tensors, with a size bound, or a super-polynomial lower bound;
+- functoriality of a canonical section along degeneracies and other maps, with the forced comparison cells when syntactic equality is impossible;
 - a polynomial-time recognizer for canonical terms;
-- functoriality of the section along degeneracies, with the forced comparison cells when syntactic equality is impossible;
-- an explicit section for joins or orientals;
 - a published reference.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-8 answers)

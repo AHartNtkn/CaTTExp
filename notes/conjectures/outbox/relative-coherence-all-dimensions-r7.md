@@ -1702,3 +1702,42 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_four_head_reduction.py 7 --agda "$dir/FourHeads.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/FourHeads.agda"
 ~~~
+
+# Researcher Response 59
+
+## For the walking three-cell, only structural four-heads remain
+
+Both outer whiskers left open for \(i_2\) in Response 58 have exact five-dimensional mixed actions. Consequently **surjectivity on \(\pi_4\) for a pushout of \(i_2\) follows from mixed actions for structural four-heads on arities of heights two and three** at the induced labellings. A failure for \(i_2\) would have to involve such a head in every normalized representative of an obstructing class. A head of height at most one has only stationary inputs here. The \(i_0\) and \(i_1\) alternatives in the ring test remain.
+
+Write \(W(u)=u*_0p\) or \(p*_0u\) for a fixed one-cell \(p\). In the generic four-globe assume the objects and one-cells are unmarked, exactly the condition induced by an \(i_2\)-attachment. Use a dot for temporal composition in execution order. For two temporally composable \(d\)-cells with \(d=3,4\), use the distributor
+\[
+ D(a,b): W(a)\cdot W(b)\longrightarrow W(a\cdot b).
+\]
+Both terms have exactly the same immediate faces. The ordinary pasting arity of the adjacent \(d\)-globes and the exterior one-globe supplies the comparison and its reverse over the strict identity. Write \(\bar D\) for the latter.
+
+**Lower choices.** For a selected two-pole \(z\), use \(W(H_z)\) as the change of \(W(z)\). For a selected three-pole \(y\), its minus cap is \(A^-_y=y^- *_2 H_{t_2}\) and its plus cap is \(A^+_y=H_{s_2} *_2 y^+\), with each missing rail omitted. Let \(D^-_y\) compare the distributed minus cap to \(W(A^-_y)\), and let \(\bar D^+_y\) compare \(W(A^+_y)\) to the distributed plus cap. Omit the corresponding distributor when that rail is absent. Use
+\[
+                D^-_y\cdot W(H_y)\cdot\bar D^+_y
+\]
+as the change of \(W(y)\). These lower choices have the prescribed strict cylinder values, so they can be used in the all-arity construction through degree three. The outer whisker heads are unsuspended and the suspended choices of Response 58 can use these lower actions.
+
+**The four-cell.** Let \(x:s\to t\) be the top variable. Define \(A^\pm_x\) by the same cut-two formulas, and let \(U^\pm_x\) denote the corresponding distributed caps. At cut three there are two further comparisons, when the relevant two-rail is present:
+\[
+ \begin{split}
+ U^-_x\cdot D^-_t &\longrightarrow D^-_s\cdot W(A^-_x),\\
+ \bar D^+_s\cdot U^+_x &\longrightarrow W(A^+_x)\cdot\bar D^+_t .
+ \end{split}
+\]
+For the first, work over the ordinary arity consisting of the four-globe, the target rail's three-globe at cut two, and the exterior one-globe. The two terms have identical three-faces by the defining literal faces of the distributors. Each uses the whole chart and their strict values agree. Form its five-coherence in either direction and substitute. The second uses the three-globe on the other side at cut two. This step accounts for the different *writings* of both three-faces of an outer whisker.
+
+In the prescribed minus cap replace the first pair by the first comparison, then collect \(W(A^-_x)\cdot W(H_t)\) by the rank-four distributor if \(t\) is selected. On the plus side use the second comparison and collect \(W(H_s)\cdot W(A^+_x)\) if \(s\) is selected. The resulting two expressions have the same prefix \(D^-_s\) and suffix \(\bar D^+_t\), whenever present. Between them insert \(W(H_x)\) with that prefix and suffix. Traverse the plus-side comparisons in reverse. Reassociation at cut three uses only the ordinary temporal string arity. If a three-pole is unselected, both its lower two-poles are unselected and its omitted component requires no distributor. The sole five-dimensional generator in the resulting term is \(H_x\), occurring once. Together with its prescribed literal faces this gives the strict whiskered cylinder value (on the free strict tableau, all lower rows are determined by the faces).
+
+The generic substitution allows *any* stationary one-cell \(p\) of the required type and arbitrary labels and changes at the selected poles. It may identify inputs or substitute loops of any finite power. Normalization and the mixed evaluation of Response 58 apply to every based four-loop, also after iterated composition. Thus the removal of both whisker tests holds without any bound on the base, inactive labels or loop length.
+
+**Checks.** For each order of \(W\) the solver constructs the five-term for all seven nonempty up-closed selections in the four-globe with no selected cell below dimension two. It verifies the exact type and the top multiset for all fourteen terms. Its local rewrites construct and type-check both directions, including the plus-side reverses used in the filler. Agda checked the assembled five-term for the left whisker with both two-poles, both three-poles and the four-cell selected. [Stationary whisker solver](../../../tools/relative_coherence_stationary_whisker.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_stationary_whisker.py --agda "$dir/StationaryWhisker.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/StationaryWhisker.agda"
+~~~

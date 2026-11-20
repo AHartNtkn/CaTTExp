@@ -38,6 +38,10 @@ import CaTTExp.Gray.Cube
 import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls
+import CaTTExp.Gray.Biclosed.Syntax
+import CaTTExp.Gray.Biclosed.Typing
+import CaTTExp.Gray.Biclosed.Templates
+import CaTTExp.Gray.Biclosed.Examples
 import CaTTExp.Gray.NBE.Base
 import CaTTExp.Gray.NBE.Syntax
 import CaTTExp.Gray.NBE.Termination

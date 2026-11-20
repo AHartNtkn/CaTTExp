@@ -657,4 +657,4 @@ The results above therefore provide conditional undecidability and two precisely
 - Q2 (ι∘π = 1_H? 𝒢(t₁, t₂) = {α}? 𝒢(s, t) = {θ}?), untouched. CLOSED's internal attempt on ι∘π is in `closed-structure.md`.
 - Q3 with a directed admissibility judgment.
 
-The follow-up prompt is `outbox/gray-biclosed-coherence-r3.md`.
+The follow-up prompt is `gray-biclosed-coherence-r3-2026-11-20.md` (answered 2026-11-20).

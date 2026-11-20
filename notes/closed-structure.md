@@ -812,6 +812,8 @@ The colimit route of `internal-hom.md` §6 (B12) remains a third option. **Statu
 
 **Checked 2026-11-20.** Neither non-PL-ω route is proved for arbitrary objects. F5 supplies object-indexed colimits, not the limit the end formula needs, and the density step it would rest on (F5b) still lacks a realisation rule, with the universal shape family (F5c) only drafted. The colimit route has no proof that the colimit over cells of B and C has the Gray tensor's universal property. So the step that currently needs PL-ω is forming [C, –]_lax for arbitrary C as an object, with evaluation and currying as coherences; the researcher prompt `conjectures/outbox/gray-biclosed-coherence-r3.md` stays in the outbox for it.
 
+**Update 2026-11-20 (later).** The prompt is answered (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, verified). Response 2 gives the PL-ω route in reading (II). The type formers are ⊗, \ and /. The distinguished coherences are pairing, the left and right evaluations, and, at decidable generic sequents, currying c with its comparison ε. The free data model is initial over the lax-grid model. So [C, –]_lax = C\– (and –/C for the oplax side) exists for arbitrary C, and B ⊗ C for two arbitrary factors follows. **Status:** design route settled. Remaining: write the templates into F.7.3's rule set and reconcile them with E.2/E.4.
+
 ---
 
 # Part F. PL-ω: a candidate criterion that passes the first test (D11)

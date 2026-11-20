@@ -1429,4 +1429,4 @@ Agda: all sixteen generated certificates type-check in safe mode with Agda 2.6.3
 - D³ ⊗ D⁴: the two 6-terms of Response 22. Globe pairs in degree six: the two signed distant exchanges in D⁴ ⊗ D⁴ and the short tests at (2,4) and (4,2), or a different word construction that avoids them.
 - Q2 for cubes: I^{⊗n}, n ≥ 6, needs comparisons for composite 5-cells at cut four.
 - This is now also the input that the relative-coherence round needs: CT for the Gray m-cube would decide RC for the seam presentations whose seam graph has an m-cycle. For the six-seam ring the relative-coherence round found a route that avoids the six-cube (relative coherence r6, Response 19).
-- Follow-up: [`outbox/canonical-gray-terms-r7.md`](../outbox/canonical-gray-terms-r7.md).
+- Follow-up: [`answered/canonical-gray-terms-r7-2026-11-20.md`](canonical-gray-terms-r7-2026-11-20.md).

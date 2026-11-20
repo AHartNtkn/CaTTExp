@@ -159,3 +159,30 @@ The [guarded-ring checker](../../../tools/homotopy_polygraph_guarded_ring.py) in
 The [unary-chart checker](../../../tools/homotopy_polygraph_unary_chart.py) constructs the 17-declaration presentation and a 4-term over the specified unary chart. It places $Z$ and $B$ in successive rows with an associator at their common 1-cut, and checks that the term uses the entire presentation. Its generated module `UnaryChart.agda` passed the repository’s certified CaTT type checker under Agda 2.8.0. The middle-wire computation used in rank four is independently reproducible with `python3 tools/relative_coherence_middle_wire.py`: its necklace graph has four vertices and four edges in one component, hence first integral Betti number one. The argument with the time Segal map identifies exactly where that computation applies in the new presentation.
 
 These results rule out an ordinary generator-level decision procedure and the proposed strict last-step equivalence. They leave the oracle-only part of Question 2 open between the lower and upper bounds stated above.
+
+# Verification (2026-11-20)
+
+Status: **verified, partial. Q1 answered negatively (undecidable); Q3 answered negatively as stated; Q2 narrowed to 0′-hard, at most 0″.** One response.
+
+**What was re-run.** From the repository root, all pass (exit 0):
+- `python3 -B tools/homotopy_polygraph_guarded_ring.py`: for both tape orders (`ixyf`, `iyxf`) all 96 chart strings and every facet agree with the two-seam ring, Betti (1, 1); an incomplete tape has no full five-event string; an unreachable target has no full string in any tape order; with only the final control edge, all 97 proper strings agree, Betti (1).
+- `python3 -B tools/homotopy_polygraph_unary_chart.py --agda UnaryChart.agda`: 17 declarations and a full-support 4-cell; the module type-checks (`agda --safe`, Agda 2.6.3).
+- `python3 tools/relative_coherence_middle_wire.py`: the necklace graph has four vertices and four edges in one component, first Betti number one.
+
+**Q1 (a finite generator-level test): answered negatively.** I checked the reduction.
+- *Construction.* G(T,w,v) inserts a passive strip (edges Q, U, a private tape vertex m, gates Q ⇒ lwr, the rules of T, and lvr ⇒ U) between the lanes p₁ and s₁ of the two-seam ring, and whiskers 1_U into both faces of b₁ and 1_Q into both faces of z. All generating faces are non-identity, so every instance is positive and therefore bubble-free (first source and last target of a serialization survive by additivity of occurrence counts).
+- *The strip.* A strict diagram Q ⇒ U exists iff w →* v: no gate produces Q or acts on a proper part of it, so the Q cut is initial and the U cut final in any fixed strip diagram K.
+- *Erasure lemma.* Lanes split strict 2-diagrams and K stays fixed along every top change; z needs the Q cut and b₁ the U cut. When both markers occur in one tier their order is already forced in the erased chart (on p₁, z reads q and b₁ reads p, with t : q ⇒ p between them), so restoring K gives a unique lifted tier, compatible with splits and incidences. This is the step that carries the proof, and I found no gap: the argument that serializations differ by interchanges of independent boxes, with the two reads never swapped, is the right uniqueness argument.
+- *Conclusion.* If w →* v the full-support label c_* lifts and its fibre is a circle; otherwise every label omits b₁ or z and all fibres are contractible by the proper-support part of the ring calculation (which round 6 proved for all labels). So G(T,w,v) is homotopical iff w ↛* v, and positive semi-Thue reachability is r.e.-complete. Top weight is at most five, so the hardness sits in the lower 2-diagrams; suspension (item 6) gives every n ≥ 3.
+- *Consequences.* No finite generator-level test and no sound and complete r.e. certificate system even with positivity promised; 0′-hardness, with the 0″ upper bound of item 19. On this family one query to a bubble-freeness oracle (on another presentation) decides, so the oracle question stays open.
+
+**Q3 (naive last-step criterion in every dimension): false as stated.** I checked the example: 2-skeleton of the middle wire, A₀, A₁ : α₀ ⇛ α₁, B : gβ₀ ⇛ gβ₁, Z : A₀g ⇛ A₁g.
+- A strict 2-diagram has at most one α gate, so a strict 3-cell of any marked presentation M_k uses at most one of A₀, A₁, C₁, …, C_k. Every non-identity strict 4-cell therefore has weight one and every L(c) is a single vertex. The 3-skeleton passes the no-matching test, so the lower skeleta are homotopical.
+- In M₁, C₁ : α₀g ⇛ α₁g and B overlap on the idle wire g, which is exactly the middle wire, so the label using C₁ and B has fibre S¹. The response's time-direction Segal argument (zero-count summands for A₀, A₁, one marker per tuple) shows the circle survives as the fibre of the 4-cell over the unary chart. I checked the counting steps; the use of Barkan–Steinebrunner Prop. 2.16 (horizontal Segalification first) is the same input as item 19.
+- So the recursive hypothesis of item 21 (marked lower presentations must pass) is needed, and an exact criterion in dimension ≥ 4 must test the marked presentations M_k.
+
+**What is left open.**
+- The exact recursive last-step criterion in every dimension (with marked lower presentations), especially without positivity.
+- The oracle strength of homotopicality (0′ versus 0″).
+- Decidable classes with generator-level tests, uniform in the dimension.
+- Follow-up: [`outbox/homotopy-polygraphs-r5.md`](../outbox/homotopy-polygraphs-r5.md).

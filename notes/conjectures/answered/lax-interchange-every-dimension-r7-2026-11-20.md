@@ -1152,3 +1152,31 @@ all 30 interval assignments, including the right unit at each endpoint.
 The finite-derivation argument
 above supplies the quantification over all sources and all dimensions.
 [Checker](../../../scripts/e6/interchange_weak_initiality.py)
+
+# Verification (2026-11-20)
+
+Status: **verified, partial; Q1(a) answered negatively (no initial and no weakly initial theory), Q1(b) and Q2 answered (infinitely many independent laws, an infinite divisibility family).** Three responses (Responses 2 and 3, and an unnumbered one on weak initiality that arrived during verification; there is no Response 1).
+
+**What was re-run.** `python3 -B scripts/e6/interchange_weak_initiality.py` (exit 0): two typed subdivisions of the strip with identical signed tableau and distinct Boolean tags; an associative three-element monoid with 729 functorial pastes; the guarded split holds on all 30 interval assignments. `python3 -B scripts/e6/interchange_universality_check.py` (exit 0): square, 10 paths, 36 typed compositions, two exchanged fillers; powers, 1232 assignments with diagonal failures only and all right splits holding; cyclic orders through 32, 371,712 split assignments, 1024 ordered pairs, 119 marked subgroup inclusions.
+
+**Response 2, Q1(a): no initial theory. Checked.**
+- The target has two copies of the upper declarations of T₁₂ sharing P and the structural operations, plus a coordinate M. On D = Σ³(Σ[1] ∨ Σ[1]) the long hom is the square grid with two generating 2-cells b₀, b₁ : v → h, both spanning the whole grid, so they are the only cells v → h; copy i evaluates the mixed square at b_i.
+- Swapping the copies is an interpretation over P that commutes with the Gray and strict projections, and it moves every possible image of the required comparison (copy-0 values evaluate to b₀, copy-1 values to b₁). Any interpretation from a candidate initial theory composed with the swap is a second, distinct interpretation, so uniqueness fails for every candidate.
+- Admissibility of the doubled target uses the same identity-reflection argument as the joint model of (K51) (primary positive charges and shared unit specializations), which was verified in round 5.
+
+**Response 2, Q1(b): Boolean intervals and infinitely many independent laws. Checked at the level of the stated constructions.**
+- For a fixed signature, a law set is admissible iff it lies in an interval between the laws forced by finite proof supports and the laws true in the Gray and strict operation tables. This is a description, not a decision procedure.
+- The prime laws L_p (left split into p equal blocks) are separated by the marked tables M_q on ℤ/q with tag [a ≠ 0][b proper]: the direct tag [pa ≠ 0] and the expanded tag [a ≠ 0] differ exactly when q = p. So the L_p are independent of each other, and the right split R holds in all of these tables (a right subdivision has at most one proper piece), so it is independent too.
+
+**Unnumbered response, Q1(a): no weakly initial theory. Checked.** The quantifier order is the point: given S, fix the two P-expressions u (one crossing W(A₁ ∗₂ A₂, B)) and v (the paste of W(A₁,B) and W(A₂,B)) on the strip C_{2,1}, which have the same Gray image. Any interpretation of S into U over P and Gray must send S's finite derivation relating them (through its comparison K_S) to cells of bounded dimension. U_m adds two operations X, Y valued in a table E_m whose degree-m cells {1, x, y} multiply by ab = a, so the bare elementary comparison on x, y is proper; with m above the derivation's dimensions, the algebra D_m (bit-decorated 5-cells over G(C), u with bit one and v with bit zero) reflects identities below m and separates u from v. I checked the monoid laws of E_m (a word evaluates to its first non-unit letter), that forgetting the bit reflects identities in every degree (a Steiner tableau with zero top row is an identity), and that the two mixed evaluations differ only at the outer cut on the two short spans. Admissibility of U_m follows the pattern of (K51).
+
+**Response 3, Q2: an infinite divisibility family. Checked; the argument is complete.**
+- U_N uses the same table with left group ℤ/N. In M_N, D_{d,p} fails iff dℤ/N (cyclic of order N/gcd(N,d)) has an element of order p, iff v_p(N) > v_p(d).
+- If M | N, a ↦ (N/M)a embeds M_M in M_N preserving and reflecting the zero test, so every law of U_N holds in U_M and the identity on the signature is an interpretation. If M ∤ N, pick p with v_p(M) > v_p(N); D_{N,p} uses only P, holds in U_N and fails in U_M, and any interpretation over P preserves it.
+- So U_N → U_M exists iff M | N, and U₂, U₄, U₈, … (all with R, without L₂, with every odd L_p) are pairwise inequivalent.
+
+**What is left open.**
+- Maximal or terminal admissible theories (is T₁₂ maximal?), and the global shape of the interpretation preorder (lattice, directedness, invariants).
+- Decidability of admissibility for finite law sets.
+- A closed description of the forbidden factors of (K52) (optional).
+- Follow-up: [`outbox/lax-interchange-every-dimension-r8.md`](../outbox/lax-interchange-every-dimension-r8.md).

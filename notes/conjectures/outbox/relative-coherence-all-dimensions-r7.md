@@ -771,3 +771,56 @@ agda --safe --no-libraries -i src -i "$dir" "$dir/IntegralDegree.agda"
 ~~~
 
 With `--input file.json` the solver accepts the same raw context, colours and degree as Response 11. It verifies each returned potential or certificate against the original integer matrix.
+
+# Researcher Response 20
+
+## The integral degree test reduces to head equations with labels two ranks below the terms
+
+Fix $k\ge3$, put $r=k-2$, and use the universal bracket parameter $P(0,\ldots,k)$. The finite integral obstructions of Response 19 can be found by solving integer affine equations whose free input labels have dimensions **at most $r-1$**. In particular, for seven colours the search can generate arbitrary pasting heads labelled through **degree three**. A finite inconsistent set of these equations suffices to disprove identity-image RC through degree eight for $\Gamma_6$. Conversely, every finite obstruction from Response 19 forces a finite inconsistent set. The arities and the number of equations remain unbounded.
+
+**From generator weights to values on terms.** Write $H(t)$ for the integral simplex chain of a term, obtained by summing the chains of its top generators with their strict multiplicities. For a $(k-1)$-term $U$, $\omega(U)$ is its coefficient on $[1,\ldots,k]$. An integral row $h$ on full-colour $(k-1)$-generators defines $L(U)=\omega(U)-h\rho(U)$. The equation for $[U,V]$ is precisely $L(U)=L(V)$ for parallel $U,V$, by the boundary coefficient of the oriented $k$-simplex. For an $r$-term $t$ let $a(t)=[\sigma t,\tau t]$ be the unique bracket variable of its literal type. Put $p(t)=L([a(t),t])$. Comparing $[a(t),t]*_r U$ with $[a(t),t']$ gives
+$$
+                    L(U)=p(t')-p(t)\qquad(U:t\to t').
+$$
+In particular $p(a(t))=0$ by comparison with the identity. On a proper-colour $t$ this forces $p(t)=b(t):=\omega([a(t),t])$.
+
+**Unknowns and recursion.** For an arbitrary $r$-head $D$ with a fixed substitution on slots below rank $r$, replace each rank-$r$ argument by the bracket variable of its required type. This gives a term $t_0$ determined by the head and the lower substitution. For each such $t_0$ of full colour introduce one integer $\beta(t_0)$. On a proper-colour $t_0$ use the fixed integer $b(t_0)$ instead. Set $p$ to zero on $r$-variables. On $t=D[\gamma]$ the recursion is
+$$
+               p(t)=\beta(t_0)+\sum_{i:\,\dim i=r}p(\gamma_i),
+$$
+with the stated substitution of $b$ in the proper case. To see necessity, vary all rank-$r$ slots from their anchors to the actual terms by the primitive brackets $[a(\gamma_i),\gamma_i]$. These slots are maximal. The cylinder at the selected maximal variables is a pasting arity by item 14. Its comparison for $D$ uses each varying top generator once, since its strict composite is the composite of that cylinder. All lower labels are stationary. Applying the formula for $L$ yields the recursion. With no rank-$r$ slots the term already is $t_0$.
+
+The recursion gives $p(t)=b(t)$ on every proper term, independently of the free integers. Indeed $t,t_0$ are parallel, share an anchor, and all the terms in the following calculation use only colours of $t$. The chain difference $H(t)-H(t_0)$ is the sum of $H(\gamma_i)-H(a(\gamma_i))$ over the top slots. Thus the $(r+1)$-chains of $[a(t),t]$ and of $[a(t),t_0]$ plus the slot brackets have identical boundary. Boundary is injective in that degree on a simplex of dimension at most $r+1$. Taking the facet coefficient proves the assertion by recursion. The same argument on the support of any proper generator $[s,t]$ gives $\omega([s,t])=p(t)-p(s)$.
+
+**Which equations to impose.** For every $(r+1)$-head and a substitution $\gamma$, write $U$ for its value. Require
+$$
+ p(\tau U)-p(\sigma U)=\sum_{z:\,\dim z=r+1}
+                 \bigl(p(\tau\gamma_z)-p(\sigma\gamma_z)\bigr).                 \tag{*}
+$$
+It suffices to label the arity only through rank $r-1$, then put the unique bracket over the required faces in each slot of rank $r$ and $r+1$. Here is why arbitrary $r$-labels cancel. With their lower labels fixed, changing them from anchors to $\gamma_i$ changes $p(w[\gamma])$ for any generic $r$-term $w$ by $\sum_i N_i(w)p(\gamma_i)$. This holds on variables. At each nested head its lower substitution is unchanged, so its constant is fixed and the equality follows by summing over top slots. On the two sides of $(*)$ the coefficient of each $p(\gamma_i)$ agrees: the boundary count of the strict composite of the arity is the sum of the boundary counts of its $(r+1)$-variables. Slots of rank $r+1$ enter only by their faces. This proves the reduction for arbitrary inactive labels and arbitrary powers occurring in them.
+
+Conversely, given values solving the equations, assign $h_g=\omega(g)-p(\tau g)+p(\sigma g)$ on full generators. Proper generators already obey the required equality. Induction on raw $(r+1)$-terms now gives $L(U)=p(\tau U)-p(\sigma U)$: the induction step sums the contributions of the top slots and uses $(*)$. It follows that every bracket between parallel terms obeys $hM=d$. Both implications have finite witnesses where needed. For finitely many head equations the necessity argument uses finitely many anchors, maximal-slot comparisons, and brackets comparing parallel terms; include their finite dependency closures. For a finite inconsistent system of original degree columns, relabel in $P(J)$ by Response 19, retain the subheads of the finitely many attaching terms, and use their anchored equations in the converse induction. This finite argument avoids any compactness assumption for integer solutions.
+
+**Reproduction.** The solver builds the affine expressions, checks the actual types of the anchored labels, and compares each supplied equation before and after anchoring. On the minimum-coloured three-cube it extracts 22 distinct 2-heads from the two hemispheres. One anchored equation already reduces to $0=1$ up to sign. With `python3 -B tools/relative_coherence_shortcut_potential.py --input data.json`, use the typed context, colours and degree of Response 19 and an additional `terms` array of raw coherence-headed $(k-1)$-terms in that context. The output is an integral assignment on the encountered unknowns or a verified combination of the input equations obstructing it. [Affine-equation solver](../../../tools/relative_coherence_shortcut_potential.py)
+
+# Researcher Response 21
+
+## All composite shortcuts admit an integral potential, but structural flattening forces a unit change
+
+In the notation of Response 20, set every free $\beta$ equal to zero and keep the prescribed values on proper terms. Write $p_0$ for the resulting value and put $h_g=\omega(g)-p_0(\tau g)+p_0(\sigma g)$ on full $(r+1)$-generators. **No pair of parallel $(r+1)$-terms made from bracket variables by identities, binary globular compositions at any cut, and arbitrary stationary lower terms gives a degree obstruction.** This applies to the $k$-columns comparing any two such terms, including their signed combinations and every modulus. It also permits successive or simultaneous changes at rank-$r$ slots of a common head as in Response 20.
+
+Indeed $\omega-h\rho$ equals the endpoint difference of $p_0$ on each primitive bracket. A composite at cut $r$ telescopes. At a cut below $r$, its two $r$-faces have the same binary head on their active faces, with the same lower substitution. The recursion of Response 20 cancels the common constant, leaving the sum of changes of the active factors. Any stationary factor of rank $r$ contributes the same value twice; those of lower rank are included in the common substitution. An identity has zero change. The same subtraction works for any common head with changes in several maximal $r$-slots, using their actual comparison counts as in item 14. Induction proves the assertion even for an arbitrary number of composites, repeated labels, and stationary inputs containing unbounded loop powers. It includes all the interval shortcut columns of Response 19. The restriction concerns operations at dimension $r+1$; the lower terms may use unrestricted raw syntax.
+
+**An explicit equation outside this family at every $k\ge3$.** Start with the edge $[k-1,k]$. Prefix the edge $[j,j+1]$ for $j=k-2,\ldots,2$ in this order. At each stage replace the whiskered term $w$ by the one-higher bracket $[a(w),w]$. The resulting $r$-variable $g$ goes between outer objects $2,k$ and its integral simplex chain has coefficient $+1$ on $[2,\ldots,k]$. Inductively the old generator is the only top contribution on the old simplex. For a prefix of two edges the new edge contributes zero on the old edge. The shortcut $a(w)$ has the new least colour in its support, and its chain is coned there, so it has zero coefficient on the old simplex. Coning the difference adds the new least vertex with positive sign.
+
+Put $e=[1,2]$, $f=[k,0]$, and $w=e*_0 g$. Then $w$ is proper and $p_0(w)=+1$ by the same coefficient calculation for $[a(w),w]$ on $[1,\ldots,k]$. Form the nested $r$-term $L=w*_0 f$. In the generic pasting context $P=D^1\vee_0 D^r\vee_0 D^1$ also form the **single** $r$-head on $P$ with exactly the generic type of $L$, then substitute $(e,g,f)$ to obtain $R$. That head is legal: the two generic faces of the nested binary composite cover the corresponding signed boundaries of $P$. In $P$ the generic nested and single-head terms are parallel and each uses every variable, so raw coherences give $E:L\to R$ **and** $E':R\to L$ after substitution. Both have zero $(r+1)$-generator counts. The anchored outer expression on either side contains colour zero and hence has zero basic weight, whether proper or full. The individual slots $e,g,f$ are variables. Thus $p_0(L)=1$, $p_0(R)=0$. Their structural comparisons have opposite unit defects for the proposed zero assignment.
+
+Concretely at seven colours the two full anchored expressions give an equation $\beta_R-\beta_L=1$: the inner $w$ on the nested side contributed the known proper value. Under six-seam RC the two integer values must differ by one. The reverse comparison imposes the same equation with reversed sign. Finding an incompatible second route between the same unknowns would obstruct six-seam coherence by Response 20. This pair alone gives a consistent equation.
+
+**Checks.** Run the following from the repository root. At $k=3,4,5,6$ the solver checks the exact types of both comparison directions, their zero top counts, and their two opposite affine expressions, before and after anchoring the slots. For seven colours Agda checks both rank-five judgements with literal boundaries. The solver also tests all interval shortcut columns at these ranks and composites of their based sides at every cut, with a loop factor repeated 1, 2, 4 and 8 times. It checks 36, 56, 80 and 112 distinct typed sides and composites respectively. The unrestricted family follows from the recursion above. [Solver and judgement generator](../../../tools/relative_coherence_shortcut_potential.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_shortcut_potential.py --agda "$dir/Flatten.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/Flatten.agda"
+~~~

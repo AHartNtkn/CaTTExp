@@ -123,7 +123,7 @@ def loop_example(repetitions, turns):
     return ctx, integral_test(columns, d)
 
 
-def interval_shortcuts(k):
+def interval_parameter(k):
     p = Brackets(k+1)
     @cache
     def extend(vertices):
@@ -138,7 +138,12 @@ def interval_shortcuts(k):
                 shortcut = p.bracket(src(p.ctx, u), tgt(p.ctx, u))
                 result.add(p.bracket(shortcut, u))
         return tuple(sorted(result))
-    extend(tuple(range(k+1)))
+    tops = extend(tuple(range(k+1)))
+    return p, tops
+
+
+def interval_shortcuts(k):
+    p, _ = interval_parameter(k)
     columns, d = relative_columns(p.ctx, list(range(k+1)), k)
     return len(columns), integral_test(columns, d)
 

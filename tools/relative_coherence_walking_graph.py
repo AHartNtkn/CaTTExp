@@ -65,6 +65,16 @@ def linear(images, chain):
     return result
 
 
+def instantiate(ctx, work, old):
+    """Substitute the source disk of a walking attachment at the specified term."""
+    sigma = list(sub_from(work.ctx[:work.old+1], ctx, {work.old: old}))
+    types = []
+    for ty in work.ctx[work.duplicate:]:
+        types.append(subst_ty(ty, sigma))
+        sigma.append(v(len(ctx)+len(types)-1))
+    return tuple(types), sigma
+
+
 class WalkingGraph:
     def __init__(self, vertices, height, *, descending=False):
         self.ctx = (STAR,)
@@ -77,15 +87,10 @@ class WalkingGraph:
         self.carriers = [frozenset({0})]
         def attach(k, old, carrier):
             work = template(k, height)
-            disk = work.ctx[:work.old+1]
-            sigma = list(sub_from(disk, self.ctx, {work.old: old}))
             begin = len(self.ctx)
             self.blocks.append((begin, work, old, frozenset(carrier)))
-            types = []
-            for ty in work.ctx[work.duplicate:]:
-                types.append(subst_ty(ty, sigma))
-                sigma.append(v(begin+len(types)-1))
-            self.ctx += tuple(types)
+            types, sigma = instantiate(self.ctx, work, old)
+            self.ctx += types
             self.h.extend(Counter() for _ in types)
             self.carriers.extend([frozenset(carrier)]*len(types))
             g, a = sigma[work.duplicate], sigma[work.forward]

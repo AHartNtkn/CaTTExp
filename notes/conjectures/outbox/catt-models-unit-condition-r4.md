@@ -637,7 +637,19 @@ Quotient this groupoid by all local vertex groups and their conjugates. Each loc
 
 There is a further distinction between a strict subdivision and a fixed raw labelling of it. For one nondegenerate lift $ρ:h_T→A_S$, the marked paths coming entirely from that lift form a thin subgroupoid in $G_c$. Indeed $ρ$ is injective on raw terms. Distinct variables have distinct strict values. If a nonvariable term and a variable $x$ had the same image, strict monicity would give that term the value $x$ in $T$. By support it contains $x$; since $x$ has the rank of the term, it occurs in the expression itself. After substitution the finite expression would contain $ρ(x)$ as a proper subterm of itself. For two heads, syntactic equality forces the same head and equality on each substituted argument, so induction proves injectivity. Mark the total in $h_T$ itself. Its marked pullback maps by a globular trivial fibration to the marked globe, by base change of $h_T→T$. Its presentation groupoid is thus thin by the fixed-pole description. The map induced by $ρ$ sends distinct vertex generators to distinct vertex generators: the raw terms remain distinct and their proper arguments still have proper values by monicity. It sends old terms to old terms and respects words and relations. A thin groupoid whose objects remain distinct has thin image. Consequently the surviving local loop requires paths from beyond any one such lift, even though a single **strict** subdivision suffices for all its letters. This leaves a question about comparing different raw labellings of the same strict data.
 
-**Validation.** The following Agda 2.8.0 check splits the middle 1-cell of the arity for two vertically composable 2-cells. The two sections send opposite incident cells to composites. The comparison has the literal section images as its faces, and substituting an identity for the inserted edge preserves its type. This checks the positive-rank change of labels used in the connectivity proof.
+### Closed comparison paths under a degenerate labelling
+
+The argument that changes variables also excludes a class of loops for **degenerate** arity labellings, where injectivity of syntax can fail. Let $l:P_{\rm str}→T$ take every generator to a proper-support label. In $h_P$ take any finite zigzag of raw $(m+1)$-comparisons between $m$-terms whose strict labels under $l$ are $c$. Allow comparisons to be traversed backwards and require the two ends of the zigzag to be the same raw term **in $h_P$**. Under every labelling $a$ over $l$, the word of this zigzag is trivial already in $G_T$. In particular its intermediate strict $m$-values need not coincide in $P$ itself.
+
+For each split used above, construct the mixed globe labels for the vertices of this finite zigzag just once per raw term, reusing the same choices on its faces. For each comparison $e:z→w$, the strict cylinder $H$ on $πe$ has these strict boundary data. Lift its mixed $(m+2)$-cell in $h_{P'}$ at the two raw staircase faces, using the mixed labels already chosen for $z,w$ and their lower faces. After evaluation by $β$ this gives the equation of paths, written in traversal order,
+$$
+       [e^-]\,p_w = p_z\,[e^+] .
+$$
+Indeed the two staircases carry the end comparison and the mixed label of its adjacent $m$-face in that order on the two sides. Every mixed label for a face of rank less than $m$ pairs with an identity on a proper face of the mark. Thus the other paddings read empty words under the strict word interpretation. The equation holds in $G_T$ itself: all defining relations read from the lifted $(m+2)$-term have carrier in $T$, by the same substitution and proper-support argument as for letters. Reversing an edge gives the inverse equation. Along the closed zigzag the intermediate paths cancel, including at repeated vertices, since the choices were shared. The two evaluated loops are conjugate.
+
+The descending induction on the first rank allowed to vary now applies to this whole finite zigzag, with the same intermediate labellings as for connectivity. Consequently its word at $a$ is conjugate to its word at a labelling that factors through $h_T$ and the fixed $ρ$. At that labelling the zigzag lifts to a closed zigzag in $h_T$ over the total of $T$. The marked groupoid of $h_T$ is thin, and all its relations evaluate inside $G_T$. This proves the claim. The requirement that the path close before evaluation matters: an equality between two different evaluated names need not supply a closed path in the generic arity. The concurrent companion proof gives a presentation by such names and independently obtains the single-subdivision reduction by an absolute-space calculation. [Companion relative-coherence problem, Responses 10–12](relative-coherence-all-dimensions-r8.md#researcher-response-10)
+
+**Validation.** The following Agda 2.8.0 check splits the middle 1-cell of the arity for two vertically composable 2-cells. The two sections send opposite incident cells to composites. The comparison has the literal section images as its faces, and substituting an identity for the inserted edge preserves its type. The final declaration checks the square for moving a comparison from a binary composite to its padded writing. Its two 3-cell routes have exactly the same endpoints.
 
 <details>
 <summary>Agda check of the split and fold</summary>
@@ -671,6 +683,26 @@ fold = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 3 ∷ id₂ ∷ v 5 ∷ v 6
 
 afterFold : VComp ⊢tm (bridge [ fold ]tm) ∶ (B [ fold ]ty)
 afterFold = snd (from-just (infer VComp _))
+
+unitAt : Tm → Tm
+unitAt f = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ v 0 ∷ v 1 ∷ f ∷ [] ⟫
+padded = comp₂ (v 2) (v 5) vcomp (v 5) (unitAt (v 5))
+change = coh VComp (arr (arr A (v 2) (v 5)) vcomp padded) (idₛ VComp)
+PL = padded [ minus ]tm
+PR = padded [ plus ]tm
+M = arr A (v 2) (v 7)
+otherBridge = coh P (arr M PL PR) (idₛ P)
+
+Q = ctxOf (node (node (node (leaf ∷ leaf ∷ []) ∷ []) ∷ []))
+comp₃ : Tm → Tm → Tm → Tm → Tm → Tm
+comp₃ u v' d w e = coh Q (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7))
+  ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 7 ∷ u ∷ v' ∷ d ∷ w ∷ e ∷ [] ⟫
+first  = comp₃ L PL (change [ minus ]tm) PR otherBridge
+second = comp₃ L R bridge PR (change [ plus ]tm)
+square = arr (arr M L PR) first second
+
+moveComparison : P ⊢tm coh P square (idₛ P) ∶ square
+moveComparison = snd (from-just (infer P _))
 ```
 
 </details>

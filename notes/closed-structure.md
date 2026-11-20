@@ -810,6 +810,8 @@ B ⊗ C with C arbitrary needs [C, –]_lax for arbitrary C as an object. Two ro
 
 The colimit route of `internal-hom.md` §6 (B12) remains a third option. **Status:** partly done. The remainder is blocked on F5, or on D11's general criterion. The adjacent derived structure is done (E.4).
 
+**Checked 2026-11-20.** Neither non-PL-ω route is proved for arbitrary objects. F5 supplies object-indexed colimits, not the limit the end formula needs, and the density step it would rest on (F5b) still lacks a realisation rule, with the universal shape family (F5c) only drafted. The colimit route has no proof that the colimit over cells of B and C has the Gray tensor's universal property. So the step that currently needs PL-ω is forming [C, –]_lax for arbitrary C as an object, with evaluation and currying as coherences; the researcher prompt `conjectures/outbox/gray-biclosed-coherence-r3.md` stays in the outbox for it.
+
 ---
 
 # Part F. PL-ω: a candidate criterion that passes the first test (D11)

@@ -1,6 +1,6 @@
 # Design decisions: the lax side-condition theory and context checking
 
-*Owner: thread "Choose lax core and context-check designs" (DSGN). Written 2026-11-20. Ledger rows E12 and B25.*
+*Owner: thread "Choose lax core and context-check designs" (DSGN). Written 2026-11-20. Ledger rows E12, B25 and (§3) D7.*
 
 ## 0. How these choices are made
 
@@ -236,3 +236,46 @@ Reasons:
 - Extend `coneC` to term boundaries (N^cone). Owner CONE/LIM-F, notified.
 - Encode ⊢hpol with the §2.2 base classes. Owner DSGN (Loc-total is now proved). **Started 2026-11-20:** `src/CaTTExp/Lim/Hpol.agda` decides the first base rule, positive path 2-polygraphs: objects, 1-cells between objects, and 2-cells between nonempty composites of 1-cell variables. Their homotopicality is cited from Chanavat Cor. 3.39, not formalised. It accepts the parallel pair and μ : a·a ⇒ a, and rejects the bubble. Still to add: pasting contexts, orientals, positive-to-one, the no-matching positive 3-polygraphs, top weight ≤ 2, and closure under suspension. The homotopy-polygraphs r5 answer adds decidable classes: finite strict cells with abelian tests, top weight ≤ 2 in any dimension, and one-resource semaphores.
 - B24 (HPOL) is no longer on the critical path of any kernel rule. It remains a research item, and its decidable classes (r5 Q3) feed ⊢hpol.
+
+---
+
+## 3. Closed structure: which rules the kernel takes
+
+*Added 2026-11-20 by the thread "Add Gray biclosed rules to the core" (GBIC), after the verified r3 answer (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`). Ledger row D7.*
+
+### 3.1 The options
+
+**G1. Representable factors only.** Keep (lhom) of `internal-hom.md` §5.1 and the B ⊗ Θ rule of `closed-structure.md` E.2 as primitives.
+- Derives: B ⊗ ⟦Θ⟧ and [Θ, C] for representable Θ, lax transformations between arbitrary functors (E.4).
+- Rules out: B ⊗ C and Fun^lax(C, D) for arbitrary C. Lax-functor-category currying with both factors arbitrary is not expressible.
+
+**G2. The r3 templates.** ⊗, \ and / are type formers. Pairing, the two evaluations, probe pairing and the point are corollas. Currying c and its comparison ε are cut templates at every ball dimension, and there is a directed-cut template (`closed-structure.md` F.7.4).
+- Derives: everything G1 derives (as derived rules, F.7.4 item 5), plus B ⊗ C, C\D = Fun^lax(C, D) and D/C = Fun^oplax(C, D) for arbitrary objects, with every currying equivalence and probe absorption.
+- Rules out: reverse cells (orientation is inherited from hypotheses), and the unsound all-levels bijection of E.1 (time slots never move past a bound object).
+- Decidable: yes (Lemma GB-dec). Exact: initial over the lax-grid model (Response 2). The kernel's extensions (element generators, probe bound arguments, the L core as probe base) are covered by the in-house Lemma GB-ext, whose independent check is D7c.
+
+**G3. A uniform contractibility test on Gray pasting types,** in Mimram's CCCaTT style. Here every sequent passing one structural test would get a coherence.
+- Status: no such test is known. Response 1 of r3 shows that a test justified by inhabitation in every model is unsound for the free theory: a goal can hold in every ambient model and still have no map in the free theory. Per standard 1 that only rules out tests of that kind. A uniform test that is generative, not modelwise, is not excluded. Any such test would have to derive exactly G2's cells, since G2 is exact.
+
+### 3.2 Worked examples
+
+(a) **Fun^lax(C, D) for C = the walking span.** G1 has no object for it. G2 gives C\D, with evaluation (C, C\D ▸ D). A lax transformation α between F, G : B → C\D is (B, ⟦D¹⟧ ▸ C\D), which corresponds by the left row to (C, B, ⟦D¹⟧ ▸ D).
+
+(b) **The walking square.** In context (h : (Q, X ▸ Z)), G2 admits no template whose goal is the reverse of a square at a time slot. Specializing X = ⟦D⁰⟧, Z = Q and h = the unit would give a reverse square in Q, which does not exist. G1 and G2 agree here.
+
+(c) **The naive bijection.** (B ⊗ C, ⟦D¹⟧ ▸ D) against (B, ⟦D¹⟧ ▸ C\D)? G2 does not relate them, because the left row keeps the time slot after C, which is (C, B, ⟦D¹⟧ ▸ D). This matches E.1's counterexample at B = C = D¹.
+
+### 3.3 Decision
+
+**The kernel takes G2. (lhom) and the B ⊗ Θ rule become derived rules.**
+
+Reasons:
+1. G2 strictly extends G1, and everything G1 derives is a derived rule of G2.
+2. G2 is decidable and exact, and its rule classes are those of `coh`: generic contexts, template recognition and invertible witnesses. There are no universes and no definitional equations (standard 5).
+3. G3 has no candidate test. Any candidate must reproduce G2, so G2 is the reference it would be measured against.
+
+**What would overturn this.**
+- A counterexample to Lemma GB-ext. The kernel would then keep G2 for data-sorted signatures and treat element variables through G1's rules.
+- A uniform generative test (G3) that is decidable. It would replace the template list, with G2 as its specification.
+
+**Open items.** D7c (an independent check of Lemma GB-ext), and D7d (Agda, `src/CaTTExp/Gray/Biclosed/`), owned by GBIC.

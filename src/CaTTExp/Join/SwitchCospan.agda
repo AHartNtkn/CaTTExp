@@ -23,12 +23,17 @@
 --   ext-∘      switching on in two stages is switching on at once;
 --   ext-id     the identity switch extends to the identity.
 --
--- Law equations enter only through the quotient on cells, that is
--- through the setting's step lists, never through the completion's ~.
--- Not mechanized here: that J's actual law switches are Switches (in
--- particular that stepP exists), and that the catalogued optional
--- laws (inner composite crossing, R, L_p) keep seed lists. Both are
--- argued on paper in joining-completion.md §8.
+-- Where the law equations enter depends on the level. When the
+-- vertices are 3-cells, the laws (which relate 4-cells) are equations
+-- between inner words and the switch map is idS. CaTTExp.Join.SwitchLaws
+-- machine-checks that the catalogued optional laws keep seed lists in
+-- raw T-syntax (Part A) and that inner-word equations keep seed lists
+-- in the completion (Part B); the link between the two, and that the
+-- 3-cell setting is switch-independent (Part C, a definition), are on
+-- paper. When the vertices are 4-cells, the
+-- laws enter through the quotient on cells; that the switch map is
+-- then a Switch (5-letters keep their kind) is not mechanized, since
+-- there is no raw 5-dimensional syntax yet (joining-completion.md §8).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Join.Quiver

@@ -1553,3 +1553,40 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_parallel_cell.py --agda "$dir/ParallelCells.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/ParallelCells.agda"
 ~~~
+
+# Researcher Response 54
+
+## A failure would reach one of the first three generators for weak \(\omega\)-equifibrations
+
+Use the published source inclusions \(i_k:D^k\to\mathcal E^{k+1}\) of the walking bi-invertible cell, with independent left and right inverse data. These maps and their higher suspensions generate the lifting characterization of FHM \(\omega\)-equifibrations. If the six-seam ring has degree-eight identity-image RC, at least one of the following occurs in a pushout at a three-connected groupoidal free algebra, based at an old vertex.
+
+| Map attached | Possible degree of failure of surjectivity |
+|---|---|
+| \(i_0\), walking invertible arrow | 2, 3 or 4 |
+| \(i_1\), walking invertible two-cell | 3 or 4 |
+| \(i_2\), walking invertible three-cell | 4 |
+
+If all these attachments preserve three-connectivity, the failure is in degree four and its cokernel contains a split \(\mathbb Z\). Proving surjectivity in the six entries decides the ring negatively. The tests on the bracket cylinders in Response 53 require only degree four; the present tests use the actual equifibration generators. [Fujii, Hoshino and Maehara](https://arxiv.org/abs/2511.09849) · [Benjamin, Champin and Markakis, Definition 4.8 and Remark 4.9](https://arxiv.org/abs/2606.30254)
+
+**The unconditional range for the walking cell.** In a pushout under \(i_k\) at any groupoidal free algebra the inclusion is bijective on components and induces isomorphisms on based \(\pi_d\) for \(1\le d\le k+1\). Choose a retraction sending the duplicate \(g\) to the old \(k\)-cell \(z\), and the forward and inverse \((k+1)\)-arrows to the weak identity on \(z\). Extend to the full inverse data on the identity in the old globe. Its higher cancellation types are parallel on a globe above its top dimension, so globe coherence gives these higher values. In the pushout the duplicate is equivalent to the old cell; all higher inverse data are invertible, including the two one-sided inverses of any invertible cell. Thus the result is groupoidal.
+
+For surjectivity move from the retracted labelling to the original labelling and mark the new variables. Through degree \(k+1\) only \(g\) and the three arrows \(a:z\to g,\ b,c:g\to z\) need mixed labels. Write juxtaposition for \(*_k\). Write \(P:ab\to1_z\), \(Q:ca\to1_g\) for the two supplied invertible cancellations. Take \(a\) as the component on \(g\). For the three arrows the required mixed types are respectively
+\[
+                1_z a\to a,\qquad 1_z\to ab,\qquad 1_z\to ac.
+\]
+The unitor and an inverse of \(P\) give the first two. For the third, compare \(b\) to \(c\) by the literal route
+\[
+ b\ \longrightarrow\ 1_g b\ \longrightarrow\ (ca)b\
+ \longrightarrow\ c(ab)\ \longrightarrow\ c1_z\ \longrightarrow\ c .
+\]
+The steps are unit insertion, whiskered reverse of \(Q\), associator, whiskered \(P\) and unit contraction. Whisker by \(a\) after the reverse of \(P\) to get \(1_z\to ac\). The route with all directions reversed also exists, using the other orientations of these same structural cells and cancellations. Thus every mixed label is realized inside the walking cell itself. Depth-one naturality on any based loop through degree \(k+1\) now gives a comparison with its retraction, since its point poles are unmarked. The argument is by substitution of arbitrary labels from the pushout, including all inactive inputs and unrestricted powers. The retraction gives injectivity. This range uses no assertion that the entire walking weak equivalence is contractible.
+
+**Passage to the six tests.** Repeat the two towers in Response 53 using \(i_k\) at each generator of rank \(k\le4\). At a three-connected stage the required old cell on the lifted boundary exists by basing. The map to the facet \(F\) extends: choose there an equivalence from its old image to the prescribed new cell (the primitive bracket suffices), then choose its independent inverse and cancellation data in the same complete facet. This is exactly the defining mapping property of the walking cell. Every stage is free on a computad, by its ordinary computadic presentation, and groupoidal by the preceding argument. If either tower first loses three-connectivity, it does so at a successor because a loop has finite support. The unconditional range permits only the lower-degree entries in the table. If both towers retain three-connectivity, the first tower gives the same section on four-skeleta as before. A nonzero detector therefore appears in the second tower, with the same split integral cokernel argument. The unconditional range rules out \(k=3,4\) at that step.
+
+**Typed checks.** In the ordinary presentation the solver uses one reverse of each cancellation from its own invertibility data; it keeps \(b,c\) distinct. It constructs both directions of \(b\simeq c\), both directions of the missing cancellation, and both directions of the two other required mixed components. It checks their literal types before suspension and after one, two, three and four suspensions. Agda accepted all 40 judgments. The generic derivation suspends at every \(k\), and the proof for arbitrary loops uses depth-one naturality. [Independent inverse and mixed-label solver](../../../tools/relative_coherence_walking_equivalence.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_walking_equivalence.py --agda "$dir/WalkingReverses.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingReverses.agda"
+~~~

@@ -40,8 +40,8 @@ def simplex_boundary(chain):
     return result
 
 
-def degree_test(ctx, colours, degree):
-    """Return (integer coefficients on context indices, signed degree), or None."""
+def relative_columns(ctx, colours, degree):
+    """Compute full-colour boundary columns and their oriented simplex volumes."""
     check_ctx(ctx)
     simplex = tuple(range(degree + 1))
     if degree < 1 or len(colours) != ctx.count(STAR) or not set(colours) <= set(simplex):
@@ -66,6 +66,12 @@ def degree_test(ctx, colours, degree):
         if tdim(ty) + 1 == degree:
             columns[i] = {j: a for j, a in boundary.items() if len(support[j]) == degree + 1}
             volume[i] = image[i].get(simplex, 0)
+    return columns, volume
+
+
+def degree_test(ctx, colours, degree):
+    """Return (integer coefficients on context indices, signed degree), or None."""
+    columns, volume = relative_columns(ctx, colours, degree)
 
     # Keep each column operation on the generators as well as on the boundary.
     pivots = {}

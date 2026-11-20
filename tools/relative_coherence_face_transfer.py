@@ -25,14 +25,19 @@ def reduced(vector, modulus):
 class Transfer(Valuation):
     @cache
     def collapse(self, i, root, other):
+        names = tuple(root if j == other else j for j in range(self.ctx.count(STAR)))
+        return self.relabel(i, names)
+
+    @cache
+    def relabel(self, i, names):
         a = self.ctx[i]
         if a == STAR:
-            return v(root if i == other else i)
+            return v(names[i])
 
         @cache
         def term(t):
             if t[0] == 'v':
-                return self.collapse(t[1], root, other)
+                return self.relabel(t[1], names)
             return (*t[:3], tuple(term(x) for x in t[3]))
         return self.p.bracket(term(a[2]), term(a[3]))
 

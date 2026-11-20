@@ -1,8 +1,8 @@
-# Relative coherence in CaTT: search-free connecting terms, canonical sections, and the directed classification
+# Relative coherence in CaTT: search-free connecting terms and canonical sections
 
 *A self-contained problem. It assumes familiarity with globular weak ω-categories, strict ω-categories, polygraphs (computads) and Steiner complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** The classification is complete for every small computad (items 56, 59): relative coherence in all degrees holds exactly when the computad is homotopical, the first failing degree is r + a(E_Γ(c)) minimised over strict cells and is unbounded already at height three (item 58), and raw connecting terms have no size bound in the sizes of the two inputs and the tableau (item 60). Every construction so far finds the connecting terms by search. We now ask for the whole remaining line: a **search-free** construction of connecting terms and canonical sections with sizes measured correctly (against the whole context, or with sharing), and the **directed** classification for the interchange-directed theory L on arbitrary finite directed computads. Results for one more context or one more dimension are not useful to us.
+**What we are asking for.** The classification is complete for every small computad (items 56, 59): relative coherence in all degrees holds exactly when the computad is homotopical, the first failing degree is r + a(E_Γ(c)) minimised over strict cells and is unbounded already at height three (item 58), and raw connecting terms have no size bound in the sizes of the two inputs and the tableau (item 60). Items 62–63 make the construction search-free on globular lower skeleta and on two nonglobular top ranks, and reduce the rest to one call. A type checker has to produce these terms, so we now ask for one thing: a **search-free** construction of connecting terms, canonical sections and naturality fillers in general, with sizes measured correctly (against the whole context, or with sharing) and a recognizer for canonical sections that runs in time polynomial in the shared size. Results for one more context or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -170,17 +170,14 @@ RC is the single missing ingredient in several constructions in CaTT: lax natura
 - (a) For every finite strong-Steiner context S, give a search-free construction of the connecting term over a strict cell c between parallel raw terms u, v, by structural recursion on the terms, the context and the tableau of c. Bound its size in terms of the **whole** input (the context with its declarations, u, v and the tableau), or as a DAG with sharing. Is a polynomial bound possible in either measure? If not, give a family forcing super-polynomial size.
 - (b) The same for canonical sections: a structurally recursive assignment T from cells of ν(K) to terms over a declaration of the atoms chosen together with T (item 57), compatible with identities, dependency-closed faces and, for iterated Gray tensors, every parenthesization, for all finite strong-Steiner K (Gray tensors of globular pasting diagrams, joins, orientals and their tensors with globes, lax cylinders Γ ⊗ D¹). Bound its size polynomially in the tableau with sharing, or prove a lower bound. If explicitness holds for one family of shapes and fails for another, say where.
 - (c) The same for the depth-n naturality fillers of Conjecture N with n ≥ 3 (depth two is item 63). Give size bounds for depth two as well.
-
-**Question 2 (the directed classification).** For the directed theory L of item 61, define relative coherence of a finite directed computad A as: any two parallel cells of the free L-algebra with equal image in the free strict Gray-enriched category are joined by a cell with identity image. Prove the analogue of item 56 for every finite directed computad (relative coherence ⟺ the free strict Gray-enriched category is the free oriented (∞,ω)-category on A), or give a counterexample with a separating invariant. Give the first-failing-degree formula of item 58 in the directed setting, and say which of the ordinary steps (subdivision poset, top-generator reductions, two-fresh-face test, depth-two filler) fail for lax interchange.
-
-**Question 3 (computing the invariants).** Homotopicality is undecidable, but the fibres E_Γ(c) at a specified cell are finite and effective. Give an algorithm that, from a finite context and a strict cell, produces a finite model of the fixed-boundary fibre W(c, b) together with explicit raw terms realising generators of its first nonvanishing homotopy group (the separating classes of item 58), and bound their size.
+- (d) Elementary bounds. If no polynomial bound exists in (a), is there an elementary one? For the tensor-family contexts of the canonical Gray terms line (iterated Gray tensors of globular pasting diagrams), construct comparison cells between terms with the same strict value of size elementary (ideally polynomial) in the sizes of the two terms and the context, or prove that none exists. The known comparisons are non-elementary.
+- (e) Recognizing canonical forms. For the canonical sections of (b) in a representation with sharing (term DAGs or let-bindings), give a recognizer deciding whether a shared term is canonical in time polynomial in its shared size, or prove a lower bound. Explicit trees need super-polynomial size, so sharing is essential.
 
 ## 5. What counts as a solution
 
 Any of the following:
-- a search-free construction of connecting terms or canonical sections for all finite strong-Steiner contexts or for all iterated Gray tensors, with a size bound in the whole input or with sharing, or a lower bound;
-- the directed classification for all finite directed computads, or a counterexample;
-- an algorithm producing explicit separating classes with a size bound;
+- a search-free construction of connecting terms, canonical sections or naturality fillers for all finite strong-Steiner contexts or for all iterated Gray tensors, with a size bound in the whole input or with sharing, or a lower bound;
+- a polynomial-time recognizer for shared canonical forms, or a lower bound;
 - a published reference.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-3 to round-9 answers)

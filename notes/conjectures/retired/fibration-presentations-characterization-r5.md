@@ -1,5 +1,7 @@
 # Grothendieck constructions over free bases: when do the plain Gray-generator attaching maps exist?
 
+> **Retired unsent 2026-11-20.** Proposition W (design-decisions §2.5) already gives finite presentations over every finite base; the unaugmented presentation and a minimal augmentation are optimizations no rule needs.
+
 *A self-contained problem. It assumes familiarity with (∞,ω)-categories, the Gray tensor product, polygraphs (computads) and Grothendieck constructions, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
 **What we are asking for.** The most general theorem about the **unaugmented** relative Gray-generator presentation of §2, which is correct whenever it is well defined (item 16). Totals over weak and localised bases are settled (item 18). The universal question over all weights is undecidable (item 22). For a single weight, recognition is decidable for graph fibres over bases of dimension ≤ 4, for positive finite strict 2-fibres in base dimension 4, and strictly in every base dimension for finite strict 2-fibres (items 23–25), while two natural subproblems are undecidable (item 26); graded fibres, bubble-freeness of raw stages and simply connected comparison stages extend this (items 27–29). We want the **whole remaining line**: a terminating procedure for one weight in every dimension and for all finite homotopical fibres, or an undecidability proof for that problem itself, and the minimal augmentation. One more special class is not what we want.

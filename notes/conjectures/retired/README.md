@@ -9,4 +9,14 @@ These prompts were written as the next incremental round of a researcher line an
 | `directed-interchange-every-level-r9.md` (completion closed under the (K25) degeneration, six remaining lifts, overlapping variables, K15, definition or impossibility) | `../outbox/lax-interchange-construction-or-impossibility.md` |
 | `gray-closed-scheduling-r8.md` (fullness of the braid functor, position-rigid composites, ι ∘ π, forward uniqueness) | `../outbox/gray-biclosed-coherence.md` |
 
+
+**Retired 2026-11-20 by relevance.** A follow-up stays in the outbox only if its answer would change a rule, the kernel or checker design, or a construction the project needs.
+
+| Retired prompt | Reason |
+|---|---|
+| `homotopy-polygraphs-r9.md` | No rule checks homotopicality any more (C4, design-decisions §2); the optional ⊢hpol judgement already has decidable base classes, and further complexity or fibre refinements change no rule. |
+| `fibration-presentations-characterization-r5.md` | Proposition W (design-decisions §2.5) already gives finite presentations over every finite base; the unaugmented presentation and a minimal augmentation are optimizations no rule needs. |
+| `catt-models-unit-condition-r7.md` | The semantics needed by the design is settled (both comparisons, model structures, strict-presentation test); the remaining questions change no rule or construction. |
+| `canonical-gray-terms-r11.md` | Q1 (elementary comparison bounds) and Q2 (shared canonical forms with a polynomial recognizer, for E9′) are folded into `outbox/relative-coherence-all-dimensions-r10.md` Q1; Q3 (jointly strict classes) is not used, since coherent functoriality up to comparison (r10) suffices. |
+
 The answered rounds of the same lines (in `../answered/`) are unchanged. The three responses received on 2026-11-18 for naturality r8, gray-contexts r8 and fibration r6 were filed in `../answered/` with no incremental follow-up; their open items are covered by `relative-coherence-all-dimensions.md`, `homotopy-polygraphs.md` and `fibration-presentations-all-dimensions.md`.

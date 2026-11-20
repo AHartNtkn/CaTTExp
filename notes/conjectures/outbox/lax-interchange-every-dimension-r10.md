@@ -7,7 +7,7 @@
 - they do not form a lattice, and admissibility is not closed under finite unions ((K71));
 - not every profile is V plus laws already typed over V ((K72)).
 
-A finite set of equations true in T₁₂ is always admissible over V, and admissibility of equation-only extensions is in Π⁰₂ ((K73)). We now ask for the **exact complexity of admissibility** of V + S for finite sets S of pasting-diagram laws, for **uniform normal forms** for admissible extensions, and for a **closed-form description of the decorations** of (K65). Results for one more shape or one more degree are not what we want; a uniform argument is.
+A finite set of equations true in T₁₂ is always admissible over V ((K73)). A type checker built on this offers four settings: V, V + {R}, V + {inner law} and T₁₂ = V + both, where R is the right split law and the inner law is the inner composite-crossing law of (K73). We now ask for one thing: **decidable equality and reachability in the free objects of these four settings, in every dimension**, with normal forms and computable comparison maps between them. Results for one more shape or one more degree are not what we want; a uniform argument is.
 
 ## 1. Setting
 
@@ -391,19 +391,13 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 *Conventions.* "Admissible" means satisfying requirements 1–5 of §3 in every dimension with H ≠ 1. The *pasting profile* of a theory is the family of its free objects F(Γ) on finite pasting diagrams Γ. A *pasting-diagram law* is an unconditional equation u = v (or a directed cell u → v) between two expressions over one finite pasting diagram, imposed for all substitution instances.
 
-**Q1 (main: the complexity of admissibility).** For a finite set S of pasting-diagram laws, is admissibility of V + S decidable? (K73) gives a Π⁰₂ upper bound for equations and a sufficient condition (truth in T₁₂). Determine the exact degree, or give a decision procedure.
-- Is admissibility decidable for sets S that fail in T₁₂ but hold in both benchmarks?
-- Is admissibility of a single law decidable?
-- Do directed-cell laws change the answer?
-- (K71) shows that admissibility is not closed under unions. Is the set of finite S whose union with a given admissible S′ stays admissible decidable?
-
-**Q2 (uniform normal forms).** For every finite S with V + S admissible, are equality and reachability in F_{V+S}(Γ) decidable, uniformly in S? (K73) gives this when the input arities have height at most 3. Does (K65)'s rank construction extend to V + S, and is the comparison F_{V+S}(Γ) → F_{V+S′}(Γ) for S ⊆ S′ computable on normal forms?
-
-**Q3 (the decorations).** Give a combinatorial description of the lifts in (K65), uniform in the degree, for example by marked subsets of cuts (generalizing (K66)) or by decorated Gray cells. Describe the maximal fibre size of q : F_V(Γ) → F_T₁₂(Γ) as a function of Γ and the degree.
+**Q1 (main: deciding the four settings).** Let S ⊆ {R, inner law}. For every finite pasting diagram Γ, are equality and reachability in F_{V+S}(Γ) decidable, in every dimension? (K73) gives this when the input arities have height at most 3, and Lemma V-dec gives it for S = ∅. Give normal forms, for example by extending (K65)'s rank construction from V to V + S, or prove undecidability.
+- Is the comparison F_{V+S}(Γ) → F_{V+S′}(Γ) for S ⊆ S′ computable on normal forms?
+- Can equality be decided in time polynomial in the size of the terms with sharing?
 
 ## 5. What counts as a solution
 
-An answer to Q1 in every dimension, positive or negative; an answer to Q2 or Q3; or a published construction, classification or impossibility result. A negative answer, for example that admissibility of pasting-diagram laws over V is undecidable, counts as fully as a positive one.
+A decision procedure for equality and reachability in F_{V+S}(Γ) for the four settings in every dimension, or a proof that one of them is undecidable; or a published result.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19; updated 2026-11-20)
 

@@ -223,11 +223,11 @@ This is the non-collapse half: for instance, no closed cell relates two distinct
 - **⊗, \ and /.** ⊗ is the Gray tensor of strict ω-categories, with the Leibniz rule of `conventions.md` §2 on Steiner complexes. For loop-free unital (strong Steiner) complexes, ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) (Steiner 2004; Ara–Maltsiniotis, arXiv 1607.00668, App. A). The tensor is monoidal and biclosed on all strict ω-categories (Al-Agl–Brown–Steiner 2002; Crans 1995; Ara–Maltsiniotis App. A). A\C and C/A are its closures: Hom(A ⊗ W, C) ≅ Hom(W, A\C) and Hom(W ⊗ A, C) ≅ Hom(W, C/A). *Citation level: the statements are standard, but the theorem numbers were not re-read for this note.*
 - **Multimaps.** (X₁, …, Xₙ ▸ Z) is the set of strict functors X₁ ⊗ … ⊗ Xₙ → Z, using the associativity isomorphisms, with the unit 1 = ν(λD⁰) for n = 0. A time slot ⟦Dᵏ⟧ is the factor ν(λDᵏ) at its position. Faces are restriction along the source and target inclusions ν(λDᵏ⁻¹) → ν(λDᵏ).
 - **Invertible.** ⊨ is interpreted as strictly invertible: the cell has a two-sided inverse in its own dimension. An invertible n-ball of operations in a gap is an n-cell of the hom ω-category of operations, obtained by currying the gap with the closures, that is strictly invertible.
-- **Probes.** ⟦Θ⟧ = ν(λΘ), which is Free(Θ) (`Strict/PsGlob`). An L-core term t : A over a pasting context Θ is a cell of ν(K(Θ)) (`Strict/Soundness.sound-tm`). Hom by hom, ν(K(Θ))(aᵢ, aⱼ) = ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ). The canonical comparison maps ⊗ → × are compatible with composition, so they give κ_Θ : ν(K(Θ)) → ν(λΘ), whose homs are the products, and κ_Θ(t) is a cell with the boundary A prescribes. An L substitution σ : Θ′ → Θ therefore gives a good labelling of Θ′ in ν(λΘ), hence a strict functor ⟦σ⟧ : ν(λΘ′) → ν(λΘ) (`Strict/PsGlob`, `FromGood.functor`). p_{Δ,Θ} is the isomorphism ν(λΔ) ⊗ ν(λΘ) ≅ ν(λΔ ⊗ λΘ), with ⟦Δ ⊗ Θ⟧ := ν(λΔ ⊗ λΘ), which is ordered unital by `Strict/TensorBasis`. pt is the identity on 1.
+- **Probes.** ⟦Θ⟧ = ν(λΘ), which is Free(Θ) (`Strict/PsGlob`). An L-core term t : A over a pasting context Θ is a cell of ν(K(Θ)) (`Strict/Soundness.sound-tm`). Hom by hom, ν(K(Θ))(aᵢ, aⱼ) = ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ). ν(K(Θ)) is Gray-enriched. View ν(λΘ), whose homs are the products, as a Gray-category by change of base along the comparison X ⊗ Y → X × Y. That comparison is monoidal, since maps into a product are fixed by their projections. So the comparisons give a Gray-functor κ_Θ : ν(K(Θ)) → ν(λΘ), and κ_Θ(t) is a cell with the boundary A prescribes. An L substitution σ : Θ′ → Θ therefore gives a good labelling of Θ′ in ν(λΘ), hence a strict functor ⟦σ⟧ : ν(λΘ′) → ν(λΘ) (`Strict/PsGlob`, `FromGood.functor`). p_{Δ,Θ} is the isomorphism ν(λΔ) ⊗ ν(λΘ) ≅ ν(λΔ ⊗ λΘ), with ⟦Δ ⊗ Θ⟧ := ν(λΔ ⊗ λΘ), which is ordered unital by `Strict/TensorBasis`. pt is the identity on 1.
 - **glue.** The collar term `glue` is interpreted as the strict composite it stands for. It exists because it is an L-core composite.
 
-**Lemma S1 (rows are bijections).** For each row ρ and each fixed placement of time slots, r : H → B is a bijection of operation sets that commutes with restriction along every time slot.
-*Proof.* The pair and probe-pair rows are the associativity isomorphism, composed for the probe-pair row with p. The unit row is the unit isomorphism. The two evaluation rows are the two closure bijections, and (A, Φ) and (Φ, A) keep each time slot in its gap. Restriction along a slot is precomposition with a map in one tensor factor, and every one of these isomorphisms is natural in each factor. ∎
+**Lemma S1 (rows are isomorphisms).** For each row ρ and each fixed placement of time slots, r : H → B is a bijection of operation sets, natural in every map of every tensor factor. Restriction along time-slot faces is one such map. Hence r is an isomorphism of the hom ω-categories of operations (curry any gap), so r and r⁻¹ preserve strict invertibility.
+*Proof.* The pair and probe-pair rows are the associativity isomorphism, composed for the probe-pair row with p. The unit row is the unit isomorphism. The two evaluation rows are the two closure bijections, and (A, Φ) and (Φ, A) keep each time slot in its gap. Restriction along a slot is precomposition with a map in one tensor factor, and every one of these isomorphisms is natural in each factor. Naturality in every factor also gives the isomorphism of hom ω-categories. ∎
 
 **Theorem S (soundness of the kernel in 𝔖).** Fix a valuation of a kernel context in 𝔖 that respects the context's types and marks. Then every derivable judgement denotes a functor or cell with the boundary its type prescribes, and every marked derivable cell denotes a strictly invertible one.
 *Proof.* By induction on the derivation.
@@ -238,9 +238,11 @@ This is the non-collapse half: for instance, no closed cell relates two distinct
   - (PS-fac): it has two positive-dimensional factors, so its image is an identity.
   - (INV-obj): only objects are involved, so its image is an identity.
   - (OBJ-k): the valuation sends a grpd_k object to one whose cells above k are invertible.
+  - (MARK): a marked variable is valued as a strictly invertible cell.
+  - The ps rules (OP-ps, INV⇒PS, PS*) are interpreted vacuously, as true of every cell. No inv conclusion depends on them.
 - The corollas m, e^ℓ, e^r, p and pt: by the definitions above.
 - Planar substitution: by composition of functors.
-- (GB-cut_{ρ,n}). Let b̂ = glue(a, b) be b with its collar adjoined. Its boundary is r(u). Put c := r⁻¹(b̂), which has boundary u by Lemma S1, and ε := the identity on b̂ = r(c), which is invertible.
+- (GB-cut_{ρ,n}). Let b̂ = glue(a, b) be b with its collar adjoined. Its boundary is r(u). Put c := r⁻¹(b̂), which has boundary u by Lemma S1, and ε := the identity on b̂ = r(c), which is invertible. In inv mode, b̂ is invertible, being a composite of invertibles, so c is invertible because r⁻¹ is an isomorphism of hom ω-categories (Lemma S1).
 - (GB-dcut_{ρ,k}). The same with d := r⁻¹(glue(a^±, b)) and the identity as its comparison.
 
 Admissibility closed under substitution then needs nothing further, since the denotation of an instance is the denotation of the template composed with the valuation. ∎
@@ -271,16 +273,14 @@ These are the remaining formal steps (ledger C5b).
 
 **Theorem D7g.** For every row ρ, every gap and every k ≥ 1, in the generic context of (GB-dcut_{ρ,k}) no derivable term of the kernel, of any shape, has type u⁺ ⇒ u⁻ at H on ⟦Dᵏ⟧.
 *Proof.* Choose the following valuation in 𝔖.
-- Every object variable of the row except the output ↦ 1.
+- Every object *variable* of the row's lists, except the output, ↦ 1.
 - The output (Z, or C) ↦ G := ν(λDᵏ), as a data atom. The sort discipline allows this, since the output ranges over data formulas.
-- Then H and B on ⟦Dᵏ⟧ are both isomorphic to Hom(ν(λDᵏ), G), using the unit isomorphisms and 1\G ≅ G ≅ G/1.
-- b ↦ the identity of G, which is the generic k-cell e.
-- u^± ↦ r⁻¹ of the faces of e.
+- The lists may also contain fixed representables ⟦Θ⟩ anywhere (in L, R, Φ, U, V or A, by the generic formula grammar), and these cannot be valued as 1. Let F be the tensor of all non-slot input factors under this valuation (when A is representable, first move it across with the closure bijection). F has an object, since every probe is nonempty. Let π : F ⊗ ν(λDᵏ) → ν(λDᵏ) be the projection that sends F to 1 (! ⊗ id, then the unit isomorphism).
+- b ↦ e ∘ π, where e is the identity of G, the generic k-cell.
+- u^± ↦ r⁻¹ of the faces of e ∘ π.
 - a^± ↦ identities, which are invertible, and agree on the common boundary.
 
-The probe-pair row has fixed probe inputs ⟦Δ⟧ and ⟦Θ⟧, which cannot be valued as 1. There b ↦ e ∘ (! ⊗ id), and a reverse term is restricted along a point of ⟦Δ ⊗ Θ⟧ (one exists, since probes are nonempty) before reading off the cell below.
-
-The valuation respects all types and marks. By Theorem S a derivable term of type u⁺ ⇒ u⁻ would denote a k-cell of ν(λDᵏ) from t(e) to s(e). Its top chain is m·e with m ≥ 0, since e is the only k-generator, and it satisfies ∂(m·e) = s(e) − t(e) = −∂e. As ∂e ≠ 0, this forces m = −1, which is impossible. ∎
+The valuation respects all types and marks. By Theorem S a derivable term of type u⁺ ⇒ u⁻ would denote a functor F ⊗ ν(λDᵏ) → G whose faces are those of e ∘ π, swapped. Restricting it along a point of every factor of F gives a k-cell of ν(λDᵏ) from t(e) to s(e). Its top chain is m·e with m ≥ 0, since e is the only k-generator, and it satisfies ∂(m·e) = s(e) − t(e) = −∂e. As ∂e ≠ 0, this forces m = −1, which is impossible. ∎
 
 **Corollary D7g (instances).** Let σ be a kernel instance into Γ. The reverse of the directed goal is not derivable over Γ whenever some valuation of Γ in 𝔖 sends σ(u⁻) and σ(u⁺) to operations with no cell σ(u⁺) ⇒ σ(u⁻). Examples are the walking square, which is the reverse interchanger (`Strict/ReverseInterchanger`), and the four-cube pair 212321 / 123212 of r3 item 41, which has no cell in either direction. This is the specialization argument of the r3 answer, with 𝔖 as its model.
 *Proof.* As above, composing the valuation of Γ with σ. ∎

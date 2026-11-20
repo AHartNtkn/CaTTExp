@@ -14,7 +14,7 @@ def simplex_d(simplex):
 
 
 @cache
-def simplex_atom(simplex):
+def simplex_atom(simplex, boundary_map=simplex_d):
     sides = []
     for sign in (-1, 1):
         row = Counter({simplex: 1})
@@ -22,7 +22,7 @@ def simplex_atom(simplex):
         for _ in simplex[1:]:
             differential = Counter()
             for cell, n in row.items():
-                for face, a in simplex_d(cell).items():
+                for face, a in boundary_map(cell).items():
                     differential[face] += sign*n*a
             row = +differential
             chain.append(tuple(sorted(row.elements())))

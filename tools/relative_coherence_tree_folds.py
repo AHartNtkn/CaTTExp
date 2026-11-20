@@ -9,7 +9,7 @@ from catt import check_ctx, comp2, src, tgt, v
 from rc2 import kappa
 from relative_coherence_based_columns import Brackets, difference
 from relative_coherence_cube_boundary import boundary
-from relative_coherence_oriental_wedges import simplex_d, support
+from relative_coherence_oriental_wedges import simplex_atom, simplex_d, support
 from relative_coherence_state_colours import inventory
 from relative_coherence_steiner_cuts import tableau
 
@@ -42,21 +42,8 @@ class TreeFold:
         return tuple(tuple(tuple(sorted(s for f in chain for s in self.basis(f)))
                            for chain in pair) for pair in rows)
 
-    @cache
     def atom(self, simplex):
-        sides = []
-        for sign in (-1, 1):
-            chain = Counter({simplex: 1})
-            rows = []
-            for _ in simplex:
-                rows.append(tuple(sorted(chain.elements())))
-                change = Counter()
-                for s, n in chain.items():
-                    for f, a in self.d[s].items():
-                        change[f] += sign*n*a
-                chain = +change
-            sides.append(rows[::-1])
-        return tuple(zip(*sides))
+        return simplex_atom(simplex, self.d.__getitem__)
 
     def check(self, n):
         faces = list(product((-1, 0, 1), repeat=n))

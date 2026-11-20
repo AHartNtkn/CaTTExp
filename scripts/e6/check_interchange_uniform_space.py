@@ -38,7 +38,7 @@ def hemisphere(disk, rank, side):
     return disk
 
 
-def verify_rows(p, q, right):
+def verify_rows(p, q, right, check_bridge=None):
     rows, nodes = bridge_contexts(p, q, right)
 
     def basis(variable, fixed):
@@ -69,6 +69,8 @@ def verify_rows(p, q, right):
             fixed = (offset, 2 if offset == q else fixed_side)
             bridges[rank, side] = between(*ends, basis((p + 1, 2), fixed))
             assert ends[side] == hemisphere(direct, rank, side)
+            if check_bridge is not None:
+                check_bridge(rank, bridges[rank, side])
     assert bridges[p + q, 0] == bridges[p + q, 1] == direct
     return 2 * len(rows)
 

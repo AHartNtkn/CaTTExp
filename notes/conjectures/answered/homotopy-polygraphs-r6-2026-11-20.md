@@ -302,3 +302,63 @@ Cover the history complex by choices of one such list per guard. Each choice add
 Indeed on any record drop permanently covered resources. Group the other axes of each guard by their actual zero sets: nonempty proper initial intervals, nonempty proper final intervals, and all other nonempty sets. The last type requires both operation signs on a walk. In a chart string all its initial witnesses are redundant except one with latest departure, and all its final witnesses except one with earliest arrival. This holds even when another axis has many zero windows. Split a multiple initial or final group into two parts as in Response 5. These two subcomplexes cover all strings, and each is attainable by adding one initial hold on the omitted axes of that resource. When all such groups are singletons or empty, the role bound ensures that each guard depends on at most two nonconstant axes. Its grid has flag links and all strict components are contractible by round 5, Response 9. Inducting back up through the binary covers shows that if all global positive-degree integral homology tests vanish then every fibre is contractible, by the free-group argument of Response 5. The tests can be enumerated on actual records even when no uniform bound on their milestones exists. This includes arbitrary binary resources together with any number of resource-monotone guards, and also permits some resources to have one genuinely mixed user and many one-sided users.
 
 **Reproduction.** Run `python tools/homotopy_polygraph_milestones.py`. The [checker](../../../tools/homotopy_polygraph_milestones.py) computes the induced milestone poset from one serialization. Independently, it follows legal square exchanges in the binary grid, enumerates the full spatial clock charts, and computes their ordered-split boundaries. In each of two different binary components it finds 4,505 full chart strings versus 409 milestone strings, both with point Betti numbers. A case with interior and disconnected zero sets gives 149 strings on both sides. With repeated binary excursions the checked records grow from 12 to 264 instructions, while eight milestones continue to give 1,360 strings and circle homology for both serializations tested at each length. In that family the two binary processes' visit lists can be shuffled in arbitrarily many ways. The finite bound concerns the induced milestone data across these components.
+
+# Verification (2026-11-20)
+
+Status: **verified. Q2 and Q3 are answered with four generator-level decidable classes and an exact fibre description on two of them. Q1, the exact degree for all finite polygraphs, is still open:** the new hardness results apply to supplied families of poles or boards, not to one finite presentation per machine.
+- **Q1, partial.**
+  - Response 1: in one fixed positive rank-six presentation V there is a decidable family of pole pairs on which the universal comparison test is Π⁰₂-complete. The selection is on rank-four poles, so it is not yet a whole-presentation reduction.
+  - Response 6, three results:
+    - Every positive lift of a complete routed label already has a weight-three circle at other poles, so Response 1's pole selection cannot be enforced by positive typing.
+    - If only the incidence comparisons are optional, whole-presentation homotopicality is decided by a matching test: D has an isolated vertex, or its maximum matching has size at most 2.
+    - A rank-eleven request tree forces all incidence comparisons. This gives Σ⁰₁-completeness of the whole-presentation test on a supplied family of boards, one per complex.
+  - Response 7: on the class of binary resources plus resources with no internal acquire-and-release cycle, homotopicality is truth-table reducible to 0′. On another class with unbounded reversals, failure is r.e. So r5's truth-table lower bound cannot be raised beyond truth tables on these classes.
+- **Q2, the generator-level classes.** All four are closed under suspension and graph assembly.
+  - **Single-transfer controls** (Responses 2–3). A whole presentation fails exactly when some choice of one possible edge per process has a strong component with at least two more edges than vertices. Recognition is coNP-complete, with 3-SAT hardness on two-branch controls. Every negative instance has a certificate with at most R + 2 processes, and this bound is attained. Recognition is fixed-parameter tractable in the resource count R, by matching over at most 2^R (R²)^{R+2} patterns.
+  - **One destination per process** (Response 4), and its time reversal. Recognition is coNP-complete, with circle witnesses on at most R + 2 moving processes.
+  - **Monotone on each resource** (Response 5). No process walk both acquires and releases one resource. Whole-presentation homotopicality is decidable by integral homology alone, although contractibility of a specified fibre on the same class is r.e.-complete.
+  - **Binary plus bounded milestones** (Response 7). Homotopicality is truth-table reducible to 0′; this class is decidable relative to the halting problem.
+- **Q3, the group tests.**
+  - On the single-transfer and one-destination classes every strict fibre is a finite product of positive-dimensional spheres, and every such product occurs. The fibre groups are free abelian, and integral homology detects every failure.
+  - On the monotone class a nontrivial perfect group is never the only global obstruction. If every record has vanishing positive-degree homology, every fibre is contractible.
+  - The boundary is sharp. Letting each process choose its class individually gives r.e.-complete specified fibres, through round 5's incidence construction.
+
+**What was re-run.** All eight cited checkers exit 0 under Python 3; each run took at most 2 s.
+- `homotopy_polygraph_transfer_graph.py`: 101 strongly connected multigraphs with full and partial guards. Strict inequalities after successive potential updates are [2, 4, 6, 8, 9]. The five-process, three-resource obstruction has 322 spatial cubes, Euler sum 0 and Betti numbers (1, 1).
+- `homotopy_polygraph_transfer_complexity.py`: 252 branching families agree between matching and exhaustive choice; 220 CNFs, 28 of them unsatisfiable.
+- `homotopy_polygraph_one_destination.py`: 26 endpoint pairs on the cyclic control, 351 multiple-tail systems, and 45,209 endpoint strings with point Betti numbers. There are 757 cubes with an additional arrival, and the explicit failing record is ((2, 1), (2, 1), (1, 2), (1, 2)).
+- `homotopy_polygraph_monotone.py`: needs SymPy, which was installed for the run.
+  - The projective-plane assertion (H₁ torsion of order 2) passes.
+  - Triangle H₁ = ℤ, the cone is acyclic, and with the apex hold increased H₁ = ℤ.
+  - The whole presentation is accepted after 2,916 record tuples. The failing case is rejected after 3,291 tuples, with an explicit witness.
+- `homotopy_polygraph_routed_cuts.py`: 12 chart strings with Betti (1, 1) and 74 with Betti (1, 0, 1). Both boards check out: 250 and 294 boxes on the one-by-one board, 474 and 602 on the triangle board.
+- `homotopy_polygraph_optional_incidence.py`: all 512 three-by-three and 4,096 four-by-three relations, and 262,144 spatial cube comparisons.
+- `homotopy_polygraph_relay_handshake.py`: 642 realizable subsets among 4,096, exactly one complete record, and 299,008 comparisons.
+- `homotopy_polygraph_milestones.py`:
+  - Each binary component gives 4,505 full strings against 409 milestone strings.
+  - The interior case gives 149 strings on both sides.
+  - Records of 12 to 264 instructions keep eight milestones and a circle.
+
+**Checked.** No gap was found.
+1. **The sphere theorem** (Response 2). Write t_e = c + w_e + h_head − h_tail with w orthogonal to constants and gradients for a positive circulation. A maximum of h rules out w = 0. The monotone averaging update gives a continuous strict potential on L ∖ {0}, and the maximum-and-translate homotopy contracts the fibre to it. This gives S^{n−m−1}. Checked; the free-constraint reduction for weak components with an unguarded vertex or an intercomponent edge was also checked.
+2. **Certificates and hardness** (Response 3). Ear extensions raise edges minus vertices by one, so two ears after a directed cycle suffice, giving m + 2 processes. The 3-SAT reduction uses one colour per literal occurrence and three return arcs. Checked.
+3. **The one-destination sink formula** (Response 4). The forbidden set is a product of half-lines, so the complement is contractible unless there is no external-only arrival, in which case it is S^{n_C−|C|−1}. Checked.
+4. **Homology suffices on the monotone class** (Response 5). Split one guard's alternative witnesses into two parts. Each part is the history complex of an attainable record of the same polygraph, after adding one initial hold. A union of two subcomplexes with simply connected components has free fundamental group (graph of groups with trivial vertex groups). So vanishing H₁ gives simple connectivity, and Whitehead gives contractibility. The induction uses the global hypothesis on all records, which is why it does not contradict r.e.-completeness of single fibres. Checked.
+5. **The matching test** (Response 6). The vertex-cover argument for matching number ≤ 2 holds. For k ≥ 3, the star decomposition gives nerve ∂Δ^{k−1}, hence S^{k−2}. The path 12, 23, 34 is a correct example. Checked.
+6. **The request tree** (Response 6). A parent that opens and closes forces both transitions of every child, and there is no protocol path from one relay to another, so partial records only add orders from S to the columns, from the rows to T, or from S to T. Checked at the level of the stated construction; the lifted-chart details follow round 5's disjoint-box argument.
+7. **Milestone reduction** (Response 7). Each choice of window lists adds only strict comparisons of milestones, and cyclicity is unchanged on restricting H to the milestones after transitive closure. So the two nerves agree. Checked.
+
+**Caveats.**
+- Response 1's Π⁰₂-completeness is for a decidable family of pole pairs inside one presentation, not for homotopicality of finite presentations. Response 6 shows that positive typing cannot enforce that pole selection.
+- Response 6's Σ⁰₁-completeness still uses one finite board per complex. The universal input quantifier of Q1 is not implemented.
+- The size bounds in Response 5 (at most 2^{n^{2R}} nerve simplices) are deliberately coarse; Response 3 gives the coNP lower bound.
+- The checkers are finite instances; the unbounded statements rest on the proofs above.
+
+**Editorial.** The file moved from `outbox/` to `answered/`; its relative links resolve unchanged. Links to it from `open-issues.md` and `README.md` were repointed.
+
+**What is left open.**
+- The exact degree of homotopicality of finite polygraphs: Δ⁰₂ or Π⁰₂-complete. The gap is still between truth-table hardness and Π⁰₂.
+- A single finite presentation per machine that enforces Response 1's pole selection.
+- A generator-level class that contains all four classes above. Also, the exact complexity on the monotone class, between coNP-hard and the coarse bound.
+- A characterization of the fibres outside the sphere-product classes.
+- Follow-up: [`outbox/homotopy-polygraphs-r7.md`](../outbox/homotopy-polygraphs-r7.md).

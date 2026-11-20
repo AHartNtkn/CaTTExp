@@ -1356,4 +1356,4 @@ Status: **verified; Q1(b) answered positively (a least pasting profile V, with d
 - An explicit description of F_V(Γ) and of what T₁₂ adds to it; classification of the pasting profiles; a visibility criterion.
 - Admissibility for the format of laws a kernel would add (unconditional equations over a pasting diagram).
 - Laws acting on the 4-loops H^k and on the loops of the arithmetic gate (degree-shifted prime laws).
-- Follow-up: [`outbox/lax-interchange-every-dimension-r9.md`](../outbox/lax-interchange-every-dimension-r9.md).
+- Follow-up: [`answered/lax-interchange-every-dimension-r9-2026-11-20.md`](lax-interchange-every-dimension-r9-2026-11-20.md).

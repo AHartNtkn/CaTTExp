@@ -1,8 +1,8 @@
-# Relative coherence in CaTT after the classification: degree bounds, explicit connecting terms, and beyond finite computads
+# Relative coherence in CaTT: search-free connecting terms, canonical sections, and the directed classification
 
 *A self-contained problem. It assumes familiarity with globular weak ω-categories, strict ω-categories, polygraphs (computads) and Steiner complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** The classification is now known: for every finite CaTT context Γ, RC_id(∞)(Γ) holds exactly when Γ is homotopical (item 56). Every finite strong-Steiner context is relatively coherent, and the naturality operation of Conjecture N exists at every depth (items 55, 57). The proof is an existence proof. It runs through bar spectral sequences, superperfect loop groups and a nested induction on height and number of generators, and the connecting terms it supplies are found by search. We now ask for the **effective** form of the theorem, uniform in the dimension: a degree bound beyond which nothing new can fail, an explicit (search-free) construction of the connecting cells and of canonical sections for all strong-Steiner shapes (including the canonical Gray terms) with a size bound, and the extension beyond finite computads. Results for one more context or one more dimension are not useful to us.
+**What we are asking for.** The classification is complete for every small computad (items 56, 59): relative coherence in all degrees holds exactly when the computad is homotopical, the first failing degree is r + a(E_Γ(c)) minimised over strict cells and is unbounded already at height three (item 58), and raw connecting terms have no size bound in the sizes of the two inputs and the tableau (item 60). Every construction so far finds the connecting terms by search. We now ask for the whole remaining line: a **search-free** construction of connecting terms and canonical sections with sizes measured correctly (against the whole context, or with sharing), and the **directed** classification for the interchange-directed theory L on arbitrary finite directed computads. Results for one more context or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -150,36 +150,31 @@ RC is the single missing ingredient in several constructions in CaTT: lax natura
 56. **The classification (r8).** **For every finite context Γ, RC_id(∞)(Γ) ⟺ Γ is homotopical.** This goes through item 52 and the partial-cylinder unit theorem: the unit lies in W on all partial cylinders ⇒ Conjecture N ⇒ FEA ⇒ the unit lies in W on every computad-cofibrant algebra. In particular the unit of the comparison between CaTT models and coinductively complete (∞,ω)-categories is a weak equivalence on every computad-cofibrant model. Since homotopicality of finite polygraphs is undecidable, so is RC_id(∞).
 57. **Consequences (r8).** Conjecture N holds at every depth: the generic filler is a lift of the collapsed Gray cell at the literal staircases on the relatively coherent P↑Y. Canonical CaTT terms exist for the cells of every finite iterated Gray tensor of globular pasting diagrams, chosen by a fixed search order.
 
+58. **The first failing degree (r9).** For a space E put a(E) = 0 if E is empty or disconnected, and otherwise the least j ≥ 1 with π_j(E) ≠ 0 (∞ if none). For a finite context of height m, the first failing degree is min over r ≤ m and strict r-cells c of r + a(E_Γ(c)), the fibres taken in the inductive realization. Equivalently RC_id(n) for all n ≤ d iff every E_Γ(c) of rank r ≤ min(d, m) is (d − r)-connected; the proof identifies the fixed-boundary fibre W(c, b) as the groupoid of raw cells at a literal boundary b modulo comparison (using the ordinary unit theorem). The seam ring Γ_k (height 3) first fails in degree exactly k + 2, by a degree-one class in π_{k−1}(S^{k−1}); so no degree bound exists at fixed height.
+59. **Beyond finite computads (r9).** For every small computad with finitary attaching terms, of bounded or unbounded height, RC in all degrees ⟺ homotopical ⟺ every finite dependency-closed subcomputad is homotopical (filtered unions and discrete Conduché base change). Completing only the final comparison is weaker in unbounded height: the computadic replacement K1 of the point fails RC_id(3) yet Q e_P is an equivalence. Relative criterion: if P is relatively coherent, P′ ⊇ P is iff each new attachment N C_{<g} ⊔^h_{∂𝔻^r} 𝔻^r → N C_{≤g} is an inductive equivalence (order-independent); no criterion depending only on the new declarations and their dependency closures exists (the middle-wire declaration A over two coherent bases).
+60. **Size lower bounds (r9).** With atom declarations padded by nested unary composites p_N, S_N = (x, y; f, h : x → y; z : p_N ⇒ h) has the same strict tableau and inputs for all N, but every lift of c from f to h contains p_N, so no bound in the sizes of u, v and the tableau exists. An atom-preserving section is consistent in a fixed presentation iff assigning atoms their variables and closing under faces and identities gives one raw term per strict label; with freely chosen declarations (item 57) this is always possible. Even so, syntactic compatibility with the weak disk identity forces T(1^d x) = id^d(x), whose expanded tree contains l_d occurrences of x with l_{d+2} = 2l_{d+1} + l_d (1, 1, 3, 7, 17, 41, 99, …): exponential without sharing.
+61. **Directed pasting arities (r9).** For the two-tier directed theory L (homs are ordinary weak ω-categories; the forward strict hom of ΣP₁ ∨ ⋯ ∨ ΣP_k between vertices i < j is P_{i+1} ⊗ ⋯ ⊗ P_j with the lax Gray tensor), the free L-algebra on every finite globular pasting arity maps to its free strict Gray-enriched category by a globular trivial fibration, in every dimension. This uses the directed unit theorem (L-models localized at W_L are coinductively complete oriented categories).
+
 ## 4. Questions
 
-**Question 1 (main: a degree bound).** Let Γ be a finite context of generating height m.
-- (a) Is there a computable function n(m) (for instance n(m) = m + 2, the first possible failing degree in a minimal support, item 50) such that RC_id(n(m))(Γ) ⇒ RC_id(∞)(Γ) for every Γ of height m? Equivalently, does a nontrivial superperfect loop group in some fibre always produce a failure already in a bounded degree?
-- (b) If no such bound exists, give a family of homotopy-theoretic counterexamples. Here the failing degree is a function of Γ that is unbounded at fixed height, and a separating invariant should be given for each member.
-- (c) In either case, describe the first failing degree in terms of a homotopy invariant of the geometric fibres E_Γ(c) (connectivity, or the first nonvanishing homotopy group).
+**Question 1 (main: search-free connecting terms and canonical sections).** Items 55 and 57 produce connecting terms and canonical sections only by a terminating search; item 60 rules out bounds in the sizes of the two inputs and the tableau alone, and exponential blow-up of identities without sharing.
+- (a) For every finite strong-Steiner context S, give a search-free construction of the connecting term over a strict cell c between parallel raw terms u, v, by structural recursion on the terms, the context and the tableau of c. Bound its size in terms of the **whole** input (the context with its declarations, u, v and the tableau), or as a DAG with sharing. Is a polynomial bound possible in either measure? If not, give a family forcing super-polynomial size.
+- (b) The same for canonical sections: a structurally recursive assignment T from cells of ν(K) to terms over a declaration of the atoms chosen together with T (item 57), compatible with identities, dependency-closed faces and, for iterated Gray tensors, every parenthesization, for all finite strong-Steiner K (Gray tensors of globular pasting diagrams, joins, orientals and their tensors with globes, lax cylinders Γ ⊗ D¹). Bound its size polynomially in the tableau with sharing, or prove a lower bound. If explicitness holds for one family of shapes and fails for another, say where.
+- (c) The same for the depth-n naturality fillers of Conjecture N.
 
-**Question 2 (explicit connecting cells and canonical sections, one construction for all strong-Steiner shapes).** This question also carries the explicit-section question for canonical Gray terms (CT), which is the same step: CT holds for every finite family of globular pasting diagrams because each cell of the tensor is lifted at its two chosen faces by relative coherence of its strong-Steiner support (item 57), and that lift is currently found by search.
-- (a) **Connecting terms.** For every finite strong-Steiner context S, give a search-free construction of the connecting term: given parallel raw terms u, v of S and a strict cell c : πu → πv, produce a raw term of type u → v over c, by structural recursion on the terms and on the Steiner tableau of c, with a bound on its size in terms of the sizes of u, v and the tableau. The same for the depth-n naturality fillers of Conjecture N.
-- (b) **Canonical sections.** For every finite strong-Steiner complex K (in particular iterated Gray tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k of globular pasting diagrams, joins Cone(Q; c), orientals and their tensors with globes, and lax cylinders Γ ⊗ D¹), give a structurally recursive assignment T from cells of ν(K) to CaTT terms over the context with one variable per atom, such that T(atom) is its variable, T(c) has strict value c, T(c) : T(∂⁻c) → T(∂⁺c) holds syntactically, and T is compatible with identities, restriction to dependency-closed faces and, for tensors, every parenthesization. This is (a) applied cell by cell in increasing dimension; the point is to do it without search.
-- (c) **Size.** Is a polynomial bound possible in (a) and (b)? If not, give a family of contexts or tensors forcing super-polynomial terms. If explicitness holds for one family of shapes (say tensors) and fails for another (say joins or non-pasting cylinders), say where it breaks.
+**Question 2 (the directed classification).** For the directed theory L of item 61, define relative coherence of a finite directed computad A as: any two parallel cells of the free L-algebra with equal image in the free strict Gray-enriched category are joined by a cell with identity image. Prove the analogue of item 56 for every finite directed computad (relative coherence ⟺ the free strict Gray-enriched category is the free oriented (∞,ω)-category on A), or give a counterexample with a separating invariant. Give the first-failing-degree formula of item 58 in the directed setting, and say which of the ordinary steps (subdivision poset, top-generator reductions, two-fresh-face test, depth-two filler) fail for lax interchange.
 
-Natural routes: make the existence proof constructive (the pole-loop, serial-word and signed-count contractions as explicit term rewrites); use the explicit low-dimensional ingredients (the hexagon section and wedge theorem for tensors, the interval cells) as the steps of a recursion on height and number of factors; or interpret the cells in an algebraic weak ω-category with a Gray-type multiplication and translate.
-
-**Question 3 (beyond finite computads).**
-- (a) Infinite and locally finite computads. Does RC_id(∞) ⟺ homotopical hold for every computad of finite generating height? What about unbounded height, where coinductive completion enters (Ozornova–Rovelli–Walde)?
-- (b) Relative versions. For a computad inclusion Γ ⊆ Γ′ with Γ relatively coherent, give a criterion on the new generators alone (in the spirit of item 51 and the extension theorem asked for earlier) for Γ′ to be relatively coherent.
-- (c) The directed-interchange setting. Replace strict ω-categories by free Gray-enriched categories, or by the free objects of a directed-interchange theory T in which interchangers k ≥ 1 are directed cells. Is the comparison from a weak free object with directed interchange to its T-strictification a globular trivial fibration on an explicit class of contexts, analogous to "homotopical"?
+**Question 3 (computing the invariants).** Homotopicality is undecidable, but the fibres E_Γ(c) at a specified cell are finite and effective. Give an algorithm that, from a finite context and a strict cell, produces a finite model of the fixed-boundary fibre W(c, b) together with explicit raw terms realising generators of its first nonvanishing homotopy group (the separating classes of item 58), and bound their size.
 
 ## 5. What counts as a solution
 
 Any of the following:
-- a degree bound with proof, or a family showing that none exists;
-- an explicit recursive construction of connecting terms and canonical sections for all finite strong-Steiner contexts (or for all iterated Gray tensors), with a size bound or a lower bound;
-- the classification for infinite computads of finite height;
-- a relative extension criterion;
-- the directed analogue for one explicit theory T;
+- a search-free construction of connecting terms or canonical sections for all finite strong-Steiner contexts or for all iterated Gray tensors, with a size bound in the whole input or with sharing, or a lower bound;
+- the directed classification for all finite directed computads, or a counterexample;
+- an algorithm producing explicit separating classes with a size bound;
 - a published reference.
 
-## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-8 answers)
+## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-3 to round-9 answers)
 
 - Ozornova–Rovelli–Walde, arXiv 2603.11005 (coinductive completion; (∞,m)-categories are coinductively complete).
 - Street, *The algebra of oriented simplexes* (orientals); Steiner, *Orientals*, arXiv math/0601383 (tableaux of face suborientals).
@@ -207,130 +202,3 @@ Any of the following:
 - Eilenberg–MacLane, acyclic models (used in item 43).
 
 - Guetta, arXiv 1812.05332, Thm 6.11 (discrete Conduché functors and bases; item 49); Campion, arXiv 2311.00200, Thm 4.21 (contractible subdivision posets; item 52).
-
-# Researcher Response 1
-
-## The first failing degree
-
-There is **no degree bound, even at generating height three**. For the finite positive seam ring $\Gamma_k$ of item 32, the first failing degree is exactly $k+2$, for every $k\ge2$. The obstruction is an integral degree in $\pi_{k-1}(S^{k-1})$. The lower bound on the first failure needs the comparison at *literal* boundaries. An upper bound on where the sphere is detected would not suffice.
-
-Here is a formula for an arbitrary finite context of height $m$. For a space $E$, put $a(E)=0$ if $E$ is empty or disconnected. For a nonempty connected $E$, put $a(E)=\min\{j\ge1:\pi_j(E)\ne0\}$, with empty minimum $+\infty$. Then the first failing degree, with the same convention, is
-$$
-                 \boxed{\min_{1\le r\le m}\ \min_{c\in F(\Gamma)_r}
-                                      \bigl(r+a(E_\Gamma(c))\bigr).}
-$$
-All homotopy fibres here use the inductive realization in item 27. The minimum runs over all strict cells, including composites.
-
-**Fixed boundaries.** Write $S_r=\Gamma_{\le r}$, $X_r=L\mathrm{Free}(S_r)$ and $C_r=F(S_r)$. A strict $r$-cell $c$ belongs to $C_r$. Item 27 identifies its geometric fibre in $S_r$ with $E_\Gamma(c)$. The same identification holds on every face. Algebraically, every writing of an iterated identity on $c$, and every filler over its strict identity, already lies in $S_r$ by item 2.
-
-Let $B_r(\partial c)$ be the space of maps from the cellular globe boundary to $X_r$ over the indicated strict boundary. For a literal boundary $b$ over $\partial c$, let
-$$
-             W(c,b)=\operatorname{hofib}_{b}
-               \bigl(E_\Gamma(c)\longrightarrow B_r(\partial c)\bigr).
-$$
-The identity $S(e_{S_r})\eta=\pi_{S_r}$ for the singular functor $S$ identifies the strict label on both sides of the unit comparison.
-
-1. Its components are the raw $r$-terms at $b$ over $c$, modulo invertible comparison. In positive degree $j$, its $j$th homotopy group at a writing consists of the based raw $(r+j)$-loops there modulo $(r+j+1)$-comparison. Indeed the ordinary unit at $\mathrm{Free}(S_r)$ is a weak equivalence by item 56, and $X_r$ is an $(\infty,r)$-category by item 23. In the derived nerve, fixing the two poles takes the weak hom, and the relative globe cylinder identifies components of disk restriction at a literal boundary with raw cells modulo invertible comparison. Iterate the hom calculation down to $b$. The resulting hom is groupoidal since every positive-dimensional cell in it is above generating height. Its strict target is a discrete set of $r$-cells, so selecting $c$ selects entire components. Taking further homs at a writing and its identities computes successive based loop spaces. This also proves representability of the loop classes with their specified lower faces. [Derived nerve, fixed homs and relative globe cylinder, Response 2](../answered/catt-models-unit-condition-r4-2026-11-20.md#the-derived-nerve-on-strict-arities) · [Ordinary unit, Response 13](../answered/catt-models-unit-condition-r4-2026-11-20.md#the-ordinary-unit-is-a-weak-equivalence)
-2. In this groupoid all parallel $j$-cells admit a comparison exactly when $\pi_j$ vanishes at every basepoint, for $j\ge1$. At fixed endpoints the difference of two paths is a loop obtained by composing one with the reverse of the other. Every nonempty path space from $u$ to $v$ is equivalent, by concatenation with a chosen return path, to the based loop space at $u$. Iterating gives the assertion for arbitrary parallel higher cells. Conversely a nonzero based class and the constant loop are a parallel pair without comparison. At $j=0$ the condition is that any two points belong to the same component. In $S_r$ all these comparisons have the required strict identity value. Item 2 makes the same test exact in $\Gamma$.
-
-**Passage to absolute fibres.** Fix a proposed cutoff $d\ge1$. We prove the equivalence
-$$
- \bigwedge_{n=1}^{d}\mathrm{RC}_{\rm id}(n)(\Gamma)
- \quad\Longleftrightarrow\quad
- E_\Gamma(c)\text{ is }(d-r)\text{-connected for every }r\le\min(d,m)
- \text{ and every strict }r\text{-cell }c .
-$$
-In rank zero each fibre at a vertex is contractible by restriction to its point context. In rank one $B_1$ is the product of the two endpoint fibres. In rank $r\ge2$ the boundary is two $(r-1)$-disks glued along their whole boundary. Thus $B_r$ is the homotopy pullback of the two face fibres over $B_{r-1}$ at their common boundary. These identifications follow by mapping the cellular pushout into $X_r$ and taking the fibre over the strict labelling. In computing on each face one may pass to the smaller skeleton by item 27. If the displayed connectivity estimates hold in smaller ranks, $B_r$ is at least $(d-r+1)$-connected. Indeed the two factors have that connectivity, and the base of their pullback is at least $(d-r+2)$-connected. This follows from the path-space model of a homotopy pullback.
-
-Suppose first that all the comparisons through $d$ hold. For $r\le\min(d,m)$ choose a writing of $c$ and take its literal boundary $b$. Such a writing requires comparisons only through rank $r-1$. Lift a strict expression in generators, units and binary compositions, adjusting the two operands at a shared cut by identity-image comparisons of their poles, from the lowest pole up. The highest cut of an $r$-expression is $r-1$. This is the rank-bounded boundary correction of §1.2. The support calculation allows all these steps in $S_r$. Now $W(c,b)$ is nonempty and connected by the rank-$r$ comparison, and its homotopy groups through $d-r$ vanish by the fixed-boundary calculation. Induct on $r$. The estimate for $B_r$ makes it connected, so every fibre of restriction is equivalent to this one. The homotopy exact sequence gives the asserted connectivity of $E_\Gamma(c)$.
-
-Conversely assume the geometric estimates. The same boundary calculation and the homotopy exact sequence make $W(c,b)$ $(d-r)$-connected at every specified boundary for these ranks. In particular, for $d=r$, simple connectivity of $B_r$ ensures connectedness of the fixed-boundary fibre. Given parallel $n$-terms with common strict value, $1\le n\le d$, strip strict identities from their value to write it as $1^{n-r}c$ on an intrinsic $r$-cell. Then $r\le\min(n,m)$. For $r=0$ both terms live over the point. Otherwise they supply parallel $(n-r)$-cells of the groupoid at their common boundary below rank $r$. Connectedness if $n=r$, and vanishing of $\pi_{n-r}$ otherwise, give the required raw comparison. This proves the equivalence and hence the minimum formula.
-
-**The family and the separating class.** In $\Gamma_k$ the signal constraints are $b_i<a_{i+1}$ for $i<k$ and $b_k<z<a_1$. At the full label $c_k$, hiding seam $i$ adds $a_i<b_i$. All $k$ constraints together close one cycle, and every proper subset permits a temporal order. The sign-sheet cover therefore gives $E(c_k)\simeq\partial I^k$ by item 32. The all-label calculation gives a contractible space or the same sphere at every strict 3-label. All lower fibres are contractible by the positive 2-skeleton and support localization. Consequently the boundary space at $c_k$ is contractible. At a chosen writing the oriented cubical boundary gives a based class of degree one in $W(c_k,b)$, while the identity has degree zero. Their raw representatives have dimension $3+(k-1)=k+2$. The formula gives comparisons in **every** smaller degree. Taking $k+2>N$ refutes even a test of all degrees through $N$ at height three, and hence also the proposed single-degree test. [Seam-ring presentation and proof for every strict label, Response 8](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#researcher-response-8)
-
-## Raw size and the choice of atom declarations
-
-For Question 2(a) there is **no uniform size bound at all** in the three listed inputs for arbitrary strong-Steiner CaTT contexts. Use the explicit substitutions of §1.1 and count ordinary raw syntax-tree nodes. Let $D=(x,y;f:x\to y)$. Write $p_0=f$ and let $p_{i+1}$ be the unary composition head on $D$, of type $x\to y$, with $f$ labelled by $p_i$. The composition side condition holds on the two endpoints of the disk. Every $p_i$ has strict value $f$, and the $i$ nested heads are visible in its raw syntax. For $N>0$ take
-$$
-    S_N=(x,y;f,h:x\to y;\ z:p_N\Rightarrow h),
-       \qquad u=f,\quad v=h,\quad c=\pi z .
-$$
-The strict based complex is always the standard strong Steiner 2-globe. The two input terms, their types and the entire strict tableau of $c$ are independent of $N$.
-
-Every lift of $c$ uses $z$ since its strict top count is one. The bare variable $z$ has the wrong literal source. In any other lift take an occurrence of the variable $z$ in the ambient syntax. Its immediate parent uses it as an entry of the substitution of a coherence head. The arity is globular, so this 2-slot has a source **variable** in the arity. The entry at that variable is literally $p_N$, by typing the substitution entry $z$. Thus the output contains $p_N$ as a subterm and its size grows without bound. Existence here can also be seen directly. Over $D$ take the coherence $f\Rightarrow p_N$ and vertically compose its instance with $z$. Its strict value is $c$. The adjustment itself has strict identity value.
-
-For 2(b), if the one-variable-per-atom context is supplied with its weak declarations, the same example rules out even an atom-preserving globular section. It would give $T(c)=z$ and $T(\partial^-c)=f$, while the literal source of $z$ is $p_N$. More generally, in a single fixed presentation the exact consistency condition is that assigning each atom its variable, then taking all iterated faces and standard identities, give a single raw term for each strict label reached. Necessity follows from the section equations. For sufficiency the resulting partial assignment is closed under faces. Induct on dimension, giving each remaining identity the identity of its assigned base and lifting each remaining intrinsic cell at its two assigned faces by item 55. The inductive types agree on the partially assigned cells by construction. This gives existence in the fixed context. Item 57 allows the construction to *choose* atom declarations together with $T$. In the example one can then declare $z:f\Rightarrow h$.
-
-There is a size obstruction even for freely chosen presentations in 2(c). In the one-object complex take the rank-$d$ identity on the object $x$. Its tableau has at most $O(d+1)$ entries including the rank. Syntactic compatibility with the usual weak disk identity forces $T(1^d x)=\mathrm{id}^d(x)$. Let $l_d$ count occurrences of the ambient $x$ in its expanded substitution tree. Then $l_0=l_1=1$. The identity on a $d$-term labels the top of its $d$-disk once and the two faces of each lower rank separately. Hence
-$$
-       l_{d+1}=l_d+2\sum_{i<d}l_i,\qquad
-       l_{d+2}=2l_{d+1}+l_d .
-$$
-Already this count is exponential. It applies on the point face of any tensor. Both lower bounds concern the specified raw output. A bound charging the full input context in (a), or an output representation with sharing in (c), has different size parameters. The arguments do not give a search-free construction of the independently chosen Gray presentations or of the generic naturality fillers.
-
-## Infinite computads and relative extensions
-
-For **every small computad with finitary CaTT attaching terms**, of bounded or unbounded height, relative coherence in all degrees is equivalent to homotopicality as defined in item 8. More precisely, either property is equivalent to homotopicality of every finite dependency-closed subcomputad.
-
-Every generator has finite dependency closure by induction on its dimension. Finite closed subcomputads form a filtered system under union. Every raw term, strict expression and pair of parallel terms is supported in one member. Inclusions of the free strict categories are injective. For instance an equality derivation uses the strict laws on subexpressions, and support is preserved by every law, so every step between expressions of the subcomputad lies in it. A filler over an identity on an old cell is itself old by item 2, which applies inside the finite closure of that filler. These observations prove the assertion for relative coherence in both directions.
-
-For geometry write $e_P:X_P\to NF(P)$ for the inductive comparison. Its restriction along $NF(D)\to NF(P)$ for closed $D\subseteq P$ is $e_D$. To extend item 27 to this cardinality, observe that the support of a composite is the union of the supports of its factors and an identity has the support of its base. Thus the inclusion uniquely lifts every strict factorization of an old cell. This gives discrete Conduché base change. The strict nerves used here are discrete **inductive** complete nerves. Strict inverse pairs are trivial by top counts, which gives discrete completeness in every iterated hom. The Segal identities hold by strict composition. Pullback preserves small colimits along this inclusion. In the cellular presentation of $X_P$ each old characteristic globe and boundary pulls back intact. For any other generator the complement of its boundary consists of its top cell and identities on it, all mapping outside $F(D)$, so its pulled-back attachment contributes nothing. This proves the asserted cartesian square through all stages, including limit stages. In particular an equivalence $e_P$ restricts to equivalences $e_D$. [Support base change, Response 2](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#researcher-response-2) · [Loubaton, Theorem 2.2.2.10](https://arxiv.org/pdf/2406.05425)
-
-Conversely, $X_P$ is the colimit of the $X_D$ by the cellular presentation. A compatible family of maps out supplies all generator disks and their attaching data. Also $NF(P)$ is the filtered colimit of the $NF(D)$ in the inductive theory. On each finite $\Theta$-arity its presheaf of labels is their set-theoretic union, hence their filtered colimit in spaces. That objectwise colimit is already the discrete local nerve just described. Thus $e_P$ is the colimit of the $e_D$. The finite classification, item 56, now proves the assertion. It requires neither locally finite incidence nor a bound on dimension.
-
-**Why completing only the final comparison changes the unbounded-height answer.** In finite height both objects of $e_P$ are already coinductively complete (item 23). In unbounded height the condition “$Qe_P$ is an equivalence” is strictly weaker. Take the computad underlying $A=K1$ of item 22. Its generator on the literal pair $(1_x,1_x)$ in rank two, together with $x$, is a closed copy of the bubble of item 6. Hence $A$ fails $\mathrm{RC}_{\rm id}(3)$ by heredity.
-
-Nevertheless both ends of $Qe_P$ are equivalent to the point. By construction $A\to1$ lifts globular boundaries. The free weak point $V$ also maps by a trivial fibration to $1$, by pasting coherence. Thus $i:V\hookrightarrow A$ selecting $x$ is a weak equivalence by two-out-of-three and a computadic cofibration. Coinductively completed realization preserves weak equivalences between cofibrants by the unit theorem, so $QX_P$ is equivalent to the realization of $V$, the point. To check the *strict* end, factor $i=pj$ by the small object argument on the weak walking-equivalence inclusions $J$, with $j$ relative $J$-cellular and $p$ an equifibration. By FEA of item 56, relative $J$-cell maps from cofibrant sources are weak equivalences. Hence $p$ is a weak equivalence and an equifibration, so lifts globular boundaries. Lifting $i$ against $p$ exhibits $i$ as a retract of $j$ in the arrow category. Strict reflection preserves this retract and the cellular colimits, and carries each member of $J$ to a folk trivial cofibration. It follows that $1\to F(P)$ is a folk trivial cofibration. Thus $F(P)\to1$ is a folk weak equivalence, and also a folk fibration since the target is the point. It lifts all strict globular boundaries. Its discrete inductive nerve is consequently $\infty$-surjective onto the point, which coinductive completion inverts. This proves the claim at both ends. It also explains why finite-support tests above are taken *before* completing the whole union. [FEA and the ordinary unit](../answered/catt-models-unit-condition-r4-2026-11-20.md#researcher-response-5) · [Fujii–Hoshino–Maehara, §§4–6, including strict reflection of the generators](https://arxiv.org/html/2511.09849v1#S6.SS2) · [Ozornova–Rovelli–Walde, §5](https://arxiv.org/html/2603.11005v2#S5)
-
-**A relative attachment criterion.** Suppose $P\subseteq P'$ and $P$ is relatively coherent. Well-order the new generators compatibly with their dependencies, and write $C_{<g}$ and $C_{\le g}$ for the strict free categories just before and after attaching $g$ of rank $r$. Then $P'$ is relatively coherent if and only if, for each **new** $g$, the characteristic map
-$$
- NC_{<g}\amalg^{h}_{\partial\mathbb D^r}\mathbb D^r
-                      \longrightarrow NC_{\le g}
-$$
-is an equivalence in the inductive theory. Use the cellular boundary and the actual strictified attaching map. This test is independent of the chosen compatible order. For necessity, every intermediate subcomputad of a relatively coherent $P'$ is relatively coherent by support. Its comparison is therefore an equivalence by the classification just proved. The cellular pushout for the weak realization identifies the displayed map with the next comparison. For sufficiency, start with the equivalence at $P$ and apply that pushout argument at successors. At limits use the filtered-union argument above. Equivalently, one can test contractibility of $E_{P'}(c)$ just for strict cells whose support meets the new generators. Old fibres agree with those of $P$. Globe evaluations detect the comparison by the Segal decomposition of arities.
-
-The preceding criterion retains the ambient category at the attachment. A necessary and sufficient criterion depending **only on the new declarations and their dependency closures**, uniformly across coherent bases, is impossible. Take the 2-skeleton $B$ of the middle-wire example in item 28. Use the *same* new declaration $A:\alpha_0g\to\alpha_1g$ over each of $B$ and $B[B':g\beta_0\to g\beta_1]$. Both bases are coherent. Indeed $B$ is positive of height two, and $B[B']$ has just one 3-generator with an idle left prefix and no idle right suffix. Item 30 applies. Likewise $B[A]$ has only an idle right suffix, so is coherent. The extension of the second base by $A$ is precisely the middle-wire example, with circle obstruction in degree four. The closure of $A$ is identical in the two extensions. The strict 3-label involving both $A$ and $B'$ accounts for the different answers. [Middle-wire fibre and no-idle-overlap criterion, Responses 3–5](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#researcher-response-3)
-
-## A directed-interchange theory
-
-Take the two-tier theory $L$ of the companion directed unit theorem. Its homs are ordinary weak $\omega$-categories. An arity $P=\Sigma P_1\vee\cdots\vee\Sigma P_k$ has a strict forward hom from vertex $i$ to vertex $j>i$ given by $P_{i+1}\otimes\cdots\otimes P_j$ with the lax Gray tensor. In particular the mixed cell of two arrow factors is the directed Gray interchanger. For **every finite globular pasting arity** $P$, the free $L$-algebra on $P$ maps by a globular trivial fibration to that free strict enriched category.
-
-Indeed the wedge Segal presentation makes the cellular realization of $P$ equivalent to its strict enriched nerve. The directed unit is a weak equivalence on computad-cofibrant algebras by the companion Response 16. Factor strictification as the unit followed by the singular map of that cellular comparison. The fixed-hom criterion of Response 6 gives an ordinary FHM weak equivalence on every pair of vertices. Each forward strict hom is a finite strong Steiner tensor, hence its only coinductive equivalences are identities. The endomorphism homs are terminal and the backward homs empty. For such targets the equifibration condition is automatic. FHM identifies equifibrations that are weak equivalences with globular trivial fibrations. Strictification is bijective on vertices. A positive-dimensional prescribed globe lift is a prescribed globe lift one rank lower in its fixed hom, including object lifting there for a global arrow. This proves the directed assertion in every dimension, including arities with arbitrarily many active tensor factors. [Definition of $L$ and the fixed-hom criterion](../answered/catt-models-unit-condition-r4-2026-11-20.md#researcher-response-6) · [Directed unit theorem, Response 16](../answered/catt-models-unit-condition-r4-2026-11-20.md#researcher-response-16)
-
-## Validation
-
-The [typed seam-ring checker](../../../tools/relative_coherence_spherical_fibres.py) enumerated the components and incidence boundaries for $k=2,3$. It obtained mod-two Betti vectors $(1,1)$ and $(1,0,1)$, including a separate repeated-letter test with a contractible component and a circle component. Its four-seam CaTT presentation typechecked with Agda 2.8.0 in safe mode. The [middle-wire checker](../../../tools/relative_coherence_middle_wire.py) checked the two exchange terms and four corner comparisons and recovered the connected four-edge graph of rank one. The integral obstruction and the exact degree for unbounded $k$ follow from the sphere and fixed-boundary proofs above.
-
-The following check uses the repository's raw CaTT syntax. It distinguishes the atomic source from the prescribed source at every positive padding depth and checks an actual corrected filler at depth eight. Save the block as `R9Padding.agda` and run Agda with `--safe --no-libraries` and include paths for `src` and the module directory. Both type equalities checked by reduction with Agda 2.8.0. Independently expanding the disk-identity substitutions through rank ten gave $1,1,3,7,17,41,99,239,577,1393,3363$ occurrences of $x$.
-
-```agda
-module R9Padding where
-open import CaTTExp.Prelude
-open import CaTTExp.Pure
-
-wire = arr ⋆ (var 0) (var 1)
-disk = ε ▸ ⋆ ▸ ⋆ ▸ wire
-label : Tm → Sub
-label t = ⟪ var 0 ∷ var 1 ∷ t ∷ [] ⟫
-
-pad : Nat → Tm
-pad zero    = var 2
-pad (suc n) = coh disk wire (label (pad n))
-
-different : (n : Nat) → ¬ (pad (suc n) ≡ var 2)
-different n ()
-
-context : Nat → Ctx
-context n = disk ▸ wire ▸ arr wire (pad n) (var 3)
-adjust : Nat → Tm
-adjust n = coh disk (arr wire (var 2) (pad n)) (label (var 2))
-chain = disk ▸ wire ▸ arr wire (var 2) (var 3)
-             ▸ wire ▸ arr wire (var 3) (var 5)
-liftAt : Nat → Tm
-liftAt n = coh chain (arr wire (var 2) (var 5))
-  ⟪ var 0 ∷ var 1 ∷ var 2 ∷ pad n ∷ adjust n ∷ var 3 ∷ var 4 ∷ [] ⟫
-atom-type : fst (from-just (infer (context 8) (var 4))) ≡ arr wire (pad 8) (var 3)
-atom-type = refl
-lift-type : fst (from-just (infer (context 8) (liftAt 8))) ≡ arr wire (var 2) (var 3)
-lift-type = refl
-```

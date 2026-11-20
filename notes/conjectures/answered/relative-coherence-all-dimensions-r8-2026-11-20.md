@@ -998,4 +998,4 @@ Status: **verified. Question 1 is answered positively: RC_id(∞)(Γ) ⟺ Γ hom
 - Explicit connecting terms without search, and their size.
 - Infinite and locally finite computads.
 - The analogue for the directed-interchange (L) theories.
-- Follow-up: [`outbox/relative-coherence-all-dimensions-r9.md`](../outbox/relative-coherence-all-dimensions-r9.md).
+- Follow-up: [`answered/relative-coherence-all-dimensions-r9-2026-11-20.md`](relative-coherence-all-dimensions-r9-2026-11-20.md).

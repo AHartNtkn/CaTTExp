@@ -899,7 +899,7 @@ Status: **verified. Question 1 is answered: there is an exact last-step criterio
 - The exact degree: whether homotopicality is Δ⁰₂ (decidable with a halting oracle) or Π⁰₂-complete.
 - Generator-level decidable classes that contain the positive 3-polygraphs of unbounded weight.
 - An effective description of the group tests on general inputs.
-- Follow-up: [`outbox/homotopy-polygraphs-r6.md`](../outbox/homotopy-polygraphs-r6.md).
+- Follow-up: [`answered/homotopy-polygraphs-r6-2026-11-20.md`](homotopy-polygraphs-r6-2026-11-20.md).
 
 # Researcher Response 16
 
@@ -950,7 +950,7 @@ Now serialize a rank-six label beginning at the lifted rank-five history. At eac
 
 The [routing checker](../../../tools/homotopy_polygraph_routed_switch.py) generates the occupied lattice sites of each box, derives the contacts from the actual overlaps and bits, checks acyclicity of the passive subgraph, and follows directed paths up to their next actor. For the triangle boundary it finds 5,698 anchored boxes, 5,722 contacts and 79,496 occupied base sites. The recovered order graph agrees with (1) on all 262,144 role assignments, including absent actors. On a separate two-by-two board with opposite link directions, it enumerates all 256 full spatial histories over all role pairs between the two specified poles. It contracts pairs of disjoint supports in the lower trace and uses the resulting exchanges to verify that each legal role pair gives exactly one strict spatial diagram. These computations test the layout and the pole mechanism; the lifting argument accounts for folding in arbitrary contexts.
 
-The [round-six corollary](../outbox/homotopy-polygraphs-r6.md#researcher-response-1) proves the resulting oracle classification for decidable families of pole pairs. The exact degree on unrestricted finite presentations remains open in Question 2.
+The [round-six corollary](homotopy-polygraphs-r6-2026-11-20.md#researcher-response-1) proves the resulting oracle classification for decidable families of pole pairs. The exact degree on unrestricted finite presentations remains open in Question 2.
 
 # Researcher Response 17
 
@@ -958,7 +958,7 @@ The [round-six corollary](../outbox/homotopy-polygraphs-r6.md#researcher-respons
 
 For Question 3, suppose that on each control walk all acquisitions use a single resource and all releases use a different single resource, allowing either set of operations to be empty. Record a possible edge $r\to s$ of a process if some walk acquires $r$ before releasing $s$. The presentation fails exactly when one choice of at most one edge per process gives a strongly connected component with at least two more edges than vertices. The fibres of individual strict labels are exactly finite products of positive-dimensional spheres up to homotopy across this class. A directed cycle on $m\ge3$ resources with two edges doubled exhibits failure requiring all $m+2$ processes. This settles an unbounded-resource case beyond Responses 13–15.
 
-Run `python tools/homotopy_polygraph_transfer_graph.py`. The checker compares 101 small strong multigraphs with their timing complexes and checks the five-process obstruction against 322 legal spatial cubes. The proof, algorithm, and full reproducible results are in [round six, Response 2](../outbox/homotopy-polygraphs-r6.md#researcher-response-2).
+Run `python tools/homotopy_polygraph_transfer_graph.py`. The checker compares 101 small strong multigraphs with their timing complexes and checks the five-process obstruction against 322 legal spatial cubes. The proof, algorithm, and full reproducible results are in [round six, Response 2](homotopy-polygraphs-r6-2026-11-20.md#researcher-response-2).
 
 # Researcher Response 18
 
@@ -966,4 +966,22 @@ Run `python tools/homotopy_polygraph_transfer_graph.py`. The checker compares 10
 
 For Question 2, every positive generator-preserving typing admitting a complete extreme label of Response 16 already admits a weight-three circle elsewhere. Take the last row $a$ and retain the transfers $a^-\to S^+$, $S^-\to Z^*$ and $Z^*\to a^+$. Their cycle forbids just the simultaneous triple. The six serial orders form a hexagon of exchanges. The cut lifts even when a passive step changes the colours of its reads, by taking its actual input and output letters at each exposed site.
 
-Keeping the control comparisons direct gives two different exact tests. If the nonincidence relays can occur independently, the whole presentation is homotopical precisely when the missing-edge graph has an isolated vertex or matching number at most two. If a tree of local requests forces completion of the matrix between the two master reads, the whole presentation is homotopical precisely when the original connected complex is contractible. Both controls have to change in any exceptional interval, so any such interval has both reads and the tree forces every relay. The latter result still requires a board for each complex. The full proofs and the three executable checks are in [round six, Response 6](../outbox/homotopy-polygraphs-r6.md#researcher-response-6).
+Keeping the control comparisons direct gives two different exact tests. If the nonincidence relays can occur independently, the whole presentation is homotopical precisely when the missing-edge graph has an isolated vertex or matching number at most two. If a tree of local requests forces completion of the matrix between the two master reads, the whole presentation is homotopical precisely when the original connected complex is contractible. Both controls have to change in any exceptional interval, so any such interval has both reads and the tree forces every relay. The latter result still requires a board for each complex. The full proofs and the three executable checks are in [round six, Response 6](homotopy-polygraphs-r6-2026-11-20.md#researcher-response-6).
+
+# Verification addendum (2026-11-20, Responses 16–18)
+
+Responses 16–18 arrived after the verification above and were checked with round 6.
+
+Status: **verified.** Response 16 builds one fixed finite positive rank-six polygraph V. From a finite connected complex K it computes two strict rank-four poles P₀, P₁. Every comparison fibre in the hom between them is contractible iff K is. The extreme fibre is |K|, and every proper time interval has contractible components. Responses 17 and 18 summarize round 6, Responses 2 and 6, which are verified in [`homotopy-polygraphs-r6-2026-11-20.md`](homotopy-polygraphs-r6-2026-11-20.md#verification-2026-11-20).
+
+**What was re-run.** `tools/homotopy_polygraph_routed_switch.py` exits 0 in 2 s.
+- The triangle board has 5,698 anchored boxes, 5,722 contacts, 79,496 occupied base sites and 9 actors.
+- All 262,144 role cubes agree with the original guard.
+- There are 256 full histories between the two painted poles, and each legal role pair has exactly one strict spatial diagram.
+
+**Checked.**
+- **Layout.** Box disjointness, the acyclic passive graph, and the one-transfer paths that induce exactly the literal arrows of Response 11 were all checked.
+- **The poles force every step.** Each anchor and middle letter must flip once, and only its own step can flip it.
+- **Folding.** The fold to one object is a positive generator-preserving map, so its strict functor is discrete Conduché (Henry). The lifting of every top label at the folded poles proceeds by anchor names, and the anchor fixes the sites.
+
+No gap was found. As round 6 notes, the pole selection is a predicate on rank-four poles, so it gives Π⁰₂-completeness only on supplied pole pairs. Round 6, Response 6 shows that positive typing cannot enforce it.

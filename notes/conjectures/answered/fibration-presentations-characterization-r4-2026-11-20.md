@@ -1087,6 +1087,41 @@ This establishes the obstruction to passing from Question 2 to Question 1 with t
 
 The two geometric inputs are the component calculation and the gluing at the multiplication in [Response 10](#researcher-response-10). The finite check of its negative witness is [the short-side computation](../../../tools/fibration_universal_base.py).
 
+# Verification addendum (2026-11-20, Responses 21–29)
+
+Responses 21–29 arrived after the addendum above. They extend the answers to Question 1 and explain why item 22 cannot be used to settle it.
+
+Status: **verified.** No gap was found. Question 1 in general is still open.
+
+**What they prove.**
+- **Response 21 (weak realization).** Suppose the raw (r−2)-skeleton is homotopical and every component of the raw (r−1)-cell space is simply connected. Then each strict r-cell is realized at prescribed weak faces, uniquely up to a path relative to the faces, and strict marked (r+1)-writings lift. The obstruction at a joint lies in an image of π₁ in the boundary space. On an identity stratum it is exactly π₁ of the old comparison component.
+- **Responses 22–23 (graded fibres).** Grade the raw 1-generators, positive on fibre edges and equal across every raw 2-generator. Then strict lifts of fixed projection and degree are finite in every rank, even for cyclic graph fibres with infinitely many paths. A moment M increases at each prism. With 2-fibres whose forward rewriting terminates, all ranks are enumerable. If the idle-face test passes, the whole presentation is decided in base dimension ≤ 4, and in base dimension ≤ 5 for graded graph fibres. The pentagon weight with sorting rule bg ⇒ gb separates e = 0 (both routes reachable) from e = 1 (only the long route).
+- **Response 24 (no bubbles).** No raw partial stage has a bubble in ranks 2 or 3. For 2-fibres there are none in any rank. So the chart-string computation of comparison spaces applies to every raw 3-stage. On the nullary circuit every comparison fibre is a point.
+- **Response 25.** The strict 4-cells on the nullary circuit are exactly the order-preserving injections between the (DM)-cores, which makes the strict 5-factor test on that component terminating.
+- **Response 26.** Forward enumeration of degree-3 writings from the prescribed 2-source terminates when finite certificate data exists: positive strict comparison 2-categories C with functors J_b and transformations k_e, and two acyclicity conditions on invisible generators. This holds even with nullary gates and erased fibre cells (the split cup).
+- **Response 27.** A terminating solver returns all strict 3-labels with given data and a finite presentation of π₁ of each weak comparison fibre. With Response 21 this gives a sufficient whole-input check in base dimension 4 for finite strict 2-fibres without the idle-face hypothesis.
+- **Response 28.** On inputs positive through rank 3, every comparison fibre of a raw 3-cell with at most two top occurrences is contractible. Forced cuts in gate ancestry split a fibre into a product of blocks.
+- **Response 29.** The reduction of item 22 cannot be turned into an undecidability proof for Question 1 at a fixed base. Even with an oracle for single-weight attachment, queries at Γ_I cannot decide accessibility. The reason is that a computable bit d(T) (is some component of m nonempty?) answers every promised query on reachable instances. The weight families that find counterweights are exactly the r.e. subsets of non-accessibility, and a diagonal instance missed by any given family is effective.
+
+**What was re-run.** All nine new checkers exit 0 with the stated counts:
+- `fibration_weak_joints.py`: 22 objects with trivial group, and 9 of 81 path pairs gluing.
+- `fibration_graded_lifts.py 2 7` and `3 5`: 111 of 2,303 and 254 of 2,452 cells; signed pentagon 35 → 5 → 15.
+- `fibration_graded_two_fibres.py`: e = 0 has both routes, e = 1 the long route only.
+- `fibration_bubble_records.py`: 288 record transitions.
+- `fibration_cyclic_injections.py`: 5,448 writings in 431 classes.
+- `fibration_observed_prisms.py`: 5, 10, 17, 26 states.
+- `fibration_three_comparison.py`: the six-serialization case has 13 vertices, 24 edges and 12 triangles.
+- `fibration_comparison_cuts.py`: 120 blocks, with 0 or 60 circle factors.
+- `fibration_cyclic_four.py` and `fibration_erasing_graph_pentagon.py` still pass.
+
+**Checked by hand.**
+- **Response 21.** The components of a homotopy pullback over a target with simply connected components are the pullback of the component sets.
+- **Response 22.** The moment M is well defined on strict cells (associativity at a 0-cut and interchange were checked).
+- **Response 24.** Projecting to the bubble-free base and using the ordered crossing records reduces a total bubble to a fibre bubble.
+- **Response 29.** The simulation is sound: implication 2 holds on every instance, and implication 1 needs only reachability.
+
+**Left open.** Question 1 in general: fibres of dimension ≥ 3 without decreasing weights or certificates, and weak realization where the comparison components are not simply connected. Response 29 shows that undecidability needs a reduction that varies the base of each query. Question 3 is not addressed.
+
 ## Researcher Response 30
 
 ### The weak 4-cell spaces at the infinite nullary circuit

@@ -1,6 +1,7 @@
 """Check proper-input chart paths against their literal CaTT comparisons."""
 
 from argparse import ArgumentParser
+from itertools import product
 from pathlib import Path
 
 from catt import (STAR, arr, check_ctx, comp2, disc_tree, fv_tm, glue_tree,
@@ -98,6 +99,82 @@ def check_rank(ctx, atoms, rank, emitter):
     emitter.check_type(f'proper-{rank}', ctx, higher, expected)
 
 
+def check_coincident_names(ctx, atoms, rank, emitter):
+    cut = rank - 2
+    disk = tree_ctx(disc_tree(rank))
+    z = v(len(disk) - 1)
+    move = unitor(disk, z)
+    padded = tgt(disk, move)
+    back = head(disk, padded, z)
+    returning = comp2(disk, rank, back, move)
+    null = head(disk, returning, identity(disk, padded))
+    chart = tree_ctx(glue_tree(rank, cut, rank))
+    x, y = (v(i) for i in maximal_vars(chart))
+    for slot in range(2):
+        def paste(context, pair, replacement):
+            inputs = list(pair)
+            inputs[slot] = replacement
+            return comp2(context, cut, *inputs)
+
+        atom = atoms[slot]
+        s = sub_from(disk, ctx, {z[1]: atom})
+        padded_atom = subst_tm(padded, s)
+        # First name pads the formal variable. Second name pads its label.
+        formal_pad = subst_tm(padded, sub_from(disk, chart, {z[1]: (x, y)[slot]}))
+        first = paste(chart, (x, y), formal_pad)
+        second = comp2(chart, cut, x, y)
+        labels = list(atoms)
+        labels[slot] = padded_atom
+        old = sub_from(chart, ctx, dict(zip(maximal_vars(chart), atoms)))
+        new = sub_from(chart, ctx, dict(zip(maximal_vars(chart), labels)))
+        shared = subst_tm(first, old)
+        assert first != second and old != new and shared == subst_tm(second, new)
+        loop = paste(ctx, atoms, subst_tm(returning, s))
+        collapsed = paste(ctx, atoms, identity(ctx, padded_atom))
+        lifted = paste(ctx, atoms, subst_tm(null, s))
+        end = identity(ctx, shared)
+        generic_identity = identity(chart, second)
+        local_id = paste(chart, (x, y), identity(chart, (x, y)[slot]))
+        finish = subst_tm(head(chart, local_id, generic_identity), new)
+        assert src(ctx, lifted) == loop and tgt(ctx, lifted) == collapsed
+        witness = comp2(ctx, rank + 1, lifted, finish)
+        expected = arr(infer(ctx, loop), loop, end)
+        assert src(ctx, loop) == tgt(ctx, loop) == shared and infer(ctx, witness) == expected
+        label = f'collision-{rank}-{slot}'
+        emitter.check_typed(label, ctx, witness)
+        emitter.check_type(label, ctx, witness, expected)
+        emitter.check_eq(label + '-operation', first, old, shared)
+        emitter.check_eq(label + '-input', second, new, shared)
+
+
+def check_strict_rows():
+    # Each arrow in column j maps to a common prefix followed by its own
+    # suffix. A vertical generator maps to two consecutive whiskered changes.
+    count = 0
+    for width in range(1, 5):
+        states = range(3)
+        for start in range(width):
+            for end in range(start + 1, width + 1):
+                seen = set()
+                for intervals in product([(a, b) for a in states for b in states if a <= b],
+                                         repeat=end - start):
+                    source, target, top = [], [], []
+                    for j, (a, b) in enumerate(intervals, start):
+                        source.extend([(j, 'prefix'), (j, 2 * a)])
+                        target.extend([(j, 'prefix'), (j, 2 * b)])
+                        top.extend((j, t) for t in range(2 * a, 2 * b))
+                    tableau = tuple(source), tuple(target), tuple(top)
+                    assert tableau not in seen
+                    seen.add(tableau)
+                    for j, ab in enumerate(intervals, start):
+                        lo = next(v for k, v in source if k == j and v != 'prefix')
+                        hi = next(v for k, v in target if k == j and v != 'prefix')
+                        assert (lo // 2, hi // 2) == ab
+                        assert [t for k, t in top if k == j] == list(range(lo, hi))
+                    count += 1
+    return count
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--agda', type=Path)
@@ -106,7 +183,9 @@ if __name__ == '__main__':
     ctx, atoms = two_triangles()
     for rank in (2, 3, 4):
         check_rank(ctx, atoms, rank, emitter)
+        check_coincident_names(ctx, atoms, rank, emitter)
         ctx, atoms = susp_ctx(ctx), [susp_tm(a) for a in atoms]
     if args.agda:
         args.agda.write_text(emitter.module(args.agda.stem, 'Two proper factors in a chart.'))
+    print(f'{check_strict_rows()} strict row decodings and 6 coincident-name contractions verified')
     print('12 exchanges, 3 simultaneous input changes and 36 chart paths verified')

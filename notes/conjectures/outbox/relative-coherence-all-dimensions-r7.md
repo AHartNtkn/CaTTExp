@@ -2162,3 +2162,44 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_hom_chains.py --agda "$dir/HomChainColumns.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/HomChainColumns.agda"
 ~~~
+
+# Researcher Response 75
+
+## The hom-chain test is exact for the cubical pair and the walking fans
+
+Let \(A\) be a free groupoidal CaTT algebra on a computad, with a base object \(o\). If \(A\) is two-connected, the ordinary top-occurrence map is an **integral isomorphism**
+\[
+       h:\pi_3(A,o)\longrightarrow H_3(C_*(A);\mathbb Z),
+       \qquad [L]\longmapsto [N_3(L)].
+\]
+Here the differential of each computad generator counts its target minus its source. In particular, for any two parallel three-terms \(s,t\) in \(A\), an actual four-term \(s\to t\) exists exactly when \(N_3(t)-N_3(s)\) is an integral four-boundary. This holds for infinite computads with finite chains. The theorem uses full naturality only through degree three.
+
+Take the hom-computad of the simplex star at the two outer vertices of the original five-cube poles \(u,v\) of Response 48. **Its absolute integral three-cycle \(d(u,v)\) from Response 74 is a boundary if and only if the original five-comparison exists in the star.** Also, for each planar fan of Response 73, with hom-computad \(D_n\) at \((o,o)\),
+\[
+                        \pi_4(F_n,o)\cong H_3(C_*(D_n);\mathbb Z).
+\]
+Thus the vanishing of these ordinary abelian groups for all \(n\) is equivalent to the full walking-pushout assertion of Response 73. The cubical membership problem and the values of the fan groups remain open.
+
+**Collapsing the lower cells.** Construct a minus labelling \(M\) of the three-skeleton of \(A\) with values in \(A\); the plus labelling is the identity. Mark all generators. Send every object to \(o\), choosing a rail to it with the identity rail at \(o\). Send each one- and two-generator to a term in the free point on \(o\) at the prescribed minus faces. Point coherence supplies these caps. The required mixed changes in degrees one and two now ask for comparisons between parallel cells of those degrees in \(A\). Connectivity, groupoidality and basing supply them. On a three-generator \(g\), give its minus cap a fresh variable whose poles are the already chosen point terms. The minus frame contains this cap once in top count; the plus frame and the common boundary are fixed. Divide by the minus frame in \(A\) (Response 56) to obtain both \(M(g)\) and an actual four-change \(H_g\). The ordinary full actions through degree three extend these changes to \(H_s:F_-(M(s))\to F_+(s)\) on every three-term. The frames depend only on its poles and their changes.
+
+**Reading the minus caps as group elements.** Base each \(M(g)\) by pads in the free point at the iterated identities on \(o\). All its lower faces are point terms. Let \(l(g)\) be the resulting class in \(\pi_3(A,o)\), extended linearly on the free three-chains. For any three-term \(s\), basing \(M(s)\) by point pads gives a class equal to \(l(N_3s)\). To see this without assuming the asserted isomorphism, introduce an auxiliary context consisting of one point and a formal three-letter \(y_g\) of the pure minus type of each relevant \(g\). The minus writing lifts literally by assigning each \(g\) to its letter and retaining the lower point writings. The padded lift of \(M(s)\) and the product of the padded letters with multiplicities \(N_3s\) have the same strict value. The strict three-cells form the free commutative monoid on the letters by interchange, and point pads have no top counts. The two terms are parallel and have a four-comparison by Response 16, since the two-skeleton is a point. Evaluating the formal letters at \(M(g)\) proves the formula, independently of the choices of point pads. Each term requires only finitely many letters.
+
+For an actual four-generator \(w:s\to t\), whisker it by the common plus frame and paste with \(H_s,H_t\), reversing the needed change by groupoidality. This compares the two framed minus values. Reflection along their common one-hole frame gives a comparison \(M(s)\to M(t)\). Basing identically in the point shows \(l(\partial w)=0\). Thus \(l\) descends on cycles to a map from \(H_3\). Conversely, the chain identity for any four-term and additivity under top composition make \(h\) a homomorphism.
+
+For a based loop \(L\), both families of rails in its frames lie in the free point: they are evaluated on identity poles at \(o\) with the identity object rail. In the auxiliary point context with one formal based three-letter \(X\), the two frames \(F_-(X),F_+(X)\) have the same literal type and the same strict value \(X\). Response 16 compares them. Substitute \(L\) for \(X\), compose with \(H_L\), and reflect along the common minus frame. Hence \(M(L)\) compares to \(L\) at its original based type. Equivalently one may take its point padding to be empty at that type. This proves \(lh=1\).
+
+**Why every integral cycle is attained.** On two-generators set \(K(f)=N_3(H_f)\) and extend linearly. For every two-term \(a\), its change has three-count \(K(N_2a)\): the prescribed strict cylinder of a two-head has one mixed top slot per top occurrence, including its multiplicity after substitution. Pure slots and all lower rails have rank at most two. For a three-generator \(g:s\to t\), the minus frame ends with the change on \(t\) and the plus frame starts at its last cut with the change on \(s\). Consequently
+\[
+              \partial N_4(H_g)=g-N_3(M(g))+K(N_2s)-K(N_2t).
+\]
+For a finite integral three-cycle \(c\) the last two terms sum to zero. Basing \(M(g)\) by point pads preserves its three-count exactly. Therefore \(c\) is homologous to the top count of the based class \(l(c)\), with negative coefficients interpreted by group inverses. This proves \(hl=1\). For parallel unbased three-terms use the same invertible basing pads in \(A\) on both sides. Their contributions to the difference of counts cancel, even when the last pads have dimension three. Equality of the based classes is witnessed by a four-comparison, and invertible whiskering reflects it to the original literal ends. In both arguments the only constrained occurrence is the fresh cap in division. The cylinder count formula holds under every substitution and is linear on powers of arbitrary size.
+
+The weak hom of a three-connected groupoidal free algebra is groupoidal and two-connected. Its objects are parallel one-cells, and comparison through hom degree two follows from comparison through ambient degree three. It is free on the Benjamin–Markakis hom-computad of Response 74. Apply the theorem there. The cubical statement concerns **absolute** homology; passing to the relative quotient in Response 74 may impose additional relations. For the fan use the identity one-cell as hom basepoint, identifying its based three-loops and four-comparisons with the ambient based four-loops and five-comparisons. This gives the displayed isomorphism without a ring hypothesis.
+
+**Verification.** The solver evaluates the full partial-boundary formula on the eight declarations of a three-disk with a second parallel top generator. The minus labels through dimension two are point terms, the plus labels have different object names, and the two top changes have the same nonzero rail correction. As an independent family, freely adjoin a bi-invertible based three-loop \(g\) and a bi-invertible four-arrow from \(g^m\) to the unit. Through rank four there are three generating three-loops (the forward and two inverses). Their boundary columns are, up to sign, \((1,1,0),(1,0,1),(m,0,0)\). The second-order determinantal divisor is one and the third is \(m\), hence the fourth-boundary quotient is \(\mathbb Z/m\) for every \(m\ge1\). For \(m=1,\ldots,12\) the solver computed all 108 actual columns and their determinantal divisors. It checked both directions of the power relation whiskered by inverse powers 0, 1 and 5 at their literal types, then suspended all 72 terms and recomputed their signed hom boundaries. Agda checked both top changes, both whiskered directions for \(m=3\) at power 5, and both of those suspended five-terms. The exact criterion above concerns arbitrary inactive terms and signed finite chains, independently of this finite calculation. [Degree-three solver and suspended certificates](../../../tools/relative_coherence_hurewicz_three.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_hurewicz_three.py --agda "$dir/HurewiczThree.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/HurewiczThree.agda"
+~~~

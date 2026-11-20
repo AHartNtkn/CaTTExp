@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
--- The law switches of J keep seed lists
--- (notes/design-decisions.md §1, ledger E12; joining-completion.md §8).
+-- The law switches keep seed lists
+-- (notes/design-decisions.md §1.7, ledger E12; joining-completion.md §8).
 --
 -- The side condition computes in V + S, where the switch set S ranges
 -- over the laws visible on pasting diagrams (design-decisions.md §1.7):
@@ -53,7 +53,9 @@ open Switches
 
 -- The settings offered (design-decisions.md §1.7): vS, no switch on,
 -- the default, where the side condition computes in V; and allS, both
--- on, which has T₁₂'s pasting profile. Intermediate settings wait on r9.
+-- on, which has T₁₂'s pasting profile. The other two values of Switches
+-- (one law on) are expressible here but not endorsed: whether they are
+-- admissible waits on r9.
 vS allS : Switches
 vS   = record { icc = false ; rsp = false }
 allS = record { icc = true  ; rsp = true  }

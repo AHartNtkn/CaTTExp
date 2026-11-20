@@ -862,3 +862,67 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_folded_frames.py --edges 7 --agda "$dir/FoldedRoutes.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/FoldedRoutes.agda"
 ~~~
+
+# Researcher Response 24
+
+## A degree certificate must use an operation whose root vertices see every colour
+
+For $k\ge3$ there is an explicitly computable integer on each generic $(k-1)$-head with its **object slots alone** coloured. Under substitution this number is independent of the positive-dimensional arguments. For a $(k-1)$-term $U$, let $d(U)$ be the sum of these integers over its occurrences of top heads: count its head, recurse into its arguments of the same dimension, and give a variable zero. There is an explicit integer row $h$ on full-colour $(k-1)$-generators such that for every **based** $U$ in Response 19,
+$$
+                         \omega(U)-h\rho(U)=d(U).
+$$
+In particular a seven-colour modular certificate must contain a rank-five head whose own root path sees all seven colours, in at least six intervals. Even an input containing every colour cannot make a head with fewer root colours contribute. This excludes the reflattenings of Response 21 and all other families made from narrower top heads simultaneously, with arbitrarily many active slots. The assertion concerns the integral degree test for the seam ring.
+
+**Computing the number.** Use ordered integral simplex chains; $C_a$ cones at vertex $a$, and $[a,b]$ is the signed edge (zero for $a=b$). For an $n$-head $D$ on $P$ with generic faces $s,t$ and object colouring $c$, compute a cycle $Z_n(D,c)$ and set $W_n(D,c)=C_oZ_n(D,c)$, where $o$ is its coloured outer source. For $n=1$, $Z_1$ is the sum of the consecutive coloured edges of $P$ minus the edge between the two endpoint colours. This includes the point arity. For a term $w$ in a coloured globular arity define $Q_n(w)$ by summing $W_n$ over its top-head occurrences and giving variables zero, passing the induced object colouring at each nested head. Inductively put
+$$
+                            Z_n(D,c)=Q_{n-1}(s)-Q_{n-1}(t),\qquad n\ge2.
+$$
+The structural integer at $n=k-1$ is the coefficient of $[1,\ldots,k]$ in $Z_{k-1}$. All these chains are carried by the root vertex colours of the indicated arity: the objects of every nested generic substitution are labelled by object variables of its parent. A $(k-1)$-cycle on at most $k$ vertices is zero, since boundary is injective on top chains of the proper simplex. We verify the cycle assertion and the formula next.
+
+**Comparison with the actual generator counts.** Let $H(t)$ be the carried simplex chain from Response 11 on an arbitrary term, given by its top-generator counts. Define a carried $(n+1)$-chain $K_n(t)$ for every positive-dimensional term. In dimension one set $K_1(x)=0$ on generators. In higher dimension put
+$$
+ K_n(x)= C_{o(x)}\bigl(H(x)+K_{n-1}(\sigma x)-K_{n-1}(\tau x)\bigr)
+$$
+on a generator $x$. Evaluate a composite head by adding $W_n$ to the sum of the $K_n$ of its rank-$n$ arguments. Then
+$$
+ \begin{aligned}
+ \partial K_1(t)&=H(t)-[o(t),o'(t)],\\
+ \partial K_n(t)&=H(t)+K_{n-1}(\sigma t)-K_{n-1}(\tau t)\quad(n\ge2),
+ \end{aligned}
+$$
+where $o'$ is the outer target. In rank one the consecutive edges telescope and $H$ of a generating edge is its chord. At a higher generator the expression coned is a cycle by the preceding rank's identity and parallelism of its two faces.
+
+For the head step, on any generic $j$-term $w$ the substitution law is
+$$
+ K_j(w[\gamma])=Q_j(w)+\sum_{i:\dim i=j} N_i(w)K_j(\gamma_i).
+$$
+Indeed on a variable only its own summand occurs. At a head the contribution $W_j$ sees exactly the same object names after composing labels; summing the induction statement over its top arguments gives the formula. Apply this in degree $n-1$ to the two generic faces of $D$. Their target-minus-source count difference is the cellular boundary of the strict total composite of $P$, hence the sum of the boundaries of its rank-$n$ variables. Because those variables have variable faces, every lower-argument term in the substitution formula cancels against the corresponding input boundary contribution. The remaining correction at the head is exactly $Z_n(D,c)$. It is a cycle: the desired boundary formula's right side is closed by the preceding rank, and the input contributions have boundaries already. This reasoning can be carried out on $P$ itself with the chosen object colours and then after arbitrary substitution. Coning therefore fills that cycle and proves the asserted induction. In particular the proof ranges over arbitrary inactive inputs, including paths visiting every colour and arbitrarily large finite powers of a loop.
+
+In rank $n=k-1$ write $V(x)=H(x)+K_{n-1}(\sigma x)-K_{n-1}(\tau x)$. This is a carried $(k-1)$-cycle. It vanishes for every proper generator and is $h_x\partial[0,\ldots,k]$ on a full generator. Before coning, the head-step calculation gives, for **any** $U$,
+$$
+ H(U)+K_{n-1}(\sigma U)-K_{n-1}(\tau U)
+       - \sum_x N_x(U)V(x)=d(U)\,\partial[0,\ldots,k].
+$$
+On a based term the two endpoint chains cancel. Taking the distinguished facet coefficient gives the claimed equality. Thus when full counts vanish modulo $m$, the signed sum of the individual root-colour contributions must give the observed degree modulo $m$. The same formula applies to differences between terms with identical literal boundaries.
+
+**Checks.** `python3 -B tools/relative_coherence_head_degree.py` separately evaluates the generator-count side and the generic-head side as entire signed simplex chains. On the based four-turn example of Response 19, the count weight and structural sum both equal $6$, nonzero modulo four. On the 22 two-heads of the three-cube input it finds five terms with structural sum $+1$ and the rest zero. The solver accepts the head-equation JSON of Response 20 with `--input`. [Root-colour degree solver](../../../tools/relative_coherence_head_degree.py)
+
+# Researcher Response 25
+
+## The root-arity bound is sharp for both directions of a typed comparison in every dimension
+
+For every $k\ge3$, on the path of $k$ generating arrows with successive vertex colours $0,\ldots,k$, there are parallel $(k-2)$-terms $L,R$ with a $(k-1)$-comparison in either direction. **Every comparison $L\to R$ on that path has structural degree $-1$, and every reverse has degree $+1$.** Consequently each uses a top head with at least $k$ root intervals. The bounds are attained by a single top head in each direction. The two terms have the same strict image, the full path padded by identities as needed.
+
+Start on three edges $x,y,z$ with $L=(xy)z$ and $R=x(yz)$, using binary composition. Both generic full path terms have the same literal type. The head $L\to R$ is legal and $Q_1(L)-Q_1(R)$ is minus the oriented boundary of the tetrahedron: the two bracketings give its two signed triangulations of the quadrilateral. Reversing the two sides negates the cycle.
+
+Inductively shift a length-$k$ comparison $g$ to the last $k$ edges of a path of length $k+1$, and prefix its remaining edge $e$ from colour zero to one. The new nested side is $w=e*_0g$. The other side $f$ is the single head on the entire path with the same generic type as $w$. This head is legal: $w$ lies above dimension one, and both its faces use the entire path by the support lemma. The generic structural head $w\to f$ is legal by full support, as is its reverse. To calculate its degree, the shifted $g$ contributes $-[1,\ldots,k+1]$ to $Q_{k-1}(w)$, by coning its structural cycle within that simplex. Its binary whisker contributes zero, since its root has only three vertices and its $W_{k-1}$ has dimension at least three. The single head $f$ has only path inputs and its own $W_{k-1}$ is coned at zero. It therefore has zero coefficient on $[1,\ldots,k+1]$. This proves the signed unit at the next rank.
+
+On the path there are no generators in the comparison dimension. The general identity of Response 24 makes the structural sum of a comparison depend only on its endpoints, giving the assertion for **every** forward or reverse term. The same conclusion holds after substituting arbitrary paths with those same endpoint colours, for comparisons with the original strict image: its top-generator counts are all zero. In particular inactive excursions can have unbounded length. If the root colours themselves coincide, the structural degree of the displayed head instead vanishes, even when the substituted paths together visit every colour.
+
+**Checks.** At lengths three through seven the solver constructs both literal judgements, computes the entire signed boundary cycle, and tests the identification of two colours. For the six-arrow example it separately substitutes powers one through seven of a path visiting all seven colours, both with the original root colours and with all root objects identified. The outcomes are respectively a signed unit and zero at every tested power. Agda checks both rank-five terms on six arrows. These are parallel comparisons with different endpoints in the two directions. A based modular certificate for the six-seam ring would also have to satisfy the full-colour count condition of Response 19.
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_head_degree.py --agda "$dir/HeadDegree.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/HeadDegree.agda"
+~~~

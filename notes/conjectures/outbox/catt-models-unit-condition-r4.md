@@ -1202,3 +1202,153 @@ Restrict the displayed space to the homotopy fibre over the identity of the diag
 These fibres are stable under operadic substitution. Evaluate first in a strict oriented arity or in one of its consecutive blocks. For any tuple of raw labels there, naturality under the strict labelling sends a normalized operation to the given strict composition on its chart, since the generating operation projects to the identity on the generic $K_P$. The chart colimit computes the entire tensor of the input homs. Thus normalized operations agree with strict composition in each such strict target. For a composite of natural operations, project from the free directed arity to its strict oriented arity. By naturality the projected composite is the composite of strict compositions, hence it again has the identity projection on the generic tensor. These comparisons are coherent on the strict arities: all mapping spaces between the strict shapes in question are discrete. The ordinary identity operation satisfies the same condition. The nullary fibre is contractible by the point-hom test. Consequently these operations form a nonsymmetric operad of natural operations with contractible spaces in every arity. Its map to the associative operad is an equivalence. An inverse supplies all unit and associativity coherences simultaneously. Evaluating on the object strings of $X$ gives the asserted enriched category. Completion of the object space preserves the homs between the original objects and is essentially surjective on objects. A strict algebra map therefore induces an equivalence precisely when it induces equivalences of all ordinary realized homs and an essentially surjective map on $hX$, as claimed. [Enrichment and the Segal characterization, Gepner–Heine §2](https://arxiv.org/html/2510.10504v2#S2)
 
 This constructs a functor on the intrinsic directed localization. To identify it with the derived functor of $\mathcal L_{R_L}$ one still needs a comparison on free directed computads. In particular the contraction of the space of normalized operations lifts maps **from** the semantic tensor $K_P$ into $\Phi H_P$. The directed arity unit also tests all the cells already **in** $H_P$ over nonrectangular labels. The argument above gives the section of that projection and the coherent composition laws.
+
+# Researcher Response 16
+
+## The directed unit and the realization adjunction
+
+For every computad-cofibrant directed algebra $B$, the actual map
+$$
+                B\longrightarrow S_L\mathcal L_{R_L}B
+$$
+is in $W_L$. With coinductive completion, the derived realization and singular functors are inverse equivalences. In particular the directed unit holds on all the finite computads of Q2. We use the intrinsic class of Response 15: essential surjectivity on objects up to global equivalence, and ordinary FHM equivalences on fixed homs.
+
+Write $\mathcal O$ for oriented categories enriched in coinductively complete higher categories, with complete object space. Write $Q_o$ for the passage to this category from the inductive oriented theory. Explicitly, apply ordinary coinductive completion $Q$ on homs and then complete the space of objects. This is change of enriching category along the monoidal localization for the Gray tensor: its right adjoint acts on homs by the lax monoidal inclusion. The two functors are adjoint on enriched algebras by the adjunction on each tensor operation, hence also after completion of the object space. Completion is fully faithful on the homs of the given objects and every object is equivalent to one of them. In particular $Q_o$ preserves colimits, and its value on an arity is the same strict arity. We use $G_\Gamma$ for that semantic arity, $h_\Gamma$ for the free raw algebra, and $C_\Gamma$ for the strict algebra regarded as a raw algebra. The comparison $h_\Gamma\to C_\Gamma$ exists on every raw substitution. [Gray localization, Campion §3](https://arxiv.org/pdf/2311.00205) · [Enrichment, suspension and completion, Gepner–Heine §2](https://arxiv.org/html/2510.10504v2#S2)
+
+**Two functors on raw algebras.** Let $F X$ be the enriched category constructed in Response 15, with homs $\Phi X(x,y)$. It detects and preserves $W_L$. Define
+$$
+             E X=\operatorname*{colim}_{h_\Gamma\to X}G_\Gamma
+             \qquad\text{in }\mathcal O.
+$$
+The index includes every raw directed substitution. The identity chart is terminal for $X=h_\Gamma$, giving $E h_\Gamma=G_\Gamma$, naturally on the raw theory.
+
+There is a natural enriched map $v_X:F X\to E X$. On objects use the point charts. A labelling $h_P\to X(x,y)$ of an ordinary arity is a labelling $h_{\Sigma P}\to X$ at the indicated poles. Its chart in $E X$, under these two point charts, gives a map $P\to (E X)(x,y)$ by the bipointed suspension adjunction. Naturality includes ordinary substitutions and both pole inclusions. Use the chart colimit of Response 15 to obtain the map on the entire hom. At $h_\Gamma$ this sends each hom chart to its strict label; it is the ordinary realization of hom strictification.
+
+Here is the verification that these maps respect enriched composition, including its homotopies. For $k$ inputs in an object string, a natural operation from their realized hom tensor to the extreme hom of $E X$ is specified by a natural map $K_P\to (E h_\Gamma)(0,k)=K_P$ for the universal wedge $\Gamma=\bigvee_i\Sigma P_i$. This is the weighted Yoneda calculation of Response 15 with the indicated target: expand the source by its ordinary charts and represent a tuple of labels by the wedge. The space of families with identity value on the generic tensors is contractible. In fact the mapping spaces in its natural transformation end are discrete, since both strict tensors are gaunt. In the nullary calculation the generic target hom is the point. The proposed unary map lies in this family. Composing these families at the output by composition in $E$ gives the identity on the generic tensor: all the intermediate block charts in $E h_\Gamma$ are the strict inclusions. Composing at the inputs by composition in $F$ does so as well: restriction of $v_{h_\Gamma}$ to a hom is strictification, and normalized operations in $F$ project to strict composition, including under labellings of subblocks. Thus the two compositions, and all their iterates, belong to the same contractible spaces. One can express the coherence test using the trees for a homotopy coherent associative morphism. Each path from a leaf to the root crosses the morphism once. A face either composes a block of source inputs first, or applies a target composition to the outputs of a partition into blocks. In both cases the map on the entire list of source inputs belongs to the normalized contractible space just computed. Attach the cells for these trees (the multiplihedra) along their boundaries, using the chosen source and target coherences on their uncut parts. Every boundary therefore extends in its normalized space; trees with unit inputs use the degeneracies. Equivalently this lifts the unital associative bimodule along an aritywise trivial fibration, after taking a cofibrant resolution. This constructs $v$ naturally on strict algebra maps.
+
+**Comparison in the other direction.** We construct $d_X:E X\to F X$. It is important here to include substitutions which merge several outer slots. We give a comparison of presheaves on the *whole* raw theory. Let
+$$
+ A(\Gamma)(X)=\operatorname{Hom}(h_\Gamma,X),\qquad
+ B'(\Gamma)(X)\simeq\operatorname{Map}_{\mathcal O}(G_\Gamma,F X).
+$$
+Use discrete simplicial sets for $A$. We will construct a natural span $A\leftarrow M\to B'$, with left map an objectwise equivalence and both maps strictly commuting with head evaluation. The weighted colimit definition of $E$ then gives $d$.
+
+We specify models for these simplicial sets to explain the relative extension in the span. Work in a larger universe, so the ordinary category $\mathcal C$ of models of the given size can index diagrams. Present $F$ by a strict diagram in $\mathcal A_{\rm or}$ representing its values as locally coinductively complete objects in the inductive presentation. Diagram rectification in a combinatorial model category allows this: equivalently one may first rectify in the simplicial presheaf presentation and use functorial free algebraic fibrant replacement on the diagram. Take a right frame $Y_\bullet$ for that diagram, by injective fibrant replacement of its constant simplicial diagram in $\mathrm{Fun}(\mathcal C,\mathrm{s}\mathcal A_{\rm or,Reedy})$. This is objectwise homotopically constant and Reedy fibrant. Put
+$$
+          B'(\Gamma)(X)=\mathcal A_{\rm or}(R_L\Gamma,Y_\bullet(X)).
+$$
+Since $R_L\Gamma$ is cofibrant and augments equivalently to $G_\Gamma$, this computes the displayed space and is a strict simplicial model of the raw theory. In particular the value at a globular sum is its strict matching limit. [Diagram rectification, Lurie, Proposition 4.2.4.4](https://www.math.ias.edu/~lurie/papers/highertopoi.pdf)
+
+For use below the matching maps $B'(D_n)\to B'(\partial D_n)$ are fibrations in the **injective** simplicial diagram structure on $\mathcal C$. Here the boundary means the limit over proper globe faces. Indeed, for an objectwise trivial monomorphism $U\hookrightarrow V$ of simplicial-set diagrams, the adjoint lifting test into $Y_\bullet$ uses the map
+$$
+ (U\cdot R_LD_n)\amalg_{U\cdot R_L\partial D_n}
+ (V\cdot R_L\partial D_n)\ \longrightarrow\ V\cdot R_LD_n .
+$$
+Here the dot is degreewise copower. Objectwise this is a Reedy cofibration between Reedy cofibrant simplicial objects: the latching calculation attaches a copy of the globe cofibration for each new nondegenerate simplex. Its homotopy colimit in the simplicial direction is objectwise an equivalence, since it is the pushout-product calculation with the equivalence of spaces $U(X)\to V(X)$. Thus it induces an equivalence of derived mapping spaces into the homotopically constant diagram $Y_\bullet$. To see this for the entire diagram, take the natural transformation end: at an arrow $X\to X'$ a map from a simplicial object at $X$ to the constant object at $X'$ is a map from its homotopy colimit. The end preserves the resulting equivalences. Surjectivity on components gives a strict extension of a *specified* map: the source inclusion is an injective cofibration between cofibrants and $Y_\bullet$ is injectively fibrant, so homotopy extension along that inclusion straightens a homotopy on its source. This proves the lifting test.
+
+There is a natural map $\rho:A\to B'$ on **globular faces**. It names each object of $F X$ and, at its two objects, each actual cell by its ordinary disk chart in $\Phi X(x,y)$. The chart maps and the bipointed suspension adjunction give a coherent transformation including the faces. It has a strict representative on the globe category. Indeed this is an inverse Reedy indexing category for cell spaces, each $A(D_n)$ is projectively cofibrant as a representable simplicial diagram on $\mathcal C$, and the target is Reedy fibrant for the projective diagram structure by the matching result. Use such a representative. Define on globes
+$$
+ M(D_n)= A(D_n)\times_{\rho,B'(D_n),\,\mathrm{ev}_0}
+                           B'(D_n)^{\Delta^1}.
+$$
+Project to $A$ and evaluate at 1 to map to $B'$. Extend to globular sums by their face limits. For each $\Gamma$ the constant path section $s:A(\Gamma)\to M(\Gamma)$ is an objectwise trivial monomorphism: contraction of a path towards its initial end commutes with all face maps. The section is only used on these underlying spaces.
+
+Extend $M$ over the free heads of the coherator, keeping both projections strict. At a head $h:D_n\to\Gamma$, the initial end required of the new path is $\rho$ of the raw output, its final end is the $B'$-output on the final labelling, and the entire path on its boundary has already been specified. Thus the problem is lifting into $B'(D_n)^{\Delta^1}$ over its endpoint-and-boundary matching object. This matching map is an injective fibration by the preceding test and the simplicial fibration axiom for $\partial\Delta^1\hookrightarrow\Delta^1$. It suffices to lift on $sA(\Gamma)$. By ordinary Yoneda this asks for just one actual path with the given boundary path, at the identity labelling in $X=h_\Gamma$.
+
+To supply it, map $Fh_\Gamma$ to $F C_\Gamma=G_\Gamma$. The last identification follows on homs from the ordinary equivalence on strict Steiner homs and on operations from the normalized strict composition of Response 15. The two ends have the same strict value. At the initial end this is strictification of the raw disk chart. At the final end it is evaluation by $R_L h$ on the strict generating labelling, since $R_L$ augments naturally to the strict diagram. All disks and their boundaries have discrete derived mapping spaces into $G_\Gamma$, so these identifications also identify the projected boundary path with the constant path there.
+
+At this **generic** head the strict value is the total of its input tensor or an identity on that total, by the operation and coherence rules, respectively. Over this value the space of disks at a prescribed lifted boundary is contractible. In the extreme hom this is exactly the rectangle lifting calculation of Responses 8 and 15: at the terminal boundary take a raw representative, lift the rectangle, and compare any two writings by lifting the identity and then every successive identity at the prescribed faces. The comparisons are invertible; the relative ordinary disk calculation identifies the resulting space with the derived fibre. Arbitrary semantic boundaries in the same component are handled by transportation of that fibre. The bipointed suspension adjunction gives the same fibre for global disks including their two object faces. In particular one can first transport along the entire specified boundary path, then join the transported disk to the prescribed terminal disk in the fibre. In dimension one this uses the space of objects over a rectangular hom object; for a point arity it uses the constant-pole hom. Fibrancy of disk restriction realizes the path with its prescribed ends and its *actual* boundary path: a path over an interval with fixed endpoints extends precisely when the transported initial endpoint and the final endpoint are in the same fibre component. This gives the lift on $sA(\Gamma)$. Its inclusion is an injective trivial cofibration, so the matching fibration extends the lift over $M(\Gamma)$. Freeness extends this assignment to all substitutions. This argument applies head by head at every stage. In particular the extension along a substitution uses the path already chosen at the head even if the substituted cell has nonrectangular support.
+
+The resulting $d$ on a generator disk in any chart is the chart named by $\rho$: at the identity tuple $s$ has constant paths on the globular generators. It follows that $v_{h_\Gamma}d_{h_\Gamma}$ is the identity on $G_\Gamma$. It fixes its generating diagram, and $G_\Gamma$ is the free semantic wedge of suspensions on that diagram. These identities are coherent over raw arities since the maps between the strict arities form discrete spaces. On the colimit of charts, naturality gives $v_Xd_X\simeq1$. For the other composite, first identify its object function with the original one, using the point chart. On the homs, the unary weighted Yoneda calculation identifies natural endomorphisms with families $P\to\Phi(h_{\Sigma P}(0,1))$ on ordinary arities. The projection of this target to $P$ is a natural equivalence by Response 7. On a suspended arity the composite $d v$ has identity strict projection on the generating chart, by the computation of $v d$ there. Its family therefore agrees with the identity family, coherently since maps between strict arities form discrete spaces. Hence $d_Xv_X$ is an equivalence on every hom and on objects. We have proved $v:F\simeq E$ on *all* raw algebra maps. [Suspended arity unit](#the-directed-unit-on-suspended-pasting-arities) · [Relative lifts over rectangles](#prescribed-faces-for-tensor-cells-in-the-directed-theory)
+
+**Cofibrant realization.** Put $L=\mathcal L_{R_L}$. There is a natural evaluation $b_B:E B\to Q_o U L B$, using $R_L\Gamma=Lh_\Gamma\simeq G_\Gamma$ and the maps $Lh_\Gamma\to L B$ of the labelled arities. It is an equivalence on computad-cofibrant $B$. We spell out the comparison since a strict colimit of discrete algebra nerves need not compute a homotopy colimit.
+
+Use the joint presentation of Response 15 with the raw directed site $\mathbb T_L$, strict site $\Theta^{\rm or}$, and mixed arrows $\Gamma_w\to P_s$ the strict maps $G_\Gamma\to P$. On the raw site localize simplicial presheaves at globular spines. Each raw representable and the discrete nerve $N_w B$ are local by the globular sum equations. Lift the heads into the free algebraically fibrant raw spines over their raw representables to obtain $R_w$; the singular algebra of $N_w B$ is $B$ since maps into this discrete local object are exactly the compatible labels. Hence $\mathcal L_{R_w}B\to N_w B$ is natural. On the joint site localize at the semantic maps on the strict site and the comparisons $y_w\Gamma\to y_sG_\Gamma$. This presents $\mathcal O$ by restriction to the strict site. Both site inclusions give left Quillen extensions: the raw one extends by the empty presheaf on strict objects, the strict one restricts along strictification on raw objects, and the strict arities are homotopy globular sums. As in Response 15 include the images of the generating filler maps when lifting both adjunctions to algebraically fibrant objects. There the two realizations of the raw theory preserve globular sums and have cofibrant attachments. Both augment equivalently to the same discrete diagram $y_sG_\Gamma$. The joint-boundary factorization of Response 2 compares them over this diagram, first on globe boundaries and then on all heads. Gluing their coends at the successive generators of a cofibrant $B$ identifies their derived images there. Thus the derived image of the raw map $\mathcal L_{R_w}B\to N_w B$ gives
+$$
+                     j_B:Q_o U L B\longrightarrow E B
+$$
+naturally on cofibrants; the derived image of the discrete nerve is its colimit of strict charts by Yoneda. At $h_\Gamma$ this is the arity augmentation in the joint presentation. Consequently $j_B b_B\simeq1$ by naturality on all the arity charts of $B$. The endomorphism $b_Bj_B$ of $Q_o U L B$ is an equivalence by cellular induction: it is one on free disks, and this functor on cofibrants takes globe attachments to homotopy pushouts and cellular unions to homotopy colimits. Indeed $L$ preserves the colimits, takes each generating boundary to a cofibration between cofibrants, and the derived forgetful equivalence and $Q_o$ preserve the resulting homotopy colimits. Include the empty algebra and pass to retracts. This proves the assertion about $b$. [Joint-boundary construction](#a-strict-comparison-compatible-with-all-coherence-operations) · [Raw and strict site comparison](#transport-along-an-invertible-global-arrow-and-two-out-of-six)
+
+**Evaluation at singular algebras.** For any algebraically fibrant oriented $Y$, evaluate each chart of $S_LY$ by its adjunct $R_L\Gamma\to Y$. This gives a natural map
+$$
+       e_Y:F S_LY \xrightarrow{v} E S_LY \longrightarrow Q_o UY.
+$$
+It is an equivalence. Its objects include a vertex in each object class. Fix literal vertices $x,y$, write $T=(UY)(x,y)$ for the inductive semantic hom, and put $H=(S_LY)(x,y)$ for the ordinary weak algebra. On these poles $e_Y$ is the map $\Phi H\simeq C(H)\to QT$ given by evaluating suspended ordinary charts. We check the ordinary $\infty$-surjectivity criterion for this particular map.
+
+A point of its degree-$p$ relative matching space is a boundary in $\Phi H$, a $p$-disk in $QT$, and an identification of their boundaries. Represent the first by a literal boundary $\partial h_{D^p}\to H$. Indeed the ordinary realization of this free boundary is the semantic sphere of faces, by its homotopy globe attachments. The ordinary source is cofibrant and $H$ is fibrant, so strict maps represent all components. Transport the given boundary identification along this replacement. The evaluation of the literal boundary already has a representative in $T$: its faces are the adjuncts in $Y$ of the raw faces, with common poles $x,y$, by the definition of $v$ on charts. The unit $T\to QT$ is $\infty$-surjective. Applied to this boundary and the given disk, it supplies a disk in $T$ and an identification over the boundary realizing the prescribed component in $QT$.
+
+In the bipointed inductive model this last disk can be taken to be an actual map $R_L(\Sigma D^p)\to Y$ with the exact already labelled boundary. In detail, take the boundary $\partial D^{p+1}$ of the global disk $D^{p+1}=\Sigma D^p$. Its realization with $R_L$ is the homotopy union of its globe faces, under the two point objects. Its augmentation therefore gives the semantic boundary under those points. The map from that realized boundary to the realized disk is a cofibration, and the bipointed target with the two specified pole maps is fibrant. Thus the derived space under this *literal* boundary computes the homotopy fibre of restriction, and strict extensions represent its components. By the suspension adjunction this is exactly the disk restriction fibre in $T$. For $p=0$ the global boundary consists of just the two poles. The extension is a raw cell of $H$ by the definition of $S_L$, and its chart provides the required lift in $\Phi H$. This proves surjectivity on components of the homotopy matching maps at every rank, with the boundary identification included. An $\infty$-surjective map between coinductively complete categories is an equivalence. This proves full faithfulness of $e_Y$ on the given objects, and hence the assertion. Naturality and detection by $F$ now show that $S_L$ sends every map inverted by $Q_oU$ into $W_L$; denote the induced functor by $\bar S_L$. [Coinductive completion and the disk lifting criterion, Ozornova–Rovelli–Walde §5](https://arxiv.org/html/2603.11005v1#S5)
+
+**The actual unit.** For a computad-cofibrant $B$, the composite
+$$
+ F B\xrightarrow{F\eta_B} F S_L L B\xrightarrow{e_{L B}} Q_o U L B
+$$
+is $b_B v_B$. Indeed $v$ is natural, and on a chart $h_\Gamma\to B$ the adjunct of its composite with the raw unit is exactly the map $L h_\Gamma\to L B$. These equalities form an equality of chart cocones. The maps $v_B$, $b_B$ and $e_{LB}$ are equivalences, so $F\eta_B$ is an equivalence. Detection by $F$ gives the asserted $\eta_B\in W_L$, including the specified raw unit at a finite homotopical computad.
+
+For clarity the same comparison gives the finite reduction in Q2. On cofibrants $F\simeq Q_o U L$ by $b v$, so $F$ takes filtered cellular unions to homotopy colimits. The transformation $e_L\circ F\eta$ between those two functors consequently takes such a union to the colimit of its maps on the stages. Every free computad is the filtered cellular union of its finite subcomputads: the finitely many terms in a generator's boundary involve finitely many earlier generators of lower dimension. Their boundary closures terminate in finitely many steps. These filtered unions compute homotopy colimits after realization; for example order the finite subcomputads by inclusion, with the union of proper subcomputads as latching subcomputad, included by a computad cofibration. The result passes to retracts. Since $e$ is an equivalence and $F$ detects $W_L$, checking the raw units on finite computads suffices.
+
+Finally choose a functorial computadic replacement $q_X:K_L X\to X$ by the free globe-boundary factorization of the initial map. This lifts all globular boundaries, hence lies in $W_L$ by surjectivity on objects and the ordinary trivial fibration test in each fixed hom. Naturality and two-out-of-three make $K_L$ relative. The functor
+$$
+           X\longmapsto Q_o U\mathcal L_{R_L}K_L X
+$$
+is relative by its natural equivalence with $F K_L X\simeq F X$. On localization its composite with $\bar S_L$ on the semantic side is the identity by $e$; on the raw side the unit is represented by $X\leftarrow K_LX\to S_L L K_LX$, followed by the identification induced by completion. Both arrows are in $W_L$. These natural equivalences give the realization adjunction and the equivalence
+$$
+             \operatorname{Mod}(\mathbb T_L)[W_L^{-1}]\ \simeq\ \mathcal O .
+$$
+The identification with the specified adjunction follows also from the triangle on charts above: composing the realized unit with evaluation is the identity under $b v$. This completes Q2 together with the transport and two-out-of-six theorem of Response 15.
+
+**Validation.** This Agda example checks the substitution step where the two support tests give different answers. At the generic square, pad both boundary paths by the identity at their common target. The two composites using the boundary corrections have exactly the type used for the comparison head. Substitute a path around two sides of a square into the first slot and a third-coordinate edge into the second. The two named square generators occur in the resulting interchanger. Agda accepts the substituted comparison at its literal faces and computes that a direct coherence head in the larger arity fails its side condition. The example checks raw typing and support; the extension at an arbitrary head and the derived unit are proved above.
+
+<details>
+<summary>Agda check of a generic comparison under a block-merging substitution</summary>
+
+~~~agda
+module GenericHeadPath where
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using
+  (v; D₁; HComp; vcomp; x; z; fg; f'g'; βα; αβ; ich; ΣTm)
+
+disk = ctxOf (node (node (leaf ∷ []) ∷ []))
+idle : Tm → Tm → Tm → Tm
+idle X Z b = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2))
+                 ⟪ X ∷ Z ∷ b ∷ [] ⟫
+pad : Tm → Tm → Tm → Tm → Tm → Tm
+pad X Z a b u = vcomp X Z a b u b (idle X Z b)
+type₂ = arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+fix : Tm → Tm
+fix u = coh disk (arr type₂ (v 4) (pad (v 0) (v 1) (v 2) (v 3) (v 4)))
+             ⟪ x ∷ z ∷ fg ∷ f'g' ∷ u ∷ [] ⟫
+join : Tm → Tm → Tm → Tm → Tm → Tm
+join u v' a w b = ΣTm (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6))
+                 [ ⟪ x ∷ z ∷ fg ∷ f'g' ∷ u ∷ v' ∷ a ∷ w ∷ b ∷ [] ⟫ ]tm
+pathTy = arr (arr ⋆ x z) fg f'g'
+L = pad x z fg f'g' βα
+R = pad x z fg f'g' αβ
+padded = coh HComp (arr pathTy L R) (idₛ HComp)
+left = join βα αβ ich R (fix αβ)
+right = join βα L (fix βα) R padded
+trackTy = arr pathTy βα R
+squareTy = arr trackTy left right
+square = coh HComp squareTy (idₛ HComp)
+
+generic : HComp ⊢tm square ∶ squareTy
+generic = snd (from-just (infer HComp _))
+
+edge = node (leaf ∷ [])
+cube = ctxOf (node (edge ∷ edge ∷ edge ∷ []))
+across = ⟪ x ∷ z ∷ fg ∷ f'g' ∷ αβ ∷ v 9 ∷ v 10 ∷ v 11 ∷ v 12 ∷ [] ⟫
+
+merged : cube ⊢tm (square [ across ]tm) ∶ (squareTy [ across ]ty)
+merged = snd (from-just (infer cube _))
+
+two-squares : (memT (4 ∷ 6 ∷ 12 ∷ []) (topS (ich [ across ]tm)) ∧
+               memT (3 ∷ 8 ∷ 12 ∷ []) (topS (ich [ across ]tm))) ≡ true
+two-squares = refl
+
+direct-test : graySide cube (trackTy [ across ]ty) (left [ across ]tm)
+                            (right [ across ]tm) ≡ false
+direct-test = refl
+~~~
+
+</details>

@@ -210,3 +210,70 @@ A proof of (N), (FEA) or (U); a counterexample to (11) with a separating invaria
 - Chanavat, arXiv 2505.01387 (Thm 3.22); Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620; Batanin–Cisinski–Weber, arXiv 1209.2776.
 - Barwick–Schommer-Pries, *On the unicity of the theory of higher categories*; Caviglia–Horel (unit induction for internal algebras); Taylor, arXiv 2604.09867.
 
+# Researcher Response 1
+
+**The unit is an FHM weak equivalence for every groupoidal computad-cofibrant CaTT model, including infinite computads. The completed reconstruction map is an equivalence at every space.** For a general strict target the reconstruction map induces an equivalence after groupoidification. On the directed side, the singular functor carries semantic weak equivalences into the proposed intrinsic class. The unrestricted unit in Q1 and the directed equivalence in Q2 remain open.
+
+## The groupoidal unit and the counit at spaces
+
+Write \(E(B)=gQU\mathcal L_R B\), where \(g\) denotes groupoidification. Let \(X(B)\) be the classifying space of the simplicial category of labelled paths in \(B\). We use two natural comparisons proved in the companion problem. For computad-free \(B\), its category of labelled weak arities gives a natural zigzag \(X(B)\simeq E(B)\). For groupoidal \(B\) and vertices \(x,y\), the labelled-path comparison gives
+
+\[
+ X(B(x,y))\simeq \operatorname{Path}_{x,y}X(B).
+\]
+
+Every component of \(X(B)\) contains a vertex. Two vertices in the same component of a groupoidal algebra are joined by an actual invertible cell. The computation of components uses the category of one-cells modulo two-cells and composition of the resulting arrows. The same statements apply inside each successive fixed hom. [Path-space comparison](../answered/relative-coherence-all-dimensions-r7-2026-11-20.md#researcher-response-81) · [Natural arity comparison and the two-endpoint version](../answered/relative-coherence-all-dimensions-r7-2026-11-20.md#researcher-response-82)
+
+Consequently, for a map \(f:B\to B'\) between groupoidal computad-free algebras, \(E(f)\) an equivalence implies \(f\in W\). Indeed \(X(f)\) is an equivalence. Taking path spaces between any two source vertices gives an equivalence on \(X\) of their fixed homs. Repeat at every prescribed pair of poles. Surjectivity on components at each stage gives precisely the successive essential-surjectivity conditions of FHM. Naturality of the arity zigzag identifies the map used in the first step with \(E(f)\). This proves the reflection implication used in Known (VII) independently of the unit. If computad-cofibrant objects are taken to include retracts, the natural comparison of the two functors on free objects extends to their retracts before applying the groupoidality hypothesis. [FHM, Definition 3.1.2](https://arxiv.org/pdf/2406.13240)
+
+Apply this to Lanari's theory \(\mathbb T^{\rm bi}\), with adjunction \(J\dashv V\) as above. We use the inverse-data calculation of Known (VII). The map \(A\to VJA\) is cellular in the independent inverse-data inclusions \(\beta_k\). Realization in spaces inverts each \(\beta_k\) and its cellular composites with cofibrant source, since these attachments realize as homotopy pushouts. For a pasting arity \(P\), the underlying algebra \(B_P=VJh_P\) is groupoidal and computad-free. Thus \(X(B_P)\simeq E(h_P)\simeq *\). Taking path spaces repeatedly shows that every prescribed parallel pair of cells in \(B_P\) admits a filler. By the adjunction and Yoneda its cells are the arrows \(D_n\to P\) in \(\mathbb T^{\rm bi}\). This gives contractibility at every arity. The theory is cellular by construction and hence is a groupoid coherator. [Inverse-data calculation and cellularity](../answered/catt-models-unit-condition-2026-11-19.md) · [Bourke, Theorems 4.3–4.4](https://arxiv.org/abs/1811.09532)
+
+For Henry's condition take any cellular \(\mathbb T^{\rm bi}\)-model \(Z\) and cell \(\mathbb D_n\to VZ\). Form the source-face expansion \(h:Z\to Z'=Z\amalg_{J\mathbb D_n}J\mathbb D_{n+1}\). Bourke's factorization on underlying algebras is
+
+\[
+ VZ\longrightarrow VZ\amalg_{\mathbb D_n}\mathbb D_{n+1}
+ \longrightarrow VZ'.
+\]
+
+The first map becomes a homotopy pushout of a map between contractible spaces under \(E\). The second is \(\beta_k\)-cellular with cofibrant source. Hence \(E(Vh)\) is an equivalence. The endpoints of \(Vh\) are groupoidal and computad-free, so reflection gives \(Vh\in W\). On groupoidal models essential surjectivity at every pair of poles is the globular characterization of Grothendieck weak equivalence. This proves Henry's pushout condition. Known (VIII)(A) now gives \((U_{\rm gpd})\) with its full quantifier. [Ara, Theorem 4.18](https://arxiv.org/abs/1206.2941) · [Henry, §5.3](https://arxiv.org/abs/1609.04622) · [Converse for the specified unit](../answered/catt-models-unit-condition-r2-2026-11-19.md)
+
+There is a corresponding case of (FEA) in every attachment rank. Let \(B\) be groupoidal and computad-cofibrant and put \(B'=B\amalg_{\mathcal C^n}\mathcal E^{n+1}\) at any cell of \(B\). The underlying attachment is cellular. Its forward cell is coinductively invertible by the defining tower, as are the inverse and cancellation witnesses in the tower. When \(n>0\), the new parallel \(n\)-cell is equivalent to the old invertible one via the forward cell and is therefore invertible. When \(n=0\) the duplicate is an object. All positive-dimensional generators now have invertible images, and closure of invertibility under weak composition gives groupoidality of \(B'\). The semantic calculation in Known (VIII)(B) inverts \(B\to B'\) under \(\Phi\), hence under \(E\). Reflection proves \(B\to B'\in W\). This includes \(j_0\) by taking the free point as source. [Invertibility under composition and equivalence, FHM §2.4](https://arxiv.org/pdf/2406.13240) · [Semantic walking-equivalence calculation](https://arxiv.org/abs/2603.11005)
+
+Now let \(Y\) present any space and put \(A=S_0Y\). Known (II) shows that \(A\) is groupoidal. The weak equivalence \(q_A:KA\to A\) reflects invertibility, so \(KA\) is groupoidal. Apply the unit just proved to the actual comparison identity
+
+\[
+ S_0(d_Y)\,\eta_{KA}=q_A .
+\]
+
+Two-out-of-three gives \(S_0(d_Y)\in W\), and detection in Known (IV) gives \(QU(d_Y)\) an equivalence. In particular this checks Q1(d) at the terminal category and at every discrete category. [FHM, Proposition 3.1.7](https://arxiv.org/pdf/2406.13240)
+
+## What the strict reconstruction map computes
+
+For a free strict target \(C\) in Q1(d), the replacement \(q_C:KC\to C\) lifts every prescribed globular boundary. The arity comparison of Response 82 applies to the **map** from the realization of a computad-free algebra into the nerve of a strict target induced by such a boundary-lifting morphism. On each labelled arity its cocone is strictification followed by the given strict label. Substituting \(q_C\) gives exactly the adjunct \(d_C\). Thus \(gQU(d_C)\) is an equivalence. Here groupoidification factors through coinductive completion because spaces are coinductively complete. With any sequence of fixed algebraic poles, the restricted \(q_C\) still lifts all boundaries and its source hom is computad-free, so the same comparison applies there. [Arity descent for the actual comparison map](../answered/relative-coherence-all-dimensions-r7-2026-11-20.md#researcher-response-82) · [Suspension and free homs](https://arxiv.org/abs/2402.01611)
+
+The missing step in Q1(d) is to identify the geometric homs of \(QU\mathcal L_R(KC)\) at those poles. Taking a hom first and groupoidifying first already differ on \([1]\), where the hom from \(1\) to \(0\) is empty and its geometric path space after groupoidification is contractible. For the ordinary unit there is also an unconditional directed family. Response 87 proves \(\mathrm{RC}_{\rm id}(n)\) for all \(n\) for finite two-computads whose two-generators have nonempty strict input and output paths. These polygraphs are homotopical, so Known (VIII) gives \(\eta\in W\) for them. This argument leaves (FEA), (N), the unit on the bubble, and the general vanishing in Q1(d) undecided. [All-dimensional positive two-computad theorem](../answered/relative-coherence-all-dimensions-r7-2026-11-20.md#researcher-response-87)
+
+## A space-valued test that retains the prescribed poles
+
+There is an exact test for what the groupoidal argument still needs in Q1. For a strict CaTT map \(f:A\to B\), let \(H(f)\) range over \(f\) and the maps obtained by taking any finite succession of homs at a pair of objects of the current source and their two images. Write \(kD\) for the core of a weak category, consisting of its objects and hereditarily invertible cells. Then
+
+\[
+ f\in W\quad\Longleftrightarrow\quad
+ X(kH(f))\text{ is a weak homotopy equivalence for every such }H.
+\]
+
+For the forward implication, each \(H(f)\) is in \(W\) by the prescribed-boundary test. The core preserves this property. Indeed a target cell in the core at a prescribed source boundary lifts up to an invertible comparison. Its lift is invertible by invariance under invertible comparison and reflection of invertibility. The prescribed boundary then puts the lift in the core. On groupoidal algebras a weak equivalence gives a bijection on components and on each based homotopy group. In a fixed hom, surjectivity on classes is essential surjectivity there, and injectivity follows by lifting the comparison between two images at their specified poles. Response 81 now applies to the map of spaces. For the reverse implication only surjectivity on components of these spaces is needed. Every object of each target hom belongs to its core, and a path component in that core gives an invertible comparison to the image of a source object. Running through all depths and poles gives exactly the FHM condition. [Groupoidal cores](https://arxiv.org/abs/2303.14907) · [Prescribed-boundary equivalences](https://arxiv.org/abs/2406.13240)
+
+In particular this test applies to the actual map \(\eta_B\) without assuming (FEA). Applied to \(\eta_{KC}\), it is also equivalent to Q1(d) at \(C\). Indeed \(S_0(d_C)\eta_{KC}=q_C\in W\), and Known (VIII)(A)'s detection statement identifies \(S_0(d_C)\in W\) with equivalence of \(QU(d_C)\). The target homs in this test are taken in \(S_0\mathcal L_R(KC)\). The comparison of Response 82 with the strict homs of \(C\) leaves precisely these spaces to compute.
+
+## The directed singular functor preserves semantic weak equivalences
+
+Write \(W_L\) for the candidate in Q2. Let \(f:Y\to Z\) be a semantic weak equivalence in \(\mathcal A_{\rm or}\). Choose a path object \(Z\xrightarrow{\sim}PZ\xrightarrow{(d_0,d_1)}Z\times Z\) with endpoint map a fibration. Put \(T=Y\times_{Z,d_0}PZ\), write \(r:T\to Y\) for its projection, \(i:Y\to T\) for the constant-path section, and \(p:T\to Z\) for the second endpoint. Both \(r\) and \(p\) are trivial fibrations. Indeed \(d_0\) is a trivial fibration since \(Z\) is fibrant, and \(T\to Y\times Z\) is a base change of the endpoint fibration. The identities \(ri=1\) and \(pi=f\) then give the weak equivalences by semantic two-out-of-three.
+
+The singular image of either trivial fibration lifts every strict globular boundary by adjunction, since the realizing maps \(F(\partial D_n)\to F(D_n)\) are cofibrations. At fixed poles it therefore restricts to a globular trivial fibration of ordinary CaTT homs. For each \(x,y\) of \(S_LY\), the restriction of \(S_Lr\) at \((ix,iy)\) lies in the ordinary FHM class and splits the restriction of \(S_Li\). Two-out-of-three **in CaTT** and composition with the corresponding restriction of \(S_Lp\) give the local FHM condition for \(S_Lf\). [FHM, Corollary 3.3.4](https://arxiv.org/pdf/2406.13240)
+
+Suppress \(S_L\) on objects and arrows. Given \(b\in S_LZ\), lift it along \(p\) to \(v\in S_LT\) and put \(a=rv\). Lift the identity at \(a\) along \(r\) with prescribed endpoints \(ia,v\). The resulting arrow \(e:ia\to v\) is invertible. To see this, take the identity's tower of inverses and cancellations, supplied by the point-arity coherences. Lift the chosen inverse once and use that same lift on both sides. Lift the left and right cancellation witnesses with the literal composite boundaries formed from these choices. Repeat for the cancellations in every higher rank. Strict preservation of the operations by \(r\) makes each lifting square commute. Strict preservation by \(p\) sends this tower to one for \(pe:f(a)\to b\). This proves essential surjectivity, hence \(S_Lf\in W_L\). Consequently \(S_L\) induces a functor out of the semantic localization into \(\mathrm{Mod}(\mathbb T_L)[W_L^{-1}]\).
+
+This establishes the forward preservation property in every dimension. The path-object argument supplies inverse witnesses inside fibres of globular trivial fibrations. For Q2 one still needs transport along an arbitrary invertible arrow of an arbitrary \(L\)-model, or an independent proof of two-out-of-six there, and the homotopical realization and finite-unit comparison. The semantic interchanger theorem applies to diagrammatic sets. Applying it to raw \(L\)-terms requires comparisons at the specified substitution boundaries of Known (IX). [Chanavat, Theorem 3.22](https://arxiv.org/abs/2505.01387)
+
+**Validation.** The arity-cover checker verified 330 typed path lifts, including 18 lifted relators, and classified 505 equal-image pairs. The walking-fan checker verified the chain contraction through rank four for five fans and checked both directions of the five-cell comparison at three powers. The positive two-computad checker verified 35,170 intervals. These exercise the cited constructions. The unbounded assertions above use naturality of the arity comparison and induction through every finite sequence of fixed poles. [Arity covers](../../../tools/relative_coherence_arity_covers.py) · [Walking fans](../../../tools/relative_coherence_fan_groups.py) · [Positive two-computads](../../../tools/relative_coherence_positive_sweeps.py)

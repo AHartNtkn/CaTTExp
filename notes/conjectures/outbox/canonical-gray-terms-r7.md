@@ -1465,3 +1465,86 @@ python3 -B tools/gray_spatial_units.py 4
 python3 -B tools/gray_spatial_units.py 2 --paste --agda /tmp/GraySpatialUnitAll.agda
 agda --safe --no-libraries -i /tmp -i src /tmp/GraySpatialUnitAll.agda
 ~~~
+
+# Researcher Response 23
+
+**Binary temporal composition passes the elementary substitution test at every rank of the induction in Response 21.** The two normalized inputs can meet at an arbitrary composite face. Even after collapsing the top strings, the source, middle and target faces can be three different raw terms. The result uses two facts about the promotion in Response 20. Splitting a spatial string preserves the promoted temporal action up to comparison, and the spatial square of a thin bridge has a temporal action at its prescribed faces.
+
+Put $k=r+1$. Use $\ast$ for composition at cut $r$ and $\cdot$ for composition at cut $r+1$, both in order of traversal. Calculate in the bicategory of Response 21, whose 2-cells are $(r+2)$-terms modulo invertible $(r+3)$-comparison with fixed faces. Every equality used below in a labelled temporal cylinder of height at most $r+2$ yields an actual comparison there. In formulas with multiple products insert the string associators, and at an inactive position insert and cancel the temporary unitors of Response 21.
+
+### The composition law for two spatial changes
+
+Consider two successive spatial labellings $a,b$ and one direct labelling $c$ with the same outer caps. The first spatial marks have degree $r$. Write $D_z^a,D_z^b,D_z^c$ for the three changes on an $r$-term. On a marked $r$-variable give a comparison $m_x:D_x^c\Rightarrow D_x^a\ast D_x^b$. For an $(r+1)$-term $f:s\to t$, write $f_0,f_1,f_2$ for the three caps and $J_f$ for its spatial action opposed in degree $r+2$. Paste the two squares to obtain
+\[
+ P_f=(D_s^a\ast J_f^b)\cdot(J_f^a\ast D_t^b):
+ (D_s^a\ast D_s^b)\ast f_2\Rightarrow f_0\ast(D_t^a\ast D_t^b).
+\]
+Suppose on each marked $(r+1)$-variable the following equation holds. Then it holds on every $(r+1)$-term, with the induced comparisons on its two poles:
+\[
+             (m_s\ast f_2)\cdot P_f=J_f^c\cdot(f_0\ast m_t).       \tag{2}
+\]
+
+To define $m_z$, first take an $r$-term on a pure globular arity. Graft two composable $(r+1)$-arrows at each active top slot. On this globular tree choose $M_z:D_z(a\ast b)\Rightarrow D_z(a)\ast D_z(b)$. Both faces evaluate strictly to the same cell. Indeed the strict $r$-diagram acts on a top change in each of its moving positions, and strict interchange separates the first changes from the second. Globular boundary lifting supplies $M_z$ and identifies the choices up to comparison. For arbitrary labels first vary the top change labels in $D_z$ along the supplied $m_x$, then use $M_z$. This prescription respects substitution. To check a composite substitution, split each inner $m$ into its variation and its $M$. The variation in a composite of two comparisons distributes by the same construction on the graft of two vertically composable $(r+2)$-arrows. The first variations now combine by ordinary substitution for depth-zero action, once in each top degree. Both remaining routes are comparisons on the pure two-step graft of the inner arity with the same literal endpoints. That graft has height at most $r+1$, and the routes have the same strict identity value, so they agree in the quotient before labelling. This gives the substitution law successively at every head of $z$.
+
+For a pure arity $Q$ of height at most $r+1$, glue two opposed spatial cylinders of $Q$ along their common middle cap, with the same mask beginning in rank $r$. Call the result $W$. In its strict category any two parallel $(r+2)$-cells are equal. To see this, decompose a globular tree as a wedge of suspensions. Below rank $r$ the marks are stationary, so gluing commutes with each such suspension and wedge. The strict hom across consecutive branches is the product of the corresponding strict homs. Descend $r$ times, dropping trivial coordinates. At the last level the tree is a path. There are three copies of each selected horizontal edge and two vertical steps at each selected vertex. An opposed square in a column rewrites a source vertical followed by the upper horizontal to the lower horizontal followed by a target vertical, omitting an absent vertical. A path visits each horizontal position at most once. Its initial and final words therefore prescribe the moves in each column, in order of decreasing stage. Two enabled moves in different columns occupy disjoint subwords, since a move consumes only its own horizontal and possibly a vertical at its source. An enabled move stays enabled across all other moves until it fires. Thus the first move of one schedule can be commuted to the front of any other schedule with the same target. Induction on the length proves equality by strict exchange. This also treats isolated marks and columns with neither end selected. The $(r+1)$-skeleton of $W$ has variable faces and each new top square has variable $r$-poles. Consequently Response 13 gives a raw comparison between any two parallel $(r+2)$-terms in $W$.
+
+Now induct on $f=h[\sigma]$. Use two labellings of the one-stage opposed cylinder of the head arity. The first evaluates the direct changes on the arguments of $\sigma$. The second first maps into $W$ by composing the two changes at each $r$-position and pasting the two squares at each $(r+1)$-position, then evaluates the stage labels on the arguments. Vary only the change variables of the one-stage cylinder between these labellings. At an $r$-position use $m_{\sigma x}$. At an $(r+1)$-position the declaration asks for (2) on the proper argument $\sigma x$: varying a single moving operand of either edge whisker is the higher whisker on its change. Choose the witness to the induction hypothesis there. The lowest variable varied in this second cylinder has rank $r+1$. Depth-one naturality on $J_h$ therefore compares the two evaluations, with exactly these variations at the poles. For the second evaluation, the direct square with the pure $M$ corrections and the pasted stage squares already agree in $W$ by the preceding paragraph. Specialize and compose. The substitution law for $m$ identifies the two outer corrections with those at the actual poles of $f$. This proves (2), including when $f$ is a previously chosen term on a mixed context. The substitution and depth-one operations used here are those of [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1 and Lemma 3.3](https://arxiv.org/pdf/2501.11620).
+
+Apply (2) to $f=H_w$ on $S\uparrow Y$ in the notation of Response 20. Take $a,b$ to be the two portions of each spatial string and $c$ the full string. On the two temporal copies of a spatial slot, $m_x$ is the pure comparison from the full string to the product of the portions. At the change variable $H_x$, (2) is exactly temporal regrouping of that string at the recursive actions, proved in Response 21, with the lower cap distributors. Indeed for a fixed lower whisker $F$ the pole comparison $m_{Fz}$ is $F(m_z)$ followed by the distributor $F(D^a_z\ast D^b_z)\Rightarrow F(D^a_z)\ast F(D^b_z)$. At one whisker this is an allowed choice on its pure two-step graft, hence agrees with $M$ there. Iterate over the occupied cuts. The same calculation identifies (2) on $H_w$ as a temporal action on the pure comparison
+\[
+                    D^c w\longrightarrow D^a w\ast D^b w
+\]
+at the promoted action on the left and the recursive binary action on the right. Empty portions use disk actions and the unit law of Response 22. The reverse pure comparison also has an action by Response 21.
+
+### Moving a thin bridge across a spatial change
+
+Let $b:u\to v$ be a pure $(r+1)$-term over an arity $S$ of height at most $r$, with temporal action $K:p\ast h_v\Rightarrow h_u\ast q$. Here $p,q$ are the minus and plus copies of $b$ with their proper temporal whiskers below $r$, and $h_u=H_u$, $h_v=H_v$. Write $A=p\ast h_v$, $B=h_u\ast q$. Make a single spatial change of the top slots of $S$, with its label and temporal change as in Response 20. The pure opposed square is
+\[
+                         j_b:Du\ast b_1\Rightarrow b_0\ast Dv.
+\]
+It admits a temporal action at the recursively computed actions on these two products.
+
+For the orientation, apply ordinary depth-two spatial naturality to $\mathrm{op}_{r+2}K:B\Rightarrow A$, then oppose degree $r+2$ in the resulting judgment. The old context has height at most $r+1$ and is fixed by this opposition. Use the depth-two extension of Response 13 with its ordinary depth-zero and depth-one boundary actions. Before opposition, the source is the product of the whiskered initial copy of $\mathrm{op}_{r+2}K$ with the ordinary square on $A$. The target is the ordinary square on $B$ followed by the whiskered final copy. Opposition reverses products at cut $r+1$ and returns $K$ on both copies. Thus the new cell has the following faces, where $e,f$ are the changes on the padded minus poles of $u,v$ and $e',f'$ those on the plus poles:
+\[
+              J_A\cdot(K_0\ast f')\quad\Longrightarrow\quad
+                         (e\ast K_1)\cdot J_B.                      \tag{3}
+\]
+This applies to any raw $K$, by the substitution recursion for depth two. Its two caps are precisely the given instances of $K$.
+
+For clarity, name the four other squares
+\[
+ P:e\ast p_1\Rightarrow p_0\ast f,\quad
+ Q:e'\ast q_1\Rightarrow q_0\ast f',\quad
+ U:e\ast h_{u,1}\Rightarrow h_{u,0}\ast e',\quad
+ V:f\ast h_{v,1}\Rightarrow h_{v,0}\ast f'.
+\]
+Here $U,V$ are the promoted actions on $Du,Dv$. The opposed square of a binary path agrees with the paste of its operand squares in path order: both have the same faces on the generic one-band path cylinder, so the strip argument and Response 13 compare them before substitution. Likewise the opposed square of a fixed lower whisker on $b$ agrees with the whisker of $j_b$ after distributing the two products at its ends. Apply the same argument on the one-band cylinder of the pure whisker arity, holding the lower operand stationary, and then substitute. This identifies $P,Q$ with the two padded copies of $j_b$, including the distributors, through any number of occupied cuts.
+
+Expand the source of (3) in order as $P\ast h_{v,1}$, $p_0\ast V$, $K_0\ast f'$. The last two factors give the temporal action on $b_0\ast Dv$. Expand the target as $e\ast K_1$, $U\ast q_1$, $h_{u,0}\ast Q$. Its first two factors give the temporal action on $Du\ast b_1$. The cap distributors adjacent to these two pastes cancel their inverses in the expressions for $P,Q$ by the pseudofunctor laws of Response 21. Rebracket at both exterior ends. These are exactly the two faces for the action on $j_b$. All adjustments lift to raw comparisons. In particular (3) never requires an inverse for $H_u$ or $H_v$.
+
+### Choosing the bridge actions and folding two arbitrary factors
+
+At the preceding stage, the $k$-actions on thin heads can be chosen compatibly with products of bridges on the same pure arity. Fix such an arity, a full literal type of rank $r$ terms on it, and their common strict value. Let $n$ be the normal writing. Choose a pure equivalence $l_u:u\to n$ for each writing $u$ in this class and put $l_n=1_n$. The preceding stage supplies an invertible square $L_u:F(l_u)H_n\Rightarrow H_u G(l_u)$, where $F,G$ are the two padded caps. Invertibility holds because $L_u$ has degree $r+2$ over a cylinder of height at most $r+1$. Use the disk square at $n$. For any pure bridge $b:u\to v$, there is a unique pure 2-cell class $\theta_b:b\ast l_v\Rightarrow l_u$ by globular boundary lifting. Choose the square $K_b$ by the equation
+\[
+ (F\theta_b\ast H_n)\cdot L_u
+  =(Fb\ast L_v)\cdot(K_b\ast G l_v)\cdot(H_u\ast G\theta_b)
+\]
+with the two cap compositors inserted. This is solvable uniquely in the quotient: cancel the invertible outer 2-cells, then right whiskering by the equivalence $G l_v$ is fully faithful, with inverse given by whiskering by its inverse and using its unit and counit. This defines an invertible square and gives the disk square for an identity. For two bridges $b:u\to v$, $d:v\to w$, append $l_w$ to their pasted square. Applying the defining equation for $d$ and then for $b$ gives the defining equation for a direct bridge $u\to w$, transported along the pure comparison out of $b\ast d$. The two resulting pure triangles agree by uniqueness of the pure 2-cell class. Faithfulness after whiskering by $G l_w$ gives the desired comparison of squares. Install representatives on generic thin heads on their own supports, and use their variable inclusions. This construction uses the freedom to choose those heads before constructing the positive-height heads at rank $k$. It makes no assumption about the induced action on an arbitrary substitution into a thin head.
+
+Take normalized composable $k$-terms on the support $P$ of their product. If $P$ has height below $k$, both strict values are identities on the same cell, so each factor already lives on all of $P$. They are generic bridges or disk identities, and the preceding construction gives the elementary comparison. At shallow selections the required $(k+1)$-comparison actions can also be lifted directly by Response 13 whenever their temporal depth is at most two.
+
+Otherwise $P$ has height $k$. Its common $r$-truncation is $S$. The strict factorization picks a middle position in every top string. Indeed, decomposing by wedge and suspension down to rank $r$ takes the cut-$r$ product coordinatewise. In each remaining path, factorization of a path is a cut at a vertex, including either endpoint. The supports of the factors are exactly these two portions together with the unchanged branches. Their three signed sections therefore identify with three inclusions $i_0,i_1,i_2$ of $S$. Pull the actual pole terms back to them, giving $u_0,u_1,u_2$ with common literal type and strict value. In particular the middle writing is shared literally by the two factors. For deeper threshold selections the marks are constant along each string, as in Response 20.
+
+Choose generic bridges $b_{ij}:u_i\to u_j$, using the identity for equal writings. By Responses 20–22, the two factors and the direct normal writing have respectively the following reference terms with their assigned actions, up to pure cap corrections:
+\[
+ b_{01}[i_0]\ast D^a u_1,\qquad b_{12}[i_1]\ast D^b u_2,
+ \qquad b_{02}[i_0]\ast D^c u_2 .
+\]
+For equal writings insert the identity bridge by the temporal unit law. For an entirely empty portion use the complete-collapse comparison. A variable on a disk retains its declared action. Change the two product factors to their references by top-slot replacement. Reassociate and apply the crossing just proved to $D^a u_1\ast b_{12}[i_1]$. This moves the second bridge to $i_0$ and changes the following factor to $D^a u_2$. Now combine the two bridges on $i_0$ using the compatible choice above, and combine $D^a u_2\ast D^b u_2$ to $D^c u_2$ using (2) in reverse. Every step has an action at its stated endpoints and can be used inside the surrounding product by Response 21. Finally change the direct reference to the normal writing using the cap corrections of Response 19. This constructs the comparison for the binary fold. The remaining elementary substitutions of Response 22 can consequently be restricted to lower-height heads and to positive-height heads with at most one arrow per top string and nonvariable lower labels.
+
+**Verification.** For a width-three strip with three bands the checker enumerated all 34 masks and 4,956 paths. Each of the 12,016 source–target cases with several schedules was connected by swaps of independent moves. It built a typed comparison between both ways of pasting four positive squares. It also realized the pure fold on two slots in degrees two through four with three distinct pole writings, including a wholly empty first portion and a wholly empty support in top degree. For (3) it used the oriented cube face as a hypothesis, constructed both bracket transfers in CaTT, used the cube once, and checked the resulting raw term at the independent temporal faces in Agda safe mode. The certificate checks this transfer. The existence of the depth-two face and the arbitrary-rank fold are supplied by the proofs above. [Checker and Agda certificate generator](../../../tools/gray_spatial_composition.py)
+
+~~~sh
+python3 -B tools/gray_spatial_composition.py --width 3 --stages 3 --agda /tmp/GrayBridgeCube.agda
+agda --safe --no-libraries -i /tmp -i src /tmp/GrayBridgeCube.agda
+~~~

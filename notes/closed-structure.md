@@ -1274,7 +1274,18 @@ Everything in this list is now **derived**. None of it is a primitive any more.
 
 #### 7. Formalization (standard 9) and open items
 
-- **Agda: `src/CaTTExp/Gray/Biclosed/`.** It contains the syntax of formulas and multimap types, the rows and their r, the generic contexts Ctx(ρ, n) and the directed templates, and a decision procedure for admissibility that is proved sound and complete for the template relation. It checks that each template's goal is well-typed against its context, that no directed goal is admitted with an orientation opposite to its hypothesis, and that the derived (lhom) and E.2 constructions are admitted instances. It formalizes the syntax and the decidability of §3. It does not formalize the ∞-categorical initiality of §4, which stays on paper (Response 2, verified; Lemma GB-ext in-house). Independent honesty review before merge.
+- **Agda: `src/CaTTExp/Gray/Biclosed/`** (type-checked locally with Agda 2.6.3, `--safe`, no postulates).
+  - `Syntax`: formulas, multimap types, globular cell types with a gap and a mode, and terms. Boolean equality on all of them is proved sound and reflexive.
+  - `Typing`: a checker `infer`/`wf`/`wfCtx`. Planar substitution and whiskering move the gap by the number of inputs to its left. The collar term `glue` has a stated typing rule: it stands for an L-core composite, and that composite is not derived from L's coh in Agda.
+  - `Templates`: the five rows with their r, the generic contexts of (GB-cut) and (GB-dcut) for every n, the relation `Admissible`, and the decision procedure `admit?`.
+    - `admit?-sound` and `admit?-complete` give Lemma GB-dec for the template relation. Renaming is handled by canonical numbering of the generic formulas.
+    - `no-reverse` proves that a directed goal and its reverse are never both admissible, so the judgement is not endpoint-symmetric (r3 item 29).
+    - `dir-needs-dir` proves that an admissible directed goal has a directed hypothesis.
+  - `Examples` (by evaluation):
+    - For nine rows, the derived (lhom) and E.2 unit rows among them, every generated context and both goals are well typed, and both goals are admitted. That covers (GB-cut) at n ≤ 2 (and n = 3 for one row) and (GB-dcut) at k ≤ 2 at every gap.
+    - Reversed directed goals are rejected. So are directed goals once b is made invertible.
+    - Negative controls: non-generic or misnumbered formulas, n = 0 directed, wrong endpoint types, a dropped collar, and a goal from another row's context.
+  - **Not formalized:** closure of admissible goals under substitution; the general typing theorem for all n (only checked by evaluation); and the ∞-categorical initiality of §4, which stays on paper (Response 2, verified; Lemma GB-ext in-house). An independent honesty review is required before merge.
 - **Open items:**
   - (D7c) an independent check of Lemma GB-ext;
   - (D7d) the Agda module above, owned by GBIC;

@@ -151,7 +151,7 @@ What *is* available in the algebraic setting is enough for the free case: for C 
 
 ---
 
-## 5. Conservativity (C5): strict half proved under P, full statement reduced
+## 5. Conservativity (C5): strict half proved under P and under L, full statement reduced
 
 ### 5.1 Statement
 
@@ -179,10 +179,85 @@ Under P (pseudo ambient), interpret the ambient in the strict ω-category of str
 
 This is the non-collapse half: for instance, no closed cell relates two distinct parallel generators. It does not give C5-full (strict equality in `F_s(Γ)` is coarser than connection by CaTT cells). Under L, the corresponding strict model is Gray-enriched rather than a strict ω-category; LCORE's strict AM-model validation (E2) is the natural place to add ⟦Γ⟧.
 
-### 5.4 Remaining for C5
+### 5.4 Strict half under L (C5b): proved, at argument level
+
+*Added 2026-11-20.* Under L the ambient is Gray-enriched, so the strict model is strict ω-categories with the **Gray** tensor instead of the cartesian product. The same model interprets the biclosed rules of `closed-structure.md` F.7.4, which is what D7g needs (§5.5).
+
+**The model 𝔖.**
+- **Objects.** Strict ω-categories. A data atom is valued as any strict ω-category.
+- **⊗, \ and /.** ⊗ is the Gray tensor of strict ω-categories, with the Leibniz rule of `conventions.md` §2 on Steiner complexes. For loop-free unital (strong Steiner) complexes, ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) (Steiner 2004; Ara–Maltsiniotis, arXiv 1607.00668, App. A). The tensor is monoidal and biclosed on all strict ω-categories (Al-Agl–Brown–Steiner 2002; Crans 1995; Ara–Maltsiniotis App. A). A\C and C/A are its closures: Hom(A ⊗ W, C) ≅ Hom(W, A\C) and Hom(W ⊗ A, C) ≅ Hom(W, C/A). *Citation level: the statements are standard, but the theorem numbers were not re-read for this note.*
+- **Multimaps.** (X₁, …, Xₙ ▸ Z) is the set of strict functors X₁ ⊗ … ⊗ Xₙ → Z, using the associativity isomorphisms, with the unit 1 = ν(λD⁰) for n = 0. A time slot ⟦Dᵏ⟧ is the factor ν(λDᵏ) at its position. Faces are restriction along the source and target inclusions ν(λDᵏ⁻¹) → ν(λDᵏ).
+- **Invertible.** ⊨ is interpreted as strictly invertible: the cell has a two-sided inverse in its own dimension. An invertible n-ball of operations in a gap is an n-cell of the hom ω-category of operations, obtained by currying the gap with the closures, that is strictly invertible.
+- **Probes.** ⟦Θ⟧ = ν(λΘ), which is Free(Θ) (`Strict/PsGlob`). An L-core term t : A over a pasting context Θ is a cell of ν(K(Θ)) (`Strict/Soundness.sound-tm`). Hom by hom, ν(K(Θ))(aᵢ, aⱼ) = ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ). The canonical comparison maps ⊗ → × are compatible with composition, so they give κ_Θ : ν(K(Θ)) → ν(λΘ), whose homs are the products, and κ_Θ(t) is a cell with the boundary A prescribes. An L substitution σ : Θ′ → Θ therefore gives a good labelling of Θ′ in ν(λΘ), hence a strict functor ⟦σ⟧ : ν(λΘ′) → ν(λΘ) (`Strict/PsGlob`, `FromGood.functor`). p_{Δ,Θ} is the isomorphism ν(λΔ) ⊗ ν(λΘ) ≅ ν(λΔ ⊗ λΘ), with ⟦Δ ⊗ Θ⟧ := ν(λΔ ⊗ λΘ), which is ordered unital by `Strict/TensorBasis`. pt is the identity on 1.
+- **glue.** The collar term `glue` is interpreted as the strict composite it stands for. It exists because it is an L-core composite.
+
+**Lemma S1 (rows are bijections).** For each row ρ and each fixed placement of time slots, r : H → B is a bijection of operation sets that commutes with restriction along every time slot.
+*Proof.* The pair and probe-pair rows are the associativity isomorphism, composed for the probe-pair row with p. The unit row is the unit isomorphism. The two evaluation rows are the two closure bijections, and (A, Φ) and (Φ, A) keep each time slot in its gap. Restriction along a slot is precomposition with a map in one tensor factor, and every one of these isomorphisms is natural in each factor. ∎
+
+**Theorem S (soundness of the kernel in 𝔖).** Fix a valuation of a kernel context in 𝔖 that respects the context's types and marks. Then every derivable judgement denotes a functor or cell with the boundary its type prescribes, and every marked derivable cell denotes a strictly invertible one.
+*Proof.* By induction on the derivation.
+- L-core and probe judgements: by the probes item above. Marked L-cells (the rules of `Gray/Marks`) denote strictly invertible cells, rule by rule:
+  - (COH-inv): coherence-case cells denote identities (`Strict/Soundness`).
+  - (OP-inv): composites of invertibles are invertible.
+  - (INV-fac): κ_Θ sends a Gray cell with two or more factors of positive dimension to an identity, and one with a single such factor to that factor whiskered, which is invertible when the factor is.
+  - (PS-fac): it has two positive-dimensional factors, so its image is an identity.
+  - (INV-obj): only objects are involved, so its image is an identity.
+  - (OBJ-k): the valuation sends a grpd_k object to one whose cells above k are invertible.
+- The corollas m, e^ℓ, e^r, p and pt: by the definitions above.
+- Planar substitution: by composition of functors.
+- (GB-cut_{ρ,n}). Let b̂ = glue(a, b) be b with its collar adjoined. Its boundary is r(u). Put c := r⁻¹(b̂), which has boundary u by Lemma S1, and ε := the identity on b̂ = r(c), which is invertible.
+- (GB-dcut_{ρ,k}). The same with d := r⁻¹(glue(a^±, b)) and the identity as its comparison.
+
+Admissibility closed under substitution then needs nothing further, since the denotation of an instance is the denotation of the template composed with the valuation. ∎
+
+**Proposition 5L (strict half under L).** Interpret ⟦Γ⟧ as the data object F_s(Γ), the free strict ω-category on Γ. Under L the k-cells of Diag(Γ, C) are maps out of the unmarked Γ ⊗ Dᵏ, so Diag(Γ, C) is (⟦Γ⟧, ⟦Dᵏ⟧ ▸ C), the lax hom of 𝔖. LIFT holds as an isomorphism whenever F_s(Γ) ⊗ ν(λDᵏ) is free on Γ ⊗ Dᵏ. That holds for every Γ with an ordered globular presentation, pasting contexts included, since then F_s(Γ) = ν(λΓ) and λΓ ⊗ λDᵏ is ordered unital (`Strict/GlobBasis`, `Strict/TensorBasis`, `Strict/Lift`). For such Γ, if a closed cell t[η] → u[η] of dimension k + 1 is derivable, then F_s(Γ) has a (k + 1)-cell ⟦t⟧ → ⟦u⟧.
+*Proof.* This is Theorem S applied to the closed derivation, with η the generic element of F_s(Γ). ∎
+
+**Difference from P.** Under P (Prop. 5) a closed cell denotes an identity, so ⟦t⟧ = ⟦u⟧. Under L the ambient structure cells between elements are lax naturality cells of 𝔖 and need not be identities, so only existence of a cell follows. In F_s(Γ) = ν(λΓ) a (k + 1)-cell s → u has a top chain c ≥ 0 of (k + 1)-generators with ∂c = u − s on top chains.
+
+**Corollary (non-collapse under L).** If Γ has no generator of dimension k + 1, then a closed cell t[η] → u[η] of dimension k + 1 is derivable only if ⟦t⟧ = ⟦u⟧. In particular no closed cell relates two distinct parallel top-dimensional generators.
+
+**What is and is not machine-checked.** The L-core inputs are in Agda:
+- soundness in ν(K(Θ)) (`Strict/Soundness`);
+- ν(λΘ) = Free(Θ) (`Strict/PsGlob`);
+- the tensor basis (`Strict/TensorBasis`);
+- freeness on atoms (`Strict/Lift`).
+
+Not in Agda:
+- the Gray tensor and closures of *arbitrary* strict ω-categories (the repository has ν(K ⊗ L) for Steiner complexes only);
+- κ_Θ;
+- the induction of Theorem S over the biclosed kernel (`Gray/Biclosed`).
+
+These are the remaining formal steps (ledger C5b).
+
+### 5.5 No reverse cells for directed biclosed instances (D7g): proved for generic contexts, in 𝔖
+
+**The stated form was too strong.** The ledger phrased D7g as: a directed instance's reverse is not derivable unless σ(b) is invertible. That is false in general. If σ sends u⁻ and u⁺ to the same operation, which a non-invertible σ(b) allows (for example σ(b) a non-identity loop cell at k = 1 with equal faces), the identity on σ(u⁻) has the reverse type. The correct statements are the following.
+
+**Theorem D7g.** For every row ρ, every gap and every k ≥ 1, in the generic context of (GB-dcut_{ρ,k}) no derivable term of the kernel, of any shape, has type u⁺ ⇒ u⁻ at H on ⟦Dᵏ⟧.
+*Proof.* Choose the following valuation in 𝔖.
+- Every object variable of the row except the output ↦ 1.
+- The output (Z, or C) ↦ G := ν(λDᵏ), as a data atom. The sort discipline allows this, since the output ranges over data formulas.
+- Then H and B on ⟦Dᵏ⟧ are both isomorphic to Hom(ν(λDᵏ), G), using the unit isomorphisms and 1\G ≅ G ≅ G/1.
+- b ↦ the identity of G, which is the generic k-cell e.
+- u^± ↦ r⁻¹ of the faces of e.
+- a^± ↦ identities, which are invertible, and agree on the common boundary.
+
+The probe-pair row has fixed probe inputs ⟦Δ⟧ and ⟦Θ⟧, which cannot be valued as 1. There b ↦ e ∘ (! ⊗ id), and a reverse term is restricted along a point of ⟦Δ ⊗ Θ⟧ (one exists, since probes are nonempty) before reading off the cell below.
+
+The valuation respects all types and marks. By Theorem S a derivable term of type u⁺ ⇒ u⁻ would denote a k-cell of ν(λDᵏ) from t(e) to s(e). Its top chain is m·e with m ≥ 0, since e is the only k-generator, and it satisfies ∂(m·e) = s(e) − t(e) = −∂e. As ∂e ≠ 0, this forces m = −1, which is impossible. ∎
+
+**Corollary D7g (instances).** Let σ be a kernel instance into Γ. The reverse of the directed goal is not derivable over Γ whenever some valuation of Γ in 𝔖 sends σ(u⁻) and σ(u⁺) to operations with no cell σ(u⁺) ⇒ σ(u⁻). Examples are the walking square, which is the reverse interchanger (`Strict/ReverseInterchanger`), and the four-cube pair 212321 / 123212 of r3 item 41, which has no cell in either direction. This is the specialization argument of the r3 answer, with 𝔖 as its model.
+*Proof.* As above, composing the valuation of Γ with σ. ∎
+
+**Scope.** The proofs rest on Theorem S, which holds at argument level and uses the cited Gray-tensor facts. The finite chain computations are elementary. The globe case is above, and the walking square is `Strict/ReverseInterchanger` in Agda. What is not done:
+- an Agda interpretation of `Gray/Biclosed` in 𝔖, which needs Gray tensors of arbitrary strict ω-categories in Agda;
+- the four-cube computation in Agda.
+
+### 5.6 Remaining for C5
 
 - (C5a) Weak half: blocked on E11.
-- (C5b) Strict half under L: needs the strict Gray model of the L core (E2 adjacent).
+- (C5b) Paper side done (§5.4). Formal side: Theorem S in Agda, together with κ_Θ and the Gray closures of arbitrary strict ω-categories.
 
 ---
 
@@ -241,6 +316,10 @@ Under `src/CaTTExp/Free/`, typechecked locally with Agda 2.6.3 (`--safe`, plus `
 - Fujii, Hoshino, Maehara, *Weakly invertible cells in a weak ω-category*, arXiv 2303.14907.
 - Fujii, Hoshino, Maehara, *ω-weak equivalences between weak ω-categories*, arXiv 2406.13240.
 - Fujii, Hoshino, Maehara, *ω-equifibrations between strict and weak ω-categories*, arXiv 2511.09849.
+- Al-Agl, Brown, Steiner, *Multiple categories: the equivalence of a globular and a cubical approach*, Adv. Math. 170 (2002).
+- Ara, Maltsiniotis, *Joint et tranches pour les ∞-catégories strictes*, arXiv 1607.00668.
+- Crans, *On combinatorial models for higher dimensional homotopies*, PhD thesis, Utrecht, 1995.
 - Lafont, Métayer, Worytkiewicz, *A folk model structure on omega-cat*, Adv. Math. 2010.
 - Loubaton, arXiv 2307.11931 and 2406.05425.
 - Ozornova, Rovelli, *The complicial model of (∞,ω)-categories*, arXiv 2207.08504.
+- Steiner, *Omega-categories and chain complexes*, Homology Homotopy Appl. 6 (2004).

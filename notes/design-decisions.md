@@ -106,7 +106,7 @@ Reasons:
 - (J-chk) Re-check in-house that all separating algebras can be combined at once with exact quotients. Response 2 asserts this ("use (K51)'s argument with all the selected tests at once") and it was verified at construction level.
 - (Q-vis) Which catalogued laws are visible on free objects of finite pasting diagrams? A law that is not visible does not change the kernel, so it need not be a switch.
 - (ZN) Decidability for the composite-N tables (§1.5), then add the D_{d,p} switches to the default.
-- Outbox: the least-theory question, merged into `outbox/lax-interchange-every-dimension-r8.md` as its main question (standard 11); answered 2026-11-20 (`answered/lax-interchange-every-dimension-r8-2026-11-20.md`), follow-up `outbox/lax-interchange-every-dimension-r9.md`.
+- Outbox: the least-theory question, merged into `outbox/lax-interchange-every-dimension-r8.md` as its main question (standard 11); answered 2026-11-20 (`answered/lax-interchange-every-dimension-r8-2026-11-20.md`), follow-up `answered/lax-interchange-every-dimension-r9-2026-11-20.md` (answered 2026-11-20), next follow-up `outbox/lax-interchange-every-dimension-r10.md`.
 - LCORE's uniform rule takes the switch set as a parameter (message sent to LCORE).
 
 ### 1.7 Revised decision (2026-11-20, after the r8 answers)
@@ -132,16 +132,16 @@ Reasons:
 3. Equality of two V-terms of the same weight is decidable. A derivation of the equality uses only defining pairs between terms of that same weight, since the gradings are conserved by every equation of V ⊆ T₁₂. So equality is connectivity in the finite graph whose vertices are the terms of that weight at those boundaries and whose edges are one-step applications of V's defining pairs. That graph is finite by step 2.
 4. Steps 1–3 satisfy the hypotheses of `Reach.Bounded.reach?` (`src/CaTTExp/Join/BoundedReach.agda`), so reachability is decidable. ∎
 
-**Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. Whether V + {R} and V + {inner law} are admissible on their own is asked in `outbox/lax-interchange-every-dimension-r9.md`. Until that is answered, the only settings offered are none (V) and all (T₁₂). Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
+**Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. **Updated 2026-11-20 (r9 Responses 2–5, verified; K73 in `outbox/lax-interchange-every-dimension-r10.md`):** every finite set of equations true in T₁₂ is admissible over V, so V + {R} and V + {inner law} are each admissible, and all four settings (none, R, inner law, both = T₁₂) are available. Admissibility is not closed under unions in general and the pasting profiles are not a lattice, but neither caveat affects these two laws, which are both true in T₁₂. Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
 
 **What would overturn this.**
 - A proof that a visible law is needed for a core construction. That law's setting then becomes the default for that construction's development.
-- Admissibility answers in r9 that open up the intermediate settings.
+- Answered: the intermediate settings V + {R} and V + {inner law} are admissible (K73).
 
 **Open items.**
-- (FV) An explicit description of F_V(Γ) and of what T₁₂ adds (r9).
+- (FV) An explicit description of F_V(Γ) and of what T₁₂ adds. **Answered 2026-11-20 by r9 (verified):** q : F_V(Γ) → F_T₁₂(Γ) is finite-to-one in every degree, and a V-cell is a T₁₂ normal word with decorated faces and a rank-selected word index (K65). Fibres are unbounded (2^{m−1} on suspended strips) but all those identifications come from R (K66). Visibility of pasting-diagram laws is decidable, so (Q-vis) is decidable for any proposed switch (K67). A closed-form description of the decorations is asked in r10 Q3.
 - Whether F_J = F_V on pasting diagrams. This is now only of interest for comparison.
-- Admissibility of V + R and of V + inner law separately (r9).
+- Admissibility of V + R and of V + inner law separately. **Answered 2026-11-20 (K73): both admissible.** Uniform normal forms for V + S are asked in r10 Q2.
 - LCORE: point the default setting at V (message sent).
 
 ---

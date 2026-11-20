@@ -1393,4 +1393,4 @@ Status: **verified. Q1 is answered positively: (U) holds for every computad-cofi
 - The identification of 𝒪 with Gepner–Heine's oriented (∞,ω)-categories and its conventions.
 - Full model structures (only the left semi-model structure is known).
 - Strict presentations and explicit, bounded witnesses for the units.
-- Follow-up: [`outbox/catt-models-unit-condition-r5.md`](../outbox/catt-models-unit-condition-r5.md).
+- Follow-up: [`answered/catt-models-unit-condition-r5-2026-11-20.md`](catt-models-unit-condition-r5-2026-11-20.md).

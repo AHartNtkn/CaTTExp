@@ -1,8 +1,15 @@
-# Canonical CaTT terms for Gray tensors: coherent functoriality and compact canonical forms
+# Canonical CaTT terms for Gray tensors: elementary comparisons, shared canonical forms and decidable strict classes
 
 *A self-contained problem. It assumes familiarity with the type theory CaTT, strict ω-categories and Steiner's directed complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** CT is proved for every finite family (item 39). Every shape map acts on canonical terms up to specified invertible comparisons, strict naturality is impossible in general, and the canonical terms have a polynomial-time recognizer (items 40–42). The recognizer works because the canonical term carries its own search time as identity padding, so canonical terms are as large as the search that found them. We now ask for the whole remaining line: comparisons that form a fully **coherent** functor on shape maps, the best possible strict class independent of the chosen section, and **compact** canonical forms whose size is polynomial in the tableau with a recognizer that does not rely on padding. The explicit, search-free construction of sections in general is asked in the companion relative-coherence problem; here we ask for what a type checker needs on top of it. Results for one more pair or one more dimension are not useful to us.
+**What we are asking for.** Several results are now proved:
+- CT holds for every finite family (item 39).
+- Shape maps act on canonical terms through a unital homotopy-coherent functor (item 43).
+- Joint strict naturality has an exact criterion by subdivision trees, but there is no greatest strict class (item 44).
+- Explicit raw canonical terms cannot be of polynomial size; tableaux give a polynomial form modulo invertible cylinders (item 45).
+- Comparisons between terms with equal strict value exist with a computable but non-elementary size bound, and the comparisons required by functoriality cannot be canonical (item 46).
+
+We now ask for the whole remaining line: **elementary** (ideally polynomial) bounds on comparisons and on the coherent functor's cells, canonical forms of polynomial size **with sharing**, and a **decision procedure** for joint strict admissibility of finite diagrams of shapes. The search-free construction of sections in general is asked in the companion relative-coherence problem; here we ask for what a type checker needs on top of it.
 
 ## 1. Setting
 
@@ -111,23 +118,34 @@ The same question for iterated tensors λΘ₁ ⊗ ⋯ ⊗ λΘ_k.
 41. **Strict naturality fails (r9).** For every CT section, the image is not closed under substitution: the collapse [2] → [1] sends the coherence-headed T(y ∘ x) to a coherence-headed term, while the section must give the variable z. No section is strictly natural even along injective ordinal maps [2] → [3] (a depth count of the first edge in the substitution-argument tree distinguishes t(t(x, y), z) from t(x, t(y, z))). So comparisons must in general also compare the poles.
 42. **A section with an exact strict class and a polynomial recognizer (r9).** Pad the first-witness term r : u → v of each proper cell c by an unbiased vertical composite r, then the bits of a prefix-free code w(c) of its ordered local support (0 as a weak identity, 1 as the unary composition coherence on it), then h + 1 weak identities, where h is the number of steps of a fixed machine that computes r from w(c). For this section, f is strictly natural on all cells iff for every proper c the restriction (S(c), c) → (S(fc), fc) is an order-preserving based isomorphism (a finite test; for monotone maps [r] → [s] with r ≥ 2 it means all increments are one). Its image has a recognizer polynomial in the size of the raw term. Checked: all 456 monotone maps between paths of length ≤ 4, of which 60 are strict, and Agda tests of the bit terms and the square collapse.
 
+43. **Coherent functoriality (r10).** The comparisons extend to a unital homotopy-coherent functor from shape maps to CaTT substitutions. It is built on a simplicial category of substitution frames: cosimplicial presentations A_K^r augmented to K, with free latching inclusions and boundary-lifting matching maps, so that every mapping space lifts every simplicial boundary over the strict maps. It is extended over the free resolution ℭN of the shape category.
+    - The simplicial identities, units and split and contracted faces hold on the nose. The identification of two vertex writings, and every later pasting, is a specified coinductively invertible cell.
+    - A two-row version gives a homotopy-coherent natural transformation from strict relabelling to the section.
+44. **The section-independent strict class (r10).** A finite diagram of shapes admits a common strictly natural CT section iff it has rooted trees of strict pasting-arity maps passing a grafting test and a finite pole-cut test. For infinite subcategories the condition is that there exist bounds on node counts under which every finite test succeeds (compactness). The criterion gives a positive semidecision.
+    - No greatest jointly strict subcategory exists: the two subdivisions [2] → [3] are each admissible but not jointly.
+    - On paths, a single map [r] → [s] with r ≥ 2 is admissible iff it is strictly increasing. Joint admissibility is a finite test with planar hierarchies.
+45. **Raw size lower bound and tableau forms (r10).** In explicit raw syntax every term of rank a + k over a context of height a has at least L(k) nodes, where L(0) = 1 and L(k) = Σ_{j ≤ ⌊(k−1)/2⌋} L(j), and L(4^q) ≥ 4^{q(q−1)/2}. So the rank-d cell of the point needs exp(Ω((log d)²)) nodes, while its tableau has size O(d).
+    - The strict tableau with its rank is a polynomial representative modulo invertible cylinders, decidable in polynomial time on typed raw input.
+46. **Comparisons (r10).** For terms with equal strict value, the first derivation in a fixed enumeration is an explicit comparison. Its size is bounded by a total recursive, non-elementary function H of the input length, iterated over the 2n + 1 mixed generators of the cylinder.
+    - In the collapse [2] → [1], the comparison required by functoriality has poles u (coherence-headed) and z, while the canonical writing of 1_z has both poles z. So functoriality comparisons cannot all be canonical.
+
 ## 4. Questions
 
-**Q1 (main: coherent functoriality).** Make the comparisons of item 40 into a homotopy-coherent functor: a specified system of higher comparisons for all finite strings of composable shape maps, compatible with faces and identities in all dimensions, from the category of strict maps between iterated tensors (or a natural subcategory containing degeneracies, coface maps, subdivisions and the maps used for cones and cylinders) to CaTT substitutions. State exactly which coherence laws hold strictly and which hold up to the specified cells. Then determine the section-independent strict class: the maps f for which **some** CT section is strictly natural along f (and along a whole subcategory at once), with the forced comparison cells for the remaining maps.
+**Q1 (main: elementary comparisons).** For CaTT terms a, b over a tensor family context with the same strict value, construct a comparison cell with size bounded by an elementary function (ideally a polynomial) of the sizes of a, b and the context. Do the same for the cells of the coherent functor of item 43 on strings of a fixed length. If no elementary bound exists, prove it. A conditional answer assuming the companion relative-coherence problem's search-free lifting is welcome.
 
-**Q2 (compact canonical forms).** Give a section whose terms have size bounded by a polynomial in the tableau of the cell (no padding by search time), together with a recognizer polynomial in the term size. If the polynomial-size section is only possible with a weaker notion of canonical form (for example canonical up to a specified invertible cell, or canonical relative to a normal form of the shape), describe that notion and decide it in polynomial time. If no polynomial-size section exists, prove a lower bound. (The construction of such a section without search is the companion problem's Question 2; a conditional answer assuming it is welcome.)
+**Q2 (canonical forms with sharing).** Item 45's lower bound is for explicit trees. In a representation with sharing (term DAGs, or let-bindings of subterms), is there a CT section of size polynomial in the tableau, together with a recognizer polynomial in the shared size? If not, prove a lower bound for shared representations.
 
-**Q3 (equality of tensor terms).** Given two CaTT terms over a tensor family context with the same strict value, compute an explicit comparison cell between them, compatible with the comparisons of item 40, and bound its size. Decide whether the comparisons of Q1 can be chosen so that every comparison between canonical terms is itself canonical.
+**Q3 (deciding strict classes).** Decide joint strict admissibility (item 44) for finite diagrams of shapes beyond paths: at least for diagrams of cubes, globes and simplices with degeneracies, cofaces and subdivisions, and for the maps used in cones and cylinders. Give the complexity, or prove undecidability. Describe the maximal jointly strict subcategories (there is no greatest one) for these natural families.
 
 ## 5. What counts as a solution
 
 Any of the following:
-- a homotopy-coherent functoriality theorem with the strict and weak laws identified, or the section-independent strict class;
-- a polynomial-size section with a polynomial recognizer, or a lower bound;
-- explicit comparisons between arbitrary terms with equal strict value, with a size bound;
+- an elementary bound on comparisons and coherence cells, or a proof that none exists;
+- a polynomial-size shared section with a polynomial recognizer, or a lower bound for shared representations;
+- a decision procedure for joint strict admissibility on a natural family of shapes, or an undecidability proof;
 - a published reference.
 
-## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-9 answers)
+## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 to round-10 answers)
 
 - Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620, §4, Thm 4.3 (weak cylinder stacking).
 
@@ -141,3 +159,4 @@ Any of the following:
 - Steiner, *Simple omega-categories and chain complexes*, arXiv math/0403237 (tableaux; used throughout items 19–25).
 
 - Campion, arXiv 2311.00200, Thm 4.21 (contractible subdivision posets; item 38); Benjamin–Markakis, Hom ω-categories of a computad are free, J. London Math. Soc. (2025).
+- Riehl, *Homotopy coherent structures*, Part I (the free resolution ℭN; used in item 43).

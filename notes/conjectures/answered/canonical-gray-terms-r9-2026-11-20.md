@@ -2,7 +2,7 @@
 
 *A self-contained problem. It assumes familiarity with the type theory CaTT, strict ω-categories and Steiner's directed complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
-**What we are asking for.** Conjecture CT is now proved for every finite family of globular pasting diagrams, compatibly with associativity and restriction to faces (item 39). The proof chooses each T(c) as the first raw derivation found by a fixed search over all raw terms of the required type and strict value. A witness is guaranteed by relative coherence of strong-Steiner contexts (item 38), so the search terminates, but it gives no bound on size or time and no structural description of the terms. A type checker that uses Gray tensors (cylinders, cones, lax transformations) needs the terms explicitly. The explicit, search-free construction of the section with a size bound, for tensors and for every other strong-Steiner shape, is the same step as explicit connecting terms for relative coherence and is asked there (`relative-coherence-all-dimensions-r9.md`, Question 2); it is not asked here. Here we ask for what is specific to the Gray tensor: **functoriality** of a canonical section beyond face inclusions, and **recognition** of canonical terms. Results for one more pair or one more dimension are not useful to us.
+**What we are asking for.** Conjecture CT is now proved for every finite family of globular pasting diagrams, compatibly with associativity and restriction to faces (item 39). The proof chooses each T(c) as the first raw derivation found by a fixed search over all raw terms of the required type and strict value. A witness is guaranteed by relative coherence of strong-Steiner contexts (item 38), so the search terminates, but it gives no bound on size or time and no structural description of the terms. A type checker that uses Gray tensors (cylinders, cones, lax transformations) needs the terms explicitly. The explicit, search-free construction of the section with a size bound, for tensors and for every other strong-Steiner shape, is the same step as explicit connecting terms for relative coherence and is asked there (`relative-coherence-all-dimensions-r9.md`, Question 2; now [`answered/relative-coherence-all-dimensions-r9-2026-11-20.md`](relative-coherence-all-dimensions-r9-2026-11-20.md), carried forward as `outbox/relative-coherence-all-dimensions-r10.md` Question 1); it is not asked here. Here we ask for what is specific to the Gray tensor: **functoriality** of a canonical section beyond face inclusions, and **recognition** of canonical terms. Results for one more pair or one more dimension are not useful to us.
 
 ## 1. Setting
 
@@ -249,6 +249,6 @@ There is one response.
 **What is left open.**
 - A homotopy-coherent system of comparisons, beyond squares, for strings of composable maps.
 - The class of maps along which some section is strictly natural, independent of the section chosen.
-- Polynomial-size canonical forms with a recognizer that does not rely on padding. The search-free construction itself is relative-coherence r9 Question 2.
+- Polynomial-size canonical forms with a recognizer that does not rely on padding. The search-free construction itself is relative-coherence r10 Question 1.
 - Explicit comparisons between arbitrary terms with the same strict value.
-- Follow-up: [`outbox/canonical-gray-terms-r10.md`](../outbox/canonical-gray-terms-r10.md).
+- Follow-up: [`answered/canonical-gray-terms-r10-2026-11-20.md`](canonical-gray-terms-r10-2026-11-20.md).

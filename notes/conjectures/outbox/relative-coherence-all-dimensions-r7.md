@@ -470,3 +470,26 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_scalar_charge.py --agda "$dir/ScalarCharge.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/ScalarCharge.agda"
 ```
+
+# Researcher Response 9
+
+## A single five-bracket gives the seven-vertex homology test
+
+Use the degree-four choice of cubical attaching terms and the minimum vertex labelling of Response 7. In the ordered simplex on $J=\{0,1,\ldots,6\}$ take the five-cube with lower subset $\{6\}$ and upper subset $I=\{1,\ldots,6\}$. Let $g$ denote its image 5-generator in $P(I)$, a bracket of its two labelled 4-faces. For $S\subseteq I$ write $g_S$ for its relabelling sending all ranks in $S$ to zero. The following cellular chain has **64 distinct generators**, and its class gives a test involving only one six-vertex homology group:
+$$
+ z=\sum_{S\subseteq I}(-1)^{|S|}g_S .
+$$
+
+Write $p_i$ for the map collapsing rank $i$ to zero and $E=\prod_{i\in I}(1-p_i)$ on integral cellular chains or homology. The factors commute and are idempotent. All vertex maps here send generators to generators, and act on the cellular chains by that relabelling. A cell whose support misses $i$ is fixed by $p_i$. For the cubical maps of Response 7 the support of each bracket contains exactly the vertex names occurring on its cube. Indeed the two strict boundary pastings together use all immediate facets, by the signed cube differential; the support lemma gives their occurrence in the weak attaching terms. The statement follows down to vertices by induction. Relabelling commutes with brackets, so in particular the support of $g_S$ distinguishes every $S$.
+
+**Computing the projection.** The cellular representative of $b$ is the oriented sum of the 42 five-cubes, six in each of the seven boundary simplices. Every cube on a simplex missing a rank $i>0$ is killed by $E$. On the simplex missing zero, the cube anchored at $j$ only uses names at most $j$, by the minimum labelling. Thus exactly the cube anchored at six survives, and $Eb=\pm[z]$, with sign $-$ in the ordered incidence convention of the checker. One can also see $\partial z=0$ facet by facet. A zero-side facet of this five-cube misses its free rank $i$. A one-side facet has minimum at most $i<6$ and misses rank six. Each of the ten facet brackets therefore cancels separately after applying $E$.
+
+Let $A=H_5X(J)$ and $B$ be the sum of all proper-subset images in $A$. Every class $a$ satisfies $a-Ea\in B$ by expansion. Moreover $EB=E\,\mathrm{im}(H_5X(I)\to A)$: every other proper subset either misses a positive rank, or is contained in $I$. Since $E$ is an idempotent, these identities give
+$$
+ A/B\ \cong\ EA\big/E\,\mathrm{im}(H_5X(I)\to A).
+$$
+Consequently the sufficient obstruction of Response 7 can be tested exactly as follows. Find a nonzero integer $m$, a cellular 5-cycle $y$ on the six positive ranks, and a finite cellular 6-chain $w$ on the seven ranks with $mz-Ey=\partial w$. Signs can be absorbed into $m$. Such a certificate disproves identity-image relative coherence through degree eight for $\Gamma_6$. Conversely any nonzero-multiple relation in the proper-subset quotient of Response 7 yields a certificate of this form. Each possible 6-generator of $w$ is indexed by two literal parallel 5-terms; its boundary is their difference of top-generator counts. Brackets between two variables alone always give zero here, since in $P(J)$ a 5-variable is uniquely determined by its literal attaching pair.
+
+**Where a certificate must use seven ranks.** Let $Y=\bigcup_{U\subsetneq J} X(U)$ inside $X(J)$. It admits a continuous map to the boundary of the ordinary simplex on $J$, sending each vertex to its name and every generator into the face spanned by its support. Construct it inductively on cells by extending their attaching maps in those convex faces. On the subdivided simplex boundary defining $b$ this map has degree one: on every original simplex face both it and the subdivision map land in that face, so cellular induction gives a homotopy between them. Every cycle in a single proper $X(U)$ has degree zero. Thus $[z]$ has degree $\pm1$ already in $Y$, and $Ey$ has degree zero there. Any $w$ in the test must contain a 6-bracket with all seven ranks in its support. This argument identifies a primitive class before the full-support attachments. Whether those attachments give the required boundary remains open.
+
+**Reproduction.** Run `python3 -B tools/relative_coherence_polarized_cube.py`. For three through seven ranks it expands the projection on every top cube, records the sole survivor and its orientation, checks its labelled-vertex summands and cancels each facet independently. At seven ranks it checks all 42 cubes, the 64 different labellings, all ten facet cancellations, and annihilation of the chain by each of the six individual collapse maps. The calculation uses vertex relabellings and cubical incidence. The cellular proof makes it independent of the allowed common choice of weak attaching syntax. [Projected cube checker](../../../tools/relative_coherence_polarized_cube.py)

@@ -791,6 +791,40 @@ This shows ν_u⁻¹ ; H ; ν_v is connected to an exchange path. By E2 and E3, 
   - What remains of (K) is the forced-order part: letters joined by connectors that cross their boundary blocks. Its fibres have one linear extension, which is the line-word situation (item 22 of the same prompt).
   So the in-house target for the hexagon is the k-fold matrix argument for the wedge of three lax squares, replacing I with the three-factor interchange `(α ∗₀ β ∗₀ γ) · (α′ ∗₀ β′ ∗₀ γ′) ⇛ (α·α′) ∗₀ (β·β′) ∗₀ (γ·γ′)` over C₂ ∗₀ C₂ ∗₀ C₂. Generating Agda checks for the hexagon in the grid before that is proved would only check single coherences, so it is deferred.
 
+### 7.12 Second-identity calls: a height measure that avoids the shift (thread RCX, 2026-11-20, sketch)
+
+This addresses r10 item 64 / Question 1. Notation follows `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, Responses 3–4.
+
+**The cycle there.** Response 4 reduces first-identity calls at height m to second-identity calls at height m − 1. A second-identity call is then handled by:
+1. the identity-tower shift (whisker by a fresh globe), which raises the height by one and lowers the identity level by one;
+2. a four-link fold, which lowers the height by one and raises the level by one.
+
+The net effect can be zero, so there is no well-founded measure.
+
+**Proposal: no shift, localize at every identity level.** Write C(h, k) for the call: compare two parallel raw (h + k)-terms of value 1^k_d, where d is an intrinsic strict h-cell, in a strong-Steiner context of height h. (C(h, 1) is Response 3's first-identity call; C(h − 1, 2) is Response 4's second-identity call.)
+
+1. **Higher localization.** The events of d are its top h-atoms. Fix the canonical linear extension L₀. The faces of the permutohedron whose vertices are all linear extensions form a complex. Its cells are the ordered set partitions of the events into antichain blocks, consistent with the order. A k-cell is a product of permutohedra on blocks of total excess k, so every block has at most k + 1 events. This complex is contractible: it is the cell complex of a T-convex set of topes of the braid arrangement (Björner–Las Vergnas–Sturmfels–White–Ziegler, *Oriented Matroids*, §4.2; Edelman). The descent-by-inversions matching gives an explicit collapse toward L₀, so it needs no search.
+   - Running Response 4's serial-resolution steps 1–4 one level higher therefore localizes C(h, k) to blocks of at most k + 2 events.
+   - k = 1 recovers Response 4's three events: squares and the braid hexagon. k = 2 adds the 3-cells: cubes, hexagonal prisms and the 4-event permutohedron.
+2. **(k + 3)-link subdivision.** Subdivide each top h-generator into k + 3 links with fresh knots. The strong-Steiner check is Response 4's, with more knots. A block of at most k + 2 links never contains a whole subdivided generator, so every used segment has a free fresh end.
+3. **Folds.** Fold each free end x with its unique link v, using Response 4's two fold formulas. The varying set {x, v} has lowest rank h − 1 under terms of rank h + k, so the fold uses **depth-(k + 1) naturality**. After all folds the context has height h − 1, and the inputs have value 1^{k+1}_{d′}. That is a call C(h − 1, k + 1).
+4. **Measure.** Order calls lexicographically by input rank n = h + k and then by height h. Steps 1–3 keep n and strictly lower h. Every other call (lifts, old caps, inverse data) has smaller input rank. The base case C(0, k) is a single head on the point.
+
+So the recursion is well-founded, with **no shift**. When d is itself an identity, Response 3's shift is still used, but only once at entry, at a fixed level, and it is never repeated.
+
+**What this costs.** A call C(h, 1) unfolds to C(h − 1, 2), …, C(0, h + 1). It uses fold naturality of depths 2, …, h + 1.
+- Depths 2 and 3 are search-free (Responses 3–4).
+- Depth n ≥ 4 is r10 Question 1(c), restricted to *fold selections*: a free knot x and its single link v, with x↑ = v and v↑ a unitor.
+
+Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localization lemma**. Conversely, Q1(c) is a special case of Q1(a). The two questions are equivalent up to that lemma.
+
+**Where the circularity moves.** In Responses 3–4, depth-n naturality comes from comparisons in partial cylinders with about n nonglobular top ranks. Through this reduction, those comparisons again need fold naturality of depth up to n + 1. So with the known inputs this does not close unconditionally. It closes if fold naturality of every depth is built directly. That may be possible because a fold selection is special: (x, v) is a free face pair. Γ is the pushout of Γ′ along ∂⁻Dʰ ↪ Dʰ, and the fold is the retraction collapsing that elementary expansion. The local model is the partial cylinder Dʰ↑{x, v}, a lax triangle in dimension h (the triangle context for h = 1). This is the next thing to try.
+
+**Status: sketch, not verified.**
+- The contractibility input is standard. Its search-free collapse and the level-k version of Response 4's steps 1–4 are not written out in detail.
+- No machine check yet.
+- New compared with Response 4: replacing the shift by localization at every identity level, which makes height a well-founded measure. That isolates the remaining obligation as fold naturality of all depths.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

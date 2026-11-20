@@ -1287,7 +1287,8 @@ Everything in this list is now **derived**. None of it is a primitive any more.
     - For nine rows, the derived (lhom) and E.2 unit rows among them, every generated context and both goals are well typed, and both goals are admitted. That covers (GB-cut) at n ≤ 2 (and n = 3 for one row) and (GB-dcut) at k ≤ 2 at every gap.
     - Reversed directed goals are rejected. So are directed goals once b is made invertible.
     - Negative controls: non-generic or misnumbered formulas, n = 0 directed, wrong endpoint types, a dropped collar, and a goal from another row's context.
-  - **Not formalized:** closure of admissible goals under substitution; the general typing theorem for all n (only checked by evaluation); and the ∞-categorical initiality of §4, which stays on paper (Response 2, verified; Lemma GB-ext in-house). An independent honesty review is required before merge.
+  - `TemplatesTyped` (D7f, 2026-11-20): `templates-typed` proves for **every** row, gap, mode and n that the generic context is well formed entry by entry and that both goals are well-formed types in it. The proof follows the collar chains through a mixed tower type that moves the levels below j to the H side. The `glue` typing rule is still the stated one.
+  - **Not formalized:** closure of admissible goals under substitution (D7e); and the ∞-categorical initiality of §4, which stays on paper (Response 2, verified; Lemma GB-ext, checked at argument level under D7c).
 - **Open items:**
   - (D7c) an independent check of Lemma GB-ext;
   - (D7d) the Agda module above, owned by GBIC;

@@ -181,3 +181,58 @@ A proof of either direction of Question 1, of Question 2, or of Question 3 with 
 - Genevois, Ann. Inst. Fourier (median graphs, item 30); Ardila–Owen–Sullivant (CAT(0) cube complexes as posets with inconsistent pairs).
 - Guthmann, arXiv 1903.05777 (strictification of tricategories); Di Vittorio, arXiv 2205.15486 (Gray-categorical pasting); Griffiths, arXiv 2101.00077 (the tricategory operad). Used in item 36.
 
+<<<<<<<< HEAD:notes/conjectures/outbox/relative-coherence-all-dimensions-r7.md
+========
+# Researcher Response 1
+
+## Coinductive reconstruction gives the 0-truncation
+
+Let $C=F(Γ)$ for a finite context, $A=\mathrm{Free}(Γ)$, and let $Q,L,N$ be as in items 22–23. In the ∞-category of coinductively complete $(∞,ω)$-categories, **both comparison maps exhibit their common target as the 0-truncation of their source**:
+
+$$
+QL(KC)\xrightarrow{Qd_C}NC,\qquad QLA\xrightarrow{Qe}NC.
+$$
+
+Here 0-truncation has its mapping-space meaning. An object $Z$ is 0-truncated if every space of maps into $Z$ is a 0-type. Such an object can have nonidentity directed cells in arbitrarily high dimensions. The assertion about $Qd_C$ also holds for any strict $C$ whose discrete Θ-nerve is coinductively complete.
+
+**Algebraic descent.** Suppose $p:X\to C$ is a globular trivial fibration of CaTT models with strict codomain. Let $D$ be a strict ω-category in which every coinductively invertible positive-dimensional cell is an identity. Then precomposition is a bijection
+
+$$
+\mathrm{Hom}_{\mathrm{str}\,ω\mathrm{Cat}}(C,D)
+\longrightarrow \mathrm{Hom}_{\mathrm{CaTT}}(X,D).
+$$
+
+To prove it, fix $h:X\to D$ and any two $n$-cells $u,v$ with $p(u)=p(v)=c$. Their boundaries in $X$ can differ. Use the CaTT presentation of the globe cylinder $I\otimes\mathbb D^n$ with its two endpoint globes. The endpoint variables have their globular types, and the cylinder is obtained from their disjoint union by freely adjoining the mixed generators in increasing dimension. Below, map the strict cylinder to $C$ by collapsing $I$ and selecting $c$. Above, prescribe $u$ and $v$ on the two endpoint globes. For each mixed generator its two attaching terms now evaluate to parallel cells in $X$ with the prescribed images in $C$. Boundary lifting for $p$ extends the assignment across that generator. This includes $n=0$, when the unique mixed generator is an edge. [Globe-cylinder presentation, item 6](canonical-gray-terms-r5-2026-11-19.md)
+
+Every mixed generator maps under the collapse to an identity. Cells in $X$ over identities are coinductively invertible. Indeed a reverse cell over the same identity lifts against the reversed boundary. Both composites admit cancellation witnesses over identities by another application of boundary lifting, so the class satisfies the coinductive inverse condition. The strict map $h$ preserves this inverse data. Consequently the composite cylinder labelling in $D$ sends every mixed generator to an identity.
+
+Since $D$ is strict, this labelling evaluates the strict Gray cylinder. For a face generator $x$ of the globe, its cylinder generator has source and target obtained by whiskering $x^-$ and $x^+$ with the mixed generators on their lower faces, as in §1.3. In $D$ these lower whiskerings are by identities. Starting with vertices and proceeding up the globe, the two faces of the mixed generator therefore evaluate to the two endpoint values of $x$. The mixed generator itself is an identity, so those values coincide. At the top this gives $h(u)=h(v)$.
+
+Boundary lifting makes $p$ surjective on cells, by first lifting a labelling of the boundary of a globe and then its top cell. Thus $h$ descends uniquely as a globular map $\bar h:C\to D$. For each CaTT operation, lift its whole labelled globular pasting arity through $p$, one variable at a time. On this lift the equation expressing preservation of the operation by $\bar h$ is the corresponding equation for $h$. This proves that $\bar h$ preserves all operations, including identities and binary composites, as required.
+
+**Truncation.** The 0-truncated objects of the coinductive theory are exactly its discrete complete Segal Θ-nerves. Indeed if $Z$ is 0-truncated, evaluating at any Θ-shape $P$ gives the 0-type $\mathrm{Map}(QP,Z)$. Taking components then gives an equivalent set-valued presheaf. Its Segal bijections are the strict ω-category nerve conditions. Conversely, mapping into a set-valued presheaf gives 0-types, also in the full subcategory of local objects. Completeness forces invertible cells in a discrete nerve to be identities, and coinductive completeness does so for coinductively invertible cells. The latter condition uses the coinductive inverse criterion, which in a discrete strict nerve evaluates on the cells and compositions of the strict category itself. For our finite $Γ$, $NC$ is discrete by gauntness and coinductively complete by the dimension bound in item 23. [Berger, Theorem 1.12](https://math.univ-cotedazur.fr/u/cberger/nerve.pdf) · [Ozornova–Rovelli–Walde, Propositions 5.29 and 5.42](https://arxiv.org/html/2603.11005v2)
+
+Test $Qd_C$ against any such target $ND$. Locality identifies maps out of $QL(KC)$ into $ND$ with maps out of $L(KC)$. These form a discrete space whose points, by the realization adjunction at a gaunt target, are the strict CaTT maps $KC\to D$. Maps $NC\to ND$ form the discrete space of strict ω-functors $C\to D$. On these sets precomposition with $Qd_C$ is precomposition with $q:KC\to C$, a bijection by algebraic descent. This proves the universal property of 0-truncation. For $Qe$ the same calculation gives precomposition with $π:A\to C$, a bijection already by freeness: an assignment of the generators of $Γ$ in a strict target evaluates every attaching term at its strict image and extends uniquely to a strict ω-functor from $F(Γ)$. [Realization at discrete gaunt targets, Known (II)](../outbox/catt-models-unit-condition-r4.md)
+
+**The remaining geometric test.** For $Z=QL(KC)$, reconstruction at $C$ is now equivalent to
+
+$$
+\pi_j\!\left(\mathrm{Map}(\mathbb D^n,Z),z\right)=0
+\quad\text{for every }n\geq0,\ j\geq1,\ z\in\mathrm{Map}(\mathbb D^n,Z).
+$$
+
+Indeed these vanishings say precisely that the spaces of globe labellings are 0-types. The Segal condition computes the space of labellings of any pasting shape as a limit of those spaces. Hence the entire Θ-presheaf is 0-truncated, and its truncation map is an equivalence. The converse follows by evaluating a 0-truncated target on globes. The identical test with $Z=QLA$ characterizes homotopicality of $Γ$ by item 23. In particular, necessity in Question 1 would follow from vanishing for $QLA$ under $\mathrm{RC}_{\mathrm{id}}(∞)$. The base point and sphere in this test can be arbitrary geometric data. The cylinder descent proof identifies maps into discrete targets and leaves this positive-degree vanishing open.
+
+# Verification (2026-11-19)
+
+Status: **verified, partial**. The response identifies both comparison maps as 0-truncations, which turns both directions of the homotopical comparison into one vanishing statement.
+- *Algebraic descent: correct.* Let p : X → C be a globular trivial fibration and D strict, with coinductively invertible positive cells being identities. A CaTT map h : X → D descends through p:
+  - Two cells u, v over the same c are joined by a lifted globe cylinder. Its mixed generators lie over identities, so they are coinductively invertible: a reverse and the cancellation witnesses lift over identities by boundary lifting. Hence they map to identities in D, and evaluating the strict cylinder in D gives h(u) = h(v).
+  - The descended map preserves operations, by lifting labelled arities.
+  - p is surjective by boundary lifting, so the descent is unique.
+- *0-truncated objects are the discrete complete Segal Θ-nerves*, with coinductive completeness forcing coinductively invertible cells to be identities (Berger Thm 1.12; Ozornova–Rovelli–Walde Props. 5.29, 5.42; taken from the literature as cited). NC is such an object for finite Γ (gaunt, dimension bound).
+- *Universal property.* Maps from QL(KC), or from QLA, into ND are strict CaTT maps from KC, or from A, into D. Precomposition with q is bijective by descent (q is a trivial fibration), and precomposition with π is bijective by freeness. So **Qd_C and Qe are both 0-truncation maps**. Correct.
+- *Consequence.* **Γ is homotopical iff QLA is 0-truncated, iff π_j Map(𝔻ⁿ, QLA) = 0 for all n ≥ 0 and j ≥ 1.** Reconstruction at C is the same statement for QL(KC). The descent argument settles maps into discrete targets only. The vanishing of positive homotopy is the open geometric content.
+
+Follow-up: [`outbox/relative-coherence-all-dimensions-r6.md`](../outbox/relative-coherence-all-dimensions-r6.md).
+>>>>>>>> 0eb545e7abf0880ae0addd4a5aa7285218ca88ec:notes/conjectures/answered/relative-coherence-all-dimensions-r5-2026-11-19.md

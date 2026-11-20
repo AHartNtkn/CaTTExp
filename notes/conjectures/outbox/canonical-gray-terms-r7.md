@@ -1767,3 +1767,117 @@ Finally transport by the two cap instances of the pure comparison of paths. The 
 python3 -B tools/gray_temporal_cap_panels.py --agda /tmp/GrayCapPanels.agda
 agda --safe --no-libraries -i /tmp -i src /tmp/GrayCapPanels.agda
 ~~~
+
+# Researcher Response 28
+
+**In the remaining deep-threshold tests of (6), the last substitution may split or collapse any number of top edges without imposing an equation on the choices.** The middle substitution may have arbitrary branching, differently written lower poles, and inputs supported in smaller dimension. The choices of the elementary squares must be made together as described below. Consequently only the singleton labellings of Response 26 need to be tested for preservation. There is also a different sufficient family. One may test last labellings in which each source top edge advances **one edge at every target site belonging to its lower pole**. Such an edge can advance several sites at once. The lower pole writings in this family remain arbitrary.
+
+Write $s=r-1$. Work at the induction stage of Response 25 with its preceding-stage actions, and take the lowest temporal marks in degree $d<s$. The shallower cases of the original head construction are covered by Response 13. Call a normalized labelling a *subdivision* if its entries below $r$ are variables and each top edge maps to the normal writing of its consecutive block, possibly empty. Restrict throughout to the support of the output, including a final variable inclusion when necessary. We use $fg$ for raw substitution in traversal order and $f\odot g$ for composition followed by normalization of its rank-$r$ entries.
+
+### Calculating with a bridge and its square
+
+Use the groupoid whose objects are writings of a fixed pure $r$-cell at a fixed literal type together with their temporal actions. An arrow consists of a pure bridge and a square on it. Identify two arrows by the pure comparison of their bridges and an action on that comparison at the given squares. The pure comparison is unique up to further comparison in the globular support. The cap transport, pasted product, disk unit and inverse from Responses 21, 23 and 25 give the groupoid laws. For example, paste a square and its reverse, contract the two padded pure inverse pairs, and cancel the square against its inverse at cut $r+1$. This gives the unit class even when the two vertical sides are noninvertible. Equalities in this groupoid give actual $(r+3)$-terms after the indicated pure-face transport. In a stationary support only the pure comparison is required.
+
+For a pure $r$-term $t$ with a specified action write $t_*$ for promotion of changes at its top inputs and their supplied squares. It respects products by the two-stage comparison of Response 23, arrows equivalent by a comparison with action by the simultaneous replacement of Response 21, and units by Response 22. Hence it respects inverses. It specializes along substitutions, with the identity-slot corrections of Response 24. In particular, for a recursively evaluated term $E=c[\alpha]$ and changes $z$ of the target top variables,
+\[
+                         E_*z=c_*\bigl((\alpha_x)_*z\bigr)_x .
+\]
+This uses the depth-zero substitution equation on the pure output and its depth-one opposed version on the temporal action. For a square $K:t\to u$ the crossing of Response 23 gives the following other equality. Suppose two labellings $a,b$ agree below $r$, and $z$ consists of bridges with squares from their top entries in $a$ to those in $b$. Then
+\[
+                         K[a]\,(u_*z)=(t_*z)\,K[b].                 \tag{7}
+\]
+Here and below square specialization uses the temporal labelling on every argument. Identity changes may be included in all slots. These laws apply to any supplied $K$, before deciding which squares to use as normalizers. [Crossing at the two actual substitution instances](#researcher-response-23) · [Naturality and substitution, Theorem 3.1 and Lemma 3.3](https://arxiv.org/pdf/2501.11620)
+
+### Two subdivisions on an arbitrary normal head
+
+For each normal writing $t$ and subdivision $f$ we first construct a square class $B_t(f):t[f]\to N(t[f])$. Take the unit when $t$ is a variable. For a thin normal head its support has height at most $s$ and a subdivision on this support is a variable inclusion. This also gives a unit. For a temporal path head use Response 27. For any two subdivisions $f,g$ put $h=f\odot g$ and $z_i=B_{f_i}(g)$ on each top edge. We claim
+\[
+                B_t(f)[g]\,B_{N(t[f])}(g)=(t_*z)\,B_t(h).          \tag{8}
+\]
+For a variable the sole nonunit factor is the same $z_i$ on both sides. The assertion on paths is precisely (6) of Response 27.
+
+For a general full normal head use its signed $s$-truncation $S$ with its two pole writings $u,v$. Expand its $s$-sites by strings of lengths $A=(A_i)$. Denote by $t_A$ the normal term at those pole writings included on the two exterior sections. The deep selection on each string is constant, so one formal edge per site suffices for all lengths, including zero. Use the one-edge template $T$ of Responses 20–21 for these $S,u,v$, with its specified action. It represents $b*_s Dv$, or just $Dv$ when the writings agree. Write $w_A$ for the tuple of flat string words, with their chosen actions. There is a square class
+\[
+                           k_A:T[w_A]\longrightarrow t_A.
+\]
+For positive-height heads this is the face adjustment used to define their actions. For the all-empty expansion it is the disk contraction of the promotion, followed by the right unit on $b$ when present, from Response 22. Thus it ends at the previously assigned thin-head or disk action even in this case. Choose $k_A$ once for each expansion with its given pole writings. Sites of smaller height retain their single inclusion.
+
+A subdivision $f:A\to B$ induces in each site the path normalization $b_A(f):w_A[f]\to w_B$ of Response 27. Work componentwise in this tuple. Set
+\[
+             B_{t_A}(f)=k_A[f]^{-1}\;T_* b_A(f)\; k_B .            \tag{9}
+\]
+The two instances of $T$ have the same lower labels because the substitutions are variable inclusions there and preserve both exterior sections. When the expansion $B$ is empty, further subdivisions on its support are inclusions, $b_B$ consists of units, and (9) for such a further map is itself the unit. When $t_A$ is a single variable the affected support is a disk with one temporal slot, so the path convention applies. The temporal template in this case is its single edge with the given slot square. Thus the separate path choices in (8) need no second choice for a branching head. As always the construction is made on minimal support.
+
+In the left side of (8) for $t_A$, the adjacent $k_B[g]$ and its inverse cancel. The path equations (8) in the slots of $T$ replace $b_A(f)[g]\,b_B(g)$ by $(w_A)_*z\, b_A(h)$. Promotion carries this equality through $T$. Apply (7) to $k_A$ with the changes $z:fg\to h$. It moves $(T[w_A])_*z$ past $k_A[fg]^{-1}$ and replaces that factor by $k_A[h]^{-1}$, leaving $(t_A)_*z$ at the start. What follows is (9) at $h$. This proves (8) on every branching arity. Only binary composition and promotion of bridge squares were used above the path result. In particular $T$ may itself have a deeply marked, branching lower term.
+
+### Recovering a common arity from a middle labelling
+
+Let $\rho:Q\to P$ be any normalized middle labelling of full image support. Project each target $r$-string to its single $s$-position in the common truncation $S_P$. This is a raw substitution, sending edges to disk identities. For a source $s$-site $I$ let $u_{I,j}$ be the projected raw label of its $j$th position, in order from $j=0$. Their strict $s$-values coincide since each intervening $r$-edge projects strictly to an identity. The terms $u_{I,j}$ can differ. Let $T_I$ be the set of target $s$-sites occurring in this value.
+
+The nonempty $T_I$ partition the target $s$-sites. Choose one position per source site to form a strict $s$-section of $Q$. In the image each target site occurs at most once by the unit coefficients of a cell in a globular tree. Every such site occurs because the full image uses the whole target and projecting either signed full section of that image onto the truncation uses each site. For a fixed $b\in T_I$ each actual position label of $I$ uses exactly one position in the string at $b$. Write its offset as $p_{b,j}$. Positions are nondecreasing along $I$ by the path order in the strict $s$-fold hom. They start at zero and end at the target string length by full support. Shorter branches need no coordinates.
+
+Construct $\widehat P$ from $S_P$ by giving each $b\in T_I$ one edge for **every** source edge in $I$. In particular insert an edge also when $p_{b,j+1}=p_{b,j}$. Define $\alpha:Q\to\widehat P$ below $s$ by the original lower labels. At the $j$th position of $I$ include $u_{I,j}$ on the section with offset $j$ at the sites of $T_I$. The section elsewhere does not affect this term. For the next source edge take the normal $r$-writing at these two pole terms, moving once in each of the specified sites. For existence, first join $u_{I,j}$ to $u_{I,j+1}$ by a pure bridge on their common support on the first section, then promote $u_{I,j+1}$ along those individual site edges. Their product has the indicated type and strict value. When $T_I$ is empty only the pure bridge is needed. At rank $s$ the proper faces stay literal because all the sections agree below $s$.
+
+There is a subdivision $f:\widehat P\to P$ with lengths $p_{b,j+1}-p_{b,j}$. It recovers all lower labels literally. In an $s$-term on a section, projecting and then restoring its used positions recovers the initial substitution on every occurring variable. On an $r$-edge, the two calculations now have the same literal type and move through the same interval at every site. Top normalization therefore gives
+\[
+                               \rho=\alpha\odot f.                   \tag{10}
+\]
+A further subdivision $g$ changes the offsets by the partial sums of its block lengths and leaves the projected raw labels $u_{I,j}$ identical. Hence the construction on $\rho\odot g$ gives literally the same $\widehat P,\alpha$, with subdivision $h=f\odot g$. This includes the case where every interval at an entire site goes to length zero. Computing the construction on $\alpha$ gives $\alpha$ again with all block lengths one. The temporal selection on $\widehat P$ is fixed by its truncation at degree $d<s$, including at the inserted sites, so these literal identifications also identify the temporal contexts. Restricting to the full image at the outset makes (10) independent of unused target branches.
+
+### Extending the square choices and checking (6)
+
+Take a normal generic $c$. On the arity of (10) put $E=c[\alpha]$ and $n=N(E)$. Choose a preceding-stage bridge square $K:E\to n$ there, once per such elementary expression and inherited selection. Use the disk if $E=n$. The syntactic head and its substitution determine $E$'s data, and the preceding paragraph makes this choice independent of the later lengths. Put $a_x=\alpha x$ for the top slots of $c$. Each $a_x$ is normal. Choose the square class for $e=c[\rho]$ to be
+\[
+ J_e=\bigl(c_*(B_{a_x}(f))_x\bigr)^{-1}\;
+                       K[f]\; B_n(f).                               \tag{11}
+\]
+The inverse starts at $c[\rho]$ and ends at $E[f]$. The terminal writing is $N(n[f])=N(e)$ by equality of the literal type and strict value. Transport the class to the prescribed pure bridge $j_e$ by the cap adjustments. Formula (11) and its unit convention extend (9). Indeed for a subdivision of a normal generic head the recovered $\alpha$ is the identity on its support, $K$ is the disk, and all the $B_{a_x}(f)$ are units on the normal blocks. If $c[\rho]$ itself is normal and $c$ has full height, its arguments are the variable inclusion of that generic head on its support, so (11) gives the unit. An identity head over a smaller arity may have a compound argument and still be normal; its instances take the disk directly. For any thin head the support of $e$ has height at most $s$, so a last subdivision on that support only includes its existing square. These conventions also cover empty image strings.
+
+To verify (6) let $g$ be the last subdivision and $z_i=B_{f_i}(g):f_i[g]\to h_i$ as in (8). Write $v_x=N(a_x[f])$, $m=N(n[f])$ and abbreviate tuples by omitting the indices. The upper route in (6) is
+\[
+       \bigl(c_*B_a(f)[g]\bigr)^{-1}\; K[fg]\; B_n(f)[g]\;B_m(g).
+\]
+Here the specialized promotion has the specialized lower arguments of $c$. By (8) the last two factors are $n_*z\;B_n(h)$. Crossing (7) for the *chosen* $K$ rewrites $K[fg]\,(n_*z)$ as $(E_*z)\,K[h]$. The latter promotion is $c_*(a_*z)$. Apply (8) a second time, now separately to every normal $a_x$:
+\[
+               B_a(f)[g]^{-1}\,(a_*z)=B_v(g)\,B_a(h)^{-1}.
+\]
+The tuple of equalities may be promoted through $c$. The resulting expression is
+\[
+                      (c_*B_v(g))\;(c_*B_a(h))^{-1}\;K[h]\;B_n(h).
+\]
+Its last three factors are exactly (11) for $c[\rho\odot g]$, by the invariance of $\alpha$ in (10). Its first is the required promotion on the actual input squares of (6), since $v_x=\rho x$ and (11) on the subdivision instances of these normal inputs is (9). This proves the equation with its specified square on both sides. Response 26 extends the choices to the exceptional outer heads. By its preservation criterion, subdivisions are therefore preserving for these choices even when a recognized square is specialized after a nonvariable lower labelling.
+
+For the remaining test one can use the singletons of Response 26 because the other factors there are subdivisions. Alternatively, (10) factors **every last labelling** as an $\alpha$ of the simultaneous one-edge form followed by a preserving subdivision. Thus it suffices to prove preservation for those $\alpha$ with choices of $K$ satisfying their equations. The two sufficient families impose different conditions on a last map. In particular an $s$-pole of $\alpha$ may be a compound writing using several target sites. Its changes of lower writing at consecutive positions survive (10). Compatibility on these maps, which is still needed to conclude Q2, is open.
+
+### Restricting the middle labelling as well
+
+For the simultaneous one-edge version of the test, the middle labelling need only be a subdivision or itself of simultaneous one-edge form. This follows from a cancellation law for three successive labellings. For normal $t$ denote its chosen square by $b_t(u):t[u]\to N(t[u])$, with units and support restrictions as above, and abbreviate the normal term $N(t[u])$ by $t\odot u$. Write $E(u,v)$ for (6) on this pair of labellings for every normal head on the source and its support restrictions. Thus
+\[
+                b_t(u)[v]\, b_{t\odot u}(v)
+                      = t_* b_u(v)\, b_t(u\odot v),
+\]
+where $b_u(v)$ denotes the tuple over the top entries of $u$. If $E(u,v)$ and $E(v,w)$ hold, then
+\[
+                      E(u,v\odot w)\quad\Longleftrightarrow\quad
+                      E(u\odot v,w).                                \tag{12}
+\]
+Indeed start from $b_t(u)[vw]\, b_{t\odot u}(v)[w]\, b_{(t\odot u)\odot v}(w)$. Applying $E(v,w)$ to $t\odot u$, then crossing $b_t(u)$ as in (7), gives
+\[
+     t_*\bigl(u_* b_v(w)\bigr)\ b_t(u)[v\odot w]\ b_{t\odot u}(v\odot w).
+\]
+Applying $E(u,v)$ first and specializing its comparison along $w$ gives instead
+\[
+      t_*\bigl(b_u(v)[w]\bigr)\ b_t(u\odot v)[w]\ b_{t\odot(u\odot v)}(w).
+\]
+The tests in (12) replace the last two factors in these respective expressions. After replacement the results agree by $E(v,w)$ on the individual normal entries of $u$, promoted through $t$, and associativity of normalized substitution. All the displayed prefixes are invertible in the groupoid. Cancellation proves equivalence in both directions with the given middle and end squares. The calculation is local on the support of $t$ and of each input.
+
+For a last simultaneous one-edge map $g$, write the middle map as $\alpha\odot f$ by (10). Factor $f\odot g=\beta\odot h$ by (10) again, with $\beta$ simultaneous one-edge and $h$ a subdivision. If every pair of simultaneous one-edge maps passes, apply (12) to $\alpha,\beta,h$. The two equations ending in $h$ already hold, so this gives $E(\alpha, f\odot g)$. If the pairs consisting of a subdivision followed by a simultaneous one-edge map also pass, apply (12) to $\alpha,f,g$ to obtain $E(\alpha\odot f,g)$ as desired. Restrictions of the simultaneous one-edge maps used here still have that form on the image support: restricting a source string selects an interval of its positions, which selects exactly the same interval at each of its owned sites. A stationary source position alone selects just its section. Thus (12) uses the same two families on its smaller supports. These remaining equations retain nonvariable lower labels even when the lists of lengths everywhere consist only of ones.
+
+In the subdivision-first family even the middle map may be taken to be a **single binary split or a single collapse**. Factor a longer subdivision as $f_1\odot f_2$ with $f_2$ elementary. Induct on the number of elementary factors of the first map, uniformly in the last simultaneous one-edge map $g$. Factor $f_2\odot g=\beta\odot h$ as before. The induction hypothesis gives $E(f_1,\beta)$, and (12) with last map $h$ gives $E(f_1, f_2\odot g)$ since both tests ending in $h$ hold. Use (12) on $f_1,f_2,g$, with $E(f_2,g)$ the elementary hypothesis, to conclude. Variable inclusions act by restriction and the identity has its disk square. This bounds the number of top edges that the middle map must change in that family independently of the branching and of $r$.
+
+**Verification.** The checker takes raw substitutions, projects their position terms, recovers the arity and checks (10) entry by entry. Inputs include a source site supporting two target sites, an interval with no advance on either site, and a whole source string whose pole is supported one degree lower. Mixed and total collapses give identical recovered $\alpha$ in ranks two through four. Changing just the syntax of an intermediate pole changes $\alpha$ at that position with all lengths fixed. In a separate branching example the checker specializes one generic square $K$ at both the raw and the normalized block composite, computes the two promoted paths, and constructs the transported comparison (7) with those two specialized squares as factors. It checks the literal faces in degrees five and six. This last calculation uses top temporal marks, where the full mixed term can be checked on a globular graft. The deep-threshold proof uses the crossing of Response 23. Agda checked the total-collapse substitutions and the degree-five comparison in safe mode. [Checker and Agda certificate generator](../../../tools/gray_subdivision_templates.py)
+
+~~~sh
+python3 -B tools/gray_subdivision_templates.py --agda /tmp/GraySubdivisions.agda
+agda --safe --no-libraries -i /tmp -i src /tmp/GraySubdivisions.agda
+~~~

@@ -268,3 +268,51 @@ The [round-10 checker](../../../tools/gray_coherent_substitutions.py) tests the 
 Independent enumeration of raw path hierarchies finds 36 admissible individual maps among all 121 monotone maps between lengths zero through three. The two subdivisions at length three have disjoint sets of target hierarchies. The cut tests recover a common generic head at its substituted poles and detect an empty intersection when the strict value agrees but the required poles differ. Row-linear evaluation agrees with the repository's evaluator using inferred poles on 152 cube tableau evaluations, including identity elevations. The checker also evaluates the rank-excess recurrence and constructs high-rank point terms with several different outer arity heights.
 
 Running the checker with `--agda /tmp/GrayCoherentSubstitutions.agda` emits the raw examples. Agda 2.8.0 with `--safe --no-libraries` checked the subdivision comparison, rejection of the canonical identity at its unequal poles, the reconstructed head and four rank-five terms at their prescribed types. The all-rank claims rest on (1), the pole-cut reconstruction and the rank-excess induction.
+
+# Verification (2026-11-20)
+
+Status: **verified. Q1 is answered, Q2 is answered negatively with a polynomial weaker form, and Q3 is answered with a computable but non-elementary bound plus a negative result on canonical comparisons.**
+- **Q1, coherent functoriality.**
+  - There is a unital homotopy-coherent action of shape maps on CaTT substitutions. It is built from a simplicial category of substitution frames (cosimplicial presentations A_K^r with free latching inclusions and boundary-lifting matching maps) and the free resolution ℭN of the shape category.
+  - The simplicial identities, unit laws and split and contracted faces hold on the nose. Identifying the vertices of a pair of maps, and every later pasting, is a specified coinductively invertible higher cell.
+  - A two-row version gives a homotopy-coherent natural transformation from strict relabelling to the section, so the comparisons of the section itself are coherent.
+- **Q1, the section-independent strict class.**
+  - A finite diagram of shapes admits a common strictly natural CT section iff it has trees of strict pasting-arity maps passing the graft and pole-cut tests. The criterion uses no weak operation and no choice of section.
+  - For infinite subcategories the condition is a compactness condition (bounds on node counts making every finite test succeed). It gives a positive semidecision only.
+  - **There is no greatest jointly strict subcategory.** The two subdivisions [2] → [3] are each admissible but are not jointly admissible.
+  - On paths: a single map [r] → [s] with r ≥ 2 is admissible iff it is strictly increasing. Joint admissibility is a finite test with planar hierarchies.
+- **Q2, compact forms.**
+  - **No polynomial-size explicit raw section exists.** Every raw writing of the rank-d cell 1^d x over the point has at least L(k) nodes, where L(k) = Σ_{j ≤ ⌊(k−1)/2⌋} L(j). Since L(4^q) ≥ 4^{q(q−1)/2}, the size is exp(Ω((log d)²)) while the tableau has size O(d).
+  - The polynomial weaker form is the strict tableau with its rank. It represents a term modulo invertible cylinders, and two writings are equivalent exactly when their tableaux agree. Evaluation and comparison take polynomial time on typed raw input, with no table of weak lifts.
+- **Q3, comparisons.**
+  - For parallel terms with equal strict value, the first derivation in a fixed enumeration gives an explicit comparison. Its length is bounded by a total recursive function H of the input length. The comparison cylinder is bounded by iterating t_i = C(s_i + 1)³, s_{i+1} = t_i + H(t_i) + C over the 2n + 1 mixed generators.
+  - The comparisons required by functoriality cannot all be canonical. In the collapse [2] → [1] the comparison has value 1_z, but its poles are the coherence-headed writing u and the variable z, while the canonical writing of 1_z has both poles z.
+
+**What was re-run.**
+- `tools/gray_coherent_substitutions.py` exits 0 in 1 s.
+  - 24,959 cut vertices, and 36 of the 121 path maps admit strict sections.
+  - 299,592 quotient checks, and 152 cube tableaux agree in all rows.
+  - The pole cuts, incompatible subdivisions and rank-excess bounds pass.
+- `--agda` emits `GrayCoherentSubstitutions.agda`, which type-checks under `agda --safe --no-libraries -i src` (Agda 2.8.0, exit 0). It contains the subdivision comparison, the rejection of the canonical identity at unequal poles, the reconstructed head, and four rank-five terms.
+
+**Checked.** No gap was found.
+1. **Boundary lifting for mapping simplices** (§1). Quotient components are well defined, because two quotients through which α factors have a common coarsening that refines the fibre partition of α. The missing components are filled in increasing j by (1). Checked.
+2. **The coherent functor.** ℭN is a simplicial computad, so extending over nondegenerate atomic simplices by boundary lifting gives a simplicial functor. Coinductive invertibility of the parameter-moving generators follows as in item 40. Checked.
+3. **The criterion of §2.** Necessity reads strict arity maps from a solution. Sufficiency reads terms from a surviving decoration, using that the pole cuts list every inverse image under slot substitution. A head of rank j has arity height at most j, which keeps the cut search finite. Checked.
+4. **The path class and the two subdivisions.** Admissibility forces the first two and the last two edges of [3] to be clusters of one hierarchy, which is impossible. Checked.
+5. **The lower bound.** L is nondecreasing, and L(4m) ≥ Σ_{j=m}^{2m−1} L(j) ≥ m L(m), so L(4^q) ≥ 4^{q(q−1)/2}. The case split on arity height (p ≥ a + m against p < a + m) covers every head. Checked.
+6. **Tableaux modulo invertible cylinders.** A coinductively invertible cell of the strict tensor is an identity, by descending from the top degree with additivity of generator counts. Checked.
+
+**Caveats.**
+- The lower bound counts nodes of explicit raw trees. It does not apply to representations with sharing (DAGs or let-bindings), where compact forms might still exist.
+- The comparison bound H is total recursive but defined by exhaustive search, so it is not elementary. The response says it asserts computability only.
+- The strict-class criterion is exact, but for a finite diagram it is only a semidecision; failure at one bound decides nothing.
+
+**Editorial.** The researcher's commit also edited `open-issues.md` and `README.md` in place. In `open-issues.md` it truncated the E8 row to its first sentences. The row was restored from the previous version, and the r10 result was recorded in the standard form. The file moved from `outbox/` to `answered/`; its relative links resolve unchanged.
+
+**What is left open.**
+- An elementary (ideally polynomial) bound on comparisons between terms with equal strict value. This is the same search-free lifting problem as relative-coherence r10 Q1.
+- Canonical forms of polynomial size in a representation with sharing, or a lower bound for shared representations.
+- Decidability of joint strict admissibility for finite diagrams beyond paths, for example for cubes and for the cone and cylinder maps.
+- A search-free construction of the coherent functor's cells.
+- Follow-up: [`outbox/canonical-gray-terms-r11.md`](../outbox/canonical-gray-terms-r11.md).

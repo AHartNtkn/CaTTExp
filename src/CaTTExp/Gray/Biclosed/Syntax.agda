@@ -41,6 +41,28 @@ open MTy public
 data Mode : Set where
   inv dir : Mode
 
+-- Rows of the cut rules (F.7.4 §2 table); their meaning is in Rows.agda.
+data Row : Set where
+  pairR  : List Fm → Fm → Fm → List Fm → Fm → Row        -- L U V R Z
+  probeR : List Fm → Shape → Shape → List Fm → Fm → Row  -- L Δ Θ R Z
+  unitR  : List Fm → List Fm → Fm → Row                  -- L R Z
+  evLR   : List Fm → Fm → Fm → Row                       -- Φ A C
+  evRR   : List Fm → Fm → Fm → Row                       -- Φ A C
+
+-- A template: row, time-slot gap, mode and dimension.
+record Tmpl : Set where
+  constructor tmpl
+  field
+    row  : Row
+    gap  : Nat
+    mode : Mode
+    dimn : Nat
+open Tmpl public
+
+-- The two goals of a template: the cell c and its comparison ε.
+data Goal : Set where
+  gc gε : Goal
+
 mutual
   -- Terms.
   --   var i        context variable (de Bruijn level)
@@ -54,7 +76,9 @@ mutual
   --                one argument is a higher cell
   --   glue a⁻ x a⁺ x with invertible collars adjoined on both sides
   --                (an L-core composite; its typing rule is in Typing)
-  --   here T       the coherence of type T in the current context
+  --   here t e φs ts  goal e of template t, instantiated by the
+  --                substitution sending object variable i to φs[i] and
+  --                context variable i to ts[i]
   data Tm : Set where
     var  : Nat → Tm
     mP   : Fm → Fm → Tm
@@ -65,7 +89,7 @@ mutual
     idt  : Fm → Tm
     comp : Tm → List Tm → Tm
     glue : Tm → Tm → Tm → Tm
-    here : CTy → Tm
+    here : Tmpl → Goal → List Fm → List Tm → Tm
 
   -- Cell types.  op M: operations of type M.  hom m g T s t: cells from
   -- s to t (both of type T) with time slot at gap g, of mode m.
@@ -109,6 +133,25 @@ eqMode inv inv = true
 eqMode dir dir = true
 eqMode _ _ = false
 
+eqRow : Row → Row → Bool
+eqRow (pairR a b c d e)  (pairR a′ b′ c′ d′ e′)  =
+  eqFms a a′ ∧ eqFm b b′ ∧ eqFm c c′ ∧ eqFms d d′ ∧ eqFm e e′
+eqRow (probeR a b c d e) (probeR a′ b′ c′ d′ e′) =
+  eqFms a a′ ∧ eqSh b b′ ∧ eqSh c c′ ∧ eqFms d d′ ∧ eqFm e e′
+eqRow (unitR a b c)      (unitR a′ b′ c′)        = eqFms a a′ ∧ eqFms b b′ ∧ eqFm c c′
+eqRow (evLR a b c)       (evLR a′ b′ c′)         = eqFms a a′ ∧ eqFm b b′ ∧ eqFm c c′
+eqRow (evRR a b c)       (evRR a′ b′ c′)         = eqFms a a′ ∧ eqFm b b′ ∧ eqFm c c′
+eqRow _ _ = false
+
+eqTmpl : Tmpl → Tmpl → Bool
+eqTmpl (tmpl r g m n) (tmpl r′ g′ m′ n′) =
+  eqRow r r′ ∧ (g ==ℕ g′) ∧ eqMode m m′ ∧ (n ==ℕ n′)
+
+eqGoal : Goal → Goal → Bool
+eqGoal gc gc = true
+eqGoal gε gε = true
+eqGoal _  _  = false
+
 mutual
   eqTm : Tm → Tm → Bool
   eqTm (var m)      (var n)      = m ==ℕ n
@@ -120,7 +163,8 @@ mutual
   eqTm (idt a)      (idt b)      = eqFm a b
   eqTm (comp f gs)  (comp h ks)  = eqTm f h ∧ eqTms gs ks
   eqTm (glue a x b) (glue c y d) = eqTm a c ∧ eqTm x y ∧ eqTm b d
-  eqTm (here A)     (here B)     = eqTy A B
+  eqTm (here t e φs ts) (here t′ e′ φs′ ts′) =
+    eqTmpl t t′ ∧ eqGoal e e′ ∧ eqFms φs φs′ ∧ eqTms ts ts′
   eqTm _ _ = false
 
   eqTms : List Tm → List Tm → Bool
@@ -171,6 +215,10 @@ eqMode-sound : ∀ a b → T (eqMode a b) → a ≡ b
 eqMode-sound inv inv _ = refl
 eqMode-sound dir dir _ = refl
 
+eqGoal-sound : ∀ a b → T (eqGoal a b) → a ≡ b
+eqGoal-sound gc gc _ = refl
+eqGoal-sound gε gε _ = refl
+
 private
   cong₃ : ∀ {A B C D : Set} (f : A → B → C → D) {a a' b b' c c'} →
           a ≡ a' → b ≡ b' → c ≡ c' → f a b c ≡ f a' b' c'
@@ -181,6 +229,44 @@ private
           a ≡ a' → b ≡ b' → c ≡ c' → d ≡ d' → e ≡ e' →
           f a b c d e ≡ f a' b' c' d' e'
   cong₅ f refl refl refl refl refl = refl
+
+  cong₄ : ∀ {A B C D E : Set} (f : A → B → C → D → E) {a a' b b' c c' d d'} →
+          a ≡ a' → b ≡ b' → c ≡ c' → d ≡ d' → f a b c d ≡ f a' b' c' d'
+  cong₄ f refl refl refl refl = refl
+
+-- split a proof of a right-nested conjunction
+∧₅ : ∀ {a b c d e} → T (a ∧ b ∧ c ∧ d ∧ e) → T a × T b × T c × T d × T e
+∧₅ {true} {true} {true} {true} {true} _ = tt , tt , tt , tt , tt
+
+∧₃ : ∀ {a b c} → T (a ∧ b ∧ c) → T a × T b × T c
+∧₃ {true} {true} {true} _ = tt , tt , tt
+
+∧₄ : ∀ {a b c d} → T (a ∧ b ∧ c ∧ d) → T a × T b × T c × T d
+∧₄ {true} {true} {true} {true} _ = tt , tt , tt , tt
+
+eqRow-sound : ∀ a b → T (eqRow a b) → a ≡ b
+eqRow-sound (pairR a b c d e) (pairR a′ b′ c′ d′ e′) p =
+  let (p1 , p2 , p3 , p4 , p5) = ∧₅ {eqFms a a′} p in
+  cong₅ pairR (eqFms-sound a a′ p1) (eqFm-sound b b′ p2) (eqFm-sound c c′ p3)
+              (eqFms-sound d d′ p4) (eqFm-sound e e′ p5)
+eqRow-sound (probeR a b c d e) (probeR a′ b′ c′ d′ e′) p =
+  let (p1 , p2 , p3 , p4 , p5) = ∧₅ {eqFms a a′} p in
+  cong₅ probeR (eqFms-sound a a′ p1) (eqSh-sound b b′ p2) (eqSh-sound c c′ p3)
+               (eqFms-sound d d′ p4) (eqFm-sound e e′ p5)
+eqRow-sound (unitR a b c) (unitR a′ b′ c′) p =
+  let (p1 , p2 , p3) = ∧₃ {eqFms a a′} p in
+  cong₃ unitR (eqFms-sound a a′ p1) (eqFms-sound b b′ p2) (eqFm-sound c c′ p3)
+eqRow-sound (evLR a b c) (evLR a′ b′ c′) p =
+  let (p1 , p2 , p3) = ∧₃ {eqFms a a′} p in
+  cong₃ evLR (eqFms-sound a a′ p1) (eqFm-sound b b′ p2) (eqFm-sound c c′ p3)
+eqRow-sound (evRR a b c) (evRR a′ b′ c′) p =
+  let (p1 , p2 , p3) = ∧₃ {eqFms a a′} p in
+  cong₃ evRR (eqFms-sound a a′ p1) (eqFm-sound b b′ p2) (eqFm-sound c c′ p3)
+
+eqTmpl-sound : ∀ a b → T (eqTmpl a b) → a ≡ b
+eqTmpl-sound (tmpl r g m n) (tmpl r′ g′ m′ n′) p =
+  let (p1 , p2 , p3 , p4) = ∧₄ {eqRow r r′} p in
+  cong₄ tmpl (eqRow-sound r r′ p1) (==ℕ-sound g g′ p2) (eqMode-sound m m′ p3) (==ℕ-sound n n′ p4)
 
 mutual
   eqTm-sound : ∀ a b → T (eqTm a b) → a ≡ b
@@ -201,7 +287,10 @@ mutual
     let q = ∧-snd {eqTm a c} p in
     cong₃ glue (eqTm-sound a c (∧-fst p)) (eqTm-sound x y (∧-fst q))
                (eqTm-sound b d (∧-snd {eqTm x y} q))
-  eqTm-sound (here A) (here B) p = cong here (eqTy-sound A B p)
+  eqTm-sound (here t e φs ts) (here t′ e′ φs′ ts′) p =
+    let (p1 , p2 , p3 , p4) = ∧₄ {eqTmpl t t′} p in
+    cong₄ here (eqTmpl-sound t t′ p1) (eqGoal-sound e e′ p2)
+               (eqFms-sound φs φs′ p3) (eqTms-sound ts ts′ p4)
 
   eqTms-sound : ∀ a b → T (eqTms a b) → a ≡ b
   eqTms-sound []       []       _ = refl
@@ -249,6 +338,21 @@ eqMode-refl : ∀ a → T (eqMode a a)
 eqMode-refl inv = tt
 eqMode-refl dir = tt
 
+eqGoal-refl : ∀ a → T (eqGoal a a)
+eqGoal-refl gc = tt
+eqGoal-refl gε = tt
+
+eqRow-refl : ∀ a → T (eqRow a a)
+eqRow-refl (pairR a b c d e)  = ∧-intro (eqFms-refl a) (∧-intro (eqFm-refl b) (∧-intro (eqFm-refl c) (∧-intro (eqFms-refl d) (eqFm-refl e))))
+eqRow-refl (probeR a b c d e) = ∧-intro (eqFms-refl a) (∧-intro (eqSh-refl b) (∧-intro (eqSh-refl c) (∧-intro (eqFms-refl d) (eqFm-refl e))))
+eqRow-refl (unitR a b c)      = ∧-intro (eqFms-refl a) (∧-intro (eqFms-refl b) (eqFm-refl c))
+eqRow-refl (evLR a b c)       = ∧-intro (eqFms-refl a) (∧-intro (eqFm-refl b) (eqFm-refl c))
+eqRow-refl (evRR a b c)       = ∧-intro (eqFms-refl a) (∧-intro (eqFm-refl b) (eqFm-refl c))
+
+eqTmpl-refl : ∀ a → T (eqTmpl a a)
+eqTmpl-refl (tmpl r g m n) =
+  ∧-intro (eqRow-refl r) (∧-intro (==ℕ-refl g) (∧-intro (eqMode-refl m) (==ℕ-refl n)))
+
 mutual
   eqTm-refl : ∀ a → T (eqTm a a)
   eqTm-refl (var n)      = ==ℕ-refl n
@@ -260,7 +364,8 @@ mutual
   eqTm-refl (idt a)      = eqFm-refl a
   eqTm-refl (comp f gs)  = ∧-intro (eqTm-refl f) (eqTms-refl gs)
   eqTm-refl (glue a x b) = ∧-intro (eqTm-refl a) (∧-intro (eqTm-refl x) (eqTm-refl b))
-  eqTm-refl (here A)     = eqTy-refl A
+  eqTm-refl (here t e φs ts) =
+    ∧-intro (eqTmpl-refl t) (∧-intro (eqGoal-refl e) (∧-intro (eqFms-refl φs) (eqTms-refl ts)))
 
   eqTms-refl : ∀ a → T (eqTms a a)
   eqTms-refl []       = tt

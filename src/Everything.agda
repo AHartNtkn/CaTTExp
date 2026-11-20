@@ -39,8 +39,13 @@ import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls
 import CaTTExp.Gray.Biclosed.Syntax
+import CaTTExp.Gray.Biclosed.ListOps
+import CaTTExp.Gray.Biclosed.Rows
+import CaTTExp.Gray.Biclosed.SubstDef
 import CaTTExp.Gray.Biclosed.Typing
 import CaTTExp.Gray.Biclosed.Templates
+import CaTTExp.Gray.Biclosed.Scope
+import CaTTExp.Gray.Biclosed.HereAmbiguity
 import CaTTExp.Gray.Biclosed.Examples
 import CaTTExp.Gray.Biclosed.TemplatesTyped
 import CaTTExp.Gray.Biclosed.Subst

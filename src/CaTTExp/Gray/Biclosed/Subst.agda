@@ -15,54 +15,12 @@ module CaTTExp.Gray.Biclosed.Subst where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Biclosed.Syntax
+open import CaTTExp.Gray.Biclosed.SubstDef public
 open import CaTTExp.Gray.Biclosed.Typing
 open import CaTTExp.Gray.Biclosed.TemplatesTyped
   using (T→≡; eqTy-false; map-++)
-
-------------------------------------------------------------------------
--- Substitution
-
-record Sub : Set where
-  constructor sub
-  field
-    fo : Nat → Fm
-    tm : Nat → Tm
-open Sub public
-
-sF : (Nat → Fm) → Fm → Fm
-sF φ (obj i)  = φ i
-sF φ (rep s)  = rep s
-sF φ (a ⊗ b)  = sF φ a ⊗ sF φ b
-sF φ (a \\ b) = sF φ a \\ sF φ b
-sF φ (a // b) = sF φ a // sF φ b
-
-sFs : (Nat → Fm) → List Fm → List Fm
-sFs φ []       = []
-sFs φ (a ∷ as) = sF φ a ∷ sFs φ as
-
-sM : (Nat → Fm) → MTy → MTy
-sM φ (xs ▸ z) = sFs φ xs ▸ sF φ z
-
-mutual
-  sT : Sub → Tm → Tm
-  sT σ (var i)      = tm σ i
-  sT σ (mP U V)     = mP (sF (fo σ) U) (sF (fo σ) V)
-  sT σ (eL A C)     = eL (sF (fo σ) A) (sF (fo σ) C)
-  sT σ (eR A C)     = eR (sF (fo σ) A) (sF (fo σ) C)
-  sT σ (pP Δ Θ)     = pP Δ Θ
-  sT σ pt           = pt
-  sT σ (idt A)      = idt (sF (fo σ) A)
-  sT σ (comp f gs)  = comp (sT σ f) (sTs σ gs)
-  sT σ (glue a x b) = glue (sT σ a) (sT σ x) (sT σ b)
-  sT σ (here A)     = here (sY σ A)
-
-  sTs : Sub → List Tm → List Tm
-  sTs σ []       = []
-  sTs σ (t ∷ ts) = sT σ t ∷ sTs σ ts
-
-  sY : Sub → CTy → CTy
-  sY σ (op M)          = op (sM (fo σ) M)
-  sY σ (hom m g A s t) = hom m g (sY σ A) (sT σ s) (sT σ t)
+open import CaTTExp.Gray.Biclosed.Scope
+  using (scY; All; []; _∷_; inst-sY; module TmplScope)
 
 -- Γ ⊢ σ ∶ Δ
 record _⊢_∶_ (Γ : Ctx) (σ : Sub) (Δ : Ctx) : Set where
@@ -169,6 +127,10 @@ module Ops (σ : Sub) where
   length-sFs : ∀ xs → length (sFs φ xs) ≡ length xs
   length-sFs []       = refl
   length-sFs (x ∷ xs) = cong suc (length-sFs xs)
+
+  length-sTs : ∀ xs → length (sTs σ xs) ≡ length xs
+  length-sTs []       = refl
+  length-sTs (x ∷ xs) = cong suc (length-sTs xs)
 
   take-sM : ∀ n ms → take n (map (sM φ) ms) ≡ map (sM φ) (take n ms)
   take-sM zero    ms       = refl
@@ -358,6 +320,9 @@ module Ops (σ : Sub) where
 ------------------------------------------------------------------------
 -- The substitution lemma
 
+if-true′ : ∀ {b} {A : Set} {x y : A} → T b → (if b then x else y) ≡ x
+if-true′ {true} _ = refl
+
 module _ {Γ Δ : Ctx} {σ : Sub} (h : Γ ⊢ σ ∶ Δ) where
   open Ops σ
 
@@ -378,8 +343,58 @@ module _ {Γ Δ : Ctx} {σ : Sub} (h : Γ ⊢ σ ∶ Δ) where
     ... | ta , tb , tx , e1 , e2 , e3 , e4
       rewrite sub-infer am ta e1 | sub-infer ap tb e2 | sub-infer x tx e3 =
       glueTop-sY am ap ta tb tx A e4
-    sub-infer (here B) A e with if-inv (wf Δ B) e
-    ... | p , refl rewrite T→≡ (sub-wf B p) = refl
+    sub-infer (here t e φs ts) A eq = sub-here t e φs ts A eq
+
+    sub-here : ∀ t e φs ts A → infer Δ (here t e φs ts) ≡ just A →
+               infer Γ (sT σ (here t e φs ts)) ≡ just (sY σ A)
+    sub-here t e φs ts A eq
+      with if-inv (okT t ∧ (length φs ==ℕ nObj t) ∧ (length ts ==ℕ nCtx t)
+                     ∧ argsOk Δ (instS φs ts) ts (ctx t)) eq
+    ... | p , refl =
+      trans (if-true′ {okT t ∧ (length (sFs (fo σ) φs) ==ℕ nObj t)
+                         ∧ (length (sTs σ ts) ==ℕ nCtx t)
+                         ∧ argsOk Γ (instS (sFs (fo σ) φs) (sTs σ ts)) (sTs σ ts) (ctx t)}
+               (∧-intro okt (∧-intro lφ′ (∧-intro lt″
+                  (sub-args ts (ctx t) ctx-sc′ (∧-snd {length ts ==ℕ nCtx t} p3))))))
+            (cong just (sym (inst-sY φs ts σ (goal t e) goal-sc′)))
+      where
+      okt = ∧-fst p
+      p2  = ∧-snd {okT t} p
+      p3  = ∧-snd {length φs ==ℕ nObj t} p2
+      lφ : length φs ≡ nObj t
+      lφ = ==ℕ-sound _ _ (∧-fst p2)
+      lt′ : length ts ≡ nCtx t
+      lt′ = ==ℕ-sound _ _ (∧-fst p3)
+      lφ′ : T (length (sFs (fo σ) φs) ==ℕ nObj t)
+      lφ′ = subst (λ q → T (q ==ℕ nObj t)) (sym (length-sFs φs)) (∧-fst p2)
+      lt″ : T (length (sTs σ ts) ==ℕ nCtx t)
+      lt″ = subst (λ q → T (q ==ℕ nCtx t)) (sym (length-sTs ts)) (∧-fst p3)
+      open TmplScope t okt using (ctx-sc; goal-sc)
+      sc≡ : ∀ B → T (scY (nObj t) (nCtx t) B) → T (scY (length φs) (length ts) B)
+      sc≡ B q rewrite lφ | lt′ = q
+      mapAll : ∀ Ψ → All (λ B → T (scY (nObj t) (nCtx t) B)) Ψ →
+               All (λ B → T (scY (length φs) (length ts) B)) Ψ
+      mapAll []      []       = []
+      mapAll (B ∷ Ψ) (q ∷ qs) = sc≡ B q ∷ mapAll Ψ qs
+      ctx-sc′ = mapAll (ctx t) ctx-sc
+      goal-sc′ = sc≡ (goal t e) (goal-sc e)
+
+    -- the instance's arguments stay well typed
+    sub-args : ∀ {φs us} xs Ψ → All (λ B → T (scY (length φs) (length us) B)) Ψ →
+               T (argsOk Δ (instS φs us) xs Ψ) →
+               T (argsOk Γ (instS (sFs (fo σ) φs) (sTs σ us)) (sTs σ xs) Ψ)
+    sub-args []       []      _        _ = tt
+    sub-args {φs} {us} (x ∷ xs) (B ∷ Ψ) (q ∷ qs) p =
+      ∧-intro (side (∧-fst p))
+              (sub-args xs Ψ qs (∧-snd {eqMaybeTy (infer Δ x) (sY (instS φs us) B)} p))
+      where
+      side : T (eqMaybeTy (infer Δ x) (sY (instS φs us) B)) →
+             T (eqMaybeTy (infer Γ (sT σ x)) (sY (instS (sFs (fo σ) φs) (sTs σ us)) B))
+      side px with infer Δ x in ex
+      ... | just C rewrite sub-infer x C ex
+                         | sym (inst-sY φs us σ B q) = eqTy-sY C (sY (instS φs us) B) px
+    sub-args []       (_ ∷ _) _ ()
+    sub-args (_ ∷ _)  []      _ ()
 
     sub-inferL : ∀ xs As → inferL Δ xs ≡ just As →
                  inferL Γ (sTs σ xs) ≡ just (map (sY σ) As)

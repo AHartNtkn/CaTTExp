@@ -16,9 +16,10 @@
 --                     from r(σ(u±)) to the collared σ(β±).
 -- no-reverse and dir-needs-dir (Templates) hold for generic contexts
 -- only.  For instances they fail syntactically (sending b to an
--- identity can make σ(u⁻) = σ(u⁺)), and `here` inhabits every
--- well-formed type, so the absence of reverse cells is a semantic
--- statement (r3, the walking square) and stays on paper.
+-- identity can make σ(u⁻) = σ(u⁺)), so the absence of reverse cells
+-- is a semantic statement (r3, the walking square).  Since D7h the
+-- instance term is here t e φs ts, which records σ; AdmI still speaks
+-- about goal types, as before.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Biclosed.Instances where
 
@@ -30,94 +31,8 @@ open import CaTTExp.Gray.Biclosed.TemplatesTyped
   using (templates-typed; module Fixed)
 open import CaTTExp.Gray.Biclosed.Subst
 
-------------------------------------------------------------------------
--- Identity and composition of substitutions
-
-idS : Sub
-idS = sub obj var
-
-_⨾_ : Sub → Sub → Sub
-σ ⨾ τ = sub (λ i → sF (fo τ) (fo σ i)) (λ i → sT τ (tm σ i))
-
-sF-id : ∀ a → sF obj a ≡ a
-sF-id (obj i)  = refl
-sF-id (rep s)  = refl
-sF-id (a ⊗ b)  = cong₂ _⊗_ (sF-id a) (sF-id b)
-sF-id (a \\ b) = cong₂ _\\_ (sF-id a) (sF-id b)
-sF-id (a // b) = cong₂ _//_ (sF-id a) (sF-id b)
-
-sFs-id : ∀ as → sFs obj as ≡ as
-sFs-id []       = refl
-sFs-id (a ∷ as) = cong₂ _∷_ (sF-id a) (sFs-id as)
-
-sM-id : ∀ M → sM obj M ≡ M
-sM-id (xs ▸ z) = cong₂ _▸_ (sFs-id xs) (sF-id z)
-
-private
-  cong₃ : ∀ {A B C D : Set} (f : A → B → C → D) {a a' b b' c c'} →
-          a ≡ a' → b ≡ b' → c ≡ c' → f a b c ≡ f a' b' c'
-  cong₃ f refl refl refl = refl
-
-mutual
-  sT-id : ∀ x → sT idS x ≡ x
-  sT-id (var i)      = refl
-  sT-id (mP U V)     = cong₂ mP (sF-id U) (sF-id V)
-  sT-id (eL A C)     = cong₂ eL (sF-id A) (sF-id C)
-  sT-id (eR A C)     = cong₂ eR (sF-id A) (sF-id C)
-  sT-id (pP Δ Θ)     = refl
-  sT-id pt           = refl
-  sT-id (idt A)      = cong idt (sF-id A)
-  sT-id (comp f gs)  = cong₂ comp (sT-id f) (sTs-id gs)
-  sT-id (glue a x b) = cong₃ glue (sT-id a) (sT-id x) (sT-id b)
-  sT-id (here A)     = cong here (sY-id A)
-
-  sTs-id : ∀ xs → sTs idS xs ≡ xs
-  sTs-id []       = refl
-  sTs-id (x ∷ xs) = cong₂ _∷_ (sT-id x) (sTs-id xs)
-
-  sY-id : ∀ A → sY idS A ≡ A
-  sY-id (op M)          = cong op (sM-id M)
-  sY-id (hom m g A s t) =
-    trans (cong (λ A′ → hom m g A′ (sT idS s) (sT idS t)) (sY-id A))
-          (cong₂ (hom m g A) (sT-id s) (sT-id t))
-
-module Comp (σ τ : Sub) where
-  sF-⨾ : ∀ a → sF (fo τ) (sF (fo σ) a) ≡ sF (fo (σ ⨾ τ)) a
-  sF-⨾ (obj i)  = refl
-  sF-⨾ (rep s)  = refl
-  sF-⨾ (a ⊗ b)  = cong₂ _⊗_ (sF-⨾ a) (sF-⨾ b)
-  sF-⨾ (a \\ b) = cong₂ _\\_ (sF-⨾ a) (sF-⨾ b)
-  sF-⨾ (a // b) = cong₂ _//_ (sF-⨾ a) (sF-⨾ b)
-
-  sFs-⨾ : ∀ as → sFs (fo τ) (sFs (fo σ) as) ≡ sFs (fo (σ ⨾ τ)) as
-  sFs-⨾ []       = refl
-  sFs-⨾ (a ∷ as) = cong₂ _∷_ (sF-⨾ a) (sFs-⨾ as)
-
-  sM-⨾ : ∀ M → sM (fo τ) (sM (fo σ) M) ≡ sM (fo (σ ⨾ τ)) M
-  sM-⨾ (xs ▸ z) = cong₂ _▸_ (sFs-⨾ xs) (sF-⨾ z)
-
-  mutual
-    sT-⨾ : ∀ x → sT τ (sT σ x) ≡ sT (σ ⨾ τ) x
-    sT-⨾ (var i)      = refl
-    sT-⨾ (mP U V)     = cong₂ mP (sF-⨾ U) (sF-⨾ V)
-    sT-⨾ (eL A C)     = cong₂ eL (sF-⨾ A) (sF-⨾ C)
-    sT-⨾ (eR A C)     = cong₂ eR (sF-⨾ A) (sF-⨾ C)
-    sT-⨾ (pP Δ Θ)     = refl
-    sT-⨾ pt           = refl
-    sT-⨾ (idt A)      = cong idt (sF-⨾ A)
-    sT-⨾ (comp f gs)  = cong₂ comp (sT-⨾ f) (sTs-⨾ gs)
-    sT-⨾ (glue a x b) = cong₃ glue (sT-⨾ a) (sT-⨾ x) (sT-⨾ b)
-    sT-⨾ (here A)     = cong here (sY-⨾ A)
-
-    sTs-⨾ : ∀ xs → sTs τ (sTs σ xs) ≡ sTs (σ ⨾ τ) xs
-    sTs-⨾ []       = refl
-    sTs-⨾ (x ∷ xs) = cong₂ _∷_ (sT-⨾ x) (sTs-⨾ xs)
-
-    sY-⨾ : ∀ A → sY τ (sY σ A) ≡ sY (σ ⨾ τ) A
-    sY-⨾ (op M)          = cong op (sM-⨾ M)
-    sY-⨾ (hom m g A s t) =
-      trans (cong (λ A′ → hom m g A′ (sT τ (sT σ s)) (sT τ (sT σ t))) (sY-⨾ A))
-            (cong₂ (hom m g (sY (σ ⨾ τ) A)) (sT-⨾ s) (sT-⨾ t))
+open import CaTTExp.Gray.Biclosed.SubstDef public
+  using (idS; _⨾_; sF-id; sFs-id; sM-id; sT-id; sTs-id; sY-id; module Comp)
 
 -- typing of identity and composite substitutions
 id-typed : ∀ Γ → Γ ⊢ idS ∶ Γ
@@ -150,9 +65,9 @@ inst-subst {τ = τ} (inst-ε t ok σ h refl) k =
 
 -- every instance is a well-formed type
 inst-typed : ∀ {Γ A} → AdmI Γ A → T (wf Γ A)
-inst-typed (inst-c t _ σ h refl) =
-  sub-wf h (cgoal t) (∧-snd {wfCtx (ctx t)} (fst (templates-typed t)))
-inst-typed (inst-ε t _ σ h refl) = sub-wf h (egoal t) (snd (templates-typed t))
+inst-typed (inst-c t ok σ h refl) =
+  sub-wf h (cgoal t) (∧-snd {wfCtx (ctx t)} (fst (templates-typed t ok)))
+inst-typed (inst-ε t ok σ h refl) = sub-wf h (egoal t) (snd (templates-typed t ok))
 
 ------------------------------------------------------------------------
 -- The direction of a directed instance comes from the instance of b

@@ -509,7 +509,7 @@ Status: **verified. Q1(a), Q1(c) and Q4 are answered; Q1(b), Q2 and Q3 are not a
 - Q1(b): the classification of pasting profiles, the lattice question, and infinite families of independent visible laws.
 - Q2: admissibility of V + S for pasting-diagram laws (decidability, closure under unions, uniform decidability of free objects).
 - Q3: laws one degree up on 4-loops.
-- Follow-up: [`outbox/lax-interchange-every-dimension-r10.md`](../outbox/lax-interchange-every-dimension-r10.md).
+- Follow-up: [`lax-interchange-every-dimension-r10-2026-11-20.md`](lax-interchange-every-dimension-r10-2026-11-20.md).
 
 # Researcher Response 2
 
@@ -772,4 +772,4 @@ No gap was found. All four responses are long hand proofs. The checkers cover on
 - Q2(c): uniform normal forms, equality and reachability for every finite admissible extension.
 - A closed form for the decorations of (K65).
 
-These are carried into `outbox/lax-interchange-every-dimension-r10.md`, which was revised accordingly.
+These are carried into `lax-interchange-every-dimension-r10-2026-11-20.md`, which was revised accordingly.

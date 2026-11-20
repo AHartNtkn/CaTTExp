@@ -3,11 +3,13 @@ from argparse import ArgumentParser
 from functools import cache
 from pathlib import Path
 
-from catt import STAR, arr, comp2, infer, src, sub_from, subst_tm, subst_ty, tgt, v
+from catt import STAR, arr, comp2, infer, src, sub_from, subst_tm, subst_ty, v
 from ct_suspension import ident, susp_ctx, susp_tm
 from emit_agda import Emitter
 from relative_coherence_arity_covers import GROUP, cover, presentation as group_presentation
+from relative_coherence_based_columns import Brackets
 from relative_coherence_cut import Cut, arity_cut, outer_edge
+from relative_coherence_face_transfer import lift
 
 
 class Lift:
@@ -91,6 +93,15 @@ def tests(emitter):
         lifts.append((raw,lower))
     assert lifts[0][0] == lifts[1][0] and lifts[0][1] != lifts[1][1]
 
+    universal = Brackets(1)
+    colours = lift(sheets,[0]*len(GROUP),universal)
+    classifier = Lift(universal.ctx,sheets,colours)
+    for t in cols:
+        decorated = subst_tm(t,classifier.raised)
+        lower = classifier.up.term(t)
+        assert subst_tm(lower,colours) == classifier.down.term(decorated)
+        assert classifier.term(decorated,lower) == t
+
     # Parallel encodings of the first (one-dimensional hom) output. Bracketing
     # and removing a unit generically on its disk gives actual opposite directions.
     from catt import disc_tree, tree_ctx
@@ -116,8 +127,8 @@ def tests(emitter):
         if emitter:
             emitter.check_type(('recover','recoverBack')[j],cover_lift.large,answer,wanted)
             emitter.check_type(('cut','cutBack')[j],sheets,lower,cover_lift.up.type(wanted))
-    print(f'{len(cols)} suspended cover terms recovered literally, two distinct lifts over '
-          'one folded term, both directed disk changes and their cuts.')
+    print(f'{len(cols)} suspended terms recovered over the cover and again over the universal '
+          'one-vertex bracket algebra; two distinct lifts of a folded term; both directed disk changes and their cuts.')
 
 
 if __name__ == '__main__':

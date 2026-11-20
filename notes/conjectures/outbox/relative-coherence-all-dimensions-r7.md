@@ -1590,3 +1590,32 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_walking_equivalence.py --agda "$dir/WalkingReverses.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingReverses.agda"
 ~~~
+
+# Researcher Response 55
+
+## The walking arrow preserves the second group, and its suspension preserves the third
+
+Two entries in Response 54 can be discharged. For any groupoidal free base, a pushout of \(i_0\) induces an isomorphism on based \(\pi_2\), and a pushout of \(i_1\) induces an isomorphism on based \(\pi_3\). **The remaining walking-equivalence tests are \(i_0\) in degrees three and four, and \(i_1,i_2\) in degree four.**
+
+**Parallel two-terms in the walking arrow.** Work first in its homotopy bicategory: parallel two-cells are identified when connected by an invertible three-cell. All positive-dimensional cells of the walking arrow are weakly invertible. Write \(a:z\to g\), \(b,c:g\to z\), \(P:ab\Rightarrow1_z\), \(Q:ca\Rightarrow1_g\) as in Response 54. Bicategorical calculations below omit the canonical associators and unitors. They can equivalently be made in a strictification, whose functor on each hom category is fully faithful. Use \(\cdot\) for vertical composition in execution order. Put
+\[
+ \chi=(Qb)^{-1}\cdot(cP):b\Rightarrow c,\qquad
+ H=(\chi a)\cdot Q:ba\Rightarrow1_g .
+\]
+The first triangle \(Hb=bP\) follows by postcomposing both sides with the invertible \(\chi\). Indeed \(Qb\cdot\chi=cP\), and \((\chi ab)\cdot(cP)=(bP)\cdot\chi\) by interchange. For the second triangle, \((abP)\cdot P=(Pab)\cdot P\) by interchange, hence \(abP=Pab\). Left whiskering the first triangle by \(a\) now gives \(aHb=Pab\). Right whiskering by the equivalence \(b\) is faithful, so \(aH=Pa\).
+
+Reduce path words by \(c\to b,\ ab\to1_z,\ ba\to1_g\), labelled respectively by \(\chi^{-1},P,H\). The ordered pair (number of \(c\)'s, length) decreases. Disjoint steps commute by interchange. The only overlapping left sides are \(aba,bab\), and their reduction cells agree by the two triangles. Induction on the decreasing pair proves that all reduction paths to normal form give the same two-cell. An irreducible path is empty or consists of a single \(a\) or \(b\); its endpoints determine it. Each reduction and its inverse thus agrees with the canonical comparison obtained from the two normalizers. This includes \(Q\), since \(Q=(\chi a)^{-1}\cdot H\). The independent inverses of \(P,Q\) equal their vertical inverses in the homotopy bicategory by their supplied one-sided three-dimensional cancellations.
+
+This accounts for arbitrary raw two-terms: the rank-two normalization of §3 item 1 expresses them up to three-comparison as strings of whiskered two-generators with structural bracketing and unit cells. Structural comparisons on the same path are unique in the quotient by RC(2) in the one-skeleton. Thus **all parallel two-terms of the walking arrow admit three-comparisons**. The proof applies to insertions as well as reductions and imposes no length bound.
+
+**Use on arbitrary attachments.** For \(i_0\) keep the mixed choices on generators through rank one from Response 54. Every mixed type for a new two-generator now has a comparison in the walking arrow by the preceding theorem, including generators representing either one-sided inverse of \(P,Q\). Apply the degree-two naturality construction to any based two-loop with exactly the new variables marked. The mixed labels specialize in the pushout, and the loop's literal point poles are stationary. Together with the strict retraction this proves the first isomorphism.
+
+For \(i_1\) the ordinary walking computad is the suspension of the previous one. Use the suspended retraction and mixed labels through rank three. Here one can choose the known naturality operations through degree three to respect suspension when the two exterior objects are unmarked. To see this, in the generic-head induction choose the suspension of the lower operation whenever the arity, typed generic head and marks are suspensions. The partial cylinder of a suspended globular arity with unmarked outer poles is the suspension of its partial cylinder, by the variable boundary formula and omission of the cut-zero factors. On suspended terms the recursive substitution then suspends every mixed argument, by term induction. The prescribed face types therefore match literally up to the canonical variable ordering. The strict value is the suspended cylinder pasting (every active cut index increases by one). On the other generic heads the existing proof by prescribed-boundary lifting on the partial cylinder applies with these choices: the lower strict values are the prescribed cylinder values, and the required RC through degree three holds on all globular-arity cylinders. This gives one choice for the operation on *all* terms of the attaching context. In particular the suspended three-generators receive simply the suspensions of the mixed labels just chosen for the two-generators. Naturality of an arbitrary based three-loop in the pushout now gives the second isomorphism. Arbitrary inactive labels outside the walking computad need only be substituted into these generic operations. [Definition of the partial cylinder and the all-arity proof through degree three](../answered/naturality-arbitrary-depth-r8-2026-11-18.md#7-arbitrary-arities-and-conjecture-n-through-dimension-3) · [Suspended walking cells](https://arxiv.org/abs/2606.30254)
+
+**Checks.** The word solver visits all 1,787 composable paths of length at most 16, counting the two empty paths separately. All reduce to the endpoint-prescribed word. It finds 5,129 occurrences of the overlapping pair on \(aba\) and 2,628 on \(bab\). The term checker constructs both reduction paths at each overlap and both reverse expansions at their literal types. It also constructs both directions of the two three-dimensional interchanges used in the triangle proof. Agda checked these twelve judgments. The equalities of the two full peak composites use the bicategorical cancellation argument above. [Word normalization and typed overlap checks](../../../tools/relative_coherence_walking_peaks.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_walking_peaks.py --agda "$dir/WalkingPeaks.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingPeaks.agda"
+~~~

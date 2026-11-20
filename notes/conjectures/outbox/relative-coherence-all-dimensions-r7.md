@@ -1671,3 +1671,34 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_walking_components.py 4 --agda "$dir/WalkingComponents.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingComponents.agda"
 ~~~
+
+# Researcher Response 58
+
+## Seven elementary operations suffice for the four-input part of the obstruction
+
+Every raw four-term is connected in both directions, at its **original literal faces** and over the strict identity, to an expression whose four-dimensional constructors are of two kinds:
+
+* A head on a pasting arity of height at most three.
+* An unbiased binary \(X*_j B\) or \(B*_j X\), where \(X\) has dimension four and \(B\) has dimension \(j+1\). There are seven distinct heads, since the two orders at \(j=3\) give the same binary temporal composition.
+
+The lower-dimensional subterms may be arbitrary. Applied to \(i_1,i_2\) of Response 56, **only two of the seven elementary heads still need a mixed action**, the left and right whiskers at cut zero. For \(i_2\) the one-cell in each such whisker is always stationary. Heads of the first kind still require investigation; their strict four-dimensional value is an identity. This separates the outstanding coherence-head problem from the one-cell whisker problem.
+
+**Reduction at literal faces.** First work in the arity of a generic four-head \(h\) of height four. Split its tree at the first branch below its unary trunk, into the first child and the remaining children with that same trunk. The operands share their literal interface globe at the trunk cut. Recursion, with the variable on a disc, gives a binary expression for the full strict pasting. Align its faces with those of \(h\) from dimension one to three as in Response 56. The two writings of each signed face live on that signed boundary arity. They are parallel after alignment of the previous faces and have the same full strict face there. An identity-image pad is therefore available on this lower arity. At the last cut the pad can be chosen as the single coherence between those full-support three-terms. Earlier pads have rank at most three. Each added binary node is elementary since its pad has dimension one above its cut. The framed expression and \(h\) are parallel and have full support on the original pasting arity. Its full-support five-coherence in either orientation compares them over the identity.
+
+For any binary node of rank four and cut \(j\) with operands \(A,B\), put \(p=\min(\dim A,\dim B)\). If \(p>j+1\), pass on the generic two-disc arity to
+\[
+ (A *_j s_{p-1}B)*_{p-1}(t_{p-1}A *_j B).
+\]
+In the strict category these are the same cell by interchange with identities. The outer product is elementary, including when \(p=4\). Of the inner products, each still having rank four now has smaller minimum operand dimension. Normalize these on their own arities and substitute; their original faces are retained so the outer product is defined. Align this result to the unsplit product using the lower-arity pads just described. This simultaneously handles both four-inputs when \(p=4\).
+
+Specialize a framed head at its actual labels. For nested four-inputs, replace the top labels recursively inside the elementary expression. A comparison of a label with its replacement propagates through a binary node by whiskering the five-cell with the other label; at a top product replace the two inputs successively. The elementary heads have the required literal face formulas at that dimension. A head of height at most three has no four-label to replace. Composing the comparisons gives the two actual five-terms, and substitution, whiskering and composition preserve their strict identity values. This proof does not use groupoidality and is valid for arbitrary repeated or inactive inputs. Term induction applies to every finite power of a loop.
+
+**Use in the walking test.** Choose the generator changes of Response 57. For \(i_1,i_2\) the retraction fixes all objects. Each elementary head at a positive cut is literally the suspension of a binary head of dimension three. Its two exterior object variables are unmarked, so its partial cylinder and both mixed faces are suspensions of the lower ones. Choose the suspended lower action there, as in Response 55. For consistency choose lower actions the same way on suspended heads with stationary ends; temporal actions permit this choice on their common cases. Substitution then handles arbitrary labels from the pushout, including unsuspended terms. For \(i_0\) temporal composition still has its action even with moving objects, by Gray Response 18. In each case the normalized representative has the same based faces. A mixed evaluation on it supplies a comparison with its retraction, and the normalizing comparisons transfer that conclusion back to the original representative. Thus a nonsurjective \(i_1\) or \(i_2\) in the ring test requires either one of the two outer whiskers or an active structural head of height at most three at which this recursion fails. No assertion of nonsurjectivity is needed for the reduction.
+
+**Checks.** The solver enumerated all 173 four-dimensional trees with four through seven edges (1, 7, 33 and 132 at the successive sizes). It built the framed expression, inspected every rank-four constructor, preserved the top multiplicities, and checked both five-arrows at their literal types. It separately tested every distinct non-elementary binary arity, including those beyond the edge bound, and a horizontal three-branch arity of dimensions \(4,1,4\). Agda checked both orientations on these ten arities, twenty judgments in total. The enumeration used the unbiased original heads; the proof on signed boundary arities handles other literal writings. [Four-head reduction solver](../../../tools/relative_coherence_four_head_reduction.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_four_head_reduction.py 7 --agda "$dir/FourHeads.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/FourHeads.agda"
+~~~

@@ -361,7 +361,22 @@ These checks cover only the single-hom side conditions and the signed interchang
   - **The differential.** §2.6 ("Steiner ∞-categories") defines the Steiner complex λ(𝒜) with ∂(X) = d⁺(X) − d⁻(X), which is target minus source as the response says. It does not contain a cube construction.
   - **The cube and the tensor.** §2.8 defines the square □² = 𝔻¹ ⊠ 𝔻¹ with its 2-morphism running from the composite (0,0) → (0,1) → (1,1) to the composite (0,0) → (1,0) → (1,1). So the source moves the second factor first, which matches Known (III). Appendix A.1 gives the tensor of augmented directed complexes with the Koszul sign, ∂(X ⊗ Y) = ∂X ⊗ Y + (−1)^i X ⊗ ∂Y. §3.5 treats the Gray tensor and lax transformations.
   - **Verdict.** The convention claimed is correct, and the right references are §2.8 and Appendix A.1 of 2606.29373.
-- **Citations not checked.** The theorem numbers Gepner–Heine (2510.10504) Thms 4.1.10 and 4.2.7 and Cor. 2.2.8, Loubaton Construction 2.3.1.17, and Ozornova–Rovelli–Walde Rem. 2.2 were not checked against the papers.
+- **The remaining citations, checked 2026-11-20** against arXiv 2510.10504v2, 2406.05425v2 and 2603.11005v1. All the cited statements exist and say what the response uses them for. The two inaccuracies below do not affect any proof.
+  - **Gepner–Heine, *Oriented Category Theory*, arXiv 2510.10504v2.**
+    - Thm 4.1.10 (restated as Thm 1.6.6): X₁ ⊠ ⋯ ⊠ Xₙ → X₁ × ⋯ × Xₙ is an epimorphism. Correct.
+    - Def. 4.2.6: the oriented realization ‖−‖_⊠ is the left adjoint of the inclusion of ∞Cat into oriented categories. Correct.
+    - Thm 4.2.7: an oriented category comes from an ∞-category iff the strict interchange law holds. That is, every 𝔻^m ⊠ 𝔻^n → RMor(A, C) factors through the quotient 𝔻^m ⊠ 𝔻^n → 𝔻^m × 𝔻^n. This is the image test the response uses. Item (2) carries this statement in the introduction's restatement. In the body, item (1) states the antioriented version, and the oriented one is dual.
+    - Cor. 2.2.8(5): the hom from k to m in a wedge of suspensions is the tensor of the consecutive homs. Correct; this gives [1] ⊗ [1] in the pushout counterexample.
+    - Notation 3.1.3: 𝒞 ⊠ (−) ⊣ Fun^lax(𝒞, −). Correct.
+    - Enrichment: oriented categories are left enriched in the lax tensor ⊠̄, or right enriched in the oplax tensor ⊠ (§1.4; the paper's Introduction notes that its unbarred ⊠ is the oplax tensor). This matches the response's "right enriched in ⊠, equivalently left enriched in the reversed product".
+    - Rem. 3.2.3: composition is RMor(X, Y) ⊠ RMor(Y, Z) → RMor(X, Z), in execution order. Correct.
+    - **Inaccuracy 1.** The paper does not use the word "flagged"; it says "not necessarily univalent". Hypercompletion appears only in its references, as Gepner–Heine arXiv 2603.09903. So the hypercompletion step of the response's identification of 𝒪 belongs to 2603.09903, not to §§2.5 and 3.2 of 2510.10504.
+  - **Loubaton, arXiv 2406.05425v2.**
+    - Construction 2.3.1.17 defines the enhanced Gray product X ⊖ Y by a pushout using m_b([a, n]) = [a × b, n]. Correct.
+    - The construction is followed by the identification C ⊖ K ≃ C ⊗ K when K is an (∞,1)-category. The response says "1-categorical"; the source says (∞,1).
+    - §1.2.3 is "Gray operations on augmented directed complexes", and Chapter 4 defines a lax transformation as a map A ⊗ [1] → B. Correct.
+  - **Ozornova–Rovelli–Walde, arXiv 2603.11005v1, Rem. 2.2.** This is a dictionary with Gepner–Heine: their "univalent ∞-category" is ORW's "right ∞-category", and their "hypercomplete" is ORW's "coinductively complete". Correct.
+    - **Inaccuracy 2.** The Gepner–Heine paper this dictionary refers to is 2603.09903, not 2510.10504. This confirms the attribution in inaccuracy 1. §5 ("Invertibility and completeness at ∞") contains the coinductive characterization the response cites.
 
 **Editorial.** The file moved from `outbox/` to `answered/`; its relative links (`../answered/…`, `../../../src/…`, `../../../tools/…`) resolve unchanged. Links to it from `open-issues.md`, `README.md` and `models-comparison-extensions.md` were repointed.
 

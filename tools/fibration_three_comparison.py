@@ -8,6 +8,21 @@ from fibration_factor_search import Rule, Stage
 from fibration_weak_joints import edge_presentation
 
 
+def unary_signature(stage, label, marker, marker_rule, path):
+    """Use the same distinguished slot name in every serialization of a unary chart."""
+    rules = {('old', g):r for g,r in stage.rules.items()}
+    rules['slot', label] = marker_rule
+    typed = Stage(stage.arrows,rules)
+    initial = tuple((('slot',label) if g == marker else ('old',g), i) for g,i in path)
+    seen, todo = {initial}, [initial]
+    while todo:
+        for p in typed.exchanges(todo.pop()):
+            if p not in seen:
+                seen.add(p)
+                todo.append(p)
+    return tuple((kind,g,i) for (kind,g),i in min(seen))
+
+
 def comparison_groups(stage, disks, vertex, word, start, end, events):
     """Return the serial writings and group of each component at the given poles/counts.
 
@@ -143,6 +158,13 @@ def comparison_groups(stage, disks, vertex, word, start, end, events):
     for a,b in edges.values():
         neighbors[a].add(b)
         neighbors[b].add(a)
+    names = dict(zip(tagged, events))
+
+    @cache
+    def signature(c):
+        marker, = charts[paths[c]]
+        return unary_signature(stage,names[marker],marker,rules[marker],paths[c])
+
     result = []
     while vertices:
         component = {min(vertices)}
@@ -157,11 +179,9 @@ def comparison_groups(stage, disks, vertex, word, start, end, events):
         t = [tri for tri in sorted(triangles) if tri[0] in e]
         gs, rs, _ = edge_presentation(sorted(component),e,t)
         serial = set()
-        names = dict(zip(tagged, events))
         for seq in component:
             if len(seq) == len(events):
-                serial.add(tuple(tuple(('slot', names[g], i) if g in names else ('old', g, i)
-                                       for g,i in paths[c]) for c in seq))
+                serial.add(tuple(signature(c) for c in seq))
         result.append((serial, gs, rs, (len(component),len(e),len(t))))
     return result
 

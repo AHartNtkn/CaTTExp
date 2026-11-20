@@ -20,6 +20,9 @@
 --   * templates-sorted : every entry of every template context satisfies
 --                 the context-variable clause of F.7.4 §2 for the
 --                 template's data variable.
+--   * sorted-sub, sortedCtx-sub : the clause is preserved by data-sorted
+--                 substitution, so the substituted template context of a
+--                 kernel instance is well sorted for Γ's data variables.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Biclosed.SortDisc where
 
@@ -256,3 +259,72 @@ templates-sorted : ∀ t → T (okT t) → ∀ A → A ∈ ctx t →
 templates-sorted t ok A p with Sorted.ctx-HB t A p
 ... | inl e rewrite e = Sorted.H-sorted t ok
 ... | inr e rewrite e = Sorted.B-sorted t ok
+
+------------------------------------------------------------------------
+-- The context-variable clause is preserved by data-sorted substitution
+
+elem→∈ : ∀ i S → T (elem i S) → i ∈ S
+elem→∈ i []       ()
+elem→∈ i (k ∷ S) p with i ==ℕ k in e
+... | true  = subst (λ j → i ∈ (j ∷ S)) (==ℕ-sound i k (subst T (sym e) tt)) here!
+... | false = there! (elem→∈ i S p)
+
+T→≡″ : ∀ {b} → T b → b ≡ true
+T→≡″ {true} _ = refl
+
+∈→elem : ∀ i S → i ∈ S → T (elem i S)
+∈→elem i (k ∷ S) here! rewrite T→≡″ (==ℕ-refl i) = tt
+∈→elem i (k ∷ S) (there! p) with i ==ℕ k
+... | true  = tt
+... | false = ∈→elem i S p
+
+allRep-sFs : ∀ φ xs → T (all isRep xs) → T (all isRep (sFs φ xs))
+allRep-sFs φ []            _ = tt
+allRep-sFs φ (rep s ∷ xs)  p = allRep-sFs φ xs p
+allRep-sFs φ (obj _ ∷ xs)  ()
+allRep-sFs φ ((_ ⊗ _) ∷ xs)  ()
+allRep-sFs φ ((_ \\ _) ∷ xs) ()
+allRep-sFs φ ((_ // _) ∷ xs) ()
+
+sorted-sub : ∀ S S′ τ M → DSub S S′ τ → T (sortedM S M) → T (sortedM S′ (sM (fo τ) M))
+sorted-sub S S′ τ (xs ▸ obj i) d p =
+  let r = d i (elem→∈ i S p) in
+  go (fo τ i) (fst r) (snd r)
+  where
+    go : ∀ f → T (nonRep f) → (∀ j → headVar f ≡ just j → j ∈ S′) →
+         T (sortedM S′ (sFs (fo τ) xs ▸ f))
+    go (obj j)  _  h = ∈→elem j S′ (h j refl)
+    go (rep _)  () h
+    go (a ⊗ b)  _  h = tt
+    go (a \\ b) _  h = tt
+    go (a // b) _  h = tt
+sorted-sub S S′ τ (xs ▸ rep s)  d p = allRep-sFs (fo τ) xs p
+sorted-sub S S′ τ (xs ▸ (a ⊗ b))  d p = tt
+sorted-sub S S′ τ (xs ▸ (a \\ b)) d p = tt
+sorted-sub S S′ τ (xs ▸ (a // b)) d p = tt
+
+SortedCtx : List Nat → Ctx → Set
+SortedCtx S Γ = ∀ A → A ∈ Γ → T (sortedM S (baseM A))
+
+private
+  mapL : ∀ {A B : Set} → (A → B) → List A → List B
+  mapL f []       = []
+  mapL f (x ∷ xs) = f x ∷ mapL f xs
+
+  ∈-map : ∀ {A B : Set} (f : A → B) {y} xs → y ∈ mapL f xs →
+          Σ A (λ x → x ∈ xs × y ≡ f x)
+  ∈-map f (x ∷ xs) here!      = x , here! , refl
+  ∈-map f (x ∷ xs) (there! p) with ∈-map f xs p
+  ... | z , q , e = z , there! q , e
+
+-- substituting a well-sorted context by a data-sorted τ gives a
+-- well-sorted context
+sortedCtx-sub : ∀ S S′ τ Γ → DSub S S′ τ → SortedCtx S Γ →
+                SortedCtx S′ (mapL (sY τ) Γ)
+sortedCtx-sub S S′ τ Γ d s B p with ∈-map (sY τ) Γ p
+... | A , q , refl rewrite Ops.baseM-sY τ A =
+  sorted-sub S S′ τ (baseM A) d (s A q)
+
+-- the template contexts are well sorted for their data variable
+templates-sortedCtx : ∀ t → T (okT t) → SortedCtx (tmplData t) (ctx t)
+templates-sortedCtx = templates-sorted

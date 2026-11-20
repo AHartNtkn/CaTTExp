@@ -208,7 +208,7 @@ C4 needs the B14 theorems for bases Free(Γ) with Γ arbitrary.
 - So ∫T is the pushout of ∫(T∘ℓ) along the totals over the trivialisations, and it remains to show that the total over D_{k+1}^t → D_k^♭ is the localisation at the lifts of the top cell.
 - Over a globe, the weight is determined by a k-cell of ω whose top part is invertible. Its total over D_{k+1} is a Gray cylinder on the fibre, and inverting the lifted top cell gives the total over D_k^♭ by item 2 (tensor-localisation). Item 2 is stated for X[S⁻¹] ⊗ I. The globe case needs it for D_k ⊗ fibre, which is the same lemma with the factors exchanged.
 
-This last step is what remains. It is merged into `outbox/fibration-presentations-characterization-r4.md` as Question 3, together with Proposition W, in case it is already in the literature.
+This last step was posed as Question 3 of the fibration-presentations r4 prompt. **Proved 2026-11-20** (`conjectures/answered/fibration-presentations-characterization-r4-2026-11-20.md`, Response 1, verified). The globe case D_k → D_{k−1} follows from the suspension classification and the tensor-localisation lemma, and the general case from a homotopy pushout of globe trivialisations with Loubaton's pullback–colimit theorem. Steps 1–3 are confirmed, so Proposition W holds unconditionally.
 
 **Effectiveness.** The resolution (Γ′, W′) is found by a terminating search, because a resolution always exists. A finite equivalence certificate (item 15) is checkable. So the kernel can accept any finite base. The certificate becomes trivial (Γ′ = Γ, W′ = ∅) exactly when Γ carries a ⊢hpol derivation. That is C3's role under C4: an optimisation that keeps presentations small, never a gate.
 
@@ -232,7 +232,7 @@ Reasons:
 **What would overturn this.** A counterexample to Proposition W, meaning a weight over a non-homotopical base with no finite presentation. Then the fallback is C3 as a gate for presentation-based weights only, with C4 kept for everything else.
 
 **Open items.**
-- Lemma Loc-total. Proof attempt above; owner DSGN; posed as B14 r4 Question 3.
+- ~~Lemma Loc-total.~~ Proved 2026-11-20 (fibration r4 Response 1, verified); Proposition W is unconditional.
 - Extend `coneC` to term boundaries (N^cone). Owner CONE/LIM-F, notified.
-- Encode ⊢hpol with the §2.2 base classes. Owner DSGN, after Loc-total.
+- Encode ⊢hpol with the §2.2 base classes. Owner DSGN (Loc-total is now proved). The homotopy-polygraphs r5 answer adds decidable classes: finite strict cells with abelian tests, top weight ≤ 2 in any dimension, and one-resource semaphores.
 - B24 (HPOL) is no longer on the critical path of any kernel rule. It remains a research item, and its decidable classes (r5 Q3) feed ⊢hpol.

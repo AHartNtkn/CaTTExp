@@ -845,3 +845,58 @@ Take one attainable axis for each process and build their legal grid by the mask
 There are finitely many possible process catalogues at these fixed parameters. Encode a presentation by its multiplicity vector of catalogues. Reordering the processes preserves the list of grid types because the mask-cover test is symmetric. Bad multiplicity vectors are upward closed: leave each additional process stationary with a positive number of every hold, so the same bad record is legal with exactly the same path space. This argument also defines an upward-closed set on all multiplicity vectors by using just actual catalogues and rings with at least four processes. Dickson's lemma gives finitely many minimal bad vectors. For each fixed $(R,b)$ there consequently exists an ordinary decision algorithm for the entire promised class: compute the input vector and compare it against those finitely many vectors. This is **nonuniform**. The proof supplies neither their values nor an effective extraction from $(R,b)$. Responses 13 and 14 give explicit tests in the stated one- and two-resource cases. The local undecidability of Response 10 allows the resource count to grow and concerns a specified label.
 
 **Reproduction.** Run `python tools/homotopy_polygraph_mask_catalogue.py`. The [finite-state solver](../../../tools/homotopy_polygraph_mask_catalogue.py) computes all 122 axis types of a three-resource cyclic graph with unbounded releases, waits and acquisitions. Literal count enumeration through length three misses 36 of them. Enumeration through length eight realizes the exact catalogue obtained independently by finite-state saturation. On a four-process circle example it verifies every elementary cube against the spatial clock comparator. Compressing a constant-mask interval gives 242 legal cubes from 290, with 3,064 and 6,584 endpoint chart strings respectively. Both computations give Betti numbers $(1,1)$ after trailing zeros. The checker implements the excursion-free saturation; the general reversal-bounded decision above uses Ibarra's theorem.
+
+# Verification (2026-11-20)
+
+Status: **verified. Question 1 is answered: there is an exact last-step criterion in every dimension (Response 1). Question 2 is answered in part.** On general finite inputs, homotopicality is both Σ⁰₁-hard (Response 11) and Π⁰₁-hard (item 23). Moreover, every set truth-table reducible to 0′ many-one reduces to it (Response 12), so it has no computable approximation with a bounded number of mind changes. The Π⁰₂ upper bound stands, and whether a halting oracle decides it is still open. **Question 3 is answered by several classes:** finite strict cells with abelian group tests, top weight ≤ 2 in any dimension, and closure under graph assembly (Response 1); bounded top weight with a halting oracle (Response 2); exact generator tests for the semaphore families (Responses 9, 10, 13 and 14), and a finite list of complexes for reversal-bounded controls (Response 15). There are fifteen responses. Responses 14 and 15 arrived on main during the pass and are included.
+
+**What was re-run.** All 17 cited checkers exit 0, and both emitted Agda modules type-check under `agda --safe --without-K --no-libraries` (Agda 2.8.0). The printed counts match the responses.
+- `timed_charts`: 81 strings, 31 final faces, 297 comma objects.
+- `passive_gaps`: 169 labels at length 12, 13 circles and 156 intervals; 49 folded placements.
+- `counter_ring`: 512 strings with Betti (1,1); 125 with (1).
+- `cubical_switch`: 951 reachable pairs on the triangle boundary, one with positive Betti number; 142 and 334 controls with point homology; the projective plane has 1,561 cells, Betti (1,1,1) mod 2 and (1) mod 3.
+- `chart_corners`: 441 germ families, 161 pairwise joint, 8 with several joint charts.
+- `parallel_seams`: 24, 78, 216 section cells with Betti 1, 3, 9; the (3,0) control has 141 cells and point homology; 248 and 125 histories.
+- `exchange_groups`: at four insertions 75 vertices, 158 edges, 24 squares and 84 ternary squares, first Betti number 60 → 0; the other hexagon and square counts as stated.
+- `occurrence_colours`: stabilizers of orders 2 and 6; 1,620 and 5,670 histories with trivial stabilizer.
+- `proper_cuts`: cut nerves (6,6) and (14,36,24); two-seam ring (24,84,96,36) with Betti (1,1,0,0); suffix counts 2, 4, 8, 16.
+- `precedence`: 386 and 1,501 legal cubes; 881 declarations; all 512 three-by-three inputs agree with the matching test.
+- `semaphore`: 131 declarations; 80/208/192/64 cells; 15,170 strings with Betti (1,0,1,0,0); 225 two-resource declarations; 81 faces; six-process past link (1,1,1) mod 2 and (1,0,0) mod 3; 343 and 543 declarations fold into the 15-generator fixed context.
+- `guarded_boxes`: 262,144 cubes, 78,810 intervals of which 78,809 collapse; the cone has 1,048,576 cubes and all 313,009 intervals collapse. The checker prints "spatial dimension 8" where the text says seven-dimensional projected boxes, but the counts agree.
+- `conditional_switch`: 34 records, 262,144 cubes, 1,736,704 comparisons.
+- `parking`: 3,136 endpoint records; 149 strings (1,0,0,0); 82 strings (2,0,0); 6 isolated; 168 strings (1,1,0).
+- `two_resources` (Response 14): 219 declarations; two transfers give no histories, three give two points; 432 and 1,360 strings with Betti (1,1); 6,568 strings with both minima interior, still (1,1); five transfers have Euler characteristic 2 (S²); the covered controls are acyclic.
+- `mask_catalogue` (Response 15): 122 axis types, 36 needing more than three instructions; 290 → 242 cubes under compression, 6,584 and 3,064 strings, both with Betti (1,1).
+- `two_changes --agda`: 19 declarations, 22 decorated objects (1,0,1), (75,158,108), 1,473 and 96 histories.
+- Agda: TwoChanges and SemaphoreUniversal both type-check.
+
+**Response 1 (exact criterion, every dimension). Checked.** The coefficient E(σ) is read from the horizontal necklace recursion on P_a → NF(M_a), keeping the face maps between marked coefficients. That is the ingredient whose omission makes item 24's naive criterion fail. The fibre formula X(c) ≃ hocolim_{H(c)} U and the left Kan extension along "last bead and prefix" give X(c) ≃ Λ(c) when all prefix fibres are contractible. Induction on weight and rank then proves the criterion. It is exact on bubble-free inputs, needs no positivity, and each tested cell is finite and effective. The class with a two-sided decision (finite strict cells, where finiteness is decidable rank by rank, with group restrictions that make π₁ abelian) and the top-weight-≤-2 rule were checked against their statements.
+
+**Responses 2–13. Checked at the level of the arguments.**
+- **Response 2:** at bounded top weight a single halting query decides homotopicality of positive 3-polygraphs (degree 0′). Failures are semidecidable on all inputs. The least failing weight has no computable bound.
+- **Response 3:** cube lists are Σ⁰₁-complete for one list and Π⁰₂-complete for programs. This concerns cube lists, not polygraphs.
+- **Responses 4–7:**
+  - local corner theorem;
+  - the seam encoding restriction;
+  - three time colours suffice for π₁;
+  - homology of the marked lower presentation is necessary;
+  - relative co-r.e.-completeness with unbounded witness weight;
+  - the right-angled Artin embedding of the binary group;
+  - permutation detection by finite sets;
+  - the strict-factorization group test.
+- **Responses 8–9:** any subcomplex of the directed cube is realized as rank-4 fibres. One fixed positive 4-polygraph U with 15 generators has Σ⁰₁-complete local fibre contractibility and realizes every finite connected homotopy type.
+- **Responses 10–13:**
+  - bipartite precedence families;
+  - finite-strict-cell homotopicality is Σ⁰₁-complete (rank 10);
+  - G(K, M) homotopical ⟺ M never halts or |K| is contractible, giving tt(0′) ≤_m;
+  - one-resource semaphores are homotopical ⟺ at most two processes admit an excursion.
+- **Responses 14–15:**
+  - two-resource rings without excursions fail exactly when four processes can be given transfer directions with both directions represented (fibre S^{N−3} for N mixed transfers);
+  - for controls where no strongly connected component both acquires and releases one resource, there is an effective finite list of complexes (via axis compression and Ibarra's reversal-bounded counter machines), so the affirmative property is r.e. there and such controls cannot carry Response 12's lower bound;
+  - at fixed resource count and reversal bound, Dickson's lemma gives a nonuniform decision procedure.
+
+**What is left open.**
+- The exact degree: whether homotopicality is Δ⁰₂ (decidable with a halting oracle) or Π⁰₂-complete.
+- Generator-level decidable classes that contain the positive 3-polygraphs of unbounded weight.
+- An effective description of the group tests on general inputs.
+- Follow-up: [`outbox/homotopy-polygraphs-r6.md`](../outbox/homotopy-polygraphs-r6.md).

@@ -1,8 +1,13 @@
 # Free higher categories with directed interchange: classifying what lies above the least pasting profile
 
-*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked. The constructions summarized in (K43)–(K53) are defined in full in the round-5 answers, which are reproduced in the repository file `notes/conjectures/answered/lax-interchange-every-dimension-r5-2026-11-20.md` (Responses 1–34), with Responses 8–9 of `notes/conjectures/answered/lax-interchange-every-dimension-r4-2026-11-19.md`. (K52)–(K53) are from `notes/conjectures/answered/lax-interchange-every-dimension-r6-2026-11-20.md`, (K54)–(K57) from `notes/conjectures/answered/lax-interchange-every-dimension-r7-2026-11-20.md`, (K58)–(K64) from `notes/conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md` (Responses 1–2), and (K65)–(K68) from `notes/conjectures/answered/lax-interchange-every-dimension-r9-2026-11-20.md`. The summaries below fix notation.*
+*A self-contained problem. No background beyond standard higher category theory is assumed. Everything in §2 is proved and is not re-asked. The constructions summarized in (K43)–(K53) are defined in full in the round-5 answers, which are reproduced in the repository file `notes/conjectures/answered/lax-interchange-every-dimension-r5-2026-11-20.md` (Responses 1–34), with Responses 8–9 of `notes/conjectures/answered/lax-interchange-every-dimension-r4-2026-11-19.md`. (K52)–(K53) are from `notes/conjectures/answered/lax-interchange-every-dimension-r6-2026-11-20.md`, (K54)–(K57) from `notes/conjectures/answered/lax-interchange-every-dimension-r7-2026-11-20.md`, (K58)–(K64) from `notes/conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md` (Responses 1–2), and (K65)–(K73) from `notes/conjectures/answered/lax-interchange-every-dimension-r9-2026-11-20.md` (Responses 1–5). The summaries below fix notation.*
 
-**What we are asking for.** On free objects of finite pasting diagrams there is a least admissible theory V ((K58)). Its free objects now have normal forms in every degree, by rank over the comparison to T₁₂ ((K65)). Visibility of pasting-diagram laws is decidable, and visibility of Horn laws is r.e.-complete ((K67)). The largest theory with V's profile is dense but not recursively axiomatizable ((K68)). We now ask for the **classification of what lies above V on pasting diagrams**: which pasting profiles occur, when adding pasting-diagram laws to V keeps admissibility, and what the decorations of (K65) are combinatorially. Results for one more shape or one more degree are not what we want; a uniform argument is.
+**What we are asking for.** On free objects of finite pasting diagrams there is a least admissible theory V ((K58)). Its free objects have normal forms by rank over the comparison to T₁₂ ((K65)). The profiles above V are now known to be wild:
+- they contain infinite antichains and divisibility ((K70));
+- they do not form a lattice, and admissibility is not closed under finite unions ((K71));
+- not every profile is V plus laws already typed over V ((K72)).
+
+A finite set of equations true in T₁₂ is always admissible over V, and admissibility of equation-only extensions is in Π⁰₂ ((K73)). We now ask for the **exact complexity of admissibility** of V + S for finite sets S of pasting-diagram laws, for **uniform normal forms** for admissible extensions, and for a **closed-form description of the decorations** of (K65). Results for one more shape or one more degree are not what we want; a uniform argument is.
 
 ## 1. Setting
 
@@ -357,6 +362,22 @@ This step uses an interchanger whose inputs are *endomorphisms*.
 
 **(K68) The largest theory with V's profile (proved, 2026-11-20).** V^max is dense: the free finite pasting diagrams form a dense full subcategory of its models. Its Horn theory is co-r.e.-hard (λ_Φ ∈ V^max iff Φ is unsolvable), and it has no recursive axiomatization. It is not axiomatizable over B by pasting-diagram laws, even infinitely many. Every pasting-diagram law valid in V^max holds in all B-algebras, but U_p is a B-model that fails D_{1,p} ∈ V^max.
 
+
+**(K69) Power splits are visible in every dimension ≥ 4 (proved, 2026-11-20).** For a chronological n-loop X, n ≥ 4, the left splits D^{(n)}_{d,p} into p equal blocks X^d are visible, and those with d = 1 are independent over V, already as pasting-diagram equations. Separating tables with labels (m_n(a) m_n(b), [N ∤ m_n(a)] [m_n(b) > 0]) satisfy the law iff v_p(N) ≤ v_p(d). The right splits behave symmetrically. On Γ_{2,n}, V agrees with T₁₂ through global degree six, and explicit normal forms are known there.
+
+**(K70) Infinite antichains of admissible profiles (proved, 2026-11-20).** On the eight-span arity Δ of (K63), the degree-5 laws S_{d,p} (the square E(X^{dp}, Y) equals the paste of p crossings of X^d) give admissible V + {S_{d,p} : selected}. The condition is that some positive weighting f with f(dpm) = p f(dm) exists. The same holds in every output degree D ≥ 5. So the profiles embed the poset of sets of primes, which contains infinite antichains, divisibility and its reverse. All profiles are indexed exactly by sets of positive diagram judgements (definedness and equality bits), ordered by inclusion.
+
+**(K71) No lattice, no closure under unions (proved, 2026-11-20).** At output degree M ≥ 10 there are two finite sets of pasting-diagram laws, already typed over V: S₁ = {A = B} and S₂ = {A² = B³, d² = c³}, built from the outer unary at rank M − 1. Each of V + S₁ and V + S₂ is admissible, but no admissible profile lies above both. In such a profile x = A₁² and y = A₂² would be proper idempotents, and the exchange of a proper loop Z′ with PZ′ = Z′ = Z′P with itself would violate requirement 3.
+
+**(K72) A profile needing a newly typed equation (proved, 2026-11-20).** Let E₀ be V with both unrestricted splits of the degree-n bare square at cut n − 3 (n ≥ 9). On D = Σ^{n−3}(Σ[2] ∨ Σ[4]), E = E₀ + {A²B⁴A² = B²A⁴B²} is admissible. Every V-typed equation or existence request valid in E's profile already holds in E₀'s. So E's profile is not V plus old-typed pasting-diagram laws.
+
+**(K73) Finite equation extensions (proved, 2026-11-20).**
+- If a finite set S of unconditional equations holds at every generic T₁₂-tuple, then V + S is admissible.
+- If S fails at a generic Gray or strict tuple, V + S is not admissible.
+- Admissibility of equation-only extensions is in Π⁰₂.
+- For T₁₂-valid lists whose input arities have height at most 3, equality and reachability in F_{V+S}(Γ) are uniformly decidable.
+- In particular V + {R} and V + {inner composite-crossing law} are each admissible.
+
 ## 3. Requirements
 
 A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary interchangers χ : L ⇛ R for (l+1)-cells with no reverse cell in free objects; one naturality cell per varying argument, oriented by the Leibniz sign; higher cells between routes of lower naturality cells; and coherence equations to be determined. The free objects F(Γ) must satisfy:
@@ -368,25 +389,21 @@ A **tensor-shaped lax-interchange ω-category** has, for every k < l, elementary
 
 ## 4. Questions
 
-*Conventions.* "Admissible" means satisfying requirements 1–5 of §3 in every dimension with H ≠ 1. The *pasting profile* of a theory is the family of its free objects F(Γ) on finite pasting diagrams Γ, with the identifications and directed cells between expressions in the signature. A law is *visible* if it fails in F_V(Γ) for some finite pasting diagram Γ. A *pasting-diagram law* is an unconditional equation u = v (or a directed cell u → v) between two expressions over one finite pasting diagram, imposed for all substitution instances.
+*Conventions.* "Admissible" means satisfying requirements 1–5 of §3 in every dimension with H ≠ 1. The *pasting profile* of a theory is the family of its free objects F(Γ) on finite pasting diagrams Γ. A *pasting-diagram law* is an unconditional equation u = v (or a directed cell u → v) between two expressions over one finite pasting diagram, imposed for all substitution instances.
 
-**Q1 (main: classification of pasting profiles).** Describe all pasting profiles of admissible theories, ordered by the maps of (K58).
-- Is every profile the profile of V plus a set of visible pasting-diagram laws?
-- Is the poset of profiles a lattice?
-- Are there infinitely many independent visible laws? The catalogued ones are R, the inner composite-crossing law, and the family of (K66), which reduces to R. Does the poset contain infinite antichains, or the divisibility order of (K56)?
+**Q1 (main: the complexity of admissibility).** For a finite set S of pasting-diagram laws, is admissibility of V + S decidable? (K73) gives a Π⁰₂ upper bound for equations and a sufficient condition (truth in T₁₂). Determine the exact degree, or give a decision procedure.
+- Is admissibility decidable for sets S that fail in T₁₂ but hold in both benchmarks?
+- Is admissibility of a single law decidable?
+- Do directed-cell laws change the answer?
+- (K71) shows that admissibility is not closed under unions. Is the set of finite S whose union with a given admissible S′ stays admissible decidable?
 
-**Q2 (adding visible laws).** For a finite set S of pasting-diagram laws, when is V + S admissible?
-- (a) Is this decidable? The reductions of (K63) and (K67) use new symbols or Horn premises, and neither is a pasting-diagram law.
-- (b) Is admissibility closed under unions? If V + S and V + S′ are admissible, is V + S ∪ S′? If not, give the obstruction.
-- (c) When V + S is admissible, does (K65)'s rank construction extend to give normal forms for F_{V+S}(Γ), uniformly in S?
+**Q2 (uniform normal forms).** For every finite S with V + S admissible, are equality and reachability in F_{V+S}(Γ) decidable, uniformly in S? (K73) gives this when the input arities have height at most 3. Does (K65)'s rank construction extend to V + S, and is the comparison F_{V+S}(Γ) → F_{V+S′}(Γ) for S ⊆ S′ computable on normal forms?
 
-**Q3 (the decorations).** Give a combinatorial description of the lifts in (K65), uniform in the degree: for example by marked subsets of cuts, generalizing (K66), or by decorated Gray cells. Describe the maximal fibre size of q as a function of Γ and the degree.
-
-**Q4 (laws one degree up).** Free objects on pasting diagrams contain 4-loops ((K45), (K59), (K63)), so laws of the shape of L_p and D_{d,p} one degree higher can act on them: a crossing of the p-th power of a 4-loop against the paste of p crossings, or splitting a composite of 4-loops. Decide their visibility and independence, uniformly in the degree. Are there infinitely many independent visible laws of this kind in some degree, and in every degree above some bound?
+**Q3 (the decorations).** Give a combinatorial description of the lifts in (K65), uniform in the degree, for example by marked subsets of cuts (generalizing (K66)) or by decorated Gray cells. Describe the maximal fibre size of q : F_V(Γ) → F_T₁₂(Γ) as a function of Γ and the degree.
 
 ## 5. What counts as a solution
 
-An answer to Q1, or to Q2(a) or Q2(b), in every dimension; an answer to Q3 or Q4; or a published construction, classification or impossibility result. A negative answer (for example, that admissibility of V + S for pasting-diagram laws is undecidable, or that the profiles do not form a lattice) counts as fully as a positive one.
+An answer to Q1 in every dimension, positive or negative; an answer to Q2 or Q3; or a published construction, classification or impossibility result. A negative answer, for example that admissibility of pasting-diagram laws over V is undecidable, counts as fully as a positive one.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19; updated 2026-11-20)
 

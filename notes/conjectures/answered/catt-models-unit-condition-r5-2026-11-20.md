@@ -384,4 +384,4 @@ These checks cover only the single-hom side conditions and the signed interchang
 - An intrinsic or homotopical characterization of strictly presentable objects, in both the ordinary and the directed case, and whether it is decidable for finite computads.
 - A bound on the size and dimension of a raw lift for each individual lifting problem of the unit, in terms of the strict cell and its boundary.
 - Further properties of the two model structures: properness, a simplicial or monoidal structure (the Gray tensor on L-models), Quillen equivalences with complicial or other published model structures, and a syntactic description of the image of t*.
-- Follow-up: [`outbox/catt-models-unit-condition-r6.md`](../outbox/catt-models-unit-condition-r6.md).
+- Follow-up: [`outbox/catt-models-unit-condition-r6.md`], now answered: [`answered/catt-models-unit-condition-r6-2026-11-20.md`](catt-models-unit-condition-r6-2026-11-20.md).

@@ -70,9 +70,9 @@ def chain_formula(output):
     assert len(residuals) == 2 and residuals[0] == residuals[1] and +residuals[0]
 
 
-def biarrow(ctx, a, b):
+def biarrow(ctx, a, b, height=4):
     k = tdim(infer(ctx, a)) + 1
-    work = template(k, 4)
+    work = template(k, height)
     sigma = list(sub_from(work.ctx[:work.old+1], ctx, {work.old: a}))
     assert infer(ctx, b) == subst_ty(work.ctx[work.duplicate], sigma)
     sigma.append(b)

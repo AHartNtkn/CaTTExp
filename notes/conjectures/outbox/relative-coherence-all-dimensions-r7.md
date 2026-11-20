@@ -2466,3 +2466,31 @@ python3 -B tools/relative_coherence_arity_covers.py
 ~~~
 
 **Scope for Question 1.** At literal weak poles this computes the groupoidification of the algebraic weak hom. The geometric fibre in item 27 uses the space of globe maps into \(LA\). Passing from the former to the latter still requires a comparison with geometric homs before groupoidification. Globally, even the walking arrow and the point have equivalent groupoidifications. The directed comparison and the converse in Question 1 remain open here.
+
+# Researcher Response 83
+
+## In the first possible nonzero degree, top counts decide comparison at the original weak faces
+
+Let \(U\) be free on a computad and groupoidal, and let \(n\ge2\). On any based \(n\)-loop \(t\), the homomorphism
+\[
+      [t]\longmapsto[N_n(t)]\ \in H_n(\lambda U;\mathbb Z)
+\]
+is the ordinary Hurewicz map for \(X(U)\) under Responses 79 and 81, up to a single choice of orientation in degree \(n\). In particular, when \(U\) is \((n-1)\)-connected this is an isomorphism. For any parallel \(n\)-terms \(s,t\) in that case there is a term \(s\to t\) **if and only if** \(N_n(t)-N_n(s)\) is an integral cellular boundary. This extends Response 75 to every rank.
+
+**Calibrating on one based loop.** Start with a free point, freely attach a based \(n\)-loop \(g\) at the iterated weak identity, then supply the two inverse towers on \(g\) as in Response 61. Denote the resulting groupoidal algebra by \(W_n\). Each based \(n\)-loop of a groupoidal free \(U\) is the image of \(g\) under a strict CaTT map \(W_n\to U\): choose its two inverses, the two cancellation cells, and repeat on the cancellations. Everything below degree \(n\) in \(W_n\) is already in the free point, where all required comparisons exist. Its spatial realization \(X(W_n)\) is therefore \((n-1)\)-connected by Response 81. In degree \(n\) its cellular homology is \(\mathbb Z\) on \(N_n(g)\): its only other \(n\)-generators are the two returns, and the next boundary columns and their negatives identify each return with \(-g\).
+
+Counts define a natural homomorphism on the algebraic group: an identity has zero top count, temporal composition adds, and a comparison gives the differential of its own count. The ordinary spatial Hurewicz map on \(W_n\) is an isomorphism. Consequently \(\pi_n(W_n)\cong\mathbb Z\), and the fact that the count of \(g\) is a generator forces \([g]\) itself to generate this infinite cyclic group. The two maps on \(W_n\) agree up to sign. Both are natural for the strict maps just constructed, by the natural bar and cellular comparisons. Evaluating at each chosen \(t\) proves the formula without choosing natural inverse towers in \(U\). For arbitrary literal faces in the connected range, base the pair with the same pads at each cut as in Responses 48 and 75. Connectivity supplies the pads; groupoidal division reflects comparison along them. Lower-dimensional pads add no \(n\)-count, and pads of rank \(n\) add the same count on both sides. Their difference is exactly the one in the statement.
+
+For Question 3 and more generally Response 82's height-\(m\) test, take the \(m\)-fold hom and its component at a fixed top label. Components of a groupoidal free algebra are free subcomputads: the vertices of a labelled globular arity are edge-connected, so every generator and all its dependencies lie in one component. Once comparisons have made the component \((n-1)\)-connected, its first possible obstruction in ambient degree \(m+n\) is read on the *specified pair* by its two cellular counts in this fixed hom. The calculation applies to full finite syntax, with no limit on the number of inactive terms, on their own powers, or on the length of a sequence of comparisons. The degree-one test can still involve the nonabelian group in Response 78.
+
+**Matrix presentations and checks.** Give \(r\) based \(n\)-loops their bi-inverse towers. For each vector \(a\in\mathbb Z^r\) in a finite list, form a temporal word using the forward loops and their chosen returns with exponent vector \(a\), and adjoin a bi-invertible \((n+1)\)-cell from that word to the identity. The algebra is still \((n-1)\)-connected. The return columns eliminate the two inverse rows of each letter. The remaining relation columns and their negatives impose precisely the listed vectors. Thus two signed words compare at their given type exactly when their exponent difference is in the integer span of those vectors. Any common temporal pad, including an arbitrary loop power, has the same contribution on both sides.
+
+The solver forms the actual computadic columns through \(n+1\), solves the integer system and checks membership independently after eliminating the returns. For relations \((4,2),(-2,2)\) in degrees 2, 3, 4 and 5, it checked all 18 columns per degree. The second letter has order six: cancelling the first coordinate in a combination of the two columns forces the second coefficient to be twice the first. The solver gave an integral filling chain for \((0,6)\) and a separating mod-six character for \((0,3)\). It checked eight literal directed relation terms per degree at two pads. Agda checked the six-dimensional relation and its reverse with three copies of each signed padding letter. The earlier 108-column rank-three check also passes. [Matrix comparison solver](../../../tools/relative_coherence_hurewicz_matrix.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_hurewicz_matrix.py --agda "$dir/HurewiczMatrix.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/HurewiczMatrix.agda"
+python3 -B tools/relative_coherence_hurewicz_matrix.py --vector '[0,3]'
+python3 -B tools/relative_coherence_hurewicz_three.py
+~~~

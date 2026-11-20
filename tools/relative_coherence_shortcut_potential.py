@@ -200,7 +200,7 @@ def frame_test(val, terms):
     return integral_test(columns, constants)
 
 
-def from_input(data):
+def input_terms(data):
     ctx = immutable(data['context'])
     check_ctx(ctx)
     k, colours = data['degree'], data['colours']
@@ -214,7 +214,12 @@ def from_input(data):
     for u in terms:
         if u[0] != 'coh' or tdim(infer(ctx, u))+1 != k-1:
             raise ValueError('expected coherence-headed terms of dimension degree-1')
-    return frame_test(Valuation(p, k), [subst_tm(u, labels) for u in terms])
+    return p, [subst_tm(u, labels) for u in terms]
+
+
+def from_input(data):
+    p, terms = input_terms(data)
+    return frame_test(Valuation(p, data['degree']), terms)
 
 
 def cube_equations():

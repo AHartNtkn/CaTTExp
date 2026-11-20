@@ -259,3 +259,4 @@ import CaTTExp.Join.SupportSubst
 import CaTTExp.Join.CutInvariant
 import CaTTExp.Join.SepAlgebra
 import CaTTExp.Join.BoundedReach
+import CaTTExp.Join.SwitchCospan

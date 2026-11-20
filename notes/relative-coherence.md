@@ -971,6 +971,60 @@ The fold action on t, t′ would be the composite t ≅ θ·(i f t) ≅ θ·(i f
 
 **What is known.** Strong-Steiner contexts are homotopical (r9 item 8, Campion), so RC_id(∞) holds there by r8. Fold actions **exist**. What is open is only a **search-free** (structurally recursive) construction, which is r10 Question 1. Nothing found here changes that.
 
+#### (F) Substitution functoriality at level j, written out (thread RCX, 2026-11-20)
+
+This is the remaining item of (D), step 3.1. It follows Response 3's "Sequentializing an arbitrary raw term" and "Sorting in a nonglobular lower skeleton" (r9; verified at level 0) and Response 4 steps 1–3 (verified at level 1), with each ingredient checked for dependence on the level.
+
+**Statement (Sub_j).** Let Γ be strong Steiner of height h, j ≥ 1, and t = coh(A; u → w)[σ] a head of rank h + j over 1^j_d. Suppose every proper argument σ(y) of rank > h has already been compared, at its chosen end connectors, to a **serial word**. A serial word is a temporal composite of old caps and single-block actions (a linear term acting on an elementary cell of X(P) of dimension ≤ dim y − h). Suppose every rank-h argument has its chosen writing comparison. Then t is compared, at its chosen end connectors, to a serial word. The comparison uses only:
+- (a) heads in pasting contexts, namely the coherence rule;
+- (b) depth-0 and depth-1 naturality (Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620, Thm 3.1, constructive in every dimension);
+- (c) **old-arrow calls**: same input rank h + j, in the skeleton without the height-h generators, so of height ≤ h − 1;
+- (d) block calls, as in (D) step 1;
+- recursion on the proper arguments of the *original* term.
+
+**F1. The root, before substitution.** A is a pasting context of any dimension. Serialize the strict composite of its rank-h slots in a fixed linear extension. Lift each elementary step in A and prescribe the head's own ends. The resulting word and coh(A; u → w) have the same type and full support on A, so one coherence (a) compares them. Then apply σ.
+- Nothing here depends on j. The slots of A of rank > h are not serialized at the root. They are proper arguments, and the factors that remain are linear actions on them.
+
+**F2. Linear actions carry the recursion; this is the grafting step.** Let ℓ be a linear term with one active leaf y of dim h + i, and let c be a pasting of argument cells over the type of y, of any shape T. Form ℓ in the arity A[y := T], where the leaf y is replaced by the Batanin tree T.
+- T = one link carries a comparison, as in "promote the arrow slot once more".
+- T = two links carries a temporal product, as in "graft a two-link string at the active leaf".
+- Deeper T carry comparisons between comparisons. Level j needs exactly these, with height up to j − i + 1.
+
+A[y := T] is again a pasting context, so the two ways of composing ("act, then compose in the slot" and "compose, then act") are parallel with full support there, and one coherence (a) compares them.
+- Nested linear terms: apply this from the active child outwards. Two nested single-slot actions compose by the depth-0 substitution recursion (b).
+- Several active leaves of one root: graft at each leaf. The result is still a tree, and the comparisons between orders of action are again single coherences in that one grafted arity.
+- **Machine-checked:** `CaTTExp.GraftedArity` (Agda, `--safe`, no postulates). For every tree A, leaf a and tree T:
+  - `graft A a T` is a pasting context;
+  - the globular filler is total on it (`graft-fill`, from `GlobularTotal.FillTotal.fill-total`): any two parallel terms with the same strict normal form get a certified coherence;
+  - grafting a leaf is the identity.
+
+  Examples include a two-link string, and a 4-globe column grafted on a 2-cell arity.
+
+**F3. Joins between consecutive factors.** At each join, compare the adjacent caps with the composite through the chosen state representative. This is an **old-arrow call** (c), the only same-rank call. Change of writing at a slot uses depth-1 naturality of the writing comparison J in its single maximal variable (b).
+- At level j that variable has rank h + j − 1 and J has rank h + j, so the depth is still one. Depth-1 naturality is constructive in every dimension.
+- Its caps are old, and old caps are changed by old-arrow calls as at level 0.
+
+**F4. Elementary block moves.** Here t passes through one elementary cell on a block B of events. Product cells are interchanges of blocks in different temporal factors (F2 at the common root).
+- Lift the simultaneous marked state F(X_e : e ∈ B) at the fixed exterior poles. This needs rank-h lifting only. Each marker occurs once along top-rank slots, because occurrences are counted by the strict top coefficient, which is a statement about rank h.
+- Each route through B is compared to the single simultaneous depth-0 action. At each active root slot, graft a string with one link per change, in route order, and apply F2. When several changes enter the same child, recurse into that proper child and act in the promoted root slot.
+- Connectors at the outside corners and at shared states produce old loops. These are compared to identities by old-arrow calls (c).
+
+**What F4 does not give, and why the block calls stay.** The marked context F(X_e : e ∈ B) is in general **not** a pasting context; Response 3 notes "The ambient F need not be an operation on a single globular support". So two routes are compared only through each root's grafted arity, and cells between route comparisons whose grafts sit in different roots do not come from (a). For |B| = 3 this is exactly why Response 4 *hypothesizes* the three-event braid. So F4 gives the 1-skeleton of each block permutohedron, and its higher cells *inside a single root*. The single-block cells of X(P) whose route comparisons cross roots are the block calls (d), exactly as in (D) step 1.
+
+**Accounting.** The calls Sub_j makes are:
+- (c): same input rank, height ≤ h − 1;
+- (d): ≤ k + 2 events, folded by §7.12 to C(h − 1, k + 1);
+- calls on proper arguments, which are smaller terms.
+
+All of them are smaller in the §7.12 order (input rank, height), refined by term size. So Sub_j closes (D) step 3.1 with no new circularity. **Lemma L is now reduced to F1–F4 plus (L-comb).** Each of F1–F4 is the level-0 or level-1 construction of r9 Responses 3–4, with the level-dependent parts identified:
+- the grafted tree T in F2, which is machine-checked;
+- the depth-1 rank count in F3.
+
+**Status.**
+- Written out; not independently verified.
+- The Agda module checks the grafting step only. The raw-term recursion F1–F4 is not formalized: the Agda development models typing and the globular filler, not the marked contexts or old-arrow calls of Responses 3–4.
+- The remaining open input for RC in general is unchanged: fold actions in every depth, r10 Question 1(a), §7.13(E).
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

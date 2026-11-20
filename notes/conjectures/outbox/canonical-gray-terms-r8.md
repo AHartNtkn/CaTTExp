@@ -279,3 +279,70 @@ Here the provisional degree-four construction is used only on $B$ before making 
 **Reduction of the original pair.** Write the two diagrams of height at most three as $\bigvee_i\Sigma P_i$ and $\bigvee_j\Sigma Q_j$. By Response 4 on both sides, it suffices to solve each suspended pair. By item 12 it suffices to solve $P_i\otimes I\otimes Q_j$. Both $P_i$ and $Q_j$ have height at most two. Split them in turn into object-wedges of suspensions of paths. The unchanged factor at the first split is $I\otimes Q_j$ of dimension at most three. At the other split it is $\Sigma[r]\otimes I$, again of dimension at most three. The wedge theorem applies to both strong-Steiner seams. The remaining triple tensors are exactly those constructed above. Points are tensor units, and components of smaller height are included by item 24. Choose on flattened tuples of generators throughout, to identify the parenthesizations of the triple tensor.
 
 This settles all binary pairs of height at most three separately. For larger heights the proper hexagon panels can have rank greater than four, so the prescribed-boundary lifting step in $B$ needs further input. All globe pairs and all higher cubes remain open as general families.
+
+# Researcher Response 6
+
+## A pinned strict section for two arbitrary suspended trees and an interval
+
+For all finite globular pasting diagrams \(P,Q\), the hexagon trace has a globular section
+\[
+ s:(\Sigma P\otimes I\otimes\Sigma Q)(000,111)
+       \longrightarrow P\otimes H\otimes Q .
+\]
+It preserves signed faces and identities and sends the atom \(\langle Sp,e,Sq\rangle\) to \(\langle p,t,q\rangle\), where \(t\) is the face of the directed hexagon \(H\). Thus the strict diagonal comparison in the three-factor step works in every dimension, with arbitrary branching at every node. The argument requires a stronger local assertion than Response 5. Interior nodes receive margins chosen by different parent nodes, so the local lifting rule must accept **every compatible triple**.
+
+### Filling two path windows with prescribed margins
+
+Write \(J=[r]\), \(K=[s]\). For a tableau in \(J\otimes H\otimes K\), let \(U,V\) augment the last and first coordinates respectively. Let \(M\) keep the part of the hexagon trace in which both outer axes move. This drops the bottom row and retains the middle interval coordinate. In the original labels, its differential and that of the trailing path are reversed. Include the empty tableau and suppress identity padding. The data for a window are
+\[
+ u\in J\otimes H,\qquad v\in H\otimes K,\qquad
+ w\in J\otimes I^{\mathrm{op}_{\rm all}}\otimes K^{\mathrm{op}_{\rm all}},
+ \qquad
+ \epsilon_Ju=\epsilon_Kv,\quad Mu=\epsilon_Kw,\quad Mv=\epsilon_Jw .
+\]
+There is a simultaneous lift with \((U,V,M)=(u,v,w)\), compatible with faces, identities and the mixed atom pins. There is also a one-sided version. With one outer label variable, prescribe the unlabelled hexagon tableau and the trace column in which that axis moves. The compatibility is equality of their projections to the remaining square. These are the two one-sided signatures of [round 6, Response 4](../answered/canonical-gray-terms-r6-2026-11-20.md#researcher-response-4).
+
+For a proof, retain just edge \(i\) in \(J\) and just edge \(j\) in \(K\), collapsing the other edges to vertices. At length zero use the point test. Augmentation and taking an active trace column commute with these projections. Apply the fixed round-6 unit-window choice to the projected data, then invert cumulative sums separately on the two path coordinates as in Response 5. At a vertex internal to a path, the inverse is the difference of the zero-side counts at the two adjacent cuts. At an exterior vertex or an edge it uses one cut. The corresponding one-sided construction uses one inverse.
+
+The following finite calculation checks this rule on **independently generated marginal inputs**. For \(r,s=0,1,2\), the counts of compatible triples, with rows indexed by \(r\), are
+
+| \(r\) | \(s=0\) | \(s=1\) | \(s=2\) |
+|---|---:|---:|---:|
+| 0 | 20 | 116 | 479 |
+| 1 | 116 | 996 | 5,632 |
+| 2 | 479 | 5,632 | 41,002 |
+
+For each one-sided orientation the counts are 20, 96 and 324. The calculation generates each strict category from its atoms by closure under composable cuts. For every compatible input it checks nonnegativity before forming the lifted chains, reprojection to every unit test, membership in the independently generated source, all prescribed margins, the signed faces of the choices and each atom pin. [Finite window calculation](../../../tools/gray_hexagon_tree_windows.py)
+
+These checks imply the claim for all lengths. To test nonnegativity of any inverse coefficient, retain just its one or two cuts on each side. The collapsed marginal input is compatible and its small-path coefficient has exactly the same formula. For reprojection, edge coefficients are copied, and summing vertices on the zero side telescopes. For the complementary sum the total at any two cuts must agree. Retain those two cuts and a fixed test on the other path. The two unit lifts are projections of a single small-path lift by the checked reprojection property. This gives the required equality for each signed row and each value of the remaining coordinates. Inverting in the two orders gives all reprojections. Path projections are jointly injective on chains by the inverse formula. They detect the differential, equality of the top rows and the prescribed margins, and preserve bottom augmentation. Signed faces and identity padding are detected the same way, taking \(M\) one degree lower. Projecting a pinned atom gives a pinned atom or an identity on one, by the tensor-atom formula. This proves the local assertion including the point and empty cases.
+
+### Gluing at nodes
+
+A node \(a\) of a tree has depth \(i=|a|\) and \(r\) children. The \(r+1\) generators \((a,k)\) have degree \(i\). A generator \((a d,l)\) at child \(d\) has differential \((a,d+1)-(a,d)\). The window at \(a\) takes \((a,k)\) to vertex \(k\), every \((a d,l)\) to edge \(d\), and discards the other basis elements. Drop the first \(i\) rows. On suspended labels first strip the suspension and drop one extra row. An odd first-axis shift reverses the differential on each subsequent factor. The path involution is \(v_k\mapsto v_{r-k}\), \(e_d\mapsto e_{r-1-d}\). On \(H\) reverse each traversal and interchange the boundary routes, as in the unit construction.
+
+Every window used as input is a tableau or is empty. The signed differential equations at successive retained rows follow from the displayed boundary of a child. Discarded grandchildren have two boundary labels on the same child edge, hence cancel. For bottom augmentation, collapse each selected branch to its depth globe, suspending along that branch and collapsing the segments strictly before and after it to the corresponding endpoint. Augment the unselected coordinates. The sum in either candidate bottom chain is then a single coefficient in a tableau of a tensor of globes, hence at most one. The two augmentations agree by the boundary equation, and above an empty bottom row strong loop-freeness rules out a nonzero positive cycle. For an inherited slice at a specified edge use the path map retaining that edge before applying the same argument. [Branch-collapse and coefficient argument, round 4, Response 4](../answered/canonical-gray-terms-r4-2026-11-19.md#researcher-response-4)
+
+First collapse both suspensions to unlabelled intervals. The resulting extreme cube hom is \(H\). Restore one tree at a time to get the two outer margins. At its root use the unlabelled hexagon value. At node \(a\), prescribe the active trace column of the given target and the inherited hexagon value. Use the one-sided path window. For child \(d\) inherit the slice on its particular edge \(d\), dropping one row and that factor. On a left descent reverse the remaining hexagon. At the root the square agreement is the unlabelled trace equation. At a child it is the parent's active-column equation restricted to that edge. Reading the vertex-labelled terms in each chosen window gives the required global one-sided margin.
+
+Now take nodes \(a,b\) of depths \(i,j\). At the root of \(Q\), use the \(a\)-window of the first outer margin for \(u\). At a child of \(Q\), use the corresponding last-edge slice of its parent box. At odd \(i\), child \(d\) of a node of width \(s'\) is edge \(s'-1-d\) in that box. At the root of \(P\), use the \(b\)-window of the other outer margin for \(v\). At a child of \(P\), use its parent's first-edge slice, reversing both the remaining hexagon and the path. Take \(w\) directly from the target where both suspended labels survive their node windows, shifting down \(i+j+2\) rows and undoing the odd-\(i\) change of coordinates on the middle and last factors.
+
+To check the first compatibility equation at an interior node pair, take both labelled edge slices in their common grandparent box. They commute after the indicated relabellings. On either axis the same equality is the one-sided margin recursion, and at the root pair it is equality of the unlabelled hexagon values. For each other compatibility equation, the active column of a parent's edge slice equals that edge slice of its active column. The latter sums precisely the vertex labels at the new node, giving the augmentation of \(w\). Thus the local lemma supplies the next box. This argument is by induction on \(i+j\).
+
+Read terms with two outer vertices from each signed row \(d\) of the box at \(a,b\), undo the reflections, and put them in global row \(i+j+d\). Taking windows of these chains recovers every chosen box. A vertex-vertex coefficient was inserted directly. An edge-vertex coefficient is the sum of the vertex-vertex coefficients of the specified child, by its margin equation. The other single edge is the same calculation at the other child. Applying the two sums recovers an edge-edge coefficient. The global differential equation at \(((a,k),h,(b,l))\) now follows from the box equation, since only the two incident child edges on each path and the hexagon differential can contribute. The root supplies augmentation one. Signed truncation and padding commute with the selections at every node, with an empty slice below its first retained row. The two one-sided margins recover all trace terms with a stationary outer coordinate. The \(w\)'s recover the doubly active terms, proving the right-inverse equation.
+
+For the pins, a basis generator in a tree lies in the embedded globe formed by its two iterated faces at each lower rank. Its contribution to a window is supported on a single vertex, a single edge with its two incident vertices, or is empty. Restrict the tensor-atom formula to those two-rank windows. On this embedded segment it is the unit formula, with possible face truncation and identity padding. The path choice respects inclusion of a segment on pinned data: every threshold test restricts there to the unit pin or to its collapsed vertex pin. Joint injectivity then recovers the embedded pin. The same observation applies to one-sided pins. Induction on the two addresses gives exactly the windows of \(\langle p,t,q\rangle\). The decorated trace of this atom is \(\langle Sp,e,Sq\rangle\) by the atom formula on the two embedded globes. This proves the claimed globular section.
+
+An independent global check enumerated all cells of the source and target degree by degree on the first tree pair below. The extreme-hom counts through the top degree were 36, 1,000, 5,866, 10,152, 10,782 and 10,790, including identities at each degree. Each lift belonged to the source, had the given trace and respected both faces and identity padding. On the second pair the check through degree two found 36, 1,326 and 13,530 lifts. On the third pair it checked all 611 distinct pins and their signed faces, including odd-depth nodes with more than one child. [Tree section and global verifier](../../../tools/gray_hexagon_trees.py)
+
+~~~sh
+python3 -B tools/gray_hexagon_tree_windows.py
+python3 -B tools/gray_hexagon_trees.py '[[],[[]]]' '[[]]'
+python3 -B tools/gray_hexagon_trees.py '[[[],[]]]' '[[],[]]' --through 2
+python3 -B tools/gray_hexagon_trees.py '[[[],[]],[]]' '[[],[[[],[]]]]' --through -1
+~~~
+
+### What this gives for raw CaTT terms
+
+Suppose a CT assignment is given on \(P\otimes H\otimes Q\), and fix compatible CT data for cells in the non-extreme coordinate faces of the target. In the suspended substitution of Response 5, every generator indexed by \(h=t\) can now be declared at its substituted type, in every rank. Every generator indexed by a **vertex** of \(H\) admits its prescribed-boundary lift in every rank when the pure-axis declarations are the standard ones. Its trace is supported on the object-wedge of the three pure factors in traversal order. This wedge is a globular pasting arity. The substituted poles have their strict supports there by induction, so pasting-context boundary lifting applies.
+
+It therefore suffices in this transfer to realize the generators indexed by the **six edges** of \(H\) at their substituted raw types. For an edge exchanging \(A,B\) or \(B,C\), the supporting subcontext is a tile on the two exchanging axes with the remaining pure factor attached at the traversal endpoint. For an \(A,C\) exchange it is a copy of \(\Sigma P\otimes\Sigma Q\) at a fixed \(B\)-vertex, with the outside \(B\)-arrow attached. This follows by inspecting the square and its two vertex traversals. Once these substitutions exist, apply the suspended source term to the section above and substitute. The right-inverse, face and pin equations give (b), (c) and (a), respectively, on every extreme cell. The hypotheses on the source and the edge substitutions are open in general. In particular the all-dimensional strict section alone supplies neither the prescribed CaTT edge terms nor CT for every globe pair or cube.

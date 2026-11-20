@@ -66,10 +66,11 @@ def linear(images, chain):
 
 
 class WalkingGraph:
-    def __init__(self, vertices, height):
+    def __init__(self, vertices, height, *, descending=False):
         self.ctx = (STAR,)
         self.h = [Counter()]
         self.edges = {}
+        self.descending = descending
         self.attachments = Counter()
         self.blocks = []
         self.points = [v(0)]
@@ -100,7 +101,7 @@ class WalkingGraph:
             self.edges[0, i], self.edges[i, 0] = f, b
         for i in range(vertices):
             for j in range(vertices):
-                if (i, j) in self.edges:
+                if (i, j) in self.edges or (descending and not i > j > 0):
                     continue
                 anchor = (ident(self.ctx, self.points[i]) if i == j
                           else comp2(self.ctx, 0, self.edges[i, 0], self.edges[0, j]))
@@ -127,7 +128,9 @@ class WalkingGraph:
         for bits in range(1 << (len(self.points)-1)):
             names = {0} | {i for i in range(1, len(self.points)) if bits & (1 << (i-1))}
             local_edges = {(i, j) for (i, j), edge in self.edges.items() if self.carriers[edge[1]] <= names}
-            assert local_edges == {(i, j) for i in names for j in names}
+            expected = {(i, j) for i in names for j in names
+                        if not self.descending or i > j > 0 or (i != j and 0 in (i, j))}
+            assert local_edges == expected
         print(f'Walking attachments: {dict(self.attachments)}; generators by rank: '
               f'{[ranks.count(r) for r in range(height+1)]}.')
         print(f'Checked {len(self.edges)} literal edge types and dh+hd on {sum(r < height for r in ranks)} generators.')
@@ -148,10 +151,11 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--vertices', type=int, default=7)
     parser.add_argument('--height', type=int, default=5)
+    parser.add_argument('--descending', action='store_true')
     parser.add_argument('--agda', type=Path)
     args = parser.parse_args()
     if args.height < 3 or args.vertices < 1:
         parser.error('expected height at least three and at least one vertex')
-    WalkingGraph(args.vertices, args.height).check(args.height)
+    WalkingGraph(args.vertices, args.height, descending=args.descending).check(args.height)
     if args.agda:
         certificates(args.agda)

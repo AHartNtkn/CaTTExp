@@ -132,16 +132,16 @@ Reasons:
 3. Equality of two V-terms of the same weight is decidable. A derivation of the equality uses only defining pairs between terms of that same weight, since the gradings are conserved by every equation of V ⊆ T₁₂. So equality is connectivity in the finite graph whose vertices are the terms of that weight at those boundaries and whose edges are one-step applications of V's defining pairs. That graph is finite by step 2.
 4. Steps 1–3 satisfy the hypotheses of `Reach.Bounded.reach?` (`src/CaTTExp/Join/BoundedReach.agda`), so reachability is decidable. ∎
 
-**Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. Whether V + {R} and V + {inner law} are admissible on their own was asked in r9 and not answered; it is asked again in `outbox/lax-interchange-every-dimension-r10.md` (Q2). Until that is answered, the only settings offered are none (V) and all (T₁₂). Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
+**Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. **Updated 2026-11-20 (r9 Responses 2–5, verified; K73 in `outbox/lax-interchange-every-dimension-r10.md`):** every finite set of equations true in T₁₂ is admissible over V, so V + {R} and V + {inner law} are each admissible, and all four settings (none, R, inner law, both = T₁₂) are available. Admissibility is not closed under unions in general and the pasting profiles are not a lattice, but neither caveat affects these two laws, which are both true in T₁₂. Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
 
 **What would overturn this.**
 - A proof that a visible law is needed for a core construction. That law's setting then becomes the default for that construction's development.
-- Admissibility answers in r10 that open up the intermediate settings.
+- Answered: the intermediate settings V + {R} and V + {inner law} are admissible (K73).
 
 **Open items.**
 - (FV) An explicit description of F_V(Γ) and of what T₁₂ adds. **Answered 2026-11-20 by r9 (verified):** q : F_V(Γ) → F_T₁₂(Γ) is finite-to-one in every degree, and a V-cell is a T₁₂ normal word with decorated faces and a rank-selected word index (K65). Fibres are unbounded (2^{m−1} on suspended strips) but all those identifications come from R (K66). Visibility of pasting-diagram laws is decidable, so (Q-vis) is decidable for any proposed switch (K67). A closed-form description of the decorations is asked in r10 Q3.
 - Whether F_J = F_V on pasting diagrams. This is now only of interest for comparison.
-- Admissibility of V + R and of V + inner law separately (r10 Q2).
+- Admissibility of V + R and of V + inner law separately. **Answered 2026-11-20 (K73): both admissible.** Uniform normal forms for V + S are asked in r10 Q2.
 - LCORE: point the default setting at V (message sent).
 
 ---

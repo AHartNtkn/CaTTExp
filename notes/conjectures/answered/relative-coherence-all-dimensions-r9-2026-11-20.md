@@ -485,3 +485,34 @@ In particular, let a finite strong Steiner complex have height $h\ge3$ and stric
 For Conjecture N take a generic head of rank $d$ with selection of depth two. Its partial cylinder through rank $d-1$ is globular: the bridge of a lowest selected variable has no moving lower face. A bridge of rank $d$ compares the two copies of a $(d-1)$-variable whiskered by the changes of its selected $(d-2)$-poles. Its $(d-2)$-poles are literal variables, the source at the minus end and the target at the plus end. Copies and stationary variables also have variable poles. Thus the preceding prescribed-boundary algorithm applies with $m=d-1$ to the strict collapsed interval $(d+1)$-cell at the two required raw staircases. The lower-rank actions on its boundaries and the depth-zero and depth-one cases are supplied by the usual rank recursion. Extend from generic heads to evaluated terms by applying the generic lift to the lifted substitution, recursing on same-rank proper arguments. This produces the depth-two fillers in every dimension and for every eligible selection, including adjacent lowest marks. [Cylinder calculation and substitution recursion, round 8, Response 18](relative-coherence-all-dimensions-r8-2026-11-20.md#researcher-response-18)
 
 **Validation and scope.** The [nested-frame checker](../../../tools/relative_coherence_frame_exchange.py) constructs the two routes, their distributors in both orientations, and the composite between the routes. It uses an actual lower skeleton with a composite 1-face, two top changes with composite 2-faces, and a nested frame in which both changes first enter the same root slot. It checked the literal types and event counts in exchange ranks four, five and six. Agda 2.8.0 checked the rank-four and rank-five exchanges in safe mode. The [globe checker](../../../tools/relative_coherence_globe_padding.py) now also checks the first-identity shift on its identity-valued inputs through rank five. On the four-cube the [independent strict checker](../../../tools/gray_steiner_event_ideals.py) checked 1,676 ideal cuts and 1,271 nonempty marked steps over 505 cells. These computations validate the local constructions. For arbitrary strong Steiner presentations, the same-rank call comparing old arrows over a first identity remains open. Applying the event argument to those arrows themselves yields an empty event word and requires that very call.
+
+# Verification addendum (2026-11-20, Response 3)
+
+Response 3 arrived after the addendum above. It answers more of r10 Question 1.
+
+Status: **verified, with the stated open call.** Response 3 proves three results.
+- **Reduction to first identities.** Question 2(a) of r9 (r10 Q1(a)) is equivalent to the restricted problem: for an intrinsic strict m-cell w, compare two parallel raw (m+1)-terms of value 1_w over 1_{1_w} in the closed support of w.
+  - An identity tower is shortened by whiskering with 1_z for a fresh (n−1)-globe z at the end vertex. The base a *₀ z is intrinsic because of the coefficient of z, and collapsing the globe returns the original poles through the disk corrections of Response 2.
+  - Every other step is an induction on rank. It uses event schedules (linear extensions of the top-atom order), formal marker states, depth-zero and depth-one actions, and the sorting of incomparable events by a two-marker exchange. The only same-rank call is the comparison of two old n-arrows over a strict identity. That call is exactly the restricted problem.
+- **Two successive nonglobular ranks.** Suppose the m-skeleton is globular and the (m−1)-poles of every (m+1)-generator's attaching terms are variables. Then the old-arrow call is answered directly by Response 2, and the construction is unconditional. This gives search-free equal-image comparisons in rank m+1 and prescribed-boundary lifts through rank m+2. For a strong Steiner complex that is globular through rank h−2, the round-8 strong-order argument gives literal poles in rank h−1. So there is a search-free canonical section with two possibly nonglobular top ranks.
+- **Depth-two naturality.** For a generic head of rank d with a depth-two selection, the partial cylinder is globular through rank d−1, and the rank-d bridges have variable (d−2)-poles. The previous result applies with m = d−1 and gives the depth-two fillers of Conjecture N search-free in every dimension.
+
+**What was re-run.**
+- `tools/relative_coherence_frame_exchange.py` (new) exits 0 in under 1 s. It prints "Both factorizations and the exchange at literal poles in ranks 4, 5 and 6." Its emitted `FrameExchange.agda` type-checks under `agda --safe --no-libraries -i src` in 10 s.
+- `tools/relative_coherence_globe_padding.py`, with the new first-identity shift, exits 0 in 9 s with the same 23 comparisons. The new block asserts that the shifted poles have identity value, that the fresh atom has coefficient one in the base, and that the fold returns the right unitors.
+- `tools/gray_steiner_event_ideals.py 1 1 1 1` reports 505 positive-dimensional cells, 1,676 ideal cuts and 1,271 nonempty marked steps (maximum simultaneous set 2). These are the numbers in the response.
+
+**Checked.**
+- **The identity-tower shift.** The value of u *₀ 1_z is 1_{a *₀ z}, a first identity on an intrinsic cell. Under the collapse z ↦ 1_y, 1_z goes to 1ⁿ_y by substitution.
+- **Marker contexts are strong Steiner.** Each marker X_z takes the position of z in the order, and its incidences go through the facets of z. It has the raw type of the faces of z.
+- **The only same-rank call.** All other calls are of lower rank, or are actions or heads on globular arities. The recursion is on proper arguments of the original term, so it terminates.
+- **The unconditional case.** With variable (m−1)-poles, each marked skeleton B[X] is globular below rank m. Old arrows live in the globular B, where a comparison is a single head.
+
+No gap was found.
+
+**Left open.**
+- The old-arrow call over a first identity for arbitrary strong Steiner presentations. The response notes that the event argument cannot settle it, because the event word of such an arrow is empty.
+- Size bounds for the new constructions.
+- Naturality fillers of depth three and more.
+
+These are carried into `outbox/relative-coherence-all-dimensions-r10.md` as item 63 and a narrowed Question 1.

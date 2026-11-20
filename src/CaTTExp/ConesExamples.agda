@@ -328,3 +328,67 @@ module NonGlobular where
   -- Mikhail's (KE) admits it too.
   _ : KE.okConeAll cone 7 ≡ true
   _ = refl
+
+------------------------------------------------------------------------
+-- 10. Cones over 1-dimensional coherence terms (ledger B19, B25):
+--     ConeT.cone, total on contexts whose boundary terms are variables,
+--     identities of objects, or composites of 1-cells.
+
+module TermCones where
+  okT : ExCtx → Bool
+  okT Γ = okM (ConeT.cone Γ)
+
+  keT : ExCtx → Bool
+  keT Γ with ConeT.cone Γ
+  ... | nothing = false
+  ... | just K  = KE.okConeAll (evCtx K) (length Γ)
+
+  -- On globular shapes it is the specified cone, syntactically.
+  _ : map ConeT.cone shapes ≡ map (λ Γ → just (ConeOf.cone Γ)) shapes
+  _ = refl
+
+  -- The bubble σ : 1_x ⇒ 1_x.
+  Bubble : ExCtx
+  Bubble = ob ∷ hom (hom ob (v 0) (v 0)) (idn (v 0)) (idn (v 0)) ∷ []
+
+  -- A homotopical base: μ : a ∗₀ a ⇒ a for a loop a : x → x.
+  Mult : ExCtx
+  Mult = ob ∷ hom ob (v 0) (v 0) ∷ hom (hom ob (v 0) (v 0)) (bn 0 (v 1) (v 1)) (v 1) ∷ []
+
+  -- τ : f ∗₀ g ⇒ h (the hand-built example of module NonGlobular).
+  Tri : ExCtx
+  Tri = NonGlobular.Tri
+
+  -- A 3-fold composite and a unit on both sides: β : (f ∗₀ g) ∗₀ k ⇒ 1_x ∗₀ e.
+  Mixed : ExCtx
+  Mixed = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ ob ∷ hom ob (v 1) (v 3) ∷ ob ∷ hom ob (v 3) (v 5)
+        ∷ hom ob (v 0) (v 5)
+        ∷ hom (hom ob (v 0) (v 5)) (bn 0 (bn 0 (v 2) (v 4)) (v 6)) (bn 0 (idn (v 0)) (v 7)) ∷ []
+
+  termShapes : List ExCtx
+  termShapes = Bubble ∷ Mult ∷ Tri ∷ Mixed ∷ []
+
+  _ : all ok termShapes ≡ true
+  _ = refl
+  _ : all okT termShapes ≡ true
+  _ = refl
+  _ : all keT termShapes ≡ true
+  _ = refl
+
+  -- Not implemented: a 2-dimensional composite boundary (needs N^cone
+  -- in dimension 2): θ : α ∗₁ β ⇛ γ over D¹ with three parallel 2-cells.
+  VComp : ExCtx
+  VComp = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ hom ob (v 0) (v 1) ∷ hom ob (v 0) (v 1)
+        ∷ hom (hom ob (v 0) (v 1)) (v 2) (v 3) ∷ hom (hom ob (v 0) (v 1)) (v 3) (v 4)
+        ∷ hom (hom ob (v 0) (v 1)) (v 2) (v 4)
+        ∷ hom (hom (hom ob (v 0) (v 1)) (v 2) (v 4)) (bn 1 (v 5) (v 6)) (v 7) ∷ []
+  _ : ok VComp ≡ true
+  _ = refl
+  _ : is-just (ConeT.cone VComp) ≡ false
+  _ = refl
+
+  -- Cocones, by duality; on globular shapes they are the specified cocone.
+  _ : map coconeT shapes ≡ map (λ Γ → just (CoconeOf.cocone Γ)) shapes
+  _ = refl
+  _ : all (λ Γ → okM (coconeT Γ)) termShapes ≡ true
+  _ = refl

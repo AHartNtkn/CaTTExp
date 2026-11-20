@@ -734,3 +734,96 @@ sharedWellTyped = snd (from-just (infer HComp shared))
 ```
 
 </details>
+
+# Researcher Response 10
+
+## Comparing transports across different raw labellings
+
+Fix the minimal strong Steiner context $S$, the strict composite $c$ of rank $m$, and a nondegenerate subdivision $f:T↪F(S)$ of $c$ as in Response 9. Write $d$ for the total of $T$. A frame over $f$ fixes the raw labels below rank $m$ and the strict labels of the $m$-variables. Its top raw labels can vary from one end of a path to the other. Write $T_C(v,w)$ for transport in such a frame $C$ between two vertices in its image. This is well-defined even when a vertex has several names. [Frame transport and its dependence on evaluated vertices, Responses 10–11](relative-coherence-all-dimensions-r8.md#researcher-response-10)
+
+**Theorem.** In $G_c$, the transports of *all* frames over the fixed embedding $f$ generate a thin groupoid on each component of their union. Thus a loop whose successive edges change the top inputs, the generic operations, and the raw lower labellings still contracts if these transports all use $f$. We first give a change-of-arity formula which also applies to some edges represented by degenerate diagrams.
+
+**Change of arity.** Let $C$ have arity $P$ and strict labelling $fg$ for a strict arity map $g:P→T$ taking the total to $d$. All variable labels of $C$ must have proper support in $S$. Let $M$ be a frame over $f$. Suppose the two raw labellings $a_-,a_+$ used by two names of $C$ factor as
+$$
+                 a_-=u_- e_-,\qquad a_+=u_+ e_+ .
+$$
+Here $u_-,u_+$ are full labellings extending $M$, and $e_-,e_+:h_P→h_T$ are weak substitutions over $g$ which agree literally below rank $m$. Juxtaposition means composition of maps of free weak algebras. Then the arrow between the two names in $C$ is the arrow of $M$ between their evaluated vertices.
+
+To prove this, double every top variable of $T$, inserting a formal $(m+1)$-step between its two copies, and do the same in $P$. Write $T^+$ and $P^+$ for the resulting trees. For an $m$-cell $p$ of the strict $T$ write $D(p)$ for its simultaneous step in $T^+$. It is the formal step on a top variable, the identity on either copy of a cell from below, and it respects all compositions below $m$ by strict interchange. Consequently replacing each top variable $i$ of $P$ by $D(g i)$ takes the simultaneous step of its total to $D(d)$, also when $g i$ is composite or identity-padded. [Simultaneous steps on strict pastings](relative-coherence-all-dimensions-r8.md#researcher-response-11)
+
+Send the two copies of $P$ into $h_{T^+}$ by $e_-$ and $e_+$ followed by their respective copy inclusions. They agree on the common skeleton. For the step at $i$ lift $D(g i)$ at the two assigned literal ends by globular boundary lifting in the free weak tree. This gives a substitution $h_{P^+}→h_{T^+}$. Evaluate $T^+$ in $S$ using $u_-,u_+$ and any proper comparisons between their corresponding entries. The images of the steps of $P^+$ are then permissible comparisons for $C$: their strict values are identities on the proper labels $fg i$. Thus evaluation of a generic transport lift in $P^+$ computes the original transport in $C$, by independence of these comparison choices. In $T^+$ its image is a lift over $D(d)$. Its two ends have common lower poles because $e_-,e_+$ agree below $m$. Normalize these poles to the chosen poles of $T$ using the same lower pads on both sides. These pads preserve the read word and the two vertices. The normalized lift now computes transport in $M$ by the same formula. This proves the assertion with no injectivity hypothesis on $g$.
+
+**Agreement at shared vertices.** Suppose $C,C'$ are two frames over $f$ and both contain $v,w$. At $v$ choose full labellings for the two names. Their images contain the same literal primitive head: strict monicity makes the generic marked head remain primitive after evaluation. By the common-vertex factorization of Response 9, both labellings factor through the labelling taking the shorter raw label at every variable. Do this independently at $w$. The two shorter labellings have *the same lower skeleton*, since those entries depend only on $C,C'$. Denote that frame by $M$. For either original frame, its two factorizing weak substitutions agree below $m$: there they evaluate under the same smaller labels to the same original labels, and that evaluation is injective on raw lower terms. Change of arity with $g=1_T$ proves
+$$
+                    T_C(v,w)=T_M(v,w)=T_{C'}(v,w).
+$$
+The argument allows the smaller top tuple as well as the factorizing substitutions in top rank to differ at the two vertices. [Common-vertex factorization](#combining-nondegenerate-labellings-with-a-common-vertex)
+
+**A common lower labelling for a finite path.** For a variable $x$ below rank $m$, restrict a frame to the closed globe of $x$. Order these globe labellings by factorization: $a≤b$ means that $b$ factors through $a$ by a weak substitution over the identity of the strict globe. If $a≤b$ and the top labels differ, the top label of $a$ occurs as a proper subterm of that of $b$, by the support argument in Response 9. Equality of the top labels gives equality on the globe by taking faces.
+
+Any two labellings $a,b$ below a common globe labelling $h$ are comparable. Indeed the top label of $h$ is a common evaluation of two writings with strict value $x$. Parse these writings together, as in Response 9. At a stopped pair with the variable $x$ on one side, the other side represents its label. Such a pair must occur: the writings use $x$ by support, and a stopped branch at a lower variable has strict value that variable and uses only its closed globe on either side. Representability at $x$ extends to its whole globe by taking faces. This proves comparability, including rank zero.
+
+Consider a finite sequence of frames with successive shared vertices. At each $x$ the successive globe labellings are comparable by the same parsing of the shared primitive vertex in the full arity. This sequence has a least member. Inductively keep the least member seen so far. If the next labelling is above the last, keep the least. If it is below the last, it and the current least are below a common labelling and hence comparable. For each $x$ choose the label of its least member. This is a single well-typed lower labelling $L$: restriction of a least member at $x$ to any face $y$ occurs in the list at $y$ and is below all entries there. The restrictions therefore give exactly the selected labels at the faces. Each frame's lower labelling factors through $L$. Choose the expressions witnessing this on each globe. Their boundary equations hold after evaluation by construction and already hold before evaluation by injectivity at $L$. The same reasoning applies to the frame taking pointwise shorter lower labels at an adjacent pair. It gives a factorization of that frame's lower labelling through $L$. Extend $L$ to a frame on $T$ with strict labels prescribed by $f$.
+
+**Contraction.** Write a cycle as arrows in successive frames $C_i$, with transition vertices $v_i$ shared by $C_i,C_{i+1}$, indices cyclic. At $v_i$ take the two full labellings that witness the shared primitive vertex, and their common shorter labelling $u_i$ over the frame $M_i$ just constructed for this pair. Before evaluation by $u_i$, the two factorized primitive vertices in $h_T$ are literally equal by injectivity under $u_i$. We can therefore specialize this equality at any other top tuple for $M_i$.
+
+Choose a weak substitution on the lower skeleton expressing $M_i$ through $L$. Extend it to $h_T→h_T$ over the strict identity, filling at each top variable with the assigned literal boundary by tree contraction. Follow it by any full labelling extending $L$, which exists by proper-support lifting. The resulting full labelling extends $M_i$. Specializing the common primitive vertex there gives a vertex $v_i'$ in all three frames $C_i,C_{i+1},L$. Indeed the two original factorizations reconstruct names with the original lower labellings, and specialization through $L$ gives a name in $L$. Normalization of poles in these names preserves their primitive vertex. This step only needs one new tuple at each transition.
+
+The path from $v_i$ to $v_i'$ has the same value in its two incident frames by agreement at shared vertices. Conjugate each edge by these paths at its ends. The new edge in $C_i$ has both ends in $L$, so it equals transport in $L$ by the same agreement result. Around the cycle the conjugating paths cancel, and the product of the transports in $L$ is the identity. This proves the theorem. Together with Response 9, the remaining ordinary obstruction is a loop in one strict subdivision that requires degenerate expansions or transports through different embedded arities within it, beyond the change-of-arity formula above.
+
+**Validation at two changing slots.** In the horizontal composite of two 2-cells, double each top slot by a 3-cell. The two substitutions below change lower faces in opposite columns. At the positive end each adds a further top padding that is absent at the negative end. Agda 2.8.0 checked that computing the comparison in either order gives the same raw 3-term and that this term has the transported type in the doubled arity. The finite-cycle assertion follows from the factorization and transport arguments above. The module imports the embedded `SplitVertex` module of Response 9.
+
+<details>
+<summary>Agda check of the doubled substitutions</summary>
+
+```agda
+module FrameTransport where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Pure
+open import CaTTExp.Examples using (v; hcomp; comp)
+open import SplitVertex using (wrap; wrap₂; D₂)
+
+globe₂ : Tm → Tm → Tm → Tm → Tm → Sub
+globe₂ x y f g a = ⟪ x ∷ y ∷ f ∷ g ∷ a ∷ [] ⟫
+pad₂ : Tm → Tm → Tm → Tm → Tm → Tm
+pad₂ x y f g a = coh D₂ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (globe₂ x y f g a)
+
+column = node (node (leaf ∷ []) ∷ [])
+D₃ = ctxOf (node (column ∷ []))
+double = ctxOf (node (column ∷ column ∷ []))
+base : Tm → Tm → Tm → Tm → Ty
+base x y f g = arr (arr ⋆ x y) (wrap x y f) (wrap x y g)
+minus plus : Tm → Tm → Tm → Tm → Tm → Tm
+minus x y f g a = wrap₂ x y f g a
+plus x y f g a = pad₂ x y (wrap x y f) (wrap x y g) (minus x y f g a)
+
+liftTy = arr (base (v 0) (v 1) (v 2) (v 3))
+             (minus (v 0) (v 1) (v 2) (v 3) (v 4))
+             (plus (v 0) (v 1) (v 2) (v 3) (v 5))
+entry : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+entry x y f g a b h = coh D₃ liftTy ⟪ x ∷ y ∷ f ∷ g ∷ a ∷ b ∷ h ∷ [] ⟫
+left = ⟪ v 0 ∷ v 1 ∷ wrap (v 0) (v 1) (v 2) ∷ wrap (v 0) (v 1) (v 3)
+       ∷ minus (v 0) (v 1) (v 2) (v 3) (v 4) ∷ plus (v 0) (v 1) (v 2) (v 3) (v 5)
+       ∷ entry (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6)
+       ∷ v 7 ∷ v 8 ∷ v 9 ∷ v 10 ∷ v 11 ∷ v 12 ∷ [] ⟫
+right = ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ v 4 ∷ v 5 ∷ v 6 ∷ v 7
+        ∷ wrap (v 1) (v 7) (v 8) ∷ wrap (v 1) (v 7) (v 9)
+        ∷ minus (v 1) (v 7) (v 8) (v 9) (v 10) ∷ plus (v 1) (v 7) (v 8) (v 9) (v 11)
+        ∷ entry (v 1) (v 7) (v 8) (v 9) (v 10) (v 11) (v 12) ∷ [] ⟫
+
+side : Tm → Tm → Tm
+side a b = hcomp [ ⟪ v 0 ∷ v 1 ∷ v 2 ∷ v 3 ∷ a ∷ v 7 ∷ v 8 ∷ v 9 ∷ b ∷ [] ⟫ ]tm
+pole = arr (arr ⋆ (v 0) (v 7)) (comp (v 0) (v 1) (v 2) (v 7) (v 8))
+                                (comp (v 0) (v 1) (v 3) (v 7) (v 9))
+stepTy = arr pole (side (v 4) (v 10)) (side (v 5) (v 11))
+step = coh double stepTy (idₛ double)
+one = (step [ left ]tm) [ right ]tm
+two = (step [ right ]tm) [ left ]tm
+common : one ≡ two
+common = refl
+checked : double ⊢tm one ∶ ((stepTy [ right ]ty) [ left ]ty)
+checked = snd (from-just (infer double _))
+```
+
+</details>

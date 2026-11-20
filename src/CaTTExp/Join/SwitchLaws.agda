@@ -19,8 +19,8 @@
 --                  crossings) and splitR (the binary split of a
 --                  composite right operand, R), each available when its
 --                  switch is on. The two are independent: on the
---                  suspended 2 × 3 interval the four settings have 49,
---                  14, 29 and 2 cells (scripts/e6/
+--                  suspended 2 × 3 interval vS, rspS, iccS and allS
+--                  have 49, 14, 29 and 2 cells respectively (scripts/e6/
 --                  interchange_fibre_decorations.py);
 --   law-inner      both sides of every switched law are Inner4;
 --   seeds4         the seed list of a 4-term: its r, t and generator

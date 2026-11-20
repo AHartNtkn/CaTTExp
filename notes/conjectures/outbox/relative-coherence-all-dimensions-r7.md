@@ -2203,3 +2203,41 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_hurewicz_three.py --agda "$dir/HurewiczThree.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/HurewiczThree.agda"
 ~~~
+
+# Researcher Response 76
+
+## Fifteen proper brackets lift a full-support certificate for the five-cube
+
+Use the star \(S\) on \(0,1,\ldots,6\) from Response 48 and the fixed hom from 6 to 1. Write \(D\) for its hom-computad, \(J=\{2,3,4,5\}\), and \(Y\) for the subcomplex of hom generators whose ambient dependencies miss a positive name. Every hom generator in this hom already uses both endpoints. Thus the rows retained in \(C_*(D)/Y\) are exactly those using **all four names of \(J\)**. For the original poles \(u,v\), put \(d=N_3(v)-N_3(u)\) in hom chains.
+
+A five-comparison in \(S\) exists **if and only if** a finite integer combination of full-support hom four-columns gives \(d\) on the retained rows. There is an explicit formula converting such a certificate to an absolute one. It also works for multiples of \(d\) and modulo every \(m\ge2\). For a multiple \(k\) of the oriented cubical cycle, the columns must supply coefficients \(+k,-k\) on the two rooted simplex facets missing 1 and 6 respectively. These give two integer tests before solving for any of the full-support rows.
+
+**Recovering the omitted rows.** For \(B\subseteq J\) let \(e_B\) collapse the names of \(B\) to 0, keeping all other names, including 6 and 1, fixed. Relabel an ambient bracket as the bracket at its relabelled faces, even when the faces become equal. This defines commuting maps of the star and of its fixed hom. On a hom indecomposable its ambient head is unchanged, or it remains a variable bracket. Desuspension of the generic head therefore gives the same decomposition rule, so relabelling commutes with hom counts and their differential. Put
+\[
+                 E=\sum_{B\subseteq J}(-1)^{|B|} e_B.
+\]
+A generator missing \(j\in J\) is fixed literally by \(e_{\{j\}}\), hence \(EY=0\). Conversely \(E\) induces the identity modulo \(Y\). Suppose \(W\) is a chain of hom four-columns with \(\partial W=kd\) on the full rows. For every nonempty \(B\), the ambient primitive bracket \(b_B=[e_Bu,e_Bv]\) exists in the star, since the two terms miss every name of \(B\). It is a hom four-generator and \(\partial b_B=e_Bd\). Thus an absolute chain with boundary \(kd\) is
+\[
+                 E W+k\sum_{\varnothing\ne B\subseteq J}(-1)^{|B|+1}b_B .
+\]
+The formula uses at most sixteen relabellings of each input column and fifteen proper brackets. Its proof is linear over the coefficient ring. Over the integers Response 75 turns the certificate for \(k=1\) into existence of a five-term at the original literal faces. Conversely an actual five-term supplies its hom top-count chain; discarding proper columns leaves the retained rows unchanged. For \(k\ne0\) an integral certificate implies that the based cubical difference has order dividing \(|k|\). In particular any such certificate disproves degree-eight ring RC. Modulo \(m\), the test says precisely that its integral based class belongs to \(m\pi_4(S)\) when \(k=1\), by the universal coefficient injection and Response 75. The conditional character taking value one precludes this as well.
+
+In fact \(H_3(D)\to H_3(C_*(D)/Y)\) is an isomorphism for any coefficients. Choose a reference path \(6\to0\to1\) in the fixed hom. For a proper hom generator, take its cone on that reference path using the primitive ambient bracket at its prescribed cone faces. In increasing dimension, both faces are in the generator's carrier augmented by 0, since all earlier cones on its attaching terms respect that carrier. Extend cones to terms by the generic point-join actions of Response 46 in the hom. In degrees needed here the mixed top count is one per top occurrence; all hom operations interpret as suspensions. The resulting linear operator has \(\partial C+C\partial=1\) on positive chains of \(Y\) through degree three by the cone boundary formula of Response 46. The cases of degrees two and three give the asserted isomorphism by the exact sequence. The displayed fifteen-bracket formula avoids constructing these cones for a candidate chain on a specified pair.
+
+**Two necessary exterior coefficients.** Send a hom generator to the top count of its underlying ambient term, then to the ordered simplex chains by the carried map of Response 44. Call the result \(P\). In positive hom degrees this commutes with boundaries: a suspended hom head contributes the ambient counts of its top labels, while its two added object positions contribute none. Every ambient five-term in the star maps into the five-dimensional simplicial cone on the boundary of \([1,\ldots,6]\). Orient the cube so \(P(d)=\partial[1,\ldots,6]\), as in Response 48.
+
+For the actual cube, \(P(e_B d)\) is the boundary of the simplicially relabelled positive five-simplex. For a singleton this follows by comparing the two carried maps on the proper cubical boundary, where both maps take each face into the same proper face of the renamed simplex. They give homologous top cycles there, hence equal chains, since its boundary has no five-simplices. For two or more collapsed names the four-cycle is supported on at most five vertices and is zero. This argument allows arbitrary weak attaching terms on the prescribed cube faces and makes no naturality assumption on a least-vertex cone under a change of order.
+
+Consequently the simplicial five-chain with boundary \(P(E d)\) in the star is
+\[
+                            [0,2,3,4,5,6]-[0,1,2,3,4,5].
+\]
+Indeed \([1,\ldots,6]-\partial[0,1,\ldots,6]\) is the unpolarized star filling. On applying simplicial \(E\), every facet missing an interior name is killed, and the two remaining facets already contain 0, so any nonempty collapse makes them degenerate. The star boundary map on five-chains is injective over every coefficient ring: the unrooted four-face of each rooted five-facet occurs only in its own boundary. Thus \(P(EW)\) is exactly \(k\) times the displayed chain. For these two coefficients \(P(EW)\) agrees with \(P(W)\), since every nonempty collapse misses a name in both displayed simplices. Proper hom columns cannot contribute to either coefficient. In particular, in any integral filling of a nonzero multiple there must be a column which uses **the root and every positive name**. It is necessarily a structural ambient five-term indecomposable in the hom: an ambient generator of the star always misses a positive name. The two coefficients alone do not decide the remaining boundary equations.
+
+**Verification.** The solver takes a proposed hom-column combination, checks the star support, its fixed endpoints and the retained boundary rows, and returns an absolute chain whose complete boundary it checks again. It verified both directions on a four-term chart with a full-colour path and stationary loop powers 0, 1 and 4. In each case it accepted an integer certificate with a nonzero proper residual, accepted a different certificate modulo five for twice the target, and rejected that second certificate over the integers. It checked 96 polarized target terms, the 90 correction bracket orientations and the two exterior simplex coefficients. Agda checked both chart directions and all thirty proper brackets at power zero. The chart validations exercise the conversion; they do not supply full-row coefficients for the original cube. Relabelling is a substitution on finite syntax, so the argument and formula apply to any inactive terms and loop powers. [Relative certificate verifier and exterior-coordinate test](../../../tools/relative_coherence_hom_colour_projection.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_hom_colour_projection.py --agda "$dir/HomColourProjection.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/HomColourProjection.agda"
+~~~

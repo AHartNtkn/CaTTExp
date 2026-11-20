@@ -86,6 +86,7 @@ Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can b
     - Homotopicality is truth-table reducible to 0′, with the query list computable in advance.
     - Erasing every instruction except the zero-crossings ("milestones") of the non-binary resources preserves homotopy type, after taking transitive closure.
     - On a second class, failure is r.e. In that class mixed roles and unbounded reversals are allowed, with at most one initial-only and one final-only role per resource and assignable counts at most two.
+    - The oracle is needed for the table queries. With ten binary resources, occurrence of one fixed 100-milestone table is r.e.-complete, by a two-counter machine with request and acknowledgement locks, although every such input is homotopical.
 35. **Closure.** Each class in items 31–34 is recognized by finite reachability on the control graphs and is closed under suspension and graph assembly (item 7).
 
 ## 4. Questions
@@ -93,6 +94,7 @@ Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can b
 **Question 1 (main: the exact degree).** Decide whether homotopicality of finite polygraphs is decidable relative to the halting problem (Δ⁰₂), or prove it Π⁰₂-complete.
 - A Π⁰₂ lower bound needs one finite presentation per machine that realises the universal input quantifier. Item 30 does this on supplied poles, and shows that positive typing cannot select them. Say whether a non-positive presentation, or a different routing, can enforce the selection.
 - A Δ⁰₂ upper bound needs a bound, computable from a halting oracle, on the records to examine. Item 34 gives one when only the non-binary resources have bounded milestones. Say whether a milestone-type reduction extends to all resources.
+- Item 34's r.e.-complete table attainability is a candidate source of hardness. Say whether the topology can be made to detect one fixed table in the presence of all other records.
 - If neither is reachable, settle the question on positive presentations.
 
 **Question 2 (one class containing the decidable ones).** Items 31–34 give four generator-level classes.

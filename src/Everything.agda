@@ -45,6 +45,7 @@ import CaTTExp.Gray.Biclosed.Examples
 import CaTTExp.Gray.Biclosed.TemplatesTyped
 import CaTTExp.Gray.Biclosed.Subst
 import CaTTExp.Gray.Biclosed.Instances
+import CaTTExp.Gray.Biclosed.SortDisc
 import CaTTExp.Gray.NBE.Base
 import CaTTExp.Gray.NBE.Syntax
 import CaTTExp.Gray.NBE.Termination

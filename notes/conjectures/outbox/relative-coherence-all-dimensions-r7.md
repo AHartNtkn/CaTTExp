@@ -2121,3 +2121,44 @@ agda --safe --no-libraries -i src -i "$dir" "$dir/WalkingFan.agda"
 python3 -B tools/relative_coherence_walking_graph.py --descending
 python3 -B tools/relative_coherence_walking_graph.py
 ~~~
+
+# Researcher Response 74
+
+## A third-homology test on the unlabelled cylinder and on the single cubical pair
+
+Fix the two outer vertices \(x,y\) of parallel four-terms \(a,b\) in a free CaTT algebra \(A\). Let \(D\) be the Benjamin–Markakis computad freely generating the weak hom \(A(x,y)\). Write \(N_j\) for the top occurrence chain of a \(j\)-term **in this computad**. Define
+\[
+                 d(a,b)=[N_3(b)-N_3(a)]\in H_3(C_*(D);\mathbb Z).
+\]
+The differential of a generator is the target count minus the source count. Chains have finite support even when \(D\) has infinitely many generators. Literal parallelism makes the difference a cycle. Any five-term \(w:a\to b\) is a four-term in the hom, so \(\partial N_4(w)=N_3(b)-N_3(a)\). A nonzero class therefore certifies unfillability in the original syntax.
+
+Let \(R_8\) denote identity-image RC through degree eight on the six-seam ring.
+
+1. In the simplex star of Response 48, use the *original*, unbased five-cube poles \(u,v\) in their common hom. Under \(R_8\), an integral character takes \(d(u,v)\) to one, even after quotienting the chain complex by the sum of the chain complexes on rooted proper vertex sets containing \(x,y\). Any torsion relation on this relative class, including zero, disproves \(R_8\).
+2. Take the full cylinders \(A=I\otimes S\) of Response 71 and its pairs \(a,b\) over the identity on the full mixed cell, with the indicated padding. For every prime \(p\), \(R_8\) forces **some unlabelled cylinder** with \(d(a,b)\ne0\) in homology over \(\mathbb F_p\), detected by reduction of an integral character. Thus a uniform proof that all the differences bound modulo a *single* prime would disprove \(R_8\). Conversely, a single nonboundary at any prime proves a counterexample to RC(4) in this strong-Steiner class, independently of the ring hypothesis. The chains in this test depend only on the cylinder and its two vertices.
+
+**Reading the hom generators.** An ambient variable is indecomposable in the hom. A labelled coherence decomposes there precisely when its generic operation is the suspension of a legal operation. Both the arity and the generic sphere must desuspend. The labels at the two added poles are then \(x,y\), and the remaining substitution gives the hom labelling by adjunction. At a decomposable head add the counts of the labels of the output dimension. At an indecomposable head count the entire literal term once. This follows from the explicit evaluation of a hom operation and injectivity of the coherence constructor in the proof of freeness. It computes a difference and each proposed boundary column without enumerating the computad. [Benjamin and Markakis, §4.3, Proposition 10 and its proof](https://arxiv.org/pdf/2402.01611)
+
+**Moving the character down one dimension.** Assume \(R_8\). Let \(z\) be the integral five-cocycle on the unrestricted bracket parameter \(P\) from Responses 44 and 72. First use a cylinder labelling \(e:A\to G\) from Response 72 followed by \(q:G\to P\). Choose a reference path \(o:e(x)\to e(y)\) in \(G\). In the hom \(G(e(x),e(y))\), choose point cones from \(o\) on the images of generators of \(D\) through hom degree two. An object needs an arrow from \(o\). In the next two degrees the cone boundary is the one in Response 46, using cones already chosen on the attaching terms. These choices ask for ambient cells of degrees two, three and four between parallel faces in the groupoidal, three-connected \(G\). Extend generator choices to terms by the generic point-join actions of Response 46, applied *inside the hom*.
+
+For each hom three-generator \(g\), the faces of its required cone are parallel ambient four-terms. Take their primitive five-bracket in \(P\) and define \(\kappa(g)\) to be its \(z\)-weight. This defines an integral three-cochain on \(D\). For an arbitrary hom three-term \(t\), its cone \(p_t\) built using the generic join action satisfies
+\[
+                        z(N^{P}_5 p_t)=\kappa(N_3 t).
+\]
+Indeed the generic join cell has one mixed top count per top occurrence. Interpreting a hom operation in the ambient parameter suspends it. Each top slot shifts up one rank, and the two added object positions have zero five-count. Substituting a generator cone therefore contributes its weight with exactly the required multiplicity. Lower labels and unmixed labels have ambient rank at most four. Induction proves the formula with arbitrary repetitions.
+
+For parallel hom three-terms \(s,t\), take *any* ambient five-term \(j:qe(s)\to qe(t)\) in \(P\). The cone type of \(j\), viewed as a hom four-cell, has source \(p_t\) and target \(j\) whiskered with the source-face cones, ending with \(p_s\) at hom cut three. The globular face equations give parallel ambient five-terms. Their primitive **six-bracket** in \(P\) has boundary of weight zero. The target has the five-count of \(j\) plus that of \(p_s\), since all earlier pads have lower dimension. It follows that
+\[
+                       \kappa(N_3t-N_3s)=z(N^{P}_5 j).
+\]
+Only the cone *type* in degree four was needed. The generic cone actions used in the construction end in hom degree three. For every four-generator of \(D\), its evaluated image supplies a \(j\) through \(G\) of weight zero by Response 72. Hence \(\kappa\partial_4=0\). Taking the primitive bracket on the evaluated images of \(a,b\) identifies the cylinder weight with the value of this homology character. The weights generate the unit ideal by Response 72. For every prime at least one of the characters therefore detects a difference after reduction.
+
+For the first test use the inclusion of the star in \(P\) in place of \(qe\). Choose \(o\) to run from \(x\) through 0 to \(y\). On a hom generator through degree two take the rooted carrier of its ambient dependencies, including the globular poles. If the carrier misses a positive name, its complete bracket algebra supplies the lower cone. The previously chosen cones on attaching terms stay in the same carrier by substitution. For a full carrier use three-connectivity of the star from Response 49. Now \(\kappa(g)=0\) on every proper carrier by the prescribed proper values of \(z\). Every ambient five-term of the star has weight zero since its generating brackets each miss a positive name. The cochain accordingly descends to a cocycle on the relative chain complex. Taking \(j=[u,v]\) gives one with the orientation of Response 48.
+
+**Checks.** The solver checked 1,697 signed cone boundaries after suspension. It computed cycles on the full cylinders of the point, arrow and two-globe. In each, whisker the full mixed cell (identity-padded to degree three) by an identity arrow. The generic endocoherence of this whiskering contributes a single hom three-generator, while the identity on the same term has zero hom three-count. In both directions a typed five-comparison supplies the unit boundary column. The solver also checked powers zero through seven and a suspended arity whose generic sphere fails desuspension. Agda 2.8.0 checked all seven five-comparisons in safe mode. These examples give zero in homology. The order of the relative five-cube class and the uniform cylinder boundary calculation remain undetermined. [Hom-computad chain solver](../../../tools/relative_coherence_hom_chains.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_hom_chains.py --agda "$dir/HomChainColumns.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/HomChainColumns.agda"
+~~~

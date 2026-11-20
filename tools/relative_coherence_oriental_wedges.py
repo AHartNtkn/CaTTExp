@@ -1,4 +1,5 @@
 """Project a suspended cube to a simplex and isolate the RC comparisons at its cuts."""
+from argparse import ArgumentParser
 from collections import Counter
 from functools import cache
 from itertools import combinations, product
@@ -73,7 +74,45 @@ def support(rows):
     return {f for s in maximal for size in range(1, len(s)+1) for f in combinations(s, size)}
 
 
-def census(n):
+def full_three_cells(simplices, names):
+    cells = close_atoms(map(simplex_atom, simplices), 3)
+    full = {q for q in cells if {v for pair in q for side in pair for s in side for v in s} == names}
+    return len(cells), full
+
+
+def unary_path(q):
+    """Check every cut-three factorization, retaining the whole intermediate tableau."""
+    top = q[4][0]
+    assert len(top) == len(set(top))
+    cells = close_atoms(map(simplex_atom, support(q)), 4)
+    fronts = []
+    for length in range(len(top)+1):
+        candidates = []
+        for prefix in combinations(top, length):
+            suffix = tuple(sorted(set(top)-set(prefix)))
+            counts = Counter(q[3][0])
+            for atom in prefix:
+                counts.update(simplex_d(atom))
+            if any(n < 0 for n in counts.values()):
+                continue
+            middle = tuple(sorted(counts.elements()))
+            left = q[:3] + ((q[3][0], middle), (prefix, prefix))
+            right = q[:3] + ((middle, q[3][1]), (suffix, suffix))
+            if left in cells and right in cells:
+                candidates.append((set(prefix), middle))
+        unique, = candidates
+        fronts.append(unique)
+    edges = []
+    for (before, source), (after, target) in zip(fronts, fronts[1:]):
+        assert before < after
+        atom, = after - before
+        edge = q[:3] + ((source, target), ((atom,), (atom,)))
+        assert edge in cells
+        edges.append(edge)
+    return {q[:3] + ((m, m),) for _, m in fronts}, edges
+
+
+def census(n, show_slices=False):
     for f in product((-1,0,1), repeat=n-1):
         differential = Counter()
         for s in image_basis(f):
@@ -109,14 +148,13 @@ def census(n):
         allowed = {s for lo,hi in intervals(face) for size in range(1,5)
                    for s in combinations(range(lo,hi+1),size)}
         contexts.append(allowed)
-        cells = close_atoms(map(simplex_atom, allowed), 3)
-        full = {q for q in cells if {v for pair in q for side in pair for s in side for v in s} == set(whole)}
+        count, full = full_three_cells(allowed, set(whole))
         full_labels.update(full)
         assert all({s for s in support(q) if len(s)<=4} <= allowed for q in ends)
         print(f'  cut {i}: {len(ends)} comparison labels, top four-cells '
               f'{[len(q[-1][0]) for q in ends]}, three-skeleton '
               f'{[sum(len(s)==j for s in allowed) for j in range(1,5)]}, '
-              f'{len(full)} full labels among {len(cells)} three-cells')
+              f'{len(full)} full labels among {count} three-cells')
     assert len(set(labels)) == 7
     union = set.union(*contexts)
     assert union == {s for size in range(1,5) for s in combinations(whole,size)
@@ -125,8 +163,26 @@ def census(n):
     heights = Counter(max(j for j, row in enumerate(q) if any(row)) for q in full_labels)
     assert heights == {1: 1, 2: 89, 3: 206}
     print(f'Distinct full three-labels by underlying dimension: {dict(sorted(heights.items()))}')
+    states, unary, identity = set(), set(), set()
+    for q in labels:
+        fronts, edges = unary_path(q)
+        states.update(fronts)
+        unary.update(edges)
+        if not edges:
+            identity.add(q[:-1])
+    assert (len(states),len(unary),len(identity)) == (17,14,1)
+    weights = Counter(len(q[3][0]) for q in states)
+    assert states <= full_labels and weights == {2: 3, 3: 4, 4: 4, 5: 4, 6: 2}
+    print(f'Forced paths: {len(states)} states, {len(unary)} unary edges and one stationary label.')
+    print(f'States by number of tetrahedron occurrences: {dict(sorted(weights.items()))}')
+    if show_slices:
+        for i, q in enumerate(sorted(states), 1):
+            print(f'Slice {i}: {q}')
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument('--slices', action='store_true', help='print both hemispheres of every slice tableau')
+    args = parser.parse_args()
     for n in range(2,8):
-        census(n)
+        census(n, args.slices)

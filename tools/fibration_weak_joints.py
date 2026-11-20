@@ -31,55 +31,60 @@ def eliminate(word, generator, replacement):
     return reduce_word(out)
 
 
+def edge_presentation(vertices, edges, triangles):
+    """Present pi_1 of a connected complex retaining distinct parallel edge incidences."""
+    neighbors = {v: [] for v in vertices}
+    for label, (i, j) in edges.items():
+        neighbors[i].append((j, label))
+        neighbors[j].append((i, label))
+    root = next(iter(vertices))
+    seen, queue, tree = {root}, deque([root]), set()
+    while queue:
+        i = queue.popleft()
+        for j, label in neighbors[i]:
+            if j not in seen:
+                seen.add(j)
+                tree.add(label)
+                queue.append(j)
+    if len(seen) != len(vertices):
+        raise ValueError('Choose a single nonempty component')
+    arcs, generators = {}, set()
+    for e in edges:
+        word = ()
+        if e not in tree:
+            g = len(generators) + 1
+            generators.add(g)
+            word = (g,)
+        arcs[e] = word
+    relations = [reduce_word(arcs[a] + arcs[b] + inverse(arcs[c])) for a, b, c in triangles]
+    while True:
+        relations = sorted({r for r in relations if r}, key=lambda r: (len(r), r))
+        choice = next(((r, i) for r in relations for i in r
+                       if r.count(i) + r.count(-i) == 1), None)
+        if choice is None:
+            return generators, relations, arcs
+        r, i = choice
+        k = r.index(i)
+        rest = r[k + 1:] + r[:k]
+        # Cyclically permute the relator to i * rest = 1.
+        replacement = inverse(rest) if i > 0 else rest
+        generators.remove(abs(i))
+        relations = [eliminate(s, abs(i), replacement) for s in relations]
+        arcs = {e: eliminate(w, abs(i), replacement) for e, w in arcs.items()}
+
+
 class FibreGroup:
-    """Collapse a spanning tree and eliminate generators with a defining relation."""
+    """Edge-path group of one finite fibre order complex."""
 
     def __init__(self, elements, below):
-        size = len(elements)
-        edges = [(i, j) for i, j in combinations(range(size), 2)
-                 if below(elements[i], elements[j]) or below(elements[j], elements[i])]
-        neighbors = [[] for _ in elements]
-        for i, j in edges:
-            neighbors[i].append(j)
-            neighbors[j].append(i)
-        seen, queue, tree = {0}, deque([0]), set()
-        while queue:
-            i = queue.popleft()
-            for j in neighbors[i]:
-                if j not in seen:
-                    seen.add(j)
-                    tree.add(tuple(sorted((i, j))))
-                    queue.append(j)
-        if len(seen) != size:
-            raise ValueError('Choose a single nonempty component')
-        self.arcs = {}
-        generators = set()
-        for i, j in edges:
-            word = ()
-            if (i, j) not in tree:
-                g = len(generators) + 1
-                generators.add(g)
-                word = (g,)
-            self.arcs[i, j], self.arcs[j, i] = word, inverse(word)
-        relations = []
-        for i, j, k in combinations(range(size), 3):
-            if all(pair in self.arcs for pair in ((i, j), (j, k), (k, i))):
-                relations.append(self.walk((i, j, k, i)))
-        while True:
-            relations = sorted({r for r in relations if r}, key=lambda r: (len(r), r))
-            choice = next(((r, i) for r in relations for i in r
-                           if r.count(i) + r.count(-i) == 1), None)
-            if choice is None:
-                break
-            r, i = choice
-            k = r.index(i)
-            rest = r[k + 1:] + r[:k]
-            # Cyclically permute the relator to i * rest = 1.
-            replacement = inverse(rest) if i > 0 else rest
-            generators.remove(abs(i))
-            relations = [eliminate(s, abs(i), replacement) for s in relations]
-            self.arcs = {e: eliminate(w, abs(i), replacement) for e, w in self.arcs.items()}
-        self.generators, self.relations = generators, relations
+        vertices = list(range(len(elements)))
+        edges = {(i, j): (i, j) for i, j in combinations(vertices, 2)
+                 if below(elements[i], elements[j]) or below(elements[j], elements[i])}
+        triangles = [((i,j),(j,k),(i,k)) for i,j,k in combinations(vertices,3)
+                     if (i,j) in edges and (j,k) in edges and (i,k) in edges]
+        self.generators, self.relations, arcs = edge_presentation(vertices, edges, triangles)
+        self.arcs = dict(arcs)
+        self.arcs.update({(j, i): inverse(w) for (i, j), w in arcs.items()})
 
     def walk(self, vertices):
         return reduce_word(i for edge in zip(vertices, vertices[1:]) for i in self.arcs[edge])

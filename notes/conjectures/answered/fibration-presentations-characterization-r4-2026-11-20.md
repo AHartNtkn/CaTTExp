@@ -926,3 +926,30 @@ python3 tools/fibration_cyclic_four.py
 ```
 
 [Exact 4-cell table and interchange check](../../../tools/fibration_cyclic_injections.py)
+
+## Researcher Response 26
+
+### Computing the weak joint group from the supplied generators
+
+The new solver takes the raw typed 2-rules, the two actual 2-writings for each 3-generator, two parallel strict 2-poles and a multiset of 3-generators. It returns **all strict 3-labels with these data, their serial marked contexts, and a finite presentation of the fundamental group of the weak comparison fibre at each label**. In particular it computes the group needed in Response 21 directly on a fibration stage. This is a terminating calculation on every promised input, including nullary generators and repeated occurrences. Triviality of an arbitrary output presentation is a separate group problem. The geometric identification uses the bubble-freeness of the raw stage proved in Response 24 and the unweighted chart-string theorem in homotopy-polygraphs R5.
+
+**Bounding every chart without bounding the whole hom.** Give each requested occurrence a distinct temporary name. Introduce a 2-marker for it with the same 1-poles as its 3-disk. In a chart string let $S$ be the prescribed starting 2-cell. For each ordinary 2-generator $h$, every intermediate count is at most
+$$
+            [S]_h+\sum_i\max(0,[t_i]_h-[s_i]_h).
+$$
+The sum uses the given top occurrences, with multiplicity. This follows by serialising the changes in each bead. Every ordinary gate of a bead survives in its initial state after substituting all source faces. Hence that same bound applies to gates outside the bead's markers. The total number of ordinary gates is also at most $|S|+\sum_i\max(0,|t_i|-|s_i|)$. Enumerate 2-writings from the specified outer 1-source with these bounds and at most one of each temporary name. Keep the specified outer 1-target and quotient by all disjoint-window interchanges, including both placements at an empty site. Evaluating marker faces yields concrete 2-cells modulo this same exchange. Now concatenate nonempty charts with disjoint name sets whose evaluated 2-faces match, testing the two outer 2-poles and use of all names. The count bounds prove completeness even if the entire parallel strict 2-set is infinite.
+
+**Keeping the correct incidences.** Before forgetting names, the resulting strings form a finite poset ordered by refinement. Split a bead into any chosen nonempty early and late sets: in the early bead substitute source faces for the late set, and in the late bead substitute target faces for the early set. If two given named strings are related, the name set of each final bead specifies its parent and its part of the ordered split uniquely. Refinements give all flag simplices. Permutations of names having the same 3-generator act freely on strings. Indeed each occurrence lies in a specific bead, and within that bead the boundary-fixed planar marker diagram has no automorphism moving a slot (bubble-freeness). Equivalently, substituting faces in a closed component of a planar marker diagram would give a raw 2-bubble, unless it consisted entirely of changes between two identity 2-faces; a first such marker on an empty word would itself be a raw 3-bubble.
+
+An uncoloured refinement lifts uniquely once the occurrences at one end are named: follow the retained slots through its ordered splits. Thus the quotient of the named flag complex by these permutations is the nerve of the uncoloured chart-string category. The implementation takes orbits **of flags**, since separate edges or triangles can have the same vertex orbits. Each connected component is one strict 3-label by the free top extension equations. Within that component take its edge generators after contracting a spanning tree and the relator for every flag triangle. Higher simplices preserve this group. The solver tracks generators through elementary Tietze eliminations. Every returned presentation presents the actual group, including when nontrivial relators remain.
+
+For Question 1 this also gives a finite sufficient whole-input check in base dimension four with finite strict 2-fibres when the base has only finitely many strict cells through rank three (or these are supplied by a terminating exhaustive enumeration). Enumerate the raw strict 3-labels of each candidate stage by Response 19, use this solver to test the groups, and apply Response 21 if every group is certified trivial. For example, successful elimination to the empty presentation is a decidable sufficient test. Then strict feasibility of the five-dimensional templates is equivalent to weak feasibility. This test does not require the no-matching-idle hypothesis of Response 18. A nontrivial group alone does not reject the presentation; specific relative joints still matter.
+
+**Validation.** The input for the nullary circuit is its actual $D,M$ disks at the specified poles. Four successive steps $DMDM$ give one serial history and a point. The positive middle-wire example has two serialisations and two inequivalent simultaneous charts, giving four vertices, four edges and infinite cyclic group. Narrowing one change on the same diagram makes the group trivial. For a doubly suspended two-loop graph the two orders acting on the same gate are distinct strict labels, each with point fibre; such a fibre is admissible at a base vertex. Finally three occurrences of the same change on three independent wires yield six serialisations, 13 vertices, 24 edges and 12 triangles with trivial group, checking the quotient by six renamings. The middle-wire control tests the group calculation on a known polygraph. Its occurrence as an obstruction in a raw total would require a separate realization.
+
+```sh
+python3 tools/fibration_three_comparison.py
+python3 tools/fibration_weak_joints.py
+```
+
+[Generator-to-group solver](../../../tools/fibration_three_comparison.py) · [Chart-string model](homotopy-polygraphs-r5-2026-11-20.md#finite-computation-at-a-specified-cell)

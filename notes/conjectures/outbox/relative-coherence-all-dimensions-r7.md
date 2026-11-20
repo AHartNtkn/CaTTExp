@@ -568,3 +568,35 @@ For necessity, for each $A$ containing no run the checker finds a translated sta
 **A 57-context sufficient test in dimension three.** For a run, take the union of the three-dimensional states reached in firing its four membranes. The gluing argument of round 6, Response 19 is local to each membrane: RC(3) and RC(4) on its states supply all its edge comparisons and hence its required 5-term. For starting indices $0$ through $11$ the union sizes are respectively $70,67,67,70,57,57,70,67,67,70,57,57$. Thus checking the two RC conditions on the **57 states of the run starting at 4** would already settle the six-seam case negatively; the same is true independently for starts 5, 10 or 11. Existence of the comparisons on any one of these runs remains open. [State enumeration and local gluing](../answered/relative-coherence-all-dimensions-r6-2026-11-20.md#researcher-response-19)
 
 **Reproduction.** Run `python3 -B tools/relative_coherence_sweep_colours.py`. The solver recomputes the twelve supports from their signed facet sweeps. Among 46,080 signed priority colourings, exactly 4,032 have four full-colour membranes, 10,368 have five, 1,728 have six and 29,952 have twelve. It reports a witness for each four-run. On the negative side it tests simplex containment on the 720 flags in each of 32 staircase triangulations (opposite origins give the same triangulation). Of all 4,096 permissions, 1,465 contain a feasible run and every other one admits the triangulation obstruction. It enumerates the incident states separately to obtain the twelve counts above. These are incidence and degree checks. The boundary formula and relative-degree argument give the implication for arbitrary CaTT terms. [Membrane colouring solver](../../../tools/relative_coherence_sweep_colours.py)
+
+# Researcher Response 13
+
+## A relative degree certificate is equivalent to one bracket at a point
+
+Fix $k\ge2$, $J=\{0,\ldots,k\}$, and $d=k-1$. Call a $d$-term *based at vertex $0$* if both its literal $(d-1)$-faces are $1_0^{d-1}$, with $1_0^0=0$. Let $N(t)$ count the $d$-generators of $P(J)$ in the strict image of $t$. Let $\rho(t)$ retain only the entries of $N(t)$ whose generators use every colour. For each $d$-generator $g$, let $\ell(g)$ be the coefficient of the oriented facet $[1,\ldots,k]$ in the simplex chain $h(g)$ computed by the cone formula of the relative-degree test. Put $\omega(t)=\sum_g N(t)_g\ell(g)$.
+
+**A nonzero relative $k$-degree occurs in $P(J)$ if and only if there are two based $d$-terms $A,B$ such that**
+$$
+                    \rho(A)=\rho(B),\qquad \omega(A)\ne\omega(B).
+$$
+In this case the *single generator* $[A,B]$ is a certificate of signed degree $\omega(B)-\omega(A)$. Moreover, *every* signed cellular $k$-chain in $P(J)$ has exactly the same cellular boundary as a single bracket between based terms. This includes all coefficients on the proper-colour generators. For $k=6$, either a pair satisfying the display or a successful relative chain from Response 11 therefore gives the other and disproves identity-image RC through degree eight on the six-seam ring.
+
+**Constructing the based bracket.** Write a finite chain as a signed sum of $k$-generators $[u_j,v_j]$, repeating generators according to their multiplicities. For a negative summand swap its two terms. Its contribution to the boundary is now $N(v_j)-N(u_j)$ with the updated order. Treat each parallel pair separately. For $i=0,\ldots,d-1$, let $s,t$ be its current $i$-source and $i$-target. Whisker both terms on the left at cut $i$ by $[1_0^i,s]$ and on the right by $[t,1_0^i]$, using identical binary heads and parentheses on both terms. At $i=0$ any two objects admit a bracket. At $i>0$ the preceding cut made the two $(i-1)$-boundaries literally $1_0^{i-1}$. Hence $s,t,1_0^i$ are parallel and both brackets exist. The two outer $i$-faces of the padded terms are literally $1_0^i$: the $i$-boundaries of a binary paste at cut $i$ select the outer faces. The next step consequently preserves all previously fixed lower faces.
+
+For $i<d-1$ the added brackets have dimension below $d$ and contribute zero to $N$. At the last cut the two brackets contribute exactly the same vector on both sides. Thus the based pair has the original signed difference. Compose all left terms at cut $d-1$ to make $A$, and compose all right terms in the same order to make $B$. These composites exist since every term is now an endomorphism of the same literal pole. Additivity gives $N(B)-N(A)=\partial w$ for the original chain $w$. For the zero chain one can take $A=B=1_0^d$. The bracket $[A,B]$ exists by definition of $P(J)$.
+
+A chain is relative precisely when its boundary has zero full-colour entries. For a relative chain its boundary maps to a cycle in $\partial\Delta^k$. The coefficient of $[1,\ldots,k]$ in that cycle is its integral degree, since this facet has coefficient $+1$ in $\partial[0,\ldots,k]$. Equal cellular boundaries therefore give equal degrees. This proves the criterion in both directions. The last-cut cancellation permits auxiliary brackets even when strict loops have no weak representative. [Relative degree and cellular chains](#relative-simplex-degree-detects-one-bridge-seam-rings)
+
+There is a dual way to test the remaining obstruction. **All relative degrees vanish if and only if one can assign rational numbers $\lambda_g$ to the full-colour $d$-generators such that every based $d$-term satisfies**
+$$
+                       \omega(t)=\sum_g \lambda_g\rho(t)_g.
+$$
+Indeed the count vectors of based terms form an additive monoid under the top composite, with the identity term representing zero. If all equal $\rho$-vectors have equal weight, the weight defines an additive map on the image monoid. It extends to its group of differences and then to the rational span. Extend this linear functional to the ambient direct sum by a basis extension. Conversely such a functional forces equal weight in every fibre. This concerns the relative-degree test alone. For six seams neither a nonzero-degree pair nor a functional satisfying all of these equations is established here.
+
+**Validation.** On the minimum-coloured three-cube the construction preserves the entire signed boundary and gives one based bracket of relative degree $-1$. At rank six the checker combines two columns with opposite signs from distinct triples of vertices, verifies every common pole, and checks that exactly one coefficient $+1$ and one coefficient $-1$ survive. That example validates the rank-six conversion. It has zero relative degree. The emitted rank-six judgment was checked with Agda 2.8.0 in safe mode. [Based-bracket checker](../../../tools/relative_coherence_based_columns.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_based_columns.py --agda "$dir/BasedSix.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/BasedSix.agda"
+~~~

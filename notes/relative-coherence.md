@@ -820,6 +820,15 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 
 **Where the circularity moves.** In Responses 3–4, depth-n naturality comes from comparisons in partial cylinders with about n nonglobular top ranks. Through this reduction, those comparisons again need fold naturality of depth up to n + 1. So with the known inputs this does not close unconditionally. It closes if fold naturality of every depth is built directly. That may be possible because a fold selection is special: (x, v) is a free face pair. Γ is the pushout of Γ′ along ∂⁻Dʰ ↪ Dʰ, and the fold is the retraction collapsing that elementary expansion. The local model is the partial cylinder Dʰ↑{x, v}, a lax triangle in dimension h (the triangle context for h = 1). This is the next thing to try.
 
+**The lax-triangle route, tried (2026-11-20): it does not close as stated.**
+- *Structure.* For the fold selection Y = {x, v} with v : p → x, the cylinder Γ↑Y adds x⁻, v⁻ : p → x⁻, x⁺, v⁺ : p → x⁺, x↑ : x⁻ → x⁺ and v↑ : v⁻ ∗_{h−1} x↑ → v⁺ (the lax triangle). It collapses to Γ′ by three elementary collapses of free face pairs, in this order:
+  1. (v⁺, v↑), where v⁺ is only the target of v↑;
+  2. (x⁺, x↑);
+  3. (x⁻, v⁻).
+- *Consequence.* Fold naturality on rank-n terms is a family of prescribed-boundary lifts in Γ↑Y, so it needs comparisons of rank n + 1 there. These would follow from an **expansion lemma** (E): comparisons transfer along an elementary expansion Δ = Δ′ + (y, w : q → y).
+- *Why it does not close.* (E) for a pair of dimensions (j − 1, j) at input rank n is exactly fold naturality of depth n − j + 1. Applied to Γ↑Y, (E) at the pair (x⁺, x↑) has the same dimensions as the original pair (x, v), at rank n + 1. So depth grows by one at each step. The expansion route recurs at higher rank, not lower. The pair (v⁺, v↑) lowers the depth, but (x⁺, x↑) does not.
+- A working route has to break the (x⁺, x↑) step. One way is to construct the depth-(k + 1) fold action on a free pair directly, by recursion on terms with explicit heads, using that x occurs only through v. Another is to avoid naturality in the folds altogether. Neither is done.
+
 **Status: sketch, not verified.**
 - The contractibility input is standard. Its search-free collapse and the level-k version of Response 4's steps 1–4 are not written out in detail.
 - No machine check yet.

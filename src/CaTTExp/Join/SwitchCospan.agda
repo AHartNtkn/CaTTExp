@@ -25,9 +25,12 @@
 --
 -- Where the law equations enter depends on the level. When the
 -- vertices are 3-cells, the laws (which relate 4-cells) are equations
--- between inner words and the switch map is idS; this is mechanized in
--- CaTTExp.Join.SwitchLaws (Parts A–C), including that the catalogued
--- optional laws keep seed lists. When the vertices are 4-cells, the
+-- between inner words and the switch map is idS. CaTTExp.Join.SwitchLaws
+-- machine-checks that the catalogued optional laws keep seed lists in
+-- raw T-syntax (Part A) and that inner-word equations keep seed lists
+-- in the completion (Part B); the link between the two, and that the
+-- 3-cell setting is switch-independent (Part C, a definition), are on
+-- paper. When the vertices are 4-cells, the
 -- laws enter through the quotient on cells; that the switch map is
 -- then a Switch (5-letters keep their kind) is not mechanized, since
 -- there is no raw 5-dimensional syntax yet (joining-completion.md §8).

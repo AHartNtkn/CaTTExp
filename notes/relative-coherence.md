@@ -993,12 +993,12 @@ This is the remaining item of (D), step 3.1. It follows Response 3's "Sequential
 A[y := T] is again a pasting context, so the two ways of composing ("act, then compose in the slot" and "compose, then act") are parallel with full support there, and one coherence (a) compares them.
 - Nested linear terms: apply this from the active child outwards. Two nested single-slot actions compose by the depth-0 substitution recursion (b).
 - Several active leaves of one root: graft at each leaf. The result is still a tree, and the comparisons between orders of action are again single coherences in that one grafted arity.
-- **Machine-checked:** `CaTTExp.GraftedArity` (Agda, `--safe`, no postulates). For every tree A, leaf a and tree T:
-  - `graft A a T` is a pasting context;
-  - the globular filler is total on it (`graft-fill`, from `GlobularTotal.FillTotal.fill-total`): any two parallel terms with the same strict normal form get a certified coherence;
-  - grafting a leaf is the identity.
+- **What is machine-checked, and what is not.** `CaTTExp.GraftedArity` (Agda, `--safe`, no postulates) checks only the immediate part:
+  - `graft A a T` is a pasting context. This holds for every tree because `psOf` turns any Batanin tree into one, so grafting itself contributes nothing here.
+  - Consequently the coherence rule is total there for parallel terms with equal strict normal forms (`graft-fill`, which applies `GlobularTotal.FillTotal.fill-total` to such a pair *assumed* given).
+  - Grafting a leaf is the identity, and the examples hold by `refl`.
 
-  Examples include a two-link string, and a 4-globe column grafted on a 2-cell arity.
+  The substantive claim of F2 is **not** checked: that "act, then compose" and "compose, then act" in A[y := T] are parallel with equal strict normal forms. That is a paper argument.
 
 **F3. Joins between consecutive factors.** At each join, compare the adjacent caps with the composite through the chosen state representative. This is an **old-arrow call** (c), the only same-rank call. Change of writing at a slot uses depth-1 naturality of the writing comparison J in its single maximal variable (b).
 - At level j that variable has rank h + j − 1 and J has rank h + j, so the depth is still one. Depth-1 naturality is constructive in every dimension.
@@ -1017,12 +1017,12 @@ A[y := T] is again a pasting context, so the two ways of composing ("act, then c
 - calls on proper arguments, which are smaller terms.
 
 All of them are smaller in the §7.12 order (input rank, height), refined by term size. So Sub_j closes (D) step 3.1 with no new circularity. **Lemma L is now reduced to F1–F4 plus (L-comb).** Each of F1–F4 is the level-0 or level-1 construction of r9 Responses 3–4, with the level-dependent parts identified:
-- the grafted tree T in F2, which is machine-checked;
+- the grafted tree T in F2, a paper argument (only the fact that grafted arities are pasting contexts is machine-checked, and that fact is immediate);
 - the depth-1 rank count in F3.
 
 **Status.**
 - Written out; not independently verified.
-- The Agda module checks the grafting step only. The raw-term recursion F1–F4 is not formalized: the Agda development models typing and the globular filler, not the marked contexts or old-arrow calls of Responses 3–4.
+- The Agda module checks only that grafted arities are pasting contexts, so the coherence rule is total there for pairs with equal normal forms; that the F2 composites form such a pair is unchecked. The raw-term recursion F1–F4 is not formalized: the Agda development models typing and the globular filler, not the marked contexts or old-arrow calls of Responses 3–4.
 - The remaining open input for RC in general is unchanged: fold actions in every depth, r10 Question 1(a), §7.13(E).
 
 ## 8. Follow-ups and owners

@@ -9,8 +9,9 @@
 --
 -- The level-j substitution step of lemma L acts with a root head on a
 -- pasting of argument cells by forming the root in the grafted arity
--- and comparing there by the coherence rule.  This module checks the
--- formal part of that step:
+-- and comparing there by the coherence rule.  This module checks only
+-- the immediate part of that step (that the two composites of F2 have
+-- equal strict normal forms is a paper argument, not checked here):
 --
 --   * the grafted arity is again a pasting context (`psGraft`), hence
 --     globular (`graft-glob`), for every tree, leaf and grafted tree;

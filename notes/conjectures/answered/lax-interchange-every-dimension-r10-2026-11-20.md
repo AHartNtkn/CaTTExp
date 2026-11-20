@@ -639,3 +639,42 @@ For a true output the excluded reverse supplies both inequalities. For a false o
 For explicit logspace layering, at stage \(i\) create the newly available gate and propagate all earlier values forward. There are polynomially many gate-level pairs. An expansion at level \(n\) uses \(O(n)\) pairs of shared column nodes; writing each indicated iterated face one map at a time takes \(O(n^2)\) nodes. Cut numbers, stage numbers, gate numbers and local subnode indices are polynomially bounded, and the gate’s predecessor addresses are obtained by scanning the circuit. Tuple names with these indices define a logspace transducer producing the shared DAG, including its two final terms. One can expand the Godement \( *_3\) by the same columns if it is presented as derived. Complemented monotone circuit value is also P-complete, by dualizing the gates and constants. [Goldschlager, *The monotone and planar circuit value problems are log space complete for P*](https://doi.org/10.1145/1008354.1008356).
 
 The double-exponential bound applies to materializing the matrix. The Boolean equality decision could avoid materializing it. Indeed on the fixed adjacent pair of loops with free trace vocabulary from (K63), any shared expression built from the two loops, identities and chronological composition gives a straight-line program for a word in two letters. Equal words give equal pastes; different words are already distinguished by the trace in \(T\), hence in every setting. Compressed-word equality gives a deterministic polynomial-time test on this fragment. For the full signature the existence of a polynomial-time decision procedure on arbitrary shared terms remains open here. [Faithful two-letter trace](../answered/lax-interchange-every-dimension-r8-2026-11-20.md#researcher-response-2) · [Jeż, compressed pattern matching and equality](https://arxiv.org/abs/1111.3244)
+
+# Verification (2026-11-20)
+
+**Checker re-runs.** Both pass, each in about a second.
+- `scripts/e6/interchange_fibre_decorations.py`:
+  - Strip cut-path counts agree with independent marked evaluations through width nine.
+  - The 3 × 4 threshold grid: both positional loops, the nine projected relations, classes of sizes 12 and 1, and all eight three-block products.
+  - The forbidden-pattern recurrence reproduces all 39,604 components of the 40,320 permutations.
+  - The suspended 1 × 2 interval has switch counts [2, 1, 1, 1], and the 2 × 3 interval has 49 raw paths with counts [49, 14, 2, 2]. All comparison maps commute.
+- `scripts/e6/check_interchange_shared_paths.py`:
+  - 1,000 compressed-word comparisons agree with expansion.
+  - Rigid-label classification agrees with the marked and split strip tables through width 6.
+  - Reassociated grammars with 2^100 periods compare equal, and a changed final rigid label is detected.
+
+**Response 3 (answers §4 Question 1).** Argument checked.
+- *Finite grounding.* Both switches are equations on a height-3 arity: a stack of two 3-globes against one 3-globe. The free tables through dimension 3 are common to all four settings and finite on a finite diagram (r9). So the substitution instances of the enabled switches on Γ form a finite, computable list of ground 4-path pairs.
+- *Normal forms.* These go by induction on degree. Raw lifts of a T₁₂ normal word τ between the A-normalized faces are finite by the (K65) bounds, computed with A-labels on lower operands. Equality is connectivity in the graph of one-step replacements. Above degree 4, the new equations act only inside lower labels, which are already normalized. Completeness holds because every derivation step preserves the T₁₂-value and the A-endpoints. The rank selection is a canonical choice of the first word per component.
+- *Reachability.* This is breadth-first search over the finite vertex list at fixed lower faces and conserved weight, as in Lemma V-dec.
+- *Comparison maps.* For S ⊆ S′, the comparison re-normalizes the source representative in S′. It is computable and functorial.
+- *Lower bound.* Equality and reachability on shared terms are P-hard, by encoding monotone circuit value through properness. B_n(X, Y) is proper iff both inputs are, X ∗₃ Y is proper iff either is, and a final cell has equal faces iff the circuit returns 0 (Goldschlager). The explicit algorithm can need a matrix with at least 2^{2^k − 1} rows on a DAG with O(k) nodes. A polynomial algorithm on arbitrary shared terms is open. The fragment of products of two adjacent loops is polynomial by compressed-word equality.
+- *Repository detail.* As the response says, `SwitchLaws` enables both binary splits under the inner-law bit, so the "inner law" and "both" settings have the same free tables. design-decisions.md §1.7 lists four settings. In fact only three are distinct: V, V + {R}, and T₁₂.
+
+**Response 2 (shared chronological paths).** Relative to an oracle for lower labels and unary runs, equality is polynomial via the rigid factorization U₀ g₁ U₁ ⋯ g_h U_h and Jeż recompression. It is unconditionally polynomial on paths whose rigid labels have already been classified. The two-loop family makes this nontrivial in every degree ≥ 5. Checked at the argument level and by the checker.
+
+**Response 1** answers the earlier, unnarrowed round-10 brief: arbitrary finite extensions, comparison fibres and decorations. Checked at the argument level, plus the checker runs above. Its results:
+- single-equation admissibility has the same degree as list admissibility;
+- lists of one output degree pack into one equation;
+- pure directed-existence lists are decidable, and otherwise there is no free object, by the translation argument;
+- the T₁₂-based rank construction cannot cover all admissible S;
+- decorated-cut fibres and the exact maximum on two-chain grids, which is 1 iff min(m, n) ≤ 2 or m = n = 3, and +∞ otherwise in degree ≥ 4;
+- a co-r.e. admissibility criterion for rank-preserving lists;
+- normalization relative to a halting oracle.
+
+None of these changes the design.
+
+**Verdict.** Verified. **Question 1 is answered positively.** Equality and reachability are decidable in F_{V+S} for every offered setting, in every dimension, uniformly in the diagram, the degree and the switch bits, with computable comparison maps. So the checker's side condition is decidable with any switch on. Polynomial time on shared terms is not established, and the problem is P-hard.
+
+**Follow-up: none (retired by relevance).** The only open item is a polynomial-time algorithm on arbitrary shared terms. That would change the checker's cost, not any rule, the kernel design or a needed construction. The decision procedure exists, and the polynomial fragments in Responses 2–3 cover the families met so far. This item is recorded under E12 as an implementation question.
+

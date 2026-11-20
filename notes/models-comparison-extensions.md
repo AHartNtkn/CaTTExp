@@ -4,6 +4,8 @@
 
 *Background and notation are those of `conjectures/answered/catt-models-unit-condition-2026-11-19.md` (the prompt's Known (I)–(VI) and the verified response). In brief: A_𝔠 is the free CaTT model on a finite computad 𝔠, F(𝔠) the free strict ω-category, π_𝔠 : A_𝔠 → F(𝔠) the strict-image map, 𝓛_R ⊣ S₀ the realization adjunction between CaTT models and algebraically fibrant complete Segal Θ_ω-spaces 𝒜, η the unit, W the Fujii–Hoshino–Maehara (FHM) ω-weak equivalences, Q coinductive completion, and*
 
+**Update 2026-11-20.** Both items are closed by the verified unit-condition r4 responses (`conjectures/answered/catt-models-unit-condition-r4-2026-11-20.md`, PR #287): (U), hence (11) for every finite computad including the bubble, and (FEA) hold, and Mod(CaTT)[W⁻¹] ≃ coinductively complete (∞,ω)-categories; for L, built on Theorem L's realization, W_L has 2-out-of-6, the directed unit holds and Mod(𝕋_L)[W_L⁻¹] ≃ 𝒪. By Theorem B this gives RC_id(𝔠) for every homotopical finite computad. Whether 𝒪 is Gepner–Heine's OrCat (which contains B.4's convention check) is asked in `conjectures/outbox/catt-models-unit-condition-r5.md`.
+
 ```
 (11)_𝔠    η_{A_𝔠} ∈ W.
 ```

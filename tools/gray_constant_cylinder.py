@@ -107,8 +107,8 @@ def check_tile(level, emitter):
             emitter.check_type(f'degeneracy-{d}', G, higher, wanted)
 
 
-def check_moving_caps(level, max_degree, emitter):
-    """Lift globular extensions of a 3-cylinder with arbitrary 2-dimensional caps."""
+def moving_cap_lifts(level, max_degree):
+    """Lift two parallel fillers above a cylinder with arbitrary caps of the given rank."""
     G = level.G
     g = ('g', level.k, '*')
     caps = [v(level.end[s, g]) for s in (0, 1)]
@@ -132,10 +132,16 @@ def check_moving_caps(level, max_degree, emitter):
         assert expected != A
         for s, t in enumerate(lifted):
             assert infer(G, t) == expected
-            if emitter is not None:
-                emitter.check_type(f'moving-{degree}-{s}', G, t, expected)
+            yield degree, s, G, t, expected
             rails[s].append(t)
-        print(f'Degree {degree}: both lifts have the prescribed moving-cap cylinder type')
+
+
+def check_moving_caps(level, max_degree, emitter):
+    for degree, side, ctx, term, expected in moving_cap_lifts(level, max_degree):
+        if emitter is not None:
+            emitter.check_type(f'moving-{degree}-{side}', ctx, term, expected)
+        if side == 1:
+            print(f'Degree {degree}: both lifts have the prescribed moving-cap cylinder type')
 
 
 def run(max_degree, certificate):

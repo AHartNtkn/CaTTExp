@@ -1919,4 +1919,4 @@ Status: **verified, partial. Q2 advanced: CT for D^M ⊗ D³ and D³ ⊗ D^M for
 - Q1: all pairs and iterated tensors from degree five on.
 - Q2: all globe pairs (equation (6) for singleton labellings, or arbitrary-depth partial naturality on globular arities) and all cubes I^{⊗n} for n ≥ 6.
 - Q3: no impossibility evidence.
-- Follow-up: [`outbox/canonical-gray-terms-r8.md`](../outbox/canonical-gray-terms-r8.md).
+- Follow-up: [`answered/canonical-gray-terms-r8-2026-11-20.md`](canonical-gray-terms-r8-2026-11-20.md).

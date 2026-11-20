@@ -627,4 +627,4 @@ Status: **verified, partial; Q2 and Q3 answered, Q1 open.** One response. Before
 **What is left open.**
 - Q1: classification of the theories satisfying 1–5 with H ≠ 1 over P, or an initial one, with morphisms as clarified above.
 - A closed description of the forbidden factors of Q2 (optional).
-- Follow-up: [`outbox/lax-interchange-every-dimension-r7.md`](../outbox/lax-interchange-every-dimension-r7.md).
+- Follow-up: [`answered/lax-interchange-every-dimension-r7-2026-11-20.md`](lax-interchange-every-dimension-r7-2026-11-20.md).

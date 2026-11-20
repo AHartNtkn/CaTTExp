@@ -1046,4 +1046,4 @@ Status: **verified, partial**. Nineteen responses. Neither direction of Question
 - (⇐) in general: no contraction theorem beyond dimension 3. Response 18 shows it is tied to Γ₆.
 - (⇒) in general: decide whether RC_id(∞) forces every geometric fibre to be contractible. The cube-parameter method needs CT for Gray cubes in all dimensions, and the six-seam ring Γ₆ is the first undecided context.
 - Γ₆ itself: decide RC(3) and RC(4) on the 148 three-dimensional states of Response 19. A failure on one state refutes (⇐), since the states are strong-Steiner. Success on all of them shows that Γ₆ fails RC in some degree ≤ 8, as (⇒) predicts.
-- Follow-up: [`outbox/relative-coherence-all-dimensions-r7.md`](../outbox/relative-coherence-all-dimensions-r7.md).
+- Follow-up: [`answered/relative-coherence-all-dimensions-r7-2026-11-20.md`](relative-coherence-all-dimensions-r7-2026-11-20.md).

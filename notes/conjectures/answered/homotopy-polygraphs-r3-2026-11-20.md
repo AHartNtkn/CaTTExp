@@ -196,4 +196,4 @@ Status: **verified, partial; Question 3 answered, Question 1 answered in terms o
 - A finite criterion at the level of generators in every dimension (for example, no seam ring), or a proof that none exists.
 - Decidability of homotopicality relative to a bubble-freeness oracle (only the jump is known).
 - The last-step criterion in every dimension for non-positive polygraphs.
-- Follow-up: [`outbox/homotopy-polygraphs-r4.md`](../outbox/homotopy-polygraphs-r4.md).
+- Follow-up: [`answered/homotopy-polygraphs-r4-2026-11-20.md`](homotopy-polygraphs-r4-2026-11-20.md).

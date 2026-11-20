@@ -185,6 +185,33 @@ xchC dir u w = coh Q B σ , B [ σ ]ty
   B = if dir then arr (snd s) (fst s) (fst t) else arr (snd s) (fst t) (fst s)
   σ = ⟪ diskList u ++ restDisk 0 w ⟫
 
+-- Unitors and associators on 1-cells, used by cones over 1-dimensional
+-- coherence terms (ledger B19/B25): for a 1-cell w : x → y,
+--   ruC w : w ⇒ w ∗₀ id_y,   luC w : w ⇒ id_x ∗₀ w   (full cohs over D¹),
+-- and for composable 1-cells u, v, w,
+--   assoc1C true u v w : (u ∗₀ v) ∗₀ w ⇒ u ∗₀ (v ∗₀ w)   (false: reverse).
+ruC luC : Cell → Cell
+ruC w = coh D B ⟪ diskList w ⟫ , B [ ⟪ diskList w ⟫ ]ty
+  where
+  D = Disk 1
+  f = gen D 2
+  B = arr (snd f) (fst f) (fst (binC 0 f (idC (gen D 1))))
+luC w = coh D B ⟪ diskList w ⟫ , B [ ⟪ diskList w ⟫ ]ty
+  where
+  D = Disk 1
+  f = gen D 2
+  B = arr (snd f) (fst f) (fst (binC 0 (idC (gen D 0)) f))
+
+assoc1C : Bool → Cell → Cell → Cell → Cell
+assoc1C dir u v w = coh Q B σ , B [ σ ]ty
+  where
+  Q = ctxOf (node (leaf ∷ leaf ∷ leaf ∷ []))
+  a = gen Q 2 ; b = gen Q 4 ; c = gen Q 6
+  l = binC 0 (binC 0 a b) c
+  r = binC 0 a (binC 0 b c)
+  B = if dir then arr (snd l) (fst l) (fst r) else arr (snd l) (fst r) (fst l)
+  σ = ⟪ diskList u ++ restDisk 0 v ++ restDisk 0 w ⟫
+
 -- assocC dir u v w, for 2-cells composable along 1-cells, is the
 -- associator (u ∗₁ v) ∗₁ w ⇛ u ∗₁ (v ∗₁ w) (dir = true) or its reverse
 -- (dir = false), over three 2-disks glued along 1-disks.
@@ -208,6 +235,8 @@ data Ex : Set where
   xc  : Ex → Ex → Ex          -- interchange of two 2-cells (xchC)
   xr  : Ex → Ex → Ex          -- its reverse
   asL asR : Ex → Ex → Ex → Ex -- associator of three 2-cells along 1-cells, and its reverse
+  ru lu : Ex → Ex             -- unitors on a 1-cell: w ⇒ w ∗₀ id, w ⇒ id ∗₀ w
+  a1L a1R : Ex → Ex → Ex → Ex -- associator of three 1-cells, and its reverse
 
 data ExTy : Set where
   ob  : ExTy
@@ -247,6 +276,12 @@ tyF (suc f) Γ (xr u w)   = hom (tyF f Γ s) t s
   B = tyF f Γ w
   s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
   t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
+tyF (suc f) Γ (ru w)     = hom (tyF f Γ w) w (bn 0 w (idn (tgtE (tyF f Γ w))))
+tyF (suc f) Γ (lu w)     = hom (tyF f Γ w) w (bn 0 (idn (srcE (tyF f Γ w))) w)
+tyF (suc f) Γ (a1L u y w) = hom (tyF f Γ l) l (bn 0 u (bn 0 y w))
+  where l = bn 0 (bn 0 u y) w
+tyF (suc f) Γ (a1R u y w) = hom (tyF f Γ l) (bn 0 u (bn 0 y w)) l
+  where l = bn 0 (bn 0 u y) w
 tyF (suc f) Γ (asL u y w) = hom (tyF f Γ l) l (bn 1 u (bn 1 y w))
   where l = bn 1 (bn 1 u y) w
 tyF (suc f) Γ (asR u y w) = hom (tyF f Γ l) (bn 1 u (bn 1 y w)) l
@@ -279,6 +314,10 @@ mutual
   evF (suc f) Γ (bn k u w) = fst (binC k (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (xc u w)   = fst (xchC true  (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (xr u w)   = fst (xchC false (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (ru w)     = fst (ruC (cellF f Γ w))
+  evF (suc f) Γ (lu w)     = fst (luC (cellF f Γ w))
+  evF (suc f) Γ (a1L u y w) = fst (assoc1C true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
+  evF (suc f) Γ (a1R u y w) = fst (assoc1C false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asR u y w) = fst (assocC false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
 
@@ -315,6 +354,10 @@ substE ρ (bn k u w) = bn k (substE ρ u) (substE ρ w)
 substE ρ (idn e)    = idn (substE ρ e)
 substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
 substE ρ (xr u w)   = xr (substE ρ u) (substE ρ w)
+substE ρ (ru w)     = ru (substE ρ w)
+substE ρ (lu w)     = lu (substE ρ w)
+substE ρ (a1L u y w) = a1L (substE ρ u) (substE ρ y) (substE ρ w)
+substE ρ (a1R u y w) = a1R (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (asR u y w) = asR (substE ρ u) (substE ρ y) (substE ρ w)
 
@@ -328,6 +371,10 @@ varsE (bn _ u w) = varsE u ++ varsE w
 varsE (idn e)    = varsE e
 varsE (xc u w)   = varsE u ++ varsE w
 varsE (xr u w)   = varsE u ++ varsE w
+varsE (ru w)     = varsE w
+varsE (lu w)     = varsE w
+varsE (a1L u y w) = varsE u ++ varsE y ++ varsE w
+varsE (a1R u y w) = varsE u ++ varsE y ++ varsE w
 varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
 varsE (asR u y w) = varsE u ++ varsE y ++ varsE w
 
@@ -417,6 +464,63 @@ module ConeOf (Γ : ExCtx) where
 --      X_j = X_{j−1} ∗_j q_{u_{m−j}} (j even), q_{u_{m−j}} ∗_j X_{j−1} (j odd),
 -- where u_0 = t and u_{k+1} is the source of u_k if dim u_k is even and
 -- its target if dim u_k is odd.
+
+------------------------------------------------------------------------
+-- Cones over contexts whose boundaries are 1-dimensional coherence
+-- terms (ledger B19, B25; notes/specified-cones.md §5): the cone cell
+-- over a term is defined by recursion,
+--   P(x)          = p_x
+--   P(id_x)       = ru(p_x)                     : p_x ⇒ p_x ∗₀ id_x
+--   P(a ∗₀ b)     = (P b ∗₁ (P a ∗₀ b)) ∗₁ a1L(p_X, a, b)
+--                                               : p_Z ⇒ p_X ∗₀ (a ∗₀ b)
+-- for 1-dimensional a : X → M, b : M → Z. Any other term (identities of
+-- 1-cells, 2-dimensional composites, …) gives nothing: those need N^cone
+-- in dimension ≥ 2 and are not implemented. On globular Γ this is
+-- ConeOf.cone (checked by refl in ConesExamples).
+
+module ConeT (Γ : ExCtx) where
+  private
+    n = length Γ
+    c = v n
+    pr : Nat → Ex
+    pr i = v (suc (n + i))
+    dimΓ : Ex → Nat
+    dimΓ e = dimE (tyE Γ e)
+    pObj : Ex → Maybe Ex
+    pObj (v i) = just (pr i)
+    pObj _     = nothing
+
+  P : Ex → Maybe Ex
+  P (v i) = just (pr i)
+  P (idn e) = if dimΓ e ==ℕ 0 then (pObj e >>= λ pe → just (ru pe)) else nothing
+  P (bn k a b) =
+    if (k ==ℕ 0) ∧ (dimΓ a ==ℕ 1) ∧ (dimΓ b ==ℕ 1) then
+      (P a >>= λ Pa → P b >>= λ Pb → pObj (srcE (tyE Γ a)) >>= λ pX →
+       just (bn 1 (bn 1 Pb (bn 0 Pa b)) (a1L pX a b)))
+    else nothing
+  P _ = nothing
+
+  longSide : Nat → ExTy → Maybe Ex
+  longSide x A = P (srcIter Γ m (v x)) >>= λ p0 → go m 1 (bn 0 p0 (v x))
+    where
+    m = dimE A
+    go : Nat → Nat → Ex → Maybe Ex
+    go zero    j acc = just acc
+    go (suc f) j acc =
+      if m ≤ℕ j then just acc
+      else (P (srcIter Γ (m ∸ j) (v x)) >>= λ pj → go f (suc j) (bn j pj acc))
+
+  projTy : ExCtx → Nat → ExTy → Maybe ExTy
+  projTy K x ob          = just (hom ob c (v x))
+  projTy K x (hom A s t) = P t >>= λ pt → longSide x (hom A s t) >>= λ l →
+                           just (hom (tyE K pt) pt l)
+
+  build : Nat → ExCtx → ExCtx → Maybe ExCtx
+  build x K []       = just K
+  build x K (A ∷ As) = projTy K x A >>= λ B → build (suc x) (K ++ (B ∷ [])) As
+
+  cone : Maybe ExCtx
+  cone = build 0 (Γ ++ (ob ∷ [])) Γ
 
 module CoconeOf (Γ : ExCtx) where
   n = length Γ
@@ -561,6 +665,10 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   liftF (suc fl) (xc _ _)    = nothing
   liftF (suc fl) (xr _ _)    = nothing
   liftF (suc fl) (asL _ _ _) = nothing
+  liftF (suc fl) (ru _)      = nothing
+  liftF (suc fl) (lu _)      = nothing
+  liftF (suc fl) (a1L _ _ _) = nothing
+  liftF (suc fl) (a1R _ _ _) = nothing
   liftF (suc fl) (asR _ _ _) = nothing
   liftF (suc fl) (bn k u w) =
     if affected u ∧ affected w then
@@ -772,6 +880,13 @@ dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dual
 -- and the dual of an associator is the reverse associator.
 dualE (xc u w)    = xc (dualE w) (dualE u)
 dualE (xr u w)    = xr (dualE w) (dualE u)
+-- O_odd reverses 1-cells and swaps ∗₀ factors; 2-cells keep their
+-- direction. So a right unitor becomes a left one, and the associator of
+-- 1-cells becomes the reverse associator of the swapped factors.
+dualE (ru w)      = lu (dualE w)
+dualE (lu w)      = ru (dualE w)
+dualE (a1L u y w) = a1R (dualE w) (dualE y) (dualE u)
+dualE (a1R u y w) = a1L (dualE w) (dualE y) (dualE u)
 dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
 dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
 
@@ -1104,3 +1219,8 @@ module ConstD2 (Γ : ExCtx) where
     okSub : Maybe Ctx → Bool
     okSub nothing  = false
     okSub (just C) = is-just (checkCtx ΣΓ >>= λ w → checkSub ΣΓ w H C)
+
+-- Cocones over 1-dimensional coherence terms, as the O_odd dual of the
+-- cone over the dual diagram (on globular Γ this is CoconeOf.cocone).
+coconeT : ExCtx → Maybe ExCtx
+coconeT Γ = ConeT.cone (dualCtx Γ) >>= λ K → just (dualCtx K)

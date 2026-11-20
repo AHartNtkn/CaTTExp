@@ -206,7 +206,7 @@ Status: **verified, partial**. The response identifies both comparison maps as 0
 - *Universal property.* Maps from QL(KC), or from QLA, into ND are strict CaTT maps from KC, or from A, into D. Precomposition with q is bijective by descent (q is a trivial fibration), and precomposition with π is bijective by freeness. So **Qd_C and Qe are both 0-truncation maps**. Correct.
 - *Consequence.* **Γ is homotopical iff QLA is 0-truncated, iff π_j Map(𝔻ⁿ, QLA) = 0 for all n ≥ 0 and j ≥ 1.** Reconstruction at C is the same statement for QL(KC). The descent argument settles maps into discrete targets only. The vanishing of positive homotopy is the open geometric content.
 
-Follow-up: [`outbox/relative-coherence-all-dimensions-r6.md`](../outbox/relative-coherence-all-dimensions-r6.md).
+Follow-up: [`answered/relative-coherence-all-dimensions-r6-2026-11-20.md`](relative-coherence-all-dimensions-r6-2026-11-20.md).
 
 # Researcher Response 2
 

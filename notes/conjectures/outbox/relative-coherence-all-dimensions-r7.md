@@ -1,0 +1,238 @@
+# Relative coherence in CaTT in every dimension: free weak ω-categories are strict exactly on homotopical computads
+
+*A self-contained problem. It assumes familiarity with globular weak ω-categories, strict ω-categories, polygraphs (computads) and Steiner complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
+
+**What we are asking for.** One theorem valid in every dimension: the exact class of finite computads on which the free weak ω-category is strict (in the sense of §1.2), ideally "exactly the homotopical ones". Individual new cases (one more context, one more dimension) are not useful to us. The geometric side is now well understood in large classes: the obstruction to homotopicality is a non-contractible *geometric fibre* E(c) over a strict cell c (items 26–27), and for positive 3-computads these fibres are computed by explicit cube complexes, including spheres of every dimension (items 30–35). What is missing is the link between those fibres and CaTT terms in general. One context now carries the whole question: the six-seam ring Γ₆ (item 37). If Γ₆ satisfies relative coherence, *both* directions of the conjectured equivalence fail.
+
+## 1. Setting
+
+### 1.1 CaTT
+
+CaTT (Finster–Mimram, LICS 2017, arXiv 1706.02866) is a dependent type theory whose models are weak ω-categories (Benjamin–Finster–Mimram, arXiv 2106.04475: models are exactly Grothendieck–Maltsiniotis weak ω-categories).
+
+```
+Types          A ::= ⋆ | u →_A v
+Terms          t ::= x | coh_{P, A}[γ]
+Contexts       Γ ::= ∅ | Γ, x : A
+Substitutions  γ ::= ⟨⟩ | ⟨γ, x ↦ t⟩
+```
+
+- `dim ⋆ = −1`, `dim(u →_A v) = dim A + 1`, and a term of type A has dimension `dim A + 1`.
+- A **pasting context** `P ⊢ps` presents a globular pasting diagram. It has boundaries `∂⁻P`, `∂⁺P`.
+- **The only term former.** If `P ⊢ps`, `P ⊢ u →_A v` and `Δ ⊢ γ : P`, then `Δ ⊢ coh_{P, u→_A v}[γ] : (u →_A v)[γ]`, provided either
+  - (coherence) `Var(u : A) = Var(P) = Var(v : A)`, or
+  - (composition) `Var(u : A) = Var(∂⁻P)` and `Var(v : A) = Var(∂⁺P)`.
+- Definitional equality is syntactic equality. There are no other equations.
+- Binary composites `u ∗_k v` and whiskerings are composition coherences over two discs glued along a k-disc.
+- Contexts are exactly finite computads, and the terms of Γ are the cells of the free weak ω-category on Γ (Benjamin–Markakis–Sarti, arXiv 2405.00398). Coherence terms are invertible in the coinductive sense (Benjamin–Markakis, arXiv 2406.12127).
+
+### 1.2 Strict image and relative coherence
+
+Every context Γ is a polygraph. Write `F(Γ)` for the free strict ω-category on it. Strict ω-categories are CaTT models, so every term t has a **strict image** `π(t) ∈ F(Γ)`: a coherence is sent to the unique strict composite of its arity.
+
+> **RC(n) for Γ.** Any two parallel n-terms `T, T′` of Γ with `π(T) = π(T′)` are connected by an (n+1)-term `T → T′`.
+
+Because coherence terms are invertible, RC(n) is symmetric. Write **RC(∞)(Γ)** for "RC(n) holds for Γ for every n ≥ 1".
+
+> **RC_id(n) for Γ.** As RC(n), with the connecting term required to have identity image: `π(T → T′) = 1_{π T}`. Write RC_id(∞) as above.
+
+RC_id implies RC. They agree when every endo-(n+1)-cell on an n-cell of F(Γ) is an identity, which holds in the loop-free class of Question 1. With loops, plain RC is too weak: in (x; f : x → x; α : f ⇒ f), the pair (f, f) is joined by α itself, whose image is not an identity. Wherever loops can occur, RC_id is the statement that matters.
+
+*Equivalent form (proved for every finite context).* Every strict cell of F(Γ) is the image of some term. Given that, RC_id(∞)(Γ) is equivalent to: **π_Γ : Free(Γ) → F(Γ) is a trivial fibration of CaTT models**, and also to π_Γ being a weak equivalence (F(Γ) is gaunt: its only invertible cells are identities, since the multiset of top generators is additive). The trivial-fibration form says: for every pair of parallel (n−1)-terms u, v and every strict n-cell c : π(u) → π(v) there is an n-term t : u → v with π(t) = c. (Lift c with some boundary, then conjugate by RC_id connections, which have identity image.) 
+
+### 1.3 Contexts we need
+
+All of the following are finite. The full cylinders (Y = Var(Q)), the joins, the Gray products of globes and the orientals present strongly loop-free Steiner complexes (Steiner, *Omega-categories and chain complexes*, HHA 2004; Ara–Maltsiniotis, *Joint et tranches pour les ∞-catégories strictes*), so F(Γ) = ν(K) has cells determined by their supports. The partial cylinders (Y ≠ Var(Q)) also present strongly loop-free unital Steiner complexes (§3 item 9), and they are positive in every dimension (the source of x↑ has x⁻ as a factor and its target has x⁺).
+
+- **Cylinders.** For a pasting context Q and an up-closed set `Y ⊆ Var(Q)` (if y ∈ Y occurs in the type of x then x ∈ Y), the context `Q↑Y` keeps each `x ∉ Y` and replaces each `x ∈ Y` by two copies `x⁻, x⁺` and a cell `x↑ : a_x → b_x`, where for x of dimension n
+
+  ```
+  a_x := ( … ((x⁻ ∗₀ (τⁿx)↑) ∗₁ (τⁿ⁻¹x)↑) … ) ∗_{n−1} (τx)↑
+  b_x := (σx)↑ ∗_{n−1} ( … ((σⁿ⁻¹x)↑ ∗₁ ((σⁿx)↑ ∗₀ x⁺)) … )
+  ```
+
+  with every factor `w↑` for `w ∉ Y` omitted. For Y = Var(Q) the strict ω-category F(Q↑Y) is the Gray cylinder `D¹ ⊗ Q`. The smallest example is the **lax square** (x⁻, x⁺, y⁻, y⁺; x↑, y↑, f⁻, f⁺; F : f⁻ ∗₀ y↑ ⇒ x↑ ∗₀ f⁺).
+- **Joins.** For a pasting context Q, `Cone(Q; c)` adds an object c and, for each variable t of Q of dimension m, a variable `p_t : p_{τt} → p_{σt} ∗_{m−1} (p_{σ²t} ∗_{m−2} ( … (p_{σᵐt} ∗₀ t)))` (with `p_x : c → x` for objects). F(Cone(Q; c)) is the Ara–Maltsiniotis join `c ⋆ Q`.
+- **Gray molecules.** Gray products `D^{n₁} ⊗ ⋯ ⊗ D^{n_k}` of globes, and more generally pasting diagrams in Steiner's or Hadzihasanovic's sense, presented in CaTT by giving each cell the type `⌈∂⁻x⌉ → ⌈∂⁺x⌉` with chosen composite terms for its boundary molecules.
+- **Orientals.** For example the **triangle** (x, y, z; f : x → y, g : y → z, h : x → z; α : f ∗₀ g ⇒ h).
+
+
+## 2. Why it matters
+
+RC is the single missing ingredient in several constructions in CaTT: lax naturality of every coherence with respect to every up-closed set of its variables (equivalently a lax cylinder Γ ⊗ D¹ for every context Γ); composites, unique up to higher cells, for non-globular pasting diagrams (Gray products of globes, joins); cones over every coherence; and the comparison of the free CaTT model on a computad with its strict free ω-category, which is the unit condition in comparing CaTT models with (∞,ω)-categories.
+
+## 3. What is known
+
+1. **RC(1) and RC(2) hold in every context.** For 2-terms: normalise to vertical composites of whiskered 2-variables; two composites with the same strict image are related by exchange moves (Ara–Burroni–Guiraud–Lafont–Métayer, *Polygraphs*, arXiv 2312.00429, §4.1), and each move is one coherence.
+2. **Support lemma.** supp(π t) = supp(t) in every context, and if t has no variable of dimension dim t in its support then supp(t) = supp(σt) = supp(τt). Parallel terms whose image is an identity on a cell w are joined by one coherence over supp(w) whenever supp(w) is a pasting context. For a pasting context P, π_P is a trivial fibration (this is the coherence and composition rule).
+3. **RC(3) is known** for the lax square, the triangle, every cylinder Q↑Y, the 2 × 2 and 2 × 3 grids, the Gray cube D¹ ⊗ D¹ ⊗ D¹, and joins over vertical chains of 2-discs. Each proof is a hand-built normalisation for one context; in each, RC(n+1) needed a separately constructed coherence of the normalisation one dimension up.
+4. **Adjoining top generators in dimension 3.** If Λ has dimension ≤ 2 and an acyclic generating 1-graph, and Γ adds 3-generators between parallel 2-terms of Λ, then RC(3)(Γ) ⟺ RC(3)(Λ) (using depth-1 naturality, Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620, Thm 3.1). In dimension 4 only a conditional version (assuming RC(3) and RC(4) for Λ) is known.
+5. **Exchange combinatorics in dimension 2 are settled.** For a 2-dimensional context with an acyclic generating 1-graph and non-empty boundary paths, the 2-paths representing a strict 2-cell c are the linear extensions of an event poset, and the graph of exchange moves with squares and hexagons as 2-cells is simply connected; squares and hexagons are single coherences.
+6. **Loops obstruct.** In Γ = (x; a : 1_x ⇒ 1_x) the Eckmann–Hilton 3-cell a ∗₀ a ⇛ a ∗₀ a and the identity are parallel with equal strict image, and no 4-term joins them (the weak free object groupoidifies to S², the strict one B²ℕ to K(ℤ, 2), and π₃(S²) ≠ 0).
+7. **Gaunt targets.** F(Γ) is gaunt for every finite Γ (generator counts), so an FHM ω-weak equivalence into F(Γ) is a trivial fibration. RC_id(∞)(Γ) ⟺ π_Γ is a trivial fibration ⟺ π_Γ is a weak equivalence.
+8. **Homotopical computads.** Γ is *homotopical* when the comparison from the free (∞,ω)-category on Γ (generators attached by homotopy pushouts) to F(Γ) is an equivalence. Strongly loop-free Steiner complexes with unital basis, and regular directed complexes with frame-acyclic molecules, are homotopical (Campion, arXiv 2311.00200; Chanavat, arXiv 2603.22242, Thm 3.17). **A finite 2-polygraph is homotopical if and only if F(Γ) has no bubble** (no non-identity 2-cell 1_x ⇒ 1_x); in particular every 2-polygraph whose 2-generators all have non-empty target (or all non-empty source) is homotopical, loops and cycles in the 1-graph allowed. Bubble-freeness is undecidable. For a homotopical context, RC_id(∞)(Γ) is equivalent to the unit of the realization adjunction between CaTT models and (∞,ω)-categories being a weak equivalence at the free CaTT model on Γ.
+9. **Partial cylinders are strong Steiner.** For Y ⊆ Var(Q) up-closed, the complex K_Y obtained from the Steiner tensor I ⊗ λQ by identifying c⁻ = c⁺ and killing Ic for c ∉ Y is strongly loop-free and unital, with ∂⁻-iterates (∂⁻)^j Ix = (σ^{j−1}x)⁻ + I(τ^j x), (∂⁺)^j Ix = (τ^{j−1}x)⁺ + I(σ^j x) (omitted terms zero); so F(Q↑Y) ≅ ν(K_Y).
+10. **Cartesian strictification.** Call Γ *positive* if every generator of dimension ≥ 2 of its polygraph has non-identity source and target. For every generator-preserving map f : Δ → Γ of positive CaTT contexts (variables to variables, attaching terms preserved), the square Free(Δ) → Free(Γ) over F(Δ) → F(Γ) is a pullback in every dimension: a term t of Γ and a strict cell d of F(Δ) over π(t) have exactly one lift. (Proof: Henry's theorem that composition is cartesian on positive polygraphs, *Non-unital polygraphs form a presheaf category*, Cor. 2.3.13, 2.4.9, plus induction on terms.)
+11. **Reduction to polyplexes.** For a strict cell c of F(Γ), Γ positive, let P_c → Γ be its generic (Henry) polyplex, with the uniquely lifted weak attaching terms. Then π_Γ is a trivial fibration iff every π_{P_c} is; the same holds for RC(n) and RC_id(n) for each n. Positive 2-polyplexes are strong Steiner, so **RC(n) for every finite positive context of dimension ≤ 2 is equivalent to RC(n) for every finite strong-Steiner context of dimension ≤ 2** (no hypothesis on the 1-graph).
+12. **The fibre over one generator.** If Γ = (Λ, z : a → b) is a strong Steiner atom polygraph with z of top dimension m, then Free(Γ) ×_{F(Γ)} 𝔻^m is the free extension, by one m-cell, of Free(Λ) ×_{F(Λ)} ∂𝔻^m (𝔻^m the strict m-globe mapped onto π(z)). So the trivial-fibration property over the cell π(z) would follow from: *adjoining an m-cell to a trivial fibration B → ∂𝔻^m, along an attaching sphere over the two faces, gives a trivial fibration B[ẑ] → 𝔻^m.* That statement is unproved, and it does not cover strict composites of z with other generators.
+13. **Arity lemma.** If a coherence coh_{P,A}[γ] has a substituted strict boundary using a top generator z exactly once, the variables of P labelled by terms involving z form one suspended subtree Σ^m Q of P's Batanin tree.
+14. **Maximal variables.** If Y ⊆ Var(P) consists of variables occurring in no other variable's boundary, P↑Y is a pasting context, and every term over P (any dimension) has a naturality term over P↑Y with its full cylinder boundary. This does not give compatibility under substitutions that change a selected variable's boundary.
+15. **Not counterexamples.** Chanavat's 4-dimensional regular directed complex (arXiv 2509.26563, Comment 2.67) has a polygraph Q whose strict free category differs from the "stricter" one, but the extra equations appear only in Q → r^>Q, so they do not give equal strict images in F(Q). Benjamin–Markakis's hom-computads (hom weak ω-categories of free computads are free) do not transport π: for (x), the hom computad has distinct 0-cells id_x and id_x ∗₀ id_x, while Hom_{F(x)}(x, x) has one.
+16. **A related open conjecture.** Dean (*Globular multicategories with homomorphism types*, thesis, Thm 5.4.0.1) proves an all-dimensional acyclic-fibration strictification for fibrational homomorphism types with a strict computation law; the weak analogue is his Conj. 5.4.0.9. No equivalence with RC is known.
+
+17. **Two-dimensional bubbles obstruct RC.** Let Λ be a finite context of dimension ≤ 2 such that F(Λ) has a non-identity 2-cell c : 1_x ⇒ 1_x. Then there are parallel 3-terms T, T′ with π(T) = π(T′) and no 4-term T → T′ at all, so RC(3)(Λ) fails. Proof:
+    - Choose a 2-term U with π(U) = c, and correct its boundaries by coherences over the context (x) to get a : 1_x ⇒ 1_x literally, with π(a) = c.
+    - Take T = eh(a, a), the Eckmann–Hilton 3-term a ∗₁ a → a ∗₁ a (Benjamin–Markakis, arXiv 2402.01611, §6.1), and T′ = 1_{a∗₁a}.
+    - Interpret Λ in the double delooping 𝒢 of the strict braided monoidal groupoid with objects ℕ, End(p) = ℤ, ⊗ = + and braiding β_{p,q} = pq. Every 1-cell goes to the unique 1-cell, and every 2-generator to 1.
+    - 𝒢 is a Gray category, so it is an algebra of the Gray-category 3-operad. That operad is contractible with top-dimensional uniqueness (Batanin–Cisinski–Weber, arXiv 1209.2776, Ex. 3.6, §4.5, Ex. 5.7), and extended by identities it is a CaTT model with only identity 4-cells.
+    - There, [[T]] = ±N² and [[T′]] = 0, where N > 0 is the number of 2-generators in c.
+18. **Heredity.** If Δ ⊆ Γ is dependency-closed, RC_id(n)(Γ) ⇒ RC_id(n)(Δ): an identity-image filler H has supp(H) = supp(πH) ⊆ Var(Δ), by item 2. With item 17: if F(Γ_{≤2}) has a bubble, then RC_id(3)(Γ) fails, whatever the higher generators of Γ. For finite contexts of dimension ≤ 2: RC_id(∞) ⇒ RC(3) ⇒ bubble-free ⇔ homotopical.
+19. **Higher endo-cells obstruct homotopicality.** If F(Γ) has a non-identity n-cell q : 1^{n−1−k}_c ⇒ 1^{n−1−k}_c (0 ≤ k ≤ n − 2, c a k-cell), then Γ is not homotopical. Proof: the n-skeleton inclusion is discrete Conduché, so homotopicality passes to Γ_{≤n}. Counting n-generators gives F(Γ_{≤n}) → Bⁿℤ, and q gives Σ^{n−2}B²ℕ → F(Γ_{≤n}). Steenrod powers then detect nonzero mod-p cohomology of the groupoidification in unboundedly many degrees, while the free cellular n-skeleton has dimension n. The converse ("no such endo-cell ⇒ homotopical") is proved in dimension 2 (item 8) and for positive-to-one polygraphs in every dimension. It is **false** in dimension 3 (item 28).
+20. **Higher bubbles obstruct RC_id(∞) in every dimension.** Suppose F(Γ) has an n-cell q : 1_b ⇒ 1_b, q ≠ 1, n ≥ 2, where b is an (n−2)-cell (possibly itself an iterated identity). Then π_Γ is not a trivial fibration, so RC_id(∞)(Γ) fails. Composite q of even weight and b of positive dimension are included. Proof:
+    - *A list model.* Fix n and a set C of colours. Take one cell in each dimension below n, finite lists in C as n-cells, colour-preserving bijections of positions as (n+1)-cells, and identities above. This is a CaTT model, natural in recolourings. Every n-head concatenates its input lists, one block per n-generator occurrence of its generic strict cell, in a fixed order. Every (n+1)-head matches positions: give the positions in each *slot* distinct auxiliary colours, transport them along the labelled bijections, and match equal colours. A slot is a class of n-variables of the pasting context joined by (n+1)-variables. Two facts about generic pasting contexts make this well defined: each strict n-cell uses each slot at most once, and the two n-faces of a higher cell use the same slots. Both are proved by the decomposition of a Batanin tree into suspended subtrees, and checked by machine on all trees with at most 8 edges. (n+2)-heads are well defined because colour-preserving bijections between lists without repeated auxiliary colours are unique.
+    - *The separation.* With distinct colours, the suspended Eckmann–Hilton term eh_{n−2}(a, b) : a ∗_{n−1} b → b ∗_{n−1} a (Benjamin–Markakis, arXiv 2402.01611, §§6.1, 6.3) must be the block exchange, and by naturality it stays the block exchange after recolouring to one colour. For a = b of length m > 0 this is not the identity.
+    - *The reduction.* By heredity (item 18), pass to the n-skeleton Λ. Boundary lifting gives a with literal type 1_d → 1_d and π(a) = q. Send each n-generator to a one-element list, so a has length m = (number of n-generators in q) > 0. Then eh(a, a) and 1_{a∗a} are parallel, have the same identity image, and are separated in the model.
+21. **The unrestricted extension theorem is false.** Adjoin α : 1_f ⇒ 1_f (a 3-generator on the weak identity of f) to the 2-disc (x, y; f, g : x → y; β : f ⇒ g). The 2-disc satisfies RC_id(∞) (item 2), but the extended context fails RC(4) by item 20 with n = 3. The same works in each attachment dimension m ≥ 3. So adjoining generators can preserve RC_id(∞) at best for attachments that keep the context homotopical.
+22. **Split criterion and the reduction of necessity to reconstruction.** Let A = Free(Γ), let C = F(Γ) as a CaTT model, and let q : KC → C be the computadic cofibrant replacement. KC has one generator for each parallel pair (u, v) of cells of KC and each strict cell c : q(u) → q(v) (Dean–Finster–Markakis–Reutter–Vicary, arXiv 2208.08719, §5; Markakis, arXiv 2303.11978, §5). Sending each generator x of Γ to the generator labelled by π(x) and its already-embedded boundary gives a generator inclusion i : A → KC over C. KC is A with the remaining generators freely attached.
+    - **RC_id(∞)(Γ) holds iff there is a strict CaTT map r : KC → A with r i = id_A and π r = q.** (⇒) extends id_A across the remaining generators by boundary lifting. (⇐) lifts through q and applies r.
+    - Let L be realization from CaTT models to (∞,ω)-categories, and N the nerve. Let e : LA → NC and d : LKC → NC be induced by π and q. Then e is the comparison defining homotopicality, and d is the *reconstruction map* of the strict target C. We have d ∘ Li = e. Under the split criterion we also have e ∘ Lr = d and Lr ∘ Li = id, so **e is a retract of d over NC**. Hence RC_id(∞)(Γ) together with "d is an equivalence for C = F(Γ)" implies that Γ is homotopical. More precisely, under RC_id(∞)(Γ), Γ is homotopical iff there is s : NC → LKC with d ∘ s ≃ id and s ∘ e ≃ Li.
+
+23. **Inductive reconstruction fails; coinductive reconstruction suffices.** With the notation of item 22, the inductive reconstruction map d_C : L(KC) → NC is **not** an equivalence for any nonempty strict C. Proof:
+    - Let D be the free strict ω-category with one object p, a loop ℓ, and in each dimension k ≥ 2 one generator for each ordered parallel pair of (k−1)-cells. D is gaunt, because top-generator counts are additive, and D → 1 has boundary lifting in every dimension.
+    - K1 has one object v and a loop generator u. Sending u to ℓ and to 1_p gives two maps L(K1) → ND. They restrict to different points of the discrete space Map(D¹, ND), so they lie in different components, while Map(N1, ND) is a single point. So d₁ is not an equivalence.
+    - For nonempty C, 1 → C → 1 exhibits d₁ as a retract of d_C.
+    
+    However, D → 1 is an FHM weak equivalence, so Q(ND) ≃ 1, where Q is coinductive completion. For Γ of generator dimension ≤ m, both ends of e lie in (∞,m)-categories. That subcategory is coreflective, with the m-core as right adjoint, so it is closed under the colimits building LA, and its objects are coinductively complete (Ozornova–Rovelli–Walde, arXiv 2603.11005, Lemmas 4.4, 5.22–5.23). Hence **e is an equivalence iff Qe is**, and by the retract of item 22, **RC_id(∞)(Γ) together with Q d_{F(Γ)} being an equivalence implies that Γ is homotopical**. Equivalently, with η the unit at A and W the FHM weak equivalences: given RC_id(∞), Γ is homotopical iff η ∈ W; given homotopicality, RC_id(∞) holds iff η ∈ W.
+24. **Simultaneous algebraic lifts of strict simplices.** Suppose π : A → C has globular boundary lifting. Call a strict CaTT map h : K Oₙ → A with π h = σ q an *algebraic lift* of a strict simplex σ : Oₙ → C (Oₙ is Street's oriental). The pairs (σ, h) form a simplicial set, and forgetting h is a trivial fibration onto the Street nerve of C. Proof: the face suborientals satisfy O(F) ∩ O(G) = O(F ∩ G) (Steiner's tableaux), and the subcomputads K O(F) ⊆ K Oₙ satisfy the same formula. So compatible face lifts glue, and the remaining generators lift one at a time. This does not give the geometric section s of item 22, which needs a comparison from geometric simplices to the realizations of K Oₙ.
+25. **The dimension-3 exchange step reduces to a wedge lemma.** Assume (H): Γ is finite, of dimension ≤ 2, has an acyclic generating 1-graph, and every 2-generator has nonempty source and target paths. Then the 2-paths representing a strict 2-cell are exactly the linear extensions of an event poset, and exchange moves are swaps of adjacent incomparable events (item 5).
+    - Under (H), a contiguous antichain of events in a 2-path spans, in its generic polyplex (item 11), a wedge A₁ ∨₀ ⋯ ∨₀ A_k of single-generator contexts glued at cut vertices. So, by the polyplex reduction, the part of RC(3) that concerns permuting such a block is exactly **the wedge lemma**: RC(3)(A₁ ∨₀ ⋯ ∨₀ A_k) follows from RC(3)(A_i) for each i.
+    - For k = 2 this is known: two independent letters with a cut vertex are handled by horizontal normal forms and one interchange coherence.
+    - The rest of RC(3) under (H) consists of forced-order statements: letters joined by connectors that cross their boundary blocks, whose fibres have a single linear extension. This includes a fusion statement comparing normalisers along substitution. These are of the kind already proved for cylinders and grids.
+    - The smallest wedge with k = 3 is the polyplex of the hexagon triple in the 3 × 3 grid: three lax squares glued at two cut vertices. Its key ingredient is the three-factor interchange (α ∗₀ β ∗₀ γ) · (α′ ∗₀ β′ ∗₀ γ′) ⇛ (α·α′) ∗₀ (β·β′) ∗₀ (γ·γ′).
+
+26. **Both comparisons are 0-truncations.** In coinductively complete (∞,ω)-categories, Q d_C : QL(KC) → NC and Q e : QLA → NC both exhibit NC as the **0-truncation** of their source, in the mapping-space sense: every space of maps into a 0-truncated object is a 0-type, though such an object can have non-identity directed cells in every dimension.
+    - *Algebraic descent.* For a globular trivial fibration p : X → C of CaTT models with C strict, and any strict D in which coinductively invertible positive-dimensional cells are identities, precomposition Hom_str(C, D) → Hom_CaTT(X, D) is a bijection. Two cells over the same strict cell are joined by a lifted globe cylinder whose mixed generators lie over identities. Those generators are therefore coinductively invertible, so they become identities in D.
+    - The 0-truncated objects are exactly the discrete, coinductively complete Segal Θ-nerves (Berger; Ozornova–Rovelli–Walde). Precomposition with q (by descent) and with π (by freeness) is bijective on maps into them.
+    - **Consequence: Γ is homotopical iff π_j Map(𝔻ⁿ, QLA) = 0 for all n ≥ 0 and j ≥ 1, at every base point.** Reconstruction at C is the same vanishing for QL(KC).
+
+27. **Support localization (all dimensions).** For a strict n-cell c of F(Γ), let E_Γ(c) be the homotopy fibre over c of Map(𝔻ⁿ, L Free(Γ)) → {strict n-cells}. For dependency-closed Δ ⊆ Γ, F(Δ) → F(Γ) is discrete Conduché, so L Free(Δ) is the pullback of L Free(Γ) along NF(Δ), and E_Δ(c) ≃ E_Γ(c) whenever c ∈ F(Δ). By item 26, Γ is homotopical iff every E_Γ(c) is contractible. Under RC_id(∞), E_Γ(c) is contractible whenever supp(c) has generator dimension ≤ 2. A minimal counterexample to (⇒) has a non-contractible fibre over a **full-support** cell in its top generator dimension m ≥ 3, and the m-globe suffices.
+28. **Positivity is not enough; no endo-cells does not imply homotopical (the middle wire).** Take objects 0 → 1 → 2 → 3, edges f₀, f₁ : 0 → 1, g : 1 → 2, h₀, h₁ : 2 → 3, 2-cells α₀, α₁ : f₀ ⇒ f₁ and β₀, β₁ : h₀ ⇒ h₁, and 3-generators A : α₀g → α₁g, B : gβ₀ → gβ₁. This Γ is positive, has an acyclic 1-graph and no endo-cells, and its 2-skeleton has RC_id(∞); RC holds through degree 3. There is one strict 3-cell c : α₀gβ₀ → α₁gβ₁ using A and B, but E(c) ≃ S¹: the diagonal hom is two squares (the two simultaneous diagrams (Ah₀) ∗₁ (f₁B) and (f₀B) ∗₁ (Ah₁)) glued along their perimeter. The two exchange 4-terms through the two diagonals have equal (identity) image and no 5-term between them, so RC(4) fails. The mechanism is a **two-sided idle overlap**: the path g is an idle right suffix of both faces of A and an idle left prefix of both faces of B. So the positive fallback of the previous Question 2 is false, adjoining generators to a bubble-free context can destroy RC, and the converse of item 19 is false.
+29. **Transition presentation of 3-cell fibres.** For a 3-computad with homotopical 2-skeleton B, form B_k by adjoining k fresh parallel copies h(z, i) of each 3-generator z as 2-generators. The strict 2-cells of F(B_k) form a simplicial set T whose mapping spaces over c are E(c). A simultaneous diagram of d events gives a cube (Δ¹)^d, and in the mapping space a (d − 1)-dimensional permutohedral cell; a fibre of weight r (number of top occurrences) has a CW model of dimension ≤ r − 1. Under RC_id(∞): every 3-cell fibre is connected with π₁ = π₂ = 0 (edges and the square and hexagon 2-cells are realized by CaTT 4- and 5-terms). For positive 3-computads under RC_id(∞), every fibre of weight ≤ 4 is contractible, and H_{r−1}(E(c)) = 0 in weight r. A positive counterexample to (⇒) in generator dimension 3 needs weight ≥ 5 and its first nonzero homotopy group in degree j with 3 ≤ j ≤ r − 2.
+30. **No idle overlap ⇒ homotopical (positive 3-computads, unconditional).** Let all 2-generators have nonempty input and output paths and all 3-generators nonidentity faces. If no idle right suffix of a generating 3-face is an idle left prefix of a generating 3-face, the transition complex is a CAT(0) cube complex with directed intervals given by order ideals of an event poset, and **every fibre is contractible**. In general, weight-two components are points, intervals or circles, and a circle occurs iff some nonempty path is an idle suffix of both faces of one generator and an idle prefix of both faces of another (item 28); such a circle rules out RC.
+31. **Strip products.** If lower generators are unary and, at every cut between strips, the events crossing the cut are strictly ordered in the same way on both sides, then E(c) ≃ ∏_b K_b over strips, and under RC_id(∞) each factor (hence E(c)) is contractible. Without the cut hypothesis two locally possible exchanges can fail to glue.
+32. **Seam rings: spheres in every degree.** For k ≥ 2 there is a finite positive 3-computad Γ_k with acyclic 1-graph (signal lanes s_i with gates L, M, R; seam lanes p_i with loops d_i, e_i; 3-generators a_i, b_i, and a bridge z spanning the whole line) and a full-support strict 3-cell c_k with E(c_k) ≃ S^{k−1}; every other fibre is contractible. More generally, for unary seam-signal presentations E(c) ≃ Z_K, the subcomplex of the k-cube whose faces are the sets of seams with acyclic induced *seam graph* (i → j when b_i ≤ a_j in the forced temporal order). The fibre is contractible iff the seam graph is acyclic; a chordless directed cycle of length m gives a nonzero class in H_{m−1}. Distributed seams realize S^{r−1} for every max(2, k − s) ≤ r ≤ k in one presentation.
+33. **Detecting seam spheres by CaTT terms, through Gray cubes.** Colour the seams of a minimal non-face of size m by fresh 2-generators h_i : p_i ⇒ p_i (positive, generator-preserving maps to Γ transfer boundary lifting by item 10), erase colours by literal substitutions to weak identities, and label the threefold suspensions of the faces of a CaTT presentation of the Gray m-cube. If a CaTT presentation of the Gray m-cube exists whose face subcontexts present the faces (canonical Gray terms, CT, for I^{⊗m}), then RC_id fails for the seam presentation in some degree ≤ m + 2. CT is known for m ≤ 5, so: Γ₄ fails RC_id(n) for some n ≤ 6, Γ₅ for some n ≤ 7, and under RC_id(∞) every unary seam presentation whose induced directed cycles have length ≤ 5 has contractible fibres. The same holds for iterated suspensions. The literal pullback of two opposite erasures has no 3-cell at all between the needed endpoints, so literal gluing of the two coloured facets is impossible.
+34. **Reflections and fixed points.** If an involution of the presentation fixes c and its weak poles, reverses all faces above dimension m, and there is an equivariant map E(c) → S^{k−1} (antipodal), then RC_id fails in some degree ≤ m + k − 1. This decides symmetric seam presentations with fibre S^{k−1} for every k. Under RC_id(∞), any two literally fixed parallel weak lifts lie in the same component of E(c)^{hC₂}.
+35. **Substitution and many-to-one attachments.** Substituting d-fold suspensions of presentations K_g at the top generators g of a positive d-presentation P gives E_D(w, (u_o)) ≃ E_P(w) × ∏_o E_{K_{g(o)}}(u_o). Under RC_id(∞), iterated substitutions starting from dimension ≤ 2 have all fibres contractible. If every generator of dimension ≥ 3 of a positive context has variable faces, the context is homotopical. If the top rank is many-to-one (each new (d+1)-generator has a single generating d-variable as target), E_D(c) ≃ E_B(target of c), so the extension is homotopical iff the base is. For any generator-preserving map of positive contexts the square of geometric comparisons is cartesian.
+36. **RC(3) under (H) for biased terms.** For a 3-presentation with acyclic generating 1-graph and nonempty boundary paths of 2-generators (3-generators arbitrary), the free tricategory is faithful over the free strict 3-category on parallel 3-cells (Gray pasting theorem plus Guthmann's strictification). Hence any two parallel CaTT 3-terms that are interpretations of biased tricategorical expressions with the same strict image are joined by 4-terms in both directions. This contains the wedge lemma of item 25. (Extending it to arbitrary raw 3-terms needs each raw 3-term to be conjugate, by identity-image comparisons, to such an interpretation.)
+37. **The six-seam ring decides a lot.** Γ₆ (item 32 with k = 6) has a full-support fibre S⁵, and the method of item 33 would need CT for the Gray six-cube, that is, terms for its composite 5-cells, which is not known. Using only CT through degree 4 for the six-cube, one obtains a boundary computad B on its 728 proper faces with integral fundamental cycle Σ_i (−1)^{i−1}([g_{i,+}] − [g_{i,−}]), and the following alternative: **either Γ₆ fails RC_id in some degree ≤ 8, or one of twelve explicit full-support strict 4-cells, in finite strong-Steiner contexts with generator counts (57, 156, 165, 80, 15), has two parallel weak lifts with no 5-term between them.** If Γ₆ satisfied RC_id(∞) it would therefore refute (⇒) (it is not homotopical) and (⇐) (a strong-Steiner, hence homotopical, context would fail RC(4)). Moreover (Response 19 of r6) each of the 114 adjacent ridge exchanges in those twelve contexts has a CaTT 5-term filling its square, and the gluing of these squares reduces to RC(3) and RC(4) on 148 explicit **three-dimensional** strong-Steiner contexts S_r, each with 42 vertices, 96 edges, 75 squares and 20 cubes (enumerated by `tools/relative_coherence_ridge_exchanges.py`). So: **if Γ₆ satisfies RC through degree 8, one of these 148 three-dimensional contexts fails RC(3) or RC(4).**
+
+## 4. Questions
+
+**Question 1 (main: the exact class).** Prove that for every finite CaTT context Γ,
+
+> RC_id(∞)(Γ)  ⟺  Γ is homotopical,
+
+equivalently (items 7, 26, 27) that π_Γ is a trivial fibration exactly when every geometric fibre E_Γ(c) is contractible, or give a counterexample to either direction with a separating invariant. Item 37 shows that the two directions are linked through Γ₆, so a decision of RC for Γ₆, by an argument that applies to whole classes, is wanted rather than a computation for Γ₆ alone.
+
+- **(⇒, necessity).** Show that RC_id(∞) forces every geometric fibre to be contractible. Routes:
+  - (a) **A general detection theorem.** Turn any non-contractible full-support fibre (item 27) into parallel CaTT terms of equal strict image with no filler, as items 28, 33 and 34 do for circles, seam spheres and symmetric spheres. For instance: a CaTT-definable parameter space for an arbitrary sphere in E(c), or a "cellular realization" of the CW model of item 29 by terms, cell by cell, with literal boundaries.
+  - (b) **Via canonical Gray terms.** Item 33 needs CaTT presentations of the Gray m-cube and its faces (CT for I^{⊗m}). A uniform construction for all m (the companion problem on canonical Gray terms asks for this) would settle every seam presentation; a proof that such presentations cannot exist would also be informative.
+  - (c) **A contraction under RC.** Prove the vanishing of π_j E(c) under RC_id(∞) directly, extending items 29–31 (π₁, π₂, weight ≤ 4, strip products) to all degrees and weights, and then beyond generator dimension 3 (item 35 handles substitution-built contexts).
+- **(⇐, the contraction).** Prove RC_id(∞) for every homotopical Γ. By item 37 this would in particular show that Γ₆ fails RC. Routes as before:
+  - (a) the attachment statement of item 12 for arbitrary trivial fibrations B → ∂𝔻^m, extended to strict composites;
+  - (b) contractibility of the fibre of π_Γ over each strict cell, described CaTT-definably;
+  - (c) a relative Guiraud–Malbos normalisation strategy;
+  - (d) an equivalence with Dean's Conj. 5.4.0.9 or another named open statement;
+  - (e) the retraction r : KC → A of item 22;
+  - (f) a wedge theorem in every dimension. In dimension 3 under (H) item 36 already gives the comparisons for biased terms.
+  - The new geometric input may help: for homotopical Γ all E(c) are contractible, and items 29–31 show how cells of E(c) are realized by CaTT terms in dimension 3.
+
+**Question 2 (fallback for (⇐), still every dimension).** Prove RC_id(∞) for every finite strong-Steiner context. (Positivity alone is not enough, item 28.) Strong-Steiner contexts of dimension 3 are already a test case that matters: by item 37, RC(3) and RC(4) on all of them would show that Γ₆ fails RC in some degree ≤ 8, and a failure on one of the 148 explicit three-dimensional contexts of item 37 would refute (⇐). A general argument for 3-dimensional strong-Steiner contexts is welcome, but please aim for every dimension.
+
+**Question 3 (fallback, every n).** Prove RC_id(n) for every n for every finite 2-dimensional homotopical (equivalently bubble-free) context, and an extension theorem: adjoining generators of any dimension ≥ 3 so that the result is **still homotopical** preserves RC_id(∞). Items 21 and 28 show that bubble-freeness of the extension is not enough. Item 36 handles RC(3) under (H) for biased terms.
+
+## 5. What counts as a solution
+
+A proof of either direction of Question 1, of Question 2, or of Question 3 with the extension theorem; a decision of relative coherence for Γ₆ by a method that applies to a whole class (for example all seam presentations, or all positive 3-computads); a counterexample in one of the named classes with a proof that no connecting term exists; an equivalence with a named open problem; or a published reference. An existence proof of the connecting cells is enough, provided it is a proof about CaTT terms or CaTT models.
+
+## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-6 answers)
+
+- Ozornova–Rovelli–Walde, arXiv 2603.11005 (coinductive completion; (∞,m)-categories are coinductively complete).
+- Street, *The algebra of oriented simplexes* (orientals); Steiner, *Orientals*, arXiv math/0601383 (tableaux of face suborientals).
+
+- Dean–Finster–Markakis–Reutter–Vicary, arXiv 2208.08719, §5, and Markakis, arXiv 2303.11978, §5 (computadic cofibrant replacement).
+
+- Batanin–Cisinski–Weber, *Multitensor lifting and strictly unital higher category theory*, arXiv 1209.2776 (Ex. 3.6, Ex. 5.7: the Gray-category operad is contractible).
+- Benjamin–Markakis, arXiv 2402.01611, §6.1 (the Eckmann–Hilton term).
+
+- Campion, arXiv 2311.00200; Chanavat, arXiv 2603.22242 (Thm 3.17, Cors. 3.38–3.39, Comment 3.40) and arXiv 2509.26563.
+- Henry, *Non-unital polygraphs form a presheaf category*, Higher Structures 3(1) (2019); Henry, *Regular polygraphs and the Simpson conjecture*, arXiv 1807.02627.
+- Guiraud–Malbos, *Higher-dimensional normalisation strategies for acyclicity*, Adv. Math. 231 (2012).
+- Benjamin–Markakis–Offord–Sarti–Vicary, arXiv 2501.11620 (naturality at depth ≤ 1; Lemma B.6).
+- Benjamin–Markakis, arXiv 2402.01611 and *Hom ω-categories of a computad are free*, J. London Math. Soc. (2025).
+- Fujii–Hoshino–Maehara, arXiv 2511.09849 (ω-weak equivalences and trivial fibrations).
+- Dean, thesis (globular multicategories with homomorphism types), Conj. 5.4.0.9.
+- Delpeuch–Vicary, arXiv 1804.07832; Heidemann, arXiv 2411.04870 (used for the 2-dimensional homotopicality theorem of item 8).
+- No published comparison of free weak ω-categories with free strict ones on non-globular computads was found.
+- Loubaton, arXiv 2406.05425, Thm 2.2.2.10 (pullback along discrete Conduché functors preserves colimits; used in items 27 and 35).
+- Dugger–Spivak, arXiv 0910.0814 (necklaces; mapping spaces in items 28–29).
+- Haugseng, arXiv 1312.3881 and 1604.08480 (iterated enrichment and the rectangular and Θ models).
+- Genevois, Ann. Inst. Fourier (median graphs, item 30); Ardila–Owen–Sullivant (CAT(0) cube complexes as posets with inconsistent pairs).
+- Guthmann, arXiv 1903.05777 (strictification of tricategories); Di Vittorio, arXiv 2205.15486 (Gray-categorical pasting); Griffiths, arXiv 2101.00077 (the tricategory operad). Used in item 36.
+
+<<<<<<<< HEAD:notes/conjectures/outbox/relative-coherence-all-dimensions-r7.md
+========
+# Researcher Response 1
+
+## Coinductive reconstruction gives the 0-truncation
+
+Let $C=F(Γ)$ for a finite context, $A=\mathrm{Free}(Γ)$, and let $Q,L,N$ be as in items 22–23. In the ∞-category of coinductively complete $(∞,ω)$-categories, **both comparison maps exhibit their common target as the 0-truncation of their source**:
+
+$$
+QL(KC)\xrightarrow{Qd_C}NC,\qquad QLA\xrightarrow{Qe}NC.
+$$
+
+Here 0-truncation has its mapping-space meaning. An object $Z$ is 0-truncated if every space of maps into $Z$ is a 0-type. Such an object can have nonidentity directed cells in arbitrarily high dimensions. The assertion about $Qd_C$ also holds for any strict $C$ whose discrete Θ-nerve is coinductively complete.
+
+**Algebraic descent.** Suppose $p:X\to C$ is a globular trivial fibration of CaTT models with strict codomain. Let $D$ be a strict ω-category in which every coinductively invertible positive-dimensional cell is an identity. Then precomposition is a bijection
+
+$$
+\mathrm{Hom}_{\mathrm{str}\,ω\mathrm{Cat}}(C,D)
+\longrightarrow \mathrm{Hom}_{\mathrm{CaTT}}(X,D).
+$$
+
+To prove it, fix $h:X\to D$ and any two $n$-cells $u,v$ with $p(u)=p(v)=c$. Their boundaries in $X$ can differ. Use the CaTT presentation of the globe cylinder $I\otimes\mathbb D^n$ with its two endpoint globes. The endpoint variables have their globular types, and the cylinder is obtained from their disjoint union by freely adjoining the mixed generators in increasing dimension. Below, map the strict cylinder to $C$ by collapsing $I$ and selecting $c$. Above, prescribe $u$ and $v$ on the two endpoint globes. For each mixed generator its two attaching terms now evaluate to parallel cells in $X$ with the prescribed images in $C$. Boundary lifting for $p$ extends the assignment across that generator. This includes $n=0$, when the unique mixed generator is an edge. [Globe-cylinder presentation, item 6](canonical-gray-terms-r5-2026-11-19.md)
+
+Every mixed generator maps under the collapse to an identity. Cells in $X$ over identities are coinductively invertible. Indeed a reverse cell over the same identity lifts against the reversed boundary. Both composites admit cancellation witnesses over identities by another application of boundary lifting, so the class satisfies the coinductive inverse condition. The strict map $h$ preserves this inverse data. Consequently the composite cylinder labelling in $D$ sends every mixed generator to an identity.
+
+Since $D$ is strict, this labelling evaluates the strict Gray cylinder. For a face generator $x$ of the globe, its cylinder generator has source and target obtained by whiskering $x^-$ and $x^+$ with the mixed generators on their lower faces, as in §1.3. In $D$ these lower whiskerings are by identities. Starting with vertices and proceeding up the globe, the two faces of the mixed generator therefore evaluate to the two endpoint values of $x$. The mixed generator itself is an identity, so those values coincide. At the top this gives $h(u)=h(v)$.
+
+Boundary lifting makes $p$ surjective on cells, by first lifting a labelling of the boundary of a globe and then its top cell. Thus $h$ descends uniquely as a globular map $\bar h:C\to D$. For each CaTT operation, lift its whole labelled globular pasting arity through $p$, one variable at a time. On this lift the equation expressing preservation of the operation by $\bar h$ is the corresponding equation for $h$. This proves that $\bar h$ preserves all operations, including identities and binary composites, as required.
+
+**Truncation.** The 0-truncated objects of the coinductive theory are exactly its discrete complete Segal Θ-nerves. Indeed if $Z$ is 0-truncated, evaluating at any Θ-shape $P$ gives the 0-type $\mathrm{Map}(QP,Z)$. Taking components then gives an equivalent set-valued presheaf. Its Segal bijections are the strict ω-category nerve conditions. Conversely, mapping into a set-valued presheaf gives 0-types, also in the full subcategory of local objects. Completeness forces invertible cells in a discrete nerve to be identities, and coinductive completeness does so for coinductively invertible cells. The latter condition uses the coinductive inverse criterion, which in a discrete strict nerve evaluates on the cells and compositions of the strict category itself. For our finite $Γ$, $NC$ is discrete by gauntness and coinductively complete by the dimension bound in item 23. [Berger, Theorem 1.12](https://math.univ-cotedazur.fr/u/cberger/nerve.pdf) · [Ozornova–Rovelli–Walde, Propositions 5.29 and 5.42](https://arxiv.org/html/2603.11005v2)
+
+Test $Qd_C$ against any such target $ND$. Locality identifies maps out of $QL(KC)$ into $ND$ with maps out of $L(KC)$. These form a discrete space whose points, by the realization adjunction at a gaunt target, are the strict CaTT maps $KC\to D$. Maps $NC\to ND$ form the discrete space of strict ω-functors $C\to D$. On these sets precomposition with $Qd_C$ is precomposition with $q:KC\to C$, a bijection by algebraic descent. This proves the universal property of 0-truncation. For $Qe$ the same calculation gives precomposition with $π:A\to C$, a bijection already by freeness: an assignment of the generators of $Γ$ in a strict target evaluates every attaching term at its strict image and extends uniquely to a strict ω-functor from $F(Γ)$. [Realization at discrete gaunt targets, Known (II)](../outbox/catt-models-unit-condition-r4.md)
+
+**The remaining geometric test.** For $Z=QL(KC)$, reconstruction at $C$ is now equivalent to
+
+$$
+\pi_j\!\left(\mathrm{Map}(\mathbb D^n,Z),z\right)=0
+\quad\text{for every }n\geq0,\ j\geq1,\ z\in\mathrm{Map}(\mathbb D^n,Z).
+$$
+
+Indeed these vanishings say precisely that the spaces of globe labellings are 0-types. The Segal condition computes the space of labellings of any pasting shape as a limit of those spaces. Hence the entire Θ-presheaf is 0-truncated, and its truncation map is an equivalence. The converse follows by evaluating a 0-truncated target on globes. The identical test with $Z=QLA$ characterizes homotopicality of $Γ$ by item 23. In particular, necessity in Question 1 would follow from vanishing for $QLA$ under $\mathrm{RC}_{\mathrm{id}}(∞)$. The base point and sphere in this test can be arbitrary geometric data. The cylinder descent proof identifies maps into discrete targets and leaves this positive-degree vanishing open.
+
+# Verification (2026-11-19)
+
+Status: **verified, partial**. The response identifies both comparison maps as 0-truncations, which turns both directions of the homotopical comparison into one vanishing statement.
+- *Algebraic descent: correct.* Let p : X → C be a globular trivial fibration and D strict, with coinductively invertible positive cells being identities. A CaTT map h : X → D descends through p:
+  - Two cells u, v over the same c are joined by a lifted globe cylinder. Its mixed generators lie over identities, so they are coinductively invertible: a reverse and the cancellation witnesses lift over identities by boundary lifting. Hence they map to identities in D, and evaluating the strict cylinder in D gives h(u) = h(v).
+  - The descended map preserves operations, by lifting labelled arities.
+  - p is surjective by boundary lifting, so the descent is unique.
+- *0-truncated objects are the discrete complete Segal Θ-nerves*, with coinductive completeness forcing coinductively invertible cells to be identities (Berger Thm 1.12; Ozornova–Rovelli–Walde Props. 5.29, 5.42; taken from the literature as cited). NC is such an object for finite Γ (gaunt, dimension bound).
+- *Universal property.* Maps from QL(KC), or from QLA, into ND are strict CaTT maps from KC, or from A, into D. Precomposition with q is bijective by descent (q is a trivial fibration), and precomposition with π is bijective by freeness. So **Qd_C and Qe are both 0-truncation maps**. Correct.
+- *Consequence.* **Γ is homotopical iff QLA is 0-truncated, iff π_j Map(𝔻ⁿ, QLA) = 0 for all n ≥ 0 and j ≥ 1.** Reconstruction at C is the same statement for QL(KC). The descent argument settles maps into discrete targets only. The vanishing of positive homotopy is the open geometric content.
+
+Follow-up: [`outbox/relative-coherence-all-dimensions-r6.md`](../outbox/relative-coherence-all-dimensions-r6.md).
+>>>>>>>> 0eb545e7abf0880ae0addd4a5aa7285218ca88ec:notes/conjectures/answered/relative-coherence-all-dimensions-r5-2026-11-19.md

@@ -266,3 +266,36 @@ Both functions are continuous piecewise linear. Interpolating to their midpoint 
 For a wedge of $m\ge1$ circles take $m$ triples of rows, the three unit vectors of $\mathbb R^3$ translated by $4i(1,-1,0)$ for $0\le i<m$. Within each triple use its three pairs as edges. Join the first vector of each triple to the second vector of the next. For each desired pair use the column equal to its coordinatewise maximum plus $(1,1,1)$. Integrality makes this column contain exactly the two endpoints. Within one triple the unused coordinate excludes the opposite vertex, and the translations separate other triples. For a bridge its third-coordinate bound excludes the third vector of both triples, while its first and second bounds respectively isolate the indicated vertex on the right and left. Thus the row complex is $m$ triangle boundaries connected by bridges. A single row and column give a point. More generally the $t$ unit-vector rows and columns having entry 1 at the omitted index and 2 elsewhere give the boundary of the $(t-1)$-simplex, attaining homology in degree $t-2$ for $t\ge3$.
 
 **Reproduction.** Run `python tools/homotopy_polygraph_hubs.py` with stock Python. The [solver](../../../tools/homotopy_polygraph_hubs.py) constructs all control words and initial counts, checks the binary serialization, recovers its intrinsic order from the positive visits, and compares its actual main-milestone relation to the coordinate calculation. It recovers bouquets of ranks 1, 2, 3, 5 and 8, with 24 vertices and 31 edges in the last connected graph. For two through six hubs it recovers exactly the facets of the predicted simplex boundaries. Arbitrary ranks and the planar upper bound follow from the constructions above.
+
+# Verification (2026-11-20)
+
+Status: **verified.** No gap was found. Question 1 is reduced but not settled. Question 2 gets two new decidable classes with exact complexity, and Question 3 gets an exact answer on a generator-level class.
+
+**What the four responses prove.**
+- **Response 1 (Question 1).**
+  - H is Π⁰₂-complete iff there is a partial computable C that, for every machine emitting finitely many identical pulses, returns a finite polygraph that is homotopical exactly when the count is even. Nothing is required on infinite-output machines. The reduction may also avoid any pair of sound 0′-decidable certificates, so a hardness proof need not survive homology or finite-quotient tests.
+  - On one connected rank-11 board G_{m,n,e}, an internal request tree and a two-stack recognizer select the whole incidence matrix: G ∈ H iff every word accepted by e gives a row Dowker complex with contractible components. On these board codes the problem is many-one complete for the sets truth-table reducible to 0′. Because the catalogue is computably finite, this family cannot carry the parity construction, and the unrestricted degree stays open.
+- **Response 2 (Question 2).** For one monotone resource g with all other resources binary (arbitrary controls), if at most three processes release g or at most three acquire it, homotopicality is coNP-complete. Failure is three process-disjoint causal routes and has a circle fibre. With at most k users on one side, the fibres are exactly the connected finite complexes with a model on at most k vertices. Without a width bound every connected finite complex occurs.
+- **Response 3 (Question 2).** If the binary-resource interaction graph is a forest, homotopicality is NL-complete with no width bound. Two processes meeting all routes certify homotopicality on any interaction graph.
+- **Response 4 (Question 3).** If t processes (hubs) meet all causal routes, the fibres are exactly the components of t-coordinate strict dominance row complexes. Each is an open polyhedral subset of ℝ^{t−1}. For three hubs they are exactly the finite wedges of circles; four hubs give S².
+
+**What was re-run.** islpy 2026.2.2 was installed with pip.
+- `tools/homotopy_polygraph_matrix_reader.py`: 755 reachable states, all 11 accepted matrix and payload orders, and 42 altered initial records, none returning.
+- `tools/homotopy_polygraph_causal_routes.py`: 1,024 two-counter words and four relay controls agree; the circle routes ((0,1,2),(3,4,5),(6,7,8)) give circle homology; 220 SAT encodings agree with truth assignments (28 unsatisfiable).
+- `tools/homotopy_polygraph_forest.py`: two chains cannot cover induced 6-, 8-, 10- and 12-cycles; packing equals hitting set for 1 to 4 hubs; one relay change flips the decision.
+- `tools/homotopy_polygraph_hubs.py`: bouquets of 1, 2, 3, 5 and 8 circles for three hubs (24 vertices and 31 edges in the last), and simplex boundaries for 2 to 6 hubs.
+- `tools/homotopy-check/QuietParity.agda` type-checks under `agda --safe --no-libraries --ignore-interfaces`. It has no postulates.
+
+**Checked by hand.**
+- **The parity criterion.** "Infinitely many pulses, or finitely many and even" is Π⁰₂, which gives the forward direction. In the reverse direction the self-indexed producer must get an answer from C, since otherwise it emits zero pulses. A mismatch in either direction makes the parity eventually constant and contradicts the guarantee on C.
+- **The board catalogue.** Acceptance is Σ⁰₁ and contractibility of a finite complex is Σ⁰₁ (acyclicity is decidable and triviality of π₁ is semidecidable). So the board test is a fixed Boolean combination of 2·2^{mn} queries to 0′.
+- **Width three.** On at most three vertices the only non-contractible connected complex is the hollow triangle. That gives the three-route pattern, and the routes come from shortening comparison paths.
+- **Two hubs.** In two-coordinate dominance, rows of an induced cycle have pairwise incomparable thresholds. Each column then selects an interval of rows in one linear order, which gives at most k − 1 adjacent pairs, while the cycle needs k. So no induced cycle of length 6 or more exists.
+- **Forests.** Feasible routes are paths in a forest, so packing equals hitting set (the Helly property of subtrees).
+- **Three hubs.** A component of a bounded open polyhedral subset of the plane deformation retracts to a finite graph.
+
+**Caveats.**
+- The rank-11 board construction is checked only at the level of its protocol argument. The checker runs a sample recognizer on a finite language. The all-record argument depends on the endpoint and trace theorems of rounds 5 and 6, which were verified then.
+- The NP and NL bounds in Responses 2 and 3 use polynomial witnesses for two-counter reachability with unary updates (Englert–Lazić–Totzke, arXiv 1602.00477). This citation was not re-checked.
+
+**Follow-up:** [`outbox/homotopy-polygraphs-r8.md`](../outbox/homotopy-polygraphs-r8.md).

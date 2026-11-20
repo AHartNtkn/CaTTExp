@@ -13,6 +13,8 @@
 --     composite; its typing rule is stated here, not derived from L);
 --   * here A has type A when A is well formed (admissibility of A is a
 --     separate judgement, Templates.admit?).
+-- So infer / wf check that goal types are well formed; they are not a
+-- derivability check (here A inhabits every well-formed A).
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Biclosed.Typing where
 

@@ -369,3 +369,626 @@ An answer to Q1(a) or Q1(b) in every dimension; an answer to any part of Q2; a d
 - Ara–Maltsiniotis, arXiv 1607.00668 (lax Gray tensor of strict ω-categories); Steiner, *Omega-categories and chain complexes*, HHA 2004.
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange, Appendix A and Rem. 4.10).
 - Campion, arXiv 2311.00205 (Gray tensor of (∞,n)-categories); Gepner–Heine, arXiv 2510.10504.
+
+# Researcher Response 1
+
+## The minimum on pasting diagrams
+
+Write \(T=T_{12}\). On the fixed signature there is an admissible theory with
+the minimum pasting profile of Q1(b). One presentation \(V\) uses the
+defining families of \(T\), with the unrestricted **inner** subdivision laws
+left optional (retain their prescribed instances in \(P\)). More precisely,
+take the base \(B\) specified below and adjoin the guarded quotient
+equations of round 5 at every indicated cut, including the guarded
+identification of each shifted join. At cut zero keep the unguarded
+unary laws. The unguarded optional splits at inner cuts are absent. This
+last description fixes the choice of \(V\) used below.
+
+Here and below a law is a finitary partial Horn law as in (K55). Having
+the same free objects on pasting diagrams need not imply having the same
+laws with hypotheses.
+
+**The forced unary laws.** Let \(B\) consist of the structural theory, \(P\),
+the fixed face and unit declarations, the outer unary subdivisions in both
+variables and the exterior and intervening vertex transports for these unary
+operations. Every admissible fixed-signature theory contains \(B\). The
+point requiring proof is that the unguarded outer equations hold *before*
+imposing the inner identities.
+
+For the stationary subdivision use the generic arity with moving hom globe
+\(D^p\) and stationary hom \([2]\). For exterior transport use the single
+edge in place of \([2]\) and insert the indicated vertex factors. The
+order of the two factors can be reversed. Contract the stationary factor
+and the vertices in the Gray table, projecting to the moving globe.
+The effective rank of an iterated identity means the degree of its
+underlying nonidentity cell (zero for a vertex). On a hom interval
+containing the moving factor, every proper cell of hom degree \(n\ge2\)
+projects to effective rank at least \(n-1\). On an interval missing that
+factor there are only paths of edges and their identities.
+
+Here is a term induction for this bound in the free algebra of *any*
+admissible theory. Pure moving generators have their original rank. For two
+proper outer arguments only the pair consisting of a moving cell and a
+stationary edge is possible. Its rank after contraction is the degree of the
+moving cell in the short hom: the atom on a \(j\)-cell and an edge projects
+to an identity on that \(j\)-cell. Pure transport by vertices preserves it.
+In a single moving globe a positive cell is a face or the top generator.
+There is no independent positive pair at an internal cut there. Structural
+pastes in the globe cannot lose the largest effective rank of their pieces:
+below that rank two active pieces either match in temporal order or
+a lower piece is a unit at the attaching cut. Normalizing unit arguments
+in an auxiliary uses its specified specialization. Finally consider a
+putative first proper inner call, at cut \(k\) *in the hom*. Its two
+operands have hom degrees at least \(k+2\), so both projections have
+effective rank greater than \(k\). Their \(k\)-source and \(k\)-target
+are the negative and positive \(k\)-hemispheres of the moving globe.
+The positive hemisphere is distinct from the negative one. The required
+match is impossible. This proves the induction, including for terms that
+type using additional laws: matching in the proposed theory implies
+matching in its Gray projection. The only outer split on a subinterval
+with a vertex partner is a unit specialization or pure transport.
+
+For subdivision in the moving argument use \(D^p[2]\), two \(p\)-globes
+joined at their \((p-1)\)-faces, against a single edge \(b\). The same
+induction works with a nonempty consecutive interval of top generators in
+place of a single top generator. At cuts \(k<p-1\) the two hemispheres
+are still distinct; the one additional possibility is \(k=p-1\) between
+two proper cells of hom degree \(p+1\). Each contains a cylinder on a
+nonempty interval of \(p\)-generators against \(b\). Contract the two
+\(p\)-generators to identities on the sole \((p-1)\)-globe \(a\).
+At degree \(p\) each projected operand now contains \(a\otimes b\)
+(or \(b\otimes a\) in the other order). Fixed contexts preserve this
+contribution. Composing along \(p-1\) would give coefficient at least
+two. In \(D^{p-1}\otimes[1]\) the only \(p\)-basis element is
+\(a\otimes b\). The coefficient of \(a\otimes v_1\) in its boundary
+is \(+1\) or \(-1\), with \(v_1\) the terminal vertex of the edge.
+In either \((p-1)\)-row that coefficient is at most one by projection to
+the lone globe \(a\). Subtracting the rows gives top coefficient at most
+one. Interchanging the factors gives the same bound. The square and the
+first unary laws already belong to \(P\).
+
+On each of these arities all inner operations consequently have their
+killed values. If \(F_E(\Gamma)\) itself satisfies the inner identities,
+it is already free on \(\Gamma\) in the inner-identity subcategory by its
+ordinary universal property. Requirement 4 therefore identifies it with
+the Gray table on that arity. The two terms of each unary law type on its
+generic arity by the unary boundary recursion and have the same Gray
+tableau. Equality on this arity gives the law on arbitrary assignments by
+substitution. This proves the assertion about \(B\).
+
+**Why the other outer axioms can be used without changing this profile.**
+The free \(B\)-algebra projects to \(F_T\) on each pasting diagram, and
+this projection reflects identities. For clarity, expand a cell into a
+top path with fixed whiskerings. Normalize a unit argument by the
+prescribed specialization. Induction on subterms shows that each remaining
+proper generating occurrence has proper defining arguments in \(F_T\);
+its positive charge there survives fixed whiskering. Top composition adds
+charges. Thus an identity primary value has no remaining proper occurrence.
+This is the argument of (K51), with exactly one copy of each generator.
+It works for terms in the smaller theory since their typing derivations
+map to \(T\).
+
+We spell out which verifications from (K47) are needed here. The guarded
+equations, including those on shifted auxiliaries, hold in these free \(B\)-algebras for the following reasons.
+
+* For a mixed paste, each test is the inner square on the two transported
+  3-faces. In \(F_T\) its properness is detected by the product of their
+  lengths. A successful test forces a unit specialization of an operand.
+  Identity reflection brings this specialization back to \(F_B\). The
+  principal top occurrences in the tested paste specialize to identities.
+* For a bridge identified with its contextual atom, a unit moving input
+  gives the identity on its face. A fixed operand reduced to an edge gives
+  the same unary cylinder on both sides; reduction to a vertex gives the
+  pure action. In the atomic representative any surviving nonunit exterior
+  context would add a positive chain in its highest effective row. These
+  are the unit calculations of round 5, Responses 8–10, including \(K=W\)
+  at a unit left variation and the separate identity-image \(H_R\) case.
+  In the factorization and shifted-join tests it is the displayed inner
+  prefix or suffix that is proper when the defining arguments are proper.
+* For a whiskering of the moving input the test compares its variation with
+  the cylinder on the neighbouring piece. For the three-factor equations
+  the test compares a variation with the crossing on the other two slots.
+  If proper, these are proper inner comparisons in \(F_T\). In the unit
+  cases, the two sides specialize to the same lower unary operation with
+  its fixed transports, or to identities on their common faces. The triple
+  of edges is the original triple equation in \(P\).
+
+These checks use the common unit declarations and the just-proved unary
+laws in making the specializations. In particular they do not use either
+unrestricted inner split to deduce a guarded equality. The detailed
+boundary checks are in [round 5, Responses 8–12](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-8).
+
+Adjoining the guarded equations to \(B\) therefore preserves **each
+free algebra on a pasting diagram** by its universal property. This is the
+presentation \(V\). After imposing the inner identities, the entire outer
+presentation used for the exactness proof of (K47) is present. The inner
+operations have their prescribed values in strict homs, including both
+sides of the inner subdivision and transported equations. Thus the
+inner-identity algebras are precisely those of \(T\) with the inner
+identities. Imposing the outer identities gives its strict quotient as
+well. Reflection to \(T\) gives strong directedness and detects \(H\).
+Typed paths, explicit faces, least occurrence representatives and
+substitution give requirements 1, 2 and 5 as in (K55). Consequently \(V\)
+is admissible. For each admissible \(E\) there are generator-preserving maps
+\[
+                 F_V(\Gamma)=F_B(\Gamma)\longrightarrow F_E(\Gamma).
+\]
+They send a particular directed cell to a directed cell with the specified
+images as endpoints. This proves the simultaneous minimum requested in
+Q1(b) for both reachability and equality. It does not require a single
+interpretation \(V\to E\) on all algebras.
+
+The word and reachability problems for this profile are decidable. Use the
+contextual alphabet and positive conserved weights of (K50) pulled back
+from \(T\). Through degree three use the original finite path lists. In
+degree four there is a finite alphabet on each finite diagram, and for
+equality at fixed weight enumerate just the bounded words. Inductively
+above four, the boundaries of an intermediate vertex have fixed lower
+faces, and its weight is conserved by every step. Enumerate the finitely
+many such lower paths, retaining all representatives before reducing them
+by the lower decision. Form the typed contextual letters between them in
+\(B\); the faces, unit rules, restricted splits and unary subdivisions and
+transports are explicit. The positive lower charges bound the inputs of
+proper letters as in (K50); proper fixed contexts are bounded by their
+lower rows or their transported lengths. Thus one uses the finite lists
+of raw possibilities in the weight argument, with matching and equality
+checked in \(B\) at the previous degree. The grade bound is on words, not
+on the number of their \(T\)-equivalence classes. Equality is connectivity
+by the retained defining pairs on the finite top-weight layer. To decide
+existence one degree higher, compare the conserved endpoint weights first,
+then take ordinary directed reachability on the finite intermediate vertex
+list with edges the contextual generating steps. Below the conserved
+degree the sets of vertices for this last search are already finite. The
+argument does not transfer a negative reachability decision by reflection
+along a map to \(T\).
+
+**Visibility.** The unrestricted right split \(R\) is visible. In the
+marked suspension of (K51) its direct and pasted terms have different
+tags on the generating assignment of the finite diagram of (K31). They
+agree in \(T\). By contrast every chronological 3-endomorphism in a free
+object on a finite pasting diagram is an identity on this fixed signature.
+A normalized nonempty 3-history has a positive top chain in Gray: its
+letters are input advances or outer crossings of proper 2-inputs.
+Fixed contexts preserve these steps and composition adds them. Equal
+2-faces would give a positive cycle in the strongly loop-free table of
+§1, which is impossible. Higher equations preserve the Gray image and
+cannot create a new constructor of degree three. Thus all the \(L_p\)
+and \(D_{d,p}\) hold on every such free object. Adjoining any of them
+preserves those objects by freeness. Their independence on general
+algebra assignments in (K55)–(K56) is consistent with this result.
+The \(H^k\) are endomorphisms one degree higher.
+
+## What the intersection proves
+
+Let \(E_*\) be the intersection of the **deductively closed** admissible
+law sets. The inclusions \(B\subseteq E_*\subseteq V\) give, on each
+pasting diagram, the identity-on-generators maps
+\[
+ F_B(\Gamma)\longrightarrow F_{E_*}(\Gamma)\longrightarrow F_V(\Gamma).
+\]
+Their composite is the preceding isomorphism. In fact all three tables
+coincide. The common outside table satisfies the intermediate laws,
+and its universal property as a free \(B\)-algebra makes it free for
+the intermediate laws as well. Thus \(E_*\) has the decidable equality
+and reachability just proved, satisfies 1, 2, 3 and 5, and retains
+\(H\ne1\). Every equation of \(T\) belonging to \(B\) is retained.
+The unrestricted right split and each \(L_p\) are absent by (K51) and
+(K55), and each \(D_{d,p}\) is absent by taking \(v_p(N)>v_p(d)\) in
+(K56). The latter omissions are compatible with their validity on all
+ordinary free tables.
+
+There is a stronger statement on the strip \(C_{2,1}\) of (K46):
+**the intersection itself proves the subdivision after imposing the
+inner identities**. Here are details of the finite support argument.
+In hom degrees at most three, use the exactness proof of (K45) for
+\(P\). On this finite strip take a representing term for each cell in
+those degrees and a proof in \(P\) with the inner identities of each
+defined table entry on these representatives (include the operations,
+faces, identities and generators). There are finitely many entries.
+Record, as a finite conjunction \(A\), the definedness and the equality
+to a unit at every use of an inner identity in these proofs. Record
+instantiated uses in the strip context, expanding substitutions first.
+In any theory extending the base, assuming \(A\) replays those proofs.
+Conversely \(A\) is provable in the base with the inner identities:
+replay the original proofs in order, so even a term whose typing needed
+an earlier identity becomes defined. Thus \(A\) is a legitimate common
+Horn premise, also when some matches are obtained only after killing.
+
+For any admissible \(E\), take its term algebra in the strip context
+subject to \(A\). It maps to the Gray strip since Gray satisfies the
+premises. Its bottom three hom degrees have exactly the Gray table by
+the chosen rows and induction on terms in those degrees. Higher
+equations may supply additional matches but the map to Gray detects
+matches between these representatives. To check possible higher calls,
+one only needs the following small signed-table calculation. For
+\(D^2[2]\otimes D^2\) the numbers of cells through hom degree four,
+including units, are \(4,26,98,139,146\). For each cut \(k\), list the
+sources and targets at \(k\) of all proper cells of degrees at least \(k+2\). Among
+proper cells of degree \(d\ge k+2\), the number with an opposite face
+on the list is eight at \((k,d)=(0,2)\) and zero otherwise. For
+reproduction, start with the tensor atoms, add identities, and close
+each degree under pasting equal signed rows at all lower cuts; the code
+in the validation section performs this enumeration in the full table, including pairs of unequal ranks.
+
+In each individual outer factor there are only the original globes
+and their structural pastes. In the long hom the only outer operation
+above the normalized three hom degrees with proper inputs is the disk
+\(W\) on two rank-two inputs. It has positive top Gray chain, also
+on a composite input. Fixed transport preserves this chain and temporal
+composition adds chains. Induct now on a normalized expression. The
+only possible proper-operand inner calls are the squares on rank-two
+inputs just listed; their values are already units by the bottom tables.
+Any other first inner call would require an opposite-face match excluded
+by the table. Unit arguments reduce by the prescribed specialization.
+Thus every remaining proper cell above hom degree three has positive
+Gray image in degree four; there are no higher proper cells. This
+argument allows distinct lifts of a degree-four Gray cell. Consequently
+the entire algebra in context \(A\) satisfies the inner identities.
+It receives the generator assignment from the free inner quotient of
+\(E\) on the strip. By requirement 4 the direct and tiled \(W\) agree
+in that quotient, hence in the algebra in context \(A\). Term-model
+completeness gives \(A\Rightarrow W_{\rm direct}=W_{\rm tiled}\) in
+each \(E\). This single Horn consequence is in \(E_*\), and the
+inner identities discharge its premise there.
+
+For arbitrary arities (K55) gives a precise remaining condition.
+In each nonempty interval in (5) with deductive closure enabled, its
+lower endpoint is admissible. The minimal admissible theories are
+exactly the inclusion-minimal members of the family of these lower
+endpoints: every admissible point contains an endpoint below it, and
+a strictly smaller admissible point would contain a strictly smaller
+endpoint. Their construction chooses finite supports for required
+table entries and for triggered returns and takes the union of the
+chosen supports as in (5). This description alone does not guarantee
+a minimal endpoint below each point of a descending chain. The
+intersection is admissible exactly if it contains a complete finite
+support for every quotient entry of (3) of (K55); all the unquotiented
+requirements have already been checked. A family of individually
+witnessed finite supports need not have a witness in its intersection.
+On general binary disks the upper auxiliaries can also occur as fixed
+contexts in still higher face matches, so the strip argument above
+does not prove that condition in every arity. The all-dimensional
+minimum established here is the one asked for in Q1(b). The least
+closed law set in Q1(a) remains undetermined.
+
+## Maximal theories and upper bounds
+
+There are strict law extensions even *above* \(T\) on its existing
+signature. For \(m\ge8\) let \(\sigma_m\) say that for two adjacent
+idempotent \(m\)-endomorphisms the two Godement schedules at cut \(m-2\)
+are equal. Write the two schedules using structural operations. In every
+free \(T\)-object a top idempotent has weight \(2w=w\), hence is an
+identity. The free objects satisfy \(\sigma_m\). In Gray and strict the
+two schedules at this inner cut agree without the idempotence premise.
+Consequently every collection of these laws gives an admissible extension
+with the original free objects and both original quotients.
+
+For strictness use the \(T\)-algebra \(E_m\) of (K57). Its \(m\)-cells
+form the left-zero semigroup on \(x,y\) with unit adjoined. Its
+\((m+1)\)-cells are the arrows of the codiscrete groupoid on that monoid.
+The two schedules on \(x,y\) are \(yx=y\) and \(xy=x\). In every other
+dimension all top endomorphisms are identities, so \(E_m\) satisfies
+each \(\sigma_n\) for \(n\ne m\). Thus the extensions by subsets of
+these laws embed the inclusion order on \(\mathcal P(\mathbb N)\) even
+in the interpretation preorder: an interpretation must preserve the two
+*structural* words in each law. This entire family has one pasting
+profile. See [the construction of \(E_m\)](../answered/lax-interchange-every-dimension-r7-2026-11-20.md#a-high-dimensional-comparison).
+
+There is an exact maximality criterion for arbitrary **closed** law sets
+on the fixed signature. Above an admissible point \(A\), retain the
+finite-support prohibitions and return clauses of (K55), as well as
+deductive closure. The positive witnesses for both quotient tables
+already belong to \(A\). For a triggered return the two alternatives
+can be written as single bits: assert on the indicated finite diagram
+that the first, respectively the second, active input equals its identity.
+Include the definedness premises from the trigger. Deductive closure
+gives this bit exactly when the corresponding unit judgement follows
+in that context. Thus above \(A\) all remaining tests are finite
+propositional clauses, including the clauses from each finite proof of
+a Horn consequence. An absent law \(b\) is incompatible with every
+admissible extension of \(A\) precisely when finitely many such clauses
+together with \(b\) and finitely many bits of \(A\) are unsatisfiable,
+by propositional compactness. The maximal points are precisely those for
+which every absent law has such a certificate. This tests compatibility
+with *all further repairs*. A failure of the immediate one-law extension
+alone would not suffice. Every admissible point lies under a maximal
+one: an increasing union of closed admissible law sets satisfies the
+finite clauses above its first member, so the chain upper bound and
+Zorn's lemma apply. At a fixed pasting profile the largest collection
+of laws preserving it and the quotient projections is the common theory
+of its free tables and the two benchmark theories. This follows by
+evaluation and freeness. With literal signature extensions allowed,
+every theory has a proper extension, for example by a new name for an
+identity operation. Such an extension represents the same point up to
+interpretation.
+
+**No maximal interpretation class with variable signature.** Here is a strict
+extension even up to mutual interpretation. Let \(S\) be any countably
+presented admissible theory (a countable signature suffices). Write \(I\)
+for the free strict interval with its specified \(S\)-table. The product
+\(Q=I^{\mathbb N}\) has infinitely many vertices and only identities in
+degrees at least two. It is an \(S\)-algebra by componentwise evaluation.
+This choice only requires the specified projections on free tables.
+
+Fix a binary sequence \(b\). Add four vertex-valued operations
+\(o_0(p),o_1(p),s(p,z),c(p,z)\), where \(p\) is an assignment of the
+\(H\)-arity and \(z\) is a vertex. On every table
+\(F_S(\Delta)\times Q\), for a finite pasting diagram \(\Delta\), give
+all four outputs first coordinate the initial vertex of \(p\) in the
+first coordinate. When \(H(p)\) is a unit there, give them all the
+initial vertex of \(p\) also in the second coordinate. Otherwise choose
+fixed distinct vertices \(q_*,q_0,q_1,\ldots\) in \(Q\). Give the two
+names second coordinates \(q_0,q_*\). Make \(s\) advance the second
+coordinate of \(z\) from \(q_n\) to \(q_{n+1}\). Make \(c\) send
+\(q_n\) to \(q_0\) or \(q_*\) according as \(b_n=0\) or \(1\). Use
+\(q_0\) for both functions on the remaining vertices. Include the
+benchmark quotient tables with all four operations equal to the initial
+vertex. Take the common Horn theory of these tables, \(S_b\). It
+extends \(S\).
+
+To verify admissibility, a free cell is the joint value of a typed
+expression on the generating diagram over all table assignments, with
+the given operations and faces evaluated coordinatewise. Equivalently
+these are the finite term trees modulo equality on every such
+assignment, with their least occurrence representatives as in (K55).
+In every first coordinate the four names erase to the initial vertex.
+Evaluate on the generators in \(F_S(\Gamma)\times Q\) using a constant
+diagram in \(Q\). This yields the generic erased value in
+\(F_S(\Gamma)\). Every other primary value is its image by substitution,
+by induction on the expression, including the equalities used to form
+its operations. A generic erased unit of degree at least two is a unit
+under every evaluation: the second coordinates have only identities
+there and the benchmarks also evaluate by erasure. Thus this projection
+reflects identities of both active inputs of every elementary rectangle.
+A reverse would project to a reverse in \(F_S(\Gamma)\). The original
+\(H\) survives in that same coordinate. This proves directedness and
+nontriviality. Under either set of interchange identities, \(H(p)=1\)
+forces every new operation to equal the initial vertex, a common Horn
+law. Erasure then reduces every quotient term to its old value by term
+induction, and the benchmark coordinates preserve all the required
+values. This gives both exact quotients, also for newly matched terms.
+
+For fixed \(p\) put \(u_0=o_0(p)\) and \(u_{n+1}=s(p,u_n)\). The
+table construction gives the laws
+\[
+       c(p,u_n)=o_{b_n}(p),\qquad o_0(p)=o_1(p)\ \Longrightarrow\ H(p)=1 .
+\]
+An interpretation back into \(S\), evaluated at the generic proper
+\(p\) there, would distinguish the two names and recover every bit of
+\(b\) from the four interpreting terms. There are only countably many
+such quadruples in \(S\), even allowing arbitrary images for the old
+upper operations, since \(p,H\) and the initial vertex are fixed over
+\(P\). Choose a binary sequence outside their countable set of recovered
+sequences. Then \(S\to S_b\) by inclusion, and there is no interpretation
+back. For an arbitrary set-sized signature one can instead name
+\(\kappa\) vertices at \(p\), for \(\kappa\) larger than the vertex set of
+\(F_S(\Gamma_H)\). Use \(I^\kappa\) with distinct tag vertices, and
+the same unit specialization and identity-reflection proof. Equality of
+any two different names would kill \(H\), which rules out a reverse
+interpretation by cardinality. Thus fixed-signature law maximality and
+maximality in the full preorder have different answers.
+
+**Two theories with no common target.** Let \(A\) be the marked theory
+of (K51) and let \(\Delta\) be the finite pasting diagram of (K31).
+The terms \(r,s\) for the two sides of the right split differ on its
+generators in \(F_A(\Delta)\). Extend \(A\) as follows. For each tuple
+\(p\) of the arity of \(H\), give operations naming a diagram
+\(b(p)\) of shape \(\Delta\), one for each of its globular generators
+with the indicated faces. Write \(v(p)\) for the initial vertex of
+the rectangle. Impose these two finite sets of conditions:
+\[
+ H(p)=1\ \Longrightarrow\ b(p)\text{ is the diagram of identities at }v(p),
+ \qquad
+ r(b(p))=s(b(p))\ \Longrightarrow\ H(p)=1 .
+\]
+This uses the variable-signature convention of §4; the new operations
+include vertex-valued operations. No such extension is used in the
+fixed-signature minimum above.
+
+The free algebra has an explicit construction. Start with \(F_A(\Gamma)\).
+For every tuple there with \(H(p)\ne1\), take a fresh disjoint component
+\(F_A(\Delta)\) and use its generators for \(b(p)\). For other tuples
+use the specified identities. Repeat on any new tuples in the new
+components, taking the union of the finite stages. The old operations
+act within a component: their incidence arities are connected.
+The disjoint union is an \(A\)-algebra here. In detail, \(A\) is the
+common Horn theory of the primary and marked algebras of (K51), which
+require this point even for laws with disconnected premises. The free
+components embed in products of their evaluation algebras. Equivalently,
+one can separate any two elements of the union by homomorphisms into
+the original free components: use the identity on the component being
+tested and send every other component to iterated identities at a vertex.
+To separate vertices of distinct components, map the two components
+constantly to the two distinct vertices in a free interval. These maps
+give an injective map into a product of \(A\)-algebras, reflecting all
+face matches. For partial structural and disk operations, a matching
+tuple in its image has its inputs in one component, hence has its
+prescribed value there. This proves the assertion for the full common
+theory, not only its connected axioms.
+
+On each attached component the two split terms on its named generators
+are distinct. Every tuple is finite and receives a name exactly once.
+A map out on the input diagram extends uniquely at each stage: on the
+copy indexed by \(p\) send the generators to the named diagram at the
+image of \(p\). This remains valid if the image of \(H(p)\) is an identity.
+This proves freeness and substitution. Each elementary rectangle and
+each possible reverse lies in a single old component, and the original
+witness \(H\) survives. Component addresses and the old expanded supports
+give an expanded basis. After imposing the inner identities all \(H(p)\)
+are identities. Every name then has its prescribed value, and every
+old quotient algebra has exactly this expansion. This gives both exact
+quotients.
+
+Call this extension \(A'\). In any common target of \(T\) and \(A'\),
+the \(P\)-law \(R\) supplied by \(T\) applies to the interpretation of
+\(b(p)\). The second condition then proves \(H(p)=1\) on the generic
+rectangle. This contradicts admissibility. Hence the preorder is not
+directed, this pair has no join, and there is neither a weakly terminal
+nor a terminal theory. In particular the preorder is not a lattice.
+
+## Complexity of interpretation-equivalence
+
+There is no Borel classification of mutual interpretability by countable
+structures up to isomorphism. The following reduction is on countable
+signatures and uses just one base theory. For a group \(G\) on \(\mathbb N\)
+extend \(T\) by a vertex \(o(p)\) and loops \(a_g(p)\) there, for every
+\(p\) of the \(H\)-arity and \(g\in G\). Impose the multiplication table,
+\(a_1=1_{o(p)}\), the identity diagram at \(v(p)\) when \(H(p)=1\), and
+\[
+                     a_g(p)=a_h(p)\ \Longrightarrow\ H(p)=1
+                     \qquad(g\ne h).
+\]
+Call the result \(T_G\). This time the free construction attaches the
+ordinary one-object category \(BG\), with only identity higher cells, at
+each proper tuple. Here “attaches” means as a disjoint component. There
+are no proper tuples in \(BG\). It is a strict algebra of \(T\).
+The usual connected defining axioms of \(T\) hold componentwise;
+alternatively use the same product separation, with \(BG\) itself as
+a receiving algebra. The multiplication table gives the unique extension
+on each component, and the quotient and directedness arguments just
+given apply.
+
+There is an interpretation \(T_G\to T_J\) over both quotients exactly
+when \(G\) embeds into \(J\). An embedding gives the corresponding
+renaming of loops. Conversely evaluate an interpretation on the generic
+proper \(H\)-rectangle in the target. Its interpreted \(a_g\) give an
+injective homomorphism into the endomorphism group of the interpreted
+vertex: equality of distinct images would kill this \(H\). In the
+original free component the 1-endomorphisms are identities, since its
+1-arrows are the paths on a directed globular pasting diagram. Every
+other component is \(BJ\). This proves the converse for nontrivial
+groups, and the trivial group embeds in every group.
+
+The presentation depends Borelly on the multiplication table; indeed one
+entry selects one axiom and the disequality indices are fixed. Williams
+proved that embeddability and bi-embeddability of countable groups
+are respectively universal analytic as a quasi-order and an equivalence
+relation. Thus already this concrete family has universal analytic
+mutual interpretability. To see the obstruction to countable invariants,
+take a non-Borel analytic set and the analytic equivalence relation whose
+only nonsingleton class is that set. A Borel reduction to isomorphism of
+countable structures would make that class the Borel preimage of a
+single isomorphism class, which is Borel by Scott's isomorphism theorem.
+Here “classification” has its usual Borel meaning; arbitrary set-theoretic
+codes without any regularity requirement would not express it.
+[Williams, Theorem 5.1 and Corollary 5.2](https://arxiv.org/abs/1306.1270)
+
+## Finite changes and admissibility
+
+For finite signature extensions there is a short reduction using only
+unconditional equations. Given a finite group presentation, choose
+\(m\ge6\). For each generator add \(p_i(z),n_i(z):z\to z\) on an
+arbitrary \((m-1)\)-cell \(z\), impose inverse equations for top
+composition, and impose the relators on these loops. If the presented
+group is trivial, each generator is the identity by a group derivation
+that applies in every local endomorphism monoid (the specified elements
+are units). The extension is definitional over \(T\). Otherwise take the
+\((m-1)\)-fold suspension of the one-object group category, with only
+identities above degree \(m\). At the distinguished \((m-1)\)-cell
+interpret the operations by the generators and inverses and use units
+elsewhere. This is a strict model in which some \(p_i(z)\ne1_z\).
+The strict quotient on \(D^{m-1}\) therefore has a nonidentity \(m\)-cell,
+whereas the free strict globe has none. Requirement 4 fails. Thus even
+testing this finite form of extension decides triviality of a finitely
+presented group, which is impossible.
+[Adian's undecidability theorem](https://arxiv.org/abs/2208.08560)
+
+### One additional Horn law on the original signature
+
+**Theorem.** In the finitary Horn syntax of (K55), the set of single laws whose addition to \(T_{12}\) is admissible is co-r.e.-hard. The reduction uses the existing operations through degree five. Variables range independently over cells, and the premises are finitely many definedness and face or term equalities. Existence of a witness in the argument below means that a universally quantified witness variable satisfies its face premises in a falsifying assignment.
+
+**Two loops of weight one.** Take \(\Delta=(\Sigma[1])^{\vee8}\), with one generating 2-cell on each of eight consecutive outer spans. On the first four spans, whisker the first two generators by the stationary 1-faces of the other slot to obtain consecutive steps \(a_1,a_2\) of a 2-word on spans 1 and 2. Do the same with spans 3 and 4 for \(b_1,b_2\). Use (K34) to form the 4-endomorphism \(A=H(a_1,a_2;b_1,b_2)\) of \(u=\chi(a_1a_2,b_1b_2)\). The second group of four gives \(B\) at \(v\). Each loop is a fixed contextual inner crossing of two single 3-events. Its degree-four weight is one. If any one of its four 2-inputs is an identity, one operand of the inner crossing is an identity and the loop specializes to an identity.
+
+Write \(u:u_0\to u_1\) and \(v:v_0\to v_1\) for their 2-faces. Concatenate the disjoint 2-words in left-group then right-group order, with the necessary exterior 1-whiskers. Work at the 3-cell
+\[
+              d=(u\,v_0)\mathbin{;} (u_1\,v).
+\]
+For a local 4-loop \(X\) at \(u\), let \(j_L(X)\) act on the first interval of \(d\), with fixed suffix. Define \(j_R(Y)\) on the second interval for a local loop at \(v\), with fixed prefix. These are monoid maps by functorial whiskering. The elementary temporal comparison \(e\) on the two interval operands \(A\,v_0\) and \(u_1\,B\) has faces \(j_R(B)j_L(A)\) and \(j_L(A)j_R(B)\), in that order. Juxtaposition of 4-loops denotes chronological composition.
+
+**A trace for arbitrary witnesses.** Let \(P\) be any 4-endomorphism at \(d\) in \(F_{T_{12}}(\Delta)\). Let \(P|_L,P|_R\) be the substitutions contracting the opposite four spans to an object. Each resulting cell is again a loop. Write \(m_4\) for the positive grading of (K47), evaluated on the respective shape. Define
+\[
+              D(P)=m_4(P)-m_4(P|_L)-m_4(P|_R).
+\]
+A 4-loop has zero top Gray chain because the free Gray hom on this shape has no proper endomorphisms. Thus \(m_4=w\) here, by the formula \(m_4=w+f(q_3)\), also after either contraction. Round 5, Response 4, “A degree-five sector on arbitrary pasting diagrams,” gives the following description of this zero-chain sector. After normalization the only proper contextual steps are inner crossings \(\iota(F,G)\): the shape has no input 4-generators, and proper outer naturalities and joins have positive mixed Gray chain. The equations acting in this sector are the structural whiskerings and the applicable inner block splits. In particular the mixed factorization equations cannot retain a correcting proper inner step after a zero-chain specialization. The free 4-skeleton of the completed theory is the same (round 5, Response 18).
+
+Every atomic 3-event in these histories crosses a named pair of generating 2-slots. Its occurrence is determined by the two boundary words, since an ordered pair of slots can cross at most once. The two boundary words of \(d\) have the same relative order between the two groups. Hence every 3-event is internal to one group. An edge \(\iota(F,G)\) contributes one unit of \(w\) for each member of the Cartesian product of the two event sets (round 5, Response 4, formula for \(I(F,G)\)). A contraction retains precisely the pairs internal to its retained group. Consequently \(D(P)\) counts the pairs with events of opposite colors and is nonnegative. Every 5-cell between 4-loops preserves \(D\) and the two individual projected weights by conservation of \(m_4\) on each shape and substitution of that 5-cell.
+
+If \(D(P)=0\), every nonempty product on every representative of \(P\) is monochromatic: if both colors occurred among its factors, some pair in that product would have opposite colors. Emit its color \(L\) or \(R\) repeated by its weight, and concatenate the words along the path. This gives a well-defined word \(t(P)\). Indeed a block split partitions a monochromatic product, and structural changes preserve event names and the order of contextual steps. The zero-chain description above exhausts the active equations. Concatenation concatenates traces. The two letter counts are exactly the projected weights. In particular \(t(j_L(X))=L^{m_4(X)}\), \(t(j_R(Y))=R^{m_4(Y)}\), and the traces of the two padded distinguished loops are the single letters.
+
+**Multiplication.** For local 4-loops \(X,U\) at \(u\) and \(Y\) at \(v\), use the following gate with variables \(Z\) and \(C\):
+\[
+\begin{gathered}
+  sZ=tZ=d,\qquad Zj_L(X)j_R(B)=j_L(X)j_R(B)Z,\\
+  sC=Z,\qquad tC=j_L(U)j_R(Y),\qquad \dim C=5.
+\end{gathered}
+\]
+Put \(m=m_4(X),n=m_4(Y),r=m_4(U)\). The prescribed target of \(C\) has defect zero, so \(D(Z)=0\) and the letter counts of \(t(Z)\) are \((r,n)\). The commutation premise says that \(t(Z)\) commutes with \(L^mR\). Commuting words are powers of a common word: cancellation of the shorter prefix reduces the sum of lengths and proves this by induction, including the empty word. Since \(L^mR\) contains exactly one \(R\), it is primitive even for \(m=0\). Thus \(t(Z)=(L^mR)^n\), and \(r=mn\). Conversely, take \(X=A^m,Y=B^n,U=A^{mn}\) and \(Z=(j_L(A)^m j_R(B))^n\). The commutation holds by associativity, and a paste of whiskered copies of \(e\) sorts the word to \(j_L(A)^{mn}j_R(B)^n\). This constructs \(C\) also when an exponent is zero.
+
+**The reduction.** Translate a Diophantine equation effectively into finitely many additions, multiplications and equalities over the nonnegative integers (move negative coefficients to the opposite side). For each arithmetic variable use local loops \(X_i,Y_i\) with face premises \(sX_i=tX_i=u\) and \(sY_i=tY_i=v\). Include a multiplication gate \((A,Y_i,X_i)\) to synchronize their weights. Use \(X_0=1_u,X_1=A\) for constants, chronological products \(X_k=X_iX_j\) for additions, and a gate \((X_i,Y_j,X_k)\) for each multiplication. Equalities of arithmetic outputs become equalities of their left variables. Quantify the eight 2-inputs with their consecutive outer-span matching premises and fresh witnesses for each gate. Take the conjunction of these finite premises to imply \(e=1_{s e}\). This is a single law on the original signature.
+
+If a solution exists, powers of \(A,B\) and the sorting witnesses realize the premises on \(\Delta\), including in any extension by laws. Suppose the extension were admissible. Each of the two bare 3-crossings inside each \(H\) survives in Gray, so the bare inner 4-comparison is proper by requirement 3. Immediate whiskering reflects identities, as in (K42): the proof appends a fresh globe to the end of the old finite diagram, and contracting either the globe or all the old factors detects the two test operands. It applies to each full four-span interval here. Hence the immediate prefix and suffix of (K34) preserve properness of \(A,B\). Contracting the opposite four spans detects each padded interval operand of \(e\). The new law therefore gives an identity reverse to a proper elementary comparison, contradicting requirement 3.
+
+If there is no solution, consider an assignment of the premises in any original \(F_{T_{12}}(\Gamma)\). If one of the eight 2-inputs is a unit, the preceding unit calculation makes \(e\) an identity. Otherwise the assignment of the eight 2-globes has a left inverse by substitution back to \(\Delta\). In detail, a nonidentity 2-path traverses an advance in the string of slots of some outer factor in its 0-span (round 5, Response 4, event description). Choose one such advance for each of the eight inputs. Consecutive outer spans have disjoint interiors, so their eight retained outer factors are distinct and ordered. Collapse every other outer factor to an object. In each retained factor map its ordered 1-cell positions to the initial or terminal 1-cell of the corresponding 2-globe, cutting at the chosen advance. Send every generating 2-cell across that cut to the unique generating 2-cell and all other generating 2-cells to the indicated identities. Parallel generators have the same image, so higher globes map to iterated identities. These assignments respect faces. Each assigned 2-path crosses its retained cut exactly once by monotonicity, and its remaining steps and exterior whiskers contract. Thus the induced substitution takes all eight assigned inputs to their designated generators. It takes every additional variable and its matching-face premises along, giving a gate assignment on \(\Delta\). The trace calculation would extract a solution, a contradiction.
+
+Every original free algebra on a finite pasting diagram therefore satisfies the law and retains its universal property among the algebras satisfying it. The inner-identity quotient already entails the conclusion on every assignment, as does the all-identity quotient. Both quotient theories are consequently unchanged. This proves admissibility in all dimensions exactly in the no-solution case. The co-r.e.-hardness follows from [Matiyasevich's Diophantine representation theorem](https://doi.org/10.1007/BF01094400). The witness variables are part of an ordinary finite matching context. The narrower input formats of unconditional equations, or laws requiring all variables to generate one unconstrained globular pasting tree, are separate restrictions.
+
+## A closed expression for the forbidden factors
+
+Use the lower-normal-labelled contextual alphabet of (K52), in any
+degree. Fix endpoints and positive total weight and list **all** the
+typed words \(p_0,\ldots,p_{N-1}\) in the resulting finite layer, in
+shortlex order. Take the integer incidence matrix \(C\) with a column
+\(e_i-e_j\) for each *original* defining pair in a typed top context
+whose two words are \(p_i,p_j\). Use the raw defining-pair list of
+[round 6, Response 1](../answered/lax-interchange-every-dimension-r6-2026-11-20.md#a-formula-for-the-forbidden-factors),
+before orienting or completing it. Put
+\[
+ b=\operatorname{ord}_t\det\big(CC^{\mathsf T}
+                    +\operatorname{diag}(t,t^2,t^4,\ldots,t^{2^{N-1}})\big).
+\]
+The binary digit of \(b\) at \(i\) is one precisely for a normal word.
+A nonempty word belongs to the forbidden-factor list precisely when its
+own digit is zero and the digits of its prefix and suffix of length one
+less are both one, each in its own layer. The empty path is normal.
+
+Indeed the coefficient for choosing diagonal positions \(S\) is the
+principal minor on the complement of \(S\). The quadratic form of
+\(CC^{\mathsf T}\) is the sum of \((x_i-x_j)^2\) over the raw contextual
+pairs. The minor is positive exactly when \(S\) meets each connected
+component: extend a vector on the complement by zero to see exactly
+when the restriction has trivial kernel. The least exponent selects
+just the lowest-index vertex of each component. The components are the
+path-congruence classes because every single replacement and its inverse
+stays in this layer. Their minima are the (K52) normal forms. Each left
+side of its reduced dictionary has only normal proper factors: factors
+have smaller weight and those rules have already been applied. Conversely
+any nonnormal word contains a left side. Every proper contiguous factor
+lies in the indicated prefix or suffix, proving the formula. It trades
+enumeration of the full finite raw layer for a single determinant and
+does not use overlaps or forbidden lists at smaller weights.
+
+## Validation
+
+* [Unary subdivisions and the two-tile strip](../../../scripts/e6/interchange_pasting_minimum.py).
+  In both tensor orders, the checker builds the signed cells of 20 unary
+  subdivision shapes in moving degrees 2 through 6. It checks 13,216
+  entries and 1,484,960 oriented partner tests. On the binary strip it
+  independently enumerates the possible pairs at every cut and rank.
+* [Arithmetic witnesses](../../../scripts/e6/interchange_arithmetic_gate.py).
+  The checks cover 225 event products, 2,401 subdivisions and 12,282
+  witness/input pairs, with 29 accepted gates. All 49 sorting certificates
+  replay using forward steps, including the two zero-exponent cases.
+* [Forbidden factors](../../../scripts/e6/interchange_forbidden_determinant.py).
+  Exact rational elimination in each of 20 typed layers gives the same
+  normal indicators as (K52) on all 39 tested paths, and the same six
+  minimal forbidden factors.
+* The existing normal-form checker completed the four grids through
+  \(3\times3\). The weak-initiality and universality checkers verified
+  the two strip tags, 729 functorial pastes and the split and subgroup
+  tables through cyclic order 32. The degree-five checker with
+  `--all-disks` replayed the positive and negative certificates on all
+  five generic disks, the five schema boundaries and their specializations.
+
+These finite computations check the specified instances. The dimension
+induction, the quotient arguments, and the reductions establish the
+statements outside their enumerated ranges.

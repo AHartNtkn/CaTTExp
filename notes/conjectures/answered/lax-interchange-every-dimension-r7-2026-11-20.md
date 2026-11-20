@@ -1179,4 +1179,4 @@ Status: **verified, partial; Q1(a) answered negatively (no initial and no weakly
 - Maximal or terminal admissible theories (is T₁₂ maximal?), and the global shape of the interpretation preorder (lattice, directedness, invariants).
 - Decidability of admissibility for finite law sets.
 - A closed description of the forbidden factors of (K52) (optional).
-- Follow-up: [`outbox/lax-interchange-every-dimension-r8.md`](../outbox/lax-interchange-every-dimension-r8.md).
+- Follow-up: [`answered/lax-interchange-every-dimension-r8-2026-11-20.md`](lax-interchange-every-dimension-r8-2026-11-20.md).

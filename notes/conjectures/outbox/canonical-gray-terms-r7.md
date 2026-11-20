@@ -853,3 +853,62 @@ agda --safe -i /tmp -i src /tmp/GrayThresholdPadding.agda
 python3 tools/gray_leaf_naturality.py 3 --agda /tmp/GrayLeafNaturality.agda
 agda --safe -i /tmp -i src /tmp/GrayLeafNaturality.agda
 ~~~
+
+# Researcher Response 12
+
+**At depth two, the only generic heads still needed by Response 11 have a generating edge between two lowest-dimensional marks.** More precisely, let $c$ be a full generic head of dimension $d+2$ on a globular pasting arity $P$, and let $Y$ be up-closed with lowest selected dimension $d$. Suppose no $(d+1)$-variable of $P$ has both its $d$-source and its $d$-target selected. Then the partial naturality judgment for $c$ has a filler, including when the caller has already chosen its lower actions. This allows internal selected vertices, incident higher generators and arbitrary additional selections above dimension $d$. In particular it narrows the uniform width-three problem to depth-two heads containing a pair of adjacent marks.
+
+### The two depth-one actions
+
+Put $m=d+1$, $n=d+2$, and work in the ordinary partial cylinder $C=P\uparrow Y$. Use $E,M$ for its minus and plus inclusions and $r_x:x^-\to x^+$ for the change at a selected $d$-variable. Call a variable above $d$ outgoing if its iterated $d$-source is selected, and incoming if its iterated $d$-target is selected. The hypothesis makes these classes disjoint, since the two $d$-poles of a higher variable are already the poles of its $m$-source. All higher cofaces of an outgoing variable are outgoing, and likewise for incoming variables.
+
+Make two further substitutions $L,V$ into $C$. At dimensions through $d$ set $L=E$ and $V=M$. In higher dimensions use the following entries, with $x$ the indicated selected pole.
+
+| Old variable $y$ | $L(y)$ | $V(y)$ |
+| --- | --- | --- |
+| Outgoing at $x$ | $r_x *_d M(y)$ | $M(y)$ |
+| Incoming at $x$ | $E(y)$ | $E(y)*_d r_x$ |
+| Neither | $E(y)$ | $E(y)$ |
+
+For an $m$-variable these have the required endpoints by the direction of $r_x$. Above $m$, taking either immediate face commutes literally with the displayed mixed whiskering. This verifies both substitutions on the declarations, since faces of variables in $P$ are variables.
+
+For the change $E\to L$ select only the outgoing variables above $d$. For $V\to M$ select the remaining members of $Y$ above $d$. Both selections are up-closed and start at degree $m$. In the first cylinder label each selected change by its original variable $\widehat y$ in $C$. The old target $d$-factor there was absent and the old source $d$-factor is now part of $L(y)$. Every higher factor in its type is the same original change variable. In the second cylinder the old target $d$-factor on incoming variables has become part of $V(y)$, and the source $d$-factor is absent. At a selected variable in neither class there was no $d$-factor. These identities verify the change labels even at an $n$-generator. Depth-one naturality now gives actions on $c$ and its poles for both substitutions. [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1 and Lemma 3.3](https://arxiv.org/pdf/2501.11620)
+
+Write $s,v$ for the immediate poles of $c$. Let $Q(z)=z*_d H_{v_d}$ and $B(z)=H_{s_d}*_d z$ using the supplied actions on the target and source $d$-poles. Omit each operation when its pole is unmarked. The $d$-poles agree for $c,s,v$. Whisker the first depth-one action by $Q$, and the second by $B$. Each becomes a square between the padded caps, with corresponding whiskered arrows on $s$ and $v$. Here and below the squares are composed in the iterated hom with those fixed $d$-boundaries. To verify the precise square type, distribute the fixed $d$-whisker across each binary cut-$m$ product on its boundary. Both writings lift to the wedge of the fixed $m$-disc with a pair of $n$-discs composed at $m$ and have the same faces there. A coherence and its reverse on that arity perform the change. If a depth-one selection misses a pole, use the identity on that pole and the unit comparison. If it misses the whole head, use the unit square on the common cap.
+
+### The intermediate pasting arity
+
+There is one ordinary pasting diagram $R$ containing both intermediate writings. In each string of $m$-cells at cut $d$, insert $r_x$ at each selected $d$-vertex, separating $x^-$ from $x^+$. Retain the minus block before each inserted edge and the plus block immediately after it. More explicitly, keep the minus copy of each incoming block, the plus copy of each outgoing block, and the minus copy of every other block. Use this same sign on all the cells above the block. At an isolated selected $d$-leaf add one child. This is a tree construction, including when a string starts or ends at a selected vertex. The two signs never prescribe different copies of a single block. Every retained variable has its ordinary globular variable faces in this diagram. Both $L$ and $V$ take values in $R$.
+
+For $w=s,v$ there is a comparison $e_w:Q(L(w))\to B(V(w))$ on the corresponding face of $R$. The two terms have the literal exterior $d$-poles $E(s_d),M(v_d)$. Both use every retained old leaf on the support of $w$. On the left, each inserted $r_x$ occurs in the outgoing block, or, if that block is absent, in the change of the target $d$-pole. On the right it occurs in the incoming block or in the change of the source $d$-pole. An isolated marked leaf occurs in both pole changes. In each pole change the occurrence is forced because $r_x$ is the only differential there carrying the positive copy of $x$. Thus both terms have full typed support on this promoted old face, which is a pasting arity. If a pole misses all the marks, the same argument uses its ordinary support with no insertions.
+
+Use cut $m$ for juxtaposition. Over the full $R$ there is a square
+\[
+          Q(L(c))\,e_v\ \longrightarrow\ e_s\,B(V(c)).
+\]
+Its endpoints are parallel by the choices just made. The same support calculation applies to the full head. Each side uses the retained old leaves and all the inserted edges. Hence a single coherence on $R$ supplies this square, also when $c$ is a higher coherence on an arity of height $m$. Paste the first depth-one square, this square, and the second depth-one square. Pasting two consecutive squares means reassociating around their shared cap, whiskering each square by the remaining side, and composing at cut $n$. This gives a square from $Q(E(c))$ to $B(M(c))$ whose sides $J_s,J_v$ are the composites of the three respective side arrows.
+
+### Agreement with the prescribed lower actions
+
+Fix $w=s$ or $v$, and restrict to its old support. This is its signed $m$-boundary arity when the strict full cell has height $n$, and the full old arity when the head is above its height. The cylinder on this support has a particularly simple presentation over its middle diagram $R_w$. For an incoming $m$-variable keep $y^-$ and put $a=y^-*_d r_x$. For a selected $m$-variable with both poles unmarked take $a=y^-$. In either case the additional data are a fresh parallel $b=y^+$ and $h:a\to b$. For an outgoing $m$-variable keep $y^+$ and take $a=r_x*_d y^+$. The additional data are $b=y^-$ and $h:b\to a$. All anchors $a$ live in $R_w$. These are all the additional declarations since the old support has height $m$.
+
+Compare any two local lower actions $F,G:Q(E(w))\to B(M(w))$, in particular the prescribed $H_w$ and $J_w$. First collapse every pair $h:a\to b$ by $b\mapsto a$, $h\mapsto 1_a$. This projection $p$ has a depth-one change from $p$ to the identity. Label the change of $b$ by $h$ and the change of $h$ by the unit comparison $1_a h\to h$. The source $Q(E(w))$ uses none of these fresh variables. Naturality of $F$ and $G$ at this change compares them respectively to $F[p]\,D$ and $G[p]\,D$, where $D$ is the same action on their common target. If the target is unchanged, omit $D$. These two comparisons are invertible since they have dimension $n+1$ in a context of height at most $n$.
+
+In the resulting smaller context collapse each remaining $h:b\to a$ by the same projection formula. Now use the change from the identity to the projection, with $h$ on $b$ and $h\to h1_a$ on $h$. The target $B(M(w))[p]$ is fixed. This time naturality compares the two terms to their fully collapsed versions preceded by the same source action. Both naturality applications have depth at most one, since the lowest fresh variables have degree $m$ and $F,G$ have degree $n=m+1$. In $R_w$ the fully collapsed terms are parallel and have full typed support: their common source is $Q(L(w))$ and their common target is $B(V(w))$. A coherence over $R_w$ compares them. Whisker it back by the two common actions and compose with the invertible comparisons just obtained. This proves $F\simeq G$ with their original exact boundaries. The argument also works when either group of fresh pairs is empty.
+
+Finally whisker the comparison $H_v\simeq J_v$ by $Q(E(c))$, paste the constructed square, and use $J_s\simeq H_s$ on the other end. The resulting judgment is precisely
+\[
+                    Q(E(c))\,H_v\longrightarrow H_s\,B(M(c))
+\]
+with the originally supplied actions. If a pole action is absent, the corresponding unit comparison implements the omission. Everything takes place on the support of the given head, so the judgment specializes on the old attaching terms of Response 11.
+
+In a remaining depth-two head some $m$-variable $y$ must therefore have selected $d$-cells on **both** ends. Its change has type $y^-*_d r_{t y}\to r_{s y}*_d y^+$. Neither side is a fresh variable in the lower-face contraction above. This incidence can actually occur in the substitution recursion: in the rank-one strip of Response 10 at $t=1,j=3$, the positive attaching term has a subhead with an interior and the following terminal $1$-cell selected. The strip itself has its separate construction. No proof for all such incident pairs at arbitrary cut, or for the longer gaps, has been obtained here. Q1 and the unconditional Q2 remain open.
+
+The checker constructs the depth-two action on a terminal block with two moving top cells and a preceding fixed cell. It checks a change of both lower writings and counts the two top change generators in the result. A second example inserts an internal marked vertex between two moving blocks and uses both kinds of change. At cut two Agda checked both degree-four actions at their stated types. [Separated-mark checker and Agda certificate generator](../../../tools/gray_globe_separated_naturality.py)
+
+~~~sh
+python3 tools/gray_globe_separated_naturality.py 2 --agda /tmp/GrayTerminalNaturality.agda
+python3 tools/gray_globe_separated_naturality.py 2 --interior --agda /tmp/GrayInteriorNaturality.agda
+agda --safe -i /tmp -i src /tmp/GrayTerminalNaturality.agda
+agda --safe -i /tmp -i src /tmp/GrayInteriorNaturality.agda
+~~~

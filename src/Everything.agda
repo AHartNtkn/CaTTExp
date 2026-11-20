@@ -62,6 +62,7 @@ import CaTTExp.Lim.OverL
 import CaTTExp.Lim.Collapse4
 import CaTTExp.Lim.Horn
 import CaTTExp.Lim.WeakBase
+import CaTTExp.Lim.Hpol
 import CaTTExp.GraphFiller
 import CaTTExp.GraphFillerExamples
 import CaTTExp.GraphFillerTotal.Chains

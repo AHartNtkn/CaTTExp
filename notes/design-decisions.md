@@ -234,5 +234,5 @@ Reasons:
 **Open items.**
 - ~~Lemma Loc-total.~~ Proved 2026-11-20 (fibration r4 Response 1, verified); Proposition W is unconditional.
 - Extend `coneC` to term boundaries (N^cone). Owner CONE/LIM-F, notified.
-- Encode ⊢hpol with the §2.2 base classes. Owner DSGN (Loc-total is now proved). The homotopy-polygraphs r5 answer adds decidable classes: finite strict cells with abelian tests, top weight ≤ 2 in any dimension, and one-resource semaphores.
+- Encode ⊢hpol with the §2.2 base classes. Owner DSGN (Loc-total is now proved). **Started 2026-11-20:** `src/CaTTExp/Lim/Hpol.agda` decides the first base rule, positive path 2-polygraphs: objects, 1-cells between objects, and 2-cells between nonempty composites of 1-cell variables. Their homotopicality is cited from Chanavat Cor. 3.39, not formalised. It accepts the parallel pair and μ : a·a ⇒ a, and rejects the bubble. Still to add: pasting contexts, orientals, positive-to-one, the no-matching positive 3-polygraphs, top weight ≤ 2, and closure under suspension. The homotopy-polygraphs r5 answer adds decidable classes: finite strict cells with abelian tests, top weight ≤ 2 in any dimension, and one-resource semaphores.
 - B24 (HPOL) is no longer on the critical path of any kernel rule. It remains a research item, and its decidable classes (r5 Q3) feed ⊢hpol.

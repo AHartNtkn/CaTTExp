@@ -1,4 +1,5 @@
 """Localize strict labels across states and compute the signed-priority hitting number."""
+from argparse import ArgumentParser
 from collections import Counter
 from functools import cache
 from itertools import permutations, product
@@ -6,6 +7,30 @@ from itertools import permutations, product
 from relative_coherence_state_colours import (
     close_atoms, closure, inventory, mask, minimal, priority_colours, tableau, vertex_mask,
 )
+from relative_coherence_steiner_cuts import differential
+
+
+def whole_slices(states, carriers, colours):
+    """Check the entire strict three-tableau at every cut of a membrane."""
+    lower = tableau((0,)*6)[:3]
+    common_faces = {f for row in lower for side in row for f in side}
+    labels = []
+    for state, (vertices, _) in zip(states, carriers):
+        assert len(state) == 20 and vertices.bit_count() == 42
+        assert common_faces <= set(closure(state))
+        chain = Counter(state)
+        for source, target in reversed(lower):
+            expected = Counter(target)
+            expected.subtract(source)
+            assert differential(chain) == expected
+            chain = Counter(source)
+        row = tuple(sorted(state))
+        labels.append((*lower, (row, row)))
+    assert len(set(labels)) == 148
+    indices = [i for i,(vertices, _) in enumerate(carriers) if all(vertices & c for c in colours)]
+    assert len(indices) == 19
+    print(f'Whole strict three-labels: {len(labels)}; each has 20 cubes and 42 vertices.')
+    print('Full slice indices for seed 5:', *indices)
 
 
 def support_profile(states, carriers, colours):
@@ -87,7 +112,7 @@ def hitting_number(constraints, state_count):
     raise AssertionError('a required state set is empty')
 
 
-def main():
+def main(slices_only=False):
     states, carriers, _ = inventory()
     positive = [mask(i for i in range(64) if i >> j & 1) for j in range(6)]
     constraints, choices = priority_constraints(carriers, positive)
@@ -95,8 +120,13 @@ def main():
     assert len(witness) == 7 and all(m & mask(witness) for m in choices)
     print('Priority colourings: 46,080; distinct full-state sets: 475; minimal sets: 72.')
     print('Minimum number of states meeting every set:', len(witness), sorted(witness))
-    support_profile(states, carriers, priority_colours(5, (0, 1, 2, 3, 5, 4), positive))
+    colours = priority_colours(5, (0, 1, 2, 3, 5, 4), positive)
+    whole_slices(states, carriers, colours)
+    if not slices_only:
+        support_profile(states, carriers, colours)
 
 
 if __name__ == '__main__':
-    main()
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument('--slices-only', action='store_true', help='check whole labels and the transversal search')
+    main(parser.parse_args().slices_only)

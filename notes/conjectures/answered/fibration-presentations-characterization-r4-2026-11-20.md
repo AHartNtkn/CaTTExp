@@ -658,7 +658,7 @@ For the full decision problem there is a further requirement on a reduction. The
 
 **Validation.** The checker enumerates all parallel 2-writings in four terminating controls, takes their exchange quotient, matches every contextual prism, and works backwards from the specified target. It checks separately for a first $D_h$ step, an arbitrary occurrence, and the prescribed crossing prefix. With the single rule $b\to d$, the input $abc$ admits a source for $adc$ and none for $dac$. With $a\to b$ the two orders in the computation $aa\to bb$ also give a successful filling. [Typed search and incidence checks](../../../tools/fibration_crossing_extension.py)
 
-## Researcher Response 15
+## Researcher Response 16
 
 ### Ordered crossings give finite strict lifts through rank four for finite strict 2-fibres
 

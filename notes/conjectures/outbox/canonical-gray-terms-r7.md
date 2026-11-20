@@ -608,3 +608,70 @@ The checker peels the higher factors, records the full lower operations, and com
 python3 tools/gray_globe_middle_descent.py 8 --agda /tmp/GrayMiddleDescent.agda
 agda --safe -i /tmp -i src /tmp/GrayMiddleDescent.agda
 ~~~
+
+# Researcher Response 8
+
+**One of the two distant exchanges per mixed rectangle and degree suffices.** The construction can be chosen equivariantly for total opposition, which takes the prefix exchange to the suffix exchange with its actual four steps. There is a further reduction when the right generator has bidegree $(m,1)$. In that case a single open naturality square supplies the exchange with both horizontal terms prescribed. Matching its vertical sides to the section requires two comparisons involving only the $(m,1)$ generator in top degree. Both results are uniform in the dimensions.
+
+### Choosing opposite terms on the same section
+
+On a basis label complement each non-star tag in both factors. Write $D$ for this relabelling. Then $\partial D=-D\partial$ by the Leibniz formula. On tableaux interchange the two chains of every row as well as applying $D$ to their labels. This preserves the tableau equations and augmentation, takes each atom to the atom of its reflected label, and reverses the order in every cut composition. A full state with bits $z$ is sent to the state with bits $1-z$. Signed face inclusion commutes with this operation after complementing the signs of the inclusion.
+
+Use the corresponding total opposite on CaTT syntax. In tree coordinates reverse the children at every node, permute the positions accordingly, transform a substitution argument by argument, and interchange the transformed endpoints in each arrow type. A coherence head goes to the head on this reflected tree at the transformed type. Its two support conditions are carried to one another's signed boundary conditions in the composition case, and full support stays full in the coherence case. The rule commutes with substitution and squares to the identity under the position identification. Raising a single maximal leaf commutes with reflection because the reflected tree extends the corresponding leaf and has the two reflected endpoint heads in reverse order. In particular this applies to the depth-zero actions at pure steps. [Benjamin and Markakis, §5, on opposites of computads](https://arxiv.org/abs/2402.01611)
+
+Here are the choices needed to make this a symmetry of the *same* section.
+
+- On full rows use the same preferred end at reflected states. The bidegrees and pure ends are unchanged. When the row contains more than one site, it has a notch bit and its reflected state is distinct. Choose comparison and inverse data on one member of each orbit in the minimal projection box, and transport both directions to the other member. The signed inclusions then give the choices on larger faces. For an atom the prescribed variable reflects to the variable at the reflected label. At the top star-star atom its two chosen attaching terms are reflections of each other, so its fixed name has the transformed type.
+- On a padded single run choose the omitted end by ranks as in Response 4. There is a frozen join in the minimal box. For example, when a stationary $d$-site lies to the right of the shadow of a run ending at $b$, sites $b,b+1$ occur on the full $d$-row, and the join at $b+1$ is frozen. The left case uses the join between the shadow and its left neighbour. Total opposition complements this bit and reverses the two endpoints of the open term. Thus the two keys for the template are distinct. Choose the reflected bracketing and reverse the order of the reflected endpoint segments on the partner. Unpadded templates use their signed native inclusion and the identity operation on the hole. For a run containing a pure exterior position, the clipped template construction interchanges its two signed endpoint segments under reflection. The pure singleton action is the marked-leaf action just described.
+- Several disjoint runs admit either temporal order by the cut formula. At the first gap between runs, choose increasing order when its frozen bit is zero and decreasing order when it is one. Choose reversed bracketing in the second case. This gap stays fixed on all higher faces of the hom and under signed inclusion, and its bit flips under reflection. Hence a cell and its reflection use reversed lists of reflected factors, including when a factor becomes an identity on a higher face.
+
+These choices respect the inductions on rectangles and cuts. Binary temporal heads can be taken on the two-arrow string with its two exterior endpoints. Reflection of a binary whiskering similarly exchanges the two slots and their boundary operations. In choosing closed changes from open ones as in Response 7, carry the two inverse directions as a pair, exchanging their roles on reflection. This makes the reflected composite an allowed choice for the opposite direction at the partner state. The construction requires only the literal faces of the open witnesses and the inverse laws for their closed specializations.
+
+On a prefix patch, the two varying bits increase from $00$ to $11$ and all strictly intermediate bits are zero. Reflection reverses each path and complements its states. Its new endpoints are again $00$ and $11$, with all intermediate bits one. Thus the two paths become exactly the suffix paths, with their singleton terms transformed as above. A supplied prefix comparison and its inverse give the two needed directions on the suffix. In degree $k\ge4$ the sufficient number of closed exchanges is therefore $(k-2)(k-3)/2$.
+
+### An open square at a mixed generator of transverse rank one
+
+Take $d=k-1=m$, $r=(m,1)$ and $l=(a,n)$, with $m-a=h\ge2$. Index the four corners $z_{ij}$ by whether $l,r$ have respectively executed. Write $L_j$ for the actual horizontal $k$-term on $l$ at fixed $j$ and $R_i$ for the actual vertical term on $r$ at fixed $i$. The following works separately on either patch.
+
+Collapse the left bound from $m$ to $m-1$, identifying its two signed $(m-1)$-copies and killing rank $m$. Both horizontal tableaux collapse to the same old $k$-step $q$ with top label $l$. In fact peeling the rightmost $d$-site from either horizontal step at cut $d-1$ leaves exactly the signed copy of $q$. The stationary $d$-site is pure since $m=d$. The retained block covers every $(d-1)$-site, and hence its transport at that cut is just signed inclusion. Its native $d$-row starts at $a-1$ and ends at $m-1$. The pure factor acts on the target $(d-1)$-pole of $q$ when $j=0$, following the signed copy, and on its source pole when $j=1$, preceding the copy. This is the signed-column boundary formula with the two choices of order at the last join. The two vertical tableaux are the marked-column cylinders on the two $d$-poles of $q$. [Round 6, Response 10, signed column formula](../answered/canonical-gray-terms-r6-2026-11-20.md#researcher-response-10)
+
+Take the normalized old open template for $q$. Denote its degree-$d$ frame by $G(w)$, where $w$ is a formal $d$-variable with the $(d-1)$-poles of the native $(a,n)$ atom as attaching terms. Write $w_0,w_1$ for that atom's actual $d$-poles, so $l:w_0\to w_1$. Let $s,t$ be the $(d-1)$-source and target of $G(w)$. These are independent of $w$. For an expression in the old skeleton use superscripts $-,+$ for its two signed copies. With hats denoting the chosen pure actions, put
+\[
+        P_0(w)=G^-(w)*_{d-1}\widehat t,\qquad
+        P_1(w)=\widehat s*_{d-1}G^+(w).
+\]
+These are the actual normalized *frames* of the two horizontal steps. Indeed peeling the pure $d$-site gives the binary operation above with the old native open term as its sole varying argument. Normalizing it as in Response 4 puts the old endpoint corrections outside its marked branch. Thus with the closed initial and terminal corrections denoted by $A_j,B_j$ one has, up to the specified distributors and reassociations,
+\[
+                      L_j = A_j\,P_j^\uparrow(l)\, B_j
+\]
+at the exact exterior terms of $L_j$. Juxtaposition from here on is at cut $d$.
+
+In the old $d$-skeleton mark the variables of first rank $m-1$. The marks are up-closed by support. They have transverse ranks zero and one, so $G(w)$ has depth at most one in the marks. The attaching terms of $w$ have first rank at most $a\le m-2$, which leaves the formal variable unmarked. Label the two copies in the naturality context by the signed inclusions. Use the actual pure variables for changes at transverse rank zero and the $(m,1)$ variables for changes at rank one. The latter declarations have precisely the required naturality types because the pure end and the signed mixed end of the atom are the two forced factors on each face, with the depth-zero pure action and the native signed variable. Applying depth-one naturality to $G(w)$ now gives an open $k$-term
+\[
+                            J(w):P_0(w)\longrightarrow P_1(w).
+\]
+Its strict top chain consists of $r$ once. The old frame has the stationary $(m-1,1)$ label once, its remaining stationary labels have smaller first rank, and the pure changes have degree $d$. Equivalently the coefficient of the sole available changed top label is forced by the difference of its two signed copies in the boundary. [Benjamin–Markakis–Offord–Sarti–Vicary, §3 and Theorem 3.1](https://arxiv.org/pdf/2501.11620)
+
+Now mark only $w$ in this new term. It is maximal, $J(w)$ has depth one in it, and its two faces have depth zero. Its naturality at $l$ compares the two paths
+\[
+                  J(w_0)\,P_1^\uparrow(l)
+                  \quad\simeq\quad
+                  P_0^\uparrow(l)\,J(w_1).
+\]
+This comparison is invertible in the $k$-skeleton. Inserting the actual horizontal endpoint corrections gives an exchange on $L_0,L_1$ with vertical terms
+\[
+           V_0=A_0\,J(w_0)\,A_1^{-1},\qquad
+           V_1=B_0^{-1}\,J(w_1)\,B_1 .
+\]
+For instance $V_0 L_1$ reduces by cancellation to $A_0 J(w_0) P_1^\uparrow(l) B_1$. The square changes this to $A_0 P_0^\uparrow(l) J(w_1) B_1$, which compares to $L_0 V_1$. Each $V_i$ has strict value and literal endpoints equal to those of $R_i$. Thus the two sufficient residual judgments here are $V_i\simeq R_i$. Their contexts contain $r$ as the only required $k$-generator, by support. All corrections used in their definitions have identity strict image and can be taken in the $d$-skeleton. In particular these judgments involve neither a variable for $l$ nor a choice of comparison already involving both end generators. The other thin end can be treated with the right-column convention obtained by interchanging factors and taking the odd opposite.
+
+The argument separates two uses of naturality. Applying it first to the degree-$d$ frame makes the mixed generator available as the change of a stationary label. Applying it next to the fresh maximal hole supplies the square. Directly marking the old column in the already-substituted degree-$k$ horizontal term can have depth two.
+
+For $D^M\otimes D^3$ with $M\ge3$, every mixed test in its subrectangles now has just one top generator in each residual judgment. Indeed the inequalities $k>\max(m,n)$ and $h=m+n-k\ge2$ force $n=3$, $k=m+1$, $h=2$ and $b=1$. Thus the two specified comparisons over the edge generator $(m,1)$ for each $3\le m\le M$ suffice for this entire family. For arbitrary globe pairs, after handling both thin ends this way, the tests still involving *both* generators are indexed by $a,b\ge2$ and $a+b\le k-2$. There are $(k-4)(k-5)/2$ of these in degree $k\ge6$ and none below degree six.
+
+The checker verified reflection and involutivity on all 8,987 intrinsic cells in the five-by-five box, including the run choices. It compared both reflected paths on 204 pairs of exchange patches through bound ten. On 72 thin-column patches it checked the collapse, the two signed whiskerings, both actual vertical strict cylinders and the common composite. A separate Agda certificate constructs a degree-five square with an independent native change and a mixed variable declared between two composite paths, using the indicated pure actions on the horizontal boundaries. It checks the pasting at literal types. The comparisons $V_i\simeq R_i$ and the general prefix exchange for thicker columns remain open, so this does not yet decide Q2. [Exchange checker and Agda certificate generator](../../../tools/gray_globe_distant_columns.py)
+
+~~~sh
+python3 tools/gray_globe_distant_columns.py 10 --agda /tmp/GrayDistantColumns.agda
+agda --safe -i /tmp -i src /tmp/GrayDistantColumns.agda
+~~~

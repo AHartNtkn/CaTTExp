@@ -725,3 +725,73 @@ The checker reconstructs all 8,987 intrinsic cells in the five-by-five box, incl
 python3 tools/gray_globe_threshold_faces.py 8 --terms 4 --agda /tmp/GrayThresholdFaces.agda
 agda --safe -i /tmp -i src /tmp/GrayThresholdFaces.agda
 ~~~
+
+# Researcher Response 10
+
+**The image at transverse rank $j=t+1$ in Response 9 can always be constructed from the preceding threshold.** This holds for arbitrary old attaching terms and every first rank $p$. Hence the remaining generator judgments have $j\ge t+2$. There is also a choice of crossing order that makes a section built this way equivariant for total opposition. Together the two results leave one signed judgment per growth step for $D^M\otimes D^3$. That judgment uses only the old signed generators and the new *pure* generators. Its two boundary comparisons can be posed without the old top generator.
+
+### Moving from one threshold to the next
+
+Use the notation of Response 9. Fix $t\ge1$, put $d=p+t-1$, and suppose the preceding substitution $E=\sigma_{t-1}^e$ has been constructed on the required native box. Write $M=\sigma_t^e$ for the substitution being constructed. In degree $d$ precisely one old variable changes between the two substitutions,
+\[
+ x=A_p B_{t-1}^{(1-e)\oplus(p\bmod2)}.
+\]
+The new generator $r=A_{p+1}B_{t-1}^{(1-e)\oplus(p\bmod2)}$ goes from $E(x)$ to $M(x)$ for $e=0$ and from $M(x)$ to $E(x)$ for $e=1$. Every variable below degree $d$ has the same image. For a native column atom of transverse rank $j\ge t$, the $d$-pole on side $1-e$ contains $x$ once and the opposite $d$-pole omits it. This follows from the two transverse tags $\alpha\oplus(p\bmod2)$ of the native $d$-row. Applying the depth-zero action to the term of the affected pole at $r$ gives the cell $C$ of degree $d+1$ used below.
+
+There is a cut identity in every higher degree. For the native atom or any of its poles $w$ of dimension greater than $d$, let $E_s,M_s$ denote the two strict maps. Then
+\[
+ M_s(w)=
+ \begin{cases}
+ E_s(w)*_d C_s & e=0,\\
+ C_s *_d E_s(w) & e=1 ,
+ \end{cases}
+\]
+where $C_s$ is the strict value of $C$. Indeed the two maps agree below $d$. At $d$ exactly the indicated exterior pole changes. In each signed $(d+1)$-row the unique old $(p,t)$ site contributes the extra $(p+1,t-1)$ label of $C_s$. Above this row the maps agree on each basis label. This proves equality of all tableau rows, including when the two immediate poles of $w$ have different top labels. Write $D(w)$ for the binary CaTT whiskering with this same order applied to $E(T(w))$ and $C$. Its higher faces are the corresponding whiskerings of the old faces.
+
+For $j=t$ the new image is exactly $D(w)$ on the atom, by the triangular construction in Response 9. Take $j=t+1$ and write $g=A_pB_{t+1}^y$, with attaching terms $u,v$ of degree $d+1$. In the old context through degree $d+1$ take the up-closure of $x$. The only possible proper cofaces in this closure are the variables $Z=A_p B_t^{y'}$. This follows by support and the upper bound $p$ on first rank. The up-closure and both terms therefore have depth at most one. For $e=0$ label the two endpoints of this naturality context by $E,M$; for $e=1$ label them by $M,E$. Supply $r$ at $x$. At each marked $Z$ supply an identity. This is well typed because the affected $d$-pole is the only marked boundary and $M(Z)$ was defined using exactly the binary composite on the other side of its change type.
+
+Depth-one naturality applied to $w=u,v$ gives comparisons
+\[
+ c_w:D(w)\longrightarrow M(w)\quad(e=0),\qquad
+ c_w:M(w)\longrightarrow D(w)\quad(e=1).
+\]
+Here $M(w)$ means ordinary substitution in the *given* attaching term. The action at the affected pole is the same $C$ for $u$ and $v$ by globularity. The other pole contributes no factor. The $c_w$ are invertible. In a context of the two endpoint substitutions through degree $d+1$ and $r$, all top changes for the $Z$ have been instantiated by identities, so these are $(d+2)$-terms over the $(d+1)$-skeleton. The boundary formula and dimension hypotheses are those of [Benjamin–Markakis–Offord–Sarti–Vicary, §3 and Theorem 3.1](https://arxiv.org/pdf/2501.11620).
+
+Whisker $E(g)$ by $C$ to make $D(g):D(u)\to D(v)$. With products at cut $d+1$ choose
+\[
+ M(g)=
+ \begin{cases}
+ c_u^{-1}\,D(g)\,c_v & e=0,\\
+ c_u\,D(g)\,c_v^{-1} & e=1 .
+ \end{cases}
+\]
+Its type has literal endpoints $M(u),M(v)$. The comparisons contribute no strict top chain, and the cut identity gives the required strict value. This proves the extension through $t+1$. In particular the extension of an old signed section in Response 9 works on the entire subpresentation omitting $(p,3)$: threshold one reaches transverse rank two by this argument, and threshold two then constructs its native caps. Arbitrarily high cells at smaller first rank are allowed there.
+
+### The next gap uses only naturality on two poles
+
+For $j=t+2$ and $e=0$, put $g=A_pB_{t+2}^y$, and let $U,V$ be its immediate attaching terms, of degree $d+2$. They have the same two immediate poles $i,j'$ of degree $d+1$. Set $A=c_i$ and $B=c_{j'}$. Use juxtaposition here for cut $d+1$. It suffices to construct two invertible terms
+\[
+     H_W:D(W)B\longrightarrow A\,M(W)\qquad(W=U,V).
+\]
+All terms in their types are already defined without $g$. These are the specialized depth-two naturality judgments for the same up-closure in the old $(d+2)$-skeleton. In particular there is no extra variable-change obligation at degree $d+2$. At a marked variable $Z$ of that degree the construction above gives $M(Z)=c_{sZ}^{-1}D(Z)c_{tZ}$. Reassociation, inverse cancellation and the unit laws thus supply the required invertible change from $D(Z)c_{tZ}$ to $c_{sZ}M(Z)$. At smaller degrees use exactly the components already described. Only the two *term* judgments on $U,V$ remain in this argument.
+
+To verify sufficiency, whisker $D(g)$ on the right by $B$. Change its endpoints by $H_U^{-1}$ and $H_V$, now composing at cut $d+2$. This gives a cell from $A M(U)$ to $A M(V)$. Whisker on the left by $A^{-1}$. At each endpoint reassociate, cancel $A^{-1}A$ and apply the unit comparison. These are differences of writing with invertible witnesses and give a term with precisely the endpoints $M(U),M(V)$. The strict top chain comes only from $D(g)$, provided the two supplied terms are taken in the lower skeleton as required. This supplies the generator image. The same proof with the opposite order applies at $e=1$. Depth-one naturality alone does not give the displayed terms for arbitrary $U,V$.
+
+### One sign and the transverse strip of width one
+
+The threshold construction can use the total opposition of Response 8. At the strict level it takes $F_t^e$ to $F_t^{1-e}$ because both bit tags in the formula of Response 9 are complemented. For the crossing case of that response, the elementary change on $r$ can also be performed *first*, at the initial $d$-pole, followed by the positive sector. This gives the same strict cell: the $d$-row runs between the same two exterior sectors, the next signed rows each add $r$, and all higher rows agree. Choose the change last if the transverse tag of the stationary label is zero, and first if the tag is one. The tag stays fixed on every higher face. A star tag at this crossing forces $u=n$ and the collapsed cell contains the top $(p,n)$ generator. That cell is the native atom, so its change is just the variable. This also proves compatibility when an ordinary signed face inclusion sends the star to a bit.
+
+Starting with an opposite-equivariant old section, the two orders are now exchanged under reflection. In constructing the substitutions choose the negative sign in the minimal native box and take its total opposite for the other sign, complementing the label tags. The triangular caps on the two sides are reflected composites, with the same reflected marked-leaf actions as in Response 8. On variables below the threshold the required sign $y\oplus(p\bmod2)$ changes to its complement; hence these paired choices obey the literal restriction rule as well. The two sectors of a reflected cell use precisely the paired substitutions. This gives equivariance inductively, including when a supplied proof is used at both ordinary signed copies of a native label.
+
+At the first growth step, $p=1$, all the threshold substitutions exist with the signed strip declarations used in Response 5. For each $t$ start at right bound $t$, where Response 9 gives the native caps from the preceding threshold. To grow the right bound from $b\ge t$ to $b+1$, use the two ordinary signed old strips in the target together with the new first-rank-two variables of transverse rank less than $t$. These are all the variables the images use. Mark transverse rank $b$ on source and target. The marked ranks in both are $(0,b),(1,b)$ and the variables added at first rank two remain unmarked. Every marked old image contains its one signed marked top label. At $b=t$ the extra summand in the image has transverse rank $t-1$ and is unmarked. All other images are free of marks. Thus both contexts and the substitution meet the depth-one hypotheses, with exactly the desired inverse image of the marks.
+
+Use naturality of the substitution for transverse growth, as in the strip argument of Response 5. The two signed restrictions agree literally by the endpoint substitution equations. The changed mixed image has precisely its one raised signed label in top degree: its old image had that label once, and any additional top summand was unmarked. Equivalently, the transverse column homotopy sends that mixed label with the Leibniz sign to the same raised label on either route; it kills the extra summand at $b=t$. The right-slot variance uses the opposite convention of Response 5 on both sides. Thus the raised term has the prescribed strict image and the required substituted faces. The target declarations in the marked layer are just the ordinary signed strip declarations, since the first-rank-two parameters use lower transverse ranks. This induction can construct one sign and take its opposite for the other. The width-one source section can itself be obtained by growing the transverse globe: the only native declarations to make are the pure change and the mixed change between the signed variable and its pure boundary action, precisely these strip declarations. The crossing order above, with the axes exchanged, supplies the section on composite cells.
+
+Consequently, for $D^M\otimes D^3$ the threshold criterion has just **one residual generator image per $2\le p<M$**. Take $e=0,t=1$ and the native label $A_pB_3$ in its minimal right box. The target of this judgment uses the two signed old sections and the new pure $(p+1,0)$ variables only. Threshold zero is ordinary inclusion. At threshold one the preceding proof reaches rank two; at threshold two it reaches rank three once threshold one is available there; and threshold three only needs its native caps. For arbitrary transverse bound $n$, the same reasoning leaves at most $(n-1)(n-2)/2$ inputs per $p\ge2$ for $n\ge2$, one for each $1\le t\le j-2$ and $j\le n$. Neither the two depth-two pole comparisons for arbitrary $p$ nor the longer gaps have been proved here, so Q2 remains open.
+
+The checker compares the whole adjacent-threshold cut product on native atoms and all their intermediate poles. It also checks the transverse growth identities and the two opposite crossing orders. A separate syntax calculation starts from formal parameters for the *preceding* substitutions, with their actual attaching types and strict tableaux. On the width-one strip it constructs the next two substitution instances, including the reassociation and the exchange past an independent whiskered step, and checks every resulting face and strict image. At threshold two Agda checks the corrected rank-three images at their substituted types. [Adjacent threshold checker and certificate generator](../../../tools/gray_globe_adjacent_thresholds.py)
+
+~~~sh
+python3 tools/gray_globe_adjacent_thresholds.py 8 --terms 2 --agda /tmp/GrayAdjacentThresholds.agda
+agda --safe -i /tmp -i src /tmp/GrayAdjacentThresholds.agda
+~~~

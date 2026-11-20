@@ -63,7 +63,7 @@ Any other route is equally welcome.
 
 ## 5. What counts as a solution
 
-A proof of Question 1, 2 or 3; a counterexample with a proof of non-homotopicality (for example by a homology computation as in item 2); or a published reference.
+A proof of Question 1, 2 or 3; a counterexample to a proposed criterion with a proof of non-homotopicality (for example by a homology computation as in item 2); or a published reference.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19)
 

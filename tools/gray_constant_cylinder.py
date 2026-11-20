@@ -32,11 +32,14 @@ def correction(G, cap_base, rail, side, reverse):
     """Compare the padded side with the raw filler in either direction.
 
     The forward direction contracts the padded side to the raw filler. The
-    base of the cap identity can be any appropriately typed term.
+    base of the cap identity can be any appropriately typed term. A None
+    entry below the last cut denotes an unselected pole.
     """
     degree = len(rail)
     current, proof = cap_base, None
     for cut, partner in enumerate(rail[:-1]):
+        if partner is None:
+            continue
         p, q = tdim_tm(G, current), tdim_tm(G, partner)
 
         def pair(P, a, b):

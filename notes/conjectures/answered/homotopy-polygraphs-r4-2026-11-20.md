@@ -185,4 +185,4 @@ Status: **verified, partial. Q1 answered negatively (undecidable); Q3 answered n
 - The exact recursive last-step criterion in every dimension (with marked lower presentations), especially without positivity.
 - The oracle strength of homotopicality (0′ versus 0″).
 - Decidable classes with generator-level tests, uniform in the dimension.
-- Follow-up: [`outbox/homotopy-polygraphs-r5.md`](../outbox/homotopy-polygraphs-r5.md).
+- Follow-up: [`answered/homotopy-polygraphs-r5-2026-11-20.md`](homotopy-polygraphs-r5-2026-11-20.md).

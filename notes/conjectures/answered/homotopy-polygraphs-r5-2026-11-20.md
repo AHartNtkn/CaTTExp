@@ -801,3 +801,52 @@ There is also a closed count of strict labels for one fixed feasible local recor
 For several resources the same projection proves a sufficient generator test. Set aside each process for which no walk can go from an acquisition to a later release of *any* resource. If on each resource at most two of the remaining processes use it, every section has flag links by Response 9, and the whole presentation passes. Resource-by-resource eligibility with a different minimum for each resource would not justify the projection. Response 10 already gives circle fibres with no individual resource excursion.
 
 **Reproduction.** Run `python tools/homotopy_polygraph_parking.py` from the repository root. The [checker](../../../tools/homotopy_polygraph_parking.py) compares the count against enumeration of all legal serial histories modulo actual square exchanges on 3,136 endpoint records. It also builds cubes from spatial clock precedences with the Response 9 solver. Two excursions and a third process that releases then acquires give 149 chart strings and Betti numbers $(1,0,0,0)$ when its minimum is zero. With one extra initial hold, the same instructions give 82 strings and $(2,0,0)$. Two processes making two excursions each give six isolated shuffles. Three excursions give 168 strings and $(1,1,0)$. The Betti numbers are over the field of two elements. The path-space equivalence proves the criterion for unbounded control walks.
+
+# Verification (2026-11-20)
+
+Status: **verified. Question 1 is answered: there is an exact last-step criterion in every dimension (Response 1). Question 2 is answered in part.** On general finite inputs, homotopicality is both Σ⁰₁-hard (Response 11) and Π⁰₁-hard (item 23). Moreover, every set truth-table reducible to 0′ many-one reduces to it (Response 12), so it has no computable approximation with a bounded number of mind changes. The Π⁰₂ upper bound stands, and whether a halting oracle decides it is still open. **Question 3 is answered by several classes:** finite strict cells with abelian group tests, top weight ≤ 2 in any dimension, and closure under graph assembly (Response 1); bounded top weight with a halting oracle (Response 2); and exact generator tests for the semaphore families (Responses 9, 10 and 13). There are thirteen responses.
+
+**What was re-run.** All 15 cited checkers exit 0, and both emitted Agda modules type-check under `agda --safe --without-K --no-libraries` (Agda 2.8.0). The printed counts match the responses.
+- `timed_charts`: 81 strings, 31 final faces, 297 comma objects.
+- `passive_gaps`: 169 labels at length 12, 13 circles and 156 intervals; 49 folded placements.
+- `counter_ring`: 512 strings with Betti (1,1); 125 with (1).
+- `cubical_switch`: 951 reachable pairs on the triangle boundary, one with positive Betti number; 142 and 334 controls with point homology; the projective plane has 1,561 cells, Betti (1,1,1) mod 2 and (1) mod 3.
+- `chart_corners`: 441 germ families, 161 pairwise joint, 8 with several joint charts.
+- `parallel_seams`: 24, 78, 216 section cells with Betti 1, 3, 9; the (3,0) control has 141 cells and point homology; 248 and 125 histories.
+- `exchange_groups`: at four insertions 75 vertices, 158 edges, 24 squares and 84 ternary squares, first Betti number 60 → 0; the other hexagon and square counts as stated.
+- `occurrence_colours`: stabilizers of orders 2 and 6; 1,620 and 5,670 histories with trivial stabilizer.
+- `proper_cuts`: cut nerves (6,6) and (14,36,24); two-seam ring (24,84,96,36) with Betti (1,1,0,0); suffix counts 2, 4, 8, 16.
+- `precedence`: 386 and 1,501 legal cubes; 881 declarations; all 512 three-by-three inputs agree with the matching test.
+- `semaphore`: 131 declarations; 80/208/192/64 cells; 15,170 strings with Betti (1,0,1,0,0); 225 two-resource declarations; 81 faces; six-process past link (1,1,1) mod 2 and (1,0,0) mod 3; 343 and 543 declarations fold into the 15-generator fixed context.
+- `guarded_boxes`: 262,144 cubes, 78,810 intervals of which 78,809 collapse; the cone has 1,048,576 cubes and all 313,009 intervals collapse. The checker prints "spatial dimension 8" where the text says seven-dimensional projected boxes, but the counts agree.
+- `conditional_switch`: 34 records, 262,144 cubes, 1,736,704 comparisons.
+- `parking`: 3,136 endpoint records; 149 strings (1,0,0,0); 82 strings (2,0,0); 6 isolated; 168 strings (1,1,0).
+- `two_changes --agda`: 19 declarations, 22 decorated objects (1,0,1), (75,158,108), 1,473 and 96 histories.
+- Agda: TwoChanges and SemaphoreUniversal both type-check.
+
+**Response 1 (exact criterion, every dimension). Checked.** The coefficient E(σ) is read from the horizontal necklace recursion on P_a → NF(M_a), keeping the face maps between marked coefficients. That is the ingredient whose omission makes item 24's naive criterion fail. The fibre formula X(c) ≃ hocolim_{H(c)} U and the left Kan extension along "last bead and prefix" give X(c) ≃ Λ(c) when all prefix fibres are contractible. Induction on weight and rank then proves the criterion. It is exact on bubble-free inputs, needs no positivity, and each tested cell is finite and effective. The class with a two-sided decision (finite strict cells, where finiteness is decidable rank by rank, with group restrictions that make π₁ abelian) and the top-weight-≤-2 rule were checked against their statements.
+
+**Responses 2–13. Checked at the level of the arguments.**
+- **Response 2:** at bounded top weight a single halting query decides homotopicality of positive 3-polygraphs (degree 0′). Failures are semidecidable on all inputs. The least failing weight has no computable bound.
+- **Response 3:** cube lists are Σ⁰₁-complete for one list and Π⁰₂-complete for programs. This concerns cube lists, not polygraphs.
+- **Responses 4–7:**
+  - local corner theorem;
+  - the seam encoding restriction;
+  - three time colours suffice for π₁;
+  - homology of the marked lower presentation is necessary;
+  - relative co-r.e.-completeness with unbounded witness weight;
+  - the right-angled Artin embedding of the binary group;
+  - permutation detection by finite sets;
+  - the strict-factorization group test.
+- **Responses 8–9:** any subcomplex of the directed cube is realized as rank-4 fibres. One fixed positive 4-polygraph U with 15 generators has Σ⁰₁-complete local fibre contractibility and realizes every finite connected homotopy type.
+- **Responses 10–13:**
+  - bipartite precedence families;
+  - finite-strict-cell homotopicality is Σ⁰₁-complete (rank 10);
+  - G(K, M) homotopical ⟺ M never halts or |K| is contractible, giving tt(0′) ≤_m;
+  - one-resource semaphores are homotopical ⟺ at most two processes admit an excursion.
+
+**What is left open.**
+- The exact degree: whether homotopicality is Δ⁰₂ (decidable with a halting oracle) or Π⁰₂-complete.
+- Generator-level decidable classes that contain the positive 3-polygraphs of unbounded weight.
+- An effective description of the group tests on general inputs.
+- Follow-up: [`outbox/homotopy-polygraphs-r6.md`](../outbox/homotopy-polygraphs-r6.md).

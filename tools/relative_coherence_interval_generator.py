@@ -1,10 +1,13 @@
 """Check ordered replacement at composite faces and the endpoint contraction prism."""
 
 from argparse import ArgumentParser
+from functools import lru_cache
+from graphlib import CycleError, TopologicalSorter
+from itertools import combinations
 from pathlib import Path
 
 from catt import (STAR, arr, check_ctx, comp2, disc_tree, fv_tm, glue_tree, infer,
-                  maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v)
+                  maximal_vars, src, sub_from, subst_tm, tdim_tm, tgt, tree_ctx, v)
 from ct_suspension import susp_ctx, susp_tm
 from emit_agda import Emitter
 from relative_coherence_chart_paths import unitor
@@ -102,15 +105,110 @@ def check(rank, lower, a, b, wire, emitter):
     emitter.check_type(f'endpoint-{rank}', bare, witness, expected)
 
 
+def padded_boundary(rank, emitter):
+    # Two vertical paths of globular generators with the same extremities.
+    lower = (STAR, STAR) + (arr(STAR, v(0), v(1)),) * 4
+    poles = [v(i) for i in range(2, 6)]
+    for i, j in ((0, 1), (1, 3), (0, 2), (2, 3)):
+        lower += (arr(lower[2], poles[i], poles[j]),)
+    aa, bb = (v(6), v(7)), (v(8), v(9))
+    for _ in range(rank - 3):
+        lower = susp_ctx(lower)
+        aa, bb = tuple(map(susp_tm, aa)), tuple(map(susp_tm, bb))
+    k = rank - 2
+    chain = tree_ctx(glue_tree(rank - 1, k, rank - 1))
+    first, last = map(v, maximal_vars(chain))
+    a = comp2(chain, k, first, last)
+    pole = src(chain, first)
+    disk = tree_ctx(disc_tree(k))
+    g = v(len(disk) - 1)
+    out = unitor(disk, g)
+    back = head(disk, tgt(disk, out), g)
+    slot = sub_from(disk, chain, {g[1]: pole})
+    out, back = (subst_tm(t, slot) for t in (out, back))
+    padded = comp2(chain, k, back, a)
+    normalized = comp2(chain, k, out, padded)
+    roundtrip = comp2(chain, k, back, normalized)
+
+    def use(t, pair):
+        return subst_tm(t, sub_from(chain, lower, dict(zip(maximal_vars(chain), pair))))
+
+    original_a, original_b = use(padded, aa), use(padded, bb)
+    globe_a, globe_b = use(normalized, aa), use(normalized, bb)
+    assert src(lower, original_a) != src(lower, globe_a)
+    assert src(lower, globe_a)[0] == 'v' and tgt(lower, globe_a)[0] == 'v'
+    old = lower + (arr(infer(lower, original_a), original_a, original_b),)
+    z = v(len(lower))
+    normalized_z = comp2(old, k, use(out, aa), z)
+    assert src(old, normalized_z) == globe_a and tgt(old, normalized_z) == globe_b
+    left = use(head(chain, padded, roundtrip), aa)
+    right = use(head(chain, roundtrip, padded), bb)
+    padded_v = comp2(old, k, use(back, aa), normalized_z)
+    image = comp2(old, rank - 1, comp2(old, rank - 1, left, padded_v), right)
+    assert image != z and infer(old, image) == infer(old, z)
+    emitter.check_typed(f'padded-replacement-{rank}', old, image)
+    emitter.check_type(f'padded-replacement-{rank}', old, image, infer(old, z))
+
+
+@lru_cache(maxsize=None)
+def trees(size):
+    if size == 0:
+        return ((),)
+    return tuple((child,) + siblings
+                 for n in range(size) for child in trees(n)
+                 for siblings in trees(size - 1 - n))
+
+
+def strong_order_checks():
+    cases = rejected = 0
+    for size in range(2, 8):
+        for shape in trees(size):
+            ctx = tree_ctx(shape)
+            for d in range(1, 5):
+                slots = [i for i in maximal_vars(ctx) if tdim_tm(ctx, v(i)) == d]
+                for chosen in [(i,) for i in slots] + list(combinations(slots, 2)):
+                    basis = list(ctx)
+                    minus, plus = [], []
+                    for i in chosen:
+                        g = v(i)
+                        a, b, target = [v(len(basis) + j) for j in range(3)]
+                        basis.extend([ctx[i]] * 3)
+                        for signs, path in ((minus, (g, a, target)), (plus, (g, b, target))):
+                            for s, t in zip(path, path[1:]):
+                                signs.append(len(basis))
+                                basis.append(arr(ctx[i], s, t))
+                    ordering = TopologicalSorter()
+                    for j, ty in enumerate(basis):
+                        if ty != STAR:
+                            ordering.add(j, ty[2][1])
+                            ordering.add(ty[3][1], j)
+                    apex = len(basis)
+                    ordering.add(apex, *minus)
+                    for j in plus:
+                        ordering.add(j, apex)
+                    try:
+                        tuple(ordering.static_order())
+                        exists = True
+                    except CycleError:
+                        exists = False
+                    assert exists == (len(chosen) == 1)
+                    cases += 1
+                    rejected += int(not exists)
+    return cases, rejected
+
+
 if __name__ == '__main__':
     cli = ArgumentParser(description=__doc__)
     cli.add_argument('--agda', type=Path)
     args = cli.parse_args()
     lower, a, b, wire = diagram()
+    print("candidate top boundaries, cyclic orders:", strong_order_checks())
     emitter = Emitter()
     for rank in (2, 3, 4):
         check(rank, lower, a, b, wire, emitter)
         lower, a, b, wire = susp_ctx(lower), susp_tm(a), susp_tm(b), susp_tm(wire)
+    for rank in (3, 4, 5):
+        padded_boundary(rank, emitter)
     if args.agda:
         args.agda.write_text(emitter.module(args.agda.stem, 'Ordered replacement and endpoint contraction.'))
-    print('3 replacements with composite faces and 3 endpoint prisms checked')
+    print('3 replacements with composite faces and 3 endpoint prisms checked; 3 replacements at padded boundaries checked')

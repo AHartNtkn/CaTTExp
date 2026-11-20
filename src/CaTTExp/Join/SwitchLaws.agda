@@ -13,10 +13,15 @@
 --   Inner4         4-terms built from ι, identities, composition,
 --                  contexts and whiskerings only (no r, t, generators);
 --   Law sw X Y     the switched laws, as schemas on raw terms:
---                  splitL / splitR (binary unrestricted splits of either
---                  operand, the inner composite-crossing law),
---                  and splitR alone (R), each available when its
---                  switch is on;
+--                  splitL (the binary split of a composite left
+--                  operand, the inner composite-crossing law: the direct
+--                  crossing of F ⨾ F′ past G is the paste of the two
+--                  crossings) and splitR (the binary split of a
+--                  composite right operand, R), each available when its
+--                  switch is on. The two are independent: on the
+--                  suspended 2 × 3 interval the four settings have 49,
+--                  14, 29 and 2 cells (scripts/e6/
+--                  interchange_fibre_decorations.py);
 --   law-inner      both sides of every switched law are Inner4;
 --   seeds4         the seed list of a 4-term: its r, t and generator
 --                  letters, in order;
@@ -47,13 +52,14 @@ module CaTTExp.Join.SwitchLaws where
 -- Which visible laws are on.
 record Switches : Set where
   field
-    icc  : Bool          -- inner composite-crossing law (both splits)
+    icc  : Bool          -- inner composite-crossing law (left split)
     rsp  : Bool          -- right split R
 open Switches
 
 -- The settings offered (design-decisions.md §1.7), all four admissible
 -- (lax r9, K73): vS, no switch on, the default, where the side condition
--- computes in V; iccS, V + the inner composite-crossing law; rspS,
+-- computes in V; iccS, V + the inner composite-crossing law (left split
+-- only); rspS,
 -- V + R; and allS, both on, which has T₁₂'s pasting profile.
 vS iccS rspS allS : Switches
 vS   = record { icc = false ; rsp = false }
@@ -83,9 +89,6 @@ module PartA (G1 G2 G3 G4 : Set) where
     splitL : IsTrue (icc sw) → ∀ F F′ G v v′ e e′ →
              Law sw (ι (F ⨾ F′) G)
                     (ctx (id3 e) (ι F G) (wr F′ v′) · ctx (wr F v) (ι F′ G) (id3 e′))
-    splitR-icc : IsTrue (icc sw) → ∀ F G G′ u u′ e e′ →
-             Law sw (ι F (G ⨾ G′))
-                    (ctx (wl u G) (ι F G′) (id3 e) · ctx (id3 e′) (ι F G) (wl u′ G′))
     splitR : IsTrue (rsp sw) → ∀ F G G′ u u′ e e′ →
              Law sw (ι F (G ⨾ G′))
                     (ctx (wl u G) (ι F G′) (id3 e) · ctx (id3 e′) (ι F G) (wl u′ G′))
@@ -93,8 +96,6 @@ module PartA (G1 G2 G3 G4 : Set) where
   law-inner : ∀ {sw X Y} → Law sw X Y → Inner4 X × Inner4 Y
   law-inner (splitL _ F F′ G v v′ e e′) =
     i-ι _ _ , i-· (i-ctx _ _ (i-ι F G)) (i-ctx _ _ (i-ι F′ G))
-  law-inner (splitR-icc _ F G G′ u u′ e e′) =
-    i-ι _ _ , i-· (i-ctx _ _ (i-ι F G′)) (i-ctx _ _ (i-ι F G))
   law-inner (splitR _ F G G′ u u′ e e′) =
     i-ι _ _ , i-· (i-ctx _ _ (i-ι F G′)) (i-ctx _ _ (i-ι F G))
 
@@ -164,7 +165,6 @@ module PartA (G1 G2 G3 G4 : Set) where
 
   law-mono : ∀ {s s′} → s ≤S s′ → ∀ {X Y} → Law s X Y → Law s′ X Y
   law-mono (i , _) (splitL h F F′ G v v′ e e′)     = splitL (i h) F F′ G v v′ e e′
-  law-mono (i , _) (splitR-icc h F G G′ u u′ e e′) = splitR-icc (i h) F G G′ u u′ e e′
   law-mono (_ , j) (splitR h F G G′ u u′ e e′)     = splitR (j h) F G G′ u u′ e e′
 
   -- The order of the offered settings: vS ≤ iccS, rspS ≤ allS.

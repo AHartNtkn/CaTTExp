@@ -505,21 +505,26 @@ def column_into(P, nl, nr, pre_imgs, Z, suf_imgs):
     for e, t in zip(suf, suf_imgs): im[e] = t
     return subst_tm(H_over(nl, nr), sub_from(Pc, P, im))
 
-def swap_split(G, g1, g2):
-    lam, x, r1 = g1
-    l2, y, rho = g2
-    tx = path(G, tgt(G, v(x)))[0]
-    sy = path(G, src(G, v(y)))[0]
-    assert l2[:len(lam)] == lam and l2[len(lam):len(lam) + len(tx)] == tx, 'not side by side'
-    mu = l2[len(lam) + len(tx):]
-    assert r1 == mu + sy + rho, 'not side by side'
+def swap_split(G, left, right, right_first):
+    lam, x, right_context = left
+    left_context, y, rho = right
+    # At the other step the stationary spatial factor is on its initial
+    # or final edge word according to which of the two moves ran first.
+    x_word = path(G, (src if right_first else tgt)(G, v(x)))[0]
+    y_word = path(G, (tgt if right_first else src)(G, v(y)))[0]
+    prefix = lam + x_word
+    assert left_context[:len(prefix)] == prefix, 'not side by side'
+    mu = left_context[len(prefix):]
+    assert right_context == mu + y_word + rho, 'not side by side'
     return lam, mu, rho
 
 def exchange_cell(G, g1, g2, a_prev, b_next):
     """Z => Z', where Z, Z' have canonical forms [k, H_g1, k, H_g2, k] and the swapped one,
-    from a_prev to b_next. Returns (Z, Z', cell, cellrev, g2', g1')."""
-    lam, mu, rho = swap_split(G, g1, g2)
-    x, y = g1[1], g2[1]
+    from a_prev to b_next. Returns the two writings and both comparisons."""
+    right_first = len(g1[0]) > len(g2[0])
+    left, right = (g2, g1) if right_first else (g1, g2)
+    lam, mu, rho = swap_split(G, left, right, right_first)
+    x, y = left[1], right[1]
     P, pre, (z1m, z1p, Z1), mid, (z2m, z2p, Z2), suf = E_info(len(lam), len(mu), len(rho))
     V_ = lambda ls: [v(e) for e in ls]
     H1 = column_into(P, len(pre), len(mid) + 1 + len(suf), V_(pre), Z1, V_(mid) + [v(z2m)] + V_(suf))
@@ -543,6 +548,8 @@ def exchange_cell(G, g1, g2, a_prev, b_next):
     def wrap(cell):
         return comp2(G, 1, comp2(G, 1, ka, cell), kb)
     Z1t = lfold(G, 1, [ka, t1, kb]); Z2t = lfold(G, 1, [ka, t2, kb])
+    if right_first:
+        return Z2t, Z1t, wrap(e_b), wrap(e_f)
     return Z1t, Z2t, wrap(e_f), wrap(e_b)
 
 def canon_term(G, gens, A, B):

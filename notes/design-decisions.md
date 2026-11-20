@@ -94,7 +94,7 @@ The cyclic tables for composite N (needed to switch off the D_{d,p} with p | d) 
 Reasons:
 1. **L2 against L1.** Both satisfy requirements 1–5, both are decidable, and both have the same rule form. J is strictly more general: the tagged model and the M_q are J models but not T₁₂ models. Standard 4 then picks J unless there is a concrete reason to specialize. No derivation is known yet that needs a catalogued law. The switches keep T₁₂ one setting away, and imports run upwards.
 2. **L2 against L3.** Hypotheses do not reach the side condition, so a declared law brings an unbounded tower of coherence declarations (example (c)). Switches put the law into the oracle, where all its coherences come for free.
-3. **L2 against L4.** L4 is the right target if it exists, but its admissibility and decidability are unknown. Per standard 1, that is a question to ask, not a reason to drop it: it is now the main question of `conjectures/outbox/lax-interchange-every-dimension-r8.md`. If it has a positive answer with a decidable side condition, it replaces J.
+3. **L2 against L4.** L4 is the right target if it exists, but its admissibility and decidability are unknown. Per standard 1, that is a question to ask, not a reason to drop it: it is now the main question of `conjectures/outbox/lax-interchange-every-dimension-r8.md` (answered 2026-11-20, `conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md`: on pasting diagrams a least admissible theory V exists and is decidable; see its Verification section). If it has a positive answer with a decidable side condition, it replaces J.
 4. **Stability.** A newly discovered independent law joins the catalogue as a new switch. A development records its switch set, so later additions to the catalogue do not change what it checked against.
 
 **What would overturn this.**
@@ -106,7 +106,7 @@ Reasons:
 - (J-chk) Re-check in-house that all separating algebras can be combined at once with exact quotients. Response 2 asserts this ("use (K51)'s argument with all the selected tests at once") and it was verified at construction level.
 - (Q-vis) Which catalogued laws are visible on free objects of finite pasting diagrams? A law that is not visible does not change the kernel, so it need not be a switch.
 - (ZN) Decidability for the composite-N tables (§1.5), then add the D_{d,p} switches to the default.
-- Outbox: the least-theory question, merged into `outbox/lax-interchange-every-dimension-r8.md` as its main question (standard 11).
+- Outbox: the least-theory question, merged into `outbox/lax-interchange-every-dimension-r8.md` as its main question (standard 11); answered 2026-11-20 (`answered/lax-interchange-every-dimension-r8-2026-11-20.md`), follow-up `outbox/lax-interchange-every-dimension-r9.md`.
 - LCORE's uniform rule takes the switch set as a parameter (message sent to LCORE).
 
 ---

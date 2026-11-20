@@ -87,9 +87,9 @@ J(S) is J with the laws in S switched back on, which means dropping their separa
 
 The cyclic tables for composite N (needed to switch off the D_{d,p} with p | d) need the same linear algebra over ℤ/N. That step is not written out, so those switches are not in the default J yet (§1.6).
 
-### 1.6 Decision
+### 1.6 Decision (superseded 2026-11-20 by §1.7)
 
-**The kernel's side condition computes in J (L2). Each catalogued law is a per-development switch, and T₁₂ is the setting with every switch on.**
+**Original decision: the kernel's side condition computes in J (L2). Each catalogued law is a per-development switch, and T₁₂ is the setting with every switch on.**
 
 Reasons:
 1. **L2 against L1.** Both satisfy requirements 1–5, both are decidable, and both have the same rule form. J is strictly more general: the tagged model and the M_q are J models but not T₁₂ models. Standard 4 then picks J unless there is a concrete reason to specialize. No derivation is known yet that needs a catalogued law. The switches keep T₁₂ one setting away, and imports run upwards.
@@ -108,6 +108,41 @@ Reasons:
 - (ZN) Decidability for the composite-N tables (§1.5), then add the D_{d,p} switches to the default.
 - Outbox: the least-theory question, merged into `outbox/lax-interchange-every-dimension-r8.md` as its main question (standard 11); answered 2026-11-20 (`answered/lax-interchange-every-dimension-r8-2026-11-20.md`), follow-up `outbox/lax-interchange-every-dimension-r9.md`.
 - LCORE's uniform rule takes the switch set as a parameter (message sent to LCORE).
+
+### 1.7 Revised decision (2026-11-20, after the r8 answers)
+
+The r8 answers (`conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md`, verified) meet overturn condition 1 in the form the kernel uses.
+- **L4 exists.** Let B be the forced base and V = B + the round-5 guarded equations. Then V is admissible, F_V(Γ) = F_B(Γ), and F_V(Γ) maps generator-preservingly to F_E(Γ) for every admissible E. So on every finite pasting diagram, a directed cell or an equality exists in F_V(Γ) iff it exists in every admissible theory.
+- **Q-vis.** The right split R and the inner composite-crossing law are visible on pasting diagrams. Every L_p and D_{d,p} is invisible, because every chronological 3-endomorphism in a free object on a pasting diagram is an identity.
+- **Q1(a) is negative** (no least or minimal law set on arbitrary algebras). The kernel never sees those algebras, so this does not matter for the decision.
+
+**Decision. The side condition computes in V. The switches are the visible laws: the inner composite-crossing law and R. A setting S means the side condition computes in V + S.**
+
+Reasons:
+- V is the most general possible choice, not just the most general known one. Every judgement it derives is derivable in every admissible theory, so a V development is sound in the models of every admissible theory. That is L4, and it removes reason 3 of §1.6.
+- The catalogue shrinks to the visible laws. L_p and D_{d,p} do not change the kernel, so they are not switches, and (ZN) is moot.
+- (J-chk) leaves the critical path, because J is no longer the default.
+- L1 and L3 lose for the same reasons as before.
+
+**Lemma V-dec.** For every finite pasting diagram Γ, equality and reachability in F_V(Γ) are decidable.
+
+*Proof.* The proof follows Lemma J-dec.
+1. V has the T₁₂ signature and a subset of T₁₂'s equations. So the identity on letters sends a V-path to a T₁₂-path with the same letters, and the positive gradings of (K45)/(K50) bound its length by the endpoint gradings.
+2. At fixed boundaries the contextual alphabet is finite (K50).
+3. Equality of two V-terms of the same weight is decidable. A derivation of the equality uses only defining pairs between terms of that same weight, since the gradings are conserved by every equation of V ⊆ T₁₂. So equality is connectivity in the finite graph whose vertices are the terms of that weight at those boundaries and whose edges are one-step applications of V's defining pairs. That graph is finite by step 2.
+4. Steps 1–3 satisfy the hypotheses of `Reach.Bounded.reach?` (`src/CaTTExp/Join/BoundedReach.agda`), so reachability is decidable. ∎
+
+**Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. Whether V + {R} and V + {inner law} are admissible on their own is asked in `outbox/lax-interchange-every-dimension-r9.md`. Until that is answered, the only settings offered are none (V) and all (T₁₂). Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
+
+**What would overturn this.**
+- A proof that a visible law is needed for a core construction. That law's setting then becomes the default for that construction's development.
+- Admissibility answers in r9 that open up the intermediate settings.
+
+**Open items.**
+- (FV) An explicit description of F_V(Γ) and of what T₁₂ adds (r9).
+- Whether F_J = F_V on pasting diagrams. This is now only of interest for comparison.
+- Admissibility of V + R and of V + inner law separately (r9).
+- LCORE: point the default setting at V (message sent).
 
 ---
 

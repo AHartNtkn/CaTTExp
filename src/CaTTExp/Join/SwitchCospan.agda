@@ -15,16 +15,20 @@
 --              (j α I R ↦ j (f α) (f I) (f R));
 --   ext-~      it respects the completion equations;
 --   ext-++     it respects composition;
---   ext-ι      it agrees with the switch map on original paths;
+--   ext-ι      it agrees with the switch map on original paths
+--              (these three are CospanNatural.Map's map-~, map-++ and
+--              map-ι, re-exported for letter maps);
 --   ext-seeds  it maps seed lists letterwise, so seed-list invariance
 --              (Cospan.seeds-~) is carried along;
 --   ext-∘      switching on in two stages is switching on at once;
 --   ext-id     the identity switch extends to the identity.
 --
--- The catalogued optional laws (inner composite crossing, R, L_p) are
--- split equations of ι whose two sides are inner words; they do not
--- change seed lists, which is the condition this transport relies on
--- (joining-completion.md §8).
+-- Law equations enter only through the quotient on cells, that is
+-- through the setting's step lists, never through the completion's ~.
+-- Not mechanized here: that J's actual law switches are Switches (in
+-- particular that stepP exists), and that the catalogued optional
+-- laws (inner composite crossing, R, L_p) keep seed lists. Both are
+-- argued on paper in joining-completion.md §8.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Join.Quiver

@@ -50,7 +50,7 @@ def check_syntax(k):
     print(k, "seams:", checks, "face inclusions preserve both literal CaTT endpoints")
 
 
-def visible(cell, k):
+def visible(cell, k, *, require_visible=True):
     signs = []
     for i in range(k):
         a, b = chr(65 + 2 * i), chr(66 + 2 * i)
@@ -65,7 +65,8 @@ def visible(cell, k):
         else:
             word = cell[tb][lane]
             signs.append(1 if word.index("d") < word.index(b) else -1)
-    assert any(signs)
+    if require_visible:
+        assert any(signs)
     return tuple(signs)
 
 

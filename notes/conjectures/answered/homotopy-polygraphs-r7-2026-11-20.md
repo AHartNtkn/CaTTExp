@@ -298,7 +298,7 @@ Status: **verified.** No gap was found. Question 1 is reduced but not settled. Q
 - The rank-11 board construction is checked only at the level of its protocol argument. The checker runs a sample recognizer on a finite language. The all-record argument depends on the endpoint and trace theorems of rounds 5 and 6, which were verified then.
 - The NP and NL bounds in Responses 2 and 3 use polynomial witnesses for two-counter reachability with unary updates (Englert–Lazić–Totzke, arXiv 1602.00477). This citation was not re-checked.
 
-**Follow-up:** [`outbox/homotopy-polygraphs-r8.md`](../outbox/homotopy-polygraphs-r8.md).
+**Follow-up:** [`outbox/homotopy-polygraphs-r8.md`], now answered: [`answered/homotopy-polygraphs-r8-2026-11-20.md`](homotopy-polygraphs-r8-2026-11-20.md).
 
 # Researcher Response 5
 
@@ -514,7 +514,7 @@ To check the replacement, take any collection of witnessing pairs at the guards.
 
 # Verification addendum (2026-11-20, Responses 5–11)
 
-Responses 5–11 arrived after the verification above. They answer much of `outbox/homotopy-polygraphs-r8.md`.
+Responses 5–11 arrived after the verification above. They answer much of the r8 follow-up (now `answered/homotopy-polygraphs-r8-2026-11-20.md`).
 
 Status: **verified.** No gap was found. Question 1 (the unrestricted degree) stays open.
 
@@ -546,4 +546,4 @@ The GAP coset check in Response 5 (orders 60 and 1 for the A₅ model) was not r
 - **Response 7, induced cycles.** Chordal bipartite relations have contractible row complexes, and an induced cycle is isolated by adding holds.
 - **Response 9.** Feasible corners are satisfying assignments decorated with true literals, and the projection to the Boolean solution complex is an equivalence by Quillen's Theorem A.
 
-**Left open.** The unrestricted degree; decidability for one monotone guard with arbitrary binary reversals (failure is r.e.); the exact complexity between coNP and EXPTIME for unboundedly many monotone guards; the least hub count between 5 and 3q + 2 at which specified-fibre contractibility becomes undecidable. These are carried into `outbox/homotopy-polygraphs-r8.md`.
+**Left open.** The unrestricted degree; decidability for one monotone guard with arbitrary binary reversals (failure is r.e.); the exact complexity between coNP and EXPTIME for unboundedly many monotone guards; the least hub count between 5 and 3q + 2 at which specified-fibre contractibility becomes undecidable. These were carried into the r8 follow-up and now into `outbox/homotopy-polygraphs-r9.md`.

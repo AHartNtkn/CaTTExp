@@ -30,6 +30,54 @@ def closure(faces):
     return cells
 
 
+def block_distance(row, incident):
+    """Shortest adjacent-swap distance between the two contiguous-star conditions."""
+    changes = {ridge: differential({ridge: 1}) for ridge in row}
+    ports = {}
+    for ridge, delta in changes.items():
+        for port, sign in delta.items():
+            ports.setdefault(port, []).append((ridge, sign))
+    assert all(len(entries) == 1 or (len(entries) == 2 and entries[0][1] == -entries[1][1])
+               for entries in ports.values())
+    blocks = [row.intersection(differential({facet: 1})) for facet in incident]
+    assert [len(block) for block in blocks] == [5, 5]
+    assert len(blocks[0] & blocks[1]) == 1
+
+    def orders(remaining, state, prefix):
+        if not remaining:
+            yield prefix
+        for ridge in remaining:
+            if -changes[ridge] <= state:
+                after = state.copy()
+                after.update(changes[ridge])
+                yield from orders(remaining - {ridge}, +after, (*prefix, ridge))
+
+    words = set(orders(row, -differential(dict.fromkeys(row, 1)), ()))
+
+    def contiguous(word, block):
+        positions = [i for i, ridge in enumerate(word) if ridge in block]
+        return positions[-1] - positions[0] + 1 == len(block)
+
+    start, finish = [{word for word in words if contiguous(word, block)} for block in blocks]
+    assert start and finish
+    seen = set(start)
+    front = start
+    distance = 0
+    while front.isdisjoint(finish):
+        neighbors = {word[:i] + (word[i + 1], word[i]) + word[i + 2:]
+                     for word in front for i in range(len(word) - 1)}
+        front = (neighbors & words) - seen
+        assert front
+        seen.update(front)
+        distance += 1
+    def inversions(first, second):
+        rank = {ridge: i for i, ridge in enumerate(second)}
+        return sum(rank[a] > rank[b] for a, b in combinations(first, 2))
+
+    assert distance == min(inversions(a, b) for a in start for b in finish)
+    return len(words), distance
+
+
 def sweeps(dimension):
     top = (0,) * dimension
     signed = differential({top: 1})
@@ -44,7 +92,7 @@ def sweeps(dimension):
         previous = next_row
     assert sum((+previous).values()) == sum((-previous).values()) == 1
 
-    walks, labels = [], set()
+    walks, labels, incidences = [], set(), {}
     for hemisphere in (-signed, +signed):
         unused = set(hemisphere)
         row = -lower
@@ -61,6 +109,7 @@ def sweeps(dimension):
                 break
             # A single-facet tableau needs its negative subchain in this row.
             face, = [face for face in unused if -differential({face: 1}) <= row]
+            incidences.setdefault(frozenset(row), []).append(face)
             after = row.copy()
             after.update(differential({face: 1}))
             assert all(c >= 0 for c in after.values())
@@ -69,12 +118,18 @@ def sweeps(dimension):
             assert change == differential({face: 1})
             route.append(face)
             row = +after
+            incidences.setdefault(frozenset(row), []).append(face)
             unused.remove(face)
         assert row == +lower
         walks.append(route)
     assert len(labels) == 2 * dimension
     assert [next(i for i, x in enumerate(f) if x) for f in walks[0]] == list(range(dimension))
     assert [next(i for i, x in enumerate(f) if x) for f in walks[1]] == list(reversed(range(dimension)))
+    if dimension == 6:
+        counts = Counter(block_distance(row, pair) for row, pair in incidences.items())
+        assert counts == {(12, 0): 4, (196, 6): 4, (286, 6): 2, (840, 8): 2}
+        print("nested four-dimensional walks: 4 common block orders; "
+              "6 rows need six swaps and 2 rows need eight swaps")
     return walks
 
 

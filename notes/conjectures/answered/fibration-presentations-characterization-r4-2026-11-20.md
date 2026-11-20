@@ -903,3 +903,26 @@ python3 tools/fibration_cyclic_four.py
 ```
 
 [Raw stage and chart checks](../../../tools/fibration_bubble_records.py)
+
+## Researcher Response 25
+
+### Exact strict 4-cells on the infinite nullary circuit
+
+At the poles of the genuine nullary Gray square of Response 13 the strict 3-histories have unbounded length. Its **entire parallel strict 4-cell sets** have the following description. On any history visiting $A$, retain the initial segment before its first visit and the final segment after its last visit. Between them the word is $(DM)^r$. A parallel 4-cell to the history with core $(DM)^s$ is exactly a strictly increasing injection from $r$ ordered positions into $s$. Composition of 4-cells is ordinary composition of the injections. The zero-length history at $B$ is isolated with just its identity. Thus the strict 4-cell table has size $\binom{s}{r}$ for $s\ge r$, zero for $s<r$, with the stated exception. This gives actual representatives for use in a further attaching template. Response 13's reachability test settled only whether the table is empty.
+
+**All contextual operations and equations.** A 3-history from $A$ or $B$ is the alternating word forced by the two different unary charts of Response 13. The 4-generator $Z$ inserts $DM$ at $A$. A marker for a 4-step is a 3-generator with 2-faces $A,A$. Its planar 2-marker $X$ has word poles $1,tg$. At the outer word poles $1,tg$ a one-marker 2-chart containing $X$ is just $X$: it already provides both new letters, and the crossing acts neither before it nor on its output. No 2-chart at these poles has two markers among $X,D,M$. With $X$ the total length increase would be too large; the other pairs were excluded in Response 24. These facts also apply with different colours on occurrences of $X$.
+
+It follows that a 3-context for a 4-step consists of the earlier alternating steps, the marker at an $A$ visit, and the later alternating steps. A two-marker 3-context likewise consists of two such markers in temporal order with ordinary steps between, possibly none. In detail, serialise the marked 3-context into its unary steps. Substituting the identity 3-face of $Z$ keeps all 2-states on the old circuit. Each $X$ is therefore at its unique spatial 2-context. The only possible changes of serialisation at lower cuts come from two-slot planar charts, which the preceding calculation excludes. This accounts for one- and two-marker contexts by actual free strict composition, including when both markers are at the very same visit. The free top extension imposes exchanges from precisely such two-marker contexts, in addition to composition and unit laws. Its effect is to exchange the temporal order of two insertions at disjoint positions, including both orders of two new copies placed at one original gap. No insertion is possible between the $D$ and $M$ of an existing core copy because that intermediate state is $B$.
+
+Follow each original copy of $DM$. Each insertion preserves its position relative to all other old copies, and the exchanges preserve the resulting injection. Conversely, once the final positions of the original copies are fixed, the other final positions must be created. They can be inserted in any chosen order. Exchanging two successive insertions gives the writing in the opposite order with these same final positions: place the two temporal markers at their original gaps in their prescribed left-to-right order. This includes two insertions which occupied one original gap. Adjacent transpositions connect all the orders, giving the claimed bijection and its composition law. The one-letter end segments, when present, are protected throughout. Every assertion here concerns the strict stage before localization.
+
+**Use for the next degree.** In any larger search in which the allowed strict 4-steps on this component are still just the specified insertions, a prescribed 4-face fixes the parallel 3-poles and hence both core lengths. The possible opposite face and *every intervening 4-cell* are now effectively enumerable. Actual contextual 5-steps between these cells and finite base-prefix control give a terminating strict 5-factor test on this component, also with a specified subset of 5-labels. Other components or more 4-generators require their own analysis. A negative strict test obstructs the corresponding weak attachment.
+
+**Reproduction.** The checker builds the marked spatial rules and verifies the one- and two-marker counts. It then enumerates insertion writings at actual $A$ visits. Independently it quotients by the disjoint-window exchange algorithm, including the two placements at coincident nullary sites, and compares every class with the predicted surviving positions. For 80 pairs of boundaries, starting at each of the two states, it finds 5,448 writings and 431 classes. The empty history at $B$ and the end fragments in all four types of hom are included.
+
+```sh
+python3 tools/fibration_cyclic_injections.py
+python3 tools/fibration_cyclic_four.py
+```
+
+[Exact 4-cell table and interchange check](../../../tools/fibration_cyclic_injections.py)

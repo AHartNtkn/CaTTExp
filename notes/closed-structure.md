@@ -10,7 +10,7 @@
 | **D10** Units | **Balanced is not enough** once a unit is present: the triple-dual endomorphism is a second morphism of a balanced, provable sequent (Part B.1). **A contractible class that does work**: sequents that normalize, under the canonical unit isomorphisms and invertible rules, to a unit-free pasting sequent or to ⊢ I (Theorem B). Completeness of the resulting theory UL_I is proved in outline (B.3). **B.4:** Theorem A extends to empty antecedents, which enlarges the contractible class, and fullness reduces to one lemma about closed terms. | contractibility proved; fullness proved (Theorem B6); faithfulness proved (Theorem B8, D10b closed): the term model of UL_I\* is the free biclosed monoidal multicategory with unit |
 | **D8** Dualities under L | **Classified.** A duality D_K on Steiner complexes commutes with ⊗ (canonically) iff K ∈ {∅, all}, and reverses it iff K ∈ {odd, even}. Every other duality turns ⊗ into a *twisted* tensor. For two-tier L: the ambient dualities D_J that are symmetries are exactly J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}}. Those that swap lax and oplax are J ∈ {{1}, all, even, {3,5,7,…}}. Every other J sends L to a mixed-orientation theory L_ε. The orientation-parameterised kernel is the family L_ε, on which the whole duality group acts transitively, and freely up to the global sign (Part D). Agda: the sign lemma and the classification. | closed (kernel family designed; implementing it is part of E1's checker) |
 | **D12** Mimram's higher criterion | The tool (commit `69bb11a`) has **two** higher criteria, read off the source: a *reversible* one, for (∞,1), which contracts higher hypotheses that have a free endpoint; and a *directed*, globular one (Part C). Re-check of `internal-hom.md` §5.7 against the PDF: four corrections. Soundness of the directed criterion in dimension 2 over graphs follows from Fiore–Saville. **New (C.4, sketch):** the free cartesian closed (∞,1)-category on a set or graph has discrete mapping spaces (normalization by gluing, as in Uemura's ∞-type-theory coherence), hence the reversible criterion is sound. The directed (∞,ω) case is posed as a conjecture (`conjectures/cartesian-closed-higher-coherence.md` Q3). | Rev sound (sketch); Dir beyond dim 2 out to researcher |
-| **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | partly done; remainder blocked on F5 or D11 |
+| **D7** Gray tensor of arbitrary objects | **Partly unblocked.** B ⊗ ⟦Θ⟧ for *arbitrary* B and representable Θ (and ⟦Θ⟧ ⊗ C) can be given by a colimit-free representability rule over the existing lax hom (lhom), sound by Campion's biclosedness. Lax cylinders B ⊗ D¹ of arbitrary objects follow. The universal property is stated precisely, including higher cells (through the pseudo cotensor). A naive rule asserting the bijection on *all* cells is unsound, with an explicit counterexample at B = C = D¹. Both factors arbitrary still needs [C, –]_lax for arbitrary C, which needs either object-indexed limits (F5) or PL-ω. | **done 2026-11-20**: both factors arbitrary via the biclosed rules of F.7.4 (from the verified r3 answer); E.2 is derived from them. Open: Lemma GB-ext check (D7c), Agda (D7d) |
 | **D11** PL-ω | **First test passed by a candidate.** Mimram's directed criterion produces the interchanger in *both* directions, so it fails the test. The candidate "Gray criterion" adds an inversion-set condition on the event order. It produces the lax naturality cell of evaluation and never its inverse (Part F). The ω-version is conjectured to be the higher Bruhat orders, recorded in `planar-pasting-types.md` §4. | candidate passes test; general definition and ω-version open |
 
 ---
@@ -753,6 +753,8 @@ All cells are invertible (written with ⊨). There are no definitional equations
 - **Consistency:** for B = ⟦Δ⟧, B ⊗ Θ and the Gray context ⟦Δ ⊗ Θ⟧ represent the same functor, so they are equivalent. The comparison is *derivable* (E.4, Prop. E2); no extra rule is needed.
 - **Mirror:** ⟦Θ⟧ ⊗ C via the oplax hom, which is derivable by `internal-hom.md` §5.6.
 
+**Status 2026-11-20.** This rule is now derived from the biclosed rules of F.7.4, with B ⊗ Θ the formula B ⊗ ⟦Θ⟧ (F.7.4 item 5). It is kept here as the representable case and as the source of E.4.
+
 **Payoff.** Lax transformations between arbitrary functors are maps B ⊗ D¹ → C. That is a cleaner presentation than the fibre definition LaxTr(F, G) of §5.2, and it composes by (⊗Θ-fill).
 
 ## E.4 Derived structure of the B ⊗ Θ rule (D7, adjacent)
@@ -812,7 +814,7 @@ The colimit route of `internal-hom.md` §6 (B12) remains a third option. **Statu
 
 **Checked 2026-11-20.** Neither non-PL-ω route is proved for arbitrary objects. F5 supplies object-indexed colimits, not the limit the end formula needs, and the density step it would rest on (F5b) still lacks a realisation rule, with the universal shape family (F5c) only drafted. The colimit route has no proof that the colimit over cells of B and C has the Gray tensor's universal property. So the step that currently needs PL-ω is forming [C, –]_lax for arbitrary C as an object, with evaluation and currying as coherences; the researcher prompt `conjectures/outbox/gray-biclosed-coherence-r3.md` stays in the outbox for it.
 
-**Update 2026-11-20 (later).** The prompt is answered (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, verified). Response 2 gives the PL-ω route in reading (II). The type formers are ⊗, \ and /. The distinguished coherences are pairing, the left and right evaluations, and, at decidable generic sequents, currying c with its comparison ε. The free data model is initial over the lax-grid model. So [C, –]_lax = C\– (and –/C for the oplax side) exists for arbitrary C, and B ⊗ C for two arbitrary factors follows. **Status:** design route settled. Remaining: write the templates into F.7.3's rule set and reconcile them with E.2/E.4.
+**Update 2026-11-20 (later).** The prompt is answered (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, verified). Response 2 gives the PL-ω route in reading (II). The type formers are ⊗, \ and /. The distinguished coherences are pairing, the left and right evaluations, and, at decidable generic sequents, currying c with its comparison ε. The free data model is initial over the lax-grid model. So [C, –]_lax = C\– (and –/C for the oplax side) exists for arbitrary C, and B ⊗ C for two arbitrary factors follows. **Status: done (2026-11-20).** The templates are written into the kernel in **F.7.4**, and E.2/E.4 and (lhom) are derived from them (F.7.4 item 5). What remains is the in-house Lemma GB-ext (D7c, independent check requested) and the Agda module (D7d).
 
 ---
 
@@ -1123,6 +1125,161 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
 - (b) ~~Check E.2~~ done (above): E.2 is probe absorption with Q = Dᵏ.
 - (c) Decided: the project's type theory needs only reading (II), and round 5 confirms this. D11's remaining reading-(I) questions (the original 𝒢, ι∘π, forward uniqueness) are research side questions. They stay under D11 and do not block D7 or E.3.
 
+### F.7.4 The biclosed rules of the kernel (D7, from the r3 answer)
+
+*Added 2026-11-20, thread "Add Gray biclosed rules to the core" (GBIC). Source: `conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, Response 2 (verified). This turns the F.7.3 draft into rules. F.7.3's structural statements become derived facts (item 5 below). Agda: `src/CaTTExp/Gray/Biclosed/` (item 7).*
+
+**Reading and names.** Reading (II). Names follow `conventions.md` §3.2:
+- A\C = Hom_lax(A, C). Its evaluation takes the argument first, (A, A\C) ▸ C, as in `conventions.md` §4.
+- C/A = Hom_oplax(A, C).
+- The lax hom [Θ, C] of `internal-hom.md` §5.1 is C/⟦Θ⟧. Maps Δ ⊳ [Θ, C] are maps out of Δ ⊗ Θ, the right residual.
+
+#### 1. Judgements
+
+- **Objects.** Γ ⊢ A : ⋆, as before. There are three new formers: ⊗, \ and /.
+- **Multimaps.** The new judgement is Γ ⊢ t : (X₁, …, Xₙ ▸ Z), with n ≥ 0 and every Xᵢ and Z an object. Its meaning is a map X₁ ⊗ … ⊗ Xₙ → Z, and the list is never bracketed.
+  - With n = 1 it is an ambient 1-cell.
+  - With one representable input it is the diagram judgement: (⟦Δ⟧ ▸ C) is Δ ⊳ C of `internal-hom.md` §5.
+- **Time slots.** A *time slot* is an input position holding a representable ⟦Θ⟧. The cells of homs are multimaps with ⟦Dᵏ⟧ in a slot:
+  - (B, ⟦Dᵏ⟧ ▸ C) is a lax k-cell between maps B → C, a cell of ℍ_r;
+  - (⟦Dᵏ⟧, B ▸ C) is an oplax k-cell, a cell of ℍ_ℓ;
+  - a slot between two data inputs gives the mixed cells of the double hom.
+
+  Faces are restrictions along ⟦s⟧, ⟦t⟧ : ⟦Dᵏ⁻¹⟧ → ⟦Dᵏ⟧. With n = 0 and a time slot, Dᵏ ⊳ C is a k-cell of C.
+- **Invertible cells.** These are the marked judgement ⊨ (`internal-hom.md` §5.1, `invertibility-markings.md`) at a time slot. Response 2 needs balls Dⁿ of invertible homotopies of operations. Its paragraph "Where to put an invertible parameter" realizes them as cells at an extra time slot all of whose cells are invertible, because by completeness diagrams in the core of a hom are balls. The kernel uses that realization. The slot for an invertible ball is the rightmost gap. For invertible cells the side does not matter, since pseudo cells embed in both families.
+- **Substitution and the ambient calculus.** Multimaps substitute into slots planarly, as in a planar multicategory, which extends the pre- and postcomposition of `internal-hom.md` §5. A substitution σ : Θ′ → Θ produced by the L core restricts a time slot along ⟦σ⟧. Composition of cells inside a one-hole hom is therefore L's coh with its side condition in V + S (`design-decisions.md` §1.7). This is the "ambient calculus" that Response 2 takes as its base: the lax-grid calculus, whose model is Keidar–Neuhauser's (arXiv 2606.27574, Thm 4.15 and Cor 4.16).
+
+#### 2. The rules
+
+Every rule has the shape of `coh`: a generic context, a goal, and an admissibility test. Each produces a term with no definitional equation. Universal properties are witnessed by cells (standard 5).
+
+```
+(GB-form)   Γ ⊢ A : ⋆    Γ ⊢ B : ⋆   ⟹   Γ ⊢ A ⊗ B : ⋆,   Γ ⊢ A\B : ⋆,   Γ ⊢ B/A : ⋆
+
+(GB-pair)   (U V : ⋆)  ⊢  m_{U,V} : (U, V ▸ U ⊗ V)
+(GB-evℓ)    (A C : ⋆)  ⊢  e^ℓ_{A,C} : (A, A\C ▸ C)
+(GB-evr)    (A C : ⋆)  ⊢  e^r_{A,C} : (C/A, A ▸ C)
+(GB-probe)  ⊢  p_{Δ,Θ} : (⟦Δ⟧, ⟦Θ⟧ ▸ ⟦Δ ⊗ Θ⟧)      for pasting shapes Δ, Θ
+(GB-pt)     ⊢  pt : ( ▸ ⟦D⁰⟧)
+```
+
+- Δ ⊗ Θ in (GB-probe) is the Gray tensor of contexts (`internal-hom.md` §4), and p is its pair of inclusions. In Response 2 this is "for pure U, V use the identity on their probe product as m_UV".
+- (GB-pt) is Response 2's nullary pure operation m₀, with ⟦D⁰⟧ as the probe unit I.
+
+**Rows.** Each row is a restriction r : H → B between multimap types. It sends x to the two-vertex composite of x with the row's distinguished vertex.
+
+| Row | H, the missing vertex | B, the outer operation | r(x) |
+|---|---|---|---|
+| pair at slot i | (L, U⊗V, R ▸ Z) | (L, U, V, R ▸ Z) | x ∘ᵢ m_{U,V} |
+| probe pair at slot i | (L, ⟦Δ⊗Θ⟧, R ▸ Z) | (L, ⟦Δ⟧, ⟦Θ⟧, R ▸ Z) | x ∘ᵢ p_{Δ,Θ} |
+| unit at slot i | (L, ⟦D⁰⟧, R ▸ Z) | (L, R ▸ Z) | x ∘ᵢ pt |
+| left evaluation | (Φ ▸ A\C) | (A, Φ ▸ C) | e^ℓ ∘ (1_A, x) |
+| right evaluation | (Φ ▸ C/A) | (Φ, A ▸ C) | e^r ∘ (x, 1_A) |
+
+- L, R and Φ are lists of objects, and any entry may be a time slot.
+- A time slot in Φ stays in its gap: the left row's outer input is (A, Φ) and the right row's is (Φ, A). So a cut never moves a directed time past the bound object (Response 2, "Under a cut, use the image of the same gap").
+- In the unit row, B is a sub-case of the pair row with nullary m₀.
+
+**(GB-cut_{ρ,n}), for a row ρ and n ≥ 0.** The generic context Ctx(ρ, n) contains:
+- a fresh object variable for each formula of the row (U, V, L, R; or A, C and the entries of Φ);
+- b, an invertible n-ball of operations of type B;
+- u, an (n−1)-sphere of operations of type H, empty when n = 0;
+- a, the collar r(u) ⊨ b|_{∂}, empty when n = 0.
+
+Two goals are admissible in Ctx(ρ, n):
+- **c_{ρ,n}**: the n-ball of type H with boundary u;
+- **ε_{ρ,n}**: the invertible (n+1)-cell of type B from r(c_{ρ,n}) to b with the collar a adjoined.
+
+The source of ε contains c as a term, not as a variable. At n = 0, c is the curry or factorization of b and ε : r(c) ⊨ b. At n = 1 with b constant, the rule connects two lifts of the same b, which is uniqueness.
+
+**(GB-dcut_{ρ,k}), for a row ρ, k ≥ 1, and a time slot ⟦Dᵏ⟧ at a fixed gap of the row's lists.** The generic context contains:
+- the object variables of the row;
+- u⁻ and u⁺, parallel operations of type H at ⟦Dᵏ⁻¹⟧ in that gap, with their common boundary;
+- b, an operation of type B at ⟦Dᵏ⟧ in the same gap;
+- a^±, comparisons r(u^±) ⊨ b|_{∂^±} that agree on the common boundary.
+
+The goals are d, of type H at ⟦Dᵏ⟧ with source face u⁻ and target face u⁺, and an invertible comparison r(d) ⊨ b relative to a^±. This is Response 2's template (6). Its exactness is the pushout (6) there.
+
+**Orientation.** The only directed goal is d, and its direction is inherited from the hypothesis b. No template has a directed goal whose orientation is not that of a hypothesis. So the rules admit no reverse cells. The response's specialization argument rules out the reverse of the walking square and both directions of the ν(I^⊗4) pair 212321 / 123212 (r3 item 41).
+
+#### 3. Admissibility and its decidability
+
+A goal is **admissible** iff, up to renaming of context variables, its context and type are one of the templates of §2. The row's formula constructor is read off the goal's type. Admissible goals are then closed under type and term substitution, as for `coh`.
+
+**Lemma GB-dec.** Admissibility is decidable.
+
+*Proof.*
+- The templates form finitely many families, indexed by (row, slot, gap, n or k), and the indices are bounded by the size of the goal.
+- For each candidate index, matching compares a finite incidence presentation up to a bijection of variables (finitely many) and compares formula expressions syntactically.
+- The ε and comparison goals are tested by building the term r(c), which needs no search for an operation.
+- Restrictions along ⟦σ⟧ call L's side condition, which is decidable in every switch setting (`design-decisions.md` §1.7, Lemma V-dec and its extension). ∎
+
+Deciding whether an arbitrary sequent has *some* derivation is a different question, and it is undecidable (r3 item 38). The kernel never asks it.
+
+#### 4. Soundness and exactness
+
+- **Soundness.** In Cat_ω, ⊗ is Campion's Gray tensor, \ and / are its two closures (Campion, arXiv 2311.00205), and the probe base is the Gray maps of pasting shapes. Every template is sound there by Response 2's extension lemma, which says that a row is an equivalence iff every relative disk lifts. The combined kernel is sound wherever the L core is sound in Cat_ω, an existing item that this section does not change.
+- **Exactness.** Response 2's theorem (3) says that the free data model 𝓕_Σ, built by reflecting at the tree conditions, the grid conditions and the table rows, is initial among data models over the lax-grid model. The two-step attachment identifies naming c and ε with that reflection.
+
+**Lemma GB-ext (in-house, argument level; independent check requested, D7c).** Theorem (3) of Response 2 still holds with three extensions that the kernel needs:
+- (i) **element generators**: profiles whose inputs are all probes and whose output is data, including the nullary profile;
+- (ii) probes as **bound arguments** of residuals, so that [Θ, C] = C/⟦Θ⟧ is an instance;
+- (iii) any probe base generated by the L core in a fixed switch setting V + S.
+
+*Proof sketch.* The argument re-runs Response 2's proof step by step.
+1. **Localization.** Allowing more profiles, and the table maps for the new instances (the evaluation rows with Γ pure or empty, and residuals with a probe as the bound argument), still localizes a presentable category at a set of maps. The cellular description (5) is unchanged, because the test objects are still compact.
+2. **Grid tests.** The one-hole homs with no data input, G ↦ O(W(G); Z) with W a word of probes, get the same grid Segal and completeness tests. In Cat_ω they hold because O(P, G, Q; Z) = Map(G, P\Z/Q) is represented by an object.
+3. **Local objects.** The representability argument goes through unchanged. Its conclusion "unary mixed homs are empty" becomes: probe-to-data homs may be nonempty, and data-to-probe homs are empty. That is the intended Cat_ω picture.
+4. **Pure-probe preservation.** The point-extension right adjoint still works: a tree with pure output still has only pure vertices, because no profile has data inputs and pure output. This step uses nothing about the probe base U, which gives (iii). So the biclosed rules add **no new cells between pasting shapes**, and they are conservative over L in every switch setting.
+5. **Initiality.** Formula (3) follows from the reflection and the free-corolla property, with Σ now allowed to contain element generators x : (⟦Θ⟧ ▸ T).
+
+What this sketch does not settle: whether step 2's extra tests interact with the table rows when Γ is pure. They should not, since both are locality conditions for one reflection. That is the point the independent check should look at. ∎
+
+#### 5. Reconciliation with E.1, E.2, E.4, F.7.3 and `internal-hom.md` §5.1
+
+Everything in this list is now **derived**. None of it is a primitive any more.
+
+- **(lhom), `internal-hom.md` §5.1.**
+  - [Θ, C] := C/⟦Θ⟧.
+  - (lhom-Λ) takes φ : (⟦Δ⊗Θ⟧ ▸ C), restricts it by the probe-pair row to (⟦Δ⟧, ⟦Θ⟧ ▸ C), and applies c of the right row at n = 0. (lhom-♭) is the inverse composite of the two r's.
+  - β is ε at n = 0.
+  - η is c at n = 1, comparing the lifts (ψ, identity) and (Λ(ψ♭), ε).
+  - (nat-Δ) and (nat-C) are n = 1 instances: both sides are lifts of the same outer operation.
+- **E.2, the B ⊗ Θ rule.** B ⊗ Θ is the formula B ⊗ ⟦Θ⟧.
+  - u_B := c_{right,0}(m_{B,⟦Θ⟧}).
+  - h♯ := c_{pair,0}(e^r ∘ (h, 1)), and ε_h is built from the two ε's.
+  - (⊗Θ-uni) is the n = 1 instance of the pair row.
+  - So E.2's four rules are derived, and E.4, which is derived from E.2, is unchanged.
+  - E.4 Prop. E2 (⟦Δ⟧ ⊗ Θ ≃ ⟦Δ ⊗ Θ⟧) now also follows directly, because both objects represent the same operation space (pair row against probe-pair row).
+- **E.1, the warning.** The rows are equivalences of operation spaces with each time slot fixed in its gap. They are never equivalences of hom (∞,ω)-categories with a time slot moved. So the unsound naive rule of E.1 is not an instance. For example:
+  - (B⊗C, ⟦Dᵏ⟧ ▸ D) ≃ (B, C, ⟦Dᵏ⟧ ▸ D) by the pair row;
+  - the right row then curries C and the time slot *together*, giving (B ▸ D/(C ⊗ ⟦Dᵏ⟧));
+  - that is E.1's "higher cells through [Dᵏ, D]", and it is probe absorption.
+- **F.7.3.** All of F.7.3's statements are instances of the rows:
+  - Φ_L and Φ_R (pair row, then the left or right row, with Γ = (B, ⟦Dᵏ⟧) or (⟦Dᵏ⟧, A));
+  - probe absorption;
+  - 2-functoriality of A ⊗ – on lax cells and of – ⊗ B on oplax cells;
+  - the canonical but non-literal equivalence (A\C)/B ≃ A\(C/B) (r3 item 17): both sides represent (A, Φ, B ▸ C).
+- **Mixed-shape cells.** These are multimaps with an inner time slot, as F.7.3 and `gray-cylinders.md` describe.
+
+#### 6. What changes in the kernel, and what does not
+
+- **New:** the multimap judgement, the formers, five corollas, and the cut and directed-cut templates.
+- **Unchanged:**
+  - L's coh rule and its side condition in V + S (Lemma GB-ext (iii) says the new rules derive no new cells between pasting shapes, in every switch setting);
+  - markings, which ⊨ already provides;
+  - the pseudo hom of `internal-hom.md` §5.4–§5.5, which is cartesian and independent of these rules.
+- **Retired as primitives:** (lhom) and (⊗Θ), which are now derived (item 5). They can stay in the checker as derived rules.
+- **No universes, and no definitional equations** beyond CaTT's syntactic substitution. Planar substitution of multimaps is the meta-operation, as substitution is in CaTT.
+
+#### 7. Formalization (standard 9) and open items
+
+- **Agda: `src/CaTTExp/Gray/Biclosed/`.** It contains the syntax of formulas and multimap types, the rows and their r, the generic contexts Ctx(ρ, n) and the directed templates, and a decision procedure for admissibility that is proved sound and complete for the template relation. It checks that each template's goal is well-typed against its context, that no directed goal is admitted with an orientation opposite to its hypothesis, and that the derived (lhom) and E.2 constructions are admitted instances. It formalizes the syntax and the decidability of §3. It does not formalize the ∞-categorical initiality of §4, which stays on paper (Response 2, verified; Lemma GB-ext in-house). Independent honesty review before merge.
+- **Open items:**
+  - (D7c) an independent check of Lemma GB-ext;
+  - (D7d) the Agda module above, owned by GBIC;
+  - implementing the new judgement in the type-checker, which belongs to the thread that implements lhom (E.4's note).
+
 ---
 
 # Part G. Open items left by this note
@@ -1131,7 +1288,7 @@ So E.2 and E.4 are instances of the corrected rule set with one representable fa
 |---|---|
 | D10 completeness of UL_I (B.3 generation statement) | CLOSED thread (D10a), in progress |
 | ~~A4 generalization lemma written out in full~~ | done (Lemma A5, D9a closed) |
-| D7 remainder: both factors arbitrary (F5 / PL-ω / B12) | blocked; listed under D7. Adjacent E.2 rule work: CLOSED thread |
+| ~~D7 remainder: both factors arbitrary~~ | done (F.7.4). D7c (independent check of Lemma GB-ext) and D7d (Agda, `src/CaTTExp/Gray/Biclosed/`): GBIC thread |
 | D11: event order across residuals; ω-version; soundness/completeness | out to researcher (`conjectures/outbox/gray-pasting-types.md`); internal attempt: CLOSED thread |
 | D12: higher coherence for free cartesian closed (∞,1)/(∞,ω)-categories | `conjectures/outbox/cartesian-closed-higher-coherence.md`, ready to send; internal attempt: CLOSED thread |
 | D8 for uniform L | blocked on E6 |

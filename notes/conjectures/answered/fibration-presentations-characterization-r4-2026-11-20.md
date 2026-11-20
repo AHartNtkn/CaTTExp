@@ -805,3 +805,58 @@ In a connected constraint graph every prescribed vertex must therefore have the 
 **Validation.** Take two base edges. The first sends $(I,J)$ to $(i,j)$, a unary $r:I\Rightarrow I$ to $h:i\Rightarrow i$, and $s:J\Rightarrow J$ to an identity. The middle fibre also has $k:i\Rightarrow i$. The second edge erases everything. At the 1-poles $ba$ and $baIJ$, with at most two pure steps, the raw contextual checker gives 73 writings, 16 exchange classes and 20 elementary prisms. All agree individually with the coordinate moves. For all 256 ordered pairs of these targets the bounded test also agrees with common ancestry in the independent contextual graph through four pure steps, which includes every source permitted by (2) for these queries. Targets carrying $r$ and $s$ separately have a common source carrying both. There are arbitrarily large common sources since extra $r$ steps can transfer across both edges. Targets with middle histories $hk$ and $kh$ have the same terminal descendant but no common source, as the bounded search confirms. [Reproduce the gluing checks](../../../tools/fibration_common_source.py)
 
 For Question 1 this handles gluing over an entire path, including shared unknown faces and erasing transport. The undecidability result of Response 15 uses an additional incidence condition inside a leg. A general solution must still account for the constraints imposed by the actual higher generator and its proper-fibre substitutions.
+
+# Verification addendum (2026-11-20, Responses 8–20)
+
+Responses 8–20 arrived after the verification above. They answer most of the questions of `outbox/fibration-presentations-characterization-r5.md`.
+
+Status: **verified. Question 2 is answered negatively (Response 10). Question 1 is answered on several large classes, with two undecidable subproblems located.** No gap was found. Question 3 is not addressed.
+
+**Question 2.**
+- **Response 10: U(Γ) is undecidable.** From a semi-Thue instance (R, w, v) with nonempty rule sides it builds a finite homotopical 4-polygraph Γ with one 4-generator, such that every strict weight has the unaugmented presentation iff w →* v. If the word is reachable, the testers force every 2-transformation component on the pentagon subbase to be empty, so Response 7 applies there and items 3–4 elsewhere. If it is unreachable, an erasing weight with a bubble-free one-object fibre sends the associator to δ and reproduces the failing short side of item 9. So no exact criterion on finite data exists, and U is Σ⁰₁-complete on this family.
+
+**Question 1, decidable classes.**
+- **Response 8.** If reverse rewriting terminates in each fibre, prescribed marked 3-factors are decidable, with empty generator boundaries and erasure allowed. Its example shows that the occurrence-count bound of Response 6 can be infinite.
+- **Response 9.** Marked 4-factors at prescribed weak 3-faces are decidable when the base 2-generators have nonempty paths and the fibre 2-generators have positive weights decreased by every pure fibre 3-generator. It proves a **component lemma**: if the raw (r−1)-skeleton is homotopical, the r-cells representing a strict r-cell at prescribed faces form a nonempty path-connected space. Later responses use it for weak assembly.
+- **Response 11.** For finite acyclic graph fibres and base dimension ≤ 4, the whole presentation is decidable. Strict lifts of a specified cell are finite in every rank, ranked by the longest-path height. The ordinal pentagon (fibres [i+1], gap e) is a negative instance at e = 1 with finite linearly ordered fibres.
+- **Response 12.** For graph fibres (cycles and erasure allowed), naturality moves over a fixed base 2-pasting form an acyclic graph, because every wire component meets the boundary. Marked 4-factors are decidable, and the whole presentation is decidable in base dimension ≤ 4 with nonerasing transport.
+- **Response 13.** A 4-factor is decidable when the 3-context graph is deterministic, even with infinitely many middle cells, by a search ceiling max(n₀, n₁, H + 2J).
+- **Response 16.** For fibres that are free 2-categories with finitely many cells (decidable on the polygraph), strict lifts through rank 4 are finite, using ordered crossing records on base occurrences. Strict marked 5-factors are decidable.
+- **Response 17.** For graph fibres over any homotopical base of dimension ≤ 4, with cycles and erasure, **Question 1 is decidable**. It follows the distinguished faces of marked factors through one-sided tables in degrees 1–4.
+- **Response 18.** Homotopicality of every raw 3-skeleton follows from separate idle-face tests on the base and the fibres. This gives whole-presentation decisions in base dimension 4 with positive finite strict 2-fibres, and in base dimension 5 with finite acyclic graph fibres.
+- **Response 19.** For finite strict 2-fibres, strict lifts are finite over a homotopical base of **any finite dimension**, so the strict template test is decidable, and a negative answer is an obstruction. Fibres with higher generators are covered when linear weight inequalities hold. The weak realization of surviving candidates is left open above the dimensions of Responses 17–18.
+- **Response 20.** Simultaneous 3-face gluing along a base path is decidable for positive fibre 2-generators, with erasure. There is a bounded common source, and each connected constraint graph has a canonical terminal descendant.
+
+**Question 1, undecidable subproblems.**
+- **Response 14.** Finiteness of the set of parallel middle 2-cells at a prism's poles is r.e.-complete. In the same family only two cells are reachable, so a decision procedure must not enumerate all parallel cells.
+- **Response 15.** Whether a marked 3-cell with a given generating target uses a prescribed prism is r.e.-complete. Full-template recognition is not shown undecidable, because the actual templates need not impose such an incidence condition.
+
+**What was re-run.** All sixteen cited checkers exit 0, and every count matches the response:
+- `fibration_sorting_prism.py 1 2 3 4 5 6`: one cycle AHKⁿM, peak k-count n.
+- `fibration_pentagon_counterexample.py`: E_early has no outgoing edge.
+- `fibration_four_factors.py`: 114 cells, 48 descents, 4 middle cells; 7 of 16 subsets.
+- `fibration_universal_base.py`: 18 writings, 8 classes, 7 marked edges; the balanced successor is a sink.
+- `fibration_ordinal_pentagon.py`: gap 0 has both routes; gap 1 has the long route only.
+- `fibration_nullary_wires.py 1 2 3 4`: 4, 10, 20, 35 cells and longest paths 3, 6, 9, 12 in both modes.
+- `fibration_cyclic_four.py`: 256 endpoint queries.
+- `fibration_erased_machine.py`: 4, 5, 6 parallel cells with 2 reachable; nonhalting machines checked through 24 steps.
+- `fibration_crossing_extension.py`: abc → adc has a source; abc → dac has none.
+- `fibration_crossing_histories.py`: 8 writings, 6 cells, 6 edges; the histories ia → ib and jb → ja.
+- `fibration_erasing_graph_pentagon.py`: e = 0 has both routes; e = 1 has the long route only.
+- `fibration_idle_faces.py`: 106 faces with no idle exterior word.
+- `fibration_strict_ranks.py`: 129, 1,133 and 3,013 descents.
+- `fibration_common_source.py`: 73 writings, 16 cells, 20 moves, 256 pairs.
+
+**Checked by hand.**
+- **Response 10, the reachable case.** Component lengths of b are constant on fibre components. The two opposite 3-cells give a bubble on an empty path, or an untouched input position on both sides of a naturality equation. Either way b_y is empty, which forces μ, and then m, to act by identity.
+- **Response 10, the unreachable case.** A nonempty rewrite from the empty word must use f, and it closes a matched bracket pair whose interior computes w →* v. So the fibre is bubble-free. On the short side no new label can occur first, by additivity of counts.
+- **Response 12.** The region vectors propagate to zero along a horizontal slice, so every z_v = 0.
+- **Response 14.** The bijection between cells t ⇒ tv and pairs (w, A : w ⇒ v) holds because crossings exchange to the front.
+- **Response 15.** The two counts #z + #L + #y and #z + #R + #y force exactly one z insertion.
+- **Response 20.** Prefixes of a positive concrete fibre diagram are order ideals, which gives the trimming bound (2).
+
+**Caveats.**
+- The weak assembly in Responses 11, 16, 17 and 18 rests on the component lemma of Response 9. That lemma gives only path-connectedness. The responses use it only where shared faces have dimension at most r − 1, and this was checked.
+- The undecidability in Response 10 is for the universal question over all weights. For a single weight (Question 1) the general case is still open: fibres with 3-generators that fail the weight inequalities, and weak realization above base dimension 5.
+
+The open parts are carried into the revised `outbox/fibration-presentations-characterization-r5.md` (items 22–26 and narrowed questions).

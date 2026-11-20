@@ -1293,7 +1293,7 @@ Everything in this list is now **derived**. None of it is a primitive any more.
 - **Open items:**
   - (D7c, closed 2026-11-20) Lemma GB-ext checked at argument level by an independent reviewer, with (iii) restated over P and conservativity stated as "no biclosed rule enters a pure derivation";
   - (D7e, closed 2026-11-20) closure of admissible goals under substitution, `Subst`, `Instances` and `SortDisc` above, independently reviewed (PR #329);
-  - (D7g) no reverse cells for directed instances: semantic, blocked on a model of the kernel (see `open-issues.md`);
+  - (D7g) no reverse cells for directed instances: proved for the generic contexts in the strict Gray model 𝔖, at argument level (`free-objects-proofs.md` §5.4–§5.5). The earlier wording "unless σ(b) is invertible" is false for instances; the corrected criterion is there. Formal side open (FOBJ);
   - implementing the new judgement in the type-checker, which belongs to the thread that implements lhom (E.4's note).
 
 ---

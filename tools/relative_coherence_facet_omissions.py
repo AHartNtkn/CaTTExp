@@ -1,5 +1,5 @@
 """Test the cube degree formula and the seven-state nerve certificate."""
-from collections import Counter
+from collections import Counter, defaultdict
 from itertools import combinations, product
 
 from relative_coherence_simplex_carrier import flags, orientation
@@ -93,6 +93,36 @@ def seven_state_certificate():
     assert {f for f, n in actual.items() if n % 2} == {star[:6] for star in stars}
     print(f'Seven states {selected}: {len(faces)} five-simplices, {len(cofaces)} six-simplices; '
           f'{len(chain)} columns have exactly the 64 boundary facets modulo two.')
+    # Orient the very same simplices. Codimension-one faces incident to
+    # exactly two columns propagate signs from the oriented exterior sphere.
+    exterior = {star[:6]: (-1)**(6-x.bit_count()) for x, star in enumerate(stars)}
+    incident = defaultdict(list)
+    for j, g in enumerate(chain):
+        for i in range(len(g)):
+            incident[g[:i]+g[i+1:]].append((j, (-1)**i))
+    adjacent = defaultdict(list)
+    signs = {}
+    for f, entries in incident.items():
+        if len(entries) == 1:
+            (j, sign), = entries
+            assert signs.setdefault(j, exterior[f]*sign) == exterior[f]*sign
+        if len(entries) == 2:
+            (j, a), (l, b) = entries
+            adjacent[j].append((l, -a*b))
+            adjacent[l].append((j, -a*b))
+    stack = list(signs)
+    while stack:
+        j = stack.pop()
+        for l, sign in adjacent[j]:
+            required = signs[j]*sign
+            if l not in signs:
+                stack.append(l)
+            assert signs.setdefault(l, required) == required
+    assert len(signs) == len(chain)
+    signed_boundary = {f: sum(signs[j]*a for j, a in entries) for f, entries in incident.items()}
+    assert {f: n for f, n in signed_boundary.items() if n} == exterior
+    print(f'Integral filling: {sum(a==1 for a in signs.values())} positive and '
+          f'{sum(a==-1 for a in signs.values())} negative six-simplices.')
 
 
 if __name__ == '__main__':

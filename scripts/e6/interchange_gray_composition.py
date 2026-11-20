@@ -83,7 +83,7 @@ def check_stationary(p, slot, mid, end):
             first, second = (contexts[i](chunk(x, i)) for i in order)
             assert compose(first, second, k) == stack_image(atom(pair(x, (1, 2))), 1, fixed, 0, end)
         if k == p:
-            break
+            return first, second
         a, b = order
         prefix = contexts[a](chunk((k, 0), a))
         suffix = contexts[b](chunk((k, 1), b))

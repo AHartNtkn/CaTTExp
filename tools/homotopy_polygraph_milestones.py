@@ -136,7 +136,46 @@ def compare(programs, initial, serial, many, binary, spatial=False):
     return size, small, betti
 
 
+def check_cycle_record(size):
+    """Build a polygon on one main guard, with reversing visits on its binary links."""
+    missing = [(row, col) for row in range(size) for col in range(size)
+               if (col - row) % size not in (0, 1)]
+    resources = range(1, len(missing) + 1)
+    initial = [[1] * (len(missing) + 1) for _ in range(2 * size)]
+    words = [[] for _ in initial]
+    for col in range(size):
+        initial[col][0] = 0
+        words[col].append(('P', 0))
+    for link, (row, col) in zip(resources, missing):
+        sink = size + row
+        initial[sink][link] = 0
+        # From one hold visit count two, return to zero, then make a second visit.
+        words[col].extend((op, link) for op in 'PVVPV')
+        words[sink].extend((op, link) for op in 'PVP')
+    for sink in range(size, 2 * size):
+        words[sink].append(('V', 0))
+
+    states = profiles(words, initial)
+    short_words, short_states = [], []
+    for word, axis in zip(words, states):
+        changes = [j for j, (_, r) in enumerate(word)
+                   if (axis[j][r] == 0) != (axis[j+1][r] == 0)]
+        short_words.append([word[j] for j in changes])
+        short_states.append([axis[0]] + [axis[j+1] for j in changes])
+    for programs, axes in ((words, states), (short_words, short_states)):
+        serial = [i for i, word in enumerate(programs) for _ in word]
+        relation = orders(programs, axes, serial, binary_pairs(axes, resources))
+        for col in range(size):
+            rows = {row for row in range(size)
+                    if (size + row, len(programs[size + row]) - 1) not in relation[col, 0]}
+            assert rows == {col, (col - 1) % size}
+    print(f'{size}-gon on the main resource: {sum(map(len, words))} instructions, '
+          f'{sum(map(len, short_words))} zero changes.')
+
+
 def check():
+    for size in (3, 4, 5, 6, 8):
+        check_cycle_record(size)
     # The binary mutex orders two transfers. Which label of the binary base
     # was selected changes which comparisons survive on erasing its instructions.
     wrapped = lambda r: [('P', 2), ('P', r), ('V', 1-r), ('V', 2)]

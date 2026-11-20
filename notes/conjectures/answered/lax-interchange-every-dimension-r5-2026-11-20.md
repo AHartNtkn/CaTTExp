@@ -4691,4 +4691,4 @@ Status: **verified; Q1(A), Q2 and Q3 answered.** Thirty-four responses, plus Res
 - A closed description of normal forms for the completed theory above degree four. r4 Response 9 gives a decidable presentation and an expanded basis but no explicit list of normal forms.
 - Canonicity: whether some theory satisfying requirements 1–5 is initial among those with H ≠ 1, and how the theories answering Q1 can differ (the optional inner composite law already gives two).
 - Whether T + (C) with absorbed interchangers set to 1 is itself a 3′ theory (the Q2 closure for T's specific data).
-- Follow-up: [`outbox/lax-interchange-every-dimension-r6.md`](../outbox/lax-interchange-every-dimension-r6.md).
+- Follow-up: [`answered/lax-interchange-every-dimension-r6-2026-11-20.md`](lax-interchange-every-dimension-r6-2026-11-20.md) (answered 2026-11-20).

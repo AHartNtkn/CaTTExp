@@ -47,11 +47,16 @@ class Stage:
             yield word
 
     def backwards(self, vertex, source, target, objects, budget, object_site=None):
+        return (path for word, path in self.ending_at(vertex, target, objects, budget, object_site)
+                if word == source)
+
+    def ending_at(self, vertex, target, objects, budget, object_site=None):
+        """Yield (initial word, writing) for every allowed source at a specified target."""
         stack = [(target, budget, ())]
         while stack:
             word, remaining, path = stack.pop()
-            if word == source and remaining == 0:
-                yield path
+            if remaining == 0:
+                yield word, path
             for name, rule in self.rules.items():
                 cost = int(name in objects)
                 if cost > remaining:

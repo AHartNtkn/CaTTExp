@@ -7,9 +7,11 @@ from pathlib import Path
 
 from catt import (arr, chain_tree, check_ctx, comp2, disc_tree, glue_tree, infer, maximal_vars,
                   src, sub_from, subst_tm, tgt, tree_ctx, v)
+from ct_suspension import susp_ctx, susp_tm
 from emit_agda import Emitter
-from relative_coherence_chart_paths import unitor
+from relative_coherence_chart_paths import two_triangles, unitor
 from relative_coherence_exchange_faces import head
+from relative_coherence_hidden_seam import identity
 
 
 def swap(word, cut):
@@ -153,6 +155,40 @@ def check_grafts(rank, emitter):
     emitter.check_type(f'graft-{rank}', ctx, proof, arr(infer(ctx, direct), direct, indirect))
 
 
+def check_ordered_subdivision(ctx, atoms, rank, emitter):
+    temporal = rank - 1
+    spatial = rank - 2
+    chain = tree_ctx(path_arity(rank, 2))
+    x, y = map(v, maximal_vars(chain))
+    seam = tgt(chain, x)
+    disk = tree_ctx(disc_tree(temporal))
+    pole = v(len(disk) - 1)
+    bridge = unitor(disk, pole)
+    reverse = head(disk, tgt(disk, bridge), pole)
+    label = sub_from(disk, chain, {pole[1]: seam})
+    out, back = (subst_tm(q, label) for q in (bridge, reverse))
+    base = comp2(chain, temporal, x, y)
+    expanded = comp2(chain, temporal, comp2(chain, temporal, x, out),
+                     comp2(chain, temporal, back, y))
+    loop = comp2(chain, rank, head(chain, base, expanded), head(chain, expanded, base))
+    null = head(chain, loop, identity(chain, base))
+
+    a, b = atoms
+    steps = [(comp2(ctx, spatial, a, src(ctx, b)), comp2(ctx, spatial, tgt(ctx, a), b)),
+             (comp2(ctx, spatial, src(ctx, a), b), comp2(ctx, spatial, a, tgt(ctx, b)))]
+    assert tgt(ctx, steps[0][0]) != tgt(ctx, steps[1][0])
+    for i, (first, last) in enumerate(steps):
+        assert tgt(ctx, first) == src(ctx, last)
+        assignment = sub_from(chain, ctx, {x[1]: first, y[1]: last})
+        raw, padded, path, filler = (subst_tm(t, assignment) for t in (base, expanded, loop, null))
+        assert raw != padded and src(ctx, path) == tgt(ctx, path) == raw
+        expected = arr(infer(ctx, path), path, identity(ctx, raw))
+        assert infer(ctx, filler) == expected
+        name = f'ordered-subdivision-{rank}-{i}'
+        emitter.check_typed(name, ctx, filler)
+        emitter.check_type(name, ctx, filler, expected)
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--agda', type=Path)
@@ -160,9 +196,12 @@ if __name__ == '__main__':
     print('graphs, legal orders, square forks, braid forks:',
           tuple(map(sum, zip(*(check_orders(n) for n in range(1, 6))))))
     emitter = Emitter()
+    ctx, atoms = two_triangles()
     for rank in (2, 3, 4):
         check_seams(rank, emitter)
         check_grafts(rank, emitter)
+        check_ordered_subdivision(ctx, atoms, rank, emitter)
+        ctx, atoms = susp_ctx(ctx), [susp_tm(a) for a in atoms]
     if args.agda:
         args.agda.write_text(emitter.module(args.agda.stem, 'Changes of seam and substitution of a temporal composite.'))
-    print('Three seam-change pentagons and three nested substitutions verified')
+    print('Three seam-change pentagons, three nested substitutions and six ordered-subdivision loops verified')

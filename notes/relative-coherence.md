@@ -829,7 +829,7 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - *Why it does not close.* (E) for a pair of dimensions (j − 1, j) at input rank n is exactly fold naturality of depth n − j + 1. Applied to Γ↑Y, (E) at the pair (x⁺, x↑) has the same dimensions as the original pair (x, v), at rank n + 1. So depth grows by one at each step. The expansion route recurs at higher rank, not lower. The pair (v⁺, v↑) lowers the depth, but (x⁺, x↑) does not.
 - A working route has to break the (x⁺, x↑) step. One way is to construct the depth-(k + 1) fold action on a free pair directly, by recursion on terms with explicit heads, using that x occurs only through v. Another is to avoid naturality in the folds altogether. Neither is done.
 
-**Status: sketch, not verified.**
+**Status: sketch, not verified.** (Update: §7.13 gives the explicit collapse, by a different matching than "descent by inversions", proves the combinatorial half of the localization lemma, and corrects the indexing in r10 item 65.)
 - The contractibility input is standard. Its search-free collapse and the level-k version of Response 4's steps 1–4 are not written out in detail.
 - No machine check yet.
 - New compared with Response 4: replacing the shift by localization at every identity level, which makes height a well-founded measure. That isolates the remaining obligation as fold naturality of all depths.
@@ -840,6 +840,85 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - *Lax-triangle route: checked.* Γ↑{x, v} collapses to Γ′ by the three free pairs, in the order stated. The pair (x⁺, x↑) has the dimensions (h − 1, h) of (x, v), now at rank n + 1, so the expansion lemma climbs in depth.
 - *One correction.* The folded value 1^{k+1}_{d′} need not have d′ intrinsic. The claim that the entry shift is never repeated needs C(h, k) to be stated for terms with any identity value in a height-h context, not only for an intrinsic h-cell. In that version, d′ simply has fewer events, possibly none, and Response 4's zero-event case puts every block in lower height. With that restatement no shift is needed at all.
 - *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/outbox/relative-coherence-all-dimensions-r10.md` (item 65, Question 1).
+
+### 7.13 Lemma L: the explicit collapse (proved) and the level-k resolution (sketch) (thread RCX, 2026-11-20)
+
+This takes up r10 item 65 / Question 1(a′). Notation as in §7.12: a call C(h, k) compares two parallel raw (h + k)-terms in a strong-Steiner context Γ of height h. Their strict value is automatically an identity 1^k_d (F(Γ) has no non-identity cells above h); by the §7.12 correction, d is any h-cell, possibly itself an identity. P is the event poset of d (its top h-atoms, possibly none), and L₀ a fixed linear extension, written e₁ < … < e_N.
+
+**Indexing correction to item 65.** With input rank n = h + k, the inputs are k-dimensional, so their comparison is filled by (k + 1)-faces of X(P), whose blocks have at most k + 2 = n − h + 2 events. The subdivision therefore needs k + 3 = n − h + 3 links. Item 65 had n − h + 1 events and n − h + 2 links. Check against Response 4: the first identity (k = 1) gives blocks of 3 events (the braid) and four links. The fold depth k + 1 = n − h + 1 in item 65 is right.
+
+#### (A) X(P) collapses to L₀ by an explicit matching (proved; machine-checked)
+
+X(P) is the subcomplex of the permutohedron on the events whose cells are the ordered partitions F = (B₁, …, B_r) into antichains with a < b in P ⇒ block(a) < block(b). It is closed under taking faces (splitting a block keeps both properties), so it is a regular CW complex. A facet of F splits one block B into an ordered pair (A, B ∖ A), both nonempty. Every such split is again in X(P) because B is an antichain.
+
+*The matching M.*
+- The **tail** of F is its longest suffix of the form ({e_j}, {e_{j+1}}, …, {e_N}). Removing it leaves F′, a cell of X(P|{e₁, …, e_m}) with m = j − 1.
+- If F′ is empty, F = L₀, and F is critical.
+- Otherwise let z = e_m. It is maximal in P|{e₁, …, e_m}, since L₀ is a linear extension.
+  - If z lies in a block B with |B| ≥ 2, match F down with (…, {z}, B ∖ z, …).
+  - If {z} is a singleton block of F′, it is not the last block of F′ (or the tail would be longer). Match F up with the cell that merges {z} with the next block C. This merge is a cell because z is maximal (so z ≮ c), and c in a later block means c ≮ z.
+- The two rules are inverse, and neither changes the tail: a merge never leaves {e_m} as the last block of F′, and a split of a block containing z leaves z before the rest of that block. So M is a well-defined matching of cells with codimension-one faces.
+
+*Acyclic.* Measure μ(F) = (tail length, number of events of F′ before the block of z), ordered lexicographically. In a V-path σ₀ ↗ τ₀ ↘ σ₁ ↗ τ₁ …, σ₁ is a facet of τ₀ = (…, {z} ∪ C, …) other than σ₀, and σ₁ must be matched up.
+- Splitting a block makes the tail weakly longer, never shorter. If it gets longer, μ increases.
+- If the tail is the same, z is the same. Splitting any block other than {z} ∪ C leaves z in a block of size ≥ 2, so σ₁ is matched down and the path stops.
+- Splitting {z} ∪ C into (A, A′) with z ∈ A, |A| ≥ 2 stops the path for the same reason. A = {z} gives σ₀ back.
+- The remaining case is z ∈ A′, A ⊆ C nonempty. Then |A| more events precede z, so μ strictly increases.
+
+Hence μ strictly increases along every V-path, and M is acyclic.
+
+*Critical cells.* F is critical only when F′ is empty, so L₀ is the only critical cell. By Forman's discrete Morse theory (*Morse theory for cell complexes*, 1998, §§3–4), an acyclic matching on a regular CW complex whose only critical cell is a vertex gives a **collapse X(P) ↘ L₀**. The elementary collapses are the matched pairs, taken in an order that the measure determines.
+
+*Machine check.* `tools/rc_collapse.py` checks, for every naturally labelled poset on at most 6 elements (5,231 posets, 1,097,159 cells):
+- the block bound;
+- that M is an involution between a cell and a facet or cofacet, inside X(P);
+- that μ strictly increases at every V-path step;
+- that the modified Hasse diagram is acyclic;
+- that L₀ is the only critical cell.
+
+It runs in about a minute. This supersedes the "not checked" line of the §7.12 independent check. It also replaces the citation to oriented matroids: contractibility now follows from the collapse.
+
+#### (B) The combinatorial half of lemma L: search-free fillings through (k + 1)-faces (proved)
+
+Let S be a cellular k-sphere in X(P), meaning a combinatorial k-sphere built from k-cells of X(P), for example the union of two resolved k-chains with a common boundary.
+
+Walk through the elementary collapses (σᵢ, τᵢ) of (A) in order. Each one is a cellular deformation retraction rᵢ : Xᵢ → Xᵢ₊₁ that pushes σᵢ across τᵢ onto ∂τᵢ ∖ σᵢ.
+- **dim σᵢ = k.** Each occurrence of σᵢ in S is replaced by ∂τᵢ ∖ σᵢ. The homotopy is the (k + 1)-cell τᵢ, with blocks of at most k + 2 events.
+- **dim σᵢ = k − 1.** σᵢ is a free face of τᵢ in Xᵢ, so the k-cell τᵢ occurs in the current sphere only in cancelling pairs (another k-cell would have to contain σᵢ). The push is a cancellation of a cell against its inverse.
+- **dim σᵢ < k − 1.** The push only reparametrizes.
+
+After the last collapse the sphere is constant at L₀. The composite homotopy is a null-homotopy of S. It uses only (k + 1)-cells of X(P) and cancellations, and it is determined by M with no search.
+
+For k = 1 this is Response 4's step 4: the measure μ replaces "sort toward L₀ by inversion count", and the (k + 1)-cells are squares (interchange) and hexagons (the braid). So:
+
+> **(L-comb).** Every cellular k-sphere of X(P) has an explicit null-homotopy through cells of dimension ≤ k + 1. Every block of those cells has at most k + 2 events. Each cell with r nontrivial blocks is a product of r permutohedra.
+
+#### (C) The algebraic half: level-k resolution (sketch, not verified)
+
+Lemma L also needs the CaTT side. Response 4's steps 1–3 must hold one level up, and the cells of (B) must be realized as raw comparisons. The plan, by induction on k, assuming every call of smaller input rank (Response 4's "smaller-rank lifting"):
+
+1. **Face terms.** For each cell F of X(P) with dim F = j ≤ k + 1, choose one raw (h + j)-term [F]. Its boundary is the chosen terms on ∂F, after the resolution comparisons.
+   - *Single block, j = k + 1.* F = (singletons, B, singletons) with |B| = k + 2. [F] fills the boundary of the permutohedron on B. That is a call C(h, k) whose varying events are the k + 2 events of B, whiskered by fixed factors. These are the **block calls**, the hypothesis of L. §7.12 step 2 (now with k + 3 links) and step 3 fold them to C(h − 1, k + 1).
+   - *Product cells.* With r ≥ 2 nontrivial blocks, [F] is the interchange of the lower face terms on the blocks. Compress each block to one formal slot (Response 4 step 3) and use globular lifting in the generic temporal string, as in "disjoint sorting moves commute by the interchange comparison". No search is needed.
+   - *Single block, j ≤ k.* This is a call of smaller input rank, already available by induction.
+2. **Resolution.** Every raw (h + k)-term t over 1^k_d is compared to a cellular k-chain of face terms, relative to the resolutions of its boundary. This uses structural recursion on t, as in Response 4 steps 1–3:
+   - At a head of arity A, act on the resolutions of the inputs.
+   - Serialize in A.
+   - Replace the generic comparison in A by a cellular k-chain of X(P_A), where P_A is the slot order of A. The chain is (L-comb) applied to P_A, so the collapse is also used at arity level.
+   - Compare the two by globular lifting in A, where π_A is a trivial fibration.
+
+   As at k = 1, after substitution each elementary factor carries at most one event. A generic j-cell on blocks of slots therefore evaluates to a j-cell on blocks of events of the same sizes.
+3. **Filling.** For the call C(h, k) on t and t′, resolve both to k-chains γ and γ′ with the same resolved boundary. Fill the sphere γ ∪ γ′ by (L-comb). Realize each (k + 1)-cell τᵢ by [τᵢ] whiskered by the unchanged factors, and each cancellation by Response 4's raw inverses and cancellations. Paste, then cancel the resolution connections.
+
+What is not checked in (C):
+- (i) The compatibility of [F] with its boundary faces, when a face is reached by two different routes. At k = 1 this is the "two ways around this change" argument of step 4. In general it is a call of input rank h + j + 1 ≤ h + k + 1 on the events of F. For j ≤ k − 1 it is covered by induction. For j = k it is again a block call or a product. This needs writing out.
+- (ii) That step 3's nesting argument (inner-then-outer against direct serialization) goes through unchanged when the moves are k-cells rather than swaps. Its only inputs are globular contraction in an elementary-labelled arity and (L-comb) on the slot order, so no new obstruction is visible. But it has not been written out.
+- (iii) No CaTT-level machine check. `tools/relative_coherence_four_links.py` covers k = 1 only.
+
+**Status.** Lemma L = (L-comb) + (C).
+- (L-comb) is **proved**, with an explicit, search-free collapse, machine-checked on all posets with at most 6 events.
+- (C) is a **sketch**. Its circularity is controlled: face terms of dimension ≤ k are calls of smaller input rank, and the (k + 1)-dimensional single-block terms are exactly the block calls that §7.12 folds to C(h − 1, k + 1).
+- With (C), the §7.12 recursion is well-founded in (input rank, height) given fold actions of every depth (r10 Question 1(a)). That question is still open.
 
 ## 8. Follow-ups and owners
 

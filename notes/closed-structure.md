@@ -1279,8 +1279,8 @@ Everything in this list is now **derived**. None of it is a primitive any more.
   - `Typing`: a checker `infer`/`wf`/`wfCtx`. Planar substitution and whiskering move the gap by the number of inputs to its left. The collar term `glue` has a stated typing rule: it stands for an L-core composite, and that composite is not derived from L's coh in Agda.
   - `Templates`: the five rows with their r, the generic contexts of (GB-cut) and (GB-dcut) for every n, the relation `Admissible`, and the decision procedure `admit?`.
     - `admit?-sound` and `admit?-complete` give Lemma GB-dec for the template relation. Renaming is handled by canonical numbering of the generic formulas.
-    - `no-reverse` proves that a directed goal and its reverse are never both admissible, so the judgement is not endpoint-symmetric (r3 item 29).
-    - `dir-needs-dir` proves that an admissible directed goal has a directed hypothesis.
+    - `no-reverse` proves that a directed goal and its reverse are never both admissible, so the template relation is not endpoint-symmetric (r3 item 29). This is proved for the template relation on generic contexts. It covers substitution instances only once closure under substitution is formalized.
+    - `dir-needs-dir` proves that an admissible directed goal has a directed hypothesis. It too is a statement about the template relation.
   - `Examples` (by evaluation):
     - For nine rows, the derived (lhom) and E.2 unit rows among them, every generated context and both goals are well typed, and both goals are admitted. That covers (GB-cut) at n ≤ 2 (and n = 3 for one row) and (GB-dcut) at k ≤ 2 at every gap.
     - Reversed directed goals are rejected. So are directed goals once b is made invertible.

@@ -357,9 +357,11 @@ These checks cover only the single-hom side conditions and the signed interchang
 **Caveats.**
 - The Q3 test is a recognition theorem, not an effective one. It quantifies over all subsets R ⊆ ∐ₙ (S_X)ₙ², with |S_X| ≤ κ. It gives no intrinsic or homotopical characterization of strict presentability, and no algorithm for finite computads.
 - The no-bound result for Q3 is weak. Infinitely many lifting problems trivially need infinitely many witnesses. The response itself notes that a bound for each individual lifting problem is a different statement, and it remains open.
-- **Citations not checked.**
-  - The first Gepner–Heine link points to arXiv 2606.29373 ("their strict cube construction, §2.6"). This is not the 2510.10504 paper cited elsewhere.
-  - The theorem numbers (Gepner–Heine Thms 4.1.10 and 4.2.7, Cor. 2.2.8; Loubaton Construction 2.3.1.17; Ozornova–Rovelli–Walde Rem. 2.2) were not checked against the papers. Nothing in the proofs depends on the second paper beyond the tensor convention, which matches Known (III).
+- **arXiv 2606.29373, checked 2026-11-20.** The first Gepner–Heine link is a different paper from the 2510.10504 cited elsewhere. It exists: Gepner–Heine, *An Oriented Street–Roberts Conjecture*, arXiv 2606.29373v1 (math.AT, 28 June 2026). Its content supports the claim, though the section number is off.
+  - **The differential.** §2.6 ("Steiner ∞-categories") defines the Steiner complex λ(𝒜) with ∂(X) = d⁺(X) − d⁻(X), which is target minus source as the response says. It does not contain a cube construction.
+  - **The cube and the tensor.** §2.8 defines the square □² = 𝔻¹ ⊠ 𝔻¹ with its 2-morphism running from the composite (0,0) → (0,1) → (1,1) to the composite (0,0) → (1,0) → (1,1). So the source moves the second factor first, which matches Known (III). Appendix A.1 gives the tensor of augmented directed complexes with the Koszul sign, ∂(X ⊗ Y) = ∂X ⊗ Y + (−1)^i X ⊗ ∂Y. §3.5 treats the Gray tensor and lax transformations.
+  - **Verdict.** The convention claimed is correct, and the right references are §2.8 and Appendix A.1 of 2606.29373.
+- **Citations not checked.** The theorem numbers Gepner–Heine (2510.10504) Thms 4.1.10 and 4.2.7 and Cor. 2.2.8, Loubaton Construction 2.3.1.17, and Ozornova–Rovelli–Walde Rem. 2.2 were not checked against the papers.
 
 **Editorial.** The file moved from `outbox/` to `answered/`; its relative links (`../answered/…`, `../../../src/…`, `../../../tools/…`) resolve unchanged. Links to it from `open-issues.md`, `README.md` and `models-comparison-extensions.md` were repointed.
 

@@ -227,6 +227,8 @@ There are two ways to generate these cells:
 - **Cotensors turn colimits of shapes into limits** (handed over from limits-representables.md §10.6). This is formal from the rule: a map into [Θ, C] is a map out of Δ ⊗ Θ, and ⊗ preserves colimits of contexts in each variable (G3 is the case of a wedge). So [colim Θᵢ, C] ≃ lim [Θᵢ, C], provided the limit exists.
 - **Role under P** (limits-representables.md §10.1). Cone-style limits cannot produce lax cotensors or hom objects Hom_C(a, b) under a pseudo ambient. Under P, these come from this rule. In particular, Hom_C(a, b) is the fibre of [D¹, C] → C × C over (a, b).
 
+**Status 2026-11-20: derived.** With the biclosed rules of `closed-structure.md` F.7.4, [Θ, C] is the right residual C/⟦Θ⟧. (lhom-Λ/♭) are the probe-pair row composed with the right-evaluation row. β is the n = 0 comparison ε, η is the n = 1 cut, and the naturality cells are n = 1 cuts (F.7.4 item 5). The rule above stays valid as a derived rule, so nothing in this section changes meaning.
+
 ### 5.2 Lax transformations between arbitrary functors
 
 For F, G : B → C (ambient 1-cells), define
@@ -389,6 +391,7 @@ Architecture A never forms B ⊗ C for non-representable B and C.
   - A rule asserting the bijection on all cells is unsound: counterexample at B = C = D¹.
   - Both factors arbitrary still needs [C, –]_lax for arbitrary C, either from object-indexed limits (F5) or from PL-ω.
 - **Update 2026-11-20:** the PL-ω route is now available (`conjectures/answered/gray-biclosed-coherence-r3-2026-11-20.md`, Response 2, verified), so [C, –]_lax = C\– is a type former for arbitrary C; see `closed-structure.md` E.3.
+- **Rules written 2026-11-20:** `closed-structure.md` F.7.4 gives the kernel rules. ⊗, \ and / are type formers. Pairing, the two evaluations, probe pairing and the point are corollas. Currying and its comparison are cut templates (GB-cut) at every ball dimension, and there is a directed-cut template (GB-dcut). Admissibility is decidable (Lemma GB-dec). B ⊗ C for arbitrary B and C is the formula B ⊗ C, and Fun^lax(C, D) is C\D.
 
 ---
 

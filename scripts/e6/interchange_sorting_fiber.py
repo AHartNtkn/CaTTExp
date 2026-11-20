@@ -65,16 +65,24 @@ def _prefixes(state):
 
 
 @cache
-def raw_histories(start):
-    """All complete sorting histories from start."""
+def raw_histories(start, end=None):
+    """All positive adjacent-crossing histories from start to end."""
     _check_slots(start)
-    length = sum(a > b for a, b in combinations(start, 2))
-    return tuple(p for p in _prefixes(start) if len(p) == length)
+    if end is None:
+        end = ''.join(sorted(start))
+    if sorted(start) != sorted(end):
+        raise ValueError('the sorting interval endpoints must have the same strands')
+    if start == end:
+        return ((),)
+    return tuple((b + a, *tail)
+                 for a, b in zip(start, start[1:])
+                 if a > b and end.index(a) > end.index(b)
+                 for tail in raw_histories(advance(start, b + a), end))
 
 
 def _check_slots(start):
-    if not 1 <= len(start) <= 5 or len(set(start)) != len(start):
-        raise ValueError('a sorting fiber has one to five distinct factor names')
+    if not 1 <= len(start) <= 6 or len(set(start)) != len(start):
+        raise ValueError('a sorting fiber has one to six distinct factor names')
 
 
 @cache

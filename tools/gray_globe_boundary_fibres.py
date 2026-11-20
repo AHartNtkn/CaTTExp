@@ -230,6 +230,37 @@ def check_blocks(domain, emitter):
     print('Contiguity conflicts by number of rivals and forks:', dict(sorted(conflicts.items())))
 
 
+def sort_face_patches(w, face_word=None):
+    """The two-step patches along the prescribed sorting of the faces of one singleton."""
+    d = len(w)-1
+    p = rank(w[-1][0][0])
+    predecessors = {q for q in ((p[0]-1, p[1]), (p[0], p[1]-1)) if min(q) >= 0}
+    cut = d-2
+    owner = {q: -1 if q in predecessors or q == p else q[0]
+             for q in profile(w) if sum(q) > cut}
+    pieces = ordered_factors(w, cut, owner)
+    core, = [c for c in pieces if len(c) == d+1]
+    assert set(map(rank, core[-2][0])) == predecessors
+    for side in (0, 1):
+        z = face(w, side)
+        parts = [part for c in pieces for part in ordered_factors(
+            truncate(c, d-1, side), cut, {rank(g): rank(g)[0] for g in c[d-1][side]})]
+        wanted = (face_word(z) if face_word else
+                  ordered_factors(z, cut, {rank(g): rank(g)[0] for g in z[-1][0]}))
+        priority = {c[-1][0][0]: i for i, c in enumerate(wanted)}
+        for j in range(len(parts)):
+            for i in range(len(parts)-1-j):
+                a, b = parts[i:i+2]
+                ga, gb = a[-1][0][0], b[-1][0][0]
+                if priority[ga] < priority[gb]:
+                    continue
+                assert abs(rank(ga)[0]-rank(gb)[0]) >= 2
+                patch = compose(a, b, cut)
+                yield minimal_shape(patch)
+                parts[i:i+2] = ordered_factors(patch, cut, {rank(ga): 1, rank(gb): 0})
+        assert tuple(parts) == wanted
+
+
 def check_local_words(domain, bound):
     """Sort the two actual faces of every elementary move, recording the exact exchange patches."""
     binary = defaultdict(set)
@@ -247,31 +278,10 @@ def check_local_words(domain, bound):
         predecessors = {site for site in ((p[0]-1, p[1]), (p[0], p[1]-1)) if min(site) >= 0}
         if set(map(rank, w[-2][0])) == predecessors:
             short[p].add(minimal_shape(w))
-        cut = d-2
-        owner = {q: -1 if q in predecessors or q == p else q[0]
-                 for q in profile(w) if sum(q) > cut}
-        pieces = ordered_factors(w, cut, owner)
-        core, = [c for c in pieces if len(c) == d+1]
-        assert set(map(rank, core[-2][0])) == predecessors
-        for side in (0, 1):
-            z = face(w, side)
-            parts = [part for c in pieces for part in ordered_factors(
-                truncate(c, d-1, side), cut, {rank(g): rank(g)[0] for g in c[d-1][side]})]
-            wanted = ordered_factors(z, cut, {rank(g): rank(g)[0] for g in z[-1][0]})
-            priority = {c[-1][0][0]: i for i, c in enumerate(wanted)}
-            for j in range(len(parts)):
-                for i in range(len(parts)-1-j):
-                    a, b = parts[i:i+2]
-                    ga, gb = a[-1][0][0], b[-1][0][0]
-                    if priority[ga] < priority[gb]:
-                        continue
-                    assert abs(rank(ga)[0]-rank(gb)[0]) >= 2
-                    patch = compose(a, b, cut)
-                    used.add(minimal_shape(patch))
-                    if p == (3, 3):
-                        central_patches.add(minimal_shape(patch))
-                    parts[i:i+2] = ordered_factors(patch, cut, {rank(ga): 1, rank(gb): 0})
-            assert tuple(parts) == wanted
+        patches = set(sort_face_patches(w))
+        used.update(patches)
+        if p == (3, 3):
+            central_patches.update(patches)
     assert used <= set().union(*binary.values())
     def schroeder(h):
         return small_schroeder(h) if h >= 1 else 1

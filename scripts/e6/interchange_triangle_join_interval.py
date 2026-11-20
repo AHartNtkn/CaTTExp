@@ -197,12 +197,15 @@ def ground(loose=False):
 
 
 def ground_interval(classes, at, loose=False):
-    """Ground zero-Gray rules on a pure interval with at most five slots.
+    """Ground zero-Gray rules other than a proper shifted join on a pure interval.
 
     classes maps raw histories to K15 classes. at contains every permitted
     positive occurrence out of each history. Any restrictions supplied by a
     caller must be necessary on all routes and equation representatives under
     study, including intermediate routes when pasting a composite variation.
+    Through five slots a proper shifted join is impossible. At six slots a
+    caller must exclude two independent triangle-bearing operands or account
+    separately for their shifted joins.
     """
     keys = {e: (classes[e.source], classes[e.target], signature(e))
             for group in at.values() for e in group}

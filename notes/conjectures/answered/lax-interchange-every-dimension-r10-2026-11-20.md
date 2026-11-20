@@ -961,3 +961,35 @@ Soundness follows from the checked defining instances. For completeness take any
 Finally bound the preparation in terms of the original shared input. At fixed \(d\), write a shared node for each required face, proper head, structural action and chronological join, specializing units at their effective ranks. The operation and Godement templates have bounded size at this degree. Producing faces of newly exposed heads and their operand fields continues in strictly lower ranks. Sharing previous nodes gives polynomially many nodes, with an exponent depending on \(d\), as in Response 11. This construction uses only the globular and structural templates, so it applies on arbitrary diagrams. Unfolding the bounded-arity DAG once costs at most \(2^{\mathrm{poly}_d(s+g)}\); putting the actions into contextual order costs a fixed-rank polynomial in that explicit size by the cut argument above. This bounds \(H\), prior to comparisons identifying equal head names. For \(B\), each single proper 4-letter has polynomial weight in \(g\). For the cochain correction, its hom top chain has polynomial multiplicity: input atoms are singletons, the mixed \(r,t,h\) terms count products of a bounded 3-history length and a 2-word length, and inner terms have zero top chain. The cochain has at most one contribution per possible raised slot, each bounded by twice the height bound. Above four the proper charges are the fixed seed and bridge charges, the moving grade times the length of a stationary word for an outer unary, and the analogous degree-five left auxiliary charge. Each stationary length is at most \(g\). Summing over an explicit word and descending the fixed number of ranks keeps every required grade polynomial in \(H+g\). The table comparisons themselves proceed in lower rank with this same preparation. This gives the stated exponential-space bound. The degree-dependent polynomials are effective by the recursive signature and constructions, giving the single algorithm and a computable \(f\). [Seed and bridge charges](lax-interchange-every-dimension-r5-2026-11-20.md#raising-a-globe-in-arbitrary-bidegree) · [Shared face preparation](#polynomial-certificates-of-inequality-in-every-fixed-degree-on-variable-width-two-row-grids)
 
 **Validation.** Run the [row and name checker](../../../scripts/e6/check_interchange_row_bounds.py). It checks 432 moving and stationary subdivisions in both orientations on stacks of named moving globes crossed with a nontrivial stationary string, in global output degrees 7 through 12. The independent signed tableaux recover both endpoints and the intervening row, the sum of the two top charges, and the face-closed set of named moving globes. Each moving split exposes an interior face label absent as a summand of the whole tableau. The general cutoff and space bounds follow from the structural induction. Even at fixed degree the resulting state codes can be exponentially long on shared inputs. Whether deterministic polynomial time suffices for equality on the full shared signature remains open.
+
+# Verification addendum (2026-11-20, Responses 4–13)
+
+**Checker re-runs.** All eleven scripts cited by these responses pass, each in under 10 s:
+- `check_interchange_grid_contractions`, which includes 2×5 through 2×7 grids;
+- `check_interchange_grid_five`, with 2^18 rigid squares;
+- `check_interchange_grid_occurrence`, at an index near 2^70;
+- `check_interchange_grid_windows`;
+- `check_interchange_row_bounds`, with 432 stack tests;
+- `check_interchange_shared_whiskers`;
+- `check_interchange_slot_refinement`;
+- `check_interchange_strand_tests`, with five strands against all binary subdivisions on the 3×3, 3×5 and 4×4 grids;
+- `check_interchange_unary_runs`;
+- `interchange_shared_reachability`, with 476 subset-sum reductions and a 544-node grammar;
+- `interchange_sorting_fiber`.
+
+**Claims, checked at the argument level.**
+- *Response 4.* Shared directed reachability is coNP-complete on the fixed grid Γ_{2,4} in every setting, while equality there is polynomial. Membership uses the prefix-count criterion for the single forward move LE → EL. Hardness reduces from subset sum through compressed markers (Bertoni–Choffrut–Radicioni). I checked the grammar sizes and the midpoint comparison.
+- *Responses 5–7 and 9.* Equality is polynomial on rigid paths with immediate whiskering and free lower pads. It is polynomial through degree 4 on every two-row grid Γ_{2,n} with full shared constructors. In degree 5 on Γ_{2,n} it takes 2^{O(n³)}·poly(s + n) time, which is polynomial at fixed width.
+- *Response 8.* Degree-3 equality reduces to comparing sorting histories under (K15), so it is in PSPACE. Through degree 4 it is in EXPSPACE.
+- *Response 10.* Strand restrictions: five strands detect comparison with a single block crossing and five is sharp, six do not suffice in general, and from degree d ≥ 4 all 2^{d−1} spans can be needed.
+- *Response 11.* Inequivalence has polynomial certificates on variable-width two-row grids at every fixed degree, so the problem is in coNP there.
+- *Response 12.* There are normal forms for cylinders on one stationary slot, which removes the unary-run oracle of Response 2 on those paths.
+- *Response 13.* In every fixed degree on arbitrary diagrams, equality is in EXPSPACE. The proof uses face-closed rigid name sets, which are invariant under the congruence, and conserved grades that bound the length of every intermediate vertex. The proof itself notes that one search vertex has bounded size but the search graph is not polynomial.
+
+**Verdict.** Verified, at the argument level for the complexity bounds and by every cited checker. The picture of the cost question:
+- reachability on shared inputs is coNP-hard;
+- equality is polynomial on fixed two-row grids through degree 5, in coNP on variable-width two-row grids, and in EXPSPACE in each fixed degree in general;
+- deterministic polynomial time for shared equality in general is still open.
+
+As recorded in the main verification, this is a cost question for the implementation (E12). No rule or kernel choice depends on it, so no follow-up is written.
+

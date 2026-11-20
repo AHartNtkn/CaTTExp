@@ -409,7 +409,7 @@ No gap was found.
   - Campion, arXiv 2311.00205 is *The Gray tensor product of (∞,n)-categories*. It is a construction of the tensor, not a paper about Gray cubes specifically. The strip argument does not depend on it.
   - Ozornova–Rovelli–Walde, arXiv 2603.11005 (*Cores and localizations of (∞,∞)-categories*): Remark 5.37 and Corollary 5.39 could not be read (the fetched text stops in §3). The introduction says the walking coinductive equivalence is nontrivial in the right limit and becomes trivial after localization, and defers the proof to a companion paper. The response uses only that Q E ≃ *, which holds because a coinductive equivalence becomes an equivalence in coinductively complete objects. The numbering is unconfirmed.
 
-**Follow-up:** [`outbox/catt-models-unit-condition-r7.md`](../outbox/catt-models-unit-condition-r7.md).
+**Follow-up:** [`retired/catt-models-unit-condition-r7.md` (retired unsent)](../retired/catt-models-unit-condition-r7.md).
 
 # Researcher Response 2
 
@@ -461,4 +461,4 @@ Status: **verified.** No gap was found.
 
 **What was re-run.** `tools/homotopy_polygraph_unary_chart.py` exits 0 ("Checked 17 declarations and a full-support 4-cell"), and its emitted Agda module type-checks under `agda --safe --no-libraries -i src`.
 
-**Left open.** The unrestricted degree, which is now exactly the open degree of H (homotopy polygraphs r8 Question 1), and whether a non-finitary compatible simplicial tensor exists. Both are carried into `outbox/catt-models-unit-condition-r7.md`.
+**Left open.** The unrestricted degree, which is now exactly the open degree of H (homotopy polygraphs r8 Question 1), and whether a non-finitary compatible simplicial tensor exists. Both are carried into `retired/catt-models-unit-condition-r7.md` (retired unsent).

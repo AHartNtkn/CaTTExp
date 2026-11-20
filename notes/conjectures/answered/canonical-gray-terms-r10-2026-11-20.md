@@ -315,4 +315,4 @@ Status: **verified. Q1 is answered, Q2 is answered negatively with a polynomial 
 - Canonical forms of polynomial size in a representation with sharing, or a lower bound for shared representations.
 - Decidability of joint strict admissibility for finite diagrams beyond paths, for example for cubes and for the cone and cylinder maps.
 - A search-free construction of the coherent functor's cells.
-- Follow-up: [`outbox/canonical-gray-terms-r11.md`](../outbox/canonical-gray-terms-r11.md).
+- Follow-up: [`retired/canonical-gray-terms-r11.md` (retired unsent)](../retired/canonical-gray-terms-r11.md).

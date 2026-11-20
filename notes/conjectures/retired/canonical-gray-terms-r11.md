@@ -1,5 +1,7 @@
 # Canonical CaTT terms for Gray tensors: elementary comparisons, shared canonical forms and decidable strict classes
 
+> **Retired unsent 2026-11-20.** Q1 (elementary comparison bounds) and Q2 (shared canonical forms with a polynomial recognizer, for E9′) are folded into `outbox/relative-coherence-all-dimensions-r10.md` Q1; Q3 (jointly strict classes) is not used, since coherent functoriality up to comparison (r10) suffices.
+
 *A self-contained problem. It assumes familiarity with the type theory CaTT, strict ω-categories and Steiner's directed complexes, and nothing else. Everything under "What is known" is proved and is not re-asked.*
 
 **What we are asking for.** Several results are now proved:

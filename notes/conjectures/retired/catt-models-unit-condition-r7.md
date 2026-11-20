@@ -1,5 +1,7 @@
 # CaTT and its directed variant L as presentations of (∞,ω)-categories: strict presentability, explicit units and the two model structures
 
+> **Retired unsent 2026-11-20.** The semantics needed by the design is settled (both comparisons, model structures, strict-presentation test); the remaining questions change no rule or construction.
+
 *A self-contained problem. No knowledge of the project that posed it is assumed. Everything under the "Known" headings is proved and is not re-asked.*
 
 **What we are asking for.** Both comparisons are proved (Known (X)) and related to each other and to the literature (Known (XI)). Strict presentability of finite ordinary computads is now exactly homotopicality, simply connected ordinary n-types are settled, both model categories are proper and Quillen equivalent to the localized complicial and comical models, and no Gray tensor of the expected kind is monoidal (Known (XII)). We ask for the whole remaining line: a homotopy-invariant description of strictly presentable objects beyond the simply connected groupoidal case, in particular for oriented objects; the exact computability degree for unrestricted finite computads in both theories; bounds on witnesses of the unit up to invertible comparison; and the remaining structure of the two model categories. Special computads or low dimensions are not what we want.

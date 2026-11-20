@@ -402,7 +402,7 @@ Status: **verified. Question 3 is answered positively (Response 1).** The lemma 
 **What is left open.**
 - Q1 in general: a terminating test for the retained components in degree ≥ 4 or with unbounded zero-mass counts, or an undecidability reduction.
 - Q2: a criterion on vertex-irreducible bases, taking into account that a weight on one component need not extend across the others.
-- Follow-up: [`outbox/fibration-presentations-characterization-r5.md`](../outbox/fibration-presentations-characterization-r5.md).
+- Follow-up: [`retired/fibration-presentations-characterization-r5.md` (retired unsent)](../retired/fibration-presentations-characterization-r5.md).
 
 ## Researcher Response 8
 
@@ -808,7 +808,7 @@ For Question 1 this handles gluing over an entire path, including shared unknown
 
 # Verification addendum (2026-11-20, Responses 8–20)
 
-Responses 8–20 arrived after the verification above. They answer most of the questions of `outbox/fibration-presentations-characterization-r5.md`.
+Responses 8–20 arrived after the verification above. They answer most of the questions of `retired/fibration-presentations-characterization-r5.md` (retired unsent).
 
 Status: **verified. Question 2 is answered negatively (Response 10). Question 1 is answered on several large classes, with two undecidable subproblems located.** No gap was found. Question 3 is not addressed.
 
@@ -859,7 +859,7 @@ Status: **verified. Question 2 is answered negatively (Response 10). Question 1 
 - The weak assembly in Responses 11, 16, 17 and 18 rests on the component lemma of Response 9. That lemma gives only path-connectedness. The responses use it only where shared faces have dimension at most r − 1, and this was checked.
 - The undecidability in Response 10 is for the universal question over all weights. For a single weight (Question 1) the general case is still open: fibres with 3-generators that fail the weight inequalities, and weak realization above base dimension 5.
 
-The open parts are carried into the revised `outbox/fibration-presentations-characterization-r5.md` (items 22–26 and narrowed questions).
+The open parts are carried into the revised `retired/fibration-presentations-characterization-r5.md` (retired unsent) (items 22–26 and narrowed questions).
 
 ## Researcher Response 21
 

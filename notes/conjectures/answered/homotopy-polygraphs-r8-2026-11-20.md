@@ -183,6 +183,6 @@ Status: **verified.** No gap was found. The response answers part of Question 2.
 
 **Checked by hand.** Splitting equal actor occurrences only removes within-axis comparisons, so it preserves feasibility. A product face is feasible iff all its corners are, so components are computed by single-slot moves. The response notes that truncation need not preserve the homotopy type of the original fibre, only the nerve homology, and that this is enough for the certificate.
 
-**Left open.** The unparameterized complexity (between coNP and EXPTIME), the unrestricted degree, and the rest of Questions 1–3. These are carried into `outbox/homotopy-polygraphs-r9.md`.
+**Left open.** The unparameterized complexity (between coNP and EXPTIME), the unrestricted degree, and the rest of Questions 1–3. These are carried into `retired/homotopy-polygraphs-r9.md` (retired unsent).
 
-**Follow-up:** [`outbox/homotopy-polygraphs-r9.md`](../outbox/homotopy-polygraphs-r9.md).
+**Follow-up:** [`retired/homotopy-polygraphs-r9.md` (retired unsent)](../retired/homotopy-polygraphs-r9.md).

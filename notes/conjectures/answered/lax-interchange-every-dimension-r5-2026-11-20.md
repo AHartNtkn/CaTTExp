@@ -4527,3 +4527,42 @@ the prefix to a temporal swap with a late triangle temporally before a
 positive early inner pair on \(G\). Incidence on a shared strand is
 unavailable there. Rectangles with two active inner witnesses and mixed
 inactive inputs also remain for Q1.
+
+# Verification (2026-11-20)
+
+Status: **verified, partial; Q2 and Q3 answered.** Twenty-nine responses. There is now an all-dimensional theory with H ≠ 1 and exact Gray and strict quotients in every degree on every finite pasting diagram. Requirement 3 (no reverse) is proved in every output degree ≥ 6, and in degree five for most classes of rectangles. The universal degree-five question is reduced to one fixed diagram. What remains for Q1(A) is degree-five directedness for rectangles whose active inputs are structural with zero Gray 4-chain, and a description of the free objects (requirements 1–2) for the completed theory in every degree.
+
+**What was re-run.** All 48 runnable scripts in `scripts/e6/` that the responses cite were re-run (three more cited modules are libraries that these import) from the repository root and pass (exit 0), plus `tools/tensor_atom_tableau.py` (0 mismatches). The two GLPK scripts (`interchange_five_cut_ranks.py`, `interchange_late_naturality.py`) need `glpsol` on PATH. After installing GLPK 5.0 they verify all 10,976 cut-labelled deltas on 86 active five-strand cuts and 16,327 grounded rules at 20 cuts. Representative outputs:
+- `interchange_loop_weights.py`: H has boundary weight (4, 4) on both sides; its powers 0 to 100 have top weights 0 to 100.
+- `marked_inner_crossing.py`: the direct and expanded squares both run BBA → ABB with distinct tags (the Q3 separation).
+- `check_response12_degree_five.py --all-disks`: forward and reverse certificates on all five generic disks; five directed schema boundaries and their unit specializations.
+- `interchange_slot_restriction.py`: all 518,400 schedule pairs on six groups, 31,711 reachable.
+- `interchange_two_moving_cuts.py`: 191,280 raw 4-paths, 221,217 contextual δ applications.
+- `interchange_eight_strands.py`: the fixed eight-strand interval has 40,320 permutation states.
+- `interchange_free.py` on the response's sample query (a single generating 5-globe) answers "reachable (1 derivation steps)".
+
+**Q2 (requirement 3′): answered yes, by construction.** Response 1 builds term theories, with joint evaluation in the coordinates G_j (j levels of cartesian enrichment outside one Gray enrichment), that satisfy 1, 2 (in an expanded basis), 3′, 4 and 5 in every dimension. Exact Gray and strict quotients come from the disk-pair strictness argument.
+- It also gives the least closure forced by 3′ for any fixed finitary upper data: the derivation rule (an elementary e : u → v with a reverse d : v → u forces u = v and e = 1). Saturation never identifies cells with different Gray images, so exactness of the quotients survives.
+- Caveat, stated by the response: these theories make the bare inner crossing of two disjoint outer crossings an identity, so H = 1 there. They do not show that T + (C) + (R∞) with absorbed interchangers set to 1 is *exactly* this closure; they show 3′ is consistent and give the closure relative to chosen upper data.
+
+**Q3 (inner composite-crossing law): answered, the law is optional.** The tagged algebra M (2-cells tagged by subsets of {(1,1), (1,2)}) separates the direct ι(A, B; C), tag {(1,2)}, from the expanded composite, tag {(1,1)}, while satisfying every other law. So the law is not forced. The first construction, without M, satisfies it, so it is consistent. Re-run of `marked_inner_crossing.py` confirms the two cells have the same Gray boundary and distinct tags.
+
+**Q1(A): an all-dimensional theory with H ≠ 1, with directedness open only in part of degree five.**
+- Responses 3–4: the support-free presentation P through degree four has the factorization of (K32), strong elementary directedness, exact quotients and H^k ≠ H^ℓ for k ≠ ℓ. Its expanded basis is decidable: a positive integer weight on all nonunit contextual 4-edges bounds path length. Response 2: on Γ_{2,2r} the r copies of H generate a free monoid, and the two sides of the (K33) rectangle are distinct with no reverse.
+- Response 7: in degree five the inner quotient of P maps onto Gray but is not injective (a cell on a strip of length m has ≥ 2^{m−1} lifts). Responses 8–10 and 12 complete it. Response 12 gives a theory whose inner quotient is exactly Gray, and strict quotient exactly strict, on every finite pasting diagram in every degree. In it every proper elementary rectangle of output degree ≥ 6 has no reverse (Response 8), and on the two-row grids Γ_{2,s} strong directedness holds in all degrees.
+- Degree five (Responses 5, 6, 11, 13–29): no reverse when
+  - an active input contains a generating 4-update (22);
+  - both active inputs have positive Gray 4-chain (25–26);
+  - the early active input has positive Gray 4-chain, or the total late Gray chain is zero (27);
+  - the active inputs share an outer pair through unary mixed atoms (23);
+  - the witnesses have joint retaining cost ≤ 5 (28);
+  - an early inner witness and a late triangle share a strand (29);
+  - in the two-moving-slot families with any number of stationary partners (14, 16, 18, 19, 21).
+- Response 24 shows that universal degree-five directedness for this theory is equivalent to directedness on one interval: eight Σ[1] factors, from 87654321 to 12345678, with uniform bounds of 56 mixed 4-steps and 280 opposite-colour inner pairs on any return.
+- I checked the reductions at the level of their invariants (inversion counts on a common slot, temporal colour of Gray atoms, integer scores with exact arithmetic) and re-ran every certificate. I did not re-derive each case analysis line by line.
+
+**What is left open.**
+- Degree-five directedness when every active witness is structural with zero Gray 4-chain (inner exchanges), in particular two active inner witnesses with mixed inactive inputs, and a disjoint early inner pair against a late triangle (end of Response 29).
+- A uniform description of the free objects (requirement 1) and of the expanded basis (requirement 2) for the completed theory of Response 12 in every degree. Response 4 gives this for P through degree four.
+- Whether T + (C) with absorbed interchangers set to 1 is itself a 3′ theory (the Q2 closure for T's specific data).
+- Follow-up: [`outbox/lax-interchange-every-dimension-r6.md`](../outbox/lax-interchange-every-dimension-r6.md).

@@ -432,7 +432,7 @@ Status: **verified**. This is a negative answer to Q1(A) and to Q3, and a strong
 
 **Script.** `python3 scripts/e6/absorbed_interchanger.py` was re-run (0.1 s): both 3 × 3 squares type-check and reduce to the same contextual probe, all four 3 × 2 corners are extreme, and each projected interval has exactly two paths.
 
-**What is left open.** Every obstruction found so far has one shape: an **absorbed elementary interchanger**, meaning one whose source and target coincide because a whiskered input became an identity. Two questions remain. (a) Can a theory that omits T's raw support equations keep H ≠ 1, with no (C) and an infinite degree-4 basis, and satisfy requirements 1, 3, 4 and 5 in every dimension? (b) Is the natural weakening, requirement 3′ ("an elementary interchanger is the identity when its source and target coincide, and has no reverse otherwise"), consistent with T + (C) + the forced 3-equations in every dimension? Follow-up: [`outbox/lax-interchange-every-dimension-r5.md`](../outbox/lax-interchange-every-dimension-r5.md).
+**What is left open.** Every obstruction found so far has one shape: an **absorbed elementary interchanger**, meaning one whose source and target coincide because a whiskered input became an identity. Two questions remain. (a) Can a theory that omits T's raw support equations keep H ≠ 1, with no (C) and an infinite degree-4 basis, and satisfy requirements 1, 3, 4 and 5 in every dimension? (b) Is the natural weakening, requirement 3′ ("an elementary interchanger is the identity when its source and target coincide, and has no reverse otherwise"), consistent with T + (C) + the forced 3-equations in every dimension? Follow-up: [`answered/lax-interchange-every-dimension-r5-2026-11-20.md`](lax-interchange-every-dimension-r5-2026-11-20.md).
 
 # Researcher Response 2
 
@@ -493,7 +493,7 @@ For example let the left slot admit consecutive unary events \(a_1,a_2\), with a
 
 **Validation.** `python3 -B scripts/e6/two_slot_interchange.py` executes the updates and the positional interchanges on all schedules of two successive events in each slot and the crossing, with both choices of face for each unary event. It checks 19,376 contextual rectangles, including 2,656 strict drops, and the endpoints and marker words of 784 binary factorizations. The all-length proof is the event and marker argument above.
 
-The general positive grading, the one-factor theorem and the proof that each specified degree-five reachability question is decidable are in [round 5, Researcher Response 4](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-4). The two-slot argument uses the fact that an inner comparison cannot move a unary event past the unique outer crossing. With a third slot, disjoint events can make exactly such a move. The original all-dimensional requirement for arbitrary diagrams remains unresolved.
+The general positive grading, the one-factor theorem and the proof that each specified degree-five reachability question is decidable are in [round 5, Researcher Response 4](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-4). The two-slot argument uses the fact that an inner comparison cannot move a unary event past the unique outer crossing. With a third slot, disjoint events can make exactly such a move. The original all-dimensional requirement for arbitrary diagrams remains unresolved.
 
 # Researcher Response 4
 
@@ -585,7 +585,7 @@ checks the cuts, active blocks, common endpoints and direction of the 496
 successive rectangles for list lengths two through 32. It independently compares
 adjacent-swap reachability with all two-block contractions on 533,416 pairs
 of schedules of up to six moves. The argument using
-requirement 3 proves separation uniformly. [Round 5, Response 7](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-7)
+requirement 3 proves separation uniformly. [Round 5, Response 7](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-7)
 also identifies a positive degree-five Gray fiber where the support-free
 presentation needs composition equations. These results constrain both
 directions of a repair: some lifts must be identified for exactness, and
@@ -598,7 +598,7 @@ Q1 for an unrestricted infinite presentation open.
 every pair of vertically composed 2-globes.** More precisely, take
 \(C_{m,n}=\Sigma(\Sigma[m])\vee\Sigma(\Sigma[n])\) for any
 \(m,n\ge1\), and the presentation of
-[round 5, Response 9](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-9).
+[round 5, Response 9](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-9).
 Every elementary rectangle with proper active arguments has no reverse
 in every degree, including when the two inactive arguments are nonunits.
 The new case here is global degree five. In particular on these shapes
@@ -629,7 +629,7 @@ can act, but their operands can be re-presented by the actual
 
 Consider the two consecutive temporal intervals of a four-slot rectangle.
 When the fixed Gray 4-chain is zero, the separated-event proof of
-[round 5, Response 4](../outbox/lax-interchange-every-dimension-r5.md#a-degree-five-sector-on-arbitrary-pasting-diagrams)
+[round 5, Response 4](lax-interchange-every-dimension-r5-2026-11-20.md#a-degree-five-sector-on-arbitrary-pasting-diagrams)
 applies, including both inactive slots. Otherwise \(c\) occurs in
 exactly one interval. Color all events of that interval M, and all
 events of the other interval P. The positive mixed Gray atoms in the
@@ -743,7 +743,7 @@ bound on the number of labels *over one nonidentity Gray cell with
 specified raw faces* cannot replace the unbounded expanded basis.
 
 For an explicit family, use the presentation of [round five, Response
-12](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-12).
+12](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-12).
 On the first two outer factors take the complete two-by-two crossing
 with its positive loop \(H\). On three further slots \(a,b,c\) take
 the triangle \(T\) from crossing order \((bc,ac,ab)\) to
@@ -760,7 +760,7 @@ same whiskered triangle for every \(n,i\). In the full theory,
 Indeed, conservation of the positive length \(m_4\) gives \(n=m\):
 each path has length \(n\,m_4(H)+m_4(T)\), with the weights calculated
 after the fixed exterior whiskerings. In the slot graph of [round five,
-Response 17](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-17)
+Response 17](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-17)
 all four grid slots lie in the early run and all three triangle slots
 in the late run. The inversion count for \(P_{n,i}\) is
 \((n-i)m_4(H)m_4(T)\). It cannot increase on any 5-path in this
@@ -777,8 +777,8 @@ run on a general diagram remains the open case of the follow-up.
 # Researcher Response 7
 
 **A degree-five separation theorem with mixed inactive inputs.** Work in
-the completed presentation of [round five, Response 12](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-12).
-By [the eight-strand reduction](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-24),
+the completed presentation of [round five, Response 12](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-12).
+By [the eight-strand reduction](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-24),
 its remaining universal test can be made on a pure sorting interval. The
 following argument applies to such intervals of any size. Fix the Gray
 4-chain of a four-input rectangle. Select any set \(F\) of named
@@ -912,7 +912,7 @@ zero through four, giving 1,750 comparisons. Run
 above treats arbitrary lengths. A rectangle can still have an active
 path with no recorded window. Unrestricted Q1 remains open.
 
-The [four-strand order calculation and proof](../outbox/lax-interchange-every-dimension-r5.md#researcher-response-27)
+The [four-strand order calculation and proof](lax-interchange-every-dimension-r5-2026-11-20.md#researcher-response-27)
 further exclude every rectangle whose early active input has positive
 Gray chain and every rectangle with zero total late Gray chain, for this
 same candidate on every finite diagram. The obstruction still to decide

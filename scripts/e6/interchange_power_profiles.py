@@ -1,5 +1,6 @@
 """Check the subdivision witnesses, seed charges, and the two profile tests."""
 
+from functools import cache
 from itertools import product
 from math import gcd
 
@@ -72,8 +73,56 @@ def check_profiles():
         assert summary(pre + 2*base + post) == summary(pre + 3*base + post)
 
 
+@cache
+def crossing_histories(start, end):
+    """Paths of unsplit bare squares. Each coordinate counts columns before a row."""
+    if start == end:
+        return ((),)
+    first, second = start
+    low, high = end
+    moves = []
+    for width in range(1, first - low + 1):
+        moves.append((("first", first, width), (first - width, second)))
+    for width in range(1, second - max(first, high) + 1):
+        moves.append((("second", second, width), (first, second - width)))
+    if first == second:
+        for width in range(1, first - high + 1):
+            moves.append((("both", first, width), (first - width, second - width)))
+    return tuple((step,) + tail for step, target in moves
+                 for tail in crossing_histories(target, end))
+
+
+def check_staged_equation():
+    histories = set(crossing_histories((4, 4), (0, 0)))
+    lifts = []
+    for column in (4, 2):
+        corner = (("first", column, 1),)
+        last = (("second", column - 1, 1),)
+        early = ("first", column - 1, 1)
+        late = ("second", column, 1)
+        # The inactive two-column square can use any of its macrohistories.
+        other = 6 - column
+        inactive = crossing_histories((other, other), (other - 2, other - 2))
+        sources, targets = set(), set()
+        for path in inactive:
+            before, after = ((), path) if column == 4 else (path, ())
+            sources.add(before + corner + (late, early) + last + after)
+            targets.add(before + corner + (early, late) + last + after)
+        assert sources | targets <= histories
+        assert sources.isdisjoint(targets)
+        lifts.append((sources, targets))
+    # Distinct block moves really can compose before quotienting.
+    assert lifts[0][1] & lifts[1][0]
+    colours = ["".join(w) for size in range(5) for w in product("EL", repeat=size)]
+    for a, b in product(colours, repeat=2):
+        assert summary(2*a + 4*b + 2*a) == summary(2*b + 4*a + 2*b)
+    print(f"{len(histories)} macrohistories, {len(lifts[0][0])} and "
+          f"{len(lifts[1][0])} lifts, {len(colours)**2} colour assignments checked.")
+
+
 if __name__ == "__main__":
     check_schedules()
     check_seeds()
     check_profiles()
+    check_staged_equation()
     print("Both schedules, five seed routes, consecutive-rank charges, divisor tests and separated-word contexts agree.")

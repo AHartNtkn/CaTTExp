@@ -524,3 +524,87 @@ The checker compares both nested restrictions on all signed labels of the middle
 python3 tools/gray_globe_middle_parameter.py 8 --agda /tmp/GrayMiddleParameter.agda
 agda --safe -i /tmp -i src /tmp/GrayMiddleParameter.agda
 ~~~
+
+# Researcher Response 7
+
+**For all globe pairs, two distant exchanges per mixed rectangle and degree suffice.** They are closed comparisons between the two orders of the actual singleton steps at the left and right ends. The formal middle arrow of Response 6 drops out because the two frames around it are the two open writings one degree lower. Naturality of their comparison supplies the middle square. The two equal-order cases then close by cancellation.
+
+### Identifying the lower terms
+
+Use the notation of Response 6 and put $d=k-1$. The degree-$d$ row in the ambient rectangle has first ranks $a-1,\ldots,m$. Write $w_-,w_+$ for the two chosen $d$-poles of the signed middle box $B$, so $p:w_-\to w_+$. In either writing, distribute the actions on native composites until the occurrence of $p$ stands alone. With execution order from left to right, the result has the form
+\[
+     A_U\,P_U(p)\,B_U,\qquad A_V\,P_V(p)\,B_V .
+\]
+Here juxtaposition is at cut $d$, and $P_i(p)=F_i^\uparrow(p)$ for a degree-$d$ frame $F_i(w)$. The four end segments contain no $p$. To obtain these expressions, use the normalized templates of Response 4. In a raised slot the comparison distributing over two consecutive arrows is obtained over the two-arrow string in that slot. Whisker it through the heads on the way to the root. Reassociate the resulting word and put each closed endpoint correction on the side where it occurred. This gives invertible comparisons with the original terms, including their literal outer endpoints. Raising along two nested marked branches is the action along their composite branch.
+
+Consider first the writing peeling $l$ and then $r$. The upper retained interval $[a+1,m]$ has shadow $[a,m]$ at degree $d$. Its only stationary $d$-site is $a-1$. In the construction of its normalized template the end to peel is therefore forced. Its frame takes a native $d$-term, applies the cut-$(d-1)$ transport for the block $[a,m]$, and composes with the singleton at $a-1$ in their prescribed order. The retained native box is $(m,n-1)$ in both constructions. Indeed the upper interval and its lower shadow give exactly those bounds in the run formula. Within this box the second upper peel retains $[a+1,m-1]$, whose lower shadow is $[a,m-1]$. This time the only stationary $d$-site is $m$. The second frame peels it and uses the native box $(m-1,n-1)$. In the other writing the lower ends are peeled in the order $m,a-1$, through $(m-1,n)$ and $(m-1,n-1)$.
+
+These identifications include the intermediate states and the actual operations. Splitting at cut $d-1$ separates the *whole retained upper factor* from its stationary singleton. Replacing that upper factor by any of its $d$-states leaves the singleton, block order and cut-$(d-1)$ endpoints unchanged, since these depend only on the two $(d-1)$-poles and the singleton differential. Restricting the active factor retains precisely the higher rows of the signed native box and its full $d$-row. The same argument applies inside that box. Thus the two frames use the singleton terms and the cut-$(d-1)$ open operations of the two lower end writings, including any corrections already inside those operations.
+
+At the middle step the left end event has executed exactly when $z_1=0$, and the right end event exactly when $z_h=1$. This holds in both orders in the table of Response 6. Consequently the exterior notch bits of the lower test are $(1-z_1,z_h)$. The $h-1$ interior positions are all zero on entry to $p$ and all one on exit. In particular the two lower tests at these corners have the **same open terms**. Their signed middle inclusion has first tag $z_h$ and second tag $(1-z_1)\mathbin{\mathrm{XOR}}(a\bmod 2)$, the latter equal to $z_1\mathbin{\mathrm{XOR}}((a+1)\bmod 2)$. Hence their hole expects the two $(d-1)$-poles of the very same signed $B$. Both $w_-$ and $w_+$ are legal substitutions. With consistent bracketing the two lower open writings are literally $F_U(w),F_V(w)$.
+
+### The boundary of the degree induction
+
+When $d>\max(m,n)$ the open comparison
+\[
+                  E(w):F_U(w)\longrightarrow F_V(w)
+\]
+is the preceding degree's mixed comparison. When $d=\max(m,n)$ a lower end is pure. Here the pure-end argument of Response 4 gives the same comparison with $w$ free. The following spells out where the parameter enters that argument.
+
+Call the pure end $Y$ and the other end $S$. In the writing peeling $Y$ first, its complementary block is unpadded. The rest of the writing already peels $S$ in the clipped signed box, using $w$ in its remaining block. In the writing peeling $S$ first, the native retained word peels $Y$ next. Within this native word the block complementary to $Y$ is again unpadded. Thus its two arguments are the native pure action and $w$, in the order forced by their join. The enclosing exterior template uses the frame of its clipped interior run and the signed copies of the endpoint corrections, as in Response 4. Distribute its action over these two arguments. The slide past the incident closed endpoint correction uses depth-one naturality on that correction in the pure variable. The other argument, $w$, is simply whiskered through the slide at its indicated signed type. After the slide the frame on $w$ and its two end corrections are precisely the clipped template on $w$. This follows from the definition of the exterior template, which takes the initial and final segments separately on their signed faces. If the surrounding template is unpadded, its frame is the identity and there are no such corrections.
+
+Move $Y$ past $S$ if required. The depth-one square on the singleton term for $S$ uses only the stationary pure variable at the relevant corner. It has no $w$ in its context. What remains in either writing is exactly the decomposition peeling $S$ in the signed box clipped at $Y$, with the same argument $w$. Both orders use the same join for $S$ and the surviving block. This also covers two pure ends, for which both complementary blocks are unpadded. All these slides and reassociations are reversible above the lower skeleton. This proves the open pure-end case needed at the first mixed degree.
+
+### Using the lower closed comparison at both middle corners
+
+Set $e_-=E(w_-)$ and $e_+=E(w_+)$. They are independent of $p$ and have identity strict image. Naturality of $E$ in its maximal degree-$d$ variable supplies an invertible $(k+1)$-comparison between
+\[
+             e_-\,P_V(p) \quad\text{and}\quad P_U(p)\,e_+ .
+\]
+The witness has depth one in $w$ and its faces have depth zero. These face actions are the marked-leaf actions used for the frames. This is the literal boundary calculation of Response 6, applied one degree earlier. [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1](https://arxiv.org/pdf/2501.11620)
+
+At either middle corner $z$, write $D_U,D_V$ for its original lower end writings and $i_U,i_V$ for the changes to their twice-peeled versions $F_U(T(w)),F_V(T(w))$. Here $w$ is the native strict $d$-state at this corner. Each $i$ changes the retained native writing to its opposite end writing and applies the outer operation to that change. Choose the lower closed comparison from $D_U$ to $D_V$ to be
+\[
+                         i_U\,E(T(w))\,i_V^{-1}.
+\]
+This is the construction of the closed comparison in Response 6. Make it at every lower state with these two end writings, using the open pure-end proof at the boundary of the induction. Make the choice in the minimal box and use its signed copies. The preferred $T(z)$ is one of $D_U,D_V$. Write $c_U,c_V$ for the changes from it to those writings, taking the empty change at the preferred end, and $K_U(z)=c_U i_U$, $K_V(z)=c_V i_V$. Use inverse changes for terminal corrections. By associativity, cancellation and units,
+\[
+                  K_U(z)\,E(T(w))\simeq K_V(z).
+\]
+These are actual higher terms by the inverse laws for invertible CaTT cells and temporal reassociations. The same choice works at *both* middle corners because the native pole calculation gives $T(w)=w_-$ at its source $s$ and $T(w)=w_+$ at its target $t$, for any of the four upper tests.
+
+Consequently the two terms between the preferred corners
+\[
+        K_i(s)\,P_i(p)\,K_i(t)^{-1}\qquad(i=U,V)
+\]
+are invertibly comparable. Insert the displayed corner changes on the two sides of the middle naturality square and cancel. The resulting comparison is open in $p$.
+
+### Recovering the actual singleton steps
+
+It remains to verify that using these preferred middle corners gives the singleton terms of the section on the rest of each word. Consider the left-first writing. Outside the retained block its $l$ is already the ambient singleton step. Inside, the $r$-step in $(m,n-1)$ is carried through the outer operation for $[a+1,m]$. At the instant of this inner $r$-step, consider the rule for the *ambient singleton* $[m,m]$ at cut $d$. Its shadow occupies $m-1,m$. It omits the left end $a-1$ and contains the right end $m$. Thus the omitted end to peel is forced, and it is the same lower singleton $a-1$ as for $[a+1,m]$. Its retained lower block is again $[a,m]$ in $(m,n-1)$. Both steps keep the left notch frozen throughout. Their lower frames $G$ agree because the stationary factor, block order, native signs and cut-$(d-1)$ endpoints agree. Restricting the ambient singleton after this peel gives precisely the inner native $r$-step. This follows on the higher row by retaining its unique label and on the $d$-rows by removing the same stationary site. Thus the earlier-cut operations and the native term selected by the construction agree syntactically. For the right-first writing the transported inner $l$ has shadow $a-1,a$, which forces the omitted right end $m$. Its retained lower block is $[a-1,m-1]$ through $(m-1,n)$. The identical restriction argument applies.
+
+More explicitly, at either occurrence let $j$ be this omitted end, let $s',t'$ be the actual corners of the singleton, and let $c_j(v)$ go from $T(v)$ to the writing peeling $j$. If $S_{\rm nat}$ is the singleton in the smaller box, the ambient singleton is comparable, with its exact two faces, to
+\[
+                 c_j(s')\,G^\uparrow(S_{\rm nat})\,c_j(t')^{-1}.
+\]
+Indeed this is the defining padded-run construction before normalization. To recover the normalized version, distribute $G^\uparrow$ over the two native corrections and their middle, then compose the marked branches. The upper singleton and retained interval here are interior runs because $0<a\le m<k$. All the corrections just described are the ordinary signed endpoint choices. Any exterior specialization appearing inside $G$ is shared by both terms.
+
+Distribute the outer action over its native two-step word and insert $c_j(v)^{-1}c_j(v)$ at the seam. The transported singleton now has exactly the preceding ambient form. On the middle step the remaining correction at each corner is $c_j$ followed by the transported inner correction, precisely $K_i$ there. Reassociation and cancellation therefore express each original writing as its ambient singleton steps and its corrected middle step, in the temporal order of Response 6. All changes used for this normalization live over the formal test context and retain its prescribed outer terms.
+
+| Exterior bits | End steps before the middle in $U,V$ | End steps after the middle in $U,V$ |
+| --- | --- | --- |
+| $00$ | $l$ in both | $r$ in both |
+| $11$ | $r$ in both | $l$ in both |
+| $01$ | $lr$, $rl$ | empty |
+| $10$ | empty | $rl$, $lr$ |
+
+For equal bits the ambient singleton steps in the two words occur at the same labelled states. Whiskering the corrected middle comparison proves the test. For $01$ supply the exchange between the two actual two-step prefixes and whisker it with the middle. For $10$ supply the exchange between the suffixes. These exchanges have top chain $l+r$, no formal variable, and lie in the ordinary $k$-skeleton. In particular they ask for comparisons on the steps just identified, with their actual endpoint corrections.
+
+Their corners have a simple description. On the degree-$d$ cube of bits, the two extreme positions $a,m$ vary independently from zero to one. All $h-1$ positions strictly between them are zero for the prefix test and one for the suffix test. In each patch the two routes have the same source and target, and the two different intermediate vertices prescribe the terms at their internal seams. The two choices of intermediate bits, the mixed end bidegrees, and the common poles specify the two patches in every rectangle. Induction as in Responses 4 and 6 now gives the stated sufficiency. There are $(k-2)(k-3)$ such closed tests in degree $k\ge4$, by summing two over the $(k-2)(k-3)/2$ mixed rectangles.
+
+The checker peels the higher factors, records the full lower operations, and compares them with an independent peel of the two middle poles. It also checks the transported singleton and its two lower corner operations against the standalone ambient singleton, and compares the complete labelled end steps of both words. It checks both orders, both inclusions on every native label, and both signed native pole tableaux. Through bound eight this covers 708 states with a pure end in the lower degree and 564 with two mixed lower ends. A separate Agda judgment checks the five-step pasting on an arity with independent left, middle and right changes, distinct bracketings at the middle input, and the specified outer terms. These checks validate the descent and the pasting convention. The two distant exchanges on the specified terms in arbitrary degree, and hence Q1 and Q2, remain open. [Descent checker and certificate generator](../../../tools/gray_globe_middle_descent.py)
+
+~~~sh
+python3 tools/gray_globe_middle_descent.py 8 --agda /tmp/GrayMiddleDescent.agda
+agda --safe -i /tmp -i src /tmp/GrayMiddleDescent.agda
+~~~

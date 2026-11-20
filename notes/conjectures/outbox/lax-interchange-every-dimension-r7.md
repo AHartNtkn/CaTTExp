@@ -844,3 +844,311 @@ The finite check evaluated 371,712 split assignments through cyclic order 32, in
 ~~~sh
 python3 -B scripts/e6/interchange_universality_check.py
 ~~~
+
+### Q1(a). There is no weakly initial theory over \(P\)
+
+**Theorem.** For every admissible theory \(S\) there is an admissible theory
+\(U\) admitting no interpretation from \(S\) that fixes \(P\) and commutes
+with the Gray projection. In particular there is no weakly initial theory
+for the interpretations over both quotients.
+
+We use the finitary theory interpretations of Q1(a). In particular, an
+upper auxiliary can take cells with specified matching faces as arguments.
+The construction below adds two such operations to the signature of
+\(T=T_{12}\). The quantifier order matters. One target will exclude all
+sources whose proof of a particular Gray equality uses inner identities
+below a given dimension. Each proposed source has such a bound.
+
+#### An equality fixed by every interpretation
+
+Use the strip \(C=C_{2,1}\) of (K46). Its two successive outer spans
+have short homs \(V=\Sigma[2]\) and \(V'=\Sigma[1]\). Write \(A_1,A_2\)
+for the composable advances in the first and \(B\) for the advance in
+the second. In global degree five take the two expressions
+
+* \(u\), the single \(W(A_1 *_2 A_2,B)\);
+* \(v\), the chronological paste of the two contextual tiles with sole
+  positive top occurrences \(W(A_1,B)\) and \(W(A_2,B)\), respectively.
+
+Use the \(P\)-expressions for the contexts constructed in (K46), by
+lifting the strict atomic contexts through degree four. Their matching
+is required only in the inner quotient. Both expressions there have
+the same two degree-three hom rows and top chain
+\(A_1\otimes B+A_2\otimes B\). This fixes one pair of expressions
+once and for all. The full signed tableau and the construction of the
+two lifts are given in [round 5, Response 7](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#a-separating-algebra-and-its-signed-tableaux).
+
+Write \(K_S\) for the axioms making the designated inner interchangers
+identities. In \(S+K_S\), exactness through degree four types both
+expressions and exactness in degree five proves \(u=v\). By the term
+model argument (2) of Response 2 this judgement, including its typing,
+has a **finite** derivation. Choose \(m\ge8\) strictly above the output
+degrees of the instances of \(K_S\) in one such derivation. No bound
+on the dimensions in the laws of \(S\) is required.
+
+We construct \(U_m\) and a \(U_m\)-algebra \(D_m\) over the Gray algebra
+\(G(C)\) with the following two properties:
+
+1. the map \(q:D_m\to G(C)\) reflects identities in every degree \(<m\);
+2. on the indicated assignment of \(C\) in \(D_m\), both expressions
+   are defined and \(u\ne v\).
+
+Here reflection of identities means that any cell mapping to an identity
+is the identity on its own source. The construction and the proof of
+admissibility follow.
+
+#### The strip and its two evaluations
+
+Use the globular set of \(G(C)\) through degree four. In the long hom
+decorate a global 5-cell \(z\) by a bit \(b\), allowing both bits if its
+top chain is nonzero and only \(b=0\) otherwise. Faces forget the bit,
+identities have bit zero and compositions take the join of the bits.
+Use only identities above global degree five. This defines a strict
+long hom. Indeed, top chains add under all its compositions in top
+degree, including fixed whiskering by lower cells. Positivity makes
+the restriction at zero closed under composition, and join is a
+commutative monoid. Keep the short homs and the pure outer actions.
+A long span can be extended at either end only by a terminal span.
+Forgetting the bit reflects identities in **every** dimension. In
+degree five this uses the restriction at zero and the fact that a
+Steiner tableau with zero top row is an identity.
+
+There are two choices of mixed evaluations on this same structure.
+For the first, \(B^0\), compose the short homs by the strict functor
+from \(V\otimes V'\) to the decorated long hom sending every cell
+to its zero-bit lift. This gives a Gray-enriched algebra. The other
+choice, \(B^*\), uses the same Gray values, with one change in the
+choice of lifts. Give a \(W\) on the two short spans bit one just
+when the left operand traverses both advances and the right operand
+traverses its advance. The bit is zero on all other such disks.
+Use the prescribed unit specializations, including the specialization
+of the auxiliary \(K\) to \(W\). All cuts inside homs use strict
+operations. The resulting evaluation on the strip has \(u\) of bit
+one and \(v\) of bit zero. The two tiles in \(v\) have positive
+width one, and their contexts add no bit.
+
+We record why this specifies the face and unit declarations in *all*
+degrees, even though the subdivision law will fail. At the outer cut
+with two nonterminal spans both inputs lie in the short homs. Remove
+iterated identity inputs down to their underlying disks. In hom degrees
+the resulting pair has \(p,q\le2\). All disk faces have their Gray
+values through hom degree three. For \(p=q=2\) the tensor of the two
+input globes is freely generated as a strict hom by its disk atoms. Its
+only degree-four atom is the top pair. Either lift of that atom with
+the prescribed faces extends to a strict functor on this **one disk
+pair**. Its restrictions to all proper faces have the unchanged values.
+This works also on the disk classified by the composite left advance.
+It imposes no compatibility with subdividing that advance. In the
+higher declarations a unit moving input gives identities on the old
+faces. A unit fixed input restricts the recursion to its smaller face,
+then takes identities on the same surviving bridge on both routes.
+These are the unit calculations for the seeds in round 5, Responses
+8–9, and item 3 of [the disk recursion in Response 10](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#raising-a-globe-in-arbitrary-bidegree).
+They apply to the chosen lift because they use the same disk and
+its restrictions. At a cut with a terminal partner only the pure
+actions survive. Thus all the declarations are interpreted, \(P\)
+holds by the separating-algebra calculation of (K46), and the two
+evaluations have the same structural operations. On **the same
+inputs**, a mixed call can distinguish them only at the outer cut on
+the two short spans, with a proper global 3-face in each operand.
+This includes a surviving \(W\) in a unit specialization. In higher
+degrees parallel cells in \(B^*\) are equal since they are identities.
+
+#### A high-dimensional comparison
+
+We need an actual inner interchanger whose identity can force a law.
+Use a \(T\)-algebra \(E_m\) with a single cell in each degree below
+\(m\). Its \(m\)-cells form the monoid \(L=\{1,x,y\}\) with unit 1
+and \(ab=a\) for \(a,b\in\{x,y\}\). This is associative (a word has
+the value of its first nonunit, or 1). Top composition is this product,
+lower fixed whiskers act identically, and lower binary composites are
+their specified Godement orders. In degree \(m+1\) take exactly one
+arrow between any two \(m\)-cells, and above that take identities.
+All compositions and whiskerings in these higher degrees are induced
+on endpoints.
+
+Here is the law check for \(E_m\). Through degree \(m\) this is a
+sesquicategory: fixed lower actions are identities, immediate fixed
+\(m\)-cell contexts act by left and right multiplication, and nested
+contexts compose by associativity. The two orders of multiplying
+independent \(m\)-cells are the two faces of a comparison one
+degree higher. Every positive mixed disk or proper auxiliary of
+output at most \(m\) has strictly lower input degrees, including
+the truncated fixed face used to index an auxiliary (item 2 of the
+disk recursion). Its inputs in this table are units, hence it takes
+the prescribed unit value. To check the nonstructural laws at degree
+\(m\), the subdivision equations in either argument, the exterior
+and balancing equations on a mixed atom, the auxiliary equations
+and the mixed-paste and three-factor equations all compare such
+occurrences in fixed lower contexts. Their positive atoms have
+unit inputs, so the pastes have value 1. The same check applies to
+a shifted seed, including a split square or the join factorization:
+its operands at that cut still lie below its output degree. The
+vertex-only action cases
+are the fixed-action laws above. Placing any of these equalities
+in an \(m\)-cell context multiplies both sides by the same words.
+This exhausts the defining families of (K47). At degree \(m+1\) every prescribed
+parallel boundary has a unique filler; inductively this also holds
+above \(m+1\), since parallel cells of each such degree coincide.
+This types the higher declarations and verifies every equation on
+parallel outputs, including the unit rules.
+
+At cut \(m-2\ge1\), the bare elementary comparison on \(x,y\) has
+as faces the two orders \(yx=y\) and \(xy=x\). In particular it is
+proper. On \(1,1\) it is an identity.
+
+We now give the two new operation declarations. For consecutive outer
+global 3-cells \(A,B'\), let \(I(A,B')\) be the inner 4-comparison on
+\(f_0\triangleleft B'\) and \(A\triangleright g_1\) in [round 5,
+Response 9](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#an-inner-comparison-detecting-a-proper-outer-pair).
+Adjoin two \(m\)-cells \(X(A,B',R),Y(A,B',R)\) on the finite context
+\[
+                       R:tI(A,B')\longrightarrow sI(A,B').
+\]
+Both are endomorphisms of the iterated \(m-1\)-dimensional identity
+on the initial outer object. This is a face-matching domain: the
+reverse \(R\) is an **input**. When \(A\) or \(B'\) is a unit take both
+values to be identities. In all primary \(T\)-algebras expand \(X,Y\)
+as identities on their domain. In the test table
+\[
+                              D_m=B^*\times E_m
+\]
+use the componentwise old operations and give \(X,Y\) identity first
+coordinates. Their second coordinates are \(x,y\), respectively, if
+the two strip operands are proper advances on the two short spans,
+and are \(1,1\) otherwise. This defines operations on every matching
+assignment. In the strip \(I\) is an identity because its cut is
+strict. The projection forgetting the second coordinate and the bit
+is a homomorphism of the declared operations to the primary expansion
+of \(G(C)\). It has the two asserted properties of \(q\): the second
+coordinate is unique below \(m\), and the canonical strip assignment
+has the two different bits.
+
+Let \(J(A,B',R)\) denote the bare inner comparison at cut \(m-2\) on
+\(X(A,B',R),Y(A,B',R)\). Its operands are composable at that cut
+since both are based at the same iterated identity. In all the primary
+expansions and in \(D_m\) we have the conditional law
+\[
+                       J=1\quad\Longrightarrow\quad X=1,\ Y=1.       \tag{6}
+\]
+In the active case in \(D_m\) the two faces of \(J\) have different
+second coordinates. In the other cases both new operations are units.
+Importantly \(J\) is an instance of a designated elementary inner
+interchanger from \(T\), so the ordinary inner-identity quotient
+makes the premise true on every matching assignment.
+
+#### Admissibility of the target
+
+Define \(U_m\) by the common finitary laws of the primary expansions
+and \(D_m\). The faces and \(P\)-laws checked above hold throughout.
+As in Response 2, the free algebra on a finite diagram is generated
+by its simultaneous evaluations in \(F_T\) and in the tests indexed by
+all assignments to \(D_m\). An operation is formed on jointly matching
+faces. Joint equality is precisely equality under all generating
+assignments, by the free property of \(F_T\) in the primary coordinate.
+This proves freeness and substitution. For the expanded basis use the
+primary normal paths of (K52) and the assignment-indexed table values.
+Each test value is specified by its strip tableau and bit and its
+entry of \(E_m\) (endpoints for an arrow); there are finitely many
+assignments on each finite input diagram. Equivalently one can choose
+the least typed occurrence tree with that tuple, as in Response 2.
+This gives requirements 1, 2 and 5.
+
+The additional operations require a check of directedness. Whenever
+their arguments are typed in a free joint evaluation, the primary
+coordinate of \(R\) is a reverse to \(I(A,B')\). By the proper-pair
+test of Response 9 and strong directedness in \(F_T\), at least one
+of the primary operands \(A,B'\) is an identity. That same operand
+is an identity in every test assignment. Indeed, projecting the
+assignment by \(q\) gives an assignment into the primary Gray algebra
+\(G(C)\); its evaluation is also the image of the primary free value.
+Identity reflection by \(q\) in degree three gives the assertion.
+Thus on *any free diagram* a well-typed \(X\) or \(Y\) takes the
+joint identity value. We can now prove that the primary projection
+reflects identities in every degree. Fix a test assignment and project
+its input globes to \(E_m\). This extends to a map from \(F_T\)
+because \(E_m\) is a \(T\)-algebra. On a joint term its second test
+coordinate is the image under this map of its primary value, by
+induction on terms: old operations are componentwise, and the two new
+operations give identities on both sides by the preceding argument.
+Hence an identity primary value has identity second coordinate. Its
+strip coordinate maps to an identity in \(G(C)\), and forgetting the
+strip bit reflects identities in every degree. Both coordinates are
+therefore identities on their respective sources, for every assignment.
+It follows that a proper elementary rectangle is proper in \(F_T\),
+where a reverse is impossible. This proves requirement 3. The primary
+value also detects \(H\ne1\).
+
+For requirement 4 we verify equality of the quotient algebras, to
+include pastes first typed after quotienting. All Gray algebras have
+primary expansions. Conversely, in an inner-identity \(U_m\)-algebra,
+(6) makes \(X,Y\) the specified identity operations on their entire
+domain. We show that its old reduct satisfies the laws of \(T\).
+
+* Through degree four the laws already hold in all coordinates.
+  The strip there is Gray and \(E_m\) is a \(T\)-algebra.
+* For each defining equation of \(T\) of output degree five take
+  its original premises and require both sides to be defined and
+  parallel. For each outer mixed call in its expressions, including
+  its premises, inspect the two operands. If both reach global
+  degree three, take all pairs \(A,B'\) of their global 3-faces
+  (the operand itself in degree three). Add the finite premises
+  \[
+            I(A,B')=1,\qquad J(A,B',1_{sI(A,B')})=1 .             \tag{7}
+  \]
+  The first premise types the supplied reverse in the second.
+  The resulting conditional equation is common. It holds in the
+  primary algebras by the original law. In the test, a call differing
+  between \(B^*\) and \(B^0\) would include two proper advances on
+  the short spans among the inspected pairs. Its \(J\) would have
+  distinct high faces. Thus, when (7) holds, every inspected call
+  has its \(B^0\) value on the same inputs. Induction from subterms
+  to terms gives the \(B^0\) evaluations of the original premises
+  and sides, also for arbitrary tagged cells supplied as variables.
+  The strip equality follows since \(B^0\) is Gray; the second
+  coordinate satisfies the original law in \(E_m\). After killing
+  the inner comparisons *both* premises in (7) hold automatically.
+* In each degree above five use the original equation with definedness
+  and parallelism of its sides as extra premises. It is common:
+  parallel strip outputs agree and \(E_m\) satisfies the law.
+  In each induction step, starting in degree five, the old face
+  and typing derivations use the previously recovered lower laws
+  to give the added matching and parallelism under the original
+  premises. This is the degree induction of (K47) and Response 2,
+  applied on arbitrary assignments.
+
+Consequently the old reduct is an inner-identity \(T\)-algebra.
+Conversely every such algebra with the identity expansions satisfies
+the common laws, and (6) makes its expansion unique. By (K47) this
+is precisely the Gray quotient, with the primary operations as its
+projection. Imposing the remaining outer identities gives the strict
+quotient by the same identification. This proves requirement 4 in
+every dimension. The auxiliary reverse input has introduced neither
+a new sort nor an existence condition on any quotient algebra.
+
+#### Why an interpretation is impossible
+
+Suppose \(j:S\to U_m\) were an interpretation fixing \(P\) over Gray.
+Interpret the chosen finite proof in the \(S\)-reduct of \(D_m\).
+All laws of \(S\) hold there. For each inner-identity axiom used
+in the proof, take any assignment satisfying its typing premises.
+By commutation with the Gray projection and the homomorphism \(q\),
+the interpreted inner comparison goes to an identity in \(G(C)\).
+Its output degree is below \(m\), so it is already an identity in
+\(D_m\). Thus all the extra axioms used in this derivation also hold
+there. Soundness, including the formation of terms using proved face
+matches, gives \(u=v\) on the strip assignment. But \(j\) fixes every
+operation in these two \(P\)-expressions, and their bits there are
+one and zero. This contradiction proves the theorem. The bound was
+on the degrees of the **identity axioms used**, so allowing arbitrary
+derived target terms as images of upper source operations does not
+affect the argument.
+
+The signed-strip and finite-table checks can be reproduced with
+`python3 -B scripts/e6/interchange_weak_initiality.py`. They check the
+two subdivisions and their tags, the monoid and its induced compositions,
+the active and inactive cases of (6), and the guarded subdivision on
+all 30 interval assignments, including the right unit at each endpoint.
+The finite-derivation argument
+above supplies the quantification over all sources and all dimensions.
+[Checker](../../../scripts/e6/interchange_weak_initiality.py)

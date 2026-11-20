@@ -178,3 +178,19 @@ The script computes, exactly, the 4-endomorphisms of F_T(Σ[m] ∨ Σ[n]) throug
 - to interchanger cells, because otherwise the A ⊗ B atom between r/t routes would collapse.
 
 As with §6, every survival claim here is computed, not proved. Each depends on the script's equation list being complete.
+
+## 8. The uniform rule in every law setting of J (E12)
+
+*Code: `src/CaTTExp/Join/SwitchCospan.agda`. Source: `design-decisions.md` §1.*
+
+The cospan completion of §2 is stated for an arbitrary quiver, so nothing in it is fixed to T₁₂. `SwitchCospan` makes the switch parameter explicit.
+- **Settings.** A `Setting` presents a law setting's comparison graph by step lists, as `BoundedReach` does: cells, inner steps and seed steps. `Setting.Completion` is its cospan completion.
+- **Switch maps.** A `Switch S S′` is a switch-on map: the identity on letters, so inner steps go to inner steps and seed steps go to seed steps. This is the shape of `BoundedReach.Transport`'s step map.
+- **Extension (proved).** `Ext` extends a switch map to the completions by j α I R ↦ j (σα) (σI) (σR):
+  - `ext-inn`, `ext-jn`: the extension acts letterwise;
+  - `ext-~`: it respects the completion equations;
+  - `ext-++`: it respects composition;
+  - `ext-ι`: it agrees with the switch map on original paths;
+  - `ext-seeds`, `seedsMap-~`: seed lists map letterwise and stay invariant.
+- **Functoriality (proved).** Switching on in two stages is switching on at once (`ext-∘`), and the identity switch extends to the identity (`ext-id`).
+- **The catalogued laws keep seed lists.** The inner composite-crossing law, the right split R and every prime left split L_p are split equations for ι. Each equates a direct ι of a composite (or of A^p) with a paste of ι's of the pieces. In the comparison quiver ι-instances are inner arrows, and the 3-cell arguments and whiskers are only contexts. So both sides are inner words with empty seed lists, under every substitution too. Switching any of these laws on therefore keeps the seed-list invariance that the extension uses.

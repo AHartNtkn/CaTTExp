@@ -350,3 +350,254 @@ An answer to Q1 (a) or (b) in every dimension; a normal-form theorem for Q2; a d
 - Ara–Maltsiniotis, arXiv 1607.00668 (lax Gray tensor of strict ω-categories); Steiner, *Omega-categories and chain complexes*, HHA 2004.
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange, Appendix A and Rem. 4.10).
 - Campion, arXiv 2311.00205 (Gray tensor of (∞,n)-categories); Gepner–Heine, arXiv 2510.10504.
+
+# Researcher Response 1
+
+**Q2 has a forbidden-subpath normal form in every dimension.** For each weight
+there is an explicit list of new forbidden words. Its entries come from the two
+sides of defining relations and from proper overlaps of *lower-weight* forbidden
+words. A typed path represents a normal form precisely when it contains none of
+these factors. The lists can be infinite over all weights. **For Q3, the
+absorption closure of T's own data fails requirement 4 in degree five.** The
+failure is a missing Gray atom. Absorption preserves every distinction already
+detected in Gray.
+
+## The dimension step for Q2
+
+Fix a finite diagram and order its input generators and the operation symbols
+by their indices. Order finite encodings of contextual generators by length
+and then lexicographically. Any such fixed well-order works. We describe the
+step from normal cells through degree \(d-1\) to normal \(d\)-cells.
+
+Use the contextual path alphabet of (K47)–(K50). Here are its inputs and the
+boundary prescription, to specify exactly what gets normalized. The vertices
+are the normal \((d-1)\)-cells. For an input globe take its two given faces.
+For an operation symbol \(g\) of output degree \(d\), let \(s_g,t_g\) be its
+two declared face pastings in its generic arity. Take each well-typed tuple
+\(a\) of lower normal cells in that arity. A letter is one proper occurrence
+\(C[g(a)]\) in a fixed whiskering context. Its incidence is
+\[
+    N_{d-1}(C[s_g(a)])\ \longrightarrow\ N_{d-1}(C[t_g(a)]) .
+\]
+Here the context on each face is the induced boundary context. Input globes
+use the same formula. Use the structural contextual occurrences of (K50):
+distribute whiskers over top concatenation, combine successive fixed whiskers
+by their action laws, and evaluate their lower labels in normal form. Unit
+specializations take their declared values. Identities are empty paths *at a
+specified vertex*.
+
+In this prescription the elementary square uses the right-first and left-first
+pastes. For a unary raise of a varying face \(x^-\to x^+\) by \(Z\), the
+two face expressions are \(E(x^-);T[Z]\) and \(L[Z];E(x^+)\), ordered by
+the varying side as in (K3). The cut-zero binary join has faces \(S,U_0\),
+and the \((2,2)\)-letter has faces \(\bar t_0\,\bar\iota_+\,\bar r_0\)
+and \(h\,\bar t_1\). For the higher mixed and auxiliary letters use the
+signed face *expressions* of (K47), including their fixed contexts. These
+are part of the specified presentation, so they can be substituted verbatim
+in the incidence formula. Using only their Gray tableaux here would give
+incorrect incidences before quotienting. The explicit generic boundaries
+are in [round 5, Responses 8–10](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#the-presentation-and-its-boundaries)
+and the exterior equations in [Response 12](../answered/lax-interchange-every-dimension-r5-2026-11-20.md#unary-cylinders-on-an-edge-subdivided-in-two).
+
+Form the pairs \(D\) of parallel words given by the defining path equations on
+these lower labels, in all fixed whiskering contexts. No chronological prefix
+or suffix of **top letters** is needed in \(D\). Replacing a factor of a word
+will supply both. In particular a fixed lower whisker on a relation acts on
+*each* top letter. Replacing inside the operand of a generator is already
+accounted for by its lower normal label. Thus factor replacement by \(D\)
+in either direction generates precisely the top path congruence, by (K50).
+For the conditional quotient equations one uses the free-object calculation
+of Responses 8–12: a proper guarded instance has a nonidentity test, and the
+unit specializations already hold in the normalized syntax. The unguarded
+subdivision, transport and factorization equations do supply pairs in \(D\).
+This distinction matters when constructing the alphabet on the next degree.
+
+Write \(|w|_m\) for additive **weight** and \(\ell(w)\) for number of letters.
+In degrees one and two count input steps. In degree three count atomic steps
+after expanding a block crossing, so that its weight is the product of the
+two operand lengths. In higher degrees use the positive path gradings of
+(K50), with the conserved \(m_4\) and the charges for cylinders and joins
+of (K47). Every letter has positive integer weight and both sides of each
+pair in \(D\) have equal weight. In particular the join factorization need
+not preserve \(\ell\).
+
+All the lists below may be formed locally. Through degree four the vertex
+and contextual-letter alphabets on a finite diagram are finite. Above that
+degree, fix the parallel lower boundary, the conserved weight of the
+immediate source, and a cutoff on top weight. All intermediate vertices
+have that same lower boundary and conserved weight. The list of such
+vertices is finite by the lower-degree weight bound. Use the finite
+contextual-letter and equation-instance lists of (K50) there, retaining
+letters and pairs up to the cutoff. Equivalently use all such local lists
+at once, keeping the same order on common letters. Every word replacing a
+factor has the same endpoints and weight as the factor, and its internal
+vertices stay in the same conserved layer. Thus a calculation with this
+cutoff includes the replacements needed inside its subpaths. No global
+finiteness of the \(d\)-skeleton is assumed.
+
+## A formula for the forbidden factors
+
+Order paths with the same endpoints by shortlex (first \(\ell\), then the
+letter order). The order is preserved by attaching the same two paths.
+For \(j=1,2,\ldots\) define a dictionary \(R_j\) of oriented word pairs of
+weight \(j\) as follows. Begin with the empty dictionary. Write \(b(w)\)
+for reduction using the previously constructed \(R_{<j}\): repeatedly
+replace the leftmost matching factor by its assigned right side, breaking
+ties by the fixed word order. This stops because each replacement decreases
+shortlex. At this point uniqueness of arbitrary reductions at weight \(j\)
+is *not* assumed.
+
+Form a finite undirected graph from the following pairs, omitting equal
+pairs if desired. Its vertices need only be the words occurring in the
+pairs.
+
+1. For \((u,v)\in D\) of weight \(j\), insert \(\{b(u),b(v)\}\).
+2. For two rules \(xy\to p\) and \(yz\to q\) of \(R_{<j}\), with
+   \(x,y,z\) all nonempty, \(xyz\) typed, and \(|xyz|_m=j\), insert
+   \(\{b(pz),b(xq)\}\). Allow the same rule in both roles.
+
+For each component \(K\) put into \(R_j\) the pairs
+\[
+                 w\ \longrightarrow\ \min K
+            \qquad (w\in K,\ w\ne\min K).
+\]
+This completes the entire weight in one step. In particular the construction
+does not enumerate all paths of that weight or call a word-problem oracle
+to obtain its rules. Only an equation side or the reduced branch of a
+specified overlap can contribute a new forbidden word.
+
+Let \(B_j=\operatorname{dom} R_j\), and let \(\mathcal P(u,v)\) be the
+ordinary typed words from \(u\) to \(v\) in the contextual alphabet. The
+promised list at weight \(M\) is
+\[
+ \left\{ w\in\mathcal P(u,v):
+      |w|_m=M,\quad
+      \text{every contiguous factor of }w\text{ avoids membership in }
+                             \bigcup_{j=1}^{M}B_j \right\}.
+\]
+For example, to *generate* the list, extend a word by one matching letter
+and reject it as soon as a forbidden suffix appears. At a finite cutoff it
+suffices to remember the endpoint, remaining weight and longest suffix
+which is a proper prefix of a forbidden word (including the empty suffix).
+Every shorter matching prefix is a suffix of this one. This gives a finite
+automaton on each indicated layer. It lists each normal cell once without
+first listing the representatives of that cell.
+
+**Proof.** Induct on weight. All right sides at stage \(j\) are smaller, and
+all words in its graph are irreducible by earlier rules. Every new rule is
+a valid equation. For an overlap both branches are equal to the peak
+\(xyz\) by earlier equations, and equality persists along a component.
+Conversely every defining pair at this weight reduces to one word by the
+first kind of graph edge. In a component each nonminimum reduces directly
+to its minimum.
+
+For confluence, consider two reductions out of a path of weight at most
+\(j\). Disjoint replacements commute, including at adjacent factors.
+Coincident occurrences of the same left side give the same result. Proper
+inclusion of one left side in another is impossible: at the weight of
+the larger left side it was already irreducible by the smaller rule.
+A proper inclusion between words of equal weight is excluded by positivity.
+The remaining peak is a proper overlap. If the union of its two occurrences
+has weight less than \(j\), join its branches by induction inside the
+surrounding context. If the union has weight \(j\), both rules have strictly
+smaller weight, and the second kind of graph edge joins the reductions of
+its two branches. This also explains why overlaps created by a new rule
+need no second pass at its own weight. The system terminates by shortlex,
+so local confluence implies confluence (induct on the peak word and join
+the first two steps). The empty path supplies the weight-zero base.
+Every finite derivation lies at a finite weight. We have therefore proved
+convergence of the union of the dictionaries and equality of its presented
+congruence with that of \(D\).
+
+Its irreducibles are exactly the displayed list. Composition is concatenation
+followed by reduction, lower compositions use Godement expansion, and an
+operation is evaluated by its contextual occurrence followed by reduction.
+Since the congruences agree, these operations have precisely the free
+\(T_{12}\)-algebra laws and evaluation gives substitution. Starting with the
+objects of the diagram proves the dimension step for every \(d\). Boundary
+supports together with position-labelled letters of these words give the
+corresponding expanded basis.
+
+## Decision of Q3 on T's own data
+
+Let \(A_0\) denote the specified presentation T of (K30), with (C),
+\((R_\infty)\) and the thin-block equations. Its outer output-degree-five
+operations are the two unary families \(U_r,U_t\), of hom bidegrees
+\((3,1),(1,3)\). Its other degree-five families \(\delta,N_L,N_R\) are
+inner. The binary operation \(W\) in (K32) belongs to the extension (K45).
+This signature distinction decides Q3 even after re-forming all newly
+typable terms.
+
+Take \(\Gamma=\Sigma D^2\vee\Sigma D^2\), with objects \(0,1,2\).
+Inside the T-reduct of \(G(\Gamma)\) take the cells through global degree
+four and their iterated identities above degree four. Call the resulting
+globular set \(M\). We verify that it is closed under the operations,
+including on **all** matching inputs in \(M\).
+
+* Structural composition of identities in a strict hom gives identities.
+  Exterior object-level Godement composition and fixed whiskerings also
+  preserve identities at this degree, by their pure actions. The operations
+  of output degree at most four take their values in the corresponding
+  full layers of \(M\).
+* Inner mixed operations have identity value in Gray. A proper outer
+  \(U_r\) or \(U_t\) would need adjacent outer spans carrying a hom
+  3-cell and a hom 1-cell, both proper. The only pair of nonempty forward
+  spans is \((0,1),(1,2)\). Each of these short homs is the strict
+  2-globe and has only identity 3-cells. If either span has length zero
+  its hom is terminal. These exhaust the cases, including arguments
+  supported on the long hom: their partner then lies in a length-zero
+  span. The unit rules give identity top cells in every case.
+
+Thus \(M\) is a model of the fixed operations with the inner families set
+to identities. It inherits the equations. In particular the raw support
+equations hold in the generic Gray tables by (K30), hence under assignments
+by substitution. All extreme crossing expansions have the same Gray
+table, (C) is an inner identity, and a pure inner loop at the block is
+an identity. These are exactly the additional low-dimensional equations
+in Q3. The positive-chain argument of (K43) applies to this substructure:
+the top chains of a forward and backward pair have nonnegative sum with
+zero boundary. Loop-freeness forces the sum to vanish, so each chain
+vanishes and the lower rows give identity cells. In particular the absorption inference
+holds under every assignment in \(M\). An induction on derivations,
+including formation at newly equal boundaries, now interprets the
+absorption closure **and its inner quotient** in \(M\). This use of a
+model checks new composites as well as the original T-paths.
+
+Evaluate at the generating diagram. The canonical comparison of this
+quotient to \(G(\Gamma)\) factors through the inclusion of \(M\), since
+both evaluations agree on the diagram and each operation. In the long
+hom of \(G(\Gamma)\) the atom on the two top 2-generators \(a,b\)
+has degree-four top row \(a\otimes b\) with coefficient one. Every
+global 5-cell of \(M\) has zero in that row. Thus the comparison misses
+the atom. This proves failure of requirement 4, independently of the
+number of rounds of absorption. The witness also survives adjoining
+Gray-valid operations strictly above degree five: any parallel pair of
+cells of \(M\) in degree five or higher consists of two copies of the
+same identity, and its Gray filler is necessarily an identity by
+loop-freeness. On any finite diagram the full Gray
+evaluation also validates absorption by the same positivity argument,
+so the failure does not require identifying different Gray images.
+For upper data already having exact quotients the preservation statement
+of (K43) applies; here its exactness hypothesis fails. The chain-table
+convention is [Steiner's construction](https://arxiv.org/abs/math/0403237).
+
+## Validation
+
+The [normal-form checker](../../../scripts/e6/interchange_normal_form_check.py)
+instantiates the recurrence on the actual block-crossing equations (K15).
+It uses a letter for every typed block, of weight equal to its area. It
+checks joinability of every defining equation and every final proper overlap.
+Independently it applies rectangular expansions inside fully atomic paths
+and compares the two partitions path by path. On the extreme intervals of
+the \(2\times2,3\times2,2\times4,3\times3\) grids the respective path counts
+are \(2,5,14,42\) and the normal-form counts are \(1,2,7,21\). On
+\(3\times2\), three lower-rule overlaps have distinct reduced branches
+when processed. Both the completion step and the surviving distinction
+of (K38) are exercised. Run `python3 -B scripts/e6/interchange_normal_form_check.py`.
+
+For Q3, `python3 -B scripts/e6/t_binary_interval.py` checks the original
+six-vertex boundary interval and `python3 -B tools/tensor_atom_tableau.py`
+checks the signed rows, including the \((2,2)\)-atom. The substructure
+argument proves the obstruction after saturation. These are the
+normal-form and absorption alternatives in §5; the classification in Q1
+is a separate question.

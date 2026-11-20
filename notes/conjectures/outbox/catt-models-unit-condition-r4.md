@@ -543,3 +543,58 @@ reverseAtFaces = snd (from-just (infer P _))
 comparison : P ⊢tm coh P (arr A t u) (idₛ P) ∶ arr A t u
 comparison = snd (from-just (infer P _))
 ~~~
+
+# Researcher Response 8
+
+## Prescribed faces for tensor cells in the directed theory
+
+Let $Γ=ΣP_1 ∨ ⋯ ∨ ΣP_k$ be a directed pasting arity. In its strict forward hom on a consecutive block of slots, choose a globular subarity in each factor, allowing a vertex. Let $c$ be the total cell of their Gray tensor. **Every lifting problem for $c$, or for an iterated identity on $c$, has a solution at the specified parallel raw faces.** This includes the elementary mixed atoms in every profile, with any number of active slots. Every raw cell strictly over an identity on such a total cell is coinductively invertible in the fixed hom.
+
+**Restriction to the slots.** Write $π$ for directed strictification. If $t$ is a forward raw term and $i$ belongs to its block, every variable of $P_i$ used in the typed term occurs in the closed support of the projection of $πt$ to $P_i$. To see this, make a directed substitution from $ΣP_i$ into $Γ$. Retain slot $i$ with its variables, send all outer vertices up to its left endpoint to the first pole of $ΣP_i$, and all vertices from its right endpoint onwards to the second pole. Send the generators in each collapsed slot to iterated identities at its pole. These assignments are typed since the arity generators have globular variable faces. Their strict interpretation on the forward hom augments all the other tensor factors. Each occurrence of a retained variable survives in the substituted typed expression, since substitution acts on the entries of a raw head and the retained variable maps to itself. By the single-slot support lemma of Response 7 the resulting expression uses only variables in the support of the projected cell. All variables occur between the outer endpoints of the term. Indeed, in each contributing root labelling the successive outer vertices form a nondecreasing sequence between those endpoints, by term induction from the directions of the arity generators and the endpoints of a head. The reasoning includes the terms in the type. [Single-slot support lemma](#the-directed-unit-on-suspended-pasting-arities) · [Table projections and closed supports](canonical-gray-terms-r8.md#projection-and-adjustment-of-chart-sections)
+
+Let $B$ be the wedge of the suspended subarities in the statement. The strict faces of $c$ project into the selected subarities, since they are faces of a cell already in that subtensor. The restriction just proved puts the two prescribed terms and their common type in $B$, by thinning the declarations. The inclusion is injective on strict tableaux, so their strict values in $B$ are the two faces of its total cell. The operation rule of $L$ supplies a head with exactly those terms as faces. At hom dimension zero the rule composes the chosen arrows along the outer path. For an identity on a total cell, both prescribed terms have the entire closed support of that cell in $B$. The coherence rule supplies the lift. Identity padding preserves closed support, so the calculation applies at every higher rank. Reindex each lift along the inclusion into $Γ$. At constant poles use the point arity. [Directed support rules and their strict interpretation](../../agda-gray-findings.md)
+
+For invertibility, start with a raw cell over an identity on $c$. Lift the strict identity at the reversed pair of raw faces. The two composites with this reverse and their respective units are parallel and again lie over an iterated identity on $c$. Lift both cancellations there. Repeat on each cancellation to obtain the inverse tower. This confines any failed prescribed lift in Response 6 at a pasting arity to a strict value whose cell, after stripping identity padding, is not the total cell of a tensor of subarities. For example, both axis projections of a path around two sides of the tensor square traverse a whole edge. The support of the path omits the square generator. The full-support coherence rule on the outer square therefore does not apply to two writings of that path.
+
+**Interchange with an identity input.** In any available elementary tensor term, specialize a positive-dimensional input of hom dimension $p+1$ to the identity on a $p$-cell. The specialized term is coinductively invertible, even if all the other inputs have positive dimension. First perform the specialization generically, by the globe map $D^{p+1}→D^p$ classifying the identity on the top generator. On directed complexes this sends the top basis element to zero, identifies its two signed $p$-faces with the top generator of $D^p$, and preserves lower faces. In the tensor tableau of the original atom the top row consequently vanishes. One row lower, in each sign, the unique surviving summand comes from taking the appropriate signed $p$-face in that factor and the top entry in every other factor. Its image is the top tuple of the smaller box with coefficient one. This tuple generates the full closed support, so support reconstruction identifies the result with the identity on the smaller total cell. The inverse-tower argument above applies at the actual specialized faces. An arbitrary labelling sends that tower to the witnesses required in its target model. The argument works in each slot, including at $p=0$. [Steiner tensor formula, Appendix A](https://arxiv.org/pdf/1607.00668) · [Strict support reconstruction](../../agda-gray-findings.md)
+
+## From ordinary tensor terms to directed operations
+
+Suppose the tensor $K=P_1⊗⋯⊗P_k$ has an ordinary CaTT family of terms $T(d)$ representing its strict cells, with a variable for each atom and literal source and target terms for every cell (condition CT). Then strictification of the forward hom between the extreme poles in $Γ$ has a section on underlying globular sets. Its terms have their specified faces simultaneously. In particular there are directed elementary terms $τ_{1,q}$ and $τ_{q,1}$ for every $q$, as well as terms for all cells of both subdivisions $[r]⊗D^q$ and $D^q⊗[r]$, for every finite $r$. [Definition of CT and the path-factor theorem, item 19](canonical-gray-terms-r8.md)
+
+Construct an ordinary labelling of the CT family in the fixed hom, in generator order. Represent a tuple of vertices by the outer path composite. For an atom $g$ of positive dimension the previously labelled family gives two raw terms, the evaluations of $T(∂^-g)$ and $T(∂^+g)$. They are parallel by the literal face equations of CT. Their strict values are the corresponding faces of $g$, since the labelling sends each earlier atom to its given strict value. In each slot take the closed globe of the corresponding entry of $g$. The total cell of this tensor of globes is $g$. The prescribed-face result supplies the next label. Evaluation of ordinary CaTT terms in the fixed hom now sends every $T(d)$ to a directed term over $d$. It preserves the literal face equations by substitution. This proves the section assertion.
+
+Under (U), every skeleton of an ordinary family presentation of a Steiner tensor has relative coherence by Known (VIII), since those skeleta are homotopical. The ascending cut construction of CT then works on every finite tensor (item 13 of the CT problem). The transfer above gives simultaneous directed terms for **every strict cell of every pasting arity**, including all the elementary tensor terms required in Known (IX). In a prescribed-boundary problem one can start with the resulting representative. Its boundary still has to be compared with the specified boundary at strict values supported on proper parts of the tensor. In particular a section alone does not compare an elementary term specialized at a composite input with the paste of its two instances. That comparison is still needed for the proposed proof of transport. [Ascending cut construction, item 13](canonical-gray-terms-r8.md#3-what-is-known)
+
+**Validation.** Agda 2.8.0 checked the mixed square with a vertical identity appended to each of its two boundary paths. At those literal faces the operation rule produces a 3-cell, and the coherence rule types a loop on it and a further loop on that loop. At the padded two-edge boundary path itself the square-arity side condition computes to false. A separate signed-table check folded each positive-dimensional factor of every globe product with one through four factors, factor dimensions at most four and total dimension at most eight. In all 1,284 cases the folded tableau was the smaller atom padded by an identity. The all-rank assertions use restriction to subarities and induction on family generators.
+
+<details>
+<summary>Agda check at the prescribed faces</summary>
+
+```agda
+module BoxCheck where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Gray.Pure
+open import CaTTExp.Gray.Examples using (v; D₁; HComp; Txz; x; z; fg; f'g'; βα; αβ; vcomp)
+
+endId = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ x ∷ z ∷ f'g' ∷ [] ⟫
+lower = arr Txz fg f'g'
+left = vcomp x z fg f'g' βα f'g' endId
+right = vcomp x z fg f'g' αβ f'g' endId
+B = arr lower left right
+box = coh HComp B (idₛ HComp)
+
+atPaddedFaces : HComp ⊢tm box ∶ B
+atPaddedFaces = snd (from-just (infer HComp _))
+
+loopType = arr B box box
+loop = coh HComp loopType (idₛ HComp)
+tower : HComp ⊢tm coh HComp (arr loopType loop loop) (idₛ HComp) ∶ arr loopType loop loop
+tower = snd (from-just (infer HComp _))
+
+pathControl : graySide HComp lower left left ≡ false
+pathControl = refl
+```
+
+</details>

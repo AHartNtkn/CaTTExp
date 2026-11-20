@@ -46,7 +46,7 @@ class Stage:
             word = word[:i] + rule.target + word[i + len(rule.source):]
             yield word
 
-    def backwards(self, vertex, source, target, objects, budget):
+    def backwards(self, vertex, source, target, objects, budget, object_site=None):
         stack = [(target, budget, ())]
         while stack:
             word, remaining, path = stack.pop()
@@ -57,6 +57,8 @@ class Stage:
                 if cost > remaining:
                     continue
                 for i in self.sites(vertex, word, rule.target, rule.vertex):
+                    if cost and object_site is not None and not object_site(remaining, name, word, i):
+                        continue
                     prev = word[:i] + rule.source + word[i + len(rule.target):]
                     stack.append((prev, remaining - cost, ((name, i),) + path))
 

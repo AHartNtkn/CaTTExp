@@ -211,6 +211,8 @@
 - **Along i.** An ordinary strict presentation stays strict in 𝒪. The converse fails: the double delooping of the braided monoidal groupoid on ℤ with braiding β_{p,q} = pq is a strict Gray presentation of iX with X not ordinarily strictly presentable.
 - **The image of t*.** An L-algebra is in the image of t* up to W_L iff every elementary mixed term τ_{p,q} evaluates to a coinductively invertible cell.
 - **Model structures.** Both are combinatorial, tractable, left proper and right proper. Explicit Quillen zigzags connect the ordinary one to the complete Segal Θ-space, complicial and comical models localized at the walking coinductive equivalence, and the oriented one to the Gepner–Heine wedge-site presentation. The discrete enrichment fails the simplicial axiom. The terminal object is sequentially compact in the unlocalized saturated complicial and comical models but not here, so those are not Quillen equivalent to the raw models.
+- **Same degree as homotopicality.** Strict presentability of finite typed ordinary computads has exactly the Turing degree of homotopicality of finite strict polygraphs. A typing search terminates on homotopical inputs, H reduces to it with two adaptive queries, every set truth-table reducible to 0′ many-one reduces to it in rank ≤ 10, and it is Π⁰₂-complete iff homotopicality is. Directed inputs are truth-table hard in rank ≤ 11.
+- **No finitary point cylinder.** A cofibrant algebra with two distinct equivalent vertices is not a retract of a computad missing generators in some positive rank. So a compatible simplicial tensor would have P ⊗ Δ¹ not finitely presentable, and its path cotensor could not preserve filtered colimits.
 - **No Gray monoidal structure.** A homwise Gray tensor on L-models has no middle-four map. No Quillen bifunctor's derived tensor extends the ordinary Gray tensor on embedded Gray cubes: the derived tensor would make i([2] ⊗ [2]) the pushout of its two one-column strips, and maps of the strips into ΣI ∨ ΣI that agree on the common edge do not extend.
 
 ## Questions
@@ -219,12 +221,12 @@
 - Give a homotopy-invariant characterization of the strictly presentable groupoidal n-types that are not simply connected, in terms of the π₁-action and the k-invariants. Known (XII) settles the simply connected ordinary case.
 - Do the same in the directed setting. Which n-types have a strict Gray presentation? Is every 3-type one, as the braided example suggests? Which simply connected 4-types are, given that P₄S³ is not?
 - Give an intrinsic criterion for non-groupoidal objects that does not quantify over presenting diagrams D, for example in terms of the homotopy types of the arity mapping spaces of X.
-- Give the exact computability degree of strict presentability for unrestricted finite computads. In the ordinary case it lies between Π⁰₁ and Π⁰₂; is it Π⁰₂-complete in dimension 3 or higher? In the directed case it lies between Π⁰₁ and Σ¹₁; is it arithmetical?
+- Give the exact computability degree of strict presentability for unrestricted finite directed computads. It lies between truth-table hardness for 0′ and Σ¹₁; is it arithmetical? (The ordinary case has exactly the degree of homotopicality of finite strict polygraphs (Known (XII)), which is asked separately.)
 
 **Q2 (bounds up to invertible comparison).** Literal lifts of the unit do not exist in general (Known (XII)). Fix a representation of fillers, realization choices and invertibility data. For a finite computad B and a strict cell d of S₀𝓛_R B with a prescribed raw boundary, give a raw cell at that boundary together with an explicit invertible comparison to d, with a bound on its size and dimension. Say whether a polynomial bound exists, and do the same for the directed unit.
 
 **Q3 (the two model categories).**
-- Is there a simplicial (or other) enrichment of the raw categories, with tensors and cotensors, satisfying the enriched model axiom?
+- Is there a simplicial (or other) enrichment of the raw categories, with tensors and cotensors, satisfying the enriched model axiom? Known (XII) rules out finitary ones; a non-finitary one is still possible.
 - Known (XII) rules out monoidal structures extending the Gray tensor on embedded Gray cubes. Does either model structure admit a closed monoidal structure presenting some other tensor of interest (for example the cartesian product on ordinary models, or the tensor of Gepner–Heine acting on the enriching category)?
 - Give a direct Quillen equivalence between L-models and a published combinatorial model of oriented (∞,ω)-categories, if one exists.
 

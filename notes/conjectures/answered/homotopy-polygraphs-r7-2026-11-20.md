@@ -511,3 +511,39 @@ To check the replacement, take any collection of witnessing pairs at the guards.
 **Recognition.** The generator condition is checked by starting immediately after every acquisition, remembering the first release resource subsequently encountered, and rejecting a walk with another release resource. Check resource monotonicity separately. Enumerate attainable zero changes by the finite axis catalogue and apply the replacement and sink test to each tuple. For coNP membership, a bad tuple has polynomial-length control words: mark the at most $R$ zero changes on each axis, shorten the intervening control walks to simple paths, then choose the initial holdings so each retained first acquisition or final release gives its intended change. This works by resource monotonicity. The positive sphere-factor test on the resulting graph is polynomial. Hardness and realization of all sphere products already hold on the single-transfer subclass. Suspension invariance and the graph-assembly decision carry over as in the earlier class.
 
 **Reproduction.** With Python and SymPy run `python tools/homotopy_polygraph_interleaved.py`. The [solver](../../../tools/homotopy_polygraph_interleaved.py) compares the formula with independently computed integral product-cell homology on 126 four-axis records. Two records with identical endpoint masks have respectively one circle and one point, and the corresponding whole decisions differ. A single axis releasing, acquiring, releasing again and acquiring on a new resource has both an early and a late departure. The solver and signed cellular calculation both give a circle, including after adding an initial release on a different guarded resource.
+
+# Verification addendum (2026-11-20, Responses 5–11)
+
+Responses 5–11 arrived after the verification above. They answer much of `outbox/homotopy-polygraphs-r8.md`.
+
+Status: **verified.** No gap was found. Question 1 (the unrestricted degree) stays open.
+
+**What they prove.**
+- **Response 5 (Question 1).** There is a fixed finite positive rank-6 polygraph with supplied rank-4 poles drawn in a periodic strip of constant cross-section, realizing spaces Y_n with Y_{2^e(2j+1)} contractible iff φ_e(j)↓. So the universal test on an arithmetic progression of strip lengths is Π⁰₂-complete. The Y_n are glued from one fixed block between two caps. The groups come from Higman's embedding, Miller's Lemma 5.13, Higman's group and a universal central extension. All Y_n are acyclic with no finite quotients. A sufficient 1-cell selection property for whole-presentation hardness is stated.
+- **Response 10 (Question 1).** That selection property fails for this strip: every complete strip has a circle at the same 1-boundary, using only T, the first column, the switch and one junction. So a test on boundary words cannot select these strips.
+- **Response 6 (Question 3).** With at most t hubs, the fibres are exactly the connected finite subcomplexes of the Freudenthal triangulation of ℝ^{t−1}. Four hubs give a torus. Up to four hubs, specified-fibre contractibility is decided by integral homology, because an acyclic regular neighbourhood in ℝ³ is a ball. At 3q + 2 hubs (q fixed by the strip) it is r.e.-complete.
+- **Response 7 (Question 2).** For one monotone resource of any width with binary controls, failure is r.e. and always has a circle fibre: it is an induced bipartite cycle of length ≥ 6. With no control component reversing a binary resource internally, the problem is coNP-complete (Euler-trail certificates with integer-programming bounds). On the fully monotone class it is in EXPTIME. The homology question of r7 Question 2 is answered under the two-subcomplex induction hypotheses.
+- **Response 8 (Question 2).** For any number of monotone guards with arbitrary binary controls, failure is r.e. and has a homology witness. The fibres are modelled by a product-of-simplices subcomplex determined by its corners. Under bounded reversals the problem is in EXPTIME, and it is coNP-complete for every fixed bound on the number of nonbinary resources.
+- **Response 9.** Equality of strict labels on an explicit monotone record is PSPACE-complete, by realizing the solution complex of a CNF formula and using PSPACE-completeness of connectivity of Boolean solution graphs (Gopalan–Kolaitis–Maneva–Papadimitriou).
+- **Response 11 (Question 2).** On monotone rings where, after the first acquisition, all releases use one resource, the fibres are products of spheres and the problem is coNP-complete. This enlarges the one-destination class.
+
+**What was re-run.** All cited checkers exit 0 with the stated counts:
+- `homotopy_polygraph_periodic_strip.py`: 115 lanes and at most 45 arcs per slab from 4 triangles up to 64.
+- `homotopy_polygraph_hub_triangulation.py`: 851 faces; the torus has 32 vertices, 96 edges and 64 triangles.
+- `homotopy_polygraph_milestones.py`: polygons with circle homology.
+- `homotopy_polygraph_monotone.py`: 2,916 and 3,291 records.
+- `homotopy_polygraph_witness_product.py`: the projective plane has H₁ = ℤ/2.
+- `homotopy_polygraph_sat_charts.py`: 36 CNFs agree.
+- `homotopy_polygraph_strip_cut.py`: 26 faces, Betti (1, 1).
+- `homotopy_polygraph_interleaved.py`: 126 records.
+- `homotopy_polygraph_two_changes.py` also passes.
+
+The GAP coset check in Response 5 (orders 60 and 1 for the A₅ model) was not re-run, because GAP is not installed. It is a sanity check only.
+
+**Checked by hand.**
+- **Response 5, the halting dichotomy.** If n ∈ S the quotient of D is trivial, so the quotient of U is central and perfect, hence trivial. Otherwise it surjects onto a group containing P.
+- **Response 6, the ball argument.** Duality gives H₁(∂N) = 0 and a connected ∂N, so ∂N is one PL 2-sphere, and Alexander's theorem makes N a ball.
+- **Response 7, induced cycles.** Chordal bipartite relations have contractible row complexes, and an induced cycle is isolated by adding holds.
+- **Response 9.** Feasible corners are satisfying assignments decorated with true literals, and the projection to the Boolean solution complex is an equivalence by Quillen's Theorem A.
+
+**Left open.** The unrestricted degree; decidability for one monotone guard with arbitrary binary reversals (failure is r.e.); the exact complexity between coNP and EXPTIME for unboundedly many monotone guards; the least hub count between 5 and 3q + 2 at which specified-fibre contractibility becomes undecidable. These are carried into `outbox/homotopy-polygraphs-r8.md`.

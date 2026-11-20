@@ -95,26 +95,33 @@ Homotopy polygraphs are exactly the computads whose free (∞,ω)-category can b
 39. **Forests (r7).** If the graph joining the two users of each binary resource is a forest, homotopicality is NL-complete with no width bound. Failure is again three disjoint routes. On any interaction graph, two processes meeting every feasible route certify homotopicality, because two-coordinate dominance has no induced cycles of length 6 or more.
 40. **Hubs and the fibres (r7).** If t processes meet every causal route, the fibres are exactly the components of t-coordinate strict dominance row complexes, each an open polyhedral subset of ℝ^{t−1}. For t = 3 these are exactly the finite wedges of circles; t = 4 gives S²; homology vanishes in degrees ≥ t − 1.
 
+41. **Periodic supplied poles (r7).** A fixed finite positive rank-6 polygraph has supplied rank-4 poles in a periodic strip of constant cross-section realizing spaces Y_n (one fixed block glued n times between two caps; all acyclic with no finite quotients) with Y_{2^e(2j+1)} contractible iff φ_e(j) halts. The universal test on an arithmetic progression of lengths is Π⁰₂-complete. Grading into the free category on l, b, r with all fibres outside grades lbⁿr passing would transfer this to whole presentations, but in this strip every complete strip has a circle at the same 1-boundary, so boundary words cannot select it.
+42. **Hub fibres exactly (r7).** With at most t hubs the fibres are exactly the connected finite subcomplexes of the Freudenthal triangulation of ℝ^{t−1}. Up to four hubs specified-fibre contractibility is decided by integral homology; at a fixed hub count 3q + 2 it is r.e.-complete.
+43. **Monotone guards with binary controls (r7).** For one monotone guard of any width with arbitrary binary controls, failure is r.e. with a circle witness (an induced bipartite cycle of length ≥ 6). For any number of monotone guards, failure is r.e. with a homology witness (a product-of-simplices model determined by its corners). When no control component reverses a binary resource internally, recognition is in EXPTIME, and coNP-complete for each fixed bound on the number of nonbinary resources. On the fully monotone class (item 33) it is in EXPTIME.
+44. **Labels are PSPACE-hard (r7).** Equality of strict labels on an explicit monotone record is PSPACE-complete, via connectivity of CNF solution spaces.
+45. **Interleaved releases (r7).** On monotone rings where all releases after the first acquisition use one resource, fibres are products of spheres and recognition is coNP-complete.
+46. **Homology suffices under two-subcomplex induction (r7).** If attainable history complexes admit a well-founded induction where bases have simply connected components and every other complex is a union of two subcomplexes modelled by smaller records, integral acyclicity of all of them implies contractibility.
+
 ## 4. Questions
 
 **Question 1 (main: the exact degree).** Decide whether homotopicality of finite polygraphs is Π⁰₂-complete or Δ⁰₂.
-- For Π⁰₂-completeness, give the construction of item 36: a finite polygraph from a pulse producer whose answer tracks the parity of a finite but uncapped pulse count. Item 37 shows that a fixed board with a finite catalogue cannot do it; say what kind of unbounded routing could.
+- For Π⁰₂-completeness, give the construction of item 36: a finite polygraph from a pulse producer whose answer tracks the parity of a finite but uncapped pulse count. Item 37 shows that a fixed board with a finite catalogue cannot do it, and item 41 that the periodic strip cannot be selected by boundary words; say what kind of unbounded routing or selection could.
 - For Δ⁰₂, give a bound computable from 0′ on the records to examine, extending item 34's milestone reduction to all resources.
 - If neither is reachable, settle the question on positive presentations.
 
 **Question 2 (one class containing the decidable ones).**
-- Find one natural class, defined by finite checks on the generators and closed under suspension and graph assembly, that contains items 31–34, 38 and 39 and on which item 25's criterion becomes a terminating test. Give the algorithm and its exact complexity.
-- One monotone resource with four or more users on both sides: is homotopicality decidable, and what is its complexity? Item 38 notes that longer induced incidence cycles then need analysis.
-- Several monotone resources with binary controls: give the exact complexity, or show undecidability.
-- On the monotone class (item 33), is recognition coNP-complete, or harder? Give the exact boundary between decidable and undecidable generator-level classes.
+- Find one natural class, defined by finite checks on the generators and closed under suspension and graph assembly, that contains items 31–34, 38, 39, 43 and 45 and on which item 25's criterion becomes a terminating test. Give the algorithm and its exact complexity.
+- One monotone guard with arbitrary binary reversals: failure is r.e. (item 43). Is recognition decidable?
+- Unboundedly many monotone guards (bounded reversals, or the fully monotone class of item 33): the complexity lies between coNP and EXPTIME, and label equality alone is PSPACE-complete (item 44). Determine it.
+- Give the exact boundary between decidable and undecidable generator-level classes.
 
 **Question 3 (the fibres).**
-- Item 40 gives the fibres of hub-separated classes. Characterize the fibres on the monotone and binary classes without a hub bound, beyond item 38's "every connected finite complex".
-- For t ≥ 4 hubs, characterize the homotopy types of t-coordinate dominance complexes intrinsically (for example, as a class of open subsets of ℝ^{t−1}). Is every finite complex of dimension ≤ t − 2 one of them?
+- Characterize the fibres on the monotone and binary classes without a hub bound, beyond "every connected finite complex".
+- Find the least hub count at which specified-fibre contractibility is undecidable (item 42: between 5 and 3q + 2).
 
 ## 5. What counts as a solution
 
-An exact placement in the arithmetic hierarchy; one decidable class at the level of generators containing items 31–34, 38 and 39, with its exact complexity and a uniform proof in every dimension; a characterisation of the fibres that occur on a natural class; or a published reference.
+An exact placement in the arithmetic hierarchy; one decidable class at the level of generators containing items 31–34, 38, 39, 43 and 45, with its exact complexity and a uniform proof in every dimension; a characterisation of the fibres that occur on a natural class; or a published reference.
 
 ## 6. Literature (searched 2026-11-18 and 2026-11-19; references added 2026-11-20 from the round-3 to round-7 answers)
 
@@ -135,3 +142,4 @@ An exact placement in the arithmetic hierarchy; one decidable class at the level
 - Adyan–Rabin (triviality of finitely presented groups is undecidable), the source of undecidability of contractibility of finite complexes used in item 27.
 - Kőnig–Egerváry (bipartite vertex cover), used in item 30; Matiyasevich, *The Diophantineness of enumerable sets* (via the round-5 answers).
 - Englert–Lazić–Totzke, arXiv 1602.00477 (two-counter reachability with unary updates); Blondin et al., arXiv 1412.4259 (flattening of two-dimensional VASS); Terwijn, *Generalizations of the recursion theorem*.
+- Higman, *Subgroups of finitely presented groups*; Miller, *Combinatorial Group Theory* (Lemma 5.13); Bridson, arXiv 0810.0390; Gopalan–Kolaitis–Maneva–Papadimitriou, arXiv cs/0609072; Papadimitriou, *On the complexity of integer programming*; Alexander, *On the subdivision of 3-space by a polyhedron*.

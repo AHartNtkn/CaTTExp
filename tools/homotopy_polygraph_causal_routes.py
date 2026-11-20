@@ -66,7 +66,7 @@ def can_relay(graph, left, right):
         pumps.update((s,x,y,a,b) for s,t,x,y,a,b in walks if s == t and (x or y))
 
 
-def circle_routes(controls, main):
+def binary_users(controls, main):
     users = defaultdict(set)
     for i, graph in enumerate(controls):
         if any(acquisition_before_release(graph, a, b) for a,b in
@@ -77,6 +77,12 @@ def circle_routes(controls, main):
                 users[op[1]].add(i)
     if any(len(us) > 2 for us in users.values()):
         raise ValueError("auxiliary resource has more than two users")
+
+    return users
+
+
+def circle_routes(controls, main):
+    users = binary_users(controls, main)
 
     @cache
     def relay(i, a, b):
@@ -97,7 +103,6 @@ def circle_routes(controls, main):
         if len(set(a+b+c)) == len(a+b+c):
             return a,b,c
     return None
-
 
 
 def homotopical(controls, main):

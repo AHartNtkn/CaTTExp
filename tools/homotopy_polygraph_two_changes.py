@@ -56,7 +56,7 @@ def forget_wire(history, keep):
                  for left, wire, right in history)
 
 
-def check_fibre():
+def comparison_poset():
     joint, labels = lower_charts('CD')
     assert joint.betti(labels) == (1, 1)
     sides = {}
@@ -90,9 +90,16 @@ def check_fibre():
             return False
         return all(j in sides[k].ideal(i) for k, i, j in zip(y[0], source, y[1:]))
 
+    return elements, below
+
+
+def check_fibre():
+    elements, below = comparison_poset()
     betti = order_complex_betti(elements, below)
     assert betti[:3] == (1, 0, 1) and not any(betti[3:])
-    print(f'{len(joint.cells)} joint lower histories, {len(sides["C"].cells)} per unary side, '
+    joint_count = sum(e[0] == 'joint' for e in elements)
+    side_count = len({e[1] for e in elements if e[0] == 'CD'})
+    print(f'{joint_count} joint lower histories, {side_count} per unary side, '
           f'{len(elements)} decorated objects, mod-two Betti numbers {betti[:3]}.')
 
 

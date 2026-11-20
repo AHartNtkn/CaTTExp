@@ -32,7 +32,7 @@ def transfer_options(graph):
     options = set()
     while pending:
         s, acquired, released = pending.pop()
-        for action, t in outgoing[s]:
+        for action, t in outgoing.get(s, ()):
             p, v = acquired, released
             if action is not None:
                 kind, r = action

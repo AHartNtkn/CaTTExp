@@ -69,9 +69,20 @@ The reduction for undecidability could go from reachability in positive rewritin
 
 **Question 2 (conditions on the base alone).** Is there a condition on Γ alone, checkable on finite data and valid in every dimension, under which the attaching expressions exist for **every** strict weight with free homotopical values? Item 9 shows that this is not automatic from base dimension 4, even for oriental bases. If such a condition exists, prove necessity and sufficiency. If the only bases that work for every weight are those covered by items 3–5, prove that.
 
+**Question 3 (bases that are not homotopical, read weakly).** Drop the homotopicality hypothesis on the base by taking the weak base Free(Γ) instead of F(Γ). Let Γ be any finite n-polygraph, and T : Free(Γ) → ω a coherent weight whose values are Free(Π_b)[W_b⁻¹] with Π_b finite and dim Π_b ≤ m. Prove that ∫T → Free(Γ)^♯ has a finite marked presentation of dimension ≤ n + m, or give a counterexample. Item 8's obstruction does not apply: over Free(σ) for the bubble σ : 1_x ⇒ 1_x, the total of the terminal weight is Free(σ) itself. A proposed route:
+- (i) **Resolve the base.** Free(Γ) is an iterated homotopy pushout of globes by definition, so the bounded-model calculus behind item 12 gives a finite complicial model of dimension ≤ n. The conversion L_n then gives a finite homotopical polygraph Γ′ (the oriental of a semisimplicial set, Chanavat Thm 3.35) of dimension ≤ n, together with a finite set W′ of generators such that Free(Γ′)[W′⁻¹] ≃ Free(Γ).
+- (ii) **Present over the resolution.** Apply item 13 to T ∘ ℓ, where ℓ : F(Γ′) → Free(Γ).
+- (iii) **Localise the total.** Localise the result at the cartesian lifts z_{w,x} (w ∈ W′, x a source-fibre vertex).
+
+Step (iii) needs the following lemma, which is the precise question:
+
+> **Lemma (totals over a localisation).** For an (∞,ω)-category B, a set S of cells, ℓ : B → B[S⁻¹] and T : B[S⁻¹] → ω, the map ∫(T ∘ ℓ) → ∫T exhibits ∫T as the localisation of ∫(T ∘ ℓ) at the cartesian lifts of the cells of S.
+
+One reduction: B[S⁻¹] is a pushout of B along marked trivialisations ∐ D_{k+1}^t → ∐ D_k^♭, and pullback along left cartesian fibrations preserves colimits (Loubaton Thm 3.2.3.15). So it suffices to prove the lemma for a single trivialisation D_{k+1}^t → D_k^♭, where it should follow from item 2. Please prove the lemma (or give a reference), and confirm or repair steps (i)–(iii).
+
 ## 5. What counts as a solution
 
-A terminating recognition procedure with proof, or an undecidability proof, for Question 1; an exact base criterion, or a proof that none exists beyond items 3–5, for Question 2; or a published reference.
+A terminating recognition procedure with proof, or an undecidability proof, for Question 1; an exact base criterion, or a proof that none exists beyond items 3–5, for Question 2; a proof or counterexample for Question 3; or a published reference.
 
 ## 6. Literature (searched 2026-11-19)
 

@@ -1517,3 +1517,39 @@ dir=$(mktemp -d)
 python3 -B tools/relative_coherence_star_attachment_ranks.py --agda "$dir/StarRanks.agda"
 agda --safe --no-libraries -i src -i "$dir" "$dir/StarRanks.agda"
 ~~~
+
+# Researcher Response 53
+
+## Three fixed relative cylinder inclusions suffice, independently of the attaching paths
+
+For each \(k\ge0\) take two \(k\)-globes with identified boundary. Fold them to the first globe \(D^k\), and factor this fold by freely filling all globular boundary-lifting problems in ranks \(>k\). Write the result as
+\[
+ D^k\amalg_{\partial D^k}D^k\ \lhook\joinrel\longrightarrow W_k
+        \xrightarrow{p_k} D^k ,
+ \qquad j_k:D^k\hookrightarrow W_k
+\]
+where \(j_k\) selects the first copy. Use one generator for each pair of parallel \((n-1)\)-terms and **each specified \(n\)-term of the globe** on their projected ends, in increasing rank \(n>k\). The projection is a globular trivial fibration: below \(k\) it is the identity, in rank \(k\) the first copy supplies the lift, and above \(k\) use the specified generator. Thus each \(j_k\) is a split computadic cofibration and an FHM weak equivalence. Its source and target are fixed, even when an attaching map sends the top cell of the first globe to a large composite.
+
+**If cobase changes of \(j_0,j_1,j_2\) at three-connected groupoidal free algebras are surjective on algebraic \(\pi_4\) at the old basepoint, the six-seam ring fails identity-image RC through degree eight.** Conversely, if the ring has that RC, one pushout of one of these three fixed maps at such an algebra has a split infinite cyclic summand in the cokernel on \(\pi_4\). This removes the dependence of the *attached inclusion* in Response 52 on the changing path endpoints, overlapping facets and higher brackets of its source.
+
+**What these attachments preserve unconditionally.** For any groupoidal free algebra \(Y\) and any attaching cell \(D^k\to Y\), put \(Y^+=Y\amalg_{D^k}W_k\). Then \(Y\to Y^+\) induces an isomorphism at each old basepoint on
+\[
+                         \pi_d,\qquad 1\le d\le\max(3,k+1).
+\]
+It also gives a bijection on components. The retraction is induced by \(j_kp_k\) on the template. In \(W_k\) any parallel pair of \(m\)-terms with \(m\ge k\) admits a comparison: in the globe their images have the same strict value, since the strict globe is thin in rank \(k\) and has only identities higher up. Pasting-context RC supplies a globe term on their images, then lift it with \(p_k\). This yields coinductive inverses for every new generator above rank \(k\). The duplicate \(k\)-cell, if \(k>0\), is joined by an invertible \((k+1)\)-cell to the chosen old cell, hence becomes weakly invertible in the pushout. For \(k=0\) the new vertex is connected to the old one. Thus the pushout remains groupoidal.
+
+For a loop mark all the new generators in its finite context, including dependencies. All have rank at least \(k\). Interpret its naturality cylinder with minus copy the identity and plus copy the retraction followed by the inclusion. On the template itself, recursively choose the mixed label for each marked variable in \(W_k\): its prescribed parallel ends have dimension at least \(k\), so the preceding lifting argument applies. These choices specialize along the attaching map, with the old globe unmarked. More explicitly, the presentation of \(Y^+\) freely adjoins the complementary template variables with the old globe substituted in their types. Naturality respects substitution of unmarked terms; the old labels may therefore be arbitrary cells of \(Y\). In dimension at most three use arbitrary-depth naturality. In dimension \(d\le k+1\) use depth at most one; when there are no marks the term is already old. The loop has literal point poles, so its cylinder is a comparison with its retracted loop. This proves surjectivity, and the strict retraction proves injectivity. No comparison of different choices of naturality data is used. [Arbitrary-depth naturality through dimension three, §7](../answered/naturality-arbitrary-depth-r8-2026-11-18.md#7-arbitrary-arities-and-conjecture-n-through-dimension-3) · [Depth-one theorem](https://arxiv.org/abs/2501.11620)
+
+**Lifting the four-skeleton using only the fixed templates.** Take any square \(D'\subset F,\ O'\subset T\) of Response 51. Starting at \(P=D'\), construct a free algebra over \(F\) by processing the generators of \(F-D'\) through rank four in order of dimension, using a countable enumeration within each rank. Maintain a literal lift of the part processed so far, equal to the inclusion on the old four-skeleton. For a new \(k\)-generator \(g\), lift its boundary using those earlier choices. Choose an old cell \(z\) on this lifted boundary in the current \(P\); for \(k=0\) choose the old apex. Such a cell exists because \(P\) remains three-connected and groupoidal. Indeed the preceding isomorphisms preserve three-connectivity at each step and at unions every term occurs at a prior stage. In a connected groupoidal algebra with all based groups through degree three zero, parallel \(m\)-terms for \(m\le3\) can be based identically as in Response 48, compared there, and the comparison reflected along the invertible whiskerings.
+
+Attach \(W_k\) at \(z\), and use its duplicate as the lift of \(g\). Map this extension to \(F\) by sending the first cell to the image of \(z\), the second to \(g\), and the higher variables to fillers in the globularly contractible \(F\). The two cells have the same literal boundary in \(F\). This produces a section on the entire four-skeleton of \(F\), compatible there with \(D'\). After pushout under \(O'\) the resulting algebra maps to \(T\) surjectively on based four-loops: substitute the chosen lifts on \(F\) and the original terms on \(O'\), which agree on the common four-skeleton. Throughout this second tower the base is likewise three-connected and groupoidal. Its initial object \(O'\) has these properties since \(O\) does and the additional generators start in rank five.
+
+In a square detected by Response 51, pull the detecting homomorphism back along the entire tower under \(O'\). Its image starts at zero and ends nonzero by the literal lifting. A first nonzero image occurs at a successor because every four-loop has finite support. That successor attaches \(W_k\) for \(k\le2\): the unconditional range above gives surjectivity in degree four at \(k=3,4\). The image at that step gives the split integral summand in the cokernel. The same argument proves the sufficient implication by composition and finite support. This is a test for the original ring; surjectivity outside the proved range for \(j_0,j_1,j_2\) remains open.
+
+**Reproduction.** The solver implements the prescribed-image generators, constructs their projection to the first globe, and checks opposite cells before and after projection for \(k=0,\ldots,4\). Two different projection labels on one literal boundary give distinct generators. The solver constructs a comparison between those generators and its reverse. For \(k=2\) it also specializes the template at a composite two-arrow on a three-vertex path and checks both specialized mixed four-types. Agda checks all 62 stated types. The solver checks these finite fragments; the arbitrary-rank result uses the specified-image lifting construction and the two naturality ranges. [Relative cylinder generator and projection checks](../../../tools/relative_coherence_parallel_cell.py)
+
+~~~sh
+dir=$(mktemp -d)
+python3 -B tools/relative_coherence_parallel_cell.py --agda "$dir/ParallelCells.agda"
+agda --safe --no-libraries -i src -i "$dir" "$dir/ParallelCells.agda"
+~~~

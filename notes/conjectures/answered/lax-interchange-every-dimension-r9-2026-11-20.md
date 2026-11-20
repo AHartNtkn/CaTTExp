@@ -733,3 +733,43 @@ Now keep \(F_{E_0}(D)\) through \(M\) and freely complete its carrier by a *uniq
 The [power-profile checker](../../../scripts/e6/interchange_power_profiles.py) enumerates the 302 raw macrohistories of the generic two-by-four crossing. Allowing every presentation of the inactive two-column block gives nine raw lifts for each of the two moves. The source set of each is disjoint from its own target set. A lift of one move can compose with a lift of the other. The checker also tests all 961 assignments of early/late words of length at most four to the two loops. The window-string and truncation arguments above supply the result for arbitrary substitutions and arities.
 
 Together Responses 1–5 answer Q1, Q2(b), and Q3–Q5. Q2(a) remains open for arbitrary finite lists of pasting-diagram laws. Q2(c) remains open for uniform equality, reachability and comparison on normal forms for every finite admissible extension. Response 3 gives the decision results for restricted lists.
+
+# Verification addendum (2026-11-20, Responses 2–5)
+
+Responses 2–5 arrived after the verification above. They answer the remaining r9 questions, which are also the questions of the unsent r10 follow-up.
+
+Status: **verified.** Q1(b), Q2(b), Q3, Q4 and Q5 are now answered. Q2(a) and Q2(c) remain open in general. The closed-form description of the decorations, asked as r10 Q3, is still not addressed.
+- **Q3, laws one degree up** (Responses 2 and 3).
+  - In every dimension n ≥ 4 the power splits D^{(n)}_{d,p} are visible, and those with d = 1 are independent over V on explicit pasting-diagram equations. Separating tables with labels (m_n(a) m_n(b), [N ∤ m_n(a)] [m_n(b) > 0]) show that the law holds iff v_p(N) ≤ v_p(d).
+  - On the eight-span arity Δ, the degree-5 laws S_{d,p} (E(X^{dp}, Y) equals the paste of p crossings) give admissible extensions T + {S_{d,p}} and V + {S_{d,p}} for every selection compatible with a weighting f with f(dpm) = p f(dm). The same holds in every output degree D ≥ 5.
+- **Q1(b), classification of pasting profiles** (Responses 3–5).
+  - The profiles over V embed the inclusion poset of sets of primes, using S_{1,p} with f(m) = ∏_{p∈I} p^{v_p(m)}. This gives infinite antichains, divisibility and its reverse.
+  - **The profiles do not form a lattice, and admissibility is not closed under finite unions** (Response 4). At degree M ≥ 10 there are two admissible finite sets S₁ = {A = B} and S₂ = {A² = B³, d² = c³}, typed over V in the outer-unary variant. Their union forces idempotents x, y with a proper exchange loop Z′ satisfying PZ′ = Z′ = Z′P, which contradicts requirement 3.
+  - **Not every profile is V plus old-typed pasting laws** (Response 5). E = E₀ + {A²B⁴A² = B²A⁴B²} is admissible, yet every V-typed equation of rank at most M that is valid in E already holds in E₀. The proof uses a mass-indexed window-string invariant.
+  - There is an exact index of all profiles by positive diagram judgements, ordered by inclusion and built from the finite proof supports of (K55).
+- **Q2, adding laws** (Response 3).
+  - A finite set S of unconditional equations that holds at every generic T₁₂-tuple makes V + S admissible. Failure at a generic Gray or strict tuple rules admissibility out.
+  - Admissibility of equation-only extensions has a Π⁰₂ upper bound.
+  - Equality and reachability are uniformly decidable for T₁₂-valid finite lists whose input arities have height at most 3.
+- **Q5** (Response 2). On Γ_{2,n} the comparison from V to the round-5 Response-12 theory is an isomorphism through global degree six. So the list of T₁₂ identifications that V lacks there is empty. The response gives explicit normal forms in degrees 3–6.
+
+**Consequence for the design decision (§1.7).** R and the inner composite-crossing law both hold in T₁₂, which is admissible and contains them. By Response 3's sufficient condition, **V + {R} and V + {inner law} are each admissible**, so the two intermediate switch settings are available.
+
+**What was re-run.**
+- `scripts/e6/interchange_grid_normal_histories.py` exits 0. It finds 45 states, 825 intervals, 33,549 histories and 28,878 normal forms.
+- `scripts/e6/interchange_power_profiles.py` exits 0. It checks 302 macrohistories, 9 and 9 lifts, and 961 colour assignments. Both schedules, the five seed routes, the consecutive-rank charges, the divisor tests and the separated-word contexts agree.
+
+**Checked.**
+- **Response 2.** The two expansions of the outer unary give the weight-one loop, and the v_p criterion follows from the image of multiplication by d in ℤ/N.
+- **Response 3.** The surcharge table keeps the grading conserved: each modified letter is balanced in its seed routes, and the bridges see equal charges on paired layers. The bidirectional window check holds because the p windows cover the direct window with connected interiors.
+- **Response 4.** The masses give polynomial identities on the seed paths. The separation predicate is the three Booleans (early colour present, late colour present, an early letter before a late one), and twice and three times give the same Booleans. The idempotent contradiction holds.
+- **Response 5.** Each step of the window-string invariant was checked.
+
+No gap was found. All four responses are long hand proofs. The checkers cover only finite instances.
+
+**Left open.**
+- Q2(a): decidability of admissibility of V + S for arbitrary finite lists of pasting-diagram laws. The known bounds are a Π⁰₂ upper bound and a sufficient condition.
+- Q2(c): uniform normal forms, equality and reachability for every finite admissible extension.
+- A closed form for the decorations of (K65).
+
+These are carried into `outbox/lax-interchange-every-dimension-r10.md`, which was revised accordingly.

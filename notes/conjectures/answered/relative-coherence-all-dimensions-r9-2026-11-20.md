@@ -775,3 +775,32 @@ Move the unit in $u$ inside the whiskering using the globular chart of $L,z$. On
 **Validation.** The [finite-intermediate solver](../../../tools/relative_coherence_intermediates.py) implements the chart recursion, finite closure and witness construction. It recovered all 23 chosen charts on trees of at most four edges when all labels collapse to the point, checked two labellings of a square grid glued along a two-edge face, and constructed a simultaneous change in two slots. For input ranks three through seven the initial vocabulary failed on the two-globe above. With the two displayed terms added, the solver reconstructed a comparison from ten rank-$n$ terms including subterms. Run `python3 -B tools/relative_coherence_intermediates.py --rank 7`. Agda 2.8.0 checked the rank-four and rank-five outputs in safe mode. For rank four, emit with `--rank 4 --agda "$dir/IntermediateTerms.agda"` and run Agda with `--safe --no-libraries -i src -i "$dir" "$dir/IntermediateTerms.agda"`.
 
 The remaining choice is a sufficient finite vocabulary for arbitrary second-identity inputs. The exact decision for a supplied vocabulary and the family requiring new intermediate terms do not yet give that choice.
+
+# Verification addendum (2026-11-20, Responses 6–8)
+
+**Checker re-runs.** All pass.
+- `tools/relative_coherence_fold_staircases.py` (with `--rank 5`): 690 marked pasting contexts satisfy G_{s+1}, and the folded comparison returns through both staircases at input ranks 3, 4 and 5.
+- `tools/relative_coherence_graft_distributors.py`: 65 grafts, 49 of which needed boundary repair.
+- `tools/relative_coherence_intermediates.py --rank 7`: 23 collapsed charts, both square grids and a two-slot change. At ranks 3–7 the endpoint vocabulary is insufficient and 10 terms suffice.
+- Emitted Agda modules (`--safe --no-libraries`, exit 0, no postulates): FoldStaircases (rank 4, 661 lines), GraftDistributors (137 lines), IntermediateTerms (rank 4, 178 lines).
+- `src/CaTTExp/GraftedArity.agda` (`graft-distributes`, `constant-column`) also type-checks with `--safe`.
+
+**Response 6.** Argument checked.
+- *The induction order.* The measure is (n, n − l, h). Every context satisfies G₀, and G_n contexts are globular, so Response 2 covers the base case.
+- *Why naturality calls are smaller.* A rank-d head's action is a prescribed-boundary lift in the partial cylinder through rank d. That cylinder satisfies G_{s+1}, where s is the lowest marked rank, by the staircase argument; the checker inspects all 690 markings. For a fold the marks start at h − 1 ≥ l, so the same-rank calls drop n − l.
+- *Reflection through lower whiskering.* This goes by downward induction on the cut. It uses Response 4's raw inverses and globular-chart lifts, and every stripped factor sits at a cut j > r.
+- *The fold step.* With b(n, h) + 1 links, a free end always exists. Its pole is stationary by the row coefficients, so the staircase factors to strip all lie at cuts ≥ h.
+- *Conclusion.* Fold actions and naturality of every depth follow from localization alone. This supersedes the extra hypothesis in `relative-coherence.md` §7.12–§7.13 and RC r10 item 65.
+
+**Response 7.** The strict row theorem F(ρ) ∗_k F(σ) = F(ρ ∗_k σ), for k above every cut of F, follows by induction using strict interchange, and it is machine-checked. The raw correction aligns lower poles cut by cut using Response 2's lifts on the globular graft. This closes step F2 of §7.13. The response's new obstruction is also correct: over the one-globe, two distinct 2-tracks f → p(f) can only be compared by a 3-term whose support contains f, so a change at a join cannot be pushed into the lower skeleton by rank alone.
+
+**Response 8.**
+- *Charts.* The chart recursion is complete. The injectivity argument uses the strict order s(i) < i < t(i) on positions of a pasting tree.
+- *Closure is exact.* For heights ≤ n, full support gives the empty-change rule. At height n + 1 there are strings of (n + 1)-slots over the rank-n positions. Saturation is bounded by |E|² pairs.
+- *The two-globe example.* "Protected" occurrences of f, i.e. those inside a literal p, are preserved in every chart of u, while v's middle slot evaluates to G, which has an unprotected f. So no chart pair matches without a fresh rank-n term.
+
+**Verdict.** Verified.
+- With the in-house combinatorial half of lemma L (§7.13) and Response 7's grafting step, the general construction now reduces to one step: compatible resolutions across frames at joins (raw higher localization).
+- Two alternatives would also suffice: a sufficient intermediate vocabulary chosen by recursion (Response 8), or sufficient integer columns (Response 5).
+- RC r10 is updated. Item 67 is added, Question 1 now asks for raw higher localization or one of the two recursive choices, the fold-action question is removed (it follows from localization), and (c) is reduced to size bounds.
+

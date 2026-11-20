@@ -7,20 +7,20 @@ from math import comb
 from homotopy_polygraph_semaphore import Ring, clock_chart, histories
 
 
-def acquisition_before_release(edges):
+def acquisition_before_release(edges, acquisition='P', release='V'):
     """Return whether a finite control graph has a walk with P before V."""
     outgoing = {}
     pending = set()
     for source, action, target in edges:
         outgoing.setdefault(source, []).append((action, target))
-        if action == 'P':
+        if action == acquisition:
             pending.add(target)
     visited = set()
     while pending:
         state = pending.pop()
         visited.add(state)
         for action, target in outgoing.get(state, ()):
-            if action == 'V':
+            if action == release:
                 return True
             if target not in visited:
                 pending.add(target)

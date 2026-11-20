@@ -795,3 +795,61 @@ The checker compares the whole adjacent-threshold cut product on native atoms an
 python3 tools/gray_globe_adjacent_thresholds.py 8 --terms 2 --agda /tmp/GrayAdjacentThresholds.agda
 agda --safe -i /tmp -i src /tmp/GrayAdjacentThresholds.agda
 ~~~
+
+# Researcher Response 11
+
+**Arbitrary-depth naturality on ordinary globular pasting arities implies CT for every pair of globes.** For a fixed transverse bound $n\ge 2$, depth at most $n-1$ in arbitrary dimension suffices. In this implication every upper generator image and its change are constructed together. The only naturality inputs are on the old attaching terms. There is also an unconditional reduction of the hypothesis. At any depth, a generic naturality judgment whose selected variables are all maximal leaves has a CaTT filler as soon as its lower boundary actions are supplied.
+
+### Lifting through the source whiskerings
+
+Fix the negative threshold of Response 10, with $E=\sigma_{t-1}^0$, $M=\sigma_t^0$, $d=p+t-1$, and the distinguished change $r:E(x)\to M(x)$. Use the mixed-dimensional binary composites given by the unbiased operation on the wedge of two discs. Let $g=A_pB_j^y$, $k=p+j$, and write $s_i,v_i$ for its old source and target terms in dimension $i<k$. Write $H_w$ for the specialized partial naturality cell on an old term $w$. At degree $d$ the only factor is $C=H_{v_d}$, the depth-zero action at $r$. All poles $s_i,v_i$ with $i>d$ have this same pair of $d$-poles. They meet the up-closure of $x$.
+
+For an old pole $w$ above degree $h$, or for $w=g$, define the following two operations through level $h$. In the right column $z$ is a candidate with the two $M$-substituted faces of $w$.
+\[
+\begin{array}{ll}
+ Q_d(w)=E(w)*_d C, & P_d(z)=z,\\
+ Q_i(w)=Q_{i-1}(w)*_i H_{v_i},&
+ P_i(z)=H_{s_i}*_i P_{i-1}(z)\qquad(d<i\le h).
+\end{array}
+\]
+The $s_i,v_i$ in either formula are the common lower poles of the cell being padded. For $k\ge d+2$ put $h=k-2$, $s=s_{k-1}$ and $v=v_{k-1}$. The two ordinary naturality judgments on the immediate attaching terms give
+\[
+ H_s:Q_h(s)\to P_h(M(s)),\qquad
+ H_v:Q_h(v)\to P_h(M(v)).
+\]
+Here $M(s)$ and $M(v)$ are actual substitutions into the specified terms. The formulas follow by reading the source and target factors in order of increasing cut, omitting the unmarked poles. All such $H_w$ for $\dim w>d$ are invertible when constructed in the target skeleton through $\dim w$. They have degree $\dim w+1$ there. In particular they have identity strict image. The labeling of the marked context needs this skeleton property only **after** specializing its change variables.
+
+Use cut $k-1$ in the following product:
+\[
+             b= H_s^{-1}\;\bigl(Q_h(g)\; H_v\bigr).
+\]
+Its exact endpoints are $P_h(M(s)),P_h(M(v))$. To recover a $k$-cell between $M(s)$ and $M(v)$, peel the left whiskerings from $i=h$ down to $d+1$. At step $i$ the given cell goes from $P_i(M(s))$ to $P_i(M(v))$. Left whiskering by $H_{s_i}$ lifts it, up to an invertible comparison, to a cell with the **specified** faces $P_{i-1}(M(s)),P_{i-1}(M(v))$. Indeed, in the iterated hom with the fixed lower faces, $H_{s_i}$ is an invertible arrow. Essential $\omega$-surjectivity of its whiskering map applies between any prescribed parallel inputs in any dimension. It also preserves invertible comparisons. This applies inside the term algebra of the target $k$-skeleton, so the preimages and comparisons are terms in that same context. The standard whiskerings in this theorem take two inputs of possibly unequal dimensions. Their instructions take the variable on a disc and the contraction of the already chosen boundary instructions on a nondisc. Interpreting the contraction by a CaTT coherence gives exactly the unbiased binary heads used above, including their literal higher faces. [Fujii–Hoshino–Maehara, Definitions 2.3.3 and 2.3.5, Remark 3.2.2 and Theorem 3.2.14](https://arxiv.org/pdf/2406.13240) [Benjamin–Markakis on CaTT term models and computads](https://arxiv.org/abs/2405.00398)
+
+Take the final preimage for $M(g)$. Whisker each comparison back through the preceding outer factors and compose. This gives $b\simeq P_h(M(g))$. Whiskering this equivalence by $H_s$, followed in the appropriate direction by reassociation, inverse cancellation and the unit law, gives
+\[
+          H_g:Q_h(g)\; H_v\longrightarrow H_s\;P_h(M(g)).
+\]
+This is the required variable label for extending the naturality substitution to the next degree. Its two ends have the same strict tableau since it is a $(k+1)$-term in the $k$-skeleton. On the right each source correction is strictly an identity on the face at its cut. On the left the upper target corrections are likewise identities. Thus $M(g)$ has the strict value of $E(g)*_d C$, precisely $F_t^0(g)$ by the cut identity of Response 10. The argument uses invertible whiskering only on the source corrections above degree $d$. The cell $C$ can be noninvertible.
+
+For $j=t$ take the native choice $M(g)=E(g)*_d C$ and the identity change. Off the marked column keep the common substitution. This starts the simultaneous induction on generator dimension. At every subsequent stage the two endpoint substitutions and all the lower variable changes label the naturality context through degree $k-1$. Apply naturality there to its terms $s,v$ and run the construction just given. Restrict to the minimal native box for each label and transport along the signed inclusions. Response 10 supplies the reflected choices at the other sign, and Response 9 reconstructs the assignment on all cells from these substitutions. The disjoint degree-zero cases are ordinary globes.
+
+To quantify the hypothesis, use the ordinary substitution recursion for naturality on a coherence head. A pulled-back mark of a slot $q$ requires that its argument depend on a marked variable of dimension at least $d$. A term of dimension below $d$ cannot do so. Every head needed for a pole of dimension $k-1$ has dimension at most $k-1$, as do its arguments and its attaching data. Thus the largest required depth is $(k-1)-d=j-t\le n-1$. Known depth-one naturality starts this induction. A family of higher generic fillers must extend its lower choices so that the substitutions in the two displayed judgments typecheck. [Ordinary partial naturality, §§1.3–1.4](../answered/naturality-arbitrary-depth-r8-2026-11-18.md) [Benjamin–Markakis–Offord–Sarti–Vicary, Theorem 3.1](https://arxiv.org/pdf/2501.11620)
+
+### A filler when the selected variables are leaves
+
+Let $c=\mathsf{coh}_{P,B}[\mathrm{id}]$ have dimension $m$. Suppose every selected variable in the globular arity $P$ is maximal, meaning that it occurs in the type of no other variable. The selections can have different dimensions. In $P\uparrow Y$ each selected leaf $y$ becomes two parallel leaves $y^-,y^+$ with an arrow $\widehat y:y^-\to y^+$. All its proper faces are unselected. Adding a child at each selected leaf of the tree of $P$ gives exactly this context, up to the variable order. Denote the resulting pasting arity by $R$.
+
+Use any well-typed lower boundary actions local to the old terms on which they are taken. Locality here means that an action uses only the promoted variables in the support of its argument and their faces. The ordinary substitution recursion has this property. Form the cylinder endpoints $a_c,b_c$ by the partial naturality formula, including the copies $c^-,c^+$ respectively. They are parallel by the cylinder typing lemma. It suffices to check the CaTT support condition on $R$.
+
+Take a marked leaf $y$ of dimension $l<m$. The strict cell of a full generic head in a globular arity uses every leaf, including $y$. Since $y$ is maximal, it can occur in its tableau support only as a label in degree $l$. No $(l+1)$-generator of $P$ has $y$ in its differential, so the two signed $l$-rows contain $y$ with the same positive coefficient. Both $l$-poles of $c$ therefore use $y$. In the cylinder type of either such pole $u$, all whiskering factors below cut $l$ come from old terms of dimension less than $l$. By locality these factors use neither copy of $y$. The source of $H_u$ consequently contains $y^-$ with positive top coefficient and $y^+$ with coefficient zero. Its target has the reverse coefficients. In $R$ the only differential with a $y^+$ coefficient is that of $\widehat y$. Hence $H_u$ uses $\widehat y$ and its typed support contains both copies. Applying this to the target $l$-pole puts all three variables in $a_c$. The source $l$-pole puts them in $b_c$.
+
+Each endpoint already uses every unselected variable, through its copy of $c$. A selected leaf of dimension $m$ appears only in that copy, with its indicated sign, since every other factor comes from a proper pole. If there are no selected $m$-leaves, both endpoints therefore have full support in $R$. Otherwise $R$ has dimension $m+1$, and the supports are precisely its negative and positive $m$-boundaries. Its only $(m+1)$-generators are the arrows on those selected $m$-leaves. In either case the single head $\mathsf{coh}_{R,\,a_c\to b_c}[\mathrm{id}]$ supplies the exact judgment. This proof accepts the lower faces already chosen by the caller. In particular the remaining generic inputs in the globe-pair implication can be confined to depth at least two with at least one selected **nonmaximal** variable.
+
+The first checker builds distinct raw face terms on a mixed whiskering arity, peels the successive prefixes with those faces, and interprets the result in an actual native threshold tableau. Agda checked two successive lifts at degree five and the resulting generator change. The second checker constructs the leaf fillers on branching arities, including a lower leaf selected together with a top leaf. It tests an unbiased composite, an alternative writing, their comparison and an identity on the comparison. Agda checked the mixed-leaf composite and comparison at arity height three. The general proofs above cover arbitrary dimension. Neither calculation supplies the generic fillers for incident marks at depth two and above. The unconditional globe-pair assertion in Q2 and the full assertion in Q1 remain open here. [Threshold checker](../../../tools/gray_globe_threshold_padding.py) [Leaf-action checker](../../../tools/gray_leaf_naturality.py)
+
+~~~sh
+python3 tools/gray_globe_threshold_padding.py 1 1 4 --agda /tmp/GrayThresholdPadding.agda
+agda --safe -i /tmp -i src /tmp/GrayThresholdPadding.agda
+python3 tools/gray_leaf_naturality.py 3 --agda /tmp/GrayLeafNaturality.agda
+agda --safe -i /tmp -i src /tmp/GrayLeafNaturality.agda
+~~~

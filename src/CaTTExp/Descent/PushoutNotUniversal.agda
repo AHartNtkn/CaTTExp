@@ -18,13 +18,17 @@
 --   (1) the pullbacks of the three pieces along f, as subsets of [1]
 --       with the inherited order: {b0}, {b1}, ∅;
 --   (2) the coproduct {b0} ⊔ {b1} (disjoint union, no order between
---       summands) admits no order-preserving-and-reflecting bijection
---       to [1]; in particular the canonical comparison map is not one;
+--       summands) admits no order-reflecting bijection to [1] (hence
+--       a fortiori no order isomorphism); in particular the canonical
+--       comparison map is not one;
 --   (3) f fails the Conduché factorisation-lifting condition: b0 ≤ b1
 --       and f b0 ≤ a1 ≤ f b1, but no z has f z ≡ a1.
 --
--- What is NOT encoded: that [2] is the pushout in Cat (the cited
--- fact), and the general theorem that exponentiable = Conduché.
+-- What is NOT encoded (standard facts, cited): that [2] is the
+-- pushout in Cat; that pullbacks along these full-subposet
+-- inclusions are the preimage subposets (modelled as predicates);
+-- that the pushout of {b0} ← ∅ → {b1} is the coproduct Disc; and the
+-- general theorem that exponentiable = Conduché.
 -- The positive side (descent for cocartesian fibrations) is a
 -- semantic statement cited in the note, not formalised here.
 ------------------------------------------------------------------------

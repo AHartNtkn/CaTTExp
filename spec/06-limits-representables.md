@@ -94,7 +94,7 @@ lim^{(Ψ,π)} γ := lim_{Ψ^μ}[γ ∘ π]
 
 **Semantics.** Hom(1, C) ≃ C in ωCat. Disks are not dense; pasting diagrams Θ are, so extensionality principles must be indexed by Θ (`notes/free-objects-proofs.md` §6; chapter 9, §9.5).
 
-**Not the same as chapter 8's points.** A point of C in chapter 8 is a nullary multimap ( ▸ C). No current rule relates it to an element ⊤ → C (`notes/ordinary-math.md` Theorem 6.4 (a)). Likewise the lax cotensor of §6.5, defined here as a limit, is related to chapter 8's C/⟦Θ⟧ only under GB-shape (chapter 8, §8.8).
+**Chapter 8's points.** A point of C in chapter 8 is a nullary multimap ( ▸ C). Rule GB-shape (chapter 8, §8.8) makes it the same as an element ⊤ → C. Without GB-shape the two are unrelated (`notes/ordinary-math.md` Theorem 6.4 (a)). Likewise, GB-shape makes the lax cotensor of §6.5, defined here as a limit, equivalent to chapter 8's C/⟦Θ⟧.
 
 **Status.** Elements elaborate to well-typed kernel terms: **Agda-checked** (`CaTTExp.Suspension`, `elements-at`; ledger C8(1)). **Source:** `notes/limits-representables.md` §5.1.
 

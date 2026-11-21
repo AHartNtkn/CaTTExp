@@ -369,4 +369,15 @@ Places checked and found consistent: chapter 6's elements, hom objects and T-hom
 - That exactness check failing for Θ ≠ D⁰. K1 would then be the choice.
 - A proof that K1 derives the shape row at every Θ, for example from a pasting rule for probes. K1 and K2 would then coincide, and K1 is the smaller statement.
 
-Until then the spec presents GB-shape as **proposed**, and each place in §4.2 says what holds without it.
+### 4.7 Decision (2026-11-21)
+
+**K2 is adopted.** The independent check of the exactness argument passed at argument level (ledger S13).
+- By the left and right rows, O(L, ⟦Θ⟧♭, R; Z) ≃ Map(⟦Θ⟧♭, L\Z/R) and O(L, ⟦Θ⟧, R; Z) ≃ O(⟦Θ⟧; L\Z/R). This uses probes as bound arguments (GB-ext (ii)). So the row family is a single locality condition: ⟦Θ⟧♭ represents O(⟦Θ⟧; –) on data through ι_Θ. GB-ext step 1 applies, and Cat_ω is local because ι_Θ = id.
+- Steps 3–5 are unchanged. ι_Θ is an element generator, and no profile has a data input with a pure output.
+
+Precisions recorded:
+- (a) The check treats ⟦Θ⟧♭ as a data atom. Its identification with chapter 7's free object is sound in Cat_ω. Exactness of the combination with LIFT is outside GB-ext, as for every non-biclosed chapter.
+- (b) GB-dcut for this row puts the time slot at a fixed gap of L or R, as for the pair row. The row adds no slot of its own (`spec/08` §8.8).
+- (c) Derived: ⟦Δ⟧♭ ⊗ ⟦Θ⟧♭ ≃ ⟦Δ ⊗ Θ⟧♭, by the pair and probe-pair rows. This is true in Cat_ω.
+
+The corrections in §4.2 stand as statements of what needs GB-shape. With K2 adopted, each place there now holds as originally written.

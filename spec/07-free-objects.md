@@ -87,11 +87,11 @@ The initial object 0 is ⟦ε⟧.
 
 ## 7.5 Free objects and chapter 8's probes
 
-**Statement.** No current rule relates the free object ⟦Θ⟧ of this chapter (data sort) to the probe ⟦Θ⟧ of chapter 8 (probe sort). In particular, an element ⊤ → C (⊤ ≃ ⟦D⁰⟧) and a point ( ▸ C) of chapter 8 are unrelated: a graded countermodel satisfies every rule and separates them (`notes/ordinary-math.md` Theorem 6.4 (a)).
+**Rule.** GB-shape (chapter 8, §8.8) relates the free object ⟦Θ⟧ of this chapter (data sort) to the probe ⟦Θ⟧ of chapter 8 (probe sort). It gives a corolla ι_Θ from the probe to the free object, and a row that makes maps out of the free object the same as probe diagrams. In particular, an element ⊤ → C (⊤ ≃ ⟦D⁰⟧) is the same as a point ( ▸ C) of chapter 8.
 
-**Proposed bridge.** Rule GB-shape (chapter 8, §8.8): a corolla ι_Θ from the probe to the free object, and a row making maps out of the free object the same as probe diagrams.
+**Why a rule is needed.** Without GB-shape, a graded countermodel satisfies every other rule and separates elements from points (`notes/ordinary-math.md` Theorem 6.4 (a)).
 
-**Status.** Open kernel question, `notes/design-decisions.md` §4 (ledger S13, F8a).
+**Status.** Adopted 2026-11-21 (`notes/design-decisions.md` §4; ledger S13). Sound in Cat_ω. Exactness has been checked with ⟦Θ⟧♭ as a data atom. Its identification with the free object of §7.2 is sound in Cat_ω, and its exactness together with LIFT is outside that check.
 
 ## 7.6 Open surface questions
 

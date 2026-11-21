@@ -99,7 +99,26 @@ rcNone Δ A t u = nothing
 
 ------------------------------------------------------------------------
 
-module ConeRC (rc : RC) (Γ : ExCtx) where
+-- The construction is parametric in how a filler a → b is obtained in
+-- the context K built so far, and in how literal equality is decided.
+-- ConeRC (below) uses the oracle directly; CoconeRC runs the cone
+-- construction on the dual diagram and asks the oracle in the dual
+-- (cocone) world.
+Fill : Set
+Fill = ExCtx → Ex → Ex → Out Ex
+
+Eq : Set
+Eq = ExCtx → Ex → Ex → Bool
+
+fillCore : RC → Fill
+fillCore rc K a b with rc (evCtx K) (evTy K (tyE K a)) (ev K a) (ev K b)
+... | just w  = ret (raw w a b)
+... | nothing = miss (evCtx K , evTy K (tyE K a) , ev K a , ev K b)
+
+eqCore : Eq
+eqCore K a b = ev K a ==Tm ev K b
+
+module ConeGen (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
   private
     n = length Γ
     c = v n
@@ -127,14 +146,11 @@ module ConeRC (rc : RC) (Γ : ExCtx) where
       else e
 
     eq : Ex → Ex → Bool
-    eq a b = ev K a ==Tm ev K b
+    eq = eqH K
 
-    -- A cell a → b from the oracle.
+    -- A cell a → b.
     fillE : Ex → Ex → Out Ex
-    fillE a b with rc Δ A ta tb
-      where Δ = evCtx K ; A = evTy K (tyE K a) ; ta = ev K a ; tb = ev K b
-    ... | just w  = ret (raw w a b)
-    ... | nothing = miss (evCtx K , evTy K (tyE K a) , ev K a , ev K b)
+    fillE = fillH K
 
     -- Precompose W along r with a cell L → s_r W, unless they agree.
     fixS : Nat → Ex → Ex → Out Ex
@@ -228,3 +244,46 @@ module ConeRC (rc : RC) (Γ : ExCtx) where
   -- oracle tables query by query).
   firstMiss : Maybe Query
   firstMiss = missed coneO
+
+module ConeRC (rc : RC) (Γ : ExCtx) = ConeGen (fillCore rc) eqCore Γ
+
+------------------------------------------------------------------------
+-- Cocones by O_odd duality. The cone construction runs on the dual
+-- diagram Γ*; each filler a → b it needs (an (r+1)-cell in the cone
+-- context K of Γ*) is asked of the oracle in the dual context K*, which
+-- is a prefix of the cocone of Γ: there it is a* → b*, or b* → a* when
+-- r + 1 is odd. The answer w enters K as rawD w a b, whose dual is the
+-- term w itself. Literal equality is also decided in K*.
+
+oddB : Nat → Bool
+oddB zero          = false
+oddB (suc zero)    = true
+oddB (suc (suc k)) = oddB k
+
+fillDual : RC → Fill
+fillDual rc K a b with rc (evCtx K*) (evTy K* (tyE K* t)) (ev K* t) (ev K* u)
+  where
+  K* = dualCtx K
+  rev = oddB (suc (dimE (tyE K a)))
+  t = if rev then dualE b else dualE a
+  u = if rev then dualE a else dualE b
+... | just w  = ret (rawD w a b)
+... | nothing = miss (evCtx K* , evTy K* (tyE K* t) , ev K* t , ev K* u)
+  where
+  K* = dualCtx K
+  rev = oddB (suc (dimE (tyE K a)))
+  t = if rev then dualE b else dualE a
+  u = if rev then dualE a else dualE b
+
+eqDual : Eq
+eqDual K a b = ev (dualCtx K) (dualE a) ==Tm ev (dualCtx K) (dualE b)
+
+module CoconeRC (rc : RC) (Γ : ExCtx) where
+  private
+    module G = ConeGen (fillDual rc) eqDual (dualCtx Γ)
+
+  cocone : Maybe ExCtx
+  cocone = G.cone >>= λ K → if all dualOKTy K then just (dualCtx K) else nothing
+
+  firstMiss : Maybe Query
+  firstMiss = G.firstMiss

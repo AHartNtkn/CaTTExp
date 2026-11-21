@@ -14,7 +14,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Finding (Anthony): the resulting growing list of extra rules is unacceptable. Logged as ledger F10.
 - [x] 0.3 Universal properties are witnessed by cells
 - [x] 0.4 Lax by default, the most general version first
-  - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16.
+  - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
 - [ ] 0.5 The kernel and the surface are kept apart
 - [ ] 0.6 Decidability of checking
 - [ ] Q0.1 (surface question): Which composition order does the user write?
@@ -125,6 +125,6 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
-- S16 (0.4): marks no longer recover two-tier L from uniform L; §0.4 stale and a design gap.
+- S16 (0.4): marks no longer recovered two-tier L from uniform L. Resolved by PR #404 / #406.
 - S15 (0.2): chapter 0 contradicts itself on internal quantifiers.
 - F10 (0.2): the universe-free rule list keeps growing; seek a small general set of principles that closes it.

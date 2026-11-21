@@ -29,6 +29,8 @@ which is the spec's SC_𝕋: a cell x → z of full support.
 
 The fullness test is a parameter, so this part does not depend on how ledger S1 settles the support of V + S (see §3).
 
+**Caveat (2026-11-21, from the S3a–S3c thread).** `Graded` holds only for layers without loops. Some layers Kernel must be instantiated with do have loops. In V at degree 4 on Γ_{2,2}, the loop H has pairwise distinct powers. On suspended grids at degree 5 in setting T₁₂, the positional square is a self-loop on the 2 × 2 grid. So spec §2.3's "paths have bounded length" is not true in general. r10 Response 3 decides reachability by breadth-first search over a finite vertex list instead. A decision that needs no `Graded` (search over pairs of a cell and an accumulated support, in a finite closed universe) is being added by the thread "Formalize the V + S free objects in every degree". `sc?` stays correct where `Graded` holds.
+
 ### 1.2 The kernel's judgments and checker (`Kernel.agda`)
 
 The module is parameterised by, for each pasting context Δ and type A:

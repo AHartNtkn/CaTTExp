@@ -95,10 +95,44 @@ as an equality of contexts, where `d` is the top variable of Dⁿ, `A^± = (∂D
 
 So the comparison holds at level 0 of `Diag` (objects), which is all that A2's LIFT₀ uses. At higher levels it needs Lemma 4 for `Dⁿ ⊗ Dᵏ`-cylinders; this is the statement "r is an ω-equifibration", open in the weak setting (FHM 2511.09849 prove that `X → 1` is an ω-equifibration for every X, but not this case). It holds in the strict model (§4.1).
 
+### 2.2a C3b: reduction to cylinders on Dⁿ ⊗ Dᵏ and one invertibility lemma
+
+*Added 2026-11-20.* Throughout, Diag(X, C)'s k-cells are substitutions into X ⊗ Dᵏ. r is restriction along ∂Dⁿ ⊗ Dᵏ ⊆ Dⁿ ⊗ Dᵏ, so on cells it is literally restriction of substitutions, and strict equalities over r are syntactic.
+
+**What has to be shown** (FHM 2511.09849, ω-equifibration, unfolded). For every k, every k-cell y of Diag(Dⁿ, C), and every invertible (k + 1)-cell φ of Diag(∂Dⁿ, C) with source r(y), there must be:
+- (L) a (k + 1)-cell φ̃ of Diag(Dⁿ, C) with source y and r(φ̃) = φ;
+- (I) such that φ̃ is invertible in Diag(Dⁿ, C).
+
+The recursion into homs is the same statement one level up, so (L) and (I) for all k are all that is needed.
+
+**Step 1 (shape).** By Lemma 2 applied to Dⁿ ⊗ Dᵏ (so Dⁿ ⊗ Dᵏ⁺¹ = (Dⁿ ⊗ Dᵏ)↑), the variables of Dⁿ ⊗ Dᵏ⁺¹ outside ∂Dⁿ ⊗ Dᵏ⁺¹ come as triples (x⁻, x⁺, x↑), one for each variable x of Dⁿ ⊗ Dᵏ over the top cell d of Dⁿ. Their types are A_x[in⁻], A_x[in⁺] and a_x → b_x. y fixes every x⁻, and φ fixes everything over ∂Dⁿ. So φ̃ amounts to choosing x⁺ and x↑ for these x, in the order of Lemma 2.
+
+**Step 2 (one variable: Lemma T).** Fix such an x, and suppose every boundary variable w of x already has w⁺ and an invertible w↑. Then a_x is x⁻ composed with invertible cells (the factors w↑, whiskered), and b_x is invertible cells composed with x⁺. *Lemma T:* there are an x⁺ with the prescribed boundary and an invertible x↑ : a_x → b_x.
+*Proof.* This is Lemma 4 with the variable-boundary sphere replaced by the composite boundary of x. Write b_x as u ∗ⱼ x⁺ ∗ⱼ v, composed in the dimensions j of x's boundary, with u and v invertible.
+- Put x⁺ := u⁻¹ ∗ⱼ a_x ∗ⱼ v⁻¹. This first has to be transported to x's prescribed boundary, by Lemma T one dimension down, which is the induction of Lemma 4.
+- Take x↑ to be the composite of the associators, the counits u ∗ u⁻¹ → id, the unitors, and Lemma 4's transport cylinder from that first step.
+- x↑ is invertible because composites of invertible cells are invertible (Benjamin–Markakis, arXiv 2406.12127), and coherences are invertible.
+
+Steps 1 and 2 give (L), with all the new top components invertible.
+
+**Step 3 (I).** "φ̃ invertible in Diag(Dⁿ, C)" needs Diag's composition: an inverse ψ with ψ ∘ φ̃ and φ̃ ∘ ψ connected to identities. That is the vertical composite of lax squares and its higher analogues, which is C3a and is not yet defined (blocked on D3). So (I) **depends on C3a**, even at level 0. Only (L) is proved here. Defining invertibility componentwise would only move the question into C3a, so C3b is stated as depending on C3a instead.
+
+*Plan for (I), once composition is fixed (PI):* a (k + 1)-cell of Diag(X, C) whose components x↑ are all invertible in C is invertible in Diag(X, C). The construction cannot invert x↑ and swap x^±. ψ's component at x has type a^ψ_x → b^ψ_x, and both of those endpoints are built from ψ's own lower components, so x↑⁻¹ has the wrong boundary. The tool is Lemma 4 with *both* endpoints prescribed:
+- whisker x↑⁻¹ by the inverses of the lower cylinder cells;
+- transport the result along an invertible cylinder to the required boundary.
+That cylinder needs comparison cells between ψ's lower components and the naive inverses. So ψ, these comparisons, and the unit and counit, which also have fixed endpoints, must be built by **one simultaneous recursion** over the variables of X ⊗ Dᵏ, in the order of Lemma 2. The result is then a guarded coinduction, as in `Free/Reflect.agda`, for the higher levels. The independent check (2026-11-20) saw no obstruction to this restructured recursion. It is not yet written out.
+
+**Hypotheses.** Step 1 uses the cylinders on Dⁿ ⊗ Dᵏ. For k ≥ 1 these are not globular: their boundary terms are cylinder composites, so a_x needs naturality terms of depth ≥ 2 (C1). So:
+- (L) at level 0 of Diag (k = 0, objects) is **unconditional**: Dⁿ is globular, and this is Lemma 4.
+- At level k ≥ 1, (L) holds **given C1** for the coherences in the boundary terms of Dⁿ ⊗ Dᵏ. Its variables have dimension ≤ n + k, so their boundary terms have dimension ≤ 2 when n + k ≤ 3, and C1 is settled for those (Theorem A of NGC). So (L) holds at argument level for n + k ≤ 3. This rests on NGC's Theorem A, which the C3b check did not re-check. In general it waits on RC(n).
+- In the strict model C3b holds outright. Ara–Lucas (arXiv 1909.13564) show the folk model structure is monoidal for the Gray tensor, so restriction along the cofibration ∂Dⁿ → Dⁿ into a fibrant C is a folk fibration, which lifts invertible cells.
+
+**Status (after independent check, 2026-11-20).** (L) is proved, given C1 on Dⁿ ⊗ Dᵏ: unconditional at level 0, at argument level for n + k ≤ 3. (I) depends on C3a (Diag's composition), and then on (PI) via the simultaneous recursion above. In the strict model C3b holds outright (Ara–Lucas; folk fibrations lift reversible cells, Lafont–Métayer–Worytkiewicz).
+
 ### 2.3 Remaining for C3
 
 - (C3a) Composition of Diag and its compatibility with (Dec): blocked on D3 (`free-objects.md` §1.2) being fixed; adjacent work: the vertical composite of two lax squares as a substitution, for the globular case.
-- (C3b) Lemma 4 at all levels (r is an ω-equifibration), syntactically.
+- (C3b) r is an ω-equifibration, syntactically. Lifting (L) is done (§2.2a): unconditional at level 0, at argument level for n + k ≤ 3, and given C1 beyond that. Invertibility of the lift (I) depends on C3a, and then on (PI) by one simultaneous recursion, which is not yet written out.
 - (C3c) Higher-depth cylinders: C1.
 
 ---
@@ -188,11 +222,11 @@ This is the non-collapse half: for instance, no closed cell relates two distinct
 - **⊗, \ and /.** ⊗ is the Gray tensor of strict ω-categories, with the Leibniz rule of `conventions.md` §2 on Steiner complexes. For loop-free unital (strong Steiner) complexes, ν(K ⊗ L) ≅ ν(K) ⊗ ν(L) (Steiner 2004; Ara–Maltsiniotis, arXiv 1607.00668, App. A). The tensor is monoidal and biclosed on all strict ω-categories (Al-Agl–Brown–Steiner 2002; Crans 1995; Ara–Maltsiniotis App. A). A\C and C/A are its closures: Hom(A ⊗ W, C) ≅ Hom(W, A\C) and Hom(W ⊗ A, C) ≅ Hom(W, C/A). *Citation level: the statements are standard, but the theorem numbers were not re-read for this note.*
 - **Multimaps.** (X₁, …, Xₙ ▸ Z) is the set of strict functors X₁ ⊗ … ⊗ Xₙ → Z, using the associativity isomorphisms, with the unit 1 = ν(λD⁰) for n = 0. A time slot ⟦Dᵏ⟧ is the factor ν(λDᵏ) at its position. Faces are restriction along the source and target inclusions ν(λDᵏ⁻¹) → ν(λDᵏ).
 - **Invertible.** ⊨ is interpreted as strictly invertible: the cell has a two-sided inverse in its own dimension. An invertible n-ball of operations in a gap is an n-cell of the hom ω-category of operations, obtained by currying the gap with the closures, that is strictly invertible.
-- **Probes.** ⟦Θ⟧ = ν(λΘ), which is Free(Θ) (`Strict/PsGlob`). An L-core term t : A over a pasting context Θ is a cell of ν(K(Θ)) (`Strict/Soundness.sound-tm`). Hom by hom, ν(K(Θ))(aᵢ, aⱼ) = ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ). The canonical comparison maps ⊗ → × are compatible with composition, so they give κ_Θ : ν(K(Θ)) → ν(λΘ), whose homs are the products, and κ_Θ(t) is a cell with the boundary A prescribes. An L substitution σ : Θ′ → Θ therefore gives a good labelling of Θ′ in ν(λΘ), hence a strict functor ⟦σ⟧ : ν(λΘ′) → ν(λΘ) (`Strict/PsGlob`, `FromGood.functor`). p_{Δ,Θ} is the isomorphism ν(λΔ) ⊗ ν(λΘ) ≅ ν(λΔ ⊗ λΘ), with ⟦Δ ⊗ Θ⟧ := ν(λΔ ⊗ λΘ), which is ordered unital by `Strict/TensorBasis`. pt is the identity on 1.
+- **Probes.** ⟦Θ⟧ = ν(λΘ), which is Free(Θ) (`Strict/PsGlob`). An L-core term t : A over a pasting context Θ is a cell of ν(K(Θ)) (`Strict/Soundness.sound-tm`). Hom by hom, ν(K(Θ))(aᵢ, aⱼ) = ν(λΘᵢ₊₁) ⊗ … ⊗ ν(λΘⱼ). ν(K(Θ)) is Gray-enriched. View ν(λΘ), whose homs are the products, as a Gray-category by change of base along the comparison X ⊗ Y → X × Y. That comparison is monoidal, since maps into a product are fixed by their projections. So the comparisons give a Gray-functor κ_Θ : ν(K(Θ)) → ν(λΘ), and κ_Θ(t) is a cell with the boundary A prescribes. An L substitution σ : Θ′ → Θ therefore gives a good labelling of Θ′ in ν(λΘ), hence a strict functor ⟦σ⟧ : ν(λΘ′) → ν(λΘ) (`Strict/PsGlob`, `FromGood.functor`). p_{Δ,Θ} is the isomorphism ν(λΔ) ⊗ ν(λΘ) ≅ ν(λΔ ⊗ λΘ), with ⟦Δ ⊗ Θ⟧ := ν(λΔ ⊗ λΘ), which is ordered unital by `Strict/TensorBasis`. pt is the identity on 1.
 - **glue.** The collar term `glue` is interpreted as the strict composite it stands for. It exists because it is an L-core composite.
 
-**Lemma S1 (rows are bijections).** For each row ρ and each fixed placement of time slots, r : H → B is a bijection of operation sets that commutes with restriction along every time slot.
-*Proof.* The pair and probe-pair rows are the associativity isomorphism, composed for the probe-pair row with p. The unit row is the unit isomorphism. The two evaluation rows are the two closure bijections, and (A, Φ) and (Φ, A) keep each time slot in its gap. Restriction along a slot is precomposition with a map in one tensor factor, and every one of these isomorphisms is natural in each factor. ∎
+**Lemma S1 (rows are isomorphisms).** For each row ρ and each fixed placement of time slots, r : H → B is a bijection of operation sets, natural in every map of every tensor factor. Restriction along time-slot faces is one such map. Hence r is an isomorphism of the hom ω-categories of operations (curry any gap), so r and r⁻¹ preserve strict invertibility.
+*Proof.* The pair and probe-pair rows are the associativity isomorphism, composed for the probe-pair row with p. The unit row is the unit isomorphism. The two evaluation rows are the two closure bijections, and (A, Φ) and (Φ, A) keep each time slot in its gap. Restriction along a slot is precomposition with a map in one tensor factor, and every one of these isomorphisms is natural in each factor. Naturality in every factor also gives the isomorphism of hom ω-categories. ∎
 
 **Theorem S (soundness of the kernel in 𝔖).** Fix a valuation of a kernel context in 𝔖 that respects the context's types and marks. Then every derivable judgement denotes a functor or cell with the boundary its type prescribes, and every marked derivable cell denotes a strictly invertible one.
 *Proof.* By induction on the derivation.
@@ -203,9 +237,11 @@ This is the non-collapse half: for instance, no closed cell relates two distinct
   - (PS-fac): it has two positive-dimensional factors, so its image is an identity.
   - (INV-obj): only objects are involved, so its image is an identity.
   - (OBJ-k): the valuation sends a grpd_k object to one whose cells above k are invertible.
+  - (MARK): a marked variable is valued as a strictly invertible cell.
+  - The ps rules (OP-ps, INV⇒PS, PS*) are interpreted vacuously, as true of every cell. No inv conclusion depends on them.
 - The corollas m, e^ℓ, e^r, p and pt: by the definitions above.
 - Planar substitution: by composition of functors.
-- (GB-cut_{ρ,n}). Let b̂ = glue(a, b) be b with its collar adjoined. Its boundary is r(u). Put c := r⁻¹(b̂), which has boundary u by Lemma S1, and ε := the identity on b̂ = r(c), which is invertible.
+- (GB-cut_{ρ,n}). Let b̂ = glue(a, b) be b with its collar adjoined. Its boundary is r(u). Put c := r⁻¹(b̂), which has boundary u by Lemma S1, and ε := the identity on b̂ = r(c), which is invertible. In inv mode, b̂ is invertible, being a composite of invertibles, so c is invertible because r⁻¹ is an isomorphism of hom ω-categories (Lemma S1).
 - (GB-dcut_{ρ,k}). The same with d := r⁻¹(glue(a^±, b)) and the identity as its comparison.
 
 Admissibility closed under substitution then needs nothing further, since the denotation of an instance is the denotation of the template composed with the valuation. ∎
@@ -236,16 +272,14 @@ These are the remaining formal steps (ledger C5b).
 
 **Theorem D7g.** For every row ρ, every gap and every k ≥ 1, in the generic context of (GB-dcut_{ρ,k}) no derivable term of the kernel, of any shape, has type u⁺ ⇒ u⁻ at H on ⟦Dᵏ⟧.
 *Proof.* Choose the following valuation in 𝔖.
-- Every object variable of the row except the output ↦ 1.
+- Every object *variable* of the row's lists, except the output, ↦ 1.
 - The output (Z, or C) ↦ G := ν(λDᵏ), as a data atom. The sort discipline allows this, since the output ranges over data formulas.
-- Then H and B on ⟦Dᵏ⟧ are both isomorphic to Hom(ν(λDᵏ), G), using the unit isomorphisms and 1\G ≅ G ≅ G/1.
-- b ↦ the identity of G, which is the generic k-cell e.
-- u^± ↦ r⁻¹ of the faces of e.
+- The lists may also contain fixed representables ⟦Θ⟩ anywhere (in L, R, Φ, U, V or A, by the generic formula grammar), and these cannot be valued as 1. Let F be the tensor of all non-slot input factors under this valuation (when A is representable, first move it across with the closure bijection). F has an object, since every probe is nonempty. Let π : F ⊗ ν(λDᵏ) → ν(λDᵏ) be the projection that sends F to 1 (! ⊗ id, then the unit isomorphism).
+- b ↦ e ∘ π, where e is the identity of G, the generic k-cell.
+- u^± ↦ r⁻¹ of the faces of e ∘ π.
 - a^± ↦ identities, which are invertible, and agree on the common boundary.
 
-The probe-pair row has fixed probe inputs ⟦Δ⟧ and ⟦Θ⟧, which cannot be valued as 1. There b ↦ e ∘ (! ⊗ id), and a reverse term is restricted along a point of ⟦Δ ⊗ Θ⟧ (one exists, since probes are nonempty) before reading off the cell below.
-
-The valuation respects all types and marks. By Theorem S a derivable term of type u⁺ ⇒ u⁻ would denote a k-cell of ν(λDᵏ) from t(e) to s(e). Its top chain is m·e with m ≥ 0, since e is the only k-generator, and it satisfies ∂(m·e) = s(e) − t(e) = −∂e. As ∂e ≠ 0, this forces m = −1, which is impossible. ∎
+The valuation respects all types and marks. By Theorem S a derivable term of type u⁺ ⇒ u⁻ would denote a functor F ⊗ ν(λDᵏ) → G whose faces are those of e ∘ π, swapped. Restricting it along a point of every factor of F gives a k-cell of ν(λDᵏ) from t(e) to s(e). Its top chain is m·e with m ≥ 0, since e is the only k-generator, and it satisfies ∂(m·e) = s(e) − t(e) = −∂e. As ∂e ≠ 0, this forces m = −1, which is impossible. ∎
 
 **Corollary D7g (instances).** Let σ be a kernel instance into Γ. The reverse of the directed goal is not derivable over Γ whenever some valuation of Γ in 𝔖 sends σ(u⁻) and σ(u⁺) to operations with no cell σ(u⁺) ⇒ σ(u⁻). Examples are the walking square, which is the reverse interchanger (`Strict/ReverseInterchanger`), and the four-cube pair 212321 / 123212 of r3 item 41, which has no cell in either direction. This is the specialization argument of the r3 answer, with 𝔖 as its model.
 *Proof.* As above, composing the valuation of Γ with σ. ∎

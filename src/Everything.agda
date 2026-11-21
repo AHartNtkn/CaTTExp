@@ -81,6 +81,8 @@ import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
 import CaTTExp.Cones
 import CaTTExp.ConesExamples
+import CaTTExp.ConeRC
+import CaTTExp.ConeRCExamples
 import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.Free.AssociatorDepth2

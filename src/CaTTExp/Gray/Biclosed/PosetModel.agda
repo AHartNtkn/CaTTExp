@@ -171,7 +171,7 @@ record Val : Set where
   field
     prof : MTy
     raw  : List U → U
-open Val
+open Val public
 
 ap : Val → List U → U
 ap x us = raw x (cA (ins (prof x)) us)
@@ -186,7 +186,7 @@ record _≈ᵥ_ (x y : Val) : Set where
   field
     eprof : prof x ≡ prof y
     efn   : ∀ us → ap x us ≡ ap y us
-open _≈ᵥ_
+open _≈ᵥ_ public
 
 record _∶ᵥ_ (x : Val) (M : MTy) : Set where
   constructor tyd
@@ -195,7 +195,7 @@ record _∶ᵥ_ (x : Val) (M : MTy) : Set where
     tin   : ∀ {us} → InL (ins M) us → IF (out M) (ap x us)
     tmono : ∀ {us vs} → InL (ins M) us → InL (ins M) vs → LeL (ins M) us vs →
             LF (out M) (ap x us) (ap x vs)
-open _∶ᵥ_
+open _∶ᵥ_ public
 
 ≈-intro : ∀ {x y} → prof x ≡ prof y → (∀ ws → InL (ins (prof x)) ws → ap x ws ≡ ap y ws) → x ≈ᵥ y
 ≈-intro {mk P rx} {mk .P ry} refl h =

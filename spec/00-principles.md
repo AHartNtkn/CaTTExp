@@ -45,10 +45,10 @@ Rule classes are those of the published CaTT variants: context formation, type f
 
 ## 0.4 Lax by default, the most general version first
 
-Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one. It recovers the others by marking (chapter 3) where marks suffice, and the text records where they do not. Concretely:
+Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one. It recovers the others by marking (chapter 3). Concretely:
 - the core is the uniform lax core L (chapter 2): interchange is directed at every level, not only across objects;
 - the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
-- pseudo transformations and groupoids are marks on top of L (`inv`, `ps`, `grpd_k`), never separate kernels.
+- pseudo transformations, ordinary ω-categories and groupoids are marks on top of L (`inv`, `ps`, `ord`, `grpd_k`), never separate kernels (see below for how far each goes).
 
 **The generality ordering**, from most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
 
@@ -58,7 +58,6 @@ Where a construction has lax, pseudo and strict versions, the kernel takes the *
   - The rule (COH-ord) accepts a head all of whose objects are `ord` on the two-tier side condition. With every object marked `ord`, uniform L then derives exactly two-tier L: the same terms, types and marks (chapter 3, §3.6; ledger S16(b)).
   - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
   - Heads that mix `ord` and non-`ord` objects use the uniform rule (ledger E15).
-- pseudo transformations, ordinary ω-categories and groupoids are therefore all marks on top of L (`inv`, `ps`, `ord`, `grpd_k`).
 
 Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
 

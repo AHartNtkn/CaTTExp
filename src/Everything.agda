@@ -292,3 +292,10 @@ import CaTTExp.Join.SepAlgebra
 import CaTTExp.Join.BoundedReach
 import CaTTExp.Join.SwitchCospan
 import CaTTExp.Join.SwitchLaws
+import CaTTExp.Uniform.ListKit
+import CaTTExp.Uniform.Arith
+import CaTTExp.Uniform.FiniteGraph
+import CaTTExp.Uniform.Rule
+import CaTTExp.Uniform.Kernel
+import CaTTExp.Uniform.Grid
+import CaTTExp.Uniform.GridExamples

@@ -2,6 +2,8 @@
 
 A free object makes a context into an object: ⟦Γ⟧ is the free ω-category on the computad Γ, and maps ⟦Γ⟧ → C are the same as Γ-shaped diagrams in C. The universal property is an equivalence stated as filler rules, one per dimension, with no definitional β or η.
 
+**Notation.** Free objects are data objects. Chapter 8's probes are a different sort, also written ⟦Θ⟧ there. Where both appear (chapter 9, §9.6, and `notes/design-decisions.md` §4), the free object is written ⟦Θ⟧♭. No current rule relates the two (§7.5).
+
 ## 7.1 How a universal property is stated
 
 **Schema (LIFT).** A restriction R : X → Y between ω-categories is an equivalence when
@@ -71,7 +73,7 @@ R : Hom(C[x : a → b], D)  →  Hom(C, D) ×_{Diag(∂Dⁿ, D)} Diag(Dⁿ, D)
 ```
 The initial object 0 is ⟦ε⟧.
 
-**Why A1 is the primitive.** The notes compare A1 (one object per context) and A2 (initial object plus one-cell attachment) and leave both open (`notes/free-objects.md` §4.4). The comparison there turns on one structural fact: **A2 = A1 + pushouts along boundary inclusions**, and with general pseudo pushouts the two are interderivable, A1 being the smaller addition. The kernel has pseudo pushouts: the all-marked colimit of a span (chapter 6, §6.3). Two later chapters also use A1's form: the probe objects ⟦Δ⟧ of the closed structure (chapter 8) and R-A in ordinary mathematics (chapter 9). So the spec takes A1 as primitive and derives ATTACH. This is **stated here**, by that argument; ledger S10 asks for it to be recorded in `notes/free-objects.md`.
+**Why A1 is the primitive.** The notes compare A1 (one object per context) and A2 (initial object plus one-cell attachment) and leave both open (`notes/free-objects.md` §4.4). The comparison there turns on one structural fact: **A2 = A1 + pushouts along boundary inclusions**, and with general pseudo pushouts the two are interderivable, A1 being the smaller addition. The kernel has pseudo pushouts: the all-marked colimit of a span (chapter 6, §6.3). R-A in ordinary mathematics (chapter 9) also uses A1's form. So the spec takes A1 as primitive and derives ATTACH. (An earlier version of this paragraph also cited chapter 8's probes ⟦Δ⟧ as A1's form. They are not free objects; see §7.5.) This is **stated here**, by that argument; ledger S10 asks for it to be recorded in `notes/free-objects.md`.
 
 **Example.** ℤ in chapter 9 is a localisation of the loop ⟦x, s : x → x⟧, a finite pushout. Under A1 + pushouts it needs no further primitive.
 
@@ -83,7 +85,15 @@ The initial object 0 is ⟦ε⟧.
 
 **Status.** Semantically **proved** (`notes/limits-representables.md` §10.3). Syntactically, with the specified cocone: φ (family ⇒ cocone) exists in every dimension; the full equivalence is **proved** for graphs (machine-checked on 6 graphs) and in dimension 2 (ψ and one homotopy machine-checked on 9 shapes, the other on paper); dimension ≥ 3 and higher cocone morphisms are open (B6, B20, B21, owner CONE). Until it is proved, (FREE) stays a primitive. **Source:** `notes/specified-cones.md` §6.
 
-## 7.5 Open surface questions
+## 7.5 Free objects and chapter 8's probes
+
+**Statement.** No current rule relates the free object ⟦Θ⟧ of this chapter (data sort) to the probe ⟦Θ⟧ of chapter 8 (probe sort). In particular, an element ⊤ → C (⊤ ≃ ⟦D⁰⟧) and a point ( ▸ C) of chapter 8 are unrelated: a graded countermodel satisfies every rule and separates them (`notes/ordinary-math.md` Theorem 6.4 (a)).
+
+**Proposed bridge.** Rule GB-shape (chapter 8, §8.8): a corolla ι_Θ from the probe to the free object, and a row making maps out of the free object the same as probe diagrams.
+
+**Status.** Open kernel question, `notes/design-decisions.md` §4 (ledger S13, F8a).
+
+## 7.6 Open surface questions
 
 **Q7.1. How free objects are named.**
 - *Option A: by their context*, `⟦x : ⋆, s : x → x⟧`. Exactly the kernel; long names for common objects.

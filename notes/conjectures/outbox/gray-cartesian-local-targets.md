@@ -40,3 +40,54 @@
 1. **(Main.) Is B κ-local exactly when B is an (∞,1)-category?** Give a proof, or a precise citation, of the converse to Fact 2. Do this in the generality of Cat_ω, for whichever model it holds in.
 2. **Higher analogue.** For each k ≥ 1, consider the comparison maps between the Gray tensor and the k-truncated tensors, for example τ_k(A ⊗ W) versus τ_kA ⊗_k τ_kW. Is the canonical comparison an equivalence? Does τ_k preserve finite products for every k ≤ n ≤ ω? Equivalently, is Cat_(∞,k) an exponential ideal of Cat_ω?
 3. **If Question 1 fails:** describe the class of κ-local objects exactly.
+
+# Researcher Response 1
+
+**The κ-local objects are exactly the (∞,1)-categories.** For $0\le k\le n\le\omega$, the reflector $\tau_k$ preserves the Gray tensor and finite cartesian products. These assertions hold in Campion’s inductive and coinductively complete models.
+
+Write $C_n$ for the ∞-category of $(\infty,n)$-categories. The colimit of the finite stages along inclusions in $\mathrm{Pr}^L$ and the limit along their right adjoints (the underlying-category or core functors) describe the *same* $C_\omega$, Campion’s inductive model. This follows by passing from left adjoints to right adjoints. Campion’s coinductively complete model is a further reflective localization of this $C_\omega$. The finite $C_k$ embed fully faithfully in both. [Goldthorpe, Definition 3.0.4 and proof of Proposition 3.3.4](https://arxiv.org/pdf/2307.00442#page=15), [Campion, Examples 1.29 and 1.34 and Observation 1.35](https://arxiv.org/pdf/2311.00205#page=9).
+
+## Reflection of the two products
+
+Start in the ∞-category of flagged (∞,∞)-categories. Write $L_n$ for its reflector to the chosen $C_n$. Campion’s Theorem 3.14 and Corollary 3.15 give each $L_n$ a strong Gray monoidal structure, including both choices at $\omega$ (use the constant, unrestricted truncation multilevel). For $k\le n$, the inclusions are nested, so $L_k\simeq\tau_k L_n$ by adjunction. The universal property in Theorem 3.14 therefore gives $\tau_k$ a strong monoidal structure. In particular, the canonical comparison is an equivalence
+
+$$
+\tau_k(A\otimes_n W)\ \simeq\ \tau_k A\otimes_k\tau_k W .
+$$
+
+This identifies the tensor reflected to $C_k$ even when the ambient tensor of two $k$-categories has cells above dimension $k$. [Campion, Theorem 3.14 and Corollary 3.15](https://arxiv.org/pdf/2311.00205#page=15).
+
+For finite $n$, the cartesian comparison $\tau_k(A\times W)\to\tau_k A\times\tau_k W$ is an equivalence by Goldthorpe’s Lemma 3.0.3. Its proof starts with groupoid completion $C_1\to C_0$ and iterates change of enrichment. At each step the left adjoint changes the hom-objects and then completes the enriched category. Both operations preserve finite products. [Goldthorpe, Lemma 3.0.3](https://arxiv.org/pdf/2307.00442#page=15), [Ozornova–Rovelli–Walde, Theorem 2.12 and Lemma 2.13](https://arxiv.org/pdf/2603.11005#page=11).
+
+For inductive $C_\omega$, the images of the shapes in $\Theta=\bigcup_m\Theta_m$ generate under colimits, since $C_\omega$ is a localization of the presheaves of spaces on $\Theta$. Both sides of the cartesian comparison preserve colimits separately in $A,W$, by cartesian closure and the adjunction defining $\tau_k$. Each pair of shapes lies in some common finite $C_m$ with $m\ge k$. The inclusion of $C_m$ preserves products as a right adjoint, and restriction of $\tau_k$ to $C_m$ gives its finite-stage reflector by adjunction. Thus the comparison on those pairs is the finite-dimensional equivalence. Extending under colimits in each variable proves it for all pairs.
+
+For the coinductively complete localization, its inclusion in inductive $C_\omega$ preserves products, and restricting the inductive reflector gives the left adjoint to the inclusion of $C_k$. Hence the same comparison holds there. The terminal category already belongs to $C_k$, which also gives preservation of the empty product. For $k=n$, including $k=n=\omega$ within either model, the reflector is the identity. [Campion, Definitions 1.4 and 1.10 and Example 1.29](https://arxiv.org/pdf/2311.00205#page=6).
+
+This also identifies the cartesian internal hom. If $i:C_k\hookrightarrow C_n$ and $B\in C_k$, then for every $T,X\in C_n$,
+
+$$
+\begin{aligned}
+\mathrm{Map}_n(T,[X,iB]_n)
+&\simeq \mathrm{Map}_k(\tau_k(T\times X),B)\\
+&\simeq \mathrm{Map}_k(\tau_k T\times\tau_k X,B)\\
+&\simeq \mathrm{Map}_n(T,i[\tau_k X,B]_k).
+\end{aligned}
+$$
+
+Yoneda gives $[X,iB]_n\simeq i[\tau_k X,B]_k$, proving the exponential-ideal assertion of Question 2.
+
+## The reflected Gray square
+
+It remains to identify the canonical map $U\otimes_1 V\to U\times V$ in $C_1$. Both bifunctors preserve colimits separately. The point and the interval $I=[1]$ generate $C_1$ under colimits, since the simplices generate in the complete Segal space presentation and each $[m]$ for $m\ge1$ is the colimit of its spine of $m$ intervals. The comparison is the unitor if either input is a point. It therefore suffices to calculate it on $(I,I)$. [Campion, Definitions 1.10 and 1.27](https://arxiv.org/pdf/2311.00205#page=7).
+
+By strong monoidality on Gray cubes, $I\otimes_1 I$ is the 1-reflection of the strict walking lax square $Q$. The projection $Q\to I\times I$ is the identity on the four vertices. From $(0,0)$ to $(1,1)$ the hom-category in $Q$ is $[1]$, with the two paths around the square as objects and the interchanger as its arrow. On this hom-category the projection is $[1]\to *$. For every other ordered pair it is an isomorphism of empty or terminal hom-categories. The reflector $C_2\to C_1$ applies groupoid completion to these hom-categories and completes. Since $|[1]|\to *$ is an equivalence of spaces, the induced map is fully faithful and essentially surjective, hence an equivalence. Thus the projection-defined comparison is an equivalence on $(I,I)$ and consequently on all pairs in $C_1$. For $k\ge2$ the same square retains its noninvertible interchanger, so the higher Gray products can already be distinguished from cartesian products on this pair. [Campion, Theorem A](https://arxiv.org/pdf/2311.00205#page=2), [Ozornova–Rovelli–Walde, Theorem 2.20 and Lemma 2.25, equation (2.51)](https://arxiv.org/html/2603.11005v1#S2.SS4).
+
+## Detection by globes
+
+Under the two product equivalences above, $\tau_1(\kappa_{A,W})$ identifies with the comparison for $\tau_1 A,\tau_1 W$ in $C_1$. Indeed each projection comes from the unique map to the terminal tensor unit, which $\tau_1$ preserves. Therefore $\tau_1(\kappa_{A,W})$ is an equivalence. Mapping it into any $B\in C_1$ and applying $\tau_1\dashv i$ gives exactly the equivalence of mapping spaces in the definition of κ-locality.
+
+For necessity, one can express Fact 2 as a retract in the arrow category. Fix $r\ge1$, let $p:D^{r+1}\to D^r$ collapse the top cell to an identity, and let $t:D^{r+1}\to I\otimes D^r$ classify the top cylinder cell. For the strict functor $q$ of Fact 2 we have $qt=\mathrm{id}$. Also $pq=\mathrm{pr}_2\kappa$. On the Steiner generators both maps keep each endpoint copy of $D^r$ and kill the terms containing the interval’s positive-dimensional generator. Since $I\times D^r$ is a strict $r$-category, $\kappa t$ classifies an identity and factors as $hp$ for $h:D^r\to I\times D^r$. Then $\mathrm{pr}_2hp=pqt=p$, so $\mathrm{pr}_2h=\mathrm{id}$ because $p$ has a face section. Thus $(t,h)$ and $(q,\mathrm{pr}_2)$ exhibit $p$ as a retract of $\kappa_{I,D^r}$.
+
+The strict globes and their cylinder give these same maps in either ambient model by the strong monoidal embedding of Steiner shapes followed by reflection. The cartesian product of the two globes is represented by their strict product since their nerves preserve products and these gaunt categories are already complete. [Campion, Example 1.30, Example 3.2 and Corollary 3.5](https://arxiv.org/pdf/2311.00205#page=12).
+
+An object local for every κ is consequently local for every $D^{r+1}\to D^r$ with $r\ge1$, since equivalences of spaces are closed under retracts. These are precisely the globe collapses that lower the category level to 1 in Campion’s presentation. Together with ambient completeness, locality for them says $B\in C_1$. This proves the classification in both models and settles Question 3. [Campion, Definition 1.15, Remark 1.19 and Observation 1.35](https://arxiv.org/pdf/2311.00205#page=8).

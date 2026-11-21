@@ -85,6 +85,8 @@ J(S) is J with the laws in S switched back on, which means dropping their separa
 3. Steps are finite. At fixed boundaries the contextual alphabet is finite (K50).
 4. Steps 1–3 make reachability decidable. This abstract step is machine-checked in `src/CaTTExp/Join/BoundedReach.agda` (`Reach.Bounded.reach?`, no postulates). ∎
 
+*Correction 2026-11-21 (ledger S14).* Step 2 is false in general. The gradings are conserved along paths but do not bound their length: some free objects have loops, such as the loop H of V at degree 4 on Γ_{2,2} (pairwise distinct powers), and a positional self-loop at degree 5 on the 2 × 2 grid in T₁₂ (`notes/uniform-checker.md` §1.1, PR #380). The conclusion stands by another route. At fixed faces and weight the vertex set is finite (K58), and reachability in a finite closed universe is decidable with no length bound (r10 Response 3; `Uniform/FiniteGraph.agda`). The same correction applies to step 1 of Lemma V-dec below.
+
 The cyclic tables for composite N (needed to switch off the D_{d,p} with p | d) need the same linear algebra over ℤ/N. That step is not written out, so those switches are not in the default J yet (§1.6).
 
 ### 1.6 Decision (superseded 2026-11-20 by §1.7)
@@ -131,6 +133,8 @@ Reasons:
 2. At fixed boundaries the contextual alphabet is finite (K50).
 3. Equality of two V-terms of the same weight is decidable. A derivation of the equality uses only defining pairs between terms of that same weight, since the gradings are conserved by every equation of V ⊆ T₁₂. So equality is connectivity in the finite graph whose vertices are the terms of that weight at those boundaries and whose edges are one-step applications of V's defining pairs. That graph is finite by step 2.
 4. Steps 1–3 satisfy the hypotheses of `Reach.Bounded.reach?` (`src/CaTTExp/Join/BoundedReach.agda`), so reachability is decidable. ∎
+
+*Correction 2026-11-21 (ledger S14).* Step 1's length bound fails where F_V(Γ) has loops, as in the loop H at degree 4 on Γ_{2,2}. Step 3 is unaffected, since it uses finiteness of the vertices of one weight, not path length. Reachability is decidable by breadth-first search over that finite vertex set (r10 Response 3; `Uniform/FiniteGraph.agda`), so the lemma stands.
 
 **Switch settings V + S.** T₁₂ is admissible and contains both visible laws, so the all-on setting has T₁₂'s pasting profile. **Updated 2026-11-20 (r9 Responses 2–5, verified; K73 in `conjectures/answered/lax-interchange-every-dimension-r10-2026-11-20.md`):** every finite set of equations true in T₁₂ is admissible over V, so V + {R} and V + {inner law} are each admissible, and all four settings (none, R, inner law, both = T₁₂) are available. **Decidable (2026-11-20, r10 Response 3, verified):** equality and reachability in F_{V+S} are decidable for every S, in every dimension, uniformly in Γ, the degree and the switch bits, and the comparison maps F_{V+S}(Γ) → F_{V+S′}(Γ) are computable. Lemma V-dec therefore extends to every setting. Two caveats. First, r10 found that `SwitchLaws` enabled both binary splits under the inner-law bit, so the "inner law" and "both" settings had the same free tables. Corrected 2026-11-20 (LCORE): this was a modelling error in `SwitchLaws`. The inner composite-crossing law is the left split (§1.2: the direct crossing of A₁ ∗ A₂ past B is the paste of the two crossings), so the inner-law bit now enables only the left split, and R is the separate right-split bit. The four settings are distinct: on the suspended 2 × 3 interval, V, V + R, V + inner law and T₁₂ have 49, 14, 29 and 2 cells respectively (`scripts/e6/interchange_fibre_decorations.py`, which now selects the left split alone for the inner-law bit). r10 Response 3's algorithm covers the left split selected alone, as the response states. Second, the procedure is not polynomial on shared terms, and the problem is P-hard; polynomial time remains an implementation question under E12. Admissibility is not closed under unions in general and the pasting profiles are not a lattice, but neither caveat affects these two laws, which are both true in T₁₂. Imports still run upwards: F_V(Γ) maps generator-preservingly into F_T₁₂(Γ), and `Transport` applies.
 
@@ -279,3 +283,105 @@ Reasons:
 - A uniform generative test (G3) that is decidable. It would replace the template list, with G2 as its specification.
 
 **Open items.** D7c (an independent check of Lemma GB-ext), and D7d (Agda, `src/CaTTExp/Gray/Biclosed/`), owned by GBIC.
+
+---
+
+## 4. Free objects and probes: rule GB-shape
+
+*Added 2026-11-21 by the thread "Write the consolidated system spec" (SPEC), at the coordinator's request after `ordinary-math.md` §6.5.2 (FSET, PR #361). Ledger rows S13 and F8a.*
+
+### 4.1 The gap
+
+The kernel has two kinds of "shape object", and no rule relates them.
+- **Free objects** (chapter 7, `free-objects.md`; written ⟦Θ⟧♭ here and in `ordinary-math.md` §6.5.2, ⟦Θ⟧ in `spec/07`). They are data objects. Maps ⟦Θ⟧♭ → C are Θ-shaped diagrams of elements of C, by LIFT. ⊤ ≃ ⟦D⁰⟧♭, and an element of C is a map ⊤ → C (chapter 6).
+- **Probes** (chapter 8, `closed-structure.md` F.7.4; written ⟦Θ⟧). They are the probe sort of the multimap judgment. A point of C is a nullary multimap ( ▸ C), and (⟦Θ⟧ ▸ C) is a probe diagram. The unit row makes (L, ⟦D⁰⟧, R ▸ Z) ≃ (L, R ▸ Z), so a point is also (⟦D⁰⟧ ▸ C).
+
+The graded countermodel 𝒢 of `ordinary-math.md` Theorem 6.4 (a) satisfies every current rule. In 𝒢, elements ⊤ → C are families of points of every component C_n, while points ( ▸ C) are points of C₀ alone. So no comparison between elements and points is derivable, in either direction.
+
+### 4.2 Audit: where the notes and spec identify the two silently
+
+Each place below is true with GB-shape. Without it, the statement is unsupported.
+
+| Place | What it identifies | Effect without GB-shape |
+|---|---|---|
+| `internal-hom.md` §5.1, "Status 2026-11-20: derived" | (lhom) is stated for Δ ⊳ C = maps out of the free object ⟦Δ⟧♭. The derived rule C/⟦Θ⟧ is about probe multimaps (⟦Δ⟧ ▸ –). "Nothing in this section changes meaning" equates the two. | The derived rule gives (lhom-Λ/♭) for probe Δ only. The data form, including the D⁰ check "points of [Θ, C] are Θ-diagrams", is not derived. The same applies to §5.2–5.6, which use Δ ⊳ –. |
+| `closed-structure.md` E.2, "Status 2026-11-20"; `spec/08` §8.4 (B ⊗ ⟦Θ⟧) | E.2's B ⊗ Θ took Θ as a shape of data diagrams. F.7.4 item 5 reads it as B ⊗ ⟦Θ⟧ with a probe. | E.2's rule is derived for the probe reading only. Its consistency clause (B = ⟦Δ⟧) holds inside the probe sort only. |
+| `spec/06` §6.5 table, "lax cotensor [⟦Θ⟧, C]: lim over Θ of the constant diagram"; `spec/08` §8.4, "[Θ, C] := C/⟦Θ⟧" | Two definitions of the lax cotensor: a limit whose maps in are data diagrams, and a residual whose maps in are probe multimaps. | Two objects, with no derivable comparison between them. |
+| `spec/07` §7.3, "Why A1 is the primitive"; ledger S10; `free-objects.md` §4.4 update | It says chapter 8's probes ⟦Δ⟧ "use A1's form", i.e. that they are free objects. | False as stated. The A1 choice still stands on the pushout argument alone, which does not use probes. |
+| `spec/08` §8.1, "(⟦Δ⟧ ▸ C) is a Δ-shaped diagram in C" | Probe diagrams and chapter 7's diagrams Diag(Δ, C). | Probe diagrams only. Globular probes ⟦Dᵏ⟧ in a time slot are ambient k-cells (the time-slot reading of §8.1), but a time slot needs a data input beside it, so this does not reach the nullary case. |
+| `spec/09` §9.6 | Presents GB-shape and L-× as "added". | They are proposals (ledger F8a, F8b). |
+
+Places checked and found consistent: chapter 6's elements, hom objects and T-hom (all about ⊤ → C); chapter 9's G, DJ, dcoh_S (elements ⊤ → –); chapter 8's rows, conservativity and dualities (probe sort only); `design-decisions.md` §3.2 (b) (probe sort only); the Agda `Gray/Biclosed` modules (probe sort only, plus the weakening row in `FunSets.agda`, which assumes GB-shape at D⁰).
+
+### 4.3 The options
+
+**K0. Status quo.** Two notions of element and of shape diagram, related by nothing.
+- Derives: what the current rules derive, read with the corrections of §4.2.
+- Rules out: projections out of ⊗, weakening, and every bridge in §4.2 (Theorem 6.4 (a)).
+
+**K1. GB-shape at D⁰ only (weakening).** The corolla ι_{D⁰} : (⟦D⁰⟧ ▸ ⊤) and the row "⊤ at slot i": H = (L, ⊤, R ▸ Z), B = (L, ⟦D⁰⟧, R ▸ Z), r(x) = x ∘ᵢ ι_{D⁰}.
+- Derives: elements = points, since (⊤ ▸ C) ≃ (⟦D⁰⟧ ▸ C) ≃ ( ▸ C). Projections out of ⊗ and the comparison κ (`ordinary-math.md` §6.5.2 (ii)).
+- Derives at globes: an ambient k-cell between elements e, e′ : ⊤ → C is (⊤, ⟦Dᵏ⟧ ▸ C) by the time-slot reading. The ⊤ row followed by the unit row turns it into (⟦Dᵏ⟧ ▸ C). So probe globes are cells between elements.
+- Not known: whether (⟦Θ⟧ ▸ C) ≃ maps ⟦Θ⟧♭ → C for non-globular Θ. That would need probes to decompose along the pasting of Θ, and no current rule glues probes (§4.5).
+
+**K2. GB-shape at every pasting shape Θ** (`ordinary-math.md` §6.5.2 (ii)). The corolla ι_Θ : (⟦Θ⟧ ▸ ⟦Θ⟧♭) and the row "shape at slot i": H = (L, ⟦Θ⟧♭, R ▸ Z), B = (L, ⟦Θ⟧, R ▸ Z), r(x) = x ∘ᵢ ι_Θ.
+- Derives: everything K1 derives, and maps ⟦Θ⟧♭ → C ≃ (⟦Θ⟧ ▸ C) for every Θ. So every bridge of §4.2 holds.
+
+**K3. One sort: identify ⟦Θ⟧♭ with ⟦Θ⟧ as a single object.**
+- Rejected. The sort discipline (`spec/08` §8.1) is what makes the biclosed rules conservative over L (§8.5, GB-ext step 4). If probes are data objects, an object variable in an output position can be a probe. A row's output can then feed a pure judgment, and conservativity over L is lost.
+
+### 4.4 Worked examples
+
+1. **An element as a point.** For e : ⊤ → C, its point ( ▸ C).
+   - K0: no term.
+   - K1, K2: the c of the ⊤ row applied to e, then the unit row.
+2. **An arrow between elements as a probe 1-cell.** A 2-cell θ : e ⇒ e′ between elements, as (⟦D¹⟧ ▸ C).
+   - K0: no term.
+   - K1, K2: θ is (⊤, ⟦D¹⟧ ▸ C) by the time-slot reading. The ⊤ row at slot 0 gives (⟦D⁰⟧, ⟦D¹⟧ ▸ C), and the unit row gives (⟦D¹⟧ ▸ C).
+3. **A composable pair.** Θ = (x → y → z), i.e. D¹ ∨ D¹. A pair of composable arrows of elements is a map ⟦Θ⟧♭ → C (chapter 7). The lax cotensor C/⟦Θ⟧ of chapter 8 classifies probe diagrams (⟦Θ⟧ ▸ C).
+   - K2: the shape row at Θ identifies the two.
+   - K1: each arrow transfers by example 2. Gluing the two at y as a probe diagram needs a pasting rule for probes, which the kernel does not have.
+   - K0: no transfer.
+4. **The two lax cotensors** (§4.2, third row). lim_Θ(const C) represents maps ⟦Θ⟧♭ → –. C/⟦Θ⟧ represents (⟦Θ⟧ ▸ –) at the probe slot.
+   - K2: both represent the same functor through the shape row, so they are equivalent by the uniqueness of representing objects (GB-cut at n = 1).
+   - K0, K1: no derivable comparison, except at globes in K1.
+5. **Projections out of ⊗.** (A, W ▸ A).
+   - K1, K2: w₁(1_A) ∘₁ !_W (`ordinary-math.md` §6.5.2 (ii)).
+   - K0: not derivable (𝒢).
+
+### 4.5 Comparison
+
+| | K0 | K1 | K2 | K3 |
+|---|---|---|---|---|
+| Rules added | none | one corolla, one row | one corolla and one row per Θ | sort merge |
+| Sound in Cat_ω | yes | yes (⟦D⁰⟧ and ⊤ are both the point) | yes (ι_Θ is the identity of Θ) | yes |
+| Conservative over L (`spec/08` §8.5) | yes | yes: data output | yes: data output | **no** |
+| Decidable (Lemma GB-dec) | yes | yes: one more template family | yes: one more family, indexed by Θ, bounded by the goal as for the probe-pair row | — |
+| Elements = points | no | yes | yes | yes |
+| Shape diagrams = probe diagrams | no | globes only (others unknown) | yes | yes |
+| Bridges of §4.2 | none | globular instances | all | all |
+
+### 4.6 Verdict (by the evidence)
+
+**K2**, on the evidence so far. Adoption waits on an independent check of the exactness argument for the shape row (GB-ext step 1 with ι_Θ as an element generator; F8a, FSET). Soundness in Cat_ω is proved, and the countermodels 𝒢 and 𝒬 passed their independent check.
+- It is the most general option that keeps conservativity (standard 4). K3 loses conservativity, and K0 and K1 derive strictly less.
+- Every claim in §4.2 then becomes true as written, so the notes need pointers, not rewrites.
+- Its cost over K1 is one template family indexed by Θ, decided by the same matching as the probe-pair row.
+- Its soundness is immediate in Cat_ω. Its exactness is at argument level (GB-ext step 1, `ordinary-math.md` §6.5.2 (ii)).
+
+**What would overturn this.**
+- That exactness check failing for Θ ≠ D⁰. K1 would then be the choice.
+- A proof that K1 derives the shape row at every Θ, for example from a pasting rule for probes. K1 and K2 would then coincide, and K1 is the smaller statement.
+
+### 4.7 Decision (2026-11-21)
+
+**K2 is adopted.** The independent check of the exactness argument passed at argument level (ledger S13).
+- By the left and right rows, O(L, ⟦Θ⟧♭, R; Z) ≃ Map(⟦Θ⟧♭, L\Z/R) and O(L, ⟦Θ⟧, R; Z) ≃ O(⟦Θ⟧; L\Z/R). This uses probes as bound arguments (GB-ext (ii)). So the row family is a single locality condition: ⟦Θ⟧♭ represents O(⟦Θ⟧; –) on data through ι_Θ. GB-ext step 1 applies, and Cat_ω is local because ι_Θ = id.
+- Steps 3–5 are unchanged. ι_Θ is an element generator, and no profile has a data input with a pure output.
+
+Precisions recorded:
+- (a) The check treats ⟦Θ⟧♭ as a data atom. Its identification with chapter 7's free object is sound in Cat_ω. Exactness of the combination with LIFT is outside GB-ext, as for every non-biclosed chapter.
+- (b) GB-dcut for this row puts the time slot at a fixed gap of L or R, as for the pair row. The row adds no slot of its own (`spec/08` §8.8).
+- (c) Derived: ⟦Δ⟧♭ ⊗ ⟦Θ⟧♭ ≃ ⟦Δ ⊗ Θ⟧♭, by the pair and probe-pair rows. This is true in Cat_ω.
+
+The corrections in §4.2 stand as statements of what needs GB-shape. With K2 adopted, each place there now holds as originally written.

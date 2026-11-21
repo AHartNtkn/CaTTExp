@@ -56,8 +56,19 @@ lhom = evRR (rep (named 0) ∷ []) (rep (named 1)) (obj 0)
 e2-unit : Row
 e2-unit = evRR (obj 0 ∷ []) (rep (named 0)) (obj 1)
 
+-- (GB-shape): (X, ⟦Θ⟧♭ ▸ Z) against (X, ⟦Θ⟧ ▸ Z), at three shapes
+shape₁ : Row
+shape₁ = shapeR (obj 0 ∷ []) (named 0) [] (obj 1)
+
+shape₂ : Row
+shape₂ = shapeR [] (disk 1) (obj 0 ∷ []) (obj 1)
+
+shape₃ : Row
+shape₃ = shapeR (obj 0 ∷ []) (disk 1 ⊠ named 0) [] (obj 1)
+
 rows : List Row
-rows = pair₁ ∷ pair₂ ∷ probe₁ ∷ unit₁ ∷ evL₁ ∷ evL₂ ∷ evR₁ ∷ lhom ∷ e2-unit ∷ []
+rows = pair₁ ∷ pair₂ ∷ probe₁ ∷ unit₁ ∷ evL₁ ∷ evL₂ ∷ evR₁ ∷ lhom ∷ e2-unit
+     ∷ shape₁ ∷ shape₂ ∷ shape₃ ∷ []
 
 ------------------------------------------------------------------------
 -- Checks

@@ -295,6 +295,7 @@ rS : Row → Nat → Nat → V → V
 rS (pairR L U W R Z)  g k x = pc x (cpos L g k) (cor (cm U W))
 rS (probeR L Δ Θ R Z) g k x = pc x (cpos L g k) (cor (cp Δ Θ))
 rS (unitR L R Z)      g k x = pc x (cpos L g k) (cor cpt)
+rS (shapeR L Θ R Z)   g k x = pc x (cpos L g k) (cor (cι Θ))
 rS (evLR Φ A C)       g k x = pc (evL A C) 1 x
 rS (evRR Φ A C)       g k x = pc (evR A C) 0 x
 
@@ -302,6 +303,7 @@ rinvS : Row → Nat → Nat → V → V
 rinvS (pairR L U W R Z)  g k y = unC (cm U W) (cpos L g k) y
 rinvS (probeR L Δ Θ R Z) g k y = unC (cp Δ Θ) (cpos L g k) y
 rinvS (unitR L R Z)      g k y = unC cpt (cpos L g k) y
+rinvS (shapeR L Θ R Z)   g k y = unC (cι Θ) (cpos L g k) y
 rinvS (evLR Φ A C)       g k y = curL A C y
 rinvS (evRR Φ A C)       g k y = curR A C y
 
@@ -309,6 +311,7 @@ rS-cong : ∀ ρ g k {x x′} → x ≈ x′ → rS ρ g k x ≈ rS ρ g k x′
 rS-cong (pairR L U W R Z)  g k p = pc-cong (cpos L g k) p ≈-refl
 rS-cong (probeR L Δ Θ R Z) g k p = pc-cong (cpos L g k) p ≈-refl
 rS-cong (unitR L R Z)      g k p = pc-cong (cpos L g k) p ≈-refl
+rS-cong (shapeR L Θ R Z)   g k p = pc-cong (cpos L g k) p ≈-refl
 rS-cong (evLR Φ A C)       g k p = pc-cong 1 ≈-refl p
 rS-cong (evRR Φ A C)       g k p = pc-cong 0 ≈-refl p
 
@@ -316,6 +319,7 @@ rinv-cong : ∀ ρ g k {y y′} → y ≈ y′ → rinvS ρ g k y ≈ rinvS ρ g
 rinv-cong (pairR L U W R Z)  g k p = unC-cong (cm U W) (cpos L g k) p
 rinv-cong (probeR L Δ Θ R Z) g k p = unC-cong (cp Δ Θ) (cpos L g k) p
 rinv-cong (unitR L R Z)      g k p = unC-cong cpt (cpos L g k) p
+rinv-cong (shapeR L Θ R Z)   g k p = unC-cong (cι Θ) (cpos L g k) p
 rinv-cong (evLR Φ A C)       g k p = curL-cong A C p
 rinv-cong (evRR Φ A C)       g k p = curR-cong A C p
 
@@ -345,6 +349,7 @@ T-rS : ∀ ρ {k g x} → CellAt k g (H ρ) x → CellAt k (rgap ρ g) (B ρ) (r
 T-rS (pairR L U W R Z)  {k} {g} cx = T-rS-slot {L} {cm U W} {R} {Z} {k} {g} cx
 T-rS (probeR L Δ Θ R Z) {k} {g} cx = T-rS-slot {L} {cp Δ Θ} {R} {Z} {k} {g} cx
 T-rS (unitR L R Z)      {k} {g} cx = T-rS-slot {L} {cpt} {R} {Z} {k} {g} cx
+T-rS (shapeR L Θ R Z)   {k} {g} cx = T-rS-slot {L} {cι Θ} {R} {Z} {k} {g} cx
 T-rS (evLR Φ A C) {k} (cellAt pre post sp len tx) =
   cellAt (A ∷ pre) post (cong (A ∷_) sp) (cong suc len)
     (retype (T-pc {P = A ∷ []} {Y = A \\ C} {Q = []} (T-evL A C) tx)
@@ -360,6 +365,7 @@ T-rinvS : ∀ ρ {k g y} → T (leq g (length (ins (H ρ)))) → CellAt k (rgap 
 T-rinvS (pairR L U W R Z)  {k} {g} bd cy = T-rinv-slot {L} {cm U W} {R} {Z} {k} {g} bd cy
 T-rinvS (probeR L Δ Θ R Z) {k} {g} bd cy = T-rinv-slot {L} {cp Δ Θ} {R} {Z} {k} {g} bd cy
 T-rinvS (unitR L R Z)      {k} {g} bd cy = T-rinv-slot {L} {cpt} {R} {Z} {k} {g} bd cy
+T-rinvS (shapeR L Θ R Z)   {k} {g} bd cy = T-rinv-slot {L} {cι Θ} {R} {Z} {k} {g} bd cy
 T-rinvS (evLR Φ A C) bd cy with evL-view cy
 ... | pre , post , sp , len , ty = cellAt pre post sp len (T-curL ty)
 T-rinvS (evRR Φ A C) bd cy with evR-view bd cy
@@ -369,6 +375,7 @@ rinv-l : ∀ ρ {k g x} → CellAt k g (H ρ) x → rinvS ρ g k (rS ρ g k x) �
 rinv-l (pairR L U W R Z)  {k} {g} cx = rinv-l-slot {L} {cm U W} {R} {Z} {k} {g} cx
 rinv-l (probeR L Δ Θ R Z) {k} {g} cx = rinv-l-slot {L} {cp Δ Θ} {R} {Z} {k} {g} cx
 rinv-l (unitR L R Z)      {k} {g} cx = rinv-l-slot {L} {cpt} {R} {Z} {k} {g} cx
+rinv-l (shapeR L Θ R Z)   {k} {g} cx = rinv-l-slot {L} {cι Θ} {R} {Z} {k} {g} cx
 rinv-l (evLR Φ A C) cx = curL-l (typ cx)
 rinv-l (evRR Φ A C) cx = curR-l (typ cx)
 
@@ -377,6 +384,7 @@ rinv-r : ∀ ρ {k g y} → T (leq g (length (ins (H ρ)))) → CellAt k (rgap �
 rinv-r (pairR L U W R Z)  {k} {g} bd cy = rinv-r-slot {L} {cm U W} {R} {Z} {k} {g} bd cy
 rinv-r (probeR L Δ Θ R Z) {k} {g} bd cy = rinv-r-slot {L} {cp Δ Θ} {R} {Z} {k} {g} bd cy
 rinv-r (unitR L R Z)      {k} {g} bd cy = rinv-r-slot {L} {cpt} {R} {Z} {k} {g} bd cy
+rinv-r (shapeR L Θ R Z)   {k} {g} bd cy = rinv-r-slot {L} {cι Θ} {R} {Z} {k} {g} bd cy
 rinv-r (evLR Φ A C) bd cy with evL-view cy
 ... | pre , post , sp , len , ty = curL-r ty
 rinv-r (evRR Φ A C) bd cy with evR-view bd cy
@@ -387,6 +395,7 @@ r-face : ∀ ρ {k g x} α → CellAt (suc k) g (H ρ) x →
 r-face (pairR L U W R Z)  {k} {g} α cx = r-face-slot {L} {cm U W} {R} {Z} {k} {g} α cx
 r-face (probeR L Δ Θ R Z) {k} {g} α cx = r-face-slot {L} {cp Δ Θ} {R} {Z} {k} {g} α cx
 r-face (unitR L R Z)      {k} {g} α cx = r-face-slot {L} {cpt} {R} {Z} {k} {g} α cx
+r-face (shapeR L Θ R Z)   {k} {g} α cx = r-face-slot {L} {cι Θ} {R} {Z} {k} {g} α cx
 r-face (evLR Φ A C) {k} α (cellAt pre post sp refl tx) =
   seq {P = A ∷ []} {Y = A \\ C} {Q = []} {P′ = pre} (T-evL A C) tx (T-δ α k)
 r-face (evRR Φ A C) {k} α (cellAt pre post sp refl tx) =

@@ -273,6 +273,8 @@ PR #3 I.5 considers a double structure with both pseudo and lax 2-cells. Agreed:
 
 ## 0. Summary
 
+*Update 2026-11-21 (ledger S5):* the statements below that the free structure for uniform L "has not been constructed" are superseded. Admissible theories exist in every dimension (T₁₂), the least one on pasting diagrams is V, and the kernel's side condition computes in V + S with S ⊆ {inner law, R}; see `design-decisions.md` §1.7 and `spec/02-lax-core.md`.
+
 1. **The target is not an ω-category.** The ω-category of ω-categories with lax transformations is a category *enriched over ωCat with the lax Gray tensor*, which Gepner–Heine call an **oriented category** ([2510.10504](https://arxiv.org/abs/2510.10504), §1.8, with ∞Cat's hom-objects being Fun^lax(S, T)) **[paper, intro level]**. A CaTT model is enriched over the *cartesian* product. So under P the ambient is a different object (ωCat with pseudo transformations), and the lax one appears only as a family of objects and maps inside it.
 2. **Two versions of L.** In ωCat_lax only the outermost composition is Gray, since each hom Fun^lax(B, C) is an ordinary ω-category.
    - **Two-tier L** matches that exactly: plain CaTT inside homs, directed interchange only for composition across objects.

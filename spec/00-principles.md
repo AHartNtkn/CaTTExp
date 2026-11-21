@@ -1,0 +1,84 @@
+# Chapter 0. Principles
+
+These are the constraints every later chapter satisfies. They are design commitments, not theorems, so they have no proof status; each one names where it was decided.
+
+## 0.1 What the system is about
+
+The system is a type theory in the style of CaTT (Finster–Mimram) whose intended model is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it.
+
+- A term of type ⋆ is an object of 𝒦, that is, an ω-category.
+- A term of type `a → b` between objects is a 1-cell of 𝒦, a functor. A term between 1-cells is a lax transformation, and so on up.
+- Inside one hom 𝒦(a, b), cells compose as in an ω-category. Composition **across** objects, 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), is Gray: it has a directed interchanger and no horizontal composite.
+
+The ambient 𝒦 stays **external**: it is the model the judgments are about, not a term inside the theory. Internal quantifiers in Lawvere's style (a rule that binds an object variable and has a universal property witnessed by cells) are allowed where the rules below support them.
+
+*Source:* `notes/pseudo-vs-gray.md` §0, §2.1–2.2; `notes/conventions.md` §4.
+
+## 0.2 No universes
+
+There is no type of types, no type of small ω-categories, and no rule that turns a judgment into a term. ⋆ is a sort, not a universe: nothing has type "the collection of objects".
+
+Consequences used later:
+- an object is never quantified over by a term former; object variables are bound only by contexts;
+- "the ω-category of ω-categories" is never an object of the theory. Its structure appears only through rules about 𝒦 (limits, free objects, the closed structure).
+
+*Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
+
+## 0.3 Universal properties are witnessed by cells
+
+The kernel has **no definitional equality** beyond syntactic identity of terms after substitution, as in CaTT. In particular:
+- no β or η rules for any type former or term former;
+- no computation rules for limits, free objects, internal homs or tensors;
+- a law of a strict theory used in a side condition (chapter 2) never becomes a definitional equality. It only makes certain cells derivable.
+
+Every universal property is stated as the existence of cells: a structure map, a comparison cell, and a witness that the comparison is invertible where invertibility is meant. A user proves an equation by exhibiting a cell, never by a conversion check.
+
+Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`, `⊢hpol`).
+
+*Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional).
+
+## 0.4 Lax by default, the most general version first
+
+Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one and recovers the others by marking (chapter 3). Concretely:
+- the core is the uniform lax core L (chapter 2): interchange is directed at every level, not only across objects;
+- the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
+- pseudo transformations, ordinary ω-categories and groupoids are marks on top of L, never separate kernels.
+
+The generality ordering, from most to least general: uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations), each being the previous one plus marks. "More general" means fewer derivable cells and more models.
+
+Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
+
+*Source:* project standard 4; `notes/pseudo-vs-gray.md` §2.5, §7; `notes/design-decisions.md` §1.7.
+
+## 0.5 The kernel and the surface are kept apart
+
+The **kernel** is a small, explicit, decidable system. It has:
+- no defaults (every mark, every switch setting, every bracketing is written out);
+- no implicit arguments, no notation, no overloading;
+- a checker that decides every judgment.
+
+The **surface** is the language a person writes. It elaborates to kernel terms. It may infer marks, choose default bracketings or layerings, offer notation and implicit arguments. It may not change what is derivable: an elaborated term is checked by the kernel like any other.
+
+This spec fixes the kernel and leaves every surface choice open. Each chapter lists its open surface questions, with options and a practical comparison.
+
+*Source:* Anthony, in this project's chat (2026-11-21): keeping the kernel and surface apart is essential.
+
+## 0.6 Decidability of checking
+
+Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it, and offers a decidable sufficient judgment as an optional optimisation.
+
+Decidability is not the same as efficiency. Several side conditions are decidable but expensive (chapter 2, §2.6). Efficiency is an implementation question and never changes the rules.
+
+*Source:* `notes/design-decisions.md` §0, §1.5, §1.7, §2.7.
+
+## 0.7 Open surface questions
+
+**Q0.1. Which composition order does the user write?** The kernel uses diagrammatic order (`f ; g`, first f).
+- *Option A: diagrammatic only.* Matches the kernel, Mikhail's rules and the Gray tensor's execution order, so the factor order in a Gray cell reads left to right. Users coming from classical category theory reverse every composite in their head.
+- *Option B: classical only* (`g ∘ f`). Familiar, but every Gray cell's factor order is then read right to left, and the lax/oplax naming hazard of `conventions.md` §3.2 becomes a daily hazard.
+- *Option C: both, with distinct symbols.* Cheap to support (it is pure notation) but doubles what a reader must recognise.
+- *Worked example.* The lax naturality cell of α : F ⇒ G at f : x → y is `α_x ; Gf ⇛ Ff ; α_y` in A and `Gf ∘ α_x ⇛ α_y ∘ Ff` in B.
+
+**Q0.2. Are objects written as types or as terms?** The kernel has objects as terms of sort ⋆ and elements of C as 1-cells ⊤ → C (chapter 6).
+- *Option A: as in the kernel* (`x : ⊤ → C`). Nothing to elaborate; every element is visibly a functor, so lax naturality at elements is visible.
+- *Option B: elements as variables of type C* (`x : C`), elaborated to `⊤ → C`. Reads like ordinary mathematics; the elaborator must insert ⊤ and whiskerings everywhere, and error messages must translate back.

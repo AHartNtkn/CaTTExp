@@ -199,6 +199,7 @@ The argument uses C1′ and the definition of composition, nothing else; it is o
 - **Two-tier L ⊂ P** (in the sense "P = two-tier L + markings"): semantic half by Theorem 3.1; syntactic half is Conjecture 3.2.
 - **Every P-model is a two-tier L-model**: proved (change of base along c, §3.1).
 - **Uniform L ⊂ two-tier L**, and "every two-tier model is a uniform model": blocked on E6 (there is no uniform side condition yet to compare).
+  *Update 2026-11-21 (SPEC, ledger S2):* no longer blocked. The uniform side condition computes in V + S (`design-decisions.md` §1.7); `spec/02-lax-core.md` §2.3 sketches the inclusion through the requirement-4 projection, and S2 tracks the proof.
 
 ---
 
@@ -291,6 +292,8 @@ So L moves G1 but does not remove it. Two things improve:
 
 ## 6. Surface defaults (E10), settled by counts
 
+*Reopened 2026-11-21 (ledger S6):* Anthony asked that surface and ergonomic choices be left open for him. The counts and arguments below stand as the comparison; the "Decision" paragraphs are proposals, and the options are presented without a choice in `spec/03-invertibility-markings.md` Q3.1 and `spec/02-lax-core.md` Q2.2.
+
 The questions were `pseudo-vs-gray.md` §8 Q2–Q3: marking defaults for objects and transformations, and the default layering of horizontal composites. Per project standard 3, these are settled by a worked comparison.
 
 ### 6.1 Marking defaults
@@ -368,4 +371,4 @@ So a structure with directed interchange along 0-cells can never be ν of a comp
 | E9′ (polynomial side-condition check with sharing) | open; experiment handed to LCORE | this thread + LCORE |
 | §1.4: rec admissible | open, low priority | this thread |
 | E6 first uniform case (ΣD² ∨ ΣD², dimension 5) | in progress | this thread |
-| Agda: encode inv/ps judgments, the propagation rules, and the Example 1.6 checks | to start | LCORE (asked) |
+| Agda: encode inv/ps judgments, the propagation rules, and the Example 1.6 checks | done (`Gray/Marks*.agda`, ledger E4); DES destructors remain (corrected 2026-11-21, S7) | MARK (former) |

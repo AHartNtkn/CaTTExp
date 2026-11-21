@@ -71,6 +71,7 @@ leq-step j m p = leq-trans (j * 6) (6 + j * 6) m (leq-+ˡ 6 (j * 6)) p
 scF : Nat → Fm → Bool
 scF k (obj i)  = lt i k
 scF k (rep _)  = true
+scF k (shp _)  = true
 scF k (a ⊗ b)  = scF k a ∧ scF k b
 scF k (a \\ b) = scF k a ∧ scF k b
 scF k (a // b) = scF k a ∧ scF k b
@@ -90,6 +91,7 @@ mutual
   scT k m (eR A C)         = scF k A ∧ scF k C
   scT k m (pP _ _)         = true
   scT k m pt               = true
+  scT k m (iP _)           = true
   scT k m (idt A)          = scF k A
   scT k m (comp f gs)      = scT k m f ∧ scTs k m gs
   scT k m (glue a x b)     = scT k m a ∧ scT k m x ∧ scT k m b
@@ -127,6 +129,7 @@ module _ {k m : Nat} {σ τ : Sub} (ag : Agree k m σ τ) where
   agree-sF : ∀ a → T (scF k a) → sF (fo σ) a ≡ sF (fo τ) a
   agree-sF (obj i)  p = agF ag i p
   agree-sF (rep _)  p = refl
+  agree-sF (shp _)  p = refl
   agree-sF (a ⊗ b)  p = cong₂ _⊗_ (agree-sF a (∧ˡ p)) (agree-sF b (∧ʳ {scF k a} p))
   agree-sF (a \\ b) p = cong₂ _\\_ (agree-sF a (∧ˡ p)) (agree-sF b (∧ʳ {scF k a} p))
   agree-sF (a // b) p = cong₂ _//_ (agree-sF a (∧ˡ p)) (agree-sF b (∧ʳ {scF k a} p))
@@ -146,6 +149,7 @@ module _ {k m : Nat} {σ τ : Sub} (ag : Agree k m σ τ) where
     agree-sT (eR A C) p = cong₂ eR (agree-sF A (∧ˡ p)) (agree-sF C (∧ʳ {scF k A} p))
     agree-sT (pP _ _) p = refl
     agree-sT pt       p = refl
+    agree-sT (iP _)   p = refl
     agree-sT (idt A)  p = cong idt (agree-sF A p)
     agree-sT (comp f gs) p =
       cong₂ comp (agree-sT f (∧ˡ p)) (agree-sTs gs (∧ʳ {scT k m f} p))
@@ -231,6 +235,7 @@ inst-id k m A p = trans (agree-sY (inst-id-agree k m) A p) (sY-id A)
 scF-up : ∀ k k′ a → T (leq k k′) → T (scF k a) → T (scF k′ a)
 scF-up k k′ (obj i)  le p = leq-trans (suc i) k k′ p le
 scF-up k k′ (rep _)  le p = tt
+scF-up k k′ (shp _)  le p = tt
 scF-up k k′ (a ⊗ b)  le p = ∧-intro (scF-up k k′ a le (∧ˡ p)) (scF-up k k′ b le (∧ʳ {scF k a} p))
 scF-up k k′ (a \\ b) le p = ∧-intro (scF-up k k′ a le (∧ˡ p)) (scF-up k k′ b le (∧ʳ {scF k a} p))
 scF-up k k′ (a // b) le p = ∧-intro (scF-up k k′ a le (∧ˡ p)) (scF-up k k′ b le (∧ʳ {scF k a} p))
@@ -251,6 +256,7 @@ module _ (k : Nat) where
     scT-up m m′ (eR A C) le p = p
     scT-up m m′ (pP _ _) le p = tt
     scT-up m m′ pt       le p = tt
+    scT-up m m′ (iP _)   le p = tt
     scT-up m m′ (idt A)  le p = p
     scT-up m m′ (comp f gs) le p =
       ∧-intro (scT-up m m′ f le (∧ˡ p)) (scTs-up m m′ gs le (∧ʳ {scT k m f} p))
@@ -309,6 +315,7 @@ canon-sc k (rep s ∷ fs)  p rewrite +-suc k (length fs) =
   All-mono (g ∷ gs) (q ∷ qs) =
     scF-up (k + length fs) (suc (k + length fs)) g
       (leq-suc (k + length fs) (k + length fs) (leq-refl (k + length fs))) q ∷ All-mono gs qs
+canon-sc k (shp _ ∷ fs)  ()
 canon-sc k (_ ⊗ _ ∷ fs)  ()
 canon-sc k (_ \\ _ ∷ fs) ()
 canon-sc k (_ // _ ∷ fs) ()
@@ -348,6 +355,9 @@ module RowScope (k : Nat) where
   H-sc (unitR L R Z) p =
     let (pL , q) = All-++ L p ; (pR , qz) = All-++ R q ; pZ = one qz in
     ∧-intro (scFs-++ L _ (All→scFs L pL) (∧-intro tt (All→scFs R pR))) pZ
+  H-sc (shapeR L Θ R Z) p =
+    let (pL , q) = All-++ L p ; (pR , qz) = All-++ R q ; pZ = one qz in
+    ∧-intro (scFs-++ L _ (All→scFs L pL) (∧-intro tt (All→scFs R pR))) pZ
   H-sc (evLR Φ A C) (pA ∷ q) =
     let (pΦ , qc) = All-++ Φ q ; pC = one qc in ∧-intro (All→scFs Φ pΦ) (∧-intro pA pC)
   H-sc (evRR Φ A C) p =
@@ -363,6 +373,9 @@ module RowScope (k : Nat) where
   B-sc (unitR L R Z) p =
     let (pL , q) = All-++ L p ; (pR , qz) = All-++ R q ; pZ = one qz in
     ∧-intro (scFs-++ L _ (All→scFs L pL) (All→scFs R pR)) pZ
+  B-sc (shapeR L Θ R Z) p =
+    let (pL , q) = All-++ L p ; (pR , qz) = All-++ R q ; pZ = one qz in
+    ∧-intro (scFs-++ L _ (All→scFs L pL) (∧-intro tt (All→scFs R pR))) pZ
   B-sc (evLR Φ A C) (pA ∷ q) =
     let (pΦ , qc) = All-++ Φ q ; pC = one qc in ∧-intro (∧-intro pA (All→scFs Φ pΦ)) pC
   B-sc (evRR Φ A C) p =
@@ -377,6 +390,9 @@ module RowScope (k : Nat) where
     let (pL , q) = All-++ L p ; (pR , _) = All-++ R q in
     ∧-intro px (scTs-++ (ids L) _ (All→ids L pL) (∧-intro tt (All→ids R pR)))
   rmap-sc {m} (unitR L R Z) x p px =
+    let (pL , q) = All-++ L p ; (pR , _) = All-++ R q in
+    ∧-intro px (scTs-++ (ids L) _ (All→ids L pL) (∧-intro tt (All→ids R pR)))
+  rmap-sc {m} (shapeR L Θ R Z) x p px =
     let (pL , q) = All-++ L p ; (pR , _) = All-++ R q in
     ∧-intro px (scTs-++ (ids L) _ (All→ids L pL) (∧-intro tt (All→ids R pR)))
   rmap-sc {m} (evLR Φ A C) x (pA ∷ q) px =

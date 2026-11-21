@@ -20,12 +20,14 @@ data Shape : Set where
   named : Nat → Shape
   _⊠_   : Shape → Shape → Shape
 
--- Formulas.  obj i is an object variable; rep Θ is the representable ⟦Θ⟧.
+-- Formulas.  obj i is an object variable; rep Θ is the representable ⟦Θ⟧
+-- (probe sort); shp Θ is ⟦Θ⟧♭, chapter 7's free object on Θ, a data atom.
 --   A \\ C  is  A\C = Hom_lax(A, C)
 --   C // A  is  C/A = Hom_oplax(A, C)
 data Fm : Set where
   obj  : Nat → Fm
   rep  : Shape → Fm
+  shp  : Shape → Fm     -- ⟦Θ⟧♭, the free object on Θ as data (GB-shape, K2)
   _⊗_  : Fm → Fm → Fm
   _\\_ : Fm → Fm → Fm
   _//_ : Fm → Fm → Fm
@@ -48,6 +50,7 @@ data Row : Set where
   unitR  : List Fm → List Fm → Fm → Row                  -- L R Z
   evLR   : List Fm → Fm → Fm → Row                       -- Φ A C
   evRR   : List Fm → Fm → Fm → Row                       -- Φ A C
+  shapeR : List Fm → Shape → List Fm → Fm → Row         -- L Θ R Z  (GB-shape, K2)
 
 -- A template: row, time-slot gap, mode and dimension.
 record Tmpl : Set where
@@ -71,6 +74,7 @@ mutual
   --   eR A C       e^r_{A,C} : (C/A, A ▸ C)
   --   pP Δ Θ       p_{Δ,Θ}   : (⟦Δ⟧, ⟦Θ⟧ ▸ ⟦Δ ⊠ Θ⟧)
   --   pt           pt        : ( ▸ ⟦D⁰⟧)
+  --   iP Θ         ι_Θ       : (⟦Θ⟧ ▸ ⟦Θ⟧♭)   (GB-shape, K2)
   --   idt A        1_A       : (A ▸ A)
   --   comp f gs    planar substitution f ∘ (g₁, …, gₙ), whiskering when
   --                one argument is a higher cell
@@ -86,6 +90,7 @@ mutual
     eR   : Fm → Fm → Tm
     pP   : Shape → Shape → Tm
     pt   : Tm
+    iP   : Shape → Tm
     idt  : Fm → Tm
     comp : Tm → List Tm → Tm
     glue : Tm → Tm → Tm → Tm
@@ -115,6 +120,7 @@ eqSh _ _ = false
 eqFm : Fm → Fm → Bool
 eqFm (obj m)  (obj n)  = m ==ℕ n
 eqFm (rep a)  (rep b)  = eqSh a b
+eqFm (shp a) (shp b) = eqSh a b
 eqFm (a ⊗ b)  (c ⊗ d)  = eqFm a c ∧ eqFm b d
 eqFm (a \\ b) (c \\ d) = eqFm a c ∧ eqFm b d
 eqFm (a // b) (c // d) = eqFm a c ∧ eqFm b d
@@ -141,6 +147,7 @@ eqRow (probeR a b c d e) (probeR a′ b′ c′ d′ e′) =
 eqRow (unitR a b c)      (unitR a′ b′ c′)        = eqFms a a′ ∧ eqFms b b′ ∧ eqFm c c′
 eqRow (evLR a b c)       (evLR a′ b′ c′)         = eqFms a a′ ∧ eqFm b b′ ∧ eqFm c c′
 eqRow (evRR a b c)       (evRR a′ b′ c′)         = eqFms a a′ ∧ eqFm b b′ ∧ eqFm c c′
+eqRow (shapeR a b c d)   (shapeR a′ b′ c′ d′)    = eqFms a a′ ∧ eqSh b b′ ∧ eqFms c c′ ∧ eqFm d d′
 eqRow _ _ = false
 
 eqTmpl : Tmpl → Tmpl → Bool
@@ -160,6 +167,7 @@ mutual
   eqTm (eR a b)     (eR c d)     = eqFm a c ∧ eqFm b d
   eqTm (pP a b)     (pP c d)     = eqSh a c ∧ eqSh b d
   eqTm pt           pt           = true
+  eqTm (iP a)       (iP b)       = eqSh a b
   eqTm (idt a)      (idt b)      = eqFm a b
   eqTm (comp f gs)  (comp h ks)  = eqTm f h ∧ eqTms gs ks
   eqTm (glue a x b) (glue c y d) = eqTm a c ∧ eqTm x y ∧ eqTm b d
@@ -195,6 +203,7 @@ eqSh-sound (a ⊠ b)   (c ⊠ d)   p =
 eqFm-sound : ∀ a b → T (eqFm a b) → a ≡ b
 eqFm-sound (obj m)  (obj n)  p = cong obj (==ℕ-sound m n p)
 eqFm-sound (rep a)  (rep b)  p = cong rep (eqSh-sound a b p)
+eqFm-sound (shp a) (shp b) p = cong shp (eqSh-sound a b p)
 eqFm-sound (a ⊗ b)  (c ⊗ d)  p =
   cong₂ _⊗_ (eqFm-sound a c (∧-fst p)) (eqFm-sound b d (∧-snd {eqFm a c} p))
 eqFm-sound (a \\ b) (c \\ d) p =
@@ -262,6 +271,9 @@ eqRow-sound (evLR a b c) (evLR a′ b′ c′) p =
 eqRow-sound (evRR a b c) (evRR a′ b′ c′) p =
   let (p1 , p2 , p3) = ∧₃ {eqFms a a′} p in
   cong₃ evRR (eqFms-sound a a′ p1) (eqFm-sound b b′ p2) (eqFm-sound c c′ p3)
+eqRow-sound (shapeR a b c d) (shapeR a′ b′ c′ d′) p =
+  let (p1 , p2 , p3 , p4) = ∧₄ {eqFms a a′} p in
+  cong₄ shapeR (eqFms-sound a a′ p1) (eqSh-sound b b′ p2) (eqFms-sound c c′ p3) (eqFm-sound d d′ p4)
 
 eqTmpl-sound : ∀ a b → T (eqTmpl a b) → a ≡ b
 eqTmpl-sound (tmpl r g m n) (tmpl r′ g′ m′ n′) p =
@@ -280,6 +292,7 @@ mutual
   eqTm-sound (pP a b) (pP c d) p =
     cong₂ pP (eqSh-sound a c (∧-fst p)) (eqSh-sound b d (∧-snd {eqSh a c} p))
   eqTm-sound pt pt _ = refl
+  eqTm-sound (iP a) (iP b) p = cong iP (eqSh-sound a b p)
   eqTm-sound (idt a) (idt b) p = cong idt (eqFm-sound a b p)
   eqTm-sound (comp f gs) (comp h ks) p =
     cong₂ comp (eqTm-sound f h (∧-fst p)) (eqTms-sound gs ks (∧-snd {eqTm f h} p))
@@ -323,6 +336,7 @@ eqSh-refl (a ⊠ b)   = ∧-intro (eqSh-refl a) (eqSh-refl b)
 eqFm-refl : ∀ a → T (eqFm a a)
 eqFm-refl (obj n)  = ==ℕ-refl n
 eqFm-refl (rep a)  = eqSh-refl a
+eqFm-refl (shp a) = eqSh-refl a
 eqFm-refl (a ⊗ b)  = ∧-intro (eqFm-refl a) (eqFm-refl b)
 eqFm-refl (a \\ b) = ∧-intro (eqFm-refl a) (eqFm-refl b)
 eqFm-refl (a // b) = ∧-intro (eqFm-refl a) (eqFm-refl b)
@@ -348,6 +362,7 @@ eqRow-refl (probeR a b c d e) = ∧-intro (eqFms-refl a) (∧-intro (eqSh-refl b
 eqRow-refl (unitR a b c)      = ∧-intro (eqFms-refl a) (∧-intro (eqFms-refl b) (eqFm-refl c))
 eqRow-refl (evLR a b c)       = ∧-intro (eqFms-refl a) (∧-intro (eqFm-refl b) (eqFm-refl c))
 eqRow-refl (evRR a b c)       = ∧-intro (eqFms-refl a) (∧-intro (eqFm-refl b) (eqFm-refl c))
+eqRow-refl (shapeR a b c d)   = ∧-intro (eqFms-refl a) (∧-intro (eqSh-refl b) (∧-intro (eqFms-refl c) (eqFm-refl d)))
 
 eqTmpl-refl : ∀ a → T (eqTmpl a a)
 eqTmpl-refl (tmpl r g m n) =
@@ -361,6 +376,7 @@ mutual
   eqTm-refl (eR a b)     = ∧-intro (eqFm-refl a) (eqFm-refl b)
   eqTm-refl (pP a b)     = ∧-intro (eqSh-refl a) (eqSh-refl b)
   eqTm-refl pt           = tt
+  eqTm-refl (iP a)       = eqSh-refl a
   eqTm-refl (idt a)      = eqFm-refl a
   eqTm-refl (comp f gs)  = ∧-intro (eqTm-refl f) (eqTms-refl gs)
   eqTm-refl (glue a x b) = ∧-intro (eqTm-refl a) (∧-intro (eqTm-refl x) (eqTm-refl b))

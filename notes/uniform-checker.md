@@ -129,7 +129,7 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
   - `sem-law`: each switched law holds up to one split step.
   - `sem-tr`: the translation of a running path evaluates to that path.
   - `split-run`, `≈U→≈`: split steps keep a path running from the same word to the same word, in both directions. So the untyped split class of a valid path stays among valid paths and is Grid's typed equality.
-  - `Converse.converse`: if p and q are valid and `sw ⊢ tr start p ≈S tr start q`, then `sw ⊢ p ≈ q`. So V + S adds no equation on suspended grids beyond the splits, and in particular ≈S is not trivial there, although raw ≈ identifies all identity 4-terms (ι(id3 u, G) ≈ id4 F for every F).
+  - `Converse.converse`: if p and q are valid and `sw ⊢ tr start p ≈S tr start q`, then `sw ⊢ p ≈ q`. So the raw presentation ≈S adds no equation on suspended grids beyond the splits; that V + S adds none follows under the by-inspection identification of ≈S with V + S (§2 item 2). In particular ≈S is not trivial there, although raw ≈ identifies all identity 4-terms (ι(id3 u, G) ≈ id4 F for every F).
 
 ## 2. What this does not check (the trust boundary)
 

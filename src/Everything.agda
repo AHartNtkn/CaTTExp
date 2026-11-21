@@ -67,6 +67,7 @@ import CaTTExp.Gray.Biclosed.Steiner.Arith
 import CaTTExp.Gray.Biclosed.Steiner.Sum
 import CaTTExp.Gray.Biclosed.Steiner.Codes
 import CaTTExp.Gray.Biclosed.Steiner.Maps
+import CaTTExp.Gray.Biclosed.Steiner.Tensor
 import CaTTExp.Gray.Biclosed.Mirror
 import CaTTExp.Gray.Biclosed.FunSets
 import CaTTExp.Gray.Biclosed.ShapeRow

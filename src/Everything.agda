@@ -185,6 +185,7 @@ import CaTTExp.Strict.CaTT
 import CaTTExp.Strict.Purity
 import CaTTExp.Strict.Sound
 import CaTTExp.Strict.Omega
+import CaTTExp.Strict.OmegaS
 import CaTTExp.Strict.OmegaPasting
 import CaTTExp.Strict.Trees
 import CaTTExp.Strict.TreeCat

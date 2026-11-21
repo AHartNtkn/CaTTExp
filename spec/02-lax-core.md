@@ -185,7 +185,7 @@ CaTT has a duality D_J for every J ⊆ {1, 2, …}: reverse the cells whose dime
 
 Together these force J = ∅. Neither alone does: J = {1,2,4,5,7,…} passes the first and fails the second, while op passes the second and fails the first.
 
-**Example.** op = D_odd reverses 3-cells and keeps 1-cells and 4-cells. Over Σ(ΣD¹ ∨ ΣD¹) (§2.3 example (c)), it sends the accepted interchanger of two 2-cells of an object to the reversed interchanger, which every setting rejects. In two-tier L that interchanger is an identity, which is why op is a two-tier symmetry. So in uniform L the "prove once, get the op-dual free" rule holds only in the `ord` fragment (chapter 3).
+**Example.** op = D_odd reverses 3-cells and keeps 2-cells and 4-cells. Over Σ(ΣD¹ ∨ ΣD¹) (§2.3 example (c)), it sends the accepted interchanger of two 2-cells of an object to the reversed interchanger, which every setting rejects. In two-tier L that interchanger is an identity, which is why op is a two-tier symmetry. So in uniform L the "prove once, get the op-dual free" rule holds only in the `ord` fragment (chapter 3).
 
 **Status.**
 - Sign arithmetic, the orientation lemma (the three flips taken as the definition of the action), the classification and the switch exchange: **Agda-checked** (`src/CaTTExp/GrayDualityUniform.agda`: `dual-canonical`, `kernel-theorem`, `J124-gray-rows`, `op-gray-rows`, `dual-has`, `total-mirror`, `level-uniform`; no postulates).

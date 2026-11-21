@@ -9,6 +9,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 0.1 What the system is about
   - Q (Anthony): is "lax transformations as 2-cells" a truncation at dimension 2, like (∞,2) ⊂ (∞,ω)? Answered: no; laxness is an orientation axis, not a dimension axis, and every level of Fun^lax is lax (maps A ⊗ Dⁱ → B). The more general direction is uniform L (directed interchange inside objects too), which the kernel takes. Worked picture of D¹ × D¹ vs D¹ ⊗ D¹ and of a lax modification given.
 - [x] 0.2 No universes
+  - Q (Anthony): what are the practical limitations, beyond rephrasings? Answered: no large recursion (families by recursion), no encode–decode (EX had to be a rule), no power objects, no categories of structures as objects (Set, Grp, presheaves), object-indexed diagrams as fibrations, quantification over objects only outermost.
+  - Finding (Anthony): the resulting growing list of extra rules is unacceptable. Logged as ledger F10.
 - [ ] 0.3 Universal properties are witnessed by cells
 - [ ] 0.4 Lax by default, the most general version first
 - [ ] 0.5 The kernel and the surface are kept apart
@@ -121,4 +123,4 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
-None yet.
+- F10 (0.2): the universe-free rule list keeps growing; seek a small general set of principles that closes it.

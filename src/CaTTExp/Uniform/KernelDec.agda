@@ -8,7 +8,7 @@
 -- bound (CaTTExp.Uniform.RuleFin, header). This module takes instead,
 -- for each Δ, A, a decision of SC between any two cells, which
 -- Rule.Decide (from a bound) and RuleFin.DecideFin (from finite closed
--- universes) both provide. Everything else is as in Kernel.
+-- universes) both provide. Kernel is this module at Rule.Decide.sc?.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

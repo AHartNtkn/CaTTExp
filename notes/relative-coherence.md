@@ -791,6 +791,8 @@ This shows ν_u⁻¹ ; H ; ν_v is connected to an exchange path. By E2 and E3, 
   - What remains of (K) is the forced-order part: letters joined by connectors that cross their boundary blocks. Its fibres have one linear extension, which is the line-word situation (item 22 of the same prompt).
   So the in-house target for the hexagon is the k-fold matrix argument for the wedge of three lax squares, replacing I with the three-factor interchange `(α ∗₀ β ∗₀ γ) · (α′ ∗₀ β′ ∗₀ γ′) ⇛ (α·α′) ∗₀ (β·β′) ∗₀ (γ·γ′)` over C₂ ∗₀ C₂ ∗₀ C₂. Generating Agda checks for the hexagon in the grid before that is proved would only check single coherences, so it is deferred.
 
+> **Superseded 2026-11-21.** Sections 7.12–7.13 pursued lemma L and fold actions. The search-free construction is now settled by a different route: r9 Response 15, descent over Campion's decomposition posets (`conjectures/answered/relative-coherence-all-dimensions-r10-2026-11-21.md`). Lemma L is no longer needed.
+
 ### 7.12 Second-identity calls: a height measure that avoids the shift (thread RCX, 2026-11-20, sketch)
 
 This addresses r10 item 64 / Question 1. Notation follows `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, Responses 3–4.
@@ -839,7 +841,7 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - *Counts: checked.* A block of at most k + 2 links cannot contain all k + 3 links of one generator. The fold's varying set {x, v} has lowest rank h − 1 under terms of rank h + k, which is depth k + 1, and Response 4 is the case k = 1. After all folds, the height is h − 1 at the same input rank. So (input rank, height) decreases lexicographically, given the higher localization lemma and the fold actions.
 - *Lax-triangle route: checked.* Γ↑{x, v} collapses to Γ′ by the three free pairs, in the order stated. The pair (x⁺, x↑) has the dimensions (h − 1, h) of (x, v), now at rank n + 1, so the expansion lemma climbs in depth.
 - *One correction.* The folded value 1^{k+1}_{d′} need not have d′ intrinsic. The claim that the entry shift is never repeated needs C(h, k) to be stated for terms with any identity value in a height-h context, not only for an intrinsic h-cell. In that version, d′ simply has fewer events, possibly none, and Response 4's zero-event case puts every block in lower height. With that restatement no shift is needed at all.
-- *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/outbox/relative-coherence-all-dimensions-r10.md` (item 65, Question 1).
+- *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/answered/relative-coherence-all-dimensions-r10-2026-11-21.md` (item 65, Question 1).
 
 ### 7.13 Lemma L: the explicit collapse (proved) and the level-k resolution (sketch) (thread RCX, 2026-11-20)
 

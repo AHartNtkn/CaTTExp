@@ -242,3 +242,12 @@ Any of the following:
 - Eilenberg–MacLane, acyclic models (used in item 43).
 
 - Guetta, arXiv 1812.05332, Thm 6.11 (discrete Conduché functors and bases; item 49); Campion, arXiv 2311.00200, Thm 4.21 (contractible subdivision posets; item 52).
+
+# Response and verification (2026-11-21)
+
+The researcher answered this prompt in the round-9 conversation. The answers are recorded there as **Researcher Responses 9–15** of `relative-coherence-all-dimensions-r9-2026-11-20.md`, and the verification is the addendum that follows them in that file.
+
+**Outcome.** Question 1 is answered positively. Response 15 constructs comparisons between parallel raw terms of equal strict value, by structural recursion, in every finite strong-Steiner context. It also gives naturality fillers of every depth and compatible canonical sections. It does this by descent over Campion's decomposition posets Sd(c). It does not go through lemma L or the vocabulary or column routes of items 66–67, which Responses 9–14 had developed and which are now superseded.
+
+**Still open, and not pursued.** No elementary or polynomial size bound is given; the only bound is computable, obtained by running the recursion. There is also no polynomial recognizer for shared canonical forms (Questions 1(a″), (d) and (e)). These are cost questions, so under the relevance rule no follow-up is written. They are recorded under C1 and E9 as implementation items.
+

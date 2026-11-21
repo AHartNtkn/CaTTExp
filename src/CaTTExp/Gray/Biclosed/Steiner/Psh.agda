@@ -215,16 +215,16 @@ castM-∘ʳ : ∀ {K L M M′} (e : M ≡ M′) (g : Map L M) (f : Map K L) → 
 castM-∘ʳ refl g f = ≈M-refl
 
 -- The frame of a slot: 1_KP ⊗ g ⊗ 1_KQ, flattened.
-Fr : ∀ KP KQ {K Ls} → Map K (concat Ls) → Map (concat (KP ++ K ∷ KQ)) (concat (KP ++ Ls ++ KQ))
-Fr KP KQ {K} {Ls} g = castM refl (concat-flat KP Ls KQ) (⊗s (idMaps KP ++ᵐ (g ∷ idMaps KQ)))
+Fr : ∀ KP KQ {K} Ls → Map K (concat Ls) → Map (concat (KP ++ K ∷ KQ)) (concat (KP ++ Ls ++ KQ))
+Fr KP KQ {K} Ls g = castM refl (concat-flat KP Ls KQ) (⊗s (idMaps KP ++ᵐ (g ∷ idMaps KQ)))
 
-Fr-cong : ∀ KP KQ {K Ls} {g g′ : Map K (concat Ls)} → g ≈M g′ → Fr KP KQ g ≈M Fr KP KQ g′
-Fr-cong KP KQ {Ls = Ls} e =
+Fr-cong : ∀ KP KQ {K} Ls {g g′ : Map K (concat Ls)} → g ≈M g′ → Fr KP KQ Ls g ≈M Fr KP KQ Ls g′
+Fr-cong KP KQ Ls e =
   castM-≈M refl (concat-flat KP Ls KQ) (⊗s-cong (≈ᵐ-++ (≈ᵐ-refl (idMaps KP)) (e , ≈ᵐ-refl (idMaps KQ))))
 
 -- a map after the frame
 Fr-post : ∀ {KP′ KP KQ′ KQ K Ls Ls₀} (hP : Maps KP′ KP) (hs : Maps Ls Ls₀) (hQ : Maps KQ′ KQ) (g : Map K (concat Ls)) →
-          (⊗s (hP ++ᵐ (hs ++ᵐ hQ)) ∘M Fr KP′ KQ′ g)
+          (⊗s (hP ++ᵐ (hs ++ᵐ hQ)) ∘M Fr KP′ KQ′ Ls g)
             ≈M castM refl (concat-flat KP Ls₀ KQ) (⊗s (hP ++ᵐ ((⊗s hs ∘M g) ∷ hQ)))
 Fr-post {KP′} {KP} {KQ′} {KQ} {K} {Ls} {Ls₀} hP hs hQ g =
   ≈M-trans (castM (concat-flat KP′ Ls KQ′) (concat-flat KP Ls₀ KQ) N ∘M castM refl (concat-flat KP′ Ls KQ′) M)
@@ -243,7 +243,7 @@ Fr-post {KP′} {KP} {KQ′} {KQ} {K} {Ls} {Ls₀} hP hs hQ g =
 
 -- a map before the frame
 Fr-pre : ∀ {KP′ KP KQ′ KQ K′ K Ls} (hP : Maps KP′ KP) (h : Map K′ K) (hQ : Maps KQ′ KQ) (g : Map K (concat Ls)) →
-         (Fr KP KQ g ∘M ⊗s (hP ++ᵐ (h ∷ hQ)))
+         (Fr KP KQ Ls g ∘M ⊗s (hP ++ᵐ (h ∷ hQ)))
            ≈M castM refl (concat-flat KP Ls KQ) (⊗s (hP ++ᵐ ((g ∘M h) ∷ hQ)))
 Fr-pre {KP′} {KP} {KQ′} {KQ} {K′} {K} {Ls} hP h hQ g =
   ≈M-trans (castM refl (concat-flat KP Ls KQ) (⊗s (idMaps KP ++ᵐ (g ∷ idMaps KQ)) ∘M ⊗s (hP ++ᵐ (h ∷ hQ))))

@@ -185,7 +185,6 @@ import CaTTExp.Strict.CaTT
 import CaTTExp.Strict.Purity
 import CaTTExp.Strict.Sound
 import CaTTExp.Strict.Omega
-import CaTTExp.Strict.OmegaS
 import CaTTExp.Strict.OmegaPasting
 import CaTTExp.Strict.Trees
 import CaTTExp.Strict.TreeCat
@@ -200,7 +199,6 @@ import CaTTExp.Strict.FreeTV
 import CaTTExp.Strict.TrFlat
 import CaTTExp.Strict.Support
 import CaTTExp.Strict.Key
-import CaTTExp.Strict.OmegaSound
 import CaTTExp.Strict.LaxColimPoint
 import CaTTExp.Strict.Tables
 import CaTTExp.Strict.Nu

@@ -143,7 +143,7 @@ This is a kernel question, so the evidence decides it (standard 3). It is record
 
 **Worked example.** Take two composable arrows of elements x → y → z in C, i.e. a map out of chapter 7's ⟦D¹ ∨ D¹⟧♭. In K2 the shape row turns it into a probe diagram (⟦D¹ ∨ D¹⟧ ▸ C), which C/⟦D¹ ∨ D¹⟧ classifies. In K1 each arrow transfers separately: an arrow of elements is (⊤, ⟦D¹⟧ ▸ C) by the time-slot reading, and the ⊤ row and then the unit row turn it into (⟦D¹⟧ ▸ C). Gluing the two at y as one probe diagram needs a pasting rule for probes, which does not exist. In K0 nothing transfers.
 
-**Evidence so far.** K2 is the most general option that keeps conservativity (standard 4). K3 loses it, and K0 and K1 derive strictly less. K2 is adopted once F8a's independent check of soundness and exactness passes. If that check fails for Θ ≠ D⁰, K1 is the choice. If K1 is shown to derive the shape row at every Θ, K1 is the smaller statement of the same theory.
+**Evidence so far.** K2 is the most general option that keeps conservativity (standard 4). K3 loses it, and K0 and K1 derive strictly less. K2 is adopted after an independent check of the exactness argument for the shape row (GB-ext step 1 with ι_Θ as an element generator; F8a, FSET). Soundness in Cat_ω is proved, and the countermodels 𝒢 and 𝒬 passed their independent check. If that check fails for Θ ≠ D⁰, K1 is the choice. If K1 is shown to derive the shape row at every Θ, K1 is the smaller statement of the same theory.
 
 **Status.** Soundness in Cat_ω: **proved** (ι_Θ is the identity). Exactness: argument level (GB-ext step 1). Weakening row (Θ = D⁰) in Agda over the abstract interface: `Gray/Biclosed/FunSets.agda` (F8d).
 

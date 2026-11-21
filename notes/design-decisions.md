@@ -359,14 +359,14 @@ Places checked and found consistent: chapter 6's elements, hom objects and T-hom
 
 ### 4.6 Verdict (by the evidence)
 
-**K2**, on the evidence so far; adoption waits on F8a's open item.
+**K2**, on the evidence so far. Adoption waits on an independent check of the exactness argument for the shape row (GB-ext step 1 with ι_Θ as an element generator; F8a, FSET). Soundness in Cat_ω is proved, and the countermodels 𝒢 and 𝒬 passed their independent check.
 - It is the most general option that keeps conservativity (standard 4). K3 loses conservativity, and K0 and K1 derive strictly less.
 - Every claim in §4.2 then becomes true as written, so the notes need pointers, not rewrites.
 - Its cost over K1 is one template family indexed by Θ, decided by the same matching as the probe-pair row.
 - Its soundness is immediate in Cat_ω. Its exactness is at argument level (GB-ext step 1, `ordinary-math.md` §6.5.2 (ii)).
 
 **What would overturn this.**
-- The independent check of F8a's soundness and exactness arguments failing for Θ ≠ D⁰. K1 would then be the choice.
+- That exactness check failing for Θ ≠ D⁰. K1 would then be the choice.
 - A proof that K1 derives the shape row at every Θ, for example from a pasting rule for probes. K1 and K2 would then coincide, and K1 is the smaller statement.
 
 Until then the spec presents GB-shape as **proposed**, and each place in §4.2 says what holds without it.

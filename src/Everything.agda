@@ -63,6 +63,8 @@ import CaTTExp.Gray.Biclosed.Poset
 import CaTTExp.Gray.Biclosed.PosetModel
 import CaTTExp.Gray.Biclosed.DirEnv
 import CaTTExp.Gray.Biclosed.D7g
+import CaTTExp.Gray.Biclosed.Mirror
+import CaTTExp.Gray.Biclosed.FunSets
 import CaTTExp.Gray.NBE.Base
 import CaTTExp.Gray.NBE.Syntax
 import CaTTExp.Gray.NBE.Termination
@@ -235,6 +237,7 @@ import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
+import CaTTExp.GrayDualityUniform
 import CaTTExp.SU
 import CaTTExp.SUExamples
 import CaTTExp.Gray.Cover

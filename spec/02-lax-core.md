@@ -170,7 +170,30 @@ This is not the kernel's default theory. Marking every object `ord` in uniform L
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
 - The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds exactly (§3.6). For coherences it fails by the coherence rule alone in settings without the inner law (the strip), and is otherwise a relative coherence question (ledger E13).
 
-## 2.7 Open surface questions
+## 2.7 Dualities
+
+CaTT has a duality D_J for every J ⊆ {1, 2, …}: reverse the cells whose dimension is in J (Benjamin–Markakis). Two-tier L keeps four of them as symmetries (`notes/closed-structure.md` §D.2, including op). The uniform core keeps one.
+
+**Statement (Theorem D4).** In every setting S:
+- D_J sends every uniform-L derivation to a uniform-L derivation iff **J = ∅**;
+- D_J sends uniform L to the oplax core (every elementary interchanger reversed) iff **J = all**. The image of setting S is the oplax core in setting mirror(S), which exchanges the inner law and R: V + {inner law} goes to V^∘ + {R}, and V + {R} to V^∘ + {inner law};
+- every other J maps some accepted coherence to a rejected type. Its image is a mixed core D_J(V + S), which can be checked by running the V + S checker on the dualised input.
+
+**Why.** D_J sends the elementary interchanger of two (l+1)-cells juxtaposed along a k-cell to the reverse type iff a_{k+1} + a_{l+1} + a_{l+2} is odd, where a_m = [m ∈ J]. Two necessary conditions follow:
+- the Gray interchanger at every level n, over Σⁿ(ΣD¹ ∨ ΣD¹), must keep its orientation;
+- J must pass the two-tier test.
+
+Together these force J = ∅. Neither alone does: J = {1,2,4,5,7,…} passes the first and fails the second, while op passes the second and fails the first.
+
+**Example.** op = D_odd reverses 3-cells and keeps 2-cells and 4-cells. Over Σ(ΣD¹ ∨ ΣD¹) (§2.3 example (c)), it sends the accepted interchanger of two 2-cells of an object to the reversed interchanger, which every setting rejects. In two-tier L that interchanger is an identity, which is why op is a two-tier symmetry. So in uniform L the "prove once, get the op-dual free" rule holds only in the `ord` fragment (chapter 3).
+
+**Status.**
+- Sign arithmetic, the orientation lemma (the three flips taken as the definition of the action), the classification and the switch exchange: **Agda-checked** (`src/CaTTExp/GrayDualityUniform.agda`: `dual-canonical`, `kernel-theorem`, `J124-gray-rows`, `op-gray-rows`, `dual-has`, `total-mirror`, `level-uniform`; no postulates).
+- That the action is the three flips, and that the two-tier witnesses live on contexts ΣD¹ ∨ ΣD^q, where F_{V+S} = 𝔉: **argued** (`notes/closed-structure.md` §D.4.1).
+
+**Source.** `notes/closed-structure.md` §D.4; ledger D8.
+
+## 2.8 Open surface questions
 
 **Q2.1. Which setting a development starts in.** The kernel requires the setting to be declared.
 - *Option A: the surface defaults to ∅ (V), and the user switches laws on.* Every development is as general as possible unless the author asks otherwise; a proof that needs a split fails to check until the switch is written, which is visible. Imports from more general developments always work.

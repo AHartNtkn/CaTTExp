@@ -11,7 +11,7 @@ Names follow `notes/conventions.md` §3.2: A\C has evaluation (A, A\C ▸ C), ta
 (GB-form)   Γ ⊢ A : ⋆    Γ ⊢ B : ⋆   ⟹   Γ ⊢ A ⊗ B : ⋆,   Γ ⊢ A\B : ⋆,   Γ ⊢ B/A : ⋆
 Γ ⊢ t : (X₁, …, Xₙ ▸ Z)        n ≥ 0; a map X₁ ⊗ … ⊗ Xₙ → Z, the list never bracketed
 ```
-- With n = 1 a multimap is an ambient 1-cell. With one representable input it is a diagram: (⟦Δ⟧ ▸ C) is a Δ-shaped diagram in C.
+- With n = 1 a multimap is an ambient 1-cell. With one representable input it is a **probe diagram**: (⟦Δ⟧ ▸ C) is a Δ-shaped diagram in C in the probe sense. By rule GB-shape (§8.8) it is the same as a map out of chapter 7's free object on Δ, and a point ( ▸ C) is the same as an element ⊤ → C of chapter 6. Without that rule neither identification is derivable.
 - A **time slot** is an input position holding a representable ⟦Θ⟧. (B, ⟦Dᵏ⟧ ▸ C) is a lax k-cell between maps B → C; (⟦Dᵏ⟧, B ▸ C) is an oplax one; a slot between two data inputs gives mixed cells. Faces are restrictions along ⟦s⟧, ⟦t⟧ : ⟦Dᵏ⁻¹⟧ → ⟦Dᵏ⟧.
 - **Invertible cells** are the `inv` mark of chapter 3 at a time slot, realised as an extra slot in the rightmost gap all of whose cells are invertible.
 - **Substitution** is planar, as in a planar multicategory. An L substitution σ : Θ′ → Θ restricts a time slot along ⟦σ⟧, so composition inside a one-hole hom is L's coherence with its side condition in V + S.
@@ -71,11 +71,13 @@ At n = 0, c is currying (or factorization) and ε : r(c) ⊨ b. At n = 1 with b 
 
 **Source.** `notes/closed-structure.md` F.7.4 §2–4, §7; `notes/design-decisions.md` §3; ledger D7, D7c–D7g.
 
+**Further rows (§8.8 and chapter 9, §9.6).** Two rows are added to the five above. GB-shape is adopted (§8.8), and L-× is proposed (ledger F8b): GB-shape (chapter 7's free objects ⟦Θ⟧♭ are represented by the probes ⟦Θ⟧, which at Θ = D⁰ is weakening by ⊤), and L-× (contraction: maps out of A × W into a `grpd_2` target are multimaps (A, W ▸ B)). With them, function sets are A\B and F8 is derived. Without them the kernel has no projection out of ⊗ (graded countermodel, `notes/ordinary-math.md` Theorem 6.4).
+
 ## 8.4 Derived rules
 
 All of these are derived, none primitive:
-- **(lhom):** [Θ, C] := C/⟦Θ⟧. Abstraction restricts φ : (⟦Δ⊗Θ⟧ ▸ C) by the probe-pair row to (⟦Δ⟧, ⟦Θ⟧ ▸ C) and applies c of the right row at n = 0; β is ε at n = 0; η is c at n = 1; naturality in Δ and C are n = 1 instances.
-- **B ⊗ ⟦Θ⟧** (the earlier E.2 rule): u_B := c_{right,0}(m_{B,⟦Θ⟧}), h♯ := c_{pair,0}(e^r ∘ (h, 1)), and its uniqueness is the n = 1 pair row. ⟦Δ⟧ ⊗ Θ ≃ ⟦Δ ⊗ Θ⟧ because both represent the same operation space.
+- **(lhom):** [Θ, C] := C/⟦Θ⟧, the lax cotensor for **probe** diagrams. `notes/internal-hom.md` §5.1 states (lhom) for maps out of free objects (Δ ⊳ C), and chapter 6, §6.5 defines a lax cotensor as a limit. Both agree with C/⟦Θ⟧ by GB-shape (§8.8), since all three represent the same functor. Abstraction restricts φ : (⟦Δ⊗Θ⟧ ▸ C) by the probe-pair row to (⟦Δ⟧, ⟦Θ⟧ ▸ C) and applies c of the right row at n = 0; β is ε at n = 0; η is c at n = 1; naturality in Δ and C are n = 1 instances.
+- **B ⊗ ⟦Θ⟧** (the earlier E.2 rule, read with Θ a probe; E.2 with Θ a free object needs GB-shape): u_B := c_{right,0}(m_{B,⟦Θ⟧}), h♯ := c_{pair,0}(e^r ∘ (h, 1)), and its uniqueness is the n = 1 pair row. ⟦Δ⟧ ⊗ Θ ≃ ⟦Δ ⊗ Θ⟧ because both represent the same operation space.
 - **Probe absorption** and **E.1's warning:** (B⊗C, ⟦Dᵏ⟧ ▸ D) ≃ (B, C, ⟦Dᵏ⟧ ▸ D) by the pair row, and the right row curries C together with the time slot, giving (B ▸ D/(C ⊗ ⟦Dᵏ⟧)).
 - **(A\C)/B ≃ A\(C/B):** canonical but not literal; both represent (A, Φ, B ▸ C).
 - 2-functoriality of A ⊗ – on lax cells and of – ⊗ B on oplax cells.
@@ -88,9 +90,71 @@ No biclosed rule enters a derivation of a pure judgment (⟦Δ₁⟧, …, ⟦Δ
 
 ## 8.6 What the closed structure does not change
 
-L's coherence rule and its side condition in V + S; the marks of chapter 3; the pseudo hom (cartesian, `notes/internal-hom.md` §5.4–5.5). Two items in the notes still describe closed-structure work as blocked on the uniform construction ("D8 for uniform L", `closed-structure.md` Part G), which is superseded (ledger S12).
+L's coherence rule and its side condition in V + S; the marks of chapter 3; the pseudo hom (cartesian, `notes/internal-hom.md` §5.4–5.5).
 
-## 8.7 Open surface questions
+## 8.7 Dualities
+
+The object duality (–)^K and the ambient duality D_J act differently on the biclosed rules.
+
+**Rule.** None. The dualities are meta-operations on derivations, not rules.
+
+**Statement.**
+- **Ambient dualities with 1 ∈ J do not act.** A multimap (X₁, …, Xₙ ▸ Z) is an ambient 1-cell. Reversing it gives a map from Z to a tensor, which is not a multimap for n ≠ 1.
+- **The mirror.** For K ∈ {odd, even}, (X ⊗ Y)^K ≅ Y^K ⊗ X^K. The mirror acts as follows:
+  - a multimap (X₁, …, Xₙ ▸ Z) goes to (Xₙ^K, …, X₁^K ▸ Z^K);
+  - A\C goes to C^K/A^K, and C/A goes to A^K\C^K;
+  - m, e^ℓ, e^r and p_{Δ,Θ} go to m with swapped arguments, e^r, e^ℓ and p_{Θ^K,Δ^K};
+  - a time slot at gap g goes to gap n − g, so a lax slot becomes an oplax one;
+  - ⟦Dᵏ⟧ keeps its shape, with source and target swapped iff k ∈ K.
+
+  The mirror maps the row table of §8.3 to itself, the vertex types H and B to their mirrors, and the restriction r to its mirror. Directed cuts go to directed cuts. Collars go to collars after inverting the reversed ones.
+- **What breaks the symmetry is L.** A probe restriction along ⟦σ⟧ mirrors to the restriction along ⟦D_K σ⟧. That is a kernel restriction for every σ iff D_K is a symmetry of the core.
+  - Under uniform L, in every setting, only K = ∅ is a symmetry (chapter 2, §2.7). So no non-trivial duality is a symmetry of L + biclosed rules.
+  - The op mirror lands in the biclosed system over the mixed core D_odd(V + S).
+  - K = all keeps ⊗'s order and lands over the oplax core, with the inner law and R exchanged.
+  - Under two-tier L, op is a core symmetry, so the op mirror is a symmetry of two-tier L + biclosed rules.
+- **Other K** turn ⊗ into the twisted tensor ⊗_ε, which is not a formula. They have no action on the biclosed rules.
+
+**Example.** Over two-tier L, the right curry of a lax transformation α : (B, ⟦D¹⟧ ▸ C) mirrors to the left curry of an oplax transformation of opposites, with the same derivation. Over uniform L the rows still mirror. But a restriction along the interchanger of two 2-cells of an object (Σ(ΣD¹ ∨ ΣD¹), chapter 2 §2.3 example (c)) mirrors under op to a restriction along the reversed interchanger, which uniform L rejects.
+
+**Status.** The mirror's action on the rows: **Agda-checked** (`src/CaTTExp/Gray/Biclosed/Mirror.agda`: `mirRow-invol`, `H-mir`, `B-mir`, `rmap-mir`, `rowsOf-mir`, no postulates). The action on directed cuts, collars and probe restrictions: **stated** (argued in the note). The core classification it relies on: chapter 2, §2.7. **Source.** `notes/closed-structure.md` §D.5; ledger D8.
+
+## 8.8 Rule GB-shape: free objects and probes
+
+This was a kernel question, decided by the evidence (standard 3). It was **adopted on 2026-11-21 (option K2)**, after the independent check of its exactness argument passed. **Source:** `notes/design-decisions.md` §4; ledger S13, F8a.
+
+**The gap.** Free objects (chapter 7) and probes (§8.1) are unrelated. So elements ⊤ → C and points ( ▸ C) are unrelated, ⊗ has no projections, and four places in the notes identify the two without a rule. These are (lhom) in data form, E.2's B ⊗ Θ, chapter 6's lax cotensor as a limit, and an earlier version of chapter 7's A1 argument.
+
+**Rule.**
+```
+(GB-shape)  ⊢ ι_Θ : (⟦Θ⟧ ▸ ⟦Θ⟧♭)        for each pasting shape Θ   (⟦Θ⟧♭ the free object of chapter 7)
+            row: H = (L, ⟦Θ⟧♭, R ▸ Z),   B = (L, ⟦Θ⟧, R ▸ Z),      r(x) = x ∘ᵢ ι_Θ
+```
+- (GB-cut) and (GB-dcut) apply as for every row. GB-dcut puts its time slot at a fixed gap of L or R, as for the pair row. The row adds no slot of its own.
+- With Θ = Dᵏ beside a data input, the converted probe reads as a time slot (§8.1).
+- **Derived.** With the pair and probe-pair rows, ⟦Δ⟧♭ ⊗ ⟦Θ⟧♭ ≃ ⟦Δ ⊗ Θ⟧♭, since both represent (⟦Δ⟧, ⟦Θ⟧ ▸ –) on data objects. This is true in Cat_ω.
+
+**Options compared.**
+
+| | K0 status quo | K1 GB-shape at D⁰ (weakening) | K2 GB-shape at every Θ | K3 one sort |
+|---|---|---|---|---|
+| Elements = points | no | yes | yes | yes |
+| Shape diagrams = probe diagrams | no | globes only; others unknown | yes | yes |
+| Conservative over L (§8.5) | yes | yes | yes | **no** |
+| Decidable | yes | yes | yes (one template family per Θ, bounded by the goal) | — |
+| Sound in Cat_ω | yes | yes | yes | yes |
+
+**Worked example.** Take two composable arrows of elements x → y → z in C, i.e. a map out of chapter 7's ⟦D¹ ∨ D¹⟧♭. In K2 the shape row turns it into a probe diagram (⟦D¹ ∨ D¹⟧ ▸ C), which C/⟦D¹ ∨ D¹⟧ classifies. In K1 each arrow transfers separately: an arrow of elements is (⊤, ⟦D¹⟧ ▸ C) by the time-slot reading, and the ⊤ row and then the unit row turn it into (⟦D¹⟧ ▸ C). Gluing the two at y as one probe diagram needs a pasting rule for probes, which does not exist. In K0 nothing transfers.
+
+**Decision: K2.** It is the most general option that keeps conservativity (standard 4). K3 loses conservativity, and K0 and K1 derive strictly less. What would overturn it: a failure of exactness for some Θ (K1 would then be the choice). If K1 is shown to derive the shape row at every Θ, K1 is a smaller presentation of the same theory.
+
+**Status.**
+- Soundness in Cat_ω: **proved** (ι_Θ is the identity).
+- Exactness: **independently checked** at argument level (ledger S13). By the left and right rows, the whole row family is one locality condition: the data atom ⟦Θ⟧♭ represents (⟦Θ⟧ ▸ –) on data through ι_Θ. Steps 3–5 of GB-ext are unchanged, so conservativity over L holds.
+- Scope of that check: it treats ⟦Θ⟧♭ as a data atom. Identifying the atom with chapter 7's free object (LIFT) is sound in Cat_ω. Exactness of the combination with chapter 7 lies outside GB-ext, as for every chapter other than this one.
+- Weakening row (Θ = D⁰) in Agda over the abstract interface: `Gray/Biclosed/FunSets.agda` (F8d).
+
+## 8.9 Open surface questions
 
 **Q8.1. How multimaps are written.**
 - *Option A: as in the kernel,* `t : (X₁, …, Xₙ ▸ Z)`. Exact; unfamiliar.

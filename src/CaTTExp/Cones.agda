@@ -212,6 +212,113 @@ assoc1C dir u v w = coh Q B σ , B [ σ ]ty
   B = if dir then arr (snd l) (fst l) (fst r) else arr (snd l) (fst r) (fst l)
   σ = ⟪ diskList u ++ restDisk 0 v ++ restDisk 0 w ⟫
 
+-- Coherences used by cones over 2-dimensional coherence terms (ledger
+-- B19): each is a coherence-case coh over the named pasting context.
+private
+  cohOver : Ctx → Cell → Cell → List Tm → Cell
+  cohOver Q s t ts = coh Q B ⟪ ts ⟫ , B [ ⟪ ts ⟫ ]ty
+    where B = arr (snd s) (fst s) (fst t)
+
+-- dwC u a b : (u ∗₀ a) ∗₁ (u ∗₀ b) ⇛ u ∗₀ (a ∗₁ b)   (u a 1-cell; a, b vertical 2-cells)
+dwC : Cell → Cell → Cell → Cell
+dwC u a b = cohOver Q (binC 1 (binC 0 U A) (binC 0 U B)) (binC 0 U (binC 1 A B))
+                    (diskList u ++ restDisk 0 a ++ restDisk 1 b)
+  where
+  Q = ctxOf (node (leaf ∷ node (leaf ∷ leaf ∷ []) ∷ []))
+  U = gen Q 2 ; A = gen Q 6 ; B = gen Q 8
+
+-- drC a b u : (a ∗₁ b) ∗₀ u ⇛ (a ∗₀ u) ∗₁ (b ∗₀ u)
+drC : Cell → Cell → Cell → Cell
+drC a b u = cohOver Q (binC 0 (binC 1 A B) U) (binC 1 (binC 0 A U) (binC 0 B U))
+                    (diskList a ++ restDisk 1 b ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (node (leaf ∷ leaf ∷ []) ∷ leaf ∷ []))
+  A = gen Q 4 ; B = gen Q 6 ; U = gen Q 8
+
+-- naC u a α : ((u ∗₀ a) ∗₀ α) ∗₁ a1(u, a, τα) ⇛ a1(u, a, σα) ∗₁ (u ∗₀ (a ∗₀ α))
+naC : Cell → Cell → Cell → Cell
+naC u a α = cohOver Q (binC 1 (binC 0 (binC 0 U A) Al) (assoc1C true U A G))
+                      (binC 1 (assoc1C true U A F) (binC 0 U (binC 0 A Al)))
+                    (diskList u ++ restDisk 0 a ++ restDisk 0 α)
+  where
+  Q = ctxOf (node (leaf ∷ leaf ∷ node (leaf ∷ []) ∷ []))
+  U = gen Q 2 ; A = gen Q 4 ; F = gen Q 6 ; G = gen Q 7 ; Al = gen Q 8
+
+-- nrC u α b : ((u ∗₀ α) ∗₀ b) ∗₁ a1(u, τα, b) ⇛ a1(u, σα, b) ∗₁ (u ∗₀ (α ∗₀ b))
+nrC : Cell → Cell → Cell → Cell
+nrC u α b = cohOver Q (binC 1 (binC 0 (binC 0 U Al) B) (assoc1C true U G B))
+                      (binC 1 (assoc1C true U F B) (binC 0 U (binC 0 Al B)))
+                    (diskList u ++ restDisk 0 α ++ restDisk 0 b)
+  where
+  Q = ctxOf (node (leaf ∷ node (leaf ∷ []) ∷ leaf ∷ []))
+  U = gen Q 2 ; F = gen Q 4 ; G = gen Q 5 ; Al = gen Q 6 ; B = gen Q 8
+
+-- ru2C a : a ⇛ a ∗₁ id_{τa}   (a a 2-cell)
+ru2C : Cell → Cell
+ru2C a = cohOver Q A (binC 1 A (idC (gen Q 3))) (diskList a)
+  where
+  Q = Disk 2
+  A = gen Q 4
+
+-- wiC u f : id_{u ∗₀ f} ⇛ u ∗₀ id_f
+wiC : Cell → Cell → Cell
+wiC u f = cohOver Q (idC (binC 0 U F)) (binC 0 U (idC F)) (diskList u ++ restDisk 0 f)
+  where
+  Q = ctxOf (node (leaf ∷ leaf ∷ []))
+  U = gen Q 2 ; F = gen Q 4
+
+-- hxC a b : (a ∗₀ σb) ∗₁ (τa ∗₀ b) ⇛ a ∗₀ b   (horizontal composite as whiskers)
+hxC : Cell → Cell → Cell
+hxC a b = cohOver Q (binC 1 (binC 0 A (gen Q 6)) (binC 0 (gen Q 3) B)) (binC 0 A B)
+                  (diskList a ++ restDisk 0 b)
+  where
+  Q = Glue 0 2 2
+  A = gen Q 4 ; B = gen Q 8
+
+-- O_odd duals of the cells above, used by cocones over 2-dimensional
+-- coherence terms. Under O_odd, ∗₀ factors swap, 2-cells keep their
+-- direction and 3-cells reverse.
+
+-- ru2rC a : a ∗₁ id_{τa} ⇛ a   (dual of ru2C)
+ru2rC : Cell → Cell
+ru2rC a = cohOver Q (binC 1 A (idC (gen Q 3))) A (diskList a)
+  where
+  Q = Disk 2
+  A = gen Q 4
+
+-- wirC f u : id_f ∗₀ u ⇛ id_{f ∗₀ u}   (dual of wiC)
+wirC : Cell → Cell → Cell
+wirC f u = cohOver Q (binC 0 (idC F) U) (idC (binC 0 F U)) (diskList f ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (leaf ∷ leaf ∷ []))
+  F = gen Q 2 ; U = gen Q 4
+
+-- naDC α a u : a1R(σα, a, u) ∗₁ ((α ∗₀ a) ∗₀ u) ⇛ (α ∗₀ (a ∗₀ u)) ∗₁ a1R(τα, a, u)
+naDC : Cell → Cell → Cell → Cell
+naDC α a u = cohOver Q (binC 1 (assoc1C false F A U) (binC 0 (binC 0 Al A) U))
+                       (binC 1 (binC 0 Al (binC 0 A U)) (assoc1C false G A U))
+                     (diskList α ++ restDisk 0 a ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (node (leaf ∷ []) ∷ leaf ∷ leaf ∷ []))
+  F = gen Q 2 ; G = gen Q 3 ; Al = gen Q 4 ; A = gen Q 6 ; U = gen Q 8
+
+-- nrDC b α u : a1R(b, σα, u) ∗₁ ((b ∗₀ α) ∗₀ u) ⇛ (b ∗₀ (α ∗₀ u)) ∗₁ a1R(b, τα, u)
+nrDC : Cell → Cell → Cell → Cell
+nrDC b α u = cohOver Q (binC 1 (assoc1C false B F U) (binC 0 (binC 0 B Al) U))
+                       (binC 1 (binC 0 B (binC 0 Al U)) (assoc1C false B G U))
+                     (diskList b ++ restDisk 0 α ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (leaf ∷ node (leaf ∷ []) ∷ leaf ∷ []))
+  B = gen Q 2 ; F = gen Q 4 ; G = gen Q 5 ; Al = gen Q 6 ; U = gen Q 8
+
+-- hxDC b a : b ∗₀ a ⇛ (σb ∗₀ a) ∗₁ (b ∗₀ τa)   (dual of hxC)
+hxDC : Cell → Cell → Cell
+hxDC b a = cohOver Q (binC 0 B A) (binC 1 (binC 0 (gen Q 2) A) (binC 0 B (gen Q 7)))
+                   (diskList b ++ restDisk 0 a)
+  where
+  Q = Glue 0 2 2
+  B = gen Q 4 ; A = gen Q 8
+
 -- assocC dir u v w, for 2-cells composable along 1-cells, is the
 -- associator (u ∗₁ v) ∗₁ w ⇛ u ∗₁ (v ∗₁ w) (dir = true) or its reverse
 -- (dir = false), over three 2-disks glued along 1-disks.
@@ -237,6 +344,12 @@ data Ex : Set where
   asL asR : Ex → Ex → Ex → Ex -- associator of three 2-cells along 1-cells, and its reverse
   ru lu : Ex → Ex             -- unitors on a 1-cell: w ⇒ w ∗₀ id, w ⇒ id ∗₀ w
   a1L a1R : Ex → Ex → Ex → Ex -- associator of three 1-cells, and its reverse
+  dw dr na nr : Ex → Ex → Ex → Ex  -- the 3-cells dwC, drC, naC, nrC
+  ru2 : Ex → Ex                    -- ru2C
+  wi hx : Ex → Ex → Ex             -- wiC, hxC
+  naD nrD : Ex → Ex → Ex → Ex      -- their O_odd duals: naDC, nrDC,
+  ru2r : Ex → Ex                   -- ru2rC,
+  wir hxD : Ex → Ex → Ex           -- wirC, hxDC
 
 data ExTy : Set where
   ob  : ExTy
@@ -278,6 +391,37 @@ tyF (suc f) Γ (xr u w)   = hom (tyF f Γ s) t s
   t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
 tyF (suc f) Γ (ru w)     = hom (tyF f Γ w) w (bn 0 w (idn (tgtE (tyF f Γ w))))
 tyF (suc f) Γ (lu w)     = hom (tyF f Γ w) w (bn 0 (idn (srcE (tyF f Γ w))) w)
+tyF (suc f) Γ (dw u a b) = hom (tyF f Γ s) s (bn 0 u (bn 1 a b))
+  where s = bn 1 (bn 0 u a) (bn 0 u b)
+tyF (suc f) Γ (dr a b u) = hom (tyF f Γ s) s (bn 1 (bn 0 a u) (bn 0 b u))
+  where s = bn 0 (bn 1 a b) u
+tyF (suc f) Γ (na u a w) = hom (tyF f Γ s) s (bn 1 (a1L u a (srcE W)) (bn 0 u (bn 0 a w)))
+  where
+  W = tyF f Γ w
+  s = bn 1 (bn 0 (bn 0 u a) w) (a1L u a (tgtE W))
+tyF (suc f) Γ (nr u w b) = hom (tyF f Γ s) s (bn 1 (a1L u (srcE W) b) (bn 0 u (bn 0 w b)))
+  where
+  W = tyF f Γ w
+  s = bn 1 (bn 0 (bn 0 u w) b) (a1L u (tgtE W) b)
+tyF (suc f) Γ (ru2 a)    = hom (tyF f Γ a) a (bn 1 a (idn (tgtE (tyF f Γ a))))
+tyF (suc f) Γ (wi u w)   = hom (tyF f Γ s) s (bn 0 u (idn w))
+  where s = idn (bn 0 u w)
+tyF (suc f) Γ (hx a b)   = hom (tyF f Γ s) s (bn 0 a b)
+  where s = bn 1 (bn 0 a (srcE (tyF f Γ b))) (bn 0 (tgtE (tyF f Γ a)) b)
+tyF (suc f) Γ (ru2r a)   = hom (tyF f Γ s) s a
+  where s = bn 1 a (idn (tgtE (tyF f Γ a)))
+tyF (suc f) Γ (wir w u)  = hom (tyF f Γ s) s (idn (bn 0 w u))
+  where s = bn 0 (idn w) u
+tyF (suc f) Γ (naD w a u) = hom (tyF f Γ s) s (bn 1 (bn 0 w (bn 0 a u)) (a1R (tgtE W) a u))
+  where
+  W = tyF f Γ w
+  s = bn 1 (a1R (srcE W) a u) (bn 0 (bn 0 w a) u)
+tyF (suc f) Γ (nrD b w u) = hom (tyF f Γ s) s (bn 1 (bn 0 b (bn 0 w u)) (a1R b (tgtE W) u))
+  where
+  W = tyF f Γ w
+  s = bn 1 (a1R b (srcE W) u) (bn 0 (bn 0 b w) u)
+tyF (suc f) Γ (hxD b a)  = hom (tyF f Γ s) s (bn 1 (bn 0 (srcE (tyF f Γ b)) a) (bn 0 b (tgtE (tyF f Γ a))))
+  where s = bn 0 b a
 tyF (suc f) Γ (a1L u y w) = hom (tyF f Γ l) l (bn 0 u (bn 0 y w))
   where l = bn 0 (bn 0 u y) w
 tyF (suc f) Γ (a1R u y w) = hom (tyF f Γ l) (bn 0 u (bn 0 y w)) l
@@ -316,6 +460,18 @@ mutual
   evF (suc f) Γ (xr u w)   = fst (xchC false (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (ru w)     = fst (ruC (cellF f Γ w))
   evF (suc f) Γ (lu w)     = fst (luC (cellF f Γ w))
+  evF (suc f) Γ (dw u a b) = fst (dwC (cellF f Γ u) (cellF f Γ a) (cellF f Γ b))
+  evF (suc f) Γ (dr a b u) = fst (drC (cellF f Γ a) (cellF f Γ b) (cellF f Γ u))
+  evF (suc f) Γ (na u a w) = fst (naC (cellF f Γ u) (cellF f Γ a) (cellF f Γ w))
+  evF (suc f) Γ (nr u w b) = fst (nrC (cellF f Γ u) (cellF f Γ w) (cellF f Γ b))
+  evF (suc f) Γ (ru2 a)    = fst (ru2C (cellF f Γ a))
+  evF (suc f) Γ (wi u w)   = fst (wiC (cellF f Γ u) (cellF f Γ w))
+  evF (suc f) Γ (hx a b)   = fst (hxC (cellF f Γ a) (cellF f Γ b))
+  evF (suc f) Γ (ru2r a)   = fst (ru2rC (cellF f Γ a))
+  evF (suc f) Γ (wir w u)  = fst (wirC (cellF f Γ w) (cellF f Γ u))
+  evF (suc f) Γ (naD w a u) = fst (naDC (cellF f Γ w) (cellF f Γ a) (cellF f Γ u))
+  evF (suc f) Γ (nrD b w u) = fst (nrDC (cellF f Γ b) (cellF f Γ w) (cellF f Γ u))
+  evF (suc f) Γ (hxD b a)  = fst (hxDC (cellF f Γ b) (cellF f Γ a))
   evF (suc f) Γ (a1L u y w) = fst (assoc1C true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (a1R u y w) = fst (assoc1C false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
@@ -356,6 +512,18 @@ substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
 substE ρ (xr u w)   = xr (substE ρ u) (substE ρ w)
 substE ρ (ru w)     = ru (substE ρ w)
 substE ρ (lu w)     = lu (substE ρ w)
+substE ρ (dw u a b) = dw (substE ρ u) (substE ρ a) (substE ρ b)
+substE ρ (dr a b u) = dr (substE ρ a) (substE ρ b) (substE ρ u)
+substE ρ (na u a w) = na (substE ρ u) (substE ρ a) (substE ρ w)
+substE ρ (nr u w b) = nr (substE ρ u) (substE ρ w) (substE ρ b)
+substE ρ (ru2 a)    = ru2 (substE ρ a)
+substE ρ (wi u w)   = wi (substE ρ u) (substE ρ w)
+substE ρ (hx a b)   = hx (substE ρ a) (substE ρ b)
+substE ρ (ru2r a)   = ru2r (substE ρ a)
+substE ρ (wir w u)  = wir (substE ρ w) (substE ρ u)
+substE ρ (naD w a u) = naD (substE ρ w) (substE ρ a) (substE ρ u)
+substE ρ (nrD b w u) = nrD (substE ρ b) (substE ρ w) (substE ρ u)
+substE ρ (hxD b a)  = hxD (substE ρ b) (substE ρ a)
 substE ρ (a1L u y w) = a1L (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (a1R u y w) = a1R (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
@@ -373,6 +541,18 @@ varsE (xc u w)   = varsE u ++ varsE w
 varsE (xr u w)   = varsE u ++ varsE w
 varsE (ru w)     = varsE w
 varsE (lu w)     = varsE w
+varsE (dw u a b) = varsE u ++ varsE a ++ varsE b
+varsE (dr a b u) = varsE a ++ varsE b ++ varsE u
+varsE (na u a w) = varsE u ++ varsE a ++ varsE w
+varsE (nr u w b) = varsE u ++ varsE w ++ varsE b
+varsE (ru2 a)    = varsE a
+varsE (wi u w)   = varsE u ++ varsE w
+varsE (hx a b)   = varsE a ++ varsE b
+varsE (ru2r a)   = varsE a
+varsE (wir w u)  = varsE w ++ varsE u
+varsE (naD w a u) = varsE w ++ varsE a ++ varsE u
+varsE (nrD b w u) = varsE b ++ varsE w ++ varsE u
+varsE (hxD b a)  = varsE b ++ varsE a
 varsE (a1L u y w) = varsE u ++ varsE y ++ varsE w
 varsE (a1R u y w) = varsE u ++ varsE y ++ varsE w
 varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
@@ -490,15 +670,87 @@ module ConeT (Γ : ExCtx) where
     pObj (v i) = just (pr i)
     pObj _     = nothing
 
-  P : Ex → Maybe Ex
-  P (v i) = just (pr i)
-  P (idn e) = if dimΓ e ==ℕ 0 then (pObj e >>= λ pe → just (ru pe)) else nothing
-  P (bn k a b) =
-    if (k ==ℕ 0) ∧ (dimΓ a ==ℕ 1) ∧ (dimΓ b ==ℕ 1) then
-      (P a >>= λ Pa → P b >>= λ Pb → pObj (srcE (tyE Γ a)) >>= λ pX →
-       just (bn 1 (bn 1 Pb (bn 0 Pa b)) (a1L pX a b)))
+  srcΓ tgtΓ : Ex → Ex
+  srcΓ e = srcE (tyE Γ e)
+  tgtΓ e = tgtE (tyE Γ e)
+
+  -- P on terms of dimension ≤ 2, by recursion (with fuel, since the
+  -- horizontal case recurses on a rewritten term).
+  PF : Nat → Ex → Maybe Ex
+  PF zero _ = nothing
+  PF (suc fl) (v i) = just (pr i)
+  PF (suc fl) (idn e) =
+    if dimΓ e ==ℕ 0 then (pObj e >>= λ pe → just (ru pe))
+    else if dimΓ e ==ℕ 1 then
+      -- P(1_f) = ru2(P f) ∗₂ (P f ∗₁ wi(p_X, f))
+      (PF fl e >>= λ Pe → pObj (srcΓ e) >>= λ pX →
+       just (bn 2 (ru2 Pe) (bn 1 Pe (wi pX e))))
     else nothing
-  P _ = nothing
+  PF (suc fl) (bn k a b) =
+    if (k ==ℕ 0) ∧ (da ==ℕ 1) ∧ (db ==ℕ 1) then
+      (PF fl a >>= λ Pa → PF fl b >>= λ Pb → pObj (srcΓ a) >>= λ pX →
+       just (bn 1 (bn 1 Pb (bn 0 Pa b)) (a1L pX a b)))
+    else if (k ==ℕ 1) ∧ (da ==ℕ 2) ∧ (db ==ℕ 2) then vert
+    else if (k ==ℕ 0) ∧ (da ==ℕ 1) ∧ (db ==ℕ 2) then whiskL
+    else if (k ==ℕ 0) ∧ (da ==ℕ 2) ∧ (db ==ℕ 1) then whiskR
+    else if (k ==ℕ 0) ∧ (da ==ℕ 2) ∧ (db ==ℕ 2) then horiz
+    else nothing
+    where
+    da = dimΓ a
+    db = dimΓ b
+    -- a ∗₁ b, with a : f ⇒ g, b : g ⇒ h over X → Y:
+    --   P b ∗₂ (P a ∗₁ (p_X ∗₀ b)) ∗₂ asL(P f, p_X ∗₀ a, p_X ∗₀ b) ∗₂ (P f ∗₁ dw(p_X, a, b))
+    vert : Maybe Ex
+    vert = PF fl a >>= λ Pa → PF fl b >>= λ Pb → PF fl (srcΓ a) >>= λ Pf →
+           pObj (srcΓ (srcΓ a)) >>= λ pX →
+           just (bn 2 Pb (bn 2 (bn 1 Pa (bn 0 pX b))
+                (bn 2 (asL Pf (bn 0 pX a) (bn 0 pX b)) (bn 1 Pf (dw pX a b)))))
+    -- a ∗₀ α, with a : X → Y and α : f ⇒ g over Y → Z.
+    whiskL : Maybe Ex
+    whiskL = PF fl a >>= λ Pa → PF fl b >>= λ Pα → PF fl f >>= λ Pf →
+             pObj (srcΓ a) >>= λ pX → pObj (tgtΓ a) >>= λ pY →
+             let W  = bn 0 pY b
+                 V  = bn 0 (bn 0 pX a) b
+                 Ag = a1L pX a g
+                 Af = a1L pX a f
+                 L  = bn 1 Pf (bn 0 Pa f)
+             in just (bn 2 (bn 1 (bn 1 Pα (bn 0 Pa g)) Ag)
+                     (bn 2 (bn 1 (asL Pf W (bn 0 Pa g)) Ag)
+                     (bn 2 (bn 1 (bn 1 Pf (xc Pa b)) Ag)
+                     (bn 2 (bn 1 (asR Pf (bn 0 Pa f) V) Ag)
+                     (bn 2 (asL L V Ag)
+                     (bn 2 (bn 1 L (na pX a b))
+                           (asR L Af (bn 0 pX (bn 0 a b)))))))))
+      where
+      f = srcΓ b
+      g = tgtΓ b
+    -- α ∗₀ b, with α : f ⇒ g over X → Y and b : Y → Z.
+    whiskR : Maybe Ex
+    whiskR = PF fl b >>= λ Pb → PF fl a >>= λ Pα → PF fl f >>= λ Pf →
+             pObj (srcΓ f) >>= λ pX →
+             let U   = bn 0 (bn 0 pX a) b
+                 Ag  = a1L pX g b
+                 Af  = a1L pX f b
+                 L   = bn 1 Pb (bn 0 Pf b)
+             in just (bn 2 (bn 1 (bn 1 Pb (bn 0 Pα b)) Ag)
+                     (bn 2 (bn 1 (bn 1 Pb (dr Pf (bn 0 pX a) b)) Ag)
+                     (bn 2 (bn 1 (asR Pb (bn 0 Pf b) U) Ag)
+                     (bn 2 (asL L U Ag)
+                     (bn 2 (bn 1 L (nr pX a b))
+                           (asR L Af (bn 0 pX (bn 0 a b))))))))
+      where
+      f = srcΓ a
+      g = tgtΓ a
+    -- α ∗₀ β: transport the cone cell of (α ∗₀ σβ) ∗₁ (τα ∗₀ β) along hx.
+    horiz : Maybe Ex
+    horiz = PF fl vt >>= λ Pv → PF fl (srcΓ (bn 0 a b)) >>= λ Ps →
+            pObj (srcΓ (srcΓ a)) >>= λ pX →
+            just (bn 2 Pv (bn 1 Ps (bn 0 pX (hx a b))))
+      where vt = bn 1 (bn 0 a (srcΓ b)) (bn 0 (tgtΓ a) b)
+  PF (suc fl) _ = nothing
+
+  P : Ex → Maybe Ex
+  P = PF fuel
 
   longSide : Nat → ExTy → Maybe Ex
   longSide x A = P (srcIter Γ m (v x)) >>= λ p0 → go m 1 (bn 0 p0 (v x))
@@ -669,25 +921,37 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   liftF (suc fl) (lu _)      = nothing
   liftF (suc fl) (a1L _ _ _) = nothing
   liftF (suc fl) (a1R _ _ _) = nothing
+  liftF (suc fl) (dw _ _ _)  = nothing
+  liftF (suc fl) (dr _ _ _)  = nothing
+  liftF (suc fl) (na _ _ _)  = nothing
+  liftF (suc fl) (nr _ _ _)  = nothing
+  liftF (suc fl) (ru2 _)     = nothing
+  liftF (suc fl) (wi _ _)    = nothing
+  liftF (suc fl) (hx _ _)    = nothing
+  liftF (suc fl) (ru2r _)    = nothing
+  liftF (suc fl) (wir _ _)   = nothing
+  liftF (suc fl) (naD _ _ _) = nothing
+  liftF (suc fl) (nrD _ _ _) = nothing
+  liftF (suc fl) (hxD _ _)   = nothing
   liftF (suc fl) (asR _ _ _) = nothing
   liftF (suc fl) (bn k u w) =
     if affected u ∧ affected w then
-      (if (suc k ==ℕ n) ∧ (n ==ℕ 2) ∧ (du ==ℕ 2) ∧ (dw ==ℕ 2) then paste else nothing)
+      (if (suc k ==ℕ n) ∧ (n ==ℕ 2) ∧ (du ==ℕ 2) ∧ (dW ==ℕ 2) then paste else nothing)
     else if affected u then
       (if du ==ℕ n then (liftF fl u >>= λ u' → just (bn k u' (ren⁻ w)))
        else if (n ==ℕ 2) ∧ (du ==ℕ 1) ∧ (k ==ℕ 0)
        then (liftF fl u >>= λ u' → just (xc u' (ren⁻ w)))
        else nothing)
     else if affected w then
-      (if dw ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w'))
-       else if (n ==ℕ 2) ∧ (dw ==ℕ 1) ∧ (k ==ℕ 0)
+      (if dW ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w'))
+       else if (n ==ℕ 2) ∧ (dW ==ℕ 1) ∧ (k ==ℕ 0)
        then (liftF fl w >>= λ w' → just (xr (ren⁻ u) w'))
        else nothing)
     else nothing
     where
     du = dimΓ u
-    dw = dimΓ w
-    n  = max du dw
+    dW = dimΓ w
+    n  = max du dW
     srcΓ tgtΓ : Ex → Ex
     srcΓ e = srcE (tyE Γ e)
     tgtΓ e = tgtE (tyE Γ e)
@@ -887,6 +1151,23 @@ dualE (ru w)      = lu (dualE w)
 dualE (lu w)      = ru (dualE w)
 dualE (a1L u y w) = a1R (dualE w) (dualE y) (dualE u)
 dualE (a1R u y w) = a1L (dualE w) (dualE y) (dualE u)
+-- The coherences used for cones over 2-dimensional terms have no dual
+-- constructors yet. dualE leaves them unchanged, and coconeT refuses
+-- (returns nothing) when a cone contains one; see dualOK.
+-- The 2-dimensional cone cells: each dual is the paired cell above
+-- (O_odd swaps ∗₀ factors, turns a1L into a1R, and reverses 3-cells).
+dualE (dw u a b) = dr (dualE a) (dualE b) (dualE u)
+dualE (dr a b u) = dw (dualE u) (dualE a) (dualE b)
+dualE (na u a w) = naD (dualE w) (dualE a) (dualE u)
+dualE (naD w a u) = na (dualE u) (dualE a) (dualE w)
+dualE (nr u w b) = nrD (dualE b) (dualE w) (dualE u)
+dualE (nrD b w u) = nr (dualE u) (dualE w) (dualE b)
+dualE (ru2 a)    = ru2r (dualE a)
+dualE (ru2r a)   = ru2 (dualE a)
+dualE (wi u w)   = wir (dualE w) (dualE u)
+dualE (wir w u)  = wi (dualE u) (dualE w)
+dualE (hx a b)   = hxD (dualE b) (dualE a)
+dualE (hxD b a)  = hx (dualE a) (dualE b)
 dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
 dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
 
@@ -1222,5 +1503,35 @@ module ConstD2 (Γ : ExCtx) where
 
 -- Cocones over 1-dimensional coherence terms, as the O_odd dual of the
 -- cone over the dual diagram (on globular Γ this is CoconeOf.cocone).
+dualOK : Ex → Bool
+dualOK (v _)       = true
+dualOK (bn _ u w)  = dualOK u ∧ dualOK w
+dualOK (idn e)     = dualOK e
+dualOK (xc u w)    = dualOK u ∧ dualOK w
+dualOK (xr u w)    = dualOK u ∧ dualOK w
+dualOK (asL u y w) = dualOK u ∧ dualOK y ∧ dualOK w
+dualOK (asR u y w) = dualOK u ∧ dualOK y ∧ dualOK w
+dualOK (ru w)      = dualOK w
+dualOK (lu w)      = dualOK w
+dualOK (a1L u y w) = dualOK u ∧ dualOK y ∧ dualOK w
+dualOK (a1R u y w) = dualOK u ∧ dualOK y ∧ dualOK w
+dualOK (dw u a b)  = dualOK u ∧ dualOK a ∧ dualOK b
+dualOK (dr a b u)  = dualOK a ∧ dualOK b ∧ dualOK u
+dualOK (na u a w)  = dualOK u ∧ dualOK a ∧ dualOK w
+dualOK (naD w a u) = dualOK w ∧ dualOK a ∧ dualOK u
+dualOK (nr u w b)  = dualOK u ∧ dualOK w ∧ dualOK b
+dualOK (nrD b w u) = dualOK b ∧ dualOK w ∧ dualOK u
+dualOK (ru2 a)     = dualOK a
+dualOK (ru2r a)    = dualOK a
+dualOK (wi u w)    = dualOK u ∧ dualOK w
+dualOK (wir w u)   = dualOK w ∧ dualOK u
+dualOK (hx a b)    = dualOK a ∧ dualOK b
+dualOK (hxD b a)   = dualOK b ∧ dualOK a
+
+dualOKTy : ExTy → Bool
+dualOKTy ob          = true
+dualOKTy (hom A s t) = dualOKTy A ∧ dualOK s ∧ dualOK t
+
 coconeT : ExCtx → Maybe ExCtx
-coconeT Γ = ConeT.cone (dualCtx Γ) >>= λ K → just (dualCtx K)
+coconeT Γ = ConeT.cone (dualCtx Γ) >>= λ K →
+            if all dualOKTy K then just (dualCtx K) else nothing

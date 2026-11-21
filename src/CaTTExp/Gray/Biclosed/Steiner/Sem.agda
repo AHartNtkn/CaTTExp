@@ -46,10 +46,6 @@ module Sem (ob : Nat → Psh) where
   --------------------------------------------------------------------
   -- General lemmas.
 
-  ⊗s-ids : ∀ Ks → ⊗s (idMaps Ks) ≈M idMap (concat Ks)
-  ⊗s-ids []       = ≈M-refl
-  ⊗s-ids (K ∷ Ks) = ≈M-trans (idMap K ⊗ₘ idMap (concat Ks)) (⊗-congʳ (idMap K) (⊗s-ids Ks)) (⊗ₘ-id K (concat Ks))
-
   resL-ids : ∀ As Ks us → AtL As Ks us → resL (idMaps Ks) us ∼L us
   resL-ids []       []       []              _                 = tt
   resL-ids (A ∷ As) (K ∷ Ks) ((.A , x) ∷ us) ((refl , a) , as) = ∼u (res-id ⟦ A ⟧ a) , resL-ids As Ks us as

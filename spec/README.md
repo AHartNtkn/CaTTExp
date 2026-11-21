@@ -13,11 +13,11 @@ If the spec and a note disagree, that is a bug in one of them. It is recorded in
 | 2 | [`02-lax-core.md`](02-lax-core.md) | The lax core L: directed coherence, the side condition computed in V, the four switch settings | kernel |
 | 3 | [`03-invertibility-markings.md`](03-invertibility-markings.md) | Marks `inv`, `ps`, `ps*`, `grpd_k`, `ord`; pseudo = L + marks | kernel |
 | 4 | [`04-context-checking.md`](04-context-checking.md) | Pasting contexts for `coh`; arbitrary bases read weakly; the optional `⊢hpol` fast path | kernel |
-| 5 | `05-derived-constructions.md` | Gray tensor of contexts, cylinders, naturality, cones, as algorithms | derived (to be written) |
-| 6 | `06-limits-representables.md` | Limits and representables | kernel extension (to be written) |
-| 7 | `07-free-objects.md` | Free objects | kernel extension (to be written) |
-| 8 | `08-closed-structure.md` | Gray biclosed rules | kernel extension (to be written) |
-| 9 | `09-ordinary-math.md` | Ordinary mathematics | derived (to be written) |
+| 5 | [`05-derived-constructions.md`](05-derived-constructions.md) | Gray tensor of contexts, cylinders, naturality, cones, as algorithms | derived |
+| 6 | [`06-limits-representables.md`](06-limits-representables.md) | Limits and representables | kernel extension |
+| 7 | [`07-free-objects.md`](07-free-objects.md) | Free objects | kernel extension |
+| 8 | [`08-closed-structure.md`](08-closed-structure.md) | Gray biclosed rules | kernel extension |
+| 9 | [`09-ordinary-math.md`](09-ordinary-math.md) | Ordinary mathematics | derived |
 
 ## The two layers
 

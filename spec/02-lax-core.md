@@ -16,7 +16,8 @@ Each row's free objects map onto the next row's, so (§2.6) every derivation in 
 
 - Every pasting context decomposes uniquely as a wedge of suspensions Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, with objects a₀, …, aₙ. Θᵢ is the pasting context of the cells in the hom from aᵢ₋₁ to aᵢ.
 - For a strict theory 𝕋 (one of the rows above), **F_𝕋(Γ)** is its free object on Γ. Every term t over Γ has a **strict interpretation** ⟦t⟧_𝕋, a cell of F_𝕋(Γ), defined by induction: a variable goes to its generator, and a coherence goes to the cell its side condition provides (§2.3), transported along the map of free objects its substitution induces (requirement 5 below).
-- **supp(c)**, for a cell c of F_𝕋(Γ), is the downward-closed set of generators used by c and by its iterated boundaries. For ν and 𝔉 the generators are Steiner basis elements; for V + S they are the generators of the expanded basis (requirement 2 below).
+- **supp(c)**, for a cell c of ν(λΓ) or 𝔉(Γ), is the downward-closed set of Steiner basis elements used by c and by its iterated boundaries. Support is always measured in these **finite** Steiner bases. It is never measured in the expanded basis of F_{V+S}(Γ), which is infinite already on Σ[2] ∨ Σ[2] (lax r10 (K45)/(K50)).
+- **π** is the requirement-4 projection F_{V+S}(Γ) → 𝔉(Γ), which makes every interchanger along a k-cell with k ≥ 1 an identity. For ν and 𝔉 themselves, π is the identity.
 - Composition order is diagrammatic, and composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c) in execution order (`notes/conventions.md` §1, §4).
 
 ## 2.2 The side condition, in one form for every row
@@ -24,10 +25,17 @@ Each row's free objects map onto the next row's, so (§2.6) every derivation in 
 **Rule.** The `coh` rule of chapter 1, §1.4, with
 
 ```
-SC_𝕋(Γ, t →_A u)   :⟺   F_𝕋(Γ) has a cell  c : ⟦t⟧_𝕋 → ⟦u⟧_𝕋  with  supp(c) = all generators of F_𝕋(Γ).
+SC_𝕋(Γ, t →_A u)   :⟺   F_𝕋(Γ) has a cell  c : ⟦t⟧_𝕋 → ⟦u⟧_𝕋  (an identity allowed)
+                          whose projection π(c) has full support in 𝔉(Γ)  (in ν(λΓ) for 𝕋 = ν).
 ```
 
-The cell c is then unique (requirement 2: two cells of the same dimension with the same support are equal), and it is the interpretation of the coherence. The coherence is in the **coherence case** if c is an identity, i.e. ⟦t⟧ = ⟦u⟧, and in the **operation case** otherwise.
+The coherence is in the **coherence case** if ⟦t⟧ = ⟦u⟧ in F_𝕋(Γ), and in the **operation case** otherwise. By Lemma 2.2.1, π(c) is then the total cell τ_Γ or an identity on a full-support cell.
+
+**Interpretation of the coherence (the designated lift).** For ν and 𝔉, c is unique by support-determines-cells, and it is the interpretation. In F_{V+S}(Γ) it need not be unique: distinct cells can share a Gray image (on Σ[2] ∨ Σ[2] the loop H and 1_w do). The interpretation is therefore fixed **per coherence head** (Γ, t →_A u), once:
+- in the coherence case, c := the identity on ⟦t⟧;
+- in the operation case, c := the first cell found by the decision procedure of §2.3, whose enumeration order is fixed.
+
+Because substitution never changes a coherence's head, ⟦coh_{Γ,A}[σ]⟧ := σ_*(c_{Γ,A}) is stable under substitution by construction (requirement 5). The kernel's judgments do not depend on the choice, only the interpretation in the free objects of V + S does. Whether all candidate lifts for one head are connected by higher cells, so that the choice is irrelevant up to coherence, is **open** (ledger S11).
 
 **Lemma 2.2.1 (agreement with the support form).** For 𝕋 = ν (plain CaTT) and 𝕋 = 𝔉 (two-tier L), SC_𝕋 holds iff one of
 ```
@@ -36,9 +44,9 @@ The cell c is then unique (requirement 2: two cells of the same dimension with t
 ```
 and, by support-determines-cells, these are the support conditions `supp(t:A) = Supp(∂⁻τ), supp(u:A) = Supp(∂⁺τ)`, respectively `supp(t:A) = supp(u:A) = everything`, of `notes/pseudo-vs-gray.md` §3.3.
 
-*Proof.* The total cell τ_Γ has full support (`Gray/FullSupp.agda`). If c has full support it contains the top generator, so dim c ≥ dim τ_Γ. If dim c = dim τ_Γ then c = τ_Γ by support-determines-cells (`Strict/Recon.b-supp`), which is the operation case. If dim c > dim τ_Γ then c has no generator in its own dimension, so it is an identity, which is the coherence case. Conversely τ_Γ and the identity on a full-support cell are cells of the required kind. ∎
+*Proof.* Here π is the identity. The total cell τ_Γ has full support (`Gray/FullSupp.agda`). If c has full support it contains the top generator, so dim c ≥ dim τ_Γ. If dim c = dim τ_Γ then c = τ_Γ by support-determines-cells (`Strict/Recon.b-supp`), which is the operation case. If dim c > dim τ_Γ then c has no generator in its own dimension, so it is an identity, which is the coherence case. Conversely τ_Γ and the identity on a full-support cell are cells of the required kind. ∎
 
-**Status.** The single form SC_𝕋 is **stated here**; it is how `notes/design-decisions.md` §1.1 describes the rule ("read off the free object F_T(Γ)") but no note writes it out (ledger S1). Lemma 2.2.1 is **stated here** with the proof above, whose two inputs are Agda-checked. On a single hom (n = 1), the 𝔉 instance equals Finster–Mimram's Var condition: **Agda-checked** (`Gray/SingleHom.agda` for the rule level, `Gray/SuppVars.agda` and `Strict/SuppFV.agda` for the term level; ledger E1).
+**Status.** The single form SC_𝕋 is **stated here**. It is how `notes/design-decisions.md` §1.1 describes the rule ("read off the free object F_T(Γ)"), but no note writes it out (ledger S1). A first version of this chapter measured support in the expanded basis of F_{V+S}(Γ); the independent check of S1 showed that version rejects even the composite interchanger on Σ[2] ∨ Σ[2], and recommended the projected form above, which this chapter now uses. The designated lift is a SPEC decision (S11). Lemma 2.2.1 is **stated here** with the proof above, whose two inputs are Agda-checked. On a single hom (n = 1), the 𝔉 instance equals Finster–Mimram's Var condition: **Agda-checked** (`Gray/SingleHom.agda` for the rule level, `Gray/SuppVars.agda` and `Strict/SuppFV.agda` for the term level; ledger E1).
 
 **Source.** `notes/design-decisions.md` §1.1; `notes/pseudo-vs-gray.md` §3.2–3.3, §3.6; ledger E1.
 
@@ -87,8 +95,8 @@ A development **declares its setting S** once, and every coherence in it is chec
 
 **Side condition and decision procedure.** SC_{V+S}(Δ, t →_A u) is decided as follows.
 1. Compute ⟦t⟧ and ⟦u⟧ in F_{V+S}(Δ) (normal forms by rank increments; r9 (K65), r10 Response 1).
-2. Decide whether ⟦t⟧ = ⟦u⟧. If so, check that the support is full; this is the coherence case.
-3. Otherwise decide reachability ⟦t⟧ → ⟦u⟧ by a cell of full support. Paths have bounded length (the positive gradings of (K45)/(K50) bound a path by its endpoints' gradings, since V + S has the T₁₂ signature and a subset of its equations), and at fixed boundaries the alphabet of steps is finite (K50). So the search is finite, and filtering by support is a finite check on each path.
+2. Decide whether ⟦t⟧ = ⟦u⟧. If so, check that π⟦t⟧ has full support in 𝔉(Δ); this is the coherence case.
+3. Otherwise search for a path ⟦t⟧ → ⟦u⟧ in F_{V+S}(Δ) whose projection π(c) has full support in 𝔉(Δ), i.e. by Lemma 2.2.1 π(c) = τ_Δ or an identity on a full-support cell. Paths have bounded length (the positive gradings of (K45)/(K50) bound a path by its endpoints' gradings, since V + S has the T₁₂ signature and a subset of its equations), and at fixed boundaries the alphabet of steps is finite (K50). So the search is finite. Projecting a path and computing its Gray support is the two-tier computation of §2.5, so the filter is a finite check on each path. The first path found in the fixed enumeration order is the designated lift.
 
 Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in every dimension, uniformly in Γ, the degree and the switch bits, and the comparison maps between settings are computable (r10 Response 3). The abstract step "bounded paths over a finite alphabet with decidable equality make reachability decidable" is Agda-checked (`Join/BoundedReach.agda`, `Reach.Bounded.reach?`).
 
@@ -100,15 +108,15 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - There is no horizontal composite: a cell from f ; g to f′ ; g′ has hom-dimension 1, so it cannot use the generator α ⊗ β, which has hom-dimension 2, and no such cell has full support.
 
 **Example (b): the strip, where the settings differ.** Inside a hom, take composable inner cells A₁, A₂ and a cell B in interchange position (the strip C_{2,1}). Let u = W(A₁ ∗ A₂, B), the direct crossing, and v the paste of W(A₁, B) and W(A₂, B).
-- Settings ∅ and {R}: ⟦u⟧ ≠ ⟦v⟧ and neither reaches the other with full support, so neither `coh(u → v)` nor `coh(v → u)` is accepted. In the tagged model of (K44) they really differ.
-- Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧ with full support, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
+- Settings ∅ and {R}: ⟦u⟧ ≠ ⟦v⟧ and neither reaches the other, so neither `coh(u → v)` nor `coh(v → u)` is accepted. In the tagged model of (K44) they really differ.
+- Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧, and its Gray image has full support, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
 - The law cannot be added as a hypothesis instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
 
 **Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore not derivable in any setting without the `ord` mark of chapter 3. *Not yet run mechanically* (ledger E7).
 
 **Semantics.**
 - **Admissible theories.** A judgment derivable in setting S holds in the free objects of every admissible theory satisfying S. In particular a setting-∅ development is valid in the models of every admissible theory.
-- **Gray-enriched models.** By requirement 4 every cell of F_{V+S}(Γ) projects to a cell of 𝔉(Γ). That every accepted coherence projects to an accepted two-tier coherence, so that every model of two-tier L (in particular strict ω-Cat with lax transformations, and every oriented (∞,ω)-category) is a model of uniform L, is **stated here** with the following argument and is ledger S2: the projection is generator-preserving and surjective on generators of the Gray basis, so it sends a full-support cell to a full-support cell, and §2.2's lemma applies.
+- **Gray-enriched models.** By requirement 4 every cell of F_{V+S}(Γ) projects to a cell of 𝔉(Γ). Every accepted coherence projects to an accepted two-tier coherence: if c witnesses SC_{V+S}(Δ, t → u), then π(c) : π⟦t⟧ → π⟦u⟧ has full Gray support, which is SC_𝔉 for the projected terms. So every model of two-tier L (in particular strict ω-Cat with lax transformations, and every oriented (∞,ω)-category) is a model of uniform L, interpreting each coherence through its projection. This is immediate from the form of the rule (ledger S2).
 - **What uniform L adds.** Objects need not be ordinary ω-categories: their own compositions may interchange directedly (Gepner–Heine's oriented categories are examples of such objects). The ambient and its objects are then the same kind of structure, which keeps a future lax universe object possible without a mismatch.
 
 **Status.**
@@ -116,7 +124,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - The four settings are admissible and distinct: **proved** (r9 Responses 2–5, K73) and computed (`scripts/e6/interchange_fibre_decorations.py`).
 - Reachability from bounded paths: **Agda-checked** (`Join/BoundedReach.agda`).
 - The switch maps extend functorially to the cospan completions, and the switched laws keep seed lists: **Agda-checked** (`Join/SwitchCospan.agda`, `Join/SwitchLaws.agda`), with the link between raw syntax and the completion by inspection only (ledger E12 items (a)–(c), owner LCORE).
-- The rule (coh_S) as a single condition on F_{V+S}: **stated here** (ledger S1).
+- The rule (coh_S) as a single condition on F_{V+S}: **stated here**, in the projected form recommended by the independent check (ledger S1). Uniqueness of the lift up to coherence: open (S11).
 - **No checker implements (coh_S).** The implemented and verified checker is two-tier L (§2.5). Ledger S3.
 
 **Source.** `notes/design-decisions.md` §1.2, §1.7, Lemma V-dec; `notes/joining-completion.md` §8; `notes/conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md`, `-r9-`, `-r10-`; ledger E6, E12.
@@ -125,7 +133,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 
 | Cell | Invertible? | Reason |
 |---|---|---|
-| coherence case (c an identity) | yes | the reversed coherence satisfies the same side condition; Benjamin–Markakis's argument goes through unchanged |
+| coherence case (⟦t⟧ = ⟦u⟧) | yes | the reversed coherence satisfies the same side condition; Benjamin–Markakis's argument goes through unchanged |
 | operation case on a single hom, in the Gray quotient | no, as in CaTT | |
 | elementary interchanger, every setting | **no** | requirement 3; in the Gray quotient the reverse type is uninhabited (Agda-checked, below) |
 | a crossing of a composite against the paste of crossings | in settings containing the matching split: yes, as a coherence case; otherwise there is no cell either way | §2.3 example (b) |
@@ -159,7 +167,7 @@ This is not the kernel's default theory: it is the theory obtained from uniform 
 
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
-- Uniform to two-tier: **stated here**, ledger S2 (the argument is in §2.3 *Semantics*).
+- Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
 - The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3.
 
 ## 2.7 Open surface questions
@@ -168,7 +176,7 @@ This is not the kernel's default theory: it is the theory obtained from uniform 
 - *Option A: the surface defaults to ∅ (V), and the user switches laws on.* Every development is as general as possible unless the author asks otherwise; a proof that needs a split fails to check until the switch is written, which is visible. Imports from more general developments always work.
 - *Option B: the surface defaults to {inner law, R} (T₁₂), and the user switches laws off.* Proofs about composites of crossings go through with no annotation; a development silently proves a statement valid only in T₁₂'s models, and cannot be imported into a more general one.
 - *Option C: no default; the surface makes the user write the setting.* One line per file; nothing silent; slightly more ceremony.
-- *Worked example.* Example (b) of §2.3: under A, `coh(u → v)` fails with "no cell of full support in V; enable inner law"; under B it succeeds silently; under C the file header decides.
+- *Worked example.* Example (b) of §2.3: under A, `coh(u → v)` fails with "no cell ⟦u⟧ → ⟦v⟧ in V; the inner law would make them equal"; under B it succeeds silently; under C the file header decides.
 
 **Q2.2. How a horizontal composite across objects is written.** The kernel has no horizontal composite; there are two layerings, ∂⁻τ (later factor first) and ∂⁺τ (earlier factor first), related by the directed interchanger from ∂⁻ to ∂⁺.
 - *Option A: no notation; the user writes the layering they mean.* Nothing hidden; every composite of transformations across objects is written twice as long.

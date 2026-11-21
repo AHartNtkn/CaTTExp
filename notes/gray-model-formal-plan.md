@@ -14,7 +14,7 @@ The literal route would interpret every formula as a strict ω-category and ⊗ 
 - To prove it, a functor ν(M) → U ⊗ W from a Steiner complex has to be pushed through other tensor factors.
 - Its atoms land on formal composites of charts, and (a ⊗ (t # t′) ⊗ b) is not a composite of a ⊗ t ⊗ b and a ⊗ t′ ⊗ b.
 
-The setoid ω-categories were written (2026-11-21) and then dropped for the route below; this obstacle is why.
+The setoid ω-categories were written (2026-11-21) and then dropped for the route below; this obstacle is why. The literal version stays open as ledger item C5c.
 
 ## The route: Day convolution over Steiner complexes (𝔖̂)
 

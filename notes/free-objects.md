@@ -296,6 +296,8 @@ So this is not a difference in what the two options ultimately rest on. It is a 
 
 ### 4.4 Status
 
+*Update 2026-11-21 (ledger S10):* the kernel has pseudo pushouts (the all-marked colimit of a span, `limits-representables.md` §4.2–4.3), so by §4.1 the two options are interderivable and A1 is the smaller addition. The closed structure's probes ⟦Δ⟧ (`closed-structure.md` F.7.4) and R-A in `ordinary-math.md` already use A1's form. The spec takes A1 as primitive and derives ATTACH (`spec/07-free-objects.md` §7.3). The text below is the comparison as it stood before that.
+
 Both options remain open. What separates them is structural, not evidential:
 
 1. **General pushouts.** If the theory has general pseudo pushouts, A1 is the smaller addition and ATTACH is redundant. If it does not, A1 cannot adjoin a cell to a non-free object, while A2 can.

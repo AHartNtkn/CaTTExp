@@ -13,7 +13,20 @@ The generator is untrusted. Correctness of every answer comes from the certified
 - The answers reach Agda as a table. `CaTTExp.RCOracle.certified?` runs the certified checker on every entry, and each generated table has a companion module `<Table>Check` with `all-certified : certified? entries ≡ true` proved by `refl`.
 - `CaTTExp.RCOracle.certify` turns any oracle into one that returns typing derivations, `Maybe (Σ Tm λ w → Γ ⊢tm w ∶ arr A t u)`, by running the checker on the answer.
 
-So a bug in the generator can only make an answer missing, never wrong. *Totality* (an answer for every well-typed equal-image query on a strong-Steiner context) is a separate theorem. For the dimensions covered below it is the cited theorem, provided the implementation follows the proof; it is not machine-checked.
+So a bug in the generator can only make an answer missing, never wrong.
+
+Reproducing the checks:
+
+```
+python3 tools/rc_selftest.py emit      # Python checks, writes Generated/RCSelfTest{,Check}.agda
+cd src && LC_ALL=C.UTF-8 agda CaTTExp/Generated/RCSelfTestCheck.agda          # accepted (about 20 s)
+cd .. && python3 tools/rc_selftest.py neg   # negative control: first entry's ends swapped
+cd src && LC_ALL=C.UTF-8 agda CaTTExp/Generated/RCSelfTestNegCheck.agda       # must fail with
+#   false != true of type Bool
+#   when checking that the expression refl has type certified? entries ≡ true
+```
+
+The Neg modules are not committed. `entryOK` and `certify` check the answer's typing in the given Γ but not `Γ ⊢ctx` itself; consumers check their whole contexts (ConeRC runs `checkCtx`), so this is harmless there, and a consumer that does not should check Γ separately. *Totality* (an answer for every well-typed equal-image query on a strong-Steiner context) is a separate theorem. For the dimensions covered below it is the cited theorem, provided the implementation follows the proof; it is not machine-checked.
 
 ## 2. Interface
 

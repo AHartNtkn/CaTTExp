@@ -712,7 +712,168 @@ Define **L_ε** as two-tier L with supports computed in ν(Θ₁ ⊗_ε … ⊗_
 
 Soundness of L_ε is inherited: its models are the D_J-duals of Gray-enriched categories, i.e. categories enriched in ⊗_ε.
 
-**Under uniform L** (E6, not yet constructed) the same analysis applies level by level. The symmetries are those J for which every shift J − k passes the test above at every level. This is to be redone once E6's structure exists.
+**Under uniform L** the analysis is redone in §D.4: the prediction above (every shift J − k must pass the two-tier test) is correct, and it leaves only J = ∅.
+
+## D.4 Dualities of the uniform core V + S (D8, uniform part)
+
+*Setting: spec chapter 2, §2.3. The side condition computes in V + S, S ⊆ {inner law, R}. Agda: `src/CaTTExp/GrayDualityUniform.agda` (no postulates).*
+
+### D.4.1 What a duality does to an interchanger
+
+**The Gray configuration at level n.** Take the context Γ_n = Σⁿ(ΣD¹ ∨ ΣD¹): two (n+2)-cells α (left) and β (right), juxtaposed along an n-cell. For n = 0 these are two 2-cells side by side along an object (spec §2.3 example (a)), and for n = 1 two 2-cells of an object side by side along a 1-cell (example (c)). The two composites of their whiskered parts along (n+1)-cells are "β's part first" and "α's part first". The elementary interchanger is the (n+3)-cell
+
+```
+χ_n : (β's part first) ⇛ (α's part first)        (right first ⇛ left first)
+```
+
+Its orientation is positional at every level (lax r8 (K9)). It is accepted as `coh_{Γ_n, right first → left first}` in every setting. For n = 0 it is the operation case. For n ≥ 1 its Gray image is an identity on a full-support cell. No admissible theory has its reverse (requirement 3), so `coh_{Γ_n, left first → right first}` is **rejected in every setting**.
+
+**The orientation lemma.** Let D_J reverse the cells whose dimension is in J, and write a_m = 1 if m ∈ J, 0 otherwise. For a configuration of (l+1)-cells juxtaposed along a k-cell, three dimensions decide what D_J does to an interchanger between its two composites:
+- **k+1.** If (k+1)-cells are reversed, the k-composition reverses, so α becomes the right operand and β the left one.
+- **l+1.** If (l+1)-cells are reversed, the l-composition reverses, so in each composite the other part comes first.
+- **l+2.** If (l+2)-cells are reversed, the cell itself is reversed.
+
+Each is a flip of "which operand comes first in the source". So:
+
+**Lemma D3.** D_J sends a cell oriented "right first ⇛ left first" to one with the same orientation in the dual configuration iff
+
+```
+row_J(k, l)  :=  a_{k+1} + a_{l+1} + a_{l+2}  ≡  0  (mod 2),
+```
+
+and to the reverse orientation iff the row is 1.
+- *Agda:* `dual-canonical`, `dual-canonical-iff`, `dual-reversed-iff`. The three flips are the definition `dualIch`. The Agda checks that their composite is governed by the one sign. That the action is these three flips is the argument just given.
+
+**Corollary.** The dual of Γ_n is Γ_n up to renaming. If row_J(n, n+1) = 1, then D_J sends the accepted interchanger χ_n to the rejected type "left first → right first". So **every Gray row must be 0** for D_J to be a symmetry, and **every Gray row must be 1** for D_J to map uniform L to the oplax core.
+
+**The two-tier test is also necessary.** Uniform L ⊂ two-tier L (spec §2.6), so a coherence rejected in two-tier L is rejected in uniform L. The witnesses of §D.2 for failing the two-tier test can be taken over the contexts ΣD¹ ∨ ΣD^q and ΣD^q ∨ ΣD¹: by Proposition D1, failure of IdC and of SwapC is already visible at p = 1. On those contexts uniform L and two-tier L agree, because F_{V+S} has no interchanger along k ≥ 1 there.
+- In 𝔉(ΣD¹ ∨ ΣD^q), the hom is λD¹ ⊗ λD^q, with D¹ = (f, f′, α).
+- Fix a hom-level j. The generators of dimension ≥ j+2 are f ⊗ e and f′ ⊗ e with |e| ≥ j+2, and α ⊗ e with |e| ≥ j+1. The f-side ones run from f ⊗ e_j⁻ to f ⊗ e_j⁺, the f′-side ones from f′ ⊗ e_j⁻ to f′ ⊗ e_j⁺, and each α ⊗ e spans the whole range from f ⊗ e_j⁻ to f′ ⊗ e_j⁺ (by ∂⁻(α⊗e) = f⊗e + α⊗∂⁺e and ∂⁺(α⊗e) = f′⊗e + α⊗∂⁻e).
+- So the only j-routes between the ends are [f ⊗ e, then α ⊗ e_j⁺] and [α ⊗ e_j⁻, then f′ ⊗ e′]. The separating cells α ⊗ e_j^± have dimension j + 1. No two cells of dimension ≥ j+2 are ever ∗_j-adjacent, so there is no interchange position at any level j (for j = 0 this is the factor α ⊗ g_i).
+- "No interchange position ⇒ F_{V+S}(Γ) = 𝔉(Γ)" uses the fact that every cell V adds beyond the Gray presentation involves an inner interchanger (as in the (K7)–(K11) constructions). Requirement 4 alone does not say this.
+- So a two-tier witness is accepted in uniform L, and its rejected dual is rejected there too.
+
+Acceptance of χ_n for n ≥ 1 above also uses the Gray-projection reading of the side condition (ledger S1, S11). This step is **argued**, not machine-checked.
+
+### D.4.2 Classification
+
+**Theorem D4.** Let J ⊆ {1, 2, …} and let S, S′ be settings.
+1. D_J sends every derivable judgment of uniform L in setting S to a derivable judgment in some setting S′ iff **J = ∅**. Then S′ = S.
+2. D_J sends uniform L in setting S to the oplax core (every elementary interchanger reversed) iff **J = all**, every dimension ≥ 1. The image is the oplax core in setting mirror(S), which exchanges the inner law and R (§D.4.3).
+3. For every other J, some accepted coherence has a rejected dual. The image is the mixed core D_J(V + S), described below.
+
+*Proof.* (1, ⇐) and (2, ⇐) are immediate. For (1, ⇒), §D.4.1 gives two necessary conditions:
+- (G) row_J(n, n+1) = 0 for every n;
+- (T) J passes the two-tier test, so J ∈ {∅, {2,3,…}, odd, {1,2,4,6,…}} by D2.
+
+Under (T):
+- If 1 ∉ J, then J is constant from dimension 2 on. The row (1, 2) is then 3a_2 = a_2, so a_2 = 0 and J = ∅.
+- If 1 ∈ J, then J alternates from dimension 2 on. The rows (1, 2) and (2, 3) are then a_2 + 1 and a_2, which cannot both be 0.
+
+(2, ⇒) is the same computation with every row equal to 1. It leaves only J = all. ∎
+- *Agda:* `kernel-theorem` (both parts, for c = +1 and c = −1).
+
+**Neither condition suffices alone.**
+- (G) alone is solved by the period-3 sets, for example J = {1,2,4,5,7,8,…}, which reverses n iff 3 ∤ n. That set fails (T) (`J124-gray-rows`, `J124-not-two-tier`).
+- (T) alone is solved by op (`op-two-tier`), which fails (G) at level 1 (`op-gray-rows`).
+
+So the uniform result is not a level-by-level repetition of the two-tier one. It needs both the Gray interchangers inside objects and the Leibniz data across objects.
+
+**Relation to §D.3's prediction.** §D.3 predicted that J is a symmetry iff every shift of J passes the two-tier test. That is the reading in which each level k carries the full Gray orientation data, with one row (k, l) for every l > k. Arithmetically, this gives the same answer:
+- all rows (k, l) equal c ⟺ every shift passes the test ⟺ J ≡ c (`all-rows↔const`, `all-rows↔shifts`, `level0↔Symmetry`, `level0↔ToOplax`);
+- of the four two-tier symmetries ∅, {2,3,…}, odd and {1,2,4,6,…}, the shifts are all, even, even and odd, and only ∅ survives.
+
+The proof above does not need the rows with l > k+1, whose geometric meaning inside homs (the tensor-shaped naturality data of lax r8 (K3)) is not pinned down in the notes.
+
+**Worked example: CaTT's op.** op = D_odd is a two-tier symmetry (`op-two-tier`). Take Γ₁ = Σ(ΣD¹ ∨ ΣD¹), the context of spec §2.3 example (c): two 3-cells of 𝒦 (2-cells inside an object) juxtaposed along a 1-cell.
+- The interchanger χ₁, a 4-cell from "right first" to "left first", is accepted in every setting.
+- op reverses the 3-cells, so their 2-composition reverses. It keeps the 1-composition (2 ∉ odd) and keeps χ₁ (4 ∉ odd).
+- So the op-image of χ₁ has type "left first → right first", and it is rejected.
+- *Agda:* `op-row-1-2`, `op-reverses-1-2`, `op-gray-rows`.
+
+**The mixed cores.** The orientation of D_J(V + S)'s Gray interchanger at level n is row_J(n, n+1) = a_{n+1} + a_{n+2} + a_{n+3}. For the sets J below, this is lax or oplax according to n alone:
+
+| J | Gray interchanger at level n after D_J |
+|---|---|
+| ∅ | lax at every n (the identity) |
+| all | oplax at every n |
+| odd (op) | lax for even n, oplax for odd n |
+| even (co) | oplax for even n, lax for odd n |
+| {2,3,4,…} | lax at n = 0, oplax for every n ≥ 1 |
+| {1,2,4,6,…} | lax for n = 0 and every odd n, oplax for every even n ≥ 2 |
+
+D_J(V) is the least theory satisfying requirements 1–5 transported along D_J. Leastness transfers because D_J is a bijection on cells that preserves generator sets. So D_J(V) is the most general theory with its orientation pattern, and D_J(V + S) adds the duals of the laws in S (§D.4.3).
+- **The orbit is free.** D_J D_{J′} = D_{J △ J′}. So D_J(V + S) = D_{J′}(V + S′) forces D_{J △ J′} to be a symmetry, and J = J′ by Theorem D4(1).
+- **Checking a mixed core costs nothing.** D_J is an involution on judgments, so SC_{D_J(V+S)}(Γ, A) ⟺ SC_{V+S}(D_J Γ, D_J A). A checker for D_J(V + S) is the V + S checker run on the dualised input. Unlike L_ε of §D.3, nothing has to be implemented.
+
+**Practical consequence.** The two-tier rule "prove a lemma once, get its op-dual free" (§D.3, item 2) does not hold in the uniform core. A uniform-L lemma's D_J-image is a lemma of the core D_J(V + S), which is V + S only for J = ∅. The total dual of a lax lemma is the corresponding oplax lemma, in the oplax core. Within V + S, a dual can still be used whenever the dualised coherence happens to be accepted. But there is no uniform transfer: by Theorem D4 every J ≠ ∅ has an accepted coherence with a rejected dual.
+
+**Restricting to an `ord` fragment.** If every object of the development is marked `ord` (spec chapter 3), the side condition is the two-tier one and §D.2 applies: op and the other three two-tier symmetries come back. In the uniform core, `ord` is what brings the op-symmetry back. Whether the `ord` reduction is exact is ledger E7.
+
+### D.4.3 The switches under duality
+
+The two visible laws are splits of an interchanger whose operand is a composite (`Join/SwitchLaws.agda`, `splitL` and `splitR`):
+- the **inner law** (left split): ι(F ⨾ F′, G) = the paste of ι(F, G) and ι(F′, G);
+- **R** (right split): ι(F, G ⨾ G′) = the paste of ι(F, G) and ι(F, G′).
+
+Take an interchanger at level k, with its operands juxtaposed along a k-cell. D_J trades its left and right operands iff k+1 ∈ J. The order inside the composite F ⨾ F′ may reverse too, but the dual is still the split of a composite operand. So at level k, D_J sends the left split to the right split, and back, iff k+1 ∈ J. An equation is sent to an equation, and the image of each law needs no orientation.
+
+**Proposition D5.**
+- Let mirror(S) swap the two switches. The dual setting at level k is S if k+1 ∉ J, and mirror(S) if k+1 ∈ J. It contains exactly the duals of the laws of S (`dual-has`).
+- The total duality mirrors at every level (`total-mirror`). So D_all maps
+  - V to V^∘,
+  - V + {inner law} to V^∘ + {R},
+  - V + {R} to V^∘ + {inner law},
+  - T₁₂'s profile to its oplax mirror,
+
+  where V^∘ := D_all(V) is the least oplax-admissible theory (`mirror-iccS`, `mirror-rspS`, `mirror-vS`, `mirror-allS`).
+- The dual of one setting is the same at every level iff S is mirror-symmetric (∅ or both switches) or [k+1 ∈ J] does not depend on k (`level-uniform`). For any other pair, the image of a single setting is a level-dependent law set. This only matters for the mixed cores, since J = ∅ and J = all are the only dualities that keep the orientation uniform.
+
+So the four settings of the lax core and the four settings of the oplax core correspond under the total duality, with {inner law} and {R} trading places. A development checked in {inner law} dualises to an oplax development checked in {R}, and conversely.
+
+## D.5 Dualities, ⊗ and the biclosed rules (F.7.4)
+
+*Agda: `src/CaTTExp/Gray/Biclosed/Mirror.agda` (no postulates).*
+
+The biclosed rules involve two dualities, and they must be kept apart.
+- **External:** D_J acting on the ambient, as in §D.2–D.4.
+- **Internal:** the duality (–)^K acting on objects, X ↦ X^K, a functor of Cat_ω.
+
+Proposition D1 is about the internal one: (X ⊗ Y)^K ≅ X^K ⊗ Y^K iff K ∈ {∅, all}, and ≅ Y^K ⊗ X^K iff K ∈ {odd, even}. D1 is a statement about Gray tensors of Steiner complexes, so it does not depend on the core.
+
+**External dualities with 1 ∈ J do not act on multimaps.** A multimap (X₁, …, Xₙ ▸ Z) is an ambient 1-cell from a tensor of inputs to one output. Reversing it gives a 1-cell from one object to a tensor, which is not a judgment of the system for n ≠ 1. So D_J with 1 ∈ J, including the total duality of Theorem D4(2), sends the biclosed fragment to a "co-closed" system, with left adjoints to ⊗ in place of residuals. That system is not part of the kernel. Only the pure fragment with n = 1 (L itself) carries over.
+
+**Internal dualities: the mirror.** For alternating K, every piece of the biclosed system has a mirror image:
+- a multimap X₁ ⊗ … ⊗ Xₙ → Z gives (Xₙ^K, …, X₁^K ▸ Z^K);
+- the lax hom A\C goes to the oplax hom C^K/A^K, and C/A goes to A^K\C^K;
+- the corollas m, e^ℓ and e^r go to m with swapped arguments, e^r and e^ℓ;
+- p_{Δ,Θ} goes to p_{Θ^K, Δ^K}, using D1 for the Gray tensor of contexts;
+- a time slot at gap g of an n-ary type goes to gap n − g, so a lax slot (after the data) becomes an oplax slot (before it), matching Cat_ω's (X ⊗ Dᵏ)^K ≅ (Dᵏ)^K ⊗ X^K;
+- ⟦Dᵏ⟧^K ≅ ⟦Dᵏ⟧, with source and target swapped iff k ∈ K.
+
+**Proposition D6 (mirror of the rows).** The mirror is an involution on formulas, multimap types and rows. For every row ρ:
+- H(ρ*) = H(ρ)* and B(ρ*) = B(ρ)*;
+- r_{ρ*}(x*) = r_ρ(x)* for every term x;
+- the rows read off M* are exactly the mirrors of the rows read off M. So the candidate templates of the decision procedure (Lemma GB-dec) are mirror-closed.
+
+The pair, probe and unit rows go to rows of the same kind at the mirrored slot, and the left evaluation row goes to the right one and back.
+- *Agda:* `mirFm-invol`, `mirM-invol`, `mirRow-invol`, `H-mir`, `B-mir`, `rmap-mir`, `rowsOf-mir`, `rowsOf-mir⁻`.
+
+**What the mirror does to the rest of a template** (paper only):
+1. **Directed cuts.** A directed goal d at slot ⟦Dᵏ⟧ inherits its direction from the hypothesis b. In the mirror, b's and d's directions both swap iff k ∈ K. So the mirror of a (GB-dcut) instance is a (GB-dcut) instance, with u⁻ and u⁺ exchanged iff k ∈ K. "No reverse cell" (§8.3 orientation) is preserved.
+2. **Collars.** The invertible collars a^± and the comparison cells reverse with their slots. So the mirror of a generic context is a template context only after replacing each reversed collar by its inverse. Inverses of invertible cells are available (chapter 3's `inv` mark), so admissibility is preserved, but not literally on the nose. The Agda therefore stops at the rows.
+3. **Probe restrictions.** A restriction along ⟦σ⟧ for an L-substitution σ : Θ′ → Θ mirrors to the restriction along ⟦σ⟧^K = ⟦D_K σ⟧. That is a kernel restriction iff D_K σ is admissible in the core, which holds for all σ iff D_K is a symmetry of the core.
+
+**Consequence.**
+
+| Core | Internal dualities that are symmetries of L + biclosed rules |
+|---|---|
+| two-tier L | ∅ and the mirror for K = odd (op is a two-tier symmetry, D2). K = even maps to the oplax two-tier core. K = all keeps ⊗'s order but is lax ↦ oplax on the probes. Every other K twists ⊗ (D1) and has no action. |
+| uniform L, any setting | **∅ only.** The mirror for K = odd lands in the biclosed system over D_odd(V + S), and for K = even over D_even(V + S), which are mixed cores (§D.4.2). K = all (order-preserving, all slots reversed) lands over the oplax core with mirror(S). |
+
+So in the uniform core the biclosed layer is mirror-symmetric on its own (Proposition D6), but the coupling through the probe restrictions breaks the symmetry. The symmetry-breaking comes entirely from L's side condition, not from ⊗ or the residuals.
+
+**Worked example.** Over two-tier L, the right curry of a lax transformation α : (B, ⟦D¹⟧ ▸ C) is a map B → C/⟦D¹⟧. Its op-mirror is the left curry ⟦D¹⟧^op ⊗ B^op → C^op, an oplax transformation of opposites with the same derivation. Over uniform L the same mirror is still valid on the rows. But if B's diagram involves an interchanger along a 1-cell inside a probe, for example a restriction along the χ₁ of §D.4.2 inside ⟦Θ⟧, then the mirrored restriction is along the reversed interchanger, which uniform L rejects.
 
 ---
 
@@ -1309,5 +1470,5 @@ Everything in this list is now **derived**. None of it is a primitive any more.
 | ~~D7 remainder: both factors arbitrary~~ | done (F.7.4). D7c (independent check of Lemma GB-ext) and D7d (Agda, `src/CaTTExp/Gray/Biclosed/`): GBIC thread |
 | D11: event order across residuals; ω-version; soundness/completeness | out to researcher (`conjectures/outbox/gray-pasting-types.md`); internal attempt: CLOSED thread |
 | D12: higher coherence for free cartesian closed (∞,1)/(∞,ω)-categories | `conjectures/outbox/cartesian-closed-higher-coherence.md`, ready to send; internal attempt: CLOSED thread |
-| D8 for uniform L | **unblocked** (2026-11-21): E6's existence part is settled by the kernel computing in V + S (`design-decisions.md` §1.7), so the duality analysis of Part D can be redone for V + S. Owner: see `open-issues.md` D8 |
+| ~~D8 for uniform L~~ | done (§D.4–D.5, `GrayDualityUniform.agda`, `Gray/Biclosed/Mirror.agda`) |
 | Implement L_ε in the support checker | L-core thread (E1) |

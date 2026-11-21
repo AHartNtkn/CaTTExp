@@ -90,9 +90,36 @@ No biclosed rule enters a derivation of a pure judgment (⟦Δ₁⟧, …, ⟦Δ
 
 ## 8.6 What the closed structure does not change
 
-L's coherence rule and its side condition in V + S; the marks of chapter 3; the pseudo hom (cartesian, `notes/internal-hom.md` §5.4–5.5). Two items in the notes still describe closed-structure work as blocked on the uniform construction ("D8 for uniform L", `closed-structure.md` Part G), which is superseded (ledger S12).
+L's coherence rule and its side condition in V + S; the marks of chapter 3; the pseudo hom (cartesian, `notes/internal-hom.md` §5.4–5.5).
 
-## 8.7 Open surface questions
+## 8.7 Dualities
+
+The object duality (–)^K and the ambient duality D_J act differently on the biclosed rules.
+
+**Rule.** None. The dualities are meta-operations on derivations, not rules.
+
+**Statement.**
+- **Ambient dualities with 1 ∈ J do not act.** A multimap (X₁, …, Xₙ ▸ Z) is an ambient 1-cell. Reversing it gives a map from Z to a tensor, which is not a multimap for n ≠ 1.
+- **The mirror.** For K ∈ {odd, even}, (X ⊗ Y)^K ≅ Y^K ⊗ X^K. The mirror acts as follows:
+  - a multimap (X₁, …, Xₙ ▸ Z) goes to (Xₙ^K, …, X₁^K ▸ Z^K);
+  - A\C goes to C^K/A^K, and C/A goes to A^K\C^K;
+  - m, e^ℓ, e^r and p_{Δ,Θ} go to m with swapped arguments, e^r, e^ℓ and p_{Θ^K,Δ^K};
+  - a time slot at gap g goes to gap n − g, so a lax slot becomes an oplax one;
+  - ⟦Dᵏ⟧ keeps its shape, with source and target swapped iff k ∈ K.
+
+  The mirror maps the row table of §8.3 to itself, the vertex types H and B to their mirrors, and the restriction r to its mirror. Directed cuts go to directed cuts. Collars go to collars after inverting the reversed ones.
+- **What breaks the symmetry is L.** A probe restriction along ⟦σ⟧ mirrors to the restriction along ⟦D_K σ⟧. That is a kernel restriction for every σ iff D_K is a symmetry of the core.
+  - Under uniform L, in every setting, only K = ∅ is a symmetry (chapter 2, §2.7). So no non-trivial duality is a symmetry of L + biclosed rules.
+  - The op mirror lands in the biclosed system over the mixed core D_odd(V + S).
+  - K = all keeps ⊗'s order and lands over the oplax core, with the inner law and R exchanged.
+  - Under two-tier L, op is a core symmetry, so the op mirror is a symmetry of two-tier L + biclosed rules.
+- **Other K** turn ⊗ into the twisted tensor ⊗_ε, which is not a formula. They have no action on the biclosed rules.
+
+**Example.** Over two-tier L, the right curry of a lax transformation α : (B, ⟦D¹⟧ ▸ C) mirrors to the left curry of an oplax transformation of opposites, with the same derivation. Over uniform L the rows still mirror. But a restriction along the interchanger of two 2-cells of an object (Σ(ΣD¹ ∨ ΣD¹), chapter 2 §2.3 example (c)) mirrors under op to a restriction along the reversed interchanger, which uniform L rejects.
+
+**Status.** The mirror's action on the rows: **Agda-checked** (`src/CaTTExp/Gray/Biclosed/Mirror.agda`: `mirRow-invol`, `H-mir`, `B-mir`, `rmap-mir`, `rowsOf-mir`, no postulates). The action on directed cuts, collars and probe restrictions: **stated** (argued in the note). The core classification it relies on: chapter 2, §2.7. **Source.** `notes/closed-structure.md` §D.5; ledger D8.
+
+## 8.8 Open surface questions
 
 **Q8.1. How multimaps are written.**
 - *Option A: as in the kernel,* `t : (X₁, …, Xₙ ▸ Z)`. Exact; unfamiliar.

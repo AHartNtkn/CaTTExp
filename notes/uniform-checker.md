@@ -107,9 +107,9 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
   - In V it is directed: X ≠ Y, SC holds from X to Y and fails from Y to X.
   - In T₁₂, X = Y, since they are the two split orders of the full crossing. So the square is a letter from the single 4-cell to itself (`loop-T`), the suspension of H. A Python run of the same model finds self-loops only with both switches on: 1 on 2 × 2, 1 on 2 × 3, 9 on 3 × 3. This loop is why `RuleFin` is needed. It is a whiskered square (the suspension of H) that is a 5-loop: the cut-3 whiskering [χ(b₂a₁) | I₂(χ(b₁a₁), χ(b₂a₂)) | χ(b₁a₂)] of a bare square that is directed in every setting. It is not a (K49) four-input rectangle, since no temporal cut of b₁b₂a₁a₂ separates the two active inputs (ledger S14, settled by DSGN).
 
-### 1.6 The grid in raw T-syntax (`GridLink.agda`; 2026-11-21, ledger S3c, forward direction)
+### 1.6 The grid in raw T-syntax (`GridLink.agda`, `GridSep.agda`; 2026-11-21, ledger S3c)
 
-`GridLink` translates grid paths into raw terms of the theory T of `Join/SepAlgebra.agda` and proves that equal grid paths have equal translations.
+`GridLink` translates grid paths into raw terms of the theory T of `Join/SepAlgebra.agda` and proves that equal grid paths have equal translations. `GridSep` proves the converse, so on valid paths Grid's equality is exactly T-equality of the translations (`GridSep.Converse.link-iff`).
 
 - **The signature.** The suspended grid has 2-cells u₀ … u_m and v₀ … v_n and 3-cells aᵢ : uᵢ ⇛ uᵢ₊₁ and bⱼ : vⱼ ⇛ vⱼ₊₁. A word read from stage (i, j) is the 3-composite whose a-letter is `wr aᵢ vⱼ` and whose b-letter is `wl uᵢ bⱼ` (`w3`).
 - **The translation.** A block crossing ⟨k, p, q⟩ at word w becomes `ctx P (ι F G) Q`. Here P is the first k letters, F and G are the a-run and the b-run as raw composites of generators, and Q is the rest (`trE`). A path becomes the composite of its edges' translations, ending in an identity (`tr`). Every translation is a pure-ι 4-term (`tr-inner`).
@@ -120,12 +120,17 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
   - `core-left` and `core-right`: one left (right) split of a block crossing is an instance of `splitL` (`splitR`) up to T's structural equations.
   - `tr-step`: a split anywhere in a path that runs.
   - `Link.link`: if `sw ⊢ p ≈ q` in `Grid.OnGrid m n` (typed split steps between valid paths), then `sw ⊢ tr start p ≈S tr start q`.
-- **Not proved: the converse.** The converse says that T's support-free equations plus the switched laws identify no two grid paths that `Grid` keeps apart, i.e. V adds no equation on grids. It needs a model of T that separates the grid classes. The separating algebra M of `SepAlgebra` does not separate them, because its weights are edge sets. One caution belongs here: raw ≈ is untyped and includes the identity normalizations, such as ι(id3 u, G) ≈ id4 F for every F. So ≈S identifies all identity 4-terms, and its nontriviality on grid translations is exactly what the converse would show.
+- **The converse (`GridSep`).** It uses a model of T that reads a 3-term as its word of letters (junk when it has a χ with two non-identity arguments) and a 4-term as a raw path or junk. ι(F, G) becomes the block crossing ⟨0, |G| − 1, |F| − 1⟩ when F is all a's and G all b's, and the empty path when either side is empty. r and t become empty paths or junk, and ctx shifts by the length of its left whisker. Paths are compared up to Grid's split steps without the validity side condition.
+  - `sem3-≈` and `sem-≈`: every equation of T in dimensions 3 and 4 holds on the nose, except the support equations.
+  - `sem-law`: each switched law holds up to one split step.
+  - `sem-tr`: the translation of a running path evaluates to that path.
+  - `split-run`, `≈U→≈`: split steps keep a path running from the same word to the same word, in both directions. So the untyped split class of a valid path stays among valid paths and is Grid's typed equality.
+  - `Converse.converse`: if p and q are valid and `sw ⊢ tr start p ≈S tr start q`, then `sw ⊢ p ≈ q`. So V + S adds no equation on suspended grids beyond the splits, and in particular ≈S is not trivial there, although raw ≈ identifies all identity 4-terms (ι(id3 u, G) ≈ id4 F for every F).
 
 ## 2. What this does not check (the trust boundary)
 
 1. **The free objects F_{V+S}(Γ) are not constructed in Agda in general.** `Kernel` is the kernel checker relative to the layers. That suitable layers exist for V + S in every dimension, with finite alphabets and grading bounds, is the paper result: r9 (K65) and r10 Response 3, verified at the argument level. Constructing them needs the raw syntax of the T₁₂ signature in every degree, B's defining pairs, and the guarded equations. Only degree four exists in Agda (`Join/SepAlgebra.agda`), and `Join/SwitchLaws.agda` notes that there is no raw 5-dimensional syntax.
-2. **The grid model is a model by inspection.** That these words, edges and split equations are the degree-4 layer of F_{V+S} on a suspended grid is taken from r10 Response 3 and the checker it cites. So is the claim that V adds no equation there. Since 2026-11-21 the forward direction is checked (§1.6): grid equality gives equality of raw T-translations. The converse, that V adds nothing on grids, is not. This is the grid case of the "Link A–B" of `joining-completion.md` §8.
+2. **The grid model is a model by inspection.** That these words, edges and split equations are the degree-4 layer of F_{V+S} on a suspended grid is taken from r10 Response 3 and the checker it cites. Since 2026-11-21 the link to raw T-syntax is checked in both directions (§1.6): on valid paths, grid equality is exactly equality of raw T-translations under T without the support equations plus the switched laws. What stays by inspection is that this raw presentation (SepAlgebra's T, with the support equations dropped) is V + S on these diagrams, and the paper claims behind it. This is the grid case of the "Link A–B" of `joining-completion.md` §8.
 3. **5-letters by inspection.** `GridFive` takes the degree-5 alphabet on suspended grids (positional squares only) from the paper argument of §1.5, and treats composite-operand squares through their atomic pastes. Neither is derived from raw syntax. *(Until 2026-11-21 there were no 5-letters at all, and example (b) was checked only as u ≠ v.)*
 4. **Supports of V + S.** The fullness test is a parameter. How it reads for V + S is ledger S1. The spec's 2.1 takes supports in the expanded basis, but (K45)/(K50) say that basis is infinite on some pasting diagrams, so "supp(c) = all generators" needs a reading. The point has been passed to the S1 check.
 
@@ -134,7 +139,7 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
 - **S3a**: construct the layers of F_{V+S} in every degree in Agda and instantiate `Kernel`. This means formalizing the raw syntax of the T₁₂ signature, B and the guarded equations, then the (K65) rank normal forms and the switch extension of r10 Response 3.
 - **S3b**: done (§1.5).
 - **S3e**: done (§1.5, `RuleFin`, `KernelDec`). The (K49) question raised by the T₁₂ loop is settled in ledger S14: the loop is a whiskered square, not a (K49) rectangle.
-- **S3c**: forward direction done (§1.6, `GridLink`). Open: the converse (a model of T separating the grid classes), which would close item 2 above.
+- **S3c**: done (§1.6, `GridLink`, `GridSep`).
 - **S3d**: fix the support reading. The S1 reviewer (2026-11-21, ledger PR #350) recommends this reading: SC_{V+S} holds iff some cell c : ⟦t⟧ → ⟦u⟧ (identity allowed) has full support after the requirement-4 projection to 𝔉(Γ), meaning every Gray tuple generator. `Rule` already covers it: take `Supp` to be supports in 𝔉(Γ), `supp` and `suppL` to be the projected supports, and `full` the Gray fullness test. The reviewer also says which lift interprets a coherence is open. Distinct V-cells can share a Gray image, as u and v of example (b) do. That choice stays a parameter of `Kernel` (⟦_⟧).
 
 Owners are recorded in the ledger (S3).

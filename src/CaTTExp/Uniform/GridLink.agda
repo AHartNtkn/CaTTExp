@@ -39,13 +39,12 @@
 --   link         sw ⊢ p ≈ q in Grid (both paths valid) implies
 --                sw ⊢ tr start p ≈S tr start q.
 --
--- Not proved here: the converse (T's support-free equations together
--- with the switched laws identify no two grid paths that the grid
--- keeps apart, i.e. "V adds no equation on grids"). That needs a model
--- of T separating the grid classes; see notes/uniform-checker.md §1.6.
--- Raw ≈ is untyped and has the identity normalisations (for example
+-- The converse is CaTTExp.Uniform.GridSep (a model of T separating
+-- grid paths), so on valid paths the two equalities agree. Raw ≈ is
+-- untyped and has the identity normalisations (for example
 -- ι (id3 u) G ≈ id4 F for every F), so ≈S identifies all identity
--- 4-terms; that it is nontrivial on grid translations is the converse.
+-- 4-terms; GridSep shows it still identifies no two grid paths that
+-- Grid keeps apart.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Join.Quiver using (_⊎_; inj₁; inj₂; Dec; yes; no)

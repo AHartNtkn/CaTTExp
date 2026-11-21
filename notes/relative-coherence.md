@@ -32,7 +32,10 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | RC(3) on the full cylinder of D² ∗₀ D² | **proved by a researcher, verified** (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`: orientations AB→BA, AG→GA, FB→BF; U_A/U_B via the interchange 4-cell). An independent internal sketch of the 2-skeleton (§7.9: unique factorisation, a single exchange χ_M) has its normal forms and all multiplications machine-checked (`TwoDiscCylinderRC3`) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | General exchange in dimension 2 (acyclic, nonempty boundaries) | strict side **proved** (§7.11): exchange classes are linear extensions of event posets, and squares and hexagons are a homotopy basis (machine-checked on grids up to 3 × 3); both are single coherences over pasting contexts (`ExchangeLaws`). RC(3) reduced to two forced-order statements (K), (F): sketch |
-| RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
+| RC(n) for every n in every finite strong-Steiner context (RC_id(∞)); includes every cylinder `Q↑Y` (partial cylinders are strong Steiner), every join context Cone(Q; c), and every Gray product of globes | **settled.** Existence: r8 Response 18 (verified). Construction by structural recursion: r9 Response 15 (verified). Campion's U_{k−2} cocartesian step is closed in §7.15 (independently checked) |
+| Hence **Conjecture N at every depth**, global K, N^cone in every dimension, G(n) for all n on strong-Steiner molecules, and the D3 templates for strong-Steiner M | settled (ledger C1, B19; D2 and D3 narrowed, S9) |
+| RC(n), n ≥ 3, for loop-free contexts that are not strong Steiner | RC_id(∞) ⟺ homotopical (r8 Response 18; r9 for small computads). Fails for the seam rings Γ_k from degree k + 2. Otherwise open |
+| Cost of the construction: elementary size bound; polynomial recognizer for shared canonical forms (E9′) | open (RCX) |
 
 ## 1. Notation
 

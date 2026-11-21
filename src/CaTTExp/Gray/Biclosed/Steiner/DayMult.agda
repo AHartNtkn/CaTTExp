@@ -24,7 +24,7 @@ module CaTTExp.Gray.Biclosed.Steiner.DayMult (nmFB : Nat → FB) where
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Biclosed.Syntax
 open import CaTTExp.Gray.Biclosed.ListOps using (length; take; lookup)
-open import CaTTExp.Gray.Biclosed.ListLemmas using (drop; length-++)
+open import CaTTExp.Gray.Biclosed.ListLemmas using (drop; length-++; +-assoc) renaming (++-assoc to ++-assocL; ++-[] to ++-[]L)
 open import CaTTExp.Gray.Biclosed.Steiner.Codes using (Code; AC)
 open import CaTTExp.Gray.Biclosed.Steiner.Psh nmFB
 
@@ -398,3 +398,264 @@ module Interp (⟦_⟧ : Fm → Psh) where
       where
         subst₂′ : ∀ {A : Set} (R : A → A → Set) {a a′ b b′} → a ≡ a′ → b ≡ b′ → R a b → R a′ b′
         subst₂′ R refl refl r = r
+
+    cnat : ∀ {Ks′ Ks} (hs : Maps Ks′ Ks) us → AtL (ins Mc) Ks us →
+           _∼_ ⟦ out Mf ⟧ (rc Ks′ (resL hs us)) (res ⟦ out Mf ⟧ (⊗s hs) (rc Ks us))
+    cnat {Ks′} {Ks} hs us a with split3 sP (ins Mg) sQ Ks us a
+    ... | sp3 KP KX KQ uP uX uQ refl refl aP aX aQ with Maps-split KP (KX ++ KQ) hs
+    ...   | KP′ , R′ , hP , hR , refl , refl with Maps-split KX KQ hR
+    ...     | KX′ , KQ′ , hX , hQ , refl , refl =
+      ∼-trans Z (∼-≡ Z (cong (rc (KP′ ++ KX′ ++ KQ′)) s0))
+      (∼-trans Z (∼-≡ Z (evA {KQ = KQ′} {uQ = uQ′} aP′ aX′))
+      (∼-trans Z s2
+      (∼-trans Z (∼-≡ Z (cong (rf (KP′ ++ concat KX′ ∷ KQ′)) s3))
+      (∼-trans Z (vnat of F (uP ++ (Y , rg KX uX) ∷ uQ) (inF aP aX aQ))
+      (∼-trans Z (∼-≡ Z (sym (res-cast Z (concat-flat KP′ KX′ KQ′) (concat-flat KP KX KQ) (⊗s F) x)))
+      (∼-trans Z (res-cong Z (⊗s-flat hP hX hQ) (∼-refl Z))
+                 (∼-≡ Z (cong (res Z (⊗s (hP ++ᵐ (hX ++ᵐ hQ)))) (sym (evA {KQ = KQ} {uQ = uQ} aP aX))))))))))
+      where
+        Z = ⟦ out Mf ⟧
+        F = hP ++ᵐ (⊗s hX ∷ hQ)
+        x = rf (KP ++ concat KX ∷ KQ) (uP ++ (Y , rg KX uX) ∷ uQ)
+        uP′ = resL hP uP
+        uX′ = resL hX uX
+        uQ′ = resL hQ uQ
+        aP′ = AtL-res sP hP uP aP
+        aX′ = AtL-res (ins Mg) hX uX aX
+        aQ′ = AtL-res sQ hQ uQ aQ
+        lP : length uP ≡ length KP
+        lP = trans (AtL-lenU sP KP uP aP) (sym (AtL-lenK sP KP uP aP))
+        lX : length uX ≡ length KX
+        lX = trans (AtL-lenU (ins Mg) KX uX aX) (sym (AtL-lenK (ins Mg) KX uX aX))
+        s0 : resL (hP ++ᵐ (hX ++ᵐ hQ)) (uP ++ uX ++ uQ) ≡ uP′ ++ uX′ ++ uQ′
+        s0 = trans (resL-++ hP (hX ++ᵐ hQ) uP (uX ++ uQ) lP) (cong (uP′ ++_) (resL-++ hX hQ uX uQ lX))
+        y′ = res ⟦ Y ⟧ (⊗s hX) (rg KX uX)
+        s2 : _∼_ Z (rf (KP′ ++ concat KX′ ∷ KQ′) (uP′ ++ (Y , rg KX′ uX′) ∷ uQ′))
+                   (rf (KP′ ++ concat KX′ ∷ KQ′) (uP′ ++ (Y , y′) ∷ uQ′))
+        s2 = vcong of _ _ _ (inF aP′ aX′ aQ′)
+               (subst (λ Fs → AtL Fs (KP′ ++ concat KX′ ∷ KQ′) (uP′ ++ (Y , y′) ∷ uQ′)) (sym eF)
+                      (AtL-++ {sP} {Y ∷ sQ} {KP′} {concat KX′ ∷ KQ′} {uP′} aP′
+                              ((refl , At-res ⟦ Y ⟧ (⊗s hX) (vAt og KX uX aX)) , aQ′)))
+               (∼L-++ {uP′} {uP′} {(Y , rg KX′ uX′) ∷ uQ′} {(Y , y′) ∷ uQ′}
+                      (∼L-refl uP′) (∼u (vnat og hX uX aX) , ∼L-refl uQ′))
+        s3 : uP′ ++ (Y , y′) ∷ uQ′ ≡ resL F (uP ++ (Y , rg KX uX) ∷ uQ)
+        s3 = sym (resL-++ hP (⊗s hX ∷ hQ) uP ((Y , rg KX uX) ∷ uQ) lP)
+
+    cok : Ok Mc rc
+    cok = ok cAt ccong cnat
+
+  ----------------------------------------------------------------------
+  -- Composition.
+
+  pc-at : ∀ {Mf rf} (of : Ok Mf rf) {Mg rg} (og : Ok Mg rg) i →
+          Maybe (Slot (ins Mf) i (out Mg)) → Val
+  pc-at {Mf} {rf} of og i nothing  = mk Mf rf of
+  pc-at {Mf} {rf} of og i (just s) = mk (PC.Mc of og i s) (PC.rc of og i s) (PC.cok of og i s)
+
+  pc : Val → Nat → Val → Val
+  pc (mk Mf rf of) i (mk Mg rg og) = pc-at of og i (compat (ins Mf) i (out Mg))
+
+  compat-just : ∀ {Fs i Y} (s : Slot Fs i Y) → compat Fs i Y ≡ just s
+  compat-just {Y = Y} (slot P Q refl refl) with compat-ok P Y Q
+  ... | s′ , e = trans e (cong just (slot-unique s′ _))
+
+  pc-just : ∀ {Mf rf} (of : Ok Mf rf) {Mg rg} (og : Ok Mg rg) i (s : Slot (ins Mf) i (out Mg)) →
+            pc (mk Mf rf of) i (mk Mg rg og) ≡ mk (PC.Mc of og i s) (PC.rc of og i s) (PC.cok of og i s)
+  pc-just {Mf} of {Mg} og i s = cong (pc-at of og i) (compat-just s)
+
+  ≈-≡ : ∀ {x y} → x ≡ y → x ≈ y
+  ≈-≡ refl = ≈-refl
+
+  -- values whose input lists are equal but not definitionally so
+  ≈-ins : ∀ {Is Is′ Z} {r r′ : List Code → List Uni → UF Z} {o : Ok (Is ▸ Z) r} {o′ : Ok (Is′ ▸ Z) r′} →
+          Is ≡ Is′ → (∀ Ks us → AtL Is Ks us → _∼_ ⟦ Z ⟧ (r Ks us) (r′ Ks us)) → mk (Is ▸ Z) r o ≈ mk (Is′ ▸ Z) r′ o′
+  ≈-ins refl h = ≈c h
+
+  T-pc : ∀ {f g P Y Q Z Xs} → f ∶ ((P ++ Y ∷ Q) ▸ Z) → g ∶ (Xs ▸ Y) →
+         pc f (length P) g ∶ ((P ++ Xs ++ Q) ▸ Z)
+  T-pc {mk _ rf of} {mk _ rg og} {P} {Y} {Q} refl refl = cong prof (pc-just of og (length P) (slot P Q refl refl))
+
+  pc-cong : ∀ {f f′ g g′} i → f ≈ f′ → g ≈ g′ → pc f i g ≈ pc f′ i g′
+  pc-cong {mk Mf rf of} {mk _ rf′ of′} {mk Mg rg og} {mk _ rg′ og′} i (≈c ef) (≈c eg) = go (compat (ins Mf) i (out Mg))
+    where
+      Z = ⟦ out Mf ⟧
+      h : ∀ s Ks us → AtL (ins (PC.Mc of og i s)) Ks us → _∼_ Z (PC.rc of og i s Ks us) (PC.rc of′ og′ i s Ks us)
+      h s Ks us a with split3 (Slot.sP s) (ins Mg) (Slot.sQ s) Ks us a
+      ... | sp3 KP KX KQ uP uX uQ refl refl aP aX aQ =
+        ∼-trans Z (∼-≡ Z (PC.evA of og i s {KQ = KQ} {uQ = uQ} aP aX))
+        (∼-trans Z (ef _ _ (PC.inF of og i s aP aX aQ))
+        (∼-trans Z (vcong of′ _ _ _ (PC.inF of′ og i s aP aX aQ) (PC.inF of′ og′ i s aP aX aQ)
+                     (∼L-++ {uP} {uP} (∼L-refl uP) (∼u (eg KX uX aX) , ∼L-refl uQ)))
+                   (∼-≡ Z (sym (PC.evA of′ og′ i s {KQ = KQ} {uQ = uQ} aP aX)))))
+      go : (m : Maybe (Slot (ins Mf) i (out Mg))) → pc-at of og i m ≈ pc-at of′ og′ i m
+      go nothing  = ≈c ef
+      go (just s) = ≈c (h s)
+
+  ----------------------------------------------------------------------
+  -- Identities.
+
+  AtL-nil : ∀ {Ks us} → AtL [] Ks us → (Ks ≡ []) × (us ≡ [])
+  AtL-nil {[]} {[]} _ = refl , refl
+
+  record One (A : Fm) (Ks : List Code) (us : List Uni) : Set where
+    constructor one
+    field
+      K₀ : Code
+      u₀ : Uni
+      eK₀ : Ks ≡ K₀ ∷ []
+      eu₀ : us ≡ u₀ ∷ []
+      a₀ : AtU A K₀ u₀
+
+  AtL-one : ∀ {A Ks us} → AtL (A ∷ []) Ks us → One A Ks us
+  AtL-one {A} {K ∷ []} {u ∷ []} (a , tt) = one K u refl refl a
+
+  idraw : (A : Fm) → List Code → List Uni → UF A
+  idraw A Ks []      = def ⟦ A ⟧
+  idraw A Ks (u ∷ _) = co A u
+
+  idok : ∀ A → Ok ((A ∷ []) ▸ A) (idraw A)
+  idok A = ok at cg nt
+    where
+      at : ∀ Ks us → AtL (A ∷ []) Ks us → At ⟦ A ⟧ (concat Ks) (idraw A Ks us)
+      at Ks us a with AtL-one a
+      ... | one K u refl refl a₀ = At-≡ ⟦ A ⟧ (sym (++-[] K)) (AtU-At a₀)
+      cg : ∀ Ks us vs → AtL (A ∷ []) Ks us → AtL (A ∷ []) Ks vs → us ∼L vs → _∼_ ⟦ A ⟧ (idraw A Ks us) (idraw A Ks vs)
+      cg Ks us vs a b e with AtL-one a | AtL-one b
+      ... | one K u refl refl _ | one _ v _ refl _ = co-cong A (fst e)
+      nt : ∀ {Ks′ Ks} (hs : Maps Ks′ Ks) us → AtL (A ∷ []) Ks us →
+           _∼_ ⟦ A ⟧ (idraw A Ks′ (resL hs us)) (res ⟦ A ⟧ (⊗s hs) (idraw A Ks us))
+      nt hs us a with AtL-one a
+      nt (h ∷ []) .((A , x) ∷ []) a | one K (.A , x) refl refl (refl , _) =
+        ∼-trans ⟦ A ⟧ (∼-≡ ⟦ A ⟧ (co-id A (res ⟦ A ⟧ h x)))
+        (∼-trans ⟦ A ⟧ (res-cong ⟦ A ⟧ (≈M-sym (⊗-unitʳ h)) (∼-refl ⟦ A ⟧))
+                       (∼-≡ ⟦ A ⟧ (trans (res-cast ⟦ A ⟧ (++-[] _) (++-[] K) (h ⊗ₘ idMap []) x)
+                                         (cong (res ⟦ A ⟧ (h ⊗ₘ idMap [])) (sym (co-id A x))))))
+
+  idv : Fm → Val
+  idv A = mk ((A ∷ []) ▸ A) (idraw A) (idok A)
+
+  T-id : ∀ A → idv A ∶ ((A ∷ []) ▸ A)
+  T-id A = refl
+
+  unit-l : ∀ {g Xs Y} → g ∶ (Xs ▸ Y) → pc (idv Y) 0 g ≈ g
+  unit-l {mk _ rg og} {Xs} {Y} refl =
+    ≈-trans (≈-≡ (pc-just (idok Y) og 0 s)) (≈-ins (++-[]L Xs) h)
+    where
+      s : Slot (Y ∷ []) 0 Y
+      s = slot [] [] refl refl
+      h : ∀ Ks us → AtL (Xs ++ []) Ks us → _∼_ ⟦ Y ⟧ (PC.rc (idok Y) og 0 s Ks us) (rg Ks us)
+      h Ks us a with split3 [] Xs [] Ks us a
+      ... | sp3 KP KX KQ uP uX uQ refl refl aP aX aQ with AtL-nil aP | AtL-nil aQ
+      ...   | refl , refl | refl , refl =
+        ∼-≡ ⟦ Y ⟧ (trans (PC.evA (idok Y) og 0 s {KQ = []} {uQ = []} aP aX)
+                  (trans (co-id Y (rg KX uX)) (sym (cong₂ rg (++-[]L KX) (++-[]L uX)))))
+
+  unit-r : ∀ {f P Y Q Z} → f ∶ ((P ++ Y ∷ Q) ▸ Z) → pc f (length P) (idv Y) ≈ f
+  unit-r {mk _ rf of} {P} {Y} {Q} {Z} refl =
+    ≈-trans (≈-≡ (pc-just of (idok Y) (length P) s)) (≈c h)
+    where
+      s : Slot (P ++ Y ∷ Q) (length P) Y
+      s = slot P Q refl refl
+      h : ∀ Ks us → AtL (P ++ Y ∷ Q) Ks us → _∼_ ⟦ Z ⟧ (PC.rc of (idok Y) (length P) s Ks us) (rf Ks us)
+      h Ks us a with split3 P (Y ∷ []) Q Ks us a
+      ... | sp3 KP KX KQ uP uX uQ refl refl aP aX aQ with AtL-one aX
+      ...   | one K u refl refl a₀ =
+        ∼-≡ ⟦ Z ⟧ (trans (PC.evA of (idok Y) (length P) s {KQ = KQ} {uQ = uQ} aP aX)
+                  (cong₂ (λ L v → rf (KP ++ L ∷ KQ) (uP ++ v ∷ uQ)) (++-[] K) (sym (AtU-co a₀))))
+
+  ----------------------------------------------------------------------
+  -- Markl's sequential and parallel laws.
+
+  private
+    L2 : ∀ {A : Set} (a b c d e : List A) → (a ++ b) ++ c ++ (d ++ e) ≡ a ++ (b ++ c ++ d) ++ e
+    L2 a b c d e = trans (++-assocL a b (c ++ d ++ e))
+                         (cong (a ++_) (sym (trans (++-assocL b (c ++ d) e) (cong (b ++_) (++-assocL c d e)))))
+
+    A3 : ∀ {A : Set} (a b c d : List A) → (a ++ b ++ c) ++ d ≡ a ++ b ++ c ++ d
+    A3 a b c d = trans (++-assocL a (b ++ c) d) (cong (a ++_) (++-assocL b c d))
+
+  seq : ∀ {f g h P Y Q Z P′ X Q′ Ws} →
+        f ∶ ((P ++ Y ∷ Q) ▸ Z) → g ∶ ((P′ ++ X ∷ Q′) ▸ Y) → h ∶ (Ws ▸ X) →
+        pc (pc f (length P) g) (length P + length P′) h ≈ pc f (length P) (pc g (length P′) h)
+  seq {mk _ rf of} {mk _ rg og} {mk _ rh oh} {P} {Y} {Q} {Z} {P′} {X} {Q′} {Ws} refl refl refl =
+    ≈-trans (≈-≡ (trans (cong (λ v → pc v q (mk _ rh oh)) (pc-just of og (length P) s1)) (pc-just ofg oh q s2)))
+    (≈-trans (≈-ins (L2 P P′ Ws Q′ Q) H)
+             (≈-sym (≈-≡ (trans (cong (pc (mk _ rf of) (length P)) (pc-just og oh (length P′) s3))
+                                (pc-just of ogh (length P) s4)))))
+    where
+      q = length P + length P′
+      s1 : Slot (P ++ Y ∷ Q) (length P) Y
+      s1 = slot P Q refl refl
+      ofg = PC.cok of og (length P) s1
+      rfg = PC.rc of og (length P) s1
+      s2 : Slot (P ++ (P′ ++ X ∷ Q′) ++ Q) q X
+      s2 = slot (P ++ P′) (Q′ ++ Q)
+             (trans (cong (P ++_) (++-assocL P′ (X ∷ Q′) Q)) (sym (++-assocL P P′ (X ∷ Q′ ++ Q))))
+             (length-++ P P′)
+      s3 : Slot (P′ ++ X ∷ Q′) (length P′) X
+      s3 = slot P′ Q′ refl refl
+      ogh = PC.cok og oh (length P′) s3
+      rgh = PC.rc og oh (length P′) s3
+      s4 : Slot (P ++ Y ∷ Q) (length P) Y
+      s4 = slot P Q refl refl
+      rl = PC.rc ofg oh q s2
+      rr = PC.rc of ogh (length P) s4
+      H : ∀ Ks us → AtL ((P ++ P′) ++ Ws ++ (Q′ ++ Q)) Ks us → _∼_ ⟦ Z ⟧ (rl Ks us) (rr Ks us)
+      H Ks us a with split3 (P ++ P′) Ws (Q′ ++ Q) Ks us a
+      ... | sp3 KA KW KB uA uW uB refl refl aA aW aB with AtL-split P P′ KA uA aA | AtL-split Q′ Q KB uB aB
+      ...   | sp KP KP′ uP uP′ refl refl aP aP′ | sp KQ′ KQ uQ′ uQ refl refl aQ′ aQ =
+        ∼-≡ ⟦ Z ⟧
+          (trans (PC.evA ofg oh q s2 {KQ = KQ′ ++ KQ} {uQ = uQ′ ++ uQ} aA aW)
+          (trans (cong₂ rfg (L2 KP KP′ (concat KW ∷ []) KQ′ KQ) (L2 uP uP′ ((X , rh KW uW) ∷ []) uQ′ uQ))
+          (trans (PC.evA of og (length P) s1 {KQ = KQ} {uQ = uQ} aP
+                   (AtL-++ {P′} {X ∷ Q′} {KP′} {concat KW ∷ KQ′} {uP′} aP′ ((refl , vAt oh KW uW aW) , aQ′)))
+          (trans (cong₂ (λ L y → rf (KP ++ L ∷ KQ) (uP ++ (Y , y) ∷ uQ))
+                        (concat-flat KP′ KW KQ′) (sym (PC.evA og oh (length P′) s3 {KQ = KQ′} {uQ = uQ′} aP′ aW)))
+          (trans (sym (PC.evA of ogh (length P) s4 {KQ = KQ} {uQ = uQ} aP
+                        (AtL-++ {P′} {Ws ++ Q′} {KP′} {KW ++ KQ′} {uP′} aP′ (AtL-++ {Ws} {Q′} {KW} {KQ′} {uW} aW aQ′))))
+                 (sym (cong₂ rr (L2 KP KP′ KW KQ′ KQ) (L2 uP uP′ uW uQ′ uQ))))))))
+
+  par : ∀ {f g h P Y M W Q Z Xs Ws} →
+        f ∶ ((P ++ Y ∷ M ++ W ∷ Q) ▸ Z) → g ∶ (Xs ▸ Y) → h ∶ (Ws ▸ W) →
+        pc (pc f (length P) g) (length P + length Xs + length M) h
+          ≈ pc (pc f (length P + suc (length M)) h) (length P) g
+  par {mk _ rf of} {mk _ rg og} {mk _ rh oh} {P} {Y} {M} {W} {Q} {Z} {Xs} {Ws} refl refl refl =
+    ≈-trans (≈-≡ (trans (cong (λ v → pc v q (mk _ rh oh)) (pc-just of og (length P) t1)) (pc-just ofg oh q t2)))
+    (≈-trans (≈-ins (A3 P Xs M (Ws ++ Q)) H)
+             (≈-sym (≈-≡ (trans (cong (λ v → pc v (length P) (mk _ rg og)) (pc-just of oh p′ t3))
+                                (pc-just ofh og (length P) t4)))))
+    where
+      q = length P + length Xs + length M
+      p′ = length P + suc (length M)
+      t1 : Slot (P ++ Y ∷ M ++ W ∷ Q) (length P) Y
+      t1 = slot P (M ++ W ∷ Q) refl refl
+      ofg = PC.cok of og (length P) t1
+      rfg = PC.rc of og (length P) t1
+      t2 : Slot (P ++ Xs ++ M ++ W ∷ Q) q W
+      t2 = slot (P ++ Xs ++ M) Q (sym (A3 P Xs M (W ∷ Q)))
+             (trans (length-++ P (Xs ++ M))
+                    (trans (cong (length P +_) (length-++ Xs M)) (sym (+-assoc (length P) (length Xs) (length M)))))
+      t3 : Slot (P ++ Y ∷ M ++ W ∷ Q) p′ W
+      t3 = slot (P ++ Y ∷ M) Q (sym (++-assocL P (Y ∷ M) (W ∷ Q))) (length-++ P (Y ∷ M))
+      ofh = PC.cok of oh p′ t3
+      rfh = PC.rc of oh p′ t3
+      t4 : Slot ((P ++ Y ∷ M) ++ Ws ++ Q) (length P) Y
+      t4 = slot P (M ++ Ws ++ Q) (++-assocL P (Y ∷ M) (Ws ++ Q)) refl
+      rl = PC.rc ofg oh q t2
+      rr = PC.rc ofh og (length P) t4
+      H : ∀ Ks us → AtL ((P ++ Xs ++ M) ++ Ws ++ Q) Ks us → _∼_ ⟦ Z ⟧ (rl Ks us) (rr Ks us)
+      H Ks us a with split3 (P ++ Xs ++ M) Ws Q Ks us a
+      ... | sp3 KA KW KQ uA uW uQ refl refl aA aW aQ with AtL-split P (Xs ++ M) KA uA aA
+      ...   | sp KP R uP uR refl refl aP aR with AtL-split Xs M R uR aR
+      ...     | sp KX KM uX uM refl refl aX aM =
+        ∼-≡ ⟦ Z ⟧
+          (trans (PC.evA ofg oh q t2 {KQ = KQ} {uQ = uQ} aA aW)
+          (trans (cong₂ rfg (A3 KP KX KM (concat KW ∷ KQ)) (A3 uP uX uM ((W , rh KW uW) ∷ uQ)))
+          (trans (PC.evA of og (length P) t1 {KQ = KM ++ concat KW ∷ KQ} {uQ = uM ++ (W , rh KW uW) ∷ uQ} aP aX)
+          (trans (sym (cong₂ rf (++-assocL KP (concat KX ∷ KM) (concat KW ∷ KQ))
+                                (++-assocL uP ((Y , rg KX uX) ∷ uM) ((W , rh KW uW) ∷ uQ))))
+          (trans (sym (PC.evA of oh p′ t3 {KQ = KQ} {uQ = uQ}
+                        (AtL-++ {P} {Y ∷ M} {KP} {concat KX ∷ KM} {uP} aP ((refl , vAt og KX uX aX) , aM)) aW))
+          (trans (cong₂ rfh (++-assocL KP (concat KX ∷ KM) (KW ++ KQ)) (++-assocL uP ((Y , rg KX uX) ∷ uM) (uW ++ uQ)))
+          (trans (sym (PC.evA ofh og (length P) t4 {KQ = KM ++ KW ++ KQ} {uQ = uM ++ uW ++ uQ} aP aX))
+                 (sym (cong₂ rr (A3 KP KX KM (KW ++ KQ)) (A3 uP uX uM (uW ++ uQ)))))))))))

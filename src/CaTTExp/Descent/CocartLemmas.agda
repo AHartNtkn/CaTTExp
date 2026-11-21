@@ -14,9 +14,9 @@
 --   comp        (RV Lemma 5.1.8) cocartesian arrows compose;
 --   cancel      (RV Lemma 5.1.9) left cancellation: if χ and ψ ∘ χ are
 --                                cocartesian, so is ψ;
---   compare-iso (RV Obs. 4.1.3)  two cocartesian arrows out of the same
---                                object, related by γ with P γ invertible,
---                                are related by an invertible γ;
+--   compare-iso (RV Obs. 4.1.3)  if χ, χ' are cocartesian out of the same
+--                                object and γ ∘ χ ≡ χ' with P γ invertible,
+--                                then γ itself is invertible;
 --   all-cocart  (RV Prop. 4.2.5) if P has cocartesian lifts (up to an
 --                                isomorphism in the base) and reflects
 --                                isomorphisms, every arrow is cocartesian;
@@ -30,8 +30,12 @@
 --     (propositional ≡, with K, as everywhere in this development).
 --     "Cocartesian" is the classical notion: the induced arrow is
 --     unique.  RV's weak notion (induction + conservativity) is the
---     right one in a homotopy 2-category; in a 1-category the two
---     agree, and the classical one is what is checked here.
+--     right one in a homotopy 2-category.  Classical implies weak;
+--     the converse fails in general, but the two coincide for a
+--     functor with classical cocartesian lifts (a weak one is then
+--     isomorphic to the lift, hence classical by iso-post), which is
+--     the situation of §5.  The lemmas below are proved for the
+--     classical notion, so they are not literally RV's weak lemmas.
 --   * Lifts are required only up to an isomorphism in the base
 --     (`HasLift`), the invariant form, so no equality of objects of B
 --     is ever assumed.

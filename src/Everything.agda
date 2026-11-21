@@ -303,5 +303,6 @@ import CaTTExp.Uniform.Rule
 import CaTTExp.Uniform.Kernel
 import CaTTExp.Uniform.Grid
 import CaTTExp.Uniform.GridExamples
+import CaTTExp.Uniform.KernelToy
 import CaTTExp.Uniform.InnerInv
 import CaTTExp.Uniform.Marks

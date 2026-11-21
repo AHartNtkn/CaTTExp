@@ -223,7 +223,7 @@ module _ (A B : Psh) where
 ------------------------------------------------------------------------
 -- Map identities used by the closures.
 
-private
+module MapIds where
   -- (h ⊗ 1) ∘ (1 ⊗ g) ≈ h ⊗ g ≈ (1 ⊗ g) ∘ (h ⊗ 1)
   ⊗-split₁ : ∀ {L L′ K K′} (h : Map L′ L) (g : Map K′ K) → ((h ⊗ₘ idMap K) ∘M (idMap L′ ⊗ₘ g)) ≈M (h ⊗ₘ g)
   ⊗-split₁ {L} {L′} {K} {K′} h g =
@@ -246,6 +246,8 @@ private
 
   ⊗-congˡ : ∀ {K K′ L L′} {f f′ : Map K K′} (g : Map L L′) → f ≈M f′ → (f ⊗ₘ g) ≈M (f′ ⊗ₘ g)
   ⊗-congˡ g e = ⊗ₘ-cong e ≈M-refl
+
+open MapIds public
 
 ------------------------------------------------------------------------
 -- The left closure A ⊸ C: φ_L : A(L) → C(L ⊗ K).

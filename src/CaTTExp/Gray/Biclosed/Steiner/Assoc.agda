@@ -75,11 +75,11 @@ join-assoc : ∀ K L M u v w →
              castE (++-assoc K L M) (join (K ++ L) M (join K L u v) w) ≡ join K (L ++ M) u (join L M v w)
 join-assoc []      L M tt      v w = refl
 join-assoc (a ∷ K) L M (i , u) v w =
-  trans (castE-cons (++-assoc K L M) i (join (K ++ L) M (join K L u v) w)) (cong (i ,_) (join-assoc K L M u v w))
+  trans (castE-cons {a = a} (++-assoc K L M) i (join (K ++ L) M (join K L u v) w)) (cong (i ,_) (join-assoc K L M u v w))
 
 join-[] : ∀ K u → castE (++-[] K) (join K [] u tt) ≡ u
 join-[] []      tt      = refl
-join-[] (a ∷ K) (i , u) = trans (castE-cons (++-[] K) i (join K [] u tt)) (cong (i ,_) (join-[] K u))
+join-[] (a ∷ K) (i , u) = trans (castE-cons {a = a} (++-[] K) i (join K [] u tt)) (cong (i ,_) (join-[] K u))
 
 ------------------------------------------------------------------------
 -- Associativity and units of ⊗ on maps.

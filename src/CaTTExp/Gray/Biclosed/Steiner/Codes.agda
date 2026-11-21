@@ -2,8 +2,8 @@
 -- Codes for finite directed complexes (S1 of the 𝔖̂ instance,
 -- notes/gray-model-formal-plan.md).
 --
--- A finite basis (`FB`) is a degree and the two boundary parts ∂⁻, ∂⁺
--- as ℕ-matrices on Fin size. An atomic code is a globe λDⁿ or a named
+-- A finite basis (`FB`) is a finite type of cells with a degree and the
+-- two boundary parts ∂⁻, ∂⁺ as ℕ-matrices. An atomic code is a globe λDⁿ or a named
 -- basis (a parameter, for named shapes). A code is a list of atomic
 -- codes, read as their Gray tensor: the basis of K = a₁ … aₙ is the
 -- tuples (b₁, …, bₙ), of degree Σ deg bᵢ, with the Leibniz rule
@@ -12,10 +12,9 @@
 -- associative and unital, and the n-ary tensors needed by the Day
 -- multicategory are concatenation.
 --
--- λDⁿ is listed as 0 … 2n: i < n is the source cell of degree i, n is
--- the top cell, i > n is the target cell of degree 2n − i. Every cell
--- of degree d ≥ 1 has ∂⁻ = the source cell of degree d − 1 and ∂⁺ =
--- the target cell of degree d − 1.
+-- λDⁿ has a top cell and a source and a target cell of each degree
+-- d < n (`Globe`). Every cell of degree d ≥ 1 has ∂⁻ = the source cell
+-- of degree d − 1 and ∂⁺ = the target cell of degree d − 1.
 --
 -- Steiner's hypotheses (loop-freeness, unitality) are not needed for
 -- the Model instance and are not stated here.
@@ -25,12 +24,14 @@ module CaTTExp.Gray.Biclosed.Steiner.Codes where
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Biclosed.Steiner.Arith
 open import CaTTExp.Gray.Biclosed.Steiner.Sum
+open import CaTTExp.Gray.Biclosed.Steiner.Globe public
 
-record FB : Set where
+record FB : Set₁ where
   field
-    size : Nat
-    fdeg : Fin size → Nat
-    fbd  : Bool → Fin size → Fin size → Nat
+    Cell  : Set
+    enumC : Enum Cell
+    fdeg  : Cell → Nat
+    fbd   : Bool → Cell → Cell → Nat
 open FB public
 
 even : Nat → Bool
@@ -41,22 +42,9 @@ even (suc (suc n)) = even n
 flip : Nat → Bool → Bool
 flip d α = if even d then α else not α
 
-min : Nat → Nat → Nat
-min zero    n       = zero
-min (suc m) zero    = zero
-min (suc m) (suc n) = suc (min m n)
-
 -- λDⁿ
 globeFB : Nat → FB
-globeFB n = record { size = suc (n + n) ; fdeg = gdeg ; fbd = gbd }
-  where
-    gdeg : Fin (suc (n + n)) → Nat
-    gdeg i = min (toℕ i) ((n + n) ∸ toℕ i)
-
-    gbd : Bool → Fin (suc (n + n)) → Fin (suc (n + n)) → Nat
-    gbd β i j with gdeg i
-    ... | zero  = 0
-    ... | suc d = if (toℕ j ==ℕ (if β then (n + n) ∸ d else d)) then 1 else 0
+globeFB n = record { Cell = GCell n ; enumC = enumG n ; fdeg = gdeg ; fbd = gbd }
 
 data AC : Set where
   globe : Nat → AC
@@ -72,7 +60,7 @@ module Codes (nmFB : Nat → FB) where
   fbA (named i) = nmFB i
 
   Ix : AC → Set
-  Ix a = Fin (size (fbA a))
+  Ix a = Cell (fbA a)
 
   degA : ∀ a → Ix a → Nat
   degA a = fdeg (fbA a)
@@ -81,7 +69,7 @@ module Codes (nmFB : Nat → FB) where
   bdA a = fbd (fbA a)
 
   enumA : ∀ a → Enum (Ix a)
-  enumA a = enumFin (size (fbA a))
+  enumA a = enumC (fbA a)
 
   El : Code → Set
   El []      = ⊤

@@ -158,7 +158,7 @@ Two-tier L computes the side condition in the free Gray-enriched category 𝔉(�
 
 Generators are tuples θᵢ₊₁ ⊗ … ⊗ θⱼ with dimension the sum and boundary by the Leibniz formula. The total cell τ_Γ is the tensor of the composites ⟨Θᵢ⟩. Supports are Steiner chains, so the side condition of Lemma 2.2.1 is integer linear algebra.
 
-This is not the kernel's default theory. Marking every object `ord` in uniform L gives two-tier L's invertibility judgments for heads with operand-pure lifts (chapter 3, §3.6). It does not give two-tier L's coherences in any setting: relative coherence of V + S over 𝔉 fails even after inverting every inner letter (ledger E13, answered 2026-11-21). It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
+This is not the kernel's default theory. Marking every object `ord` in uniform L gives exactly two-tier L, through the rule (COH-ord), which computes the side condition of an all-`ord` head in 𝔉 (chapter 3, §3.6; ledger S16(b)). Merely inverting inner letters would not suffice: relative coherence of V + S over 𝔉 fails even after every inner letter is inverted (ledger E13). It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
 
 **Decision procedure.** Symbolic supports and an exact cover check (`Gray/Cover.agda`, `Gray/Fast.agda`), proved equal to the explicit support computation (`fastSide ≡ graySide`). Measured growth on n-fold wedges is about n⁶ up to n = 28. Explicit supports are exponential (a term of size O(n) has support of size 3ⁿ), so the symbolic form is required.
 
@@ -175,7 +175,7 @@ This is not the kernel's default theory. Marking every object `ord` in uniform L
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
-- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds for heads with operand-pure lifts (§3.6). For coherences it fails in every setting: the loop H and 1_w, and the outer W-strip, have equal Gray images and stay unconnected after every inner letter is inverted (ledger E13). For the first, the relative coherence lemma for 𝔉 → ν now holds (ledger E5).
+- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. The second holds exactly with `ord` on every object and the rule (COH-ord) (§3.6). Without (COH-ord) it would fail for coherences in every setting: the loop H and 1_w, and the outer W-strip, have equal Gray images and stay unconnected after every inner letter is inverted (ledger E13). For the first, the relative coherence lemma for 𝔉 → ν now holds (ledger E5).
 
 ## 2.7 Dualities
 

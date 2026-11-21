@@ -266,6 +266,8 @@ Lemma 4.1 then concludes. ∎
   - For two-tier L, the (H3) reduction "plus E5's relative coherence" now has its lemma proved (§8.1). What remains is realizing the strict cell v by an L⁺ term; see E5.
   - The "no marks" entries are unchanged.
 
+**Resolved (2026-11-21, S16(b)).** The failure above is a failure of the *invertible* reading of `ord`. With `ord` read as "inner letters trivial" and the rule (COH-ord), which computes the side condition of an all-`ord` head in 𝔉, `ord` everywhere gives exactly two-tier L (`ord-recovers-two-tier.md`).
+
 ### 8.4 Corrections to the sections above
 
 - §0 item 3, §2.3, Theorem 4.7: "(IL) is automatic … for outer cylinders" is **wrong as stated**. It holds when the moving operand is a generator, because then the letter is its own Gray cell. (IL) is false in general (§8.1).

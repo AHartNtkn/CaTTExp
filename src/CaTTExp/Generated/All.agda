@@ -19,3 +19,4 @@ import CaTTExp.Generated.CanonicalGrayTwoDiscs
 import CaTTExp.Generated.GrayDiscDiscTransfer
 import CaTTExp.Generated.RCSelfTestCheck
 import CaTTExp.Generated.RCConeTwoCheck
+import CaTTExp.ConeRCTwoKE

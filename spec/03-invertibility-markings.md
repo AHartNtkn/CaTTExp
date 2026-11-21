@@ -153,7 +153,7 @@ The Gray cells g[γ] are the operation-case coherences over wedges of disks, as 
 - (INN-fac_S): **Agda-checked** (`Uniform/InnerInv.agda`, `left-inv`, `right-inv`, from the sesquicategory axioms, the unit law and the split, as record fields).
 - Outer cylinders: **proved**.
 - The remaining rules: **proved** for 𝓜_S. Whether every model lies in 𝓜_S is **open** (ledger E13; outbox `conjectures/outbox/invertibility-in-directed-interchange.md`).
-- **Agda-checked** (`Uniform/Marks.agda`): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation.
+- **Agda-checked** (`Uniform/Marks.agda`): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
 - Ledger S4 and E7 are done. The open remainder is E13.
 
 **Source.** `notes/uniform-marks.md`; `notes/invertibility-markings.md` §1.5.

@@ -1405,3 +1405,20 @@ For each subformula \(F\) and desired five-cycle \(c\), construct a macro return
 The hardness assertion uses row-program input and a regular test on the prescribed representative. Equality on exactly that row-program input has the polynomial algorithm above. No translation from the automaton test to equality of ordinary higher terms is supplied by the regular test.
 
 **Validation.** The [weighted coordinate algorithm](../../../scripts/e6/interchange_compressed_tableaux.py) was checked against explicit named-column contractions on 1,596 schedules and initial shuffles. The [tableau checker](../../../scripts/e6/check_interchange_compressed_tableaux.py) also compares actual signed moving and stationary subdivisions in output degrees six through eight with the predicted positions of each lower marker, in 240 cases. It compares three sweeps on five rows and \(2^{116}+3\) moving positions, rejects a forbidden three-column restriction, and detects the effect of a different initial offset. The [regular-observation checker](../../../scripts/e6/check_interchange_tableau_observations.py) verifies the commutator table and checks both quantified truth values against canonical words computed by explicit contraction. The general polynomial-time question still includes arbitrary diagrams, unaries whose moving paths have their own positive subdivisions, and ordinary shared inputs in unrestricted degree.
+
+# Verification addendum (2026-11-21, Responses 14–21)
+
+**Checker re-runs.** All nine cited checkers pass. Each takes under 10 s except `check_interchange_divisor_observers` (48 s). They are: `check_interchange_compressed_tableaux`, `check_interchange_divisor_observers`, `check_interchange_effective_rank`, `check_interchange_rigid_group`, `check_interchange_rigid_readers`, `check_interchange_sorting_intervals`, `check_interchange_sorting_layers`, `check_interchange_tableau_observations` and `check_interchange_uniform_space`.
+
+**Claims.** Checked at the level of their stated results and checkers.
+- *Response 14.* Shared equality in every setting is uniformly in space 2^{poly(s+g+d)}, which is 2-EXPSPACE in bit size, or EXPSPACE with degrees charged numerically.
+- *Response 15.* Effective rank is computable in polynomial time even at exponential degree, and unit equality is P-complete.
+- *Response 16.* Equality is polynomial for the purely structural operations on every diagram, through a compressed free-group code.
+- *Response 17.* Equality is fixed-parameter tractable for the full signature on two-row grids and single suspensions.
+- *Response 18.* Degree-3 equality reduces to degree-4 equality on square-grid intervals with both switches on, and those intervals are polynomial with fewer switches.
+- *Response 19.* Equality is polynomial in width and input in every fixed degree on Γ_{2,n}.
+- *Response 20.* Bounded layers of wide rectangular moves are recognized in polynomial time for each fixed number of layers.
+- *Response 21.* Rectangular schedules of exponential width are decidable in polynomial time.
+
+**Verdict.** Verified. These are partial cost results and the question is still open in general. Response 18 shows that the cost can depend on the switch setting, but none of these results changes a rule or the kernel design, so no follow-up is written.
+

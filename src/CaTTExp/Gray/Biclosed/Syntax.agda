@@ -21,13 +21,14 @@ data Shape : Set where
   _⊠_   : Shape → Shape → Shape
 
 -- Formulas.  obj i is an object variable; rep Θ is the representable ⟦Θ⟧
--- (probe sort); shp Θ is ⟦Θ⟧♭, chapter 7's free object on Θ, a data atom.
+-- (probe sort); shp Θ is ⟦Θ⟧♭, a data atom intended as chapter 7's free object on Θ
+-- (that identification, LIFT, is not encoded).
 --   A \\ C  is  A\C = Hom_lax(A, C)
 --   C // A  is  C/A = Hom_oplax(A, C)
 data Fm : Set where
   obj  : Nat → Fm
   rep  : Shape → Fm
-  shp  : Shape → Fm     -- ⟦Θ⟧♭, the free object on Θ as data (GB-shape, K2)
+  shp  : Shape → Fm     -- ⟦Θ⟧♭, data atom (GB-shape, K2)
   _⊗_  : Fm → Fm → Fm
   _\\_ : Fm → Fm → Fm
   _//_ : Fm → Fm → Fm

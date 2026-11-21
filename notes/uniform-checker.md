@@ -79,17 +79,46 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
 
 **Example (b) of spec §2.3** is checked as an equality statement (`ExampleB`). On the strip, the direct crossing u = W(a₁a₂, b) and the paste v of the two crossings are equal 4-cells in V + inner law and in T₁₂, and different in V and in V + R. The mirror statement for R on the 1 × 2 grid is `ExampleR`.
 
+### 1.5 Without a length bound, and degree five on grids (`RuleFin.agda`, `KernelDec.agda`, `GridFive.agda`, `GridFiveExamples.agda`; 2026-11-21, ledger S3b, S3e)
+
+**Why a second decision.** `Rule.Decide` needs `Graded`: a bound on the length of every path between two cells. Layers with loops have none. Examples: the loop H of V at degree 4 on Σ[2] ∨ Σ[2] ((K45): its powers are pairwise distinct), and the degree-5 loop on the 2 × 2 grid below.
+
+- **`RuleFin.DecideFin.sc?`**: SC x z is decidable, for every z, given finite lists of cells and supports that contain x and supp x and are closed under steps. The search is breadth-first over states (cell, support accumulated so far). The only algebraic hypothesis is associativity of the union of supports. This is r10 Response 3's search, with the support filter of spec §2.3 folded into the state.
+- **`KernelDec`**: `Kernel` with the grading parameter replaced by any decision of SC per layer. `Rule.Decide` (from a bound) and `RuleFin.DecideFin` both supply one. Everything else is as in `Kernel`.
+
+**The 5-letters on suspended grids (`GridFive`).** On Σ(Σ[m] ∨ Σ[n]) the only proper 5-letter is the positional square I₂(A, B) of two positive 4-cells on consecutive 3-intervals, from (u₀B)(Av₁) to (Av₀)(u₁B). This is a paper argument, not derived from raw syntax: r10 Response 1 (the paragraph on the suspended strip, around its line 490) and r9 Response 2 ("5- and 6-cells"). Every positive 4-cell uses both short spans, so no cut-1 variation or join has an active partner. A suspension has one outer span, so there is no cut-0 operation. The diagram has no 5-globe. Cut-3 squares need 5-cell inputs. And r10 Response 3 says the switches add no letter above degree four.
+- **Raw letters** (`Sq`): swap adjacent edges e′ ; e into e ; e′ when e's window lies wholly left of e′'s. A letter out of a 4-cell applies to any representative of its class and lands in the class of the result.
+- **Composite operands.** A square with composite operands has the same endpoints as the paste of atomic squares that moves A's edges one by one before B's. So atomic squares give the same 5-reachability. This is argued here, not checked.
+- **Supports.** Under the S1 reading SC asks for full support of π(c). π kills every interchanger along a k-cell with k ≥ 1, so every cell and letter here maps to an identity on the composite of all a- and b-cells, which has full Gray support. The layer therefore has every support full, and SC between 4-cells is exactly 5-reachability.
+
+**Checked, for every m, n and every setting:**
+- `reach5?`: 5-reachability `_⇛_` (the closure of switch equality and typed squares) is decidable, by breadth-first search on the valid raw paths of one charge.
+- `layer`: the 4-cells in normal form, with the squares as letters, form a `Layer`.
+- `path→⇛`, `⇛→path`, `sc→⇛`, `⇛→sc`: paths of letters in the layer are exactly 5-reachability, and SC is exactly 5-reachability.
+- `sc?`: SC on the layer is decidable, through `RuleFin`.
+
+**Computed (`GridFiveExamples`, about 40 s):**
+- **Example (b)** on the strip, for u = W(a₁a₂, b) and v the paste of the two crossings:
+  - The strip has no 5-letter at all, since every edge moves the single b.
+  - In V and in V + R, SC fails from u to v and from v to u (`noSC-V-uv`, `noSC-V-vu`, `noSC-R-uv`, `noSC-R-vu`).
+  - In V + inner law and in T₁₂, u and v are the same cell and SC holds both ways.
+  - `sc?` returns false, false, true, true in the four settings.
+- **The 2 × 2 grid.** Let X = χ(b₂a₁) χ(b₂a₂) χ(b₁a₁) χ(b₁a₂) and Y = χ(b₂a₁) χ(b₁a₁) χ(b₂a₂) χ(b₁a₂). The positional square of χ(b₁a₁) and χ(b₂a₂) goes X ⇛ Y.
+  - In V it is directed: X ≠ Y, SC holds from X to Y and fails from Y to X.
+  - In T₁₂, X = Y, since they are the two split orders of the full crossing. So the square is a letter from the single 4-cell to itself (`loop-T`), the suspension of H. A Python run of the same model finds self-loops only with both switches on: 1 on 2 × 2, 1 on 2 × 3, 9 on 3 × 3. This loop is why `RuleFin` is needed. It is also in tension with (K49), which is ledger S15 (owner DSGN).
+
 ## 2. What this does not check (the trust boundary)
 
 1. **The free objects F_{V+S}(Γ) are not constructed in Agda in general.** `Kernel` is the kernel checker relative to the layers. That suitable layers exist for V + S in every dimension, with finite alphabets and grading bounds, is the paper result: r9 (K65) and r10 Response 3, verified at the argument level. Constructing them needs the raw syntax of the T₁₂ signature in every degree, B's defining pairs, and the guarded equations. Only degree four exists in Agda (`Join/SepAlgebra.agda`), and `Join/SwitchLaws.agda` notes that there is no raw 5-dimensional syntax.
 2. **The grid model is a model by inspection.** That these words, edges and split equations are the degree-4 layer of F_{V+S} on a suspended grid is taken from r10 Response 3 and the checker it cites. So is the claim that V adds no equation there. Nothing in Agda links `Grid` to `Join/SepAlgebra`'s raw T-syntax. This is the same gap as the "Link A–B" of `joining-completion.md` §8.
-3. **No 5-letters.** `Grid` decides equality of 4-cells, which is the identity test of the coherence case at degree four. It does not model letters one dimension up (directed 5-cells between 4-paths). So it is not a `Layer` for SC on 4-cells. Spec example (b) also says that in V and V + R neither of u, v reaches the other by a full-support 5-cell. Here that is checked only in the weaker form "u ≠ v".
+3. **5-letters by inspection.** `GridFive` takes the degree-5 alphabet on suspended grids (positional squares only) from the paper argument of §1.5, and treats composite-operand squares through their atomic pastes. Neither is derived from raw syntax. *(Until 2026-11-21 there were no 5-letters at all, and example (b) was checked only as u ≠ v.)*
 4. **Supports of V + S.** The fullness test is a parameter. How it reads for V + S is ledger S1. The spec's 2.1 takes supports in the expanded basis, but (K45)/(K50) say that basis is infinite on some pasting diagrams, so "supp(c) = all generators" needs a reading. The point has been passed to the S1 check.
 
 ## 3. Open items
 
 - **S3a**: construct the layers of F_{V+S} in every degree in Agda and instantiate `Kernel`. This means formalizing the raw syntax of the T₁₂ signature, B and the guarded equations, then the (K65) rank normal forms and the switch extension of r10 Response 3.
-- **S3b**: the degree-5 letters on suspended grids, so that the grid layer becomes a `Layer` and example (b)'s non-reachability is checked.
+- **S3b**: done (§1.5).
+- **S3e**: done (§1.5, `RuleFin`, `KernelDec`). The (K49) question raised by the T₁₂ loop is ledger S15.
 - **S3c**: link `Grid` to raw T-syntax (`Join/SepAlgebra`), closing item 2 above. It shares the missing map from pure-ι 4-terms to words with "Link A–B" (E12).
 - **S3d**: fix the support reading. The S1 reviewer (2026-11-21, ledger PR #350) recommends this reading: SC_{V+S} holds iff some cell c : ⟦t⟧ → ⟦u⟧ (identity allowed) has full support after the requirement-4 projection to 𝔉(Γ), meaning every Gray tuple generator. `Rule` already covers it: take `Supp` to be supports in 𝔉(Γ), `supp` and `suppL` to be the projected supports, and `full` the Gray fullness test. The reviewer also says which lift interprets a coherence is open. Distinct V-cells can share a Gray image, as u and v of example (b) do. That choice stays a parameter of `Kernel` (⟦_⟧).
 

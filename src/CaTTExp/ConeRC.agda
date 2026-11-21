@@ -118,6 +118,11 @@ fillCore rc K a b with rc (evCtx K) (evTy K (tyE K a)) (ev K a) (ev K b)
 eqCore : Eq
 eqCore K a b = ev K a ==Tm ev K b
 
+-- Invariant: inside ConeGen, filler values are inspected only through
+-- fillH and eqH; everything else uses the symbolic types of tyE. This
+-- is what lets CoconeRC store rawD terms, whose evF is a placeholder,
+-- in the intermediate context over Γ*: that context is never evaluated
+-- itself, only its dual is.
 module ConeGen (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
   private
     n = length Γ

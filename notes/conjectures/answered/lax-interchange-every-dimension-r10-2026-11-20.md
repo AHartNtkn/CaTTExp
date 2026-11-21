@@ -648,6 +648,7 @@ The double-exponential bound applies to materializing the matrix. The Boolean eq
   - The 3 × 4 threshold grid: both positional loops, the nine projected relations, classes of sizes 12 and 1, and all eight three-block products.
   - The forbidden-pattern recurrence reproduces all 39,604 components of the 40,320 permutations.
   - The suspended 1 × 2 interval has switch counts [2, 1, 1, 1], and the 2 × 3 interval has 49 raw paths with counts [49, 14, 2, 2]. All comparison maps commute.
+  - *Corrected 2026-11-21 (S3).* These counts predate the 2026-11-20 fix of the inner-law bit (below). After the fix the checker prints [2, 1, 2, 1] for 1 × 2, [2, 2, 1, 1] for 2 × 1 and [49, 14, 29, 2] for 2 × 3 (order V, V + R, V + inner law, T₁₂). `src/CaTTExp/Uniform/GridExamples.agda` computes the same numbers in Agda.
 - `scripts/e6/check_interchange_shared_paths.py`:
   - 1,000 compressed-word comparisons agree with expansion.
   - Rigid-label classification agrees with the marked and split strip tables through width 6.

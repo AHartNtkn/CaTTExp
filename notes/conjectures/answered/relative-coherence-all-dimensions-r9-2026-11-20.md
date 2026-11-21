@@ -359,7 +359,7 @@ Status: **verified. There is one response.**
 - A search-free construction of connecting terms and canonical sections, with size measured against the whole input or with sharing. This now includes the canonical Gray terms question.
 - The directed classification for arbitrary finite directed computads.
 - Explicit separating classes with size bounds.
-- Follow-up: [`outbox/relative-coherence-all-dimensions-r10.md`](../outbox/relative-coherence-all-dimensions-r10.md).
+- Follow-up: [`relative-coherence-all-dimensions-r10-2026-11-21.md`](relative-coherence-all-dimensions-r10-2026-11-21.md).
 
 # Researcher Response 2
 
@@ -440,7 +440,7 @@ No gap was found.
 - A search-free construction when the support has nonglobular attaching terms in several ranks. This includes unrestricted Gray tensors and the generic naturality fillers.
 - An elementary size bound in general.
 
-The open part is carried into `outbox/relative-coherence-all-dimensions-r10.md` as item 62 and a narrowed Question 1.
+The open part is carried into `relative-coherence-all-dimensions-r10-2026-11-21.md` as item 62 and a narrowed Question 1.
 
 # Researcher Response 3
 
@@ -515,7 +515,7 @@ No gap was found.
 - Size bounds for the new constructions.
 - Naturality fillers of depth three and more.
 
-These are carried into `outbox/relative-coherence-all-dimensions-r10.md` as item 63 and a narrowed Question 1.
+These are carried into `relative-coherence-all-dimensions-r10-2026-11-21.md` as item 63 and a narrowed Question 1.
 
 # Researcher Response 4
 
@@ -588,7 +588,7 @@ For a general strong Steiner presentation the final folded context may itself ha
 - *Strong Steiner after subdivision.* This is the three-link chain verification of round 8 (Response 16) with one more knot. The ordering argument is the same.
 - *Three nonglobular ranks.* With B globular and variable (m − 2)-poles, every surviving knot has variable faces, so the folded context is globular and Response 2 applies. The pole lemma covers the markers because their raw types come from assigned faces. This gives sections for complexes globular through h − 3. The depth-three statement truncates at d − 3, where there is no lower moving variable, so the same calls apply.
 
-**Verdict.** Verified. The new results are search-free depth-three naturality and search-free sections with three nonglobular top ranks. The general case still reduces to second-identity comparisons in folded contexts that can have nonglobular attachments, with no well-founded measure, and the response says so. No size bounds are given. The outbox follow-up `outbox/relative-coherence-all-dimensions-r10.md` gains item 64. Its Q1 now asks for that second-identity call, and (c) starts at depth 4.
+**Verdict.** Verified. The new results are search-free depth-three naturality and search-free sections with three nonglobular top ranks. The general case still reduces to second-identity comparisons in folded contexts that can have nonglobular attachments, with no well-founded measure, and the response says so. No size bounds are given. The outbox follow-up `relative-coherence-all-dimensions-r10-2026-11-21.md` gains item 64. Its Q1 now asks for that second-identity call, and (c) starts at depth 4.
 
 
 # Researcher Response 5
@@ -1182,3 +1182,49 @@ agda --safe --no-libraries -i src -i "$dir" "$dir/CarrierDescent.agda"
 ~~~
 
 **Resolution of the three questions.** Response 1 gives the height-three family with unbounded first failure and the fibre invariant for Question 1. For Question 2 the construction above produces the connecting terms, arbitrary-depth naturality fillers and compatible sections in every finite strong Steiner shape. A size bound requires charging the weak declarations, and even compatible disk identities can have exponential raw size. For Question 3, Response 1 gives the finitary infinite-computad classification with its completion convention, the relative attachment criterion and its obstruction to a test on the new declarations alone, and the directed-interchange theorem for the explicit theory and class of arities requested.
+
+# Verification addendum (2026-11-21, Responses 9–15; these answer `relative-coherence-all-dimensions-r10-2026-11-21.md`)
+
+**Checker re-runs.** All nine cited runs pass.
+- `relative_coherence_boundary_modes.py --rank 4 --width 2 --check-single`: 42 terms both ways; the single-slot closure stays separate with 17 anchors; the comparison across 2 factors is checked. It takes 112 s.
+- `relative_coherence_carrier_descent.py`: 10, 20 and 222 subdivisions, of which 8, 18 and 218 grow strictly; three raw transfers.
+- `relative_coherence_chart_joins.py --rank 6 --width 5`.
+- `relative_coherence_frame_module.py --depth 7`.
+- `relative_coherence_nested_charts.py --rank 4`: 4,720 support profiles.
+- `relative_coherence_presentation_transfer.py`, run both as `--rank 3 --length 2 --suspend 1` and as `--rank 4`.
+- `relative_coherence_state_alignment.py`.
+- `relative_coherence_state_paths.py --rank 7`.
+
+**Agda.** The emitted modules are CarrierDescent (157 lines), NestedCharts (196), PresentationFinal (991) and BoundaryModes (1,336). None has postulates, and each type-checks with `--safe --no-libraries` (exit 0).
+
+**Responses 9–14.** These are partial routes to the open step of item 67. I checked them by their checkers and at the level of their stated results.
+- *Response 9.* A finite matrix of rank-(n−1) states certifies a comparison, and a comparison exists iff some finite state set works.
+- *Response 10.* Selecting states at joins.
+- *Response 11.* Decidable intersections of recursive chart grammars, with slot promotion on the weak two-globe.
+- *Response 12.* A finite basis determined by the literal poles.
+- *Response 13.* An exact decision for iterated slot actions.
+- *Response 14.* Reduction to contracting loops at one preferred presentation and writing.
+
+Each response states its own remaining gap. All of them are superseded by Response 15.
+
+**Response 15 (descent over strict subdivisions).** Argument checked.
+- *Induction.* The measure is (n, n − l, h, |S|), extending Response 6's.
+- *Pieces.* For composite c, every non-base generator of the marked pullback A_c has a least carrier p_x in the decomposition poset Sd(c). The faces of a generator stay at or below its carrier. Each piece V_θ admits prescribed-boundary lifting. The proof interprets back and forth between U_θ and the free weak algebra W_θ of the globular arity, with bridges JR ⇒ id built from smaller-support or lower-height calls, and inverse data computed inside the piece.
+- *Gluing.* Three constructive rules D(P) glue local lifting along a finite poset:
+  - a zigzag of comparable monotone maps from the identity to a constant;
+  - grouping along a monotone map;
+  - the cocartesian variant over a bottom element.
+- *Applying the rules to Sd(c).* Campion's proof of Theorem 4.21 supplies the needed structure. I read it in the PDF of arXiv 2311.00200 ("An (∞,n)-Categorical Pasting Theorem").
+  - k is chosen by Lemma 1.12, so that At_k(µ) is not an equivalence relation.
+  - The projection Sd(µ) → Sd⊳_{[0,k−2]}(µ) is cocartesian, by Lemma 4.12 and Remark 4.20, and its fibres over θ ≠ µ have initial objects.
+  - The bottom fibre Sd_{[k−1,n−1]}(µ) maps cocartesianly to Sd⊳_{{k−1}}(µ), again with initial objects in the fibres over θ ≠ µ.
+  - Sd_{{k−1}}(µ) ≅ Lin(At_k(µ)) by Proposition 4.15, which is ≅ sd(DC(At_k)) by Lemma 3.2. That is the poset of chains of nonempty proper ideals.
+  - Arone's argument (Lemma 3.3) uses the minimal set M and the coreflection I ↦ I ∩ M.
+
+  The response turns each homotopical step into a constructive rule (initial object → least element, Quillen A → grouping along the map). The index [0, k − 2] and the least-element claims match the paper. Campion's monicity statement (Def. 1.8 and Prop. 1.10) is for Θ-shaped maps, which covers the globular pasting arities used here. Remark 1.5 includes loop-free Steiner complexes among the torsion-free complexes, and strong Steiner complexes are loop-free.
+- *Low variables.* For l ≥ 2, the hom-computad decomposition and the refinement R_l and minimum M_l keep variables below l stationary, so the local pieces are adapted. The three properties (extensive, monotone, low variables literal) are checked on product hom chains by the carrier-descent checker.
+- *Size.* The bound offered, t(N), is computed by running the recursion on every input of length ≤ N. It is computable but carries no elementary estimate.
+- *Scope of the checks.* The checkers exercise instances only. The general result rests on the induction, which I checked at the argument level.
+
+**Verdict.** Verified, at the argument level for the general induction and through the citations. **The search-free construction is settled.** Connecting terms, naturality fillers of every depth and compatible canonical sections are all constructed by structural recursion in every finite strong-Steiner context. Lemma L and the vocabulary or column routes are no longer needed. What remains are cost questions: a polynomial or elementary size bound, and a polynomial recognizer for shared canonical forms. No follow-up is written (`relative-coherence-all-dimensions-r10-2026-11-21.md`).
+

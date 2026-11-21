@@ -1309,5 +1309,5 @@ Everything in this list is now **derived**. None of it is a primitive any more.
 | ~~D7 remainder: both factors arbitrary~~ | done (F.7.4). D7c (independent check of Lemma GB-ext) and D7d (Agda, `src/CaTTExp/Gray/Biclosed/`): GBIC thread |
 | D11: event order across residuals; ω-version; soundness/completeness | out to researcher (`conjectures/outbox/gray-pasting-types.md`); internal attempt: CLOSED thread |
 | D12: higher coherence for free cartesian closed (∞,1)/(∞,ω)-categories | `conjectures/outbox/cartesian-closed-higher-coherence.md`, ready to send; internal attempt: CLOSED thread |
-| D8 for uniform L | blocked on E6 |
+| D8 for uniform L | **unblocked** (2026-11-21): E6's existence part is settled by the kernel computing in V + S (`design-decisions.md` §1.7), so the duality analysis of Part D can be redone for V + S. Owner: see `open-issues.md` D8 |
 | Implement L_ε in the support checker | L-core thread (E1) |

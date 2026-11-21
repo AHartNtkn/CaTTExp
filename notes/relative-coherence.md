@@ -32,7 +32,10 @@ Ledger items addressed: D1 (closed), D2 (existence in G(3); rest reduced), C1 (d
 | RC(3) on the full cylinder of D² ∗₀ D² | **proved by a researcher, verified** (`conjectures/answered/naturality-arbitrary-depth-r7-2026-11-18.md`: orientations AB→BA, AG→GA, FB→BF; U_A/U_B via the interchange 4-cell). An independent internal sketch of the 2-skeleton (§7.9: unique factorisation, a single exchange χ_M) has its normal forms and all multiplications machine-checked (`TwoDiscCylinderRC3`) |
 | D14: the Gray cube's two bracketings are inverse up to 4-cells | sketch (§6.1) |
 | General exchange in dimension 2 (acyclic, nonempty boundaries) | strict side **proved** (§7.11): exchange classes are linear extensions of event posets, and squares and hexagons are a homotopy basis (machine-checked on grids up to 3 × 3); both are single coherences over pasting contexts (`ExchangeLaws`). RC(3) reduced to two forced-order statements (K), (F): sketch |
-| RC(n), n ≥ 3, for general loop-free contexts and cylinders `Q↑Y` | **open**, sent out |
+| RC(n) for every n in every finite strong-Steiner context (RC_id(∞)); includes every cylinder `Q↑Y` (partial cylinders are strong Steiner), every join context Cone(Q; c), and every Gray product of globes | **settled.** Existence: r8 Response 18 (verified). Construction by structural recursion: r9 Response 15 (verified). Campion's U_{k−2} cocartesian step is closed in §7.15 (independently checked) |
+| Hence **Conjecture N at every depth**, global K, N^cone in every dimension, G(n) for all n on strong-Steiner molecules, and the D3 templates for strong-Steiner M | settled (ledger C1, B19; D2 and D3 narrowed, S9) |
+| RC(n), n ≥ 3, for loop-free contexts that are not strong Steiner | RC_id(∞) ⟺ homotopical (r8 Response 18; r9 for small computads). Fails for the seam rings Γ_k from degree k + 2. Otherwise open |
+| Cost of the construction: elementary size bound; polynomial recognizer for shared canonical forms (E9′) | open (RCX) |
 
 ## 1. Notation
 
@@ -791,6 +794,8 @@ This shows ν_u⁻¹ ; H ; ν_v is connected to an exchange path. By E2 and E3, 
   - What remains of (K) is the forced-order part: letters joined by connectors that cross their boundary blocks. Its fibres have one linear extension, which is the line-word situation (item 22 of the same prompt).
   So the in-house target for the hexagon is the k-fold matrix argument for the wedge of three lax squares, replacing I with the three-factor interchange `(α ∗₀ β ∗₀ γ) · (α′ ∗₀ β′ ∗₀ γ′) ⇛ (α·α′) ∗₀ (β·β′) ∗₀ (γ·γ′)` over C₂ ∗₀ C₂ ∗₀ C₂. Generating Agda checks for the hexagon in the grid before that is proved would only check single coherences, so it is deferred.
 
+> **Superseded 2026-11-21.** Sections 7.12–7.13 pursued lemma L and fold actions. The search-free construction is now settled by a different route: r9 Response 15, descent over Campion's decomposition posets (`conjectures/answered/relative-coherence-all-dimensions-r10-2026-11-21.md`). Lemma L is no longer needed.
+
 ### 7.12 Second-identity calls: a height measure that avoids the shift (thread RCX, 2026-11-20, sketch)
 
 This addresses r10 item 64 / Question 1. Notation follows `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, Responses 3–4.
@@ -839,7 +844,7 @@ Hence **Q1(a) reduces to Q1(c) for fold selections, given the higher localizatio
 - *Counts: checked.* A block of at most k + 2 links cannot contain all k + 3 links of one generator. The fold's varying set {x, v} has lowest rank h − 1 under terms of rank h + k, which is depth k + 1, and Response 4 is the case k = 1. After all folds, the height is h − 1 at the same input rank. So (input rank, height) decreases lexicographically, given the higher localization lemma and the fold actions.
 - *Lax-triangle route: checked.* Γ↑{x, v} collapses to Γ′ by the three free pairs, in the order stated. The pair (x⁺, x↑) has the dimensions (h − 1, h) of (x, v), now at rank n + 1, so the expansion lemma climbs in depth.
 - *One correction.* The folded value 1^{k+1}_{d′} need not have d′ intrinsic. The claim that the entry shift is never repeated needs C(h, k) to be stated for terms with any identity value in a height-h context, not only for an intrinsic h-cell. In that version, d′ simply has fewer events, possibly none, and Response 4's zero-event case puts every block in lower height. With that restatement no shift is needed at all.
-- *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/outbox/relative-coherence-all-dimensions-r10.md` (item 65, Question 1).
+- *Not proved:* the higher localization lemma (Response 4's steps 1–4 at level k), and fold naturality (or folding without naturality) in every depth. Both are now the main question of `conjectures/answered/relative-coherence-all-dimensions-r10-2026-11-21.md` (item 65, Question 1).
 
 ### 7.13 Lemma L: the explicit collapse (proved) and the level-k resolution (sketch) (thread RCX, 2026-11-20)
 
@@ -1057,6 +1062,90 @@ Consequences for this section:
 - **Open:** compatible resolutions of arbitrary raw inputs across frames at joins ("raw higher localization", r10 item 67 and Question 1). (D) and (F) without F3's height claim remain a correct reduction of lemma L to this one step.
 
 Ownership: the r10 outbox poses it to the researchers, and RCX keeps it in-house.
+
+### 7.14 Independent check of r9 Response 15: descent over Sd(c) (thread RCX, 2026-11-21)
+
+Response 15 (in `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, verified in PR #342) constructs search-free comparisons between parallel raw terms with equal strict value in every finite strong-Steiner context, without lemma L. This section is a second, independent check. It separates three kinds of support: what is machine-checked, what I checked by argument, and what still rests on citations.
+
+**1. Induction measure (checked by argument).** The measure is (n, n − l, h, |S|) in lexicographic order. I followed every recursive call:
+- *Step-1 actions.* These are same-rank calls in a partial cylinder whose lowest mark s satisfies s ≥ h > l. The cylinder satisfies G_{s+1} (Response 6, checked on 690 markings), so l rises to l′ = min(n, s + 1) and n − l drops.
+- *Bridges JR ⇒ id in a piece U_θ.* These are equal-image comparisons on the support of a proper label. The rank n is unchanged and G_l is inherited. Either h drops, or h stays the same and |S| drops.
+- *The atomic exception g.* The call has input rank h < n.
+- *Zigzag bridges F_* ⇒ G_*.* These are lifts at staircase ends inside one piece V_{G(p_x)}, and the local algorithm on that piece supplies them. The local algorithm is an input to D(P), already built from smaller calls.
+- *Base cases.* h ≤ l uses globular contraction. h = n uses Response 3's intrinsic events, whose old caps have height ≤ n − 1 and inherit G_l.
+
+No call fails to decrease.
+
+**2. The three gluing rules (order theory machine-checked; lifting by argument).** `CaTTExp.CarrierGluing` (Agda, `--safe`, no postulates) checks the bookkeeping. Carriers live in a preorder, faces are carried at or below their carrier, and the pieces are V p = B′ ∪ {x | p_x ≤ p}.
+- Pieces are closed under faces and monotone in p (`piece-closed`, `piece-mono`).
+- *Zigzag rule.* For a monotone endomap F, the faces of x land in pieces inside V_{F p_x} (`Endo.face-target`), so F_* is well defined. When F ≤ G pointwise, V_{F p} ⊆ V_{G p} (`bridge-nest`), which is the piece where the bridge on x is lifted.
+- *Grouping rule.* Regrouping along a monotone u gives carriers that satisfy the face condition again (`Transport.regroup`). The regrouped piece at q is exactly the union of the V_p with u p ≤ q (`grouped→union`, `union→grouped`).
+- *Cocartesian rule.* Reassigning each carrier to its least extension over q is monotone (`Cocartesian.ext-mono`). Over the fibre, ext p ≤ r holds exactly when p ≤ r, so the reassigned pieces are the original ones.
+- *Bottom variant.* Its only extra content is enlarging the base by the generators over 0. Their faces stay in the enlarged base by face-closure of carriers, which `regroup` already covers.
+
+I checked the raw-term content of the rules by argument: lifting the strict label of x at faces already interpreted, the staircases of step 1, and the transfers of step 2. In particular, the inverses needed for transfer are computed inside a piece containing the generator, by lifting at reversed ends. That is legitimate because a piece's local algorithm handles all lifts through rank n + 1. The serialization bound "no demand exceeds rank n + 1" is correct: cancellations of rank-q face factors have degree q + 1 ≤ n + 1, and a top staircase of rank n + 1 needs only its reverse.
+
+**3. The poset input from Campion (checked against the paper, with one gap).** I read §§3–4 of arXiv 2311.00200 myself.
+- *Single-cut poset.* Proposition 4.15 gives Sd_{{k−1}}(µ) ≅ Lin(At_k(µ)), and Lemma 3.2 gives Lin(P) ≅ sd of the **nonempty proper** downsets of P.
+  - The paper's definition of DC(P) says only "nonempty". With P itself included, the bijection of Lemma 3.2 fails. The proof of Lemma 3.2 extracts proper ideals, and Response 15 correctly uses proper ones.
+  - `tools/rc_lin_ideals.py` confirms both points on all 407 naturally labelled posets with at most 5 elements: Lin(P) counts match the nonempty chains of nonempty proper downsets, and the count with P included differs.
+- *Index slip in the paper.* Lemma 4.18 writes Sd_{{k}}(µ), but the proof of Theorem 4.21 and Proposition 4.15 need Sd_{{k−1}}(µ). Response 15 uses k − 1, which is consistent.
+- *Zigzags (machine-checked in Agda, for every preorder that has a non-minimal element and a procedure finding a minimal element below any element; every finite preorder with decidable order has one).*
+  - I ↦ I ∩ Min is a monotone map of nonempty proper downsets, below the identity and below the constant Min (`Ideals.cut`, `cut-mono`, `cut-below-id`, `cut-below-Min`). This is Arone's coreflection. The script above also checks it on small posets.
+  - C ↦ C ∪ {t} on nonempty chains bounded by t is monotone, above the identity and above {t} (`Chains.addTop`).
+  - A least or greatest element gives a one-step zigzag (`least-zigzag`, `greatest-zigzag`).
+- *Fibres.* The two projections and the least elements of their non-bottom fibres match the proof of Theorem 4.21: U_{k−2} to Sd⊳_{[0,k−2]}(µ), then U′_{k−1} on the bottom fibre Sd_{[k−1,n−1]}(µ) to Sd⊳_{{k−1}}(µ).
+- **Gap (citation level).** Both the paper and Response 15 call U_{k−2} : Sd(µ) → Sd⊳_{[0,k−2]}(µ) cocartesian "by Lemma 4.12 and Remark 4.20". The cited results do not literally cover this map:
+  - Lemma 4.12 covers only forgetting the top cut, [0, n−1] → [0, n−2].
+  - Lemma 4.17 gives cocartesianness down to [0, k−1].
+  - The remaining step, [0, k−1] → [0, k−2], would need Lemma 4.16 at k − 1, which assumes At_k is an equivalence relation. That is exactly what fails at the chosen k.
+
+  *Update (2026-11-21).* Chanavat, arXiv 2603.22242, Lemma 2.50 and Cor. 2.51, proves exactly this cocartesianness for frame-acyclic molecules, for every cut j ≥ frdim U − 1, which is Campion's k − 2 by Thm 2.52 and Comment 2.9. The lifts are explicit pushouts. What remains is identifying Campion's Sd(µ) for strong-Steiner cells with Chanavat's poset of a frame-acyclic molecule, or proving the step directly. Written up as `conjectures/outbox/sd-cocartesian.md`, since retired unsent (now `conjectures/retired/sd-cocartesian.md`). RCX's in-house adaptation (§7.15, sketch) closes the step in Campion's own setting: Chanavat's proof needs only Campion's Prop. 4.15 at the same k, plus a heredity lemma for pieces glued along dimensions ≤ k − 2.
+
+  The constructive cocartesian rule needs least extensions for this map. I did not reconstruct a proof, and I did not find a counterexample. The descent is therefore exactly as sound as this step of Campion's published proof. The Theorem 4.21 statement itself (contractibility) is not in doubt here. The question is only whether its cocartesian projection supplies least extensions. Without them, the non-cocartesian grouping rule would need D on the preimages of downsets instead.
+
+**4. Low variables (checked by argument).** For l ≥ 2, the minimal refinement M_l(c) and the refinement R_l satisfy p ⊆ R_l(p), M_l(c) ⊆ R_l(p), and R_l is monotone. That is exactly a zigzag id ≤ R_l ≥ const M_l on adapted pieces, the shape `Zigzag₁` with both comparisons going up. So collapsing into V_{M_l(c)} and comparing in V_{R_l(p_x)} is an instance of the zigzag rule. The hom-computad decomposition behind R_l is checked only on product hom chains (the response's checker). I did not check it in general.
+
+**5. Not checked here.**
+- The least-carrier calculation and the identification of V_θ. These rest on round 8, Responses 7, 8 and 12, cited and not re-derived.
+- Local lifting in U_θ, beyond the measure in point 1.
+- The size bound t(N). It is computable by construction, but it carries no estimate.
+
+**Verdict.** I agree with the PR #342 verification, with one qualification: the construction inherits the cocartesianness of U_{k−2} from Campion's proof, and the stated lemmas do not literally cover that map (point 3). Everything order-theoretic that the gluing uses on the single-cut poset is machine-checked.
+
+**Owners.**
+- *Cocartesianness of U_{k−2}.* RCX: either prove the least-extension property, or show that the non-cocartesian grouping rule suffices.
+- *Size bound (C1).* RCX.
+- *Shared-canonical-form recognizer (E9′).* RCX, until it is reassigned.
+
+### 7.15 Closing the U_{k−2} step in Campion's setting (thread RCX, 2026-11-21; independently checked)
+
+Notation is Campion's (arXiv 2311.00200 v1). Let µ be an n-cell of a torsion-free complex. Let k be the index of Thm 4.21: At_i(µ) is an equivalence relation for every i > k, and At_k(µ) is not. Lemma 4.17 already gives U: Sd⊳(µ) → Sd⊳_{[0,k−1]}(µ) cocartesian. The missing piece is the single step U: Sd⊳_{[0,k−1]}(µ) → Sd⊳_{[0,k−2]}(µ). Remark 4.20 then turns the composite into U_{k−2} on Sd(µ). Campion's Lemma 4.16 would give this step only if At_k(µ) were an equivalence relation, and it is not.
+
+**Observation.** Chanavat's proof of his Lemma 2.50 (arXiv 2603.22242) does not use the pullback square of Campion's Lemma 4.16. It uses three inputs:
+1. the isomorphism between (k−1)-pre-layerings and linear preorders, at the level being cut (his Prop. 2.18), for µ and for certain subcells ν of µ;
+2. the generic substitution of a decomposition of each generator (his pushout û and Lemma 2.49);
+3. induction over the canonical r-decomposition for r < k−1, applied to the pieces.
+
+In Campion's notation, input 1 at the cut [0,k−1] → [0,k−2] is Sd⊳_{{k−1}}(ν) ≅ Lin⊳(At_k(ν)), which is Campion's **Prop. 4.15 at the same k**. Its hypothesis is that At_i(ν) is an equivalence relation for i ≥ k + 1, and for ν = µ that is exactly the hypothesis we have. (This matches Chanavat's index shift, Comment 2.9: his frdim is Campion's k − 1.)
+
+**Heredity lemma.** Every subcell ν that the proof uses arises in one of two ways: as a generator of an element of Sd⊳_{[0,k−2]}(µ) (the base case, ν = v(θ_x)), or as a piece of a ◦_r-decomposition with r ≤ k − 2 (the inductive step). Both glue only along dimensions j ≤ k − 2. Claim: for such ν and every i with i − 1 > j, At_i(ν) is the restriction of At_i(µ) to (∂_i ν)_i, and that set is a union of connected components of the generating graph of At_i(µ). Hence if At_i(µ) is an equivalence relation, so is At_i(ν).
+
+Proof sketch, for one gluing µ = ν ◦_j ν′, iterated:
+- (a) An element of ν of dimension > j lies in ν and not in ν′, because ν ∩ ν′ has dimension ≤ j. So every coface in µ of such an element lies in ν: ν is upward closed above dimension j.
+- (b) For i > j, ∂_i(ν ◦_j ν′) = ∂_i ν ◦_j ∂_i ν′, so (∂_i µ)_i is the disjoint union of (∂_i ν)_i and (∂_i ν′)_i.
+- (c) Equivalence generators. If a, b ∈ (∂_i c)_i for an atom c of dimension ≥ i + 1, and a ∈ ν, then c ∈ ν by (a), and so b ∈ ν.
+- (d) Order generators. If a ⊳_{i−1} b, the shared (i−1)-element has dimension i − 1 > j. So whenever one of a, b lies in ν, the shared element and then the other also lie in ν, by (a).
+
+So the generating data of At_i(ν) is that of At_i(µ) restricted to a union of components. Paths of generators never leave a component, so symmetry is inherited. With j ≤ k − 2 and i ≥ k + 1 we have i − 1 ≥ k > j. So each ν satisfies the hypothesis of Prop. 4.15 at k. The case i = k also has i − 1 > j, so restricting an element of Lin⊳(At_k(µ)) to (∂_k ν)_k gives an element of Lin⊳(At_k(ν)), possibly codiscrete. This is Chanavat's "L_x obtained by restricting L". If ν lies inside one layer of L, the restriction is codiscrete, which is Lemma 2.49(2). If dim ν ≤ k − 1, there is nothing to lift (Chanavat's "dim u^{(i)} ≤ k" case).
+
+**Conclusion (sketch).** With Prop. 4.15 and the heredity lemma in place of Chanavat's Prop. 2.18 and his heredity remark, his proof of Lemma 2.50 goes through for every torsion-free µ at the cut [0,k−1] → [0,k−2]. So U_{k−2} is cocartesian, and Campion's Thm 4.21 holds as stated, with the citation "Lemma 4.12 and Remark 4.20" replaced by "Lemma 4.17, this step, and Remark 4.20". The same argument applies to every cut [0,l] → [0,l−1] with l ≥ k − 1. Below k − 1 it fails at Prop. 4.15, because At_{l+1}(µ) need not be an equivalence relation.
+
+**Not checked.** Two points remain:
+- that Campion's Sd⊳ admits Chanavat's substitution û and the Lemma 2.49(1) monotonicity verbatim (Campion's decompositions are cells, not functors out of thetas, but substituting decompositions of generators is the same operation);
+- the bookkeeping of iterated gluings in the heredity lemma for a general S-theta, not just one ◦_j.
+
+*Independent check (2026-11-21):* both points hold, with the caveat inherited from Campion's Lemma 4.12. The full findings are in `open-issues.md`, C1 row. The gap is closed, and the prompt is retired unsent (`conjectures/retired/sd-cocartesian.md`).
 
 ## 8. Follow-ups and owners
 

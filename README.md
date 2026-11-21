@@ -8,7 +8,8 @@ variants.
 
 Layout:
 
-- `notes/`: design notes and literature surveys.
+- `spec/`: the consolidated specification of the system as it currently stands, one file per chapter, with the kernel and the surface kept apart. It states only current answers and cites `notes/`.
+- `notes/`: design notes and literature surveys. This is the research record.
 - `notes/open-issues.md`: the single list of known open items, each with its owner and status. Threads update it whenever they find or close an item.
 - `src/`: Agda formalization experiments.
 

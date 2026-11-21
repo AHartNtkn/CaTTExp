@@ -1,6 +1,6 @@
 # Chapter 3. Invertibility markings
 
-The lax core makes every interchanger directed. Pseudo transformations, ordinary ω-categories and groupoids are recovered by **marks**: proof-irrelevant judgments on terms and object variables, propagated by syntax-directed rules. Marks add no new definitional equalities. They add only the inverse term formers that ICaTT has, without its equations.
+The lax core makes every interchanger directed. Pseudo transformations and groupoids are recovered by **marks**. Ordinary ω-categories are recovered only in part: the `ord` mark inverts inner letters but does not give two-tier L's coherences (§3.6; ledger S16). Marks are proof-irrelevant judgments on terms and object variables, propagated by syntax-directed rules. Marks add no new definitional equalities. They add only the inverse term formers that ICaTT has, without its equations.
 
 **Pseudo = L + marks.** P (plain CaTT with pseudo transformations) has exactly the models of L in which every mixed cell of every dimension is invertible (Theorem 3.5.1). So the kernel does not need a separate pseudo core.
 
@@ -123,10 +123,15 @@ TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff so
 (C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 
 (COH-inv)    coherence case                                                   ⇒  inv
-(OP-inv_S)   Gray operation case, g[γ] inv for every g ∈ TopGray(Γ),
+(OP-inv_S′)  Gray operation case, designated lift c; every outer top letter ℓ
+             of c has generators of Γ as operands and is one of
+               (i)   a whiskered Gray cell G(x₁, …, xₙ), with g[γ] inv,
+               (ii)  an outer cylinder whose moving input x has x[γ] inv,
+               (iii) h(A, B) with A[γ] inv and (ord-tgt, or the split on
+                     the side of the A-cylinder in ῑ₋ is in S);
              and (inner-top(Γ, A) ⇒ ord-tgt)                                   ⇒  inv
-(OP-ps_S)    Gray operation case, for every g ∈ TopGray(Γ): g[γ] inv or some
-             xⱼ with dⱼ ≥ 1 and xⱼ[γ] ps*; and (inner-top(Γ, A) ⇒ ord-tgt)      ⇒  ps
+(OP-ps_S′)   as (OP-inv_S′), except that in case (i) "g[γ] inv" may be
+             replaced by "some xⱼ with dⱼ ≥ 1 has xⱼ[γ] ps*"                    ⇒  ps
 (ORD)        inner coherence, ord-tgt                                          ⇒  inv
 (INN-fac_S)  inner coherence whose head is the elementary inner interchanger,
              with (inner law ∈ S and its left input inv) or (R ∈ S and its right input inv)
@@ -142,19 +147,28 @@ The Gray cells g[γ] are the operation-case coherences over wedges of disks, as 
 
 **Semantics.** The intended models are algebras of admissible theories satisfying S (§2.3), with strict inverses. `C ord` quantifies over all inner letters, not only elementary interchangers.
 - **Sound in every model:** (COH-inv), (ORD), (INN-fac_S), and (INV-fac)/(INV-obj) for Gray cells with one positive factor (from the outer unary subdivisions of V's base B). (INN-fac_S) uses the switched split law together with the unit law ι(1, G) = 1.
-- **Sound in the model class 𝓜_S:** (OP-inv_S), (OP-ps_S), and the factor rules for Gray cells with several positive factors. 𝓜_S is cut out by the hypothesis (IL): an outer letter is invertible whenever the Gray cell of its Gray image is. 𝓜_S contains every strict Gray-enriched category and every strict ω-category, for every S.
-- (IL) is needed. In setting ∅ the binary join of V satisfies r̄₁ = h(A, B) · ῑ₋. With A invertible, h is therefore invertible iff the inner interchanger ῑ₋ is, so the two-tier (INV-fac) cannot be read letter by letter on F_V.
+- **Also sound in every model:** (OP-inv_S′) (`notes/uniform-marks.md` Theorem 8.1). Each top letter of the lift is invertible: in case (i) by closure under substitution, in case (ii) by the cylinder result, in case (iii) by r̄₁ = h(A, B) · ῑ₋, and inner top letters by `ord`.
+- **Sound only in the model class 𝓜_S:** the ps* branch of (OP-ps_S′), and the factor rules for Gray cells with several positive factors. 𝓜_S is cut out by the hypothesis (IL): an outer letter is invertible whenever the Gray cell of its Gray image is. 𝓜_S contains every strict Gray-enriched category and every strict ω-category, but **no free algebra of V + S**.
+- **Why the rule was repaired.** The first version, (OP-inv_S), read its premise on the Gray generator g[γ]. The researcher answer of 2026-11-21 shows that (IL) is false on free algebras, in every setting. The letter E(Z, b), with Z an inner square composed with a generator x, has Gray cell G(x, b). A substitution contracting x makes that Gray cell an identity, while the letter becomes E(I, b), which is not invertible. Requiring the operands of the letter to be generators of Γ removes the gap.
+- **Both switch conditions are exact.** An inner interchanger with an invertible input need not be invertible without the matching split. Invertible elementary inner interchangers do not make the other inner letters invertible. So `ord` has to quantify over all inner letters, and (INN-fac_S) is as strong as possible.
 
-**`ord` everywhere versus two-tier L.** With every object marked `ord`, the uniform rules derive `inv` and `ps` exactly when the two-tier rules derive them on the projected head, in every setting. Without `ord` the uniform rules never derive more than the two-tier ones. The coherence rule behaves differently. In settings without the inner law, the strip pair u, v of §2.3 Example (b) has the same Gray image and no cell either way. Two-tier L accepts coh(u → v), but uniform L has no coherence of that type with or without `ord`. So `ord` gives ordinary objects for invertibility, but the inner coherence *equations* also need the switches. Whether every two-tier coherence has a uniform-plus-`ord` counterpart (a longer term) is a relative coherence question, ledger E13. A candidate countermodel for settings without the inner law is also recorded there.
+**`ord` everywhere versus two-tier L.** Marks: with every object marked `ord`, the uniform rules derive `inv` and `ps` whenever the two-tier rules derive them on the projected head, provided the designated lift's outer top letters have generator operands and are of kinds (i)–(iii). Every head over a wedge of disks qualifies. For other lifts they derive less. Without `ord` the uniform rules never derive more than the two-tier ones.
+
+Coherences: `ord` everywhere does **not** give two-tier L's coherences, **in any setting**.
+- **The loop.** The loop H : w ⇛ w on Σ[2] ∨ Σ[2] (a whiskered inner interchanger) and 1_w have the same Gray image. In a V + S algebra in which every inner letter is invertible they still differ, and no higher cell joins them. Inverting the inner letters therefore creates no cell H ⇛ 1_w.
+- **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both switches.
+- **The inner strip.** It is equal exactly when the inner law holds. Without the inner law it stays unconnected after localization.
+
+So an `ord` object has invertible inner letters, but it is not an ordinary ω-category up to coherence. Source: `notes/uniform-marks.md` §8; `notes/conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`.
 
 **Status.**
 - Rules: **stated here**, following `notes/uniform-marks.md` §3.
 - (ORD) and (COH-inv): **proved** (§4.3 there).
 - (INN-fac_S): **Agda-checked** (`Uniform/InnerInv.agda`, `left-inv`, `right-inv`, from the sesquicategory axioms, the unit law and the split, as record fields).
 - Outer cylinders: **proved**.
-- The remaining rules: **proved** for 𝓜_S. Whether every model lies in 𝓜_S is **open** (ledger E13; outbox `conjectures/outbox/invertibility-in-directed-interchange.md`).
-- **Agda-checked** (`Uniform/Marks.agda`): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
-- Ledger S4 and E7 are done. The open remainder is E13.
+- (OP-inv_S′): **proved** in every model (`notes/uniform-marks.md` Theorem 8.1). The ps* branch of (OP-ps_S′) and the factor rules for several positive factors: **proved** for 𝓜_S only, which excludes the free algebras. Whether they hold in every model is open (ledger E14).
+- **Agda-checked** (`Uniform/Marks.agda`, which encodes the first version (OP-inv_S); re-encoding (OP-inv_S′) is ledger E14): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
+- Ledger S4, E7 and E13 are done. What remains is ledger E14.
 
 **Source.** `notes/uniform-marks.md`; `notes/invertibility-markings.md` §1.5.
 

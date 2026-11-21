@@ -131,6 +131,9 @@ module _ (K₀ : Code) where
     ; def = K₀ , idMap K₀
     }
 
+  yres-at : ∀ {K₁ K₂ K′} (g : Map K₁ K₂) (f : Map K′ K₀) (e : K₂ ≡ K′) → res yP g (K′ , f) ≡ (K₁ , (f ∘M castM refl e g))
+  yres-at g f refl = resY-at g f
+
 ------------------------------------------------------------------------
 -- The Day tensor.
 
@@ -219,6 +222,10 @@ module _ (A B : Psh) where
                 (∼D-≡ (cong (resD f) (sym (resD-at g L M a b h)))))) }
     ; def = defD
     }
+
+  dres-at : ∀ {K₁ K₂ K′} (g : Map K₁ K₂) L M a b (f : Map K′ (L ++ (M ++ []))) (e : K₂ ≡ K′) →
+            res Day g (de K′ L M a b f) ≡ de K₁ L M a b (f ∘M castM refl e g)
+  dres-at g L M a b f refl = resD-at g L M a b f
 
 ------------------------------------------------------------------------
 -- Map identities used by the closures.

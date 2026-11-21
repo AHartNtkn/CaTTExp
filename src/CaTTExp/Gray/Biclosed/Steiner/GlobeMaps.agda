@@ -318,3 +318,18 @@ private
 σδ0 : ∀ α → (σmap 0 ∘M d0 α) ≈M iso0
 σδ0 α = ≈m λ { tt z → trans (∘-ind (d0 α) (σmap 0) (λ _ → just (side α fz , tt)) (λ x → wrap (sl (fst x)))
                                         (λ _ _ → refl) (λ _ _ → refl) tt z) (cong (λ m → ind (enumEl (G 0)) (wrap m) z) (sl-side α fz)) }
+
+------------------------------------------------------------------------
+-- The inverse of [] ≅ λD⁰.
+
+iso0⁻ : Map (G 0) []
+iso0⁻ = funMap (svb-G 0) svb-[] (λ _ → just tt)
+  (λ { (top , tt) tt refl → refl })
+  (λ _ _ → tt , refl)
+  (λ { (top , tt) → inj₁ (refl , refl) })
+
+iso0-l : (iso0 ∘M iso0⁻) ≈M idMap (G 0)
+iso0-l = ≈m λ { (top , tt) z → ∘-ind iso0⁻ iso0 (λ _ → just tt) (λ _ → just (top , tt)) (λ _ _ → refl) (λ _ _ → refl) (top , tt) z }
+
+iso0-r : (iso0⁻ ∘M iso0) ≈M idMap []
+iso0-r = ≈m λ { tt z → ∘-ind iso0 iso0⁻ (λ _ → just (top , tt)) (λ _ → just tt) (λ _ _ → refl) (λ _ _ → refl) tt z }

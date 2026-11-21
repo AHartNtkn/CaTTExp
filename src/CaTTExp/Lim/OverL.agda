@@ -25,7 +25,13 @@
 --      a cell β under the universal cone is the interchanger over
 --      ΣD¹ ∨ ΣD¹ substituted by (β, λ_f) (limits-metatheory.md §5.2),
 --      so the researcher's inverse R⁻¹ = B ; N⁻¹ ; A⁻¹ is not available
---      by coherence. That *no* term of L inverts it is Thm 1(2), open.
+--      by coherence. Thm 1(2), that no term of L at all has the reverse
+--      interchanger's type over ΣD¹ ∨ ΣD¹, is proved
+--      (CaTTExp.Strict.ReverseInterchanger). For the substituted
+--      instance at (β, λ_f) it gives non-invertibility only through a
+--      valuation in the strict model that keeps the substituted
+--      endpoints non-reversible (as in notes/free-objects-proofs.md
+--      §5.5); that step is not checked here.
 ------------------------------------------------------------------------
 module CaTTExp.Lim.OverL where
 

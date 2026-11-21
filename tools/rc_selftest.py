@@ -7,7 +7,8 @@ Self-test of the relative-coherence tooling (notes/rc-generator.md).
                                         # a negative control whose Check Agda must reject
 
 Checks: answers of rc in each implemented case (identity, globular support
-in dimensions 2 and 3, RC(1), Theorem A with an exchange, peeling), refusal
+in dimensions 2 and 3, RC(1), Theorem A with an exchange, peeling, the
+rank-3 reductions of rc_heur), refusal
 of a pair with different strict images, the strict word of every cell of a
 small context evaluating back to it, word lifting at prescribed poles, and
 the marked-globe reduction with padding removal (r9 Response 2).
@@ -38,6 +39,14 @@ def triangle():
     G.append(arr(arr(STAR, v(3), v(9)), v(10), v(11)))             # c : 12
     return tuple(G)
 
+def whisker3():
+    """x, y; f, g : x -> y; a, b, c : f => g; A : a => b, B : b => c; z, h : y -> z,
+    k : x -> z and a 2-cell tau : k => f * h with a composite target."""
+    S = arr(STAR, v(0), v(1)); T2 = arr(S, v(2), v(3))
+    G = (STAR, STAR, S, S, T2, T2, T2, arr(T2, v(4), v(5)), arr(T2, v(5), v(6)),
+         STAR, arr(STAR, v(1), v(9)), arr(STAR, v(0), v(9)))
+    return G + (arr(arr(STAR, v(0), v(9)), v(11), comp2(G, 0, v(2), v(10))),)
+
 def cases():
     out = []
     G = bigons()
@@ -62,6 +71,16 @@ def cases():
     t = comp2(H, 1, comp2(H, 0, v(6), v(10)), comp2(H, 0, fg, v(12)))
     u = comp2(H, 1, comp2(H, 0, v(5), v(12)), comp2(H, 0, v(6), v(11)))
     out.append(('theorem-a-exchange', H, infer(H, t), t, u))
+    # rank 3 on a nonglobular support (rc_heur): distribution over a composite
+    W3 = whisker3()
+    wh = lambda X: comp2(W3, 1, v(12), comp2(W3, 0, X, v(10)))
+    t = comp2(W3, 2, wh(v(7)), wh(v(8)))
+    u = wh(comp2(W3, 2, v(7), v(8)))
+    out.append(('rank3-distribute', W3, infer(W3, t), t, u))
+    # and an identity in a top slot
+    t = comp2(W3, 1, v(12), identity(W3, comp2(W3, 0, v(4), v(10))))
+    u = comp2(W3, 1, v(12), comp2(W3, 0, identity(W3, v(4)), v(10)))
+    out.append(('rank3-identity-slot', W3, infer(W3, t), t, u))
     return out
 
 def run_python_checks():

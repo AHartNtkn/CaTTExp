@@ -757,7 +757,7 @@ So L-× is stated for the largest class of targets on which it is sound (standar
 
 F8 under P (the pseudo ambient) keeps its statement in §6.5.1, since it is the general cartesian exponential there. Under L, F8 for targets that are not (∞,1)-categories is not sound (Part E), and A\B replaces it.
 
-**Formalization (standard 9).** `src/CaTTExp/Gray/Biclosed/FunSets.agda` (F8d) works over the abstract model interface of `Gray/Biclosed/Model.agda`. It extends the interface with ⊤, binary products, the weakening row and the contraction row at a predicate of set-like targets. It derives κ, ev, λ and β, and proves that λ is a bijection up to ≈ (exp-λ with exp-uni at level 1). It is a 1-truncated check: cells above level 1 and the countermodels 𝒢, 𝒬 are not encoded there.
+**Formalization (standard 9).** `src/CaTTExp/Gray/Biclosed/FunSets.agda` (F8d) works over the abstract model interface of `Gray/Biclosed/Model.agda`. It extends the interface with ⊤, binary products, the weakening row and the contraction row at a predicate of set-like targets. It derives κ, ev, λ and β, and proves that λ is a bijection up to ≈ (exp-λ with exp-uni at level 1). It is a 1-truncated check: cells above level 1 and the countermodels 𝒢, 𝒬 are not encoded there. It type-checks locally (Agda 2.6.3, `--safe`, no postulates) and goes in a separate PR that waits for the honesty review.
 
 ### 6.6 Θ-density as an object-indexed colimit (F5b)
 

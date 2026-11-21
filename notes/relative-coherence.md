@@ -1087,7 +1087,7 @@ I checked the raw-term content of the rules by argument: lifting the strict labe
   - The paper's definition of DC(P) says only "nonempty". With P itself included, the bijection of Lemma 3.2 fails. The proof of Lemma 3.2 extracts proper ideals, and Response 15 correctly uses proper ones.
   - `tools/rc_lin_ideals.py` confirms both points on all 407 naturally labelled posets with at most 5 elements: Lin(P) counts match the nonempty chains of nonempty proper downsets, and the count with P included differs.
 - *Index slip in the paper.* Lemma 4.18 writes Sd_{{k}}(µ), but the proof of Theorem 4.21 and Proposition 4.15 need Sd_{{k−1}}(µ). Response 15 uses k − 1, which is consistent.
-- *Zigzags (machine-checked in Agda, for every preorder that has a non-minimal element).*
+- *Zigzags (machine-checked in Agda, for every preorder that has a non-minimal element and a procedure finding a minimal element below any element; every finite preorder with decidable order has one).*
   - I ↦ I ∩ Min is a monotone map of nonempty proper downsets, below the identity and below the constant Min (`Ideals.cut`, `cut-mono`, `cut-below-id`, `cut-below-Min`). This is Arone's coreflection. The script above also checks it on small posets.
   - C ↦ C ∪ {t} on nonempty chains bounded by t is monotone, above the identity and above {t} (`Chains.addTop`).
   - A least or greatest element gives a one-step zigzag (`least-zigzag`, `greatest-zigzag`).
@@ -1096,6 +1096,8 @@ I checked the raw-term content of the rules by argument: lifting the strict labe
   - Lemma 4.12 covers only forgetting the top cut, [0, n−1] → [0, n−2].
   - Lemma 4.17 gives cocartesianness down to [0, k−1].
   - The remaining step, [0, k−1] → [0, k−2], would need Lemma 4.16 at k − 1, which assumes At_k is an equivalence relation. That is exactly what fails at the chosen k.
+
+  *Update (2026-11-21).* Chanavat, arXiv 2603.22242, Lemma 2.50 and Cor. 2.51, proves exactly this cocartesianness for frame-acyclic molecules, for every cut j ≥ frdim U − 1, which is Campion's k − 2 by Thm 2.52 and Comment 2.9. The lifts are explicit pushouts. What remains is identifying Campion's Sd(µ) for strong-Steiner cells with Chanavat's poset of a frame-acyclic molecule, or proving the step directly. Sent out as `conjectures/outbox/sd-cocartesian.md`.
 
   The constructive cocartesian rule needs least extensions for this map. I did not reconstruct a proof, and I did not find a counterexample. The descent is therefore exactly as sound as this step of Campion's published proof. The Theorem 4.21 statement itself (contractibility) is not in doubt here. The question is only whether its cocartesian projection supplies least extensions. Without them, the non-cocartesian grouping rule would need D on the preimages of downsets instead.
 

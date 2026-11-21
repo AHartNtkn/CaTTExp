@@ -286,22 +286,22 @@ f ⊗ₘ g = f ⊗M g
 -- Functoriality.
 
 ⊗ₘ-cong : ∀ {K K′ L L′} {f f′ : Map K K′} {g g′ : Map L L′} → f ≈M f′ → g ≈M g′ → (f ⊗ₘ g) ≈M (f′ ⊗ₘ g′)
-⊗ₘ-cong {K} {K′} {L} {L′} ef eg x y = cong₂ _*_ (ef _ _) (eg _ _)
+⊗ₘ-cong {K} {K′} {L} {L′} ef eg = ≈m (λ x y → cong₂ _*_ (≈mat ef _ _) (≈mat eg _ _))
 
 ⊗ₘ-id : ∀ K L → (idMap K ⊗ₘ idMap L) ≈M idMap (K ++ L)
-⊗ₘ-id K L = by-join K L λ u v → by-join K L λ u′ v′ →
-  trans (tmat-join (idMap K) (idMap L) u v u′ v′) (sym (δ-join K L u v u′ v′))
+⊗ₘ-id K L = ≈m (by-join K L λ u v → by-join K L λ u′ v′ →
+  trans (tmat-join (idMap K) (idMap L) u v u′ v′) (sym (δ-join K L u v u′ v′)))
 
 ⊗ₘ-∘ : ∀ {K K′ K″ L L′ L″} (f′ : Map K′ K″) (f : Map K K′) (g′ : Map L′ L″) (g : Map L L′) →
        ((f′ ∘M f) ⊗ₘ (g′ ∘M g)) ≈M ((f′ ⊗ₘ g′) ∘M (f ⊗ₘ g))
-⊗ₘ-∘ {K} {K′} {K″} {L} {L′} {L″} f′ f g′ g = by-join K L λ u v → by-join K″ L″ λ u″ v″ →
+⊗ₘ-∘ {K} {K′} {K″} {L} {L′} {L″} f′ f g′ g = ≈m (by-join K L λ u v → by-join K″ L″ λ u″ v″ →
   trans (tmat-join (f′ ∘M f) (g′ ∘M g) u v u″ v″)
   (sym (trans (Σ-join K′ L′ _)
        (trans (Σ-cong (els′ K′) (λ u′ → Σ-cong (els′ L′) (λ v′ →
                  trans (cong₂ _*_ (tmat-join f g u v u′ v′) (tmat-join f′ g′ u′ v′ u″ v″))
                        (r1 (mat f u u′) (mat g v v′) (mat f′ u′ u″) (mat g′ v′ v″)))))
        (trans (Σ-cong (els′ K′) (λ u′ → sym (Σ-*ˡ (els′ L′) (mat f u u′ * mat f′ u′ u″) _)))
-              (sym (Σ-*ʳ (els′ K′) _ _))))))
+              (sym (Σ-*ʳ (els′ K′) _ _)))))))
   where
     r1 : ∀ a b c d → a * b * (c * d) ≡ a * c * (b * d)
     r1 a b c d = trans (*-assoc a b (c * d)) (trans (cong (a *_) (trans (sym (*-assoc b c d))

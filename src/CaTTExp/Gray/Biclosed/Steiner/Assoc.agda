@@ -48,7 +48,7 @@ castM-mat refl refl m x y = refl
 -- To compare a cast with a map, compare on cast elements.
 castM-≈ : ∀ {K K′ L L′} (e₁ : K ≡ K′) (e₂ : L ≡ L′) (m : Map K L) (n : Map K′ L′) →
           (∀ x y → mat m x y ≡ mat n (castE e₁ x) (castE e₂ y)) → castM e₁ e₂ m ≈M n
-castM-≈ e₁ e₂ m n h x′ y′ =
+castM-≈ e₁ e₂ m n h = ≈m λ x′ y′ →
   trans (cong₂ (mat (castM e₁ e₂ m)) (sym (castE-inv e₁ x′)) (sym (castE-inv e₂ y′)))
   (trans (castM-mat e₁ e₂ m (castE (sym e₁) x′) (castE (sym e₂) y′))
   (trans (h (castE (sym e₁) x′) (castE (sym e₂) y′))
@@ -59,14 +59,14 @@ castM-cong refl refl e = e
 
 castM-∘ : ∀ {K K′ L L′ M M′} (e₁ : K ≡ K′) (e₂ : L ≡ L′) (e₃ : M ≡ M′) (g : Map L M) (f : Map K L) →
           castM e₁ e₃ (g ∘M f) ≈M (castM e₂ e₃ g ∘M castM e₁ e₂ f)
-castM-∘ refl refl refl g f x y = refl
+castM-∘ refl refl refl g f = ≈m (λ x y → refl)
 
 castM-id : ∀ {K K′} (e : K ≡ K′) → castM e e (idMap K) ≈M idMap K′
-castM-id refl x y = refl
+castM-id refl = ≈m (λ x y → refl)
 
 castM-trans : ∀ {K K′ K″ L L′ L″} (e₁ : K ≡ K′) (e₁′ : K′ ≡ K″) (e₂ : L ≡ L′) (e₂′ : L′ ≡ L″) (m : Map K L) →
               castM e₁′ e₂′ (castM e₁ e₂ m) ≈M castM (trans e₁ e₁′) (trans e₂ e₂′) m
-castM-trans refl refl refl refl m x y = refl
+castM-trans refl refl refl refl m = ≈m (λ x y → refl)
 
 ------------------------------------------------------------------------
 -- Joins and casts.
@@ -121,4 +121,4 @@ dec3 K L M {P} h = by-join (K ++ L) M (λ uv w → by-join K L {λ z → P (join
                     (trans (*-one (mat f u u′)) (sym (cong₂ (mat f) (join-[] K u) (join-[] K′ u′))))
 
 ⊗-unitˡ : ∀ {K K′} (f : Map K K′) → (idMap [] ⊗ₘ f) ≈M f
-⊗-unitˡ f x y = +-zero (mat f x y)
+⊗-unitˡ f = ≈m (λ x y → +-zero (mat f x y))

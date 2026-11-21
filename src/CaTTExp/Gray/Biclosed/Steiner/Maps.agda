@@ -77,8 +77,10 @@ record Map (K L : Code) : Set where
     mchain : ((mat · ∂ L true) ⊕ (∂ K false · mat)) ≐ ((mat · ∂ L false) ⊕ (∂ K true · mat))
 open Map public
 
-_≈M_ : ∀ {K L} → Map K L → Map K L → Set
-f ≈M g = mat f ≐ mat g
+record _≈M_ {K L} (f g : Map K L) : Set where
+  constructor ≈m
+  field ≈mat : mat f ≐ mat g
+open _≈M_ public
 
 ------------------------------------------------------------------------
 -- Identities.
@@ -198,13 +200,13 @@ g ∘M f = record { mat = mat f · mat g ; mdeg = ∘deg f g ; maug = ∘aug f g
 -- Category laws.
 
 ∘M-idl : ∀ {K L} (f : Map K L) → (idMap L ∘M f) ≈M f
-∘M-idl f = δ-·ʳ (mat f)
+∘M-idl f = ≈m (δ-·ʳ (mat f))
 
 ∘M-idr : ∀ {K L} (f : Map K L) → (f ∘M idMap K) ≈M f
-∘M-idr f = δ-·ˡ (mat f)
+∘M-idr f = ≈m (δ-·ˡ (mat f))
 
 ∘M-assoc : ∀ {K L M N} (h : Map M N) (g : Map L M) (f : Map K L) → ((h ∘M g) ∘M f) ≈M (h ∘M (g ∘M f))
-∘M-assoc h g f k n = sym (·-assoc (mat f) (mat g) (mat h) k n)
+∘M-assoc h g f = ≈m (λ k n → sym (·-assoc (mat f) (mat g) (mat h) k n))
 
 ∘M-cong : ∀ {K L M} {g g′ : Map L M} {f f′ : Map K L} → g ≈M g′ → f ≈M f′ → (g ∘M f) ≈M (g′ ∘M f′)
-∘M-cong eg ef = ·-cong ef eg
+∘M-cong eg ef = ≈m (·-cong (≈mat ef) (≈mat eg))

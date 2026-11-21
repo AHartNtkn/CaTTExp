@@ -1,6 +1,7 @@
 ------------------------------------------------------------------------
--- D7d: the rows, the generic contexts of (GB-cut) and (GB-dcut), and
--- the admissibility judgement of notes/closed-structure.md F.7.4.
+-- D7d: the admissibility judgement of notes/closed-structure.md F.7.4
+-- on generic contexts (the rows, generic contexts and goals are in
+-- Rows.agda and re-exported here).
 --
 -- Main results (no postulates):
 --   * admit? decides Admissible (admit?-sound, admit?-complete);
@@ -28,159 +29,10 @@ open import CaTTExp.Prelude
 open import CaTTExp.Gray.Biclosed.Syntax
 open import CaTTExp.Gray.Biclosed.Typing
 open import Agda.Builtin.Nat using (_*_)
-
-------------------------------------------------------------------------
--- Rows (F.7.4 §2 table)
-
-data Row : Set where
-  pairR  : List Fm → Fm → Fm → List Fm → Fm → Row        -- L U V R Z
-  probeR : List Fm → Shape → Shape → List Fm → Fm → Row  -- L Δ Θ R Z
-  unitR  : List Fm → List Fm → Fm → Row                  -- L R Z
-  evLR   : List Fm → Fm → Fm → Row                       -- Φ A C
-  evRR   : List Fm → Fm → Fm → Row                       -- Φ A C
-
--- H: type of the missing vertex
-H : Row → MTy
-H (pairR L U V R Z)  = (L ++ (U ⊗ V) ∷ R) ▸ Z
-H (probeR L Δ Θ R Z) = (L ++ rep (Δ ⊠ Θ) ∷ R) ▸ Z
-H (unitR L R Z)      = (L ++ rep (disk 0) ∷ R) ▸ Z
-H (evLR Φ A C)       = Φ ▸ (A \\ C)
-H (evRR Φ A C)       = Φ ▸ (C // A)
-
--- B: type of the outer operation
-B : Row → MTy
-B (pairR L U V R Z)  = (L ++ U ∷ V ∷ R) ▸ Z
-B (probeR L Δ Θ R Z) = (L ++ rep Δ ∷ rep Θ ∷ R) ▸ Z
-B (unitR L R Z)      = (L ++ R) ▸ Z
-B (evLR Φ A C)       = (A ∷ Φ) ▸ C
-B (evRR Φ A C)       = (Φ ++ A ∷ []) ▸ C
-
-ids : List Fm → List Tm
-ids = map idt
-
-idTys : List Fm → List MTy
-idTys = map (λ A → (A ∷ []) ▸ A)
-
--- r : H → B, pasting the distinguished vertex
-rmap : Row → Tm → Tm
-rmap (pairR L U V R Z)  x = comp x (ids L ++ mP U V ∷ ids R)
-rmap (probeR L Δ Θ R Z) x = comp x (ids L ++ pP Δ Θ ∷ ids R)
-rmap (unitR L R Z)      x = comp x (ids L ++ pt ∷ ids R)
-rmap (evLR Φ A C)       x = comp (eL A C) (idt A ∷ x ∷ [])
-rmap (evRR Φ A C)       x = comp (eR A C) (x ∷ idt A ∷ [])
-
--- the image of a time-slot gap under r (as computed by whiskering)
-rgap : Row → Nat → Nat
-rgap (pairR L U V R Z)  g = sumIns (take g (idTys L ++ ((U ∷ V ∷ []) ▸ (U ⊗ V)) ∷ idTys R))
-rgap (probeR L Δ Θ R Z) g = sumIns (take g (idTys L ++ ((rep Δ ∷ rep Θ ∷ []) ▸ rep (Δ ⊠ Θ)) ∷ idTys R))
-rgap (unitR L R Z)      g = sumIns (take g (idTys L ++ ([] ▸ rep (disk 0)) ∷ idTys R))
-rgap (evLR Φ A C)       g = 1 + g
-rgap (evRR Φ A C)       g = g
-
--- generic templates use fresh object variables, numbered in order of
--- appearance in the outer profile B; the output is an object variable
-fmsOf : Row → List Fm
-fmsOf (pairR L U V R Z)  = L ++ U ∷ V ∷ R ++ Z ∷ []
-fmsOf (probeR L _ _ R Z) = L ++ R ++ Z ∷ []
-fmsOf (unitR L R Z)      = L ++ R ++ Z ∷ []
-fmsOf (evLR Φ A C)       = A ∷ Φ ++ C ∷ []
-fmsOf (evRR Φ A C)       = Φ ++ A ∷ C ∷ []
-
-outOf : Row → Fm
-outOf (pairR _ _ _ _ Z)  = Z
-outOf (probeR _ _ _ _ Z) = Z
-outOf (unitR _ _ Z)      = Z
-outOf (evLR _ _ C)       = C
-outOf (evRR _ _ C)       = C
-
-canonFrom : Nat → List Fm → Bool
-canonFrom k []             = true
-canonFrom k (obj i ∷ fs)   = (i ==ℕ k) ∧ canonFrom (suc k) fs
-canonFrom k (rep _ ∷ fs)   = canonFrom k fs
-canonFrom k (_ ∷ _)        = false
-
-isObj : Fm → Bool
-isObj (obj _) = true
-isObj _       = false
-
-canon : Row → Bool
-canon ρ = canonFrom 0 (fmsOf ρ) ∧ isObj (outOf ρ)
-
-------------------------------------------------------------------------
--- Templates
-
-record Tmpl : Set where
-  constructor tmpl
-  field
-    row  : Row
-    gap  : Nat
-    mode : Mode
-    dimn : Nat
-open Tmpl public
-
-pos : Nat → Nat → Nat
-pos j o = o + j * 6
-
-uM uP bM bP aM aP : Nat → Nat
-uM j = pos j 0
-uP j = pos j 1
-bM j = pos j 2
-bP j = pos j 3
-aM j = pos j 4
-aP j = pos j 5
-
-module _ (t : Tmpl) where
-  private
-    ρ  = row t
-    g  = gap t
-    m  = mode t
-    g′ = rgap (row t) (gap t)
-
-  tyU : Nat → CTy
-  tyU zero    = op (H ρ)
-  tyU (suc j) = hom m g (tyU j) (var (uM j)) (var (uP j))
-
-  tyB : Nat → CTy
-  tyB zero    = op (B ρ)
-  tyB (suc j) = hom m g′ (tyB j) (var (bM j)) (var (bP j))
-
-  tyRU : Nat → CTy
-  tyRU zero    = op (B ρ)
-  tyRU (suc j) = hom m g′ (tyRU j) (rmap ρ (var (uM j))) (rmap ρ (var (uP j)))
-
-  chain : Nat → Tm → Tm
-  chain zero    y = y
-  chain (suc j) y = glue (var (aM j)) (chain j y) (var (aP j))
-
-  block : Nat → Ctx
-  block j = tyU j ∷ tyU j ∷ tyB j ∷ tyB j
-          ∷ hom inv g′ (tyRU j) (rmap ρ (var (uM j))) (chain j (var (bM j)))
-          ∷ hom inv g′ (tyRU j) (rmap ρ (var (uP j))) (chain j (var (bP j)))
-          ∷ []
-
-  levels : Nat → Ctx
-  levels zero    = []
-  levels (suc j) = levels j ++ block j
-
-  ctx : Ctx
-  ctx = levels (dimn t) ++ (tyB (dimn t) ∷ [])
-
-  cgoal : CTy
-  cgoal = tyU (dimn t)
-
-  egoal : CTy
-  egoal = hom inv g′ (tyRU (dimn t)) (rmap ρ (here cgoal)) (chain (dimn t) (var (pos (dimn t) 0)))
-
-leq : Nat → Nat → Bool
-leq zero    _       = true
-leq (suc m) zero    = false
-leq (suc m) (suc n) = leq m n
-
--- side conditions: canonical generic formulas; at n = 0 the template is
--- the invertible one at the rightmost gap; otherwise any gap of H
-okT : Tmpl → Bool
-okT (tmpl ρ g m zero)    = canon ρ ∧ eqMode m inv ∧ (g ==ℕ length (ins (H ρ)))
-okT (tmpl ρ g m (suc n)) = canon ρ ∧ leq g (length (ins (H ρ)))
+open import CaTTExp.Gray.Biclosed.Rows public
+open import CaTTExp.Gray.Biclosed.Syntax public
+  using (Row; pairR; probeR; unitR; evLR; evRR; Tmpl; tmpl; row; gap; mode; dimn;
+         Goal; gc; gε)
 
 ------------------------------------------------------------------------
 -- The admissibility judgement
@@ -225,16 +77,17 @@ modeC (hom m _ _ _ _) = m
 candsC : CTy → List Tmpl
 candsC A = map (λ ρ → tmpl ρ (gapC A) (modeC A) (dim A)) (rowsOf (baseM A))
 
-hereOf : Tm → List CTy
-hereOf (here A) = A ∷ []
-hereOf _        = []
+-- the templates named by the coherence terms at the head of a source
+hereOf : Tm → List Tmpl
+hereOf (here t _ _ _) = t ∷ []
+hereOf _              = []
 
-heres : Tm → List CTy
+heres : Tm → List Tmpl
 heres (comp f gs) = hereOf f ++ concatMap hereOf gs
 heres _           = []
 
 candsE : CTy → List Tmpl
-candsE (hom _ _ _ s _) = concatMap candsC (heres s)
+candsE (hom _ _ _ s _) = heres s
 candsE (op _)          = []
 
 ------------------------------------------------------------------------
@@ -350,16 +203,15 @@ candsC-complete t ok =
     (∈-map (λ ρ → tmpl ρ (gapC (cgoal t)) (modeC (cgoal t)) (dim (cgoal t)))
       (subst (λ M → row t ∈ rowsOf M) (sym (baseM-tyU t (dimn t))) (rowsOf-complete (row t))))
 
-heres-rmap : ∀ ρ c → c ∈ heres (rmap ρ (here c))
-heres-rmap (pairR _ _ _ _ _)  c = here!
-heres-rmap (probeR _ _ _ _ _) c = here!
-heres-rmap (unitR _ _ _)      c = here!
-heres-rmap (evLR _ _ _)       c = here!
-heres-rmap (evRR _ _ _)       c = here!
+heres-rmap : ∀ ρ t e φs ts → t ∈ heres (rmap ρ (here t e φs ts))
+heres-rmap (pairR _ _ _ _ _)  t e φs ts = here!
+heres-rmap (probeR _ _ _ _ _) t e φs ts = here!
+heres-rmap (unitR _ _ _)      t e φs ts = here!
+heres-rmap (evLR _ _ _)       t e φs ts = here!
+heres-rmap (evRR _ _ _)       t e φs ts = here!
 
 candsE-complete : ∀ t → T (okT t) → t ∈ candsE (egoal t)
-candsE-complete t ok =
-  ∈-concatMap candsC (heres-rmap (row t) (cgoal t)) (candsC-complete t ok)
+candsE-complete t ok = heres-rmap (row t) t gc (idφ t) (idts t)
 
 ------------------------------------------------------------------------
 -- admit? decides Admissible

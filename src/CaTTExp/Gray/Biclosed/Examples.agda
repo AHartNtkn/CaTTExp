@@ -137,7 +137,7 @@ control-type = tt
 -- the ε goal with its collar dropped is not well typed at n = 1
 control-collar : T (not (wf (ctx (tmpl evL₁ 1 inv 1))
                             (hom inv 2 (tyRU (tmpl evL₁ 1 inv 1) 1)
-                               (rmap evL₁ (here (cgoal (tmpl evL₁ 1 inv 1))))
+                               (rmap evL₁ (cterm (tmpl evL₁ 1 inv 1)))
                                (var (pos 1 0)))))
 control-collar = tt
 

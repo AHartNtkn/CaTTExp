@@ -11,48 +11,23 @@
 --   * glue a⁻ x a⁺ adjoins invertible collars a± : p± ≅ q± to a cell x
 --     whose faces at the collars' level are q⁻, q⁺ (this is an L-core
 --     composite; its typing rule is stated here, not derived from L);
---   * here A has type A when A is well formed (admissibility of A is a
---     separate judgement, Templates.admit?).
--- So infer / wf check that goal types are well formed; they are not a
--- derivability check (here A inhabits every well-formed A).
+--   * here t e φs ts, goal e of template t at the instance (φs, ts), has
+--     the substituted goal type when t satisfies the template side
+--     conditions (okT), the lists cover the template's variables, and
+--     each ts[i] has the substituted type of the i-th template entry.
+--     This is CaTT's rule for coh(Γ, A)[σ]: the term records σ.
+-- So infer is a derivability check for the kernel, up to the stated
+-- typing rule of glue and the sort discipline (SortDisc).  Until
+-- 2026-11-20 the coherence term was `here A`, typed at every
+-- well-formed A, which forgot the instance (HereAmbiguity.agda).
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Biclosed.Typing where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Gray.Biclosed.Syntax
-
-------------------------------------------------------------------------
--- List helpers
-
-map : ∀ {A B : Set} → (A → B) → List A → List B
-map f []       = []
-map f (x ∷ xs) = f x ∷ map f xs
-
-length : ∀ {A : Set} → List A → Nat
-length []       = 0
-length (_ ∷ xs) = suc (length xs)
-
-lookup : ∀ {A : Set} → List A → Nat → Maybe A
-lookup []       _       = nothing
-lookup (x ∷ _)  zero    = just x
-lookup (_ ∷ xs) (suc n) = lookup xs n
-
-take : ∀ {A : Set} → Nat → List A → List A
-take zero    _        = []
-take (suc n) []       = []
-take (suc n) (x ∷ xs) = x ∷ take n xs
-
-setAt : ∀ {A : Set} → Nat → A → List A → List A
-setAt _       _ []       = []
-setAt zero    y (_ ∷ xs) = y ∷ xs
-setAt (suc n) y (x ∷ xs) = x ∷ setAt n y xs
-
-concatIns : List MTy → List Fm
-concatIns []       = []
-concatIns (m ∷ ms) = ins m ++ concatIns ms
-
-sumIns : List MTy → Nat
-sumIns ms = length (concatIns ms)
+open import CaTTExp.Gray.Biclosed.ListOps public
+open import CaTTExp.Gray.Biclosed.SubstDef public
+open import CaTTExp.Gray.Biclosed.Rows public
 
 ------------------------------------------------------------------------
 -- Cell-type helpers
@@ -142,7 +117,17 @@ mutual
   infer Γ (glue am x ap) with infer Γ am | infer Γ ap | infer Γ x
   ... | just ta | just tb | just tx = glueTop am ap ta tb tx
   ... | _       | _       | _       = nothing
-  infer Γ (here A) = if wf Γ A then just A else nothing
+  infer Γ (here t e φs ts) =
+    if okT t ∧ (length φs ==ℕ nObj t) ∧ (length ts ==ℕ nCtx t)
+         ∧ argsOk Γ (instS φs ts) ts (ctx t)
+    then just (sY (instS φs ts) (goal t e)) else nothing
+
+  -- the instance's terms have the substituted types of the template
+  -- context, entry by entry
+  argsOk : Ctx → Sub → List Tm → Ctx → Bool
+  argsOk Γ σ []       []       = true
+  argsOk Γ σ (x ∷ xs) (A ∷ As) = eqMaybeTy (infer Γ x) (sY σ A) ∧ argsOk Γ σ xs As
+  argsOk Γ σ _        _        = false
 
   inferL : Ctx → List Tm → Maybe (List CTy)
   inferL Γ []       = just []

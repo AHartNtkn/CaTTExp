@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------
 -- D7f: every template of F.7.4 is well typed, for every row, gap,
--- mode and dimension.
+-- mode and dimension satisfying the side conditions okT.
 --
 -- Main result (no postulates):
---   templates-typed : ∀ t → T (wtGoal (ctx t) (cgoal t)) × T (wf (ctx t) (egoal t))
+--   templates-typed : ∀ t → T (okT t) →
+--                     T (wtGoal (ctx t) (cgoal t)) × T (wf (ctx t) (egoal t))
 -- i.e. the generic context of every (GB-cut) / (GB-dcut) template is
 -- well formed entry by entry, and both goals (c and ε) are well formed
 -- cell types in it, for the type checker of Typing.agda (including its
@@ -17,6 +18,7 @@ open import Agda.Builtin.Nat using (_*_)
 open import CaTTExp.Gray.Biclosed.Syntax
 open import CaTTExp.Gray.Biclosed.Typing
 open import CaTTExp.Gray.Biclosed.Templates
+open import CaTTExp.Gray.Biclosed.Scope using (module IdInst)
 
 ------------------------------------------------------------------------
 -- Arithmetic and list lemmas
@@ -380,11 +382,10 @@ module Fixed (t : Tmpl) where
 ------------------------------------------------------------------------
 -- The theorem
 
-here-ok : ∀ Γ A → T (wf Γ A) → infer Γ (here A) ≡ just A
-here-ok Γ A p rewrite T→≡ p = refl
-
-templates-typed : ∀ t → T (wtGoal (ctx t) (cgoal t)) × T (wf (ctx t) (egoal t))
-templates-typed t = ∧-intro wfctx wfc , wfe
+-- (the source of ε contains the identity instance of c, which is typed
+-- by Scope.IdInst.cterm-typed; this is where okT is needed)
+templates-typed : ∀ t → T (okT t) → T (wtGoal (ctx t) (cgoal t)) × T (wf (ctx t) (egoal t))
+templates-typed t ok = ∧-intro wfctx wfc , wfe
   where
   open Fixed t
   n = dimn t
@@ -400,8 +401,8 @@ templates-typed t = ∧-intro wfctx wfc , wfe
   lb = trans (lookup-at n (tyB t n ∷ []) 0) (cong (λ q → just (tyB t q)) (sym (+-zero n)))
   wfe : T (wf Γ (egoal t))
   wfe = ∧-intro (wfRU Γ n av n 0 (sym (+-zero n)))
-          (∧-intro (T-inf (rmap (row t) (here (tyU t n))) (tyRU t n)
-                      (infer-rmap t Γ n (here (tyU t n)) (here-ok Γ (tyU t n) wfc)))
+          (∧-intro (T-inf (rmap (row t) (cterm t)) (tyRU t n)
+                      (infer-rmap t Γ n (cterm t) (IdInst.cterm-typed t ok)))
                    (T-inf (chain t n (var (pos n 0))) (tyRU t n)
                       (trans (chain-typed n Γ (hypA Γ n av) 0 (var (pos n 0)) lb)
                              (cong just (trans (cong (mix n) (+-zero n)) (mix-low n))))))

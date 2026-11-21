@@ -14,11 +14,14 @@
 -- then do the two independent crossings b₂a₂ and b₁a₁ in the two
 -- orders, then b₁ past a₂. The positional square goes X ⇛ Y.
 --   * In V: X ≠ Y, X reaches Y and Y does not reach X.
---   * In T₁₂ ({inner law, R}): X = Y, so the square is a 5-loop at the
---     single 4-cell of the grid. It is the suspension of the loop H of
---     (K34): X and Y are the two split orders of the full crossing of
---     b₁b₂ past a₁a₂. So 5-paths here have unbounded length, and SC
---     must be decided without a length bound (RuleFin).
+--   * In T₁₂ ({inner law, R}): X = Y, since they are the two split
+--     orders of the full crossing of b₁b₂ past a₁a₂. So the square is
+--     a whiskered square (suspension of H) that is a 5-loop at the
+--     single 4-cell of the grid: the cut-3 whiskering
+--     [χ(b₂a₁) | I₂(χ(b₁a₁), χ(b₂a₂)) | χ(b₁a₂)] of a bare square that
+--     is directed in every setting. It is not a (K49) four-input
+--     rectangle (ledger S14). So 5-paths here have unbounded length,
+--     and SC must be decided without a length bound (RuleFin).
 ------------------------------------------------------------------------
 module CaTTExp.Uniform.GridFiveExamples where
 
@@ -132,7 +135,8 @@ module Square22 where
   noSC-V-YX : ¬ SC InV.layer (InV.cellOf Y vY) (InV.cellOf X vX)
   noSC-V-YX s = InV.reach5-complete vY (InV.sc→⇛ s)
 
-  -- In T₁₂, X = Y and the square is a letter from the cell to itself.
+  -- In T₁₂, X = Y and the whiskered square is a letter from the cell
+  -- to itself.
   same-T : InT.cellOf X vX ≡ InT.cellOf Y vY
   same-T = refl
 

@@ -105,7 +105,7 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
   - `sc?` returns false, false, true, true in the four settings.
 - **The 2 × 2 grid.** Let X = χ(b₂a₁) χ(b₂a₂) χ(b₁a₁) χ(b₁a₂) and Y = χ(b₂a₁) χ(b₁a₁) χ(b₂a₂) χ(b₁a₂). The positional square of χ(b₁a₁) and χ(b₂a₂) goes X ⇛ Y.
   - In V it is directed: X ≠ Y, SC holds from X to Y and fails from Y to X.
-  - In T₁₂, X = Y, since they are the two split orders of the full crossing. So the square is a letter from the single 4-cell to itself (`loop-T`), the suspension of H. A Python run of the same model finds self-loops only with both switches on: 1 on 2 × 2, 1 on 2 × 3, 9 on 3 × 3. This loop is why `RuleFin` is needed. It is also in tension with (K49), which is ledger S15 (owner DSGN).
+  - In T₁₂, X = Y, since they are the two split orders of the full crossing. So the square is a letter from the single 4-cell to itself (`loop-T`), the suspension of H. A Python run of the same model finds self-loops only with both switches on: 1 on 2 × 2, 1 on 2 × 3, 9 on 3 × 3. This loop is why `RuleFin` is needed. It is a whiskered square (the suspension of H) that is a 5-loop: the cut-3 whiskering [χ(b₂a₁) | I₂(χ(b₁a₁), χ(b₂a₂)) | χ(b₁a₂)] of a bare square that is directed in every setting. It is not a (K49) four-input rectangle, since no temporal cut of b₁b₂a₁a₂ separates the two active inputs (ledger S14, settled by DSGN).
 
 ## 2. What this does not check (the trust boundary)
 
@@ -118,7 +118,7 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
 
 - **S3a**: construct the layers of F_{V+S} in every degree in Agda and instantiate `Kernel`. This means formalizing the raw syntax of the T₁₂ signature, B and the guarded equations, then the (K65) rank normal forms and the switch extension of r10 Response 3.
 - **S3b**: done (§1.5).
-- **S3e**: done (§1.5, `RuleFin`, `KernelDec`). The (K49) question raised by the T₁₂ loop is ledger S15.
+- **S3e**: done (§1.5, `RuleFin`, `KernelDec`). The (K49) question raised by the T₁₂ loop is settled in ledger S14: the loop is a whiskered square, not a (K49) rectangle.
 - **S3c**: link `Grid` to raw T-syntax (`Join/SepAlgebra`), closing item 2 above. It shares the missing map from pure-ι 4-terms to words with "Link A–B" (E12).
 - **S3d**: fix the support reading. The S1 reviewer (2026-11-21, ledger PR #350) recommends this reading: SC_{V+S} holds iff some cell c : ⟦t⟧ → ⟦u⟧ (identity allowed) has full support after the requirement-4 projection to 𝔉(Γ), meaning every Gray tuple generator. `Rule` already covers it: take `Supp` to be supports in 𝔉(Γ), `supp` and `suppL` to be the projected supports, and `full` the Gray fullness test. The reviewer also says which lift interprets a coherence is open. Distinct V-cells can share a Gray image, as u and v of example (b) do. That choice stays a parameter of `Kernel` (⟦_⟧).
 

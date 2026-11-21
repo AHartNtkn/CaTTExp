@@ -90,5 +90,6 @@ Agda pays for the *unshared* size of a term: the certified checker and `==Tm` tr
 
 ## 7. Log
 
+- 2026-11-21. The cone table `Generated/RCConeTwo` (12 answers, 1.2 MB, made with `rc_dim2.py`) is certified: `RCConeTwoCheck` passes in 5.5 min. With it layered over `rc1`, `all (λ Γ → okM (ConeRC.cone (RCConeTwo.rc orRC rc1) Γ)) TermCones2.twoTerm ≡ true` passes by `refl` on the PR #373 branch in 5.8 min, so every 2-dimensional cone context goes through the certified checker. Loading the table alone takes 4.7 min.
 - 2026-11-21. Against the cone thread's `ConeRC.firstMiss` (branch of PR #373), all 8 shapes of `TermCones2.twoTerm` close in 4 rounds with 12 answers (8, 3, 1, 0 misses), every answer from the cases above.
 - 2026-11-21. Steps 0 (interface, trust model, bridge) and the n ≤ 2 and globular cases. A round trip (Python → query module → Agda normal form → Python → table → certified checker) passes; the checker accepts all answers of the test table at their queried types (`RCTestCheck`-style module, about 4 min for three answers of rank 2 and 1).

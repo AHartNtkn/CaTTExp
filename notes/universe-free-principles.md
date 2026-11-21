@@ -14,7 +14,7 @@ Without universes, the rule list for "ordinary mathematics" has grown one rule a
 |---|---|---|
 | **Exactness**: say what maps *into* a colimit, or pullbacks of a colimit, look like ("encode–decode") | EX, T-coprod and disjointness, G (fibres and transport of lax colimits), G⁺, the fibre clauses of R-U | **(DESC)** descent for cocartesian fibrations, plus descent for all maps along groupoid-indexed colimits |
 | **Construction**: build an object by a universal property *out of* it, including object-valued recursion | Trunc_n, R-A, R-A⁺, ℕ (route I), lists, W-types, R-U, Θ as an object | **(INIT)** every strictly positive finite context has an initial model; read impredicatively, this is a System-F quantifier `∀Δ. X` with naturality |
-| Representability (Yoneda) | DJ | none new: DJ is a candidate theorem of the limit rules (Riehl–Verity prove Yoneda from limit axioms only), **[conj]**, §5 |
+| Representability (Yoneda) | DJ | none new: DJ is a theorem of the limit rules, following Riehl–Verity's proof in an abstract homotopy 2-category, **[proved here, sketch]**, §5 |
 | Not universe-related | GB-shape, L-× | already instances of one schema, the chapter 8 row table (`spec/08`, F.7.4); out of F10's scope, §6 |
 
 With DESC and INIT, every rule in F10's list is either an instance of one of the two schemata or a candidate theorem; §7 gives the status of each. Two schemata are a **fixed, finite** list: a new inductive object, quotient, truncation or recursively defined family is a new *instance*, never a new rule. The open points are semantic (does Cat_ω satisfy the schemata in the stated generality?) and are sent out as one general researcher question (§8).
@@ -157,10 +157,21 @@ The evidence favours INIT: it is the only option that removes every construction
 
 ---
 
-## 5. DJ: a candidate theorem of the limit rules [conj]
+## 5. DJ is a theorem of the limit rules (F10b) [proved here, sketch, relative to Riehl–Verity's abstract results]
 
-Riehl–Verity prove the Yoneda lemma for cartesian fibrations (FYL Thm 6.0.1) in any ∞-cosmos, and the ∞-cosmos axioms contain only limits (cotensors by finite simplicial sets, pullbacks of isofibrations, a terminal object). Most of the paper is stated to work in a homotopy 2-category with weak comma objects. The project's limit rules (commas, cotensors by shapes, `uni` at every level) give at least weak 2-universal commas in the homotopy 2-category of the ambient. So DJ-sec and DJ-uni are candidates for theorems of the limit rules, which would remove DJ from the rule list. **Attempt.** The step to transfer is FYL §6.2's proof; it was not read in this session, so the dependency list is not confirmed. The one place to watch is FYL §5.2 ("a somewhat delicate result", pullback stability of cartesian fibrations), which uses the cosmos's strict pullbacks of isofibrations; under P the project's pullbacks are pseudo, which is the invariant version, so this should be the easier direction. Consistency check: `ordinary-math.md` §4.5's countermodel (categories with an auxiliary equivalence relation) has all limits and R-A and kills route III. If DJ follows from limits, then G must fail there, and so must DESC + G₁ (§3.3); which clause fails is not yet checked **[conj]**. Owner: this thread (ledger F10b).
+*Source, read this session from the arXiv PDF:* Riehl–Verity, *Fibrations and Yoneda's lemma in an ∞-cosmos* (arXiv:1506.05500), §4–§6. §4 opens: "For this section we shall assume that we are working in an abstract homotopy 2-category C ... nothing we say here will depend on that being the case [that C is the homotopy 2-category of an ∞-cosmos]". An abstract homotopy 2-category is a strict 2-category with comma and iso-comma objects whose comparison functors are smothering (surjective on objects, full, conservative), Def. 3.2.5 **[paper]**. §6.1 is also stated for an abstract homotopy 2-category. Only §6.2 uses the ∞-cosmos, and only to assemble the 1- and 2-cell statements into an equivalence of hom quasi-categories (Observation 6.2.5 and "pointwise isomorphisms in qCat₂ are isomorphisms", Obs. I.3.2.3) **[paper]**.
 
+**What the project's rules provide.** Under P, the homotopy 2-category of the ambient (objects, maps, cells up to invertible 3-cells) has comma and iso-comma objects with a universal property at every level, which is stronger than smothering. A biterminal object is ⊤. The project's definition of a cocartesian fibration (an adjunction `ℓ ⊣ r` with invertible unit, `ordinary-math.md` §4.6) is RV's Thm 4.1.10(ii), dualised, which RV prove equivalent to cocartesian 2-cells with induction and conservativity (Def. 4.1.1) in any abstract homotopy 2-category (Appendix §7) **[paper, statement and the setting of §7]**.
+
+**The proof, dualised to cocartesian fibrations** (RV §6.2, with the hom-quasi-category step replaced by generalised elements):
+1. *DJ-cocart.* `π_a : a ↓ C → C` is a groupoidal cocartesian fibration: RV Ex. 4.1.16/4.1.18 and 4.2.11 (domain projection of a comma), using Prop. 5.2.1 (pullback stability), all in an abstract homotopy 2-category. By Prop. 4.2.5, every 2-cell with codomain `a ↓ C` is π_a-cocartesian **[paper]**.
+2. *DJ-sec.* Let `φ : a ∘ ! ⇒ π_a` be the universal comma cell and `e : ⊤ → E` with `q e ≅ a`. Take the q-cocartesian lift `χ_φ : e ∘ ! ⇒ h` of φ (apply ℓ to the map `(e∘!, φ) : a ↓ C → q ↓ C`), so `q h = π_a`. Then h is a CF-morphism: for any cell τ into `a ↓ C`, τ is π_a-cocartesian (step 1), and middle-four interchange gives `hτ · χ_φ = χ_φ · e!τ`; the right side is cocartesian (χ_φ composed with an invertible cell), so `hτ` is cocartesian by left cancellation (RV Lemma 5.1.9, dualised). This is RV Lemma 6.2.9. Restricting along `ι = (a, 1_a)`, φι is an identity, so `χ_φ ι` is a cocartesian lift of an identity, hence invertible (RV Obs. 4.1.3): `h ∘ ι ≅ e`.
+3. *DJ-uni.* Let `h : a ↓ C → E` be any CF-morphism. The comma's 2-cell induction gives `η : ι ∘ ! ⇒ id` with `π_a η = φ` (RV Obs. 6.2.3). By step 1 η is cocartesian, so `hη : h ι ! ⇒ h` is a q-cocartesian lift of φ from `hι!`. Two cocartesian lifts of the same cell with the same source are connected by an invertible cell over the identity (RV Obs. 4.1.3). So h is isomorphic to the map built in step 2 from `e := hι`. Given two CF-morphisms h, h' and `θ : hι ≅ h'ι`, both are isomorphic to the construction of step 2 applied to `hι ≅ h'ι`, which is functorial in invertible cells (the lift of φ from an isomorphic source is the isomorphic lift, RV Obs. 4.1.2). So `h ≅ h'`, restricting to θ. This is RV Lemma 6.2.12.
+4. *Higher levels.* As in `ordinary-math.md` §4.6, a cell `h ⇒ h'` over C is a map into the fibrewise cotensor `E^{D¹}_C`. That is a cocartesian fibration: cotensoring by ⟦D¹⟧ is a 2-functor, so it sends the adjunction `ℓ ⊣ r` with invertible unit to one, and pulling back along the diagonal preserves cocartesian fibrations (RV Prop. 5.2.1). Steps 2–3 applied to `E^{D¹}_C` give level 2, and so on, coinductively. **[proved here, sketch]**
+
+**Generalised elements replace the hom quasi-categories.** RV need §6.2's quasi-categorical step because they state an equivalence of mapping quasi-categories. DJ is stated as existence and uniqueness of maps and cells, at every level, which steps 2–4 give directly, so the ∞-cosmos-specific facts are not needed. Steps 2–3 also work with e a generalised element `W → E` over `a ∘ !`, by the same argument in the slice over W.
+
+**Conclusion.** DJ adds nothing beyond the limit rules (commas, cotensors by ⟦D¹⟧, pullbacks, ⊤) and the definition of cocartesian fibration. It moves from "rule" to "theorem", relative to RV §4–§5 (abstract homotopy 2-category results, cited, not re-proved here). *Consequence for `ordinary-math.md` §4.5's countermodel* (all limits and R-A, route III fails): DJ holds there, so G fails there, and therefore so does DESC + G₁. **[proved here, relative to the above]** Which of DESC and G₁ fails is not needed and is not checked.
 ---
 
 ## 6. GB-shape and L-× are outside F10
@@ -178,7 +189,7 @@ GB-shape (weakening) and L-× (contraction at `grpd_2` targets) are rows of the 
 | Trunc_n | instance of INIT | **[proved here]** given INIT; INIT's soundness §8 Q2 |
 | G | DESC + edge case G₁ | **[proved here, sketch]**; G₁ derivable **[conj]** (Sattler–Wärn's route) |
 | G⁺ | DESC + G₁ relative to a base | **[proposal; sketch]** |
-| DJ | theorem of the limit rules | **[conj]**, §5, F10b |
+| DJ | theorem of the limit rules (Riehl–Verity §4–§6 in an abstract homotopy 2-category) | **[proved here, sketch]**, §5, F10b |
 | R-A, R-A⁺ | instances of INIT | **[proved here]** |
 | R-U (fibres and Θ₁-action) | instance of INIT + DESC-grpd | **[proved here, sketch]** |
 | R-cot⁺ (over set bases) | DESC-grpd: `[q, B] := ∐_i [U_i, B]` is already a construction from extensivity (`ordinary-math.md` §6.6(v)); the coproduct over an infinite set is an INIT instance (`Δ = (X, p : X → I, a : … )`) | **[conj]**, needs a check that the coproduct over a set I is an initial model; F10c |
@@ -186,7 +197,7 @@ GB-shape (weakening) and L-× (contraction at `grpd_2` targets) are rows of the 
 | T-graph, T-loc | unchanged for now; candidate theorems by encode–decode once DESC is in (the word family over ⟦Γ⟧ glued by DESC, as π₁(S¹) is computed in HoTT) | **[conj]**, F10d |
 | GB-shape, L-× | chapter 8 rows, not universe substitutes | out of scope, §6 |
 
-After this, the list of universe-substitute rules is **DESC (one schema) and INIT (one schema)**, with G₁ and DJ as candidate theorems.
+After this, the list of universe-substitute rules is **DESC (one schema) and INIT (one schema)**, with DJ a theorem (§5) and G₁ a candidate theorem.
 
 ---
 

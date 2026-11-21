@@ -1,6 +1,6 @@
 # Chapter 3. Invertibility markings
 
-The lax core makes every interchanger directed. Pseudo transformations and groupoids are recovered by **marks**. Ordinary ω-categories are recovered only in part: the `ord` mark inverts inner letters but does not give two-tier L's coherences (§3.6; ledger S16). Marks are proof-irrelevant judgments on terms and object variables, propagated by syntax-directed rules. Marks add no new definitional equalities. They add only the inverse term formers that ICaTT has, without its equations.
+The lax core makes every interchanger directed. Pseudo transformations, ordinary ω-categories and groupoids are recovered by **marks**. For ordinary ω-categories the mark is `ord`, which makes inner letters trivial and acts through the side condition (rule (COH-ord)). With every object marked `ord`, uniform L derives exactly two-tier L (§3.6; ledger S16(b)). Marks are proof-irrelevant judgments on terms and object variables, propagated by syntax-directed rules. Marks add no new definitional equalities. They add only the inverse term formers that ICaTT has, without its equations.
 
 **Pseudo = L + marks.** P (plain CaTT with pseudo transformations) has exactly the models of L in which every mixed cell of every dimension is invertible (Theorem 3.5.1). So the kernel does not need a separate pseudo core.
 

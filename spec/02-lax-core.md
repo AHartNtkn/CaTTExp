@@ -112,7 +112,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - The reverse, `coh_{Δ, (α▷g);(f′◁β) → (f◁β);(α▷g′)}`, is rejected in every setting: requirement 3 for every admissible theory, and in the Gray quotient no term at all has that type (below).
 - There is no horizontal composite: a cell from f ; g to f′ ; g′ has hom-dimension 1, so it cannot use the generator α ⊗ β, which has hom-dimension 2, and no such cell has full support.
 
-**Example (b): the strip, where the settings differ.** Inside a hom, take composable inner cells A₁, A₂ and a cell B in interchange position (the strip C_{2,1}). Let u = W(A₁ ∗ A₂, B), the direct crossing, and v the paste of W(A₁, B) and W(A₂, B).
+**Example (b): the strip, where the settings differ.** Inside a hom, take composable inner cells A₁, A₂ and a cell B in interchange position (the strip C_{2,1}). Let u = ι(A₁ ∗ A₂, B), the direct inner crossing, and v the paste of ι(A₁, B) and ι(A₂, B). (Earlier versions wrote W here. W is the outer lift, and the outer W-strip behaves differently: it stays distinct in every setting, ledger E13.)
 - Settings ∅ and {R}: ⟦u⟧ ≠ ⟦v⟧ and neither reaches the other, so neither `coh(u → v)` nor `coh(v → u)` is accepted. In the tagged model of (K44) they really differ.
 - Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧, and its Gray image has full support, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
 - The law cannot be added as a hypothesis instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
@@ -158,7 +158,7 @@ Two-tier L computes the side condition in the free Gray-enriched category 𝔉(�
 
 Generators are tuples θᵢ₊₁ ⊗ … ⊗ θⱼ with dimension the sum and boundary by the Leibniz formula. The total cell τ_Γ is the tensor of the composites ⟨Θᵢ⟩. Supports are Steiner chains, so the side condition of Lemma 2.2.1 is integer linear algebra.
 
-This is not the kernel's default theory. Marking every object `ord` in uniform L gives two-tier L's invertibility judgments exactly (chapter 3, §3.6), but its coherences only up to the relative coherence question of ledger E13, and in settings without the inner law not by the coherence rule alone. It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
+This is not the kernel's default theory. Marking every object `ord` in uniform L gives two-tier L's invertibility judgments for heads with operand-pure lifts (chapter 3, §3.6). It does not give two-tier L's coherences in any setting: relative coherence of V + S over 𝔉 fails even after inverting every inner letter (ledger E13, answered 2026-11-21). It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
 
 **Decision procedure.** Symbolic supports and an exact cover check (`Gray/Cover.agda`, `Gray/Fast.agda`), proved equal to the explicit support computation (`fastSide ≡ graySide`). Measured growth on n-fold wedges is about n⁶ up to n = 28. Explicit supports are exponential (a term of size O(n) has support of size 3ⁿ), so the symbolic form is required.
 
@@ -175,7 +175,7 @@ This is not the kernel's default theory. Marking every object `ord` in uniform L
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
-- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds exactly (§3.6). For coherences it fails by the coherence rule alone in settings without the inner law (the strip), and is otherwise a relative coherence question (ledger E13).
+- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds for heads with operand-pure lifts (§3.6). For coherences it fails in every setting: the loop H and 1_w, and the outer W-strip, have equal Gray images and stay unconnected after every inner letter is inverted (ledger E13). For the first, the relative coherence lemma for 𝔉 → ν now holds (ledger E5).
 
 ## 2.7 Dualities
 

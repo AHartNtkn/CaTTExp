@@ -6,6 +6,8 @@
 
 ## 0. Summary
 
+*Superseded in part by §8 (2026-11-21, after the researcher answer): (IL) and (U) are false; (OP-inv_S) is repaired to (OP-inv_S′); relative coherence of V + S over 𝔉 fails in every setting; the Gray-to-strict lemma (E5) holds.*
+
 1. **Restated rules (§3).** Over V + S the propagation rules split by the Gray image of the designated lift c of a coherence. If π(c) is the total cell τ_Γ, the two-tier premises are read on the top generators of U(Γ) exactly as before, plus one new premise for the inner top letters of c. If π(c) is an identity (an *inner coherence*, such as an inner interchanger), the new rules (ORD) and (INN-fac) apply. Nothing else changes: (COH-inv), (DES), (INV⇒PS), (PS*), (OBJ-k) and the marked declarations are as in spec §3.3.
 2. **What is proved outright, in every algebra of every admissible theory satisfying S (§4).**
    - (COH-inv), the composite step of (OP-inv), and (ORD), with `C ord` meaning "every inner letter landing in a hom into C is invertible" **[proved]**.
@@ -53,7 +55,7 @@ The definition of `ord` quantifies over all inner letters, of every dimension, n
 
 ### 2.3 The hypothesis on outer letters
 
-**(IL) [hyp].** For every pasting context Γ, every outer letter ℓ of F_{V+S}(Γ) with π(ℓ) a whiskering of the Gray generator x₁ ⊗ … ⊗ xₙ, and every σ : F_E(Γ) → 𝒦: if σ(G(x₁, …, xₙ)) is invertible then σ(ℓ) is invertible.
+**(IL) [hyp; refuted 2026-11-21, see §8.1].** For every pasting context Γ, every outer letter ℓ of F_{V+S}(Γ) with π(ℓ) a whiskering of the Gray generator x₁ ⊗ … ⊗ xₙ, and every σ : F_E(Γ) → 𝒦: if σ(G(x₁, …, xₙ)) is invertible then σ(ℓ) is invertible.
 
 𝓜_S is the class of models in setting S satisfying (IL).
 
@@ -124,7 +126,7 @@ Suppose A is invertible. r̄₁ is a whiskered outer cylinder of A, so it is inv
 
 So the two-tier rule (INV-fac) cannot be read letter by letter on F_V without either a split or a hypothesis such as (IL). This is why §2.3 states (IL), and why (INN-fac) and (IL) are posed together as outbox Q1.
 
-**Theorem 4.7 (OP-inv_S, OP-ps_S, Gray-cell rules) [proved for 𝓜_S].** In a model in 𝓜_S, all rules of §3 are sound.
+**Theorem 4.7 (OP-inv_S, OP-ps_S, Gray-cell rules) [proved for 𝓜_S; 𝓜_S contains no free algebra, so (OP-inv_S) is replaced by (OP-inv_S′), Theorem 8.1].** In a model in 𝓜_S, all rules of §3 are sound.
 *Proof.* (OP-inv_S): the top letters of c are outer or inner. An outer one projects to a whiskered g ∈ TopGray(Γ) (generator-preserving π and π(c) = τ_Γ), and σ(G(g)) is invertible by premise (a), so σ(ℓ) is invertible by (IL). An inner one exists only if inner-top(Γ, A), and then ord-tgt and `ord` make it invertible. Lemma 4.1 concludes. (OP-ps_S): as two-tier Lemma 2.3, with y ⊗ c replaced by the lift of G(y, c), whose top letters over the wedge are handled the same way. (INV-fac), (INV-obj), (PS-fac) on uniform Gray cells: the two-tier proofs (`invertibility-markings.md` §2, Lemmas 2.1–2.2) are statements about the cell σ(G(x)); for one positive factor Theorem 4.5 proves them in every algebra; for several, (IL) applied to the top atom of the wedge reduces them to the two-tier statement in the Gray quotient of the hom when the target is `ord`, and otherwise they are exactly what (IL) asserts. The remaining rules are as in two-tier L. ∎
 
 **Status of soundness.** Sound in every model, with no hypothesis: (COH-inv), (ORD), (INN-fac_S), (INV-fac)/(INV-obj) for one positive factor, (INV⇒PS), (PS*), (OBJ-k), (DES). Sound in 𝓜_S: the rest. (IL) holds in every strict Gray-enriched category and strict ω-category, for every S.
@@ -137,7 +139,7 @@ Let Δ have every object variable marked `ord`.
 
 **5.2 Marks cover the two-tier marks [proved; Agda `Uniform.Marks.ord-covers-two-tier`].** For a head accepted by uniform L, with every object `ord`: if the two-tier rules derive `inv` (resp. `ps`) for the projected head, the uniform rules derive it. *Proof.* Two-tier (COH-inv) on the projected head means the Gray coherence case: then the uniform head is a coherence case (uniform (COH-inv)) or an inner coherence ((ORD), ord-tgt holds). Two-tier (OP-inv)/(OP-ps) means the Gray operation case with premise (a); premise (b) holds because ord-tgt does. The factor rules on Gray cells coincide. ∎
 
-**5.3 Two-tier coherences that uniform L lacks.** The converse direction asks: for every two-tier-accepted head (Γ, t → u) is there a uniform-plus-`ord` term of type t → u?
+**5.3 Two-tier coherences that uniform L lacks.** *(Revised in §8.3: recovery fails in every setting.)* The converse direction asks: for every two-tier-accepted head (Γ, t → u) is there a uniform-plus-`ord` term of type t → u?
 - **If the π-fibre is connected by inner coherences [proved].** Call the head *inner-connected* if there are terms t = t₀, t₁, …, t_m with ⟦t_m⟧ = ∂⁻ of a lift and terms u_m′, …, u₀ = u with ⟦u_m′⟧ = ∂⁺ of that lift, consecutive ones related in one direction or the other by a term that is an inner coherence (over some pasting context, substituted). Then each such term is invertible by (ORD), and composing the lift's coherence with these terms and the inverses given by (DES) yields a uniform-plus-`ord` term of type t → u. In the Gray coherence case the lift is an identity and only the zigzag remains. This covers every two-tier head whose two sides differ in V by one inner interchanger in either direction, such as the directed Eckmann–Hilton of §5.4.
 - **Finding: the strip [proved for the coherence rule; conj in general].** Spec §2.3 Example (b): inside a hom of C, u = W(A₁ ∗ A₂, B) and v = the paste of W(A₁, B), W(A₂, B). In settings ∅ and {R}, ⟦u⟧ ≠ ⟦v⟧, π(⟦u⟧) = π(⟦v⟧) with full support, and neither reaches the other. So two-tier L accepts coh(u → v) (coherence case), uniform L accepts no coherence of type u → v or v → u, and `ord` cannot help directly because there is no cell to invert. The mirror strip (a composite right operand) does the same in settings ∅ and {inner law}. With both splits on, ⟦u⟧ = ⟦v⟧.
   - **[conj] no uniform-plus-`ord` term of type u → v exists in settings ∅ and {R}.** A countermodel would be the tagged model of (K44) with tags in the free abelian group on operand-length pairs instead of subsets: every inner letter then has an inverse tag, so every object is `ord` and (IL) holds coordinatewise with a Gray-category coordinate, while u and v keep different tags and the tag coordinate has only identities one degree up. What is not checked in-house is that this algebra satisfies all of V's laws (the subset tags of (K44) are idempotent; the group tags are not). Outbox Q2, fallback part.
@@ -185,7 +187,88 @@ So "marking every object `ord` gives two-tier L" is **true for marks** (5.2), **
 
 | Item | Owner |
 |---|---|
-| Outbox Q1: (IL) and (U) in every algebra of every admissible theory satisfying S; inner letters beyond elementary interchangers | outbox `conjectures/outbox/invertibility-in-directed-interchange.md`; in-house attempts MKL |
-| Outbox Q2: relative coherence RC_{V+S/𝔉} under `ord`, merged with E5's L⁺/P lemma; the group-tag countermodel | same prompt; MKL |
+| ~~Outbox Q1, Q2~~: answered 2026-11-21, see §8 (`conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`) | done |
+| Re-encode (OP-inv_S′) in Agda; ps* branch and several-factor rules in every algebra; further outer letters under `ord` | E14, MKL |
+| Conjecture 3.2: realize the strict comparison cell as an L⁺ term | E5, MKL |
 | Running the E7 head computations on actual F_V (needs the uniform checker) | ULC (S3) |
 | S11 (uniqueness of lifts) affects only the remark after Theorem 4.4 | SPEC |
+
+## 8. After the researcher answer (2026-11-21)
+
+The outbox prompt was answered. The answer is verified and filed at `conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`. This section records what changes here. Where it conflicts with §§0–7, **this section wins**. The superseded statements above are marked inline.
+
+### 8.1 What is now known
+
+- **(IL) is false, and so is (U), in every setting** [cited; verified].
+  - On Γ = Σ(D² ∨ D² ∨ D³) ∨ ΣD¹, take the outer unary disk E(Z, b), where Z is the Godement composite of an inner square I and the D³ generator x. Its Gray cell is G(x, b).
+  - A substitution that contracts x sends G(x, b) to an identity and sends E(Z, b) to E(I, b).
+  - E(I, b) is proper (positive charge), so it is not invertible (M5). This holds with both switches on as well.
+  - So 𝓜_S contains no free algebra of V + S. (IL) fails along a substitution between free pasting diagrams.
+- **The matching split is necessary** for "invertible input ⇒ invertible inner interchanger" [cited; verified]. This is the converse of Theorem 4.4: in setting ∅ there is a V-algebra with F invertible and ι(F, G) not invertible. So (INN-fac_S) is exactly right.
+- **Elementary inner interchangers do not control the other inner letters** [cited; verified]. There is a V + both-splits algebra in which every elementary inner square is an identity but a naturality cell is not invertible. So `ord` must mean every inner letter, as §2.2 defines it.
+- **Relative coherence fails for both uniform quotients in every setting** [cited; verified].
+  - The parallel pair is H : w ⇛ w (the loop (K34), a whiskered elementary inner interchanger on Σ[2] ∨ Σ[2]) and 1_w. Both have the same image under π₁ and under π₀.
+  - In a V + S algebra in which every inner letter (respectively every interchanger letter) is invertible, H and 1_w take different values and no 5-cell exists.
+  - So F_{V+S}(Γ)[I_k⁻¹] has no cell H ⇛ 1_w, for k = 1 and k = 0 and every S.
+- **Relative coherence holds for the Gray-to-strict map** [cited; verified]. This is the missing lemma of E5 (`invertibility-markings.md` §3.2).
+  - Let p and q be parallel in 𝔉(Γ) with π_G(p) = π_G(q).
+  - Then there is a strict cell p → q, with a strict two-sided inverse, in the strict presentation of each hom with its mixed atoms inverted. That presentation maps into 𝔉(Γ)[mixed⁻¹].
+- **Two strips.** These were run together in §5.3, in spec §2.3 Example (b) and in `design-decisions.md` §1.4(a).
+  - The **inner strip** is (K44)/(K51): the inner crossing ι(A₁ ∗ A₂, B) against the paste of ι(A₁, B) and ι(A₂, B). It is equal iff the left split (the inner law) holds. Without it, the pair stays unconnected after inverting all inner letters, by the ℤ-tag model with its base collapsed (the old [conj] of §5.3 is now [cited]).
+  - The **outer W-strip** on C_{2,1} is W(A₁ ∗ A₂, B), a degree-5 outer lift, against the paste of W(A₁, B) and W(A₂, B). It stays distinct and unconnected after localization **in every setting**, including with both splits.
+- **The per-letter criterion.** Whether a given letter becomes invertible with a given argument can be semi-decided by enumerating bounded derivations of V + S with a fresh inverse adjoined. It is complete, but it is not a decision procedure.
+
+### 8.2 Repaired rules
+
+(IL) is false on free algebras. So (OP-inv_S)(a), which reads the premise on the Gray generator g[γ], can conclude `inv` for a term with no inverse. Concretely, a lift whose top letter is E(Z, b), substituted by the contraction, gets a premise that is an identity, while its top letter is not invertible.
+
+The repair keeps the premise on the letter's own operands. Call an outer top letter ℓ of the designated lift c **operand-pure** if its operands are generators of Γ.
+
+```
+(OP-inv_S′)  Gray operation case, designated lift c, and
+             (a′) every outer top letter ℓ of c is operand-pure and one of:
+                  (i)   ℓ is a whiskered Gray cell G(x₁, …, xₙ), and g[γ] inv;
+                  (ii)  ℓ is an outer cylinder with moving input x, and x[γ] inv;
+                  (iii) ℓ = h(A, B), A[γ] inv, and (ord-tgt, or the split on
+                        the side of the A-cylinder in ῑ₋ is in S)
+             (b)  inner-top(Γ, A) ⇒ ord-tgt                                     ⇒  inv
+(OP-ps_S′)   as (OP-ps_S), with "for every g ∈ TopGray(Γ)" replaced by
+             "every outer top letter ℓ of c is operand-pure, and is case (i)
+             with g[γ] inv or some xⱼ[γ] ps* (dⱼ ≥ 1), or case (ii) or (iii)"   ⇒  ps
+```
+
+**Theorem 8.1 [proved].** (OP-inv_S′) is sound in **every** algebra of every admissible theory satisfying S, with no hypothesis.
+
+*Proof.* Each top letter has an invertible image:
+- *Case (i).* ℓ[γ] is the whiskered Gray cell G(x₁[γ], …, xₙ[γ]), by closure under substitution (requirement 5), because the operands are generators. Whiskering preserves inverses.
+- *Case (ii).* Theorem 4.5, applied to the substituted moving input.
+- *Case (iii).* §4.6: r̄₁ = h · ῑ₋, where r̄₁ is invertible by Theorem 4.5 and ῑ₋ is invertible by `ord` or by Theorem 4.4.
+- *Inner top letters.* By (b).
+
+Lemma 4.1 then concludes. ∎
+
+**The ps* branch.** (OP-ps_S′) keeps the old status: proved for 𝓜_S. Case (i) needs no (IL), because the letter is its Gray cell. What it still needs is that two-tier Lemma 2.3 transfers to a uniform Gray cell with several positive factors in an arbitrary V-algebra. That transfer is open and logged as E14.
+
+**What the repair costs.**
+- `ord` everywhere still gives every two-tier `inv` judgement for heads whose designated lift has operand-pure top letters of kinds (i)–(iii). Every head over a wedge of disks qualifies, and so does every head whose lift is a single whiskered Gray cell.
+- For other designated lifts, the uniform rules now derive less than §5.2 claimed. Typical examples are lifts with W-type letters on composite operands, or lifts with auxiliary letters K, J or shifted joins at the top.
+- `Uniform/Marks.agda` encodes the old (OP-inv_S). Its theorems remain true as statements about that encoding, relative to the `Sem` hypotheses. But `Sem`'s field for the operation case is now known to fail on free algebras. Re-encoding the repaired rule is ledger E14.
+
+### 8.3 E7 and S8, revised
+
+- **E7.** `ord` everywhere does **not** recover two-tier L's coherences **in any setting**.
+  - The pair (H, 1_w) is accepted as equal by two-tier L (both have identity image) and is unconnected in uniform L even after every inner letter is inverted.
+  - The outer W-strip gives a second witness that survives both switches.
+  - The inner-connected case of §5.3 still holds: a head whose sides differ by inner coherences is recovered with `ord`.
+  - Recovering marks (§5.2) holds as revised in §8.2.
+  - Design consequence: in uniform L an object marked `ord` has invertible inner letters, but it is **not** an ordinary ω-category up to coherence. Its inner coherence equations are genuinely missing, and neither switch supplies them.
+- **S8.** In §6, every "and RC_{V+S/𝔉}" for (H2) and (H3) heads under V + S becomes: **accepted iff the head's V-fibre is connected. No general relative coherence is available, and marks cannot supply one.**
+  - For two-tier L, the (H3) reduction "plus E5's relative coherence" now has its lemma proved (§8.1). What remains is realizing the strict cell v by an L⁺ term; see E5.
+  - The "no marks" entries are unchanged.
+
+### 8.4 Corrections to the sections above
+
+- §0 item 3, §2.3, Theorem 4.7: "(IL) is automatic … for outer cylinders" is **wrong as stated**. It holds when the moving operand is a generator, because then the letter is its own Gray cell. (IL) is false in general (§8.1).
+- §0 item 4 and §5.3: "with both splits on … recovery is exactly relative coherence" and "open (relative coherence) in the T₁₂ setting" are **refuted**: relative coherence fails in every setting (§8.1). "With both splits on, ⟦u⟧ = ⟦v⟧" is correct for the **inner** strip ι(A₁ ∗ A₂, B) only. It is wrong for the outer W-strip.
+- §5.3 [conj] on the ℤ-tag model: now [cited], in the collapsed form of §8.1.
+- §6 table, column "Uniform V + S": read "RC_{V+S/𝔉}" as "fibre connectivity, case by case" (§8.3).

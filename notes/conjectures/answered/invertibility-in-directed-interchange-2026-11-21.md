@@ -560,3 +560,69 @@ one-sided splits, `marked_inner_crossing.py` for the directed
 base and its 19,456 interchange rectangles, and
 `interchange_weak_initiality.py` for the two signed strip
 subdivisions. All four are in `scripts/e6/`.
+
+# Verification (2026-11-21, thread MKL)
+
+Status: **verified at argument level.** Every question is answered. Two of the answers refute hypotheses that the repository had been using, and one answer proves a missing lemma.
+
+**What was re-run.** All five scripts exit 0.
+- `scripts/e6/interchange_invertibility.py` (new): the loop H has value (4, 1) against (4, 0); both strip evaluations; the contraction of the moving globe; 48 equal-image pairs on four disk tensors, each joined by a zigzag of mixed cells; the naturality label on the (2, 1) disk.
+- `interchange_loop_weights.py`: 169 typed input pairs; powers of H from 0 to 100.
+- `interchange_universality_check.py`: the cyclic tables; all right splits hold.
+- `marked_inner_crossing.py`: 19,456 rectangles.
+- `interchange_weak_initiality.py`: the strip and its guarded split.
+
+The new script checks only the arithmetic and the finite instances. Every general claim below was checked by hand.
+
+**Checked by hand.**
+
+1. **Q2 for the uniform quotients (k = 1 and k = 0) fails in every setting.**
+   - **The pair.** It is H = [prefix | ι(F, G) | suffix] : w ⇛ w together with 1_w, on Σ[2] ∨ Σ[2]. H is the loop (K34), a whiskered elementary inner interchanger, which exists in every admissible theory. π₁(H) and π₀(H) are both identities.
+   - **The model.**
+     - Long-hom 3-cells are ℤ.
+     - The 4-cells over n are pairs (n, z), and both compositions add.
+     - There are only identities above degree 4.
+     - The outer crossing has value ab.
+     - The inner square has label xy over x + y.
+   - **Why the model satisfies V + S.** Bilinearity gives the zero and subdivision laws at cut 0. Inside the long hom the structure is a genuine Gray composition, so both splits hold. Every higher equation holds because parallel cells above degree 4 are equal.
+   - **Why inversion cannot connect them.** Every letter that either localization inverts takes a group value, so the assignment extends to the localization. H = (4, 1) and 1_w = (4, 0), and there is no 5-cell between them in either direction. So inverting the killed letters creates no cell H ⇛ 1_w.
+   - No gap.
+2. **Q2 for the Gray-to-strict map holds in every dimension, for every interval and every parallel pair.** This is the missing relative coherence lemma of E5 (`invertibility-markings.md` §3.2). The proof has three steps.
+   - **Step 1 (counting).** In the strict presentation L of the Gray tensor with mixed atoms inverted, a cell with identity product image has no pure top occurrence. Pure occurrences contribute positive basis chains, while mixed atoms and their inverses contribute zero. So the cell is strictly invertible.
+   - **Step 2 (existence).** The repository's n-ary localization theorem (Thm 3.1 step 1) gives an equivalence in the weak realization.
+   - **Step 3 (strict representative).** Homs of a strict ω-category between strict objects are represented by its strict homs, so the equivalence has a strict representative v : p → q. The product is loop-free, so c(v) is an identity, and step 1 then makes v strictly invertible.
+   - The weak-to-strict step relies on the cited Rezk material and was checked at argument level only.
+   - The script finds a zigzag for all 48 pairs in the four small tensors.
+3. **(IL) and invisibility (U) fail (Q1(a), Q3).**
+   - **The letter.** Take Γ = Σ(D² ∨ D² ∨ D³) ∨ ΣD¹ and the letter E(Z, b), where Z is the Godement composite of the inner square I and the top cell x. In 𝔉 the square I becomes an identity, so the Gray cell of E(Z, b) is G(x, b) = E(x, b).
+   - **The substitution.** Contracting x to an identity sends G(x, b) to an identity, and sends the letter to E(I, b).
+   - **Why E(I, b) is not invertible.** Its round-5 charge is m₄(I)·|b| > 0, so it is proper, and by (M5) it is not invertible.
+   - **Both splits.** The degree-5 bit quotient keeps E(I, b) proper with both switches on. Bits combine by disjunction, every elementary split carries the same bit on both sides, and the quotient reflects identities.
+   - No gap.
+4. **Q1(b): the converse of (M6) fails.** A model without the left split, built from C₂ against [1] with labels {0, 1} under max, has a square with label 1 on an input that is its own inverse. That square is not invertible, because max has no inverses. Every right subdivision holds, since [1] has only one proper arrow. The mirror model gives the right-input case.
+   - So the matching split is necessary and sufficient for the universal one-input rule.
+   - These are the cyclic tables of r7 Responses 2–3, already verified.
+5. **Q1(c): invertible elementary inner squares do not make every inner letter invertible.**
+   - **The model.** Short homs D², D¹. The long hom has (ℕ, +) as 3-endomorphisms. The composition functor out of D² ⊗ D¹ sends the top atom to 1.
+   - Every elementary square is an identity, but the (2, 1) naturality has label 1 and is not invertible.
+   - So `ord` must quantify over all inner letters, as `uniform-marks.md` §2.2 already defines it.
+6. **Q4 and the strip.** The response separates two strips that the prompt's (M3), spec §2.3 Example (b) and `design-decisions.md` §1.4(a) had run together.
+   - **The inner strip.** This is (K44)/(K51): the inner crossing of A₁ ∗ A₂ past B, against the paste of the two crossings. It is decided by the left split.
+     - With ℤ-tags, the literal grid model is a V-algebra. Its proper squares are still not invertible, because the base is directed.
+     - After collapsing the base to a point, the tags become 2-endomorphisms and the inverse is negation. The direct square and the tiled squares then have the different values e₂,₁ and 2e₁,₁.
+     - So **without the left split the inner strip stays unconnected after localization.** This answers Q4 positively, in the collapsed form.
+   - **The outer W-strip on C_{2,1}.** W is a degree-5 outer lift.
+     - A table with both switches on gives the direct W(A₁ ∗ A₂, B) label 1 and every paste of the two unit tiles label 0.
+     - Every killed letter is invertible in that table, and a 6-cell exists only between cells with equal labels.
+     - So **the outer strip stays unconnected after localization in every setting.**
+     - The table's checks (join factorization −ab + ba = 0, the guard families of r8 Response 1, unit restrictions) were followed. No gap was found.
+7. **The per-letter criterion.** For a fixed letter and argument position, propagation is semi-decidable. Enumerate the bounded derivation graphs of V + S, adjoined with a fresh inverse of the argument, and look for a letter that is both a first factor and a last factor of identity components.
+   - The proof is the standard term-model argument: the term model is itself a test algebra.
+   - It is correct. It gives an enumeration, not a decision procedure.
+
+**Corrections this forces in the repository** (all made in this round, see `uniform-marks.md` §8):
+- The model class 𝓜_S of `uniform-marks.md` excludes the free algebras, so (OP-inv_S) as stated is **unsound for the syntax**. A substitution can send a premise to an identity while a top letter stays non-invertible. The rule is repaired by **operand purity**, and the repaired rule is sound in every algebra.
+- "(IL) is automatic for outer cylinders" was wrong. It holds when the operands are generators.
+- `ord` everywhere does not recover two-tier coherences in any setting. The loop pair (H, 1_w) and the outer W-strip both show this.
+- Spec Example (b) and `design-decisions.md` §1.4(a) wrote W for the inner crossing. That notation is corrected.
+- E5's missing lemma is proved. What remains for Conjecture 3.2 is realizing the strict cell v by an L⁺ term.

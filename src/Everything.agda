@@ -299,3 +299,7 @@ import CaTTExp.Uniform.Rule
 import CaTTExp.Uniform.Kernel
 import CaTTExp.Uniform.Grid
 import CaTTExp.Uniform.GridExamples
+import CaTTExp.Uniform.RuleFin
+import CaTTExp.Uniform.KernelDec
+import CaTTExp.Uniform.GridFive
+import CaTTExp.Uniform.GridFiveExamples

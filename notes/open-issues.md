@@ -44,6 +44,7 @@ Thread ids used below:
 | SPEC | "Write the consolidated system spec" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbMsqNLiUxV2Vs7PrDh7sGei` | active (added 2026-11-21): writes `spec/`; owns S-items marked SPEC |
 | MKL | "Restate invertibility markings over the lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbF5iK9ShTrDvaLaEvBmuHtv` | active (added 2026-11-21): owns S4, S8 |
 | ULC | "Implement the uniform lax checker in Agda" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb1PqLMvGwzMhRBpUokoMvbg` | active (added 2026-11-21): owns S3 |
+| VSF | "Formalize the V + S free objects in every degree" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbEDdjJY37pJKCxZ3UkEYjg5` | active (added 2026-11-21): owns S3a, S3b, S3c |
 | DUAL | "Redo Gray dualities for the lax core" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb7gr8C9TDJRTDAfoRWhzEvN` | done 2026-11-21 (D8 uniform part closed, PR #358) |
 | FSET | "Derive function sets from the internal hom" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbEYh1SmSvYpJK9574NkQDZb` | active (added 2026-11-21): owns F8, F8a–F8d |
 

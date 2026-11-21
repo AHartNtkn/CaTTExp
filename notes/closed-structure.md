@@ -916,6 +916,8 @@ All cells are invertible (written with ⊨). There are no definitional equations
 
 **Status 2026-11-20.** This rule is now derived from the biclosed rules of F.7.4, with B ⊗ Θ the formula B ⊗ ⟦Θ⟧ (F.7.4 item 5). It is kept here as the representable case and as the source of E.4.
 
+*Correction 2026-11-21 (ledger S13, `design-decisions.md` §4).* F.7.4 derives this rule with Θ a probe ⟦Θ⟧. Read with Θ a free object (as written above, through (lhom) of `internal-hom.md` §5.1), it is derived only under the proposed rule GB-shape. The consistency clause (B = ⟦Δ⟧) likewise holds within the probe sort.
+
 **Payoff.** Lax transformations between arbitrary functors are maps B ⊗ D¹ → C. That is a cleaner presentation than the fibre definition LaxTr(F, G) of §5.2, and it composes by (⊗Θ-fill).
 
 ## E.4 Derived structure of the B ⊗ Θ rule (D7, adjacent)

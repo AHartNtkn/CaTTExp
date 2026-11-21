@@ -85,7 +85,7 @@ Colimits *inside* an object C are declared structure: a marking with a filler ru
 
 ## 9.6 Function sets
 
-**Rules (two rows of the chapter 8 table).** Function sets come from A\B. Two structural principles are added as rows of the F.7.4 table, so they get (GB-cut) and (GB-dcut) like every other row:
+**Rules (two proposed rows of the chapter 8 table).** Function sets come from A\B. Two structural principles are proposed as rows of the F.7.4 table, so they get (GB-cut) and (GB-dcut) like every other row. Both are proposals: GB-shape is the open kernel question of chapter 8, §8.8 (ledger S13, F8a), and L-× awaits an independent check (F8b).
 ```
 (GB-shape)  ⊢ ι_Θ : (⟦Θ⟧ ▸ ⟦Θ⟧♭)        for each pasting shape Θ   (⟦Θ⟧♭ the free object of chapter 7)
             row: H = (L, ⟦Θ⟧♭, R ▸ Z),   B = (L, ⟦Θ⟧, R ▸ Z),      r(x) = x ∘ᵢ ι_Θ

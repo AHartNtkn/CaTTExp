@@ -229,6 +229,8 @@ There are two ways to generate these cells:
 
 **Status 2026-11-20: derived.** With the biclosed rules of `closed-structure.md` F.7.4, [Θ, C] is the right residual C/⟦Θ⟧. (lhom-Λ/♭) are the probe-pair row composed with the right-evaluation row. β is the n = 0 comparison ε, η is the n = 1 cut, and the naturality cells are n = 1 cuts (F.7.4 item 5). The rule above stays valid as a derived rule, so nothing in this section changes meaning.
 
+*Correction 2026-11-21 (ledger S13, `design-decisions.md` §4).* The derivation gives (lhom-Λ/♭) with Δ a **probe**, i.e. for multimaps (⟦Δ⟧ ▸ –). This section states it for Δ ⊳ C, maps out of the free object ⟦Δ⟧ of `free-objects.md`. The two are identified only by the proposed rule GB-shape (`ordinary-math.md` §6.5.2 (ii)). So "nothing changes meaning" holds under GB-shape. Without it, the data form of (lhom), including the D⁰ check above and the uses of Δ ⊳ – in §5.2–5.6, is not derived.
+
 ### 5.2 Lax transformations between arbitrary functors
 
 For F, G : B → C (ambient 1-cells), define

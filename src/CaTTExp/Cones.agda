@@ -350,6 +350,10 @@ data Ex : Set where
   naD nrD : Ex → Ex → Ex → Ex      -- their O_odd duals: naDC, nrDC,
   ru2r : Ex → Ex                   -- ru2rC,
   wir hxD : Ex → Ex → Ex           -- wirC, hxDC
+  -- A core term w supplied from outside (a relative-coherence filler),
+  -- declared to have type a → b. Nothing here trusts it: every context
+  -- that contains one is run through the checker.
+  raw : Tm → Ex → Ex → Ex
 
 data ExTy : Set where
   ob  : ExTy
@@ -408,6 +412,7 @@ tyF (suc f) Γ (wi u w)   = hom (tyF f Γ s) s (bn 0 u (idn w))
   where s = idn (bn 0 u w)
 tyF (suc f) Γ (hx a b)   = hom (tyF f Γ s) s (bn 0 a b)
   where s = bn 1 (bn 0 a (srcE (tyF f Γ b))) (bn 0 (tgtE (tyF f Γ a)) b)
+tyF (suc f) Γ (raw w a b) = hom (tyF f Γ a) a b
 tyF (suc f) Γ (ru2r a)   = hom (tyF f Γ s) s a
   where s = bn 1 a (idn (tgtE (tyF f Γ a)))
 tyF (suc f) Γ (wir w u)  = hom (tyF f Γ s) s (idn (bn 0 w u))
@@ -467,6 +472,7 @@ mutual
   evF (suc f) Γ (ru2 a)    = fst (ru2C (cellF f Γ a))
   evF (suc f) Γ (wi u w)   = fst (wiC (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (hx a b)   = fst (hxC (cellF f Γ a) (cellF f Γ b))
+  evF (suc f) Γ (raw w a b) = w
   evF (suc f) Γ (ru2r a)   = fst (ru2rC (cellF f Γ a))
   evF (suc f) Γ (wir w u)  = fst (wirC (cellF f Γ w) (cellF f Γ u))
   evF (suc f) Γ (naD w a u) = fst (naDC (cellF f Γ w) (cellF f Γ a) (cellF f Γ u))
@@ -519,6 +525,7 @@ substE ρ (nr u w b) = nr (substE ρ u) (substE ρ w) (substE ρ b)
 substE ρ (ru2 a)    = ru2 (substE ρ a)
 substE ρ (wi u w)   = wi (substE ρ u) (substE ρ w)
 substE ρ (hx a b)   = hx (substE ρ a) (substE ρ b)
+substE ρ (raw w a b) = raw w a b   -- not substituted (used only in final contexts)
 substE ρ (ru2r a)   = ru2r (substE ρ a)
 substE ρ (wir w u)  = wir (substE ρ w) (substE ρ u)
 substE ρ (naD w a u) = naD (substE ρ w) (substE ρ a) (substE ρ u)
@@ -548,6 +555,7 @@ varsE (nr u w b) = varsE u ++ varsE w ++ varsE b
 varsE (ru2 a)    = varsE a
 varsE (wi u w)   = varsE u ++ varsE w
 varsE (hx a b)   = varsE a ++ varsE b
+varsE (raw w a b) = varsE a ++ varsE b
 varsE (ru2r a)   = varsE a
 varsE (wir w u)  = varsE w ++ varsE u
 varsE (naD w a u) = varsE w ++ varsE a ++ varsE u
@@ -928,6 +936,7 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   liftF (suc fl) (ru2 _)     = nothing
   liftF (suc fl) (wi _ _)    = nothing
   liftF (suc fl) (hx _ _)    = nothing
+  liftF (suc fl) (raw _ _ _) = nothing
   liftF (suc fl) (ru2r _)    = nothing
   liftF (suc fl) (wir _ _)   = nothing
   liftF (suc fl) (naD _ _ _) = nothing
@@ -1163,6 +1172,7 @@ dualE (naD w a u) = na (dualE u) (dualE a) (dualE w)
 dualE (nr u w b) = nrD (dualE b) (dualE w) (dualE u)
 dualE (nrD b w u) = nr (dualE u) (dualE w) (dualE b)
 dualE (ru2 a)    = ru2r (dualE a)
+dualE (raw w a b) = raw w a b      -- no dual: dualOK refuses it
 dualE (ru2r a)   = ru2 (dualE a)
 dualE (wi u w)   = wir (dualE w) (dualE u)
 dualE (wir w u)  = wi (dualE u) (dualE w)
@@ -1527,6 +1537,7 @@ dualOK (wi u w)    = dualOK u ∧ dualOK w
 dualOK (wir w u)   = dualOK w ∧ dualOK u
 dualOK (hx a b)    = dualOK a ∧ dualOK b
 dualOK (hxD b a)   = dualOK b ∧ dualOK a
+dualOK (raw _ _ _) = false
 
 dualOKTy : ExTy → Bool
 dualOKTy ob          = true

@@ -82,6 +82,8 @@ import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
 import CaTTExp.Cones
 import CaTTExp.ConesExamples
+import CaTTExp.ConeRC
+import CaTTExp.ConeRCExamples
 import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.Free.AssociatorDepth2
@@ -293,3 +295,5 @@ import CaTTExp.Join.SepAlgebra
 import CaTTExp.Join.BoundedReach
 import CaTTExp.Join.SwitchCospan
 import CaTTExp.Join.SwitchLaws
+import CaTTExp.Uniform.InnerInv
+import CaTTExp.Uniform.Marks

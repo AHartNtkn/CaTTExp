@@ -8,7 +8,25 @@ Each section gives the algorithm's input, its output, the steps, a worked exampl
 
 The algorithms build plain CaTT terms: their correctness proofs use the reference side condition of chapter 1 (equality in the free strict ω-category). How they transfer to the kernel:
 - **Inside a single hom, two-tier L.** L restricted to one hom is plain CaTT (chapter 2, §2.2: the 𝔉 instance on a single hom is Finster–Mimram's rule). So every construction whose context lives inside one hom 𝒦(X, C) is valid verbatim in two-tier L. That covers the cases the notes use: elements and their cells live in 𝒦(⊤, C) by suspension.
-- **Across objects, or in uniform L.** A construction that uses invertible interchange across objects, or inside an object under uniform L, is valid only where that interchange is invertible: under the marks of chapter 3 (`ps`, `ord`). Which of the constructions below need such marks over V + S has not been worked out in any note. Ledger S8.
+- **Across objects, or in uniform L.** A construction is valid verbatim in a core exactly when every coherence head it emits is accepted there. Classify the emitted heads by their pasting context Q (`notes/uniform-marks.md` §6):
+  - **(H1) interchange-free.** At most one hom of Q has cells of hd ≥ 1, and that hom's diagram is a globe or a vertical chain of globes. Examples are chain contexts of 1-cells, whiskerings, vertical composites, and unitors and associators of 1-cells. Here ν = 𝔉 = F_{V+S}. **No marks, in every core.**
+  - **(H2) interchange inside one hom.** Two-tier L needs nothing (E1). V + S needs `ord` on the hom's target object, plus relative coherence of V + S over 𝔉 (ledger E13). Strip-shaped heads fail even with `ord` when the matching split is off.
+  - **(H3) across objects.** Two-tier L needs `ps*` on the later factor, or `inv` on a factor, of every mixed Gray cell the head inverts, plus E5's relative coherence lemma (posed in E13). V + S also needs `ord` on the targets.
+- **Native naturality needs no construction.** For a native lax transformation α in 𝒦(B, C) and any cell c of 𝒦(X, B), the naturality cell is the Gray cell G(c, α): one operation-case coherence, with no marks in any core. §5.2 is needed only for transformations given as cylinder data.
+
+| Construction | Two-tier L | Uniform V + S |
+|---|---|---|
+| RC(1) | no marks | no marks |
+| RC(n ≥ 2), inside one hom | no marks | `ord` on the target + E13 |
+| RC(n ≥ 2), across objects | `ps*`/`inv` on the inverted mixed cells + E5/E13 | the same, plus `ord` |
+| N, Y without objects, inside one hom | no marks | as RC inside one hom |
+| N with objects in Y (cylinder data) | `ps*` on the squares + E5/E13; native transformations: G(c, α), no marks | the same, plus `ord`; G(c, α): no marks |
+| Explicit cylinders (5.3.1); specified cone (5.4.1) | no marks (contexts only) | no marks |
+| M ⊗ Dⁿ templates (5.3.2) | as RC (inside one hom / across objects) | as RC |
+| Cones over arbitrary Γ (5.4.2) | hd-0 boundaries: no marks; higher: as RC across objects | the same, plus `ord` for higher boundaries |
+| Canonical Gray terms (5.5) | no marks | `ord` on the target when lifts have inner letters |
+
+**Status.** The "no marks" entries are **proved** (H1 heads, or contexts only). The other entries are reductions to the relative coherence lemmas of ledger E13 (outbox `conjectures/outbox/invertibility-in-directed-interchange.md`, Q2). Ledger S8 is done. Source: `notes/uniform-marks.md` §6.
 
 ## 5.1 Relative coherence (RC)
 

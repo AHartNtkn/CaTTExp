@@ -45,12 +45,20 @@ Rule classes are those of the published CaTT variants: context formation, type f
 
 ## 0.4 Lax by default, the most general version first
 
-Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one and recovers the others by marking (chapter 3). Concretely:
+Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one. It recovers the others by marking (chapter 3) where marks suffice, and the text records where they do not. Concretely:
 - the core is the uniform lax core L (chapter 2): interchange is directed at every level, not only across objects;
 - the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
-- pseudo transformations, ordinary ω-categories and groupoids are marks on top of L, never separate kernels.
+- pseudo transformations and groupoids are marks on top of L (`inv`, `ps`, `grpd_k`), never separate kernels.
 
-The generality ordering, from most to least general: uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations), each being the previous one plus marks. "More general" means fewer derivable cells and more models.
+**The generality ordering**, from most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
+
+**How far marks go back down the ordering.**
+- *From two-tier L to P:* by marks. P is two-tier L with every interchanger invertible, and the relative coherence lemma for 𝔉 → ν holds (ledger E5).
+- *From uniform L to two-tier L:* only in part.
+  - Marking every object `ord` makes its inner letters invertible.
+  - It gives two-tier L's `inv` and `ps` judgments for heads whose designated lift is operand-pure (chapter 3, §3.6).
+  - It does **not** give two-tier L's coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (chapter 3, §3.6; ledger E13).
+  - So an object whose own compositions behave as an ordinary ω-category up to coherence is not, at present, obtainable from the uniform kernel by marking. Whether some mark or rule in the allowed classes recovers it, or none can, is ledger S16(b).
 
 Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
 

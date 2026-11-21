@@ -180,6 +180,29 @@ GB-shape (weakening) and L-× (contraction at `grpd_2` targets) are rows of the 
 
 ---
 
+## 6a. T-graph and T-loc by encode–decode (F10d) [proved here, sketch]
+
+HoTT computes π₁(S¹) = ℤ by encode–decode, with univalence defining the covering family. Here DESC defines the family, DJ (now a theorem, §5) gives "encode", and INIT gives "decode" and the uniqueness step.
+
+**Setting.** Γ is a finite graph with vertex set V, ⟦Γ⟧ its free object (an INIT instance, §4.3), and `a : ⊤ → ⟦Γ⟧` a vertex.
+
+1. *Path sets.* Let Π be the initial model of the multi-sorted positive context `(X_v : ⋆ for v ∈ V, nil : ⊤ → X_a, snoc_e : X_v → X_w for e : v → w)`. INIT is stated with one sort, but a finite family of sorts is the one-sort case over the finite set V (`X → V`, fibres X_v; DESC-grpd over the coproduct V). Π_v is "paths from a to v".
+2. *The covering family.* DESC-glue over the pushout presentation of ⟦Γ⟧ (vertices and edges), with fibre Π_v over v and, over each edge e, the collage of `snoc_e` (base clause G₁), gives a cocartesian fibration `E → ⟦Γ⟧` with fibres Π_v and transport snoc_e. nil is a point of E over a.
+3. *Encode.* DJ-sec gives a CF-morphism `enc : a ↓ ⟦Γ⟧ → E` over ⟦Γ⟧ with `enc ∘ ι ≅ nil`.
+4. *Decode.* The family `v ↦ Hom_{⟦Γ⟧}(a, v)` with `1_a` and `– ; e` is a model of the context in step 1, so INIT-J1 gives `dec_v : Π_v → Hom(a, v)`, a model morphism. Its cells `dec ∘ snoc_e ≅ (dec – ) ; e` say that the fibrewise maps commute with transport, so DESC-uni (maps between glued fibrations are glued from compatible fibrewise maps) assembles them into a CF-morphism `dec : E → a ↓ ⟦Γ⟧` over ⟦Γ⟧.
+5. *dec ∘ enc ≅ 1.* Both are CF-morphisms `a ↓ ⟦Γ⟧ → a ↓ ⟦Γ⟧` over ⟦Γ⟧, and both send ι to `(a, 1_a)`. DJ-uni.
+6. *enc ∘ dec ≅ 1.* Restricted to fibres, both are model endomorphisms of the initial model Π: they preserve nil, and they commute with snoc_e because CF-morphisms commute with transport. INIT-J2.
+
+So `Hom_{⟦Γ⟧}(a, b) ≃ Π_b`. The same argument with the context `(X, z : ⊤ → X, s : X → X, s⁻¹ and the invertible cells s ; s⁻¹ ≅ 1, s⁻¹ ; s ≅ 1)` (an initial "object with an automorphism", i.e. ℤ) and the localised loop gives `Hom_{⟦L⟧[s⁻¹]}(x, x) ≃ ℤ_init`. With M edges inverted in a general Γ, the transports of inverted edges are equivalences, as in HoTT, and the fibres are the initial models of the context with inverse data on M.
+
+**What remains to reach T-graph's statement.** Two steps, both general clauses, not graph-specific rules:
+- *(T-init) [proposal; semantically sound].* If every operation of a positive context is built from coproducts, finite products and parameters that are trunc n (n ≥ 0), and its cells are marked invertible, then `μΔ trunc n`. Semantically, the Adámek tower stays inside n-truncated objects, which are closed under coproducts (n ≥ 0), finite products and sequential colimits in Cat_ω **[recall]**. This is a closure clause of the same kind as T-lim and T-coprod. It gives `Π_b trunc 0`, so `Hom_{⟦Γ⟧}(a, b) trunc 0`.
+- *From homs to the object.* T-graph says `⟦Γ⟧ trunc 1`, about cells into ⟦Γ⟧ from arbitrary c, while encode–decode gives homs between points. With generalised points `a : W → ⟦Γ⟧` the argument runs in the slice over W (DJ holds in the slice 2-category, RV's §4 being 2-categorical), giving the homs over W. The step "all relative homs are trunc n ⟹ the object is trunc (n+1)" is the converse of T-hom. It is a statement about the judgment itself and is **[conj]**, recorded in F10d.
+
+So T-graph and T-loc, two rules about specific objects, are replaced by the general closure clause T-init plus the converse of T-hom, both pending.
+
+---
+
 ## 7. Status of every rule on F10's list
 
 | Rule | Becomes | Status |
@@ -194,7 +217,7 @@ GB-shape (weakening) and L-× (contraction at `grpd_2` targets) are rows of the 
 | R-U (fibres and Θ₁-action) | instance of INIT + DESC-grpd | **[proved here, sketch]** |
 | R-cot⁺ (over set bases) | DESC-grpd: `[q, B] := ∐_i [U_i, B]` is already a construction from extensivity (`ordinary-math.md` §6.6(v)); the coproduct over an infinite set is an INIT instance (`Δ = (X, p : X → I, a : … )`) | **[conj]**, needs a check that the coproduct over a set I is an initial model; F10c |
 | route I's ℕ, lists, W-types | instances of INIT | **[proved here]** |
-| T-graph, T-loc | unchanged for now; candidate theorems by encode–decode once DESC is in (the word family over ⟦Γ⟧ glued by DESC, as π₁(S¹) is computed in HoTT) | **[conj]**, F10d |
+| T-graph, T-loc | theorems by encode–decode from DESC, DJ and INIT, giving `Hom ≃` an initial model (§6a), plus the general closure clause T-init and the converse of T-hom | **[proved here, sketch]** for the hom computation; T-init **[proposal]**, converse of T-hom **[conj]**, F10d |
 | GB-shape, L-× | chapter 8 rows, not universe substitutes | out of scope, §6 |
 
 After this, the list of universe-substitute rules is **DESC (one schema) and INIT (one schema)**, with DJ a theorem (§5) and G₁ a candidate theorem.

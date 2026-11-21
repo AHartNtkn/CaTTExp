@@ -64,6 +64,8 @@ import CaTTExp.Gray.Biclosed.PosetModel
 import CaTTExp.Gray.Biclosed.DirEnv
 import CaTTExp.Gray.Biclosed.D7g
 import CaTTExp.Gray.Biclosed.Mirror
+import CaTTExp.Gray.Biclosed.FunSets
+import CaTTExp.Gray.Biclosed.ShapeRow
 import CaTTExp.Gray.NBE.Base
 import CaTTExp.Gray.NBE.Syntax
 import CaTTExp.Gray.NBE.Termination
@@ -80,6 +82,8 @@ import CaTTExp.Lim.Defects
 import CaTTExp.Lim.Repaired
 import CaTTExp.Cones
 import CaTTExp.ConesExamples
+import CaTTExp.ConeRC
+import CaTTExp.ConeRCExamples
 import CaTTExp.Gray.Bounded
 import CaTTExp.Lim.Linearity
 import CaTTExp.Free.AssociatorDepth2
@@ -141,6 +145,7 @@ import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
+import CaTTExp.RCOracle
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing
@@ -291,3 +296,19 @@ import CaTTExp.Join.SepAlgebra
 import CaTTExp.Join.BoundedReach
 import CaTTExp.Join.SwitchCospan
 import CaTTExp.Join.SwitchLaws
+import CaTTExp.Uniform.ListKit
+import CaTTExp.Uniform.Arith
+import CaTTExp.Uniform.FiniteGraph
+import CaTTExp.Uniform.Rule
+import CaTTExp.Uniform.Kernel
+import CaTTExp.Uniform.Grid
+import CaTTExp.Uniform.GridExamples
+import CaTTExp.Uniform.RuleFin
+import CaTTExp.Uniform.KernelDec
+import CaTTExp.Uniform.GridFive
+import CaTTExp.Uniform.GridFiveExamples
+import CaTTExp.Uniform.GridLink
+import CaTTExp.Uniform.GridSep
+import CaTTExp.Uniform.KernelToy
+import CaTTExp.Uniform.InnerInv
+import CaTTExp.Uniform.Marks

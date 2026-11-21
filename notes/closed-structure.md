@@ -747,11 +747,13 @@ and to the reverse orientation iff the row is 1.
 **Corollary.** The dual of Γ_n is Γ_n up to renaming. If row_J(n, n+1) = 1, then D_J sends the accepted interchanger χ_n to the rejected type "left first → right first". So **every Gray row must be 0** for D_J to be a symmetry, and **every Gray row must be 1** for D_J to map uniform L to the oplax core.
 
 **The two-tier test is also necessary.** Uniform L ⊂ two-tier L (spec §2.6), so a coherence rejected in two-tier L is rejected in uniform L. The witnesses of §D.2 for failing the two-tier test can be taken over the contexts ΣD¹ ∨ ΣD^q and ΣD^q ∨ ΣD¹: by Proposition D1, failure of IdC and of SwapC is already visible at p = 1. On those contexts uniform L and two-tier L agree, because F_{V+S} has no interchanger along k ≥ 1 there.
-- In 𝔉(ΣD¹ ∨ ΣD^q), the hom is λD¹ ⊗ λD^q.
-- Every pair of hom-cells that are juxtaposed along a hom-j-cell has a factor of the form α ⊗ g_i, which is 1-dimensional. So no pair is in interchange position, and the count of (K7) adds nothing.
+- In 𝔉(ΣD¹ ∨ ΣD^q), the hom is λD¹ ⊗ λD^q, with D¹ = (f, f′, α).
+- Fix a hom-level j. The generators of dimension ≥ j+2 are f ⊗ e and f′ ⊗ e with |e| ≥ j+2, and α ⊗ e with |e| ≥ j+1. The f-side ones run from f ⊗ e_j⁻ to f ⊗ e_j⁺, the f′-side ones from f′ ⊗ e_j⁻ to f′ ⊗ e_j⁺, and each α ⊗ e spans the whole range from f ⊗ e_j⁻ to f′ ⊗ e_j⁺ (by ∂⁻(α⊗e) = f⊗e + α⊗∂⁺e and ∂⁺(α⊗e) = f′⊗e + α⊗∂⁻e).
+- So the only j-routes between the ends are [f ⊗ e, then α ⊗ e_j⁺] and [α ⊗ e_j⁻, then f′ ⊗ e′]. The separating cells α ⊗ e_j^± have dimension j + 1. No two cells of dimension ≥ j+2 are ever ∗_j-adjacent, so there is no interchange position at any level j (for j = 0 this is the factor α ⊗ g_i).
+- "No interchange position ⇒ F_{V+S}(Γ) = 𝔉(Γ)" uses the fact that every cell V adds beyond the Gray presentation involves an inner interchanger (as in the (K7)–(K11) constructions). Requirement 4 alone does not say this.
 - So a two-tier witness is accepted in uniform L, and its rejected dual is rejected there too.
 
-This step is **argued**, not machine-checked.
+Acceptance of χ_n for n ≥ 1 above also uses the Gray-projection reading of the side condition (ledger S1, S11). This step is **argued**, not machine-checked.
 
 ### D.4.2 Classification
 
@@ -913,6 +915,8 @@ All cells are invertible (written with ⊨). There are no definitional equations
 - **Mirror:** ⟦Θ⟧ ⊗ C via the oplax hom, which is derivable by `internal-hom.md` §5.6.
 
 **Status 2026-11-20.** This rule is now derived from the biclosed rules of F.7.4, with B ⊗ Θ the formula B ⊗ ⟦Θ⟧ (F.7.4 item 5). It is kept here as the representable case and as the source of E.4.
+
+*Correction 2026-11-21 (ledger S13, `design-decisions.md` §4).* F.7.4 derives this rule with Θ a probe ⟦Θ⟧. Read with Θ a free object (as written above, through (lhom) of `internal-hom.md` §5.1), it is derived only under the proposed rule GB-shape. The consistency clause (B = ⟦Δ⟧) likewise holds within the probe sort.
 
 **Payoff.** Lax transformations between arbitrary functors are maps B ⊗ D¹ → C. That is a cleaner presentation than the fibre definition LaxTr(F, G) of §5.2, and it composes by (⊗Θ-fill).
 

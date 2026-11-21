@@ -17,3 +17,8 @@ import CaTTExp.Generated.GrayIntervalDisc
 import CaTTExp.Generated.CanonicalGrayCube
 import CaTTExp.Generated.CanonicalGrayTwoDiscs
 import CaTTExp.Generated.GrayDiscDiscTransfer
+import CaTTExp.Generated.RCSelfTestCheck
+import CaTTExp.Generated.RCConeTwoCheck
+import CaTTExp.Generated.RCCoconeTwoCheck
+import CaTTExp.Generated.RCTwoCones
+import CaTTExp.ConeRCTwoKE

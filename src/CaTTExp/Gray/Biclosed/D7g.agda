@@ -82,6 +82,7 @@ canon-nt : ∀ ρ → T (canon ρ) → T (ntC (fmC (out (H ρ))))
 canon-nt (pairR L U V R Z)  c = isObj-nt Z (∧-snd {canonFrom 0 (fmsOf (pairR L U V R Z))} c)
 canon-nt (probeR L Δ Θ R Z) c = isObj-nt Z (∧-snd {canonFrom 0 (fmsOf (probeR L Δ Θ R Z))} c)
 canon-nt (unitR L R Z)      c = isObj-nt Z (∧-snd {canonFrom 0 (fmsOf (unitR L R Z))} c)
+canon-nt (shapeR L Θ R Z)  c = isObj-nt Z (∧-snd {canonFrom 0 (fmsOf (shapeR L Θ R Z))} c)
 canon-nt (evLR Φ A C)       c = isObj-nt C (∧-snd {canonFrom 0 (fmsOf (evLR Φ A C))} c)
 canon-nt (evRR Φ A C)       c = isObj-nt C (∧-snd {canonFrom 0 (fmsOf (evRR Φ A C))} c)
 

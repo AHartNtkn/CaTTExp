@@ -4,7 +4,8 @@
 --
 -- Formulas are finite posets (Poset.agda): object variables are the
 -- chain 0 < 1, ⊗ and ⊠ are products, both closures A\C and C/A are the
--- poset of monotone maps A → C, a named shape is a point, and the
+-- poset of monotone maps A → C, a named shape is a point, ⟦Θ⟧♭ is the
+-- same poset as ⟦Θ⟧ with ι_Θ the identity, and the
 -- k-globe ⟦Dᵏ⟧ is the chain 0 < 1 < … < 2k whose middle element k is
 -- its interior; the faces δ^±_k : ⟦Dᵏ⟧ → ⟦Dᵏ⁺¹⟧ send the interior to k
 -- and to k + 2 and shift the points above it by 2, and σ_k collapses
@@ -44,6 +45,7 @@ shC (a ⊠ b)   = cpair (shC a) (shC b)
 fmC : Fm → Code
 fmC (obj _)  = cnat 1
 fmC (rep s)  = shC s
+fmC (shp s)  = shC s
 fmC (a ⊗ b)  = cpair (fmC a) (fmC b)
 fmC (a \\ c) = ctab (fmC a) (fmC c)
 fmC (c // a) = ctab (fmC a) (fmC c)
@@ -242,6 +244,7 @@ corV : Cor → Val
 corV (cm U W) = mk ((U ∷ W ∷ []) ▸ (U ⊗ W)) (λ us → pr (hdU us) (hdU (tlU us)))
 corV (cp Δ Θ) = mk ((rep Δ ∷ rep Θ ∷ []) ▸ rep (Δ ⊠ Θ)) (λ us → pr (hdU us) (hdU (tlU us)))
 corV cpt      = mk ([] ▸ D 0) (λ _ → nat zero)
+corV (cι Θ)   = mk ((rep Θ ∷ []) ▸ shp Θ) hdU
 
 evLV : Fm → Fm → Val
 evLV A C = mk ((A ∷ (A \\ C) ∷ []) ▸ C) (λ us → app (fmC A) (hdU (tlU us)) (hdU us))
@@ -275,6 +278,7 @@ splitC : Cor → U → List U
 splitC (cm _ _) u = fstU u ∷ sndU u ∷ []
 splitC (cp _ _) u = fstU u ∷ sndU u ∷ []
 splitC cpt      u = []
+splitC (cι _)   u = u ∷ []
 
 unProf : Cor → Nat → MTy → MTy
 unProf c i (Ys ▸ Z) = (take i Ys ++ corOut c ∷ drop (i + length (corIns c)) Ys) ▸ Z
@@ -499,6 +503,7 @@ T-corV (cm U W) = tyRaw (corV (cm U W)) refl (λ { (qx ∷ qy ∷ []) → ∧I q
 T-corV (cp Δ Θ) = tyRaw (corV (cp Δ Θ)) refl (λ { (qx ∷ qy ∷ []) → ∧I qx qy })
                     (λ { (_ ∷ _ ∷ []) (_ ∷ _ ∷ []) (lx ∷ ly ∷ []) → ∧I lx ly })
 T-corV cpt      = tyRaw (corV cpt) refl (λ { [] → tt }) (λ { [] [] [] → tt })
+T-corV (cι Θ)   = tyRaw (corV (cι Θ)) refl (λ { (q ∷ []) → q }) (λ { (q ∷ []) (q′ ∷ []) (l ∷ []) → l })
 
 T-evLV : ∀ A C → evLV A C ∶ᵥ ((A ∷ (A \\ C) ∷ []) ▸ C)
 T-evLV A C = tyRaw (evLV A C) refl
@@ -632,6 +637,7 @@ splitC-In (cm U W) {u} q with inC-pair _ _ u q
 splitC-In (cp Δ Θ) {u} q with inC-pair _ _ u q
 ... | x , y , refl , qx , qy = qx ∷ qy ∷ []
 splitC-In cpt      q = []
+splitC-In (cι Θ)   q = q ∷ []
 
 splitC-mono : ∀ c {u v} → IF (corOut c) u → IF (corOut c) v → LF (corOut c) u v →
               LeL (corIns c) (splitC c u) (splitC c v)
@@ -640,6 +646,7 @@ splitC-mono (cm U W) {u} {v} q q′ l with inC-pair _ _ u q | inC-pair _ _ v q�
 splitC-mono (cp Δ Θ) {u} {v} q q′ l with inC-pair _ _ u q | inC-pair _ _ v q′
 ... | x , y , refl , _ , _ | x′ , y′ , refl , _ , _ = ∧-fst l ∷ ∧-snd {leC (shC Δ) x x′} l ∷ []
 splitC-mono cpt q q′ l = []
+splitC-mono (cι Θ) q q′ l = l ∷ []
 
 cor-split : ∀ c {u} → IF (corOut c) u → ap (corV c) (splitC c u) ≡ u
 cor-split (cm U W) {u} q with inC-pair _ _ u q
@@ -649,11 +656,13 @@ cor-split (cp Δ Θ) {u} q with inC-pair _ _ u q
 cor-split cpt      {u} q with inC-nat _ u q
 cor-split cpt      {u} q | zero  , refl , _ = refl
 cor-split cpt      {u} q | suc p , refl , ()
+cor-split (cι Θ)   {u} q = ap-ty (corV (cι Θ)) (q ∷ [])
 
 split-cor : ∀ c {bs} → InL (corIns c) bs → splitC c (ap (corV c) bs) ≡ bs
 split-cor (cm U W) (qx ∷ qy ∷ []) = cong (splitC (cm U W)) (ap-ty (corV (cm U W)) (qx ∷ qy ∷ []))
 split-cor (cp Δ Θ) (qx ∷ qy ∷ []) = cong (splitC (cp Δ Θ)) (ap-ty (corV (cp Δ Θ)) (qx ∷ qy ∷ []))
 split-cor cpt      []              = refl
+split-cor (cι Θ)   (q ∷ [])        = cong (splitC (cι Θ)) (ap-ty (corV (cι Θ)) (q ∷ []))
 
 unProf-eq : ∀ c {Py P Q Z} → Py ≡ (P ++ corIns c ++ Q) ▸ Z → unProf c (length P) Py ≡ (P ++ corOut c ∷ Q) ▸ Z
 unProf-eq c {P = P} {Q} {Z} refl =

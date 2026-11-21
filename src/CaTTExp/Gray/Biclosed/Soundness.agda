@@ -43,6 +43,7 @@ module _ (𝔐 : Model) where
       sound (eR A C)  refl = T-evR A C , refl , refl
       sound (pP Δ Θ)  refl = T-cor (cp Δ Θ) , refl , refl
       sound pt        refl = T-cor cpt , refl , refl
+      sound (iP Θ)    refl = T-cor (cι Θ) , refl , refl
       sound (idt A)   refl = T-id A , refl , refl
       sound (comp f gs) p with infer Γ f in ef | inferL Γ gs in egs
       ... | just tf | just tgs = compSound ε f gs tf tgs (sound f ef) (soundL gs egs) p

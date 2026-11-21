@@ -152,6 +152,9 @@ infer-rmap t@(tmpl (probeR L Δ Θ R Z) g m n) Γ k x px =
 infer-rmap t@(tmpl (unitR L R Z) g m n) Γ k x px =
   infer-fhigher t Γ (ids L ++ pt ∷ ids R) (argTys L ([] ▸ rep (disk 0)) R)
     (inferL-args Γ L pt _ R refl) (compOp-args L _ R Z) (λ _ → refl) refl k x px
+infer-rmap t@(tmpl (shapeR L Θ R Z) g m n) Γ k x px =
+  infer-fhigher t Γ (ids L ++ iP Θ ∷ ids R) (argTys L ((rep Θ ∷ []) ▸ shp Θ) R)
+    (inferL-args Γ L (iP Θ) _ R refl) (compOp-args L _ R Z) (λ _ → refl) refl k x px
 infer-rmap (tmpl (evLR Φ A C) g m n) Γ zero x px
   rewrite px | T→≡ (eqFms-refl (A ∷ (A \\ C) ∷ [])) | ++-[] Φ = refl
 infer-rmap (tmpl (evLR Φ A C) g m n) Γ (suc j) x px

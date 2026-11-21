@@ -8,9 +8,9 @@
 -- given by one-place composition with Markl's sequential, parallel and
 -- unit laws, up to an equivalence ≈ and with an extrinsic typing
 -- judgement v ∶ (X₁, …, Xₙ ▸ Z).  On top of that:
---   * representability: precomposition with m_{U,V}, p_{Δ,Θ} or pt at
---     any input position is invertible (the pair, probe-pair and unit
---     rows of F.7.4 §2);
+--   * representability: precomposition with m_{U,V}, p_{Δ,Θ}, pt or ι_Θ
+--     at any input position is invertible (the pair, probe-pair, unit
+--     and shape rows of F.7.4 §2 and K2);
 --   * closures: v ↦ e^ℓ ∘₁ v and v ↦ e^r ∘₀ v are invertible (the left
 --     and right evaluation rows), for every list of inputs Φ;
 --   * globes: δ^±_n : ⟦Dⁿ⟧ → ⟦Dⁿ⁺¹⟧ (nullary at n = 0, since ⟦D⁰⟧ is the
@@ -43,16 +43,19 @@ data Cor : Set where
   cm  : Fm → Fm → Cor          -- m_{U,V}
   cp  : Shape → Shape → Cor    -- p_{Δ,Θ}
   cpt : Cor                    -- pt
+  cι  : Shape → Cor            -- ι_Θ (GB-shape, K2)
 
 corIns : Cor → List Fm
 corIns (cm U W) = U ∷ W ∷ []
 corIns (cp Δ Θ) = rep Δ ∷ rep Θ ∷ []
 corIns cpt      = []
+corIns (cι Θ)   = rep Θ ∷ []
 
 corOut : Cor → Fm
 corOut (cm U W) = U ⊗ W
 corOut (cp Δ Θ) = rep (Δ ⊠ Θ)
 corOut cpt      = D 0
+corOut (cι Θ)   = shp Θ
 
 record Model : Set₁ where
   infix 4 _≈_ _∶_

@@ -334,6 +334,7 @@ module _ {Γ Δ : Ctx} {σ : Sub} (h : Γ ⊢ σ ∶ Δ) where
     sub-infer (eR A C) _ refl = refl
     sub-infer (pP Δ Θ) _ refl = refl
     sub-infer pt       _ refl = refl
+    sub-infer (iP _)   _ refl = refl
     sub-infer (idt A)  _ refl = refl
     sub-infer (comp f gs) A e with comp-inv Δ f gs e
     ... | tf , tgs , e1 , e2 , e3

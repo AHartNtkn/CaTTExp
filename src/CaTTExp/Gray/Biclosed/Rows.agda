@@ -30,6 +30,7 @@ H (probeR L Δ Θ R Z) = (L ++ rep (Δ ⊠ Θ) ∷ R) ▸ Z
 H (unitR L R Z)      = (L ++ rep (disk 0) ∷ R) ▸ Z
 H (evLR Φ A C)       = Φ ▸ (A \\ C)
 H (evRR Φ A C)       = Φ ▸ (C // A)
+H (shapeR L Θ R Z)   = (L ++ shp Θ ∷ R) ▸ Z
 
 -- B: type of the outer operation
 B : Row → MTy
@@ -38,6 +39,7 @@ B (probeR L Δ Θ R Z) = (L ++ rep Δ ∷ rep Θ ∷ R) ▸ Z
 B (unitR L R Z)      = (L ++ R) ▸ Z
 B (evLR Φ A C)       = (A ∷ Φ) ▸ C
 B (evRR Φ A C)       = (Φ ++ A ∷ []) ▸ C
+B (shapeR L Θ R Z)   = (L ++ rep Θ ∷ R) ▸ Z
 
 ids : List Fm → List Tm
 ids = map idt
@@ -52,6 +54,7 @@ rmap (probeR L Δ Θ R Z) x = comp x (ids L ++ pP Δ Θ ∷ ids R)
 rmap (unitR L R Z)      x = comp x (ids L ++ pt ∷ ids R)
 rmap (evLR Φ A C)       x = comp (eL A C) (idt A ∷ x ∷ [])
 rmap (evRR Φ A C)       x = comp (eR A C) (x ∷ idt A ∷ [])
+rmap (shapeR L Θ R Z)    x = comp x (ids L ++ iP Θ ∷ ids R)
 
 -- the image of a time-slot gap under r (as computed by whiskering)
 rgap : Row → Nat → Nat
@@ -60,6 +63,7 @@ rgap (probeR L Δ Θ R Z) g = sumIns (take g (idTys L ++ ((rep Δ ∷ rep Θ ∷
 rgap (unitR L R Z)      g = sumIns (take g (idTys L ++ ([] ▸ rep (disk 0)) ∷ idTys R))
 rgap (evLR Φ A C)       g = 1 + g
 rgap (evRR Φ A C)       g = g
+rgap (shapeR L Θ R Z)    g = sumIns (take g (idTys L ++ ((rep Θ ∷ []) ▸ shp Θ) ∷ idTys R))
 
 -- generic templates use fresh object variables, numbered in order of
 -- appearance in the outer profile B; the output is an object variable
@@ -69,6 +73,7 @@ fmsOf (probeR L _ _ R Z) = L ++ R ++ Z ∷ []
 fmsOf (unitR L R Z)      = L ++ R ++ Z ∷ []
 fmsOf (evLR Φ A C)       = A ∷ Φ ++ C ∷ []
 fmsOf (evRR Φ A C)       = Φ ++ A ∷ C ∷ []
+fmsOf (shapeR L _ R Z)    = L ++ R ++ Z ∷ []
 
 outOf : Row → Fm
 outOf (pairR _ _ _ _ Z)  = Z
@@ -76,6 +81,7 @@ outOf (probeR _ _ _ _ Z) = Z
 outOf (unitR _ _ Z)      = Z
 outOf (evLR _ _ C)       = C
 outOf (evRR _ _ C)       = C
+outOf (shapeR _ _ _ Z)   = Z
 
 canonFrom : Nat → List Fm → Bool
 canonFrom k []             = true

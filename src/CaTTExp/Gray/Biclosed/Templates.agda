@@ -31,7 +31,7 @@ open import CaTTExp.Gray.Biclosed.Typing
 open import Agda.Builtin.Nat using (_*_)
 open import CaTTExp.Gray.Biclosed.Rows public
 open import CaTTExp.Gray.Biclosed.Syntax public
-  using (Row; pairR; probeR; unitR; evLR; evRR; Tmpl; tmpl; row; gap; mode; dimn;
+  using (Row; pairR; probeR; unitR; evLR; evRR; shapeR; Tmpl; tmpl; row; gap; mode; dimn;
          Goal; gc; gε)
 
 ------------------------------------------------------------------------
@@ -57,6 +57,7 @@ slotRow : List Fm → Fm → List Fm → Fm → List Row
 slotRow pre (u ⊗ v)            post z = pairR pre u v post z ∷ []
 slotRow pre (rep (d ⊠ θ))      post z = probeR pre d θ post z ∷ []
 slotRow pre (rep (disk zero))  post z = unitR pre post z ∷ []
+slotRow pre (shp θ)            post z = shapeR pre θ post z ∷ []
 slotRow pre _                  post z = []
 
 slotRows : List Fm → List Fm → Fm → List Row
@@ -185,6 +186,8 @@ rowsOf-complete (probeR L Δ Θ R Z) =
   ∈-++ʳ (outRows (L ++ rep (Δ ⊠ Θ) ∷ R) Z) (slot-lemma [] L (rep (Δ ⊠ Θ)) R Z _ here!)
 rowsOf-complete (unitR L R Z) =
   ∈-++ʳ (outRows (L ++ rep (disk 0) ∷ R) Z) (slot-lemma [] L (rep (disk 0)) R Z _ here!)
+rowsOf-complete (shapeR L Θ R Z) =
+  ∈-++ʳ (outRows (L ++ shp Θ ∷ R) Z) (slot-lemma [] L (shp Θ) R Z _ here!)
 rowsOf-complete (evLR Φ A C) = here!
 rowsOf-complete (evRR Φ A C) = here!
 
@@ -209,6 +212,7 @@ heres-rmap (probeR _ _ _ _ _) t e φs ts = here!
 heres-rmap (unitR _ _ _)      t e φs ts = here!
 heres-rmap (evLR _ _ _)       t e φs ts = here!
 heres-rmap (evRR _ _ _)       t e φs ts = here!
+heres-rmap (shapeR _ _ _ _)   t e φs ts = here!
 
 candsE-complete : ∀ t → T (okT t) → t ∈ candsE (egoal t)
 candsE-complete t ok = heres-rmap (row t) t gc (idφ t) (idts t)

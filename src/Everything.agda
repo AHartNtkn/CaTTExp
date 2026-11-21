@@ -292,3 +292,5 @@ import CaTTExp.Join.SepAlgebra
 import CaTTExp.Join.BoundedReach
 import CaTTExp.Join.SwitchCospan
 import CaTTExp.Join.SwitchLaws
+import CaTTExp.Uniform.InnerInv
+import CaTTExp.Uniform.Marks

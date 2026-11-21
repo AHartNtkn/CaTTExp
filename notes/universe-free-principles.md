@@ -203,6 +203,17 @@ So T-graph and T-loc, two rules about specific objects, are replaced by the gene
 
 ---
 
+## 6b. R-cot⁺ over a set base from the closed structure and DESC (F10c) [proved here, sketch]
+
+R-cot⁺ (`ordinary-math.md` §6.6(iii), (v)) asks, for a set I and `q : U → I`, for an object `[q, B] → I` such that maps `W → [q, B]` over I are maps `W ×_I U → B`, with the tensor the single-shape cotensor uses. It needs no rule of its own, by a partial-map construction:
+1. Let `U\(B ⊔ ⊤)` be the closed-structure hom (chapter 8, adopted), so maps `W → U\(B ⊔ ⊤)` are maps `U ⊗ W → B ⊔ ⊤`.
+2. I has decidable equality (it is a set built by INIT, like Θ₀, with equality by recursion into Bool). Let `[q, B] ↪ I × U\(B ⊔ ⊤)` be the equaliser saying that `h` sends `U_i ⊗ –` into the summand B and every `U_j ⊗ –` with j ≠ i into ⊤. This is an equation between two maps into the set-valued `U\Bool` (compose with `B ⊔ ⊤ → ⊤ ⊔ ⊤`), so it is a finite limit.
+3. Universal property. Given `W → I`, DESC-grpd splits `W ≃ ∐_i W_i`, and ⊗ preserves coproducts in each variable, so `U ⊗ W ≃ ∐_{i,j} U_j ⊗ W_i`. A map from W into the equaliser over I is then a family of maps `U_i ⊗ W_i → B` (the j ≠ i parts are forced to the unique map to ⊤, and the B-part lands in the summand B by disjointness). That is a map `W ×_I U → B` in R-cot⁺'s sense. Cells at every level are the same argument applied to cotensors.
+
+So R-cot⁺ over a set base is a construction from the closed structure, DESC-grpd and INIT (for decidable equality on I). Over a non-discrete base it would be a right adjoint to base change along q, which exists only for exponentiable q (§4.2, the final-model counterexample), so the general R-cot⁺ stays unproposed, as before.
+
+---
+
 ## 7. Status of every rule on F10's list
 
 | Rule | Becomes | Status |
@@ -215,7 +226,7 @@ So T-graph and T-loc, two rules about specific objects, are replaced by the gene
 | DJ | theorem of the limit rules (Riehl–Verity §4–§6 in an abstract homotopy 2-category) | **[proved here, sketch]**, §5, F10b |
 | R-A, R-A⁺ | instances of INIT | **[proved here]** |
 | R-U (fibres and Θ₁-action) | instance of INIT + DESC-grpd | **[proved here, sketch]** |
-| R-cot⁺ (over set bases) | DESC-grpd: `[q, B] := ∐_i [U_i, B]` is already a construction from extensivity (`ordinary-math.md` §6.6(v)); the coproduct over an infinite set is an INIT instance (`Δ = (X, p : X → I, a : … )`) | **[conj]**, needs a check that the coproduct over a set I is an initial model; F10c |
+| R-cot⁺ (over set bases) | construction from the closed-structure hom, DESC-grpd and INIT (partial-map trick, §6b) | **[proved here, sketch]**, F10c |
 | route I's ℕ, lists, W-types | instances of INIT | **[proved here]** |
 | T-graph, T-loc | theorems by encode–decode from DESC, DJ and INIT, giving `Hom ≃` an initial model (§6a), plus the general closure clause T-init and the converse of T-hom | **[proved here, sketch]** for the hom computation; T-init **[proposal]**, converse of T-hom **[conj]**, F10d |
 | GB-shape, L-× | chapter 8 rows, not universe substitutes | out of scope, §6 |

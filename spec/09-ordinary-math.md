@@ -113,7 +113,7 @@ Colimits *inside* an object C are declared structure: a marking with a filler ru
 
 **Status.**
 - Non-derivability (two countermodels), maximality, the set instance of L-×, and the derivation of F8: **proved** (note level). Soundness of each countermodel for every chapter-1–9 rule is at sketch level.
-- L-× at general `grpd_2` targets: **sketch**, relative to two cited facts. Independent check requested.
+- L-× at general `grpd_2` targets: **proved relative to cited theorems** (Campion Thm 3.14 / Cor. 3.15; Goldthorpe Lemma 3.0.3; researcher answer verified 2026-11-21, `notes/conjectures/answered/gray-cartesian-local-targets-2026-11-21.md`). Holds in the inductive and coinductively complete models of Cat_ω.
 - Agda (1-truncated derivation over the abstract model interface): in progress.
 - Open: whether the kernel derives the cartesian F8 by an unrelated route (moot once L-× is adopted).
 

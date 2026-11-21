@@ -91,3 +91,59 @@ For necessity, one can express Fact 2 as a retract in the arrow category. Fix $r
 The strict globes and their cylinder give these same maps in either ambient model by the strong monoidal embedding of Steiner shapes followed by reflection. The cartesian product of the two globes is represented by their strict product since their nerves preserve products and these gaunt categories are already complete. [Campion, Example 1.30, Example 3.2 and Corollary 3.5](https://arxiv.org/pdf/2311.00205#page=12).
 
 An object local for every κ is consequently local for every $D^{r+1}\to D^r$ with $r\ge1$, since equivalences of spaces are closed under retracts. These are precisely the globe collapses that lower the category level to 1 in Campion’s presentation. Together with ambient completeness, locality for them says $B\in C_1$. This proves the classification in both models and settles Question 3. [Campion, Definition 1.15, Remark 1.19 and Observation 1.35](https://arxiv.org/pdf/2311.00205#page=8).
+
+# Verification (2026-11-21)
+
+Status: **verified. There is one response, and it answers all three questions.**
+- **Question 1 is answered positively.** B is κ-local exactly when B is an (∞,1)-category. This holds in Campion's inductive model and in his coinductively complete model.
+- **Question 2 is answered positively.** For 0 ≤ k ≤ n ≤ ω, τ_k is strong monoidal for the Gray tensor, so τ_k(A ⊗ W) ≃ τ_kA ⊗_k τ_kW canonically. τ_k also preserves finite products, so Cat_(∞,k) is an exponential ideal, with [X, iB] ≃ i[τ_k X, B]. For k = 1 the reflected Gray tensor is the cartesian product. For k ≥ 2 it is not, because the lax square keeps its interchanger.
+- **Question 3 is moot**, because Question 1 holds.
+
+**Correction to the prompt's setting.** The prompt called the limit of the Cat_(∞,n) along the underlying-category functors "the coinductive model". That limit is taken along the right adjoints of the inclusions. It is therefore the same ∞-category as the Pr^L colimit, which is the *inductive* model (passing to right adjoints). Campion's coinductively complete model is a further reflective localization of it. Both models contain every finite Cat_(∞,k) fully faithfully.
+
+**Citations checked against the papers.**
+- **Campion, Theorem 3.14.** Localizations at sets of the form {Σⁿ t_C : n ≥ N(C)} are compatible with the Gray tensor, and the localization is strong monoidal.
+  - τ_k is such a localization: it is localization at the globe collapses Σʳ p : G_{r+1} → G_r for r ≥ k (Definition 1.15, Remark 1.19).
+- **Campion, Corollary 3.15.** It applies this to the inductive and coinductive localizations, for finite n and for n = ω.
+  - Corollary 3.15 says "weakly decreasing" multilevels, while the introduction to §3 says "order-preserving". The response uses constant multilevels, so the discrepancy does not matter.
+- **Goldthorpe, Lemma 3.0.3.** In Goldthorpe's Cat(n, r), with n = ∞ and finite r ≤ r′, the inclusion Cat(∞, r) ↪ Cat(∞, r′) has a left adjoint π and a right adjoint κ. Both preserve products.
+  - This π is τ_r on (∞,r′)-categories, so the finite-stage product claim is cited exactly.
+  - Definition 3.0.4 gives the two limit towers. The tower along κ, the right adjoints, is the one the response uses to identify the limit with the inductive colimit.
+- **Ozornova–Rovelli–Walde,** "Cores and localizations of (∞,∞)-categories", arXiv 2603.11005, Theorem 2.12 and Lemma 2.13. These concern change of enrichment and completion, and Lemma 2.13 is the finite-products statement. They are a secondary citation for the mechanism behind Goldthorpe's lemma, and were checked from a summary, not verbatim.
+
+**Checked by hand.**
+- **Extension of product preservation to ω.**
+  - Both sides of τ_k(A × W) → τ_kA × τ_kW preserve colimits in each variable separately, because Cat_ω and Cat_(∞,k) are cartesian closed and τ_k is a left adjoint.
+  - Θ-shapes generate the inductive model under colimits.
+  - Any pair of shapes lies in one finite Cat_(∞,m). The inclusion of Cat_(∞,m) preserves products, and τ_k restricts to the finite-stage reflector.
+  - For the coinductive model, its inclusion into the inductive one preserves products. Cat_(∞,k) lies inside the coinductive model, so the reflector restricts.
+- **Exponential ideal.** The Yoneda computation Map(T, [X, iB]) ≃ Map(T, i[τ_k X, B]) is correct. It also supplies the citation for Day's reflection theorem that ledger F8b asked for.
+- **⊗₁ = × in Cat_(∞,1).**
+  - Both bifunctors preserve colimits in each variable. The point and the interval I generate Cat_(∞,1), using the spines of the [m].
+  - On (pt, X) the comparison is a unitor.
+  - On (I, I) it is τ₁ of the projection from Campion's strict lax square Q to I × I (Theorem A). The only nontrivial hom is from (0,0) to (1,1); it is [1] ↦ *, and groupoid completion makes it |[1]| ≃ *.
+  - The comparison is natural in both variables, so it is an equivalence everywhere. For k ≥ 2 the same square separates ⊗_k from ×.
+- **Sufficiency.**
+  - Under the two equivalences, τ₁(κ_{A,W}) is the C₁ comparison. Each projection comes from the map to the tensor unit, which is terminal and is preserved by τ₁. So τ₁(κ) is an equivalence.
+  - Adjunction then gives κ-locality for every B ∈ C₁.
+  - It also gives locality at the hom level, through τ₁(A ⊗ W ⊗ Dᵏ). This is the step that Prop. 6.6 (iii) uses.
+- **Necessity: p is a retract of κ_{I,Dʳ} in the arrow category.** Here p : Dʳ⁺¹ → Dʳ is the globe collapse.
+  - The retraction is (t, h) followed by (q, pr₂), where q is Fact 2's functor and t classifies e₁ ⊗ e_r.
+  - qt = id: q sends e₁ ⊗ e_r to e_{r+1}, kills the e₁ ⊗ (lower) generators in the boundary of the cylinder cell, and sends 0 ⊗ e_r to e_r⁻.
+  - pq = pr₂κ: both maps send 0 ⊗ x and 1 ⊗ x to x, and kill every e₁ ⊗ – generator.
+  - κt is an (r+1)-cell of the strict r-category I × Dʳ, so it is an identity and factors as hp.
+  - pr₂h = id: pr₂hp = pqt = p, and p has a face section s, so pr₂h = pr₂hps = ps = id.
+  - Equivalences of spaces are closed under retracts. So a κ-local B is local for every collapse Dʳ⁺¹ → Dʳ with r ≥ 1, and by Remark 1.19 such a B lies in C₁.
+  - This is a cleaner form of Fact 2. It gives locality at the collapse maps directly, so no separate invertibility argument is needed.
+  - Transporting from strict to ∞: Steiner shapes embed strong monoidally (Campion, Example 3.2, Corollary 3.5). The strict product I × Dʳ of these gaunt categories is the ∞-product.
+
+**Taken on trust.**
+- That the Pr^L colimit and the Pr^R limit of the towers agree. This is standard (HTT 5.5.3.13) and is not re-derived here.
+- The exact statements of ORW Theorem 2.12 and Lemma 2.13. The argument does not depend on them, because Goldthorpe's Lemma 3.0.3 covers the step.
+
+**Consequences for the project.**
+- Prop. 6.6 (iii) of `ordinary-math.md` is now proved relative to cited theorems. Both cited facts, (OBJ-1) in canonical form and τ₁ preserving finite products, hold in both models.
+- So L-× (ledger F8b) is sound at every `grpd_2` target. By (ii), and now by the retract argument above, this is the largest sound class.
+- The higher analogue (τ_k strong Gray-monoidal and product-preserving for every k) is available if a k-level contraction row is ever wanted. It would not be a contraction: for k ≥ 2, ⊗ and × already differ on I ⊗ I.
+
+**What is left open.** Nothing from this prompt. No follow-up is needed.

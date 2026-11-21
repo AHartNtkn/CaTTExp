@@ -309,5 +309,6 @@ import CaTTExp.Uniform.GridFive
 import CaTTExp.Uniform.GridFiveExamples
 import CaTTExp.Uniform.GridLink
 import CaTTExp.Uniform.GridSep
+import CaTTExp.Uniform.KernelToy
 import CaTTExp.Uniform.InnerInv
 import CaTTExp.Uniform.Marks

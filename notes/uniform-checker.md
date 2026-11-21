@@ -6,7 +6,7 @@ Everything called "checked" below is verified when `src/Everything.agda` type-ch
 
 ## 1. What is checked
 
-The work has two parts. The first is the kernel checker for every theory, relative to the free objects. The second is one concrete free-object layer: the one where the switches act.
+The work has two parts. The first is the kernel checker relative to the free objects, for every family of layers that has a grading bound (`Graded`; see §2 item 5 for layers with loops). The second is one concrete free-object layer: the one where the switches act.
 
 ### 1.1 The rule and its decision, for any free-object layer (`Rule.agda`)
 
@@ -42,6 +42,10 @@ It defines `side Δ A t u`. Then:
 - **`side-sound`, `side-complete`**: `side Δ A t u` holds iff ⟦t⟧ = x, ⟦u⟧ = y and SC x y.
 - **The judgments** are `CaTTExp.TypingWith` at this side condition. So the coh rule is exactly (coh_S), and `coh-S` / `coh-S⁻¹` state it in the spec's form.
 - **The checker** is `CaTTExp.CheckWith` at this side condition. It is sound by construction and complete by `CaTTExp.Completeness`, which already holds for every side condition.
+
+Completeness (`CheckerComplete`) takes the two hypotheses of `CaTTExp.Completeness` on the signature of constants: `==K-refl` (the equality test on constants is reflexive) and `valid?-complete` (`valid?` succeeds on valid constants). Pure CaTT satisfies both vacuously.
+
+`KernelToy.agda` instantiates `Kernel` with a one-cell layer, so its parameters can be supplied. The resulting checker accepts coh_{(x : ⋆), x → x}[x]. This is not a model of V + S; it only shows the hypotheses are satisfiable.
 
 Substitution, weakening and the rest of `CaTTExp.Subst` hold for these judgments too, since they are proved for every side condition.
 
@@ -133,6 +137,7 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
 2. **The grid model is a model by inspection.** That these words, edges and split equations are the degree-4 layer of F_{V+S} on a suspended grid is taken from r10 Response 3 and the checker it cites. Since 2026-11-21 the link to raw T-syntax is checked in both directions (§1.6): on valid paths, grid equality is exactly equality of raw T-translations under T without the support equations plus the switched laws. What stays by inspection is that this raw presentation (SepAlgebra's T, with the support equations dropped) is V + S on these diagrams, and the paper claims behind it. This is the grid case of the "Link A–B" of `joining-completion.md` §8.
 3. **5-letters by inspection.** `GridFive` takes the degree-5 alphabet on suspended grids (positional squares only) from the paper argument of §1.5, and treats composite-operand squares through their atomic pastes. Neither is derived from raw syntax. *(Until 2026-11-21 there were no 5-letters at all, and example (b) was checked only as u ≠ v.)*
 4. **Supports of V + S.** The fullness test is a parameter. How it reads for V + S is ledger S1. The spec's 2.1 takes supports in the expanded basis, but (K45)/(K50) say that basis is infinite on some pasting diagrams, so "supp(c) = all generators" needs a reading. The point has been passed to the S1 check.
+5. **`Graded` fails on layers with loops** (ledger S14): the loop H of V at degree 4 on Γ_{2,2}, and the positional self-loop at degree 5 on the 2 × 2 grid in T₁₂. On such layers `Decide.sc?` and so `Kernel` do not apply. The decision by search over (cell, accumulated support) pairs in a finite closed universe belongs to S3a. When it lands, `Kernel` should take it in place of `Graded`.
 
 ## 3. Open items
 

@@ -35,6 +35,7 @@ sM-H φ (probeR L Δ Θ R Z) = cong (_▸ sF φ Z) (sFs-++ φ L (rep (Δ ⊠ Θ)
 sM-H φ (unitR L R Z)      = cong (_▸ sF φ Z) (sFs-++ φ L (rep (disk 0) ∷ R))
 sM-H φ (evLR Φ A C)       = refl
 sM-H φ (evRR Φ A C)       = refl
+sM-H φ (shapeR L Θ R Z)   = cong (_▸ sF φ Z) (sFs-++ φ L (shp Θ ∷ R))
 
 sM-B : ∀ φ ρ → sM φ (B ρ) ≡ B (sRow φ ρ)
 sM-B φ (pairR L U W R Z)  = cong (_▸ sF φ Z) (sFs-++ φ L (U ∷ W ∷ R))
@@ -42,6 +43,7 @@ sM-B φ (probeR L Δ Θ R Z) = cong (_▸ sF φ Z) (sFs-++ φ L (rep Δ ∷ rep 
 sM-B φ (unitR L R Z)      = cong (_▸ sF φ Z) (sFs-++ φ L R)
 sM-B φ (evLR Φ A C)       = refl
 sM-B φ (evRR Φ A C)       = cong (_▸ sF φ C) (sFs-++ φ Φ (A ∷ []))
+sM-B φ (shapeR L Θ R Z)   = cong (_▸ sF φ Z) (sFs-++ φ L (rep Θ ∷ R))
 
 sTs-++ : ∀ σ xs ys → sTs σ (xs ++ ys) ≡ sTs σ xs ++ sTs σ ys
 sTs-++ σ []       ys = refl
@@ -61,6 +63,7 @@ sT-rmap σ (probeR L Δ Θ R Z) x = cong (comp (sT σ x)) (sTs-slot σ L (pP Δ 
 sT-rmap σ (unitR L R Z)      x = cong (comp (sT σ x)) (sTs-slot σ L pt R)
 sT-rmap σ (evLR Φ A C)       x = refl
 sT-rmap σ (evRR Φ A C)       x = refl
+sT-rmap σ (shapeR L Θ R Z)    x = cong (comp (sT σ x)) (sTs-slot σ L (iP Θ) R)
 
 -- the gap of r does not see the formulas
 idTys-sFs : ∀ φ L → idTys (sFs φ L) ≡ map (sM φ) (idTys L)
@@ -88,6 +91,7 @@ rgap-sRow φ (probeR L Δ Θ R Z) g = slot-gap φ L ((rep Δ ∷ rep Θ ∷ []) 
 rgap-sRow φ (unitR L R Z)      g = slot-gap φ L ([] ▸ rep (disk 0)) R g
 rgap-sRow φ (evLR Φ A C)       g = refl
 rgap-sRow φ (evRR Φ A C)       g = refl
+rgap-sRow φ (shapeR L Θ R Z)    g = slot-gap φ L ((rep Θ ∷ []) ▸ shp Θ) R g
 
 -- r maps gaps of H to gaps of B
 sumIns-take-≤ : ∀ g ms → T (leq (sumIns (take g ms)) (sumIns ms))
@@ -119,6 +123,9 @@ rgap-bound (probeR L Δ Θ R Z) g _ =
 rgap-bound (unitR L R Z)      g _ =
   subst (λ n → T (leq (sumIns (take g (idTys L ++ ([] ▸ rep (disk 0)) ∷ idTys R))) n)) (slot-total L ([] ▸ rep (disk 0)) R)
         (sumIns-take-≤ g (idTys L ++ ([] ▸ rep (disk 0)) ∷ idTys R))
+rgap-bound (shapeR L Θ R Z)    g _ =
+  subst (λ n → T (leq (sumIns (take g (idTys L ++ ((rep Θ ∷ []) ▸ shp Θ) ∷ idTys R))) n)) (slot-total L ((rep Θ ∷ []) ▸ shp Θ) R)
+        (sumIns-take-≤ g (idTys L ++ ((rep Θ ∷ []) ▸ shp Θ) ∷ idTys R))
 rgap-bound (evLR Φ A C)       g p = p
 rgap-bound (evRR Φ A C)       g p =
   subst (λ n → T (leq g n)) (sym (trans (length-++ Φ (A ∷ [])) (+-comm (length Φ) 1)))
@@ -535,6 +542,9 @@ module _ (ε : Nat → SC) where
   rmapSem (unitR L R Z) {k} {g} u rd
     rewrite slotRO u pt L cpt R refl =
     toRO (slotSem {L} {cpt} {R} {Z} ⟦ u ⟧ (rcell rd) (rdm rd) (rgp rd))
+  rmapSem (shapeR L Θ R Z) {k} {g} u rd
+    rewrite slotRO u (iP Θ) L (cι Θ) R refl =
+    toRO (slotSem {L} {cι Θ} {R} {Z} ⟦ u ⟧ (rcell rd) (rdm rd) (rgp rd))
   rmapSem (evLR Φ A C) {k} {g} u rd with rcell rd
   ... | cellAt pre post sp len tx = record
     { oval = unit-r {P = []} {Y = A} {Q = pre ++ dsrc k ++ post}

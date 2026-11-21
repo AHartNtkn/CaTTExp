@@ -134,6 +134,7 @@ mirSh (a ⊠ b)   = mirSh b ⊠ mirSh a
 mirFm : Fm → Fm
 mirFm (obj i)  = obj i
 mirFm (rep θ)  = rep (mirSh θ)
+mirFm (shp θ)  = shp (mirSh θ)
 mirFm (a ⊗ b)  = mirFm b ⊗ mirFm a
 mirFm (a \\ c) = mirFm c // mirFm a
 mirFm (c // a) = mirFm a \\ mirFm c
@@ -148,6 +149,7 @@ mirRow : Row → Row
 mirRow (pairR L U V R Z)  = pairR (mirL R) (mirFm V) (mirFm U) (mirL L) (mirFm Z)
 mirRow (probeR L Δ Θ R Z) = probeR (mirL R) (mirSh Θ) (mirSh Δ) (mirL L) (mirFm Z)
 mirRow (unitR L R Z)      = unitR (mirL R) (mirL L) (mirFm Z)
+mirRow (shapeR L Θ R Z)   = shapeR (mirL R) (mirSh Θ) (mirL L) (mirFm Z)
 mirRow (evLR Φ A C)       = evRR (mirL Φ) (mirFm A) (mirFm C)
 mirRow (evRR Φ A C)       = evLR (mirL Φ) (mirFm A) (mirFm C)
 
@@ -159,6 +161,7 @@ mutual
   mirTm (eR a c)         = eL (mirFm a) (mirFm c)
   mirTm (pP d θ)         = pP (mirSh θ) (mirSh d)
   mirTm pt               = pt
+  mirTm (iP θ)           = iP (mirSh θ)
   mirTm (idt a)          = idt (mirFm a)
   mirTm (comp f gs)      = comp (mirTm f) (mirTs gs)
   mirTm (glue a x b)     = glue (mirTm a) (mirTm x) (mirTm b)
@@ -184,6 +187,7 @@ mirSh-invol (a ⊠ b)   = cong₂ _⊠_ (mirSh-invol a) (mirSh-invol b)
 mirFm-invol : ∀ a → mirFm (mirFm a) ≡ a
 mirFm-invol (obj i)  = refl
 mirFm-invol (rep θ)  = cong rep (mirSh-invol θ)
+mirFm-invol (shp θ)  = cong shp (mirSh-invol θ)
 mirFm-invol (a ⊗ b)  = cong₂ _⊗_ (mirFm-invol a) (mirFm-invol b)
 mirFm-invol (a \\ c) = cong₂ _\\_ (mirFm-invol a) (mirFm-invol c)
 mirFm-invol (c // a) = cong₂ _//_ (mirFm-invol c) (mirFm-invol a)
@@ -201,6 +205,8 @@ mirRow-invol (probeR L Δ Θ R Z) rewrite mirL-invol L | mirL-invol R
   | mirSh-invol Δ | mirSh-invol Θ | mirFm-invol Z = refl
 mirRow-invol (unitR L R Z) rewrite mirL-invol L | mirL-invol R
   | mirFm-invol Z = refl
+mirRow-invol (shapeR L Θ R Z) rewrite mirL-invol L | mirL-invol R
+  | mirSh-invol Θ | mirFm-invol Z = refl
 mirRow-invol (evLR Φ A C) rewrite mirL-invol Φ | mirFm-invol A
   | mirFm-invol C = refl
 mirRow-invol (evRR Φ A C) rewrite mirL-invol Φ | mirFm-invol A
@@ -213,6 +219,7 @@ H-mir : ∀ ρ → H (mirRow ρ) ≡ mirM (H ρ)
 H-mir (pairR L U V R Z)  = cong (_▸ mirFm Z) (sym (rmapL-split mirFm L (U ⊗ V) R))
 H-mir (probeR L Δ Θ R Z) = cong (_▸ mirFm Z) (sym (rmapL-split mirFm L (rep (Δ ⊠ Θ)) R))
 H-mir (unitR L R Z)      = cong (_▸ mirFm Z) (sym (rmapL-split mirFm L (rep (disk 0)) R))
+H-mir (shapeR L Θ R Z)   = cong (_▸ mirFm Z) (sym (rmapL-split mirFm L (shp Θ) R))
 H-mir (evLR Φ A C)       = refl
 H-mir (evRR Φ A C)       = refl
 
@@ -226,6 +233,7 @@ B-mir (probeR L Δ Θ R Z) = cong (_▸ mirFm Z) (sym
          (trans (cong (λ s → s ++ rep (mirSh Δ) ∷ mirL L) (rmapL-++ mirFm (rep Θ ∷ []) R))
                 (++-assoc (mirL R) (rep (mirSh Θ) ∷ []) (rep (mirSh Δ) ∷ mirL L)))))
 B-mir (unitR L R Z) = cong (_▸ mirFm Z) (sym (rmapL-++ mirFm L R))
+B-mir (shapeR L Θ R Z) = cong (_▸ mirFm Z) (sym (rmapL-split mirFm L (rep Θ) R))
 B-mir (evLR Φ A C)  = refl
 B-mir (evRR Φ A C)  = cong (_▸ mirFm C) (sym (rmapL-++ mirFm Φ (A ∷ [])))
 
@@ -249,6 +257,10 @@ rmap-mir (unitR L R Z) x = cong (comp (mirTm x)) (sym
   (trans (mirTs≡ (ids L ++ pt ∷ ids R))
     (trans (rmapL-split mirTm (ids L) pt (ids R))
            (cong₂ (λ a b → a ++ pt ∷ b) (ids-mir R) (ids-mir L)))))
+rmap-mir (shapeR L Θ R Z) x = cong (comp (mirTm x)) (sym
+  (trans (mirTs≡ (ids L ++ iP Θ ∷ ids R))
+    (trans (rmapL-split mirTm (ids L) (iP Θ) (ids R))
+           (cong₂ (λ a b → a ++ iP (mirSh Θ) ∷ b) (ids-mir R) (ids-mir L)))))
 rmap-mir (evLR Φ A C) x = refl
 rmap-mir (evRR Φ A C) x = refl
 
@@ -286,6 +298,7 @@ slot-split {ρ} pre (x ∷ xs) z p = go (slotRow pre x xs z) refl p
     one-row pre (rep (named _)) xs z r r′ rs ()
     one-row pre (rep (_ ⊠ _)) xs z r r′ rs ()
     one-row pre (_ ⊗ _) xs z r r′ rs ()
+    one-row pre (shp _) xs z r r′ rs ()
     one-row pre (_ \\ _) xs z r r′ rs ()
     one-row pre (_ // _) xs z r r′ rs ()
 
@@ -308,6 +321,8 @@ slotRow-mir L (rep (disk zero)) R z here! = here!
 slotRow-mir L (u ⊗ v)           R z (there! ())
 slotRow-mir L (rep (d ⊠ θ))     R z (there! ())
 slotRow-mir L (rep (disk zero)) R z (there! ())
+slotRow-mir L (shp θ)           R z here! = here!
+slotRow-mir L (shp θ)           R z (there! ())
 slotRow-mir L (obj _)              R z ()
 slotRow-mir L (rep (disk (suc _))) R z ()
 slotRow-mir L (rep (named _))      R z ()
@@ -321,6 +336,7 @@ outRows-mir xs (a \\ c) (there! ())
 outRows-mir xs (c // a) (there! ())
 outRows-mir xs (obj _) ()
 outRows-mir xs (rep _) ()
+outRows-mir xs (shp _) ()
 outRows-mir xs (_ ⊗ _) ()
 
 ∈-++-split : ∀ {A : Set} {x : A} xs ys → x ∈ (xs ++ ys) → (x ∈ xs) ⊎ (x ∈ ys)

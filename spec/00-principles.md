@@ -18,11 +18,17 @@ The ambient 𝒦 stays **external**: it is the model the judgments are about, no
 
 There is no type of types, no type of small ω-categories, and no rule that turns a judgment into a term. ⋆ is a sort, not a universe: nothing has type "the collection of objects".
 
-Consequences used later:
-- an object is never quantified over by a term former; object variables are bound only by contexts;
-- "the ω-category of ω-categories" is never an object of the theory. Its structure appears only through rules about 𝒦 (limits, free objects, the closed structure).
+What this excludes:
+- any object or term that classifies objects, families of objects or presented structures. "The ω-category of ω-categories" is never an object of the theory, and its structure appears only through rules about 𝒦 (limits, free objects, the closed structure);
+- any rule that reflects a judgment into a term, including ⋆ itself or Γ ⊢ C : ⋆.
 
-*Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
+What it does not exclude:
+- **Binding formers in Lawvere's style** (§0.1). A rule may bind an object variable in a premise and form an object or a cell from it. Examples are an end ∫_X F(X, X) or a System F-style ∀X. T(X).
+- Such a rule must state its universal property as the existence of cells (§0.3), and it must not make ⋆ or a judgment into a term.
+- A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
+- Whether the kernel takes any binding former, and which ones are sound in 𝒦, is open (ledger F10(c)).
+
+*Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan. An earlier version of this section said no term former ever quantifies over objects. That contradicted §0.1, which allows these binders, and was corrected under ledger S15.
 
 ## 0.3 Universal properties are witnessed by cells
 

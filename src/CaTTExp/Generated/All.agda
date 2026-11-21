@@ -17,3 +17,4 @@ import CaTTExp.Generated.GrayIntervalDisc
 import CaTTExp.Generated.CanonicalGrayCube
 import CaTTExp.Generated.CanonicalGrayTwoDiscs
 import CaTTExp.Generated.GrayDiscDiscTransfer
+import CaTTExp.Generated.RCSelfTestCheck

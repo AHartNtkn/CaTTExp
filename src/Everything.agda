@@ -145,6 +145,7 @@ import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
+import CaTTExp.RCOracle
 import CaTTExp.LocalisedFiller
 import CaTTExp.LocalisedFillerExamples
 import CaTTExp.Trunc.Typing

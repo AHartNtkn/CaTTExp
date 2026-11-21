@@ -1060,6 +1060,59 @@ Consequences for this section:
 
 Ownership: the r10 outbox poses it to the researchers, and RCX keeps it in-house.
 
+### 7.14 Independent check of r9 Response 15: descent over Sd(c) (thread RCX, 2026-11-21)
+
+Response 15 (in `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, verified in PR #342) constructs search-free comparisons between parallel raw terms with equal strict value in every finite strong-Steiner context, without lemma L. This section is a second, independent check. It separates three kinds of support: what is machine-checked, what I checked by argument, and what still rests on citations.
+
+**1. Induction measure (checked by argument).** The measure is (n, n − l, h, |S|) in lexicographic order. I followed every recursive call:
+- *Step-1 actions.* These are same-rank calls in a partial cylinder whose lowest mark s satisfies s ≥ h > l. The cylinder satisfies G_{s+1} (Response 6, checked on 690 markings), so l rises to l′ = min(n, s + 1) and n − l drops.
+- *Bridges JR ⇒ id in a piece U_θ.* These are equal-image comparisons on the support of a proper label. The rank n is unchanged and G_l is inherited. Either h drops, or h stays the same and |S| drops.
+- *The atomic exception g.* The call has input rank h < n.
+- *Zigzag bridges F_* ⇒ G_*.* These are lifts at staircase ends inside one piece V_{G(p_x)}, and the local algorithm on that piece supplies them. The local algorithm is an input to D(P), already built from smaller calls.
+- *Base cases.* h ≤ l uses globular contraction. h = n uses Response 3's intrinsic events, whose old caps have height ≤ n − 1 and inherit G_l.
+
+No call fails to decrease.
+
+**2. The three gluing rules (order theory machine-checked; lifting by argument).** `CaTTExp.CarrierGluing` (Agda, `--safe`, no postulates) checks the bookkeeping. Carriers live in a preorder, faces are carried at or below their carrier, and the pieces are V p = B′ ∪ {x | p_x ≤ p}.
+- Pieces are closed under faces and monotone in p (`piece-closed`, `piece-mono`).
+- *Zigzag rule.* For a monotone endomap F, the faces of x land in pieces inside V_{F p_x} (`Endo.face-target`), so F_* is well defined. When F ≤ G pointwise, V_{F p} ⊆ V_{G p} (`bridge-nest`), which is the piece where the bridge on x is lifted.
+- *Grouping rule.* Regrouping along a monotone u gives carriers that satisfy the face condition again (`Transport.regroup`). The regrouped piece at q is exactly the union of the V_p with u p ≤ q (`grouped→union`, `union→grouped`).
+- *Cocartesian rule.* Reassigning each carrier to its least extension over q is monotone (`Cocartesian.ext-mono`). Over the fibre, ext p ≤ r holds exactly when p ≤ r, so the reassigned pieces are the original ones.
+- *Bottom variant.* Its only extra content is enlarging the base by the generators over 0. Their faces stay in the enlarged base by face-closure of carriers, which `regroup` already covers.
+
+I checked the raw-term content of the rules by argument: lifting the strict label of x at faces already interpreted, the staircases of step 1, and the transfers of step 2. In particular, the inverses needed for transfer are computed inside a piece containing the generator, by lifting at reversed ends. That is legitimate because a piece's local algorithm handles all lifts through rank n + 1. The serialization bound "no demand exceeds rank n + 1" is correct: cancellations of rank-q face factors have degree q + 1 ≤ n + 1, and a top staircase of rank n + 1 needs only its reverse.
+
+**3. The poset input from Campion (checked against the paper, with one gap).** I read §§3–4 of arXiv 2311.00200 myself.
+- *Single-cut poset.* Proposition 4.15 gives Sd_{{k−1}}(µ) ≅ Lin(At_k(µ)), and Lemma 3.2 gives Lin(P) ≅ sd of the **nonempty proper** downsets of P.
+  - The paper's definition of DC(P) says only "nonempty". With P itself included, the bijection of Lemma 3.2 fails. The proof of Lemma 3.2 extracts proper ideals, and Response 15 correctly uses proper ones.
+  - `tools/rc_lin_ideals.py` confirms both points on all 407 naturally labelled posets with at most 5 elements: Lin(P) counts match the nonempty chains of nonempty proper downsets, and the count with P included differs.
+- *Index slip in the paper.* Lemma 4.18 writes Sd_{{k}}(µ), but the proof of Theorem 4.21 and Proposition 4.15 need Sd_{{k−1}}(µ). Response 15 uses k − 1, which is consistent.
+- *Zigzags (machine-checked in Agda, for every preorder that has a non-minimal element).*
+  - I ↦ I ∩ Min is a monotone map of nonempty proper downsets, below the identity and below the constant Min (`Ideals.cut`, `cut-mono`, `cut-below-id`, `cut-below-Min`). This is Arone's coreflection. The script above also checks it on small posets.
+  - C ↦ C ∪ {t} on nonempty chains bounded by t is monotone, above the identity and above {t} (`Chains.addTop`).
+  - A least or greatest element gives a one-step zigzag (`least-zigzag`, `greatest-zigzag`).
+- *Fibres.* The two projections and the least elements of their non-bottom fibres match the proof of Theorem 4.21: U_{k−2} to Sd⊳_{[0,k−2]}(µ), then U′_{k−1} on the bottom fibre Sd_{[k−1,n−1]}(µ) to Sd⊳_{{k−1}}(µ).
+- **Gap (citation level).** Both the paper and Response 15 call U_{k−2} : Sd(µ) → Sd⊳_{[0,k−2]}(µ) cocartesian "by Lemma 4.12 and Remark 4.20". The cited results do not literally cover this map:
+  - Lemma 4.12 covers only forgetting the top cut, [0, n−1] → [0, n−2].
+  - Lemma 4.17 gives cocartesianness down to [0, k−1].
+  - The remaining step, [0, k−1] → [0, k−2], would need Lemma 4.16 at k − 1, which assumes At_k is an equivalence relation. That is exactly what fails at the chosen k.
+
+  The constructive cocartesian rule needs least extensions for this map. I did not reconstruct a proof, and I did not find a counterexample. The descent is therefore exactly as sound as this step of Campion's published proof. The Theorem 4.21 statement itself (contractibility) is not in doubt here. The question is only whether its cocartesian projection supplies least extensions. Without them, the non-cocartesian grouping rule would need D on the preimages of downsets instead.
+
+**4. Low variables (checked by argument).** For l ≥ 2, the minimal refinement M_l(c) and the refinement R_l satisfy p ⊆ R_l(p), M_l(c) ⊆ R_l(p), and R_l is monotone. That is exactly a zigzag id ≤ R_l ≥ const M_l on adapted pieces, the shape `Zigzag₁` with both comparisons going up. So collapsing into V_{M_l(c)} and comparing in V_{R_l(p_x)} is an instance of the zigzag rule. The hom-computad decomposition behind R_l is checked only on product hom chains (the response's checker). I did not check it in general.
+
+**5. Not checked here.**
+- The least-carrier calculation and the identification of V_θ. These rest on round 8, Responses 7, 8 and 12, cited and not re-derived.
+- Local lifting in U_θ, beyond the measure in point 1.
+- The size bound t(N). It is computable by construction, but it carries no estimate.
+
+**Verdict.** I agree with the PR #342 verification, with one qualification: the construction inherits the cocartesianness of U_{k−2} from Campion's proof, and the stated lemmas do not literally cover that map (point 3). Everything order-theoretic that the gluing uses on the single-cut poset is machine-checked.
+
+**Owners.**
+- *Cocartesianness of U_{k−2}.* RCX: either prove the least-extension property, or show that the non-cocartesian grouping rule suffices.
+- *Size bound (C1).* RCX.
+- *Shared-canonical-form recognizer (E9′).* RCX, until it is reassigned.
+
 ## 8. Follow-ups and owners
 
 - RC(n), n ≥ 3 (C1 and D2): out to researcher; internal attempts continue in this thread (NGC).

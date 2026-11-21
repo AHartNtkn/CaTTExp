@@ -390,10 +390,6 @@ module TermCones where
   _ = refl
   _ : all (λ Γ → okM (coconeT Γ)) termShapes ≡ true
   _ = refl
-  -- Cocones over 2-dimensional boundaries are not implemented: the
-  -- coherences they use have no dual constructors, so coconeT refuses.
-  _ : is-just (coconeT VComp) ≡ false
-  _ = refl
 
 ------------------------------------------------------------------------
 -- 11. Cones over 2-dimensional coherence boundaries (ledger B19): the
@@ -427,20 +423,51 @@ module TermCones2 where
         ∷ hom (hom ob (v 0) (v 5)) (bn 0 (v 2) (v 6)) (bn 0 (v 3) (v 7))
         ∷ hom (hom (hom ob (v 0) (v 5)) (bn 0 (v 2) (v 6)) (bn 0 (v 3) (v 7))) (bn 0 (v 4) (v 8)) (v 9) ∷ [])
 
+  -- Nested operands. θ : (α ∗₁ β) ∗₀ b ⇛ γ, with α : f ⇒ g, β : g ⇒ h : x → y,
+  -- b : y → z, γ : f∗₀b ⇒ h∗₀b.
+  NestR : ExCtx
+  NestR = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ hom ob (v 0) (v 1) ∷ hom ob (v 0) (v 1)
+        ∷ hom (hom ob (v 0) (v 1)) (v 2) (v 3) ∷ hom (hom ob (v 0) (v 1)) (v 3) (v 4)
+        ∷ ob ∷ hom ob (v 1) (v 7)
+        ∷ hom (hom ob (v 0) (v 7)) (bn 0 (v 2) (v 8)) (bn 0 (v 4) (v 8))
+        ∷ hom (hom (hom ob (v 0) (v 7)) (bn 0 (v 2) (v 8)) (bn 0 (v 4) (v 8))) (bn 0 (bn 1 (v 5) (v 6)) (v 8)) (v 9) ∷ []
+
+  -- θ : (a ∗₀ a′) ∗₀ α ⇛ β, whiskering by a composite 1-cell, with
+  -- a : x → w, a′ : w → y, α : f ⇒ g : y → z.
+  NestL : ExCtx
+  NestL = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ ob ∷ hom ob (v 1) (v 3)
+        ∷ ob ∷ hom ob (v 3) (v 5) ∷ hom ob (v 3) (v 5)
+        ∷ hom (hom ob (v 3) (v 5)) (v 6) (v 7)
+        ∷ hom (hom ob (v 0) (v 5)) (bn 0 (bn 0 (v 2) (v 4)) (v 6)) (bn 0 (bn 0 (v 2) (v 4)) (v 7))
+        ∷ hom (hom (hom ob (v 0) (v 5)) (bn 0 (bn 0 (v 2) (v 4)) (v 6)) (bn 0 (bn 0 (v 2) (v 4)) (v 7)))
+              (bn 0 (bn 0 (v 2) (v 4)) (v 8)) (v 9) ∷ []
+
+  -- θ : 1_f ∗₀ (α ∗₁ β) ⇛ γ: a horizontal composite whose operands are an
+  -- identity and a vertical composite, with f : x → y, α : g ⇒ h, β : h ⇒ k : y → z.
+  NestH : ExCtx
+  NestH = ob ∷ ob ∷ hom ob (v 0) (v 1) ∷ ob ∷ hom ob (v 1) (v 3) ∷ hom ob (v 1) (v 3) ∷ hom ob (v 1) (v 3)
+        ∷ hom (hom ob (v 1) (v 3)) (v 4) (v 5) ∷ hom (hom ob (v 1) (v 3)) (v 5) (v 6)
+        ∷ hom (hom ob (v 0) (v 3)) (bn 0 (v 2) (v 4)) (bn 0 (v 2) (v 6))
+        ∷ hom (hom (hom ob (v 0) (v 3)) (bn 0 (v 2) (v 4)) (bn 0 (v 2) (v 6)))
+              (bn 0 (idn (v 2)) (bn 1 (v 7) (v 8))) (v 9) ∷ []
+
   twoTerm : List ExCtx
-  twoTerm = VComp ∷ Unit2 ∷ WhiskL ∷ WhiskR ∷ Horiz ∷ []
+  twoTerm = VComp ∷ Unit2 ∷ WhiskL ∷ WhiskR ∷ Horiz ∷ NestR ∷ NestL ∷ NestH ∷ []
 
   _ : all ok twoTerm ≡ true
   _ = refl
   -- Each shape gets a cone, and each cone type-checks.
-  _ : map (λ Γ → is-just (ConeT.cone Γ)) twoTerm ≡ true ∷ true ∷ true ∷ true ∷ true ∷ []
+  _ : map (λ Γ → is-just (ConeT.cone Γ)) twoTerm ≡ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ []
   _ = refl
   _ : all okT twoTerm ≡ true
   _ = refl
   _ : all keT twoTerm ≡ true
   _ = refl
-  -- Cocones over these shapes are not built yet (recorded).
-  _ : map (λ Γ → is-just (coconeT Γ)) twoTerm ≡ false ∷ false ∷ false ∷ false ∷ false ∷ []
+  -- Cocones over the same shapes, by O_odd duality (the 2-dimensional
+  -- cone cells and their duals are paired in dualE).
+  _ : map (λ Γ → is-just (coconeT Γ)) twoTerm ≡ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ []
+  _ = refl
+  _ : all (λ Γ → okM (coconeT Γ)) twoTerm ≡ true
   _ = refl
   -- The 1-dimensional and globular cases are unchanged.
   _ : all okT TermCones.termShapes ≡ true

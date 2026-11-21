@@ -275,6 +275,50 @@ hxC a b = cohOver Q (binC 1 (binC 0 A (gen Q 6)) (binC 0 (gen Q 3) B)) (binC 0 A
   Q = Glue 0 2 2
   A = gen Q 4 ; B = gen Q 8
 
+-- O_odd duals of the cells above, used by cocones over 2-dimensional
+-- coherence terms. Under O_odd, ∗₀ factors swap, 2-cells keep their
+-- direction and 3-cells reverse.
+
+-- ru2rC a : a ∗₁ id_{τa} ⇛ a   (dual of ru2C)
+ru2rC : Cell → Cell
+ru2rC a = cohOver Q (binC 1 A (idC (gen Q 3))) A (diskList a)
+  where
+  Q = Disk 2
+  A = gen Q 4
+
+-- wirC f u : id_f ∗₀ u ⇛ id_{f ∗₀ u}   (dual of wiC)
+wirC : Cell → Cell → Cell
+wirC f u = cohOver Q (binC 0 (idC F) U) (idC (binC 0 F U)) (diskList f ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (leaf ∷ leaf ∷ []))
+  F = gen Q 2 ; U = gen Q 4
+
+-- naDC α a u : a1R(σα, a, u) ∗₁ ((α ∗₀ a) ∗₀ u) ⇛ (α ∗₀ (a ∗₀ u)) ∗₁ a1R(τα, a, u)
+naDC : Cell → Cell → Cell → Cell
+naDC α a u = cohOver Q (binC 1 (assoc1C false F A U) (binC 0 (binC 0 Al A) U))
+                       (binC 1 (binC 0 Al (binC 0 A U)) (assoc1C false G A U))
+                     (diskList α ++ restDisk 0 a ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (node (leaf ∷ []) ∷ leaf ∷ leaf ∷ []))
+  F = gen Q 2 ; G = gen Q 3 ; Al = gen Q 4 ; A = gen Q 6 ; U = gen Q 8
+
+-- nrDC b α u : a1R(b, σα, u) ∗₁ ((b ∗₀ α) ∗₀ u) ⇛ (b ∗₀ (α ∗₀ u)) ∗₁ a1R(b, τα, u)
+nrDC : Cell → Cell → Cell → Cell
+nrDC b α u = cohOver Q (binC 1 (assoc1C false B F U) (binC 0 (binC 0 B Al) U))
+                       (binC 1 (binC 0 B (binC 0 Al U)) (assoc1C false B G U))
+                     (diskList b ++ restDisk 0 α ++ restDisk 0 u)
+  where
+  Q = ctxOf (node (leaf ∷ node (leaf ∷ []) ∷ leaf ∷ []))
+  B = gen Q 2 ; F = gen Q 4 ; G = gen Q 5 ; Al = gen Q 6 ; U = gen Q 8
+
+-- hxDC b a : b ∗₀ a ⇛ (σb ∗₀ a) ∗₁ (b ∗₀ τa)   (dual of hxC)
+hxDC : Cell → Cell → Cell
+hxDC b a = cohOver Q (binC 0 B A) (binC 1 (binC 0 (gen Q 2) A) (binC 0 B (gen Q 7)))
+                   (diskList b ++ restDisk 0 a)
+  where
+  Q = Glue 0 2 2
+  B = gen Q 4 ; A = gen Q 8
+
 -- assocC dir u v w, for 2-cells composable along 1-cells, is the
 -- associator (u ∗₁ v) ∗₁ w ⇛ u ∗₁ (v ∗₁ w) (dir = true) or its reverse
 -- (dir = false), over three 2-disks glued along 1-disks.
@@ -303,6 +347,9 @@ data Ex : Set where
   dw dr na nr : Ex → Ex → Ex → Ex  -- the 3-cells dwC, drC, naC, nrC
   ru2 : Ex → Ex                    -- ru2C
   wi hx : Ex → Ex → Ex             -- wiC, hxC
+  naD nrD : Ex → Ex → Ex → Ex      -- their O_odd duals: naDC, nrDC,
+  ru2r : Ex → Ex                   -- ru2rC,
+  wir hxD : Ex → Ex → Ex           -- wirC, hxDC
 
 data ExTy : Set where
   ob  : ExTy
@@ -361,6 +408,20 @@ tyF (suc f) Γ (wi u w)   = hom (tyF f Γ s) s (bn 0 u (idn w))
   where s = idn (bn 0 u w)
 tyF (suc f) Γ (hx a b)   = hom (tyF f Γ s) s (bn 0 a b)
   where s = bn 1 (bn 0 a (srcE (tyF f Γ b))) (bn 0 (tgtE (tyF f Γ a)) b)
+tyF (suc f) Γ (ru2r a)   = hom (tyF f Γ s) s a
+  where s = bn 1 a (idn (tgtE (tyF f Γ a)))
+tyF (suc f) Γ (wir w u)  = hom (tyF f Γ s) s (idn (bn 0 w u))
+  where s = bn 0 (idn w) u
+tyF (suc f) Γ (naD w a u) = hom (tyF f Γ s) s (bn 1 (bn 0 w (bn 0 a u)) (a1R (tgtE W) a u))
+  where
+  W = tyF f Γ w
+  s = bn 1 (a1R (srcE W) a u) (bn 0 (bn 0 w a) u)
+tyF (suc f) Γ (nrD b w u) = hom (tyF f Γ s) s (bn 1 (bn 0 b (bn 0 w u)) (a1R b (tgtE W) u))
+  where
+  W = tyF f Γ w
+  s = bn 1 (a1R b (srcE W) u) (bn 0 (bn 0 b w) u)
+tyF (suc f) Γ (hxD b a)  = hom (tyF f Γ s) s (bn 1 (bn 0 (srcE (tyF f Γ b)) a) (bn 0 b (tgtE (tyF f Γ a))))
+  where s = bn 0 b a
 tyF (suc f) Γ (a1L u y w) = hom (tyF f Γ l) l (bn 0 u (bn 0 y w))
   where l = bn 0 (bn 0 u y) w
 tyF (suc f) Γ (a1R u y w) = hom (tyF f Γ l) (bn 0 u (bn 0 y w)) l
@@ -406,6 +467,11 @@ mutual
   evF (suc f) Γ (ru2 a)    = fst (ru2C (cellF f Γ a))
   evF (suc f) Γ (wi u w)   = fst (wiC (cellF f Γ u) (cellF f Γ w))
   evF (suc f) Γ (hx a b)   = fst (hxC (cellF f Γ a) (cellF f Γ b))
+  evF (suc f) Γ (ru2r a)   = fst (ru2rC (cellF f Γ a))
+  evF (suc f) Γ (wir w u)  = fst (wirC (cellF f Γ w) (cellF f Γ u))
+  evF (suc f) Γ (naD w a u) = fst (naDC (cellF f Γ w) (cellF f Γ a) (cellF f Γ u))
+  evF (suc f) Γ (nrD b w u) = fst (nrDC (cellF f Γ b) (cellF f Γ w) (cellF f Γ u))
+  evF (suc f) Γ (hxD b a)  = fst (hxDC (cellF f Γ b) (cellF f Γ a))
   evF (suc f) Γ (a1L u y w) = fst (assoc1C true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (a1R u y w) = fst (assoc1C false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
@@ -453,6 +519,11 @@ substE ρ (nr u w b) = nr (substE ρ u) (substE ρ w) (substE ρ b)
 substE ρ (ru2 a)    = ru2 (substE ρ a)
 substE ρ (wi u w)   = wi (substE ρ u) (substE ρ w)
 substE ρ (hx a b)   = hx (substE ρ a) (substE ρ b)
+substE ρ (ru2r a)   = ru2r (substE ρ a)
+substE ρ (wir w u)  = wir (substE ρ w) (substE ρ u)
+substE ρ (naD w a u) = naD (substE ρ w) (substE ρ a) (substE ρ u)
+substE ρ (nrD b w u) = nrD (substE ρ b) (substE ρ w) (substE ρ u)
+substE ρ (hxD b a)  = hxD (substE ρ b) (substE ρ a)
 substE ρ (a1L u y w) = a1L (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (a1R u y w) = a1R (substE ρ u) (substE ρ y) (substE ρ w)
 substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
@@ -477,6 +548,11 @@ varsE (nr u w b) = varsE u ++ varsE w ++ varsE b
 varsE (ru2 a)    = varsE a
 varsE (wi u w)   = varsE u ++ varsE w
 varsE (hx a b)   = varsE a ++ varsE b
+varsE (ru2r a)   = varsE a
+varsE (wir w u)  = varsE w ++ varsE u
+varsE (naD w a u) = varsE w ++ varsE a ++ varsE u
+varsE (nrD b w u) = varsE b ++ varsE w ++ varsE u
+varsE (hxD b a)  = varsE b ++ varsE a
 varsE (a1L u y w) = varsE u ++ varsE y ++ varsE w
 varsE (a1R u y w) = varsE u ++ varsE y ++ varsE w
 varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
@@ -852,6 +928,11 @@ module CylOf (Γ : ExCtx) (Y : List Nat) where
   liftF (suc fl) (ru2 _)     = nothing
   liftF (suc fl) (wi _ _)    = nothing
   liftF (suc fl) (hx _ _)    = nothing
+  liftF (suc fl) (ru2r _)    = nothing
+  liftF (suc fl) (wir _ _)   = nothing
+  liftF (suc fl) (naD _ _ _) = nothing
+  liftF (suc fl) (nrD _ _ _) = nothing
+  liftF (suc fl) (hxD _ _)   = nothing
   liftF (suc fl) (asR _ _ _) = nothing
   liftF (suc fl) (bn k u w) =
     if affected u ∧ affected w then
@@ -1073,13 +1154,20 @@ dualE (a1R u y w) = a1L (dualE w) (dualE y) (dualE u)
 -- The coherences used for cones over 2-dimensional terms have no dual
 -- constructors yet. dualE leaves them unchanged, and coconeT refuses
 -- (returns nothing) when a cone contains one; see dualOK.
-dualE (dw u a b) = dw u a b
-dualE (dr a b u) = dr a b u
-dualE (na u a w) = na u a w
-dualE (nr u w b) = nr u w b
-dualE (ru2 a)    = ru2 a
-dualE (wi u w)   = wi u w
-dualE (hx a b)   = hx a b
+-- The 2-dimensional cone cells: each dual is the paired cell above
+-- (O_odd swaps ∗₀ factors, turns a1L into a1R, and reverses 3-cells).
+dualE (dw u a b) = dr (dualE a) (dualE b) (dualE u)
+dualE (dr a b u) = dw (dualE u) (dualE a) (dualE b)
+dualE (na u a w) = naD (dualE w) (dualE a) (dualE u)
+dualE (naD w a u) = na (dualE u) (dualE a) (dualE w)
+dualE (nr u w b) = nrD (dualE b) (dualE w) (dualE u)
+dualE (nrD b w u) = nr (dualE u) (dualE w) (dualE b)
+dualE (ru2 a)    = ru2r (dualE a)
+dualE (ru2r a)   = ru2 (dualE a)
+dualE (wi u w)   = wir (dualE w) (dualE u)
+dualE (wir w u)  = wi (dualE u) (dualE w)
+dualE (hx a b)   = hxD (dualE b) (dualE a)
+dualE (hxD b a)  = hx (dualE a) (dualE b)
 dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
 dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
 
@@ -1427,7 +1515,18 @@ dualOK (ru w)      = dualOK w
 dualOK (lu w)      = dualOK w
 dualOK (a1L u y w) = dualOK u ∧ dualOK y ∧ dualOK w
 dualOK (a1R u y w) = dualOK u ∧ dualOK y ∧ dualOK w
-dualOK _           = false
+dualOK (dw u a b)  = dualOK u ∧ dualOK a ∧ dualOK b
+dualOK (dr a b u)  = dualOK a ∧ dualOK b ∧ dualOK u
+dualOK (na u a w)  = dualOK u ∧ dualOK a ∧ dualOK w
+dualOK (naD w a u) = dualOK w ∧ dualOK a ∧ dualOK u
+dualOK (nr u w b)  = dualOK u ∧ dualOK w ∧ dualOK b
+dualOK (nrD b w u) = dualOK b ∧ dualOK w ∧ dualOK u
+dualOK (ru2 a)     = dualOK a
+dualOK (ru2r a)    = dualOK a
+dualOK (wi u w)    = dualOK u ∧ dualOK w
+dualOK (wir w u)   = dualOK w ∧ dualOK u
+dualOK (hx a b)    = dualOK a ∧ dualOK b
+dualOK (hxD b a)   = dualOK b ∧ dualOK a
 
 dualOKTy : ExTy → Bool
 dualOKTy ob          = true

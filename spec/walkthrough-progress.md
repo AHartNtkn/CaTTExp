@@ -7,7 +7,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 0. Principles
 
 - [x] 0.1 What the system is about
-- [ ] 0.2 No universes
+  - Q (Anthony): is "lax transformations as 2-cells" a truncation at dimension 2, like (∞,2) ⊂ (∞,ω)? Answered: no; laxness is an orientation axis, not a dimension axis, and every level of Fun^lax is lax (maps A ⊗ Dⁱ → B). The more general direction is uniform L (directed interchange inside objects too), which the kernel takes. Worked picture of D¹ × D¹ vs D¹ ⊗ D¹ and of a lax modification given.
+- [x] 0.2 No universes
 - [ ] 0.3 Universal properties are witnessed by cells
 - [ ] 0.4 Lax by default, the most general version first
 - [ ] 0.5 The kernel and the surface are kept apart

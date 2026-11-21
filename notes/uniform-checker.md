@@ -89,6 +89,6 @@ These agree with the Python checker as it stands after the 2026-11-20 fix of the
 - **S3a**: construct the layers of F_{V+S} in every degree in Agda and instantiate `Kernel`. This means formalizing the raw syntax of the T₁₂ signature, B and the guarded equations, then the (K65) rank normal forms and the switch extension of r10 Response 3.
 - **S3b**: the degree-5 letters on suspended grids, so that the grid layer becomes a `Layer` and example (b)'s non-reachability is checked.
 - **S3c**: link `Grid` to raw T-syntax (`Join/SepAlgebra`), closing item 2 above. It shares the missing map from pure-ι 4-terms to words with "Link A–B" (E12).
-- **S3d**: fix the support reading, after S1.
+- **S3d**: fix the support reading. The S1 reviewer (2026-11-21, ledger PR #350) recommends this reading: SC_{V+S} holds iff some cell c : ⟦t⟧ → ⟦u⟧ (identity allowed) has full support after the requirement-4 projection to 𝔉(Γ), meaning every Gray tuple generator. `Rule` already covers it: take `Supp` to be supports in 𝔉(Γ), `supp` and `suppL` to be the projected supports, and `full` the Gray fullness test. The reviewer also says which lift interprets a coherence is open. Distinct V-cells can share a Gray image, as u and v of example (b) do. That choice stays a parameter of `Kernel` (⟦_⟧).
 
 Owners are recorded in the ledger (S3).

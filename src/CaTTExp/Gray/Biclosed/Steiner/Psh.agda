@@ -135,3 +135,29 @@ castM-irr refl refl refl refl m = ≈m (λ x y → refl)
     E₂ = sym (concat-++ (K ∷ Ks) Ls)
     step1 : ((h ⊗ₘ A) ⊗ₘ B) ≈M castM (sym a′) (sym a) (h ⊗ₘ (A ⊗ₘ B))
     step1 = castM-sym a′ a (⊗-assoc h A B)
+
+-- Flattening one nested slot of a tensor of maps is a cast.
+⊗s-flat : ∀ {KP′ KP KX′ KX KQ′ KQ} (hP : Maps KP′ KP) (hX : Maps KX′ KX) (hQ : Maps KQ′ KQ) →
+          castM (concat-flat KP′ KX′ KQ′) (concat-flat KP KX KQ) (⊗s (hP ++ᵐ (⊗s hX ∷ hQ))) ≈M ⊗s (hP ++ᵐ (hX ++ᵐ hQ))
+⊗s-flat {KP′} {KP} {KX′} {KX} {KQ′} {KQ} hP hX hQ =
+  ≈M-trans (castM (concat-flat KP′ KX′ KQ′) (concat-flat KP KX KQ) (castM (sym c1′) (sym c1) G))
+           (castM-≈M (concat-flat KP′ KX′ KQ′) (concat-flat KP KX KQ) (≈M-sym (⊗s-++ hP (⊗s hX ∷ hQ))))
+  (≈M-trans (castM (trans (sym c1′) (concat-flat KP′ KX′ KQ′)) (trans (sym c1) (concat-flat KP KX KQ)) G)
+            (castM-trans (sym c1′) (concat-flat KP′ KX′ KQ′) (sym c1) (concat-flat KP KX KQ) G)
+  (≈M-trans (castM (trans (cong (concat KP′ ++_) (sym c2′)) (sym c3′)) (trans (cong (concat KP ++_) (sym c2)) (sym c3)) G)
+            (castM-irr _ _ _ _ G)
+  (≈M-trans (castM (sym c3′) (sym c3) (castM (cong (concat KP′ ++_) (sym c2′)) (cong (concat KP ++_) (sym c2)) G))
+            (≈M-sym (castM-trans (cong (concat KP′ ++_) (sym c2′)) (sym c3′) (cong (concat KP ++_) (sym c2)) (sym c3) G))
+  (≈M-trans (castM (sym c3′) (sym c3) (⊗s hP ⊗ₘ castM (sym c2′) (sym c2) (⊗s hX ⊗ₘ ⊗s hQ)))
+            (castM-≈M (sym c3′) (sym c3) (⊗-castʳ (⊗s hP) (sym c2′) (sym c2) (⊗s hX ⊗ₘ ⊗s hQ)))
+  (≈M-trans (castM (sym c3′) (sym c3) (⊗s hP ⊗ₘ ⊗s (hX ++ᵐ hQ)))
+            (castM-≈M (sym c3′) (sym c3) (⊗-congʳ (⊗s hP) (⊗s-++ hX hQ)))
+            (⊗s-++ hP (hX ++ᵐ hQ)))))))
+  where
+    G   = ⊗s hP ⊗ₘ (⊗s hX ⊗ₘ ⊗s hQ)
+    c1′ = concat-++ KP′ (concat KX′ ∷ KQ′)
+    c1  = concat-++ KP (concat KX ∷ KQ)
+    c2′ = concat-++ KX′ KQ′
+    c2  = concat-++ KX KQ
+    c3′ = concat-++ KP′ (KX′ ++ KQ′)
+    c3  = concat-++ KP (KX ++ KQ)

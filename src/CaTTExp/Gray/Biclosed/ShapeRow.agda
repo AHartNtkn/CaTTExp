@@ -96,3 +96,16 @@ shape-rmap : ∀ L Θ R Z g m n Γ k x →
              infer Γ x ≡ just (tyU (tmpl (shapeR L Θ R Z) g m n) k) →
              infer Γ (rmap (shapeR L Θ R Z) x) ≡ just (tyRU (tmpl (shapeR L Θ R Z) g m n) k)
 shape-rmap L Θ R Z g m n = infer-rmap (tmpl (shapeR L Θ R Z) g m n)
+
+-- the module above, instantiated at the canonical templates: literally
+-- every Θ, every gap g ≤ 2, mode and dimension
+module AtCut (Θ : Shape) = AtTemplate (cutT Θ) (shape-ok-cut Θ)
+module AtDcut (Θ : Shape) (g : Nat) (m : Mode) (n : Nat) (le : T (leq g 2)) =
+  AtTemplate (dcutT Θ g m n) (shape-ok-dcut Θ g m n le)
+
+shape-admit-cut : ∀ Θ → T (admit? (ctx (cutT Θ)) (cgoal (cutT Θ)))
+shape-admit-cut Θ = AtCut.shape-admit-c Θ
+
+shape-typed-dcut : ∀ Θ g m n (le : T (leq g 2)) →
+  T (wtGoal (ctx (dcutT Θ g m n)) (cgoal (dcutT Θ g m n))) × T (wf (ctx (dcutT Θ g m n)) (egoal (dcutT Θ g m n)))
+shape-typed-dcut Θ g m n le = AtDcut.shape-typed Θ g m n le

@@ -71,6 +71,8 @@ At n = 0, c is currying (or factorization) and ε : r(c) ⊨ b. At n = 1 with b 
 
 **Source.** `notes/closed-structure.md` F.7.4 §2–4, §7; `notes/design-decisions.md` §3; ledger D7, D7c–D7g.
 
+**Further rows (chapter 9, §9.6).** Two rows are proposed in addition to the five above: GB-shape (chapter 7's free objects ⟦Θ⟧♭ are represented by the probes ⟦Θ⟧, which at Θ = D⁰ is weakening by ⊤), and L-× (contraction: maps out of A × W into a `grpd_2` target are multimaps (A, W ▸ B)). With them, function sets are A\B and F8 is derived. Without them the kernel has no projection out of ⊗ (graded countermodel, `notes/ordinary-math.md` Theorem 6.4).
+
 ## 8.4 Derived rules
 
 All of these are derived, none primitive:

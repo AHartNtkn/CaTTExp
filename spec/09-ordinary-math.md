@@ -1,6 +1,6 @@
 # Chapter 9. Ordinary mathematics
 
-The criterion (`catt-survey.md` §13, in the project files): for any ordinary structure, we can **build an object that behaves like an instance of it**. This chapter lists what that needs (sets, the natural numbers with induction, quotients, families and dependent sections, colimits indexed by objects, function sets, lax functors) and how each is obtained. Most items add **no rule**: they are constructions over chapters 1–8. The rules that are added are judgments in the style of `⊢ps` and filler rules, without definitional equations.
+The criterion (`catt-survey.md` §13, in the project files): for any ordinary structure, we can **build an object that behaves like an instance of it**. This chapter lists what that needs (sets, the natural numbers with induction, quotients, families and dependent sections, colimits indexed by objects, function sets, lax functors) and how each is obtained. Most items add **no rule**: they are constructions over chapters 1–8. The rules that are added are judgments in the style of `⊢ps`, filler rules, and two rows of the chapter 8 table (§9.6), all without definitional equations.
 
 The notes state this chapter under P (pseudo ambient) and say where L differs. For **discrete targets P and L agree**, because every 2-cell of the target is already invertible. Restating the non-discrete parts over V + S is ledger S8.
 
@@ -85,11 +85,39 @@ Colimits *inside* an object C are declared structure: a marking with a filler ru
 
 ## 9.6 Function sets
 
-**Rule (F8, under P).** A product-parametrised exponential [A, B] for arbitrary A, B, with exp-λ and exp-uni at every level; [A, B] is a set when B is (T-exp).
+**Rules (two rows of the chapter 8 table).** Function sets come from A\B. Two structural principles are added as rows of the F.7.4 table, so they get (GB-cut) and (GB-dcut) like every other row:
+```
+(GB-shape)  ⊢ ι_Θ : (⟦Θ⟧ ▸ ⟦Θ⟧♭)        for each pasting shape Θ   (⟦Θ⟧♭ the free object of chapter 7)
+            row: H = (L, ⟦Θ⟧♭, R ▸ Z),   B = (L, ⟦Θ⟧, R ▸ Z),      r(x) = x ∘ᵢ ι_Θ
 
-**Under the kernel.** The biclosed rules of chapter 8 give A\B = Fun^lax(A, B) for arbitrary objects. For a set B, lax and pseudo transformations into B agree, so A\B is a candidate for [A, B]. Whether F8 is thereby derived is not written in any note (ledger S12).
+(L-×)       B grpd_2:
+            row: H = (A × W, S ▸ B),     B' = (A, W, S ▸ B),        r(x) = x ∘₀ κ_{A,W}
+            S empty or one time slot in the last gap
+```
+- GB-shape at Θ = D⁰, with ⟦D⁰⟧♭ ≃ ⊤, is **weakening**: (L, ⊤, R ▸ Z) ≃ (L, R ▸ Z). From it come the projections out of ⊗, and the comparison κ_{A,W} : (A, W ▸ A × W) by ×'s `uni`. It also identifies chapter 6's elements ⊤ → C with chapter 8's points ( ▸ C).
+- L-× is **contraction** at (∞,1)-category targets: maps A × W → B are multimaps (A, W ▸ B). Its set instance (B trunc 0, only n = 0, 1 carry content) is (L-set).
 
-**Status.** F8 sound under P: **proved** (note level, Prop. 6.3). **Source:** `notes/ordinary-math.md` §6.5.1; ledger F8.
+**Derived (F8).** With [A, B] := A\B, the exponential rules (exp), (exp-λ) and (exp-uni) at every level are derived for every B with `B grpd_2`, in particular for sets. Here ev := the L-× cut of e^ℓ, λf := the left-row cut of f ∘ κ, and β comes from L-×'s uniqueness. T-exp follows: `B trunc n ⟹ A\B trunc n`, since the left row keeps the time slot last. F8 is no longer a primitive under L. Under P it keeps its §6.5.1 statement as the general cartesian exponential.
+
+**Side condition and decision procedure.** Template matching as in chapter 8 (Lemma GB-dec). L-× also reads `B grpd_2`, which is syntax-directed (chapter 3).
+
+**Why new rules.** Without them the kernel derives no projection (A, W ▸ A), no comparison κ, and no unitor (W, ⊤ ▸ W). A graded countermodel shows this: Day convolution on ℕ-graded ω-categories, where the ⊗-unit is not ⊤. With GB-shape and even F8, (L-set) is still not derivable: a filtered countermodel has A ⊗ W = y(2) and A × W = y(1). The h-level rules give no maps out of products.
+
+**Example.** For g : N → N\N, the diagonal n ↦ g(n)(n) + 1 needs ev out of N × (N\N), i.e. contraction (L-×). The pointwise sum of two sequences needs only weakening.
+
+**Semantics.** Both rules are sound in Cat_ω.
+- GB-shape: ⟦Θ⟧ and ⟦Θ⟧♭ are both Θ.
+- L-× at sets: π₀(A ⊗ W) = π₀A × π₀W.
+- L-× at all `grpd_2` targets: the (∞,1)-reflection τ₁ sends ⊗ to × (Campion, (OBJ-1)), and τ₁ preserves products.
+- Maximality: if κ* is an equivalence into B for all A, W, then `B grpd_2`. So L-× has the most general target class.
+
+**Status.**
+- Non-derivability (two countermodels), maximality, the set instance of L-×, and the derivation of F8: **proved** (note level). Soundness of each countermodel for every chapter-1–9 rule is at sketch level.
+- L-× at general `grpd_2` targets: **sketch**, relative to two cited facts. Independent check requested.
+- Agda (1-truncated derivation over the abstract model interface): in progress.
+- Open: whether the kernel derives the cartesian F8 by an unrelated route (moot once L-× is adopted).
+
+**Source:** `notes/ordinary-math.md` §6.5.1–6.5.2; ledger F8, F8a–F8d.
 
 ## 9.7 Lax functors
 

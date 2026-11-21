@@ -157,9 +157,22 @@ def side_ok(P, A, t, u):
         return False
     return vt == ps_boundary_vars(P, n - 1, '-') and vu == ps_boundary_vars(P, n - 1, '+')
 
+_IDC = {}   # id(G) -> (G, {id(t): (t, type)}): identity-keyed memo, so that
+            # large shared terms are not rehashed at every subterm
+
 def infer(G, t, _cache={}):
-    key = (G, t)
-    if key in _cache: return _cache[key]
+    g = _IDC.get(id(G))
+    if g is None or g[0] is not G:
+        g = (G, {})
+        _IDC[id(G)] = g
+    hit = g[1].get(id(t))
+    if hit is not None and hit[0] is t:
+        return hit[1]
+    r = _infer(G, t, _cache)
+    g[1][id(t)] = (t, r)
+    return r
+
+def _infer(G, t, _cache):
     if t[0] == 'v':
         if t[1] >= len(G): raise TypeError_('var out of range')
         r = G[t[1]]
@@ -175,7 +188,6 @@ def infer(G, t, _cache={}):
             if infer(G, ti) != subst_ty(Bi, s):
                 raise TypeError_('sub entry %d ill-typed' % i)
         r = subst_ty(A, s)
-    _cache[key] = r
     return r
 
 @lru_cache(maxsize=None)

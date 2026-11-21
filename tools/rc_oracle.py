@@ -28,7 +28,10 @@ Dimensions covered.
            coherence over the chain context of the common path.
   n = 2  : Theorem A (relative-coherence.md section 2), via tools/rc2.py,
            on the support of t, u (dimension <= 2, acyclic 1-skeleton).
-  n >= 3 : r9 Response 15 descent: see rc_descent.py (in progress).
+  n >= 3 : globular supports and common factors as above; otherwise the
+           local reductions of rc_heur.py (top-slot congruence, identity
+           slots, distribution, rebracketing, abstraction to a pasting
+           context). The r9 Response 15 descent is not implemented yet.
 
 Support restriction. Every call is answered on the dependency-closed
 support S of (A, t, u). The answer over G|S is pulled back along the
@@ -207,6 +210,8 @@ def rc(G, A, t, u):
             return None
         if strict_image(G, t) != strict_image(G, u):
             return None
+        import rc_heur
+        rc_heur.CALLS[0] = 0
         w = _rc(G, A, t, u)
     except (TypeError_, AssertionError, NotCovered, KeyError, StopIteration, ValueError):
         return None
@@ -237,8 +242,8 @@ def _rc(G, A, t, u):
     elif n == 2:
         w = _rcd2.rc2_small(H, tH, uH)
     else:
-        import rc_descent
-        w = rc_descent.rc_n(H, AH, tH, uH)
+        import rc_heur
+        w = rc_heur.heur(H, AH, tH, uH, _rc_inner)
     if w is None:
         return None
     return subst_tm(w, incl)

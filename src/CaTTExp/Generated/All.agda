@@ -21,3 +21,4 @@ import CaTTExp.Generated.RCSelfTestCheck
 import CaTTExp.Generated.RCConeTwoCheck
 import CaTTExp.Generated.RCCoconeTwoCheck
 import CaTTExp.Generated.RCTwoCones
+import CaTTExp.ConeRCTwoKE

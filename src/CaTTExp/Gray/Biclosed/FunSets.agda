@@ -5,9 +5,10 @@
 -- Over the abstract model interface of Model.agda we add
 --   * a terminal formula ⊤F with  bang X : (X ▸ ⊤F)  unique up to ≈;
 --   * binary products _×F_ with projections and pairing, and their
---     universal property against multimaps (X₁, …, Xₙ ▸ A ×F B).
+--     universal property against multimaps (X₁, …, Xₙ ▸ A ×F B), n ≥ 1.
 --     (In the kernel this is ×'s `uni` at the apex X₁ ⊗ … ⊗ Xₙ,
---     transported along the pair row; here it is taken directly.);
+--     transported along the pair row; here it is taken directly.  n = 0
+--     is excluded: its apex would be the probe unit ⟦D⁰⟧.);
 --   * the row GB-shape at Θ = D⁰ with ⟦D⁰⟧♭ := ⊤F: a corolla
 --     ι : (⟦D⁰⟧ ▸ ⊤F) whose precomposition at any input position is
 --     invertible.  (The kernel's ⟦D⁰⟧♭ ≃ ⊤ is a chapter 7 fact that this
@@ -88,10 +89,10 @@ record Weak : Set₁ where
     T-p1  : ∀ A B → p1 A B ∶ (((A ×F B) ∷ []) ▸ A)
     T-p2  : ∀ A B → p2 A B ∶ (((A ×F B) ∷ []) ▸ B)
     pair  : V → V → V
-    T-pair : ∀ {f g Xs A B} → f ∶ (Xs ▸ A) → g ∶ (Xs ▸ B) → pair f g ∶ (Xs ▸ (A ×F B))
-    p1-β  : ∀ {f g Xs A B} → f ∶ (Xs ▸ A) → g ∶ (Xs ▸ B) → pc (p1 A B) 0 (pair f g) ≈ f
-    p2-β  : ∀ {f g Xs A B} → f ∶ (Xs ▸ A) → g ∶ (Xs ▸ B) → pc (p2 A B) 0 (pair f g) ≈ g
-    pair-η : ∀ {h Xs A B} → h ∶ (Xs ▸ (A ×F B)) →
+    T-pair : ∀ {f g X Xs A B} → f ∶ ((X ∷ Xs) ▸ A) → g ∶ ((X ∷ Xs) ▸ B) → pair f g ∶ ((X ∷ Xs) ▸ (A ×F B))
+    p1-β  : ∀ {f g X Xs A B} → f ∶ ((X ∷ Xs) ▸ A) → g ∶ ((X ∷ Xs) ▸ B) → pc (p1 A B) 0 (pair f g) ≈ f
+    p2-β  : ∀ {f g X Xs A B} → f ∶ ((X ∷ Xs) ▸ A) → g ∶ ((X ∷ Xs) ▸ B) → pc (p2 A B) 0 (pair f g) ≈ g
+    pair-η : ∀ {h X Xs A B} → h ∶ ((X ∷ Xs) ▸ (A ×F B)) →
              h ≈ pair (pc (p1 A B) 0 h) (pc (p2 A B) 0 h)
     pair-cong : ∀ {f f′ g g′} → f ≈ f′ → g ≈ g′ → pair f g ≈ pair f′ g′
 

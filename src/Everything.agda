@@ -64,6 +64,7 @@ import CaTTExp.Gray.Biclosed.PosetModel
 import CaTTExp.Gray.Biclosed.DirEnv
 import CaTTExp.Gray.Biclosed.D7g
 import CaTTExp.Gray.Biclosed.Mirror
+import CaTTExp.Gray.Biclosed.FunSets
 import CaTTExp.Gray.NBE.Base
 import CaTTExp.Gray.NBE.Syntax
 import CaTTExp.Gray.NBE.Termination

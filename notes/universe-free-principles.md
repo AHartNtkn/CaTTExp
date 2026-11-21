@@ -197,4 +197,4 @@ The semantic questions are merged into one general prompt (standard 11): `notes/
 - **Q2.** Every strictly positive finite context (in the grammar given there) has an initial model in `Cat_(∞,ω)`, with the maximal syntactic class, and a counterexample just outside it.
 - **Q3 (fallback).** Non-derivability: a model of finite limits, colimits and DESC with a positive context lacking an initial model.
 
-Ledger entries: F10 (this note), F10a (Agda: descent counterexample, done here pending review), F10b (DJ from limits), F10c (R-cot⁺ as DESC + INIT), F10d (T-graph and T-loc by encode–decode), F10e (spec wording: §0.2 already fits; chapter 9 once adopted). All owned by this thread.
+Ledger entries: F10 (this note), F10a (Agda: descent counterexample, done, honesty review passed), F10b (DJ from limits), F10c (R-cot⁺ as DESC + INIT), F10d (T-graph and T-loc by encode–decode), F10e (spec wording: §0.2 already fits; chapter 9 once adopted). All owned by this thread.

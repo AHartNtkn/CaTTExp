@@ -74,6 +74,7 @@ sRow φ (probeR L Δ Θ R Z) = probeR (sFs φ L) Δ Θ (sFs φ R) (sF φ Z)
 sRow φ (unitR L R Z)      = unitR (sFs φ L) (sFs φ R) (sF φ Z)
 sRow φ (evLR Φ A C)       = evLR (sFs φ Φ) (sF φ A) (sF φ C)
 sRow φ (evRR Φ A C)       = evRR (sFs φ Φ) (sF φ A) (sF φ C)
+sRow φ (shapeR L Θ R Z)   = shapeR (sFs φ L) Θ (sFs φ R) (sF φ Z)
 
 gapIs : Nat → CTy → Set
 gapIs g (op _)            = ⊤
@@ -120,6 +121,7 @@ module Interp (ε : Nat → SC) where
     ⟦ eR A C ⟧         = sc (evR A C) 2 0 0
     ⟦ pP Δ Θ ⟧         = corSC (cp Δ Θ)
     ⟦ pt ⟧             = corSC cpt
+    ⟦ iP Θ ⟧           = corSC (cι Θ)
     ⟦ idt A ⟧          = idSC A
     ⟦ comp f gs ⟧      = compS ⟦ f ⟧ ⟦ gs ⟧s
     ⟦ glue a x b ⟧     = ⟦ x ⟧

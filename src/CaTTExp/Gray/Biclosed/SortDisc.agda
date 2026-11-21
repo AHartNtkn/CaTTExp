@@ -46,6 +46,7 @@ sF-nonRep : ∀ φ a → T (nonRep a) →
             T (nonRep (sF φ a))
 sF-nonRep φ (obj i)  _ h = h i refl
 sF-nonRep φ (rep _)  () h
+sF-nonRep φ (shp _)  _ h = tt
 sF-nonRep φ (a ⊗ b)  _ h = tt
 sF-nonRep φ (a \\ b) _ h = tt
 sF-nonRep φ (a // b) _ h = tt
@@ -239,6 +240,7 @@ module Sorted (t : Tmpl) where
       go (pairR L U V R Z)  o = outOK (L ++ (U ⊗ V) ∷ R) Z o
       go (probeR L Δ Θ R Z) o = outOK (L ++ rep (Δ ⊠ Θ) ∷ R) Z o
       go (unitR L R Z)      o = outOK (L ++ rep (disk 0) ∷ R) Z o
+      go (shapeR L Θ R Z)   o = outOK (L ++ shp Θ ∷ R) Z o
       go (evLR Φ A C)       o = tt
       go (evRR Φ A C)       o = tt
 
@@ -249,6 +251,7 @@ module Sorted (t : Tmpl) where
       go (pairR L U V R Z)  o = outOK (L ++ U ∷ V ∷ R) Z o
       go (probeR L Δ Θ R Z) o = outOK (L ++ rep Δ ∷ rep Θ ∷ R) Z o
       go (unitR L R Z)      o = outOK (L ++ R) Z o
+      go (shapeR L Θ R Z)   o = outOK (L ++ rep Θ ∷ R) Z o
       go (evLR Φ A C)       o = outOK (A ∷ Φ) C o
       go (evRR Φ A C)       o = outOK (Φ ++ A ∷ []) C o
 
@@ -283,6 +286,7 @@ allRep-sFs φ []            _ = tt
 allRep-sFs φ (rep s ∷ xs)  p = allRep-sFs φ xs p
 allRep-sFs φ (obj _ ∷ xs)  ()
 allRep-sFs φ ((_ ⊗ _) ∷ xs)  ()
+allRep-sFs φ (shp _ ∷ xs)  ()
 allRep-sFs φ ((_ \\ _) ∷ xs) ()
 allRep-sFs φ ((_ // _) ∷ xs) ()
 
@@ -295,10 +299,12 @@ sorted-sub S S′ τ (xs ▸ obj i) d p =
          T (sortedM S′ (sFs (fo τ) xs ▸ f))
     go (obj j)  _  h = ∈→elem j S′ (h j refl)
     go (rep _)  () h
+    go (shp _)  _  h = tt
     go (a ⊗ b)  _  h = tt
     go (a \\ b) _  h = tt
     go (a // b) _  h = tt
 sorted-sub S S′ τ (xs ▸ rep s)  d p = allRep-sFs (fo τ) xs p
+sorted-sub S S′ τ (xs ▸ shp s)  d p = p
 sorted-sub S S′ τ (xs ▸ (a ⊗ b))  d p = tt
 sorted-sub S S′ τ (xs ▸ (a \\ b)) d p = tt
 sorted-sub S S′ τ (xs ▸ (a // b)) d p = tt

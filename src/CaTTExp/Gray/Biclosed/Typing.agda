@@ -110,6 +110,7 @@ mutual
   infer Γ (eR A C)  = just (op (((C // A) ∷ A ∷ []) ▸ C))
   infer Γ (pP Δ Θ)  = just (op ((rep Δ ∷ rep Θ ∷ []) ▸ rep (Δ ⊠ Θ)))
   infer Γ pt        = just (op ([] ▸ rep (disk 0)))
+  infer Γ (iP Θ)    = just (op ((rep Θ ∷ []) ▸ shp Θ))
   infer Γ (idt A)   = just (op ((A ∷ []) ▸ A))
   infer Γ (comp f gs) with infer Γ f | inferL Γ gs
   ... | just tf | just tgs = compTy f gs tf tgs

@@ -28,6 +28,7 @@ open Sub public
 sF : (Nat → Fm) → Fm → Fm
 sF φ (obj i)  = φ i
 sF φ (rep s)  = rep s
+sF φ (shp s) = shp s
 sF φ (a ⊗ b)  = sF φ a ⊗ sF φ b
 sF φ (a \\ b) = sF φ a \\ sF φ b
 sF φ (a // b) = sF φ a // sF φ b
@@ -47,6 +48,7 @@ mutual
   sT σ (eR A C)     = eR (sF (fo σ) A) (sF (fo σ) C)
   sT σ (pP Δ Θ)     = pP Δ Θ
   sT σ pt           = pt
+  sT σ (iP Θ)       = iP Θ
   sT σ (idt A)      = idt (sF (fo σ) A)
   sT σ (comp f gs)  = comp (sT σ f) (sTs σ gs)
   sT σ (glue a x b) = glue (sT σ a) (sT σ x) (sT σ b)
@@ -89,6 +91,7 @@ _⨾_ : Sub → Sub → Sub
 sF-id : ∀ a → sF obj a ≡ a
 sF-id (obj i)  = refl
 sF-id (rep s)  = refl
+sF-id (shp s) = refl
 sF-id (a ⊗ b)  = cong₂ _⊗_ (sF-id a) (sF-id b)
 sF-id (a \\ b) = cong₂ _\\_ (sF-id a) (sF-id b)
 sF-id (a // b) = cong₂ _//_ (sF-id a) (sF-id b)
@@ -113,6 +116,7 @@ mutual
   sT-id (eR A C)     = cong₂ eR (sF-id A) (sF-id C)
   sT-id (pP Δ Θ)     = refl
   sT-id pt           = refl
+  sT-id (iP Θ)       = refl
   sT-id (idt A)      = cong idt (sF-id A)
   sT-id (comp f gs)  = cong₂ comp (sT-id f) (sTs-id gs)
   sT-id (glue a x b) = cong₃ glue (sT-id a) (sT-id x) (sT-id b)
@@ -132,6 +136,7 @@ module Comp (σ τ : Sub) where
   sF-⨾ : ∀ a → sF (fo τ) (sF (fo σ) a) ≡ sF (fo (σ ⨾ τ)) a
   sF-⨾ (obj i)  = refl
   sF-⨾ (rep s)  = refl
+  sF-⨾ (shp s) = refl
   sF-⨾ (a ⊗ b)  = cong₂ _⊗_ (sF-⨾ a) (sF-⨾ b)
   sF-⨾ (a \\ b) = cong₂ _\\_ (sF-⨾ a) (sF-⨾ b)
   sF-⨾ (a // b) = cong₂ _//_ (sF-⨾ a) (sF-⨾ b)
@@ -151,6 +156,7 @@ module Comp (σ τ : Sub) where
     sT-⨾ (eR A C)     = cong₂ eR (sF-⨾ A) (sF-⨾ C)
     sT-⨾ (pP Δ Θ)     = refl
     sT-⨾ pt           = refl
+    sT-⨾ (iP Θ)       = refl
     sT-⨾ (idt A)      = cong idt (sF-⨾ A)
     sT-⨾ (comp f gs)  = cong₂ comp (sT-⨾ f) (sTs-⨾ gs)
     sT-⨾ (glue a x b) = cong₃ glue (sT-⨾ a) (sT-⨾ x) (sT-⨾ b)

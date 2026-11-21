@@ -33,7 +33,7 @@ The coherence is in the **coherence case** if ⟦t⟧ = ⟦u⟧ in F_𝕋(Γ), a
 
 **Interpretation of the coherence (the designated lift).** For ν and 𝔉, c is unique by support-determines-cells, and it is the interpretation. In F_{V+S}(Γ) it need not be unique: distinct cells can share a Gray image (on Σ[2] ∨ Σ[2] the loop H and 1_w do). The interpretation is therefore fixed **per coherence head** (Γ, t →_A u), once:
 - in the coherence case, c := the identity on ⟦t⟧;
-- in the operation case, c := the first cell found by the decision procedure of §2.3, whose enumeration order is fixed.
+- in the operation case, c := the first witnessing path of minimal length found by the decision procedure of §2.3, in its fixed enumeration order. This is well defined even where F_{V+S}(Γ) has loops.
 
 Because substitution never changes a coherence's head, ⟦coh_{Γ,A}[σ]⟧ := σ_*(c_{Γ,A}) is stable under substitution by construction (requirement 5). The kernel's judgments do not depend on the choice, only the interpretation in the free objects of V + S does. Whether all candidate lifts for one head are connected by higher cells, so that the choice is irrelevant up to coherence, is **open** (ledger S11).
 
@@ -96,9 +96,14 @@ A development **declares its setting S** once, and every coherence in it is chec
 **Side condition and decision procedure.** SC_{V+S}(Δ, t →_A u) is decided as follows.
 1. Compute ⟦t⟧ and ⟦u⟧ in F_{V+S}(Δ) (normal forms by rank increments; r9 (K65), r10 Response 1).
 2. Decide whether ⟦t⟧ = ⟦u⟧. If so, check that π⟦t⟧ has full support in 𝔉(Δ); this is the coherence case.
-3. Otherwise search for a path ⟦t⟧ → ⟦u⟧ in F_{V+S}(Δ) whose projection π(c) has full support in 𝔉(Δ), i.e. by Lemma 2.2.1 π(c) = τ_Δ or an identity on a full-support cell. Paths have bounded length (the positive gradings of (K45)/(K50) bound a path by its endpoints' gradings, since V + S has the T₁₂ signature and a subset of its equations), and at fixed boundaries the alphabet of steps is finite (K50). So the search is finite. Projecting a path and computing its Gray support is the two-tier computation of §2.5, so the filter is a finite check on each path. The first path found in the fixed enumeration order is the designated lift.
+3. Otherwise search for a path ⟦t⟧ → ⟦u⟧ in F_{V+S}(Δ) whose projection π(c) has full support in 𝔉(Δ), i.e. by Lemma 2.2.1 π(c) = τ_Δ or an identity on a full-support cell.
+   - **No length bound is used.** Paths in F_{V+S}(Δ) are not bounded by their endpoints: some free objects have loops. Examples are the loop H of V at degree 4 on Γ_{2,2}, which has pairwise distinct powers, and a positional self-loop at degree 5 on the 2 × 2 grid in T₁₂ (ledger S14).
+   - **What is finite** is the set of vertices. At fixed lower faces and weight there are finitely many vertex normal forms (K58), and the native generating steps between them are finitely many and listable (r10 Response 3).
+   - The support of a composite path is the union of its steps' supports. So search breadth-first over pairs (vertex, support accumulated so far in 𝔉(Δ)). This state space is finite, since supports are subsets of the finite Steiner basis of 𝔉(Δ). Accept when the target ⟦u⟧ is reached with full accumulated support.
+   - Reachability in a finite closed universe is decidable without a length hypothesis: loop removal plus pigeonhole, with breadth-first saturation proved exact. It is Agda-checked in `Uniform/FiniteGraph.agda` (PR #380). The search over pairs is being added by the S3a thread.
+   - The **designated lift** is the first witnessing path of minimal length, in the fixed enumeration order of steps. A shortest witness exists whenever any witness exists. There are finitely many paths of each length, so the choice is well defined.
 
-Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in every dimension, uniformly in Γ, the degree and the switch bits, and the comparison maps between settings are computable (r10 Response 3). The abstract step "bounded paths over a finite alphabet with decidable equality make reachability decidable" is Agda-checked (`Join/BoundedReach.agda`, `Reach.Bounded.reach?`).
+Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in every dimension, uniformly in Γ, the degree and the switch bits, and the comparison maps between settings are computable (r10 Response 3, by breadth-first search over the finite vertex list). An earlier version of this section derived decidability from a length bound on paths. That bound fails where free objects have loops (ledger S14). The abstract step that needs no bound is `Uniform/FiniteGraph.agda`. `Join/BoundedReach.agda` (`Reach.Bounded.reach?`) still holds, but only for loop-free layers.
 
 **Cost.** Decidable is not cheap. The problem is P-hard; shared reachability is coNP-complete already on a fixed grid; a uniform 2-EXPSPACE bound holds; equality is polynomial for structural terms, on two-row grids in each fixed degree, and for exponential-width schedules (r10 Responses 3–21). A polynomial algorithm on arbitrary shared terms is open (ledger E9, E12). None of this changes the rule.
 
@@ -112,7 +117,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧, and its Gray image has full support, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
 - The law cannot be added as a hypothesis instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
 
-**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore not derivable in any setting without the `ord` mark of chapter 3. *Not yet run mechanically* (ledger E7).
+**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other, and it is invertible only with the `ord` mark, or with a switch and an `inv` input (chapter 3, §3.6 Example (a)). The rule-level computation is checked by evaluation (`Uniform/Marks.agda`). The run on the actual F_V waits for the uniform checker (ledger S3).
 
 **Semantics.**
 - **Admissible theories.** A judgment derivable in setting S holds in the free objects of every admissible theory satisfying S. In particular a setting-∅ development is valid in the models of every admissible theory.
@@ -122,7 +127,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 **Status.**
 - V exists, is least on pasting diagrams, and decides equality and reachability: **proved** (verified researcher answers r8, r9, r10; ledger E6, E12).
 - The four settings are admissible and distinct: **proved** (r9 Responses 2–5, K73) and computed (`scripts/e6/interchange_fibre_decorations.py`).
-- Reachability from bounded paths: **Agda-checked** (`Join/BoundedReach.agda`).
+- Reachability in a finite closed universe, with no length bound: **Agda-checked** (`Uniform/FiniteGraph.agda`, PR #380). The bounded-path version (`Join/BoundedReach.agda`) applies only to loop-free layers (S14).
 - The switch maps extend functorially to the cospan completions, and the switched laws keep seed lists: **Agda-checked** (`Join/SwitchCospan.agda`, `Join/SwitchLaws.agda`), with the link between raw syntax and the completion by inspection only (ledger E12 items (a)–(c), owner LCORE).
 - The rule (coh_S) as a single condition on F_{V+S}: **stated here**, in the projected form recommended by the independent check (ledger S1). Uniqueness of the lift up to coherence: open (S11).
 - **The checker for (coh_S), relative to the free objects: Agda-checked** (`Uniform/Kernel.agda`, `Uniform/Rule.agda`; `notes/uniform-checker.md`). For any family of free-object layers with a grading bound, SC is decidable, the judgments are those of `TypingWith` at that side condition, and the checker is sound and complete. The layers of F_{V+S} in every degree are not yet constructed in Agda, so this is the kernel checker relative to them (ledger S3a).
@@ -153,7 +158,7 @@ Two-tier L computes the side condition in the free Gray-enriched category 𝔉(�
 
 Generators are tuples θᵢ₊₁ ⊗ … ⊗ θⱼ with dimension the sum and boundary by the Leibniz formula. The total cell τ_Γ is the tensor of the composites ⟨Θᵢ⟩. Supports are Steiner chains, so the side condition of Lemma 2.2.1 is integer linear algebra.
 
-This is not the kernel's default theory: it is the theory obtained from uniform L when every object is marked `ord` (chapter 3, §3.6; that identification is ledger E7). It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
+This is not the kernel's default theory. Marking every object `ord` in uniform L gives two-tier L's invertibility judgments exactly (chapter 3, §3.6), but its coherences only up to the relative coherence question of ledger E13, and in settings without the inner law not by the coherence rule alone. It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
 
 **Decision procedure.** Symbolic supports and an exact cover check (`Gray/Cover.agda`, `Gray/Fast.agda`), proved equal to the explicit support computation (`fastSide ≡ graySide`). Measured growth on n-fold wedges is about n⁶ up to n = 28. Explicit supports are exponential (a term of size O(n) has support of size 3ⁿ), so the symbolic form is required.
 
@@ -170,7 +175,7 @@ This is not the kernel's default theory: it is the theory obtained from uniform 
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
-- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3.
+- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds exactly (§3.6). For coherences it fails by the coherence rule alone in settings without the inner law (the strip), and is otherwise a relative coherence question (ledger E13).
 
 ## 2.7 Dualities
 

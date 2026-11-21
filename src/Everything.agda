@@ -63,6 +63,10 @@ import CaTTExp.Gray.Biclosed.Poset
 import CaTTExp.Gray.Biclosed.PosetModel
 import CaTTExp.Gray.Biclosed.DirEnv
 import CaTTExp.Gray.Biclosed.D7g
+import CaTTExp.Gray.Biclosed.Steiner.Arith
+import CaTTExp.Gray.Biclosed.Steiner.Sum
+import CaTTExp.Gray.Biclosed.Steiner.Codes
+import CaTTExp.Gray.Biclosed.Steiner.Maps
 import CaTTExp.Gray.Biclosed.Mirror
 import CaTTExp.Gray.Biclosed.FunSets
 import CaTTExp.Gray.Biclosed.ShapeRow

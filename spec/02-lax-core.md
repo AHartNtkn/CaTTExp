@@ -91,7 +91,7 @@ The other laws once catalogued as switches (the prime left splits L_p and the di
 
 A development **declares its setting S** once, and every coherence in it is checked against V + S. The kernel has no default setting (chapter 0, §0.5). V (S = ∅) is the most general setting.
 
-**Imports run upwards.** If S ⊆ S′, the identity on letters maps F_{V+S}(Γ) to F_{V+S′}(Γ) and sends cells to cells, so every judgment derivable in setting S is derivable in setting S′, and a development checked in S can be imported into one checked in S′. A development checked in S′ cannot be imported into S.
+**Imports run upwards.** If S ⊆ S′, the identity on letters maps F_{V+S}(Γ) to F_{V+S′}(Γ) and sends cells to cells, so every judgment derivable in setting S is derivable in setting S′, and a development checked in S can be imported into one checked in S′. A development checked in S′ cannot be imported into S. The step from a map of free objects to SC is Agda-checked for any map that sends letters to letters and full supports to full supports (`Uniform/Rule.agda`, `Transport.sc-map`). On the grid layer the comparison maps are checked (`Grid.nf-compare`).
 
 **Side condition and decision procedure.** SC_{V+S}(Δ, t →_A u) is decided as follows.
 1. Compute ⟦t⟧ and ⟦u⟧ in F_{V+S}(Δ) (normal forms by rank increments; r9 (K65), r10 Response 1).
@@ -130,7 +130,9 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - Reachability in a finite closed universe, with no length bound: **Agda-checked** (`Uniform/FiniteGraph.agda`, PR #380). The bounded-path version (`Join/BoundedReach.agda`) applies only to loop-free layers (S14).
 - The switch maps extend functorially to the cospan completions, and the switched laws keep seed lists: **Agda-checked** (`Join/SwitchCospan.agda`, `Join/SwitchLaws.agda`), with the link between raw syntax and the completion by inspection only (ledger E12 items (a)–(c), owner LCORE).
 - The rule (coh_S) as a single condition on F_{V+S}: **stated here**, in the projected form recommended by the independent check (ledger S1). Uniqueness of the lift up to coherence: open (S11).
-- **No checker implements (coh_S).** The implemented and verified checker is two-tier L (§2.5). Ledger S3.
+- **The checker for (coh_S), relative to the free objects: Agda-checked** (`Uniform/Kernel.agda`, `Uniform/Rule.agda`; `notes/uniform-checker.md`). For any family of free-object layers with a grading bound, SC is decidable, the judgments are those of `TypingWith` at that side condition, and the checker is sound and complete. The layers of F_{V+S} in every degree are not yet constructed in Agda, so this is the kernel checker relative to them (ledger S3a).
+- **The switch layer: Agda-checked** (`Uniform/Grid.agda`, `Uniform/GridExamples.agda`). In every setting, equality of 4-cells on suspended m × n grids is decided, with normal forms and computable comparison maps. The counts 2, 1, 2, 1 (1 × 2), 2, 2, 1, 1 (2 × 1) and 49, 14, 29, 2 (2 × 3) are computed, and so is example (b) as an equality statement. Directed 5-cells between these 4-cells are not modelled (ledger S3b).
+- The implemented checker for actual developments is still two-tier L (§2.5).
 
 **Source.** `notes/design-decisions.md` §1.2, §1.7, Lemma V-dec; `notes/joining-completion.md` §8; `notes/conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md`, `-r9-`, `-r10-`; ledger E6, E12.
 

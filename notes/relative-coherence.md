@@ -1097,7 +1097,7 @@ I checked the raw-term content of the rules by argument: lifting the strict labe
   - Lemma 4.17 gives cocartesianness down to [0, k−1].
   - The remaining step, [0, k−1] → [0, k−2], would need Lemma 4.16 at k − 1, which assumes At_k is an equivalence relation. That is exactly what fails at the chosen k.
 
-  *Update (2026-11-21).* Chanavat, arXiv 2603.22242, Lemma 2.50 and Cor. 2.51, proves exactly this cocartesianness for frame-acyclic molecules, for every cut j ≥ frdim U − 1, which is Campion's k − 2 by Thm 2.52 and Comment 2.9. The lifts are explicit pushouts. What remains is identifying Campion's Sd(µ) for strong-Steiner cells with Chanavat's poset of a frame-acyclic molecule, or proving the step directly. Sent out as `conjectures/outbox/sd-cocartesian.md`. RCX's in-house adaptation (§7.15, sketch) closes the step in Campion's own setting: Chanavat's proof needs only Campion's Prop. 4.15 at the same k, plus a heredity lemma for pieces glued along dimensions ≤ k − 2.
+  *Update (2026-11-21).* Chanavat, arXiv 2603.22242, Lemma 2.50 and Cor. 2.51, proves exactly this cocartesianness for frame-acyclic molecules, for every cut j ≥ frdim U − 1, which is Campion's k − 2 by Thm 2.52 and Comment 2.9. The lifts are explicit pushouts. What remains is identifying Campion's Sd(µ) for strong-Steiner cells with Chanavat's poset of a frame-acyclic molecule, or proving the step directly. Written up as `conjectures/outbox/sd-cocartesian.md`, since retired unsent (now `conjectures/retired/sd-cocartesian.md`). RCX's in-house adaptation (§7.15, sketch) closes the step in Campion's own setting: Chanavat's proof needs only Campion's Prop. 4.15 at the same k, plus a heredity lemma for pieces glued along dimensions ≤ k − 2.
 
   The constructive cocartesian rule needs least extensions for this map. I did not reconstruct a proof, and I did not find a counterexample. The descent is therefore exactly as sound as this step of Campion's published proof. The Theorem 4.21 statement itself (contractibility) is not in doubt here. The question is only whether its cocartesian projection supplies least extensions. Without them, the non-cocartesian grouping rule would need D on the preimages of downsets instead.
 
@@ -1115,7 +1115,7 @@ I checked the raw-term content of the rules by argument: lifting the strict labe
 - *Size bound (C1).* RCX.
 - *Shared-canonical-form recognizer (E9′).* RCX, until it is reassigned.
 
-### 7.15 Closing the U_{k−2} step in Campion's setting (thread RCX, 2026-11-21; sketch, needs an independent check)
+### 7.15 Closing the U_{k−2} step in Campion's setting (thread RCX, 2026-11-21; independently checked)
 
 Notation is Campion's (arXiv 2311.00200 v1). Let µ be an n-cell of a torsion-free complex. Let k be the index of Thm 4.21: At_i(µ) is an equivalence relation for every i > k, and At_k(µ) is not. Lemma 4.17 already gives U: Sd⊳(µ) → Sd⊳_{[0,k−1]}(µ) cocartesian. The missing piece is the single step U: Sd⊳_{[0,k−1]}(µ) → Sd⊳_{[0,k−2]}(µ). Remark 4.20 then turns the composite into U_{k−2} on Sd(µ). Campion's Lemma 4.16 would give this step only if At_k(µ) were an equivalence relation, and it is not.
 
@@ -1142,7 +1142,7 @@ So the generating data of At_i(ν) is that of At_i(µ) restricted to a union of 
 - that Campion's Sd⊳ admits Chanavat's substitution û and the Lemma 2.49(1) monotonicity verbatim (Campion's decompositions are cells, not functors out of thetas, but substituting decompositions of generators is the same operation);
 - the bookkeeping of iterated gluings in the heredity lemma for a general S-theta, not just one ◦_j.
 
-Neither looks like a real obstacle, but this is a sketch. `conjectures/outbox/sd-cocartesian.md` is kept as an independent confirmation.
+*Independent check (2026-11-21):* both points hold, with the caveat inherited from Campion's Lemma 4.12. The full findings are in `open-issues.md`, C1 row. The gap is closed, and the prompt is retired unsent (`conjectures/retired/sd-cocartesian.md`).
 
 ## 8. Follow-ups and owners
 

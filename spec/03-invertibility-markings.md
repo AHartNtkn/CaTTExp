@@ -4,7 +4,7 @@ The lax core makes every interchanger directed. Pseudo transformations, ordinary
 
 **Pseudo = L + marks.** P (plain CaTT with pseudo transformations) has exactly the models of L in which every mixed cell of every dimension is invertible (Theorem 3.5.1). So the kernel does not need a separate pseudo core.
 
-The rules below are stated over the **two-tier** unfolding U(Γ) = Θ₁ ⊗ … ⊗ Θₙ of chapter 2, §2.5, which is where they are proved and machine-checked. Their restatement over the generators of F_{V+S}(Γ) is §3.6.
+The rules below are stated over the **two-tier** unfolding U(Γ) = Θ₁ ⊗ … ⊗ Θₙ of chapter 2, §2.5, which is where they are proved and machine-checked. Their restatement over F_{V+S}(Γ), read through the Gray projection, is §3.6.
 
 ## 3.1 Notation
 
@@ -112,21 +112,51 @@ ps* is the right notion of "pseudo" in the sense of P. An r-cell of Fun^lax(B, C
 
 ## 3.6 Marks over the uniform core
 
-**Rule (stated here).** Over V + S, the generators of F_{V+S}(Γ) include, beyond the Gray tensor tuples of §3.1, the inner interchangers and their naturality cells. The marks of §3.2 keep their meaning, and two additions are needed:
+The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are restated by reading the **designated lift** c of a coherence (§2.2) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). The cases are:
+- the **Gray operation case**, π(c) = τ_Γ;
+- the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 
+TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff some lift of the head has an inner letter of top dimension; both are computed by the procedure of §2.3. ord-tgt means that γ(aₙ) is an object variable marked `ord`.
+
+**Rule.**
 ```
-(C : ⋆)^ord      C is an ordinary ω-category: every inner interchanger of every hom 𝒦(X, C) is invertible
+(C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 
-(ORD)       an inner interchanger whose cells land in a hom 𝒦(X, C), with C ord   ⇒  inv
+(COH-inv)    coherence case                                                   ⇒  inv
+(OP-inv_S)   Gray operation case, g[γ] inv for every g ∈ TopGray(Γ),
+             and (inner-top(Γ, A) ⇒ ord-tgt)                                   ⇒  inv
+(OP-ps_S)    Gray operation case, for every g ∈ TopGray(Γ): g[γ] inv or some
+             xⱼ with dⱼ ≥ 1 and xⱼ[γ] ps*; and (inner-top(Γ, A) ⇒ ord-tgt)      ⇒  ps
+(ORD)        inner coherence, ord-tgt                                          ⇒  inv
+(INN-fac_S)  inner coherence whose head is the elementary inner interchanger,
+             with (inner law ∈ S and its left input inv) or (R ∈ S and its right input inv)
+                                                                               ⇒  inv
 ```
+The Gray cells g[γ] are the operation-case coherences over wedges of disks, as in §3.1. (INV-fac), (INV-obj), (PS-fac), (INV⇒PS), (PS*), (OBJ-k), (DES) and the mark rule are unchanged. A `ord` mark, like `grpd_k`, may only be sent by a substitution to an object variable marked `ord`.
 
-together with the (INV-fac)-style rule for inner generators: an inner interchanger with an invertible positive-dimensional factor is invertible.
+**Side condition and decision procedure.** Finite, given the side-condition procedure of §2.3. That procedure is not yet implemented (ledger S3), so the Agda encoding takes its output as a parameter.
 
-**Intended meaning.** Marking every object `ord` should give exactly two-tier L up to invertible cells: under `ord`, the coherences accepted in setting S over 𝒦(X, C) coincide with two-tier L's, up to invertible cells. Marking everything `ord` and every variable ps should give P.
+**Example (a): directed Eckmann–Hilton inside an object.** The inner interchanger head over Σ(ΣD¹ ∨ ΣD¹), substituted with identity 1-cells and 2-cells a, b : 1_x ⇒ 1_x of the hom 𝒦(X, C), gives EH₁ : b ∗ a ⇛ a ∗ b; swapping a and b gives EH₂ : a ∗ b ⇛ b ∗ a. These are two directed cells, not inverse to each other. With `(C : ⋆)^ord` both are invertible by (ORD). With the inner law on and a marked `inv`, or with R on and b marked `inv`, (INN-fac_S) makes them invertible without `ord`. In setting ∅, with no marks, nothing makes them invertible. In two-tier L the same head is one coherence in the coherence case, and EH is invertible with no marks.
 
-**Example.** Example (c) of chapter 2, §2.3: in an object C, the directed interchanger of two 2-cells composable along a 1-cell is not invertible; with `(C : ⋆)^ord` it is, and directed Eckmann–Hilton becomes the ordinary invertible one.
+**Example (b): why `ord` is needed in the Gray operation case.** For hom-1 cells α, β of 𝒦(X, C) composable along a hom-0 cell, the strict composite is the Gray operation case, but a lift from one layering to the other has the inner interchanger ι(α, β) as a top letter. So a composite of invertible cells inside an object is invertible only when C is `ord` (or (INN-fac_S) applies).
 
-**Status.** **Stated here** following `notes/invertibility-markings.md` §1.5. The notes record this as blocked on the uniform construction, which now exists (V, chapter 2), so it is no longer blocked: the restatement of (INV-fac), (PS-fac) and (OP-ps) over F_{V+S}(Γ), the soundness of (ORD), and the check "ord restores two-tier L" are ledger E7 and S4.
+**Semantics.** The intended models are algebras of admissible theories satisfying S (§2.3), with strict inverses. `C ord` quantifies over all inner letters, not only elementary interchangers.
+- **Sound in every model:** (COH-inv), (ORD), (INN-fac_S), and (INV-fac)/(INV-obj) for Gray cells with one positive factor (from the outer unary subdivisions of V's base B). (INN-fac_S) uses the switched split law together with the unit law ι(1, G) = 1.
+- **Sound in the model class 𝓜_S:** (OP-inv_S), (OP-ps_S), and the factor rules for Gray cells with several positive factors. 𝓜_S is cut out by the hypothesis (IL): an outer letter is invertible whenever the Gray cell of its Gray image is. 𝓜_S contains every strict Gray-enriched category and every strict ω-category, for every S.
+- (IL) is needed. In setting ∅ the binary join of V satisfies r̄₁ = h(A, B) · ῑ₋. With A invertible, h is therefore invertible iff the inner interchanger ῑ₋ is, so the two-tier (INV-fac) cannot be read letter by letter on F_V.
+
+**`ord` everywhere versus two-tier L.** With every object marked `ord`, the uniform rules derive `inv` and `ps` exactly when the two-tier rules derive them on the projected head, in every setting. Without `ord` the uniform rules never derive more than the two-tier ones. The coherence rule behaves differently. In settings without the inner law, the strip pair u, v of §2.3 Example (b) has the same Gray image and no cell either way. Two-tier L accepts coh(u → v), but uniform L has no coherence of that type with or without `ord`. So `ord` gives ordinary objects for invertibility, but the inner coherence *equations* also need the switches. Whether every two-tier coherence has a uniform-plus-`ord` counterpart (a longer term) is a relative coherence question, ledger E13. A candidate countermodel for settings without the inner law is also recorded there.
+
+**Status.**
+- Rules: **stated here**, following `notes/uniform-marks.md` §3.
+- (ORD) and (COH-inv): **proved** (§4.3 there).
+- (INN-fac_S): **Agda-checked** (`Uniform/InnerInv.agda`, `left-inv`, `right-inv`, from the sesquicategory axioms, the unit law and the split, as record fields).
+- Outer cylinders: **proved**.
+- The remaining rules: **proved** for 𝓜_S. Whether every model lies in 𝓜_S is **open** (ledger E13; outbox `conjectures/outbox/invertibility-in-directed-interchange.md`).
+- **Agda-checked** (`Uniform/Marks.agda`): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation.
+- Ledger S4 and E7 are done. The open remainder is E13.
+
+**Source.** `notes/uniform-marks.md`; `notes/invertibility-markings.md` §1.5.
 
 ## 3.7 Open surface questions
 
@@ -152,7 +182,7 @@ The note proposed M1; the choice is left open here.
 - *Option A: expose only `ps*`, written "pseudo".* Matches the meaning in P; every pseudo modification must have pseudo boundaries anyway.
 - *Option B: expose both.* `ps` alone is the more general building block, but no rule currently uses it as a premise, so it would be a mark the user can write and nothing can consume.
 
-**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked.
+**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. (Whatever the scope, `ord` recovers two-tier L's marks but not its inner coherence equations unless the switches are on, §3.6; so "ordinary objects" in the full two-tier sense means `ord` plus the setting {inner law, R}.)
 - *Option A: per object declaration* (`(C : ⋆)^ord`). Precise; most objects in ordinary use need the mark.
 - *Option B: a per-file default "all objects ord" with an opt-out.* Ordinary mathematics needs no annotation; a development that forgets the opt-out silently proves a statement only about ordinary ω-categories.
 - *Option C: a per-development setting, like the switch setting of chapter 2.* Uniform with Q2.1; coarse.

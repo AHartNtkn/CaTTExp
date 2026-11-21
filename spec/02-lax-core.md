@@ -112,7 +112,7 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 - Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧, and its Gray image has full support, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
 - The law cannot be added as a hypothesis instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
 
-**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore not derivable in any setting without the `ord` mark of chapter 3. *Not yet run mechanically* (ledger E7).
+**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other, and it is invertible only with the `ord` mark, or with a switch and an `inv` input (chapter 3, §3.6 Example (a)). The rule-level computation is checked by evaluation (`Uniform/Marks.agda`). The run on the actual F_V waits for the uniform checker (ledger S3).
 
 **Semantics.**
 - **Admissible theories.** A judgment derivable in setting S holds in the free objects of every admissible theory satisfying S. In particular a setting-∅ development is valid in the models of every admissible theory.
@@ -151,7 +151,7 @@ Two-tier L computes the side condition in the free Gray-enriched category 𝔉(�
 
 Generators are tuples θᵢ₊₁ ⊗ … ⊗ θⱼ with dimension the sum and boundary by the Leibniz formula. The total cell τ_Γ is the tensor of the composites ⟨Θᵢ⟩. Supports are Steiner chains, so the side condition of Lemma 2.2.1 is integer linear algebra.
 
-This is not the kernel's default theory: it is the theory obtained from uniform L when every object is marked `ord` (chapter 3, §3.6; that identification is ledger E7). It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
+This is not the kernel's default theory. Marking every object `ord` in uniform L gives two-tier L's invertibility judgments exactly (chapter 3, §3.6), but its coherences only up to the relative coherence question of ledger E13, and in settings without the inner law not by the coherence rule alone. It is the theory the checker currently implements, and the one with a full machine-checked soundness proof.
 
 **Decision procedure.** Symbolic supports and an exact cover check (`Gray/Cover.agda`, `Gray/Fast.agda`), proved equal to the explicit support computation (`fastSide ≡ graySide`). Measured growth on n-fold wedges is about n⁶ up to n = 28. Explicit supports are exponential (a term of size O(n) has support of size 3ⁿ), so the symbolic form is required.
 
@@ -168,7 +168,7 @@ This is not the kernel's default theory: it is the theory obtained from uniform 
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
-- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3.
+- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. For marks the second holds exactly (§3.6). For coherences it fails by the coherence rule alone in settings without the inner law (the strip), and is otherwise a relative coherence question (ledger E13).
 
 ## 2.7 Open surface questions
 

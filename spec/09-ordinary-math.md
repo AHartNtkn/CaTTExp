@@ -15,14 +15,14 @@ The list is fixed. A new inductive object, quotient, truncation or recursively d
 | Disjoint, universal coproducts (T-coprod) | theorem of DESC-grpd | proved |
 | Effective quotients (EX) | theorem of DESC with DESC-tr | proved (sketch) |
 | Lax colimits as Grothendieck constructions (G) | DESC + the edge case G₁, itself a theorem of DESC-or and DJ | paper only |
-| G⁺ (object-labelled edges) | DESC + G₁ relative to a base | paper only (F10g) |
+| G⁺ (object-labelled edges) | DESC + G₁ relative to a base, from DESC-or along the Gray cylinder | paper only |
 | Directed J (DJ) | theorem of the limit rules (Riehl–Verity) | Agda-checked 1-truncated; higher levels paper only |
 | Truncations ‖X‖_n | instance of INIT with the mark `⋆^{≤n}` | proved, given INIT |
 | Free objects on graphs and object-labelled graphs (R-A, R-A⁺) | instances of INIT | proved |
 | ℕ, lists, finitary W-types | instances of INIT (ℕ is also a theorem of DESC) | proved |
 | Object-valued recursion on rose trees (R-U) | instance of INIT + DESC-grpd | proved (sketch) |
 | R-cot⁺ over a set base | closed-structure hom + DESC-grpd + INIT | proved (sketch) |
-| T-graph, T-loc | encode–decode from DESC, DJ and INIT, plus the closure clauses T-init and T-hom⁻ | paper only (F10g) |
+| T-graph, T-loc | encode–decode from DESC, DJ and INIT, plus the closure clauses T-init and T-hom⁻ | paper only (F10d, F10g) |
 
 The notes state this chapter under P (pseudo ambient) and say where L differs. For **discrete targets P and L agree**, because every 2-cell of the target is already invertible. Restating the non-discrete parts over V + S is ledger S8.
 
@@ -43,8 +43,8 @@ Introduction and closure rules:
 (T-unit)   ⊤ trunc (−2);   ⊥ trunc (−1)
 (T-lim)    every object vertex of γ has trunc n  ⟹  lim_{Γ^μ}[γ] trunc n   (any marking)
 (T-hom)    C trunc n,  a, b : ⊤ → C  ⟹  Hom_C(a, b) trunc (n − 1)          (n ≥ −1)
-(T-hom⁻)   Hom_C(a, b) trunc (n − 1) for generalised points a, b : W → C, W fresh
-           ⟹  C trunc n                                                    (n ≥ −1)
+(T-hom⁻)   (s, t) : [⟦D¹⟧, C] → C × C  relatively trunc (n − 1)
+           ⟹  C trunc n                       (n = −1 or n ≥ 1; at n = 0 also C grpd_1)
 (T-init)   Δ positive in X (§9.3); every operation has target X and a source built from
            coproducts, finite products and parameters with trunc n (n ≥ 0); no cell
            variables except inv marks given by bi-invertibility data
@@ -58,20 +58,22 @@ Derived:
 (T-loc)    the same with a set M of edges inverted  ⟹  ⟦Γ⟧[M⁻¹] trunc 1
 ```
 
-**Side condition and decision procedure.** Syntax-directed on the object; the level of a cell is read off its type. T-init reads the context Δ, which is finite syntax. T-hom⁻'s premise is a hom judgment over a fresh W, proved like any other judgment, not searched for. Stable under substitution because declared truncations are certified (T-var).
+**Side condition and decision procedure.** Syntax-directed on the object; the level of a cell is read off its type. T-init reads the context Δ, which is finite syntax. T-hom⁻'s premise is a relative truncation judgment on the boundary map, which covers the homs over every generalised point; it is proved like any other judgment, not searched for. The range of n is read off syntactically. Stable under substitution because declared truncations are certified (T-var).
 
 **Example.** Bool := ⊤ ⊔ ⊤ is a set (T-coprod). ℕ := μ(X, z : ⊤ → X, s : X → X) is a set (T-init, n = 0). ℤ := μ(X, z : ⊤ → X, s : X → X inv) is a set (T-init; the `inv` mark is given by bi-invertibility data, §9.5). The loop L = (x, s : x → x) has ⟦L⟧ trunc 1 (T-graph).
+
+**Why T-hom⁻ excludes n = 0.** The walking arrow [1] has every hom a proposition (Hom(0, 1) = ⊤, Hom(1, 0) = ∅, endo-homs ⊤), but it is not trunc 0, because its arrow is not invertible. Invertibility of the homs' cells says nothing about C's 1-cells, so at n = 0 the rule needs C to be a groupoid. Every use (T-graph, T-loc) is at n = 1.
 
 **Why T-init has no cell variables.** With arbitrary invertible cells T-init is false. The context (X, z, s, s⁻¹, s ; s⁻¹ ≅ 1, s⁻¹ ; s ≅ 1), with quasi-inverse data instead of bi-invertibility data, has an initial model that is not a set: the higher inductive integers without their coherence constructor (Altenkirch–Scoccola, arXiv:2007.00167, §1.2).
 
 **Relation to `grpd_k`.** `C grpd_k` (chapter 3) makes cells of hom-dimension ≥ k invertible: C is an (∞, k−1)-category. `C trunc n` makes them also fillable above level n: C is an n-truncated object. For n ≥ 0, `trunc n` implies `grpd_{n+1}`; the converse fails.
 
-**Semantics.** Closure under limits and homs: proved (sketch level). T-hom⁻: sound, since n-truncation is tested on globes and the fibres of `Map(⟦Dᵏ⟧, C) → C^≃ × C^≃` are maps into homs. T-init: sound, since the Adámek tower stays inside n-truncated objects, which are closed under coproducts (n ≥ 0), finite products and filtered colimits, and an `inv` mark is a reflective condition closed under these.
+**Semantics.** Closure under limits and homs: proved (sketch level). T-hom⁻: sound in its range, since n-truncation is tested on globes and the fibres of `Map(⟦Dᵏ⟧, C) → C^≃ × C^≃` are maps into homs; a k-cell of C is a (k−1)-cell of a hom, which settles every k > n when n ≥ 1, and contractible homs force C ≃ ⊤ or ∅ when n = −1. T-init: sound, since the Adámek tower stays inside n-truncated objects, which are closed under coproducts (n ≥ 0), finite products and filtered colimits, and an `inv` mark is a reflective condition closed under these.
 
 **Status.**
 - T-fill, T-inv, T-ctr: **Agda-checked** as coherences over fixed non-pasting contexts, with a certified checker and examples (`src/CaTTExp/Trunc/`, F9). Closure under limits and homs: **proved** (note level, F3).
 - T-coprod: **proved**, from DESC-grpd.
-- T-init and T-hom⁻: **paper only**. Both are semantically sound (sketch). Whether they are derivable from the other rules, instead of being closure clauses like T-lim, is open (F10g).
+- T-init and T-hom⁻: **paper only**. Both are semantically sound (sketch) and are introduction rules of `trunc` in their own right, as T-coprod is for ⊔. T-hom⁻ is not derivable: no other rule concludes `trunc` for an unmarked variable (argument by inspecting the rule conclusions; machine check pending, F10f). T-init is derivable by encode–decode only for groupoid parameters, and then only given a clause that μΔ is a groupoid when its parameters are (the rules have no core former) and an n = −2 base case; for directed parameters no derivation is known. So T-init stays a clause (F10g).
 - T-graph and T-loc: **paper only**, by encode–decode (§9.4) relative to T-init and T-hom⁻ (F10d).
 - Open: F3b (Hedberg route), F3c.
 
@@ -190,7 +192,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 **Status.**
 - Dependent elimination for shapes ⟦Γ⟧ and for ℕ: **proved** (note level).
 - DJ: **Agda-checked, 1-truncated**: DJ-cocart and the lemmas on cocartesian arrows (`CaTTExp.Descent.CocartLemmas`), DJ-sec and the directed DJ-uni (`CaTTExp.Descent.DJOneTruncated`: `dj-sec`, `dj-ext`, `dj-uni`, `dj-ext-uni`). Higher levels: **paper only** (F10b).
-- G from DESC and DJ, including G₁-tot: **paper only** (sketch). Open: DESC-or in slices, needed for G₁ relative to a base and so for G⁺ (F10g).
+- G and G⁺ from DESC and DJ, including G₁-tot and G₁ relative to a base (absolute DESC-or along the Gray cylinder B_e ⊗ ⟦D¹⟧, read as a cocomma): **paper only** (sketch, F10g).
 - Encode–decode for graphs and localised graphs: **paper only** (F10d; Agda in F10f part 3).
 
 **Source.** `notes/ordinary-math.md` §4; `notes/universe-free-principles.md` §3.3, §5, §6a; ledger F1, F10b, F10d, F10f, F10g.

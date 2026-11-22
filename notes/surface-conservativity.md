@@ -16,10 +16,10 @@ Anthony's decisions (S19):
 | **Theorem B.** KC at Γ for types of dimension n follows from *relative coherence* EL(k) at Γ for k < n. EL(k) says: parallel kernel k-terms that are ≈-equal are joined, in both directions, by kernel cells that are ≈ to identities. The proof uses only whiskering and vertical composites over linear trees, which exist in every kernel, uniform L included. | **[proved]** (§3.2) |
 | **Theorem C (converse).** If the surface is conservative at Γ, then EL holds at Γ, including the "≈ identity" half. | **[Agda]** `Converse.necessary` |
 | **Corollary 3.4 (equivalence).** Conservativity at Γ through dimension n ⟺ EL(< n) at Γ, given EL at pasting contexts of dimension ≤ n | **[proved]** from A (Agda), B (paper), C (Agda) |
-| **Interchange can never be strictified over L.** Any surface equality that identifies the two layerings of a horizontal pair is not conservative, already over the pasting context ΣD¹ ∨ ΣD¹ in dimension 3. So every subset of {associators, unitors, interchange} that contains interchange fails over L. | **[Agda]** `strict-interchange-not-conservative` (two-tier L); uniform L **[proved]** from requirement 3 |
+| **Interchange can never be strictified over L.** Any surface equality that identifies the two layerings of a horizontal pair is not conservative, already over the pasting context ΣD¹ ∨ ΣD¹ in dimension 3. With interchange in its whiskering form (§1.2), every subset of {associators, unitors, interchange} that contains interchange identifies that pair and so fails over L. | **[Agda]** `strict-interchange-not-conservative` (two-tier L); uniform L **[proved]** from requirement 3 |
 | **Strict associators and unitors over L** (≈ = equality in 𝔉 or F_{V+S}, the side condition's own free objects) are conservative in every pasting context, in every dimension | **[proved]** given Lemma V (**[argued]** for two-tier L; (ii) **[open]** for uniform L) and Lemma 1.3 (**[argued]**) |
 | The same over L in an **arbitrary** context | **[open]**. It is equivalent to Conjecture GRC (§4.3), which is in the outbox |
-| **Plain CaTT, by subset.** Every subset is conservative in strong-Steiner contexts in every dimension, and in every context through dimension 3. Any subset containing {unitors, interchange} fails in (x, a : 1ₓ → 1ₓ) at dimension 4. {associators, interchange} is Simpson's case and is open; so are {associators, unitors} and every smaller subset. | first claim **[proved]** given Lemma 1.3; failure of the full set **[proved]** from a verified counterexample; failure of {U, I} **[argued]**; rest **[open]** (§4.4) |
+| **Plain CaTT, by subset.** Every subset is conservative in strong-Steiner contexts in every dimension, and in every context through dimension 3. Full image equality ≡_ν fails in (x, a : 1ₓ → 1ₓ) at dimension 4; any subset containing {unitors, interchange} is expected to fail there too. {associators, interchange} is Simpson's case and is open; so are {associators, unitors} and every smaller subset. | first claim **[proved]** given Lemma 1.3; failure of ≡_ν **[proved]** from a verified counterexample; failure of ≈_{U,I} and ≈_{A,U,I} **[argued]**; rest **[open]** (§4.4) |
 | **Catt_sua and Catt_su are conservative over Catt** in every strong-Steiner context (pasting contexts included) and in every context for types of dimension ≤ 3 | **[proved]** given Lemmas 1.2 and 1.3 (**[argued]**). The literature has this only over pasting contexts. |
 | Rewrite rules (disc, endo-coherence removal, insertion) as an implementation of ≈ over uniform L | disc and endo removal **[proved]**; insertion and pruning need the designated lifts to commute with insertion **[open]**, a new sub-item of S11 |
 
@@ -59,7 +59,7 @@ The relations that matter:
 - **≡_F (image equality).** Γ ∣ t ≈ t′ iff ⟦t⟧ = ⟦t′⟧ in F(Γ). The interpretation is extended to raw terms compositionally, with a junk value for ill-formed heads, so that ≈ is a total equivalence. Only its restriction to surface-typed terms is ever used.
   - Over **L**: F is strictly associative and unital, so associators and unitors become identities. Interchangers across objects (and, in uniform L, at every level) are non-identity generators of F, so they stay directed.
   - Over **P**: ≡_ν strictifies all three, interchange included (§4.1).
-- **≈_S for S ⊆ {A, U, I}** (associativity, units, interchange). This is the smallest congruence, stable under substitution, that contains w ≈ w′ for every pair of parallel *words* that are equal in the free algebra satisfying exactly the laws in S. Words are terms over a pasting context built from variables, the kernel's binary composites and identities. This is the general form used in §4.4 and in the outbox prompt. For P, ≈_{A,U,I} ⊆ ≡_ν. For L, ≈_{A,U} ⊆ ≡_F.
+- **≈_S for S ⊆ {A, U, I}** (associativity, units, interchange). This is the smallest congruence, stable under substitution, that contains (i) w ≈ w′ for every pair of parallel *words* that are equal in the free algebra satisfying exactly the laws in S, and (ii) coh_{Δ, w → w′}[σ] ≈ 1_{w[σ]} for every such pair, whenever that coherence exists (a coherence between S-equal words is an identity; Catt_su/sua get this from endo-coherence removal). Words are terms over a pasting context built from variables, the kernel's binary composites (in L: vertical composites and whiskerings) and identities. The laws: A is associativity of each composite; U is the unit laws; I is the *whiskering form* of interchange, (a ∗ⱼ s b) ∘ (t a ∗ⱼ b) = (s a ∗ⱼ b) ∘ (a ∗ⱼ t b) for j-composable a, b, where s, t are the boundaries one level below the cells and ∘ is composition along them, with its higher analogues (in the presence of U this is equivalent to Godement's law). This is the general form used in §4.4 and in the outbox prompt. For P, ≈_{A,U,I} ⊆ ≡_ν. For L, ≈_{A,U} ⊆ ≡_F.
 - **≡_su, ≡_sua.** These are the equivalence closures of the published rewrite rules of Catt_su and Catt_sua: disc removal, endo-coherence removal, and pruning (respectively insertion), restricted to redexes typable in the kernel. `CaTTExp.SU` implements them on raw syntax with a normaliser (D16). Both are context-independent.
 
 **Lemma 1.1 [proved for P and two-tier L; partly open for uniform L].** ≡_sua ⊆ ≡_F on surface-typed terms.
@@ -168,7 +168,7 @@ Agda: `Converse.necessary`. The same argument, applied to a kernel cell c : u �
 
 ### 3.4 The equivalence, localised
 
-**Corollary 3.4 [proved].** Assume (E), (SC), (Inv), (Dim) and (W). Assume also that the kernel's side condition forces dim Δ ≤ dim A for every accepted head (Δ, A). This holds in all three kernels: in the operation case dim A = dim Δ, and in the coherence case A's terms are full, so dim A ≥ dim Δ. Suppose EL(k) holds for all k < n at every pasting context of dimension ≤ n. Then the following are equivalent:
+**Corollary 3.4 [proved].** Assume (E), (SC), (Inv), (Dim) and (W). Assume also that the kernel's side condition forces dim Δ ≤ dim A for every accepted head (Δ, A). This holds in all three kernels: in the operation case A has the dimension of the total cell, which is ≥ dim Δ (equal in P; larger for interchangers in L), and in the coherence case A's terms are full, so dim A ≥ dim Δ. Suppose EL(k) holds for all k < n at every pasting context of dimension ≤ n. Then the following are equivalent:
 - the surface is conservative at Γ through dimension n;
 - EL(k) holds at Γ for all k < n.
 
@@ -216,7 +216,7 @@ Rehydration is stronger, since it gives a Catt term that is ≡_sua-equal and no
 
 **Whether the obstruction survives ≡_sua.** The pair of 3-terms in the counterexample is the Eckmann–Hilton braid of a with itself against an identity. The braid is a composite of unitors and interchangers.
 - **[argued]** ≡_sua does not identify the two, because ≡_sua makes no interchanger trivial. Not checked with the SU normaliser.
-- **[argued]** ≈_{U,I} does identify them. Each constituent cell is then a coherence between ≈_{U,I}-equal words, and a composite of identities is an identity under U.
+- **[argued]** ≈_{U,I} does identify them. Each constituent cell is a coherence between ≈_{U,I}-equal words, hence ≈ 1 by clause (ii) of the definition of ≈_S, and a composite of identities is an identity under U.
 
 Whether EL holds for ≡_sua in every context is **open** (Q1 of the outbox prompt).
 
@@ -261,12 +261,12 @@ Write S ⊆ {A, U, I} for the laws made definitional, with ≈_S as in §1.2. Co
 
 **Over L.**
 
-**Proposition 4.6 [Agda for two-tier L; proved for uniform L].** Let the surface identify the two layerings (f◁β);(α▷g′) and (α▷g);(f′◁β) in ΣD¹ ∨ ΣD¹. Then it is not conservative at that pasting context, in dimension 3. Every surface that strictifies interchange across objects does this.
+**Proposition 4.6 [Agda for two-tier L; proved for uniform L].** Let the surface identify the two layerings (f◁β);(α▷g′) and (α▷g);(f′◁β) in ΣD¹ ∨ ΣD¹. Then it is not conservative at that pasting context, in dimension 3. ≈_S does this for every S ∋ I, since the identification is an instance of the whiskering form of I (§1.2); so does any other surface equality that strictifies interchange across objects.
 
 *Proof.* The interchanger converts to the reverse type, which the kernel leaves empty. For two-tier L this is `no-reverse-interchanger`. For uniform L it is requirement 3 in every admissible theory, `spec/02` §2.4. Apply `Embed.reverse-breaks`. Agda: `Surface/StrictInterchange.agda`, `strict-interchange-not-conservative`, for every surface equality whatsoever that identifies the pair. ∎
 
 Consequences:
-- Over L, **every S containing I fails**: {I}, {A, I}, {U, I} and {A, U, I}. This is a theorem, not a design choice.
+- Over L, **every S containing I fails**: {I}, {A, I}, {U, I} and {A, U, I}, with I in its whiskering form. This is a theorem, not a design choice. (With I only in Godement's horizontal form, I cannot even be stated over L, which has no horizontal composite of positive-dimensional cells in adjacent homs; the whiskering form is the one that means "strict interchange" there.)
 - The reason is that interchange in L is directed. Strictifying it equates two cells that the kernel joins in one direction only. By Theorem C, conservativity needs both directions.
 - What remains is S ⊆ {A, U}. By downward closure, everything there follows from {A, U}, which is §4.2–4.3: conservative in pasting contexts, and GRC in general.
 - Interchange *inside* a hom of two-tier L is already strict in 𝔉. It is part of ≡_𝔉 and is not an extra choice.
@@ -276,11 +276,11 @@ Consequences:
 | S | Status |
 |---|---|
 | any S | conservative in every strong-Steiner context in every dimension, and in every context through dimension 3 (≈_S ⊆ ≡_ν and Corollary 4.1) **[proved]** given Lemma 1.3 |
-| {A, U, I} | fails in (x, a : 1ₓ → 1ₓ) at dimension 4 **[proved]** (Corollary 4.1) |
-| {U, I} | fails at the same place **[argued]**: the braid/identity pair is ≈_{U,I}-equal (§4.1). This is Simpson's Eckmann–Hilton argument, in type-theoretic form |
+| ≡_ν (all of image equality) | fails in (x, a : 1ₓ → 1ₓ) at dimension 4 **[proved]** (Corollary 4.1) |
+| {A, U, I}, {U, I} | fail at the same place **[argued]**: the braid/identity pair is ≈_{U,I}-equal, because each constituent cell is a coherence between ≈_{U,I}-equal words, hence ≈ 1 by clause (ii) of §1.2, and a composite of identities is an identity under U. This is Simpson's Eckmann–Hilton argument in type-theoretic form. Not yet written out cell by cell |
 | {A, I} (weak units) | **[open]**. This is the type-theoretic form of Simpson's conjecture that weak units suffice; Joyal–Kock prove the semantic version for one object and one arrow in dimension 3 |
-| {A, U} (Catt_sua), {U} (Catt_su) | **[open]** in general contexts (§4.1) |
-| {A}, {I} | **[open]**; they follow from {A, I} |
+| {A, U}, {U} (contained in ≡_sua, ≡_su) | **[open]** in general contexts (§4.1) |
+| {A}, {I} | **[open]**; they follow from {A, I}. {I} alone may be conservative for a cheap reason: without U, the whiskering law identifies few terms |
 
 **Conjecture SC-P [conj].** S-strictification is conservative over CaTT in every context if and only if S ⊉ {U, I}. Equivalently, {A, I} and {A, U} are both conservative. Evidence: the failing cases are exactly the Eckmann–Hilton ones, and the semantic analogues are Simpson's conjecture and Gordon–Power–Street.
 

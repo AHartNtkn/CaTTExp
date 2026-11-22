@@ -32,12 +32,12 @@ In F(Δ), a pasting diagram, c is unique.
 
 **Semistrict equalities.** Write A, U and I for the associativity, unit and interchange laws of ω-categories:
 - A: (x ∗ₖ y) ∗ₖ z = x ∗ₖ (y ∗ₖ z);
-- U: 1 ∗ₖ x = x = x ∗ₖ 1, and 1 of an identity is an identity;
-- I: (a ∗ⱼ b) ∗ₖ (c ∗ⱼ d) = (a ∗ₖ c) ∗ⱼ (b ∗ₖ d) for j < k, and 1_{a ∗ⱼ b} = 1_a ∗ⱼ 1_b.
+- U: 1 ∗ₖ x = x = x ∗ₖ 1, and 1_{a ∗ⱼ b} = 1_a ∗ⱼ 1_b;
+- I, in whiskering form: for j-composable cells a, b of dimension > j, (a ∗ⱼ s b) ∘ (t a ∗ⱼ b) = (s a ∗ⱼ b) ∘ (a ∗ⱼ t b), where s, t are the source and target one dimension below the cells and ∘ is composition along them, together with the analogous laws for cells of unequal dimension. In the presence of U this is equivalent to Godement's law (a ∗ⱼ b) ∗ₖ (c ∗ⱼ d) = (a ∗ₖ c) ∗ⱼ (b ∗ₖ d); unlike Godement's law it can be stated in CaTT_G, which has no horizontal composite.
 
 For a theory T ∈ {CaTT, CaTT_G}:
 - *Words* over a pasting context Δ are terms built from variables, T's binary composites and identities. In CaTT these are all ∗ₖ. In CaTT_G they are vertical composition and whiskering, since no horizontal composite of two positive-dimensional cells in adjacent homs exists.
-- For S ⊆ {A, U, I}, let **≈_S** be the smallest congruence on terms, stable under substitution, that contains w ≈ w′ for all parallel words w, w′ over a pasting context that are equal in the free algebra (globular set with composites and identities) satisfying exactly the laws in S.
+- For S ⊆ {A, U, I}, let **≈_S** be the smallest congruence on terms, stable under substitution, that contains (i) w ≈ w′ for all parallel words w, w′ over a pasting context that are equal in the free algebra (globular set with composites and identities) satisfying exactly the laws in S, and (ii) coh_{Δ, w → w′}[σ] ≈ 1_{w[σ]} for every such pair whose coherence exists in T (a coherence between S-equal words is an identity).
 - Two published closed forms:
   - ≡_su: Catt_su, Finster–Reutter–Rice–Vicary, arXiv 2007.08307 (disc removal, endo-coherence removal, pruning);
   - ≡_sua: Catt_sua, Finster–Rice–Vicary, arXiv 2302.05303 (disc removal, endo-coherence removal, insertion).
@@ -75,9 +75,9 @@ The same argument shows the following. If u ≈ u′ and some T-cell u → u′ 
 - EL(n) holds for every n in every finite strong-Steiner (strongly loop-free) context, pasting contexts included.
 - EL(3) **fails** in the context (x, a : 1ₓ → 1ₓ). The obstruction is Eckmann–Hilton.
 
-So for every S, CaTT_{≈_S} is conservative in strong-Steiner contexts, and in every context through dimension 3, since ≈_S is contained in equality in F(Γ). CaTT_{≈_{A,U,I}} is not conservative in (x, a : 1ₓ → 1ₓ) at dimension 4.
+So for every S, CaTT_{≈_S} is conservative in strong-Steiner contexts, and in every context through dimension 3, since ≈_S is contained in equality in F(Γ). CaTT with full image equality is not conservative in (x, a : 1ₓ → 1ₓ) at dimension 4. Whether ≈_{A,U,I} and ≈_{U,I} identify the obstructing pair is part of Q2.
 
-**3. Interchange over CaTT_G.** Let ≈ identify the two layerings (f ◁ β) ; (α ▷ g′) and (α ▷ g) ; (f′ ◁ β) over ΣD¹ ∨ ΣD¹. Then CaTT_G with ≈ is not conservative, by the last sentence of item 1. So every S containing I fails over CaTT_G, already in a pasting context and in dimension 3.
+**3. Interchange over CaTT_G.** Let ≈ identify the two layerings (f ◁ β) ; (α ▷ g′) and (α ▷ g) ; (f′ ◁ β) over ΣD¹ ∨ ΣD¹. Then CaTT_G with ≈ is not conservative, by the last sentence of item 1. The whiskering form of I contains this identification, so every S containing I fails over CaTT_G, already in a pasting context and in dimension 3.
 
 **4. Literature on ≡_su and ≡_sua.**
 - Catt_su is conservative over Catt for terms over pasting diagrams (Finster–Reutter–Rice–Vicary).
@@ -97,7 +97,7 @@ So for every S, CaTT_{≈_S} is conservative in strong-Steiner contexts, and in 
 
 Conservativity is downward closed in S, so it suffices to settle the maximal cases. After Known 2 and 3, the conjectured answer is:
 - (i) over CaTT_G: conservative iff I ∉ S. Equivalently, ≈_{A,U} is conservative in every context. A sharper form: parallel CaTT_G-terms with equal images in 𝔉(Γ) are connected, in both directions, by terms whose images are identities, in every context.
-- (ii) over CaTT: conservative iff S ⊉ {U, I}. Equivalently, both ≈_{A,U} and ≈_{A,I} are conservative in every context, and ≈_{U,I} is not.
+- (ii) over CaTT: conservative iff S ⊉ {U, I}. Equivalently, both ≈_{A,U} and ≈_{A,I} are conservative in every context, and ≈_{U,I} is not (the last is expected from Eckmann–Hilton but not yet established; see Q2).
 
 Prove these, or give counterexamples. A uniform proof is preferred to separate ones, for example one covering every CaTT-style theory whose side condition is read off a family of strict free structures. A proof of the stronger form for ≡_sua (Catt_sua conservative over Catt in every context) is also wanted.
 

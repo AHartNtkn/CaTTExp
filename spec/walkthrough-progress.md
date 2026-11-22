@@ -130,6 +130,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").
 - S17 (0.4): alternatives to the form of the marking system never compared.

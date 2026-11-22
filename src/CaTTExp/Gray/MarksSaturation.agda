@@ -17,20 +17,25 @@
 --      inv₁, inv₂    ICaTT's inv-intro, for cells of dimension 1 and 2
 --      can es        a coh whose arguments at the listed positions are
 --                    invertible by the given evidence (ICaTT's can-intro,
---                    over the L rules: the upgraded arguments feed
---                    (OP-inv), (INV-fac), (INV-obj) and (PS-fac) through
---                    `invC` exactly as derived marks do)
+--                    over the L rules: the upgraded arguments feed (OP-inv),
+--                    (INV-fac) and (INV-obj) through `invC`; only the inv
+--                    component is upgraded, so an argument made inv by
+--                    evidence does not become ps or ps* and cannot serve as
+--                    the ps* factor of (PS-fac). (OBJ-k) is kept.)
 --    `checkEv` decides it by structural recursion on the evidence. The
---    evidence layer is conservative over the judgment (`jud-conservative`)
---    and fixes both examples.
+--    evidence `jud` coincides with the judgment by definition
+--    (`jud-conservative`, which holds by refl), and the layer fixes both
+--    examples. inv-intro checks that the evidence terms s, s′, l, r are
+--    well-typed in Γ with the certified checker (`wt`).
 --
 -- Scope, stated honestly:
 --  * inv-intro is encoded for cells of dimension 1 and 2 only (the
 --    composite in the unit types is built with `comp` and `vcomp`). The
 --    general rule uses the suspended composite and is not encoded.
---  * `checkEv` checks the shape of the evidence on raw terms and reads
---    types syntactically (`typeOf`), like `Gray.Marks`. Well-typedness of
---    the contexts is checked separately below with the certified checker.
+--  * The term t itself is assumed well-typed, as in `Gray.Marks`; the new
+--    terms introduced by evidence are type-checked (`wt`), and their types
+--    are then read off syntactically (`typeOf`), which agrees with the
+--    derived type on well-typed terms (`typeOf-sound`).
 --  * Soundness of the evidence layer (inv-intro is sound for invertibility
 --    in every model; can follows from the soundness of the judgment rules)
 --    is on paper, notes/marking-alternatives.md §6, item 2. It is not encoded.
@@ -51,6 +56,10 @@ v = var
 -- identity 2-cell on f : x → y
 id2 : Tm → Tm → Tm → Tm
 id2 x y f = coh D₁ (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2)) ⟪ x ∷ y ∷ f ∷ [] ⟫
+
+-- t is a well-typed term of Γ (certified checker)
+wt : Ctx → Tm → Bool
+wt Γ t = is-just (checkCtx Γ >>= λ w → inferTm Γ w t)
 
 eqTy : Maybe Ty → Ty → Bool
 eqTy (just A) B = A ==Ty B
@@ -87,12 +96,14 @@ mutual
   checkEv ms Γ t (inv₂ s s′ l r eL eR) = intro₂ ms Γ t s s′ l r (typeOf Γ t) eL eR
   checkEv ms Γ (coh Θ (arr A t u) γ) (can es) =
     invC Θ A t u (upgrade ms Γ (subList γ) es (judgeSub (fuelOf Γ (coh Θ (arr A t u) γ)) ms Γ γ))
+    ∨ objRule ms (just (arr A t u [ γ ]ty))
   checkEv ms Γ _ (can es) = false
 
   -- ICaTT's inv-intro for t : a → b.
   intro₁ : Marks → Ctx → (t s s′ l r : Tm) → Maybe Ty → Ev → Ev → Bool
   intro₁ ms Γ t s s′ l r (just (arr ⋆ a b)) eL eR =
-       eqTy (typeOf Γ s)  (arr ⋆ b a)
+       wt Γ s ∧ wt Γ s′ ∧ wt Γ l ∧ wt Γ r
+     ∧ eqTy (typeOf Γ s)  (arr ⋆ b a)
      ∧ eqTy (typeOf Γ s′) (arr ⋆ b a)
      ∧ eqTy (typeOf Γ l)  (arr (arr ⋆ b b) (comp b a s b t) (idc b))
      ∧ eqTy (typeOf Γ r)  (arr (arr ⋆ a a) (comp a b t a s′) (idc a))
@@ -102,7 +113,8 @@ mutual
   -- ICaTT's inv-intro for a 2-cell t : f ⇒ g : X → Y.
   intro₂ : Marks → Ctx → (t s s′ l r : Tm) → Maybe Ty → Ev → Ev → Bool
   intro₂ ms Γ t s s′ l r (just (arr (arr ⋆ X Y) f g)) eL eR =
-       eqTy (typeOf Γ s)  (arr (arr ⋆ X Y) g f)
+       wt Γ s ∧ wt Γ s′ ∧ wt Γ l ∧ wt Γ r
+     ∧ eqTy (typeOf Γ s)  (arr (arr ⋆ X Y) g f)
      ∧ eqTy (typeOf Γ s′) (arr (arr ⋆ X Y) g f)
      ∧ eqTy (typeOf Γ l)  (arr (arr (arr ⋆ X Y) g g) (vcomp X Y g f s g t) (id2 X Y g))
      ∧ eqTy (typeOf Γ r)  (arr (arr (arr ⋆ X Y) f f) (vcomp X Y f g t f s′) (id2 X Y f))

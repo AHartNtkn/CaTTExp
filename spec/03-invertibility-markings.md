@@ -184,8 +184,8 @@ So invertibility alone does not make an object an ordinary ω-category up to coh
 The marks are proof-irrelevant judgments. This form was compared against an equation-free invertibility type (ICaTT without equations), marked arrow types, complicial thinness and modes in `notes/marking-alternatives.md` (ledger S17).
 - **What was forced.** Pseudo is a property of lax cells (Theorem 3.5.1), so marks rather than a second sort of cell. `ps*` is forced by C1″. `ord` must act through the side condition (E13), so `ord` and `grpd_k` are modes on objects in any form.
 - **What was not forced.** Proof-irrelevant judgments rather than evidence terms. That was a choice.
-- **Its cost.** `inv` is not *saturated*: it is not closed under ICaTT's inv-intro. In Γ₁ = (x : a → b)(y : b → a)(l : y;x ⇛ 1)^inv(r : x;y ⇛ 1)^inv, x is invertible in every model, but no 1-cell a → b is derivably inv. One dimension up, the naturality cell of a lax transformation at such an x is invertible in every model and not derivably so. **Agda-checked** (`Gray/MarksSaturation.agda`).
-- **Theorem (saturation vs decidability).** No sound judgment on raw terms that is closed under inv-intro, (OP-inv), (DES) and (DES-inv) is decidable, uniformly in Γ, already for one object, 1-cells and inv-marked 2-cells. **Proved** (`notes/marking-alternatives.md` Theorem 3.3), by reduction of the unit problem of finitely presented monoids (Narendran–Ó'Dúnlaing–Otto 1991).
+- **Its cost.** `inv` is not *saturated*: it is not closed under ICaTT's inv-intro. In Γ₁ = (x : a → b)(y : b → a)(l : y;x ⇛ 1)^inv(r : x;y ⇛ 1)^inv, x is invertible in every model, but x is not derivably inv (**Agda-checked**, `Gray/MarksSaturation.agda`). In fact no 1-cell a → b is derivably inv (**proved** on paper). One dimension up, the naturality cell of a lax transformation at such an x is invertible in every model and not derivably so (**Agda-checked**).
+- **Theorem (saturation vs decidability).** No sound judgment on raw terms is decidable, uniformly in Γ, if it contains the marked variables and the coherence-case cohs and is closed under inv-intro, (OP-inv), (INV-fac), (DES) and (DES-inv). This holds already for one object, 1-cells and inv-marked 2-cells. **Proved** (`notes/marking-alternatives.md` Theorem 3.3), by reduction of the unit problem of finitely presented monoids (Narendran–Ó'Dúnlaing–Otto 1991).
 
 **Proposed evidence layer [proposal].**
 ```
@@ -194,14 +194,14 @@ e ::= !                                   the judgment itself (ICaTT's evidence 
     | can(coh[γ]; {i ↦ e_i})               arguments upgraded by evidence, fed to §3.3/§3.6
 Γ ⊢ t inv by e
 ```
-Evidence `!` is exactly the judgment. Evidence is checked structurally, so the layer is decidable and conservative over §3.3. It is used where a judgment needs a cell that is invertible by data: substitution into a marked variable (the "equivalence certificates" of CaTT_lim) and the premises of the propagation rules. Destructors on evidence follow ICaTT without equations. The judgment's own t⁻ˡ is linv(!).
-- **Agda-checked**: the checker for cells of dimensions 1 and 2, conservativity, and the two examples (`Gray/MarksSaturation.agda`). General dimensions are not encoded.
-- **Proved on paper**: soundness.
+Evidence `!` is the judgment, by definition. Evidence is checked structurally, and the new terms it introduces are type-checked, so the layer is decidable. It only adds derivations, so everything §3.3 derives is kept. It is used where a judgment needs a cell that is invertible by data: substitution into a marked variable (the "equivalence certificates" of CaTT_lim) and the premises of the propagation rules. Destructors on evidence follow ICaTT without equations. The judgment's own t⁻ˡ is linv(!).
+- **Agda-checked**: the checker for cells of dimensions 1 and 2, and the two examples (`Gray/MarksSaturation.agda`). General dimensions are not encoded.
+- **Proved on paper**: soundness, for well-typed evidence (the Agda checker type-checks the evidence terms).
 - **Open**:
   - pseudo by data, which needs a binder over a generic earlier cell (ledger S19);
   - whether finite certificates suffice in L (ledger S20, `notes/conjectures/outbox/invertibility-certificates.md`). In P they do (`notes/marking-alternatives.md` §6.1).
 
-**Rejected forms.** Marked arrow types need subtyping, or they duplicate every coh by its annotation. Complicial thinness replaces `coh` rather than marking it, and its saturated form is undecidable by the theorem above. Modes cannot carry cell-level marks: two lax transformations between the same functors can differ in being pseudo.
+**Rejected forms.** Marked arrow types need subtyping, or they duplicate every coh by its annotation. Complicial thinness replaces `coh` rather than marking it, and its saturated form is undecidable by the theorem above. Modes on objects or 1-cells cannot carry cell-level marks: two lax transformations between the same functors can differ in being pseudo. A mode on the hom amounts to a marked arrow type or a second kind of 2-cell.
 
 ## 3.8 Open surface questions
 

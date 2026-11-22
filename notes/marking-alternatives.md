@@ -72,7 +72,7 @@ Spec §3.3 (DES) concludes `λ_t inv` and `ρ_t inv`, but not `t⁻ˡ inv` or `t
 
 ### 3.3 Saturation and decidability are incompatible on raw terms [proved]
 
-Call a judgment J ⊆ {(Γ, t)} on the kernel's raw terms *sound* if J(Γ, t) implies ⟦t⟧ invertible in every model of Γ. Call it *saturated* if it contains the marked variables, the coherence-case cohs, and is closed under (OP-inv), (DES), (DES-inv) and inv-intro: if J(Γ, l) and J(Γ, r) for l : s ; t ⇛ 1, r : t ; s′ ⇛ 1, then J(Γ, t).
+Call a judgment J ⊆ {(Γ, t)} on the kernel's raw terms *sound* if J(Γ, t) implies ⟦t⟧ invertible in every model of Γ. Call it *saturated* if it contains the marked variables and the coherence-case cohs, and is closed under (OP-inv), (INV-fac), (DES), (DES-inv) and inv-intro: if J(Γ, l) and J(Γ, r) for l : s ; t ⇛ 1, r : t ; s′ ⇛ 1, then J(Γ, t).
 
 **Theorem 3.3.** No sound saturated judgment is decidable, uniformly in Γ. This holds already for contexts with one object, 1-cells, and inv-marked 2-cells, in two-tier L, and equally in P.
 
@@ -91,7 +91,7 @@ Call a judgment J ⊆ {(Γ, t)} on the kernel's raw terms *sound* if J(Γ, t) im
 
 **Consequences.**
 - The current judgment is decidable *because* it is unsaturated (principle 0.6).
-- Any saturated system must record the certificate (s, s′, l, r) in the syntax. A checker given only raw terms would have to search for it, and the theorem says that search cannot be a decision procedure.
+- Any decidable saturated system must record the certificate (s, s′, l, r) in the syntax. A checker given only raw terms would have to search for it, and the theorem says that search cannot be a decision procedure.
 - This is the precise sense in which axis (A) matters: proof-irrelevance and saturation exclude each other under decidability.
 
 *What the theorem does not say.* It does not show that the evidence form is complete, that is, that every cell invertible in the free model on Γ has a *finite* certificate. See §6.1 and the outbox prompt.
@@ -136,9 +136,9 @@ Each subsection gives the description, then what is derivable, decidability, fit
 
 *Description.* Arrow types carry the mark: `u ≅_A v`, `u →^ps_A v`. A marked declaration is a variable of a marked type, which is the most direct reading of BCM's marked generators. `ps*` falls out for free: a cell is `ps*` when every arrow in its type is ps-marked, because the boundaries' types are part of the type.
 
-**The obstruction [proved].** In CaTT a term has a unique type, read off syntactically: x has its declared type, and coh_{Γ,A}[γ] has A[γ]. Take Γ = (a, b)(x : a → b) and the unary composite c = coh_{Γ, a → b}[x]. Substitute x ↦ t with t invertible. Then c[γ] has type a → b (unmarked) but is invertible. Three ways out, each costly:
-1. *Subsumption* `u ≅ v ≤ u → v`, together with a rule that upgrades the type of c[γ]. That is subtyping, which no published CaTT variant has (standard 5). The type of a term is then no longer A[γ], so the substitution lemma has to be reproved for a non-structural typing rule.
-2. *Annotations on coh* (coh_{Γ, a ≅ b} as well as coh_{Γ, a → b}). Two distinct raw terms for the same composite, connected only by a cell. A 3-cell between composites then depends on which annotation was chosen.
+**The obstruction [proved].** In CaTT a term has a unique type, read off syntactically: x has its declared type, and coh_{Γ,A}[γ] has A[γ]. Take Γ = (a, b)(x : a → b) and the unary composite c = coh_{Γ, a → b}[x]. Substitute x ↦ t with t : a ≅ b invertible. The problem already appears at the substitution itself, since t has type a ≅ b and x has type a → b. And c[γ] has type a → b (unmarked) but is invertible. Three ways out, each costly:
+1. *Subsumption* `u ≅ v ≤ u → v`, needed for the substitution itself, together with a rule that upgrades the type of c[γ]. That is subtyping, which no published CaTT variant has (standard 5). The type of a term is then no longer A[γ], so the substitution lemma has to be reproved for a non-structural typing rule.
+2. *Annotations everywhere*: variables declared at marked and unmarked types, and coh_{Γ, a ≅ b} as well as coh_{Γ, a → b}. Two distinct raw terms for the same composite, connected only by a cell. A 3-cell between composites then depends on which annotation was chosen.
 3. *The marked type is only a lower bound* and a separate judgment finds the rest. That is (d) with a cache.
 
 - **Derivable.** No more than (d) (or (a1), if inv-intro is added as an intro rule for `≅`).
@@ -153,7 +153,7 @@ Each subsection gives the description, then what is derivable, decidability, fit
 - **What it would change.** Coherences would not be `coh` terms but marked horn fillers, and the propagation rules would be the thinness extensions. That replaces CaTT's core (globular pasting schemes and the single `coh` rule) with a simplicial core. It is a different kernel, not a different marking.
   - No CaTT-style type theory for complicial sets is published. A literature search (2026-11-21) found none.
   - So it fails standard 5's "rule classes of published CaTT variants".
-- **Decidability.** The saturated marking is closed under 2-out-of-6, which contains inv-intro. As a judgment on raw terms it therefore meets Theorem 3.3. Unsaturated thinness is decidable, but it is the analogue of (d), not something new.
+- **Decidability.** The saturated marking is closed under 2-out-of-6, which contains inv-intro. As a judgment on a syntax of this kind it would meet the analogue of Theorem 3.3 **[conj]**. The theorem is proved for this kernel's raw terms. The same monoid reduction is expected to go through for finitely presented marked simplicial sets, but that was not checked. Unsaturated thinness is decidable, but it is the analogue of (d), not something new.
 - **What it confirms.**
   - The complicial picture separates *thinness* (coherence) from *saturation* (equivalences are thin). Our (COH-inv) is the first, and §3.1 is exactly a failure of the second.
   - Saturation is a fibrancy (lifting) condition there, never a decidable syntactic one. That matches Theorem 3.3.
@@ -165,10 +165,10 @@ Each subsection gives the description, then what is derivable, decidability, fit
 *Description.* Each object (or hom) has a mode, for example lax, ordinary, or k-groupoidal. Rules depend on the modes involved, and adjunctions between modes give change-of-mode operations, as in multimodal type theory (Gratzer–Kavvos–Nuyts–Birkedal, arXiv 2011.15021).
 
 - **Object marks are already modes.** `grpd_k` says "C lies in Cat_{k−1}". `ord` with (COH-ord) changes the coh rule for heads whose objects are `ord` (E13 forces this). Substitutions must send an object of a given mode to one of the same mode. That is a mode discipline in all but name, and the open question about heads mixing `ord` and non-`ord` objects (E15) is the usual question of how modes interact.
-- **Cell marks cannot be modes [proved].** Pseudo-ness of a transformation is not determined by its objects and functors.
+- **Cell marks cannot be modes on objects or 1-cells [proved].** Pseudo-ness of a transformation is not determined by its objects and functors.
   - Let C be a 2-category with an arrow p : c → d and a non-invertible 2-cell ε : p ⇒ p. Let F : D¹ → C pick p.
   - The lax transformations F ⇒ F with identity components and naturality cell 1_p, respectively ε, have the same source, target, domain and codomain. The first is pseudo, the second is not.
-  - So a mode carried by objects or 1-cells cannot express `ps`. Putting the mode on the 2-cell is R10's option C (two kinds of 2-cell), already judged heavier and subsumed by marks.
+  - So a mode carried by objects or 1-cells cannot express `ps`. A mode on the hom or on the 2-cell's arrow type is possible, but it is (a2) (§4.3) or R10's option C (two kinds of 2-cell), already judged heavier and subsumed by marks.
 - **MTT itself is excluded.** Its modal types have β/η rules (standard 5). Change-of-mode functors would be object formers (reflections τ_k, the reflection onto ordinary ω-categories): free objects, not marks.
 - **Verdict.** Modes describe the object-level part of the current system exactly, and nothing more.
 
@@ -199,7 +199,7 @@ Each subsection gives the description, then what is derivable, decidability, fit
 | | (d)+DES-inv | (d)+DES-inv + evidence layer (§6) | (a1) alone | (a2) | (b) | (c) |
 |---|---|---|---|---|---|---|
 | Saturated (W2, W3) | no | **yes** | yes | no | only if undecidable | n/a |
-| Decidable | yes | yes | yes | yes | saturated: no (Thm 3.3) | n/a |
+| Decidable | yes | yes | yes | yes | saturated: no by the analogue of Thm 3.3 [conj] | n/a |
 | Unique inverse per cell | yes | yes for derived marks; evidence-indexed for data | no | yes | n/a | n/a |
 | Published rule classes (std 5) | yes | yes (ICaTT formers, no equations) | yes | needs subtyping | no | MTT needs β/η |
 | `ord` | object mark, side condition | same | same | same | none | is a mode |
@@ -218,19 +218,19 @@ The evidence decides as follows.
    - destructors on evidence, with linv(!) printed t⁻ˡ.
 
    It is used only where a judgment needs a cell that is invertible by data: substituting into a marked variable, and the premises of the propagation rules. Properties:
-   - *conservative*: evidence `!` is exactly the judgment (`jud-conservative`);
-   - *decidable*: structural on the evidence;
+   - *conservative*: evidence `!` is exactly the judgment, by definition (`jud-conservative` holds by refl);
+   - *decidable*: structural on the evidence, with the evidence terms type-checked by the certified checker;
    - *sound*: inv-intro is the definition of invertibility, and `can` follows from the soundness of the rules it feeds;
    - *equation-free*.
 
    It fixes W2 and W3 in `Gray/MarksSaturation.agda`. Unlike (a1) alone, the common case keeps (d)'s unique inverses and zero evidence. This is the "equivalence certificates" the CaTT_lim answer asked substitutions to supply.
 3. **Present `ord` and `grpd_k` as modes** in spec chapter 3 (naming only), with E15 as the mode-interaction question.
-4. **Do not adopt (a2), (b) or modes for cells.** (a2) needs subtyping or duplicates terms. (b) is a different core, and its saturated form is undecidable. Modes cannot carry cell marks.
+4. **Do not adopt (a2), (b) or modes for cells.** (a2) needs subtyping or duplicates terms. (b) is a different core, and its saturated form is undecidable. Modes on objects or 1-cells cannot carry cell marks, and modes on homs reduce to (a2) or option C.
 
 ### 6.1 Open questions behind the verdict
 
 - **Finite certificates (S20).** Is every cell that is invertible in the free model on a finite marked context certified by finitely many applications of inv-intro and can over the judgment?
-  - In **P** (and plain CaTT) yes **[proved]**. Every term of dimension above dim Γ is derivably inv with (DES-inv). By induction on terms, a variable cannot have that dimension, (COH-inv) and (OP-inv) handle cohs (their top arguments have the same dimension), and destructors are inv by (DES)/(DES-inv). So the coinductive tower of inverse data can be cut off after finitely many levels.
+  - In **P** (and plain CaTT) yes **[proved]**. This assumes that the syntactic model is the free model (initiality, as for CaTT), so that inverse data in the free model is given by terms. Every term of dimension greater than dim Γ is derivably inv with (DES-inv). By induction on terms, a variable cannot have that dimension, (COH-inv) and (OP-inv) handle cohs (their top arguments have the same dimension), and destructors are inv by (DES)/(DES-inv). So the coinductive tower of inverse data can be cut off after finitely many levels.
   - In **L** the argument fails: above dim Γ there are directed interchangers, which are not invertible.
   - Whether some invertible cell of a free L-model needs an infinite tower is open, and it decides whether the evidence layer needs ICaTT's rec (a binder over the walking equivalence). General prompt: `conjectures/outbox/invertibility-certificates.md`.
 - **Pseudo by data (S19).** Evidence that t is `ps` by data needs a term over a context with a generic cell y composed before t (a binder, like rec). Two questions are open: whether Gray cells at a generic hd-1 cell suffice for transformations (hd 1), and how the generic cells of higher hd are handled.

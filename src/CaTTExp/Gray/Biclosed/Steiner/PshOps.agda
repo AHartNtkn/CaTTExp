@@ -144,6 +144,17 @@ module _ (K₀ : Code) where
   yres : ∀ {K₁ K} (g : Map K₁ K) (f : Map K K₀) → res yP g (K , f) ≡ (K₁ , (f ∘M g))
   yres g f = resY-at g f
 
+  -- elements at stages that are equal but not definitionally so
+  yeqc : ∀ {K₁ K₂} (e : K₂ ≡ K₁) {f : Map K₁ K₀} {g : Map K₂ K₀} → f ≈M castM e refl g → _∼_ yP (K₁ , f) (K₂ , g)
+  yeqc refl p = ym p
+
+  yst : ∀ {K K′} {f : Map K K₀} {f′ : Map K′ K₀} → _∼_ yP (K , f) (K′ , f′) → K ≡ K′
+  yst (ym _) = refl
+
+  -- postcomposition with a map of codes
+  ypost : ∀ {K₁} → Map K₀ K₁ → U yP → Σ Code (λ K → Map K K₁)
+  ypost φ (K , f) = K , (φ ∘M f)
+
 ------------------------------------------------------------------------
 -- The Day tensor.
 
@@ -387,3 +398,11 @@ module _ (C A : Psh) where
         res-cong C (≈M-sym (⊗-∘ˡ f g)) (∼-refl C) ⟨∼⟩ res-∘ C (f ⊗ₘ idMap L) (g ⊗ₘ idMap L) (gat at L x a) }
     ; def = λ _ _ → def C
     }
+
+module _ (K₀ K₁ : Code) (φ : Map K₀ K₁) where
+  ypost-cong : ∀ {x x′} → _∼_ (yP K₀) x x′ → _∼_ (yP K₁) (ypost K₀ φ x) (ypost K₀ φ x′)
+  ypost-cong {K , f} {K′ , f′} e = go e
+    where
+      go : _∼_ (yP K₀) (K , f) (K′ , f′) → _∼_ (yP K₁) (K , (φ ∘M f)) (K′ , (φ ∘M f′))
+      go e with yst K₀ e
+      ... | refl = yeq K₁ (∘M-cong ≈M-refl (yinv K₀ e))

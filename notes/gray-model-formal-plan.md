@@ -43,3 +43,16 @@ Let 𝒮 be a small category of finite strong Steiner complexes, with all maps o
 - **S4. Day multicategory.** This covers presheaves of setoids, multimaps, substitution (restriction along flattening), and the laws `seq`, `par`, `unit-l` and `unit-r`.
 - **S5. Structure.** This covers the coend ⊗ with `unC` for m; the ends \ and / with `curL` and `curR`; Yoneda for rep, shp, p, pt and ι; and globes with σδ = 1. The result is `dayModel : Model`.
 - **S6. inv as strictly invertible**, and the D7g instance criterion stated over 𝒮.
+
+## Status (2026-11-22)
+
+**S1–S5 are done in Agda** (`src/CaTTExp/Gray/Biclosed/Steiner/`, `--safe`, no postulates). `DayModel.dayModel ob : Model` is the instance 𝔖̂, for any family `ob` of presheaves valuing the object variables. So `Soundness.soundness` (Theorem S, generic part) holds in 𝔖̂.
+- *Codes and maps* (`Codes`, `Globe`, `Maps`, `Tensor`, `Assoc`). Codes are lists of atomic bases (globes and named bases), read as their Steiner tensor. Maps are degree- and augmentation-preserving ℕ-chain maps. Steiner's loop-freeness and unitality are not stated; the instance does not need them.
+- *Day multicategory* (`Psh`, `DayMult`). Setoid presheaves, multimaps as natural families, one-place composition with Markl's laws.
+- *Structure* (`PshOps`, `Sem`, `Rep`, `Corollas`, `GlobeMaps`, `DayModel`). ⊗ is the coend, presented by generators with the generated equivalence; m is the coend injection, and its universal property is proved by induction on that equivalence. \ and / are ends, with evaluation and currying. rep Θ and shp Θ are representables y(λΘ). p_{Δ,Θ}, ι_Θ and pt are Yoneda corollas, through y(λΔ ++ λΘ) ≅ y(λΔ) ⊗ y(λΘ) at the level of multimaps. δ^± and σ are postcomposition with the face and collapse maps of globes, and σδ = 1 (= pt at n = 0) is the chain-map identity `GlobeMaps.σδ`.
+
+**What 𝔖̂ establishes, and what it does not.** Theorem S holds in 𝔖̂ in Agda. Carrying it to the literal 𝔖 uses the nerve facts listed above, which are citation level. Tensors of 𝔖̂ match S only *as inputs*: a multimap out of U ⊗ W is a multimap out of (U, W), as in 𝔖. A judgement whose output is a tensor is about Day convolution, which on nerves is not the nerve of the Gray tensor. C5b and D7g only use outputs that are object variables or closures into them, so they are covered. The literal version, with every formula a strict ω-category and ⊗ the Gray tensor, is ledger item C5c.
+
+**S6, partly done.**
+- *Instance criterion.* `Soundness.no-term` states it in every model: if one valuation satisfying Γ has no element of ⟦A⟧, then no term has type A over Γ. Taking A to be the reversed goal of a directed instance gives the criterion of `free-objects-proofs.md` §5.5. The two example computations (walking square, four-cube pair) are not yet done in 𝒮 in Agda.
+- *inv as strictly invertible.* Not done. Soundness still reads inv as flat.

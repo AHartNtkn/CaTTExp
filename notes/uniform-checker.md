@@ -148,6 +148,23 @@ What this leaves for S3a is the input in every degree: the raw T₁₂ syntax, B
 - (b′) `Present`'s universe `U` (finiteness of each ≈-class) is discharged generically by `WordPresent` (2026-11-22). Over a finite alphabet with positive letter weights, a weight-preserving one-step relation gives a `Presentation` whose `U x` is the finite list of words of x's weight. Each degree still supplies its finite alphabet of contextual letters, the weights, and the steps.
 - (c) The presentation must actually be F_{V+S} in that degree. For the grid this is still by inspection (§2 item 2).
 
+### 1.8 The raw signature of P through degree four, on any pasting diagram (`SigP.agda`; 2026-11-22, ledger S3a)
+
+The first piece of S3a's raw syntax that is not specific to grids. `scripts/e6/reachability_theory.py` states the support-free presentation P of (K45) as operations with guards and boundaries, equation schemas, and the directed 5-cell schemas. `scripts/e6/interchange_free.py` grounds that presentation on any finite pasting tree. `SigP` transcribes it as data.
+
+- **Terms.** Variables and operations are untyped (`Tm`), with dimensions computed (`dim`). Typing conditions are guards, that is, equations between faces (`adjacent`), because the theory is essentially algebraic. The helpers `paste`, `face`, `ctx` and `vertical`, and the `Block` machinery for outer spans with stationary 1-whiskers, follow the Python.
+- **Content.**
+  - `sesquiOps n` and `sesqui n` give the sesquicategory structure in dimension n: faces, units, composition, the left and right actions of k-cells for k < n, and their laws. They are defined for every n ≥ 1. The Python stops at 4, and nothing in the schemas depends on that.
+  - `compOps` and `comparisons` give χ, r, t, ι and h, with their boundaries, degeneracies and whiskering laws.
+  - `outerEqs` gives (7a)–(21) and the binary join factorization.
+  - `rules` gives W, δ, N_L, N_R, U_r and U_t.
+- **Checked against the Python.** `scripts/sigp_check/check.sh` compiles a small dump harness. The harness is outside the `--safe` library, because it needs a GHC binding to print. The script compares the dump with the Python's output line by line. All 165 operations, equations and rules agree exactly. The only masked field is the boundary of s_n and t_n, which the Python leaves unstated.
+- **Not yet done.**
+  - The free algebra on a pasting tree from this signature: ground the operations dimension by dimension on cells already quotiented, and take the congruence.
+  - Its normal forms through `Present`.
+  - The proof that it agrees with (K45) and with `Grid` on suspended grids.
+  - The T₁₂ extensions of (K47) above degree four.
+
 ## 2. What this does not check (the trust boundary)
 
 1. **The free objects F_{V+S}(Γ) are not constructed in Agda in general.** `Kernel` is the kernel checker relative to the layers. That suitable layers exist for V + S in every dimension, with finite alphabets and grading bounds, is the paper result: r9 (K65) and r10 Response 3, verified at the argument level. Constructing them needs the raw syntax of the T₁₂ signature in every degree, B's defining pairs, and the guarded equations. Only degree four exists in Agda (`Join/SepAlgebra.agda`), and `Join/SwitchLaws.agda` notes that there is no raw 5-dimensional syntax.

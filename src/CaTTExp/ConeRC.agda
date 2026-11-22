@@ -123,7 +123,18 @@ eqCore K a b = ev K a ==Tm ev K b
 -- is what lets CoconeRC store rawD terms, whose evF is a placeholder,
 -- in the intermediate context over Γ*: that context is never evaluated
 -- itself, only its dual is.
-module ConeGen (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
+-- split = true turns on the horizontal split: a composite a ∗_k b whose
+-- factors both have dimension > k + 1 is first rewritten as
+-- u′ = (a ∗_k s_{k+1} b) ∗_{k+1} (t_{k+1} a ∗_k b), which has the same
+-- strict image (and is split again if still horizontal), and P(a ∗_k b)
+-- is P(u″) followed by R_m(w). Here u″ is u′ with its lower faces
+-- transported to those of a ∗_k b (§2, in the diagram's variables), and
+-- w : u″ → a ∗_k b is one oracle cell between parallel terms.
+-- That cell involves only the diagram's variables, and the oracle
+-- queries left for P(u′) are about whiskers by (k+1)-cells and
+-- vertical composites (full sequentialization). ConeRC keeps split = false, so the
+-- certified tables made for it stay valid; ConeRCS turns it on.
+module ConeGenS (split : Bool) (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
   private
     n = length Γ
     c = v n
@@ -204,15 +215,27 @@ module ConeGen (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
 
       lift : Nat → Ex → Out Ex
       lift f (bn k a b) =
-        P f a ⟫= λ Pa → P f b ⟫= λ Pb →
-        R f k (face false (suc k) b) ⟫= λ Rb →
-        compose k Pa Rb ⟫= λ X → compose (suc k) Pb X ⟫= λ W₀ →
-        P f (tE u) ⟫= λ Pt → Tc f u ⟫= λ Tu →
-        transport m (λ r → if r ==ℕ m then Pt else face true r Pt)
-                    (λ r → if r ==ℕ m then Tu else face false r Pt) W₀
+        if split ∧ (suc k <ℕ dimK a) ∧ (suc k <ℕ dimK b) then hsplit
+        else straight
         where
         u = bn k a b
         m = dimK u
+        u′ = bn (suc k) (bn k a (face true (suc k) b)) (bn k (face false (suc k) a) b)
+        hsplit : Out Ex
+        hsplit =
+          transport (m ∸ 1) (λ r → face true r u) (λ r → face false r u) u′ ⟫= λ u″ →
+          fillE u″ u ⟫= λ w → P f u″ ⟫= λ Pu′ → R f m w ⟫= λ Rw →
+          P f (tE u) ⟫= λ Pt → Tc f u ⟫= λ Tu →
+          transport m (λ r → if r ==ℕ m then Pt else face true r Pt)
+                      (λ r → if r ==ℕ m then Tu else face false r Pt) (bn m Pu′ Rw)
+        straight : Out Ex
+        straight =
+          P f a ⟫= λ Pa → P f b ⟫= λ Pb →
+          R f k (face false (suc k) b) ⟫= λ Rb →
+          compose k Pa Rb ⟫= λ X → compose (suc k) Pb X ⟫= λ W₀ →
+          P f (tE u) ⟫= λ Pt → Tc f u ⟫= λ Tu →
+          transport m (λ r → if r ==ℕ m then Pt else face true r Pt)
+                      (λ r → if r ==ℕ m then Tu else face false r Pt) W₀
       lift f _ = fail
 
       -- R_j(w) = P(s_{j−1} w) ∗_{j−1} (… (P(s₀ w) ∗₀ w)).
@@ -250,7 +273,12 @@ module ConeGen (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
   firstMiss : Maybe Query
   firstMiss = missed coneO
 
+module ConeGen = ConeGenS false
+
 module ConeRC (rc : RC) (Γ : ExCtx) = ConeGen (fillCore rc) eqCore Γ
+
+-- With the horizontal split.
+module ConeRCS (rc : RC) (Γ : ExCtx) = ConeGenS true (fillCore rc) eqCore Γ
 
 ------------------------------------------------------------------------
 -- Cocones by O_odd duality. The cone construction runs on the dual

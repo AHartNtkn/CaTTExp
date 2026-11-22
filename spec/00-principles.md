@@ -28,7 +28,7 @@ What it does not exclude:
 - A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
 - Whether the kernel takes any binding former, and which ones are sound in 𝒦, is open (ledger F10(c)).
 
-*Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan. An earlier version of this section said no term former ever quantifies over objects. That contradicted §0.1, which allows these binders, and was corrected under ledger S15.
+*Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
 
 ## 0.3 Universal properties are witnessed by cells
 

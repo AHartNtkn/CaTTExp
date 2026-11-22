@@ -121,9 +121,9 @@ The object duality (–)^K and the ambient duality D_J act differently on the bi
 
 ## 8.8 Rule GB-shape: free objects and probes
 
-This was a kernel question, decided by the evidence (standard 3). It was **adopted on 2026-11-21 (option K2)**, after the independent check of its exactness argument passed. **Source:** `notes/design-decisions.md` §4; ledger S13, F8a.
+A kernel rule, chosen by the evidence (standard 3) as option K2 of the comparison below. **Source:** `notes/design-decisions.md` §4; ledger S13, F8a.
 
-**The gap.** Free objects (chapter 7) and probes (§8.1) are unrelated. So elements ⊤ → C and points ( ▸ C) are unrelated, ⊗ has no projections, and four places in the notes identify the two without a rule. These are (lhom) in data form, E.2's B ⊗ Θ, chapter 6's lax cotensor as a limit, and an earlier version of chapter 7's A1 argument.
+**Why a rule is needed.** Without it, free objects (chapter 7) and probes (§8.1) are unrelated. Elements ⊤ → C and points ( ▸ C) are then unrelated, and ⊗ has no projections. (lhom) in data form, E.2's B ⊗ Θ with Θ a free object, and chapter 6's lax cotensor as a limit would also not agree with their chapter 8 counterparts (`notes/design-decisions.md` §4.2).
 
 **Rule.**
 ```

@@ -198,8 +198,8 @@ Evidence `!` is the judgment, by definition. Evidence is checked structurally, a
 - **Agda-checked**: the checker for cells of dimensions 1 and 2, and the two examples (`Gray/MarksSaturation.agda`). General dimensions are not encoded.
 - **Proved on paper**: soundness, for well-typed evidence (the Agda checker type-checks the evidence terms).
 - **Open**:
-  - pseudo by data, which needs a binder over a generic earlier cell (ledger S19);
-  - whether finite certificates suffice in L (ledger S20, `notes/conjectures/outbox/invertibility-certificates.md`). In P they do (`notes/marking-alternatives.md` §6.1).
+  - pseudo by data, which needs a binder over a generic earlier cell (ledger S21);
+  - whether finite certificates suffice in L (ledger S22, `notes/conjectures/outbox/invertibility-certificates.md`). In P they do (`notes/marking-alternatives.md` §6.1).
 
 **Rejected forms.** Marked arrow types need subtyping, or they duplicate every coh by its annotation. Complicial thinness replaces `coh` rather than marking it, and its saturated form is undecidable by the theorem above. Modes on objects or 1-cells cannot carry cell-level marks: two lax transformations between the same functors can differ in being pseudo. A mode on the hom amounts to a marked arrow type or a second kind of 2-cell.
 

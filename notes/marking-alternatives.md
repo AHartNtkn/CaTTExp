@@ -1,6 +1,6 @@
 # Alternatives to the marking system (S17)
 
-*Design note, 2026-11-22. Ledger S17 (closed here), new items S19–S20, E4 extended. Thread "Compare alternatives to the marker system". Builds on `invertibility-markings.md`, `uniform-marks.md`, `ord-recovers-two-tier.md`, `icatt-and-rice-rules.md`, `pseudo-vs-gray.md` R10–R11 and spec chapter 3.*
+*Design note, 2026-11-22. Ledger S17 (closed here), new items S21–S22, E4 extended. Thread "Compare alternatives to the marker system". Builds on `invertibility-markings.md`, `uniform-marks.md`, `ord-recovers-two-tier.md`, `icatt-and-rice-rules.md`, `pseudo-vs-gray.md` R10–R11 and spec chapter 3.*
 
 *Markers: **[proved]** proved here; **[Agda]** machine-checked; **[paper]** checked against the source; **[proposal]**; **[conj]**.*
 
@@ -229,11 +229,11 @@ The evidence decides as follows.
 
 ### 6.1 Open questions behind the verdict
 
-- **Finite certificates (S20).** Is every cell that is invertible in the free model on a finite marked context certified by finitely many applications of inv-intro and can over the judgment?
+- **Finite certificates (S22).** Is every cell that is invertible in the free model on a finite marked context certified by finitely many applications of inv-intro and can over the judgment?
   - In **P** (and plain CaTT) yes **[proved]**. This assumes that the syntactic model is the free model (initiality, as for CaTT), so that inverse data in the free model is given by terms. Every term of dimension greater than dim Γ is derivably inv with (DES-inv). By induction on terms, a variable cannot have that dimension, (COH-inv) and (OP-inv) handle cohs (their top arguments have the same dimension), and destructors are inv by (DES)/(DES-inv). So the coinductive tower of inverse data can be cut off after finitely many levels.
   - In **L** the argument fails: above dim Γ there are directed interchangers, which are not invertible.
   - Whether some invertible cell of a free L-model needs an infinite tower is open, and it decides whether the evidence layer needs ICaTT's rec (a binder over the walking equivalence). General prompt: `conjectures/outbox/invertibility-certificates.md`.
-- **Pseudo by data (S19).** Evidence that t is `ps` by data needs a term over a context with a generic cell y composed before t (a binder, like rec). Two questions are open: whether Gray cells at a generic hd-1 cell suffice for transformations (hd 1), and how the generic cells of higher hd are handled.
+- **Pseudo by data (S21).** Evidence that t is `ps` by data needs a term over a context with a generic cell y composed before t (a binder, like rec). Two questions are open: whether Gray cells at a generic hd-1 cell suffice for transformations (hd 1), and how the generic cells of higher hd are handled.
 - **Encoding.** inv-intro is encoded for dimensions 1 and 2 only. The general rule uses the suspended composite.
 
 ## 7. Open items from this note
@@ -241,6 +241,6 @@ The evidence decides as follows.
 | Item | Ledger | Status |
 |---|---|---|
 | (DES-inv) in Agda | E4 (extended) | with E4 |
-| Evidence layer: general-dimension inv-intro in Agda, Ps-by-data rule, spec text | S19 | in progress (this thread) |
-| Finite certificates in free L-models | S20 | in progress (this thread); outbox prompt ready to send |
+| Evidence layer: general-dimension inv-intro in Agda, Ps-by-data rule, spec text | S21 | in progress (this thread) |
+| Finite certificates in free L-models | S22 | in progress (this thread); outbox prompt ready to send |
 | Mixed `ord` heads as mode interaction | E15 | unchanged owner |

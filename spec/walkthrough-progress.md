@@ -17,7 +17,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
-- [ ] 0.6 Decidability of checking
+- [x] 0.6 Decidability of checking
 - [ ] Q0.1 (surface question): Which composition order does the user write?
 - [ ] Q0.2 (surface question): Are objects written as types or as terms?
 
@@ -53,6 +53,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 3.4 Recursive pseudo
 - [ ] 3.5 Pseudo = L + marks
 - [ ] 3.6 Marks over the uniform core
+- [ ] 3.7 The form of the marks, and saturation (added 2026-11-22, S17)
 - [ ] Q3.1 (surface question): Where marks are written.
 - [ ] Q3.2 (surface question): Whether `ps` and `ps*` are both visible.
 - [ ] Q3.3 (surface question): How `ord` is scoped.
@@ -114,15 +115,18 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 9. Ordinary mathematics
 
 - [ ] 9.1 h-levels
-- [ ] 9.2 Filler tactics (admissible, no rule)
-- [ ] 9.3 Families, induction and the natural numbers
-- [ ] 9.4 Quotients and the integers
-- [ ] 9.5 Colimits indexed by objects
+- [ ] 9.2 Descent (DESC)
+- [ ] 9.3 Initial models (INIT)
+- [ ] 9.4 Families, induction and the natural numbers
+- [ ] 9.5 Quotients and the integers
 - [ ] 9.6 Function sets
-- [ ] 9.7 Lax functors
+- [ ] 9.7 Colimits indexed by objects
+- [ ] 9.8 Lax functors
+- [ ] 9.9 Filler tactics (admissible, no rule)
 - [ ] Q9.1 (surface question): Whether `trunc n` is written or inferred.
-- [ ] Q9.2 (surface question): How inductive objects are introduced.
-- [ ] Q9.3 (surface question): Whether the filler tactics run automatically.
+- [ ] Q9.2 (surface question): How INIT instances are introduced.
+- [ ] Q9.3 (surface question): How descent data are supplied.
+- [ ] Q9.4 (surface question): Whether the filler tactics run automatically.
 
 ## Findings raised during the walkthrough
 

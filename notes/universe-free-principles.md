@@ -63,10 +63,11 @@ All pieces are finite syntax over objects, maps, pullbacks and cocartesian-fibra
 (DESC-uni)  two such gluings are connected by an invertible cell, at every level (uni-style)
 (DESC-grpd) D indexed by a groupoid (in particular a coproduct, D indexed by a finite set):
             the same four clauses with "cocartesian" deleted, for every map p
-(DESC-or)   S the lax (oriented) colimit of D.  Lax gluing data: cocartesian p_k : E_k → D_k,
-            and for each arrow u : k → k' a map  E_k → D_k ×_{D_k'} E_k'  over D_k (any map,
-            not required invertible or cocartesian-preserving), with the higher cells the
-            shape requires
+(DESC-or)   S the partially lax (oriented) colimit of D, lax along the unmarked arrows of
+            the shape.  Lax gluing data: cocartesian p_k : E_k → D_k, and for each arrow
+            u : k → k' a map  E_k → D_k ×_{D_k'} E_k'  over D_k (any map, not required
+            cocartesian-preserving; invertible when u is marked), with the higher cells
+            the shape requires
             ⟹  p : E → S cocartesian with  ι_k*p ≃ p_k  and the gluing maps recovered as
             transport;  plus uniqueness at every level.  No universality clause.
 ```
@@ -96,7 +97,15 @@ Because the localisation `E[W⁻¹]` (§6.1 of `ordinary-math.md`) and the seque
 
 So EX moves from "a genuine rule" (`ordinary-math.md` §5.3, with a countermodel in posets) to an instance of DESC. The poset countermodel fails DESC; that is consistent, since it was a countermodel to EX from limits, colimits, R-A and Trunc, without descent.
 
-**G, the Grothendieck principle [proved here, sketch, following Sattler–Wärn].** For a diagram γ over a graph shape ⟦Γ⟧, `⟦Γ⟧` is the pushout of its vertices and edges. Over the edge `⟦D¹⟧`, the collage `cyl(γ_f) := (γ_x ⊗ ⟦D¹⟧) ⊔_{γ_x ⊗ {1}} γ_y → ⟦D¹⟧` is a cocartesian fibration with fibres γ_x, γ_y and transport γ_f (**base clause G₁**). DESC-glue glues the collages to `π : E → ⟦Γ⟧`; DESC-univ (along π) shows `E` is the colimit of the collages, which is the lax colimit of γ: G-fib and G-fibre. G-transport is G₁'s transport, and G-nat is DESC-uni applied to the glued map. So G reduces to its **edge case G₁**, plus DESC. **G₁ from DESC-or [proved here, sketch].** `⟦D¹⟧` is the lax colimit of the point over `D¹` (`conjectures/lax-colimit-of-point.md`, semantically Loubaton Ex. 4.2.3.12). Lax gluing data over it are two objects and a map `f : A → B`, so DESC-or gives a cocartesian fibration over `⟦D¹⟧` with fibres A, B and transport f, unique at every level: G₁'s existence, transport and uniqueness. What DESC-or does not give is the *formula* for its total space, that it is the collage `cyl(f)` (G-fibre in the one-edge case). That remaining step, **G₁-tot**, says that a map out of the collage into a cocartesian fibration over `⟦D¹⟧` is determined fibrewise; it is a statement about homs in a pushout and stays **[conj]** (F10g). Sattler–Wärn derive their analogue from descent along localisations and cocommas.
+**G, the Grothendieck principle [proved here, sketch, following Sattler–Wärn].** For a diagram γ over a graph shape ⟦Γ⟧, `⟦Γ⟧` is the pushout of its vertices and edges. Over the edge `⟦D¹⟧`, the collage `cyl(γ_f) := (γ_x ⊗ ⟦D¹⟧) ⊔_{γ_x ⊗ {1}} γ_y → ⟦D¹⟧` is a cocartesian fibration with fibres γ_x, γ_y and transport γ_f (**base clause G₁**). DESC-glue glues the collages to `π : E → ⟦Γ⟧`; DESC-univ (along π) shows `E` is the colimit of the collages, which is the lax colimit of γ: G-fib and G-fibre. G-transport is G₁'s transport, and G-nat is DESC-uni applied to the glued map. So G reduces to its **edge case G₁**, plus DESC. **G₁ from DESC-or [proved here, sketch].** `⟦D¹⟧` is the lax colimit of the point over `D¹` (`conjectures/lax-colimit-of-point.md`, semantically Loubaton Ex. 4.2.3.12). Lax gluing data over it are two objects and a map `f : A → B`, so DESC-or gives a cocartesian fibration over `⟦D¹⟧` with fibres A, B and transport f, unique at every level: G₁'s existence, transport and uniqueness. DESC-or alone does not give the *formula* for its total space, that it is the collage `cyl(f) = (A ⊗ ⟦D¹⟧) ⊔_{A ⊗ {1}} B` (G-fibre in the one-edge case). Call that step **G₁-tot**.
+
+**G₁-tot from DESC-or and DJ [proved here, sketch; following Sattler–Wärn §2.16 and Lemma 6.1].** It suffices to show that `cyl(f) → ⟦D¹⟧` is cocartesian, i.e. to compute the homs of the collage out of `k(a)`, where `k : A → cyl(f)` and `l : B → cyl(f)` are the inclusions.
+1. *Left fibrations over the collage.* `cyl(f)` is the cocomma of `A ←id– A –f→ B`, a partially lax colimit (the first leg strict, the second lax). By DESC-or for left fibrations (cocartesian with groupoid fibres), a left fibration over `cyl(f)` is the same as a triple `(L_A, L_B, φ : L_A → f*L_B)` of left fibrations over A and B and a map over A, and maps of left fibrations are the same as maps of triples.
+2. *The triple for a point a of A.* Take `(a ↓ A, fa ↓ B, φ_a)`, where `φ_a` sends `u : a → x` to `fu : fa → fx`. A map of triples from it into `(M_A, M_B, ψ)` is a pair of maps `a ↓ A → M_A` and `fa ↓ B → M_B` with a compatibility square. By DJ, the first is a point `m ∈ M_A(a)` and the second a point `n ∈ M_B(fa)`, and the square forces `n ≅ ψ(m)` (DJ-uni). So these maps are exactly the points of `M_A(a) = (k*M)(a)`: the triple corepresents evaluation at `k(a)`.
+3. *Comparing with DJ in the collage.* By DJ in `cyl(f)`, `k(a) ↓ cyl(f)` also corepresents evaluation at `k(a)`. So under step 1 it is the triple of step 2. Its fibres are therefore `Hom_cyl(k a, k x) ≃ Hom_A(a, x)` and `Hom_cyl(k a, l b) ≃ Hom_B(fa, b)`, the second by composing with the arrow `k a → l(fa)` of the collage.
+4. *Cocartesian lifts.* The arrow `k a → l(fa)` over `0 → 1` is cocartesian by step 3. Over identities the lifts are identities, and the full inclusions are fully faithful by step 3 and its analogue for `l(b)` (the triple `(∅, b ↓ B, !)`). So `cyl(f) → ⟦D¹⟧` is a cocartesian fibration with fibres A, B and transport f, and by DESC-or's uniqueness it is the fibration of the previous paragraph. ∎
+
+So **G₁ is a theorem of DESC-or and DJ**, and G reduces to DESC (with DESC-or) and DJ. Sattler–Wärn take straightening for left fibrations as an axiom (their §2.10) and prove the analogue of step 1 from it; here DESC-or plays that role. Relative G₁ (over a base `B_e`, needed for G⁺) runs the same argument in the slice over `B_e`, with DESC-or stated in slices **[conj]**, F10g.
 
 **G⁺ [proposal; proved here, sketch].** Object-labelled edges are suspensions `ΣB_e = ⊤ ⊔ ⊤ ⊔_{B_e ⊗ ∂⟦D¹⟧} B_e ⊗ ⟦D¹⟧`. DESC-glue over that pushout reduces G⁺ to the collage over `B_e ⊗ ⟦D¹⟧` of the map `B_e × C_v → B_e × C_w` over `B_e`. That is G₁ in the slice over `B_e`, so G₁ should be stated relative to a base (most general version, standard 4); The researcher's answer suggests the route: in the slice over `B_e`, the oriented colimit of the constant diagram at `id` over `D¹` is the Gray `B_e ⊠ ⟦D¹⟧ → B_e`, so relative G₁ would follow from DESC-or stated in slices. That DESC-or holds in slice oriented categories was not asked and is **[conj]**, part of F10g with G₁-tot.
 
@@ -230,7 +239,7 @@ So R-cot⁺ over a set base is a construction from the closed structure, DESC-gr
 | EX | theorem of DESC (with DESC-tr) | **[proved here, sketch]**, §3.3 |
 | T-coprod, disjointness | theorem of DESC-grpd | **[proved here]**, §3.3 |
 | Trunc_n | instance of INIT | **[proved here]** given INIT; INIT sound (researcher, verified 2026-11-21) |
-| G | DESC + edge case G₁; G₁'s classification half from DESC-or | **[proved here, sketch]**; G₁-tot (the total space is the collage) **[conj]**, F10g |
+| G | DESC + edge case G₁; G₁ from DESC-or and DJ (§3.3) | **[proved here, sketch]** |
 | G⁺ | DESC + G₁ relative to a base | **[proposal; sketch]** |
 | DJ | theorem of the limit rules (Riehl–Verity §4–§6 in an abstract homotopy 2-category) | **[proved here, sketch]**, §5, F10b |
 | R-A, R-A⁺ | instances of INIT | **[proved here]** |
@@ -240,7 +249,7 @@ So R-cot⁺ over a set base is a construction from the closed structure, DESC-gr
 | T-graph, T-loc | theorems by encode–decode from DESC, DJ and INIT, giving `Hom ≃` an initial model (§6a), plus the general closure clauses T-init and the converse of T-hom | **[proved here, sketch]** for the hom computation; T-init (restricted to contexts without cells) and the converse of T-hom **semantically sound [sketch]**; their derivability from existing rules open, F10g |
 | GB-shape, L-× | chapter 8 rows, not universe substitutes | out of scope, §6 |
 
-After this, the list of universe-substitute rules is **DESC (one schema, with the oriented clause DESC-or) and INIT (one schema)**, both sound in Cat_ω, with DJ a theorem (§5) and G₁ a theorem except for G₁-tot.
+After this, the list of universe-substitute rules is **DESC (one schema, with the oriented clause DESC-or) and INIT (one schema)**, both sound in Cat_ω, with DJ a theorem (§5) and G₁ a theorem of DESC-or and DJ.
 
 ---
 
@@ -250,6 +259,6 @@ After this, the list of universe-substitute rules is **DESC (one schema, with th
 
 **Still open:**
 - ~~**Non-derivability of INIT (corrected class)** from finite limits, finite colimits and DESC.~~ **Answered 2026-11-22 (F10h, verified):** INIT is not derivable (§4.1), though ℕ is. The original text follows. The researcher's model (spaces) refutes only the old grammar: spaces is presentable, so the corrected INIT holds there. The question may go the other way: Rasekh (arXiv:1809.01734, TAC 37 (2021)) proves that a finitely bicomplete, locally cartesian closed (∞,1)-category with a subobject classifier and descent has a natural number object, built from ΩS¹, with no universe. So in the ∞-setting descent may *derive* some INIT instances, unlike FinSet in 1-topos theory. Our rules lack local cartesian closure and a subobject classifier, so this does not apply directly. Sent as `conjectures/outbox/universe-free-initial-models-r2.md` (F10h): which positive signatures follow from finite limits, finite colimits and descent, and a separating model if not all.
-- **G₁-tot** (§3.3), and the *derivability* of T-init and of the converse of T-hom (§6a), both of which are semantically sound. In-house, F10g.
+- DESC-or in slices, for relative G₁ and G⁺ (§3.3), and the *derivability* of T-init and of the converse of T-hom (§6a), both of which are semantically sound. In-house, F10g.
 
 Ledger entries: F10 (this note), F10a (Agda: descent counterexample), F10b (DJ from limits), F10c (R-cot⁺ as DESC + INIT), F10d (T-graph and T-loc by encode–decode), F10e (spec wording), F10f (Agda for the derivations), F10g (G₁-tot, T-init and converse of T-hom), F10h (non-derivability of INIT). All owned by this thread.

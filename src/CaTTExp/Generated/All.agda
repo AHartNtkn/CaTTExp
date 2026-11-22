@@ -25,3 +25,5 @@ import CaTTExp.ConeRCTwoKE
 import CaTTExp.ConeRCThreeKE
 import CaTTExp.Generated.RCConeThreeCheck
 import CaTTExp.Generated.RCThreeCones
+import CaTTExp.Generated.RCCoconeThreeCheck
+import CaTTExp.CoconeRCThree

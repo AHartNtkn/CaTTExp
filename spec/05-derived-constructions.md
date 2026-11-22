@@ -11,7 +11,7 @@ The algorithms build plain CaTT terms: their correctness proofs use the referenc
 - **Across objects, or in uniform L.** A construction is valid verbatim in a core exactly when every coherence head it emits is accepted there. Classify the emitted heads by their pasting context Q (`notes/uniform-marks.md` §6):
   - **(H1) interchange-free.** At most one hom of Q has cells of hd ≥ 1, and that hom's diagram is a globe or a vertical chain of globes. Examples are chain contexts of 1-cells, whiskerings, vertical composites, and unitors and associators of 1-cells. Here ν = 𝔉 = F_{V+S}. **No marks, in every core.**
   - **(H2) interchange inside one hom.** Two-tier L needs nothing (E1). V + S needs `ord` on the hom's target object, and the head is accepted iff its V-fibre is connected. There is no general relative coherence of V + S over 𝔉 (it fails in every setting, ledger E13), so this is decided head by head. Inner-strip heads fail when the inner law is off. Heads like the loop H against 1_w, or the outer W-strip, fail in every setting.
-  - **(H3) across objects.** Two-tier L needs `ps*` on the later factor, or `inv` on a factor, of every mixed Gray cell the head inverts, plus E5's relative coherence lemma, which is now proved (ledger E5). The step left is realizing the strict comparison cell as an L⁺ term. V + S also needs `ord` on the targets, and fibre connectivity as in (H2).
+  - **(H3) across objects.** Two-tier L needs `ps*` on the later factor, or `inv` on a factor, of every mixed Gray cell the head inverts, plus E5's relative coherence lemma, which is proved (ledger E5). The step left is realizing the strict comparison cell as an L⁺ term. V + S also needs `ord` on the targets, and fibre connectivity as in (H2).
 - **With every object of the emitted heads marked `ord`**, V + S accepts each head by (COH-ord) exactly when two-tier L does, so the two-tier column of the table applies verbatim (chapter 3, §3.6; ledger S16(b)). The uniform column is for heads with a non-`ord` object.
 - **Native naturality needs no construction.** For a native lax transformation α in 𝒦(B, C) and any cell c of 𝒦(X, B), the naturality cell is the Gray cell G(c, α): one operation-case coherence, with no marks in any core. §5.2 is needed only for transformations given as cylinder data.
 
@@ -105,7 +105,7 @@ The first line is the lax naturality square α_x ; Gf ⇒ Ff ; α_y of `notes/co
 
 **Status.** Well-formedness for every globular Γ of dimension ≤ 5, both sides: **Agda-checked** (`NaturalWF.cylN-wf-all`). Cross-checked against the independent `CaTTExp.Free.Cylinder`. G3 (Γ ⊗ (D¹ ∨ D¹) is two glued cylinders) holds on the nose, checked for small Γ. **Source:** `notes/gray-cylinders.md` §1, §1a, §2.
 
-### 5.3.2 The Gray tensor M ⊗ Dⁿ for every Steiner context (the repaired rule)
+### 5.3.2 The Gray tensor M ⊗ Dⁿ for every Steiner context
 
 **Input.** A context M with a strong Steiner basis and n ≥ 1.
 

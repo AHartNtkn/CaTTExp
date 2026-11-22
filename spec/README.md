@@ -1,6 +1,6 @@
 # The system specification
 
-This folder states the system as it currently stands: one file per chapter, each chapter depending only on earlier ones. It records the **current answer** only. Superseded designs, rejected options and the history of how a decision was reached stay in `notes/`, which is the research record; every rule here links to the note that justifies it.
+This folder states the system as it currently stands: one file per chapter, each chapter depending only on earlier ones. It records the **current answer** only. Superseded designs, rejected options and the history of how a decision was reached stay in `notes/`, which is the research record; every rule here links to the note that justifies it. **Change history** is not written into the spec: it lives in git and in the ledger (`notes/open-issues.md`), whose rows record what was corrected and why. A spec passage may explain why a rule has its current form, for example by a counterexample to a simpler rule, but it does not narrate earlier versions.
 
 If the spec and a note disagree, that is a bug in one of them. It is recorded in `notes/open-issues.md` (section S) with an owner, and neither document is silently preferred.
 
@@ -22,9 +22,12 @@ If the spec and a note disagree, that is a bug in one of them. It is recorded in
 ## The two layers
 
 - The **kernel** is the set of judgments and rules that a checker must implement and that the semantics interprets. It has no defaults, no implicit arguments, no notation and no elaboration. Everything in a kernel chapter is stated so that it can be decided mechanically.
-- The **surface** is what a person writes. It elaborates to kernel terms. This spec makes **no** surface decisions. Each chapter ends with a section *Open surface questions*, which lists the choices a surface language must make, with the options and a practical comparison, and leaves the choice open.
+- The **surface** is what a person writes. Besides notation, defaults and implicit arguments, it may have computation rules the kernel lacks. An example is rewrite rules that strictify two of associators, unitors and interchange (§0.5).
+  - Every surface feature, and every other extension of the kernel, comes with a proof that it is **conservative** over the kernel, and that proof is formalized. Its output is then trusted on the strength of that proof, not re-checked by the kernel term by term.
+  - Everything is formalized: the kernel, its checker, and every extension.
+  - This spec makes **no** surface decisions. Each chapter ends with a section *Open surface questions*, which lists the choices a surface language must make, with the options and a practical comparison, and leaves the choice open.
 
-A kernel rule never depends on a surface choice. A surface choice may only change what the user writes, never what is derivable.
+A kernel rule never depends on a surface choice. A surface choice may change what the user writes and how fast it is checked, never what is derivable.
 
 ## Format of a rule
 

@@ -41,7 +41,7 @@ Introduction rules:
 
 **Algorithm (graph filler).** In a graph context, two parallel cells with the same flattened path are connected by one coherence over the chain context Θ_k. This is RC(1) and its higher analogue for graphs.
 
-**Algorithm (globular filler).** Compute strict normal forms as labelled pasting trees (merge = composition, flatten = substitution), lift by position trees, and propose `coh Θ_τ (ũ → ṽ)[λ]`; the certified checker accepts or rejects.
+**Algorithm (globular filler).** Compute strict normal forms as labelled pasting trees (merge = composition, flatten = substitution), lift by position trees, and return `coh Θ_τ (ũ → ṽ)[λ]`. That this term is well typed whenever the two cells have the same normal form is proved (`FillTotal.fill-total`), so the output needs no separate check.
 
 **Algorithm (localised filler).** In a localised graph (inverse data as context variables), same reduced word ⇒ explicit 2-cell from graph fillers and whiskered cancellations.
 
@@ -59,7 +59,7 @@ Introduction rules:
 
 **Semantics.** DJ by Riehl–Verity's Yoneda lemma; G by Abellán–Haugseng–Martini and Loubaton.
 
-**Status.** Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion: **proved** (note level). Induction from G + DJ: **proved** (Thm 4.4, the circular uniqueness step of the first version corrected). Some h-initiality steps are **not derivable** without further rules (F1c, verified countermodel). **Source:** `notes/ordinary-math.md` §4; ledger F1, F1a–c.
+**Status.** Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion: **proved** (note level). Induction from G + DJ: **proved** (Thm 4.4). Some h-initiality steps are **not derivable** without further rules (F1c, verified countermodel). **Source:** `notes/ordinary-math.md` §4; ledger F1, F1a–c.
 
 ## 9.4 Quotients and the integers
 
@@ -135,7 +135,7 @@ a cell dcoh_S(u, v) : u → v. The term records its support S.
 
 **Semantics.** Λ(A) is strongly loop-free unital Steiner, so c_∞N(A) ≅ νΛ(A); its (n+1)-cells u → v correspond exactly to the admissible S. Sound for strict B through dimension 3 (Gagna); for weak B it is the definition (normalised oplax functors are maps c_∞N(A) → B).
 
-**Status.** **Proved** (verified researcher answer, `notes/conjectures/answered/lax-functor-refinement-2026-11-18.md`); the first version (a cell whenever supports allow, unique) was refuted. **Source:** `notes/ordinary-math.md` §7; ledger F6, F6a.
+**Status.** **Proved** (verified researcher answer, `notes/conjectures/answered/lax-functor-refinement-2026-11-18.md`). **Source:** `notes/ordinary-math.md` §7; ledger F6, F6a.
 
 ## 9.8 Open surface questions
 

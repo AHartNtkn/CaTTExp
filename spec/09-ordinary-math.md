@@ -14,7 +14,7 @@ The list is fixed. A new inductive object, quotient, truncation or recursively d
 |---|---|---|
 | Disjoint, universal coproducts (T-coprod) | theorem of DESC-grpd | proved |
 | Effective quotients (EX) | theorem of DESC with DESC-tr | proved (sketch) |
-| Lax colimits as Grothendieck constructions (G) | DESC + the edge case G₁ | paper only (F10g: G₁-tot) |
+| Lax colimits as Grothendieck constructions (G) | DESC + the edge case G₁, itself a theorem of DESC-or and DJ | paper only |
 | G⁺ (object-labelled edges) | DESC + G₁ relative to a base | paper only (F10g) |
 | Directed J (DJ) | theorem of the limit rules (Riehl–Verity) | Agda-checked 1-truncated; higher levels paper only |
 | Truncations ‖X‖_n | instance of INIT with the mark `⋆^{≤n}` | proved, given INIT |
@@ -93,10 +93,11 @@ Derived:
             the four clauses above with "cocartesian" deleted, for every map p
 (DESC-tr)   Y a groupoid: families over Y with n-truncated fibres descend uniquely
             along the unit  Y → ‖Y‖_{n+1}
-(DESC-or)   S the lax (oriented) colimit of D.  Lax gluing data: cocartesian p_k : E_k → D_k
-            and, for each arrow u : k → k', a map  E_k → D_k ×_{D_k'} E_k'  over D_k (any map,
-            not required invertible or cocartesian-preserving), with the higher cells the
-            shape requires
+(DESC-or)   S the partially lax (oriented) colimit of D, lax along the unmarked arrows of
+            the shape.  Lax gluing data: cocartesian p_k : E_k → D_k and, for each arrow
+            u : k → k', a map  E_k → D_k ×_{D_k'} E_k'  over D_k (any map, not required
+            cocartesian-preserving; invertible when u is marked), with the higher cells
+            the shape requires
             ⟹  p : E → S cocartesian with  ι_k*p ≃ p_k  and the gluing maps recovered as
             transport;  uniqueness at every level.  No universality clause.
 ```
@@ -174,7 +175,7 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 
 DJ follows from the limit rules (commas, cotensors by ⟦D¹⟧, pullbacks, ⊤) and the definition of cocartesian fibration, by Riehl–Verity's proof of Yoneda (FYL §6.2, Lemmas 6.2.9 and 6.2.12), which works in an abstract homotopy 2-category. It is not a rule.
 
-**Theorem (G, lax colimits are Grothendieck constructions).** A diagram γ over a graph shape ⟦Γ⟧ has a lax colimit, which is the total space of a cocartesian fibration E → ⟦Γ⟧ with fibres γ_x and transport γ_f (clauses G-fib, G-fibre, G-transport, G-nat). Proof: ⟦Γ⟧ is a pushout of vertices and edges. Over an edge, the collage of γ_f is a cocartesian fibration (the edge case **G₁**). DESC-glue glues the collages, DESC-univ identifies the total space with the lax colimit, and DESC-uni gives G-nat. G₁'s existence, transport and uniqueness come from DESC-or, since ⟦D¹⟧ is the lax colimit of the point over D¹. G⁺ (object-labelled edges ΣB_e) reduces by DESC-glue to G₁ relative to the base B_e.
+**Theorem (G, lax colimits are Grothendieck constructions).** A diagram γ over a graph shape ⟦Γ⟧ has a lax colimit, which is the total space of a cocartesian fibration E → ⟦Γ⟧ with fibres γ_x and transport γ_f (clauses G-fib, G-fibre, G-transport, G-nat). Proof: ⟦Γ⟧ is a pushout of vertices and edges. Over an edge, the collage of γ_f is a cocartesian fibration (the edge case **G₁**). DESC-glue glues the collages, DESC-univ identifies the total space with the lax colimit, and DESC-uni gives G-nat. G₁ is itself a theorem: its existence, transport and uniqueness come from DESC-or, since ⟦D¹⟧ is the lax colimit of the point over D¹; that the total space is the collage (G₁-tot) follows from DESC-or for left fibrations over the collage, read as a cocomma, together with DJ, which shows that k(a) ↓ cyl(f) is the glued triple (a ↓ A, fa ↓ B, f) and so computes the collage's homs (as in Sattler–Wärn §2.16, Lemma 6.1). G⁺ (object-labelled edges ΣB_e) reduces by DESC-glue to G₁ relative to the base B_e.
 
 **Example.** *Encode–decode for a graph.* Let Γ be a finite graph, a a vertex, and Π the initial model of the multi-sorted context (X_v for v ∈ V, nil : ⊤ → X_a, snoc_e : X_v → X_w), read over the finite set V by DESC-grpd. Π_v is the set of paths from a to v.
 1. DESC-glue, with G₁ over each edge, builds a cocartesian fibration E → ⟦Γ⟧ with fibres Π_v and transport snoc_e.
@@ -189,7 +190,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 **Status.**
 - Dependent elimination for shapes ⟦Γ⟧ and for ℕ: **proved** (note level).
 - DJ: **Agda-checked, 1-truncated**: DJ-cocart and the lemmas on cocartesian arrows (`CaTTExp.Descent.CocartLemmas`), DJ-sec and the directed DJ-uni (`CaTTExp.Descent.DJOneTruncated`: `dj-sec`, `dj-ext`, `dj-uni`, `dj-ext-uni`). Higher levels: **paper only** (F10b).
-- G from DESC: **paper only**. Open: **G₁-tot**, that the total space of DESC-or's fibration over ⟦D¹⟧ is the collage; and DESC-or in slices, needed for G₁ relative to a base and so for G⁺ (both F10g).
+- G from DESC and DJ, including G₁-tot: **paper only** (sketch). Open: DESC-or in slices, needed for G₁ relative to a base and so for G⁺ (F10g).
 - Encode–decode for graphs and localised graphs: **paper only** (F10d; Agda in F10f part 3).
 
 **Source.** `notes/ordinary-math.md` §4; `notes/universe-free-principles.md` §3.3, §5, §6a; ledger F1, F10b, F10d, F10f, F10g.

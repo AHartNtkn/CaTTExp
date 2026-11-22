@@ -41,7 +41,7 @@ Introduction rules:
 
 **Algorithm (graph filler).** In a graph context, two parallel cells with the same flattened path are connected by one coherence over the chain context Θ_k. This is RC(1) and its higher analogue for graphs.
 
-**Algorithm (globular filler).** Compute strict normal forms as labelled pasting trees (merge = composition, flatten = substitution), lift by position trees, and propose `coh Θ_τ (ũ → ṽ)[λ]`; the certified checker accepts or rejects.
+**Algorithm (globular filler).** Compute strict normal forms as labelled pasting trees (merge = composition, flatten = substitution), lift by position trees, and return `coh Θ_τ (ũ → ṽ)[λ]`. That this term is well typed whenever the two cells have the same normal form is proved (`FillTotal.fill-total`), so the output needs no separate check.
 
 **Algorithm (localised filler).** In a localised graph (inverse data as context variables), same reduced word ⇒ explicit 2-cell from graph fillers and whiskered cancellations.
 

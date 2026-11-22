@@ -1,6 +1,6 @@
 # The system specification
 
-This folder states the system as it currently stands: one file per chapter, each chapter depending only on earlier ones. It records the **current answer** only. Superseded designs, rejected options and the history of how a decision was reached stay in `notes/`, which is the research record; every rule here links to the note that justifies it.
+This folder states the system as it currently stands: one file per chapter, each chapter depending only on earlier ones. It records the **current answer** only. Superseded designs, rejected options and the history of how a decision was reached stay in `notes/`, which is the research record; every rule here links to the note that justifies it. **Change history** is not written into the spec: it lives in git and in the ledger (`notes/open-issues.md`), whose rows record what was corrected and why. A spec passage may explain why a rule has its current form, for example by a counterexample to a simpler rule, but it does not narrate earlier versions.
 
 If the spec and a note disagree, that is a bug in one of them. It is recorded in `notes/open-issues.md` (section S) with an owner, and neither document is silently preferred.
 

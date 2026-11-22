@@ -73,7 +73,7 @@ R : Hom(C[x : a → b], D)  →  Hom(C, D) ×_{Diag(∂Dⁿ, D)} Diag(Dⁿ, D)
 ```
 The initial object 0 is ⟦ε⟧.
 
-**Why A1 is the primitive.** The notes compare A1 (one object per context) and A2 (initial object plus one-cell attachment) and leave both open (`notes/free-objects.md` §4.4). The comparison there turns on one structural fact: **A2 = A1 + pushouts along boundary inclusions**, and with general pseudo pushouts the two are interderivable, A1 being the smaller addition. The kernel has pseudo pushouts: the all-marked colimit of a span (chapter 6, §6.3). R-A in ordinary mathematics (chapter 9) also uses A1's form. So the spec takes A1 as primitive and derives ATTACH. (An earlier version of this paragraph also cited chapter 8's probes ⟦Δ⟧ as A1's form. They are not free objects; see §7.5.) This is **stated here**, by that argument; ledger S10 asks for it to be recorded in `notes/free-objects.md`.
+**Why A1 is the primitive.** The notes compare A1 (one object per context) and A2 (initial object plus one-cell attachment) and leave both open (`notes/free-objects.md` §4.4). The comparison there turns on one structural fact: **A2 = A1 + pushouts along boundary inclusions**, and with general pseudo pushouts the two are interderivable, A1 being the smaller addition. The kernel has pseudo pushouts: the all-marked colimit of a span (chapter 6, §6.3). R-A in ordinary mathematics (chapter 9) also uses A1's form. So the spec takes A1 as primitive and derives ATTACH. Chapter 8's probes ⟦Δ⟧ are a separate sort, not free objects (§7.5). This is **stated here**, by that argument, and recorded in `notes/free-objects.md` §4.4 (ledger S10).
 
 **Example.** ℤ in chapter 9 is a localisation of the loop ⟦x, s : x → x⟧, a finite pushout. Under A1 + pushouts it needs no further primitive.
 
@@ -91,7 +91,7 @@ The initial object 0 is ⟦ε⟧.
 
 **Why a rule is needed.** Without GB-shape, a graded countermodel satisfies every other rule and separates elements from points (`notes/ordinary-math.md` Theorem 6.4 (a)).
 
-**Status.** Adopted 2026-11-21 (`notes/design-decisions.md` §4; ledger S13). Sound in Cat_ω. Exactness has been checked with ⟦Θ⟧♭ as a data atom. Its identification with the free object of §7.2 is sound in Cat_ω, and its exactness together with LIFT is outside that check.
+**Status.** Adopted (`notes/design-decisions.md` §4; ledger S13). Sound in Cat_ω. Exactness has been checked with ⟦Θ⟧♭ as a data atom. Its identification with the free object of §7.2 is sound in Cat_ω, and its exactness together with LIFT is outside that check.
 
 ## 7.6 Open surface questions
 

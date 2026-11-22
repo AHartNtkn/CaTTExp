@@ -18,9 +18,15 @@ The ambient 𝒦 stays **external**: it is the model the judgments are about, no
 
 There is no type of types, no type of small ω-categories, and no rule that turns a judgment into a term. ⋆ is a sort, not a universe: nothing has type "the collection of objects".
 
-Consequences used later:
-- an object is never quantified over by a term former; object variables are bound only by contexts;
-- "the ω-category of ω-categories" is never an object of the theory. Its structure appears only through rules about 𝒦 (limits, free objects, the closed structure).
+What this excludes:
+- any object or term that classifies objects, families of objects or presented structures. "The ω-category of ω-categories" is never an object of the theory, and its structure appears only through rules about 𝒦 (limits, free objects, the closed structure);
+- any rule that reflects a judgment into a term, including ⋆ itself or Γ ⊢ C : ⋆.
+
+What it does not exclude:
+- **Binding formers in Lawvere's style** (§0.1). A rule may bind an object variable in a premise and form an object or a cell from it. Examples are an end ∫_X F(X, X) or a System F-style ∀X. T(X).
+- Such a rule must state its universal property as the existence of cells (§0.3), and it must not make ⋆ or a judgment into a term.
+- A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
+- Whether the kernel takes any binding former, and which ones are sound in 𝒦, is open (ledger F10(c)).
 
 *Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
 
@@ -39,12 +45,19 @@ Rule classes are those of the published CaTT variants: context formation, type f
 
 ## 0.4 Lax by default, the most general version first
 
-Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one and recovers the others by marking (chapter 3). Concretely:
+Where a construction has lax, pseudo and strict versions, the kernel takes the **most general** one. It recovers the others by marking (chapter 3). Concretely:
 - the core is the uniform lax core L (chapter 2): interchange is directed at every level, not only across objects;
 - the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
-- pseudo transformations, ordinary ω-categories and groupoids are marks on top of L, never separate kernels.
+- pseudo transformations, ordinary ω-categories and groupoids are marks on top of L (`inv`, `ps`, `ord`, `grpd_k`), never separate kernels (see below for how far each goes).
 
-The generality ordering, from most to least general: uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations), each being the previous one plus marks. "More general" means fewer derivable cells and more models.
+**The generality ordering**, from most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
+
+**How far marks go back down the ordering.**
+- *From two-tier L to P:* by marks. P is two-tier L with every interchanger invertible, and the relative coherence lemma for 𝔉 → ν holds (ledger E5).
+- *From uniform L to two-tier L:* by marks, with `ord` read as "the inner letters into this object are trivial".
+  - The rule (COH-ord) accepts a head all of whose objects are `ord` on the two-tier side condition. With every object marked `ord`, uniform L then derives exactly two-tier L: the same terms, types and marks (chapter 3, §3.6; ledger S16(b)).
+  - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
+  - Heads that mix `ord` and non-`ord` objects use the uniform rule (ledger E15).
 
 Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
 

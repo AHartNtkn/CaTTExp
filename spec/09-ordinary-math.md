@@ -59,7 +59,7 @@ Introduction rules:
 
 **Semantics.** DJ by Riehl–Verity's Yoneda lemma; G by Abellán–Haugseng–Martini and Loubaton.
 
-**Status.** Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion: **proved** (note level). Induction from G + DJ: **proved** (Thm 4.4, the circular uniqueness step of the first version corrected). Some h-initiality steps are **not derivable** without further rules (F1c, verified countermodel). **Source:** `notes/ordinary-math.md` §4; ledger F1, F1a–c.
+**Status.** Dependent elimination for shapes ⟦Γ⟧ and for ℕ from recursion: **proved** (note level). Induction from G + DJ: **proved** (Thm 4.4). Some h-initiality steps are **not derivable** without further rules (F1c, verified countermodel). **Source:** `notes/ordinary-math.md` §4; ledger F1, F1a–c.
 
 ## 9.4 Quotients and the integers
 
@@ -113,7 +113,7 @@ Colimits *inside* an object C are declared structure: a marking with a filler ru
 
 **Status.**
 - Non-derivability (two countermodels), maximality, the set instance of L-×, and the derivation of F8: **proved** (note level). Soundness of each countermodel for every chapter-1–9 rule is at sketch level.
-- L-× at general `grpd_2` targets: **sketch**, relative to two cited facts. Independent check requested.
+- L-× at general `grpd_2` targets: **proved relative to cited theorems** (Campion Thm 3.14 / Cor. 3.15; Goldthorpe Lemma 3.0.3; researcher answer verified 2026-11-21, `notes/conjectures/answered/gray-cartesian-local-targets-2026-11-21.md`). Holds in the inductive and coinductively complete models of Cat_ω.
 - Agda (1-truncated derivation over the abstract model interface): in progress.
 - Open: whether the kernel derives the cartesian F8 by an unrelated route (moot once L-× is adopted).
 
@@ -135,7 +135,7 @@ a cell dcoh_S(u, v) : u → v. The term records its support S.
 
 **Semantics.** Λ(A) is strongly loop-free unital Steiner, so c_∞N(A) ≅ νΛ(A); its (n+1)-cells u → v correspond exactly to the admissible S. Sound for strict B through dimension 3 (Gagna); for weak B it is the definition (normalised oplax functors are maps c_∞N(A) → B).
 
-**Status.** **Proved** (verified researcher answer, `notes/conjectures/answered/lax-functor-refinement-2026-11-18.md`); the first version (a cell whenever supports allow, unique) was refuted. **Source:** `notes/ordinary-math.md` §7; ledger F6, F6a.
+**Status.** **Proved** (verified researcher answer, `notes/conjectures/answered/lax-functor-refinement-2026-11-18.md`). **Source:** `notes/ordinary-math.md` §7; ledger F6, F6a.
 
 ## 9.8 Open surface questions
 

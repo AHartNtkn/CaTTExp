@@ -62,7 +62,7 @@ J(S) is J with the laws in S switched back on, which means dropping their separa
 
 ### 1.4 Worked examples
 
-(a) **The strip C_{2,1}.** Inside a hom, take two composable inner cells A₁, A₂ and a cell B in interchange position. Let u = W(A₁ ∗ A₂, B) be the direct crossing and v the paste of W(A₁, B) and W(A₂, B). Both have the same Gray image.
+(a) **The strip C_{2,1}.** Inside a hom, take two composable inner cells A₁, A₂ and a cell B in interchange position. Let u = ι(A₁ ∗ A₂, B) be the direct inner crossing and v the paste of ι(A₁, B) and ι(A₂, B). Both have the same Gray image. *(Corrected 2026-11-21: this used to write W. The outer W-strip on C_{2,1}, a degree-5 lift, is a different pair. It stays distinct and unconnected after localization in every setting, including with both switches: ledger E13.)*
 - L1: ⟦u⟧ = ⟦v⟧, so `coh` gives an invertible cell u ≅ v.
 - L2 (law off): u and v are distinct cells with no cell between them. In the tagged model they really differ.
 - L2 with the inner law switched on: same as L1.

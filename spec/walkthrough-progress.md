@@ -7,10 +7,16 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 0. Principles
 
 - [x] 0.1 What the system is about
-- [ ] 0.2 No universes
-- [ ] 0.3 Universal properties are witnessed by cells
-- [ ] 0.4 Lax by default, the most general version first
-- [ ] 0.5 The kernel and the surface are kept apart
+  - Q (Anthony): is "lax transformations as 2-cells" a truncation at dimension 2, like (∞,2) ⊂ (∞,ω)? Answered: no; laxness is an orientation axis, not a dimension axis, and every level of Fun^lax is lax (maps A ⊗ Dⁱ → B). The more general direction is uniform L (directed interchange inside objects too), which the kernel takes. Worked picture of D¹ × D¹ vs D¹ ⊗ D¹ and of a lax modification given.
+- [x] 0.2 No universes
+  - Q (Anthony): what are the practical limitations, beyond rephrasings? Answered: no large recursion (families by recursion), no encode–decode (EX had to be a rule), no power objects, no categories of structures as objects (Set, Grp, presheaves), object-indexed diagrams as fibrations, quantification over objects only outermost.
+  - Q (Anthony): System F has impredicative ∀ without a universe; could (co)end calculus be adapted? Answered: yes in principle, as a binding end former; corrected my earlier "no impredicative definitions". Sub-findings: S15 (§0.1 vs §0.2 contradiction), F10(c) (which ends are sound).
+  - Finding (Anthony): the resulting growing list of extra rules is unacceptable. Logged as ledger F10.
+- [x] 0.3 Universal properties are witnessed by cells
+- [x] 0.4 Lax by default, the most general version first
+  - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
+  - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
+- [x] 0.5 The kernel and the surface are kept apart
 - [ ] 0.6 Decidability of checking
 - [ ] Q0.1 (surface question): Which composition order does the user write?
 - [ ] Q0.2 (surface question): Are objects written as types or as terms?
@@ -120,4 +126,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
-None yet.
+- S18 (0.5): the spec carries history ("an earlier version of this section").
+- S17 (0.4): alternatives to the form of the marking system never compared.
+- S16 (0.4): marks no longer recovered two-tier L from uniform L. Resolved by PR #404 / #406.
+- S15 (0.2): chapter 0 contradicts itself on internal quantifiers.
+- F10 (0.2): the universe-free rule list keeps growing; seek a small general set of principles that closes it.

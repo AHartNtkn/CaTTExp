@@ -245,6 +245,7 @@ import CaTTExp.GrayDuality
 import CaTTExp.GrayDualityUniform
 import CaTTExp.SU
 import CaTTExp.SUExamples
+import CaTTExp.Surface.Conservativity
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient

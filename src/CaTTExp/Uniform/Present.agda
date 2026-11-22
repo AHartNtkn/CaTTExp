@@ -242,33 +242,49 @@ module Compose {A : Set} (P P′ P″ : Presentation A)
 
 ------------------------------------------------------------------------
 -- A Rule.Layer whose cells are the normal forms of a presentation.
--- Letters, their targets (as raw words) and supports are read on the
--- representative of a cell.
+-- Letters, their targets (as raw words) and supports are given on raw
+-- words and must not depend on the word within its class (out₀-cong,
+-- supp₀-cong). Then reading them on a cell's representative is no
+-- choice: layer-out and layer-supp say the layer's data at cellOf x is
+-- the raw data at x, for every word x.
 
-record LayerData (A : Set) : Set₁ where
+record LayerData {A : Set} (P : Presentation A) : Set₁ where
+  open Present P using (_≈_)
   field
-    Letter : Set
-    out₀   : A → List Letter
-    tgt₀   : Letter → A
-    Supp   : Set
-    supp₀  : A → Supp
-    suppL  : Letter → Supp
-    _∪_    : Supp → Supp → Supp
-    full   : Supp → Bool
+    Letter     : Set
+    out₀       : A → List Letter
+    tgt₀       : Letter → A
+    Supp       : Set
+    supp₀      : A → Supp
+    suppL      : Letter → Supp
+    _∪_        : Supp → Supp → Supp
+    full       : Supp → Bool
+    out₀-cong  : ∀ {x y} → x ≈ y → out₀ x ≡ out₀ y
+    supp₀-cong : ∀ {x y} → x ≈ y → supp₀ x ≡ supp₀ y
 
-layerOf : ∀ {A : Set} → Presentation A → LayerData A → Layer
-layerOf P D = record
-  { Cell   = Cell
-  ; _≟_    = _≟C_
-  ; Letter = Letter
-  ; out    = λ c → out₀ (fst c)
-  ; tgt    = λ ℓ → cellOf (tgt₀ ℓ)
-  ; Supp   = Supp
-  ; supp   = λ c → supp₀ (fst c)
-  ; suppL  = suppL
-  ; _∪_    = _∪_
-  ; full   = full
-  }
-  where
+module LayerOf {A : Set} (P : Presentation A) (D : LayerData P) where
   open Present P
   open LayerData D
+
+  layer : Layer
+  layer = record
+    { Cell   = Cell
+    ; _≟_    = _≟C_
+    ; Letter = Letter
+    ; out    = λ c → out₀ (fst c)
+    ; tgt    = λ ℓ → cellOf (tgt₀ ℓ)
+    ; Supp   = Supp
+    ; supp   = λ c → supp₀ (fst c)
+    ; suppL  = suppL
+    ; _∪_    = _∪_
+    ; full   = full
+    }
+
+  layer-out : ∀ x → Layer.out layer (cellOf x) ≡ out₀ x
+  layer-out x = out₀-cong (cellOf-≈ x)
+
+  layer-supp : ∀ x → Layer.supp layer (cellOf x) ≡ supp₀ x
+  layer-supp x = supp₀-cong (cellOf-≈ x)
+
+layerOf : ∀ {A : Set} (P : Presentation A) → LayerData P → Layer
+layerOf P D = LayerOf.layer P D

@@ -93,3 +93,32 @@ module _ (sw : Switches) where
   equiv-from vp vq (≈-trans {q = r} d e) =
     P.≈-trans (equiv-from vp vr d) (equiv-from vr vq e)
     where vr = fst (≈-valid d) vp
+
+  -- The generic normal form is Grid's: both take the first path of the
+  -- charge universe connected to the input.
+  private
+    module G = Setting sw
+
+    bool-ext : ∀ {a b} → (T a → T b) → (T b → T a) → a ≡ b
+    bool-ext {true}  {true}  f g = refl
+    bool-ext {false} {false} f g = refl
+    bool-ext {true}  {false} f g = ⊥-elim (f tt)
+    bool-ext {false} {true}  f g = ⊥-elim (g tt)
+
+    conn-same : ∀ {p} (vp : Valid p) {q} (vq : Valid q) → P.conn (p , vp) (q , vq) ≡ G.conn p q
+    conn-same vp vq = bool-ext
+      (λ t → G.conn-complete vp (equiv-to (P.conn-sound _ _ t)))
+      (λ t → P.conn-complete (equiv-from vp vq (G.conn-sound _ _ t)))
+
+    head-lift : ∀ (f : V → Bool) (g : RawPath → Bool) (d : V) xs (h : ∀ {q} → q ∈L xs → Valid q) →
+      (∀ {q} (k : q ∈L xs) → f (q , h k) ≡ g q) →
+      fst (P.headOr d (filter f (lift xs h))) ≡ G.headOr (fst d) (filter g xs)
+    head-lift f g d []       h fg = refl
+    head-lift f g d (q ∷ qs) h fg with f (q , h here) | g q | fg here
+    ... | true  | true  | refl = refl
+    ... | false | false | refl = head-lift f g d qs (λ k → h (there k)) (λ k → fg (there k))
+
+  nf-agree : ∀ {p} (vp : Valid p) → fst (P.nf (p , vp)) ≡ G.nf p
+  nf-agree {p} vp =
+    head-lift (P.conn (p , vp)) (G.conn p) (p , vp) (Uc (charge p)) (Uc-valid (charge p))
+      (λ k → conn-same vp (Uc-valid (charge p) k))

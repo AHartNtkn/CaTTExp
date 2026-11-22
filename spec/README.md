@@ -17,7 +17,7 @@ If the spec and a note disagree, that is a bug in one of them. It is recorded in
 | 6 | [`06-limits-representables.md`](06-limits-representables.md) | Limits and representables | kernel extension |
 | 7 | [`07-free-objects.md`](07-free-objects.md) | Free objects | kernel extension |
 | 8 | [`08-closed-structure.md`](08-closed-structure.md) | Gray biclosed rules | kernel extension |
-| 9 | [`09-ordinary-math.md`](09-ordinary-math.md) | Ordinary mathematics | derived |
+| 9 | [`09-ordinary-math.md`](09-ordinary-math.md) | Ordinary mathematics: descent (DESC) and initial models (INIT), h-levels, and what they derive | kernel extension |
 
 ## The two layers
 

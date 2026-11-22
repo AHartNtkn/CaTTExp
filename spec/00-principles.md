@@ -26,7 +26,7 @@ What it does not exclude:
 - **Binding formers in Lawvere's style** (§0.1). A rule may bind an object variable in a premise and form an object or a cell from it. Examples are an end ∫_X F(X, X) or a System F-style ∀X. T(X).
 - Such a rule must state its universal property as the existence of cells (§0.3), and it must not make ⋆ or a judgment into a term.
 - A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
-- Whether the kernel takes any binding former, and which ones are sound in 𝒦, is open (ledger F10(c)).
+- The kernel has one such former: INIT (chapter 9, §9.3), the initial model μΔ of a positive context Δ, read impredicatively as ∀Δ. X with naturality. It is sound in 𝒦 for its class of contexts. The dual, final models of copositive contexts, is unsound in general and is not a rule.
 
 *Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
 

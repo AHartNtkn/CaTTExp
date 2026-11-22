@@ -144,7 +144,7 @@ r10 Response 3 builds every layer of F_{V+S}(Γ) the same way: list the finitely
 What this leaves for S3a is the input in every degree: the raw T₁₂ syntax, B's defining pairs, the guarded equations, and their finite grounding (that each `U x` is finite and closed). Once those give a `Presentation` and letters per degree, `layerOf`, `RuleFin` and `KernelDec` give the kernel checker, but three obligations remain per degree:
 
 - (a) The ≈-invariance of `out₀` and `supp₀`, now fields of `LayerData` (2026-11-22), must be proved for each degree's letters.
-- (b) `RuleFin` still needs finite, step-closed universes of cells and supports.
+- (b) `RuleFin` still needs finite, step-closed universes of cells and supports. For the universes of words, `WordPresent` (2026-11-22) proves the generic case: over a finite alphabet with positive letter weights, a weight-preserving one-step relation gives a `Presentation` whose universe is the finite list of words of the same weight. Each degree still supplies its finite alphabet of contextual letters, the weights, and the steps.
 - (c) The presentation must actually be F_{V+S} in that degree. For the grid this is still by inspection (§2 item 2).
 
 ## 2. What this does not check (the trust boundary)

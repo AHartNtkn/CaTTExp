@@ -37,11 +37,13 @@ The kernel has **no definitional equality** beyond syntactic identity of terms a
 - no computation rules for limits, free objects, internal homs or tensors;
 - a law of a strict theory used in a side condition (chapter 2) never becomes a definitional equality. It only makes certain cells derivable.
 
-Every universal property is stated as the existence of cells: a structure map, a comparison cell, and a witness that the comparison is invertible where invertibility is meant. A user proves an equation by exhibiting a cell, never by a conversion check.
+Every universal property is stated as the existence of cells: a structure map, a comparison cell, and a witness that the comparison is invertible where invertibility is meant. In the kernel, an equation is proved by exhibiting a cell, never by a conversion check.
+
+**This is a property of the kernel only.** The surface may add computation rules (§0.5). For example, rewrite rules may strictify two of associators, unitors and interchange. Each such rule is justified by a formalized conservativity proof, not by a definitional equality in the kernel.
 
 Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`, `⊢hpol`).
 
-*Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional).
+*Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional); Anthony, spec walkthrough 2026-11-22 (surface computation rules; ledger S6, S19).
 
 ## 0.4 Lax by default, the most general version first
 
@@ -65,16 +67,21 @@ Specialisation happens only for a concrete, recorded reason. The one recorded st
 
 ## 0.5 The kernel and the surface are kept apart
 
-The **kernel** is a small, explicit, decidable system. It has:
+The **kernel** is an explicit, decidable system. It has:
 - no defaults (every mark, every switch setting, every bracketing is written out);
-- no implicit arguments, no notation, no overloading;
+- no implicit arguments, no notation, no overloading, no computation rules;
 - a checker that decides every judgment.
 
-The **surface** is the language a person writes. It elaborates to kernel terms. It may infer marks, choose default bracketings or layerings, offer notation and implicit arguments. It may not change what is derivable: an elaborated term is checked by the kernel like any other.
+The **surface** is the language a person writes.
+- It may infer marks, choose default bracketings or layerings, and offer notation and implicit arguments.
+- It may have **computation rules** the kernel lacks. Rewrite rules may strictify two of associators, unitors and interchange, and similar rules may be added for other structure (ledger S6, S19).
+- It may not change what is derivable. Every surface layer (elaborator, rewrite system, tactic) is **proved conservative** over the kernel: every surface derivation corresponds to a kernel derivation of the corresponding judgment, and the surface derives nothing the kernel does not.
+
+**Trust comes from proof, not from re-checking.** Each conservativity proof is formalized once. The layer's output is then trusted on the strength of that proof and is not sent back through the kernel term by term, which would make checking slow and memory-hungry. **Everything is formalized**: the kernel, its checker, and every layer above it. The kernel is kept separate because it is the reference theory that the conservativity proofs target, not because it is the only formalized part.
 
 This spec fixes the kernel and leaves every surface choice open. Each chapter lists its open surface questions, with options and a practical comparison.
 
-*Source:* Anthony, in this project's chat (2026-11-21): keeping the kernel and surface apart is essential.
+*Source:* Anthony, in this project's chat (2026-11-21): keeping the kernel and surface apart is essential. Anthony, spec walkthrough (2026-11-22): surface computation rules, and trust by formalized conservativity (ledger S6, S19). The conservativity proof for strictified associators and unitors is ledger S19 (b)–(c).
 
 ## 0.6 Decidability of checking
 

@@ -15,6 +15,8 @@ The generator is untrusted. Correctness of every answer comes from the certified
 
 So a bug in the generator can only make an answer missing, never wrong.
 
+*Note (2026-11-22, ledger S19, S20).* Re-checking each answer is how this research tool establishes finite instances. It is not the design for the system. There, an extension is trusted through a formalized proof of its correctness, without a re-check. The target here is a formalized RC procedure (spec §5.1) proved to return well-typed terms.
+
 Reproducing the checks:
 
 ```

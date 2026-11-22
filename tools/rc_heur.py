@@ -153,56 +153,78 @@ def _replace_leaf(tree, path, k):
     i = path[0]
     return tree[:i] + (_replace_leaf(tree[i], path[1:], k),) + tree[i + 1:]
 
+def _split_leaves(tree, leaves, k):
+    """Replace each leaf whose path is in `leaves` by k sibling leaves.
+    Returns (new tree, {old path: new path} for the other nodes,
+    {old leaf path: [new sibling paths]})."""
+    pmap, smap = {}, {}
+    def go(node, old, new):
+        out = []
+        for i, child in enumerate(node):
+            op = old + (i,)
+            if op in leaves:
+                assert child == ()
+                smap[op] = [new + (len(out) + j,) for j in range(k)]
+                out += [()] * k
+            else:
+                np_ = new + (len(out),)
+                pmap[op] = np_
+                out.append(go(child, op, np_))
+        return tuple(out)
+    return go(tree, (), ()), pmap, smap
+
 def distribute(G, t, forward):
-    """If t = H(..., c, ...) with c at the only N-dimensional position of H's
-    pasting context and c a composite of k >= 2 factors along N-1, return
-    (H(f_1) * ... * H(f_k), D) with D : t -> that (forward) or back. One
-    coherence over P^k, the pasting context of H with that leaf replaced by k
-    sibling leaves."""
+    """If t = H(..., c_i, ...) where every argument c_i at an N-dimensional
+    position of H's pasting context is a composite of the same number k >= 2
+    of factors along N-1, return (H(f_1) * ... * H(f_k), D) with H(f_j) taking
+    the j-th factor in every such slot (interchange), and D : t -> that
+    (forward) or back. One coherence over P^k, H's pasting context with each
+    of those leaves replaced by k sibling leaves."""
     R = _R()
     if t[0] != 'coh':
         return t, None
     _, P, B, s = t
     N = tdim(B) + 1
     tops = [i for i, C in enumerate(P) if tdim(C) + 1 == N]
-    if ps_dim(P) != N or len(tops) != 1:
+    if ps_dim(P) != N or not tops:
         return t, None
-    i = tops[0]
-    fs = R.vfactors(G, s[i], N)
-    k = len(fs)
-    if k < 2:
+    fss = {i: R.vfactors(G, s[i], N) for i in tops}
+    k = len(fss[tops[0]])
+    if k < 2 or any(len(fs) != k for fs in fss.values()):
         return t, None
     tree = tree_of(P)
     paths = _paths(tree)
-    pth = paths[i]
-    parent, i0 = pth[:-1], pth[-1]
-    Tk = _replace_leaf(tree, pth, k)
+    parents = [paths[i][:-1] for i in tops]
+    if len(set(parents)) != len(parents):
+        return t, None                  # two top slots composable along N-1
+    Tk, pmap, smap = _split_leaves(tree, {paths[i] for i in tops}, k)
     Pk = tree_ctx(Tk)
-    pk_paths = _paths(Tk)
-    var_at = {p: j for j, p in enumerate(pk_paths) if p is not None}
-    sib = [var_at[parent + (i0 + j,)] for j in range(k)]
+    var_at = {p: j for j, p in enumerate(_paths(Tk)) if p is not None}
+    sib = {i: [var_at[q] for q in smap[paths[i]]] for i in tops}
     mx = maximal_vars(P)
+    other = {m: v(var_at[pmap[paths[m]]]) for m in mx if m not in sib}
     def iota(j):
-        im = {}
-        for m in mx:
-            im[m] = v(sib[j]) if m == i else v(var_at[_shift_path(paths[m], parent, i0, k)])
+        im = dict(other)
+        for i in tops:
+            im[i] = v(sib[i][j])
         return sub_from(P, Pk, im)
     Hs = [('coh', P, B, iota(j)) for j in range(k)]
     rhs = R.vcomp_over_terms(Pk, N, Hs)
-    # the slot argument, with its own bracketing, over Pk
+    # each slot argument, with its own bracketing, over Pk
     Ck, ctops = R.column(N, k)
-    Tc = R._abstract(G, s[i], N, Ck, ctops, [0])
-    to_pk = sub_from(Ck, Pk, {ctops[j]: v(sib[j]) for j in range(k)})
-    im = {m: (subst_tm(Tc, to_pk) if m == i else v(var_at[_shift_path(paths[m], parent, i0, k)])) for m in mx}
+    im = dict(other)
+    for i in tops:
+        Tc = R._abstract(G, s[i], N, Ck, ctops, [0])
+        to_pk = sub_from(Ck, Pk, {ctops[j]: v(sib[i][j]) for j in range(k)})
+        im[i] = subst_tm(Tc, to_pk)
     lhs = ('coh', P, B, sub_from(P, Pk, im))
-    # instantiate Pk in G
     gim = {}
     for m in mx:
-        if m == i:
+        if m in sib:
             for j in range(k):
-                gim[sib[j]] = fs[j]
+                gim[sib[m][j]] = fss[m][j]
         else:
-            gim[var_at[_shift_path(paths[m], parent, i0, k)]] = s[m]
+            gim[other[m][1]] = s[m]
     sk = sub_from(Pk, G, gim)
     A = infer(Pk, lhs)
     D = ('coh', Pk, arr(A, lhs, rhs), sk) if forward else ('coh', Pk, arr(A, rhs, lhs), sk)
@@ -305,6 +327,59 @@ def rebracket(G, A, t, u):
     Tu = R._abstract(G, u, n, C, tops, [0])
     return ('coh', C, arr(infer(C, Tt), Tt, Tu), sub)
 
+def cancel_loop(G, A, x, fw, rec):
+    """x a vertical composite H(f_1) * ... * H(f_k) (k >= 2) of one composition
+    head H with a single top slot, whose ends agree and whose slot composite
+    c = f_1 * ... * f_k has identity value with equal ends (for example a
+    coherence followed by its inverse). Returns x -> 1 (fw) or 1 -> x:
+    regroup into H(c) (distribution backwards), compare c with the identity
+    recursively, then H(1) with the identity recursively."""
+    R = _R()
+    n = tdim(A) + 1
+    if A[2] != A[3]:
+        return None
+    fs = R.vfactors(G, x, n)
+    if len(fs) < 2 or any(f[0] != 'coh' for f in fs):
+        return None
+    _, P, B, s0 = fs[0]
+    if any((f[1], f[2]) != (P, B) for f in fs) or ps_dim(P) != n:
+        return None
+    tops = [i for i, C in enumerate(P) if tdim(C) + 1 == n]
+    if len(tops) != 1:
+        return None
+    i = tops[0]
+    mx = maximal_vars(P)
+    if any(f[3][m] != s0[m] for f in fs for m in mx if m != i):
+        return None
+    c = R.vcomp_over_terms(G, n, [f[3][i] for f in fs])
+    Tc = infer(G, c)
+    if Tc[2] != Tc[3] or not is_identity_value(G, c):
+        return None
+    h = ('coh', P, B, sub_from(P, G, {**{m: s0[m] for m in mx if m != i}, i: c}))
+    col, D = distribute(G, h, not fw)          # fw: D : col -> h
+    if D is None:
+        return None
+    rb = None
+    if col != x:
+        rb = rebracket(G, A, x, col) if fw else rebracket(G, A, col, x)
+        if rb is None:
+            return None
+    idc = R.identity(G, Tc[2])
+    X1 = rec(G, Tc, c, idc) if fw else rec(G, Tc, idc, c)
+    if X1 is None:
+        return None
+    Cg, h1 = congruence(G, h, {i: (idc, X1)}, fw)
+    idt = R.identity(G, A[2])
+    X2 = (rec(G, A, h1, idt) if fw else rec(G, A, idt, h1)) if h1 != idt else None
+    if h1 != idt and X2 is None:
+        return None
+    cells = [rb, D, Cg, X2] if fw else [X2, Cg, D, rb]
+    cells = [y for y in cells if y is not None]
+    out = cells[0]
+    for y in cells[1:]:
+        out = comp2(G, n, out, y)
+    return out
+
 # ---------------------------------------------------------------- driver
 
 CALLS = [0]          # reset by rc_oracle.rc for each top-level query
@@ -324,6 +399,12 @@ def heur(G, A, t, u, rec):
             X = rec(G, A, t2, u2)
         else:
             X = rebracket(G, A, t, u)
+            if X is None and A[2] == A[3]:
+                idt = R.identity(G, A[2])
+                if u == idt:
+                    X = cancel_loop(G, A, t, True, rec)
+                elif t == idt:
+                    X = cancel_loop(G, A, u, False, rec)
             if X is None:
                 X = via_abstraction(G, A, t, u, rec)
         if X is None:

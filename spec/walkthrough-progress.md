@@ -126,6 +126,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").
 - S17 (0.4): alternatives to the form of the marking system never compared.
 - S16 (0.4): marks no longer recovered two-tier L from uniform L. Resolved by PR #404 / #406.

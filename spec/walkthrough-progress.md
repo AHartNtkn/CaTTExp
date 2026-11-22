@@ -115,15 +115,18 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 9. Ordinary mathematics
 
 - [ ] 9.1 h-levels
-- [ ] 9.2 Filler tactics (admissible, no rule)
-- [ ] 9.3 Families, induction and the natural numbers
-- [ ] 9.4 Quotients and the integers
-- [ ] 9.5 Colimits indexed by objects
+- [ ] 9.2 Descent (DESC)
+- [ ] 9.3 Initial models (INIT)
+- [ ] 9.4 Families, induction and the natural numbers
+- [ ] 9.5 Quotients and the integers
 - [ ] 9.6 Function sets
-- [ ] 9.7 Lax functors
+- [ ] 9.7 Colimits indexed by objects
+- [ ] 9.8 Lax functors
+- [ ] 9.9 Filler tactics (admissible, no rule)
 - [ ] Q9.1 (surface question): Whether `trunc n` is written or inferred.
-- [ ] Q9.2 (surface question): How inductive objects are introduced.
-- [ ] Q9.3 (surface question): Whether the filler tactics run automatically.
+- [ ] Q9.2 (surface question): How INIT instances are introduced.
+- [ ] Q9.3 (surface question): How descent data are supplied.
+- [ ] Q9.4 (surface question): Whether the filler tactics run automatically.
 
 ## Findings raised during the walkthrough
 

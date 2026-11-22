@@ -157,3 +157,245 @@ module Corollas (ob : Nat → Psh) where
           Z ⟨ bridge F g₁ x₁ y₁ ax₁ ay₁ ⟩
           Z ⟨ VF-cong F hyp (At-res Dp g₁ (vAt mok _ _ A₁)) ⟩
               ∼-sym Z (bridge F g₂ x₂ y₂ ax₂ ay₂)
+
+  --------------------------------------------------------------------
+  -- Corollas between representables: p_{Δ,Θ}, ι_Θ and pt.
+  --
+  -- The inputs are representables ⟦Θᵢ⟧ = y(λΘᵢ) and the output is a
+  -- representable y B with an isomorphism φ : ⊗ᵢ λΘᵢ ≅ B.  The corolla
+  -- sends (h₁ : L₁ → λΘ₁, …) to φ ∘ (h₁ ⊗ …); its universal property is
+  -- Yoneda.
+
+  λs : List Shape → List Code
+  λs []       = []
+  λs (Θ ∷ Θs) = λS Θ ∷ λs Θs
+
+  reps : List Shape → List Fm
+  reps []       = []
+  reps (Θ ∷ Θs) = rep Θ ∷ reps Θs
+
+  -- the arguments named by a list of maps
+  yvs : ∀ Θs {Ls} → Maps Ls (λs Θs) → List Uni
+  yvs []       []       = []
+  yvs (Θ ∷ Θs) {L ∷ _} (h ∷ hs) = (rep Θ , (L , h)) ∷ yvs Θs hs
+
+  yvs-At : ∀ Θs {Ls} (hs : Maps Ls (λs Θs)) → AtL (reps Θs) Ls (yvs Θs hs)
+  yvs-At []       []       = tt
+  yvs-At (Θ ∷ Θs) (h ∷ hs) = (refl , refl) , yvs-At Θs hs
+
+  -- every argument list at the inputs is named by a list of maps
+  yview : ∀ Θs Ls vs → AtL (reps Θs) Ls vs → Σ (Maps Ls (λs Θs)) (λ hs → vs ≡ yvs Θs hs)
+  yview []       []       []       _ = [] , refl
+  yview []       []       (_ ∷ _)  ()
+  yview []       (_ ∷ _)  _        ()
+  yview (Θ ∷ Θs) []       _        ()
+  yview (Θ ∷ Θs) (L ∷ Ls) []       ()
+  yview (Θ ∷ Θs) (L ∷ Ls) ((.(rep Θ) , (.L , h)) ∷ vs) ((refl , refl) , a) with yview Θs Ls vs a
+  ... | hs , refl = (h ∷ hs) , refl
+
+  yvs-inv : ∀ Θs {Ls} (hs hs′ : Maps Ls (λs Θs)) → yvs Θs hs ∼L yvs Θs hs′ → hs ≈ᵐ hs′
+  yvs-inv []       []       []         _          = tt
+  yvs-inv (Θ ∷ Θs) (h ∷ hs) (h′ ∷ hs′) (∼u e , es) = yinv (λS Θ) e , yvs-inv Θs hs hs′ es
+
+  yvs-congˢ : ∀ Θs {Ls} (hs hs′ : Maps Ls (λs Θs)) → hs′ ≈ᵐ hs → yvs Θs hs ∼L yvs Θs hs′
+  yvs-congˢ []       []       []         _        = tt
+  yvs-congˢ (Θ ∷ Θs) (h ∷ hs) (h′ ∷ hs′) (e , es) = ∼u (yeq (λS Θ) (≈M-sym e)) , yvs-congˢ Θs hs hs′ es
+
+  resL-yvs : ∀ Θs {Ls Ks′} (hs : Maps Ls (λs Θs)) (hs₀ : Maps Ks′ Ls) → resL hs₀ (yvs Θs hs) ≡ yvs Θs (hs ∘ᵐ hs₀)
+  resL-yvs []       []       []         = refl
+  resL-yvs (Θ ∷ Θs) (h ∷ hs) (g ∷ hs₀) = cong₂ _∷_ (cong (rep Θ ,_) (yres (λS Θ) g h)) (resL-yvs Θs hs hs₀)
+
+  -- reading a list of maps off an argument list
+  gyo : ∀ {K′ L A} → Map K′ A → Maybe (K′ ≡ L) → Maybe (Map L A)
+  gyo f (just refl) = just f
+  gyo f nothing     = nothing
+
+  gyY : ∀ {A} L → Σ Code (λ K → Map K A) → Maybe (Map L A)
+  gyY L (K′ , f) = gyo f (decCode K′ L)
+
+  getY : ∀ Θ L → Uni → Maybe (Map L (λS Θ))
+  getY Θ L v = gyY L (co (rep Θ) v)
+
+  getY-at : ∀ Θ {L} (h : Map L (λS Θ)) → getY Θ L (rep Θ , (L , h)) ≡ just h
+  getY-at Θ {L} h = trans (cong (gyY L) (co-id (rep Θ) (L , h))) (cong (gyo h) (decCode-refl L))
+
+  mcons : ∀ {L A Ls As} → Maybe (Map L A) → Maybe (Maps Ls As) → Maybe (Maps (L ∷ Ls) (A ∷ As))
+  mcons (just h) (just hs) = just (h ∷ hs)
+  mcons (just h) nothing   = nothing
+  mcons nothing  _         = nothing
+
+  getM : ∀ Θs Ls → List Uni → Maybe (Maps Ls (λs Θs))
+  getM []       []       []       = just []
+  getM []       []       (_ ∷ _)  = nothing
+  getM []       (_ ∷ _)  _        = nothing
+  getM (Θ ∷ Θs) []       _        = nothing
+  getM (Θ ∷ Θs) (L ∷ Ls) []       = nothing
+  getM (Θ ∷ Θs) (L ∷ Ls) (v ∷ vs) = mcons (getY Θ L v) (getM Θs Ls vs)
+
+  getM-yvs : ∀ Θs {Ls} (hs : Maps Ls (λs Θs)) → getM Θs Ls (yvs Θs hs) ≡ just hs
+  getM-yvs []       []       = refl
+  getM-yvs (Θ ∷ Θs) (h ∷ hs) = cong₂ mcons (getY-at Θ h) (getM-yvs Θs hs)
+
+  -- an isomorphism given by an equation of codes
+  φE : ∀ {X Y : Code} → X ≡ Y → Map X Y
+  φE {X} e = castM refl e (idMap X)
+
+  ψE : ∀ {X Y : Code} → X ≡ Y → Map Y X
+  ψE {X} e = castM e refl (idMap X)
+
+  φψE : ∀ {X Y : Code} (e : X ≡ Y) → (φE e ∘M ψE e) ≈M idMap Y
+  φψE refl = ∘M-idl _
+
+  ψφE : ∀ {X Y : Code} (e : X ≡ Y) → (ψE e ∘M φE e) ≈M idMap X
+  ψφE refl = ∘M-idl _
+
+  module CorY (Θs : List Shape) (B : Code) (φ : Map (concat (λs Θs)) B) (ψ : Map B (concat (λs Θs)))
+              (φψ : (φ ∘M ψ) ≈M idMap B) (ψφ : (ψ ∘M φ) ≈M idMap (concat (λs Θs))) where
+    private
+      As = λs Θs
+      Is = reps Θs
+      yB = yP B
+
+    fin : ∀ {Ls} → Maybe (Maps Ls As) → U yB
+    fin {Ls} (just hs) = concat Ls , (φ ∘M ⊗s hs)
+    fin      nothing   = B , idMap B
+
+    cr : List Code → List Uni → U yB
+    cr Ls vs = fin (getM Θs Ls vs)
+
+    cr-at : ∀ {Ls} (hs : Maps Ls As) → cr Ls (yvs Θs hs) ≡ (concat Ls , (φ ∘M ⊗s hs))
+    cr-at hs = cong fin (getM-yvs Θs hs)
+
+    yAt : ∀ Ls vs → AtL Is Ls vs → At yB (concat Ls) (cr Ls vs)
+    yAt Ls vs a with yview Θs Ls vs a
+    ... | hs , refl = cong fst (cr-at hs)
+
+    ycg : ∀ Ls us vs → AtL Is Ls us → AtL Is Ls vs → us ∼L vs → _∼_ yB (cr Ls us) (cr Ls vs)
+    ycg Ls us vs a b e with yview Θs Ls us a | yview Θs Ls vs b
+    ... | hs , refl | hs′ , refl =
+      yB ⟨ ∼-≡ yB (cr-at hs) ⟩
+      yB ⟨ yeq B (∘M-cong ≈M-refl (⊗s-cong (yvs-inv Θs hs hs′ e))) ⟩
+           ∼-≡ yB (sym (cr-at hs′))
+
+    ynt : ∀ {Ks′ Ks} (hs₀ : Maps Ks′ Ks) us → AtL Is Ks us →
+          _∼_ yB (cr Ks′ (resL hs₀ us)) (res yB (⊗s hs₀) (cr Ks us))
+    ynt {Ks′} {Ks} hs₀ us a with yview Θs Ks us a
+    ... | hs , refl =
+      yB ⟨ ∼-≡ yB (cong (cr Ks′) (resL-yvs Θs hs hs₀)) ⟩
+      yB ⟨ ∼-≡ yB (cr-at (hs ∘ᵐ hs₀)) ⟩
+      yB ⟨ yeq B (≈M-trans (φ ∘M (⊗s hs ∘M ⊗s hs₀)) (∘M-cong ≈M-refl (⊗s-∘ hs hs₀))
+                           (≈M-sym (∘M-assoc φ (⊗s hs) (⊗s hs₀)))) ⟩
+           ∼-≡ yB (sym (trans (cong (res yB (⊗s hs₀)) (cr-at hs)) (yres B (⊗s hs₀) (φ ∘M ⊗s hs))))
+
+    -- decomposition
+    ddo : ∀ {K K′} → Map K′ B → Maybe (K′ ≡ K) → DecR K
+    ddo f (just refl) = dr As (yvs Θs (idMaps As)) (ψ ∘M f)
+    ddo {K} f nothing = defDec K
+
+    dd : ∀ K → U yB → DecR K
+    dd K (K′ , f) = ddo f (decCode K′ K)
+
+    dd-at : ∀ {K} (f : Map K B) → dd K (K , f) ≡ dr As (yvs Θs (idMaps As)) (ψ ∘M f)
+    dd-at {K} f = cong (ddo f) (decCode-refl K)
+
+    ydAt : ∀ K t → At yB K t → AtL Is (rLs (dd K t)) (rvs (dd K t))
+    ydAt K (.K , f) refl =
+      subst (λ d → AtL Is (rLs d) (rvs d)) (sym (dd-at f)) (yvs-At Θs (idMaps As))
+
+    -- f = φ ∘ ⊗ ids ∘ ψ ∘ f
+    deq-law : ∀ {K} (f : Map K B) → f ≈M ((φ ∘M ⊗s (idMaps As)) ∘M (ψ ∘M f))
+    deq-law f =
+      ≈M-sym
+      (≈M-trans ((φ ∘M idMap (concat As)) ∘M (ψ ∘M f)) (∘M-cong (∘M-cong ≈M-refl (⊗s-ids As)) ≈M-refl)
+      (≈M-trans (φ ∘M (ψ ∘M f)) (∘M-cong (∘M-idr φ) ≈M-refl)
+      (≈M-trans ((φ ∘M ψ) ∘M f) (≈M-sym (∘M-assoc φ ψ f))
+      (≈M-trans (idMap B ∘M f) (∘M-cong φψ ≈M-refl) (∘M-idl f)))))
+
+    ydeq : ∀ K t → At yB K t → _∼_ yB t (res yB (rg (dd K t)) (cr (rLs (dd K t)) (rvs (dd K t))))
+    ydeq K (.K , f) refl =
+      subst (λ d → _∼_ yB (K , f) (res yB (rg d) (cr (rLs d) (rvs d)))) (sym (dd-at f))
+        (yB ⟨ yeq B (deq-law f) ⟩
+              ∼-≡ yB (sym (trans (cong (res yB (ψ ∘M f)) (cr-at (idMaps As)))
+                                 (yres B (ψ ∘M f) (φ ∘M ⊗s (idMaps As))))))
+
+    -- Yoneda: a framed value at named arguments is a restriction of its value at the identities
+    module _ {Z} (F : Framed Is Z) where
+      private
+        KP = fKP F
+        KQ = fKQ F
+        w₀ = yvs Θs (idMaps As)
+        a₀ = yvs-At Θs (idMaps As)
+
+      yo : ∀ {K Ls} (g : Map K (concat Ls)) (hs : Maps Ls As) →
+           _∼_ Z (res Z (Fr KP KQ Ls g) (fF F Ls (yvs Θs hs)))
+                 (res Z (Fr KP KQ As (⊗s hs ∘M g)) (fF F As w₀))
+      yo {K} {Ls} g hs =
+        Z ⟨ res-cong Z ≈M-refl
+              (Z ⟨ fcg F Ls (yvs Θs hs) (resL hs w₀) (yvs-At Θs hs) (AtL-res Is hs w₀ a₀)
+                       (subst (λ z → yvs Θs hs ∼L z) (sym (resL-yvs Θs (idMaps As) hs))
+                              (yvs-congˢ Θs hs (idMaps As ∘ᵐ hs) (ids-∘ᵐ hs))) ⟩
+                   fnat F hs w₀ a₀) ⟩
+        Z ⟨ ∼-sym Z (res-∘ Z (Fr KP KQ Ls g) (⊗s (idMaps KP ++ᵐ (hs ++ᵐ idMaps KQ))) (fAt F As w₀ a₀)) ⟩
+            res-cong Z (Fr-post (idMaps KP) hs (idMaps KQ) g) (∼-refl Z)
+
+    canc : ∀ {K} (m : Map K (concat As)) → m ≈M (ψ ∘M (φ ∘M m))
+    canc m =
+      ≈M-sym
+      (≈M-trans ((ψ ∘M φ) ∘M m) (≈M-sym (∘M-assoc ψ φ m))
+      (≈M-trans (idMap (concat As) ∘M m) (∘M-cong ψφ ≈M-refl) (∘M-idl m)))
+
+    ydUP : ∀ {Z} (F : Framed Is Z) {K Ls₁ vs₁ Ls₂ vs₂} (g₁ : Map K (concat Ls₁)) (g₂ : Map K (concat Ls₂)) →
+           AtL Is Ls₁ vs₁ → AtL Is Ls₂ vs₂ →
+           _∼_ yB (res yB g₁ (cr Ls₁ vs₁)) (res yB g₂ (cr Ls₂ vs₂)) →
+           _∼_ Z (res Z (Fr (fKP F) (fKQ F) Ls₁ g₁) (fF F Ls₁ vs₁)) (res Z (Fr (fKP F) (fKQ F) Ls₂ g₂) (fF F Ls₂ vs₂))
+    ydUP {Z} F {K} {Ls₁} {vs₁} {Ls₂} {vs₂} g₁ g₂ A₁ A₂ hyp with yview Θs Ls₁ vs₁ A₁ | yview Θs Ls₂ vs₂ A₂
+    ... | hs₁ , refl | hs₂ , refl =
+      Z ⟨ yo F g₁ hs₁ ⟩
+      Z ⟨ res-cong Z (Fr-cong (fKP F) (fKQ F) As key) (∼-refl Z) ⟩
+          ∼-sym Z (yo F g₂ hs₂)
+      where
+        E : ∀ {Ls} (g : Map K (concat Ls)) (hs : Maps Ls As) →
+            res yB g (cr Ls (yvs Θs hs)) ≡ (K , ((φ ∘M ⊗s hs) ∘M g))
+        E g hs = trans (cong (res yB g) (cr-at hs)) (yres B g (φ ∘M ⊗s hs))
+        h′ : ((φ ∘M ⊗s hs₁) ∘M g₁) ≈M ((φ ∘M ⊗s hs₂) ∘M g₂)
+        h′ = yinv B (subst (λ z → _∼_ yB z (K , ((φ ∘M ⊗s hs₂) ∘M g₂))) (E g₁ hs₁)
+                    (subst (λ z → _∼_ yB (res yB g₁ (cr Ls₁ (yvs Θs hs₁))) z) (E g₂ hs₂) hyp))
+        key : (⊗s hs₁ ∘M g₁) ≈M (⊗s hs₂ ∘M g₂)
+        key =
+          ≈M-trans (ψ ∘M (φ ∘M (⊗s hs₁ ∘M g₁))) (canc _)
+          (≈M-trans (ψ ∘M (φ ∘M (⊗s hs₂ ∘M g₂)))
+            (∘M-cong ≈M-refl
+              (≈M-trans ((φ ∘M ⊗s hs₁) ∘M g₁) (≈M-sym (∘M-assoc φ (⊗s hs₁) g₁))
+              (≈M-trans ((φ ∘M ⊗s hs₂) ∘M g₂) h′ (∘M-assoc φ (⊗s hs₂) g₂))))
+            (≈M-sym (canc _)))
+
+  --------------------------------------------------------------------
+  -- The three instances.
+
+  private
+    eP : ∀ Δ Θ → concat (λs (Δ ∷ Θ ∷ [])) ≡ λS Δ ++ λS Θ
+    eP Δ Θ = cong (λS Δ ++_) (++-[] (λS Θ))
+
+    eI : ∀ Θ → concat (λs (Θ ∷ [])) ≡ λS Θ
+    eI Θ = ++-[] (λS Θ)
+
+  cpD : ∀ Δ Θ → CorD (rep Δ ∷ rep Θ ∷ []) (rep (Δ ⊠ Θ))
+  cpD Δ Θ = record
+    { cr = cr ; cok = ok yAt ycg ynt
+    ; dLs = λ K t → rLs (dd K t) ; dvs = λ K t → rvs (dd K t) ; dg = λ K t → rg (dd K t)
+    ; dAt = ydAt ; deq = ydeq ; dUP = ydUP }
+    where open CorY (Δ ∷ Θ ∷ []) (λS Δ ++ λS Θ) (φE (eP Δ Θ)) (ψE (eP Δ Θ)) (φψE (eP Δ Θ)) (ψφE (eP Δ Θ))
+
+  cιD : ∀ Θ → CorD (rep Θ ∷ []) (shp Θ)
+  cιD Θ = record
+    { cr = cr ; cok = ok yAt ycg ynt
+    ; dLs = λ K t → rLs (dd K t) ; dvs = λ K t → rvs (dd K t) ; dg = λ K t → rg (dd K t)
+    ; dAt = ydAt ; deq = ydeq ; dUP = ydUP }
+    where open CorY (Θ ∷ []) (λS Θ) (φE (eI Θ)) (ψE (eI Θ)) (φψE (eI Θ)) (ψφE (eI Θ))
+
+  cptD : CorD [] (rep (disk 0))
+  cptD = record
+    { cr = cr ; cok = ok yAt ycg ynt
+    ; dLs = λ K t → rLs (dd K t) ; dvs = λ K t → rvs (dd K t) ; dg = λ K t → rg (dd K t)
+    ; dAt = ydAt ; deq = ydeq ; dUP = ydUP }
+    where open CorY [] (G 0) iso0 iso0⁻ iso0-l iso0-r

@@ -134,6 +134,16 @@ module _ (K₀ : Code) where
   yres-at : ∀ {K₁ K₂ K′} (g : Map K₁ K₂) (f : Map K′ K₀) (e : K₂ ≡ K′) → res yP g (K′ , f) ≡ (K₁ , (f ∘M castM refl e g))
   yres-at g f refl = resY-at g f
 
+  -- equivalence of representable elements at one stage is equality of maps
+  yeq : ∀ {K} {f g : Map K K₀} → f ≈M g → _∼_ yP (K , f) (K , g)
+  yeq e = ym e
+
+  yinv : ∀ {K} {f g : Map K K₀} → _∼_ yP (K , f) (K , g) → f ≈M g
+  yinv (ym e) = e
+
+  yres : ∀ {K₁ K} (g : Map K₁ K) (f : Map K K₀) → res yP g (K , f) ≡ (K₁ , (f ∘M g))
+  yres g f = resY-at g f
+
 ------------------------------------------------------------------------
 -- The Day tensor.
 

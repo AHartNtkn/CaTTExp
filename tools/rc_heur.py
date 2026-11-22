@@ -327,6 +327,59 @@ def rebracket(G, A, t, u):
     Tu = R._abstract(G, u, n, C, tops, [0])
     return ('coh', C, arr(infer(C, Tt), Tt, Tu), sub)
 
+def cancel_loop(G, A, x, fw, rec):
+    """x a vertical composite H(f_1) * ... * H(f_k) (k >= 2) of one composition
+    head H with a single top slot, whose ends agree and whose slot composite
+    c = f_1 * ... * f_k has identity value with equal ends (for example a
+    coherence followed by its inverse). Returns x -> 1 (fw) or 1 -> x:
+    regroup into H(c) (distribution backwards), compare c with the identity
+    recursively, then H(1) with the identity recursively."""
+    R = _R()
+    n = tdim(A) + 1
+    if A[2] != A[3]:
+        return None
+    fs = R.vfactors(G, x, n)
+    if len(fs) < 2 or any(f[0] != 'coh' for f in fs):
+        return None
+    _, P, B, s0 = fs[0]
+    if any((f[1], f[2]) != (P, B) for f in fs) or ps_dim(P) != n:
+        return None
+    tops = [i for i, C in enumerate(P) if tdim(C) + 1 == n]
+    if len(tops) != 1:
+        return None
+    i = tops[0]
+    mx = maximal_vars(P)
+    if any(f[3][m] != s0[m] for f in fs for m in mx if m != i):
+        return None
+    c = R.vcomp_over_terms(G, n, [f[3][i] for f in fs])
+    Tc = infer(G, c)
+    if Tc[2] != Tc[3] or not is_identity_value(G, c):
+        return None
+    h = ('coh', P, B, sub_from(P, G, {**{m: s0[m] for m in mx if m != i}, i: c}))
+    col, D = distribute(G, h, not fw)          # fw: D : col -> h
+    if D is None:
+        return None
+    rb = None
+    if col != x:
+        rb = rebracket(G, A, x, col) if fw else rebracket(G, A, col, x)
+        if rb is None:
+            return None
+    idc = R.identity(G, Tc[2])
+    X1 = rec(G, Tc, c, idc) if fw else rec(G, Tc, idc, c)
+    if X1 is None:
+        return None
+    Cg, h1 = congruence(G, h, {i: (idc, X1)}, fw)
+    idt = R.identity(G, A[2])
+    X2 = (rec(G, A, h1, idt) if fw else rec(G, A, idt, h1)) if h1 != idt else None
+    if h1 != idt and X2 is None:
+        return None
+    cells = [rb, D, Cg, X2] if fw else [X2, Cg, D, rb]
+    cells = [y for y in cells if y is not None]
+    out = cells[0]
+    for y in cells[1:]:
+        out = comp2(G, n, out, y)
+    return out
+
 # ---------------------------------------------------------------- driver
 
 CALLS = [0]          # reset by rc_oracle.rc for each top-level query
@@ -346,6 +399,12 @@ def heur(G, A, t, u, rec):
             X = rec(G, A, t2, u2)
         else:
             X = rebracket(G, A, t, u)
+            if X is None and A[2] == A[3]:
+                idt = R.identity(G, A[2])
+                if u == idt:
+                    X = cancel_loop(G, A, t, True, rec)
+                elif t == idt:
+                    X = cancel_loop(G, A, u, False, rec)
             if X is None:
                 X = via_abstraction(G, A, t, u, rec)
         if X is None:

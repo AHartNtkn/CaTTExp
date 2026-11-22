@@ -18,7 +18,7 @@ Anthony's decisions (S19): the kernel has no computation rules. The user-facing 
 | **Catt_sua and Catt_su are conservative over Catt** in every strong-Steiner context (pasting contexts included) and in every context for types of dimension ≤ 3 | **[proved]** from the line above, given Lemma 1.2 (**[argued]**). The literature has this only over pasting contexts (FRRV 2020 for Catt_su; Rice's "partial rehydration" for Catt_sua). |
 | Rewrite rules (disc, endo-coherence removal, insertion) as an implementation of ≈ over uniform L | disc and endo removal **[proved]**; insertion and pruning need the designated lifts of §2.2 of `spec/02` to commute with insertion **[open]**, new sub-item of S11 |
 
-The short version: **conservativity is exactly relative coherence for the strictified equality.** The reduction (Theorem A) and its converse (Theorem C) are machine-checked. What is left is one statement about the kernel, EL, which holds inside every coherence head (pasting contexts) and is open in arbitrary contexts.
+The short version: **conservativity is exactly relative coherence for the strictified equality.** The reduction (Theorem A) and the existence half of its converse (Theorem C) are machine-checked; Theorem B (EL ⇒ KC), which closes the equivalence, and the "≈ 1" half of EL in Theorem C are paper proofs. What is left is one statement about the kernel, EL, which holds inside every coherence head (pasting contexts) and is open in arbitrary contexts.
 
 ## 1. The setting
 

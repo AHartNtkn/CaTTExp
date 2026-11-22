@@ -17,7 +17,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
-- [ ] 0.6 Decidability of checking
+- [x] 0.6 Decidability of checking
 - [ ] Q0.1 (surface question): Which composition order does the user write?
 - [ ] Q0.2 (surface question): Are objects written as types or as terms?
 

@@ -81,6 +81,14 @@ def cases():
     t = comp2(W3, 1, v(12), identity(W3, comp2(W3, 0, v(4), v(10))))
     u = comp2(W3, 1, v(12), comp2(W3, 0, identity(W3, v(4)), v(10)))
     out.append(('rank3-identity-slot', W3, infer(W3, t), t, u))
+    # a whiskered coherence followed by its inverse, against the identity
+    a1 = comp2(W3, 1, v(4), identity(W3, v(3)))
+    D2 = tree_ctx(disc_tree(2))
+    k1 = ('coh', D2, arr(D2[4], v(4), comp2(D2, 1, v(4), identity(D2, v(3)))), (v(0), v(1), v(2), v(3), v(4)))
+    k2 = ('coh', D2, arr(D2[4], comp2(D2, 1, v(4), identity(D2, v(3))), v(4)), (v(0), v(1), v(2), v(3), v(4)))
+    t = comp2(W3, 2, wh(k1), wh(k2))
+    u = identity(W3, wh(v(4)))
+    out.append(('rank3-cancel-loop', W3, infer(W3, t), t, u))
     return out
 
 def run_python_checks():

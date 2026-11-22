@@ -52,7 +52,7 @@ A substitution Δ ⊢ γ : Γ must preserve marks: Δ ⊢ x[γ] m for every mark
 
 There is no β or η, so ICaTT's `can`/`rec` equations have nothing to say. Since `inv` is a judgment, the destructors depend on t only.
 
-(DES-inv) was missing until 2026-11-22: without it no rule makes an inverse invertible, so composites involving t⁻ˡ were not derivably inv (`notes/marking-alternatives.md` §3.2). It is sound (t⁻ˡ has inverse t) and syntax-directed. Agda: with the destructors, ledger E4.
+(DES-inv) is needed because no other rule makes an inverse invertible: without it, composites involving t⁻ˡ would not be derivably inv (`notes/marking-alternatives.md` §3.2). It is sound (t⁻ˡ has inverse t) and syntax-directed. Agda: with the destructors, ledger E4.
 
 ### Propagation
 

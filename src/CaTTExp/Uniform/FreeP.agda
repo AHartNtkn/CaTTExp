@@ -176,3 +176,82 @@ module Example where
 
   fg-src : sF 1 (comp 1 f g) ≐ v 0 "a"
   fg-src = ≐-trans (≐-src {σ = σ} (there here) refl args-ok guards-ok) (≐-gsrc f∈ refl)
+
+------------------------------------------------------------------------
+-- Models and soundness.
+--
+-- A model interprets raw terms partially (ev), defines every typed
+-- term, and satisfies every equation the judgments can derive. Then
+-- `typed-def` and `sound` hold, so a model that separates two terms
+-- shows they are distinct cells (`separate`). This is how a computed
+-- table of classes is shown complete: a table closed under the
+-- operations and satisfying the schemas is such a model.
+
+module Models (ops : List OpSpec) (eqs : List Schema) (gens : List Gen) where
+  open Free ops eqs gens
+
+  Defined : ∀ {M : Set} → Maybe M → Set
+  Defined m = T (is-just m)
+
+  record Model : Set₁ where
+    field
+      M  : Set
+      ev : Tm → Maybe M
+
+    ArgsM : Sub → List Tm → Set
+    ArgsM σ as = ∀ {a} → a ∈L as → Defined (ev (σ (varName a))) × (dim (σ (varName a)) ≡ dim a)
+
+    GuardsM : Sub → List Guard → Set
+    GuardsM σ gs = ∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≡ ev (sub σ (snd g))
+
+    field
+      def-gen  : ∀ {g} → g ∈L gens → Defined (ev (v (gdim g) (gname g)))
+      def-s    : ∀ {n x} → Defined (ev x) → dim x ≡ suc n → Defined (ev (sF (suc n) x))
+      def-t    : ∀ {n x} → Defined (ev x) → dim x ≡ suc n → Defined (ev (tF (suc n) x))
+      def-op   : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
+                 ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
+                 Defined (ev (sub σ (OpSpec.applied o)))
+      cong-s   : ∀ {n x y} → ev x ≡ ev y → ev (sF n x) ≡ ev (sF n y)
+      cong-t   : ∀ {n x y} → ev x ≡ ev y → ev (tF n x) ≡ ev (tF n y)
+      cong-op  : ∀ {o σ τ} → o ∈L ops →
+                 (∀ {a} → a ∈L OpSpec.args o → ev (σ (varName a)) ≡ ev (τ (varName a))) →
+                 ev (sub σ (OpSpec.applied o)) ≡ ev (sub τ (OpSpec.applied o))
+      sat-eq   : ∀ {e σ} → e ∈L eqs → ArgsM σ (Schema.vars e) → GuardsM σ (Schema.guards e) →
+                 ev (sub σ (Schema.lhs e)) ≡ ev (sub σ (Schema.rhs e))
+      sat-src  : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
+                 ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
+                 ev (sF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≡ ev (sub σ (OpSpec.srcO o))
+      sat-tgt  : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
+                 ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
+                 ev (tF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≡ ev (sub σ (OpSpec.tgtO o))
+      sat-gsrc : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
+                 ev (sF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gsrc g))
+      sat-gtgt : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
+                 ev (tF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gtgt g))
+
+  module Soundness (𝕄 : Model) where
+    open Model 𝕄
+
+    typed-def : ∀ {x} → Typed x → Defined (ev x)
+    sound     : ∀ {x y} → x ≐ y → ev x ≡ ev y
+
+    typed-def (t-gen m)          = def-gen m
+    typed-def (t-s d e)          = def-s (typed-def d) e
+    typed-def (t-t d e)          = def-t (typed-def d) e
+    typed-def (t-op m ns ha hg)  = def-op m ns (λ k → typed-def (fst (ha k)) , snd (ha k)) (λ k → sound (hg k))
+
+    sound (≐-refl _)                    = refl
+    sound (≐-sym d)                     = sym (sound d)
+    sound (≐-trans d e)                 = trans (sound d) (sound e)
+    sound (≐-s d)                       = cong-s (sound d)
+    sound (≐-t d)                       = cong-t (sound d)
+    sound (≐-op m ns ha hg hb hh pw)    = cong-op m (λ k → sound (pw k))
+    sound (≐-eq m ha hg)                = sat-eq m (λ k → typed-def (fst (ha k)) , snd (ha k)) (λ k → sound (hg k))
+    sound (≐-src m ns ha hg)            = sat-src m ns (λ k → typed-def (fst (ha k)) , snd (ha k)) (λ k → sound (hg k))
+    sound (≐-tgt m ns ha hg)            = sat-tgt m ns (λ k → typed-def (fst (ha k)) , snd (ha k)) (λ k → sound (hg k))
+    sound (≐-gsrc m e)                  = sat-gsrc m e
+    sound (≐-gtgt m e)                  = sat-gtgt m e
+
+    -- A model that tells two terms apart shows they are distinct cells.
+    separate : ∀ {x y} → ¬ (ev x ≡ ev y) → ¬ (x ≐ y)
+    separate ne d = ne (sound d)

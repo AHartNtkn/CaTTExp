@@ -239,6 +239,7 @@ import CaTTExp.Strict.Lift
 import CaTTExp.Strict.FreeGlob
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
+import CaTTExp.Gray.MarksSaturation
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
 import CaTTExp.GrayDualityUniform
@@ -310,9 +311,13 @@ import CaTTExp.Uniform.GridFive
 import CaTTExp.Uniform.GridFiveExamples
 import CaTTExp.Uniform.GridLink
 import CaTTExp.Uniform.GridSep
+import CaTTExp.Uniform.Present
+import CaTTExp.Uniform.GridPresent
+import CaTTExp.Uniform.WordPresent
 import CaTTExp.Uniform.KernelToy
 import CaTTExp.Uniform.InnerInv
 import CaTTExp.Uniform.Marks
 import CaTTExp.Uniform.OrdCoh
 import CaTTExp.Descent.PushoutNotUniversal
 import CaTTExp.Descent.CocartLemmas
+import CaTTExp.Descent.DJOneTruncated

@@ -10,6 +10,10 @@
 -- them is a map m : λD³ → K₄ whose faces have top chains U and V.
 -- `no-uv` and `no-vu`: there is none, in either direction.  The proof
 -- reads off three (resp. two) coordinates of m's chain condition.
+-- `uCell` and `vCell` check, by computation (CheckMap), that u and v
+-- are 2-cells (chain maps λD² → K₄) with these top chains, from the
+-- path 4321 to the path 1234; `no-u⇒v` and `no-v⇒u` state the result
+-- with them as the faces.
 -- No postulates.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude using (Nat)
@@ -23,6 +27,8 @@ open import CaTTExp.Gray.Biclosed.Steiner.Sum
 open import CaTTExp.Gray.Biclosed.Steiner.Globe
 open import CaTTExp.Gray.Biclosed.Steiner.Codes using (globe; Code)
 open import CaTTExp.Gray.Biclosed.Steiner.Maps nmFB
+open import CaTTExp.Gray.Biclosed.Steiner.CheckMap nmFB using (allb; mkMap)
+open import CaTTExp.Gray.Biclosed.Steiner.GlobeMaps nmFB using (δmap)
 
 K₄ : Code
 K₄ = globe 1 ∷ globe 1 ∷ globe 1 ∷ globe 1 ∷ []
@@ -38,10 +44,6 @@ c a b d e = a , b , d , e , tt
 
 ------------------------------------------------------------------------
 -- Sums against a matrix column certified by computation.
-
-allb : ∀ {A : Set} → List A → (A → Bool) → Bool
-allb []       p = true
-allb (x ∷ xs) p = p x ∧ allb xs p
 
 Σ-certify : ∀ {A : Set} (xs : List A) (f b e : A → Nat) → T (allb xs (λ l → b l ==ℕ e l)) →
             Σl xs (λ l → f l * b l) ≡ Σl xs (λ l → f l * e l)
@@ -190,3 +192,44 @@ no-vu m hs ht = s≢z (trans (sym (trans (+-suc (x (c T′ T′ T′ S′)) 0) (
     ttgs′ = trans (cong (x (c T′ T′ T′ S′) +_) (sym (hs (c T′ T′ G′ S′))))
             (trans e-TTGS (trans (cong (x (c T′ T′ G′ T′) +_) (ht (c T′ T′ G′ S′)))
                                  (trans (+-zero _) xTTGT0)))
+
+------------------------------------------------------------------------
+-- u and v are 2-cells: maps λD² → K₄ with top chains U and V, from the
+-- path 4321 (coordinate 4 changes first) to the path 1234.
+
+p4321 p1234 : El K₄ → Nat
+p4321 l = δE K₄ l (c S′ S′ S′ T′) + δE K₄ l (c S′ S′ T′ G′) + δE K₄ l (c S′ T′ G′ G′) + δE K₄ l (c T′ G′ G′ G′)
+p1234 l = δE K₄ l (c T′ S′ S′ S′) + δE K₄ l (c G′ T′ S′ S′) + δE K₄ l (c G′ G′ T′ S′) + δE K₄ l (c G′ G′ G′ T′)
+
+cellMat : (El K₄ → Nat) → Mat (D 2) K₄
+cellMat X (top , tt)          l = X l
+cellMat X (src (fs fz) , tt)  l = p4321 l
+cellMat X (tgt (fs fz) , tt)  l = p1234 l
+cellMat X (src fz , tt)       l = δE K₄ l (c S′ S′ S′ S′)
+cellMat X (tgt fz , tt)       l = δE K₄ l (c G′ G′ G′ G′)
+cellMat X (src (fs (fs ())) , tt) l
+cellMat X (tgt (fs (fs ())) , tt) l
+
+uCell : Map (D 2) K₄
+uCell = mkMap (cellMat U) tt tt tt
+
+vCell : Map (D 2) K₄
+vCell = mkMap (cellMat V) tt tt tt
+
+-- the faces of a 3-cell are its restrictions along δ^±
+face3 : ∀ α (m : Map (D 3) K₄) n → mat (m ∘M δmap α 2) (top , tt) n ≡ mat m (if α then t₃ else s₃) n
+face3 true  m n = trans (Σ-certifyˡ (els′ (D 3)) (λ j → mat m j n) (mat (δmap true 2) (top , tt)) (δE (D 3) t₃) tt)
+                        (Σ-δ (enumEl (D 3)) t₃ (λ j → mat m j n))
+face3 false m n = trans (Σ-certifyˡ (els′ (D 3)) (λ j → mat m j n) (mat (δmap false 2) (top , tt)) (δE (D 3) s₃) tt)
+                        (Σ-δ (enumEl (D 3)) s₃ (λ j → mat m j n))
+
+-- No 3-cell u ⇒ v or v ⇒ u, stated with the 2-cells themselves as faces.
+no-u⇒v : ∀ (m : Map (D 3) K₄) → (m ∘M δmap false 2) ≈M uCell → (m ∘M δmap true 2) ≈M vCell → ⊥
+no-u⇒v m es et =
+  no-uv m (λ n → trans (sym (face3 false m n)) (≈mat es (top , tt) n))
+          (λ n → trans (sym (face3 true m n)) (≈mat et (top , tt) n))
+
+no-v⇒u : ∀ (m : Map (D 3) K₄) → (m ∘M δmap false 2) ≈M vCell → (m ∘M δmap true 2) ≈M uCell → ⊥
+no-v⇒u m es et =
+  no-vu m (λ n → trans (sym (face3 false m n)) (≈mat es (top , tt) n))
+          (λ n → trans (sym (face3 true m n)) (≈mat et (top , tt) n))

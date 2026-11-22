@@ -108,14 +108,15 @@ zipA []       []       = just []
 zipA (n ∷ ns) (t ∷ ts) = zipA ns ts >>= λ as → just ((n , t) ∷ as)
 zipA _        _        = nothing
 
+-- The boundary assignments read off the types of the images.
+fillGo : Ctx → Ctx → Assign → Maybe Assign
+fillGo Γ P []             = just []
+fillGo Γ P ((p , u) ∷ as) =
+  lookup P p >>= λ B' → tyOf Γ u >>= λ B → unify B' B >>= λ bs →
+  fillGo Γ P as >>= λ cs → just (bs ++ cs)
+
 fill : Ctx → Ctx → Assign → Maybe Sub
-fill Γ P top = go top >>= λ rest → subOf (len P) (top ++ rest)
-  where
-  go : Assign → Maybe Assign
-  go []             = just []
-  go ((p , u) ∷ as) =
-    lookup P p >>= λ B' → tyOf Γ u >>= λ B → unify B' B >>= λ bs →
-    go as >>= λ cs → just (bs ++ cs)
+fill Γ P top = fillGo Γ P top >>= λ rest → subOf (len P) (top ++ rest)
 
 -- The general coh former: a pasting scheme T, a builder that produces
 -- the source and target *inside* ctxOf T, and the images (in Γ) of the
@@ -223,18 +224,16 @@ _◃_ : Ctx → Tm → Tm → Maybe Tm
 Comp₃T : Tree
 Comp₃T = node (leaf ∷ leaf ∷ leaf ∷ [])
 
--- assoc f g h : (f;g);h ⇒ f;(g;h)
+-- assoc f g h : (f;g);h ⇒ f;(g;h)   (assocB false; assocB true is the inverse)
+assocB : Bool → Ctx → Maybe (Tm × Tm)
+assocB inv P =
+  vcomp P (var 2 ∷ var 4 ∷ []) >>= λ fg → vcomp P (fg ∷ var 6 ∷ []) >>= λ l →
+  vcomp P (var 4 ∷ var 6 ∷ []) >>= λ gh → vcomp P (var 2 ∷ gh ∷ []) >>= λ r →
+  just (if inv then (r , l) else (l , r))
+
 assoc assoc⁻ : Ctx → Tm → Tm → Tm → Maybe Tm
-assoc Γ f g h = cohT Γ Comp₃T (λ P →
-    vcomp P (var 2 ∷ var 4 ∷ []) >>= λ fg → vcomp P (fg ∷ var 6 ∷ []) >>= λ l →
-    vcomp P (var 4 ∷ var 6 ∷ []) >>= λ gh → vcomp P (var 2 ∷ gh ∷ []) >>= λ r →
-    just (l , r))
-  (f ∷ g ∷ h ∷ [])
-assoc⁻ Γ f g h = cohT Γ Comp₃T (λ P →
-    vcomp P (var 2 ∷ var 4 ∷ []) >>= λ fg → vcomp P (fg ∷ var 6 ∷ []) >>= λ l →
-    vcomp P (var 4 ∷ var 6 ∷ []) >>= λ gh → vcomp P (var 2 ∷ gh ∷ []) >>= λ r →
-    just (r , l))
-  (f ∷ g ∷ h ∷ [])
+assoc  Γ f g h = cohT Γ Comp₃T (assocB false) (f ∷ g ∷ h ∷ [])
+assoc⁻ Γ f g h = cohT Γ Comp₃T (assocB true) (f ∷ g ∷ h ∷ [])
 
 ------------------------------------------------------------------------
 -- Rewriting inside a vertical chain of n-cells by an (n+1)-cell.

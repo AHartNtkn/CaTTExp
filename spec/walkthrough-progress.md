@@ -53,6 +53,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 3.4 Recursive pseudo
 - [ ] 3.5 Pseudo = L + marks
 - [ ] 3.6 Marks over the uniform core
+- [ ] 3.7 The form of the marks, and saturation (added 2026-11-22, S17)
 - [ ] Q3.1 (surface question): Where marks are written.
 - [ ] Q3.2 (surface question): Whether `ps` and `ps*` are both visible.
 - [ ] Q3.3 (surface question): How `ord` is scoped.

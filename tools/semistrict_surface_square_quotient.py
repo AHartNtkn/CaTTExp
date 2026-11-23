@@ -163,6 +163,59 @@ class SquareQuotient:
         return None
 
 
+def neutral_cutoff(rules):
+    """First width with all letters identified, or a one-letter obstruction."""
+    defects = []
+    for n, l, r in rules:
+        if len(l) == len(r):
+            d = multiply(evaluate(n, r), inverse(evaluate(n, l)))
+            if d != tuple(range(n)):
+                defects.append((n, d))
+    if not defects:
+        return None, None
+    n = min(m for m, _ in defects)
+    exceptional = n == 4 and all(order(d) == 2 for m, d in defects if m == 4)
+    for width in range(n, n+1+exceptional):
+        graph = {i: set() for i in range(1, width)}
+        for m, l, r in rules:
+            if len(l) == len(r) == 1:
+                for offset in range(width-m+1):
+                    graph[l[0]+offset].add(r[0]+offset)
+        for i in graph:
+            seen, todo = {i}, [i]
+            while todo:
+                for j in graph[todo.pop()] - seen:
+                    todo.append(j)
+                    seen.add(j)
+            required = ({1, 3} if i != 2 else {2}) if exceptional and width == 4 else graph.keys()
+            for j in sorted(required - seen):
+                pair = tuple((evaluate(width, (letter,)), 0) for letter in (i, j))
+                return None, (width, pair)
+    return n + int(exceptional), None
+
+
+def unary_failure(cutoff, rules):
+    """After the single letters agree, only the rule lengths remain."""
+    for width, l, r in rules:
+        change = len(r)-len(l)
+        if not change:
+            continue
+        n = max(cutoff, width)
+        # Orient the entire weakly monotone system towards larger counts.
+        moves = [(min(len(a), len(b)), abs(len(a)-len(b)))
+                 for m, a, b in rules if m <= n and len(a) != len(b)]
+        target = abs(change)
+        seen = {0}
+        for count in range(target):
+            if count in seen:
+                seen.update(count+cost for guard, cost in moves if guard <= count)
+        if target not in seen:
+            words = ((), (1,)*target) if change > 0 else ((1,)*target, ())
+            pair = tuple((evaluate(n, w), len(w)//2) for w in words)
+            return n, pair
+    return None
+
+
 def all_width_failure(rules):
     increasing = sorted(rule for rule in rules if len(rule[2]) > len(rule[1]))
     decreasing = sorted(rule for rule in rules if len(rule[2]) < len(rule[1]))
@@ -184,8 +237,19 @@ def all_width_failure(rules):
             if not solver.reachable(*pair, False):
                 return threshold, pair
         return None
+    cutoff, failure = neutral_cutoff(rules)
+    if failure:
+        return failure
+    if cutoff is not None:
+        if increasing or decreasing:
+            for n in range(2, cutoff):
+                failure = SquareQuotient(n, rules).reflection_failure()
+                if failure:
+                    return n, failure
+        return unary_failure(cutoff, rules)
     if any(evaluate(n, l) != evaluate(n, r) for n, l, r in rules):
-        raise ValueError('all-width criterion requires permutation preservation or costs of both signs')
+        raise ValueError('all-width criterion requires permutation preservation, a nontrivial '
+                         'count-neutral defect, or costs of both signs')
     solvers = {}
     for n, l, r in sorted(rules):
         e = (len(r)-len(l))//2
@@ -264,8 +328,27 @@ def checks():
         pair = tuple(q.state(w) for w in words)
         for signed in (True, False):
             assert model.reachable(*pair, signed) == (pair[0][0] == pair[1][0])
+    distant = [(4, (1,), (3,)), (4, (3,), (1,))]
+    joined = distant + [(5, (1,), (2,)), (5, (2,), (1,))]
+    assert all_width_failure(distant)[0] == 5 and all_width_failure(joined) is None
+    assert all_width_failure(joined + [(6, (1,), (1, 1))])[0] == 6
+    assert all_width_failure(joined + [(6, (), (1, 1))]) is None
+    assert all_width_failure(joined + [(6, (1, 1), ())]) is None
+    catalogue = [(3, (1,), (2,)), (3, (2,), (1,)), *distant,
+                 (4, (1, 2), (2, 1)), (4, (1, 1, 1), (3, 3, 3))]
+    homogeneous = 0
+    for flags in product((False, True), repeat=len(catalogue)):
+        rules = [r for r, use in zip(catalogue, flags) if use]
+        first = all_width_failure(rules)
+        for n in (3, 4):
+            result = SquareQuotient(n, rules).reflection_failure()
+            if result is not None:
+                assert first is not None and first[0] == n
+                break
+            assert first is None or first[0] > n
+        homogeneous += 1
     print(f'{counted} positive spellings, {comparisons} exact successor sets, '
-          'guarded and mixed-sign reflection checks passed')
+          f'{homogeneous} homogeneous dictionaries, guarded and mixed-sign checks passed')
 
 
 if __name__ == '__main__':

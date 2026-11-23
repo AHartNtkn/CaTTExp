@@ -248,7 +248,7 @@ module Interp (⟦_⟧ : Fm → Psh) where
   drop-++ []       bs zero    refl = refl
   drop-++ (a ∷ as) bs (suc n) e    = drop-++ as bs n (suc-inj e)
 
-  cons-inj′ : ∀ {A : Set} {x y : A} {xs ys : List A} → x ∷ xs ≡ y ∷ ys → (x ≡ y) × (xs ≡ ys)
+  cons-inj′ : ∀ {A : Set} {x y : A} {xs ys : List A} → _≡_ {A = List A} (x ∷ xs) (y ∷ ys) → (x ≡ y) × (xs ≡ ys)
   cons-inj′ refl = refl , refl
 
   app-inj : ∀ {A : Set} (as bs cs ds : List A) → length as ≡ length cs → as ++ bs ≡ cs ++ ds → (as ≡ cs) × (bs ≡ ds)

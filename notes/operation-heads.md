@@ -58,7 +58,7 @@ So suspension acts on the fragment built from coherences, variables and DES; a t
 
 ## 5. Limits of this work, logged in open-issues S27 (e)–(h), owner HEADS
 
-1. (e) **uni is not a head yet.** Its arity is the generic horn H_n(Γ) (spec §1.6), and horns exist in Agda only for n ≤ 1 (`Lim/Horn`).
+1. (e) **uni** is a head family since `Binder.UniHeads`, generic over the horn shape: one pure context laid out as Cone(Γ; L), the horn entries, w, the components, read against the universal cone (L := lim_Γ[id], λ_g := λ_{Γ,g}[id], w := uni^w[id]). Marked horn entries are marked inv in the arity, so the kernel's mark premise is §6.2's "σ must supply inv derivations". `UniHeadsExamples` instantiates the horns of `Lim/Horn` (arrow, n = 0, 1). Remaining: (e′) horn shapes for every Γ and n, which need F(w)_g in general; (e″) J2's "uni^y[σ] inv", a clause of the mark judgment.
 2. (f) **HeadOK for the legs λ_{Γ,g}** (that each leg's type is well-formed over Γ) is not proved for a general shape, so `head-presup` is not instantiated for `LimHeads`. lim itself (type ⋆) is immediate. It needs the cone shape's well-formedness carried through `coneSub`.
 3. (g) **Heads indexed by a non-empty closed telescope** are covered by `head-laws` but not by suspension: suspending them would need a strengthening lemma that the binder kernel does not have. lim is therefore indexed by a pure context carried in the former (`limF Γ`) rather than by a telescope.
 4. (h) `Lim/Rules` (recognition judgments over named contexts) is not yet stated as an instance of `LimHeads`; the two encodings coexist.

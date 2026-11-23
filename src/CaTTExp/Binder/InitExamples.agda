@@ -301,3 +301,45 @@ _ = refl
 -- Selectors: μ, rec and uni at sorts only; η, rec_y, uni_y after them.
 _ : (sideOf μ 2 Δeo , sideOf η 1 Δeo , sideOf rec 2 Δeo) ≡₃ (false , false , false)
 _ = refl
+
+------------------------------------------------------------------------
+-- Marks in the telescope (S26d): the integers
+-- ℤ := μ(X, z : ⊤ → X, s : X → X inv) (spec §9.5). A model must
+-- certify the inv mark: rec into (A, z′, s′) is accepted when s′ is a
+-- variable marked inv, and rejected when s′ is unmarked. With the
+-- (MARK)-only judgment of this file, that is all the kernel knows about
+-- inv; the Gray judgment adds (DES), (DES-inv) and INIT's own inv rules
+-- (ledger S26e).
+
+Δℤ : Ctx
+Δℤ = ε ▸ ⋆ ▸ arr ⋆ one X ▸[ minv ∷ [] ] arr ⋆ X X
+
+μℤ : Tm
+μℤ = bnd μ 0 Δℤ ⟨⟩
+
+Γℤ : List Mark → Ctx
+Γℤ ms = ε ▸ ⋆ ▸ arr ⋆ one (var 0) ▸[ ms ] arr ⋆ (var 0) (var 0)
+
+_ : ( ok (tyOf ε μℤ) , ok (tyOf ε (bnd η 2 Δℤ ⟨⟩))
+    , ok (tyOf (Γℤ (minv ∷ [])) (bnd rec 0 Δℤ (fresh 0 3)))
+    , ok (tyOf (Γℤ []) (bnd rec 0 Δℤ (fresh 0 3)))) ≡₄ (true , true , true , false)
+_ = refl
+
+_ : tyOf (Γℤ (minv ∷ [])) (bnd rec 0 Δℤ (fresh 0 3)) ≡ just (arr ⋆ μℤ (var 0))
+_ = refl
+
+-- rec_y at s, and uni over the marked telescope (its model argument
+-- is marked like Δℤ, so the opened context has s′ marked inv).
+Γuℤ : Ctx
+Γuℤ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℤ)
+
+_ : ( ok (tyOf (Γℤ (minv ∷ [])) (bnd recY 2 Δℤ (fresh 0 3)))
+    , ok (ctx? Γuℤ) , ok (tyOf Γuℤ (bnd uni 0 Δℤ (fresh 0 9)))
+    , ok (tyOf Γuℤ (bnd uniY 2 Δℤ (fresh 0 9)))) ≡₄ (true , true , true , true)
+_ = refl
+
+-- Positivity rejects a marked sort, and a mark other than inv.
+_ : ( sideOf μ 0 (ε ▸[ minv ∷ [] ] ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X X)
+    , sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸[ mps ∷ [] ] arr ⋆ X X)
+    , sideOf μ 0 Δℤ) ≡₃ (false , false , true)
+_ = refl

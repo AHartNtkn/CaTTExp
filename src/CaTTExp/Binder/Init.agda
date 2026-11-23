@@ -35,8 +35,8 @@
 --
 -- Composites, whiskerings and identities are coherences over the usual
 -- pasting contexts. INIT's model-morphism cells are meant invertible;
--- the Agda kernel has no invertibility marks, so the types here carry
--- no `inv` (the marks are a separate judgment, spec chapter 3).
+-- the types here carry no `inv`: that INIT's cells are inv belongs to
+-- the kernel's mark judgment (spec chapter 3; ledger S26e).
 --
 -- Positivity (`positive`). This instance's fragment of §9.3's check,
 -- for the object terms the Agda kernel has (variables, constants,
@@ -46,7 +46,12 @@
 --   * every other entry is a map or a cell (of any dimension) whose
 --     underlying arrow type is S → T with
 --       S a sort, or S mentions no variable bound by the telescope;
---       T a sort, or T is a constant the base signature marks as ⊤.
+--       T a sort, or T is a constant the base signature marks as ⊤;
+--   * marks: the sorts are unmarked, and an operation or cell may be
+--     marked inv (spec §9.3), e.g. ℤ = μ(X, z, s : X → X inv). A
+--     model is an argument list for Δ itself, so the kernel's mark
+--     premise makes it certify every inv mark. The sort marks `grpd` and
+--     ⋆^{≤n} are not accepted yet (ledger S26d).
 -- The arrow context Δ^→ (model morphisms) is stated at maps and at
 -- globular 2-cells l : f ⇒ g between map entries f, g, where its
 -- component is a 3-cell between the two pastings of the naturality
@@ -223,13 +228,24 @@ module Construction (K : Set) (top? : K → Bool) where
   entryOK : Nat → Ty → Bool
   entryOK m A = okBase m (base A)
 
-  -- Every entry after the sorts is a map or cell with a good base.
-  -- Entries are unmarked: marked INIT telescopes are not part of this
-  -- instance (ledger S26d).
+  -- Marks: the sorts are unmarked; an operation or cell may be marked
+  -- inv (spec §9.3, "marks an operation invertible").
+  isInvMark : Mark → Bool
+  isInvMark minv = true
+  isInvMark _    = false
+
+  marksOKAt : Nat → Nat → List Mark → Bool
+  marksOKAt m j ms = if j <ℕ m then null ms else all isInvMark ms
+    where
+    null : List Mark → Bool
+    null []      = true
+    null (_ ∷ _) = false
+
+  -- Every entry after the sorts is a map or cell with a good base, and
+  -- marks are as above.
   posFrom : Nat → Ctx → Bool
-  posFrom m ε                = true
-  posFrom m (Δ ▸ A)          = posFrom m Δ ∧ ((len Δ <ℕ m) ∨ entryOK m A)
-  posFrom m (Δ ▸[ _ ∷ _ ] A) = false
+  posFrom m ε             = true
+  posFrom m (Δ ▸[ ms ] A) = posFrom m Δ ∧ marksOKAt m (len Δ) ms ∧ ((len Δ <ℕ m) ∨ entryOK m A)
 
   positive : Ctx → Bool
   positive Δ = (0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ

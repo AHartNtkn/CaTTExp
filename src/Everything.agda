@@ -424,6 +424,8 @@ import CaTTExp.Binder.MarkExamples
 import CaTTExp.Binder.Des
 import CaTTExp.Binder.DesLaws
 import CaTTExp.Binder.DesPresup
+import CaTTExp.Binder.PureSide
+import CaTTExp.Binder.DesSideCatt
 import CaTTExp.Binder.DesExamples
 import CaTTExp.Binder.Embed
 import CaTTExp.Binder.Init

@@ -23,6 +23,7 @@ The list is fixed. A new inductive object, quotient, truncation or recursively d
 | Object-valued recursion on rose trees (R-U) | instance of INIT + DESC-grpd | proved (sketch) |
 | R-cot⁺ over a set base | closed-structure hom + DESC-grpd + INIT | proved (sketch) |
 | T-graph, T-loc | encode–decode from DESC, DJ and INIT, plus the closure clauses T-init and T-hom⁻ | paper only (F10d, F10g) |
+| Higher inductive objects (circle, spheres, suspensions, torus, ‖A‖₋₁ by a squash constructor) and their directed analogues (directed circle BN, directed spheres, Gray suspension) | instances of INIT with cell variables; dependent elimination by Theorem D of `notes/higher-inductive.md` | proved (note level, F11) |
 
 The notes state this chapter under P (pseudo ambient) and say where L differs. For **discrete targets P and L agree**, because every 2-cell of the target is already invertible. Restating the non-discrete parts over V + S is ledger S8.
 
@@ -65,6 +66,8 @@ Derived:
 **Why T-hom⁻ excludes n = 0.** The walking arrow [1] has every hom a proposition (Hom(0, 1) = ⊤, Hom(1, 0) = ∅, endo-homs ⊤), but it is not trunc 0, because its arrow is not invertible. Invertibility of the homs' cells says nothing about C's 1-cells, so at n = 0 the rule needs C to be a groupoid. Every use (T-graph, T-loc) is at n = 1.
 
 **Why T-init has no cell variables.** With arbitrary invertible cells T-init is false. The context (X, z, s, s⁻¹, s ; s⁻¹ ≅ 1, s⁻¹ ; s ≅ 1), with quasi-inverse data instead of bi-invertibility data, has an initial model that is not a set: the higher inductive integers without their coherence constructor (Altenkirch–Scoccola, arXiv:2007.00167, §1.2).
+
+**No complete clause with cell variables.** Allowing cell variables makes `trunc n` undecidable: (X : grpd, X : ⋆^{≤1}, b, g_i : b → b, ρ_j : w_j ⇒ 1_b) has μΔ = BG for the presented group G, which is trunc 0 iff G is trivial (Adian–Rabin). So extensions of T-init can only be sound sufficient conditions; candidates (Gersten's weight test for groupoidal 2-dimensional contexts, homotopical polygraphs for directed ones, ledger B24) are in `notes/higher-inductive.md` §7 (F11d).
 
 **Relation to `grpd_k`.** `C grpd_k` (chapter 3) makes cells of hom-dimension ≥ k invertible: C is an (∞, k−1)-category. `C trunc n` makes them also fillable above level n: C is an n-truncated object. For n ≥ 0, `trunc n` implies `grpd_{n+1}`; the converse fails.
 
@@ -131,8 +134,10 @@ DESC-pb is a theorem of the definition (Riehl–Verity, FYL §5.2) and is listed
 - in the **target** of every operation, X occurs only under limit-preserving operations: X itself, ⊤, Hom_X(x, y) for points given by earlier variables, cotensors and lax cotensors [A, X] by objects A not mentioning X, and finite limits of these. Not coproducts, pushouts, ⊗, or a constant other than ⊤;
 - in the **source** of every operation, X occurs under any accessible covariant operation: finite limits, colimits, ⊗ and × with fixed objects, and cotensors by fixed objects;
 - a **cell** variable is a cell (of any dimension, invertible or not) between composites of earlier operations, and its target obeys the target condition;
-- a **mark** restricts X to a reflective class closed under limits and filtered colimits (`⋆^{≤n}`), or marks an operation invertible (`inv`, presented by bi-invertibility data);
+- a **mark** restricts X to a reflective class closed under limits and filtered colimits (`⋆^{≤n}`), or marks an operation invertible (`inv`, the declaration mark of chapter 3, §3.2, whose destructors (DES) are bi-invertibility data);
 - X occurs nowhere contravariantly (no [X, –], no Hom with X in the first argument).
+
+**Several sorts, over bases.** More generally Δ may distinguish finitely many object variables X₁, …, X_m, each optionally **over a fixed base** B_i (a structure map X_i → B_i, with operations into X_i taken over B_i). The conditions above apply to each X_i, with B_i in place of ⊤ as the terminal target for X_i. This covers multi-sorted contexts over a set (§9.4), R-U's family over Θ₀ (§9.7), inductive families over a non-discrete base, and inductive-inductive definitions (a sort R with p : R → X × X declared with X). Models live in ∏_i Cat_ω/B_i, which is presentable, so the soundness argument below applies unchanged (`notes/higher-inductive.md` §8, F11b).
 
 A **model** of Δ with carrier A is a substitution σ : Δ[A/X]. A **model morphism** is a map between carriers with an **invertible** cell for each variable of Δ (the arrow context Δ^→): model morphisms are strong.
 ```
@@ -144,6 +149,8 @@ A **model** of Δ with carrier A is a substitution σ : Δ[A/X]. A **model morph
 (higher)     derived: a level-k cell between model morphisms is a model morphism into the
              cotensor [⟦Dᵏ⟧, A] with the pointwise model
 ```
+"Invertible" here is chapter 3's judgment `inv`: INIT concludes `rec_y inv`, `uni inv` and `uni_y inv`, and the inverses and their witnesses at every level come from (DES) and (DES-inv), with no further formers. A model σ must certify every `inv` mark of Δ, since substitutions preserve marks (§3.2). The three conclusions are syntax-directed axioms on INIT's head formers, like (mark), so `inv` stays decidable: it is not closed under inv-intro, which is what the saturation theorem of §3.7 needs for undecidability. Where a model's mark needs a cell that is invertible only by data, the evidence layer of §3.7 supplies it. DES is not yet in Agda (ledger E4).
+
 The rule binds the object variable X in a premise, forms an ordinary object μΔ, states its universal property by cells, and makes no judgment a term. It is the kind of binding former §0.2 allows, not a universe.
 
 **Side condition and decision procedure.** Positivity is syntax-directed and decidable, like strict positivity for inductive types: walk the source and target of each operation and check every occurrence of X against the two lists above. No decidable syntax can be exact for single contexts outside this class: with a fixed BG for a finitely presented group G, `⊤ → BG` has an initial model iff G is trivial, which is undecidable (Adian–Rabin). So the kernel checks the uniform class.
@@ -151,7 +158,8 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 **Example.**
 - ℕ := μ(X, z : ⊤ → X, s : X → X); List(B) := μ(X, n : ⊤ → X, c : B × X → X); a finitary W-type is μ(X, c_i : B_i × X^{n_i} → X).
 - ‖A‖_n := μ(X : ⋆^{≤n}, g : A → X). Here INIT-J1 and INIT-J2 are the two truncation rules Tr-J1 and Tr-J2.
-- The free object on an object-labelled graph is μ(X, x_v : ⊤ → X, e : B_e → Hom_X(x_v, x_w)), which is R-A⁺. The target Hom_X(x_v, x_w) is a pullback of [⟦D¹⟧, X], so it is limit-preserving. The initial model is V ⊔_{∐_e (⊤ ⊔ ⊤)} ∐_e ΣB_e.
+- The free object on an object-labelled graph is μ(X, x_v : ⊤ → X, e : B_e → Hom_X(x_v, x_w)), which is R-A⁺. The target Hom_X(x_v, x_w) is a pullback of the **lax** cotensor [⟦D¹⟧, X], so it is limit-preserving. (The fibre of the cartesian cotensor over (x_v, x_w) has only the invertible 2-cells of X as its 1-cells, so it is not the hom; F11a.) The initial model is V ⊔_{∐_e (⊤ ⊔ ⊤)} ∐_e ΣB_e.
+- *Cell constructors (HITs).* A context whose sources do not mention X is a cell complex: μΔ is the iterated pushout of A ⊗ ∂⟦Dᵏ⟧ → A ⊗ ⟦Dᵏ⟧, one per cell variable (`notes/higher-inductive.md`, Thm A). (X, b : ⊤ → X, l : b → b) is the directed circle BN, the free (∞,ω)-category on a loop; with `l inv`, or with the mark `X : grpd` (∞-groupoids are a reflective class closed under limits and colimits), it is the circle S¹ = BZ. (X, n, s : ⊤ → X, m : A → Hom_X(n, s)) is the Gray suspension ΣA. Under `grpd` the result is the CW complex of HoTT's non-recursive HITs (Thm B). Recursive cell constructors are admitted too: (X : grpd, g : A → X, sq : π₁ ⇒ π₂ : X × X → X) gives ‖A‖₋₁ (Thm C), while without `grpd` its initial model is not ⊤ (Prop C′). Dependent elimination for every Δ and every family p : E → μΔ follows from INIT-J1/J2 by the Awodey–Gambino–Sojakova argument (Thm D).
 - *Rejected: a target that does not preserve limits.* Δ = (X, t : ⊤ → ⊤ ⊔ ⊤) has models Cat_ω ⊔ Cat_ω and no initial model. The same holds for (X, t : ⊤ → X ⊔ X).
 - *Why morphisms are strong.* With lax model morphisms, pointed objects with a non-invertible comparison f(i) → y have no initial model: every candidate has two inequivalent maps to ([1], 1). Cells *declared in* Δ may still be non-invertible, so directed structure is available inside models.
 
@@ -160,7 +168,7 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 **Semantics.** Sound in Cat_ω for limit-preserving accessible targets, accessible sources and strong morphisms: the forgetful functor from models creates limits and is accessible, so an initial model exists (Adámek–Rosický; Kerodon 9.4.9, 9.5.1–9.5.2), extended to finite contexts with cells. The target class is maximal among uniform ones: for a constant source A, having initial models for every A is a left adjoint to the target, which forces the target to preserve limits. The dual rule, final models of copositive contexts, is unsound in general (the right adjoint to base change along the non-exponentiable {0<2} → [2] does not exist), and it is not part of the system.
 
 **Status.**
-- Soundness and maximality: **proved** (researcher answer, verified 2026-11-21).
+- Soundness and maximality: **proved** (researcher answer, verified 2026-11-21). The answer states the theorem for any presentable category of carriers, "such as C, a slice, or the intersection of the specified marks", which covers several sorts over bases.
 - **Not derivable** from finite limits, finite colimits and DESC: **proved** (researcher answer, verified 2026-11-22, `notes/conjectures/answered/universe-free-initial-models-r2-2026-11-22.md`). A model with full finite descent and DESC-tr (eventually-connected sequences of arrows of spaces) has no initial model for (X, a : A → X, l : X ×_{X×X} X → X). ℕ on its own *is* a theorem of DESC (ΩS¹ with Sattler–Wärn's sign construction), but which contexts follow from descent is undecidable (contractibility of finite complexes), so INIT stays one rule.
 - Agda: INIT as a declared operation over the abstract model interface, with the derivations: open (F10f).
 
@@ -199,7 +207,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 
 ## 9.5 Quotients and the integers
 
-**Construction.** ℤ := μ(X, z : ⊤ → X, s : X → X inv), the initial object with a point and an automorphism. The `inv` mark is presented by bi-invertibility data l, r : X → X with l ; s ≅ 1 and s ; r ≅ 1, whose witnesses form a proposition, so maps out of ℤ are determined by z and s (Altenkirch–Scoccola, Thm 2.4). Equivalently, ℤ ≃ Hom(x, x) in the localisation of ⟦L⟧ at s, a finite pushout (chapter 7, §7.3), by encode–decode with M = {s} inverted (§9.4).
+**Construction.** ℤ := μ(X, z : ⊤ → X, s : X → X inv), the initial object with a point and an automorphism. The `inv` mark is chapter 3's declaration mark: its destructors give l = s⁻ˡ and r = s⁻ʳ with λ_s : l ; s → 1 and ρ_s : s ; r → 1, all themselves inv (DES, DES-inv). Invertibility is a judgment, so it is a property rather than data, and maps out of ℤ are determined by z and s (Altenkirch–Scoccola, Thm 2.4). Equivalently, ℤ ≃ Hom(x, x) in the localisation of ⟦L⟧ at s, a finite pushout (chapter 7, §7.3), by encode–decode with M = {s} inverted (§9.4).
 
 **Truncations and quotient sets.** ‖X‖_n is an INIT instance (§9.3); its higher levels and dependent elimination are derived. A quotient set is the 0-truncation of a localisation (a pseudo coequaliser); ℚ is a quotient of ℤ × ℕ.
 
@@ -256,7 +264,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 
 Colimits *inside* an object C are declared structure: a marking with a filler rule. **Θ-density** (B as the colimit of its pasting-diagram elements) is an instance over an internal Θ and gives extensionality of transformations for arbitrary domains (F5b, F5c drafted).
 
-**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}.
+**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}. (Here X is a sort over the base Θ₀ in the sense of §9.3's "several sorts, over bases"; with a single unbased sort, p's constant target Θ₀ would violate the target condition. F11b.)
 
 **R-cot⁺ over a set base (no rule).** For a set I and q : U → I, the object [q, B] → I, whose maps from W over I are the maps W ×_I U → B, is an equaliser inside I × U\(B ⊔ ⊤) (the closed-structure hom of chapter 8, read as partial maps): the i-th component lands in B and the others in ⊤. DESC-grpd splits W over I, and decidable equality on I comes from INIT. Over a non-discrete base, R-cot⁺ would be a right adjoint to base change along q, which exists only for exponentiable q; it is not part of the system.
 

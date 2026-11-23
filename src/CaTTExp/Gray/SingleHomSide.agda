@@ -28,12 +28,22 @@
 --    t:A by isOp. It is not an object, so (S v) ∈ ↓supp(t:A)
 --    (Strict.SuppFV.supp-fv⇐), which is a bounded path from a tuple of
 --    supp(t:A), i.e. a leqT cover (Gray.DownAgree).
+--
+-- The coherence case, in every dimension (no dim Θ > 0 needed):
+--
+--   Cells.coh-side : Θ ⊢ps → ΣΘ ⊢tm t, u ∶ A → endsOK (ΣΘ) A →
+--                    isCoh (ΣΘ) A t u → cohCase (ΣΘ) A t u
+--
+-- by the same two inclusions with ∂^sg T replaced by Supp(T): a tuple
+-- of supp(t:A) is some (S v), which is below Supp(T)
+-- (Gray.SingleHom.rule-full); a tuple of Supp(T) is some (S v), and S v
+-- is a variable of t:A by isCoh, so (S v) ∈ ↓supp(t:A).
 ------------------------------------------------------------------------
 module CaTTExp.Gray.SingleHomSide where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Strict.Complex using (endsV; endsL; WFT)
-open import CaTTExp.Strict.L using (PsInv; psInv; IsCellTm; towerOf; endsL-inv)
+open import CaTTExp.Strict.L using (PsInv; psInv; IsCellTm; towerOf; endsL-inv; lookup-lt)
 open import CaTTExp.Strict.Cell using (flat)
 open import CaTTExp.Strict.Soundness using (flat-supp; endsV→endsTy)
 open import CaTTExp.Strict.Recon using (flat-sub; Sub-cell; topdeg)
@@ -46,9 +56,9 @@ open import CaTTExp.Gray.SetFacts ∅ using (_∈L_; _∈ᴺ_; anyS⇐; map≡; 
 open import CaTTExp.Gray.DownAgree ∅ using (memT-sound; memT-complete; nub-sound) renaming (module Faces to DF)
 open import CaTTExp.Gray.SuppVars ∅ using (supp-fv)
 open import CaTTExp.Gray.SingleHom ∅
-  using (module Main; mkC; hΣ; hcsΣ; cell-shape; objsΣ; dimKΣ; rule-bdry⇒; rule-bdry⇐; FM; chain1⇒; lower⇒)
+  using (module Main; mkC; hΣ; hcsΣ; cell-shape; objsΣ; dimKΣ; rule-bdry⇒; rule-bdry⇐; FM; chain1⇒; lower⇒; rule-full; homsΣ)
 open import CaTTExp.Suspension ∅ using (Σctx; Σty; S; Σps′; lookupΣ)
-open import CaTTExp.Typing ∅ using (isOp)
+open import CaTTExp.Typing ∅ using (isOp; isCoh)
 
 open import CaTTExp.Strict.Soundness using (module Soundness)
 open Soundness using (sound-tm)
@@ -105,6 +115,125 @@ private
   endsOK-ty Γ A e rewrite e = refl
 
 ------------------------------------------------------------------------
+-- Tuples over Γ = ΣΘ, any dimension, and the coherence case.
+
+module Cells {Θ : Ctx} (PΘ : Θ ⊢ps) where
+
+  private
+    Γ  = Σctx Θ
+    PΓ : Γ ⊢ps
+    PΓ = Σps′ PΘ
+    invΓ = psInv PΓ
+    cs = cells Γ
+    N  = dimK (homs Γ)
+    h  = hΣ Θ
+    module F = DF cs
+
+    Mh = dimK (h ∷ [])
+
+    lt-pred : ∀ x m → T (x <ℕ suc m) → (x ==ℕ m) ≡ false → T (x <ℕ m)
+    lt-pred zero    zero    _ ()
+    lt-pred zero    (suc m) _ _ = tt
+    lt-pred (suc x) zero    () _
+    lt-pred (suc x) (suc m) p e = lt-pred x m p e
+
+    <-down : ∀ x m → T (x <ℕ m) → x ∈ᴺ downFrom m
+    <-down x (suc m) p with x ==ℕ m in e
+    ... | true  = here (==ℕ-sound x m (subst T (sym e) tt))
+    ... | false = there (<-down x m (lt-pred x m p e))
+
+
+    -- The ⋆-endpoints fixed by endsOK are the objects 0 and 1.
+    ends01 : ∀ A {x y} → endsV A ≡ just (x , y) → T (endsOK Γ A) → (x ≡ 0) × (y ≡ 1)
+    ends01 A {x} {y} ev ok =
+      let q = subst (λ L → T (isVarAt (var x) (firstL L) ∧ isVarAt (var y) (lastL L))) (objsΣ Θ)
+                (subst T (endsOK-ty Γ A (endsV→endsTy A ev)) ok)
+      in ==ℕ-sound x 0 (∧-fst q) , ==ℕ-sound y 1 (∧-snd {x ==ℕ 0} q)
+
+  -- A tuple of supp(t : A) is a singleton (S v), v a variable of Θ.
+  supp-sing : ∀ {t B p q} → Γ ⊢tm t ∶ arr B p q → T (endsOK Γ (arr B p q)) →
+                ∀ {s} → s ∈L supp t (arr B p q) →
+                Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (s ≡ S v ∷ [])
+  supp-sing {t} {B} {p} {q} d ok {s} ms with sound-tm invΓ d
+  ... | (x , y) , ev , _ , _ , cX
+    with flat-sub PΓ (dim B) (towerOf t (arr B p q)) cX
+           (memT-sound s _ (subst T (sym (flat-supp t B p q s)) (memT-complete s _ ms)))
+  ...   | m , V , sub , mv with topdeg PΓ m V (Sub-cell PΓ cX sub) mv | ends01 (arr B p q) ev ok
+  ...     | wft , _ | refl , refl = fin s wft
+    where
+    fin : ∀ s → WFT Γ 0 1 s → Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (s ≡ S v ∷ [])
+    fin []      ()
+    fin (a ∷ w) (z , ea , rest) with endsL-inv (lookup Γ a) ea
+    ... | ⋆ , la , ()
+    ... | arr C c c′ , la , _ with lookupΣ⁻ Θ a la refl
+    ...   | v , A′ , refl , _ , lv =
+      v , A′ , lv , cong (S v ∷_) (short-tail (short Θ (S v ∷ w) (z , ea , rest)))
+
+
+  -- A tuple of a table of the one hom is a singleton (S v).
+  chain-sing : ∀ s k {τ} → τ ∈L chainT s k (h ∷ []) →
+               Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (τ ≡ S v ∷ [])
+  chain-sing s k mc with chain1⇒ h s k mc
+  ... | b , refl , pb with piece-cell h k s pb
+  ...   | e , me , refl with cell-shape Θ (subst (λ L → Any (e ≡_) L) (hcsΣ Θ) me)
+  ...     | v , A′ , lv , refl = v , A′ , lv , refl
+
+  -- A tuple of Supp(T) is a singleton (S v), v a variable of Θ.
+  full-sing : ∀ {τ} → τ ∈L fullT (homs Γ) →
+              Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (τ ≡ S v ∷ [])
+  full-sing {τ} mτ with any-++⁻ (lowerT Mh (h ∷ [])) (subst (λ hs → τ ∈L fullT hs) (homsΣ Θ) mτ)
+  ... | inj₁ l with lower⇒ Mh (h ∷ []) l
+  ...   | k , s , _ , mc = chain-sing s k mc
+  full-sing mτ | inj₂ c = chain-sing true Mh c
+
+  -- S v is a variable of Γ for every variable v of Θ.
+  S-vars : ∀ v {A′} → lookup Θ v ≡ just A′ → S v ∈ᴺ varsCtx Γ
+  S-vars v lv = <-down (S v) (len Γ) (lookup-lt Γ (S v) (lookupΣ Θ v lv))
+
+  -- A side that uses every variable of Γ has support ↓Supp(T).
+  coh-half : ∀ {t B p q} → Γ ⊢tm t ∶ arr B p q → T (endsOK Γ (arr B p q)) →
+             T (⊆? (varsCtx Γ) (fvTmTy t (arr B p q))) →
+             T (sameDown Γ (supp t (arr B p q)) (fullT (homs Γ)))
+  coh-half {t} {B} {p} {q} d ok sub = ∧-in to from
+    where
+    A = arr B p q
+    go-to : ∀ s → s ∈L supp t A → T (any (leqT cs N s) (fullT (homs Γ)))
+    go-to s ms with supp-sing d ok ms
+    ... | v , A′ , lv , refl = rule-full Θ v lv
+    to : T (covers Γ (supp t A) (fullT (homs Γ)))
+    to = T-All (λ s → any (leqT cs N s) (fullT (homs Γ))) (supp t A) (λ {s} ms → go-to s ms)
+    go-from : ∀ τ → τ ∈L fullT (homs Γ) → T (any (leqT cs N τ) (supp t A))
+    go-from τ mτ with full-sing mτ
+    ... | v , A′ , lv , refl with F.close⇒ N (nubT (supp t A)) (memT-sound (S v ∷ []) (down Γ (supp t A)) (supp-fv⇐ PΘ d inFV no))
+      where
+      inFV : S v ∈ᴺ fvTmTy t A
+      inFV = ⊆?⇒ (varsCtx Γ) (fvTmTy t A) sub (S-vars v lv)
+      no : lookup Γ (S v) ≡ just ⋆ → ⊥
+      no e = Σ≢⋆ A′ (just-inj (trans (sym (lookupΣ Θ v lv)) e))
+    ...   | s , ms , k , kle , r =
+      anyS⇐ (leqT cs N (S v ∷ [])) (supp t A)
+        (any-at (nub-sound (supp t A) ms) (F.leqT⇐ {N} {S v ∷ []} (F.pw-mono kle (F.reach⇒pw r))))
+    from : T (covers Γ (fullT (homs Γ)) (supp t A))
+    from = T-All (λ τ → any (leqT cs N τ) (supp t A)) (fullT (homs Γ)) (λ {τ} mτ → go-from τ mτ)
+
+  -- Finster–Mimram's coherence condition gives two-tier L's, on one hom
+  -- and in every dimension.
+  coh-side : ∀ {B p q t u} → Γ ⊢tm t ∶ arr B p q → Γ ⊢tm u ∶ arr B p q →
+             T (endsOK Γ (arr B p q)) →
+             T (isCoh Γ (arr B p q) t u) → T (cohCase Γ (arr B p q) t u)
+  coh-side {B} {p} {q} {t} {u} dt du ok ic =
+    ∧-in ok (∧-in (coh-half dt ok (∧-snd {⊆? (fvTmTy t A) (varsCtx Γ)} (∧-fst ic)))
+                  (coh-half du ok (∧-snd {⊆? (fvTmTy u A) (varsCtx Γ)}
+                                         (∧-snd {≈? (fvTmTy t A) (varsCtx Γ)} ic))))
+    where A = arr B p q
+
+  coh-side-gray : ∀ {B p q t u} → Γ ⊢tm t ∶ arr B p q → Γ ⊢tm u ∶ arr B p q →
+                  T (endsOK Γ (arr B p q)) →
+                  T (isCoh Γ (arr B p q) t u) → T (graySide Γ (arr B p q) t u)
+  coh-side-gray {B} {p} {q} {t} {u} dt du ok ic =
+    ∨-inl {cohCase Γ (arr B p q) t u} (coh-side dt du ok ic)
+
+------------------------------------------------------------------------
 -- The lemma, over Γ = ΣΘ.
 
 module _ {Θ : Ctx} (PΘ : Θ ⊢ps) (pos : T (0 <ℕ dimCtx Θ)) where
@@ -132,32 +261,6 @@ module _ {Θ : Ctx} (PΘ : Θ ⊢ps) (pos : T (0 <ℕ dimCtx Θ)) where
     rb⇐ : ∀ sg v {A} → lookup Θ v ≡ just A →
           elem (S v) (FM sg Γ) ≡ true → T (any (leqT cs N (S v ∷ [])) (bdryT sg (homs Γ)))
     rb⇐ sg v lv p = rule-bdry⇐ dΘ pos sg v lv p
-
-    -- The ⋆-endpoints fixed by endsOK are the objects 0 and 1.
-    ends01 : ∀ A {x y} → endsV A ≡ just (x , y) → T (endsOK Γ A) → (x ≡ 0) × (y ≡ 1)
-    ends01 A {x} {y} ev ok =
-      let q = subst (λ L → T (isVarAt (var x) (firstL L) ∧ isVarAt (var y) (lastL L))) (objsΣ Θ)
-                (subst T (endsOK-ty Γ A (endsV→endsTy A ev)) ok)
-      in ==ℕ-sound x 0 (∧-fst q) , ==ℕ-sound y 1 (∧-snd {x ==ℕ 0} q)
-
-    -- A tuple of supp(t : A) is a singleton (S v), v a variable of Θ.
-    supp-sing : ∀ {t B p q} → Γ ⊢tm t ∶ arr B p q → T (endsOK Γ (arr B p q)) →
-                ∀ {s} → s ∈L supp t (arr B p q) →
-                Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (s ≡ S v ∷ [])
-    supp-sing {t} {B} {p} {q} d ok {s} ms with sound-tm invΓ d
-    ... | (x , y) , ev , _ , _ , cX
-      with flat-sub PΓ (dim B) (towerOf t (arr B p q)) cX
-             (memT-sound s _ (subst T (sym (flat-supp t B p q s)) (memT-complete s _ ms)))
-    ...   | m , V , sub , mv with topdeg PΓ m V (Sub-cell PΓ cX sub) mv | ends01 (arr B p q) ev ok
-    ...     | wft , _ | refl , refl = fin s wft
-      where
-      fin : ∀ s → WFT Γ 0 1 s → Σ Nat λ v → Σ Ty λ A′ → (lookup Θ v ≡ just A′) × (s ≡ S v ∷ [])
-      fin []      ()
-      fin (a ∷ w) (z , ea , rest) with endsL-inv (lookup Γ a) ea
-      ... | ⋆ , la , ()
-      ... | arr C c c′ , la , _ with lookupΣ⁻ Θ a la refl
-      ...   | v , A′ , refl , _ , lv =
-        v , A′ , lv , cong (S v ∷_) (short-tail (short Θ (S v ∷ w) (z , ea , rest)))
 
     -- A tuple of ∂^sg T is a singleton (S v), v a variable of Θ.
     bdry-sing : ∀ sg {τ} → τ ∈L bdryT sg (homs Γ) →
@@ -188,7 +291,7 @@ module _ {Θ : Ctx} (PΘ : Θ ⊢ps) (pos : T (0 <ℕ dimCtx Θ)) where
       where
       A = arr B p q
       go : ∀ s → s ∈L supp t A → T (any (leqT cs N s) (bdryT sg (homs Γ)))
-      go s ms with supp-sing d ok ms
+      go s ms with Cells.supp-sing PΘ d ok ms
       ... | v , A′ , lv , refl =
         rb⇐ sg v lv (T≡ (elem⇐ (S v) (FM sg Γ) (⊆?⇒ (fvTmTy t A) (FM sg Γ) sub (supp-fv t A ms (here refl)))))
 

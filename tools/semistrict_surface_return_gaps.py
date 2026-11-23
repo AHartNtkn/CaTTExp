@@ -18,6 +18,17 @@ class Rule:
     target: tuple
 
 
+def exchange_at(steps, index, marks):
+    """Swap a spatially right rewrite followed by a disjoint left one."""
+    right_pos, right = steps[index]
+    left_pos, left = steps[index + 1]
+    source, target = marks[left]
+    if left_pos + len(source) > right_pos:
+        return None
+    pair = ((left_pos, left), (right_pos + len(target) - len(source), right))
+    return steps[:index] + pair + steps[index + 2:]
+
+
 class Presentation:
     def __init__(self, edges, marks, rules):
         self.edges = edges
@@ -58,11 +69,9 @@ class Presentation:
         for i, (pos, a) in enumerate(steps):
             # A forward square executes the spatially left event first.
             if i + 1 < len(steps):
-                other_pos, b = steps[i + 1]
-                sb, tb = self.marks[b]
-                if other_pos + len(sb) <= pos:
-                    replacement = ((other_pos, b), (pos + len(tb) - len(sb), a))
-                    yield steps[:i] + replacement + steps[i + 2:], None
+                replacement = exchange_at(steps, i, self.marks)
+                if replacement is not None:
+                    yield replacement, None
             for rule in self.rules:
                 k = len(rule.source)
                 offset = pos - rule.source[0][0]

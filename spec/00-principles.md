@@ -26,7 +26,7 @@ What it does not exclude:
 - **Binding formers in Lawvere's style** (§0.1). A rule may bind an object variable in a premise and form an object or a cell from it. Examples are an end ∫_X F(X, X) or a System F-style ∀X. T(X).
 - Such a rule must state its universal property as the existence of cells (§0.3), and it must not make ⋆ or a judgment into a term.
 - A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
-- Whether the kernel takes any binding former, and which ones are sound in 𝒦, is open (ledger F10(c)).
+- The kernel has one such former: INIT (chapter 9, §9.3), the initial model μΔ of a positive context Δ, read impredicatively as ∀Δ. X with naturality. It is sound in 𝒦 for its class of contexts. The dual, final models of copositive contexts, is unsound in general and is not a rule.
 
 *Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
 
@@ -41,7 +41,7 @@ Every universal property is stated as the existence of cells: a structure map, a
 
 **This is a property of the kernel only.** The surface may add computation rules (§0.5). For example, rewrite rules may strictify two of associators, unitors and interchange. Each such rule is justified by a formalized conservativity proof, not by a definitional equality in the kernel.
 
-Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`, `⊢hpol`).
+Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`).
 
 *Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional); Anthony, spec walkthrough 2026-11-22 (surface computation rules; ledger S6, S19).
 
@@ -85,7 +85,7 @@ This spec fixes the kernel and leaves every surface choice open. Each chapter li
 
 ## 0.6 Decidability of checking
 
-Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it, and offers a decidable sufficient judgment as an optional optimisation.
+Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it. A decidable sufficient test that only speeds checking up (`⊢hpol`, chapter 4, §4.4) is not part of the kernel. It lives in the layer above it and is proved conservative like every other layer (§0.5).
 
 Decidability is not the same as efficiency. Several side conditions are decidable but expensive (chapter 2, §2.6). Efficiency is an implementation question and never changes the rules.
 

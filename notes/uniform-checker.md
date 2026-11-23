@@ -143,9 +143,32 @@ r10 Response 3 builds every layer of F_{V+S}(Γ) the same way: list the finitely
 
 What this leaves for S3a is the input in every degree: the raw T₁₂ syntax, B's defining pairs, the guarded equations, and their finite grounding (that each `U x` is finite and closed). Once those give a `Presentation` and letters per degree, `layerOf`, `RuleFin` and `KernelDec` give the kernel checker, but three obligations remain per degree:
 
-- (a) The ≈-invariance of `out₀` and `supp₀`, now fields of `LayerData` (2026-11-22), must be proved for each degree's letters.
-- (b) `RuleFin` still needs finite, step-closed universes of cells and supports.
+- (a) The ≈-invariance of `out₀` and `supp₀`, now fields of `LayerData` (2026-11-22), must be proved for each degree's letters. If a degree names letters by position in the word, equal lists may be too strong; equality up to ∈-equivalence would still suffice for `Rule`'s SC, and the field can be weakened then.
+- (b) `RuleFin` still needs finite universes of cells and supports, closed under the letters one dimension up and under accumulating supports. These are still per degree.
+- (b′) `Present`'s universe `U` (finiteness of each ≈-class) is discharged generically by `WordPresent` (2026-11-22). Over a finite alphabet with positive letter weights, a weight-preserving one-step relation gives a `Presentation` whose `U x` is the finite list of words of x's weight. Each degree still supplies its finite alphabet of contextual letters, the weights, and the steps.
 - (c) The presentation must actually be F_{V+S} in that degree. For the grid this is still by inspection (§2 item 2).
+
+### 1.8 The raw signature of P through degree four, on any pasting diagram (`SigP.agda`; 2026-11-22, ledger S3a)
+
+The first piece of S3a's raw syntax that is not specific to grids. `scripts/e6/reachability_theory.py` states the support-free presentation P of (K45) as operations with guards and boundaries, equation schemas, and the directed 5-cell schemas. `scripts/e6/interchange_free.py` grounds that presentation on any finite pasting tree. `SigP` transcribes it as data.
+
+- **Terms.** Variables and operations are untyped (`Tm`), with dimensions computed (`dim`). Typing conditions are guards, that is, equations between faces (`adjacent`), because the theory is essentially algebraic. The helpers `paste`, `face`, `ctx` and `vertical`, and the `Block` machinery for outer spans with stationary 1-whiskers, follow the Python.
+- **Content.**
+  - `sesquiOps n` and `sesqui n` give the sesquicategory structure in dimension n: faces, units, composition, the left and right actions of k-cells for k < n, and their laws. They are defined for every n ≥ 1. The Python stops at 4, and nothing in the schemas depends on that.
+  - `compOps` and `comparisons` give χ, r, t, ι and h, with their boundaries, degeneracies and whiskering laws.
+  - `outerEqs` gives (7a)–(21) and the binary join factorization.
+  - `rules` gives W, δ, N_L, N_R, U_r and U_t.
+- **Checked against the Python.** `scripts/sigp_check/check.sh` compiles a small dump harness. The harness is outside the `--safe` library, because it needs a GHC binding to print. The script compares the dump with the Python's output line by line. All 165 operations, equations and rules agree exactly, including the s_n and t_n entries, whose unstated boundaries both sides print as `?`. The check covers dimensions up to 4. `sesqui n` and `sesquiOps n` for n > 4 are the same schemas extended past the Python's bound, unchecked there.
+- **The free algebra, as a specification (`FreeP.agda`).** The free algebra of a presentation in this format on a set of generators is given by two mutually inductive judgments on raw terms. `Typed x` says x is a defined cell: an operation applies when its arguments are typed with the declared dimensions and its guards are derivable. `x ≐ y` is the least congruence containing every instance of an equation schema whose guards hold, the boundary of every operation, and the generators' faces. It is parametric in the operations, schemas and generators. `FreeP gens` is P through degree four, and `Example` checks a composite and its source on a two-arrow diagram. `Models` defines a (partial) model of the judgments, and `Soundness` proves that every typed term is defined in a model and every derivable equality holds there. So a model that separates two terms shows they are distinct cells (`separate`). This is how a computed table of classes will be shown complete: a table closed under the operations and satisfying the schemas is such a model.
+- **Points the next proofs must handle** (review of #436):
+  1. There is no consistency witness yet. Nothing shows, for example, that a ≐ c fails on a → b → c. A concrete `Model` of P, at least one that reads 0-boundaries, would pin this down.
+  2. `Typed` and `≐` are not tied together. `≐-s` and `≐-t` accept any n, so sF 7 f ≐ sF 7 f is derivable, and `Typed` is not shown to be closed under `≐`. Theorems about the free algebra must be stated over typed terms.
+  3. `gens` has no well-formedness condition. Nothing requires `gsrc` and `gtgt` to name generators of the right dimension, or to be globular. A predicate for a generator list coming from a pasting tree is needed.
+- **Not yet done.**
+  - A computation of `FreeP` on a pasting tree, proved sound and complete for `Typed` and `≐`: ground the operations dimension by dimension on cells already quotiented, and take the congruence, as `interchange_free.py` does.
+  - Its normal forms through `Present`.
+  - The proof that it agrees with (K45) and with `Grid` on suspended grids.
+  - The T₁₂ extensions of (K47) above degree four.
 
 ## 2. What this does not check (the trust boundary)
 

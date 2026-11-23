@@ -246,6 +246,8 @@ import CaTTExp.GrayDuality
 import CaTTExp.GrayDualityUniform
 import CaTTExp.SU
 import CaTTExp.SUExamples
+import CaTTExp.Surface.Conservativity
+import CaTTExp.Surface.StrictInterchange
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient
@@ -313,6 +315,9 @@ import CaTTExp.Uniform.GridLink
 import CaTTExp.Uniform.GridSep
 import CaTTExp.Uniform.Present
 import CaTTExp.Uniform.GridPresent
+import CaTTExp.Uniform.WordPresent
+import CaTTExp.Uniform.SigP
+import CaTTExp.Uniform.FreeP
 import CaTTExp.Uniform.KernelToy
 import CaTTExp.Uniform.InnerInv
 import CaTTExp.Uniform.Marks

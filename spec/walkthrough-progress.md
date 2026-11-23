@@ -17,7 +17,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
-- [ ] 0.6 Decidability of checking
+- [x] 0.6 Decidability of checking
 - [ ] Q0.1 (surface question): Which composition order does the user write?
 - [ ] Q0.2 (surface question): Are objects written as types or as terms?
 
@@ -63,7 +63,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 4.1 Coherence contexts
 - [ ] 4.2 Bases are read weakly
 - [ ] 4.3 Finite presentations over every base
-- [ ] 4.4 The optional judgment ⊢hpol
+- [ ] 4.4 Above the kernel: the fast path ⊢hpol
 - [ ] 4.5 What the limit rules actually need from a base
 - [ ] Q4.1 (surface question): Whether the user sees ⊢hpol.
 - [ ] Q4.2 (surface question): How bases are written.
@@ -115,18 +115,22 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 9. Ordinary mathematics
 
 - [ ] 9.1 h-levels
-- [ ] 9.2 Filler tactics (admissible, no rule)
-- [ ] 9.3 Families, induction and the natural numbers
-- [ ] 9.4 Quotients and the integers
-- [ ] 9.5 Colimits indexed by objects
+- [ ] 9.2 Descent (DESC)
+- [ ] 9.3 Initial models (INIT)
+- [ ] 9.4 Families, induction and the natural numbers
+- [ ] 9.5 Quotients and the integers
 - [ ] 9.6 Function sets
-- [ ] 9.7 Lax functors
+- [ ] 9.7 Colimits indexed by objects
+- [ ] 9.8 Lax functors
+- [ ] 9.9 Filler tactics (admissible, no rule)
 - [ ] Q9.1 (surface question): Whether `trunc n` is written or inferred.
-- [ ] Q9.2 (surface question): How inductive objects are introduced.
-- [ ] Q9.3 (surface question): Whether the filler tactics run automatically.
+- [ ] Q9.2 (surface question): How INIT instances are introduced.
+- [ ] Q9.3 (surface question): How descent data are supplied.
+- [ ] Q9.4 (surface question): Whether the filler tactics run automatically.
 
 ## Findings raised during the walkthrough
 
+- S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").
 - S17 (0.4): alternatives to the form of the marking system never compared.

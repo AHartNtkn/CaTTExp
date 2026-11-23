@@ -31,8 +31,11 @@
 --     None of the fields is (IL).                     (sound′)
 --   * the composite step (Lemma 4.1) and the join step (§4.6), proved
 --     separately over an abstract category      (iso-path, join-iso)
---   * the operation case with iso-path connected: soundness from the
---     single per-letter hypothesis `letters`     (OpModel, sound-op)
+--   * the operation case with iso-path connected   (OpModel, sound-op).
+--     Two inputs remain unchecked: (1) that the coherence's image is
+--     pcomp p for the lift's letter images (p is a free field, not tied
+--     to liftTops h, so OpModel can be inhabited with p = nil), and
+--     (2) `letters`, the per-letter step.
 ------------------------------------------------------------------------
 module CaTTExp.Uniform.MarksRepaired where
 
@@ -406,11 +409,11 @@ eh-ord-all  = refl
 ------------------------------------------------------------------------
 -- E14(d): the operation case with Lemma 4.1 connected. The model's
 -- image of the designated lift is a path p of letter images in a
--- category, and "invertible" is IsIso of its composite. What remains a
--- hypothesis is only the per-letter step: the premises of (OP-inv_S′)
--- make every letter image in p invertible (Thm 8.1 (i)–(iii) for the
--- outer letters, the iord reading for the inner ones), which includes
--- the decomposition of the image into those letters.
+-- category, and "invertible" is IsIso of its composite. Unchecked:
+-- (1) that p is the path of the lift's letter images (p is a free
+-- field, not indexed by liftTops h); (2) `letters`, the premises of
+-- (OP-inv_S′) make every letter image in p invertible (Thm 8.1
+-- (i)–(iii) for the outer letters, the iord reading for the inner ones).
 
 record OpModel (S : Setting) (h : Head) (cs : List Comp) : Set₁ where
   field

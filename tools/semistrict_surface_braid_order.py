@@ -58,16 +58,22 @@ def reduced(word, order):
     return tuple(runs)
 
 
-def cube_return(order):
-    """Produce the positioned forward braid moves of a reverse modulo finite powers."""
+def cube_contexts(order):
+    """Position forward moves giving a reverse modulo finite powers."""
     x, y = (1,), (2,)
-    X, Y = x+y+x, y+x+y
+    X = x+y+x
     inverse_X = tuple(letter for gen in reversed(X) for letter in (gen,)*(order-1))
     conjugate = X+y+inverse_X
-    current = reduced(Y,order)
     for i in range(order-1):
         left = x*(order-2-i) + x
         right = inverse_X + conjugate*(i+1) + X
+        yield left, right
+
+
+def cube_return(order):
+    X, Y = (1,2,1), (2,1,2)
+    current = reduced(Y,order)
+    for left,right in cube_contexts(order):
         assert reduced(left+X+right, order) == current
         current = reduced(left+Y+right, order)
     assert current == reduced(X,order)

@@ -101,21 +101,25 @@ def specialize(term, paste, ambient, arguments):
     return subst_tm(term, labels)
 
 
-def fitted_crossing():
-    """Make the directed square a loop on a literal two-scalar writing."""
+def scalar_context(count):
     point = (STAR,)
     unit = identity(point, v(0))
-    ctx = point + (arr(infer(point, unit), unit, unit),)
-    a = v(1)
+    return point + (arr(infer(point, unit), unit, unit),)*count
+
+
+def fitted_exchange(ctx, first, second):
+    """Exchange two named scalars at literal source and target writings."""
+    point = (STAR,)
+    unit = identity(point, v(0))
     unit_pair = comp2(point, 0, unit, unit)
     enter, leave = head(point, unit_pair, unit), head(point, unit, unit_pair)
-    stationary = composite(ctx, 1, [enter, a, leave])
+    stationary = composite(ctx, 1, [enter, first, leave])
     disc = tree_ctx(disc_tree(2))
     alpha, = map(v, maximal_vars(disc))
     line = tree_ctx(disc_tree(1))
     edge, = map(v, maximal_vars(line))
 
-    def forms(left):
+    def forms(left, a):
         def whisker(G, t, f):
             if left:
                 return comp2(G, 0, identity(G, src(G, f)), t)
@@ -142,11 +146,16 @@ def fitted_crossing():
 
         return comparison(False), comparison(True)
 
-    from_left, to_left = forms(True)
-    from_right, to_right = forms(False)
-    crossing = composite(ctx, 2, [comp2(ctx, 1, from_left, from_right), exchange(ctx, a, a),
+    from_left, to_left = forms(True, first)
+    from_right, to_right = forms(False, second)
+    crossing = composite(ctx, 2, [comp2(ctx, 1, from_left, from_right), exchange(ctx, second, first),
                                   comp2(ctx, 1, to_right, to_left)])
-    return ctx, stationary, crossing
+    return stationary, crossing
+
+
+def fitted_crossing():
+    ctx = scalar_context(1)
+    return ctx, *fitted_exchange(ctx, v(1), v(1))
 
 
 def raw_letters(emitter):

@@ -448,4 +448,14 @@ import CaTTExp.Binder.InitLaws
 import CaTTExp.Binder.InitMeta
 import CaTTExp.Binder.InitEmbed
 import CaTTExp.Binder.InitExamples
+-- Operation heads (ledger S27 (b)–(d), spec §1.1, §1.5, §1.6).
+import CaTTExp.Binder.Heads
+import CaTTExp.Binder.Close
+import CaTTExp.Binder.HonestHeads
+import CaTTExp.Binder.HeadSpec
+import CaTTExp.Binder.LimHeads
+import CaTTExp.Binder.LimHeadsExamples
+import CaTTExp.Binder.Suspension
+import CaTTExp.Binder.SpecSusp
+import CaTTExp.Binder.DesSusp
 import CaTTExp.Uniform.MarksRepaired

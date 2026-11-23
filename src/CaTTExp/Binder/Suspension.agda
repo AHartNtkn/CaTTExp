@@ -609,3 +609,57 @@ module _ (hs : HeadSusp) (mΣ : MarkΣ) where
 
 varMarkΣ : ∀ {Γ t m} → T (varMark Γ m t) → T (varMark (Σctx Γ) m (Σtm t))
 varMarkΣ {Γ} {var i} {m} p rewrite marksAtΣ Γ i = p
+
+------------------------------------------------------------------------
+-- Suspension preserves scoping (shifting the bound by the two new
+-- objects) and local closure. A binder's telescope is left as it is.
+
+mutual
+  scΣty : ∀ n A → T (scTy? n A) → T (scTy? (S n) (Σty A))
+  scΣty n ⋆           _ = tt
+  scΣty n (arr A t u) p =
+    let (a , q) = T∧ {scTy? n A} p ; (b , c) = T∧ {scTm? n t} q in
+    ∧T (scΣty n A a) (∧T (scΣtm n t b) (scΣtm n u c))
+
+  scΣtm : ∀ n t → T (scTm? n t) → T (scTm? (S n) (Σtm t))
+  scΣtm n (var i)       p = p
+  scΣtm n (bvar _ _)    _ = tt
+  scΣtm n (coh _ _ σ)   p = scΣsub n σ p
+  scΣtm n (cst _)       _ = tt
+  scΣtm n (bnd _ _ Δ σ) p =
+    let (a , b) = T∧ {scTel? n Δ} p in
+    ∧T (scTel-suc Δ (scTel-suc Δ a)) (scΣsub n σ b)
+
+  scΣsub : ∀ n σ → T (scSub? n σ) → T (scSub? (S n) (Σsub σ))
+  scΣsub n ⟨⟩       _ = tt
+  scΣsub n (σ ,ₛ t) p =
+    let (a , b) = T∧ {scSub? n σ} p in ∧T (scΣsub n σ a) (scΣtm n t b)
+
+mutual
+  lcΣty : ∀ d A → T (lcTy? d A) → T (lcTy? d (Σty A))
+  lcΣty d ⋆           _ = tt
+  lcΣty d (arr A t u) p =
+    let (a , q) = T∧ {lcTy? d A} p ; (b , c) = T∧ {lcTm? d t} q in
+    ∧T (lcΣty d A a) (∧T (lcΣtm d t b) (lcΣtm d u c))
+
+  lcΣtm : ∀ d t → T (lcTm? d t) → T (lcTm? d (Σtm t))
+  lcΣtm d (var _)       _ = tt
+  lcΣtm d (bvar _ _)    p = p
+  lcΣtm d (coh _ _ σ)   p = lcΣsub d σ p
+  lcΣtm d (cst _)       _ = tt
+  lcΣtm d (bnd _ _ Δ σ) p =
+    let (a , b) = T∧ {lcTel? (suc d) Δ} p in ∧T a (lcΣsub d σ b)
+
+  lcΣsub : ∀ d σ → T (lcSub? d σ) → T (lcSub? d (Σsub σ))
+  lcΣsub d ⟨⟩       _ = tt
+  lcΣsub d (σ ,ₛ t) p =
+    let (a , b) = T∧ {lcSub? d σ} p in ∧T (lcΣsub d σ a) (lcΣtm d t b)
+
+-- The suspension of an honest arity context is honest.
+honestΣ : ∀ G → T (honest? G) → T (honest? (Σctx G))
+honestΣ ε             _ = tt
+honestΣ (G ▸[ _ ] A) p =
+  let (a , q) = T∧ {honest? G} p ; (b , c) = T∧ {scTy? (len G) A} q in
+  ∧T (honestΣ G a)
+     (∧T (subst (λ n → T (scTy? n (Σty A))) (sym (lenΣ G)) (scΣty (len G) A b))
+         (lcΣty 0 A c))

@@ -46,7 +46,13 @@
 --   * every other entry is a map or a cell (of any dimension) whose
 --     underlying arrow type is S → T with
 --       S a sort, or S mentions no variable bound by the telescope;
---       T a sort, or T is a constant the base signature marks as ⊤;
+--       T a sort, or T mentions no variable bound by the telescope;
+--   * sorts over bases (`basedOK`): the X-free targets allowed are ⊤
+--     (a constant the base marks as ⊤), the base B_k of a structure
+--     map p : X_k → B_k in the header right after the sorts, and the
+--     target of a companion cell c : a ; p_k ⇒ s (marked inv), which
+--     must follow every operation a into a based sort X_k (see the
+--     block before `positive`);
 --   * marks (spec §9.3): a sort may be marked grpd_k or ⋆^{≤n}
 --     (S¹ = μ(X : grpd, b, l : b ⇒ b), ‖A‖_n = μ(X : ⋆^{≤n}, g : A → X)),
 --     and an operation or cell may be marked inv (ℤ = μ(X, z, s inv)).
@@ -215,7 +221,7 @@ module Construction (K : Set) (top? : K → Bool) where
 
   srcOK tgtOK : Nat → Tm → Bool
   srcOK m S = isSort m S ∨ not (mTm 0 S)
-  tgtOK m T = isSort m T ∨ isTop? T
+  tgtOK m T = isSort m T ∨ not (mTm 0 T)
 
   -- The underlying arrow S → T of a map or cell type.
   base : Ty → Maybe (Tm × Tm)
@@ -248,9 +254,6 @@ module Construction (K : Set) (top? : K → Bool) where
   posFrom : Nat → Ctx → Bool
   posFrom m ε             = true
   posFrom m (Δ ▸[ ms ] A) = posFrom m Δ ∧ marksOKAt m (len Δ) ms ∧ ((len Δ <ℕ m) ∨ entryOK m A)
-
-  positive : Ctx → Bool
-  positive Δ = (0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ
 
   -- A variable of the binder at depth 0, other than through a parameter.
   bv0? : Tm → Maybe Nat
@@ -286,6 +289,149 @@ module Construction (K : Set) (top? : K → Bool) where
   isMap? : Maybe Ty → Bool
   isMap? nothing  = false
   isMap? (just A) = dim A ==ℕ 1
+
+  ----------------------------------------------------------------------
+  -- Targets, and sorts over bases (spec §9.3 "several sorts, over
+  -- bases"; the syntax of notes/higher-inductive.md §8 as fixed by the
+  -- HIT thread). `posFrom` checks sources, and that targets are sorts or
+  -- X-free. `basedOK` checks which X-free targets are allowed:
+  --
+  --   * the header: right after the sorts, structure maps p : X_k → B_k
+  --     (B_k X-free; at most one per sort, in increasing order of k).
+  --     X_k is then a sort over the base B_k;
+  --   * in the body, an X-free target must be ⊤, unless the entry is
+  --     the companion cell of an operation (below);
+  --   * an operation a : S → X_k into a based sort must be a map (not a
+  --     cell), followed by its companion c : a ; p_k ⇒ s marked inv,
+  --     where s : S → B_k is a term (not a new variable: a definition,
+  --     so that a is a map S → s*X_k into a pullback of X_k).
+  --
+  -- The companion's source is recognised as the binary composite of
+  -- a and p_k (a coherence over PC2 with arguments S, X_k, a, B_k, p_k);
+  -- that its types fit is the telescope's typing premise. Cells of
+  -- dimension ≥ 2 into a based sort are not accepted yet (ledger S26c).
+
+  baseOf : Maybe Ty → Maybe (Tm × Tm)
+  baseOf nothing  = nothing
+  baseOf (just A) = base A
+
+  entryBase : Ctx → Nat → Maybe (Tm × Tm)
+  entryBase Δ y = baseOf (lookup Δ y)
+
+  -- A header entry X_k → B (B X-free): k.
+  hdrShape : Nat → Ty → Maybe Nat
+  hdrShape n ⋆                     = nothing
+  hdrShape n (arr ⋆ S B)           = if mTm 0 B then nothing else srt n S
+  hdrShape n (arr (arr _ _ _) _ _) = nothing
+
+  isPC2 : Ctx → Bool
+  isPC2 (ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ ⋆ ▸ arr ⋆ (var 1) (var 3)) = true
+  isPC2 _ = false
+
+  isCmpTy : Ty → Bool
+  isCmpTy (arr ⋆ (var 0) (var 3)) = true
+  isCmpTy _                       = false
+
+  tri : Maybe Nat → Maybe Nat → Maybe Nat → Maybe (Nat × Nat × Nat)
+  tri (just x) (just y) (just z) = just (x , y , z)
+  tri _        _        _        = nothing
+
+  -- The arguments X_k, a, p of a binary composite S → X_k → B.
+  cmpSub : Sub → Maybe (Nat × Nat × Nat)
+  cmpSub (⟨⟩ ,ₛ _ ,ₛ x ,ₛ a ,ₛ _ ,ₛ q) = tri (bv0? x) (bv0? a) (bv0? q)
+  cmpSub _                             = nothing
+
+  cmpTm : Tm → Maybe (Nat × Nat × Nat)
+  cmpTm (coh Γ A τ) = if isPC2 Γ ∧ isCmpTy A then cmpSub τ else nothing
+  cmpTm _           = nothing
+
+  -- A companion cell (a ; p) ⇒ s between maps: (k, a, p).
+  cmpShape : Ty → Maybe (Nat × Nat × Nat)
+  cmpShape (arr (arr ⋆ _ _) u _) = cmpTm u
+  cmpShape _                     = nothing
+
+  -- Per-entry data, as functions of the index.
+  mapMT : ∀ {X : Set} → (Ty → X) → X → Maybe Ty → X
+  mapMT f d nothing  = d
+  mapMT f d (just A) = f A
+
+  tgtSrtB : Nat → Maybe (Tm × Tm) → Maybe Nat
+  tgtSrtB n nothing        = nothing
+  tgtSrtB n (just (_ , T)) = srt n T
+
+  tgtTopB : Maybe (Tm × Tm) → Bool
+  tgtTopB nothing        = false
+  tgtTopB (just (_ , T)) = isTop? T
+
+  record Info : Set where
+    field
+      hs : Nat → Maybe Nat                -- header shape
+      ts : Nat → Maybe Nat                -- target sort
+      tp : Nat → Bool                     -- target ⊤
+      dm : Nat → Nat                      -- dimension
+      cm : Nat → Maybe (Nat × Nat × Nat)  -- companion shape
+      iv : Nat → Bool                     -- marked inv
+
+  infoOf : Ctx → Info
+  infoOf Δ = record
+    { hs = λ j → mapMT (hdrShape (sorts Δ)) nothing (lookup Δ j)
+    ; ts = λ j → tgtSrtB (sorts Δ) (entryBase Δ j)
+    ; tp = λ j → tgtTopB (entryBase Δ j)
+    ; dm = λ j → mapMT dim 0 (lookup Δ j)
+    ; cm = λ j → mapMT cmpShape nothing (lookup Δ j)
+    ; iv = λ j → minv ∈M marksAt Δ j
+    }
+
+  eqMN : Maybe Nat → Nat → Bool
+  eqMN nothing  _ = false
+  eqMN (just x) y = x ==ℕ y
+
+  -- Length of the header starting at j, sorts at least lo.
+  hdrGo : (Nat → Maybe Nat) → Nat → Nat → Nat → Nat
+  hdrGo hs zero    j lo = 0
+  hdrGo hs (suc f) j lo = step (hs j)
+    where
+    step : Maybe Nat → Nat
+    step nothing  = 0
+    step (just k) = if k <ℕ lo then 0 else suc (hdrGo hs f (suc j) (suc k))
+
+  -- The header entry of sort k among c entries from j.
+  findHdr : (Nat → Maybe Nat) → Nat → Nat → Nat → Maybe Nat
+  findHdr hs k zero    j = nothing
+  findHdr hs k (suc c) j = if eqMN (hs j) k then just j else findHdr hs k c (suc j)
+
+  cmpIs : Maybe (Nat × Nat × Nat) → Nat → Nat → Nat → Bool
+  cmpIs nothing              k j p = false
+  cmpIs (just (k′ , j′ , p′)) k j p = (k′ ==ℕ k) ∧ (j′ ==ℕ j) ∧ (p′ ==ℕ p)
+
+  -- Entry j of the body, given the header length h.
+  okBased : Info → Nat → Nat → Nat → Maybe Nat → Bool
+  okBased I j k h nothing  = true
+  okBased I j k h (just p) =
+    (Info.dm I j ==ℕ 1) ∧ cmpIs (Info.cm I (suc j)) k j p ∧ Info.iv I (suc j)
+
+  okComp : Info → Nat → Nat → Nat → Maybe (Nat × Nat × Nat) → Bool
+  okComp I n h j nothing              = false
+  okComp I n h j (just (k , j′ , p)) = (suc j′ ==ℕ j) ∧ eqMN (findHdr (Info.hs I) k h n) p
+
+  okTgt : Info → Nat → Nat → Nat → Maybe Nat → Bool
+  okTgt I n h j (just k) = okBased I j k h (findHdr (Info.hs I) k h n)
+  okTgt I n h j nothing  = Info.tp I j ∨ okComp I n h j (Info.cm I j)
+
+  okB : Nat → Nat → Info → Nat → Bool
+  okB n L I j =
+    if j <ℕ (n + hdrGo (Info.hs I) L n 0) then true
+    else okTgt I n (hdrGo (Info.hs I) L n 0) j (Info.ts I j)
+
+  allBelow : Nat → (Nat → Bool) → Bool
+  allBelow zero    f = true
+  allBelow (suc L) f = allBelow L f ∧ f L
+
+  basedOK : Ctx → Bool
+  basedOK Δ = allBelow (len Δ) (okB (sorts Δ) (len Δ) (infoOf Δ))
+
+  positive : Ctx → Bool
+  positive Δ = ((0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ) ∧ basedOK Δ
 
   -- y is a sort, or an entry after the sorts.
   isSortIx inner : Nat → Ctx → Bool
@@ -323,13 +469,6 @@ module Construction (K : Set) (top? : K → Bool) where
   bvPre : Nat → Sub
   bvPre zero    = ⟨⟩
   bvPre (suc k) = bvPre k ,ₛ bvar 0 k
-
-  baseOf : Maybe Ty → Maybe (Tm × Tm)
-  baseOf nothing  = nothing
-  baseOf (just A) = base A
-
-  entryBase : Ctx → Nat → Maybe (Tm × Tm)
-  entryBase Δ y = baseOf (lookup Δ y)
 
   withBase : Maybe (Tm × Tm) → (Tm → Tm → Ty) → Ty
   withBase nothing        k = ⋆

@@ -416,12 +416,14 @@ import CaTTExp.Binder.Laws
 import CaTTExp.Binder.Scoping
 import CaTTExp.Binder.Rename
 import CaTTExp.Binder.Subst
+import CaTTExp.Binder.Presup
 import CaTTExp.Binder.CheckWith
 import CaTTExp.Binder.Completeness
 import CaTTExp.Binder.VarMark
 import CaTTExp.Binder.MarkExamples
 import CaTTExp.Binder.Des
 import CaTTExp.Binder.DesLaws
+import CaTTExp.Binder.DesPresup
 import CaTTExp.Binder.DesExamples
 import CaTTExp.Binder.Embed
 import CaTTExp.Binder.Init

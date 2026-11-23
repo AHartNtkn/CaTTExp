@@ -93,6 +93,69 @@ mutual
   mSub-lc d (σ ,ₛ t) p = let (a , b) = T∧ {lcSub? d σ} p in ∨ff (mSub-lc d σ a) (mTm-lc d t b)
 
 ------------------------------------------------------------------------
+-- Sorts over bases: `basedOK` only reads per-entry data (`Info`), and
+-- is monotone in it.
+
+record Rel (I I′ : Info) : Set where
+  field
+    hs≡ : ∀ j → Info.hs I j ≡ Info.hs I′ j
+    ts≡ : ∀ j → Info.ts I j ≡ Info.ts I′ j
+    tp→ : ∀ j → T (Info.tp I j) → T (Info.tp I′ j)
+    dm≡ : ∀ j → Info.dm I j ≡ Info.dm I′ j
+    cm→ : ∀ j x → Info.cm I j ≡ just x → Info.cm I′ j ≡ just x
+    iv≡ : ∀ j → Info.iv I j ≡ Info.iv I′ j
+
+hdrGo-ext : ∀ hs hs′ → (∀ j → hs j ≡ hs′ j) → ∀ f j lo → hdrGo hs f j lo ≡ hdrGo hs′ f j lo
+hdrGo-ext hs hs′ e zero    j lo = refl
+hdrGo-ext hs hs′ e (suc f) j lo rewrite e j with hs′ j
+... | nothing = refl
+... | just k  = cong (λ z → if k <ℕ lo then 0 else suc z) (hdrGo-ext hs hs′ e f (suc j) (suc k))
+
+findHdr-ext : ∀ hs hs′ → (∀ j → hs j ≡ hs′ j) → ∀ k c j → findHdr hs k c j ≡ findHdr hs′ k c j
+findHdr-ext hs hs′ e k zero    j = refl
+findHdr-ext hs hs′ e k (suc c) j rewrite e j =
+  cong (if eqMN (hs′ j) k then just j else_) (findHdr-ext hs hs′ e k c (suc j))
+
+cmpIs-mono : ∀ m m′ k j p → (∀ x → m ≡ just x → m′ ≡ just x) → T (cmpIs m k j p) → T (cmpIs m′ k j p)
+cmpIs-mono (just x) m′ k j p f q rewrite f x refl = q
+
+okB-mono : ∀ {I I′} → Rel I I′ → ∀ n L j → T (okB n L I j) → T (okB n L I′ j)
+okB-mono {I} {I′} R n L j p
+  rewrite sym (hdrGo-ext (Info.hs I) (Info.hs I′) (Rel.hs≡ R) L n 0)
+  with j <ℕ (n + hdrGo (Info.hs I) L n 0)
+... | true  = tt
+... | false = tgt (Info.ts I j) (Info.ts I′ j) (Rel.ts≡ R j) p
+  where
+  h = hdrGo (Info.hs I) L n 0
+  fh : ∀ k → findHdr (Info.hs I) k h n ≡ findHdr (Info.hs I′) k h n
+  fh k = findHdr-ext (Info.hs I) (Info.hs I′) (Rel.hs≡ R) k h n
+
+  based : ∀ k mp → T (okBased I j k h mp) → T (okBased I′ j k h mp)
+  based k nothing  q = tt
+  based k (just q₀) q rewrite sym (Rel.dm≡ R j) | sym (Rel.iv≡ R (suc j)) =
+    let (a , r) = T∧ {Info.dm I j ==ℕ 1} q
+        (b , c) = T∧ {cmpIs (Info.cm I (suc j)) k j q₀} r
+    in ∧T a (∧T (cmpIs-mono _ _ k j q₀ (Rel.cm→ R (suc j)) b) c)
+
+  comp : ∀ m → (∀ x → m ≡ just x → Info.cm I′ j ≡ just x) → T (okComp I n h j m) → T (okComp I′ n h j (Info.cm I′ j))
+  comp (just (k , j′ , q₀)) f q rewrite f (k , j′ , q₀) refl | sym (fh k) = q
+
+  tgt : ∀ m m′ → m ≡ m′ → T (okTgt I n h j m) → T (okTgt I′ n h j m′)
+  tgt (just k) .(just k) refl q rewrite sym (fh k) = based k (findHdr (Info.hs I) k h n) q
+  tgt nothing  .nothing  refl q with Info.tp I j in e
+  ... | true  = subst (λ z → T (z ∨ okComp I′ n h j (Info.cm I′ j))) (sym (T→≡ (Rel.tp→ R j (subst T (sym e) tt)))) tt
+  ... | false = ∨-mono (Info.tp I′ j) (comp (Info.cm I j) (Rel.cm→ R j)) (T∨ʳ (Info.tp I′ j) q)
+    where
+    T∨ʳ : ∀ a {b} → T b → T (a ∨ b)
+    T∨ʳ true  _ = tt
+    T∨ʳ false q = q
+
+allBelow-mono : ∀ L f g → (∀ j → T (f j) → T (g j)) → T (allBelow L f) → T (allBelow L g)
+allBelow-mono zero    f g h p = tt
+allBelow-mono (suc L) f g h p =
+  let (a , b) = T∧ {allBelow L f} p in ∧T (allBelow-mono L f g h a) (h L b)
+
+------------------------------------------------------------------------
 -- Substitution by a locally closed σ.
 
 module _ (σ : Sub) (l : LC σ) where
@@ -136,11 +199,7 @@ module _ (σ : Sub) (l : LC σ) where
   srcOK-[] m S = cong₂ _∨_ (cong is-just (srt-[] m S)) (cong not (mTm-[] 0 S))
 
   tgt-stable : ∀ m T₀ → T (tgtOK m T₀) → T (tgtOK m (T₀ [ σ ]tm))
-  tgt-stable m (var _)       ()
-  tgt-stable m (bvar _ _)    p = p
-  tgt-stable m (coh _ _ _)   ()
-  tgt-stable m (cst _)       p = p
-  tgt-stable m (bnd _ _ _ _) ()
+  tgt-stable m T₀ p = subst T (sym (srcOK-[] m T₀)) p
 
   mapP : Maybe (Tm × Tm) → Maybe (Tm × Tm)
   mapP nothing        = nothing
@@ -170,10 +229,6 @@ module _ (σ : Sub) (l : LC σ) where
     let (a , c) = T∧ {posFrom m Δ} p
         (b , d) = T∧ {marksOKAt m (len Δ) ms} c in
     ∧T (posFrom-stable m Δ a) (∧T b (∨-mono (len Δ <ℕ m) (entryOK-stable m A) d))
-
-  positive-stable : ∀ Δ → T (positive Δ) → T (positive (Δ [ σ ]tel))
-  positive-stable Δ p rewrite sorts-[] Δ =
-    let (a , c) = T∧ {0 <ℕ sorts Δ} p in ∧T a (posFrom-stable (sorts Δ) Δ c)
 
   bv0?-[] : ∀ t → bv0? (t [ σ ]tm) ≡ bv0? t
   bv0?-[] (var i)       = bv0?-lc (lookupₛ σ i) (lc-lookup σ i l)
@@ -274,6 +329,95 @@ module _ (σ : Sub) (l : LC σ) where
   entryBase-[] Δ y rewrite lookup-[] Δ y with lookup Δ y
   ... | nothing = refl
   ... | just A  = base-[] A
+
+  -- Sorts over bases: the per-entry data of `basedOK`.
+  hdrShape-[] : ∀ n A → hdrShape n (A [ σ ]ty) ≡ hdrShape n A
+  hdrShape-[] n ⋆                     = refl
+  hdrShape-[] n (arr ⋆ S B)           rewrite mTm-[] 0 B | srt-[] n S = refl
+  hdrShape-[] n (arr (arr _ _ _) _ _) = refl
+
+  cmpSub-[] : ∀ τ → cmpSub (τ ∘ σ) ≡ cmpSub τ
+  cmpSub-[] ⟨⟩ = refl
+  cmpSub-[] (⟨⟩ ,ₛ _) = refl
+  cmpSub-[] (⟨⟩ ,ₛ _ ,ₛ _) = refl
+  cmpSub-[] (⟨⟩ ,ₛ _ ,ₛ _ ,ₛ _) = refl
+  cmpSub-[] (⟨⟩ ,ₛ _ ,ₛ _ ,ₛ _ ,ₛ _) = refl
+  cmpSub-[] (⟨⟩ ,ₛ _ ,ₛ x ,ₛ a ,ₛ _ ,ₛ q) rewrite bv0?-[] x | bv0?-[] a | bv0?-[] q = refl
+  cmpSub-[] ((_ ,ₛ _) ,ₛ _ ,ₛ _ ,ₛ _ ,ₛ _ ,ₛ _) = refl
+
+  cmpShape-[] : ∀ A x → cmpShape A ≡ just x → cmpShape (A [ σ ]ty) ≡ just x
+  cmpShape-[] ⋆ x ()
+  cmpShape-[] (arr ⋆ _ _) x ()
+  cmpShape-[] (arr (arr ⋆ _ _) (coh Γ A τ) _) x e rewrite cmpSub-[] τ = e
+  cmpShape-[] (arr (arr ⋆ _ _) (var _) _) x ()
+  cmpShape-[] (arr (arr ⋆ _ _) (bvar _ _) _) x ()
+  cmpShape-[] (arr (arr ⋆ _ _) (cst _) _) x ()
+  cmpShape-[] (arr (arr ⋆ _ _) (bnd _ _ _ _) _) x ()
+  cmpShape-[] (arr (arr (arr _ _ _) _ _) _ _) x ()
+
+  isTop-[] : ∀ t → T (isTop? t) → T (isTop? (t [ σ ]tm))
+  isTop-[] (cst _) p = p
+
+  marksAt-[] : ∀ Δ j → marksAt (Δ [ σ ]tel) j ≡ marksAt Δ j
+  marksAt-[] ε j = refl
+  marksAt-[] (Δ ▸[ _ ] A) j rewrite len-tel[] Δ σ with j ==ℕ len Δ
+  ... | true  = refl
+  ... | false = marksAt-[] Δ j
+
+  info-[] : ∀ Δ → Rel (infoOf Δ) (infoOf (Δ [ σ ]tel))
+  info-[] Δ = record
+    { hs≡ = λ j → sym (hs-eq j)
+    ; ts≡ = λ j → sym (ts-eq j)
+    ; tp→ = tp-imp
+    ; dm≡ = λ j → sym (dm-eq j)
+    ; cm→ = cm-imp
+    ; iv≡ = λ j → cong (minv ∈M_) (sym (marksAt-[] Δ j))
+    }
+    where
+    hs-eq : ∀ j → mapMT (hdrShape (sorts (Δ [ σ ]tel))) nothing (lookup (Δ [ σ ]tel) j)
+                ≡ mapMT (hdrShape (sorts Δ)) nothing (lookup Δ j)
+    hs-eq j rewrite sorts-[] Δ | lookup-[] Δ j with lookup Δ j
+    ... | nothing = refl
+    ... | just A  = hdrShape-[] (sorts Δ) A
+
+    ts-eq : ∀ j → tgtSrtB (sorts (Δ [ σ ]tel)) (entryBase (Δ [ σ ]tel) j) ≡ tgtSrtB (sorts Δ) (entryBase Δ j)
+    ts-eq j rewrite sorts-[] Δ | entryBase-[] Δ j with entryBase Δ j
+    ... | nothing       = refl
+    ... | just (_ , T₀) = srt-[] (sorts Δ) T₀
+
+    tp-imp : ∀ j → T (tgtTopB (entryBase Δ j)) → T (tgtTopB (entryBase (Δ [ σ ]tel) j))
+    tp-imp j p rewrite entryBase-[] Δ j with entryBase Δ j
+    ... | just (_ , T₀) = isTop-[] T₀ p
+
+    dm-eq : ∀ j → mapMT dim 0 (lookup (Δ [ σ ]tel) j) ≡ mapMT dim 0 (lookup Δ j)
+    dm-eq j rewrite lookup-[] Δ j with lookup Δ j
+    ... | nothing = refl
+    ... | just A  = dim-[] A σ
+
+    cm-imp : ∀ j x → mapMT cmpShape nothing (lookup Δ j) ≡ just x →
+             mapMT cmpShape nothing (lookup (Δ [ σ ]tel) j) ≡ just x
+    cm-imp j x e rewrite lookup-[] Δ j with lookup Δ j
+    ... | just A = cmpShape-[] A x e
+
+  basedOK-stable : ∀ Δ → T (basedOK Δ) → T (basedOK (Δ [ σ ]tel))
+  basedOK-stable Δ p =
+    tr (sorts-[] Δ) (len-tel[] Δ σ)
+      (allBelow-mono (len Δ) (okB (sorts Δ) (len Δ) (infoOf Δ))
+         (okB (sorts Δ) (len Δ) (infoOf (Δ [ σ ]tel)))
+         (okB-mono (info-[] Δ) (sorts Δ) (len Δ)) p)
+    where
+    tr : ∀ {n n′ L L′} → n′ ≡ n → L′ ≡ L
+       → T (allBelow L (okB n L (infoOf (Δ [ σ ]tel))))
+       → T (allBelow L′ (okB n′ L′ (infoOf (Δ [ σ ]tel))))
+    tr refl refl q = q
+
+  positive-stable : ∀ Δ → T (positive Δ) → T (positive (Δ [ σ ]tel))
+  positive-stable Δ p =
+    let (ab , c) = T∧ {(0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ} p
+        (a , b)  = T∧ {0 <ℕ sorts Δ} ab
+    in ∧T (∧T (subst (λ n → T (0 <ℕ n)) (sym (sorts-[] Δ)) a)
+              (subst (λ n → T (posFrom n (Δ [ σ ]tel))) (sym (sorts-[] Δ)) (posFrom-stable (sorts Δ) Δ b)))
+          (basedOK-stable Δ c)
 
   cell3Ty-[] : ∀ m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h h′ θf θg → (∀ k → (h k) [ σ ]tm ≡ h′ k) →
                (cell3Ty m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg) [ σ ]ty ≡

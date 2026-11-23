@@ -18,9 +18,15 @@
 --    key α < key e on ∂⁺ α.
 --
 -- This is Steiner's strong loop-freeness truncated at dimension 2. It
--- holds for pasting contexts and for the cylinders Q↑Y of the
--- naturality filler, and it fails for g, h : f ⇒ f, where Theorem A
--- itself fails (g ∗₁ h and h ∗₁ g have the same strict image).
+-- is expected (on paper, not proved here) to hold for pasting contexts
+-- and for the cylinders Q↑Y of the naturality filler; it cannot hold
+-- for g, h : f ⇒ f (it would need key f < key g < key f), where
+-- Theorem A itself fails, since g ∗₁ h and h ∗₁ g have the same strict
+-- image (not formalized).
+--
+-- Not tied down here: the endpoints a, b that `order` gives for each
+-- 2-variable's boundary paths are not required to be the endpoints
+-- declared in α's type in Γ.
 --
 -- `tups-≋` turns bag equality of strict-image tops (singleton tuples)
 -- into the bag equality used by TwoPath.exchange-complete.

@@ -164,6 +164,8 @@ import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.RCProc
 import CaTTExp.RCProc.Support
 import CaTTExp.RCProc.Glue
+import CaTTExp.PsRaise
+import CaTTExp.PsRaiseExamples
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing

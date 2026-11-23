@@ -21,9 +21,10 @@
 -- every term. CaTTExp.Naturality.DimOne constructs a filler family K₁
 -- with FillerOK K₁ Dim1 (every coherence of dimension 1), and derives
 -- the cylinder of every term of dimension ≤ 1 for every valid datum
--- (`cyl₁-wf`). No filler family for coherences of dimension ≥ 2 exists
--- yet (ledger C1d item (2) in notes/open-issues.md), so for terms that
--- use such coherences this theorem is still conditional on FillerOK.
+-- (`cyl₁-wf`). CaTTExp.Naturality.General constructs a family Kω for
+-- every dimension, with FillerOK Kω Good, where Good is CONDITIONAL in
+-- dimension ≥ 2 on rcS answering the cylinder query (RCq, ledger C1d
+-- item (2)); no unconditional filler of dimension ≥ 2 exists yet.
 --
 -- The proof is by structural induction on the typing derivation of t.
 -- At t = coh Q B γ the filler's type is transported along γ↑ with the

@@ -285,15 +285,30 @@ module _ (n : Nat) where
   iterB α (suc k) m = bindM (iterB α k m) (gb α)
 
   private
-    mb-bind : ∀ α m z → mb m (λ y → I (gb α y) z) ≡ I (bindM m (gb α)) z
-    mb-bind α nothing  z = refl
-    mb-bind α (just w) z = refl
+    ∸-disj : ∀ a b → a * b ≡ 0 → a ∸ b ≡ a
+    ∸-disj zero    zero    _  = refl
+    ∸-disj zero    (suc b) _  = refl
+    ∸-disj (suc a) zero    _  = refl
+    ∸-disj (suc a) (suc b) ()
+
+    part-disj : ∀ α w z → part α (I (gb true w) z) (I (gb false w) z) ≡ I (gb α w) z
+    part-disj true  w z = ∸-disj _ _ (disj-eq w z)
+    part-disj false w z = ∸-disj _ _ (trans (*-comm (I (gb false w) z) (I (gb true w) z)) (disj-eq w z))
+
+    mb-bind : ∀ α m z → part α (mb m (λ y → I (gb true y) z)) (mb m (λ y → I (gb false y) z)) ≡ I (bindM m (gb α)) z
+    mb-bind α nothing  z = part0 α
+      where part0 : ∀ α → part α 0 0 ≡ 0
+            part0 true  = refl
+            part0 false = refl
+    mb-bind α (just w) z = part-disj α w z
 
     down-eq : ∀ α k m z → down α k (I m) z ≡ I (iterB α k m) z
     down-eq α zero    m z = refl
     down-eq α (suc k) m z =
-      trans (Σ-cong cs (λ y → cong (_* I (gb α y) z) (down-eq α k m y)))
-      (trans (ΣM (iterB α k m) (λ y → I (gb α y) z)) (mb-bind α (iterB α k m) z))
+      trans (cong₂ (part α)
+        (trans (Σ-cong cs (λ y → cong (_* I (gb true y) z) (down-eq α k m y))) (ΣM (iterB α k m) (λ y → I (gb true y) z)))
+        (trans (Σ-cong cs (λ y → cong (_* I (gb false y) z) (down-eq α k m y))) (ΣM (iterB α k m) (λ y → I (gb false y) z))))
+      (mb-bind α (iterB α k m) z)
 
     iter-just : ∀ α k d (x : GCell n) → gdeg x ≡ k + d →
                 Σ (GCell n) (λ w → (iterB α k (just x) ≡ just w) × (gdeg w ≡ d))

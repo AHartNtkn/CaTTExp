@@ -24,7 +24,11 @@
 --     injection along z is P₁ = (⊤, false), the pullback of the second
 --     is P₂ = (⊥, false), each with its universal property, and the
 --     comparison  P₁ + P₂ → 𝟙  has no inverse: there is no map
---     𝟙 → P₁ + P₂ at all (`not-universal`).
+--     𝟙 → P₁ + P₂ at all (`not-universal`);
+--   * disjointness, for all objects: an initial object 𝟘 = (⊥, false)
+--     (`¡`, `¡-uni`), and for every A, B the pullback of ι₁ and ι₂ of
+--     A ⊕ B is 𝟘: every cone factors through 𝟘 (`disjoint`), uniquely
+--     (`disjoint-uni`).
 --
 -- Scope and honesty notes.
 --   * NOT encoded: local presentability of Gl(T) (it is the gluing of
@@ -295,9 +299,26 @@ comparison = [ P₁-p , ! ]
 not-universal : ¬ Hom 𝟙 (P₁ ⊕ P₂)
 not-universal g = flag g tt
 
--- Coproducts are nonetheless disjoint here: the pullback of the two
--- injections of D₀ + 𝟙 is empty (it factors through P₂-style ⊥).
-disjoint : ∀ {W} (a : Hom W D₀) (b : Hom W 𝟙) →
-           (∀ v → fun (ι₁ {D₀} {𝟙}) (fun a v) ≡ fun (ι₂ {D₀} {𝟙}) (fun b v)) →
-           X W → ⊥
-disjoint a b c v = inl≢inr (c v)
+-- Initial object 𝟘 = (⊥, false).
+𝟘 : Ob
+𝟘 = ob ⊥ false (λ ())
+
+¡ : ∀ {A} → Hom 𝟘 A
+¡ = hom (λ ()) (λ ())
+
+¡-uni : ∀ {A} (h : Hom 𝟘 A) → h ≈ ¡
+¡-uni h ()
+
+-- Coproducts are nonetheless disjoint, for all A and B: every cone
+-- W → A, W → B over the two injections of A ⊕ B factors through 𝟘
+-- (uniquely, by `¡-uni`-style vacuity), so the pullback of ι₁ and ι₂
+-- is 𝟘.  This is the binary case; the nullary case is that 𝟘 is
+-- initial (`¡`, `¡-uni`).
+disjoint : ∀ {A B W} (a : Hom W A) (b : Hom W B) →
+           (∀ v → fun (ι₁ {A} {B}) (fun a v) ≡ fun (ι₂ {A} {B}) (fun b v)) →
+           Hom W 𝟘
+disjoint {W = W} a b c =
+  hom (λ v → inl≢inr (c v)) (λ t → inl≢inr (c (w W t)))
+
+disjoint-uni : ∀ {W} (h h′ : Hom W 𝟘) → h ≈ h′
+disjoint-uni h h′ v = ⊥-elim (fun h v)

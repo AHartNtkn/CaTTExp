@@ -61,7 +61,7 @@ def top_chain(G, t):
     """Top chain of the strict image of t, as a sorted tuple of (var, coeff)."""
     return tuple(sorted(_top(G, t).items()))
 
-@lru_cache(maxsize=None)
+@id_memo
 def _top_cached(G, t):
     if t[0] == 'v':
         return ((t[1], 1),)
@@ -78,7 +78,7 @@ def _top_cached(G, t):
 def _top(G, t):
     return dict(_top_cached(G, t))
 
-@lru_cache(maxsize=None)
+@id_memo
 def strict_image(G, t):
     """Steiner tableau of the strict image: (dim, top chain, image of source,
     image of target); objects are ('pt', x)."""
@@ -202,6 +202,9 @@ class NotCovered(Exception):
 def covered(n):
     return n <= 2
 
+_MEMO = {}
+_DEPTH = [0]      # nesting of rc (rc_nat's fillers call rc from inside rc)
+
 def rc(G, A, t, u):
     """Return w : t ->_A u in G, or None. Never returns an ill-typed term."""
     try:
@@ -211,8 +214,14 @@ def rc(G, A, t, u):
         if strict_image(G, t) != strict_image(G, u):
             return None
         import rc_heur
-        rc_heur.CALLS[0] = 0
-        w = _rc(G, A, t, u)
+        if _DEPTH[0] == 0:
+            rc_heur.CALLS[0] = 0      # one budget per outermost query
+            _MEMO.clear()             # answers (and failures) within it
+        _DEPTH[0] += 1
+        try:
+            w = _rc(G, A, t, u)
+        finally:
+            _DEPTH[0] -= 1
     except (TypeError_, AssertionError, NotCovered, KeyError, StopIteration, ValueError):
         return None
     if w is None:
@@ -221,9 +230,22 @@ def rc(G, A, t, u):
     return w
 
 def _rc_inner(G, A, t, u):
-    if infer(G, t) != A or infer(G, u) != A:
+    # a sub-query that fails by an exception fails alone (other routes of
+    # the caller stay open); only the call budget (NotCovered) aborts
+    try:
+        if infer(G, t) != A or infer(G, u) != A:
+            return None
+        key = (G, A, t, u)
+        if key in _MEMO:
+            return _MEMO[key]
+        import rc_heur
+        b0, c0 = rc_heur.BLOCKED[0], rc_heur.CALLS[0]
+        w = _rc(G, A, t, u)
+        if w is not None or rc_heur.BLOCKED[0] == b0:
+            _MEMO[key] = w
+        return w
+    except (TypeError_, AssertionError, KeyError, StopIteration, ValueError):
         return None
-    return _rc(G, A, t, u)
 
 def _rc(G, A, t, u):
     n = tdim(A) + 1

@@ -24,21 +24,51 @@ def v(i):
 
 # ---------------------------------------------------------------- basics
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=300000)
 def tdim(A):
     return -1 if A == STAR else tdim(A[1]) + 1
 
-def subst_tm(t, s):
+def id_memo(f):
+    """Memoize f on the identities of its arguments (checked on a hit):
+    hashing a term walks its shared subterms as a tree, which is exponential
+    for the deeply shared terms the oracle builds. Bounded by clearing."""
+    memo = {}
+    def g(*args):
+        key = tuple(map(id, args))
+        hit = memo.get(key)
+        if hit is not None and all(a is b for a, b in zip(hit[0], args)):
+            return hit[1]
+        r = f(*args)
+        if len(memo) > 100000:
+            memo.clear()
+        memo[key] = (args, r)
+        return r
+    g.cache_clear = memo.clear
+    g.__wrapped__ = f
+    return g
+
+def subst_tm(t, s, _m=None):
+    # memoized by identity within one call: shared subterms stay shared
     if t[0] == 'v':
         return s[t[1]]
-    return ('coh', t[1], t[2], tuple(subst_tm(u, s) for u in t[3]))
+    if _m is None:
+        _m = {}
+    k = id(t)
+    hit = _m.get(k)
+    if hit is not None and hit[0] is t:
+        return hit[1]
+    r = ('coh', t[1], t[2], tuple(subst_tm(u, s, _m) for u in t[3]))
+    _m[k] = (t, r)
+    return r
 
-def subst_ty(A, s):
+def subst_ty(A, s, _m=None):
     if A == STAR:
         return A
-    return ('->', subst_ty(A[1], s), subst_tm(A[2], s), subst_tm(A[3], s))
+    if _m is None:
+        _m = {}
+    return ('->', subst_ty(A[1], s, _m), subst_tm(A[2], s, _m), subst_tm(A[3], s, _m))
 
-@lru_cache(maxsize=None)
+@id_memo
 def fv_tm(t):
     if t[0] == 'v':
         return frozenset([t[1]])
@@ -47,7 +77,7 @@ def fv_tm(t):
         r |= fv_tm(u)
     return r
 
-@lru_cache(maxsize=None)
+@id_memo
 def fv_ty(A):
     if A == STAR:
         return frozenset()
@@ -79,8 +109,12 @@ def chain_tree(k):
 def ps_dim(P):
     return max(tdim(A) + 1 for A in P)
 
+@lru_cache(maxsize=100000)
 def ps_boundary_vars(P, k, sign):
-    """Variables of the k-boundary of ps P (sign '-' or '+')."""
+    """Variables of the k-boundary of ps P (sign '-' or '+'), a frozenset."""
+    return frozenset(_ps_boundary_vars(P, k, sign))
+
+def _ps_boundary_vars(P, k, sign):
     S = set()
     for i, A in enumerate(P):
         d = tdim(A) + 1
@@ -160,16 +194,36 @@ def side_ok(P, A, t, u):
 _IDC = {}   # id(G) -> (G, {id(t): (t, type)}): identity-keyed memo, so that
             # large shared terms are not rehashed at every subterm
 
+_IDN = [0]
+
 def infer(G, t, _cache={}):
     g = _IDC.get(id(G))
     if g is None or g[0] is not G:
-        g = (G, {})
+        g = (G, {}, {})
         _IDC[id(G)] = g
     hit = g[1].get(id(t))
     if hit is not None and hit[0] is t:
         return hit[1]
-    r = _infer(G, t, _cache)
+    if t[0] == 'coh':
+        # structural memo: equal terms rebuilt as new tuples (substitution,
+        # composition) are checked once per context
+        # keyed by the identities of the head and the arguments (hashing
+        # the term itself would walk its shared subterms as a tree)
+        key = (id(t[1]), id(t[2])) + tuple(map(id, t[3]))
+        h2 = g[2].get(key)
+        if h2 is not None and h2[0][1] is t[1] and h2[0][2] is t[2] and all(
+                a is b for a, b in zip(h2[0][3], t[3])):
+            r = h2[1]
+        else:
+            r = _infer(G, t, _cache)
+            g[2][key] = (t, r)
+    else:
+        r = _infer(G, t, _cache)
     g[1][id(t)] = (t, r)
+    _IDN[0] += 1
+    if _IDN[0] > 400000:          # the memo keeps its terms alive: bound it
+        _IDC.clear()
+        _IDN[0] = 0
     return r
 
 def _infer(G, t, _cache):
@@ -179,10 +233,7 @@ def _infer(G, t, _cache):
     else:
         _, P, A, s = t
         if A == STAR: raise TypeError_('coh at *')
-        if not is_ps(P): raise TypeError_('not ps')
-        check_ty_cached(P, A)
-        if not side_ok(P, A[1], A[2], A[3]):
-            raise TypeError_('side condition fails')
+        _head_ok(P, A)
         if len(s) != len(P): raise TypeError_('sub length')
         for i, (Bi, ti) in enumerate(zip(P, s)):
             if infer(G, ti) != subst_ty(Bi, s):
@@ -190,7 +241,17 @@ def _infer(G, t, _cache):
         r = subst_ty(A, s)
     return r
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=200000)
+def _head_ok(P, A):
+    """The coherence head coh_P(A) is well formed (independent of the
+    substitution, so cached)."""
+    if not is_ps(P): raise TypeError_('not ps')
+    check_ty_cached(P, A)
+    if not side_ok(P, A[1], A[2], A[3]):
+        raise TypeError_('side condition fails')
+    return True
+
+@lru_cache(maxsize=300000)
 def check_ty_cached(G, A):
     if A == STAR: return True
     check_ty_cached(G, A[1])

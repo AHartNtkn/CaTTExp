@@ -23,26 +23,27 @@
 -- kernel image of t's biclosed type. Types mention the boundaries of
 -- cells, which are biclosed terms; their kernel image (`trTm`) is the
 -- argument for a variable, and otherwise the mmc head of the term on
--- its **canonical support**: the entries it uses, closed under the
--- entries their types use, and the atoms they use, each kept in its
--- original order and renumbered (`canon`). The side condition requires
--- every head to be canonical (every entry and every atom is used),
--- like coh's requirement that its pasting context be exactly the
--- support of its type. So each biclosed term in a context has one
--- kernel image, and
--- a term written directly and the same term met as a boundary are the
--- same kernel term (`MultimapCellsExamples`, `curry-boundary`).
+-- its **canonical support**: the entries it and its type use, closed
+-- under the entries their types use, and the atoms all of these use,
+-- each kept in its original order and renumbered (`canon`). The side
+-- condition requires every head to be canonical (every entry and every
+-- atom is used), like coh's requirement that its pasting context be
+-- exactly the support of its type, and requires the inferred type to be
+-- admitted, well formed, and to use only the k atoms. So each biclosed
+-- term in a context has one kernel image, and a term written directly
+-- and the same term met as a boundary are the same kernel term
+-- (`MultimapCellsExamples`, `curry-boundary`).
 --
 -- This file is the construction; the stability laws are
--- `MultimapCellsLaws`. The presupposition law for mmc is not yet
--- proved (ledger S26j). Its biclosed half is: the canonical head of
--- every inferring term passes the side condition with the renamed type
--- (`MultimapCellsWf.sub-mmcTy`). What remains is the kernel half (the
--- kernel images commute with the renaming onto a support). Step 1's
--- heads keep their presupposition law
--- (`MultimapPresup`). Like mm, mmc trusts `infer`, so it inherits its
--- two caveats: `glue`'s stated typing rule, and no sort discipline
--- (`here` instances are AdmI, not the data-sorted KInst; SortDisc).
+-- `MultimapCellsLaws` and the presupposition law (in the kernel with
+-- plain CaTT's side condition and rule (MARK)) is `MultimapCellsPresup`:
+-- the canonical head of every boundary passes the side condition with
+-- the renamed type (`MultimapCellsWf.sub-mmcTy`), and the kernel images
+-- commute with the renaming onto a support (`MultimapCellsComm`).
+-- Step 1's heads keep their presupposition law (`MultimapPresup`). Like
+-- mm, mmc trusts `infer`, so it inherits its two caveats: `glue`'s
+-- stated typing rule, and no sort discipline (`here` instances are
+-- AdmI, not the data-sorted KInst; SortDisc).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax

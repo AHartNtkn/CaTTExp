@@ -1195,4 +1195,19 @@ What is not yet in Agda: an unconditional filler for any coherence of dimension 
 
 **Correction (2026-11-23): the single query is only the coherence case of Proposition R.** For a **composition** c over Q (dim Q = dim c = n) with a selected top cell q, `π(a_c) ≠ π(b_c)`: they differ by `collapse(e ⊗ π(c))`, which contains the (n+1)-generator q↑. Theorem A and `rcS-thmA` only cover queries with equal strict images, so nothing will discharge `RCq` for these c (e.g. the vertical composite α ∗₁ β of 2-cells with α selected), and there is no reason to expect rcS to answer them. `okAll` stays true but gives nothing for them. `Kω` is the right filler for coherences, and for compositions whose top cells are all unselected; compositions with a selected top cell need the layered filler of §4.1 (whiskered q↑ layers joined by RC(n) connectors), which is the next step of C1d (2).
 
+**Plan for compositions with selected top cells (NATF, C1d (2)).** Reduce every composition to three basic shapes, then layer those by hand.
+1. *Biased form.* For a composition c over Q of dimension 2 with top cells q₁ … q_k in a layering order (t₀ = s ⇒ t₁ ⇒ … ⇒ t_k = u, with t_{i−1} = l_i f_i r_i and t_i = l_i g_i r_i), let c″ = W₁ ∗₁ ⋯ ∗₁ W_k, where W_i = l_i ∗₀ q_i ∗₀ r_i is built from the typed whiskers of `DerivedBoundary`. Then π(c) = π(c″) in F(Q).
+2. *Transport.* Take w : c ⇛ c″ and w′ : c″ ⇛ c from rcS in Q. Q is a pasting context, so these are equal-image queries in a Key2 context. Set c↑ = (w⁻ whiskered into a_c) ; c″↑ ; (w′⁺ whiskered into b_c), where c″↑ is the ordinary cylinder of the term c″.
+3. *Basic fillers.* c″↑ only needs fillers for 1-dimensional compositions (K₁), for the 2-cell whiskers l ∗₀ q and q ∗₀ r, and for the binary vertical composite α ∗₁ β. Each of these gets an explicit layered filler, one layer per selected top cell:
+   (l⁻ f⁻ r↑) ∗₁ (l⁻ ∗₀ q↑ ∗₀ r⁺) ∗₁ (l↑ g⁺ r⁺).
+   Its two ends are joined to a_c and b_c by equal-image RC(2) connectors, with omitted factors handled as in `DimOne`.
+   *Status (2026-11-23):* the vertical composite is done in a general form: `Naturality.Ladder` runs DimOne's sweep one dimension up (in the hom x⁻ → y⁺, with 3-cell squares θ_α and ∗₂-stacking), and `Naturality.Column.col-ok` types it as c↑ : a_c → b_c for any 2-cell c : f₀ ⇒ f_m over the column Q_m = ΣΘ_m (every m, every valid datum). It is conditional on rcS answering the gaps it uses (`ColRC`), which for the vertical composite are equal-image 2-cell queries (expected, not proved).
+   *Refinement (2026-11-23):* no separate transport step is needed. For a general 2-dimensional composition c, run the same `Ladder` in the hom x₀⁻ → x_m⁺ with:
+   - objects: the layer paths t_j as composite 1-cell terms;
+   - rungs: their cylinders t_j↑ (K₁, unconditional);
+   - edges: whiskered top cells W_j = l_j ∗₀ q_j ∗₀ r_j, built with `rwT 0 1` / `lwT 0 1`;
+   - squares: the cylinders W_j↑ of those whisker terms.
+   The end gaps compare c⁻ with the composite of the W_j⁻, which have the same strict image. So the base cases are just the one-sided whisker coherences `rwT 0 1` and `lwT 0 1`. Each of these gets one explicit layer, e.g. (f⁻ ◃ h↑) ; fill₁ ; (α↑ ∗₀ h⁺) for α ∗₀ h, with rcS gaps on both sides.
+4. *My side of the hypotheses.* Equal strict images for every connector (≈w), and `Key2Ctx (Q↑Y)`.
+
 For the cases where the single query is right, discharging `RCq` in dimension 2 needs (i) rcS total on parallel 2-cells with equal strict image (Theorem A, `rcS-thmA`, RC threads, S20) and (ii) a proof that a_c and b_c have equal strict images, `⟦ a_c ⟧ (η Γ) ≈w ⟦ b_c ⟧ (η Γ)` with Γ = Q↑Y, plus the strong order `Key2Ctx (Q↑Y)` (`RCProc.TwoPathCtx`), the hypothesis of `rcS-thmA`. In dimension n ≥ 3 it needs RC(n) (the descent, RCGEN). rcS today is total only for globular supports and for supports with no variable of dimension ≥ 2; cylinder queries are in general neither.

@@ -157,7 +157,7 @@ A use such as Θ ⊢ uni^w_{Γ,n}[σ] with σ : Horn_n(Γ, γ; c) in chapter 6 i
 
 A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders), and the kernel with binders is formalized in `CaTTExp.Binder.*` (§1.5; ledger S26a, with the remaining fragments S26b–S26f).
 
-User declarations enter the same way: a development's postulated objects, cells and marks are a signature (equivalently, a context it is checked in).
+The signature is closed to users. Every head is a kernel former that comes with its rules and an interpretation in the model 𝒦, so a user cannot assert that something exists. A development's assumptions are context variables: a derivation in Γ is a hypothetical statement, valid for every instance of Γ, and asserts nothing (ledger S28).
 
 **Status.** Agda-checked, `CaTTExp.Signature`. **Source:** `notes/agda-sketch-findings.md` "The sketch".
 
@@ -166,6 +166,7 @@ User declarations enter the same way: a development's postulated objects, cells 
 **Q1.1. Names or positions.** The kernel uses de Bruijn levels in Agda; the spec writes names.
 - *Option A: names with shadowing forbidden.* Simplest to read and to report errors in. Every context must be written with distinct names.
 - *Option B: names elaborated to levels, shadowing allowed.* More convenient in long developments; error messages must reconstruct names.
+- **Decided (Anthony, 2026-11-23): Option A.** Names are distinct within every context, and a binder's variables are distinct from those of the context around it. In a flat context shadowing only makes variables unreachable (a hidden `x` still occurs in later types and must be printed as `x✝`), contexts are local to one coherence, diagram or binder so names do not accumulate, and the only saving B offers is picking a fresh name for a bound variable. The named layer over the limit rules (`CaTTExp.Lim.Named`, `WfCtx`) already requires distinct names.
 
 **Q1.2. How much of a coherence the user writes.** The kernel term `coh_{Δ, A}[σ]` carries the whole pasting context Δ, the type A and the full substitution σ.
 - *Option A: write everything.* No inference; terms are long (the composite of two arrows names five variables of Δ and five terms of σ).

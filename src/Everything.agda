@@ -179,6 +179,16 @@ import CaTTExp.PsRaiseExamples
 import CaTTExp.VarSubFv
 import CaTTExp.PsRaiseCongr
 import CaTTExp.PsRaiseCongrExamples
+import CaTTExp.RCProc.Path1
+import CaTTExp.RCProc.Column
+import CaTTExp.RCProc.Walk
+import CaTTExp.RCProc.Whisker
+import CaTTExp.RCProc.Edges
+import CaTTExp.RCProc.EgPath
+import CaTTExp.RCProc.Eg
+import CaTTExp.RCProc.TwoPathTerm
+import CaTTExp.RCProc.StrictPath
+import CaTTExp.RCProc.Key2Bd
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute
@@ -187,6 +197,8 @@ import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
+import CaTTExp.Naturality.Ladder
+import CaTTExp.Naturality.Column
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle
@@ -417,6 +429,7 @@ import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
 import CaTTExp.Descent.TruncHomInv
 import CaTTExp.Descent.TInit
+import CaTTExp.Descent.InitNotDesc
 import CaTTExp.Descent.EncodeDecode
 import CaTTExp.Descent.EncodeDecodeDJ
 -- Binders and INIT (ledger S26a, spec §1.6, §9.3).

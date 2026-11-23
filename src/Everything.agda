@@ -509,6 +509,7 @@ import CaTTExp.Binder.MultimapCells
 import CaTTExp.Binder.MultimapCellsLaws
 import CaTTExp.Binder.MultimapCellsExamples
 import CaTTExp.Binder.MultimapCellsStrengthen
+import CaTTExp.Binder.MultimapCellsSupport
 import CaTTExp.Binder.FreeObj
 import CaTTExp.Binder.FreeObjLaws
 import CaTTExp.Binder.FreeObjExamples

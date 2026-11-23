@@ -179,6 +179,9 @@ import CaTTExp.RCProc.Path1
 import CaTTExp.RCProc.Column
 import CaTTExp.RCProc.Walk
 import CaTTExp.RCProc.Whisker
+import CaTTExp.RCProc.Edges
+import CaTTExp.RCProc.EgPath
+import CaTTExp.RCProc.Eg
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute

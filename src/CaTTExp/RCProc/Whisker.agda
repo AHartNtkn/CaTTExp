@@ -10,6 +10,7 @@
 module CaTTExp.RCProc.Whisker where
 
 open import CaTTExp.Prelude
+open import CaTTExp.Derived using (subst₂)
 open import CaTTExp.Pure
 open import CaTTExp.PsRaise using (TopOK; anyR; Le)
 open import CaTTExp.RCProc.Column
@@ -72,3 +73,11 @@ module Col (m n : Nat) where
     cong-cell-op (flagAt m) (node []) (leaves (m + n)) ⋆ (var 0) (var (vtx N)) 1
       (le-chain (m + n)) (topOK-chain m n) (any-chain m n) (ty-chain N) (op-chain N)
       (subst (Γ ⊢sub θ ∶_) (sym R≡) sθ)
+
+  -- The type of H_g[θ_g] is a → b.
+  open import CaTTExp.PsRaise using (inclM; inclM-0; inclM-pt)
+
+  A^-eq : A^ (flagAt m) (node []) (leaves (m + n)) ⋆ (var 0) (var (vtx N)) ≡ arr ⋆ (var 0) (var (colEnd m n))
+  A^-eq = cong₂ (arr ⋆) (inclM-0 (flagAt m) (node []) (leaves (m + n)))
+            (subst₂ (λ i j → lookupₛ (inclM (flagAt m) (node []) (leaves (m + n))) i ≡ var j)
+               (chain-pt N) (raised-pt m n) (inclM-pt (flagAt m) (node []) (leaves (m + n))))

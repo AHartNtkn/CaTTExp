@@ -110,3 +110,20 @@ C₀-chainC N = trans (fst (chain-eq N 0)) (cong chainC (+-zero N))
 
 e₀-vtx : ∀ N → e₀ N ≡ vtx N
 e₀-vtx N = trans (snd (chain-eq N 0)) (cong vtx (+-zero N))
+
+-- The final points.
+chain-pt : ∀ N → fst (snd (build (chainT N) pss)) ≡ vtx N
+chain-pt N = trans (snd (build-leaves N pss)) (e₀-vtx N)
+
+colEnd : Nat → Nat → Nat
+colEnd m n = endFrom (Raised (C₀ m) (e₀ m) ⋆) (len (C₀ m)) n
+
+raised-pt : ∀ m n → fst (snd (build (raiseT (flagAt m) (chainT (suc (m + n)))) pss)) ≡ colEnd m n
+raised-pt m n =
+  trans (cong (λ T′ → fst (snd (build T′ pss))) (trans (raiseT-node m (leaves (m + n))) (cong node (raise-leaves m n))))
+    (trans (cong (λ r → fst (snd r)) (build-++ (leaves m) (col ∷ leaves n) pss))
+      (trans (snd (build-leaves n (psd (psd (pse (pse dm))))))
+        (cong₂ (λ Γ x → endFrom (Raised Γ x ⋆) (len Γ) n) (fst bm) (snd bm))))
+  where
+  dm = snd (snd (buildList (leaves m) pss))
+  bm = build-leaves m pss

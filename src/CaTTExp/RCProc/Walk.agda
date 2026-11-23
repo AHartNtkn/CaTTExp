@@ -82,9 +82,10 @@ wgoF-ty {Γ} {Θ} {σ} {x′} {x} s lΘ lx (cons {z = z} {e = e} {p = p} le w)
 
 open import CaTTExp.Derived using (tm-ty; subst₂)
 open import CaTTExp.GraphFillerTotal using (wsub; wgo-ty; wgo-seg; seg-head; seg-end; walk-end; Seg; tm-ctx; wgo-keep)
-open import CaTTExp.GraphFillerTotal.Chains using (chainC; vtx; +-zero)
-open import CaTTExp.RCProc.Column using (C₀; e₀; colCtx; C₀-chainC; e₀-vtx)
+open import CaTTExp.GraphFillerTotal.Chains using (chainC; vtx; +-zero; T→<)
+open import CaTTExp.RCProc.Column using (C₀; e₀; colCtx; colEnd; C₀-chainC; e₀-vtx)
 open import CaTTExp.PsRaise using (Raised)
+open import CaTTExp.RCProc.Edges using (bd; edgesAt; lt-bd; wgo-len; edgesAt-keep; wgo-edges)
 
 θg : Ctx → Nat → List Nat → Nat → Tm → Tm → Nat → List Nat → Sub
 θg Γ a λ′ w s t x ρ = wgo Γ (wsub Γ a λ′ ,ₛ var w ,ₛ s ,ₛ t ,ₛ var x) w ρ
@@ -194,3 +195,81 @@ module _ {Γ a λ′ v w s t x ρ b}
 
   θg-wf : Γ ⊢sub θg Γ a λ′ w s t x ρ ∶ colCtx m ∣ ρ ∣
   θg-wf = wgoF-ty sCol lyC lyσ wρ
+
+  θg-0 : lookupₛ (θg Γ a λ′ w s t x ρ) 0 ≡ var a
+  θg-0 = trans (wgo-keep (σ₃ ,ₛ var x) w ρ 0 (T→< 0 _ tt))
+           (trans (lk-1 σ₃ (var x) 0 tt) (trans (lk-1 σ₂ t 0 tt) (trans (lk-1 σ₁ s 0 tt)
+             (trans (lk-1 σλ (var w) 0 (zero< λ′)) (seg-head λ′ sg)))))
+    where
+    zero< : ∀ p → T (0 <ℕ lenₛ (wsub Γ a p))
+    zero< p = pos (⟨⟩ ,ₛ var a) a p tt
+      where
+      pos : ∀ σ y q → T (0 <ℕ lenₛ σ) → T (0 <ℕ lenₛ (wgo Γ σ y q))
+      pos σ y []      h = h
+      pos σ y (e ∷ q) h = pos (σ ,ₛ var (tgtOf Γ e) ,ₛ var e) (tgtOf Γ e) q tt
+
+  θg-end : lookupₛ (θg Γ a λ′ w s t x ρ) (colEnd m ∣ ρ ∣) ≡ var b
+  θg-end = trans (wgoF-end Γ (Raised C (e₀ m) ⋆) (σ₃ ,ₛ var x) (len C) w ρ (snd (S.sub-sc closed sCol)) lyσ)
+                 (cong var (walk-end wρ))
+
+  -- The edges of θ_g: λ, then the slots of s and t, then ρ
+  -- (CaTTExp.RCProc.Edges).
+  private
+    L₀ = bd 1 m
+    σ₄ = σ₃ ,ₛ var x
+
+    bL : L₀ ≡ len C
+    bL = trans (sym (wgo-len Γ (⟨⟩ ,ₛ var a) a λ′)) lC
+
+    self′ : ∀ n → T (n <ℕ suc n)
+    self′ zero    = tt
+    self′ (suc n) = self′ n
+
+    keep₄ : ∀ i → T (i <ℕ lenₛ σ₄) → lookupₛ (θg Γ a λ′ w s t x ρ) i ≡ lookupₛ σ₄ i
+    keep₄ i p = wgo-keep σ₄ w ρ i (T→< i (lenₛ σ₄) p)
+
+
+  private
+    s1 = <-suc′
+    nσ = lenₛ σλ
+    nC = len C
+
+  θg-λ : edgesAt (θg Γ a λ′ w s t x ρ) 1 m ≡ λ′
+  θg-λ = trans (edgesAt-keep σλ (θg Γ a λ′ w s t x ρ) 1 m h) (wgo-edges Γ (⟨⟩ ,ₛ var a) a λ′)
+    where
+    h : ∀ i → T (i <ℕ L₀) → lookupₛ (θg Γ a λ′ w s t x ρ) i ≡ lookupₛ σλ i
+    h i p = trans (keep₄ i b4)
+              (trans (lk-1 σ₃ (var x) i b3)
+              (trans (lk-1 σ₂ t i b2)
+              (trans (lk-1 σ₁ s i b1) (lk-1 σλ (var w) i iσ))))
+      where
+      iσ : T (i <ℕ nσ)
+      iσ = subst (λ k → T (i <ℕ k)) (trans bL (sym lC)) p
+      b1 = s1 i nσ iσ
+      b2 = s1 i (suc nσ) b1
+      b3 = s1 i (suc (suc nσ)) b2
+      b4 = s1 i (suc (suc (suc nσ))) b3
+
+  private
+    c3 : T (nC <ℕ suc (suc (suc nC)))
+    c3 = s1 nC (suc (suc nC)) (s1 nC (suc nC) (self′ nC))
+
+    c2 : T (nC <ℕ suc (suc nC))
+    c2 = s1 nC (suc nC) (self′ nC)
+
+    lift : ∀ i (k : Nat → Nat) → T (i <ℕ k nC) → T (i <ℕ k nσ)
+    lift i k p = subst (λ n → T (i <ℕ k n)) (sym lC) p
+
+  θg-s : lookupₛ (θg Γ a λ′ w s t x ρ) (suc L₀) ≡ s
+  θg-s = subst (λ k → lookupₛ (θg Γ a λ′ w s t x ρ) (suc k) ≡ s) (sym bL)
+           (trans (keep₄ (suc nC) (lift (suc nC) (λ n → suc (suc (suc (suc n)))) c3))
+                  (trans (lk-1 σ₃ (var x) (suc nC) (lift (suc nC) (λ n → suc (suc (suc n))) c2)) ls))
+
+  θg-t : lookupₛ (θg Γ a λ′ w s t x ρ) (suc (suc L₀)) ≡ t
+  θg-t = subst (λ k → lookupₛ (θg Γ a λ′ w s t x ρ) (suc (suc k)) ≡ t) (sym bL)
+           (trans (keep₄ (suc (suc nC)) (lift (suc (suc nC)) (λ n → suc (suc (suc (suc n)))) c2))
+                  (trans (lk-1 σ₃ (var x) (suc (suc nC)) (lift (suc (suc nC)) (λ n → suc (suc (suc n))) (self′ nC))) lt))
+
+  θg-ρ : edgesAt (θg Γ a λ′ w s t x ρ) (suc (suc (suc (suc L₀)))) ∣ ρ ∣ ≡ ρ
+  θg-ρ = subst (λ k → edgesAt (θg Γ a λ′ w s t x ρ) (suc (suc (suc (suc k)))) ∣ ρ ∣ ≡ ρ)
+           (wgo-len Γ (⟨⟩ ,ₛ var a) a λ′) (wgo-edges Γ σ₄ w ρ)

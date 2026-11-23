@@ -8,24 +8,42 @@ is a separate test when the end labels differ.
 """
 from argparse import ArgumentParser
 from collections import defaultdict,deque
+from functools import lru_cache
 from itertools import permutations,product
 import json
 from pathlib import Path
 
 from semistrict_surface_checkpoint_orders import readings
 from semistrict_surface_planar_columns import Column
-from semistrict_surface_planar_event_projection import cuts
 from semistrict_surface_private_histories import closure
 
 
 class Diagram:
     def __init__(self,width,schedule):
-        _,sites=cuts(Column(width,schedule))
-        self.sites={sum(1<<e for e in done):pos for done,pos in sites.items()}
+        column = Column(width,schedule)
         self.n=len(schedule)
+        @lru_cache(maxsize=2048)
+        def sites(mask):
+            live = column.initial
+            for e,(inputs,outputs) in enumerate(column.boxes):
+                if mask & (1 << e):
+                    if inputs[0] not in live:
+                        return {}
+                    pos = live.index(inputs[0])
+                    if live[pos:pos+len(inputs)] != inputs:
+                        return {}
+                    live = live[:pos]+outputs+live[pos+len(inputs):]
+            offsets = {wire:i for i,wire in enumerate(live)}
+            enabled = {}
+            for e,(inputs,_) in enumerate(column.boxes):
+                pos = offsets.get(inputs[0])
+                if pos is not None and live[pos:pos+len(inputs)] == inputs:
+                    enabled[e] = pos
+            return enabled
+        self.sites = sites
 
     def legal(self,e,mask):
-        return e in self.sites.get(mask,{})
+        return e in self.sites(mask)
 
     def read(self,start,steps):
         p=list(start)
@@ -43,7 +61,7 @@ class Diagram:
                 if not 0<=token<self.n-1:
                     raise ValueError('invalid exchange position')
                 a,b=p[token:token+2]
-                pos=self.sites[sum(1<<x for x in p[:token])]
+                pos=self.sites(sum(1<<x for x in p[:token]))
                 if b not in pos or pos[a]<=pos[b]:
                     raise ValueError('exchange is not native at its sites')
                 p[token:token+2]=b,a
@@ -61,7 +79,7 @@ class Diagram:
                 f,_,t=w[i+1]
                 if (s|1<<e)&~t==0 or (t|1<<f)&~s==0:
                     yield ('commute',i),w[:i]+(w[i+1],w[i])+w[i+2:]
-            for x in self.sites[s]:
+            for x in self.sites(s):
                 if x!=e and not s&(1<<x):
                     extra=s|1<<x
                     if self.legal(e,extra) and (limits is None or extra&~limits[e,j]==0):

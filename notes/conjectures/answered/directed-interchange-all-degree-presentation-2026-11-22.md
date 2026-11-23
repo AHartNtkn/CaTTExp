@@ -217,3 +217,58 @@ There is a related positive statement about **reachability**. For \(X=X_1X_2\), 
 The [response checker](../../../scripts/e6/check_all_degree_presentation.py) reconstructs the two actual endpoint tableaux of each signed bridge and reads the pure operand summands at their own ranks. It checks 7,040 hemisphere occurrences, including the choice of hemisphere for a truncated fixed input. It evaluates all 65,536 transformation assignments for a two-letter, one-vertex weight-one layer, with the split into distinct or identified letters, and checks contextual products with a weight-two letter. It executes both face routes of the two \(3\times3\) naturalities and the \(4\times4\) join on named grid swaps and compares their endpoints and weights. These are finite checks; the row induction and the separating action on bounded path classes prove the all-degree assertions.
 
 The [disk](../../../scripts/e6/interchange_double_variation.py), [cochain and stationary split](../../../scripts/e6/interchange_gray_composition.py), [row-bound](../../../scripts/e6/check_interchange_row_bounds.py), [doubled-loop](../../../scripts/e6/grid_loop_words.py), [grid-history](../../../scripts/e6/interchange_grid_normal_histories.py), and [switch](../../../scripts/e6/interchange_fibre_decorations.py) checks also pass. They cover 84 signed disk extensions, 2,349 cochain differentials, 432 two-axis subdivisions, all 127 tested doubled-loop words, 825 grid intervals, and the four switch counts \(49,14,29,2\). Agda 2.8.0 checks the existing [generic finite-presentation normalizer](../../../src/CaTTExp/Uniform/Present.agda) and [weighted word presentation](../../../src/CaTTExp/Uniform/WordPresent.agda) with \(\texttt{--safe}\). The new constructor and operand-bound inductions above are paper proofs.
+
+# Verification (2026-11-23, S3a thread)
+
+Checked against the prompt, (K44)–(K58) of `lax-interchange-every-dimension-r10-2026-11-20.md`, r9 Response 2, and the cited scripts. **Accepted for questions 1–3 and 5. Question 4 is answered only in a weak sense** (see item 4). The levels of checking are stated per item.
+
+**Scripts run (2026-11-23, all pass).**
+- `check_all_degree_presentation.py` (new with this response): 7,040 pure-operand hemisphere checks, 65,536 transformation arrays, and 3 wide-grid boundary routes.
+- `interchange_double_variation.py`: 84 disk extensions.
+- `interchange_gray_composition.py`: 2,349 differentials and 180 whiskerings.
+- `check_interchange_row_bounds.py`: 432 stack tests.
+- `grid_loop_words.py`: 127 doubled-loop words.
+- `interchange_grid_normal_histories.py`: 825 intervals.
+- `interchange_fibre_decorations.py`: switch counts 49, 14, 29, 2.
+
+The new script is a set of finite spot checks. It does not test the all-degree inductions, which are paper proofs, as the response says.
+
+1. **Signature (§1).** The schemas are finite and uniform in d:
+   - the structural constructors;
+   - the square E₁₁ and the unary recursion from it;
+   - the (2,2), (3,2), (2,3) and (3,3) seed tables;
+   - one raising schema for all higher bidegrees, with bridges b_a^ε;
+   - the input globes.
+
+   A raw d-cell is an indexed list of records (head, operands, pads l_i, r_i at each cut). This is an ordinary inductive family at each rank, which is the shape `FreeP` needs beyond degree four. Checked at argument level. Two limits:
+   - The schemas are not self-contained. They point to displayed formulas (2)–(29), (K32) and the round-5 tables, which must be transcribed from those files.
+   - The typing induction for the raising schema is a paper proof. The script checks its hemisphere rows for p ≤ 7 and q ≤ 9.
+2. **Equations and guards (§2).**
+   - B is the low table plus the cut-0 unary subdivisions and transports, extended to every unary.
+   - R and the inner law are the two split schemas.
+   - The V guard table has explicit tests: U(z) (empty collected list), generic Gray-tableau equality, and parallelism.
+
+   The (K58) remark is the useful part for the free layer: on free objects every guarded row can be replaced by its unit specializations, so the algorithm never enumerates generic guarded pastes. Checked at argument level against (K58). **Refinement of the prompt.** The prompt (after r10 Response 3) said that above degree 4 the new equations act only inside lower labels. That holds for the two *switches* only. B's outer unary subdivisions and transports still give top-word replacements in every degree.
+3. **Letters, weights, bounds (§3).**
+   - Weights: per-head charges through degree 4 (the r5 Response 4 formulas plus a cochain term), and charge one per proper head above 4, with overrides for shifted h, H_R, H, J, the cut-0 unary and H_L.
+   - Operand bound: each stored operand has row grades at most those of the letter's faces (the "operand bound"). The bound B, the explicit box product, and the size bound K^{D^{d+2}} follow from it.
+   - The response notes that a word between fixed faces is not bounded, since loops have infinitely many powers. So the letter list is finite and the word list needs the top weight, which matches what `WordPresent` assumes.
+
+   Checked at argument level. Conservation for the raising bridges is the (K47) induction, followed in outline. The bound is far too large to run. It gives finiteness, not an algorithm one would execute.
+4. **Closed form above degree four (§4): weak.** The normal data of p is its action on every transformation array T ∈ [N]^{A×[N]} that satisfies the pair list, masked by D(T).
+   - The separation proof is the right-regular action on bounded path classes plus a sink. Checked in detail: each pair is satisfied on every state because partial weights never exceed final weights. It is correct.
+   - But this is the general fact that a finite quotient embeds in a transformation monoid. It needs N^{aN} arrays, is not a combinatorial model of the cells, and is not an impossibility result. It decides nothing that the first word per component (`Present.agda`) does not already decide.
+
+   So question 4 stays open in the sense intended: either a combinatorial model with explicit cells, or a proof that none exists.
+5. **Degree five on grids (§5).** The response works on Σ[m] ∨ Σ[n], as the prompt asked. It points out that `GridFive.agda` uses Σ(Σ[m] ∨ Σ[n]) and that the active cuts differ. On Σ[m] ∨ Σ[n]:
+   - The rank-5 heads are the square δ at cut 2 and N_L, N_R, h₁ at cut 1.
+   - With two rows (or two columns) only δ occurs. N_L and N_R first occur on 3 × 3 and h₁ on 4 × 4. The script checks the witnesses' routes, endpoints and charges.
+   - There are no top relations in degree 5, so the normal form is the typed list itself.
+
+   **Correction to the prompt.** "5-letters are exactly the positional squares" is true on two rows and false on wider grids. Composite-operand squares are **not** equal to pastes of atomic squares: δ(H_eH_e, H_l) has grade 1 and the two-letter paste has grade 2. This agrees with r9 Response 2 ("a square on a composite of 4-cells is a single operation"). They do have the same endpoints, so 5-*reachability* by atomic squares is unchanged. That reachability claim is the only one `GridFive.agda` uses. The response gives the explicit atomic witness. Checked at argument level.
+
+**Consequences in the repository.**
+- S3a plan: `SigP`/`FreeP` extend past degree four from the §1 schemas. Free layers use the (K58) unit-specialization reading of the guards (§2). Letter lists come from the §3 box, with `WordPresent` supplying the word universes.
+- The §3 bound is too large to compute. Concrete instances still need the actual letters, as in `GridFive`.
+- `uniform-checker.md` §1.5 is updated. Composite-operand squares are distinct letters, and reachability by atomic squares is confirmed. GridFive's alphabet on Σ(Σ[m] ∨ Σ[n]) remains the r10 Response 1 paper argument.
+- Question 4 (a combinatorial closed form or an impossibility result) is left open. No follow-up prompt has been sent yet.

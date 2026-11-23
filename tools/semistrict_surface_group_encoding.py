@@ -30,29 +30,39 @@ def weight(word):
     return sum(1 if i>0 else -1 for i in word)//2
 
 
-def positive_equation(word):
-    """Clear negatives by a common full twist; one extra twist guards the raw relation."""
-    assert weight(word) == 0
+def positive_equation(word, guard_twists=1):
+    """Clear negatives by full twists, optionally padding both sides at the source."""
+    assert sum(1 if i>0 else -1 for i in word) == 0
     pieces = {1:(1,), 2:(2,), -1:(2,1,1,2,1), -2:(1,2,1,2,1)}
-    left = Z + tuple(j for i in word for j in pieces[i])
-    right = Z*(1+sum(i<0 for i in word))
+    left = Z*guard_twists + tuple(j for i in word for j in pieces[i])
+    right = Z*(guard_twists+sum(i<0 for i in word))
     assert len(left) == len(right)
     return left,right
 
 
-def compile_group(relators):
-    rels = tuple(map(spelling,relators))
-    g, D = 3, Z
+def homogeneous_kernel(generators, rels, central, degree):
+    """Generate the kernel of (the quotient by rels and central, integer degree)."""
+    g, D = degree(central), central
     for r in rels:
-        e = weight(r)
-        if e % 3:
-            sign = 1 if e % 3 == 1 else -1
-            g, D = 1, power(r,sign)+power(Z,(1-sign*e)//3)
-            break
-    assert weight(D) == g
-    kernel = [D+x+inverse(D)+inverse(x) for x in (A,B)]
-    kernel.extend(r + power(D,-(weight(r)//g)) for r in (*rels,Z))
+        # Keep Bezout coefficients in the Euclidean algorithm. D represents
+        # a trivial quotient element of the current positive gcd degree.
+        e = degree(r)
+        if e % g:
+            hi,lo = g,abs(e)
+            u,v,s,t = 1,0,0,1
+            while lo:
+                q,rem = divmod(hi,lo)
+                hi,lo = lo,rem
+                u,v,s,t = s,t,u-q*s,v-q*t
+            g,D = hi,power(D,u)+power(r,v if e>=0 else -v)
+    assert degree(D) == g
+    kernel = [D+x+inverse(D)+inverse(x) for x in generators]
+    kernel.extend(r + power(D,-(degree(r)//g)) for r in (*rels,central))
     return g, D, [positive_equation(k) for k in kernel]
+
+
+def compile_group(relators):
+    return homogeneous_kernel((A,B),tuple(map(spelling,relators)),Z,weight)
 
 
 def query(word, g, D):
@@ -102,7 +112,7 @@ def schreier_table():
 
 
 def finite_image(word, generators):
-    state = tuple(range(len(generators['a'])))
+    state = tuple(range(len(next(iter(generators.values())))))
     for c in word:
         state = tuple(generators[c][i] for i in state)
     return state

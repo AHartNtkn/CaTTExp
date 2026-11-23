@@ -5,7 +5,8 @@
 -- Every statement below is `refl`: the checker, which is sound and
 -- complete, accepts (or rejects) the term, so the term is (or is not)
 -- derivable. Positive: ℕ with all six formers, and the circle (a cell
--- variable) with μ and η. Negative: the side condition (positivity and
+-- variable) with μ and η, and a sort over a base with a companion cell.
+-- Negative: the side condition (positivity and
 -- the former's selection) rejects a non-⊤ parameter target, a second
 -- object variable, a source mentioning X, rec_y at y = 0 or at a cell,
 -- and uni on a signature with a cell.
@@ -183,9 +184,11 @@ _ = refl
 ------------------------------------------------------------------------
 -- Rejections by the side condition.
 
--- A map into a parameter that is not ⊤: (X, f : X → A) in context A.
+-- A map into a parameter that is not ⊤, after an operation (so not a
+-- structure map, and not a companion): (X, z : ⊤ → X, f : X → A) in
+-- context A. ((X, f : X → A) alone is a sort over A; see below.)
 Δbad₁ : Ctx
-Δbad₁ = ε ▸ ⋆ ▸ arr ⋆ X (var 0)
+Δbad₁ = ε ▸ ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X (var 0)
 
 _ : (sideOf μ 0 Δbad₁ , ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δbad₁ ⟨⟩))) ≡₂ (false , false)
 _ = refl
@@ -338,8 +341,105 @@ _ : ( ok (tyOf (Γℤ (minv ∷ [])) (bnd recY 2 Δℤ (fresh 0 3)))
     , ok (tyOf Γuℤ (bnd uniY 2 Δℤ (fresh 0 9)))) ≡₄ (true , true , true , true)
 _ = refl
 
--- Positivity rejects a marked sort, and a mark other than inv.
+-- Positivity rejects inv on a sort, and a mark other than inv on an
+-- operation.
 _ : ( sideOf μ 0 (ε ▸[ minv ∷ [] ] ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X X)
     , sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸[ mps ∷ [] ] arr ⋆ X X)
-    , sideOf μ 0 Δℤ) ≡₃ (false , false , true)
+    , sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸[ mgrpd 1 ∷ [] ] arr ⋆ X X)
+    , sideOf μ 0 Δℤ) ≡₄ (false , false , false , true)
+_ = refl
+
+------------------------------------------------------------------------
+-- Sort marks (S26d): the circle S¹ = μ(X : grpd₁, b : ⊤ → X, l : b ⇒ b)
+-- and the truncation ‖A‖₀ = μ(X : ⋆^{≤0}, g : A → X), A a parameter.
+-- A model's carrier must certify the mark: with the (MARK)-only
+-- judgment, a carrier variable carrying it.
+
+ΔS¹ : Ctx
+ΔS¹ = ε ▸[ mgrpd 1 ∷ [] ] ⋆ ▸ arr ⋆ one X ▸ arr (arr ⋆ one X) (bvar 0 1) (bvar 0 1)
+
+ΓS¹ : List Mark → Ctx
+ΓS¹ ms = ε ▸[ ms ] ⋆ ▸ arr ⋆ one (var 0) ▸ arr (arr ⋆ one (var 0)) (var 1) (var 1)
+
+_ : ( ok (tyOf ε (bnd μ 0 ΔS¹ ⟨⟩))
+    , ok (tyOf (ΓS¹ (mgrpd 1 ∷ [])) (bnd rec 0 ΔS¹ (fresh 0 3)))
+    , ok (tyOf (ΓS¹ (mgrpd 1 ∷ [])) (bnd recY 2 ΔS¹ (fresh 0 3)))
+    , ok (tyOf (ΓS¹ []) (bnd rec 0 ΔS¹ (fresh 0 3)))) ≡₄ (true , true , true , false)
+_ = refl
+
+-- In context (A : ⋆): ‖A‖₀ with n = 0, i.e. mtrunc 2.
+Δtr : Ctx
+Δtr = ε ▸[ mtrunc 2 ∷ [] ] ⋆ ▸ arr ⋆ (var 0) X
+
+Γtr : List Mark → Ctx
+Γtr ms = ε ▸ ⋆ ▸[ ms ] ⋆ ▸ arr ⋆ (var 0) (var 1)
+
+_ : ( ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δtr ⟨⟩))
+    , ok (tyOf (Γtr (mtrunc 2 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
+    , ok (tyOf (Γtr (mtrunc 3 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
+    , ok (tyOf (Γtr []) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))) ≡₄ (true , true , false , false)
+_ = refl
+
+------------------------------------------------------------------------
+-- Sorts over bases (S26c step 2). In context (B : ⋆, s : ⊤ → B), the
+-- sort X over B with a point over s:
+--   μ(X, p : X → B, a : ⊤ → X, c : a ; p ⇒ s inv).
+-- p is the header (structure map), c the companion of the operation a.
+
+-- The composite x ; q of maps x : S → Y, q : Y → Z.
+cmp : Tm → Tm → Tm → Tm → Tm → Tm
+cmp S Y Z x q =
+  coh (ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ ⋆ ▸ arr ⋆ (var 1) (var 3))
+      (arr ⋆ (var 0) (var 3)) (⟨⟩ ,ₛ S ,ₛ Y ,ₛ x ,ₛ Z ,ₛ q)
+
+-- The companion type a ; p ⇒ s, for a and p entries of the telescope.
+cmpTyB : Nat → Nat → Ty
+cmpTyB a p = arr (arr ⋆ one (var 0)) (cmp one X (var 0) (bvar 0 a) (bvar 0 p)) (var 1)
+
+Γb : Ctx
+Γb = ε ▸ ⋆ ▸ arr ⋆ one (var 0)
+
+Δb : Ctx
+Δb = ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X ▸[ minv ∷ [] ] cmpTyB 2 1
+
+-- A model: (A, q : A → B, a′ : ⊤ → A, c′ : a′ ; q ⇒ s inv).
+Γbm : List Mark → Ctx
+Γbm ms = Γb ▸ ⋆ ▸ arr ⋆ (var 2) (var 0) ▸ arr ⋆ one (var 2)
+            ▸[ ms ] arr (arr ⋆ one (var 0)) (cmp one (var 2) (var 0) (var 4) (var 3)) (var 1)
+
+σbm : Sub
+σbm = ⟨⟩ ,ₛ var 2 ,ₛ var 3 ,ₛ var 4 ,ₛ var 5
+
+_ : ( sideOf μ 0 Δb
+    ∷ ok (tyOf Γb (bnd μ 0 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 1 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 2 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 3 Δb ⟨⟩))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd rec 0 Δb σbm))
+    ∷ ok (tyOf (Γbm []) (bnd rec 0 Δb σbm))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd recY 1 Δb σbm))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd recY 2 Δb σbm))
+    ∷ []) ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ false ∷ true ∷ true ∷ [])
+_ = refl
+
+-- A sort over A with no operations: (X, p : X → A).
+_ : sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0)) ≡ true
+_ = refl
+
+-- Rejections: no companion; the companion unmarked; a companion whose
+-- source is not a ; p; a cell into the based sort; an X-free non-⊤
+-- target with no companion; the structure map after an operation.
+_ : ( sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X)
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X ▸ cmpTyB 2 1)
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X
+                    ▸[ minv ∷ [] ] arr (arr ⋆ one (var 0)) (var 1) (var 1))
+    ∷ sideOf μ 0 (Δb ▸ arr (arr ⋆ one X) (bvar 0 2) (bvar 0 2))
+    ∷ sideOf μ 0 (Δb ▸ arr ⋆ one (var 0))
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X (var 0) ▸[ minv ∷ [] ] cmpTyB 1 2)
+    ∷ []) ≡ (false ∷ false ∷ false ∷ false ∷ false ∷ false ∷ [])
+_ = refl
+
+-- Not yet: rec_y at the companion c (a 2-cell whose source a ; p is a
+-- composite) and uni over Δb need θ of a composite (ledger S26b (b)).
+_ : ( ok (tyOf (Γbm (minv ∷ [])) (bnd recY 3 Δb σbm)) ∷ sideOf uni 0 Δb ∷ []) ≡ (false ∷ false ∷ [])
 _ = refl

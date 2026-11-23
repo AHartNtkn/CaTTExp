@@ -435,6 +435,8 @@ import CaTTExp.HIT.DirectedSquash
 -- F12b: coinductive objects from INIT (notes/coinductive.md)
 import CaTTExp.Coinductive.Streams
 import CaTTExp.Coinductive.ConstArity
+import CaTTExp.Coinductive.Conat
+import CaTTExp.Descent.GlueNotUniversal
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel

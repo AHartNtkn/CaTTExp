@@ -1175,3 +1175,14 @@ So the generating data of At_i(ν) is that of At_i(µ) restricted to a union of 
 There is one negative control. In `UnitorNaturality`, swapping source and target in the expected type makes Agda reject the module.
 
 The generator does not implement positional pull-back for 1-skeleta with cycles, so Eckmann–Hilton is not generated. The proof covers that case.
+
+## 10. The naturality filler in Agda, every dimension (C1d)
+
+*Thread NATF, 2026-11-23.* `src/CaTTExp/Naturality/` states and proves, over the pure kernel, the recursion of §4.1 for all terms. Only the fillers K themselves are taken as a parameter.
+
+- **Cylinder data.** A datum D on a context Γ, landing in Δ, is a pair of substitutions mm, mp : Δ → Γ (the copies t⁻, t⁺), a selection Y of the variables of Γ, and a cell θ_x for each selected x. Validity (`ValidD`) says: mm and mp are typed, θ_x : a_x → b_x, unselected variables have equal copies, and Y is up-closed. Γ is any context, not only a pasting context. This is the shape a model morphism of INIT has (ledger S26b): mm, mp are the two models, θ the components.
+- **The recursion** (`Raw`): `cyl D (var x) = θ_x` and `cyl D (coh Q B γ) = K Q B Y' [γ↑]`, where Y' = {q : γ(q) uses Y} and γ↑ : Δ → Q↑Y' sends q to γ(q)⁻, γ(q)⁺, γ(q)↑, or to γ(q)⁻ alone when q ∉ Y'. The boundary cells a_t, b_t are the nested whiskers of `conjectures/naturality-arbitrary-depth.md` §2.2, built from the typed whiskers of `DerivedBoundary`. A factor w↑ with w untouched is omitted, not replaced by an identity.
+- **Substitution** (`Commute`): `cyl D (t[σ]) = cyl (pre σ D) t` and `cyl D t [S] = cyl (D[S]) t`, and likewise for a_t, b_t and their types. Both are syntactic, with only scoping hypotheses.
+- **Typing** (`Typing.Main.cyl-wf`): if D is valid and K is typed on every pasting coherence the term uses (`FillerOK`: for Q ⊢ps, B full, Y' nonempty and up-closed, K Q B Y' : a_c → b_c in Q↑Y', c = coh Q B id), then t↑ : a_t → b_t, for every term t of every dimension. The proof is structural induction on the typing derivation. At a coherence, the filler's type is carried along γ↑ by the two substitution laws, plus an extensionality lemma for data that agree on the variables in scope.
+
+What is not yet in Agda: the fillers. Proposition R builds them from RC on Q↑Y'. The coherence case is one RC(n) query; the composition case is the layering of §4.1. RC(1) is typed and total in `RCProc` (`rcP-1`), so the 1-dimensional fillers come next (ledger C1d (1)). Dimension ≥ 2 waits on typed RC(n) on cylinder contexts (C1d (2), RCGEN / S20).

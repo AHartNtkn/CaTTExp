@@ -17,6 +17,13 @@ So a bug in the generator can only make an answer missing, never wrong.
 
 *Note (2026-11-22, ledger S19, S20).* Re-checking each answer is how this research tool establishes finite instances. It is not the design for the system. There, an extension is trusted through a formalized proof of its correctness, without a re-check. The target here is a formalized RC procedure (spec §5.1) proved to return well-typed terms.
 
+*Formalized procedure (S20 (i)).* `CaTTExp.RCProc` defines `rcP : Γ ⊢tm t ∶ A → Γ ⊢tm u ∶ A → Maybe (Σ w. Γ ⊢tm w ∶ arr A t u)`. Each answer carries a derivation built by a proved lemma; nothing is run through the checker. Plan and state:
+1. Done (2026-11-22). Identities (the globular filler on the disk `Dsk (dim A)`, pulled back along `dskSub t A`), dimension 1 between variables (`GraphFillerTotal.total`), and globular contexts (`FillTotal.fill-total`, after deciding `Glob Γ` and comparing normal forms). Totality is proved for identities (`rcP-id`) and dimension 1 (`rcP-1`: equal paths give an answer). Totality on globular contexts needs completeness of `glob?` and fuel independence of `sameNf?`, still to do.
+2. Support restriction (a strengthening lemma), so that a query is answered in the context its support generates.
+3. The local reductions of §3 (congruence, identity slots, distribution, rebracketing, loop cancellation, abstraction) as proved constructions.
+4. Theorem A (dimension 2), then the descent.
+Until a case is proved, its answers still come from the certified tables above.
+
 Reproducing the checks:
 
 ```

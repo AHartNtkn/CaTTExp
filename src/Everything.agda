@@ -143,6 +143,7 @@ import CaTTExp.GlobularTotal.AssignUnique
 import CaTTExp.GlobularTotal.LiftSub
 import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
+import CaTTExp.RCProc
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle

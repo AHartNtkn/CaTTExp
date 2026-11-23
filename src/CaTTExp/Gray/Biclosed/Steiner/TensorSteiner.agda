@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 -- Strong Steiner under the tensor (ledger C5f): loop-freeness, degrees,
--- disjoint supports and augmentation.
+-- disjoint supports, augmentation and ∂∂ = 0.
 --
 -- The basis of a code a ∷ K is the pairs (i, x) with the Leibniz
 -- boundary of `Codes.bd`.  Its relation <₁ has two kinds of steps:
@@ -19,7 +19,14 @@
 -- Part 2: degrees (`t-degs`), disjoint supports (`t-disj`) and
 -- augmentation (`t-aug`) carry over from a and K to a ∷ K.
 --
--- Not proved here yet: ∂∂ = 0 and unitality for a ∷ K.  So the full
+-- Part 3: ∂∂ = 0 carries over (`t-chain`).  The sum over the middle
+-- cell splits into four blocks (`S-expand`): the a-block ∂_a∂_a ⊗ id,
+-- the two mixed blocks, and the K-block id ⊗ ∂_K∂_K.  The outer blocks
+-- cancel by ∂∂ = 0 in a and K.  The mixed blocks cancel against each
+-- other: where ∂_a(i, k) is nonzero, deg i = deg k + 1, so the K-sign
+-- flips between them (the Leibniz sign).
+--
+-- Not proved here yet: unitality for a ∷ K.  So the full
 -- `StrongSteiner` record for a tensor is not yet derived.
 -- No postulates.
 ------------------------------------------------------------------------
@@ -432,3 +439,234 @@ module _ (a : AC) (K : Code) where
               split (inj₂ (p , q)) =
                 cong₂ _+_ (augEq A i p (gA i))
                   (trans (row0 KB dK (flip (degA a i) true) x q) (sym (row0 KB dK (flip (degA a i) false) x q)))
+
+------------------------------------------------------------------------
+-- Part 3: ∂∂ = 0
+
+private
+  rearr : ∀ a b c d → (a * b) * (c * d) ≡ (a * c) * (b * d)
+  rearr a b c d =
+    trans (*-assoc a b (c * d))
+    (trans (cong (a *_) (trans (sym (*-assoc b c d)) (trans (cong (_* d) (*-comm b c)) (*-assoc c b d))))
+           (sym (*-assoc a c (b * d))))
+
+  expand4 : ∀ a b c d → (a + b) * (c + d) ≡ a * c + (a * d + (b * c + b * d))
+  expand4 a b c d =
+    trans (distribʳ a b (c + d))
+    (trans (cong₂ _+_ (distribˡ a c d) (distribˡ b c d)) (+-assoc (a * c) (a * d) (b * c + b * d)))
+
+  Σ-+4 : ∀ {X : Set} (xs : List X) (f g h k : X → Nat) →
+         Σl xs (λ x → f x + (g x + (h x + k x))) ≡ Σl xs f + (Σl xs g + (Σl xs h + Σl xs k))
+  Σ-+4 xs f g h k =
+    trans (Σ-+ xs f (λ x → g x + (h x + k x)))
+    (cong (Σl xs f +_) (trans (Σ-+ xs g (λ x → h x + k x)) (cong (Σl xs g +_) (Σ-+ xs h k))))
+
+  shuffle : ∀ a b c d a′ b′ c′ d′ →
+            (a + (b + (c + d))) + (a′ + (b′ + (c′ + d′))) ≡ (a + a′) + (((b + c) + (b′ + c′)) + (d + d′))
+  shuffle a b c d a′ b′ c′ d′ =
+    trans (+-inter a (b + (c + d)) a′ (b′ + (c′ + d′)))
+    (cong ((a + a′) +_) (trans (cong₂ _+_ (sym (+-assoc b c d)) (sym (+-assoc b′ c′ d′)))
+                               (+-inter (b + c) d (b′ + c′) d′)))
+
+  combine : ∀ a b c d a′ b′ c′ d′ A B C D A′ B′ C′ D′ →
+            a + a′ ≡ A + A′ → (b + c) + (b′ + c′) ≡ (B + C) + (B′ + C′) → d + d′ ≡ D + D′ →
+            (a + (b + (c + d))) + (a′ + (b′ + (c′ + d′))) ≡ (A + (B + (C + D))) + (A′ + (B′ + (C′ + D′)))
+  combine a b c d a′ b′ c′ d′ A B C D A′ B′ C′ D′ e₁ e₂ e₃ =
+    trans (shuffle a b c d a′ b′ c′ d′)
+    (trans (cong₂ _+_ e₁ (cong₂ _+_ e₂ e₃)) (sym (shuffle A B C D A′ B′ C′ D′)))
+
+  not-not′ : ∀ b → not (not b) ≡ b
+  not-not′ true  = refl
+  not-not′ false = refl
+
+  even-suc′ : ∀ n → even (suc n) ≡ not (even n)
+  even-suc′ zero          = refl
+  even-suc′ (suc zero)    = refl
+  even-suc′ (suc (suc n)) = even-suc′ n
+
+  flip-suc′ : ∀ n β → flip (suc n) β ≡ not (flip n β)
+  flip-suc′ n β rewrite even-suc′ n with even n
+  ... | true  = refl
+  ... | false = sym (not-not′ β)
+
+  flip-false : ∀ n → flip n false ≡ not (flip n true)
+  flip-false n with even n
+  ... | true  = refl
+  ... | false = refl
+
+module _ (a : AC) (K : Code) where
+  private
+    module SA = SS (fbA a)
+    module SK = SS (codeFB K)
+    module ST = SS (codeFB (a ∷ K))
+    EA = enumA a
+    EK = enumEl K
+    A  = fbA a
+    elsA = els EA
+    elsK = els EK
+
+  -- Σ over the middle cell of a product of two tensor boundary entries
+  S : Bool → Bool → El (a ∷ K) → El (a ∷ K) → Nat
+  S α β u w = Σl (els (enumEl (a ∷ K))) (λ v → bd (a ∷ K) α u v * bd (a ∷ K) β v w)
+
+  private
+    KK : Bool → Bool → Ix a → El K → El K → Nat
+    KK α β i x z = Σl elsK (λ y → bd K (flip (degA a i) α) x y * bd K (flip (degA a i) β) y z)
+
+  S-expand : ∀ α β i x k z →
+    S α β (i , x) (k , z) ≡
+      (Σl elsA (λ j → bdA a α i j * bdA a β j k) * δE K x z) +
+      ((bdA a α i k * bd K (flip (degA a k) β) x z) +
+      ((bdA a β i k * bd K (flip (degA a i) α) x z) +
+       (δ EA i k * KK α β i x z)))
+  S-expand α β i x k z =
+    trans (Σ-pairs elsA elsK (λ v → bd (a ∷ K) α (i , x) v * bd (a ∷ K) β v (k , z)))
+    (trans (Σ-cong elsA (λ j → trans (Σ-cong elsK (λ y → expand4 (p1 j y) (p2 j y) (q1 j y) (q2 j y)))
+                                      (Σ-+4 elsK (λ y → p1 j y * q1 j y) (λ y → p1 j y * q2 j y)
+                                                 (λ y → p2 j y * q1 j y) (λ y → p2 j y * q2 j y))))
+    (trans (Σ-+4 elsA (λ j → Σl elsK (λ y → p1 j y * q1 j y)) (λ j → Σl elsK (λ y → p1 j y * q2 j y))
+                      (λ j → Σl elsK (λ y → p2 j y * q1 j y)) (λ j → Σl elsK (λ y → p2 j y * q2 j y)))
+           (cong₂ _+_ T1 (cong₂ _+_ T2 (cong₂ _+_ T3 T4)))))
+    where
+      p1 p2 q1 q2 : Ix a → El K → Nat
+      p1 j y = bdA a α i j * δE K x y
+      p2 j y = δ EA i j * bd K (flip (degA a i) α) x y
+      q1 j y = bdA a β j k * δE K y z
+      q2 j y = δ EA j k * bd K (flip (degA a j) β) y z
+      T1 : Σl elsA (λ j → Σl elsK (λ y → (bdA a α i j * δE K x y) * (bdA a β j k * δE K y z))) ≡
+           Σl elsA (λ j → bdA a α i j * bdA a β j k) * δE K x z
+      T1 = trans (Σ-cong elsA (λ j →
+                   trans (Σ-cong elsK (λ y → rearr (bdA a α i j) (δE K x y) (bdA a β j k) (δE K y z)))
+                   (trans (sym (Σ-*ˡ elsK (bdA a α i j * bdA a β j k) (λ y → δE K x y * δE K y z)))
+                          (cong ((bdA a α i j * bdA a β j k) *_) (Σ-δ EK x (λ y → δE K y z))))))
+                 (sym (Σ-*ʳ elsA (δE K x z) (λ j → bdA a α i j * bdA a β j k)))
+
+      T2 : Σl elsA (λ j → Σl elsK (λ y → (bdA a α i j * δE K x y) * (δ EA j k * bd K (flip (degA a j) β) y z))) ≡
+           bdA a α i k * bd K (flip (degA a k) β) x z
+      T2 = trans (Σ-cong elsA (λ j →
+                   trans (Σ-cong elsK (λ y → rearr (bdA a α i j) (δE K x y) (δ EA j k) (bd K (flip (degA a j) β) y z)))
+                   (trans (sym (Σ-*ˡ elsK (bdA a α i j * δ EA j k) (λ y → δE K x y * bd K (flip (degA a j) β) y z)))
+                   (trans (cong ((bdA a α i j * δ EA j k) *_) (Σ-δ EK x (bd K (flip (degA a j) β) · z)))
+                          (rearr′ (bdA a α i j) (δ EA j k) (bd K (flip (degA a j) β) x z))))))
+                 (Σ-δʳ EA k (λ j → bdA a α i j * bd K (flip (degA a j) β) x z))
+        where
+          _·_ : ∀ {X Y Z : Set} → (X → Y → Z) → Y → X → Z
+          (g · y) x = g x y
+          rearr′ : ∀ p q r → (p * q) * r ≡ (p * r) * q
+          rearr′ p q r = trans (*-assoc p q r) (trans (cong (p *_) (*-comm q r)) (sym (*-assoc p r q)))
+
+      T3 : Σl elsA (λ j → Σl elsK (λ y → (δ EA i j * bd K (flip (degA a i) α) x y) * (bdA a β j k * δE K y z))) ≡
+           bdA a β i k * bd K (flip (degA a i) α) x z
+      T3 = trans (Σ-cong elsA (λ j →
+                   trans (Σ-cong elsK (λ y → rearr (δ EA i j) (bd K (flip (degA a i) α) x y) (bdA a β j k) (δE K y z)))
+                   (trans (sym (Σ-*ˡ elsK (δ EA i j * bdA a β j k) (λ y → bd K (flip (degA a i) α) x y * δE K y z)))
+                   (trans (cong ((δ EA i j * bdA a β j k) *_) (Σ-δʳ EK z (bd K (flip (degA a i) α) x)))
+                          (*-assoc (δ EA i j) (bdA a β j k) (bd K (flip (degA a i) α) x z))))))
+                 (Σ-δ EA i (λ j → bdA a β j k * bd K (flip (degA a i) α) x z))
+
+      T4 : Σl elsA (λ j → Σl elsK (λ y → (δ EA i j * bd K (flip (degA a i) α) x y) * (δ EA j k * bd K (flip (degA a j) β) y z))) ≡
+           δ EA i k * KK α β i x z
+      T4 = trans (Σ-cong elsA (λ j →
+                   trans (Σ-cong elsK (λ y → rearr (δ EA i j) (bd K (flip (degA a i) α) x y) (δ EA j k) (bd K (flip (degA a j) β) y z)))
+                   (trans (sym (Σ-*ˡ elsK (δ EA i j * δ EA j k) (λ y → bd K (flip (degA a i) α) x y * bd K (flip (degA a j) β) y z)))
+                          (*-assoc (δ EA i j) (δ EA j k) _))))
+                 (Σ-δ EA i (λ j → δ EA j k * Σl elsK (λ y → bd K (flip (degA a i) α) x y * bd K (flip (degA a j) β) y z)))
+
+  -- the matrix identity behind ∂∂ = 0 in any basis that satisfies it
+  private
+    chain-eq : ∀ (B : FB) x z → T (SS.chainAt B x z) →
+      Σl (els (enumC B)) (λ y → fbd B true x y * fbd B true y z) + Σl (els (enumC B)) (λ y → fbd B false x y * fbd B false y z) ≡
+      Σl (els (enumC B)) (λ y → fbd B true x y * fbd B false y z) + Σl (els (enumC B)) (λ y → fbd B false x y * fbd B true y z)
+    chain-eq B x z c =
+      trans (sym (Σ-+ (els (enumC B)) (λ y → fbd B true x y * fbd B true y z) (λ y → fbd B false x y * fbd B false y z)))
+      (trans (==ℕ-sound _ _ c)
+             (Σ-+ (els (enumC B)) (λ y → fbd B true x y * fbd B false y z) (λ y → fbd B false x y * fbd B true y z)))
+
+    rot : ∀ w x y z → (w + x) + (y + z) ≡ (x + y) + (z + w)
+    rot w x y z =
+      trans (+-assoc w x (y + z))
+      (trans (+-comm w (x + (y + z)))
+      (trans (cong (_+ w) (sym (+-assoc x y z))) (+-assoc (x + y) z w)))
+
+    rot4 : ∀ p q (g : Bool → Nat) c t₁ t₂ t₃ t₄ → t₁ ≡ c → t₂ ≡ not c → t₃ ≡ not c → t₄ ≡ c →
+      (p * g t₁ + p * g t₃) + (q * g t₂ + q * g t₄) ≡ (p * g t₂ + q * g t₃) + (q * g t₁ + p * g t₄)
+    rot4 p q g c ._ ._ ._ ._ refl refl refl refl = rot (p * g c) (p * g (not c)) (q * g (not c)) (q * g c)
+
+  module _ (dA : ∀ i j → T (SA.degAt i j))
+           (cA : ∀ i k → T (SA.chainAt i k)) (cK : ∀ x z → T (SK.chainAt x z)) where
+    private
+      t1 t2 t3 t4 : Bool → Bool → Ix a → El K → Ix a → El K → Nat
+      t1 α β i x k z = Σl elsA (λ j → bdA a α i j * bdA a β j k) * δE K x z
+      t2 α β i x k z = bdA a α i k * bd K (flip (degA a k) β) x z
+      t3 α β i x k z = bdA a β i k * bd K (flip (degA a i) α) x z
+      t4 α β i x k z = δ EA i k * KK α β i x z
+
+      E1 : ∀ i x k z → t1 true true i x k z + t1 false false i x k z ≡ t1 true false i x k z + t1 false true i x k z
+      E1 i x k z =
+        trans (sym (distribʳ (Σl elsA (λ j → bdA a true i j * bdA a true j k)) (Σl elsA (λ j → bdA a false i j * bdA a false j k)) (δE K x z)))
+        (trans (cong (_* δE K x z) (chain-eq A i k (cA i k)))
+               (distribʳ (Σl elsA (λ j → bdA a true i j * bdA a false j k)) (Σl elsA (λ j → bdA a false i j * bdA a true j k)) (δE K x z)))
+
+      kk : ∀ x z t f → f ≡ not t →
+        Σl elsK (λ y → bd K t x y * bd K t y z) + Σl elsK (λ y → bd K f x y * bd K f y z) ≡
+        Σl elsK (λ y → bd K t x y * bd K f y z) + Σl elsK (λ y → bd K f x y * bd K t y z)
+      kk x z true  ._ refl = chain-eq (codeFB K) x z (cK x z)
+      kk x z false ._ refl =
+        trans (+-comm (Σl elsK (λ y → bd K false x y * bd K false y z)) (Σl elsK (λ y → bd K true x y * bd K true y z)))
+        (trans (chain-eq (codeFB K) x z (cK x z))
+               (+-comm (Σl elsK (λ y → bd K true x y * bd K false y z)) (Σl elsK (λ y → bd K false x y * bd K true y z))))
+
+      E4 : ∀ i x k z → t4 true true i x k z + t4 false false i x k z ≡ t4 true false i x k z + t4 false true i x k z
+      E4 i x k z =
+        trans (sym (distribˡ (δ EA i k) (KK true true i x z) (KK false false i x z)))
+        (trans (cong (δ EA i k *_) (kk x z (flip (degA a i) true) (flip (degA a i) false) (flip-false (degA a i))))
+               (distribˡ (δ EA i k) (KK true false i x z) (KK false true i x z)))
+
+      A0 : ∀ γ i k → (suc (degA a k) ≡ degA a i → ⊥) → bdA a γ i k ≡ 0
+      A0 γ i k ne = go (bdA a γ i k) refl
+        where
+          go : ∀ n → bdA a γ i k ≡ n → bdA a γ i k ≡ 0
+          go zero    e = e
+          go (suc n) e = ⊥-elim (ne (deg-of A i k γ (dA i k) (T-subst (cong (λ m → not (m ==ℕ 0)) (sym e)) tt)))
+
+      E23 : ∀ i x k z →
+        (t2 true true i x k z + t3 true true i x k z) + (t2 false false i x k z + t3 false false i x k z) ≡
+        (t2 true false i x k z + t3 true false i x k z) + (t2 false true i x k z + t3 false true i x k z)
+      E23 i x k z = go (suc (degA a k) ==ℕ degA a i) refl
+        where
+          g : Bool → Nat
+          g γ = bd K γ x z
+          dk = degA a k
+          di = degA a i
+          go : ∀ b → (suc dk ==ℕ di) ≡ b →
+            (t2 true true i x k z + t3 true true i x k z) + (t2 false false i x k z + t3 false false i x k z) ≡
+            (t2 true false i x k z + t3 true false i x k z) + (t2 false true i x k z + t3 false true i x k z)
+          go true r = rot4 (bdA a true i k) (bdA a false i k) g (flip dk true)
+                        (flip dk true) (flip dk false) (flip di true) (flip di false)
+                        refl (flip-false dk)
+                        (trans (cong (λ n → flip n true) (sym e)) (flip-suc′ dk true))
+                        (trans (cong (λ n → flip n false) (sym e))
+                          (trans (flip-suc′ dk false) (trans (cong not (flip-false dk)) (not-not′ (flip dk true)))))
+            where e : suc dk ≡ di
+                  e = ==ℕ-sound _ _ (T-subst (sym r) tt)
+          go false r rewrite A0 true i k (λ e → T-subst r (==-T e)) | A0 false i k (λ e → T-subst r (==-T e)) = refl
+
+    t-chain : ∀ u w → T (ST.chainAt u w)
+    t-chain (i , x) (k , z) = ==-T main
+      where
+        cs = els (enumEl (a ∷ K))
+        d = bd (a ∷ K)
+        u = (i , x)
+        w = (k , z)
+        main : Σl cs (λ v → d true u v * d true v w + d false u v * d false v w) ≡
+               Σl cs (λ v → d true u v * d false v w + d false u v * d true v w)
+        main =
+          trans (Σ-+ cs (λ v → d true u v * d true v w) (λ v → d false u v * d false v w))
+          (trans (cong₂ _+_ (S-expand true true i x k z) (S-expand false false i x k z))
+          (trans (combine (t1 true true i x k z) (t2 true true i x k z) (t3 true true i x k z) (t4 true true i x k z)
+                          (t1 false false i x k z) (t2 false false i x k z) (t3 false false i x k z) (t4 false false i x k z)
+                          (t1 true false i x k z) (t2 true false i x k z) (t3 true false i x k z) (t4 true false i x k z)
+                          (t1 false true i x k z) (t2 false true i x k z) (t3 false true i x k z) (t4 false true i x k z)
+                          (E1 i x k z) (E23 i x k z) (E4 i x k z))
+          (sym (trans (Σ-+ cs (λ v → d true u v * d false v w) (λ v → d false u v * d true v w))
+                      (cong₂ _+_ (S-expand true false i x k z) (S-expand false true i x k z))))))

@@ -382,6 +382,70 @@ def cancel_loop(G, A, x, fw, rec):
 
 # ---------------------------------------------------------------- driver
 
+def _subst_diff(a, b, acc):
+    """Collect (y, Z) where a has the variable y and b has Z != v(y) at the
+    same position; False if a and b differ in shape elsewhere."""
+    if a == b:
+        return True
+    if a[0] == 'v':
+        acc.add((a[1], b)); return True
+    if b[0] == 'v' or a[1] != b[1] or a[2] != b[2] or len(a[3]) != len(b[3]):
+        return False
+    return all(_subst_diff(x, y, acc) for x, y in zip(a[3], b[3]))
+
+def interchange(G, A, t, u, rec):
+    """Interchange of two events. If, after a common prefix, t has factors
+    [f, g] and u has [g', f'], where f' is f with one variable y replaced by
+    Z and e : y -> Z is a context cell, the naturality square of f along e
+    at y (rc_nat.square) goes from f * (tau f)^ to (sigma f)^ * f'. It is
+    whiskered by the rest of t, and both of its ends are compared to t and
+    u by `rec`."""
+    R = _R()
+    import rc_nat as N
+    n = tdim(A) + 1
+    ft, fu = R.vfactors(G, t, n), R.vfactors(G, u, n)
+    for i in range(min(len(ft), len(fu)) - 1):
+        if ft[i] == fu[i]:
+            continue
+        if ft[:i] != fu[:i]:
+            return None
+        f, f2 = ft[i], fu[i + 1]
+        acc = set()
+        if not _subst_diff(f, f2, acc) or len(acc) != 1:
+            return None
+        y, Z = next(iter(acc))
+        es = [k for k, T in enumerate(G) if T != STAR and T[2] == v(y) and T[3] == Z]
+        if not es:
+            return None
+        try:
+            w, a, b = N.square(G, {y}, {y: Z}, {y: v(es[0])}, f, rec)
+        except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError):
+            return None
+        pre, post = ft[:i], ft[i + 2:]
+        W = w
+        if post:
+            W = comp2(G, n - 1, W, R.vcomp_over_terms(G, n, post))
+        if pre:
+            W = comp2(G, n - 1, R.vcomp_over_terms(G, n, pre), W)
+        s_, t_ = src(G, W), tgt(G, W)
+        cells = []
+        if s_ != t:
+            x = rec(G, A, t, s_)
+            if x is None:
+                return None
+            cells.append(x)
+        cells.append(W)
+        if t_ != u:
+            x = rec(G, A, t_, u)
+            if x is None:
+                return None
+            cells.append(x)
+        out = cells[0]
+        for c in cells[1:]:
+            out = comp2(G, n, out, c)
+        return out
+    return None
+
 CALLS = [0]          # reset by rc_oracle.rc for each top-level query
 LIMIT = 400
 
@@ -405,6 +469,11 @@ def heur(G, A, t, u, rec):
                     X = cancel_loop(G, A, t, True, rec)
                 elif t == idt:
                     X = cancel_loop(G, A, u, False, rec)
+            if X is None:
+                X = interchange(G, A, t, u, rec)
+            if X is None:
+                import rc_nat
+                X = rc_nat.sweep_rc(G, A, t, u, rec)
             if X is None:
                 X = via_abstraction(G, A, t, u, rec)
         if X is None:

@@ -126,6 +126,27 @@ def run_python_checks():
     ok &= globe_ok
     if globe_ok:
         answered.append((G, infer(G, u2), u2, w2, Kg))
+    # Event interchange (rc_heur.interchange, via rc_nat.square): the
+    # [E_tau, E_b] against [E_c, (sigma c_1)^] sub-query of Horiz3 round 21.
+    # Python-only (not emitted to the Agda table): asserts that the step fires.
+    import gzip, ast, rc_heur
+    fx = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fixtures', 'rc_interchange_round21.txt.gz')
+    with gzip.open(fx, 'rt') as f:
+        Gi, Ai, ti, ui = ast.literal_eval(f.read())
+    fired = [0]
+    orig = rc_heur.interchange
+    def spy(*a):
+        r = orig(*a)
+        fired[0] += r is not None
+        return r
+    rc_heur.interchange = spy
+    try:
+        wi = rc(Gi, Ai, ti, ui)
+    finally:
+        rc_heur.interchange = orig
+    inter_ok = wi is not None and infer(Gi, wi) == arr(Ai, ti, ui) and fired[0] > 0
+    print('%-20s %s' % ('interchange', 'ok' if inter_ok else 'FAILED'))
+    ok &= inter_ok
     H = triangle()
     print('%-20s %s' % ('strong-steiner', 'ok' if St.Complex(H).is_strong_steiner() else 'FAILED'))
     return ok, answered

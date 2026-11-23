@@ -90,8 +90,9 @@ Closure rules, each a proved closure theorem:
 
 **Status.**
 - The decision procedure for the first base rule (positive path 2-polygraphs) is **Agda-checked** (`src/CaTTExp/Lim/Hpol.agda`).
-- The obligation for that rule is **open**. Its homotopicality is cited from Chanavat (Cor. 3.39), not formalized, and that the test selects exactly that class is argued informally in the module.
-- The remaining base rules and the closure rules are **open**: neither their tests nor their obligations are formalized (ledger B25, S24).
+- That the test selects exactly that class is **proved** in the module (`hpol-sound`, `hpol-complete`, 2026-11-23).
+- The obligation for that rule is **open**. Its homotopicality is cited from Chanavat (Cor. 3.39), not formalized. Plan: `notes/hpol-obligations.md` (combinatorial core by Stong dismantling; bridge by relative coherence RC_id(∞) in Agda).
+- The remaining base rules and the closure rules are **open**: neither their tests nor their obligations are formalized (ledger B25, B26).
 
 **Source.** `notes/design-decisions.md` §2.2, §2.7.
 

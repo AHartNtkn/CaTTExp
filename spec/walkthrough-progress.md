@@ -18,12 +18,14 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
 - [x] 0.6 Decidability of checking
-- [ ] Q0.1 (surface question): Which composition order does the user write?
-- [ ] Q0.2 (surface question): Are objects written as types or as terms?
+- [x] Q0.1 (surface question): Which composition order does the user write?
+  - **Decided:** Option A, diagrammatic only; principle: align surface with kernel, ignore historical convention. Application written `x ; F`.
+- [x] Q0.2 (surface question): Are objects written as types or as terms?
+  - **Decided:** Option A, kernel form `x : ⊤ → C` (also settles Q6.1). Users define abbreviations like `El(C) := ⊤ → C` themselves; surface must support user-defined abbreviations.
 
 ## Chapter 1. Core syntax
 
-- [ ] 1.1 Raw syntax
+- [x] 1.1 Raw syntax
 - [ ] 1.2 Judgments
 - [ ] 1.3 Pasting contexts
 - [ ] 1.4 The coherence rule
@@ -130,6 +132,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S26 (1.1): §1.6 forbids the binders §0.2 allows.
 - S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").

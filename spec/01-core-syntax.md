@@ -123,7 +123,9 @@ where Var(t : A) is the set of variables of t and of the terms in A.
 
 A signature 𝕊 is a set of constants with decidable equality, a closed type `ty(c)` for each, and a decidable validity predicate `Valid(c)`. Pure CaTT is the empty signature.
 
-Later chapters extend the kernel only by adding constants, families of constants indexed by syntax (for example, one constant `⟦Γ⟧ : ⋆` per pasting context Γ, chapter 7), and inductive judgments in the style of `⊢ps`. They add no new definitional equalities and no new binders.
+Later chapters extend the kernel only by adding constants, families of constants indexed by syntax (for example, one constant `⟦Γ⟧ : ⋆` per pasting context Γ, chapter 7), and inductive judgments in the style of `⊢ps`. They add no new definitional equalities.
+
+A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is **not yet in §1.1's grammar**, which has no binders. Until it is, chapter 9 states INIT's terms directly, and the Agda signature (`CaTTExp.Signature`) does not cover it (ledger S26).
 
 User declarations enter the same way: a development's postulated objects, cells and marks are a signature (equivalently, a context it is checked in).
 

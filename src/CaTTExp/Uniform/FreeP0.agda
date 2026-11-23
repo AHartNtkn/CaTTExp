@@ -316,15 +316,19 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
   ev t = just (lo t , hi t)
 
   private
-    ev-sub : ∀ σ t → ev (sub σ t) ≡ just (interp σ (loS t) , interp σ (hiS t))
-    ev-sub σ t = cong₂ (λ a b → just (a , b)) (lo-sub σ t) (hi-sub σ t)
+    -- ev is always defined, so the lifted equality is equality of pairs.
+    pr : Tm → String × String
+    pr t = lo t , hi t
 
-    guards-hold : ∀ σ gs → (∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≡ ev (sub σ (snd g))) →
+    ev-sub : ∀ σ t → pr (sub σ t) ≡ (interp σ (loS t) , interp σ (hiS t))
+    ev-sub σ t = cong₂ _,_ (lo-sub σ t) (hi-sub σ t)
+
+    guards-hold : ∀ σ gs → (∀ {g} → g ∈L gs → pr (sub σ (fst g)) ≡ pr (sub σ (snd g))) →
                   Hold (interp σ) (guardEqs gs)
     guards-hold σ ((l , r) ∷ gs) h here =
-      trans (sym (lo-sub σ l)) (trans (fst (,-inj (just-inj (h here)))) (lo-sub σ r))
+      trans (sym (lo-sub σ l)) (trans (fst (,-inj (h here))) (lo-sub σ r))
     guards-hold σ ((l , r) ∷ gs) h (there here) =
-      trans (sym (hi-sub σ l)) (trans (snd (,-inj (just-inj (h here)))) (hi-sub σ r))
+      trans (sym (hi-sub σ l)) (trans (snd (,-inj (h here))) (hi-sub σ r))
     guards-hold σ ((l , r) ∷ gs) h (there (there m)) = guards-hold σ gs (λ k → h (there k)) m
 
     zero-hold : ∀ σ as → (∀ {a} → a ∈L as → dim (σ (varName a)) ≡ dim a) →
@@ -336,7 +340,7 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
     zero-hold σ (a ∷ as) h m         | false = zero-hold σ as (λ k → h (there k)) m
 
     all-hold : ∀ σ as gs → (∀ {a} → a ∈L as → dim (σ (varName a)) ≡ dim a) →
-               (∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≡ ev (sub σ (snd g))) →
+               (∀ {g} → g ∈L gs → pr (sub σ (fst g)) ≡ pr (sub σ (snd g))) →
                Hold (interp σ) (allEqs as gs)
     all-hold σ as gs hd hg m with ∈-++⁻ (zeroEqs as) m
     ... | inj₁ m′ = zero-hold σ as hd m′
@@ -344,11 +348,11 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
 
     by-check : ∀ σ as gs l r → T (okEq as gs l r) →
                (∀ {a} → a ∈L as → dim (σ (varName a)) ≡ dim a) →
-               (∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≡ ev (sub σ (snd g))) →
-               ev (sub σ l) ≡ ev (sub σ r)
+               (∀ {g} → g ∈L gs → pr (sub σ (fst g)) ≡ pr (sub σ (snd g))) →
+               pr (sub σ l) ≡ pr (sub σ r)
     by-check σ as gs l r t hd h =
       trans (ev-sub σ l)
-        (trans (cong₂ (λ a b → just (a , b))
+        (trans (cong₂ _,_
                   (check-sound (interp σ) (allEqs as gs) {loS l} {loS r}
                      (∧-fst {check (allEqs as gs) (loS l) (loS r)} t) (all-hold σ as gs hd h))
                   (check-sound (interp σ) (allEqs as gs) {hiS l} {hiS r}
@@ -358,14 +362,14 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
 
     -- An operation's value depends only on its declared arguments.
     from-args : ∀ {o} σ τ s → T (memS (symName s) (mapK varName (OpSpec.args o))) →
-                (∀ {a} → a ∈L OpSpec.args o → ev (σ (varName a)) ≡ ev (τ (varName a))) →
+                (∀ {a} → a ∈L OpSpec.args o → pr (σ (varName a)) ≡ pr (τ (varName a))) →
                 interp σ s ≡ interp τ s
     from-args {o} σ τ (S0 x) t pw with memS-sound x _ t
     ... | y , m , refl with ∈-map⁻ varName (OpSpec.args o) m
-    ...   | a , ma , refl = fst (,-inj (just-inj (pw ma)))
+    ...   | a , ma , refl = fst (,-inj (pw ma))
     from-args {o} σ τ (T0 x) t pw with memS-sound x _ t
     ... | y , m , refl with ∈-map⁻ varName (OpSpec.args o) m
-    ...   | a , ma , refl = snd (,-inj (just-inj (pw ma)))
+    ...   | a , ma , refl = snd (,-inj (pw ma))
 
     gen-ok : ∀ {g} → g ∈L gens → T (GenCheck.okGen ρl ρh g)
     gen-ok = ∈-all _ gens gens-ok
@@ -376,19 +380,23 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
   model : Model
   model = record
     { M  = String × String
+    ; _≈_ = _≡_
+    ; ≈-refl = refl
+    ; ≈-sym = sym
+    ; ≈-trans = trans
     ; ev = ev
     ; def-gen  = λ _ → tt
     ; def-s    = λ _ _ → tt
     ; def-t    = λ _ _ → tt
     ; def-op   = λ _ _ _ _ → tt
-    ; cong-s   = λ {n} e → cong (λ p → just (fst p , (if n <ℕ 2 then fst p else snd p))) (just-inj e)
-    ; cong-t   = λ {n} e → cong (λ p → just ((if n <ℕ 2 then snd p else fst p) , snd p)) (just-inj e)
+    ; cong-s   = λ {n} e → cong (λ p → (fst p , (if n <ℕ 2 then fst p else snd p))) e
+    ; cong-t   = λ {n} e → cong (λ p → ((if n <ℕ 2 then snd p else fst p) , snd p)) e
     ; cong-op  = λ {o} {σ} {τ} m pw →
         let t = ∈-all okOp ops ops-ok m
             ap = OpSpec.applied o
             t₃ = ∧-snd {okTgt o} (∧-snd {okSrc o} t)
         in trans (ev-sub σ ap)
-             (trans (cong₂ (λ a b → just (a , b))
+             (trans (cong₂ _,_
                        (from-args {o} σ τ (loS ap) (∧-fst t₃) pw)
                        (from-args {o} σ τ (hiS ap) (∧-snd {okLo o} t₃) pw))
                     (sym (ev-sub τ ap)))
@@ -411,15 +419,15 @@ module Model0 (ops : List OpSpec) (eqs : List Schema) (gens : List Gen)
     gen-at {g} m e = subst (λ d → T (GenCheck.okGenD ρl ρh g d)) e (gen-ok m)
 
     gsrc-ok : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
-           ev (sF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gsrc g))
+           pr (sF (suc n) (v (gdim g) (gname g))) ≡ pr (v n (gsrc g))
     gsrc-ok {g} {n} m e rewrite e =
       let t = gen-at {g} {n} m e in
-      cong₂ (λ a b → just (a , b)) (yes-≡ (∧-fst t)) (yes-≡ (∧-fst (∧-snd {GenCheck.g1 ρl ρh g n} t)))
+      cong₂ _,_ (yes-≡ (∧-fst t)) (yes-≡ (∧-fst (∧-snd {GenCheck.g1 ρl ρh g n} t)))
     gtgt-ok : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
-           ev (tF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gtgt g))
+           pr (tF (suc n) (v (gdim g) (gname g))) ≡ pr (v n (gtgt g))
     gtgt-ok {g} {n} m e rewrite e =
       let t = ∧-snd {GenCheck.g2 ρl ρh g n} (∧-snd {GenCheck.g1 ρl ρh g n} (gen-at {g} {n} m e)) in
-      cong₂ (λ a b → just (a , b)) (yes-≡ (∧-fst t)) (yes-≡ (∧-snd {GenCheck.g3 ρl ρh g n} t))
+      cong₂ _,_ (yes-≡ (∧-fst t)) (yes-≡ (∧-snd {GenCheck.g3 ρl ρh g n} t))
 
   open Soundness model public
 

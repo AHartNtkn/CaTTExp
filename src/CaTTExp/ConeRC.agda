@@ -213,13 +213,27 @@ module ConeGenS (split : Bool) (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
         if nz u then lift f u
         else (P f (tE u) ⟫= λ Pt → Tc f u ⟫= λ Tu → fillE Pt Tu)
 
+      -- With the split on, the factors of a lift are built with their
+      -- top faces left raw (transported only up to dimension m − 1), so
+      -- that the top-dimensional caps of all factors are made once, by
+      -- the enclosing lift's final transport, rather than between the
+      -- factors' events.
+      Ps : Nat → Ex → Out Ex
+      Ps zero    _     = fail
+      Ps (suc f) (v i) = ret (pr i)
+      Ps (suc f) u     = if split ∧ nz u then liftG false f u else P (suc f) u
+
       lift : Nat → Ex → Out Ex
-      lift f (bn k a b) =
+      lift = liftG true
+
+      liftG : Bool → Nat → Ex → Out Ex
+      liftG full f (bn k a b) =
         if split ∧ (suc k <ℕ dimK a) ∧ (suc k <ℕ dimK b) then hsplit
         else straight
         where
         u = bn k a b
         m = dimK u
+        top = if full then m else (m ∸ 1)
         u′ = bn (suc k) (bn k a (face true (suc k) b)) (bn k (face false (suc k) a) b)
         hsplit : Out Ex
         hsplit =
@@ -230,13 +244,13 @@ module ConeGenS (split : Bool) (fillH : Fill) (eqH : Eq) (Γ : ExCtx) where
                       (λ r → if r ==ℕ m then Tu else face false r Pt) (bn m Pu′ Rw)
         straight : Out Ex
         straight =
-          P f a ⟫= λ Pa → P f b ⟫= λ Pb →
+          Ps f a ⟫= λ Pa → Ps f b ⟫= λ Pb →
           R f k (face false (suc k) b) ⟫= λ Rb →
           compose k Pa Rb ⟫= λ X → compose (suc k) Pb X ⟫= λ W₀ →
           P f (tE u) ⟫= λ Pt → Tc f u ⟫= λ Tu →
-          transport m (λ r → if r ==ℕ m then Pt else face true r Pt)
-                      (λ r → if r ==ℕ m then Tu else face false r Pt) W₀
-      lift f _ = fail
+          transport top (λ r → if r ==ℕ m then Pt else face true r Pt)
+                        (λ r → if r ==ℕ m then Tu else face false r Pt) W₀
+      liftG _ f _ = fail
 
       -- R_j(w) = P(s_{j−1} w) ∗_{j−1} (… (P(s₀ w) ∗₀ w)).
       R : Nat → Nat → Ex → Out Ex

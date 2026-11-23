@@ -98,7 +98,9 @@ Decidability is not the same as efficiency. Several side conditions are decidabl
 - *Option B: classical only* (`g ∘ f`). Familiar, but every Gray cell's factor order is then read right to left, and the lax/oplax naming hazard of `conventions.md` §3.2 becomes a daily hazard.
 - *Option C: both, with distinct symbols.* Cheap to support (it is pure notation) but doubles what a reader must recognise.
 - *Worked example.* The lax naturality cell of α : F ⇒ G at f : x → y is `α_x ; Gf ⇛ Ff ; α_y` in A and `Gf ∘ α_x ⇛ α_y ∘ Ff` in B.
+- **Decided (Anthony, 2026-11-22): Option A, diagrammatic only.** General principle behind it: the surface is aligned with the kernel as far as possible, no convention is chosen because it is historically common, and the user is never asked to do translation work in their head that the system does not need. Consequence: functor application is written in the kernel's order too (`x ; F`, §6.6), not as classical `F(x)` sugar.
 
 **Q0.2. Are objects written as types or as terms?** The kernel has objects as terms of sort ⋆ and elements of C as 1-cells ⊤ → C (chapter 6).
 - *Option A: as in the kernel* (`x : ⊤ → C`). Nothing to elaborate; every element is visibly a functor, so lax naturality at elements is visible.
 - *Option B: elements as variables of type C* (`x : C`), elaborated to `⊤ → C`. Reads like ordinary mathematics; the elaborator must insert ⊤ and whiskerings everywhere, and error messages must translate back.
+- **Decided (Anthony, 2026-11-22): Option A, as in the kernel** (`x : ⊤ → C`, `f : x ⇒ y`, `x ; F`), by the Q0.1 principle. Abbreviations such as `El(C) := ⊤ → C` are left to users. This requires the surface to support user-defined abbreviations (definitions unfolded by elaboration, covered by the conservativity obligation of §0.5).

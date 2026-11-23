@@ -399,24 +399,19 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
     just-inj : ∀ {X : Set} {x y : X} → just x ≡ just y → x ≡ y
     just-inj refl = refl
 
-  -- A term over the support.
-  module ForTerm (b : Tm) (bvs : varsT b ⊆ vs) where
+  -- A start set inside the support: its support, after the renaming,
+  -- is the support of its image.
+  module ForSet (X : List Nat) (bvs : X ⊆ vs) where
 
     Rb : List Nat
-    Rb = closeFrom Φ n (varsT b)
-
-    b′ : Tm
-    b′ = sT ρ b
-
-    vars-b′ : varsT b′ ≡ map rr (varsT b)
-    vars-b′ = varsT-ren as vs b bvs
+    Rb = closeFrom Φ n X
 
     R′ : List Nat
-    R′ = closeFrom Φ′ (length Φ′) (varsT b′)
+    R′ = closeFrom Φ′ (length Φ′) (map rr X)
 
     -- Rb ∩ [0, n) ⊆ the support.
     Rb⊆vs : ∀ i → In Rb i → T (i <ℕ n) → In vs i
-    Rb⊆vs i p l = cl-least Φ vs (λ j eA q → vs-closed j eA q) n (varsT b) (self n)
+    Rb⊆vs i p l = cl-least Φ vs (λ j eA q → vs-closed j eA q) n X (self n)
                     (λ k q _ → bvs k q) i p l
       where
       self : ∀ n → T (n <ℕ suc n)
@@ -450,15 +445,15 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
                 r′ = subst (λ xs → In xs i) (varsY-ren as vs A (vs-closed j eAj jvs))
                        (subst (λ B → In (varsY B) i) eA′ r)
                 (k , kin , ek) = In-map-inv rr (varsY A) i r′
-                kRb = cl-closed Φ dd (varsT b) j eAj jRb k kin
+                kRb = cl-closed Φ dd X j eAj jRb k kin
                 kvs = vs-closed j eAj jvs k kin
             in subst (In D′) (sym ek) (In-map rr (filter (λ i → elem i Rb) vs) k (filter-elem (λ i → elem i Rb) vs k kRb kvs))
-          h : ∀ i → In (varsT b′) i → T (i <ℕ length Φ′) → In D′ i
+          h : ∀ i → In (map rr X) i → T (i <ℕ length Φ′) → In D′ i
           h i r _ =
-            let (k , kin , ek) = In-map-inv rr (varsT b) i (subst (λ xs → In xs i) vars-b′ r)
+            let (k , kin , ek) = In-map-inv rr X i r
             in subst (In D′) (sym ek)
-                 (In-map rr (filter (λ i → elem i Rb) vs) k (filter-elem (λ i → elem i Rb) vs k (closeFrom-mono Φ n (varsT b) k kin) (bvs k kin)))
-          inD = cl-least Φ′ D′ cD′ (length Φ′) (varsT b′) (self (length Φ′)) h p q
+                 (In-map rr (filter (λ i → elem i Rb) vs) k (filter-elem (λ i → elem i Rb) vs k (closeFrom-mono Φ n X k kin) (bvs k kin)))
+          inD = cl-least Φ′ D′ cD′ (length Φ′) (map rr X) (self (length Φ′)) h p q
                   (subst (λ y → T (p <ℕ y)) (sym len-Φ′) l)
           (j , jin , ej) = In-map-inv rr (filter (λ i → elem i Rb) vs) p inD
           (jRb , jvs) = filter-In-inv (λ i → elem i Rb) vs j jin
@@ -473,7 +468,7 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
     bwd p l q =
       let D = filter (λ i → elem (rr i) R′) vs
           cR′ : Closed Φ′ R′
-          cR′ = cl-closed Φ′ deps′ (varsT b′)
+          cR′ = cl-closed Φ′ deps′ (map rr X)
           cD : Closed Φ D
           cD = λ j {A} eA inD k kin →
             let (jR′ , jvs) = filter-In-inv (λ i → elem (rr i) R′) vs j inD
@@ -483,14 +478,14 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
                 rk = subst (λ xs → In xs (rr k)) (sym (varsY-ren as vs A (vs-closed j eA jvs)))
                        (In-map rr (varsY A) k kin)
             in filter-elem (λ i → elem (rr i) R′) vs k (cR′ (rr j) e′ jR′ (rr k) rk) kvs
-          h : ∀ i → In (varsT b) i → T (i <ℕ n) → In D i
+          h : ∀ i → In X i → T (i <ℕ n) → In D i
           h i r _ = filter-elem (λ i → elem (rr i) R′) vs i
-                      (closeFrom-mono Φ′ (length Φ′) (varsT b′) (rr i)
-                        (subst (λ xs → In xs (rr i)) (sym vars-b′) (In-map rr (varsT b) i r)))
+                      (closeFrom-mono Φ′ (length Φ′) (map rr X) (rr i)
+                        (In-map rr X i r))
                       (bvs i r)
           j = nth vs p
           jin = nth-In vs p l
-          inD = cl-least Φ D cD n (varsT b) (self n) h j q (vs-lt j jin)
+          inD = cl-least Φ D cD n X (self n) h j q (vs-lt j jin)
           (jR′ , _) = filter-In-inv (λ i → elem (rr i) R′) vs j inD
       in subst (In R′) (idx-nth vs vs-nd p l) jR′
       where
@@ -498,7 +493,7 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
       self zero    = tt
       self (suc n) = self n
 
-    supVars-ren : supVars Φ′ b′ ≡ map rr (supVars Φ b)
+    supVars-ren : supVarsFrom Φ′ (map rr X) ≡ map rr (supVarsFrom Φ X)
     supVars-ren =
       trans (cong (λ k → filter (λ p → elem p R′) (upTo k)) len-Φ′)
         (sym (trans (cong (map rr) (sym (filter-filter (λ i → elem i Rb) (λ j → elem j R) (upTo n)

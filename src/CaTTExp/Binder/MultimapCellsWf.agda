@@ -12,10 +12,13 @@ open import CaTTExp.Gray.Biclosed.Subst using (_⊢_∶_; ⊢in; sub-wf)
 open import CaTTExp.Binder.Multimap using (atomFm)
 open import CaTTExp.Binder.MultimapCells
 open import CaTTExp.Binder.MultimapCellsStrengthen
-  using (T-if; F-if; dec; inl; inr; ptTy; blankFrom; blank; lookup-blank; mapM-if; nthY-just; lookup-map; lookup-idx)
+  using (T-if; F-if; dec; inl; inr; ptTy; blankFrom; blank; lookup-blank; mapM-if; nthY-just; lookup-map; lookup-idx;
+         agree-blank-on; ren-typed)
 open import CaTTExp.Binder.MultimapCellsSupport using (In; _⊆_; Deps↓; lookup-some; elem-split)
 open import CaTTExp.Binder.MultimapCellsRen
 open import CaTTExp.Binder.MultimapCellsComp
+open import CaTTExp.Binder.MultimapSorted using (module Ren)
+open import CaTTExp.Binder.Multimap using (sortedT; sortedY)
 
 ------------------------------------------------------------------------
 -- okTy and atomFm under a renaming of atoms into range.
@@ -37,14 +40,23 @@ module OkRen (as vs : List Nat) where
   atomFm-ren k (x \\ y) p h = ∧-in (atomFm-ren k x (∧-l _ _ p) (⊆-l (atF x) (atF y) as h)) (atomFm-ren k y (∧-r _ _ p) (⊆-r (atF x) (atF y) as h))
   atomFm-ren k (x // y) p h = ∧-in (atomFm-ren k x (∧-l _ _ p) (⊆-l (atF x) (atF y) as h)) (atomFm-ren k y (∧-r _ _ p) (⊆-r (atF x) (atF y) as h))
 
+  inputs-sY : ∀ A → inputs (sY ρ A) ≡ inputs A
+  inputs-sY (op (xs ▸ _))   = len-sFs xs
+    where
+    len-sFs : ∀ ys → length (sFs (fo ρ) ys) ≡ length ys
+    len-sFs []       = refl
+    len-sFs (_ ∷ ys) = cong suc (len-sFs ys)
+  inputs-sY (hom _ _ A _ _) = inputs-sY A
+
   okTy-ren : ∀ k A → T (okTy k A) → atY A ⊆ as → T (okTy (length as) (sY ρ A))
   okTy-ren k (op ((x ∷ []) ▸ z)) p h =
     ∧-in (atomFm-ren k x (∧-l _ _ p) (λ i q → h i (elem-++l i (atF x ++ []) (atF z) (elem-++l i (atF x) [] q))))
          (atomFm-ren k z (∧-r _ _ p) (λ i q → h i (elem-++r i (atF x ++ []) (atF z) q)))
-  okTy-ren k (op ([] ▸ _)) ()
+  okTy-ren k (op ([] ▸ z)) p h = atomFm-ren k z p h
   okTy-ren k (op ((_ ∷ _ ∷ _) ▸ _)) ()
   okTy-ren k (hom m g A s t) p h =
-    ∧-in (∧-l _ _ p) (okTy-ren k A (∧-r (g ==ℕ 1) _ p) (⊆-l (atY A) (atT s ++ atT t) as h))
+    ∧-in (subst (λ n → T (g ==ℕ n)) (sym (inputs-sY A)) (∧-l _ _ p))
+         (okTy-ren k A (∧-r (g ==ℕ inputs A) _ p) (⊆-l (atY A) (atT s ++ atT t) as h))
 
 ------------------------------------------------------------------------
 -- wf reads a context only at the variables of the type.
@@ -102,9 +114,9 @@ wfFrom-intro acc (B ∷ Ψ) h =
 open import CaTTExp.Binder.MultimapCellsCanon using (module Idem; atY-concatAt)
 
 module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : infer Φ b ≡ just B)
-             (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
+             (wB : T (wf Φ B)) (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
 
-  open Idem k Φ w b eB ab
+  open Idem k Φ w b eB wB ab
 
   private
     just-inj : ∀ {X : Set} {x y : X} → just x ≡ just y → x ≡ y
@@ -184,7 +196,29 @@ module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : in
   S-asb : ∀ i → In S i → In asb i
   S-asb = S-in
 
-  module _ (oks : ∀ j {A} → lookup Φ j ≡ just A → T (okTy k A)) (okB : T (okTy k B)) where
+  module _ (oks : ∀ j {A} → lookup Φ j ≡ just A → T (okTy k A)) (okB : T (okTy k B))
+           (srt : ∀ j {A} → lookup Φ j ≡ just A → T (sortedY k A)) (srtb : T (sortedT k b)) (srtB : T (sortedY k B)) where
+
+    open Ren asb vs using (sortedT-ren; sortedY-ren)
+
+    entries-sorted : T (all (sortedY (length asb)) Φ′)
+    entries-sorted = all-introL _ Φ′ (λ p {A′} eA′ →
+      let l′ = lt-m eA′
+          open AtPos p l′
+          (A , eA) = lookup-some Φ j (vs-lt j jvs)
+          e′ : A′ ≡ sY ρ A
+          e′ = just-inj (trans (sym eA′) (trans (lookup-Φ′ p l′) (cong (λ X → just (sY ρ X)) (nthY-just Φ j eA))))
+          sub : atY A ⊆ asb
+          sub i r = S-in i (elem-++l i (concatAt (map (nthY Φ) vs)) _
+                      (atY-concatAt (nthY Φ) vs j jvs i (subst (λ X → In (atY X) i) (sym (nthY-just Φ j eA)) r)))
+      in subst (λ X → T (sortedY (length asb) X)) (sym e′) (sortedY-ren k A sub (srt j eA)))
+
+    b-sorted : T (sortedT (length asb) b′)
+    b-sorted = sortedT-ren k b (λ i r → S-in i (elem-++r i (concatAt (map (nthY Φ) vs)) _ (elem-++l i (atT b) _ r))) srtb
+
+    B-sorted : T (sortedY (length asb) (sY ρ B))
+    B-sorted = sortedY-ren k B (λ i r → S-in i (elem-++r i (concatAt (map (nthY Φ) vs)) _
+                                  (elem-++r i (atT b) _ (subst (λ X → In (atYM X) i) (sym eB) r)))) srtB
 
     entries-ok : T (all (okTy (length asb)) Φ′)
     entries-ok = all-introL _ Φ′ (λ p {A′} eA′ →
@@ -214,9 +248,25 @@ module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : in
     B-ok = okTy-ren k B okB (λ i r → S-in i (elem-++r i (concatAt (map (nthY Φ) vs)) _
                                 (elem-++r i (atT b) _ (subst (λ X → In (atYM X) i) (sym eB) r))))
 
+    B-wf : T (wf Φ′ (sY ρ B))
+    B-wf = sub-wf (ren-typed asb vs Φ) B
+             (subst T (wf-agree Φ (blank vs Φ) B (agree-blank-on Φ vs (varsY B) (λ i q _ → bvsY i q))) wB)
+
+    B-at : T (all (λ i → i <ℕ length asb) (atY (sY ρ B)))
+    B-at = all-introN _ (atY (sY ρ B)) (λ i q →
+      let (x , xin , e) = In-map-inv ra (atY B) i (subst (λ X → In X i) (atY-ren B) q)
+      in subst (λ z → T (z <ℕ length asb)) (sym e)
+           (idx-lt asb x (S-in x (elem-++r x (concatAt (map (nthY Φ) vs)) _
+                                   (elem-++r x (atT b) _ (subst (λ X → In (atYM X) x) (sym eB) xin))))))
+
     sub-mmcTy : mmcTy (cidx (canon k Φ b)) ≡ just (sY ρ B)
     sub-mmcTy =
-      trans (T-if (isCanon (cidx (canon k Φ b)) ∧ all (okTy (length asb)) Φ′ ∧ wfCtx Φ′ ∧ atomsBelow (length asb) Φ′ b′)
-                  (∧-in isCanon-sub (∧-in entries-ok (∧-in wfCtx-Φ′ atoms-ok))))
-        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A then just A else nothing) infer-b′)
-               (T-if (okTy (length asb) (sY ρ B)) B-ok))
+      trans (T-if (isCanon (cidx (canon k Φ b)) ∧ all (okTy (length asb)) Φ′ ∧ wfCtx Φ′ ∧ atomsBelow (length asb) Φ′ b′
+                   ∧ all (sortedY (length asb)) Φ′ ∧ sortedT (length asb) b′)
+                  (∧-in isCanon-sub (∧-in entries-ok (∧-in wfCtx-Φ′ (∧-in atoms-ok (∧-in entries-sorted b-sorted))))))
+        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A ∧ wf Φ′ A ∧ all (λ i → i <ℕ length asb) (atY A)
+                                              ∧ sortedY (length asb) A
+                                         then just A else nothing) infer-b′)
+               (T-if (okTy (length asb) (sY ρ B) ∧ wf Φ′ (sY ρ B) ∧ all (λ i → i <ℕ length asb) (atY (sY ρ B))
+                        ∧ sortedY (length asb) (sY ρ B))
+                     (∧-in B-ok (∧-in B-wf (∧-in B-at B-sorted)))))

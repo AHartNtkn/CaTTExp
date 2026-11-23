@@ -12,7 +12,8 @@
 -- substitution (RCProc.Walk), and the κ's are the 1-dimensional
 -- chain fillers (GraphFillerTotal.total), which apply because both
 -- sides have the same path (RCProc.EgPath). `eg` is the term, computed
--- from the data alone; `eg-wf` types it.
+-- from the data alone; `eg-wf` types it, and `eg-κ₁-wf`, `eg-H-wf`,
+-- `eg-κ₂-wf` type its three factors.
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.Eg where
 
@@ -132,3 +133,13 @@ module _ {Γ a λ′ v w s t x ρ b}
 
   eg-wf : Γ ⊢tm eg Γ a λ′ w s t x ρ b Ps Pt ∶ arr A Bs Bt
   eg-wf = snd (transA k₁ (transA (Hθ , dH) k₂))
+
+  -- Its three factors, typed.
+  eg-κ₁-wf : Γ ⊢tm κ₁ ∶ arr A Bs c⁻θ
+  eg-κ₁-wf = snd k₁
+
+  eg-H-wf : Γ ⊢tm Hθ ∶ arr A c⁻θ c⁺θ
+  eg-H-wf = dH
+
+  eg-κ₂-wf : Γ ⊢tm κ₂ ∶ arr A c⁺θ Bt
+  eg-κ₂-wf = snd k₂

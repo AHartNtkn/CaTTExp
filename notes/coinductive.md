@@ -4,7 +4,7 @@
 
 *Short answer.*
 - **Streams and every constant-arity M-type are derivable from INIT and chapter 8, with no DESC.** For any objects A and E (directed or not), νX. A × (E\X) is SnocList(E)\A. Streams are the case without E. [agda, 1-truncated] `CaTTExp.Coinductive.Streams`, `CaTTExp.Coinductive.ConstArity`.
-- **Dependent arities (a map p : E → A, a family of arity sets) are open.** Every known construction (Ahrens–Capriotti–Spadotti in HoTT, Abbott–Altenkirch–Ghani, van den Berg–De Marchi) uses a universe, or disjoint coproducts and local cartesian closure. In our system the analogue of those is DESC-grpd. No countermodel is known: in every model of §3 of `descent-vs-init.md` the M-types exist. Sent out as `conjectures/outbox/dependent-m-types-without-descent.md`.
+- **Dependent arities (a map p : E → A, a family of arity sets): settled (2026-11-23).** In *coalgebra form*, for P given inductively, they need no DESC (routes 5–6, §4; the conaturals are [agda]). In *dialgebra form* (a terminal p-dialgebra), they are not derivable without universality of finite coproducts (a consequence of DESC-grpd), even for the conaturals, p = 1 → 1 + 1. The countermodel is rectangular bands ([agda] `Coinductive/RectBandNoDialgebra.agda`). Universality restores every map between finite copowers. Researcher answer, verified: `conjectures/answered/dependent-m-types-without-descent-2026-11-23.md`.
 - **Anthony's question (2026-11-23): does the HoTT construction hinge on univalence?** No. It hinges on a *universe* (§3).
 
 Status tags follow `conventions.md`.
@@ -105,18 +105,34 @@ The literature constructions all assume disjoint coproducts: Abbott–Altenkirch
 
 **Evidence the other way.** All three countermodels of `descent-vs-init.md` §3 (Set, the lattice 2, Pos) are locally presentable, and there final dialgebras exist for set-like p. So nothing yet shows DESC is needed. A separating model would have to be non-extensive or not locally presentable, and still have every INIT instance.
 
-**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house: route 4 localises its own need to universality of finite coproducts (for finitely many constructors). Model D shows that universality is not derivable, yet M-types exist in Model D. Route 5 does that for the conatural numbers and, at sketch level, for finitely many constructors over sets. Route 5 for the conaturals is checked in Agda over an abstract cartesian closed category with equalisers and NNO (`Coinductive/Conat.agda`, 1-truncated). Its transfer to the system is proved at note level, for arbitrary coalgebras C (route 5, "In the system"). Route 6 extends the pattern to internal arities in coalgebra form (νX. List X) at sketch level. The dialgebra form for internal A reduces to universality of ⊤ ⊔ ⊤.
+**Status: answered (researcher, verified 2026-11-23; `conjectures/answered/dependent-m-types-without-descent-2026-11-23.md`).**
+- **Dialgebra form is not derivable without DESC.** In the rectangular-band model R (pairs of sets, with the empty pair), the axioms hold: R is locally finitely presentable and cartesian closed, with disjoint but non-universal coproducts and a complemented diagonal on the labels. Yet there is no terminal p-dialgebra for the first injection 1 → 1 + 1, nor for Fin → ℕ. Two labels u = (0, 1) and v = (1, 0) have empty fibres, but their band product has a fibre point, so the maps from two constant-step dialgebras into a terminal one must agree there and then disagree after one step. [agda] `CaTTExp.Coinductive.RectBandNoDialgebra` (`inactive-product`, `no-first`, `no-fin`), an independent port of the response's Lean certificate. R still has the terminal *coalgebras* of 1 + X and List (routes 5 and 6), so the separation is exactly the coalgebra/dialgebra gap that route 6 located.
+- **Classification for finite copowers.** For f : J → I finite, p_f has a terminal dialgebra in every model iff |I| ≤ 1 or f is bijective. The other cases fail in R, in affine spaces over 𝔽₃ (with a non-cartesian tensor) and in augmented vector spaces [checked in outline].
+- **Restoration.** Universality of finite coproducts alone (a theorem of DESC-grpd) gives the terminal p-dialgebra for every p between finite copowers, coherently and with a non-cartesian tensor [checked in outline]. So in the system, finite-constructor dependent M-types in dialgebra form follow from DESC-grpd.
+- **Internal labels: decidable families [proved here; agda, 1-truncated; 2026-11-23].** [agda] `CaTTExp.Coinductive.DecidableDialgebra`: over an abstract category with terminal object, products, coproducts, equalisers and U-⊔ at 2 (no disjointness, no exponentials), `dom-pb` shows that the tt-part of C × B is the pullback C ×_A E, and `Final.terminal`/`Final.unique` give the terminal dialgebra from a terminal constant-arity machine. `CaTTExp.Coinductive.CartMachine` builds that machine in the same interface: A^L with L the list object over B, given exponentials and lists. So `Build.Unconditional` is the terminal dialgebra with no hypothesis beyond U-⊔ at 2, exponentials and lists. Call p : E → A a *decidable B-family* if E ≅ χ*(tt) ⊆ A × B for some χ : A × B → 2, with p the first projection. Examples:
+  - Fin → ℕ, with B = ℕ and χ(n, i) = (i < n), defined by recursion.
+  - Any p whose label object A has decidable equality δ : A × A → 2 (δ*(tt) = diagonal), with B = E and χ(a, e) = δ(a, p e).
+  - Every map between finite copowers.
+
+  *Theorem.* Assume 𝒱 satisfies (a)–(c) with ⊗ = ×, and finite coproducts are universal (U-⊔, `descent-vs-init.md` §5b). Then every decidable B-family has a terminal p-dialgebra.
+  1. **Split.** By pullback pasting, C ×_A E ≅ (χ ∘ (h × B))*(tt) ⊆ C × B. U-⊔ along χ ∘ (h × B) : C × B → ⊤ ⊔ ⊤ gives C × B ≅ (C ×_A E) ⊔ Q with Q the ff-part. No disjointness is needed.
+  2. **Machines.** Let K be the category of (C, h : C → A, t̄ : C × B → C). It has a terminal object, SnocList(B)\A (Known 1 / §2).
+  3. **Retraction.** R : K → D restricts t̄ to C ×_A E. J₀ : D → K extends t by "stay": [t, π₁] on (C ×_A E) ⊔ Q. J₀ is functorial because a dialgebra map g preserves h, so g × B maps each part to the same part. And R J₀ = id.
+  4. **Idempotent equaliser.** η_D := R(!_{J₀D}) : D → X := R(T_K) is natural (terminality in K), so η_X ∘ η_Z = η_Z. The equaliser of id_X and η_X in D (created by 𝒱, since dialgebra maps commute with t) is terminal. η_Z factors through it, and any f into it satisfies e f = η_X e f = η_Z, with e mono.
+
+  **In the system:** with U-⊔ and L-×, the same holds when A and B are sets and C is arbitrary (directed included). L-× turns the ⊗-machines of §2 into ×-machines, because their carrier SnocList(B)\A is a set, and maps C × B → (set) are multimaps. The equaliser and the higher levels are trivial, as in route 5, because every map compared lands in a set.
+
+  **Open:** non-decidable families; non-cartesian ⊗ without L-× (internal B needs B × C ≃ B ⊗ C); and directed labels, where {0<2} → [2] already fails even though Cat_(∞,1) has universal coproducts. The coalgebra form (route 6) needs no DESC.
 
 ## 5. Directed M-types
 
 - **Constant arity:** done (§2) for arbitrary A and E, lax and oplax versions.
 - **Set-level labels, directed coalgebras [proved here, note level].** Routes 5 and 6 map only into sets, so they hold in the system for coalgebras C of any kind, directed included (§4, route 5, "In the system").
-- **Dependent arity, p directed:** the dialgebra formulation makes sense for every p. Semantically, when p is exponentiable (for example a cocartesian fibration) Π_p exists in Cat_ω and P is accessible, so a final coalgebra exists. For non-exponentiable p (such as {0<2} → [2]) the dialgebra category need not be a coalgebra category, and whether a terminal object exists is not known. This is part 2 of the outbox prompt.
+- **Dependent arity, p directed: answered (researcher, verified in outline 2026-11-23).** In Cat_(∞,1) and Cat_(∞,ω), p has a terminal dialgebra iff its terminal chain W = lim P_p^n(1), computed in presheaves on Δ or Θ, satisfies the Segal and completeness conditions. Exponentiable p (cartesian or cocartesian fibrations) suffices, by the terminal chain. The inclusion {0<2} → [2] has **no** terminal dialgebra: the images of 0 → 1 and 1 → 2 compose through the shared middle object to an arrow over 0 → 2, and one step turns it into an arrow over 2 → 0. Exponentiability is not necessary: the rank map of the diamond b < m₀, m₁ < t onto [2] is not exponentiable but has a terminal dialgebra, a poset of trees.
 
 ## 6. Open items
 
 | Row | Item | Owner |
 |---|---|---|
 | F12b | Streams and constant-arity M-types: Agda written, checked on Agda 2.7.0.1 and 2.6.3; honesty review passed (PR #556) | this thread |
-| F12c-D | Model D (`Descent/GlueNotUniversal.agda`): honesty review | this thread |
-| F12c | Dependent-arity M-types without DESC (undirected and directed): outbox prompt; in-house attempt on route 2 | this thread (prompt ready to send) |
+| F12c | Dependent-arity M-types without DESC: answered (researcher, verified). `RectBandNoDialgebra.agda`: honesty review | this thread |

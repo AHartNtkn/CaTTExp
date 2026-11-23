@@ -486,6 +486,8 @@ import CaTTExp.Binder.HonestHeads
 import CaTTExp.Binder.HeadSpec
 import CaTTExp.Binder.LimHeads
 import CaTTExp.Binder.LimHeadsExamples
+import CaTTExp.Binder.Colim
+import CaTTExp.Binder.ColimExamples
 import CaTTExp.Binder.Suspension
 import CaTTExp.Binder.SpecSusp
 import CaTTExp.Binder.DesSusp

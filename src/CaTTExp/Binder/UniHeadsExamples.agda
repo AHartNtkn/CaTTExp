@@ -98,7 +98,7 @@ H₀-c = refl
 uni₀-ty : inferTy H₀ (uni₀ 0) ≡ just (arr ⋆ (var 3) L)
 uni₀-ty = refl
 
--- The comparison components are well typed; m_x : p_x ⇒ uni^w ; λ_x.
+-- The comparison components are well typed.
 uni₀-y-wf : (wellTyped H₀ (uni₀ 1) ∧ wellTyped H₀ (uni₀ 2) ∧ wellTyped H₀ (uni₀ 3)) ≡ true
 uni₀-y-wf = refl
 
@@ -165,3 +165,13 @@ legΘ g = bnd (base (legF Arr)) g ε (fresh 0 3)
 uni-self : inferTy Θ (bnd (uniF Arr 0) 0 ε (fresh 0 3 ,ₛ LΘ ,ₛ legΘ 0 ,ₛ legΘ 1 ,ₛ legΘ 2))
            ≡ just (arr ⋆ LΘ LΘ)
 uni-self = refl
+
+------------------------------------------------------------------------
+-- Presupposition (CaTTExp.Binder.UniPresup) applied to the checker's
+-- derivation of the n = 1 filler: its type is well formed.
+
+open import CaTTExp.Binder.VarMark 𝕊 cattSide using (markRen; markSub; markVar)
+open import CaTTExp.Binder.UniPresup coneShape hornShape varMark markRen markSub markVar using (uni-tm-ty)
+
+uni₁-presup : H₁ ⊢ty arr (arr ⋆ (var 3) L) (var 4) (var 5)
+uni₁-presup = uni-tm-ty (snd (from-just (infer H₁ (uni₁ 0))))

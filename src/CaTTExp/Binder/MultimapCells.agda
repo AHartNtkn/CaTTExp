@@ -47,6 +47,7 @@
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax
 open import CaTTExp.Binder.Embed using (Binders)
+open import CaTTExp.Binder.HeadSpec using (HeadSpec; specBinders)
 open import CaTTExp.Binder.GrayForm
 open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; _==MM_; ==MM-sound; atomFm)
 import CaTTExp.Gray.Biclosed.Syntax as GB
@@ -196,41 +197,43 @@ mmcTy (mmi k Φ t) =
   else nothing
 
 ------------------------------------------------------------------------
--- The construction.
+-- The construction, as a HeadSpec family (CaTTExp.Binder.HeadSpec):
+-- arity and type are written with free variables (atom i is var i,
+-- entry j is var (k + j)), and HeadSpec closes them.
 
 module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) where
 
   open Syntax K B
   open GrayFormConstruction K B injG public
 
-  fmB : GB.Fm → Tm
-  fmB (GB.obj i)  = bvar 0 i
-  fmB (GB.rep _)  = bvar 0 0   -- unreachable under atomFm
-  fmB (GB.shp _)  = bvar 0 0   -- unreachable under atomFm
-  fmB (x GB.⊗ y)  = fmB x ⊗ᵗ fmB y
-  fmB (x GB.\\ y) = fmB x \\ᵗ fmB y
-  fmB (x GB.// y) = fmB x //ᵗ fmB y
+  fmV : GB.Fm → Tm
+  fmV (GB.obj i)  = var i
+  fmV (GB.rep _)  = var 0   -- unreachable under atomFm
+  fmV (GB.shp _)  = var 0   -- unreachable under atomFm
+  fmV (x GB.⊗ y)  = fmV x ⊗ᵗ fmV y
+  fmV (x GB.\\ y) = fmV x \\ᵗ fmV y
+  fmV (x GB.// y) = fmV x //ᵗ fmV y
 
-  -- Bound variables 0 j for j in a list, after ρ.
-  bvsOf : Sub → List Nat → Sub
-  bvsOf ρ []       = ρ
-  bvsOf ρ (j ∷ js) = bvsOf (ρ ,ₛ bvar 0 j) js
+  -- Variables j for j in a list, after ρ.
+  varsOf : Sub → List Nat → Sub
+  varsOf ρ []       = ρ
+  varsOf ρ (j ∷ js) = varsOf (ρ ,ₛ var j) js
 
-  -- The kernel arguments of a canonical support, inside a telescope
-  -- with k atoms in front.
+  -- The kernel arguments of a canonical support, in a context with k
+  -- atoms in front.
   supArgs : Nat → Canon → Sub
-  supArgs k c = bvsOf (bvsOf ⟨⟩ (catoms c)) (GT.map (k +_) (cvars c))
+  supArgs k c = varsOf (varsOf ⟨⟩ (catoms c)) (GT.map (k +_) (cvars c))
 
   -- The image of a term that is not a variable.
   trHead : Nat → GB.Ctx → GB.Tm → Tm
   trHead k Φ u = bnd (injC (cidx (canon k Φ u))) 0 ε (supArgs k (canon k Φ u))
 
   trTm : Nat → GB.Ctx → GB.Tm → Tm
-  trTm k Φ (GB.var j) = bvar 0 (k + j)
+  trTm k Φ (GB.var j) = var (k + j)
   trTm k Φ u          = trHead k Φ u
 
   trTy : Nat → GB.Ctx → GB.CTy → Ty
-  trTy k Φ (GB.op ((x ∷ []) GB.▸ z)) = arr ⋆ (fmB x) (fmB z)
+  trTy k Φ (GB.op ((x ∷ []) GB.▸ z)) = arr ⋆ (fmV x) (fmV z)
   trTy k Φ (GB.op _)                 = ⋆
   trTy k Φ (GB.hom _ _ A s t)        = arr (trTy k Φ A) (trTm k Φ s) (trTm k Φ t)
 
@@ -252,14 +255,8 @@ module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) where
   arity : Nat → GB.Ctx → Ctx
   arity k Φ = cellsTel k Φ (atomsTel k) Φ
 
-  sideC : MMI → Nat → Ctx → Bool
-  sideC b y Δ = (y ==ℕ 0) ∧ isε Δ ∧ is-just (mmcTy b)
-
-  argsC : MMI → Nat → Ctx → Ctx
-  argsC (mmi k Φ t) y Δ = arity k Φ
-
-  resC : MMI → Nat → Ctx → Ty
-  resC b y Δ with mmcTy b
+  resC : MMI → Ty
+  resC b with mmcTy b
   ... | just A  = trTy (atoms b) (mctx b) A
   ... | nothing = ⋆
 
@@ -288,20 +285,23 @@ module GCInterface (K : Set) where
   open Syntax K GCF
   open CellsConstruction K GCF gform mmc public
 
-  sideGC : GCF → Nat → Ctx → Bool
-  sideGC (gform b) = side b
-  sideGC (mmc b)   = sideC b
+  hctxGC : GCF → Nat → Ctx
+  hctxGC (gform _) _ = ε ▸ ⋆ ▸ ⋆
+  hctxGC (mmc b)   _ = arity (atoms b) (mctx b)
 
-  argsGC : GCF → Nat → Ctx → Ctx
-  argsGC (gform b) = args b
-  argsGC (mmc b)   = argsC b
+  htyGC : GCF → Nat → Ty
+  htyGC (gform _) _ = ⋆
+  htyGC (mmc b)   _ = resC b
 
-  resGC : GCF → Nat → Ctx → Ty
-  resGC (gform b) = res b
-  resGC (mmc b)   = resC b
+  hokGC : GCF → Nat → Bool
+  hokGC (gform _) y = y ==ℕ 0
+  hokGC (mmc b)   y = (y ==ℕ 0) ∧ is-just (mmcTy b)
+
+cellSpec : (K : Set) → HeadSpec K
+cellSpec K = record
+  { H = GCF ; _==H_ = _==GC_ ; ==H-sound = ==GC-sound
+  ; hctx = hctxGC ; hty = htyGC ; hok = hokGC }
+  where open GCInterface K
 
 cellBinders : (K : Set) → Binders K
-cellBinders K = record
-  { B = GCF ; _==B_ = _==GC_ ; ==B-sound = ==GC-sound
-  ; bside = sideGC ; bargs = argsGC ; bres = resGC }
-  where open GCInterface K
+cellBinders K = specBinders (cellSpec K)

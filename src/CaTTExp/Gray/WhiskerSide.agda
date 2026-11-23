@@ -80,7 +80,8 @@ private
   pos-LK : ∀ k j → T (0 <ℕ dimCtx (LK k j))
   pos-LK k j = subst (λ n → T (0 <ℕ n)) (sym (D.dimCtx-LK k j)) tt
 
-  -- op-side-gray, transported along Σ(Θ) = Γ and Σ(A₀) = A.
+  -- op-side-gray, transported along Σ(Θ) = Γ and Σ(A₀) = A. The split
+  -- on A₀ only makes Σty A₀ reduce to an arr, as op-side-gray needs.
   side-at : ∀ {Θ Γ A₀ A t u} → Θ ⊢ps → T (0 <ℕ dimCtx Θ) → Σctx Θ ≡ Γ → Σty A₀ ≡ A →
             Γ ⊢tm t ∶ A → Γ ⊢tm u ∶ A → dim A ≡ dimCtx Θ → T (isOp Γ A t u) →
             T (graySide Γ A t u)

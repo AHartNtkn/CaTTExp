@@ -22,7 +22,7 @@
 --  * the coherence case is false (NoCoh): it would put the source
 --    above dim K (Gray.CohDim.cohB<), and the support computation
 --    needs this for the heads below.
--- The left whisker heads LK 0 (j+1) are not done yet.
+-- The left whisker heads LK 0 (j+1) are Gray.WhiskerZeroLeftSide.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.WhiskerZeroSide where
 

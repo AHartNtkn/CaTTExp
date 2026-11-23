@@ -272,11 +272,14 @@ import CaTTExp.DerivedWithBase
 import CaTTExp.DerivedWith
 import CaTTExp.Surface.WhiskerWith
 import CaTTExp.Surface.WhiskerCatt
+import CaTTExp.Surface.WhiskerGray
 import CaTTExp.Gray.WhiskerSigma
 import CaTTExp.Gray.SingleHomSide
 import CaTTExp.Gray.WhiskerSide
 import CaTTExp.Gray.WhiskerZero
 import CaTTExp.Gray.WhiskerZeroSide
+import CaTTExp.Gray.WhiskerZeroLeft
+import CaTTExp.Gray.WhiskerZeroLeftSide
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient

@@ -363,3 +363,5 @@ import CaTTExp.Descent.DJOneTruncated
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
+import CaTTExp.Descent.TruncHomInv
+import CaTTExp.Descent.TInit

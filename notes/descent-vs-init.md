@@ -57,7 +57,7 @@ What fails is DESC, which is the one rule that says more than "some object exist
 
 The same model kills Hom_{⟦L⟧}(x, x) ≃ ℕ, where ⟦L⟧ = 1 so that hom is 1, while INIT's ℕ is ℕ. [agda] `CaTTExp.Descent.InitNotDesc` Part I checks `S¹-initial`, `ℤ-initial`, `ΩS¹≄ℤ` and `no-glue-ℤ`.
 
-**Model B: 𝒱 = 2 = {0 < 1}, truth values (descent fails at disjointness).** A complete Heyting algebra is a locally presentable, cartesian closed small category [recall]. Here ⊤ = 1, ∅ = 0, ⊔ = ∨, × = ∧, and initial models are least prefixed points (Knaster–Tarski). Universality holds (frame distributivity), but ⊤ ×_{⊤⊔⊤} ⊤ = 1 ≠ 0, so the coproduct injections are not disjoint. DESC-grpd's gluing of (⊤ over the first summand, ∅ over the second) has no solution. [agda] `InitNotDesc` Part II checks `lfp-pre` and `lfp-least` (INIT's existence and uniqueness for a single operator), `distrib`, `not-disjoint` and `no-glue-coprod`.
+**Model B: 𝒱 = 2 = {0 < 1}, truth values (descent fails at disjointness).** A complete Heyting algebra is a locally presentable, cartesian closed small category [recall]. Here ⊤ = 1, ∅ = 0, ⊔ = ∨, × = ∧, and initial models are least prefixed points (Knaster–Tarski). Universality holds (frame distributivity), but ⊤ ×_{⊤⊔⊤} ⊤ = 1 ≠ 0, so the coproduct injections are not disjoint. DESC-grpd's gluing of (⊤ over the first summand, ∅ over the second) has no solution. [agda] `InitNotDesc` Part II checks `lfp-pre`, `lfp-least` and `≤-prop` (INIT-form, J1 and J2 for a single operator), `distrib` (binary coproducts), `not-disjoint` and `no-glue-coprod`.
 
 **Model C: 𝒱 = Pos (descent fails at universality and effectiveness).** This is the verified model of `non-derivability-2026-11-18.md` §1. EX fails there. The [2]-pushout is not stable under pullback ([agda] `PushoutNotUniversal`), and every map is a "cocartesian fibration" in this locally discrete model, so DESC-univ fails. Pos is locally presentable, so INIT holds by the common pattern. This upgrades the old Q3 result (EX independent of R-A and Trunc) to EX independent of all of INIT.
 
@@ -108,6 +108,6 @@ That DESC does not follow from INIT is the higher, rule-level form of a standard
 
 | Row | Item | Owner |
 |---|---|---|
-| F12 | DESC vs INIT: neither derivable (this note) | this thread; done once the honesty review passes |
-| F12a | Agda shadow `CaTTExp.Descent.InitNotDesc`: independent honesty review | this thread |
+| F12 | DESC vs INIT: neither derivable (this note) | this thread (done) |
+| F12a | Agda shadow `CaTTExp.Descent.InitNotDesc`: independent honesty review passed with nits, fixed | this thread (done) |
 | F12b | Coinductive objects: Prop S in Agda (abstract interface), M-types (§5) at sketch level checked, whether M-types need DESC, directed M-types | new thread (requested) |

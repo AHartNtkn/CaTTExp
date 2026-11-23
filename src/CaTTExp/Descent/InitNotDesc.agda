@@ -9,15 +9,21 @@
 -- Part I.  The model Set with discrete homs (every ambient cell of
 -- dimension ≥ 2 an identity; internal cells of every object are
 -- identities).  Agda's Set with K (this library is --safe, K on) is
--- that model's underlying 1-category.
+-- that model's underlying 1-category.  Equality of maps is rendered
+-- pointwise throughout (no function extensionality under --safe).
 --   (I.1) `S¹-initial`: the one-point set with b = tt, l = refl is the
 --         initial model of Δ_S¹ = (X, b : ⊤ → X, l : b → b, l inv):
 --         existence of a strong model morphism to every model (J1) and
---         uniqueness of model morphisms (J2), including their l-cells.
+--         uniqueness of model morphisms (J2): the maps agree pointwise
+--         and the b-cells agree (`S¹-uni-cell`); the l-cells then agree
+--         by UIP.  The inv mark on l needs no certificate: every ≡ is
+--         invertible.
 --   (I.2) `ℤ-initial`: the integers with z = 0 and s = suc, whose
 --         `inv` mark is certified by bi-invertibility data, form the
 --         initial model of Δ_ℤ = (X, z : ⊤ → X, s : X → X inv):
---         recursion, its computation equations, and uniqueness.
+--         recursion, its computation equations, and pointwise
+--         uniqueness of the map (agreement of the z- and s-cells is
+--         then immediate by UIP, not stated).
 --   (I.3) `ΩS¹-prop` and `ΩS¹≄ℤ`: Hom_{S¹}(b, b), which in this model
 --         is b ≡ b, is a proposition, while ℤ is not; so ΩS¹ ≃ ℤ fails.
 --   (I.4) `no-glue`: DESC-glue fails.  Descent data over the
@@ -26,19 +32,23 @@
 --         gluing is a family over Q whose fibre is identified with F
 --         so that transport along the coequalising cell κ is φ.  Here
 --         κ ≡ refl (UIP), so transport is the identity and any gluing
---         forces φ = id.  `no-glue-ℤ`: (ℤ, suc) has no gluing.
+--         forces φ = id.  A gluing is only assumed to give a split
+--         surjection from the fibre onto F (not an equivalence), which
+--         makes the negative result stronger.  `no-glue-ℤ`: (ℤ, suc) has no gluing.
 --
 -- Part II.  The model 2 = {false < true} (a complete Heyting algebra
 -- viewed as a thin, locally discrete ω-category).  ⊤ = true, ∅ =
 -- false, coproduct = ∨, pullback = ∧, every hom a subsingleton.
---   (II.1) `lfp`: every operator f : Bool → Bool (monotone or not) has
---          a least prefixed point, namely f false.  In a thin model
---          the models of a single-sorted positive context are the
+--   (II.1) every operator f : Bool → Bool has a least prefixed point,
+--          namely f false (only the monotone case is used).  In a thin
+--          model the models of a single-sorted positive context are the
 --          prefixed points of the join of its operations' sources, so
---          this is INIT's existence and uniqueness there.
+--          `lfp-pre` is INIT-form (μ is a model), `lfp-least` is J1, and
+--          `≤-prop` (homs are subsingletons) is J2.
 --   (II.2) `pb-univ`, `coprod-univ`: ∧ and ∨ are the pullback and the
---          coproduct.  `distrib`: colimits are universal (DESC-univ
---          holds for coproducts).
+--          coproduct.  `distrib`: binary coproducts are universal (the
+--          nullary and other cases are trivial in a thin model, not
+--          stated).
 --   (II.3) `not-disjoint`: ⊤ ×_{⊤ ⊔ ⊤} ⊤ = true is not ∅, so the two
 --          coproduct injections are not disjoint (T-coprod fails), and
 --          `no-glue-coprod`: DESC-grpd's gluing of (⊤ over the first
@@ -50,8 +60,15 @@
 --     pattern of the verified Pos model, conjectures/answered/
 --     non-derivability-2026-11-18.md §1); that INIT holds for every
 --     positive context in Set (Adámek–Rosický, argued in the note);
---     that the cell structure is discrete above dimension 1 (it is
---     the model's definition, not a theorem).
+--     that the cell structure is discrete above dimension 1 and that
+--     Hom_X(x, y) is x ≡ y (both are the model's definition, not
+--     theorems); that ⊤ with κ is the coequaliser of id, id : ⊤ ⇉ ⊤ in
+--     Set and coincides with the INIT object S¹ (both are ⊤ here, no
+--     universal property or iso is stated); that Set satisfies DESC-univ
+--     and EX (used in the note's reading of Model A); the reduction of
+--     a thin positive context to one operator (II.1); the note's
+--     Hom_{⟦L⟧}(x, x) ≄ ℕ instance and Model C (Pos), which are argued
+--     in the note or checked in `PushoutNotUniversal`.
 --   * (I.2) encodes Δ_ℤ's model notion in the Set model: a set with a
 --     point and a bijection; morphisms commute with z and s (the
 --     inverse is then preserved automatically, not stated).
@@ -100,6 +117,10 @@ S¹-rec N = record { map = λ _ → b N ; on-b = refl ; on-l = uip _ _ }
 S¹-uni : ∀ {N} (h h' : S¹-Mor S¹ N) →
          (∀ x → map h x ≡ map h' x)
 S¹-uni h h' tt = trans (on-b h) (sym (on-b h'))
+
+S¹-uni-cell : ∀ {N} (h h' : S¹-Mor S¹ N) →
+              on-b h ≡ trans (S¹-uni h h' tt) (on-b h')
+S¹-uni-cell h h' = uip _ _
 
 S¹-initial : (∀ N → S¹-Mor S¹ N) × (∀ {N} (h h' : S¹-Mor S¹ N) → ∀ x → map h x ≡ map h' x)
 S¹-initial = S¹-rec , S¹-uni
@@ -260,6 +281,10 @@ infix 4 _≤_
 data _≤_ : Bool → Bool → Set where
   f≤ : ∀ {x} → false ≤ x
   t≤t : true ≤ true
+
+≤-prop : ∀ {x y} (p q : x ≤ y) → p ≡ q
+≤-prop f≤  f≤  = refl
+≤-prop t≤t t≤t = refl
 
 ≤-true : ∀ x → x ≤ true
 ≤-true false = f≤

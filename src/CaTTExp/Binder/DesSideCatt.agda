@@ -105,11 +105,12 @@ private
     ... | true  = tt
     ... | false = <→up x d (down→< x d m)
 
-  coh-Dsk : ∀ n → T (P.isCoh (D.Dsk n) (aL n) (P.var (dbl n)) (P.var (dbl n)))
-  coh-Dsk n = D.∧-in h h
-    where
-    h : T (≈? (P.fvTmTy (P.var (dbl n)) (aL n)) (P.varsCtx (D.Dsk n)))
-    h rewrite D.fvTy-aL n | D.len-Sph n = ≈-up-down (dbl n)
+-- The identity over Dⁿ uses every variable of Dⁿ.
+coh-Dsk : ∀ n → T (P.isCoh (D.Dsk n) (aL n) (P.var (dbl n)) (P.var (dbl n)))
+coh-Dsk n = D.∧-in h h
+  where
+  h : T (≈? (P.fvTmTy (P.var (dbl n)) (aL n)) (P.varsCtx (D.Dsk n)))
+  h rewrite D.fvTy-aL n | D.len-Sph n = ≈-up-down (dbl n)
 
 side-Dsk : ∀ n → T (P.cattSide (D.Dsk n) (aL n) (P.var (dbl n)) (P.var (dbl n)))
 side-Dsk n = D.∨-l (coh-Dsk n)

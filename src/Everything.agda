@@ -324,6 +324,8 @@ import CaTTExp.Gray.DimB
 import CaTTExp.Gray.MarksBKernel
 import CaTTExp.Gray.MarksBDes
 import CaTTExp.Gray.DesSideL
+import CaTTExp.Gray.SupportIota
+import CaTTExp.Gray.DesPresupL
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp

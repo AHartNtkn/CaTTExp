@@ -20,7 +20,19 @@ Substitutions  σ, τ ::= ⟨⟩ | ⟨σ, x ↦ t⟩
 - The **dimension** of a type is dim ⋆ = −1 and dim (t →_A u) = dim A + 1. The dimension of a term is the dimension of its type plus one, so objects have dimension 0.
 - Substitution `t[σ]`, `A[σ]`, `σ ∘ τ` acts on raw syntax by replacing variables. It is the only operation on terms, and it is syntactic: there is no other definitional equality (chapter 0, §0.3).
 
-**Status.** Agda-checked: raw syntax and substitution, `CaTTExp.Syntax` (de Bruijn levels, so extending a context never renames). **Source:** `notes/agda-sketch-findings.md` "What is formalized".
+**Binders (INIT).** The kernel's one binding former, INIT (chapter 9, §9.3), adds a binder and five term formers:
+```
+Binders        β ::= X. Δ              Δ a context whose first entry is X : ⋆
+Terms          t, u ::= … | μ(β) | η_y(β) | rec(β; A, σ) | rec_y(β; A, σ) | uni(β; A, σ; ρ, ρ′) | uni_y(β; A, σ; ρ, ρ′)
+```
+- In `X. Δ`, the variable X and every variable declared in Δ are **bound**. The free variables of β are the variables of the surrounding context that Δ's types mention (the parameters).
+- `μ(β)` is the initial model's carrier; `η_y(β)` is the generic model at the variable y of Δ, so η = ⟨X ↦ μ(β), y ↦ η_y(β), …⟩ is a substitution Δ[μ(β)/X].
+- For a carrier A and a model σ : Δ[A/X], `rec(β; A, σ)` is the map μ(β) → A and `rec_y(β; A, σ)` its invertible cell at y (INIT-J1).
+- For two model morphisms ρ, ρ′ from η to σ (substitutions into the arrow context Δ^→), `uni(β; A, σ; ρ, ρ′)` is the invertible cell between their carrier maps and `uni_y` its compatibility cell at y (INIT-J2). Higher levels are derived (§9.3), so they need no syntax.
+- Substitution acts on the parameters only: `μ(X. Δ)[τ] = μ(X. Δ[τ⁺])`, where τ⁺ extends τ by the identity on X and on Δ's variables, and likewise for the other formers. With de Bruijn levels, a binder's variables are numbered after the surrounding context, so τ⁺ is a shift, and no capture can occur.
+- Equality of terms stays syntactic identity. Positivity of Δ in X (§9.3) is a typing side condition, not part of the grammar.
+
+**Status.** Agda-checked: raw syntax and substitution without binders, `CaTTExp.Syntax` (de Bruijn levels, so extending a context never renames). The binder above is **stated here**: it is not yet in `CaTTExp.Syntax` or `CaTTExp.Signature`, so the substitution and decidability results of §1.3–1.5 do not yet cover it (ledger S26). **Source:** `notes/agda-sketch-findings.md` "What is formalized"; for INIT, `notes/universe-free-principles.md` §4.2.
 
 ## 1.2 Judgments
 
@@ -125,7 +137,7 @@ A signature 𝕊 is a set of constants with decidable equality, a closed type `t
 
 Later chapters extend the kernel only by adding constants, families of constants indexed by syntax (for example, one constant `⟦Γ⟧ : ⋆` per pasting context Γ, chapter 7), and inductive judgments in the style of `⊢ps`. They add no new definitional equalities.
 
-A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is **not yet in §1.1's grammar**, which has no binders. Until it is, chapter 9 states INIT's terms directly, and the Agda signature (`CaTTExp.Signature`) does not cover it (ledger S26).
+A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders). It is not yet formalized: `CaTTExp.Syntax` and `CaTTExp.Signature` have no binders (ledger S26).
 
 User declarations enter the same way: a development's postulated objects, cells and marks are a signature (equivalently, a context it is checked in).
 

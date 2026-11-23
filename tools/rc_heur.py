@@ -1393,11 +1393,13 @@ def change_of_writing(G, A, t, u, rec):
 CALLS = [0]          # reset by rc_oracle.rc for each top-level query
 LIMIT = 400
 
+BLOCKED = [0]        # cycle-guard refusals (a failure under one is not final)
 INPROG = set()       # queries currently being answered (cycle guard)
 
 def heur(G, A, t, u, rec):
     key = (G, t, u)
     if key in INPROG:
+        BLOCKED[0] += 1
         return None
     INPROG.add(key)
     try:

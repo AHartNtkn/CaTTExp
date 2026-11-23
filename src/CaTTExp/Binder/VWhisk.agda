@@ -9,6 +9,8 @@
 -- boundaries of C read off C (baseAt, srcAt, tgtAt). They agree with
 -- the sphere's positions for k < dim C (`aL-sph-k`, `src-sph`,
 -- `tgt-sph`), which is what typing the classifying substitutions needs.
+-- Typed (with deep types): spheres, disks, σR, σL, rwT, lwT; and the
+-- types of the whiskers (rwT-ty0, rwT-ty, lwT-ty0, lwT-ty).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
@@ -16,6 +18,7 @@ import CaTTExp.Binder.Mark as BM
 import CaTTExp.Binder.Laws as Laws
 import CaTTExp.Pure as P
 import CaTTExp.Derived as Dv
+import CaTTExp.DerivedBoundary as DB
 open import CaTTExp.GrayCtx.Natural using (dbl; aL)
 open import CaTTExp.GrayCtx.NaturalWF using (n<sn)
 open import CaTTExp.Naturality.Raw using (Filler)
@@ -315,6 +318,168 @@ rwT-ty k j c C' s t z h e =
   ρ∘ v u lv = cong₂ _,ₛ_ (cong₂ _,ₛ_ (cong₂ _,ₛ_ sph lv) M.lk-σR-z) M.lk-σR-h
 
 ------------------------------------------------------------------------
+-- Boundaries of a cell type, read off it.
+
+baseAt-arr : ∀ k C' s t → T (k <ℕ dim C') → baseAt k (arr C' s t) ≡ baseAt k C'
+baseAt-arr k C' s t p rewrite <→≢ k (suc (dim C')) (<-suc k (dim C') p) = refl
+
+srcAt-arr : ∀ k C' s t → T (k <ℕ dim C') → srcAt k (arr C' s t) ≡ srcAt k C'
+srcAt-arr k C' s t p rewrite <→≢ k (dim C') p = refl
+
+tgtAt-arr : ∀ k C' s t → T (k <ℕ dim C') → tgtAt k (arr C' s t) ≡ tgtAt k C'
+tgtAt-arr k C' s t p rewrite <→≢ k (dim C') p = refl
+
+-- A cell type of dimension k+1 is (its k-type, k-source, k-target).
+C-sph : ∀ k C → dim C ≡ suc k → arr (baseAt k C) (srcAt k C) (tgtAt k C) ≡ C
+C-sph k (arr C₀ s₀ t₀) refl
+  rewrite ==-suc-dim (dim C₀) | ==-self {dim C₀} refl | baseAt-top C₀ = refl
+
+dim-baseAt : ∀ k A → T (k <ℕ suc (dim A)) → dim (baseAt k A) ≡ k
+dim-baseAt k ⋆           p = le0 k p
+  where le0 : ∀ k → T (k <ℕ 1) → 0 ≡ k
+        le0 zero _ = refl
+        le0 (suc k) ()
+dim-baseAt k (arr A s u) p with k ==ℕ suc (dim A) in e
+... | true  = sym (eq-sound e)
+... | false = dim-baseAt k A (lt-ne k (suc (dim A)) p e)
+
+kC-of : ∀ k j C → dim C ≡ Dv.nB k j → T (k <ℕ dim C)
+kC-of k j C e = subst (λ m → T (k <ℕ m)) (sym e) (Dv.k<n j k)
+
+------------------------------------------------------------------------
+-- Left whiskers h ◃ₖ c = lwT k j h x c C.
+
+-- The sphere of h's type, extended.
+module LkσL (k : Nat) (h x : Tm) (C : Ty) (kC : T (k <ℕ dim C)) where
+  Bk = baseAt k C
+  S = sphSub Bk
+
+  dB : dim Bk ≡ k
+  dB = dim-baseAt k C (<-suc k (dim C) kC)
+
+  lS : lenₛ S ≡ dbl k
+  lS = trans (lenₛ-sph Bk) (cong dbl dB)
+
+  sc : T (scTy? (lenₛ S) (eaL k))
+  sc = sc-aL-in k Bk (subst (λ m → T (k <ℕ suc m)) (sym dB) (n<sn k))
+
+  Q = S ,ₛ x ,ₛ srcAt k C ,ₛ h
+
+  sc₃ : T (scTy? (lenₛ Q) (eaL k))
+  sc₃ = scTy-suc (eaL k) (scTy-suc (eaL k) (scTy-suc (eaL k) sc))
+
+  aL-Q : eaL k [ Q ]ty ≡ Bk
+  aL-Q = trans (ext-ty (eaL k) (S ,ₛ x ,ₛ srcAt k C) h (scTy-suc (eaL k) (scTy-suc (eaL k) sc)))
+         (trans (ext-ty (eaL k) (S ,ₛ x) (srcAt k C) (scTy-suc (eaL k) sc))
+         (trans (ext-ty (eaL k) S x sc)
+                (subst (λ m → eaL m [ S ]ty ≡ Bk) dB (aL-sph Bk))))
+
+  lk-x : ∀ u v → lookupₛ (Q ,ₛ u ,ₛ v) (dbl k) ≡ x
+  lk-x u v = subst (λ m → lookupₛ (Q ,ₛ u ,ₛ v) m ≡ x) lS
+    (trans (lk-pop (Q ,ₛ u) v L (<-suc L (suc (suc (suc L))) (<-suc L (suc (suc L)) (<-suc L (suc L) (n<sn L)))))
+    (trans (lk-pop Q u L (<-suc L (suc (suc L)) (<-suc L (suc L) (n<sn L))))
+    (trans (lk-pop (S ,ₛ x ,ₛ srcAt k C) h L (<-suc L (suc L) (n<sn L)))
+    (trans (lk-pop (S ,ₛ x) (srcAt k C) L (n<sn L))
+           (lk-top S x)))))
+    where L = lenₛ S
+
+  lk-src : ∀ u → lookupₛ (Q ,ₛ u) (suc (dbl k)) ≡ srcAt k C
+  lk-src u = subst (λ m → lookupₛ (Q ,ₛ u) (suc m) ≡ srcAt k C) lS
+    (trans (lk-pop Q u (suc L) (<-suc (suc L) (suc (suc L)) (n<sn (suc L))))
+    (trans (lk-pop (S ,ₛ x ,ₛ srcAt k C) h (suc L) (n<sn (suc L)))
+           (lk-top (S ,ₛ x) (srcAt k C))))
+    where L = lenₛ S
+
+  lk-tgt : ∀ u → lookupₛ (Q ,ₛ tgtAt k C ,ₛ u) (suc (suc (suc (dbl k)))) ≡ tgtAt k C
+  lk-tgt u = subst (λ m → lookupₛ (Q ,ₛ tgtAt k C ,ₛ u) (suc (suc (suc m))) ≡ tgtAt k C) lS
+    (trans (lk-pop (Q ,ₛ tgtAt k C) u (lenₛ Q) (n<sn (lenₛ Q))) (lk-top Q (tgtAt k C)))
+
+  lk-tgt' : lookupₛ (Q ,ₛ tgtAt k C) (suc (suc (suc (dbl k)))) ≡ tgtAt k C
+  lk-tgt' = subst (λ m → lookupₛ (Q ,ₛ tgtAt k C) (suc (suc (suc m))) ≡ tgtAt k C) lS
+    (lk-top Q (tgtAt k C))
+
+lenₛ-σLp : ∀ k j h x C → dim C ≡ Dv.nB k j → lenₛ (σLp k j h x C) ≡ Dv.tL k j
+lenₛ-σLp k zero    h x C            e =
+  cong (λ m → suc (suc (suc (suc m)))) (LkσL.lS k h x C (kC-of k 0 C e))
+lenₛ-σLp k (suc j) h x (arr C' s t) e = cong (λ m → suc (suc m)) (lenₛ-σLp k j h x C' (cong pred e))
+  where pred : Nat → Nat
+        pred zero = zero
+        pred (suc n) = n
+
+sc-bLK : ∀ k j → T (scTy? (Dv.tL k j) (embTy (Dv.bLK k (suc j))))
+sc-bLK k j = sc-embTy _ (Dv.bLK k (suc j)) (DB.sc-bLK k j)
+
+-- Under σLp, the generic type of the top cell of LK k j is C.
+bLK-σLp : ∀ k j h x C → dim C ≡ Dv.nB k j → embTy (Dv.bLK k (suc j)) [ σLp k j h x C ]ty ≡ C
+bLK-σLp k zero h x C e =
+  trans (arr≡ (trans (ext-ty (eaL k) Q (tgtAt k C) sc₃) aL-Q) (lk-src (tgtAt k C)) lk-tgt')
+        (C-sph k C e)
+  where open LkσL k h x C (kC-of k 0 C e)
+bLK-σLp k (suc j) h x (arr C' s t) e =
+  arr≡ (trans (ext-ty (embTy (Dv.bLK k (suc j))) (Pp ,ₛ s) t (scTy-suc (embTy (Dv.bLK k (suc j))) sc))
+       (trans (ext-ty (embTy (Dv.bLK k (suc j))) Pp s sc) (bLK-σLp k j h x C' e')))
+       (subst (λ m → lookupₛ (Pp ,ₛ s ,ₛ t) m ≡ s) lP
+          (trans (lk-pop (Pp ,ₛ s) t (lenₛ Pp) (n<sn (lenₛ Pp))) (lk-top Pp s)))
+       (subst (λ m → lookupₛ (Pp ,ₛ s ,ₛ t) (suc m) ≡ t) lP (lk-top (Pp ,ₛ s) t))
+  where
+  e' : dim C' ≡ Dv.nB k j
+  e' = suc-inj e
+    where suc-inj : ∀ {a b : Nat} → suc a ≡ suc b → a ≡ b
+          suc-inj refl = refl
+  Pp = σLp k j h x C'
+  lP : lenₛ Pp ≡ Dv.tL k j
+  lP = lenₛ-σLp k j h x C' e'
+  sc : T (scTy? (lenₛ Pp) (embTy (Dv.bLK k (suc j))))
+  sc = subst (λ m → T (scTy? m (embTy (Dv.bLK k (suc j))))) (sym lP) (sc-bLK k j)
+
+-- For j = 0: h ;ₖ c goes from x to t_k c.
+lwT-ty0 : ∀ k h x c C → dim C ≡ Dv.nB k 0 →
+          embTy (Dv.lK k 0) [ σL k 0 h x c C ]ty ≡ arr (baseAt k C) x (tgtAt k C)
+lwT-ty0 k h x c C e =
+  arr≡ (trans (ext-ty (eaL k) (Q ,ₛ tgtAt k C) c (scTy-suc (eaL k) sc₃))
+       (trans (ext-ty (eaL k) Q (tgtAt k C) sc₃) aL-Q))
+       (lk-x (tgtAt k C) c) (lk-tgt c)
+  where open LkσL k h x C (kC-of k 0 C e)
+
+-- The identity on a prefix, composed.
+eidS∘ : ∀ ρ τ → (∀ i → T (i <ℕ lenₛ ρ) → lookupₛ τ i ≡ lookupₛ ρ i) → embSub (Dv.idS (lenₛ ρ)) ∘ τ ≡ ρ
+eidS∘ ⟨⟩       τ h = refl
+eidS∘ (ρ ,ₛ u) τ h =
+  cong₂ _,ₛ_ (eidS∘ ρ τ (λ i p → trans (h i (<-suc i (lenₛ ρ) p)) (lk-pop ρ u i p)))
+             (trans (h (lenₛ ρ) (n<sn (lenₛ ρ))) (lk-top ρ u))
+
+-- For j ≥ 1 and c : s → t: h ◃ₖ c : (h ◃ₖ s) → (h ◃ₖ t).
+lwT-ty : ∀ k j h x c C' s t → dim C' ≡ Dv.nB k j →
+         embTy (Dv.lK k (suc j)) [ σL k (suc j) h x c (arr C' s t) ]ty
+           ≡ arr (embTy (Dv.lK k j) [ σL k j h x s C' ]ty) (lwT k j h x s C') (lwT k j h x t C')
+lwT-ty k j h x c C' s t e =
+  arr≡ (trans (cong (_[ σ ]ty) (emb-[]ty (Dv.lK k j) (Dv.λsK k j)))
+         (trans (assoc-ty (embTy (Dv.lK k j)) (embSub (Dv.λsK k j)) σ scλ)
+                (cong (embTy (Dv.lK k j) [_]ty) λs∘)))
+       (cong (coh (embCtx (Dv.LK k j)) (embTy (Dv.lK k j))) λs∘)
+       (cong (coh (embCtx (Dv.LK k j)) (embTy (Dv.lK k j))) λt∘)
+  where
+  Pp = σLp k j h x C'
+  σ = σL k (suc j) h x c (arr C' s t)
+  lP : lenₛ Pp ≡ Dv.tL k j
+  lP = lenₛ-σLp k j h x C' e
+  scλ : T (scTy? (lenₛ (embSub (Dv.λsK k j))) (embTy (Dv.lK k j)))
+  scλ = subst (λ m → T (scTy? m (embTy (Dv.lK k j)))) (sym (lenₛ-emb (Dv.λsK k j)))
+          (sc-embTy _ (Dv.lK k j)
+            (subst (λ n → Sb.ScTy n (Dv.lK k j)) (sym (Dv.lenλs k j)) (Sb.ty-sc Dv.closed (Dv.lK-wf k j))))
+  λs∘ : embSub (Dv.λsK k j) ∘ σ ≡ Pp ,ₛ s
+  λs∘ = subst (λ m → embSub (Dv.idS (suc m)) ∘ σ ≡ Pp ,ₛ s) lP
+          (eidS∘ (Pp ,ₛ s) σ (λ i p → trans (lk-pop (Pp ,ₛ s ,ₛ t) c i (<-suc i (suc (lenₛ Pp)) p))
+                                           (lk-pop (Pp ,ₛ s) t i p)))
+  lt : lookupₛ σ (suc (lenₛ Pp)) ≡ t
+  lt = trans (lk-pop (Pp ,ₛ s ,ₛ t) c (suc (lenₛ Pp)) (n<sn (suc (lenₛ Pp)))) (lk-top (Pp ,ₛ s) t)
+  λt∘ : embSub (Dv.λtK k j) ∘ σ ≡ Pp ,ₛ t
+  λt∘ = subst (λ m → (embSub (Dv.idS m) ∘ σ) ,ₛ lookupₛ σ (suc m) ≡ Pp ,ₛ t) lP
+          (cong₂ _,ₛ_ (eidS∘ Pp σ (λ i p → trans (lk-pop (Pp ,ₛ s ,ₛ t) c i (<-suc i (suc (lenₛ Pp)) (<-suc i (lenₛ Pp) p)))
+                                            (trans (lk-pop (Pp ,ₛ s) t i (<-suc i (lenₛ Pp) p)) (lk-pop Pp s i p))))
+                      lt)
+
+------------------------------------------------------------------------
 -- Spheres and disks are typed by deep types.
 
 module Typed (closed : Closed) (laws : BinderLaws) (mren : MarkRen) (msub : MarkSub) (mvar : MarkVar)
@@ -351,3 +516,52 @@ module Typed (closed : Closed) (laws : BinderLaws) (mren : MarkRen) (msub : Mark
   rwT-wf k (suc j) e dc dh =
     dcoh closed laws mren msub mvar sp (Dv.BK-ps k (suc j)) (Dv.wBK k (suc j)) (Dv.wK-wf k (suc j))
       (Dv.sideK k (suc j)) (σR-wf k (suc j) e dc dh)
+
+  -- The boundaries of a deep type are deep.
+  bdry-wf : ∀ {Γ} k C → T (k <ℕ dim C) → DTy Γ C →
+            DTm Γ (srcAt k C) (baseAt k C) × DTm Γ (tgtAt k C) (baseAt k C)
+  bdry-wf {Γ} k (arr A s u) p (a , ds , du) rewrite <→≢ k (suc (dim A)) p with k ==ℕ dim A in e
+  ... | true  = subst (λ y → DTm Γ s (baseAt y A) × DTm Γ u (baseAt y A)) (sym (eq-sound {k} {dim A} e))
+                  ((subst (Γ ⊢tm s ∶_) bt ds , a') , (subst (Γ ⊢tm u ∶_) bt du , a'))
+    where bt = sym (baseAt-top A)
+          a' = subst (DTy Γ) bt a
+  ... | false = bdry-wf k A (lt-ne k (dim A) p e) a
+
+  hL-arr : ∀ k x C' s t → T (k <ℕ dim C') → hL k x (arr C' s t) ≡ hL k x C'
+  hL-arr k x C' s t p = arr≡ (baseAt-arr k C' s t p) refl (srcAt-arr k C' s t p)
+
+  mutual
+    σLp-wf : ∀ k j {Γ h x c C} → DTm Γ c C → dim C ≡ Dv.nB k j → DTm Γ h (hL k x C) →
+             Γ ⊢sub σLp k j h x C ∶ embCtx (Dv.LPK k j)
+    σLp-wf k zero {Γ} {h} {x} {c} {C} (_ , dC) e dh =
+      ,-wf (subst (λ m → Γ ⊢sub dskSub h (hL k x C) ∶ embCtx (Dv.Dsk m)) (cong suc dB) (dsk-wf (hL k x C) dh))
+           (subst (Γ ⊢tm tgtAt k C ∶_) (sym aL-Q) (fst (snd (bdry-wf k C kC dC)))) tt
+      where kC = kC-of k 0 C e
+            open LkσL k h x C kC
+    σLp-wf k (suc j) {Γ} {h} {x} {c} {arr C' s t} (_ , a , ds , dt) e dh =
+      ,-wf (σL-wf k j (ds , a) e' (subst (DTm Γ h) (hL-arr k x C' s t (kC-of k j C' e')) dh))
+           (subst (Γ ⊢tm t ∶_) (sym eq) dt) tt
+      where
+      e' : dim C' ≡ Dv.nB k j
+      e' = suc-inj e
+        where suc-inj : ∀ {a b : Nat} → suc a ≡ suc b → a ≡ b
+              suc-inj refl = refl
+      eq : embTy (Dv.bLK k (suc j)) [ σL k j h x s C' ]ty ≡ C'
+      eq = trans (ext-ty (embTy (Dv.bLK k (suc j))) (σLp k j h x C') s
+                    (subst (λ m → T (scTy? m (embTy (Dv.bLK k (suc j))))) (sym (lenₛ-σLp k j h x C' e')) (sc-bLK k j)))
+                 (bLK-σLp k j h x C' e')
+
+    σL-wf : ∀ k j {Γ h x c C} → DTm Γ c C → dim C ≡ Dv.nB k j → DTm Γ h (hL k x C) →
+            Γ ⊢sub σL k j h x c C ∶ embCtx (Dv.LK k j)
+    σL-wf k j {Γ} {h} {x} {c} {C} dc e dh =
+      ,-wf (σLp-wf k j dc e dh) (subst (Γ ⊢tm c ∶_) (sym (bLK-σLp k j h x C e)) (fst dc)) tt
+
+  -- h ◃ₖ c is well typed, with a deep type.
+  lwT-wf : ∀ k j {Γ h x c C} → DTm Γ c C → dim C ≡ Dv.nB k j → DTm Γ h (hL k x C) →
+           DTm Γ (lwT k j h x c C) (embTy (Dv.lK k j) [ σL k j h x c C ]ty)
+  lwT-wf k zero    dc e dh =
+    dcoh closed laws mren msub mvar sp (Dv.LK-ps k 0) (Dv.wLK k 0) (Dv.lK-wf k 0) (Dv.sideLK k 0)
+      (σL-wf k 0 dc e dh)
+  lwT-wf k (suc j) dc e dh =
+    dcoh closed laws mren msub mvar sp (Dv.LK-ps k (suc j)) (Dv.wLK k (suc j)) (Dv.lK-wf k (suc j))
+      (Dv.sideLK k (suc j)) (σL-wf k (suc j) dc e dh)

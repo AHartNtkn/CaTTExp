@@ -936,3 +936,65 @@ private
 cover-incl : ∀ bs t ts → Cover (inclM bs t ts) (inclP bs t ts) (len (ctxOf (node (t ∷ ts)))) (ctxOf (raiseT bs (node (t ∷ ts))))
 cover-incl []       t ts = covL (t ∷ ts) [] pss pss base cover-base
 cover-incl (b ∷ bs) t ts = covL (t ∷ ts) (b ∷ bs) pss pss base cover-base
+
+------------------------------------------------------------------------
+-- incl⁻ and incl⁺ differ only at flagged leaves, and (under TopOK k)
+-- a flagged leaf is a cell of dimension k ≥ 1 of τ (`diff-incl`).
+
+Diff : Nat → Sub → Sub → Ctx → Set
+Diff k rm rp Γ = ∀ w → T (w <ℕ len Γ) →
+  (lookupₛ rp w ≡ lookupₛ rm w) ⊎ (Σ Ty λ F → (lookup Γ w ≡ just F) × (dim F ≡ k) × T (0 <ℕ k))
+
+private
+  lk-ctx2 : ∀ Γ C D w F → lookup Γ w ≡ just F → lookup (Γ ▸ C ▸ D) w ≡ just F
+  lk-ctx2 Γ C D w F l = lookup-wk (Γ ▸ C) w D (lookup-wk Γ w C l)
+
+  diff-E : ∀ k rm rp Γ C D i j → lenₛ rm ≡ len Γ → lenₛ rp ≡ len Γ → Diff k rm rp Γ →
+           Diff k (rm ,ₛ var i ,ₛ var j) (rp ,ₛ var i ,ₛ var j) (Γ ▸ C ▸ D)
+  diff-E k rm rp Γ C D i j e₁ e₂ df w p with split2 w (len Γ) p
+  ... | inj₂ (inj₁ refl) = inj₁ (trans (lk-y′ rp _ _ _ e₂) (sym (lk-y′ rm _ _ _ e₁)))
+  ... | inj₂ (inj₂ refl) = inj₁ (trans (lk-f′ rp _ _ _ e₂) (sym (lk-f′ rm _ _ _ e₁)))
+  ... | inj₁ q with df w q
+  ...   | inj₁ e = inj₁ (trans (lk-old2 rp _ _ w (lt-under e₂ q)) (trans e (sym (lk-old2 rm _ _ w (lt-under e₁ q)))))
+  ...   | inj₂ (F , l , d , z) = inj₂ (F , lk-ctx2 Γ C D w F l , d , z)
+
+  diff-R : ∀ k rm rp Γ A x i j j′ → lenₛ rm ≡ len Γ → lenₛ rp ≡ len Γ → suc (dim A) ≡ k → Diff k rm rp Γ →
+           Diff k (rm ,ₛ var i ,ₛ var j) (rp ,ₛ var i ,ₛ var j′) (Γ ▸ A ▸ arr A (var x) (var (len Γ)))
+  diff-R k rm rp Γ A x i j j′ e₁ e₂ dk df w p with split2 w (len Γ) p
+  ... | inj₂ (inj₁ refl) = inj₁ (trans (lk-y′ rp _ _ _ e₂) (sym (lk-y′ rm _ _ _ e₁)))
+  ... | inj₂ (inj₂ refl) =
+    inj₂ (arr A (var x) (var (len Γ)) , lookup-top (Γ ▸ A) _ , dk , subst (λ m → T (0 <ℕ m)) dk tt)
+  ... | inj₁ q with df w q
+  ...   | inj₁ e = inj₁ (trans (lk-old2 rp _ _ w (lt-under e₂ q)) (trans e (sym (lk-old2 rm _ _ w (lt-under e₁ q)))))
+  ...   | inj₂ (F , l , d , z) = inj₂ (F , lk-ctx2 Γ A _ w F l , d , z)
+
+  DS : ∀ {Γ x A Δ x^ A^} → Nat → Sim Γ x A Δ x^ A^ → Set
+  DS {Γ} k S = Diff k (fst S) (fst (snd S)) Γ
+
+mutual
+  private
+    diffL : ∀ k ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+            TopOK k (dim A) ts bs → DS k S → DS k (simL ts bs d d^ S)
+    diffL k []                  bs           d d^ S _ df = df
+    diffL k (node [] ∷ ts)      []           {Γ} {x} {A} {Δ} d d^ S top df =
+      diffL k ts [] (psd (pse d)) (psd (pse d^)) (leafP d d^ S) top
+        (diff-E k _ _ Γ A _ (len Δ) (suc (len Δ)) (lenM S) (lenP S) df)
+    diffL k (node [] ∷ ts)      (false ∷ bs) {Γ} {x} {A} {Δ} d d^ S top df =
+      diffL k ts bs (psd (pse d)) (psd (pse d^)) (leafP d d^ S) top
+        (diff-E k _ _ Γ A _ (len Δ) (suc (len Δ)) (lenM S) (lenP S) df)
+    diffL k (node [] ∷ ts)      (true ∷ bs)  {Γ} {x} {A} {Δ} d d^ S (e , top) df =
+      diffL k ts bs (psd (pse d)) (psd (psd (pse (pse d^)))) (leafR d d^ S) top
+        (diff-R k _ _ Γ A x (len Δ) (suc (len Δ)) (suc (suc (len Δ))) (lenM S) (lenP S) e df)
+    diffL k (node (c ∷ cs) ∷ ts) []       d d^ S top df = diffN k (c ∷ cs) ts [] d d^ S top df
+    diffL k (node (c ∷ cs) ∷ ts) (b ∷ bs) d d^ S top df = diffN k (c ∷ cs) ts (b ∷ bs) d d^ S top df
+
+    diffN : ∀ k cs ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+            TopOK k (suc (dim A)) cs bs × TopOK k (dim A) ts (snd (raiseL bs cs)) → DS k S → DS k (simN cs ts bs d d^ S)
+    diffN k cs ts bs {Γ} {x} {A} {Δ} d d^ S (top₁ , top₂) df =
+      diffL k ts (snd (raiseL bs cs)) _ _ (psdS (simL cs bs (pse d) (pse d^) (pseS d d^ S))) top₂
+        (diffL k cs bs (pse d) (pse d^) (pseS d d^ S) top₁
+          (diff-E k _ _ Γ A _ (len Δ) (suc (len Δ)) (lenM S) (lenP S) df))
+
+diff-incl : ∀ k bs t ts → TopOK k 0 (t ∷ ts) bs → Diff k (inclM bs t ts) (inclP bs t ts) (ctxOf (node (t ∷ ts)))
+diff-incl k []       t ts top = diffL k (t ∷ ts) [] pss pss base top (λ w _ → inj₁ refl)
+diff-incl k (b ∷ bs) t ts top = diffL k (t ∷ ts) (b ∷ bs) pss pss base top (λ w _ → inj₁ refl)

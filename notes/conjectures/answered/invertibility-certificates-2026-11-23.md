@@ -248,3 +248,33 @@ print('The D² ⊗ D² detector labels exactly the top atom out of 25, and vanis
 ```
 
 </details>
+
+---
+
+## Verification (2026-11-23, thread "Compare alternatives to the marker system")
+
+**Status: verified, with Q1 answered for the rule set as stated rather than the one the project needs.** The decision consequences are in `../../marking-alternatives.md` §8.
+
+**Checks run.**
+- The Python block above was run from the repository root (Python 3). All three checks pass:
+  - the fold preserves the differential on 864 generators in degrees 2–17, and maps the principal-cell tableau correctly;
+  - the 32,767 words of length ≤ 14 for `abab ⇒ 1` have unique normal forms, and the shift-map values agree;
+  - the D² ⊗ D² detector picks out exactly the top atom.
+- The Lean block was not run, because Lean is not installed in the container. Its argument was checked by hand. It is a direct chaining of the hypotheses: `witnessOfChoice` is rule 5 applied to an identity, `introCert` is rule 6, and the theorem uses nothing else.
+
+**Q1–Q2 (completeness): correct, but only because of how rule 5 was worded.**
+- Rule 5 said "any chosen inverse g of f together with the cells witnessing it". Applied to f = 1_z, it certifies *any* invertible contraction w : c → 1_z as a witness, without w's own invertibility tower. Being a witness is a semantic condition, which is also why rules 1–5 are undecidable here (the response's word-problem example). Both conclusions follow correctly from the rules as written.
+- The project's kernel has no such rule. Its destructors give each invertible cell one fixed package (t⁻ˡ, t⁻ʳ, λ_t, ρ_t), and an identity's package is made of coherences. So the cancellation trick is not available. The question the project needs is the main question with rule 5 restricted to the package recorded by the derivation. It is restated as `../outbox/invertibility-certificates-r2.md`.
+- The response itself flags the difference: "A rule projecting a single predetermined inverse package … would have a different premise."
+
+**Q3 (quotient criterion): verified by reading.**
+- Admissible families of relations, and the largest one E (connected by an invertible cell), give f invertible ⇔ [f] an isomorphism in H_n(E). The two directions are the coinduction shown, and closure of equivalences under composition, inverses and whiskering (Fujii–Hoshino–Maehara for the weak case).
+- The criterion is not algorithmic. It changes no rule.
+- The counterexample to support tests (`abab ⇒ 1`: ab invertible, ba not) was checked by the script and by hand. Shift map: a = +1, b = truncated −1, so ab = id and ba sends 0 and 1 to 1.
+
+**Q4 (pseudo cells): verified by reading and the fold check, with citations taken on trust where marked.**
+- Freely attaching D^k at the source object a makes the new hom into z equal to D^k ⊗ K(a, z) (free right module). So the generic test is invertibility of d_k ⊗ t in D^k ⊗ H.
+- The fold D^{k−1} ⊗ D^1 → D^k carries d_{k−1} ⊗ (d_1 ⊗ t) to d_k ⊗ t. Its chain-level compatibility was checked by the script. Strictly, that it is an ω-functor rests on Ara–Lucas Prop. 4.9 (taken on trust).
+- **Main fact:** collapsing the two end copies of H in D^1 ⊗ H gives the suspension of H^coop, and d_1 ⊗ t maps to the suspended dual of t (Ara–Maltsiniotis B.6.5–6, taken on trust; Gepner–Heine 3.11.2 and 4.6.8 for the weak case). So the generic test holds **iff t is invertible**. The small case H = D^1 was checked by hand: collapsing the rows of the lax square leaves a 2-globe whose cell is the image of d_1 ⊗ t.
+- The two finite examples, showing that the internal quantifier in the definition of pseudo is weaker than free attachment, were checked by reading. The D² ⊗ D² detector was checked by the script.
+- **Consequence for the project.** No sound rule can conclude `ps` from inverse data alone, unless t is invertible. Pseudo-ness must be declared (see `marking-alternatives.md` §8.2).

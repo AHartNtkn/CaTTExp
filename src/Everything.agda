@@ -545,4 +545,8 @@ import CaTTExp.Binder.MultimapSorted
 import CaTTExp.Binder.FreeObj
 import CaTTExp.Binder.FreeObjLaws
 import CaTTExp.Binder.FreeObjExamples
+import CaTTExp.Binder.GenHeads
+import CaTTExp.Binder.GenHeadsLaws
+import CaTTExp.Binder.GenHeadsPresup
+import CaTTExp.Binder.GenHeadsExamples
 import CaTTExp.Uniform.MarksRepaired

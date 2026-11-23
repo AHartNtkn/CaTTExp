@@ -452,4 +452,9 @@ import CaTTExp.Binder.InitDesExamples
 import CaTTExp.Binder.InitMeta
 import CaTTExp.Binder.InitEmbed
 import CaTTExp.Binder.InitExamples
+import CaTTExp.Binder.GrayForm
+import CaTTExp.Binder.GrayFormLawsGen
+import CaTTExp.Binder.GrayFormLaws
+import CaTTExp.Binder.GrayFormEmbed
+import CaTTExp.Binder.GrayFormExamples
 import CaTTExp.Uniform.MarksRepaired

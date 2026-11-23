@@ -42,7 +42,7 @@ module Rep (ob : Nat → Psh) where
 
   private
     pfx : ∀ {F I : Fm} {Fs Is} → Maybe (F ≡ I) → Maybe (Σ (List Fm) (λ Q → Fs ≡ Is ++ Q)) →
-          Maybe (Σ (List Fm) (λ Q → F ∷ Fs ≡ I ∷ Is ++ Q))
+          Maybe (Σ (List Fm) (λ Q → _≡_ {A = List Fm} (F ∷ Fs) (I ∷ Is ++ Q)))
     pfx (just refl) (just (Q , refl)) = just (Q , refl)
     pfx (just refl) nothing           = nothing
     pfx nothing     _                 = nothing

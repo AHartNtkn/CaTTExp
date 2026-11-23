@@ -130,10 +130,9 @@ def check_orders():
     return count
 
 
-def check_attachment(checkout):
+def check_attachment(checkout, seam):
     binary = checkout / 'target/release/catt_strict'
     base = '(x : *) (a : id(id(x)) -> id(id(x)))'
-    seam = 'comp[a,a]'
     ctx = base + ''.join(f' ({p} : {seam} -> {seam})' for p in 'uvwt')
     ctx += f' (z : comp[comp[comp[id({seam}),u],v],w] -> t)'
     with TemporaryDirectory() as tmp:
@@ -161,5 +160,9 @@ if __name__ == '__main__':
     print('Block restrictions at mixed cuts:', check_orders())
     print('Barycentric subset cones:', check_cones())
     if args.catt_strict:
-        check_attachment(args.catt_strict.resolve())
-        print('Mixed scalar attachment checked at the forward and reverse boundaries.')
+        for first_degree in (4, 7):
+            seam = 'comp[a,a]'
+            for _ in range(first_degree - 4):
+                seam = f'id({seam})'
+            check_attachment(args.catt_strict.resolve(), seam)
+            print(f'First attachment in degree {first_degree}: both boundaries checked in degree {first_degree+1}.')

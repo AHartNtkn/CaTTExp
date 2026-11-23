@@ -219,9 +219,18 @@ module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : in
     B-wf = sub-wf (ren-typed asb vs Φ) B
              (subst T (wf-agree Φ (blank vs Φ) B (agree-blank-on Φ vs (varsY B) (λ i q _ → bvsY i q))) wB)
 
+    B-at : T (all (λ i → i <ℕ length asb) (atY (sY ρ B)))
+    B-at = all-introN _ (atY (sY ρ B)) (λ i q →
+      let (x , xin , e) = In-map-inv ra (atY B) i (subst (λ X → In X i) (atY-ren B) q)
+      in subst (λ z → T (z <ℕ length asb)) (sym e)
+           (idx-lt asb x (S-in x (elem-++r x (concatAt (map (nthY Φ) vs)) _
+                                   (elem-++r x (atT b) _ (subst (λ X → In (atYM X) x) (sym eB) xin))))))
+
     sub-mmcTy : mmcTy (cidx (canon k Φ b)) ≡ just (sY ρ B)
     sub-mmcTy =
       trans (T-if (isCanon (cidx (canon k Φ b)) ∧ all (okTy (length asb)) Φ′ ∧ wfCtx Φ′ ∧ atomsBelow (length asb) Φ′ b′)
                   (∧-in isCanon-sub (∧-in entries-ok (∧-in wfCtx-Φ′ atoms-ok))))
-        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A ∧ wf Φ′ A then just A else nothing) infer-b′)
-               (T-if (okTy (length asb) (sY ρ B) ∧ wf Φ′ (sY ρ B)) (∧-in B-ok B-wf)))
+        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A ∧ wf Φ′ A ∧ all (λ i → i <ℕ length asb) (atY A)
+                                         then just A else nothing) infer-b′)
+               (T-if (okTy (length asb) (sY ρ B) ∧ wf Φ′ (sY ρ B) ∧ all (λ i → i <ℕ length asb) (atY (sY ρ B)))
+                     (∧-in B-ok (∧-in B-wf B-at))))

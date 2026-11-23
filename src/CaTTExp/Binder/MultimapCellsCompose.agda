@@ -67,6 +67,36 @@ module Compose (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : 
   ra-inj : ∀ a c → In asb a → In asb c → ra a ≡ ra c → a ≡ c
   ra-inj = idx-inj asb
 
+  -- A start set inside the support has its support inside.
+  supFrom⊆ : ∀ X → X ⊆ vs → supVarsFrom Φ X ⊆ vs
+  supFrom⊆ X h i p =
+    let (a , b) = filter-In-inv (λ j → elem j (closeFrom Φ n X)) (upTo n) i p
+    in ForSet.Rb⊆vs X h i a (upTo-In-inv n i b)
+
+  start⊆ : ∀ u {U} → infer Φ u ≡ just U → varsT u ⊆ vs → varsY U ⊆ vs → supStart Φ u ⊆ vs
+  start⊆ u {U} eU uT uY i p with elem-split i (varsT u) (varsY U) (subst (λ xs → In xs i) (cong (λ m → varsT u ++ varsYM m) eU) p)
+  ... | inl q = uT i q
+  ... | inr q = uY i q
+
+  entries-at : ∀ j → In vs j → atY (nthY Φ j) ⊆ asb
+  entries-at j p i q = S-in i (elem-++l i (concatAt (map (nthY Φ) vs)) _ (atY-concatAt (nthY Φ) vs j p i q))
+
+  concatAt-inv : ∀ (f : Nat → CTy) xs x → In (concatAt (map f xs)) x → Σ Nat (λ j → In xs j × In (atY (f j)) x)
+  concatAt-inv f (y ∷ xs) x p with elem-split x (atY (f y)) (concatAt (map f xs)) p
+  ... | inl q = y , ∨-l (y ==ℕ y) _ (==ℕ-refl y) , q
+  ... | inr q = let (j , jin , r) = concatAt-inv f xs x q in j , ∨-r (j ==ℕ y) _ jin , r
+
+  -- The atoms around a term over the support are among b's.
+  supAt⊆ : ∀ u {U} → infer Φ u ≡ just U → varsT u ⊆ vs → varsY U ⊆ vs → atT u ⊆ asb → atY U ⊆ asb →
+           supAtomsOf Φ u ⊆ asb
+  supAt⊆ u {U} eU uT uY aT aY i p
+    with elem-split i (concatAt (map (nthY Φ) (supVars Φ u))) (atT u ++ atYM (infer Φ u)) p
+  ... | inl q = let (j , jin , r) = concatAt-inv (nthY Φ) (supVars Φ u) i q
+                in entries-at j (supFrom⊆ (supStart Φ u) (start⊆ u eU uT uY) j jin) i r
+  ... | inr q with elem-split i (atT u) (atYM (infer Φ u)) q
+  ...   | inl r = aT i r
+  ...   | inr r = aY i (subst (λ m → In (atYM m) i) eU r)
+
   module On (u : Tm) {U : CTy} (eU : infer Φ u ≡ just U) (wU : T (wf Φ U))
             (uT : varsT u ⊆ vs) (uY : varsY U ⊆ vs) (uA : supAtomsOf Φ u ⊆ asb) where
 

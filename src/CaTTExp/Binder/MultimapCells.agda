@@ -206,7 +206,7 @@ atomsBelow k Φ t = all (λ i → i <ℕ k) (concatAt Φ ++ atT t)
 mmcTy : MMI → Maybe GB.CTy
 mmcTy (mmi k Φ t) =
   if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t
-  then (GT.infer Φ t >>= λ A → if okTy k A ∧ GT.wf Φ A then just A else nothing)
+  then (GT.infer Φ t >>= λ A → if okTy k A ∧ GT.wf Φ A ∧ all (λ i → i <ℕ k) (atY A) then just A else nothing)
   else nothing
 
 ------------------------------------------------------------------------

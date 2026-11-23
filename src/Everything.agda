@@ -310,6 +310,7 @@ import CaTTExp.Gray.DownAgree
 import CaTTExp.Gray.Graded
 import CaTTExp.Gray.MarksFuel
 import CaTTExp.Gray.DesSide
+import CaTTExp.Gray.MarksB
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp

@@ -166,6 +166,7 @@ The signature is closed to users. Every head is a kernel former that comes with 
 **Q1.1. Names or positions.** The kernel uses de Bruijn levels in Agda; the spec writes names.
 - *Option A: names with shadowing forbidden.* Simplest to read and to report errors in. Every context must be written with distinct names.
 - *Option B: names elaborated to levels, shadowing allowed.* More convenient in long developments; error messages must reconstruct names.
+- **Decided (Anthony, 2026-11-23): Option A.** Names are distinct within every context, and a binder's variables are distinct from those of the context around it. In a flat context shadowing only makes variables unreachable (a hidden `x` still occurs in later types and must be printed as `x✝`), contexts are local to one coherence, diagram or binder so names do not accumulate, and the only saving B offers is picking a fresh name for a bound variable. The named layer over the limit rules (`CaTTExp.Lim.Named`, `WfCtx`) already requires distinct names.
 
 **Q1.2. How much of a coherence the user writes.** The kernel term `coh_{Δ, A}[σ]` carries the whole pasting context Δ, the type A and the full substitution σ.
 - *Option A: write everything.* No inference; terms are long (the composite of two arrows names five variables of Δ and five terms of σ).

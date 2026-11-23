@@ -169,6 +169,10 @@ import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.RCProc
 import CaTTExp.RCProc.Support
+import CaTTExp.RCProc.TwoPath
+import CaTTExp.RCProc.TwoPathCtx
+import CaTTExp.RCProc.TwoPathFacts
+import CaTTExp.RCProc.TwoPathModel
 import CaTTExp.RCProc.Glue
 import CaTTExp.PsRaise
 import CaTTExp.PsRaiseExamples
@@ -190,6 +194,8 @@ import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
+import CaTTExp.Naturality.Ladder
+import CaTTExp.Naturality.Column
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle

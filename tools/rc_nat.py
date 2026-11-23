@@ -246,6 +246,8 @@ def _layered(Q, B, Yq, C, mi, pl, up, a, b, rc, op):
         if w is None:
             raise NoFiller(('connector', len(Q)))
         pieces.append(w)
+    if not pieces:
+        raise NoFiller('no top-dimensional Y-variable in the layers')
     K = pieces[0]
     for P_ in pieces[1:]:
         K = comp2(C, n, K, P_)

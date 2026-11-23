@@ -167,6 +167,8 @@ import CaTTExp.RCProc.Glue
 import CaTTExp.PsRaise
 import CaTTExp.PsRaiseExamples
 import CaTTExp.VarSubFv
+import CaTTExp.PsRaiseCongr
+import CaTTExp.PsRaiseCongrExamples
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing

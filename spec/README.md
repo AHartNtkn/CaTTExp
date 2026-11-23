@@ -12,7 +12,7 @@ If the spec and a note disagree, that is a bug in one of them. It is recorded in
 | 1 | [`01-core-syntax.md`](01-core-syntax.md) | Pasting shapes, contexts, types, terms, substitution, the coherence rule | kernel |
 | 2 | [`02-lax-core.md`](02-lax-core.md) | The lax core L: directed coherence, the side condition computed in V, the four switch settings | kernel |
 | 3 | [`03-invertibility-markings.md`](03-invertibility-markings.md) | Marks `inv`, `ps`, `ps*`, `grpd_k`, `ord`; pseudo = L + marks | kernel |
-| 4 | [`04-context-checking.md`](04-context-checking.md) | Pasting contexts for `coh`; arbitrary bases read weakly; the optional `⊢hpol` fast path | kernel |
+| 4 | [`04-context-checking.md`](04-context-checking.md) | Pasting contexts for `coh`; arbitrary bases read weakly. §4.4 (the `⊢hpol` fast path) is above the kernel | kernel (§4.4: conservative extension) |
 | 5 | [`05-derived-constructions.md`](05-derived-constructions.md) | Gray tensor of contexts, cylinders, naturality, cones, as algorithms | derived |
 | 6 | [`06-limits-representables.md`](06-limits-representables.md) | Limits and representables | kernel extension |
 | 7 | [`07-free-objects.md`](07-free-objects.md) | Free objects | kernel extension |

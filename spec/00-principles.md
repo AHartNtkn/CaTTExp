@@ -41,7 +41,7 @@ Every universal property is stated as the existence of cells: a structure map, a
 
 **This is a property of the kernel only.** The surface may add computation rules (§0.5). For example, rewrite rules may strictify two of associators, unitors and interchange. Each such rule is justified by a formalized conservativity proof, not by a definitional equality in the kernel.
 
-Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`, `⊢hpol`).
+Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`).
 
 *Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional); Anthony, spec walkthrough 2026-11-22 (surface computation rules; ledger S6, S19).
 
@@ -85,7 +85,7 @@ This spec fixes the kernel and leaves every surface choice open. Each chapter li
 
 ## 0.6 Decidability of checking
 
-Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it, and offers a decidable sufficient judgment as an optional optimisation.
+Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it. A decidable sufficient test that only speeds checking up (`⊢hpol`, chapter 4, §4.4) is not part of the kernel. It lives in the layer above it and is proved conservative like every other layer (§0.5).
 
 Decidability is not the same as efficiency. Several side conditions are decidable but expensive (chapter 2, §2.6). Efficiency is an implementation question and never changes the rules.
 

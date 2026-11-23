@@ -43,9 +43,13 @@
 --     underlying arrow type is S → T with
 --       S = X, or S mentions no variable bound by the telescope;
 --       T = X, or T is a constant the base signature marks as ⊤.
--- rec_y needs entry y to be a map; uni and uni_y need every entry
--- after X to be a map (their arrow context Δ^→ at a cell variable is a
--- higher naturality cell, not encoded here).
+-- The arrow context Δ^→ (model morphisms) is stated at maps and at
+-- globular 2-cells l : f ⇒ g between map entries f, g, where its
+-- component is a 3-cell between the two pastings of the naturality
+-- square (`cell3Ty`). So rec_y needs entry y to be a map or a globular
+-- 2-cell; uni needs every entry after X to be one; uni_y needs that and
+-- entry y a map. Cells of higher dimension, or with composite
+-- boundaries, are accepted by μ, η_y and rec only (ledger S26b).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax
@@ -205,11 +209,37 @@ module Construction (K : Set) (top? : K → Bool) where
   positive (ε ▸ arr _ _ _)   = false
   positive (Δ ▸ B ▸ A)       = positive (Δ ▸ B) ∧ entryOK A
 
-  -- Every entry after X is a map.
-  mapsOnly : Ctx → Bool
-  mapsOnly ε           = true
-  mapsOnly (ε ▸ _)     = true
-  mapsOnly (Δ ▸ B ▸ A) = mapsOnly (Δ ▸ B) ∧ (dim A ==ℕ 1)
+  -- A variable of the binder at depth 0, other than through a parameter.
+  bv0? : Tm → Maybe Nat
+  bv0? (bvar zero j) = just j
+  bv0? _             = nothing
+
+  both : Maybe Nat → Maybe Nat → Maybe (Nat × Nat)
+  both (just i) (just j) = just (i , j)
+  both _        _        = nothing
+
+  -- A globular 2-cell between two earlier entries: f ⇒ g for f, g : S → T
+  -- variables of the telescope. Returns the entries of f and g.
+  glob : Ty → Maybe (Nat × Nat)
+  glob ⋆                             = nothing
+  glob (arr ⋆ _ _)                   = nothing
+  glob (arr (arr ⋆ _ _) f g)         = both (bv0? f) (bv0? g)
+  glob (arr (arr (arr _ _ _) _ _) _ _) = nothing
+
+  -- Entries whose model-morphism component the kernel states: maps, and
+  -- globular 2-cells (ledger S26b for the rest).
+  low : Ty → Bool
+  low A = (dim A ==ℕ 1) ∨ is-just (glob A)
+
+  -- Every entry after X is low.
+  lowOnly : Ctx → Bool
+  lowOnly ε           = true
+  lowOnly (ε ▸ _)     = true
+  lowOnly (Δ ▸ B ▸ A) = lowOnly (Δ ▸ B) ∧ low A
+
+  isLow? : Maybe Ty → Bool
+  isLow? nothing  = false
+  isLow? (just A) = low A
 
   isMap? : Maybe Ty → Bool
   isMap? nothing  = false
@@ -222,9 +252,9 @@ module Construction (K : Set) (top? : K → Bool) where
   sel μ    y Δ = y ==ℕ 0
   sel η    y Δ = inner y Δ
   sel rec  y Δ = y ==ℕ 0
-  sel recY y Δ = inner y Δ ∧ isMap? (lookup Δ y)
-  sel uni  y Δ = (y ==ℕ 0) ∧ mapsOnly Δ
-  sel uniY y Δ = inner y Δ ∧ mapsOnly Δ
+  sel recY y Δ = inner y Δ ∧ isLow? (lookup Δ y)
+  sel uni  y Δ = (y ==ℕ 0) ∧ lowOnly Δ
+  sel uniY y Δ = (inner y Δ ∧ lowOnly Δ) ∧ isMap? (lookup Δ y)
 
   side : Former → Nat → Ctx → Bool
   side b y Δ = positive Δ ∧ sel b y Δ
@@ -272,18 +302,52 @@ module Construction (K : Set) (top? : K → Bool) where
         (cmp (opTm 0 M₁ S) (opTm 0 M₁ T) (opTm 0 M₂ T) s₁ (act T M₁ h))
         (cmp (opTm 0 M₁ S) (opTm 0 M₂ S) (opTm 0 M₂ T) (act S M₁ h) s₂)
 
-  -- The cell at y of a morphism from η to the model given by the first
-  -- m arguments, with carrier map h.
-  θBody : Ctx → Nat → Tm → Tm → Tm → Ty
-  θBody Δ y h S T = cellTy S T (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h
+  -- The 3-cell of a model morphism h : M₁ → M₂ at a 2-cell l : f ⇒ g
+  -- between maps S → T, given its cells θf, θg at f and g: the two
+  -- pastings of the naturality square
+  --   (l₁ ▷ T(h)) · θg   ⇛   θf · (S(h) ◁ l₂).
+  cell3Ty : Tm → Tm → Sub → Sub → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Ty
+  cell3Ty S T M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg =
+    let S₁  = opTm 0 M₁ S
+        S₂  = opTm 0 M₂ S
+        T₁  = opTm 0 M₁ T
+        T₂  = opTm 0 M₂ T
+        Th  = act T M₁ h
+        Sh  = act S M₁ h
+        src = cmp S₁ T₁ T₂ f₁ Th
+        tgt = cmp S₁ S₂ T₂ Sh g₂
+    in arr (arr (arr ⋆ S₁ T₂) src tgt)
+           (vcomp S₁ T₂ src (cmp S₁ T₁ T₂ g₁ Th) (rwh S₁ T₁ T₂ f₁ g₁ l₁ Th) tgt θg)
+           (vcomp S₁ T₂ src (cmp S₁ S₂ T₂ Sh f₂) θf tgt (lwh S₁ S₂ T₂ Sh f₂ g₂ l₂))
 
-  θTy : Ctx → Nat → Tm → Ty
-  θTy Δ y h = withBase (entryBase Δ y) (θBody Δ y h)
+  globM : Maybe Ty → Maybe (Nat × Nat)
+  globM nothing  = nothing
+  globM (just A) = glob A
 
-  -- The cells θ_1, …, θ_k of a morphism with carrier map bvar 0 o.
+  globAt : Ctx → Nat → Maybe (Nat × Nat)
+  globAt Δ y = globM (lookup Δ y)
+
+  -- The component at y of a morphism from η to the model given by the
+  -- first m arguments, with carrier map h and components th i at the
+  -- earlier entries: a cell at a map, a 3-cell at a globular 2-cell.
+  θSel : Ctx → Nat → Tm → (Nat → Tm) → Tm → Tm → Maybe (Nat × Nat) → Ty
+  θSel Δ y h th S T nothing        =
+    cellTy S T (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h
+  θSel Δ y h th S T (just (i , j)) =
+    cell3Ty S T (ηPre Δ (len Δ)) (bvPre (len Δ))
+            (ηAt Δ i) (ηAt Δ j) (ηAt Δ y) (bvar 0 i) (bvar 0 j) (bvar 0 y) h (th i) (th j)
+
+  θBody : Ctx → Nat → Tm → (Nat → Tm) → Tm → Tm → Ty
+  θBody Δ y h th S T = θSel Δ y h th S T (globAt Δ y)
+
+  θTy : Ctx → Nat → Tm → (Nat → Tm) → Ty
+  θTy Δ y h th = withBase (entryBase Δ y) (θBody Δ y h th)
+
+  -- The components θ_1, …, θ_k of a morphism with carrier map bvar 0 o,
+  -- θ_i being bvar 0 (o + i).
   θTel : Ctx → Nat → Nat → Ctx
   θTel Δ o zero    = ε
-  θTel Δ o (suc k) = θTel Δ o k ▸ θTy Δ (suc k) (bvar 0 o)
+  θTel Δ o (suc k) = θTel Δ o k ▸ θTy Δ (suc k) (bvar 0 o) (λ i → bvar 0 (o + i))
 
   -- A model morphism from η to the model given by the first m
   -- arguments, starting at argument o: the carrier map, then its cells.
@@ -338,7 +402,7 @@ module Construction (K : Set) (top? : K → Bool) where
   res μ    y Δ = ⋆
   res η    y Δ = ηRes Δ y (lookup Δ y)
   res rec  y Δ = arr ⋆ (μT Δ) (bvar 0 0)
-  res recY y Δ = θTy Δ y (bnd rec 0 Δ (bvPre (len Δ)))
+  res recY y Δ = θTy Δ y (bnd rec 0 Δ (bvPre (len Δ))) (λ i → bnd recY i Δ (bvPre (len Δ)))
   res uni  y Δ = arr (arr ⋆ (μT Δ) (bvar 0 0)) (bvar 0 (len Δ)) (bvar 0 (len Δ + len Δ))
   res uniY y Δ = uniYTy Δ y
 

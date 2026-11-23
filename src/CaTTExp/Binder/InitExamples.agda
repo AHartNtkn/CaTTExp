@@ -128,18 +128,56 @@ _ = refl
 _ : ok (tyOf ε (bnd η 2 Δ○ ⟨⟩)) ≡ true
 _ = refl
 
--- rec into a model (A, a : ⊤ → A, p : a ⇒ a) is accepted; rec_y at the
--- cell and uni need the higher naturality data (S26a follow-up).
+-- rec into a model (A, a : ⊤ → A, p : a ⇒ a), its cells at b and at
+-- the 2-cell l (a 3-cell), and uni and uni_y at b, are accepted.
 Γ○ : Ctx
 Γ○ = ε ▸ ⋆ ▸ arr ⋆ one (var 0) ▸ arr (arr ⋆ one (var 0)) (var 1) (var 1)
 
-_ : tyOf Γ○ (bnd rec 0 Δ○ (fresh 0 3)) ≡ just (arr ⋆ μ○ (var 0))
+rec○ : Tm
+rec○ = bnd rec 0 Δ○ (fresh 0 3)
+
+_ : tyOf Γ○ rec○ ≡ just (arr ⋆ μ○ (var 0))
 _ = refl
 
-_ : ok (tyOf Γ○ (bnd recY 2 Δ○ (fresh 0 3))) ≡ false
+_ : (ok (tyOf Γ○ (bnd recY 1 Δ○ (fresh 0 3))) , ok (tyOf Γ○ (bnd recY 2 Δ○ (fresh 0 3)))) ≡₂ (true , true)
 _ = refl
 
-_ : (sideOf recY 2 Δ○ , sideOf uni 0 Δ○ , sideOf uniY 1 Δ○) ≡₃ (false , false , false)
+-- rec_y at l: the naturality cylinder (η_l ▷ rec) · θ_b ⇛ θ_b · (1 ◁ p).
+private
+  module C○ = Construction NK (λ _ → true)
+  ηb ηl θb : Tm
+  ηb = bnd η 1 Δ○ ⟨⟩
+  ηl = bnd η 2 Δ○ ⟨⟩
+  θb = bnd recY 1 Δ○ (fresh 0 3)
+
+_ : tyOf Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ≡ just
+      (let i1  = C○.idm one
+           src = C○.cmp one μ○ (var 0) ηb rec○
+           tgt = C○.cmp one one (var 0) i1 (var 1) in
+       arr (arr (arr ⋆ one (var 0)) src tgt)
+           (C○.vcomp one (var 0) src src (C○.rwh one μ○ (var 0) ηb ηb ηl rec○) tgt θb)
+           (C○.vcomp one (var 0) src (C○.cmp one one (var 0) i1 (var 1)) θb tgt
+                     (C○.lwh one one (var 0) i1 (var 1) (var 1) (var 2))))
+_ = refl
+
+Γu○ : Ctx
+Γu○ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δ○)
+
+_ : (ok (ctx? Γu○) , ok (tyOf Γu○ (bnd uni 0 Δ○ (fresh 0 9))) , ok (tyOf Γu○ (bnd uniY 1 Δ○ (fresh 0 9))))
+      ≡₃ (true , true , true)
+_ = refl
+
+-- uni_y at the 2-cell (a modification condition between 3-cells) is
+-- not stated yet (ledger S26b).
+_ : sideOf uniY 2 Δ○ ≡ false
+_ = refl
+
+-- A 3-cell variable m : l ⇛ l: μ, η and rec accept it; rec_y at it and
+-- uni do not (ledger S26b).
+Δ○₃ : Ctx
+Δ○₃ = Δ○ ▸ arr (arr (arr ⋆ one X) (bvar 0 1) (bvar 0 1)) (bvar 0 2) (bvar 0 2)
+
+_ : (ok (tyOf ε (bnd μ 0 Δ○₃ ⟨⟩)) , sideOf recY 3 Δ○₃ , sideOf uni 0 Δ○₃) ≡₃ (true , false , false)
 _ = refl
 
 ------------------------------------------------------------------------

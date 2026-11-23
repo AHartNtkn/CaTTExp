@@ -43,6 +43,7 @@ class Faces:
         if any(not 0 <= slot < len(self.vertices) or scalars[name] != self.vertices[slot]
                for slot, name in hist):
             raise ValueError('scalar at the wrong site')
+        self.history = hist
         self.profile = Counter(hist)
         multiplicities = Counter(slot for slot, _ in hist)
         self.sites = [s for s, m in sorted(multiplicities.items()) if m >= 2]
@@ -50,6 +51,8 @@ class Faces:
         (u, a), (v, b) = (evaluate(hist, data[side]) for side in ('left', 'right'))
         if u != v:
             raise ValueError('crossing faces must have the same temporal endpoint')
+        self.end = u
+        self.counts = a, b
         self.defect = tuple(y-x for x, y in zip(a, b))
 
     def placements(self, rule):

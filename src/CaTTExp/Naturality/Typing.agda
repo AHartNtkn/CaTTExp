@@ -18,9 +18,11 @@
 --     context Q↑Y, where c = coh Q B id.
 --
 -- `Good` grades the result: with Good Q B = ⊤ the statement covers
--- every term. CaTTExp.Naturality.DimOne supplies a filler family for
--- every coherence of dimension 1, which gives the cylinder of every
--- term of dimension ≤ 1 with no hypothesis on fillers.
+-- every term. No filler family is constructed in this module or yet
+-- anywhere in the repository: fillers for 1-dimensional coherences
+-- (which would give the cylinder of every term of dimension ≤ 1 with
+-- no hypothesis on fillers) and for higher ones are open, ledger C1d
+-- items (1) and (2) in notes/open-issues.md.
 --
 -- The proof is by structural induction on the typing derivation of t.
 -- At t = coh Q B γ the filler's type is transported along γ↑ with the

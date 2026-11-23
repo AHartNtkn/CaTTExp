@@ -4,9 +4,10 @@ from collections import Counter
 from functools import cache
 from itertools import product
 
-from catt import STAR, arr, comp2, glue_tree, infer, maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v
+from catt import STAR, arr, comp2, disc_tree, glue_tree, infer, maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v
 from catt_unit_ordered_exchange import temporal_words
 from gray_globe_comparison import atom, globe
+from relative_coherence_hidden_seam import identity
 
 
 def vertical(left, right):
@@ -98,6 +99,28 @@ def check_projections(counts):
                 counts["tensor atom projections"] += 1
 
 
+def check_unit_whiskers():
+    ctx = tree_ctx(disc_tree(2))
+    top, = maximal_vars(ctx)
+    cell = v(top)
+    left_unit = identity(ctx, src(ctx, src(ctx, cell)))
+    right_unit = identity(ctx, tgt(ctx, tgt(ctx, cell)))
+    padded = comp2(ctx, 0, comp2(ctx, 0, left_unit, cell), right_unit)
+    infer(ctx, padded)
+
+    def read(term):
+        if term == cell:
+            return {"": ("token",)}
+        arity, arguments = term[1], term[3]
+        first, second = maximal_vars(arity)
+        if arity == tree_ctx(glue_tree(1, 0, 2)):
+            return horizontal({}, read(arguments[second]))
+        assert arity == tree_ctx(glue_tree(2, 0, 1))
+        return horizontal(read(arguments[first]), {})
+
+    assert read(padded) == {"01": ("token",)} and read(padded) != read(cell)
+
+
 def check_folded_square():
     loop_type = arr(STAR, v(0), v(0))
     ctx = (STAR, loop_type, arr(loop_type, v(1), v(1)))
@@ -114,6 +137,8 @@ if __name__ == "__main__":
     check_cuts(counts)
     check_projections(counts)
     check_folded_square()
+    check_unit_whiskers()
     for kind, count in sorted(counts.items()):
         print(f"{count:,} {kind}")
+    print("Double identity whiskering moves the walking 2-cell token to address 01.")
     print("Folded square has distinct words at the same literal boundary.")

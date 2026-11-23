@@ -180,12 +180,15 @@ module Example where
 ------------------------------------------------------------------------
 -- Models and soundness.
 --
--- A model interprets raw terms partially (ev), defines every typed
--- term, and satisfies every equation the judgments can derive. Then
--- `typed-def` and `sound` hold, so a model that separates two terms
--- shows they are distinct cells (`separate`). This is how a computed
--- table of classes is shown complete: a table closed under the
--- operations and satisfying the schemas is such a model.
+-- A model interprets raw terms partially (ev) in a setoid, defines every
+-- typed term, and satisfies every equation the judgments can derive, up
+-- to the setoid's equality. Then `typed-def` and `sound` hold, so a
+-- model that separates two terms shows they are distinct cells
+-- (`separate`). This is how a computed table of classes is shown
+-- complete: a table closed under the operations and satisfying the
+-- schemas is such a model. Models whose values are sets (the Gray
+-- support model, FreeGray) need the setoid; models with canonical
+-- values take _≈_ = _≡_ (FreeP0).
 
 module Models (ops : List OpSpec) (eqs : List Schema) (gens : List Gen) where
   open Free ops eqs gens
@@ -193,16 +196,30 @@ module Models (ops : List OpSpec) (eqs : List Schema) (gens : List Gen) where
   Defined : ∀ {M : Set} → Maybe M → Set
   Defined m = T (is-just m)
 
+  -- A relation lifted to partial values: both undefined, or both
+  -- defined and related.
+  Lift : ∀ {M : Set} → (M → M → Set) → Maybe M → Maybe M → Set
+  Lift R nothing  nothing  = ⊤
+  Lift R (just a) (just b) = R a b
+  Lift R _        _        = ⊥
+
   record Model : Set₁ where
     field
-      M  : Set
-      ev : Tm → Maybe M
+      M       : Set
+      _≈_     : M → M → Set
+      ≈-refl  : ∀ {a} → a ≈ a
+      ≈-sym   : ∀ {a b} → a ≈ b → b ≈ a
+      ≈-trans : ∀ {a b c} → a ≈ b → b ≈ c → a ≈ c
+      ev      : Tm → Maybe M
+
+    _≈M_ : Maybe M → Maybe M → Set
+    _≈M_ = Lift _≈_
 
     ArgsM : Sub → List Tm → Set
     ArgsM σ as = ∀ {a} → a ∈L as → Defined (ev (σ (varName a))) × (dim (σ (varName a)) ≡ dim a)
 
     GuardsM : Sub → List Guard → Set
-    GuardsM σ gs = ∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≡ ev (sub σ (snd g))
+    GuardsM σ gs = ∀ {g} → g ∈L gs → ev (sub σ (fst g)) ≈M ev (sub σ (snd g))
 
     field
       def-gen  : ∀ {g} → g ∈L gens → Defined (ev (v (gdim g) (gname g)))
@@ -211,38 +228,49 @@ module Models (ops : List OpSpec) (eqs : List Schema) (gens : List Gen) where
       def-op   : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
                  ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
                  Defined (ev (sub σ (OpSpec.applied o)))
-      cong-s   : ∀ {n x y} → ev x ≡ ev y → ev (sF n x) ≡ ev (sF n y)
-      cong-t   : ∀ {n x y} → ev x ≡ ev y → ev (tF n x) ≡ ev (tF n y)
+      cong-s   : ∀ {n x y} → ev x ≈M ev y → ev (sF n x) ≈M ev (sF n y)
+      cong-t   : ∀ {n x y} → ev x ≈M ev y → ev (tF n x) ≈M ev (tF n y)
       cong-op  : ∀ {o σ τ} → o ∈L ops →
-                 (∀ {a} → a ∈L OpSpec.args o → ev (σ (varName a)) ≡ ev (τ (varName a))) →
-                 ev (sub σ (OpSpec.applied o)) ≡ ev (sub τ (OpSpec.applied o))
+                 (∀ {a} → a ∈L OpSpec.args o → ev (σ (varName a)) ≈M ev (τ (varName a))) →
+                 ev (sub σ (OpSpec.applied o)) ≈M ev (sub τ (OpSpec.applied o))
       sat-eq   : ∀ {e σ} → e ∈L eqs → ArgsM σ (Schema.vars e) → GuardsM σ (Schema.guards e) →
-                 ev (sub σ (Schema.lhs e)) ≡ ev (sub σ (Schema.rhs e))
+                 ev (sub σ (Schema.lhs e)) ≈M ev (sub σ (Schema.rhs e))
       sat-src  : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
                  ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
-                 ev (sF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≡ ev (sub σ (OpSpec.srcO o))
+                 ev (sF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≈M ev (sub σ (OpSpec.srcO o))
       sat-tgt  : ∀ {o σ} → o ∈L ops → isSelector o ≡ false →
                  ArgsM σ (OpSpec.args o) → GuardsM σ (OpSpec.guardsO o) →
-                 ev (tF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≡ ev (sub σ (OpSpec.tgtO o))
+                 ev (tF (dim (OpSpec.applied o)) (sub σ (OpSpec.applied o))) ≈M ev (sub σ (OpSpec.tgtO o))
       sat-gsrc : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
-                 ev (sF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gsrc g))
+                 ev (sF (suc n) (v (gdim g) (gname g))) ≈M ev (v n (gsrc g))
       sat-gtgt : ∀ {g n} → g ∈L gens → gdim g ≡ suc n →
-                 ev (tF (suc n) (v (gdim g) (gname g))) ≡ ev (v n (gtgt g))
+                 ev (tF (suc n) (v (gdim g) (gname g))) ≈M ev (v n (gtgt g))
+
+    ≈M-refl : ∀ {m} → Defined m → m ≈M m
+    ≈M-refl {just a} _ = ≈-refl
+
+    ≈M-sym : ∀ {m m′} → m ≈M m′ → m′ ≈M m
+    ≈M-sym {nothing} {nothing} _ = tt
+    ≈M-sym {just a}  {just b}  e = ≈-sym e
+
+    ≈M-trans : ∀ {m m′ m″} → m ≈M m′ → m′ ≈M m″ → m ≈M m″
+    ≈M-trans {nothing} {nothing} {nothing} _ _ = tt
+    ≈M-trans {just a}  {just b}  {just c}  e f = ≈-trans e f
 
   module Soundness (𝕄 : Model) where
     open Model 𝕄
 
     typed-def : ∀ {x} → Typed x → Defined (ev x)
-    sound     : ∀ {x y} → x ≐ y → ev x ≡ ev y
+    sound     : ∀ {x y} → x ≐ y → ev x ≈M ev y
 
     typed-def (t-gen m)          = def-gen m
     typed-def (t-s d e)          = def-s (typed-def d) e
     typed-def (t-t d e)          = def-t (typed-def d) e
     typed-def (t-op m ns ha hg)  = def-op m ns (λ k → typed-def (fst (ha k)) , snd (ha k)) (λ k → sound (hg k))
 
-    sound (≐-refl _)                    = refl
-    sound (≐-sym d)                     = sym (sound d)
-    sound (≐-trans d e)                 = trans (sound d) (sound e)
+    sound (≐-refl d)                    = ≈M-refl (typed-def d)
+    sound (≐-sym {x} {y} d)             = ≈M-sym {ev x} {ev y} (sound d)
+    sound (≐-trans {x} {y} {z} d e)     = ≈M-trans {ev x} {ev y} {ev z} (sound d) (sound e)
     sound (≐-s d)                       = cong-s (sound d)
     sound (≐-t d)                       = cong-t (sound d)
     sound (≐-op m ns ha hg hb hh pw)    = cong-op m (λ k → sound (pw k))
@@ -253,5 +281,5 @@ module Models (ops : List OpSpec) (eqs : List Schema) (gens : List Gen) where
     sound (≐-gtgt m e)                  = sat-gtgt m e
 
     -- A model that tells two terms apart shows they are distinct cells.
-    separate : ∀ {x y} → ¬ (ev x ≡ ev y) → ¬ (x ≐ y)
+    separate : ∀ {x y} → ¬ (ev x ≈M ev y) → ¬ (x ≐ y)
     separate ne d = ne (sound d)

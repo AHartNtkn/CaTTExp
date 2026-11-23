@@ -272,6 +272,7 @@ import CaTTExp.DerivedWith
 import CaTTExp.Surface.WhiskerWith
 import CaTTExp.Surface.WhiskerCatt
 import CaTTExp.Gray.WhiskerSigma
+import CaTTExp.Gray.SingleHomSide
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient
@@ -347,6 +348,9 @@ import CaTTExp.Uniform.WordPresent
 import CaTTExp.Uniform.SigP
 import CaTTExp.Uniform.FreeP
 import CaTTExp.Uniform.FreeP0
+import CaTTExp.Uniform.SuppAlg
+import CaTTExp.Uniform.GrayTab
+import CaTTExp.Uniform.FreeGray
 import CaTTExp.Uniform.KernelToy
 import CaTTExp.Uniform.InnerInv
 import CaTTExp.Uniform.Marks
@@ -356,3 +360,4 @@ import CaTTExp.Descent.CocartLemmas
 import CaTTExp.Descent.DJOneTruncated
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
+import CaTTExp.Descent.TruncGrpdModel

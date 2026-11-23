@@ -106,6 +106,7 @@ Anthony's question: why does pullback-stability of coproducts need descent? It d
 (U-⊔)   f : W → A ⊔ B   ⟹   the comparison  [π, π′] : (W ×_{A⊔B} A) ⊔ (W ×_{A⊔B} B) → W  inv
 (U-∅)   f : W → ∅       ⟹   f inv                         (the initial object is strict)
 ```
+- **[agda] shadows** (`CaTTExp.Descent.CoprodUniversality`): Part A proves U-⊔ and U-∅ in Set (soundness shadow); Part B proves that the frame 2 satisfies U-⊔ and U-∅ but not disjointness (strictly weaker than DESC-grpd); Part C re-exports Model D's `not-universal` (U-⊔ is not derivable). The application to dialgebras is `CaTTExp.Coinductive.DecidableDialgebra`.
 - **CaTT form.** The comparison is a fixed term built from chapter 6 limits and colimits, for every map f, with no cocartesian or groupoid side condition. The conclusion is an `inv` mark, as in DESC-univ. Checking it is syntax-directed. The rule is the DESC-grpd clause for finite discrete diagrams with gluing and uniqueness deleted.
 - **Soundness.** In Cat_ω, coproducts are universal (DESC-grpd soundness, spec §9.2; T-coprod, `ordinary-math.md` §2.3 [proved here, G4]), and ∅ is strict.
 - **Strictly weaker than DESC.** Model B (the frame 2) satisfies U-⊔ and U-∅ (frame distributivity, and W ≤ 0 ⇒ W = 0) but not disjointness, which is a theorem of DESC-grpd (spec §9.2). Model A (Set) and Model C (Pos) also satisfy U-⊔. So all three underivability results of Theorem 1 survive with U-⊔ added: disjointness (Model B), ΩS¹ ≃ ℤ and T-graph (Model A), and EX (Model C).

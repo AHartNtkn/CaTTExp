@@ -21,7 +21,7 @@
 --  * The sort check: an instance that infers but sends the template's
 --    data variable to a representable is not sorted (`unsorted`).
 --  * Nullary multimaps: a point x : ( ▸ A) is a kernel map ⊤ → A, with
---    ⊤ = lim_ε the `unit` head; f ∘ x is the map ⊤ → B, and whiskering
+--    ⊤ the `unit` head (lim_ε's rule); f ∘ x is the map ⊤ → B, and whiskering
 --    a cell α : x ⇒ y between points (gap 0, the only gap) by f is a
 --    kernel 2-cell f ∘ x ⇒ f ∘ y between the heads on x and on y.
 ------------------------------------------------------------------------
@@ -167,7 +167,7 @@ unsorted : is-just (GT.infer (Fr ∷ []) unsortedT) ∷ sortedT 2 unsortedT ∷ 
 unsorted = refl
 
 ------------------------------------------------------------------------
--- Nullary multimaps: points as kernel maps out of ⊤ = lim_ε.
+-- Nullary multimaps: points as kernel maps out of ⊤ (lim_ε's rule).
 -- Context: A B : ⋆, x y : ⊤ → A, α : x ⇒ y, f : A → B.
 
 Pt : GB.Fm → GB.CTy

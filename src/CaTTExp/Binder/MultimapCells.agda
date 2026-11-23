@@ -16,8 +16,9 @@
 -- over atom formulas, and cells `hom m 1 A s t` over admitted A.
 --
 -- Nullary multimaps. A point ( ▸ Z) is a kernel map ⊤ → Z, where ⊤ is
--- the point object, the limit of the empty diagram: the `unit` head of
--- GCF has exactly the rule of `LimHeads`' lim_ε (`unit-is-lim`). A
+-- the point object: the `unit` head of GCF, which has exactly the rule
+-- of `LimHeads`' lim_ε (`unit-is-lim`) but is a separate head, with no
+-- terminality or uni here. A
 -- k-cell between points has its time slot in gap 0, the only gap, so
 -- the admitted gap of `hom m g A s t` is the number of inputs of A's
 -- base (1 or 0). An
@@ -238,7 +239,8 @@ module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) (unit
   open Syntax K B
   open GrayFormConstruction K B injG public
 
-  -- The point object ⊤ (lim_ε), the source of a nullary multimap.
+  -- The point object ⊤ (a head with lim_ε's rule; no terminality or
+  -- uni here), the source of a nullary multimap.
   topT : Tm
   topT = bnd unitB 0 ε ⟨⟩
 
@@ -303,8 +305,8 @@ module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) (unit
 ------------------------------------------------------------------------
 -- The Gray object formers and the mmc heads together.
 
--- `unit` is the point object ⊤: the limit of the empty diagram, with
--- exactly the rule of `LimHeads`' lim_ε (`unit-is-lim` below).
+-- `unit` is the point object ⊤: a head with exactly the rule of
+-- `LimHeads`' lim_ε (`unit-is-lim` below), not lim_ε itself.
 data GCF : Set where
   gform : GBF → GCF
   mmc   : MMI → GCF

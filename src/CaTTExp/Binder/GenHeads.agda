@@ -1,7 +1,8 @@
 ------------------------------------------------------------------------
 -- The generic diagram η_Γ (spec §7.2, rule (GEN); ledger S26k step 2)
 -- as heads beside the free object ⟦Γ⟧ (CaTTExp.Binder.FreeObj) and
--- the point object ⊤ = lim_ε (spec §6.6):
+-- the point object ⊤, a head with lim_ε's rule (spec §6.6; it has no
+-- terminality or uni here):
 --
 --   Γ ⊢
 --   ─────────────────────── (GEN)
@@ -78,7 +79,7 @@ module GenConstruction (K B : Set) (inj : GenF → B) where
   isεC ε = true
   isεC _ = false
 
-  -- ⊤ = lim_ε.
+  -- ⊤, with lim_ε's rule.
   topT : Tm
   topT = bnd (inj unit) 0 ε ⟨⟩
 

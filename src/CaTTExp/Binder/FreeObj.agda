@@ -26,7 +26,7 @@
 -- would be a free object inside a hom, which models need not have.
 --
 -- The generic diagram η_Γ (GEN) is CaTTExp.Binder.GenHeads (S26k step
--- 2), beside this head and ⊤ = lim_ε; the LIFT fillers (step 3) are not
+-- 2), beside this head and a point object ⊤ with lim_ε's rule; the LIFT fillers (step 3) are not
 -- encoded yet.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude

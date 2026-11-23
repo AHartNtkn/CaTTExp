@@ -179,6 +179,7 @@ The first piece of S3a's raw syntax that is not specific to grids. `scripts/e6/r
        - χ, r and t: top x · top y.
        - h: top x · (2-target of y). The join factorization forces this, and so do both degeneracies.
        - ι: empty, since it is strict in the Gray image.
+       - That these tables are the requirement-4 Gray image π is argued, not proved. The Agda shows only that they form a model, and every separation it gives stands either way.
        - The lower levels of a comparison are those of its two boundary terms (`SigP.compBounds`), read the same way.
      - **The model.** `FreeP.Models` now takes a setoid (`_≈_`, lifted to partial values). `FreeP0` uses `≡`. `ModelG` is a `Model` of P on any generator list whose faces are globular in this reading (`GenCheck.okGen`, decided).
      - **The check.** Each operation boundary and each schema is checked once, symbolically. A schema variable is read as a table of letters. Guards give object equalities, decided by connectivity as in `FreeP0`. They also give support equalities: one with a single letter on one side becomes a rewrite, and rewriting is sound because it is an interpretation (`SuppAlg.Rewrite`). The two sides must then agree as sets of words at every level. The reading commutes with interpreting the letters (`GrayTab.ev-hom`), so one check covers every instance.

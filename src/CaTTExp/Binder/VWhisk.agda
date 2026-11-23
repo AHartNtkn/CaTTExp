@@ -159,9 +159,166 @@ module _ where
          , trans (sph-ext A s u (suc (dbl k)) lq₁) ih₃ )
 
 ------------------------------------------------------------------------
+-- Pure scoping, spheres and dimensions, embedded.
+
+import CaTTExp.Subst P.∅ P.cattSide as Sb
+
+mutual
+  sc-embTy : ∀ n A → Sb.ScTy n A → T (scTy? n (embTy A))
+  sc-embTy n P.⋆           _           = tt
+  sc-embTy n (P.arr A t u) (a , b , c) = ∧T (sc-embTy n A a) (∧T (sc-embTm n t b) (sc-embTm n u c))
+
+  sc-embTm : ∀ n t → Sb.ScTm n t → T (scTm? n (embTm t))
+  sc-embTm n (P.var i)     p = p
+  sc-embTm n (P.coh _ _ σ) p = sc-embSub n σ p
+  sc-embTm n (P.cst ())    _
+
+  sc-embSub : ∀ n σ → Sb.ScSub n σ → T (scSub? n (embSub σ))
+  sc-embSub n P.⟨⟩       _       = tt
+  sc-embSub n (σ P.,ₛ t) (a , b) = ∧T (sc-embSub n σ a) (sc-embTm n t b)
+
+emb-sph : ∀ A → embSub (Dv.sphSub A) ≡ sphSub (embTy A)
+emb-sph P.⋆           = refl
+emb-sph (P.arr A s t) = cong (λ σ → σ ,ₛ embTm s ,ₛ embTm t) (emb-sph A)
+
+private
+  arr≡ : ∀ {A A' s s' t t'} → A ≡ A' → s ≡ s' → t ≡ t' → arr A s t ≡ arr A' s' t'
+  arr≡ refl refl refl = refl
+
+-- The classifying substitution of a sphere, composed.
+sph∘ : ∀ A τ → (∀ i → T (i <ℕ dbl (dim A)) → lookupₛ τ i ≡ lookupₛ (sphSub A) i) →
+       sphSub (eaL (dim A)) ∘ τ ≡ sphSub A
+sph∘ ⋆           τ h = refl
+sph∘ (arr A s t) τ h =
+  cong₂ _,ₛ_ (cong₂ _,ₛ_ (sph∘ A τ h') (trans (h (dbl (dim A)) p₁) e₁))
+             (trans (h (suc (dbl (dim A))) p₂) e₂)
+  where
+  L = lenₛ (sphSub A)
+  lA : L ≡ dbl (dim A)
+  lA = lenₛ-sph A
+  p₂ : T (suc (dbl (dim A)) <ℕ dbl (suc (dim A)))
+  p₂ = n<sn (suc (dbl (dim A)))
+  p₁ : T (dbl (dim A) <ℕ dbl (suc (dim A)))
+  p₁ = <-suc (dbl (dim A)) (suc (dbl (dim A))) (n<sn (dbl (dim A)))
+  e₂ : lookupₛ (sphSub A ,ₛ s ,ₛ t) (suc (dbl (dim A))) ≡ t
+  e₂ = subst (λ m → lookupₛ (sphSub A ,ₛ s ,ₛ t) (suc m) ≡ t) lA (lk-top (sphSub A ,ₛ s) t)
+  e₁ : lookupₛ (sphSub A ,ₛ s ,ₛ t) (dbl (dim A)) ≡ s
+  e₁ = subst (λ m → lookupₛ (sphSub A ,ₛ s ,ₛ t) m ≡ s) lA
+         (trans (lk-pop (sphSub A ,ₛ s) t L (n<sn L)) (lk-top (sphSub A) s))
+  h' : ∀ i → T (i <ℕ dbl (dim A)) → lookupₛ τ i ≡ lookupₛ (sphSub A) i
+  h' i p = trans (h i (lt-sucsuc i (dbl (dim A)) p))
+             (trans (lk-pop (sphSub A ,ₛ s) t i (<-suc i L q)) (lk-pop (sphSub A) s i q))
+    where q = subst (λ m → T (i <ℕ m)) (sym lA) p
+
+------------------------------------------------------------------------
+-- Right whiskers c ▹ₖ h = rwT k j c C z h: the classifying
+-- substitution σR c C z h, read through the agreement lemma.
+
+module LkσR (k j : Nat) (c : Tm) (C : Ty) (z h : Tm) (e : dim C ≡ Dv.nB k j) where
+  σ = σR c C z h
+  L = lenₛ (sphSub C)
+
+  lC : L ≡ dbl (Dv.nB k j)
+  lC = trans (lenₛ-sph C) (cong dbl e)
+
+  kC : T (k <ℕ dim C)
+  kC = subst (λ m → T (k <ℕ m)) (sym e) (Dv.k<n j k)
+
+  sc : T (scTy? L (eaL k))
+  sc = sc-aL-in k C (<-suc k (dim C) kC)
+
+  ag : Agree k C
+  ag = sph-agree k C kC
+
+  q₀ : T (dbl k <ℕ L)
+  q₀ = subst (λ m → T (dbl k <ℕ m)) (sym (lenₛ-sph C)) (dbl-le k (dim C) kC)
+
+  q₁ : T (suc (dbl k) <ℕ L)
+  q₁ = subst (λ m → T (suc (dbl k) <ℕ m)) (sym (lenₛ-sph C)) (dbl-lt k (dim C) kC)
+
+  lk-σR-low : ∀ i → T (i <ℕ L) → lookupₛ σ i ≡ lookupₛ (sphSub C) i
+  lk-σR-low i p =
+    trans (lk-pop (sphSub C ,ₛ c ,ₛ z) h i (<-suc i (suc L) (<-suc i L p)))
+    (trans (lk-pop (sphSub C ,ₛ c) z i (<-suc i L p)) (lk-pop (sphSub C) c i p))
+
+  lk-σR-z : lookupₛ σ (Dv.zK k j) ≡ z
+  lk-σR-z = subst (λ m → lookupₛ σ (suc m) ≡ z) lC
+    (trans (lk-pop (sphSub C ,ₛ c ,ₛ z) h (suc L) (n<sn (suc L))) (lk-top (sphSub C ,ₛ c) z))
+
+  lk-σR-h : lookupₛ σ (suc (Dv.zK k j)) ≡ h
+  lk-σR-h = subst (λ m → lookupₛ σ (suc (suc m)) ≡ h) lC (lk-top (sphSub C ,ₛ c ,ₛ z) h)
+
+  lk-σR-src : lookupₛ σ (dbl k) ≡ srcAt k C
+  lk-σR-src = trans (lk-σR-low (dbl k) q₀) (fst (snd ag))
+
+  dsk-aL : eaL k [ dskSub c C ]ty ≡ baseAt k C
+  dsk-aL = trans (ext-ty (eaL k) (sphSub C) c sc) (fst ag)
+
+  σR-aL : eaL k [ σ ]ty ≡ baseAt k C
+  σR-aL = trans (ext-ty (eaL k) (sphSub C ,ₛ c ,ₛ z) h (scTy-suc (eaL k) (scTy-suc (eaL k) sc)))
+          (trans (ext-ty (eaL k) (sphSub C ,ₛ c) z (scTy-suc (eaL k) sc)) dsk-aL)
+
+  -- The type of the whiskering cell h, at the disk extended by z.
+  hTy-σ : embTy (Dv.hTy k j) [ dskSub c C ,ₛ z ]ty ≡ arr (baseAt k C) (tgtAt k C) z
+  hTy-σ =
+    arr≡ (trans (ext-ty (eaL k) (sphSub C ,ₛ c) z (scTy-suc (eaL k) sc)) dsk-aL)
+         (trans (lk-pop (sphSub C ,ₛ c) z (suc (dbl k)) (<-suc (suc (dbl k)) L q₁))
+           (trans (lk-pop (sphSub C) c (suc (dbl k)) q₁) (snd (snd ag))))
+         (subst (λ m → lookupₛ (sphSub C ,ₛ c ,ₛ z) (suc m) ≡ z) lC (lk-top (sphSub C ,ₛ c) z))
+
+-- For j = 0: c ;ₖ h goes from s_k c to z.
+rwT-ty0 : ∀ k c C z h → dim C ≡ Dv.nB k 0 →
+          embTy (Dv.wK k 0) [ σR c C z h ]ty ≡ arr (baseAt k C) (srcAt k C) z
+rwT-ty0 k c C z h e = arr≡ σR-aL lk-σR-src lk-σR-z
+  where open LkσR k 0 c C z h e
+
+-- For j ≥ 1 and c : s → t: c ▹ₖ h : (s ▹ₖ h) → (t ▹ₖ h).
+rwT-ty : ∀ k j c C' s t z h → dim C' ≡ Dv.nB k j →
+         embTy (Dv.wK k (suc j)) [ σR c (arr C' s t) z h ]ty
+           ≡ arr (embTy (Dv.wK k j) [ σR s C' z h ]ty) (rwT k j s C' z h) (rwT k j t C' z h)
+rwT-ty k j c C' s t z h e =
+  arr≡ (trans (cong (_[ σ ]ty) (emb-[]ty (Dv.wK k j) (Dv.ρsK k j)))
+         (trans (assoc-ty (embTy (Dv.wK k j)) (embSub (Dv.ρsK k j)) σ (scρ (dbl n)))
+                (cong (embTy (Dv.wK k j) [_]ty) (ρ∘ (dbl n) s lk-s))))
+       (cong (coh (embCtx (Dv.BK k j)) (embTy (Dv.wK k j))) (ρ∘ (dbl n) s lk-s))
+       (cong (coh (embCtx (Dv.BK k j)) (embTy (Dv.wK k j))) (ρ∘ (suc (dbl n)) t lk-t))
+  where
+  n  = Dv.nB k j
+  C  = arr C' s t
+  σ  = σR c C z h
+  e' : dim C ≡ Dv.nB k (suc j)
+  e' = cong suc e
+  module M = LkσR k (suc j) c C z h e'
+  scρ : ∀ v → T (scTy? (lenₛ (embSub (Dv.ρK k j v))) (embTy (Dv.wK k j)))
+  scρ v = subst (λ m → T (scTy? m (embTy (Dv.wK k j)))) (sym (lenₛ-emb (Dv.ρK k j v)))
+            (sc-embTy _ (Dv.wK k j) (Dv.sc-ρK k j v (Sb.ty-sc Dv.closed (Dv.wK-wf k j))))
+  L' = lenₛ (sphSub C')
+  lC' : L' ≡ dbl n
+  lC' = trans (lenₛ-sph C') (cong dbl e)
+  low : ∀ i → T (i <ℕ dbl (dim C')) → lookupₛ σ i ≡ lookupₛ (sphSub C') i
+  low i p = trans (M.lk-σR-low i (<-suc i (suc L') (<-suc i L' q)))
+                  (trans (lk-pop (sphSub C' ,ₛ s) t i (<-suc i L' q)) (lk-pop (sphSub C') s i q))
+    where q = subst (λ m → T (i <ℕ m)) (sym (lenₛ-sph C')) p
+  lk-s : lookupₛ σ (dbl n) ≡ s
+  lk-s = trans (M.lk-σR-low (dbl n)
+                  (subst (λ m → T (dbl n <ℕ suc (suc m))) (sym lC') (<-suc (dbl n) (suc (dbl n)) (n<sn (dbl n)))))
+               (subst (λ m → lookupₛ (sphSub C) m ≡ s) lC'
+                  (trans (lk-pop (sphSub C' ,ₛ s) t L' (n<sn L')) (lk-top (sphSub C') s)))
+  lk-t : lookupₛ σ (suc (dbl n)) ≡ t
+  lk-t = trans (M.lk-σR-low (suc (dbl n))
+                  (subst (λ m → T (suc (dbl n) <ℕ suc (suc m))) (sym lC') (n<sn (suc (dbl n)))))
+               (subst (λ m → lookupₛ (sphSub C) (suc m) ≡ t) lC' (lk-top (sphSub C' ,ₛ s) t))
+  sph : embSub (Dv.sphSub (aL n)) ∘ σ ≡ sphSub C'
+  sph = trans (cong (_∘ σ) (emb-sph (aL n)))
+              (subst (λ m → sphSub (eaL m) ∘ σ ≡ sphSub C') e (sph∘ C' σ low))
+  ρ∘ : ∀ v u → lookupₛ σ v ≡ u → embSub (Dv.ρK k j v) ∘ σ ≡ σR u C' z h
+  ρ∘ v u lv = cong₂ _,ₛ_ (cong₂ _,ₛ_ (cong₂ _,ₛ_ sph lv) M.lk-σR-z) M.lk-σR-h
+
+------------------------------------------------------------------------
 -- Spheres and disks are typed by deep types.
 
-module Typed (closed : Closed) (laws : BinderLaws) (mren : MarkRen) (msub : MarkSub) (mvar : MarkVar) where
+module Typed (closed : Closed) (laws : BinderLaws) (mren : MarkRen) (msub : MarkSub) (mvar : MarkVar)
+             (sp : SidePure) where
 
   sph-wf : ∀ {Γ} A → DTy Γ A → Γ ⊢sub sphSub A ∶ embCtx (Dv.Sph (dim A))
   sph-wf ⋆           w             = ⟨⟩-wf w
@@ -173,3 +330,24 @@ module Typed (closed : Closed) (laws : BinderLaws) (mren : MarkRen) (msub : Mark
 
   dsk-wf : ∀ {Γ c} C → DTm Γ c C → Γ ⊢sub dskSub c C ∶ embCtx (Dv.Dsk (dim C))
   dsk-wf {Γ} {c} C (d , a) = ,-wf (sph-wf C a) (subst (Γ ⊢tm c ∶_) (sym (aL-sph C)) d) tt
+
+  -- The classifying substitution of a right whisker.
+  σR-wf : ∀ k j {Γ c C z h} → dim C ≡ Dv.nB k j → DTm Γ c C →
+          DTm Γ h (arr (baseAt k C) (tgtAt k C) z) →
+          Γ ⊢sub σR c C z h ∶ embCtx (Dv.BK k j)
+  σR-wf k j {Γ} {c} {C} {z} {h} e dc (dh , _ , _ , dz) =
+    ,-wf (,-wf (subst (λ m → Γ ⊢sub dskSub c C ∶ embCtx (Dv.Dsk m)) e (dsk-wf C dc))
+               (subst (Γ ⊢tm z ∶_) (sym dsk-aL) dz) tt)
+         (subst (Γ ⊢tm h ∶_) (sym hTy-σ) dh) tt
+    where open LkσR k j c C z h e
+
+  -- c ▹ₖ h is well typed, with a deep type.
+  rwT-wf : ∀ k j {Γ c C z h} → dim C ≡ Dv.nB k j → DTm Γ c C →
+           DTm Γ h (arr (baseAt k C) (tgtAt k C) z) →
+           DTm Γ (rwT k j c C z h) (embTy (Dv.wK k j) [ σR c C z h ]ty)
+  rwT-wf k zero    e dc dh =
+    dcoh closed laws mren msub mvar sp (Dv.BK-ps k 0) (Dv.wBK k 0) (Dv.wK-wf k 0) (Dv.sideK k 0)
+      (σR-wf k 0 e dc dh)
+  rwT-wf k (suc j) e dc dh =
+    dcoh closed laws mren msub mvar sp (Dv.BK-ps k (suc j)) (Dv.wBK k (suc j)) (Dv.wK-wf k (suc j))
+      (Dv.sideK k (suc j)) (σR-wf k (suc j) e dc dh)

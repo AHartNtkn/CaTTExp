@@ -190,6 +190,7 @@ import CaTTExp.RCProc.Eg
 import CaTTExp.RCProc.TwoPathTerm
 import CaTTExp.RCProc.StrictPath
 import CaTTExp.RCProc.Key2Bd
+import CaTTExp.RCProc.Exchange
 import CaTTExp.RCProc.LiftF
 import CaTTExp.RCProc.ColSub
 import CaTTExp.RCProc.LemmaGSub
@@ -205,6 +206,7 @@ import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
 import CaTTExp.Naturality.Ladder
 import CaTTExp.Naturality.Column
+import CaTTExp.Naturality.Whisker
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle
@@ -433,6 +435,8 @@ import CaTTExp.HIT.DirectedSquash
 -- F12b: coinductive objects from INIT (notes/coinductive.md)
 import CaTTExp.Coinductive.Streams
 import CaTTExp.Coinductive.ConstArity
+import CaTTExp.Coinductive.Conat
+import CaTTExp.Descent.GlueNotUniversal
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
@@ -514,6 +518,11 @@ import CaTTExp.Binder.MultimapCells
 import CaTTExp.Binder.MultimapCellsLaws
 import CaTTExp.Binder.MultimapCellsExamples
 import CaTTExp.Binder.MultimapCellsStrengthen
+import CaTTExp.Binder.MultimapCellsSupport
+import CaTTExp.Binder.MultimapCellsRen
+import CaTTExp.Binder.MultimapCellsComp
+import CaTTExp.Binder.MultimapCellsCanon
+import CaTTExp.Binder.MultimapCellsWf
 import CaTTExp.Binder.FreeObj
 import CaTTExp.Binder.FreeObjLaws
 import CaTTExp.Binder.FreeObjExamples

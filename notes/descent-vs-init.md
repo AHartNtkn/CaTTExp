@@ -71,7 +71,7 @@ The same model kills Hom_{⟦L⟧}(x, x) ≃ ℕ, where ⟦L⟧ = 1 so that hom 
 | non-recursive HITs (S¹, spheres, suspension, torus, directed circle) | neither (finite colimits); INIT restates their universal property | Theorem A, `higher-inductive.md` |
 | dependent elimination into a **given** family | INIT (Theorem D) | a section is a model morphism out of μΔ |
 | families over S¹ defined by a fibre and an automorphism (universal cover) | DESC-glue | prescribed fibres; fails in Model A |
-| true ≠ false, disjoint and universal coproducts (T-coprod) | DESC-grpd | fails in Model B |
+| true ≠ false, disjoint and universal coproducts (T-coprod) | DESC-grpd | disjointness fails in Model B; universality fails in Model D (`coinductive.md` §4) |
 | effective quotients (EX) | DESC-grpd, DESC-tr, plus INIT for ‖–‖₀ | fails in Model C |
 | lax colimits as Grothendieck constructions (G, G⁺) | DESC-glue, DESC-or, DJ | fibres of a glued fibration |
 | ΩS¹ ≃ ℤ, Hom_{⟦Γ⟧}(a, b) ≃ paths (T-graph, T-loc) | **both** | INIT for ℤ / the path set and for decode; DESC for the code family; fails in Model A |

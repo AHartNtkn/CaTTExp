@@ -433,6 +433,7 @@ import CaTTExp.Binder.VarMark
 import CaTTExp.Binder.MarkExamples
 import CaTTExp.Binder.Des
 import CaTTExp.Binder.DesLaws
+import CaTTExp.Binder.DesLawsGen
 import CaTTExp.Binder.DesPresup
 import CaTTExp.Binder.PureSide
 import CaTTExp.Binder.DesSideCatt
@@ -445,6 +446,9 @@ import CaTTExp.Binder.CylOK
 import CaTTExp.Binder.CylExamples
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
+import CaTTExp.Binder.InitLawsGen
+import CaTTExp.Binder.InitDes
+import CaTTExp.Binder.InitDesExamples
 import CaTTExp.Binder.InitMeta
 import CaTTExp.Binder.InitEmbed
 import CaTTExp.Binder.InitExamples

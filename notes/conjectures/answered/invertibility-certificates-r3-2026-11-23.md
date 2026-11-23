@@ -153,7 +153,7 @@ Run `python3 -B scripts/s22/check_invertibility_clock.py` and `python3 -B script
 
 ## Verification (2026-11-23, thread "Compare alternatives to the marker system")
 
-**Status: verified for strict Gray ω-categories. The weak case is verified conditionally on cited 2026 results.** Q1 is answered negatively: invertibility is not recursively enumerable, even for one fixed finite marked computad (a universal machine) with the input varying. Q2 therefore has a false antecedent. Q3 is answered with a sound, decidably checked periodic rule, and a proof that no inclusion-maximal decidably checked sound fragment exists. The consequences are in `../../marking-alternatives.md` §10.
+**Status: verified, strict and weak.** The weak case's cited results were checked against the sources (see "Citation check" below). Q1 is answered negatively: invertibility is not recursively enumerable, even for one fixed finite marked computad (a universal machine) with the input varying. Q2 therefore has a false antecedent. Q3 is answered with a sound, decidably checked periodic rule, and a proof that no inclusion-maximal decidably checked sound fragment exists. The consequences are in `../../marking-alternatives.md` §10.
 
 **Checks run.** Both committed validators were run from the repository root, and every check passes.
 - `python3 -B scripts/s22/check_invertibility_clock.py`: direct tape execution agrees with the string relations. The symmetric congruence components of three halting runs (50, 28 and 14 words, with branching predecessors) stay within the predicted length bound. The immediate-halt input is an isolated word. 24 successive clock factorizations w_i →* w_{i+1}s are checked on each of three infinite runs. In truncated bit fibres of heights 2–6, the reversible cells exclude the root defect.
@@ -171,7 +171,7 @@ Run `python3 -B scripts/s22/check_invertibility_clock.py` and `python3 -B script
 - The invariant ("split contraction before the prefix") and the reversal step for s A are checked. The two candidates are h;(sB) and sB, and their cancellations are again a split contraction and an invertible cell.
 - *Coinduction up to cylinders.* R Φ(X) ⊆ Φ(R X) and X ⊆ R Φ(R X) give R X ⊆ Φ(R X). So R X is postfixed and its members are invertible. This is the standard up-to-context soundness argument, checked. In the strict case the compatibility of R rests on lifting along reversible cylinders (Lafont–Métayer–Worytkiewicz, Lemma 13), taken on trust.
 - An infinite run gives the comparisons w_i ⇒ w_{i+1} s as composites of whiskered marked word rules, so they are invertible.
-- *Weak case.* It rests on coinductive completion of the ordinary hom (Ozornova–Rovelli–Walde, arXiv:2603.11005, Lemmas 5.20, 5.27, 5.38, Prop. 5.29, Cor. 5.39) and on Gepner–Heine (Remarks 3.8.3, 4.5.4, Thm 3.8.1, Cor. 4.8.17, Prop. 4.9.1). These were not checked against the sources. The separating direction transfers by the embedding of strict targets, which is routine.
+- *Weak case.* It rests on coinductive completion of the ordinary hom (Ozornova–Rovelli–Walde) and on Gepner–Heine. Both were checked against the sources; see "Citation check" below. The separating direction transfers by the embedding of strict targets.
 
 **Non-r.e.** A computable reduction from nonhalting to invertibility. If invertibility were r.e., halting would be decidable by dovetailing. Checked.
 
@@ -180,3 +180,14 @@ Run `python3 -B scripts/s22/check_invertibility_clock.py` and `python3 -B script
 - *It certifies the r2 example.* Take s = 1_a, t = p and the single prefix 1_a pointing to itself. The four hypotheses are exactly the four marks, and the root is f. Checked.
 - *No decidable cell-membership superset of Cert.* On a monoid presentation, a sound superset of Cert would decide whether every generator is a unit, that is, the group problem (Narendran–Ó'Dúnlaing–Otto). Checked.
 - *No maximal witness-checked fragment.* Any such language accepts an r.e. set, so by the reduction it misses a true instance. Adding that instance as a ground axiom is sound by freeness and keeps checking decidable. Checked.
+
+**Citation check (2026-11-23, against the arXiv PDFs).**
+- *Ozornova–Rovelli–Walde, "Cores and localizations of (∞,∞)-categories", arXiv:2603.11005v2.*
+  - Prop. 5.29: localization at the coinductive isomorphisms is ∞-surjective and is the coinductive completion. Lemma 5.27: ∞-surjective maps reflect coinductive isomorphisms. Together these support "completion inverts coinductive isomorphisms, is surjective on cells relative to boundaries, and reflects towers". **Matches.**
+  - Lemma 5.20: coinductive invertibility does not depend on the walking coinductive isomorphism (any L-trivial cell complex with a free arrow). **Matches.**
+  - Construction 5.35 orients the attaching cells as h₊ : id → g₊f and h₋ : fg₋ → id, which are not both toward identities. Lemma 5.38's two-stage step inverts h₊ and h₋ and gets the walking isomorphism, so reversing h₊ gives the same localization, as the response says. With Cor. 5.39's colimit step and Lemma 5.20, the re-oriented tower is a valid walking object. **The re-orientation argument checks.**
+  - ORW work in (∞,∞)-categories (Gepner–Haugseng enrichment) and say strict categories do not appear. Its use here is on the ordinary homs of the weak model, which are (∞,∞)-categories. That fits.
+- *Gepner–Heine, arXiv:2510.10504v1.*
+  - Remark 3.8.3: the embedding ∞Cat_strict ⊂ ∞Cat is lax monoidal for the Gray structures. Remark 4.5.4: the enriched-category localizations have the embedding as right adjoint, so a strict Gray-enriched category is a weak one. **Matches** the transfer of the separating model.
+  - Theorem 3.8.1 (Campion): the Gray structure descends from Steiner categories, so ∞Cat_Steiner ⊂ ∞Cat is monoidal and Steiner strips are computed as in the strict case. **Matches.**
+  - Prop. 4.9.1(1): maps out of a suspension S(A) are a pullback of the endpoint maps and a map into the hom. Cor. 4.8.17 gives the homs of lax arrow categories. These support the inductive "endpoints, then a map into their hom" description used for transport along cylinders. **Matches.**

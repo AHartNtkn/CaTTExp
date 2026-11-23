@@ -17,8 +17,10 @@
 --    and sideLK; `wh` and `Wh-wf-pure` are the same construction as
 --    in WhiskerPure (no equation between the two is checked).
 --  * two-tier L: needs graySide's hypotheses for every k, j. They are
---    proved for k ≥ 1 (CaTTExp.Gray.WhiskerSide); k = 0 is open,
---    checked by evaluation for j ≤ 3 (CaTTExp.Surface.WhiskerGrayCheck).
+--    proved for k ≥ 1 (CaTTExp.Gray.WhiskerSide) and for the k = 0
+--    right whiskers (CaTTExp.Gray.WhiskerZeroSide); the k = 0 left
+--    whiskers are open, checked by evaluation for j ≤ 3
+--    (CaTTExp.Surface.WhiskerGrayCheck).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Pure using (∅; cattSide)

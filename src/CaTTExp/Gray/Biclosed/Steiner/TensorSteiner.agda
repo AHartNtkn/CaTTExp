@@ -26,8 +26,8 @@
 -- other: where ∂_a(i, k) is nonzero, deg i = deg k + 1, so the K-sign
 -- flips between them (the Leibniz sign).
 --
--- Not proved here yet: unitality for a ∷ K.  So the full
--- `StrongSteiner` record for a tensor is not yet derived.
+-- Unitality for a ∷ K, and the full `StrongSteiner` record for every
+-- code, are in `TensorUnital`.
 -- No postulates.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude using (Nat)

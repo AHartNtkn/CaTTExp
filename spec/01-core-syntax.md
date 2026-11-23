@@ -112,7 +112,7 @@ The kernel's side condition is the lax one of chapter 2. For reference, plain Ca
 
 where Var(t : A) is the set of variables of t and of the terms in A.
 
-**Decision procedure.** For plain CaTT: compute the two variable sets and compare. For the lax side condition: chapter 2, §2.4.
+**Decision procedure.** For plain CaTT: compute the two variable sets and compare. For the lax side condition: chapter 2, §2.3.
 
 **Example (plain CaTT).** Over the composable pair Δ above, take A = ⋆, t = x, u = z. Then Var(x : ⋆) = {x} = Var(∂⁻Δ) and Var(z : ⋆) = {z} = Var(∂⁺Δ), so `coh_{Δ, x → z}` is the composite of f and g, written f ; g after substitution. The "inverse" `coh_{(x,y,f), y → x}` is rejected: Var(y : ⋆) = {y} ≠ {x} = Var(∂⁻(x, y, f)).
 

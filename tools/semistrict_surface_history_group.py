@@ -14,6 +14,9 @@ from pathlib import Path
 
 from semistrict_surface_braid_reflection import end_vertex, follow
 from semistrict_surface_return_gaps import exchange_at
+from semistrict_surface_one_step_reflection import reverse_signed
+from semistrict_surface_shared_edge import braid_image
+from semistrict_surface_single_power import coprime_parts
 from semistrict_surface_scalar_sites import coefficients
 
 
@@ -55,6 +58,23 @@ def exchange(h, letter, marks):
     return prev
 
 
+def realize(start, end, word, marks):
+    """Return a legal representative of this ambient braid at these histories."""
+    if len(start) != len(end):
+        return None
+    if any(not 1 <= abs(x) < len(start) for x in word):
+        raise ValueError('braid generator outside the temporal width')
+    fraction = reverse_signed(tuple(word))
+    n = next((i for i,x in enumerate(fraction) if x < 0),len(fraction))
+    a,b,_ = coprime_parts(fraction[:n],inv(fraction[n:]))
+    try:
+        if follow(start,a,marks) == follow(end,b,marks):
+            return a+inv(b)
+    except ValueError:
+        pass
+    return None
+
+
 class FacePair:
     def __init__(self, entry, edges, rules, marks):
         self.root, self.path, history, l, r = entry
@@ -87,6 +107,8 @@ class Presentation:
         todo = deque(seen)
         self.labels = {}
         self.generators = set()
+        self.braids = {}
+        tree_paths = {q.history: ()}
         width = len(q.history)
         while todo:
             h = todo.popleft()
@@ -98,12 +120,16 @@ class Presentation:
                     edge = (h,i) if e > 0 else (k,i)
                     if k not in seen:
                         seen.add(k)
+                        tree_paths[k] = tree_paths[h]+(e,)
                         todo.append(k)
                         self.labels[edge] = ()
                     elif edge not in self.labels:
                         g = len(self.generators)+1
                         self.generators.add(g)
                         self.labels[edge] = (g,)
+                        left = edge[0]
+                        right = exchange_at(left,i-1,self.marks)
+                        self.braids[g] = reduced(tree_paths[left]+(i,)+inv(tree_paths[right]))
         self.vertices = len(seen)
         self.query = q
         self.atoms = defaultdict(set)
@@ -191,8 +217,11 @@ class Presentation:
 
     def abelian_decision(self):
         gs = sorted(self.generators)
-        if any(cyclic((g,h,-g,-h)) not in self.relators for g,h in combinations(gs,2)):
-            return None
+        for g,h in combinations(gs,2):
+            a,b = self.braids[g],self.braids[h]
+            n = len(self.query.history)
+            if braid_image(n,a+b) != braid_image(n,b+a):
+                return None
         def vec(w):
             return tuple(w.count(g)-w.count(-g) for g in gs)
         rows = [vec(w) for w in self.defects]
@@ -230,6 +259,7 @@ class Presentation:
 
     def result(self):
         return dict(histories=self.vertices, generators=sorted(self.generators),
+                    braid_generators={i:self.braids[i] for i in sorted(self.generators)},
                     relators=sorted(self.relators), directed_defects=sorted(self.defects),
                     target=self.target, surface=True if self.acyclic else self.abelian_decision(),
                     acyclic=self.acyclic, raw_on_acyclic_component=self.acyclic_raw())
@@ -284,17 +314,43 @@ def examples():
             if model.acyclic:
                 assert not model.acyclic_raw()
             assert model.target == ()
-    return p,b,checks
+    # The bubble component is a single four-edge circuit. Its possible
+    # loops are independently the powers of 1221, so test both directions.
+    tested = 0
+    origin = b.query.history
+    loop = (1,2,2,1)
+    for length in range(6):
+        for w in product((1,-1,2,-2),repeat=length):
+            exp = sum(1 if x>0 else -1 for x in w)
+            power = (loop if exp >= 0 else inv(loop))*(abs(exp)//4)
+            want = exp%4 == 0 and braid_image(3,w) == braid_image(3,power)
+            answer = realize(origin,origin,w,b.marks)
+            assert (answer is not None) == want
+            if answer is not None:
+                assert b.read(origin,answer)[0] == origin and braid_image(3,w) == braid_image(3,answer)
+            tested += 1
+    # Nonabelian component: all three scalar occurrences have the same site.
+    one = dict(edges={},rules={'a':('v','','')},query=['v','',[(0,'a')]*3,[],[1]],attachments=[])
+    assert Presentation(one).abelian_decision() is None
+    return p,b,checks,tested
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--presentation',type=Path)
+    ap.add_argument('--realize',help='comma-separated signed braid, tested at the query face endpoints')
     args = ap.parse_args()
     if args.presentation:
-        print(json.dumps(Presentation(json.loads(args.presentation.read_text())).result()))
+        model = Presentation(json.loads(args.presentation.read_text()))
+        if args.realize is None:
+            print(json.dumps(model.result()))
+        else:
+            w = tuple(map(int,args.realize.split(','))) if args.realize else ()
+            origin = model.query.history
+            end = follow(origin,model.query.left,model.marks)
+            print('legal signed path',realize(origin,end,w,model.marks))
     else:
-        p,b,n = examples()
+        p,b,n,tested = examples()
         print('length-changing component',p.result())
         print('birth/death component',b.result())
-        print(n,'directed attachment comparisons and 256 typed three-axis components checked')
+        print(n,'directed attachment comparisons, 256 typed components and',tested,'ambient braid tests')

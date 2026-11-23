@@ -20,9 +20,10 @@
 -- Γ ⊢ in the theory being defined, so it should be checked by the
 -- kernel's own rules, under whatever side condition it runs with.
 -- Since Γ is closed, substitution fixes it (`closed-tel`), so
--- substitution fixes ⟦Γ⟧. Suspension does not cover it: the
--- suspension of #552 covers empty-telescope heads only, and free
--- objects do not suspend semantically (ledger S27 (g)).
+-- substitution fixes ⟦Γ⟧. Like INIT and lim, ⟦Γ⟧ does not suspend
+-- in general (ledger S27 (g); notes/operation-heads.md §4–§5): the
+-- suspension of #552 covers empty-telescope heads only, and Σ⟦Γ⟧
+-- would be a free object inside a hom, which models need not have.
 --
 -- Not here: the generic diagram η_Γ (GEN) and the LIFT fillers (S26k
 -- steps 2–3), which need elements ⊤ → C with ⊤ = lim_ε (spec §6.6).

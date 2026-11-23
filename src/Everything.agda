@@ -424,6 +424,9 @@ import CaTTExp.Descent.DJOneTruncated
 -- F11f: HITs via INIT (notes/higher-inductive.md)
 import CaTTExp.HIT.DependentElim
 import CaTTExp.HIT.DirectedSquash
+-- F12b: coinductive objects from INIT (notes/coinductive.md)
+import CaTTExp.Coinductive.Streams
+import CaTTExp.Coinductive.ConstArity
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
@@ -486,6 +489,10 @@ import CaTTExp.Binder.LimHeadsExamples
 import CaTTExp.Binder.Suspension
 import CaTTExp.Binder.SpecSusp
 import CaTTExp.Binder.DesSusp
+import CaTTExp.Binder.UniHeads
+import CaTTExp.Binder.UniHeadsExamples
+import CaTTExp.Binder.LimPresup
+import CaTTExp.Binder.LimRecognised
 import CaTTExp.Binder.GrayForm
 import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws

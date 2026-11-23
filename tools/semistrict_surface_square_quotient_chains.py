@@ -1,6 +1,6 @@
 """Construct a rational directed-chain model of the full binary Gray surface.
 
-Arguments such as IPI denote consecutive interval and polygon (2-globe) axes.
+Arguments such as IPI or 1,4,1 give the local globe dimensions in spatial order.
 Checks whether this model obstructs the reverse at the characteristic top.
 Requires islpy for exact positive-cycle saturation.
 """
@@ -14,8 +14,6 @@ from math import lcm
 
 import islpy as isl
 
-DEG = (0,0,1,1,2)
-FACES = {0:(), 1:(), 2:((1,1),(0,-1)), 3:((1,1),(0,-1)), 4:((3,1),(2,-1))}
 
 
 def add(vector, key, coefficient):
@@ -30,9 +28,12 @@ def differential(word):
     sign = 1
     out = {}
     for i,x in enumerate(word):
-        for y,c in FACES[x]:
+        degree = x // 2
+        if not degree:
+            continue
+        for y,c in ((2*degree-1,1),(2*degree-2,-1)):
             add(out, word[:i]+(y,)+word[i+1:],sign*c)
-        sign *= (-1)**DEG[x]
+        sign *= (-1)**degree
     return out
 
 
@@ -100,13 +101,13 @@ def positive_cycles(columns):
 @cache
 def quotient(shape):
     by_degree = defaultdict(list)
-    for w in product(*(range(3 if a == 'I' else 5) for a in shape)):
-        by_degree[sum(DEG[x] for x in w)].append(w)
+    for w in product(*(range(2*a+1) for a in shape)):
+        by_degree[sum(x//2 for x in w)].append(w)
     rel = {d:Space() for d in by_degree}
     def impose(v):
         if v:
             word = next(iter(v))
-            rel[sum(DEG[x] for x in word)].insert(v)
+            rel[sum(x//2 for x in word)].insert(v)
 
     for cut in range(1,len(shape)):
         for first in (True,False):
@@ -115,10 +116,10 @@ def quotient(shape):
             subrel,_ = quotient(sub)
             for k in subrel.values():
                 for row in k.rows.values():
-                    for w in product(*(range(3 if a=='I' else 5) for a in other)):
+                    for w in product(*(range(2*a+1) for a in other)):
                         impose({(v+w if first else w+v):c for v,c in row.items()})
     for w in by_degree.get(2,[]):
-        if sum(DEG[i]==1 for i in w) == 2:
+        if sum(i//2==1 for i in w) == 2:
             impose({w:1})
             impose(differential(w))
     for d,words in sorted(by_degree.items()):
@@ -132,8 +133,8 @@ def quotient(shape):
 
 
 def test(shape):
-    if not shape or set(shape) - set('IP'):
-        raise ValueError('choose a nonempty word in I,P')
+    if not shape or min(shape) < 1:
+        raise ValueError('choose a nonempty list of positive globe dimensions')
     rel,degrees = quotient(shape)
     d = max(degrees)
     w, = degrees[d]
@@ -157,6 +158,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('shapes',nargs='*',default=[''.join(w) for n in range(2,5) for w in product('IP', repeat=n)])
     for shape in parser.parse_args().shapes:
-        survives = test(shape)
-        assert survives == ('II' not in shape)
+        dims = tuple(1 if a=='I' else 2 for a in shape) if set(shape)<=set('IP') else tuple(map(int,shape.split(',')))
+        survives = test(dims)
+        assert survives == (not any(a == b == 1 for a,b in zip(dims,dims[1:])))
         print(shape, 'surface reverse excluded' if survives else 'top vanishes in the model', flush=True)

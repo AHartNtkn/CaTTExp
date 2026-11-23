@@ -10,8 +10,8 @@
 -- This is CaTTExp.Strict.Interp with the top chain of a coherence left
 -- as a parameter `cohT`, so that one development serves plain CaTT
 -- (cohT = the composite of the top-dimensional variables, the strict
--- model ν(λΓ)) and, as intended, two-tier L (cohT = the image of the
--- top tuples of K(Δ), the strict model 𝔉; not yet instantiated). Nothing here depends on cohT: only that
+-- model ν(λΓ), Surface.ImageCatt) and two-tier L (cohT = the image of the
+-- top tuples of K(Δ), the strict model 𝔉, Surface.ImageGray). Nothing here depends on cohT: only that
 -- the top chain of a coh is a function of the environment it builds.
 --
 -- Contents: substitution (⟦t[σ]⟧ρ = ⟦t⟧(⟦σ⟧ρ), t scoped), weakening,

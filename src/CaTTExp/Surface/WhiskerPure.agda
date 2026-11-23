@@ -29,8 +29,9 @@
 -- ≡_sua): Wh-≈, i.e. whiskering by cells ≈ an identity is ≈ the
 -- identity on x. That is a property of ≈ on the fixed kernel term
 -- (p ◃ₖ x) ▹ₖ q (strict unitality of ≈); no further kernel
--- construction is needed. It is not proved here. The interface for
--- two-tier and uniform L is also open.
+-- construction is needed. It is not proved here (for image equality it
+-- is: Surface.ImageCatt, and for two-tier L Surface.WhiskerGray and
+-- Surface.ImageGray). The interface for uniform L is open.
 ------------------------------------------------------------------------
 module CaTTExp.Surface.WhiskerPure where
 

@@ -38,6 +38,7 @@ open import CaTTExp.DerivedBoundary using (dim[])
 open import CaTTExp.Strict.Bag using (Bag; Tuple; _≈_; at; count; ≈-refl; ≈-sym; ≈-trans; ≡→≈; ++-cong; ++-[]L; cm; cm-ext'; cm-cong; cm-fuse)
 import CaTTExp.Subst as SubstM
 open import CaTTExp.Strict.Cell using (Tower; base; step; top; _≈w_; ≈w-top)
+open import CaTTExp.Surface.TowerDim using (tdim)
 open import CaTTExp.Strict.PsFacts ∅ using (Wb; sel; dimv; dimM; tup; sel-hit; sel-miss; dimv-wk)
 open import CaTTExp.Strict.Interp ∅ (λ ()) using (Env; _,ₑ_; lenₑ; lookupₑ; Fv; cohTop)
 
@@ -242,38 +243,38 @@ private
   zplus : ∀ X Y → X ≈ [] → X ++ (Y ++ []) ≈ Y
   zplus X Y p = ≈-trans (++-cong p (≈-refl {Y ++ []})) (≡→≈ (++-[]L Y))
 
-HR0P : ∀ k ρ → UnitP (lookupₑ ρ (suc (zK k 0))) →
+HR0P : ∀ k ρ → tdim (lookupₑ ρ (suc (zK k 0))) ≡ suc k → UnitP (lookupₑ ρ (suc (zK k 0))) →
        cohTP (BK k 0) (aL k) (var (dbl k)) (var (zK k 0)) ρ ≈ top (lookupₑ ρ (dbl (nB k 0)))
-HR0P k ρ u =
+HR0P k ρ _ u =
   subst (_≈ top (lookupₑ ρ (dbl (suc k))))
         (sym (trans (op-fire (BK k 0) (aL k) ρ (suc k) (cong suc (dim-aL k)) (D.dimCtx-BK k 0))
                     (cong (cm (Fv ρ)) (Wb-BK0 k))))
         (zplus _ _ (unit-top _ u))
 
-HRP : ∀ k j ρ → UnitP (lookupₑ ρ (suc (zK k (suc j)))) →
+HRP : ∀ k j ρ → tdim (lookupₑ ρ (suc (zK k (suc j)))) ≡ suc k → UnitP (lookupₑ ρ (suc (zK k (suc j)))) →
       cohTP (BK k (suc j)) (wK k j [ ρsK k j ]ty)
             (coh (BK k j) (wK k j) (ρsK k j)) (coh (BK k j) (wK k j) (ρtK k j)) ρ
         ≈ top (lookupₑ ρ (dbl (nB k (suc j))))
-HRP k j ρ u =
+HRP k j ρ _ u =
   subst (_≈ top (lookupₑ ρ (dbl (nB k (suc j)))))
         (sym (trans (op-fire (BK k (suc j)) (wK k j [ ρsK k j ]ty) ρ (nB k (suc j))
                        (cong suc (trans (dim[] (wK k j) (ρsK k j)) (dim-wK k j))) (D.dimCtx-BK k (suc j)))
                     (cong (cm (Fv ρ)) (Wb-BK k j))))
         (≡→≈ (++-[]L _))
 
-HL0P : ∀ k ρ → UnitP (lookupₑ ρ (dbl (suc k))) →
+HL0P : ∀ k ρ → tdim (lookupₑ ρ (dbl (suc k))) ≡ suc k → UnitP (lookupₑ ρ (dbl (suc k))) →
        cohTP (LK k 0) (aL k) (var (dbl k)) (var (zK k 0)) ρ ≈ top (lookupₑ ρ (tL k 0))
-HL0P k ρ u =
+HL0P k ρ _ u =
   subst (_≈ top (lookupₑ ρ (tL k 0)))
         (sym (trans (op-fire (BK k 0) (aL k) ρ (suc k) (cong suc (dim-aL k)) (D.dimCtx-BK k 0))
                     (cong (cm (Fv ρ)) (Wb-BK0 k))))
         (plus0 _ _ (unit-top _ u))
 
-HLP : ∀ k j ρ → UnitP (lookupₑ ρ (dbl (suc k))) →
+HLP : ∀ k j ρ → tdim (lookupₑ ρ (dbl (suc k))) ≡ suc k → UnitP (lookupₑ ρ (dbl (suc k))) →
       cohTP (LK k (suc j)) (lK k j [ λsK k j ]ty)
             (coh (LK k j) (lK k j) (λsK k j)) (coh (LK k j) (lK k j) (λtK k j)) ρ
         ≈ top (lookupₑ ρ (tL k (suc j)))
-HLP k j ρ u =
+HLP k j ρ _ u =
   subst (_≈ top (lookupₑ ρ (tL k (suc j))))
         (sym (trans (op-fire (LK k (suc j)) (lK k j [ λsK k j ]ty) ρ (nB k (suc j))
                        (cong suc (trans (dim[] (lK k j) (λsK k j)) (dim-lK k j))) (D.dimCtx-LK k (suc j)))

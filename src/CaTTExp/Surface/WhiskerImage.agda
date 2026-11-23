@@ -19,7 +19,10 @@
 -- four whisker heads: the top chain of the head is the top chain of
 -- the whiskered cell when the whiskering cell's image is an identity
 -- (`HR0`, `HR`, `HL0`, `HL`), and an identity has equal source and
--- target (`unit-par`). From them:
+-- target (`unit-par`). The head hypotheses may assume that the
+-- whiskering cell's tower has the dimension its type gives (`tdim`,
+-- proved here from the boundary half of soundness, `tdim-sound`): in
+-- 𝔉 a 1-cell identity and a higher identity have different top chains. From them:
 --
 --   headR, headL : the image of a whisker head, applied in any
 --                  environment with the right boundaries whose
@@ -43,6 +46,7 @@ open import CaTTExp.GrayCtx.Natural using (dbl; aL)
 open import CaTTExp.Derived using (nB; zK; BK; wK; LK; LPK; lK; ρK; ρsK; ρtK; λsK; λtK; tL; bLK; hTy)
 open import CaTTExp.Strict.Bag using (Bag; _≈_; ≈-refl; ≈-sym; ≈-trans; ≡→≈)
 open import CaTTExp.Strict.Cell using (Tower; base; step; top; _≈w_; ≈w-refl; ≈w-sym; ≈w-trans)
+open import CaTTExp.Surface.TowerDim using (tdim; tdim-≈w)
 open import CaTTExp.Strict.Interp ∅ (λ ()) using (Env; []ₑ; _,ₑ_; lenₑ; lookupₑ)
 
 module CaTTExp.Surface.WhiskerImage
@@ -56,15 +60,15 @@ module CaTTExp.Surface.WhiskerImage
   (cohT : Ctx → Ty → Tm → Tm → Env → Bag)
   (UnitTw : Tower → Set)
   (unit-par : ∀ S U c → UnitTw (step S U c) → S ≈w U)
-  (HR0 : ∀ k ρ → UnitTw (lookupₑ ρ (suc (zK k 0))) →
+  (HR0 : ∀ k ρ → tdim (lookupₑ ρ (suc (zK k 0))) ≡ suc k → UnitTw (lookupₑ ρ (suc (zK k 0))) →
          cohT (BK k 0) (aL k) (var (dbl k)) (var (zK k 0)) ρ ≈ top (lookupₑ ρ (dbl (nB k 0))))
-  (HR  : ∀ k j ρ → UnitTw (lookupₑ ρ (suc (zK k (suc j)))) →
+  (HR  : ∀ k j ρ → tdim (lookupₑ ρ (suc (zK k (suc j)))) ≡ suc k → UnitTw (lookupₑ ρ (suc (zK k (suc j)))) →
          cohT (BK k (suc j)) (wK k j [ ρsK k j ]ty)
               (coh (BK k j) (wK k j) (ρsK k j)) (coh (BK k j) (wK k j) (ρtK k j)) ρ
            ≈ top (lookupₑ ρ (dbl (nB k (suc j)))))
-  (HL0 : ∀ k ρ → UnitTw (lookupₑ ρ (dbl (suc k))) →
+  (HL0 : ∀ k ρ → tdim (lookupₑ ρ (dbl (suc k))) ≡ suc k → UnitTw (lookupₑ ρ (dbl (suc k))) →
          cohT (LK k 0) (aL k) (var (dbl k)) (var (zK k 0)) ρ ≈ top (lookupₑ ρ (tL k 0)))
-  (HL  : ∀ k j ρ → UnitTw (lookupₑ ρ (dbl (suc k))) →
+  (HL  : ∀ k j ρ → tdim (lookupₑ ρ (dbl (suc k))) ≡ suc k → UnitTw (lookupₑ ρ (dbl (suc k))) →
          cohT (LK k (suc j)) (lK k j [ λsK k j ]ty)
               (coh (LK k j) (lK k j) (λsK k j)) (coh (LK k j) (lK k j) (λtK k j)) ρ
            ≈ top (lookupₑ ρ (tL k (suc j))))
@@ -77,7 +81,7 @@ open import CaTTExp.GrayCtx.NaturalWF using (dim-aL; <-suc; n<sn)
 open import CaTTExp.DerivedBoundary
   using (σR; rwT; tyK; tgtK; srcK; hL; σLp; σL; lwT; lenₛ-σLp; dim-tyK)
 open import CaTTExp.DerivedWith side closedS side-BK0 side-BK side-LK
-  using (tm-ty; σR-wf; σL-wf; lwT-wf; wBK; wLK; ρK-wf; λsK-wf; λtK-wf)
+  using (tm-ty; lookup-wf; σR-wf; σL-wf; lwT-wf; wBK; wLK; ρK-wf; λsK-wf; λtK-wf)
 open import CaTTExp.Surface.Image side closedS cohT
 open import CaTTExp.Surface.TheoremB ∅ side closedS using (Pre; here; there; module Hyp)
 open import CaTTExp.Surface.WhiskerWith side closedS side-BK0 side-BK side-LK
@@ -223,6 +227,39 @@ compL0 X (step Sh Uh ch) a m z c bX (sa , um) u r =
     (≈w-trans a Sh m (≈w-sym Sh a sa) (≈w-trans Sh Uh m (unit-par Sh Uh ch u) um)) (≈w-refl z) r
 
 ------------------------------------------------------------------------
+-- The whiskering cell has the dimension its type says.
+
+tdim-sound : ∀ {Γ ρ} → BdEnv ρ Γ → ∀ A → Γ ⊢ty A → ∀ X → Bd X A ρ → tdim X ≡ dim A
+tdim-sound bρ ⋆           _            (base _)     _ = refl
+tdim-sound bρ ⋆           _            (step _ _ _) ()
+tdim-sound bρ (arr A t u) _            (base _)     ()
+tdim-sound {ρ = ρ} bρ (arr A t u) (arr-wf dt du) (step S U c) (s , _) =
+  cong suc (trans (tdim-≈w S (⟦ t ⟧ ρ) s) (tdim-sound bρ A (tm-ty dt) (⟦ t ⟧ ρ) (Bd-sound dt bρ)))
+
+private
+  lk-hL : ∀ k j → lookup (LK k j) (dbl (suc k)) ≡ just (aL (suc k))
+  lk-hL k zero    = lk-hL0 k
+  lk-hL k (suc j) =
+    trans (lk-skip (LK k j ▸ bLK k (suc j)) (bLK k (suc (suc j))) (dbl (suc k))
+             (<-suc (dbl (suc k)) (len (LK k j)) lt))
+          (trans (lk-skip (LK k j) (bLK k (suc j)) (dbl (suc k)) lt) (lk-hL k j))
+    where
+    lt : T (dbl (suc k) <ℕ len (LK k j))
+    lt = subst (λ m → T (dbl (suc k) <ℕ m)) (sym (D.len-LK k j)) (<-suc (dbl (suc k)) (tL k j) (lt-h k j))
+
+tdR : ∀ k j σ ρ → BdEnv (⟦ σ ⟧ₛ ρ) (BK k j) → tdim (lookupₑ (⟦ σ ⟧ₛ ρ) (suc (zK k j))) ≡ suc k
+tdR k j σ ρ bρ =
+  trans (tdim-sound bρ (hTy k j) (lookup-wf {i = suc (zK k j)} (wBK k j) (D.lk-hK k j))
+               (lookupₑ (⟦ σ ⟧ₛ ρ) (suc (zK k j))) (bρ (suc (zK k j)) (hTy k j) (D.lk-hK k j)))
+        (cong suc (dim-aL k))
+
+tdL : ∀ k j σ ρ → BdEnv (⟦ σ ⟧ₛ ρ) (LK k j) → tdim (lookupₑ (⟦ σ ⟧ₛ ρ) (dbl (suc k))) ≡ suc k
+tdL k j σ ρ bρ =
+  trans (tdim-sound bρ (aL (suc k)) (lookup-wf {i = dbl (suc k)} (wLK k j) (lk-hL k j))
+               (lookupₑ (⟦ σ ⟧ₛ ρ) (dbl (suc k))) (bρ (dbl (suc k)) (aL (suc k)) (lk-hL k j)))
+        (dim-aL (suc k))
+
+------------------------------------------------------------------------
 -- The image of a whisker head is the image of the whiskered cell.
 
 headR : ∀ k j σ ρ → BdEnv (⟦ σ ⟧ₛ ρ) (BK k j) → UnitTw (lookupₑ (⟦ σ ⟧ₛ ρ) (suc (zK k j))) →
@@ -231,7 +268,7 @@ headR k zero σ ρ bρ u =
   compR0 X H (lookupₑ ρ′ (dbl k)) (lookupₑ ρ′ (suc (dbl k))) (lookupₑ ρ′ (zK k 0)) _
     (Bd→BdS X (aL k) (var (dbl k)) (var (suc (dbl k))) ρ′ (bρ _ _ (lk-cR k 0)))
     (Bd→BdS H (aL k) (var (suc (dbl k))) (var (zK k 0)) ρ′ (bρ _ _ (D.lk-hK k 0)))
-    u (HR0 k ρ′ u)
+    u (HR0 k ρ′ (tdR k 0 σ ρ bρ) u)
   where
   ρ′ = ⟦ σ ⟧ₛ ρ
   X = lookupₑ ρ′ (dbl (nB k 0))
@@ -247,7 +284,7 @@ headR k (suc j) σ ρ bρ u =
        (headR k j (ρtK k j) ρ′
           (Bd-sub (ρK-wf k j (suc (dbl n)) (D.lk-face-t k j)) bρ (wBK k j))
           (subst UnitTw (sym (ρK-h k j (suc (dbl n)) ρ′)) u)))
-    (HR k j ρ′ u)
+    (HR k j ρ′ (tdR k (suc j) σ ρ bρ) u)
   where
   n = nB k j
   ρ′ = ⟦ σ ⟧ₛ ρ
@@ -259,7 +296,7 @@ headL k zero σ ρ bρ u =
   compL0 X H (lookupₑ ρ′ (dbl k)) (lookupₑ ρ′ (suc (dbl k))) (lookupₑ ρ′ (zK k 0)) _
     (Bd→BdS X (aL k) (var (suc (dbl k))) (var (zK k 0)) ρ′ (bρ _ _ (lk-cL k 0)))
     (Bd→BdS H (aL k) (var (dbl k)) (var (suc (dbl k))) ρ′ (bρ _ _ (lk-hL0 k)))
-    u (HL0 k ρ′ u)
+    u (HL0 k ρ′ (tdL k 0 σ ρ bρ) u)
   where
   ρ′ = ⟦ σ ⟧ₛ ρ
   X = lookupₑ ρ′ (tL k 0)
@@ -271,7 +308,7 @@ headL k (suc j) σ ρ bρ u =
        (headL k j (λsK k j) ρ′ (Bd-sub (λsK-wf k j) bρ (wLK k j)) (subst UnitTw (sym s-h) u)))
     (subst (⟦ coh (LK k j) (lK k j) (λtK k j) ⟧ ρ′ ≈w_) t-c
        (headL k j (λtK k j) ρ′ (Bd-sub (λtK-wf k j) bρ (wLK k j)) (subst UnitTw (sym t-h) u)))
-    (HL k j ρ′ u)
+    (HL k j ρ′ (tdL k (suc j) σ ρ bρ) u)
   where
   ρ′ = ⟦ σ ⟧ₛ ρ
   X = lookupₑ ρ′ (tL k (suc j))

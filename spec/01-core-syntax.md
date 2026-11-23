@@ -29,10 +29,10 @@ Terms          t, u ::= … | μ(β) | η_y(β) | rec(β; A, σ) | rec_y(β; A, 
 - `μ(β)` is the initial model's carrier; `η_y(β)` is the generic model at the variable y of Δ, so η = ⟨X ↦ μ(β), y ↦ η_y(β), …⟩ is a substitution Δ[μ(β)/X].
 - For a carrier A and a model σ : Δ[A/X], `rec(β; A, σ)` is the map μ(β) → A and `rec_y(β; A, σ)` its invertible cell at y (INIT-J1).
 - For two model morphisms ρ, ρ′ from η to σ (substitutions into the arrow context Δ^→), `uni(β; A, σ; ρ, ρ′)` is the invertible cell between their carrier maps and `uni_y` its compatibility cell at y (INIT-J2). Higher levels are derived (§9.3), so they need no syntax.
-- Substitution acts on the parameters only: `μ(X. Δ)[τ] = μ(X. Δ[τ⁺])`, where τ⁺ extends τ by the identity on X and on Δ's variables, and likewise for the other formers. With de Bruijn levels, a binder's variables are numbered after the surrounding context, so τ⁺ is a shift, and no capture can occur.
+- Bound variables are **locally nameless**: inside a binder, X and Δ's variables form a separate syntactic class (`bvar d j`: entry j of the binder d levels out), while free variables stay de Bruijn levels. Substitution acts on the parameters only, `μ(X. Δ)[τ] = μ(X. Δ[τ])`, with no shift and no possible capture, and likewise for the other formers. Checking a binder opens Δ with fresh free variables. Extending a context still never renames.
 - Equality of terms stays syntactic identity. Positivity of Δ in X (§9.3) is a typing side condition, not part of the grammar.
 
-**Status.** Agda-checked: raw syntax and substitution without binders, `CaTTExp.Syntax` (de Bruijn levels, so extending a context never renames). The binder above is **stated here**: it is not yet in `CaTTExp.Syntax` or `CaTTExp.Signature`, so the substitution and decidability results of §1.3–1.5 do not yet cover it (ledger S26). **Source:** `notes/agda-sketch-findings.md` "What is formalized"; for INIT, `notes/universe-free-principles.md` §4.2.
+**Status.** Agda-checked: raw syntax and substitution, `CaTTExp.Syntax` (de Bruijn levels, so extending a context never renames); with binders, `CaTTExp.Binder.Syntax` (locally nameless) and `CaTTExp.Binder.Subst`. INIT's six formers are an instance of the generic binder interface, `CaTTExp.Binder.Init`, with laws in `InitLaws` and checked examples in `InitExamples` (ℕ with all six formers; the circle with μ, η, rec). The Agda positivity check covers only the fragment whose sources are X or X-free and whose targets are X or ⊤ (ledger S26f). Not yet formalized: rec_y, uni, uni_y at cell variables (S26b), several sorts (S26c), marks in Δ (S26d), and the inverses that make rec_y and uni_y invertible (S26e). **Source:** `notes/agda-sketch-findings.md` "What is formalized"; for INIT, `notes/universe-free-principles.md` §4.2.
 
 ## 1.2 Judgments
 
@@ -130,6 +130,8 @@ where Var(t : A) is the set of variables of t and of the terms in A.
 | **Suspension.** For constant-free syntax, Σ preserves all judgments, both side conditions and the pasting judgment. | Agda-checked | `CaTTExp.Suspension` |
 | **Constant substitutions.** For constant-free Γ, (c : ⋆) ⊢ !_Γ : Γ. | Agda-checked | `CaTTExp.ConstSub` |
 | **Soundness in strict ω-categories** (plain CaTT). | Agda-checked | `CaTTExp.Strict.OmegaSound` (A3a) |
+| **With binders: substitution and decidability.** Both hold for every side condition and every binder interface satisfying the binder laws, INIT included. | Agda-checked | `CaTTExp.Binder.Subst`; `CaTTExp.Binder.CheckWith`, `CaTTExp.Binder.Completeness` (S26a) |
+| **Binders are conservative.** The embedding of binder-free syntax preserves and reflects all five judgments, so adding binders derives nothing new about the binder-free fragment (for plain CaTT unconditionally; in general when the side conditions agree on embedded syntax). | Agda-checked | `CaTTExp.Binder.Embed`, `CaTTExp.Binder.InitEmbed` (S26a) |
 
 ## 1.6 Signatures
 
@@ -137,7 +139,7 @@ A signature 𝕊 is a set of constants with decidable equality, a closed type `t
 
 Later chapters extend the kernel only by adding constants, families of constants indexed by syntax (for example, one constant `⟦Γ⟧ : ⋆` per pasting context Γ, chapter 7), and inductive judgments in the style of `⊢ps`. They add no new definitional equalities.
 
-A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders). It is not yet formalized: `CaTTExp.Syntax` and `CaTTExp.Signature` have no binders (ledger S26).
+A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders), and the kernel with binders is formalized in `CaTTExp.Binder.*` (§1.5; ledger S26a, with the remaining fragments S26b–S26f).
 
 User declarations enter the same way: a development's postulated objects, cells and marks are a signature (equivalently, a context it is checked in).
 

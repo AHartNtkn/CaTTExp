@@ -63,7 +63,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 4.1 Coherence contexts
 - [ ] 4.2 Bases are read weakly
 - [ ] 4.3 Finite presentations over every base
-- [ ] 4.4 The optional judgment ⊢hpol
+- [ ] 4.4 Above the kernel: the fast path ⊢hpol
 - [ ] 4.5 What the limit rules actually need from a base
 - [ ] Q4.1 (surface question): Whether the user sees ⊢hpol.
 - [ ] Q4.2 (surface question): How bases are written.
@@ -130,6 +130,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").
 - S17 (0.4): alternatives to the form of the marking system never compared.

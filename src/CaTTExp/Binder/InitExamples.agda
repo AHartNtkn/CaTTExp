@@ -169,3 +169,41 @@ _ = refl
 -- rec_y at y = 0, and η at y = 0.
 _ : (sideOf recY 0 Δℕ , sideOf η 0 Δℕ) ≡₂ (false , false)
 _ = refl
+
+------------------------------------------------------------------------
+-- The shapes of INIT-J1 and INIT-J2 on ℕ, in the model (A, z, s):
+-- rec_y at s is the naturality cell  η_s ; rec ⇒ rec ; s,  and uni is
+-- a cell between the two model morphisms of its arguments.
+
+private
+  cmpℕ : Tm → Tm → Tm → Tm → Tm → Tm
+  cmpℕ = Construction.cmp NK (λ _ → true)
+
+  recℕ : Tm
+  recℕ = bnd rec 0 Δℕ (fresh 0 3)
+
+_ : t-r2 ≡ just (arr (arr ⋆ μℕ (var 0))
+                     (cmpℕ μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) recℕ)
+                     (cmpℕ μℕ (var 0) (var 0) recℕ (var 2)))
+_ = refl
+
+-- In Γu = (A, z, s, h, θ_z, θ_s, h′, θ′_z, θ′_s): uni is h ⇒ h′, and
+-- uni_y at s is the modification condition, both sides from
+-- η_s ; h to h′ ; s.
+private
+  module C = Construction NK (λ _ → true)
+  uℕ : Tm
+  uℕ = bnd uni 0 Δℕ (fresh 0 9)
+
+_ : t-uni ≡ just (arr (arr ⋆ μℕ (var 0)) (var 3) (var 6))
+_ = refl
+
+_ : t-u2 ≡ just
+      (let src = C.cmp μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 3)
+           tgt = C.cmp μℕ (var 0) (var 0) (var 6) (var 2) in
+       arr (arr (arr ⋆ μℕ (var 0)) src tgt)
+           (C.vcomp μℕ (var 0) src (C.cmp μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 6))
+                    (C.lwh μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 3) (var 6) uℕ) tgt (var 8))
+           (C.vcomp μℕ (var 0) src (C.cmp μℕ (var 0) (var 0) (var 3) (var 2)) (var 5) tgt
+                    (C.rwh μℕ (var 0) (var 0) (var 3) (var 6) uℕ (var 2))))
+_ = refl

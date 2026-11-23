@@ -35,9 +35,10 @@
 -- Not done here: discharging (W) for a particular kernel (constructing
 -- `wh` from coherences over the linear pasting contexts
 -- Σʲ(D¹ ∨ Dᵐ⁻ʲ ∨ D¹) and proving Wh-wf and Wh-≈). For plain CaTT,
--- CaTTExp.Surface.WhiskerPure builds `wh`, proves Wh-wf, and shows all
--- hypotheses jointly satisfiable; Wh-≈ for the ≈ of interest and the
--- two-tier and uniform L instances remain open.
+-- CaTTExp.Surface.WhiskerPure builds `wh`, proves Wh-wf, and shows the
+-- module parameters jointly satisfiable (Wh-≈ and Unit only
+-- trivially); Wh-≈ for the ≈ of interest and the two-tier and
+-- uniform L instances remain open.
 -- Wh-wf is syntactic: the boundary terms of the whiskering head,
 -- after substitution, must be exactly the recursive `wh` calls on
 -- the boundaries. The construction must be made to satisfy this.

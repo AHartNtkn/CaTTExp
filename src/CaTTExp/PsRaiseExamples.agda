@@ -2,7 +2,8 @@
 -- A check of CaTTExp.PsRaise on the 2-disc: raising its 2-cell α gives
 -- the 3-disc-shaped context with α, α′ and a 3-cell α → α′; the two
 -- inclusions send α to α and to α′, and the source and target of the
--- raised context (at k = 2) are their images.
+-- raised context (at k = 2) are their images; the raised context has
+-- dimension 3.
 ------------------------------------------------------------------------
 module CaTTExp.PsRaiseExamples where
 
@@ -34,3 +35,11 @@ _ = refl
 -- The general theorems at this instance.
 _ = src-incl 2 (true ∷ []) (node (node [] ∷ [])) [] top
 _ = tgt-incl 2 (true ∷ []) (node (node [] ∷ [])) [] top
+
+-- The closed-form statements: D2 has dimension 2, so the raised
+-- context has dimension 3 and its boundaries are the images of all of D2.
+_ : dimCtx (ctxOf (raiseT (true ∷ []) D2)) ≡ 3
+_ = dim-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt
+
+_ = src-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt
+_ = tgt-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt

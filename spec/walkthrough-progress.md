@@ -29,7 +29,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 1.2 Judgments
 - [x] 1.3 Pasting contexts
 - [x] 1.4 The coherence rule
-- [ ] 1.5 Metatheorems
+- [x] 1.5 Metatheorems
 - [ ] 1.6 Signatures
 - [ ] Q1.1 (surface question): Names or positions.
 - [ ] Q1.2 (surface question): How much of a coherence the user writes.
@@ -132,6 +132,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S27 (1.5): how kernel extensions enter (closed constants vs substitution-applied heads) is under-specified; metatheory doesn't cover limit formers.
 - S26 (1.1): §1.6 forbids the binders §0.2 allows.
 - S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.

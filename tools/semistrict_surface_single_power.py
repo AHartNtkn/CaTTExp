@@ -27,15 +27,16 @@ def terminal_letters(word):
 
 def coprime_parts(source, target):
     suffix = []
-    while True:
+    while source and target:
         small = terminal_letters(source)
         large = terminal_letters(target)
         candidates = small.keys() & large.keys()
         if not candidates:
-            return source,target,tuple(reversed(suffix))
+            break
         x = min(candidates)
         suffix.append(x)
         source,target = small[x],large[x]
+    return source,target,tuple(reversed(suffix))
 
 
 def output_order(names, prefix):

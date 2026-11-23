@@ -25,7 +25,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Chapter 1. Core syntax
 
-- [ ] 1.1 Raw syntax
+- [x] 1.1 Raw syntax
 - [ ] 1.2 Judgments
 - [ ] 1.3 Pasting contexts
 - [ ] 1.4 The coherence rule
@@ -132,6 +132,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S26 (1.1): §1.6 forbids the binders §0.2 allows.
 - S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").

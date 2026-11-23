@@ -41,7 +41,7 @@ Every universal property is stated as the existence of cells: a structure map, a
 
 **This is a property of the kernel only.** The surface may add computation rules (§0.5). For example, rewrite rules may strictify two of associators, unitors and interchange. Each such rule is justified by a formalized conservativity proof, not by a definitional equality in the kernel.
 
-Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`, `⊢hpol`).
+Rule classes are those of the published CaTT variants: context formation, type formation, the `coh` rule with a side condition computed on its own pasting context, substitution, signature constants with decidable validity, and inductive judgments in the style of `⊢ps` (for example `inv`, `ps`).
 
 *Source:* project standard 5; `notes/design-decisions.md` §1.1 (laws of T are never definitional); Anthony, spec walkthrough 2026-11-22 (surface computation rules; ledger S6, S19).
 
@@ -85,7 +85,7 @@ This spec fixes the kernel and leaves every surface choice open. Each chapter li
 
 ## 0.6 Decidability of checking
 
-Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it, and offers a decidable sufficient judgment as an optional optimisation.
+Every kernel judgment is decidable. Where a property of interest is undecidable (homotopicality of polygraphs, chapter 4), the kernel does not check it: it reads the construct in a way that does not need it. A decidable sufficient test that only speeds checking up (`⊢hpol`, chapter 4, §4.4) is not part of the kernel. It lives in the layer above it and is proved conservative like every other layer (§0.5).
 
 Decidability is not the same as efficiency. Several side conditions are decidable but expensive (chapter 2, §2.6). Efficiency is an implementation question and never changes the rules.
 
@@ -98,7 +98,9 @@ Decidability is not the same as efficiency. Several side conditions are decidabl
 - *Option B: classical only* (`g ∘ f`). Familiar, but every Gray cell's factor order is then read right to left, and the lax/oplax naming hazard of `conventions.md` §3.2 becomes a daily hazard.
 - *Option C: both, with distinct symbols.* Cheap to support (it is pure notation) but doubles what a reader must recognise.
 - *Worked example.* The lax naturality cell of α : F ⇒ G at f : x → y is `α_x ; Gf ⇛ Ff ; α_y` in A and `Gf ∘ α_x ⇛ α_y ∘ Ff` in B.
+- **Decided (Anthony, 2026-11-22): Option A, diagrammatic only.** General principle behind it: the surface is aligned with the kernel as far as possible, no convention is chosen because it is historically common, and the user is never asked to do translation work in their head that the system does not need. Consequence: functor application is written in the kernel's order too (`x ; F`, §6.6), not as classical `F(x)` sugar.
 
 **Q0.2. Are objects written as types or as terms?** The kernel has objects as terms of sort ⋆ and elements of C as 1-cells ⊤ → C (chapter 6).
 - *Option A: as in the kernel* (`x : ⊤ → C`). Nothing to elaborate; every element is visibly a functor, so lax naturality at elements is visible.
 - *Option B: elements as variables of type C* (`x : C`), elaborated to `⊤ → C`. Reads like ordinary mathematics; the elaborator must insert ⊤ and whiskerings everywhere, and error messages must translate back.
+- **Decided (Anthony, 2026-11-22): Option A, as in the kernel** (`x : ⊤ → C`, `f : x ⇒ y`, `x ; F`), by the Q0.1 principle. Abbreviations such as `El(C) := ⊤ → C` are left to users. This requires the surface to support user-defined abbreviations (definitions unfolded by elaboration, covered by the conservativity obligation of §0.5).

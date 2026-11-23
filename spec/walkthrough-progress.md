@@ -17,13 +17,15 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Correction sent: my first message said one `ord` mark per object recovers plain behaviour. After E13 (PR #398) it recovers invertibility only for operand-pure heads and none of two-tier L's extra coherences. Finding S16, resolved the same morning by PR #404 (`ord` = inner letters trivial, rule (COH-ord)); told Anthony. Pending for chapter 3 surface questions: whether to keep the invertible-only `ord` as a weaker mark (Anthony's choice); E15 (mixed heads) open.
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
-- [ ] 0.6 Decidability of checking
-- [ ] Q0.1 (surface question): Which composition order does the user write?
-- [ ] Q0.2 (surface question): Are objects written as types or as terms?
+- [x] 0.6 Decidability of checking
+- [x] Q0.1 (surface question): Which composition order does the user write?
+  - **Decided:** Option A, diagrammatic only; principle: align surface with kernel, ignore historical convention. Application written `x ; F`.
+- [x] Q0.2 (surface question): Are objects written as types or as terms?
+  - **Decided:** Option A, kernel form `x : ⊤ → C` (also settles Q6.1). Users define abbreviations like `El(C) := ⊤ → C` themselves; surface must support user-defined abbreviations.
 
 ## Chapter 1. Core syntax
 
-- [ ] 1.1 Raw syntax
+- [x] 1.1 Raw syntax
 - [ ] 1.2 Judgments
 - [ ] 1.3 Pasting contexts
 - [ ] 1.4 The coherence rule
@@ -63,7 +65,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 4.1 Coherence contexts
 - [ ] 4.2 Bases are read weakly
 - [ ] 4.3 Finite presentations over every base
-- [ ] 4.4 The optional judgment ⊢hpol
+- [ ] 4.4 Above the kernel: the fast path ⊢hpol
 - [ ] 4.5 What the limit rules actually need from a base
 - [ ] Q4.1 (surface question): Whether the user sees ⊢hpol.
 - [ ] Q4.2 (surface question): How bases are written.
@@ -130,6 +132,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S26 (1.1): §1.6 forbids the binders §0.2 allows.
+- S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.
 - S19 (0.5): Anthony's decisions: surface may strictify 2 of 3 by rewrite rules; surface layers trusted by Agda-proved conservativity, no kernel re-check; everything formalized.
 - S18 (0.5): the spec carries history ("an earlier version of this section").
 - S17 (0.4): alternatives to the form of the marking system never compared.

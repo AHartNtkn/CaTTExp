@@ -288,6 +288,8 @@ The valuation respects all types and marks. By Theorem S a derivable term of typ
 - an Agda interpretation of `Gray/Biclosed` in 𝔖, which needs Gray tensors of arbitrary strict ω-categories in Agda;
 - the four-cube computation in Agda.
 
+*Update 2026-11-22.* Both are now in Agda in the Day convolution instance 𝔖̂ (`gray-model-formal-plan.md`, Status), which agrees with 𝔖 on representables: `Steiner/DayModel.dayModel`, and the computations `Steiner/WalkingSquare`, `Steiner/FourCube` in 𝒮. The criterion itself is `Soundness.no-term`. u and v are checked to be 2-cells in Agda. The syntactic link from an instance σ to these maps is not formalized (ledger D7g-link).
+
 ### 5.6 Remaining for C5
 
 - (C5a) Weak half: blocked on E11.

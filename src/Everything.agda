@@ -169,12 +169,26 @@ import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.RCProc
 import CaTTExp.RCProc.Support
+import CaTTExp.RCProc.TwoPath
+import CaTTExp.RCProc.TwoPathCtx
+import CaTTExp.RCProc.TwoPathFacts
+import CaTTExp.RCProc.TwoPathModel
 import CaTTExp.RCProc.Glue
 import CaTTExp.PsRaise
 import CaTTExp.PsRaiseExamples
 import CaTTExp.VarSubFv
 import CaTTExp.PsRaiseCongr
 import CaTTExp.PsRaiseCongrExamples
+import CaTTExp.RCProc.Path1
+import CaTTExp.RCProc.Column
+import CaTTExp.RCProc.Walk
+import CaTTExp.RCProc.Whisker
+import CaTTExp.RCProc.Edges
+import CaTTExp.RCProc.EgPath
+import CaTTExp.RCProc.Eg
+import CaTTExp.RCProc.TwoPathTerm
+import CaTTExp.RCProc.StrictPath
+import CaTTExp.RCProc.Key2Bd
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute
@@ -182,6 +196,9 @@ import CaTTExp.Naturality.Typing
 import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
+import CaTTExp.Naturality.General
+import CaTTExp.Naturality.Ladder
+import CaTTExp.Naturality.Column
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle
@@ -412,6 +429,7 @@ import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
 import CaTTExp.Descent.TruncHomInv
 import CaTTExp.Descent.TInit
+import CaTTExp.Descent.InitNotDesc
 import CaTTExp.Descent.EncodeDecode
 import CaTTExp.Descent.EncodeDecodeDJ
 -- Binders and INIT (ledger S26a, spec §1.6, §9.3).
@@ -444,6 +462,12 @@ import CaTTExp.Binder.CylLaws
 import CaTTExp.Binder.CylOne
 import CaTTExp.Binder.CylOK
 import CaTTExp.Binder.CylExamples
+import CaTTExp.Binder.VCyl
+import CaTTExp.Binder.VCylLaws
+import CaTTExp.Binder.PureEmbed
+import CaTTExp.Binder.Deep
+import CaTTExp.Binder.VWhisk
+import CaTTExp.Binder.VBoundary
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
 import CaTTExp.Binder.InitLawsGen
@@ -452,6 +476,16 @@ import CaTTExp.Binder.InitDesExamples
 import CaTTExp.Binder.InitMeta
 import CaTTExp.Binder.InitEmbed
 import CaTTExp.Binder.InitExamples
+-- Operation heads (ledger S27 (b)–(d), spec §1.1, §1.5, §1.6).
+import CaTTExp.Binder.Heads
+import CaTTExp.Binder.Close
+import CaTTExp.Binder.HonestHeads
+import CaTTExp.Binder.HeadSpec
+import CaTTExp.Binder.LimHeads
+import CaTTExp.Binder.LimHeadsExamples
+import CaTTExp.Binder.Suspension
+import CaTTExp.Binder.SpecSusp
+import CaTTExp.Binder.DesSusp
 import CaTTExp.Binder.GrayForm
 import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws

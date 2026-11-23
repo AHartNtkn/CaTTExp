@@ -30,9 +30,9 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 1.3 Pasting contexts
 - [x] 1.4 The coherence rule
 - [x] 1.5 Metatheorems
-- [ ] 1.6 Signatures
-- [ ] Q1.1 (surface question): Names or positions.
-- [ ] Q1.2 (surface question): How much of a coherence the user writes.
+- [x] 1.6 Signatures (presented with heads, after S27(a) landed; Agda S27(b)–(c) still open)
+- [x] Q1.1 (surface question): Names or positions. Decided: A, distinct names, no shadowing.
+- [x] Q1.2 (surface question): How much of a coherence the user writes. Decided: B (top-dimensional arguments), names as abbreviations.
 - [ ] Q1.3 (surface question): How pasting contexts are presented.
 
 ## Chapter 2. The lax core L
@@ -132,6 +132,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S28 (1.6): user postulates removed; the signature is closed to users, and assumptions are context variables.
 - S27 (1.5): how kernel extensions enter (closed constants vs substitution-applied heads) is under-specified; metatheory doesn't cover limit formers.
 - S26 (1.1): §1.6 forbids the binders §0.2 allows.
 - S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.

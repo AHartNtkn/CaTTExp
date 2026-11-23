@@ -84,5 +84,5 @@ The literature constructions all assume disjoint coproducts: Abbott–Altenkirch
 
 | Row | Item | Owner |
 |---|---|---|
-| F12b | Streams and constant-arity M-types: Agda written, checked on Agda 2.7.0.1 and 2.6.3; honesty review | this thread |
+| F12b | Streams and constant-arity M-types: Agda written, checked on Agda 2.7.0.1 and 2.6.3; honesty review passed (PR #556) | this thread |
 | F12c | Dependent-arity M-types without DESC (undirected and directed): outbox prompt; in-house attempt on route 2 | this thread (prompt ready to send) |

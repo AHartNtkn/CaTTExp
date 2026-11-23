@@ -281,6 +281,10 @@ import CaTTExp.GrayCtx.VCompExplicit
 import CaTTExp.GrayCtx.VCompAll
 import CaTTExp.GrayCtx.Lift
 import CaTTExp.GrayCtx.VCompLift
+import CaTTExp.GrayCtx.ElabCorrect.Fill
+import CaTTExp.GrayCtx.ElabCorrect.Coh
+import CaTTExp.GrayCtx.ElabCorrect.Shape
+import CaTTExp.GrayCtx.ElabCorrect.Assoc
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

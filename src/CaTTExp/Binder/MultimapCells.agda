@@ -24,19 +24,22 @@
 -- cells, which are biclosed terms; their kernel image (`trTm`) is the
 -- argument for a variable, and otherwise the mmc head of the term on
 -- its **canonical support**: the entries it uses, closed under the
--- entries their types use, in dependency order of first use, and the
--- atoms they use in order of first occurrence, renumbered
--- (`canon`). The side condition requires every head to be canonical,
+-- entries their types use, and the atoms they use, each kept in its
+-- original order and renumbered (`canon`). The side condition requires
+-- every head to be canonical (every entry and every atom is used),
 -- like coh's requirement that its pasting context be exactly the
--- support of its type. So each biclosed term has one kernel image, and
+-- support of its type. So each biclosed term in a context has one
+-- kernel image, and
 -- a term written directly and the same term met as a boundary are the
 -- same kernel term (`MultimapCellsExamples`, `curry-boundary`).
 --
 -- This file is the construction; the stability laws are
--- `MultimapCellsLaws`. The presupposition law for mmc is not proved
--- here (ledger S26j): it needs a strengthening lemma for the biclosed
--- checker (typing on a support) and its renaming (`Gray.Biclosed.
--- Subst.sub-infer`). Step 1's heads keep their presupposition law
+-- `MultimapCellsLaws`. The presupposition law for mmc is not yet
+-- proved (ledger S26j). Its biclosed half is: the canonical head of
+-- every inferring term passes the side condition with the renamed type
+-- (`MultimapCellsWf.sub-mmcTy`). What remains is the kernel half (the
+-- kernel images commute with the renaming onto a support). Step 1's
+-- heads keep their presupposition law
 -- (`MultimapPresup`). Like mm, mmc trusts `infer`, so it inherits its
 -- two caveats: `glue`'s stated typing rule, and no sort discipline
 -- (`here` instances are AdmI, not the data-sorted KInst; SortDisc).
@@ -67,9 +70,6 @@ okTy k (GB.hom _ g A _ _)        = (g ==ℕ 1) ∧ okTy k A
 idx : Nat → List Nat → Nat
 idx i []       = 0
 idx i (j ∷ js) = if i ==ℕ j then 0 else suc (idx i js)
-
-addNew : List Nat → Nat → List Nat
-addNew js i = if elem i js then js else (js ++ (i ∷ []))
 
 -- Context variables of a term, in order of occurrence.
 mutual
@@ -125,26 +125,17 @@ nthY Φ j with GT.lookup Φ j
 ... | just A  = A
 ... | nothing = GB.op ([] GB.▸ GB.obj 0)
 
--- The entries a term needs: each used entry after the entries its type
--- needs (dependency order of first use). Entry j's type only mentions
--- entries below j in a well-formed context, so depth |Φ| suffices.
-mutual
-  visit : GB.Ctx → Nat → List Nat → Nat → List Nat
-  visit Φ zero    acc j = addNew acc j
-  visit Φ (suc n) acc j =
-    if elem j acc then acc else addNew (visitAll Φ n acc (varsY (nthY Φ j))) j
+-- The entries a term needs: the variables it uses, closed under the
+-- dependencies of their types, listed in context order. In a
+-- well-formed context entry j's type mentions only entries below j, so
+-- one sweep from the top closes the set.
+upTo : Nat → List Nat
+upTo zero    = []
+upTo (suc n) = upTo n ++ (n ∷ [])
 
-  visitAll : GB.Ctx → Nat → List Nat → List Nat → List Nat
-  visitAll Φ n acc []       = acc
-  visitAll Φ n acc (j ∷ js) = visitAll Φ n (visit Φ n acc j) js
-
--- Deduplicate, keeping first occurrences.
-nub : List Nat → List Nat
-nub = go []
-  where
-  go : List Nat → List Nat → List Nat
-  go acc []       = acc
-  go acc (i ∷ is) = go (addNew acc i) is
+closeFrom : GB.Ctx → Nat → List Nat → List Nat
+closeFrom Φ zero    S = S
+closeFrom Φ (suc j) S = closeFrom Φ j (if elem j S then S ++ varsY (nthY Φ j) else S)
 
 record Canon : Set where
   constructor canonOf
@@ -154,16 +145,24 @@ record Canon : Set where
     cvars  : List Nat     -- its entries, as entries of the original
 open Canon public
 
--- The entries of a term's support, and its atoms.
+-- The entries of a term's support and its atoms, in increasing order.
 supVars : GB.Ctx → GB.Tm → List Nat
-supVars Φ u = visitAll Φ (GT.length Φ) [] (varsT u)
+supVars Φ u = filter (λ j → elem j (closeFrom Φ (GT.length Φ) (varsT u))) (upTo (GT.length Φ))
 
 concatAt : GB.Ctx → List Nat
 concatAt []       = []
 concatAt (A ∷ As) = atY A ++ concatAt As
 
-supAtoms : GB.Ctx → GB.Tm → List Nat
-supAtoms Φ u = nub (concatAt (GT.map (nthY Φ) (supVars Φ u)) ++ atT u)
+atYM : Maybe GB.CTy → List Nat
+atYM (just A) = atY A
+atYM nothing  = []
+
+-- The atoms of the support's types, of the term, and of its type.
+supAtomsOf : GB.Ctx → GB.Tm → List Nat
+supAtomsOf Φ u = concatAt (GT.map (nthY Φ) (supVars Φ u)) ++ atT u ++ atYM (GT.infer Φ u)
+
+supAtoms : Nat → GB.Ctx → GB.Tm → List Nat
+supAtoms k Φ u = filter (λ i → elem i (supAtomsOf Φ u)) (upTo k)
 
 -- The renaming onto a support: atoms and entries to their positions.
 -- Entries outside the support (never used by the term) go to pt.
@@ -175,7 +174,7 @@ canon : Nat → GB.Ctx → GB.Tm → Canon
 canon k Φ u = canonOf (mmi (GT.length as) Φ′ (GS.sT ren u)) as vs
   where
   vs  = supVars Φ u
-  as  = supAtoms Φ u
+  as  = supAtoms k Φ u
   ren = renOf as vs
   Φ′  = GT.map (GS.sY ren) (GT.map (nthY Φ) vs)
 
@@ -185,9 +184,14 @@ canon k Φ u = canonOf (mmi (GT.length as) Φ′ (GS.sT ren u)) as vs
 isCanon : MMI → Bool
 isCanon (mmi k Φ t) = cidx (canon k Φ t) ==MM mmi k Φ t
 
+-- Every atom the head mentions, in its context or its term, is one of
+-- its k atoms.
+atomsBelow : Nat → GB.Ctx → GB.Tm → Bool
+atomsBelow k Φ t = all (λ i → i <ℕ k) (concatAt Φ ++ atT t)
+
 mmcTy : MMI → Maybe GB.CTy
 mmcTy (mmi k Φ t) =
-  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ
+  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t
   then (GT.infer Φ t >>= λ A → if okTy k A then just A else nothing)
   else nothing
 

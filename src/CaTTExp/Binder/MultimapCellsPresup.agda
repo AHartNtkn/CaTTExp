@@ -235,7 +235,7 @@ gbT : ∀ {Γ a c} kd → Γ ⊢tm a ∶ ⋆ → Γ ⊢tm c ∶ ⋆ → Γ ⊢tm
 gbT kd da dc = bnd-wf tt tt w tt (,-a (,-a (⟨⟩-a w) da tt) dc tt)
   where w = tm-ctx da
 
--- The point object ⊤ = lim_ε.
+-- The point object ⊤ (a head with lim_ε's rule).
 top-wf : ∀ {Γ} → Γ ⊢ctx → Γ ⊢tm topT ∶ ⋆
 top-wf w = bnd-wf tt tt w tt (⟨⟩-a w)
 

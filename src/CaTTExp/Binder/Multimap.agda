@@ -40,7 +40,7 @@
 -- kernel instances KInst), so the side condition also asks that Φ and
 -- t be sorted (`sortedT`, `sortedY` below): every here node sends its
 -- template's data variable to a non-representable formula over the
--- atoms, which is SortDisc's DSub (`MultimapSorted.dataInst-dsub`).
+-- atoms, which implies SortDisc's DSub (`MultimapSorted.dataInst-dsub`).
 --
 -- The construction is over any set B of formers into which the Gray
 -- object formers and the mm heads inject, so it sits beside DES, INIT

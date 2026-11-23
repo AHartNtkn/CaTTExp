@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------
 -- The sort check of the mm and mmc heads (ledger S26j).
 --
---  * dataInst-dsub: a here node passes `dataInst k` exactly when its
+--  * dataInst-dsub: a here node passes `dataInst k` only when its
 --    instance substitution is data-sorted in the sense of
 --    `Gray.Biclosed.SortDisc` (DSub from the template's data variable
 --    to the atoms below k), so a sorted term that infers uses only

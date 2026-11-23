@@ -96,3 +96,14 @@ module _ (𝔐 : Model) where
   soundness : ∀ (ε : Nat → SC) Γ → (∀ i {A} → lookup Γ i ≡ just A → Interp.Mem ε A (ε i)) →
               ∀ t {A} → infer Γ t ≡ just A → Interp.Mem ε A (Interp.⟦_⟧ ε t)
   soundness ε Γ hyp t p = Sound.sound ε Γ hyp t p
+
+  ----------------------------------------------------------------------
+  -- The instance criterion of D7g (free-objects-proofs.md §5.5), in
+  -- every model: a type A has no derivable term over Γ as soon as one
+  -- valuation satisfying Γ has no element of ⟦A⟧.  For a directed
+  -- instance, A is the reversed goal σ(u⁺) ⇒ σ(u⁻) and the valuation
+  -- is the one in which there is no such cell.
+
+  no-term : ∀ (ε : Nat → SC) Γ → (∀ i {A} → lookup Γ i ≡ just A → Interp.Mem ε A (ε i)) →
+            ∀ A → (∀ x → Interp.Mem ε A x → ⊥) → ∀ t → infer Γ t ≡ just A → ⊥
+  no-term ε Γ hyp A empty t p = empty (Interp.⟦_⟧ ε t) (soundness ε Γ hyp t p)

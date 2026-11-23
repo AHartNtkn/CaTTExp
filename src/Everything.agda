@@ -169,6 +169,8 @@ import CaTTExp.GlobularTotal.Lift
 import CaTTExp.GlobularTotal.FillTotal
 import CaTTExp.RCProc
 import CaTTExp.RCProc.Support
+import CaTTExp.RCProc.TwoPath
+import CaTTExp.RCProc.TwoPathCtx
 import CaTTExp.RCProc.Glue
 import CaTTExp.PsRaise
 import CaTTExp.PsRaiseExamples

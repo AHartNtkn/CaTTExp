@@ -26,9 +26,9 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 ## Chapter 1. Core syntax
 
 - [x] 1.1 Raw syntax
-- [ ] 1.2 Judgments
-- [ ] 1.3 Pasting contexts
-- [ ] 1.4 The coherence rule
+- [x] 1.2 Judgments
+- [x] 1.3 Pasting contexts
+- [x] 1.4 The coherence rule
 - [ ] 1.5 Metatheorems
 - [ ] 1.6 Signatures
 - [ ] Q1.1 (surface question): Names or positions.

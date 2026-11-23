@@ -233,4 +233,4 @@ Row F11b. Not derivable from single-sort INIT in an obvious way; non-derivabilit
 | F11c | G_k: cocartesian fibrations over ⟦Dᵏ⟧ from DESC-or (needed for families over cellular μΔ) | HIT |
 | F11d | T-init-asph and T-init-pol as h-level clauses; directed case waits on B24 (HPOL) | HIT |
 | F11e | Directed squash: is the initial model the walking idempotent? | HIT |
-| F11f | Agda: Theorem D over the abstract INIT interface; Prop C′ and the §2.3 collapse as finite checks | HIT, coordinated with S26a (binders) and F10f |
+| F11f | Agda: Theorem D over an abstract category of models (`CaTTExp.HIT.DependentElim`); Prop C′ and the §2.3 collapse (`CaTTExp.HIT.DirectedSquash`); 1-truncated, written, awaiting honesty review | HIT, coordinated with S26a (binders) |

@@ -437,6 +437,11 @@ import CaTTExp.HIT.DirectedSquash
 import CaTTExp.Coinductive.Streams
 import CaTTExp.Coinductive.ConstArity
 import CaTTExp.Coinductive.Conat
+import CaTTExp.Coinductive.RectBandNoDialgebra
+import CaTTExp.Coinductive.DecidableDialgebra
+import CaTTExp.Descent.CoprodUniversality
+import CaTTExp.Descent.CoprodUniversalityOmega
+import CaTTExp.Coinductive.CartMachine
 import CaTTExp.Descent.GlueNotUniversal
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage

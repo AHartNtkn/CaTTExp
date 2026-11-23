@@ -175,6 +175,7 @@ import CaTTExp.PsRaiseExamples
 import CaTTExp.VarSubFv
 import CaTTExp.PsRaiseCongr
 import CaTTExp.PsRaiseCongrExamples
+import CaTTExp.RCProc.Path1
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute

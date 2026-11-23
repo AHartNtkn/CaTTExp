@@ -15,9 +15,10 @@
 -- full cone context Γ, c, coneC Γ c lowered to de Bruijn levels is
 -- exactly `coneShape` of the lowered diagram. So on those diagrams the
 -- types of the universal cone's cells λ_{Γ,g} are the types of a cone
--- that Mikhail's rules recognise (`recognised-*`). A general proof that
--- `coneC` and `coneShape` agree on every diagram of dimension ≤ 2 is
--- not claimed (S27 (h′)); the kernel uses CaTTExp.Cones only.
+-- that Mikhail's rules recognise (`recognised-*`). The agreement holds
+-- for every globular diagram of dimension ≤ 2 (`agrees`, from
+-- CaTTExp.Lim.ConeAgree, S27 (h′)); recognition by the rules is checked
+-- on the three diagrams only.
 ------------------------------------------------------------------------
 module CaTTExp.Binder.LimRecognised where
 
@@ -28,6 +29,7 @@ open import CaTTExp.Lim.Rules
 open import CaTTExp.Lim.Repaired
 open import CaTTExp.Lim.Defects using (Γarr; Parr; Γloop; Πcanonical)
 open import CaTTExp.Binder.LimHeadsExamples using (coneShape)
+open import CaTTExp.Lim.ConeAgree using (Dg; parse; named; cone-agrees) renaming (wf to wfD)
 
 -- The specified cone context Γ, c, coneC Γ c, at de Bruijn levels.
 specified : NCtx → Name → Maybe P.Ctx
@@ -52,3 +54,9 @@ recognised-loop = canonical-accepted
 
 recognised-41 : SpecCone Γ41 5 (from-just (coneC Γ41 5))
 recognised-41 = cone41
+
+-- In general: every pure context that reads as a well-formed diagram of
+-- dimension ≤ 2, named canonically, with apex the next name.
+agrees : ∀ Γ D → parse Γ ≡ just D → T (wfD D) →
+         specified (named Γ) (P.len Γ) ≡ (lower (named Γ) >>= coneShape)
+agrees = cone-agrees

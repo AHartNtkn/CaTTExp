@@ -14,7 +14,7 @@ open import CaTTExp.Binder.Multimap using (MMI; mmi; mctx; mterm; _==MM_)
 open import CaTTExp.Binder.MultimapCells
 open import CaTTExp.Binder.MultimapCellsStrengthen
   using (T-if; F-if; dec; inl; inr; strengthen; lookup-idx; filter-elem; upTo-elem; closeFrom-mono; nthY-just; lookup-map)
-open import CaTTExp.Binder.MultimapCellsSupport using (In; _⊆_; Deps↓; lookup-some)
+open import CaTTExp.Binder.MultimapCellsSupport using (In; _⊆_; Deps↓; lookup-some; elem-split)
 open import CaTTExp.Binder.MultimapCellsRen
 open import CaTTExp.Binder.MultimapCellsComp
 
@@ -103,7 +103,7 @@ cidx-canon : ∀ K Ψ s → cidx (canon K Ψ s) ≡ headOf K Ψ s (supAtoms K Ψ
 cidx-canon K Ψ s = refl
 
 module Idem (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : infer Φ b ≡ just B)
-            (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
+            (wB : T (wf Φ B)) (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
 
   dd : Deps↓ Φ
   dd j e = wf-deps Φ j w e
@@ -111,12 +111,32 @@ module Idem (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : inf
   asb : List Nat
   asb = supAtoms k Φ b
 
-  open SupportRen Φ dd (varsT b) asb public
+  open SupportRen Φ dd (supStart Φ b) asb public
 
-  bvs : varsT b ⊆ vs
-  bvs i p = vs-in i (closeFrom-mono Φ n (varsT b) i p) (infer-scope Φ b eB i p)
+  start-eq : supStart Φ b ≡ varsT b ++ varsY B
+  start-eq = cong (λ m → varsT b ++ varsYM m) eB
 
-  open ForTerm b bvs public
+  bvsT : varsT b ⊆ vs
+  bvsT i p = vs-in i (closeFrom-mono Φ n (supStart Φ b) i (elem-++l i (varsT b) (varsYM (infer Φ b)) p))
+                   (infer-scope Φ b eB i p)
+
+  bvsY : varsY B ⊆ vs
+  bvsY i p = vs-in i (closeFrom-mono Φ n (supStart Φ b) i
+                        (subst (λ xs → In xs i) (sym start-eq) (elem-++r i (varsT b) (varsY B) p)))
+                   (wf-scope Φ B wB i p)
+
+  bvs : supStart Φ b ⊆ vs
+  bvs i p with elem-split i (varsT b) (varsY B) (subst (λ xs → In xs i) start-eq p)
+  ... | inl q = bvsT i q
+  ... | inr q = bvsY i q
+
+  open ForSet (supStart Φ b) bvs public
+
+  b′ : Tm
+  b′ = sT ρ b
+
+  vars-b′ : varsT b′ ≡ map rr (varsT b)
+  vars-b′ = varsT-ren asb vs b bvsT
 
   ra : Nat → Nat
   ra i = idx i asb
@@ -133,9 +153,6 @@ module Idem (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : inf
   S-in : ∀ i → In S i → In asb i
   S-in i p = filter-elem (λ i → elem i S) (upTo k) i p (upTo-elem k i (ab i p))
 
-  G1 : supVars Φ′ b′ ≡ upTo m
-  G1 = trans supVars-ren (map-idx-self vs vs-nd)
-
   nthY-Φ′ : ∀ j → In vs j → nthY Φ′ (rr j) ≡ sY ρ (nthY Φ j)
   nthY-Φ′ j p =
     let (A , eA) = lookup-some Φ j (vs-lt j p) in
@@ -144,8 +161,17 @@ module Idem (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : inf
   infer-b′ : infer Φ′ b′ ≡ just (sY ρ B)
   infer-b′ = strengthen k Φ b B eB
 
+  start′ : supStart Φ′ b′ ≡ map rr (supStart Φ b)
+  start′ =
+    trans (cong₂ (λ X m → X ++ varsYM m) vars-b′ infer-b′)
+      (trans (cong (map rr (varsT b) ++_) (varsY-ren asb vs B bvsY))
+        (trans (sym (map-++ rr (varsT b) (varsY B))) (cong (map rr) (sym start-eq))))
+
+  G1 : supVars Φ′ b′ ≡ upTo m
+  G1 = trans (cong (supVarsFrom Φ′) start′) (trans supVars-ren (map-idx-self vs vs-nd))
+
   types′ : map (nthY Φ′) (supVars Φ′ b′) ≡ map (sY ρ) (map (nthY Φ) vs)
-  types′ = trans (cong (map (nthY Φ′)) supVars-ren)
+  types′ = trans (cong (map (nthY Φ′)) (trans (cong (supVarsFrom Φ′) start′) supVars-ren))
              (trans (mapᵍ-map (nthY Φ′) rr vs)
                (trans (mapᵍ-cong _ _ vs nthY-Φ′) (sym (mapᵍ-map (sY ρ) (nthY Φ) vs))))
 
@@ -188,7 +214,7 @@ module Idem (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : inf
     (subst (FixA ρ″) (sym (atT-ren b))
       (fixA (atT b) (λ i p → S-in i (elem-++r i (concatAt (map (nthY Φ) vs)) (atT b ++ atYM (infer Φ b))
                                       (elem-++l i (atT b) (atYM (infer Φ b)) p)))))
-    (subst (FixV ρ″) (sym vars-b′) (fixV (varsT b) bvs))
+    (subst (FixV ρ″) (sym vars-b′) (fixV (varsT b) bvsT))
 
   fix-entry : ∀ j → In vs j → sY ρ″ (sY ρ (nthY Φ j)) ≡ sY ρ (nthY Φ j)
   fix-entry j p =

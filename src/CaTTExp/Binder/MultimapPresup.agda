@@ -70,8 +70,8 @@ allUnary-ok k (A ∷ As) e with bind-just (unaryTy k A) _ e
 mmTy-ok : ∀ b {ps x z} → mmTy b ≡ just (ps , (x , z)) →
           AllAtom (atoms b) ps × T (atomFm (atoms b) x) × T (atomFm (atoms b) z)
 mmTy-ok (mmi k Φ t) e with bind-just (allUnary k Φ) _ e
-... | ps , e₁ , e₂ with bind-just (((if GT.wfCtx Φ then GT.infer Φ t else nothing)) >>= unaryTy k) _ e₂
-... | xz , e₃ , refl with bind-just (if GT.wfCtx Φ then GT.infer Φ t else nothing) (unaryTy k) e₃
+... | ps , e₁ , e₂ with bind-just (((if GT.wfCtx Φ ∧ all (sortedY k) Φ ∧ sortedT k t then GT.infer Φ t else nothing)) >>= unaryTy k) _ e₂
+... | xz , e₃ , refl with bind-just (if GT.wfCtx Φ ∧ all (sortedY k) Φ ∧ sortedT k t then GT.infer Φ t else nothing) (unaryTy k) e₃
 ... | A , _ , e₄ = allUnary-ok k Φ e₁ , unaryTy-ok k A e₄
 
 ------------------------------------------------------------------------

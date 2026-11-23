@@ -45,7 +45,7 @@ def optimize(before,weights):
     return value,layers
 
 
-def presentation(data):
+def presentation(data, *, allow_empty=False):
     edges,marks = data['edges'],data['marks']
     def poles(path):
         if not path or any(edges[a][1]!=edges[b][0] for a,b in zip(path,path[1:])):
@@ -54,10 +54,22 @@ def presentation(data):
     pole = {}
     faces = {}
     for name,(a,b) in marks.items():
-        pole[name] = poles(a)
-        if pole[name]!=poles(b):
-            raise ValueError('nonparallel planar mark')
-        faces[name] = (tuple(a),tuple(b))
+        if a and b:
+            pole[name] = poles(a)
+            if pole[name]!=poles(b):
+                raise ValueError('nonparallel planar mark')
+        elif not allow_empty:
+            raise ValueError('expected two positive paths')
+        elif a or b:
+            pole[name] = poles(a or b)
+            if pole[name][0]!=pole[name][1]:
+                raise ValueError('an empty path is parallel only to a loop')
+        else:
+            if name not in data.get('scalar_at',{}):
+                raise ValueError(f'scalar_at must specify the vertex of {name}')
+            v = data['scalar_at'][name]
+            pole[name] = (v,v)
+        faces[name] = (pole[name],tuple(a),tuple(b))
     heights = dict.fromkeys(pole.values(),1)
     used = set(marks)|set(edges)
     for d,decl in enumerate(data.get('higher',[]),2):

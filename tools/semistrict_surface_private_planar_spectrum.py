@@ -1,6 +1,7 @@
-"""Compute the exact full Gray interchange failure spectrum on a private planar base.
+"""Compute the exact full Gray interchange failure spectrum on any planar 2-base with private higher generators.
 
 --base FILE uses the path and declaration format of semistrict_surface_planar_layer_spectrum.
+Empty sides are allowed; scalar_at maps each mark with two empty sides to its vertex.
 The checks construct the integral square ideal on actual diagram cuts before
 comparing its highest rank and kernel with the projected clique calculations.
 """
@@ -20,8 +21,30 @@ from semistrict_surface_tree_spectra import Tree, context_spectrum, cycles
 
 
 def solve(data):
-    slots,heights,arrows,_ = presentation(data)
-    return context_spectrum(dict(edges=arrows,slots=[(*s,heights[s]) for s in slots]))
+    slots,heights,arrows,_ = presentation(data,allow_empty=True)
+    result = context_spectrum(dict(edges=arrows,slots=[(*s,heights[s]) for s in slots]))
+    if 'failing_from' not in result or all(a and b for a,b in data['marks'].values()):
+        return result
+
+    # Use only real generating edges for a positive-length middle path.
+    edges,marks = data['edges'],data['marks']
+    scalar = data.get('scalar_at',{})
+    vertices = {v for s in slots for v in s}|{v for edge in edges.values() for v in edge}
+    nonempty = {v:set() for v in vertices}
+    for a,b in edges.values():
+        nonempty[a].add(b)
+    for b in vertices:
+        for a in vertices:
+            if b in nonempty[a]:
+                nonempty[a].update(nonempty[b])
+    sites = []
+    for name,(a,b) in marks.items():
+        path = a or b
+        sites.append((edges[path[0]][0],edges[path[-1]][1],False) if path
+                     else (scalar[name],scalar[name],True))
+    fails_three = any(x in nonempty[y] or (x==y and not (s and t))
+                      for _,y,s in sites for x,_,t in sites)
+    return {'failing_from':3 if fails_three else 4}
 
 
 def subsets(seq):

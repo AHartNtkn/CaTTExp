@@ -204,14 +204,14 @@ The exact characterisation of homotopical polygraphs in every dimension is open 
 
 **Proposal (INIT_B, multi-sorted).** Allow finitely many distinguished variables X₁, …, X_m, each over a fixed base object B_i (B_i = ⊤ by default). Operations are maps over the bases; targets are limit-preserving in the slices `Cat_ω/B_i` (with B_i in place of ⊤); sources are accessible covariant in all X_j.
 
-*Soundness [sketch].* `∏_i Cat_ω/B_i` is presentable. The forgetful functor from models creates limits (limits in a slice are computed from connected limits in Cat_ω, and the terminal object is B_i), and is accessible. So the category of models is presentable and has an initial object, by the same Adámek–Rosický argument as §9.3. Maximality transfers slice-wise.
+*Soundness [proved, relative to the verified researcher answer].* The verified INIT answer (`conjectures/answered/universe-free-descent-and-initial-models-2026-11-21.md`, "Maximal uniform target class") proves existence of initial models for any presentable category of carriers, explicitly including a slice. `∏_i Cat_ω/B_i` is presentable (slices and finite products of presentable categories are), and its terminal object is (B_i)_i, so the same argument applies, with the same maximal target class. Adopted into spec §9.3 (2026-11-23).
 
 *What it gives.*
 - R-U and §9.4's path family as stated, without the DESC-grpd detour, and over non-discrete bases;
 - **inductive families over any base**, e.g. a universal cover over S¹ defined inductively rather than glued;
 - **higher inductive-inductive definitions**: a sort R with p : R → X × X (target limit-preserving in (X, R)) declared together with X, as the Cauchy reals and partiality QIITs need.
 
-Row F11b. Not derivable from single-sort INIT in an obvious way; non-derivability is not claimed.
+Row F11b (closed). Not derivable from single-sort INIT in an obvious way; non-derivability is not claimed.
 
 ---
 

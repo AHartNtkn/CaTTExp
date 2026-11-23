@@ -26,7 +26,7 @@ Let 𝒮 be a small category of finite strong Steiner complexes, with all maps o
 - **rep Θ and shp Θ** are the representables y(λΘ), and the probe pair is Δ ⊠ Θ ↦ λΔ ⊗ λΘ. By Yoneda, y K ⊗ y L ≅ y(K ⊗ L), which gives p and ι. pt is the unit y(λD⁰). δ and σ are the face and collapse maps of globes, and σδ = 1 is a computation in 𝒮.
 - **obj i** is valued as any presheaf. Valued as a nerve N A = Hom(ν −, A), it is the ω-category A.
 
-**Relation to 𝔖.** These are citation-level facts (Steiner 2004; Ara–Maltsiniotis App. A):
+**Relation to 𝔖.** These are citation-level facts (Steiner 2004; Ara–Maltsiniotis App. A). They need every code to be a strong Steiner complex. Globes and their tensors are. The named bases (the parameter `nmFB`) are arbitrary in the Agda, which does not assert loop-freeness or unitality, so the transfer to 𝔖 applies only when every named basis is strong Steiner:
 - *Nerves.* ν is fully faithful on strong Steiner complexes and 𝒮 is dense in strict ω-categories. So ω-categories form a full reflective sub-multicategory of 𝔖̂ by nerves.
 - *Closures.* Hom(|N A ⊗ N B|, Z) = Hom(A ⊗ B, Z), so (N A, N B ▸ N Z) in 𝔖̂ is exactly 𝔖's multimap set. Closures of nerves are nerves: [N A, N Z] ≅ N(A\Z).
 - *Tensors.* 𝔖̂ differs from 𝔖 only in maps *into* a tensor. There the Day convolution is not a nerve.

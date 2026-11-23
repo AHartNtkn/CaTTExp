@@ -110,4 +110,4 @@ That DESC does not follow from INIT is the higher, rule-level form of a standard
 |---|---|---|
 | F12 | DESC vs INIT: neither derivable (this note) | this thread (done) |
 | F12a | Agda shadow `CaTTExp.Descent.InitNotDesc`: independent honesty review passed with nits, fixed | this thread (done) |
-| F12b | Coinductive objects: Prop S in Agda (abstract interface), M-types (§5) at sketch level checked, whether M-types need DESC, directed M-types | new thread (requested) |
+| F12b | Coinductive objects: Prop S in Agda (abstract interface), M-types (§5) at sketch level checked, whether M-types need DESC, directed M-types | "Build coinductive objects from initiality" thread |

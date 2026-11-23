@@ -130,6 +130,12 @@ module Term (Γ : Ctx) (key : Nat → Nat) (p⁻ p⁺ : Nat → List Nat) where
         wρ : Walk Γ w r b
         wρ = subst (λ z → Walk Γ z r b) e₂ wr
 
+    -- The step, exported.
+    step-wf : ∀ l α r → Var2 Γ α → Walk Γ a (l ++ p⁻ α ++ r) b →
+              (Γ ⊢tm egW a b (wg l α r) ∶ arr (arr ⋆ (var a) (var b)) (B Γ a (l ++ p⁻ α ++ r)) (B Γ a (l ++ p⁺ α ++ r))) ×
+              Walk Γ a (l ++ p⁺ α ++ r) b
+    step-wf = step
+
     tgtL-ok : ∀ {S w P T} → Chain S (w ∷ P) T → tgtL (w ∷ P) ≡ T
     tgtL-ok (cons _ _ nil)            = refl
     tgtL-ok (cons _ _ (cons g e ch))  = tgtL-ok (cons g e ch)

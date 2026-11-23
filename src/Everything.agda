@@ -196,6 +196,7 @@ import CaTTExp.RCProc.Glue3Eqv
 import CaTTExp.RCProc.ExchangeSub
 import CaTTExp.RCProc.ExchangeSq
 import CaTTExp.RCProc.ExchangeGamma
+import CaTTExp.RCProc.ExchangeSeq
 import CaTTExp.RCProc.LiftF
 import CaTTExp.RCProc.ColSub
 import CaTTExp.RCProc.LemmaGSub

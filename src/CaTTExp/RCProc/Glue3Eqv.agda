@@ -10,6 +10,7 @@
 --
 --   id₂ x y f : f ⇒ f            (over the 1-chain chainC 1)
 --   unitE     : id₂ f ∗ h ⇄ h    (over a 2-disc)
+--   reflE     : h ⇄ h            (the identity 3-cell, over a 2-disc)
 --
 -- `paste`: two squares K⁻ ∗ g ⇄ e ∗ K⁺ sharing a side give one for the
 -- composites; and `stripE`: a low 2-cell K : U ⇒ V on the left can be
@@ -146,6 +147,23 @@ private
 unitE : ∀ {Γ x y f g h} → Γ ⊢tm h ∶ arr (arr ⋆ x y) f g →
         Eqv Γ (arr (arr ⋆ x y) f g) (vcomp (arr ⋆ x y) f f g (id₂ x y f) h) h
 unitE {Γ} {x} {y} {f} {g} {h} dh = (coh Θu Tu σ , retarget dTu sσ) , (coh Θu Tu′ σ , retarget dTu′ sσ)
+  where
+  σ = ⟨⟩ ,ₛ x ,ₛ y ,ₛ f ,ₛ g ,ₛ h
+  b = bd2 dh
+  sσ : Γ ⊢sub σ ∶ Θu
+  sσ = ,-wf (,-wf (,-wf (,-wf (,-wf (⟨⟩-wf (tm-ctx dh)) (fst b)) (fst (snd b))) (fst (snd (snd b)))) (snd (snd (snd b)))) dh
+
+------------------------------------------------------------------------
+-- The identity 3-cell on a 2-cell.
+
+private
+  Tr : Ty
+  Tr = arr (arr A′ (var 2) (var 3)) (var 4) (var 4)
+
+  dTr = snd (from-just (infer Θu (coh Θu Tr (idS 5))))
+
+reflE : ∀ {Γ x y f g h} → Γ ⊢tm h ∶ arr (arr ⋆ x y) f g → Eqv Γ (arr (arr ⋆ x y) f g) h h
+reflE {Γ} {x} {y} {f} {g} {h} dh = (coh Θu Tr σ , retarget dTr sσ) , (coh Θu Tr σ , retarget dTr sσ)
   where
   σ = ⟨⟩ ,ₛ x ,ₛ y ,ₛ f ,ₛ g ,ₛ h
   b = bd2 dh

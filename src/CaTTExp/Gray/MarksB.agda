@@ -33,9 +33,8 @@
 -- formerMarks, carry grpd_k′ with k′ ≤ k"
 -- (invertibility-markings.md §1.2, precision from PR #41).
 -- `markVar` proves the kernel's hypothesis MarkVar (rule MARK).
--- Renaming and substitution stability (MarkRen, MarkSub) are the
--- binder-syntax counterparts of Gray.MarksSubst / Gray.MarksFuel and are
--- not proved here.
+-- Renaming and substitution stability (MarkRen, MarkSub) are proved in
+-- CaTTExp.Gray.MarksBKernel (instantiated for DES in Gray.MarksBDes).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Signature as Old
@@ -91,10 +90,18 @@ anyM : (Mark → Bool) → List Mark → Bool
 anyM p []       = false
 anyM p (m ∷ ms) = p m ∨ anyM p ms
 
--- (OBJ-k): the 0-target of t is a variable marked grpd_k, k ≤ hd(t).
+-- A term carries a mark grpd_k′ with k′ ≤ h: a variable through its
+-- entry, a former occurrence through formerMarks (μ_k of a sort marked
+-- grpd, spec §9.3).
+isGrpd : Ctx → Nat → Tm → Bool
+isGrpd Γ h (var C)        = anyM (grpdLe h) (marksAt Γ C)
+isGrpd Γ h (bnd b y Δ ts) = anyM (grpdLe h) (formerMarks b y Δ)
+isGrpd Γ h _              = false
+
+-- (OBJ-k): the 0-target of t carries grpd_k, k ≤ hd(t).
 objAt : Ctx → Nat → Maybe (Tm × Tm) → Bool
-objAt Γ n (just (_ , var C)) = anyM (grpdLe (n ∸ 1)) (marksAt Γ C) ∧ (1 <ℕ n)
-objAt Γ n _                  = false
+objAt Γ n (just (_ , c)) = isGrpd Γ (n ∸ 1) c ∧ (1 <ℕ n)
+objAt Γ n nothing        = false
 
 objRule : Ctx → Maybe Ty → Bool
 objRule Γ nothing  = false
@@ -160,15 +167,10 @@ judgeT Γ t = judge (fuelOf Γ t) Γ t
 ------------------------------------------------------------------------
 -- The kernel's mark parameter.
 
-isVarGrpd : Ctx → Nat → Tm → Bool
-isVarGrpd Γ k (var C)        = anyM (grpdLe k) (marksAt Γ C)
-isVarGrpd Γ k (bnd b y Δ ts) = anyM (grpdLe k) (formerMarks b y Δ)
-isVarGrpd Γ k _              = false
-
 mark : Ctx → Mark → Tm → Bool
 mark Γ minv      t = jinv (judgeT Γ t)
 mark Γ mps       t = jps (judgeT Γ t)
-mark Γ (mgrpd k) t = isVarGrpd Γ k t
+mark Γ (mgrpd k) t = isGrpd Γ k t
 
 ------------------------------------------------------------------------
 -- (MARK): a variable has the marks of its entry.

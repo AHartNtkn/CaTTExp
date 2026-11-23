@@ -373,4 +373,4 @@ So a structure with directed interchange along 0-cells can never be ν of a comp
 | E9′ (polynomial side-condition check with sharing) | open; experiment handed to LCORE | this thread + LCORE |
 | §1.4: rec admissible | open, low priority | this thread |
 | E6 first uniform case (ΣD² ∨ ΣD², dimension 5) | in progress | this thread |
-| Agda: encode inv/ps judgments, the propagation rules, and the Example 1.6 checks | done (`Gray/Marks*.agda`, ledger E4); DES destructors on the binder kernel (`Gray/DesSide`, `Gray/MarksB`, `Gray/MarksBExamples`, 2026-11-23); their MarkRen/MarkSub remain | MARK (former) |
+| Agda: encode inv/ps judgments, the propagation rules, and the Example 1.6 checks | done (`Gray/Marks*.agda`, ledger E4); DES destructors on the binder kernel (`Gray/DesSide`, `Gray/MarksB`, `Gray/MarksBExamples`, 2026-11-23); MarkRen/MarkSub proved (`Gray/MarksBKernel`, `Gray/MarksBDes`), given kernel presupposition | MARK (former) |

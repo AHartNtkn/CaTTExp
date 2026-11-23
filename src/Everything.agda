@@ -312,6 +312,11 @@ import CaTTExp.Gray.MarksFuel
 import CaTTExp.Gray.DesSide
 import CaTTExp.Gray.MarksB
 import CaTTExp.Gray.MarksBExamples
+import CaTTExp.Binder.Forget
+import CaTTExp.Gray.MarksBSubst
+import CaTTExp.Gray.DimB
+import CaTTExp.Gray.MarksBKernel
+import CaTTExp.Gray.MarksBDes
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp

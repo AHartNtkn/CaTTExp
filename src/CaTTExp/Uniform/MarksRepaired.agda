@@ -30,8 +30,12 @@
 --     are abstract, so sound′ is a case dispatch over those fields.
 --     None of the fields is (IL).                     (sound′)
 --   * the composite step (Lemma 4.1) and the join step (§4.6), proved
---     separately over an abstract category and not yet connected to
---     Sem′                                           (iso-path, join-iso)
+--     separately over an abstract category      (iso-path, join-iso)
+--   * the operation case with iso-path connected   (OpModel, sound-op).
+--     Two inputs remain unchecked: (1) that the coherence's image is
+--     pcomp p for the lift's letter images (p is a free field, not tied
+--     to liftTops h, so OpModel can be inhabited with p = nil), and
+--     (2) `letters`, the per-letter step.
 ------------------------------------------------------------------------
 module CaTTExp.Uniform.MarksRepaired where
 
@@ -401,3 +405,29 @@ eh-ord-C    : invU (setting false false) ehHead (unm ∷ cO ∷ unm ∷ unm ∷ 
 eh-ord-C    = refl
 eh-ord-all  : invU (setting false false) ehHead (cO ∷ cO ∷ unm ∷ unm ∷ []) ≡ true
 eh-ord-all  = refl
+
+------------------------------------------------------------------------
+-- E14(d): the operation case with Lemma 4.1 connected. The model's
+-- image of the designated lift is a path p of letter images in a
+-- category, and "invertible" is IsIso of its composite. Unchecked:
+-- (1) that p is the path of the lift's letter images (p is a free
+-- field, not indexed by liftTops h); (2) `letters`, the premises of
+-- (OP-inv_S′) make every letter image in p invertible (Thm 8.1
+-- (i)–(iii) for the outer letters, the iord reading for the inner ones).
+
+record OpModel (S : Setting) (h : Head) (cs : List Comp) : Set₁ where
+  field
+    C     : Cat
+  open Cat C public
+  open CatFacts C public
+  field
+    a b     : Ob
+    p       : Path a b
+    letters : T (all (letterInv S h cs) (liftTops h)) → T (innerOK h cs) → AllIso p
+
+sound-op : ∀ S h cs (M : OpModel S h cs) → case h ≡ grayOpC → allOrd h cs ≡ false →
+           T (invU S h cs) → OpModel.IsIso M (OpModel.pcomp M (OpModel.p M))
+sound-op S h cs M c a q rewrite a | c =
+  OpModel.iso-path M (OpModel.p M)
+    (OpModel.letters M (fstT (all (letterInv S h cs) (liftTops h)) q)
+                       (sndT (all (letterInv S h cs) (liftTops h)) q))

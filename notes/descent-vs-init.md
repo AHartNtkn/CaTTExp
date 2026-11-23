@@ -99,6 +99,28 @@ No DESC is used, since ℕ ⊗ C (not ℕ × C) is what appears. If one wants �
 
 **General M-types (superseded 2026-11-23 by `coinductive.md`).** The terminal-chain sketch that stood here overstated what is needed. Constant-arity M-types, directed ones included, follow from INIT and chapter 8 alone: νX. A × (E\X) = SnocList(E)\A ([agda] `CaTTExp.Coinductive.ConstArity`), by the same transposition as Prop S. The chain limit needs no R-cot⁺, since sections over ℕ live in ℕ\Y. What the terminal chain really needs is the fibres of an INIT family over ℕ, and that is where a universe (Ahrens–Capriotti–Spadotti) or DESC-grpd comes in. For dependent arities (p : E → A), every known route uses disjoint coproducts, and no countermodel is known. That case is open (F12c) and has a paste-ready prompt in `conjectures/outbox/dependent-m-types-without-descent.md`.
 
+## 5b. Universality of finite coproducts as its own rule [proposed; proved here, note level] (F12d, 2026-11-23)
+
+Anthony's question: why does pullback-stability of coproducts need descent? It does not need *all* of DESC, but it does need *some* rule. It is not derivable from the non-DESC rules: Model D (`coinductive.md` §4, [agda] `Descent/GlueNotUniversal`) and the rectangular-band model R (`conjectures/answered/dependent-m-types-without-descent-2026-11-23.md`, [agda] `Coinductive/RectBandNoDialgebra`) satisfy every non-DESC rule on the pattern of §3, and in both, coproducts are not universal. Today it enters only as the universality clause of DESC-grpd restricted to finite discrete diagrams. It can be stated alone:
+```
+(U-⊔)   f : W → A ⊔ B   ⟹   the comparison  [π, π′] : (W ×_{A⊔B} A) ⊔ (W ×_{A⊔B} B) → W  inv
+(U-∅)   f : W → ∅       ⟹   f inv                         (the initial object is strict)
+```
+- **CaTT form.** The comparison is a fixed term built from chapter 6 limits and colimits, for every map f, with no cocartesian or groupoid side condition. The conclusion is an `inv` mark, as in DESC-univ. Checking it is syntax-directed. The rule is the DESC-grpd clause for finite discrete diagrams with gluing and uniqueness deleted.
+- **Soundness.** In Cat_ω, coproducts are universal (DESC-grpd soundness, spec §9.2; T-coprod, `ordinary-math.md` §2.3 [proved here, G4]), and ∅ is strict.
+- **Strictly weaker than DESC.** Model B (the frame 2) satisfies U-⊔ and U-∅ (frame distributivity, and W ≤ 0 ⇒ W = 0) but not disjointness, which is a theorem of DESC-grpd (spec §9.2). Model A (Set) and Model C (Pos) also satisfy U-⊔. So all three underivability results of Theorem 1 survive with U-⊔ added: disjointness (Model B), ΩS¹ ≃ ℤ and T-graph (Model A), and EX (Model C).
+- **What U-⊔ buys.**
+  - Dialgebra-form dependent M-types for every map between finite copowers of ⊤. This is the researcher's restoration theorem, coherent and with a non-cartesian tensor [researcher, verified in outline].
+  - With L-× it also gives every *decidable family over sets* (`coinductive.md` §4, "Internal labels"), including Fin → ℕ.
+  - The splitting of any W over 2 = ⊤ ⊔ ⊤ along a Boolean test, which is the step that route 4 lacked.
+  - T-coprod's h-level clause does not need it, since that is a T-init instance (§4 table, spec §9.1).
+- **What still needs DESC.**
+  - Disjointness, and hence true ≠ false (Model B).
+  - Universality along infinite or groupoid-indexed coproducts, such as ℕ × C ≃ ∐_ℕ C ≃ ℕ ⊗ C for non-set C. At set targets, L-× covers what the constructions here use.
+  - Universality of other colimits along cocartesian fibrations (DESC-univ).
+  - All gluing and effectiveness: the universal cover, ΩS¹ ≃ ℤ, EX, G, and R-U's fibres.
+- **Optional companion (D-⊔).** A ×_{A⊔B} B ≃ ∅. U-⊔ + D-⊔ is extensivity. Model B shows D-⊔ is independent of U-⊔. Together they give T-coprod and true ≠ false without effectiveness, but nothing in this note needs D-⊔ yet.
+
 ## 6. Literature
 
 That DESC does not follow from INIT is the higher, rule-level form of a standard fact. Locally presentable categories have initial algebras for accessible functors (Adámek–Rosický), while descent characterises toposes among them (Lurie, HTT Thm 6.1.3.9, for (∞,1)). Sets and frames are presentable and fail higher descent. No new conjecture arises, so nothing is sent out.
@@ -110,4 +132,5 @@ That DESC does not follow from INIT is the higher, rule-level form of a standard
 | F12 | DESC vs INIT: neither derivable (this note) | this thread (done) |
 | F12a | Agda shadow `CaTTExp.Descent.InitNotDesc`: independent honesty review passed with nits, fixed | this thread (done) |
 | F12b | Coinductive objects: Prop S and constant-arity M-types in Agda (`coinductive.md` §1–2) | "Build coinductive objects from initiality" thread |
-| F12c | Dependent-arity M-types without DESC, undirected and directed (`coinductive.md` §4–5) | same thread; outbox prompt ready |
+| F12c | Dependent-arity M-types without DESC, undirected and directed (`coinductive.md` §4–5) | same thread; answered (researcher, verified) |
+| F12d | U-⊔ (universality of finite coproducts) as its own rule, weaker than DESC (§5b): proposed, sound, strictly weaker; independent check requested | same thread |

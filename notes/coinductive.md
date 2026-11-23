@@ -109,7 +109,20 @@ The literature constructions all assume disjoint coproducts: Abbott–Altenkirch
 - **Dialgebra form is not derivable without DESC.** In the rectangular-band model R (pairs of sets, with the empty pair), the axioms hold: R is locally finitely presentable and cartesian closed, with disjoint but non-universal coproducts and a complemented diagonal on the labels. Yet there is no terminal p-dialgebra for the first injection 1 → 1 + 1, nor for Fin → ℕ. Two labels u = (0, 1) and v = (1, 0) have empty fibres, but their band product has a fibre point, so the maps from two constant-step dialgebras into a terminal one must agree there and then disagree after one step. [agda] `CaTTExp.Coinductive.RectBandNoDialgebra` (`inactive-product`, `no-first`, `no-fin`), an independent port of the response's Lean certificate. R still has the terminal *coalgebras* of 1 + X and List (routes 5 and 6), so the separation is exactly the coalgebra/dialgebra gap that route 6 located.
 - **Classification for finite copowers.** For f : J → I finite, p_f has a terminal dialgebra in every model iff |I| ≤ 1 or f is bijective. The other cases fail in R, in affine spaces over 𝔽₃ (with a non-cartesian tensor) and in augmented vector spaces [checked in outline].
 - **Restoration.** Universality of finite coproducts alone (a theorem of DESC-grpd) gives the terminal p-dialgebra for every p between finite copowers, coherently and with a non-cartesian tensor [checked in outline]. So in the system, finite-constructor dependent M-types in dialgebra form follow from DESC-grpd.
-- **Internal labels.** Labels such as A = ℕ stay open in the dialgebra form, even with universality. The coalgebra form (route 6) needs no DESC.
+- **Internal labels: decidable families [proved here, note level; 2026-11-23].** Call p : E → A a *decidable B-family* if E ≅ χ*(tt) ⊆ A × B for some χ : A × B → 2, with p the first projection. Examples:
+  - Fin → ℕ, with B = ℕ and χ(n, i) = (i < n), defined by recursion.
+  - Any p whose label object A has decidable equality δ : A × A → 2 (δ*(tt) = diagonal), with B = E and χ(a, e) = δ(a, p e).
+  - Every map between finite copowers.
+
+  *Theorem.* Assume 𝒱 satisfies (a)–(c) with ⊗ = ×, and finite coproducts are universal (U-⊔, `descent-vs-init.md` §5b). Then every decidable B-family has a terminal p-dialgebra.
+  1. **Split.** By pullback pasting, C ×_A E ≅ (χ ∘ (h × B))*(tt) ⊆ C × B. U-⊔ along χ ∘ (h × B) : C × B → ⊤ ⊔ ⊤ gives C × B ≅ (C ×_A E) ⊔ Q with Q the ff-part. No disjointness is needed.
+  2. **Machines.** Let K be the category of (C, h : C → A, t̄ : C × B → C). It has a terminal object, SnocList(B)\A (Known 1 / §2).
+  3. **Retraction.** R : K → D restricts t̄ to C ×_A E. J₀ : D → K extends t by "stay": [t, π₁] on (C ×_A E) ⊔ Q. J₀ is functorial because a dialgebra map g preserves h, so g × B maps each part to the same part. And R J₀ = id.
+  4. **Idempotent equaliser.** η_D := R(!_{J₀D}) : D → X := R(T_K) is natural (terminality in K), so η_X ∘ η_Z = η_Z. The equaliser of id_X and η_X in D (created by 𝒱, since dialgebra maps commute with t) is terminal. η_Z factors through it, and any f into it satisfies e f = η_X e f = η_Z, with e mono.
+
+  **In the system:** with U-⊔ and L-×, the same holds when A and B are sets and C is arbitrary (directed included). L-× turns the ⊗-machines of §2 into ×-machines, because their carrier SnocList(B)\A is a set, and maps C × B → (set) are multimaps. The equaliser and the higher levels are trivial, as in route 5, because every map compared lands in a set.
+
+  **Open:** non-decidable families; non-cartesian ⊗ without L-× (internal B needs B × C ≃ B ⊗ C); and directed labels, where {0<2} → [2] already fails even though Cat_(∞,1) has universal coproducts. The coalgebra form (route 6) needs no DESC.
 
 ## 5. Directed M-types
 

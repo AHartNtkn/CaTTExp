@@ -9,16 +9,20 @@
 -- ⟦Γ⟧ = bnd free 0 Γ ⟨⟩: the former binds Γ as its telescope (entries
 -- refer to earlier entries by bvar 0 j), takes no arguments, and has
 -- type ⋆. The side condition asks that Γ be closed (no parameter of
--- Θ); the binder rule's telescope premise, (Θ ⧺ openTel Γ) ⊢ctx, is
--- then exactly the premise Γ ⊢, checked by the kernel itself with its
--- own coh side condition (CaTT's or L's) and mark judgment.
+-- Θ); the binder rule's telescope premise, (Θ ⧺ openTel Γ) ⊢ctx, says
+-- that Γ is well formed after Θ, checked by the kernel itself with its
+-- own coh side condition (CaTT's or L's) and mark judgment. That this
+-- is equivalent to Γ ⊢ on its own is not proved here (it needs a
+-- strengthening lemma for the kernel).
 --
 -- Why the telescope and not an index outside the syntax (as S27's
 -- chapter 6 heads index lim by a pure context): (FREE)'s premise is
 -- Γ ⊢ in the theory being defined, so it should be checked by the
 -- kernel's own rules, under whatever side condition it runs with.
--- Since Γ is closed, substitution fixes it (`closed-tel`), and ⟦Γ⟧ is
--- a constant: it has no suspension issue to worry about.
+-- Since Γ is closed, substitution fixes it (`closed-tel`), so
+-- substitution fixes ⟦Γ⟧. Suspension does not cover it: the
+-- suspension of #552 covers empty-telescope heads only, and free
+-- objects do not suspend semantically (ledger S27 (g)).
 --
 -- Not here: the generic diagram η_Γ (GEN) and the LIFT fillers (S26k
 -- steps 2–3), which need elements ⊤ → C with ⊤ = lim_ε (spec §6.6).

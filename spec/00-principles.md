@@ -103,3 +103,4 @@ Decidability is not the same as efficiency. Several side conditions are decidabl
 **Q0.2. Are objects written as types or as terms?** The kernel has objects as terms of sort ⋆ and elements of C as 1-cells ⊤ → C (chapter 6).
 - *Option A: as in the kernel* (`x : ⊤ → C`). Nothing to elaborate; every element is visibly a functor, so lax naturality at elements is visible.
 - *Option B: elements as variables of type C* (`x : C`), elaborated to `⊤ → C`. Reads like ordinary mathematics; the elaborator must insert ⊤ and whiskerings everywhere, and error messages must translate back.
+- **Decided (Anthony, 2026-11-22): Option A, as in the kernel** (`x : ⊤ → C`, `f : x ⇒ y`, `x ; F`), by the Q0.1 principle. Abbreviations such as `El(C) := ⊤ → C` are left to users. This requires the surface to support user-defined abbreviations (definitions unfolded by elaboration, covered by the conservativity obligation of §0.5).

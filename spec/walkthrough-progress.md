@@ -20,7 +20,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 0.6 Decidability of checking
 - [x] Q0.1 (surface question): Which composition order does the user write?
   - **Decided:** Option A, diagrammatic only; principle: align surface with kernel, ignore historical convention. Application written `x ; F`.
-- [ ] Q0.2 (surface question): Are objects written as types or as terms?
+- [x] Q0.2 (surface question): Are objects written as types or as terms?
+  - **Decided:** Option A, kernel form `x : ⊤ → C` (also settles Q6.1). Users define abbreviations like `El(C) := ⊤ → C` themselves; surface must support user-defined abbreviations.
 
 ## Chapter 1. Core syntax
 

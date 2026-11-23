@@ -150,3 +150,44 @@ If decidability concerns *checking a supplied witness*, every such sound languag
 ### Validation
 
 Run `python3 -B scripts/s22/check_invertibility_clock.py` and `python3 -B scripts/s22/check_invertibility.py` from the repository root. The [clock checker](../../../scripts/s22/check_invertibility_clock.py) compares direct tape execution with the string relations, checks complete symmetric congruence components for three halting examples with branching predecessors and an isolated immediate halt, and verifies 24 successive prefix factorizations on each of three infinite runs including a repeated stationary configuration. It also computes reversible cells by descending from the top of bit fibres of heights two through six. The [strip checker](../../../scripts/s22/check_invertibility.py) checks the ungraded multiplication, the marked boundaries and two-tile cylinder subdivisions through hom degree nine. The halting basin bound, the clock criterion and the finite-height descent above prove the statements for arbitrary run length and degree.
+
+## Verification (2026-11-23, thread "Compare alternatives to the marker system")
+
+**Status: verified, strict and weak.** The weak case's cited results were checked against the sources (see "Citation check" below). Q1 is answered negatively: invertibility is not recursively enumerable, even for one fixed finite marked computad (a universal machine) with the input varying. Q2 therefore has a false antecedent. Q3 is answered with a sound, decidably checked periodic rule, and a proof that no inclusion-maximal decidably checked sound fragment exists. The consequences are in `../../marking-alternatives.md` §10.
+
+**Checks run.** Both committed validators were run from the repository root, and every check passes.
+- `python3 -B scripts/s22/check_invertibility_clock.py`: direct tape execution agrees with the string relations. The symmetric congruence components of three halting runs (50, 28 and 14 words, with branching predecessors) stay within the predicted length bound. The immediate-halt input is an isolated word. 24 successive clock factorizations w_i →* w_{i+1}s are checked on each of three infinite runs. In truncated bit fibres of heights 2–6, the reversible cells exclude the root defect.
+- `python3 -B scripts/s22/check_invertibility.py`: as in r2 (gauntness, 10,360 cubical tests, alternators and the Steiner strip through hom degree 9).
+
+**Halting ⇒ not invertible (the graded model).** Checked by reading, every step.
+- *Length bound.* The language of configuration words and sweep words is closed under every rule in both directions. The forward rewriting on it is deterministic, so the forward basin of the terminal word h s^N is closed under backward steps. Forward rules never shorten a word, so every word congruent to w_0 has length at most |h| + N.
+- *Grading.* P adds t = s. Replacing t by s turns every P-derivation into a machine derivation (the grading step becomes an equality), and x is fresh, so it stays last. So L([w_0 x]) ≤ |h| + N + 1 is finite. L is superadditive under concatenation, so d = 2L is too.
+- *The model.* The hom is a disjoint union over grades g of copies of E truncated above degree d(g). It is closed under the Gray multiplication, because a tensor of an i-category and a j-category has dimension at most i + j ≤ d(gh). The unit is bit 0 at the unit grade, whose fibre has height 0 (no relation has an empty side).
+- *The marks.* Each machine relation has both sides in one grade and at bit 0, so it goes to an identity. The equation t = s puts u : s ⇒ t inside one fibre (bit 0 to bit 1), which is the only use of the grading equation. u;v has label 0 on the boundary (0, 0), so it is the identity. Joining with t (bit 1) sends tu, tv and tf to identities. So every mark, with its whole tower of adjoined inverses, goes to identities.
+- *The root.* w_0 f goes to a label-0 cell on the label-1 identity, in a fibre of finite height at least 2. It is not an identity. Descending from the top of a finite-height fibre, identity cancellations give strict inverses, and gauntness makes them identities. So no reversal tower exists over the image, and by freeness none exists in F(C, M).
+
+**Nonhalting ⇒ invertible (the clock criterion).** Checked by reading at the level of its structure.
+- The based split through an invertible c is the r2 split (verified there), now with whiskering by s throughout. The marks make u;v, tu, tv and tf invertible, which is what the split needs.
+- The invariant ("split contraction before the prefix") and the reversal step for s A are checked. The two candidates are h;(sB) and sB, and their cancellations are again a split contraction and an invertible cell.
+- *Coinduction up to cylinders.* R Φ(X) ⊆ Φ(R X) and X ⊆ R Φ(R X) give R X ⊆ Φ(R X). So R X is postfixed and its members are invertible. This is the standard up-to-context soundness argument, checked. In the strict case the compatibility of R rests on lifting along reversible cylinders (Lafont–Métayer–Worytkiewicz, Lemma 13), taken on trust.
+- An infinite run gives the comparisons w_i ⇒ w_{i+1} s as composites of whiskered marked word rules, so they are invertible.
+- *Weak case.* It rests on coinductive completion of the ordinary hom (Ozornova–Rovelli–Walde) and on Gepner–Heine. Both were checked against the sources; see "Citation check" below. The separating direction transfers by the embedding of strict targets.
+
+**Non-r.e.** A computable reduction from nonhalting to invertibility. If invertibility were r.e., halting would be decidable by dovetailing. Checked.
+
+**Q3.**
+- *Periodic clock certificate.* It consists of a clock diagram with Cert proofs of its four hypotheses, a finite list of prefix words with successor indices, and a Cert derivation of each comparison w ⇒ w′s. Checking it is decidable. Following successors gives the infinite chain, so it is sound by the clock criterion, also under substitution.
+- *It certifies the r2 example.* Take s = 1_a, t = p and the single prefix 1_a pointing to itself. The four hypotheses are exactly the four marks, and the root is f. Checked.
+- *No decidable cell-membership superset of Cert.* On a monoid presentation, a sound superset of Cert would decide whether every generator is a unit, that is, the group problem (Narendran–Ó'Dúnlaing–Otto). Checked.
+- *No maximal witness-checked fragment.* Any such language accepts an r.e. set, so by the reduction it misses a true instance. Adding that instance as a ground axiom is sound by freeness and keeps checking decidable. Checked.
+
+**Citation check (2026-11-23, against the arXiv PDFs).**
+- *Ozornova–Rovelli–Walde, "Cores and localizations of (∞,∞)-categories", arXiv:2603.11005v2.*
+  - Prop. 5.29: localization at the coinductive isomorphisms is ∞-surjective and is the coinductive completion. Lemma 5.27: ∞-surjective maps reflect coinductive isomorphisms. Together these support "completion inverts coinductive isomorphisms, is surjective on cells relative to boundaries, and reflects towers". **Matches.**
+  - Lemma 5.20: coinductive invertibility does not depend on the walking coinductive isomorphism (any L-trivial cell complex with a free arrow). **Matches.**
+  - Construction 5.35 orients the attaching cells as h₊ : id → g₊f and h₋ : fg₋ → id, which are not both toward identities. Lemma 5.38's two-stage step inverts h₊ and h₋ and gets the walking isomorphism, so reversing h₊ gives the same localization, as the response says. With Cor. 5.39's colimit step and Lemma 5.20, the re-oriented tower is a valid walking object. **The re-orientation argument checks.**
+  - ORW work in (∞,∞)-categories (Gepner–Haugseng enrichment) and say strict categories do not appear. Its use here is on the ordinary homs of the weak model, which are (∞,∞)-categories. That fits.
+- *Gepner–Heine, arXiv:2510.10504v1.*
+  - Remark 3.8.3: the embedding ∞Cat_strict ⊂ ∞Cat is lax monoidal for the Gray structures. Remark 4.5.4: the enriched-category localizations have the embedding as right adjoint, so a strict Gray-enriched category is a weak one. **Matches** the transfer of the separating model.
+  - Theorem 3.8.1 (Campion): the Gray structure descends from Steiner categories, so ∞Cat_Steiner ⊂ ∞Cat is monoidal and Steiner strips are computed as in the strict case. **Matches.**
+  - Prop. 4.9.1(1): maps out of a suspension S(A) are a pullback of the endpoint maps and a map into the hom. Cor. 4.8.17 gives the homs of lax arrow categories. These support the inductive "endpoints, then a map into their hom" description used for transport along cylinders. **Matches.**

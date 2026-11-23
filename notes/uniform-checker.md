@@ -188,6 +188,7 @@ The first piece of S3a's raw syntax that is not specific to grids. `scripts/e6/r
      - **Not yet proved.** That this model separates *every* pair of distinct cells through degree three. That is (K45)'s exactness, and it needs step 2.
   2. **Identification, by normal forms.** Show that every typed term through degree three is ≐-equal to a Gray normal form. This is the exactness half of (K45), and it is where most of the proof lies.
   3. **Degree four.** Over each Gray value, the 4-cells of P are the finite comparison fibre of (K65). Its presentation goes through `Present` and `WordPresent`, with letters read from `SigP`'s ι, r, t and h. `Grid` is the case of suspended grids.
+  4. **Above degree four** (ledger S25, verified 2026-11-23). A cell is a typed list of transport-normalized whole records with a Boolean two-neighbour filter (no native fork at a junction), computed by the interval formula of `conjectures/answered/directed-interchange-closed-form-above-four-2026-11-23.md`. The Agda work is the record type, the two fork tables, transport normalization, and confluence from same-axis gluing (formula (1)) and the mixed-overlap exclusion. The d = 5 end-piece lemma can enter as a decided finite check.
 
 ## 2. What this does not check (the trust boundary)
 

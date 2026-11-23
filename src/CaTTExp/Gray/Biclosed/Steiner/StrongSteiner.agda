@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Strong Steiner bases, decided by computation (ledger C5d).
+-- Strong Steiner bases, certified by a sound check (ledger C5d).
 --
 -- The transfer from 𝔖̂ to the literal 𝔖 (notes/gray-model-formal-plan.md,
 -- "Relation to 𝔖") uses Steiner's theorem that ν is fully faithful on
@@ -23,6 +23,9 @@
 -- and, for loop-freeness, a height function strictly increasing along
 -- <₁ (`Height`), from which `acyclic`: no nonempty <₁-path returns to
 -- its start.  So a named basis is certified strong Steiner by `tt`.
+-- The check is sound but not proved complete: nothing here shows that
+-- it returns true on every strong Steiner basis (that would need the
+-- computed height `hgt` to increase along <₁ on every loop-free basis).
 --
 -- Checked here: globes λDⁿ for n ≤ 4 (`globes`), and a loop basis
 -- (1-cells p → q and q → p) is rejected (`loop-rejected`) while

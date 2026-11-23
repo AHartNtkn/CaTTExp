@@ -106,6 +106,20 @@ wt2 : (wellTyped Γ₂ (d2 (linv 2)) ∷ wellTyped Γ₂ (d2 (rinv 2)) ∷
     ≡ (true ∷ true ∷ true ∷ true ∷ [])
 wt2 = refl
 
+-- λ_α : α⁻ˡ ; α → id_g and ρ_α : α ; α⁻ʳ → id_f, over the boundary (x, y).
+xy : Sub
+xy = ⟨⟩ ,ₛ v 0 ,ₛ v 1
+
+unitL2-ty : inferTy Γ₂ (d2 (unitL 2)) ≡
+  just (arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 3))
+            (comp 1 xy (v 3) (v 2) (d2 (linv 2)) (v 3) (v 4)) (idc 1 xy (v 3)))
+unitL2-ty = refl
+
+unitR2-ty : inferTy Γ₂ (d2 (unitR 2)) ≡
+  just (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2))
+            (comp 1 xy (v 2) (v 3) (v 4) (v 2) (d2 (rinv 2))) (idc 1 xy (v 2)))
+unitR2-ty = refl
+
 -- A 1-cell destructor does not apply to the 2-cell's arguments.
 no-dim : is-just (infer Γ₂ (d2 (linv 1))) ≡ false
 no-dim = refl

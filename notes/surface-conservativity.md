@@ -320,8 +320,8 @@ The outbox prompt asks for both classifications, over L and over CaTT, as one qu
 Not formalized yet:
 - The whiskering interface for two-tier and uniform L: derived whiskers in the Gray kernels, with their side condition for all k, j (plain CaTT is done in `WhiskerPure`). Plan for two-tier L:
   - Reuse plain CaTT's heads. `Surface/WhiskerGrayCheck.agda` checks by evaluation that graySide accepts Derived's whisker heads (BK k j, wK k j) and (LK k j, lK k j) for k + j ≤ 3, including k = 0, which whiskers across objects in a two-hom context.
-  - Make `Derived`, `DerivedBoundary` and `WhiskerPure` generic in the side condition. Only the side-condition lemmas (`side-BK0`, `side-BK`, `side-LK`) and the typing judgments depend on cattSide; the type computations are pure syntax.
-  - Prove graySide on these heads for all k, j. For k ≥ 1 the head lives on one hom, where graySide is Finster–Mimram's condition (single-hom conservativity, E1: `Gray/SingleHom`, `Gray/SuppVars`, `Strict/SuppFV`). Those pieces still have to be assembled into a single lemma graySide ⟺ cattSide on ΣΘ heads. k = 0 is a two-hom context ΣD^j ∨ ΣD⁰ and needs a direct support computation.
+  - Make `Derived`, `DerivedBoundary` and `WhiskerPure` generic in the side condition. What depends on cattSide is the side-condition statements and lemmas (`SideK`, `SideLK`, `side-BK0`, `side-BK`, `side-LK`) and the typing judgments, including the mutual `wK-wf`/`sideK`/`avoidK` blocks and their `lK` counterparts. The type computations are pure syntax.
+  - Prove graySide on these heads for all k, j. For k ≥ 1 the head lives on one hom, where graySide is Finster–Mimram's condition (single-hom conservativity, E1: `Gray/SingleHom`, `Gray/SuppVars`, `Strict/SuppFV`). Those pieces still have to be assembled into a single lemma graySide ⟺ cattSide on ΣΘ heads. k = 0 is a two-hom context, ΣD^j ∨ ΣD⁰ for the right whisker and ΣD⁰ ∨ ΣD^j for the left, and needs a direct support computation.
   - Uniform L follows the same plan with its own side condition.
 - `Wh-≈` for the ≈ of interest, once that ≈ (≡_F or ≡_sua) is formalized.
 - The dimensioned form of `ELAt` (EL below dim B only).

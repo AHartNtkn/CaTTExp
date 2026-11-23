@@ -1080,35 +1080,87 @@ def _replace_ty(A, a, x):
     return arr(_replace_ty(A[1], a, x), _replace(A[2], a, x), _replace(A[3], a, x))
 
 def _marker_ctx(G, z):
-    """For an event z : a -> b, the context where the square along z is taken:
-    G itself with x = a when a is a variable; otherwise the marker context
-    G + (X : type a) + (Z : X -> b) (r9 Response 3). Returns (G', x, z',
-    fwd, back): fwd replaces a by X and z by Z in a term (None if the result
-    is ill-typed or does not substitute back), back substitutes X := a,
-    Z := z."""
-    a, b = G[z][2], G[z][3]
-    if a[0] == 'v':
-        ident = lambda w: w
-        return G, a[1], z, ident, ident
-    X, Zv = len(G), len(G) + 1
+    """Single-event form of _marker_ctx_multi: (G', x, z', fwd, back)."""
+    r = _marker_ctx_multi(G, [z])
+    if r is None:
+        return None
+    G2, xs, zm, fwd, back = r
+    return G2, xs[z], zm[z], fwd, back
+
+def _marker_ctx_multi(G, zs):
+    """For events z : a_z -> b_z, the context where squares along all of
+    them are taken: G itself with x_z = a_z for a variable source, and a
+    marker pair (X_z : type a_z, Z_z : X_z -> b_z) appended for each
+    composite source (r9 Response 3). Returns (G', {z: x_z}, {z: z'}, fwd,
+    back): fwd replaces each composite a_z by X_z and z by Z_z (None if
+    the result is ill-typed or does not substitute back), back undoes it."""
+    xs, zm = {}, {}
+    G2 = list(G)
+    sg = [v(i) for i in range(len(G))]
+    bsub = [v(i) for i in range(len(G))]
+    reps = []
+    for z in zs:
+        a, b = G[z][2], G[z][3]
+        if a[0] == 'v':
+            xs[z], zm[z] = a[1], z
+            continue
+        X, Zv = len(G2), len(G2) + 1
+        try:
+            Ta = infer(G, a)
+        except (TypeError_, AssertionError, KeyError):
+            return None
+        G2 += [Ta, arr(Ta, v(X), b)]
+        xs[z], zm[z] = X, Zv
+        sg[z] = v(Zv)
+        bsub += [a, v(z)]
+        reps.append((a, v(X)))
+    G2 = tuple(G2)
+    sg, bsub = tuple(sg), tuple(bsub)
     try:
-        Ta = infer(G, a)
-        G2 = G + (Ta, arr(Ta, v(X), b))
         check_ctx(G2)
     except (TypeError_, AssertionError, KeyError):
         return None
-    sg = tuple(v(i) if i != z else v(Zv) for i in range(len(G)))
-    bsub = tuple(v(i) for i in range(len(G))) + (a, v(z))
+    if not reps:
+        ident = lambda w: w
+        return G, xs, zm, ident, ident
     def back(w):
         return subst_tm(w, bsub)
     def fwd(w):
-        w2 = _replace(subst_tm(w, sg), a, v(X))
+        w2 = subst_tm(w, sg)
+        for a, X in reps:
+            w2 = _replace(w2, a, X)
         try:
             infer(G2, w2)
         except (TypeError_, AssertionError, KeyError):
             return None
         return w2 if back(w2) == w else None
-    return G2, X, Zv, fwd, back
+    return G2, xs, zm, fwd, back
+
+def _rebuilder(G, Gm, ren):
+    """w over G -> w over Gm with the variables in ren renamed and every
+    head's lower arguments re-derived from the images of its locally
+    maximal variables (so faces follow the new types); None if ill-typed."""
+    from catt import sub_from
+    memo = {}
+    def rw(w):
+        if w[0] == 'v':
+            return ren.get(w[1], w)
+        k = id(w)
+        if k in memo and memo[k][0] is w:
+            return memo[k][1]
+        _, P, B, sg = w
+        imgs = {m: rw(sg[m]) for m in maximal_vars(P)}
+        r = ('coh', P, B, tuple(sub_from(P, Gm, imgs)))
+        memo[k] = (w, r)
+        return r
+    def go(w):
+        try:
+            r = rw(w)
+            infer(Gm, r)
+            return r
+        except (TypeError_, AssertionError, KeyError, ValueError):
+            return None
+    return go
 
 def markerize(G, A, t, u, rec):
     """An event z : a -> b whose source a is a composite term: rewrite the
@@ -1234,10 +1286,10 @@ def C1_D1_differ(a, b):
     return a != b
 
 def change_of_writing(G, A, t, u, rec):
-    """Change of writing for a single event (r9 Response 3). t = C1 E C2 and
-    u = D1 E' D2 along the top cut, where the C's and D's contain no
-    n-variable and E, E' contain the same single n-variable z : a -> b with
-    a a variable. With J : src E' -> src E (rank n-1), the naturality square
+    """Change of writing for an event factor (r9 Response 3). t = C1 E C2 and
+    u = D1 E' D2 along the top cut, where C1, D1 contain no n-variable and
+    E, E' contain the same n-variables z : a_z -> b_z (composite sources
+    through marker contexts, _marker_ctx_multi), all lifted at once. With J : src E' -> src E (rank n-1), the naturality square
     of J along z at a (rc_nat.square) gives J (src E)^ -> (src E')^ J+, so
       t -> C1 J^-1 J (src E)^ C2 -> C1 J^-1 (src E')^ J+ C2 -> u,
     the remaining comparisons (E with (src E)^, the old blocks, E' with
@@ -1253,14 +1305,16 @@ def change_of_writing(G, A, t, u, rec):
     i, j = et[0], eu[0]
     E, E2 = ft[i], fu[j]
     zs = _events(G, E, n)
-    if zs != _events(G, E2, n) or len(zs) != 1:
+    if sorted(zs) != sorted(_events(G, E2, n)) or not zs:
         return None
-    z = zs[0]
-    a, b = G[z][2], G[z][3]
-    mk = _marker_ctx(G, z)
+    mk = _marker_ctx_multi(G, zs)
     if mk is None:
         return None
-    Gm, x, zm, fwd, back = mk
+    Gm, xs_, zms, fwd, back = mk
+    rebuild = _rebuilder(G, Gm, {z: v(zms[z]) for z in zs})
+    Ym = frozenset(xs_.values())
+    pmap = {xs_[z]: G[z][3] for z in zs}
+    umap = {xs_[z]: v(zms[z]) for z in zs}
     sE, sE2 = src(G, E), src(G, E2)
     if sE == sE2:
         # same writing at the event: no change of writing needed
@@ -1289,26 +1343,29 @@ def change_of_writing(G, A, t, u, rec):
         if W1 is None:
             return None
         return comp2(G, n, W0, W1)
-    sEm, sE2m = fwd(sE), fwd(sE2)
-    if sEm is None or sE2m is None:
+    # the sources over the markers: rebuild the event factors with z := Z_z
+    # (lower arguments re-derived from the types), then take their sources
+    Em, E2m = rebuild(E), rebuild(E2)
+    if Em is None or E2m is None:
+        return None
+    sEm, sE2m = src(Gm, Em), src(Gm, E2m)
+    if back(sEm) != sE or back(sE2m) != sE2:
         return None
     Jm = rec(Gm, infer(Gm, sE2m), sE2m, sEm)       # J : src E' -> src E
     if Jm is None:
         return None
-    Ji = I.inverse(G, back(Jm))
-    if Ji is None:
-        return None
     # J is taken as the inverse of J^-1, so that J^-1 J is a cancellation
-    Jp = I.inverse(G, Ji)
-    if Jp is None or infer(G, Jp) != infer(G, back(Jm)) or fwd(Jp) is None:
+    Jim = I.inverse(Gm, Jm)
+    Jm2 = I.inverse(Gm, Jim) if Jim is not None else None
+    if Jm2 is None or infer(Gm, Jm2) != infer(Gm, Jm):
         return None
-    Jm = fwd(Jp)
+    Jm, Ji, Jp = Jm2, back(Jim), back(Jm2)
     cj = I.cancel(G, Ji, rec)
     ins = I.inverse(G, cj) if cj is not None else None
     if ins is None:
         return None
     try:
-        sq, sa, sb = (back(w) for w in N.square(Gm, {x}, {x: b}, {x: v(zm)}, Jm, rec))
+        sq, sa, sb = (back(w) for w in N.square(Gm, Ym, pmap, umap, Jm, rec))
     except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError):
         return None
     # sa = J *_{n-2}... (src E)^ ; sb = (src E')^ * J+ ; with J+ = J[x := b]
@@ -1355,7 +1412,7 @@ def change_of_writing(G, A, t, u, rec):
     tw = tgt(G, W)
     fw = R.vfactors(G, tw, n)
     try:
-        lift2 = back(N.nat_in(Gm, frozenset({x}), {x: b}, {x: v(zm)}, sE2m, rec))
+        lift2 = back(N.nat_in(Gm, Ym, pmap, umap, sE2m, rec))
     except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError):
         return None
     fl = R.vfactors(G, lift2, n)

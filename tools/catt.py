@@ -39,7 +39,7 @@ def id_memo(f):
         if hit is not None and all(a is b for a, b in zip(hit[0], args)):
             return hit[1]
         r = f(*args)
-        if len(memo) > 500000:
+        if len(memo) > 100000:
             memo.clear()
         memo[key] = (args, r)
         return r
@@ -221,7 +221,7 @@ def infer(G, t, _cache={}):
         r = _infer(G, t, _cache)
     g[1][id(t)] = (t, r)
     _IDN[0] += 1
-    if _IDN[0] > 2000000:          # the memo keeps its terms alive: bound it
+    if _IDN[0] > 400000:          # the memo keeps its terms alive: bound it
         _IDC.clear()
         _IDN[0] = 0
     return r

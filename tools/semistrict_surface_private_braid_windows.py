@@ -14,7 +14,7 @@ from semistrict_surface_history_group import inv
 from semistrict_surface_one_step_reflection import quotient,reverse_signed
 from semistrict_surface_private_braid_transport import connectors
 from semistrict_surface_private_histories import closure,solve as validate
-from semistrict_surface_private_simple_braid import named_component,read,solve as simple_test
+from semistrict_surface_private_simple_braid import read,solve as simple_test
 from semistrict_surface_single_power import coprime_parts,output_order,spellings
 
 
@@ -83,14 +83,11 @@ def solve(data):
     braid,other = tuple(braid),tuple(other)
     if u!=v or len(braid)!=len(other) or quotient(braid,other)!=():
         return dict(surface_filler=False,obstruction='unequal erased braids')
-    intrinsic = named_component(h,chart.marks,chart.updates)
-    def rejected(reason):
-        return dict(surface_filler=False if intrinsic else None,reason=reason)
     changes = {}
     for p,q in layers[1].values():
         changes.setdefault(p,set()).add(q)
     if old.keys()!=new.keys() or any(new[k] not in closure(p,lambda x:changes.get(x,())) for k,p in old.items()):
-        return rejected('private labels')
+        return dict(surface_filler=False,obstruction='private labels')
     a,b = Reading(data['source'],w),Reading(data['target'],z)
     cuts = list(seams(a,b))
     windows = []
@@ -111,7 +108,7 @@ def solve(data):
         pieces = [r.piece(i,j,left,right) for r in (a,b)]
         comparison = simple_test(dict(data,history=start,source=pieces[0],target=pieces[1]))
         if comparison['surface_filler'] is not True:
-            if intrinsic and comparison['surface_filler'] is False:
+            if comparison['surface_filler'] is False:
                 return dict(surface_filler=False,obstruction='projected window',marks=[i,j])
             exact = False
         windows.append(dict(marks=[i,j],simple=True,trace_moves=comparison.get('trace_moves')))

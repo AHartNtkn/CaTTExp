@@ -53,6 +53,8 @@ toPureTy (arr A t u) =
 toPure : Ctx → Maybe P.Ctx
 toPure ε       = just P.ε
 toPure (Γ ▸ A) = toPure Γ >>= λ Γ₀ → toPureTy A >>= λ A₀ → just (Γ₀ P.▸ A₀)
+-- Pasting contexts are unmarked.
+toPure (Γ ▸[ _ ∷ _ ] A) = nothing
 
 private
   just-inj : ∀ {a} {A : Set a} {x y : A} → just x ≡ just y → x ≡ y
@@ -84,6 +86,7 @@ toPure-sound ε refl = refl
 toPure-sound (Γ ▸ A) e with bind-just (toPure Γ) _ e
 ... | Γ₀ , eΓ , e₁ with bind-just (toPureTy A) _ e₁
 ... | A₀ , eA , refl = cong₂ _▸_ (toPure-sound Γ eΓ) (toPureTy-sound A eA)
+toPure-sound (Γ ▸[ _ ∷ _ ] A) ()
 
 -- Pasting contexts are built from variables (CaTTExp.Pasting), so
 -- toPure succeeds on their images.

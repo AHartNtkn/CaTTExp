@@ -20,14 +20,16 @@
 -- On binder-free syntax erasure is the identity (`de-tm` etc.), so the
 -- two side conditions agree (`graySideD-agree`), and Binder.Embed's
 -- conservativity theorems apply: the extension of binder-free L by any
--- binder interface derives nothing new about the binder-free fragment
--- (`open Theorems`).
+-- binder interface and any mark judgment derives nothing new about
+-- the binder-free fragment (`open Theorems`).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Signature as Old
 import CaTTExp.Syntax as OSyn
 import CaTTExp.Binder.Syntax as NSyn
 open import CaTTExp.Binder.Embed
+open import CaTTExp.Binder.Signature using (Signature)
+import CaTTExp.Binder.Mark as BM
 
 module CaTTExp.Gray.DesSide
   (𝕊₀ : Old.Signature)
@@ -70,7 +72,8 @@ mutual
 
   dCtx : N.Ctx → Maybe O.Ctx
   dCtx N.ε       = just O.ε
-  dCtx (Γ N.▸ A) = dCtx Γ >>= λ Γ₀ → dTy A >>= λ A₀ → just (Γ₀ O.▸ A₀)
+  -- Marks are erased with the rest (L's coh rule never sees them).
+  dCtx (Γ N.▸[ _ ] A) = dCtx Γ >>= λ Γ₀ → dTy A >>= λ A₀ → just (Γ₀ O.▸ A₀)
 
   dSub : N.Sub → Maybe O.Sub
   dSub N.⟨⟩       = just O.⟨⟩
@@ -104,11 +107,14 @@ mutual
   de-sub (σ O.,ₛ t) rewrite de-sub σ | de-tm t = refl
 
 ------------------------------------------------------------------------
--- Conservativity of L + binders over L.
+-- Conservativity of L + binders over L, for every mark judgment on
+-- binder syntax (binder-free L has no marked entries).
 
-open Conservative 𝕊₀ bi graySide graySideD public
+module _ (mark : Signature.Ctx (extend 𝕊₀ bi) → BM.Mark → Signature.Tm (extend 𝕊₀ bi) → Bool) where
 
-graySideD-agree : Agree
-graySideD-agree Δ A t u rewrite de-ctx Δ | de-ty A | de-tm t | de-tm u = refl
+  open Conservative 𝕊₀ bi graySide graySideD mark public
 
-open Theorems graySideD-agree public
+  graySideD-agree : Agree
+  graySideD-agree Δ A t u rewrite de-ctx Δ | de-ty A | de-tm t | de-tm u = refl
+
+  open Theorems graySideD-agree public

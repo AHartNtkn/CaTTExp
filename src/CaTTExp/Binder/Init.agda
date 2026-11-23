@@ -35,8 +35,8 @@
 --
 -- Composites, whiskerings and identities are coherences over the usual
 -- pasting contexts. INIT's model-morphism cells are meant invertible;
--- the Agda kernel has no invertibility marks, so the types here carry
--- no `inv` (the marks are a separate judgment, spec chapter 3).
+-- the types here carry no `inv`: that INIT's cells are inv belongs to
+-- the kernel's mark judgment (spec chapter 3; ledger S26e).
 --
 -- Positivity (`positive`). This instance's fragment of §9.3's check,
 -- for the object terms the Agda kernel has (variables, constants,
@@ -46,7 +46,14 @@
 --   * every other entry is a map or a cell (of any dimension) whose
 --     underlying arrow type is S → T with
 --       S a sort, or S mentions no variable bound by the telescope;
---       T a sort, or T is a constant the base signature marks as ⊤.
+--       T a sort, or T is a constant the base signature marks as ⊤;
+--   * marks (spec §9.3): a sort may be marked grpd_k or ⋆^{≤n}
+--     (S¹ = μ(X : grpd, b, l : b ⇒ b), ‖A‖_n = μ(X : ⋆^{≤n}, g : A → X)),
+--     and an operation or cell may be marked inv (ℤ = μ(X, z, s inv)).
+--     A model is an argument list for Δ itself, so the kernel's mark
+--     premise makes it certify every mark. That μ_k and the generic
+--     model η carry the marks of Δ is the mark judgment's business
+--     (ledger S26d/S26e).
 -- The arrow context Δ^→ (model morphisms) is stated at maps and at
 -- globular 2-cells l : f ⇒ g between map entries f, g, where its
 -- component is a 3-cell between the two pastings of the naturality
@@ -168,7 +175,7 @@ module Construction (K : Set) (top? : K → Bool) where
 
   sorts : Ctx → Nat
   sorts ε       = 0
-  sorts (Δ ▸ A) = if (sorts Δ ==ℕ len Δ) ∧ isStar A then suc (len Δ) else sorts Δ
+  sorts (Δ ▸[ _ ] A) = if (sorts Δ ==ℕ len Δ) ∧ isStar A then suc (len Δ) else sorts Δ
 
   -- Which sort a term is, if it is one.
   srt : Nat → Tm → Maybe Nat
@@ -200,7 +207,7 @@ module Construction (K : Set) (top? : K → Bool) where
 
     mTel : Nat → Ctx → Bool
     mTel d ε       = false
-    mTel d (Δ ▸ A) = mTel d Δ ∨ mTy d A
+    mTel d (Δ ▸[ _ ] A) = mTel d Δ ∨ mTy d A
 
     mSub : Nat → Sub → Bool
     mSub d ⟨⟩       = false
@@ -223,10 +230,24 @@ module Construction (K : Set) (top? : K → Bool) where
   entryOK : Nat → Ty → Bool
   entryOK m A = okBase m (base A)
 
-  -- Every entry after the sorts is a map or cell with a good base.
+  -- Marks (spec §9.3): a sort may be restricted to a reflective class
+  -- closed under limits and filtered colimits, `grpd_k` or ⋆^{≤n}; an
+  -- operation or cell may be marked inv.
+  isInvMark isSortMark : Mark → Bool
+  isInvMark minv = true
+  isInvMark _    = false
+  isSortMark (mgrpd _)  = true
+  isSortMark (mtrunc _) = true
+  isSortMark _          = false
+
+  marksOKAt : Nat → Nat → List Mark → Bool
+  marksOKAt m j ms = if j <ℕ m then all isSortMark ms else all isInvMark ms
+
+  -- Every entry after the sorts is a map or cell with a good base, and
+  -- marks are as above.
   posFrom : Nat → Ctx → Bool
-  posFrom m ε       = true
-  posFrom m (Δ ▸ A) = posFrom m Δ ∧ ((len Δ <ℕ m) ∨ entryOK m A)
+  posFrom m ε             = true
+  posFrom m (Δ ▸[ ms ] A) = posFrom m Δ ∧ marksOKAt m (len Δ) ms ∧ ((len Δ <ℕ m) ∨ entryOK m A)
 
   positive : Ctx → Bool
   positive Δ = (0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ
@@ -256,7 +277,7 @@ module Construction (K : Set) (top? : K → Bool) where
   -- Every entry after the sorts is low.
   lowFrom : Nat → Ctx → Bool
   lowFrom m ε       = true
-  lowFrom m (Δ ▸ A) = lowFrom m Δ ∧ ((len Δ <ℕ m) ∨ low A)
+  lowFrom m (Δ ▸[ _ ] A) = lowFrom m Δ ∧ ((len Δ <ℕ m) ∨ low A)
 
   isLow? : Maybe Ty → Bool
   isLow? nothing  = false

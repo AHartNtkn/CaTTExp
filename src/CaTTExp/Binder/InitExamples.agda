@@ -35,7 +35,7 @@ base = record
 open import CaTTExp.Binder.Signature
 open Signature 𝕊
 open import CaTTExp.Binder.Typing 𝕊
-open import CaTTExp.Binder.CheckWith 𝕊 cattSide
+open import CaTTExp.Binder.CheckWith 𝕊 cattSide varMark
 
 X : Tm
 X = bvar 0 0
@@ -300,4 +300,79 @@ _ = refl
 
 -- Selectors: μ, rec and uni at sorts only; η, rec_y, uni_y after them.
 _ : (sideOf μ 2 Δeo , sideOf η 1 Δeo , sideOf rec 2 Δeo) ≡₃ (false , false , false)
+_ = refl
+
+------------------------------------------------------------------------
+-- Marks in the telescope (S26d): the integers
+-- ℤ := μ(X, z : ⊤ → X, s : X → X inv) (spec §9.5). A model must
+-- certify the inv mark: rec into (A, z′, s′) is accepted when s′ is a
+-- variable marked inv, and rejected when s′ is unmarked. With the
+-- (MARK)-only judgment of this file, that is all the kernel knows about
+-- inv; the Gray judgment adds (DES), (DES-inv) and INIT's own inv rules
+-- (ledger S26e).
+
+Δℤ : Ctx
+Δℤ = ε ▸ ⋆ ▸ arr ⋆ one X ▸[ minv ∷ [] ] arr ⋆ X X
+
+μℤ : Tm
+μℤ = bnd μ 0 Δℤ ⟨⟩
+
+Γℤ : List Mark → Ctx
+Γℤ ms = ε ▸ ⋆ ▸ arr ⋆ one (var 0) ▸[ ms ] arr ⋆ (var 0) (var 0)
+
+_ : ( ok (tyOf ε μℤ) , ok (tyOf ε (bnd η 2 Δℤ ⟨⟩))
+    , ok (tyOf (Γℤ (minv ∷ [])) (bnd rec 0 Δℤ (fresh 0 3)))
+    , ok (tyOf (Γℤ []) (bnd rec 0 Δℤ (fresh 0 3)))) ≡₄ (true , true , true , false)
+_ = refl
+
+_ : tyOf (Γℤ (minv ∷ [])) (bnd rec 0 Δℤ (fresh 0 3)) ≡ just (arr ⋆ μℤ (var 0))
+_ = refl
+
+-- rec_y at s, and uni over the marked telescope (its model argument
+-- is marked like Δℤ, so the opened context has s′ marked inv).
+Γuℤ : Ctx
+Γuℤ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℤ)
+
+_ : ( ok (tyOf (Γℤ (minv ∷ [])) (bnd recY 2 Δℤ (fresh 0 3)))
+    , ok (ctx? Γuℤ) , ok (tyOf Γuℤ (bnd uni 0 Δℤ (fresh 0 9)))
+    , ok (tyOf Γuℤ (bnd uniY 2 Δℤ (fresh 0 9)))) ≡₄ (true , true , true , true)
+_ = refl
+
+-- Positivity rejects inv on a sort, and a mark other than inv on an
+-- operation.
+_ : ( sideOf μ 0 (ε ▸[ minv ∷ [] ] ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X X)
+    , sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸[ mps ∷ [] ] arr ⋆ X X)
+    , sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸[ mgrpd 1 ∷ [] ] arr ⋆ X X)
+    , sideOf μ 0 Δℤ) ≡₄ (false , false , false , true)
+_ = refl
+
+------------------------------------------------------------------------
+-- Sort marks (S26d): the circle S¹ = μ(X : grpd₁, b : ⊤ → X, l : b ⇒ b)
+-- and the truncation ‖A‖₀ = μ(X : ⋆^{≤0}, g : A → X), A a parameter.
+-- A model's carrier must certify the mark: with the (MARK)-only
+-- judgment, a carrier variable carrying it.
+
+ΔS¹ : Ctx
+ΔS¹ = ε ▸[ mgrpd 1 ∷ [] ] ⋆ ▸ arr ⋆ one X ▸ arr (arr ⋆ one X) (bvar 0 1) (bvar 0 1)
+
+ΓS¹ : List Mark → Ctx
+ΓS¹ ms = ε ▸[ ms ] ⋆ ▸ arr ⋆ one (var 0) ▸ arr (arr ⋆ one (var 0)) (var 1) (var 1)
+
+_ : ( ok (tyOf ε (bnd μ 0 ΔS¹ ⟨⟩))
+    , ok (tyOf (ΓS¹ (mgrpd 1 ∷ [])) (bnd rec 0 ΔS¹ (fresh 0 3)))
+    , ok (tyOf (ΓS¹ (mgrpd 1 ∷ [])) (bnd recY 2 ΔS¹ (fresh 0 3)))
+    , ok (tyOf (ΓS¹ []) (bnd rec 0 ΔS¹ (fresh 0 3)))) ≡₄ (true , true , true , false)
+_ = refl
+
+-- In context (A : ⋆): ‖A‖₀ with n = 0, i.e. mtrunc 2.
+Δtr : Ctx
+Δtr = ε ▸[ mtrunc 2 ∷ [] ] ⋆ ▸ arr ⋆ (var 0) X
+
+Γtr : List Mark → Ctx
+Γtr ms = ε ▸ ⋆ ▸[ ms ] ⋆ ▸ arr ⋆ (var 0) (var 1)
+
+_ : ( ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δtr ⟨⟩))
+    , ok (tyOf (Γtr (mtrunc 2 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
+    , ok (tyOf (Γtr (mtrunc 3 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
+    , ok (tyOf (Γtr []) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))) ≡₄ (true , true , false , false)
 _ = refl

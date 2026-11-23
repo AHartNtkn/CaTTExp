@@ -463,4 +463,8 @@ import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws
 import CaTTExp.Binder.GrayFormEmbed
 import CaTTExp.Binder.GrayFormExamples
+import CaTTExp.Binder.Multimap
+import CaTTExp.Binder.MultimapLaws
+import CaTTExp.Binder.MultimapPresup
+import CaTTExp.Binder.MultimapExamples
 import CaTTExp.Uniform.MarksRepaired

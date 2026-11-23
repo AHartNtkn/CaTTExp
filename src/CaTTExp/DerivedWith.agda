@@ -27,9 +27,9 @@
 -- Instances: plain CaTT (the hypotheses are Derived's sideK, sideLK;
 -- instantiated in CaTTExp.Surface.WhiskerCatt) and two-tier L (graySide; the
 -- hypotheses are proved for k ≥ 1 in CaTTExp.Gray.WhiskerSide, and the
--- right whisker ones for k = 0 in CaTTExp.Gray.WhiskerZeroSide; the
--- k = 0 left whisker one is the open part of S19's two-tier L interface,
--- checked by evaluation for j ≤ 3 in CaTTExp.Surface.WhiskerGrayCheck).
+-- ones for k = 0 in CaTTExp.Gray.WhiskerZeroSide (right whiskers) and
+-- CaTTExp.Gray.WhiskerZeroLeftSide (left whiskers); instantiated in
+-- CaTTExp.Surface.WhiskerGray).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Pure using (∅; cattSide)

@@ -304,3 +304,206 @@ upTo-In-inv (suc n) i p with elem-split i (upTo n) (n ∷ []) p
   self : ∀ n → T (n <ℕ suc n)
   self zero    = tt
   self (suc n) = self n
+
+------------------------------------------------------------------------
+-- Supports commute with the renaming onto a support.
+
+open import CaTTExp.Gray.Biclosed.ListLemmas using (length-map)
+open import CaTTExp.Binder.MultimapCellsSupport
+  using (Deps↓; Closed; cl-least; cl-closed; lookup-some)
+open import CaTTExp.Binder.MultimapCellsStrengthen using (closeFrom-mono; nthY-just)
+
+module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat) where
+
+  n : Nat
+  n = length Φ
+
+  R : List Nat
+  R = closeFrom Φ n X₀
+
+  vs : List Nat
+  vs = filter (λ j → elem j R) (upTo n)
+
+  ρ : Sub
+  ρ = renOf as vs
+
+  rr : Nat → Nat
+  rr i = idx i vs
+
+  Φ′ : Ctx
+  Φ′ = map (sY ρ) (map (nthY Φ) vs)
+
+  m : Nat
+  m = length vs
+
+  len-Φ′ : length Φ′ ≡ m
+  len-Φ′ = trans (length-map (sY ρ) (map (nthY Φ) vs)) (length-map (nthY Φ) vs)
+
+  vs-inc : Inc vs
+  vs-inc = inc-filter _ (upTo n) (inc-upTo n)
+
+  vs-nd : NoDup vs
+  vs-nd = inc-nodup vs vs-inc
+
+  vs-in : ∀ i → In R i → T (i <ℕ n) → In vs i
+  vs-in i p l = filter-elem (λ j → elem j R) (upTo n) i p (upTo-elem n i l)
+
+  vs-R : ∀ i → In vs i → In R i
+  vs-R i p = fst (filter-In-inv (λ j → elem j R) (upTo n) i p)
+
+  vs-lt : ∀ i → In vs i → T (i <ℕ n)
+  vs-lt i p = upTo-In-inv n i (snd (filter-In-inv (λ j → elem j R) (upTo n) i p))
+
+  <-trans‴ : ∀ a b c → T (a <ℕ b) → T (b <ℕ c) → T (a <ℕ c)
+  <-trans‴ zero    (suc b) (suc c) _ _ = tt
+  <-trans‴ (suc a) (suc b) (suc c) p q = <-trans‴ a b c p q
+
+  vs-closed : ∀ j {A} → lookup Φ j ≡ just A → In vs j → varsY A ⊆ vs
+  vs-closed j eA p l q = vs-in l (cl-closed Φ dd X₀ j eA (vs-R j p) l q)
+                           (<-trans‴ l j n (dd j eA l q) (vs-lt j p))
+
+  lookup-Φ′ : ∀ p → T (p <ℕ m) → lookup Φ′ p ≡ just (sY ρ (nthY Φ (nth vs p)))
+  lookup-Φ′ p l =
+    trans (lookup-map (sY ρ) (map (nthY Φ) vs) p)
+      (trans (cong (mapM (sY ρ)) (lookup-map (nthY Φ) vs p))
+             (cong (λ x → mapM (sY ρ) (mapM (nthY Φ) x)) (lookup-nth vs p l)))
+
+  -- Entry j of Φ, for j in the support, is entry rr j of Φ′.
+  lookup-Φ′-r : ∀ j {A} → lookup Φ j ≡ just A → In vs j → lookup Φ′ (rr j) ≡ just (sY ρ A)
+  lookup-Φ′-r j {A} eA p =
+    trans (lookup-Φ′ (rr j) (idx-lt vs j p))
+      (cong (λ B → just (sY ρ B)) (trans (cong (nthY Φ) (nth-idx vs j p)) (nthY-just Φ j eA)))
+
+  -- Φ′ at a position p < m.
+  at : ∀ p → T (p <ℕ m) → Σ CTy (λ A → lookup Φ (nth vs p) ≡ just A)
+  at p l = lookup-some Φ (nth vs p) (vs-lt (nth vs p) (nth-In vs p l))
+
+  lt-m : ∀ {p A} → lookup Φ′ p ≡ just A → T (p <ℕ m)
+  lt-m {p} e = subst (λ k → T (p <ℕ k)) len-Φ′ (lookup-below Φ′ p e)
+
+  deps′ : Deps↓ Φ′
+  deps′ p {A′} e i q =
+    let l = lt-m e
+        (A , eA) = at p l
+        j = nth vs p
+        jin = nth-In vs p l
+        eA′ : A′ ≡ sY ρ A
+        eA′ = just-inj (trans (sym e) (trans (lookup-Φ′ p l) (cong (λ B → just (sY ρ B)) (nthY-just Φ j eA))))
+        q′ = subst (λ B → In (varsY B) i) eA′ q
+        q″ = subst (λ xs → In xs i) (varsY-ren as vs A (vs-closed j eA jin)) q′
+        (k , kin , ei) = In-map-inv rr (varsY A) i q″
+        kvs = vs-closed j eA jin k kin
+        mono = idx-mono vs vs-inc k j kvs jin (dd j eA k kin)
+    in subst (λ x → T (x <ℕ p)) (sym ei) (subst (λ y → T (rr k <ℕ y)) (idx-nth vs vs-nd p l) mono)
+    where
+    just-inj : ∀ {X : Set} {x y : X} → just x ≡ just y → x ≡ y
+    just-inj refl = refl
+
+  -- A term over the support.
+  module ForTerm (b : Tm) (bvs : varsT b ⊆ vs) where
+
+    Rb : List Nat
+    Rb = closeFrom Φ n (varsT b)
+
+    b′ : Tm
+    b′ = sT ρ b
+
+    vars-b′ : varsT b′ ≡ map rr (varsT b)
+    vars-b′ = varsT-ren as vs b bvs
+
+    R′ : List Nat
+    R′ = closeFrom Φ′ (length Φ′) (varsT b′)
+
+    -- Rb ∩ [0, n) ⊆ the support.
+    Rb⊆vs : ∀ i → In Rb i → T (i <ℕ n) → In vs i
+    Rb⊆vs i p l = cl-least Φ vs (λ j eA q → vs-closed j eA q) n (varsT b) (self n)
+                    (λ k q _ → bvs k q) i p l
+      where
+      self : ∀ n → T (n <ℕ suc n)
+      self zero    = tt
+      self (suc n) = self n
+
+    lookup-inv : ∀ p {A′} → lookup Φ′ p ≡ just A′ →
+                 Σ CTy (λ A → lookup Φ (nth vs p) ≡ just A × (A′ ≡ sY ρ A))
+    lookup-inv p {A′} e =
+      let l = lt-m e
+          (A , eA) = at p l
+      in A , eA , just-inj (trans (sym e) (trans (lookup-Φ′ p l) (cong (λ B → just (sY ρ B)) (nthY-just Φ (nth vs p) eA))))
+      where
+      just-inj : ∀ {X : Set} {x y : X} → just x ≡ just y → x ≡ y
+      just-inj refl = refl
+
+    -- (⇒) R′ ⊆ rr (Rb).
+    fwd : ∀ p → T (p <ℕ m) → In R′ p → In Rb (nth vs p)
+    fwd p l q =
+      let D′ = map rr (filter (λ i → elem i Rb) vs)
+          cD′ : Closed Φ′ D′
+          cD′ = λ p′ {A′} e inD i r →
+            let (j , jin , ej) = In-map-inv rr (filter (λ i → elem i Rb) vs) p′ inD
+                (jRb , jvs) = filter-In-inv (λ i → elem i Rb) vs j jin
+                (A , eA , eA′) = lookup-inv p′ e
+                -- nth vs p′ = j
+                ej′ : nth vs p′ ≡ j
+                ej′ = trans (cong (nth vs) ej) (nth-idx vs j jvs)
+                eAj : lookup Φ j ≡ just A
+                eAj = subst (λ x → lookup Φ x ≡ just A) ej′ eA
+                r′ = subst (λ xs → In xs i) (varsY-ren as vs A (vs-closed j eAj jvs))
+                       (subst (λ B → In (varsY B) i) eA′ r)
+                (k , kin , ek) = In-map-inv rr (varsY A) i r′
+                kRb = cl-closed Φ dd (varsT b) j eAj jRb k kin
+                kvs = vs-closed j eAj jvs k kin
+            in subst (In D′) (sym ek) (In-map rr (filter (λ i → elem i Rb) vs) k (filter-elem (λ i → elem i Rb) vs k kRb kvs))
+          h : ∀ i → In (varsT b′) i → T (i <ℕ length Φ′) → In D′ i
+          h i r _ =
+            let (k , kin , ek) = In-map-inv rr (varsT b) i (subst (λ xs → In xs i) vars-b′ r)
+            in subst (In D′) (sym ek)
+                 (In-map rr (filter (λ i → elem i Rb) vs) k (filter-elem (λ i → elem i Rb) vs k (closeFrom-mono Φ n (varsT b) k kin) (bvs k kin)))
+          inD = cl-least Φ′ D′ cD′ (length Φ′) (varsT b′) (self (length Φ′)) h p q
+                  (subst (λ y → T (p <ℕ y)) (sym len-Φ′) l)
+          (j , jin , ej) = In-map-inv rr (filter (λ i → elem i Rb) vs) p inD
+          (jRb , jvs) = filter-In-inv (λ i → elem i Rb) vs j jin
+      in subst (In Rb) (sym (trans (cong (nth vs) ej) (nth-idx vs j jvs))) jRb
+      where
+      self : ∀ n → T (n <ℕ suc n)
+      self zero    = tt
+      self (suc n) = self n
+
+    -- (⇐) rr (Rb) ⊆ R′.
+    bwd : ∀ p → T (p <ℕ m) → In Rb (nth vs p) → In R′ p
+    bwd p l q =
+      let D = filter (λ i → elem (rr i) R′) vs
+          cR′ : Closed Φ′ R′
+          cR′ = cl-closed Φ′ deps′ (varsT b′)
+          cD : Closed Φ D
+          cD = λ j {A} eA inD k kin →
+            let (jR′ , jvs) = filter-In-inv (λ i → elem (rr i) R′) vs j inD
+                e′ = lookup-Φ′-r j eA jvs
+                kvs = vs-closed j eA jvs k kin
+                rk : In (varsY (sY ρ A)) (rr k)
+                rk = subst (λ xs → In xs (rr k)) (sym (varsY-ren as vs A (vs-closed j eA jvs)))
+                       (In-map rr (varsY A) k kin)
+            in filter-elem (λ i → elem (rr i) R′) vs k (cR′ (rr j) e′ jR′ (rr k) rk) kvs
+          h : ∀ i → In (varsT b) i → T (i <ℕ n) → In D i
+          h i r _ = filter-elem (λ i → elem (rr i) R′) vs i
+                      (closeFrom-mono Φ′ (length Φ′) (varsT b′) (rr i)
+                        (subst (λ xs → In xs (rr i)) (sym vars-b′) (In-map rr (varsT b) i r)))
+                      (bvs i r)
+          j = nth vs p
+          jin = nth-In vs p l
+          inD = cl-least Φ D cD n (varsT b) (self n) h j q (vs-lt j jin)
+          (jR′ , _) = filter-In-inv (λ i → elem (rr i) R′) vs j inD
+      in subst (In R′) (idx-nth vs vs-nd p l) jR′
+      where
+      self : ∀ n → T (n <ℕ suc n)
+      self zero    = tt
+      self (suc n) = self n
+
+    supVars-ren : supVars Φ′ b′ ≡ map rr (supVars Φ b)
+    supVars-ren =
+      trans (cong (λ k → filter (λ p → elem p R′) (upTo k)) len-Φ′)
+        (sym (trans (cong (map rr) (sym (filter-filter (λ i → elem i Rb) (λ j → elem j R) (upTo n)
+                       (λ i ui ri → vs-R i (Rb⊆vs i ri (upTo-In-inv n i ui))))))
+               (trans (idx-filter (λ i → elem i Rb) vs vs-nd)
+                      (filter-ext _ _ (upTo m) (λ p up →
+                        let l = upTo-In-inv m p up in
+                        iff-≡ _ _ (bwd p l) (fwd p l))))))

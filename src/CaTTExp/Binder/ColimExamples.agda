@@ -2,7 +2,7 @@
 -- Examples for CaTTExp.Binder.Colim, checked by the certified checker
 -- with plain CaTT's side condition: the colimit of an arrow and its
 -- universal cocone (the cocone cell reverses the leg), the coproduct
--- as the colimit over two points, limits beside colimits in the same
+-- as the colimit over two points (typing only, without couni), limits beside colimits in the same
 -- signature, and rejections. Every statement is `refl`.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
@@ -78,7 +78,8 @@ L = bnd (limH (limF Arr)) 0 ε γ
 legx-ty : inferTy Θ (bnd (limH (legF Arr)) 0 ε γ) ≡ just (arr ⋆ L (var 0))
 legx-ty = refl
 
--- Two points: the coproduct A + B with its coprojections.
+-- Two points: the coproduct A + B with its coprojections (typing
+-- only: that it is universal needs couni, which is not encoded).
 Two : P.Ctx
 Two = P.ε P.▸ P.⋆ P.▸ P.⋆
 
@@ -91,7 +92,8 @@ Sum = bnd (colimH (limF Two)) 0 ε (⟨⟩ ,ₛ var 0 ,ₛ var 1)
 ι₂-ty : inferTy (ε ▸ ⋆ ▸ ⋆) (bnd (colimH (legF Two)) 1 ε (⟨⟩ ,ₛ var 0 ,ₛ var 1)) ≡ just (arr ⋆ (var 1) Sum)
 ι₂-ty = refl
 
--- The initial object: the colimit over the empty base.
+-- The initial object: the colimit over the empty base (typing only,
+-- as above).
 bot-ty : inferTy ε (bnd (colimH (limF P.ε)) 0 ε ⟨⟩) ≡ just ⋆
 bot-ty = refl
 

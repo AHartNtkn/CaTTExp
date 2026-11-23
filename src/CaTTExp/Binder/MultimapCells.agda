@@ -154,18 +154,30 @@ record Canon : Set where
     cvars  : List Nat     -- its entries, as entries of the original
 open Canon public
 
+-- The entries of a term's support, and its atoms.
+supVars : GB.Ctx → GB.Tm → List Nat
+supVars Φ u = visitAll Φ (GT.length Φ) [] (varsT u)
+
+concatAt : GB.Ctx → List Nat
+concatAt []       = []
+concatAt (A ∷ As) = atY A ++ concatAt As
+
+supAtoms : GB.Ctx → GB.Tm → List Nat
+supAtoms Φ u = nub (concatAt (GT.map (nthY Φ) (supVars Φ u)) ++ atT u)
+
+-- The renaming onto a support: atoms and entries to their positions.
+-- Entries outside the support (never used by the term) go to pt.
+renOf : List Nat → List Nat → GS.Sub
+renOf as vs = GS.sub (λ i → GB.obj (idx i as))
+                     (λ j → if elem j vs then GB.var (idx j vs) else GB.pt)
+
 canon : Nat → GB.Ctx → GB.Tm → Canon
 canon k Φ u = canonOf (mmi (GT.length as) Φ′ (GS.sT ren u)) as vs
   where
-  vs  = visitAll Φ (GT.length Φ) [] (varsT u)
-  tys = GT.map (nthY Φ) vs
-  as  = nub (concatAt tys ++ atT u)
-    where
-    concatAt : GB.Ctx → List Nat
-    concatAt []       = []
-    concatAt (A ∷ As) = atY A ++ concatAt As
-  ren = GS.sub (λ i → GB.obj (idx i as)) (λ j → GB.var (idx j vs))
-  Φ′  = GT.map (GS.sY ren) tys
+  vs  = supVars Φ u
+  as  = supAtoms Φ u
+  ren = renOf as vs
+  Φ′  = GT.map (GS.sY ren) (GT.map (nthY Φ) vs)
 
 ------------------------------------------------------------------------
 -- The type of an mmc head.

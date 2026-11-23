@@ -51,6 +51,7 @@ import CaTTExp.Gray.Biclosed.TemplatesTyped
 import CaTTExp.Gray.Biclosed.Subst
 import CaTTExp.Gray.Biclosed.Instances
 import CaTTExp.Gray.Biclosed.SortDisc
+import CaTTExp.Gray.Biclosed.Strengthen
 import CaTTExp.Gray.Biclosed.Model
 import CaTTExp.Gray.Biclosed.ListLemmas
 import CaTTExp.Gray.Biclosed.ModelFacts
@@ -507,6 +508,7 @@ import CaTTExp.Binder.MultimapExamples
 import CaTTExp.Binder.MultimapCells
 import CaTTExp.Binder.MultimapCellsLaws
 import CaTTExp.Binder.MultimapCellsExamples
+import CaTTExp.Binder.MultimapCellsStrengthen
 import CaTTExp.Binder.FreeObj
 import CaTTExp.Binder.FreeObjLaws
 import CaTTExp.Binder.FreeObjExamples

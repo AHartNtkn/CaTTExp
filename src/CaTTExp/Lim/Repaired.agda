@@ -4,8 +4,8 @@
 --  R1  Specified shapes. The cone and cone-morphism contexts are given
 --      by a fixed construction from the diagram context, not by the
 --      permissive recognition judgment.
---        * coneC: Mikhail's Thm 3.3 construction, implemented here for
---          globular diagrams of dimension ≤ 2.
+--        * coneC: Mikhail's Thm 3.3 construction, for globular
+--          diagrams of every dimension.
 --        * morC: cone morphisms (ctrf, n = 1) between two copies of
 --          the canonical cone, for diagrams of dimension ≤ 1, with the
 --          comparison cell m_f : p_f ; (m_a ◁ f) ⇛ m_b ; q_f.
@@ -38,6 +38,7 @@ open import CaTTExp.Lim.Named
 open import CaTTExp.Lim.Conditions
 open import CaTTExp.Lim.Rules
 open import CaTTExp.Lim.Terms
+import CaTTExp.Lim.ConeCells as CC
 open import CaTTExp.Lim.Defects
   using (Γarr; Parr; Qarr; Marr; Γloop; Πcanonical; Πnoncanonical)
 
@@ -49,25 +50,40 @@ private
   a ⇒⋆ b = arr ⋆ (v a) (v b)
 
 ------------------------------------------------------------------------
--- R1. The canonical cone (Mikhail Thm 3.3), dimension ≤ 2, with the
--- projection of x named `pn x`.
+-- R1. The canonical cone (Mikhail Thm 3.3), in every dimension, with
+-- the projection of x named `pn x`:
 --   dim 0:  p_x : c → x
+--   dim m:  p_t : p_{τt} → p_{σt} ∗_{m−1} (p_{σ²t} ∗_{m−2} (… (p_{σᵐt} ∗₀ t)))
+-- for globular types (every boundary a variable). The composites are
+-- CaTT's binary composites with their boundary typing
+-- (CaTTExp.Lim.ConeCells, which also proves in every dimension that
+-- the two sides of p_t's type are parallel and every composite in it
+-- is composable, the boundary claims of spec Lemma 2.2). In dimensions 1 and 2
+-- this is Mikhail's printed formula (`printed₁`, `printed₂` below):
 --   dim 1:  p_f : p_b ⇒ p_a · f                       (f : a → b)
 --   dim 2:  p_α : p_g ⇛ p_f ; (p_a ▷ α)               (α : f ⇒ g)
 
+globTy : Ty → Bool
+globTy ⋆                       = true
+globTy (arr A (var _) (var _)) = globTy A
+globTy (arr A _ _)             = false
+
 projTy : (c : Name) (pn : Name → Name) (x : Name) → Ty → Maybe Ty
-projTy c pn x ⋆ = just (c ⇒⋆ x)
-projTy c pn x (arr ⋆ (var a) (var b)) =
-  just (arr (c ⇒⋆ b) (v (pn b)) (comp (v c) (v a) (v (pn a)) (v b) (v x)))
-projTy c pn x (arr (arr ⋆ (var a) (var b)) (var f) (var g)) =
-  just (arr (arr (c ⇒⋆ b) (v (pn b)) pag) (v (pn g))
-            (vcomp (v c) (v b) (v (pn b)) paf (v (pn f)) pag
-                   (whL (v c) (v a) (v (pn a)) (v b) (v f) (v g) (v x))))
-  where
-  paf pag : Tm
-  paf = comp (v c) (v a) (v (pn a)) (v b) (v f)
-  pag = comp (v c) (v a) (v (pn a)) (v b) (v g)
-projTy _ _ _ _ = nothing
+projTy c pn x X = if globTy X then just (CC.Proj.projN c pn (var x) X) else nothing
+
+-- Mikhail's printed projection types in dimensions 1 and 2.
+printed₁ : ∀ c pn x a b →
+  projTy c pn x (arr ⋆ (var a) (var b))
+  ≡ just (arr (c ⇒⋆ b) (v (pn b)) (comp (v c) (v a) (v (pn a)) (v b) (v x)))
+printed₁ c pn x a b = refl
+
+printed₂ : ∀ c pn x a b f g →
+  projTy c pn x (arr (arr ⋆ (var a) (var b)) (var f) (var g))
+  ≡ just (arr (arr (c ⇒⋆ b) (v (pn b)) (comp (v c) (v a) (v (pn a)) (v b) (v g))) (v (pn g))
+              (vcomp (v c) (v b) (v (pn b)) (comp (v c) (v a) (v (pn a)) (v b) (v f)) (v (pn f))
+                     (comp (v c) (v a) (v (pn a)) (v b) (v g))
+                     (whL (v c) (v a) (v (pn a)) (v b) (v f) (v g) (v x))))
+printed₂ c pn x a b f g = refl
 
 coneWith : (c : Name) (pn : Name → Name) → NCtx → Maybe NCtx
 coneWith c pn ∅           = just ∅

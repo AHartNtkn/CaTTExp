@@ -45,7 +45,7 @@ def exception_query(shape):
     return tableau_query(cells,rank,lambda cell:boundary(cell).items())
 
 
-def tableau_query(cells,rank,facets):
+def tableau_query(cells,rank,facets,*,require_raw_failure=True,constraints=()):
     """Compare the square ideal with raw filling when rank is above its top degree."""
     lines = ['(set-logic LIA)']
 
@@ -78,12 +78,14 @@ def tableau_query(cells,rank,facets):
         active = [d for d,_ in c if d]
         if not any(a==b==1 for a,b in zip(active,active[1:])):
             lines.append(f'(assert (= {quotient.get(c,"0")} {y}))')
-    raw = {c:f'z{i}' for i,c in enumerate(cells[rank])}
-    rows = image(raw)
-    conditions = [f'(>= {x} 0)' for x in raw.values()]
-    conditions.extend(f'(= {rows.get(f,"0")} {y})' for f,y in rhs.items())
-    binders = ' '.join(f'({x} Int)' for x in raw.values())
-    lines.append(f'(assert (not (exists ({binders}) (and {" ".join(conditions)}))))')
+    if require_raw_failure:
+        raw = {c:f'z{i}' for i,c in enumerate(cells[rank])}
+        rows = image(raw)
+        conditions = [f'(>= {x} 0)' for x in raw.values()]
+        conditions.extend(f'(= {rows.get(f,"0")} {y})' for f,y in rhs.items())
+        binders = ' '.join(f'({x} Int)' for x in raw.values())
+        lines.append(f'(assert (not (exists ({binders}) (and {" ".join(conditions)}))))')
+    lines.extend(constraints)
     return '\n'.join(lines+['(check-sat)',''])
 
 

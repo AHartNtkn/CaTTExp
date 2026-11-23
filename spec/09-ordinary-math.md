@@ -137,6 +137,8 @@ DESC-pb is a theorem of the definition (Riehl–Verity, FYL §5.2) and is listed
 - a **mark** restricts X to a reflective class closed under limits and filtered colimits (`⋆^{≤n}`), or marks an operation invertible (`inv`, presented by bi-invertibility data);
 - X occurs nowhere contravariantly (no [X, –], no Hom with X in the first argument).
 
+**Several sorts, over bases.** More generally Δ may distinguish finitely many object variables X₁, …, X_m, each optionally **over a fixed base** B_i (a structure map X_i → B_i, with operations into X_i taken over B_i). The conditions above apply to each X_i, with B_i in place of ⊤ as the terminal target for X_i. This covers multi-sorted contexts over a set (§9.4), R-U's family over Θ₀ (§9.7), inductive families over a non-discrete base, and inductive-inductive definitions (a sort R with p : R → X × X declared with X). Models live in ∏_i Cat_ω/B_i, which is presentable, so the soundness argument below applies unchanged (`notes/higher-inductive.md` §8, F11b).
+
 A **model** of Δ with carrier A is a substitution σ : Δ[A/X]. A **model morphism** is a map between carriers with an **invertible** cell for each variable of Δ (the arrow context Δ^→): model morphisms are strong.
 ```
 (INIT-form)  Δ positive in X   ⟹   μΔ : ⋆   and a model  η : Δ[μΔ/X]          (the generic model)
@@ -164,7 +166,7 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 **Semantics.** Sound in Cat_ω for limit-preserving accessible targets, accessible sources and strong morphisms: the forgetful functor from models creates limits and is accessible, so an initial model exists (Adámek–Rosický; Kerodon 9.4.9, 9.5.1–9.5.2), extended to finite contexts with cells. The target class is maximal among uniform ones: for a constant source A, having initial models for every A is a left adjoint to the target, which forces the target to preserve limits. The dual rule, final models of copositive contexts, is unsound in general (the right adjoint to base change along the non-exponentiable {0<2} → [2] does not exist), and it is not part of the system.
 
 **Status.**
-- Soundness and maximality: **proved** (researcher answer, verified 2026-11-21).
+- Soundness and maximality: **proved** (researcher answer, verified 2026-11-21). The answer states the theorem for any presentable category of carriers, "such as C, a slice, or the intersection of the specified marks", which covers several sorts over bases.
 - **Not derivable** from finite limits, finite colimits and DESC: **proved** (researcher answer, verified 2026-11-22, `notes/conjectures/answered/universe-free-initial-models-r2-2026-11-22.md`). A model with full finite descent and DESC-tr (eventually-connected sequences of arrows of spaces) has no initial model for (X, a : A → X, l : X ×_{X×X} X → X). ℕ on its own *is* a theorem of DESC (ΩS¹ with Sattler–Wärn's sign construction), but which contexts follow from descent is undecidable (contractibility of finite complexes), so INIT stays one rule.
 - Agda: INIT as a declared operation over the abstract model interface, with the derivations: open (F10f).
 
@@ -260,7 +262,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 
 Colimits *inside* an object C are declared structure: a marking with a filler rule. **Θ-density** (B as the colimit of its pasting-diagram elements) is an instance over an internal Θ and gives extensionality of transformations for arbitrary domains (F5b, F5c drafted).
 
-**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}. (As written, p's target Θ₀ is a constant other than ⊤, which §9.3's grammar excludes; the context is meant over the set Θ₀, i.e. multi-sorted. INIT over a base, which makes this literal, is proposed in `notes/higher-inductive.md` §8, F11b.)
+**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}. (Here X is a sort over the base Θ₀ in the sense of §9.3's "several sorts, over bases"; with a single unbased sort, p's constant target Θ₀ would violate the target condition. F11b.)
 
 **R-cot⁺ over a set base (no rule).** For a set I and q : U → I, the object [q, B] → I, whose maps from W over I are the maps W ×_I U → B, is an equaliser inside I × U\(B ⊔ ⊤) (the closed-structure hom of chapter 8, read as partial maps): the i-th component lands in B and the others in ⊤. DESC-grpd splits W over I, and decidable equality on I comes from INIT. Over a non-discrete base, R-cot⁺ would be a right adjoint to base change along q, which exists only for exponentiable q; it is not part of the system.
 

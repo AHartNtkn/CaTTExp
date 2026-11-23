@@ -998,3 +998,65 @@ mutual
 diff-incl : ∀ k bs t ts → TopOK k 0 (t ∷ ts) bs → Diff k (inclM bs t ts) (inclP bs t ts) (ctxOf (node (t ∷ ts)))
 diff-incl k []       t ts top = diffL k (t ∷ ts) [] pss pss base top (λ w _ → inj₁ refl)
 diff-incl k (b ∷ bs) t ts top = diffL k (t ∷ ts) (b ∷ bs) pss pss base top (λ w _ → inj₁ refl)
+
+------------------------------------------------------------------------
+-- incl∓ fix level 0 and send the final point of τ to the final point
+-- of the raised tree (`inclM-0`, `inclP-0`, `inclM-pt`, `inclP-pt`).
+
+private
+  ps-pos : ∀ {Γ x A} → Γ ⊢ps x ∶ A → T (0 <ℕ len Γ)
+  ps-pos pss     = tt
+  ps-pos (pse d) = tt
+  ps-pos (psd d) = ps-pos d
+
+  Z0 : ∀ {Γ x A Δ x^ A^} → Sim Γ x A Δ x^ A^ → Set
+  Z0 S = (lookupₛ (fst S) 0 ≡ var 0) × (lookupₛ (fst (snd S)) 0 ≡ var 0)
+
+  z-ext : ∀ σ a b n → lenₛ σ ≡ n → T (0 <ℕ n) → lookupₛ σ 0 ≡ var 0 → lookupₛ (σ ,ₛ a ,ₛ b) 0 ≡ var 0
+  z-ext σ a b n e p z = trans (lk-old2 σ a b 0 (lt-under e p)) z
+
+  z-step : ∀ {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (S : Sim Γ x A Δ x^ A^) → ∀ a b a′ b′ → Z0 S →
+           (lookupₛ (fst S ,ₛ a ,ₛ b) 0 ≡ var 0) × (lookupₛ (fst (snd S) ,ₛ a′ ,ₛ b′) 0 ≡ var 0)
+  z-step {Γ} d S a b a′ b′ (z₁ , z₂) =
+    z-ext (fst S) a b (len Γ) (lenM S) (ps-pos d) z₁ , z-ext (fst (snd S)) a′ b′ (len Γ) (lenP S) (ps-pos d) z₂
+
+mutual
+  private
+    zL : ∀ ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+         Z0 S → Z0 (simL ts bs d d^ S)
+    zL []                  bs           d d^ S z = z
+    zL (node [] ∷ ts)      []           {Δ = Δ} d d^ S z =
+      zL ts [] _ _ (leafP d d^ S) (z-step d S (var (len Δ)) (var (suc (len Δ))) (var (len Δ)) (var (suc (len Δ))) z)
+    zL (node [] ∷ ts)      (true ∷ bs)  {Δ = Δ} d d^ S z =
+      zL ts bs _ _ (leafR d d^ S) (z-step d S (var (len Δ)) (var (suc (len Δ))) (var (len Δ)) (var (suc (suc (len Δ)))) z)
+    zL (node [] ∷ ts)      (false ∷ bs) {Δ = Δ} d d^ S z =
+      zL ts bs _ _ (leafP d d^ S) (z-step d S (var (len Δ)) (var (suc (len Δ))) (var (len Δ)) (var (suc (len Δ))) z)
+    zL (node (c ∷ cs) ∷ ts) []       d d^ S z = zN (c ∷ cs) ts [] d d^ S z
+    zL (node (c ∷ cs) ∷ ts) (b ∷ bs) d d^ S z = zN (c ∷ cs) ts (b ∷ bs) d d^ S z
+
+    zN : ∀ cs ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+         Z0 S → Z0 (simN cs ts bs d d^ S)
+    zN cs ts bs {Δ = Δ} d d^ S z =
+      zL ts (snd (raiseL bs cs)) _ _ (psdS (simL cs bs (pse d) (pse d^) (pseS d d^ S)))
+        (zL cs bs (pse d) (pse d^) (pseS d d^ S) (z-step d S (var (len Δ)) (var (suc (len Δ))) (var (len Δ)) (var (suc (len Δ))) z))
+
+private
+  zIncl : ∀ bs t ts → (lookupₛ (inclM bs t ts) 0 ≡ var 0) × (lookupₛ (inclP bs t ts) 0 ≡ var 0)
+  zIncl []       t ts = zL (t ∷ ts) [] pss pss base (refl , refl)
+  zIncl (b ∷ bs) t ts = zL (t ∷ ts) (b ∷ bs) pss pss base (refl , refl)
+
+inclM-0 : ∀ bs t ts → lookupₛ (inclM bs t ts) 0 ≡ var 0
+inclM-0 bs t ts = fst (zIncl bs t ts)
+
+inclP-0 : ∀ bs t ts → lookupₛ (inclP bs t ts) 0 ≡ var 0
+inclP-0 bs t ts = snd (zIncl bs t ts)
+
+inclM-pt : ∀ bs t ts → lookupₛ (inclM bs t ts) (fst (snd (build (node (t ∷ ts)) pss)))
+                     ≡ var (fst (snd (build (raiseT bs (node (t ∷ ts))) pss)))
+inclM-pt []       t ts = pt (fst (snd (snd (snd (snd (incl [] t ts))))))
+inclM-pt (b ∷ bs) t ts = pt (fst (snd (snd (snd (snd (incl (b ∷ bs) t ts))))))
+
+inclP-pt : ∀ bs t ts → lookupₛ (inclP bs t ts) (fst (snd (build (node (t ∷ ts)) pss)))
+                     ≡ var (fst (snd (build (raiseT bs (node (t ∷ ts))) pss)))
+inclP-pt []       t ts = pt (snd (snd (snd (snd (snd (incl [] t ts))))))
+inclP-pt (b ∷ bs) t ts = pt (snd (snd (snd (snd (snd (incl (b ∷ bs) t ts))))))

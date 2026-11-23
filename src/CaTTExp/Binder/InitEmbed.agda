@@ -22,9 +22,9 @@ initBinders = record
   { B         = Former
   ; _==B_     = _==F_
   ; ==B-sound = ==F-sound
-  ; bside     = Construction.side K top?
-  ; bargs     = Construction.args K top?
-  ; bres      = Construction.res K top?
+  ; bside     = Construction.side K Former (λ b → b) top?
+  ; bargs     = Construction.args K Former (λ b → b) top?
+  ; bres      = Construction.res K Former (λ b → b) top?
   }
 
 initBase : Base

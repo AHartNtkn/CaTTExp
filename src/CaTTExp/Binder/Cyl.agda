@@ -101,8 +101,10 @@ srcAt k ⋆           = junk
 srcAt k (arr A s u) = if k ==ℕ dim A then s else srcAt k A
 
 -- DerivedBoundary's tyK, tgtK, srcK (aL k and positions of the sphere,
--- substituted by sphSub C), read off C directly: they agree for
--- k < dim C, and commute with substitution in every case.
+-- substituted by sphSub C), read off C directly. That the two readings
+-- agree for k < dim C is intended but not proved here (CylExamples
+-- checks it at k ≤ 1 by refl); these commute with substitution in
+-- every case (CylLaws), which is all the laws use.
 tyK : Nat → Ty → Ty
 tyK = baseAt
 

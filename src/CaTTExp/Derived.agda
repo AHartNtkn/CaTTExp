@@ -604,12 +604,15 @@ tgt-BK0 k rewrite dimCtx-BK k 0 | dim-aL k | n≮n k | T-≡ (==ℕ-refl k) | tg
 subst₂ : ∀ {A B : Set} (P : A → B → Set) {a a' b b'} → a ≡ a' → b ≡ b' → P a b → P a' b'
 subst₂ P refl refl p = p
 
-side-BK0 : ∀ k → T (cattSide (BK k 0) (aL k) (var (dbl k)) (var (zK k 0)))
-side-BK0 k =
-  ∨-r (∧-in (subst₂ (λ X L → T (≈? (dbl k ∷ X) L)) (sym (fvTy-aL k)) (sym (src-BK0 k))
+op-BK0 : ∀ k → T (isOp (BK k 0) (aL k) (var (dbl k)) (var (zK k 0)))
+op-BK0 k =
+  (∧-in (subst₂ (λ X L → T (≈? (dbl k ∷ X) L)) (sym (fvTy-aL k)) (sym (src-BK0 k))
                (≈-cons-snoc (dbl k) (upTo (dbl k))))
             (subst₂ (λ X L → T (≈? (zK k 0 ∷ X) L)) (sym (fvTy-aL k)) (sym (tgt-BK0 k))
                (≈-cons-snoc (zK k 0) (upTo (dbl k)))))
+
+side-BK0 : ∀ k → T (cattSide (BK k 0) (aL k) (var (dbl k)) (var (zK k 0)))
+side-BK0 k = ∨-r (op-BK0 k)
 
 -- The two faces differ only at the top cell 2n of BK k j.
 lk-ρK : ∀ k j v v' w → (w ==ℕ dbl (nB k j)) ≡ false → lookupₛ (ρK k j v) w ≡ lookupₛ (ρK k j v') w
@@ -671,10 +674,10 @@ avoid-BK k j sc m with mem++ D (fvTy (wK k j [ ρsK k j ]ty)) (fvSub (ρsK k j) 
 ...   | inj₁ s = notIn-ρK k j _ (lt-sK k j) s
 ...   | inj₂ s = notIn-ρK k j _ (lt-tK k j) s
 
-side-BK : ∀ k j → ScTy (len (BK k j)) (wK k j) → ¬ Mem (dbl (nB k j)) (fvTy (wK k j)) →
-          T (cattSide (BK k (suc j)) (wK k j [ ρsK k j ]ty)
+op-BK : ∀ k j → ScTy (len (BK k j)) (wK k j) → ¬ Mem (dbl (nB k j)) (fvTy (wK k j)) →
+          T (isOp (BK k (suc j)) (wK k j [ ρsK k j ]ty)
                       (coh (BK k j) (wK k j) (ρsK k j)) (coh (BK k j) (wK k j) (ρtK k j)))
-side-BK k j sc av = ∨-r
+op-BK k j sc av =
   (∧-in (subst (λ L → T (≈? (fvSub (ρsK k j) ++ fvTy A) L)) (sym (src-BK k j))
           (≈-absorb (fvSub (ρsK k j)) (fvTy A) (fv-ty[] (wK k j) (ρsK k j) (sc-ρK k j (dbl (nB k j)) sc))))
         (subst (λ L → T (≈? (fvSub (ρtK k j) ++ fvTy A) L)) (sym (tgt-BK k j))
@@ -682,6 +685,11 @@ side-BK k j sc av = ∨-r
             (subst (λ X → fvTy X ⊆ fvSub (ρtK k j)) (sym (faces-BK k j (wK k j) av))
               (fv-ty[] (wK k j) (ρtK k j) (sc-ρK k j (suc (dbl (nB k j))) sc))))))
   where A = wK k j [ ρsK k j ]ty
+
+side-BK : ∀ k j → ScTy (len (BK k j)) (wK k j) → ¬ Mem (dbl (nB k j)) (fvTy (wK k j)) →
+          T (cattSide (BK k (suc j)) (wK k j [ ρsK k j ]ty)
+                      (coh (BK k j) (wK k j) (ρsK k j)) (coh (BK k j) (wK k j) (ρtK k j)))
+side-BK k j sc av = ∨-r (op-BK k j sc av)
 
 -- Lookups in BK k j.
 lk-BK-Sph : ∀ k j i → T (i <ℕ dbl (nB k j)) → lookup (BK k j) i ≡ lookup (Sph (nB k j)) i
@@ -944,10 +952,10 @@ avoid-LK k j sc m with mem++ D (fvTy (lK k j [ λsK k j ]ty)) (fvSub (λsK k j) 
 ...   | inj₁ s = notIn-λs k j s
 ...   | inj₂ s = notIn-λt k j s
 
-side-LK : ∀ k j → ScTy (len (LK k j)) (lK k j) → ¬ Mem (tL k j) (fvTy (lK k j)) →
-          T (cattSide (LK k (suc j)) (lK k j [ λsK k j ]ty)
+op-LK : ∀ k j → ScTy (len (LK k j)) (lK k j) → ¬ Mem (tL k j) (fvTy (lK k j)) →
+          T (isOp (LK k (suc j)) (lK k j [ λsK k j ]ty)
                       (coh (LK k j) (lK k j) (λsK k j)) (coh (LK k j) (lK k j) (λtK k j)))
-side-LK k j sc av = ∨-r
+op-LK k j sc av =
   (∧-in (subst (λ L → T (≈? (fvSub (λsK k j) ++ fvTy A) L)) (sym (src-LK k j))
           (≈-absorb (fvSub (λsK k j)) (fvTy A)
             (fv-ty[] (lK k j) (λsK k j) (subst (λ n → ScTy n (lK k j)) (sym (lenλs k j)) sc))))
@@ -956,6 +964,11 @@ side-LK k j sc av = ∨-r
             (subst (λ X → fvTy X ⊆ fvSub (λtK k j)) (sym (faces-LK k j (lK k j) av))
               (fv-ty[] (lK k j) (λtK k j) (subst (λ n → ScTy n (lK k j)) (sym (lenλt k j)) sc))))))
   where A = lK k j [ λsK k j ]ty
+
+side-LK : ∀ k j → ScTy (len (LK k j)) (lK k j) → ¬ Mem (tL k j) (fvTy (lK k j)) →
+          T (cattSide (LK k (suc j)) (lK k j [ λsK k j ]ty)
+                      (coh (LK k j) (lK k j) (λsK k j)) (coh (LK k j) (lK k j) (λtK k j)))
+side-LK k j sc av = ∨-r (op-LK k j sc av)
 
 -- The faces are well typed.
 λsK-wf : ∀ k j → LK k (suc j) ⊢sub λsK k j ∶ LK k j

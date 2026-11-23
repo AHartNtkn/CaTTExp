@@ -12,7 +12,8 @@ open import CaTTExp.Gray.Biclosed.Subst using (_⊢_∶_; ⊢in; sub-wf)
 open import CaTTExp.Binder.Multimap using (atomFm)
 open import CaTTExp.Binder.MultimapCells
 open import CaTTExp.Binder.MultimapCellsStrengthen
-  using (T-if; F-if; dec; inl; inr; ptTy; blankFrom; blank; lookup-blank; mapM-if; nthY-just; lookup-map; lookup-idx)
+  using (T-if; F-if; dec; inl; inr; ptTy; blankFrom; blank; lookup-blank; mapM-if; nthY-just; lookup-map; lookup-idx;
+         agree-blank-on; ren-typed)
 open import CaTTExp.Binder.MultimapCellsSupport using (In; _⊆_; Deps↓; lookup-some; elem-split)
 open import CaTTExp.Binder.MultimapCellsRen
 open import CaTTExp.Binder.MultimapCellsComp
@@ -102,9 +103,9 @@ wfFrom-intro acc (B ∷ Ψ) h =
 open import CaTTExp.Binder.MultimapCellsCanon using (module Idem; atY-concatAt)
 
 module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : infer Φ b ≡ just B)
-             (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
+             (wB : T (wf Φ B)) (ab : ∀ i → In (supAtomsOf Φ b) i → T (i <ℕ k)) where
 
-  open Idem k Φ w b eB ab
+  open Idem k Φ w b eB wB ab
 
   private
     just-inj : ∀ {X : Set} {x y : X} → just x ≡ just y → x ≡ y
@@ -214,9 +215,13 @@ module SubWf (k : Nat) (Φ : Ctx) (w : T (wfCtx Φ)) (b : Tm) {B : CTy} (eB : in
     B-ok = okTy-ren k B okB (λ i r → S-in i (elem-++r i (concatAt (map (nthY Φ) vs)) _
                                 (elem-++r i (atT b) _ (subst (λ X → In (atYM X) i) (sym eB) r))))
 
+    B-wf : T (wf Φ′ (sY ρ B))
+    B-wf = sub-wf (ren-typed asb vs Φ) B
+             (subst T (wf-agree Φ (blank vs Φ) B (agree-blank-on Φ vs (varsY B) (λ i q _ → bvsY i q))) wB)
+
     sub-mmcTy : mmcTy (cidx (canon k Φ b)) ≡ just (sY ρ B)
     sub-mmcTy =
       trans (T-if (isCanon (cidx (canon k Φ b)) ∧ all (okTy (length asb)) Φ′ ∧ wfCtx Φ′ ∧ atomsBelow (length asb) Φ′ b′)
                   (∧-in isCanon-sub (∧-in entries-ok (∧-in wfCtx-Φ′ atoms-ok))))
-        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A then just A else nothing) infer-b′)
-               (T-if (okTy (length asb) (sY ρ B)) B-ok))
+        (trans (cong (λ X → X >>= λ A → if okTy (length asb) A ∧ wf Φ′ A then just A else nothing) infer-b′)
+               (T-if (okTy (length asb) (sY ρ B) ∧ wf Φ′ (sY ρ B)) (∧-in B-ok B-wf)))

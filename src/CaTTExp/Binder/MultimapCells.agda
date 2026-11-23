@@ -126,7 +126,7 @@ nthY Φ j with GT.lookup Φ j
 ... | just A  = A
 ... | nothing = GB.op ([] GB.▸ GB.obj 0)
 
--- The entries a term needs: the variables it uses, closed under the
+-- The entries a term needs: the variables it and its type use, closed under the
 -- dependencies of their types, listed in context order. In a
 -- well-formed context entry j's type mentions only entries below j, so
 -- one sweep from the top closes the set.
@@ -146,9 +146,22 @@ record Canon : Set where
     cvars  : List Nat     -- its entries, as entries of the original
 open Canon public
 
+varsYM : Maybe GB.CTy → List Nat
+varsYM (just A) = varsY A
+varsYM nothing  = []
+
+-- The entries a term needs to start with: those it uses and those its
+-- type uses (a type may use entries its term does not).
+supStart : GB.Ctx → GB.Tm → List Nat
+supStart Φ u = varsT u ++ varsYM (GT.infer Φ u)
+
+-- The entries of Φ in the closure of X, in increasing order.
+supVarsFrom : GB.Ctx → List Nat → List Nat
+supVarsFrom Φ X = filter (λ j → elem j (closeFrom Φ (GT.length Φ) X)) (upTo (GT.length Φ))
+
 -- The entries of a term's support and its atoms, in increasing order.
 supVars : GB.Ctx → GB.Tm → List Nat
-supVars Φ u = filter (λ j → elem j (closeFrom Φ (GT.length Φ) (varsT u))) (upTo (GT.length Φ))
+supVars Φ u = supVarsFrom Φ (supStart Φ u)
 
 concatAt : GB.Ctx → List Nat
 concatAt []       = []
@@ -193,7 +206,7 @@ atomsBelow k Φ t = all (λ i → i <ℕ k) (concatAt Φ ++ atT t)
 mmcTy : MMI → Maybe GB.CTy
 mmcTy (mmi k Φ t) =
   if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t
-  then (GT.infer Φ t >>= λ A → if okTy k A then just A else nothing)
+  then (GT.infer Φ t >>= λ A → if okTy k A ∧ GT.wf Φ A then just A else nothing)
   else nothing
 
 ------------------------------------------------------------------------

@@ -1,7 +1,8 @@
 """Check the raw scalar cube boundaries and the orientation after folding its faces."""
 
 from argparse import ArgumentParser
-from itertools import permutations
+from collections import defaultdict
+from itertools import permutations, product
 from pathlib import Path
 
 from catt import (STAR, arr, comp2, disc_tree, glue_tree, infer, maximal_vars, src,
@@ -89,6 +90,34 @@ def check_cube():
                 assert swaps([order, changed]) == (k,)
 
 
+def check_two_step_returns():
+    """Compare directed reachability with the same-cut scalar criterion."""
+    cases = 0
+    for lengths in product(product(range(3), repeat=2), repeat=2):
+        for width in range(6):
+            graph = defaultdict(set)
+            exchanges = []
+            for left, right in product(range(2), repeat=2):
+                s, t = lengths[left]
+                u, v = lengths[right]
+                for prefix in range(width - s - u + 1):
+                    for gap in range(width - s - u - prefix + 1):
+                        late = ((right, prefix + s + gap), (left, prefix))
+                        early = ((left, prefix), (right, prefix + t + gap))
+                        graph[late].add(early)
+                        exchanges.append((late, early, (s, t, gap, u, v) == (0,) * 5))
+            for late, early, expected in exchanges:
+                seen = {early}
+                pending = [early]
+                while pending:
+                    for neighbor in graph[pending.pop()] - seen:
+                        seen.add(neighbor)
+                        pending.append(neighbor)
+                assert (late in seen) == expected
+                cases += 1
+    return cases
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--agda', type=Path, help='emit checks for CaTTExp.Gray.Pure')
@@ -96,8 +125,10 @@ if __name__ == '__main__':
     emitter = Emitter()
     check_raw(emitter)
     check_cube()
+    returns = check_two_step_returns()
     if args.agda:
         module = emitter.module(args.agda.stem, 'Directed scalar cube and identity comparisons.')
         args.agda.write_text(module.replace('open import CaTTExp.Pure\n',
                                             'open import CaTTExp.Gray.Pure\n'))
     print('Parallel scalar terms, eight identity comparisons, and the directed cube 121 → 212 checked.')
+    print(f'{returns:,} two-step exchange return tests checked by reachability.')

@@ -1207,7 +1207,7 @@ What is not yet in Agda: an unconditional filler for any coherence of dimension 
    - rungs: their cylinders t_j↑ (K₁, unconditional);
    - edges: whiskered top cells W_j = l_j ∗₀ q_j ∗₀ r_j, built with `rwT 0 1` / `lwT 0 1`;
    - squares: the cylinders W_j↑ of those whisker terms.
-   The end gaps compare c⁻ with the composite of the W_j⁻, which have the same strict image. So the base cases are just the one-sided whisker coherences `rwT 0 1` and `lwT 0 1`. Each of these gets one explicit layer, e.g. (f⁻ ◃ h↑) ; fill₁ ; (α↑ ∗₀ h⁺) for α ∗₀ h, with rcS gaps on both sides.
+   The end gaps compare c⁻ with the composite of the W_j⁻, which should have the same strict image (expected, not proved). So the base cases are just the one-sided whisker coherences `rwT 0 1` and `lwT 0 1`. Each of these gets one explicit layer, e.g. (f⁻ ◃ h↑) ; fill₁ ; (α↑ ∗₀ h⁺) for α ∗₀ h, with rcS gaps on both sides.
 4. *My side of the hypotheses.* Equal strict images for every connector (≈w), and `Key2Ctx (Q↑Y)`.
 
 For the cases where the single query is right, discharging `RCq` in dimension 2 needs (i) rcS total on parallel 2-cells with equal strict image (Theorem A, `rcS-thmA`, RC threads, S20) and (ii) a proof that a_c and b_c have equal strict images, `⟦ a_c ⟧ (η Γ) ≈w ⟦ b_c ⟧ (η Γ)` with Γ = Q↑Y, plus the strong order `Key2Ctx (Q↑Y)` (`RCProc.TwoPathCtx`), the hypothesis of `rcS-thmA`. In dimension n ≥ 3 it needs RC(n) (the descent, RCGEN). rcS today is total only for globular supports and for supports with no variable of dimension ≥ 2; cylinder queries are in general neither.

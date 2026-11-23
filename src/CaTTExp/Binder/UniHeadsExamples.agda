@@ -98,7 +98,7 @@ H₀-c = refl
 uni₀-ty : inferTy H₀ (uni₀ 0) ≡ just (arr ⋆ (var 3) L)
 uni₀-ty = refl
 
--- The comparison components are well typed; m_x : p_x ⇒ uni^w ; λ_x.
+-- The comparison components are well typed.
 uni₀-y-wf : (wellTyped H₀ (uni₀ 1) ∧ wellTyped H₀ (uni₀ 2) ∧ wellTyped H₀ (uni₀ 3)) ≡ true
 uni₀-y-wf = refl
 

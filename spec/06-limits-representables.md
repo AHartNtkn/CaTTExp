@@ -44,7 +44,7 @@ where T is the transfor σ supplies.
 
   Every step is a coherence over a pasting context, and the interchanger is the only one that is directed under L.
 
-So the cells the limit rules need from the core are coherences over pasting contexts: the wedge cells and the rebracketing coherences (associators, their naturality, distributivity of whiskering). Both the CaTT and the L checkers accept every one of them that has been built (`CaTTExp.Lim.HornGen`). For n ≥ 2, and for n = 1 over 2-dimensional diagrams, F(w)_g is the lift of the n − 1 pasting along w: a cylinder lift of depth ≥ 2, which is the open part of ledger B18 (`notes/specified-cones.md` §4.3). Those horns are not built (ledger S27 (e′)).
+So the cells the limit rules need from the core are coherences over pasting contexts: the wedge cells and the rebracketing coherences (associators, their naturality, distributivity of whiskering). `CaTTExp.Lim.HornGen` builds them for every globular Γ of dimension ≤ 1 at n ≤ 1 and dimension 2 at n = 0; both the CaTT and the L checkers accept the resulting horns on a suite of diagrams (`Lim/HornGenExamples`), which is checked case by case, not proved for all Γ. For n ≥ 2, and for n = 1 over 2-dimensional diagrams, F(w)_g is the lift of the n − 1 pasting along w: a cylinder lift of depth ≥ 2, which is the open part of ledger B18 (`notes/specified-cones.md` §4.3). Those horns are not built (ledger S27 (e′)).
 
 **Side condition and decision procedure.** The transfor comparison variables of Tr_n over **marked** diagram generators are marked declarations (chapter 3), so σ must supply `inv` derivations for them. Over unmarked generators they are unrestricted. Everything else is a substitution check.
 

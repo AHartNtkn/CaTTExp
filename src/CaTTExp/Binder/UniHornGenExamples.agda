@@ -1,12 +1,14 @@
 ------------------------------------------------------------------------
 -- The uni heads over the general horns of CaTTExp.Lim.HornGen (every
--- globular diagram of dimension ≤ 1, n = 0, 1; ledger S27 (e′)), in the
+-- globular diagram of dimension ≤ 1, n = 0, 1; ledger S27 (e′)), checked
+-- on two diagrams, in the
 -- kernel with plain CaTT's side condition and rule (MARK). Every
 -- statement is `refl`.
 --
 -- On the cospan a → c ← b (pullbacks) and the parallel pair
--- (equalisers): every uni head is valid, its arity is a well-formed
--- context, and uni^w has the type of J1.
+-- (equalisers), n = 0, 1: every uni head (uni^w and each component) is
+-- valid, the cospan's arity is a well-formed context, and uni^w over the
+-- cospan at n = 0 has the type of J1.
 ------------------------------------------------------------------------
 module CaTTExp.Binder.UniHornGenExamples where
 
@@ -37,8 +39,11 @@ valid : LUF → Nat → Bool
 valid h y = bside h y ε
 
 -- Pullbacks: the cospan has 5 variables; uni^w and the 5 components.
-cospan-valid : (valid (uniF Cospan 0) 0 ∧ valid (uniF Cospan 0) 5
-                ∧ valid (uniF Cospan 1) 0 ∧ valid (uniF Cospan 1) 5) ≡ true
+allValid : LUF → Nat → Bool
+allValid h zero    = valid h 0
+allValid h (suc k) = allValid h k ∧ valid h (suc k)
+
+cospan-valid : (allValid (uniF Cospan 0) 5 ∧ allValid (uniF Cospan 1) 5) ≡ true
 cospan-valid = refl
 
 cospan-arity : is-just (ctx? (hctx (uniF Cospan 1) 0)) ≡ true
@@ -51,7 +56,7 @@ cospan-uni₀ : inferTy (hctx (uniF Cospan 0) 0) (bnd (uniF Cospan 0) 0 ε (fres
 cospan-uni₀ = refl
 
 -- Equalisers.
-par-valid : (valid (uniF Par 0) 0 ∧ valid (uniF Par 1) 4) ≡ true
+par-valid : (allValid (uniF Par 0) 4 ∧ allValid (uniF Par 1) 4) ≡ true
 par-valid = refl
 
 -- Out of range.

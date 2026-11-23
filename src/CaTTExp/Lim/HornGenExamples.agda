@@ -48,9 +48,13 @@ suiteP : (okP (J2 Pt 0) ∧ okP (J2 Pt 1) ∧ okP (J2 Cospan 0) ∧ okP (J2 Cosp
           ∧ okP (J2 Loop 0) ∧ okP (J2 Loop 1)) ≡ true
 suiteP = refl
 
--- And in the L core (the interchanger used is the forward one).
+-- And in the L core, n = 1 (the interchanger used is the forward one)
+-- and n = 0.
 suiteL : (okL (J2 Pt 1) ∧ okL (J2 Cospan 1) ∧ okL (J2 Par 1) ∧ okL (J2 Comp 1) ∧ okL (J2 Loop 1)) ≡ true
 suiteL = refl
+
+suiteL₀ : (okL (J2 Pt 0) ∧ okL (J2 Cospan 0) ∧ okL (J2 Par 0) ∧ okL (J2 Comp 0) ∧ okL (J2 Loop 0)) ≡ true
+suiteL₀ = refl
 
 -- The marked horn entries: the comparisons over the arrows.
 marks-cospan : (hornData Cospan 1 >>= λ d → just (HornData.marked d)) ≡ just (17 ∷ 18 ∷ [])

@@ -67,13 +67,24 @@ So the analogy "DESC plays the role of univalence" in `descent-vs-init.md` §3 i
 4. *Case analysis by ⊗-distributivity (partial progress) [sketch, needs checking].* For finitely many constructors, P(X) = ∐_{j∈J} A_j × (E_j\X) with J an external finite set, write a coalgebra as c : C → P(C), a map **into** a coproduct, not as a dialgebra. Then every case split the construction needs is a split of an **input** that is a coproduct, and it is available without DESC: ⊗ and \, / are biclosed, so X ⊗ – and – ⊗ X preserve coproducts. Take addresses L = SnocList(∐_j E_j) and labels Lab = (∐_j A_j) ⊔ ⊤, with ⊤ meaning "absent". The step map of the right-row model, (Lab/C, E ▸ Lab/C), is defined by copairing over the shape of c(x) and the shape of e. The candidate M is the equaliser inside L\Lab cutting out the consistent label functions. Transposition plus INIT-J1/J2 then gives existence and uniqueness of coalgebra morphisms C → M, as in §2.
    - **The one step that still needs descent:** M's own structure map M → P(M). To build it, M has to be split along its root label M → Lab, which means pulling the coproduct ∐_j A_j ⊔ ⊤ back along a map. That is **universality** of finite coproducts (the coproduct case of DESC-univ inside DESC-grpd). Disjointness does not seem to be used.
    - With universal finite coproducts, the whole construction appears to go through: dependent M-types with finitely many constructors would follow from INIT + chapter 8 + universal finite coproducts [sketch]. With an internal shape object A (say A = ℕ), comparing shapes needs decidable equality on A, and deriving x = y from eq(x, y) = true seems to need disjointness as well.
-   - Universality of finite coproducts holds in all three countermodels of `descent-vs-init.md` §3. It is not derivable from distributivity (× and ⊗ distribute over ⊔, but universality along a mono such as a graph Γ ↪ 2 × C does not follow). Whether (a)–(c) imply it is part of the outbox prompt.
+   - Universality of finite coproducts holds in all three countermodels of `descent-vs-init.md` §3, but it is **not derivable** (Model D below).
+
+**Model D: universality of finite coproducts is not derivable [proved here; agda].** Let T : Set → 2 send X to "X is inhabited". T preserves finite products and filtered colimits, but not pullbacks. Its Artin gluing Gl(T) has as objects sets X with a flag y ∈ {0, 1}, where y = 1 only if X is inhabited. A map is a function with y ≤ y′.
+- Gl(T) is cartesian closed. Products are (X × X′, y ∧ y′). The exponential is X′^X with flag (y ⇒ y′), cut down to 0 when X′^X is empty.
+- It is locally presentable [recall: a comma category of accessible functors between locally presentable categories, Adámek–Rosický 2.43]. So with discrete homs it satisfies every non-DESC rule, INIT included, by the common pattern of `descent-vs-init.md` §3.
+- Coproducts are (X ⊎ X′, y ∨ y′). Take z : 𝟙 → D₀ + 𝟙 with D₀ = (⊤, 0), hitting D₀. The two pullbacks of the injections along z are (⊤, 0) and (∅, 0). Their sum (⊤, 0) is not 𝟙 = (⊤, 1), and there is no map back. So finite coproducts are not universal.
+- They are still disjoint. So Model D also separates universality from disjointness, the opposite of Model B (the lattice 2), where coproducts are universal but not disjoint.
+- [agda] `CaTTExp.Descent.GlueNotUniversal`: category laws, the terminal object, products, exponentials (given a classical decision of whether X′^X is inhabited, passed as an argument), coproducts, both pullbacks with their universal properties, `not-universal` and `disjoint`. Local presentability and the remaining non-DESC rules are argued here, not encoded.
+
+**What Model D says about M-types.** In Model D, as in every locally presentable model, final coalgebras of accessible endofunctors exist (the category of coalgebras is accessible, and its forgetful functor creates colimits). That includes the conatural numbers and all coproduct-form M-types. So route 4's use of universality is a limitation of the route, not of the system. Two consequences:
+- A proof that dependent M-types are *not* derivable needs a model of the non-DESC rules that is not locally presentable, or not locally discrete.
+- A derivation has to avoid splitting M along its root label.
 
 The literature constructions all assume disjoint coproducts: Abbott–Altenkirch–Ghani Prop. 4.1 (Martin-Löf categories: LCCC, disjoint coproducts, W-types); van den Berg–De Marchi, *Non-well-founded trees in categories* (arXiv:math/0409158), in LCC pretoposes, where Prop. 2.9 also uses decidable equality on A.
 
 **Evidence the other way.** All three countermodels of `descent-vs-init.md` §3 (Set, the lattice 2, Pos) are locally presentable, and there final dialgebras exist for set-like p. So nothing yet shows DESC is needed. A separating model would have to be non-extensive or not locally presentable, and still have every INIT instance.
 
-**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house: route 4 localises the need to universality of finite coproducts (for finitely many constructors). Next is to write route 4 out in full and to look for a locally presentable cartesian closed category with non-universal finite coproducts.
+**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house: route 4 localises its own need to universality of finite coproducts (for finitely many constructors). Model D shows that universality is not derivable, yet M-types exist in Model D. Next is a derivation that avoids splitting M along its root label.
 
 ## 5. Directed M-types
 
@@ -85,4 +96,5 @@ The literature constructions all assume disjoint coproducts: Abbott–Altenkirch
 | Row | Item | Owner |
 |---|---|---|
 | F12b | Streams and constant-arity M-types: Agda written, checked on Agda 2.7.0.1 and 2.6.3; honesty review passed (PR #556) | this thread |
+| F12c-D | Model D (`Descent/GlueNotUniversal.agda`): honesty review | this thread |
 | F12c | Dependent-arity M-types without DESC (undirected and directed): outbox prompt; in-house attempt on route 2 | this thread (prompt ready to send) |

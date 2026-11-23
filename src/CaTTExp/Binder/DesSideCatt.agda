@@ -10,8 +10,8 @@
 --
 -- Both are proved over pure syntax and transferred by
 -- CaTTExp.Binder.PureSide. So `catt-tm-ty` is presupposition for plain
--- CaTT + DES with the (MARK)-only mark judgment, unconditionally (given
--- that 𝕊₀'s constants have well-formed types).
+-- CaTT + DES with the (MARK)-only mark judgment, given only Closed and
+-- SigOK (𝕊₀'s constants have well-formed types).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Signature as Old

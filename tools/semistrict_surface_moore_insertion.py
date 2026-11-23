@@ -2,7 +2,9 @@
 from argparse import ArgumentParser
 from collections import Counter
 from dataclasses import dataclass
+from fractions import Fraction
 from functools import cache
+from itertools import product
 from pathlib import Path
 from random import Random
 from tempfile import TemporaryDirectory
@@ -156,6 +158,57 @@ def check_insertions(limit=5):
     return counts
 
 
+def check_matching_clocks():
+    # A split carrier is the product of its blocks. At either projection the
+    # external path runs from the common source clock to the block's clock.
+    grid = tuple(Fraction(i, 4) for i in range(5))
+    def between(first, last, u):
+        return (1-u)*first + u*last
+
+    def at(start, delta, elapsed, duration):
+        assert duration or not delta
+        if duration == 0:
+            return start
+        return start + delta * min(1, max(0, elapsed/duration))
+
+    def concat(start, increments, durations, time):
+        for delta, length in zip(increments, durations, strict=True):
+            if time <= length:
+                return at(start, delta, time, length)
+            time -= length
+            start += delta
+        return start
+
+    checks = mismatches = 0
+    for left, right, more_left, more_right in product(range(3), repeat=4):
+        initial = (max(left, right), max(more_left, more_right))
+        blocks = ((left, more_left), (right, more_right))
+        mismatches += any(pair[0] != pair[1] for pair in ((left, right), (more_left, more_right)))
+        for lengths in blocks:
+            increments = tuple((2-i)*bool(length) for i, length in enumerate(lengths))
+            for u in grid:
+                local = tuple(between(a, b, u) for a, b in zip(initial, lengths))
+                for t in grid:
+                    clock = t * sum(local)
+                    result = concat(0, increments, local, clock)
+                    # Independently clamp the spent time in each piece.
+                    expected = sum(at(0, inc, clock-sum(local[:i]), local[i])
+                                   for i, inc in enumerate(increments))
+                    assert result == expected
+                    if u in (0, 1):
+                        end = initial if u == 0 else lengths
+                        assert result == concat(0, increments, end, t*sum(end))
+                    checks += 1
+    # A normalized track may move inside a parameter interval even if both
+    # prescribed endpoint lifts and the reference path have length zero.
+    for u, t in product(grid, repeat=2):
+        length = 4*u*(1-u)
+        value = u*(1-u)*t
+        assert length or value == 0
+        assert at(0, u*(1-u), t*length, length) == value
+    return checks, mismatches
+
+
 def check_checker(checkout):
     binary = checkout / 'target/release/catt_strict'
     with TemporaryDirectory() as tmp:
@@ -181,6 +234,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     for name, n in check_insertions().items():
         print(f'{n:,} {name}')
+    print('product path evaluations and unequal-clock cases:', *check_matching_clocks())
     if args.catt_strict:
         check_checker(args.catt_strict.resolve())
         print('checked insertion at the nonstandard swap head')

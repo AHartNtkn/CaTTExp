@@ -118,18 +118,20 @@ b ==F c = code b ==ℕ code c
 ==F-refl b = ==ℕ-refl (code b)
 
 ------------------------------------------------------------------------
--- The construction, over constants K, with a test for ⊤.
+-- The construction, over constants K, with a test for ⊤, and any set B
+-- of formers into which INIT's inject (`inj`), so that INIT can sit
+-- beside other binders (DES, CaTTExp.Binder.InitDes).
 
-module Construction (K : Set) (top? : K → Bool) where
+module Construction (K B : Set) (inj : Former → B) (top? : K → Bool) where
 
-  open Syntax K Former
+  open Syntax K B
 
   -- The syntax as a signature (only its syntax is used: the cylinders
   -- of CaTTExp.Binder.Cyl are stated over a signature).
   𝕊c : Signature
   𝕊c = record
     { K = K ; _==K_ = λ _ _ → false ; ==K-sound = λ _ _ ()
-    ; B = Former ; _==B_ = _==F_ ; ==B-sound = ==F-sound
+    ; B = B ; _==B_ = λ _ _ → false ; ==B-sound = λ _ _ ()
     ; ty = λ _ → ⋆ ; Valid = λ _ → ⊤ ; valid? = λ _ → nothing
     ; bside = λ _ _ _ → false ; bargs = λ _ _ Δ → Δ ; bres = λ _ _ _ → ⋆
     }
@@ -411,11 +413,11 @@ module Construction (K : Set) (top? : K → Bool) where
 
   -- The carrier of sort k.
   μAt : Ctx → Nat → Tm
-  μAt Δ k = bnd μ k Δ ⟨⟩
+  μAt Δ k = bnd (inj μ) k Δ ⟨⟩
 
   -- Component j of the generic model.
   ηAt : Ctx → Nat → Tm
-  ηAt Δ j = if j <ℕ sorts Δ then bnd μ j Δ ⟨⟩ else bnd η j Δ ⟨⟩
+  ηAt Δ j = if j <ℕ sorts Δ then bnd (inj μ) j Δ ⟨⟩ else bnd (inj η) j Δ ⟨⟩
 
   -- The first k components of the generic model.
   ηPre : Ctx → Nat → Sub
@@ -470,15 +472,15 @@ module Construction (K : Set) (top? : K → Bool) where
 
   -- The components of rec: rec_k at a sort, rec_i otherwise.
   recTh : Ctx → Nat → Tm
-  recTh Δ i = if i <ℕ sorts Δ then bnd rec i Δ (bvPre (len Δ)) else bnd recY i Δ (bvPre (len Δ))
+  recTh Δ i = if i <ℕ sorts Δ then bnd (inj rec) i Δ (bvPre (len Δ)) else bnd (inj recY) i Δ (bvPre (len Δ))
 
   -- uni: a modification between the morphisms h (arguments from m)
   -- and h′ (from m + m), m = len Δ, as a cylinder datum over the
   -- arguments: h selected, the model fixed; its components uni_k at a
   -- sort, uni_i otherwise. uni_i's type is the cylinder of θ_i.
   uniTh : Ctx → Nat → Tm
-  uniTh Δ i = if i <ℕ sorts Δ then bnd uni i Δ (bvPre (len Δ + len Δ + len Δ))
-              else bnd uniY i Δ (bvPre (len Δ + len Δ + len Δ))
+  uniTh Δ i = if i <ℕ sorts Δ then bnd (inj uni) i Δ (bvPre (len Δ + len Δ + len Δ))
+              else bnd (inj uniY) i Δ (bvPre (len Δ + len Δ + len Δ))
 
   modSel : Nat → Nat → Bool
   modSel m j = not (j <ℕ m) ∧ (j <ℕ m + m)
@@ -558,8 +560,8 @@ initSig b = record
   ; ty        = ty
   ; Valid     = Valid
   ; valid?    = valid?
-  ; bside     = Construction.side K top?
-  ; bargs     = Construction.args K top?
-  ; bres      = Construction.res K top?
+  ; bside     = Construction.side K Former (λ b → b) top?
+  ; bargs     = Construction.args K Former (λ b → b) top?
+  ; bres      = Construction.res K Former (λ b → b) top?
   }
   where open Base b

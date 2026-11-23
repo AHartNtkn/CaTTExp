@@ -59,7 +59,7 @@ one = cst ⊤c
 Γm = ε ▸ ⋆ ▸ arr ⋆ one (var 0) ▸ arr ⋆ (var 0) (var 0)
 
 sideOf : Former → Nat → Ctx → Bool
-sideOf = Construction.side NK (λ _ → true)
+sideOf = Construction.side NK Former (λ b → b) (λ _ → true)
 
 -- Tuples of verdicts, compared at a fixed type.
 B2 = Bool × Bool
@@ -95,7 +95,7 @@ t-r2  = tyOf Γm (bnd recY 2 Δℕ (fresh 0 3))
 
 -- uni and uni_y: the context is the argument telescope opened.
 Γu : Ctx
-Γu = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℕ)
+Γu = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δℕ)
 
 t-ctxu = ok (ctx? Γu)
 t-uni  = tyOf Γu (bnd uni 0 Δℕ (fresh 0 9))
@@ -161,7 +161,7 @@ _ : wfTy Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ≡ true
 _ = refl
 
 Γu○ : Ctx
-Γu○ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δ○)
+Γu○ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δ○)
 
 _ : (ok (ctx? Γu○) , ok (tyOf Γu○ (bnd uni 0 Δ○ (fresh 0 9))) , ok (tyOf Γu○ (bnd uniY 1 Δ○ (fresh 0 9))))
       ≡₃ (true , true , true)
@@ -185,7 +185,7 @@ _ = refl
 Γ○₃ = Γ○ ▸ arr (arr (arr ⋆ one (var 0)) (var 1) (var 1)) (var 2) (var 2)
 
 Γu○₃ : Ctx
-Γu○₃ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δ○₃)
+Γu○₃ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δ○₃)
 
 _ : ( ok (tyOf ε (bnd μ 0 Δ○₃ ⟨⟩)) ∷ sideOf recY 3 Δ○₃ ∷ sideOf uni 0 Δ○₃
     ∷ wfTy Γ○₃ (bnd recY 3 Δ○₃ (fresh 0 4)) ∷ ok (ctx? Γu○₃) ∷ wfTy Γu○₃ (bnd uni 0 Δ○₃ (fresh 0 12))
@@ -290,7 +290,7 @@ _ : tyOf Γeo (bnd recY 3 Δeo (fresh 0 5)) ≡ just
 _ = refl
 
 Γueo : Ctx
-Γueo = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δeo)
+Γueo = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δeo)
 
 _ : (ok (ctx? Γueo) , ok (tyOf Γueo (bnd uni 0 Δeo (fresh 0 15))) , ok (tyOf Γueo (bnd uni 1 Δeo (fresh 0 15))))
       ≡₃ (true , true , true)
@@ -338,7 +338,7 @@ _ = refl
 -- rec_y at s, and uni over the marked telescope (its model argument
 -- is marked like Δℤ, so the opened context has s′ marked inv).
 Γuℤ : Ctx
-Γuℤ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℤ)
+Γuℤ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δℤ)
 
 _ : ( ok (tyOf (Γℤ (minv ∷ [])) (bnd recY 2 Δℤ (fresh 0 3)))
     , ok (ctx? Γuℤ) , ok (tyOf Γuℤ (bnd uni 0 Δℤ (fresh 0 9)))
@@ -447,7 +447,7 @@ _ = refl
 -- is its cylinder, with the composite's cylinder filled by K₁; uni is
 -- stated over Δb. Their types are well formed.
 Γub : Ctx
-Γub = Γb ⧺ openTel 2 (Construction.args NK (λ _ → true) uni 0 Δb)
+Γub = Γb ⧺ openTel 2 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δb)
 
 _ : ( sideOf recY 3 Δb ∷ wfTy (Γbm (minv ∷ [])) (bnd recY 3 Δb σbm)
     ∷ sideOf uni 0 Δb ∷ ok (ctx? Γub) ∷ wfTy Γub (bnd uni 0 Δb (fresh 2 12))
@@ -467,7 +467,7 @@ _ = refl
 Γfp = Γm ▸ arr (arr ⋆ one (var 0)) (cmp one (var 0) (var 0) (var 1) (var 2)) (var 1)
 
 Γufp : Ctx
-Γufp = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δfp)
+Γufp = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δfp)
 
 _ : ( sideOf μ 0 Δfp ∷ sideOf recY 3 Δfp ∷ wfTy Γfp (bnd recY 3 Δfp (fresh 0 4))
     ∷ ok (ctx? Γufp) ∷ wfTy Γufp (bnd uni 0 Δfp (fresh 0 12)) ∷ wfTy Γufp (bnd uniY 2 Δfp (fresh 0 12))

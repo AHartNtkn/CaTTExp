@@ -53,7 +53,7 @@ Introduction and closure rules:
 ```
 Derived:
 ```
-(T-coprod) A, B trunc n,  n ≥ 0  ⟹  A ⊔ B trunc n            (from DESC-grpd, §9.2)
+(T-coprod) A, B trunc n,  n ≥ 0  ⟹  A ⊔ B trunc n            (from DESC-grpd, §9.2; also T-init at μ(X; A ⊔ B → X))
 (T-trunc)  ‖X‖_n trunc n                                     (from INIT's mark ⋆^{≤n}, §9.3)
 (T-graph)  Γ a finite graph context  ⟹  ⟦Γ⟧ trunc 1         (encode–decode, §9.4)
 (T-loc)    the same with a set M of edges inverted  ⟹  ⟦Γ⟧[M⁻¹] trunc 1
@@ -166,7 +166,7 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 
 **The impredicative reading.** Write ∀Δ. X for μΔ. A map W → ∀Δ. X is the same as a family of maps W → A, one for each model (A, σ), natural along model morphisms. System F's ∀X. (ΦX → X) → X is the case Δ = (X, a : ΦX → X). The naturality is built into INIT-J2, and it is essential: without it the encoding lacks η (Awodey–Frey–Speight, arXiv:1802.02820), and the plain dinatural end is wrong already for ℕ in Set, whereas strong (Barr) dinaturals are exactly the numerals (Paré–Román 1998, Prop. 1). The end ∫_{(A,σ)} A is a consequence of initiality, not equivalent to it: for ⊤ → 2 the end exists (it is ∅) but no initial model does. So the rule is stated as initiality.
 
-**Semantics.** Sound in Cat_ω for limit-preserving accessible targets, accessible sources and strong morphisms: the forgetful functor from models creates limits and is accessible, so an initial model exists (Adámek–Rosický; Kerodon 9.4.9, 9.5.1–9.5.2), extended to finite contexts with cells. The target class is maximal among uniform ones: for a constant source A, having initial models for every A is a left adjoint to the target, which forces the target to preserve limits. The dual rule, final models of copositive contexts, is unsound in general (the right adjoint to base change along the non-exponentiable {0<2} → [2] does not exist), and it is not part of the system. Some coinductive objects are derivable anyway: streams ℕ\B are the final coalgebras of B × – from INIT(ℕ) and chapter 8 alone; general M-types also use DESC-grpd (`notes/descent-vs-init.md` §5, F12b).
+**Semantics.** Sound in Cat_ω for limit-preserving accessible targets, accessible sources and strong morphisms: the forgetful functor from models creates limits and is accessible, so an initial model exists (Adámek–Rosický; Kerodon 9.4.9, 9.5.1–9.5.2), extended to finite contexts with cells. The target class is maximal among uniform ones: for a constant source A, having initial models for every A is a left adjoint to the target, which forces the target to preserve limits. The dual rule, final models of copositive contexts, is unsound in general (the right adjoint to base change along the non-exponentiable {0<2} → [2] does not exist), and it is not part of the system. Some coinductive objects are derivable anyway: streams ℕ\B, and more generally SnocList(E)\A as the final coalgebra of A × (E\–) for any A and E, follow from INIT and chapter 8 alone (Agda-checked, 1-truncated: `CaTTExp.Coinductive.Streams`, `ConstArity`). Dependent-arity M-types are open: every known route uses DESC-grpd (`notes/coinductive.md`, F12b–F12c).
 
 **Status.**
 - Soundness and maximality: **proved** (researcher answer, verified 2026-11-21). The answer states the theorem for any presentable category of carriers, "such as C, a slice, or the intersection of the specified marks", which covers several sorts over bases.

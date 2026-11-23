@@ -5,7 +5,7 @@
 *Short answer.* Neither rule is derivable from the other, so both stay.
 - **INIT builds objects by their maps out.** Every INIT conclusion is a map out of μΔ, or a cell between two such maps.
 - **DESC is about pullbacks of colimits.** Its conclusions identify a pullback of a colimit (DESC-univ), or the fibres of a family over a colimit (DESC-glue, DESC-or, DESC-tr). No INIT conclusion has that form, and §3 below gives models in which INIT holds and descent fails.
-- **Coinductive objects are not INIT instances.** Final models of copositive contexts are unsound in general (§9.3). Streams are derivable from INIT and the closed structure; general M-types need DESC-grpd as well (§5).
+- **Coinductive objects are not INIT instances.** Final models of copositive contexts are unsound in general (§9.3). Streams and every constant-arity M-type are derivable from INIT and the closed structure without DESC; dependent-arity M-types are open (§5, `coinductive.md`).
 
 Status tags follow `conventions.md`: [proved here], [sketch], [agda], [recall].
 
@@ -71,13 +71,14 @@ The same model kills Hom_{⟦L⟧}(x, x) ≃ ℕ, where ⟦L⟧ = 1 so that hom 
 | non-recursive HITs (S¹, spheres, suspension, torus, directed circle) | neither (finite colimits); INIT restates their universal property | Theorem A, `higher-inductive.md` |
 | dependent elimination into a **given** family | INIT (Theorem D) | a section is a model morphism out of μΔ |
 | families over S¹ defined by a fibre and an automorphism (universal cover) | DESC-glue | prescribed fibres; fails in Model A |
-| true ≠ false, disjoint and universal coproducts (T-coprod) | DESC-grpd | fails in Model B |
+| true ≠ false, disjoint and universal coproducts (T-coprod) | DESC-grpd | disjointness fails in Model B; universality fails in Model D (`coinductive.md` §4) |
 | effective quotients (EX) | DESC-grpd, DESC-tr, plus INIT for ‖–‖₀ | fails in Model C |
 | lax colimits as Grothendieck constructions (G, G⁺) | DESC-glue, DESC-or, DJ | fibres of a glued fibration |
 | ΩS¹ ≃ ℤ, Hom_{⟦Γ⟧}(a, b) ≃ paths (T-graph, T-loc) | **both** | INIT for ℤ / the path set and for decode; DESC for the code family; fails in Model A |
 | object-valued recursion R-U (fibres U_{node(ts)} ≃ ∨ ΣU_{t_j}) | **both** | INIT over Θ₀ builds U; DESC-grpd computes its fibres |
 | streams ℕ\B (all B, directed too) | INIT + closed structure | §5 |
-| M-types (non-wellfounded trees) over sets | INIT + DESC-grpd + closed structure [sketch] | §5 |
+| M-types with a constant arity object, νX. A × (E\X) = SnocList(E)\A (directed too) | INIT + closed structure | `coinductive.md` §2 [agda] |
+| M-types with dependent arity p : E → A | known routes use DESC-grpd; whether it is needed is open | `coinductive.md` §4, F12c |
 
 **Example (π₁ of the circle, step by step).** INIT gives S¹, ℤ and decode: rec of the model (Hom(b, –) over S¹) yields ℤ → ΩS¹. It also gives the dependent eliminator used to check that decode ∘ encode ≅ 1. Encode needs a family C → S¹ with fibre ℤ over b and transport suc around l. INIT over the base S¹ can build μ(Y : grpd over S¹, y₀ : ⊤ → Y over b), which is the free family on a point (= b ↓ S¹ by DJ). But computing its fibre is the very theorem being proved. DESC-glue instead builds C with fibre ℤ **by construction**. Model A shows no other route exists.
 
@@ -93,12 +94,9 @@ The same model kills Hom_{⟦L⟧}(x, x) ≃ ℕ, where ⟦L⟧ = 1 so that hom 
 
 No DESC is used, since ℕ ⊗ C (not ℕ × C) is what appears. If one wants ℕ × C, identifying it with ℕ ⊗ C at sets uses L-×, and in general it uses DESC-grpd (universality of the coproduct ℕ = ∐ ⊤), which the proof avoids.
 
-**General M-types [sketch; open as F12b].** For a polynomial P(X) = Σ_{a:A} B(a)\X with A, B(a) sets, the terminal chain gives νP = lim_n Pⁿ(⊤) (Adámek's theorem, ω^op-continuity of P; Ahrens–Capriotti–Spadotti, arXiv:1504.02949, in HoTT). The chain's limit needs three things:
-- the family n ↦ Pⁿ⊤ over ℕ, built by INIT over the base ℕ, whose fibres are computed by Lambek plus DESC-grpd, as for R-U;
-- its product over ℕ (R-cot⁺ over a set base, which uses DESC-grpd and INIT);
-- ω^op-continuity of Σ_a, which is universality and disjointness of coproducts, i.e. DESC-grpd.
+[agda, 1-truncated] `CaTTExp.Coinductive.Streams`, with a shorter proof that needs no ⊗ (the multimap (ℕ, C ▸ B) is transposed both ways directly): `coinductive.md` §1.
 
-So general coinductive types use **both** rules. Model B suggests that DESC-grpd is really needed here: Σ_a over a non-disjoint coproduct does not commute with connected limits. But in a complete lattice greatest fixed points exist anyway, so Model B is not a countermodel. Whether M-types can avoid DESC is open. Directed M-types (A, B(a) non-discrete) are also open.
+**General M-types (superseded 2026-11-23 by `coinductive.md`).** The terminal-chain sketch that stood here overstated what is needed. Constant-arity M-types, directed ones included, follow from INIT and chapter 8 alone: νX. A × (E\X) = SnocList(E)\A ([agda] `CaTTExp.Coinductive.ConstArity`), by the same transposition as Prop S. The chain limit needs no R-cot⁺, since sections over ℕ live in ℕ\Y. What the terminal chain really needs is the fibres of an INIT family over ℕ, and that is where a universe (Ahrens–Capriotti–Spadotti) or DESC-grpd comes in. For dependent arities (p : E → A), every known route uses disjoint coproducts, and no countermodel is known. That case is open (F12c) and has a paste-ready prompt in `conjectures/outbox/dependent-m-types-without-descent.md`.
 
 ## 6. Literature
 
@@ -110,4 +108,5 @@ That DESC does not follow from INIT is the higher, rule-level form of a standard
 |---|---|---|
 | F12 | DESC vs INIT: neither derivable (this note) | this thread (done) |
 | F12a | Agda shadow `CaTTExp.Descent.InitNotDesc`: independent honesty review passed with nits, fixed | this thread (done) |
-| F12b | Coinductive objects: Prop S in Agda (abstract interface), M-types (§5) at sketch level checked, whether M-types need DESC, directed M-types | "Build coinductive objects from initiality" thread |
+| F12b | Coinductive objects: Prop S and constant-arity M-types in Agda (`coinductive.md` §1–2) | "Build coinductive objects from initiality" thread |
+| F12c | Dependent-arity M-types without DESC, undirected and directed (`coinductive.md` §4–5) | same thread; outbox prompt ready |

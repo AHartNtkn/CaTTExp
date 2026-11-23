@@ -166,7 +166,7 @@ ext-varsOf A σ []       p = refl
 ext-varsOf A σ (j ∷ js) p = trans (ext-varsOf A (σ ,ₛ var j) js (scTy-suc A p)) (ext-ty A σ (var j) p)
 
 lenₛ-varsOf : ∀ ρ js → lenₛ (varsOf ρ js) ≡ lenₛ ρ + GT.length js
-lenₛ-varsOf = CM.lenₛ-varsOf K B gform mmc
+lenₛ-varsOf = CM.lenₛ-varsOf K B gform mmc unit
 
 ------------------------------------------------------------------------
 -- Prefixes of an arity, entry by entry.
@@ -235,6 +235,10 @@ gbT : ∀ {Γ a c} kd → Γ ⊢tm a ∶ ⋆ → Γ ⊢tm c ∶ ⋆ → Γ ⊢tm
 gbT kd da dc = bnd-wf tt tt w tt (,-a (,-a (⟨⟩-a w) da tt) dc tt)
   where w = tm-ctx da
 
+-- The point object ⊤ = lim_ε.
+top-wf : ∀ {Γ} → Γ ⊢ctx → Γ ⊢tm topT ∶ ⋆
+top-wf w = bnd-wf tt tt w tt (⟨⟩-a w)
+
 fm-ty : ∀ {Γ} k → Γ ⊢ctx → (∀ i → T (i <ℕ k) → lookup Γ i ≡ just ⋆) → ∀ x → T (atomFm k x) → Γ ⊢tm fmV x ∶ ⋆
 fm-ty k w at (GB.obj i)  p = var-wf w (at i p)
 fm-ty k w at (GB.rep _)  ()
@@ -288,8 +292,8 @@ module _ (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) where
     let (ok , wj , bj) = entry j l in
     ∧T (honest-pre j (<-suc j (GT.length Φ) l))
        (∧T (subst (λ n → T (scTy? n (trTy k Φ (nthY Φ j)))) (sym (len-pre k Φ j))
-              (SC.Sc.sc-trTy K B gform mmc k Φ dd j (nthY Φ j) ok wj bj))
-           (SC.lc-trTy K B gform mmc k Φ (nthY Φ j)))
+              (SC.Sc.sc-trTy K B gform mmc unit k Φ dd j (nthY Φ j) ok wj bj))
+           (SC.lc-trTy K B gform mmc unit k Φ (nthY Φ j)))
 
   honest-arity : T (honest? (arity k Φ))
   honest-arity = subst (λ G → T (honest? G)) (pre-arity k Φ) (honest-pre (GT.length Φ) (<-self (GT.length Φ)))
@@ -394,7 +398,7 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
             (_ , b) = MR.filter-In-inv _ (upTo (GT.length Φ)) v vin
         in entry-at v (MR.upTo-In-inv (GT.length Φ) v b) i r
 
-      module A = CM.At K B gform mmc k Φ w s eS wS ab
+      module A = CM.At K B gform mmc unit k Φ w s eS wS ab
       open A using (K′; σb; σb-rr)
       open A.CB using (asb; vs; ρ; rr; Φ′; m)
 
@@ -422,11 +426,11 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
       sc-res : T (scTy? (len (arity K′ Φ′)) (resC h))
       sc-res = subst (λ X → T (scTy? (len (arity K′ Φ′)) X)) (sym res-eq)
                  (subst (λ n → T (scTy? n (trTy K′ Φ′ (GT.sY ρ S)))) (sym (len-arity K′ Φ′ Vc))
-                   (SC.Sc.sc-trTy K B gform mmc K′ Φ′ ddc (GT.length Φ′) (GT.sY ρ S) (MmcOK.okA okc) (MmcOK.wA okc)
+                   (SC.Sc.sc-trTy K B gform mmc unit K′ Φ′ ddc (GT.length Φ′) (GT.sY ρ S) (MmcOK.okA okc) (MmcOK.wA okc)
                       (wf-scope Φ′ (GT.sY ρ S) (MmcOK.wA okc))))
 
       lc-res : T (lcTy? 0 (resC h))
-      lc-res = subst (λ X → T (lcTy? 0 X)) (sym res-eq) (SC.lc-trTy K B gform mmc K′ Φ′ (GT.sY ρ S))
+      lc-res = subst (λ X → T (lcTy? 0 X)) (sym res-eq) (SC.lc-trTy K B gform mmc unit K′ Φ′ (GT.sY ρ S))
 
       ok : T (bside (mmc h) 0 ε)
       ok = ∧T (subst (λ m → T (is-just m)) (sym mmc-eq) tt)
@@ -434,7 +438,7 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
 
       -- The support, below j.
       vs<j : ∀ v → In vs v → T (v <ℕ j)
-      vs<j = SC.Sc.sup-below K B gform mmc k Φ dd′ j s eS bT bY
+      vs<j = SC.Sc.sup-below K B gform mmc unit k Φ dd′ j s eS bT bY
 
       -- The arguments, a prefix at a time.
       σa : Sub
@@ -489,7 +493,7 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
         ep = entry K′ Φ′ Vc p lp
         scp : T (scTy? (lenₛ (σp p)) (trTy K′ Φ′ Cp))
         scp = subst (λ n → T (scTy? n (trTy K′ Φ′ Cp))) (sym (len-σp p (<-suc p m l)))
-                (SC.Sc.sc-trTy K B gform mmc K′ Φ′ ddc p Cp (fst ep) (fst (snd ep)) (snd (snd ep)))
+                (SC.Sc.sc-trTy K B gform mmc unit K′ Φ′ ddc p Cp (fst ep) (fst (snd ep)) (snd (snd ep)))
         okv : T (okTy k (nthY Φ v))
         okv = fst (entry k Φ V v (v<Φ v (vs<j v vin)))
         tyeq : trTy k Φ (nthY Φ v) ≡ trTy K′ Φ′ Cp [ σp p ]ty
@@ -543,14 +547,14 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
            T (sortedY k C) → Γ ⊢ty trTy k Φ C
     tyWf (GB.op ((x ∷ []) GB.▸ z)) p _ _ _ _ =
       arr-wf (fm-ty k wj atoms-at x (∧-l _ _ p)) (fm-ty k wj atoms-at z (∧-r _ _ p))
-    tyWf (GB.op ([] GB.▸ _)) () _ _ _ _
+    tyWf (GB.op ([] GB.▸ z)) p _ _ _ _ = arr-wf (top-wf wj) (fm-ty k wj atoms-at z p)
     tyWf (GB.op ((_ ∷ _ ∷ _) GB.▸ _)) () _ _ _ _
     tyWf (GB.hom d g A s t) p wC bC aC sC =
       let wA  = ∧-l _ _ wC
           wst = ∧-r (GT.wf Φ A) _ wC
           eS  = eqMaybe-sound (GT.infer Φ s) A (∧-l _ _ wst)
           eT  = eqMaybe-sound (GT.infer Φ t) A (∧-r (GT.eqMaybeTy (GT.infer Φ s) A) _ wst)
-          okA = ∧-r (g ==ℕ 1) _ p
+          okA = ∧-r (g ==ℕ inputs A) _ p
           bA  : Below j (varsY A)
           bA  = λ i q → bC i (elem-++l i (varsY A) (varsT s ++ varsT t) q)
           bs  : Below j (varsT s)
@@ -583,6 +587,8 @@ ok-all b y (_ ▸[ _ ] _) ()
 ok-all (gform g) zero ε p = honest-ok (spec-honest (gform g) 0 p) (⋆-wf (atoms-ctx 2)) ε p
 ok-all (gform g) (suc y) ε ()
 ok-all (mmc h) (suc y) ε ()
+ok-all unit zero ε p = honest-ok (spec-honest unit 0 p) (⋆-wf ε-wf) ε p
+ok-all unit (suc y) ε ()
 ok-all (mmc (mmi k Φ t)) zero ε p =
   honest-ok (spec-honest (mmc (mmi k Φ t)) 0 p) a ε p
   where

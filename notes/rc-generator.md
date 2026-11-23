@@ -110,7 +110,7 @@ Agda pays for the *unshared* size of a term: the certified checker and `==Tm` tr
 
 ## 7. Generators with composite faces (S20 stage 4, 2026-11-23)
 
-Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a rank-3 comparison of two coherence-only tracks (22 and 25 top-cut factors) in a 15-variable context with two generators whose targets are composites: `x12 : x11 ⇒ x10 ∗₀ x2` and `x14 : x13 ⇒ x11 ∗₀ x6`. The context is strong Steiner (`steiner.Complex.is_strong_steiner`).
+Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a rank-3 comparison of two coherence-only tracks (22 and 25 top-cut factors) in a 15-variable context with two generators whose targets are composites: `x12 : x11 ⇒ x10 ∗₀ x2` and `x14 : x13 ⇒ x11 ∗₀ x6`. The context is strong Steiner, checked in Python (`steiner.Complex.is_strong_steiner`), not yet certified in Agda.
 
 **The marker step, stated.** Let g : s → c be a generator whose face c is a composite term of type B. Put Γ_g = Γ with g replaced by C : B and g′ : s → C, and σ_g : Γ_g → Γ the substitution C ↦ c, g′ ↦ g.
 - *Claim (correctness).* If t = σ_g(t′) and u = σ_g(u′) with t′, u′ parallel in Γ_g, and w′ : t′ → u′ in Γ_g, then σ_g(w′) : t → u in Γ. This holds because substitution preserves typing.
@@ -122,7 +122,7 @@ Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a r
 - both endpoints of query (2) whisker x4 and x8 inside those composites;
 - in Γ_g the marker C is free, so no 2-cell relates C ∗₀ y to x10 ∗₀ x3. The endpoints therefore have no bundled form at all. Checked with `rc_heur._rebuilder`: none of the four endpoint lifts typechecks.
 
-So the marker step is correct and terminating only under the hypothesis that **no generator acts on a proper part of a marked face**. Query (2) violates it. This is the same obstruction that made r9 Response 4 fold free faces instead (§7.12 of `relative-coherence.md`). The fold route was tried on query (2) (`tools/rc_fold.py`). Its squares recurse into cylinder contexts of 35 to 87 variables, and each level shows new shapes:
+So the marker step, though correct and terminating, applies only under the hypothesis that **no generator acts on a proper part of a marked face** (otherwise no bundled forms exist). Query (2) violates it. This is the same obstruction that made r9 Response 4 fold free faces instead (§7.12 of `relative-coherence.md`). The fold route was tried on query (2) (`tools/rc_fold.py`). Its squares recurse into cylinder contexts of 35 to 87 variables, and each level shows new shapes:
 - several simultaneous events with decomposed composite sources;
 - identity slots, loops, and nested vertical composites.
 
@@ -130,8 +130,28 @@ Steps were added for each (`rc_heur`). All captured sub-queries answer, some in 
 
 **The general step is the descent, not a new heuristic.** Response 15 (`conjectures/answered/relative-coherence-all-dimensions-r10-2026-11-21.md`, verified) constructs comparisons of parallel raw terms with equal strict value by structural recursion in every finite strong-Steiner context. Its well-founded measure is (n, n − l, h, |S|), so it is terminating and correct on paper. Query (2)'s context is strong Steiner, so Response 15 answers it, with no fold and no marker. No open question is involved, so no new prompt is needed. What is missing is the implementation of §4 steps 4, 5 and 7 (staircases, transfer and inverses, piece lifts and gluing). Step 6 has its strict side (`steiner.Sd`). Stage 4 now implements those steps directly from Response 15. The fold code and the shape steps stay as fast paths for the cases they already answer; they are not part of the general argument.
 
+**Single-piece step, implemented (2026-11-23, `tools/rc_descent.py`).** When both inputs lie in one piece U_θ (the literal expansion of Response 15: heads whose substitution entries all have labels in θ are expanded, every other subterm is a generator with a label of proper support), `piece` does the following:
+- builds W, the pasting context of the globular arity θ, with a strict label on every variable;
+- builds J : W → Γ, choosing literal generators of the inputs where they fit (the target face first), otherwise word lifts;
+- builds R : U_θ → W, lifting the unique W-cell over each label (unique because arities are monic);
+- compares R(t) with R(u) in W, where the comparison is globular;
+- transfers the result back along bridges x↑ for the generators with JR(x) ≠ x. The bridges are recursive equal-image calls on the proper supports. The lax and oplax squares come from `rc_nat`, and moved faces are stripped at the top cut and at the cut below it (`strip_right`, `strip_lower`, which use inverses and cancellations from `rc_inverse` and generic interchange coherences).
+
+Results:
+- On query (2) no gluing is needed: all 47 factors lie in the piece of the order 14, 12, 4, 8, one of the 15 elements of Sd(c).
+- The comparison in W (11 variables) answers in 0.6 s.
+- On the self-test it answers `rank3-cancel-loop`.
+- The step sits in the `rc_heur` dispatch behind `DESCENT` (off by default).
+
+**What still blocks query (2).** The inputs contain many rank-3 generators: whiskerings of inner coherences by raw 1-cells such as x10, x11 and x6, whose labels are outside θ. Their bridges are rank-4 equal-image calls on supports that still contain x12. Two ways of computing them both fail:
+- Plain `rc` gives up on the first one after 54 s.
+- The step itself, applied recursively, meets two obstacles. First, a wedge arity whose composite 1-pole moves, which the strips handle. Second, naturality fillers K(Q, B, Y′) for coherence heads with 40 to 70 variables, where Y′ contains moved lower-dimensional variables. The filler query in the cylinder Q↑Y′ (about 90 variables, h = n) did not finish in 15 minutes.
+
+In Response 15 these fillers are themselves calls of the induction (step 1: the cylinder has G_{s+1}, so l′ > l), and the low variables are kept stationary by the adapted pieces R_l, M_l. Neither is implemented. So the missing piece is now precise: the l-component of the induction (adapted subdivisions, and staircases as recursive calls in partial cylinders).
+
 ## 8. Log
 
+- 2026-11-23. `tools/rc_descent.py`: the single-piece step of Response 15 (§7). It answers the self-test's `rank3-cancel-loop` and the in-arity comparison of query (2) (0.6 s). Query (2) itself is still open: the bridges of its whiskered rank-3 generators need the l-component of the induction (adapted pieces, cylinder staircases as recursive calls), which is not implemented.
 - 2026-11-23. Stage 4, query (2): new `rc_heur` steps (change of writing for several simultaneous events with markers built from the factors' types, sorting in both directions, splitting nested and mixed events, identity-slot removal, loop separation, distribution over nested vertical composites); identity-keyed memos for `infer`, free variables and strict images, sharing-preserving substitution, one call budget and one answer memo per outermost query (a slow sub-query went from 91 s to 11 s, and a run that exhausted 15 GB now stays under 5 GB). Query (2) is still unanswered. The marker step cannot reach it, and the fold route does not converge (§7). Next: implement the descent proper (§4 steps 4, 5, 7) from Response 15.
 - 2026-11-23. `rc_heur` dispatches to (d″), the event-interchange step, and to the cone thread's cap sweep (`rc_nat.sweep_rc`) before abstraction. Horiz3 round 21's interchange comparison ([Eτ, Eb] against [Ec, (σc₁)↑]) is answered in 0.1 s, and 15 s inside its whole factor list. The full round-21 query is still unanswered (464 s, 58 calls): the remaining piece is a coherence-only comparison of two different cap blocks with the same boundary, which needs the descent (S20 stage 4). All `rc_selftest.py` cases pass.
 - 2026-11-22. Two more reductions in `rc_heur.py`: interchange over several top slots, and loop cancellation. With them, the cone thread's sequentialized horizontal split (`ConeRCS`, branch `claude/project-thread-b03ys3`) gets past its round-16 query (7 s). That query had the two events adjacent on both sides, t a literal prefix of u, and u ending in a whiskered coherence followed by its inverse. In the unsplit `ConeRC` query, and in the first version of the split (stuck at round 17), an event action is separated from the other event by 25 old caps (whiskered Theorem A answers). Matching that needs depth-one naturality of those caps (§6 item 1), so the cone side reorders instead. Self-test case `rank3-cancel-loop` added.

@@ -1285,6 +1285,16 @@ def _flipped(G, A, t, u, rec, step):
 def C1_D1_differ(a, b):
     return a != b
 
+DESCENT = [False, 40]
+
+def _descent(G, A, t, u, rec):
+    """r9 Response 15, single piece (tools/rc_descent.py); off by default,
+    and only for contexts of at most DESCENT[1] variables."""
+    if not DESCENT[0] or len(G) > DESCENT[1]:
+        return None
+    import rc_descent
+    return rc_descent.piece(G, A, t, u, rec)
+
 def change_of_writing(G, A, t, u, rec):
     """Change of writing for an event factor (r9 Response 3). t = C1 E C2 and
     u = D1 E' D2 along the top cut, where C1, D1 contain no n-variable and
@@ -1490,6 +1500,7 @@ def _heur(G, A, t, u, rec):
                 lambda: cancel_loop(G, A, t, True, rec) if idt is not None and u == idt else None,
                 lambda: cancel_loop(G, A, u, False, rec) if idt is not None and t == idt else None,
                 lambda: interchange(G, A, t, u, rec),
+                lambda: _descent(G, A, t, u, rec),
                 lambda: change_of_writing(G, A, t, u, rec),
                 lambda: swap_first(G, A, t, u, rec),
                 lambda: _flipped(G, A, t, u, rec, swap_first),

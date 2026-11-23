@@ -216,6 +216,62 @@ def unary_failure(cutoff, rules):
     return None
 
 
+def cycle_distance(p):
+    seen = set()
+    cycles = 0
+    for i in range(len(p)):
+        if i not in seen:
+            cycles += 1
+            while i not in seen:
+                seen.add(i)
+                i = p[i]
+    return len(p) - cycles
+
+
+def block_obstruction(rules):
+    """Return a sharp-budget half-block witness if it passes the efficiency test.
+
+    All rules are oriented towards increasing counts. A missing certificate here
+    leaves the general dictionary undecided.
+    """
+    changing = []
+    for width, left, right in rules:
+        defect = multiply(evaluate(width, right), inverse(evaluate(width, left)))
+        distance = cycle_distance(defect)
+        if distance:
+            changing.append((len(right)-len(left), distance, width))
+    for cost, distance, width in sorted(changing):
+        if distance != 1 or cost <= 1:
+            continue
+        n = max(2*cost, width)
+        if any(delta < cost*d for delta, d, w in changing if w <= n):
+            continue
+        target = tuple(range(cost, 2*cost)) + tuple(range(cost)) + tuple(range(2*cost, n))
+        for w, left, right in rules:
+            if w <= n and not left and len(right) == cost*cost:
+                if any(evaluate(n, (x+k for x in right)) == target for k in range(n-w+1)):
+                    break
+        else:
+            return n, ((tuple(range(n)), 0), (target, 0))
+    return None
+
+
+def unit_tail(rules, first_unit):
+    """At and above this width every signed change costs at least its distance."""
+    for n in range(2, first_unit):
+        failure = SquareQuotient(n, rules).reflection_failure()
+        if failure:
+            return n, failure
+    # With positive costs the only possible nontrivial step from count 0 to 1
+    # has empty source and one-letter target. Neutral rules here preserve permutation.
+    letters = {right[0]+offset for w, left, right in rules if not left and len(right) == 1
+               for offset in range(first_unit-w+1)}
+    for i in range(1, first_unit):
+        if i not in letters:
+            return first_unit, ((tuple(range(first_unit)), 0), (evaluate(first_unit, (i,)), 0))
+    return None
+
+
 def all_width_failure(rules):
     increasing = sorted(rule for rule in rules if len(rule[2]) > len(rule[1]))
     decreasing = sorted(rule for rule in rules if len(rule[2]) < len(rule[1]))
@@ -248,8 +304,25 @@ def all_width_failure(rules):
                     return n, failure
         return unary_failure(cutoff, rules)
     if any(evaluate(n, l) != evaluate(n, r) for n, l, r in rules):
-        raise ValueError('all-width criterion requires permutation preservation, a nontrivial '
-                         'count-neutral defect, or costs of both signs')
+        forward = [(n, r, l) if decreasing else (n, l, r) for n, l, r in rules]
+        defect_costs = [(n, len(r)-len(l), cycle_distance(multiply(evaluate(n, r),
+                         inverse(evaluate(n, l))))) for n, l, r in forward]
+        units = [n for n, cost, distance in defect_costs if cost == distance == 1]
+        if units and all(cost >= distance for _, cost, distance in defect_costs):
+            failure = unit_tail(forward, min(units))
+        else:
+            failure = block_obstruction(forward)
+            if failure is None:
+                from semistrict_surface_cycle_costs import positive_pair, staircase_failure
+                separated = staircase_failure(forward)
+                if separated:
+                    failure = positive_pair(separated[2])
+                else:
+                    raise ValueError('no implemented all-width criterion covers this dictionary')
+        if decreasing and failure:
+            width, (start, end) = failure
+            return width, (end, start)
+        return failure
     solvers = {}
     for n, l, r in sorted(rules):
         e = (len(r)-len(l))//2
@@ -334,6 +407,37 @@ def checks():
     assert all_width_failure(joined + [(6, (1,), (1, 1))])[0] == 6
     assert all_width_failure(joined + [(6, (), (1, 1))]) is None
     assert all_width_failure(joined + [(6, (1, 1), ())]) is None
+    cheap = [(2, (), (1,))]
+    assert all_width_failure(cheap + [(5, (1,), (2, 3, 4, 3))]) is None
+    assert all_width_failure([(3, (), (1,))])[0] == 3
+    assert all_width_failure([(3, (), (1,)), (3, (), (2,))]) is None
+    assert all_width_failure([(3, (1,), (1, 1))])[0] == 3
+    costly = [(2, (), (1, 1, 1)), (3, (), (1, 2, 1))]
+    obstruction = all_width_failure(costly)
+    assert obstruction == (6, ((tuple(range(6)), 0), ((3,4,5,0,1,2), 0)))
+    assert all_width_failure([(w, r, l) for w, l, r in costly]) == (6, obstruction[1][::-1])
+    assert all_width_failure(costly + [(4, (), (1, 2)*3)]) == obstruction
+    # Grant every individually positive one-transposition move, even if no raw
+    # declaration realizes it. Three signed moves suffice; positive seams still fail.
+    start, end = (state[0] for state in obstruction[1])
+    layers = []
+    for require_positive in (False, True):
+        reached = {start}
+        for step in range(1, 4):
+            following = set()
+            for p in reached:
+                for j in range(6):
+                    for i in range(j):
+                        q = list(p)
+                        q[i], q[j] = q[j], q[i]
+                        if not require_positive or inversions(q) <= 3*step:
+                            following.add(tuple(q))
+            reached = following
+        layers.append(end in reached)
+    assert layers == [True, False]
+    # A single full block insertion is exactly the exception to this certificate.
+    full = (6, (), spelling(end, 0))
+    assert block_obstruction(costly + [full]) is None
     catalogue = [(3, (1,), (2,)), (3, (2,), (1,)), *distant,
                  (4, (1, 2), (2, 1)), (4, (1, 1, 1), (3, 3, 3))]
     homogeneous = 0

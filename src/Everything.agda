@@ -438,6 +438,11 @@ import CaTTExp.Binder.PureSide
 import CaTTExp.Binder.DesSideCatt
 import CaTTExp.Binder.DesExamples
 import CaTTExp.Binder.Embed
+import CaTTExp.Binder.Cyl
+import CaTTExp.Binder.CylLaws
+import CaTTExp.Binder.CylOne
+import CaTTExp.Binder.CylOK
+import CaTTExp.Binder.CylExamples
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
 import CaTTExp.Binder.InitMeta

@@ -38,6 +38,8 @@ def closure(initial,moves):
 
 
 def decide(source,target,marks,updates):
+    if source==target:
+        return True,True
     if len(source)!=len(target):
         return False,False
     graph = defaultdict(set)

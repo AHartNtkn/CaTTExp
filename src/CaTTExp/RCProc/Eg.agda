@@ -6,7 +6,7 @@
 -- s t : v → w and w ⇝ρ b, the cell
 --
 --   e_g = κ(B_src, c⁻[θ_g]) ∗₁ H_g[θ_g] ∗₁ κ(c⁺[θ_g], B_tgt)
---       : B Γ a (λ ++ path s ++ ρ) ⇒ B Γ a (λ ++ path t ++ ρ)
+--       : B Γ a (λ ++ P⁻ ++ ρ) ⇒ B Γ a (λ ++ P⁺ ++ ρ)    (path s ≡ P⁻, path t ≡ P⁺)
 --
 -- where H_g is the column coherence (RCProc.Whisker), θ_g its
 -- substitution (RCProc.Walk), and the κ's are the 1-dimensional
@@ -42,7 +42,8 @@ vcomp A t s u c h = rwT (dim A) 0 c (arr A t s) u h
 ------------------------------------------------------------------------
 -- The term.
 
-module EgTm (Γ : Ctx) (a : Nat) (λ′ : List Nat) (w : Nat) (s t : Tm) (x : Nat) (ρ : List Nat) (b : Nat) where
+module EgTm (Γ : Ctx) (a : Nat) (λ′ : List Nat) (w : Nat) (s t : Tm) (x : Nat) (ρ : List Nat) (b : Nat)
+            (Ps Pt : List Nat) where
   m n : Nat
   m = ∣ λ′ ∣
   n = ∣ ρ ∣
@@ -64,8 +65,8 @@ module EgTm (Γ : Ctx) (a : Nat) (λ′ : List Nat) (w : Nat) (s t : Tm) (x : Na
   c⁺θ = cp
 
   Bs Bt : Tm
-  Bs = B Γ a (λ′ ++ (path s ++ ρ))
-  Bt = B Γ a (λ′ ++ (path t ++ ρ))
+  Bs = B Γ a (λ′ ++ (Ps ++ ρ))
+  Bt = B Γ a (λ′ ++ (Pt ++ ρ))
 
   κ₁ κ₂ Hθ : Tm
   κ₁ = fill₁ Γ Bs c⁻θ A
@@ -82,8 +83,9 @@ open EgTm using (eg) public
 
 module _ {Γ a λ′ v w s t x ρ b}
          (da : Γ ⊢tm var a ∶ ⋆) (wλ : Walk Γ a λ′ v)
-         (dx : Γ ⊢tm var x ∶ arr (arr ⋆ (var v) (var w)) s t) (wρ : Walk Γ w ρ b) where
-  open EgTm Γ a λ′ w s t x ρ b hiding (eg)
+         (dx : Γ ⊢tm var x ∶ arr (arr ⋆ (var v) (var w)) s t) (wρ : Walk Γ w ρ b)
+         {Ps Pt} (ps : path s ≡ Ps) (pt : path t ≡ Pt) where
+  open EgTm Γ a λ′ w s t x ρ b Ps Pt hiding (eg)
   open W.Col m n using (H-wf; A^-eq)
 
   private
@@ -105,21 +107,21 @@ module _ {Γ a λ′ v w s t x ρ b}
     ... | arr-wf ds dt = ds , dt
 
     dBs : Γ ⊢tm Bs ∶ A
-    dBs = B-wf da (walk-++ wλ (walk-++ (walk s (fst tys) refl) wρ))
+    dBs = B-wf da (walk-++ wλ (walk-++ (subst (λ q → Walk Γ v q w) ps (walk s (fst tys) refl)) wρ))
 
     dBt : Γ ⊢tm Bt ∶ A
-    dBt = B-wf da (walk-++ wλ (walk-++ (walk t (snd tys) refl) wρ))
+    dBt = B-wf da (walk-++ wλ (walk-++ (subst (λ q → Walk Γ v q w) pt (walk t (snd tys) refl)) wρ))
 
     pe₁ : path Bs ≡ path c⁻θ
     pe₁ = trans (path-B Γ a _)
             (sym (trans (path-c⁻ m n ⋆ (var 0) (var (vtx (suc (m + n)))) θ)
                         (cong₂ _++_ (θg-λ da wλ dx wρ)
-                                    (cong₂ _++_ (cong path (θg-s da wλ dx wρ)) (θg-ρ da wλ dx wρ)))))
+                                    (cong₂ _++_ (trans (cong path (θg-s da wλ dx wρ)) ps) (θg-ρ da wλ dx wρ)))))
 
     pe₂ : path c⁺θ ≡ path Bt
     pe₂ = trans (trans (path-c⁺ m n ⋆ (var 0) (var (vtx (suc (m + n)))) θ)
                        (cong₂ _++_ (θg-λ da wλ dx wρ)
-                                   (cong₂ _++_ (cong path (θg-t da wλ dx wρ)) (θg-ρ da wλ dx wρ))))
+                                   (cong₂ _++_ (trans (cong path (θg-t da wλ dx wρ)) pt) (θg-ρ da wλ dx wρ))))
                 (sym (path-B Γ a _))
 
     k₁ : Ans Γ A Bs c⁻θ
@@ -128,5 +130,5 @@ module _ {Γ a λ′ v w s t x ρ b}
     k₂ : Ans Γ A c⁺θ Bt
     k₂ = κ₂ , total (snd sides) dBt pe₂
 
-  eg-wf : Γ ⊢tm eg Γ a λ′ w s t x ρ b ∶ arr A Bs Bt
+  eg-wf : Γ ⊢tm eg Γ a λ′ w s t x ρ b Ps Pt ∶ arr A Bs Bt
   eg-wf = snd (transA k₁ (transA (Hθ , dH) k₂))

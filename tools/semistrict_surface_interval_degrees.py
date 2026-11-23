@@ -1,4 +1,4 @@
-"""Degree bounds and contextual cube/prism reverse certificates for globular Gray intervals."""
+"""Exact failing degrees and contextual reverse witnesses for globular Gray intervals."""
 import argparse
 from itertools import combinations, permutations, product
 
@@ -117,7 +117,8 @@ if __name__ == '__main__':
             return tuple(map(int,s.split(','))) if s else ()
         best,mixed = degree_bounds(seq(args.start),seq(args.end),set(seq(args.updated)))
         print('all old types inhabited from degree', best[0]+2)
-        print('highest certified failing degree', mixed[0]+1 if mixed[0] else None,
-              'on reversed strands', mixed[1])
+        print('exact failing degrees above three', list(range(4,mixed[0]+2)))
+        if mixed[0]:
+            print('highest failure witnessed on', mixed[1])
     else:
         checks()

@@ -4,7 +4,8 @@
 -- is not globular because of an extra cell γ : f ∗₀ g ⇒ f ∗₀ g whose
 -- type has composite ends. rcP on the whole context has no case for
 -- it; rcS restricts to the support (which omits γ, so is globular) and
--- answers. Both facts are checked by evaluation.
+-- answers. Both facts are checked by evaluation. A second check does
+-- the same for Lemma P (a support with no 2-variable).
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.SupportExamples where
 
@@ -35,4 +36,31 @@ _ = refl
 
 -- The support context is I itself (γ dropped).
 _ : Sup.Γ′ dαβ dβα ≡ I
+_ = refl
+
+------------------------------------------------------------------------
+-- Lemma P through support restriction: the 3-dimensional associator
+-- query of GraphFillerTotal.HigherExamples on the loop L, asked after
+-- adding a 2-cell β : s ∗₀ s ⇒ s ∗₀ s. The whole context is neither a
+-- graph nor globular, so rcP refuses; the support is L, a graph
+-- context, so rcS answers by the higher chain filler.
+
+open import CaTTExp.GraphFillerExamples using (L; hom; hom₂; ss; a₃; a₃')
+
+Lβ : Ctx
+Lβ = L ▸ arr hom ss ss
+
+da₃ : Lβ ⊢tm a₃ ∶ hom₂
+da₃ = snd (from-just (infer Lβ a₃))
+
+da₃' : Lβ ⊢tm a₃' ∶ hom₂
+da₃' = snd (from-just (infer Lβ a₃'))
+
+_ : is-just (rcP da₃ da₃') ≡ false
+_ = refl
+
+_ : is-just (rcS da₃ da₃') ≡ true
+_ = refl
+
+_ : Sup.Γ′ da₃ da₃' ≡ L
 _ = refl

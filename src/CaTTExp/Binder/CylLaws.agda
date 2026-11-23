@@ -97,6 +97,56 @@ lenₛ-liftS D (γ ,ₛ t) with touched D t
 ... | false = cong suc (lenₛ-liftS D γ)
 
 ------------------------------------------------------------------------
+-- The whiskers commute with every substitution (no local closedness
+-- needed: junk is closed).
+
+module Whisk (σ : Sub) where
+
+  sph-∘ : ∀ C → sphSub C ∘ σ ≡ sphSub (C [ σ ]ty)
+  sph-∘ ⋆           = refl
+  sph-∘ (arr C s t) rewrite sph-∘ C = refl
+
+  baseAt-[] : ∀ k A → baseAt k A [ σ ]ty ≡ baseAt k (A [ σ ]ty)
+  baseAt-[] k ⋆           = refl
+  baseAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ suc (dim A)
+  ... | true  = refl
+  ... | false = baseAt-[] k A
+
+  tgtAt-[] : ∀ k A → tgtAt k A [ σ ]tm ≡ tgtAt k (A [ σ ]ty)
+  tgtAt-[] k ⋆           = refl
+  tgtAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ dim A
+  ... | true  = refl
+  ... | false = tgtAt-[] k A
+
+  srcAt-[] : ∀ k A → srcAt k A [ σ ]tm ≡ srcAt k (A [ σ ]ty)
+  srcAt-[] k ⋆           = refl
+  srcAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ dim A
+  ... | true  = refl
+  ... | false = srcAt-[] k A
+
+  σR-∘ : ∀ c C z h → σR c C z h ∘ σ ≡ σR (c [ σ ]tm) (C [ σ ]ty) (z [ σ ]tm) (h [ σ ]tm)
+  σR-∘ c C z h rewrite sph-∘ C = refl
+
+  hL-[] : ∀ k x C → hL k x C [ σ ]ty ≡ hL k (x [ σ ]tm) (C [ σ ]ty)
+  hL-[] k x C rewrite baseAt-[] k C | srcAt-[] k C = refl
+
+  σLp-∘ : ∀ k j h x C → σLp k j h x C ∘ σ ≡ σLp k j (h [ σ ]tm) (x [ σ ]tm) (C [ σ ]ty)
+  σLp-∘ k zero    h x C            rewrite sph-∘ (hL k x C) | baseAt-[] k C | srcAt-[] k C | tgtAt-[] k C = refl
+  σLp-∘ k (suc j) h x ⋆            = refl
+  σLp-∘ k (suc j) h x (arr C' s t) rewrite σLp-∘ k j h x C' = refl
+
+  rwI-[] : ∀ k n c C z h h′ b → (b ≡ true → h [ σ ]tm ≡ h′) →
+           rwI k n c C z h b [ σ ]tm ≡ rwI k n (c [ σ ]tm) (C [ σ ]ty) (z [ σ ]tm) h′ b
+  rwI-[] k n c C z h h′ true  e rewrite σR-∘ c C z h | e refl = refl
+  rwI-[] k n c C z h h′ false e = refl
+
+  lwI-[] : ∀ k n h h′ x c C b → (b ≡ true → h [ σ ]tm ≡ h′) →
+           lwI k n h x c C b [ σ ]tm ≡ lwI k n h′ (x [ σ ]tm) (c [ σ ]tm) (C [ σ ]ty) b
+  lwI-[] k n h h′ x c C true  e rewrite σLp-∘ k (n ∸ suc k) h x C | e refl = refl
+  lwI-[] k n h h′ x c C false e = refl
+
+
+------------------------------------------------------------------------
 -- Substitution.
 
 module Subst (σ : Sub) (l : LC σ) where
@@ -143,51 +193,7 @@ module Subst (σ : Sub) (l : LC σ) where
     mask-[] ⟨⟩       = refl
     mask-[] (γ ,ₛ t) = cong₂ _◂_ (mask-[] γ) (touched-[] t)
 
-  ----------------------------------------------------------------------
-  -- The whiskers.
-
-  sph-∘ : ∀ C → sphSub C ∘ σ ≡ sphSub (C [ σ ]ty)
-  sph-∘ ⋆           = refl
-  sph-∘ (arr C s t) rewrite sph-∘ C = refl
-
-  baseAt-[] : ∀ k A → baseAt k A [ σ ]ty ≡ baseAt k (A [ σ ]ty)
-  baseAt-[] k ⋆           = refl
-  baseAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ suc (dim A)
-  ... | true  = refl
-  ... | false = baseAt-[] k A
-
-  tgtAt-[] : ∀ k A → tgtAt k A [ σ ]tm ≡ tgtAt k (A [ σ ]ty)
-  tgtAt-[] k ⋆           = refl
-  tgtAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ dim A
-  ... | true  = refl
-  ... | false = tgtAt-[] k A
-
-  srcAt-[] : ∀ k A → srcAt k A [ σ ]tm ≡ srcAt k (A [ σ ]ty)
-  srcAt-[] k ⋆           = refl
-  srcAt-[] k (arr A s u) rewrite dim-[]′ A σ with k ==ℕ dim A
-  ... | true  = refl
-  ... | false = srcAt-[] k A
-
-  σR-∘ : ∀ c C z h → σR c C z h ∘ σ ≡ σR (c [ σ ]tm) (C [ σ ]ty) (z [ σ ]tm) (h [ σ ]tm)
-  σR-∘ c C z h rewrite sph-∘ C = refl
-
-  hL-[] : ∀ k x C → hL k x C [ σ ]ty ≡ hL k (x [ σ ]tm) (C [ σ ]ty)
-  hL-[] k x C rewrite baseAt-[] k C | srcAt-[] k C = refl
-
-  σLp-∘ : ∀ k j h x C → σLp k j h x C ∘ σ ≡ σLp k j (h [ σ ]tm) (x [ σ ]tm) (C [ σ ]ty)
-  σLp-∘ k zero    h x C            rewrite sph-∘ (hL k x C) | baseAt-[] k C | srcAt-[] k C | tgtAt-[] k C = refl
-  σLp-∘ k (suc j) h x ⋆            = refl
-  σLp-∘ k (suc j) h x (arr C' s t) rewrite σLp-∘ k j h x C' = refl
-
-  rwI-[] : ∀ k n c C z h h′ b → (b ≡ true → h [ σ ]tm ≡ h′) →
-           rwI k n c C z h b [ σ ]tm ≡ rwI k n (c [ σ ]tm) (C [ σ ]ty) (z [ σ ]tm) h′ b
-  rwI-[] k n c C z h h′ true  e rewrite σR-∘ c C z h | e refl = refl
-  rwI-[] k n c C z h h′ false e = refl
-
-  lwI-[] : ∀ k n h h′ x c C b → (b ≡ true → h [ σ ]tm ≡ h′) →
-           lwI k n h x c C b [ σ ]tm ≡ lwI k n h′ (x [ σ ]tm) (c [ σ ]tm) (C [ σ ]ty) b
-  lwI-[] k n h h′ x c C true  e rewrite σLp-∘ k (n ∸ suc k) h x C | e refl = refl
-  lwI-[] k n h h′ x c C false e = refl
+  open Whisk σ public
 
   ----------------------------------------------------------------------
   -- The cylinders.

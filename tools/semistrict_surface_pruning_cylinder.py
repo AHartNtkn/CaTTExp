@@ -4,6 +4,10 @@ from itertools import combinations, combinations_with_replacement, product
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from catt import maximal_vars, tree_ctx, tree_of
+from gray_globe_comparison import atom, globe
+from partial_cylinder_steiner import trees
+from semistrict_surface_configuration_carriers import prune
 from semistrict_surface_exact_boundary import accepted, rejected, run
 
 
@@ -111,6 +115,42 @@ def check_degeneracies():
     return tests
 
 
+def check_gray_trees():
+    quotients = 0
+    for size in range(1, 8):
+        for tree in trees(size):
+            if sum(bool(column) for column in tree) > 1:
+                continue
+            ctx = tree_ctx(tree)
+            leaves = maximal_vars(ctx)
+            for count in range(1, len(leaves)+1):
+                for choices in combinations(leaves, count):
+                    pruned_ctx, _ = prune(ctx, choices)
+                    assert sum(bool(column) for column in tree_of(pruned_ctx)) <= 1
+                    quotients += 1
+
+    comparisons = 0
+    for arity in range(1, 6):
+        for index, dim in product(range(arity), range(5)):
+            for generator in globe(dim):
+                factors = [globe(0)[0]] * arity
+                factors[index] = generator
+                # Compare the whole signed atom tableau with the active factor.
+                single = atom((generator,))
+                rows = atom(tuple(factors))
+                projected = tuple(tuple(tuple((term[index],) for term in chain)
+                                        for chain in row) for row in rows)
+                assert projected == single
+                assert all(term == tuple(factors[:index]) + (term[index],) + tuple(factors[index+1:])
+                           for row in rows for chain in row for term in chain)
+                comparisons += 1
+    # Two moving columns have a square with different boundary walks.
+    active = globe(1)[-1]
+    square = atom((active, active))
+    assert len(square) == 3 and square[1][0] != square[1][1]
+    return quotients, comparisons
+
+
 def check_checker(checkout):
     binary = checkout / 'target/release/catt_strict'
     with TemporaryDirectory() as tmp:
@@ -133,6 +173,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print('quotient-presheaf degeneracy intersections:', check_degeneracies())
     print('acyclic relative cylinder complexes:', check_cylinders())
+    print('Gray simple-tree quotients and tensor tableaux:', *check_gray_trees())
     if args.catt_strict:
         check_checker(args.catt_strict.resolve())
         print('mixed-dimensional raw and strict-unit witnesses checked')

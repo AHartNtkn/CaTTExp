@@ -358,6 +358,6 @@ Not formalized yet:
 | Conjecture GRC (§4.3); EL for ≡_sua over P in arbitrary contexts; the classification Conjecture SC-P | outbox prompt `semistrict-surface-conservativity.md`; this thread keeps working on it |
 | Lemmas 1.2, 1.3 and V written out; Lemma V (ii) for F_{V+S} | this thread (S19) |
 | Insertion vs designated lifts in uniform L (Lemma 1.1, uniform case) | this thread, cross-referenced to S11 |
-| Agda: the whiskering interface of `TheoremB` for uniform L (plain CaTT done; two-tier L's typing half done, `Surface/WhiskerGray`); (`Wh-≈` for two-tier L in 𝔉 done, `Surface/ImageGray`; plain CaTT done, `Surface/ImageCatt`); full Lemma 1.3 for the generated ≈, including (SC) (top-chain half of the congruence part done, `sound-top`); the dimension-bounded Theorem A; Lemma 1.1 in the strict model; the surface presupposition lemma | this thread (S19 (c)) |
+| Agda: the whiskering interface of `TheoremB` for uniform L (plain CaTT done; two-tier L's typing half done, `Surface/WhiskerGray`); (`Wh-≈` for two-tier L in 𝔉 done, `Surface/ImageGray`; plain CaTT done, `Surface/ImageCatt`); full Lemma 1.3 for the generated ≈, including (SC) (top-chain half of the congruence part done for plain CaTT only, `sound-top`); the dimension-bounded Theorem A; Lemma 1.1 in the strict model; the surface presupposition lemma | this thread (S19 (c)) |
 | Check with the SU normaliser that the Eckmann–Hilton pair is not ≡_sua-equal | this thread |
 | Decidability of ≡_F in arbitrary finite contexts, for the surface checker | this thread (S19) |

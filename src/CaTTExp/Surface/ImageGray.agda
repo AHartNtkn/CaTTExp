@@ -11,9 +11,10 @@
 --                          otherwise)
 --
 -- with F_ρ = applyF (envTops ρ) the chain map sending a tuple
--- (w₁ … wₘ) to top(ρ w₁) ⊗ … ⊗ top(ρ wₘ). This is Support.topS with
--- the tops of ρ in place of those of a substitution: by construction
--- ⟦coh Δ A σ⟧ρ has top chain applyF (topsSub′) (…) exactly as topS.
+-- (w₁ … wₘ) to top(ρ w₁) ⊗ … ⊗ top(ρ wₘ). This is the formula of
+-- Support.topS with the tops of ρ in place of those of a substitution
+-- (a match of definitions only: no lemma here links cohTL to
+-- Gray.Support.topS or to Strict.L.towerOf).
 --
 -- Identities (`UnitL`). An identity 1-cell is the empty tuple (the
 -- unit of the hom complex): top chain [()], source ≈ target. A higher

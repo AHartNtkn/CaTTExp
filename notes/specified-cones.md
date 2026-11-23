@@ -285,10 +285,10 @@ The new auxiliary cells `ru2, wi, dw, dr, na, nr, hx` are coherence-case coheren
 **Executable cap naturality (2026-11-23, `tools/rc_nat.py`).** The naturality lift t↑ is built by the structural recursion of `conjectures/naturality-arbitrary-depth.md` §3. There is one filler per coherence shape, asked in that coherence's own small cylinder context Q↑Y (Proposition R). For compositions, the filler is the layered composite of the generators' lifts, and each layer is c with one slot widened. `nat_op` gives the oplax squares (σc)↑ ∗ c⁺ → c ∗ (τc)↑ that move an event forward past a cap. `rc_nat_selftest.py` checks it on a whisker, an associator and a 3-dimensional cap.
 
 On the Horiz3 round-21 query, the event is x10 : x8 → x9, and the first block of 25 caps on t is u's block renamed by x8 ↦ x9. All 25 squares build, and the sweep moves the event across the whole block. The 25 squares of the second block also build. Two comparisons remain:
-- **[Eτ, Eb] against [Ec, (σc₁)↑].** This is a pure interchange of the independent 3-cells x10 and x16, not naturality. The RC thread is adding a merge step to `rc_heur` for it.
+- **[Eτ, Eb] against [Ec, (σc₁)↑].** This is a pure interchange of the independent 3-cells x10 and x16. It is answered by `rc_nat.square` of Eτ along x16 at x15, in under a second (found by the RC thread). The general rule: if t = [f, g] and u = [g′, f′], with f′ equal to f with y replaced by τ(e) for a context cell e : y → ·, the answer is the square of f along e at y. The RC thread wires this into `rc_heur` as an interchange step.
 - **t's second cap block against u's (renamed).** The two blocks have the same boundary and identity image, but they are different Theorem A caps over the composite face, so they do not correspond cap by cap. That is RC for a coherence-only comparison, the descent proper (RC thread, S20 stage 4), not cap naturality.
 
-So the cap-naturality part of Horiz3 is executable, and Horiz3 now waits on the interchange merge and on S20 stage 4.
+So the cap-naturality and interchange parts of Horiz3 are executable, and Horiz3 now waits only on S20 stage 4.
 
 **Ownership (2026-11-23).** CONE builds the executable cap-naturality step for join contexts c ⋆ Q. RCGEN takes general N within the descent work (S20 stage 4) after that, using this case as its template.
 

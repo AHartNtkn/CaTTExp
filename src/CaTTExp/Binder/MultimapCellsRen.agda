@@ -166,3 +166,141 @@ module _ (as vs : List Nat) where
                                          (varsT-ren t (⊆-r (varsT s) (varsT t) vs h₂₃)))
                              (sym (map-++ r (varsT s) (varsT t)))))
           (sym (map-++ r (varsY A) (varsT s ++ varsT t)))
+
+------------------------------------------------------------------------
+-- Increasing lists.
+
+All< : Nat → List Nat → Set
+All< x xs = ∀ i → In xs i → T (x <ℕ i)
+
+data Inc : List Nat → Set where
+  []  : Inc []
+  _∷_ : ∀ {x xs} → All< x xs → Inc xs → Inc (x ∷ xs)
+
+<-trans″ : ∀ a b c → T (a <ℕ b) → T (b <ℕ c) → T (a <ℕ c)
+<-trans″ zero    (suc b) (suc c) _ _ = tt
+<-trans″ (suc a) (suc b) (suc c) p q = <-trans″ a b c p q
+
+<-irrefl : ∀ a → T (a <ℕ a) → ⊥
+<-irrefl (suc a) p = <-irrefl a p
+
+==→≡ : ∀ a b → T (a ==ℕ b) → a ≡ b
+==→≡ = ==ℕ-sound
+
+In-map-suc : ∀ xs i → In (map suc xs) (suc i) → In xs i
+In-map-suc (x ∷ xs) i p with dec (suc i ==ℕ suc x)
+... | inl q = ∨-l (i ==ℕ x) _ q
+... | inr q = ∨-r (i ==ℕ x) _ (In-map-suc xs i (or-r (suc i ==ℕ suc x) _ q p))
+  where
+  or-r : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r true  b n _ = ⊥-elim (n tt)
+  or-r false b n p = p
+
+In-map-suc0 : ∀ xs → In (map suc xs) 0 → ⊥
+In-map-suc0 (x ∷ xs) p = In-map-suc0 xs p
+
+inc-map-suc : ∀ xs → Inc xs → Inc (map suc xs)
+inc-map-suc []       []       = []
+inc-map-suc (x ∷ xs) (a ∷ i) = (λ { zero p → ⊥-elim (In-map-suc0 xs p) ; (suc j) p → a j (In-map-suc xs j p) })
+                               ∷ inc-map-suc xs i
+
+inc-upTo : ∀ n → Inc (upTo n)
+inc-upTo zero    = []
+inc-upTo (suc n) = subst Inc (sym (upTo-cons n))
+  ((λ { zero p → ⊥-elim (In-map-suc0 (upTo n) p) ; (suc j) p → tt }) ∷ inc-map-suc (upTo n) (inc-upTo n))
+
+inc-filter : ∀ (P : Nat → Bool) xs → Inc xs → Inc (filter P xs)
+inc-filter P []       []      = []
+inc-filter P (x ∷ xs) (a ∷ i) with P x
+... | true  = (λ j p → a j (filter-sub P xs j p)) ∷ inc-filter P xs i
+... | false = inc-filter P xs i
+
+inc-nodup : ∀ xs → Inc xs → NoDup xs
+inc-nodup []       []      = []
+inc-nodup (x ∷ xs) (a ∷ i) = (λ p → <-irrefl x (a x p)) ∷ inc-nodup xs i
+
+-- idx is strictly monotone on an increasing list.
+idx-mono : ∀ xs → Inc xs → ∀ i j → In xs i → In xs j → T (i <ℕ j) → T (idx i xs <ℕ idx j xs)
+idx-mono (x ∷ xs) (a ∷ inc) i j pi pj ij with dec (i ==ℕ x) | dec (j ==ℕ x)
+... | inl qi | inl qj = ⊥-elim (<-irrefl j (subst (λ y → T (y <ℕ j)) (trans (==→≡ i x qi) (sym (==→≡ j x qj))) ij))
+... | inl qi | inr qj rewrite T-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} qi | F-if (j ==ℕ x) {x = 0} {y = suc (idx j xs)} qj = tt
+... | inr qi | inl qj =
+      let i∈ = or-r (i ==ℕ x) _ qi pi in
+      ⊥-elim (<-irrefl j (<-trans″ j i j (subst (λ y → T (y <ℕ i)) (sym (==→≡ j x qj)) (a i i∈)) ij))
+  where
+  or-r : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r true  b n _ = ⊥-elim (n tt)
+  or-r false b n p = p
+... | inr qi | inr qj rewrite F-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} qi | F-if (j ==ℕ x) {x = 0} {y = suc (idx j xs)} qj =
+      idx-mono xs inc i j (or-r (i ==ℕ x) _ qi pi) (or-r (j ==ℕ x) _ qj pj) ij
+  where
+  or-r : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r true  b n _ = ⊥-elim (n tt)
+  or-r false b n p = p
+
+------------------------------------------------------------------------
+-- Positions.
+
+private
+  or-r : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r true  b n _ = ⊥-elim (n tt)
+  or-r false b n p = p
+
+idx-lt : ∀ xs i → In xs i → T (idx i xs <ℕ length xs)
+idx-lt (x ∷ xs) i p with dec (i ==ℕ x)
+... | inl q rewrite T-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} q = tt
+... | inr q rewrite F-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} q = idx-lt xs i (or-r (i ==ℕ x) _ q p)
+
+nth-idx : ∀ xs i → In xs i → nth xs (idx i xs) ≡ i
+nth-idx (x ∷ xs) i p with dec (i ==ℕ x)
+... | inl q rewrite T-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} q = sym (==ℕ-sound i x q)
+... | inr q rewrite F-if (i ==ℕ x) {x = 0} {y = suc (idx i xs)} q = nth-idx xs i (or-r (i ==ℕ x) _ q p)
+
+nth-In : ∀ xs p → T (p <ℕ length xs) → In xs (nth xs p)
+nth-In (x ∷ xs) zero    _ = ∨-l (x ==ℕ x) _ (==ℕ-refl x)
+nth-In (x ∷ xs) (suc p) l = ∨-r (nth xs p ==ℕ x) _ (nth-In xs p l)
+
+idx-nth : ∀ xs → NoDup xs → ∀ p → T (p <ℕ length xs) → idx (nth xs p) xs ≡ p
+idx-nth (x ∷ xs) (nx ∷ nd) zero    _ = T-if (x ==ℕ x) (==ℕ-refl x)
+idx-nth (x ∷ xs) (nx ∷ nd) (suc p) l =
+  trans (F-if (nth xs p ==ℕ x) (λ q → nx (subst (In xs) (==ℕ-sound _ x q) (nth-In xs p l))))
+        (cong suc (idx-nth xs nd p l))
+
+lookup-nth : ∀ xs p → T (p <ℕ length xs) → lookup xs p ≡ just (nth xs p)
+lookup-nth (x ∷ xs) zero    _ = refl
+lookup-nth (x ∷ xs) (suc p) l = lookup-nth xs p l
+
+In-map : ∀ (f : Nat → Nat) xs x → In xs x → In (map f xs) (f x)
+In-map f (y ∷ xs) x p with dec (x ==ℕ y)
+... | inl q rewrite ==ℕ-sound x y q = ∨-l (f y ==ℕ f y) _ (==ℕ-refl (f y))
+... | inr q = ∨-r (f x ==ℕ f y) _ (In-map f xs x (or-r (x ==ℕ y) _ q p))
+
+In-map-inv : ∀ (f : Nat → Nat) xs y → In (map f xs) y → Σ Nat (λ x → In xs x × (y ≡ f x))
+In-map-inv f (x ∷ xs) y p with dec (y ==ℕ f x)
+... | inl q = x , ∨-l (x ==ℕ x) _ (==ℕ-refl x) , ==ℕ-sound y (f x) q
+... | inr q =
+      let (z , iz , e) = In-map-inv f xs y (or-r (y ==ℕ f x) _ q p)
+      in z , ∨-r (z ==ℕ x) _ iz , e
+
+filter-In-inv : ∀ (P : Nat → Bool) xs i → In (filter P xs) i → T (P i) × In xs i
+filter-In-inv P (x ∷ xs) i p with dec (P x)
+... | inl px rewrite T-if (P x) {x = x ∷ filter P xs} {y = filter P xs} px with dec (i ==ℕ x)
+...   | inl q = subst (λ y → T (P y)) (sym (==ℕ-sound i x q)) px , ∨-l (i ==ℕ x) _ q
+...   | inr q = let (a , b) = filter-In-inv P xs i (or-r (i ==ℕ x) _ q p) in a , ∨-r (i ==ℕ x) _ b
+filter-In-inv P (x ∷ xs) i p | inr px rewrite F-if (P x) {x = x ∷ filter P xs} {y = filter P xs} px =
+      let (a , b) = filter-In-inv P xs i p in a , ∨-r (i ==ℕ x) _ b
+
+upTo-In-inv : ∀ n i → In (upTo n) i → T (i <ℕ n)
+upTo-In-inv (suc n) i p with elem-split i (upTo n) (n ∷ []) p
+... | inl q = <-suc′ i n (upTo-In-inv n i q)
+  where
+  <-suc′ : ∀ a b → T (a <ℕ b) → T (a <ℕ suc b)
+  <-suc′ zero    b       _ = tt
+  <-suc′ (suc a) (suc b) p = <-suc′ a b p
+... | inr q = subst (λ y → T (y <ℕ suc n)) (sym (==ℕ-sound i n (or-l q))) (self n)
+  where
+  or-l : ∀ {a} → T (a ∨ false) → T a
+  or-l {true} _ = tt
+  self : ∀ n → T (n <ℕ suc n)
+  self zero    = tt
+  self (suc n) = self n

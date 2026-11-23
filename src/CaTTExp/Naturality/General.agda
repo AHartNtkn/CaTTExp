@@ -38,6 +38,14 @@
 -- (ii) equality of the strict images of a_c and b_c, and (iii) for
 -- dimension ≥ 3, RC(n) (the descent, RCGEN). See open-issues C1d.
 --
+-- RCq is NOT expected to hold for a composition c (dim Q = dim c) with
+-- a selected top cell q: then a_c and b_c have different strict images
+-- (they differ by the generator q↑), so Theorem A does not apply and
+-- nothing will discharge RCq there. okAll gives nothing for those c. They need
+-- the layered filler of Proposition R (relative-coherence.md §4.1), not
+-- yet built. Kω is the intended filler for coherences, and for
+-- compositions whose top cells are all unselected.
+--
 -- For terms all of whose coherences are 1-dimensional (in particular
 -- every term of dimension ≤ 1) Good holds outright (`low-h`), so
 -- `cylω-low` is unconditional, as in DimOne.

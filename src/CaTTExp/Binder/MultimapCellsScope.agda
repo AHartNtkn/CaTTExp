@@ -43,11 +43,11 @@ private
   self zero    = tt
   self (suc n) = self n
 
-module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
+module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) (unitB : B) where
 
   open Syntax K B
   open SL K B using (T∧; ∧T; <-+; <-trans)
-  open CellsConstruction K B injG injC
+  open CellsConstruction K B injG injC unitB
 
   ----------------------------------------------------------------------
   -- Substitutions of variables.
@@ -110,7 +110,7 @@ module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
 
   lc-trTy : ∀ k Φ C → T (lcTy? 0 (trTy k Φ C))
   lc-trTy k Φ (GB.op ((x ∷ []) GB.▸ z))     = ∧T (lc-fmV x) (lc-fmV z)
-  lc-trTy k Φ (GB.op ([] GB.▸ _))           = tt
+  lc-trTy k Φ (GB.op ([] GB.▸ z))           = ∧T tt (lc-fmV z)
   lc-trTy k Φ (GB.op ((_ ∷ _ ∷ _) GB.▸ _))  = tt
   lc-trTy k Φ (GB.hom _ _ A s t)            = ∧T (lc-trTy k Φ A) (∧T (lc-trTm k Φ s) (lc-trTm k Φ t))
 
@@ -163,7 +163,7 @@ module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
     sc-trTy : ∀ C → T (okTy k C) → T (GT.wf Φ C) → Below j (varsY C) → T (scTy? n (trTy k Φ C))
     sc-trTy (GB.op ((x ∷ []) GB.▸ z)) p _ _ =
       ∧T (sc-fmV k n x atom-lt (∧-l _ _ p)) (sc-fmV k n z atom-lt (∧-r _ _ p))
-    sc-trTy (GB.op ([] GB.▸ _)) () _ _
+    sc-trTy (GB.op ([] GB.▸ z)) p _ _ = ∧T tt (sc-fmV k n z atom-lt p)
     sc-trTy (GB.op ((_ ∷ _ ∷ _) GB.▸ _)) () _ _
     sc-trTy (GB.hom d g A s t) p wC bC =
       let wA  = ∧-l _ _ wC
@@ -172,6 +172,6 @@ module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
           eT  = eqMaybe-sound (GT.infer Φ t) A (∧-r (GT.eqMaybeTy (GT.infer Φ s) A) _ wst)
           bA  = below-l j (varsY A) (varsT s ++ varsT t) bC
           bst = below-r j (varsY A) (varsT s ++ varsT t) bC
-      in ∧T (sc-trTy A (∧-r (g ==ℕ 1) _ p) wA bA)
+      in ∧T (sc-trTy A (∧-r (g ==ℕ inputs A) _ p) wA bA)
             (∧T (sc-trTm s eS (below-l j (varsT s) (varsT t) bst) bA)
                 (sc-trTm t eT (below-r j (varsT s) (varsT t) bst) bA))

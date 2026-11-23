@@ -40,14 +40,23 @@ module OkRen (as vs : List Nat) where
   atomFm-ren k (x \\ y) p h = ∧-in (atomFm-ren k x (∧-l _ _ p) (⊆-l (atF x) (atF y) as h)) (atomFm-ren k y (∧-r _ _ p) (⊆-r (atF x) (atF y) as h))
   atomFm-ren k (x // y) p h = ∧-in (atomFm-ren k x (∧-l _ _ p) (⊆-l (atF x) (atF y) as h)) (atomFm-ren k y (∧-r _ _ p) (⊆-r (atF x) (atF y) as h))
 
+  inputs-sY : ∀ A → inputs (sY ρ A) ≡ inputs A
+  inputs-sY (op (xs ▸ _))   = len-sFs xs
+    where
+    len-sFs : ∀ ys → length (sFs (fo ρ) ys) ≡ length ys
+    len-sFs []       = refl
+    len-sFs (_ ∷ ys) = cong suc (len-sFs ys)
+  inputs-sY (hom _ _ A _ _) = inputs-sY A
+
   okTy-ren : ∀ k A → T (okTy k A) → atY A ⊆ as → T (okTy (length as) (sY ρ A))
   okTy-ren k (op ((x ∷ []) ▸ z)) p h =
     ∧-in (atomFm-ren k x (∧-l _ _ p) (λ i q → h i (elem-++l i (atF x ++ []) (atF z) (elem-++l i (atF x) [] q))))
          (atomFm-ren k z (∧-r _ _ p) (λ i q → h i (elem-++r i (atF x ++ []) (atF z) q)))
-  okTy-ren k (op ([] ▸ _)) ()
+  okTy-ren k (op ([] ▸ z)) p h = atomFm-ren k z p h
   okTy-ren k (op ((_ ∷ _ ∷ _) ▸ _)) ()
   okTy-ren k (hom m g A s t) p h =
-    ∧-in (∧-l _ _ p) (okTy-ren k A (∧-r (g ==ℕ 1) _ p) (⊆-l (atY A) (atT s ++ atT t) as h))
+    ∧-in (subst (λ n → T (g ==ℕ n)) (sym (inputs-sY A)) (∧-l _ _ p))
+         (okTy-ren k A (∧-r (g ==ℕ inputs A) _ p) (⊆-l (atY A) (atT s ++ atT t) as h))
 
 ------------------------------------------------------------------------
 -- wf reads a context only at the variables of the type.

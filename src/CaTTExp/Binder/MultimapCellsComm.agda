@@ -64,11 +64,11 @@ wf-entry Φ j {A} w e =
   ag : Agree (GT.take j Φ) Φ (varsY A)
   ag i q = lookup-take Φ j i (wf-deps Φ j w e i q)
 
-module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
+module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) (unitB : B) where
 
   open Syntax K B
   open SL K B using (<→≢; <-suc; <-self; ==-refl; +-suc; +-zero)
-  open CellsConstruction K B injG injC
+  open CellsConstruction K B injG injC unitB
 
   ----------------------------------------------------------------------
   -- Substitutions of variables.
@@ -204,7 +204,7 @@ module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
     commTy (GB.op ((x ∷ []) GB.▸ z)) p _ _ h =
       cong₂ (arr ⋆) (commF x (∧-l _ _ p) (λ i q → h i (elem-++l i (atF x ++ []) (atF z) (elem-++l i (atF x) [] q))))
                     (commF z (∧-r _ _ p) (λ i q → h i (elem-++r i (atF x ++ []) (atF z) q)))
-    commTy (GB.op ([] GB.▸ _)) () _ _ _
+    commTy (GB.op ([] GB.▸ z)) p _ _ h = cong (arr ⋆ topT) (commF z p h)
     commTy (GB.op ((_ ∷ _ ∷ _) GB.▸ _)) () _ _ _
     commTy (GB.hom d g A s t) p wC hv ha =
       let wA  = ∧-l _ _ wC
@@ -215,7 +215,7 @@ module _ (K B : Set) (injG : GBF → B) (injC : MMI → B) where
           hst = ⊆-r (varsY A) (varsT s ++ varsT t) vs hv
           aA  = ⊆-l (atY A) (atT s ++ atT t) asb ha
           ast = ⊆-r (atY A) (atT s ++ atT t) asb ha
-      in cong₃ arr (commTy A (∧-r (g ==ℕ 1) _ p) wA hA aA)
+      in cong₃ arr (commTy A (∧-r (g ==ℕ inputs A) _ p) wA hA aA)
                    (commTm s eS wA (⊆-l (varsT s) (varsT t) vs hst) hA (⊆-l (atT s) (atT t) asb ast) aA)
                    (commTm t eT wA (⊆-r (varsT s) (varsT t) vs hst) hA (⊆-r (atT s) (atT t) asb ast) aA)
       where

@@ -13,7 +13,14 @@
 -- a multimap (X, ⟦Dᵏ⟧ ▸ Z): its time slot is in gap 1, after the input
 -- (spec §8.1: "(B, ⟦Dᵏ⟧ ▸ C) is a lax k-cell between maps B → C").
 -- So the admitted cell types (`okTy`) are a unary operation (X ▸ Z)
--- over atom formulas, and cells `hom m 1 A s t` over admitted A. An
+-- over atom formulas, and cells `hom m 1 A s t` over admitted A.
+--
+-- Nullary multimaps. A point ( ▸ Z) is a kernel map ⊤ → Z, where ⊤ is
+-- the point object, the limit of the empty diagram: the `unit` head of
+-- GCF has exactly the rule of `LimHeads`' lim_ε (`unit-is-lim`). A
+-- k-cell between points has its time slot in gap 0, the only gap, so
+-- the admitted gap of `hom m g A s t` is the number of inputs of A's
+-- base (1 or 0). An
 -- invertible cell (mode inv) is an entry marked inv; an invertible
 -- result is a plain kernel cell (its invertibility is not passed to the
 -- kernel's mark judgment here).
@@ -55,16 +62,25 @@ open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; _==MM_;
 import CaTTExp.Gray.Biclosed.Syntax as GB
 import CaTTExp.Gray.Biclosed.Typing as GT
 import CaTTExp.Gray.Biclosed.SubstDef as GS
+import CaTTExp.Pure as P
+open import CaTTExp.Binder.LimHeads using (module LimConstruction; limF)
 
 module CaTTExp.Binder.MultimapCells where
 
 ------------------------------------------------------------------------
 -- Admitted types.
 
+-- The number of inputs of a type's base operation: a cell's time slot
+-- goes after them (gap 1 for a unary base, gap 0 for a point).
+inputs : GB.CTy → Nat
+inputs (GB.op (xs GB.▸ _))  = GT.length xs
+inputs (GB.hom _ _ A _ _)   = inputs A
+
 okTy : Nat → GB.CTy → Bool
 okTy k (GB.op ((x ∷ []) GB.▸ z)) = atomFm k x ∧ atomFm k z
+okTy k (GB.op ([] GB.▸ z))       = atomFm k z
 okTy k (GB.op _)                 = false
-okTy k (GB.hom _ g A _ _)        = (g ==ℕ 1) ∧ okTy k A
+okTy k (GB.hom _ g A _ _)        = (g ==ℕ inputs A) ∧ okTy k A
 
 ------------------------------------------------------------------------
 -- Supports.
@@ -217,10 +233,14 @@ mmcTy (mmi k Φ t) =
 -- arity and type are written with free variables (atom i is var i,
 -- entry j is var (k + j)), and HeadSpec closes them.
 
-module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) where
+module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) (unitB : B) where
 
   open Syntax K B
   open GrayFormConstruction K B injG public
+
+  -- The point object ⊤ (lim_ε), the source of a nullary multimap.
+  topT : Tm
+  topT = bnd unitB 0 ε ⟨⟩
 
   fmV : GB.Fm → Tm
   fmV (GB.obj i)  = var i
@@ -250,6 +270,7 @@ module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) where
 
   trTy : Nat → GB.Ctx → GB.CTy → Ty
   trTy k Φ (GB.op ((x ∷ []) GB.▸ z)) = arr ⋆ (fmV x) (fmV z)
+  trTy k Φ (GB.op ([] GB.▸ z))       = arr ⋆ topT (fmV z)
   trTy k Φ (GB.op _)                 = ⋆
   trTy k Φ (GB.hom _ _ A s t)        = arr (trTy k Φ A) (trTm k Φ s) (trTm k Φ t)
 
@@ -282,36 +303,61 @@ module CellsConstruction (K B : Set) (injG : GBF → B) (injC : MMI → B) where
 ------------------------------------------------------------------------
 -- The Gray object formers and the mmc heads together.
 
+-- `unit` is the point object ⊤: the limit of the empty diagram, with
+-- exactly the rule of `LimHeads`' lim_ε (`unit-is-lim` below).
 data GCF : Set where
   gform : GBF → GCF
   mmc   : MMI → GCF
+  unit  : GCF
 
 _==GC_ : GCF → GCF → Bool
 gform a ==GC gform b = a ==G b
 mmc a   ==GC mmc b   = a ==MM b
+unit    ==GC unit    = true
 _       ==GC _       = false
 
 ==GC-sound : ∀ a b → T (a ==GC b) → a ≡ b
 ==GC-sound (gform a) (gform b) p = cong gform (==G-sound a b p)
 ==GC-sound (mmc a)   (mmc b)   p = cong mmc (==MM-sound a b p)
+==GC-sound unit      unit      _ = refl
 ==GC-sound (gform _) (mmc _)   ()
+==GC-sound (gform _) unit      ()
 ==GC-sound (mmc _)   (gform _) ()
+==GC-sound (mmc _)   unit      ()
+==GC-sound unit      (gform _) ()
+==GC-sound unit      (mmc _)   ()
 
 module GCInterface (K : Set) where
   open Syntax K GCF
-  open CellsConstruction K GCF gform mmc public
+  open CellsConstruction K GCF gform mmc unit public
 
   hctxGC : GCF → Nat → Ctx
   hctxGC (gform _) _ = ε ▸ ⋆ ▸ ⋆
   hctxGC (mmc b)   _ = arity (atoms b) (mctx b)
+  hctxGC unit      _ = ε
 
   htyGC : GCF → Nat → Ty
   htyGC (gform _) _ = ⋆
   htyGC (mmc b)   _ = resC b
+  htyGC unit      _ = ⋆
 
   hokGC : GCF → Nat → Bool
   hokGC (gform _) y = y ==ℕ 0
   hokGC (mmc b)   y = (y ==ℕ 0) ∧ is-just (mmcTy b)
+  hokGC unit      y = y ==ℕ 0
+
+  -- unit's rule is lim_ε's (LimHeads, any cone shape): same arity,
+  -- type and side condition.
+  module _ (shape : P.Ctx → Maybe P.Ctx) where
+    private module L = LimConstruction K GCF (λ _ → unit) shape
+
+    unit-is-lim : ∀ y → (hctxGC unit y ≡ L.hctx (limF P.ε) y) × (htyGC unit y ≡ L.hty (limF P.ε) y)
+                        × (hokGC unit y ≡ L.hok (limF P.ε) y)
+    unit-is-lim y = refl , refl , sym (∧-true (y ==ℕ 0))
+      where
+      ∧-true : ∀ b → (b ∧ true) ≡ b
+      ∧-true true  = refl
+      ∧-true false = refl
 
 cellSpec : (K : Set) → HeadSpec K
 cellSpec K = record

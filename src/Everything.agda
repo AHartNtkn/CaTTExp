@@ -185,6 +185,8 @@ import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
+import CaTTExp.Naturality.Ladder
+import CaTTExp.Naturality.Column
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle

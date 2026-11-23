@@ -60,10 +60,12 @@ private
 
 -- The composite is an operation (a degenerate one, the identity, when
 -- the walk is empty).
+B-op : ∀ k → T (isOp (chainC k) ⋆ (var 0) (var (vtx k)))
+B-op k = ∧-in′ (subst (λ L → T (≈? (0 ∷ []) L)) (sym (∂⁻-chain k)) (≈1 0))
+               (subst (λ L → T (≈? (vtx k ∷ []) L)) (sym (∂⁺-chain k)) (≈1 (vtx k)))
+
 B-side : ∀ k → T (cattSide (chainC k) ⋆ (var 0) (var (vtx k)))
-B-side k = ∨-inr′ (isCoh (chainC k) ⋆ (var 0) (var (vtx k)))
-  (∧-in′ (subst (λ L → T (≈? (0 ∷ []) L)) (sym (∂⁻-chain k)) (≈1 0))
-         (subst (λ L → T (≈? (vtx k ∷ []) L)) (sym (∂⁺-chain k)) (≈1 (vtx k))))
+B-side k = ∨-inr′ (isCoh (chainC k) ⋆ (var 0) (var (vtx k))) (B-op k)
 
 B-ty : ∀ k → chainC k ⊢ty arr ⋆ (var 0) (var (vtx k))
 B-ty k = arr-wf (var-wf (chainC-wf k) (lookup-vtx k 0 z≤n)) (var-wf (chainC-wf k) (lookup-vtx k k ≤-refl))

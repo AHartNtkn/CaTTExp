@@ -65,8 +65,11 @@
 -- component is a 3-cell between the two pastings of the naturality
 -- square (`cell3Ty`). So rec_y needs entry y to be a map or a globular
 -- 2-cell; uni needs every entry after X to be one; uni_y needs that and
--- entry y a map. Cells of higher dimension, or with composite
--- boundaries, are accepted by μ, η_y and rec only (ledger S26b).
+-- entry y one too. At a map y, uni_y's type is a 3-cell; at a 2-cell
+-- l : f ⇒ g it is a 4-cell between two pastings of 3-cells (`mod4`,
+-- the modification condition built from θ_l, θ′_l, uni_f and uni_g).
+-- Cells of higher dimension, or with composite boundaries, are accepted
+-- by μ, η_y and rec only (ledger S26b).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax
@@ -170,6 +173,169 @@ module Construction (K : Set) (top? : K → Bool) where
   rwh a b c f f′ α g =
     coh PCrw (arr (arr ⋆ (v 0) (v 5)) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 6)))
         (⟨⟩ ,ₛ a ,ₛ b ,ₛ f ,ₛ f′ ,ₛ α ,ₛ c ,ₛ g)
+
+  ----------------------------------------------------------------------
+  -- Cells of dimension 3 between 2-cells of maps x → y, for uni_y at a
+  -- 2-cell (below). Each is a coherence over a pasting context.
+
+  PCwl PCwr PCas PCic PCv3 : Ctx
+  -- x, y, z, a, α : z ⇒ a, b, P Q : a ⇒ b, Θ : P ⇛ Q
+  PCwl = PC1 ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)
+             ▸ arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)
+             ▸ arr (arr (arr ⋆ (v 0) (v 1)) (v 3) (v 5)) (v 6) (v 7)
+  -- x, y, a, b, P Q : a ⇒ b, Θ : P ⇛ Q, c, β : b ⇒ c
+  PCwr = PC1 ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)
+             ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 3) (v 7)
+  -- x, y, a, b, α, c, β, d, γ : c ⇒ d
+  PCas = PCv ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 5) (v 7)
+  -- a, b, p, q, α : p ⇒ q, c, r, s, β : r ⇒ s
+  PCic = PCrw ▸ arr ⋆ (v 1) (v 5) ▸ arr (arr ⋆ (v 1) (v 5)) (v 6) (v 7)
+  -- x, y, a, b, P, Q, Θ : P ⇛ Q, R, Θ′ : Q ⇛ R
+  PCv3 = PC1 ▸ arr ⋆ (v 0) (v 1) ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 5)
+             ▸ arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)
+             ▸ arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 5) (v 7)
+
+  -- α · Θ : α · P ⇛ α · Q.
+  wL3 : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+  wL3 x y z a α b P Q Θ =
+    coh PCwl (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 5))
+                  (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6))
+                  (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 7)))
+        (⟨⟩ ,ₛ x ,ₛ y ,ₛ z ,ₛ a ,ₛ α ,ₛ b ,ₛ P ,ₛ Q ,ₛ Θ)
+
+  -- Θ · β : P · β ⇛ Q · β.
+  wR3 : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+  wR3 x y a b P Q Θ c β =
+    coh PCwr (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7))
+                  (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 7) (v 8))
+                  (vcomp (v 0) (v 1) (v 2) (v 3) (v 5) (v 7) (v 8)))
+        (⟨⟩ ,ₛ x ,ₛ y ,ₛ a ,ₛ b ,ₛ P ,ₛ Q ,ₛ Θ ,ₛ c ,ₛ β)
+
+  -- (α · β) · γ ⇛ α · (β · γ), and back.
+  asc ascI : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+  asc x y a b α c β d γ =
+    coh PCas (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ascL ascR)
+        (⟨⟩ ,ₛ x ,ₛ y ,ₛ a ,ₛ b ,ₛ α ,ₛ c ,ₛ β ,ₛ d ,ₛ γ)
+    where
+    ascL = vcomp (v 0) (v 1) (v 2) (v 5) (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6)) (v 7) (v 8)
+    ascR = vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 7) (vcomp (v 0) (v 1) (v 3) (v 5) (v 6) (v 7) (v 8))
+  ascI x y a b α c β d γ =
+    coh PCas (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 7)) ascR ascL)
+        (⟨⟩ ,ₛ x ,ₛ y ,ₛ a ,ₛ b ,ₛ α ,ₛ c ,ₛ β ,ₛ d ,ₛ γ)
+    where
+    ascL = vcomp (v 0) (v 1) (v 2) (v 5) (vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 5) (v 6)) (v 7) (v 8)
+    ascR = vcomp (v 0) (v 1) (v 2) (v 3) (v 4) (v 7) (vcomp (v 0) (v 1) (v 3) (v 5) (v 6) (v 7) (v 8))
+
+  -- Interchange, for α : p ⇒ q (maps a → b) and β : r ⇒ s (maps b → c):
+  --   ich1 : (α ▷ r) · (q ◁ β) ⇛ (p ◁ β) · (α ▷ s),   ich2 the converse.
+  ich1 ich2 : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+  ich1 a b c p q α r s β =
+    coh PCic (arr (arr (arr ⋆ (v 0) (v 5)) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7)))
+                  ichL ichR)
+        (⟨⟩ ,ₛ a ,ₛ b ,ₛ p ,ₛ q ,ₛ α ,ₛ c ,ₛ r ,ₛ s ,ₛ β)
+    where
+    ichL = vcomp (v 0) (v 5) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 6))
+                 (rwh (v 0) (v 1) (v 5) (v 2) (v 3) (v 4) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7))
+                 (lwh (v 0) (v 1) (v 5) (v 3) (v 6) (v 7) (v 8))
+    ichR = vcomp (v 0) (v 5) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 2) (v 7))
+                 (lwh (v 0) (v 1) (v 5) (v 2) (v 6) (v 7) (v 8)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7))
+                 (rwh (v 0) (v 1) (v 5) (v 2) (v 3) (v 4) (v 7))
+  ich2 a b c p q α r s β =
+    coh PCic (arr (arr (arr ⋆ (v 0) (v 5)) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7)))
+                  ichR ichL)
+        (⟨⟩ ,ₛ a ,ₛ b ,ₛ p ,ₛ q ,ₛ α ,ₛ c ,ₛ r ,ₛ s ,ₛ β)
+    where
+    ichL = vcomp (v 0) (v 5) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 6))
+                 (rwh (v 0) (v 1) (v 5) (v 2) (v 3) (v 4) (v 6)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7))
+                 (lwh (v 0) (v 1) (v 5) (v 3) (v 6) (v 7) (v 8))
+    ichR = vcomp (v 0) (v 5) (cmp (v 0) (v 1) (v 5) (v 2) (v 6)) (cmp (v 0) (v 1) (v 5) (v 2) (v 7))
+                 (lwh (v 0) (v 1) (v 5) (v 2) (v 6) (v 7) (v 8)) (cmp (v 0) (v 1) (v 5) (v 3) (v 7))
+                 (rwh (v 0) (v 1) (v 5) (v 2) (v 3) (v 4) (v 7))
+
+  -- Θ ; Θ′ : P ⇛ R for Θ : P ⇛ Q, Θ′ : Q ⇛ R.
+  v3 : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm
+  v3 x y a b P Q Θ R Θ′ =
+    coh PCv3 (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 3)) (v 4) (v 7))
+        (⟨⟩ ,ₛ x ,ₛ y ,ₛ a ,ₛ b ,ₛ P ,ₛ Q ,ₛ Θ ,ₛ R ,ₛ Θ′)
+
+  -- The modification condition at a 2-cell l : f ⇒ g between maps
+  -- S → T (uni_y at l), from its data in the ambient: the boundaries
+  -- s₁ s₂ t₁ t₂ (S and T in the two models), f, g, l in both models,
+  -- the actions th, th′ (of h, h′ on T), sh, sh′ (on S), tu, su (of
+  -- u : h ⇒ h′), the cells θ_f, θ_g, θ′_f, θ′_g, the 3-cells θ_l, θ′_l,
+  -- and the 3-cells uni_f, uni_g. A 4-cell between two pastings of
+  --   (l₁ ▷ Th) · ((g₁ ◁ Tu) · θ′_g)   ⇛   θ_f · ((Su ▷ f₂) · (Sh′ ◁ l₂)):
+  --   P₁ = interchange at (l₁, Tu), then θ′_l, then uni_f;
+  --   P₂ = uni_g, then θ_l, then interchange at (Su, l₂);
+  -- with the associators between them.
+  mod4 : Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm →
+         Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Ty
+  mod4 s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug =
+    arr (arr (arr (arr ⋆ s₁ t₂) F Sh′g) Q0 Q7) P1 P2
+    where
+    vc : Tm → Tm → Tm → Tm → Tm → Tm
+    vc X Y Z α β = vcomp s₁ t₂ X Y α Z β
+    F    = cmp s₁ t₁ t₂ f₁ th
+    G    = cmp s₁ t₁ t₂ g₁ th
+    G′   = cmp s₁ t₁ t₂ g₁ th′
+    F′   = cmp s₁ t₁ t₂ f₁ th′
+    Shf  = cmp s₁ s₂ t₂ sh f₂
+    Shg  = cmp s₁ s₂ t₂ sh g₂
+    Sh′f = cmp s₁ s₂ t₂ sh′ f₂
+    Sh′g = cmp s₁ s₂ t₂ sh′ g₂
+    A1   = rwh s₁ t₁ t₂ f₁ g₁ l₁ th
+    B1   = lwh s₁ t₁ t₂ g₁ th th′ tu
+    C1   = lwh s₁ t₁ t₂ f₁ th th′ tu
+    D1   = rwh s₁ t₁ t₂ f₁ g₁ l₁ th′
+    E2   = lwh s₁ s₂ t₂ sh f₂ g₂ l₂
+    F2   = rwh s₁ s₂ t₂ sh sh′ su g₂
+    G2   = rwh s₁ s₂ t₂ sh sh′ su f₂
+    H2   = lwh s₁ s₂ t₂ sh′ f₂ g₂ l₂
+    Bθ′g = vc G G′ Sh′g B1 θg′
+    θgF2 = vc G Shg Sh′g θg F2
+    A1θg = vc F G Shg A1 θg
+    θfE2 = vc F Shf Shg θf E2
+    E2F2 = vc Shf Shg Sh′g E2 F2
+    G2H2 = vc Shf Sh′f Sh′g G2 H2
+    A1B1 = vc F G G′ A1 B1
+    C1D1 = vc F F′ G′ C1 D1
+    D1θ′g = vc F′ G′ Sh′g D1 θg′
+    θ′fH2 = vc F′ Sh′f Sh′g θf′ H2
+    C1θ′f = vc F F′ Sh′f C1 θf′
+    θfG2 = vc F Shf Sh′f θf G2
+    Q0 = vc F G Sh′g A1 Bθ′g
+    Q1 = vc F G′ Sh′g A1B1 θg′
+    Q2 = vc F G′ Sh′g C1D1 θg′
+    Q3 = vc F F′ Sh′g C1 D1θ′g
+    Q4 = vc F F′ Sh′g C1 θ′fH2
+    Q5 = vc F Sh′f Sh′g C1θ′f H2
+    Q6 = vc F Sh′f Sh′g θfG2 H2
+    Q7 = vc F Shf Sh′g θf G2H2
+    R1 = vc F G Sh′g A1 θgF2
+    R2 = vc F Shg Sh′g A1θg F2
+    R3 = vc F Shg Sh′g θfE2 F2
+    R4 = vc F Shf Sh′g θf E2F2
+    vv : Tm → Tm → Tm → Tm → Tm
+    vv P Q Θ Θ′ = v3 s₁ t₂ F Sh′g P Q Θ Q7 Θ′
+    t1 = ascI s₁ t₂ F G A1 G′ B1 Sh′g θg′
+    t2 = wR3 s₁ t₂ F G′ A1B1 C1D1 (ich1 s₁ t₁ t₂ f₁ g₁ l₁ th th′ tu) Sh′g θg′
+    t3 = asc s₁ t₂ F F′ C1 G′ D1 Sh′g θg′
+    t4 = wL3 s₁ t₂ F F′ C1 Sh′g D1θ′g θ′fH2 θl′
+    t5 = ascI s₁ t₂ F F′ C1 Sh′f θf′ Sh′g H2
+    t6 = wR3 s₁ t₂ F Sh′f C1θ′f θfG2 uf Sh′g H2
+    t7 = asc s₁ t₂ F Shf θf Sh′f G2 Sh′g H2
+    s1 = wL3 s₁ t₂ F G A1 Sh′g Bθ′g θgF2 ug
+    s2 = ascI s₁ t₂ F G A1 Shg θg Sh′g F2
+    s3 = wR3 s₁ t₂ F Shg A1θg θfE2 θl Sh′g F2
+    s4 = asc s₁ t₂ F Shf θf Shg E2 Sh′g F2
+    s5 = wL3 s₁ t₂ F Shf θf Sh′g E2F2 G2H2 (ich2 s₁ s₂ t₂ sh sh′ su f₂ g₂ l₂)
+    P1 = vv Q0 Q1 t1 (vv Q1 Q2 t2 (vv Q2 Q3 t3 (vv Q3 Q4 t4 (vv Q4 Q5 t5 (vv Q5 Q6 t6 t7)))))
+    P2 = vv Q0 R1 s1 (vv R1 R2 s2 (vv R2 R3 s3 (vv R3 R4 s4 s5)))
 
   ----------------------------------------------------------------------
   -- Sorts. The telescope opens with its sort variables X₀, …, X_{m-1},
@@ -444,7 +610,7 @@ module Construction (K : Set) (top? : K → Bool) where
   sel rec  y Δ = isSortIx y Δ
   sel recY y Δ = inner y Δ ∧ isLow? (lookup Δ y)
   sel uni  y Δ = isSortIx y Δ ∧ lowFrom (sorts Δ) Δ
-  sel uniY y Δ = (inner y Δ ∧ lowFrom (sorts Δ) Δ) ∧ isMap? (lookup Δ y)
+  sel uniY y Δ = (inner y Δ ∧ lowFrom (sorts Δ) Δ) ∧ isLow? (lookup Δ y)
 
   side : Former → Nat → Ctx → Bool
   side b y Δ = positive Δ ∧ sel b y Δ
@@ -584,8 +750,32 @@ module Construction (K : Set) (top? : K → Bool) where
            (vcomp S₁ T₂ src (cmp S₁ S₂ T₂ Sh σy) (bvar 0 (m + y)) tgt
                   (rwh S₁ S₂ T₂ Sh Sh′ Su σy))
 
+  -- The compatibility 4-cell of uni at a 2-cell y : f ⇒ g (f = i, g = j).
+  uniY2Body : Ctx → Nat → Nat → Nat → Tm → Tm → Ty
+  uniY2Body Δ y i j S T =
+    let m   = len Δ
+        n   = sorts Δ
+        M₁  = ηPre Δ m
+        M₂  = bvPre m
+        S₁  = opTm 0 M₁ S
+        T₁  = opTm 0 M₁ T
+        h   = λ k → bvar 0 (m + k)
+        h′  = λ k → bvar 0 (m + m + k)
+        u   = λ k → bnd uni k Δ (bvPre (m + m + m))
+    in mod4 S₁ (opTm 0 M₂ S) T₁ (opTm 0 M₂ T)
+            (ηAt Δ i) (ηAt Δ j) (ηAt Δ y) (bvar 0 i) (bvar 0 j) (bvar 0 y)
+            (act n T M₁ h) (act n T M₁ h′) (act n S M₁ h) (act n S M₁ h′)
+            (uActM (srt n T) T₁ u) (uActM (srt n S) S₁ u)
+            (bvar 0 (m + i)) (bvar 0 (m + j)) (bvar 0 (m + m + i)) (bvar 0 (m + m + j))
+            (bvar 0 (m + y)) (bvar 0 (m + m + y))
+            (bnd uniY i Δ (bvPre (m + m + m))) (bnd uniY j Δ (bvPre (m + m + m)))
+
+  uniYSel : Ctx → Nat → Maybe (Nat × Nat) → Tm → Tm → Ty
+  uniYSel Δ y nothing        = uniYBody Δ y
+  uniYSel Δ y (just (i , j)) = uniY2Body Δ y i j
+
   uniYTy : Ctx → Nat → Ty
-  uniYTy Δ y = withBase (entryBase Δ y) (uniYBody Δ y)
+  uniYTy Δ y = withBase (entryBase Δ y) (uniYSel Δ y (globAt Δ y))
 
   ηRes : Ctx → Nat → Maybe Ty → Ty
   ηRes Δ y nothing  = ⋆

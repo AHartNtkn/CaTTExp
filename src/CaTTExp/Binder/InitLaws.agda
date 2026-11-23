@@ -285,7 +285,7 @@ module _ (σ : Sub) (l : LC σ) where
   sel-[] recY y Δ = cong₂ _∧_ (inner-[] y Δ) (isLow-[] Δ y)
   sel-[] uni  y Δ = cong₂ _∧_ (isSortIx-[] y Δ) lf
     where lf = trans (cong (λ z → lowFrom z (Δ [ σ ]tel)) (sorts-[] Δ)) (lowFrom-[] (sorts Δ) Δ)
-  sel-[] uniY y Δ = cong₂ _∧_ (cong₂ _∧_ (inner-[] y Δ) lf) (isMap-[] Δ y)
+  sel-[] uniY y Δ = cong₂ _∧_ (cong₂ _∧_ (inner-[] y Δ) lf) (isLow-[] Δ y)
     where lf = trans (cong (λ z → lowFrom z (Δ [ σ ]tel)) (sorts-[] Δ)) (lowFrom-[] (sorts Δ) Δ)
 
   ----------------------------------------------------------------------
@@ -488,6 +488,46 @@ module _ (σ : Sub) (l : LC σ) where
           | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ)
           | ηAt-[] Δ y | len-tel[] Δ σ | sorts-[] Δ
           | srt-[] (sorts Δ) S | srt-[] (sorts Δ) T₀ = refl
+
+  mod4-[] : ∀ s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug →
+            (mod4 s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug) [ σ ]ty ≡
+            mod4 (s₁ [ σ ]tm) (s₂ [ σ ]tm) (t₁ [ σ ]tm) (t₂ [ σ ]tm) (f₁ [ σ ]tm) (g₁ [ σ ]tm) (l₁ [ σ ]tm)
+                 (f₂ [ σ ]tm) (g₂ [ σ ]tm) (l₂ [ σ ]tm) (th [ σ ]tm) (th′ [ σ ]tm) (sh [ σ ]tm) (sh′ [ σ ]tm)
+                 (tu [ σ ]tm) (su [ σ ]tm) (θf [ σ ]tm) (θg [ σ ]tm) (θf′ [ σ ]tm) (θg′ [ σ ]tm)
+                 (θl [ σ ]tm) (θl′ [ σ ]tm) (uf [ σ ]tm) (ug [ σ ]tm)
+  mod4-[] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ = refl
+
+  uniY2Body-[] : ∀ Δ y i j S T₀ → (uniY2Body Δ y i j S T₀) [ σ ]ty ≡
+                 uniY2Body (Δ [ σ ]tel) y i j (S [ σ ]tm) (T₀ [ σ ]tm)
+  uniY2Body-[] Δ y i j S T₀
+    rewrite uActM-[] (srt (sorts Δ) T₀) (opTm 0 (ηPre Δ (len Δ)) T₀)
+                     (λ k → bnd uni k Δ (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → bnd uni k (Δ [ σ ]tel) (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → cong (bnd uni k (Δ [ σ ]tel)) (bvPre-∘ (len Δ + len Δ + len Δ)))
+          | uActM-[] (srt (sorts Δ) S) (opTm 0 (ηPre Δ (len Δ)) S)
+                     (λ k → bnd uni k Δ (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → bnd uni k (Δ [ σ ]tel) (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → cong (bnd uni k (Δ [ σ ]tel)) (bvPre-∘ (len Δ + len Δ + len Δ)))
+          | act-[] (sorts Δ) T₀ (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + k)) (λ k → bvar 0 (len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) T₀ (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) S (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + k)) (λ k → bvar 0 (len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) S (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ _ → refl)
+          | op-[]tm 0 (ηPre Δ (len Δ)) S σ l | op-[]tm 0 (ηPre Δ (len Δ)) T₀ σ l
+          | op-[]tm 0 (bvPre (len Δ)) S σ l | op-[]tm 0 (bvPre (len Δ)) T₀ σ l
+          | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ) | bvPre-∘ (len Δ + len Δ + len Δ)
+          | ηAt-[] Δ i | ηAt-[] Δ j | ηAt-[] Δ y | len-tel[] Δ σ | sorts-[] Δ
+          | srt-[] (sorts Δ) S | srt-[] (sorts Δ) T₀ = refl
+
+  uniYSel-[] : ∀ Δ y S T₀ mg → (uniYSel Δ y mg S T₀) [ σ ]ty ≡ uniYSel (Δ [ σ ]tel) y mg (S [ σ ]tm) (T₀ [ σ ]tm)
+  uniYSel-[] Δ y S T₀ nothing        = uniYBody-[] Δ y S T₀
+  uniYSel-[] Δ y S T₀ (just (i , j)) = uniY2Body-[] Δ y i j S T₀
+
+  uniYTy-[] : ∀ Δ y → (uniYTy Δ y) [ σ ]ty ≡ uniYTy (Δ [ σ ]tel) y
+  uniYTy-[] Δ y =
+    trans (withBase-[] (entryBase Δ y) (uniYSel Δ y (globAt Δ y)) (uniYSel (Δ [ σ ]tel) y (globAt (Δ [ σ ]tel) y))
+                       (λ S T₀ → trans (uniYSel-[] Δ y S T₀ (globAt Δ y))
+                                       (cong (λ g → uniYSel (Δ [ σ ]tel) y g (S [ σ ]tm) (T₀ [ σ ]tm)) (sym (globAt-[] Δ y)))))
+          (cong (λ z → withBase z (uniYSel (Δ [ σ ]tel) y (globAt (Δ [ σ ]tel) y))) (sym (entryBase-[] Δ y)))
 
 ------------------------------------------------------------------------
 -- Scoping of the result types.
@@ -699,10 +739,62 @@ module _ (n : Nat) where
     Src = sc-cmp s₁ t₁ t₂ ηy th S₁ T₁ T₂ Ηy Th
     Tgt = sc-cmp s₁ s₂ t₂ sh′ σy S₁ S₂ T₂ Sh′ tt
 
+  sc-mod4 : ∀ s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug →
+            T (scTm? n s₁) → T (scTm? n s₂) → T (scTm? n t₁) → T (scTm? n t₂) →
+            T (scTm? n f₁) → T (scTm? n g₁) → T (scTm? n l₁) → T (scTm? n f₂) → T (scTm? n g₂) → T (scTm? n l₂) →
+            T (scTm? n th) → T (scTm? n th′) → T (scTm? n sh) → T (scTm? n sh′) → T (scTm? n tu) → T (scTm? n su) →
+            T (scTm? n θf) → T (scTm? n θg) → T (scTm? n θf′) → T (scTm? n θg′) → T (scTm? n θl) → T (scTm? n θl′) →
+            T (scTm? n uf) → T (scTm? n ug) →
+            T (scTy? n (mod4 s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug))
+  sc-mod4 s₁ s₂ t₁ t₂ f₁ g₁ l₁ f₂ g₂ l₂ th th′ sh sh′ tu su θf θg θf′ θg′ θl θl′ uf ug
+          p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24
+    rewrite T→≡ p1 | T→≡ p2 | T→≡ p3 | T→≡ p4 | T→≡ p5 | T→≡ p6 | T→≡ p7 | T→≡ p8
+          | T→≡ p9 | T→≡ p10 | T→≡ p11 | T→≡ p12 | T→≡ p13 | T→≡ p14 | T→≡ p15 | T→≡ p16
+          | T→≡ p17 | T→≡ p18 | T→≡ p19 | T→≡ p20 | T→≡ p21 | T→≡ p22 | T→≡ p23 | T→≡ p24 = tt
+
+  sc-uniY2Body : ∀ Δ y i j S T₀ → T (scTel? n Δ) → T (scTm? n S) → T (scTm? n T₀) →
+                 T (scTy? n (uniY2Body Δ y i j S T₀))
+  sc-uniY2Body Δ y i j S T₀ p pS pT =
+    sc-mod4 (opTm 0 M₁ S) (opTm 0 M₂ S) (opTm 0 M₁ T₀) (opTm 0 M₂ T₀)
+      (ηAt Δ i) (ηAt Δ j) (ηAt Δ y) (bvar 0 i) (bvar 0 j) (bvar 0 y)
+      (act k₀ T₀ M₁ hh) (act k₀ T₀ M₁ hh′) (act k₀ S M₁ hh) (act k₀ S M₁ hh′)
+      (uActM (srt k₀ T₀) (opTm 0 M₁ T₀) u) (uActM (srt k₀ S) (opTm 0 M₁ S) u)
+      (bvar 0 (m + i)) (bvar 0 (m + j)) (bvar 0 (m + m + i)) (bvar 0 (m + m + j))
+      (bvar 0 (m + y)) (bvar 0 (m + m + y))
+      (bnd uniY i Δ (bvPre (m + m + m))) (bnd uniY j Δ (bvPre (m + m + m)))
+      S₁ S₂ T₁ T₂ (sc-ηAt Δ i p) (sc-ηAt Δ j p) (sc-ηAt Δ y p) tt tt tt
+      (sc-act k₀ T₀ M₁ hh pT pM₁ (λ _ → tt)) (sc-act k₀ T₀ M₁ hh′ pT pM₁ (λ _ → tt))
+      (sc-act k₀ S M₁ hh pS pM₁ (λ _ → tt)) (sc-act k₀ S M₁ hh′ pS pM₁ (λ _ → tt))
+      (sc-uActM (srt k₀ T₀) (opTm 0 M₁ T₀) u T₁ pu) (sc-uActM (srt k₀ S) (opTm 0 M₁ S) u S₁ pu)
+      tt tt tt tt tt tt (pB i) (pB j)
+    where
+    m   = len Δ
+    k₀  = sorts Δ
+    M₁  = ηPre Δ m
+    M₂  = bvPre m
+    u   = λ k → bnd uni k Δ (bvPre (m + m + m))
+    hh  = λ k → bvar 0 (m + k)
+    hh′ = λ k → bvar 0 (m + m + k)
+    pM₁ = sc-ηPre Δ m p
+    pM₂ = sc-bvPre m
+    S₁  = sc-opTm 0 M₁ S pM₁ pS
+    S₂  = sc-opTm 0 M₂ S pM₂ pS
+    T₁  = sc-opTm 0 M₁ T₀ pM₁ pT
+    T₂  = sc-opTm 0 M₂ T₀ pM₂ pT
+    pu  : ∀ k → T (scTm? n (u k))
+    pu  k = ∧T {scTel? n Δ} p (sc-bvPre (m + m + m))
+    pB  : ∀ k → T (scTm? n (bnd uniY k Δ (bvPre (m + m + m))))
+    pB  k = ∧T {scTel? n Δ} p (sc-bvPre (m + m + m))
+
+  sc-uniYSel : ∀ Δ y S T₀ mg → T (scTel? n Δ) → T (scTm? n S) → T (scTm? n T₀) →
+               T (scTy? n (uniYSel Δ y mg S T₀))
+  sc-uniYSel Δ y S T₀ nothing        = sc-uniYBody Δ y S T₀
+  sc-uniYSel Δ y S T₀ (just (i , j)) = sc-uniY2Body Δ y i j S T₀
+
   sc-uniYTy : ∀ Δ y → T (scTel? n Δ) → T (scTy? n (uniYTy Δ y))
   sc-uniYTy Δ y p =
-    sc-withBase (entryBase Δ y) (uniYBody Δ y) λ S T₀ e →
-      let (pS , pT) = sc-entryBase Δ y p e in sc-uniYBody Δ y S T₀ p pS pT
+    sc-withBase (entryBase Δ y) (uniYSel Δ y (globAt Δ y)) λ S T₀ e →
+      let (pS , pT) = sc-entryBase Δ y p e in sc-uniYSel Δ y S T₀ (globAt Δ y) p pS pT
 
   sc-res : ∀ b y Δ → T (scTel? n Δ) → T (scTy? n (res b y Δ))
   sc-res μ    y Δ p = tt
@@ -754,6 +846,4 @@ initLaws = record
                (cong (λ z → θTy (Δ [ σ ]tel) y (λ k → bnd rec k (Δ [ σ ]tel) (bvPre z)) (λ i → bnd recY i (Δ [ σ ]tel) (bvPre z)))
                      (sym (len-tel[] Δ σ))))
   res-st uni  y Δ σ l _ rewrite len-tel[] Δ σ = refl
-  res-st uniY y Δ σ l _ =
-    sym (trans (withBase-[] σ l (entryBase Δ y) (uniYBody Δ y) (uniYBody (Δ [ σ ]tel) y) (uniYBody-[] σ l Δ y))
-               (cong (λ z → withBase z (uniYBody (Δ [ σ ]tel) y)) (sym (entryBase-[] σ l Δ y))))
+  res-st uniY y Δ σ l _ = sym (uniYTy-[] σ l Δ y)

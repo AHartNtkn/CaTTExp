@@ -33,7 +33,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 1.6 Signatures (presented with heads, after S27(a) landed; Agda S27(b)–(c) still open)
 - [x] Q1.1 (surface question): Names or positions. Decided: A, distinct names, no shadowing.
 - [x] Q1.2 (surface question): How much of a coherence the user writes. Decided: B (top-dimensional arguments), names as abbreviations.
-- [ ] Q1.3 (surface question): How pasting contexts are presented.
+- [x] Q1.3 (surface question): How pasting contexts are presented. Decided: A′, ordinary context in any order, canonicalised.
 
 ## Chapter 2. The lax core L
 
@@ -43,6 +43,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 2.4 Which coherences are invertible
 - [ ] 2.5 The two-tier fragment and the implemented checker
 - [ ] 2.6 The generality ordering
+- [ ] 2.7 Dualities
 - [ ] Q2.1 (surface question): Which setting a development starts in.
 - [ ] Q2.2 (surface question): How a horizontal composite across objects is written.
 - [ ] Q2.3 (surface question): How a failed side condition is reported.

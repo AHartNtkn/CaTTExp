@@ -165,3 +165,12 @@ legΘ g = bnd (base (legF Arr)) g ε (fresh 0 3)
 uni-self : inferTy Θ (bnd (uniF Arr 0) 0 ε (fresh 0 3 ,ₛ LΘ ,ₛ legΘ 0 ,ₛ legΘ 1 ,ₛ legΘ 2))
            ≡ just (arr ⋆ LΘ LΘ)
 uni-self = refl
+
+------------------------------------------------------------------------
+-- Presupposition (CaTTExp.Binder.UniPresup) applied to the checker's
+-- derivation of the n = 1 filler: its type is well formed.
+
+open import CaTTExp.Binder.UniPresup coneShape hornShape using (uni-tm-ty)
+
+uni₁-presup : H₁ ⊢ty arr (arr ⋆ (var 3) L) (var 4) (var 5)
+uni₁-presup = uni-tm-ty (snd (from-just (infer H₁ (uni₁ 0))))

@@ -1,5 +1,23 @@
 ------------------------------------------------------------------------
--- WIP: the k = 0 left whisker heads.
+-- The context of the k = 0 left whisker heads, and the transfer of the
+-- side condition onto it (step 2(d) of the two-tier L whiskering
+-- interface, notes/surface-conservativity.md §7).
+--
+-- LK 0 j is not ΣΘ with something appended (as BK 0 j is, Gray.
+-- WhiskerZero) but LW (Dsk j) (eqLW), where
+--
+--   LW Θ = x, y, h : x → y, z, then g(ΣA) for each A of Θ,
+--
+-- i.e. the disk ΣΘ moved over (y, z) = (1, 3), its levels relabelled by
+-- g (0 ↦ 1, 1 ↦ 3, i ↦ i + 2 for i ≥ 2). For Θ whose cells are the
+-- relabelled cells of ΣΘ (`good`; every disk, `goodD`):
+--
+--   homsLW     : homs (LW Θ) = (h) , g(hΣ Θ)
+--   bdryLW     : bdryT sg (homs (LW Θ)) = map F (bdryT sg (homs ΣΘ))
+--   sameDownLW : sameDown ΣΘ S R → sameDown (LW Θ) (map F S) (map F R)
+--
+-- with F x = (h) ++ g(x). g is injective, so findEl, bdEl, hitsP, the
+-- tables and the face order commute with it.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.WhiskerZeroLeft where
 

@@ -1,7 +1,7 @@
 """Eliminate passive paths in private positioned movies using ambient Artin cuts.
 
-The decision is complete when some chart vertex groups the pure loop group
-into scalar blocks. A bounded search can also certify comparisons elsewhere.
+The default search decides all private inputs by the component-framing bound.
+A requested small radius can leave a comparison open.
 """
 from argparse import ArgumentParser
 from collections import defaultdict, deque
@@ -9,7 +9,8 @@ from itertools import combinations
 import json
 from pathlib import Path
 
-from semistrict_surface_history_group import HistoryGroup, exchange, inv, realize
+from semistrict_surface_component_braids import Group
+from semistrict_surface_history_group import exchange, inv, realize
 from semistrict_surface_meridian_transport import Cut, meridian, prod, transport
 from semistrict_surface_private_winding import solve as winding
 from semistrict_surface_scalar_meetings import exhausted, hurwitz
@@ -172,40 +173,41 @@ class PrefixChart:
         return passive
 
 
-def solve(data, radius=None):
+def solve(data, radius=None, moduli=()):
     if radius is not None and radius < 0:
         raise ValueError('expected nonnegative radius')
     preliminary = winding(data)
     if preliminary['obstruction']:
         return preliminary
-    h = tuple((p, e) for e, (p, _) in enumerate(data['history']))
-    ports = {e: data['marks'][label] for e, (_, label) in enumerate(data['history'])}
-    group = HistoryGroup(h, ports)
-    root = grouped_chart(group)
-    certified = root is not None
-    if root is None:
-        root = h
-    chart = PrefixChart(root, ports)
+    structure = Group(data['history'], data['marks'], len(data['initial']))
+    group = structure.graph
+    simple_root = grouped_chart(group)
+    root = structure.root if simple_root is None else simple_root
+    chart = PrefixChart(root, structure.ports)
     rebase = inv(group.tree_paths[root])
     a, old, left = chart.read(rebase, data['source'])
     b, new, right = chart.read(rebase, data['target'])
     if left != right or any(not transport(c, b[m]) for m, c in a.items()):
         return dict(surface_filler=False, obstruction='ambient braid or mark transport')
-    n, m = len(h), len(old)
+    for modulus in moduli:
+        from semistrict_surface_private_framing import finite_obstruction
+        if finite_obstruction(data, modulus):
+            return dict(surface_filler=False, obstruction='positioned reflection quotient', modulus=modulus)
+    n, m = len(root), len(old)
     swaps = (m*max(0, n-1)+1)*m*(m-1)//2
     # The branch equations include a fixed chart path per gain and meeting.
     height = max(map(len, group.tree_paths.values()), default=0)
-    size = len(data['source'])+len(data['target'])+(2*height+n+1)*(swaps+m*n+2)
-    info = dict(grouped=certified, histories=len(group.tree_paths), root_path=group.tree_paths[root])
+    size = len(data['source'])+len(data['target'])+(2*height+n+2)**2*(swaps+m*n+2)
+    info = dict(grouped=simple_root is not None, histories=len(group.tree_paths), root_path=group.tree_paths[root])
     r = 0
     while True:
         proof = chart.search(a, b)
         if proof is not None:
             passive = chart.verify(old, new, proof)
             return dict(info, surface_filler=True, steps=proof, passive_steps=passive, radius=r)
-        if not chart.layer or (certified and exhausted(r, n, m, size)):
+        if not chart.layer or exhausted(r, n, m, size):
             return dict(info, surface_filler=False)
-        if radius == r or (not certified and radius is None):
+        if radius == r:
             return dict(info, surface_filler=None, radius=r)
         chart.grow()
         r += 1
@@ -258,8 +260,9 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--faces', type=Path)
     parser.add_argument('--radius', type=int)
+    parser.add_argument('--modulus', type=int, action='append', default=[])
     args = parser.parse_args()
     if args.faces:
-        print(json.dumps(solve(json.loads(args.faces.read_text()), args.radius)))
+        print(json.dumps(solve(json.loads(args.faces.read_text()), args.radius, args.modulus)))
     else:
         checks()

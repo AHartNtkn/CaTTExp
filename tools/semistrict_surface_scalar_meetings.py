@@ -96,27 +96,9 @@ def meeting_path(frames, source, target, move):
     return None
 
 
-class ReflectionQuotient:
-    """Full finite Hurwitz orbit of labelled dihedral reflections."""
+class FiniteFrameGraph:
+    """Reachability for private updates over a finite signed history cover."""
     steps = Ball.steps
-
-    def __init__(self, colours, modulus):
-        # The second entry is always the original occurrence, as in Ball.steps.
-        root = tuple((c % modulus, e) for e, c in enumerate(colours))
-        self.histories, self.edges, self.neighbors = [root], [], []
-        index = {root: 0}
-        for frame in self.histories:
-            edge = {}
-            for i, ((a, e), (b, f)) in enumerate(zip(frame, frame[1:])):
-                for sign, pair in ((1, (((2*a-b) % modulus, f), (a, e))),
-                                   (-1, ((b, f), ((2*b-a) % modulus, e)))):
-                    nxt = frame[:i]+pair+frame[i+2:]
-                    if nxt not in index:
-                        index[nxt] = len(self.histories)
-                        self.histories.append(nxt)
-                    edge[sign*(i+1)] = index[nxt]
-            self.edges.append(tuple(edge.items()))
-            self.neighbors.append(edge)
 
     def word(self, movie):
         h, counts, w = 0, defaultdict(int), []
@@ -150,6 +132,28 @@ class ReflectionQuotient:
                     seen.add(v)
                     queue.append(v)
         return False
+
+
+class ReflectionQuotient(FiniteFrameGraph):
+    """Full finite Hurwitz orbit of labelled dihedral reflections."""
+
+    def __init__(self, colours, modulus):
+        # The second entry is always the original occurrence, as in Ball.steps.
+        root = tuple((c % modulus, e) for e, c in enumerate(colours))
+        self.histories, self.edges, self.neighbors = [root], [], []
+        index = {root: 0}
+        for frame in self.histories:
+            edge = {}
+            for i, ((a, e), (b, f)) in enumerate(zip(frame, frame[1:])):
+                for sign, pair in ((1, (((2*a-b) % modulus, f), (a, e))),
+                                   (-1, ((b, f), ((2*b-a) % modulus, e)))):
+                    nxt = frame[:i]+pair+frame[i+2:]
+                    if nxt not in index:
+                        index[nxt] = len(self.histories)
+                        self.histories.append(nxt)
+                    edge[sign*(i+1)] = index[nxt]
+            self.edges.append(tuple(edge.items()))
+            self.neighbors.append(edge)
 
 
 def verify(source, target, witness, n):

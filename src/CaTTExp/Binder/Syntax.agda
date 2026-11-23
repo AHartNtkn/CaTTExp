@@ -14,6 +14,9 @@
 --    rule types a `bvar`);
 --  * extending a context never renames anything, binders included.
 --
+-- A context entry carries a list of marks (`Γ ▸[ ms ] A`, with
+-- `Γ ▸ A` the unmarked entry); syntax operations carry them along.
+--
 -- A binder occurrence is `bnd b y Δ ts`:
 --   b   the former (for INIT: μ, η, rec, rec_y, uni, uni_y);
 --   y   a selector, an entry of the telescope counted from 0 (η_y, ...);
@@ -32,7 +35,9 @@ open import CaTTExp.Prelude
 
 module CaTTExp.Binder.Syntax (K : Set) (B : Set) where
 
-infixl 5 _▸_ _,ₛ_
+open import CaTTExp.Binder.Mark public
+
+infixl 5 _▸[_]_ _▸_ _,ₛ_
 
 mutual
   data Ty : Set where
@@ -50,20 +55,24 @@ mutual
     -- A binding former, its selector, its telescope and its arguments.
     bnd  : B → Nat → Ctx → Sub → Tm
 
+  -- A context entry carries a list of marks (CaTTExp.Binder.Mark);
+  -- Γ ▸ A is the unmarked entry.
   data Ctx : Set where
-    ε   : Ctx
-    _▸_ : Ctx → Ty → Ctx
+    ε      : Ctx
+    _▸[_]_ : Ctx → List Mark → Ty → Ctx
 
   data Sub : Set where
     ⟨⟩   : Sub
     _,ₛ_ : Sub → Tm → Sub
+
+pattern _▸_ Γ A = Γ ▸[ [] ] A
 
 ------------------------------------------------------------------------
 -- Lengths and lookup by level
 
 len : Ctx → Nat
 len ε       = 0
-len (Γ ▸ _) = suc (len Γ)
+len (Γ ▸[ _ ] _) = suc (len Γ)
 
 lenₛ : Sub → Nat
 lenₛ ⟨⟩       = 0
@@ -71,7 +80,24 @@ lenₛ (σ ,ₛ _) = suc (lenₛ σ)
 
 lookup : Ctx → Nat → Maybe Ty
 lookup ε       i = nothing
-lookup (Γ ▸ A) i = if i ==ℕ len Γ then just A else lookup Γ i
+lookup (Γ ▸[ _ ] A) i = if i ==ℕ len Γ then just A else lookup Γ i
+
+-- The marks of entry i (none out of range).
+marksAt : Ctx → Nat → List Mark
+marksAt ε           i = []
+marksAt (Γ ▸[ ms ] _) i = if i ==ℕ len Γ then ms else marksAt Γ i
+
+-- The mark judgment with only rule (MARK): a variable has the marks
+-- of its entry, and nothing else has a mark.
+varMark : Ctx → Mark → Tm → Bool
+varMark Γ m (var i) = m ∈M marksAt Γ i
+varMark Γ m _       = false
+
+-- Every entry is unmarked.
+unmarked? : Ctx → Bool
+unmarked? ε              = true
+unmarked? (Γ ▸[ [] ] _)    = unmarked? Γ
+unmarked? (Γ ▸[ _ ∷ _ ] _) = false
 
 lookupₛ : Sub → Nat → Tm
 lookupₛ ⟨⟩       i = var i      -- out of range: unreachable for typed σ
@@ -85,7 +111,7 @@ pickOr (σ ,ₛ t) j d = if j ==ℕ lenₛ σ then t else pickOr σ j d
 infixl 6 _⧺_ _++ₛ_
 _⧺_ : Ctx → Ctx → Ctx
 Γ ⧺ ε       = Γ
-Γ ⧺ (Ξ ▸ A) = (Γ ⧺ Ξ) ▸ A
+Γ ⧺ (Ξ ▸[ ms ] A) = (Γ ⧺ Ξ) ▸[ ms ] A
 
 _++ₛ_ : Sub → Sub → Sub
 σ ++ₛ ⟨⟩       = σ
@@ -110,7 +136,7 @@ mutual
 
   _[_]tel : Ctx → Sub → Ctx
   ε       [ σ ]tel = ε
-  (Δ ▸ A) [ σ ]tel = (Δ [ σ ]tel) ▸ (A [ σ ]ty)
+  (Δ ▸[ ms ] A) [ σ ]tel = (Δ [ σ ]tel) ▸[ ms ] (A [ σ ]ty)
 
   -- (τ ∘ σ) : apply σ to every term of τ.
   _∘_ : Sub → Sub → Sub
@@ -144,7 +170,7 @@ mutual
 
   shTel : Nat → Ctx → Ctx
   shTel c ε       = ε
-  shTel c (Δ ▸ A) = shTel c Δ ▸ shTy c A
+  shTel c (Δ ▸[ ms ] A) = shTel c Δ ▸[ ms ] shTy c A
 
   shSub : Nat → Sub → Sub
   shSub c ⟨⟩       = ⟨⟩
@@ -172,7 +198,7 @@ mutual
 
   opTel : Nat → Sub → Ctx → Ctx
   opTel d ts ε       = ε
-  opTel d ts (Δ ▸ A) = opTel d ts Δ ▸ opTy d ts A
+  opTel d ts (Δ ▸[ ms ] A) = opTel d ts Δ ▸[ ms ] opTy d ts A
 
   opSub : Nat → Sub → Sub → Sub
   opSub d ts ⟨⟩       = ⟨⟩
@@ -188,7 +214,7 @@ fresh n (suc k) = fresh n k ,ₛ var (n + k)
 -- any context of length n.
 openTel : Nat → Ctx → Ctx
 openTel n ε       = ε
-openTel n (Δ ▸ A) = openTel n Δ ▸ opTy 0 (fresh n (len Δ)) A
+openTel n (Δ ▸[ ms ] A) = openTel n Δ ▸[ ms ] opTy 0 (fresh n (len Δ)) A
 
 ------------------------------------------------------------------------
 -- Dimension
@@ -199,7 +225,7 @@ dim (arr A _ _) = suc (dim A)
 
 dimCtx : Ctx → Nat
 dimCtx ε       = 0
-dimCtx (Γ ▸ A) = max (dim A) (dimCtx Γ)
+dimCtx (Γ ▸[ _ ] A) = max (dim A) (dimCtx Γ)
 
 ------------------------------------------------------------------------
 -- Free variables (levels). A binder's free variables are those of its
@@ -219,7 +245,7 @@ mutual
 
   fvTel : Ctx → List Nat
   fvTel ε       = []
-  fvTel (Δ ▸ A) = fvTel Δ ++ fvTy A
+  fvTel (Δ ▸[ _ ] A) = fvTel Δ ++ fvTy A
 
   fvSub : Sub → List Nat
   fvSub ⟨⟩       = []
@@ -253,7 +279,7 @@ mutual
 
   scTel? : Nat → Ctx → Bool
   scTel? n ε       = true
-  scTel? n (Δ ▸ A) = scTel? n Δ ∧ scTy? n A
+  scTel? n (Δ ▸[ _ ] A) = scTel? n Δ ∧ scTy? n A
 
   scSub? : Nat → Sub → Bool
   scSub? n ⟨⟩       = true
@@ -277,7 +303,7 @@ mutual
 
   lcTel? : Nat → Ctx → Bool
   lcTel? d ε       = true
-  lcTel? d (Δ ▸ A) = lcTel? d Δ ∧ lcTy? d A
+  lcTel? d (Δ ▸[ _ ] A) = lcTel? d Δ ∧ lcTy? d A
 
   lcSub? : Nat → Sub → Bool
   lcSub? d ⟨⟩       = true
@@ -302,7 +328,7 @@ mutual
 
   sizeTel : Ctx → Nat
   sizeTel ε       = 1
-  sizeTel (Δ ▸ A) = suc (sizeTel Δ + sizeTy A)
+  sizeTel (Δ ▸[ _ ] A) = suc (sizeTel Δ + sizeTy A)
 
   sizeSub : Sub → Nat
   sizeSub ⟨⟩       = 1
@@ -322,16 +348,16 @@ snoc xs x = xs ++ (x ∷ [])
 
 srcVars : Nat → Ctx → List Nat
 srcVars i ε               = []
-srcVars i (ε ▸ _)         = 0 ∷ []
-srcVars i (Γ ▸ A ▸ B)     =
+srcVars i (ε ▸[ _ ] _)         = 0 ∷ []
+srcVars i (Γ ▸[ _ ] A ▸[ _ ] B) =
   if i <ℕ suc (dim A)
   then srcVars i Γ
   else snoc (snoc (srcVars i Γ) (len Γ)) (suc (len Γ))
 
 tgtVars : Nat → Ctx → List Nat
 tgtVars i ε               = []
-tgtVars i (ε ▸ _)         = 0 ∷ []
-tgtVars i (Γ ▸ A ▸ B)     =
+tgtVars i (ε ▸[ _ ] _)         = 0 ∷ []
+tgtVars i (Γ ▸[ _ ] A ▸[ _ ] B) =
   if i <ℕ dim A
   then tgtVars i Γ
   else if dim A ==ℕ i
@@ -366,7 +392,7 @@ module Equality (_==K_ : K → K → Bool)
 
     _==Ctx_ : Ctx → Ctx → Bool
     ε       ==Ctx ε       = true
-    (Γ ▸ A) ==Ctx (Δ ▸ B) = (Γ ==Ctx Δ) ∧ (A ==Ty B)
+    (Γ ▸[ ms ] A) ==Ctx (Δ ▸[ ns ] B) = (Γ ==Ctx Δ) ∧ (ms ==Ms ns) ∧ (A ==Ty B)
     _       ==Ctx _       = false
 
     _==Sub_ : Sub → Sub → Bool
@@ -408,9 +434,11 @@ module Equality (_==K_ : K → K → Bool)
 
     ==Ctx-sound : ∀ Γ Δ → T (Γ ==Ctx Δ) → Γ ≡ Δ
     ==Ctx-sound ε ε _ = refl
-    ==Ctx-sound (Γ ▸ A) (Δ ▸ B) p =
-      let (a , b) = T∧ {Γ ==Ctx Δ} p
-      in cong₂ _▸_ (==Ctx-sound Γ Δ a) (==Ty-sound A B b)
+    ==Ctx-sound (Γ ▸[ ms ] A) (Δ ▸[ ns ] B) p =
+      let (a , q) = T∧ {Γ ==Ctx Δ} p
+          (b , c) = T∧ {ms ==Ms ns} q
+      in cong₂ (λ X (Y : List Mark × Ty) → X ▸[ fst Y ] snd Y)
+           (==Ctx-sound Γ Δ a) (cong₂ _,_ (==Ms-sound ms ns b) (==Ty-sound A B c))
 
     ==Sub-sound : ∀ σ τ → T (σ ==Sub τ) → σ ≡ τ
     ==Sub-sound ⟨⟩ ⟨⟩ _ = refl

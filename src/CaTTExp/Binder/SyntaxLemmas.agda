@@ -94,15 +94,15 @@ lenₛ-++ σ (τ ,ₛ t) = trans (cong suc (lenₛ-++ σ τ)) (sym (+-suc (len�
 
 len-⧺ : ∀ Γ Ξ → len (Γ ⧺ Ξ) ≡ len Γ + len Ξ
 len-⧺ Γ ε       = sym (+-zero (len Γ))
-len-⧺ Γ (Ξ ▸ A) = trans (cong suc (len-⧺ Γ Ξ)) (sym (+-suc (len Γ) (len Ξ)))
+len-⧺ Γ (Ξ ▸[ ms ] A) = trans (cong suc (len-⧺ Γ Ξ)) (sym (+-suc (len Γ) (len Ξ)))
 
 len-tel[] : ∀ Δ σ → len (Δ [ σ ]tel) ≡ len Δ
 len-tel[] ε       σ = refl
-len-tel[] (Δ ▸ A) σ = cong suc (len-tel[] Δ σ)
+len-tel[] (Δ ▸[ ms ] A) σ = cong suc (len-tel[] Δ σ)
 
 len-openTel : ∀ n Δ → len (openTel n Δ) ≡ len Δ
 len-openTel n ε       = refl
-len-openTel n (Δ ▸ A) = cong suc (len-openTel n Δ)
+len-openTel n (Δ ▸[ ms ] A) = cong suc (len-openTel n Δ)
 
 lenₛ-fresh : ∀ n k → lenₛ (fresh n k) ≡ k
 lenₛ-fresh n zero    = refl
@@ -128,7 +128,7 @@ mutual
 
   scTel-suc : ∀ {n} Δ → T (scTel? n Δ) → T (scTel? (suc n) Δ)
   scTel-suc ε       _ = tt
-  scTel-suc {n} (Δ ▸ A) p =
+  scTel-suc {n} (Δ ▸[ ms ] A) p =
     let (a , b) = T∧ {scTel? n Δ} p in ∧T (scTel-suc Δ a) (scTy-suc A b)
 
   scSub-suc : ∀ {n} σ → T (scSub? n σ) → T (scSub? (suc n) σ)
@@ -168,7 +168,7 @@ mutual
 
   lcTel-suc : ∀ {d} Δ → T (lcTel? d Δ) → T (lcTel? (suc d) Δ)
   lcTel-suc ε _ = tt
-  lcTel-suc {d} (Δ ▸ A) p =
+  lcTel-suc {d} (Δ ▸[ ms ] A) p =
     let (a , b) = T∧ {lcTel? d Δ} p in ∧T (lcTel-suc Δ a) (lcTy-suc A b)
 
   lcSub-suc : ∀ {d} σ → T (lcSub? d σ) → T (lcSub? (suc d) σ)
@@ -216,8 +216,8 @@ mutual
 
   opTel-lc : ∀ d ts Δ → T (lcTel? d Δ) → opTel d ts Δ ≡ Δ
   opTel-lc d ts ε _ = refl
-  opTel-lc d ts (Δ ▸ A) p =
-    let (a , b) = T∧ {lcTel? d Δ} p in cong₂ _▸_ (opTel-lc d ts Δ a) (opTy-lc d ts A b)
+  opTel-lc d ts (Δ ▸[ ms ] A) p =
+    let (a , b) = T∧ {lcTel? d Δ} p in cong₂ (_▸[ ms ]_) (opTel-lc d ts Δ a) (opTy-lc d ts A b)
 
   opSub-lc : ∀ d ts σ → T (lcSub? d σ) → opSub d ts σ ≡ σ
   opSub-lc d ts ⟨⟩ _ = refl
@@ -246,7 +246,7 @@ mutual
 
   shTel-lc : ∀ c Δ → T (lcTel? c Δ) → shTel c Δ ≡ Δ
   shTel-lc c ε _ = refl
-  shTel-lc c (Δ ▸ A) p = let (a , b) = T∧ {lcTel? c Δ} p in cong₂ _▸_ (shTel-lc c Δ a) (shTy-lc c A b)
+  shTel-lc c (Δ ▸[ ms ] A) p = let (a , b) = T∧ {lcTel? c Δ} p in cong₂ (_▸[ ms ]_) (shTel-lc c Δ a) (shTy-lc c A b)
 
   shSub-lc : ∀ c σ → T (lcSub? c σ) → shSub c σ ≡ σ
   shSub-lc c ⟨⟩ _ = refl
@@ -270,7 +270,7 @@ mutual
 
   sh-[]tel : ∀ c Δ σ → LC σ → (shTel c Δ) [ σ ]tel ≡ shTel c (Δ [ σ ]tel)
   sh-[]tel c ε σ _ = refl
-  sh-[]tel c (Δ ▸ A) σ l = cong₂ _▸_ (sh-[]tel c Δ σ l) (sh-[]ty c A σ l)
+  sh-[]tel c (Δ ▸[ ms ] A) σ l = cong₂ (_▸[ ms ]_) (sh-[]tel c Δ σ l) (sh-[]ty c A σ l)
 
   sh-∘ : ∀ c τ σ → LC σ → shSub c τ ∘ σ ≡ shSub c (τ ∘ σ)
   sh-∘ c ⟨⟩ σ _ = refl
@@ -299,7 +299,7 @@ mutual
 
   sc-shTel : ∀ {n} c Δ → T (scTel? n Δ) → T (scTel? n (shTel c Δ))
   sc-shTel c ε _ = tt
-  sc-shTel {n} c (Δ ▸ A) p = let (a , b) = T∧ {scTel? n Δ} p in ∧T (sc-shTel c Δ a) (sc-shTy c A b)
+  sc-shTel {n} c (Δ ▸[ ms ] A) p = let (a , b) = T∧ {scTel? n Δ} p in ∧T (sc-shTel c Δ a) (sc-shTy c A b)
 
   sc-shSub : ∀ {n} c σ → T (scSub? n σ) → T (scSub? n (shSub c σ))
   sc-shSub c ⟨⟩ _ = tt
@@ -336,7 +336,7 @@ mutual
 
   op-[]tel : ∀ d ts Δ σ → LC σ → (opTel d ts Δ) [ σ ]tel ≡ opTel d (ts ∘ σ) (Δ [ σ ]tel)
   op-[]tel d ts ε σ _ = refl
-  op-[]tel d ts (Δ ▸ A) σ l = cong₂ _▸_ (op-[]tel d ts Δ σ l) (op-[]ty d ts A σ l)
+  op-[]tel d ts (Δ ▸[ ms ] A) σ l = cong₂ (_▸[ ms ]_) (op-[]tel d ts Δ σ l) (op-[]ty d ts A σ l)
 
   op-∘ : ∀ d ts τ σ → LC σ → (opSub d ts τ) ∘ σ ≡ opSub d (ts ∘ σ) (τ ∘ σ)
   op-∘ d ts ⟨⟩ σ _ = refl
@@ -370,8 +370,8 @@ mutual
 
   ext-tel : ∀ Δ σ s → T (scTel? (lenₛ σ) Δ) → Δ [ σ ,ₛ s ]tel ≡ Δ [ σ ]tel
   ext-tel ε σ s _ = refl
-  ext-tel (Δ ▸ A) σ s p =
-    let (a , b) = T∧ {scTel? (lenₛ σ) Δ} p in cong₂ _▸_ (ext-tel Δ σ s a) (ext-ty A σ s b)
+  ext-tel (Δ ▸[ ms ] A) σ s p =
+    let (a , b) = T∧ {scTel? (lenₛ σ) Δ} p in cong₂ (_▸[ ms ]_) (ext-tel Δ σ s a) (ext-ty A σ s b)
 
   ext-sub : ∀ τ σ s → T (scSub? (lenₛ σ) τ) → τ ∘ (σ ,ₛ s) ≡ τ ∘ σ
   ext-sub ⟨⟩       σ s _ = refl
@@ -405,8 +405,8 @@ mutual
 
   assoc-tel : ∀ Δ τ σ → T (scTel? (lenₛ τ) Δ) → Δ [ τ ]tel [ σ ]tel ≡ Δ [ τ ∘ σ ]tel
   assoc-tel ε τ σ _ = refl
-  assoc-tel (Δ ▸ A) τ σ p =
-    let (a , b) = T∧ {scTel? (lenₛ τ) Δ} p in cong₂ _▸_ (assoc-tel Δ τ σ a) (assoc-ty A τ σ b)
+  assoc-tel (Δ ▸[ ms ] A) τ σ p =
+    let (a , b) = T∧ {scTel? (lenₛ τ) Δ} p in cong₂ (_▸[ ms ]_) (assoc-tel Δ τ σ a) (assoc-ty A τ σ b)
 
   assoc-sub : ∀ ρ τ σ → T (scSub? (lenₛ τ) ρ) → (ρ ∘ τ) ∘ σ ≡ ρ ∘ (τ ∘ σ)
   assoc-sub ⟨⟩       τ σ _ = refl
@@ -431,7 +431,7 @@ closed-ty A ⟨⟩ p = go A p
     gt (bnd b y Δ τ) p = let (a , c) = T∧ {scTel? 0 Δ} p in cong₂ (bnd b y) (gl Δ a) (gs τ c)
     gl : ∀ Δ → T (scTel? 0 Δ) → Δ [ ⟨⟩ ]tel ≡ Δ
     gl ε _ = refl
-    gl (Δ ▸ A) p = let (a , b) = T∧ {scTel? 0 Δ} p in cong₂ _▸_ (gl Δ a) (go A b)
+    gl (Δ ▸[ ms ] A) p = let (a , b) = T∧ {scTel? 0 Δ} p in cong₂ (_▸[ ms ]_) (gl Δ a) (go A b)
     gs : ∀ τ → T (scSub? 0 τ) → τ ∘ ⟨⟩ ≡ τ
     gs ⟨⟩ _ = refl
     gs (τ ,ₛ t) p = let (a , b) = T∧ {scSub? 0 τ} p in cong₂ _,ₛ_ (gs τ a) (gt t b)
@@ -456,7 +456,7 @@ mutual
 
   sc-tel[] : ∀ {n} Δ σ → T (scTel? (lenₛ σ) Δ) → T (scSub? n σ) → T (scTel? n (Δ [ σ ]tel))
   sc-tel[] ε σ _ _ = tt
-  sc-tel[] (Δ ▸ A) σ p s =
+  sc-tel[] (Δ ▸[ ms ] A) σ p s =
     let (a , b) = T∧ {scTel? (lenₛ σ) Δ} p in ∧T (sc-tel[] Δ σ a s) (sc-ty[] A σ b s)
 
   sc-∘ : ∀ {n} ρ σ → T (scSub? (lenₛ σ) ρ) → T (scSub? n σ) → T (scSub? n (ρ ∘ σ))
@@ -487,7 +487,7 @@ mutual
 
   lc-tel[] : ∀ d Δ σ → T (lcTel? d Δ) → LC σ → T (lcTel? d (Δ [ σ ]tel))
   lc-tel[] d ε σ _ _ = tt
-  lc-tel[] d (Δ ▸ A) σ p l =
+  lc-tel[] d (Δ ▸[ ms ] A) σ p l =
     let (a , b) = T∧ {lcTel? d Δ} p in ∧T (lc-tel[] d Δ σ a l) (lc-ty[] d A σ b l)
 
   lc-∘ : ∀ d ρ σ → T (lcSub? d ρ) → LC σ → T (lcSub? d (ρ ∘ σ))
@@ -523,7 +523,7 @@ mutual
 
   sc-opTel : ∀ {n} d ts Δ → T (scSub? n ts) → T (scTel? n Δ) → T (scTel? n (opTel d ts Δ))
   sc-opTel d ts ε _ _ = tt
-  sc-opTel {n} d ts (Δ ▸ A) s p =
+  sc-opTel {n} d ts (Δ ▸[ ms ] A) s p =
     let (a , b) = T∧ {scTel? n Δ} p in ∧T (sc-opTel d ts Δ s a) (sc-opTy d ts A s b)
 
   sc-opSub : ∀ {n} d ts σ → T (scSub? n ts) → T (scSub? n σ) → T (scSub? n (opSub d ts σ))

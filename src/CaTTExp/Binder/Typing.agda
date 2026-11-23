@@ -19,4 +19,6 @@ isOp Γ A t u = ≈? (fvTmTy t A) (∂⁻ Γ) ∧ ≈? (fvTmTy u A) (∂⁺ Γ)
 cattSide : Ctx → Ty → Tm → Tm → Bool
 cattSide Δ A t u = isCoh Δ A t u ∨ isOp Δ A t u
 
-open import CaTTExp.Binder.TypingWith 𝕊 cattSide public
+-- Marks are judged by rule (MARK) alone (CaTTExp.Binder.VarMark): only
+-- a variable with that mark has it.
+open import CaTTExp.Binder.TypingWith 𝕊 cattSide varMark public

@@ -40,7 +40,7 @@ if-[]tm false x y σ = refl
 
 ⧺-[] : ∀ Γ Ξ σ → (Γ ⧺ Ξ) [ σ ]tel ≡ (Γ [ σ ]tel) ⧺ (Ξ [ σ ]tel)
 ⧺-[] Γ ε       σ = refl
-⧺-[] Γ (Ξ ▸ A) σ = cong (_▸ (A [ σ ]ty)) (⧺-[] Γ Ξ σ)
+⧺-[] Γ (Ξ ▸[ ms ] A) σ = cong (_▸[ ms ] (A [ σ ]ty)) (⧺-[] Γ Ξ σ)
 
 dim-[] : ∀ A σ → dim (A [ σ ]ty) ≡ dim A
 dim-[] ⋆           σ = refl
@@ -86,7 +86,7 @@ mutual
 
   mTel-lc : ∀ d Δ → T (lcTel? d Δ) → mTel d Δ ≡ false
   mTel-lc d ε _ = refl
-  mTel-lc d (Δ ▸ A) p = let (a , b) = T∧ {lcTel? d Δ} p in ∨ff (mTel-lc d Δ a) (mTy-lc d A b)
+  mTel-lc d (Δ ▸[ _ ] A) p = let (a , b) = T∧ {lcTel? d Δ} p in ∨ff (mTel-lc d Δ a) (mTy-lc d A b)
 
   mSub-lc : ∀ d σ → T (lcSub? d σ) → mSub d σ ≡ false
   mSub-lc d ⟨⟩ _ = refl
@@ -110,7 +110,7 @@ module _ (σ : Sub) (l : LC σ) where
 
   sorts-[] : ∀ Δ → sorts (Δ [ σ ]tel) ≡ sorts Δ
   sorts-[] ε       = refl
-  sorts-[] (Δ ▸ A) rewrite sorts-[] Δ | len-tel[] Δ σ | isStar-[] A = refl
+  sorts-[] (Δ ▸[ _ ] A) rewrite sorts-[] Δ | len-tel[] Δ σ | isStar-[] A = refl
 
   mutual
     mTy-[] : ∀ d A → mTy d (A [ σ ]ty) ≡ mTy d A
@@ -126,7 +126,7 @@ module _ (σ : Sub) (l : LC σ) where
 
     mTel-[] : ∀ d Δ → mTel d (Δ [ σ ]tel) ≡ mTel d Δ
     mTel-[] d ε = refl
-    mTel-[] d (Δ ▸ A) = cong₂ _∨_ (mTel-[] d Δ) (mTy-[] d A)
+    mTel-[] d (Δ ▸[ _ ] A) = cong₂ _∨_ (mTel-[] d Δ) (mTy-[] d A)
 
     mSub-[] : ∀ d τ → mSub d (τ ∘ σ) ≡ mSub d τ
     mSub-[] d ⟨⟩ = refl
@@ -169,6 +169,7 @@ module _ (σ : Sub) (l : LC σ) where
   posFrom-stable m (Δ ▸ A) p rewrite len-tel[] Δ σ =
     let (a , c) = T∧ {posFrom m Δ} p in
     ∧T (posFrom-stable m Δ a) (∨-mono (len Δ <ℕ m) (entryOK-stable m A) c)
+  posFrom-stable m (Δ ▸[ _ ∷ _ ] A) ()
 
   positive-stable : ∀ Δ → T (positive Δ) → T (positive (Δ [ σ ]tel))
   positive-stable Δ p rewrite sorts-[] Δ =
@@ -193,11 +194,11 @@ module _ (σ : Sub) (l : LC σ) where
 
   lowFrom-[] : ∀ m Δ → lowFrom m (Δ [ σ ]tel) ≡ lowFrom m Δ
   lowFrom-[] m ε       = refl
-  lowFrom-[] m (Δ ▸ A) rewrite len-tel[] Δ σ = cong₂ _∧_ (lowFrom-[] m Δ) (cong ((len Δ <ℕ m) ∨_) (low-[] A))
+  lowFrom-[] m (Δ ▸[ _ ] A) rewrite len-tel[] Δ σ = cong₂ _∧_ (lowFrom-[] m Δ) (cong ((len Δ <ℕ m) ∨_) (low-[] A))
 
   lookup-[] : ∀ Δ y → lookup (Δ [ σ ]tel) y ≡ mapT (lookup Δ y)
   lookup-[] ε       y = refl
-  lookup-[] (Δ ▸ A) y rewrite len-tel[] Δ σ with y ==ℕ len Δ
+  lookup-[] (Δ ▸[ _ ] A) y rewrite len-tel[] Δ σ with y ==ℕ len Δ
   ... | true  = refl
   ... | false = lookup-[] Δ y
 
@@ -370,7 +371,7 @@ module _ (n : Nat) where
   sc-bvPre (suc k) = ∧T (sc-bvPre k) tt
 
   sc-lookupTel : ∀ Δ y {A} → T (scTel? n Δ) → lookup Δ y ≡ just A → T (scTy? n A)
-  sc-lookupTel (Δ ▸ A′) y p e with y ==ℕ len Δ
+  sc-lookupTel (Δ ▸[ _ ] A′) y p e with y ==ℕ len Δ
   ... | true  = subst (λ z → T (scTy? n z)) (just-inj e) (snd (T∧ {scTel? n Δ} p))
   ... | false = sc-lookupTel Δ y (fst (T∧ {scTel? n Δ} p)) e
 

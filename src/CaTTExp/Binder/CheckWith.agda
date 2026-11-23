@@ -10,14 +10,16 @@
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
+import CaTTExp.Binder.Mark as BM
 
 module CaTTExp.Binder.CheckWith
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
+  (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
   where
 
 open Signature 𝕊
-open import CaTTExp.Binder.TypingWith 𝕊 side
+open import CaTTExp.Binder.TypingWith 𝕊 side mark
 
 -- Decide syntactic equality of types and transport along it.
 castWith : ∀ {Γ t A B} (b : Bool) → (T b → A ≡ B) → Γ ⊢tm t ∶ A → Maybe (Γ ⊢tm t ∶ B)
@@ -36,7 +38,7 @@ mutual
   checkCtx : Nat → (Γ : Ctx) → Maybe (Γ ⊢ctx)
   checkCtx zero    _       = nothing
   checkCtx (suc f) ε       = just ε-wf
-  checkCtx (suc f) (Γ ▸ A) = checkCtx f Γ >>= λ w → checkTy f Γ w A >>= λ a → just (▸-wf w a)
+  checkCtx (suc f) (Γ ▸[ _ ] A) = checkCtx f Γ >>= λ w → checkTy f Γ w A >>= λ a → just (▸-wf w a)
 
   checkTy : Nat → (Γ : Ctx) → Γ ⊢ctx → (A : Ty) → Maybe (Γ ⊢ty A)
   checkTy zero    Γ w _ = nothing
@@ -73,7 +75,7 @@ mutual
   checkTel : Nat → (Γ : Ctx) → Γ ⊢ctx → (Δ : Ctx) → Maybe ((Γ ⧺ openTel (len Γ) Δ) ⊢ctx)
   checkTel zero    Γ w _       = nothing
   checkTel (suc f) Γ w ε       = just w
-  checkTel (suc f) Γ w (Δ ▸ A) =
+  checkTel (suc f) Γ w (Δ ▸[ _ ] A) =
     checkTel f Γ w Δ >>= λ w′ →
     checkTy f (Γ ⧺ openTel (len Γ) Δ) w′ (opTy 0 (fresh (len Γ) (len Δ)) A) >>= λ a →
     just (▸-wf w′ a)
@@ -81,21 +83,23 @@ mutual
   checkSub : Nat → (Γ : Ctx) → Γ ⊢ctx → (σ : Sub) (Δ : Ctx) → Maybe (Γ ⊢sub σ ∶ Δ)
   checkSub zero    Γ w _        _       = nothing
   checkSub (suc f) Γ w ⟨⟩       ε       = just (⟨⟩-wf w)
-  checkSub (suc f) Γ w (σ ,ₛ t) (Δ ▸ A) =
+  checkSub (suc f) Γ w (σ ,ₛ t) (Δ ▸[ ms ] A) =
     checkSub f Γ w σ Δ >>= λ s →
     inferTm f Γ w t >>= λ { (B , d) →
     castTy B (A [ σ ]ty) d >>= λ e →
-    just (,-wf s e) }
+    guard (marksOK Γ ms t) λ o →
+    just (,-wf s e o) }
   checkSub (suc f) Γ w _ _ = nothing
 
   checkArgs : Nat → (Γ : Ctx) → Γ ⊢ctx → (ts : Sub) (Θ : Ctx) → Maybe (Γ ⊢args ts ∶ Θ)
   checkArgs zero    Γ w _         _       = nothing
   checkArgs (suc f) Γ w ⟨⟩        ε       = just (⟨⟩-a w)
-  checkArgs (suc f) Γ w (ts ,ₛ t) (Θ ▸ A) =
+  checkArgs (suc f) Γ w (ts ,ₛ t) (Θ ▸[ ms ] A) =
     checkArgs f Γ w ts Θ >>= λ s →
     inferTm f Γ w t >>= λ { (B , d) →
     castTy B (opTy 0 ts A) d >>= λ e →
-    just (,-a s e) }
+    guard (marksOK Γ ms t) λ o →
+    just (,-a s e o) }
   checkArgs (suc f) Γ w _ _ = nothing
 
 -- Entry points, with fuel the size of the input.

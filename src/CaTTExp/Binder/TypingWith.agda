@@ -1,7 +1,8 @@
 ------------------------------------------------------------------------
 -- The typing rules of CaTT with binding formers, relative to a
--- signature (constants and a binder interface) and to the side
--- condition of the coh rule.
+-- signature (constants and a binder interface), to the side condition
+-- of the coh rule, and to a mark judgment `mark Γ m t` ("Γ ⊢ t has
+-- mark m", CaTTExp.Binder.Mark).
 --
 -- The rules of CaTTExp.TypingWith, plus one generic rule for binders:
 --
@@ -20,24 +21,36 @@
 -- telescope premise for any reasonable interface, but stating it keeps
 -- the metatheory free of hypotheses on result types). No rule types a
 -- `bvar`, so well-typed terms are locally closed.
+--
+-- Marks. A context entry Γ ▸[ ms ] A is formed like an unmarked one;
+-- its marks constrain what instantiates it. A substitution or a binder
+-- argument t for that entry needs, besides its type, every m ∈ ms to
+-- hold of t (`marksOK`). Unmarked entries add no premise, so with no
+-- marks anywhere these are the rules without marks.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
+import CaTTExp.Binder.Mark as BM
 
 module CaTTExp.Binder.TypingWith
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
+  (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
   where
 
 open Signature 𝕊
 open import CaTTExp.Binder.Pasting 𝕊 public
+
+-- Every mark in ms holds of t in Γ.
+marksOK : Ctx → List Mark → Tm → Bool
+marksOK Γ ms t = all (λ m → mark Γ m t) ms
 
 infix 4 _⊢ctx _⊢ty_ _⊢tm_∶_ _⊢sub_∶_ _⊢args_∶_
 
 mutual
   data _⊢ctx : Ctx → Set where
     ε-wf : ε ⊢ctx
-    ▸-wf : ∀ {Γ A} → Γ ⊢ctx → Γ ⊢ty A → Γ ▸ A ⊢ctx
+    ▸-wf : ∀ {Γ ms A} → Γ ⊢ctx → Γ ⊢ty A → Γ ▸[ ms ] A ⊢ctx
 
   data _⊢ty_ (Γ : Ctx) : Ty → Set where
     ⋆-wf   : Γ ⊢ctx → Γ ⊢ty ⋆
@@ -60,11 +73,13 @@ mutual
 
   data _⊢sub_∶_ (Γ : Ctx) : Sub → Ctx → Set where
     ⟨⟩-wf : Γ ⊢ctx → Γ ⊢sub ⟨⟩ ∶ ε
-    ,-wf  : ∀ {σ Δ t A} → Γ ⊢sub σ ∶ Δ → Γ ⊢tm t ∶ A [ σ ]ty →
-            Γ ⊢sub σ ,ₛ t ∶ Δ ▸ A
+    ,-wf  : ∀ {σ Δ t ms A} → Γ ⊢sub σ ∶ Δ → Γ ⊢tm t ∶ A [ σ ]ty →
+            T (marksOK Γ ms t) →
+            Γ ⊢sub σ ,ₛ t ∶ Δ ▸[ ms ] A
 
   -- Arguments of a binder against a locally nameless telescope.
   data _⊢args_∶_ (Γ : Ctx) : Sub → Ctx → Set where
     ⟨⟩-a : Γ ⊢ctx → Γ ⊢args ⟨⟩ ∶ ε
-    ,-a  : ∀ {ts Θ t A} → Γ ⊢args ts ∶ Θ → Γ ⊢tm t ∶ opTy 0 ts A →
-           Γ ⊢args ts ,ₛ t ∶ Θ ▸ A
+    ,-a  : ∀ {ts Θ t ms A} → Γ ⊢args ts ∶ Θ → Γ ⊢tm t ∶ opTy 0 ts A →
+           T (marksOK Γ ms t) →
+           Γ ⊢args ts ,ₛ t ∶ Θ ▸[ ms ] A

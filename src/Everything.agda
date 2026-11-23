@@ -399,6 +399,7 @@ import CaTTExp.Descent.TInit
 import CaTTExp.Descent.EncodeDecode
 import CaTTExp.Descent.EncodeDecodeDJ
 -- Binders and INIT (ledger S26a, spec §1.6, §9.3).
+import CaTTExp.Binder.Mark
 import CaTTExp.Binder.Syntax
 import CaTTExp.Binder.Signature
 import CaTTExp.Binder.SyntaxLemmas
@@ -411,6 +412,8 @@ import CaTTExp.Binder.Rename
 import CaTTExp.Binder.Subst
 import CaTTExp.Binder.CheckWith
 import CaTTExp.Binder.Completeness
+import CaTTExp.Binder.VarMark
+import CaTTExp.Binder.MarkExamples
 import CaTTExp.Binder.Embed
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws

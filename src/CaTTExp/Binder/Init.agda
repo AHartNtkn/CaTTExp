@@ -168,7 +168,7 @@ module Construction (K : Set) (top? : K → Bool) where
 
   sorts : Ctx → Nat
   sorts ε       = 0
-  sorts (Δ ▸ A) = if (sorts Δ ==ℕ len Δ) ∧ isStar A then suc (len Δ) else sorts Δ
+  sorts (Δ ▸[ _ ] A) = if (sorts Δ ==ℕ len Δ) ∧ isStar A then suc (len Δ) else sorts Δ
 
   -- Which sort a term is, if it is one.
   srt : Nat → Tm → Maybe Nat
@@ -200,7 +200,7 @@ module Construction (K : Set) (top? : K → Bool) where
 
     mTel : Nat → Ctx → Bool
     mTel d ε       = false
-    mTel d (Δ ▸ A) = mTel d Δ ∨ mTy d A
+    mTel d (Δ ▸[ _ ] A) = mTel d Δ ∨ mTy d A
 
     mSub : Nat → Sub → Bool
     mSub d ⟨⟩       = false
@@ -224,9 +224,12 @@ module Construction (K : Set) (top? : K → Bool) where
   entryOK m A = okBase m (base A)
 
   -- Every entry after the sorts is a map or cell with a good base.
+  -- Entries are unmarked: marked INIT telescopes are not part of this
+  -- instance (ledger S26d).
   posFrom : Nat → Ctx → Bool
-  posFrom m ε       = true
-  posFrom m (Δ ▸ A) = posFrom m Δ ∧ ((len Δ <ℕ m) ∨ entryOK m A)
+  posFrom m ε                = true
+  posFrom m (Δ ▸ A)          = posFrom m Δ ∧ ((len Δ <ℕ m) ∨ entryOK m A)
+  posFrom m (Δ ▸[ _ ∷ _ ] A) = false
 
   positive : Ctx → Bool
   positive Δ = (0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ
@@ -256,7 +259,7 @@ module Construction (K : Set) (top? : K → Bool) where
   -- Every entry after the sorts is low.
   lowFrom : Nat → Ctx → Bool
   lowFrom m ε       = true
-  lowFrom m (Δ ▸ A) = lowFrom m Δ ∧ ((len Δ <ℕ m) ∨ low A)
+  lowFrom m (Δ ▸[ _ ] A) = lowFrom m Δ ∧ ((len Δ <ℕ m) ∨ low A)
 
   isLow? : Maybe Ty → Bool
   isLow? nothing  = false

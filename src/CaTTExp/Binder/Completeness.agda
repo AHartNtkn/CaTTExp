@@ -18,10 +18,12 @@
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
+import CaTTExp.Binder.Mark as BM
 
 module CaTTExp.Binder.Completeness
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
+  (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
   (==K-refl : ∀ k → T (Signature._==K_ 𝕊 k k))
   (==B-refl : ∀ b → T (Signature._==B_ 𝕊 b b))
   (valid?-complete : ∀ k → Signature.Valid 𝕊 k → T (is-just (Signature.valid? 𝕊 k)))
@@ -29,8 +31,8 @@ module CaTTExp.Binder.Completeness
 
 open Signature 𝕊
 open import CaTTExp.Binder.SyntaxLemmas K B using (T∧; ∧T; T→≡; sh-fresh)
-open import CaTTExp.Binder.TypingWith 𝕊 side
-open import CaTTExp.Binder.CheckWith 𝕊 side
+open import CaTTExp.Binder.TypingWith 𝕊 side mark
+open import CaTTExp.Binder.CheckWith 𝕊 side mark
 
 ------------------------------------------------------------------------
 -- Reflexivity of syntactic equality.
@@ -49,7 +51,7 @@ mutual
 
   ==Ctx-refl : ∀ Γ → T (Γ ==Ctx Γ)
   ==Ctx-refl ε       = tt
-  ==Ctx-refl (Γ ▸ A) = ∧T (==Ctx-refl Γ) (==Ty-refl A)
+  ==Ctx-refl (Γ ▸[ ms ] A) = ∧T (==Ctx-refl Γ) (∧T (==Ms-refl ms) (==Ty-refl A))
 
   ==Sub-refl : ∀ σ → T (σ ==Sub σ)
   ==Sub-refl ⟨⟩       = tt
@@ -118,7 +120,7 @@ private
 
     size-opTel : ∀ d n k Δ → sizeTel (opTel d (fresh n k) Δ) ≡ sizeTel Δ
     size-opTel d n k ε = refl
-    size-opTel d n k (Δ ▸ A) = cong suc (cong₂ _+_ (size-opTel d n k Δ) (size-opTy d n k A))
+    size-opTel d n k (Δ ▸[ _ ] A) = cong suc (cong₂ _+_ (size-opTel d n k Δ) (size-opTy d n k A))
 
     size-opSub : ∀ d n k σ → sizeSub (opSub d (fresh n k) σ) ≡ sizeSub σ
     size-opSub d n k ⟨⟩ = refl
@@ -155,7 +157,7 @@ private
 mutual
   checkCtx-complete : ∀ {Γ} → Γ ⊢ctx → ∀ f → sizeTel Γ ≤ f → Succeeds (checkCtx f Γ)
   checkCtx-complete ε-wf (suc f) _ = tt
-  checkCtx-complete {Γ ▸ A} (▸-wf w a) (suc f) (s≤s p) =
+  checkCtx-complete {Γ ▸[ _ ] A} (▸-wf w a) (suc f) (s≤s p) =
     bind-ok (checkCtx f Γ) _ (checkCtx-complete w f (≤-+ˡ (sizeTel Γ) (sizeTy A) p)) λ w′ →
     bind-ok (checkTy f Γ w′ A) _ (checkTy-complete a w′ f (≤-+ʳ (sizeTel Γ) (sizeTy A) p)) λ _ → tt
 
@@ -194,7 +196,7 @@ mutual
   checkTel-complete : ∀ {Γ} Δ → (Γ ⧺ openTel (len Γ) Δ) ⊢ctx → (w : Γ ⊢ctx) → ∀ f → sizeTel Δ ≤ f →
                       Succeeds (checkTel f Γ w Δ)
   checkTel-complete ε _ w (suc f) _ = tt
-  checkTel-complete {Γ} (Δ ▸ A) (▸-wf wΞ a) w (suc f) (s≤s p) =
+  checkTel-complete {Γ} (Δ ▸[ _ ] A) (▸-wf wΞ a) w (suc f) (s≤s p) =
     bind-ok (checkTel f Γ w Δ) _ (checkTel-complete Δ wΞ w f (≤-+ˡ (sizeTel Δ) (sizeTy A) p)) λ w′ →
     bind-ok (checkTy f (Γ ⧺ openTel (len Γ) Δ) w′ (opTy 0 (fresh (len Γ) (len Δ)) A)) _
       (checkTy-complete a w′ f
@@ -203,18 +205,20 @@ mutual
   checkSub-complete : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → (w : Γ ⊢ctx) → ∀ f → sizeSub σ ≤ f →
                       Succeeds (checkSub f Γ w σ Δ)
   checkSub-complete (⟨⟩-wf _) w (suc f) _ = tt
-  checkSub-complete {Γ} (,-wf {σ} {Δ} {t} {A} s d) w (suc f) (s≤s p) =
+  checkSub-complete {Γ} (,-wf {σ} {Δ} {t} {ms} {A} s d o) w (suc f) (s≤s p) =
     bind-ok (checkSub f Γ w σ Δ) _ (checkSub-complete s w f (≤-+ˡ (sizeSub σ) (sizeTm t) p)) λ _ →
     bind-ok (inferTm f Γ w t) _ (inferTm-complete d w f (≤-+ʳ (sizeSub σ) (sizeTm t) p)) λ { (B , d′) →
-    bind-ok (castTy B (A [ σ ]ty) d′) _ (castTy-ok B _ d′ (tm-unique d′ d)) λ _ → tt }
+    bind-ok (castTy B (A [ σ ]ty) d′) _ (castTy-ok B _ d′ (tm-unique d′ d)) λ _ →
+    guard-ok (marksOK Γ ms t) _ o λ _ → tt }
 
   checkArgs-complete : ∀ {Γ ts Θ} → Γ ⊢args ts ∶ Θ → (w : Γ ⊢ctx) → ∀ f → sizeSub ts ≤ f →
                        Succeeds (checkArgs f Γ w ts Θ)
   checkArgs-complete (⟨⟩-a _) w (suc f) _ = tt
-  checkArgs-complete {Γ} (,-a {ts} {Θ} {t} {A} s d) w (suc f) (s≤s p) =
+  checkArgs-complete {Γ} (,-a {ts} {Θ} {t} {ms} {A} s d o) w (suc f) (s≤s p) =
     bind-ok (checkArgs f Γ w ts Θ) _ (checkArgs-complete s w f (≤-+ˡ (sizeSub ts) (sizeTm t) p)) λ _ →
     bind-ok (inferTm f Γ w t) _ (inferTm-complete d w f (≤-+ʳ (sizeSub ts) (sizeTm t) p)) λ { (B , d′) →
-    bind-ok (castTy B (opTy 0 ts A) d′) _ (castTy-ok B _ d′ (tm-unique d′ d)) λ _ → tt }
+    bind-ok (castTy B (opTy 0 ts A) d′) _ (castTy-ok B _ d′ (tm-unique d′ d)) λ _ →
+    guard-ok (marksOK Γ ms t) _ o λ _ → tt }
 
 -- The entry points succeed on well-typed input.
 ctx?-complete : ∀ {Γ} → Γ ⊢ctx → Succeeds (ctx? Γ)

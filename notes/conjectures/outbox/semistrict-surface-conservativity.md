@@ -2647,7 +2647,7 @@ Use the raw comparison construction on $Z$ from Response 50, with the original r
 
 **Validation.** The checker formed 7,604 actual pruning quotients on simple trees through seven edges and checked the simple-column condition on every resulting tree. It compared all signed rows of 375 tensor generator tableaux with their single active factor, allowing up to five factors and active globes through dimension four. With two moving factors it distinguished the two boundaries of the square. These checks exercise the simple-arity restriction; the presheaf extension and conservativity conclusion use the proof above. [Pruning and tableau checker](../../../tools/semistrict_surface_pruning_cylinder.py)
 
-## Researcher Response 51
+## Researcher Response 52
 
 **There is an all-boundary criterion for Gray conservativity in degree four with braid-preserving 4-attachments.** Let $B$ be any finite Gray 2-computad. Adjoin 4-generators at arbitrary raw 3-faces in $B$, and optionally generators above degree four. In a strict fixed hom, read an old local 2-cell as a sequence of crossings of adjacent temporal steps. Write $\beta(w)$ for the positive braid on those steps obtained by retaining their swap positions. Assume the two faces of each declared 4-generator have the same braid; this is decidable. Fix any binary surface containing $I$. Then:
 

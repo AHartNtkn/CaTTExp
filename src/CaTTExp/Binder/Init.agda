@@ -47,11 +47,13 @@
 --     underlying arrow type is S → T with
 --       S a sort, or S mentions no variable bound by the telescope;
 --       T a sort, or T is a constant the base signature marks as ⊤;
---   * marks: the sorts are unmarked, and an operation or cell may be
---     marked inv (spec §9.3), e.g. ℤ = μ(X, z, s : X → X inv). A
---     model is an argument list for Δ itself, so the kernel's mark
---     premise makes it certify every inv mark. The sort marks `grpd` and
---     ⋆^{≤n} are not accepted yet (ledger S26d).
+--   * marks (spec §9.3): a sort may be marked grpd_k or ⋆^{≤n}
+--     (S¹ = μ(X : grpd, b, l : b ⇒ b), ‖A‖_n = μ(X : ⋆^{≤n}, g : A → X)),
+--     and an operation or cell may be marked inv (ℤ = μ(X, z, s inv)).
+--     A model is an argument list for Δ itself, so the kernel's mark
+--     premise makes it certify every mark. That μ_k and the generic
+--     model η carry the marks of Δ is the mark judgment's business
+--     (ledger S26d/S26e).
 -- The arrow context Δ^→ (model morphisms) is stated at maps and at
 -- globular 2-cells l : f ⇒ g between map entries f, g, where its
 -- component is a 3-cell between the two pastings of the naturality
@@ -228,18 +230,18 @@ module Construction (K : Set) (top? : K → Bool) where
   entryOK : Nat → Ty → Bool
   entryOK m A = okBase m (base A)
 
-  -- Marks: the sorts are unmarked; an operation or cell may be marked
-  -- inv (spec §9.3, "marks an operation invertible").
-  isInvMark : Mark → Bool
+  -- Marks (spec §9.3): a sort may be restricted to a reflective class
+  -- closed under limits and filtered colimits, `grpd_k` or ⋆^{≤n}; an
+  -- operation or cell may be marked inv.
+  isInvMark isSortMark : Mark → Bool
   isInvMark minv = true
   isInvMark _    = false
+  isSortMark (mgrpd _)  = true
+  isSortMark (mtrunc _) = true
+  isSortMark _          = false
 
   marksOKAt : Nat → Nat → List Mark → Bool
-  marksOKAt m j ms = if j <ℕ m then null ms else all isInvMark ms
-    where
-    null : List Mark → Bool
-    null []      = true
-    null (_ ∷ _) = false
+  marksOKAt m j ms = if j <ℕ m then all isSortMark ms else all isInvMark ms
 
   -- Every entry after the sorts is a map or cell with a good base, and
   -- marks are as above.

@@ -96,8 +96,13 @@ def check_reductions():
     print(f'{checks} contextual encodings and {decisions} reachability comparisons passed.')
 
 
-def raw_letters(emitter):
-    """Realize both crossing positions as loops at one literal three-scalar writing."""
+def specialize(term, paste, ambient, arguments):
+    labels = sub_from(paste, ambient, dict(zip(maximal_vars(paste), arguments, strict=True)))
+    return subst_tm(term, labels)
+
+
+def fitted_crossing():
+    """Make the directed square a loop on a literal two-scalar writing."""
     point = (STAR,)
     unit = identity(point, v(0))
     ctx = point + (arr(infer(point, unit), unit, unit),)
@@ -109,10 +114,6 @@ def raw_letters(emitter):
     alpha, = map(v, maximal_vars(disc))
     line = tree_ctx(disc_tree(1))
     edge, = map(v, maximal_vars(line))
-
-    def specialize(term, paste, ambient, arguments):
-        labels = sub_from(paste, ambient, dict(zip(maximal_vars(paste), arguments, strict=True)))
-        return subst_tm(term, labels)
 
     def forms(left):
         def whisker(G, t, f):
@@ -145,6 +146,12 @@ def raw_letters(emitter):
     from_right, to_right = forms(False)
     crossing = composite(ctx, 2, [comp2(ctx, 1, from_left, from_right), exchange(ctx, a, a),
                                   comp2(ctx, 1, to_right, to_left)])
+    return ctx, stationary, crossing
+
+
+def raw_letters(emitter):
+    """Realize both crossing positions as loops at one literal three-scalar writing."""
+    ctx, stationary, crossing = fitted_crossing()
     pair = comp2(ctx, 1, stationary, stationary)
     triple = comp2(ctx, 1, pair, stationary)
     arity = tree_ctx(string_tree(1, [2, 2, 2]))

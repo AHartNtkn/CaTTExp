@@ -5,7 +5,6 @@ from itertools import product
 
 from semistrict_surface_three_axis import successors
 from semistrict_surface_three_axis_paths import Chart, check_chart
-from semistrict_surface_two_cut import controlled_reachable
 
 
 class PathProblem:
@@ -157,6 +156,9 @@ class PathProblem:
         compiled = self.compile([*rules, (self.start, p, q)])
         if self.internal:
             return one_counter(self.encode(q), self.encode(p), compiled)
+        if self.kind == 'finite':
+            return (self.encode(q), self.encode(p), False) in compiled
+        from semistrict_surface_two_cut import controlled_reachable
         return controlled_reachable(self.encode(q), self.encode(p), {(l, r) for l, r, _ in compiled})
 
 

@@ -30,7 +30,8 @@
 --
 -- `mark` is the kernel's mark parameter: minv ↦ inv, mps ↦ ps, and
 -- mgrpd k ↦ "a variable whose entry, or a former occurrence whose
--- formerMarks, carry grpd_k′ with k′ ≤ k"
+-- formerMarks, carry grpd_k′ with k′ ≤ k", and mtrunc k likewise with
+-- truncation marks (the minimal reading of spec §9.1 T-var)
 -- (invertibility-markings.md §1.2, precision from PR #41).
 -- `markVar` proves the kernel's hypothesis MarkVar (rule MARK).
 -- Renaming and substitution stability (MarkRen, MarkSub) are proved in
@@ -82,9 +83,26 @@ endsTy ⋆                = nothing
 endsTy (arr ⋆ s t)      = just (s , t)
 endsTy (arr (arr A a b) _ _) = endsTy (arr A a b)
 
+-- The numbered marks: mgrpd (tr = false) and mtrunc (tr = true).
+mk : Bool → Nat → Mark
+mk false k = mgrpd k
+mk true  k = mtrunc k
+
+markAt : Bool → Mark → Maybe Nat
+markAt false (mgrpd j)  = just j
+markAt true  (mtrunc j) = just j
+markAt _     _          = nothing
+
+leAt : Nat → Maybe Nat → Bool
+leAt h (just j) = j <ℕ suc h
+leAt h nothing  = false
+
+-- m is the numbered mark of kind tr at some k′ ≤ h.
+atLe : Bool → Nat → Mark → Bool
+atLe tr h m = leAt h (markAt tr m)
+
 grpdLe : Nat → Mark → Bool
-grpdLe h (mgrpd k) = k <ℕ suc h
-grpdLe h _         = false
+grpdLe = atLe false
 
 anyM : (Mark → Bool) → List Mark → Bool
 anyM p []       = false
@@ -93,10 +111,15 @@ anyM p (m ∷ ms) = p m ∨ anyM p ms
 -- A term carries a mark grpd_k′ with k′ ≤ h: a variable through its
 -- entry, a former occurrence through formerMarks (μ_k of a sort marked
 -- grpd, spec §9.3).
+-- Likewise for truncation marks (the minimal reading of spec §9.1 T-var:
+-- a variable or former occurrence marked ⋆^{≤k′−2}, k′ ≤ h).
+isAt : Ctx → Bool → Nat → Tm → Bool
+isAt Γ tr h (var C)        = anyM (atLe tr h) (marksAt Γ C)
+isAt Γ tr h (bnd b y Δ ts) = anyM (atLe tr h) (formerMarks b y Δ)
+isAt Γ tr h _              = false
+
 isGrpd : Ctx → Nat → Tm → Bool
-isGrpd Γ h (var C)        = anyM (grpdLe h) (marksAt Γ C)
-isGrpd Γ h (bnd b y Δ ts) = anyM (grpdLe h) (formerMarks b y Δ)
-isGrpd Γ h _              = false
+isGrpd Γ = isAt Γ false
 
 -- (OBJ-k): the 0-target of t carries grpd_k, k ≤ hd(t).
 objAt : Ctx → Nat → Maybe (Tm × Tm) → Bool
@@ -170,7 +193,30 @@ judgeT Γ t = judge (fuelOf Γ t) Γ t
 mark : Ctx → Mark → Tm → Bool
 mark Γ minv      t = jinv (judgeT Γ t)
 mark Γ mps       t = jps (judgeT Γ t)
-mark Γ (mgrpd k) t = isGrpd Γ k t
+mark Γ (mgrpd k) t  = isAt Γ false k t
+mark Γ (mtrunc k) t = isAt Γ true k t
+
+------------------------------------------------------------------------
+-- A numbered mark in a list gives the atLe test at its number.
+
+markAt-mk : ∀ tr k → markAt tr (mk tr k) ≡ just k
+markAt-mk false k = refl
+markAt-mk true  k = refl
+
+at-self : ∀ tr k ms m → markAt tr m ≡ just k → T (m ∈M ms) → T (anyM (atLe tr k) ms)
+at-self tr k (n ∷ ms) m e p with m ==M n in q
+... | true rewrite sym (==M-sound m n (subst T (sym q) tt)) | e = or-l {k <ℕ suc k} (lt-self k)
+  where
+  or-l : ∀ {a b} → T a → T (a ∨ b)
+  or-l {true} _ = tt
+  lt-self : ∀ k → T (k <ℕ suc k)
+  lt-self zero    = tt
+  lt-self (suc k) = lt-self k
+... | false = or-r (atLe tr k n) (at-self tr k ms m e p)
+  where
+  or-r : ∀ a {b} → T b → T (a ∨ b)
+  or-r true  _ = tt
+  or-r false q = q
 
 ------------------------------------------------------------------------
 -- (MARK): a variable has the marks of its entry.
@@ -193,25 +239,19 @@ private
   var-ps : ∀ Γ x → T (mps ∈M marksAt Γ x) → T (mark Γ mps (var x))
   var-ps Γ x p = ∨l (mps ∈M marksAt Γ x) p
 
-  grpd-self : ∀ k ms → T (mgrpd k ∈M ms) → T (anyM (grpdLe k) ms)
-  grpd-self k (minv ∷ ms) p = grpd-self k ms p
-  grpd-self k (mps ∷ ms) p = grpd-self k ms p
-  grpd-self k (mgrpd l ∷ ms) p with k ==ℕ l in e
-  ... | true  rewrite ==ℕ-sound k l (subst T (sym e) tt) = ∨l (l <ℕ suc l) (<ℕ-suc l)
-    where
-    <ℕ-suc : ∀ l → T (l <ℕ suc l)
-    <ℕ-suc zero    = tt
-    <ℕ-suc (suc l) = <ℕ-suc l
-  ... | false = T∨r (l <ℕ suc k) (grpd-self k ms p)
-    where
-    T∨r : ∀ a {b} → T b → T (a ∨ b)
-    T∨r true  _ = tt
-    T∨r false q = q
+  <ℕ-suc : ∀ l → T (l <ℕ suc l)
+  <ℕ-suc zero    = tt
+  <ℕ-suc (suc l) = <ℕ-suc l
+
+  T∨r : ∀ a {b} → T b → T (a ∨ b)
+  T∨r true  _ = tt
+  T∨r false q = q
 
   self : ∀ Γ x m → T (m ∈M marksAt Γ x) → T (mark Γ m (var x))
   self Γ x minv      p = var-inv Γ x p
   self Γ x mps       p = var-ps Γ x p
-  self Γ x (mgrpd k) p = grpd-self k (marksAt Γ x) p
+  self Γ x (mgrpd k)  p = at-self false k (marksAt Γ x) (mgrpd k) refl p
+  self Γ x (mtrunc k) p = at-self true k (marksAt Γ x) (mtrunc k) refl p
 
   all-self : ∀ Γ x ms → (∀ m → T (m ∈M ms) → T (m ∈M marksAt Γ x)) →
              T (all (λ m → mark Γ m (var x)) ms)

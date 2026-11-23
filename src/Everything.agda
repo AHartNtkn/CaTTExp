@@ -323,6 +323,7 @@ import CaTTExp.Gray.MarksBSubst
 import CaTTExp.Gray.DimB
 import CaTTExp.Gray.MarksBKernel
 import CaTTExp.Gray.MarksBDes
+import CaTTExp.Gray.DesSideL
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp

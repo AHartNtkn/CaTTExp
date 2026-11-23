@@ -17,7 +17,8 @@
 --     for DES, constant marks, and for INIT, whose marks are read off
 --     the telescope's entries, which substitution keeps);
 --   * (OBJ-k) reads the 0-target's grpd marks from a variable or a
---     former occurrence (`isGrpd`), so Resp asks a grpd-marked variable
+--     former occurrence (`isGrpd`), so Resp asks a grpd- (or trunc-)
+--     marked variable
 --     to go to a term that carries the mark (a variable or μ_k);
 --   * the type of a derivable term is derivable (`tm-ty`) is a module
 --     parameter until the kernel provides it.
@@ -162,22 +163,23 @@ record Resp (N : Nat) (Γ Δ : Ctx) (σ : Sub) : Set where
   field
     r-inv  : ∀ k x → T (minv ∈M marksAt Γ x) → T (jinv (judge (k + N) Δ (lookupₛ σ x)))
     r-ps   : ∀ k x → T (mps ∈M marksAt Γ x)  → T (jps  (judge (k + N) Δ (lookupₛ σ x)))
-    r-grpd : ∀ h x → T (anyM (grpdLe h) (marksAt Γ x)) → T (isGrpd Δ h (lookupₛ σ x))
+    -- grpd (tr = false) and truncation (tr = true) marks
+    r-at   : ∀ tr h x → T (anyM (atLe tr h) (marksAt Γ x)) → T (isAt Δ tr h (lookupₛ σ x))
 open Resp public
 
 module _ (fstab : FormerStable) {N Γ Δ σ} (r : Resp N Γ Δ σ) where
 
-  isGrpd-[] : ∀ h c → isGrpd Γ h c ⇒B isGrpd Δ h (c [ σ ]tm)
-  isGrpd-[] h (var C)        p = r-grpd r h C p
-  isGrpd-[] h (bnd b y Θ ts) p rewrite fstab b y Θ σ = p
-  isGrpd-[] h (bvar _ _)     ()
-  isGrpd-[] h (coh _ _ _)    ()
-  isGrpd-[] h (cst _)        ()
+  isAt-[] : ∀ tr h c → isAt Γ tr h c ⇒B isAt Δ tr h (c [ σ ]tm)
+  isAt-[] tr h (var C)        p = r-at r tr h C p
+  isAt-[] tr h (bnd b y Θ ts) p rewrite fstab b y Θ σ = p
+  isAt-[] tr h (bvar _ _)     ()
+  isAt-[] tr h (coh _ _ _)    ()
+  isAt-[] tr h (cst _)        ()
 
   objAt-[] : ∀ n A → objAt Γ n (endsTy A) ⇒B objAt Δ n (endsTy (A [ σ ]ty))
   objAt-[] n A p with endsTy A in eq
   ... | just (s , c) rewrite endsTy-[] A σ eq =
-    ∧-intro {isGrpd Δ (n ∸ 1) (c [ σ ]tm)} (isGrpd-[] (n ∸ 1) c (∧-fst {isGrpd Γ (n ∸ 1) c} p))
+    ∧-intro {isGrpd Δ (n ∸ 1) (c [ σ ]tm)} (isAt-[] false (n ∸ 1) c (∧-fst {isGrpd Γ (n ∸ 1) c} p))
             (∧-snd {isGrpd Γ (n ∸ 1) c} p)
 
   objRule-[] : ∀ A → objRule Γ (just A) ⇒B objRule Δ (just (A [ σ ]ty))

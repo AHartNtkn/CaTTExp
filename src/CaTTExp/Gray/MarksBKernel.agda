@@ -48,7 +48,7 @@ open import CaTTExp.Gray.DesSide 𝕊₀ bi cellArg using (graySideD)
 open CaTTExp.Binder.Laws 𝕊 using (Closed; BinderLaws)
 open import CaTTExp.Gray.Cover using (_≤_; z≤n; s≤s; ≤-trans)
 module MS = CaTTExp.Gray.MarksBSubst 𝕊₀ bi cellArg formerMarks
-open MS using (Resp; SubD; FormerStable; typeOf-sound; dim-[]; isGrpd-[])
+open MS using (Resp; SubD; FormerStable; typeOf-sound; dim-[]; isAt-[])
 module Fg = MS.Fg
 module F = Fg.F
 module R = Kernel
@@ -123,22 +123,31 @@ private
   lt-trans zero    k       h       _ _ = tt
   lt-trans (suc j) (suc k) (suc h) p q = lt-trans j k h p q
 
-  anyM-mono : ∀ k h ms → T (k <ℕ suc h) → T (anyM (grpdLe k) ms) → T (anyM (grpdLe h) ms)
-  anyM-mono k h (minv ∷ ms)    l p = anyM-mono k h ms l p
-  anyM-mono k h (mps ∷ ms)     l p = anyM-mono k h ms l p
-  anyM-mono k h (mgrpd j ∷ ms) l p =
-    ∨-case {j <ℕ suc k} p (λ q → ∨-l (lt-trans j k h q l)) (λ q → ∨-r {j <ℕ suc h} (anyM-mono k h ms l q))
+  anyM-mono : ∀ tr k h ms → T (k <ℕ suc h) → T (anyM (atLe tr k) ms) → T (anyM (atLe tr h) ms)
+  anyM-mono tr k h (n ∷ ms) l p with markAt tr n
+  ... | nothing = anyM-mono tr k h ms l p
+  ... | just j  =
+    ∨-case {j <ℕ suc k} p (λ q → ∨-l (lt-trans j k h q l)) (λ q → ∨-r {j <ℕ suc h} (anyM-mono tr k h ms l q))
 
-  isGrpd-mono : ∀ Γ k h c → T (k <ℕ suc h) → T (isGrpd Γ k c) → T (isGrpd Γ h c)
-  isGrpd-mono Γ k h (var C)        l p = anyM-mono k h (marksAt Γ C) l p
-  isGrpd-mono Γ k h (bnd b y Δ ts) l p = anyM-mono k h (formerMarks b y Δ) l p
+  isAt-mono : ∀ Γ tr k h c → T (k <ℕ suc h) → T (isAt Γ tr k c) → T (isAt Γ tr h c)
+  isAt-mono Γ tr k h (var C)        l p = anyM-mono tr k h (marksAt Γ C) l p
+  isAt-mono Γ tr k h (bnd b y Δ ts) l p = anyM-mono tr k h (formerMarks b y Δ) l p
 
-  anyM-witness : ∀ h ms → T (anyM (grpdLe h) ms) → Σ Nat λ k → T (mgrpd k ∈M ms) × T (k <ℕ suc h)
-  anyM-witness h (minv ∷ ms)    p = let (k , m , l) = anyM-witness h ms p in k , ∨-r {mgrpd k ==M minv} m , l
-  anyM-witness h (mps ∷ ms)     p = let (k , m , l) = anyM-witness h ms p in k , ∨-r {mgrpd k ==M mps} m , l
-  anyM-witness h (mgrpd j ∷ ms) p =
-    ∨-case {j <ℕ suc h} p (λ q → j , ∨-l (==M-refl (mgrpd j)) , q)
-      (λ q → let (k , m , l) = anyM-witness h ms q in k , ∨-r {mgrpd k ==M mgrpd j} m , l)
+  markAt-inv : ∀ tr n {j} → markAt tr n ≡ just j → n ≡ mk tr j
+  markAt-inv false (mgrpd j)  refl = refl
+  markAt-inv true  (mtrunc j) refl = refl
+
+  anyM-witness : ∀ tr h ms → T (anyM (atLe tr h) ms) → Σ Nat λ k → T (mk tr k ∈M ms) × T (k <ℕ suc h)
+  anyM-witness tr h (n ∷ ms) p with markAt tr n in e
+  ... | nothing = let (k , m , l) = anyM-witness tr h ms p in k , ∨-r {mk tr k ==M n} m , l
+  ... | just j  =
+    ∨-case {j <ℕ suc h} p
+      (λ q → j , subst (λ X → T (mk tr j ∈M (X ∷ ms))) (sym (markAt-inv tr n e)) (∨-l (==M-refl (mk tr j))) , q)
+      (λ q → let (k , m , l) = anyM-witness tr h ms q in k , ∨-r {mk tr k ==M n} m , l)
+
+  mark-mk : ∀ Δ tr k c → mark Δ (mk tr k) c ≡ isAt Δ tr k c
+  mark-mk Δ false k c = refl
+  mark-mk Δ true  k c = refl
 
 ------------------------------------------------------------------------
 -- The context of a derivable term.
@@ -227,9 +236,10 @@ module _ (closed : Closed) (laws : BinderLaws) (fstab : FormerStable)
                    subst (λ j → T (jinv j)) (sym (at-fuel k x A eq)) (has x A minv eq mm)
       ; r-ps   = λ k x mm → let (A , eq) = marks-lookup Γ x mps mm in
                    subst (λ j → T (jps j)) (sym (at-fuel k x A eq)) (has x A mps eq mm)
-      ; r-grpd = λ h x ma → let (k , mk , l) = anyM-witness h (marksAt Γ x) ma
-                                (A , eq)     = marks-lookup Γ x (mgrpd k) mk in
-                   isGrpd-mono Δ k h (lookupₛ σ x) l (has x A (mgrpd k) eq mk)
+      ; r-at   = λ tr h x ma → let (k , mk′ , l) = anyM-witness tr h (marksAt Γ x) ma
+                                   (A , eq)      = marks-lookup Γ x (mk tr k) mk′ in
+                   isAt-mono Δ tr k h (lookupₛ σ x) l
+                     (subst T (mark-mk Δ tr k (lookupₛ σ x)) (has x A (mk tr k) eq mk′))
       }
 
   markSub : RS.MarkSub
@@ -242,7 +252,9 @@ module _ (closed : Closed) (laws : BinderLaws) (fstab : FormerStable)
          (λ q → fst (snd q)) p
     where dF = Fg.forget-tm mark d
   markSub {Γ} {Δ} {σ} {t} {A} {mgrpd k} sd d p =
-    isGrpd-[] fstab (resp sd (ctx-of (Fg.forget-tm mark d))) k t p
+    isAt-[] fstab (resp sd (ctx-of (Fg.forget-tm mark d))) false k t p
+  markSub {Γ} {Δ} {σ} {t} {A} {mtrunc k} sd d p =
+    isAt-[] fstab (resp sd (ctx-of (Fg.forget-tm mark d))) true k t p
 
   ----------------------------------------------------------------------
   -- Renaming.
@@ -274,24 +286,11 @@ module _ (closed : Closed) (laws : BinderLaws) (fstab : FormerStable)
                    subst (λ X → T (jinv (judge (k + 0) Γ′ X))) (sym ej) (∨-l mj)
       ; r-ps   = λ k x mm → let (j , ej , mj) = same x mps mm in
                    subst (λ X → T (jps (judge (k + 0) Γ′ X))) (sym ej) (∨-l mj)
-      ; r-grpd = λ h x ma → let (k , mk , l) = anyM-witness h (marksAt Γ x) ma
-                                (j , ej , mj) = same x (mgrpd k) mk in
-                   subst (λ X → T (isGrpd Γ′ h X)) (sym ej)
-                     (isGrpd-mono Γ′ k h (var j) l (grpd-self k (marksAt Γ′ j) mj))
+      ; r-at   = λ tr h x ma → let (k , mk′ , l) = anyM-witness tr h (marksAt Γ x) ma
+                                   (j , ej , mj)  = same x (mk tr k) mk′ in
+                   subst (λ X → T (isAt Γ′ tr h X)) (sym ej)
+                     (isAt-mono Γ′ tr k h (var j) l (at-self tr k (marksAt Γ′ j) (mk tr k) (markAt-mk tr k) mj))
       }
-      where
-      grpd-self : ∀ k ms → T (mgrpd k ∈M ms) → T (anyM (grpdLe k) ms)
-      grpd-self k ms m = isGrpd-mono′ ms m
-        where
-        isGrpd-mono′ : ∀ ms → T (mgrpd k ∈M ms) → T (anyM (grpdLe k) ms)
-        isGrpd-mono′ (minv ∷ ms) p = isGrpd-mono′ ms p
-        isGrpd-mono′ (mps ∷ ms)  p = isGrpd-mono′ ms p
-        isGrpd-mono′ (mgrpd l ∷ ms) p with k ==ℕ l in e
-        ... | true rewrite ==ℕ-sound k l (subst T (sym e) tt) = ∨-l (self-lt l)
-          where self-lt : ∀ l → T (l <ℕ suc l)
-                self-lt zero    = tt
-                self-lt (suc l) = self-lt l
-        ... | false = ∨-r {l <ℕ suc k} (isGrpd-mono′ ms p)
 
     ren-rF : Γ′ FR.⊢ren ρ ∶ Γ
     ren-rF = rF
@@ -306,4 +305,5 @@ module _ (closed : Closed) (laws : BinderLaws) (fstab : FormerStable)
   markRen {Γ} {Γ′} {ρ} {t} {A} {mps} r d p =
     lift jps dF (ren-D r) (respR r) (tm-renF dF (ren-rF r)) (λ q → fst (snd q)) p
     where dF = Fg.forget-tm mark d
-  markRen {Γ} {Γ′} {ρ} {t} {A} {mgrpd k} r d p = isGrpd-[] fstab (respR r) k t p
+  markRen {Γ} {Γ′} {ρ} {t} {A} {mgrpd k}  r d p = isAt-[] fstab (respR r) false k t p
+  markRen {Γ} {Γ′} {ρ} {t} {A} {mtrunc k} r d p = isAt-[] fstab (respR r) true k t p

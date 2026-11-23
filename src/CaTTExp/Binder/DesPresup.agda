@@ -14,11 +14,11 @@
 -- the coh rule, with the pasting contexts proved pasting for every n
 -- through the pure pasting judgment.
 --
--- The side-condition hypotheses (`side-comp`, `side-id`) are checked
--- for plain CaTT's side condition at n ≤ 3 in CaTTExp.Binder.DesExamples;
--- proving them for every n, for plain CaTT and for the Gray side
--- condition, is ledger S26i's remaining step. `des-tm-ty` is
--- presupposition for 𝕊₀ + DES under these hypotheses.
+-- The side-condition hypotheses (`side-comp`, `side-id`) hold for
+-- plain CaTT for every n (CaTTExp.Binder.DesSideCatt, which also gives
+-- unconditional presupposition `catt-tm-ty`); for L's side condition
+-- they are MARK's (ledger S26i). `des-tm-ty` is presupposition for
+-- 𝕊₀ + DES under these hypotheses.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Signature as Old

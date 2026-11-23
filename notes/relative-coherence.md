@@ -1202,6 +1202,12 @@ What is not yet in Agda: an unconditional filler for any coherence of dimension 
    (l⁻ f⁻ r↑) ∗₁ (l⁻ ∗₀ q↑ ∗₀ r⁺) ∗₁ (l↑ g⁺ r⁺).
    Its two ends are joined to a_c and b_c by equal-image RC(2) connectors, with omitted factors handled as in `DimOne`.
    *Status (2026-11-23):* the vertical composite is done in a general form: `Naturality.Ladder` runs DimOne's sweep one dimension up (in the hom x⁻ → y⁺, with 3-cell squares θ_α and ∗₂-stacking), and `Naturality.Column.col-ok` types it as c↑ : a_c → b_c for any 2-cell c : f₀ ⇒ f_m over the column Q_m = ΣΘ_m (every m, every valid datum). It is conditional on rcS answering the gaps it uses (`ColRC`), which for the vertical composite are equal-image 2-cell queries.
+   *Refinement (2026-11-23):* no separate transport step is needed. For a general 2-dimensional composition c, run the same `Ladder` in the hom x₀⁻ → x_m⁺ with:
+   - objects: the layer paths t_j as composite 1-cell terms;
+   - rungs: their cylinders t_j↑ (K₁, unconditional);
+   - edges: whiskered top cells W_j = l_j ∗₀ q_j ∗₀ r_j, built with `rwT 0 1` / `lwT 0 1`;
+   - squares: the cylinders W_j↑ of those whisker terms.
+   The end gaps compare c⁻ with the composite of the W_j⁻, which have the same strict image. So the base cases are just the one-sided whisker coherences `rwT 0 1` and `lwT 0 1`. Each of these gets one explicit layer, e.g. (f⁻ ◃ h↑) ; fill₁ ; (α↑ ∗₀ h⁺) for α ∗₀ h, with rcS gaps on both sides.
 4. *My side of the hypotheses.* Equal strict images for every connector (≈w), and `Key2Ctx (Q↑Y)`.
 
 For the cases where the single query is right, discharging `RCq` in dimension 2 needs (i) rcS total on parallel 2-cells with equal strict image (Theorem A, `rcS-thmA`, RC threads, S20) and (ii) a proof that a_c and b_c have equal strict images, `⟦ a_c ⟧ (η Γ) ≈w ⟦ b_c ⟧ (η Γ)` with Γ = Q↑Y, plus the strong order `Key2Ctx (Q↑Y)` (`RCProc.TwoPathCtx`), the hypothesis of `rcS-thmA`. In dimension n ≥ 3 it needs RC(n) (the descent, RCGEN). rcS today is total only for globular supports and for supports with no variable of dimension ≥ 2; cylinder queries are in general neither.

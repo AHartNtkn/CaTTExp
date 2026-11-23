@@ -330,7 +330,7 @@ The response to `invertibility-certificates-r2.md` is filed with its verificatio
 
 ## 10. After the third answer (2026-11-23): invertibility in L is not recursively enumerable
 
-The response to `invertibility-certificates-r3.md` is filed with its verification at `conjectures/answered/invertibility-certificates-r3-2026-11-23.md`. It is verified for strict Gray ω-categories. The weak case is verified conditionally on cited 2026 results. **S22 is closed.**
+The response to `invertibility-certificates-r3.md` is filed with its verification at `conjectures/answered/invertibility-certificates-r3-2026-11-23.md`. It is verified for strict and weak Gray ω-categories (the weak case's citations to Ozornova–Rovelli–Walde and Gepner–Heine were checked against the sources). **S22 is closed.**
 
 ### 10.1 The result
 

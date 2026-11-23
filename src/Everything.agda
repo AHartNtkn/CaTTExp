@@ -387,6 +387,9 @@ import CaTTExp.Uniform.OrdCoh
 import CaTTExp.Descent.PushoutNotUniversal
 import CaTTExp.Descent.CocartLemmas
 import CaTTExp.Descent.DJOneTruncated
+-- F11f: HITs via INIT (notes/higher-inductive.md)
+import CaTTExp.HIT.DependentElim
+import CaTTExp.HIT.DirectedSquash
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel

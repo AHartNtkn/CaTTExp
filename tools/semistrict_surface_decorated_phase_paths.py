@@ -34,9 +34,9 @@ def location(word,marked):
     return before[0],before[2]
 
 
-def sort_with_changes(source,target,marked,checkpoints):
+def sort_with_changes(source,target,visits):
     """Return a replay of legal adjacent swaps and changes, or None."""
-    if set(source)!=set(target) or marked not in source or marked[0]!=1:
+    if set(source)!=set(target) or any(m not in source or m[0]!=1 for m,_ in visits):
         raise ValueError('incompatible phase words or marked occurrence')
     w = list(source)
     end = {a:i for i,a in enumerate(target)}
@@ -48,7 +48,15 @@ def sort_with_changes(source,target,marked,checkpoints):
         w[i:i+2] = b,a
         ops.append(i)
         return True
-    for left,right in checkpoints:
+    # A pair of incompatible requests can be returned in the wrong order
+    # by either tie break. Check it explicitly before constructing the replay.
+    for i,(a,(l,r)) in enumerate(visits):
+        for b,(h,k) in visits[i+1:]:
+            if a==b and (l>h or r<k):
+                return None
+            if (a<b and l>h and r>k) or (b<a and h>l and k>r):
+                return None
+    for marked,(left,right) in sorted(visits,key=lambda v:v[1][0]-v[1][1]):
         l,r = location(w,marked)
         final_l,final_r = location(target,marked)
         if not (l<=left<=final_l and final_r<=right<=r):
@@ -63,7 +71,7 @@ def sort_with_changes(source,target,marked,checkpoints):
             j = next(i for i in range(cut-1,-1,-1) if w[i][0]==2)
             if not all(swap(i) for i in range(j,cut)):
                 return None
-        ops.append('change')
+        ops.append(('change',marked))
     for i,a in enumerate(target):
         if not all(swap(j) for j in range(w.index(a)-1,i-1,-1)):
             return None
@@ -104,13 +112,13 @@ def check_words():
                     at_second = {v for w in at_first for v in after[w] if location(v,marked)==second}
                     targets = {v for w in at_second for v in after[w]}
                     for v in shuffles:
-                        ops = sort_with_changes(u,v,marked,(first,second))
+                        ops = sort_with_changes(u,v,[(marked,first),(marked,second)])
                         assert (ops is not None)==(v in targets)
                         if ops is not None:
                             w = list(u)
                             visits = []
                             for op in ops:
-                                if op=='change':
+                                if isinstance(op,tuple):
                                     visits.append(location(w,marked))
                                 else:
                                     a,b = w[op:op+2]

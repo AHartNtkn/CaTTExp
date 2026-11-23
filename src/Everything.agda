@@ -489,6 +489,7 @@ import CaTTExp.Binder.DesSusp
 import CaTTExp.Binder.UniHeads
 import CaTTExp.Binder.UniHeadsExamples
 import CaTTExp.Binder.LimPresup
+import CaTTExp.Binder.LimRecognised
 import CaTTExp.Binder.GrayForm
 import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws

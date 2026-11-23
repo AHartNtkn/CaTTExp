@@ -59,16 +59,21 @@ So the analogy "DESC plays the role of univalence" in `descent-vs-init.md` §3 i
 
 **Formulation without a universe or Π_p.** For p : E → A, the polynomial functor P(X) = Σ_a (p⁻¹a)\X needs a dependent hom Π_p, which our system does not have (R-cot⁺ exists over set bases, and only through DESC-grpd). Uncurrying avoids it. A **p-dialgebra** is (C, h : C → A, t : C ×_A E → C), and a morphism is g : C → C′ over A, commuting with t. When Π_p exists this is exactly a P-coalgebra, and a final one is the M-type. The constant case (§2) is p = π₁ : A × E → A.
 
-**Three routes tried.**
+**Four routes tried.**
 1. *Terminal chain.* Needs the fibres of an INIT family over ℕ (§3), i.e. DESC-grpd.
 2. *Address encoding.* Trees as label functions on all snoc lists of E, with inconsistent addresses filled canonically (for example, an inconsistent step stays at the current node). Extending t to E × C needs a case split on whether p(e) = h(c): a decomposition E × C ≅ (C ×_A E) ⊔ complement, which needs decidable equality on A and disjoint universal coproducts (DESC-grpd). Partial label maps L → A ⊔ ⊤ need disjointness as well.
 3. *Reduce to the constant case.* Same obstacle: a constant-arity coalgebra on C has to give t a value at inconsistent pairs.
+
+4. *Case analysis by ⊗-distributivity (partial progress) [sketch, needs checking].* For finitely many constructors, P(X) = ∐_{j∈J} A_j × (E_j\X) with J an external finite set, write a coalgebra as c : C → P(C), a map **into** a coproduct, not as a dialgebra. Then every case split the construction needs is a split of an **input** that is a coproduct, and it is available without DESC: ⊗ and \, / are biclosed, so X ⊗ – and – ⊗ X preserve coproducts. Take addresses L = SnocList(∐_j E_j) and labels Lab = (∐_j A_j) ⊔ ⊤, with ⊤ meaning "absent". The step map of the right-row model, (Lab/C, E ▸ Lab/C), is defined by copairing over the shape of c(x) and the shape of e. The candidate M is the equaliser inside L\Lab cutting out the consistent label functions. Transposition plus INIT-J1/J2 then gives existence and uniqueness of coalgebra morphisms C → M, as in §2.
+   - **The one step that still needs descent:** M's own structure map M → P(M). To build it, M has to be split along its root label M → Lab, which means pulling the coproduct ∐_j A_j ⊔ ⊤ back along a map. That is **universality** of finite coproducts (the coproduct case of DESC-univ inside DESC-grpd). Disjointness does not seem to be used.
+   - With universal finite coproducts, the whole construction appears to go through: dependent M-types with finitely many constructors would follow from INIT + chapter 8 + universal finite coproducts [sketch]. With an internal shape object A (say A = ℕ), comparing shapes needs decidable equality on A, and deriving x = y from eq(x, y) = true seems to need disjointness as well.
+   - Universality of finite coproducts holds in all three countermodels of `descent-vs-init.md` §3. It is not derivable from distributivity (× and ⊗ distribute over ⊔, but universality along a mono such as a graph Γ ↪ 2 × C does not follow). Whether (a)–(c) imply it is part of the outbox prompt.
 
 The literature constructions all assume disjoint coproducts: Abbott–Altenkirch–Ghani Prop. 4.1 (Martin-Löf categories: LCCC, disjoint coproducts, W-types); van den Berg–De Marchi, *Non-well-founded trees in categories* (arXiv:math/0409158), in LCC pretoposes, where Prop. 2.9 also uses decidable equality on A.
 
 **Evidence the other way.** All three countermodels of `descent-vs-init.md` §3 (Set, the lattice 2, Pos) are locally presentable, and there final dialgebras exist for set-like p. So nothing yet shows DESC is needed. A separating model would have to be non-extensive or not locally presentable, and still have every INIT instance.
 
-**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house attempts continue on route 2 with decidable equality coming from INIT (as in R-cot⁺), to locate exactly which half of DESC-grpd is needed.
+**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house: route 4 localises the need to universality of finite coproducts (for finitely many constructors). Next is to write route 4 out in full and to look for a locally presentable cartesian closed category with non-universal finite coproducts.
 
 ## 5. Directed M-types
 
@@ -79,5 +84,5 @@ The literature constructions all assume disjoint coproducts: Abbott–Altenkirch
 
 | Row | Item | Owner |
 |---|---|---|
-| F12b | Streams and constant-arity M-types: Agda written, both checked on Agda 2.7.0.1 and 2.6.3; honesty review | this thread |
+| F12b | Streams and constant-arity M-types: Agda written, checked on Agda 2.7.0.1 and 2.6.3; honesty review | this thread |
 | F12c | Dependent-arity M-types without DESC (undirected and directed): outbox prompt; in-house attempt on route 2 | this thread (prompt ready to send) |

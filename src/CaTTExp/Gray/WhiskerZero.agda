@@ -2,13 +2,14 @@
 -- Toward the k = 0 whisker heads of two-tier L (step 2(d) of the
 -- two-tier L whiskering interface, notes/surface-conservativity.md §7).
 --
--- Part 1: whiskering a single-hom context by a 1-cell. For a pasting
+-- Whiskering a single-hom context by a 1-cell (the supports and the
+-- side condition itself are in Gray.WhiskerZeroSide). For a pasting
 -- context Θ, let
 --
 --   W Θ = ΣΘ ▸ z : ⋆ ▸ h : a₁ → z
 --
 -- (BK 0 (j+1) is W (Dsk (j+1)) up to Σ(Dsk (j+1)) = Dsk (j+2)). Then
--- K(W Θ) = λΘ ⊗ λ{h}, h a 0-cell of its hom, and
+-- W Θ has two homs, that of ΣΘ and {h} (h a 0-cell of its hom), and
 --
 --   homsW     : homs (W Θ) = hΣ Θ , (h)
 --   bdryW     : bdryT sg (homs (W Θ)) = map (_++ (h)) (bdryT sg (homs ΣΘ))

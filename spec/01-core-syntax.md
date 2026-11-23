@@ -178,3 +178,4 @@ The signature is closed to users. Every head is a kernel former that comes with 
 **Q1.3. How pasting contexts are presented.** The kernel takes a context and checks `⊢ps`.
 - *Option A: contexts written out.* Uniform with ordinary contexts; the user must list variables in the canonical order.
 - *Option B: Batanin trees or a bracket syntax*, from which the context is generated. Can never produce a non-pasting context, so (ps) never fails; needs a second notation.
+- **Decided (Anthony, 2026-11-23): Option A′, an ordinary context in any dependency-respecting order.** The elaborator puts Δ in the canonical order, which is unique because a pasting diagram has no nontrivial automorphisms, and reports why a context is not a pasting diagram when it is not. Context syntax is needed anyway for diagrams and hypotheses, so a tree notation would be a second notation for one use; A's fixed order is busywork the system can do.

@@ -15,7 +15,12 @@
 -- The family `desSpec` is DES of CaTTExp.Binder.Des written with
 -- ordinary variables: its binder data is that of `desBinders` closed
 -- (`args-agree`, `res-agree`), and its validity holds at every
--- dimension n ≥ 1, selector 0 (`des-valid`).
+-- dimension n ≥ 1, selector 0 (`des-valid`). So `des-susp` is stated
+-- for the signature built from desSpec; its formers, argument
+-- telescopes and result types are desBinders' (`args-agree`,
+-- `res-agree`), and its side condition holds exactly where
+-- desBinders' does (n ≥ 1, selector 0, empty telescope: `des-valid`
+-- one way; specSide asks for okD and an empty telescope the other).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Signature as Old

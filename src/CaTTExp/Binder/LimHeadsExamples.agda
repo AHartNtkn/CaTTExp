@@ -103,8 +103,9 @@ Bad = P.ε P.▸ P.⋆ P.▸ P.arr P.⋆ (P.var 0) (P.var 5)
 no-bad : inferTy (ε ▸ ⋆ ▸ arr ⋆ (var 0) (var 0)) (bnd (limF Bad) 0 ε (⟨⟩ ,ₛ var 0 ,ₛ var 1)) ≡ nothing
 no-bad = refl
 
--- The point: lim over the empty base is a terminal object ⊤ (spec
--- §6.5), a head with empty arity, i.e. a constant.
+-- The point: lim over the empty base is a typed object, a head with
+-- empty arity, i.e. a constant. That it is terminal (spec §6.5) is
+-- uni's universal property, not encoded here (ledger S27 (e)).
 top-ty : inferTy ε (bnd (limF P.ε) 0 ε ⟨⟩) ≡ just ⋆
 top-ty = refl
 

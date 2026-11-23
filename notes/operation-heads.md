@@ -32,7 +32,7 @@ The binder kernel (`CaTTExp.Binder.*`, BIND) already has a former `bnd b y Δ ts
 | `Binder.HonestHeads` | For a head given by an honest arity G and type A: arguments for `clTel 0 G` are exactly substitutions into G (`args→sub`, `sub→args`), so the kernel's binder rule at h is rule (op), both ways (`op-intro`, `op-inv`). `honest-ok`: HeadOK is G ⊢ A. |
 | `Binder.HeadSpec` | A family given as in spec §1.6, by arity contexts, types and a validity test (`HeadSpec`). `Laws`: every such family is honest (`spec-honest`, so its rule is (op)) and satisfies `BinderLaws` (`spec-laws`), with no proof specific to the family. The honesty checks are decided, not assumed. |
 | `Binder.LimHeads` | lim_Γ (arity Γ, type ⋆) and the universal cone λ_{Γ,g} (arity Γ, type the type of cell g of the cone over Γ with apex lim_Γ[id] and earlier cells the earlier legs) as a `HeadSpec`, for **any** cone shape `shape : P.Ctx → Maybe P.Ctx` (a cocone shape gives colimits the same way). |
-| `Binder.LimHeadsExamples` | With the specified cone of `CaTTExp.Cones`: the limit of an arrow f : A → B has legs λ_x : L → A, λ_y : L → B and λ_f : λ_y ⇒ f ∘ λ_x; the binary product has π₁, π₂; the limit over the empty context is a terminal object; ill-formed bases, missing cells and wrong argument counts are rejected. All by computation. |
+| `Binder.LimHeadsExamples` | With the specified cone of `CaTTExp.Cones`: the limit of an arrow f : A → B has legs λ_x : L → A, λ_y : L → B and λ_f : λ_y ⇒ f ∘ λ_x; the binary product has π₁, π₂; the limit over the empty context is a typed object (a head with empty arity; that it is terminal needs uni, S27 (e)); ill-formed bases, missing cells and wrong argument counts are rejected. All by computation. |
 
 ## 3. Suspension with heads (S27 (c))
 

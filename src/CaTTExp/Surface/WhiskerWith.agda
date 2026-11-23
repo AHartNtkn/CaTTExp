@@ -9,11 +9,13 @@
 -- for every surface equality E, and `Consistent` instantiates every
 -- module parameter of TheoremB.Hyp/Thm at once (for the coarse E, where
 -- Wh-≈ and Unit hold trivially; see WhiskerPure's header for what this
--- does and does not show).
+-- does and does not show). That coarse E is not the instance of
+-- interest: for it ELAt fails, already at D¹.
 --
 -- Instances:
---  * plain CaTT: `CattInstance` at the bottom, from Derived's sideK
---    and sideLK; it recovers WhiskerPure.
+--  * plain CaTT: CaTTExp.Surface.WhiskerCatt, from Derived's sideK
+--    and sideLK; `wh` and `Wh-wf-pure` are the same construction as
+--    in WhiskerPure (no equation between the two is checked).
 --  * two-tier L: needs graySide's hypotheses for every k, j. They are
 --    checked by evaluation for k + j ≤ 3
 --    (CaTTExp.Surface.WhiskerGrayCheck); the general proof is open.
@@ -165,7 +167,7 @@ lw-ty {C} p s′ x (there {Y} {u} {v} pr) =
               (lw-ty p s′ u pr))
 
 ------------------------------------------------------------------------
--- Wh-wf for plain CaTT, for every E and every other parameter.
+-- Wh-wf, for every E and every other parameter.
 
 module _ (E : SurfaceEq)
          (inv-arr : ∀ {Γ A A′ a a′ b b′} → SurfaceEq._∣_≈T_ E Γ (arr A a b) (arr A′ a′ b′) →
@@ -212,7 +214,7 @@ module _ (E : SurfaceEq)
                    (trans (cong (λ m → rawW k m s′ t′ p w Y q) (j-ok pr))
                           (cong (λ L → rwT k d (lwU w) L t′ q) (lw-ty p s′ w pr))))
 
-  -- TheoremB's Wh-wf, for plain CaTT.
+  -- TheoremB's Wh-wf.
   Wh-wf-pure : ∀ {Γ C s s′ t t′ p q x X} →
                Γ ⊢tm p ∶ arr C s′ s → Γ ⊢tm q ∶ arr C t t′ →
                Pre (arr C s t) X → Γ ⊢tm x ∶ X →

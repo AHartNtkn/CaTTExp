@@ -134,7 +134,7 @@ DESC-pb is a theorem of the definition (Riehl–Verity, FYL §5.2) and is listed
 - in the **target** of every operation, X occurs only under limit-preserving operations: X itself, ⊤, Hom_X(x, y) for points given by earlier variables, cotensors and lax cotensors [A, X] by objects A not mentioning X, and finite limits of these. Not coproducts, pushouts, ⊗, or a constant other than ⊤;
 - in the **source** of every operation, X occurs under any accessible covariant operation: finite limits, colimits, ⊗ and × with fixed objects, and cotensors by fixed objects;
 - a **cell** variable is a cell (of any dimension, invertible or not) between composites of earlier operations, and its target obeys the target condition;
-- a **mark** restricts X to a reflective class closed under limits and filtered colimits (`⋆^{≤n}`), or marks an operation invertible (`inv`, presented by bi-invertibility data);
+- a **mark** restricts X to a reflective class closed under limits and filtered colimits (`⋆^{≤n}`), or marks an operation invertible (`inv`, the declaration mark of chapter 3, §3.2, whose destructors (DES) are bi-invertibility data);
 - X occurs nowhere contravariantly (no [X, –], no Hom with X in the first argument).
 
 **Several sorts, over bases.** More generally Δ may distinguish finitely many object variables X₁, …, X_m, each optionally **over a fixed base** B_i (a structure map X_i → B_i, with operations into X_i taken over B_i). The conditions above apply to each X_i, with B_i in place of ⊤ as the terminal target for X_i. This covers multi-sorted contexts over a set (§9.4), R-U's family over Θ₀ (§9.7), inductive families over a non-discrete base, and inductive-inductive definitions (a sort R with p : R → X × X declared with X). Models live in ∏_i Cat_ω/B_i, which is presentable, so the soundness argument below applies unchanged (`notes/higher-inductive.md` §8, F11b).
@@ -149,6 +149,8 @@ A **model** of Δ with carrier A is a substitution σ : Δ[A/X]. A **model morph
 (higher)     derived: a level-k cell between model morphisms is a model morphism into the
              cotensor [⟦Dᵏ⟧, A] with the pointwise model
 ```
+"Invertible" here is chapter 3's judgment `inv`: INIT concludes `rec_y inv`, `uni inv` and `uni_y inv`, and the inverses and their witnesses at every level come from (DES) and (DES-inv), with no further formers. A model σ must certify every `inv` mark of Δ, since substitutions preserve marks (§3.2).
+
 The rule binds the object variable X in a premise, forms an ordinary object μΔ, states its universal property by cells, and makes no judgment a term. It is the kind of binding former §0.2 allows, not a universe.
 
 **Side condition and decision procedure.** Positivity is syntax-directed and decidable, like strict positivity for inductive types: walk the source and target of each operation and check every occurrence of X against the two lists above. No decidable syntax can be exact for single contexts outside this class: with a fixed BG for a finitely presented group G, `⊤ → BG` has an initial model iff G is trivial, which is undecidable (Adian–Rabin). So the kernel checks the uniform class.
@@ -205,7 +207,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 
 ## 9.5 Quotients and the integers
 
-**Construction.** ℤ := μ(X, z : ⊤ → X, s : X → X inv), the initial object with a point and an automorphism. The `inv` mark is presented by bi-invertibility data l, r : X → X with l ; s ≅ 1 and s ; r ≅ 1, whose witnesses form a proposition, so maps out of ℤ are determined by z and s (Altenkirch–Scoccola, Thm 2.4). Equivalently, ℤ ≃ Hom(x, x) in the localisation of ⟦L⟧ at s, a finite pushout (chapter 7, §7.3), by encode–decode with M = {s} inverted (§9.4).
+**Construction.** ℤ := μ(X, z : ⊤ → X, s : X → X inv), the initial object with a point and an automorphism. The `inv` mark is chapter 3's declaration mark: its destructors give l = s⁻ˡ and r = s⁻ʳ with λ_s : l ; s → 1 and ρ_s : s ; r → 1, all themselves inv (DES, DES-inv). Invertibility is a judgment, so it is a property rather than data, and maps out of ℤ are determined by z and s (Altenkirch–Scoccola, Thm 2.4). Equivalently, ℤ ≃ Hom(x, x) in the localisation of ⟦L⟧ at s, a finite pushout (chapter 7, §7.3), by encode–decode with M = {s} inverted (§9.4).
 
 **Truncations and quotient sets.** ‖X‖_n is an INIT instance (§9.3); its higher levels and dependent elimination are derived. A quotient set is the 0-truncation of a localisation (a pseudo coequaliser); ℚ is a quotient of ℤ × ℕ.
 

@@ -506,6 +506,7 @@ import CaTTExp.Binder.LimRecognised
 import CaTTExp.Lim.HornGen
 import CaTTExp.Lim.HornGenExamples
 import CaTTExp.Binder.UniHornGenExamples
+import CaTTExp.Lim.ConeAgree
 import CaTTExp.Binder.GrayForm
 import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws

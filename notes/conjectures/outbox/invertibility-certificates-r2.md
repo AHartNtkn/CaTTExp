@@ -38,3 +38,207 @@ with λ_f, ρ_f ∈ Inv. The class must contain the marked generators, identitie
 2. **(If not.)** Give a finite marked computad and an invertible cell of F(C, M) that is not in Cert. Then give the smallest extension of rules 1–6 that is complete. One candidate is a recursor: a rule that takes a term over the walking invertible cell (the free structure on one marked generator) as a finite description of an infinite tower.
 
 3. **(High dimensions.)** Whatever the answer to 1, is there a bound N(C), computable from C, such that every invertible cell of F(C, M) of dimension greater than N(C) is in the closure of rules 1–5? A positive answer would make the coinductive tower of any invertible cell finite, and would answer 1 positively. If no such bound exists, describe the invertible cells of high dimension, for example as composites of interchangers with an invertible factor together with cells from rules 1–5.
+
+## Researcher Response 1
+
+**The answer to question 1 is no in both settings.** The same four-mark computad has a 3-cell that is coinductively invertible and has no finite derivation by rules 1–6. Its reversal uses the two inverse candidates allowed in the question. A strict model with only identities designated separates it from every recorded certificate, including certificates using inv-intro. The example also answers question 3 in every dimension from three onwards.
+
+### The finite computad
+
+Use two objects $a,b$, arrows $p:a\to a,\ x:a\to b$, and
+$u:1_a\Rightarrow p,\ v:p\Rightarrow1_a$. In $H=F(a,b)$ take
+one generator $f:1_x\to1_x$ of **hom degree two**. Write $P$
+for whiskering on the left by $p$. Adjoin and mark these four
+generators, and leave $p,x,u,v,f$ unmarked.
+
+* $T:u;v\to1_{1_a}$.
+* The two contractions of $(p u);(p v)$ and $(p v);(p u)$ onto
+  their respective identities. Here $p u$ means left whiskering of
+  $u$ by the global arrow $p$.
+* A contraction $P f\to1_{P(1_x)}$.
+
+Use the displayed whiskered endpoints in these declarations. In particular
+the last target is the identity on the source of $P f$. In the weak case
+use the unit comparisons at the endpoints of whiskering throughout. The two middle
+marks certify $p u,p v$ by rule 6. An endocell with a certified
+contraction is certified by rule 6, taking the identity as both inverse
+candidates and inserting the two unitors if necessary. In particular
+$u;v$ and $P f$ are certified.
+
+### Splitting a based cell through an invertible cell
+
+Write $0_j$ for the iterated identity of hom degree $j$ at $x$,
+with $0_0=x$. A **based** $m$-cell here means an endocell of
+$0_{m-1}$. The following fact holds for every $m\ge2$. If $q$
+is based and $Pq$ is invertible, there are a based invertible
+$m$-cell $c$ and $(m+1)$-cells
+
+$$
+q\xrightarrow{D}c\xrightarrow{E}q
+$$
+
+such that $D;E$ admits an invertible contraction to $1_q$ and
+$PD,PE$ are invertible. We first prove this fact.
+
+The two incoming cells give cylinders $U:\mathrm{Id}_H\to P$ and
+$V:P\to\mathrm{Id}_H$. Let $\beta=U_x,\ \gamma=V_x$ and
+$e=\beta;\gamma$. Evaluating $T$ at $x$ gives an invertible
+$\ell:e\to1_x$, with the structural unit and composition comparisons
+understood. On $q$, the two cylinder components give the paste
+
+$$
+q\,e \xrightarrow{U_q\,\gamma}
+ \beta\,(Pq)\,\gamma \xrightarrow{\beta\,V_q} e\,q .
+$$
+
+Juxtaposition here denotes whiskering in $H$. The paste is the
+component $(u;v)\otimes q$ evaluated by enriched composition.
+Indeed, in the vertical composite of the two cylinders the top tile of
+each cylinder occurs once. The whiskers contributed by positive proper
+faces of $q$ are identities, and the two surviving vertex whiskers are
+$\gamma,\beta$. This is the vertical composition formula of
+[Ara–Lucas, §6.6](https://arxiv.org/pdf/1909.13564#page=36).
+For weak enrichment, the same strip is the Steiner shape
+$[2]\otimes D^m$. Its top paste and its degenerate-face restrictions
+give the same formula up to the invertible structural comparisons.
+The weak Gray product on these shapes agrees with the strict one.
+[Gepner–Heine, Theorem 3.8.1](https://arxiv.org/html/2510.10504v1#S3.SS8)
+Rule 4 certifies the mixed cell because its positive-degree factor
+$u;v$ is certified. The paste is therefore invertible. Also $P(U_q)$ and $P(V_q)$
+are invertible because associativity identifies them with the evaluations of
+$(p u)\otimes q$ and $(p v)\otimes q$, respectively. This is the
+use of the two middle marks.
+
+All three terms displayed in the paste are based at $e$, an object of
+the monoidal category $G=H(x,x)$ whose unit is $I=1_x$. Change
+the base from $e$ to $I$ along $\ell$, keeping the same change
+for both arrows and their common middle term. Here are details
+of this operation. In a strict hom, put $e_1=e,\ell_2=\ell$.
+Given $\ell_{j+1}:e_j\to0_j$, take a left inverse
+$\ell_{j+1}^*$, put $e_{j+1}=\ell_{j+1}^*; \ell_{j+1}$, and
+take its invertible contraction $\ell_{j+2}:e_{j+1}\to0_{j+1}$.
+For $j=1,\ldots,m-1$, successively whisker every term with
+$\ell_{j+1}^*$ and $\ell_{j+1}$ along cut $j$.
+By interchange at cuts $j-1,j$, either $q*_{j-1}e_j$ or
+$e_j*_{j-1}q$ becomes $e_{j+1}*_{j}q$: slide the outgoing
+$\ell_{j+1}$ across $q$ and compose with the incoming inverse.
+At the end all three terms have the required base $0_{m-1}$, and
+whiskering $\ell_{m+1}$ by $q$ identifies the outer terms with
+$q$ by an invertible comparison.
+
+Equivalently, and also in a weak hom, this is change of base in the
+iterated endomorphism categories of $G$. Right and left composition
+with $e$ are pointed functors $(G,I)\to(G,e)$ via the unitors.
+The equivalence $\ell:e\to I$ gives natural equivalences from both
+functors to the identity functor, with base components $\ell$ under
+the unitors: apply the ordinary composition functor $G\times G\to G$
+to $\ell$ in the respective variable. On the first endomorphism
+category change of base is conjugation by $\ell^*,\ell$.
+Naturality identifies each transported image with the original image,
+and the comparison at the identity is the unit comparison for this
+conjugation. Explicitly, slide the outgoing $\ell$ past the variable
+endomorphism by naturality, then contract $\ell^*;\ell$. At the identity
+endomorphism this is precisely the chosen contraction, up to unitors.
+Passing to the next endomorphism category conjugates by this base comparison. Iterating gives the stated identifications with
+$q$ in every degree. At any fixed degree this uses finitely many inverse and contraction
+cells of $\ell$, and Cartesian composition *inside* the weak hom. It requires an invertible comparison at each outer endpoint;
+the two comparisons need not agree. The transported middle term $c$
+is invertible, since $Pq$ is invertible and the transports consist of
+whiskering, conjugating by equivalences and unit comparisons.
+In both settings the transported arrows still have invertible
+$P$-images, since their original $P$-images do and all
+change-of-base cells are equivalences. Their composite is invertible
+by the strip calculation, functoriality of transport and equivalence
+of the outer endpoints to $q$. If the outgoing and return arrows are initially $D,E_0$, set
+$j=D;E_0$ and choose a right inverse $j^r$. Taking $E=E_0;j^r$ gives
+$D;E\simeq j;j^r\to1_q$ by an invertible contraction.
+Applying $P$ to the correction preserves invertibility.
+
+### The reversal tower
+
+For the coinduction, take in every degree $m\ge2$ all the
+contractions $A:z\to0_m$ of based $m$-cells for which there is
+$B:0_m\to z$ with $A;B$ invertibly related to $1_z$ and
+$P A,P B$ invertible. Call this collection $S$. If a based cell
+$w$ admits such a split through an invertible based $c$, and $h$
+is a left inverse of $c$, the contraction $h;w\to0$ lies in $S$:
+whisker the split $w\to c\to w$ by $h$, then postcompose its
+outgoing arrow with the invertible contraction $h;c\to0$ and
+precompose its return arrow with the inverse contraction. This preserves
+the split and both $P$-image conditions. The same construction on the
+other side uses a right inverse of $c$. Changing the source by an
+invertible associator also preserves these conditions.
+
+Now take $A,B$ in the definition of $S$ and let $d=B;A$.
+It is based one degree higher, and $P d$ is invertible. By
+the proved fact it splits through an invertible based $c_d$.
+Choose a left inverse $h$ of $c_d$. For $A:z\to0_m$ use the
+two inverse candidates $h;B,\ B:0_m\to z$. Here the source of $h$ and its target are both $0_m$, so the first candidate
+has precisely the same boundary as the second. The first cancellation
+is the contraction of $(h;B);A\simeq h;d$ supplied by the preceding
+whiskered split. Thus this cancellation is itself in $S$. The second
+is the given invertible contraction $A;B\to1_z$.
+Consequently $S$ together with the invertible cells is postfixed
+for the defining coinductive operator; every member of $S$ is
+invertible. Finally $P f$ is invertible. Split $f$ through its
+$c$, use a left and a right inverse of $c$, and apply the two
+whiskered splits. Both required contractions for $f$ lie in $S$.
+This proves invertibility of $f$ in both settings.
+
+### A model separating the cell from every recorded certificate
+
+Let $E$ be the following strict $\omega$-category. Its objects are the bits $0,1$, each labelled by itself. For parallel cells $s,t$ there is one cell $s\to t$ for each label $e\leq b(s)\wedge b(t)$, where $b$ denotes the label. An identity retains its label. Composition in every globular direction takes the meet of the labels. The strict laws follow from the meet laws and the boundary inequalities. In the unit law the boundary label is at least the composand's label, and interchange computes the meet of the same four labels in both orders.
+
+The only strictly invertible cells of $E$ are identities. If $h:s\to t$ has a strict inverse $k$, the two cancellation equations give $b(s)=b(h)\wedge b(k)=b(t)$. The defining inequalities then force $b(h)=b(s)=b(t)$. Parallel cells with equal labels are equal, including in dimension zero. Hence $s=t$ and $h=1_s$. This argument concerns strict inverses. Indeed, every parallel pair in $E$ admits a filler of label zero.
+
+There is an associative Gray multiplication $E\otimes E\to E$ with unit the object $0$. Here are its construction and the check that it respects Gray pasting. A cube in the cubical nerve of $E$ is a face subcomplex $L\subseteq I^m$, consisting of the faces with label one. A cube is free on its faces, and the source and target hemispheres of each positive-dimensional face together contain all its facets. The meet rule therefore identifies the admissible labellings exactly with the downward-closed sets of faces. Face maps, degeneracies and connections act by preimage under the corresponding cube maps. For composition along a coordinate, the two outer faces take their labels from their respective pieces. The label on a face crossing the subdivision is the meet of its two pieces' labels. Indeed, the subdivided face pastes its two principal pieces together with faces of those pieces, whose labels are at least the corresponding principal labels. These are the cube and subdivision maps defining the cubical nerve. [Al-Agl–Brown–Steiner, §§1–2 and Theorem 8.8](https://arxiv.org/pdf/math/0007009)
+
+For cubes $L\subseteq I^m$ and $M\subseteq I^n$, set
+
+$$
+L\star M=(L\times I^n)\cup(I^m\times M)\subseteq I^{m+n}.
+$$
+
+On each pair of faces its label is the join of their labels. The formula commutes with face maps, degeneracies and connections in either block. It commutes with cubical composition in either block by $(b\wedge b')\vee c=(b\vee c)\wedge(b'\vee c)$. These are the presenting relations for a morphism out of the cubical Gray tensor. Associativity and the unit law follow on its generators from associativity of join and $0\vee b=b=b\vee0$. In particular, multiplication by the object $1$ on either side sends every cube to the full cube, the iterated degeneracy of the object $1$. The order of the two coordinate blocks is the order of the directed Gray product. [Al-Agl–Brown–Steiner, Definition 10.3](https://arxiv.org/pdf/math/0007009#page=35) [Ara–Maltsiniotis, Remark A.17](https://arxiv.org/pdf/1607.00668#page=166)
+
+Take a two-object enriched category $K$ with $K(a,a)=E$, $K(a,b)=E$, $K(b,b)=D^0$ and $K(b,a)=\varnothing$. Use $\star$ for composition at $a$ and for its action on $K(a,b)$. The designated cells are exactly the identities, with identity packages. At ambient dimension one, the endomorphism monoid at $a$ is $(\{0,1\},\vee,0)$, and there is no arrow $b\to a$. In higher dimensions the strict-inverse calculation in $E$ applies. Thus rule 6 holds. Identity cancellations give an actual left and right inverse, which coincide by the category laws. Rules 2, 3 and 5 preserve identities. For rule 4 a positive-dimensional identity factor makes the principal tensor cell degenerate. Its classifier factors through the preceding disk, and the resulting tensor of disks has dimension strictly smaller than the original total degree. When all factors are ambient identities, their composite is an identity. Hence this is a model of the recorded rules.
+
+Interpret $p$ by the object $1$ in $K(a,a)$, and $u:0\to1$, $v:1\to0$ by their unique arrows, both labelled zero. Their composite $u;v$ is the identity of $0$, so $T$ maps to an identity. Left multiplication by $p$ sends both $u$ and $v$ to the identity of $1$, as required for their marked cancellation cells. Send $x$ to the object $1$ of $K(a,b)$. Right multiplication by $x$ sends $u,v$ to identities as well. Send $f$ to the cell $1_x\to1_x$ of label zero. Its identity has label one, while $P f$ is an identity, so the mark contracting $P f$ is respected. Freeness now evaluates any purported certificate for $f$ into the designated class of $K$, contradicting its label. The same target evaluates the weak presentation. The strict-oriented embedding supplies its weak enrichment, and structural coherences have identity values in this strict target. Thus this separation also applies to the weak terms and their recorded packages. [Gepner–Heine, Remark 3.8.3 and Remark 4.5.4](https://arxiv.org/html/2510.10504v1#S4.SS5)
+
+### Question 2. A complete extension
+
+On the cells of the specified free model there is a one-rule extension. Use **coinduction relative to recorded certificates**. Supply a family of cells indexed by a set, a root index, and, at each index, two opposite candidates and their typed cancellations. For each cancellation supply either a recorded certificate or a successor index carrying exactly that cancellation. Infer the root, recording at it the package supplied at its index. Indices may be reused. Equivalently the data can be unfolded into a binary tree, stopping branches at ordinary certificates.
+
+For soundness, the indexed cells together with the reversible cells form a postfixed set for the reversal operator. For completeness, a reversal tower of a reversible cell gives such an indexing by its finite branch addresses. Its package at each node is part of the data. Rule 5 can continue to project recorded packages. This also works in the presence of two different inverse candidates.
+
+For **this** tower the step has a finite uniform description even with recorded inputs. Carry a certificate for $Pq$ into the strip construction. The composite tile is certified by the factor $u;v$; the two individual tiles acquire certificates after applying $P$, using $pu,pv$. The rebasing cells use the recorded package of $\ell$ and ordinary structure cells. Thus $c$, the rebased composite $j$, and the two $P$-images have certificates. When a formula holds up to a certified comparison, transport a certificate across it by whiskering that comparison into the two certified cancellations and applying rule 6. Use the recorded right inverse of $j$ in the correction. This produces a *certified* split triangle. Now index the step by $(A,B)$ with their $P$-certificates and their certified split triangle. One child is that triangle; the other is the next pair obtained from $d=B;A$ by the same finite recipe. This explains exactly what information a corecursive description adds to the finite derivations for this example.
+
+Minimality here refers to the accepted class of cells. Every sound, complete extension must add exactly the reversible cells missing from Cert. It uses one extra rule, and the counterexample proves that zero extra rules cannot suffice. There is no order on *syntactic* extensions in the question that selects a unique recursor. In particular, the schema above explicitly allows an infinite indexing with a witness operation. A uniform description, such as the split-contraction construction above, can present infinitely many nodes at once. Its finite written description and the general completeness proof have different scopes.
+
+The separating model also proves a necessity statement about semantics. Any new constructor interpretable in every original equipped model with its existing designated class still sends certificates to designated cells of the Boolean model. It therefore cannot certify $f$. A complete rule must permit additional recordings in such models. The relative coinduction rule does exactly this while retaining the underlying cells and projecting the package chosen by the evidence.
+
+The distinction matters for the suggested walking-cell test. A map of **equipped** structures sending the walking marked generator to the candidate already requires that candidate to be designated. A map of **underlying** Gray categories out of the walking reversal tower instead supplies all its generators' images, including all the higher cancellations. This is the coinduction rule if those data are allowed. Restricting such maps to programs in a particular finitary term language requires a representability theorem for that language. Neither the definition of a term language for this purpose nor such a theorem is part of rules 1–6.
+
+There is also a concrete limitation on an unrestricted program version. Even for a tower over an identity, a total program can return the identity package at depth $k$ if a given Turing machine has not halted in its first $k$ steps, and an ill-typed package otherwise. Validity at every address would decide nonhalting. This concerns validation of an arbitrary proposed program. A restricted language could instead require a finite typing proof for its witness operation. The questions specify no such language, and undecidability of cell membership alone does not rule out recursively enumerable proof search.
+
+### Question 3. Invertible cells in unbounded dimensions
+
+For this single computad there is a reversible cell outside **all six rules** in every ambient dimension at least three. Start with $f$. At a reversible, uncertified cell, take its actual reversal data. At least one of its two reversible cancellations is uncertified, since otherwise rule 6 certifies their parent. Iteration increases dimension by one at each step. Thus even a noncomputable finite cutoff for this computad is impossible.
+
+There are explicit examples among iterated interchangers. For $r\ge1$ take $r$ alternating interval factors, beginning with $u$, and form the mixed cell of
+
+$$
+u\otimes v\otimes u\otimes\cdots\otimes f .
+$$
+
+Its ambient dimension is $r+3$. Here one must distinguish two uses of the Gray package formula. Given an actual reversal tower for a positive factor, the formula takes that data to reversal data for the mixed cell. Applied to the tower just proved for $f$, it gives semantic invertibility. To apply rule 4 in a *finite derivation* would require a certified factor. In the strict setting the semantic statement is precisely [Ara–Lucas, Proposition 4.9](https://arxiv.org/pdf/1909.13564#page=27).
+
+Evaluate in the separating model. Represent $f$ by the square obtained by pulling its globe back along $D^1\otimes D^1\to D^2$, which preserves the principal cell. All four edges have label one and the square has label zero. The principal face of the product cube has label zero. A facet can have label zero only by selecting the zero endpoint of one of the first $r$ intervals. For $u$ this is its source, for $v$ its target. The sign of the interval differential in position $j$ is $(-1)^{j-1}$, so all these facets belong to the same hemisphere. Every facet on the opposite hemisphere, and all its faces, have label one. Its globular paste therefore has label one. The principal cell differs from an immediate boundary in label, which is impossible for an identity. Thus these reversible cells have no rules 1–6 derivation. [Ara–Lucas, §4.7, for the fold](https://arxiv.org/pdf/1909.13564#page=26)
+
+For an exact description in any dimension, take as vertices the cells outside Cert. For every choice of opposite candidates and typed cancellations at a vertex, draw an edge to the set of its cancellations still outside Cert. Keep a vertex if it has a choice for which every such child can itself be kept. Taking the greatest fixed point gives exactly the reversible vertices outside Cert, by the relative coinduction proof. Every edge at an uncertified vertex has at least one child by rule 6. The finite example realizes this infinite alternative in arbitrarily high dimensions.
+
+### Validation
+
+Run `python3 -B scripts/s22/check_invertibility.py` from the repository root. The [validator](../../../scripts/s22/check_invertibility.py) checks the four marked boundaries at their globular types and follows the nonidentity defect through eight split contractions. It exhausts the strictly inverse pairs through globular degree five, checks 10,360 compatible cubical subdivisions and 125 associativity triples, and tests both alternating orientations through hom degree nine. Using the repository’s Steiner atom tables, it also compares the two cylinder tiles with the subdivided cylinder in degrees two through nine, including the signed common face.
+
+The arguments in arbitrary degree use the cylinder subdivision formula, change of base inside an ordinary hom, and the postfixed family $S$. In particular the weak proof uses two directed tiles with invertible composite. The finite computations check the concrete model, orientations and boundary types.

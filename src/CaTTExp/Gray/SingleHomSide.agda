@@ -6,6 +6,10 @@
 --             endsOK (ΣΘ) A → dim A = dim Θ →
 --             isOp (ΣΘ) A t u → opCase (ΣΘ) A t u
 --
+-- Here A is the type at which the side condition is stated, i.e. the
+-- common type of the two sides t, u (the source type of the coh), so
+-- dim A = dim Θ (= dimCtx Θ) is the operation case's dimension check.
+--
 -- This is step 2(b) of the two-tier L whiskering interface
 -- (notes/surface-conservativity.md §7): every whisker head with k ≥ 1
 -- lives on ΣΘ (Gray.WhiskerSigma) and is accepted by isOp (Derived), so

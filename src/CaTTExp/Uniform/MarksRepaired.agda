@@ -23,12 +23,15 @@
 --   * with every object `ord`, the rules are the two-tier ones
 --                                                    (coh-ord-two-tier)
 --   * monotonicity in the setting and in the marks  (setting-mono′, mark-mono′)
---   * soundness from per-letter statements, with the composite step
---     (Lemma 4.1) and the join step (§4.6) proved here over an abstract
---     category                                       (sound′, iso-path, join-iso)
--- The per-letter statements left as fields of `Sem′` are the paper
--- theorems of notes/uniform-marks.md (4.3, 4.4, 4.5, 8.1 case (i)), each
--- proved in every algebra; none of them is (IL).
+--   * sound′ reduces soundness to the paper theorems given as fields of
+--     Sem′ (uniform-marks.md 4.3, 4.4, 8.1; ord-recovers-two-tier.md
+--     2.2/2.3; and `compose` = decomposition of the coherence image into
+--     the letters of its lift plus Lemma 4.1). Inv, LetInv and InnInv
+--     are abstract, so sound′ is a case dispatch over those fields.
+--     None of the fields is (IL).                     (sound′)
+--   * the composite step (Lemma 4.1) and the join step (§4.6), proved
+--     separately over an abstract category and not yet connected to
+--     Sem′                                           (iso-path, join-iso)
 ------------------------------------------------------------------------
 module CaTTExp.Uniform.MarksRepaired where
 

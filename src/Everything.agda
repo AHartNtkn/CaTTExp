@@ -365,3 +365,4 @@ import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
 import CaTTExp.Descent.TruncHomInv
 import CaTTExp.Descent.TInit
+import CaTTExp.Descent.EncodeDecode

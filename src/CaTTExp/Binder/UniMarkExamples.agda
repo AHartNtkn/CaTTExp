@@ -49,3 +49,10 @@ uni₁-ty = refl
 -- A variable for m_f that is not marked inv is still rejected.
 no-uni₁-unmarked : inferTy (unmark H₁) (uni₁ 0) ≡ nothing
 no-uni₁-unmarked = refl
+
+-- Presupposition under (MARK) + (HEAD-inv) (UniMark.uni-tm-ty)
+-- applied to this checker's derivation of the n = 1 filler.
+open import CaTTExp.Binder.TypingWith 𝕊 cattSide headMark using (_⊢ty_)
+
+uni₁-presup : H₁ ⊢ty arr (arr ⋆ (var 3) L) (var 4) (var 5)
+uni₁-presup = uni-tm-ty (snd (from-just (infer H₁ (uni₁ 0))))

@@ -3,7 +3,11 @@
 --
 -- For every cone shape, every valid head of CaTTExp.Binder.LimHeads
 -- has a well-formed type over its arity (`HeadOK`), in the kernel with
--- plain CaTT's side condition and rule (MARK):
+-- plain CaTT's side condition and any mark judgment stable under
+-- renaming and substitution that gives variables their entry's marks
+-- (MarkRen, MarkSub, MarkVar; `Gen`). The instance at the end of this
+-- module is rule (MARK) alone (`varMark`); CaTTExp.Binder.UniMark uses
+-- it with (MARK) + (HEAD-inv):
 --
 --   Γ ⊢ ⋆                                       (lim_Γ)
 --   Γ ⊢ A_g [Γ, lim_Γ[id], λ_{Γ,0}[id], …, λ_{Γ,g−1}[id]]   (λ_{Γ,g})
@@ -23,8 +27,8 @@
 -- well-formed type.
 --
 -- The argument is stated for any head family containing lim and the
--- legs with the same data (`Gen`), so that CaTTExp.Binder.UniPresup
--- reuses it for the family with uni.
+-- legs with the same data, and any mark judgment as above (`Gen`), so
+-- that CaTTExp.Binder.UniPresup reuses it for the family with uni.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Pure as P
@@ -33,6 +37,10 @@ open import CaTTExp.Binder.LimHeads
 open import CaTTExp.Binder.HeadSpec using (HeadSpec)
 import CaTTExp.Binder.HeadSpec as HS
 import CaTTExp.Binder.Laws as BL
+import CaTTExp.Binder.Mark as BM
+import CaTTExp.Binder.Typing as Tg
+import CaTTExp.Binder.Rename as Rn
+import CaTTExp.Binder.Subst as Sb
 
 module CaTTExp.Binder.LimPresup (shape : P.Ctx → Maybe P.Ctx) where
 
@@ -45,28 +53,31 @@ module Gen (hs : HeadSpec P.K) (inj : LimF → HeadSpec.H hs)
   (hctx-eq : ∀ l y → HeadSpec.hctx hs (inj l) y ≡ LimConstruction.hctx P.K (HeadSpec.H hs) inj shape l y)
   (hty-eq  : ∀ l y → HeadSpec.hty hs (inj l) y ≡ LimConstruction.hty P.K (HeadSpec.H hs) inj shape l y)
   (hok-eq  : ∀ l y → HeadSpec.hok hs (inj l) y ≡ LimConstruction.hok P.K (HeadSpec.H hs) inj shape l y)
+  (mark : Signature.Ctx (HS.Laws.𝕊 P.∅ hs) → BM.Mark → Signature.Tm (HS.Laws.𝕊 P.∅ hs) → Bool)
+  (markRen : Rn.MarkRen (HS.Laws.𝕊 P.∅ hs) (Tg.cattSide (HS.Laws.𝕊 P.∅ hs)) mark)
+  (markSub : Sb.MarkSub (HS.Laws.𝕊 P.∅ hs) (Tg.cattSide (HS.Laws.𝕊 P.∅ hs)) mark)
+  (markVar : Sb.MarkVar (HS.Laws.𝕊 P.∅ hs) (Tg.cattSide (HS.Laws.𝕊 P.∅ hs)) mark)
   where
 
  open HS.Laws P.∅ hs using (𝕊; spec-honest; spec-head; spec-laws)
  open Signature 𝕊
  open import CaTTExp.Binder.SyntaxLemmas K B
  open import CaTTExp.Binder.Typing 𝕊 using (cattSide)
- open import CaTTExp.Binder.TypingWith 𝕊 cattSide varMark
- open import CaTTExp.Binder.Scoping 𝕊 cattSide varMark
- open import CaTTExp.Binder.Rename 𝕊 cattSide varMark
- open import CaTTExp.Binder.Subst 𝕊 cattSide varMark
- open import CaTTExp.Binder.VarMark 𝕊 cattSide
+ open import CaTTExp.Binder.TypingWith 𝕊 cattSide mark
+ open import CaTTExp.Binder.Scoping 𝕊 cattSide mark
+ open import CaTTExp.Binder.Rename 𝕊 cattSide mark
+ open import CaTTExp.Binder.Subst 𝕊 cattSide mark
  open import CaTTExp.Binder.HonestHeads 𝕊 using (HonestAt; honest?)
  open import CaTTExp.Binder.HonestHeads 𝕊 using (module Typed)
- open Typed cattSide varMark using (op-intro; honest-ok)
+ open Typed cattSide mark using (op-intro; honest-ok)
  import CaTTExp.Binder.Heads 𝕊 as Hd
- open Hd.Typed cattSide varMark using (HeadOK; head-presup; arity; resTy)
+ open Hd.Typed cattSide mark using (HeadOK; head-presup; arity; resTy)
  open import CaTTExp.Binder.PureSide 𝕊 using (cattSide-pure)
- open import CaTTExp.Binder.PureEmbed 𝕊 cattSide varMark using (SidePure; ctx-emb; ty-emb)
+ open import CaTTExp.Binder.PureEmbed 𝕊 cattSide mark using (SidePure; ctx-emb; ty-emb)
  open LimConstruction P.K B inj shape
  open PureEmb P.K B
  open BL 𝕊 using (Closed; BinderLaws)
- open import CaTTExp.Binder.Presup 𝕊 cattSide varMark using (PresupLaws; tm-ty)
+ open import CaTTExp.Binder.Presup 𝕊 cattSide mark using (PresupLaws; tm-ty)
 
  closed : Closed
  closed ()
@@ -360,10 +371,12 @@ module Gen (hs : HeadSpec P.K) (inj : LimF → HeadSpec.H hs)
 ------------------------------------------------------------------------
 -- lim and the cone alone.
 
-open Gen (limSpec P.K shape) (λ l → l) (λ _ _ → refl) (λ _ _ → refl) (λ _ _ → refl) public
-
 open HS.Laws P.∅ (limSpec P.K shape) using (𝕊)
 open Signature 𝕊 using (Ctx; Tm; Ty; varMark)
+open import CaTTExp.Binder.VarMark 𝕊 (Tg.cattSide 𝕊) using (markRen; markSub; markVar)
+
+open Gen (limSpec P.K shape) (λ l → l) (λ _ _ → refl) (λ _ _ → refl) (λ _ _ → refl)
+  varMark markRen markSub markVar public
 import CaTTExp.Binder.Heads 𝕊 as Hd
 open import CaTTExp.Binder.Typing 𝕊 using (cattSide)
 open Hd.Typed cattSide varMark using (HeadOK)

@@ -170,7 +170,8 @@ uni-self = refl
 -- Presupposition (CaTTExp.Binder.UniPresup) applied to the checker's
 -- derivation of the n = 1 filler: its type is well formed.
 
-open import CaTTExp.Binder.UniPresup coneShape hornShape using (uni-tm-ty)
+open import CaTTExp.Binder.VarMark 𝕊 cattSide using (markRen; markSub; markVar)
+open import CaTTExp.Binder.UniPresup coneShape hornShape varMark markRen markSub markVar using (uni-tm-ty)
 
 uni₁-presup : H₁ ⊢ty arr (arr ⋆ (var 3) L) (var 4) (var 5)
 uni₁-presup = uni-tm-ty (snd (from-just (infer H₁ (uni₁ 0))))

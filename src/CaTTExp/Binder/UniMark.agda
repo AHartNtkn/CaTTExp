@@ -11,6 +11,13 @@
 -- judgment satisfies MarkRen, MarkSub and MarkVar, so substitution
 -- (`tm[]`) and weakening hold for CaTT + lim + λ + uni with it, by
 -- CaTTExp.Binder.Subst; the family's BinderLaws are HeadSpec's.
+-- Presupposition (`uni-tm-ty`) holds with it too, by
+-- CaTTExp.Binder.UniPresup, which is generic in the mark judgment.
+--
+-- (UNI-inv) has no premise: it is §6.2's J2 for selector ≥ 1 taken as
+-- an axiom, and this module encodes that rule, nothing more. Its
+-- semantic soundness rests on §6.2's certification line, which is
+-- proved for 2-categories and is a claim in (∞,ω).
 --
 -- The premise side of §6.2 ("σ must supply inv derivations" for the
 -- marked horn entries) is the kernel's mark premise on the arity
@@ -47,3 +54,9 @@ open import CaTTExp.Binder.Subst 𝕊 cattSide headMark using (tm[])
 -- Substitution for CaTT with lim, the universal cone and uni, with
 -- (UNI-inv) in the mark judgment.
 uni-tm[] = tm[] closed spec-laws markRen markSub markVar
+
+-- Presupposition with this mark judgment (CaTTExp.Binder.UniPresup,
+-- generic in the mark judgment): every term of CaTT + lim + λ + uni,
+-- typed with (MARK) + (HEAD-inv), has a well-formed type.
+open import CaTTExp.Binder.UniPresup shape ushape headMark markRen markSub markVar public
+  using (uni-presup; uni-tm-ty)

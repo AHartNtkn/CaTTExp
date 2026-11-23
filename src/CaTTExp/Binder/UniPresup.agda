@@ -3,8 +3,11 @@
 --
 -- For every cone shape and every horn shape, every valid head of
 -- CaTTExp.Binder.UniHeads has a well-formed type over its arity
--- (`HeadOK`), in the kernel with plain CaTT's side condition and rule
--- (MARK). For lim and the legs this is CaTTExp.Binder.LimPresup, reused
+-- (`HeadOK`), in the kernel with plain CaTT's side condition and any
+-- mark judgment stable under renaming and substitution that gives
+-- variables their entry's marks (module parameters; MarkRen, MarkSub,
+-- MarkVar). Both rule (MARK) alone (`varMark`) and (MARK) + (HEAD-inv)
+-- of CaTTExp.Binder.UniMark qualify. For lim and the legs this is CaTTExp.Binder.LimPresup, reused
 -- through its generic part. For uni^y_{Γ,n} (y = 0 the filler w, y ≥ 1
 -- the components), with U the horn shape laid out as
 --
@@ -37,31 +40,44 @@ open import CaTTExp.Binder.LimHeads
 open import CaTTExp.Binder.UniHeads
 import CaTTExp.Binder.HeadSpec as HS
 import CaTTExp.Binder.LimPresup as LPm
+import CaTTExp.Binder.Mark as BM
+import CaTTExp.Binder.Typing as Tg
+import CaTTExp.Binder.Rename as Rn
+import CaTTExp.Binder.Subst as Sb
 
 module CaTTExp.Binder.UniPresup
-  (shape : P.Ctx → Maybe P.Ctx) (ushape : P.Ctx → Nat → Maybe UShape) where
+  (shape : P.Ctx → Maybe P.Ctx) (ushape : P.Ctx → Nat → Maybe UShape)
+  (mark : Signature.Ctx (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape)) → BM.Mark →
+          Signature.Tm (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape)) → Bool)
+  (markRen : Rn.MarkRen (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))
+                        (Tg.cattSide (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))) mark)
+  (markSub : Sb.MarkSub (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))
+                        (Tg.cattSide (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))) mark)
+  (markVar : Sb.MarkVar (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))
+                        (Tg.cattSide (HS.Laws.𝕊 P.∅ (uniSpec P.K shape ushape))) mark)
+  where
 
 open HS.Laws P.∅ (uniSpec P.K shape ushape) using (𝕊; spec-honest; spec-head; spec-laws)
 open Signature 𝕊
 open import CaTTExp.Binder.SyntaxLemmas K B
 open import CaTTExp.Binder.Typing 𝕊 using (cattSide)
-open import CaTTExp.Binder.TypingWith 𝕊 cattSide varMark
-open import CaTTExp.Binder.Scoping 𝕊 cattSide varMark
-open import CaTTExp.Binder.Rename 𝕊 cattSide varMark
-open import CaTTExp.Binder.Subst 𝕊 cattSide varMark
-open import CaTTExp.Binder.VarMark 𝕊 cattSide
+open import CaTTExp.Binder.TypingWith 𝕊 cattSide mark
+open import CaTTExp.Binder.Scoping 𝕊 cattSide mark
+open import CaTTExp.Binder.Rename 𝕊 cattSide mark
+open import CaTTExp.Binder.Subst 𝕊 cattSide mark
 open import CaTTExp.Binder.HonestHeads 𝕊 using (HonestAt; honest?)
 open import CaTTExp.Binder.HonestHeads 𝕊 using (module Typed)
-open Typed cattSide varMark using (op-intro; honest-ok)
+open Typed cattSide mark using (op-intro; honest-ok)
 import CaTTExp.Binder.Heads 𝕊 as Hd
-open Hd.Typed cattSide varMark using (HeadOK)
-open import CaTTExp.Binder.Presup 𝕊 cattSide varMark using (PresupLaws; ty-ctx)
+open Hd.Typed cattSide mark using (HeadOK)
+open import CaTTExp.Binder.Presup 𝕊 cattSide mark using (PresupLaws; ty-ctx)
 open UniConstruction P.K LUF (λ b → b) shape ushape
 open PureEmb P.K LUF
 open LC using (shapeOK; dropR)
 
 module LP = LPm shape
 module G = LP.Gen (uniSpec P.K shape ushape) base (λ _ _ → refl) (λ _ _ → refl) (λ _ _ → refl)
+  mark markRen markSub markVar
 open G using (closed; laws; pe-ty-wf; lc-peTy; len-pe; pre; lk-in; lk-wf; lk-range; idsub)
 
 ------------------------------------------------------------------------

@@ -19,7 +19,10 @@
 -- four whisker heads: the top chain of the head is the top chain of
 -- the whiskered cell when the whiskering cell's image is an identity
 -- (`HR0`, `HR`, `HL0`, `HL`), and an identity has equal source and
--- target (`unit-par`). From them:
+-- target (`unit-par`). The head hypotheses may assume that the
+-- whiskering cell's tower has the dimension its type gives (`tdim`,
+-- proved here from the boundary half of soundness, `tdim-sound`): in
+-- 𝔉 a 1-cell identity and a higher identity have different top chains. From them:
 --
 --   headR, headL : the image of a whisker head, applied in any
 --                  environment with the right boundaries whose

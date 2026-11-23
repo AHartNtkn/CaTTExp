@@ -277,6 +277,8 @@ import CaTTExp.Surface.Generated
 import CaTTExp.Surface.Image
 import CaTTExp.Surface.WhiskerImage
 import CaTTExp.Surface.ImageCatt
+import CaTTExp.Surface.TowerDim
+import CaTTExp.Surface.ImageGray
 import CaTTExp.Gray.WhiskerSigma
 import CaTTExp.Gray.SingleHomSide
 import CaTTExp.Gray.WhiskerSide

@@ -30,8 +30,9 @@
 --
 -- `module Instance` then instantiates TheoremB.Hyp and Thm with every
 -- hypothesis discharged (inv-arr and dim-≈ from Generated, presup from
--- the kernel, Wh-wf from WhiskerWith), so `kc-from-el` and
--- `conservative-from-el` hold for this ≈ with no open parameter.
+-- the kernel, Wh-wf from WhiskerWith), so `kc-from-el` holds for this
+-- ≈ with no open module parameter. (`conservative-from-el` still takes
+-- (SC), `SideResp`, as an argument.)
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Pure using (∅)

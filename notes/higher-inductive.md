@@ -23,7 +23,7 @@
 | `(X : grpd, g : A → X, sq : π₁ ⇒ π₂ : X × X → X)` | the propositional truncation ‖A‖₋₁ (recursive higher constructor) | Thm C |
 | the same without `grpd`, A = ⊤ | **not** ⊤: the walking idempotent is a model that ⊤ does not map to | Prop C′ |
 
-1. **Universal properties.** For every positive Δ, maps μΔ → B are the same as models of Δ in B, as ω-categories (Lemma 0). For non-recursive ("cellular") contexts, μΔ is a finite cell complex in Cat_ω, an iterated pushout of A ⊗ ∂Dᵏ → A ⊗ Dᵏ (Theorem A). The groupoidal HIT is its ∞-groupoid reflection (Theorem B), so HoTT's non-recursive HITs are the groupoidifications of directed ones.
+1. **Universal properties.** When no source mentions X ("cellular" Δ), maps μΔ → B are the same as models of Δ in B, as ω-categories (Lemma 0); for recursive Δ the universal property is initiality among models, as stated in §9.3. For non-recursive ("cellular") contexts, μΔ is a finite cell complex in Cat_ω, an iterated pushout of A ⊗ ∂Dᵏ → A ⊗ Dᵏ (Theorem A). The groupoidal HIT is its ∞-groupoid reflection (Theorem B), so HoTT's non-recursive HITs are the groupoidifications of directed ones.
 2. **Dependent elimination** holds for **every** positive Δ and **every** family p : E → μΔ, by the Awodey–Gambino–Sojakova argument (Theorem D). Over a cocartesian family its data unfold to *directed* paths-over: a cell constructor l : x → y asks for a fibre map l_!(e_x) → e_y, which need not be invertible even over a groupoid base. Families over a cellular μΔ are built by DESC, given the cell-shaped edge cases G_k of §6, which are proved here only as a sketch.
 3. **h-levels are not decidable** once cell constructors are allowed (Prop E1), so T-init cannot be extended to a complete clause. What can be said: directed cellular contexts are polygraph presentations, and μΔ is n-truncated when the polygraph is *homotopical* (the HPOL characterisation, B24). Bubbles (e.g. the directed 2-sphere) break this. In the groupoidal case there are decidable sound sufficient conditions (Lyndon; Gersten's weight test), proposed as T-init clauses in §7.
 
@@ -37,13 +37,13 @@
 
 ### 1.1 Representability (Lemma 0) [proved here]
 
-For a model σ of Δ in B, a model morphism μΔ → (B, σ) is a map h with invertible cells h ∘ η ≅ σ: a point of the fibre of the restriction `η* : Hom(μΔ, B) → Mod_Δ(B)` over σ. INIT-J1 says the fibre is inhabited, INIT-J2 that any two points are connected, and the higher clause (cells between model morphisms are model morphisms into `[⟦Dᵏ⟧, B]`) says that the fibre is contractible at every level.
+Let Δ be **cellular** (no source mentions X). Then a map h : A → B carries a model σ on A to a model h_*σ on B (compose each operation S → T(A) with T(h); sources are constant), so `Mod_Δ(–)` is a functor and there is a restriction `η* : Hom(μΔ, B) → Mod_Δ(B)`, h ↦ h_*η. A model morphism μΔ → (B, σ) is a map h with invertible cells h_*η ≅ σ: a point of the fibre of η* over σ. INIT-J1 says the fibre is inhabited, INIT-J2 that any two points are connected, and the higher clause (cells between model morphisms are model morphisms into `[⟦Dᵏ⟧, B]`) says that the fibre is contractible at every level.
 
-**Lemma 0.** INIT holds for Δ iff `η* : Hom(μΔ, B) → Mod_Δ(B)` is an equivalence of ω-categories, natural in B. The cells of `Mod_Δ(B)` are the pointwise ones, i.e. models in `[⟦Dᵏ⟧, B]`.
+**Lemma 0.** For cellular Δ, INIT holds iff `η* : Hom(μΔ, B) → Mod_Δ(B)` is an equivalence of ω-categories, natural in B. The cells of `Mod_Δ(B)` are the pointwise ones, i.e. models in `[⟦Dᵏ⟧, B]`.
 
 *Proof.* Contractible fibres at every level give an equivalence on k-cells for every k. Conversely, an equivalence has contractible fibres. ∎
 
-Everything below is proved by computing `Mod_Δ(B)` and recognising a known representing object.
+For recursive Δ (a source mentions X) a map out of A does not transport models, and the universal property is only initiality among models. Theorem A below uses Lemma 0; Theorems C and D use only initiality.
 
 ### 1.2 Two kinds of cell constructor
 

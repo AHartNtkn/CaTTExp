@@ -126,8 +126,9 @@ TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff so
 (C : ⋆)^iord       every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 (C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is trivial
                    (an identity in strict models; so in particular invertible)
-(COH-ord)    Γ^ord ⊢ps (every object of Γ marked ord), SC_𝔉(Γ, t → u),
-             γ sends every object of Γ to an ord variable    ⊢  coh^ord_{Γ, t → u}[γ];
+(COH-ord)    Γ^ord ⊢ps (objects a₁, …, aₙ of Γ marked ord), SC_𝔉(Γ, t → u),
+             γ sends a₁, …, aₙ to ord variables              ⊢  coh^ord_{Γ, t → u}[γ];
+             (a₀ is the target of no hom of Γ, so its mark is irrelevant)
              its marks are the two-tier rules of §3.3
 
 (COH-inv)    coherence case                                                   ⇒  inv

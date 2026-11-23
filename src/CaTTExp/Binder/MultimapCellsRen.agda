@@ -507,3 +507,52 @@ module SupportRen (Φ : Ctx) (dd : Deps↓ Φ) (X₀ : List Nat) (as : List Nat)
                       (filter-ext _ _ (upTo m) (λ p up →
                         let l = upTo-In-inv m p up in
                         iff-≡ _ _ (bwd p l) (fwd p l))))))
+
+------------------------------------------------------------------------
+-- Increasing lists with the same elements are equal.
+
+inc-ext : ∀ xs ys → Inc xs → Inc ys → (∀ i → In xs i → In ys i) → (∀ i → In ys i → In xs i) → xs ≡ ys
+inc-ext []       []       _ _ _ _ = refl
+inc-ext []       (y ∷ ys) _ _ _ g = ⊥-elim (g y (∨-l (y ==ℕ y) _ (==ℕ-refl y)))
+inc-ext (x ∷ xs) []       _ _ f _ = ⊥-elim (f x (∨-l (x ==ℕ x) _ (==ℕ-refl x)))
+inc-ext (x ∷ xs) (y ∷ ys) (ax ∷ ix) (ay ∷ iy) f g = go head-eq
+  where
+  head-eq : x ≡ y
+  head-eq with dec (x ==ℕ y)
+  ... | inl q = ==ℕ-sound x y q
+  ... | inr q =
+        let x∈ys = or-r (x ==ℕ y) _ q (f x (∨-l (x ==ℕ x) _ (==ℕ-refl x)))
+            y<x = ay x x∈ys
+        in ⊥-elim (yx y<x)
+    where
+    yx : T (y <ℕ x) → ⊥
+    yx l with dec (y ==ℕ x)
+    ... | inl r = q (subst (λ z → T (x ==ℕ z)) (sym (==ℕ-sound y x r)) (==ℕ-refl x))
+    ... | inr r = <-irrefl x (<-trans″ x y x (ax y (or-r (y ==ℕ x) _ r (g y (∨-l (y ==ℕ y) _ (==ℕ-refl y))))) l)
+  go : x ≡ y → x ∷ xs ≡ y ∷ ys
+  go refl = cong (x ∷_) (inc-ext xs ys ix iy
+    (λ i p → or-r (i ==ℕ x) _ (λ q → <-irrefl x (subst (λ z → T (x <ℕ z)) (==ℕ-sound i x q) (ax i p))) (f i (∨-r (i ==ℕ x) _ p)))
+    (λ i p → or-r (i ==ℕ x) _ (λ q → <-irrefl x (subst (λ z → T (x <ℕ z)) (==ℕ-sound i x q) (ay i p))) (g i (∨-r (i ==ℕ x) _ p))))
+
+-- Renaming a subset of an increasing list of numbers below k onto its
+-- positions.
+sub-filter-ren : ∀ ys → Inc ys → ∀ k → (∀ i → In ys i → T (i <ℕ k)) → ∀ S → S ⊆ ys →
+  map (λ i → idx i ys) (filter (λ i → elem i S) (upTo k))
+    ≡ filter (λ p → elem p (map (λ i → idx i ys) S)) (upTo (length ys))
+sub-filter-ren ys iy k yk S Sy =
+  trans (cong (map (λ i → idx i ys)) same)
+    (trans (idx-filter (λ i → elem i S) ys (inc-nodup ys iy))
+      (filter-ext _ _ (upTo (length ys)) (λ p up →
+        let l = upTo-In-inv (length ys) p up in
+        iff-≡ _ _
+          (λ q → subst (λ z → In (map (λ i → idx i ys) S) z) (idx-nth ys (inc-nodup ys iy) p l)
+                   (In-map (λ i → idx i ys) S (nth ys p) q))
+          (λ q → let (x , xS , e) = In-map-inv (λ i → idx i ys) S p q in
+                 subst (In S) (sym (trans (cong (nth ys) e) (nth-idx ys x (Sy x xS)))) xS))))
+  where
+  same : filter (λ i → elem i S) (upTo k) ≡ filter (λ i → elem i S) ys
+  same = inc-ext _ _ (inc-filter _ (upTo k) (inc-upTo k)) (inc-filter _ ys iy)
+    (λ i p → let (a , _) = filter-In-inv (λ i → elem i S) (upTo k) i p in
+             filter-elem (λ i → elem i S) ys i a (Sy i a))
+    (λ i p → let (a , b) = filter-In-inv (λ i → elem i S) ys i p in
+             filter-elem (λ i → elem i S) (upTo k) i a (upTo-elem k i (yk i b)))

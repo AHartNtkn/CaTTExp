@@ -330,6 +330,8 @@ import CaTTExp.GrayCtx.ElabCorrect.Fill
 import CaTTExp.GrayCtx.ElabCorrect.Coh
 import CaTTExp.GrayCtx.ElabCorrect.Shape
 import CaTTExp.GrayCtx.ElabCorrect.Assoc
+import CaTTExp.GrayCtx.ElabCorrect.Chain
+import CaTTExp.GrayCtx.ElabCorrect.Susp
 import CaTTExp.GrayCtx.VComp
 import CaTTExp.GrayCtx.Cube
 import CaTTExp.GrayCtx.Prune

@@ -18,14 +18,19 @@
 --  * `module Consistent`: every hypothesis of TheoremB.Hyp/Thm is
 --    instantiated at once, for a deliberately coarse E (types related
 --    iff of equal dimension, all terms related) with Unit = ⊤. This
---    shows the hypotheses are jointly satisfiable, so TheoremB is not
---    vacuous. It is NOT the instance of interest: for that E, ELAt
---    fails in most contexts.
+--    shows the module parameters are jointly satisfiable. There Wh-≈
+--    and Unit hold trivially, since all terms are related, so this
+--    tests Wh-wf, inv-arr, dim-≈ and presup together; Wh-≈ with a
+--    non-trivial ≈ is part of the open item below. It is NOT the
+--    instance of interest: for that E, ELAt fails in most contexts
+--    (already at D¹: x ≈ y but there is no cell y → x).
 --
 -- What remains for the instance of interest (≈ image equality or
 -- ≡_sua): Wh-≈, i.e. whiskering by cells ≈ an identity is ≈ the
--- identity on x. That is a property of ≈ (strict unitality of the
--- strict image), not of the kernel, and it is not proved here.
+-- identity on x. That is a property of ≈ on the fixed kernel term
+-- (p ◃ₖ x) ▹ₖ q (strict unitality of ≈); no further kernel
+-- construction is needed. It is not proved here. The interface for
+-- two-tier and uniform L is also open.
 ------------------------------------------------------------------------
 module CaTTExp.Surface.WhiskerPure where
 

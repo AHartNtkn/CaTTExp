@@ -37,7 +37,7 @@
 -- Σʲ(D¹ ∨ Dᵐ⁻ʲ ∨ D¹) and proving Wh-wf and Wh-≈). For plain CaTT,
 -- CaTTExp.Surface.WhiskerPure builds `wh`, proves Wh-wf, and shows all
 -- hypotheses jointly satisfiable; Wh-≈ for the ≈ of interest and the
--- two-tier L instance remain open.
+-- two-tier and uniform L instances remain open.
 -- Wh-wf is syntactic: the boundary terms of the whiskering head,
 -- after substitution, must be exactly the recursive `wh` calls on
 -- the boundaries. The construction must be made to satisfy this.

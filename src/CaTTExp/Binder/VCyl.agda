@@ -7,7 +7,8 @@
 -- form in which INIT states its result types); this version selects
 -- free variables of a context, as Raw does, which is the form typing
 -- is about (a result type is typed after its telescope is opened).
--- The two agree after opening (CaTTExp.Binder.VCylOpen).
+-- That the two agree after opening is planned, not proved here
+-- (ledger S26i (2)).
 --
 --   t⁻ = t [ mm ],  t⁺ = t [ mp ],
 --   cyl D (var x)     = th D x,

@@ -13,7 +13,11 @@
 -- cylinder is junk on both sides; and its iterated boundaries are
 -- Binder.Cyl's, which commute with every substitution (CylLaws.Whisk),
 -- so some hypotheses of Commute's lemmas are not needed. Purely
--- syntactic: no typing is assumed.
+-- syntactic: no typing is assumed. Premises: cyl-pre and cylTy-pre
+-- need t (and A) scoped in σ (scTm? (lenₛ σ)); cyl-sub and cylTy-sub
+-- (module Post) need a scoped filler family (KScoped), equal lengths
+-- of mm and mp, and t, A scoped in them; Ext needs agreement below the
+-- scope n.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature

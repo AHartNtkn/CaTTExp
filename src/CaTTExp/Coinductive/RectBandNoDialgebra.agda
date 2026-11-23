@@ -19,7 +19,9 @@
 --     map h : C → A and a transition defined exactly on the pullback
 --     C ×_A E, as a band map; terminality is unique existence of
 --     dialgebra maps, with uniqueness only pointwise (so the negative
---     result is the stronger one).
+--     result is the stronger one).  `Band` carries the rectangular-band
+--     axioms (idempotence and (xy)z = xz = x(yz)), so the theorem is
+--     stated for rectangular bands, not arbitrary magmas.
 --   * `no-first`: the instance p = first injection 1 → 1 + 1 in R.
 --   * `no-fin`: the instance p : Fin → ℕ in R (ℕ = (ℕ, ℕ) is R's NNO).
 --
@@ -43,12 +45,17 @@ record Band : Set₁ where
     Car  : Set
     mul  : Car → Car → Car
     idem : ∀ x → mul x x ≡ x
+    -- the rectangular law (xy)z = xz = x(yz); associativity follows
+    left  : ∀ x y z → mul (mul x y) z ≡ mul x z
+    right : ∀ x y z → mul x (mul y z) ≡ mul x z
 open Band
 
 grid : Set → Set → Band
 Car  (grid L R) = Σ L (λ _ → R)
 mul  (grid L R) (a , _) (_ , d) = a , d
 idem (grid L R) (a , b) = refl
+left  (grid L R) _ _ _ = refl
+right (grid L R) _ _ _ = refl
 
 record BMap (B C : Band) : Set where
   field

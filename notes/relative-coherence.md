@@ -1201,7 +1201,7 @@ What is not yet in Agda: an unconditional filler for any coherence of dimension 
 3. *Basic fillers.* c″↑ only needs fillers for 1-dimensional compositions (K₁), for the 2-cell whiskers l ∗₀ q and q ∗₀ r, and for the binary vertical composite α ∗₁ β. Each of these gets an explicit layered filler, one layer per selected top cell:
    (l⁻ f⁻ r↑) ∗₁ (l⁻ ∗₀ q↑ ∗₀ r⁺) ∗₁ (l↑ g⁺ r⁺).
    Its two ends are joined to a_c and b_c by equal-image RC(2) connectors, with omitted factors handled as in `DimOne`.
-   *Status (2026-11-23):* the vertical composite is done in a general form: `Naturality.Ladder` runs DimOne's sweep one dimension up (in the hom x⁻ → y⁺, with 3-cell squares θ_α and ∗₂-stacking), and `Naturality.Column.col-ok` types it as c↑ : a_c → b_c for any 2-cell c : f₀ ⇒ f_m over the column Q_m = ΣΘ_m (every m, every valid datum). It is conditional on rcS answering the gaps it uses (`ColRC`), which for the vertical composite are equal-image 2-cell queries.
+   *Status (2026-11-23):* the vertical composite is done in a general form: `Naturality.Ladder` runs DimOne's sweep one dimension up (in the hom x⁻ → y⁺, with 3-cell squares θ_α and ∗₂-stacking), and `Naturality.Column.col-ok` types it as c↑ : a_c → b_c for any 2-cell c : f₀ ⇒ f_m over the column Q_m = ΣΘ_m (every m, every valid datum). It is conditional on rcS answering the gaps it uses (`ColRC`), which for the vertical composite are equal-image 2-cell queries (expected, not proved).
    *Refinement (2026-11-23):* no separate transport step is needed. For a general 2-dimensional composition c, run the same `Ladder` in the hom x₀⁻ → x_m⁺ with:
    - objects: the layer paths t_j as composite 1-cell terms;
    - rungs: their cylinders t_j↑ (K₁, unconditional);

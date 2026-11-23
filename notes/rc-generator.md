@@ -110,7 +110,7 @@ Agda pays for the *unshared* size of a term: the certified checker and `==Tm` tr
 
 ## 7. Generators with composite faces (S20 stage 4, 2026-11-23)
 
-Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a rank-3 comparison of two coherence-only tracks (22 and 25 top-cut factors) in a 15-variable context with two generators whose targets are composites: `x12 : x11 ⇒ x10 ∗₀ x2` and `x14 : x13 ⇒ x11 ∗₀ x6`. The context is strong Steiner (`steiner.Complex.is_strong_steiner`).
+Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a rank-3 comparison of two coherence-only tracks (22 and 25 top-cut factors) in a 15-variable context with two generators whose targets are composites: `x12 : x11 ⇒ x10 ∗₀ x2` and `x14 : x13 ⇒ x11 ∗₀ x6`. The context is strong Steiner, checked in Python (`steiner.Complex.is_strong_steiner`), not yet certified in Agda.
 
 **The marker step, stated.** Let g : s → c be a generator whose face c is a composite term of type B. Put Γ_g = Γ with g replaced by C : B and g′ : s → C, and σ_g : Γ_g → Γ the substitution C ↦ c, g′ ↦ g.
 - *Claim (correctness).* If t = σ_g(t′) and u = σ_g(u′) with t′, u′ parallel in Γ_g, and w′ : t′ → u′ in Γ_g, then σ_g(w′) : t → u in Γ. This holds because substitution preserves typing.
@@ -122,7 +122,7 @@ Query (2) of Horiz3 (the coherence-only cap-block comparison of round 21) is a r
 - both endpoints of query (2) whisker x4 and x8 inside those composites;
 - in Γ_g the marker C is free, so no 2-cell relates C ∗₀ y to x10 ∗₀ x3. The endpoints therefore have no bundled form at all. Checked with `rc_heur._rebuilder`: none of the four endpoint lifts typechecks.
 
-So the marker step is correct and terminating only under the hypothesis that **no generator acts on a proper part of a marked face**. Query (2) violates it. This is the same obstruction that made r9 Response 4 fold free faces instead (§7.12 of `relative-coherence.md`). The fold route was tried on query (2) (`tools/rc_fold.py`). Its squares recurse into cylinder contexts of 35 to 87 variables, and each level shows new shapes:
+So the marker step, though correct and terminating, applies only under the hypothesis that **no generator acts on a proper part of a marked face** (otherwise no bundled forms exist). Query (2) violates it. This is the same obstruction that made r9 Response 4 fold free faces instead (§7.12 of `relative-coherence.md`). The fold route was tried on query (2) (`tools/rc_fold.py`). Its squares recurse into cylinder contexts of 35 to 87 variables, and each level shows new shapes:
 - several simultaneous events with decomposed composite sources;
 - identity slots, loops, and nested vertical composites.
 

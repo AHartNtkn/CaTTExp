@@ -171,14 +171,20 @@ class Pasting:
                 self.proofs[c] = ('id',c[:-1])
                 return True
             return False
+        for cut,a,b in self.splits(c):
+            if self.join(c,cut,a,b):
+                return True
+        return False
+
+    def splits(self,c):
         q = len(c)-1
         if q==0:
-            return False
+            return
         top = c[-1][0]
         assert c[-1][1]==top
         possible = self.chart.divisors(q,top)
         if not possible:
-            return False
+            return
         if mass(top)>1:
             for g in sorted(possible):
                 seam = add(c[q-1][0],self.chart.differential(q,g))
@@ -187,9 +193,8 @@ class Pasting:
                 rest = minus(top,g)
                 a = c[:q-1]+((c[q-1][0],seam),(g,g))
                 b = c[:q-1]+((seam,c[q-1][1]),(rest,rest))
-                if self.join(c,q-1,a,b):
-                    return True
-            return False
+                yield q-1,a,b
+            return
         for r in range(q-1,0,-1):
             src,tgt = c[r]
             common = self.chart.divisors(r,src) & self.chart.divisors(r,tgt)
@@ -206,9 +211,8 @@ class Pasting:
                     piece = c[:r-1]+(stationary,(g,g))
                     remaining = c[:r-1]+(moving,rest)+c[r+1:]
                     a,b = (piece,remaining) if first else (remaining,piece)
-                    if self.join(c,r-1,a,b):
-                        return True
-        return False
+                    yield r-1,a,b
+        return
 
     def join(self,cell,cut,left,right):
         if self.generated(left) and self.generated(right):

@@ -18,7 +18,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
   - Q (Anthony): was the marker system thought through; what alternatives, or was it forced? Answered: partly forced (pseudo is a property of lax cells, recursive; no definitional equality), alternatives for getting pseudo back were compared, alternative forms of marking were not. Finding S17.
 - [x] 0.5 The kernel and the surface are kept apart
 - [x] 0.6 Decidability of checking
-- [ ] Q0.1 (surface question): Which composition order does the user write?
+- [x] Q0.1 (surface question): Which composition order does the user write?
+  - **Decided:** Option A, diagrammatic only; principle: align surface with kernel, ignore historical convention. Application written `x ; F`.
 - [ ] Q0.2 (surface question): Are objects written as types or as terms?
 
 ## Chapter 1. Core syntax

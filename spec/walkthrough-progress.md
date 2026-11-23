@@ -30,7 +30,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [x] 1.3 Pasting contexts
 - [x] 1.4 The coherence rule
 - [x] 1.5 Metatheorems
-- [ ] 1.6 Signatures
+- [x] 1.6 Signatures (presented with heads, after S27(a) landed; Agda S27(b)–(c) still open)
 - [ ] Q1.1 (surface question): Names or positions.
 - [ ] Q1.2 (surface question): How much of a coherence the user writes.
 - [ ] Q1.3 (surface question): How pasting contexts are presented.

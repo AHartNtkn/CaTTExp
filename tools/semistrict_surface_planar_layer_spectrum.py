@@ -45,7 +45,7 @@ def optimize(before,weights):
     return value,layers
 
 
-def bounds(data):
+def presentation(data):
     edges,marks = data['edges'],data['marks']
     def poles(path):
         if not path or any(edges[a][1]!=edges[b][0] for a,b in zip(path,path[1:])):
@@ -74,9 +74,6 @@ def bounds(data):
     # Adding a shortcut across an existing nonempty path preserves graph reachability.
     slots = list(heights)
     arrows = list(edges.values())+slots
-    lower = context_spectrum(dict(edges=arrows,slots=[(*s,heights[s]) for s in slots]))
-    if 'failing_from' in lower:
-        return lower
     vertices = {v for e in arrows for v in e}
     reach = {a:{a} for a in vertices}
     for a,b in arrows:
@@ -86,6 +83,14 @@ def bounds(data):
             if b in reach[a]:
                 reach[a].update(reach[b])
     before = [sum(1<<j for j,(_,y) in enumerate(slots) if x in reach[y]) for x,_ in slots]
+    return slots,heights,arrows,before
+
+
+def bounds(data):
+    slots,heights,arrows,before = presentation(data)
+    lower = context_spectrum(dict(edges=arrows,slots=[(*s,heights[s]) for s in slots]))
+    if 'failing_from' in lower:
+        return lower
     upper,layers = optimize(before,[heights[s] for s in slots])
     lower_degrees = lower['failing_degrees']
     if all(h<=2 for h in heights.values()):

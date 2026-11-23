@@ -1,5 +1,28 @@
 ------------------------------------------------------------------------
--- WIP: supports of the k = 0 whisker sides.
+-- Two-tier L accepts the right whisker heads of CaTTExp.Derived for
+-- k = 0 (step 2(d) of the two-tier L whiskering interface,
+-- notes/surface-conservativity.md §7; k ≥ 1 is Gray.WhiskerSide).
+--
+--   gside-BK0-0  : graySide accepts (BK 0 0,     wK 0 0)
+--   gside-BK-0 j : graySide accepts (BK 0 (j+1), wK 0 (j+1))
+--
+-- BK 0 (j+1) is W(Dⁿ) = Dⁿ⁺¹ ▸ z ▸ h (Gray.WhiskerZero), n = j+1, and
+-- the sides of its head are the whiskers by h of the source and target
+-- s, t : aL n of the top cell of Dⁿ⁺¹ = ΣDⁿ. Proof, by induction on j,
+-- together with the L-typing of the heads (g0wK-wf):
+--  * supports (Ttop, U): the top support of a whisker side is (c, h)
+--    for c the face of the top cell (the top of a disk is its one top
+--    cell, topDsk⇒/⇐), and the type supports are those of aL n with h
+--    appended; so supp(side) has the same tuples as supp(s : aL n)
+--    with h appended;
+--  * on the disk, s, t satisfy the operation condition
+--    (Gray.SingleHomSide.op-side, Finster–Mimram's isOp for Dⁿ⁺¹);
+--  * Gray.WhiskerZero carries sameDown and the boundary tables along
+--    x ↦ x ++ (h), so the operation case holds on BK 0 (j+1);
+--  * the coherence case is false (NoCoh): it would put the source
+--    above dim K (Gray.CohDim.cohB<), and the support computation
+--    needs this for the heads below.
+-- The left whisker heads LK 0 (j+1) are not done yet.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.WhiskerZeroSide where
 

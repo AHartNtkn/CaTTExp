@@ -117,6 +117,38 @@ def cheapest_pair_failure(rules):
     return None
 
 
+def staircase_failure(rules):
+    """A violated cycle-price inequality guarantees a split witness by twice its cost."""
+    actions = defects(rules)
+    cheapest = min((c for c, d in actions if d), default=None)
+    if cheapest is None:
+        return None
+    direct = cheapest_pair_failure(rules)
+    if direct:
+        return direct
+    shortfalls = [cost for cost, cycles in actions
+                  if cost < sum(cheapest+k-2 for k in cycles)]
+    if shortfalls:
+        # Search in increasing layers so a short obstruction does not require
+        # enumerating unrelated products at the theoretical upper bound.
+        for budget in range(min(shortfalls)*2+1):
+            witness = separated_failure(rules, budget)
+            if witness:
+                return witness
+        raise AssertionError('cycle-cost descent did not find its separated witness')
+    return None
+
+
+def positive_pair(data):
+    n = data['width']
+    identity = tuple(range(n))
+    target = list(identity)
+    for start, length in data['target_cycles_at_zero_based_positions']:
+        target[start:start+length] = list(range(start+1, start+length))+[start]
+    return n, ((identity, data['source_central_squares']),
+               (tuple(target), data['target_central_squares']))
+
+
 def checks():
     exact = 0
     for n in range(2, 6):
@@ -143,6 +175,22 @@ def checks():
     assert separated_failure(two_pairs, 2)[:2] == (2, (2, 2))
     # An odd rule is available, but spending two per *pair* is too cheap.
     assert separated_failure(two_pairs + [(2, (), (1,))], 3) is None
+    for k in range(3, 22):
+        n = 2*k-2
+        pair = []
+        for middle in (range(2,k), range(k,n)):
+            cycle = (0, *middle, 1)
+            p = list(range(n))
+            for a, b in zip(cycle, cycle[1:]+cycle[:1]):
+                p[a] = b
+            pair.append(p)
+        assert cycle_type(multiply(*pair)) == (k-1, k-1)
+    # 1 -> (1234) with cost one requires a nonempty source:
+    # (12) -> (23)(34) has a four-cycle as its relative permutation.
+    unit = [(2, (), (1,))]
+    fast = [(4, (1,), (2, 3))]
+    assert staircase_failure(unit + fast)[:2] == (2, (3,3))
+    assert staircase_failure(unit + [(4, (), (1, 2, 3))]) is None
     print(f'{exact} fixed-width cost layers against literal permutations; '
           'six double-transposition products and separated-budget checks passed')
 
@@ -153,7 +201,7 @@ if __name__ == '__main__':
     parser.add_argument('--budget', type=int)
     args = parser.parse_args()
     if args.rule:
-        result = (cheapest_pair_failure(args.rule) if args.budget is None
+        result = (staircase_failure(args.rule) if args.budget is None
                   else separated_failure(args.rule, args.budget))
         print('separated obstruction', result)
     else:

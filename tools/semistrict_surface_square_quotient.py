@@ -313,7 +313,12 @@ def all_width_failure(rules):
         else:
             failure = block_obstruction(forward)
             if failure is None:
-                raise ValueError('no implemented all-width criterion covers this dictionary')
+                from semistrict_surface_cycle_costs import positive_pair, staircase_failure
+                separated = staircase_failure(forward)
+                if separated:
+                    failure = positive_pair(separated[2])
+                else:
+                    raise ValueError('no implemented all-width criterion covers this dictionary')
         if decreasing and failure:
             width, (start, end) = failure
             return width, (end, start)

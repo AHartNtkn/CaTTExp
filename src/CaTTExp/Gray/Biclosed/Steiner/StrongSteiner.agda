@@ -14,7 +14,8 @@
 --               ∂⁺∂⁺x + ∂⁻∂⁻x = ∂⁺∂⁻x + ∂⁻∂⁺x;
 --   * augment.: ε∂⁺x = ε∂⁻x for x of degree 1;
 --   * unital:   ε⟨x⟩⁻₀ = ε⟨x⟩⁺₀ = 1, where ⟨x⟩^α_q is ∂^α applied
---               deg x − q times to x;
+--               deg x − q times to x, and ∂^α c is the positive (α = +)
+--               or negative part of ∂c (`bdC`);
 --   * strongly loop-free: the relation x <₁ y (x ∈ ∂⁻y or y ∈ ∂⁺x)
 --               generates a partial order.
 --
@@ -89,8 +90,15 @@ module SS (B : FB) where
   Chain : Set
   Chain = Cell B → Nat
 
+  -- positive (α = true) and negative part of a difference
+  part : Bool → Nat → Nat → Nat
+  part true  p n = p ∸ n
+  part false p n = n ∸ p
+
+  -- ∂^α c: the positive or negative part of ∂c = Σ c(x) (∂⁺x − ∂⁻x),
+  -- as in Steiner (cancellation between terms is taken into account)
   bdC : Bool → Chain → Chain
-  bdC α c y = Σl cs (λ x → c x * d α x y)
+  bdC α c y = part α (Σl cs (λ x → c x * d true x y)) (Σl cs (λ x → c x * d false x y))
 
   -- ⟨x⟩^α after k steps down
   down : Bool → Nat → Chain → Chain
@@ -263,3 +271,43 @@ module _ where
   loop-rest : T (all2 degAt ∧ all2 disjAt ∧ all2 chainAt ∧ allb (els (enumFin 4)) augAt ∧
                  allb (els (enumFin 4)) (unitAt true) ∧ allb (els (enumFin 4)) (unitAt false))
   loop-rest = tt
+
+------------------------------------------------------------------------
+-- The 2-simplex passes: points 0, 1, 2; edges 01, 12, 02; one 2-cell
+-- with ∂⁻ = 01 + 12 and ∂⁺ = 02.  Its source ⟨x⟩⁻₀ needs the
+-- cancellation in ∂(01 + 12) = 2 − 0 at the middle point 1.
+
+private
+  sdeg : Fin 7 → Nat
+  sdeg fz                               = 0
+  sdeg (fs fz)                          = 0
+  sdeg (fs (fs fz))                     = 0
+  sdeg (fs (fs (fs fz)))                = 1
+  sdeg (fs (fs (fs (fs fz))))           = 1
+  sdeg (fs (fs (fs (fs (fs fz)))))      = 1
+  sdeg (fs (fs (fs (fs (fs (fs _))))))  = 2
+
+  p₀ p₁ p₂ e₀₁ e₁₂ e₀₂ c₂ : Fin 7
+  p₀  = fz
+  p₁  = fs fz
+  p₂  = fs (fs fz)
+  e₀₁ = fs (fs (fs fz))
+  e₁₂ = fs (fs (fs (fs fz)))
+  e₀₂ = fs (fs (fs (fs (fs fz))))
+  c₂  = fs (fs (fs (fs (fs (fs fz)))))
+
+  sbd : Bool → Fin 7 → Fin 7 → Nat
+  sbd α x y = if eqFin x e₀₁ then hit α p₀ p₁ else
+              if eqFin x e₁₂ then hit α p₁ p₂ else
+              if eqFin x e₀₂ then hit α p₀ p₂ else
+              if eqFin x c₂  then (if α then (if eqFin y e₀₂ then 1 else 0)
+                                       else (if eqFin y e₀₁ ∨ eqFin y e₁₂ then 1 else 0)) else 0
+    where hit : Bool → Fin 7 → Fin 7 → Nat
+          hit false s t = if eqFin y s then 1 else 0
+          hit true  s t = if eqFin y t then 1 else 0
+
+simplexFB : FB
+simplexFB = record { Cell = Fin 7 ; enumC = enumFin 7 ; fdeg = sdeg ; fbd = sbd }
+
+simplex-ok : T (SS.strongSteiner? simplexFB)
+simplex-ok = tt

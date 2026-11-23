@@ -140,3 +140,73 @@ module AtRen (as vs : List Nat) where
   concatAt-ren : ∀ As → concatAt (map (sY ρ) As) ≡ map ra (concatAt As)
   concatAt-ren []       = refl
   concatAt-ren (A ∷ As) = trans (cong₂ _++_ (atY-ren A) (concatAt-ren As)) (sym (map-++ ra (atY A) (concatAt As)))
+
+------------------------------------------------------------------------
+-- A substitution that fixes the atoms and variables of a term fixes it.
+
+module _ (σ : Sub) where
+
+  FixA : List Nat → Set
+  FixA xs = ∀ a → In xs a → fo σ a ≡ obj a
+
+  FixV : List Nat → Set
+  FixV xs = ∀ i → In xs i → tm σ i ≡ var i
+
+  private
+    fa-l : ∀ xs ys → FixA (xs ++ ys) → FixA xs
+    fa-l xs ys h a p = h a (elem-++l a xs ys p)
+    fa-r : ∀ xs ys → FixA (xs ++ ys) → FixA ys
+    fa-r xs ys h a p = h a (elem-++r a xs ys p)
+    fv-l : ∀ xs ys → FixV (xs ++ ys) → FixV xs
+    fv-l xs ys h a p = h a (elem-++l a xs ys p)
+    fv-r : ∀ xs ys → FixV (xs ++ ys) → FixV ys
+    fv-r xs ys h a p = h a (elem-++r a xs ys p)
+
+  fixF : ∀ x → FixA (atF x) → sF (fo σ) x ≡ x
+  fixF (obj i)  h = h i (∨-l (i ==ℕ i) _ (==ℕ-refl i))
+  fixF (rep _)  h = refl
+  fixF (shp _)  h = refl
+  fixF (x ⊗ y)  h = cong₂ _⊗_  (fixF x (fa-l (atF x) (atF y) h)) (fixF y (fa-r (atF x) (atF y) h))
+  fixF (x \\ y) h = cong₂ _\\_ (fixF x (fa-l (atF x) (atF y) h)) (fixF y (fa-r (atF x) (atF y) h))
+  fixF (x // y) h = cong₂ _//_ (fixF x (fa-l (atF x) (atF y) h)) (fixF y (fa-r (atF x) (atF y) h))
+
+  fixFs : ∀ xs → FixA (atFs xs) → sFs (fo σ) xs ≡ xs
+  fixFs []       h = refl
+  fixFs (x ∷ xs) h = cong₂ _∷_ (fixF x (fa-l (atF x) (atFs xs) h)) (fixFs xs (fa-r (atF x) (atFs xs) h))
+
+  mutual
+    fixT : ∀ t → FixA (atT t) → FixV (varsT t) → sT σ t ≡ t
+    fixT (var i)  ha hv = hv i (∨-l (i ==ℕ i) _ (==ℕ-refl i))
+    fixT (mP U V) ha hv = cong₂ mP (fixF U (fa-l (atF U) (atF V) ha)) (fixF V (fa-r (atF U) (atF V) ha))
+    fixT (eL A C) ha hv = cong₂ eL (fixF A (fa-l (atF A) (atF C) ha)) (fixF C (fa-r (atF A) (atF C) ha))
+    fixT (eR A C) ha hv = cong₂ eR (fixF A (fa-l (atF A) (atF C) ha)) (fixF C (fa-r (atF A) (atF C) ha))
+    fixT (pP Δ Θ) ha hv = refl
+    fixT pt       ha hv = refl
+    fixT (iP Θ)   ha hv = refl
+    fixT (idt A)  ha hv = cong idt (fixF A ha)
+    fixT (comp f gs) ha hv =
+      cong₂ comp (fixT f (fa-l (atT f) (atTs gs) ha) (fv-l (varsT f) (varsTs gs) hv))
+                 (fixTs gs (fa-r (atT f) (atTs gs) ha) (fv-r (varsT f) (varsTs gs) hv))
+    fixT (glue a x b) ha hv =
+      let ha₂ = fa-r (atT a) (atT x ++ atT b) ha
+          hv₂ = fv-r (varsT a) (varsT x ++ varsT b) hv
+      in cong₃′ glue (fixT a (fa-l (atT a) (atT x ++ atT b) ha) (fv-l (varsT a) (varsT x ++ varsT b) hv))
+                     (fixT x (fa-l (atT x) (atT b) ha₂) (fv-l (varsT x) (varsT b) hv₂))
+                     (fixT b (fa-r (atT x) (atT b) ha₂) (fv-r (varsT x) (varsT b) hv₂))
+    fixT (here t e φs ts) ha hv =
+      cong₂ (here t e) (fixFs φs (fa-l (atFs φs) (atTs ts) ha)) (fixTs ts (fa-r (atFs φs) (atTs ts) ha) hv)
+
+    fixTs : ∀ ts → FixA (atTs ts) → FixV (varsTs ts) → sTs σ ts ≡ ts
+    fixTs []       ha hv = refl
+    fixTs (t ∷ ts) ha hv =
+      cong₂ _∷_ (fixT t (fa-l (atT t) (atTs ts) ha) (fv-l (varsT t) (varsTs ts) hv))
+                (fixTs ts (fa-r (atT t) (atTs ts) ha) (fv-r (varsT t) (varsTs ts) hv))
+
+  fixY : ∀ A → FixA (atY A) → FixV (varsY A) → sY σ A ≡ A
+  fixY (op (xs ▸ z)) ha hv = cong op (cong₂ _▸_ (fixFs xs (fa-l (atFs xs) (atF z) ha)) (fixF z (fa-r (atFs xs) (atF z) ha)))
+  fixY (hom m g A s t) ha hv =
+    let ha₂ = fa-r (atY A) (atT s ++ atT t) ha
+        hv₂ = fv-r (varsY A) (varsT s ++ varsT t) hv
+    in cong₃′ (hom m g) (fixY A (fa-l (atY A) (atT s ++ atT t) ha) (fv-l (varsY A) (varsT s ++ varsT t) hv))
+                        (fixT s (fa-l (atT s) (atT t) ha₂) (fv-l (varsT s) (varsT t) hv₂))
+                        (fixT t (fa-r (atT s) (atT t) ha₂) (fv-r (varsT s) (varsT t) hv₂))

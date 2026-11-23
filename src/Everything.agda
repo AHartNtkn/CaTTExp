@@ -192,6 +192,10 @@ import CaTTExp.RCProc.StrictPath
 import CaTTExp.RCProc.Key2Bd
 import CaTTExp.RCProc.Exchange
 import CaTTExp.RCProc.Glue3
+import CaTTExp.RCProc.Glue3Eqv
+import CaTTExp.RCProc.ExchangeSub
+import CaTTExp.RCProc.ExchangeSq
+import CaTTExp.RCProc.ExchangeGamma
 import CaTTExp.RCProc.LiftF
 import CaTTExp.RCProc.ColSub
 import CaTTExp.RCProc.LemmaGSub

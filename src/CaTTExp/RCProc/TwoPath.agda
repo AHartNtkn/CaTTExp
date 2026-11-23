@@ -34,6 +34,9 @@
 -- only (`split-uniq`) and both 2-paths now start with the same
 -- whiskered μ. Induct on the rest.
 --
+-- Also under Key2: a 1-path is determined by its start and its bag of
+-- edges (`path-unique`).
+--
 -- Strong loop-freeness is needed: for g, h : f ⇒ f, the 2-paths g;h and
 -- h;g have the same bag and source but are not exchange-equivalent
 -- (Key2 fails, since key f < key g < key f).
@@ -55,6 +58,10 @@ data _∈_ (e : Nat) : List Nat → Set where
 ∈-++ʳ : ∀ {e} xs {ys} → e ∈ ys → e ∈ xs ++ ys
 ∈-++ʳ []       i = i
 ∈-++ʳ (x ∷ xs) i = there (∈-++ʳ xs i)
+
+∈-tail : ∀ {β μ L} → (β ≡ μ → ⊥) → μ ∈ β ∷ L → μ ∈ L
+∈-tail ne here      = ⊥-elim (ne refl)
+∈-tail ne (there i) = i
 
 -- Nonempty lists.
 NE : List Nat → Set
@@ -355,6 +362,33 @@ module TwoPaths (C : Comp2) where
     split-uniq (z ∷ l₁)  (z' ∷ l₂) e r₁ r₂ (cons ee s p) eq with ∷-inj eq
     ... | refl , eq' = cong (z ∷_) (split-uniq l₁ l₂ e r₁ r₂ p eq')
 
+    -- A 1-path is determined by its start and its bag of edges.
+    path-unique : ∀ {x y y' p q} → Path1 x p y → Path1 x q y' → p ≋ q → p ≡ q
+    path-unique nil nil b = refl
+    path-unique {q = Q} nil (cons {e = f} _ _ _) b with cnt-∈ {f} {Q} here
+    ... | k , e = ⊥-elim (z≢s (trans (at≋ b f) e))
+      where
+      z≢s : ∀ {k} → 0 ≡ suc k → ⊥
+      z≢s ()
+    path-unique {p = P} (cons {e = e} _ _ _) nil b with cnt-∈ {e} {P} here
+    ... | k , c = ⊥-elim (z≢s (trans (sym (at≋ b e)) c))
+      where
+      z≢s : ∀ {k} → 0 ≡ suc k → ⊥
+      z≢s ()
+    path-unique (cons {e = e} ee refl p) (cons {e = f} ef sf q) b with dec≡ e f
+    ... | inj₁ refl = cong (e ∷_) (path-unique p q (≋-uncons e b))
+    ... | inj₂ ne = ⊥-elim (<-irrefl (<-trans kef kfe))
+      where
+      e∈q : e ∈ _
+      e∈q = ∈-tail (λ z → ne (sym z)) (≋-∈ b here)
+      f∈p : f ∈ _
+      f∈p = ∈-tail ne (≋-∈ (≋-sym b) here)
+      -- key f < key (t₀ f) < key e, and key e < key (t₀ e) < key f
+      kfe : key f < key e
+      kfe = <-trans (snd (k₁ f ef)) (path-gt q e∈q)
+      kef : key e < key f
+      kef = <-trans (snd (k₁ e ee)) (path-gt p f∈p)
+
     ne-path : ∀ {a p b} → Path1 a p b → key a < key b → NE p
     ne-path nil              lt = ⊥-elim (<-irrefl lt)
     ne-path (cons {e = e} {S = S} _ _ _) lt = e , S , refl
@@ -389,10 +423,6 @@ module TwoPaths (C : Comp2) where
     ... | μ , i , h with ≤-total (key x) (key μ)
     ...   | inj₁ p = x , here , λ { _ here → ≤-refl _ ; β (there j) → ≤-trans p (h β j) }
     ...   | inj₂ p = μ , there i , λ { _ here → p ; β (there j) → h β j }
-
-    ∈-tail : ∀ {β μ L} → (β ≡ μ → ⊥) → μ ∈ β ∷ L → μ ∈ L
-    ∈-tail ne here      = ⊥-elim (ne refl)
-    ∈-tail ne (there i) = i
 
     -- Exchange a generator of least key to the front.
     front : ∀ {S T} (P : List WG) (μ : Nat) → Chain S P T → μ ∈ bagG P →

@@ -131,7 +131,8 @@ private
 Mem : Nat → List Nat → Set
 Mem n xs = T (elem n xs)
 
-private
+-- Public: reused by CaTTExp.Binder.Suspension.
+module _ where
   mem++ : ∀ n xs ys → Mem n (xs ++ ys) → Mem n xs ⊎ Mem n ys
   mem++ n []       ys p = inj₂ p
   mem++ n (x ∷ xs) ys p with n ==ℕ x
@@ -198,7 +199,8 @@ private
 LMem : Nat → List Nat → Set
 LMem n xs = (n ≡ 0) ⊎ (n ≡ 1) ⊎ (Σ Nat λ m → (n ≡ S m) × Mem m xs)
 
-private
+-- Public: reused by CaTTExp.Binder.Suspension.
+module _ where
   Lift→ : ∀ n xs → Mem n (Lift xs) → LMem n xs
   Lift→ n xs p with mem-cons n 0 (1 ∷ mapS xs) p
   ... | inj₁ e = inj₁ e

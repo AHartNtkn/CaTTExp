@@ -25,8 +25,9 @@
 -- suspension of #552 covers empty-telescope heads only, and Σ⟦Γ⟧
 -- would be a free object inside a hom, which models need not have.
 --
--- Not here: the generic diagram η_Γ (GEN) and the LIFT fillers (S26k
--- steps 2–3), which need elements ⊤ → C with ⊤ = lim_ε (spec §6.6).
+-- The generic diagram η_Γ (GEN) is CaTTExp.Binder.GenHeads (S26k step
+-- 2), beside this head and a point object ⊤ with lim_ε's rule; the LIFT fillers (step 3) are not
+-- encoded yet.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax

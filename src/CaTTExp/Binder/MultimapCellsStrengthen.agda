@@ -86,8 +86,9 @@ lookup-none (A ∷ Φ) (suc i) n = lookup-none Φ i n
 
 vars-sup : ∀ Φ u k → T (elem k (varsT u)) → T (k <ℕ length Φ) → T (elem k (supVars Φ u))
 vars-sup Φ u k e l =
-  filter-elem (λ j → elem j (closeFrom Φ (length Φ) (varsT u))) (upTo (length Φ)) k
-    (closeFrom-mono Φ (length Φ) (varsT u) k e) (upTo-elem (length Φ) k l)
+  filter-elem (λ j → elem j (closeFrom Φ (length Φ) (supStart Φ u))) (upTo (length Φ)) k
+    (closeFrom-mono Φ (length Φ) (supStart Φ u) k (elem-++l k (varsT u) (varsYM (infer Φ u)) e))
+    (upTo-elem (length Φ) k l)
 
 -- Position in a list.
 lookup-idx : ∀ i vs → T (elem i vs) → lookup vs (idx i vs) ≡ just i
@@ -135,14 +136,17 @@ mapM-if : ∀ (b : Bool) (m : Maybe CTy) → T b → mapM (λ A → if b then A 
 mapM-if true nothing  _ = refl
 mapM-if true (just A) _ = refl
 
-agree-blank : ∀ Φ u → Agree Φ (blank (supVars Φ u) Φ) (varsT u)
-agree-blank Φ u i p with dec (i <ℕ length Φ)
-... | inl l = sym (trans (lookup-blank 0 vs Φ i) (mapM-if (elem i vs) (lookup Φ i) (vars-sup Φ u i p l)))
-  where vs = supVars Φ u
+-- Blanking outside any set containing the entries a term uses.
+agree-blank-on : ∀ Φ vs xs → (∀ i → T (elem i xs) → T (i <ℕ length Φ) → T (elem i vs)) →
+                 Agree Φ (blank vs Φ) xs
+agree-blank-on Φ vs xs h i p with dec (i <ℕ length Φ)
+... | inl l = sym (trans (lookup-blank 0 vs Φ i) (mapM-if (elem i vs) (lookup Φ i) (h i p l)))
 ... | inr l = trans (lookup-none Φ i l)
                 (sym (trans (lookup-blank 0 vs Φ i)
                   (cong (mapM (λ A → if elem i vs then A else ptTy)) (lookup-none Φ i l))))
-  where vs = supVars Φ u
+
+agree-blank : ∀ Φ u → Agree Φ (blank (supVars Φ u) Φ) (varsT u)
+agree-blank Φ u = agree-blank-on Φ (supVars Φ u) (varsT u) (vars-sup Φ u)
 
 ------------------------------------------------------------------------
 -- ren is well typed from the blanked context to the support context.
@@ -198,3 +202,12 @@ strengthen k Φ u A e =
   where
   vs = supVars Φ u
   as = supAtoms k Φ u
+
+-- The same over any set of entries containing those the term uses: a
+-- term over a support infers, after the renaming onto it, the renamed
+-- type.
+strengthen-on : ∀ as vs Φ u A → (∀ i → T (elem i (varsT u)) → T (i <ℕ length Φ) → T (elem i vs)) →
+  infer Φ u ≡ just A → infer (supCtx as vs Φ) (sT (renOf as vs) u) ≡ just (sY (renOf as vs) A)
+strengthen-on as vs Φ u A h e =
+  sub-infer (ren-typed as vs Φ) u A
+    (trans (sym (infer-agree Φ (blank vs Φ) u (agree-blank-on Φ vs (varsT u) h))) e)

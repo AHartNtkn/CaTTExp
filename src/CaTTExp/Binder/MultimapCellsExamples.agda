@@ -18,6 +18,12 @@
 --  * Rejections: non-canonical heads (an unused entry; an unused
 --    atom), each otherwise well typed; a cell at gap 0 (oplax, not a
 --    kernel cell); β not a 2-cell from f to g.
+--  * The sort check: an instance that infers but sends the template's
+--    data variable to a representable is not sorted (`unsorted`).
+--  * Nullary multimaps: a point x : ( ▸ A) is a kernel map ⊤ → A, with
+--    ⊤ the `unit` head (lim_ε's rule); f ∘ x is the map ⊤ → B, and whiskering
+--    a cell α : x ⇒ y between points (gap 0, the only gap) by f is a
+--    kernel 2-cell f ∘ x ⇒ f ∘ y between the heads on x and on y.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Pure as P
@@ -26,6 +32,8 @@ open import CaTTExp.Binder.Multimap using (MMI; mmi)
 open import CaTTExp.Binder.Signature
 open import CaTTExp.Binder.Embed using (extend)
 import CaTTExp.Gray.Biclosed.Syntax as GB
+import CaTTExp.Gray.Biclosed.Typing as GT
+open import CaTTExp.Binder.Multimap using (sortedT)
 
 module CaTTExp.Binder.MultimapCellsExamples where
 
@@ -33,7 +41,7 @@ module CaTTExp.Binder.MultimapCellsExamples where
 𝕊 = extend P.∅ (cellBinders P.K)
 
 open Signature 𝕊
-open GCInterface K using (_⊗ᵗ_; _\\ᵗ_; mmcApp)
+open GCInterface K using (_⊗ᵗ_; _\\ᵗ_; mmcApp; topT)
 open import CaTTExp.Binder.Typing 𝕊
 open import CaTTExp.Binder.CheckWith 𝕊 cattSide varMark
 
@@ -139,3 +147,66 @@ rejected = refl
 
 open import CaTTExp.Binder.Embed using (module CaTT)
 open CaTT P.∅ (cellBinders P.K) using (tm-iff; ctx-iff; ty-iff; sub-iff) public
+
+------------------------------------------------------------------------
+-- The sort check (`Multimap.sortedT`). The same curry instance with the
+-- template's data variable sent to the representable ⟦D⁰⟧ infers (it is
+-- an AdmI instance) but is not a kernel instance (KInst): the check
+-- rejects it, so no mm or mmc head is built on it.
+
+r0 : GB.Fm
+r0 = GB.rep (GB.disk 0)
+
+Fr : GB.CTy
+Fr = GB.op (((o0 GB.⊗ o1) ∷ []) GB.▸ r0)
+
+unsortedT : GB.Tm
+unsortedT = GB.here (GB.tmpl evL 1 GB.inv 0) GB.gc (o0 ∷ o1 ∷ r0 ∷ []) (fm 0 ∷ [])
+
+unsorted : is-just (GT.infer (Fr ∷ []) unsortedT) ∷ sortedT 2 unsortedT ∷ [] ≡ true ∷ false ∷ []
+unsorted = refl
+
+------------------------------------------------------------------------
+-- Nullary multimaps: points as kernel maps out of ⊤ (lim_ε's rule).
+-- Context: A B : ⋆, x y : ⊤ → A, α : x ⇒ y, f : A → B.
+
+Pt : GB.Fm → GB.CTy
+Pt z = GB.op ([] GB.▸ z)
+
+Γpt : Ctx
+Γpt = ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ topT a ▸ arr ⋆ topT a ▸ arr (arr ⋆ topT a) (v 2) (v 3) ▸ arr ⋆ a b
+
+-- f ∘ x, on its canonical support (A, B; x, f).
+fx : MMI
+fx = mmi 2 (Pt o0 ∷ GB.op ((o0 ∷ []) GB.▸ o1) ∷ []) (GB.comp (GB.var 1) (GB.var 0 ∷ []))
+
+fx-on : Tm → Tm
+fx-on p = mmcApp fx (⟨⟩ ,ₛ a ,ₛ b ,ₛ p ,ₛ v 5)
+
+point-map : (inferTy Γpt (fx-on (v 2)) ∷ inferTy Γpt (fx-on (v 3)) ∷ [])
+          ≡ (just (arr ⋆ topT b) ∷ just (arr ⋆ topT b) ∷ [])
+point-map = refl
+
+-- f ∘ α : f ∘ x ⇒ f ∘ y, a cell between points at gap 0.
+Φα : GB.Ctx
+Φα = Pt o0 ∷ Pt o0 ∷ GB.hom GB.dir 0 (Pt o0) (GB.var 0) (GB.var 1) ∷ GB.op ((o0 ∷ []) GB.▸ o1) ∷ []
+
+whisk : MMI
+whisk = mmi 2 Φα (GB.comp (GB.var 3) (GB.var 2 ∷ []))
+
+argsα : Sub
+argsα = ⟨⟩ ,ₛ a ,ₛ b ,ₛ v 2 ,ₛ v 3 ,ₛ v 4 ,ₛ v 5
+
+point-cell : inferTy Γpt (mmcApp whisk argsα)
+           ≡ just (arr (arr ⋆ topT b) (fx-on (v 2)) (fx-on (v 3)))
+point-cell = refl
+
+point-cell-wf : wellTyped Γpt (mmcApp whisk argsα) ≡ true
+point-cell-wf = refl
+
+-- A cell between points at gap 1 is rejected (there is no gap 1).
+Φα1 : GB.Ctx
+Φα1 = Pt o0 ∷ Pt o0 ∷ GB.hom GB.dir 1 (Pt o0) (GB.var 0) (GB.var 1) ∷ GB.op ((o0 ∷ []) GB.▸ o1) ∷ []
+
+point-gap1 : is-just (infer Γpt (mmcApp (mmi 2 Φα1 (GB.comp (GB.var 3) (GB.var 2 ∷ []))) argsα)) ≡ false
+point-gap1 = refl

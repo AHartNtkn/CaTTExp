@@ -33,12 +33,14 @@
 -- syntax only: Φ may contain only unary entries, and the result must
 -- be a unary operation (not a higher cell). Their kernel form is S26j's
 -- remaining part. The side condition trusts `infer`, so mm inherits
--- both caveats of Gray.Biclosed.Typing: `glue`'s typing rule is stated
--- in the Biclosed checker, not derived from L (spec §8.1 Status), and
--- `infer` does not impose the sort discipline (Gray.Biclosed.SortDisc):
--- its `here` instances are AdmI instances, a strict superset of the
--- data-sorted kernel instances KInst. So an mm head may be admitted
--- whose derivation uses a template instance that is not data-sorted.
+-- its caveat that `glue`'s typing rule is stated in the Biclosed
+-- checker, not derived from L (spec §8.1 Status). `infer` alone does
+-- not impose the sort discipline (Gray.Biclosed.SortDisc: its `here`
+-- instances are AdmI instances, a strict superset of the data-sorted
+-- kernel instances KInst), so the side condition also asks that Φ and
+-- t be sorted (`sortedT`, `sortedY` below): every here node sends its
+-- template's data variable to a non-representable formula over the
+-- atoms, which implies SortDisc's DSub (`MultimapSorted.dataInst-dsub`).
 --
 -- The construction is over any set B of formers into which the Gray
 -- object formers and the mm heads inject, so it sits beside DES, INIT
@@ -50,6 +52,7 @@ open import CaTTExp.Binder.Embed using (Binders)
 open import CaTTExp.Binder.GrayForm
 import CaTTExp.Gray.Biclosed.Syntax as GB
 import CaTTExp.Gray.Biclosed.Typing as GT
+open import CaTTExp.Gray.Biclosed.SortDisc using (nonRep; headVar; tmplData)
 
 module CaTTExp.Binder.Multimap where
 
@@ -97,12 +100,50 @@ allUnary : Nat → GB.Ctx → Maybe (List (GB.Fm × GB.Fm))
 allUnary k []       = just []
 allUnary k (A ∷ As) = unaryTy k A >>= λ p → allUnary k As >>= λ ps → just (p ∷ ps)
 
+------------------------------------------------------------------------
+-- The sort discipline (spec §8.1, F.7.4 §2; `Gray.Biclosed.SortDisc`).
+-- `infer` types every template instance (AdmI); the kernel's instances
+-- (KInst) are those whose substitution is data-sorted: the template's
+-- data variable goes to a non-representable formula whose head
+-- variable, if any, is data-sorted. Over the atoms of a head every atom
+-- is a data object, so a here node is data-sorted when its template's
+-- data variable is given, by a non-representable formula, whose head
+-- variable if any is an atom below k (`dataInst`; `MultimapSorted`
+-- shows this is SortDisc's DSub). A term, or a type's boundaries, is
+-- sorted when all its here nodes are.
+
+headBelow : Nat → Maybe Nat → Bool
+headBelow k nothing  = true
+headBelow k (just i) = i <ℕ k
+
+dataFm : Nat → List GB.Fm → Nat → Bool
+dataFm k φs i = (i <ℕ GT.length φs) ∧ nonRep (GT.nthF φs i) ∧ headBelow k (headVar (GT.nthF φs i))
+
+dataInst : Nat → GB.Tmpl → List GB.Fm → Bool
+dataInst k t φs = all (dataFm k φs) (tmplData t)
+
+mutual
+  sortedT : Nat → GB.Tm → Bool
+  sortedT k (GB.comp f gs)      = sortedT k f ∧ sortedTs k gs
+  sortedT k (GB.glue a x b)     = sortedT k a ∧ sortedT k x ∧ sortedT k b
+  sortedT k (GB.here t _ φs ts) = dataInst k t φs ∧ sortedTs k ts
+  sortedT k _                   = true
+
+  sortedTs : Nat → List GB.Tm → Bool
+  sortedTs k []       = true
+  sortedTs k (t ∷ ts) = sortedT k t ∧ sortedTs k ts
+
+sortedY : Nat → GB.CTy → Bool
+sortedY k (GB.op _)          = true
+sortedY k (GB.hom _ _ A s t) = sortedY k A ∧ sortedT k s ∧ sortedT k t
+
 -- The type of an mm head: Φ is all unary (entries `ps`), Φ is well
--- formed, and t has a unary type (X ▸ Z) over the atoms.
+-- formed, Φ and t are sorted, and t has a unary type (X ▸ Z) over the
+-- atoms.
 mmTy : MMI → Maybe (List (GB.Fm × GB.Fm) × (GB.Fm × GB.Fm))
 mmTy (mmi k Φ t) =
   allUnary k Φ >>= λ ps →
-  ((if GT.wfCtx Φ then GT.infer Φ t else nothing) >>= unaryTy k) >>= λ xz →
+  ((if GT.wfCtx Φ ∧ all (sortedY k) Φ ∧ sortedT k t then GT.infer Φ t else nothing) >>= unaryTy k) >>= λ xz →
   just (ps , xz)
 
 ------------------------------------------------------------------------

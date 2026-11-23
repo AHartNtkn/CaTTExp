@@ -119,14 +119,16 @@ The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are
 - the **Gray operation case**, π(c) = τ_Γ;
 - the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 
-TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff some lift of the head has an inner letter of top dimension; both are computed by the procedure of §2.3. ord-tgt means that γ(aₙ) is an object variable marked `ord`.
+TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff some lift of the head has an inner letter of top dimension; both are computed by the procedure of §2.3. ord-tgt means that γ(aₙ) is an object variable marked `iord` or `ord`.
 
 **Rule.**
 ```
+(C : ⋆)^iord       every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 (C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is trivial
                    (an identity in strict models; so in particular invertible)
-(COH-ord)    Γ^ord ⊢ps (every object of Γ marked ord), SC_𝔉(Γ, t → u),
-             γ sends every object of Γ to an ord variable    ⊢  coh^ord_{Γ, t → u}[γ];
+(COH-ord)    Γ^ord ⊢ps (objects a₁, …, aₙ of Γ marked ord), SC_𝔉(Γ, t → u),
+             γ sends a₁, …, aₙ to ord variables              ⊢  coh^ord_{Γ, t → u}[γ];
+             (a₀ is the target of no hom of Γ, so its mark is irrelevant)
              its marks are the two-tier rules of §3.3
 
 (COH-inv)    coherence case                                                   ⇒  inv
@@ -166,7 +168,11 @@ The Gray cells g[γ] are the operation-case coherences over wedges of disks, as 
 - **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both switches.
 - **The inner strip.** It is equal exactly when the inner law holds. Without the inner law it stays unconnected after localization.
 
-So invertibility alone does not make an object an ordinary ω-category up to coherence. Any mark that recovers two-tier coherences must force inner letters to be trivial, and therefore has to act through the side condition, because the kernel has no definitional equality. Whether to keep the invertible-only reading as a second, weaker mark is an open design choice. Nothing in the spec needs it. Source: `notes/uniform-marks.md` §8; `notes/conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`.
+So invertibility alone does not make an object an ordinary ω-category up to coherence. Any mark that recovers two-tier coherences must force inner letters to be trivial, and therefore has to act through the side condition, because the kernel has no definitional equality. **Both readings are kept** (decided 2026-11-23, `notes/ord-recovers-two-tier.md` §6):
+- `iord` (inner letters invertible) is enough for (ORD) and (OP-inv_S′). It is sound in strictly more strict models, for example the E13 loop model, where the inner letters are invertible but not identities.
+- `ord` (inner letters trivial) adds (COH-ord) and gives two-tier L.
+
+This is the lax / pseudo / strict pattern of §0.4 applied to interchange inside an object: unmarked, `iord`, `ord`. `ord` implies `iord`. An `iord` variable may be sent to an `iord` or `ord` variable, and an `ord` variable only to an `ord` variable. Source: `notes/uniform-marks.md` §8; `notes/conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`.
 
 **Status.**
 - Rules: **stated here**, following `notes/uniform-marks.md` §3.
@@ -174,7 +180,8 @@ So invertibility alone does not make an object an ordinary ω-category up to coh
 - (INN-fac_S): **Agda-checked** (`Uniform/InnerInv.agda`, `left-inv`, `right-inv`, from the sesquicategory axioms, the unit law and the split, as record fields).
 - Outer cylinders: **proved**.
 - (OP-inv_S′): **proved** in every model (`notes/uniform-marks.md` Theorem 8.1). The ps* branch of (OP-ps_S′) and the factor rules for several positive factors: **proved** for 𝓜_S only, which excludes the free algebras. Whether they hold in every model is open (ledger E14).
-- **Agda-checked** (`Uniform/Marks.agda`; it encodes a variant whose premise is read on g[γ] rather than on the letter's operands, and encoding (OP-inv_S′) is ledger E14): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
+- **Agda-checked, repaired rules** (`Uniform/MarksRepaired.agda`): (OP-inv_S′)/(OP-ps_S′) per top letter, `iord`/`ord`, (COH-ord). The first version accepts the E13 shape and the repaired rule rejects it (`old-accepts`, `new-rejects`, by evaluation). Also checked: uniform ⇒ two-tier given the projection data as a hypothesis; `iord` suffices for (ORD); all-`ord` heads use the two-tier rules; setting monotonicity. `sound′` reduces soundness to the paper theorems given as fields of `Sem′` (4.3, 4.4, 8.1, 2.2/2.3, and `compose` = decomposition of the coherence image into the letters of its lift plus Lemma 4.1); `iso-path` and `join-iso` are proved separately and not yet connected to `Sem′`. None of those fields is (IL).
+- **Agda-checked, first version** (`Uniform/Marks.agda`, superseded; its premise is read on g[γ] rather than on the letter's operands): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
 - Ledger S4, E7 and E13 are done. What remains is ledger E14.
 
 **Source.** `notes/uniform-marks.md`; `notes/invertibility-markings.md` §1.5.
@@ -231,7 +238,7 @@ The note proposed M1; the choice is left open here.
 - *Option A: expose only `ps*`, written "pseudo".* Matches the meaning in P; every pseudo modification must have pseudo boundaries anyway.
 - *Option B: expose both.* `ps` alone is the more general building block, but no rule currently uses it as a premise, so it would be a mark the user can write and nothing can consume.
 
-**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, in every switch setting, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
+**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. The same question applies to `iord`, and so does the choice of which of the two marks a default writes. (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, in every switch setting, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
 - *Option A: per object declaration* (`(C : ⋆)^ord`). Precise; most objects in ordinary use need the mark.
 - *Option B: a per-file default "all objects ord" with an opt-out.* Ordinary mathematics needs no annotation; a development that forgets the opt-out silently proves a statement only about ordinary ω-categories.
 - *Option C: a per-development setting, like the switch setting of chapter 2.* Uniform with Q2.1; coarse.

@@ -130,9 +130,8 @@ def check_orders():
     return count
 
 
-def check_attachment(checkout, seam):
+def check_attachment(checkout, seam, base='(x : *) (a : id(id(x)) -> id(id(x)))'):
     binary = checkout / 'target/release/catt_strict'
-    base = '(x : *) (a : id(id(x)) -> id(id(x)))'
     ctx = base + ''.join(f' ({p} : {seam} -> {seam})' for p in 'uvwt')
     ctx += f' (z : comp[comp[comp[id({seam}),u],v],w] -> t)'
     with TemporaryDirectory() as tmp:

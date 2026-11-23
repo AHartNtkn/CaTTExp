@@ -157,8 +157,9 @@ def compose(c,d,cut):
 
 
 class Pasting:
-    def __init__(self,chart):
+    def __init__(self,chart,from_target=False):
         self.chart = chart
+        self.from_target = from_target
         self.proofs = {}
 
     @cache
@@ -187,12 +188,18 @@ class Pasting:
             return
         if mass(top)>1:
             for g in sorted(possible):
-                seam = add(c[q-1][0],self.chart.differential(q,g))
+                rest = minus(top,g)
+                d = self.chart.differential(q,g)
+                if self.from_target:
+                    seam = minus(c[q-1][1],d)
+                    first,last = rest,g
+                else:
+                    seam = add(c[q-1][0],d)
+                    first,last = g,rest
                 if self.chart.divisors(q-1,seam) is None:
                     continue
-                rest = minus(top,g)
-                a = c[:q-1]+((c[q-1][0],seam),(g,g))
-                b = c[:q-1]+((seam,c[q-1][1]),(rest,rest))
+                a = c[:q-1]+((c[q-1][0],seam),(first,first))
+                b = c[:q-1]+((seam,c[q-1][1]),(last,last))
                 yield q-1,a,b
             return
         for r in range(q-1,0,-1):
@@ -252,7 +259,7 @@ def replay(chart,proof):
     return [values[i] for i in proof['roots']]
 
 
-def only_these_rows(chart,faces,choices):
+def only_these_rows(chart,faces,choices,required=()):
     """Exclude all other local 5-chains at the concrete old faces in the quotient."""
     lines = ['(set-logic QF_LIA)']
     contributions = defaultdict(list)
@@ -265,6 +272,7 @@ def only_these_rows(chart,faces,choices):
     delta = dict(minus(faces[1],faces[0]))
     for i in contributions.keys() | delta.keys():
         lines.append(f'(assert (= {total(contributions[i])} {delta.get(i,0)}))')
+    lines.extend(f'(assert (> x{j} 0))' for j in required)
     for indices in choices:
         cond = ' '.join(f'(= x{j} {int(j in indices)})' for j in range(len(chart.layers[5])))
         lines.append(f'(assert (not (and {cond})))')

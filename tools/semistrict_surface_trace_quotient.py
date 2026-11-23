@@ -100,8 +100,8 @@ def row_two(cell,side):
 
 
 class TracePasting:
-    def __init__(self,chart):
-        self.plain = Pasting(chart)
+    def __init__(self,chart,from_target=False):
+        self.plain = Pasting(chart,from_target=from_target)
         self.traces = Traces(chart)
         self.visited = 0
 
@@ -130,7 +130,8 @@ class TracePasting:
             return False
         for k,a,b in self.plain.splits(c):
             for first,second in self.decorations(k,a,trace):
-                if self.generated(a,first) and self.generated(b,second):
+                pieces = ((b,second),(a,first)) if self.plain.from_target else ((a,first),(b,second))
+                if all(self.generated(cell,marks) for cell,marks in pieces):
                     return True
         return False
 

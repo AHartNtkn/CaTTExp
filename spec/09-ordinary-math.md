@@ -53,7 +53,7 @@ Introduction and closure rules:
 ```
 Derived:
 ```
-(T-coprod) A, B trunc n,  n ≥ 0  ⟹  A ⊔ B trunc n            (from DESC-grpd, §9.2)
+(T-coprod) A, B trunc n,  n ≥ 0  ⟹  A ⊔ B trunc n            (from DESC-grpd, §9.2; also T-init at μ(X; A ⊔ B → X))
 (T-trunc)  ‖X‖_n trunc n                                     (from INIT's mark ⋆^{≤n}, §9.3)
 (T-graph)  Γ a finite graph context  ⟹  ⟦Γ⟧ trunc 1         (encode–decode, §9.4)
 (T-loc)    the same with a set M of edges inverted  ⟹  ⟦Γ⟧[M⁻¹] trunc 1

@@ -1,4 +1,4 @@
-"""Compute context-wide Gray spectrum bounds for finite globular generators.
+"""Compute the exact interchange failure spectrum for finite globular generators.
 
 A base has 'edges' as pairs of object poles and 'slots' as [source object,
 target object, maximum local globe dimension] for its occupied short homs.
@@ -80,15 +80,11 @@ def context_spectrum(data):
         return slots[i][2]+max((head(j) for j in before[i]),default=0)
 
     best = 0
-    exceptional = False
     for i,rest in enumerate(after):
         for j in rest:
             best = max(best,2+max((head(k) for k in before[i]),default=0)
                        + max((tail(k) for k in after[j]),default=0))
-            if slots[i][2]>=2 and slots[j][2]>=3:
-                exceptional |= any(slots[k][2]>=2 for k in after[j])
-    return {'failing_degrees':list(range(3,best+2)),
-            'undetermined_degrees':[6] if best==4 and exceptional else []}
+    return {'failing_degrees':list(range(3,best+2))}
 
 
 def checks():
@@ -103,12 +99,12 @@ def checks():
             assert special or n == 0
             checked += 1
             singular += n>0
-    for shape,known,possible in [
-        ((2,4,2),[3,4,5],[6]), ((2,2,2),[3,4,5],[]),
-        ((3,4,2),[3,4,5,6],[]), ((2,7),[3],[]), ((1,),[],[])]:
+    for shape,known in [
+        ((2,4,2),[3,4,5]), ((2,2,2),[3,4,5]),
+        ((3,4,2),[3,4,5,6]), ((2,7),[3]), ((1,),[])]:
         size = len(shape)
         data = {'edges':[(j,j+1) for j in range(size)],'slots':[(j,j+1,h) for j,h in enumerate(shape)]}
-        assert context_spectrum(data)=={'failing_degrees':known,'undetermined_degrees':possible}
+        assert context_spectrum(data)=={'failing_degrees':known}
     assert context_spectrum({'edges':[(0,1),(1,0)],'slots':[(0,1,7)]}) == {'failing_from':3}
     print(f'{checked} branching tree tensors checked; {singular} have top relation cycles')
 

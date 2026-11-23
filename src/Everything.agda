@@ -444,6 +444,12 @@ import CaTTExp.Binder.CylLaws
 import CaTTExp.Binder.CylOne
 import CaTTExp.Binder.CylOK
 import CaTTExp.Binder.CylExamples
+import CaTTExp.Binder.VCyl
+import CaTTExp.Binder.VCylLaws
+import CaTTExp.Binder.PureEmbed
+import CaTTExp.Binder.Deep
+import CaTTExp.Binder.VWhisk
+import CaTTExp.Binder.VBoundary
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
 import CaTTExp.Binder.InitLawsGen
@@ -457,4 +463,8 @@ import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws
 import CaTTExp.Binder.GrayFormEmbed
 import CaTTExp.Binder.GrayFormExamples
+import CaTTExp.Binder.Multimap
+import CaTTExp.Binder.MultimapLaws
+import CaTTExp.Binder.MultimapPresup
+import CaTTExp.Binder.MultimapExamples
 import CaTTExp.Uniform.MarksRepaired

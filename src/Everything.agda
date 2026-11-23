@@ -190,6 +190,11 @@ import CaTTExp.RCProc.Eg
 import CaTTExp.RCProc.TwoPathTerm
 import CaTTExp.RCProc.StrictPath
 import CaTTExp.RCProc.Key2Bd
+import CaTTExp.RCProc.LiftF
+import CaTTExp.RCProc.ColSub
+import CaTTExp.RCProc.LemmaGSub
+import CaTTExp.RCProc.LemmaGCoh
+import CaTTExp.RCProc.LemmaG
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute

@@ -42,6 +42,11 @@ def exception_query(shape):
     cells = defaultdict(list)
     for c in product(*(globe(d) for d in shape)):
         cells[sum(x for x,_ in c)].append(c)
+    return tableau_query(cells,rank,lambda cell:boundary(cell).items())
+
+
+def tableau_query(cells,rank,facets):
+    """Compare the square ideal with raw filling when rank is above its top degree."""
     lines = ['(set-logic LIA)']
 
     def positive(name):
@@ -51,7 +56,7 @@ def exception_query(shape):
     def image(z):
         rows = defaultdict(list)
         for c,x in z.items():
-            for f,n in boundary(c).items():
+            for f,n in facets(c):
                 if n:
                     rows[f].append(x if n==1 else f'(- {x})')
         return {f:total(terms) for f,terms in rows.items()}

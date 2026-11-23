@@ -166,10 +166,10 @@ module _ (σ : Sub) (l : LC σ) where
 
   posFrom-stable : ∀ m Δ → T (posFrom m Δ) → T (posFrom m (Δ [ σ ]tel))
   posFrom-stable m ε       _ = tt
-  posFrom-stable m (Δ ▸ A) p rewrite len-tel[] Δ σ =
-    let (a , c) = T∧ {posFrom m Δ} p in
-    ∧T (posFrom-stable m Δ a) (∨-mono (len Δ <ℕ m) (entryOK-stable m A) c)
-  posFrom-stable m (Δ ▸[ _ ∷ _ ] A) ()
+  posFrom-stable m (Δ ▸[ ms ] A) p rewrite len-tel[] Δ σ =
+    let (a , c) = T∧ {posFrom m Δ} p
+        (b , d) = T∧ {marksOKAt m (len Δ) ms} c in
+    ∧T (posFrom-stable m Δ a) (∧T b (∨-mono (len Δ <ℕ m) (entryOK-stable m A) d))
 
   positive-stable : ∀ Δ → T (positive Δ) → T (positive (Δ [ σ ]tel))
   positive-stable Δ p rewrite sorts-[] Δ =

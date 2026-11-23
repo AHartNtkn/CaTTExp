@@ -414,6 +414,9 @@ import CaTTExp.Binder.CheckWith
 import CaTTExp.Binder.Completeness
 import CaTTExp.Binder.VarMark
 import CaTTExp.Binder.MarkExamples
+import CaTTExp.Binder.Des
+import CaTTExp.Binder.DesLaws
+import CaTTExp.Binder.DesExamples
 import CaTTExp.Binder.Embed
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws

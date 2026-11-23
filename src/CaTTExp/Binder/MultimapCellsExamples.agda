@@ -18,6 +18,8 @@
 --  * Rejections: non-canonical heads (an unused entry; an unused
 --    atom), each otherwise well typed; a cell at gap 0 (oplax, not a
 --    kernel cell); β not a 2-cell from f to g.
+--  * The sort check: an instance that infers but sends the template's
+--    data variable to a representable is not sorted (`unsorted`).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Pure as P
@@ -26,6 +28,8 @@ open import CaTTExp.Binder.Multimap using (MMI; mmi)
 open import CaTTExp.Binder.Signature
 open import CaTTExp.Binder.Embed using (extend)
 import CaTTExp.Gray.Biclosed.Syntax as GB
+import CaTTExp.Gray.Biclosed.Typing as GT
+open import CaTTExp.Binder.Multimap using (sortedT)
 
 module CaTTExp.Binder.MultimapCellsExamples where
 
@@ -139,3 +143,21 @@ rejected = refl
 
 open import CaTTExp.Binder.Embed using (module CaTT)
 open CaTT P.∅ (cellBinders P.K) using (tm-iff; ctx-iff; ty-iff; sub-iff) public
+
+------------------------------------------------------------------------
+-- The sort check (`Multimap.sortedT`). The same curry instance with the
+-- template's data variable sent to the representable ⟦D⁰⟧ infers (it is
+-- an AdmI instance) but is not a kernel instance (KInst): the check
+-- rejects it, so no mm or mmc head is built on it.
+
+r0 : GB.Fm
+r0 = GB.rep (GB.disk 0)
+
+Fr : GB.CTy
+Fr = GB.op (((o0 GB.⊗ o1) ∷ []) GB.▸ r0)
+
+unsortedT : GB.Tm
+unsortedT = GB.here (GB.tmpl evL 1 GB.inv 0) GB.gc (o0 ∷ o1 ∷ r0 ∷ []) (fm 0 ∷ [])
+
+unsorted : is-just (GT.infer (Fr ∷ []) unsortedT) ∷ sortedT 2 unsortedT ∷ [] ≡ true ∷ false ∷ []
+unsorted = refl

@@ -357,3 +357,4 @@ import CaTTExp.Descent.CocartLemmas
 import CaTTExp.Descent.DJOneTruncated
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
+import CaTTExp.Descent.TruncGrpdModel

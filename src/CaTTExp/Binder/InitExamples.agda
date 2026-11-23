@@ -5,7 +5,8 @@
 -- Every statement below is `refl`: the checker, which is sound and
 -- complete, accepts (or rejects) the term, so the term is (or is not)
 -- derivable. Positive: ℕ with all six formers, and the circle (a cell
--- variable) with μ and η, and a sort over a base with a companion cell.
+-- variable) with μ and η, a sort over a base with a companion cell, and
+-- uni_y at a globular 2-cell (its 4-cell type checked well formed).
 -- Negative: the side condition (positivity and
 -- the former's selection) rejects a non-⊤ parameter target, a second
 -- object variable, a source mentioning X, rec_y at y = 0 or at a cell,
@@ -168,9 +169,18 @@ _ : (ok (ctx? Γu○) , ok (tyOf Γu○ (bnd uni 0 Δ○ (fresh 0 9))) , ok (tyO
       ≡₃ (true , true , true)
 _ = refl
 
--- uni_y at the 2-cell (a modification condition between 3-cells) is
--- not stated yet (ledger S26b).
-_ : sideOf uniY 2 Δ○ ≡ false
+-- uni_y at the 2-cell l: the modification condition, a 4-cell between
+-- two pastings of 3-cells (C.mod4), is accepted (ledger S26b (a)).
+-- The checker types the term (its arguments and side condition); that
+-- its result type is well formed is checked separately (`wfTy`), since
+-- presupposition for INIT is not proved yet (ledger S26i).
+wfTy : Ctx → Tm → Bool
+wfTy Γ t = ok (tyOf Γ t >>= λ A → ctx? (Γ ▸ A) >>= λ _ → just tt)
+
+_ : ( sideOf uniY 2 Δ○ ∷ ok (tyOf Γu○ (bnd uniY 2 Δ○ (fresh 0 9)))
+    ∷ wfTy Γu○ (bnd uniY 2 Δ○ (fresh 0 9)) ∷ wfTy Γu○ (bnd uniY 1 Δ○ (fresh 0 9))
+    ∷ wfTy Γu○ (bnd uni 0 Δ○ (fresh 0 9)) ∷ wfTy Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ∷ [])
+  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ [])
 _ = refl
 
 -- A 3-cell variable m : l ⇛ l: μ, η and rec accept it; rec_y at it and

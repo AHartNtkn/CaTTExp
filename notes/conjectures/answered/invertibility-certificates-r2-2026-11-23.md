@@ -242,3 +242,41 @@ For an exact description in any dimension, take as vertices the cells outside Ce
 Run `python3 -B scripts/s22/check_invertibility.py` from the repository root. The [validator](../../../scripts/s22/check_invertibility.py) checks the four marked boundaries at their globular types and follows the nonidentity defect through eight split contractions. It exhausts the strictly inverse pairs through globular degree five, checks 10,360 compatible cubical subdivisions and 125 associativity triples, and tests both alternating orientations through hom degree nine. Using the repository’s Steiner atom tables, it also compares the two cylinder tiles with the subdivided cylinder in degrees two through nine, including the signed common face.
 
 The arguments in arbitrary degree use the cylinder subdivision formula, change of base inside an ordinary hom, and the postfixed family $S$. In particular the weak proof uses two directed tiles with invertible composite. The finite computations check the concrete model, orientations and boundary types.
+
+---
+
+## Verification (2026-11-23, thread "Compare alternatives to the marker system")
+
+**Status: verified.** Q1 is answered negatively, with a finite counterexample. Q2 is answered with a coinductive rule. Q3 is answered negatively. The consequences are in `../../marking-alternatives.md` §9.
+
+**Checks run.** `python3 -B scripts/s22/check_invertibility.py` (committed with the answer) was run from the repository root, and every check passes:
+- the label model E is gaunt in degrees 1–5;
+- the four marked boundaries agree, and f's image is not an identity;
+- the defect reproduces through eight split contractions;
+- 10,360 cubical composition tests and 125 associativity tests pass;
+- 14 alternating interchangers through hom degree 9 are checked;
+- the Steiner strip agrees in hom degrees 2–9.
+
+**The separating model (the step that makes f uncertifiable).** Checked by reading.
+- E has objects {0, 1}, and its cells are labelled by bits at most the labels of their boundaries, composed by meet. It is a strict ω-category whose only strictly invertible cells are identities.
+- The Gray multiplication on E is join on face-labelled cubes. That it respects cubical composition reduces to distributivity (b ∧ b′) ∨ c = (b ∨ c) ∧ (b′ ∨ c). Its well-definedness as a map out of the cubical Gray tensor rests on Al-Agl–Brown–Steiner (taken on trust, with finite checks by the script).
+- With designated = identities, every rule holds:
+  - rule 6, because an identity cancellation gives a strict inverse, hence an identity;
+  - rule 4, by degeneracy;
+  - rules 2, 3 and 5 trivially.
+- So K is an equipped model. The marked generators go to identities: u;v is the identity of object 0, and joining with p = 1 sends u, v and f to identities. But f goes to a label-0 cell on the label-1 cell 1_x, which is not an identity. By freeness, no recorded certificate of f exists.
+
+**f is invertible (the coinductive argument).** Checked by reading at the level of its structure; the arbitrary-degree rebasing step is taken with moderate confidence. Finite levels are machine-checked (eight splits).
+- The cylinders U : Id ⇒ P and V : P ⇒ Id from u and v have a composite strip that is rule-4 invertible, because u;v is certified. P(U_q) and P(V_q) are invertible through the marked pu and pv.
+- Rebasing along ℓ : e → 1_x splits every based q with Pq invertible through an invertible c.
+- The family S of split contractions is postfixed for the reversal operator, so its members are invertible.
+- The individual tiles u ⊗ q and v ⊗ q are never certified. This is why the tower never closes.
+
+**Q2 (complete extension) and the necessity statement.**
+- Coinduction relative to recorded certificates is sound (postfixed set) and complete (a reversal tower is such an indexing). Both checked by reading.
+- *Necessity:* any rule interpretable in every equipped model sends certificates to identities in K. So it cannot certify f. A complete rule has to rely on the models' designated class being saturated (all invertible cells designated).
+
+**Q3.**
+- The iterated interchangers u ⊗ v ⊗ u ⊗ … ⊗ f are invertible, by the Gray package formula applied to f's tower.
+- Each evaluates in K to a cell whose principal face has label 0 while one hemisphere has label 1, so it is not an identity. The orientation was checked by the script through hom degree 9.
+- So there are uncertified invertible cells in every dimension ≥ 3, and no cutoff N(C) exists.

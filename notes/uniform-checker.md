@@ -169,6 +169,10 @@ The first piece of S3a's raw syntax that is not specific to grids. `scripts/e6/r
   - Its normal forms through `Present`.
   - The proof that it agrees with (K45) and with `Grid` on suspended grids.
   - The T₁₂ extensions of (K47) above degree four.
+- **Route (2026-11-23).** Copying `interchange_free.py`'s table completion into Agda and checking it by normalization does not scale. A degree-3 table on a small tree already has hundreds of classes, and checking every schema instance over every tuple of classes is far beyond what Agda's normalizer can do. The plan instead proves the two directions structurally:
+  1. **Distinctness, by a Gray model.** Interpret P in the free Gray-enriched category on the tree. A cell is read as a globular value: its top support, a set of tuples as in `Gray/Support.agda`, together with the values of its source and target. Composition is union of supports in dimensions ≥ 2 and concatenation product in dimension 1. A whisker across an object is the product, and one inside a hom keeps the support. χ, r, t and h are products. The inner ι is an identity. Faces are computed by the operations' boundary formulas, so the reading is compositional. Each schema is then checked once, symbolically, as in `FreeP0`. The check works in the algebra of supports (∪ and ×, with ∅ and the unit tuple), up to the face equalities from the guards. By (K45) the Gray quotient is exact through degree three, so this model separates every pair of distinct cells there.
+  2. **Identification, by normal forms.** Show that every typed term through degree three is ≐-equal to a Gray normal form. This is the exactness half of (K45), and it is where most of the proof lies.
+  3. **Degree four.** Over each Gray value, the 4-cells of P are the finite comparison fibre of (K65). Its presentation goes through `Present` and `WordPresent`, with letters read from `SigP`'s ι, r, t and h. `Grid` is the case of suspended grids.
 
 ## 2. What this does not check (the trust boundary)
 

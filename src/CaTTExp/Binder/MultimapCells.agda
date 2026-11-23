@@ -151,8 +151,16 @@ concatAt : GB.Ctx → List Nat
 concatAt []       = []
 concatAt (A ∷ As) = atY A ++ concatAt As
 
+atYM : Maybe GB.CTy → List Nat
+atYM (just A) = atY A
+atYM nothing  = []
+
+-- The atoms of the support's types, of the term, and of its type.
+supAtomsOf : GB.Ctx → GB.Tm → List Nat
+supAtomsOf Φ u = concatAt (GT.map (nthY Φ) (supVars Φ u)) ++ atT u ++ atYM (GT.infer Φ u)
+
 supAtoms : Nat → GB.Ctx → GB.Tm → List Nat
-supAtoms k Φ u = filter (λ i → elem i (concatAt (GT.map (nthY Φ) (supVars Φ u)) ++ atT u)) (upTo k)
+supAtoms k Φ u = filter (λ i → elem i (supAtomsOf Φ u)) (upTo k)
 
 -- The renaming onto a support: atoms and entries to their positions.
 -- Entries outside the support (never used by the term) go to pt.
@@ -174,9 +182,14 @@ canon k Φ u = canonOf (mmi (GT.length as) Φ′ (GS.sT ren u)) as vs
 isCanon : MMI → Bool
 isCanon (mmi k Φ t) = cidx (canon k Φ t) ==MM mmi k Φ t
 
+-- Every atom the head mentions, in its context or its term, is one of
+-- its k atoms.
+atomsBelow : Nat → GB.Ctx → GB.Tm → Bool
+atomsBelow k Φ t = all (λ i → i <ℕ k) (concatAt Φ ++ atT t)
+
 mmcTy : MMI → Maybe GB.CTy
 mmcTy (mmi k Φ t) =
-  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ
+  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t
   then (GT.infer Φ t >>= λ A → if okTy k A then just A else nothing)
   else nothing
 

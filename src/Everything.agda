@@ -490,6 +490,9 @@ import CaTTExp.Binder.UniHeads
 import CaTTExp.Binder.UniHeadsExamples
 import CaTTExp.Binder.LimPresup
 import CaTTExp.Binder.LimRecognised
+import CaTTExp.Lim.HornGen
+import CaTTExp.Lim.HornGenExamples
+import CaTTExp.Binder.UniHornGenExamples
 import CaTTExp.Binder.GrayForm
 import CaTTExp.Binder.GrayFormLawsGen
 import CaTTExp.Binder.GrayFormLaws

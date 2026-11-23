@@ -149,7 +149,7 @@ A **model** of Δ with carrier A is a substitution σ : Δ[A/X]. A **model morph
 (higher)     derived: a level-k cell between model morphisms is a model morphism into the
              cotensor [⟦Dᵏ⟧, A] with the pointwise model
 ```
-"Invertible" here is chapter 3's judgment `inv`: INIT concludes `rec_y inv`, `uni inv` and `uni_y inv`, and the inverses and their witnesses at every level come from (DES) and (DES-inv), with no further formers. A model σ must certify every `inv` mark of Δ, since substitutions preserve marks (§3.2).
+"Invertible" here is chapter 3's judgment `inv`: INIT concludes `rec_y inv`, `uni inv` and `uni_y inv`, and the inverses and their witnesses at every level come from (DES) and (DES-inv), with no further formers. A model σ must certify every `inv` mark of Δ, since substitutions preserve marks (§3.2). The three conclusions are syntax-directed axioms on INIT's head formers, like (mark), so `inv` stays decidable: it is not closed under inv-intro, which is what the saturation theorem of §3.7 needs for undecidability. Where a model's mark needs a cell that is invertible only by data, the evidence layer of §3.7 supplies it. DES is not yet in Agda (ledger E4).
 
 The rule binds the object variable X in a premise, forms an ordinary object μΔ, states its universal property by cells, and makes no judgment a term. It is the kind of binding former §0.2 allows, not a universe.
 

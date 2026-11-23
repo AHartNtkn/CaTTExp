@@ -17,11 +17,11 @@
 --
 -- The gaps of the ladder are filled by the relative-coherence
 -- procedure (`General.solve`). `col-ok` is CONDITIONAL on rcS answering
--- each gap the construction uses (`ColRC`); each gap relates two
--- 2-cells with the same strict image when c is the vertical composite
--- (the gaps reassociate whiskers and move identities), so the planned
--- Theorem A (`rcS-thmA`, with Key2Ctx) is meant to discharge them. That
--- is not done here.
+-- each gap the construction uses (`ColRC`). When c is the vertical
+-- composite, each gap should relate two 2-cells with the same strict
+-- image (they differ by reassociation and identities), so that the
+-- planned Theorem A (`rcS-thmA`, with Key2Ctx) discharges them. Neither
+-- the strict-image equalities nor the discharge is proved here.
 ------------------------------------------------------------------------
 module CaTTExp.Naturality.Column where
 

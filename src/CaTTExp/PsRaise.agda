@@ -16,6 +16,18 @@
 --
 -- by simulating the two runs of the pasting-context builder side by
 -- side (`simL`). ⊢ps of the raised tree is `psOf` itself.
+--
+-- When τ has dimension ≤ k, every flagged leaf has dimension k
+-- (`TopOK k 0`) and some leaf is flagged (`anyR`), the raised context
+-- has dimension k + 1 (`dim-raise`) and its boundaries are the images
+-- of all of τ:
+--
+--   ∂⁻ (ctxOf (raiseT bs τ)) ≡ img incl⁻ (upTo (len (ctxOf τ)))   (`src-raise`)
+--   ∂⁺ (ctxOf (raiseT bs τ)) ≡ img incl⁺ (upTo (len (ctxOf τ)))   (`tgt-raise`)
+--
+-- The hypotheses are needed: a flagged leaf below the top dimension
+-- leaves the raised context's boundary at a dimension where τ's own
+-- cells are not all kept.
 ------------------------------------------------------------------------
 module CaTTExp.PsRaise where
 
@@ -24,7 +36,7 @@ open import CaTTExp.Pure
 open import CaTTExp.PureMetatheory using (closed)
 import CaTTExp.Subst ∅ cattSide as Sb
 open import CaTTExp.Weakening ∅ cattSide using (wk-sub; lookup-top; lookup-wk)
-open import CaTTExp.Derived using (ps-wf; ctx-init; lk-ext; lk-top; dropLast-snoc)
+open import CaTTExp.Derived using (ps-wf; ctx-init; lk-ext; lk-top; dropLast-snoc; upTo)
 open import CaTTExp.GrayCtx.Lift using (raiseL; raiseT)
 
 private
@@ -465,3 +477,248 @@ tgt-incl : ∀ k bs t ts → TopOK k 0 (t ∷ ts) bs →
            tgtVars k (ctxOf (raiseT bs (node (t ∷ ts)))) ≡ img (inclP bs t ts) (tgtVars k (ctxOf (node (t ∷ ts))))
 tgt-incl k []       t ts top = tgtL k (t ∷ ts) [] pss pss base top refl
 tgt-incl k (b ∷ bs) t ts top = tgtL k (t ∷ ts) (b ∷ bs) pss pss base top refl
+
+------------------------------------------------------------------------
+-- At or above the dimension of a pasting context, srcVars and tgtVars
+-- are all its levels.
+
+private
+  max-lt-l : ∀ a b k → T (max a b <ℕ k) → T (a <ℕ k)
+  max-lt-l zero    b       (suc k) _ = tt
+  max-lt-l (suc a) zero    k       p = p
+  max-lt-l (suc a) (suc b) (suc k) p = max-lt-l a b k p
+
+  max-lt-r : ∀ a b k → T (max a b <ℕ k) → T (b <ℕ k)
+  max-lt-r zero    b       k       p = p
+  max-lt-r (suc a) zero    (suc k) _ = tt
+  max-lt-r (suc a) (suc b) (suc k) p = max-lt-r a b k p
+
+  lt-not : ∀ a k → T (suc a <ℕ suc k) → (k <ℕ suc a) ≡ false
+  lt-not a       zero    ()
+  lt-not zero    (suc k) _ = refl
+  lt-not (suc a) (suc k) p = lt-not a k p
+
+  lt-not′ : ∀ a k → T (suc a <ℕ suc k) → (k <ℕ a) ≡ false
+  lt-not′ a       zero    ()
+  lt-not′ zero    (suc k) _ = refl
+  lt-not′ (suc a) (suc k) p = lt-not′ a k p
+
+  lt-neq : ∀ a k → T (suc a <ℕ suc k) → (a ==ℕ k) ≡ false
+  lt-neq a       zero    ()
+  lt-neq zero    (suc k) _ = refl
+  lt-neq (suc a) (suc k) p = lt-neq a k p
+
+full-src : ∀ {Γ x A} → Γ ⊢ps x ∶ A → ∀ k → T (dimCtx Γ <ℕ suc k) → srcVars k Γ ≡ upTo (len Γ)
+full-src pss k _ = refl
+full-src (pse {Γ} {x} {A} d) k p
+  rewrite lt-not (dim A) k (max-lt-l (suc (dim A)) (max (dim A) (dimCtx Γ)) (suc k) p)
+        | full-src d k (max-lt-r (dim A) (dimCtx Γ) (suc k) (max-lt-r (suc (dim A)) (max (dim A) (dimCtx Γ)) (suc k) p)) = refl
+full-src (psd d) k p = full-src d k p
+
+full-tgt : ∀ {Γ x A} → Γ ⊢ps x ∶ A → ∀ k → T (dimCtx Γ <ℕ suc k) → tgtVars k Γ ≡ upTo (len Γ)
+full-tgt pss k _ = refl
+full-tgt (pse {Γ} {x} {A} d) k p
+  rewrite lt-not′ (dim A) k (max-lt-l (suc (dim A)) (max (dim A) (dimCtx Γ)) (suc k) p)
+        | lt-neq (dim A) k (max-lt-l (suc (dim A)) (max (dim A) (dimCtx Γ)) (suc k) p)
+        | full-tgt d k (max-lt-r (dim A) (dimCtx Γ) (suc k) (max-lt-r (suc (dim A)) (max (dim A) (dimCtx Γ)) (suc k) p)) = refl
+full-tgt (psd d) k p = full-tgt d k p
+
+------------------------------------------------------------------------
+-- The dimension of the raised context: if τ has dimension ≤ k and some
+-- flagged leaf (all of dimension k) is raised, the raised context has
+-- dimension k + 1.
+
+Le : Nat → Nat → Set
+Le a b = T (a <ℕ suc b)
+
+private
+  le-refl : ∀ a → Le a a
+  le-refl a = <-self a
+
+  le-trans : ∀ a b c → Le a b → Le b c → Le a c
+  le-trans zero    b       c       _ _ = tt
+  le-trans (suc a) zero    c       () _
+  le-trans (suc a) (suc b) zero    _ ()
+  le-trans (suc a) (suc b) (suc c) p q = le-trans a b c p q
+
+  le-suc : ∀ a → Le a (suc a)
+  le-suc zero    = tt
+  le-suc (suc a) = le-suc a
+
+  le-max-l : ∀ a b → Le a (max a b)
+  le-max-l zero    b       = tt
+  le-max-l (suc a) zero    = le-refl (suc a)
+  le-max-l (suc a) (suc b) = le-max-l a b
+
+  le-max-r : ∀ a b → Le b (max a b)
+  le-max-r zero    b       = le-refl b
+  le-max-r (suc a) zero    = tt
+  le-max-r (suc a) (suc b) = le-max-r a b
+
+  max-lub : ∀ a b c → Le a c → Le b c → Le (max a b) c
+  max-lub zero    b       c       _ q = q
+  max-lub (suc a) zero    c       p _ = p
+  max-lub (suc a) (suc b) zero    () _
+  max-lub (suc a) (suc b) (suc c) p q = max-lub a b c p q
+
+  le-antisym : ∀ a b → Le a b → Le b a → a ≡ b
+  le-antisym zero    zero    _ _ = refl
+  le-antisym zero    (suc b) _ ()
+  le-antisym (suc a) zero    () _
+  le-antisym (suc a) (suc b) p q = cong suc (le-antisym a b p q)
+
+  -- x ≤ max y z, from x ≤ y.
+  up-l : ∀ x y z → Le x y → Le x (max y z)
+  up-l x y z p = le-trans x y (max y z) p (le-max-l y z)
+
+  up-r : ∀ x y z → Le x z → Le x (max y z)
+  up-r x y z p = le-trans x z (max y z) p (le-max-r y z)
+
+anyR : List Bool → List Tree → Bool
+anyR bs                   []             = false
+anyR []                   (node [] ∷ ts) = anyR [] ts
+anyR (b ∷ bs)             (node [] ∷ ts) = b ∨ anyR bs ts
+anyR []       (node (c ∷ cs) ∷ ts) = anyR [] (c ∷ cs) ∨ anyR (snd (raiseL [] (c ∷ cs))) ts
+anyR (b ∷ bs) (node (c ∷ cs) ∷ ts) = anyR (b ∷ bs) (c ∷ cs) ∨ anyR (snd (raiseL (b ∷ bs) (c ∷ cs))) ts
+
+-- The dimension invariant along the two runs.
+record DimInv (k : Nat) (r : Bool) (Γ Δ : Ctx) : Set where
+  constructor _,ᵈ_
+  field
+    upper : Le (dimCtx Δ) (max (dimCtx Γ) (suc k))
+    lower : T r → Le (suc k) (dimCtx Δ)
+
+private
+  ∨-r′ : ∀ a b → T b → T (a ∨ b)
+  ∨-r′ true  b _ = tt
+  ∨-r′ false b p = p
+
+  dimE-n : ∀ k G D a b a′ b′ → a′ ≡ a → b′ ≡ b → Le D (max G (suc k)) →
+           Le (max b′ (max a′ D)) (max (max b (max a G)) (suc k))
+  dimE-n k G D a b .a .b refl refl up =
+    max-lub b _ M (up-l b _ (suc k) (le-max-l b _))
+      (max-lub a D M (up-l a _ (suc k) (up-r a b _ (le-max-l a _)))
+        (le-trans D _ M up (max-mono G _ (suc k)
+          (up-r G b _ (le-max-r a G)))))
+    where
+    M = max (max b (max a G)) (suc k)
+    max-mono : ∀ x x′ y → Le x x′ → Le (max x y) (max x′ y)
+    max-mono x x′ y p = max-lub x y (max x′ y) (up-l x x′ y p) (le-max-r x′ y)
+
+  -- A pse step on both sides (the new cells have the same dimensions).
+  dimE : ∀ k r Γ A B Δ A^ B^ → dim A^ ≡ dim A → dim B^ ≡ dim B → DimInv k r Γ Δ →
+         DimInv k r (Γ ▸ A ▸ B) (Δ ▸ A^ ▸ B^)
+  dimE k r Γ A B Δ A^ B^ dA dB (up ,ᵈ lo) =
+    dimE-n k (dimCtx Γ) (dimCtx Δ) (dim A) (dim B) (dim A^) (dim B^) dA dB up ,ᵈ
+    λ t → up-r (suc k) (dim B^) _ (up-r (suc k) (dim A^) (dimCtx Δ) (lo t))
+
+  dimR-n : ∀ G D a a′ → a′ ≡ a → Le D (max G (suc (suc a))) →
+           Le (max (suc (suc a′)) (max (suc a′) (max (suc a′) (max a′ D))))
+              (max (max (suc a) (max a G)) (suc (suc a)))
+  dimR-n G D a .a refl up =
+    max-lub ssa (max sa (max sa (max a D))) M (up-r ssa G₁ ssa (le-refl ssa))
+      (max-lub sa (max sa (max a D)) M sa≤
+        (max-lub sa (max a D) M sa≤
+          (max-lub a D M (up-l a G₁ ssa (up-r a sa (max a G) (le-max-l a G)))
+            (le-trans D (max G ssa) M up
+              (max-lub G ssa M (up-l G G₁ ssa (up-r G sa (max a G) (le-max-r a G)))
+                (le-max-r G₁ ssa))))))
+    where
+    sa  = suc a
+    ssa = suc sa
+    G₁  = max sa (max a G)
+    M   = max G₁ ssa
+    sa≤ : Le sa M
+    sa≤ = le-trans sa ssa M (le-suc sa) (le-max-r G₁ ssa)
+
+  lowR : ∀ a a′ n → a′ ≡ a → Le (suc (suc a′)) n → Le (suc (suc a)) n
+  lowR a .a n refl p = p
+
+  -- A raised leaf of dimension k = suc (dim A).
+  dimR : ∀ r Γ A x Δ x^ A^ → dim A^ ≡ dim A → DimInv (suc (dim A)) r Γ Δ →
+         DimInv (suc (dim A)) true (Γ ▸ A ▸ arr A (var x) (var (len Γ))) (Raised Δ x^ A^)
+  dimR r Γ A x Δ x^ A^ dA (up ,ᵈ lo) =
+    dimR-n (dimCtx Γ) (dimCtx Δ) (dim A) (dim A^) dA up ,ᵈ
+    λ _ → lowR (dim A) (dim A^) (dimCtx (Raised Δ x^ A^)) dA
+             (le-max-l (suc (suc (dim A^))) (max (suc (dim A^)) (max (suc (dim A^)) (max (dim A^) (dimCtx Δ)))))
+
+  dimW : ∀ {k a b Γ Δ} → (T b → T a) → DimInv k a Γ Δ → DimInv k b Γ Δ
+  dimW f (up ,ᵈ lo) = up ,ᵈ λ t → lo (f t)
+
+  ∨-false-T : ∀ r → T (r ∨ false) → T r
+  ∨-false-T true  _ = tt
+
+  ∨-assoc-T : ∀ r a b → T (r ∨ (a ∨ b)) → T ((r ∨ a) ∨ b)
+  ∨-assoc-T true  a b _ = tt
+  ∨-assoc-T false true  b _ = tt
+  ∨-assoc-T false false b p = p
+
+mutual
+  dimL : ∀ k ts bs r {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+         TopOK k (dim A) ts bs → DimInv k r Γ Δ →
+         DimInv k (r ∨ anyR bs ts) (fst (buildList ts d)) (fst (buildList (fst (raiseL bs ts)) d^))
+  dimL k []                  bs           r d d^ S _ i = dimW (∨-false-T r) i
+  dimL k (node [] ∷ ts)      []           r {Γ} {x} {A} {Δ} {x^} {A^} d d^ S top i =
+    dimL k ts [] r (psd (pse d)) (psd (pse d^)) (leafP d d^ S) top (dimE k r Γ A _ Δ A^ _ (dimS S) (cong suc (dimS S)) i)
+  dimL k (node [] ∷ ts)      (false ∷ bs) r {Γ} {x} {A} {Δ} {x^} {A^} d d^ S top i =
+    dimL k ts bs r (psd (pse d)) (psd (pse d^)) (leafP d d^ S) top (dimE k r Γ A _ Δ A^ _ (dimS S) (cong suc (dimS S)) i)
+  dimL .(suc (dim A)) (node [] ∷ ts) (true ∷ bs) r {Γ} {x} {A} {Δ} {x^} {A^} d d^ S (refl , top) i =
+    dimW (λ _ → tt) (dimL _ ts bs true (psd (pse d)) (psd (psd (pse (pse d^)))) (leafR d d^ S) top
+                      (dimR r Γ A x Δ x^ A^ (dimS S) i))
+  dimL k (node (c ∷ cs) ∷ ts) []       r d d^ S top i = dimN k (c ∷ cs) ts [] r d d^ S top i
+  dimL k (node (c ∷ cs) ∷ ts) (b ∷ bs) r d d^ S top i = dimN k (c ∷ cs) ts (b ∷ bs) r d d^ S top i
+
+  dimN : ∀ k cs ts bs r {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+         TopOK k (suc (dim A)) cs bs × TopOK k (dim A) ts (snd (raiseL bs cs)) → DimInv k r Γ Δ →
+         DimInv k (r ∨ (anyR bs cs ∨ anyR (snd (raiseL bs cs)) ts))
+           (fst (buildList ts (psd (snd (snd (buildList cs (pse d)))))))
+           (fst (buildList (fst (raiseL (snd (raiseL bs cs)) ts)) (psd (snd (snd (buildList (fst (raiseL bs cs)) (pse d^)))))))
+  dimN k cs ts bs r {Γ} {x} {A} {Δ} {x^} {A^} d d^ S (top₁ , top₂) i =
+    dimW (∨-assoc-T r (anyR bs cs) (anyR (snd (raiseL bs cs)) ts))
+      (dimL k ts (snd (raiseL bs cs)) (r ∨ anyR bs cs) _ _ (psdS (simL cs bs (pse d) (pse d^) (pseS d d^ S))) top₂
+        (dimL k cs bs r (pse d) (pse d^) (pseS d d^ S) top₁
+          (dimE k r Γ A (arr A (var x) (var (len Γ))) Δ A^ (arr A^ (var x^) (var (len Δ))) (dimS S) (cong suc (dimS S)) i)))
+
+private
+  le-max-suc : ∀ G k → Le G k → Le (max G (suc k)) (suc k)
+  le-max-suc G k p = max-lub G (suc k) (suc k) (le-trans G k (suc k) p (le-suc k)) (le-refl (suc k))
+
+  dimInv-eq : ∀ {k r Γ Δ} → DimInv k r Γ Δ → Le (dimCtx Γ) k → T r → dimCtx Δ ≡ suc k
+  dimInv-eq {k} {r} {Γ} {Δ} (up ,ᵈ lo) le t =
+    le-antisym (dimCtx Δ) (suc k)
+      (le-trans (dimCtx Δ) (max (dimCtx Γ) (suc k)) (suc k) up (le-max-suc (dimCtx Γ) k le)) (lo t)
+
+  dim0 : ∀ k → DimInv k false (ε ▸ ⋆) (ε ▸ ⋆)
+  dim0 k = tt ,ᵈ λ ()
+
+-- If τ has dimension ≤ k, every flagged leaf has dimension k and some
+-- leaf is flagged, then the raised context has dimension k + 1.
+dim-raise : ∀ k bs t ts → Le (dimCtx (ctxOf (node (t ∷ ts)))) k → TopOK k 0 (t ∷ ts) bs →
+            T (anyR bs (t ∷ ts)) → dimCtx (ctxOf (raiseT bs (node (t ∷ ts)))) ≡ suc k
+dim-raise k []       t ts le top a = dimInv-eq (dimL k (t ∷ ts) [] false pss pss base top (dim0 k)) le a
+dim-raise k (b ∷ bs) t ts le top a = dimInv-eq (dimL k (t ∷ ts) (b ∷ bs) false pss pss base top (dim0 k)) le a
+
+------------------------------------------------------------------------
+-- The boundaries of the raised context are the images of τ under the
+-- two inclusions:
+--
+--   ∂⁻ (ctxOf (raiseT bs τ)) ≡ img incl⁻ (all levels of τ)
+--   ∂⁺ (ctxOf (raiseT bs τ)) ≡ img incl⁺ (all levels of τ)
+
+private
+  dTree : ∀ t ts → ctxOf (node (t ∷ ts)) ⊢ps fst (snd (build (node (t ∷ ts)) pss)) ∶ ⋆
+  dTree t ts = snd (snd (build (node (t ∷ ts)) pss))
+
+src-raise : ∀ k bs t ts → Le (dimCtx (ctxOf (node (t ∷ ts)))) k → TopOK k 0 (t ∷ ts) bs →
+            T (anyR bs (t ∷ ts)) →
+            ∂⁻ (ctxOf (raiseT bs (node (t ∷ ts)))) ≡ img (inclM bs t ts) (upTo (len (ctxOf (node (t ∷ ts)))))
+src-raise k bs t ts le top a =
+  trans (cong (λ n → srcVars (n ∸ 1) (ctxOf (raiseT bs (node (t ∷ ts))))) (dim-raise k bs t ts le top a))
+    (trans (src-incl k bs t ts top) (cong (img (inclM bs t ts)) (full-src (dTree t ts) k le)))
+
+tgt-raise : ∀ k bs t ts → Le (dimCtx (ctxOf (node (t ∷ ts)))) k → TopOK k 0 (t ∷ ts) bs →
+            T (anyR bs (t ∷ ts)) →
+            ∂⁺ (ctxOf (raiseT bs (node (t ∷ ts)))) ≡ img (inclP bs t ts) (upTo (len (ctxOf (node (t ∷ ts)))))
+tgt-raise k bs t ts le top a =
+  trans (cong (λ n → tgtVars (n ∸ 1) (ctxOf (raiseT bs (node (t ∷ ts))))) (dim-raise k bs t ts le top a))
+    (trans (tgt-incl k bs t ts top) (cong (img (inclP bs t ts)) (full-tgt (dTree t ts) k le)))

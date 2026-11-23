@@ -3,19 +3,22 @@
 -- interface: six binding formers over a telescope X. Δ, a decidable
 -- positivity check, and the stability laws (CaTTExp.Binder.Laws).
 --
--- The telescope Δ of every former is (X : ⋆, A₁, …, A_{m-1}); its
--- entry j is bvar 0 j inside Δ, so X is bvar 0 0. Writing μT for
--- bnd μ 0 Δ ⟨⟩ and ηT y for bnd η y Δ ⟨⟩, the generic model is
--- η = ⟨μT, ηT 1, …, ηT (m-1)⟩, and a model with carrier A is a list of
--- arguments for the telescope Δ itself (A for X, then the rest).
+-- The telescope Δ of every former opens with its sort variables
+-- X₀, …, X_{n-1} : ⋆ (n ≥ 1; spec §9.3 "several sorts", here all over
+-- ⊤), followed by maps and cells A_n, …, A_{m-1}; entry j is bvar 0 j.
+-- Writing μ_k for bnd μ k Δ ⟨⟩ and ηT y for bnd η y Δ ⟨⟩, the generic
+-- model is η = ⟨μ_0, …, μ_{n-1}, ηT n, …, ηT (m-1)⟩, and a model is a
+-- list of arguments for the telescope Δ itself (carriers, then the
+-- rest). μ, rec and uni are indexed by a sort k < n; η, rec_y and uni_y
+-- by an entry y ≥ n. With one sort this is the single-sorted rule.
 --
 --   former  arguments (bargs)          type (bres), bvar 0 j = argument j
---   μ       none                       ⋆
+--   μ_k     none                       ⋆
 --   η_y     none                       A_y opened at η
---   rec     a model (A, σ) : Δ         μT → A
+--   rec_k   a model (A, σ) : Δ         μ_k → A_k
 --   rec_y   a model (A, σ) : Δ         the cell of rec at y (below)
---   uni     a model, and two model     h ⇒ h′, the 2-cell between the
---           morphisms (h, θ), (h′, θ′)  carrier maps
+--   uni_k   a model, and two model     h_k ⇒ h′_k, the 2-cell between
+--           morphisms (h, θ), (h′, θ′)  the carrier maps at sort k
 --           from η to it
 --   uni_y   the same                   the compatibility 3-cell at y
 --
@@ -24,7 +27,7 @@
 --
 --   s¹_y ; T(h)  ⇒  S(h) ; s²_y      (an arrow S¹ → T² in the ambient)
 --
--- where T(h) = h if T is X and the identity of T otherwise (likewise
+-- where T(h) = h_k if T is the sort X_k and the identity of T otherwise (likewise
 -- S(h)). For uni_y, with u : h ⇒ h′ the cell uni and T(u) = u or an
 -- identity 2-cell, the two sides are
 --
@@ -38,11 +41,12 @@
 -- Positivity (`positive`). This instance's fragment of §9.3's check,
 -- for the object terms the Agda kernel has (variables, constants,
 -- binders; it has no limit or colimit formers yet):
---   * the first entry is X : ⋆, and no other entry is an object;
+--   * the leading entries are the sorts X_k : ⋆ (at least one), and no
+--     later entry is an object;
 --   * every other entry is a map or a cell (of any dimension) whose
 --     underlying arrow type is S → T with
---       S = X, or S mentions no variable bound by the telescope;
---       T = X, or T is a constant the base signature marks as ⊤.
+--       S a sort, or S mentions no variable bound by the telescope;
+--       T a sort, or T is a constant the base signature marks as ⊤.
 -- The arrow context Δ^→ (model morphisms) is stated at maps and at
 -- globular 2-cells l : f ⇒ g between map entries f, g, where its
 -- component is a 3-cell between the two pastings of the naturality
@@ -155,11 +159,27 @@ module Construction (K : Set) (top? : K → Bool) where
         (⟨⟩ ,ₛ a ,ₛ b ,ₛ f ,ₛ f′ ,ₛ α ,ₛ c ,ₛ g)
 
   ----------------------------------------------------------------------
-  -- Positivity.
+  -- Sorts. The telescope opens with its sort variables X₀, …, X_{m-1},
+  -- the leading entries of type ⋆; `sorts Δ` is m.
 
-  isX? : Tm → Bool
-  isX? (bvar e j) = (e ==ℕ 0) ∧ (j ==ℕ 0)
-  isX? _          = false
+  isStar : Ty → Bool
+  isStar ⋆           = true
+  isStar (arr _ _ _) = false
+
+  sorts : Ctx → Nat
+  sorts ε       = 0
+  sorts (Δ ▸ A) = if (sorts Δ ==ℕ len Δ) ∧ isStar A then suc (len Δ) else sorts Δ
+
+  -- Which sort a term is, if it is one.
+  srt : Nat → Tm → Maybe Nat
+  srt m (bvar zero j) = if j <ℕ m then just j else nothing
+  srt m _             = nothing
+
+  isSort : Nat → Tm → Bool
+  isSort m t = is-just (srt m t)
+
+  ----------------------------------------------------------------------
+  -- Positivity.
 
   isTop? : Tm → Bool
   isTop? (cst k) = top? k
@@ -186,9 +206,9 @@ module Construction (K : Set) (top? : K → Bool) where
     mSub d ⟨⟩       = false
     mSub d (σ ,ₛ t) = mSub d σ ∨ mTm d t
 
-  srcOK tgtOK : Tm → Bool
-  srcOK S = isX? S ∨ not (mTm 0 S)
-  tgtOK T = isX? T ∨ isTop? T
+  srcOK tgtOK : Nat → Tm → Bool
+  srcOK m S = isSort m S ∨ not (mTm 0 S)
+  tgtOK m T = isSort m T ∨ isTop? T
 
   -- The underlying arrow S → T of a map or cell type.
   base : Ty → Maybe (Tm × Tm)
@@ -196,18 +216,20 @@ module Construction (K : Set) (top? : K → Bool) where
   base (arr ⋆ s t)             = just (s , t)
   base (arr (arr A a b) _ _)   = base (arr A a b)
 
-  okBase : Maybe (Tm × Tm) → Bool
-  okBase nothing        = false
-  okBase (just (S , T)) = srcOK S ∧ tgtOK T
+  okBase : Nat → Maybe (Tm × Tm) → Bool
+  okBase m nothing        = false
+  okBase m (just (S , T)) = srcOK m S ∧ tgtOK m T
 
-  entryOK : Ty → Bool
-  entryOK A = okBase (base A)
+  entryOK : Nat → Ty → Bool
+  entryOK m A = okBase m (base A)
+
+  -- Every entry after the sorts is a map or cell with a good base.
+  posFrom : Nat → Ctx → Bool
+  posFrom m ε       = true
+  posFrom m (Δ ▸ A) = posFrom m Δ ∧ ((len Δ <ℕ m) ∨ entryOK m A)
 
   positive : Ctx → Bool
-  positive ε                 = false
-  positive (ε ▸ ⋆)           = true
-  positive (ε ▸ arr _ _ _)   = false
-  positive (Δ ▸ B ▸ A)       = positive (Δ ▸ B) ∧ entryOK A
+  positive Δ = (0 <ℕ sorts Δ) ∧ posFrom (sorts Δ) Δ
 
   -- A variable of the binder at depth 0, other than through a parameter.
   bv0? : Tm → Maybe Nat
@@ -221,9 +243,9 @@ module Construction (K : Set) (top? : K → Bool) where
   -- A globular 2-cell between two earlier entries: f ⇒ g for f, g : S → T
   -- variables of the telescope. Returns the entries of f and g.
   glob : Ty → Maybe (Nat × Nat)
-  glob ⋆                             = nothing
-  glob (arr ⋆ _ _)                   = nothing
-  glob (arr (arr ⋆ _ _) f g)         = both (bv0? f) (bv0? g)
+  glob ⋆                               = nothing
+  glob (arr ⋆ _ _)                     = nothing
+  glob (arr (arr ⋆ _ _) f g)           = both (bv0? f) (bv0? g)
   glob (arr (arr (arr _ _ _) _ _) _ _) = nothing
 
   -- Entries whose model-morphism component the kernel states: maps, and
@@ -231,11 +253,10 @@ module Construction (K : Set) (top? : K → Bool) where
   low : Ty → Bool
   low A = (dim A ==ℕ 1) ∨ is-just (glob A)
 
-  -- Every entry after X is low.
-  lowOnly : Ctx → Bool
-  lowOnly ε           = true
-  lowOnly (ε ▸ _)     = true
-  lowOnly (Δ ▸ B ▸ A) = lowOnly (Δ ▸ B) ∧ low A
+  -- Every entry after the sorts is low.
+  lowFrom : Nat → Ctx → Bool
+  lowFrom m ε       = true
+  lowFrom m (Δ ▸ A) = lowFrom m Δ ∧ ((len Δ <ℕ m) ∨ low A)
 
   isLow? : Maybe Ty → Bool
   isLow? nothing  = false
@@ -245,16 +266,18 @@ module Construction (K : Set) (top? : K → Bool) where
   isMap? nothing  = false
   isMap? (just A) = dim A ==ℕ 1
 
-  inner : Nat → Ctx → Bool
-  inner y Δ = (0 <ℕ y) ∧ (y <ℕ len Δ)
+  -- y is a sort, or an entry after the sorts.
+  isSortIx inner : Nat → Ctx → Bool
+  isSortIx y Δ = y <ℕ sorts Δ
+  inner    y Δ = not (y <ℕ sorts Δ) ∧ (y <ℕ len Δ)
 
   sel : Former → Nat → Ctx → Bool
-  sel μ    y Δ = y ==ℕ 0
+  sel μ    y Δ = isSortIx y Δ
   sel η    y Δ = inner y Δ
-  sel rec  y Δ = y ==ℕ 0
+  sel rec  y Δ = isSortIx y Δ
   sel recY y Δ = inner y Δ ∧ isLow? (lookup Δ y)
-  sel uni  y Δ = (y ==ℕ 0) ∧ lowOnly Δ
-  sel uniY y Δ = (inner y Δ ∧ lowOnly Δ) ∧ isMap? (lookup Δ y)
+  sel uni  y Δ = isSortIx y Δ ∧ lowFrom (sorts Δ) Δ
+  sel uniY y Δ = (inner y Δ ∧ lowFrom (sorts Δ) Δ) ∧ isMap? (lookup Δ y)
 
   side : Former → Nat → Ctx → Bool
   side b y Δ = positive Δ ∧ sel b y Δ
@@ -262,12 +285,13 @@ module Construction (K : Set) (top? : K → Bool) where
   ----------------------------------------------------------------------
   -- Models and model morphisms.
 
-  μT : Ctx → Tm
-  μT Δ = bnd μ 0 Δ ⟨⟩
+  -- The carrier of sort k.
+  μAt : Ctx → Nat → Tm
+  μAt Δ k = bnd μ k Δ ⟨⟩
 
+  -- Component j of the generic model.
   ηAt : Ctx → Nat → Tm
-  ηAt Δ zero    = μT Δ
-  ηAt Δ (suc j) = bnd η (suc j) Δ ⟨⟩
+  ηAt Δ j = if j <ℕ sorts Δ then bnd μ j Δ ⟨⟩ else bnd η j Δ ⟨⟩
 
   -- The first k components of the generic model.
   ηPre : Ctx → Nat → Sub
@@ -290,30 +314,35 @@ module Construction (K : Set) (top? : K → Bool) where
   withBase nothing        k = ⋆
   withBase (just (S , T)) k = k S T
 
-  -- The action on h of an object S of the telescope, at a model M₁.
-  act : Tm → Sub → Tm → Tm
-  act S M₁ h = if isX? S then h else idm (opTm 0 M₁ S)
+  -- The action on carrier maps h (one per sort) of an object S of the
+  -- telescope, at a model M₁: h k if S is the sort k, else an identity.
+  actM : Maybe Nat → Tm → Sub → (Nat → Tm) → Tm
+  actM (just k) S M₁ h = h k
+  actM nothing  S M₁ h = idm (opTm 0 M₁ S)
+
+  act : Nat → Tm → Sub → (Nat → Tm) → Tm
+  act m S M₁ h = actM (srt m S) S M₁ h
 
   -- The cell of a model morphism h : M₁ → M₂ at a map y : S → T, whose
   -- components in the two models are s₁ and s₂.
-  cellTy : Tm → Tm → Sub → Sub → Tm → Tm → Tm → Ty
-  cellTy S T M₁ M₂ s₁ s₂ h =
+  cellTy : Nat → Tm → Tm → Sub → Sub → Tm → Tm → (Nat → Tm) → Ty
+  cellTy m S T M₁ M₂ s₁ s₂ h =
     arr (arr ⋆ (opTm 0 M₁ S) (opTm 0 M₂ T))
-        (cmp (opTm 0 M₁ S) (opTm 0 M₁ T) (opTm 0 M₂ T) s₁ (act T M₁ h))
-        (cmp (opTm 0 M₁ S) (opTm 0 M₂ S) (opTm 0 M₂ T) (act S M₁ h) s₂)
+        (cmp (opTm 0 M₁ S) (opTm 0 M₁ T) (opTm 0 M₂ T) s₁ (act m T M₁ h))
+        (cmp (opTm 0 M₁ S) (opTm 0 M₂ S) (opTm 0 M₂ T) (act m S M₁ h) s₂)
 
   -- The 3-cell of a model morphism h : M₁ → M₂ at a 2-cell l : f ⇒ g
   -- between maps S → T, given its cells θf, θg at f and g: the two
   -- pastings of the naturality square
   --   (l₁ ▷ T(h)) · θg   ⇛   θf · (S(h) ◁ l₂).
-  cell3Ty : Tm → Tm → Sub → Sub → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Tm → Ty
-  cell3Ty S T M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg =
+  cell3Ty : Nat → Tm → Tm → Sub → Sub → Tm → Tm → Tm → Tm → Tm → Tm → (Nat → Tm) → Tm → Tm → Ty
+  cell3Ty m S T M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg =
     let S₁  = opTm 0 M₁ S
         S₂  = opTm 0 M₂ S
         T₁  = opTm 0 M₁ T
         T₂  = opTm 0 M₂ T
-        Th  = act T M₁ h
-        Sh  = act S M₁ h
+        Th  = act m T M₁ h
+        Sh  = act m S M₁ h
         src = cmp S₁ T₁ T₂ f₁ Th
         tgt = cmp S₁ S₂ T₂ Sh g₂
     in arr (arr (arr ⋆ S₁ T₂) src tgt)
@@ -328,53 +357,65 @@ module Construction (K : Set) (top? : K → Bool) where
   globAt Δ y = globM (lookup Δ y)
 
   -- The component at y of a morphism from η to the model given by the
-  -- first m arguments, with carrier map h and components th i at the
-  -- earlier entries: a cell at a map, a 3-cell at a globular 2-cell.
-  θSel : Ctx → Nat → Tm → (Nat → Tm) → Tm → Tm → Maybe (Nat × Nat) → Ty
+  -- first len Δ arguments, with carrier maps h and components th i at
+  -- the earlier entries: a cell at a map, a 3-cell at a globular 2-cell.
+  θSel : Ctx → Nat → (Nat → Tm) → (Nat → Tm) → Tm → Tm → Maybe (Nat × Nat) → Ty
   θSel Δ y h th S T nothing        =
-    cellTy S T (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h
+    cellTy (sorts Δ) S T (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h
   θSel Δ y h th S T (just (i , j)) =
-    cell3Ty S T (ηPre Δ (len Δ)) (bvPre (len Δ))
+    cell3Ty (sorts Δ) S T (ηPre Δ (len Δ)) (bvPre (len Δ))
             (ηAt Δ i) (ηAt Δ j) (ηAt Δ y) (bvar 0 i) (bvar 0 j) (bvar 0 y) h (th i) (th j)
 
-  θBody : Ctx → Nat → Tm → (Nat → Tm) → Tm → Tm → Ty
+  θBody : Ctx → Nat → (Nat → Tm) → (Nat → Tm) → Tm → Tm → Ty
   θBody Δ y h th S T = θSel Δ y h th S T (globAt Δ y)
 
-  θTy : Ctx → Nat → Tm → (Nat → Tm) → Ty
+  θTy : Ctx → Nat → (Nat → Tm) → (Nat → Tm) → Ty
   θTy Δ y h th = withBase (entryBase Δ y) (θBody Δ y h th)
 
-  -- The components θ_1, …, θ_k of a morphism with carrier map bvar 0 o,
-  -- θ_i being bvar 0 (o + i).
-  θTel : Ctx → Nat → Nat → Ctx
-  θTel Δ o zero    = ε
-  θTel Δ o (suc k) = θTel Δ o k ▸ θTy Δ (suc k) (bvar 0 o) (λ i → bvar 0 (o + i))
+  -- The type of component k of a morphism from η to the model given by
+  -- the first len Δ arguments, whose components are bvar 0 (o + i):
+  -- the carrier map at a sort, the cell θ_k otherwise.
+  morEntry : Ctx → Nat → Nat → Ty
+  morEntry Δ o k =
+    if k <ℕ sorts Δ then arr ⋆ (μAt Δ k) (bvar 0 k)
+    else θTy Δ k (λ i → bvar 0 (o + i)) (λ i → bvar 0 (o + i))
 
-  -- A model morphism from η to the model given by the first m
-  -- arguments, starting at argument o: the carrier map, then its cells.
+  morPre : Ctx → Nat → Nat → Ctx
+  morPre Δ o zero    = ε
+  morPre Δ o (suc k) = morPre Δ o k ▸ morEntry Δ o k
+
+  -- A model morphism from η to the model given by the first len Δ
+  -- arguments, starting at argument o.
   morTel : Ctx → Nat → Ctx
-  morTel Δ o = (ε ▸ arr ⋆ (μT Δ) (bvar 0 0)) ⧺ θTel Δ o (len Δ ∸ 1)
+  morTel Δ o = morPre Δ o (len Δ)
+
+  -- The action of the cells u (one per sort) on an object S at M₁.
+  uActM : Maybe Nat → Tm → (Nat → Tm) → Tm
+  uActM (just k) S₁ u = u k
+  uActM nothing  S₁ u = id2 S₁ S₁ (idm S₁)
 
   -- The compatibility cell of uni at y.
   uniYBody : Ctx → Nat → Tm → Tm → Ty
   uniYBody Δ y S T =
     let m   = len Δ
+        n   = sorts Δ
         M₁  = ηPre Δ m
         M₂  = bvPre m
         S₁  = opTm 0 M₁ S
         S₂  = opTm 0 M₂ S
         T₁  = opTm 0 M₁ T
         T₂  = opTm 0 M₂ T
-        h   = bvar 0 m
-        h′  = bvar 0 (m + m)
-        u   = bnd uni 0 Δ (bvPre (m + m + m))
+        h   = λ k → bvar 0 (m + k)
+        h′  = λ k → bvar 0 (m + m + k)
+        u   = λ k → bnd uni k Δ (bvPre (m + m + m))
         ηy  = ηAt Δ y
         σy  = bvar 0 y
-        Th  = act T M₁ h
-        Th′ = act T M₁ h′
-        Sh  = act S M₁ h
-        Sh′ = act S M₁ h′
-        Tu  = if isX? T then u else id2 T₁ T₁ (idm T₁)
-        Su  = if isX? S then u else id2 S₁ S₁ (idm S₁)
+        Th  = act n T M₁ h
+        Th′ = act n T M₁ h′
+        Sh  = act n S M₁ h
+        Sh′ = act n S M₁ h′
+        Tu  = uActM (srt n T) T₁ u
+        Su  = uActM (srt n S) S₁ u
         src = cmp S₁ T₁ T₂ ηy Th
         tgt = cmp S₁ S₂ T₂ Sh′ σy
     in arr (arr (arr ⋆ S₁ T₂) src tgt)
@@ -401,9 +442,9 @@ module Construction (K : Set) (top? : K → Bool) where
   res : Former → Nat → Ctx → Ty
   res μ    y Δ = ⋆
   res η    y Δ = ηRes Δ y (lookup Δ y)
-  res rec  y Δ = arr ⋆ (μT Δ) (bvar 0 0)
-  res recY y Δ = θTy Δ y (bnd rec 0 Δ (bvPre (len Δ))) (λ i → bnd recY i Δ (bvPre (len Δ)))
-  res uni  y Δ = arr (arr ⋆ (μT Δ) (bvar 0 0)) (bvar 0 (len Δ)) (bvar 0 (len Δ + len Δ))
+  res rec  y Δ = arr ⋆ (μAt Δ y) (bvar 0 y)
+  res recY y Δ = θTy Δ y (λ k → bnd rec k Δ (bvPre (len Δ))) (λ i → bnd recY i Δ (bvPre (len Δ)))
+  res uni  y Δ = arr (arr ⋆ (μAt Δ y) (bvar 0 y)) (bvar 0 (len Δ + y)) (bvar 0 (len Δ + len Δ + y))
   res uniY y Δ = uniYTy Δ y
 
 ------------------------------------------------------------------------

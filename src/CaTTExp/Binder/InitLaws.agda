@@ -5,13 +5,13 @@
 -- CaTTExp.Binder.Rename), for every coh side condition.
 --
 -- Under a substitution σ of the parameters by locally closed terms:
---  * positivity is preserved (X stays X, and a parameter-only object
+--  * positivity is preserved (a sort stays that sort, and a parameter-only object
 --    stays parameter-only; a non-⊤ target may become ⊤, never the
 --    reverse), and the selector conditions are unchanged;
 --  * the argument telescopes and result types commute with σ, because
 --    each is built from Δ by opening, the coherences of
---    CaTTExp.Binder.Init, and a case split on "is this object X?",
---    which σ cannot change.
+--    CaTTExp.Binder.Init, and a case split on "which sort is this object?",
+--    which σ cannot change; σ does not change the number of sorts.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Init
@@ -46,13 +46,17 @@ dim-[] : ∀ A σ → dim (A [ σ ]ty) ≡ dim A
 dim-[] ⋆           σ = refl
 dim-[] (arr A _ _) σ = cong suc (dim-[] A σ)
 
--- Locally closed terms are not X and mention no bound variable.
-isX-lc : ∀ t → T (lcTm? 0 t) → isX? t ≡ false
-isX-lc (var _)       _ = refl
-isX-lc (bvar e j)    ()
-isX-lc (coh _ _ _)   _ = refl
-isX-lc (cst _)       _ = refl
-isX-lc (bnd _ _ _ _) _ = refl
+-- Locally closed terms are not sorts and mention no bound variable.
+srt-lc : ∀ m t → T (lcTm? 0 t) → srt m t ≡ nothing
+srt-lc m (var _)       _ = refl
+srt-lc m (bvar e j)    ()
+srt-lc m (coh _ _ _)   _ = refl
+srt-lc m (cst _)       _ = refl
+srt-lc m (bnd _ _ _ _) _ = refl
+
+∨-mono : ∀ a {b b′} → (T b → T b′) → T (a ∨ b) → T (a ∨ b′)
+∨-mono true  f p = p
+∨-mono false f p = f p
 
 bv0?-lc : ∀ t → T (lcTm? 0 t) → bv0? t ≡ nothing
 bv0?-lc (var _)       _ = refl
@@ -93,12 +97,20 @@ mutual
 
 module _ (σ : Sub) (l : LC σ) where
 
-  isX-[] : ∀ t → isX? (t [ σ ]tm) ≡ isX? t
-  isX-[] (var i)       = isX-lc (lookupₛ σ i) (lc-lookup σ i l)
-  isX-[] (bvar _ _)    = refl
-  isX-[] (coh _ _ _)   = refl
-  isX-[] (cst _)       = refl
-  isX-[] (bnd _ _ _ _) = refl
+  srt-[] : ∀ m t → srt m (t [ σ ]tm) ≡ srt m t
+  srt-[] m (var i)       = srt-lc m (lookupₛ σ i) (lc-lookup σ i l)
+  srt-[] m (bvar _ _)    = refl
+  srt-[] m (coh _ _ _)   = refl
+  srt-[] m (cst _)       = refl
+  srt-[] m (bnd _ _ _ _) = refl
+
+  isStar-[] : ∀ A → isStar (A [ σ ]ty) ≡ isStar A
+  isStar-[] ⋆           = refl
+  isStar-[] (arr _ _ _) = refl
+
+  sorts-[] : ∀ Δ → sorts (Δ [ σ ]tel) ≡ sorts Δ
+  sorts-[] ε       = refl
+  sorts-[] (Δ ▸ A) rewrite sorts-[] Δ | len-tel[] Δ σ | isStar-[] A = refl
 
   mutual
     mTy-[] : ∀ d A → mTy d (A [ σ ]ty) ≡ mTy d A
@@ -120,15 +132,15 @@ module _ (σ : Sub) (l : LC σ) where
     mSub-[] d ⟨⟩ = refl
     mSub-[] d (τ ,ₛ t) = cong₂ _∨_ (mSub-[] d τ) (mTm-[] d t)
 
-  srcOK-[] : ∀ S → srcOK (S [ σ ]tm) ≡ srcOK S
-  srcOK-[] S = cong₂ _∨_ (isX-[] S) (cong not (mTm-[] 0 S))
+  srcOK-[] : ∀ m S → srcOK m (S [ σ ]tm) ≡ srcOK m S
+  srcOK-[] m S = cong₂ _∨_ (cong is-just (srt-[] m S)) (cong not (mTm-[] 0 S))
 
-  tgt-stable : ∀ T₀ → T (tgtOK T₀) → T (tgtOK (T₀ [ σ ]tm))
-  tgt-stable (var _)       ()
-  tgt-stable (bvar _ _)    p = p
-  tgt-stable (coh _ _ _)   ()
-  tgt-stable (cst _)       p = p
-  tgt-stable (bnd _ _ _ _) ()
+  tgt-stable : ∀ m T₀ → T (tgtOK m T₀) → T (tgtOK m (T₀ [ σ ]tm))
+  tgt-stable m (var _)       ()
+  tgt-stable m (bvar _ _)    p = p
+  tgt-stable m (coh _ _ _)   ()
+  tgt-stable m (cst _)       p = p
+  tgt-stable m (bnd _ _ _ _) ()
 
   mapP : Maybe (Tm × Tm) → Maybe (Tm × Tm)
   mapP nothing        = nothing
@@ -143,22 +155,24 @@ module _ (σ : Sub) (l : LC σ) where
   base-[] (arr ⋆ s t)           = refl
   base-[] (arr (arr A a c) _ _) = base-[] (arr A a c)
 
-  okBase-stable : ∀ mb → T (okBase mb) → T (okBase (mapP mb))
-  okBase-stable nothing        ()
-  okBase-stable (just (S , T₀)) p =
-    let (a , c) = T∧ {srcOK S} p in
-    ∧T (subst T (sym (srcOK-[] S)) a) (tgt-stable T₀ c)
+  okBase-stable : ∀ m mb → T (okBase m mb) → T (okBase m (mapP mb))
+  okBase-stable m nothing        ()
+  okBase-stable m (just (S , T₀)) p =
+    let (a , c) = T∧ {srcOK m S} p in
+    ∧T (subst T (sym (srcOK-[] m S)) a) (tgt-stable m T₀ c)
 
-  entryOK-stable : ∀ A → T (entryOK A) → T (entryOK (A [ σ ]ty))
-  entryOK-stable A p = subst (λ z → T (okBase z)) (sym (base-[] A)) (okBase-stable (base A) p)
+  entryOK-stable : ∀ m A → T (entryOK m A) → T (entryOK m (A [ σ ]ty))
+  entryOK-stable m A p = subst (λ z → T (okBase m z)) (sym (base-[] A)) (okBase-stable m (base A) p)
+
+  posFrom-stable : ∀ m Δ → T (posFrom m Δ) → T (posFrom m (Δ [ σ ]tel))
+  posFrom-stable m ε       _ = tt
+  posFrom-stable m (Δ ▸ A) p rewrite len-tel[] Δ σ =
+    let (a , c) = T∧ {posFrom m Δ} p in
+    ∧T (posFrom-stable m Δ a) (∨-mono (len Δ <ℕ m) (entryOK-stable m A) c)
 
   positive-stable : ∀ Δ → T (positive Δ) → T (positive (Δ [ σ ]tel))
-  positive-stable ε                 ()
-  positive-stable (ε ▸ ⋆)           _ = tt
-  positive-stable (ε ▸ arr _ _ _)   ()
-  positive-stable (Δ ▸ B₀ ▸ A)      p =
-    let (a , c) = T∧ {positive (Δ ▸ B₀)} p in
-    ∧T (positive-stable (Δ ▸ B₀) a) (entryOK-stable A c)
+  positive-stable Δ p rewrite sorts-[] Δ =
+    let (a , c) = T∧ {0 <ℕ sorts Δ} p in ∧T a (posFrom-stable (sorts Δ) Δ c)
 
   bv0?-[] : ∀ t → bv0? (t [ σ ]tm) ≡ bv0? t
   bv0?-[] (var i)       = bv0?-lc (lookupₛ σ i) (lc-lookup σ i l)
@@ -177,10 +191,9 @@ module _ (σ : Sub) (l : LC σ) where
   low-[] : ∀ A → low (A [ σ ]ty) ≡ low A
   low-[] A = cong₂ _∨_ (cong (_==ℕ 1) (dim-[] A σ)) (cong is-just (glob-[] A))
 
-  lowOnly-[] : ∀ Δ → lowOnly (Δ [ σ ]tel) ≡ lowOnly Δ
-  lowOnly-[] ε             = refl
-  lowOnly-[] (ε ▸ _)       = refl
-  lowOnly-[] (Δ ▸ B₀ ▸ A)  = cong₂ _∧_ (lowOnly-[] (Δ ▸ B₀)) (low-[] A)
+  lowFrom-[] : ∀ m Δ → lowFrom m (Δ [ σ ]tel) ≡ lowFrom m Δ
+  lowFrom-[] m ε       = refl
+  lowFrom-[] m (Δ ▸ A) rewrite len-tel[] Δ σ = cong₂ _∧_ (lowFrom-[] m Δ) (cong ((len Δ <ℕ m) ∨_) (low-[] A))
 
   lookup-[] : ∀ Δ y → lookup (Δ [ σ ]tel) y ≡ mapT (lookup Δ y)
   lookup-[] ε       y = refl
@@ -204,22 +217,28 @@ module _ (σ : Sub) (l : LC σ) where
   ... | just A  = glob-[] A
 
   inner-[] : ∀ y Δ → inner y (Δ [ σ ]tel) ≡ inner y Δ
-  inner-[] y Δ rewrite len-tel[] Δ σ = refl
+  inner-[] y Δ rewrite len-tel[] Δ σ | sorts-[] Δ = refl
+
+  isSortIx-[] : ∀ y Δ → isSortIx y (Δ [ σ ]tel) ≡ isSortIx y Δ
+  isSortIx-[] y Δ rewrite sorts-[] Δ = refl
 
   sel-[] : ∀ b y Δ → sel b y (Δ [ σ ]tel) ≡ sel b y Δ
-  sel-[] μ    y Δ = refl
+  sel-[] μ    y Δ = isSortIx-[] y Δ
   sel-[] η    y Δ = inner-[] y Δ
-  sel-[] rec  y Δ = refl
+  sel-[] rec  y Δ = isSortIx-[] y Δ
   sel-[] recY y Δ = cong₂ _∧_ (inner-[] y Δ) (isLow-[] Δ y)
-  sel-[] uni  y Δ = cong ((y ==ℕ 0) ∧_) (lowOnly-[] Δ)
-  sel-[] uniY y Δ = cong₂ _∧_ (cong₂ _∧_ (inner-[] y Δ) (lowOnly-[] Δ)) (isMap-[] Δ y)
+  sel-[] uni  y Δ = cong₂ _∧_ (isSortIx-[] y Δ) lf
+    where lf = trans (cong (λ z → lowFrom z (Δ [ σ ]tel)) (sorts-[] Δ)) (lowFrom-[] (sorts Δ) Δ)
+  sel-[] uniY y Δ = cong₂ _∧_ (cong₂ _∧_ (inner-[] y Δ) lf) (isMap-[] Δ y)
+    where lf = trans (cong (λ z → lowFrom z (Δ [ σ ]tel)) (sorts-[] Δ)) (lowFrom-[] (sorts Δ) Δ)
 
   ----------------------------------------------------------------------
   -- The pieces of the argument telescopes and result types.
 
   ηAt-[] : ∀ Δ j → (ηAt Δ j) [ σ ]tm ≡ ηAt (Δ [ σ ]tel) j
-  ηAt-[] Δ zero    = refl
-  ηAt-[] Δ (suc j) = refl
+  ηAt-[] Δ j rewrite if-[]tm (j <ℕ sorts Δ) (bnd μ j Δ ⟨⟩) (bnd η j Δ ⟨⟩) σ | sorts-[] Δ with j <ℕ sorts Δ
+  ... | true  = refl
+  ... | false = refl
 
   ηPre-∘ : ∀ Δ k → ηPre Δ k ∘ σ ≡ ηPre (Δ [ σ ]tel) k
   ηPre-∘ Δ zero    = refl
@@ -229,16 +248,20 @@ module _ (σ : Sub) (l : LC σ) where
   bvPre-∘ zero    = refl
   bvPre-∘ (suc k) = cong (_,ₛ bvar 0 k) (bvPre-∘ k)
 
-  act-[] : ∀ S M h → (act S M h) [ σ ]tm ≡ act (S [ σ ]tm) (M ∘ σ) (h [ σ ]tm)
-  act-[] S M h rewrite if-[]tm (isX? S) h (idm (opTm 0 M S)) σ | isX-[] S with isX? S
-  ... | true  = refl
-  ... | false = cong idm (op-[]tm 0 M S σ l)
+  actM-[] : ∀ mk S M h h′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) →
+            (actM mk S M h) [ σ ]tm ≡ actM mk (S [ σ ]tm) (M ∘ σ) h′
+  actM-[] (just k) S M h h′ e = e k
+  actM-[] nothing  S M h h′ e = cong idm (op-[]tm 0 M S σ l)
 
-  cellTy-[] : ∀ S T₀ M₁ M₂ s₁ s₂ h →
-              (cellTy S T₀ M₁ M₂ s₁ s₂ h) [ σ ]ty ≡
-              cellTy (S [ σ ]tm) (T₀ [ σ ]tm) (M₁ ∘ σ) (M₂ ∘ σ) (s₁ [ σ ]tm) (s₂ [ σ ]tm) (h [ σ ]tm)
-  cellTy-[] S T₀ M₁ M₂ s₁ s₂ h
-    rewrite act-[] T₀ M₁ h | act-[] S M₁ h
+  act-[] : ∀ m S M h h′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) →
+           (act m S M h) [ σ ]tm ≡ act m (S [ σ ]tm) (M ∘ σ) h′
+  act-[] m S M h h′ e rewrite srt-[] m S = actM-[] (srt m S) S M h h′ e
+
+  cellTy-[] : ∀ m S T₀ M₁ M₂ s₁ s₂ h h′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) →
+              (cellTy m S T₀ M₁ M₂ s₁ s₂ h) [ σ ]ty ≡
+              cellTy m (S [ σ ]tm) (T₀ [ σ ]tm) (M₁ ∘ σ) (M₂ ∘ σ) (s₁ [ σ ]tm) (s₂ [ σ ]tm) h′
+  cellTy-[] m S T₀ M₁ M₂ s₁ s₂ h h′ e
+    rewrite act-[] m T₀ M₁ h h′ e | act-[] m S M₁ h h′ e
           | op-[]tm 0 M₁ S σ l | op-[]tm 0 M₁ T₀ σ l | op-[]tm 0 M₂ S σ l | op-[]tm 0 M₂ T₀ σ l = refl
 
   withBase-[] : ∀ mb (k k′ : Tm → Tm → Ty) → (∀ S T₀ → (k S T₀) [ σ ]ty ≡ k′ (S [ σ ]tm) (T₀ [ σ ]tm)) →
@@ -251,65 +274,75 @@ module _ (σ : Sub) (l : LC σ) where
   ... | nothing = refl
   ... | just A  = base-[] A
 
-  cell3Ty-[] : ∀ S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg →
-               (cell3Ty S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg) [ σ ]ty ≡
-               cell3Ty (S [ σ ]tm) (T₀ [ σ ]tm) (M₁ ∘ σ) (M₂ ∘ σ) (f₁ [ σ ]tm) (g₁ [ σ ]tm) (l₁ [ σ ]tm)
-                       (f₂ [ σ ]tm) (g₂ [ σ ]tm) (l₂ [ σ ]tm) (h [ σ ]tm) (θf [ σ ]tm) (θg [ σ ]tm)
-  cell3Ty-[] S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg
-    rewrite act-[] T₀ M₁ h | act-[] S M₁ h
+  cell3Ty-[] : ∀ m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h h′ θf θg → (∀ k → (h k) [ σ ]tm ≡ h′ k) →
+               (cell3Ty m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg) [ σ ]ty ≡
+               cell3Ty m (S [ σ ]tm) (T₀ [ σ ]tm) (M₁ ∘ σ) (M₂ ∘ σ) (f₁ [ σ ]tm) (g₁ [ σ ]tm) (l₁ [ σ ]tm)
+                       (f₂ [ σ ]tm) (g₂ [ σ ]tm) (l₂ [ σ ]tm) h′ (θf [ σ ]tm) (θg [ σ ]tm)
+  cell3Ty-[] m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h h′ θf θg e
+    rewrite act-[] m T₀ M₁ h h′ e | act-[] m S M₁ h h′ e
           | op-[]tm 0 M₁ S σ l | op-[]tm 0 M₁ T₀ σ l | op-[]tm 0 M₂ S σ l | op-[]tm 0 M₂ T₀ σ l = refl
 
-  θSel-[] : ∀ Δ y h th th′ → (∀ i → (th i) [ σ ]tm ≡ th′ i) → ∀ S T₀ mg →
-            (θSel Δ y h th S T₀ mg) [ σ ]ty ≡ θSel (Δ [ σ ]tel) y (h [ σ ]tm) th′ (S [ σ ]tm) (T₀ [ σ ]tm) mg
-  θSel-[] Δ y h th th′ e S T₀ nothing
-    rewrite cellTy-[] S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h
-          | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ) | ηAt-[] Δ y | len-tel[] Δ σ = refl
-  θSel-[] Δ y h th th′ e S T₀ (just (i , j))
-    rewrite cell3Ty-[] S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ i) (ηAt Δ j) (ηAt Δ y)
-                       (bvar 0 i) (bvar 0 j) (bvar 0 y) h (th i) (th j)
+  θSel-[] : ∀ Δ y h h′ th th′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) → (∀ i → (th i) [ σ ]tm ≡ th′ i) → ∀ S T₀ mg →
+            (θSel Δ y h th S T₀ mg) [ σ ]ty ≡ θSel (Δ [ σ ]tel) y h′ th′ (S [ σ ]tm) (T₀ [ σ ]tm) mg
+  θSel-[] Δ y h h′ th th′ eh e S T₀ nothing
+    rewrite cellTy-[] (sorts Δ) S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h h′ eh
+          | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ) | ηAt-[] Δ y | len-tel[] Δ σ | sorts-[] Δ = refl
+  θSel-[] Δ y h h′ th th′ eh e S T₀ (just (i , j))
+    rewrite cell3Ty-[] (sorts Δ) S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ i) (ηAt Δ j) (ηAt Δ y)
+                       (bvar 0 i) (bvar 0 j) (bvar 0 y) h h′ (th i) (th j) eh
           | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ) | ηAt-[] Δ i | ηAt-[] Δ j | ηAt-[] Δ y
-          | len-tel[] Δ σ | e i | e j = refl
+          | len-tel[] Δ σ | sorts-[] Δ | e i | e j = refl
 
-  θBody-[] : ∀ Δ y h th th′ → (∀ i → (th i) [ σ ]tm ≡ th′ i) → ∀ S T₀ →
-             (θBody Δ y h th S T₀) [ σ ]ty ≡ θBody (Δ [ σ ]tel) y (h [ σ ]tm) th′ (S [ σ ]tm) (T₀ [ σ ]tm)
-  θBody-[] Δ y h th th′ e S T₀ =
-    trans (θSel-[] Δ y h th th′ e S T₀ (globAt Δ y))
-          (cong (θSel (Δ [ σ ]tel) y (h [ σ ]tm) th′ (S [ σ ]tm) (T₀ [ σ ]tm)) (sym (globAt-[] Δ y)))
+  θBody-[] : ∀ Δ y h h′ th th′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) → (∀ i → (th i) [ σ ]tm ≡ th′ i) → ∀ S T₀ →
+             (θBody Δ y h th S T₀) [ σ ]ty ≡ θBody (Δ [ σ ]tel) y h′ th′ (S [ σ ]tm) (T₀ [ σ ]tm)
+  θBody-[] Δ y h h′ th th′ eh e S T₀ =
+    trans (θSel-[] Δ y h h′ th th′ eh e S T₀ (globAt Δ y))
+          (cong (θSel (Δ [ σ ]tel) y h′ th′ (S [ σ ]tm) (T₀ [ σ ]tm)) (sym (globAt-[] Δ y)))
 
-  θTy-[] : ∀ Δ y h th th′ → (∀ i → (th i) [ σ ]tm ≡ th′ i) →
-           (θTy Δ y h th) [ σ ]ty ≡ θTy (Δ [ σ ]tel) y (h [ σ ]tm) th′
-  θTy-[] Δ y h th th′ e =
-    trans (withBase-[] (entryBase Δ y) (θBody Δ y h th) (θBody (Δ [ σ ]tel) y (h [ σ ]tm) th′)
-                       (θBody-[] Δ y h th th′ e))
-          (cong (λ z → withBase z (θBody (Δ [ σ ]tel) y (h [ σ ]tm) th′)) (sym (entryBase-[] Δ y)))
+  θTy-[] : ∀ Δ y h h′ th th′ → (∀ k → (h k) [ σ ]tm ≡ h′ k) → (∀ i → (th i) [ σ ]tm ≡ th′ i) →
+           (θTy Δ y h th) [ σ ]ty ≡ θTy (Δ [ σ ]tel) y h′ th′
+  θTy-[] Δ y h h′ th th′ eh e =
+    trans (withBase-[] (entryBase Δ y) (θBody Δ y h th) (θBody (Δ [ σ ]tel) y h′ th′)
+                       (θBody-[] Δ y h h′ th th′ eh e))
+          (cong (λ z → withBase z (θBody (Δ [ σ ]tel) y h′ th′)) (sym (entryBase-[] Δ y)))
 
-  θTel-[] : ∀ Δ o k → (θTel Δ o k) [ σ ]tel ≡ θTel (Δ [ σ ]tel) o k
-  θTel-[] Δ o zero    = refl
-  θTel-[] Δ o (suc k) =
-    cong₂ _▸_ (θTel-[] Δ o k) (θTy-[] Δ (suc k) (bvar 0 o) (λ i → bvar 0 (o + i)) (λ i → bvar 0 (o + i)) (λ i → refl))
+  morEntry-[] : ∀ Δ o k → (morEntry Δ o k) [ σ ]ty ≡ morEntry (Δ [ σ ]tel) o k
+  morEntry-[] Δ o k rewrite sorts-[] Δ with k <ℕ sorts Δ
+  ... | true  = refl
+  ... | false = θTy-[] Δ k (λ i → bvar 0 (o + i)) (λ i → bvar 0 (o + i))
+                       (λ i → bvar 0 (o + i)) (λ i → bvar 0 (o + i)) (λ _ → refl) (λ _ → refl)
+
+  morPre-[] : ∀ Δ o k → (morPre Δ o k) [ σ ]tel ≡ morPre (Δ [ σ ]tel) o k
+  morPre-[] Δ o zero    = refl
+  morPre-[] Δ o (suc k) = cong₂ _▸_ (morPre-[] Δ o k) (morEntry-[] Δ o k)
 
   morTel-[] : ∀ Δ o → (morTel Δ o) [ σ ]tel ≡ morTel (Δ [ σ ]tel) o
-  morTel-[] Δ o =
-    trans (⧺-[] (ε ▸ arr ⋆ (μT Δ) (bvar 0 0)) (θTel Δ o (len Δ ∸ 1)) σ)
-          (cong ((ε ▸ arr ⋆ (μT (Δ [ σ ]tel)) (bvar 0 0)) ⧺_)
-                (trans (θTel-[] Δ o (len Δ ∸ 1))
-                       (cong (λ k → θTel (Δ [ σ ]tel) o (k ∸ 1)) (sym (len-tel[] Δ σ)))))
+  morTel-[] Δ o = trans (morPre-[] Δ o (len Δ)) (cong (morPre (Δ [ σ ]tel) o) (sym (len-tel[] Δ σ)))
+
+  uActM-[] : ∀ mk S₁ u u′ → (∀ k → (u k) [ σ ]tm ≡ u′ k) →
+             (uActM mk S₁ u) [ σ ]tm ≡ uActM mk (S₁ [ σ ]tm) u′
+  uActM-[] (just k) S₁ u u′ e = e k
+  uActM-[] nothing  S₁ u u′ e = refl
 
   uniYBody-[] : ∀ Δ y S T₀ → (uniYBody Δ y S T₀) [ σ ]ty ≡ uniYBody (Δ [ σ ]tel) y (S [ σ ]tm) (T₀ [ σ ]tm)
   uniYBody-[] Δ y S T₀
-    rewrite if-[]tm (isX? T₀) (bnd uni 0 Δ (bvPre (len Δ + len Δ + len Δ)))
-                   (id2 (opTm 0 (ηPre Δ (len Δ)) T₀) (opTm 0 (ηPre Δ (len Δ)) T₀) (idm (opTm 0 (ηPre Δ (len Δ)) T₀))) σ
-          | if-[]tm (isX? S) (bnd uni 0 Δ (bvPre (len Δ + len Δ + len Δ)))
-                   (id2 (opTm 0 (ηPre Δ (len Δ)) S) (opTm 0 (ηPre Δ (len Δ)) S) (idm (opTm 0 (ηPre Δ (len Δ)) S))) σ
-          | act-[] T₀ (ηPre Δ (len Δ)) (bvar 0 (len Δ))
-          | act-[] T₀ (ηPre Δ (len Δ)) (bvar 0 (len Δ + len Δ))
-          | act-[] S (ηPre Δ (len Δ)) (bvar 0 (len Δ))
-          | act-[] S (ηPre Δ (len Δ)) (bvar 0 (len Δ + len Δ))
+    rewrite uActM-[] (srt (sorts Δ) T₀) (opTm 0 (ηPre Δ (len Δ)) T₀)
+                     (λ k → bnd uni k Δ (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → bnd uni k (Δ [ σ ]tel) (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → cong (bnd uni k (Δ [ σ ]tel)) (bvPre-∘ (len Δ + len Δ + len Δ)))
+          | uActM-[] (srt (sorts Δ) S) (opTm 0 (ηPre Δ (len Δ)) S)
+                     (λ k → bnd uni k Δ (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → bnd uni k (Δ [ σ ]tel) (bvPre (len Δ + len Δ + len Δ)))
+                     (λ k → cong (bnd uni k (Δ [ σ ]tel)) (bvPre-∘ (len Δ + len Δ + len Δ)))
+          | act-[] (sorts Δ) T₀ (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + k)) (λ k → bvar 0 (len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) T₀ (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) S (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + k)) (λ k → bvar 0 (len Δ + k)) (λ _ → refl)
+          | act-[] (sorts Δ) S (ηPre Δ (len Δ)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ k → bvar 0 (len Δ + len Δ + k)) (λ _ → refl)
           | op-[]tm 0 (ηPre Δ (len Δ)) S σ l | op-[]tm 0 (ηPre Δ (len Δ)) T₀ σ l
           | op-[]tm 0 (bvPre (len Δ)) S σ l | op-[]tm 0 (bvPre (len Δ)) T₀ σ l
-          | isX-[] S | isX-[] T₀
-          | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ) | bvPre-∘ (len Δ + len Δ + len Δ)
-          | ηAt-[] Δ y | len-tel[] Δ σ = refl
+          | ηPre-∘ Δ (len Δ) | bvPre-∘ (len Δ)
+          | ηAt-[] Δ y | len-tel[] Δ σ | sorts-[] Δ
+          | srt-[] (sorts Δ) S | srt-[] (sorts Δ) T₀ = refl
 
 ------------------------------------------------------------------------
 -- Scoping of the result types.
@@ -324,8 +357,9 @@ module _ (n : Nat) where
   sc-arr A t u pA pt pu = ∧T {scTy? n A} pA (∧T {scTm? n t} pt pu)
 
   sc-ηAt : ∀ Δ j → T (scTel? n Δ) → T (scTm? n (ηAt Δ j))
-  sc-ηAt Δ zero    p = ∧T p tt
-  sc-ηAt Δ (suc j) p = ∧T p tt
+  sc-ηAt Δ j p with j <ℕ sorts Δ
+  ... | true  = ∧T p tt
+  ... | false = ∧T p tt
 
   sc-ηPre : ∀ Δ k → T (scTel? n Δ) → T (scSub? n (ηPre Δ k))
   sc-ηPre Δ zero    p = tt
@@ -384,33 +418,43 @@ module _ (n : Nat) where
   sc-if true  px _ = px
   sc-if false _ py = py
 
-  sc-act : ∀ S M h → T (scTm? n S) → T (scSub? n M) → T (scTm? n h) → T (scTm? n (act S M h))
-  sc-act S M h pS pM ph = sc-if (isX? S) ph (sc-idm (opTm 0 M S) (sc-opTm 0 M S pM pS))
+  sc-actM : ∀ mk S M h → T (scTm? n S) → T (scSub? n M) → (∀ k → T (scTm? n (h k))) →
+            T (scTm? n (actM mk S M h))
+  sc-actM (just k) S M h pS pM ph = ph k
+  sc-actM nothing  S M h pS pM ph = sc-idm (opTm 0 M S) (sc-opTm 0 M S pM pS)
 
-  sc-cellTy : ∀ S T₀ M₁ M₂ s₁ s₂ h → T (scTm? n S) → T (scTm? n T₀) → T (scSub? n M₁) → T (scSub? n M₂) →
-              T (scTm? n s₁) → T (scTm? n s₂) → T (scTm? n h) → T (scTy? n (cellTy S T₀ M₁ M₂ s₁ s₂ h))
-  sc-cellTy S T₀ M₁ M₂ s₁ s₂ h pS pT p₁ p₂ ps₁ ps₂ ph =
+  sc-act : ∀ m S M h → T (scTm? n S) → T (scSub? n M) → (∀ k → T (scTm? n (h k))) →
+           T (scTm? n (act m S M h))
+  sc-act m S M h = sc-actM (srt m S) S M h
+
+  sc-uActM : ∀ mk S₁ u → T (scTm? n S₁) → (∀ k → T (scTm? n (u k))) → T (scTm? n (uActM mk S₁ u))
+  sc-uActM (just k) S₁ u pS pu = pu k
+  sc-uActM nothing  S₁ u pS pu = sc-id2 S₁ S₁ (idm S₁) pS pS (sc-idm S₁ pS)
+
+  sc-cellTy : ∀ m S T₀ M₁ M₂ s₁ s₂ h → T (scTm? n S) → T (scTm? n T₀) → T (scSub? n M₁) → T (scSub? n M₂) →
+              T (scTm? n s₁) → T (scTm? n s₂) → (∀ k → T (scTm? n (h k))) → T (scTy? n (cellTy m S T₀ M₁ M₂ s₁ s₂ h))
+  sc-cellTy m S T₀ M₁ M₂ s₁ s₂ h pS pT p₁ p₂ ps₁ ps₂ ph =
     sc-arr (arr ⋆ a₁ d₂) (cmp a₁ c₁ d₂ s₁ th) (cmp a₁ a₂ d₂ sh s₂)
       (sc-arr ⋆ a₁ d₂ tt S₁ T₂)
-      (sc-cmp a₁ c₁ d₂ s₁ th S₁ T₁ T₂ ps₁ (sc-act T₀ M₁ h pT p₁ ph))
-      (sc-cmp a₁ a₂ d₂ sh s₂ S₁ S₂ T₂ (sc-act S M₁ h pS p₁ ph) ps₂)
+      (sc-cmp a₁ c₁ d₂ s₁ th S₁ T₁ T₂ ps₁ (sc-act m T₀ M₁ h pT p₁ ph))
+      (sc-cmp a₁ a₂ d₂ sh s₂ S₁ S₂ T₂ (sc-act m S M₁ h pS p₁ ph) ps₂)
     where
     a₁ = opTm 0 M₁ S
     a₂ = opTm 0 M₂ S
     c₁ = opTm 0 M₁ T₀
     d₂ = opTm 0 M₂ T₀
-    th = act T₀ M₁ h
-    sh = act S M₁ h
+    th = act m T₀ M₁ h
+    sh = act m S M₁ h
     S₁ = sc-opTm 0 M₁ S p₁ pS
     S₂ = sc-opTm 0 M₂ S p₂ pS
     T₁ = sc-opTm 0 M₁ T₀ p₁ pT
     T₂ = sc-opTm 0 M₂ T₀ p₂ pT
 
-  sc-cell3Ty : ∀ S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg → T (scTm? n S) → T (scTm? n T₀) →
+  sc-cell3Ty : ∀ m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg → T (scTm? n S) → T (scTm? n T₀) →
                T (scSub? n M₁) → T (scSub? n M₂) → T (scTm? n f₁) → T (scTm? n g₁) → T (scTm? n l₁) →
-               T (scTm? n f₂) → T (scTm? n g₂) → T (scTm? n l₂) → T (scTm? n h) →
-               T (scTm? n θf) → T (scTm? n θg) → T (scTy? n (cell3Ty S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg))
-  sc-cell3Ty S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg pS pT p₁ p₂ pf₁ pg₁ pl₁ pf₂ pg₂ pl₂ ph pθf pθg =
+               T (scTm? n f₂) → T (scTm? n g₂) → T (scTm? n l₂) → (∀ k → T (scTm? n (h k))) →
+               T (scTm? n θf) → T (scTm? n θg) → T (scTy? n (cell3Ty m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg))
+  sc-cell3Ty m S T₀ M₁ M₂ f₁ g₁ l₁ f₂ g₂ l₂ h θf θg pS pT p₁ p₂ pf₁ pg₁ pl₁ pf₂ pg₂ pl₂ ph pθf pθg =
     sc-arr (arr (arr ⋆ a₁ d₂) src tgt) lhs rhs
       (sc-arr (arr ⋆ a₁ d₂) src tgt (sc-arr ⋆ a₁ d₂ tt S₁ T₂) Src Tgt)
       (sc-vcomp a₁ d₂ src (cmp a₁ c₁ d₂ g₁ th) (rwh a₁ c₁ d₂ f₁ g₁ l₁ th) tgt θg
@@ -424,8 +468,8 @@ module _ (n : Nat) where
     a₂ = opTm 0 M₂ S
     c₁ = opTm 0 M₁ T₀
     d₂ = opTm 0 M₂ T₀
-    th = act T₀ M₁ h
-    sh = act S M₁ h
+    th = act m T₀ M₁ h
+    sh = act m S M₁ h
     src = cmp a₁ c₁ d₂ f₁ th
     tgt = cmp a₁ a₂ d₂ sh g₂
     lhs = vcomp a₁ d₂ src (cmp a₁ c₁ d₂ g₁ th) (rwh a₁ c₁ d₂ f₁ g₁ l₁ th) tgt θg
@@ -434,23 +478,23 @@ module _ (n : Nat) where
     S₂ = sc-opTm 0 M₂ S p₂ pS
     T₁ = sc-opTm 0 M₁ T₀ p₁ pT
     T₂ = sc-opTm 0 M₂ T₀ p₂ pT
-    Th = sc-act T₀ M₁ h pT p₁ ph
-    Sh = sc-act S M₁ h pS p₁ ph
+    Th = sc-act m T₀ M₁ h pT p₁ ph
+    Sh = sc-act m S M₁ h pS p₁ ph
     Src = sc-cmp a₁ c₁ d₂ f₁ th S₁ T₁ T₂ pf₁ Th
     Tgt = sc-cmp a₁ a₂ d₂ sh g₂ S₁ S₂ T₂ Sh pg₂
 
-  sc-θSel : ∀ Δ y h th S T₀ mg → T (scTel? n Δ) → T (scTm? n h) → (∀ i → T (scTm? n (th i))) →
+  sc-θSel : ∀ Δ y h th S T₀ mg → T (scTel? n Δ) → (∀ k → T (scTm? n (h k))) → (∀ i → T (scTm? n (th i))) →
             T (scTm? n S) → T (scTm? n T₀) → T (scTy? n (θSel Δ y h th S T₀ mg))
   sc-θSel Δ y h th S T₀ nothing p ph pth pS pT =
-    sc-cellTy S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h pS pT
+    sc-cellTy (sorts Δ) S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ y) (bvar 0 y) h pS pT
       (sc-ηPre Δ (len Δ) p) (sc-bvPre (len Δ)) (sc-ηAt Δ y p) tt ph
   sc-θSel Δ y h th S T₀ (just (i , j)) p ph pth pS pT =
-    sc-cell3Ty S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ i) (ηAt Δ j) (ηAt Δ y)
+    sc-cell3Ty (sorts Δ) S T₀ (ηPre Δ (len Δ)) (bvPre (len Δ)) (ηAt Δ i) (ηAt Δ j) (ηAt Δ y)
       (bvar 0 i) (bvar 0 j) (bvar 0 y) h (th i) (th j) pS pT
       (sc-ηPre Δ (len Δ) p) (sc-bvPre (len Δ)) (sc-ηAt Δ i p) (sc-ηAt Δ j p) (sc-ηAt Δ y p)
       tt tt tt ph (pth i) (pth j)
 
-  sc-θTy : ∀ Δ y h th → T (scTel? n Δ) → T (scTm? n h) → (∀ i → T (scTm? n (th i))) →
+  sc-θTy : ∀ Δ y h th → T (scTel? n Δ) → (∀ k → T (scTm? n (h k))) → (∀ i → T (scTm? n (th i))) →
            T (scTy? n (θTy Δ y h th))
   sc-θTy Δ y h th p ph pth =
     sc-withBase (entryBase Δ y) (θBody Δ y h th) λ S T₀ e →
@@ -470,21 +514,24 @@ module _ (n : Nat) where
           (sc-rwh s₁ s₂ t₂ sh sh′ su σy S₁ S₂ T₂ Sh Sh′ Su tt))
     where
     m   = len Δ
+    k₀  = sorts Δ
     M₁  = ηPre Δ m
     M₂  = bvPre m
     s₁  = opTm 0 M₁ S
     s₂  = opTm 0 M₂ S
     t₁  = opTm 0 M₁ T₀
     t₂  = opTm 0 M₂ T₀
-    u   = bnd uni 0 Δ (bvPre (m + m + m))
+    u   = λ k → bnd uni k Δ (bvPre (m + m + m))
+    hh  = λ k → bvar 0 (m + k)
+    hh′ = λ k → bvar 0 (m + m + k)
     ηy  = ηAt Δ y
     σy  = bvar 0 y
-    th  = act T₀ M₁ (bvar 0 m)
-    th′ = act T₀ M₁ (bvar 0 (m + m))
-    sh  = act S M₁ (bvar 0 m)
-    sh′ = act S M₁ (bvar 0 (m + m))
-    tu  = if isX? T₀ then u else id2 t₁ t₁ (idm t₁)
-    su  = if isX? S then u else id2 s₁ s₁ (idm s₁)
+    th  = act k₀ T₀ M₁ hh
+    th′ = act k₀ T₀ M₁ hh′
+    sh  = act k₀ S M₁ hh
+    sh′ = act k₀ S M₁ hh′
+    tu  = uActM (srt k₀ T₀) t₁ u
+    su  = uActM (srt k₀ S) s₁ u
     src = cmp s₁ t₁ t₂ ηy th
     tgt = cmp s₁ s₂ t₂ sh′ σy
     l   = vcomp s₁ t₂ src (cmp s₁ t₁ t₂ ηy th′) (lwh s₁ t₁ t₂ ηy th th′ tu) tgt (bvar 0 (m + m + y))
@@ -495,15 +542,15 @@ module _ (n : Nat) where
     S₂  = sc-opTm 0 M₂ S pM₂ pS
     T₁  = sc-opTm 0 M₁ T₀ pM₁ pT
     T₂  = sc-opTm 0 M₂ T₀ pM₂ pT
-    pu  : T (scTm? n u)
-    pu  = ∧T {scTel? n Δ} p (sc-bvPre (m + m + m))
+    pu  : ∀ k → T (scTm? n (u k))
+    pu  k = ∧T {scTel? n Δ} p (sc-bvPre (m + m + m))
     Ηy  = sc-ηAt Δ y p
-    Th  = sc-act T₀ M₁ (bvar 0 m) pT pM₁ tt
-    Th′ = sc-act T₀ M₁ (bvar 0 (m + m)) pT pM₁ tt
-    Sh  = sc-act S M₁ (bvar 0 m) pS pM₁ tt
-    Sh′ = sc-act S M₁ (bvar 0 (m + m)) pS pM₁ tt
-    Tu  = sc-if (isX? T₀) pu (sc-id2 t₁ t₁ (idm t₁) T₁ T₁ (sc-idm t₁ T₁))
-    Su  = sc-if (isX? S) pu (sc-id2 s₁ s₁ (idm s₁) S₁ S₁ (sc-idm s₁ S₁))
+    Th  = sc-act k₀ T₀ M₁ hh pT pM₁ (λ _ → tt)
+    Th′ = sc-act k₀ T₀ M₁ hh′ pT pM₁ (λ _ → tt)
+    Sh  = sc-act k₀ S M₁ hh pS pM₁ (λ _ → tt)
+    Sh′ = sc-act k₀ S M₁ hh′ pS pM₁ (λ _ → tt)
+    Tu  = sc-uActM (srt k₀ T₀) t₁ u T₁ pu
+    Su  = sc-uActM (srt k₀ S) s₁ u S₁ pu
     Src = sc-cmp s₁ t₁ t₂ ηy th S₁ T₁ T₂ Ηy Th
     Tgt = sc-cmp s₁ s₂ t₂ sh′ σy S₁ S₂ T₂ Sh′ tt
 
@@ -519,7 +566,7 @@ module _ (n : Nat) where
   ... | just A  = sc-opTy 0 (ηPre Δ y) A (sc-ηPre Δ y p) (sc-lookupTel Δ y p e)
   sc-res rec  y Δ p = ∧T tt (∧T (∧T p tt) tt)
   sc-res recY y Δ p =
-    sc-θTy Δ y _ _ p (∧T p (sc-bvPre (len Δ))) (λ i → ∧T {scTel? n Δ} p (sc-bvPre (len Δ)))
+    sc-θTy Δ y _ _ p (λ k → ∧T {scTel? n Δ} p (sc-bvPre (len Δ))) (λ i → ∧T {scTel? n Δ} p (sc-bvPre (len Δ)))
   sc-res uni  y Δ p = ∧T (∧T tt (∧T (∧T p tt) tt)) (∧T tt tt)
   sc-res uniY y Δ p = sc-uniYTy Δ y p
 
@@ -555,12 +602,12 @@ initLaws = record
   ... | just A  = sym (trans (op-[]ty 0 (ηPre Δ y) A σ l) (cong (λ z → opTy 0 z (A [ σ ]ty)) (ηPre-∘ σ l Δ y)))
   res-st rec  y Δ σ l _ = refl
   res-st recY y Δ σ l _ =
-    sym (trans (θTy-[] σ l Δ y (bnd rec 0 Δ (bvPre (len Δ))) (λ i → bnd recY i Δ (bvPre (len Δ)))
-                       (λ i → bnd recY i (Δ [ σ ]tel) (bvPre (len Δ))) (λ i → cong (bnd recY i (Δ [ σ ]tel)) (bvPre-∘ σ l (len Δ))))
-        (trans (cong (λ z → θTy (Δ [ σ ]tel) y (bnd rec 0 (Δ [ σ ]tel) z) (λ i → bnd recY i (Δ [ σ ]tel) (bvPre (len Δ))))
-                     (bvPre-∘ σ l (len Δ)))
-               (cong (λ z → θTy (Δ [ σ ]tel) y (bnd rec 0 (Δ [ σ ]tel) (bvPre z)) (λ i → bnd recY i (Δ [ σ ]tel) (bvPre z)))
-                     (sym (len-tel[] Δ σ)))))
+    sym (trans (θTy-[] σ l Δ y (λ k → bnd rec k Δ (bvPre (len Δ))) (λ k → bnd rec k (Δ [ σ ]tel) (bvPre (len Δ)))
+                       (λ i → bnd recY i Δ (bvPre (len Δ))) (λ i → bnd recY i (Δ [ σ ]tel) (bvPre (len Δ)))
+                       (λ k → cong (bnd rec k (Δ [ σ ]tel)) (bvPre-∘ σ l (len Δ)))
+                       (λ i → cong (bnd recY i (Δ [ σ ]tel)) (bvPre-∘ σ l (len Δ))))
+               (cong (λ z → θTy (Δ [ σ ]tel) y (λ k → bnd rec k (Δ [ σ ]tel) (bvPre z)) (λ i → bnd recY i (Δ [ σ ]tel) (bvPre z)))
+                     (sym (len-tel[] Δ σ))))
   res-st uni  y Δ σ l _ rewrite len-tel[] Δ σ = refl
   res-st uniY y Δ σ l _ =
     sym (trans (withBase-[] σ l (entryBase Δ y) (uniYBody Δ y) (uniYBody (Δ [ σ ]tel) y) (uniYBody-[] σ l Δ y))

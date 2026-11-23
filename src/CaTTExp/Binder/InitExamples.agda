@@ -190,9 +190,9 @@ _ = refl
 _ : (sideOf μ 0 Δbad₁ , ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δbad₁ ⟨⟩))) ≡₂ (false , false)
 _ = refl
 
--- A second object variable.
+-- An object variable after an operation (sorts come first).
 Δbad₂ : Ctx
-Δbad₂ = ε ▸ ⋆ ▸ ⋆
+Δbad₂ = ε ▸ ⋆ ▸ arr ⋆ one X ▸ ⋆
 
 _ : (sideOf μ 0 Δbad₂ , ok (tyOf ε (bnd μ 0 Δbad₂ ⟨⟩))) ≡₂ (false , false)
 _ = refl
@@ -244,4 +244,60 @@ _ : t-u2 ≡ just
                     (C.lwh μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 3) (var 6) uℕ) tgt (var 8))
            (C.vcomp μℕ (var 0) src (C.cmp μℕ (var 0) (var 0) (var 3) (var 2)) (var 5) tgt
                     (C.rwh μℕ (var 0) (var 0) (var 3) (var 6) uℕ (var 2))))
+_ = refl
+
+------------------------------------------------------------------------
+-- Several sorts (spec §9.3, F11b over ⊤): even and odd naturals,
+-- (E, O : ⋆, z : ⊤ → E, s : E → O, t : O → E).
+
+E O : Tm
+E = bvar 0 0
+O = bvar 0 1
+
+Δeo : Ctx
+Δeo = ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ one E ▸ arr ⋆ E O ▸ arr ⋆ O E
+
+μE μO : Tm
+μE = bnd μ 0 Δeo ⟨⟩
+μO = bnd μ 1 Δeo ⟨⟩
+
+_ : _≡_ {A = Maybe Ty × Maybe Ty} (tyOf ε μE , tyOf ε μO) (just ⋆ , just ⋆)
+_ = refl
+
+_ : tyOf ε (bnd η 3 Δeo ⟨⟩) ≡ just (arr ⋆ μE μO)
+_ = refl
+
+-- A model (A, B, a, f, g) in context.
+Γeo : Ctx
+Γeo = ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ one (var 0) ▸ arr ⋆ (var 0) (var 1) ▸ arr ⋆ (var 1) (var 0)
+
+_ : _≡_ {A = Maybe Ty × Maybe Ty} (tyOf Γeo (bnd rec 0 Δeo (fresh 0 5)) , tyOf Γeo (bnd rec 1 Δeo (fresh 0 5)))
+      (just (arr ⋆ μE (var 0)) , just (arr ⋆ μO (var 1)))
+_ = refl
+
+-- rec_y at s : E → O is  η_s ; rec_O ⇒ rec_E ; f.
+_ : tyOf Γeo (bnd recY 3 Δeo (fresh 0 5)) ≡ just
+      (arr (arr ⋆ μE (var 1))
+           (C○.cmp μE μO (var 1) (bnd η 3 Δeo ⟨⟩) (bnd rec 1 Δeo (fresh 0 5)))
+           (C○.cmp μE (var 0) (var 1) (bnd rec 0 Δeo (fresh 0 5)) (var 3)))
+_ = refl
+
+Γueo : Ctx
+Γueo = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δeo)
+
+_ : (ok (ctx? Γueo) , ok (tyOf Γueo (bnd uni 0 Δeo (fresh 0 15))) , ok (tyOf Γueo (bnd uni 1 Δeo (fresh 0 15))))
+      ≡₃ (true , true , true)
+_ = refl
+
+_ : (ok (tyOf Γueo (bnd uniY 2 Δeo (fresh 0 15))) , ok (tyOf Γueo (bnd uniY 3 Δeo (fresh 0 15))) ,
+     ok (tyOf Γueo (bnd uniY 4 Δeo (fresh 0 15))))
+      ≡₃ (true , true , true)
+_ = refl
+
+-- uni at the sort O is the 2-cell h_O ⇒ h′_O.
+_ : tyOf Γueo (bnd uni 1 Δeo (fresh 0 15)) ≡ just (arr (arr ⋆ μO (var 1)) (var 6) (var 11))
+_ = refl
+
+-- Selectors: μ, rec and uni at sorts only; η, rec_y, uni_y after them.
+_ : (sideOf μ 2 Δeo , sideOf η 1 Δeo , sideOf rec 2 Δeo) ≡₃ (false , false , false)
 _ = refl

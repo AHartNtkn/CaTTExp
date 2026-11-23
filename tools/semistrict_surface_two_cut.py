@@ -53,27 +53,37 @@ def moves(anchored):
     return {(effects(state, lhs), effects(state, rhs)) for state, lhs, rhs in anchored}
 
 
-def reachable(start, goal, rules):
+def controlled_reachable(start, goal, rules):
+    """Reachability for guarded two-counter steps between finitely many controls."""
     def singleton(point):
         x, y = point
         return isl.Set(f'{{ [x,y] : x={x} and y={y} }}')
 
-    steps = {(c-a, d-b, a, b) for (a, b), (c, d) in rules if (a, b) != (c, d)}
+    steps = {(s, t, c-a, d-b, a, b) for (s, (a, b)), (t, (c, d)) in rules}
     walks = steps.copy()
     pumps = set()
-    seen = singleton(start)
-    target = singleton(goal)
-    while seen.intersect(target).is_empty():
-        previous = seen
-        pumps.update(walk for walk in walks if walk[:2] != (0, 0))
-        for walk in sorted(pumps):
-            seen = seen.union(seen.apply(repeat(*walk))).coalesce()
-        if previous.is_equal(seen):
+    empty = isl.Set('{ [x,y] : false }')
+    seen = {q: empty for q in {start[0], goal[0]} | {p for s, t, *_ in steps for p in (s, t)}}
+    seen[start[0]] = singleton(start[1])
+    target = singleton(goal[1])
+    while seen[goal[0]].intersect(target).is_empty():
+        previous = seen.copy()
+        for s, t, dx, dy, a, b in steps:
+            step = isl.Map(f'{{ [x,y] -> [u,v] : x>={a} and y>={b} and '
+                           f'u=x+({dx}) and v=y+({dy}) }}')
+            seen[t] = seen[t].union(seen[s].apply(step)).coalesce()
+        pumps.update((s, dx, dy, a, b) for s, t, dx, dy, a, b in walks if s == t and (dx or dy))
+        for s, dx, dy, a, b in pumps:
+            seen[s] = seen[s].union(seen[s].apply(repeat(dx, dy, a, b))).coalesce()
+        if all(previous[q].is_equal(seen[q]) for q in seen):
             return False
-        # Concatenation keeps the least initial marking enabling the whole word.
-        walks = {(x+u, y+v, max(a, c-x), max(b, d-y))
-                 for x, y, a, b in walks for u, v, c, d in steps}
+        walks = {(s, t, x+u, y+v, max(a, c-x), max(b, d-y))
+                 for s, m, x, y, a, b in walks for n, t, u, v, c, d in steps if m == n}
     return True
+
+
+def reachable(start, goal, rules):
+    return controlled_reachable((0, start), (0, goal), {((0, l), (0, r)) for l, r in rules})
 
 
 def instance(gaps, attachments):

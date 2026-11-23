@@ -100,7 +100,7 @@ lim^{(Ψ,π)} γ := lim_{Ψ^μ}[γ ∘ π]
 
 ## 6.7 Open surface questions
 
-**Q6.1. Element notation.** Same as Q0.2: `x : ⊤ → C` (kernel) or `x : C` (elaborated). The choice decides whether lax naturality at elements is visible in the notation.
+**Q6.1. Element notation.** Same as Q0.2: `x : ⊤ → C` (kernel) or `x : C` (elaborated). The choice decides whether lax naturality at elements is visible in the notation. **Decided with Q0.2 (2026-11-22): kernel form, `x : ⊤ → C`.**
 
 **Q6.2. How diagrams are given to `lim`.**
 - *Option A: a base context and a substitution,* as in the kernel. Uniform; the user writes the base context once per diagram shape and reuses it.

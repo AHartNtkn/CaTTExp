@@ -4,13 +4,16 @@
 --
 -- Every statement below is `refl`: the checker, which is sound and
 -- complete, accepts (or rejects) the term, so the term is (or is not)
--- derivable. Positive: ℕ with all six formers, and the circle (a cell
--- variable) with μ and η, a sort over a base with a companion cell, and
--- uni_y at a globular 2-cell (its 4-cell type checked well formed).
--- Negative: the side condition (positivity and
--- the former's selection) rejects a non-⊤ parameter target, a second
--- object variable, a source mentioning X, rec_y at y = 0 or at a cell,
--- and uni on a signature with a cell.
+-- derivable. Positive: ℕ with all six formers (the shapes of rec_y
+-- pinned: naturality cylinders, an X-free factor omitted), the circle
+-- with every former but uni_y at the loop, a 3-cell entry (rec_y and
+-- uni), even/odd naturals, marks, a sort over a base with its
+-- companion cell (rec_y at it and uni over it: the cylinder of the
+-- composite a ; p), and a fixed point e : z ; s ⇒ z. Result types are
+-- checked well formed (`wfTy`). Negative: the side condition rejects a
+-- non-⊤ parameter target, a second object variable, a source
+-- mentioning X, rec_y at y = 0, uni_y at a 2-cell or 3-cell (ledger
+-- C1d (2)), and ill-formed companions.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Init
@@ -38,6 +41,8 @@ open import CaTTExp.Binder.Signature
 open Signature 𝕊
 open import CaTTExp.Binder.Typing 𝕊
 open import CaTTExp.Binder.CheckWith 𝕊 cattSide varMark
+open import CaTTExp.Naturality.DimOne using (K₁)
+import CaTTExp.Binder.Cyl 𝕊 K₁ as Cy
 
 X : Tm
 X = bvar 0 0
@@ -54,7 +59,7 @@ one = cst ⊤c
 Γm = ε ▸ ⋆ ▸ arr ⋆ one (var 0) ▸ arr ⋆ (var 0) (var 0)
 
 sideOf : Former → Nat → Ctx → Bool
-sideOf = Construction.side NK (λ _ → true)
+sideOf = Construction.side NK Former (λ b → b) (λ _ → true)
 
 -- Tuples of verdicts, compared at a fixed type.
 B2 = Bool × Bool
@@ -75,6 +80,12 @@ ok = is-just
 tyOf : Ctx → Tm → Maybe Ty
 tyOf Γ t = infer Γ t >>= λ r → just (fst r)
 
+-- The checker types a term (its arguments and side condition); that its
+-- result type is well formed is checked separately, since
+-- presupposition for INIT is not proved yet (ledger S26i).
+wfTy : Ctx → Tm → Bool
+wfTy Γ t = ok (tyOf Γ t >>= λ A → ctx? (Γ ▸ A) >>= λ _ → just tt)
+
 t-μ   = tyOf ε (bnd μ 0 Δℕ ⟨⟩)
 t-η1  = tyOf ε (bnd η 1 Δℕ ⟨⟩)
 t-η2  = tyOf ε (bnd η 2 Δℕ ⟨⟩)
@@ -84,7 +95,7 @@ t-r2  = tyOf Γm (bnd recY 2 Δℕ (fresh 0 3))
 
 -- uni and uni_y: the context is the argument telescope opened.
 Γu : Ctx
-Γu = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℕ)
+Γu = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δℕ)
 
 t-ctxu = ok (ctx? Γu)
 t-uni  = tyOf Γu (bnd uni 0 Δℕ (fresh 0 9))
@@ -144,51 +155,42 @@ _ = refl
 _ : (ok (tyOf Γ○ (bnd recY 1 Δ○ (fresh 0 3))) , ok (tyOf Γ○ (bnd recY 2 Δ○ (fresh 0 3)))) ≡₂ (true , true)
 _ = refl
 
--- rec_y at l: the naturality cylinder (η_l ▷ rec) · θ_b ⇛ θ_b · (1 ◁ p).
-private
-  module C○ = Construction NK (λ _ → true)
-  ηb ηl θb : Tm
-  ηb = bnd η 1 Δ○ ⟨⟩
-  ηl = bnd η 2 Δ○ ⟨⟩
-  θb = bnd recY 1 Δ○ (fresh 0 3)
-
-_ : tyOf Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ≡ just
-      (let i1  = C○.idm one
-           src = C○.cmp one μ○ (var 0) ηb rec○
-           tgt = C○.cmp one one (var 0) i1 (var 1) in
-       arr (arr (arr ⋆ one (var 0)) src tgt)
-           (C○.vcomp one (var 0) src src (C○.rwh one μ○ (var 0) ηb ηb ηl rec○) tgt θb)
-           (C○.vcomp one (var 0) src (C○.cmp one one (var 0) i1 (var 1)) θb tgt
-                     (C○.lwh one one (var 0) i1 (var 1) (var 1) (var 2))))
+-- rec_y at l is the cylinder of l: a 3-cell between the two pastings
+-- of its naturality square; its type is well formed.
+_ : wfTy Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ≡ true
 _ = refl
 
 Γu○ : Ctx
-Γu○ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δ○)
+Γu○ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δ○)
 
 _ : (ok (ctx? Γu○) , ok (tyOf Γu○ (bnd uni 0 Δ○ (fresh 0 9))) , ok (tyOf Γu○ (bnd uniY 1 Δ○ (fresh 0 9))))
       ≡₃ (true , true , true)
 _ = refl
 
--- uni_y at the 2-cell l: the modification condition, a 4-cell between
--- two pastings of 3-cells (C.mod4), is accepted (ledger S26b (a)).
--- The checker types the term (its arguments and side condition); that
--- its result type is well formed is checked separately (`wfTy`), since
--- presupposition for INIT is not proved yet (ledger S26i).
-wfTy : Ctx → Tm → Bool
-wfTy Γ t = ok (tyOf Γ t >>= λ A → ctx? (Γ ▸ A) >>= λ _ → just tt)
-
-_ : ( sideOf uniY 2 Δ○ ∷ ok (tyOf Γu○ (bnd uniY 2 Δ○ (fresh 0 9)))
-    ∷ wfTy Γu○ (bnd uniY 2 Δ○ (fresh 0 9)) ∷ wfTy Γu○ (bnd uniY 1 Δ○ (fresh 0 9))
-    ∷ wfTy Γu○ (bnd uni 0 Δ○ (fresh 0 9)) ∷ wfTy Γ○ (bnd recY 2 Δ○ (fresh 0 3)) ∷ [])
-  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ [])
+-- uni_y at the 2-cell l would be the cylinder of θ_l, whose boundaries
+-- are 2-dimensional coherences: it needs a filler of dimension 2
+-- (ledger C1d (2)), so it is not stated. At b, and uni at X, it is,
+-- with well-formed types.
+_ : ( sideOf uniY 2 Δ○ ∷ wfTy Γu○ (bnd uniY 1 Δ○ (fresh 0 9)) ∷ wfTy Γu○ (bnd uni 0 Δ○ (fresh 0 9)) ∷ [])
+  ≡ (false ∷ true ∷ true ∷ [])
 _ = refl
 
--- A 3-cell variable m : l ⇛ l: μ, η and rec accept it; rec_y at it and
--- uni do not (ledger S26b).
+-- A 3-cell variable m : l ⇛ l: rec_y at it is its cylinder, a 4-cell
+-- (cells of any dimension with variable boundaries), and uni is stated
+-- over the telescope; their types are well formed.
 Δ○₃ : Ctx
 Δ○₃ = Δ○ ▸ arr (arr (arr ⋆ one X) (bvar 0 1) (bvar 0 1)) (bvar 0 2) (bvar 0 2)
 
-_ : (ok (tyOf ε (bnd μ 0 Δ○₃ ⟨⟩)) , sideOf recY 3 Δ○₃ , sideOf uni 0 Δ○₃) ≡₃ (true , false , false)
+Γ○₃ : Ctx
+Γ○₃ = Γ○ ▸ arr (arr (arr ⋆ one (var 0)) (var 1) (var 1)) (var 2) (var 2)
+
+Γu○₃ : Ctx
+Γu○₃ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δ○₃)
+
+_ : ( ok (tyOf ε (bnd μ 0 Δ○₃ ⟨⟩)) ∷ sideOf recY 3 Δ○₃ ∷ sideOf uni 0 Δ○₃
+    ∷ wfTy Γ○₃ (bnd recY 3 Δ○₃ (fresh 0 4)) ∷ ok (ctx? Γu○₃) ∷ wfTy Γu○₃ (bnd uni 0 Δ○₃ (fresh 0 12))
+    ∷ sideOf uniY 3 Δ○₃ ∷ [])
+  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ false ∷ [])
 _ = refl
 
 ------------------------------------------------------------------------
@@ -223,40 +225,32 @@ _ = refl
 
 ------------------------------------------------------------------------
 -- The shapes of INIT-J1 and INIT-J2 on ℕ, in the model (A, z, s):
--- rec_y at s is the naturality cell  η_s ; rec ⇒ rec ; s,  and uni is
--- a cell between the two model morphisms of its arguments.
+-- rec_y at s is the naturality cell  η_s ▹ rec ⇒ rec ◃ s  (the typed
+-- whiskers of CaTTExp.DerivedBoundary), rec_y at z is  η_z ▹ rec ⇒ z
+-- (the factor at the X-free source ⊤ is omitted, not an identity),
+-- and uni is a cell between the two model morphisms of its arguments.
 
 private
-  cmpℕ : Tm → Tm → Tm → Tm → Tm → Tm
-  cmpℕ = Construction.cmp NK (λ _ → true)
-
   recℕ : Tm
   recℕ = bnd rec 0 Δℕ (fresh 0 3)
 
 _ : t-r2 ≡ just (arr (arr ⋆ μℕ (var 0))
-                     (cmpℕ μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) recℕ)
-                     (cmpℕ μℕ (var 0) (var 0) recℕ (var 2)))
+                     (Cy.rwT 0 0 (bnd η 2 Δℕ ⟨⟩) (arr ⋆ μℕ μℕ) (var 0) recℕ)
+                     (Cy.lwT 0 0 recℕ μℕ (var 2) (arr ⋆ (var 0) (var 0))))
+_ = refl
+
+_ : t-r1 ≡ just (arr (arr ⋆ one (var 0))
+                     (Cy.rwT 0 0 (bnd η 1 Δℕ ⟨⟩) (arr ⋆ one μℕ) (var 0) recℕ)
+                     (var 1))
 _ = refl
 
 -- In Γu = (A, z, s, h, θ_z, θ_s, h′, θ′_z, θ′_s): uni is h ⇒ h′, and
--- uni_y at s is the modification condition, both sides from
--- η_s ; h to h′ ; s.
-private
-  module C = Construction NK (λ _ → true)
-  uℕ : Tm
-  uℕ = bnd uni 0 Δℕ (fresh 0 9)
-
+-- uni_y at s is the modification condition, the cylinder of θ_s.
 _ : t-uni ≡ just (arr (arr ⋆ μℕ (var 0)) (var 3) (var 6))
 _ = refl
 
-_ : t-u2 ≡ just
-      (let src = C.cmp μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 3)
-           tgt = C.cmp μℕ (var 0) (var 0) (var 6) (var 2) in
-       arr (arr (arr ⋆ μℕ (var 0)) src tgt)
-           (C.vcomp μℕ (var 0) src (C.cmp μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 6))
-                    (C.lwh μℕ μℕ (var 0) (bnd η 2 Δℕ ⟨⟩) (var 3) (var 6) uℕ) tgt (var 8))
-           (C.vcomp μℕ (var 0) src (C.cmp μℕ (var 0) (var 0) (var 3) (var 2)) (var 5) tgt
-                    (C.rwh μℕ (var 0) (var 0) (var 3) (var 6) uℕ (var 2))))
+_ : (wfTy Γu (bnd uniY 1 Δℕ (fresh 0 9)) , wfTy Γu (bnd uniY 2 Δℕ (fresh 0 9)) , wfTy Γm (bnd recY 2 Δℕ (fresh 0 3)))
+      ≡₃ (true , true , true)
 _ = refl
 
 ------------------------------------------------------------------------
@@ -288,15 +282,15 @@ _ : _≡_ {A = Maybe Ty × Maybe Ty} (tyOf Γeo (bnd rec 0 Δeo (fresh 0 5)) , t
       (just (arr ⋆ μE (var 0)) , just (arr ⋆ μO (var 1)))
 _ = refl
 
--- rec_y at s : E → O is  η_s ; rec_O ⇒ rec_E ; f.
+-- rec_y at s : E → O is  η_s ▹ rec_O ⇒ rec_E ◃ f.
 _ : tyOf Γeo (bnd recY 3 Δeo (fresh 0 5)) ≡ just
       (arr (arr ⋆ μE (var 1))
-           (C○.cmp μE μO (var 1) (bnd η 3 Δeo ⟨⟩) (bnd rec 1 Δeo (fresh 0 5)))
-           (C○.cmp μE (var 0) (var 1) (bnd rec 0 Δeo (fresh 0 5)) (var 3)))
+           (Cy.rwT 0 0 (bnd η 3 Δeo ⟨⟩) (arr ⋆ μE μO) (var 1) (bnd rec 1 Δeo (fresh 0 5)))
+           (Cy.lwT 0 0 (bnd rec 0 Δeo (fresh 0 5)) μE (var 3) (arr ⋆ (var 0) (var 1))))
 _ = refl
 
 Γueo : Ctx
-Γueo = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δeo)
+Γueo = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δeo)
 
 _ : (ok (ctx? Γueo) , ok (tyOf Γueo (bnd uni 0 Δeo (fresh 0 15))) , ok (tyOf Γueo (bnd uni 1 Δeo (fresh 0 15))))
       ≡₃ (true , true , true)
@@ -344,7 +338,7 @@ _ = refl
 -- rec_y at s, and uni over the marked telescope (its model argument
 -- is marked like Δℤ, so the opened context has s′ marked inv).
 Γuℤ : Ctx
-Γuℤ = openTel 0 (Construction.args NK (λ _ → true) uni 0 Δℤ)
+Γuℤ = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δℤ)
 
 _ : ( ok (tyOf (Γℤ (minv ∷ [])) (bnd recY 2 Δℤ (fresh 0 3)))
     , ok (ctx? Γuℤ) , ok (tyOf Γuℤ (bnd uni 0 Δℤ (fresh 0 9)))
@@ -449,7 +443,34 @@ _ : ( sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X)
     ∷ []) ≡ (false ∷ false ∷ false ∷ false ∷ false ∷ false ∷ [])
 _ = refl
 
--- Not yet: rec_y at the companion c (a 2-cell whose source a ; p is a
--- composite) and uni over Δb need θ of a composite (ledger S26b (b)).
-_ : ( ok (tyOf (Γbm (minv ∷ [])) (bnd recY 3 Δb σbm)) ∷ sideOf uni 0 Δb ∷ []) ≡ (false ∷ false ∷ [])
+-- rec_y at the companion c (a 2-cell whose source a ; p is a composite)
+-- is its cylinder, with the composite's cylinder filled by K₁; uni is
+-- stated over Δb. Their types are well formed.
+Γub : Ctx
+Γub = Γb ⧺ openTel 2 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δb)
+
+_ : ( sideOf recY 3 Δb ∷ wfTy (Γbm (minv ∷ [])) (bnd recY 3 Δb σbm)
+    ∷ sideOf uni 0 Δb ∷ ok (ctx? Γub) ∷ wfTy Γub (bnd uni 0 Δb (fresh 2 12))
+    ∷ wfTy Γub (bnd uniY 2 Δb (fresh 2 12)) ∷ [])
+  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ [])
+_ = refl
+
+------------------------------------------------------------------------
+-- A 2-cell with a composite boundary between maps: a fixed point,
+-- μ(X, z : ⊤ → X, s : X → X, e : z ; s ⇒ z). rec_y at e is a 3-cell
+-- whose boundary contains the cylinder of z ; s (K₁); uni is stated.
+
+Δfp : Ctx
+Δfp = Δℕ ▸ arr (arr ⋆ one X) (cmp one X X (bvar 0 1) (bvar 0 2)) (bvar 0 1)
+
+Γfp : Ctx
+Γfp = Γm ▸ arr (arr ⋆ one (var 0)) (cmp one (var 0) (var 0) (var 1) (var 2)) (var 1)
+
+Γufp : Ctx
+Γufp = openTel 0 (Construction.args NK Former (λ b → b) (λ _ → true) uni 0 Δfp)
+
+_ : ( sideOf μ 0 Δfp ∷ sideOf recY 3 Δfp ∷ wfTy Γfp (bnd recY 3 Δfp (fresh 0 4))
+    ∷ ok (ctx? Γufp) ∷ wfTy Γufp (bnd uni 0 Δfp (fresh 0 12)) ∷ wfTy Γufp (bnd uniY 2 Δfp (fresh 0 12))
+    ∷ sideOf uniY 3 Δfp ∷ [])
+  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ false ∷ [])
 _ = refl

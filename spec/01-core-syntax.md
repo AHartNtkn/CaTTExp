@@ -11,14 +11,15 @@ Metatheory proved once for the parameterised rules holds for every instance, so 
 ```
 Contexts       Γ, Δ ::= ε | Γ, x : A
 Types          A, B ::= ⋆ | t →_A u
-Terms          t, u ::= x | c | coh_{Δ, A}[σ]
+Terms          t, u ::= x | c | coh_{Δ, A}[σ] | h[σ]
 Substitutions  σ, τ ::= ⟨⟩ | ⟨σ, x ↦ t⟩
 ```
 
 - `c` ranges over the constants of the signature 𝕊. Each constant has a closed type `ty(c)` and a decidable validity predicate `Valid(c)`.
 - `coh_{Δ, A}[σ]` is a coherence over the context Δ, at the type A (which must be an arrow type), substituted by σ.
+- `h[σ]` is an **operation head** h applied to a substitution σ. Each head h of the signature has an **arity context** Γ_h, a type A_h with Γ_h ⊢ A_h, and a decidable validity predicate `Valid(h)`. A head works like a coherence whose context and type are fixed by the signature, not by the term: σ supplies its arguments, and h[σ] has type A_h[σ]. A constant c is the case Γ_h = ε, so `c` abbreviates c[⟨⟩].
 - The **dimension** of a type is dim ⋆ = −1 and dim (t →_A u) = dim A + 1. The dimension of a term is the dimension of its type plus one, so objects have dimension 0.
-- Substitution `t[σ]`, `A[σ]`, `σ ∘ τ` acts on raw syntax by replacing variables. It is the only operation on terms, and it is syntactic: there is no other definitional equality (chapter 0, §0.3).
+- Substitution `t[σ]`, `A[σ]`, `σ ∘ τ` acts on raw syntax by replacing variables; on a head it acts on the arguments, `h[σ][τ] = h[σ ∘ τ]`, as on a coherence. It is the only operation on terms, and it is syntactic: there is no other definitional equality (chapter 0, §0.3).
 
 **Binders (INIT).** The kernel's one binding former, INIT (chapter 9, §9.3), adds a binder and five term formers:
 ```
@@ -51,18 +52,18 @@ Terms          t, u ::= … | μ(β) | η_y(β) | rec(β; A, σ) | rec_y(β; A, 
 ──────── (ε)       ─────────────── (ext)       ────── (⋆)          ─────────────────────── (→)
   ε ⊢               Γ, x : A ⊢                 Γ ⊢ ⋆                 Γ ⊢ t →_A u
 
-Γ ⊢    (x : A) ∈ Γ              Γ ⊢    Valid(c)
-───────────────── (var)        ───────────────── (const)
-   Γ ⊢ x : A                     Γ ⊢ c : ty(c)
+Γ ⊢    (x : A) ∈ Γ              Γ ⊢    Valid(c)              Δ ⊢ σ : Γ_h    Valid(h)
+───────────────── (var)        ───────────────── (const)     ──────────────────────────── (op)
+   Γ ⊢ x : A                     Γ ⊢ c : ty(c)                 Δ ⊢ h[σ] : A_h[σ]
 
   Δ ⊢                   Δ ⊢ σ : Γ    Δ ⊢ t : A[σ]
 ────────── (⟨⟩)        ───────────────────────────── (ext-sub)
 Δ ⊢ ⟨⟩ : ε              Δ ⊢ ⟨σ, x ↦ t⟩ : Γ, x : A
 ```
 
-**Side condition.** (const) checks `Valid(c)`, which every signature must make decidable. The other rules have none.
+**Side condition.** (const) checks `Valid(c)` and (op) checks `Valid(h)`, which every signature must make decidable. (const) is (op) at Γ_h = ε. The other rules have none.
 
-**Status.** Agda-checked, `CaTTExp.TypingWith` (parameterised in 𝕊 and in the side condition). The checker `CaTTExp.CheckWith` is certified (every success returns a derivation) and complete (`CaTTExp.Completeness`), so all five judgments are decidable, given that equality of constants is decidable and `valid?` is complete. **Source:** `notes/agda-sketch-findings.md`; ledger A1, A2 (closed).
+**Status.** For constants: Agda-checked, `CaTTExp.TypingWith` (parameterised in 𝕊 and in the side condition). For heads with a non-empty arity: **stated here**, not yet in Agda (ledger S27b). The checker `CaTTExp.CheckWith` is certified (every success returns a derivation) and complete (`CaTTExp.Completeness`), so all five judgments are decidable, given that equality of constants is decidable and `valid?` is complete. **Source:** `notes/agda-sketch-findings.md`; ledger A1, A2 (closed).
 
 ## 1.3 Pasting contexts
 
@@ -124,20 +125,35 @@ where Var(t : A) is the set of variables of t and of the terms in A.
 
 | Statement | Status | Where |
 |---|---|---|
-| **Substitution.** Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]; likewise for types and substitutions. Holds for every side condition. | Agda-checked | `CaTTExp.Subst` (ledger A1) |
-| **Decidability.** All five judgments are decidable, by a certified and complete checker. | Agda-checked | `CaTTExp.CheckWith`, `CaTTExp.Completeness` (A2) |
+| **Substitution.** Δ ⊢ σ : Γ and Γ ⊢ t : A give Δ ⊢ t[σ] : A[σ]; likewise for types and substitutions. Holds for every side condition. | Agda-checked for constants; for heads **stated here**: the proof is the coherence case, since A_h lives over Γ_h and h[σ][τ] = h[σ ∘ τ] | `CaTTExp.Subst` (ledger A1); heads S27b |
+| **Decidability.** All five judgments are decidable, by a certified and complete checker, given decidable equality of heads and decidable `Valid`. | Agda-checked for constants; for heads **stated here** (check σ against Γ_h, then `Valid(h)`) | `CaTTExp.CheckWith`, `CaTTExp.Completeness` (A2); heads S27b |
 | **Weakening.** Γ ⊢ J gives Γ, x : B ⊢ J. | Agda-checked | `CaTTExp.Weakening` |
-| **Suspension.** For constant-free syntax, Σ preserves all judgments, both side conditions and the pasting judgment. | Agda-checked | `CaTTExp.Suspension` |
+| **Suspension.** For constant-free syntax, Σ preserves all judgments, both side conditions and the pasting judgment. | Agda-checked | `CaTTExp.Suspension`; heads S27c |
 | **Constant substitutions.** For constant-free Γ, (c : ⋆) ⊢ !_Γ : Γ. | Agda-checked | `CaTTExp.ConstSub` |
 | **Soundness in strict ω-categories** (plain CaTT). | Agda-checked | `CaTTExp.Strict.OmegaSound` (A3a) |
 | **With binders: substitution and decidability.** Both hold for every side condition and every binder interface satisfying the binder laws, INIT included. | Agda-checked | `CaTTExp.Binder.Subst`; `CaTTExp.Binder.CheckWith`, `CaTTExp.Binder.Completeness` (S26a) |
 | **Binders are conservative.** The embedding of binder-free syntax preserves and reflects all five judgments, so adding binders derives nothing new about the binder-free fragment (for plain CaTT unconditionally; in general when the side conditions agree on embedded syntax). | Agda-checked | `CaTTExp.Binder.Embed`, `CaTTExp.Binder.InitEmbed` (S26a) |
 
+**Why suspension and constant substitutions are constant-free.** Suspension Σ raises every dimension by one, adding two new objects below. A coherence suspends to a coherence over the suspended context. A constant cannot: its type ty(c) is fixed by the signature, so Σ c would need a second constant of type Σ ty(c), which the signature need not have. Likewise `!_Γ`, which sends every object variable of Γ to one object c, is only well typed when no type in Γ mentions a constant of another object. So both statements are proved for syntax without constants. A head suspends when the signature also gives its suspension, a head Σh with arity ΣΓ_h and type ΣA_h. Which of the heads of chapters 6–9 have one (the limit heads do when Σ of a limit is the limit of the suspended diagram) is ledger S27c.
+
 ## 1.6 Signatures
 
-A signature 𝕊 is a set of constants with decidable equality, a closed type `ty(c)` for each, and a decidable validity predicate `Valid(c)`. Pure CaTT is the empty signature.
+A signature 𝕊 is a set of operation heads with decidable equality, an arity context Γ_h and a type A_h over it for each, and a decidable validity predicate `Valid(h)`. Constants are the heads with empty arity. Pure CaTT is the empty signature.
 
-Later chapters extend the kernel only by adding constants, families of constants indexed by syntax (for example, one constant `⟦Γ⟧ : ⋆` per pasting context Γ, chapter 7), and inductive judgments in the style of `⊢ps`. They add no new definitional equalities.
+Later chapters extend the kernel by adding heads, families of heads indexed by syntax, and inductive judgments in the style of `⊢ps`. They add no new definitional equalities. The heads they add:
+
+| Chapter | Head | Arity context Γ_h | Type A_h |
+|---|---|---|---|
+| 6 | `lim_Γ`, one per finite context Γ | Γ (the diagram) | ⋆ |
+| 6 | `λ_{Γ,g}`, one per entry g of the cone shape | Γ | the type of g in Cone(Γ; lim_Γ[id]) |
+| 6 | `uni^w_{Γ,n}`, `uni^y_{Γ,n}` | the generic horn H_n(Γ): Γ, an apex c : ⋆, and the horn variables of Horn_n(Γ, id; c) | the filler's cell, and the comparison component y |
+| 6 | `colim_Γ`, the cocone components, `couni` | as for limits, with the cocone shapes | as for limits |
+| 7 | `⟦Γ⟧`, one per context Γ | ε (a constant) | ⋆ |
+| 7 | `η_{Γ,x}`, one per variable x of Γ | ε | the type of the generator x as a cell of ⟦Γ⟧ (§7.2) |
+| 7 | `⟨–⟩_Γ` and its fillers | C : ⋆ followed by Diag(Γ, C) | ⟦Γ⟧ → C, and the LIFT cells |
+| 8 | `⊗`, `\`, `/` and the multimap formers | (A, B : ⋆) and the row's variables | ⋆, and the row's cells |
+
+A use such as Θ ⊢ uni^w_{Γ,n}[σ] with σ : Horn_n(Γ, γ; c) in chapter 6 is h[σ′] with σ′ = (γ, c, σ) : H_n(Γ), the diagram and the horn data packed into one substitution. The binder INIT is not a head (it binds variables); see below.
 
 A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders), and the kernel with binders is formalized in `CaTTExp.Binder.*` (§1.5; ledger S26a, with the remaining fragments S26b–S26f).
 

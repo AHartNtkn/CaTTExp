@@ -324,6 +324,8 @@ import CaTTExp.Gray.DimB
 import CaTTExp.Gray.MarksBKernel
 import CaTTExp.Gray.MarksBDes
 import CaTTExp.Gray.DesSideL
+import CaTTExp.Gray.SupportIota
+import CaTTExp.Gray.DesPresupL
 import CaTTExp.Gray.PsFacts
 import CaTTExp.Gray.CohDim
 import CaTTExp.Gray.FullSupp
@@ -431,6 +433,7 @@ import CaTTExp.Binder.VarMark
 import CaTTExp.Binder.MarkExamples
 import CaTTExp.Binder.Des
 import CaTTExp.Binder.DesLaws
+import CaTTExp.Binder.DesLawsGen
 import CaTTExp.Binder.DesPresup
 import CaTTExp.Binder.PureSide
 import CaTTExp.Binder.DesSideCatt
@@ -439,9 +442,13 @@ import CaTTExp.Binder.Embed
 import CaTTExp.Binder.Cyl
 import CaTTExp.Binder.CylLaws
 import CaTTExp.Binder.CylOne
+import CaTTExp.Binder.CylOK
 import CaTTExp.Binder.CylExamples
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
+import CaTTExp.Binder.InitLawsGen
+import CaTTExp.Binder.InitDes
+import CaTTExp.Binder.InitDesExamples
 import CaTTExp.Binder.InitMeta
 import CaTTExp.Binder.InitEmbed
 import CaTTExp.Binder.InitExamples

@@ -29,14 +29,15 @@
 -- leaves the raised context's boundary at a dimension where τ's own
 -- cells are not all kept.
 --
--- OPEN (case (b), arbitrary flags; needed by GrayCtx.Lift `generic` with
--- travelling arguments at any depth and by `raiseApply`): when a flagged
--- leaf lies below the top dimension, the coh over the raised tree is a
--- full coherence, and what is needed instead is that for a full term t
--- over τ, every flagged leaf f lies in FV(t[incl⁻]) and its copy f′ in
--- FV(t[incl⁺]). This follows from fv(t[σ]) = img σ (fv t) for variable
--- substitutions together with the images of incl∓ computed here; that fv
--- lemma is the next step of S20 (i) stage 3b and is not yet proved.
+-- Case (b), arbitrary flags (GrayCtx.Lift `generic` with travelling
+-- arguments at any depth, and `raiseApply`): the coh over the raised
+-- tree is then a full coherence. For it: incl∓ are variable
+-- substitutions (`inclM-var`, `inclP-var`); a term u using every level
+-- of τ has u[incl⁻] using every level in the image of incl⁻ and u[incl⁺]
+-- every level in the image of incl⁺ (`fv-inclM`, `fv-inclP`, from the
+-- generic `VarSubFv`); and every level of the raised context is in one
+-- of the two images or is a new top cell α : incl⁻ w → incl⁺ w
+-- (`cover-incl`).
 ------------------------------------------------------------------------
 module CaTTExp.PsRaise where
 
@@ -45,8 +46,9 @@ open import CaTTExp.Pure
 open import CaTTExp.PureMetatheory using (closed)
 import CaTTExp.Subst ∅ cattSide as Sb
 open import CaTTExp.Weakening ∅ cattSide using (wk-sub; lookup-top; lookup-wk)
-open import CaTTExp.Derived using (ps-wf; ctx-init; lk-ext; lk-top; dropLast-snoc; upTo)
+open import CaTTExp.Derived using (ps-wf; ctx-init; lk-ext; lk-top; dropLast-snoc; upTo; Mem; _⊎_; inj₁; inj₂)
 open import CaTTExp.GrayCtx.Lift using (raiseL; raiseT)
+open import CaTTExp.VarSubFv using (lev; VarSub; Full; full-img)
 
 private
   <-suc : ∀ i n → T (i <ℕ n) → T (i <ℕ suc n)
@@ -244,10 +246,6 @@ inclP-wf bs t ts = wσ (snd (snd (snd (snd (snd (incl bs t ts))))))
 --
 -- as lists of levels (`srcL`, `tgtL`). With k the dimension of τ these
 -- are ∂⁻ and ∂⁺ of the raised tree.
-
-lev : Tm → Nat
-lev (var i) = i
-lev _       = 0
 
 img : Sub → List Nat → List Nat
 img σ []       = []
@@ -731,3 +729,210 @@ tgt-raise : ∀ k bs t ts → Le (dimCtx (ctxOf (node (t ∷ ts)))) k → TopOK 
 tgt-raise k bs t ts le top a =
   trans (cong (λ n → tgtVars (n ∸ 1) (ctxOf (raiseT bs (node (t ∷ ts))))) (dim-raise k bs t ts le top a))
     (trans (tgt-incl k bs t ts top) (cong (img (inclP bs t ts)) (full-tgt (dTree t ts) k le)))
+
+------------------------------------------------------------------------
+-- Case (b), arbitrary flags: free variables and covering.
+--
+-- incl⁻ and incl⁺ are variable substitutions (`inclM-var`, `inclP-var`),
+-- so a term u over τ that uses every level of τ has images u[incl⁻] and
+-- u[incl⁺] that use every level in the image of incl⁻, resp. incl⁺
+-- (`fv-inclM`, `fv-inclP`). In particular a flagged leaf f lies in
+-- FV(u[incl⁻]) and its copy f′ in FV(u[incl⁺]).
+--
+-- Every level v of the raised context is hit by incl⁻ or by incl⁺, or is
+-- a new top cell α : incl⁻ w → incl⁺ w for a level w of τ (`cover-incl`).
+
+private
+  VS : ∀ {Γ x A Δ x^ A^} → Sim Γ x A Δ x^ A^ → Set
+  VS S = VarSub (fst S) × VarSub (fst (snd S))
+
+  vs-ext : ∀ {a b} i j i′ j′ → VarSub a × VarSub b →
+           VarSub (a ,ₛ var i ,ₛ var j) × VarSub (b ,ₛ var i′ ,ₛ var j′)
+  vs-ext i j i′ j′ (p , q) = ((p , tt) , tt) , ((q , tt) , tt)
+
+mutual
+  private
+    varL : ∀ ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+           VS S → VS (simL ts bs d d^ S)
+    varL []                  bs           d d^ S v = v
+    varL (node [] ∷ ts)      []           {Δ = Δ} d d^ S v =
+      varL ts [] (psd (pse d)) (psd (pse d^)) (leafP d d^ S) (vs-ext (len Δ) (suc (len Δ)) (len Δ) (suc (len Δ)) v)
+    varL (node [] ∷ ts)      (true ∷ bs)  {Δ = Δ} d d^ S v =
+      varL ts bs (psd (pse d)) (psd (psd (pse (pse d^)))) (leafR d d^ S) (vs-ext (len Δ) (suc (len Δ)) (len Δ) (suc (suc (len Δ))) v)
+    varL (node [] ∷ ts)      (false ∷ bs) {Δ = Δ} d d^ S v =
+      varL ts bs (psd (pse d)) (psd (pse d^)) (leafP d d^ S) (vs-ext (len Δ) (suc (len Δ)) (len Δ) (suc (len Δ)) v)
+    varL (node (c ∷ cs) ∷ ts) []       d d^ S v = varN (c ∷ cs) ts [] d d^ S v
+    varL (node (c ∷ cs) ∷ ts) (b ∷ bs) d d^ S v = varN (c ∷ cs) ts (b ∷ bs) d d^ S v
+
+    varN : ∀ cs ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+           VS S → VS (simN cs ts bs d d^ S)
+    varN cs ts bs {Δ = Δ} d d^ S v =
+      varL ts (snd (raiseL bs cs)) _ _ (psdS (simL cs bs (pse d) (pse d^) (pseS d d^ S)))
+        (varL cs bs (pse d) (pse d^) (pseS d d^ S) (vs-ext (len Δ) (suc (len Δ)) (len Δ) (suc (len Δ)) v))
+
+private
+  vsIncl : ∀ bs t ts → VarSub (inclM bs t ts) × VarSub (inclP bs t ts)
+  vsIncl []       t ts = varL (t ∷ ts) [] pss pss base ((tt , tt) , (tt , tt))
+  vsIncl (b ∷ bs) t ts = varL (t ∷ ts) (b ∷ bs) pss pss base ((tt , tt) , (tt , tt))
+
+inclM-var : ∀ bs t ts → VarSub (inclM bs t ts)
+inclM-var bs t ts = fst (vsIncl bs t ts)
+
+inclP-var : ∀ bs t ts → VarSub (inclP bs t ts)
+inclP-var bs t ts = snd (vsIncl bs t ts)
+
+fv-inclM : ∀ bs t ts u → Full (len (ctxOf (node (t ∷ ts)))) (fvTm u) →
+           ∀ w → T (w <ℕ len (ctxOf (node (t ∷ ts)))) →
+           Mem (lev (lookupₛ (inclM bs t ts) w)) (fvTm (u [ inclM bs t ts ]tm))
+fv-inclM bs t ts u f = full-img u (inclM bs t ts) (len (ctxOf (node (t ∷ ts)))) (inclM-var bs t ts) f
+
+fv-inclP : ∀ bs t ts u → Full (len (ctxOf (node (t ∷ ts)))) (fvTm u) →
+           ∀ w → T (w <ℕ len (ctxOf (node (t ∷ ts)))) →
+           Mem (lev (lookupₛ (inclP bs t ts) w)) (fvTm (u [ inclP bs t ts ]tm))
+fv-inclP bs t ts u f = full-img u (inclP bs t ts) (len (ctxOf (node (t ∷ ts)))) (inclP-var bs t ts) f
+
+-- Covering.
+Hit : Sub → Nat → Nat → Set
+Hit σ n v = Σ Nat λ w → T (w <ℕ n) × (lev (lookupₛ σ w) ≡ v)
+
+NewCell : Sub → Sub → Nat → Ctx → Nat → Set
+NewCell rm rp n Δ v = Σ Nat λ w → T (w <ℕ n) × Σ Ty λ F → lookup Δ v ≡ just (arr F (lookupₛ rm w) (lookupₛ rp w))
+
+Cover : Sub → Sub → Nat → Ctx → Set
+Cover rm rp n Δ = ∀ v → T (v <ℕ len Δ) → Hit rm n v ⊎ (Hit rp n v ⊎ NewCell rm rp n Δ v)
+
+private
+  split2 : ∀ v n → T (v <ℕ suc (suc n)) → T (v <ℕ n) ⊎ ((v ≡ n) ⊎ (v ≡ suc n))
+  split2 zero          zero    _ = inj₂ (inj₁ refl)
+  split2 zero          (suc n) _ = inj₁ tt
+  split2 (suc zero)    zero    _ = inj₂ (inj₂ refl)
+  split2 (suc (suc v)) zero    ()
+  split2 (suc v)       (suc n) p with split2 v n p
+  ... | inj₁ q        = inj₁ q
+  ... | inj₂ (inj₁ e) = inj₂ (inj₁ (cong suc e))
+  ... | inj₂ (inj₂ e) = inj₂ (inj₂ (cong suc e))
+
+  lt-wk2 : ∀ w n → T (w <ℕ n) → T (w <ℕ suc (suc n))
+  lt-wk2 w n p = <-suc w (suc n) (<-suc w n p)
+
+  lt-n : ∀ n → T (n <ℕ suc (suc n))
+  lt-n n = <-suc n (suc n) (<-self n)
+
+  lt-under : ∀ {σ w n} → lenₛ σ ≡ n → T (w <ℕ n) → T (w <ℕ lenₛ σ)
+  lt-under {w = w} e p = subst (λ m → T (w <ℕ m)) (sym e) p
+
+  lk-old2 : ∀ σ a b w → T (w <ℕ lenₛ σ) → lookupₛ (σ ,ₛ a ,ₛ b) w ≡ lookupₛ σ w
+  lk-old2 σ a b w p = trans (lk-ext (σ ,ₛ a) b w (<-suc w (lenₛ σ) p)) (lk-ext σ a w p)
+
+  lk-y′ : ∀ σ a b n → lenₛ σ ≡ n → lookupₛ (σ ,ₛ a ,ₛ b) n ≡ a
+  lk-y′ σ a b .(lenₛ σ) refl = lk2-y σ a b
+
+  lk-f′ : ∀ σ a b n → lenₛ σ ≡ n → lookupₛ (σ ,ₛ a ,ₛ b) (suc n) ≡ b
+  lk-f′ σ a b .(lenₛ σ) refl = lk2-f σ a b
+
+  hit2 : ∀ σ a b n v → lenₛ σ ≡ n → Hit σ n v → Hit (σ ,ₛ a ,ₛ b) (suc (suc n)) v
+  hit2 σ a b n v e (w , p , h) = w , lt-wk2 w n p , trans (cong lev (lk-old2 σ a b w (lt-under e p))) h
+
+  new-sub2 : ∀ rm rp a b a′ b′ n Δ v → lenₛ rm ≡ n → lenₛ rp ≡ n → NewCell rm rp n Δ v →
+             NewCell (rm ,ₛ a ,ₛ b) (rp ,ₛ a′ ,ₛ b′) (suc (suc n)) Δ v
+  new-sub2 rm rp a b a′ b′ n Δ v e₁ e₂ (w , p , F , l) =
+    w , lt-wk2 w n p , F ,
+    trans l (cong₂ (λ y z → just (arr F y z)) (sym (lk-old2 rm a b w (lt-under e₁ p)))
+                                             (sym (lk-old2 rp a′ b′ w (lt-under e₂ p))))
+
+  new-wk : ∀ rm rp n Δ C v → NewCell rm rp n Δ v → NewCell rm rp n (Δ ▸ C) v
+  new-wk rm rp n Δ C v (w , p , F , l) = w , p , F , lookup-wk Δ v C l
+
+  -- A pse step on both sides.
+  cover-E : ∀ rm rp n Δ C D i′ j′ → lenₛ rm ≡ n → lenₛ rp ≡ n → Cover rm rp n Δ →
+            Cover (rm ,ₛ var (len Δ) ,ₛ var (suc (len Δ))) (rp ,ₛ i′ ,ₛ j′) (suc (suc n)) (Δ ▸ C ▸ D)
+  cover-E rm rp n Δ C D i′ j′ e₁ e₂ cov v p with split2 v (len Δ) p
+  ... | inj₂ (inj₁ refl) = inj₁ (n , lt-n n , cong lev (lk-y′ rm _ _ n e₁))
+  ... | inj₂ (inj₂ refl) = inj₁ (suc n , <-self (suc n) , cong lev (lk-f′ rm _ _ n e₁))
+  ... | inj₁ q with cov v q
+  ...   | inj₁ h          = inj₁ (hit2 rm _ _ n v e₁ h)
+  ...   | inj₂ (inj₁ h)   = inj₂ (inj₁ (hit2 rp _ _ n v e₂ h))
+  ...   | inj₂ (inj₂ c)   =
+    inj₂ (inj₂ (new-wk rm′ rp′ n₂ (Δ ▸ C) D v (new-wk rm′ rp′ n₂ Δ C v
+      (new-sub2 rm rp (var (len Δ)) (var (suc (len Δ))) i′ j′ n Δ v e₁ e₂ c))))
+    where
+    rm′ = rm ,ₛ var (len Δ) ,ₛ var (suc (len Δ))
+    rp′ = rp ,ₛ i′ ,ₛ j′
+    n₂  = suc (suc n)
+
+  -- A raised leaf: y, f, f′ and α : f → f′.
+  cover-R : ∀ rm rp n Δ x^ A^ → lenₛ rm ≡ n → lenₛ rp ≡ n → Cover rm rp n Δ →
+            Cover (rm ,ₛ var (len Δ) ,ₛ var (suc (len Δ))) (rp ,ₛ var (len Δ) ,ₛ var (suc (suc (len Δ))))
+                  (suc (suc n)) (Raised Δ x^ A^)
+  cover-R rm rp n Δ x^ A^ e₁ e₂ cov v p with split2 v (suc (suc (len Δ))) p
+  ... | inj₂ (inj₁ refl) = inj₂ (inj₁ (suc n , <-self (suc n) , cong lev (lk-f′ rp _ _ n e₂)))
+  ... | inj₂ (inj₂ refl) =
+    inj₂ (inj₂ (suc n , <-self (suc n) , F ,
+      trans (lookup-top (Δ ▸ A^ ▸ F ▸ F) _)
+            (cong₂ (λ y z → just (arr F y z)) (sym (lk-f′ rm _ _ n e₁)) (sym (lk-f′ rp _ _ n e₂)))))
+    where F = arr A^ (var x^) (var (len Δ))
+  ... | inj₁ q with split2 v (len Δ) q
+  ...   | inj₂ (inj₁ refl) = inj₁ (n , lt-n n , cong lev (lk-y′ rm _ _ n e₁))
+  ...   | inj₂ (inj₂ refl) = inj₁ (suc n , <-self (suc n) , cong lev (lk-f′ rm _ _ n e₁))
+  ...   | inj₁ r with cov v r
+  ...     | inj₁ h        = inj₁ (hit2 rm _ _ n v e₁ h)
+  ...     | inj₂ (inj₁ h) = inj₂ (inj₁ (hit2 rp _ _ n v e₂ h))
+  ...     | inj₂ (inj₂ c) =
+    inj₂ (inj₂ (new-wk rm′ rp′ n₂ (Δ ▸ A^ ▸ F ▸ F) G v (new-wk rm′ rp′ n₂ (Δ ▸ A^ ▸ F) F v
+      (new-wk rm′ rp′ n₂ (Δ ▸ A^) F v (new-wk rm′ rp′ n₂ Δ A^ v
+        (new-sub2 rm rp (var (len Δ)) (var (suc (len Δ))) (var (len Δ)) (var (suc (suc (len Δ)))) n Δ v e₁ e₂ c))))))
+    where
+    F   = arr A^ (var x^) (var (len Δ))
+    G   = arr F (var (suc (len Δ))) (var (suc (suc (len Δ))))
+    rm′ = rm ,ₛ var (len Δ) ,ₛ var (suc (len Δ))
+    rp′ = rp ,ₛ var (len Δ) ,ₛ var (suc (suc (len Δ)))
+    n₂  = suc (suc n)
+
+  CS : ∀ {Γ x A Δ x^ A^} → Sim Γ x A Δ x^ A^ → Set
+  CS {Γ} {Δ = Δ} S = Cover (fst S) (fst (snd S)) (len Γ) Δ
+
+  cover-leafP : ∀ {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+                CS S → CS (leafP d d^ S)
+  cover-leafP {Γ} {x} {A} {Δ} {x^} {A^} d d^ S c =
+    cover-E (fst S) (fst (snd S)) (len Γ) Δ A^ (arr A^ (var x^) (var (len Δ))) _ _ (lenM S) (lenP S) c
+
+  cover-pseS : ∀ {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+               CS S → CS (pseS d d^ S)
+  cover-pseS {Γ} {x} {A} {Δ} {x^} {A^} d d^ S c =
+    cover-E (fst S) (fst (snd S)) (len Γ) Δ A^ (arr A^ (var x^) (var (len Δ))) _ _ (lenM S) (lenP S) c
+
+  cover-leafR : ∀ {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+                CS S → CS (leafR d d^ S)
+  cover-leafR {Γ} {x} {A} {Δ} {x^} {A^} d d^ S c =
+    cover-R (fst S) (fst (snd S)) (len Γ) Δ x^ A^ (lenM S) (lenP S) c
+
+mutual
+  private
+    covL : ∀ ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+           CS S → CS (simL ts bs d d^ S)
+    covL []                  bs           d d^ S c = c
+    covL (node [] ∷ ts)      []           d d^ S c =
+      covL ts [] (psd (pse d)) (psd (pse d^)) (leafP d d^ S) (cover-leafP d d^ S c)
+    covL (node [] ∷ ts)      (true ∷ bs)  d d^ S c =
+      covL ts bs (psd (pse d)) (psd (psd (pse (pse d^)))) (leafR d d^ S) (cover-leafR d d^ S c)
+    covL (node [] ∷ ts)      (false ∷ bs) d d^ S c =
+      covL ts bs (psd (pse d)) (psd (pse d^)) (leafP d d^ S) (cover-leafP d d^ S c)
+    covL (node (c ∷ cs) ∷ ts) []       d d^ S k = covN (c ∷ cs) ts [] d d^ S k
+    covL (node (c ∷ cs) ∷ ts) (b ∷ bs) d d^ S k = covN (c ∷ cs) ts (b ∷ bs) d d^ S k
+
+    covN : ∀ cs ts bs {Γ x A Δ x^ A^} (d : Γ ⊢ps x ∶ A) (d^ : Δ ⊢ps x^ ∶ A^) (S : Sim Γ x A Δ x^ A^) →
+           CS S → CS (simN cs ts bs d d^ S)
+    covN cs ts bs d d^ S c =
+      covL ts (snd (raiseL bs cs)) _ _ (psdS (simL cs bs (pse d) (pse d^) (pseS d d^ S)))
+        (covL cs bs (pse d) (pse d^) (pseS d d^ S) (cover-pseS d d^ S c))
+
+private
+  cover-base : CS base
+  cover-base zero    _ = inj₁ (0 , tt , refl)
+  cover-base (suc v) ()
+
+-- Every level of the raised context is in the image of incl⁻ or of
+-- incl⁺, or is a new top cell from incl⁻ w to incl⁺ w.
+cover-incl : ∀ bs t ts → Cover (inclM bs t ts) (inclP bs t ts) (len (ctxOf (node (t ∷ ts)))) (ctxOf (raiseT bs (node (t ∷ ts))))
+cover-incl []       t ts = covL (t ∷ ts) [] pss pss base cover-base
+cover-incl (b ∷ bs) t ts = covL (t ∷ ts) (b ∷ bs) pss pss base cover-base

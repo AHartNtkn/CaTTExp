@@ -43,3 +43,25 @@ _ = dim-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt
 
 _ = src-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt
 _ = tgt-raise 2 (true ∷ []) (node (node [] ∷ [])) [] tt top tt
+
+-- Arbitrary flags: a 2-cell followed by a 1-cell g, raising the lower
+-- (1-dimensional) leaf g to g, g′ and a 2-cell g → g′.
+M : Tree
+M = node (node (node [] ∷ []) ∷ node [] ∷ [])
+
+_ : img (inclM (false ∷ true ∷ []) (node (node [] ∷ [])) (node [] ∷ [])) (0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ [])
+    ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ []
+_ = refl
+
+_ : img (inclP (false ∷ true ∷ []) (node (node [] ∷ [])) (node [] ∷ [])) (0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 6 ∷ [])
+    ≡ 0 ∷ 1 ∷ 2 ∷ 3 ∷ 4 ∷ 5 ∷ 7 ∷ []
+_ = refl
+
+-- The raised context has 9 levels; level 8 is the new cell g → g′.
+_ : len (ctxOf (raiseT (false ∷ true ∷ []) M)) ≡ 9
+_ = refl
+
+_ : lookup (ctxOf (raiseT (false ∷ true ∷ []) M)) 8 ≡ just (arr (arr ⋆ (var 1) (var 5)) (var 6) (var 7))
+_ = refl
+
+_ = cover-incl (false ∷ true ∷ []) (node (node [] ∷ [])) (node [] ∷ [])

@@ -82,6 +82,7 @@ main = putStrLn (primStringFromList (pL misses []))
 def driver(path, table, expr, imports):
     lines = ['module RCLoopDriver where', '',
              'open import CaTTExp.Prelude', 'open import CaTTExp.Pure hiding (build)',
+             'open import CaTTExp.RCOracle using (fromTable)',
              'import CaTTExp.Generated.%s as T' % table]
     lines += ['open import %s' % m for m in imports]
     lines += ['', 'TBL = T.rc', '', 'misses = %s' % expr, '', PRINTER]

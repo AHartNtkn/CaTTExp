@@ -34,7 +34,7 @@ open import CaTTExp.Prelude
 import CaTTExp.Pure as P
 open import CaTTExp.Binder.Signature
 open import CaTTExp.Binder.MultimapCells
-open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; atomFm)
+open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; atomFm; sortedT; sortedY)
 import CaTTExp.Binder.HeadSpec as HS
 import CaTTExp.Binder.Laws as BL
 import CaTTExp.Gray.Biclosed.Syntax as GB
@@ -266,6 +266,7 @@ record CtxOK (k : Nat) (Φ : GB.Ctx) : Set where
   field
     w   : T (GT.wfCtx Φ)
     oks : ∀ v {A} → GT.lookup Φ v ≡ just A → T (okTy k A)
+    srt : ∀ v {A} → GT.lookup Φ v ≡ just A → T (sortedY k A)
 
 module _ (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) where
   open CtxOK V
@@ -312,6 +313,9 @@ record MmcOK (k : Nat) (Φ : GB.Ctx) (t : GB.Tm) (A : GB.CTy) : Set where
     okA  : T (okTy k A)
     wA   : T (GT.wf Φ A)
     atA  : T (all (λ i → i <ℕ k) (atY A))
+    srtΦ : T (all (sortedY k) Φ)
+    srtt : T (sortedT k t)
+    srtA : T (sortedY k A)
 
 if-T : ∀ {X : Set} b {x : Maybe X} {A} → (if b then x else nothing) ≡ just A → T b × (x ≡ just A)
 if-T true  e = tt , e
@@ -322,20 +326,23 @@ bind-just (just x) f e = x , refl , e
 
 mmcTy-inv : ∀ k Φ t {A} → mmcTy (mmi k Φ t) ≡ just A → MmcOK k Φ t A
 mmcTy-inv k Φ t {A} e =
-  let (c , e₁)       = if-T (isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t) e
-      (A′ , eI , e₂) = bind-just (GT.infer Φ t) (λ A → if okTy k A ∧ GT.wf Φ A ∧ all (λ i → i <ℕ k) (atY A) then just A else nothing) e₁
-      (c₂ , e₃)      = if-T (okTy k A′ ∧ GT.wf Φ A′ ∧ all (λ i → i <ℕ k) (atY A′)) e₂
-      q₁ = ∧-r (isCanon (mmi k Φ t)) _ c
-      q₂ = ∧-r (all (okTy k) Φ) _ q₁
-      r₁ = ∧-r (okTy k A′) _ c₂
-  in go A′ eI c₂ r₁ (just-inj e₃) q₁ q₂
+  let (c , e₁)       = if-T (isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t ∧ all (sortedY k) Φ ∧ sortedT k t) e
+      (A′ , eI , e₂) = bind-just (GT.infer Φ t) (λ A → if okTy k A ∧ GT.wf Φ A ∧ all (λ i → i <ℕ k) (atY A) ∧ sortedY k A
+                                                       then just A else nothing) e₁
+      (c₂ , e₃)      = if-T (okTy k A′ ∧ GT.wf Φ A′ ∧ all (λ i → i <ℕ k) (atY A′) ∧ sortedY k A′) e₂
+  in go A′ eI c₂ (just-inj e₃) (∧-r (isCanon (mmi k Φ t)) _ c)
   where
-  go : ∀ A′ → GT.infer Φ t ≡ just A′ → T (okTy k A′ ∧ GT.wf Φ A′ ∧ all (λ i → i <ℕ k) (atY A′)) →
-       T (GT.wf Φ A′ ∧ all (λ i → i <ℕ k) (atY A′)) → A′ ≡ A →
-       T (all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t) → T (GT.wfCtx Φ ∧ atomsBelow k Φ t) → MmcOK k Φ t A
-  go A′ eI c₂ r₁ refl q₁ q₂ =
-    record { oks = ∧-l _ _ q₁ ; w = ∧-l _ _ q₂ ; atb = ∧-r (GT.wfCtx Φ) _ q₂ ; eA = eI
-           ; okA = ∧-l _ _ c₂ ; wA = ∧-l _ _ r₁ ; atA = ∧-r (GT.wf Φ A′) _ r₁ }
+  go : ∀ A′ → GT.infer Φ t ≡ just A′ → T (okTy k A′ ∧ GT.wf Φ A′ ∧ all (λ i → i <ℕ k) (atY A′) ∧ sortedY k A′) → A′ ≡ A →
+       T (all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t ∧ all (sortedY k) Φ ∧ sortedT k t) → MmcOK k Φ t A
+  go A′ eI c₂ refl q₁ =
+    let q₂ = ∧-r (all (okTy k) Φ) _ q₁
+        q₃ = ∧-r (GT.wfCtx Φ) _ q₂
+        q₄ = ∧-r (atomsBelow k Φ t) _ q₃
+        r₁ = ∧-r (okTy k A′) _ c₂
+        r₂ = ∧-r (GT.wf Φ A′) _ r₁
+    in record { oks = ∧-l _ _ q₁ ; w = ∧-l _ _ q₂ ; atb = ∧-l _ _ q₃ ; eA = eI
+              ; okA = ∧-l _ _ c₂ ; wA = ∧-l _ _ r₁ ; atA = ∧-l _ _ r₂ ; srtA = ∧-r (all (λ i → i <ℕ k) (atY A′)) _ r₂
+              ; srtΦ = ∧-l _ _ q₄ ; srtt = ∧-r (all (sortedY k) Φ) _ q₄ }
 
 all-elim : ∀ {X : Set} (P : X → Bool) (xs : List X) → T (all P xs) → ∀ p {x} → GT.lookup xs p ≡ just x → T (P x)
 all-elim P (y ∷ xs) a zero    refl = ∧-l _ _ a
@@ -374,7 +381,8 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
     -- A boundary that is not a variable, at its canonical head.
     module Head (s : GB.Tm) {S : GB.CTy} (eS : GT.infer Φ s ≡ just S) (wS : T (GT.wf Φ S)) (okS : T (okTy k S))
                 (bT : Below j (varsT s)) (bY : Below j (varsY S))
-                (aT : ∀ i → In (atT s) i → T (i <ℕ k)) (aY : ∀ i → In (atY S) i → T (i <ℕ k)) where
+                (aT : ∀ i → In (atT s) i → T (i <ℕ k)) (aY : ∀ i → In (atY S) i → T (i <ℕ k))
+                (srs : T (sortedT k s)) (srS : T (sortedY k S)) where
 
       ab : ∀ i → In (supAtomsOf Φ s) i → T (i <ℕ k)
       ab i p with elem-split i (concatAt (GT.map (nthY Φ) (supVars Φ s))) (atT s ++ atYM (GT.infer Φ s)) p
@@ -397,7 +405,7 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
       oksΦ = oks
 
       mmc-eq : mmcTy h ≡ just (GT.sY ρ S)
-      mmc-eq = MW.SubWf.sub-mmcTy k Φ w s eS wS ab oksΦ okS
+      mmc-eq = MW.SubWf.sub-mmcTy k Φ w s eS wS ab oksΦ okS srt srs srS
 
       res-eq : resC h ≡ trTy K′ Φ′ (GT.sY ρ S)
       res-eq = resC-just h mmc-eq
@@ -406,7 +414,7 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
       okc = mmcTy-inv K′ Φ′ (mterm h) mmc-eq
 
       Vc : CtxOK K′ Φ′
-      Vc = record { w = MmcOK.w okc ; oks = all-elim (okTy K′) Φ′ (MmcOK.oks okc) }
+      Vc = record { w = MmcOK.w okc ; oks = all-elim (okTy K′) Φ′ (MmcOK.oks okc) ; srt = all-elim (sortedY K′) Φ′ (MmcOK.srtΦ okc) }
 
       ddc : Deps↓ Φ′
       ddc = dd K′ Φ′ Vc
@@ -515,28 +523,29 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
     typTm : ∀ s {S} → GT.infer Φ s ≡ just S → T (GT.wf Φ S) → T (okTy k S) →
             Below j (varsT s) → Below j (varsY S) →
             (∀ i → In (atT s) i → T (i <ℕ k)) → (∀ i → In (atY S) i → T (i <ℕ k)) →
+            T (sortedT k s) → T (sortedY k S) →
             Γ ⊢tm trTm k Φ s ∶ trTy k Φ S
-    typTm (GB.var v) {S} eS wS okS bT bY aT aY =
+    typTm (GB.var v) {S} eS wS okS bT bY aT aY _ _ =
       let vj = bT v (∨-l (v ==ℕ v) _ (==ℕ-refl v)) in
       subst (λ X → Γ ⊢tm var (k + v) ∶ trTy k Φ X) (nthY-just Φ v eS) (var-wf wj (lookup-pre-cell k Φ j v vj))
-    typTm s@(GB.mP _ _)       eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.eL _ _)       eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.eR _ _)       eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.pP _ _)       eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@GB.pt             eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.iP _)         eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.idt _)        eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.comp _ _)     eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.glue _ _ _)   eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
-    typTm s@(GB.here _ _ _ _) eS wS okS bT bY aT aY = Head.typed s eS wS okS bT bY aT aY
+    typTm s@(GB.mP _ _)       eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.eL _ _)       eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.eR _ _)       eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.pP _ _)       eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@GB.pt             eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.iP _)         eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.idt _)        eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.comp _ _)     eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.glue _ _ _)   eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
+    typTm s@(GB.here _ _ _ _) eS wS okS bT bY aT aY srs srS = Head.typed s eS wS okS bT bY aT aY srs srS
 
     tyWf : ∀ C → T (okTy k C) → T (GT.wf Φ C) → Below j (varsY C) → (∀ i → In (atY C) i → T (i <ℕ k)) →
-           Γ ⊢ty trTy k Φ C
-    tyWf (GB.op ((x ∷ []) GB.▸ z)) p _ _ _ =
+           T (sortedY k C) → Γ ⊢ty trTy k Φ C
+    tyWf (GB.op ((x ∷ []) GB.▸ z)) p _ _ _ _ =
       arr-wf (fm-ty k wj atoms-at x (∧-l _ _ p)) (fm-ty k wj atoms-at z (∧-r _ _ p))
-    tyWf (GB.op ([] GB.▸ _)) () _ _ _
-    tyWf (GB.op ((_ ∷ _ ∷ _) GB.▸ _)) () _ _ _
-    tyWf (GB.hom d g A s t) p wC bC aC =
+    tyWf (GB.op ([] GB.▸ _)) () _ _ _ _
+    tyWf (GB.op ((_ ∷ _ ∷ _) GB.▸ _)) () _ _ _ _
+    tyWf (GB.hom d g A s t) p wC bC aC sC =
       let wA  = ∧-l _ _ wC
           wst = ∧-r (GT.wf Φ A) _ wC
           eS  = eqMaybe-sound (GT.infer Φ s) A (∧-l _ _ wst)
@@ -551,7 +560,10 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
           aA  = λ i q → aC i (elem-++l i (atY A) (atT s ++ atT t) q)
           as  = λ i q → aC i (elem-++r i (atY A) (atT s ++ atT t) (elem-++l i (atT s) (atT t) q))
           at′ = λ i q → aC i (elem-++r i (atY A) (atT s ++ atT t) (elem-++r i (atT s) (atT t) q))
-      in arr-wf (typTm s eS wA okA bs bA as aA) (typTm t eT wA okA bt bA at′ aA)
+          sA  = ∧-l _ _ sC
+          sst = ∧-r (sortedY k A) _ sC
+      in arr-wf (typTm s eS wA okA bs bA as aA (∧-l _ _ sst) sA)
+                (typTm t eT wA okA bt bA at′ aA (∧-r (sortedT k s) _ sst) sA)
 
   -- Every prefix of the arity is well formed.
   ctx-pre : ∀ j → T (j <ℕ suc (GT.length Φ)) → pre k Φ j ⊢ctx
@@ -559,7 +571,9 @@ module Along (k : Nat) (Φ : GB.Ctx) (V : CtxOK k Φ) (atΦ : ∀ i → In (conc
   ctx-pre (suc j) l =
     let wj = ctx-pre j (<-suc j (GT.length Φ) l)
         (ok , wC , bC) = entry k Φ V j l
-    in ▸-wf wj (AtJ.tyWf j (<-suc j (GT.length Φ) l) wj (nthY Φ j) ok wC bC (entry-at j l))
+        (A , eA) = lookup-some Φ j l
+        sj = subst (λ X → T (sortedY k X)) (sym (nthY-just Φ j eA)) (srt j eA)
+    in ▸-wf wj (AtJ.tyWf j (<-suc j (GT.length Φ) l) wj (nthY Φ j) ok wC bC (entry-at j l) sj)
 
 ------------------------------------------------------------------------
 -- HeadOK for every head, and the presupposition law.
@@ -576,7 +590,7 @@ ok-all (mmc (mmi k Φ t)) zero ε p =
   A  = fst ej
   o  = mmcTy-inv k Φ t (snd ej)
   V : CtxOK k Φ
-  V = record { w = MmcOK.w o ; oks = all-elim (okTy k) Φ (MmcOK.oks o) }
+  V = record { w = MmcOK.w o ; oks = all-elim (okTy k) Φ (MmcOK.oks o) ; srt = all-elim (sortedY k) Φ (MmcOK.srtΦ o) }
   atΦ : ∀ i → In (concatAt Φ) i → T (i <ℕ k)
   atΦ i q = allN-elim (λ i → i <ℕ k) (concatAt Φ ++ atT t) (MmcOK.atb o) i (elem-++l i (concatAt Φ) (atT t) q)
   open Along k Φ V atΦ
@@ -584,7 +598,7 @@ ok-all (mmc (mmi k Φ t)) zero ε p =
   a : arity k Φ ⊢ty resC (mmi k Φ t)
   a = subst₂ (λ G X → G ⊢ty X) (pre-arity k Φ) (sym (resC-just (mmi k Φ t) (snd ej)))
         (AtJ.tyWf n (<-self n) (ctx-pre n (<-self n)) A (MmcOK.okA o) (MmcOK.wA o)
-           (wf-scope Φ A (MmcOK.wA o)) (allN-elim _ (atY A) (MmcOK.atA o)))
+           (wf-scope Φ A (MmcOK.wA o)) (allN-elim _ (atY A) (MmcOK.atA o)) (MmcOK.srtA o))
     where
     subst₂ : ∀ {X Y : Set} (P : X → Y → Set) {x x′ y y′} → x ≡ x′ → y ≡ y′ → P x y → P x′ y′
     subst₂ P refl refl q = q

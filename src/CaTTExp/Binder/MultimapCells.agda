@@ -29,8 +29,8 @@
 -- condition requires every head to be canonical (every entry and every
 -- atom is used), like coh's requirement that its pasting context be
 -- exactly the support of its type, and requires the inferred type to be
--- admitted, well formed, and to use only the k atoms. So each biclosed
--- term in a context has one kernel image, and a term written directly
+-- admitted, well formed, sorted, and to use only the k atoms. So each
+-- biclosed term in a context has one kernel image, and a term written directly
 -- and the same term met as a boundary are the same kernel term
 -- (`MultimapCellsExamples`, `curry-boundary`).
 --
@@ -41,16 +41,17 @@
 -- the renamed type (`MultimapCellsWf.sub-mmcTy`), and the kernel images
 -- commute with the renaming onto a support (`MultimapCellsComm`).
 -- Step 1's heads keep their presupposition law (`MultimapPresup`). Like
--- mm, mmc trusts `infer`, so it inherits its two caveats: `glue`'s
--- stated typing rule, and no sort discipline (`here` instances are
--- AdmI, not the data-sorted KInst; SortDisc).
+-- mm, mmc trusts `infer`, so it inherits `glue`'s stated typing rule;
+-- like mm, it also asks that its context, term and type be sorted
+-- (every template instance data-sorted, as the kernel's KInst; `infer`
+-- alone admits the larger AdmI, see `MultimapSorted`).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Binder.Syntax as Syntax
 open import CaTTExp.Binder.Embed using (Binders)
 open import CaTTExp.Binder.HeadSpec using (HeadSpec; specBinders)
 open import CaTTExp.Binder.GrayForm
-open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; _==MM_; ==MM-sound; atomFm)
+open import CaTTExp.Binder.Multimap using (MMI; mmi; atoms; mctx; mterm; _==MM_; ==MM-sound; atomFm; sortedT; sortedY)
 import CaTTExp.Gray.Biclosed.Syntax as GB
 import CaTTExp.Gray.Biclosed.Typing as GT
 import CaTTExp.Gray.Biclosed.SubstDef as GS
@@ -206,8 +207,9 @@ atomsBelow k Φ t = all (λ i → i <ℕ k) (concatAt Φ ++ atT t)
 
 mmcTy : MMI → Maybe GB.CTy
 mmcTy (mmi k Φ t) =
-  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t
-  then (GT.infer Φ t >>= λ A → if okTy k A ∧ GT.wf Φ A ∧ all (λ i → i <ℕ k) (atY A) then just A else nothing)
+  if isCanon (mmi k Φ t) ∧ all (okTy k) Φ ∧ GT.wfCtx Φ ∧ atomsBelow k Φ t ∧ all (sortedY k) Φ ∧ sortedT k t
+  then (GT.infer Φ t >>= λ A → if okTy k A ∧ GT.wf Φ A ∧ all (λ i → i <ℕ k) (atY A) ∧ sortedY k A
+                               then just A else nothing)
   else nothing
 
 ------------------------------------------------------------------------

@@ -444,6 +444,12 @@ import CaTTExp.Binder.CylLaws
 import CaTTExp.Binder.CylOne
 import CaTTExp.Binder.CylOK
 import CaTTExp.Binder.CylExamples
+import CaTTExp.Binder.VCyl
+import CaTTExp.Binder.VCylLaws
+import CaTTExp.Binder.PureEmbed
+import CaTTExp.Binder.Deep
+import CaTTExp.Binder.VWhisk
+import CaTTExp.Binder.VBoundary
 import CaTTExp.Binder.Init
 import CaTTExp.Binder.InitLaws
 import CaTTExp.Binder.InitLawsGen

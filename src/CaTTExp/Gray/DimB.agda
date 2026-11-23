@@ -282,47 +282,27 @@ module _ (cellDim : CellDim) (tm-ty : ∀ {Γ t A} → Γ F.⊢tm t ∶ A → Γ
 ------------------------------------------------------------------------
 -- Pasting contexts: the pure context's image in 𝕊₀.
 
+open import CaTTExp.Gray.SupportIota 𝕊₀ using (ιTy; ιTm; ιCtx; ιSub; len-ι)
+
+mutual
+  dι-ty : ∀ A → dTy (BP.embTy A) ≡ just (ιTy A)
+  dι-ty P.⋆ = refl
+  dι-ty (P.arr A t u) rewrite dι-ty A | dι-tm t | dι-tm u = refl
+
+  dι-tm : ∀ t → dTm (BP.embTm t) ≡ just (ιTm t)
+  dι-tm (P.var i) = refl
+  dι-tm (P.coh Γ A σ) rewrite dι-ctx Γ | dι-ty A | dι-sub σ = refl
+  dι-tm (P.cst ())
+
+  dι-ctx : ∀ Γ → dCtx (BP.embCtx Γ) ≡ just (ιCtx Γ)
+  dι-ctx P.ε = refl
+  dι-ctx (Γ P.▸ A) rewrite dι-ctx Γ | dι-ty A = refl
+
+  dι-sub : ∀ σ → dSub (BP.embSub σ) ≡ just (ιSub σ)
+  dι-sub P.⟨⟩ = refl
+  dι-sub (σ P.,ₛ t) rewrite dι-sub σ | dι-tm t = refl
+
 private
-  mutual
-    ιTy : P.Ty → Ty
-    ιTy P.⋆           = ⋆
-    ιTy (P.arr A t u) = arr (ιTy A) (ιTm t) (ιTm u)
-
-    ιTm : P.Tm → Tm
-    ιTm (P.var i)     = var i
-    ιTm (P.coh Γ A σ) = coh (ιCtx Γ) (ιTy A) (ιSub σ)
-    ιTm (P.cst ())
-
-    ιCtx : P.Ctx → Ctx
-    ιCtx P.ε       = ε
-    ιCtx (Γ P.▸ A) = ιCtx Γ ▸ ιTy A
-
-    ιSub : P.Sub → Sub
-    ιSub P.⟨⟩       = ⟨⟩
-    ιSub (σ P.,ₛ t) = ιSub σ ,ₛ ιTm t
-
-  mutual
-    dι-ty : ∀ A → dTy (BP.embTy A) ≡ just (ιTy A)
-    dι-ty P.⋆ = refl
-    dι-ty (P.arr A t u) rewrite dι-ty A | dι-tm t | dι-tm u = refl
-
-    dι-tm : ∀ t → dTm (BP.embTm t) ≡ just (ιTm t)
-    dι-tm (P.var i) = refl
-    dι-tm (P.coh Γ A σ) rewrite dι-ctx Γ | dι-ty A | dι-sub σ = refl
-    dι-tm (P.cst ())
-
-    dι-ctx : ∀ Γ → dCtx (BP.embCtx Γ) ≡ just (ιCtx Γ)
-    dι-ctx P.ε = refl
-    dι-ctx (Γ P.▸ A) rewrite dι-ctx Γ | dι-ty A = refl
-
-    dι-sub : ∀ σ → dSub (BP.embSub σ) ≡ just (ιSub σ)
-    dι-sub P.⟨⟩ = refl
-    dι-sub (σ P.,ₛ t) rewrite dι-sub σ | dι-tm t = refl
-
-  len-ι : ∀ Γ → len (ιCtx Γ) ≡ P.len Γ
-  len-ι P.ε       = refl
-  len-ι (Γ P.▸ _) = cong suc (len-ι Γ)
-
   ps-ι : ∀ {Γ x A} → Γ PP.⊢ps x ∶ A → ιCtx Γ ⊢ps₀ x ∶ ιTy A
   ps-ι PP.pss = pss
   ps-ι (PP.pse {Γ} {x} {A} d) with pse (ps-ι d)

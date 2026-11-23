@@ -24,7 +24,7 @@
 -- (`TwoPathFacts.no-key2`), where g;h and h;g are not
 -- exchange-equivalent (`TwoPathFacts.Counterexample.gh-not-~`), and
 -- g ∗₁ h and h ∗₁ g are not connected by any CaTT 3-cell although
--- their strict images agree (`TwoPathModel.no-3cell`).
+-- their strict images agree (`TwoPathModel.no-3cell`, `TwoPathModel.gh≈hg`).
 --
 -- Not tied down here: the endpoints a, b that `order` gives for each
 -- 2-variable's boundary paths are not required to be the endpoints

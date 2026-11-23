@@ -28,7 +28,7 @@ open import CaTTExp.RCProc.LiftF using (ChainIn; liftF; liftChF; liftF-lk; modul
 open import CaTTExp.RCProc.ColSub
 open import CaTTExp.RCProc.Walk using (θg)
 open import CaTTExp.RCProc.Edges using (bd; wgo-len)
-open import CaTTExp.RCProc.Column using (chainFrom)
+open import CaTTExp.RCProc.Column using (chainFrom; colEnd)
 open import CaTTExp.Weakening ∅ cattSide using (lookup-top)
 open import CaTTExp.GraphFillerTotal.Chains using (chainC-wf)
 
@@ -191,8 +191,17 @@ module _ {Γ m′ n′ τ′ τs} (sτ′ : Γ ⊢sub τ′ ∶ chainC m′) (s�
     dX = var-wf col-wf (ext-from Ra L n (suc (suc (suc L))) (lookup-top (C₀ m ▸ ⋆ ▸ F ▸ F) _))
       where F = arr ⋆ (var (e₀ m)) (var L)
 
+  private
+    wf′ = colSub-wf′ m′ n′
+            (Typed.liftChF-ty (vfF 1 0) (efF 1 0) pre m′ τ′ 0 sτ′ (le m)) lvP dX
+            (Typed.liftChF-ty (vfF (len Ra) L) (efF (len Ra) L) suf n′ τs 0 sτs (le n))
+            (fst (snd (liftF-lk (vfF (len Ra) L) (efF (len Ra) L) n′ τs 0 sτs)))
+
   ς-wf : colCtx m n ⊢sub ς τ′ τs ∶ colCtx m′ n′
-  ς-wf = colSub-wf m′ n′
-           (Typed.liftChF-ty (vfF 1 0) (efF 1 0) pre m′ τ′ 0 sτ′ (le m)) lvP dX
-           (Typed.liftChF-ty (vfF (len Ra) L) (efF (len Ra) L) suf n′ τs 0 sτs (le n))
-           (fst (snd (liftF-lk (vfF (len Ra) L) (efF (len Ra) L) n′ τs 0 sτs)))
+  ς-wf = fst wf′
+
+  -- ς sends the end of colCtx m′ n′ to the end of colCtx m n.
+  ς-end : lookupₛ (ς τ′ τs) (colEnd m′ n′) ≡ var (colEnd m n)
+  ς-end = trans (snd wf′)
+          (trans (snd (snd (liftF-lk (vfF (len Ra) L) (efF (len Ra) L) n′ τs 0 sτs)))
+                 (cong var (trans (cong (vfF (len Ra) L) (+-zero n)) (sym (endFrom-vf Ra L n)))))

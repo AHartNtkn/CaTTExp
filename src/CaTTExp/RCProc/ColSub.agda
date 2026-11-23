@@ -8,7 +8,7 @@
 -- its suffix (from the 2-disc's target vertex). A column substitution
 -- is built from a chain substitution for the prefix, the column data
 -- (w, s, t, x) and a chain substitution for the suffix (`colSub`,
--- typed by `colSub-wf`).
+-- typed by `colSub-wf`; `colSub-wf′` also gives its value at the end).
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.ColSub where
 
@@ -233,12 +233,14 @@ colSub τ w s t x τs = appCh (τ ,ₛ var w ,ₛ s ,ₛ t ,ₛ var x) τs
 
 open import CaTTExp.RCProc.Column using (C₀-chainC; e₀-vtx)
 
-colSub-wf : ∀ {Γ τ v w s t x τs} m n → Γ ⊢sub τ ∶ chainC m → lookupₛ τ (vtx m) ≡ var v →
-            Γ ⊢tm var x ∶ arr (arr ⋆ (var v) (var w)) s t →
-            Γ ⊢sub τs ∶ chainC n → lookupₛ τs 0 ≡ var w →
-            Γ ⊢sub colSub τ w s t x τs ∶ colCtx m n
-colSub-wf {Γ} {τ} {v} {w} {s} {t} {x} {τs} m n sτ lv dx sτs lw =
-  fst (appCh-wf n (self₄ L) sR sτs (trans lw (sym lwσ)))
+-- With the end of the column: colEnd m n = endFrom (Raised (C₀ m) (e₀ m) ⋆) (len (C₀ m)) n.
+colSub-wf′ : ∀ {Γ τ v w s t x τs} m n → Γ ⊢sub τ ∶ chainC m → lookupₛ τ (vtx m) ≡ var v →
+             Γ ⊢tm var x ∶ arr (arr ⋆ (var v) (var w)) s t →
+             Γ ⊢sub τs ∶ chainC n → lookupₛ τs 0 ≡ var w →
+             (Γ ⊢sub colSub τ w s t x τs ∶ colCtx m n) ×
+             (lookupₛ (colSub τ w s t x τs) (endFrom (Raised (C₀ m) (e₀ m) ⋆) (len (C₀ m)) n) ≡ lookupₛ τs (vtx n))
+colSub-wf′ {Γ} {τ} {v} {w} {s} {t} {x} {τs} m n sτ lv dx sτs lw =
+  appCh-wf n (self₄ L) sR sτs (trans lw (sym lwσ))
   where
   L = len (C₀ m)
   sC : Γ ⊢sub τ ∶ C₀ m
@@ -277,3 +279,9 @@ colSub-wf {Γ} {τ} {v} {w} {s} {t} {x} {τs} m n sτ lv dx sτs lw =
     s₃ : ∀ n → T (n <ℕ suc (suc (suc n)))
     s₃ zero = tt
     s₃ (suc n) = s₃ n
+
+colSub-wf : ∀ {Γ τ v w s t x τs} m n → Γ ⊢sub τ ∶ chainC m → lookupₛ τ (vtx m) ≡ var v →
+            Γ ⊢tm var x ∶ arr (arr ⋆ (var v) (var w)) s t →
+            Γ ⊢sub τs ∶ chainC n → lookupₛ τs 0 ≡ var w →
+            Γ ⊢sub colSub τ w s t x τs ∶ colCtx m n
+colSub-wf m n sτ lv dx sτs lw = fst (colSub-wf′ m n sτ lv dx sτs lw)

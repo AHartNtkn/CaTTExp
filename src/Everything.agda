@@ -51,6 +51,7 @@ import CaTTExp.Gray.Biclosed.TemplatesTyped
 import CaTTExp.Gray.Biclosed.Subst
 import CaTTExp.Gray.Biclosed.Instances
 import CaTTExp.Gray.Biclosed.SortDisc
+import CaTTExp.Gray.Biclosed.Strengthen
 import CaTTExp.Gray.Biclosed.Model
 import CaTTExp.Gray.Biclosed.ListLemmas
 import CaTTExp.Gray.Biclosed.ModelFacts
@@ -189,6 +190,12 @@ import CaTTExp.RCProc.Eg
 import CaTTExp.RCProc.TwoPathTerm
 import CaTTExp.RCProc.StrictPath
 import CaTTExp.RCProc.Key2Bd
+import CaTTExp.RCProc.Exchange
+import CaTTExp.RCProc.LiftF
+import CaTTExp.RCProc.ColSub
+import CaTTExp.RCProc.LemmaGSub
+import CaTTExp.RCProc.LemmaGCoh
+import CaTTExp.RCProc.LemmaG
 import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute
@@ -199,6 +206,7 @@ import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
 import CaTTExp.Naturality.Ladder
 import CaTTExp.Naturality.Column
+import CaTTExp.Naturality.Whisker
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle
@@ -424,6 +432,9 @@ import CaTTExp.Descent.DJOneTruncated
 -- F11f: HITs via INIT (notes/higher-inductive.md)
 import CaTTExp.HIT.DependentElim
 import CaTTExp.HIT.DirectedSquash
+-- F12b: coinductive objects from INIT (notes/coinductive.md)
+import CaTTExp.Coinductive.Streams
+import CaTTExp.Coinductive.ConstArity
 import CaTTExp.Descent.Collage
 import CaTTExp.Descent.RelCollage
 import CaTTExp.Descent.TruncGrpdModel
@@ -483,6 +494,8 @@ import CaTTExp.Binder.HonestHeads
 import CaTTExp.Binder.HeadSpec
 import CaTTExp.Binder.LimHeads
 import CaTTExp.Binder.LimHeadsExamples
+import CaTTExp.Binder.Colim
+import CaTTExp.Binder.ColimExamples
 import CaTTExp.Binder.Suspension
 import CaTTExp.Binder.SpecSusp
 import CaTTExp.Binder.DesSusp
@@ -502,4 +515,11 @@ import CaTTExp.Binder.Multimap
 import CaTTExp.Binder.MultimapLaws
 import CaTTExp.Binder.MultimapPresup
 import CaTTExp.Binder.MultimapExamples
+import CaTTExp.Binder.MultimapCells
+import CaTTExp.Binder.MultimapCellsLaws
+import CaTTExp.Binder.MultimapCellsExamples
+import CaTTExp.Binder.MultimapCellsStrengthen
+import CaTTExp.Binder.FreeObj
+import CaTTExp.Binder.FreeObjLaws
+import CaTTExp.Binder.FreeObjExamples
 import CaTTExp.Uniform.MarksRepaired

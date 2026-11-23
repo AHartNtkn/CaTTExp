@@ -84,6 +84,7 @@ import CaTTExp.Gray.Biclosed.Steiner.FourCube
 import CaTTExp.Gray.Biclosed.Steiner.CellRep
 import CaTTExp.Gray.Biclosed.Steiner.StrongSteiner
 import CaTTExp.Gray.Biclosed.Steiner.GlobeSteiner
+import CaTTExp.Gray.Biclosed.Steiner.TensorSteiner
 import CaTTExp.Gray.Biclosed.Mirror
 import CaTTExp.Gray.Biclosed.FunSets
 import CaTTExp.Gray.Biclosed.ShapeRow

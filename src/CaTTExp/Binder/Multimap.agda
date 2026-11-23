@@ -32,8 +32,13 @@
 -- between multimaps (time slots), remain judgments of the Biclosed
 -- syntax only: Φ may contain only unary entries, and the result must
 -- be a unary operation (not a higher cell). Their kernel form is S26j's
--- remaining part. The typing rule of `glue` is stated in the Biclosed
--- checker, not derived from L (spec §8.1 Status), and mm inherits it.
+-- remaining part. The side condition trusts `infer`, so mm inherits
+-- both caveats of Gray.Biclosed.Typing: `glue`'s typing rule is stated
+-- in the Biclosed checker, not derived from L (spec §8.1 Status), and
+-- `infer` does not impose the sort discipline (Gray.Biclosed.SortDisc):
+-- its `here` instances are AdmI instances, a strict superset of the
+-- data-sorted kernel instances KInst. So an mm head may be admitted
+-- whose derivation uses a template instance that is not data-sorted.
 --
 -- The construction is over any set B of formers into which the Gray
 -- object formers and the mm heads inject, so it sits beside DES, INIT

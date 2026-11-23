@@ -49,7 +49,9 @@ module Corollas (ob : Nat → Psh) where
 
   module CorM (U₁ W₁ : Fm) where
     private
+      O : Fm
       O  = U₁ ⊗ W₁
+      Is : List Fm
       Is = U₁ ∷ W₁ ∷ []
       DA = ⟦ U₁ ⟧
       DB = ⟦ W₁ ⟧
@@ -70,19 +72,19 @@ module Corollas (ob : Nat → Psh) where
     mok = ok at cg nt
       where
         at : ∀ Ks us → AtL Is Ks us → At Dp (concat Ks) (mraw Ks us)
-        at Ks us a with AtL-cons a
-        ... | cns L _ x _ refl refl ax as with AtL-cons as
-        ...   | cns M _ y _ refl refl ay as′ with AtL-nil as′
+        at Ks us a with AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ks} {us = us} a
+        ... | cns L Ks₁ x us₁ refl refl ax as with AtL-cons {A = W₁} {As = []} {Ks = Ks₁} {us = us₁} as
+        ...   | cns M Ks₂ y us₂ refl refl ay as′ with AtL-nil {Ks = Ks₂} {us = us₂} as′
         ...     | refl , refl = refl , cAt U₁ ax , cAt W₁ ay
         cg : ∀ Ks us vs → AtL Is Ks us → AtL Is Ks vs → us ∼L vs → _∼_ Dp (mraw Ks us) (mraw Ks vs)
-        cg Ks us vs a b e with AtL-cons a | AtL-cons b
-        ... | cns L _ x _ refl refl _ as | cns _ _ x′ _ refl refl _ bs with AtL-cons as | AtL-cons bs
+        cg Ks us vs a b e with AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ks} {us = us} a | AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ks} {us = vs} b
+        ... | cns L Ks₁ x us₁ refl refl _ as | cns _ _ x′ vs₁ refl refl _ bs with AtL-cons {A = W₁} {As = []} {Ks = Ks₁} {us = us₁} as | AtL-cons {A = W₁} {As = []} {Ks = Ks₁} {us = vs₁} bs
         ...   | cns M _ y _ refl refl _ _ | cns _ _ y′ _ refl refl _ _ =
           dcong (co-cong U₁ (fst e)) (co-cong W₁ (fst (snd e))) ≈M-refl
         nt : ∀ {Ks′ Ks} (hs : Maps Ks′ Ks) us → AtL Is Ks us → _∼_ Dp (mraw Ks′ (resL hs us)) (res Dp (⊗s hs) (mraw Ks us))
-        nt hs us a with AtL-cons a
-        ... | cns L _ x _ refl refl ax as with AtL-cons as
-        ...   | cns M _ y _ refl refl ay as′ with AtL-nil as′
+        nt {Ks = Ks} hs us a with AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ks} {us = us} a
+        ... | cns L Ks₁ x us₁ refl refl ax as with AtL-cons {A = W₁} {As = []} {Ks = Ks₁} {us = us₁} as
+        ...   | cns M Ks₂ y us₂ refl refl ay as′ with AtL-nil {Ks = Ks₂} {us = us₂} as′
         nt {L′ ∷ M′ ∷ []} (h₁ ∷ h₂ ∷ []) _ _ | cns L _ x _ refl refl ax as | cns M _ y _ refl refl ay as′ | refl , refl =
           Dp ⟨ dcong (∼-≡ DA (co-id U₁ (res DA h₁ x))) (∼-≡ DB (co-id W₁ (res DB h₂ y))) ≈M-refl ⟩
           Dp ⟨ dgen h₁ h₂ (idMap (L′ ++ (M′ ++ []))) ax ay ⟩
@@ -150,9 +152,9 @@ module Corollas (ob : Nat → Psh) where
              AtL Is Ls₁ vs₁ → AtL Is Ls₂ vs₂ →
              _∼_ Dp (res Dp g₁ (mraw Ls₁ vs₁)) (res Dp g₂ (mraw Ls₂ vs₂)) →
              _∼_ Z (res Z (Fr (fKP F) (fKQ F) Ls₁ g₁) (fF F Ls₁ vs₁)) (res Z (Fr (fKP F) (fKQ F) Ls₂ g₂) (fF F Ls₂ vs₂))
-        up {Z} F g₁ g₂ A₁ A₂ hyp with AtL-cons A₁ | AtL-cons A₂
-        ... | cns L₁ _ x₁ _ refl refl ax₁ as₁ | cns L₂ _ x₂ _ refl refl ax₂ as₂ with AtL-cons as₁ | AtL-cons as₂
-        ...   | cns M₁ _ y₁ _ refl refl ay₁ n₁ | cns M₂ _ y₂ _ refl refl ay₂ n₂ with AtL-nil n₁ | AtL-nil n₂
+        up {Z} F {K} {Ls₁} {vs₁} {Ls₂} {vs₂} g₁ g₂ A₁ A₂ hyp with AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ls₁} {us = vs₁} A₁ | AtL-cons {A = U₁} {As = W₁ ∷ []} {Ks = Ls₂} {us = vs₂} A₂
+        ... | cns L₁ Ks₁ x₁ us₁ refl refl ax₁ as₁ | cns L₂ Ks₂ x₂ us₂ refl refl ax₂ as₂ with AtL-cons {A = W₁} {As = []} {Ks = Ks₁} {us = us₁} as₁ | AtL-cons {A = W₁} {As = []} {Ks = Ks₂} {us = us₂} as₂
+        ...   | cns M₁ Ks₃ y₁ us₃ refl refl ay₁ n₁ | cns M₂ Ks₄ y₂ us₄ refl refl ay₂ n₂ with AtL-nil {Ks = Ks₃} {us = us₃} n₁ | AtL-nil {Ks = Ks₄} {us = us₄} n₂
         ...     | refl , refl | refl , refl =
           Z ⟨ bridge F g₁ x₁ y₁ ax₁ ay₁ ⟩
           Z ⟨ VF-cong F hyp (At-res Dp g₁ (vAt mok _ _ A₁)) ⟩

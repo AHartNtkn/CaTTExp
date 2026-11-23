@@ -63,36 +63,37 @@ class Meetings:
                         self.record(h)
         self.frontier = layer
 
-    def search(self, source, target):
-        possible = lru_cache(None)(transport)
-        @lru_cache(None)
-        def candidates(e, f):
-            return tuple((s, t) for s, t in self.at[e[0], f[0]]
-                         if possible(source[e], s) and possible(s, target[e]) and
-                         possible(source[f], t) and possible(t, target[f]))
-        start = tuple(source.items())
-        goal = tuple(target)
-        parents, queue = {start: None}, deque([start])
-        while queue:
-            state = queue.popleft()
-            if tuple(m for m, _ in state) == goal:
-                # Each stored cut can reach its own prescribed target.
-                witness = []
-                while parents[state] is not None:
-                    state, i, frame = parents[state]
-                    witness.append((i, frame))
-                return witness[::-1]
-            for i in range(len(state)-1):
-                (e, s), (f, t) = state[i:i+2]
-                if e[0] == f[0]:
-                    continue
-                for u, v in candidates(e, f):
-                    if possible(s, u) and possible(t, v):
-                        nxt = state[:i]+((f, v), (e, u))+state[i+2:]
-                        if nxt not in parents:
-                            parents[nxt] = state, i, self.at[e[0], f[0]][u, v]
-                            queue.append(nxt)
-        return None
+
+def meeting_path(frames, source, target, move):
+    possible = lru_cache(None)(move)
+    @lru_cache(None)
+    def candidates(e, f):
+        return tuple((s, t) for s, t in frames[e[0], f[0]]
+                     if possible(source[e], s) and possible(s, target[e]) and
+                     possible(source[f], t) and possible(t, target[f]))
+    start = tuple(source.items())
+    goal = tuple(target)
+    parents, queue = {start: None}, deque([start])
+    while queue:
+        state = queue.popleft()
+        if tuple(m for m, _ in state) == goal:
+            # Each stored cut can reach its own prescribed target.
+            witness = []
+            while parents[state] is not None:
+                state, i, frame = parents[state]
+                witness.append((i, frame))
+            return witness[::-1]
+        for i in range(len(state)-1):
+            (e, s), (f, t) = state[i:i+2]
+            if e[0] == f[0]:
+                continue
+            for u, v in candidates(e, f):
+                if possible(s, u) and possible(t, v):
+                    nxt = state[:i]+((f, v), (e, u))+state[i+2:]
+                    if nxt not in parents:
+                        parents[nxt] = state, i, frames[e[0], f[0]][u, v]
+                        queue.append(nxt)
+    return None
 
 
 class ReflectionQuotient:
@@ -196,7 +197,7 @@ def solve(data, radius=None, moduli=()):
     model = Meetings(n, (*old_frames(n, a), *old_frames(n, b)))
     r = 0
     while True:
-        witness = model.search(source, target)
+        witness = meeting_path(model.at, source, target, transport)
         if witness is not None:
             verify(source, target, witness, n)
             return dict(surface_filler=True, meeting_radius=r, frames=len(model.seen), meetings=witness)
@@ -239,7 +240,7 @@ def checks():
                 continue
             expected = three(data)['surface_filler']
             possible = all(transport(c, dict(t)[m]) for m, c in s)
-            proof = chart.search(dict(s), dict(t)) if possible else None
+            proof = meeting_path(chart.at, dict(s), dict(t), transport) if possible else None
             good = proof is not None
             if good:
                 verify(dict(s), dict(t), proof, n)

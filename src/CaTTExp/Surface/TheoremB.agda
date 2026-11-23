@@ -9,7 +9,9 @@
 --          a ≈ a′, b ≈ b′;
 --  (Dim)   ≈ on types preserves dimension;
 --  presup  the kernel's presupposition lemma;
---  (W)     a raw whiskering operation `wh j p x q` (p ∗ⱼ x ∗ⱼ q) with
+--  (W)     a raw whiskering operation `wh Γ j p x q` (p ∗ⱼ x ∗ⱼ q) with
+--          access to the context Γ (a context-free `wh` cannot satisfy
+--          Wh-wf: a variable's dimension depends on Γ),
 --            Wh-wf : its typing rule, stated with the explicit type
 --                    transformer `whTy` defined below, and
 --            Wh-≈  : p, q "units" ⇒ wh j p x q ≈ x;
@@ -32,8 +34,14 @@
 --
 -- Not done here: discharging (W) for a particular kernel (constructing
 -- `wh` from coherences over the linear pasting contexts
--- Σʲ(D¹ ∨ Dᵐ⁻ʲ ∨ D¹) and proving Wh-wf and Wh-≈). Without that, the
--- module is a theorem about any kernel that has such an operation.
+-- Σʲ(D¹ ∨ Dᵐ⁻ʲ ∨ D¹) and proving Wh-wf and Wh-≈). Until that is done
+-- the hypotheses are not known to be jointly satisfiable, so the
+-- module proves the reduction KC ⇐ EL given (W), not KC ⇐ EL outright.
+-- Wh-wf is syntactic: the boundary terms of the whiskering head,
+-- after substitution, must be exactly the recursive `wh` calls on
+-- the boundaries. The construction must be made to satisfy this.
+-- ELAt is undimensioned (EL in every dimension); the proof only uses
+-- it below dim B, so a dimensioned version is a routine refinement.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature
@@ -95,28 +103,28 @@ module _ (E : SurfaceEq) where
     (dim-≈   : ∀ {Γ A A′} → Γ ∣ A ≈T A′ → dim A ≡ dim A′)
     (presup  : ∀ {Γ t A} → Γ ⊢tm t ∶ A → Γ ⊢ty A)
     (Unit    : Ctx → Tm → Set)
-    (wh      : Nat → Tm → Tm → Tm → Tm)
+    (wh      : Ctx → Nat → Tm → Tm → Tm → Tm)
     where
 
     -- The type of p ∗ⱼ x ∗ⱼ q, for x : X whose level-j pair is (s, t)
     -- and p : s′ → s, q : t → t′: the level-j pair becomes (s′, t′),
     -- every higher pair is whiskered.
-    whTy : Nat → Tm → Tm → Tm → Tm → Ty → Ty
-    whTy j p q s′ t′ ⋆           = ⋆
-    whTy j p q s′ t′ (arr Y u v) =
+    whTy : Ctx → Nat → Tm → Tm → Tm → Tm → Ty → Ty
+    whTy Γ j p q s′ t′ ⋆           = ⋆
+    whTy Γ j p q s′ t′ (arr Y u v) =
       ifte (dim Y ==ℕ j) (arr Y s′ t′)
-                         (arr (whTy j p q s′ t′ Y) (wh j p u q) (wh j p v q))
+                         (arr (whTy Γ j p q s′ t′ Y) (wh Γ j p u q) (wh Γ j p v q))
 
     module Thm
       (Wh-wf : ∀ {Γ C s s′ t t′ p q x X} →
                Γ ⊢tm p ∶ arr C s′ s → Γ ⊢tm q ∶ arr C t t′ →
                Pre (arr C s t) X → Γ ⊢tm x ∶ X →
-               Γ ⊢tm wh (dim C) p x q ∶ whTy (dim C) p q s′ t′ X)
+               Γ ⊢tm wh Γ (dim C) p x q ∶ whTy Γ (dim C) p q s′ t′ X)
       (Wh-≈  : ∀ {Γ C s s′ t t′ p q x X} →
                Γ ⊢tm p ∶ arr C s′ s → Γ ⊢tm q ∶ arr C t t′ →
                Unit Γ p → Unit Γ q →
                Pre (arr C s t) X → Γ ⊢tm x ∶ X →
-               Γ ∣ wh (dim C) p x q ≈t x)
+               Γ ∣ wh Γ (dim C) p x q ≈t x)
       where
 
       ELAt : Ctx → Set
@@ -151,15 +159,15 @@ module _ (E : SurfaceEq) where
         ... | k , e′ rewrite e′ | e = ==-above k (dim C)
 
         -- the whiskered type of a transported cell is the transported type
-        wh-trTy : ∀ {C a b C′ a′ b′ X} (tr₀ : Tm → Tm) (p q : Tm) →
+        wh-trTy : ∀ {Γ C a b C′ a′ b′ X} (tr₀ : Tm → Tm) (p q : Tm) →
                   (pr : Pre (arr C a b) X) →
-                  whTy (dim C′) p q a′ b′ (trTy tr₀ C′ (pre-down pr))
-                  ≡ trTy (λ x → wh (dim C′) p (tr₀ x) q) (arr C′ a′ b′) pr
+                  whTy Γ (dim C′) p q a′ b′ (trTy tr₀ C′ (pre-down pr))
+                  ≡ trTy (λ x → wh Γ (dim C′) p (tr₀ x) q) (arr C′ a′ b′) pr
         wh-trTy {C′ = C′} tr₀ p q here rewrite ==-refl (dim C′) = refl
-        wh-trTy {C} {a} {b} {C′} {a′} {b′} tr₀ p q (there {Y} {u} {v} pr)
+        wh-trTy {Γ} {C} {a} {b} {C′} {a′} {b′} tr₀ p q (there {Y} {u} {v} pr)
           rewrite dim-ne C′ (pre-tr {a = a} {b = b} tr₀ C′ pr) refl =
-          cong (λ Z → arr Z (wh (dim C′) p (tr₀ u) q) (wh (dim C′) p (tr₀ v) q))
-               (wh-trTy {C} {a} {b} {C′} {a′} {b′} tr₀ p q pr)
+          cong (λ Z → arr Z (wh Γ (dim C′) p (tr₀ u) q) (wh Γ (dim C′) p (tr₀ v) q))
+               (wh-trTy {Γ} {C} {a} {b} {C′} {a′} {b′} tr₀ p q pr)
 
         dim⋆arr : ∀ {n} → 0 ≡ suc n → ⊥
         dim⋆arr ()
@@ -193,12 +201,12 @@ module _ (E : SurfaceEq) where
         q = fst Q
 
         tr : Tm → Tm
-        tr x = wh (dim C′) p (tr₀ x) q
+        tr x = wh Γ (dim C′) p (tr₀ x) q
 
         tr-wf : ∀ {x X} (pr : Pre (arr C a b) X) → Γ ⊢tm x ∶ X →
                 Γ ⊢tm tr x ∶ trTy tr (arr C′ a′ b′) pr
         tr-wf pr dx =
-          subst (Γ ⊢tm tr _ ∶_) (wh-trTy tr₀ p q pr)
+          subst (Γ ⊢tm tr _ ∶_) (wh-trTy {Γ} tr₀ p q pr)
             (Wh-wf (fst (snd P)) (fst (snd Q))
                    (pre-tr tr₀ C′ pr) (tr₀-wf (pre-down pr) dx))
 

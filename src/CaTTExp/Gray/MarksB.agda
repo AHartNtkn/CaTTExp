@@ -11,8 +11,11 @@
 -- argument telescope Dⁿ marks its top entry `minv` and the binder
 -- kernel checks that mark on the argument (CaTTExp.Binder.TypingWith).
 -- So "the occurrence is well formed" already contains "t inv".
--- `formerInv b y` says which formers (with selector y) are inv this
--- way; other formers (INIT's) get their clauses from their own
+-- `formerMarks b y Δ` lists the marks an occurrence bnd b y Δ ts
+-- carries by virtue of its former (selector y, telescope Δ), as
+-- `marksAt` does for a variable: DES gives minv on all four formers;
+-- INIT gives η_y minv exactly when entry y of Δ is marked minv, and μ_k
+-- the marks of sort k (mgrpd for S¹ as X : grpd₁); other formers (INIT's) get their clauses from their own
 -- interface, and otherwise only (OBJ-k).
 --
 -- Every other rule is CaTTExp.Gray.Marks unchanged:
@@ -26,7 +29,8 @@
 --   * (OBJ-k), (INV⇒PS), (PS*) as in Gray.Marks.
 --
 -- `mark` is the kernel's mark parameter: minv ↦ inv, mps ↦ ps, and
--- mgrpd k ↦ "a variable whose entry is marked grpd_k′ with k′ ≤ k"
+-- mgrpd k ↦ "a variable whose entry, or a former occurrence whose
+-- formerMarks, carry grpd_k′ with k′ ≤ k"
 -- (invertibility-markings.md §1.2, precision from PR #41).
 -- `markVar` proves the kernel's hypothesis MarkVar (rule MARK).
 -- Renaming and substitution stability (MarkRen, MarkSub) are the
@@ -46,7 +50,7 @@ module CaTTExp.Gray.MarksB
   (𝕊₀ : Old.Signature)
   (bi : Binders (Old.Signature.K 𝕊₀))
   (cellArg : Binders.B bi → Maybe Nat)
-  (formerInv : Binders.B bi → Nat → Bool)
+  (formerMarks : Binders.B bi → Nat → NSyn.Ctx (Old.Signature.K 𝕊₀) (Binders.B bi) → List NSyn.Mark)
   where
 
 private
@@ -127,8 +131,9 @@ mutual
     in ip i p (star n Γ ty' p)
   judge n Γ (bnd b y Δ ts) =
     let A = typeOf Γ (bnd b y Δ ts)
-        i = formerInv b y ∨ objRule Γ A                -- (DES), (DES-inv)
-        p = i ∧ hdAtLeast 1 A                          -- (INV⇒PS)
+        ms = formerMarks b y Δ
+        i = (minv ∈M ms) ∨ objRule Γ A                 -- (DES), (DES-inv)
+        p = (mps ∈M ms) ∨ (i ∧ hdAtLeast 1 A)          -- (INV⇒PS)
     in ip i p (star n Γ A p)
 
   judgeSub : Nat → Ctx → Sub → List IP
@@ -156,8 +161,9 @@ judgeT Γ t = judge (fuelOf Γ t) Γ t
 -- The kernel's mark parameter.
 
 isVarGrpd : Ctx → Nat → Tm → Bool
-isVarGrpd Γ k (var C) = anyM (grpdLe k) (marksAt Γ C)
-isVarGrpd Γ k _       = false
+isVarGrpd Γ k (var C)        = anyM (grpdLe k) (marksAt Γ C)
+isVarGrpd Γ k (bnd b y Δ ts) = anyM (grpdLe k) (formerMarks b y Δ)
+isVarGrpd Γ k _              = false
 
 mark : Ctx → Mark → Tm → Bool
 mark Γ minv      t = jinv (judgeT Γ t)

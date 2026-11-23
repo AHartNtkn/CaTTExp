@@ -139,6 +139,8 @@ Drop `grpd`: Δ⃗_sq := `(X, g : ⊤ → X, sq : π₁ ⇒ π₂)`.
 
 [conj] The initial model is Idem (as an (∞,1)-category, Lurie's walking idempotent, whose (∞,1)-nerve is the 1-category). The 1-categorical version is immediate: a morphism to (B, b, α) must send e ↦ α_{b,b}, which is idempotent by naturality. The ∞-version needs the coherence of the idempotent built from α. Row F11e.
 
+*Reformulation (2026-11-23).* A transformation α : π₁ ⇒ π₂ of functors B × B → B is a point of the end ∫_{(x,y)} Hom_B(x, y) = lim_{(x,y) ∈ B×B} Hom_B(x, y). Naturality along (f, 1) and (1, g) says that α_{–,y} is a cocone over id_B with vertex y and α_{x,–} is a cone over id_B with vertex x. Formally this is a map from "colim id_B" to "lim id_B". So Mod(B) ≃ B^≃ × lim_{B×B} Hom_B, and a strong morphism is a functor that carries one end-point to the other. For Idem the set-level limit is {e}, which recovers Prop C′. The open step is the homotopy limit over Idem × Idem: Idem's nerve has non-degenerate simplices in every dimension, so higher terms could appear.
+
 ---
 
 ## 5. Dependent elimination (Theorem D) [proved here]
@@ -233,4 +235,4 @@ Row F11b (closed). Not derivable from single-sort INIT in an obvious way; non-de
 | F11c | G_k: cocartesian fibrations over ⟦Dᵏ⟧ from DESC-or (needed for families over cellular μΔ) | HIT |
 | F11d | T-init-asph and T-init-pol as h-level clauses; directed case waits on B24 (HPOL) | HIT |
 | F11e | Directed squash: is the initial model the walking idempotent? | HIT |
-| F11f | Agda: Theorem D over an abstract category of models (`CaTTExp.HIT.DependentElim`); Prop C′ and the §2.3 collapse (`CaTTExp.HIT.DirectedSquash`); 1-truncated, written, awaiting honesty review | HIT, coordinated with S26a (binders) |
+| F11f | Agda: Theorem D over an abstract category of models (`CaTTExp.HIT.DependentElim`); Prop C′ and the §2.3 collapse (`CaTTExp.HIT.DirectedSquash`); 1-truncated; honesty review passed, merged (PR #503) | HIT (done) |

@@ -318,7 +318,11 @@ The outbox prompt asks for both classifications, over L and over CaTT, as one qu
 - Not proved: `Wh-≈` for the ≈ of interest (≡_F or ≡_sua), which needs that ≈ formalized; and the interface for two-tier and uniform L.
 
 Not formalized yet:
-- The whiskering interface for two-tier and uniform L: derived whiskers in the Gray kernels, with their side condition for all k, j (plain CaTT is done in `WhiskerPure`).
+- The whiskering interface for two-tier and uniform L: derived whiskers in the Gray kernels, with their side condition for all k, j (plain CaTT is done in `WhiskerPure`). Plan for two-tier L:
+  - Reuse plain CaTT's heads. `Surface/WhiskerGrayCheck.agda` checks by evaluation that graySide accepts Derived's whisker heads (BK k j, wK k j) and (LK k j, lK k j) for k + j ≤ 3, including k = 0, which whiskers across objects in a two-hom context.
+  - **Done (2026-11-23):** generic in the side condition. `DerivedWith` types the whiskers for any side condition that accepts the heads (three hypotheses: (BK k 0, wK k 0), (BK k (j+1), wK k (j+1)), (LK k (j+1), lK k (j+1))). `Surface/WhiskerWith` is `WhiskerPure` over such a side condition, and `Surface/WhiskerCatt` instantiates both at cattSide from Derived's `sideK`/`sideLK`. So the typing half of the two-tier L interface (`Wh-wf`) now reduces exactly to graySide accepting those heads for every k, j; `Wh-≈` stays open, as for plain CaTT. What depends on cattSide is the side-condition statements and lemmas (`SideK`, `SideLK`, `side-BK0`, `side-BK`, `side-LK`) and the typing judgments, including the mutual `wK-wf`/`sideK`/`avoidK` blocks and their `lK` counterparts. The type computations are pure syntax.
+  - Prove graySide on these heads for all k, j. For k ≥ 1 the head lives on one hom, where graySide is Finster–Mimram's condition (single-hom conservativity, E1: `Gray/SingleHom`, `Gray/SuppVars`, `Strict/SuppFV`). Those pieces still have to be assembled into a single lemma graySide ⟺ cattSide on ΣΘ heads. k = 0 is a two-hom context, ΣD^j ∨ ΣD⁰ for the right whisker and ΣD⁰ ∨ ΣD^j for the left, and needs a direct support computation.
+  - Uniform L follows the same plan with its own side condition.
 - `Wh-≈` for the ≈ of interest, once that ≈ (≡_F or ≡_sua) is formalized.
 - The dimensioned form of `ELAt` (EL below dim B only).
 - The dimension-bounded form of Theorem A.

@@ -267,6 +267,10 @@ import CaTTExp.Surface.Conservativity
 import CaTTExp.Surface.StrictInterchange
 import CaTTExp.Surface.TheoremB
 import CaTTExp.Surface.WhiskerPure
+import CaTTExp.Surface.WhiskerGrayCheck
+import CaTTExp.DerivedWith
+import CaTTExp.Surface.WhiskerWith
+import CaTTExp.Surface.WhiskerCatt
 import CaTTExp.Gray.Cover
 import CaTTExp.Gray.Fast
 import CaTTExp.Gray.Orient

@@ -133,12 +133,14 @@ cohT Γ T build cells =
 ------------------------------------------------------------------------
 -- Whiskering and unbiased composites.
 
-private
-  srcTgtVar : Ctx → Nat → Maybe (Nat × Nat)
-  srcTgtVar P l = lookup P l >>= λ where
-    (arr _ (var a) (var b)) → just (a , b)
-    _                       → nothing
+stvTy : Ty → Maybe (Nat × Nat)
+stvTy (arr _ (var a) (var b)) = just (a , b)
+stvTy _                       = nothing
 
+srcTgtVar : Ctx → Nat → Maybe (Nat × Nat)
+srcTgtVar P l = lookup P l >>= stvTy
+
+private
   topN : Tree → Nat → Nat
   topN T i = go (tops T) i
     where
@@ -185,6 +187,24 @@ mutual
                    lw fuel P (var zL) (var (snd ab)) >>= λ t → just (s , t)))
            (z ∷ c ∷ [])
 
+-- The tree of an unbiased composite of n cells of dimension k + 1.
+vT : Nat → Nat → Tree
+vT k n = wrap k (node (replicate n leaf))
+
+vFirst vLast : List Nat → Maybe Nat
+vFirst []       = nothing
+vFirst (x ∷ _)  = just x
+vLast []        = nothing
+vLast (x ∷ [])  = just x
+vLast (_ ∷ x ∷ xs) = vLast (x ∷ xs)
+
+-- Its source and target: the source of the first top cell and the
+-- target of the last.
+vcompB : List Nat → Ctx → Maybe (Tm × Tm)
+vcompB ts P = vFirst ts >>= λ f → vLast ts >>= λ l →
+  srcTgtVar P f >>= λ s → srcTgtVar P l >>= λ t →
+  just (var (fst s) , var (snd t))
+
 -- Unbiased composite of a nonempty list of n-cells along n−1 (n ≥ 1).
 -- A one-element list is returned unchanged.
 vcomp : Ctx → List Tm → Maybe Tm
@@ -193,20 +213,7 @@ vcomp Γ (c ∷ [])    = just c
 vcomp Γ (c ∷ d ∷ cs) =
   dimOf Γ c >>= λ where
     zero    → nothing
-    (suc k) →
-      let T  = wrap k (node (replicate (length (c ∷ d ∷ cs)) leaf))
-          ts = tops T
-      in cohT Γ T (λ P → first ts >>= λ f → last ts >>= λ l →
-                     srcTgtVar P f >>= λ s → srcTgtVar P l >>= λ t →
-                     just (var (fst s) , var (snd t)))
-                  (c ∷ d ∷ cs)
-  where
-  first last : List Nat → Maybe Nat
-  first []       = nothing
-  first (x ∷ _)  = just x
-  last []        = nothing
-  last (x ∷ [])  = just x
-  last (_ ∷ x ∷ xs) = last (x ∷ xs)
+    (suc k) → let T = vT k (length (c ∷ d ∷ cs)) in cohT Γ T (vcompB (tops T)) (c ∷ d ∷ cs)
 
 -- Default fuel: whiskering recursion depth is bounded by dimension.
 F : Nat

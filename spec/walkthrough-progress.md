@@ -63,7 +63,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 4.1 Coherence contexts
 - [ ] 4.2 Bases are read weakly
 - [ ] 4.3 Finite presentations over every base
-- [ ] 4.4 The optional judgment ⊢hpol
+- [ ] 4.4 Above the kernel: the fast path ⊢hpol
 - [ ] 4.5 What the limit rules actually need from a base
 - [ ] Q4.1 (surface question): Whether the user sees ⊢hpol.
 - [ ] Q4.2 (surface question): How bases are written.

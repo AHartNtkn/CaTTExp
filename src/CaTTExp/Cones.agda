@@ -518,12 +518,14 @@ cellE : ExCtx → Ex → Cell
 cellE = cellF fuel
 
 -- An ExCtx as a CaTT context.
+-- (The fold is top level so that CaTTExp.Lim.ConeAgree can reason
+-- about it.)
+evCtxGo : ExCtx → ExCtx → Ctx → Ctx
+evCtxGo Γ []       acc = acc
+evCtxGo Γ (A ∷ As) acc = evCtxGo Γ As (acc ▸ evTy Γ A)
+
 evCtx : ExCtx → Ctx
-evCtx Γ = go Γ ε
-  where
-  go : ExCtx → Ctx → Ctx
-  go []       acc = acc
-  go (A ∷ As) acc = go As (acc ▸ evTy Γ A)
+evCtx Γ = evCtxGo Γ Γ ε
 
 -- Renaming and substitution of expressions.
 substE : (Nat → Ex) → Ex → Ex

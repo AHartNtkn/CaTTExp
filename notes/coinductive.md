@@ -1,0 +1,83 @@
+# Coinductive objects from initiality
+
+*Ledger F12b.* `descent-vs-init.md` §5 shows that final coalgebras are not INIT instances, but that some of them are derivable. This note settles which ones, in Agda where possible, and records what is open.
+
+*Short answer.*
+- **Streams and every constant-arity M-type are derivable from INIT and chapter 8, with no DESC.** For any objects A and E (directed or not), νX. A × (E\X) is SnocList(E)\A. Streams are the case without E. [agda, 1-truncated] `CaTTExp.Coinductive.Streams`, `CaTTExp.Coinductive.ConstArity`.
+- **Dependent arities (a map p : E → A, a family of arity sets) are open.** Every known construction (Ahrens–Capriotti–Spadotti in HoTT, Abbott–Altenkirch–Ghani, van den Berg–De Marchi) uses a universe, or disjoint coproducts and local cartesian closure. In our system the analogue of those is DESC-grpd. No countermodel is known: in every model of §3 of `descent-vs-init.md` the M-types exist. Sent out as `conjectures/outbox/dependent-m-types-without-descent.md`.
+- **Anthony's question (2026-11-23): does the HoTT construction hinge on univalence?** No. It hinges on a *universe* (§3).
+
+Status tags follow `conventions.md`.
+
+---
+
+## 1. Prop S: streams [agda, 1-truncated; proved here, sketch at all levels]
+
+**Statement.** Let ℕ = μ(X, z : ⊤ → X, s : X → X) and let B be any object. Put Str := ℕ\B, with
+- head := e^ℓ ∘₀ z̄ : (Str ▸ B), evaluation at the point z̄ : ( ▸ ℕ) that GB-shape at D⁰ makes from z;
+- tail := curL(e^ℓ ∘₀ s) : (Str ▸ Str).
+
+Then (Str, head, tail) is a final coalgebra of X ↦ B × X. A coalgebra is (C, h : C → B, t : C → C).
+
+**Proof (simpler than the sketch in `descent-vs-init.md` §5; no ⊗ is needed).** Fix a coalgebra (C, h, t). Multimaps k : (ℕ, C ▸ B) correspond to maps g : C → ℕ\B by the left row, and to maps f : ℕ → B/C by the right row. Through these transposes:
+- head ∘ g ≅ h ⟺ k ∘₀ z̄ ≅ h ⟺ f ∘ z ≅ h̄, where h̄ = wk(curR h) : ⊤ → B/C;
+- tail ∘ g ≅ g ∘ t ⟺ k ∘₀ s ≅ k ∘₁ t ⟺ f ∘ s ≅ t* ∘ f, where t* = curR(e^r ∘₁ t) : B/C → B/C.
+
+So coalgebra morphisms C → Str correspond bijectively to model morphisms ℕ → (B/C, h̄, t*). INIT-J1 gives one, and INIT-J2 makes it unique. ∎
+
+**What is used.** INIT(ℕ), the left and right evaluation rows (GB-cut at n = 0, 1), and GB-shape at D⁰ (weakening, to pass between the element z : ⊤ → ℕ and the point z̄). No DESC, no products, no ⊗, no L-×.
+
+**All levels [sketch].** At level n, the same three steps apply to cells: GB-cut at every n transposes cells of coalgebra morphisms to cells of model morphisms, and INIT's higher clause (model morphisms into the cotensor [⟦Dⁿ⟧, B/C]) gives contractibility. The Agda covers level 1 only.
+
+**Agda.** `src/CaTTExp/Coinductive/Streams.agda`, over the abstract model interface (`Gray/Biclosed/Model`) with the weakening row (`FunSets.Weak`). INIT(ℕ) is a record of assumptions (`INITℕ`), as in `HIT/DependentElim.agda`. Results: `transpose-mor`, `untranspose-mor`, `round-trip-1/2` (the bijection), `corec-mor`, `corec-uni`, `Str-final`. No postulates; checks under `--safe`.
+
+## 2. Constant arities [agda, 1-truncated]
+
+**Statement.** Let A, E be objects and L := μ(X, n : ⊤ → X, c : X ⊗ E → X), the snoc lists on E. Put M := L\A, with head := e^ℓ ∘₀ n̄ and tail := curL(e^ℓ ∘₀ c) : (E, M ▸ M). Then M is a final coalgebra of X ↦ A × (E\X). Here a coalgebra is h : (C ▸ A) together with t : (E, C ▸ C), which by the left row is a map C → E\C.
+
+**Proof.** As in §1, with k : (L, C ▸ A) and the model (A/C, h̄, c′ := curR(e^r ∘₁ t)) of the list context. The tail condition reads k ∘₀ c ≅ k ∘₁ t, both of type (L, E, C ▸ A). ∎
+
+**Orientation (directed case).** No hypothesis on A or E is made: they may be arbitrary (∞,ω)-categories, and E\X is the lax hom. Planarity forces the list to be a **snoc** list: the label of a tree at address ℓ·e is the label at ℓ of its e-subtree. With cons lists the two sides would have inputs in the orders (E, L, C) and (L, E, C), which no rule identifies. The mirror (chapter 8, §8.7) gives the oplax version: νX. A × (X/E) = A/ConsList(E).
+
+**Agda.** `src/CaTTExp/Coinductive/ConstArity.agda`, the same interface and results (`M-final`). The constructor of L is assumed in multimap form (X, E ▸ X). The pair row identifies that with X ⊗ E → X, but the translation is not encoded.
+
+## 3. What the HoTT construction uses
+
+Ahrens–Capriotti–Spadotti, *Non-wellfounded trees in homotopy type theory* (TLCA 2015, arXiv:1504.02949), build (indexed) M-types from ℕ:
+- **Univalence:** used directly only in Lemma 5 (being a final coalgebra is a proposition). Elsewhere they use only funext (their §7). Existence and finality do not use univalence.
+- **The universe:** the chain W_n := Pⁿ(1) is a family ℕ → U, defined by recursion on ℕ. Lemma 13 (P preserves the chain limit) uses W_{n+1} = P(W_n), which is the computation rule of that large recursion.
+- Σ, Π, identity types, and the limit L := Σ_{x : Π_n W_n} Π_n (π_n x_{n+1} = x_n) (Def. 9). Lemmas 11–12 (cochain tuples, shifted chains) use only these and the initiality of ℕ.
+
+**Our rules, item by item.**
+- Funext is built in, since equality of maps is cells.
+- The chain limit needs no new rule. For a family Y → ℕ, the sections live in ℕ\Y, and compatibility is an equaliser. The earlier sketch's appeal to R-cot⁺ is unnecessary.
+- **The universe is what we lack.** Without one, INIT over the base ℕ builds the total space Y → ℕ of n ↦ Pⁿ⊤. Lambek gives Y ≅ z_!⊤ ⊔ s_!(P Y). Reading off the fibres (Y_{n+1} ≅ P(Y_n)) means pulling a coproduct back along a summand. That is universality plus disjointness, i.e. DESC-grpd. Large elimination computes fibres by fiat; DESC computes them by descent.
+
+So the analogy "DESC plays the role of univalence" in `descent-vs-init.md` §3 is right for gluing along equivalences, but for M-types the relevant role is the universe's **classification of families**.
+
+## 4. Dependent arities: what is known and where it stalls
+
+**Formulation without a universe or Π_p.** For p : E → A, the polynomial functor P(X) = Σ_a (p⁻¹a)\X needs a dependent hom Π_p, which our system does not have (R-cot⁺ exists over set bases, and only through DESC-grpd). Uncurrying avoids it. A **p-dialgebra** is (C, h : C → A, t : C ×_A E → C), and a morphism is g : C → C′ over A, commuting with t. When Π_p exists this is exactly a P-coalgebra, and a final one is the M-type. The constant case (§2) is p = π₁ : A × E → A.
+
+**Three routes tried.**
+1. *Terminal chain.* Needs the fibres of an INIT family over ℕ (§3), i.e. DESC-grpd.
+2. *Address encoding.* Trees as label functions on all snoc lists of E, with inconsistent addresses filled canonically (for example, an inconsistent step stays at the current node). Extending t to E × C needs a case split on whether p(e) = h(c): a decomposition E × C ≅ (C ×_A E) ⊔ complement, which needs decidable equality on A and disjoint universal coproducts (DESC-grpd). Partial label maps L → A ⊔ ⊤ need disjointness as well.
+3. *Reduce to the constant case.* Same obstacle: a constant-arity coalgebra on C has to give t a value at inconsistent pairs.
+
+The literature constructions all assume disjoint coproducts: Abbott–Altenkirch–Ghani Prop. 4.1 (Martin-Löf categories: LCCC, disjoint coproducts, W-types); van den Berg–De Marchi, *Non-well-founded trees in categories* (arXiv:math/0409158), in LCC pretoposes, where Prop. 2.9 also uses decidable equality on A.
+
+**Evidence the other way.** All three countermodels of `descent-vs-init.md` §3 (Set, the lattice 2, Pos) are locally presentable, and there final dialgebras exist for set-like p. So nothing yet shows DESC is needed. A separating model would have to be non-extensive or not locally presentable, and still have every INIT instance.
+
+**Status.** Open, [conj] either way. Paste-ready prompt: `conjectures/outbox/dependent-m-types-without-descent.md`. Its main question asks for the class of maps p for which final dialgebras exist in every model of the non-DESC rules, together with a uniform construction, or a separating model. In-house attempts continue on route 2 with decidable equality coming from INIT (as in R-cot⁺), to locate exactly which half of DESC-grpd is needed.
+
+## 5. Directed M-types
+
+- **Constant arity:** done (§2) for arbitrary A and E, lax and oplax versions.
+- **Dependent arity, p directed:** the dialgebra formulation makes sense for every p. Semantically, when p is exponentiable (for example a cocartesian fibration) Π_p exists in Cat_ω and P is accessible, so a final coalgebra exists. For non-exponentiable p (such as {0<2} → [2]) the dialgebra category need not be a coalgebra category, and whether a terminal object exists is not known. This is part 2 of the outbox prompt.
+
+## 6. Open items
+
+| Row | Item | Owner |
+|---|---|---|
+| F12b | Streams and constant-arity M-types: Agda written, both checked on Agda 2.7.0.1 and 2.6.3; honesty review | this thread |
+| F12c | Dependent-arity M-types without DESC (undirected and directed): outbox prompt; in-house attempt on route 2 | this thread (prompt ready to send) |

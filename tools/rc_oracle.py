@@ -221,9 +221,14 @@ def rc(G, A, t, u):
     return w
 
 def _rc_inner(G, A, t, u):
-    if infer(G, t) != A or infer(G, u) != A:
+    # a sub-query that fails by an exception fails alone (other routes of
+    # the caller stay open); only the call budget (NotCovered) aborts
+    try:
+        if infer(G, t) != A or infer(G, u) != A:
+            return None
+        return _rc(G, A, t, u)
+    except (TypeError_, AssertionError, KeyError, StopIteration, ValueError):
         return None
-    return _rc(G, A, t, u)
 
 def _rc(G, A, t, u):
     n = tdim(A) + 1

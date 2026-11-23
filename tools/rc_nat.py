@@ -251,6 +251,20 @@ def _layered(Q, B, Yq, C, mi, pl, up, a, b, rc, op):
         K = comp2(C, n, K, P_)
     return K
 
+def _lifted(C, n, Yq, Q, up, s_, t_, rc):
+    """Composition case by prescribed-boundary lifting (r9 Response 2): the
+    strict cell of c^ has top chain the sum of the q^ for the top-dimensional
+    q in Y; lift it at the raw poles s_ -> t_ in the cylinder C, with
+    comparisons of smaller rank from rc."""
+    import rc_oracle as R, rc_lift as L, steiner as St
+    ups = [up[q] for q in Yq if tdim(Q[q]) + 1 == n]
+    chain = tuple(sorted((u, 1) for u in ups))
+    try:
+        cell = St.image_to_cell((n + 1, chain, R.strict_image(C, s_), R.strict_image(C, t_)))
+        return L.lift_at(C, cell, s_, t_, rc)
+    except Exception:
+        return None
+
 def filler(Q, B, Yq, rc, op=False):
     key = (Q, B, frozenset(Yq), op)
     if key in _K:
@@ -274,8 +288,10 @@ def filler(Q, B, Yq, rc, op=False):
         try:
             w = _layered(Q, B, Yq, C, mi, pl, up, a, b, rc, op)
         except (NoFiller, TypeError_):
-            _K[key] = None
-            raise NoFiller(key)
+            w = _lifted(C, n, Yq, Q, up, b if op else a, a if op else b, rc)
+            if w is None:
+                _K[key] = None
+                raise NoFiller(key)
     elif op:
         w = rc(C, A, b, a)
     else:

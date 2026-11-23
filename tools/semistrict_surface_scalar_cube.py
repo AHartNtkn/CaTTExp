@@ -23,25 +23,29 @@ def exchange(context, left, right):
     return subst_tm(head(pair, late, early), label)
 
 
-def check_raw(emitter):
-    point = (STAR,)
-    unit = identity(point, v(0))
-    context = (*point, arr(infer(point, unit), unit, unit))
-    a = v(1)
-    h = exchange(context, a, a)
+def cube_terms(context, left, middle, right):
+    h = exchange(context, left, middle)
     u, v2 = src(context, h), tgt(context, h)
-    hu = exchange(context, u, a)
-    hv = exchange(context, v2, a)
+    hu = exchange(context, u, right)
+    hv = exchange(context, v2, right)
 
     def cut(k, x, y):
         return comp2(context, k, x, y)
 
-    early = cut(1, cut(0, h, src(context, a)), cut(0, tgt(context, u), a))
-    late = cut(1, cut(0, src(context, u), a), cut(0, h, tgt(context, a)))
+    early = cut(1, cut(0, h, src(context, right)), cut(0, tgt(context, u), right))
+    late = cut(1, cut(0, src(context, u), right), cut(0, h, tgt(context, right)))
     p = cut(2, hu, early)
     q = cut(2, late, hv)
     boundary = arr(infer(context, src(context, hu)), src(context, hu), tgt(context, hv))
     assert p != q and infer(context, p) == infer(context, q) == boundary
+    return p, q, boundary
+
+
+def check_raw(emitter):
+    point = (STAR,)
+    unit = identity(point, v(0))
+    context = (*point, arr(infer(point, unit), unit, unit))
+    p, q, boundary = cube_terms(context, v(1), v(1), v(1))
     for name, term in [('outer-first', p), ('inner-first', q)]:
         emitter.check_type(name, context, term, boundary)
 

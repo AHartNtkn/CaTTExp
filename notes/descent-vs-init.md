@@ -78,7 +78,8 @@ The same model kills Hom_{⟦L⟧}(x, x) ≃ ℕ, where ⟦L⟧ = 1 so that hom 
 | object-valued recursion R-U (fibres U_{node(ts)} ≃ ∨ ΣU_{t_j}) | **both** | INIT over Θ₀ builds U; DESC-grpd computes its fibres |
 | streams ℕ\B (all B, directed too) | INIT + closed structure | §5 |
 | M-types with a constant arity object, νX. A × (E\X) = SnocList(E)\A (directed too) | INIT + closed structure | `coinductive.md` §2 [agda] |
-| M-types with dependent arity p : E → A | known routes use DESC-grpd; whether it is needed is open | `coinductive.md` §4, F12c |
+| M-types with dependent arity, coalgebra form for an inductively given P (conaturals νX. 1 + X, finitely many constructors over sets, νX. List X) | INIT + closed structure + L-× | `coinductive.md` §4 routes 5–6; conaturals [agda] |
+| M-types with dependent arity, dialgebra form (terminal p-dialgebra) | DESC-grpd (universality of finite coproducts), even for p = 1 → 1 + 1; universality suffices for finite copowers | fails in the rectangular-band model R ([agda] `Coinductive/RectBandNoDialgebra.agda`); researcher answer, verified, `conjectures/answered/dependent-m-types-without-descent-2026-11-23.md` |
 
 **Example (π₁ of the circle, step by step).** INIT gives S¹, ℤ and decode: rec of the model (Hom(b, –) over S¹) yields ℤ → ΩS¹. It also gives the dependent eliminator used to check that decode ∘ encode ≅ 1. Encode needs a family C → S¹ with fibre ℤ over b and transport suc around l. INIT over the base S¹ can build μ(Y : grpd over S¹, y₀ : ⊤ → Y over b), which is the free family on a point (= b ↓ S¹ by DJ). But computing its fibre is the very theorem being proved. DESC-glue instead builds C with fibre ℤ **by construction**. Model A shows no other route exists.
 

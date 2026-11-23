@@ -189,6 +189,7 @@ import CaTTExp.Naturality.DimOne
 import CaTTExp.Naturality.General
 import CaTTExp.Naturality.Ladder
 import CaTTExp.Naturality.Column
+import CaTTExp.Naturality.Whisker
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle

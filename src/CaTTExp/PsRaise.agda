@@ -28,6 +28,15 @@
 -- The hypotheses are needed: a flagged leaf below the top dimension
 -- leaves the raised context's boundary at a dimension where τ's own
 -- cells are not all kept.
+--
+-- OPEN (case (b), arbitrary flags; needed by GrayCtx.Lift `generic` with
+-- travelling arguments at any depth and by `raiseApply`): when a flagged
+-- leaf lies below the top dimension, the coh over the raised tree is a
+-- full coherence, and what is needed instead is that for a full term t
+-- over τ, every flagged leaf f lies in FV(t[incl⁻]) and its copy f′ in
+-- FV(t[incl⁺]). This follows from fv(t[σ]) = img σ (fv t) for variable
+-- substitutions together with the images of incl∓ computed here; that fv
+-- lemma is the next step of S20 (i) stage 3b and is not yet proved.
 ------------------------------------------------------------------------
 module CaTTExp.PsRaise where
 

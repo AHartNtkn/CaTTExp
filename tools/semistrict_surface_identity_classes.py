@@ -65,7 +65,7 @@ def check_pair(point, rank, family, pair, emitter):
         emitter.check_type(f'{family}{rank}dir{direction}', point, comparison,
                            arr(infer(point, start), start, end))
     assert grade(point, identity(point, u), rank) == 0
-    # Reassociation around a marked term changes the surrounding syntax
+    # Unit padding around a marked term changes the surrounding syntax
     # while retaining the same literal occurrence. The generic comparison
     # specializes to a zero-grade cell even with the opaque disc input.
     disc = tree_ctx(disc_tree(rank))

@@ -119,10 +119,11 @@ The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are
 - the **Gray operation case**, π(c) = τ_Γ;
 - the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 
-TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff some lift of the head has an inner letter of top dimension; both are computed by the procedure of §2.3. ord-tgt means that γ(aₙ) is an object variable marked `ord`.
+TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff some lift of the head has an inner letter of top dimension; both are computed by the procedure of §2.3. ord-tgt means that γ(aₙ) is an object variable marked `iord` or `ord`.
 
 **Rule.**
 ```
+(C : ⋆)^iord       every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 (C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is trivial
                    (an identity in strict models; so in particular invertible)
 (COH-ord)    Γ^ord ⊢ps (every object of Γ marked ord), SC_𝔉(Γ, t → u),
@@ -166,7 +167,11 @@ The Gray cells g[γ] are the operation-case coherences over wedges of disks, as 
 - **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both switches.
 - **The inner strip.** It is equal exactly when the inner law holds. Without the inner law it stays unconnected after localization.
 
-So invertibility alone does not make an object an ordinary ω-category up to coherence. Any mark that recovers two-tier coherences must force inner letters to be trivial, and therefore has to act through the side condition, because the kernel has no definitional equality. Whether to keep the invertible-only reading as a second, weaker mark is an open design choice. Nothing in the spec needs it. Source: `notes/uniform-marks.md` §8; `notes/conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`.
+So invertibility alone does not make an object an ordinary ω-category up to coherence. Any mark that recovers two-tier coherences must force inner letters to be trivial, and therefore has to act through the side condition, because the kernel has no definitional equality. **Both readings are kept** (decided 2026-11-23, `notes/ord-recovers-two-tier.md` §6):
+- `iord` (inner letters invertible) is enough for (ORD) and (OP-inv_S′). It is sound in strictly more strict models, for example the E13 loop model, where the inner letters are invertible but not identities.
+- `ord` (inner letters trivial) adds (COH-ord) and gives two-tier L.
+
+This is the lax / pseudo / strict pattern of §0.4 applied to interchange inside an object: unmarked, `iord`, `ord`. `ord` implies `iord`. An `iord` variable may be sent to an `iord` or `ord` variable, and an `ord` variable only to an `ord` variable. Source: `notes/uniform-marks.md` §8; `notes/conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`.
 
 **Status.**
 - Rules: **stated here**, following `notes/uniform-marks.md` §3.
@@ -231,7 +236,7 @@ The note proposed M1; the choice is left open here.
 - *Option A: expose only `ps*`, written "pseudo".* Matches the meaning in P; every pseudo modification must have pseudo boundaries anyway.
 - *Option B: expose both.* `ps` alone is the more general building block, but no rule currently uses it as a premise, so it would be a mark the user can write and nothing can consume.
 
-**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, in every switch setting, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
+**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. The same question applies to `iord`, and so does the choice of which of the two marks a default writes. (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, in every switch setting, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
 - *Option A: per object declaration* (`(C : ⋆)^ord`). Precise; most objects in ordinary use need the mark.
 - *Option B: a per-file default "all objects ord" with an opt-out.* Ordinary mathematics needs no annotation; a development that forgets the opt-out silently proves a statement only about ordinary ω-categories.
 - *Option C: a per-development setting, like the switch setting of chapter 2.* Uniform with Q2.1; coarse.

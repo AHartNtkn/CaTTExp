@@ -7,8 +7,8 @@
 -- The whiskers are Binder.Cyl's: rwT k j c C z h = coh BK wK (σR …)
 -- and lwT, over embedded pure pasting contexts, with the iterated
 -- boundaries of C read off C (baseAt, srcAt, tgtAt). They agree with
--- the sphere's positions for k < dim C (`aL-sph-k`, `src-sph`,
--- `tgt-sph`), which is what typing the classifying substitutions needs.
+-- the sphere's positions for k < dim C (`sph-agree`), which is what
+-- typing the classifying substitutions needs.
 -- Typed (with deep types): spheres, disks, σR, σL, rwT, lwT; and the
 -- types of the whiskers (rwT-ty0, rwT-ty, lwT-ty0, lwT-ty).
 ------------------------------------------------------------------------
@@ -27,6 +27,7 @@ module CaTTExp.Binder.VWhisk
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
   (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
+  (KF : Filler)
   where
 
 open Signature 𝕊
@@ -36,7 +37,7 @@ open import CaTTExp.Binder.Rename 𝕊 side mark using (MarkRen; lookupₛ-top; 
 open import CaTTExp.Binder.Subst 𝕊 side mark using (MarkSub; MarkVar)
 open import CaTTExp.Binder.Deep 𝕊 side mark
 open import CaTTExp.Binder.PureEmbed 𝕊 side mark
-open import CaTTExp.Binder.Cyl 𝕊 (λ _ _ _ → P.var 0)
+open import CaTTExp.Binder.Cyl 𝕊 KF
   using (sphSub; dskSub; σR; rwT; hL; σLp; σL; lwT; baseAt; tgtAt; srcAt)
 open Laws 𝕊 using (Closed; BinderLaws)
 

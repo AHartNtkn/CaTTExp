@@ -257,7 +257,8 @@ module Cells (Θ : Ctx) (P : PsFacts Θ) where
 ------------------------------------------------------------------------
 -- Support ranks of derivable terms, in any context.
 
-private
+-- Public (as RankFacts) for the binder-syntax port, CaTTExp.Gray.DimB.
+module RankFacts where
   rk : Ctx → Tuple → Nat
   rk Γ = Faces.rank (cells Γ)
 
@@ -329,6 +330,8 @@ private
     ...   | C , eL , hq =
       subst (_≤ rk Δ (lvl e ∷ c')) (sym (rank-++ Γ y z))
         (+-mono (subst (rk Γ y ≤_) (sym hq) (bnd eL my)) (F-rank (λ m → ok (there m)) p mz))
+
+open RankFacts public
 
 mutual
   -- The top support tuples of a derivable t : A have rank ≤ dim A − 1.
@@ -450,3 +453,38 @@ module _ (closed : S.Closed) (sig : SigOK) where
 
   -- Fuel stability for L, with DimOK discharged.
   module StableL = MF.Stable closed sig dimOK
+
+------------------------------------------------------------------------
+-- DimOK from a bound on the ranks of the source's supports, without a
+-- derivation (used on binder syntax, where the bound comes from the
+-- binder-syntax derivation after erasure: CaTTExp.Gray.DimB).
+
+dimOK-from : ∀ {Θ A t u} → PsFacts Θ → T (graySide Θ A t u) →
+             (∀ {y} → y ∈L supp t A → rk Θ y ≤ dim A ∸ 1) →
+             dimCtx Θ ≤ suc (dim A)
+dimOK-from {Θ} {A} {t} {u} P side sb =
+  ≤-trans (Cells.ctx-dim Θ P) (s≤s (side-dim A sb (∨-case′ (cohCase Θ A t u) (opCase Θ A t u) side)))
+  where
+  ∨-case′ : ∀ a b → T (a ∨ b) → T a ⊎ T b
+  ∨-case′ true  b p = inj₁ tt
+  ∨-case′ false b p = inj₂ p
+  cohB′ : ∀ A → (∀ {y} → y ∈L supp t A → rk Θ y ≤ dim A ∸ 1) → T (cohCase Θ A t u) → dimK (homs Θ) ≤ dim A
+  cohB′ ⋆ _ ()
+  cohB′ (arr B s s') sb′ c with Cells.top-tuple Θ P
+  ... | f , mf , rf
+    with any-witness (anyS⇒ (leqT (cells Θ) N f) (supp t (arr B s s'))
+           (All-T (λ s₁ → any (leqT (cells Θ) N s₁) (supp t (arr B s s'))) (fullT hs) cov (any-++r (lowerT N hs) mf)))
+    where
+    hs = homs Θ
+    N  = dimK hs
+    cov : T (covers Θ (fullT hs) (supp t (arr B s s')))
+    cov = ∧-snd {covers Θ (supp t (arr B s s')) (fullT hs)}
+            (∧-fst {sameDown Θ (supp t (arr B s s')) (fullT hs)} (∧-snd {endsOK Θ (arr B s s')} c))
+  ... | r , mr , q =
+    subst (_≤ dim (arr B s s')) rf
+      (≤-trans (Ranks.rank-mono Θ (graded Θ (inv P)) (Faces.leqT⇒ (cells Θ) (dimK (homs Θ)) f r q))
+               (≤-step (sb′ mr)))
+  side-dim : ∀ A → (∀ {y} → y ∈L supp t A → rk Θ y ≤ dim A ∸ 1) →
+             T (cohCase Θ A t u) ⊎ T (opCase Θ A t u) → dimK (homs Θ) ≤ dim A
+  side-dim A sb′ (inj₁ c) = cohB′ A sb′ c
+  side-dim A sb′ (inj₂ o) = opDim Θ A t u o

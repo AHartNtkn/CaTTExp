@@ -3,7 +3,7 @@
 -- Γ = (x, y, f : x → y, g h : f ⇒ f)  (ledger S20 (i), stage 3f).
 --
 -- So Theorem A needs a hypothesis such as Key2 (CaTTExp.RCProc.
--- TwoPathCtx): g ∗₁ h and h ∗₁ g have the same strict image (bags), yet
+-- TwoPathCtx): g ∗₁ h and h ∗₁ g have the same strict image (`gh≈hg`), yet
 -- relative coherence must not answer the query.
 --
 -- The model argument. `Endo` is a strict ω-category (CaTTExp.Strict.
@@ -409,3 +409,13 @@ no-3cell dw with S.sound-in Endo M0 isM dw vρ
 ... | c , _ , _ , e₁ , e₂ =
   tf≢ft (trans (sym (O.ev-det mdet e₁ ev-gh))
           (trans (sr2 0 c) (trans (sym (tg2 0 c)) (O.ev-det mdet e₂ ev-hg))))
+
+------------------------------------------------------------------------
+-- Yet the strict images (towers of bags) of g ∗₁ h and h ∗₁ g agree.
+
+open import CaTTExp.Strict.Bag using (++-comm)
+open import CaTTExp.Strict.Cell using (_≈w_; ≈w-refl)
+open import CaTTExp.Strict.Interp ∅ (λ ()) using (⟦_⟧; η)
+
+gh≈hg : ⟦ gh ⟧ (η Γgh) ≈w ⟦ hg ⟧ (η Γgh)
+gh≈hg = ≈w-refl _ , ≈w-refl _ , ++-comm ((4 ∷ []) ∷ []) ((3 ∷ []) ∷ [])

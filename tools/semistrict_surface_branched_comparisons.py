@@ -29,17 +29,21 @@ def survives(word):
     return all((a,b)!=(1,1) for a,b in pairwise(d for d,_ in word if d))
 
 
-def certificate():
-    # Basis order is the tree order of tensor_rows. The two sides of each
-    # lower tableau row are given together, independently of any solver.
-    trees = [Tree(s) for s in [[[[]]],[[[[]],[[]]]],[[[]]]]]
-    basis = [tensor_rows(trees,r) for r in range(6)]
-    rows = [
+def certificate_rows():
+    return [
         ([0],[7]),
         ([0,5,23],[13,18,24]),
         ([0,3,8,12,35,40,52],[17,22,27,31,42,47,55]),
         ([0,3,7,12,14,31,36,41,45,62,67],[17,21,25,26,28,46,49,54,58,65,70]),
         ([1,2,4,7,18,22,26,27,44,46,49,54,60],[9,10,12,15,28,31,34,38,45,47,52,55,61])]
+
+
+def certificate():
+    # Basis order is the tree order of tensor_rows. The two sides of each
+    # lower tableau row are given together, independently of any solver.
+    trees = [Tree(s) for s in [[[[]]],[[[[]],[[]]]],[[[]]]]]
+    basis = [tensor_rows(trees,r) for r in range(6)]
+    rows = certificate_rows()
     def diff(rank,indices):
         out = Counter()
         for i in indices:

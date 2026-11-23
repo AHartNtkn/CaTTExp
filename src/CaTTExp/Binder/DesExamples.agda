@@ -24,7 +24,7 @@ module CaTTExp.Binder.DesExamples where
 𝕊 = extend P.∅ (desBinders P.K)
 
 open Signature 𝕊
-open DesConstruction K DesF (λ b → b) using (comp; idc)
+open DesConstruction K DesF (λ b → b) using (comp; idc; compPC; diskD; tyD)
 open import CaTTExp.Binder.Typing 𝕊
 open import CaTTExp.Binder.CheckWith 𝕊 cattSide varMark
 
@@ -123,3 +123,17 @@ unitR2-ty = refl
 -- A 1-cell destructor does not apply to the 2-cell's arguments.
 no-dim : is-just (infer Γ₂ (d2 (linv 1))) ≡ false
 no-dim = refl
+
+------------------------------------------------------------------------
+-- The side-condition hypotheses of CaTTExp.Binder.DesPresup hold for
+-- plain CaTT's side condition at n = 0, …, 3: the composite over
+-- Dⁿ⁺¹ ∨ Dⁿ⁺¹ and the identity over Dⁿ are coherences.
+
+sideComp sideId : Nat → Bool
+sideComp n = cattSide (compPC n) (tyD n) (var (n + n)) (var (3 + (n + n)))
+sideId   n = cattSide (diskD n) (tyD n) (var (n + n)) (var (n + n))
+
+_ : ( sideComp 0 ∷ sideComp 1 ∷ sideComp 2 ∷ sideComp 3
+    ∷ sideId 0 ∷ sideId 1 ∷ sideId 2 ∷ sideId 3 ∷ [])
+  ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ [])
+_ = refl

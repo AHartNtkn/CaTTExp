@@ -457,6 +457,11 @@ def _pole(G, x, k, sign):
         x = B[2] if sign == '-' else B[3]
     return x
 
+def _map_ty(B, f):
+    if B == STAR:
+        return B
+    return arr(_map_ty(B[1], f), f(B[2]), f(B[3]))
+
 def _plus_ty(B, plus):
     if B == STAR:
         return B

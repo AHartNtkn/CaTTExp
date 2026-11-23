@@ -14,7 +14,7 @@
 --          Wh-wf: a variable's dimension depends on Γ),
 --            Wh-wf : its typing rule, stated with the explicit type
 --                    transformer `whTy` defined below, and
---            Wh-≈  : p, q "units" ⇒ wh j p x q ≈ x;
+--            Wh-≈  : p, q "units" ⇒ wh Γ j p x q ≈ x;
 --  Unit    the predicate "≈ an identity", left abstract: EL produces
 --          cells satisfying it and Wh-≈ consumes it (instantiate it as
 --          "≈ the kernel's identity" to get Definition 2.3 exactly);

@@ -22,10 +22,11 @@
 --
 -- Diagrams are given as lists of entries (`Dg`, `Ent`) with a decidable
 -- well-formedness test `wf`; `parse` reads a pure context as a diagram,
--- and `parse-sound` shows the context is the diagram's. Canonical
--- naming (`named`: the variable at level i is named i) is no loss: a
--- named context with distinct names that lowers to Γ differs from
--- `named Γ` by a bijective renaming of names.
+-- and `parse-sound` shows the context is the diagram's. The theorem is
+-- stated for canonical naming (`named`: the variable at level i is
+-- named i, the apex is named |Γ|), the naming used by Lim/Repaired's
+-- examples; invariance of coneC under other injective namings is not
+-- proved here.
 ------------------------------------------------------------------------
 module CaTTExp.Lim.ConeAgree where
 

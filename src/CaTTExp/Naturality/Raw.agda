@@ -23,9 +23,11 @@
 -- pasting context Q, full type B and selection Y', a term of the
 -- cylinder context Q↑Y' (`cylCtx`) of type a_c → b_c, c = coh Q B id.
 -- K is a parameter. CaTTExp.Naturality.Typing proves that cyl D t has
--- type a_t → b_t whenever K is well typed and D is valid; the fillers
--- themselves are built from relative coherence (Proposition R of
--- relative-coherence.md §4.1) in CaTTExp.Naturality.Fill*.
+-- type a_t → b_t whenever K is scoped and well typed (FillerOK) and D is
+-- valid. A filler family for the coherences of dimension 1 is built in
+-- CaTTExp.Naturality.DimOne (Proposition R of relative-coherence.md
+-- §4.1, with RC(1) connectors); fillers for coherences of dimension ≥ 2
+-- are not built yet (ledger C1d item (2)).
 --
 -- The boundary cells a_t, b_t are the nested whiskers of §2.2:
 --

@@ -179,6 +179,9 @@ import CaTTExp.RCProc.SupportExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute
 import CaTTExp.Naturality.Typing
+import CaTTExp.Naturality.Boundary
+import CaTTExp.Naturality.CylCtx
+import CaTTExp.Naturality.DimOne
 import CaTTExp.GraftedArity
 import CaTTExp.CarrierGluing
 import CaTTExp.RCOracle

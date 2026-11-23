@@ -18,11 +18,12 @@
 --     context Q↑Y, where c = coh Q B id.
 --
 -- `Good` grades the result: with Good Q B = ⊤ the statement covers
--- every term. No filler family is constructed in this module or yet
--- anywhere in the repository: fillers for 1-dimensional coherences
--- (which would give the cylinder of every term of dimension ≤ 1 with
--- no hypothesis on fillers) and for higher ones are open, ledger C1d
--- items (1) and (2) in notes/open-issues.md.
+-- every term. CaTTExp.Naturality.DimOne constructs a filler family K₁
+-- with FillerOK K₁ Dim1 (every coherence of dimension 1), and derives
+-- the cylinder of every term of dimension ≤ 1 for every valid datum
+-- (`cyl₁-wf`). No filler family for coherences of dimension ≥ 2 exists
+-- yet (ledger C1d item (2) in notes/open-issues.md), so for terms that
+-- use such coherences this theorem is still conditional on FillerOK.
 --
 -- The proof is by structural induction on the typing derivation of t.
 -- At t = coh Q B γ the filler's type is transported along γ↑ with the

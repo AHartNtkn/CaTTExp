@@ -349,3 +349,4 @@ import CaTTExp.Uniform.OrdCoh
 import CaTTExp.Descent.PushoutNotUniversal
 import CaTTExp.Descent.CocartLemmas
 import CaTTExp.Descent.DJOneTruncated
+import CaTTExp.Descent.Collage

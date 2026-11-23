@@ -132,6 +132,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S28 (1.6): user postulates removed; the signature is closed to users, and assumptions are context variables.
 - S27 (1.5): how kernel extensions enter (closed constants vs substitution-applied heads) is under-specified; metatheory doesn't cover limit formers.
 - S26 (1.1): §1.6 forbids the binders §0.2 allows.
 - S24 (0.6): `⊢hpol` is an optimisation but sits in the kernel; move it to the conservative-extension layer.

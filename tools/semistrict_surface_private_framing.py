@@ -51,13 +51,15 @@ def finite_obstruction(data, modulus):
 
 
 class Equations:
-    def __init__(self, n):
+    def __init__(self, n, sample=True):
+        self.sample = sample
         self.rank, self.count = n, n
         self.rows, self.values = [], {}
 
     def fresh(self, nominal=()):
         self.count += 1
-        self.values[self.count] = nominal
+        if self.sample:
+            self.values[self.count] = nominal
         return (self.count,)
 
     def evaluate(self, word):
@@ -69,7 +71,7 @@ class Equations:
         return prod(*(value(x) for x in word))
 
     def assign(self, word):
-        x = self.fresh(self.evaluate(word))
+        x = self.fresh(self.evaluate(word) if self.sample else ())
         self.rows.append((x, word))
         return x
 
@@ -161,15 +163,31 @@ def compile_branch(data, steps, root_path=None):
             if here is None:
                 raise ValueError('schedule path fails at its actual ports')
         return here
+    def locate(path):
+        actual = prefix+tuple(path)
+        h = vertex(actual)
+        ref = oldroot+tree.tree_paths[h]
+        values = conjugators(group, actual+inv(ref))
+        return h, sys.follow(sys.framed(group, values), ref)
+    classes = {}
+    def passive(h, e):
+        if e not in classes:
+            classes[e] = passive_components(group, e)
+        return classes[e][h]
+    return action_system(data, steps, sys, vertex(oldroot), sys.follow(root, oldroot),
+                         group.ports, locate, passive)
+
+
+def action_system(data, steps, sys, start_history, start_frame, ports, locate, passive):
     def cut(h, f, e):
         i = next(i for i, (_, x) in enumerate(h) if x == e)
         return h, tuple(chain.from_iterable(f[:i])), f[i]
     def old(movie):
-        h, f = vertex(oldroot), sys.follow(root, oldroot)
+        h, f = start_history, start_frame
         counts, marks = defaultdict(int), {}
         for name, i in movie:
             if name == 'X':
-                f, h = sys.step(f, i+1), exchange(h, i+1, group.ports)
+                f, h = sys.step(f, i+1), exchange(h, i+1, ports)
             else:
                 e = h[i][1]
                 marks[e, counts[e]] = cut(h, f, e)
@@ -177,14 +195,15 @@ def compile_branch(data, steps, root_path=None):
         return marks, f
     start, left = old(data['source'])
     end, right = old(data['target'])
-    if any(sys.evaluate(a) != sys.evaluate(b) for a, b in zip(left, right)):
+    if sys.sample and any(sys.evaluate(a) != sys.evaluate(b) for a, b in zip(left, right)):
         return dict(admissible=False, reason='different total braids')
     order, latest = list(start), start.copy()
-    classes = {e: passive_components(group, e) for e in {m[0] for m in start}}
+    if not sys.sample:
+        sys.rows.extend(zip(left, right))
     def align(m, value):
         x, s, a = latest[m]
         y, t, b = value
-        if classes[m[0]][x] != classes[m[0]][y]:
+        if passive(x, m[0]) != passive(y, m[0]):
             return False
         sys.rows.extend(((s, t), (a, b)))
         latest[m] = value
@@ -192,11 +211,7 @@ def compile_branch(data, steps, root_path=None):
     for op, i, path, *args in steps:
         if op not in ('gain', 'commute') or not 0 <= i < len(order):
             raise ValueError('expected a gain or meeting at an update index')
-        actual = prefix+tuple(path)
-        h = vertex(actual)
-        ref = oldroot+tree.tree_paths[h]
-        values = conjugators(group, actual+inv(ref))
-        f = sys.follow(sys.framed(group, values), ref)
+        h, f = locate(path)
         m = order[i]
         if not align(m, cut(h, f, m[0])):
             return dict(admissible=False, reason='passive component')
@@ -204,7 +219,7 @@ def compile_branch(data, steps, root_path=None):
             g, = args
             if not 0 < abs(g) < len(h) or h[abs(g)-1][1] != m[0]:
                 return dict(admissible=False, reason='gain at wrong occurrence')
-            k = exchange(h, g, group.ports)
+            k = exchange(h, g, ports)
             if k is None:
                 return dict(admissible=False, reason='unavailable gain')
             latest[m] = cut(k, sys.step(f, g), m[0])
@@ -217,8 +232,9 @@ def compile_branch(data, steps, root_path=None):
             order[i:i+2] = other, m
     if order != list(end) or not all(align(m, end[m]) for m in end):
         return dict(admissible=False, reason='final order or passive component')
+    satisfied = all(sys.evaluate(a) == sys.evaluate(b) for a, b in sys.rows) if sys.sample else None
     return dict(admissible=True, rank=sys.rank, variable_count=sys.count-sys.rank,
-                equations=sys.rows, sample_satisfies=all(sys.evaluate(a) == sys.evaluate(b) for a, b in sys.rows))
+                equations=sys.rows, sample_satisfies=satisfied)
 
 
 def checks():

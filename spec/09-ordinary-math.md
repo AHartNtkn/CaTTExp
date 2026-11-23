@@ -23,6 +23,7 @@ The list is fixed. A new inductive object, quotient, truncation or recursively d
 | Object-valued recursion on rose trees (R-U) | instance of INIT + DESC-grpd | proved (sketch) |
 | R-cot⁺ over a set base | closed-structure hom + DESC-grpd + INIT | proved (sketch) |
 | T-graph, T-loc | encode–decode from DESC, DJ and INIT, plus the closure clauses T-init and T-hom⁻ | paper only (F10d, F10g) |
+| Higher inductive objects (circle, spheres, suspensions, torus, ‖A‖₋₁ by a squash constructor) and their directed analogues (directed circle BN, directed spheres, Gray suspension) | instances of INIT with cell variables; dependent elimination by Theorem D of `notes/higher-inductive.md` | proved (note level, F11) |
 
 The notes state this chapter under P (pseudo ambient) and say where L differs. For **discrete targets P and L agree**, because every 2-cell of the target is already invertible. Restating the non-discrete parts over V + S is ledger S8.
 
@@ -65,6 +66,8 @@ Derived:
 **Why T-hom⁻ excludes n = 0.** The walking arrow [1] has every hom a proposition (Hom(0, 1) = ⊤, Hom(1, 0) = ∅, endo-homs ⊤), but it is not trunc 0, because its arrow is not invertible. Invertibility of the homs' cells says nothing about C's 1-cells, so at n = 0 the rule needs C to be a groupoid. Every use (T-graph, T-loc) is at n = 1.
 
 **Why T-init has no cell variables.** With arbitrary invertible cells T-init is false. The context (X, z, s, s⁻¹, s ; s⁻¹ ≅ 1, s⁻¹ ; s ≅ 1), with quasi-inverse data instead of bi-invertibility data, has an initial model that is not a set: the higher inductive integers without their coherence constructor (Altenkirch–Scoccola, arXiv:2007.00167, §1.2).
+
+**No complete clause with cell variables.** Allowing cell variables makes `trunc n` undecidable: (X : grpd, X : ⋆^{≤1}, b, g_i : b → b, ρ_j : w_j ⇒ 1_b) has μΔ = BG for the presented group G, which is trunc 0 iff G is trivial (Adian–Rabin). So extensions of T-init can only be sound sufficient conditions; candidates (Gersten's weight test for groupoidal 2-dimensional contexts, homotopical polygraphs for directed ones, ledger B24) are in `notes/higher-inductive.md` §7 (F11d).
 
 **Relation to `grpd_k`.** `C grpd_k` (chapter 3) makes cells of hom-dimension ≥ k invertible: C is an (∞, k−1)-category. `C trunc n` makes them also fillable above level n: C is an n-truncated object. For n ≥ 0, `trunc n` implies `grpd_{n+1}`; the converse fails.
 
@@ -151,7 +154,8 @@ The rule binds the object variable X in a premise, forms an ordinary object μΔ
 **Example.**
 - ℕ := μ(X, z : ⊤ → X, s : X → X); List(B) := μ(X, n : ⊤ → X, c : B × X → X); a finitary W-type is μ(X, c_i : B_i × X^{n_i} → X).
 - ‖A‖_n := μ(X : ⋆^{≤n}, g : A → X). Here INIT-J1 and INIT-J2 are the two truncation rules Tr-J1 and Tr-J2.
-- The free object on an object-labelled graph is μ(X, x_v : ⊤ → X, e : B_e → Hom_X(x_v, x_w)), which is R-A⁺. The target Hom_X(x_v, x_w) is a pullback of [⟦D¹⟧, X], so it is limit-preserving. The initial model is V ⊔_{∐_e (⊤ ⊔ ⊤)} ∐_e ΣB_e.
+- The free object on an object-labelled graph is μ(X, x_v : ⊤ → X, e : B_e → Hom_X(x_v, x_w)), which is R-A⁺. The target Hom_X(x_v, x_w) is a pullback of the **lax** cotensor [⟦D¹⟧, X], so it is limit-preserving. (The fibre of the cartesian cotensor over (x_v, x_w) has only the invertible 2-cells of X as its 1-cells, so it is not the hom; F11a.) The initial model is V ⊔_{∐_e (⊤ ⊔ ⊤)} ∐_e ΣB_e.
+- *Cell constructors (HITs).* A context whose sources do not mention X is a cell complex: μΔ is the iterated pushout of A ⊗ ∂⟦Dᵏ⟧ → A ⊗ ⟦Dᵏ⟧, one per cell variable (`notes/higher-inductive.md`, Thm A). (X, b : ⊤ → X, l : b → b) is the directed circle BN, the free (∞,ω)-category on a loop; with `l inv`, or with the mark `X : grpd` (∞-groupoids are a reflective class closed under limits and colimits), it is the circle S¹ = BZ. (X, n, s : ⊤ → X, m : A → Hom_X(n, s)) is the Gray suspension ΣA. Under `grpd` the result is the CW complex of HoTT's non-recursive HITs (Thm B). Recursive cell constructors are admitted too: (X : grpd, g : A → X, sq : π₁ ⇒ π₂ : X × X → X) gives ‖A‖₋₁ (Thm C), while without `grpd` its initial model is not ⊤ (Prop C′). Dependent elimination for every Δ and every family p : E → μΔ follows from INIT-J1/J2 by the Awodey–Gambino–Sojakova argument (Thm D).
 - *Rejected: a target that does not preserve limits.* Δ = (X, t : ⊤ → ⊤ ⊔ ⊤) has models Cat_ω ⊔ Cat_ω and no initial model. The same holds for (X, t : ⊤ → X ⊔ X).
 - *Why morphisms are strong.* With lax model morphisms, pointed objects with a non-invertible comparison f(i) → y have no initial model: every candidate has two inequivalent maps to ([1], 1). Cells *declared in* Δ may still be non-invertible, so directed structure is available inside models.
 
@@ -256,7 +260,7 @@ So Hom_{⟦Γ⟧}(a, b) ≃ Π_b, a set by T-init. The same argument in the slic
 
 Colimits *inside* an object C are declared structure: a marking with a filler rule. **Θ-density** (B as the colimit of its pasting-diagram elements) is an instance over an internal Θ and gives extensionality of transformations for arbitrary domains (F5b, F5c drafted).
 
-**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}.
+**Object-valued recursion (no rule).** The internal Θ and the realisation functor (F5d) come from a family U → Θ₀ over the set of rose trees, defined by recursion. It is an INIT instance: U := μ(X, p : X → Θ₀, a : Φ_p(X) → X over Θ₀), where Φ_p(X) has fibre ∨_j ΣX_{t_j} over node(ts). Lambek's lemma and DESC-grpd over Θ₀ give the fibres U_{node(ts)} ≃ ∨_j ΣU_{t_j}. (As written, p's target Θ₀ is a constant other than ⊤, which §9.3's grammar excludes; the context is meant over the set Θ₀, i.e. multi-sorted. INIT over a base, which makes this literal, is proposed in `notes/higher-inductive.md` §8, F11b.)
 
 **R-cot⁺ over a set base (no rule).** For a set I and q : U → I, the object [q, B] → I, whose maps from W over I are the maps W ×_I U → B, is an equaliser inside I × U\(B ⊔ ⊤) (the closed-structure hom of chapter 8, read as partial maps): the i-th component lands in B and the others in ⊤. DESC-grpd splits W over I, and decidable equality on I comes from INIT. Over a non-discrete base, R-cot⁺ would be a right adjoint to base change along q, which exists only for exponentiable q; it is not part of the system.
 

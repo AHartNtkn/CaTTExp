@@ -26,6 +26,9 @@
 -- round-trip-2, corec-mor, corec-uni, M-final, as in Streams.agda.
 --
 -- Scope and honesty notes.
+--   * Parameter-free: coalgebras and models are closed formulas with
+--     closed operations (no ambient context Γ).  INIT is assumed only
+--     for such models, a special case of §9.3's INIT-J1/J2.
 --   * 1-truncated, as in Streams.agda: ≈ is a relation, INIT-J2 is
 --     uniqueness up to ≈, levels ≥ 2 are not encoded.
 --   * INIT for L is assumed (record INITL), with its constructor given

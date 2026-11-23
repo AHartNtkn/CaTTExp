@@ -37,6 +37,9 @@
 --   Str-final       the two packaged as finality.
 --
 -- Scope and honesty notes.
+--   * Parameter-free: coalgebras and models are closed formulas with
+--     closed operations (no ambient context Γ).  INIT is assumed only
+--     for such models, a special case of §9.3's INIT-J1/J2.
 --   * 1-truncated: ≈ stands for an invertible cell and is a relation,
 --     so INIT-J2 is "unique up to ≈" and the cells of a strong morphism
 --     are propositions.  The bijection transpose-mor / untranspose-mor

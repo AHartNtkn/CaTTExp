@@ -12,22 +12,27 @@
 -- Γ′) without any typing derivation of terms, which is what makes the
 -- induction go through.
 --
+-- A renaming keeps the marks of each variable, and the mark judgment
+-- is assumed stable under renaming (MarkRen).
+--
 --   tm-ren : Γ ⊢ t ∶ A  and  Γ′ ⊢ren ρ ∶ Γ  give  Γ′ ⊢ t[ρ] ∶ A[ρ]
 --   wk-tm  : Γ ⊢ t ∶ A  and  Γ ▸ B ⊢        give  Γ ▸ B ⊢ t ∶ A
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
+import CaTTExp.Binder.Mark as BM
 import CaTTExp.Binder.Laws as Laws
 
 module CaTTExp.Binder.Rename
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
+  (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
   where
 
 open Signature 𝕊
 open import CaTTExp.Binder.SyntaxLemmas K B
-open import CaTTExp.Binder.TypingWith 𝕊 side
-open import CaTTExp.Binder.Scoping 𝕊 side
+open import CaTTExp.Binder.TypingWith 𝕊 side mark
+open import CaTTExp.Binder.Scoping 𝕊 side mark
 open Laws 𝕊
 
 infix 4 _⊢ren_∶_
@@ -39,10 +44,18 @@ record _⊢ren_∶_ (Γ′ : Ctx) (ρ : Sub) (Γ : Ctx) : Set where
     leq  : lenₛ ρ ≡ len Γ
     lc   : LC ρ
     sc   : T (scSub? (len Γ′) ρ)
+    -- A variable goes to a variable of the renamed type and the
+    -- same marks.
     look : ∀ i {A} → lookup Γ i ≡ just A →
            Σ Nat λ j → (lookupₛ ρ i ≡ var j) × (lookup Γ′ j ≡ just (A [ ρ ]ty))
+                     × (marksAt Γ′ j ≡ marksAt Γ i)
 
 open _⊢ren_∶_
+
+-- The mark judgment is stable under renaming, for well-typed terms.
+MarkRen : Set
+MarkRen = ∀ {Γ Γ′ ρ t A m} → Γ′ ⊢ren ρ ∶ Γ → Γ ⊢tm t ∶ A →
+          T (mark Γ m t) → T (mark Γ′ m (t [ ρ ]tm))
 
 ------------------------------------------------------------------------
 -- Lookup lemmas.
@@ -53,11 +66,17 @@ lookupₛ-top σ t i e rewrite e = refl
 lookupₛ-pop : ∀ σ t i → (i ==ℕ lenₛ σ) ≡ false → lookupₛ (σ ,ₛ t) i ≡ lookupₛ σ i
 lookupₛ-pop σ t i e rewrite e = refl
 
-lookup-pop : ∀ Γ A i → (i ==ℕ len Γ) ≡ false → lookup (Γ ▸ A) i ≡ lookup Γ i
+lookup-pop : ∀ Γ {ms} A i → (i ==ℕ len Γ) ≡ false → lookup (Γ ▸[ ms ] A) i ≡ lookup Γ i
 lookup-pop Γ A i e rewrite e = refl
 
-lookup-top : ∀ Γ A i → (i ==ℕ len Γ) ≡ true → lookup (Γ ▸ A) i ≡ just A
+lookup-top : ∀ Γ {ms} A i → (i ==ℕ len Γ) ≡ true → lookup (Γ ▸[ ms ] A) i ≡ just A
 lookup-top Γ A i e rewrite e = refl
+
+marksAt-pop : ∀ Γ ms A i → (i ==ℕ len Γ) ≡ false → marksAt (Γ ▸[ ms ] A) i ≡ marksAt Γ i
+marksAt-pop Γ ms A i e rewrite e = refl
+
+marksAt-top : ∀ Γ ms A i → (i ==ℕ len Γ) ≡ true → marksAt (Γ ▸[ ms ] A) i ≡ ms
+marksAt-top Γ ms A i e rewrite e = refl
 
 ==-transport : ∀ i {m n} → m ≡ n → (i ==ℕ m) ≡ (i ==ℕ n)
 ==-transport i refl = refl
@@ -93,7 +112,7 @@ mutual
 
   id-tel : ∀ n Δ → T (scTel? n Δ) → Δ [ fresh 0 n ]tel ≡ Δ
   id-tel n ε _ = refl
-  id-tel n (Δ ▸ A) p = let (a , b) = T∧ {scTel? n Δ} p in cong₂ _▸_ (id-tel n Δ a) (id-ty n A b)
+  id-tel n (Δ ▸[ ms ] A) p = let (a , b) = T∧ {scTel? n Δ} p in cong₂ (_▸[ ms ]_) (id-tel n Δ a) (id-ty n A b)
 
   id-sub : ∀ n τ → T (scSub? n τ) → τ ∘ fresh 0 n ≡ τ
   id-sub n ⟨⟩ _ = refl
@@ -102,7 +121,7 @@ mutual
 ------------------------------------------------------------------------
 -- The renaming lemma.
 
-module _ (closed : Closed) (laws : BinderLaws) where
+module _ (closed : Closed) (laws : BinderLaws) (mren : MarkRen) where
 
   open BinderLaws laws
 
@@ -110,10 +129,16 @@ module _ (closed : Closed) (laws : BinderLaws) where
     scTyAt : ∀ {m n} A → m ≡ n → T (scTy? m A) → T (scTy? n A)
     scTyAt A refl p = p
 
+  marksOK-ren : ∀ {Γ Γ′ ρ t A} ms → Γ′ ⊢ren ρ ∶ Γ → Γ ⊢tm t ∶ A →
+                T (marksOK Γ ms t) → T (marksOK Γ′ ms (t [ ρ ]tm))
+  marksOK-ren []       r d _ = tt
+  marksOK-ren {Γ} {t = t} (m ∷ ms) r d p =
+    let (a , b) = T∧ {mark Γ m t} p in ∧T (mren r d a) (marksOK-ren ms r d b)
+
   mutual
     tm-ren : ∀ {Γ Γ′ t A ρ} → Γ ⊢tm t ∶ A → Γ′ ⊢ren ρ ∶ Γ → Γ′ ⊢tm t [ ρ ]tm ∶ A [ ρ ]ty
     tm-ren (var-wf {i} w eq) r with look r i eq
-    ... | j , e , l rewrite e = var-wf (ctx r) l
+    ... | j , e , l , _ rewrite e = var-wf (ctx r) l
     tm-ren {Γ′ = Γ′} {ρ = ρ} (coh-wf {Δ = Θ} {A} {t} {u} {τ} p w a ok sτ) r =
       subst (Γ′ ⊢tm coh Θ (arr A t u) (τ ∘ ρ) ∶_)
         (sym (assoc-ty (arr A t u) τ ρ
@@ -137,23 +162,25 @@ module _ (closed : Closed) (laws : BinderLaws) where
 
     sub-ren : ∀ {Θ Γ Γ′ τ ρ} → Θ ⊢ctx → Γ ⊢sub τ ∶ Θ → Γ′ ⊢ren ρ ∶ Γ → Γ′ ⊢sub τ ∘ ρ ∶ Θ
     sub-ren _ (⟨⟩-wf _) r = ⟨⟩-wf (ctx r)
-    sub-ren {Θ ▸ A} {Γ′ = Γ′} {τ ,ₛ t} {ρ} (▸-wf w a) (,-wf sτ d) r =
+    sub-ren {Θ ▸[ ms ] A} {Γ′ = Γ′} {τ ,ₛ t} {ρ} (▸-wf w a) (,-wf sτ d o) r =
       ,-wf (sub-ren w sτ r)
         (subst (Γ′ ⊢tm t [ ρ ]tm ∶_)
           (assoc-ty A τ ρ (scTyAt A (sym (snd (sub-sc closed laws sτ))) (ty-sc closed laws a)))
           (tm-ren d r))
+        (marksOK-ren ms r d o)
 
     args-ren : ∀ {Γ Γ′ ts Θ ρ} → Γ ⊢args ts ∶ Θ → Γ′ ⊢ren ρ ∶ Γ → Γ′ ⊢args ts ∘ ρ ∶ Θ [ ρ ]tel
     args-ren (⟨⟩-a _) r = ⟨⟩-a (ctx r)
-    args-ren {Γ′ = Γ′} {ρ = ρ} (,-a {ts} {Θ} {t} {A} s d) r =
+    args-ren {Γ′ = Γ′} {ρ = ρ} (,-a {ts} {Θ} {t} {ms} {A} s d o) r =
       ,-a (args-ren s r) (subst (Γ′ ⊢tm t [ ρ ]tm ∶_) (op-[]ty 0 ts A ρ (lc r)) (tm-ren d r))
+          (marksOK-ren ms r d o)
 
     -- A renaming extends under an opened telescope.
     tel-ren : ∀ {Γ Γ′ ρ} Δ → (Γ ⧺ openTel (len Γ) Δ) ⊢ctx → Γ′ ⊢ren ρ ∶ Γ → T (scTel? (len Γ) Δ) →
               (Γ′ ⧺ openTel (len Γ′) (Δ [ ρ ]tel)) ⊢ren (ρ ++ₛ fresh (len Γ′) (len Δ)) ∶ (Γ ⧺ openTel (len Γ) Δ)
     tel-ren ε _ r _ = r
-    tel-ren {Γ} {Γ′} {ρ} (Δ ▸ A) (▸-wf wΞ a) r p =
-      subst (λ Z → ((Γ′ ⧺ openTel n′ (Δ [ ρ ]tel)) ▸ Z) ⊢ren ρ′ ,ₛ var (n′ + k) ∶ ((Γ ⧺ Ξ) ▸ X))
+    tel-ren {Γ} {Γ′} {ρ} (Δ ▸[ ms ] A) (▸-wf wΞ a) r p =
+      subst (λ Z → ((Γ′ ⧺ openTel n′ (Δ [ ρ ]tel)) ▸[ ms ] Z) ⊢ren ρ′ ,ₛ var (n′ + k) ∶ ((Γ ⧺ Ξ) ▸[ ms ] X))
             E r″
       where
       n  = len Γ
@@ -183,31 +210,37 @@ module _ (closed : Closed) (laws : BinderLaws) where
                          (trans (fresh-∘ ρ n′ k) (cong (fresh n′) (sym (len-tel[] Δ ρ)))))
                   (ext-ty-++ A ρ (fresh n′ k) (subst (λ m → T (scTy? m A)) (sym lenρ) pA)))
 
-      w″ : ((Γ′ ⧺ Ξ′) ▸ X′) ⊢ctx
+      w″ : ((Γ′ ⧺ Ξ′) ▸[ ms ] X′) ⊢ctx
       w″ = ▸-wf (ctx r′) a′
 
       scX : T (scTy? (lenₛ ρ′) X)
       scX = scTyAt X (sym (leq r′)) (ty-sc closed laws a)
 
-      lk : ∀ i {T₀} → lookup ((Γ ⧺ Ξ) ▸ X) i ≡ just T₀ →
-           Σ Nat λ j → (lookupₛ (ρ′ ,ₛ var (n′ + k)) i ≡ var j) × (lookup ((Γ′ ⧺ Ξ′) ▸ X′) j ≡ just (T₀ [ ρ′ ,ₛ var (n′ + k) ]ty))
+      lk : ∀ i {T₀} → lookup ((Γ ⧺ Ξ) ▸[ ms ] X) i ≡ just T₀ →
+           Σ Nat λ j → (lookupₛ (ρ′ ,ₛ var (n′ + k)) i ≡ var j)
+                     × (lookup ((Γ′ ⧺ Ξ′) ▸[ ms ] X′) j ≡ just (T₀ [ ρ′ ,ₛ var (n′ + k) ]ty))
+                     × (marksAt ((Γ′ ⧺ Ξ′) ▸[ ms ] X′) j ≡ marksAt ((Γ ⧺ Ξ) ▸[ ms ] X) i)
       lk i {T₀} eq with i ==ℕ len (Γ ⧺ Ξ) in e
       ... | true  =
         n′ + k
         , lookupₛ-top ρ′ _ i (trans (==-transport i (leq r′)) e)
-        , trans (lookup-top (Γ′ ⧺ Ξ′) X′ (n′ + k) (==-self (sym lenΞ′)))
+        , trans (lookup-top (Γ′ ⧺ Ξ′) {ms} X′ (n′ + k) (==-self (sym lenΞ′)))
                 (cong just (trans (sym (ext-ty X ρ′ (var (n′ + k)) scX))
                                   (cong (_[ ρ′ ,ₛ var (n′ + k) ]ty) (just-inj eq))))
+        , marksAt-top (Γ′ ⧺ Ξ′) ms X′ (n′ + k) (==-self (sym lenΞ′))
       ... | false with look r′ i eq
-      ...   | j , ej , lj =
+      ...   | j , ej , lj , mj =
         j
         , trans (lookupₛ-pop ρ′ _ i (trans (==-transport i (leq r′)) e)) ej
-        , trans (lookup-pop (Γ′ ⧺ Ξ′) X′ j
+        , trans (lookup-pop (Γ′ ⧺ Ξ′) {ms} X′ j
                    (<→≢ j (len (Γ′ ⧺ Ξ′)) (lookup-< (Γ′ ⧺ Ξ′) j lj)))
                 (trans lj (cong just (sym (ext-ty T₀ ρ′ (var (n′ + k))
                    (scTyAt T₀ (sym (leq r′)) (snd (ctx-lookup closed laws wΞ eq)))))))
+        , trans (marksAt-pop (Γ′ ⧺ Ξ′) ms X′ j
+                   (<→≢ j (len (Γ′ ⧺ Ξ′)) (lookup-< (Γ′ ⧺ Ξ′) j lj)))
+                mj
 
-      r″ : ((Γ′ ⧺ Ξ′) ▸ X′) ⊢ren ρ′ ,ₛ var (n′ + k) ∶ ((Γ ⧺ Ξ) ▸ X)
+      r″ : ((Γ′ ⧺ Ξ′) ▸[ ms ] X′) ⊢ren ρ′ ,ₛ var (n′ + k) ∶ ((Γ ⧺ Ξ) ▸[ ms ] X)
       r″ = mkRen w″ (cong suc (leq r′)) (∧T (lc r′) tt)
              (∧T (scSub-suc ρ′ (sc r′))
                  (subst (λ m → T ((n′ + k) <ℕ suc m)) (sym lenΞ′) (<-self (n′ + k))))
@@ -216,18 +249,19 @@ module _ (closed : Closed) (laws : BinderLaws) where
   ----------------------------------------------------------------------
   -- Weakening.
 
-  wk-ren : ∀ {Γ B} → (Γ ▸ B) ⊢ctx → (Γ ▸ B) ⊢ren fresh 0 (len Γ) ∶ Γ
-  wk-ren {Γ} {B} w@(▸-wf wΓ _) =
+  wk-ren : ∀ {Γ ms B} → (Γ ▸[ ms ] B) ⊢ctx → (Γ ▸[ ms ] B) ⊢ren fresh 0 (len Γ) ∶ Γ
+  wk-ren {Γ} {ms} {B} w@(▸-wf wΓ _) =
     mkRen w (lenₛ-fresh 0 (len Γ)) (lc-fresh 0 (len Γ))
       (scSub-suc (fresh 0 (len Γ)) (sc-fresh 0 (len Γ)))
       λ i {A} eq →
         let (p , a) = ctx-lookup closed laws wΓ eq in
         i , lookup-id (len Γ) i p
-          , trans (lookup-pop Γ B i (<→≢ i (len Γ) p)) (trans eq (cong just (sym (id-ty (len Γ) A a))))
+          , trans (lookup-pop Γ {ms} B i (<→≢ i (len Γ) p)) (trans eq (cong just (sym (id-ty (len Γ) A a))))
+          , marksAt-pop Γ ms B i (<→≢ i (len Γ) p)
 
-  wk-tm : ∀ {Γ B t A} → Γ ⊢tm t ∶ A → (Γ ▸ B) ⊢ctx → (Γ ▸ B) ⊢tm t ∶ A
-  wk-tm {Γ} {B} {t} {A} d w =
-    subst₂ (λ u X → (Γ ▸ B) ⊢tm u ∶ X)
+  wk-tm : ∀ {Γ ms B t A} → Γ ⊢tm t ∶ A → (Γ ▸[ ms ] B) ⊢ctx → (Γ ▸[ ms ] B) ⊢tm t ∶ A
+  wk-tm {Γ} {ms} {B} {t} {A} d w =
+    subst₂ (λ u X → (Γ ▸[ ms ] B) ⊢tm u ∶ X)
       (id-tm (len Γ) t (tm-sc closed laws d)) (id-ty (len Γ) A (tm-ty-sc closed laws d))
       (tm-ren d (wk-ren w))
     where
@@ -235,18 +269,18 @@ module _ (closed : Closed) (laws : BinderLaws) where
              x ≡ y → u ≡ v → P x u → P y v
     subst₂ P refl refl q = q
 
-  wk-ty : ∀ {Γ B A} → Γ ⊢ty A → (Γ ▸ B) ⊢ctx → (Γ ▸ B) ⊢ty A
-  wk-ty {Γ} {B} {A} a w =
-    subst ((Γ ▸ B) ⊢ty_) (id-ty (len Γ) A (ty-sc closed laws a)) (ty-ren a (wk-ren w))
+  wk-ty : ∀ {Γ ms B A} → Γ ⊢ty A → (Γ ▸[ ms ] B) ⊢ctx → (Γ ▸[ ms ] B) ⊢ty A
+  wk-ty {Γ} {ms} {B} {A} a w =
+    subst ((Γ ▸[ ms ] B) ⊢ty_) (id-ty (len Γ) A (ty-sc closed laws a)) (ty-ren a (wk-ren w))
 
-  wk-sub : ∀ {Θ Γ B τ} → Θ ⊢ctx → Γ ⊢sub τ ∶ Θ → (Γ ▸ B) ⊢ctx → (Γ ▸ B) ⊢sub τ ∶ Θ
-  wk-sub {Θ} {Γ} {B} {τ} wΘ s w =
-    subst (λ σ → (Γ ▸ B) ⊢sub σ ∶ Θ) (id-sub (len Γ) τ (fst (sub-sc closed laws s)))
+  wk-sub : ∀ {Θ Γ ms B τ} → Θ ⊢ctx → Γ ⊢sub τ ∶ Θ → (Γ ▸[ ms ] B) ⊢ctx → (Γ ▸[ ms ] B) ⊢sub τ ∶ Θ
+  wk-sub {Θ} {Γ} {ms} {B} {τ} wΘ s w =
+    subst (λ σ → (Γ ▸[ ms ] B) ⊢sub σ ∶ Θ) (id-sub (len Γ) τ (fst (sub-sc closed laws s)))
       (sub-ren wΘ s (wk-ren w))
 
-  wk-args : ∀ {Θ Γ B ts} → Γ ⊢args ts ∶ Θ → (Γ ▸ B) ⊢ctx → T (scTel? 0 Θ) → (Γ ▸ B) ⊢args ts ∶ Θ
-  wk-args {Θ} {Γ} {B} {ts} s w p =
-    subst₂ (λ σ Θ′ → (Γ ▸ B) ⊢args σ ∶ Θ′) (id-sub (len Γ) ts (args-sc closed laws s))
+  wk-args : ∀ {Θ Γ ms B ts} → Γ ⊢args ts ∶ Θ → (Γ ▸[ ms ] B) ⊢ctx → T (scTel? 0 Θ) → (Γ ▸[ ms ] B) ⊢args ts ∶ Θ
+  wk-args {Θ} {Γ} {ms} {B} {ts} s w p =
+    subst₂ (λ σ Θ′ → (Γ ▸[ ms ] B) ⊢args σ ∶ Θ′) (id-sub (len Γ) ts (args-sc closed laws s))
       (id-tel (len Γ) Θ (scTel-mono Θ p)) (args-ren s (wk-ren w))
     where
     subst₂ : ∀ {a b p} {A : Set a} {B : Set b} (P : A → B → Set p) {x y u v} →

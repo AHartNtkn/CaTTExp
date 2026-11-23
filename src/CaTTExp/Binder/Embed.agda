@@ -12,7 +12,8 @@
 --   Δ ⊢ps                 ⇔  e Δ ⊢ps
 --
 -- provided the two coh side conditions agree on embedded syntax
--- (`Agree`). Plain CaTT's side condition does (`cattSide-agree`), so
+-- (`Agree`), for every mark judgment (embedded contexts are unmarked,
+-- so no mark premise arises; `uCtx` rejects marked entries). Plain CaTT's side condition does (`cattSide-agree`), so
 -- for CaTT itself the statement is unconditional (`CaTT`). Reflection
 -- also says that a binder-free term of the extended theory has only
 -- binder-free types (`tm-types`): adding binders derives nothing new
@@ -33,6 +34,7 @@ import CaTTExp.Binder.Typing
 import CaTTExp.Pasting
 import CaTTExp.Binder.TypingWith
 import CaTTExp.Binder.Pasting
+import CaTTExp.Binder.Mark as BM
 
 module CaTTExp.Binder.Embed where
 
@@ -77,6 +79,7 @@ module Emb (K B : Set) where
     uCtx : N.Ctx → Maybe O.Ctx
     uCtx N.ε       = just O.ε
     uCtx (Γ N.▸ A) = uCtx Γ >>= λ Γ₀ → uTy A >>= λ A₀ → just (Γ₀ O.▸ A₀)
+    uCtx (Γ N.▸[ _ ∷ _ ] A) = nothing   -- marked entries are not binder-free CaTT
 
     uSub : N.Sub → Maybe O.Sub
     uSub N.⟨⟩       = just O.⟨⟩
@@ -302,6 +305,7 @@ module Conservative
   (side₀ : Old.Signature.Ctx 𝕊₀ → Old.Signature.Ty 𝕊₀ → Old.Signature.Tm 𝕊₀ → Old.Signature.Tm 𝕊₀ → Bool)
   (side : Signature.Ctx (extend 𝕊₀ bi) → Signature.Ty (extend 𝕊₀ bi) →
           Signature.Tm (extend 𝕊₀ bi) → Signature.Tm (extend 𝕊₀ bi) → Bool)
+  (mark : Signature.Ctx (extend 𝕊₀ bi) → BM.Mark → Signature.Tm (extend 𝕊₀ bi) → Bool)
   where
 
   𝕊 : Signature
@@ -311,7 +315,7 @@ module Conservative
     module O  = Old.Signature 𝕊₀
     module OT = CaTTExp.TypingWith 𝕊₀ side₀
     module N  = Signature 𝕊
-    module NT = CaTTExp.Binder.TypingWith 𝕊 side
+    module NT = CaTTExp.Binder.TypingWith 𝕊 side mark
     module BP = CaTTExp.Binder.Pasting 𝕊
     module PP = CaTTExp.Pasting P.∅
     open module E = Emb O.K (Binders.B bi)
@@ -386,7 +390,7 @@ module Conservative
       sub-pres : ∀ {Γ σ Δ} → Γ OT.⊢sub σ ∶ Δ → eCtx Γ NT.⊢sub eSub σ ∶ eCtx Δ
       sub-pres (OT.⟨⟩-wf w) = NT.⟨⟩-wf (ctx-pres w)
       sub-pres {Γ} (OT.,-wf {σ} {Δ} {t} {A} s d) =
-        NT.,-wf (sub-pres s) (subst (eCtx Γ NT.⊢tm eTm t ∶_) (e-[]ty A σ) (tm-pres d))
+        NT.,-wf (sub-pres s) (subst (eCtx Γ NT.⊢tm eTm t ∶_) (e-[]ty A σ) (tm-pres d)) tt
 
     --------------------------------------------------------------------
     -- Reflection: a derivation about embedded syntax comes from one in
@@ -444,10 +448,10 @@ module Conservative
       sub-reflect (NT.⟨⟩-wf w) {σ = O.⟨⟩} {O.ε} eΓ refl refl = OT.⟨⟩-wf (ctx-reflect w eΓ)
       sub-reflect (NT.⟨⟩-wf w) {σ = O.⟨⟩} {_ O.▸ _} _ _ ()
       sub-reflect (NT.⟨⟩-wf w) {σ = _ O.,ₛ _} _ ()
-      sub-reflect (NT.,-wf s d) {Γ} {σ O.,ₛ t} {Δ O.▸ A} eΓ refl refl =
+      sub-reflect (NT.,-wf s d _) {Γ} {σ O.,ₛ t} {Δ O.▸ A} eΓ refl refl =
         OT.,-wf (sub-reflect s eΓ refl refl) (tm-reflect-at d eΓ refl (e-[]ty A σ))
-      sub-reflect (NT.,-wf s d) {σ = _ O.,ₛ _} {O.ε} _ _ ()
-      sub-reflect (NT.,-wf s d) {σ = O.⟨⟩} _ ()
+      sub-reflect (NT.,-wf s d _) {σ = _ O.,ₛ _} {O.ε} _ _ ()
+      sub-reflect (NT.,-wf s d _) {σ = O.⟨⟩} _ ()
 
     --------------------------------------------------------------------
     -- The equivalences.
@@ -484,7 +488,7 @@ module CaTT (𝕊₀ : Old.Signature) (bi : Binders (Old.Signature.K 𝕊₀)) w
     module NC = CaTTExp.Binder.Typing (extend 𝕊₀ bi)
     open Emb (Old.Signature.K 𝕊₀) (Binders.B bi)
 
-  open Conservative 𝕊₀ bi OC.cattSide NC.cattSide public
+  open Conservative 𝕊₀ bi OC.cattSide NC.cattSide (Signature.varMark (extend 𝕊₀ bi)) public
 
   cattSide-agree : Agree
   cattSide-agree Δ A t u

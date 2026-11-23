@@ -35,7 +35,7 @@ base = record
 open import CaTTExp.Binder.Signature
 open Signature 𝕊
 open import CaTTExp.Binder.Typing 𝕊
-open import CaTTExp.Binder.CheckWith 𝕊 cattSide
+open import CaTTExp.Binder.CheckWith 𝕊 cattSide varMark
 
 X : Tm
 X = bvar 0 0

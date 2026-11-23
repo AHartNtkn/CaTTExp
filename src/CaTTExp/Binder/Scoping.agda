@@ -5,16 +5,18 @@
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Binder.Signature
+import CaTTExp.Binder.Mark as BM
 import CaTTExp.Binder.Laws as Laws
 
 module CaTTExp.Binder.Scoping
   (𝕊 : Signature)
   (side : Signature.Ctx 𝕊 → Signature.Ty 𝕊 → Signature.Tm 𝕊 → Signature.Tm 𝕊 → Bool)
+  (mark : Signature.Ctx 𝕊 → BM.Mark → Signature.Tm 𝕊 → Bool)
   where
 
 open Signature 𝕊
 open import CaTTExp.Binder.SyntaxLemmas K B
-open import CaTTExp.Binder.TypingWith 𝕊 side
+open import CaTTExp.Binder.TypingWith 𝕊 side mark
 open Laws 𝕊
 
 ------------------------------------------------------------------------
@@ -29,17 +31,17 @@ mutual
 
   sub-lc : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → LC σ
   sub-lc (⟨⟩-wf _) = tt
-  sub-lc (,-wf s d) = ∧T (sub-lc s) (tm-lc d)
+  sub-lc (,-wf s d _) = ∧T (sub-lc s) (tm-lc d)
 
   args-lc : ∀ {Γ ts Θ} → Γ ⊢args ts ∶ Θ → LC ts
   args-lc (⟨⟩-a _) = tt
-  args-lc (,-a s d) = ∧T (args-lc s) (tm-lc d)
+  args-lc (,-a s d _) = ∧T (args-lc s) (tm-lc d)
 
 ------------------------------------------------------------------------
 -- Scoping.
 
 lookup-< : ∀ Γ i {A} → lookup Γ i ≡ just A → T (i <ℕ len Γ)
-lookup-< (Γ ▸ B) i eq with i ==ℕ len Γ in e
+lookup-< (Γ ▸[ _ ] B) i eq with i ==ℕ len Γ in e
 ... | true  rewrite ==→≡ i (len Γ) e = <-self (len Γ)
 ... | false = <-suc i (len Γ) (lookup-< Γ i eq)
 
@@ -49,7 +51,7 @@ module _ (closed : Closed) (laws : BinderLaws) where
 
   mutual
     ctx-lookup : ∀ {Γ i A} → Γ ⊢ctx → lookup Γ i ≡ just A → T (i <ℕ len Γ) × T (scTy? (len Γ) A)
-    ctx-lookup {Γ ▸ B} {i} {A} (▸-wf w b) eq with i ==ℕ len Γ in e
+    ctx-lookup {Γ ▸[ _ ] B} {i} {A} (▸-wf w b) eq with i ==ℕ len Γ in e
     ... | true  = ==→<suc i (len Γ) e
                 , subst (λ X → T (scTy? (suc (len Γ)) X)) (just-inj eq) (scTy-suc {len Γ} B (ty-sc b))
     ... | false = let (p , a) = ctx-lookup w eq in <-suc i (len Γ) p , scTy-suc {len Γ} A a
@@ -75,12 +77,12 @@ module _ (closed : Closed) (laws : BinderLaws) where
 
     sub-sc : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → T (scSub? (len Γ) σ) × (lenₛ σ ≡ len Δ)
     sub-sc (⟨⟩-wf _)  = tt , refl
-    sub-sc (,-wf s d) = let (p , l) = sub-sc s in ∧T p (tm-sc d) , cong suc l
+    sub-sc (,-wf s d _) = let (p , l) = sub-sc s in ∧T p (tm-sc d) , cong suc l
 
     args-sc : ∀ {Γ ts Θ} → Γ ⊢args ts ∶ Θ → T (scSub? (len Γ) ts)
     args-sc (⟨⟩-a _)  = tt
-    args-sc (,-a s d) = ∧T (args-sc s) (tm-sc d)
+    args-sc (,-a s d _) = ∧T (args-sc s) (tm-sc d)
 
   sub-ctx : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → Γ ⊢ctx
   sub-ctx (⟨⟩-wf w)  = w
-  sub-ctx (,-wf s _) = sub-ctx s
+  sub-ctx (,-wf s _ _) = sub-ctx s

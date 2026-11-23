@@ -190,6 +190,7 @@ import CaTTExp.RCProc.Eg
 import CaTTExp.RCProc.TwoPathTerm
 import CaTTExp.RCProc.StrictPath
 import CaTTExp.RCProc.Key2Bd
+import CaTTExp.RCProc.Exchange
 import CaTTExp.RCProc.LiftF
 import CaTTExp.RCProc.ColSub
 import CaTTExp.RCProc.LemmaGSub

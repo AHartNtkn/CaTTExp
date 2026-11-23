@@ -39,8 +39,8 @@
 --
 -- Strong loop-freeness is needed: for g, h : f ⇒ f, the 2-paths g;h and
 -- h;g have the same bag and source but are not exchange-equivalent
--- (Key2 fails, since key f < key g < key f). This counterexample is
--- on paper, not formalized.
+-- (Key2 fails, since key f < key g < key f). Both facts are proved in
+-- CaTTExp.RCProc.TwoPathFacts (`gh-not-~`, `no-key2`).
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.TwoPath where
 

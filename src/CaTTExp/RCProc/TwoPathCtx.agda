@@ -18,11 +18,13 @@
 --    key α < key e on ∂⁺ α.
 --
 -- This is Steiner's strong loop-freeness truncated at dimension 2. It
--- is expected (on paper, not proved here) to hold for pasting contexts
--- and for the cylinders Q↑Y of the naturality filler; it cannot hold
--- for g, h : f ⇒ f (it would need key f < key g < key f), where
--- Theorem A itself fails, since g ∗₁ h and h ∗₁ g have the same strict
--- image (not formalized).
+-- holds for every pasting context (`TwoPathFacts.key2-ps`). It is
+-- expected (on paper, not proved here) to hold for the cylinders Q↑Y
+-- of the naturality filler. It has no instance for g, h : f ⇒ f
+-- (`TwoPathFacts.no-key2`), where g;h and h;g are not
+-- exchange-equivalent (`TwoPathFacts.Counterexample.gh-not-~`); that
+-- g ∗₁ h and h ∗₁ g are not connected by a CaTT 3-cell is on paper,
+-- not formalized.
 --
 -- Not tied down here: the endpoints a, b that `order` gives for each
 -- 2-variable's boundary paths are not required to be the endpoints

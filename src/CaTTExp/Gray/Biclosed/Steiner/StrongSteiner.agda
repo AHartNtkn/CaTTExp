@@ -27,12 +27,12 @@
 -- it returns true on every strong Steiner basis (that would need the
 -- computed height `hgt` to increase along <₁ on every loop-free basis).
 --
--- Checked here: globes λDⁿ for n ≤ 4 (`globes`), and a loop basis
+-- Checked here: globes λDⁿ for n ≤ 4 (`globes`; every n is proved in
+-- GlobeSteiner), and a loop basis
 -- (1-cells p → q and q → p) is rejected (`loop-rejected`) while
 -- passing every other condition (`loop-rest`).
--- Globes of every dimension, and closure under the Gray tensor
--- (Steiner 2004; Ara–Maltsiniotis 1607.00668 App. A), are cited, not
--- proved here.
+-- Closure under the Gray tensor (Steiner 2004; Ara–Maltsiniotis
+-- 1607.00668 App. A) is cited, not proved (ledger C5f).
 ------------------------------------------------------------------------
 module CaTTExp.Gray.Biclosed.Steiner.StrongSteiner where
 

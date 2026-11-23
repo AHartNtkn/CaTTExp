@@ -11,7 +11,9 @@
 --   id₂ x y f : f ⇒ f            (over the 1-chain chainC 1)
 --   unitE     : id₂ f ∗ h ⇄ h    (over a 2-disc)
 --
--- and `stripE`: a low 2-cell K : U ⇒ V on the left can be removed,
+-- `paste`: two squares K⁻ ∗ g ⇄ e ∗ K⁺ sharing a side give one for the
+-- composites; and `stripE`: a low 2-cell K : U ⇒ V on the left can be
+-- removed,
 --   K ∗ x ⇄ K ∗ y  ⟹  x ⇄ y,
 -- since J ∗ K ⇄ id₂ U for the chain filler J : V ⇒ U (Glue3.cancel).
 ------------------------------------------------------------------------
@@ -71,12 +73,12 @@ infixr 5 _⊙_
 _⊙_ : ∀ {Γ A t s u} → Eqv Γ A t s → Eqv Γ A s u → Eqv Γ A t u
 (p , q) ⊙ (p′ , q′) = transA p p′ , transA q′ q
 
--- Rewriting an endpoint along an equation.
-≡E : ∀ {Γ A t u} → t ≡ u → Eqv Γ A t u → Eqv Γ A t u
-≡E refl e = e
-
+-- Rewriting along equations.
 substE : ∀ {Γ A t t′ u u′} → t ≡ t′ → u ≡ u′ → Eqv Γ A t u → Eqv Γ A t′ u′
 substE refl refl e = e
+
+substE3 : ∀ {Γ A A′ t t′ u u′} → A ≡ A′ → t ≡ t′ → u ≡ u′ → Eqv Γ A t u → Eqv Γ A′ t′ u′
+substE3 refl refl refl e = e
 
 congLE : ∀ {Γ x y t s u c c′ h} → Γ ⊢tm h ∶ arr (arr ⋆ x y) s u →
          Eqv Γ (arr (arr ⋆ x y) t s) c c′ →
@@ -102,6 +104,25 @@ cancelE du dv lu lv = cancel du dv lu lv , cancel dv du lv lu
 vc-wf : ∀ {Γ x y t s u c h} → Γ ⊢tm c ∶ arr (arr ⋆ x y) t s → Γ ⊢tm h ∶ arr (arr ⋆ x y) s u →
         Γ ⊢tm vcomp (arr ⋆ x y) t s u c h ∶ arr (arr ⋆ x y) t u
 vc-wf {c = c} {h} dc dh = snd (transA (c , dc) (h , dh))
+
+------------------------------------------------------------------------
+-- Pasting two squares K⁻ ∗ g ⇄ e ∗ K⁺ side by side.
+
+module _ {Γ x y X₀ X₁ X₂ B₀ B₁ B₂ K₀ K₁ K₂ g₁ g₂ e₁ e₂}
+         (dK₀ : Γ ⊢tm K₀ ∶ arr (arr ⋆ x y) X₀ B₀) (dg₁ : Γ ⊢tm g₁ ∶ arr (arr ⋆ x y) B₀ B₁)
+         (dg₂ : Γ ⊢tm g₂ ∶ arr (arr ⋆ x y) B₁ B₂) (de₁ : Γ ⊢tm e₁ ∶ arr (arr ⋆ x y) X₀ X₁)
+         (de₂ : Γ ⊢tm e₂ ∶ arr (arr ⋆ x y) X₁ X₂) (dK₁ : Γ ⊢tm K₁ ∶ arr (arr ⋆ x y) X₁ B₁)
+         (dK₂ : Γ ⊢tm K₂ ∶ arr (arr ⋆ x y) X₂ B₂) where
+  private
+    A = arr ⋆ x y
+
+  paste : Eqv Γ (arr A X₀ B₁) (vcomp A X₀ B₀ B₁ K₀ g₁) (vcomp A X₀ X₁ B₁ e₁ K₁) →
+          Eqv Γ (arr A X₁ B₂) (vcomp A X₁ B₁ B₂ K₁ g₂) (vcomp A X₁ X₂ B₂ e₂ K₂) →
+          Eqv Γ (arr A X₀ B₂) (vcomp A X₀ B₀ B₂ K₀ (vcomp A B₀ B₁ B₂ g₁ g₂))
+                              (vcomp A X₀ X₂ B₂ (vcomp A X₀ X₁ X₂ e₁ e₂) K₂)
+  paste s₁ s₂ =
+    symE (assocE dK₀ dg₁ dg₂) ⊙ congLE dg₂ s₁ ⊙ assocE de₁ dK₁ dg₂ ⊙ congRE de₁ s₂ ⊙
+    symE (assocE de₁ de₂ dK₂)
 
 ------------------------------------------------------------------------
 -- The unit law.

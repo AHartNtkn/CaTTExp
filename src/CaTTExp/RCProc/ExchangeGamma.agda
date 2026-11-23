@@ -1,6 +1,26 @@
 ------------------------------------------------------------------------
 -- Lemma E part (2): the exchange cell of a context Γ (ledger S20 (i),
 -- stage 3e; notes/relative-coherence.md §2).
+--
+-- Data: a context Γ with key and boundary lists p∓ satisfying
+-- Term.BdOK, a point a, 2-variables α : s₁ ⇒ t₁ (over v₁ → w₁) and
+-- β : s₂ ⇒ t₂ (over v₂ → w₂), and walks λ : a ⇝ v₁, μ : w₁ ⇝ v₂,
+-- ρ : w₂ ⇝ b. The two orders of an exchange step,
+--
+--   P = (λ, α, μ ++ p⁻β ++ ρ) ; (λ ++ p⁺α ++ μ, β, ρ)
+--   Q = (λ ++ p⁻α ++ μ, β, ρ) ; (λ, α, μ ++ p⁺β ++ ρ),
+--
+-- give 2-path terms connected by 3-cells both ways
+-- (`Setup.Main.exchange`).
+--
+-- Proof. With m, k, n the lengths of λ, μ, ρ, the two-disc context
+-- E = TwoDisc m k n maps to Γ by θ_E (Z₁ ↦ α, Z₂ ↦ β, its chains to
+-- the walks; `s-θE`). Each of the four whiskered generators of E,
+-- pulled back along θ_E, forms a square with the matching generator
+-- of Γ (RCProc.ExchangeSq, via Lemma G). Pasting the squares of each
+-- order (Glue3Eqv.paste) and the exchange cell of part (1) between
+-- them gives K₀ ∗ term P ⇄ K₀ ∗ term Q for a chain filler K₀, and
+-- K₀ is removed by Glue3Eqv.stripE.
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.ExchangeGamma where
 
@@ -20,6 +40,16 @@ open import CaTTExp.RCProc.Walk using (wgoF-ty; wgoF-end)
 open import CaTTExp.RCProc.LemmaGSub using (lk4-0)
 open import CaTTExp.RCProc.Exchange
 open import CaTTExp.RCProc.ExchangeSub
+open import CaTTExp.GraphFillerTotal using (fill₁; walk-++; cons)
+open import CaTTExp.RCProc.Path1 using (B)
+open import CaTTExp.RCProc.Eg using (eg; vcomp)
+open import CaTTExp.RCProc.TwoPath using (assoc4)
+open import CaTTExp.RCProc.TwoPathCtx using (Key2Ctx)
+open import CaTTExp.RCProc.TwoPathFacts using (srcVar-eq; tgtVar-eq)
+open import CaTTExp.RCProc.TwoPathTerm using (module Term)
+open import CaTTExp.RCProc.ExchangeSq using (module Sq; vcomp-sub)
+open import CaTTExp.RCProc.Glue3 using (low-coh; graph-chain)
+open import CaTTExp.RCProc.Glue3Eqv
 
 private
   self : ∀ n → T (n <ℕ suc n)
@@ -38,6 +68,18 @@ private
 
   len-sub : ∀ {Γ σ Δ} → Γ ⊢sub σ ∶ Δ → lenₛ σ ≡ len Δ
   len-sub s = snd (S.sub-sc closed s)
+
+  cong₃ : ∀ {A B C D : Set} (f : A → B → C → D) {a a' b b' c c'} →
+          a ≡ a' → b ≡ b' → c ≡ c' → f a b c ≡ f a' b' c'
+  cong₃ f refl refl refl = refl
+
+-- A 2-path generator's term, at a 2-variable of known type.
+module EgWEq (Γ : Ctx) (key : Nat → Nat) (p⁻ p⁺ : Nat → List Nat) where
+  open Term Γ key p⁻ p⁺
+
+  egW-eq : ∀ a b l α r {v w s t} → lookup Γ α ≡ just (arr (arr ⋆ (var v) (var w)) s t) →
+           egW a b (wg l α r) ≡ eg Γ a l w s t α r b (p⁻ α) (p⁺ α)
+  egW-eq a b l α r e rewrite e = refl
 
 ------------------------------------------------------------------------
 -- Agreement of substitutions below a length.
@@ -191,3 +233,262 @@ module Setup {Γ a v₁ w₁ s₁ t₁ α v₂ w₂ s₂ t₂ β b} {λΓ μΓ �
   pm-ρ = trans (pmap-chEdges θE (len D₂) n)
            (trans (cong (λ N → edgesAt θE (suc (suc (suc (suc N)))) n) (sym l₂))
                   (wgo-edges Γ θD₂ w₂ ρΓ))
+
+  ----------------------------------------------------------------------
+  -- θ_E at the start points of the two discs.
+
+  private
+    ag₁′ : Agr θ₂ θE
+    ag₁′ = agr-trans {θ₂} {θD₂} {θE} (agr-4 θ₂ (var w₂) s₂ t₂ (var β)) ag₂
+
+  lv₁ : lookupₛ θE (e₀ m) ≡ var v₁
+  lv₁ = trans (snd (ag₀ (e₀ m) (subst (λ N → T (e₀ m <ℕ N)) (sym l₁) (end-lt (ε ▸ ⋆) 0 m tt)))) lk-e₀
+
+  lv₂ : lookupₛ θE (colEnd m k) ≡ var v₂
+  lv₂ = trans (snd (ag₁′ (colEnd m k)
+                  (subst (λ N → T (colEnd m k <ℕ N)) (sym l₂)
+                         (end-lt D₁ L₁ k (<-suc′ L₁ _ (<-suc′ L₁ _ (<-suc′ L₁ _ (self L₁))))))))
+              lk-cE
+
+  ----------------------------------------------------------------------
+  -- The exchange in Γ.
+
+  module Main (key : Nat → Nat) (pm pp : Nat → List Nat) (okΓ : Term.BdOK Γ key pm pp) where
+    private
+      module TΓ = Term Γ key pm pp
+      open Key2Ctx KE using () renaming (key to keyE; p⁻ to pE⁻; p⁺ to pE⁺)
+      module TE = Term E keyE pE⁻ pE⁺
+
+      AΓ : Ty
+      AΓ = arr ⋆ (var a) (var b)
+
+      vc : Tm → Tm → Tm → Tm → Tm → Tm
+      vc = vcomp AΓ
+
+      bα = okΓ α lα
+      bβ = okΓ β lβ
+
+      lf₁ = fst (snd d₁)
+      lf₁′ = fst (snd (snd d₁))
+      lf₂ = fst (snd d₂)
+      lf₂′ = fst (snd (snd d₂))
+
+      pα⁻ : path (lookupₛ θE f₁) ≡ pm α
+      pα⁻ = trans (cong path lf₁) (fst bα)
+      pα⁺ : path (lookupₛ θE f₁′) ≡ pp α
+      pα⁺ = trans (cong path lf₁′) (fst (snd bα))
+      pβ⁻ : path (lookupₛ θE f₂) ≡ pm β
+      pβ⁻ = trans (cong path lf₂) (fst bβ)
+      pβ⁺ : path (lookupₛ θE f₂′) ≡ pp β
+      pβ⁺ = trans (cong path lf₂′) (fst (snd bβ))
+
+      pm3 : ∀ X u Y → pmap θE (X ++ u ∷ Y) ≡ pmap θE X ++ (path (lookupₛ θE u) ++ pmap θE Y)
+      pm3 X u Y = pmap-++ θE X (u ∷ Y)
+
+      dZ₁ : E ⊢tm var Z₁ ∶ arr F₁ (var f₁) (var f₁′)
+      dZ₁ = var-wf E-wf lkZ₁
+      dZ₂ : E ⊢tm var Z₂ ∶ arr F₂ (var f₂) (var f₂′)
+      dZ₂ = var-wf E-wf lkZ₂
+
+      sZ₁ : pE⁻ Z₁ ≡ f₁ ∷ []
+      sZ₁ = srcVar-eq lkZ₁
+      tZ₁ : pE⁺ Z₁ ≡ f₁′ ∷ []
+      tZ₁ = tgtVar-eq lkZ₁
+      sZ₂ : pE⁻ Z₂ ≡ f₂ ∷ []
+      sZ₂ = srcVar-eq lkZ₂
+      tZ₂ : pE⁺ Z₂ ≡ f₂′ ∷ []
+      tZ₂ = tgtVar-eq lkZ₂
+
+      wrP : Walk E L₁ (μ ++ f₂ ∷ ρ) bE
+      wrP = walk-++ wkμ (cons (x₅ lk-f₂) wkρ)
+      wrQ : Walk E L₁ (μ ++ f₂′ ∷ ρ) bE
+      wrQ = walk-++ wkμ (cons (x₅ lk-f₂′) wkρ)
+      wlP : Walk E 0 (λ′ ++ f₁′ ∷ μ) (colEnd m k)
+      wlP = walk-++ wkλ (cons (x₃ lk-f₁′) wkμ)
+      wlQ : Walk E 0 (λ′ ++ f₁ ∷ μ) (colEnd m k)
+      wlQ = walk-++ wkλ (cons (x₃ lk-f₁) wkμ)
+
+      -- The four generators of E, pulled back.
+      module P1 = Sq d0 wkλ dZ₁ wrP s-θE lk-0 lk-b lv₁
+                     (fst d₁) lf₁ lf₁′ (snd (snd (snd d₁))) (fst bα) (fst (snd bα))
+      module P2 = Sq d0 wlP dZ₂ wkρ s-θE lk-0 lk-b lv₂
+                     (fst d₂) lf₂ lf₂′ (snd (snd (snd d₂))) (fst bβ) (fst (snd bβ))
+      module Q1 = Sq d0 wlQ dZ₂ wkρ s-θE lk-0 lk-b lv₂
+                     (fst d₂) lf₂ lf₂′ (snd (snd (snd d₂))) (fst bβ) (fst (snd bβ))
+      module Q2 = Sq d0 wkλ dZ₁ wrQ s-θE lk-0 lk-b lv₁
+                     (fst d₁) lf₁ lf₁′ (snd (snd (snd d₁))) (fst bα) (fst (snd bα))
+
+      module P1a = P1.At (P1.at (trans P1.eλ pm-λ)
+                                (trans P1.eρ (trans (pm3 μ f₂ ρ) (cong₃ (λ X Y Z → X ++ (Y ++ Z)) pm-μ pβ⁻ pm-ρ))))
+      module P2a = P2.At (P2.at (trans P2.eλ (trans (pm3 λ′ f₁′ μ) (cong₃ (λ X Y Z → X ++ (Y ++ Z)) pm-λ pα⁺ pm-μ)))
+                                (trans P2.eρ pm-ρ))
+      module Q1a = Q1.At (Q1.at (trans Q1.eλ (trans (pm3 λ′ f₁ μ) (cong₃ (λ X Y Z → X ++ (Y ++ Z)) pm-λ pα⁻ pm-μ)))
+                                (trans Q1.eρ pm-ρ))
+      module Q2a = Q2.At (Q2.at (trans Q2.eλ pm-λ)
+                                (trans Q2.eρ (trans (pm3 μ f₂′ ρ) (cong₃ (λ X Y Z → X ++ (Y ++ Z)) pm-μ pβ⁺ pm-ρ))))
+
+    -- The two orders, in Γ.
+    PΓ QΓ : List TΓ.WG
+    PΓ = TΓ.wg λΓ α (μΓ ++ pm β ++ ρΓ) ∷ TΓ.wg (λΓ ++ pp α ++ μΓ) β ρΓ ∷ []
+    QΓ = TΓ.wg (λΓ ++ pm α ++ μΓ) β ρΓ ∷ TΓ.wg λΓ α (μΓ ++ pp β ++ ρΓ) ∷ []
+
+    SΓ TΓ′ : List Nat
+    SΓ  = λΓ ++ pm α ++ μΓ ++ pm β ++ ρΓ
+    TΓ′ = (λΓ ++ pp α ++ μΓ) ++ pp β ++ ρΓ
+
+    private
+      g₁ g₂ h₁ h₂ : Tm
+      g₁ = eg Γ a λΓ w₁ s₁ t₁ α (μΓ ++ pm β ++ ρΓ) b (pm α) (pp α)
+      g₂ = eg Γ a (λΓ ++ pp α ++ μΓ) w₂ s₂ t₂ β ρΓ b (pm β) (pp β)
+      h₁ = eg Γ a (λΓ ++ pm α ++ μΓ) w₂ s₂ t₂ β ρΓ b (pm β) (pp β)
+      h₂ = eg Γ a λΓ w₁ s₁ t₁ α (μΓ ++ pp β ++ ρΓ) b (pm α) (pp α)
+
+      BS BM BT BSq BMq BTq : Tm
+      BS  = B Γ a SΓ
+      BM  = B Γ a (λΓ ++ pp α ++ μΓ ++ pm β ++ ρΓ)
+      BT  = B Γ a TΓ′
+      BSq = B Γ a ((λΓ ++ pm α ++ μΓ) ++ pm β ++ ρΓ)
+      BMq = B Γ a ((λΓ ++ pm α ++ μΓ) ++ pp β ++ ρΓ)
+      BTq = B Γ a (λΓ ++ pp α ++ μΓ ++ pp β ++ ρΓ)
+
+      termP-eq : TΓ.term a b PΓ ≡ vc BS BM BT g₁ g₂
+      termP-eq = cong₂ (vc BS BM BT) (EgWEq.egW-eq Γ key pm pp a b λΓ α (μΓ ++ pm β ++ ρΓ) lα)
+                                     (EgWEq.egW-eq Γ key pm pp a b (λΓ ++ pp α ++ μΓ) β ρΓ lβ)
+
+      termQ-eq : TΓ.term a b QΓ ≡ vc BSq BMq BTq h₁ h₂
+      termQ-eq = cong₂ (vc BSq BMq BTq) (EgWEq.egW-eq Γ key pm pp a b (λΓ ++ pm α ++ μΓ) β ρΓ lβ)
+                                        (EgWEq.egW-eq Γ key pm pp a b λΓ α (μΓ ++ pp β ++ ρΓ) lα)
+
+      -- The pulled-back boundaries.
+      XS XT : Tm
+      XS = P1.X⁻
+      XT = Q2.X⁺
+
+      BE : List Nat → Tm
+      BE p = B E 0 p [ θE ]tm
+
+      eXM : P2.X⁻ ≡ P1.X⁺
+      eXM = cong BE (++-assoc λ′ (f₁′ ∷ μ) (f₂ ∷ ρ))
+      eXMq : Q2.X⁻ ≡ Q1.X⁺
+      eXMq = sym (cong BE (++-assoc λ′ (f₁ ∷ μ) (f₂′ ∷ ρ)))
+      eXS : Q1.X⁻ ≡ XS
+      eXS = cong BE (++-assoc λ′ (f₁ ∷ μ) (f₂ ∷ ρ))
+      eXT : P2.X⁺ ≡ XT
+      eXT = cong BE (++-assoc λ′ (f₁′ ∷ μ) (f₂′ ∷ ρ))
+
+      eBM : B Γ a ((λΓ ++ pp α ++ μΓ) ++ pm β ++ ρΓ) ≡ BM
+      eBM = cong (B Γ a) (assoc4 λΓ (pp α) μΓ (pm β ++ ρΓ))
+      eBMq : B Γ a (λΓ ++ pm α ++ μΓ ++ pp β ++ ρΓ) ≡ BMq
+      eBMq = sym (cong (B Γ a) (assoc4 λΓ (pm α) μΓ (pp β ++ ρΓ)))
+      eBS : BSq ≡ BS
+      eBS = cong (B Γ a) (assoc4 λΓ (pm α) μΓ (pm β ++ ρΓ))
+      eBT : BTq ≡ BT
+      eBT = sym (cong (B Γ a) (assoc4 λΓ (pp α) μΓ (pp β ++ ρΓ)))
+
+      -- Moving the source corner of a square.
+      align : ∀ {X X′ Bs Bs′ Bt XT′ g e K} → X ≡ X′ → Bs ≡ Bs′ →
+              Eqv Γ (arr AΓ X Bt) (vc X Bs Bt (fill₁ Γ X Bs AΓ) g) (vc X XT′ Bt e K) →
+              Eqv Γ (arr AΓ X′ Bt) (vc X′ Bs′ Bt (fill₁ Γ X′ Bs′ AΓ) g) (vc X′ XT′ Bt e K)
+      align refl refl q = q
+
+      tyB : ∀ {u X Y X′ Y′} → X ≡ X′ → Y ≡ Y′ → Γ ⊢tm u ∶ arr AΓ X Y → Γ ⊢tm u ∶ arr AΓ X′ Y′
+      tyB refl refl d = d
+
+      -- Order P: K₀ ∗ (g₁ ∗ g₂) ⇄ (e₁ ∗ e₂) ∗ K₂.
+      pasteP : Eqv Γ (arr AΓ XS BT) (vc XS BS BT (fill₁ Γ XS BS AΓ) (vc BS BM BT g₁ g₂))
+                                    (vc XS P2.X⁺ BT (vc XS P1.X⁺ P2.X⁺ P1.e P2.e) (fill₁ Γ P2.X⁺ BT AΓ))
+      pasteP = paste P1a.dK⁻* P1a.dg* (tyB eBM refl P2a.dg*) P1.de (tyB eXM refl P2.de) P1a.dK⁺* P2a.dK⁺*
+                     P1a.sq* (align eXM eBM P2a.sq*)
+
+      -- Order Q.
+      pasteQ : Eqv Γ (arr AΓ Q1.X⁻ BTq) (vc Q1.X⁻ BSq BTq (fill₁ Γ Q1.X⁻ BSq AΓ) (vc BSq BMq BTq h₁ h₂))
+                                        (vc Q1.X⁻ XT BTq (vc Q1.X⁻ Q1.X⁺ XT Q1.e Q2.e) (fill₁ Γ XT BTq AΓ))
+      pasteQ = paste Q1a.dK⁻* Q1a.dg* (tyB eBMq refl Q2a.dg*) Q1.de (tyB eXMq refl Q2.de) Q1a.dK⁺* Q2a.dK⁺*
+                     Q1a.sq* (align eXMq eBMq Q2a.sq*)
+
+      -- The exchange cell of E, pulled back.
+      Lin Rin : Tm
+      Lin = vc XS P1.X⁺ P2.X⁺ P1.e P2.e
+      Rin = vc Q1.X⁻ Q1.X⁺ XT Q1.e Q2.e
+
+      eA₀ : A₀ [ θE ]ty ≡ AΓ
+      eA₀ = cong₂ (arr ⋆) lk-0 lk-b
+
+      Lθ : Lt [ θE ]tm ≡ Lin
+      Lθ = trans (vcomp-sub (var 0) (var bE) tL sL uL cL hL θE)
+             (trans (cong₂ (λ x y → vcomp (arr ⋆ x y) (tL [ θE ]tm) (sL [ θE ]tm) (uL [ θE ]tm) (cL [ θE ]tm) (hL [ θE ]tm)) lk-0 lk-b)
+               (cong₃ (λ X Y Z → vc X Y Z (TE.egW 0 bE (TE.wg λ′ Z₁ (μ ++ f₂ ∷ ρ)) [ θE ]tm)
+                                         (TE.egW 0 bE (TE.wg (λ′ ++ f₁′ ∷ μ) Z₂ ρ) [ θE ]tm))
+                      (cong (λ X → BE (λ′ ++ X ++ μ ++ f₂ ∷ ρ)) sZ₁)
+                      (cong (λ X → BE (λ′ ++ X ++ μ ++ f₂ ∷ ρ)) tZ₁)
+                      (cong (λ X → BE ((λ′ ++ f₁′ ∷ μ) ++ X ++ ρ)) tZ₂)
+                ∙ cong₂ (vc XS P1.X⁺ P2.X⁺)
+                    (cong (_[ θE ]tm) (trans (EgWEq.egW-eq E keyE pE⁻ pE⁺ 0 bE λ′ Z₁ (μ ++ f₂ ∷ ρ) lkZ₁)
+                                             (cong₂ (eg E 0 λ′ L₁ (var f₁) (var f₁′) Z₁ (μ ++ f₂ ∷ ρ) bE) sZ₁ tZ₁)))
+                    (cong (_[ θE ]tm) (trans (EgWEq.egW-eq E keyE pE⁻ pE⁺ 0 bE (λ′ ++ f₁′ ∷ μ) Z₂ ρ lkZ₂)
+                                             (cong₂ (eg E 0 (λ′ ++ f₁′ ∷ μ) L₂ (var f₂) (var f₂′) Z₂ ρ bE) sZ₂ tZ₂)))))
+        where
+        _∙_ : ∀ {A : Set} {x y z : A} → x ≡ y → y ≡ z → x ≡ z
+        _∙_ = trans
+        tL = B E 0 (λ′ ++ pE⁻ Z₁ ++ μ ++ f₂ ∷ ρ)
+        sL = B E 0 (λ′ ++ pE⁺ Z₁ ++ μ ++ f₂ ∷ ρ)
+        uL = B E 0 ((λ′ ++ f₁′ ∷ μ) ++ pE⁺ Z₂ ++ ρ)
+        cL = TE.egW 0 bE (TE.wg λ′ Z₁ (μ ++ f₂ ∷ ρ))
+        hL = TE.egW 0 bE (TE.wg (λ′ ++ f₁′ ∷ μ) Z₂ ρ)
+
+      Rθ : Rt [ θE ]tm ≡ Rin
+      Rθ = trans (vcomp-sub (var 0) (var bE) tR sR uR cR hR θE)
+             (trans (cong₂ (λ x y → vcomp (arr ⋆ x y) (tR [ θE ]tm) (sR [ θE ]tm) (uR [ θE ]tm) (cR [ θE ]tm) (hR [ θE ]tm)) lk-0 lk-b)
+               (trans (cong₃ (λ X Y Z → vc X Y Z (TE.egW 0 bE (TE.wg (λ′ ++ f₁ ∷ μ) Z₂ ρ) [ θE ]tm)
+                                               (TE.egW 0 bE (TE.wg λ′ Z₁ (μ ++ f₂′ ∷ ρ)) [ θE ]tm))
+                             (cong (λ X → BE ((λ′ ++ f₁ ∷ μ) ++ X ++ ρ)) sZ₂)
+                             (cong (λ X → BE ((λ′ ++ f₁ ∷ μ) ++ X ++ ρ)) tZ₂)
+                             (cong (λ X → BE (λ′ ++ X ++ μ ++ f₂′ ∷ ρ)) tZ₁))
+                      (cong₂ (vc Q1.X⁻ Q1.X⁺ XT)
+                        (cong (_[ θE ]tm) (trans (EgWEq.egW-eq E keyE pE⁻ pE⁺ 0 bE (λ′ ++ f₁ ∷ μ) Z₂ ρ lkZ₂)
+                                                 (cong₂ (eg E 0 (λ′ ++ f₁ ∷ μ) L₂ (var f₂) (var f₂′) Z₂ ρ bE) sZ₂ tZ₂)))
+                        (cong (_[ θE ]tm) (trans (EgWEq.egW-eq E keyE pE⁻ pE⁺ 0 bE λ′ Z₁ (μ ++ f₂′ ∷ ρ) lkZ₁)
+                                                 (cong₂ (eg E 0 λ′ L₁ (var f₁) (var f₁′) Z₁ (μ ++ f₂′ ∷ ρ) bE) sZ₁ tZ₁))))))
+        where
+        tR = B E 0 ((λ′ ++ f₁ ∷ μ) ++ pE⁻ Z₂ ++ ρ)
+        sR = B E 0 ((λ′ ++ f₁ ∷ μ) ++ pE⁺ Z₂ ++ ρ)
+        uR = B E 0 (λ′ ++ pE⁺ Z₁ ++ μ ++ f₂′ ∷ ρ)
+        cR = TE.egW 0 bE (TE.wg (λ′ ++ f₁ ∷ μ) Z₂ ρ)
+        hR = TE.egW 0 bE (TE.wg λ′ Z₁ (μ ++ f₂′ ∷ ρ))
+
+      xchΓ : Eqv Γ (arr AΓ XS XT) Lin Rin
+      xchΓ = substE3 (cong (λ X → arr X XS XT) eA₀) Lθ Rθ
+               ((coh E (arr AE Lt Rt) θE , xch-wf s-θE) , (coh E (arr AE Rt Lt) θE , xch-wf′ s-θE))
+
+      K₀ K₂ J : Tm
+      K₀ = fill₁ Γ XS BS AΓ
+      K₂ = fill₁ Γ XT BT AΓ
+      J  = fill₁ Γ BS XS AΓ
+
+      dK₂ : Γ ⊢tm K₂ ∶ arr AΓ XT BT
+      dK₂ = subst (λ X → Γ ⊢tm fill₁ Γ X BT AΓ ∶ arr AΓ X BT) eXT P2a.dK⁺*
+
+      PP : Eqv Γ (arr AΓ XS BT) (vc XS BS BT K₀ (TΓ.term a b PΓ)) (vc XS XT BT Lin K₂)
+      PP = substE (cong (vc XS BS BT K₀) (sym termP-eq))
+                  (cong (λ X → vc XS X BT Lin (fill₁ Γ X BT AΓ)) eXT) pasteP
+
+      QQ : Eqv Γ (arr AΓ XS BT) (vc XS BS BT K₀ (TΓ.term a b QΓ)) (vc XS XT BT Rin K₂)
+      QQ = substE3 (cong₂ (arr AΓ) eXS eBT)
+                   (trans (cong₃ (λ X Bs Bt → vc X Bs Bt (fill₁ Γ X Bs AΓ) (vc BSq BMq BTq h₁ h₂)) eXS eBS eBT)
+                          (cong (vc XS BS BT K₀) (sym termQ-eq)))
+                   (cong₂ (λ X Bt → vc X XT Bt Rin (fill₁ Γ XT Bt AΓ)) eXS eBT)
+                   pasteQ
+
+      dtP : Γ ⊢tm TΓ.term a b PΓ ∶ arr AΓ BS BT
+      dtP = subst (λ X → Γ ⊢tm X ∶ arr AΓ BS BT) (sym termP-eq) (vc-wf P1a.dg* (tyB eBM refl P2a.dg*))
+
+      dtQ : Γ ⊢tm TΓ.term a b QΓ ∶ arr AΓ BS BT
+      dtQ = subst (λ X → Γ ⊢tm X ∶ arr AΓ BS BT) (sym termQ-eq)
+              (tyB eBS eBT (vc-wf Q1a.dg* (tyB eBMq refl Q2a.dg*)))
+
+    -- Lemma E (2): the two orders of an exchange step of Γ are
+    -- connected by 3-cells, both ways.
+    exchange : Eqv Γ (arr AΓ (B Γ a SΓ) (B Γ a TΓ′)) (TΓ.term a b PΓ) (TΓ.term a b QΓ)
+    exchange =
+      stripE P1a.dK⁻* P1a.dJ* (low-coh P1a.dK⁻* (graph-chain ∣ path XS ∣)) (low-coh P1a.dJ* (graph-chain ∣ path BS ∣))
+             dtP dtQ (PP ⊙ congLE dK₂ xchΓ ⊙ symE QQ)

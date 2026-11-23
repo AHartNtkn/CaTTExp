@@ -80,6 +80,12 @@ private
     l-end = subst (λ N → lookupₛ (wsub Δ x p) N ≡ var y) (e₀-vtx ∣ p ∣)
               (trans (wgoF-end Δ (ε ▸ ⋆) (⟨⟩ ,ₛ var x) 0 x p refl refl) (cong var (walk-end wk)))
 
+-- Substituting into a vertical composite.
+vcomp-sub : ∀ x y t s u c h θ →
+            vcomp (arr ⋆ x y) t s u c h [ θ ]tm ≡
+            vcomp (arr ⋆ (x [ θ ]tm) (y [ θ ]tm)) (t [ θ ]tm) (s [ θ ]tm) (u [ θ ]tm) (c [ θ ]tm) (h [ θ ]tm)
+vcomp-sub x y t s u c h θ = rwT-sub 1 0 c (arr (arr ⋆ x y) t s) u h θ
+
 ------------------------------------------------------------------------
 
 module Sq {Γ Δ θE a b a₀ b₀ v₀ v L w f f′ Z α s t l r Ps Pt}
@@ -252,12 +258,13 @@ module Sq {Γ Δ θE a b a₀ b₀ v₀ v L w f f′ Z α s t l r Ps Pt}
   K⁻ = fill₁ Γ X⁻ EΓ.Bs A
   K⁺ = fill₁ Γ X⁺ EΓ.Bt A
 
-  private
-    eλ : lΓ ≡ pmap θE l
-    eλ = pathCh-wgo∘ Δ (⟨⟩ ,ₛ var a₀) a₀ l θE
+  eλ : lΓ ≡ pmap θE l
+  eλ = pathCh-wgo∘ Δ (⟨⟩ ,ₛ var a₀) a₀ l θE
 
-    eρ : rΓ ≡ pmap θE r
-    eρ = pathCh-wgo∘ Δ (⟨⟩ ,ₛ var L) L r θE
+  eρ : rΓ ≡ pmap θE r
+  eρ = pathCh-wgo∘ Δ (⟨⟩ ,ₛ var L) L r θE
+
+  private
 
     pX : ∀ u → path (B Δ a₀ (l ++ ((u ∷ []) ++ r)) [ θE ]tm) ≡ lΓ ++ (path (lookupₛ θE u) ++ rΓ)
     pX u = trans (pathCh-wgo∘ Δ (⟨⟩ ,ₛ var a₀) a₀ (l ++ ((u ∷ []) ++ r)) θE)
@@ -353,3 +360,24 @@ module Sq {Γ Δ θE a b a₀ b₀ v₀ v L w f f′ Z α s t l r Ps Pt}
 
   sq : Eqv Γ (arr A X⁻ EΓ.Bt) (vcomp A X⁻ EΓ.Bs EΓ.Bt K⁻ g) (vcomp A X⁻ X⁺ EΓ.Bt e K⁺)
   sq = substE refl (cong (λ E′ → vc X⁻ X⁺ Bt E′ K⁺) (sym e-eq)) (left ⊙ symE right)
+
+  de : Γ ⊢tm e ∶ arr A X⁻ X⁺
+  de = subst (λ X → Γ ⊢tm X ∶ arr A X⁻ X⁺) (sym e-eq) (vc-wf de₁ (vc-wf dW de₂))
+
+  ----------------------------------------------------------------------
+  -- The square, with the Γ-whiskers given as any lists equal to
+  -- pathCh τ′ and pathCh τs.
+
+  record At (l* r* : List Nat) : Set where
+    field
+      sq* : Eqv Γ (arr A X⁻ (B Γ a (l* ++ (Pt ++ r*))))
+                (vcomp A X⁻ (B Γ a (l* ++ (Ps ++ r*))) (B Γ a (l* ++ (Pt ++ r*)))
+                       (fill₁ Γ X⁻ (B Γ a (l* ++ (Ps ++ r*))) A) (eg Γ a l* w s t α r* b Ps Pt))
+                (vcomp A X⁻ X⁺ (B Γ a (l* ++ (Pt ++ r*))) e (fill₁ Γ X⁺ (B Γ a (l* ++ (Pt ++ r*))) A))
+      dg* : Γ ⊢tm eg Γ a l* w s t α r* b Ps Pt ∶ arr A (B Γ a (l* ++ (Ps ++ r*))) (B Γ a (l* ++ (Pt ++ r*)))
+      dK⁻* : Γ ⊢tm fill₁ Γ X⁻ (B Γ a (l* ++ (Ps ++ r*))) A ∶ arr A X⁻ (B Γ a (l* ++ (Ps ++ r*)))
+      dK⁺* : Γ ⊢tm fill₁ Γ X⁺ (B Γ a (l* ++ (Pt ++ r*))) A ∶ arr A X⁺ (B Γ a (l* ++ (Pt ++ r*)))
+      dJ*  : Γ ⊢tm fill₁ Γ (B Γ a (l* ++ (Ps ++ r*))) X⁻ A ∶ arr A (B Γ a (l* ++ (Ps ++ r*))) X⁻
+
+  at : ∀ {l* r*} → lΓ ≡ l* → rΓ ≡ r* → At l* r*
+  at refl refl = record { sq* = sq ; dg* = vc-wf dk₁ (vc-wf dH dk₂) ; dK⁻* = dK⁻ ; dK⁺* = dK⁺ ; dJ* = total dBs dX⁻ (sym pK⁻) }

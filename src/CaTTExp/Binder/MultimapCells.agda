@@ -34,10 +34,12 @@
 -- same kernel term (`MultimapCellsExamples`, `curry-boundary`).
 --
 -- This file is the construction; the stability laws are
--- `MultimapCellsLaws`. The presupposition law for mmc is not proved
--- here (ledger S26j): it needs a strengthening lemma for the biclosed
--- checker (typing on a support) and its renaming (`Gray.Biclosed.
--- Subst.sub-infer`). Step 1's heads keep their presupposition law
+-- `MultimapCellsLaws`. The presupposition law for mmc is not yet
+-- proved (ledger S26j). Its biclosed half is: the canonical head of
+-- every inferring term passes the side condition with the renamed type
+-- (`MultimapCellsWf.sub-mmcTy`). What remains is the kernel half (the
+-- kernel images commute with the renaming onto a support). Step 1's
+-- heads keep their presupposition law
 -- (`MultimapPresup`). Like mm, mmc trusts `infer`, so it inherits its
 -- two caveats: `glue`'s stated typing rule, and no sort discipline
 -- (`here` instances are AdmI, not the data-sorted KInst; SortDisc).

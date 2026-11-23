@@ -13,9 +13,9 @@
 --    2-variables, but they are not exchange-equivalent (`gh-not-~`),
 --    so the conclusion of TwoPath's `exchange-complete` fails without
 --    Key2; and Key2Ctx Γ has no instance (`no-key2`).
---    What is formalized is the failure at the level of 2-paths and
---    exchange. That g ∗₁ h and h ∗₁ g are not connected by any CaTT
---    3-cell is not formalized here.
+--    That g ∗₁ h and h ∗₁ g are not connected by any CaTT 3-cell is
+--    proved by a model argument in CaTTExp.RCProc.TwoPathModel
+--    (`no-3cell`).
 ------------------------------------------------------------------------
 module CaTTExp.RCProc.TwoPathFacts where
 

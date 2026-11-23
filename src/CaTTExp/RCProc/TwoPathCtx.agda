@@ -22,9 +22,9 @@
 -- expected (on paper, not proved here) to hold for the cylinders Q↑Y
 -- of the naturality filler. It has no instance for g, h : f ⇒ f
 -- (`TwoPathFacts.no-key2`), where g;h and h;g are not
--- exchange-equivalent (`TwoPathFacts.Counterexample.gh-not-~`); that
--- g ∗₁ h and h ∗₁ g are not connected by a CaTT 3-cell is on paper,
--- not formalized.
+-- exchange-equivalent (`TwoPathFacts.Counterexample.gh-not-~`), and
+-- g ∗₁ h and h ∗₁ g are not connected by any CaTT 3-cell although
+-- their strict images agree (`TwoPathModel.no-3cell`).
 --
 -- Not tied down here: the endpoints a, b that `order` gives for each
 -- 2-variable's boundary paths are not required to be the endpoints

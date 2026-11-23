@@ -5,7 +5,8 @@
 -- Every statement below is `refl`: the checker, which is sound and
 -- complete, accepts (or rejects) the term, so the term is (or is not)
 -- derivable. Positive: ℕ with all six formers, and the circle (a cell
--- variable) with μ and η. Negative: the side condition (positivity and
+-- variable) with μ and η, and a sort over a base with a companion cell.
+-- Negative: the side condition (positivity and
 -- the former's selection) rejects a non-⊤ parameter target, a second
 -- object variable, a source mentioning X, rec_y at y = 0 or at a cell,
 -- and uni on a signature with a cell.
@@ -183,9 +184,11 @@ _ = refl
 ------------------------------------------------------------------------
 -- Rejections by the side condition.
 
--- A map into a parameter that is not ⊤: (X, f : X → A) in context A.
+-- A map into a parameter that is not ⊤, after an operation (so not a
+-- structure map, and not a companion): (X, z : ⊤ → X, f : X → A) in
+-- context A. ((X, f : X → A) alone is a sort over A; see below.)
 Δbad₁ : Ctx
-Δbad₁ = ε ▸ ⋆ ▸ arr ⋆ X (var 0)
+Δbad₁ = ε ▸ ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X (var 0)
 
 _ : (sideOf μ 0 Δbad₁ , ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δbad₁ ⟨⟩))) ≡₂ (false , false)
 _ = refl
@@ -375,4 +378,68 @@ _ : ( ok (tyOf (ε ▸ ⋆) (bnd μ 0 Δtr ⟨⟩))
     , ok (tyOf (Γtr (mtrunc 2 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
     , ok (tyOf (Γtr (mtrunc 3 ∷ [])) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))
     , ok (tyOf (Γtr []) (bnd rec 0 Δtr (⟨⟩ ,ₛ var 1 ,ₛ var 2)))) ≡₄ (true , true , false , false)
+_ = refl
+
+------------------------------------------------------------------------
+-- Sorts over bases (S26c step 2). In context (B : ⋆, s : ⊤ → B), the
+-- sort X over B with a point over s:
+--   μ(X, p : X → B, a : ⊤ → X, c : a ; p ⇒ s inv).
+-- p is the header (structure map), c the companion of the operation a.
+
+-- The composite x ; q of maps x : S → Y, q : Y → Z.
+cmp : Tm → Tm → Tm → Tm → Tm → Tm
+cmp S Y Z x q =
+  coh (ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ ⋆ ▸ arr ⋆ (var 1) (var 3))
+      (arr ⋆ (var 0) (var 3)) (⟨⟩ ,ₛ S ,ₛ Y ,ₛ x ,ₛ Z ,ₛ q)
+
+-- The companion type a ; p ⇒ s, for a and p entries of the telescope.
+cmpTyB : Nat → Nat → Ty
+cmpTyB a p = arr (arr ⋆ one (var 0)) (cmp one X (var 0) (bvar 0 a) (bvar 0 p)) (var 1)
+
+Γb : Ctx
+Γb = ε ▸ ⋆ ▸ arr ⋆ one (var 0)
+
+Δb : Ctx
+Δb = ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X ▸[ minv ∷ [] ] cmpTyB 2 1
+
+-- A model: (A, q : A → B, a′ : ⊤ → A, c′ : a′ ; q ⇒ s inv).
+Γbm : List Mark → Ctx
+Γbm ms = Γb ▸ ⋆ ▸ arr ⋆ (var 2) (var 0) ▸ arr ⋆ one (var 2)
+            ▸[ ms ] arr (arr ⋆ one (var 0)) (cmp one (var 2) (var 0) (var 4) (var 3)) (var 1)
+
+σbm : Sub
+σbm = ⟨⟩ ,ₛ var 2 ,ₛ var 3 ,ₛ var 4 ,ₛ var 5
+
+_ : ( sideOf μ 0 Δb
+    ∷ ok (tyOf Γb (bnd μ 0 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 1 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 2 Δb ⟨⟩))
+    ∷ ok (tyOf Γb (bnd η 3 Δb ⟨⟩))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd rec 0 Δb σbm))
+    ∷ ok (tyOf (Γbm []) (bnd rec 0 Δb σbm))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd recY 1 Δb σbm))
+    ∷ ok (tyOf (Γbm (minv ∷ [])) (bnd recY 2 Δb σbm))
+    ∷ []) ≡ (true ∷ true ∷ true ∷ true ∷ true ∷ true ∷ false ∷ true ∷ true ∷ [])
+_ = refl
+
+-- A sort over A with no operations: (X, p : X → A).
+_ : sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0)) ≡ true
+_ = refl
+
+-- Rejections: no companion; the companion unmarked; a companion whose
+-- source is not a ; p; a cell into the based sort; an X-free non-⊤
+-- target with no companion; the structure map after an operation.
+_ : ( sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X)
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X ▸ cmpTyB 2 1)
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ X (var 0) ▸ arr ⋆ one X
+                    ▸[ minv ∷ [] ] arr (arr ⋆ one (var 0)) (var 1) (var 1))
+    ∷ sideOf μ 0 (Δb ▸ arr (arr ⋆ one X) (bvar 0 2) (bvar 0 2))
+    ∷ sideOf μ 0 (Δb ▸ arr ⋆ one (var 0))
+    ∷ sideOf μ 0 (ε ▸ ⋆ ▸ arr ⋆ one X ▸ arr ⋆ X (var 0) ▸[ minv ∷ [] ] cmpTyB 1 2)
+    ∷ []) ≡ (false ∷ false ∷ false ∷ false ∷ false ∷ false ∷ [])
+_ = refl
+
+-- Not yet: rec_y at the companion c (a 2-cell whose source a ; p is a
+-- composite) and uni over Δb need θ of a composite (ledger S26b (b)).
+_ : ( ok (tyOf (Γbm (minv ∷ [])) (bnd recY 3 Δb σbm)) ∷ sideOf uni 0 Δb ∷ []) ≡ (false ∷ false ∷ [])
 _ = refl

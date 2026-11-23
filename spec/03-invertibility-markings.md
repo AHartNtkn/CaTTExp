@@ -198,8 +198,9 @@ Evidence `!` is the judgment, by definition. Evidence is checked structurally, a
 - **Agda-checked**: the checker for cells of dimensions 1 and 2, and the two examples (`Gray/MarksSaturation.agda`). General dimensions are not encoded.
 - **Proved on paper**: soundness, for well-typed evidence (the Agda checker type-checks the evidence terms).
 - **Open**:
-  - pseudo by data, which needs a binder over a generic earlier cell (ledger S21);
-  - whether finite certificates suffice in L (ledger S22, `notes/conjectures/outbox/invertibility-certificates.md`). In P they do (`notes/marking-alternatives.md` §6.1).
+  - whether finite certificates suffice in L (ledger S22, `notes/conjectures/outbox/invertibility-certificates-r2.md`). In P they do (`notes/marking-alternatives.md` §6.1).
+
+**`ps` is declared, never certified from data.** Freely attaching a generic cell y before t makes y ⊗ t invertible iff t is invertible (Ara–Maltsiniotis B.6.5–6; verified researcher answer, `notes/conjectures/answered/invertibility-certificates-2026-11-23.md`). So in a context without `ps`, `grpd_k` or `ord` marks, a term that is pseudo in every model is invertible in every model (`notes/marking-alternatives.md` Prop. 8.2). The evidence layer therefore has no Ps-intro rule: pseudo-ness enters only through declared marks and (PS-fac)/(OP-ps). **Proved**, from the verified answer.
 
 **Rejected forms.** Marked arrow types need subtyping, or they duplicate every coh by its annotation. Complicial thinness replaces `coh` rather than marking it, and its saturated form is undecidable by the theorem above. Modes on objects or 1-cells cannot carry cell-level marks: two lax transformations between the same functors can differ in being pseudo. A mode on the hom amounts to a marked arrow type or a second kind of 2-cell.
 

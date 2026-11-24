@@ -1,4 +1,4 @@
-"""Decide degree-four Gray comparisons with positive temporal faces and nonempty spatial inputs."""
+"""Test degree-four Gray surface comparisons for positive 3-computads using signed exchanges."""
 from argparse import ArgumentParser
 from collections import Counter, deque
 import json
@@ -13,22 +13,60 @@ class Movies:
         self.pres=pres
         self.start=start
         self.patch_ends=[pres.walk(r.path,r.source)[-1] for r in pres.rules]
-        # Pure signed transports between histories are unique up to the cube
-        # comparisons. Nonempty spatial inputs orient every adjacent exchange.
+        self.globally_thin = (all(s for s,_ in pres.marks.values()) or
+                              all(t for _,t in pres.marks.values()))
+        self.thin_components = {}
 
-    def swap(self,h,k):
+    def swap(self,h,k,positive):
         if k<0 or k+1>=len(h):
             return None
-        native=exchange_at(h,k,self.pres.marks)
-        if native is not None:
-            return native,True
+        if positive:
+            return exchange_at(h,k,self.pres.marks)
         (i,a),(j,b)=h[k:k+2]
         source,target=self.pres.marks[a]
         if i+len(target)>j:
             return None
         out=h[:k]+((j+len(source)-len(target),b),(i,a))+h[k+2:]
         assert exchange_at(out,k,self.pres.marks)==h
-        return out,False
+        return out
+
+    def thin(self, history):
+        if self.globally_thin:
+            return True
+        if history in self.thin_components:
+            return self.thin_components[history]
+        # Explore both directions, including distinct oriented loops at empty
+        # sites. The positive graph has a cycle exactly for nontrivial isotropy.
+        outgoing = {}
+        incoming = Counter()
+        todo = [history]
+        while todo:
+            h = todo.pop()
+            if h in outgoing:
+                continue
+            outgoing[h] = []
+            for j in range(len(h)-1):
+                for positive in (True, False):
+                    dest = self.swap(h,j,positive)
+                    if dest is None:
+                        continue
+                    if positive:
+                        outgoing[h].append(dest)
+                        incoming[dest] += 1
+                    if dest not in outgoing:
+                        todo.append(dest)
+        ready = [h for h in outgoing if not incoming[h]]
+        count = 0
+        while ready:
+            h = ready.pop()
+            count += 1
+            for dest in outgoing[h]:
+                incoming[dest] -= 1
+                if not incoming[dest]:
+                    ready.append(dest)
+        acyclic = count == len(outgoing)
+        self.thin_components.update(dict.fromkeys(outgoing,acyclic))
+        return acyclic
 
     def named(self,h,rid,i):
         rule=self.pres.rules[rid]
@@ -48,10 +86,10 @@ class Movies:
         records=[]
         for name,i in actions:
             if name=='swap':
-                out=self.swap(h,i)
-                if out is None or not out[1]:
+                out=self.swap(h,i,True)
+                if out is None:
                     raise ValueError('expected a native positive swap')
-                h=out[0]
+                h=out
             else:
                 if not isinstance(name, int) or not 0 <= name < len(self.pres.rules):
                     raise ValueError('expected a zero-based rule index')
@@ -69,17 +107,22 @@ class Movies:
             out,off=self.named(h,rid,i)
             for j in range(len(h)-1):
                 if j+2<=i or j>=i+size:
-                    sw=self.swap(h,j)
-                    if sw is not None:
-                        yield state[:k]+((sw[0],rid,i),)+state[k+1:],'disjoint square'
+                    for positive in (True,False):
+                        dest=self.swap(h,j,positive)
+                        if dest is not None:
+                            yield state[:k]+((dest,rid,i),)+state[k+1:],'disjoint square'
             # Native prism in either spatial order: the polygon moves later in temporal order.
             if i+size<len(h):
                 pos,event=h[i+size]
-                disjoint=(pos+len(self.pres.marks[event][0])<=off or pos>=off+len(self.patch_ends[rid]))
-                if disjoint:
+                spatial_orders = ((True, pos+len(self.pres.marks[event][0])<=off),
+                                  (False, pos>=off+len(self.patch_ends[rid])))
+                for positive,disjoint in spatial_orders:
+                    if not disjoint:
+                        continue
                     new=h
                     for j in reversed(range(i,i+size)):
-                        new=self.swap(new,j)[0]
+                        new=self.swap(new,j,positive)
+                        assert new is not None
                     assert self.named(new,rid,i+1) is not None
                     yield state[:k]+((new,rid,i+1),)+state[k+1:],'prism'
             if k+1>=len(state):
@@ -108,20 +151,34 @@ class Movies:
             raise ValueError('expected parallel old readings')
         if Counter(r for _,r,_ in u)!=Counter(r for _,r,_ in v):
             return dict(surface=False,states=0)
+        if first==second and not self.globally_thin:
+            return dict(surface=True,states=1,moves=[])
+        def certified(state):
+            return self.thin(b) and all(self.thin(h) for h,_,_ in state)
+        # A second visit with certified seams can give a positive result even
+        # after an uncertified visit to the same record list.
+        u=(u,certified(u))
         previous={u:None}
         queue=deque([u])
+        unresolved = False
         while queue:
             current=queue.popleft()
-            if current==v:
+            state,safe = current
+            if state==v and safe:
                 labels=[]
                 while previous[current] is not None:
                     current,label=previous[current]
                     labels.append(label)
                 return dict(surface=True,states=len(previous),moves=labels[::-1])
-            for nxt,label in self.updates(current):
+            if state==v:
+                unresolved = True
+            for nxt,label in self.updates(state):
+                nxt=(nxt,safe and certified(nxt))
                 if nxt not in previous:
                     previous[nxt]=current,label
                     queue.append(nxt)
+        if unresolved:
+            return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))
 
 
@@ -178,8 +235,8 @@ def wider_checks():
     pending = [(initial,[])]
     while pending:
         h,actions = pending.pop()
-        successors = [(s[0],actions+[('swap',j)]) for j in range(len(h)-1)
-                      if (s:=model.swap(h,j)) is not None and s[1]]
+        successors = [(s,actions+[('swap',j)]) for j in range(len(h)-1)
+                      if (s:=model.swap(h,j,True)) is not None]
         if successors:
             pending.extend(successors)
         else:
@@ -203,8 +260,8 @@ def wider_checks():
         actions.append((0,i))
         after,_ = model.named(history,0,i)
         while True:
-            step = next(((j,s[0]) for j in range(len(after)-1)
-                         if (s:=model.swap(after,j)) is not None and s[1]), None)
+            step = next(((j,s) for j in range(len(after)-1)
+                         if (s:=model.swap(after,j,True)) is not None), None)
             if step is None:
                 break
             j,after = step
@@ -215,6 +272,33 @@ def wider_checks():
             assert model.compare(initial,first,second)['surface'] == (src <= dst)
     return dict(four_column_polygon_queries=comparisons, changing_path_cube_queries=len(sorts)**2,
                 empty_spatial_output_queries=len(movies)**2)
+
+
+def mixed_port_checks():
+    marks = {'b': ('','f'), 'd': ('g',''), 'l': ('g','g')}
+    split = Rule('g', ((0,'d'),), ((0,'l'),(0,'d')))
+    edges = {'f': (0,0), 'g': (0,0)}
+    initial = ((1,'b'),(0,'d'))
+    early = [('swap',0),(0,0),('swap',1),('swap',0)]
+    left = [('swap',0),('swap',0),(0,1)]
+    right = [(0,1),('swap',0),('swap',1),('swap',1),('swap',0)]
+    comparisons = 0
+    for add_scalar in (False,True):
+        if add_scalar:
+            marks['z'] = ('','')
+        model = Movies(Presentation(edges,marks,[split],{'z':0} if add_scalar else {}),'g')
+        for i,a in enumerate((early,left,right)):
+            for j,b in enumerate((early,left,right)):
+                assert model.compare(initial,a,b)['surface'] == (i==0 or i==j)
+                comparisons += 1
+        assert model.thin(initial)
+    scalar = Rule('', ((0,'z'),), ((0,'z'),))
+    model = Movies(Presentation(edges,marks,[scalar],{'z':0}),'')
+    initial = ((0,'z'),(0,'z'))
+    assert not model.thin(initial)
+    assert model.compare(initial, [('swap',0),(0,0)], [(0,0)])['surface'] is None
+    assert model.compare(initial, [(0,1)], [(0,0)])['surface'] is False
+    return dict(mixed_empty_port_queries=comparisons, cyclic_connector_queries=2)
 
 
 def checks():
@@ -271,7 +355,8 @@ def checks():
                     assert answer['surface']==expected
                     pairs+=1
                     state_count+=answer['states']
-    return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7, **wider_checks())
+    return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7,
+                **wider_checks(), **mixed_port_checks())
 
 
 if __name__=='__main__':
@@ -281,8 +366,10 @@ if __name__=='__main__':
     if args.query:
         q=json.loads(args.query.read_text())
         rules=[Rule(r['path'],tuple(map(tuple,r['source'])),tuple(map(tuple,r['target']))) for r in q['rules']]
-        pres=Presentation(q['edges'],q['marks'],rules)
-        result=Movies(pres,q['start']).compare(tuple(map(tuple,q['source'])),q['first'],q['second'])
+        pres=Presentation(q['edges'],q['marks'],rules,q.get('mark_roots'))
+        source=tuple(map(tuple,q['source']))
+        pres.walk(q['start'],source,q.get('vertex'))
+        result=Movies(pres,q['start']).compare(source,q['first'],q['second'])
     else:
         result=checks()
     print(json.dumps(result))

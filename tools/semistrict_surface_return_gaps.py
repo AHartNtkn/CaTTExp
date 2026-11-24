@@ -30,26 +30,43 @@ def exchange_at(steps, index, marks):
 
 
 class Presentation:
-    def __init__(self, edges, marks, rules):
+    def __init__(self, edges, marks, rules, mark_roots=None):
         self.edges = edges
         self.marks = marks
         self.rules = rules
-        for source, target in marks.values():
-            assert self.poles(source) == self.poles(target)
+        self.mark_roots = dict(mark_roots or {})
+        for name, (source, target) in marks.items():
+            if source or target:
+                start, end = self.poles(source or target)
+                assert self.mark_roots.setdefault(name, start) == start
+                if source and target:
+                    assert (start, end) == self.poles(target)
+                else:
+                    assert start == end
+            elif name not in self.mark_roots:
+                raise ValueError('a spatial scalar requires its vertex')
         for rule in rules:
             assert rule.source and rule.target
-            assert self.walk(rule.path, rule.source)[-1] == self.walk(rule.path, rule.target)[-1]
+            root = self.edges[rule.path[0]][0] if rule.path else self.mark_roots[rule.source[0][1]]
+            assert self.walk(rule.path, rule.source, root)[-1] == self.walk(rule.path, rule.target, root)[-1]
 
     def poles(self, path):
         assert path and all(self.edges[a][1] == self.edges[b][0] for a, b in zip(path, path[1:]))
         return self.edges[path[0]][0], self.edges[path[-1]][1]
 
-    def walk(self, start, steps):
+    def walk(self, start, steps, root=None):
+        if start:
+            vertex, _ = self.poles(start)
+            assert root is None or root == vertex
+            root = vertex
+        elif root is None and steps:
+            root = self.mark_roots[steps[0][1]]
         paths = [start]
         for pos, mark in steps:
             source, target = self.marks[mark]
             path = paths[-1]
-            assert 0 <= pos and path[pos:pos + len(source)] == source
+            assert 0 <= pos <= len(path) and path[pos:pos + len(source)] == source
+            assert (self.edges[path[pos-1]][1] if pos else root) == self.mark_roots[mark]
             paths.append(path[:pos] + target + path[pos + len(source):])
         return paths
 

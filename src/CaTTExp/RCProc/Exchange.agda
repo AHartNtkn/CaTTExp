@@ -327,19 +327,18 @@ module TwoDisc (m k n : Nat) where
   ----------------------------------------------------------------------
   -- The walks S₀ and T₀.
 
-  private
-    w₁ : Walk E 0 λ′ (e₀ m)
-    w₁ = walk-ext x₂ (walk-chain (ε ▸ ⋆) 0 m)
-    w₃ : Walk E L₁ μ (colEnd m k)
-    w₃ = walk-ext x₄ (walk-chain D₁ L₁ k)
-    w₅ : Walk E L₂ ρ b
-    w₅ = walk-ext (λ l → l) (walk-chain D₂ L₂ n)
+  wkλ : Walk E 0 λ′ (e₀ m)
+  wkλ = walk-ext x₂ (walk-chain (ε ▸ ⋆) 0 m)
+  wkμ : Walk E L₁ μ (colEnd m k)
+  wkμ = walk-ext x₄ (walk-chain D₁ L₁ k)
+  wkρ : Walk E L₂ ρ b
+  wkρ = walk-ext (λ l → l) (walk-chain D₂ L₂ n)
 
   walk-S : Walk E 0 S₀ b
-  walk-S = walk-++ w₁ (cons (x₃ lk-f₁) (walk-++ w₃ (cons (x₅ lk-f₂) w₅)))
+  walk-S = walk-++ wkλ (cons (x₃ lk-f₁) (walk-++ wkμ (cons (x₅ lk-f₂) wkρ)))
 
   walk-T : Walk E 0 T₀ b
-  walk-T = walk-++ w₁ (cons (x₃ lk-f₁′) (walk-++ w₃ (cons (x₅ lk-f₂′) w₅)))
+  walk-T = walk-++ wkλ (cons (x₃ lk-f₁′) (walk-++ wkμ (cons (x₅ lk-f₂′) wkρ)))
 
   ----------------------------------------------------------------------
   -- The two orders.

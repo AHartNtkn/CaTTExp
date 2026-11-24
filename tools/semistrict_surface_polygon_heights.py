@@ -134,33 +134,36 @@ def check_tensor(lengths, counts):
     counts['two-polygon tensor atoms'] += 1
 
 
+def raw_prism(polygon_left):
+    ranks = (3, 2) if polygon_left else (2, 3)
+    ctx = tree_ctx(glue_tree(ranks[0], 0, ranks[1]))
+    x, y = map(v, maximal_vars(ctx))
+    p, b = (x, y) if polygon_left else (y, x)
+    u, w = src(ctx, p), tgt(ctx, p)
+
+    def compose(k, left, right):
+        return comp2(ctx, k, left, right)
+
+    if polygon_left:
+        before = compose(1, compose(0, p, src(ctx, b)), compose(0, tgt(ctx, u), b))
+        after = compose(1, compose(0, src(ctx, u), b), compose(0, p, tgt(ctx, b)))
+        negative = compose(2, exchange(ctx, u, b), before)
+        positive = compose(2, after, exchange(ctx, w, b))
+    else:
+        before = compose(1, compose(0, src(ctx, b), p), compose(0, b, tgt(ctx, u)))
+        after = compose(1, compose(0, b, src(ctx, u)), compose(0, tgt(ctx, b), p))
+        negative = compose(2, before, exchange(ctx, b, w))
+        positive = compose(2, exchange(ctx, b, u), after)
+    assert infer(ctx, negative) == infer(ctx, positive)
+    return ctx, head(ctx, negative, positive), arr(infer(ctx, negative), negative, positive)
+
+
 def raw_prisms():
     emitter = Emitter()
     for polygon_left in (True, False):
-        ranks = (3, 2) if polygon_left else (2, 3)
-        ctx = tree_ctx(glue_tree(ranks[0], 0, ranks[1]))
-        x, y = map(v, maximal_vars(ctx))
-        p, b = (x, y) if polygon_left else (y, x)
-        u, w = src(ctx, p), tgt(ctx, p)
-
-        def compose(k, left, right):
-            return comp2(ctx, k, left, right)
-
-        if polygon_left:
-            before = compose(1, compose(0, p, src(ctx, b)), compose(0, tgt(ctx, u), b))
-            after = compose(1, compose(0, src(ctx, u), b), compose(0, p, tgt(ctx, b)))
-            negative = compose(2, exchange(ctx, u, b), before)
-            positive = compose(2, after, exchange(ctx, w, b))
-        else:
-            before = compose(1, compose(0, src(ctx, b), p), compose(0, b, tgt(ctx, u)))
-            after = compose(1, compose(0, b, src(ctx, u)), compose(0, tgt(ctx, b), p))
-            negative = compose(2, before, exchange(ctx, b, w))
-            positive = compose(2, exchange(ctx, b, u), after)
-        base = infer(ctx, negative)
-        assert base == infer(ctx, positive)
+        ctx, prism, expected = raw_prism(polygon_left)
         name = 'left' if polygon_left else 'right'
-        emitter.check_type(name + '-prism', ctx, head(ctx, negative, positive),
-                           arr(base, negative, positive))
+        emitter.check_type(name + '-prism', ctx, prism, expected)
     return emitter
 
 

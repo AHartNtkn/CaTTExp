@@ -6,8 +6,8 @@
 --   infer Φ′ (u[ren]) ≡ just (A[ren])
 --
 -- where Φ′ and u[ren] are the context and term of `canon k Φ u` and
--- ren = renOf (supAtoms Φ u) (supVars Φ u). The argument: u uses only
--- entries of its support (`vars-sup`), so by `infer-agree` it has the
+-- ren = renOf (supAtoms k Φ u) (supVars Φ u). The argument: u uses only
+-- entries of its support or no entry at all (`vars-sup`, `lookup-none`), so by `infer-agree` it has the
 -- same type in Φ with every other entry blanked to the type of pt;
 -- ren is a well-typed substitution from that context to Φ′; then
 -- `Subst.sub-infer`. Neither well-formedness of Φ nor closure of the
@@ -41,47 +41,54 @@ dec : ∀ b → T b ⊎′ (T b → ⊥)
 dec true  = inl tt
 dec false = inr (λ ())
 
-addNew-mono : ∀ js i k → T (elem k js) → T (elem k (addNew js i))
-addNew-mono js i k p with dec (elem i js)
-... | inl q = subst T (sym (cong (elem k) (T-if (elem i js) q))) p
-... | inr q = subst T (sym (cong (elem k) (F-if (elem i js) q))) (elem-++l k js (i ∷ []) p)
+closeFrom-mono : ∀ Φ j S i → T (elem i S) → T (elem i (closeFrom Φ j S))
+closeFrom-mono Φ zero    S i p = p
+closeFrom-mono Φ (suc j) S i p with dec (elem j S)
+... | inl q = closeFrom-mono Φ j _ i
+                (subst T (sym (cong (elem i) (T-if (elem j S) q))) (elem-++l i S (varsY (nthY Φ j)) p))
+... | inr q = closeFrom-mono Φ j _ i (subst T (sym (cong (elem i) (F-if (elem j S) q))) p)
 
-addNew-self : ∀ js i → T (elem i (addNew js i))
-addNew-self js i with dec (elem i js)
-... | inl q = subst T (sym (cong (elem i) (T-if (elem i js) q))) q
-... | inr q = subst T (sym (cong (elem i) (F-if (elem i js) q)))
-                (elem-++r i js (i ∷ []) (∨-l (i ==ℕ i) false (==ℕ-refl i)))
-
-mutual
-  visit-mono : ∀ Φ n acc j k → T (elem k acc) → T (elem k (visit Φ n acc j))
-  visit-mono Φ zero    acc j k p = addNew-mono acc j k p
-  visit-mono Φ (suc n) acc j k p with dec (elem j acc)
-  ... | inl q = subst T (sym (cong (elem k) (T-if (elem j acc) q))) p
-  ... | inr q = subst T (sym (cong (elem k) (F-if (elem j acc) q)))
-                  (addNew-mono (visitAll Φ n acc (varsY (nthY Φ j))) j k (visitAll-mono Φ n acc (varsY (nthY Φ j)) k p))
-
-  visitAll-mono : ∀ Φ n acc js k → T (elem k acc) → T (elem k (visitAll Φ n acc js))
-  visitAll-mono Φ n acc []       k p = p
-  visitAll-mono Φ n acc (j ∷ js) k p = visitAll-mono Φ n (visit Φ n acc j) js k (visit-mono Φ n acc j k p)
-
-visit-self : ∀ Φ n acc j → T (elem j (visit Φ n acc j))
-visit-self Φ zero    acc j = addNew-self acc j
-visit-self Φ (suc n) acc j with dec (elem j acc)
-... | inl q = subst T (sym (cong (elem j) (T-if (elem j acc) q))) q
-... | inr q = subst T (sym (cong (elem j) (F-if (elem j acc) q))) (addNew-self (visitAll Φ n acc (varsY (nthY Φ j))) j)
-
-visitAll-incl : ∀ Φ n acc js k → T (elem k js) → T (elem k (visitAll Φ n acc js))
-visitAll-incl Φ n acc (j ∷ js) k p with dec (k ==ℕ j)
-... | inl q = subst (λ x → T (elem x (visitAll Φ n (visit Φ n acc j) js))) (sym (==ℕ-sound k j q))
-                (visitAll-mono Φ n (visit Φ n acc j) js j (visit-self Φ n acc j))
-... | inr q = visitAll-incl Φ n (visit Φ n acc j) js k (or-r (k ==ℕ j) _ q p)
+upTo-elem : ∀ n i → T (i <ℕ n) → T (elem i (upTo n))
+upTo-elem (suc n) i p with dec (i <ℕ n)
+... | inl q = elem-++l i (upTo n) (n ∷ []) (upTo-elem n i q)
+... | inr q = elem-++r i (upTo n) (n ∷ []) (∨-l (i ==ℕ n) false (last i n p q))
   where
-  or-r : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
-  or-r true  b n _ = ⊥-elim (n tt)
-  or-r false b n p = p
+  last : ∀ i n → T (i <ℕ suc n) → (T (i <ℕ n) → ⊥) → T (i ==ℕ n)
+  last zero    zero    _ _ = tt
+  last zero    (suc n) _ q = ⊥-elim (q tt)
+  last (suc i) zero    p _ = ⊥-elim (lt0 i p)
+    where
+    lt0 : ∀ i → T (i <ℕ 0) → ⊥
+    lt0 i ()
+  last (suc i) (suc n) p q = last i n p q
 
-vars-sup : ∀ Φ u k → T (elem k (varsT u)) → T (elem k (supVars Φ u))
-vars-sup Φ u = visitAll-incl Φ (length Φ) [] (varsT u)
+filter-elem : ∀ (p : Nat → Bool) xs i → T (p i) → T (elem i xs) → T (elem i (filter p xs))
+filter-elem p (x ∷ xs) i pi e with dec (i ==ℕ x) | dec (p x)
+... | inl q | inl r = subst (λ l → T (elem i l)) (sym (T-if (p x) r)) (∨-l (i ==ℕ x) _ q)
+... | inl q | inr r = ⊥-elim (r (subst (λ y → T (p y)) (==ℕ-sound i x q) pi))
+... | inr q | inl r = subst (λ l → T (elem i l)) (sym (T-if (p x) r))
+                        (∨-r (i ==ℕ x) _ (filter-elem p xs i pi (or-r′ (i ==ℕ x) _ q e)))
+  where
+  or-r′ : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r′ true  b n _ = ⊥-elim (n tt)
+  or-r′ false b n p = p
+... | inr q | inr r = subst (λ l → T (elem i l)) (sym (F-if (p x) r))
+                        (filter-elem p xs i pi (or-r′ (i ==ℕ x) _ q e))
+  where
+  or-r′ : ∀ a b → (T a → ⊥) → T (a ∨ b) → T b
+  or-r′ true  b n _ = ⊥-elim (n tt)
+  or-r′ false b n p = p
+
+lookup-none : ∀ (Φ : Ctx) i → (T (i <ℕ length Φ) → ⊥) → lookup Φ i ≡ nothing
+lookup-none []      i       n = refl
+lookup-none (A ∷ Φ) zero    n = ⊥-elim (n tt)
+lookup-none (A ∷ Φ) (suc i) n = lookup-none Φ i n
+
+vars-sup : ∀ Φ u k → T (elem k (varsT u)) → T (k <ℕ length Φ) → T (elem k (supVars Φ u))
+vars-sup Φ u k e l =
+  filter-elem (λ j → elem j (closeFrom Φ (length Φ) (supStart Φ u))) (upTo (length Φ)) k
+    (closeFrom-mono Φ (length Φ) (supStart Φ u) k (elem-++l k (varsT u) (varsYM (infer Φ u)) e))
+    (upTo-elem (length Φ) k l)
 
 -- Position in a list.
 lookup-idx : ∀ i vs → T (elem i vs) → lookup vs (idx i vs) ≡ just i
@@ -129,9 +136,17 @@ mapM-if : ∀ (b : Bool) (m : Maybe CTy) → T b → mapM (λ A → if b then A 
 mapM-if true nothing  _ = refl
 mapM-if true (just A) _ = refl
 
-agree-blank : ∀ Φ vs xs → (∀ k → T (elem k xs) → T (elem k vs)) → Agree Φ (blank vs Φ) xs
-agree-blank Φ vs xs inc i p =
-  sym (trans (lookup-blank 0 vs Φ i) (mapM-if (elem i vs) (lookup Φ i) (inc i p)))
+-- Blanking outside any set containing the entries a term uses.
+agree-blank-on : ∀ Φ vs xs → (∀ i → T (elem i xs) → T (i <ℕ length Φ) → T (elem i vs)) →
+                 Agree Φ (blank vs Φ) xs
+agree-blank-on Φ vs xs h i p with dec (i <ℕ length Φ)
+... | inl l = sym (trans (lookup-blank 0 vs Φ i) (mapM-if (elem i vs) (lookup Φ i) (h i p l)))
+... | inr l = trans (lookup-none Φ i l)
+                (sym (trans (lookup-blank 0 vs Φ i)
+                  (cong (mapM (λ A → if elem i vs then A else ptTy)) (lookup-none Φ i l))))
+
+agree-blank : ∀ Φ u → Agree Φ (blank (supVars Φ u) Φ) (varsT u)
+agree-blank Φ u = agree-blank-on Φ (supVars Φ u) (varsT u) (vars-sup Φ u)
 
 ------------------------------------------------------------------------
 -- ren is well typed from the blanked context to the support context.
@@ -180,10 +195,19 @@ ren-typed as vs Φ = ⊢in app′
 
 strengthen : ∀ k Φ u A → infer Φ u ≡ just A →
   infer (mctx (cidx (canon k Φ u))) (mterm (cidx (canon k Φ u)))
-    ≡ just (sY (renOf (supAtoms Φ u) (supVars Φ u)) A)
+    ≡ just (sY (renOf (supAtoms k Φ u) (supVars Φ u)) A)
 strengthen k Φ u A e =
   sub-infer (ren-typed as vs Φ) u A
-    (trans (sym (infer-agree Φ (blank vs Φ) u (agree-blank Φ vs (varsT u) (vars-sup Φ u)))) e)
+    (trans (sym (infer-agree Φ (blank vs Φ) u (agree-blank Φ u))) e)
   where
   vs = supVars Φ u
-  as = supAtoms Φ u
+  as = supAtoms k Φ u
+
+-- The same over any set of entries containing those the term uses: a
+-- term over a support infers, after the renaming onto it, the renamed
+-- type.
+strengthen-on : ∀ as vs Φ u A → (∀ i → T (elem i (varsT u)) → T (i <ℕ length Φ) → T (elem i vs)) →
+  infer Φ u ≡ just A → infer (supCtx as vs Φ) (sT (renOf as vs) u) ≡ just (sY (renOf as vs) A)
+strengthen-on as vs Φ u A h e =
+  sub-infer (ren-typed as vs Φ) u A
+    (trans (sym (infer-agree Φ (blank vs Φ) u (agree-blank-on Φ vs (varsT u) h))) e)

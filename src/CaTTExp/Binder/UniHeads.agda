@@ -28,14 +28,14 @@
 -- listed in `marked` are marked inv in the arity, so the kernel's mark
 -- premise asks σ for their inv derivations (§6.2, "σ must supply inv
 -- derivations"). J2's conclusion that every uni^y[σ] is itself inv is a
--- rule of the mark judgment, not of typing, and is not stated here.
+-- rule of the mark judgment, not of typing: CaTTExp.Binder.UniMark.
 --
 -- Validity is decided: Γ and U are well-formed pure contexts, U starts
 -- with the cone shape over Γ, and the selector is in range. The family
 -- is a HeadSpec, so it has BinderLaws (substitution, weakening, the
 -- certified checker and its completeness) and rule (op), with nothing
--- proved about horns. The horn shapes that exist in Agda (the arrow,
--- n ≤ 1) are the instance in CaTTExp.Binder.UniHeadsExamples.
+-- proved about horns. Instances: CaTTExp.Binder.UniHeadsExamples (the
+-- arrow, n ≤ 1) and CaTTExp.Binder.UniHornGenExamples (Lim/HornGen).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 import CaTTExp.Pure as P

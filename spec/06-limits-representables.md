@@ -37,9 +37,14 @@ where T is the transfor σ supplies.
 
 **The image of a cell under the universal cone.** For w a cell of 𝒦(c, L):
 - F(w)_x := w ▷ λ_x for an object generator x (an operation-case coherence over ΣD^{n−1} ∨ ΣD⁰);
-- F(w)_g for a k-generator g, k ≥ 1: the operation-case coherence over ΣD^{n−1} ∨ ΣD^k substituted by (w, λ_g). Under L it is directed.
+- F(w)_g for a k-generator g, k ≥ 1: the cell of Tr_n's shape over g. Its type is fixed by Tr_n's bracketing, so it is **not** the bare wedge cell. For n = 0 and an arrow f : a → b it must have type u ∗₀ λ_b ⇒ (u ∗₀ λ_a) ∗₀ f, while the operation-case coherence over ΣD⁰ ∨ ΣD¹ substituted by (u, λ_f) has target u ∗₀ (λ_a ∗₀ f). F(w)_g is that wedge cell pasted with rebracketing coherences:
+  - n = 0, arrow: one associator, F(u)_f = (u ▷ λ_f) ∗₁ assoc(u, λ_a, f);
+  - n = 0, 2-cell α : f ⇒ g over a → b: u ▷ λ_α, then distributivity of whiskering over vertical composition and the naturality of the associator in α, with two vertical associators;
+  - n = 1, arrow: the forward interchanger of (U, λ_f), with associators and their naturality in U (five steps).
 
-So the only cells the limit rules need from the core are operation-case coherences over two-factor wedges ΣDᵃ ∨ ΣDᵇ, which every setting of chapter 2 accepts.
+  Every step is a coherence over a pasting context, and the interchanger is the only one that is directed under L.
+
+So the cells the limit rules need from the core are coherences over pasting contexts: the wedge cells and the rebracketing coherences (associators, their naturality, distributivity of whiskering). In general F(w)_g is the lift of u's cone cell along the n-fold cylinder (`notes/specified-cones.md` §4.3, rules R0, RW, RP, RC); at n = 0 this is the list above. `CaTTExp.Lim.HornGen` builds it for every globular Γ of dimension ≤ 1 and every n, and for dimension 2 at n = 0; both the CaTT and the L checkers accept the resulting horns on a suite of diagrams (`Lim/HornGenExamples` by refl at n ≤ 1, `tools/agda-run/HornGenRun.agda` compiled at n = 2 on four diagrams and n = 3 on the point only), which is checked case by case, not proved for all Γ. For n ≥ 1 over 2-dimensional diagrams the lift reaches 2-cells and needs depth-2 lifts (naturality of a 3-cell in a 1-cell), which are not implemented; those horns are not built (ledger S27 (e′)).
 
 **Side condition and decision procedure.** The transfor comparison variables of Tr_n over **marked** diagram generators are marked declarations (chapter 3), so σ must supply `inv` derivations for them. Over unmarked generators they are unrestricted. Everything else is a substitution check.
 
@@ -49,7 +54,7 @@ So the only cells the limit rules need from the core are operation-case coherenc
 
 **Why the repair.** Mikhail's unchanged rules force every cone-morphism comparison cell, and with `uni` at every level every ambient cell of dimension ≥ 3, to be invertible (proved; `notes/limits-metatheory.md` §3). Their models are exactly the (∞,ω)-categories whose cells of dimension ≥ 3 are invertible and which have finite lax limits (§4 there). Under L, exactly one step of that argument fails: the image F(w)_g is a directed operation-case cell, not an invertible coherence.
 
-**Status.** Design: **done** (ledger B7, B11). Agda: the horn form for n ≤ 1 over the arrow in both cores (`Lim/Horn.agda`, B15); the P/L switch on the cone-morphism shapes, with the collapse instance accepted unrestricted under L and rejected under P or when f is marked (`Lim/OverL.agda`, O1–O3); general n and Γ open (B15, LIM-F, former). **Source:** `notes/limits-metatheory.md` §2–§5; `notes/catt-lim-formalization.md`.
+**Status.** Design: **done** (ledger B7, B11). Agda: the horn form for n ≤ 1 over the arrow in both cores (`Lim/Horn.agda`, B15); the P/L switch on the cone-morphism shapes, with the collapse instance accepted unrestricted under L and rejected under P or when f is marked (`Lim/OverL.agda`, O1–O3); general horns `Lim/HornGen.agda` (HEADS, S27 (e′)): Horn_n(Γ) with F(w)_g for every globular Γ of dimension ≤ 1 and every n, and of dimension 2 at n = 0, checked on a suite of diagrams in both cores (`Lim/HornGenExamples`, which also reproduces `Lim/Horn`'s arrow horn at n = 0; compiled run at n = 2 on four diagrams, n = 3 on the point only) and used as the uni head's shape (`Binder/UniHornGenExamples`); n ≥ 1 over 2-dimensional diagrams open, needing depth-2 cylinder lifts (the naturality fillers of ledger C1d, not built). As kernel heads (`Binder/UniHeads`), with J2's "every uni^y[σ] is inv" as the mark clause (UNI-inv) (`Binder/UniMark`, S27 (e″)). **Source:** `notes/limits-metatheory.md` §2–§5; `notes/catt-lim-formalization.md`.
 
 ## 6.3 Colimits
 

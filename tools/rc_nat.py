@@ -23,6 +23,10 @@ the generators' lifts q↑, each layer being c itself with one slot widened
 the small cylinder context. Lower-dimensional whiskers meeting Y in a
 layer are not handled (NoFiller). nat_op gives oplax squares b_t -> a_t for
 terms whose top-dimensional structure is coherences and their composites.
+Reassociation case (_assoc_filler): a coherence over a vertical chain whose
+two sides are bracketings of the top cells with identities inserted is
+transferred from a composite of small unitor, associator and sub-chain heads
+along the coherences between the two, with no search in the cylinder.
 sweep / sweep_rc move an event across a block of caps that differ by one
 variable renaming x -> x′ with a context cell x -> x′.
 """
@@ -34,6 +38,7 @@ class NoFiller(Exception):
     pass
 
 _K = {}
+SMALL_CYL = [40]
 
 def _iter_tgt(H, t, k):
     for _ in range(k):
@@ -267,6 +272,207 @@ def _lifted(C, n, Yq, Q, up, s_, t_, rc):
     except Exception:
         return None
 
+def _vchain_heads(Q):
+    """The binary vertical-composition head at the top dimension d of Q, if
+    Q is a d-chain (a single column of top cells over a common (d-1)-globe)."""
+    d = ps_dim(Q)
+    if d < 1:
+        return None
+    tops = [q for q in maximal_vars(Q)]
+    if any(tdim(Q[q]) + 1 != d for q in tops) or len(tops) < 4:
+        return None
+    x = comp2(Q, d - 1, v(tops[0]), v(tops[1]))
+    if x[0] != 'coh':
+        return None
+    P2 = x[1]
+    return d, (P2, x[2]), [i for i in maximal_vars(P2)]
+
+def _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc):
+    """A coherence c : P => P' over a d-chain Q whose two sides are binary
+    bracketings of the top cells (a reassociation). Its filler is transferred
+    from the composite c' of elementary associators P => N <= P' (N the
+    left-nested bracketing): c'^ is built by nat_in from small heads, and
+    gamma : c => c' (a coherence over Q) whiskers a_c -> a_c' and b_c' -> b_c.
+    Returns None if c is not of this form."""
+    hv = _vchain_heads(Q)
+    if hv is None or B[0] != '->':
+        return None
+    d, head, mx2 = hv
+    if tdim(B) != d:
+        return None
+    def is_unit(x):
+        return (x[0] == 'coh' and x[2][2] == x[2][3] and tdim(x[2]) + 1 == d
+                and len(x[1]) == len(x[3]) and ps_dim(x[1]) == d - 1)
+    def parse(x):
+        if x[0] == 'v':
+            return x[1] if tdim(Q[x[1]]) + 1 == d else None
+        if is_unit(x):
+            return ('U', x)
+        if (x[1], x[2]) != head:
+            return None
+        l, r = parse(x[3][mx2[0]]), parse(x[3][mx2[1]])
+        if l is None or r is None:
+            return None
+        return (l, r)
+    TP, TQ = parse(B[2]), parse(B[3])
+    if TP is None or TQ is None:
+        return None
+    def build(T):
+        if isinstance(T, int):
+            return v(T)
+        if T[0] == 'U':
+            return T[1]
+        return comp2(Q, d - 1, build(T[0]), build(T[1]))
+    isU = lambda T: not isinstance(T, int) and T[0] == 'U'
+    # the unitors over the 1-chain P1 (one top cell f : x0 -> x1)
+    P1 = head[0][:mx2[0] + 1]
+    f1 = P1[mx2[0]]
+    ix0, ix1 = f1[2][1], f1[3][1]
+    Dd = P1[:ix0 + 1]
+    def idat(i):
+        return ('coh', Dd, arr(Dd[ix0], v(ix0), v(ix0)), tuple(v(j) for j in range(ix0)) + (v(i),))
+    def unitor(X, left, back):
+        # left: id * X => X ; right: X * id => X ; back reverses
+        fx = v(mx2[0])
+        s_ = comp2(P1, d - 1, idat(ix0), fx) if left else comp2(P1, d - 1, fx, idat(ix1))
+        st_, tt_ = (fx, s_) if back else (s_, fx)
+        h_ = ('coh', P1, arr(infer(P1, st_), st_, tt_), tuple(v(j) for j in range(len(P1))))
+        return subst_tm(h_, sub_from(P1, Q, {mx2[0]: X}))
+    def strip(T, back):
+        # steps T => T' (T' without units unless T is all units); back: reversed steps
+        if isinstance(T, int) or isU(T):
+            return T, []
+        L, R = T
+        L2, sL = strip(L, back)
+        R2, sR = strip(R, back)
+        st = [comp2(Q, d - 1, w, build(R)) for w in sL]
+        st += [comp2(Q, d - 1, build(L2), w) for w in sR]
+        if isU(L2):
+            st.append(unitor(build(R2), True, back))
+            return R2, st
+        if isU(R2):
+            st.append(unitor(build(L2), False, back))
+            return L2, st
+        return (L2, R2), st
+    if build(TP) != B[2] or build(TQ) != B[3]:
+        return None
+    if (TP == TQ):
+        return None
+    # the elementary associator over a 3-chain of top cells
+    def chain3():
+        P2 = head[0]
+        g = P2[mx2[1]]                       # arr(base, x1, x2)
+        base, ix2 = g[1], g[3][1]
+        P = list(P2)
+        P.append(P2[ix2])                    # x3, parallel to x2
+        P.append(arr(base, v(ix2), v(len(P) - 1)))
+        return tuple(P)
+    P3 = chain3()
+    assert is_ps(P3), 'chain3'
+    t3 = maximal_vars(P3)
+    f, g, h = (v(i) for i in t3)
+    l3 = comp2(P3, d - 1, comp2(P3, d - 1, f, g), h)
+    r3 = comp2(P3, d - 1, f, comp2(P3, d - 1, g, h))
+    def assoc(X, Y, Z, back):
+        # X(YZ) => (XY)Z, or reversed
+        s_, t_ = (l3, r3) if back else (r3, l3)
+        al = ('coh', P3, arr(infer(P3, s_), s_, t_), tuple(v(i) for i in range(len(P3))))
+        imgs = {t3[0]: X, t3[1]: Y, t3[2]: Z}
+        return subst_tm(al, sub_from(P3, Q, imgs))
+    def merge(X, Y, back):
+        # normal X, Y: steps X∘Y => normal of X∘Y (or reversed steps); returns (N, steps)
+        if isinstance(Y, int):
+            return (X, Y), []
+        Bt, c = Y
+        st = [assoc(build(X), build(Bt), build(c), back)]
+        Nxb, s2 = merge(X, Bt, back)
+        st += [comp2(Q, d - 1, w, build(c)) for w in s2]
+        return (Nxb, c), st
+    def norm(T, back):
+        if isinstance(T, int):
+            return T, []
+        L, R = T
+        NL, sL = norm(L, back)
+        NR, sR = norm(R, back)
+        st = [comp2(Q, d - 1, w, build(R)) for w in sL]
+        st += [comp2(Q, d - 1, build(NL), w) for w in sR]
+        N, sm = merge(NL, NR, back)
+        return N, st + sm
+    def chaink(k):
+        P2 = head[0]
+        g = P2[mx2[1]]
+        base, ix = g[1], g[3][1]
+        P = list(P2)
+        for _ in range(k - 2):
+            P.append(P[ix])
+            P.append(arr(base, v(ix), v(len(P) - 1)))
+            ix = len(P) - 2
+        return tuple(P)
+    def leaves(T):
+        return [T] if isinstance(T, int) else leaves(T[0]) + leaves(T[1])
+    def subcoh(T1, T2):
+        # the coherence T1 => T2 over the sub-chain of their leaves, as one small head
+        ls = leaves(T1)
+        Pk = chaink(len(ls))
+        tk = maximal_vars(Pk)
+        ren_ = dict(zip(ls, tk))
+        def rb(T):
+            return v(ren_[T]) if isinstance(T, int) else comp2(Pk, d - 1, rb(T[0]), rb(T[1]))
+        s_, t_ = rb(T1), rb(T2)
+        h_ = ('coh', Pk, arr(infer(Pk, s_), s_, t_), tuple(v(i) for i in range(len(Pk))))
+        return subst_tm(h_, sub_from(Pk, Q, {tk[i]: v(ls[i]) for i in range(len(ls))}))
+    def diff(T1, T2):
+        # steps T1 => T2: split at a common root, else rotate through the normal form
+        if T1 == T2:
+            return []
+        if not isinstance(T1, int) and leaves(T1[0]) == leaves(T2[0]):
+            st = []
+            if T1[0] != T2[0]:
+                st.append(comp2(Q, d - 1, subcoh(T1[0], T2[0]), build(T1[1])))
+            if T1[1] != T2[1]:
+                st.append(comp2(Q, d - 1, build(T2[0]), subcoh(T1[1], T2[1])))
+            return st
+        N1, s1 = norm(T1, False)
+        N2, s2 = norm(T2, True)
+        assert N1 == N2
+        return s1 + list(reversed(s2))
+    SP, stP = strip(TP, False)
+    SQ, stQ = strip(TQ, True)
+    if isU(SP) or isU(SQ) or (stP or stQ) and SP == TP and SQ == TQ:
+        return None
+    steps = stP + diff(SP, SQ) + list(reversed(stQ))
+    if not steps or (len(steps) == 1 and steps[0][0] == 'coh' and steps[0][1] == Q):
+        return None
+    cprime = steps[0]
+    for w in steps[1:]:
+        cprime = comp2(Q, d, cprime, w)
+    c = ('coh', Q, B, tuple(v(i) for i in range(len(Q))))
+    assert infer(Q, cprime) == B, 'reassociation composite'
+    g_fw = ('coh', Q, arr(B, c, cprime), tuple(v(i) for i in range(len(Q))))
+    g_bw = ('coh', Q, arr(B, cprime, c), tuple(v(i) for i in range(len(Q))))
+    ren = lambda t: _ren(t, mi)
+    Yimg = frozenset(mi[q] for q in Yq)
+    meets = lambda w: bool(fv_tm(w) & Yimg)
+    plus = lambda w: _swap(w, mi, pl, Yq)
+    lift = lambda w: nat_in(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, w, rc)
+    Kp = lift(ren(cprime))
+    n = d + 1
+    ga = ren(g_fw)
+    for j in range(n):
+        w_ = _iter_tgt(C, ren(c), n - j)
+        if meets(w_):
+            ga = comp2(C, j, ga, lift(w_))
+    # b side for gamma^-1 built on its plus copy, whiskered by the same source lifts
+    gb = plus(ren(g_bw))
+    for j in range(n):
+        w_ = _iter_src_then(C, ren(c), n - j)
+        if meets(w_):
+            gb = comp2(C, j, lift(w_), gb)
+    K = comp2(C, n, comp2(C, n, ga, Kp), gb)
+    if infer(C, K) != arr(infer(C, a), a, b):
+        return None
+    return K
+
 def filler(Q, B, Yq, rc, op=False):
     key = (Q, B, frozenset(Yq), op)
     if key in _K:
@@ -291,13 +497,23 @@ def filler(Q, B, Yq, rc, op=False):
             w = _layered(Q, B, Yq, C, mi, pl, up, a, b, rc, op)
         except (NoFiller, TypeError_):
             w = _lifted(C, n, Yq, Q, up, b if op else a, a if op else b, rc)
+            if w is None and len(C) <= SMALL_CYL[0]:
+                # a small cylinder (e.g. a whiskering head with a moving
+                # lower whisker): ask the comparison directly
+                w = rc(C, A, b, a) if op else rc(C, A, a, b)
             if w is None:
                 _K[key] = None
                 raise NoFiller(key)
     elif op:
         w = rc(C, A, b, a)
     else:
-        w = rc(C, A, a, b)
+        w = None
+        try:
+            w = _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc)
+        except NoFiller:
+            w = None
+        if w is None:
+            w = rc(C, A, a, b)
     if w is None:
         _K[key] = None
         raise NoFiller((Q, B, tuple(sorted(Yq))))

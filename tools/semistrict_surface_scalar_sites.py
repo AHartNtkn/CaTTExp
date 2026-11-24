@@ -10,7 +10,6 @@ from collections import Counter
 from itertools import combinations, permutations, product
 from pathlib import Path
 
-import islpy as isl
 
 
 def evaluate(history, word, signed=False):
@@ -75,6 +74,7 @@ def coefficients(rows, target):
     for j, value in enumerate(target):
         expression = ' + '.join(f'{row[j]}*{x}' for row, x in zip(rows, names) if row[j]) or '0'
         conditions.append(expression+' = '+str(value))
+    import islpy as isl
     system = isl.Set('{ ['+', '.join(names)+'] : '+' and '.join(conditions)+' }')
     if system.is_empty():
         return None

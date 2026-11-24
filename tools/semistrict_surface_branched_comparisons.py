@@ -17,12 +17,12 @@ from semistrict_surface_globular_judgment import Tree, facets, tensor_rows
 from semistrict_surface_globe_spectrum import check, tableau_query
 
 
-def query(shapes):
+def query(shapes,**options):
     trees = [Tree(s) for s in shapes]
     if [t.height for t in trees] not in ([2,3,2],[2,4,2]):
         raise ValueError('expected local column heights (2,3,2) or (2,4,2)')
     layers = [tensor_rows(trees,r) for r in range(6)]
-    return tableau_query(layers,5,lambda word:facets(trees,word))
+    return tableau_query(layers,5,lambda word:facets(trees,word),**options)
 
 
 def survives(word):

@@ -35,12 +35,19 @@ Par    = ε ▸ o ▸ o ▸ a⟶ 0 1 ▸ a⟶ 0 1
 Comp   = ε ▸ o ▸ o ▸ o ▸ a⟶ 0 1 ▸ a⟶ 1 2
 Loop   = ε ▸ o ▸ a⟶ 0 0
 
--- The arrow: exactly Lim/Horn's horns.
-arr₀ : hornData Arr 0 ≡ just (hd Horn.J2₀ 4 [])
+-- The arrow: the hand-built horns are exactly Lim/Horn's.
+arr₀ : hornDataHand Arr 0 ≡ just (hd Horn.J2₀ 4 [])
 arr₀ = refl
 
-arr₁ : hornData Arr 1 ≡ just (hd Horn.J2₁ 6 Horn.marksP₁)
+arr₁ : hornDataHand Arr 1 ≡ just (hd Horn.J2₁ 6 Horn.marksP₁)
 arr₁ = refl
+
+-- The horns by cylinder lifts (every n) agree with them at n = 0. At
+-- n = 1 F(U)_f is a different pasting of the same kind (the lift of
+-- (u ∗₀ λ_f) ∗₁ assoc through the paste rule), so the contexts differ;
+-- both are well formed in both cores (below, and Lim/Horn).
+gen₀ : hornData Arr 0 ≡ hornDataHand Arr 0
+gen₀ = refl
 
 -- The suite, n = 0 and 1, in plain CaTT.
 suiteP : (okP (J2 Pt 0) ∧ okP (J2 Pt 1) ∧ okP (J2 Cospan 0) ∧ okP (J2 Cospan 1)
@@ -72,6 +79,7 @@ suite2P = refl
 suite2L : (okL (J2 Two 0) ∧ okL (J2 Endo2 0)) ≡ true
 suite2L = refl
 
--- Not built: n = 1 over 2-dimensional diagrams, and n ≥ 2 (S27 (e′)).
-none : (J2 Two 1 ∷ J2 Arr 2 ∷ []) ≡ (nothing ∷ nothing ∷ [])
+-- Not built: n ≥ 1 over 2-dimensional diagrams (S27 (e′): F(w)_α is a
+-- depth-2 lift).
+none : J2 Two 1 ≡ nothing
 none = refl

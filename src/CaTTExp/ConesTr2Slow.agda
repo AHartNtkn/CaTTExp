@@ -6,7 +6,7 @@
 -- 2.7.0.1: the contexts evaluate to CaTT terms of several hundred
 -- thousand nodes), so Everything does not import it. Typecheck it on
 -- its own. The same checks for all three 2-dimensional shapes, cone
--- and cocone, run in seconds compiled: tools/agda-run/ConesTr2Run.agda.
+-- and cocone, run compiled in a few minutes: tools/agda-run/ConesTr2Run.agda.
 ------------------------------------------------------------------------
 module CaTTExp.ConesTr2Slow where
 

@@ -256,6 +256,142 @@ hornAt Γ E zero          = Build.J2₀ Γ E >>= λ J → just (hd J (suc (len �
 hornAt Γ E (suc zero)    = Build.J2₁ctx Γ E >>= λ J → just (hd J (3 + len Γ) (Build.marks₁ Γ E))
 hornAt Γ E (suc (suc _)) = nothing
 
+-- The hand-built horns (Lim/Horn's formulas generalised; n = 0, 1).
+hornDataHand : Ctx → Nat → Maybe HornData
+hornDataHand Γ zero    = if dimLe 2 Γ then (toExCtx Γ >>= λ E → hornAt Γ E zero) else nothing
+hornDataHand Γ (suc n) = if dimLe 1 Γ then (toExCtx Γ >>= λ E → hornAt Γ E (suc n)) else nothing
+
+------------------------------------------------------------------------
+-- Every n, for diagrams of dimension ≤ 1 (S27 (e′)).
+--
+-- F(w) is the n-fold cylinder lift of F(u) (CaTTExp.Cones, ledger
+-- B18): put u : c → L after the cone context Pre, take F(u)_x as
+-- above (as expressions), and lift n times along the newest variable.
+-- Stage k is the context Pre, c, the k-sphere and w (Θ_k), with, for
+-- each x of Γ, the images of the boundary pairs of block x of Tr_k and
+-- F_k(w)_x. Lifting F_k along w gives F_{k+1}; its two copies become
+-- the new boundary pair. Horn_n is Tr_n with the boundary pairs sent
+-- to stage n's images; J2_n is Tr_{n+1} with, in addition, the pair
+-- (horn top, F_n(w)).
+
+module Gen (Γ : Ctx) (E : ExCtx) where
+  nΓ = len Γ
+  cL = suc (nΓ + nΓ)
+  Lv = nΓ
+  uL = suc cL
+
+  Θ₀ : ExCtx
+  Θ₀ = ConeOf.cone E ++ (ob ∷ hom ob (v cL) (v Lv) ∷ [])
+
+  -- F(u)_x: u ∗₀ λ_x over an object, and over an arrow f : a → b
+  -- (u ∗₀ λ_f) ∗₁ assoc(u, λ_a, f), where assoc is the reverse
+  -- associator u ∗₀ (λ_a ∗₀ f) → (u ∗₀ λ_a) ∗₀ f.
+  F0 : Nat → Ex
+  F0 x = pick (nth ob E x)
+    where
+    λx = v (suc (nΓ + x))
+    pick : ExTy → Ex
+    pick (hom ob (v a) (v b)) =
+      bn 1 (bn 0 (v uL) λx) (asCh 1 false (v uL) (v (suc (nΓ + a))) (v x))
+    pick _ = bn 0 (v uL) λx
+
+  Stage : Set
+  Stage = ExCtx × List (List Ex × Ex)
+
+  private
+    seqS : List (Maybe (List Ex × Ex)) → Maybe (List (List Ex × Ex))
+    seqS []       = just []
+    seqS (m ∷ ms) = m >>= λ p → seqS ms >>= λ ps → just (p ∷ ps)
+
+    step : Stage → Maybe Stage
+    step (Θ , xs) =
+      cyCtx (fuelOf Θ) Θ Y >>= λ Θ' →
+      seqS (map one xs) >>= λ xs' →
+      just (Θ' , xs')
+      where
+      Y = (length Θ ∸ 1) ∷ []
+      one : List Ex × Ex → Maybe (List Ex × Ex)
+      one (bs , F) = cyLift (fuelOf Θ) Θ Y F >>= λ F' →
+        just (map (cyRenM Y) bs ++ (cyRenM Y F ∷ cyRenP Y F ∷ []) , F')
+
+  stage : Nat → Maybe Stage
+  stage zero    = just (Θ₀ , map (λ x → [] , F0 x) (range nΓ))
+  stage (suc k) = stage k >>= step
+
+  trCtx : Nat → Maybe Ctx
+  trCtx k = ctrf k E >>= λ T → just (evCtx (Ctrf.ctx T))
+
+  trMarked : Nat → List Nat
+  trMarked k = mk (ctrf k E)
+    where
+    mk : Maybe Ctrf → List Nat
+    mk (just T) = Ctrf.marked T
+    mk nothing  = []
+
+  front : List (Maybe Tm)
+  front = map (λ i → just (var i)) (range nΓ) ++ (just (var cL) ∷ [])
+
+  takeE : Nat → ExCtx → ExCtx
+  takeE zero    _        = []
+  takeE (suc n) []       = []
+  takeE (suc n) (A ∷ As) = A ∷ takeE n As
+
+  module At (n : Nat) (S : Stage) where
+    Θ   = fst S
+    xs  = snd S
+    pre = length Θ ∸ 1                       -- the level of w in Θ
+    Hpre : Ctx                               -- Pre, c, the sphere
+    Hpre = evCtxGo Θ (takeE pre Θ) ε
+    wTy : Ty
+    wTy = evTy Θ (nth ob Θ pre)
+
+    bnd : Nat → Nat → Maybe Tm               -- boundary pair j of block x
+    bnd x j = just (ev Θ (nth (v 0) (fst (nth ([] , v 0) xs x)) j))
+
+    hornTbl : List (Maybe Tm)
+    hornTbl = front ++ concatMap (λ x → map (λ j → if j <ℕ (n + n) then bnd x j else nothing)
+                                             (range (suc (n + n)))) (range nΓ)
+
+    horn : Maybe (Ctx × List Tm)
+    horn = trCtx n >>= λ T → just (inst Hpre T (nth nothing hornTbl))
+
+    -- F_n(w)_x in J1 = horn ▸ w, where w sits after the horn tops.
+    Fw : Nat → Tm
+    Fw x = ev Θ (snd (nth ([] , v 0) xs x)) [ ⟪ map var (range pre) ++ (var (pre + nΓ) ∷ []) ⟫ ]tm
+
+    J2tbl : List (Maybe Tm)
+    J2tbl = front ++ concatMap (λ x → map (λ j →
+              if j <ℕ (n + n) then bnd x j
+              else if j ==ℕ (n + n) then just (var (pre + x))
+              else if j ==ℕ suc (n + n) then just (Fw x) else nothing)
+              (range (3 + (n + n)))) (range nΓ)
+
+    J2 : Maybe Ctx
+    J2 = horn >>= λ H → trCtx (suc n) >>= λ T → just (fst (inst (fst H ▸ wTy) T (nth nothing J2tbl)))
+
+    marks : List Nat
+    marks = mk horn
+      where
+      isVar′ : Tm → List Nat
+      isVar′ (var j) = j ∷ []
+      isVar′ _       = []
+      mk : Maybe (Ctx × List Tm) → List Nat
+      mk nothing  = []
+      mk (just H) = concatMap (λ l → isVar′ (nth (var 0) (snd H) l)) (trMarked n)
+
+  hornGen : Nat → Maybe HornData
+  hornGen n = stage n >>= λ S →
+    At.J2 n S >>= λ J → just (hd J (suc ((n + n) + nΓ)) (At.marks n S))
+
+-- The horn shape at (Γ, n) for every n, Γ globular of dimension ≤ 1.
+hornDataGen : Ctx → Nat → Maybe HornData
+hornDataGen Γ n = if dimLe 1 Γ then (toExCtx Γ >>= λ E → Gen.hornGen Γ E n) else nothing
+
+-- The horn shapes: every n over diagrams of dimension ≤ 1 (the cylinder
+-- lifts), and n = 0 over 2-dimensional diagrams (the hand-built F(u)_α).
+-- n ≥ 1 over a 2-dimensional diagram needs F(w)_α, the naturality of the
+-- 3-cell F(u)_α in the 1-cell u (depth 2), which the lifts of
+-- CaTTExp.Cones do not cover.
 hornData : Ctx → Nat → Maybe HornData
-hornData Γ zero    = if dimLe 2 Γ then (toExCtx Γ >>= λ E → hornAt Γ E zero) else nothing
-hornData Γ (suc n) = if dimLe 1 Γ then (toExCtx Γ >>= λ E → hornAt Γ E (suc n)) else nothing
+hornData Γ n = if dimLe 1 Γ then hornDataGen Γ n
+               else if n ==ℕ 0 then hornDataHand Γ 0 else nothing

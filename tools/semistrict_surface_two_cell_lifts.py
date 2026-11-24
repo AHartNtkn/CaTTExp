@@ -42,14 +42,8 @@ def vertical(parts, empty_path):
     return entries[0] if len(entries) == 1 else ('v', tuple(entries))
 
 
-def lift_relation(goal, upper_atoms, edge_map, lower_atoms):
-    """Return all lower path pairs realizing exactly the specified upper value."""
-    if any(len(e) != 1 or not image for e, image in edge_map.items()):
-        raise ValueError('Require single lower edge names with nonempty images')
-
-    def project(path):
-        return ''.join(edge_map[e] for e in path)
-
+def factor_operations(upper_atoms):
+    """Return boundary and binary-cut operations on canonical upper two-cells."""
     @cache
     def ends(t):
         tag, data = t
@@ -78,6 +72,19 @@ def lift_relation(goal, upper_atoms, edge_map, lower_atoms):
         source, target = ends(t)
         for i in range(len(steps)+1):
             yield 'v', vertical(steps[:i], source), vertical(steps[i:], target)
+
+    return ends, cuts
+
+
+def lift_relation(goal, upper_atoms, edge_map, lower_atoms):
+    """Return all lower path pairs realizing exactly the specified upper value."""
+    if any(len(e) != 1 or not image for e, image in edge_map.items()):
+        raise ValueError('Require single lower edge names with nonempty images')
+
+    def project(path):
+        return ''.join(edge_map[e] for e in path)
+
+    ends, cuts = factor_operations(upper_atoms)
 
     @cache
     def colour(word):

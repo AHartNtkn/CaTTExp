@@ -125,7 +125,7 @@ The other laws once catalogued (the prime left splits L_p and the divisibility l
 
 σ must respect Δ's marks. With no marked object in Δ, the side condition computes in V, the least admissible theory. A head all of whose objects a₁, …, aₙ are `ord` is also accepted by (COH-ord), on SC_𝔉 (chapter 3, §3.6). There is no setting, no file header and no default: every assumption a coherence uses is a mark in its own context (chapter 0, §0.1).
 
-**Why marks and not a file setting** (ledger S31, `notes/design-decisions.md` §1.8). Until 2026-11-24 the two laws were switches declared once per development. That made them the only assumption not stated in the context, and it split developments into four classes with one-way imports. A mark says the same thing about the objects it is placed on and nothing about others. For a context with at least one hom, marking every object a₁, …, aₙ with a set S gives S(Δ) = S, the old setting (`Uniform/SplitMarks.uniform-recovers`), so nothing expressible before is lost.
+**Why marks and not a file setting** (ledger S31, `notes/design-decisions.md` §1.8). A law declared once per development would be the only assumption not stated in the context, and it would split developments into four classes with one-way imports. A mark says the same thing about the objects it is placed on and nothing about others. For a context with at least one hom, marking every object a₁, …, aₙ with a set S gives S(Δ) = S, the same side condition as such a per-development law set (`Uniform/SplitMarks.uniform-recovers`), so the marks lose nothing.
 
 **Why the laws are not hypotheses either.** A declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)). A mark acts through the side condition, as `ord` does, so all of the law's higher coherences come from the oracle.
 
@@ -244,7 +244,7 @@ Together these force J = ∅. Neither alone does: J = {1,2,4,5,7,…} passes the
 
 ## 2.8 Open surface questions
 
-*Q2.1 (which switch setting a development starts in) was removed on 2026-11-24: there are no settings, and the crossing laws are object marks (§2.3, ledger S31). Their surface defaults fall under Q3.3.*
+How the split marks are supplied by the surface is part of Q3.3 (chapter 3).
 
 **Q2.2. How a horizontal composite across objects is written.** The kernel has no horizontal composite; there are two layerings, ∂⁻τ (later factor first) and ∂⁺τ (earlier factor first), related by the directed interchanger from ∂⁻ to ∂⁺.
 - *Option A: no notation; the user writes the layering they mean.* Nothing hidden; every composite of transformations across objects is written twice as long.

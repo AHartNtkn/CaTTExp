@@ -133,6 +133,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S31 (2.3): per-file switch settings may be unjustified; proposal to drop them.
 - S30 (2.2): completeness of the lax side condition is unstated.
 - S29 (2.2): §2.2 frames SC as computed in a strict theory; should present it as a combinatorial test with soundness alongside.
 - S28 (1.6): user postulates removed; the signature is closed to users, and assumptions are context variables.

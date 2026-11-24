@@ -12,7 +12,6 @@ from functools import cache
 from itertools import product
 from math import lcm
 
-import islpy as isl
 
 
 
@@ -78,6 +77,7 @@ def positive_cycles(columns):
             equations[j][i] = a
     # Coordinates of independent columns with a private row vanish in the cone.
     # ISL also propagates their signs in mixed equations before taking the hull.
+    import islpy as isl
     dim = isl.dim_type.set
     base = isl.BasicSet.universe(isl.Space.set_alloc(isl.DEFAULT_CONTEXT,0,n))
     local = isl.LocalSpace.from_space(base.get_space())

@@ -202,6 +202,21 @@ class Movies:
                         right,_ = self.parse(h,[(n,i+j) for n,j in tile.second])
                         yield state[:k]+right+state[k+count:], 'declared 4-rule'
 
+    def whole_cuts(self,source,actions,records):
+        next_record = iter(records)
+        blocks,barriers = [],[]
+        start,cut = source,0
+        for index,(rid,i) in enumerate(actions):
+            if rid=='swap':
+                continue
+            h,_,_ = next(next_record)
+            if len(h)==len(self.pres.rules[rid].source):
+                blocks.append((start,actions[cut:index]))
+                barriers.append((h,rid))
+                start,_ = self.named(h,rid,i)
+                cut = index+1
+        return blocks+[(start,actions[cut:])],barriers
+
     def compare(self,source,first,second):
         self.pres.walk(self.start,source)
         u,a=self.parse(source,first)
@@ -216,6 +231,16 @@ class Movies:
         from semistrict_surface_two_slot_polygons import compare as two_slot_compare, width_at_most_two
         if not self.attachments and any(width_at_most_two(self,source,r) for r in (u,v)):
             return two_slot_compare(self,source,first,second,u,v,True)
+        if not self.attachments:
+            left,cuts = self.whole_cuts(source,first,u)
+            right,other = self.whole_cuts(source,second,v)
+            if cuts!=other:
+                return dict(surface=False,states=0,obstruction='whole-history polygons')
+            if cuts:
+                pieces = [self.compare(h,x,y) for (h,x),(_,y) in zip(left,right)]
+                answers = [x['surface'] for x in pieces]
+                yes = False if False in answers else None if None in answers else True
+                return dict(surface=yes,states=sum(x['states'] for x in pieces),pieces=pieces)
         limit = max(len(u),len(v))
         if first==second and not self.globally_thin:
             return dict(surface=True,states=1,moves=[])
@@ -243,6 +268,13 @@ class Movies:
                 if nxt not in previous:
                     previous[nxt]=current,label
                     queue.append(nxt)
+        if unresolved and not self.attachments and len(v)<=1:
+            if not v:
+                from semistrict_surface_shared_edge import braid_image
+                images = [braid_image(len(source),tuple(i+1 for _,i in face)) for face in (first,second)]
+                return dict(surface=images[0]==images[1],states=len(previous),method='pure braid')
+            from semistrict_surface_single_polygon import decide
+            return dict(states=len(previous),**decide(self,source,first,second))
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

@@ -62,7 +62,7 @@ Where a construction has lax, pseudo and strict versions, the kernel takes the *
 - *From two-tier L to P:* by marks. P is two-tier L with every interchanger invertible, and the relative coherence lemma for 𝔉 → ν holds (ledger E5).
 - *From uniform L to two-tier L:* by marks, with `ord` read as "the inner letters into this object are trivial".
   - The rule (COH-ord) accepts a head all of whose objects are `ord` on the two-tier side condition. With every object marked `ord`, uniform L then derives exactly two-tier L: the same terms, types and marks (chapter 3, §3.6; ledger S16(b)).
-  - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
+  - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, whatever the split marks. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
   - Heads that mix `ord` and non-`ord` objects use the uniform rule (ledger E15).
 
 Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation of 𝒦 has.

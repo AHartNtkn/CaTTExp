@@ -189,14 +189,29 @@ twoDim = DiskEx 2 ∷ Loop ∷ Par2 ∷ []
 _ : all (okCtrf 1) twoDim ≡ true
 _ = refl
 
--- The next level needs naturality of those coherences themselves
--- (depth 1 in a 3-dimensional coherence, BMOSV), which is not
--- implemented: the lift returns nothing and no context is produced.
-_ : ctrfDefined 2 (DiskEx 2) ≡ false
+-- The next levels need the naturality of those coherences themselves
+-- (the coherence rule: a coherence over the pasting context raised at
+-- its moving maximal arguments), the paste rule one dimension up, and
+-- the distributivity of whiskering over a composite whose boundary
+-- moves (notes/specified-cones.md §4.3). ctrf₂ is built on every
+-- 2-dimensional shape, cone and cocone. Its well-typedness is checked
+-- by the same certified checker, but evaluating the contexts to CaTT
+-- syntax takes about 25 minutes per shape here, so the checks are in
+-- CaTTExp.ConesTr2Slow (the loop, not imported by Everything) and in
+-- the compiled run tools/agda-run/ConesTr2Run.agda (all six).
+coctrfDefined : Nat → ExCtx → Bool
+coctrfDefined k Γ with coctrf k Γ
+... | nothing = false
+... | just _  = true
+
+_ : all (ctrfDefined 2) twoDim ≡ true
+_ = refl
+_ : all (coctrfDefined 2) twoDim ≡ true
 _ = refl
 
--- Over a 3-dimensional shape even ctrf₁ needs depth-2 lifts (p_x ∗₀ θ
--- for a 3-cell θ), which are not implemented.
+-- Over a 3-dimensional shape even ctrf₁ needs depth-2 lifts: in
+-- p_f ∗₁ (p_x ∗₀ θ), for a 3-cell θ, the factor p_x ∗₀ θ moves together
+-- with its boundary, which none of the rules covers (C1).
 _ : ctrfDefined 1 (DiskEx 3) ≡ false
 _ = refl
 

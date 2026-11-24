@@ -829,7 +829,7 @@ Take an interchanger at level k, with its operands juxtaposed along a k-cell. D_
   where V^∘ := D_all(V) is the least oplax-admissible theory (`mirror-iccS`, `mirror-rspS`, `mirror-vS`, `mirror-allS`).
 - The dual of one setting is the same at every level iff S is mirror-symmetric (∅ or both switches) or [k+1 ∈ J] does not depend on k (`level-uniform`). For any other pair, the image of a single setting is a level-dependent law set. This only matters for the mixed cores, since J = ∅ and J = all are the only dualities that keep the orientation uniform.
 
-So the four settings of the lax core and the four settings of the oplax core correspond under the total duality, with {inner law} and {R} trading places. A development checked in {inner law} dualises to an oplax development checked in {R}, and conversely.
+(Since 2026-11-24 the laws are object marks rather than settings, ledger S31: D_all exchanges the marks `lsplit` and `rsplit`.) So the four settings of the lax core and the four settings of the oplax core correspond under the total duality, with {inner law} and {R} trading places. A development checked in {inner law} dualises to an oplax development checked in {R}, and conversely.
 
 ## D.5 Dualities, ⊗ and the biclosed rules (F.7.4)
 

@@ -274,3 +274,22 @@ Lemma 4.1 then concludes. ∎
 - §0 item 4 and §5.3: "with both splits on … recovery is exactly relative coherence" and "open (relative coherence) in the T₁₂ setting" are **refuted**: relative coherence fails in every setting (§8.1). "With both splits on, ⟦u⟧ = ⟦v⟧" is correct for the **inner** strip ι(A₁ ∗ A₂, B) only. It is wrong for the outer W-strip.
 - §5.3 [conj] on the ℤ-tag model: now [cited], in the collapsed form of §8.1.
 - §6 table, column "Uniform V + S": read "RC_{V+S/𝔉}" as "fibre connectivity, case by case" (§8.3).
+
+### 8.5 E14(b): the factor rules with two or more positive factors (2026-11-24)
+
+The question is whether (INV-fac)/(PS-fac) on a uniform Gray cell G(x₁, …, xₙ) with at least two factors of positive dimension, and the ps\* branch of (OP-ps_S′), are sound in **every** algebra of V + S. The answer splits by the class of algebras.
+
+**On free algebras over pasting diagrams they hold [proved].** Let σ substitute into F = F_{V+S}(Γ′) with Γ′ a pasting diagram.
+- *(INV-fac).* If xᵢ[σ] is invertible, it is an identity by (F7). The designated lift of G is the top-atom lift over the wedge of disks, and xᵢ[σ] = 1 makes this a unit input. B's unit declarations send a top-atom lift with a unit input to an identity, whether the unit input is the moving one or a fixed one (round 7, "face and unit declarations in all degrees"; round 5, disk recursion item 3; (F4)). So G(x[σ]) is an identity, hence invertible. With operand purity this covers case (i) of (OP-inv_S′) as well.
+- *(PS-fac) and the ps\* branch.* These reduce in the same way to the case of identities, provided the top-atom lift of a pair of proper operands is proper. This holds when its round-5 charge is the product of the operand charges, as for E(I, b) in §8.1. A non-identity xⱼ[σ] then has a non-invertible mixed cell G(y, xⱼ[σ]) for every generator y with hd(y) ≥ 1 before it, so xⱼ[σ] ps\* forces xⱼ[σ] = 1, and the unit declarations conclude. The multiplicativity of the charge is cited (round 5), not re-proved here.
+
+This settles the rules for unmarked terms in the term model of a pasting diagram. It does **not** settle soundness. A marked variable (`inv`, `ps`) is interpreted by a cell that is invertible, or whose mixed cells are invertible, so the semantics of marked contexts needs non-free algebras such as localizations. In those algebras (F7) is not available.
+
+**In arbitrary algebras the expected answer is no [conj].** The two-tier proof (Lemma 2.1) runs W(A, B) ∗ W(A⁻¹, B) = W(A ∗ A⁻¹, B) = W(1, B) = 1, and its first step is the binary subdivision of the top atom in one variable. That subdivision fails in every setting: this is the outer W-strip of §8.1. The round-1 W-table gives a candidate countermodel. Keep the long hom through degree 4, with 3-values in ℤ, inner squares labelled xy, joins −ab, and r, t, χ labelled 0. Then make three changes:
+- replace the short hom carrying A by one in which A has a two-sided inverse, with advance counts A ↦ 1 and A⁻¹ ↦ −1;
+- take 5-labels in (ℕ, +) instead of ℤ;
+- label W(A, B) by 1 and every other disk pair by 0, including (A⁻¹, B) and (1, B).
+
+Then A is invertible and W(A, B) has no inverse. What is unchecked is whether this table still satisfies V + S. Round 1's check used two facts that change here: the short homs were chains, and advance counts were positive. That check, together with the general line (which operand configurations and which outer letters propagate invertibility in every algebra, absorbing E14(c)), is posed in `conjectures/outbox/invertibility-in-directed-interchange-r2.md`.
+
+**Consequence if the conjecture holds.** Two rules are then sound only in restricted settings or in strict-enough models (strict Gray-enriched categories, strict ω-categories): (INV-fac)/(PS-fac) for two or more positive factors, and the ps\* branch. The uniform rule set would keep them only for operand-pure letters of kinds (i)–(iii), with the premise read on the letter itself, i.e. a premise `G(x)[γ] inv` that is declared rather than derived.

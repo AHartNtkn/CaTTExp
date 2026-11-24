@@ -192,7 +192,7 @@ def verify_class(binary,ctx,raw,witness,old_type,cut):
     def show(ty):
         return '*' if ty == STAR else ' -> '.join(code.term(t) for t in ty[2:])
     decl = ' '.join(f'(x{i} : {show(ty)})' for i,ty in enumerate(ctx))
-    direct = f'comp[{code.term(raw[0])},{code.term(raw[1])}]'
+    direct = 'comp[' + ','.join(code.term(step) for step in raw) + ']'
     old = show(old_type)
     full = ','.join('x'+str(i) for i in range(len(ctx)))
     # General context definitions take their whole argument telescope explicitly.

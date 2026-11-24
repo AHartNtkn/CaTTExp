@@ -4,15 +4,17 @@ These are the constraints every later chapter satisfies. They are design commitm
 
 ## 0.1 What the system is about
 
-The system is a type theory in the style of CaTT (Finster–Mimram) whose intended model is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it.
+The system is a type theory in the style of CaTT (Finster–Mimram). It has **no intended model**. Its rules are chosen by the generality ordering of §0.4: among candidate rules, the kernel takes the one that derives the fewest cells, and specialises only for a recorded reason. Soundness in reasonable models is a **check** on a rule, not the reason for it. A rule is never added, dropped or tuned in order to match one chosen model or model class.
+
+**The motivating example.** The example that motivates the project, and the reading the later chapters use to explain rules, is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it. It is one model among many, and the kernel's most general rules have models that are not of this kind (chapter 2, §2.3: objects whose own compositions interchange directedly). Read in 𝒦:
 
 - A term of type ⋆ is an object of 𝒦, that is, an ω-category.
 - A term of type `a → b` between objects is a 1-cell of 𝒦, a functor. A term between 1-cells is a lax transformation, and so on up.
 - Inside one hom 𝒦(a, b), cells compose as in an ω-category. Composition **across** objects, 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), is Gray: it has a directed interchanger and no horizontal composite.
 
-The ambient 𝒦 stays **external**: it is the model the judgments are about, not a term inside the theory. Internal quantifiers in Lawvere's style (a rule that binds an object variable and has a universal property witnessed by cells) are allowed where the rules below support them.
+Every model, 𝒦 included, stays **external**: a model is what the judgments are interpreted in, not a term inside the theory. Internal quantifiers in Lawvere's style (a rule that binds an object variable and has a universal property witnessed by cells) are allowed where the rules below support them.
 
-*Source:* `notes/pseudo-vs-gray.md` §0, §2.1–2.2; `notes/conventions.md` §4.
+*Source:* `notes/pseudo-vs-gray.md` §0, §2.1–2.2; `notes/conventions.md` §4; Anthony, spec walkthrough 2026-11-24 (no intended model; ledger S32).
 
 ## 0.2 No universes
 
@@ -26,7 +28,7 @@ What it does not exclude:
 - **Binding formers in Lawvere's style** (§0.1). A rule may bind an object variable in a premise and form an object or a cell from it. Examples are an end ∫_X F(X, X) or a System F-style ∀X. T(X).
 - Such a rule must state its universal property as the existence of cells (§0.3), and it must not make ⋆ or a judgment into a term.
 - A binder of this kind ranges over the sort ⋆, as a context variable does. It needs no type of objects, so it is not a universe.
-- The kernel has one such former: INIT (chapter 9, §9.3), the initial model μΔ of a positive context Δ, read impredicatively as ∀Δ. X with naturality. It is sound in 𝒦 for its class of contexts. The dual, final models of copositive contexts, is unsound in general and is not a rule.
+- The kernel has one such former: INIT (chapter 9, §9.3), the initial model μΔ of a positive context Δ, read impredicatively as ∀Δ. X with naturality. It is sound in 𝒦 for its class of contexts (the soundness check of §0.1). The dual, final models of copositive contexts, is unsound in general and is not a rule.
 
 *Source:* project standard 5; `notes/pseudo-vs-gray.md` §4.7 records why universes are off the plan.
 
@@ -52,7 +54,7 @@ Where a construction has lax, pseudo and strict versions, the kernel takes the *
 - the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
 - pseudo transformations, ordinary ω-categories and groupoids are marks on top of L (`inv`, `ps`, `ord`, `grpd_k`), never separate kernels (see below for how far each goes).
 
-**The generality ordering**, from most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
+**The generality ordering is the design criterion.** From most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
 
 **How far marks go back down the ordering.**
 - *From two-tier L to P:* by marks. P is two-tier L with every interchanger invertible, and the relative coherence lemma for 𝔉 → ν holds (ledger E5).
@@ -61,7 +63,7 @@ Where a construction has lax, pseudo and strict versions, the kernel takes the *
   - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
   - Heads that mix `ord` and non-`ord` objects use the uniform rule (ledger E15).
 
-Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
+Specialisation happens only for a concrete, recorded reason, and matching a model is not one (§0.1). The ordering extends below uniform L: a core with no interchanger at all (ω-sesquicategories) derives fewer cells still. The kernel currently stops at directed interchange. The recorded reason is that dropping it would lose the naturality cells of lax transformations, which is a reason drawn from the motivating example, so this stop is under review (ledger S33).
 
 *Source:* project standard 4; `notes/pseudo-vs-gray.md` §2.5, §7; `notes/design-decisions.md` §1.7.
 

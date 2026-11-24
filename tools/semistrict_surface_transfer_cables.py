@@ -221,11 +221,45 @@ def bounded_counts(a,b,private,allowed):
                 variables[v] = upper
                 changed = True
         if not changed:
-            return {key for key,(c,hi,lo) in expressions.items() if c+variables[hi]-variables[lo]}
+            return variables,bounds,expressions
     return None
 
 
-def compare(source,right,traces,anchored,check_schedule=None,geometry=None):
+def describe_profiles(solution,schedule,blocked,order):
+    values,bounds,expressions = solution
+    def distances(reverse):
+        dist = dict.fromkeys(values,float('inf'))
+        dist[None] = 0
+        for _ in range(len(values)-1):
+            changed = False
+            for src,dst,d in bounds:
+                u,v = (dst,src) if reverse else (src,dst)
+                if dist[u]+d<dist[v]:
+                    dist[v] = dist[u]+d
+                    changed = True
+            if not changed:
+                break
+        return dist
+    low = {v:-d for v,d in distances(True).items()}
+    high = distances(False)
+    pairs = sorted(v for v in values if v is not None and low[v]!=high[v])
+    assert all(high[v]-low[v] in (0,1) for v in values)
+    bits = {p:i for i,p in enumerate(pairs)}
+    requires = {(bits[v],bits[u]) for u,v,d in bounds if u in bits and v in bits
+                and u!=v and low[u]+d==low[v]}
+    # Each variable bit contributes a signed unit to these prism counts.
+    base = schedule(low)
+    assert base is not None and schedule(high) is not None
+    def coordinates(v,sign):
+        return sorted(k for k,(_,plus,minus) in expressions.items()
+                      if plus!=minus and (plus if sign>0 else minus)==v)
+    return dict(minimum_schedule=base,move_order=tuple(sorted(order,key=order.__getitem__)),
+                pairs=[dict(vertices=v,blocked=blocked(*v),
+                            add=coordinates(v,1),subtract=coordinates(v,-1)) for v in pairs],
+                requires=sorted(requires))
+
+
+def compare(source,right,traces,anchored,check_schedule=None,geometry=None,profiles=False):
     ids = {}
     a,b = [incidence(source,right,path,ids) for path in traces]
     if a[:3]!=b[:3]:
@@ -237,7 +271,7 @@ def compare(source,right,traces,anchored,check_schedule=None,geometry=None):
         if len(colours)==1 and n not in anchored:
             private[p] = next(iter(colours))
     units = cables(sides,graph,private)
-    lengths,required,exteriors = geometry or ({},{},{})
+    lengths,required,exteriors,windows = geometry or ({},{},{},{})
     charts = [projection(a,b,private,units,k,lengths) for k in (0,1)]
     if any(c is None for c in charts):
         return None
@@ -258,18 +292,39 @@ def compare(source,right,traces,anchored,check_schedule=None,geometry=None):
                     continue
                 pair = (order['p',p],opposite['e',f])
                 events[side,p,f] = pair[::-1] if side else pair
-    selected = bounded_counts(a,b,private,events)
-    if selected is None:
+    solution = bounded_counts(a,b,private,events)
+    if solution is None:
         return None
-    cert = tuple(sorted(selected,key=events.__getitem__))
-    words = {e:tuple(a[3].get(e,())) for e in sides}
-    for step in cert:
-        words = transition(words,*step,graph)
-        if words is None:
+    values,_,expressions = solution
+    def schedule(values):
+        selected = [key for key,(c,hi,lo) in expressions.items() if c+values[hi]-values[lo]]
+        cert = tuple(sorted(selected,key=events.__getitem__))
+        words = {e:tuple(a[3].get(e,())) for e in sides}
+        for step in cert:
+            words = transition(words,*step,graph)
+            if words is None:
+                return None
+        if any(words[e]!=tuple(b[3].get(e,())) for e in sides):
             return None
-    if any(words[e]!=tuple(b[3].get(e,())) for e in sides):
-        return None
-    return cert if check_schedule is None or check_schedule(cert) else None
+        return cert if check_schedule is None or check_schedule(cert) else None
+    cert = schedule(values)
+    if not profiles or cert is None:
+        return cert
+
+    def blocked(p,q):
+        if geometry is None:
+            return False
+        margins = []
+        for side,(moving,other) in enumerate(((p,q),(q,p))):
+            _,_,height,start = charts[1-side]
+            wire = graph[other][1][0]
+            observer = units[graph[moving][1][0]][0]
+            room = exteriors[moving][1-side]+height[observer,wire]-start[moving,observer]
+            margins.append(room-windows[other]-exteriors[other][1-side])
+        return margins[0]<0 or margins[0]!=margins[1]
+    return describe_profiles(solution,schedule,blocked,events)
+
+
 
 def checks():
     from semistrict_surface_signed_width_two import Movies, Presentation, Rule

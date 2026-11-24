@@ -7,7 +7,7 @@ from pathlib import Path
 
 from semistrict_surface_planar_cylinder import parse
 from semistrict_surface_total_ports import incidence
-from semistrict_surface_transfer_cables import slot, transition
+from semistrict_surface_transfer_cables import compare as prism_compare, slot, transition
 
 
 class Rectangles:
@@ -127,6 +127,27 @@ def checks():
                         assert v in paths
                         edges[classes[path]].add(classes[v])
     reps = set(classes.values())
+    profiles = prism_compare(source,right,traces,set(),profiles=True)
+    def expand(profile):
+        base = set(profile['minimum_schedule'])
+        out = {}
+        for bits in product((0,1),repeat=len(profile['pairs'])):
+            if any(bits[i]>bits[j] for i,j in profile['requires']):
+                continue
+            counts = {step:1 for step in base}
+            for bit,spec in zip(bits,profile['pairs']):
+                if bit:
+                    for term,sign in (('add',1),('subtract',-1)):
+                        for key in spec[term]:
+                            counts[key] = counts.get(key,0)+sign
+            assert all(c in (0,1) for c in counts.values())
+            selected = frozenset(k for k,c in counts.items() if c)
+            reading = [k for k in profile['move_order'] if k in selected]
+            assert len(reading)==len(selected)
+            out[selected] = bits
+        return out
+    ideals = expand(profiles)
+    assert set(ideals)=={frozenset(a) for a in reps}
     positive = 0
     for a in reps:
         seen = {a}
@@ -138,6 +159,7 @@ def checks():
         for b in reps:
             result = model.compare((a,b))
             assert (result is not None)==(b in seen)
+            assert (b in seen)==all(i<=j for i,j in zip(ideals[frozenset(a)],ideals[frozenset(b)]))
             positive += result is not None
     # Three independent mixed rectangles after a single support-changing rule.
     rules[0] = ('birth',('w',),tuple('BaBaBa'))
@@ -158,6 +180,9 @@ def checks():
         pos = tuple((0,p,f) for f in outputs)+tuple((1,q,e) for e in outs)
         alternatives.append((neg,pos))
     faces = {v:sum((alt[i] for alt,i in zip(alternatives,v)),()) for v in product((0,1),repeat=3)}
+    profile = prism_compare(source,right,traces,set(),profiles=True)
+    assert len(profile['pairs'])==3 and not profile['requires']
+    assert set(expand(profile))=={frozenset(a) for a in faces.values()}
     independent = 0
     for u,v in product(faces,repeat=2):
         result = separate.compare((faces[u],faces[v]))

@@ -87,7 +87,7 @@ def read(model,source,actions,roles,ids):
     return h,anchors,frames,trace
 
 
-def decide(model,source,first,second,prism_faces=None):
+def decide(model,source,first,second,prism_faces=None,profiles=False):
     if model.attachments:
         raise ValueError('expected a 3-computad')
     roles,rules = spatial_roles(model.pres)
@@ -124,6 +124,7 @@ def decide(model,source,first,second,prism_faces=None):
 
     labels = tuple(x for _,x in source)
     traces = (a[3],b[3])
+    windows = {p:model.pres.rules[n].path for (n,_),p in ids.items()}
     if prism_faces is None:
         lengths,required = {},{}
         for e,(letter,outer) in a[1].items():
@@ -131,8 +132,10 @@ def decide(model,source,first,second,prism_faces=None):
             lengths[e] = len(outgoing)-len(incoming)
             required[e] = len(incoming)+len(outer)
         exteriors = {p:(len(l),len(r)) for p,(l,r) in a[2].items()}
-        return compare(labels,right,traces,anchored,fits,(lengths,required,exteriors))
-    windows = {p:model.pres.rules[n].path for (n,_),p in ids.items()}
+        geometry = lengths,required,exteriors,{p:len(w) for p,w in windows.items()}
+        return compare(labels,right,traces,anchored,fits,geometry,profiles)
+    if profiles:
+        raise ValueError('profiles require a degree-four boundary')
     def placement(p,q,on_p,on_q):
         frames = []
         for side,(v,route) in enumerate(((p,on_p),(q,on_q))):
@@ -195,6 +198,64 @@ def all_degrees(pres,rounds=None):
                 pending[case] = model,goal,seen,nxt
     return dict(all_degrees_reflects=None if pending else True,rounds=depth,
                 returns=witnesses,unresolved=list(pending))
+
+
+def check_positioned_profiles():
+    from itertools import product
+    edges = {'f':(0,1),'k':(1,2),'g':(2,3)}
+    marks = {'a':('f','f'),'w':('kg','kg'),'n':('g','g')}
+    width = 4
+    p = Rule('fk',((0,'a'),),((0,'a'),))
+    queries = 0
+    for stages in product('nw',repeat=width+1):
+        narrow = [i for i in range(width) if stages[i:i+2]==('n','n')]
+        for flags in product((0,1),repeat=len(narrow)):
+            wide = [i not in narrow or i in {j for j,flag in zip(narrow,flags) if flag}
+                    for i in range(width)]
+            rules = [p]
+            for i,big in enumerate(wide):
+                def port(s):
+                    return ((int(big and s=='n'),s),)
+                rules.append(Rule('kg' if big else 'g',port(stages[i]),port(stages[i+1])))
+            model = Movies(Presentation(edges,marks,rules),'fkg')
+            source = ((1+int(stages[0]=='n'),stages[0]),(0,'a'))
+            first = [(i+1,0) for i in range(width)]+[('swap',0),(0,0)]
+            second = [(0,1),('swap',0)]+[(i+1,1) for i in range(width)]
+            profile = decide(model,source,first,second,profiles=True)
+            expected = {}
+            for t,stage in enumerate(stages):
+                if stage=='n':
+                    right = (t-1,0) if t else (-1,0)
+                    reading = tuple((1,q,(-1,1)) for q in reversed(range(t,width)))
+                    reading += ((0,width,right),)
+                    reading += tuple((1,q,(width,0)) for q in reversed(range(t)))
+                    expected[frozenset(reading)] = t
+            assert (profile is not None)==bool(expected)
+            if profile is None:
+                continue
+            actual = {}
+            for bits in product((0,1),repeat=len(profile['pairs'])):
+                if any(bits[i]>bits[j] for i,j in profile['requires']):
+                    continue
+                counts = dict.fromkeys(profile['minimum_schedule'],1)
+                for bit,entry in zip(bits,profile['pairs']):
+                    if bit:
+                        for key,sign in (('add',1),('subtract',-1)):
+                            for move in entry[key]:
+                                counts[move] = counts.get(move,0)+sign
+                face = tuple(m for m in profile['move_order'] if counts.get(m,0))
+                actual[frozenset(face)] = bits,face
+            assert set(actual)==set(expected)
+            for u,v in product(actual,repeat=2):
+                a,b = expected[u],expected[v]
+                yes = a<=b and not any(wide[a:b])
+                source_bits,x = actual[u]
+                target_bits,y = actual[v]
+                assert yes==all(i==j if bit['blocked'] else i<=j
+                                for i,j,bit in zip(source_bits,target_bits,profile['pairs']))
+                assert (decide(model,source,first,second,(x,y)) is not None)==yes
+                queries += 1
+    return queries
 
 
 def checks():
@@ -264,6 +325,10 @@ def checks():
         start = 'f'+'k'*length+'g'
         model = Movies(pres,start)
         source = ((length+1,'b'),(0,'a'))
+        profile = decide(model,source,first,second,profiles=True)
+        bit, = profile['pairs']
+        assert bit['vertices']==(1,0) and bit['blocked']==(length==1)
+        assert set(profile['minimum_schedule'])==set(neg) and not profile['requires']
         for u,v in product((neg,pos),repeat=2):
             cert = decide(model,source,first,second,(u,v))
             assert (cert is not None)==(u==v or (u==neg and length>=2))
@@ -280,6 +345,22 @@ def checks():
         assert cert==tuple(pos if i[0]=='b' else neg)
         assert raw_compare(model,source,first,second)['raw']
         assert model.compare(source,first,second)['surface']
+    # A forbidden middle stage ties two profile bits together. The two
+    # surviving pastes cannot exchange either polygon across the window.
+    tags['wide'] = ('kg','kg')
+    tags['narrow'] = ('g','g')
+    q1 = Rule('kg',((1,'narrow'),),((0,'wide'),))
+    q2 = Rule('kg',q1.target,q1.source)
+    model = Movies(Presentation(edges,tags,[polygons[0],q1,q2]),'fkg')
+    source = ((2,'narrow'),(0,'a'))
+    early = [(1,0),(2,0),('swap',0),(0,0)]
+    late = [(0,1),('swap',0),(1,1),(2,1)]
+    profile = decide(model,source,early,late,profiles=True)
+    assert profile['requires']==[(0,1),(1,0)] and all(b['blocked'] for b in profile['pairs'])
+    assert len(profile['minimum_schedule'])==3
+    other = ((0,2,(1,0)),(1,1,(2,0)),(1,0,(2,0)))
+    assert decide(model,source,early,late,(other,other))==[]
+    assert decide(model,source,early,late,(profile['minimum_schedule'],other)) is None
     # The second spectator needs two exterior edges. Its predecessor supplies one.
     tags['d'] = ('uv','g')
     model = Movies(Presentation(edges,tags,[polygons[0]]),'fkg')
@@ -308,7 +389,7 @@ def checks():
         assert Movies(full,start).parse(lr,witness['return_steps'])[1]==rl
     assert all_degrees(Presentation({}, {}, []))['all_degrees_reflects']
     assert all_degrees(Presentation({}, {'a':('','')}, [], {'a':0}))['spatial_triple']==('a','a','a')
-    return dict(spatial_rectangle_queries=28,comparisons=tests,positive=positives,overlapping_window_rejected=True,
+    return dict(profile_chain_queries=check_positioned_profiles(),spatial_rectangle_queries=28,comparisons=tests,positive=positives,overlapping_window_rejected=True,
                 changing_exterior_accepted=True,degree_four_context_queries=1<<len(links))
 
 
@@ -316,14 +397,15 @@ if __name__=='__main__':
     parser = ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--query',type=Path)
+    modes.add_argument('--profiles',type=Path,help='present all strict prism pastes and their rectangle order')
     modes.add_argument('--context',type=Path,help='decide reflection at every old degree-four type')
     modes.add_argument('--all-degrees',type=Path,help='test every old type for an interchange-containing surface')
     parser.add_argument('--rounds',type=int,help='limit return-search depth; unfinished cases report null')
     args = parser.parse_args()
     if args.rounds is not None and args.all_degrees is None:
         parser.error('--rounds applies to --all-degrees')
-    if args.query or args.context or args.all_degrees:
-        q = json.loads((args.query or args.context or args.all_degrees).read_text())
+    if args.query or args.profiles or args.context or args.all_degrees:
+        q = json.loads((args.query or args.profiles or args.context or args.all_degrees).read_text())
         if q.get('attachments'):
             raise ValueError('expected a 3-computad')
         rules = [Rule(r['path'],tuple(map(tuple,r['source'])),tuple(map(tuple,r['target']))) for r in q['rules']]
@@ -335,9 +417,9 @@ if __name__=='__main__':
             result = dict(every_degree_four_judgment_reflects=triple is None,spatial_triple=triple)
         else:
             model = Movies(pres,q['start'])
-            cert = decide(model,tuple(map(tuple,q['source'])),q['first'],q['second'],q.get('prism_faces'))
+            cert = decide(model,tuple(map(tuple,q['source'])),q['first'],q['second'],q.get('prism_faces'),bool(args.profiles))
             result = dict(raw=cert is not None,surface=cert is not None)
-            result['rectangles' if 'prism_faces' in q else 'schedule'] = cert
+            result['profiles' if args.profiles else 'rectangles' if 'prism_faces' in q else 'schedule'] = cert
     else:
         result = checks()
     print(json.dumps(result))

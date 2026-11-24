@@ -40,9 +40,12 @@ class Faces:
             raise ValueError('use individually named gate occurrences')
         self.holes = Counter()
         components = Components(rows,ports,self.slices[0])
-        for core in components.skeleton.values():
+        self.children = defaultdict(dict)
+        for name,core in components.skeleton.items():
             j = min(indices[g] for g in core)
-            self.holes[self.spots[j,rows[j][0]]] += 1
+            face = self.spots[j,rows[j][0]]
+            self.holes[face] += 1
+            self.children[face][name] = components.subtree[name]
 
 
 def induced(source,target,pairs):
@@ -70,7 +73,45 @@ def seam_map(old,word,ports,width):
     return now.rows,result
 
 
-def movie(data):
+def event_homology(nodes,vertex_ranks,ties,columns):
+    # The Mayer--Vietoris boundary sends a tie meridian to the children
+    # enclosed on its two cuts. Keep a lift of each pivot to the tie basis.
+    cuts = {}
+    pivots = {}
+    kernel = []
+    event_masks = defaultdict(int)
+    for i,(event,terms,links_site) in enumerate(columns):
+        image = 0
+        for generator in terms:
+            image ^= 1<<cuts.setdefault(generator,len(cuts))
+        lift = 1<<i
+        if links_site:
+            event_masks[event] |= lift
+        while image:
+            high = image.bit_length()-1
+            if high not in pivots:
+                pivots[high] = image,lift
+                break
+            vector,combination = pivots[high]
+            image ^= vector
+            lift ^= combination
+        if not image:
+            kernel.append(lift)
+    # By Alexander duality the coordinate functional of a centre is either
+    # zero or the evaluation at its bounded complementary component.
+    islands = defaultdict(list)
+    for event,mask in sorted(event_masks.items()):
+        values = tuple((z&mask).bit_count()%2 for z in kernel)
+        if any(values):
+            islands[values].append(event)
+    if len(islands)!=len(kernel):
+        raise AssertionError('the event centres miss a bounded complementary component')
+    first = ties-len(nodes)+1+sum(vertex_ranks[a] for a in nodes)-len(pivots)
+    return dict(betti=[1,first,len(kernel)],simply_connected=first==0,
+                event_groups=list(islands.values()))
+
+
+def movie(data, *, with_homology=False):
     charts = data['charts']
     read_track(dict(data,charts=[dict(c,loop=()) for c in charts]), require_shared_gate=False)
     ports = {g:(s,t) for g,(_,s,t) in data['gates'].items()}
@@ -78,6 +119,7 @@ def movie(data):
     regions = Partition()
     gaps,vertices,edges = [],{},[]
     placements = {}
+    columns = []
     for j,c in enumerate(charts):
         rows = tuple(map(tuple,c['diagram']))
         slot = c['slot']
@@ -90,6 +132,7 @@ def movie(data):
             return dest,induced(joint,dest,pairs)
         left,m = side(c['input'])
         right,n = side(c['output'])
+        left_faces = m
         if not gaps:
             gaps.append(left)
             for spot,face in left.spots.items():
@@ -117,6 +160,16 @@ def movie(data):
             a,b = (j,m[f]),(j+1,n[f])
             regions.unite(a,b)
             incident_point = ports[site]==('','') and f==joint.spots[slot,p]
+            if with_homology:
+                for enclosed in joint.children[f].values():
+                    terms = []
+                    for node,cut,face,block in ((a,left,left_faces[f],c['input']),
+                                                (b,right,n[f],c['output'])):
+                        packet = {g for _,g in block}
+                        for child in cut.children[face]:
+                            if (site if child in packet else child) in enclosed:
+                                terms.append((node,child))
+                    columns.append((a,j,terms,site in enclosed))
             edges.append((a,joint.holes[f],incident_point and not c['input'],
                           incident_point and not c['output']))
     for j,gap in enumerate(gaps):
@@ -141,6 +194,9 @@ def movie(data):
                              graph_rank=len(ties)-len(nodes)+1 if graph else None,
                              free_rank=rank,root_gaps=[first,last] if first<=last else [],
                              injective_face_maps=not any(l or r for _,_,l,r in ties),probes=0,probe_indices=[])
+        if with_homology:
+            local = [(j,terms,hit) for a,j,terms,hit in columns if regions.at(a)==root]
+            by_root[root].update(event_homology(nodes,vertices,len(ties),local))
     for index,(gap,row,pos) in enumerate(data.get('probes',[])):
         if not 0<=gap<len(gaps) or (row,pos) not in gaps[gap].spots:
             raise ValueError('probe placement outside its gap diagram')
@@ -151,6 +207,8 @@ def movie(data):
     for c in result:
         c['higher_obstruction'] = ('collision sphere' if c['probes']>=2 else
             'none' if not c['probes'] or c['free_rank'] is not None or c['injective_face_maps'] else 'requires one-probe test')
+        if c['probes']==1 and c.get('simply_connected'):
+            c['higher_obstruction'] = 'one-probe sphere' if c['betti'][2] else 'none'
     return result
 
 

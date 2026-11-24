@@ -1,5 +1,6 @@
 """Quotient intermediate packet cuts by tested endpoint braid symmetries."""
 from dataclasses import dataclass
+from functools import cached_property
 from itertools import combinations, permutations, product
 
 from semistrict_surface_component_braids import cabling, restrict
@@ -40,6 +41,12 @@ def pure_generators(count):
 class Directions:
     forward: Orbit
     backward: Orbit
+    chart_data: tuple
+
+    @cached_property
+    def cohorts(self):
+        from semistrict_surface_cohort_orbits import cohort_orbit
+        return cohort_orbit(*self.chart_data)
 
 
 def gap_orbit(width, source, goal, anchor, offset, gap_width):
@@ -85,7 +92,7 @@ def gap_orbit(width, source, goal, anchor, offset, gap_width):
         generators = tuple(reduced(chart+slots(g,start)+inv(chart)) for g in pure_generators(count))
         return Orbit(tuple((word,point) for point,word in points.items()),generators)
 
-    return Directions(family(False),family(True))
+    return Directions(family(False),family(True),(width,source,goal,anchor,offset,gap_width))
 
 
 def macro_loop(calc, history, word):
@@ -115,8 +122,7 @@ def endpoint_symmetries(calc, orbit, terminal, total, cuts):
 def joint_representatives(calc, families, terminal, total, cuts):
     """Return actual candidates and whether they cover all solutions up to symmetry."""
     options = [(f.forward,f.backward) if isinstance(f,Directions) else (f,) for f in families.values()]
-    candidates = []
-    for combination in product(*options):
+    def test(combination):
         orbits = [f for f in combination if isinstance(f,Orbit)]
         certified = all(endpoint_symmetries(calc,f,terminal,total,cuts) for f in orbits)
         if certified and len(orbits)==2:
@@ -125,10 +131,26 @@ def joint_representatives(calc, families, terminal, total, cuts):
             a,b = orbits
             certified = preserves(a,b) or preserves(b,a)
         points = {p:f.points if isinstance(f,Orbit) else f for p,f in zip(families,combination)}
+        return points,certified
+
+    for combination in product(*options):
+        points,certified = test(combination)
         if certified:
             return points,True
-        candidates.append(points)
-    return candidates[0],False
+    refined = []
+    for f,choices in zip(families.values(),options):
+        if isinstance(f,Directions):
+            if f.cohorts is False:
+                return {p:() for p in families},True
+            choices = (f.cohorts,)+choices
+        refined.append(choices)
+    for combination in product(*refined):
+        if any(isinstance(f,Directions) and choice is f.cohorts for f,choice in zip(families.values(),combination)):
+            points,certified = test(combination)
+            if certified:
+                return points,True
+    return {p:f.cohorts.points if isinstance(f,Directions) else f for p,f in families.items()},False
+
 
 
 def check_orbits():
@@ -195,7 +217,7 @@ def check_orbits():
     return checked,mixed
 
 
-def positive_example(number, side):
+def positive_example(number, side, flanks=0):
     from semistrict_surface_signed_width_two import Movies,Presentation,Rule
     from semistrict_surface_polygon_grades import resolution
     from semistrict_surface_signed_meetings import Signed,ordinary,verify_original
@@ -203,9 +225,9 @@ def positive_example(number, side):
     s = ((0 if side is None else side,'s'),)
     path = '' if side is None else 'f'
     model = Movies(Presentation({'f':(0,0)},{'s':('','')},[Rule(path,s,s)]*3,{'s':0}),path)
-    root = s*(number+3)
+    root = s*(number+3+2*flanks)
     def movie(stages):
-        packets = [(1,1),(0,number+1),(2,1)]
+        packets = [(1,1+2*flanks),(0,number+1),(2,1)]
         word = []
         for exchanges,p in stages:
             for g in exchanges:
@@ -217,7 +239,7 @@ def positive_example(number, side):
                 packets[g-1],packets[g]=packets[g],packets[g-1]
             if p is not None:
                 pos = next(i for i,(name,_) in enumerate(packets) if name==p)
-                word.append((p,sum(k for _,k in packets[:pos])))
+                word.append((p,sum(k for _,k in packets[:pos])+(flanks if p==1 else 0)))
         return tuple(word)
     x = movie([((1,),0),((1,),1),((2,1),2)])
     y = movie([((),2),((2,1),0),((2,),1),((2,),None)])

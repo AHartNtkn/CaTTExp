@@ -294,6 +294,10 @@ class Movies:
             from semistrict_surface_endomorphism_runs import supported as endomorphism_runs, decide as resolved_packets
             if endomorphism_runs(self,(*first,*second)):
                 return dict(states=len(previous),**resolved_packets(self,source,first,second))
+            from semistrict_surface_padded_packets import decide as padded_packets
+            padded = padded_packets(self,source,first,second)
+            if padded['surface'] is not None:
+                return dict(states=len(previous),**padded)
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

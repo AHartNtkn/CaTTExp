@@ -59,27 +59,60 @@ def run_weights(edges,parts):
             weights[e] += d
 
 
+def wire_labels(source,model,graph):
+    labels = {(-1,i):e for i,(_,e) in enumerate(source)}
+    for rid,_,outs in graph.values():
+        labels.update((e,s) for e,(_,s) in zip(outs,model.pres.rules[rid].target))
+    return labels
+
+
+def uniform_layout(model,source,graph):
+    labels = wire_labels(source,model,graph)
+    parts = {}
+    for p,(rid,ins,outs) in graph.items():
+        r = model.pres.rules[rid]
+        i,j = 0,0
+        for t,((shape,x),(_,y)) in enumerate(zip(runs(model,r.source),runs(model,r.target))):
+            if shape[1]==shape[2]:
+                parts[p,t] = rid,ins[i:i+x],outs[j:j+y]
+            i,j = i+x,j+y
+    weights = run_weights(labels,parts)
+    layout = {e:((0,*model.pres.marks[s],model.pres.mark_roots[s]),)*weights[e] for e,s in labels.items()}
+    return layout,{e:0 for e in labels}
+
+
+def valid_wire(model,label,row,selected):
+    source,target = model.pres.marks[label]
+    root = model.pres.mark_roots[label]
+    for k,(off,s,t,vertex) in enumerate(row):
+        if k==selected:
+            if (off,s,t,vertex)!=(0,source,target,root):
+                return False
+        else:
+            path = source if k<selected else target
+            if s!=t or not 0<=off<=len(path) or not path.startswith(s,off):
+                return False
+            if (model.pres.edges[path[off-1]][1] if off else root)!=vertex:
+                return False
+    return True
+
+
 class Resolution:
-    def __init__(self,model,source,graph):
+    def __init__(self,model,source,graph,layout,selected):
         self.model,self.source,self.graph = model,source,graph
         self.initial = [(-1,i) for i in range(len(source))]
-        labels = {e:s for e,(_,s) in zip(self.initial,source)}
-        parts = {}
-        for p,(rid,ins,outs) in graph.items():
-            r = model.pres.rules[rid]
-            labels.update((e,s) for e,(_,s) in zip(outs,r.target))
-            i,j = 0,0
-            for t,((shape,x),(_,y)) in enumerate(zip(runs(model,r.source),runs(model,r.target))):
-                if shape[1]==shape[2]:
-                    parts[p,t] = rid,ins[i:i+x],outs[j:j+y]
-                i,j = i+x,j+y
-        self.weights = run_weights(labels,parts)
-        self.units = {e:tuple(f'w{n}.{j}' for j in range(self.weights[e])) for n,e in enumerate(labels)}
-        self.owner = {u:e for e,row in self.units.items() for u in row}
-        ports = {u:model.pres.marks[labels[e]] for u,e in self.owner.items()}
-        roots = {u:model.pres.mark_roots[labels[e]] for u,e in self.owner.items()}
+        self.weights = {e:len(row) for e,row in layout.items()}
+        self.units = {e:tuple(f'w{n}.{j}' for j in range(len(row))) for n,(e,row) in enumerate(layout.items())}
+        self.selected = {self.units[e][j] for e,j in selected.items()}
+        self.layout = layout
+        self.labels = wire_labels(source,model,graph)
+        ports,roots = {},{}
+        for e,row in layout.items():
+            for u,(_,s,t,root) in zip(self.units[e],row):
+                ports[u],roots[u] = (s,t),root
         def expand(face,edges):
-            return tuple((i,u) for (i,_),e in zip(face,edges) for u in self.units[e])
+            return tuple((i+local,u) for (i,_),e in zip(face,edges)
+                         for u,(local,_,_,_) in zip(self.units[e],layout[e]))
         rules = []
         for p in range(len(graph)):
             rid,ins,outs = graph[p]
@@ -104,9 +137,13 @@ class Resolution:
         return word
 
     def project(self,actions,representatives=None):
-        keep = {row[0] for row in self.units.values()} if representatives is None else set(representatives)
+        keep = self.selected if representatives is None else set(representatives)
         if any(len(keep.intersection(row))!=1 for row in self.units.values()):
             raise ValueError('select one unit of each macro wire')
+        if representatives is not None:
+            if any(not valid_wire(self.model,self.labels[e],self.layout[e],row.index(u))
+                   for e,row in self.units.items() for u in row if u in keep):
+                raise ValueError('the chosen unit must realize the original positioned event')
         units = [u for _,u in self.base]
         out = []
         for name,i in actions:
@@ -125,9 +162,7 @@ class Resolution:
         return out
 
 
-def resolve(model,source,first,second):
-    if not supported(model,(*first,*second)):
-        raise ValueError('expected matching positioned shapes with multiplicity changes only in spatial endomorphism runs')
+def named_diagram(model,source,first,second):
     model.pres.walk(model.start,source)
     if model.parse(source,first)[1] != model.parse(source,second)[1]:
         raise ValueError('expected parallel readings')
@@ -136,8 +171,18 @@ def resolve(model,source,first,second):
     a,b = [network(source,w,ids,arities,'swap') for w in (first,second)]
     if a[:2]!=b[:2]:
         return None
-    res = Resolution(model,source,a[1])
-    return res,res.lift(a[2]),res.lift(b[2])
+    return a[1],a[2],b[2]
+
+
+def resolve(model,source,first,second):
+    if not supported(model,(*first,*second)):
+        raise ValueError('expected matching positioned shapes with multiplicity changes only in spatial endomorphism runs')
+    data = named_diagram(model,source,first,second)
+    if data is None:
+        return None
+    graph,a,b = data
+    res = Resolution(model,source,graph,*uniform_layout(model,source,graph))
+    return res,res.lift(a),res.lift(b)
 
 
 def decide(model,source,first,second,radius=None):

@@ -6,20 +6,24 @@ The lax core keeps all of chapter 1: the same syntax, the same judgments, the sa
 
 **Where "strict" enters, and where it does not.** To decide the test, the checker needs a finite description of all the cells a pasting shape has. It uses the free object F_𝕋(Δ) of a strict theory 𝕋 on Δ: finitely many generators with explicit boundaries, in which equality and reachability can be computed. That is the only role of strict structure. It is a **decision device**: nothing in the ambient 𝒦, its objects or the kernel's judgments is strict, and the kernel has no definitional equations (§0.3). The test is trusted because of the soundness theorems in §2.2, which interpret every accepted coherence in weak models (oriented (∞,ω)-categories), not because anything is strict. This is safe only on pasting contexts, which have no loops and no parallel generators, so their free strict and free weak objects agree. General diagrams are never read through a strict object (chapter 4).
 
-There is one rule, parameterised by the decision device:
+**The three versions, on one example.** Take the pasting context Δ of two whiskerable 2-cells: objects x, y, z, 1-cells f, f′ : x → y and g, g′ : y → z, and 2-cells α : f ⇒ f′ and β : g ⇒ g′. In the ambient 𝒦, x, y, z are ω-categories, f, g are functors and α, β are transformations. There are two ways to compose α and β, "β first" (f◁β);(α▷g′) and "α first" (α▷g);(f′◁β). The three versions differ in what the side condition says about a cell between them.
 
-| Free object the test is decided in | Name | Role |
-|---|---|---|
-| V + S, S ⊆ {inner law, R} | **uniform L**, setting S | **the kernel** (§2.3) |
-| the free Gray-enriched category 𝔉(Γ) | two-tier L | the fragment where interchange is directed only across objects; the implemented checker (§2.5) |
-| the free strict ω-category ν(λΓ) | plain CaTT (P) | the reference instance of chapter 1 (§2.2) |
+- **Plain CaTT, written P** (chapter 1). The side condition is Finster–Mimram's *variable check*: a coherence of type t → u is accepted if t and u each use every variable of Δ, or if t uses exactly the variables of Δ's source boundary and u those of its target boundary (chapter 1, §1.4). Interchange is an equation here, so the two composites are the same cell, and coherences between them are accepted in both directions and are invertible. In 𝒦 this means α and β commute up to an invertible cell: transformations are pseudo. The device that decides the check is the free strict ω-category ν(λΔ) on Δ.
+- **Two-tier L.** The side condition is the *crossing-aware check*. When a cell in the hom 𝒦(x, y) and a cell in 𝒦(y, z) are composed across the object y, swapping their order is a **directed** step, the interchanger χ_{α,β} : (f◁β);(α▷g′) → (α▷g);(f′◁β). So the coherence from "β first" to "α first" is accepted and the reverse is rejected: transformations are lax, and χ is their naturality cell. Inside one hom, where cells compose within a single object's hom, interchange stays an equation, as in P. Hence "two tiers": directed across objects, strict within a hom. Its device is the free Gray-enriched category 𝔉(Δ), whose homs are Gray tensors (§2.5). This is the version the implemented checker runs.
+- **Uniform L.** The crossing-aware check at **every** level, also inside a hom. For two 2-cells a, b composed inside one hom, swapping them is again a directed step, so Eckmann–Hilton becomes a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other (§2.3, example (c)). This is **the kernel**. Its device is the free object F_{V+S}(Δ), where V is the least theory in which every interchanger is a directed cell. S is a **setting**: an optional set of extra laws, from {inner law, R}, that a development may switch on. Settings are explained in §2.3.
 
-Each row's free objects map onto the next row's, so (§2.6) every derivation in a row above is a derivation in the rows below. That is the precise sense in which uniform L ⊂ two-tier L ⊂ P.
+| Version | Side condition | Decided in | Role |
+|---|---|---|---|
+| **uniform L**, setting S | crossing-aware at every level | F_{V+S}(Δ) | **the kernel** (§2.3) |
+| **two-tier L** | crossing-aware across objects, an equation within a hom | 𝔉(Δ) | the implemented checker (§2.5) |
+| **plain CaTT (P)** | variable check, interchange an equation | ν(λΔ) | the reference instance of chapter 1 (§2.2) |
+
+Each row's free objects map onto the next row's, so (§2.6) every derivation in a row above is a derivation in the rows below. Uniform L accepts the fewest coherences and has the most models; P accepts the most. That is the precise sense in which uniform L ⊂ two-tier L ⊂ P.
 
 ## 2.1 Notation
 
 - Every pasting context decomposes uniquely as a wedge of suspensions Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, with objects a₀, …, aₙ. Θᵢ is the pasting context of the cells in the hom from aᵢ₋₁ to aᵢ.
-- For a strict theory 𝕋 (one of the rows above), **F_𝕋(Γ)** is its free object on Γ, the decision device. Every term t over Γ has a **combinatorial image** ⟦t⟧_𝕋, a cell of F_𝕋(Γ), defined by induction: a variable goes to its generator, and a coherence goes to the cell its side condition provides (§2.3), transported along the map of free objects its substitution induces (requirement 5 below).
+- For a strict theory 𝕋 (one of the devices in the table above), **F_𝕋(Γ)** is its free object on Γ, the decision device. Every term t over Γ has a **combinatorial image** ⟦t⟧_𝕋, a cell of F_𝕋(Γ), defined by induction: a variable goes to its generator, and a coherence goes to the cell its side condition provides (§2.3), transported along the map of free objects its substitution induces (requirement 5 below).
 - **supp(c)**, for a cell c of ν(λΓ) or 𝔉(Γ), is the downward-closed set of Steiner basis elements used by c and by its iterated boundaries. Support is always measured in these **finite** Steiner bases. It is never measured in the expanded basis of F_{V+S}(Γ), which is infinite already on Σ[2] ∨ Σ[2] (lax r10 (K45)/(K50)).
 - **π** is the requirement-4 projection F_{V+S}(Γ) → 𝔉(Γ), which makes every interchanger along a k-cell with k ≥ 1 an identity. For ν and 𝔉 themselves, π is the identity.
 - Composition order is diagrammatic, and composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c) in execution order (`notes/conventions.md` §1, §4).

@@ -1,4 +1,4 @@
-"""Locate components and collision spheres for probes beside a gate-dependent chain.
+"""Locate components and collision spheres for probes beside a serial history.
 
 Use the serial gate tracks JSON format with gate-occurrence names; no site loop
 is needed. Optional probes list [gap, row, wire-gap] at the one-use input
@@ -72,7 +72,7 @@ def seam_map(old,word,ports,width):
 
 def movie(data):
     charts = data['charts']
-    read_track(dict(data,charts=[dict(c,loop=()) for c in charts]))
+    read_track(dict(data,charts=[dict(c,loop=()) for c in charts]), require_shared_gate=False)
     ports = {g:(s,t) for g,(_,s,t) in data['gates'].items()}
     width = len(data['path'])
     regions = Partition()
@@ -100,9 +100,9 @@ def movie(data):
         for f in m:
             a,b = (j,m[f]),(j+1,n[f])
             regions.unite(a,b)
-            loses = (ports[site]==('','') and f==joint.spots[slot,p]
-                     and (not c['input'] or not c['output']))
-            edges.append((a,joint.holes[f],loses))
+            incident_point = ports[site]==('','') and f==joint.spots[slot,p]
+            edges.append((a,joint.holes[f],incident_point and not c['input'],
+                          incident_point and not c['output']))
     for j,gap in enumerate(gaps):
         for f in set(gap.spots.values()):
             vertices[j,f] = gap.holes[f]
@@ -111,11 +111,19 @@ def movie(data):
         groups[regions.at(node)].append(node)
     by_root = {}
     for i,(root,nodes) in enumerate(groups.items()):
-        ties = [(holes,loses) for a,holes,loses in edges if regions.at(a)==root]
-        graph = not any(holes for holes,_ in ties) and not any(vertices[a] for a in nodes)
+        ties = [(a[0],holes,left_loss,right_loss) for a,holes,left_loss,right_loss in edges
+                if regions.at(a)==root]
+        graph = not any(holes for _,holes,_,_ in ties) and not any(vertices[a] for a in nodes)
+        # Grow away from a root gap. Only the newly attached cut must split
+        # relative to all its incoming exterior pieces, on either sweep.
+        first = max((j+1 for j,_,_,right_loss in ties if right_loss), default=nodes[0][0])
+        last = min((j for j,_,left_loss,_ in ties if left_loss), default=nodes[-1][0])
+        rank = (1+sum(vertices[a]-1 for a in nodes)
+                +sum(1-holes for _,holes,_,_ in ties)) if first<=last else None
         by_root[root] = dict(component=i,gap_faces=len(nodes),tied_faces=len(ties),
                              graph_rank=len(ties)-len(nodes)+1 if graph else None,
-                             injective_face_maps=not any(loses for _,loses in ties),probes=0)
+                             free_rank=rank,root_gaps=[first,last] if first<=last else [],
+                             injective_face_maps=not any(l or r for _,_,l,r in ties),probes=0)
     for gap,row,pos in data.get('probes',[]):
         if not 0<=gap<len(gaps) or (row,pos) not in gaps[gap].spots:
             raise ValueError('probe placement outside its gap diagram')
@@ -123,7 +131,7 @@ def movie(data):
     result = list(by_root.values())
     for c in result:
         c['higher_obstruction'] = ('collision sphere' if c['probes']>=2 else
-            'none' if not c['probes'] or c['injective_face_maps'] else 'requires one-probe test')
+            'none' if not c['probes'] or c['free_rank'] is not None or c['injective_face_maps'] else 'requires one-probe test')
     return result
 
 

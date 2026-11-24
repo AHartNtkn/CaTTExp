@@ -68,33 +68,35 @@ def check_rules(data):
     return {k:{side:rim(model,k,io[side]) for side in ('input','output')} for k,io in data['rules'].items()}
 
 
+def strip_arc(width,gap,block):
+    if not block or any(type(p) is not int or not 0<=p<width for p in block):
+        raise ValueError('give nonempty lists of valid unary gate positions')
+    ports = {str(i):('a','a') for i in range(len(block))}
+    ports['probe'] = ('','')
+    rows = ((gap,'probe'),)+tuple((p,str(i)) for i,p in enumerate(block))
+    word = []
+    for i in range(1,len(rows)):
+        for b in (i,-i):
+            moved = exchange(rows,b,ports)
+            if moved is not None:
+                break
+        if moved is None:
+            raise ValueError('probe cannot pass the given gate')
+        rows = moved
+        word.append(b)
+    assert rows[-1]==(gap,'probe')
+    # Return along the reference arc on the same side of the entire
+    # packet on both ports. It expands from a single flat marker.
+    ref = tuple(range(1,len(rows)))
+    return probe_word(len(rows),tuple(word)+inv(ref))
+
+
 def strip(data):
     width,gap = data['width'],data['gap']
     if type(width) is not int or type(gap) is not int or not 0<gap<width:
         raise ValueError('expect an interior gap on a positive width')
-    def arc(block):
-        if not block or any(type(p) is not int or not 0<=p<width for p in block):
-            raise ValueError('give nonempty lists of valid unary gate positions')
-        ports = {str(i):('a','a') for i in range(len(block))}
-        ports['probe'] = ('','')
-        rows = ((gap,'probe'),)+tuple((p,str(i)) for i,p in enumerate(block))
-        word = []
-        for i in range(1,len(rows)):
-            for b in (i,-i):
-                moved = exchange(rows,b,ports)
-                if moved is not None:
-                    break
-            if moved is None:
-                raise ValueError('probe cannot pass the given gate')
-            rows = moved
-            word.append(b)
-        assert rows[-1]==(gap,'probe')
-        # Return along the reference arc on the same side of the entire
-        # packet on both ports. It expands from a single flat marker.
-        ref = tuple(range(1,len(rows)))
-        return probe_word(len(rows),tuple(word)+inv(ref))
     a,b = data['input'],data['output']
-    u,vword = arc(a),arc(b)
+    u,vword = strip_arc(width,gap,a),strip_arc(width,gap,b)
     total = peripheral([(i+1,) for i in range(len(a))])
     extra = [(i,) for i in range(len(a)+1,len(a)+len(b))]
     frame = [reduced(inv(peripheral(extra))+total),*extra]

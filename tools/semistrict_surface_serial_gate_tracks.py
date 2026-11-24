@@ -32,7 +32,7 @@ def push(free_word):
                  (meridian(a-1) if a>0 else inv(meridian(-a-1))))
 
 
-def read_track(data):
+def read_track(data, *, require_shared_gate=True):
     """Validate a tuple of based one-site loops and determine its nullity."""
     charts, seams = data['charts'], data['seams']
     if not charts or len(seams)+1!=len(charts):
@@ -88,7 +88,7 @@ def read_track(data):
             for b in seam:
                 k = abs(b)-1
                 order[k:k+2] = reversed(order[k:k+2])
-            if not any(order[k] in descendants for k in source[2]):
+            if require_shared_gate and not any(order[k] in descendants for k in source[2]):
                 raise ValueError('the two consecutive uses share no gate')
             if braid_image(len(order),prev_loop+seam)!=braid_image(len(order),seam+source[1]):
                 raise ValueError('loops disagree at the seam')

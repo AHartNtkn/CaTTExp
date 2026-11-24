@@ -37,7 +37,7 @@ def endpoints_forced(cuts,starts,ends):
     return True
 
 
-def run(calc,movie,k,goal_prefix,target_cut,radius=None):
+def run(calc,movie,k,goal_prefix,target_cut,radius=None,backwards=False):
     """Move just this occurrence to its specified absolute cut and replay the end."""
     boxes,seams=movie
     p,i=boxes[k]
@@ -63,7 +63,7 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None):
     width=len(root)
     shadow=restrict(calc.width,inv(prefix)+goal_prefix,selected)
     j=output_order(range(width),tuple(map(abs,shadow))).index(i)
-    if j<=i:
+    if j==i or (j<i)!=backwards:
         return None,False
     path=executable_cut(contracted,root,shadow,j,1)
     if path is None:
@@ -76,7 +76,17 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None):
     w,slot,size=r[p]
     if cut(braid_image(calc.width,w),slot,size)!=target_cut:
         return None,False
-    # If the representative itself is monotone its steps are the witness.
+    final=follow(model,h,inputs)
+    order=tuple(range(len(h)))
+    final_order=output_order(order,tuple(map(abs,inputs)))
+    if backwards:
+        # The constructed reading is now the proposed beginning. Check the
+        # directed run from it back to the prescribed end with its actual ports.
+        path=inv(path)
+        i,j=j,i
+        h,final=final,h
+        order,final_order=final_order,order
+    # If the forward representative itself is monotone its steps are the witness.
     at=i
     for g in map(abs,path):
         if g==at:
@@ -89,9 +99,6 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None):
     # fractions. A successful monotone spelling can replace the gate word.
     upper,u=orthogonal(width,path)
     v,lower=orthogonal(width,path[::-1])
-    final=follow(model,h,inputs)
-    order=tuple(range(len(h)))
-    final_order=output_order(order,tuple(map(abs,inputs)))
     answer=transport_window(model,p,(h,order,i),(final,final_order,j),
                             inv(lower[::-1])+v[::-1],upper+inv(u),radius)['surface']
     return (result if answer else None),answer is None
@@ -131,7 +138,12 @@ def decide(model,source,first,second,radius=None,certified_only=False):
     components=meeting_components(arrows)
     independent=all(len(c)<=2 or len(c&moving)<=1 for c in components)
     middle=middle_polygons(arrows)&moving
-    exact=forced or independent or not middle
+    from semistrict_surface_extreme_runs import possible_joint_centers,three
+    joint=possible_joint_centers(arrows,moving)
+    if len(initial)==len(moving)==3 and middle and not joint:
+        return dict(three(calc,start,goal,initial,final,radius),moving_triangle_centers=sorted(middle),
+                    joint_centers=False,endpoints_forced=forced)
+    exact=forced or independent or not middle or not joint
     if certified_only and not exact:
         return dict(surface=None,moving_triangle_centers=sorted(middle))
     prefixes=calc.scan(goal)[1]
@@ -172,7 +184,8 @@ def decide(model,source,first,second,radius=None,certified_only=False):
                         moving_triangle_centers=sorted(middle))
     return dict(surface=False if exact and not unresolved else None,
                 endpoint_meetings=None if unresolved else False,endpoints_forced=forced,
-                moving_triangle_centers=sorted(middle),independent_components=independent,run_states=len(prev))
+                moving_triangle_centers=sorted(middle),independent_components=independent,
+                joint_centers=joint,run_states=len(prev))
 
 
 def checks():

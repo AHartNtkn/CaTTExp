@@ -314,6 +314,10 @@ class Movies:
             linked = link_schedules(self,source,first,second)
             if linked['surface'] is not None:
                 return dict(states=len(previous),**linked)
+            from semistrict_surface_gain_runs import decide as gain_runs
+            runs = gain_runs(self,source,first,second)
+            if runs['surface'] is not None:
+                return dict(states=len(previous),**runs)
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

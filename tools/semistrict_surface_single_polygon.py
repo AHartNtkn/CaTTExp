@@ -72,6 +72,21 @@ def decide(model,source,first,second,radius=None):
         if braid_image(width-1+size,expand(width,i,size,z))!=braid_image(width-1+size,relative):
             return no('relative braid is not the same full cable on both faces')
 
+    keep = [e for e in range(width-1+outputs) if not i<e<i+outputs]
+    upper = restrict(width-1+outputs,t_out,keep)
+    return transport_window(model,n,(h,order,i),(k,final_order,j),z,upper,radius)
+
+
+def transport_window(model,n,first,last,z,upper,radius=None):
+    h,order,i = first
+    k,final_order,j = last
+    r = model.pres.rules[n]
+    arity = len(r.source)
+    width = len(h)-arity+1
+    def no(reason):
+        return dict(surface=False,obstruction=reason)
+    if j<i:
+        return no('polygon moves to an earlier temporal position')
     pres = model.pres
     box = 'polygonWindow'
     ports = {box:(r.path,model.patch_ends[n])}
@@ -101,8 +116,6 @@ def decide(model,source,first,second,radius=None):
     bottom = common_end(h,k,bot1,bot2,ports,False)
     if bottom is None:
         return no('negative legs do not meet on the contracted histories')
-    keep = [e for e in range(width-1+outputs) if not i<e<i+outputs]
-    upper = restrict(width-1+outputs,t_out,keep)
     cut = next((a for a,g in enumerate(upper) if g<0),len(upper))
     top1,top2,_ = coprime_parts(upper[:cut],inv(upper[cut:]))
     if common_end(h,k,top1,top2,ports,True) is None:

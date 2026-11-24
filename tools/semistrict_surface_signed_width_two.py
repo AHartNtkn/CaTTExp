@@ -275,6 +275,11 @@ class Movies:
                 return dict(surface=images[0]==images[1],states=len(previous),method='pure braid')
             from semistrict_surface_single_polygon import decide
             return dict(states=len(previous),**decide(self,source,first,second))
+        if unresolved and not self.attachments:
+            from semistrict_surface_serial_polygons import decide
+            chain_result = decide(self,source,first,second)
+            if chain_result['surface'] is not None:
+                return dict(states=len(previous),**chain_result)
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

@@ -72,7 +72,8 @@ def decide(model, source, first, second):
     if positive_normal(width, a) != positive_normal(width, b):
         return reject('different total unit braids')
     if any(y[p][0] > x[p][0] for p in x):
-        return dict(surface=None, mutual=False, reason='positive temporal gain')
+        return dict(surface=None, mutual=False, reason='positive temporal gain',
+                    temporal_gain=sum(y[p][0]-x[p][0] for p in x))
     for p, (start, stop, length) in x.items():
         if coset(width, a[:length], start, stop) != coset(width, b[:y[p][2]], start, stop):
             return reject('different passive polygon cuts')

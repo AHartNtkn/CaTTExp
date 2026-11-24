@@ -285,6 +285,10 @@ class Movies:
             result = stationary(self,source,first,second)
             if result['surface'] is not None:
                 return dict(states=len(previous),**result)
+            from semistrict_surface_one_gain import decide as one_gain
+            result = one_gain(self,source,first,second,result,forced_only=True)
+            if result['surface'] is not None:
+                return dict(states=len(previous),**result)
             from semistrict_surface_packet_meetings import supported, decide as scalar_packets
             if supported(self,source,(*first,*second)):
                 return dict(states=len(previous),**scalar_packets(self,source,first,second))

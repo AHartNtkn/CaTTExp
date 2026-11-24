@@ -157,7 +157,7 @@ A use such as Θ ⊢ uni^w_{Γ,n}[σ] with σ : Horn_n(Γ, γ; c) in chapter 6 i
 
 A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders), and the kernel with binders is formalized in `CaTTExp.Binder.*` (§1.5; ledger S26a, with the remaining fragments S26b–S26f).
 
-The signature is closed to users. Every head is a kernel former that comes with its rules and a soundness check (an interpretation in 𝒦 and in the other models its chapter names), so a user cannot assert that something exists. A development's assumptions are context variables: a derivation in Γ is a hypothetical statement, valid for every instance of Γ, and asserts nothing (ledger S28).
+The signature is closed to users. Every head is a kernel former that comes with its rules and an interpretation in the reference model 𝒦, so a user cannot assert that something exists. A development's assumptions are context variables: a derivation in Γ is a hypothetical statement, valid for every instance of Γ, and asserts nothing (ledger S28).
 
 **Status.** Agda-checked, `CaTTExp.Signature`. **Source:** `notes/agda-sketch-findings.md` "The sketch".
 

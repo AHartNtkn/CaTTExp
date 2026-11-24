@@ -77,6 +77,7 @@ def movie(data):
     width = len(data['path'])
     regions = Partition()
     gaps,vertices,edges = [],{},[]
+    placements = {}
     for j,c in enumerate(charts):
         rows = tuple(map(tuple,c['diagram']))
         slot = c['slot']
@@ -91,12 +92,27 @@ def movie(data):
         right,n = side(c['output'])
         if not gaps:
             gaps.append(left)
+            for spot,face in left.spots.items():
+                placements.setdefault((0,face),dict(kind='initial',spot=list(spot)))
         else:
             reached,forward = seam_map(gaps[-1],data['seams'][j-1],ports,width)
             assert reached==left.rows
             back = {y:x for x,y in forward.items()}
             m = {f:back[g] for f,g in m.items()}
         gaps.append(right)
+        # A cut face missed by the exterior at the tie lies entirely inside
+        # the written output. Record a placement there before any seam move.
+        new_faces = set(right.spots.values())-set(n.values())
+        if new_faces:
+            local = Faces(c['output'],ports,len(ports[site][0]))
+            rim = {f for (r,q),f in local.spots.items() if r in (0,len(local.rows))
+                   or q in (0,local.slices[r])}
+            for (r,q),f in local.spots.items():
+                ambient = right.spots[slot+r,p+q]
+                if ambient in new_faces and f not in rim:
+                    placements.setdefault((j+1,ambient),dict(kind='output',use=j,spot=[r,q]))
+            if any((j+1,f) not in placements for f in new_faces):
+                raise ValueError('new cut face has no placement in the written port interior')
         for f in m:
             a,b = (j,m[f]),(j+1,n[f])
             regions.unite(a,b)
@@ -120,14 +136,17 @@ def movie(data):
         last = min((j for j,_,left_loss,_ in ties if left_loss), default=nodes[-1][0])
         rank = (1+sum(vertices[a]-1 for a in nodes)
                 +sum(1-holes for _,holes,_,_ in ties)) if first<=last else None
-        by_root[root] = dict(component=i,gap_faces=len(nodes),tied_faces=len(ties),
+        section = next(placements[a] for a in nodes if a in placements)
+        by_root[root] = dict(component=i,section=section,gap_faces=len(nodes),tied_faces=len(ties),
                              graph_rank=len(ties)-len(nodes)+1 if graph else None,
                              free_rank=rank,root_gaps=[first,last] if first<=last else [],
-                             injective_face_maps=not any(l or r for _,_,l,r in ties),probes=0)
-    for gap,row,pos in data.get('probes',[]):
+                             injective_face_maps=not any(l or r for _,_,l,r in ties),probes=0,probe_indices=[])
+    for index,(gap,row,pos) in enumerate(data.get('probes',[])):
         if not 0<=gap<len(gaps) or (row,pos) not in gaps[gap].spots:
             raise ValueError('probe placement outside its gap diagram')
-        by_root[regions.at((gap,gaps[gap].spots[row,pos]))]['probes'] += 1
+        group = by_root[regions.at((gap,gaps[gap].spots[row,pos]))]
+        group['probe_indices'].append(index)
+        group['probes'] += 1
     result = list(by_root.values())
     for c in result:
         c['higher_obstruction'] = ('collision sphere' if c['probes']>=2 else

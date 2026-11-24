@@ -497,7 +497,11 @@ def _transfer(Q, B, Yq, C, mi, pl, up, a, b, rc, cprime, op=False):
         ok = infer(C, K) == arr(infer(C, a), a, b)
     else:
         # oplax: b_c -> b_c' -> (c'^op) -> a_c' -> a_c
-        Kp, _, _ = nat_op(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, ren(cprime), rc)
+        # in the oplax cylinder the top cells' cylinders are reversed (b -> a):
+        # they are the op-lifts of the top variables
+        n_ = ps_dim(Q)
+        dm = {mi[q]: v(up[q]) for q in Yq if tdim(Q[q]) + 1 == n_}
+        Kp, _, _ = nat_op(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, ren(cprime), rc, dm)
         K = comp2(C, n, comp2(C, n, b_side(plus(ren(g_fw))), Kp), a_side(ren(g_bw)))
         ok = infer(C, K) == arr(infer(C, a), b, a)
     return K if ok else None

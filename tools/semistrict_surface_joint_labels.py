@@ -15,14 +15,41 @@ from semistrict_surface_guarded_labels import separate
 from semistrict_surface_history_group import exchange, placements
 from semistrict_surface_invertible_updates import Colours, Faces
 from semistrict_surface_scalar_sites import coefficients
-from semistrict_surface_shared_edge import braid_image
 
+
+
+def positive_normal(n,word):
+    """Left-greedy positive factors, each encoded by its output permutation."""
+    identity = list(range(n))
+    factors = []
+    for g in word:
+        if not 1<=g<n:
+            raise ValueError('crossing outside the positive braid')
+        atom = identity.copy()
+        atom[g-1],atom[g] = atom[g],atom[g-1]
+        factors.append(atom)
+    j = 0
+    while j+1<len(factors):
+        left,right = factors[j:j+2]
+        where = [0]*n
+        for pos,name in enumerate(right):
+            where[name] = pos
+        for i in range(n-1):
+            if left[i]<left[i+1] and where[i]>where[i+1]:
+                left[i],left[i+1] = left[i+1],left[i]
+                a,b = where[i],where[i+1]
+                right[a],right[b] = right[b],right[a]
+                j = max(0,j-1)
+                break
+        else:
+            j += 1
+    return tuple(tuple(p) for p in factors if p!=identity)
 
 class Rule(Faces):
     def __init__(self,data,entry,cols):
         super().__init__(data,entry,cols)
         l,r = [separate(self.original,m,cols) for m in self.movies]
-        if braid_image(len(self.history),l[0])!=braid_image(len(self.history),r[0]):
+        if positive_normal(len(self.history),l[0])!=positive_normal(len(self.history),r[0]):
             raise ValueError('rule changes the structural braid')
         self.crosses = l[0],r[0]
         self.delta = tuple(tuple(b-a for a,b in zip(x,y)) for x,y in zip(l[2],r[2]))
@@ -33,27 +60,40 @@ class Rule(Faces):
 
 
 class GapWords:
-    def __init__(self,edges,window):
+    def __init__(self,edges,words):
         self.out = defaultdict(list)
         for e,(a,b) in edges.items():
             self.out[a].append((e,b))
-        self.window = window
+        self.substrings = {''}
+        for w in words:
+            self.substrings.update(w[i:j] for i in range(len(w)) for j in range(i+1,len(w)+1))
+
+    @lru_cache(None)
+    def step(self, state, e):
+        prefix, full, suffix = state
+        full = full and prefix+e in self.substrings
+        if full:
+            prefix += e
+        suffix += e
+        while suffix not in self.substrings:
+            suffix = suffix[1:]
+        return prefix,full,suffix
 
     @lru_cache(None)
     def paths(self,start,end):
-        n = self.window
-        todo = deque([(start,'')])
-        seen = set()
+        initial = ('',True,'')
+        todo = deque([(start,initial,'')])
+        seen = {(start,initial)}
         found = []
         while todo:
-            v,w = todo.popleft()
-            k = (v,min(len(w),2*n+1),w[:n],w[-n:] if n else '')
-            if k in seen:
-                continue
-            seen.add(k)
+            v,state,w = todo.popleft()
             if v==end and w:
                 found.append(w)
-            todo.extend((y,w+e) for e,y in self.out[v])
+            for e,y in self.out[v]:
+                k = self.step(state,e)
+                if (y,k) not in seen:
+                    seen.add((y,k))
+                    todo.append((y,k,w+e))
         return found
 
 
@@ -72,7 +112,7 @@ class Catalogue:
                 raise ValueError('nonparallel base rule')
         self.rules = [Rule(data,entry,self.cols) for entry in data['attachments']]
         self.zeros = [r for r in self.rules if not r.crosses[0] and any(any(row) for row in r.delta)]
-        self.gaps = GapWords(self.edges,max((len(r.path) for r in self.zeros),default=0))
+        self.gaps = GapWords(self.edges,(r.path for r in self.zeros))
         self.stats = dict(internal=0,boundary=0,guard=0)
         self.empty = (0,)*len(self.cols.axis)
 

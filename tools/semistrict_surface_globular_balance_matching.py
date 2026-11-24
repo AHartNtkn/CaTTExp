@@ -176,7 +176,7 @@ def junction_checks(binary, agda_dir):
         if emitter:
             emitter.check_typed(f'fitted{cut}',ctx,witness)
             emitter.check_type(f'fitted{cut}',ctx,witness,old_type)
-        verify_class(binary,ctx,raw,witness,old_type,cut)
+        verify_class(binary,ctx,raw,witness,old_type,cut + 3)
         if cut < 2:
             ctx, raw = susp_ctx(ctx), list(map(susp_tm,raw))
             witness, old_type = susp_tm(witness), susp_ty(old_type)
@@ -186,8 +186,8 @@ def junction_checks(binary, agda_dir):
         (agda_dir/(name+'.agda')).write_text(emitter.module(name,__doc__))
 
 
-def verify_class(binary,ctx,raw,witness,old_type,cut):
-    assert tdim_tm(ctx,witness) == cut + 3
+def verify_class(binary,ctx,raw,witness,old_type,degree,width=2):
+    assert tdim_tm(ctx,witness) == degree
     code = Assertions()
     def show(ty):
         return '*' if ty == STAR else ' -> '.join(code.term(t) for t in ty[2:])
@@ -205,11 +205,11 @@ def verify_class(binary,ctx,raw,witness,old_type,cut):
         (folder/'Fit.catt').write_text('import Heads\n'+definitions[1]+'\n')
         (folder/'Join.catt').write_text('import Heads\n'+'\n'.join(definitions)+'\n')
         accepted(run(binary,folder,'Fit.catt'),'Fit.catt',['lifted'])
-        for flags in (['--insertion-width','2'],['--sua']):
+        for flags in (['--insertion-width',str(width)],['--sua']):
             output = run(binary,folder,'Join.catt',flags)
             accepted(output,'Join.catt',['direct','lifted'])
             assert 'are equal' in output
-        for flags in ([],['--insertion-width','1']):
+        for flags in ([],['--insertion-width',str(width-1)]):
             output = run(binary,folder,'Join.catt',flags)
             assert 'Checking direct\n' in output and 'Error:' in output and 'Finished importing Join.catt' not in output, output[-1000:]
 

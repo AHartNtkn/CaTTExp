@@ -12,8 +12,8 @@ from relative_coherence_exchange_faces import head, string_tree
 from semistrict_surface_globular_balance_matching import boundary_head, product_at, verify_class
 
 
-def preimages(chart, label, target_type):
-    """All literally typed preimages. Generic coherence types are bound syntax."""
+def inverse_terms(chart, label):
+    """Compute literal term preimages, including variable and head readings."""
     @lru_cache(None)
     def terms(target):
         answers = [v(i) for i, image in enumerate(label) if image == target]
@@ -25,6 +25,13 @@ def preimages(chart, label, target_type):
                             if infer(chart, entry) == subst_ty(local_type, prefix)]
             answers.extend(('coh', shape, generic, entries) for entries in partials)
         return tuple(answers)
+
+    return terms
+
+
+def preimages(chart, label, target_type):
+    """All literally typed preimages. Generic coherence types are bound syntax."""
+    terms = inverse_terms(chart, label)
 
     def types(ty):
         if ty == STAR:
@@ -102,7 +109,7 @@ def example(binary, agda_dir):
             possible = preimages(chart, label, local_image)
             assert possible and all(subst_ty(a, label) == local_image for a in possible)
         assert infer(ctx, witness) == old
-        verify_class(binary, ctx, steps, witness, old, cut)
+        verify_class(binary, ctx, steps, witness, old, cut + 3)
         if emitter:
             emitter.check_typed(f'fit{cut}', ctx, witness)
             emitter.check_type(f'fit{cut}', ctx, witness, old)
@@ -163,7 +170,7 @@ def closed_tracks(binary, agda_dir):
     assert infer(ctx, witness) == old
     emitter = Emitter() if agda_dir else None
     for cut in range(3):
-        verify_class(binary, ctx, steps, witness, old, cut)
+        verify_class(binary, ctx, steps, witness, old, cut + 3)
         if emitter:
             emitter.check_typed(f'closed{cut}', ctx, witness)
             emitter.check_type(f'closed{cut}', ctx, witness, old)

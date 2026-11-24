@@ -261,10 +261,15 @@ def _piece(G, A, t, u, rec, choose=None):
             return B
         return arr(ab_ty(B[1]), ab(B[2]), ab(B[3]))
     Yset = set()
+    pmemo = {}
     def plus(w):
-        if w[0] == 'v':
-            return plus_map.get(w[1], w)
-        return ('coh', w[1], w[2], tuple(plus(e) for e in w[3]))
+        # plus_map grows as generators are added; entries are only added for
+        # new variables, so earlier results stay valid only for terms not
+        # meeting them: keep the memo per plus_map size
+        key = len(plus_map)
+        if pmemo.get('k') != key:
+            pmemo.clear(); pmemo['k'] = key
+        return rc_nat.rename_map(w, plus_map, pmemo)
     Yv = set(Y)
     for x in gens:
         Hv[x] = len(Hctx); Hctx.append(ab_ty(infer(G, x))); sub.append(x)

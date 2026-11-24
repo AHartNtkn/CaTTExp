@@ -40,6 +40,24 @@ class NoFiller(Exception):
 _K = {}
 SMALL_CYL = [40]
 
+def rename_map(w, m, memo=None):
+    """w with variables renamed by m (index -> term), preserving sharing:
+    the terms built here are deeply shared, and a tree walk is exponential.
+    Pass one memo for repeated calls with the same m."""
+    if memo is None:
+        memo = {}
+    def go(x):
+        r = memo.get(id(x))
+        if r is not None:
+            return r[1]
+        if x[0] == 'v':
+            y = m.get(x[1], x)
+        else:
+            y = ('coh', x[1], x[2], tuple(go(u) for u in x[3]))
+        memo[id(x)] = (x, y)
+        return y
+    return go(w)
+
 def _iter_tgt(H, t, k):
     for _ in range(k):
         t = tgt(H, t)
@@ -126,12 +144,9 @@ def _swap(t, mi, pl, Y):
     """t (over the q⁻ copies) -> its q⁺ copy."""
     back = {}
     for q in mi:
-        back[mi[q]] = pl[q]
-    def go(t):
-        if t[0] == 'v':
-            return v(back.get(t[1], t[1]))
-        return ('coh', t[1], t[2], tuple(go(u) for u in t[3]))
-    return go(t)
+        if pl[q] != mi[q]:
+            back[mi[q]] = v(pl[q])
+    return rename_map(t, back)
 
 def _extend_leaf(tree, q):
     """The tree with the leaf whose arrow variable is q given one child, so
@@ -527,14 +542,13 @@ def nat_in(H, Y, plus_map, up_map, t, rc):
     memo = {}
     def meets(w):
         return bool(fv_tm(w) & Y)
+    pmemo = {}
     def plus(w):
-        if w[0] == 'v':
-            return plus_map.get(w[1], w)
-        return ('coh', w[1], w[2], tuple(plus(u) for u in w[3]))
+        return rename_map(w, plus_map, pmemo)
     def lift(w):
-        k = w
-        if k in memo:
-            return memo[k]
+        hit = memo.get(id(w))
+        if hit is not None:
+            return hit[1]
         if w[0] == 'v':
             r = up_map[w[1]]
         else:
@@ -555,7 +569,7 @@ def nat_in(H, Y, plus_map, up_map, t, rc):
                     sub[pl[q]] = plus(g[q])
                     sub[up[q]] = lift(g[q])
             r = subst_tm(K, tuple(sub))
-        memo[k] = r
+        memo[id(w)] = (w, r)
         return r
     return lift(t)
 
@@ -567,15 +581,15 @@ def nat_op(H, Y, plus_map, up_map, t, rc):
     lax lifts nat_in. A top-dimensional Y-variable has no op-lift."""
     Y = frozenset(Y)
     meets = lambda w: bool(fv_tm(w) & Y)
+    pmemo = {}
     def plus(x):
-        if x[0] == 'v':
-            return plus_map.get(x[1], x)
-        return ('coh', x[1], x[2], tuple(plus(u) for u in x[3]))
+        return rename_map(x, plus_map, pmemo)
     lax = lambda x: nat_in(H, Y, plus_map, up_map, x, rc)
     memo = {}
     def go(t):
-        if t in memo:
-            return memo[t]
+        hit = memo.get(id(t))
+        if hit is not None:
+            return hit[1]
         if t[0] == 'v':
             raise NoFiller('top-dimensional Y-variable has no op-lift')
         Q, B, g = t[1], t[2], t[3]
@@ -594,7 +608,7 @@ def nat_op(H, Y, plus_map, up_map, t, rc):
                 sub[pl[q]] = plus(g[q])
                 sub[up[q]] = go(g[q]) if q in optops else lax(g[q])
         r = subst_tm(K, tuple(sub))
-        memo[t] = r
+        memo[id(t)] = (t, r)
         return r
     w = go(t)
     a, b = boundary_ab(H, t, meets, lax, plus)
@@ -605,10 +619,9 @@ def square(H, Y, plus_map, up_map, t, rc):
     """(t↑, a_t, b_t), with the type checked."""
     w = nat_in(H, frozenset(Y), plus_map, up_map, t, rc)
     meets = lambda x: bool(fv_tm(x) & frozenset(Y))
+    pmemo = {}
     def plus(x):
-        if x[0] == 'v':
-            return plus_map.get(x[1], x)
-        return ('coh', x[1], x[2], tuple(plus(u) for u in x[3]))
+        return rename_map(x, plus_map, pmemo)
     a, b = boundary_ab(H, t, meets, lambda x: nat_in(H, frozenset(Y), plus_map, up_map, x, rc), plus)
     assert infer(H, w) == arr(infer(H, a), a, b), 'ill-typed naturality square'
     return w, a, b

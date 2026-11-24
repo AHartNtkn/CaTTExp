@@ -237,6 +237,8 @@ Whether EL holds for ≡_sua in every context is **open**. Conservativity of ≡
 
 So coh_{Δ′, ũ → ũ′} is a coherence-case coherence, accepted in every row of `spec/02`'s table, and so is its reverse. Their images are identities. Substituting ι gives e and e′. ∎
 
+**Correction (2026-11-24, S30, `lax-sc-completeness.md` §3.3).** The last step fails for two-tier L as written: its coherence case needs ⟦ũ⟧ to have full *Gray* support in 𝔉(Δ′), not only to use every variable. Over ΣD¹ ∨ ΣD¹, βα and βα₂ have equal images, Var = everything, and `graySide` rejects coh(βα → βα₂) (`Gray/CohCaseGap.agda`). So Prop. 4.3 and Corollary 4.4 are **not proved** for two-tier L (nor, by the same issue with π-full support, for uniform L). They hold for the repair candidate L^V (Var-shaped coherence case), by Theorem 1 of that note. Whether they hold for two-tier L as written is the outbox question `conjectures/outbox/gray-catt-relative-coherence.md`.
+
 **Lemma V [argued for two-tier L; (ii) open for uniform L].** Let u be a kernel term over a pasting context Δ.
 - (i) Var(u) is a pasting context, and supp⟦u⟧ = Var(u), where the support is the Gray support projected to variables.
 - (ii) The inclusion of a pasting sub-context induces an injective map F(Δ′) → F(Δ).

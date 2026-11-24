@@ -157,7 +157,7 @@ A use such as Θ ⊢ uni^w_{Γ,n}[σ] with σ : Horn_n(Γ, γ; c) in chapter 6 i
 
 A fourth kind of extension is a **binding former** in the sense of chapter 0, §0.2: a rule that binds an object variable in a premise and forms an object or a cell from it, with its universal property witnessed by cells. The kernel has one: INIT (chapter 9, §9.3), whose term μΔ binds the distinguished object variable X of a positive context Δ, together with its generic model η and the recursor rec_σ. Its syntax is given in §1.1 (binders), and the kernel with binders is formalized in `CaTTExp.Binder.*` (§1.5; ledger S26a, with the remaining fragments S26b–S26f).
 
-The signature is closed to users. Every head is a kernel former that comes with its rules and an interpretation in the model 𝒦, so a user cannot assert that something exists. A development's assumptions are context variables: a derivation in Γ is a hypothetical statement, valid for every instance of Γ, and asserts nothing (ledger S28).
+The signature is closed to users. Every head is a kernel former that comes with its rules and an interpretation in the reference model 𝒦, so a user cannot assert that something exists. A development's assumptions are context variables: a derivation in Γ is a hypothetical statement, valid for every instance of Γ, and asserts nothing (ledger S28).
 
 **Status.** Agda-checked, `CaTTExp.Signature`. **Source:** `notes/agda-sketch-findings.md` "The sketch".
 
@@ -171,7 +171,7 @@ The signature is closed to users. Every head is a kernel former that comes with 
 **Q1.2. How much of a coherence the user writes.** The kernel term `coh_{Δ, A}[σ]` carries the whole pasting context Δ, the type A and the full substitution σ.
 - *Option A: write everything.* No inference; terms are long (the composite of two arrows names five variables of Δ and five terms of σ).
 - *Option B: write only σ's top-dimensional terms*, inferring the lower ones from their types (as in the CaTT implementation of Finster–Mimram). Typical terms shrink by a factor of about two to five; the elaborator must solve unification problems in globular types, which are first-order and decidable.
-- *Option C: named operations* (`comp`, `id`, `assoc`, `unitor`) defined once as coherences and applied with inference as in B. Most readable; requires a library of names, and what each name denotes depends on the switch setting and marks (chapter 2, chapter 3).
+- *Option C: named operations* (`comp`, `id`, `assoc`, `unitor`) defined once as coherences and applied with inference as in B. Most readable; requires a library of names, and what each name denotes depends on the marks of its context (chapter 2, chapter 3).
 - *Worked example.* Composing f : x → y and g : y → z: in A, `coh_{(x:⋆, y:⋆, f:x→y, z:⋆, g:y→z), x →_⋆ z}[x, y, f, z, g]`; in B, `coh_{…}[f, g]`; in C, `f ; g`.
 - **Decided (Anthony, 2026-11-23): B, with names as user-defined abbreviations.** A substitution out of a pasting context is determined by its values on the locally maximal variables, so the entries A adds are always redundant (A stays legal). C is B plus the user-defined abbreviations already required by Q0.2, not a separate option. Whether a standard library of named coherences ships is a later packaging question; any such library must be stated for the kernel's side condition and marks (chapters 2–3), and the strictified surface (§0.5) removes the need for some names.
 

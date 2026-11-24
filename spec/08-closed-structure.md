@@ -84,7 +84,7 @@ All of these are derived, none primitive:
 
 ## 8.5 Conservativity over L
 
-No biclosed rule enters a derivation of a pure judgment (⟦Δ₁⟧, …, ⟦Δₖ⟧ ▸ ⟦Θ⟧), by the sort discipline. So the pure judgments are those of L + p + pt in every switch setting. The pure fragment is the free planar multicategory on L's substitutions, p and pt, **with no equations between them**: p ∘ (σ, τ) and (σ ⊗ τ) ∘ p are distinct terms. The stronger claim "pure judgments are exactly L's" is not made.
+No biclosed rule enters a derivation of a pure judgment (⟦Δ₁⟧, …, ⟦Δₖ⟧ ▸ ⟦Θ⟧), by the sort discipline. So the pure judgments are those of L + p + pt, whatever the split marks. The pure fragment is the free planar multicategory on L's substitutions, p and pt, **with no equations between them**: p ∘ (σ, τ) and (σ ⊗ τ) ∘ p are distinct terms. The stronger claim "pure judgments are exactly L's" is not made.
 
 **Status.** **Proved** at argument level (GB-ext step 4, independently checked). **Source:** `notes/closed-structure.md` F.7.4 §4, §6.
 
@@ -109,7 +109,7 @@ The object duality (–)^K and the ambient duality D_J act differently on the bi
 
   The mirror maps the row table of §8.3 to itself, the vertex types H and B to their mirrors, and the restriction r to its mirror. Directed cuts go to directed cuts. Collars go to collars after inverting the reversed ones.
 - **What breaks the symmetry is L.** A probe restriction along ⟦σ⟧ mirrors to the restriction along ⟦D_K σ⟧. That is a kernel restriction for every σ iff D_K is a symmetry of the core.
-  - Under uniform L, in every setting, only K = ∅ is a symmetry (chapter 2, §2.7). So no non-trivial duality is a symmetry of L + biclosed rules.
+  - Under uniform L, whatever the split marks, only K = ∅ is a symmetry (chapter 2, §2.7). So no non-trivial duality is a symmetry of L + biclosed rules.
   - The op mirror lands in the biclosed system over the mixed core D_odd(V + S).
   - K = all keeps ⊗'s order and lands over the oplax core, with the inner law and R exchanged.
   - Under two-tier L, op is a core symmetry, so the op mirror is a symmetry of two-tier L + biclosed rules.

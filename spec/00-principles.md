@@ -6,7 +6,7 @@ These are the constraints every later chapter satisfies. They are design commitm
 
 The system is a type theory in the style of CaTT (Finster–Mimram). It is not built to capture a chosen model or a chosen class of models. Models are a tool for justifying rules: a rule is explained by reading it in a model and checked by proving it sound there. Among candidate rules, the kernel takes the most general one by the ordering of §0.4.
 
-**One system, not a family of model classes.** Every development is checked by the same rules. No declaration, switch or setting lets a development choose the class of models it is about (ledger S32; the per-development switches of chapter 2, §2.3 are being removed, ledger S31).
+**One system, not a family of model classes.** Every development is checked by the same rules. No declaration, switch or setting lets a development choose the class of models it is about. Every assumption is a context variable or a mark on one, such as the crossing-law marks of chapter 2, §2.3. **Files carry no meaning**: what a judgment means depends only on its context and its terms, never on the file it is written in, so neither the kernel nor the surface has per-file settings or defaults (ledger S31, S32).
 
 **Files carry no semantic meaning** (Anthony, 2026-11-24). A file is only a container for declarations. Nothing that affects what a statement means or whether it checks (marks, laws, defaults, scoping of assumptions) is attached to a file, so splitting, merging or reordering files never changes a judgment. Every assumption a statement depends on is in its context.
 

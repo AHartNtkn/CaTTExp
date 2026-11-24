@@ -5,7 +5,9 @@ from itertools import combinations
 import json
 from pathlib import Path
 
-from semistrict_surface_history_group import HistoryGroup
+from semistrict_surface_component_braids import Components, cabling
+from semistrict_surface_history_group import inv
+from semistrict_surface_packet_meetings import cut
 from semistrict_surface_polygon_grades import resolution
 from semistrict_surface_shared_edge import braid_image
 from semistrict_surface_signed_width_two import Movies, Presentation, Rule
@@ -77,7 +79,8 @@ class Schedules:
         roots = {e:model.pres.mark_roots[c] for e,c in labels.items()}
         self.model = Movies(Presentation(model.pres.edges,marks,rules,roots),model.start)
         self.passives = {}
-        self.abelian = {}
+        self.factors = {}
+        self.nonabelian_guards = 0
         self.gain_visits = self.meet_visits = 0
 
     def crossing(self,h,j,sign):
@@ -133,15 +136,65 @@ class Schedules:
         for v,delta in offsets.items():
             yield {**rec,p:(v,i)},{**form,p:advance(f,delta)},var+len(cycles)
 
-    def faithful(self,h):
-        if h not in self.abelian:
-            group = HistoryGroup(h,self.model.pres.marks)
-            n = len(h)
-            loops = {braid_image(n,w):w for w in group.braids.values()}
-            loops.pop(braid_image(n,()),None)
-            ok = all(braid_image(n,x+y)==braid_image(n,y+x) for x,y in combinations(loops.values(),2))
-            self.abelian.update((k,ok) for k in group.tree_paths)
-        return self.abelian[h]
+    def nonabelian_factors(self,h):
+        """True pure sibling braid generators, transported to this history."""
+        if h in self.factors:
+            return self.factors[h]
+        marks = self.model.pres.marks
+        parts = Components(h,marks,len(self.model.start))
+        result = []
+        if any(len(face)>2 for face in parts.faces):
+            queue = deque([(h,())])
+            seen = {h}
+            while queue:
+                root,path = queue.popleft()
+                packets = parts.packets(root,marks)
+                if packets is not None:
+                    break
+                for i in range(len(root)-1):
+                    for sign in (-1,1):
+                        v = self.model.swap(root,i,sign>0)
+                        if v is not None and v not in seen:
+                            seen.add(v)
+                            queue.append((v,path+(sign*(i+1),)))
+            else:
+                raise ValueError('no grouped history in a named component')
+            for face in packets:
+                if len(face)<3:
+                    continue
+                images = []
+                for i,j in combinations(range(len(face)),2):
+                    around = tuple(range(j,i+1,-1))
+                    twist = around+(i+1,i+1)+inv(around)
+                    images.append(braid_image(len(h),path+cabling(face,twist)+inv(path)))
+                result.append(images)
+        self.factors[h] = result
+        return result
+
+    def absorbs(self,h,slots):
+        root = tuple((j+1,) for j in range(len(h)))
+        factors = self.nonabelian_factors(h)
+        ok = all(any(all(cut(f,i,k) == cut(root,i,k) for f in generators)
+                     for i,k in slots) for generators in factors)
+        if ok and factors:
+            self.nonabelian_guards += 1
+        return ok
+
+    def terminal_exact(self):
+        # Straighten from both ends up to a single connector. The exact
+        # common unit total then determines this connector without a guard.
+        split = len(self.target_order)
+        for j,p in enumerate(self.target_order):
+            h,i = self.target[p]
+            if not self.absorbs(h,[(i,len(self.graph[p][1]))]):
+                split = j
+                break
+        for p in self.target_order[split:]:
+            h,i = self.target[p]
+            out,_ = self.model.named(h,p,i)
+            if not self.absorbs(out,[(i,len(self.graph[p][2]))]):
+                return False
+        return True
 
     def branches(self,order,rec,form,var,eqs,visited,safe):
         if order == self.target_order:
@@ -161,7 +214,7 @@ class Schedules:
                 equations.extend(equalities(z,self.goal[p]))
             else:
                 if possible(equations):
-                    yield True if safe and all(self.faithful(h) for h in self.terminal_seams) else None
+                    yield True if safe and self.terminal_exact() else None
         for p in order:
             initial,i = rec[p]
             if not self.before(initial,i) < self.target_before[p]:
@@ -205,7 +258,7 @@ class Schedules:
                     new,_ = self.model.named(h,q,b0)
                     self.meet_visits += 1
                     yield (changed,{**t,q:(h,b0),p:(new,i1)},z,l,equations,
-                           visited|{changed},safe and self.faithful(mid))
+                           visited|{changed},safe and self.absorbs(mid,[(i,c),(b,d)]))
 
     def before(self,h,i):
         return frozenset(u for _,e in h[:i] for u in self.units[e])
@@ -219,7 +272,6 @@ class Schedules:
         if any(not self.before(k,i)<=self.target_before[p] for p,(k,i) in rec.items()):
             return False
         self.target_order = tuple(self.target)
-        self.terminal_seams = [self.root]+[self.model.named(k,p,i)[0] for p,(k,i) in self.target.items()]
         order = tuple(rec)
         stack = [self.branches(order,rec,form,0,[],{order},True)]
         maybe = False
@@ -255,7 +307,42 @@ def decide(model,source,first,second):
     chart = Schedules(model,source,resolved)
     yes = chart.solve(first,second,resolved[-1])
     return dict(surface=yes, gain_branches=chart.gain_visits,
-                meeting_branches=chart.meet_visits, passive_charts=len(chart.passives))
+                meeting_branches=chart.meet_visits, passive_charts=len(chart.passives),
+                absorbed_nonabelian_guards=chart.nonabelian_guards)
+
+
+def nonabelian_checks():
+    from semistrict_surface_one_step_reflection import reverse_signed
+    from semistrict_surface_polygon_cabling import rectangle
+    from semistrict_surface_raw_movie_graph import raw_compare,steps
+    s = ((0,'s'),)
+    mark = ((0,'a'),)
+    m = Movies(Presentation({'k':(0,1),'f':(1,2),'g':(2,3),'u':(1,1)},
+                            {'s':('',''),'a':('f','f'),'b':('g','g'),
+                             'birth':('','u'),'death':('u','')},
+                            [Rule('f',mark,((0,'birth'),(0,'death'))),Rule('f',mark,mark)],
+                            {'s':0}), 'kfg')
+    h = s*3+((2,'b'),)*2+((1,'a'),)*2
+    a,b = (1,1,2,2),(2,2,1,1)
+    z = reverse_signed(inv(a)+b)
+    k = next((i for i,g in enumerate(z) if g<0),len(z))
+    def cross(word): return steps(g-1 for g in word)
+    x = cross(a)+((1,6),)+steps(rectangle(3,2,1))+((0,3),)+cross(z[:k])
+    y = cross(b)+((0,5),)+steps(rectangle(3,2,2))+((1,7),)+cross(inv(z[k:]))
+    result = decide(m,h,x,y)
+    assert braid_image(3,a) != braid_image(3,b) and not raw_compare(m,h,x,y)['raw']
+    assert result['surface'] and result['absorbed_nonabelian_guards'] >= 2
+    # At two occupied gaps, each three-sibling group sees the other slot
+    # as exterior. Assigning all of them to one polygon would fail.
+    pure = Movies(Presentation({'f':(0,0)}, {'s':('','')},[],{'s':0}), 'f')
+    source = s*3+((1,'s'),)*3
+    resolved = resolution(source,((),()),[],'swap')
+    chart = Schedules(pure,source,resolved)
+    slots = [(1,1),(4,1)]
+    assert len(chart.nonabelian_factors(chart.root)) == 2
+    assert chart.absorbs(chart.root,slots)
+    assert not any(chart.absorbs(chart.root,[slot]) for slot in slots)
+    return dict(nonabelian_surface_only=result,split_factor_guard=True)
 
 
 def checks():
@@ -364,7 +451,7 @@ def checks():
     return dict(integer_systems=linear,signed_single_queries=single_queries,
                 placed_trajectories=trajectories, changing_order_surface_only=crossing,
                 winding_guard_rejected=True, nonabelian_uncertified=True,
-                width_two_queries=width_tests,width_two_positives=accepted)
+                width_two_queries=width_tests,width_two_positives=accepted,**nonabelian_checks())
 
 
 if __name__ == '__main__':

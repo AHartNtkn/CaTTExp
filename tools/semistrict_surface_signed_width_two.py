@@ -124,6 +124,17 @@ class Movies:
                 h=result[0]
         return tuple(records),h
 
+    def prism_words(self,h,rid,i,off):
+        size = len(self.pres.rules[rid].source)
+        if i+size >= len(h):
+            return
+        pos,event = h[i+size]
+        # The spectator must clear the entire spatial window, including padding.
+        if pos+len(self.pres.marks[event][0]) <= off:
+            yield tuple(range(i+size,i,-1))
+        if pos >= off+len(self.patch_ends[rid]):
+            yield tuple(-j for j in range(i+size,i,-1))
+
     def updates(self,state):
         for k,(h,rid,i) in enumerate(state):
             r=self.pres.rules[rid]
@@ -136,19 +147,13 @@ class Movies:
                         if dest is not None:
                             yield state[:k]+((dest,rid,i),)+state[k+1:],'disjoint square'
             # Native prism in either spatial order: the polygon moves later in temporal order.
-            if i+size<len(h):
-                pos,event=h[i+size]
-                spatial_orders = ((True, pos+len(self.pres.marks[event][0])<=off),
-                                  (False, pos>=off+len(self.patch_ends[rid])))
-                for positive,disjoint in spatial_orders:
-                    if not disjoint:
-                        continue
-                    new=h
-                    for j in reversed(range(i,i+size)):
-                        new=self.swap(new,j,positive)
-                        assert new is not None
-                    assert self.named(new,rid,i+1) is not None
-                    yield state[:k]+((new,rid,i+1),)+state[k+1:],'prism'
+            for word in self.prism_words(h,rid,i,off):
+                new=h
+                for g in word:
+                    new=self.swap(new,abs(g)-1,g>0)
+                    assert new is not None
+                assert self.named(new,rid,i+1) is not None
+                yield state[:k]+((new,rid,i+1),)+state[k+1:],'prism'
             if k+1>=len(state):
                 continue
             before,second,j=state[k+1]
@@ -283,6 +288,9 @@ class Movies:
             chain_result = decide(self,source,first,second)
             if chain_result['surface'] is not None:
                 return dict(states=len(previous),**chain_result)
+            from semistrict_surface_positioned_packets import supported as shape_preserving, decide as packets
+            if shape_preserving(self,(*first,*second)):
+                return dict(states=len(previous),**packets(self,source,first,second))
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

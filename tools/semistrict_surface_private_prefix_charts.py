@@ -115,7 +115,7 @@ class PrefixChart:
             assert h is not None
         return h
 
-    def search(self, source, target):
+    def search(self, source, target, can_finish=transport):
         start, end = tuple(source.items()), tuple(target.items())
         queue, seen = deque([start]), {start: None}
         while queue:
@@ -128,7 +128,7 @@ class PrefixChart:
                 return out[::-1]
             for i, (m, c) in enumerate(w):
                 for d, (path, g) in self.gains[c].items():
-                    if not transport(d, target[m]):
+                    if not can_finish(d, target[m]):
                         continue
                     q = w[:i]+((m, d),)+w[i+1:]
                     if q not in seen:

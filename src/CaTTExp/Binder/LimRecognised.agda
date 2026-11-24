@@ -5,8 +5,8 @@
 -- CaTTExp.Lim.Rules formalises Mikhail's recognition judgments for
 -- cones over named contexts, and CaTTExp.Lim.Repaired the repair R1
 -- that the spec adopted (§6.1): the cone is *specified* by a fixed
--- construction (`coneC`, Mikhail's Thm 3.3, diagrams of dimension
--- ≤ 2), and that specified cone passes the recognition rules
+-- construction (`coneC`, Mikhail's Thm 3.3, globular diagrams of
+-- every dimension), and that specified cone passes the recognition rules
 -- (`SpecCone`). The kernel's limit heads (CaTTExp.Binder.LimHeads) take
 -- the specified cone of CaTTExp.Cones as their shape (`coneShape`).
 --
@@ -16,9 +16,9 @@
 -- exactly `coneShape` of the lowered diagram. So on those diagrams the
 -- types of the universal cone's cells λ_{Γ,g} are the types of a cone
 -- that Mikhail's rules recognise (`recognised-*`). The agreement holds
--- for every globular diagram of dimension ≤ 2 (`agrees`, from
--- CaTTExp.Lim.ConeAgree, S27 (h′)); recognition by the rules is checked
--- on the three diagrams only.
+-- for every well-formed globular diagram, in every dimension (`agrees`,
+-- from CaTTExp.Lim.ConeAgree, S27 (h′)); recognition by the rules is
+-- checked on the three diagrams only.
 ------------------------------------------------------------------------
 module CaTTExp.Binder.LimRecognised where
 
@@ -29,7 +29,7 @@ open import CaTTExp.Lim.Rules
 open import CaTTExp.Lim.Repaired
 open import CaTTExp.Lim.Defects using (Γarr; Parr; Γloop; Πcanonical)
 open import CaTTExp.Binder.LimHeadsExamples using (coneShape)
-open import CaTTExp.Lim.ConeAgree using (Dg; parse; named; cone-agrees) renaming (wf to wfD)
+open import CaTTExp.Lim.ConeAgree using (gwf; named; cone-agrees)
 
 -- The specified cone context Γ, c, coneC Γ c, at de Bruijn levels.
 specified : NCtx → Name → Maybe P.Ctx
@@ -55,8 +55,8 @@ recognised-loop = canonical-accepted
 recognised-41 : SpecCone Γ41 5 (from-just (coneC Γ41 5))
 recognised-41 = cone41
 
--- In general: every pure context that reads as a well-formed diagram of
--- dimension ≤ 2, named canonically, with apex the next name.
-agrees : ∀ Γ D → parse Γ ≡ just D → T (wfD D) →
+-- In general: every well-formed globular diagram, in every dimension,
+-- named canonically, with apex the next name.
+agrees : ∀ Γ → T (gwf Γ) →
          specified (named Γ) (P.len Γ) ≡ (lower (named Γ) >>= coneShape)
 agrees = cone-agrees

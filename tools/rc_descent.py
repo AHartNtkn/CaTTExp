@@ -103,6 +103,17 @@ def _functor(W, labs, h):
 
 # ---------------------------------------------------------------- the step
 
+def descend(G, A, t, u):
+    """The comparison with the descent as its recursion (Response 15): the
+    oracle first, then the single-piece step, whose own calls (bridges,
+    in-arity comparisons, naturality fillers) recurse here."""
+    from rc_oracle import rc
+    w = rc(G, A, t, u)
+    if w is None and tdim(A) >= 1:
+        w = piece(G, A, t, u, descend)
+    return w
+
+
 def piece(G, A, t, u, rec, choose=None):
     import rc_nat
     try:

@@ -519,6 +519,8 @@ import CaTTExp.Binder.LimRecognised
 import CaTTExp.Lim.HornGen
 import CaTTExp.Lim.HornGenExamples
 import CaTTExp.Binder.UniHornGenExamples
+import CaTTExp.Lim.ConeCells
+import CaTTExp.Lim.ConesEval
 import CaTTExp.Lim.ConeAgree
 import CaTTExp.Binder.HeadMark
 import CaTTExp.Binder.UniMark

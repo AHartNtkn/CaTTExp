@@ -4,16 +4,12 @@ from argparse import ArgumentParser
 from collections import Counter
 from itertools import product
 import json
-from math import lcm, prod
+from math import prod
 from pathlib import Path
 
 from semistrict_surface_crossing_prefixes import forced_counts, word_face
+from semistrict_surface_polygon_grades import resolution
 from semistrict_surface_positive_movies import crossings, moves, trace, windows
-
-
-def quantum(rules, reading):
-    arities = [len(rules[name][1]) for name, _ in reading if name != 'X']
-    return 2 * lcm(*arities) ** len(arities)
 
 
 def rectangle(offset, left, right):
@@ -52,9 +48,29 @@ def movie_bound(initial, source, target, rules, weights=None):
     if labels(source) != labels(target):
         return None
     if weights is None:
-        weights = (quantum(rules, source),) * len(initial)
-    first, a = cable(initial, source, rules, weights)
-    last, b = cable(initial, target, rules, weights)
+        arities = {n:(len(l),len(r)) for n,(l,r) in rules.items()}
+        resolved = resolution(initial,(source,target),arities,'X')
+        if resolved is None:
+            return None
+        input_widths,flow,graph,readings = resolved
+        weights = [2*w for w in input_widths]
+        def expand(reading):
+            widths,letters = list(weights),[]
+            for i,p in reading:
+                offset = sum(widths[:i])
+                if p is None:
+                    x,y = widths[i:i+2]
+                    letters.extend(rectangle(offset,x,y))
+                    widths[i:i+2] = y,x
+                else:
+                    _,ins,outs = graph[p]
+                    letters.append(offset)
+                    widths[i:i+len(ins)] = [2*flow[e] for e in outs]
+            return tuple(letters),tuple(widths)
+        (first,a),(last,b) = map(expand,readings)
+    else:
+        first,a = cable(initial,source,rules,weights)
+        last,b = cable(initial,target,rules,weights)
     if a != b or trace(initial, source, rules)[0] != trace(initial, target, rules)[0]:
         return None
     table = forced_counts(sum(weights), 3, word_face(first), word_face(last))
@@ -75,7 +91,7 @@ def top_count(factors):
             counts.append(factor)
         else:
             u, v = factor
-            if (not u or not v or sum(u) != sum(v) or len(set(v)) != 1
+            if (not u or not v or sum(u) != sum(v)
                     or any(w < 2 or w % 2 for w in (*u, *v))):
                 raise ValueError('bad lifted polygon')
             counts.append(1)
@@ -103,14 +119,12 @@ def checks():
 
     rules = {'P': ('a', 'aa'), 'Q': ('aa', 'a')}
     reading = (('P', 0), ('Q', 2), ('X', 1), ('P', 0))
-    weights = (quantum(rules, reading),) * 3
     # Strict interchange moves a length-changing box across another box.
     for kind, other in moves('aaa', reading, rules):
         if kind == 'exchange':
-            assert movie_bound('aaa', reading, other, rules, weights) == 0
+            assert movie_bound('aaa', reading, other, rules) == 0
             totals['expanded strict exchanges'] += 1
-    # Two primitive mixed moves in succession. Assign the quantum once at the
-    # common input; later occurrences of the same label have different widths.
+    # The incidence resolution is invariant across two successive mixed moves.
     start = (('P', 0),) + crossings((1, 0)) + (('P', 0),) + crossings((1, 0))
     first = next(other for kind, other in moves('aa', start, rules) if kind == 'right')
     last = next(other for kind, other in moves('aa', first, rules)
@@ -124,7 +138,7 @@ def checks():
     # has one active square and padded idle strands. For interval cables every
     # strand has one active edge. Product cells choose one active cell per axis.
     for length in range(1, 6):
-        for factors in product((2, 4, ((6,), (2, 2, 2)), ((2, 4), (6,))), repeat=length):
+        for factors in product((2, 4, ((6,), (2, 2, 2)), ((2, 4), (6,)), ((6,), (2,4))), repeat=length):
             choices = [range(f) if isinstance(f, int) else (0,) for f in factors]
             assert sum(1 for _ in product(*choices)) == top_count(factors)
             totals['positive tensor top chains'] += 1

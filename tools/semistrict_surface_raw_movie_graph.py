@@ -84,6 +84,12 @@ def raw_compare(model, source, first, second):
     from semistrict_surface_two_slot_polygons import compare as two_slot_compare, width_at_most_two
     if not model.attachments and any(width_at_most_two(model,source,r) for r in (u,v)):
         return two_slot_compare(model,source,first,second,u,v,False)
+    grades = {}
+    if not model.attachments:
+        from semistrict_surface_polygon_grades import bound
+        grades = bound(model,source,first,second)
+        if grades is None:
+            return dict(raw=False,raw_states=0)
     limit = max(sum(n!='swap' for n,_ in face) for face in (first,second))
     seen = {first}
     todo = deque(seen)
@@ -91,13 +97,13 @@ def raw_compare(model, source, first, second):
     while todo:
         word = todo.popleft()
         if word == second:
-            return dict(raw=True, raw_states=len(seen))
+            return dict(raw=True, raw_states=len(seen),**grades)
         histories,windows = read(model,source,word)
-        if not all(model.thin(h) for h in histories):
+        if model.attachments and not all(model.thin(h) for h in histories):
             cyclic = True
             continue
         for nxt in raw_updates(model,word,histories,windows,limit):
             if nxt not in seen:
                 seen.add(nxt)
                 todo.append(nxt)
-    return dict(raw=None if cyclic else False, raw_states=len(seen))
+    return dict(raw=None if cyclic else False, raw_states=len(seen),**grades)

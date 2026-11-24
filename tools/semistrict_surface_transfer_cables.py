@@ -10,7 +10,7 @@ from semistrict_surface_planar_cylinder import moves, parse
 from semistrict_surface_total_ports import incidence
 
 
-def cables(sides,graph,private):
+def wire_weights(sides,graph,private):
     creator,consumer = {},{}
     for p in private:
         _,ins,outs = graph[p]
@@ -28,6 +28,12 @@ def cables(sides,graph,private):
         while ahead in consumer:
             ahead = graph[consumer[ahead]][2][0]
             weight[ahead] += 1
+    return weight
+
+
+def cables(sides,graph,private):
+    weight = wire_weights(sides,graph,private)
+    creator = {e:p for p in private for e in graph[p][2]}
     units = {e:tuple((e,i) for i in range(weight[e])) for e in sides if e not in creator}
     for p in sorted(private):
         _,ins,outs = graph[p]

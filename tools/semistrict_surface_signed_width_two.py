@@ -306,6 +306,10 @@ class Movies:
             padded = padded_packets(self,source,first,second)
             if padded['surface'] is not None:
                 return dict(states=len(previous),**padded)
+            from semistrict_surface_link_schedules import decide as link_schedules
+            linked = link_schedules(self,source,first,second)
+            if linked['surface'] is not None:
+                return dict(states=len(previous),**linked)
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

@@ -8,6 +8,8 @@ The system is a type theory in the style of CaTT (Finster–Mimram). It is not b
 
 **One system, not a family of model classes.** Every development is checked by the same rules. No declaration, switch or setting lets a development choose the class of models it is about (ledger S32; the per-development switches of chapter 2, §2.3 are being removed, ledger S31).
 
+**Files carry no semantic meaning** (Anthony, 2026-11-24). A file is only a container for declarations. Nothing that affects what a statement means or whether it checks (marks, laws, defaults, scoping of assumptions) is attached to a file, so splitting, merging or reordering files never changes a judgment. Every assumption a statement depends on is in its context.
+
 **The reference model.** The model the later chapters use to explain and check rules is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it. It is a reference, not a target: the kernel's rules also have models that are not of this kind (chapter 2, §2.3: objects whose own compositions interchange directedly). Read in 𝒦:
 
 - A term of type ⋆ is an object of 𝒦, that is, an ω-category.

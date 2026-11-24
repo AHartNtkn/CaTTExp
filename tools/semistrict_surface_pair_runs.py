@@ -1,6 +1,5 @@
 """Decide arbitrary two-polygon comparisons, testing at most two directed schedules."""
 from argparse import ArgumentParser
-from itertools import combinations
 import json
 from pathlib import Path
 
@@ -14,12 +13,12 @@ def precedes(source,target):
     return quasi(prod(inv(source.after),target.before))
 
 
-def meeting_components(initial,final):
-    graph={p:set() for p in initial}
-    for p,q in combinations(graph,2):
-        if precedes(initial[p],final[q]) or precedes(initial[q],final[p]):
-            graph[p].add(q)
-            graph[q].add(p)
+def meeting_arrows(initial,final):
+    return {p:{q for q in final if p!=q and precedes(initial[p],final[q])} for p in initial}
+
+
+def meeting_components(arrows):
+    graph={p:out|{q for q in arrows if p in arrows[q]} for p,out in arrows.items()}
     parts=[]
     unseen=set(graph)
     while unseen:
@@ -34,6 +33,11 @@ def meeting_components(initial,final):
         unseen-=part
         parts.append(part)
     return parts
+
+
+def middle_polygons(arrows):
+    """A later-side meeting before an earlier-side meeting requires a transitive triangle."""
+    return {p for q,targets in arrows.items() for p in targets if targets & arrows[p]}
 
 
 def solve(calc,start,goal,initial,final,moving,radius=None):
@@ -73,6 +77,33 @@ def solve(calc,start,goal,initial,final,moving,radius=None):
                 obstruction='no oriented two-polygon schedule')
 
 
+def possible_gains(calc,movie,rng):
+    """Construct literal native gains after sampled, executable right-hand approaches."""
+    from semistrict_surface_signed_meetings import follow
+    boxes,seams=movie
+    places=calc.scan(movie)[2]
+    for k,(p,i) in enumerate(boxes):
+        h,_=places[p]
+        rule=calc.model.pres.rules[p]
+        a,b=len(rule.source),len(rule.target)
+        if i+a==len(h): continue
+        u=()
+        for _ in range(rng.randrange(3)):
+            options=[g for j in range(i+a+1,len(h)) for g in (j,-j)
+                     if calc.model.swap(h,abs(g)-1,g>0) is not None]
+            if not options: break
+            g=rng.choice(options)
+            h=follow(calc.model,h,(g,))
+            u+=(g,)
+        off=calc.model.named(h,p,i)[1]
+        for cross in calc.model.prism_words(h,p,i,off):
+            sign=1 if cross[0]>0 else -1
+            out=tuple(g+(b-a)*(1 if g>0 else -1) for g in u)
+            dual=tuple(sign*j for j in range(i+b,i,-1))
+            paths=seams[:k]+(seams[k]+u+cross,inv(dual)+inv(out)+seams[k+1])+seams[k+2:]
+            yield (boxes[:k]+((p,i+1),)+boxes[k+1:],paths),p
+
+
 def checks():
     from random import Random
     from semistrict_surface_polygon_grades import resolution
@@ -80,7 +111,7 @@ def checks():
     from semistrict_surface_raw_movie_graph import steps,raw_compare
     from semistrict_surface_phase_gains import decide as phases
     from semistrict_surface_gain_runs import decide
-    from semistrict_surface_signed_meetings import Signed,follow
+    from semistrict_surface_signed_meetings import Signed
     from semistrict_surface_order_locks import permits
     from semistrict_surface_packet_meetings import cut
     from semistrict_surface_shared_edge import braid_image
@@ -148,26 +179,7 @@ def checks():
             swapped=calc.exchange(movie,0)
             if swapped is not None:
                 opts.append((swapped,None))
-            places=calc.scan(movie)[2]
-            for k,(p,i) in enumerate(boxes):
-                h,_=places[p]
-                if i+1==len(h): continue
-                # Choose an exterior approach on the current right side.
-                u=()
-                for _ in range(rng.randrange(3)):
-                    options=[g for j in range(i+2,len(h)) for g in (j,-j)
-                             if calc.model.swap(h,abs(g)-1,g>0) is not None]
-                    if not options: break
-                    g=rng.choice(options)
-                    h=follow(calc.model,h,(g,))
-                    u+=(g,)
-                off=calc.model.named(h,p,i)[1]
-                for cross in calc.model.prism_words(h,p,i,off):
-                    sign=1 if cross[0]>0 else -1
-                    out=tuple(g+(1 if g>0 else -1) for g in u)
-                    dual=(sign*(i+2),sign*(i+1))
-                    paths=seams[:k]+(seams[k]+u+cross,inv(dual)+inv(out)+seams[k+1])+seams[k+2:]
-                    opts.append(((boxes[:k]+((p,i+1),)+boxes[k+1:],paths),p))
+            opts.extend(possible_gains(calc,movie,rng))
             if not opts: break
             movie,act=rng.choice(opts)
             if act is None: old_meets+=1

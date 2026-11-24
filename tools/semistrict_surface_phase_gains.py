@@ -159,8 +159,8 @@ def intermediate(source,v,negative):
     return Packet(prod(source.after,v,inv(prod(*atoms))),atoms)
 
 
-def decide(model,source,first,second,split_signs=False):
-    criterion='one_per_sign' if split_signs else 'one_per_polygon'
+def decide(model,source,first,second,split_signs=False,separate_runs=False,radius=None):
+    criterion='mixed_runs' if separate_runs else 'one_per_sign' if split_signs else 'one_per_polygon'
     if model.attachments:
         raise ValueError('expected a positive 3-computad')
     pos=ordinary(first),ordinary(second)
@@ -179,6 +179,10 @@ def decide(model,source,first,second,split_signs=False):
     if h!=end or total!=last:
         return no('resolved total or final names')
     desired=calc.scan(goal)[1]
+    grouped=set()
+    if separate_runs:
+        from semistrict_surface_pair_runs import meeting_arrows,middle_polygons
+        grouped=initial.keys()-middle_polygons(meeting_arrows(initial,final))
     routes={}
     forced=True
     scopes=cables(list(data[1]),data[2],data[2])
@@ -201,6 +205,9 @@ def decide(model,source,first,second,split_signs=False):
             factors=gain_factors(initial[p],final[p])
             if factors is None:
                 return no('packet meridian transport')
+            if p in grouped:
+                routes[p]=route
+                continue
             neg,pos=factors
             cohorts=[{e-1 for e in content(f)} for f in factors if f]
             if len(cohorts)==2:
@@ -230,6 +237,7 @@ def decide(model,source,first,second,split_signs=False):
     start_key=key(start,(0,)*len(moving))
     todo=deque([(start,start_key)])
     seen={start_key:None}
+    unresolved=False
     while todo:
         movie,current=todo.popleft()
         order,phases=current
@@ -252,16 +260,21 @@ def decide(model,source,first,second,split_signs=False):
                 updated=phases[:j]+(stage,)+phases[j+1:]
                 if (order,updated) not in seen:
                     prefix=desired[p][0] if stage==1 else None
-                    candidate=gain(calc,movie,k,target,prefix)
+                    if p in grouped:
+                        from semistrict_surface_gain_runs import run
+                        candidate,unknown=run(calc,movie,k,prefix,target,radius)
+                        unresolved|=unknown
+                    else:
+                        candidate=gain(calc,movie,k,target,prefix)
                     if candidate is not None:
-                        put(candidate,updated,('gain',p))
+                        put(candidate,updated,('run' if p in grouped else 'gain',p))
         for k,(p,q) in enumerate(zip(order,order[1:])):
             other=order[:k]+(q,p)+order[k+2:]
             if (other,phases) not in seen:
                 candidate=calc.exchange(movie,k)
                 if candidate is not None:
                     put(candidate,phases,('meet',p,q))
-    return {criterion:False,'surface':False if forced else None,'phase_states':len(seen),
+    return {criterion:None if unresolved else False,'surface':False if forced and not unresolved else None,'phase_states':len(seen),
             'obstruction':'no permitted gain schedule'}
 
 
@@ -457,6 +470,7 @@ if __name__=='__main__':
     parser=ArgumentParser(description=__doc__)
     parser.add_argument('--query',type=Path)
     parser.add_argument('--opposite-signs',action='store_true',help='allow one gain of each sign per polygon')
+    parser.add_argument('--separate-runs',action='store_true',help='group unrestricted gains outside transitive triangles')
     args=parser.parse_args()
     if args.query:
         q=json.loads(args.query.read_text())
@@ -465,7 +479,8 @@ if __name__=='__main__':
         model=Movies(Presentation(q['edges'],q['marks'],rules,q.get('mark_roots')),q['start'])
         source=tuple(map(tuple,q['source']))
         model.pres.walk(model.start,source,q.get('vertex'))
-        ans=decide(model,source,q['first'],q['second'],split_signs=args.opposite_signs)
+        ans=decide(model,source,q['first'],q['second'],split_signs=args.opposite_signs or args.separate_runs,
+                   separate_runs=args.separate_runs)
     else:
         ans=checks()
     print(json.dumps(ans))

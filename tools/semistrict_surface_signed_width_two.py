@@ -310,11 +310,14 @@ class Movies:
             phases = phase_gains(self,source,first,second,split_signs=True)
             if phases['surface'] is not None:
                 return dict(states=len(previous),**phases)
+            from semistrict_surface_gain_runs import decide as gain_runs
+            certified_runs = gain_runs(self,source,first,second,certified_only=True)
+            if certified_runs['surface'] is not None:
+                return dict(states=len(previous),**certified_runs)
             from semistrict_surface_link_schedules import decide as link_schedules
             linked = link_schedules(self,source,first,second)
             if linked['surface'] is not None:
                 return dict(states=len(previous),**linked)
-            from semistrict_surface_gain_runs import decide as gain_runs
             runs = gain_runs(self,source,first,second)
             if runs['surface'] is not None:
                 return dict(states=len(previous),**runs)

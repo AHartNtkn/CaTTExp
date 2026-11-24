@@ -306,6 +306,10 @@ class Movies:
             padded = padded_packets(self,source,first,second)
             if padded['surface'] is not None:
                 return dict(states=len(previous),**padded)
+            from semistrict_surface_phase_gains import decide as phase_gains
+            phases = phase_gains(self,source,first,second)
+            if phases['surface'] is not None:
+                return dict(states=len(previous),**phases)
             from semistrict_surface_link_schedules import decide as link_schedules
             linked = link_schedules(self,source,first,second)
             if linked['surface'] is not None:

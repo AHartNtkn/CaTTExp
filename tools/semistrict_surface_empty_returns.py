@@ -72,30 +72,34 @@ def return_rules(data):
     return list(rules)
 
 
-def find_return(data,allowed):
+def find_return(data,allowed,required=None):
+    """Find a positive return containing at least one of the required rules."""
     places = data['point_gates']
     def vector(port):
         c = Counter(port)
         return tuple(c[p] for p in places)
     changes = [(g,*map(vector,data['rules'][g])) for g in allowed]
     zero = (0,)*len(places)
-    parent = {zero:None}
-    pending = deque([zero])
+    start = (zero,False)
+    parent = {start:None}
+    pending = deque([start])
     while pending:
-        at = pending.popleft()
+        state = pending.popleft()
+        at,seen = state
         for name,a,b in changes:
             if any(x<y for x,y in zip(at,a)):
                 continue
             dest = tuple(x-y+z for x,y,z in zip(at,a,b))
-            if dest==zero:
+            nxt = dest,seen or required is None or name in required
+            if nxt==(zero,True):
                 path = [name]
-                while at!=zero:
-                    at,step = parent[at]
+                while state!=start:
+                    state,step = parent[state]
                     path.append(step)
                 return path[::-1]
-            if dest not in parent:
-                parent[dest] = at,name
-                pending.append(dest)
+            if nxt not in parent:
+                parent[nxt] = state,name
+                pending.append(nxt)
     raise AssertionError('a certified zero cycle must have a finite run')
 
 

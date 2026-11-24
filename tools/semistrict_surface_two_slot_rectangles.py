@@ -10,7 +10,7 @@ from semistrict_surface_signed_width_two import Movies,Presentation,Rule
 from semistrict_surface_two_slot_polygons import advance_crossing,segments,width_at_most_two
 
 
-def routes(model,source,first,second,schedule,blocks):
+def routes(model,source,first,second,schedule,blocks,sequence=None):
     keys = []
     for g,(_,_,order) in enumerate(blocks):
         if g:
@@ -28,9 +28,13 @@ def routes(model,source,first,second,schedule,blocks):
             changed = y,x
         elif kind=='prism' and direction==[1] and k[1]=='mark' and l[1]=='cross':
             by_cross[l[0],l[2]].append((1,k[2],k[3]))
+            if sequence is not None:
+                sequence.append((k[0],k[2],k[3],1))
             changed = y,(x[0],1)
         elif kind=='prism' and direction==[-1] and k[1]=='cross' and l[1]=='mark':
             by_cross[k[0],k[2]].append((-1,l[2],l[3]))
+            if sequence is not None:
+                sequence.append((l[0],l[2],l[3],-1))
             changed = (y[0],1),x
         else:
             raise ValueError('step is not a two-slot prism or disjoint commutation')
@@ -164,6 +168,8 @@ if __name__=='__main__':
         pres.walk(q['start'],source,q.get('vertex'))
         cert=compare(Movies(pres,q['start']),source,q['first'],q['second'],q['prism_faces'])
         result=dict(raw=cert is not None,rectangles=cert)
+        from semistrict_surface_transfer_order import decide
+        result['surface']=decide(model,source,q['first'],q['second'],q['prism_faces'])['surface']
     else:
         result=checks()
     print(json.dumps(result))

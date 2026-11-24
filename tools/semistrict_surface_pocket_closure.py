@@ -38,8 +38,13 @@ def enclose(data,mode):
     open_site = [(0,site)]
     begin = dict(diagram=open_site,slot=0,input=[],output=inside(expanded(charts[0],'input')))
     end = dict(diagram=open_site,slot=0,input=inside(expanded(charts[-1],'output')),output=[])
+    def shift(word):
+        return [g+(len(first) if g>0 else -len(first)) for g in word]
     middle = [dict(c,diagram=inside(c['diagram']),slot=c['slot']+len(first)) for c in charts]
-    seams = [[g+(len(first) if g>0 else -len(first)) for g in word] for word in data['seams']]
+    for c in middle:
+        if 'loop' in c:
+            c['loop'] = shift(c['loop'])
+    seams = [shift(word) for word in data['seams']]
     probes = data.get('probes',[])
     if 'placement' not in data and len(probes)>1:
         raise ValueError('select the input position with placement')

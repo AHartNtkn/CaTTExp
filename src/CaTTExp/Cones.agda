@@ -1080,61 +1080,61 @@ distCh n k m right dir a b o = ch Q B (if right then (a ∷ b ∷ o ∷ []) else
 -- These functions are top level, with the context and Y as arguments,
 -- since the coherence rule runs the construction on Q.
 
-inYG : List Nat → Nat → Bool
-inYG Y i = elem i Y
+cyIn : List Nat → Nat → Bool
+cyIn Y i = elem i Y
 
-affG : List Nat → Ex → Bool
-affG Y e = any (inYG Y) (varsE e)
+cyAff : List Nat → Ex → Bool
+cyAff Y e = any (cyIn Y) (varsE e)
 
-posG : List Nat → Nat → Nat
-posG Y zero    = 0
-posG Y (suc x) = posG Y x + (if inYG Y x then 3 else 1)
+cyPos : List Nat → Nat → Nat
+cyPos Y zero    = 0
+cyPos Y (suc x) = cyPos Y x + (if cyIn Y x then 3 else 1)
 
-miG plG uplG : List Nat → Nat → Nat
-miG Y x  = posG Y x
-plG Y x  = if inYG Y x then suc (posG Y x) else posG Y x
-uplG Y x = suc (suc (posG Y x))
+cyMi cyPl cyUp : List Nat → Nat → Nat
+cyMi Y x  = cyPos Y x
+cyPl Y x  = if cyIn Y x then suc (cyPos Y x) else cyPos Y x
+cyUp Y x = suc (suc (cyPos Y x))
 
-renmG renpG : List Nat → Ex → Ex
-renmG Y = substE (λ i → v (miG Y i))
-renpG Y = substE (λ i → v (plG Y i))
+cyRenM cyRenP : List Nat → Ex → Ex
+cyRenM Y = substE (λ i → v (cyMi Y i))
+cyRenP Y = substE (λ i → v (cyPl Y i))
 
-seqM : List (Maybe Ex) → Maybe (List Ex)
-seqM []       = just []
-seqM (m ∷ ms) = m >>= λ e → seqM ms >>= λ es → just (e ∷ es)
+cySeq : List (Maybe Ex) → Maybe (List Ex)
+cySeq []       = just []
+cySeq (m ∷ ms) = m >>= λ e → cySeq ms >>= λ es → just (e ∷ es)
 
-zipL : List Nat → List Ex → List (Nat × Ex)
-zipL (i ∷ is) (e ∷ es) = (i , e) ∷ zipL is es
-zipL _        _        = []
+cyZip : List Nat → List Ex → List (Nat × Ex)
+cyZip (i ∷ is) (e ∷ es) = (i , e) ∷ cyZip is es
+cyZip _        _        = []
 
-isNil : ∀ {a} {A : Set a} → List A → Bool
-isNil [] = true
-isNil _  = false
+cyNil : ∀ {a} {A : Set a} → List A → Bool
+cyNil [] = true
+cyNil _  = false
 
 -- The iterated boundaries of e of dimension below `top` are unaffected.
-cleanBelow : ExCtx → List Nat → Nat → Ex → Bool
-cleanBelow Γ Y top e =
-  all (λ j → not (affG Y (srcIter Γ j e)) ∧ not (affG Y (tgtIter Γ j e)))
+cyClean : ExCtx → List Nat → Nat → Ex → Bool
+cyClean Γ Y top e =
+  all (λ j → not (cyAff Y (srcIter Γ j e)) ∧ not (cyAff Y (tgtIter Γ j e)))
       (rangeFrom (suc (dimE (tyE Γ e) ∸ top)) top)
 
 mutual
-  liftG : Nat → ExCtx → List Nat → Ex → Maybe Ex
-  liftG zero     Γ Y e           = nothing
-  liftG (suc fl) Γ Y (v i)       = if inYG Y i then just (v (uplG Y i)) else nothing
-  liftG (suc fl) Γ Y (ch Q B ms) = cohLift fl Γ Y Q (ch Q B (map v (maxPos Q))) ms
-  liftG (suc fl) Γ Y (bn k u w)  = binLift fl Γ Y k u w
-  liftG (suc fl) Γ Y _           = nothing
+  cyLift : Nat → ExCtx → List Nat → Ex → Maybe Ex
+  cyLift zero     Γ Y e           = nothing
+  cyLift (suc fl) Γ Y (v i)       = if cyIn Y i then just (v (cyUp Y i)) else nothing
+  cyLift (suc fl) Γ Y (ch Q B ms) = cyCoh fl Γ Y Q (ch Q B (map v (maxPos Q))) ms
+  cyLift (suc fl) Γ Y (bn k u w)  = cyBin fl Γ Y k u w
+  cyLift (suc fl) Γ Y _           = nothing
 
-  binLift : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
-  binLift fl Γ Y k u w =
+  cyBin : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
+  cyBin fl Γ Y k u w =
     if not (au ∨ aw) then nothing
-    else if (suc k ==ℕ n) ∧ (du ==ℕ n) ∧ (dW ==ℕ n) then pasteLift fl Γ Y n u w
-    else if au ∧ not aw ∧ (du ==ℕ n) then whiskLift fl Γ Y k true u w
-    else if aw ∧ not au ∧ (dW ==ℕ n) then whiskLift fl Γ Y k false w u
-    else cohLift fl Γ Y Q (bn k (v (du + du)) (v (length Q ∸ 1))) (u ∷ w ∷ [])
+    else if (suc k ==ℕ n) ∧ (du ==ℕ n) ∧ (dW ==ℕ n) then cyPaste fl Γ Y n u w
+    else if au ∧ not aw ∧ (du ==ℕ n) then cyWhisk fl Γ Y k true u w
+    else if aw ∧ not au ∧ (dW ==ℕ n) then cyWhisk fl Γ Y k false w u
+    else cyCoh fl Γ Y Q (bn k (v (du + du)) (v (length Q ∸ 1))) (u ∷ w ∷ [])
     where
-    au = affG Y u
-    aw = affG Y w
+    au = cyAff Y u
+    aw = cyAff Y w
     du = dimE (tyE Γ u)
     dW = dimE (tyE Γ w)
     n  = max du dW
@@ -1143,8 +1143,8 @@ mutual
   -- (u ∗_{n−1} w)↑ : (u⁻ ∗ w⁻) ∗ L(τw) → L(σu) ∗ (u⁺ ∗ w⁺), as
   --   asL(u⁻, w⁻, Lτw) ∗ₙ (u⁻ ∗ w↑) ∗ₙ asR(u⁻, Lσw, w⁺) ∗ₙ (u↑ ∗ w⁺) ∗ₙ asL(Lσu, u⁺, w⁺)
   -- with the factors whose lift is absent (unaffected) left out.
-  pasteLift : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
-  pasteLift fl Γ Y n u w =
+  cyPaste : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
+  cyPaste fl Γ Y n u w =
     if not low then nothing else
     (optL u >>= λ U↑ → optL w >>= λ W↑ → optL (tgtΓ w) >>= λ Lτw →
      optL (srcΓ w) >>= λ Lσw → optL (srcΓ u) >>= λ Lσu →
@@ -1155,21 +1155,21 @@ mutual
           ∷ step Lσu (λ L → asCh n true L u⁺ w⁺) ∷ []))
     where
     k = n ∸ 1
-    u⁻ = renmG Y u
-    w⁻ = renmG Y w
-    u⁺ = renpG Y u
-    w⁺ = renpG Y w
+    u⁻ = cyRenM Y u
+    w⁻ = cyRenM Y w
+    u⁺ = cyRenP Y u
+    w⁺ = cyRenP Y w
     srcΓ tgtΓ : Ex → Ex
     srcΓ e = srcE (tyE Γ e)
     tgtΓ e = tgtE (tyE Γ e)
     -- each factor's boundaries below n−1 are unaffected, and an
     -- affected (n−1)-boundary only occurs on an affected factor
     lowOK : Ex → Bool
-    lowOK e = cleanBelow Γ Y (n ∸ 1) e
-              ∧ (affG Y e ∨ (not (affG Y (srcΓ e)) ∧ not (affG Y (tgtΓ e))))
+    lowOK e = cyClean Γ Y (n ∸ 1) e
+              ∧ (cyAff Y e ∨ (not (cyAff Y (srcΓ e)) ∧ not (cyAff Y (tgtΓ e))))
     low = lowOK u ∧ lowOK w
     optL : Ex → Maybe (Maybe Ex)
-    optL e = if affG Y e then (liftG fl Γ Y e >>= λ e' → just (just e')) else just nothing
+    optL e = if cyAff Y e then (cyLift fl Γ Y e >>= λ e' → just (just e')) else just nothing
     step : Maybe Ex → (Ex → Ex) → Maybe Ex
     step nothing  f = nothing
     step (just e) f = just (f e)
@@ -1187,24 +1187,24 @@ mutual
   -- conjugated by the distributivity of whiskering over ∗_{n−1}:
   --   (a⁻ ∗_k o) ∗ (Lτa ∗_k o) → (a⁻ ∗ Lτa) ∗_k o → (Lσa ∗ a⁺) ∗_k o
   --     → (Lσa ∗_k o) ∗ (a⁺ ∗_k o).
-  whiskLift : Nat → ExCtx → List Nat → Nat → Bool → Ex → Ex → Maybe Ex
-  whiskLift fl Γ Y k right a o =
-    if cleanBelow Γ Y n a then
-      (liftG fl Γ Y a >>= λ a' → just (wh a' o⁻))
-    else if cleanBelow Γ Y (n ∸ 1) a ∧ (m <ℕ n) then
-      (liftG fl Γ Y a >>= λ A↑ → optL (tgtE (tyE Γ a)) >>= λ Lτ → optL (srcE (tyE Γ a)) >>= λ Lσ →
-       chain (step Lτ (λ L → distCh n k m right false (renmG Y a) L o⁻)
+  cyWhisk : Nat → ExCtx → List Nat → Nat → Bool → Ex → Ex → Maybe Ex
+  cyWhisk fl Γ Y k right a o =
+    if cyClean Γ Y n a then
+      (cyLift fl Γ Y a >>= λ a' → just (wh a' o⁻))
+    else if cyClean Γ Y (n ∸ 1) a ∧ (m <ℕ n) then
+      (cyLift fl Γ Y a >>= λ A↑ → optL (tgtE (tyE Γ a)) >>= λ Lτ → optL (srcE (tyE Γ a)) >>= λ Lσ →
+       chain (step Lτ (λ L → distCh n k m right false (cyRenM Y a) L o⁻)
             ∷ just (wh A↑ o⁻)
-            ∷ step Lσ (λ L → distCh n k m right true L (renpG Y a) o⁻) ∷ []))
+            ∷ step Lσ (λ L → distCh n k m right true L (cyRenP Y a) o⁻) ∷ []))
     else nothing
     where
     n = dimE (tyE Γ a)
     m = dimE (tyE Γ o)
-    o⁻ = renmG Y o
+    o⁻ = cyRenM Y o
     wh : Ex → Ex → Ex
     wh x y = if right then bn k x y else bn k y x
     optL : Ex → Maybe (Maybe Ex)
-    optL e = if affG Y e then (liftG fl Γ Y e >>= λ e' → just (just e')) else just nothing
+    optL e = if cyAff Y e then (cyLift fl Γ Y e >>= λ e' → just (just e')) else just nothing
     step : Maybe Ex → (Ex → Ex) → Maybe Ex
     step nothing  f = nothing
     step (just e) f = just (f e)
@@ -1217,25 +1217,25 @@ mutual
 
   -- The lift of c₀[σ], for c₀ a coherence or composite over the pasting
   -- context Q whose maximal variables have the images ms.
-  cohLift : Nat → ExCtx → List Nat → ExCtx → Ex → List Ex → Maybe Ex
-  cohLift fl Γ Y Q c₀ ms =
+  cyCoh : Nat → ExCtx → List Nat → ExCtx → Ex → List Ex → Maybe Ex
+  cyCoh fl Γ Y Q c₀ ms =
     if not ok then nothing else
-    (cylG fl Q Y' >>= λ Q' →
-     sideA fl Q Y' c₀ m >>= λ a → sideB fl Q Y' c₀ m >>= λ b →
-     seqM (map arg prs) >>= λ ms' →
+    (cyCtx fl Q Y' >>= λ Q' →
+     cySideA fl Q Y' c₀ m >>= λ a → cySideB fl Q Y' c₀ m >>= λ b →
+     cySeq (map arg prs) >>= λ ms' →
      just (ch Q' (hom (tyE Q' a) a b) ms'))
     where
-    prs = zipL (maxPos Q) ms
-    Y' = map fst (filter (λ p → affG Y (snd p)) prs)
-    ok = not (isNil Y') ∧ (length ms ==ℕ length (maxPos Q))
-         ∧ all (λ e → not (affG Y e) ∨ cleanBelow Γ Y (dimE (tyE Γ e)) e) ms
+    prs = cyZip (maxPos Q) ms
+    Y' = map fst (filter (λ p → cyAff Y (snd p)) prs)
+    ok = not (cyNil Y') ∧ (length ms ==ℕ length (maxPos Q))
+         ∧ all (λ e → not (cyAff Y e) ∨ cyClean Γ Y (dimE (tyE Γ e)) e) ms
     m = dimE (tyE Q c₀)
     arg : Nat × Ex → Maybe Ex
-    arg (i , e) = if affG Y e then liftG fl Γ Y e else just (renmG Y e)
+    arg (i , e) = if cyAff Y e then cyLift fl Γ Y e else just (cyRenM Y e)
 
   -- a_e and b_e for a term e of dimension m ≥ 1.
-  sideA sideB : Nat → ExCtx → List Nat → Ex → Nat → Maybe Ex
-  sideA fl Γ Y e m = go m 0 (just (renmG Y e))
+  cySideA cySideB : Nat → ExCtx → List Nat → Ex → Nat → Maybe Ex
+  cySideA fl Γ Y e m = go m 0 (just (cyRenM Y e))
     where
     go : Nat → Nat → Maybe Ex → Maybe Ex
     go zero    j acc = acc
@@ -1243,10 +1243,10 @@ mutual
       if m ≤ℕ j then acc
       else go g (suc j)
         (acc >>= λ a →
-          if affG Y (tgtIter Γ (m ∸ j) e)
-          then (liftG fl Γ Y (tgtIter Γ (m ∸ j) e) >>= λ w' → just (bn j a w'))
+          if cyAff Y (tgtIter Γ (m ∸ j) e)
+          then (cyLift fl Γ Y (tgtIter Γ (m ∸ j) e) >>= λ w' → just (bn j a w'))
           else just a)
-  sideB fl Γ Y e m = go m 0 (just (renpG Y e))
+  cySideB fl Γ Y e m = go m 0 (just (cyRenP Y e))
     where
     go : Nat → Nat → Maybe Ex → Maybe Ex
     go zero    j acc = acc
@@ -1254,23 +1254,23 @@ mutual
       if m ≤ℕ j then acc
       else go g (suc j)
         (acc >>= λ b →
-          if affG Y (srcIter Γ (m ∸ j) e)
-          then (liftG fl Γ Y (srcIter Γ (m ∸ j) e) >>= λ w' → just (bn j w' b))
+          if cyAff Y (srcIter Γ (m ∸ j) e)
+          then (cyLift fl Γ Y (srcIter Γ (m ∸ j) e) >>= λ w' → just (bn j w' b))
           else just b)
 
-  cylG : Nat → ExCtx → List Nat → Maybe ExCtx
-  cylG fl Γ Y = walk 0 [] Γ
+  cyCtx : Nat → ExCtx → List Nat → Maybe ExCtx
+  cyCtx fl Γ Y = walk 0 [] Γ
     where
     step : Nat → ExTy → ExCtx → Maybe ExCtx
     step x A K =
-      if inYG Y x then
+      if cyIn Y x then
         (if dimE A ==ℕ 0
-         then just (K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A
-                         ∷ hom ob (v (miG Y x)) (v (plG Y x)) ∷ []))
-         else (sideA fl Γ Y (v x) (dimE A) >>= λ a → sideB fl Γ Y (v x) (dimE A) >>= λ b →
-               just ((K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A ∷ []))
-                     ++ (hom (tyE (K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A ∷ [])) a) a b ∷ []))))
-      else just (K ++ (substTyE (λ i → v (miG Y i)) A ∷ []))
+         then just (K ++ (substTyE (λ i → v (cyMi Y i)) A ∷ substTyE (λ i → v (cyPl Y i)) A
+                         ∷ hom ob (v (cyMi Y x)) (v (cyPl Y x)) ∷ []))
+         else (cySideA fl Γ Y (v x) (dimE A) >>= λ a → cySideB fl Γ Y (v x) (dimE A) >>= λ b →
+               just ((K ++ (substTyE (λ i → v (cyMi Y i)) A ∷ substTyE (λ i → v (cyPl Y i)) A ∷ []))
+                     ++ (hom (tyE (K ++ (substTyE (λ i → v (cyMi Y i)) A ∷ substTyE (λ i → v (cyPl Y i)) A ∷ [])) a) a b ∷ []))))
+      else just (K ++ (substTyE (λ i → v (cyMi Y i)) A ∷ []))
     walk : Nat → ExCtx → ExCtx → Maybe ExCtx
     walk x K []       = just K
     walk x K (A ∷ As) = step x A K >>= λ K' → walk (suc x) K' As
@@ -1286,33 +1286,33 @@ record Cyl : Set where
 
 module CylOf (Γ : ExCtx) (Y : List Nat) where
   inY : Nat → Bool
-  inY = inYG Y
+  inY = cyIn Y
 
   affected : Ex → Bool
-  affected = affG Y
+  affected = cyAff Y
 
   pos mi pl upl : Nat → Nat
-  pos = posG Y
-  mi  = miG Y
-  pl  = plG Y
-  upl = uplG Y
+  pos = cyPos Y
+  mi  = cyMi Y
+  pl  = cyPl Y
+  upl = cyUp Y
 
   ren⁻ ren⁺ : Ex → Ex
-  ren⁻ = renmG Y
-  ren⁺ = renpG Y
+  ren⁻ = cyRenM Y
+  ren⁺ = cyRenP Y
 
   liftF : Nat → Ex → Maybe Ex
-  liftF fl = liftG fl Γ Y
+  liftF fl = cyLift fl Γ Y
 
   lift : Ex → Maybe Ex
-  lift = liftG (fuelOf Γ) Γ Y
+  lift = cyLift (fuelOf Γ) Γ Y
 
   aSide bSide : Nat → Nat → Maybe Ex
-  aSide x m = sideA (fuelOf Γ) Γ Y (v x) m
-  bSide x m = sideB (fuelOf Γ) Γ Y (v x) m
+  aSide x m = cySideA (fuelOf Γ) Γ Y (v x) m
+  bSide x m = cySideB (fuelOf Γ) Γ Y (v x) m
 
   cyl : Maybe Cyl
-  cyl = cylG (fuelOf Γ) Γ Y >>= λ K →
+  cyl = cyCtx (fuelOf Γ) Γ Y >>= λ K →
         just (mkCyl K mi pl upl (map upl (filter inY (range (length Γ)))))
 
 ------------------------------------------------------------------------
@@ -1440,38 +1440,38 @@ oddJ (suc (suc n)) = oddJ n
 -- Q's with the children reversed at the even depths (the cells of odd
 -- dimension are reversed). dyckDual lists Q's variables in the dual's
 -- Dyck order; the coherence is rewritten over the reordered context.
-data LT : Set where
-  lt : List (Nat × Nat × LT) → LT
+data DTree : Set where
+  dnode : List (Nat × Nat × DTree) → DTree
 
 -- Q's variables by tree position: each child is (target, cell, inside).
-labT : List Tree → Nat → List (Nat × Nat × LT) × Nat
-labT []             n = [] , n
-labT (node cs ∷ ts) n =
-  let r  = labT cs (suc (suc n))
-      r' = labT ts (snd r)
-  in ((n , suc n , lt (fst r)) ∷ fst r') , snd r'
+dLab : List Tree → Nat → List (Nat × Nat × DTree) × Nat
+dLab []             n = [] , n
+dLab (node cs ∷ ts) n =
+  let r  = dLab cs (suc (suc n))
+      r' = dLab ts (snd r)
+  in ((n , suc n , dnode (fst r)) ∷ fst r') , snd r'
 
-flipGo : Nat → List (Nat × Nat × LT) → List (Nat × Nat × LT) → Nat × List (Nat × Nat × LT)
-flipGo prev []                acc = prev , acc
-flipGo prev ((y , f , t) ∷ cs) acc = flipGo y cs ((prev , f , t) ∷ acc)
+dFlip : Nat → List (Nat × Nat × DTree) → List (Nat × Nat × DTree) → Nat × List (Nat × Nat × DTree)
+dFlip prev []                acc = prev , acc
+dFlip prev ((y , f , t) ∷ cs) acc = dFlip y cs ((prev , f , t) ∷ acc)
 
 mutual
   -- The children of one level (reversed when b), with source s.
-  dualS : Bool → Nat → List (Nat × Nat × LT) → Nat × List (Nat × Nat × LT)
-  dualS b s cs = if b then flipGo s (dualC b cs) [] else (s , dualC b cs)
+  dLevel : Bool → Nat → List (Nat × Nat × DTree) → Nat × List (Nat × Nat × DTree)
+  dLevel b s cs = if b then dFlip s (dKids b cs) [] else (s , dKids b cs)
 
-  dualC : Bool → List (Nat × Nat × LT) → List (Nat × Nat × LT)
-  dualC b []                     = []
-  dualC b ((y , f , lt sub) ∷ r) =
-    (y , fst (dualS (not b) f sub) , lt (snd (dualS (not b) f sub))) ∷ dualC b r
+  dKids : Bool → List (Nat × Nat × DTree) → List (Nat × Nat × DTree)
+  dKids b []                     = []
+  dKids b ((y , f , dnode sub) ∷ r) =
+    (y , fst (dLevel (not b) f sub) , dnode (snd (dLevel (not b) f sub))) ∷ dKids b r
 
-flatT : List (Nat × Nat × LT) → List Nat
-flatT []                     = []
-flatT ((y , f , lt sub) ∷ r) = y ∷ f ∷ (flatT sub ++ flatT r)
+dFlat : List (Nat × Nat × DTree) → List Nat
+dFlat []                     = []
+dFlat ((y , f , dnode sub) ∷ r) = y ∷ f ∷ (dFlat sub ++ dFlat r)
 
 dyckDual : Tree → List Nat
-dyckDual (node ts) = fst d ∷ flatT (snd d)
-  where d = dualS true 0 (fst (labT ts 1))
+dyckDual (node ts) = fst d ∷ dFlat (snd d)
+  where d = dLevel true 0 (fst (dLab ts 1))
 
 -- dQ, dB, dms: the duals of Q's types, of B and of ms, in Q's order.
 dualCh : ExCtx → ExCtx → ExTy → List Ex → Ex

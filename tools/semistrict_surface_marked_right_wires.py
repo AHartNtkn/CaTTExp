@@ -79,7 +79,7 @@ def schedule(graph,starts,ends,u,v,placements,drops):
     return replay
 
 
-def solve(source,right,traces,anchored,unary):
+def solve(source,right,traces,anchored,unary,assignment=None):
     ids = {}
     markers = [defaultdict(list),defaultdict(list)]
     a,b = [incidence(source,right,trace,ids,unary,place) for trace,place in zip(traces,markers)]
@@ -92,14 +92,18 @@ def solve(source,right,traces,anchored,unary):
     steps = compare_incidence(a,b,anchored)
     if steps is None:
         return None
+    if assignment is not None and len(assignment)!=len(steps):
+        raise ValueError('expected one phase for each forced left prism')
     current = initial
     right_moves = 0
     placement = []
     drops = defaultdict(list)
-    for p,f in steps:
+    for k,(p,f) in enumerate(steps):
         _,ins,outs = a[2][p]
         incoming = [current[f].pop(e) for e in ins]
-        phase = min(incoming)
+        phase = min(incoming) if assignment is None else assignment[k]
+        if not isinstance(phase,int) or not 0<=phase<=min(incoming):
+            return None
         placement.append((p,f,phase))
         for e,value in zip(ins,incoming):
             drops[e].extend((f,j) for j in reversed(range(phase,value)))
@@ -117,6 +121,15 @@ def solve(source,right,traces,anchored,unary):
     return dict(left_prisms=len(steps), right_prisms=right_moves, phases=placement, schedule=replay)
 
 
+def degree_five(source,right,traces,anchored,unary,faces):
+    if len(faces)!=2 or any(solve(source,right,traces,anchored,unary,x) is None for x in faces):
+        raise ValueError('expected two feasible prism assignments at the specified old endpoints')
+    a,b = faces
+    if any(i>j for i,j in zip(a,b)):
+        return None
+    return sum(j-i for i,j in zip(a,b))
+
+
 def private_right(rules,right,anchored):
     result = set()
     for name,l,r in rules:
@@ -125,6 +138,75 @@ def private_right(rules,right,anchored):
                 raise ValueError('private right rules must be unary')
             result.add(name)
     return result
+
+
+def rectangle_checks():
+    # The observer crosses a split and then a join, while two distinct
+    # occurrences of its unary change advance independently when separated.
+    words = [('a',),('x','y'),('d',)]
+    paths = {}
+    todo = [(0,(0,0),(),())]
+    while todo:
+        stage,h,path,assignment = todo.pop()
+        if stage==2 and h==(1,1):
+            paths[path] = assignment
+            continue
+        w = words[stage]
+        for j,i in enumerate(h):
+            if i<len(w) and (j==1 or i<h[1]):
+                nxt = h[:j]+(i+1,)+h[j+1:]
+                todo.append((stage,nxt,path+(('q',j,w[i]),),assignment))
+        if stage<2 and all(i in (0,len(w)) for i in h):
+            nxt = tuple(0 if i==0 else len(words[stage+1]) for i in h)
+            todo.append((stage+1,nxt,path+(('p',stage),),assignment+(h.count(0),)))
+    edges = defaultdict(set)
+    for path in paths:
+        for k,op in enumerate(path[:-1]):
+            a,b = path[k:k+2]
+            if a[0]==b[0]=='q' and a[1]!=b[1] and a[2]!=b[2]:
+                nxt = path[:k]+(b,a)+path[k+2:]
+                assert nxt in paths
+                edges[path].add(nxt)
+            if op[0]=='q':
+                for stage in (0,1):
+                    neg = tuple(('q',op[1],e) for e in words[stage])+(('p',stage),)
+                    pos = (('p',stage),)+tuple(('q',op[1],e) for e in words[stage+1])
+                    if path[k:k+len(neg)]==neg:
+                        nxt = path[:k]+pos+path[k+len(neg):]
+                        assert nxt in paths
+                        edges[path].add(nxt)
+    rules = [(n,tuple(l),tuple(r)) for n,l,r in
+             [('born','x','Ba'),('p','a','xy'),('r','xy','d'),('q','B','B')]]
+    source,right = ('x',),{'B'}
+    first = [('born',0),('q',0),('q',0),('swap',0),('p',0),('r',0)]
+    second = [('born',0),('p',1),('r',1),('swap',0),('q',1),('q',1)]
+    traces = [parse(source,rules,right,w)[1] for w in (first,second)]
+    accepted = 0
+    for path in paths:
+        seen = {path}
+        todo = [path]
+        while todo:
+            for nxt in edges[todo.pop()]-seen:
+                seen.add(nxt)
+                todo.append(nxt)
+        for other in paths:
+            dist = degree_five(source,right,traces,set(),{'q'},(paths[path],paths[other]))
+            assert (dist is not None)==(other in seen)
+            accepted += dist is not None
+    rules[0] = ('born',('x',),tuple('BBa'))
+    first = [('born',0),('q',0),('q',1),('swap',1),('swap',0),('p',0),('r',0)]
+    second = [('born',0),('p',2),('r',2),('swap',1),('swap',0),('q',1),('q',2)]
+    traces = [parse(source,rules,right,w)[1] for w in (first,second)]
+    phase_rows = [(p,s,r,t) for (p,r),(s,t) in product(((0,0),(1,0),(1,1)),repeat=2)]
+    positives = 0
+    for a,b in product(phase_rows,repeat=2):
+        dist = degree_five(source,right,traces,set(),{'q'},(a,b))
+        expect = all(i<=j for i,j in zip(a,b))
+        assert (dist is not None)==expect
+        positives += expect
+    return dict(five_readings=len(paths),five_assignments=len(set(paths.values())),
+                five_queries=len(paths)**2,five_positive=accepted,two_observer_queries=len(phase_rows)**2,
+                two_observer_positive=positives)
 
 
 def checks():
@@ -187,7 +269,7 @@ def checks():
     traces = [parse(source,rules,right,w)[1] for w in (first,second)]
     assert solve(source,right,traces,set(),{'q'}) is None
     return dict(comparisons=comparisons,positive=positive,total_certificate_prisms=prism_uses,
-                blocked_interior_marker=True)
+                blocked_interior_marker=True, **rectangle_checks())
 
 
 if __name__=='__main__':
@@ -205,8 +287,12 @@ if __name__=='__main__':
         (a,x),(b,y) = [parse(source,rules,right,q[k]) for k in ('first','second')]
         if a!=b:
             raise ValueError('expected parallel readings')
-        cert = solve(source,right,(x,y),anchored,unary)
-        result = dict(raw=cert is not None,surface=cert is not None,certificate=cert)
+        if 'prism_faces' in q:
+            dist = degree_five(source,right,(x,y),anchored,unary,q['prism_faces'])
+            result = dict(raw=dist is not None,surface=dist is not None,rectangles=dist)
+        else:
+            cert = solve(source,right,(x,y),anchored,unary)
+            result = dict(raw=cert is not None,surface=cert is not None,certificate=cert)
     else:
         result = checks()
     print(json.dumps(result))

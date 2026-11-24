@@ -59,7 +59,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 3.7 The form of the marks, and saturation (added 2026-11-22, S17)
 - [ ] Q3.1 (surface question): Where marks are written.
 - [ ] Q3.2 (surface question): Whether `ps` and `ps*` are both visible.
-- [ ] Q3.3 (surface question): How `ord` is scoped.
+- [ ] Q3.3 (surface question): How object marks are supplied.
 
 ## Chapter 4. Context checking
 

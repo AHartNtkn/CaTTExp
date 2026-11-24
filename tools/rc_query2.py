@@ -3,7 +3,7 @@ Horiz3 query (2), the coherence-only cap-block comparison (notes/rc-generator.md
 as a reproducible instance for the descent (tools/rc_descent.py).
 
   python3 tools/rc_query2.py            # pieces of Sd(c) holding both inputs, and the in-arity comparison
-  python3 tools/rc_query2.py full       # also run rc_descent.piece (expected: does not finish yet)
+  python3 tools/rc_query2.py full       # also run rc_descent.piece, recursing by rc_descent.descend (expected: NoFiller, rc-generator.md §7)
 
 Reports: the number of factors of each input along the top cut, the elements
 of Sd(c) whose piece holds both inputs, and the time of the comparison of
@@ -62,8 +62,8 @@ def main(full=False):
             timing['W'] = (len(H), w is not None, time.time() - t0)
             if not full:
                 raise Stop
-            return w
-        return rc(H, B, a, b)
+            return w if w is not None else D.descend(H, B, a, b)
+        return D.descend(H, B, a, b)
     t0 = time.time()
     try:
         w = D._piece(G, A, t, u, rec)

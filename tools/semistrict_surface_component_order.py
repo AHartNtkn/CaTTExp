@@ -103,18 +103,23 @@ def attainable(group, gens, defects, target):
         return dict(info, accepted=True)
     if target[0] not in indices or not edges:
         return dict(info, accepted=False)
-    end = indices[target[0]]
+    accepted = weighted_walk(len(states),edges,indices[target[0]],target[1])
+    return dict(info, accepted=accepted)
+
+
+def weighted_walk(count_states, edges, end, target):
+    """An Euler trail from state zero with prescribed total integer weight."""
     lines = ['(set-logic QF_LIA)']
     def integer(name):
         lines.append(f'(declare-const {name} Int)')
         return name
     def require(condition):
         lines.append(f'(assert {condition})')
-    ranks = [integer(f'h{i}') for i in range(len(states))]
+    ranks = [integer(f'h{i}') for i in range(count_states)]
     require(f'(= {ranks[0]} 0)')
     parents, used = defaultdict(list), defaultdict(set)
     incoming, outgoing = defaultdict(list), defaultdict(list)
-    coords = [[] for _ in target[1]]
+    coords = [[] for _ in target]
     def accumulate(w,var):
         for col,k in zip(coords,w):
             if k:
@@ -134,17 +139,17 @@ def attainable(group, gens, defects, target):
             var = integer(f'z{i}_{j}')
             require(f'(=> (= {count} 0) (= {var} 0))')
             accumulate(w,var)
-    for i in range(len(states)):
+    for i in range(count_states):
         require(f'(= (- {sum_terms(outgoing[i])} {sum_terms(incoming[i])}) {int(i==0)-int(i==end)})')
         if i:
             parent = '(or '+' '.join(parents[i])+')' if parents[i] else 'false'
             require(f'(=> (> {sum_terms(sorted(used[i]))} 0) {parent})')
-    for terms,k in zip(coords,target[1]):
+    for terms,k in zip(coords,target):
         require(f'(= {sum_terms(terms)} {k})')
     answer = smt_check('\n'.join(lines+['(check-sat)']))
     if answer not in ('sat','unsat'):
         raise RuntimeError(f'integer feasibility did not decide the order: {answer}')
-    return dict(info, accepted=answer=='sat')
+    return answer=='sat'
 
 
 def solve(data):

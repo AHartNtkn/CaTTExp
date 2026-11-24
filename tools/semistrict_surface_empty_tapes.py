@@ -3,7 +3,9 @@
 Input JSON: states, instructions ([state,read,target,write,L-or-R]), start,
 scanned, and optional left/right symbol lists over a and _. A missing
 instruction halts. With --steps N also replay up to N rewrites; exhausting
-that bound does not decide nontermination.
+that bound does not decide nontermination. With --link, the clean tape releases
+two identical point gates. Optional pairs and plat_braid in the input place a
+signed braid between all releases and the pair closures.
 """
 from argparse import ArgumentParser
 import json
@@ -45,13 +47,18 @@ def explore(initial,table,limit):
     return steps,word
 
 
-def replay(initial,steps,copies,twist):
+LINK_GATES = ('ring-gate',)*2
+
+
+def replay(initial,steps,copies,twist,link=False,plat_braid=()):
     # Each tape is read bottom-to-top in a separate block. Addresses
     # survive a signed exchange of complete blocks and every untouched seam.
     ports = {}
     live = [[] for _ in range(copies)]
     charts,seams = [],[]
     def boundary(symbol):
+        if symbol in LINK_GATES:
+            return '',''
         return ('','a') if symbol==BIRTH else ('a','') if symbol==DEATH else ('a','a')
     def change(owner,offset,old,new,ends):
         i = len(charts)
@@ -86,7 +93,18 @@ def replay(initial,steps,copies,twist):
     for owner in range(copies):
         for i,a,b in steps:
             change(owner,i,a,b,(boundary(a[0])[0],boundary(a[-1])[1]))
-        change(owner,0,(BIRTH,CLEAN,DEATH),(),('',''))
+        change(owner,0,(BIRTH,CLEAN,DEATH),LINK_GATES if link else (),('',''))
+    if link:
+        from semistrict_surface_plat_probes import presentation
+        presentation(copies,plat_braid)
+        flat = tuple((0,g) for block in live for g,_ in block)
+        order = follow(flat,plat_braid,ports)
+        for i in range(copies):
+            live[i] = [(g,LINK_GATES[0]) for _,g in order[2*i:2*i+2]]
+        gap = len(charts)-1
+        for owner in range(copies):
+            change(owner,0,LINK_GATES,(),('',''))
+        seams[gap] = list(plat_braid)
     if twist:
         seams[copies-1] = word
     d = dict(vertex='x',path='',edges={'a':['x','x']},gates={g:['x',s,t] for g,(s,t) in ports.items()},
@@ -95,15 +113,19 @@ def replay(initial,steps,copies,twist):
     return d
 
 
-def run(data,limit=None):
+def run(data,limit=None,link=False):
     initial,table = compile_tape(data)
-    result = dict(opening=[[],initial],updates=table,closing=[(BIRTH,CLEAN,DEATH),[]])
+    result = dict(opening=[[],initial],updates=table,closing=[(BIRTH,CLEAN,DEATH),LINK_GATES if link else []])
+    if link:
+        result['ring_closing'] = [LINK_GATES,[]]
     if limit is not None:
         steps,last = explore(initial,table,limit)
         result['last_tape'] = last
         result['accepting_program_found'] = last==(BIRTH,CLEAN,DEATH)
         if result['accepting_program_found']:
-            result['movie'] = replay(initial,steps,1,())
+            copies = data.get('pairs',1) if link else 1
+            braid = data.get('plat_braid',()) if link else ()
+            result['movie'] = replay(initial,steps,copies,(),link,braid)
     return result
 
 
@@ -138,10 +160,36 @@ def typed(directory):
         emitter.check_type('readBothOpenings',target,seen,subst_ty(end,images))
         (directory/'EmptyTapeReturn.agda').write_text(emitter.module('EmptyTapeReturn',__doc__.splitlines()[0]))
 
+    # Same prepared tape and update, but release the two cap occurrences.
+    ctx = ctx[:8]+(infer(ctx,e),)
+    pair = comp2(ctx,1,v(8),v(8))
+    ctx += (ty(tape(v(5)),pair),ty(pair,e))
+    check_ctx(ctx)
+    birth = comp2(ctx,2,comp2(ctx,2,v(6),tape(v(7))),v(9))
+    closed = comp2(ctx,2,birth,v(10))
+    assert infer(ctx,birth)==ty(e,pair) and infer(ctx,closed)==end
+    # Flatten the wired part, retaining the actual release and pair closure
+    # at the images of their written ports (including the old tape fits).
+    target,images = scalar_images(ctx[:8],[])
+    for i in range(8,11):
+        decl = subst_ty(ctx[i],images)
+        target += (decl,)
+        images.append(v(len(target)-1))
+    check_ctx(target)
+    projected = subst_tm(closed,images)
+    assert infer(target,projected)==subst_ty(end,images)
+    if directory:
+        emitter = Emitter()
+        emitter.check_type('acceptingTapeAsPairBirth',ctx,birth,ty(e,pair))
+        emitter.check_type('closedWiredPair',ctx,closed,end)
+        emitter.check_type('retainBothCapRules',target,projected,subst_ty(end,images))
+        (directory/'LinkedTapeReturn.agda').write_text(emitter.module('LinkedTapeReturn',__doc__.splitlines()[0]))
+
 
 def audit():
     from semistrict_surface_configuration_braids import check_transitions
     from semistrict_surface_spherical_relations import analyze as spheres
+    from semistrict_surface_plat_probes import decide
 
     check_transitions()
     data = dict(states=['s','t','h'],start='s',scanned='_',instructions=[
@@ -153,20 +201,30 @@ def audit():
         movie = replay(initial,steps,copies,twist)
         r = spheres(movie)
         assert r['betti']==[1,0,copies] and r['sphere_orbits']==copies
+        linked = spheres(replay(initial,steps,copies,twist,True))
+        assert linked['betti']==[1,copies,copies]
+    for braid,components,fills in [([2],1,True),([2,2],2,True),([2,2,2],1,False),([-2]*3,1,False)]:
+        movie = run(dict(data,pairs=2,plat_braid=braid),20,True)['movie']
+        seam = movie['seams'][-2]
+        assert seam==braid and spheres(movie)['betti']==[1,components,components]
+        answer = decide(dict(pairs=2,braid=seam,word=[1,2,-1,-2]))
+        assert answer['raw_filler']==fills
     loop = dict(data,states=['s'],instructions=[['s','_','s','_','R']])
     answer = run(loop,30)
     assert not answer['accepting_program_found'] and len(answer['last_tape'])==33
     print('one, two, and three accepting tapes replay; signed whole-tape exchanges preserve the independent probe counts')
+    print('Linked tape releases replay on four signed plats; their actual seam distinguishes both trefoil commutators.')
 
 
 if __name__=='__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('input',type=Path,nargs='?')
     parser.add_argument('--steps',type=int)
+    parser.add_argument('--link',action='store_true',help='release two point gates at acceptance and close them together')
     parser.add_argument('--agda-dir',type=Path)
     args = parser.parse_args()
     if args.input:
-        print(json.dumps(run(json.loads(args.input.read_text()),args.steps),indent=2))
+        print(json.dumps(run(json.loads(args.input.read_text()),args.steps,args.link),indent=2))
     else:
         audit()
         typed(args.agda_dir)

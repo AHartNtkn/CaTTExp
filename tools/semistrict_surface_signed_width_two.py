@@ -291,6 +291,9 @@ class Movies:
             from semistrict_surface_positioned_packets import supported as shape_preserving, decide as packets
             if shape_preserving(self,(*first,*second)):
                 return dict(states=len(previous),**packets(self,source,first,second))
+            from semistrict_surface_endomorphism_runs import supported as endomorphism_runs, decide as resolved_packets
+            if endomorphism_runs(self,(*first,*second)):
+                return dict(states=len(previous),**resolved_packets(self,source,first,second))
         if unresolved:
             return dict(surface=None,states=len(previous),reason='nontrivial exchange group on a connector')
         return dict(surface=False,states=len(previous))

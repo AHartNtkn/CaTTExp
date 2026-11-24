@@ -39,7 +39,7 @@ class Peak(Presentation):
                 o in ('expand','contract') for o in self.orientation.values()):
             raise ValueError('every rule needs a designated orientation')
 
-    def read(self, history):
+    def normal_form(self, history):
         diagram = self.diagram
         trees = [None]*len(diagram)
         # Each current root carries its ordered packet at the peak, addressed
@@ -100,7 +100,12 @@ class Peak(Presentation):
             replay = exchange(replay,b,self.ports)
             assert replay is not None
         assert replay == end
-        return diagram, source, tuple(trees), braid_image(len(end),braid)
+        return diagram, source, tuple(trees), braid
+
+    def read(self, history):
+        diagram, source, target, braid = self.normal_form(history)
+        leaves = expand_roots(diagram,target,self.rules)
+        return diagram, source, target, braid_image(len(leaves),braid)
 
     def compare(self, left, right):
         x,y = self.read(left),self.read(right)

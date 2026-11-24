@@ -246,6 +246,7 @@ class Movies:
 
 
 def wider_checks():
+    from semistrict_surface_raw_movie_graph import raw_compare
     # With a single polygon in a fixed window, a disjoint spectator can move
     # from after to before it. A spectator inside its window cannot pass it.
     # This subset order provides an oracle independent of diagram search.
@@ -305,9 +306,30 @@ def wider_checks():
         else:
             sorts.append(actions)
     assert len(sorts) == 16
+    raw_positives = 0
     for first in sorts:
+        # On this cube all positive readings are reduced words for reversal.
+        # Calculate its directed word order independently of positioned events.
+        initial_word = tuple(i for _,i in first)
+        descendants = {initial_word}
+        todo = [initial_word]
+        while todo:
+            word = todo.pop()
+            for j,(x,y) in enumerate(zip(word,word[1:])):
+                if abs(x-y)>1:
+                    out = word[:j]+(y,x)+word[j+2:]
+                elif word[j:j+3] == (x,x+1,x):
+                    out = word[:j]+(x+1,x,x+1)+word[j+3:]
+                else:
+                    continue
+                if out not in descendants:
+                    descendants.add(out)
+                    todo.append(out)
         for second in sorts:
             assert model.compare(initial,first,second)['surface']
+            expected = tuple(i for _,i in second) in descendants
+            assert raw_compare(model,initial,first,second)['raw'] == expected
+            raw_positives += expected
     # Repeated occurrences of the same deletion have distinct spatial inputs.
     # The polygon and the spectator both leave an empty spatial path.
     deleting = Presentation({'f': (0,0)}, {'d': ('f',''), 'l': ('f','f')},
@@ -334,10 +356,11 @@ def wider_checks():
         for second,dst in movies:
             assert model.compare(initial,first,second)['surface'] == (src <= dst)
     return dict(four_column_polygon_queries=comparisons, changing_path_cube_queries=len(sorts)**2,
-                empty_spatial_output_queries=len(movies)**2)
+                raw_cube_positives=raw_positives, empty_spatial_output_queries=len(movies)**2)
 
 
 def mixed_port_checks():
+    from semistrict_surface_raw_movie_graph import raw_compare
     marks = {'b': ('','f'), 'd': ('g',''), 'l': ('g','g')}
     split = Rule('g', ((0,'d'),), ((0,'l'),(0,'d')))
     edges = {'f': (0,0), 'g': (0,0)}
@@ -353,6 +376,7 @@ def mixed_port_checks():
         for i,a in enumerate((early,left,right)):
             for j,b in enumerate((early,left,right)):
                 assert model.compare(initial,a,b)['surface'] == (i==0 or i==j)
+                assert raw_compare(model,initial,a,b)['raw'] == (i==0 or i==j)
                 comparisons += 1
         assert model.thin(initial)
     scalar = Rule('', ((0,'z'),), ((0,'z'),))
@@ -366,6 +390,7 @@ def mixed_port_checks():
 
 def guarded_checks():
     from itertools import product
+    from semistrict_surface_raw_movie_graph import raw_compare
     ab = ((0,'a'),(1,'b'))
     ba = ab[::-1]
     presentation = Presentation({'f':(0,1),'g':(1,2)}, {'a':('f','f'),'b':('g','g')},
@@ -378,6 +403,7 @@ def guarded_checks():
         tiles = [Attachment('fg',ba,[('swap',0)]+movie(l),[('swap',0)]+movie(r))
                  for l,r in transitions]
         model = Movies(presentation,'fg',tiles)
+        bare = Movies(presentation,'fg',[Attachment('fg',ab,movie(l),movie(r)) for l,r in transitions])
         words = [''.join(w) for n in range(4) for w in product('01',repeat=n)]
         for start in words:
             reachable = {start}
@@ -394,6 +420,8 @@ def guarded_checks():
             for end in words:
                 answer = model.compare(ab,movie(start),movie(end))['surface']
                 assert answer == (end in reachable)
+                assert raw_compare(model,ab,movie(start),movie(end))['raw'] == (start==end)
+                assert raw_compare(bare,ab,movie(start),movie(end))['raw'] == (end in reachable)
                 loose_positives += bool(answer and start!=end)
                 checks += 1
     return dict(guarded_substring_queries=checks, guarded_surface_only=loose_positives)
@@ -428,6 +456,7 @@ def agda_guard(directory):
 
 
 def checks():
+    from semistrict_surface_raw_movie_graph import raw_compare
     edges={'f':(0,1),'u':(0,2),'v':(2,1),'g':(1,3),'h':(1,4),'k':(4,3)}
     marks={'a':('f','uv'),'x':('f','f'),'y':('f','uv'),
            'b':('g','hk'),'m':('g','g'),'n':('g','hk'),'T':('fg','uvg')}
@@ -479,6 +508,7 @@ def checks():
                     expected=data is not None and solution(data) is not None
                     answer=model.compare(history,actions,more)
                     assert answer['surface']==expected
+                    assert raw_compare(model,history,actions,more)['raw']==expected
                     pairs+=1
                     state_count+=answer['states']
     return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7,
@@ -489,6 +519,7 @@ if __name__=='__main__':
     parser=ArgumentParser(description=__doc__)
     parser.add_argument('--query',type=Path)
     parser.add_argument('--agda-dir',type=Path)
+    parser.add_argument('--raw',action='store_true',help='also decide the directed comparison on a query')
     args=parser.parse_args()
     if args.query:
         q=json.loads(args.query.read_text())
@@ -498,7 +529,11 @@ if __name__=='__main__':
         pres.walk(q['start'],source,q.get('vertex'))
         tiles=[Attachment(r['path'],tuple(map(tuple,r['source'])),r['first'],r['second'])
                for r in q.get('attachments',[])]
-        result=Movies(pres,q['start'],tiles).compare(source,q['first'],q['second'])
+        model=Movies(pres,q['start'],tiles)
+        result=model.compare(source,q['first'],q['second'])
+        if args.raw:
+            from semistrict_surface_raw_movie_graph import raw_compare
+            result.update(raw_compare(model,source,q['first'],q['second']))
     else:
         result=checks()
     if args.agda_dir:

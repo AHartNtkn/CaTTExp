@@ -39,6 +39,7 @@ def signature(model, source, face):
     _, end = model.parse(source, word)
     names = list(range(sum(p != 'swap' for p, _ in word)))
     counts = Counter()
+    tags = [[] for _ in names]
     for nxt in face[1:]:
         histories, windows = read(model, source, word)
         if nxt not in raw_updates(model, word, histories, windows, len(names)):
@@ -49,10 +50,39 @@ def signature(model, source, face):
             pair = tuple(sorted(names[k:k + 2]))
             counts[pair] += sign
             names[k:k + 2] = reversed(names[k:k + 2])
+        else:
+            gain = prism(word, nxt)
+            if gain is not None:
+                ordinal, tag = gain
+                tags[names[ordinal]].append(tag)
         word = nxt
     if model.parse(source, word)[1] != end:
         raise ValueError('schedule changed the terminal history')
-    return names, counts
+    return names, counts, [''.join(w) for w in tags]
+
+
+def prism(word, nxt):
+    """A prism increases one polygon's slot. The input crosses before or after it."""
+    old = [(j, i) for j, (p, i) in enumerate(word) if p != 'swap']
+    new = [(j, i) for j, (p, i) in enumerate(nxt) if p != 'swap']
+    for ordinal, ((j, i), (k, t)) in enumerate(zip(old, new)):
+        if i != t:
+            if t != i + 1 or k == j:
+                raise ValueError('invalid polygon transfer')
+            return ordinal, 'L' if k < j else 'R'
+    return None
+
+
+def transfer_leq(u, v):
+    """The prefix counts characterize exactly the directed swaps LR to RL."""
+    if len(u) != len(v) or u.count('R') != v.count('R'):
+        return False
+    balance = 0
+    for x, y in zip(u, v):
+        balance += (y == 'R') - (x == 'R')
+        if balance < 0:
+            return False
+    return True
 
 
 def compare(model, source, faces):
@@ -61,15 +91,19 @@ def compare(model, source, faces):
     a, b = [[tuple(map(tuple, w)) for w in face] for face in faces]
     if not a or not b or a[0] != b[0] or a[-1] != b[-1]:
         raise ValueError('schedules require common literal initial and terminal readings')
-    x, u = signature(model, source, a)
-    y, v = signature(model, source, b)
+    x, u, left_tags = signature(model, source, a)
+    y, v, right_tags = signature(model, source, b)
     if x != y:
         return dict(surface=False, terminal_matchings=[x, y])
     delta = [(*pair, v[pair] - u[pair]) for pair in sorted(u.keys() | v.keys())
              if u[pair] != v[pair]]
     obstructed = any(d < 0 or d % 2 for _, _, d in delta)
-    return dict(surface=False if obstructed else True if a == b else None,
-                terminal_matching=x, pair_differences=delta)
+    paired = {i for p, q, d in delta if d > 0 for i in (p, q)}
+    blocked = [i for i in range(len(x))
+               if i not in paired and not transfer_leq(left_tags[i], right_tags[i])]
+    return dict(surface=False if obstructed or blocked else True if a == b else None,
+                terminal_matching=x, pair_differences=delta,
+                transfer_words=list(zip(left_tags, right_tags)), blocked_transfers=blocked)
 
 
 def native_face(model, source, first, last, sign):
@@ -155,6 +189,96 @@ def transport_checks():
     return len(orders)**3
 
 
+def middle_faces(a, b, left, right):
+    # Three disjoint spatial windows; the middle polygon can split or merge.
+    marks = {x: (x, x) for x in 'fgh'}
+    mid = ((0, 'g'),)
+    model = Movies(Presentation({x: (i, i+1) for i, x in enumerate('fgh')}, marks,
+                                [Rule('g', mid*a, mid*b)]), 'fgh')
+    source = ((2, 'h'),)*right + ((1, 'g'),)*a + ((0, 'f'),)*left
+
+    def cross(i, x, y):
+        return steps(rectangle(i, x, y))
+
+    first = cross(0, right, a) + ((0, 0),) + cross(b, right, left) + cross(0, b, left)
+    last = cross(right, a, left) + cross(0, right, left) + ((0, left+right),) + cross(left, right, b)
+    faces = []
+    for negative in (True, False):
+        pattern = 'L'*right + 'R'*left if negative else 'R'*left + 'L'*right
+        todo = deque([first])
+        parent = {first: None}
+        while todo:
+            word = todo.popleft()
+            if word == last:
+                route = []
+                while word is not None:
+                    route.append(word)
+                    word = parent[word]
+                faces.append(route[::-1])
+                break
+            h, windows = read(model, source, word)
+            k, slot = next((k, i) for k, (p, i) in enumerate(word) if p != 'swap')
+            for nxt in raw_updates(model, word, h, windows, 1):
+                if nxt in parent:
+                    continue
+                gain = prism(word, nxt)
+                if gain and gain[1] != pattern[slot]:
+                    continue
+                # The middle tensor has cubes on the target phase in its
+                # negative face and on the source phase in its positive face.
+                if gain is None and len(word) == len(nxt):
+                    changes = [j for j in range(len(word)) if word[j] != nxt[j]]
+                    if len(changes) == 3 and (changes[0] > k) != negative:
+                        continue
+                parent[nxt] = word
+                todo.append(nxt)
+        else:
+            raise AssertionError('missing three-factor face')
+    return model, source, faces
+
+
+def middle_checks():
+    cases = list(product((1, 2), (1, 2), (1,), (1,)))
+    cases += [(3, 1, 1, 1), (1, 3, 1, 1), (1, 1, 2, 1), (1, 1, 1, 2)]
+    nsteps = 0
+    for a, b, left, right in cases:
+        model, source, faces = middle_faces(a, b, left, right)
+        u, v = 'L'*right + 'R'*left, 'R'*left + 'L'*right
+        fwd, rev = (compare(model, source, fs) for fs in (faces, faces[::-1]))
+        assert fwd['surface'] is None and fwd['pair_differences'] == []
+        assert fwd['transfer_words'] == [(u, v)]
+        assert rev['surface'] is False and rev['blocked_transfers'] == [0]
+        nsteps += sum(len(path)-1 for path in faces)
+    # A rectangle may change its two incident words. It cannot cover a
+    # backwards middle move on a third occurrence of the very same polygon.
+    model, src, (negative, positive) = instance(1, 1, 1, 1, repeat=True)
+    _, _, (lr, rl) = middle_faces(1, 1, 1, 1)
+    def joint(x, y):
+        return [w + y[0] for w in x] + [x[-1] + w for w in y[1:]]
+    mixed = compare(model, src + src[:1], [joint(negative, rl), joint(positive, lr)])
+    assert mixed['pair_differences'] == [(0, 1, 2)] and mixed['blocked_transfers'] == [2]
+    assert mixed['surface'] is False
+    shuffle_queries = 0
+    for n in range(7):
+        words = [''.join(w) for w in product('LR', repeat=n)]
+        for start in words:
+            reached = {start}
+            stack = [start]
+            while stack:
+                w = stack.pop()
+                for k in range(n-1):
+                    if w[k:k+2] == 'LR':
+                        t = w[:k]+'RL'+w[k+2:]
+                        if t not in reached:
+                            reached.add(t)
+                            stack.append(t)
+            for target in words:
+                assert transfer_leq(start, target) == (target in reached)
+                shuffle_queries += 1
+    return dict(middle_queries=2*len(cases), middle_literal_steps=nsteps,
+                shuffle_order_checks=shuffle_queries, mixed_rectangle_middle=1)
+
+
 def checks():
     cases = list(product((1, 2), repeat=4)) + [(3, 1, 1, 3), (1, 3, 3, 1), (3, 2, 2, 1)]
     sizes = []
@@ -164,8 +288,9 @@ def checks():
         for pad in (0, 2):
             inp = ((0, 's'),)*pad + source
             paths = [[tuple((p, i+pad) for p, i in w) for w in face] for face in faces]
-            assert compare(model, inp, paths) == dict(surface=None, terminal_matching=[1, 0],
-                                                       pair_differences=[(0, 1, 2)])
+            forward = compare(model, inp, paths)
+            assert forward['surface'] is None and forward['terminal_matching'] == [1, 0]
+            assert forward['pair_differences'] == [(0, 1, 2)]
             assert compare(model, inp, paths[::-1])['surface'] is False
             sizes.extend(len(path)-1 for path in paths)
     model, source, (neg, pos) = instance(1, 1, 1, 1, repeat=True)
@@ -178,7 +303,7 @@ def checks():
         assert sorted(n for _, _, n in result['pair_differences']) == [-2, 2]
     return dict(native_queries=len(sizes), literal_steps=sum(sizes),
                 opposite_signed_pairs=2, serialization_triangles=transport_checks(),
-                maximum_face_length=max(sizes))
+                maximum_face_length=max(sizes), **middle_checks())
 
 
 if __name__ == '__main__':

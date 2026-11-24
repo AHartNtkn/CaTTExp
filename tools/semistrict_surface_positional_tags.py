@@ -101,6 +101,31 @@ def check_cut(left_changes, right_changes, gap, emitter):
     return count
 
 
+def check_interchange_tag(emitter):
+    """A directed tag can project to a Gray identity before any tip is pruned."""
+    square = tree_ctx(glue_tree(2, 0, 2))
+    residual = tree_ctx(glue_tree(2, 0, 1))
+    a, b = maximal_vars(square)
+    event, edge = map(v, maximal_vars(residual))
+    prune = sub_from(square, residual, {a: event, b: identity(residual, edge)})
+    early, late = temporal_words(square, v(a), v(b), 0, 1)
+    for cut in range(3):
+        ty = infer(square, late)
+        assert early != late and infer(square, early) == ty
+        for pred, expected in [('cohCase', cut > 0), ('graySide', True)]:
+            name = f'tag{cut}{pred}'
+            emitter.checks.append(
+                f'{name} : {pred} {emitter.ctx(square)} {emitter.ty(ty)} '
+                f'{emitter.tm(late)} {emitter.tm(early)} ≡ {str(expected).lower()}\n{name} = refl\n')
+        forward = subst_tm(head(square, late, early), prune)
+        outside = (subst_tm(late, prune), subst_tm(early, prune))
+        emitter.check_type(f'prunedTag{cut}', residual, forward,
+                           arr(infer(residual, outside[0]), *outside))
+        square, residual = susp_ctx(square), susp_ctx(residual)
+        early, late = susp_tm(early), susp_tm(late)
+        prune = (v(0), v(1)) + tuple(map(susp_tm, prune))
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--agda-dir', type=Path)
@@ -110,6 +135,7 @@ def main():
                 for left, right, gap in product(range(4), range(4), range(3)))
     for rank in range(3, 7):
         attachment(rank, emitter)
+    check_interchange_tag(emitter)
     if args.agda_dir:
         args.agda_dir.mkdir(parents=True, exist_ok=True)
         module = 'PositionalTagChecks'

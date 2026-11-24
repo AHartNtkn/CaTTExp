@@ -141,7 +141,7 @@ def exhaustive(source,rules,right,budget,anchored=frozenset()):
     return readings,pairs,diamonds
 
 
-def agda_example(directory):
+def agda_example(directory,right_private=False):
     from catt import arr, comp2, glue_tree, infer, maximal_vars, src, tgt, tree_ctx, v
     from emit_agda import Emitter
     from relative_coherence_exchange_faces import composite
@@ -163,6 +163,8 @@ def agda_example(directory):
     x,y=split(a)
     c,d=split(b)
     declare(between(a,comp2(ctx,1,x,y)))
+    if right_private:
+        declare(between(b,comp2(ctx,1,c,d)))
     def history(events):
         left,right=src(ctx,a),src(ctx,b)
         temporal=[]
@@ -184,7 +186,7 @@ def agda_example(directory):
     g=emitter.ctx(ctx)
     emitter.checks.append(f'context-ok : is-just (checkCtx {g}) ≡ true' + chr(10) + 'context-ok = refl' + chr(10))
     emitter.check_typed('shared-split',ctx,joint)
-    name='SharedColumns'
+    name='JointPolygons' if right_private else 'SharedColumns'
     source=emitter.module(name,'Two-column shared split and all elementary returns.').replace(
         'open import CaTTExp.Pure','open import CaTTExp.Gray.Pure')
     (directory/(name+'.agda')).write_text(source)

@@ -133,6 +133,8 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S30 (2.2): completeness of the lax side condition is unstated.
+- S29 (2.2): §2.2 frames SC as computed in a strict theory; should present it as a combinatorial test with soundness alongside.
 - S28 (1.6): user postulates removed; the signature is closed to users, and assumptions are context variables.
 - S27 (1.5): how kernel extensions enter (closed constants vs substitution-applied heads) is under-specified; metatheory doesn't cover limit formers.
 - S26 (1.1): §1.6 forbids the binders §0.2 allows.

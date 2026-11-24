@@ -7,14 +7,17 @@ from pathlib import Path
 from semistrict_surface_planar_cylinder import parse
 
 
-def incidence(source,right,trace,ids):
+def incidence(source,right,trace,ids,erased=(),changes=None):
     wires=[(-1,i) for i in range(len(source))]
     sides={e:int(x in right) for e,x in zip(wires,source)}
     graph={}
     words=defaultdict(list)
     for n,i,l,r in trace:
         ins=tuple(wires[i:i+len(l)])
-        if n=='swap':
+        if n in erased:
+            f,=ins
+            changes[f].append((n,len(words[f])))
+        elif n=='swap':
             f,e=ins
             words[e].append(f)
             words[f].append(e)
@@ -31,6 +34,10 @@ def incidence(source,right,trace,ids):
 def compare(source,right,traces,anchored):
     ids={}
     a,b=[incidence(source,right,path,ids) for path in traces]
+    return compare_incidence(a,b,anchored)
+
+
+def compare_incidence(a,b,anchored):
     if a[:3]!=b[:3]:
         return None
     _,sides,graph,now=a

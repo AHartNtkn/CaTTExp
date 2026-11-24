@@ -120,6 +120,10 @@ def decide(model,source,first,second,radius=None):
     if any(initial[p]!=final[p] for p in initial.keys()-moving):
         return no('stationary packet cut')
     forced=endpoints_forced(initial,lower,upper)
+    if len(moving)==1:
+        from semistrict_surface_single_mover import solve
+        answer=solve(calc,start,goal,initial,final,next(iter(moving)),radius)
+        return dict(answer,endpoint_meetings=answer['surface'],endpoints_forced=forced)
     prefixes=calc.scan(goal)[1]
     finish=tuple(p for p,_ in goal[0]),frozenset(moving)
     source_key=tuple(p for p,_ in start[0]),frozenset()

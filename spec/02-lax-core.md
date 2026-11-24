@@ -10,11 +10,11 @@ The lax core keeps all of chapter 1: the same syntax, the same judgments, the sa
 
 - **Plain CaTT, written P** (chapter 1). The side condition is Finster–Mimram's *variable check*: a coherence of type t → u is accepted if t and u each use every variable of Δ, or if t uses exactly the variables of Δ's source boundary and u those of its target boundary (chapter 1, §1.4). Interchange is an equation here, so the two composites are the same cell, and coherences between them are accepted in both directions and are invertible. In 𝒦 this means α and β commute up to an invertible cell: transformations are pseudo. The device that decides the check is the free strict ω-category ν(λΔ) on Δ.
 - **Two-tier L.** The side condition is the *crossing-aware check*. When a cell in the hom 𝒦(x, y) and a cell in 𝒦(y, z) are composed across the object y, swapping their order is a **directed** step, the interchanger χ_{α,β} : (f◁β);(α▷g′) → (α▷g);(f′◁β). So the coherence from "β first" to "α first" is accepted and the reverse is rejected: transformations are lax, and χ is their naturality cell. Inside one hom, where cells compose within a single object's hom, interchange stays an equation, as in P. Hence "two tiers": directed across objects, strict within a hom. Its device is the free Gray-enriched category 𝔉(Δ), whose homs are Gray tensors (§2.5). The implemented checker runs this version with a stronger coherence clause (§2.5).
-- **Uniform L.** The crossing-aware check at **every** level, also inside a hom. For two 2-cells a, b composed inside one hom, swapping them is again a directed step, so Eckmann–Hilton becomes a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other (§2.3, example (c)). This is **the kernel**. Its device is the free object F_{V+S}(Δ), where V is the least theory in which every interchanger is a directed cell. S is a **setting**: an optional set of extra laws, from {inner law, R}, that a development may switch on. Settings are explained in §2.3.
+- **Uniform L.** The crossing-aware check at **every** level, also inside a hom. For two 2-cells a, b composed inside one hom, swapping them is again a directed step, so Eckmann–Hilton becomes a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other (§2.3, example (c)). This is **the kernel**. Its device is the free object F_{V+S}(Δ), where V is the least theory in which every interchanger is a directed cell. S = S(Δ) is the set of crossing laws (left split, right split R) that every object of Δ is marked as satisfying; with no marks it is empty and the device is F_V(Δ). The split marks are explained in §2.3.
 
 | Version | Side condition | Decided in | Role |
 |---|---|---|---|
-| **uniform L**, setting S | crossing-aware at every level | F_{V+S}(Δ) | **the kernel** (§2.3) |
+| **uniform L** | crossing-aware at every level | F_{V+S(Δ)}(Δ) | **the kernel** (§2.3) |
 | **two-tier L** | crossing-aware across objects, an equation within a hom | 𝔉(Δ) | the implemented checker, with a stronger coherence clause (§2.5) |
 | **plain CaTT (P)** | variable check, interchange an equation | ν(λΔ) | the reference instance of chapter 1 (§2.2) |
 
@@ -69,7 +69,9 @@ By support-determines-cells the operation clause is the support condition `supp(
 
 **Source.** `notes/design-decisions.md` §1.1; `notes/pseudo-vs-gray.md` §3.2–3.3, §3.6 (Theorem 2); `notes/lax-sc-completeness.md` §3–4; `notes/semantics-gaps.md` §2; ledger E1, S11, S29, S30.
 
-## 2.3 The kernel: the side condition computed in V + S
+## 2.3 The kernel: the side condition computed in V + S(Δ)
+
+Throughout, V + S for S ⊆ {left split, R} is V with the laws of S added; the kernel uses S = S(Δ), read off the marks of the coherence's own context (below).
 
 ### The theory V
 
@@ -83,34 +85,49 @@ An **admissible** theory is a strict theory on the T₁₂ signature (strict ass
 
 **V** is the forced base B together with the guarded round-5 equations. On every finite pasting diagram Γ, F_V(Γ) maps generator-preservingly into F_E(Γ) for every admissible E. So a directed cell or an equality exists in F_V(Γ) **iff** it exists in every admissible theory. V is the least admissible theory on pasting diagrams.
 
-### The switch settings
+### The split marks
 
-Two laws of T₁₂ are **visible** on pasting diagrams, meaning that switching them on changes some free object F(Γ):
-- the **inner law** (inner composite-crossing law, the left split): the direct crossing of A₁ ∗ A₂ past B equals the paste of the crossings of A₁ and of A₂;
-- **R** (the right split): the mirror statement, splitting a composite right operand.
+Two laws of T₁₂ are **visible** on pasting diagrams, meaning that imposing them changes some free object F(Γ):
+- the **left split** (the inner composite-crossing law): the direct crossing of A₁ ∗ A₂ past B equals the paste of the crossings of A₁ and of A₂;
+- the **right split** R: the mirror statement, splitting a composite right operand.
 
-A **setting** is a subset S ⊆ {inner law, R}. The side condition of setting S computes in V + S. All four settings are admissible and pairwise distinct:
+Both are splits of an interchanger along a k-cell with k ≥ 1, so both sides of each law are built from inner letters, identities, composition and whiskering only. (The splits along a 0-cell, for outer interchangers, are axioms of the base B, so they are in V.) At degree 4 this is **Agda-checked** (`Join/SwitchLaws.law-inner`, `Uniform/SplitMarks.Degree4.law-trivial`); in higher degrees the law schema is the same at every level k ≥ 1 (`notes/closed-structure.md` §D.4.3), on paper.
 
-| Setting | Theory | Cells on the suspended 2 × 3 interval |
+A split is a property of a particular object, like `iord` and `ord` (chapter 3, §3.6): it says how crossings inside the homs into that object behave. So it is a **mark on an object variable**, written in the context:
+
+```
+(C : ⋆)^lsplit     every inner crossing in a hom 𝒦(X, C) satisfies the left split
+(C : ⋆)^rsplit     every inner crossing in a hom 𝒦(X, C) satisfies the right split
+```
+
+`ord` implies both, because it makes inner letters into C trivial and both sides of each split are pure inner. A substitution may send a variable marked lsplit (rsplit) only to a variable marked lsplit (rsplit) or `ord`, as for the other object marks. An unmarked object assumes neither law.
+
+For a pasting context Γ with objects a₀, …, aₙ, each object possibly marked, write **S(Γ)** for the set of splits carried by **every** one of a₁, …, aₙ (`ord` counts as carrying both). a₀ is the target of no hom of Γ, so its marks are irrelevant, as for (COH-ord). S(Γ) is one of the four law sets ∅, {left}, {R}, {left, R}, and the four give pairwise distinct free objects:
+
+| S(Γ) | Theory | Cells on the suspended 2 × 3 interval |
 |---|---|---|
-| ∅ (no switch) | V | 49 |
+| ∅ (no object of Γ marked) | V | 49 |
 | {R} | V + R | 14 |
-| {inner law} | V + inner law | 29 |
-| {inner law, R} | T₁₂'s pasting profile | 2 |
+| {left} | V + left split | 29 |
+| {left, R} | T₁₂'s pasting profile | 2 |
 
-The other laws once catalogued as switches (the prime left splits L_p and the divisibility laws D_{d,p}) are **invisible** on pasting diagrams, because every chronological 3-endomorphism of a free object on a pasting diagram is an identity. They do not change the kernel, so they are not switches.
+The other laws once catalogued (the prime left splits L_p and the divisibility laws D_{d,p}) are **invisible** on pasting diagrams, because every chronological 3-endomorphism of a free object on a pasting diagram is an identity. They change no free object, so they are not marks.
 
-**Rule.** The kernel's `coh` rule is the rule of §2.2 with 𝕋 = V + S:
+**Rule.** The kernel's `coh` rule is the rule of §2.2 with 𝕋 = V + S(Δ), where Δ is the coherence's own (possibly marked) pasting context:
 
 ```
-Δ ⊢ps     Δ ⊢ t →_A u     SC_{V+S}(Δ, t →_A u)     Γ ⊢ σ : Δ
-──────────────────────────────────────────────────────────────── (coh_S)
-            Γ ⊢ coh_{Δ, t →_A u}[σ] : (t →_A u)[σ]
+Δ ⊢ps     Δ ⊢ t →_A u     SC_{V+S(Δ)}(Δ, t →_A u)     Γ ⊢ σ : Δ
+──────────────────────────────────────────────────────────────────── (coh)
+              Γ ⊢ coh_{Δ, t →_A u}[σ] : (t →_A u)[σ]
 ```
 
-A development **declares its setting S** once, and every coherence in it is checked against V + S. The kernel has no default setting (chapter 0, §0.5). V (S = ∅) is the most general setting.
+σ must respect Δ's marks. With no marked object in Δ, the side condition computes in V, the least admissible theory. A head all of whose objects a₁, …, aₙ are `ord` is also accepted by (COH-ord), on SC_𝔉 (chapter 3, §3.6). There is no setting, no file header and no default: every assumption a coherence uses is a mark in its own context (chapter 0, §0.1).
 
-**Imports run upwards.** If S ⊆ S′, the identity on letters maps F_{V+S}(Γ) to F_{V+S′}(Γ) and sends cells to cells, so every judgment derivable in setting S is derivable in setting S′, and a development checked in S can be imported into one checked in S′. A development checked in S′ cannot be imported into S. The step from a map of free objects to SC is Agda-checked for any map that sends letters to letters and full supports to full supports (`Uniform/Rule.agda`, `Transport.sc-map`). On the grid layer the comparison maps are checked (`Grid.nf-compare`).
+**Why marks and not a file setting** (ledger S31, `notes/design-decisions.md` §1.8). Until 2026-11-24 the two laws were switches declared once per development. That made them the only assumption not stated in the context, and it split developments into four classes with one-way imports. A mark says the same thing about the objects it is placed on and nothing about others. Marking every object with a set S gives exactly the old setting S (`Uniform/SplitMarks.uniform-recovers`), so nothing expressible before is lost.
+
+**Why the laws are not hypotheses either.** A declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)). A mark acts through the side condition, as `ord` does, so all of the law's higher coherences come from the oracle.
+
+**Substitution only strengthens.** If every object of Δ′ carries at least the marks of the corresponding object of Δ, then S(Δ) ⊆ S(Δ′) (`SplitMarks.meet-mono`), the identity on letters maps F_{V+S(Δ)} to F_{V+S(Δ′)} and sends cells to cells, so a coherence accepted over Δ is accepted over Δ′. The step from a map of free objects to SC is Agda-checked for any map that sends letters to letters and full supports to full supports (`Uniform/Rule.agda`, `Transport.sc-map`). On the grid layer the comparison maps are checked (`Grid.nf-compare`).
 
 **Side condition and decision procedure.** SC_{V+S}(Δ, t →_A u) is decided as follows.
 1. Compute ⟦t⟧ and ⟦u⟧ in F_{V+S}(Δ) (normal forms by rank increments; r9 (K65), r10 Response 1).
@@ -122,35 +139,35 @@ A development **declares its setting S** once, and every coherence in it is chec
    - Reachability in a finite closed universe is decidable without a length hypothesis: loop removal plus pigeonhole, with breadth-first saturation proved exact. It is Agda-checked in `Uniform/FiniteGraph.agda` (PR #380). The search over pairs is Agda-checked for any layer with finite closed universes (`Uniform/RuleFin.agda`, `DecideFin.sc?`), and `Uniform/KernelDec.agda` runs the kernel over it.
    - The **designated lift** is the first witnessing path of minimal length, in the fixed enumeration order of steps. A shortest witness exists whenever any witness exists. There are finitely many paths of each length, so the choice is well defined.
 
-Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in every dimension, uniformly in Γ, the degree and the switch bits, and the comparison maps between settings are computable (r10 Response 3, by breadth-first search over the finite vertex list). No bound on path length is used, since some free objects have loops (ledger S14). The abstract step is `Uniform/FiniteGraph.agda`, reachability in a finite closed universe. `Join/BoundedReach.agda` (`Reach.Bounded.reach?`) applies only to loop-free layers.
+Equality and reachability in F_{V+S}(Γ) are decidable for every law set S, in every dimension, uniformly in Γ, the degree and S, and the comparison maps between law sets are computable (r10 Response 3, by breadth-first search over the finite vertex list). No bound on path length is used, since some free objects have loops (ledger S14). The abstract step is `Uniform/FiniteGraph.agda`, reachability in a finite closed universe. `Join/BoundedReach.agda` (`Reach.Bounded.reach?`) applies only to loop-free layers.
 
 **Cost.** Decidable is not cheap. The problem is P-hard; shared reachability is coNP-complete already on a fixed grid; a uniform 2-EXPSPACE bound holds; equality is polynomial for structural terms, on two-row grids in each fixed degree, and for exponential-width schedules (r10 Responses 3–21). A polynomial algorithm on arbitrary shared terms is open (ledger E9, E12). None of this changes the rule.
 
-**Example (a): the interchanger, every setting.** Δ = ΣD¹ ∨ ΣD¹: α : f ⇒ f′ : x → y and β : g ⇒ g′ : y → z.
-- `coh_{Δ, (f◁β);(α▷g′) → (α▷g);(f′◁β)}` is accepted in every setting. Its cell is the elementary interchanger χ_{α,β}, which is the lax naturality cell when β is a transformation and α an arrow of an element.
-- The reverse, `coh_{Δ, (α▷g);(f′◁β) → (f◁β);(α▷g′)}`, is rejected in every setting: requirement 3 for every admissible theory, and in the Gray quotient no term at all has that type (below).
+**Example (a): the interchanger, with any marks.** Δ = ΣD¹ ∨ ΣD¹: α : f ⇒ f′ : x → y and β : g ⇒ g′ : y → z.
+- `coh_{Δ, (f◁β);(α▷g′) → (α▷g);(f′◁β)}` is accepted whatever the marks. Its cell is the elementary interchanger χ_{α,β}, which is the lax naturality cell when β is a transformation and α an arrow of an element.
+- The reverse, `coh_{Δ, (α▷g);(f′◁β) → (f◁β);(α▷g′)}`, is rejected whatever the marks: requirement 3 for every admissible theory, and in the Gray quotient no term at all has that type (below).
 - There is no horizontal composite: a cell from f ; g to f′ ; g′ has hom-dimension 1, so it cannot use the generator α ⊗ β, which has hom-dimension 2, and no such cell has full support.
 
-**Example (b): the strip, where the settings differ.** Inside a hom, take composable inner cells A₁, A₂ and a cell B in interchange position (the strip C_{2,1}). Let u = ι(A₁ ∗ A₂, B), the direct inner crossing, and v the paste of ι(A₁, B) and ι(A₂, B). (Earlier versions wrote W here. W is the outer lift, and the outer W-strip behaves differently: it stays distinct in every setting, ledger E13.)
-- Settings ∅ and {R}: ⟦u⟧ ≠ ⟦v⟧ and neither reaches the other, so neither `coh(u → v)` nor `coh(v → u)` is accepted. In the tagged model of (K44) they really differ.
-- Settings {inner law} and {inner law, R}: ⟦u⟧ = ⟦v⟧, and both use every variable, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
-- The law cannot be added as a hypothesis instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
+**Example (b): the strip, where the marks matter.** Inside a hom, take composable inner cells A₁, A₂ and a cell B in interchange position (the strip C_{2,1}). Let u = ι(A₁ ∗ A₂, B), the direct inner crossing, and v the paste of ι(A₁, B) and ι(A₂, B). (Earlier versions wrote W here. W is the outer lift, and the outer W-strip behaves differently: it stays distinct under every mark short of `ord`, ledger E13.) Let C be the object the strip's hom lands in.
+- C unmarked, or marked rsplit only: ⟦u⟧ ≠ ⟦v⟧ and neither reaches the other, so neither `coh(u → v)` nor `coh(v → u)` is accepted. In the tagged model of (K44) they really differ.
+- C marked lsplit (or `ord`): ⟦u⟧ = ⟦v⟧, and both use every variable, so `coh(u → v)` and `coh(v → u)` are both accepted, in the coherence case, and are invertible.
+- The law cannot be added as a declared cell instead: a declared cell κ : u ≅ v is not seen by the side condition, so its two uses in a three-fold composite are unrelated until the user declares a 6-cell, then a 7-cell, without end (`notes/design-decisions.md` §1.4(c)).
 
-**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other, and it is invertible only with the `ord` mark, or with a switch and an `inv` input (chapter 3, §3.6 Example (a)). The rule-level computation is checked by evaluation (`Uniform/Marks.agda`). The run on the actual F_V waits for the uniform checker (ledger S3).
+**Example (c): inside an object.** In one object C, take two 2-cells of C composable along a 1-cell (the context Σ(ΣD¹ ∨ ΣD¹) placed in the hom 𝒦(X, C)). Uniform L gives a directed interchanger one dimension up, as for transformations across objects; two-tier L and P make it invertible. Directed Eckmann–Hilton is therefore a pair of directed cells b ∗ a ⇛ a ∗ b and a ∗ b ⇛ b ∗ a, not inverse to each other, and it is invertible only with the `ord` mark, or with a split mark on C and an `inv` input (chapter 3, §3.6 Example (a)). The rule-level computation is checked by evaluation (`Uniform/Marks.agda`; with split marks, `Uniform/SplitMarks.agda`, `eh-lsplit`). The run on the actual F_V waits for the uniform checker (ledger S3).
 
 **Semantics.**
-- **Admissible theories.** A judgment derivable in setting S holds in the free objects of every admissible theory satisfying S. In particular a setting-∅ development is valid in the models of every admissible theory.
+- **Admissible theories.** A coherence over Δ holds in every algebra of an admissible theory in which the objects assigned to Δ's marked objects satisfy their marks: such an assignment satisfies every law of S(Δ) in every hom landing in an object a₁, …, aₙ (`SplitMarks.meet-lb`), and every hom of F(Δ) lands in one of them, so the algebra's map out of F_V(Δ) factors through F_{V+S(Δ)}(Δ). This is the factorization argument of (COH-ord), proved on paper (`notes/design-decisions.md` §1.8). In particular a coherence over an unmarked context is valid in every admissible theory.
 - **Gray-enriched models.** By requirement 4 every cell of F_{V+S}(Γ) projects to a cell of 𝔉(Γ). Every accepted coherence projects to an accepted two-tier coherence: in the coherence case equal images project to equal images and Var is unchanged; in the operation case, if c witnesses SC_{V+S}(Δ, t → u), then π(c) : π⟦t⟧ → π⟦u⟧ has full Gray support. Either way SC_𝔉 holds for the projected terms. So every model of two-tier L (in particular strict ω-Cat with lax transformations, and every oriented (∞,ω)-category) is a model of uniform L, interpreting each coherence through its projection. This is immediate from the form of the rule (ledger S2).
 - **What uniform L adds.** It is the most general row of the ordering, which is why it is the kernel. A consequence for models: objects need not be ordinary ω-categories, since their own compositions may interchange directedly (Gepner–Heine's oriented categories are examples of such objects).
 
 **Status.**
 - V exists, is least on pasting diagrams, and decides equality and reachability: **proved** (verified researcher answers r8, r9, r10; ledger E6, E12).
-- The four settings are admissible and distinct: **proved** (r9 Responses 2–5, K73) and computed (`scripts/e6/interchange_fibre_decorations.py`).
+- The four law sets V + S are admissible and distinct: **proved** (r9 Responses 2–5, K73) and computed (`scripts/e6/interchange_fibre_decorations.py`).
 - Reachability in a finite closed universe, with no length bound: **Agda-checked** (`Uniform/FiniteGraph.agda`, PR #380). The bounded-path version (`Join/BoundedReach.agda`) applies only to loop-free layers (S14).
-- The switch maps extend functorially to the cospan completions, and the switched laws keep seed lists: **Agda-checked** (`Join/SwitchCospan.agda`, `Join/SwitchLaws.agda`), with the link between raw syntax and the completion by inspection only (ledger E12 items (a)–(c), owner LCORE).
-- The rule (coh_S) as a single condition on F_{V+S}: **stated here**, in the projected form recommended by the independent check (ledger S1). Uniqueness of the lift up to coherence: open (S11).
-- **The checker for (coh_S), relative to the free objects: Agda-checked** (`Uniform/Kernel.agda`, `Uniform/Rule.agda`; `notes/uniform-checker.md`). For any family of free-object layers with a grading bound, SC is decidable, the judgments are those of `TypingWith` at that side condition, and the checker is sound and complete. The layers of F_{V+S} in every degree are not yet constructed in Agda, so this is the kernel checker relative to them (ledger S3a).
-- **The switch layer: Agda-checked** (`Uniform/Grid.agda`, `Uniform/GridExamples.agda`). In every setting, equality of 4-cells on suspended m × n grids is decided, with normal forms and computable comparison maps. The counts 2, 1, 2, 1 (1 × 2), 2, 2, 1, 1 (2 × 1) and 49, 14, 29, 2 (2 × 3) are computed, and so is example (b) as an equality statement. Directed 5-cells between these 4-cells are not modelled (ledger S3b).
+- The comparison maps between law sets extend functorially to the cospan completions, and the split laws keep seed lists: **Agda-checked** (`Join/SwitchCospan.agda`, `Join/SwitchLaws.agda`), with the link between raw syntax and the completion by inspection only (ledger E12 items (a)–(c), owner LCORE).
+- The rule (coh) as a single condition on F_{V+S(Δ)}, with S(Δ) read from split marks: **stated here** (ledger S31); the marks' rule level, `ord` ⇒ both splits at degree 4, and substitution monotonicity: **Agda-checked** (`Uniform/SplitMarks.agda`), in the projected form recommended by the independent check (ledger S1). Uniqueness of the lift up to coherence: open (S11).
+- **The checker for (coh), relative to the free objects: Agda-checked** (`Uniform/Kernel.agda`, `Uniform/Rule.agda`; `notes/uniform-checker.md`). For any family of free-object layers with a grading bound, SC is decidable, the judgments are those of `TypingWith` at that side condition, and the checker is sound and complete. The layers of F_{V+S} in every degree are not yet constructed in Agda, so this is the kernel checker relative to them (ledger S3a).
+- **The law-set layer: Agda-checked** (`Uniform/Grid.agda`, `Uniform/GridExamples.agda`). For every law set, equality of 4-cells on suspended m × n grids is decided, with normal forms and computable comparison maps. The counts 2, 1, 2, 1 (1 × 2), 2, 2, 1, 1 (2 × 1) and 49, 14, 29, 2 (2 × 3) are computed, and so is example (b) as an equality statement. Directed 5-cells between these 4-cells are not modelled (ledger S3b).
 - The implemented checker for actual developments is still two-tier L (§2.5).
 
 **Source.** `notes/design-decisions.md` §1.2, §1.7, Lemma V-dec; `notes/joining-completion.md` §8; `notes/conjectures/answered/lax-interchange-every-dimension-r8-2026-11-20.md`, `-r9-`, `-r10-`; ledger E6, E12.
@@ -161,8 +178,8 @@ Equality and reachability in F_{V+S}(Γ) are decidable for every setting, in eve
 |---|---|---|
 | coherence case (⟦t⟧ = ⟦u⟧) | yes | the reversed coherence satisfies the same side condition; Benjamin–Markakis's argument goes through unchanged |
 | operation case on a single hom, in the Gray quotient | no, as in CaTT | |
-| elementary interchanger, every setting | **no** | requirement 3; in the Gray quotient the reverse type is uninhabited (Agda-checked, below) |
-| a crossing of a composite against the paste of crossings | in settings containing the matching split: yes, as a coherence case; otherwise there is no cell either way | §2.3 example (b) |
+| elementary interchanger, any marks | **no** | requirement 3; in the Gray quotient the reverse type is uninhabited (Agda-checked, below) |
+| a crossing of a composite against the paste of crossings | if the hom's target object is marked with the matching split (or `ord`): yes, as a coherence case; otherwise there is no cell either way | §2.3 example (b) |
 | interchanger with an invertible or pseudo factor | only through the marks of chapter 3 | chapter 3 |
 
 **Status.** For two-tier L, non-degeneracy (no term of the reverse interchanger's type) is **Agda-checked** with no hypothesis (`Strict/ReverseInterchanger.agda`, `no-reverse-interchanger`, from strict-model soundness `Strict/Soundness.agda`; ledger E3). For V + S it is requirement 3 (**proved**, r8).
@@ -198,15 +215,15 @@ This is not the kernel's default theory. Marking every object `ord` in uniform L
 **Status.**
 - Every model of P is a model of two-tier L (change of base along X ⊗ Y → X × Y): **proved** (`notes/pseudo-vs-gray.md` §2.4).
 - Uniform to two-tier: immediate from the projected form of the rule (§2.3 *Semantics*; ledger S2).
-- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. The second holds exactly with `ord` on every object and the rule (COH-ord) (§3.6). Without (COH-ord) it would fail for coherences in every setting: the loop H and 1_w, and the outer W-strip, have equal Gray images and stay unconnected after every inner letter is inverted (ledger E13). For the first, the relative coherence lemma for 𝔉 → ν now holds (ledger E5).
+- The converse directions (P = two-tier L + "every interchanger invertible", two-tier = uniform + `ord`) are the subject of chapter 3. The second holds exactly with `ord` on every object and the rule (COH-ord) (§3.6). Without (COH-ord) it would fail for coherences under every split mark: the loop H and 1_w, and the outer W-strip, have equal Gray images and stay unconnected after every inner letter is inverted (ledger E13). For the first, the relative coherence lemma for 𝔉 → ν now holds (ledger E5).
 
 ## 2.7 Dualities
 
 CaTT has a duality D_J for every J ⊆ {1, 2, …}: reverse the cells whose dimension is in J (Benjamin–Markakis). Two-tier L keeps four of them as symmetries (`notes/closed-structure.md` §D.2, including op). The uniform core keeps one.
 
-**Statement (Theorem D4).** In every setting S:
+**Statement (Theorem D4).** For every law set S:
 - D_J sends every uniform-L derivation to a uniform-L derivation iff **J = ∅**;
-- D_J sends uniform L to the oplax core (every elementary interchanger reversed) iff **J = all**. The image of setting S is the oplax core in setting mirror(S), which exchanges the inner law and R: V + {inner law} goes to V^∘ + {R}, and V + {R} to V^∘ + {inner law};
+- D_J sends uniform L to the oplax core (every elementary interchanger reversed) iff **J = all**. The image of V + S is the oplax core with mirror(S), which exchanges the left split and R: V + {left} goes to V^∘ + {R}, and V + {R} to V^∘ + {left}. On marks, D_all exchanges lsplit and rsplit;
 - every other J maps some accepted coherence to a rejected type. Its image is a mixed core D_J(V + S), which can be checked by running the V + S checker on the dualised input.
 
 **Why.** D_J sends the elementary interchanger of two (l+1)-cells juxtaposed along a k-cell to the reverse type iff a_{k+1} + a_{l+1} + a_{l+2} is odd, where a_m = [m ∈ J]. Two necessary conditions follow:
@@ -215,21 +232,17 @@ CaTT has a duality D_J for every J ⊆ {1, 2, …}: reverse the cells whose dime
 
 Together these force J = ∅. Neither alone does: J = {1,2,4,5,7,…} passes the first and fails the second, while op passes the second and fails the first.
 
-**Example.** op = D_odd reverses 3-cells and keeps 2-cells and 4-cells. Over Σ(ΣD¹ ∨ ΣD¹) (§2.3 example (c)), it sends the accepted interchanger of two 2-cells of an object to the reversed interchanger, which every setting rejects. In two-tier L that interchanger is an identity, which is why op is a two-tier symmetry. So in uniform L the "prove once, get the op-dual free" rule holds only in the `ord` fragment (chapter 3).
+**Example.** op = D_odd reverses 3-cells and keeps 2-cells and 4-cells. Over Σ(ΣD¹ ∨ ΣD¹) (§2.3 example (c)), it sends the accepted interchanger of two 2-cells of an object to the reversed interchanger, which is rejected whatever the marks. In two-tier L that interchanger is an identity, which is why op is a two-tier symmetry. So in uniform L the "prove once, get the op-dual free" rule holds only in the `ord` fragment (chapter 3).
 
 **Status.**
-- Sign arithmetic, the orientation lemma (the three flips taken as the definition of the action), the classification and the switch exchange: **Agda-checked** (`src/CaTTExp/GrayDualityUniform.agda`: `dual-canonical`, `kernel-theorem`, `J124-gray-rows`, `op-gray-rows`, `dual-has`, `total-mirror`, `level-uniform`; no postulates).
+- Sign arithmetic, the orientation lemma (the three flips taken as the definition of the action), the classification and the split exchange: **Agda-checked** (`src/CaTTExp/GrayDualityUniform.agda`: `dual-canonical`, `kernel-theorem`, `J124-gray-rows`, `op-gray-rows`, `dual-has`, `total-mirror`, `level-uniform`; no postulates).
 - That the action is the three flips, and that the two-tier witnesses live on contexts ΣD¹ ∨ ΣD^q, where F_{V+S} = 𝔉: **argued** (`notes/closed-structure.md` §D.4.1).
 
 **Source.** `notes/closed-structure.md` §D.4; ledger D8.
 
 ## 2.8 Open surface questions
 
-**Q2.1. Which setting a development starts in.** The kernel requires the setting to be declared.
-- *Option A: the surface defaults to ∅ (V), and the user switches laws on.* Every development is as general as possible unless the author asks otherwise; a proof that needs a split fails to check until the switch is written, which is visible. Imports from more general developments always work.
-- *Option B: the surface defaults to {inner law, R} (T₁₂), and the user switches laws off.* Proofs about composites of crossings go through with no annotation; a development silently proves a statement valid only in T₁₂'s models, and cannot be imported into a more general one.
-- *Option C: no default; the surface makes the user write the setting.* One line per file; nothing silent; slightly more ceremony.
-- *Worked example.* Example (b) of §2.3: under A, `coh(u → v)` fails with "no cell ⟦u⟧ → ⟦v⟧ in V; the inner law would make them equal"; under B it succeeds silently; under C the file header decides.
+*Q2.1 (which switch setting a development starts in) was removed on 2026-11-24: there are no settings, and the crossing laws are object marks (§2.3, ledger S31). Their surface defaults fall under Q3.3.*
 
 **Q2.2. How a horizontal composite across objects is written.** The kernel has no horizontal composite; there are two layerings, ∂⁻τ (later factor first) and ∂⁺τ (earlier factor first), related by the directed interchanger from ∂⁻ to ∂⁺.
 - *Option A: no notation; the user writes the layering they mean.* Nothing hidden; every composite of transformations across objects is written twice as long.

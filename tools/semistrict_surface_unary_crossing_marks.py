@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from semistrict_surface_signed_width_two import Movies, Presentation, Rule
+from semistrict_surface_spatial_prisms import spatial_roles
 
 
 @dataclass
@@ -22,32 +23,10 @@ class CrossingMarks:
         pres = model.pres
         if model.attachments:
             raise ValueError('this criterion is for 3-computads')
-        if any(not s or not t for s,t in pres.marks.values()):
-            raise ValueError('an event at a loop with an empty port gives a spatial triple')
-        graph = defaultdict(set)
-        for u,v in pres.edges.values():
-            graph[u].add(v)
-        def reaches(u):
-            seen = {u}
-            todo = [u]
-            while todo:
-                for v in graph[todo.pop()]-seen:
-                    seen.add(v)
-                    todo.append(v)
-            return seen
-        intervals = [pres.poles(s) for s,_ in pres.marks.values()]
-        def role(path):
-            u,v = pres.poles(path)
-            left = any(a in reaches(v) for a,_ in intervals)
-            right = any(u in reaches(b) for _,b in intervals)
-            if left and right:
-                raise ValueError('three 2-events can compose spatially')
-            return 'left' if left else 'right' if right else None
-        for s,_ in pres.marks.values():
-            role(s)
+        _,polygon_roles = spatial_roles(pres)
         self.roles = {}
         for i,r in enumerate(pres.rules):
-            side = role(r.path)
+            side = polygon_roles[i]
             if side is None:
                 continue
             if len(r.source)!=1 or len(r.target)!=1:

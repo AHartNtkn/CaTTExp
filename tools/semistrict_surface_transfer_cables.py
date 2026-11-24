@@ -148,7 +148,7 @@ def transition(words,side,p,observer,graph):
     return changed
 
 
-def compare(source,right,traces,anchored):
+def compare(source,right,traces,anchored,check_schedule=None):
     ids = {}
     a,b = [incidence(source,right,path,ids) for path in traces]
     if a[:3]!=b[:3]:
@@ -185,7 +185,7 @@ def compare(source,right,traces,anchored):
     while todo:
         k,words,progress,cert = todo.pop()
         if all(progress[p]==len(r) for p,r in routes.items()):
-            if words==ends:
+            if words==ends and (check_schedule is None or check_schedule(cert)):
                 return cert
             continue
         if k==len(events):

@@ -76,7 +76,7 @@ def compare(source,right,traces,anchored):
     return certificate
 
 
-def exhaustive(source,rules,right,budget,anchored):
+def exhaustive(source,rules,right,budget,anchored,solver=compare):
     ids={}
     groups=defaultdict(dict)
     edges=defaultdict(set)
@@ -119,12 +119,12 @@ def exhaustive(source,rules,right,budget,anchored):
                     reached.add(v)
                     work.append(v)
             for v,second in group.items():
-                assert (compare(source,right,(first,second),anchored) is not None)==(v in reached)
+                assert (solver(source,right,(first,second),anchored) is not None)==(v in reached)
                 pairs+=1
     return count,pairs,diamonds
 
 
-def agda_example(directory):
+def agda_example(directory,transfers=False):
     from catt import arr, comp2, glue_tree, infer, maximal_vars, src, tgt, tree_ctx, v
     from emit_agda import Emitter
     from semistrict_surface_scalar_cube import exchange
@@ -145,11 +145,15 @@ def agda_example(directory):
     stationary=comp2(ctx,0,a,g)
     birth=declare(between(stationary,src(ctx,crossing)))
     death=declare(between(tgt(ctx,crossing),stationary))
+    if transfers:
+        only_right=comp2(ctx,0,f,b)
+        declare(between(stationary,only_right))
+        declare(between(only_right,stationary))
     for e in (a,x,y):
         j=exchange(ctx,e,b)
         declare(between(tgt(ctx,j),src(ctx,j)))
     emitter=Emitter()
-    name='SharedWireBirths'
+    name='SharedWireTransfers' if transfers else 'SharedWireBirths'
     whole=emitter.ctx(ctx)
     emitter.checks.append(f'context-ok : is-just (checkCtx {whole}) ≡ true' + chr(10) + 'context-ok = refl' + chr(10))
     emitter.check_typed('birth',ctx,birth)

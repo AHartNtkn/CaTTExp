@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from functools import cache
 from pathlib import Path
 
-from catt import (comp2, glue_tree, infer, maximal_vars, src, sub_from, subst_tm,
+from catt import (comp2, fv_tm, fv_ty, glue_tree, infer, maximal_vars, src, sub_from, subst_tm,
                   tdim_tm, tgt, tree_ctx, v)
 from catt_unit_ordered_exchange import temporal_words
 from ct_suspension import susp_ctx, susp_tm
@@ -88,6 +88,25 @@ def adjacent(ctx, generic_loop):
     assert src(ctx, x) == tgt(ctx, x) and src(ctx, y) == tgt(ctx, y)
     assert tgt(ctx, src(ctx, x)) == src(ctx, src(ctx, y))
     return x, y
+
+
+def separated_loops(generic_loop):
+    """Place each of the eight advances on a distinct outer span."""
+    ctx = tree_ctx((((),),) * 8)
+    gates = list(map(v, maximal_vars(ctx)))
+    def successive(first, second):
+        return comp2(ctx, 0, first, src(ctx, second)), comp2(ctx, 0, tgt(ctx, first), second)
+
+    labels = [placed for i in range(0, 8, 2) for placed in successive(*gates[i:i + 2])]
+    a = apply(ctx, generic_loop, labels[:4])
+    b = apply(ctx, generic_loop, labels[4:])
+    u, v_path = src(ctx, a), src(ctx, b)
+    u1, v0 = tgt(ctx, u), src(ctx, v_path)
+    left_end, right_start = tgt(ctx, u1), src(ctx, v0)
+    x = comp2(ctx, 1, comp2(ctx, 0, a, right_start), comp2(ctx, 0, left_end, v0))
+    y = comp2(ctx, 1, comp2(ctx, 0, u1, right_start), comp2(ctx, 0, left_end, b))
+    assert tgt(ctx, src(ctx, x)) == src(ctx, src(ctx, y))
+    return ctx, x, y
 
 
 def parallel_split(p, shift=2, split_left=True):
@@ -211,6 +230,17 @@ def main():
                 emitter.checks.append(f'fullSpecialization : cohCase {emitter.ctx(ctx)} {boundary} '
                                       f'{emitter.tm(left)} {emitter.tm(right)} ≡ true\n'
                                       'fullSpecialization = refl\n')
+    wide, wx, wy = separated_loops(small)
+    strip, direct, pasted = parallel_split(2)
+    wide_faces = [apply(wide, (strip, route), [wx, wx, wy]) for route in (direct, pasted)]
+    assert infer(wide, wide_faces[0]) == infer(wide, wide_faces[1])
+    for face in wide_faces:
+        assert set(range(len(wide))) == set(fv_tm(face)) | set(fv_ty(infer(wide, face)))
+    if args.agda_dir:
+        boundary = emitter.ty(infer(wide, wide_faces[0]))
+        emitter.checks.append(f'eightSpans : cohCase {emitter.ctx(wide)} {boundary} '
+                              f'{emitter.tm(wide_faces[0])} {emitter.tm(wide_faces[1])} ≡ false\n'
+                              'eightSpans = refl\n')
     if args.agda_dir:
         module = 'DirectedPowerQueries'
         args.agda_dir.mkdir(parents=True, exist_ok=True)

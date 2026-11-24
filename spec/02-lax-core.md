@@ -1,10 +1,14 @@
 # Chapter 2. The lax core L
 
-The lax core keeps all of chapter 1: the same syntax, the same judgments, the same `coh` rule. It changes **only the side condition** of `coh`. Plain CaTT reads the side condition off the free strict ω-category on the coherence's pasting context, where interchange holds as an equation. L reads it off a free structure in which interchange is a directed cell.
+The lax core keeps all of chapter 1: the same syntax, the same judgments, the same `coh` rule. It changes **only the side condition** of `coh`.
 
-There is one rule, parameterised by the strict theory the side condition computes in:
+**What the side condition is.** It is a finite combinatorial test on the coherence's own pasting context Δ and type A: does a cell of the right shape, using every generator of Δ, run from t to u? Plain CaTT's test treats interchange as an equation. L's treats it as a directed step.
 
-| Theory the side condition computes in | Name | Role |
+**Where "strict" enters, and where it does not.** To decide the test, the checker needs a finite description of all the cells a pasting shape has. It uses the free object F_𝕋(Δ) of a strict theory 𝕋 on Δ: finitely many generators with explicit boundaries, in which equality and reachability can be computed. That is the only role of strict structure. It is a **decision device**: nothing in the ambient 𝒦, its objects or the kernel's judgments is strict, and the kernel has no definitional equations (§0.3). The test is trusted because of the soundness theorems in §2.2, which interpret every accepted coherence in weak models (oriented (∞,ω)-categories), not because anything is strict. This is safe only on pasting contexts, which have no loops and no parallel generators, so their free strict and free weak objects agree. General diagrams are never read through a strict object (chapter 4).
+
+There is one rule, parameterised by the decision device:
+
+| Free object the test is decided in | Name | Role |
 |---|---|---|
 | V + S, S ⊆ {inner law, R} | **uniform L**, setting S | **the kernel** (§2.3) |
 | the free Gray-enriched category 𝔉(Γ) | two-tier L | the fragment where interchange is directed only across objects; the implemented checker (§2.5) |
@@ -15,14 +19,14 @@ Each row's free objects map onto the next row's, so (§2.6) every derivation in 
 ## 2.1 Notation
 
 - Every pasting context decomposes uniquely as a wedge of suspensions Γ = ΣΘ₁ ∨ … ∨ ΣΘₙ, with objects a₀, …, aₙ. Θᵢ is the pasting context of the cells in the hom from aᵢ₋₁ to aᵢ.
-- For a strict theory 𝕋 (one of the rows above), **F_𝕋(Γ)** is its free object on Γ. Every term t over Γ has a **strict interpretation** ⟦t⟧_𝕋, a cell of F_𝕋(Γ), defined by induction: a variable goes to its generator, and a coherence goes to the cell its side condition provides (§2.3), transported along the map of free objects its substitution induces (requirement 5 below).
+- For a strict theory 𝕋 (one of the rows above), **F_𝕋(Γ)** is its free object on Γ, the decision device. Every term t over Γ has a **combinatorial image** ⟦t⟧_𝕋, a cell of F_𝕋(Γ), defined by induction: a variable goes to its generator, and a coherence goes to the cell its side condition provides (§2.3), transported along the map of free objects its substitution induces (requirement 5 below).
 - **supp(c)**, for a cell c of ν(λΓ) or 𝔉(Γ), is the downward-closed set of Steiner basis elements used by c and by its iterated boundaries. Support is always measured in these **finite** Steiner bases. It is never measured in the expanded basis of F_{V+S}(Γ), which is infinite already on Σ[2] ∨ Σ[2] (lax r10 (K45)/(K50)).
 - **π** is the requirement-4 projection F_{V+S}(Γ) → 𝔉(Γ), which makes every interchanger along a k-cell with k ≥ 1 an identity. For ν and 𝔉 themselves, π is the identity.
 - Composition order is diagrammatic, and composition across objects is 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c) in execution order (`notes/conventions.md` §1, §4).
 
 ## 2.2 The side condition, in one form for every row
 
-**Rule.** The `coh` rule of chapter 1, §1.4, with
+**Rule.** The `coh` rule of chapter 1, §1.4, with the following test on (Γ, t →_A u). It asks for a cell from t's image to u's image that uses every generator of Γ, either the total cell of Γ (an operation) or an identity on a cell that already uses everything (a coherence).
 
 ```
 SC_𝕋(Γ, t →_A u)   :⟺   F_𝕋(Γ) has a cell  c : ⟦t⟧_𝕋 → ⟦u⟧_𝕋  (an identity allowed)
@@ -37,6 +41,12 @@ The coherence is in the **coherence case** if ⟦t⟧ = ⟦u⟧ in F_𝕋(Γ), a
 
 Because substitution never changes a coherence's head, ⟦coh_{Γ,A}[σ]⟧ := σ_*(c_{Γ,A}) is stable under substitution by construction (requirement 5). The kernel's judgments do not depend on the choice, only the interpretation in the free objects of V + S does. Whether all candidate lifts for one head are connected by higher cells, so that the choice is irrelevant up to coherence, is **open** (ledger S11).
 
+**Why the test is sound.** Acceptance by the test is justified by interpreting every accepted coherence in the intended models. The chain, by row:
+- *Strict Gray models.* For two-tier L, every derivable term over a pasting context is a cell of the free strict Gray-enriched category, and no term has the reverse interchanger's type: **Agda-checked** with no hypothesis (`Strict/Soundness.sound-tm`, `Strict/ReverseInterchanger.no-reverse-interchanger`). For plain CaTT, soundness in every strict ω-category: **Agda-checked** (`Strict/OmegaSound`, chapter 1, §1.4).
+- *Oriented (∞,ω)-categories.* Every oriented (∞,ω)-category in Gepner–Heine's sense, in particular ∞Cat with lax transformations, interprets two-tier L. Operation-case coherences go to lifts of the total cell, coherence-case ones to the invertible cells between parallel cells with equal image. **Proved on paper**: `notes/pseudo-vs-gray.md` Theorem 2. Its hypotheses (D)–(F) are discharged from the literature (Campion, arXiv 2311.00205, Ex. 3.2, Cor. 3.5; Chanavat, arXiv 2603.22242, Thm 3.29; Gepner–Haugseng §2.5).
+- *Uniform L.* Every accepted uniform coherence projects to an accepted two-tier one (§2.3 *Semantics*), so every model of two-tier L is a model of uniform L.
+- *Open ends.* Interpreting a dependent type theory with strict substitution in (∞,ω)-categories needs a coherent choice of composites and coherence cells. This gap is shared with plain CaTT; one direction is done and reconstruction is open (`notes/semantics-gaps.md` §2, (S2′)). For V + S, whether all candidate lifts of one head are connected by higher cells is open (S11).
+
 **Lemma 2.2.1 (agreement with the support form).** For 𝕋 = ν (plain CaTT) and 𝕋 = 𝔉 (two-tier L), SC_𝕋 holds iff one of
 ```
 (operation)  ⟦t⟧ = ∂⁻τ_Γ  and  ⟦u⟧ = ∂⁺τ_Γ,  where τ_Γ is the total cell of F_𝕋(Γ)
@@ -48,7 +58,7 @@ and, by support-determines-cells, these are the support conditions `supp(t:A) = 
 
 **Status.** The single form SC_𝕋 is **stated here**. It is how `notes/design-decisions.md` §1.1 describes the rule ("read off the free object F_T(Γ)"), but no note writes it out (ledger S1). Support is read through the projection π because the expanded basis of F_{V+S}(Γ) is infinite on Σ[2] ∨ Σ[2]: measured there, the rule would reject even the composite interchanger (ledger S1). The designated lift is a SPEC decision (S11). Lemma 2.2.1 is **stated here** with the proof above, whose two inputs are Agda-checked. On a single hom (n = 1), the 𝔉 instance equals Finster–Mimram's Var condition: **Agda-checked** (`Gray/SingleHom.agda` for the rule level, `Gray/SuppVars.agda` and `Strict/SuppFV.agda` for the term level; ledger E1).
 
-**Source.** `notes/design-decisions.md` §1.1; `notes/pseudo-vs-gray.md` §3.2–3.3, §3.6; ledger E1.
+**Source.** `notes/design-decisions.md` §1.1; `notes/pseudo-vs-gray.md` §3.2–3.3, §3.6 (Theorem 2); `notes/semantics-gaps.md` §2; ledger E1, S11, S29.
 
 ## 2.3 The kernel: the side condition computed in V + S
 

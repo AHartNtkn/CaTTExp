@@ -52,6 +52,8 @@ with ⊗ the Steiner–Ara–Maltsiniotis tensor and factors in execution order.
 
 Example: over Δ = ΣD¹ ∨ ΣD¹, with α : f ⇒ f′ and β : g ⇒ g′, the coherence of type (f ◁ β) ; (α ▷ g′) → (α ▷ g) ; (f′ ◁ β) is accepted. Its reverse is not, and no term at all has the reverse type.
 
+The coherence case needs full support in the Steiner bases, not only that every variable occurs. Over the same Δ, βα = (f ◁ β) ; (α ▷ g′) and βα₂ = (1_{f;g} ; (f ◁ β)) ; (α ▷ g′) are parallel, have equal images and together use every variable. Their images miss the basis element α ⊗ β, so no single coherence has type βα → βα₂ (either way). A composite of two coherences, a unitor whiskered by α ▷ g′, does have that type. So in CaTT_G, parallel terms with equal images over a pasting context cannot in general be joined by one coherence-case coherence over the variables they use.
+
 ### 1.3 Kernels with directed interchange at every level
 
 These kernels direct interchange along k-cells for every k, including inside homs. They are strict theories on the following signature:
@@ -113,6 +115,7 @@ For a kernel 𝕋:
   - {A} is conservative (Response 16).
   - {U} is conservative (Response 51).
   - {A, U} is conservative (Response 222). The proof builds a model with strictly associative and unital temporal products and Kan fibrations at globular boundaries: simplicial presheaves on a site of arities with free temporal composition, then a Reedy/injective comparison and fixed-object rigidification. It uses Response 170: with strict units, top associativity generates the whole {A, U} surface.
+- *What these proofs use.* Responses 3, 16, 51 and 222 take as input that, for every finite globular pasting arity P, the free CaTT_G-model on P maps to 𝔉(P) by a globular trivial fibration. This is the directed arity lifting of Response 1 in `notes/conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`, proved there model-theoretically (wedge Segal presentation and a fixed-hom criterion), not by a single coherence per lift. By the example in §1.2 a single coherence does not suffice. If you rely on this lifting, check that your argument does not need more than it states.
 - *Subsets with I.* Any S ∋ I fails already at ΣD¹ ∨ ΣD¹ in dimension 3, by the obstruction of item 1.
 - *Context-level results for S ∋ I.*
   - Through dimension 3, the exact per-context test is that every exchange edge has a directed return path, and this test is undecidable (Response 2).

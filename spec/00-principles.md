@@ -72,7 +72,7 @@ Specialisation happens only for a concrete, recorded reason. The one recorded st
 ## 0.5 The kernel and the surface are kept apart
 
 The **kernel** is an explicit, decidable system. It has:
-- no defaults (every mark, every switch setting, every bracketing is written out);
+- no defaults (every mark, every bracketing is written out);
 - no implicit arguments, no notation, no overloading, no computation rules;
 - a checker that decides every judgment.
 

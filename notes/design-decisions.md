@@ -118,7 +118,7 @@ The r8 answers (`conjectures/answered/lax-interchange-every-dimension-r8-2026-11
 - **Q-vis.** The right split R and the inner composite-crossing law are visible on pasting diagrams. Every L_p and D_{d,p} is invisible, because every chronological 3-endomorphism in a free object on a pasting diagram is an identity.
 - **Q1(a) is negative** (no least or minimal law set on arbitrary algebras). The kernel never sees those algebras, so this does not matter for the decision.
 
-**Decision. The side condition computes in V. The switches are the visible laws: the inner composite-crossing law and R. A setting S means the side condition computes in V + S.**
+**Decision. The side condition computes in V. The switches are the visible laws: the inner composite-crossing law and R. A setting S means the side condition computes in V + S.** *(Superseded 2026-11-24 by §1.8: the switches became object marks.)*
 
 Reasons:
 - V is the most general possible choice, not just the most general known one. Every judgement it derives is derivable in every admissible theory, so a V development is sound in the models of every admissible theory. That is L4, and it removes reason 3 of §1.6.
@@ -152,6 +152,35 @@ Reasons:
 - Whether F_J = F_V on pasting diagrams. This is now only of interest for comparison.
 - Admissibility of V + R and of V + inner law separately. **Answered 2026-11-20 (K73): both admissible.** Uniform normal forms for V + S are asked in r10 Q2.
 - LCORE: point the default setting at V (message sent).
+
+### 1.8 Revised decision (2026-11-24): the two crossing laws are object marks, not a file setting (ledger S31)
+
+**Decision.** There are no switch settings. The left split (inner composite-crossing law) and the right split R are **object marks**, `lsplit` and `rsplit`, written on object variables in the context like `iord` and `ord`. A coherence over a pasting context Δ with objects a₀, …, aₙ computes its side condition in V + S(Δ), where S(Δ) is the set of splits carried by every one of a₁, …, aₙ (`ord` carries both). With no marked object, that is V. A substitution may send an `lsplit` (`rsplit`) variable only to an `lsplit` (`rsplit`) or `ord` variable. (COH-ord) is unchanged. Spec §2.3 and §3.6 state the rule.
+
+**Why the file setting goes.**
+- *It chose a class of models.* §1.6–1.7 justified the switches by "some models with directed inner crossings satisfy these laws and some do not", and let a development declare which kind it was about. The project has no intended model and no mechanism for choosing a class of models (spec §0.1 after ledger S32). That justification is gone.
+- *It was the only assumption outside the context.* Every other hypothesis a judgment uses (a mark, a declared variable) is in the context and is discharged by substitution. The setting was a per-file global, so the library split four ways with one-way imports, and nothing in a judgment showed which laws it used.
+- *Under the generality ordering it only added cells.* V with no laws is the least admissible theory (§1.7). A setting S ≠ ∅ only adds derivable cells, everywhere in the file at once.
+
+**Why the laws are not simply deleted.** A split is a property of particular objects: it says how crossings in the homs into one object behave. The kernel already states properties of this kind as object marks: `iord` (inner letters invertible) and `ord` (inner letters trivial). `ord` is strictly stronger than either split: both sides of each split are pure inner terms (below), so they are equal wherever inner letters are trivial. Deleting the splits but keeping `ord` would make the only way to use a split to assume much more. A concrete case is directed Eckmann–Hilton inside an object C (spec §3.6 Example (a)). With `(C : ⋆)^lsplit` and a `inv`, (INN-fac) makes EH₁ invertible. With no marks it is not invertible. With `ord` it is invertible, but `ord` assumes inner letters into C are trivial, and with (COH-ord) it also joins the loop H to 1_w and the outer W-strip (E13), which the split alone does not. A mark constrains only the objects it is placed on, so an unmarked object is still checked in V and no generality is lost.
+
+**E12's original reasons, re-examined.**
+- *The separating models* (the tagged model of (K44)/(K51), the marked algebras) show that each split is independent of V and of the other split. That makes each mark a non-redundant hypothesis. It does not say that the hypothesis belongs at file level.
+- *The unbounded coherence tower* (§1.4(c)) is an argument against a law as a declared cell κ, which the side condition cannot see. A mark acts through the side condition, as (COH-ord) does, so every higher coherence of the law comes from the oracle. The argument therefore supports marks as much as it supported switches.
+
+**What is lost and what is gained.** Nothing expressible before is lost: for a context with at least one hom, marking every object a₁, …, aₙ with S gives S(Δ) = S, the old setting (`Uniform/SplitMarks.uniform-recovers`; the judgments then agree by congruence, and a context with no hom has no inner letter, so its law set is irrelevant). What is gained is per-object precision. A development can assume the left split for one object and nothing for another, and a lemma proved over unmarked objects applies to marked ones by substitution, since stronger marks only enlarge S(Δ) (`meet-mono`, `invM-mono`, Agda-checked for the pointwise mark order; substitution itself is on paper).
+
+**Check: both laws are pure-inner in every degree.** S31 asked for this first. In T₁₂'s signature the splits of an **outer** interchanger (along a 0-cell) are axioms of the base, (7) `χ-∘ˡ`, `χ-∘ʳ` in `Join/SepAlgebra.agda`, so they are already in V. The two visible laws are the splits of an interchanger along a k-cell with k ≥ 1. Each side is built from that interchanger, identities, composition and whiskering only. At degree 4 this is **Agda-checked** (`Join/SwitchLaws.law-inner`; `Uniform/SplitMarks.Degree4.law-trivial`: any predicate closed under those constructors holds of both sides). In higher degrees the law schema is the same at each level k ≥ 1, ι(F ⨾ F′, G) = paste of ι(F, G), ι(F′, G) and its mirror (`closed-structure.md` §D.4.3), with inner letters only, so the statement holds by the same induction (paper). Consequence: `ord` ⇒ `lsplit`, `rsplit`. Both sides of each law are parallel (they are the two sides of one equation of T₁₂), and in a model with trivial inner letters into C both are identities, so they are equal. The parallelism step is by the typing of T and is not mechanized.
+
+**Soundness (paper).** Fix a model, an algebra of an admissible theory, and an assignment γ that respects marks: each γ(aᵢ) satisfies the splits marked on aᵢ in every hom 𝒦(X, γ(aᵢ)). Every hom of F(Δ) runs from some aᵢ to some aⱼ with j ≥ 1, so it lands in an object carrying every law of S(Δ) (`SplitMarks.meet-lb`). So γ sends each generating instance of the S(Δ) congruence to an equality, and the model's map out of F_V(Δ) factors through F_{V+S(Δ)}(Δ). The designated lift of an accepted coherence is interpreted through that factorization. This is the (COH-ord) argument with the S(Δ) congruence in place of "inner letters killed".
+
+**Decidability.** S(Δ) is one of the four law sets, each decidable by r10 Response 3 (§1.7). Nothing new is needed.
+
+**Duality.** D_all exchanges the left split and R (`closed-structure.md` §D.4.3), so on marks it exchanges `lsplit` and `rsplit`.
+
+**Open (owner DSGN, folded into E15).** For a mixed head, the meet S(Δ) can be weaker than necessary. The left split could be imposed only on inner crossings landing in the objects that carry it, giving a theory between V + S(Δ) and V + (the union of the objects' splits). Whether that per-object quotient is admissible and decidable is the split-mark analogue of E15(a). The meet is sound and decidable now, so the rule does not wait on it.
+
+**What would overturn this.** A construction whose correctness needs a split law to hold on an object that the construction itself introduces, not on an object variable of the context. A mark could not express that. None is known.
 
 ---
 

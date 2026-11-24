@@ -196,7 +196,7 @@ class Schedules:
                 return False
         return True
 
-    def branches(self,order,rec,form,var,eqs,visited,safe):
+    def branches(self,order,rec,form,var,eqs,exchanged,safe):
         if order == self.target_order:
             f, equations, j = form.copy(), list(eqs), var
             for p in order:
@@ -232,10 +232,11 @@ class Schedules:
                     if not self.before(k,i+1) <= self.target_before[p]:
                         continue
                     self.gain_visits += 1
-                    yield order,{**r,p:(k,i+1)},{**f,p:advance(f[p],delta)},j,eqs,{order},safe
+                    yield order,{**r,p:(k,i+1)},{**f,p:advance(f[p],delta)},j,eqs,set(),safe
         for index,(p,q) in enumerate(zip(order,order[1:])):
             changed = order[:index]+(q,p)+order[index+2:]
-            if changed in visited:
+            pair = tuple(sorted((p,q)))
+            if pair in exchanged:
                 continue
             for r,f,j in self.align(p,rec,form,var):
                 h,i = r[p]
@@ -258,7 +259,7 @@ class Schedules:
                     new,_ = self.model.named(h,q,b0)
                     self.meet_visits += 1
                     yield (changed,{**t,q:(h,b0),p:(new,i1)},z,l,equations,
-                           visited|{changed},safe and self.absorbs(mid,[(i,c),(b,d)]))
+                           exchanged|{pair},safe and self.absorbs(mid,[(i,c),(b,d)]))
 
     def before(self,h,i):
         return frozenset(u for _,e in h[:i] for u in self.units[e])
@@ -273,7 +274,7 @@ class Schedules:
             return False
         self.target_order = tuple(self.target)
         order = tuple(rec)
-        stack = [self.branches(order,rec,form,0,[],{order},True)]
+        stack = [self.branches(order,rec,form,0,[],set(),True)]
         maybe = False
         while stack:
             step = next(stack[-1],False)

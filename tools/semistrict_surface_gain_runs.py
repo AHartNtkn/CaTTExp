@@ -192,6 +192,12 @@ def decide(model,source,first,second,radius=None,certified_only=False,only_endpo
         if result['surface'] is not None:
             return dict(result,endpoint_meetings=None if unresolved else False,
                         moving_triangle_centers=sorted(middle))
+    if not exact and not only_endpoint_meetings:
+        from semistrict_surface_finite_cut_search import finite_search
+        result=finite_search(calc,start,goal,initial,final,initial.keys()-middle,radius)
+        if result['surface'] is not None:
+            return dict(result,endpoint_meetings=None if unresolved else False,
+                        moving_triangle_centers=sorted(middle))
     return dict(surface=False if exact and not unresolved else None,
                 endpoint_meetings=None if unresolved else False,endpoints_forced=forced,
                 moving_triangle_centers=sorted(middle),independent_components=independent,

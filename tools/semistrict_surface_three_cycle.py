@@ -123,7 +123,8 @@ def cycle(calc,start,goal,old,new,radius=None):
                 unresolved+=1
                 continue
             from semistrict_surface_gap_orbits import joint_representatives
-            fixed,complete=joint_representatives(calc,fixed,terminal,total,(*old.values(),*new.values()))
+            bounds={p:tuple(frozenset(k-1 for k in content(c.before)) for c in (old[p],new[p])) for p in fixed}
+            fixed,complete=joint_representatives(calc,fixed,terminal,total,(*old.values(),*new.values()),bounds)
             if not complete:
                 unresolved+=1
             instructions=[('part',b),('meet',a,b),('part' if fourth else 'run',a),

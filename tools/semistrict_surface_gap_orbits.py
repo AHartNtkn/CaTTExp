@@ -119,7 +119,7 @@ def endpoint_symmetries(calc, orbit, terminal, total, cuts):
                macro_loop(calc,terminal,reduced(inv(total)+g+total)) for g in orbit.generators)
 
 
-def joint_representatives(calc, families, terminal, total, cuts):
+def joint_representatives(calc, families, terminal, total, cuts, bounds=None):
     """Return actual candidates and whether they cover all solutions up to symmetry."""
     options = [(f.forward,f.backward) if isinstance(f,Directions) else (f,) for f in families.values()]
     def test(combination):
@@ -146,6 +146,19 @@ def joint_representatives(calc, families, terminal, total, cuts):
         refined.append(choices)
     for combination in product(*refined):
         if any(isinstance(f,Directions) and choice is f.cohorts for f,choice in zip(families.values(),combination)):
+            points,certified = test(combination)
+            if certified:
+                return points,True
+    if bounds is not None:
+        from semistrict_surface_finite_cut_search import positioned_points
+        physical = []
+        for (p,f),choices in zip(families.items(),refined):
+            if isinstance(f,Directions):
+                points = positioned_points(calc,p,f.chart_data,*bounds[p])
+                if points is not None:
+                    choices = (points,)
+            physical.append(choices)
+        for combination in product(*physical):
             points,certified = test(combination)
             if certified:
                 return points,True

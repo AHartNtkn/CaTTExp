@@ -242,7 +242,7 @@ Together these force J = ∅. Neither alone does: J = {1,2,4,5,7,…} passes the
 
 ## 2.8 Open surface questions
 
-*Q2.1 (which switch setting a development starts in) was removed on 2026-11-24: there are no settings, and the crossing laws are object marks (§2.3, ledger S31). Their surface defaults fall under Q3.3.*
+How the split marks are written in a surface file is part of Q3.3 (chapter 3).
 
 **Q2.2. How a horizontal composite across objects is written.** The kernel has no horizontal composite; there are two layerings, ∂⁻τ (later factor first) and ∂⁺τ (earlier factor first), related by the directed interchanger from ∂⁻ to ∂⁺.
 - *Option A: no notation; the user writes the layering they mean.* Nothing hidden; every composite of transformations across objects is written twice as long.

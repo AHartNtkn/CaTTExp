@@ -22,7 +22,7 @@ from semistrict_surface_shared_edge import braid_image
 
 
 class Corner:
-    def __init__(self,data,accept_wired_port=None):
+    def __init__(self,data,wired_representative=None):
         self.blocks = data['blocks']
         self.model = Presentation(dict(data,rules={k:[k,b] for k,b in self.blocks.items()}))
         self.joint = self.model.diagram
@@ -35,12 +35,15 @@ class Corner:
             raise ValueError('give expanded gates distinct occurrence names apart from markers')
         self.sizes = {}
         for k,b in self.blocks.items():
-            if not b or (self.model.ports[k]!=('','') and
-                         (accept_wired_port is None or not accept_wired_port(self.model,k,b))):
+            rep = 0
+            if self.model.ports[k]!=('',''):
+                rep = wired_representative(self.model,k,b) if wired_representative else None
+            if not b or rep is None or not 0<=rep<len(b):
                 raise ValueError('port does not satisfy the selected corner criterion')
             sizes = [1]*len(names)
             pos = names.index(b[0][1])
-            sizes[pos:pos+len(b)] = [len(b)]+[0]*(len(b)-1)
+            sizes[pos:pos+len(b)] = [0]*len(b)
+            sizes[pos+rep] = len(b)
             self.sizes[k] = sizes
         self.image = lru_cache(maxsize=256)(lambda w:braid_image(len(self.rows),w))
 
@@ -65,8 +68,8 @@ class Corner:
         return x
 
 
-def solve(data,accept_wired_port=None):
-    corner = Corner(data,accept_wired_port)
+def solve(data,wired_representative=None):
+    corner = Corner(data,wired_representative)
     paths = {k:tuple(w) for k,w in data['paths'].items()}
     if set(paths)!=set(corner.blocks):
         raise ValueError('supply a corner path for each selected site')

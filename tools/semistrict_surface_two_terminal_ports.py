@@ -89,8 +89,9 @@ def recognize(data):
             for k,ports in data['rules'].items()}
 
 
-def admissible(model,k,b):
-    return classify(model,k,b) is not None
+def wired_representative(model,k,b):
+    report = classify(model,k,b)
+    return report['first'] if report else None
 
 
 def gather(rows,groups,ports):
@@ -129,7 +130,7 @@ def fixture():
 
 def audit():
     data = fixture()
-    c = Corner(data,admissible)
+    c = Corner(data,wired_representative)
     ports = c.model.ports
     blocks = c.blocks
     assert classify(c.model,'A',blocks['A'])==dict(kind='two-terminal',first=0,last=5,
@@ -279,7 +280,7 @@ if __name__=='__main__':
     args = parser.parse_args()
     if args.input:
         data = json.loads(args.input.read_text())
-        result = recognize(data) if 'rules' in data else solve_corner(data,admissible)
+        result = recognize(data) if 'rules' in data else solve_corner(data,wired_representative)
         print(json.dumps(result,indent=2))
     else:
         audit()

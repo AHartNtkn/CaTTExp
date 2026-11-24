@@ -10,18 +10,20 @@ from itertools import combinations
 import json
 from pathlib import Path
 
+from semistrict_surface_component_braids import Partition
 from semistrict_surface_empty_returns import find_return, movie, return_rules
 from semistrict_surface_scalar_leaves import read_edges
 
 
-def marked_net(data):
+def marked_net(data,degrees=(2,)):
     rules = {}
     for name in return_rules(data):
         inputs,outputs = data['rules'][name]
         ports = inputs+outputs
-        for pair in [(),*combinations(range(len(ports)),2)]:
-            decorated = [(p,i in pair) for i,p in enumerate(ports)]
-            rules[name,pair] = decorated[:len(inputs)],decorated[len(inputs):]
+        for degree in (0,*degrees):
+            for selected in combinations(range(len(ports)),degree):
+                decorated = [(p,i in selected) for i,p in enumerate(ports)]
+                rules[name,selected] = decorated[:len(inputs)],decorated[len(inputs):]
     return dict(point_gates=[(p,bit) for p in data['point_gates'] for bit in (False,True)],rules=rules)
 
 
@@ -68,8 +70,63 @@ def analyze(data,witness=False):
     return result
 
 
+def component_ranks(drawing):
+    initial,final,sources,targets,steps = read_edges(drawing)
+    assert not initial and not final
+    parts = Partition()
+    chords = []
+    for edge,(s,t) in enumerate(zip(sources,targets,strict=True)):
+        if parts.at(s)==parts.at(t):
+            chords.append(edge)
+        else:
+            parts.unite(s,t)
+    groups = {parts.at(i):[] for i in range(len(steps))}
+    for e in chords:
+        groups[parts.at(sources[e])].append(e)
+    return list(groups.values())
+
+
+def splice_copies(drawing,edge,copies):
+    """Rebuild the prescribed incidence graph, cycling the chosen strand."""
+    if copies<1:
+        raise ValueError('expected a positive copy count')
+    _,_,sources,_,steps = read_edges(drawing)
+    cut = sources[edge]+1
+    schedule = [(i,j) for block in (range(cut),range(cut,len(steps)))
+                for i in range(copies) for j in block]
+    rules = {}
+    for i,j in schedule:
+        _,ins,outs,_ = steps[j]
+        rules[i,j] = ([((i+1)%copies if e==edge else i,e) for e in ins],[(i,e) for e in outs])
+    return movie(dict(rules=rules),schedule)
+
+
+def rank_range(data,witness=False,copies=1):
+    decorated = marked_net(data,(2,3,4))
+    allowed = return_rules(decorated)
+    branching = {g for g in allowed if len(g[1])>2}
+    if not branching:
+        answer = analyze(data,witness)
+        return dict(max_component_cycle_rank=int(answer['named_degree_five_obstruction_at_empty_ends']),**answer)
+    result = dict(max_component_cycle_rank='unbounded',named_degree_five_obstruction_at_empty_ends=True)
+    if witness:
+        path = find_return(decorated,allowed,branching)
+        drawing = movie(decorated,path)
+        chords = max(component_ranks(drawing),key=len)
+        assert len(chords)>=2
+        expanded = splice_copies(drawing,chords[0],copies)
+        ranks = [len(group) for group in component_ranks(expanded)]
+        expected = 1+copies*(len(chords)-1)
+        assert max(ranks)==expected
+        result.update(program=[dict(rule=g,marked_ports=ports) for g,ports in path],
+                      movie=drawing,component_chords=chords,spliced_edge=chords[0],
+                      spliced_movie=expanded,spliced_component_ranks=ranks)
+    return result
+
+
 def audit():
     from semistrict_surface_spherical_relations import analyze as spheres
+    from semistrict_surface_scalar_leaves import prune
 
     def check(rules,positive,cycle_size=None):
         data = dict(point_gates=sorted({p for ports in rules.values() for side in ports for p in side}),
@@ -99,12 +156,29 @@ def audit():
         for b in range(1,4):
             check({'birth':('','a'*a),'death':('a'*b,'')},min(a,b)>=2)
     print('Checked returning forests, a locally closed but stranded bigon, a returned bigon, a four-event cycle and nine arity pairs.')
+    for births,deaths,rank in [(1,3,0),(2,2,1),(2,3,'unbounded'),(3,3,'unbounded')]:
+        net = dict(point_gates=['a'],rules={'birth':([],['a']*births),'death':(['a']*deaths,[])})
+        result = rank_range(net,True,3)
+        assert result['max_component_cycle_rank']==rank
+        if rank=='unbounded':
+            ranks = result['spliced_component_ranks']
+            assert max(ranks)>=4 and spheres(result['spliced_movie'])['betti']==[1,sum(ranks),len(ranks)]
+    # Arbitrarily many cycles can coexist without a single connected bicycle.
+    net = dict(point_gates=['a','leaf'],rules={'birth':([],['a','a','leaf']),
+               'death':(['a','a'],[]),'prune':(['leaf'],[])})
+    decorated_cycle = rank_range(net,True)
+    assert decorated_cycle['max_component_cycle_rank']==1
+    reduced = prune(decorated_cycle['movie'])['movie']
+    assert [(len(c['input']),len(c['output'])) for c in reduced['charts']]==[(0,2),(2,0)]
+    assert spheres(reduced)['betti']==spheres(decorated_cycle['movie'])['betti']
+    print('Connected rank bounds and three-copy splices checked on the actual signed spines.')
 
 
 def typed(directory):
-    from catt import STAR,arr,check_ctx,comp2,infer,v
+    from catt import STAR,arr,check_ctx,comp2,infer,subst_tm,subst_ty,v
     from emit_agda import Emitter
     from relative_coherence_hidden_seam import identity
+    from semistrict_surface_skeletal_base import right_unit
 
     point = (STAR,)
     u = identity(point,v(0))
@@ -129,15 +203,45 @@ def typed(directory):
         emitter.check_type('closedChamberAtWrittenEnds',ctx,closed,end)
         (directory/'CycleReturn.agda').write_text(emitter.module('CycleReturn',__doc__.splitlines()[0]))
 
+    # Fold two cycle colours to h and contract a leaf attached at the birth.
+    source = point+(scalar,)*3
+    pair = comp2(source,1,v(1),v(2))
+    triple = comp2(source,1,pair,v(3))
+    source += (arr(scalar,e,triple),arr(scalar,pair,e),arr(scalar,v(3),e))
+    check_ctx(source)
+    # Consume the right leaf and then the remaining pair at the reduced port.
+    leaf = comp2(source,1,pair,v(6))
+    step = comp2(source,2,comp2(source,2,v(4),leaf),right_unit(source,pair,2,False))
+    closed = comp2(source,2,step,v(5))
+    target = point+(scalar,)
+    folded = comp2(target,1,v(1),v(1))
+    target += (arr(scalar,e,folded),arr(scalar,folded,e))
+    check_ctx(target)
+    images = [v(0),v(1),v(1),e,comp2(target,2,v(2),right_unit(target,folded,2,True)),
+              v(3),identity(target,e)]
+    for i,t in enumerate(images):
+        assert infer(target,t)==subst_ty(source[i],images[:i])
+    projected = subst_tm(closed,images)
+    assert infer(source,closed)==end and infer(target,projected)==end
+    if directory:
+        emitter = Emitter()
+        emitter.check_type('returnWithLeaf',source,closed,end)
+        emitter.check_type('projectToOneColourAndTwoCapRules',target,projected,end)
+        (directory/'UnicyclicReturn.agda').write_text(emitter.module('UnicyclicReturn',__doc__.splitlines()[0]))
+
 
 if __name__=='__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('input',type=Path,nargs='?')
     parser.add_argument('--witness',action='store_true')
+    parser.add_argument('--rank-range',action='store_true',help='classify connected cycle ranks as 0, 1, or unbounded')
+    parser.add_argument('--copies',type=int,default=1,help='number of copies in a rank-amplification witness')
     parser.add_argument('--agda-dir',type=Path)
     args = parser.parse_args()
     if args.input:
-        print(json.dumps(analyze(json.loads(args.input.read_text()),args.witness),indent=2))
+        data = json.loads(args.input.read_text())
+        result = rank_range(data,args.witness,args.copies) if args.rank_range else analyze(data,args.witness)
+        print(json.dumps(result,indent=2))
     else:
         audit()
         typed(args.agda_dir)

@@ -125,7 +125,13 @@ def decide(model,source,first,second,prism_faces=None):
     labels = tuple(x for _,x in source)
     traces = (a[3],b[3])
     if prism_faces is None:
-        return compare(labels,right,traces,anchored,fits)
+        lengths,required = {},{}
+        for e,(letter,outer) in a[1].items():
+            incoming,outgoing = model.pres.marks[letter]
+            lengths[e] = len(outgoing)-len(incoming)
+            required[e] = len(incoming)+len(outer)
+        exteriors = {p:(len(l),len(r)) for p,(l,r) in a[2].items()}
+        return compare(labels,right,traces,anchored,fits,(lengths,required,exteriors))
     windows = {p:model.pres.rules[n].path for (n,_),p in ids.items()}
     def placement(p,q,on_p,on_q):
         frames = []
@@ -262,6 +268,27 @@ def checks():
             cert = decide(model,source,first,second,(u,v))
             assert (cert is not None)==(u==v or (u==neg and length>=2))
     assert 'impossible_gap' in all_degrees(pres)
+    # One permissible stage out of two on the other polygon. Its source
+    # and target perform the same path-length change using different sites.
+    edges = {'f':(0,1),'k':(1,2),'g':(2,3),'u':(2,4),'v':(4,3)}
+    tags = {'a':('f','f'),'b':('kg','kuv'),'c':('g','uv')}
+    for i,j in [(('b',0),('c',1)),(('c',1),('b',0))]:
+        q = Rule('kg',((i[1],i[0]),),((j[1],j[0]),))
+        model = Movies(Presentation(edges,tags,[polygons[0],q]),'fkg')
+        source = ((1+i[1],i[0]),(0,'a'))
+        cert = decide(model,source,first,second)
+        assert cert==tuple(pos if i[0]=='b' else neg)
+        assert raw_compare(model,source,first,second)['raw']
+        assert model.compare(source,first,second)['surface']
+    # The second spectator needs two exterior edges. Its predecessor supplies one.
+    tags['d'] = ('uv','g')
+    model = Movies(Presentation(edges,tags,[polygons[0]]),'fkg')
+    source = ((2,'c'),(2,'d'),(0,'a'))
+    early = [('swap',1),('swap',0),(0,0)]
+    late = [(0,2),('swap',1),('swap',0)]
+    assert decide(model,source,early,late)==((0,0,(-1,0)),(0,0,(-1,1)))
+    assert raw_compare(model,source,early,late)['raw']
+    assert model.compare(source,early,late)['surface']
     edges = {'f':(0,1),'g':(1,2)}
     bare = Presentation(edges,marks,[])
     split = Rule('f',((0,'a'),),((0,'a'),(0,'a')))

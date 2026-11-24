@@ -40,12 +40,15 @@ def cables(sides,graph,private):
     return units
 
 
-def projection(a,b,private,units,flip):
+def projection(a,b,private,units,flip,lengths):
     # In the second chart reverse the execution of each 3-reading and exchange
     # the colours. Thus a right polygon is processed from its outputs to inputs.
     _,sides,graph,_ = a
     left = [e for e in sides if sides[e]==flip]
     right = [e for e in sides if sides[e]!=flip]
+    observer_start = {e:p for p,side in private.items() if side!=flip
+                      for e in graph[p][1 if flip else 2]}
+    marker_heights,edge_heights = {},{}
     def data(diagram):
         input_words,observer_words = {},defaultdict(list)
         words = diagram[3]
@@ -57,12 +60,16 @@ def projection(a,b,private,units,flip):
         for f in sorted(right,reverse=bool(flip)):
             es = words.get(f,())
             for y in units[f]:
-                observer_words[y].extend(reversed(es) if flip else es)
+                word = observer_words[y]
+                if diagram is a and f in observer_start:
+                    marker_heights[observer_start[f],y] = sum(lengths.get(e,0) for e in word)
+                word.extend(reversed(es) if flip else es)
         return input_words,dict(observer_words)
     current,paths = data(a)
     final,targets = data(b)
     order = TopologicalSorter()
     borders = {}
+    heights = {}
     counter = 0
     def bind(e,lo,hi):
         order.add(('e',e),('gap',lo))
@@ -70,7 +77,12 @@ def projection(a,b,private,units,flip):
     for y,path in paths.items():
         borders[y] = list(range(counter,counter+len(path)+1))
         counter += len(path)+1
+        height = 0
+        heights[borders[y][0]] = height
         for j,e in enumerate(path):
+            edge_heights[y,e] = height
+            height += lengths.get(e,0)
+            heights[borders[y][j+1]] = height
             bind(e,borders[y][j],borders[y][j+1])
     routes = {}
     for p in sorted(graph,reverse=bool(flip)):
@@ -102,7 +114,13 @@ def projection(a,b,private,units,flip):
             for e in ins:
                 assert current[e].pop()==y
                 order.add(('p',p),('e',e))
+            height = heights[new[0]]
             for k,e in enumerate(outs):
+                edge_heights[y,e] = height
+                height += lengths.get(e,0)
+                if k+1==len(outs):
+                    assert height==heights[new[-1]]
+                heights[new[k+1]] = height
                 current[e].insert(0,y)
                 order.add(('e',e),('p',p))
                 bind(e,new[k],new[k+1])
@@ -110,7 +128,7 @@ def projection(a,b,private,units,flip):
             edge_gaps[j:j+len(ins)+1] = new
     if current!=final or paths!=targets:
         return None
-    return {key:i for i,key in enumerate(order.static_order())},routes
+    return {key:i for i,key in enumerate(order.static_order())},routes,edge_heights,marker_heights
 
 
 def slot(whole,part):
@@ -148,7 +166,66 @@ def transition(words,side,p,observer,graph):
     return changed
 
 
-def compare(source,right,traces,anchored,check_schedule=None):
+def bounded_counts(a,b,private,allowed):
+    # If A,B are the two private incidence matrices (outputs minus inputs),
+    # all square balances have the form D = A L - R B^t.
+    _,sides,graph,initial = a
+    final = b[3]
+    wires = [[e for e in sides if sides[e]==k] for k in (0,1)]
+    nodes = [sorted(p for p in private if private[p]==k) for k in (0,1)]
+    producer = {e:p for p in private for e in graph[p][2]}
+    consumer = {e:p for p in private for e in graph[p][1]}
+    delta = {(e,f):int(f in final.get(e,()))-int(f in initial.get(e,()))
+             for e in wires[0] for f in wires[1]}
+
+    def difference(values,born,used):
+        return values.get(born,0)-values.get(used,0)
+
+    # First-input recursion is an integral left inverse to each incidence.
+    left,right = {},{}
+    for p in nodes[0]:
+        e = graph[p][1][0]
+        for f in wires[1]:
+            left[p,f] = left.get((producer.get(e),f),0)-delta[e,f]
+    for q in nodes[1]:
+        f = graph[q][1][0]
+        for e in wires[0]:
+            al = difference(left,(producer.get(e),f),(consumer.get(e),f))
+            right[e,q] = right.get((e,producer.get(f)),0)+delta[e,f]-al
+    for (e,f),value in delta.items():
+        al = difference(left,(producer.get(e),f),(consumer.get(e),f))
+        rb = difference(right,(e,producer.get(f)),(e,consumer.get(f)))
+        if al-rb!=value:
+            return None
+
+    # Every integral solution differs from this one by (W B^t, A W).
+    # Bound each coefficient by two ordinary difference constraints.
+    variables = {None:0,**{(p,q):0 for p in nodes[0] for q in nodes[1]}}
+    bounds = []
+    expressions = {}
+    def bound(key,c,hi,lo):
+        hi = hi if hi in variables else None
+        lo = lo if lo in variables else None
+        top = int(key in allowed)
+        bounds.extend(((hi,lo,c),(lo,hi,top-c)))
+        expressions[key] = c,hi,lo
+    for (p,f),c in left.items():
+        bound((0,p,f),c,(p,producer.get(f)),(p,consumer.get(f)))
+    for (e,q),c in right.items():
+        bound((1,q,e),c,(producer.get(e),q),(consumer.get(e),q))
+    for _ in range(len(variables)):
+        changed = False
+        for u,v,d in bounds:
+            upper = variables[u]+d
+            if variables[v]>upper:
+                variables[v] = upper
+                changed = True
+        if not changed:
+            return {key for key,(c,hi,lo) in expressions.items() if c+variables[hi]-variables[lo]}
+    return None
+
+
+def compare(source,right,traces,anchored,check_schedule=None,geometry=None):
     ids = {}
     a,b = [incidence(source,right,path,ids) for path in traces]
     if a[:3]!=b[:3]:
@@ -160,47 +237,39 @@ def compare(source,right,traces,anchored,check_schedule=None):
         if len(colours)==1 and n not in anchored:
             private[p] = next(iter(colours))
     units = cables(sides,graph,private)
-    charts = [projection(a,b,private,units,k) for k in (0,1)]
+    lengths,required,exteriors = geometry or ({},{},{})
+    charts = [projection(a,b,private,units,k,lengths) for k in (0,1)]
     if any(c is None for c in charts):
         return None
-    events = []
-    for k,(order,routes) in enumerate(charts):
-        opposite = charts[1-k][0]
+    events = {}
+    for side,(order,routes,_,_) in enumerate(charts):
+        opposite,_,heights,starts = charts[1-side]
         for p,route in routes.items():
             if not route:
                 continue
+            observers = [x for e in graph[p][1] for x in units[e]]
             for f in sides:
-                if sides[f]==k or ('e',f) not in opposite:
+                if sides[f]==side or ('e',f) not in opposite or slot(route,units[f]) is None:
                     continue
-                offset = slot(route,units[f])
-                if offset is not None:
-                    pair = (order['p',p],opposite['e',f])
-                    events.append((pair[::-1] if k else pair,k,p,f,offset))
-    events.sort()
-    routes = {p:r for _,rows in charts for p,r in rows.items()}
-    ends = {e:tuple(b[3].get(e,())) for e in sides}
+                if any((x,f) not in heights for x in observers):
+                    continue
+                if geometry and any(exteriors[p][1-side]+heights[x,f]-starts[p,x]<required[f]
+                                    for x in observers):
+                    continue
+                pair = (order['p',p],opposite['e',f])
+                events[side,p,f] = pair[::-1] if side else pair
+    selected = bounded_counts(a,b,private,events)
+    if selected is None:
+        return None
+    cert = tuple(sorted(selected,key=events.__getitem__))
     words = {e:tuple(a[3].get(e,())) for e in sides}
-    progress = dict.fromkeys(routes,0)
-    todo = [(0,words,progress,())]
-    while todo:
-        k,words,progress,cert = todo.pop()
-        if all(progress[p]==len(r) for p,r in routes.items()):
-            if words==ends and (check_schedule is None or check_schedule(cert)):
-                return cert
-            continue
-        if k==len(events):
-            continue
-        _,side,p,f,offset = events[k]
-        todo.append((k+1,words,progress,cert))
-        if progress[p]!=offset:
-            continue
-        changed = transition(words,side,p,f,graph)
-        if changed is not None:
-            advanced = progress.copy()
-            advanced[p] += len(units[f])
-            todo.append((k+1,changed,advanced,cert+((side,p,f),)))
-    return None
-
+    for step in cert:
+        words = transition(words,*step,graph)
+        if words is None:
+            return None
+    if any(words[e]!=tuple(b[3].get(e,())) for e in sides):
+        return None
+    return cert if check_schedule is None or check_schedule(cert) else None
 
 def checks():
     from semistrict_surface_signed_width_two import Movies, Presentation, Rule

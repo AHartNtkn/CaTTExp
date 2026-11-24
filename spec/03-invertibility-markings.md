@@ -250,3 +250,31 @@ The note proposed M1; the choice is left open here.
 - *D combined with B.* The two are independent: D decides **which assumptions** a statement has, B decides **which marks** they carry. At `end S`, each declaration is stated over the section assumptions it uses, with the weakest marks its proof needs. A mark written in the section acts as an upper bound and as the tie-breaker where the minimum is not unique (see *What B needs*). This gives D's ergonomics (assumptions written once) with B's generality (each statement assumes only what its proof uses). Used-only scoping needs strengthening (dropping unused context variables), standard for CaTT-style systems but not formalized here (`notes/lax-sc-completeness.md` §4 relies on it too).
 - *What B needs.* Marks on an object range over a finite set: none, `iord`, `ord`, `lsplit`, `rsplit` and their combinations, with `ord` implying the rest. Every rule is monotone in the marks. So the assignments that make a proof check form an up-closed subset of a finite lattice, and finding its minimal elements is decidable, though naively exponential in the number of objects. The minimum need not be unique. In the worked example with a and b both marked `inv`, {C `lsplit`} and {C `rsplit`} each suffice through (INN-fac_S) and are incomparable. So B must report the minimal choices when there are several and let the author pick, or accept a written mark (A) that settles it.
 - *Recommendation: D with used-only scoping, combined with B, with written marks always accepted.* Sections remove the repetition that makes A tedious; inference keeps every statement as general as its proof allows; a mark written in the section settles the cases where the weakest marks are not unique. Costs: B's decision procedure over mark assignments and D's used-only discharge (strengthening), each with its conservativity proof. The choice is Anthony's (ledger S6).
+
+## 3.9 Marks as declared towers (schemes) [proposal]
+
+An `inv` mark is a finite name for an infinite tower: (DES) gives the first level, and the marks on λ_t and ρ_t give the rest. It never touches the side condition. So it is one instance of a general form, a **scheme**: a finite marked context extension over a generic cell of dimension n, suspension-stable, read coinductively. A scheme is written inline in the mark, like μΔ in chapter 9, so files carry no meaning.
+
+```
+Inv(t : u → v)  :=  ∃ s, s′ : v → u.  ∃ l : s ; t → 1_v [Inv].  ∃ r : t ; s′ → 1_u [Inv]
+Ps(t)           :=  ∀ y with hd(y) ≥ 1 composed before t.  (y ⊗ t) [Inv]      (ps* as in §3.4)
+Grpd_k(C : ⋆)   :=  ∀ t with 0-target C and hd(t) ≥ k.  t [Inv]
+```
+
+**Generic rules.**
+- (S-mark) A marked variable carries its scheme.
+- (S-proj) Projections onto the ∃-clauses: for Inv these are (DES).
+- (S-intro) Clause cells with evidence for their marks: for Inv this is inv-intro (§3.7).
+- (S-∀) Instances of ∀-clauses: for Ps this is (PS-fac), for Grpd_k it is (OBJ-k). ∀-clauses have no intro (`notes/marking-alternatives.md` Prop. 8.2).
+- (S-sub) Substitution into a scheme-marked variable supplies evidence (S21(c)).
+- (S-coh) Coherence-case cohs carry every scheme whose clause types are built from t and earlier clause cells [sketch].
+
+**What stays specific to Inv.**
+- *Closure.* (COH-inv), (OP-inv), (INV-fac), (INV-obj), (DES-inv) and (PS-fac) remain kernel rules of the Inv scheme. Closure is a theorem about particular schemes, not about all of them: idempotent structure is not closed under composition.
+- *Proof-irrelevance.* Inv is a **property scheme** (its towers are unique up to contractible choice in the intended semantics), so projections may depend on t only. Other schemes are proof-relevant, and their projections take evidence, as in §3.7.
+
+**Not schemes.** `ord`, `iord`, `lsplit` and `rsplit` remain object modes acting through the side condition. Their coherence towers range over every pasting shape (E12, E13), which no finite scheme can name.
+
+**Gain.** Towers the `inv` marks cannot express become declarable, for example right inverses at every level and adjoints at every level. Every judgment of §3.3–§3.7 is unchanged.
+
+**Status.** Agda-checked for dimensions 1–2: the generic checker, ICaTT's inv-intro as the generic intro of the Inv scheme for all inputs with S21 unit evidence, and an RInv tower (`Gray/MarkSchemes.agda`). Projections and ∀-clauses are not encoded. Soundness of the generic rules: sketch. The closure criterion for general schemes, whether Inv's closure rules are syntactically admissible over L, and the property criterion are open: ledger S35, `conjectures/outbox/mark-scheme-closure.md`. **Source:** `notes/mark-schemes.md`.

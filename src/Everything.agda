@@ -312,6 +312,7 @@ import CaTTExp.Strict.FreeGlob
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSaturation
+import CaTTExp.Gray.MarkSchemes
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
 import CaTTExp.GrayDualityUniform

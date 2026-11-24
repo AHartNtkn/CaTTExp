@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------
 -- The uni heads over the general horns of CaTTExp.Lim.HornGen (every
--- globular diagram of dimension ≤ 1, n = 0, 1; ledger S27 (e′)), checked
--- on two diagrams, in the
+-- globular diagram of dimension ≤ 1 and every n; ledger S27 (e′)),
+-- checked at n = 0, 1 on two diagrams, in the
 -- kernel with plain CaTT's side condition and rule (MARK). Every
 -- statement is `refl`.
 --

@@ -3,12 +3,17 @@ from argparse import ArgumentParser
 from itertools import permutations, product
 from pathlib import Path
 
-from catt import (arr, chain_tree, comp2, glue_tree, infer, maximal_vars, src, sub_from,
-                  subst_tm, subst_ty, tdim, tgt, tree_ctx, v)
+from catt import (arr, chain_tree, comp2, disc_tree, glue_tree, infer, maximal_vars, src,
+                  sub_from, subst_tm, subst_ty, tdim, tgt, tree_ctx, ucomp, v)
 from catt_unit_ordered_exchange import temporal_words
+from ct_suspension import susp_ctx, susp_tm
 from emit_agda import Emitter
+from rc_oracle import strict_image
 from relative_coherence_exchange_faces import head, reassociate
 from relative_coherence_hidden_seam import identity
+from relative_coherence_interval_generator import trees
+from semistrict_surface_exact_boundary import check_retraction
+from steiner import Complex, image_to_cell, raise_to, support
 
 
 def check_prism(left_moves, emitter):
@@ -48,7 +53,7 @@ def check_prism(left_moves, emitter):
     return ctx, prism
 
 
-def check_missing_join(emitter, left_prism):
+def check_missing_join(emitter, left_prism, right_prism):
     ctx = tree_ctx(glue_tree(3, 0, 3))
     a, b = map(v, maximal_vars(ctx))
     bare = tree_ctx(glue_tree(2, 0, 2))
@@ -115,6 +120,44 @@ def check_missing_join(emitter, left_prism):
     for word, prefix in zip(('BAC', 'ABC'), prefixes, strict=True):
         assert comp2(ctx, 2, prefix, steps_by_word[word][2]) == schedules[word]
     assert steps_by_word['BAC'][2] == steps_by_word['ABC'][2]
+    upper = susp_ctx(ctx)
+    u, w = susp_tm(s), susp_tm(t)
+    emitter.checks.append(f'shiftedJoinSupport : cohCase {emitter.ctx(upper)} {emitter.ty(infer(upper, u))} '
+                          f'{emitter.tm(u)} {emitter.tm(w)} ≡ true\nshiftedJoinSupport = refl\n')
+
+    def prism_at(data, inputs):
+        shape, comparison = data
+        return subst_tm(comparison, sub_from(shape, ctx, dict(zip(maximal_vars(shape), inputs, strict=True))))
+
+    def inner(first, second, reverse):
+        shape = tree_ctx(glue_tree(3, 1, 3))
+        p, q = maximal_vars(shape)
+        x, y = temporal_words(shape, v(p), v(q), 1, 2)
+        change = head(shape, x, y) if reverse else head(shape, y, x)
+        return subst_tm(change, sub_from(shape, ctx, {p: first, q: second}))
+
+    def with_prefix(before, after, step):
+        l = reassociate(ctx, steps_by_word[before], False)
+        r = reassociate(ctx, steps_by_word[after], True)
+        placed = comp2(ctx, 2, steps_by_word[before][0], step)
+        return comp2(ctx, 3, comp2(ctx, 3, l, placed), r)
+
+    # Both Gray routes reach ACB. The lower uses the reversed inner square.
+    bc = prism_at(right_prism, (src(ctx, a), b))
+    top1 = comp2(ctx, 2, bc, steps_by_word['BCA'][2])
+    post_a = comp2(ctx, 0, a, src(ctx, src(ctx, b)))
+    post_b = comp2(ctx, 0, tgt(ctx, src(ctx, a)), b)
+    top2 = with_prefix('CBA', 'CAB', inner(post_a, post_b, False))
+    ca = prism_at(left_prism, (a, src(ctx, b)))
+    top3 = comp2(ctx, 2, ca, steps_by_word['CAB'][2])
+    top = comp2(ctx, 3, comp2(ctx, 3, top1, top2), top3)
+    lower2 = comp2(ctx, 2, inner(update_b, update_a, True), steps_by_word['BAC'][2])
+    lower3 = with_prefix('ABC', 'ACB', prism_at(right_prism, (tgt(ctx, a), b)))
+    lower = comp2(ctx, 3, comp2(ctx, 3, fitted, lower2), lower3)
+    boundary = arr(infer(ctx, s), s, schedules['ACB'])
+    for label, route in [('upperRoute', top), ('lowerRoute', lower)]:
+        emitter.check_type(label, ctx, route, boundary)
+    emitter.check_type('tensorAtom', ctx, head(ctx, top, lower), arr(boundary, top, lower))
 
 
 def shorten(walk):
@@ -173,19 +216,40 @@ def check_clamp(left, right, emitter):
                               f'eraseLoops = from-just (checkSub {s} (from-just (checkCtx {s})) {sub} {l})\n')
 
 
+def check_factor_projections():
+    disk = tree_ctx(disc_tree(2))
+    disk_atom = Complex(disk).atom(len(disk) - 1)
+    count = 0
+    for size in range(2, 6):
+        for tree in trees(size):
+            ctx = tree_ctx(tree)
+            table = Complex(ctx)
+            for index, dim in enumerate(table.deg):
+                if dim == 2:
+                    kept = support(table, table.atom(index))
+                    residual, clamp = check_retraction(ctx, kept)
+                    assert residual == disk
+                    total = subst_tm(ucomp(ctx), clamp)
+                    assert image_to_cell(strict_image(disk, total)) == raise_to(disk_atom, table.n)
+                    count += 1
+    return count
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('--agda-dir', type=Path)
     args = parser.parse_args()
     emitter = Emitter()
     left_prism = check_prism(True, emitter)
-    check_prism(False, emitter)
-    check_missing_join(emitter, left_prism)
+    right_prism = check_prism(False, emitter)
+    check_missing_join(emitter, left_prism, right_prism)
     walks = [(0,) + tail for n in range(4) for tail in product(range(2), repeat=n)]
     for left, right in product(walks, repeat=2):
         check_clamp(left, right, None)
     check_clamp((0, 1, 0, 2), (0, 1, 2, 1), emitter)
-    print(f'Checked both prism boundaries and {len(walks) ** 2 + 1} two-position contractions.')
+    factors = check_factor_projections()
+    print(f'Checked both prisms, six schedules, {len(walks) ** 2 + 1} two-position contractions, '
+          f'and {factors} projections of a column total.')
     if args.agda_dir:
         args.agda_dir.mkdir(parents=True, exist_ok=True)
         module = 'RealizedFour'

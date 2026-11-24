@@ -224,7 +224,7 @@ Rehydration is stronger, since it gives a Catt term that is ≡_sua-equal and no
 - **[argued]** ≡_sua does not identify the two, because ≡_sua makes no interchanger trivial. Not checked with the SU normaliser.
 - **[argued]** ≈_{U,I} does identify them. Each constituent cell is a coherence between ≈_{U,I}-equal words, hence ≈ 1 by clause (ii) of the definition of ≈_S, and a composite of identities is an identity under U.
 
-Whether EL holds for ≡_sua in every context is **open** (Q1 of the outbox prompt).
+Whether EL holds for ≡_sua in every context is **open**. Conservativity of ≡_sua in arbitrary contexts is Q1(c) of the follow-up prompt.
 
 ### 4.2 L in pasting contexts [proved modulo Lemma V]
 
@@ -298,7 +298,7 @@ Consequences:
 
 **Conjecture SC-P [conj; status 2026-11-24].** The {A, U} half is answered positively (Response 222). The failing half is unsupported, since the Eckmann–Hilton pair is not ≈_{U,I}-equal. What remains open is every subset containing I. Original statement: S-strictification is conservative over CaTT in every context if and only if S ⊉ {U, I}. Equivalently, {A, I} and {A, U} are both conservative. Evidence: the failing cases are exactly the Eckmann–Hilton ones, and the semantic analogues are Simpson's conjecture and Gordon–Power–Street.
 
-The outbox prompt asks for both classifications, over L and over CaTT, as one question.
+The round-1 prompt asked for both classifications, over L and over CaTT, as one question. The follow-up prompt `conjectures/outbox/semistrict-surface-conservativity-r2.md` asks for what is still open: {A, U} over every theory with directed interchange at every level (uniform L), the CaTT subsets containing I, and ≡_sua in arbitrary contexts.
 
 ## 5. What this means for the surface design (S6, S19)
 
@@ -369,7 +369,7 @@ Not formalized yet:
 
 | Item | Owner |
 |---|---|
-| ~~Conjecture GRC~~ refuted (§4.3). Still open: CaTT subsets containing I and ≡_sua in arbitrary contexts; {A, U} over uniform L; **independent verification of researcher Responses 3, 16, 50, 51, 170, 183 and 222**, which carry the positive answers | outbox prompt (partial responses filed: [answered file](conjectures/answered/semistrict-surface-conservativity-partial-2026-11-24.md)); this thread |
+| ~~Conjecture GRC~~ refuted (§4.3). Still open: CaTT subsets containing I and ≡_sua in arbitrary contexts; {A, U} over uniform L; **independent verification of researcher Responses 3, 16, 50, 51, 170, 183 and 222**, which carry the positive answers | follow-up prompt [`outbox/semistrict-surface-conservativity-r2.md`](conjectures/outbox/semistrict-surface-conservativity-r2.md) (round 1 filed: [answered file](conjectures/answered/semistrict-surface-conservativity-partial-2026-11-24.md)); this thread |
 | Lemmas 1.2, 1.3 and V written out; Lemma V (ii) for F_{V+S} | this thread (S19) |
 | Insertion vs designated lifts in uniform L (Lemma 1.1, uniform case) | this thread, cross-referenced to S11 |
 | Agda: the whiskering interface of `TheoremB` for uniform L (plain CaTT done; two-tier L's typing half done, `Surface/WhiskerGray`); (`Wh-≈` for two-tier L in 𝔉 done, `Surface/ImageGray`; plain CaTT done, `Surface/ImageCatt`); full Lemma 1.3 for the generated ≈, including (SC) (top-chain half of the congruence part done for plain CaTT only, `sound-top`); the dimension-bounded Theorem A; Lemma 1.1 in the strict model; the surface presupposition lemma | this thread (S19 (c)) |

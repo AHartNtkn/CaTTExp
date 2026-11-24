@@ -1,7 +1,9 @@
 # Semistrict surface conservativity: partial researcher responses, filed and checked (2026-11-24)
 
-The responses themselves (Responses 1–267, about 3 MB) are appended to the prompt in
-[`../outbox/semistrict-surface-conservativity.md`](../outbox/semistrict-surface-conservativity.md).
+The responses themselves (Responses 1–267, about 3 MB) are appended to the round-1 prompt in
+[`semistrict-surface-conservativity-2026-11-24.md`](semistrict-surface-conservativity-2026-11-24.md).
+The follow-up prompt for what remains open is
+[`../outbox/semistrict-surface-conservativity-r2.md`](../outbox/semistrict-surface-conservativity-r2.md).
 They are partial: Q1 is settled for every subset over the Gray kernel and for the subsets without
 interchange over CaTT, but not for the CaTT subsets containing interchange, nor for insertion
 (≡_sua) in arbitrary contexts. This file records what each headline result says, how far it was

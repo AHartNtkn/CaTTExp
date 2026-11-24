@@ -1,48 +1,20 @@
-"""Decide private old degree-four comparisons in named simple braid sectors.
+"""Decide private old degree-four comparisons in simple braid sectors.
 
 --faces FILE uses positioned histories from private_movies. A null answer
 identifies a hypothesis outside this decision procedure.
 """
 from argparse import ArgumentParser
-from collections import defaultdict,deque
+from collections import defaultdict
 from itertools import permutations
 import json
 from pathlib import Path
 
-from semistrict_surface_acyclic_private_movies import Traces, solve as trace_test
+from semistrict_surface_acyclic_private_movies import Traces
 from semistrict_surface_history_group import exchange
 from semistrict_surface_private_checkpoint_blocks import decide
 from semistrict_surface_private_four_surface import Diagram
 from semistrict_surface_private_histories import closure, solve as validate
 from semistrict_surface_shared_edge import braid_image
-
-
-def named_component(start,marks,updates):
-    adjacent = defaultdict(set)
-    for a,b in updates.values():
-        adjacent[a].add(b)
-        adjacent[b].add(a)
-    shape = {a:min(closure(a,lambda x:adjacent[x])) for a in marks}
-    h = tuple((pos,shape[a]) for pos,a in start)
-    if len({a for _,a in h}) == len(h):
-        return True
-    names = {h:tuple(range(len(h)))}
-    todo = deque(names)
-    while todo:
-        h = todo.popleft()
-        for i in range(len(h)-1):
-            p = names[h]
-            q = p[:i]+(p[i+1],p[i])+p[i+2:]
-            for letter in (i+1,-i-1):
-                dest = exchange(h,letter,marks)
-                if dest is not None:
-                    if dest in names:
-                        if names[dest] != q:
-                            return False
-                    else:
-                        names[dest] = q
-                        todo.append(dest)
-    return True
 
 
 class SimpleInterval(Diagram):
@@ -130,18 +102,14 @@ def solve(data):
         return dict(surface_filler=False,obstruction='unequal erased braids')
     if not simple:
         return dict(surface_filler=None,outside='nonsimple braid')
-    def obstruction(reason):
-        if named_component(start,data['marks'],layers[0]) or trace_test(data)['surface_filler'] is False:
-            return dict(surface_filler=False,obstruction=reason)
-        return dict(surface_filler=None,outside='shape loop permutes occurrences')
     replacements = defaultdict(set)
     for p,q in layers[1].values():
         replacements[p].add(q)
     if old.keys()!=new.keys() or any(new[k] not in closure(p,lambda x:replacements[x]) for k,p in old.items()):
-        return obstruction('positioned private labels')
+        return dict(surface_filler=False,obstruction='positioned private labels')
     path,parts = decide(SimpleInterval(u),w,z)
     if path is None:
-        return obstruction('prefix trace')
+        return dict(surface_filler=False,obstruction='prefix trace')
     verify_interval_moves(start,data['marks'],w,z,path)
     return dict(surface_filler=True,block_sizes=list(map(len,parts)),trace_moves=path)
 
@@ -192,10 +160,10 @@ def checks():
     repeat = dict(data,history=[(1,'a'),(1,'a')],source=[('a!',0),('X',0)],
                   target=[('X',0),('a!',1)])
     assert solve(repeat)['surface_filler']
-    assert not named_component(((0,'a'),(0,'a')),marks,updates)
-    assert named_component(((0,'c'),(0,'c')),marks,updates)
+    repeat.update(higher=[{'loop':['a','a']}],source=[('loop',0)],target=[('loop',1)])
+    assert solve(repeat)['surface_filler'] is False
     print(f'{count} named cyclic scalar comparisons ({positive} positive) match positioned reachability; '
-          'proper intervals, anchored sites and permutation isotropy checked')
+          'proper intervals, anchored sites and equal-label occurrences checked')
 
 
 if __name__=='__main__':

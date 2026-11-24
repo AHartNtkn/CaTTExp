@@ -92,24 +92,17 @@ class FacePair:
             raise ValueError('nonparallel faces')
 
 
-class Presentation:
-    def __init__(self, data):
-        edges,rules = data['edges'],data['rules']
-        if any(len(e) != 1 for e in edges):
-            raise ValueError('edge names must be single characters')
-        self.marks = {x:(l,r) for x,(_,l,r) in rules.items()}
-        for root,l,r in rules.values():
-            if end_vertex(edges,root,l) != end_vertex(edges,root,r):
-                raise ValueError('nonparallel generating rule')
-        q = FacePair(data['query'],edges,rules,self.marks)
-        atoms = [FacePair(a,edges,rules,self.marks) for a in data['attachments']]
-        seen = {q.history}
+class HistoryGroup:
+    """Finite positioned exchange graph and its fundamental group at start."""
+    def __init__(self,start,marks):
+        self.marks = marks
+        seen = {start}
         todo = deque(seen)
         self.labels = {}
         self.generators = set()
         self.braids = {}
-        tree_paths = {q.history: ()}
-        width = len(q.history)
+        tree_paths = {start: ()}
+        width = len(start)
         while todo:
             h = todo.popleft()
             for i in range(1,width):
@@ -131,8 +124,7 @@ class Presentation:
                         right = exchange_at(left,i-1,self.marks)
                         self.braids[g] = reduced(tree_paths[left]+(i,)+inv(tree_paths[right]))
         self.vertices = len(seen)
-        self.query = q
-        self.atoms = defaultdict(set)
+        self.tree_paths = tree_paths
         outgoing = defaultdict(list)
         indegree = Counter()
         for h,i in self.labels:
@@ -150,40 +142,20 @@ class Presentation:
                     ready.append(dest)
         self.acyclic = processed == len(seen)
         self.relators = set()
-        self.defects = set()
-
-        def relation(h, l, r, dest):
-            a,b = self.read(h,l),self.read(h,r)
-            if a is not None:
-                assert b is not None and a[0] == b[0]
-                word = reduced(b[1]+inv(a[1]))
-                if word:
-                    dest.add(cyclic(word) if dest is self.relators else word)
-
         for h in sorted(seen):
             for i in range(1,width-1):
-                relation(h,(i,i+1,i),(i+1,i,i+1),self.relators)
+                self.relation(h,(i,i+1,i),(i+1,i,i+1),self.relators)
             for i,j in combinations(range(1,width),2):
                 if j-i >= 2:
-                    relation(h,(i,j),(j,i),self.relators)
-            path = q.path
-            for k in range(width+1):
-                for a in atoms:
-                    for offset in range(len(path)-len(a.path)+1):
-                        if not (path.startswith(a.path,offset) and end_vertex(edges,q.root,path[:offset]) == a.root):
-                            continue
-                        fragment = tuple((p+offset,x) for p,x in a.history)
-                        if h[k:k+len(fragment)] == fragment:
-                            l,r = (tuple(j+k for j in w) for w in (a.left,a.right))
-                            self.atoms[h].add((l,r))
-                            relation(h,l,r,self.defects)
-                if k < width:
-                    pos,x = h[k]
-                    before,after = self.marks[x]
-                    path = path[:pos]+after+path[pos+len(before):]
-        self.target = reduced(self.read(q.history,q.right)[1]+inv(self.read(q.history,q.left)[1]))
-        self.relators.discard(())
-        self.simplify()
+                    self.relation(h,(i,j),(j,i),self.relators)
+
+    def relation(self,h,l,r,dest):
+        a,b = self.read(h,l),self.read(h,r)
+        if a is not None:
+            assert b is not None and a[0] == b[0]
+            word = reduced(b[1]+inv(a[1]))
+            if word:
+                dest.add(cyclic(word) if dest is self.relators else word)
 
     def read(self,h,word):
         result = ()
@@ -195,6 +167,48 @@ class Presentation:
             result += label
             h = k
         return h,reduced(result)
+
+
+def placements(h, root, initial, atoms, edges, marks):
+    """Yield every matching temporal interval and spatial subpath at its slice."""
+    path = initial
+    for k in range(len(h)+1):
+        for a in atoms:
+            for offset in range(len(path)-len(a.path)+1):
+                if not (path.startswith(a.path,offset) and end_vertex(edges,root,path[:offset]) == a.root):
+                    continue
+                fragment = tuple((p+offset,x) for p,x in a.history)
+                if h[k:k+len(fragment)] == fragment:
+                    yield k, a
+        if k < len(h):
+            pos,x = h[k]
+            before,after = marks[x]
+            path = path[:pos]+after+path[pos+len(before):]
+
+
+class Presentation(HistoryGroup):
+    def __init__(self, data):
+        edges,rules = data['edges'],data['rules']
+        if any(len(e) != 1 for e in edges):
+            raise ValueError('edge names must be single characters')
+        self.marks = {x:(l,r) for x,(_,l,r) in rules.items()}
+        for root,l,r in rules.values():
+            if end_vertex(edges,root,l) != end_vertex(edges,root,r):
+                raise ValueError('nonparallel generating rule')
+        q = FacePair(data['query'],edges,rules,self.marks)
+        atoms = [FacePair(a,edges,rules,self.marks) for a in data['attachments']]
+        super().__init__(q.history,self.marks)
+        self.query = q
+        self.atoms = defaultdict(set)
+        self.defects = set()
+        for h in sorted(self.tree_paths):
+            for k, a in placements(h, q.root, q.path, atoms, edges, self.marks):
+                l,r = (tuple(j+k for j in w) for w in (a.left,a.right))
+                self.atoms[h].add((l,r))
+                self.relation(h,l,r,self.defects)
+        self.target = reduced(self.read(q.history,q.right)[1]+inv(self.read(q.history,q.left)[1]))
+        self.relators.discard(())
+        self.simplify()
 
     def simplify(self):
         while True:

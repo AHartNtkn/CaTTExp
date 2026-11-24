@@ -22,9 +22,10 @@ open import CaTTExp.PastingTrees ∅ public
 open import CaTTExp.Check ∅ public
 
 -- Build a substitution from a left-to-right list of terms.
+-- (The fold is top level so that proofs can reason about it.)
+subGo : Sub → List Tm → Sub
+subGo σ []       = σ
+subGo σ (t ∷ ts) = subGo (σ ,ₛ t) ts
+
 ⟪_⟫ : List Tm → Sub
-⟪ ts ⟫ = go ⟨⟩ ts
-  where
-  go : Sub → List Tm → Sub
-  go σ []       = σ
-  go σ (t ∷ ts) = go (σ ,ₛ t) ts
+⟪ ts ⟫ = subGo ⟨⟩ ts

@@ -168,9 +168,11 @@ binF (suc fuel) k u w = coh P A σ , A [ σ ]ty
 binC : Nat → Cell → Cell → Cell
 binC k u w = binF (suc (max (dimC u) (dimC w))) k u w
 
--- Two named coherences on 2-cells, used by the depth-1 lifts of the
--- cylinder construction (ledger B18). Both are coherence-case cohs
--- (both sides full) over pasting contexts.
+-- Two named coherences on 2-cells (the interchange and the associator).
+-- Both are coherence-case cohs (both sides full) over pasting contexts.
+-- The cylinder's lifts (ledger B18) now produce the generic `ch` below
+-- instead, which gives these two at level 1 and their naturality at
+-- every later level.
 --
 -- xchC u w, for 2-cells u : f ⇒ g : x → y and w : h ⇒ k : y → z, is the
 -- interchange  (f ∗₀ w) ∗₁ (u ∗₀ k)  ⇛  (u ∗₀ h) ∗₁ (g ∗₀ w),
@@ -336,7 +338,10 @@ assocC dir u v w = coh Q B σ , B [ σ ]ty
 ------------------------------------------------------------------------
 -- Layer 2: expressions for context types
 
-data Ex : Set where
+data Ex : Set
+data ExTy : Set
+
+data Ex where
   v   : Nat → Ex              -- a variable (de Bruijn level)
   bn  : Nat → Ex → Ex → Ex    -- binary composite along a k-cell
   idn : Ex → Ex               -- identity
@@ -361,8 +366,16 @@ data Ex : Set where
   -- which evaluates to w and has type a* → b*, or b* → a* when the
   -- cell's dimension is odd (O_odd reverses it).
   rawD rawF : Tm → Ex → Ex → Ex
+  -- A coherence given generically (ledger B18): ch Q B ms is coh_{Q,B}
+  -- over the pasting context Q (an expression context listed in the
+  -- Dyck order of its pasting tree, every type built from variables),
+  -- with B a type over Q, applied to the substitution determined by
+  -- the images ms of Q's maximal variables, in order; the image of any
+  -- other variable of Q is the matching iterated boundary of one of
+  -- them. The lifts of the cylinder construction produce these.
+  ch : List ExTy → ExTy → List Ex → Ex
 
-data ExTy : Set where
+data ExTy where
   ob  : ExTy
   hom : ExTy → Ex → Ex → ExTy
 
@@ -383,85 +396,200 @@ baseE : ExTy → ExTy
 baseE (hom A _ _) = A
 baseE ob          = ob
 
+-- Renaming and substitution of expressions.
+mutual
+  substE : (Nat → Ex) → Ex → Ex
+  substE ρ (v i)      = ρ i
+  substE ρ (bn k u w) = bn k (substE ρ u) (substE ρ w)
+  substE ρ (idn e)    = idn (substE ρ e)
+  substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
+  substE ρ (xr u w)   = xr (substE ρ u) (substE ρ w)
+  substE ρ (ru w)     = ru (substE ρ w)
+  substE ρ (lu w)     = lu (substE ρ w)
+  substE ρ (dw u a b) = dw (substE ρ u) (substE ρ a) (substE ρ b)
+  substE ρ (dr a b u) = dr (substE ρ a) (substE ρ b) (substE ρ u)
+  substE ρ (na u a w) = na (substE ρ u) (substE ρ a) (substE ρ w)
+  substE ρ (nr u w b) = nr (substE ρ u) (substE ρ w) (substE ρ b)
+  substE ρ (ru2 a)    = ru2 (substE ρ a)
+  substE ρ (wi u w)   = wi (substE ρ u) (substE ρ w)
+  substE ρ (hx a b)   = hx (substE ρ a) (substE ρ b)
+  substE ρ (raw w a b) = raw w a b   -- not substituted (used only in final contexts)
+  substE ρ (rawD w a b) = rawD w a b
+  substE ρ (rawF w a b) = rawF w a b
+  substE ρ (ru2r a)   = ru2r (substE ρ a)
+  substE ρ (wir w u)  = wir (substE ρ w) (substE ρ u)
+  substE ρ (naD w a u) = naD (substE ρ w) (substE ρ a) (substE ρ u)
+  substE ρ (nrD b w u) = nrD (substE ρ b) (substE ρ w) (substE ρ u)
+  substE ρ (hxD b a)  = hxD (substE ρ b) (substE ρ a)
+  substE ρ (a1L u y w) = a1L (substE ρ u) (substE ρ y) (substE ρ w)
+  substE ρ (a1R u y w) = a1R (substE ρ u) (substE ρ y) (substE ρ w)
+  substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
+  substE ρ (asR u y w) = asR (substE ρ u) (substE ρ y) (substE ρ w)
+  substE ρ (ch Q B ms) = ch Q B (substL ρ ms)
+
+  substL : (Nat → Ex) → List Ex → List Ex
+  substL ρ []       = []
+  substL ρ (e ∷ es) = substE ρ e ∷ substL ρ es
+
+substTyE : (Nat → Ex) → ExTy → ExTy
+substTyE ρ ob          = ob
+substTyE ρ (hom A s t) = hom (substTyE ρ A) (substE ρ s) (substE ρ t)
+
+mutual
+  varsE : Ex → List Nat
+  varsE (v i)      = i ∷ []
+  varsE (bn _ u w) = varsE u ++ varsE w
+  varsE (idn e)    = varsE e
+  varsE (xc u w)   = varsE u ++ varsE w
+  varsE (xr u w)   = varsE u ++ varsE w
+  varsE (ru w)     = varsE w
+  varsE (lu w)     = varsE w
+  varsE (dw u a b) = varsE u ++ varsE a ++ varsE b
+  varsE (dr a b u) = varsE a ++ varsE b ++ varsE u
+  varsE (na u a w) = varsE u ++ varsE a ++ varsE w
+  varsE (nr u w b) = varsE u ++ varsE w ++ varsE b
+  varsE (ru2 a)    = varsE a
+  varsE (wi u w)   = varsE u ++ varsE w
+  varsE (hx a b)   = varsE a ++ varsE b
+  varsE (raw w a b) = varsE a ++ varsE b
+  varsE (rawD w a b) = varsE a ++ varsE b
+  varsE (rawF w a b) = varsE a ++ varsE b
+  varsE (ru2r a)   = varsE a
+  varsE (wir w u)  = varsE w ++ varsE u
+  varsE (naD w a u) = varsE w ++ varsE a ++ varsE u
+  varsE (nrD b w u) = varsE b ++ varsE w ++ varsE u
+  varsE (hxD b a)  = varsE b ++ varsE a
+  varsE (a1L u y w) = varsE u ++ varsE y ++ varsE w
+  varsE (a1R u y w) = varsE u ++ varsE y ++ varsE w
+  varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
+  varsE (asR u y w) = varsE u ++ varsE y ++ varsE w
+  varsE (ch _ _ ms)  = varsL ms
+
+  varsL : List Ex → List Nat
+  varsL []       = []
+  varsL (e ∷ es) = varsE e ++ varsL es
+
+
+varsTy : ExTy → List Nat
+varsTy ob          = []
+varsTy (hom A s t) = varsTy A ++ varsE s ++ varsE t
+
+-- The maximal variables of a context: those occurring in no type.
+maxPos : ExCtx → List Nat
+maxPos Q = filter (λ i → not (elem i used)) (range (length Q))
+  where
+  used = concatMap varsTy Q
+
+-- The index of n in a list.
+posIn : Nat → List Nat → Maybe Nat
+posIn n []       = nothing
+posIn n (m ∷ ms) = if n ==ℕ m then just 0 else (posIn n ms >>= λ j → just (suc j))
+
+-- A variable whose type has i as its source (true) or target (false).
+cover : ExCtx → Nat → Maybe (Nat × Bool)
+cover Q i = go 0 Q
+  where
+  isI : Ex → Bool
+  isI (v j) = j ==ℕ i
+  isI _     = false
+  go : Nat → ExCtx → Maybe (Nat × Bool)
+  go z []              = nothing
+  go z (ob ∷ As)       = go (suc z) As
+  go z (hom _ s t ∷ As) =
+    if isI s then just (z , true) else if isI t then just (z , false) else go (suc z) As
+
 -- Symbolic type of an expression in an ExCtx.
-tyF : Nat → ExCtx → Ex → ExTy
-tyF zero       Γ e = ob
-tyF (suc f) Γ (v i)      = nth ob Γ i
-tyF (suc f) Γ (idn e)    = hom (tyF f Γ e) e e
-tyF (suc f) Γ (xc u w)   = hom (tyF f Γ s) s t
-  where
-  A = tyF f Γ u
-  B = tyF f Γ w
-  s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
-  t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
-tyF (suc f) Γ (xr u w)   = hom (tyF f Γ s) t s
-  where
-  A = tyF f Γ u
-  B = tyF f Γ w
-  s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
-  t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
-tyF (suc f) Γ (ru w)     = hom (tyF f Γ w) w (bn 0 w (idn (tgtE (tyF f Γ w))))
-tyF (suc f) Γ (lu w)     = hom (tyF f Γ w) w (bn 0 (idn (srcE (tyF f Γ w))) w)
-tyF (suc f) Γ (dw u a b) = hom (tyF f Γ s) s (bn 0 u (bn 1 a b))
-  where s = bn 1 (bn 0 u a) (bn 0 u b)
-tyF (suc f) Γ (dr a b u) = hom (tyF f Γ s) s (bn 1 (bn 0 a u) (bn 0 b u))
-  where s = bn 0 (bn 1 a b) u
-tyF (suc f) Γ (na u a w) = hom (tyF f Γ s) s (bn 1 (a1L u a (srcE W)) (bn 0 u (bn 0 a w)))
-  where
-  W = tyF f Γ w
-  s = bn 1 (bn 0 (bn 0 u a) w) (a1L u a (tgtE W))
-tyF (suc f) Γ (nr u w b) = hom (tyF f Γ s) s (bn 1 (a1L u (srcE W) b) (bn 0 u (bn 0 w b)))
-  where
-  W = tyF f Γ w
-  s = bn 1 (bn 0 (bn 0 u w) b) (a1L u (tgtE W) b)
-tyF (suc f) Γ (ru2 a)    = hom (tyF f Γ a) a (bn 1 a (idn (tgtE (tyF f Γ a))))
-tyF (suc f) Γ (wi u w)   = hom (tyF f Γ s) s (bn 0 u (idn w))
-  where s = idn (bn 0 u w)
-tyF (suc f) Γ (hx a b)   = hom (tyF f Γ s) s (bn 0 a b)
-  where s = bn 1 (bn 0 a (srcE (tyF f Γ b))) (bn 0 (tgtE (tyF f Γ a)) b)
-tyF (suc f) Γ (raw w a b) = hom (tyF f Γ a) a b
-tyF (suc f) Γ (rawD w a b) = hom (tyF f Γ a) a b
-tyF (suc f) Γ (rawF w a b) =
-  if oddN (suc (dimE (tyF f Γ a))) then hom (tyF f Γ a) b a else hom (tyF f Γ a) a b
-  where
-  oddN : Nat → Bool
-  oddN zero          = false
-  oddN (suc zero)    = true
-  oddN (suc (suc k)) = oddN k
-tyF (suc f) Γ (ru2r a)   = hom (tyF f Γ s) s a
-  where s = bn 1 a (idn (tgtE (tyF f Γ a)))
-tyF (suc f) Γ (wir w u)  = hom (tyF f Γ s) s (idn (bn 0 w u))
-  where s = bn 0 (idn w) u
-tyF (suc f) Γ (naD w a u) = hom (tyF f Γ s) s (bn 1 (bn 0 w (bn 0 a u)) (a1R (tgtE W) a u))
-  where
-  W = tyF f Γ w
-  s = bn 1 (a1R (srcE W) a u) (bn 0 (bn 0 w a) u)
-tyF (suc f) Γ (nrD b w u) = hom (tyF f Γ s) s (bn 1 (bn 0 b (bn 0 w u)) (a1R b (tgtE W) u))
-  where
-  W = tyF f Γ w
-  s = bn 1 (a1R b (srcE W) u) (bn 0 (bn 0 b w) u)
-tyF (suc f) Γ (hxD b a)  = hom (tyF f Γ s) s (bn 1 (bn 0 (srcE (tyF f Γ b)) a) (bn 0 b (tgtE (tyF f Γ a))))
-  where s = bn 0 b a
-tyF (suc f) Γ (a1L u y w) = hom (tyF f Γ l) l (bn 0 u (bn 0 y w))
-  where l = bn 0 (bn 0 u y) w
-tyF (suc f) Γ (a1R u y w) = hom (tyF f Γ l) (bn 0 u (bn 0 y w)) l
-  where l = bn 0 (bn 0 u y) w
-tyF (suc f) Γ (asL u y w) = hom (tyF f Γ l) l (bn 1 u (bn 1 y w))
-  where l = bn 1 (bn 1 u y) w
-tyF (suc f) Γ (asR u y w) = hom (tyF f Γ l) (bn 1 u (bn 1 y w)) l
-  where l = bn 1 (bn 1 u y) w
-tyF (suc f) Γ (bn k u w) =
-  if r ==ℕ suc k then hom (baseE A) (srcE A) (tgtE B)
-  else hom (tyF f Γ s') s' t'
-  where
-  A = tyF f Γ u
-  B = tyF f Γ w
-  r = max (dimE A) (dimE B)
-  lo hi : ExTy → Ex → Ex
-  lo C e = if dimE C <ℕ r then e else srcE C
-  hi C e = if dimE C <ℕ r then e else tgtE C
-  s' = bn k (lo A u) (lo B w)
-  t' = bn k (hi A u) (hi B w)
+mutual
+  tyF : Nat → ExCtx → Ex → ExTy
+  tyF zero       Γ e = ob
+  tyF (suc f) Γ (v i)      = nth ob Γ i
+  tyF (suc f) Γ (idn e)    = hom (tyF f Γ e) e e
+  tyF (suc f) Γ (xc u w)   = hom (tyF f Γ s) s t
+    where
+    A = tyF f Γ u
+    B = tyF f Γ w
+    s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
+    t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
+  tyF (suc f) Γ (xr u w)   = hom (tyF f Γ s) t s
+    where
+    A = tyF f Γ u
+    B = tyF f Γ w
+    s = bn 1 (bn 0 (srcE A) w) (bn 0 u (tgtE B))
+    t = bn 1 (bn 0 u (srcE B)) (bn 0 (tgtE A) w)
+  tyF (suc f) Γ (ru w)     = hom (tyF f Γ w) w (bn 0 w (idn (tgtE (tyF f Γ w))))
+  tyF (suc f) Γ (lu w)     = hom (tyF f Γ w) w (bn 0 (idn (srcE (tyF f Γ w))) w)
+  tyF (suc f) Γ (dw u a b) = hom (tyF f Γ s) s (bn 0 u (bn 1 a b))
+    where s = bn 1 (bn 0 u a) (bn 0 u b)
+  tyF (suc f) Γ (dr a b u) = hom (tyF f Γ s) s (bn 1 (bn 0 a u) (bn 0 b u))
+    where s = bn 0 (bn 1 a b) u
+  tyF (suc f) Γ (na u a w) = hom (tyF f Γ s) s (bn 1 (a1L u a (srcE W)) (bn 0 u (bn 0 a w)))
+    where
+    W = tyF f Γ w
+    s = bn 1 (bn 0 (bn 0 u a) w) (a1L u a (tgtE W))
+  tyF (suc f) Γ (nr u w b) = hom (tyF f Γ s) s (bn 1 (a1L u (srcE W) b) (bn 0 u (bn 0 w b)))
+    where
+    W = tyF f Γ w
+    s = bn 1 (bn 0 (bn 0 u w) b) (a1L u (tgtE W) b)
+  tyF (suc f) Γ (ru2 a)    = hom (tyF f Γ a) a (bn 1 a (idn (tgtE (tyF f Γ a))))
+  tyF (suc f) Γ (wi u w)   = hom (tyF f Γ s) s (bn 0 u (idn w))
+    where s = idn (bn 0 u w)
+  tyF (suc f) Γ (hx a b)   = hom (tyF f Γ s) s (bn 0 a b)
+    where s = bn 1 (bn 0 a (srcE (tyF f Γ b))) (bn 0 (tgtE (tyF f Γ a)) b)
+  tyF (suc f) Γ (raw w a b) = hom (tyF f Γ a) a b
+  tyF (suc f) Γ (rawD w a b) = hom (tyF f Γ a) a b
+  tyF (suc f) Γ (rawF w a b) =
+    if oddN (suc (dimE (tyF f Γ a))) then hom (tyF f Γ a) b a else hom (tyF f Γ a) a b
+    where
+    oddN : Nat → Bool
+    oddN zero          = false
+    oddN (suc zero)    = true
+    oddN (suc (suc k)) = oddN k
+  tyF (suc f) Γ (ru2r a)   = hom (tyF f Γ s) s a
+    where s = bn 1 a (idn (tgtE (tyF f Γ a)))
+  tyF (suc f) Γ (wir w u)  = hom (tyF f Γ s) s (idn (bn 0 w u))
+    where s = bn 0 (idn w) u
+  tyF (suc f) Γ (naD w a u) = hom (tyF f Γ s) s (bn 1 (bn 0 w (bn 0 a u)) (a1R (tgtE W) a u))
+    where
+    W = tyF f Γ w
+    s = bn 1 (a1R (srcE W) a u) (bn 0 (bn 0 w a) u)
+  tyF (suc f) Γ (nrD b w u) = hom (tyF f Γ s) s (bn 1 (bn 0 b (bn 0 w u)) (a1R b (tgtE W) u))
+    where
+    W = tyF f Γ w
+    s = bn 1 (a1R b (srcE W) u) (bn 0 (bn 0 b w) u)
+  tyF (suc f) Γ (hxD b a)  = hom (tyF f Γ s) s (bn 1 (bn 0 (srcE (tyF f Γ b)) a) (bn 0 b (tgtE (tyF f Γ a))))
+    where s = bn 0 b a
+  tyF (suc f) Γ (a1L u y w) = hom (tyF f Γ l) l (bn 0 u (bn 0 y w))
+    where l = bn 0 (bn 0 u y) w
+  tyF (suc f) Γ (a1R u y w) = hom (tyF f Γ l) (bn 0 u (bn 0 y w)) l
+    where l = bn 0 (bn 0 u y) w
+  tyF (suc f) Γ (asL u y w) = hom (tyF f Γ l) l (bn 1 u (bn 1 y w))
+    where l = bn 1 (bn 1 u y) w
+  tyF (suc f) Γ (asR u y w) = hom (tyF f Γ l) (bn 1 u (bn 1 y w)) l
+    where l = bn 1 (bn 1 u y) w
+  tyF (suc f) Γ (bn k u w) =
+    if r ==ℕ suc k then hom (baseE A) (srcE A) (tgtE B)
+    else hom (tyF f Γ s') s' t'
+    where
+    A = tyF f Γ u
+    B = tyF f Γ w
+    r = max (dimE A) (dimE B)
+    lo hi : ExTy → Ex → Ex
+    lo C e = if dimE C <ℕ r then e else srcE C
+    hi C e = if dimE C <ℕ r then e else tgtE C
+    s' = bn k (lo A u) (lo B w)
+    t' = bn k (hi A u) (hi B w)
+  tyF (suc f) Γ (ch Q B ms) = substTyE (imgF f Γ Q ms) B
+
+  -- The image of each variable of Q under the substitution of ch Q B ms.
+  imgF : Nat → ExCtx → ExCtx → List Ex → Nat → Ex
+  imgF zero    Γ Q ms i = v 0
+  imgF (suc f) Γ Q ms i = pick (posIn i (maxPos Q)) (cover Q i)
+    where
+    pick : Maybe Nat → Maybe (Nat × Bool) → Ex
+    pick (just j) _                 = nth (v 0) ms j
+    pick nothing  (just (z , true))  = srcE (tyF f Γ (imgF f Γ Q ms z))
+    pick nothing  (just (z , false)) = tgtE (tyF f Γ (imgF f Γ Q ms z))
+    pick nothing  nothing           = v 0
 
 fuel : Nat
 fuel = 64
@@ -534,6 +662,15 @@ mutual
   evF (suc f) Γ (a1R u y w) = fst (assoc1C false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asL u y w) = fst (assocC true  (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
   evF (suc f) Γ (asR u y w) = fst (assocC false (cellF f Γ u) (cellF f Γ y) (cellF f Γ w))
+  evF (suc f) Γ (ch Q B ms) =
+    coh (evCtxF f Q) (evTyF f Q B) ⟪ map (λ i → evF f Γ (imgF f Γ Q ms i)) (range (length Q)) ⟫
+
+  evCtxF : Nat → ExCtx → Ctx
+  evCtxF f Q = go Q ε
+    where
+    go : ExCtx → Ctx → Ctx
+    go []       acc = acc
+    go (A ∷ As) acc = go As (acc ▸ evTyF f Q A)
 
   evTyF : Nat → ExCtx → ExTy → Ty
   evTyF zero    Γ A           = ⋆
@@ -562,67 +699,6 @@ evCtxGo Γ (A ∷ As) acc = evCtxGo Γ As (acc ▸ evTy Γ A)
 
 evCtx : ExCtx → Ctx
 evCtx Γ = evCtxGo Γ Γ ε
-
--- Renaming and substitution of expressions.
-substE : (Nat → Ex) → Ex → Ex
-substE ρ (v i)      = ρ i
-substE ρ (bn k u w) = bn k (substE ρ u) (substE ρ w)
-substE ρ (idn e)    = idn (substE ρ e)
-substE ρ (xc u w)   = xc (substE ρ u) (substE ρ w)
-substE ρ (xr u w)   = xr (substE ρ u) (substE ρ w)
-substE ρ (ru w)     = ru (substE ρ w)
-substE ρ (lu w)     = lu (substE ρ w)
-substE ρ (dw u a b) = dw (substE ρ u) (substE ρ a) (substE ρ b)
-substE ρ (dr a b u) = dr (substE ρ a) (substE ρ b) (substE ρ u)
-substE ρ (na u a w) = na (substE ρ u) (substE ρ a) (substE ρ w)
-substE ρ (nr u w b) = nr (substE ρ u) (substE ρ w) (substE ρ b)
-substE ρ (ru2 a)    = ru2 (substE ρ a)
-substE ρ (wi u w)   = wi (substE ρ u) (substE ρ w)
-substE ρ (hx a b)   = hx (substE ρ a) (substE ρ b)
-substE ρ (raw w a b) = raw w a b   -- not substituted (used only in final contexts)
-substE ρ (rawD w a b) = rawD w a b
-substE ρ (rawF w a b) = rawF w a b
-substE ρ (ru2r a)   = ru2r (substE ρ a)
-substE ρ (wir w u)  = wir (substE ρ w) (substE ρ u)
-substE ρ (naD w a u) = naD (substE ρ w) (substE ρ a) (substE ρ u)
-substE ρ (nrD b w u) = nrD (substE ρ b) (substE ρ w) (substE ρ u)
-substE ρ (hxD b a)  = hxD (substE ρ b) (substE ρ a)
-substE ρ (a1L u y w) = a1L (substE ρ u) (substE ρ y) (substE ρ w)
-substE ρ (a1R u y w) = a1R (substE ρ u) (substE ρ y) (substE ρ w)
-substE ρ (asL u y w) = asL (substE ρ u) (substE ρ y) (substE ρ w)
-substE ρ (asR u y w) = asR (substE ρ u) (substE ρ y) (substE ρ w)
-
-substTyE : (Nat → Ex) → ExTy → ExTy
-substTyE ρ ob          = ob
-substTyE ρ (hom A s t) = hom (substTyE ρ A) (substE ρ s) (substE ρ t)
-
-varsE : Ex → List Nat
-varsE (v i)      = i ∷ []
-varsE (bn _ u w) = varsE u ++ varsE w
-varsE (idn e)    = varsE e
-varsE (xc u w)   = varsE u ++ varsE w
-varsE (xr u w)   = varsE u ++ varsE w
-varsE (ru w)     = varsE w
-varsE (lu w)     = varsE w
-varsE (dw u a b) = varsE u ++ varsE a ++ varsE b
-varsE (dr a b u) = varsE a ++ varsE b ++ varsE u
-varsE (na u a w) = varsE u ++ varsE a ++ varsE w
-varsE (nr u w b) = varsE u ++ varsE w ++ varsE b
-varsE (ru2 a)    = varsE a
-varsE (wi u w)   = varsE u ++ varsE w
-varsE (hx a b)   = varsE a ++ varsE b
-varsE (raw w a b) = varsE a ++ varsE b
-varsE (rawD w a b) = varsE a ++ varsE b
-varsE (rawF w a b) = varsE a ++ varsE b
-varsE (ru2r a)   = varsE a
-varsE (wir w u)  = varsE w ++ varsE u
-varsE (naD w a u) = varsE w ++ varsE a ++ varsE u
-varsE (nrD b w u) = varsE b ++ varsE w ++ varsE u
-varsE (hxD b a)  = varsE b ++ varsE a
-varsE (a1L u y w) = varsE u ++ varsE y ++ varsE w
-varsE (a1R u y w) = varsE u ++ varsE y ++ varsE w
-varsE (asL u y w) = varsE u ++ varsE y ++ varsE w
-varsE (asR u y w) = varsE u ++ varsE y ++ varsE w
 
 idxE : Ex → Nat
 idxE (v i) = i
@@ -916,19 +992,288 @@ constCocone Γ = ob ∷ ob ∷ map (substTyE ρ) (dropN (suc n) (CoconeOf.cocone
         else v (2 + (i ∸ suc n))
 
 ------------------------------------------------------------------------
+-- Reading a context of variables back as an expression context.
+
+readTm : Tm → Ex
+readTm (var i) = v i
+readTm _       = v 0
+
+readTy : Ty → ExTy
+readTy ⋆           = ob
+readTy (arr A s t) = hom (readTy A) (readTm s) (readTm t)
+
+readCtx : Ctx → ExCtx
+readCtx ε       = []
+readCtx (Γ ▸ A) = readCtx Γ ++ (readTy A ∷ [])
+
+-- Three n-cells composable along (n−1)-cells: the associator
+-- (a ∗ b) ∗ c → a ∗ (b ∗ c) (dir = true) or its reverse, as a generic
+-- coherence over their pasting context. (For n = 2 this is assocC.)
+nestT : Nat → Tree → Tree
+nestT zero    t = t
+nestT (suc j) t = node (nestT j t ∷ [])
+
+asCh : Nat → Bool → Ex → Ex → Ex → Ex
+asCh n dir a b c = ch Q B (a ∷ b ∷ c ∷ [])
+  where
+  Q = readCtx (ctxOf (nestT (n ∸ 1) (node (leaf ∷ leaf ∷ leaf ∷ []))))
+  M = maxPos Q
+  k = n ∸ 1
+  A₁ = v (nth 0 M 0)
+  A₂ = v (nth 0 M 1)
+  A₃ = v (nth 0 M 2)
+  l = bn k (bn k A₁ A₂) A₃
+  r = bn k A₁ (bn k A₂ A₃)
+  B = if dir then hom (tyF fuel Q l) l r else hom (tyF fuel Q l) r l
+
+-- Two pasting trees glued along a k-cell (each a single edge below
+-- depth k).
+glueTr : Nat → Tree → Tree → Tree
+glueTr zero    (node a)       (node b)       = node (a ++ b)
+glueTr (suc k) (node (t ∷ [])) (node (u ∷ [])) = node (glueTr k t u ∷ [])
+glueTr _       t              _              = t
+
+-- Distributivity of whiskering by an m-cell o along k over the
+-- composite of two n-cells along n − 1:
+--   (a ∗ b) ∗_k o → (a ∗_k o) ∗ (b ∗_k o)        (right, dir = true)
+--   o ∗_k (a ∗ b) → (o ∗_k a) ∗ (o ∗_k b)        (left, dir = true)
+-- and their reverses (dir = false), as generic coherences.
+distCh : Nat → Nat → Nat → Bool → Bool → Ex → Ex → Ex → Ex
+distCh n k m right dir a b o = ch Q B (if right then (a ∷ b ∷ o ∷ []) else (o ∷ a ∷ b ∷ []))
+  where
+  Tab = nestT (n ∸ 1) (node (leaf ∷ leaf ∷ []))
+  Q = readCtx (ctxOf (if right then glueTr k Tab (nest m) else glueTr k (nest m) Tab))
+  M = maxPos Q
+  P₀ = v (nth 0 M 0)
+  P₁ = v (nth 0 M 1)
+  P₂ = v (nth 0 M 2)
+  j = n ∸ 1
+  l = if right then bn k (bn j P₀ P₁) P₂ else bn k P₀ (bn j P₁ P₂)
+  r = if right then bn j (bn k P₀ P₂) (bn k P₁ P₂) else bn j (bn k P₀ P₁) (bn k P₀ P₂)
+  B = if dir then hom (tyF fuel Q l) l r else hom (tyF fuel Q l) r l
+
+------------------------------------------------------------------------
 -- Layer 3d: the cylinder Γ↑Y (the Gray cylinder I ⊗ Γ relative to an
 -- up-closed set Y), with Lemma 1's types
 --
 --   a_x = ( … ((x⁻ ∗₀ (τⁿx)↑) ∗₁ (τⁿ⁻¹x)↑) … ) ∗_{n−1} (τx)↑
 --   b_x = (σx)↑ ∗_{n−1} ( … ((σⁿ⁻¹x)↑ ∗₁ ((σⁿx)↑ ∗₀ x⁺)) … )
 --
--- (unaffected factors omitted). Lifts of composite boundaries are
--- computed by the depth-0 rule (u ∗_k w)↑ = u↑ ∗_k w↑ (an unaffected
--- factor is kept); this rule is only claimed where Y has depth 0 in the
--- composite (notes/specified-cones.md §4), and the checker rejects any
--- other use. Identities of affected cells are not lifted (`nothing`).
+-- (unaffected factors omitted). Layout: walk Γ in order; x ∉ Y is
+-- kept, x ∈ Y becomes x⁻, x⁺, x↑.
 --
--- Layout: walk Γ in order; x ∉ Y is kept, x ∈ Y becomes x⁻, x⁺, x↑.
+-- The lift t↑ : a_t → b_t of an affected term t (notes/specified-cones.md
+-- §4.3) is computed by three rules, each only where it is claimed; any
+-- other term gives nothing, so no cylinder is built:
+-- * depth 0: a composite u ∗_k w (k below the top) whose affected
+--   factors have the composite's own dimension lifts factorwise;
+-- * paste: a composite u ∗_{n−1} w of n-cells is the pasting of u↑ and
+--   w↑ (whichever are affected) through associators, in every n;
+-- * coherence: a coherence c = coh_{Q,B}[σ] whose affected arguments
+--   are images of maximal variables of Q with unaffected boundaries
+--   lifts to the coherence over the pasting context Q↑Y' (Y' those
+--   maximal variables, each raised to a disk one dimension up) with
+--   type a_c → b_c computed in Q↑Y' by the same construction. A
+--   composite with an affected factor below its dimension (a depth-1
+--   whisker such as p_x ∗₀ α) is lifted as the coherence it is; for
+--   p_x ∗₀ α this is the interchange.
+-- These functions are top level, with the context and Y as arguments,
+-- since the coherence rule runs the construction on Q.
+
+inYG : List Nat → Nat → Bool
+inYG Y i = elem i Y
+
+affG : List Nat → Ex → Bool
+affG Y e = any (inYG Y) (varsE e)
+
+posG : List Nat → Nat → Nat
+posG Y zero    = 0
+posG Y (suc x) = posG Y x + (if inYG Y x then 3 else 1)
+
+miG plG uplG : List Nat → Nat → Nat
+miG Y x  = posG Y x
+plG Y x  = if inYG Y x then suc (posG Y x) else posG Y x
+uplG Y x = suc (suc (posG Y x))
+
+renmG renpG : List Nat → Ex → Ex
+renmG Y = substE (λ i → v (miG Y i))
+renpG Y = substE (λ i → v (plG Y i))
+
+seqM : List (Maybe Ex) → Maybe (List Ex)
+seqM []       = just []
+seqM (m ∷ ms) = m >>= λ e → seqM ms >>= λ es → just (e ∷ es)
+
+zipL : List Nat → List Ex → List (Nat × Ex)
+zipL (i ∷ is) (e ∷ es) = (i , e) ∷ zipL is es
+zipL _        _        = []
+
+isNil : ∀ {a} {A : Set a} → List A → Bool
+isNil [] = true
+isNil _  = false
+
+-- The iterated boundaries of e of dimension below `top` are unaffected.
+cleanBelow : ExCtx → List Nat → Nat → Ex → Bool
+cleanBelow Γ Y top e =
+  all (λ j → not (affG Y (srcIter Γ j e)) ∧ not (affG Y (tgtIter Γ j e)))
+      (rangeFrom (suc (dimE (tyE Γ e) ∸ top)) top)
+
+mutual
+  liftG : Nat → ExCtx → List Nat → Ex → Maybe Ex
+  liftG zero     Γ Y e           = nothing
+  liftG (suc fl) Γ Y (v i)       = if inYG Y i then just (v (uplG Y i)) else nothing
+  liftG (suc fl) Γ Y (ch Q B ms) = cohLift fl Γ Y Q (ch Q B (map v (maxPos Q))) ms
+  liftG (suc fl) Γ Y (bn k u w)  = binLift fl Γ Y k u w
+  liftG (suc fl) Γ Y _           = nothing
+
+  binLift : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
+  binLift fl Γ Y k u w =
+    if not (au ∨ aw) then nothing
+    else if (suc k ==ℕ n) ∧ (du ==ℕ n) ∧ (dW ==ℕ n) then pasteLift fl Γ Y n u w
+    else if au ∧ not aw ∧ (du ==ℕ n) then whiskLift fl Γ Y k true u w
+    else if aw ∧ not au ∧ (dW ==ℕ n) then whiskLift fl Γ Y k false w u
+    else cohLift fl Γ Y Q (bn k (v (du + du)) (v (length Q ∸ 1))) (u ∷ w ∷ [])
+    where
+    au = affG Y u
+    aw = affG Y w
+    du = dimE (tyE Γ u)
+    dW = dimE (tyE Γ w)
+    n  = max du dW
+    Q  = readCtx (Glue k du dW)
+
+  -- (u ∗_{n−1} w)↑ : (u⁻ ∗ w⁻) ∗ L(τw) → L(σu) ∗ (u⁺ ∗ w⁺), as
+  --   asL(u⁻, w⁻, Lτw) ∗ₙ (u⁻ ∗ w↑) ∗ₙ asR(u⁻, Lσw, w⁺) ∗ₙ (u↑ ∗ w⁺) ∗ₙ asL(Lσu, u⁺, w⁺)
+  -- with the factors whose lift is absent (unaffected) left out.
+  pasteLift : Nat → ExCtx → List Nat → Nat → Ex → Ex → Maybe Ex
+  pasteLift fl Γ Y n u w =
+    if not low then nothing else
+    (optL u >>= λ U↑ → optL w >>= λ W↑ → optL (tgtΓ w) >>= λ Lτw →
+     optL (srcΓ w) >>= λ Lσw → optL (srcΓ u) >>= λ Lσu →
+     chain (step Lτw (λ L → asCh n true u⁻ w⁻ L)
+          ∷ step W↑ (λ W → bn k u⁻ W)
+          ∷ step Lσw (λ L → asCh n false u⁻ L w⁺)
+          ∷ step U↑ (λ U → bn k U w⁺)
+          ∷ step Lσu (λ L → asCh n true L u⁺ w⁺) ∷ []))
+    where
+    k = n ∸ 1
+    u⁻ = renmG Y u
+    w⁻ = renmG Y w
+    u⁺ = renpG Y u
+    w⁺ = renpG Y w
+    srcΓ tgtΓ : Ex → Ex
+    srcΓ e = srcE (tyE Γ e)
+    tgtΓ e = tgtE (tyE Γ e)
+    -- each factor's boundaries below n−1 are unaffected, and an
+    -- affected (n−1)-boundary only occurs on an affected factor
+    lowOK : Ex → Bool
+    lowOK e = cleanBelow Γ Y (n ∸ 1) e
+              ∧ (affG Y e ∨ (not (affG Y (srcΓ e)) ∧ not (affG Y (tgtΓ e))))
+    low = lowOK u ∧ lowOK w
+    optL : Ex → Maybe (Maybe Ex)
+    optL e = if affG Y e then (liftG fl Γ Y e >>= λ e' → just (just e')) else just nothing
+    step : Maybe Ex → (Ex → Ex) → Maybe Ex
+    step nothing  f = nothing
+    step (just e) f = just (f e)
+    chain : List (Maybe Ex) → Maybe Ex
+    chain []              = nothing
+    chain (nothing ∷ r)   = chain r
+    chain (just e ∷ r) with chain r
+    ... | nothing = just e
+    ... | just e' = just (bn n e e')
+
+  -- (a ∗_k o)↑ (right) or (o ∗_k a)↑ (not right), for a affected of the
+  -- composite's dimension n, o unaffected and k < n − 1. If a's
+  -- (n−1)-boundaries are unaffected this is a↑ ∗_k o. Otherwise (o of
+  -- dimension below n, a's lower boundaries unaffected) a↑ ∗_k o is
+  -- conjugated by the distributivity of whiskering over ∗_{n−1}:
+  --   (a⁻ ∗_k o) ∗ (Lτa ∗_k o) → (a⁻ ∗ Lτa) ∗_k o → (Lσa ∗ a⁺) ∗_k o
+  --     → (Lσa ∗_k o) ∗ (a⁺ ∗_k o).
+  whiskLift : Nat → ExCtx → List Nat → Nat → Bool → Ex → Ex → Maybe Ex
+  whiskLift fl Γ Y k right a o =
+    if cleanBelow Γ Y n a then
+      (liftG fl Γ Y a >>= λ a' → just (wh a' o⁻))
+    else if cleanBelow Γ Y (n ∸ 1) a ∧ (m <ℕ n) then
+      (liftG fl Γ Y a >>= λ A↑ → optL (tgtE (tyE Γ a)) >>= λ Lτ → optL (srcE (tyE Γ a)) >>= λ Lσ →
+       chain (step Lτ (λ L → distCh n k m right false (renmG Y a) L o⁻)
+            ∷ just (wh A↑ o⁻)
+            ∷ step Lσ (λ L → distCh n k m right true L (renpG Y a) o⁻) ∷ []))
+    else nothing
+    where
+    n = dimE (tyE Γ a)
+    m = dimE (tyE Γ o)
+    o⁻ = renmG Y o
+    wh : Ex → Ex → Ex
+    wh x y = if right then bn k x y else bn k y x
+    optL : Ex → Maybe (Maybe Ex)
+    optL e = if affG Y e then (liftG fl Γ Y e >>= λ e' → just (just e')) else just nothing
+    step : Maybe Ex → (Ex → Ex) → Maybe Ex
+    step nothing  f = nothing
+    step (just e) f = just (f e)
+    chain : List (Maybe Ex) → Maybe Ex
+    chain []              = nothing
+    chain (nothing ∷ r)   = chain r
+    chain (just e ∷ r) with chain r
+    ... | nothing = just e
+    ... | just e' = just (bn n e e')
+
+  -- The lift of c₀[σ], for c₀ a coherence or composite over the pasting
+  -- context Q whose maximal variables have the images ms.
+  cohLift : Nat → ExCtx → List Nat → ExCtx → Ex → List Ex → Maybe Ex
+  cohLift fl Γ Y Q c₀ ms =
+    if not ok then nothing else
+    (cylG fl Q Y' >>= λ Q' →
+     sideA fl Q Y' c₀ m >>= λ a → sideB fl Q Y' c₀ m >>= λ b →
+     seqM (map arg prs) >>= λ ms' →
+     just (ch Q' (hom (tyE Q' a) a b) ms'))
+    where
+    prs = zipL (maxPos Q) ms
+    Y' = map fst (filter (λ p → affG Y (snd p)) prs)
+    ok = not (isNil Y') ∧ (length ms ==ℕ length (maxPos Q))
+         ∧ all (λ e → not (affG Y e) ∨ cleanBelow Γ Y (dimE (tyE Γ e)) e) ms
+    m = dimE (tyE Q c₀)
+    arg : Nat × Ex → Maybe Ex
+    arg (i , e) = if affG Y e then liftG fl Γ Y e else just (renmG Y e)
+
+  -- a_e and b_e for a term e of dimension m ≥ 1.
+  sideA sideB : Nat → ExCtx → List Nat → Ex → Nat → Maybe Ex
+  sideA fl Γ Y e m = go m 0 (just (renmG Y e))
+    where
+    go : Nat → Nat → Maybe Ex → Maybe Ex
+    go zero    j acc = acc
+    go (suc g) j acc =
+      if m ≤ℕ j then acc
+      else go g (suc j)
+        (acc >>= λ a →
+          if affG Y (tgtIter Γ (m ∸ j) e)
+          then (liftG fl Γ Y (tgtIter Γ (m ∸ j) e) >>= λ w' → just (bn j a w'))
+          else just a)
+  sideB fl Γ Y e m = go m 0 (just (renpG Y e))
+    where
+    go : Nat → Nat → Maybe Ex → Maybe Ex
+    go zero    j acc = acc
+    go (suc g) j acc =
+      if m ≤ℕ j then acc
+      else go g (suc j)
+        (acc >>= λ b →
+          if affG Y (srcIter Γ (m ∸ j) e)
+          then (liftG fl Γ Y (srcIter Γ (m ∸ j) e) >>= λ w' → just (bn j w' b))
+          else just b)
+
+  cylG : Nat → ExCtx → List Nat → Maybe ExCtx
+  cylG fl Γ Y = walk 0 [] Γ
+    where
+    step : Nat → ExTy → ExCtx → Maybe ExCtx
+    step x A K =
+      if inYG Y x then
+        (if dimE A ==ℕ 0
+         then just (K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A
+                         ∷ hom ob (v (miG Y x)) (v (plG Y x)) ∷ []))
+         else (sideA fl Γ Y (v x) (dimE A) >>= λ a → sideB fl Γ Y (v x) (dimE A) >>= λ b →
+               just ((K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A ∷ []))
+                     ++ (hom (tyE (K ++ (substTyE (λ i → v (miG Y i)) A ∷ substTyE (λ i → v (plG Y i)) A ∷ [])) a) a b ∷ []))))
+      else just (K ++ (substTyE (λ i → v (miG Y i)) A ∷ []))
+    walk : Nat → ExCtx → ExCtx → Maybe ExCtx
+    walk x K []       = just K
+    walk x K (A ∷ As) = step x A K >>= λ K' → walk (suc x) K' As
 
 record Cyl : Set where
   constructor mkCyl
@@ -941,145 +1286,33 @@ record Cyl : Set where
 
 module CylOf (Γ : ExCtx) (Y : List Nat) where
   inY : Nat → Bool
-  inY i = elem i Y
+  inY = inYG Y
 
   affected : Ex → Bool
-  affected e = any inY (varsE e)
+  affected = affG Y
 
-  -- Positions, computed by a prefix walk.
-  pos : Nat → Nat        -- level of the first new variable for x
-  pos zero    = 0
-  pos (suc x) = pos x + (if inY x then 3 else 1)
-
-  mi pl upl : Nat → Nat
-  mi x = pos x
-  pl x = if inY x then suc (pos x) else pos x
-  upl x = suc (suc (pos x))
+  pos mi pl upl : Nat → Nat
+  pos = posG Y
+  mi  = miG Y
+  pl  = plG Y
+  upl = uplG Y
 
   ren⁻ ren⁺ : Ex → Ex
-  ren⁻ = substE (λ i → v (mi i))
-  ren⁺ = substE (λ i → v (pl i))
+  ren⁻ = renmG Y
+  ren⁺ = renpG Y
 
-  dimΓ : Ex → Nat
-  dimΓ e = dimE (tyE Γ e)
-
-  -- lift t : a_t → b_t, the naturality cell of an affected term t.
-  -- Rules (notes/specified-cones.md §4.3):
-  -- * depth 0: an affected factor of the composite's own dimension,
-  --   whiskered by unaffected cells, lifts factorwise;
-  -- * depth 1, whisker: u ∗₀ w with u an affected 1-cell and w an
-  --   unaffected 2-cell lifts to the interchange xc u↑ w; mirrored, an
-  --   unaffected 2-cell u and an affected 1-cell w give xr u w↑;
-  -- * depth 1, paste: u ∗₁ w with u, w affected 2-cells (and affected
-  --   1-dimensional boundaries, unaffected 0-dimensional ones) lifts to
-  --   the pasting of u↑ and w↑ through three associators.
-  -- Anything else returns nothing, so the cylinder is not built.
   liftF : Nat → Ex → Maybe Ex
-  liftF zero _ = nothing
-  liftF (suc fl) (v i)      = if inY i then just (v (upl i)) else nothing
-  liftF (suc fl) (idn e)    = nothing
-  liftF (suc fl) (xc _ _)    = nothing
-  liftF (suc fl) (xr _ _)    = nothing
-  liftF (suc fl) (asL _ _ _) = nothing
-  liftF (suc fl) (ru _)      = nothing
-  liftF (suc fl) (lu _)      = nothing
-  liftF (suc fl) (a1L _ _ _) = nothing
-  liftF (suc fl) (a1R _ _ _) = nothing
-  liftF (suc fl) (dw _ _ _)  = nothing
-  liftF (suc fl) (dr _ _ _)  = nothing
-  liftF (suc fl) (na _ _ _)  = nothing
-  liftF (suc fl) (nr _ _ _)  = nothing
-  liftF (suc fl) (ru2 _)     = nothing
-  liftF (suc fl) (wi _ _)    = nothing
-  liftF (suc fl) (hx _ _)    = nothing
-  liftF (suc fl) (raw _ _ _) = nothing
-  liftF (suc fl) (rawD _ _ _) = nothing
-  liftF (suc fl) (rawF _ _ _) = nothing
-  liftF (suc fl) (ru2r _)    = nothing
-  liftF (suc fl) (wir _ _)   = nothing
-  liftF (suc fl) (naD _ _ _) = nothing
-  liftF (suc fl) (nrD _ _ _) = nothing
-  liftF (suc fl) (hxD _ _)   = nothing
-  liftF (suc fl) (asR _ _ _) = nothing
-  liftF (suc fl) (bn k u w) =
-    if affected u ∧ affected w then
-      (if (suc k ==ℕ n) ∧ (n ==ℕ 2) ∧ (du ==ℕ 2) ∧ (dW ==ℕ 2) then paste else nothing)
-    else if affected u then
-      (if du ==ℕ n then (liftF fl u >>= λ u' → just (bn k u' (ren⁻ w)))
-       else if (n ==ℕ 2) ∧ (du ==ℕ 1) ∧ (k ==ℕ 0)
-       then (liftF fl u >>= λ u' → just (xc u' (ren⁻ w)))
-       else nothing)
-    else if affected w then
-      (if dW ==ℕ n then (liftF fl w >>= λ w' → just (bn k (ren⁻ u) w'))
-       else if (n ==ℕ 2) ∧ (dW ==ℕ 1) ∧ (k ==ℕ 0)
-       then (liftF fl w >>= λ w' → just (xr (ren⁻ u) w'))
-       else nothing)
-    else nothing
-    where
-    du = dimΓ u
-    dW = dimΓ w
-    n  = max du dW
-    srcΓ tgtΓ : Ex → Ex
-    srcΓ e = srcE (tyE Γ e)
-    tgtΓ e = tgtE (tyE Γ e)
-    ok0 = not (affected (srcΓ (srcΓ u))) ∧ not (affected (tgtΓ (tgtΓ w)))
-    ok1 = affected (srcΓ u) ∧ affected (tgtΓ u) ∧ affected (tgtΓ w)
-    paste : Maybe Ex
-    paste =
-      if ok0 ∧ ok1 then
-        (liftF fl u >>= λ u↑ → liftF fl w >>= λ w↑ →
-         liftF fl (tgtΓ w) >>= λ Lτw → liftF fl (srcΓ w) >>= λ Lσw → liftF fl (srcΓ u) >>= λ Lσu →
-         let u⁻ = ren⁻ u ; w⁻ = ren⁻ w ; u⁺ = ren⁺ u ; w⁺ = ren⁺ w in
-         just (bn 2 (asL u⁻ w⁻ Lτw)
-              (bn 2 (bn 1 u⁻ w↑)
-              (bn 2 (asR u⁻ Lσw w⁺)
-              (bn 2 (bn 1 u↑ w⁺)
-                    (asL Lσu u⁺ w⁺))))))
-      else nothing
+  liftF fl = liftG fl Γ Y
 
   lift : Ex → Maybe Ex
-  lift = liftF fuel
+  lift = liftG (fuelOf Γ) Γ Y
 
-  -- a_x and b_x for x : A of dimension m ≥ 1, in the new context K.
   aSide bSide : Nat → Nat → Maybe Ex
-  aSide x m = go m 0 (just (v (mi x)))
-    where
-    go : Nat → Nat → Maybe Ex → Maybe Ex
-    go zero    j acc = acc
-    go (suc f) j acc =
-      if m ≤ℕ j then acc
-      else go f (suc j)
-        (acc >>= λ a →
-          let w = tgtIter Γ (m ∸ j) (v x) in
-          if affected w then (lift w >>= λ w' → just (bn j a w')) else just a)
-  bSide x m = go m 0 (just (v (pl x)))
-    where
-    go : Nat → Nat → Maybe Ex → Maybe Ex
-    go zero    j acc = acc
-    go (suc f) j acc =
-      if m ≤ℕ j then acc
-      else go f (suc j)
-        (acc >>= λ b →
-          let w = srcIter Γ (m ∸ j) (v x) in
-          if affected w then (lift w >>= λ w' → just (bn j w' b)) else just b)
-
-  step : Nat → ExTy → ExCtx → Maybe ExCtx
-  step x A K =
-    if inY x then
-      (if dimE A ==ℕ 0
-       then just (K ++ (substTyE (λ i → v (mi i)) A ∷ substTyE (λ i → v (pl i)) A
-                       ∷ hom ob (v (mi x)) (v (pl x)) ∷ []))
-       else (aSide x (dimE A) >>= λ a → bSide x (dimE A) >>= λ b →
-             let K' = K ++ (substTyE (λ i → v (mi i)) A ∷ substTyE (λ i → v (pl i)) A ∷ [])
-             in just (K' ++ (hom (tyE K' a) a b ∷ []))))
-    else just (K ++ (substTyE (λ i → v (mi i)) A ∷ []))
-
-  walk : Nat → ExCtx → ExCtx → Maybe ExCtx
-  walk x K []       = just K
-  walk x K (A ∷ As) = step x A K >>= λ K' → walk (suc x) K' As
+  aSide x m = sideA (fuelOf Γ) Γ Y (v x) m
+  bSide x m = sideB (fuelOf Γ) Γ Y (v x) m
 
   cyl : Maybe Cyl
-  cyl = walk 0 [] Γ >>= λ K →
+  cyl = cylG (fuelOf Γ) Γ Y >>= λ K →
         just (mkCyl K mi pl upl (map upl (filter inY (range (length Γ)))))
 
 ------------------------------------------------------------------------
@@ -1202,50 +1435,120 @@ oddJ zero          = false
 oddJ (suc zero)    = true
 oddJ (suc (suc n)) = oddJ n
 
-dualE : Ex → Ex
-dualE (v i)      = v i
-dualE (idn e)    = idn (dualE e)
-dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dualE u) (dualE w)
--- O_odd swaps ∗₀ factors and the ends of 3-cells, and fixes ∗₁:
--- the dual of an interchange is the interchange with factors swapped,
--- and the dual of an associator is the reverse associator.
-dualE (xc u w)    = xc (dualE w) (dualE u)
-dualE (xr u w)    = xr (dualE w) (dualE u)
--- O_odd reverses 1-cells and swaps ∗₀ factors; 2-cells keep their
--- direction. So a right unitor becomes a left one, and the associator of
--- 1-cells becomes the reverse associator of the swapped factors.
-dualE (ru w)      = lu (dualE w)
-dualE (lu w)      = ru (dualE w)
-dualE (a1L u y w) = a1R (dualE w) (dualE y) (dualE u)
-dualE (a1R u y w) = a1L (dualE w) (dualE y) (dualE u)
--- The coherences used for cones over 2-dimensional terms have no dual
--- constructors yet. dualE leaves them unchanged, and coconeT refuses
--- (returns nothing) when a cone contains one; see dualOK.
--- The 2-dimensional cone cells: each dual is the paired cell above
--- (O_odd swaps ∗₀ factors, turns a1L into a1R, and reverses 3-cells).
-dualE (dw u a b) = dr (dualE a) (dualE b) (dualE u)
-dualE (dr a b u) = dw (dualE u) (dualE a) (dualE b)
-dualE (na u a w) = naD (dualE w) (dualE a) (dualE u)
-dualE (naD w a u) = na (dualE u) (dualE a) (dualE w)
-dualE (nr u w b) = nrD (dualE b) (dualE w) (dualE u)
-dualE (nrD b w u) = nr (dualE u) (dualE w) (dualE b)
-dualE (ru2 a)    = ru2r (dualE a)
-dualE (raw w a b) = raw w a b      -- no dual: dualOK refuses it
-dualE (rawD w a b) = rawF w (dualE a) (dualE b)
-dualE (rawF w a b) = rawD w (dualE a) (dualE b)
-dualE (ru2r a)   = ru2 (dualE a)
-dualE (wi u w)   = wir (dualE w) (dualE u)
-dualE (wir w u)  = wi (dualE u) (dualE w)
-dualE (hx a b)   = hxD (dualE b) (dualE a)
-dualE (hxD b a)  = hx (dualE a) (dualE b)
-dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
-dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
+-- The O_odd dual of a generic coherence ch Q B ms. Dualising Q gives
+-- a pasting context again, but out of Dyck order: its pasting tree is
+-- Q's with the children reversed at the even depths (the cells of odd
+-- dimension are reversed). dyckDual lists Q's variables in the dual's
+-- Dyck order; the coherence is rewritten over the reordered context.
+data LT : Set where
+  lt : List (Nat × Nat × LT) → LT
 
-dualTy : ExTy → ExTy
-dualTy ob          = ob
-dualTy (hom A s t) =
-  if oddJ (dimE (hom A s t)) then hom (dualTy A) (dualE t) (dualE s)
-  else hom (dualTy A) (dualE s) (dualE t)
+-- Q's variables by tree position: each child is (target, cell, inside).
+labT : List Tree → Nat → List (Nat × Nat × LT) × Nat
+labT []             n = [] , n
+labT (node cs ∷ ts) n =
+  let r  = labT cs (suc (suc n))
+      r' = labT ts (snd r)
+  in ((n , suc n , lt (fst r)) ∷ fst r') , snd r'
+
+flipGo : Nat → List (Nat × Nat × LT) → List (Nat × Nat × LT) → Nat × List (Nat × Nat × LT)
+flipGo prev []                acc = prev , acc
+flipGo prev ((y , f , t) ∷ cs) acc = flipGo y cs ((prev , f , t) ∷ acc)
+
+mutual
+  -- The children of one level (reversed when b), with source s.
+  dualS : Bool → Nat → List (Nat × Nat × LT) → Nat × List (Nat × Nat × LT)
+  dualS b s cs = if b then flipGo s (dualC b cs) [] else (s , dualC b cs)
+
+  dualC : Bool → List (Nat × Nat × LT) → List (Nat × Nat × LT)
+  dualC b []                     = []
+  dualC b ((y , f , lt sub) ∷ r) =
+    (y , fst (dualS (not b) f sub) , lt (snd (dualS (not b) f sub))) ∷ dualC b r
+
+flatT : List (Nat × Nat × LT) → List Nat
+flatT []                     = []
+flatT ((y , f , lt sub) ∷ r) = y ∷ f ∷ (flatT sub ++ flatT r)
+
+dyckDual : Tree → List Nat
+dyckDual (node ts) = fst d ∷ flatT (snd d)
+  where d = dualS true 0 (fst (labT ts 1))
+
+-- dQ, dB, dms: the duals of Q's types, of B and of ms, in Q's order.
+dualCh : ExCtx → ExCtx → ExTy → List Ex → Ex
+dualCh Q dQ dB dms = go (treeOf (evCtx Q))
+  where
+  go : Maybe Tree → Ex
+  go nothing  = ch Q dB dms     -- Q is not a pasting context: not produced
+  go (just T) = ch Q* (substTyE inv dB) ms*
+    where
+    π = dyckDual T
+    inv : Nat → Ex
+    inv i = v (from (posIn i π))
+      where
+      from : Maybe Nat → Nat
+      from (just j) = j
+      from nothing  = 0
+    Q* = map (λ j → substTyE inv (nth ob dQ j)) π
+    idx : Maybe Nat → Nat
+    idx (just j) = j
+    idx nothing  = 0
+    ms* = map (λ j → nth (v 0) dms (idx (posIn (nth 0 π j) (maxPos Q)))) (maxPos Q*)
+
+mutual
+  dualE : Ex → Ex
+  dualE (v i)      = v i
+  dualE (idn e)    = idn (dualE e)
+  dualE (bn k u w) = if oddJ (suc k) then bn k (dualE w) (dualE u) else bn k (dualE u) (dualE w)
+  -- O_odd swaps ∗₀ factors and the ends of 3-cells, and fixes ∗₁:
+  -- the dual of an interchange is the interchange with factors swapped,
+  -- and the dual of an associator is the reverse associator.
+  dualE (xc u w)    = xc (dualE w) (dualE u)
+  dualE (xr u w)    = xr (dualE w) (dualE u)
+  -- O_odd reverses 1-cells and swaps ∗₀ factors; 2-cells keep their
+  -- direction. So a right unitor becomes a left one, and the associator of
+  -- 1-cells becomes the reverse associator of the swapped factors.
+  dualE (ru w)      = lu (dualE w)
+  dualE (lu w)      = ru (dualE w)
+  dualE (a1L u y w) = a1R (dualE w) (dualE y) (dualE u)
+  dualE (a1R u y w) = a1L (dualE w) (dualE y) (dualE u)
+  -- The coherences used for cones over 2-dimensional terms have no dual
+  -- constructors yet. dualE leaves them unchanged, and coconeT refuses
+  -- (returns nothing) when a cone contains one; see dualOK.
+  -- The 2-dimensional cone cells: each dual is the paired cell above
+  -- (O_odd swaps ∗₀ factors, turns a1L into a1R, and reverses 3-cells).
+  dualE (dw u a b) = dr (dualE a) (dualE b) (dualE u)
+  dualE (dr a b u) = dw (dualE u) (dualE a) (dualE b)
+  dualE (na u a w) = naD (dualE w) (dualE a) (dualE u)
+  dualE (naD w a u) = na (dualE u) (dualE a) (dualE w)
+  dualE (nr u w b) = nrD (dualE b) (dualE w) (dualE u)
+  dualE (nrD b w u) = nr (dualE u) (dualE w) (dualE b)
+  dualE (ru2 a)    = ru2r (dualE a)
+  dualE (raw w a b) = raw w a b      -- no dual: dualOK refuses it
+  dualE (rawD w a b) = rawF w (dualE a) (dualE b)
+  dualE (rawF w a b) = rawD w (dualE a) (dualE b)
+  dualE (ru2r a)   = ru2 (dualE a)
+  dualE (wi u w)   = wir (dualE w) (dualE u)
+  dualE (wir w u)  = wi (dualE u) (dualE w)
+  dualE (hx a b)   = hxD (dualE b) (dualE a)
+  dualE (hxD b a)  = hx (dualE a) (dualE b)
+  dualE (asL u y w) = asR (dualE u) (dualE y) (dualE w)
+  dualE (asR u y w) = asL (dualE u) (dualE y) (dualE w)
+  dualE (ch Q B ms) = dualCh Q (dualTyL Q) (dualTy B) (dualL ms)
+
+  dualL : List Ex → List Ex
+  dualL []       = []
+  dualL (e ∷ es) = dualE e ∷ dualL es
+
+  dualTyL : ExCtx → ExCtx
+  dualTyL []       = []
+  dualTyL (A ∷ As) = dualTy A ∷ dualTyL As
+
+
+  dualTy : ExTy → ExTy
+  dualTy ob          = ob
+  dualTy (hom A s t) =
+    if oddJ (dimE (hom A s t)) then hom (dualTy A) (dualE t) (dualE s)
+    else hom (dualTy A) (dualE s) (dualE t)
 
 dualCtx : ExCtx → ExCtx
 dualCtx = map dualTy
@@ -1574,7 +1877,9 @@ module ConstD2 (Γ : ExCtx) where
 -- Cocones over 1-dimensional coherence terms, as the O_odd dual of the
 -- cone over the dual diagram (on globular Γ this is CoconeOf.cocone).
 dualOK : Ex → Bool
+dualOKL : List Ex → Bool
 dualOK (v _)       = true
+dualOK (ch _ _ ms) = dualOKL ms
 dualOK (bn _ u w)  = dualOK u ∧ dualOK w
 dualOK (idn e)     = dualOK e
 dualOK (xc u w)    = dualOK u ∧ dualOK w
@@ -1600,6 +1905,8 @@ dualOK (hxD b a)   = dualOK b ∧ dualOK a
 dualOK (raw _ _ _) = false
 dualOK (rawD _ a b) = dualOK a ∧ dualOK b
 dualOK (rawF _ a b) = dualOK a ∧ dualOK b
+dualOKL []       = true
+dualOKL (e ∷ es) = dualOK e ∧ dualOKL es
 
 dualOKTy : ExTy → Bool
 dualOKTy ob          = true

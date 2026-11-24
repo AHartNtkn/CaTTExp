@@ -40,6 +40,14 @@ Support is measured in the Steiner bases of the relevant Gray-enriched or strict
 
 For ν and 𝔉, c is unique when it exists. The operation case is then exactly "⟦t⟧ = ∂⁻τ_Δ and ⟦u⟧ = ∂⁺τ_Δ" for the total cell τ_Δ, and the coherence case is exactly "⟦t⟧ = ⟦u⟧ with full support".
 
+**Two forms of the coherence case.** The rule above is the *full-support form*. Round 1 (§2) used it, and every result there is for it. A second, *variable form* (written CaTT_𝕋^V) replaces the coherence case by:
+
+```
+⟦t⟧ = ⟦u⟧, and every variable of Δ occurs in t : A and in u : A.
+```
+
+The operation case is unchanged. For ν the two forms agree. For 𝔉 and F_E the variable form accepts strictly more coherences; §1.2 gives an example. Answers for either form are wanted; please say which form an answer concerns. Where the two forms behave differently, that difference is itself of interest.
+
 ### 1.2 The Gray kernel
 
 Every pasting context decomposes uniquely as Δ = ΣΘ₁ ∨ … ∨ ΣΘₙ, with objects a₀, …, aₙ. The homs of 𝔉(Δ) are
@@ -52,7 +60,7 @@ with ⊗ the Steiner–Ara–Maltsiniotis tensor and factors in execution order.
 
 Example: over Δ = ΣD¹ ∨ ΣD¹, with α : f ⇒ f′ and β : g ⇒ g′, the coherence of type (f ◁ β) ; (α ▷ g′) → (α ▷ g) ; (f′ ◁ β) is accepted. Its reverse is not, and no term at all has the reverse type.
 
-The coherence case needs full support in the Steiner bases, not only that every variable occurs. Over the same Δ, βα = (f ◁ β) ; (α ▷ g′) and βα₂ = (1_{f;g} ; (f ◁ β)) ; (α ▷ g′) are parallel, have equal images and together use every variable. Their images miss the basis element α ⊗ β, so no single coherence has type βα → βα₂ (either way). A composite of two coherences, a unitor whiskered by α ▷ g′, does have that type. So in CaTT_G, parallel terms with equal images over a pasting context cannot in general be joined by one coherence-case coherence over the variables they use.
+The coherence case needs full support in the Steiner bases, not only that every variable occurs. Over the same Δ, βα = (f ◁ β) ; (α ▷ g′) and βα₂ = (1_{f;g} ; (f ◁ β)) ; (α ▷ g′) are parallel, have equal images and together use every variable. Their images miss the basis element α ⊗ β, so no single coherence has type βα → βα₂ (either way). A composite of two coherences, a unitor whiskered by α ▷ g′, does have that type. So in CaTT_G with the full-support form, parallel terms with equal images over a pasting context cannot in general be joined by one coherence-case coherence over the variables they use. In the variable form CaTT_G^V, coh(βα → βα₂) is accepted.
 
 ### 1.3 Kernels with directed interchange at every level
 

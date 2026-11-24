@@ -1,7 +1,8 @@
-"""Exact old degree-four Gray comparisons for positive 3-computads of spatial width two."""
+"""Decide degree-four Gray comparisons with positive temporal faces and nonempty spatial inputs."""
 from argparse import ArgumentParser
 from collections import Counter, deque
 import json
+from itertools import permutations
 from pathlib import Path
 
 from semistrict_surface_return_gaps import Presentation, Rule, exchange_at
@@ -12,23 +13,8 @@ class Movies:
         self.pres=pres
         self.start=start
         self.patch_ends=[pres.walk(r.path,r.source)[-1] for r in pres.rules]
-        # Three spatial sites are exactly what invalidates thin square transport.
-        graph={}
-        for u,v in pres.edges.values():
-            graph.setdefault(u,set()).add(v)
-            graph.setdefault(v,set())
-        def after(u):
-            seen={u}
-            work=[u]
-            while work:
-                for v in graph[work.pop()]-seen:
-                    seen.add(v)
-                    work.append(v)
-            return seen
-        poles=[pres.poles(s) for s,_ in pres.marks.values()]
-        for u,v in poles:
-            if any(u in after(y) for _,y in poles) and any(x in after(v) for x,_ in poles):
-                raise ValueError('a spatial triple is present')
+        # Pure signed transports between histories are unique up to the cube
+        # comparisons. Nonempty spatial inputs orient every adjacent exchange.
 
     def swap(self,h,k):
         if k<0 or k+1>=len(h):
@@ -139,6 +125,98 @@ class Movies:
         return dict(surface=False,states=len(previous))
 
 
+def wider_checks():
+    # With a single polygon in a fixed window, a disjoint spectator can move
+    # from after to before it. A spectator inside its window cannot pass it.
+    # This subset order provides an oracle independent of diagram search.
+    path = 'fghi'
+    edges = {e: (i,i+1) for i,e in enumerate(path)}
+    marks = {e: (e,e) for e in path}
+    marks.update(x=('g','g'), y=('g','g'))
+    histories = tuple(permutations(tuple(enumerate(path))))
+    initial = histories[-1]
+
+    def sorting_steps(word):
+        steps = []
+        word = list(word)
+        while any(a[0] > b[0] for a,b in zip(word,word[1:])):
+            k = next(i for i,(a,b) in enumerate(zip(word,word[1:])) if a[0] > b[0])
+            word[k:k+2] = reversed(word[k:k+2])
+            steps.append(('swap',k))
+        return steps
+
+    comparisons = 0
+    for left,right in [(1,2),(0,2),(1,4),(0,4)]:
+        offset = 1-left
+        rule = Rule(path[left:right], ((offset,'g'),), ((offset,'x'),(offset,'y')))
+        model = Movies(Presentation(edges,marks,[rule]),path)
+        movies = []
+        for history in histories:
+            index = history.index((1,'g'))
+            # Sort the reverse initial word into the selected intermediate order.
+            ranks = {event:i for i,event in enumerate(history)}
+            before = sorting_steps([(ranks[e],e) for e in initial])
+            out,_ = model.named(history,0,index)
+            actions = before + [(0,index)] + sorting_steps(out)
+            prefix = {p for p,_ in history[:index]}
+            movies.append((actions,prefix))
+        inside = set(range(left,right))
+        for first,src in movies:
+            for second,dst in movies:
+                expected = src <= dst and (src & inside) == (dst & inside)
+                assert model.compare(initial,first,second)['surface'] == expected
+                comparisons += 1
+
+    # Enumerate the forward cube faces with unequal spatial lengths. Distinct
+    # readings have the same signed endpoints, including each reverse cube query.
+    for i,e in enumerate(path):
+        u,v = e.upper(),str(i)
+        edges[u],edges[v] = (i,5+i),(5+i,i+1)
+        marks[e] = (e,u+v)
+    model = Movies(Presentation(edges,marks,[]),path)
+    sorts = []
+    pending = [(initial,[])]
+    while pending:
+        h,actions = pending.pop()
+        successors = [(s[0],actions+[('swap',j)]) for j in range(len(h)-1)
+                      if (s:=model.swap(h,j)) is not None and s[1]]
+        if successors:
+            pending.extend(successors)
+        else:
+            sorts.append(actions)
+    assert len(sorts) == 16
+    for first in sorts:
+        for second in sorts:
+            assert model.compare(initial,first,second)['surface']
+    # Repeated occurrences of the same deletion have distinct spatial inputs.
+    # The polygon and the spectator both leave an empty spatial path.
+    deleting = Presentation({'f': (0,0)}, {'d': ('f',''), 'l': ('f','f')},
+                            [Rule('f',((0,'d'),),((0,'l'),(0,'d')))])
+    model = Movies(deleting,'fff')
+    initial = ((2,'d'),(1,'d'),(0,'d'))
+    movies = []
+    for order in permutations(range(3)):
+        ranks = {event:i for i,event in enumerate(order)}
+        actions = sorting_steps([(ranks[e],e) for e in reversed(range(3))])
+        _,history = model.parse(initial,actions)
+        i = order.index(1)
+        actions.append((0,i))
+        after,_ = model.named(history,0,i)
+        while True:
+            step = next(((j,s[0]) for j in range(len(after)-1)
+                         if (s:=model.swap(after,j)) is not None and s[1]), None)
+            if step is None:
+                break
+            j,after = step
+            actions.append(('swap',j))
+        movies.append((actions,set(order[:i])))
+    for first,src in movies:
+        for second,dst in movies:
+            assert model.compare(initial,first,second)['surface'] == (src <= dst)
+    return dict(four_column_polygon_queries=comparisons, changing_path_cube_queries=len(sorts)**2,
+                empty_spatial_output_queries=len(movies)**2)
+
+
 def checks():
     edges={'f':(0,1),'u':(0,2),'v':(2,1),'g':(1,3),'h':(1,4),'k':(4,3)}
     marks={'a':('f','uv'),'x':('f','f'),'y':('f','uv'),
@@ -193,7 +271,7 @@ def checks():
                     assert answer['surface']==expected
                     pairs+=1
                     state_count+=answer['states']
-    return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7)
+    return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7, **wider_checks())
 
 
 if __name__=='__main__':

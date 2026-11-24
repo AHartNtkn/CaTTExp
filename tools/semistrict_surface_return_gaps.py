@@ -35,7 +35,11 @@ class Presentation:
         self.marks = marks
         self.rules = rules
         for source, target in marks.values():
-            assert self.poles(source) == self.poles(target)
+            start, end = self.poles(source)
+            if target:
+                assert (start, end) == self.poles(target)
+            else:
+                assert start == end  # The empty target is the identity at this vertex.
         for rule in rules:
             assert rule.source and rule.target
             assert self.walk(rule.path, rule.source)[-1] == self.walk(rule.path, rule.target)[-1]

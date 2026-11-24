@@ -209,6 +209,7 @@ import CaTTExp.Naturality.Typing
 import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
+import CaTTExp.Naturality.Solve
 import CaTTExp.Naturality.General
 import CaTTExp.Naturality.Ladder
 import CaTTExp.Naturality.Column

@@ -40,6 +40,24 @@ class NoFiller(Exception):
 _K = {}
 SMALL_CYL = [40]
 
+def rename_map(w, m, memo=None):
+    """w with variables renamed by m (index -> term), preserving sharing:
+    the terms built here are deeply shared, and a tree walk is exponential.
+    Pass one memo for repeated calls with the same m."""
+    if memo is None:
+        memo = {}
+    def go(x):
+        r = memo.get(id(x))
+        if r is not None:
+            return r[1]
+        if x[0] == 'v':
+            y = m.get(x[1], x)
+        else:
+            y = ('coh', x[1], x[2], tuple(go(u) for u in x[3]))
+        memo[id(x)] = (x, y)
+        return y
+    return go(w)
+
 def _iter_tgt(H, t, k):
     for _ in range(k):
         t = tgt(H, t)
@@ -126,12 +144,9 @@ def _swap(t, mi, pl, Y):
     """t (over the q⁻ copies) -> its q⁺ copy."""
     back = {}
     for q in mi:
-        back[mi[q]] = pl[q]
-    def go(t):
-        if t[0] == 'v':
-            return v(back.get(t[1], t[1]))
-        return ('coh', t[1], t[2], tuple(go(u) for u in t[3]))
-    return go(t)
+        if pl[q] != mi[q]:
+            back[mi[q]] = v(pl[q])
+    return rename_map(t, back)
 
 def _extend_leaf(tree, q):
     """The tree with the leaf whose arrow variable is q given one child, so
@@ -287,7 +302,7 @@ def _vchain_heads(Q):
     P2 = x[1]
     return d, (P2, x[2]), [i for i in maximal_vars(P2)]
 
-def _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc):
+def _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc, op=False):
     """A coherence c : P => P' over a d-chain Q whose two sides are binary
     bracketings of the top cells (a reassociation). Its filler is transferred
     from the composite c' of elementary associators P => N <= P' (N the
@@ -446,32 +461,84 @@ def _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc):
     cprime = steps[0]
     for w in steps[1:]:
         cprime = comp2(Q, d, cprime, w)
-    c = ('coh', Q, B, tuple(v(i) for i in range(len(Q))))
     assert infer(Q, cprime) == B, 'reassociation composite'
+    return _transfer(Q, B, Yq, C, mi, pl, up, a, b, rc, cprime, op)
+
+def _transfer(Q, B, Yq, C, mi, pl, up, a, b, rc, cprime, op=False):
+    """The filler of c = coh(Q, B) from that of a parallel term c' of Q,
+    along the coherences gamma : c => c' and c' => c over Q (both full):
+    a_c -> a_c' (gamma whiskered by the target lifts), c'^, then
+    b_c' -> b_c (gamma^-1 on the plus side, whiskered by the source lifts)."""
+    n = tdim(B) + 1
+    c = ('coh', Q, B, tuple(v(i) for i in range(len(Q))))
     g_fw = ('coh', Q, arr(B, c, cprime), tuple(v(i) for i in range(len(Q))))
     g_bw = ('coh', Q, arr(B, cprime, c), tuple(v(i) for i in range(len(Q))))
     ren = lambda t: _ren(t, mi)
     Yimg = frozenset(mi[q] for q in Yq)
     meets = lambda w: bool(fv_tm(w) & Yimg)
     plus = lambda w: _swap(w, mi, pl, Yq)
-    lift = lambda w: nat_in(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, w, rc)
-    Kp = lift(ren(cprime))
-    n = d + 1
-    ga = ren(g_fw)
-    for j in range(n):
-        w_ = _iter_tgt(C, ren(c), n - j)
-        if meets(w_):
-            ga = comp2(C, j, ga, lift(w_))
-    # b side for gamma^-1 built on its plus copy, whiskered by the same source lifts
-    gb = plus(ren(g_bw))
-    for j in range(n):
-        w_ = _iter_src_then(C, ren(c), n - j)
-        if meets(w_):
-            gb = comp2(C, j, lift(w_), gb)
-    K = comp2(C, n, comp2(C, n, ga, Kp), gb)
-    if infer(C, K) != arr(infer(C, a), a, b):
+    _pm, _um, _lm = {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, {}
+    lift = lambda w: nat_in(C, Yimg, _pm, _um, w, rc, _lm)
+    def a_side(g):
+        for j in range(n):
+            w_ = _iter_tgt(C, ren(c), n - j)
+            if meets(w_):
+                g = comp2(C, j, g, lift(w_))
+        return g
+    def b_side(g):
+        for j in range(n):
+            w_ = _iter_src_then(C, ren(c), n - j)
+            if meets(w_):
+                g = comp2(C, j, lift(w_), g)
+        return g
+    if not op:
+        Kp = lift(ren(cprime))
+        K = comp2(C, n, comp2(C, n, a_side(ren(g_fw)), Kp), b_side(plus(ren(g_bw))))
+        ok = infer(C, K) == arr(infer(C, a), a, b)
+    else:
+        # oplax: b_c -> b_c' -> (c'^op) -> a_c' -> a_c
+        Kp, _, _ = nat_op(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, ren(cprime), rc)
+        K = comp2(C, n, comp2(C, n, b_side(plus(ren(g_fw))), Kp), a_side(ren(g_bw)))
+        ok = infer(C, K) == arr(infer(C, a), b, a)
+    return K if ok else None
+
+def _bincomp(Q):
+    """The composite of the pasting context Q by binary composites, following
+    its tree: at a k-cell the children are composed left to right by *_k."""
+    tree = tree_of(Q)
+    nxt = [1]
+    def go(node, k):
+        terms = []
+        for child in node:
+            f = nxt[0] + 1
+            nxt[0] += 2
+            terms.append(go(child, k + 1) if child else v(f))
+        acc = terms[0]
+        for t in terms[1:]:
+            acc = comp2(Q, k, acc, t)
+        return acc
+    return go(tree, 0)
+
+def _binary_filler(Q, B, Yq, C, mi, pl, up, a, b, rc, op=False):
+    """A composition head c = coh(Q, B) with a large cylinder: transfer from
+    c'' = the binary composite of Q, its poles adjusted to those of c by
+    comparisons of lower rank in Q (Response 2's adjust); the lifts of the
+    binary heads have small cylinders."""
+    import rc_lift as L
+    n = tdim(B) + 1
+    cb = _bincomp(Q)
+    if tdim_tm(Q, cb) != n:
         return None
-    return K
+    s_, t_ = B[2], B[3]
+    try:
+        for j in range(n - 1):
+            cb = L.adjust(Q, cb, j, L.pole(Q, s_, j, '-'), L.pole(Q, s_, j, '+'), rc)
+        cb = L.adjust(Q, cb, n - 1, s_, t_, rc)
+    except L.LiftFailure:
+        return None
+    if infer(Q, cb) != B or cb == ('coh', Q, B, tuple(v(i) for i in range(len(Q)))):
+        return None
+    return _transfer(Q, B, Yq, C, mi, pl, up, a, b, rc, cb, op)
 
 def filler(Q, B, Yq, rc, op=False):
     key = (Q, B, frozenset(Yq), op)
@@ -488,15 +555,23 @@ def filler(Q, B, Yq, rc, op=False):
     meets = lambda w: bool(fv_tm(w) & Yimg)
     def plus(w):
         return _swap(w, mi, pl, Yq)
+    _pm, _um, _lm = {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, {}
     def lift(w):
-        return nat_in(C, Yimg, {mi[q]: v(pl[q]) for q in Yq}, {mi[q]: v(up[q]) for q in Yq}, w, rc)
+        return nat_in(C, Yimg, _pm, _um, w, rc, _lm)
     a, b = boundary_ab(C, c, meets, lift, plus)
     A = infer(C, a)
     if comp:
         try:
             w = _layered(Q, B, Yq, C, mi, pl, up, a, b, rc, op)
         except (NoFiller, TypeError_):
-            w = _lifted(C, n, Yq, Q, up, b if op else a, a if op else b, rc)
+            w = None
+            if len(C) > SMALL_CYL[0]:
+                try:
+                    w = _binary_filler(Q, B, Yq, C, mi, pl, up, a, b, rc, op)
+                except NoFiller:
+                    w = None
+            if w is None:
+                w = _lifted(C, n, Yq, Q, up, b if op else a, a if op else b, rc)
             if w is None and len(C) <= SMALL_CYL[0]:
                 # a small cylinder (e.g. a whiskering head with a moving
                 # lower whisker): ask the comparison directly
@@ -505,7 +580,13 @@ def filler(Q, B, Yq, rc, op=False):
                 _K[key] = None
                 raise NoFiller(key)
     elif op:
-        w = rc(C, A, b, a)
+        w = None
+        try:
+            w = _assoc_filler(Q, B, Yq, C, mi, pl, up, a, b, rc, op=True)
+        except NoFiller:
+            w = None
+        if w is None:
+            w = rc(C, A, b, a)
     else:
         w = None
         try:
@@ -521,20 +602,21 @@ def filler(Q, B, Yq, rc, op=False):
     return _K[key]
     
 
-def nat_in(H, Y, plus_map, up_map, t, rc):
+def nat_in(H, Y, plus_map, up_map, t, rc, memo=None):
     """t↑ in H, for Y ⊆ Var(H) up-closed among the variables t uses,
-    with y⁺ = plus_map[y], y↑ = up_map[y]."""
-    memo = {}
+    with y⁺ = plus_map[y], y↑ = up_map[y]. Pass one memo (a dict) for
+    repeated calls with the same data: lifts are shared across calls."""
+    if memo is None:
+        memo = {}
     def meets(w):
         return bool(fv_tm(w) & Y)
+    pmemo = {}
     def plus(w):
-        if w[0] == 'v':
-            return plus_map.get(w[1], w)
-        return ('coh', w[1], w[2], tuple(plus(u) for u in w[3]))
+        return rename_map(w, plus_map, pmemo)
     def lift(w):
-        k = w
-        if k in memo:
-            return memo[k]
+        hit = memo.get(id(w))
+        if hit is not None:
+            return hit[1]
         if w[0] == 'v':
             r = up_map[w[1]]
         else:
@@ -555,28 +637,32 @@ def nat_in(H, Y, plus_map, up_map, t, rc):
                     sub[pl[q]] = plus(g[q])
                     sub[up[q]] = lift(g[q])
             r = subst_tm(K, tuple(sub))
-        memo[k] = r
+        memo[id(w)] = (w, r)
         return r
     return lift(t)
 
-def nat_op(H, Y, plus_map, up_map, t, rc):
+def nat_op(H, Y, plus_map, up_map, t, rc, down_map=None):
     """The oplax square t↑ᵒᵖ : b_t -> a_t, for t whose top-dimensional
     structure is coherences (caps) and compositions of them: coherences take
     their filler K reversed (RC is symmetric); compositions are layered with
     the op-lifts of their top arguments; lower-dimensional arguments use the
-    lax lifts nat_in. A top-dimensional Y-variable has no op-lift."""
+    lax lifts nat_in. A top-dimensional Y-variable takes down_map[y] : b_y -> a_y
+    (a reversed bridge), and has no op-lift without one."""
     Y = frozenset(Y)
     meets = lambda w: bool(fv_tm(w) & Y)
+    pmemo = {}
     def plus(x):
-        if x[0] == 'v':
-            return plus_map.get(x[1], x)
-        return ('coh', x[1], x[2], tuple(plus(u) for u in x[3]))
-    lax = lambda x: nat_in(H, Y, plus_map, up_map, x, rc)
+        return rename_map(x, plus_map, pmemo)
+    _lm = {}
+    lax = lambda x: nat_in(H, Y, plus_map, up_map, x, rc, _lm)
     memo = {}
     def go(t):
-        if t in memo:
-            return memo[t]
+        hit = memo.get(id(t))
+        if hit is not None:
+            return hit[1]
         if t[0] == 'v':
+            if down_map and t[1] in down_map:
+                return down_map[t[1]]
             raise NoFiller('top-dimensional Y-variable has no op-lift')
         Q, B, g = t[1], t[2], t[3]
         Yq = frozenset(q for q in range(len(Q)) if meets(g[q]))
@@ -594,7 +680,7 @@ def nat_op(H, Y, plus_map, up_map, t, rc):
                 sub[pl[q]] = plus(g[q])
                 sub[up[q]] = go(g[q]) if q in optops else lax(g[q])
         r = subst_tm(K, tuple(sub))
-        memo[t] = r
+        memo[id(t)] = (t, r)
         return r
     w = go(t)
     a, b = boundary_ab(H, t, meets, lax, plus)
@@ -603,13 +689,13 @@ def nat_op(H, Y, plus_map, up_map, t, rc):
 
 def square(H, Y, plus_map, up_map, t, rc):
     """(t↑, a_t, b_t), with the type checked."""
-    w = nat_in(H, frozenset(Y), plus_map, up_map, t, rc)
+    _lm = {}
+    w = nat_in(H, frozenset(Y), plus_map, up_map, t, rc, _lm)
     meets = lambda x: bool(fv_tm(x) & frozenset(Y))
+    pmemo = {}
     def plus(x):
-        if x[0] == 'v':
-            return plus_map.get(x[1], x)
-        return ('coh', x[1], x[2], tuple(plus(u) for u in x[3]))
-    a, b = boundary_ab(H, t, meets, lambda x: nat_in(H, frozenset(Y), plus_map, up_map, x, rc), plus)
+        return rename_map(x, plus_map, pmemo)
+    a, b = boundary_ab(H, t, meets, lambda x: nat_in(H, frozenset(Y), plus_map, up_map, x, rc, _lm), plus)
     assert infer(H, w) == arr(infer(H, a), a, b), 'ill-typed naturality square'
     return w, a, b
 

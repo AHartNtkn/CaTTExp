@@ -1,21 +1,45 @@
 """Test degree-four Gray surface comparisons for positive 3-computads using signed exchanges."""
 from argparse import ArgumentParser
 from collections import Counter, deque
+from dataclasses import dataclass
 import json
-from itertools import permutations
+from itertools import chain, permutations
 from pathlib import Path
 
 from semistrict_surface_return_gaps import Presentation, Rule, exchange_at
 
 
+@dataclass
+class Attachment:
+    path: str
+    source: tuple  # temporal input history shared by its two 3-faces
+    first: list
+    second: list
+
+
 class Movies:
-    def __init__(self,pres,start):
+    def __init__(self,pres,start,attachments=()):
         self.pres=pres
         self.start=start
         self.patch_ends=[pres.walk(r.path,r.source)[-1] for r in pres.rules]
         self.globally_thin = (all(s for s,_ in pres.marks.values()) or
                               all(t for _,t in pres.marks.values()))
         self.thin_components = {}
+        self.attachments = []
+        self.deltas = set()
+        for tile in attachments:
+            pres.walk(tile.path,tile.source)
+            local = Movies(pres,tile.path)
+            left,h = local.parse(tile.source,tile.first)
+            right,k = local.parse(tile.source,tile.second)
+            if h != k:
+                raise ValueError('a 4-rule requires parallel faces')
+            if not tile.source:
+                continue  # Both faces are identities by temporal positivity.
+            self.attachments.append((tile,len(left)))
+            self.deltas.add(len(right)-len(left))
+        if any(d>0 for d in self.deltas) and any(d<0 for d in self.deltas):
+            raise ValueError('4-rules must be jointly nondecreasing or jointly nonincreasing in polygon count')
 
     def swap(self,h,k,positive):
         if k<0 or k+1>=len(h):
@@ -143,14 +167,53 @@ class Movies:
             assert self.named(after,rid,i1)[0]==self.named(before,second,j)[0]
             yield state[:k]+((h,second,j0),(after,rid,i1))+state[k+2:],'disjoint rules'
 
+    def seam_histories(self, history):
+        seen = {history}
+        todo = [history]
+        while todo:
+            h = todo.pop()
+            yield h
+            for j in range(len(h)-1):
+                for positive in (True,False):
+                    dest = self.swap(h,j,positive)
+                    if dest is not None and dest not in seen:
+                        seen.add(dest)
+                        todo.append(dest)
+
+    def attachment_updates(self,state,final,limit):
+        for tile,count in self.attachments:
+            target_count = sum(name!='swap' for name,_ in tile.second)
+            if len(state)-count+target_count > limit:
+                continue
+            width = len(tile.source)
+            for k in range(len(state)-count+1):
+                seam = state[k][0] if k<len(state) else final
+                for h in self.seam_histories(seam):
+                    paths = self.pres.walk(self.start,h)
+                    for i in range(len(h)-width+1):
+                        off = h[i][0]-tile.source[0][0]
+                        if off<0 or not paths[i].startswith(tile.path,off):
+                            continue
+                        if h[i:i+width] != tuple((p+off,n) for p,n in tile.source):
+                            continue
+                        left,_ = self.parse(h,[(n,i+j) for n,j in tile.first])
+                        if left!=state[k:k+count]:
+                            continue
+                        right,_ = self.parse(h,[(n,i+j) for n,j in tile.second])
+                        yield state[:k]+right+state[k+count:], 'declared 4-rule'
+
     def compare(self,source,first,second):
         self.pres.walk(self.start,source)
         u,a=self.parse(source,first)
         v,b=self.parse(source,second)
         if a!=b:
             raise ValueError('expected parallel old readings')
-        if Counter(r for _,r,_ in u)!=Counter(r for _,r,_ in v):
+        if not self.attachments and Counter(r for _,r,_ in u)!=Counter(r for _,r,_ in v):
             return dict(surface=False,states=0)
+        if ((len(u)<len(v) and not any(d>0 for d in self.deltas)) or
+            (len(u)>len(v) and not any(d<0 for d in self.deltas))):
+            return dict(surface=False,states=0)
+        limit = max(len(u),len(v))
         if first==second and not self.globally_thin:
             return dict(surface=True,states=1,moves=[])
         def certified(state):
@@ -172,7 +235,7 @@ class Movies:
                 return dict(surface=True,states=len(previous),moves=labels[::-1])
             if state==v:
                 unresolved = True
-            for nxt,label in self.updates(state):
+            for nxt,label in chain(self.updates(state),self.attachment_updates(state,b,limit)):
                 nxt=(nxt,safe and certified(nxt))
                 if nxt not in previous:
                     previous[nxt]=current,label
@@ -301,6 +364,69 @@ def mixed_port_checks():
     return dict(mixed_empty_port_queries=comparisons, cyclic_connector_queries=2)
 
 
+def guarded_checks():
+    from itertools import product
+    ab = ((0,'a'),(1,'b'))
+    ba = ab[::-1]
+    presentation = Presentation({'f':(0,1),'g':(1,2)}, {'a':('f','f'),'b':('g','g')},
+                                [Rule('fg',ab,ab),Rule('fg',ab,ab),Rule('fg',ab,ba)])
+    def movie(word):
+        return [(int(c),0) for c in word]
+    checks = 0
+    loose_positives = 0
+    for transitions in [(('01','10'),('11','00')), (('','0'),), (('1',''),)]:
+        tiles = [Attachment('fg',ba,[('swap',0)]+movie(l),[('swap',0)]+movie(r))
+                 for l,r in transitions]
+        model = Movies(presentation,'fg',tiles)
+        words = [''.join(w) for n in range(4) for w in product('01',repeat=n)]
+        for start in words:
+            reachable = {start}
+            todo = [start]
+            while todo:
+                w = todo.pop()
+                for l,r in transitions:
+                    for i in range(len(w)-len(l)+1):
+                        if w.startswith(l,i):
+                            dest = w[:i]+r+w[i+len(l):]
+                            if len(dest)<=3 and dest not in reachable:
+                                reachable.add(dest)
+                                todo.append(dest)
+            for end in words:
+                answer = model.compare(ab,movie(start),movie(end))['surface']
+                assert answer == (end in reachable)
+                loose_positives += bool(answer and start!=end)
+                checks += 1
+    return dict(guarded_substring_queries=checks, guarded_surface_only=loose_positives)
+
+
+def agda_guard(directory):
+    from catt import arr, comp2, glue_tree, infer, maximal_vars, src, tgt, tree_ctx, v
+    from emit_agda import Emitter
+    from semistrict_surface_scalar_cube import exchange
+    ctx = tree_ctx(glue_tree(1,0,1))
+    def declare(s,t):
+        nonlocal ctx
+        assert infer(ctx,s)==infer(ctx,t)
+        x = v(len(ctx))
+        ctx += (arr(infer(ctx,s),s,t),)
+        return x
+    f,g = map(v,maximal_vars(ctx))
+    a,b = declare(f,f),declare(g,g)
+    j = exchange(ctx,a,b)
+    base = tgt(ctx,j)
+    declare(base,src(ctx,j))
+    x,y = declare(base,base),declare(base,base)
+    w,z = comp2(ctx,2,x,y),comp2(ctx,2,y,x)
+    guarded = declare(comp2(ctx,2,j,w),comp2(ctx,2,j,z))
+    emitter = Emitter()
+    emitter.check_typed('guardedRule',ctx,guarded)
+    emitter.check_type('oldSource',ctx,w,infer(ctx,z))
+    emitter.check_type('oldTarget',ctx,z,infer(ctx,w))
+    module = emitter.module('GuardedPolygonWord','One protected equal-length polygon rule.')
+    (directory/'GuardedPolygonWord.agda').write_text(module.replace('open import CaTTExp.Pure',
+                                                                     'open import CaTTExp.Gray.Pure'))
+
+
 def checks():
     edges={'f':(0,1),'u':(0,2),'v':(2,1),'g':(1,3),'h':(1,4),'k':(4,3)}
     marks={'a':('f','uv'),'x':('f','f'),'y':('f','uv'),
@@ -356,12 +482,13 @@ def checks():
                     pairs+=1
                     state_count+=answer['states']
     return dict(comparisons=pairs,visited_descriptions=state_count,changing_spatial_queries=7,
-                **wider_checks(), **mixed_port_checks())
+                **wider_checks(), **mixed_port_checks(), **guarded_checks())
 
 
 if __name__=='__main__':
     parser=ArgumentParser(description=__doc__)
     parser.add_argument('--query',type=Path)
+    parser.add_argument('--agda-dir',type=Path)
     args=parser.parse_args()
     if args.query:
         q=json.loads(args.query.read_text())
@@ -369,7 +496,11 @@ if __name__=='__main__':
         pres=Presentation(q['edges'],q['marks'],rules,q.get('mark_roots'))
         source=tuple(map(tuple,q['source']))
         pres.walk(q['start'],source,q.get('vertex'))
-        result=Movies(pres,q['start']).compare(source,q['first'],q['second'])
+        tiles=[Attachment(r['path'],tuple(map(tuple,r['source'])),r['first'],r['second'])
+               for r in q.get('attachments',[])]
+        result=Movies(pres,q['start'],tiles).compare(source,q['first'],q['second'])
     else:
         result=checks()
+    if args.agda_dir:
+        agda_guard(args.agda_dir)
     print(json.dumps(result))

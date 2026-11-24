@@ -253,16 +253,16 @@ def check_atom(m,n):
     assert count==len(graph)
 
 
-def agda_example(rules,directory):
+def square_context(rules,shapes):
     from catt import arr, comp2, glue_tree, infer, maximal_vars, src, tgt, tree_ctx, v
-    from emit_agda import Emitter
     from semistrict_surface_scalar_cube import exchange
     ctx=tree_ctx(glue_tree(2,0,2))
     j=exchange(ctx,*map(v,maximal_vars(ctx)))
     u,vv=src(ctx,j),tgt(ctx,j)
     terms={'j':j}
-    for x in sorted({'r'}|{x for _,l,r in rules for x in l+r}-{'j'}):
-        a,b={'r':(vv,u),'F':(u,u)}.get(x,(vv,vv))
+    faces={'U':u,'V':vv}
+    for x in sorted(set(shapes)-{'j'}):
+        a,b=map(faces.__getitem__,shapes[x])
         terms[x]=v(len(ctx))
         ctx+=(arr(infer(ctx,a),a,b),)
     def word(w):
@@ -270,10 +270,21 @@ def agda_example(rules,directory):
         for x in w[1:]:
             cell=comp2(ctx,2,cell,terms[x])
         return cell
-    for _,l,r in rules:
+    vertices={}
+    for name,l,r in rules:
         left,right=word(l),word(r)
+        vertices[name]=v(len(ctx))
         assert infer(ctx,left)==infer(ctx,right)
         ctx+=(arr(infer(ctx,left),left,right),)
+    return ctx,terms,vertices,word
+
+
+def agda_example(rules,directory):
+    from catt import v
+    from emit_agda import Emitter
+    shapes={x:"VV" for _,l,r in rules for x in l+r}
+    shapes.update(j="UV",r="VU",F="UU")
+    ctx,_,_,word=square_context(rules,shapes)
     emitter=Emitter()
     g=emitter.ctx(ctx)
     emitter.checks.append(f'all-rules : is-just (checkCtx {g}) ≡ true\nall-rules = refl\n')

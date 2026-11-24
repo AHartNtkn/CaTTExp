@@ -137,7 +137,7 @@ Route tried: show every term is connected to a canonical one by induction on the
 
 | Item | Owner |
 |---|---|
-| SPEC: adopt L^V's coherence case for two-tier L (and the Var-shaped analogue for V + S), or keep the Gray-full form. Evidence in §4: strictly more general, CaTT-shaped, sound, and complete on pasting contexts. | SPEC (spec thread); this note supplies the evidence |
+| SPEC: adopt L^V's coherence case for two-tier L (and the Var-shaped analogue for V + S), or keep the Gray-full form. Evidence in §4: strictly more general, CaTT-shaped, sound, and complete on pasting contexts. | **done**: adopted for every row in PR #591 (spec thread) |
 | EL for graySide in pasting contexts (is two-tier L as written complete?) | S30 (this thread); outbox prompt ready |
 | Full strict-soundness typing instance for graySideV in Agda (parameterise `topS`/`supp` and `Strict/Soundness` by the coherence-case predicate, then use `cohV-top`) | S30 |
 | Lemma 4.2 and strengthening in Agda | S30 |

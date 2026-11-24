@@ -133,7 +133,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
-- S32 (2.3): the spec treats 𝒦 as a target model; the project has no intended model.
+- S32 (2.3): a development must not choose its class of models (models stay a justification tool).
 - S31 (2.3): per-file switch settings may be unjustified; proposal to drop them.
 - S30 (2.2): completeness of the lax side condition is unstated.
 - S29 (2.2): §2.2 frames SC as computed in a strict theory; should present it as a combinatorial test with soundness alongside.

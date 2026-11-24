@@ -16,15 +16,18 @@
 -- Proved (no postulates):
 --   * with constant marks s, the per-object laws are exactly the
 --     setting-s laws                                   (const-⊆, const-⊇)
---   * a lower bound s of all marks (e.g. the meet S(Γ)) gives fewer
---     laws, and an upper bound (e.g. both splits, T₁₂) more, so
---     V + S(Γ) → V + per-object → T₁₂ on raw syntax  (lower-⊆, upper-⊆)
+--   * a lower bound s of all marks (e.g. the meet S∧) gives fewer
+--     laws, and an upper bound (e.g. both splits) more:
+--     Law S∧ ⊆ LawO ⊆ Law allS, and so on their generated congruences
+--     (split laws only, untyped raw 4-terms; V's own equations and
+--     T₁₂ are not modelled here)                     (lower-⊆, upper-⊆)
 --   * stronger marks give more laws                    (mark-mono)
 --   * all of these lift to the generated congruences   (cong-map)
 --   * both sides of every per-object law are pure inner, so seed lists
 --     are kept                                         (lawO-inner, seedsO-≈)
 -- Not mechanized: the landing-object function on actual pasting
--- contexts; substitution; the decision procedure (paper, design-
+-- contexts (`land` is a free parameter); substitution (mark-mono
+-- covers re-marking one context only); the decision procedure (paper, design-
 -- decisions.md §1.9, extending r10 Response 3 to a selected sublist of
 -- ground instances).
 ------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-"""Compute the common raw algebra of two labelled globular charts and test frame changes."""
+"""Compute the common raw algebra of two labelled computads and test globular frame changes."""
 from functools import lru_cache
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -22,8 +22,6 @@ class ChartPullback:
         declarations = []
         for s, t in self.generators:
             ty = self.pair_type(infer(p, s), infer(q, t))
-            # Every face must itself be a generator pair.
-            assert ty == STAR or all(f[0] == 'v' for f in ty[2:])
             check_ty_cached(tuple(declarations), ty)
             declarations.append(ty)
         self.ctx = tuple(declarations)

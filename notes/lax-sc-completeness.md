@@ -11,7 +11,7 @@ Soundness of the lax side condition is established: a yes from SC is a yes in st
 | For two-tier L, fullness is **equivalent to EL in pasting contexts** (relative coherence for image equality). The proof of EL in `surface-conservativity.md` Prop. 4.3 does **not** apply to two-tier L as the rule is written: its one step is exactly the coherence that `gap` rejects. | **[Agda]** for the failing step; equivalence **[proved on paper]** |
 | **Repair candidate L^V**: keep the operation case; make the coherence case Finster–Mimram's shape plus image equality (`Var(t : A) = Var(Δ)` and ⟦t⟧ = ⟦u⟧). It is strictly more general than two-tier L, and sound: in the strict model the new coherence case is (B) itself; in (∞,ω) models Theorem 2's argument never used full support. | rule and coherence-case soundness lemma **[Agda]** `Gray/CohCaseVar.agda` (`cohV-top`); full strict soundness **[not rebuilt]**; (∞,ω) **[argued]** |
 | **Theorem 1 (fullness for L^V)**: every cell of 𝔉(Δ) between term images is the image of a derivable L^V term of exactly that type. So on pasting contexts L^V derives every coherence of the free oriented (∞,ω)-category, and no further generalization of the side condition can add a derivable type. | **[proved on paper]**, modulo cited literature and Lemma 1.3 of `surface-conservativity.md` (argued) |
-| Whether the **current** two-tier rule is already complete (EL for graySide in pasting contexts) | **open**; attempted in §5; outbox prompt `conjectures/outbox/gray-catt-relative-coherence.md` |
+| The **current** two-tier rule (Gray-full coherence case) is **also complete** (EL and FULL hold in every pasting context), non-constructively: it follows from the verified directed arity lifting of relative-coherence r9 Response 1 (free two-tier algebras on pasting arities are trivial fibrations over 𝔉), re-checked against the §2 shape by the S19 thread on 2026-11-24. So graySide and L^V derive the same types; L^V gives EL by one explicit coherence. | **[verified researcher result]**, §3.3; the in-house attempt of §5 is superseded; the outbox prompt is retired |
 | Uniform L relative to oriented (∞,ω) models: **incomplete by design** (inner interchange is directed). Relative to its own free objects F_{V+S}: open, with the same coherence-case issue plus S11. | §6 |
 
 ## 1. Statements
@@ -70,7 +70,9 @@ EL for P with image equality in ν is RC, which holds in every strong-Steiner co
 
 ### 3.3 Two-tier L as written
 
-`surface-conservativity.md` Prop. 4.3 proves EL in a pasting context by one coherence-case coh over Var(u). For two-tier L that coh needs full *Gray* support of the image, which fails whenever the image is a composite such as ∂⁻τ (§2, item 3). So Prop. 4.3 is not proved for two-tier L, and with it FULL for two-tier L is open. The pair in §2 is still connected by a composite (item 4), so this is a gap in the proof, not yet a counterexample. §5 records the attempt; the general question is in the outbox.
+`surface-conservativity.md` Prop. 4.3 proves EL in a pasting context by one coherence-case coh over Var(u). For two-tier L that coh needs full *Gray* support of the image, which fails whenever the image is a composite such as ∂⁻τ (§2, item 3). So Prop. 4.3's single-head proof does not apply to two-tier L. The pair in §2 is still connected by a composite (item 4), so this was a gap in the proof, not a counterexample.
+
+**Resolved (2026-11-24).** EL, hence FULL, does hold for two-tier L as written. relative-coherence r9 Response 1 (verified 2026-11-20; `conjectures/answered/relative-coherence-all-dimensions-r9-2026-11-20.md`) proves that free two-tier L-algebras on pasting arities are globular trivial fibrations over 𝔉, for the full-Gray-support rule. Lifting the identity between equal images gives EL. The S19 thread re-checked on 2026-11-24 (addendum in that file) that the proof never lifts a single head at a non-total cell such as βα → βα₂: it only lifts generic heads, at total cells and identities on them. The result is **non-constructive** (no explicit connecting terms, no size bound) and rests on the ∞-categorical inputs of Responses 15–16, checked at the level of the stated constructions. Consequence: graySide and L^V derive exactly the same types (L^V ⊇ graySide, and every L^V head's type is inhabited in 𝔉, hence in graySide by FULL). L^V's gain is that EL is witnessed by one explicit coherence (Theorem 1), not a non-constructive lift.
 
 ## 4. The repair candidate L^V
 
@@ -100,8 +102,8 @@ Its decision cost is that of the existing closure comparison; on a single hom it
 | directed interchanger, no reverse, no horizontal composite | yes | yes (`CohCaseVar` evaluation checks: the reverse and the horizontal composite are still rejected) |
 | strict soundness | Agda (`Strict/Soundness`) | coherence-case step: `cohV-top` (Agda), which is (B) applied to t and u, replaces `coh-top`; the support function `topS` must also dispatch on cohCaseV instead of cohCase (it is defined mutually with graySide's cohCase, so as written it gives βα → βα₂ the operation-case image); the full typing instance is not rebuilt in Agda |
 | (∞,ω) soundness | Theorem 2 | same proof: coherence-case cohs go to the invertible cells that (D) provides between parallel cells with equal strict image; full support is not used there |
-| EL / FULL in pasting contexts | open (§3.3, §5) | **proved** (Theorem 1) |
-| derivable types | ⊆ L^V; equal iff EL holds for two-tier L | maximal: by Theorem 1 no further rule on pasting contexts adds a derivable type that is sound in 𝔉 |
+| EL / FULL in pasting contexts | holds, non-constructively (§3.3) | **proved** (Theorem 1) |
+| derivable types | equal to L^V's (FULL holds for both, §3.3) | maximal: by Theorem 1 no further rule on pasting contexts adds a derivable type that is sound in 𝔉 |
 
 **Lemma 4.2 (Var is a pasting sub-context, and is the projected support).** Let u : A be derivable in L^V over a pasting context Δ = ΣΘ₁ ∨ … ∨ ΣΘₙ. Then Var(u : A) equals the set of variables occurring in the closed Gray support of ⟦u⟧ and its boundaries, and it is a pasting sub-context ΣP_{i+1} ∨ … ∨ ΣP_j.
 
@@ -118,11 +120,11 @@ Its decision cost is that of the existing closure comparison; on a single hom it
 
 **Consequence for the walkthrough question.** With L^V, the strict free object loses nothing on pasting contexts: every cell of the free oriented (∞,ω)-category on Δ (which is 𝔉(Δ)) is named by a derivable term, at its exact type. The weak reading of general contexts (chapter 4) is a separate matter: there EL already fails at dimension 5 on the suspended scalar (`surface-conservativity.md` §4.3), so no such statement is expected off pasting contexts.
 
-## 5. Is two-tier L as written already complete? (attempt)
+## 5. Is two-tier L as written already complete? (attempt, superseded by §3.3)
 
 By Proposition 3.1 the question is EL for graySide in pasting contexts. A coherence-case coh over Var(u) works whenever ⟦u⟧ has full Gray support in Var(u). Otherwise ⟦u⟧ is a proper composite in a hom of 𝔉, and the connection has to be assembled from smaller cohs, as in §2 item 4.
 
-Route tried: show every term is connected to a canonical one by induction on the term, using (i) congruence of a head in each argument separately (functorialisation in one locally maximal variable: Δ↑{v} is a pasting context and its total cell τ_{Δ↑v} goes from τ_Δ[v] composed with lower functorialised boundary cells to τ_Δ[v′] composed with others, so it is an operation-case coh of two-tier L), with KC to cancel the lower cells, and (ii) an insertion-type step relating coh_H[σ] to a single head over the inserted context when σ(v) is itself a coh. Step (i) goes through on paper for operation-case heads. Step (ii) needs the image of the composite head to have full Gray support in the inserted context, which holds when the inner head is an operation case and fails, again, when the inner head is a coherence case whose image is not Gray-full. So the induction closes only modulo the same obstruction. Not clearly progressing; per standard 12 the general question is in `conjectures/outbox/gray-catt-relative-coherence.md`.
+Route tried: show every term is connected to a canonical one by induction on the term, using (i) congruence of a head in each argument separately (functorialisation in one locally maximal variable: Δ↑{v} is a pasting context and its total cell τ_{Δ↑v} goes from τ_Δ[v] composed with lower functorialised boundary cells to τ_Δ[v′] composed with others, so it is an operation-case coh of two-tier L), with KC to cancel the lower cells, and (ii) an insertion-type step relating coh_H[σ] to a single head over the inserted context when σ(v) is itself a coh. Step (i) goes through on paper for operation-case heads. Step (ii) needs the image of the composite head to have full Gray support in the inserted context, which holds when the inner head is an operation case and fails, again, when the inner head is a coherence case whose image is not Gray-full. So the induction closes only modulo the same obstruction. The prompt written for this (`conjectures/retired/gray-catt-relative-coherence.md`) was retired unsent on 2026-11-24: its Q1 and Q2 are answered by r9 Response 1 (§3.3). A constructive version is part of the open "search-free construction" item of the r9/r10 line.
 
 ## 6. Uniform L
 
@@ -138,7 +140,7 @@ Route tried: show every term is connected to a canonical one by induction on the
 | Item | Owner |
 |---|---|
 | SPEC: adopt L^V's coherence case for two-tier L (and the Var-shaped analogue for V + S), or keep the Gray-full form. Evidence in §4: strictly more general, CaTT-shaped, sound, and complete on pasting contexts. | **done**: adopted for every row in PR #591 (spec thread) |
-| EL for graySide in pasting contexts (is two-tier L as written complete?) | S30 (this thread); outbox prompt ready |
+| ~~EL for graySide in pasting contexts~~ **holds** (§3.3, r9 Response 1, non-constructive); a constructive version is the r9/r10 search-free construction item | — |
 | Full strict-soundness typing instance for graySideV in Agda (parameterise `topS`/`supp` and `Strict/Soundness` by the coherence-case predicate, then use `cohV-top`) | S30 |
 | Lemma 4.2 and strengthening in Agda | S30 |
 | `surface-conservativity.md` Prop. 4.3 / Corollary 4.4: proof does not apply to two-tier L as written; holds for L^V by Theorem 1 | S19 owner (notified) |

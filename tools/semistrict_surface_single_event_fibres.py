@@ -34,23 +34,32 @@ class PlacedTerms(Selector):
         return arr(self.local_type(ty[1], left, right), self.read(ty[2], left, right),
                    self.read(ty[3], left, right))
 
-    @cache
     def read(self, term, left=(), right=()):
         assert self.weight(term) == 1
+        return self.read_event(term, 0, left, right)
+
+    @cache
+    def read_event(self, term, event, left=(), right=()):
+        """Read one event in a serial history whose spatial columns never split."""
+        assert 0 <= event < self.weight(term)
         if term[0] == 'v':
+            assert self.weight(term) == 1
             ty = self.local_type(self.ctx[term[1]], left, right)
             name = v(len(self.local))
             self.local.append(ty)
             self.names[name] = left, term[1], right
             return name
         _, arity, ty, args = term
-        choices = []
+        offset = 0
+        contributing = []
         for lower, slots, cuts in depth_slots(arity, 2):
-            weights = {self.weight(args[i]) for i, a in zip(slots, lower) if a == STAR}
-            assert len(weights) == 1
-            if weights == {1}:
-                choices.append((slots, cuts))
-        (slots, cuts), = choices
+            weight, = {self.weight(args[i]) for i, a in zip(slots, lower) if a == STAR}
+            if weight:
+                contributing.append((offset, offset + weight, slots, cuts))
+                offset += weight
+        assert offset == self.weight(term)
+        assert len({tuple(cuts[0].indices) for _, _, _, cuts in contributing}) == 1
+        (start, _, slots, cuts), = (entry for entry in contributing if entry[0] <= event < entry[1])
         arrows = columns(arity)[1]
         col, = (k for k, i in enumerate(arrows) if i in cuts[0].indices)
         left += tuple(e for i in arrows[:col] for e in self.word(args[i]))
@@ -58,7 +67,7 @@ class PlacedTerms(Selector):
         generic = ('coh', arity, ty, tuple(map(v, range(len(arity)))))
         for cut in cuts:
             generic = cut.term(generic)
-        return subst_tm(generic, tuple(self.read(args[i], left, right) for i in slots))
+        return subst_tm(generic, tuple(self.read_event(args[i], event - start, left, right) for i in slots))
 
 
 def fixture(scalar):

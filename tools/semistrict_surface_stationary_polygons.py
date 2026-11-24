@@ -24,22 +24,38 @@ def spelling(factors):
     return result
 
 
+def initial_atoms(factors):
+    if not factors:
+        return set()
+    where = [0]*len(factors[0])
+    for pos, name in enumerate(factors[0]):
+        where[name] = pos
+    return {i+1 for i in range(len(where)-1) if where[i] > where[i+1]}
+
+
+def strip_atom(width, factors, atom):
+    first = list(factors[0])
+    a, b = first.index(atom-1), first.index(atom)
+    first[a], first[b] = first[b], first[a]
+    return positive_normal(width, spelling((first,*factors[1:])))
+
+
+def passive_prefix(width, word, start, end):
+    factors = positive_normal(width, word)
+    stripped = []
+    while factors:
+        atoms = [g for g in initial_atoms(factors) if g < start or g > end]
+        if not atoms:
+            break
+        g = min(atoms)
+        stripped.append(g)
+        factors = strip_atom(width, factors, g)
+    return tuple(stripped), factors
+
+
 def coset(width, prefix, start, end):
     # Reverse the word so that right parabolic divisors become initial atoms.
-    factors = positive_normal(width, reversed(prefix))
-    while factors:
-        first = list(factors[0])
-        where = [0]*width
-        for pos, name in enumerate(first):
-            where[name] = pos
-        g = next((i for i in range(width-1) if (i+1 < start or i >= end)
-                  and where[i] > where[i+1]), None)
-        if g is None:
-            break
-        a, b = where[g], where[g+1]
-        first[a], first[b] = first[b], first[a]
-        factors = positive_normal(width, spelling((first, *factors[1:])))
-    return factors
+    return passive_prefix(width, reversed(prefix), start, end)[1]
 
 
 def decide(model, source, first, second):

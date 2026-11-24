@@ -292,8 +292,8 @@ class Movies:
             from semistrict_surface_packet_meetings import supported, decide as scalar_packets
             if supported(self,source,(*first,*second)):
                 return dict(states=len(previous),**scalar_packets(self,source,first,second))
-            from semistrict_surface_serial_polygons import decide
-            chain_result = decide(self,source,first,second)
+            from semistrict_surface_order_locks import decide as ordered
+            chain_result = ordered(self,source,first,second)
             if chain_result['surface'] is not None:
                 return dict(states=len(previous),**chain_result)
             from semistrict_surface_positioned_packets import supported as shape_preserving, decide as packets

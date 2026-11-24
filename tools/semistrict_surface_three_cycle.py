@@ -72,8 +72,13 @@ def bracket(calc,p,q,r,old,new,first,last):
     base=restrict(calc.width,anchor,selected)
     def projection(prefix,t):
         return restrict(calc.width,prefix,selected),len(content(t.before).keys() & gap),len(names)
-    points=gap_checkpoints(len(gap),projection(first[p][0],old[p]),projection(last[p][0],new[p]))
-    if points is None: return None
+    source=projection(first[p][0],old[p])
+    goal=projection(last[p][0],new[p])
+    points=gap_checkpoints(len(gap),source,goal)
+    if points is None:
+        from semistrict_surface_gap_orbits import gap_orbit
+        chart=anchor+slots(inv(base),i+k)
+        return gap_orbit(calc.width,source,goal,chart,i+k,len(gap))
     if not points: return False
     candidates={}
     for projected,location in points:
@@ -98,7 +103,8 @@ def cycle(calc,start,goal,old,new,radius=None):
     from semistrict_surface_gain_runs import run
     order=tuple(p for p,_ in start[0])
     target=tuple(p for p,_ in goal[0])
-    first,last=(calc.scan(m)[1] for m in (start,goal))
+    terminal,first,_,total=calc.scan(start)
+    last=calc.scan(goal)[1]
     tried=unresolved=discarded=0
     for a,b,c in permutations(order):
         orientations=((a,b),(c,a),(b,c))
@@ -116,6 +122,10 @@ def cycle(calc,start,goal,old,new,radius=None):
             if any(x is None for x in fixed.values()):
                 unresolved+=1
                 continue
+            from semistrict_surface_gap_orbits import joint_representatives
+            fixed,complete=joint_representatives(calc,fixed,terminal,total,(*old.values(),*new.values()))
+            if not complete:
+                unresolved+=1
             instructions=[('part',b),('meet',a,b),('part' if fourth else 'run',a),
                           ('meet',c,a),('run',c),('meet',b,c),('run',b)]
             if fourth: instructions += [('meet',a,b),('run',a)]

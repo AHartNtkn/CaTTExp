@@ -63,7 +63,11 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None,backwards=False):
     width=len(root)
     shadow=restrict(calc.width,inv(prefix)+goal_prefix,selected)
     j=output_order(range(width),tuple(map(abs,shadow))).index(i)
-    if j==i or (j<i)!=backwards:
+    if j==i:
+        _,start,span=records[p]
+        actual=cut(braid_image(calc.width,prefix),start,span)
+        return (movie if actual==target_cut else None),False
+    if (j<i)!=backwards:
         return None,False
     path=executable_cut(contracted,root,shadow,j,1)
     if path is None:
@@ -74,7 +78,8 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None,backwards=False):
     result=boxes[:k]+((p,j),)+boxes[k+1:],paths
     _,r,_,_=calc.scan(result)
     w,slot,size=r[p]
-    if cut(braid_image(calc.width,w),slot,size)!=target_cut:
+    actual=cut(braid_image(calc.width,w),slot,size)
+    if actual!=target_cut:
         return None,False
     final=follow(model,h,inputs)
     order=tuple(range(len(h)))
@@ -104,7 +109,7 @@ def run(calc,movie,k,goal_prefix,target_cut,radius=None,backwards=False):
     return (result if answer else None),answer is None
 
 
-def decide(model,source,first,second,radius=None,certified_only=False):
+def decide(model,source,first,second,radius=None,certified_only=False,only_endpoint_meetings=False):
     if model.attachments:
         raise ValueError('expected a positive 3-computad')
     if verify_original(model,source,first)!=verify_original(model,source,second):
@@ -144,6 +149,11 @@ def decide(model,source,first,second,radius=None,certified_only=False):
         return dict(three(calc,start,goal,initial,final,radius),moving_triangle_centers=sorted(middle),
                     joint_centers=False,endpoints_forced=forced)
     exact=forced or independent or not middle or not joint
+    if len(initial)==3 and not exact and not only_endpoint_meetings:
+        from semistrict_surface_three_cycle import solve as cycles
+        result=cycles(calc,start,goal,initial,final,radius)
+        if result['surface'] is not None:
+            return dict(result,moving_triangle_centers=sorted(middle))
     if certified_only and not exact:
         return dict(surface=None,moving_triangle_centers=sorted(middle))
     prefixes=calc.scan(goal)[1]
@@ -176,7 +186,7 @@ def decide(model,source,first,second,radius=None,certified_only=False):
             nxt=order[:k]+(q,p)+order[k+2:],done
             if nxt not in prev:
                 put(nxt,calc.exchange(movie,k),('meet',p,q))
-    if not exact and moving-middle:
+    if not exact and moving-middle and not only_endpoint_meetings:
         from semistrict_surface_phase_gains import decide as phases
         result=phases(model,source,first,second,split_signs=True,separate_runs=True,radius=radius)
         if result['surface'] is not None:
@@ -294,6 +304,7 @@ if __name__=='__main__':
     parser=ArgumentParser(description=__doc__)
     parser.add_argument('--query',type=Path)
     parser.add_argument('--radius',type=int,help='optional cap on the private transport search')
+    parser.add_argument('--endpoint-meetings',action='store_true',help='test the uninterrupted-run schedule class')
     args=parser.parse_args()
     if args.query:
         q=json.loads(args.query.read_text())
@@ -302,7 +313,7 @@ if __name__=='__main__':
         model=Movies(Presentation(q['edges'],q['marks'],rules,q.get('mark_roots')),q['start'])
         source=tuple(map(tuple,q['source']))
         model.pres.walk(model.start,source,q.get('vertex'))
-        ans=decide(model,source,q['first'],q['second'],args.radius)
+        ans=decide(model,source,q['first'],q['second'],args.radius,only_endpoint_meetings=args.endpoint_meetings)
     else:
         ans=checks()
     print(json.dumps(ans))

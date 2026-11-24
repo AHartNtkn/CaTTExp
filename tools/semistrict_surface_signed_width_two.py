@@ -281,6 +281,10 @@ class Movies:
             from semistrict_surface_single_polygon import decide
             return dict(states=len(previous),**decide(self,source,first,second))
         if unresolved and not self.attachments:
+            from semistrict_surface_stationary_polygons import decide as stationary
+            result = stationary(self,source,first,second)
+            if result['surface'] is not None:
+                return dict(states=len(previous),**result)
             from semistrict_surface_packet_meetings import supported, decide as scalar_packets
             if supported(self,source,(*first,*second)):
                 return dict(states=len(previous),**scalar_packets(self,source,first,second))

@@ -250,7 +250,7 @@ def _piece(G, A, t, u, rec, choose=None):
     import rc_nat
     Y = [x for x in gens if JR(x) != x]
     Hctx, Hv, sub = [], {}, []
-    plus_map, up_map = {}, {}
+    plus_map, up_map, down_map = {}, {}, {}
     def ab(x):
         if x in Hv:
             return v(Hv[x])
@@ -261,10 +261,15 @@ def _piece(G, A, t, u, rec, choose=None):
             return B
         return arr(ab_ty(B[1]), ab(B[2]), ab(B[3]))
     Yset = set()
+    pmemo = {}
     def plus(w):
-        if w[0] == 'v':
-            return plus_map.get(w[1], w)
-        return ('coh', w[1], w[2], tuple(plus(e) for e in w[3]))
+        # plus_map grows as generators are added; entries are only added for
+        # new variables, so earlier results stay valid only for terms not
+        # meeting them: keep the memo per plus_map size
+        key = len(plus_map)
+        if pmemo.get('k') != key:
+            pmemo.clear(); pmemo['k'] = key
+        return rc_nat.rename_map(w, plus_map, pmemo)
     Yv = set(Y)
     for x in gens:
         Hv[x] = len(Hctx); Hctx.append(ab_ty(infer(G, x))); sub.append(x)
@@ -289,16 +294,27 @@ def _piece(G, A, t, u, rec, choose=None):
             _dbg(260)
             return None
         sub.append(br)
+        if tdim_tm(G, x) == n:
+            # a moved top generator of u needs its reversed bridge for the
+            # oplax square: the opposite equal-image comparison
+            Hctx.append(arr(Ba, b, a))
+            down_map[i] = v(len(Hctx) - 1)
+            bk = rec(G, infer(G, aG), bG, aG)
+            if bk is None:
+                _dbg('reverse bridge')
+                return None
+            sub.append(bk)
     H = tuple(Hctx)
     sH = tuple(sub)
     Yf = frozenset(Yset)
     T, U = ab(t), ab(u)
     wt, at, bt = rc_nat.square(H, Yf, plus_map, up_map, T, rec)
-    wu, au, bu = rc_nat.nat_op(H, Yf, plus_map, up_map, U, rec)
+    wu, au, bu = rc_nat.nat_op(H, Yf, plus_map, up_map, U, rec, down_map)
     wt, wu = subst_tm(wt, sH), subst_tm(wu, sH)
     at, bt, au, bu = (subst_tm(x, sH) for x in (at, bt, au, bu))
     meets = lambda w: bool(fv_tm(w) & Yf)
-    lift = lambda w: subst_tm(rc_nat.nat_in(H, Yf, plus_map, up_map, w, rec), sH)
+    _lm = {}
+    lift = lambda w: subst_tm(rc_nat.nat_in(H, Yf, plus_map, up_map, w, rec, _lm), sH)
     # b-side: the same whiskers as b_t, around w* instead of t*
     mid = wst
     for j in range(n):

@@ -418,6 +418,7 @@ import CaTTExp.Uniform.Grid
 import CaTTExp.Uniform.GridExamples
 import CaTTExp.Uniform.RuleFin
 import CaTTExp.Uniform.KernelDec
+import CaTTExp.Uniform.ForcedLift
 import CaTTExp.Uniform.GridFive
 import CaTTExp.Uniform.GridFiveExamples
 import CaTTExp.Uniform.GridLink

@@ -115,7 +115,7 @@ ps* is the right notion of "pseudo" in the sense of P. An r-cell of Fun^lax(B, C
 
 ## 3.6 Marks over the uniform core
 
-The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are restated by reading the **designated lift** c of a coherence (§2.2) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). The cases are:
+The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are restated by reading the **forced lift** c of a coherence (its interpretation, §2.2; formerly called the designated lift) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). The cases are:
 - the **Gray operation case**, π(c) = τ_Γ;
 - the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 
@@ -132,7 +132,7 @@ TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff so
              its marks are the two-tier rules of §3.3
 
 (COH-inv)    coherence case                                                   ⇒  inv
-(OP-inv_S′)  Gray operation case, designated lift c; every outer top letter ℓ
+(OP-inv_S′)  Gray operation case, forced lift c; every outer top letter ℓ
              of c has generators of Γ as operands and is one of
                (i)   a whiskered Gray cell G(x₁, …, xₙ), with g[γ] inv,
                (ii)  an outer cylinder whose moving input x has x[γ] inv,
@@ -163,7 +163,7 @@ The Gray cells g[γ] are the operation-case coherences over wedges of disks, as 
 
 **`ord` everywhere is two-tier L** (`notes/ord-recovers-two-tier.md`, ledger S16(b)). With every object variable marked `ord`, (COH-ord) accepts exactly the two-tier heads, and the uniform rule set derives exactly two-tier L's terms, types and marks (there, Corollary 3.2, **proved on paper**). **Agda-checked** (`Uniform/OrdCoh.agda`, `recovers`, `conservative`): only the Boolean form of the acceptance rule, on abstract side conditions, assuming the inclusion SC_{V+S} ⇒ SC_𝔉 of S2. S2 is closed under the S1 reading of the side condition. (COH-ord) is sound in every strict model whose `ord` objects have trivial inner letters: such a model kills every inner letter of the head, so its map out of F_{V+S}(Γ) factors through the quotient 𝔉(Γ) (requirement 4). The path-level form of that factorization is **Agda-checked** (`OrdCoh.Erase.factor`); the algebra-level step is proved on paper. With no `ord` marks, nothing changes.
 
-**Why `ord` must change the side condition.** A mark that only made inner letters invertible would not give two-tier L's coherences, **in any setting**. With such a mark on every object, the uniform rule set would derive `inv` and `ps` only for designated lifts whose outer top letters have generator operands and are of kinds (i)–(iii).
+**Why `ord` must change the side condition.** A mark that only made inner letters invertible would not give two-tier L's coherences, **in any setting**. With such a mark on every object, the uniform rule set would derive `inv` and `ps` only for forced lifts whose outer top letters have generator operands and are of kinds (i)–(iii).
 - **The loop.** The loop H : w ⇛ w on Σ[2] ∨ Σ[2] (a whiskered inner interchanger) and 1_w have the same Gray image. In a V + S algebra in which every inner letter is invertible they still differ, and no higher cell joins them. Inverting the inner letters therefore creates no cell H ⇛ 1_w.
 - **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both switches.
 - **The inner strip.** It is equal exactly when the inner law holds. Without the inner law it stays unconnected after localization.

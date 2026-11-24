@@ -390,3 +390,67 @@ Precisions recorded:
 - (c) Derived: ⟦Δ⟧♭ ⊗ ⟦Θ⟧♭ ≃ ⟦Δ ⊗ Θ⟧♭, by the pair and probe-pair rows. This is true in Cat_ω.
 
 The corrections in §4.2 stand as statements of what needs GB-shape. With K2 adopted, each place there now holds as originally written.
+
+---
+
+## 5. Interpretation of a coherence head in V + S: designated lift or forced lift
+
+*Thread "Settle the designated-lift choice", 2026-11-24. Ledger S11 (and S1 (d), which made the provisional choice). Agda: `Uniform/ForcedLift.agda`.*
+
+### 5.1 The question, and why it is re-derived
+
+The kernel interprets a coherence coh_{Γ,A}[σ] as σ_*(c), where c is a cell of F_{V+S}(Γ) from ⟦t⟧ to ⟦u⟧ whose Gray projection π(c) has full support (spec §2.2). For ν and 𝔉 there is exactly one such c. In F_{V+S}(Γ) there can be several. On 2026-11-21 (S1 (d)) the spec fixed a **designated lift** per head: the identity in the coherence case, otherwise the first shortest witnessing path in the decision procedure's enumeration order. That decision was provisional. Its premise was that all lifts of one head are connected by higher cells, so the choice would not matter up to coherence (S11).
+
+E13 (verified 2026-11-21) refuted the premise. The loop H and 1_w on Σ[2] ∨ Σ[2], and the strip routes u and v in settings without the inner law, are parallel lifts with the same Gray image that are not connected, even after every inner letter is inverted. So the decision is re-derived here from current knowledge rather than patched.
+
+### 5.2 A fact the provisional decision missed: the choice changes judgments
+
+The spec said "the kernel's judgments do not depend on the choice". That is false. The coherence clause compares the images ⟦t⟧ and ⟦u⟧, and those images are built from the interpretations of the coherences inside t and u. So a different choice of lift changes which later coherences are accepted.
+
+**Worked example (the strip, setting ∅).** Inside a hom, take composable cells A₁, A₂ and a cell B in interchange position (C_{2,1}). The head h = coh_{C_{2,1}, s → t} with s → t the boundary of the strip's Gray cell has two lifts: the direct crossing u = ι(A₁ ∗ A₂, B), one letter, and v = the paste of ι(A₁, B) and ι(A₂, B), two letters. They are parallel, π(u) = π(v), and no cell connects them in either direction (r5 (K44)/(K51); E13 for the inverted case). Let k = coh_ι[A₁ ∗ A₂, B], whose image is u, and k′ = the composite of coh_ι[A₁, B] and coh_ι[A₂, B], whose image is v.
+- Designated lift u (the current rule, since u is shorter): coh(h → k) is accepted, in the coherence case, and coh(h → k′) is rejected.
+- Designated lift v: the reverse.
+
+So the type "h is the direct crossing" is inhabited or not depending on an enumeration order. Agda: `Strip.routes-differ`, `Strip.pu-shortest`, `Strip.strip-not-forced` in `Uniform/ForcedLift.agda`, on a two-route layer whose values separate the routes as (K44) does.
+
+A second defect: an enumeration order is not part of the free object. A duality (J = all, `closed-structure.md` §D.4) or any other letter-preserving isomorphism of free objects need not send the first shortest witness to the first shortest witness. So the designated lift is not known to commute with the system's own symmetries.
+
+### 5.3 The options
+
+- **(A) Designated lift by enumeration** (the provisional rule). Accept a head iff some lift exists; interpret it by the first shortest witness.
+- **(B) A canonical structural choice.** Accept a head iff some lift exists; interpret it by a lift picked by an intrinsic criterion. Two natural criteria are (B1) fewest letters, which picks u on the strip, and (B2) most split (only elementary letters on generator operands), which picks v.
+- **(C) The lift is part of the term.** Heads become coh_{Γ,A,c}, one for every lift c. Nothing is chosen, and every lift is a primitive term.
+- **(D) Forced lift.** Accept a head iff its lift is forced: some *simple* witness exists (a path of letters that visits no vertex twice), and all simple witnesses have the same value. The interpretation is that value. A path with a repeated vertex contains a cycle. Every cycle of F_{V+S}(Γ) projects to an identity of the loop-free 𝔉(Γ), so it adds no support, and cutting it out leaves a witness. So simple witnesses are exactly the witnesses with their cycles removed.
+
+### 5.4 Worked examples
+
+| Head | (A) | (B1) | (B2) | (C) | (D) |
+|---|---|---|---|---|---|
+| Strip h, settings ∅, {R} | accepted, value u (enumeration) | accepted, u | accepted, v | two terms, values u and v | **rejected**; u and v are still terms: k and k′ |
+| Strip h, settings with the inner law | accepted, u = v | same | same | two terms with equal value | accepted, value u = v (`StripInner.computed`) |
+| coh(w → w) on Σ[2] ∨ Σ[2] (lifts 1_w, H, H², …, pairwise unconnected) | accepted, 1_w | 1_w | 1_w | infinitely many terms | accepted, value 1_w. The only simple path w → w is the empty one (`simple-loop`, `coh-forced`, `Loop.identity-forced`). |
+| The elementary interchanger χ_{α,β} on ΣD¹ ∨ ΣD¹ | accepted | accepted | accepted | one term | accepted (one letter, no other route) |
+| Any head of ν or 𝔉 (P, two-tier L) | unchanged | unchanged | unchanged | unchanged | unchanged: 𝔉 is loop-free and full-support cells are unique (Lemma 2.2.1), so the lift is always forced |
+
+In (D) the coherence case needs no separate treatment. The identity is the unique simple witness whenever ⟦t⟧ = ⟦u⟧, so the loops that made "uniqueness of the lift" fail for 1_w against H never arise.
+
+### 5.5 Comparison
+
+- **Generality (standard 4, spec §0.4).** Every (D) derivation is an (A) derivation **with the same interpretation**, whatever the enumeration order: on a forced head every shortest witness is simple, so it has the forced value (`designated-agrees`, from `shortest-simple`; Agda, under the hypothesis CutFull, which is the cycle fact in 5.3). Likewise for (B1), since a fewest-letter witness is a shortest one, and for (C), taking c to be the forced value. (B2) is not compared: a most-split witness need not be simple. The inclusion is strict: the strip head of setting ∅ is accepted by (A), (B), (C) and rejected by (D). So (D) derives the fewest cells. Every model of (A), (B) or (C) is a model of (D), and (D) is the most general of the four.
+- **No unforced judgments.** (A) and (B) accept coh(h → k) or coh(h → k′), a statement that the free object does not force: in the tagged model of (K44), u ≠ v. (D) accepts only heads whose interpretation the free object determines. This is the CaTT principle that a primitive coherence's filler is determined by its type.
+- **Symmetries.** (D) is defined from the free object alone (vertices, letters, supports, equality of cells), so every letter-preserving isomorphism of free objects, in particular the duality J = all, sends forced heads to forced heads and forced values to forced values (on paper; immediate from the definition). (A) is not known to have this property. (B1) and (B2) have it when their pick is unique. (B1) is not unique when two shortest witnesses tie; a candidate tie is the pair of two-step segments of the loops L₀ and L₁ on the 3 × 4 grid (r10, "the threshold grid"), argued, not checked.
+- **Rule classes (standard 5, spec §0.3).** (A), (B) and (D) keep CaTT's head (Γ, A) with a side condition on Γ alone. (C) puts a cell of the decision device into the syntax, against §0.3 and the S29 principle that strict free objects are only a decision device.
+- **Decidability.** All four are decidable. For (D): simple paths have length at most the number of vertices, so it is enough to enumerate the finitely many paths up to that length, keep the simple witnesses, and compare their values (`DecideForced.forced?`, Agda, over any finite closed universe of vertices). The cost is higher than (A)'s breadth-first search, which only finds one witness. Cost does not change the rule (§1.7).
+- **What (D) could lose.** (D) rejects heads whose filler is not forced. The strip loses nothing: u and v remain terms (k, k′). The general claim needed is **Lemma F (forced generation)**: every cell of F_{V+S}(Γ) between images of derivable terms is the value of a term built by composition and substitution from forced heads. Equivalently, uniform fullness (S30) holds for (D) whenever it holds for (A). Lemma F is open. The critical cases are top letters with no shorter decomposition, such as the lift W(A, B) of a binary globe tensor on ΣD² ∨ ΣD²: (D) needs W to be the forced value of its own head. An unknown is not a reason against (standard 1). Lemma F gets a proof attempt and an outbox prompt (`conjectures/outbox/forced-lift-generation.md`).
+
+### 5.6 Decision (2026-11-24)
+
+**(D), the forced lift, is adopted** for uniform L in every setting. The spec's §2.2 interpretation paragraph and §2.3 step 3 are restated accordingly. The P and two-tier rows are unchanged. The provisional designated lift (S1 (d)) is withdrawn.
+
+Consequences recorded:
+- Spec chapter 3's uniform rules (`spec/03` §3.6) read "the designated lift c" as "the forced value c". Their soundness argument holds for any lift, so it holds for the forced one. They now apply to fewer heads (only accepted ones).
+- The S19 sub-item "insertion vs designated lifts" becomes: if the inserted head is forced, its value is κ_*(c) as soon as κ_* is injective on vertices, because κ_* then sends simple witnesses to simple witnesses. If the inserted head is not forced, insertion does not apply.
+
+**What would overturn this.**
+- A counterexample to Lemma F: a cell between term images that is only the value of an unforced head. Then (D) would name strictly fewer cells than F_{V+S} has, and the choice between (D) and a canonical choice (B) would be re-derived from that example.
+- A proof that every lift set is a singleton after loop removal. Then (A) and (D) coincide, and the restriction costs nothing. The strip already rules this out in settings ∅ and {R}.

@@ -360,3 +360,7 @@ The response to `invertibility-certificates-r3.md` is filed with its verificatio
    - Since no fragment is maximal, further rules are added only when a construction needs them. Each needs a soundness proof of this kind.
 3. **Users who meet an invertible cell outside the evidence layer** declare it marked `inv` as a hypothesis, as in §9.2 item 3. That is the "ground axiom" extension of §10.2, made locally and explicitly.
 4. **Formalization (S21, this thread).** Encode (INV-clock) checking in `Gray/MarksSaturation.agda`, with the §9 example certified by it. The rule's soundness is the paper clock criterion; Agda checks only the certificate's well-typedness.
+
+## 11. Follow-up (2026-11-24): is invertibility special at all?
+
+Anthony asked why invertibility is not handled like any other declared infinite tower. The answer is in `mark-schemes.md` (ledger S35). The `inv` mark already is a finite name for a tower. ICaTT's inv-intro (the evidence former `inv` of §6) is the generic intro of the Inv scheme. What is specific to invertibility is closure across shapes and being a property. The evidence layer of §6 becomes the general, proof-relevant form for all schemes.

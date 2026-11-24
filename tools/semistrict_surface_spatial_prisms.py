@@ -1,4 +1,4 @@
-"""Decide old degree-four comparisons on every finite positive Gray 3-computad without a spatial triple."""
+"""Compare positioned prisms and rectangles, and test positive Gray 3-computad conservativity."""
 from argparse import ArgumentParser
 from collections import defaultdict
 from functools import lru_cache
@@ -7,6 +7,8 @@ from pathlib import Path
 
 from semistrict_surface_signed_width_two import Movies, Presentation, Rule
 from semistrict_surface_transfer_cables import compare
+from semistrict_surface_transfer_rectangles import Rectangles
+from semistrict_surface_first_events import obligations
 
 
 def neighbours(pres):
@@ -85,7 +87,7 @@ def read(model,source,actions,roles,ids):
     return h,anchors,frames,trace
 
 
-def decide(model,source,first,second):
+def decide(model,source,first,second,prism_faces=None):
     if model.attachments:
         raise ValueError('expected a 3-computad')
     roles,rules = spatial_roles(model.pres)
@@ -96,25 +98,97 @@ def decide(model,source,first,second):
     if a[0]!=b[0]:
         raise ValueError('expected parallel readings')
     if a[1]!=b[1] or a[2].keys()!=b[2].keys():
+        if prism_faces is not None:
+            raise ValueError('prism faces require matching incidence and spatial anchors')
         return None
+
+    def advance(frame,side,e):
+        label,outer = a[1][e]
+        incoming,outgoing = model.pres.marks[label]
+        left,right = frame
+        if side==0:
+            tail = incoming+outer
+            if right.endswith(tail):
+                return left,right[:-len(tail)]+outgoing+outer
+        elif left.startswith(outer+incoming):
+            return outer+outgoing+left[len(outer+incoming):],right
+        return None
+
     def fits(moves):
         frames = a[2].copy()
         for side,p,e in moves:
-            label,outer = a[1][e]
-            incoming,outgoing = model.pres.marks[label]
-            left,right = frames[p]
-            if side==0:
-                tail = incoming+outer
-                if not right.endswith(tail):
-                    return False
-                frames[p] = left,right[:-len(tail)]+outgoing+outer
-            else:
-                head = outer+incoming
-                if not left.startswith(head):
-                    return False
-                frames[p] = outer+outgoing+left[len(head):],right
+            frames[p] = advance(frames[p],side,e)
+            if frames[p] is None:
+                return False
         return frames==b[2]
-    return compare(tuple(x for _,x in source),right,(a[3],b[3]),anchored,fits)
+
+    labels = tuple(x for _,x in source)
+    traces = (a[3],b[3])
+    if prism_faces is None:
+        return compare(labels,right,traces,anchored,fits)
+    windows = {p:model.pres.rules[n].path for (n,_),p in ids.items()}
+    def placement(p,q,on_p,on_q):
+        frames = []
+        for side,(v,route) in enumerate(((p,on_p),(q,on_q))):
+            frame = a[2][v]
+            for wire in route:
+                frame = advance(frame,side,wire)
+                if frame is None:
+                    return False
+            frames.append(frame)
+        (lp,hp),(hq,rq) = frames
+        tail = windows[q]+rq
+        return hp.endswith(tail) and hq==lp+windows[p]+hp[:-len(tail)]
+    return Rectangles(labels,right,traces,anchored).compare(prism_faces,fits,placement)
+
+
+def all_degrees(pres,rounds=None):
+    if rounds is not None and rounds<0:
+        raise ValueError('the round limit must be nonnegative')
+    triple = spatial_triple(pres)
+    if triple is not None:
+        return dict(all_degrees_reflects=False,spatial_triple=triple)
+    compiled = obligations(pres)
+    if 'required_returns' not in compiled:
+        return dict(all_degrees_reflects=False,**compiled)
+    monotone = (all(len(r.source)<=len(r.target) for r in pres.rules) or
+                all(len(r.source)>=len(r.target) for r in pres.rules))
+    pending = {}
+    witnesses = []
+    for case in compiled['required_returns']:
+        start,lr,rl = pres.square(*case)
+        pending[case] = Movies(pres,start),rl,{lr:None},[lr]
+    depth = 0
+    while pending and (rounds is None or depth<rounds):
+        depth += 1
+        for case,(model,goal,seen,front) in list(pending.items()):
+            nxt = []
+            for h in front:
+                for i in range(len(h)):
+                    moves = [('swap',model.swap(h,i,True))]
+                    for rid in range(len(pres.rules)):
+                        step = model.named(h,rid,i)
+                        if step is not None:
+                            moves.append((rid,step[0]))
+                    for rid,dest in moves:
+                        if dest is None or dest in seen or (monotone and len(dest)!=2):
+                            continue
+                        nxt.append(dest)
+                        seen[dest] = h,(rid,i)
+            if goal in seen:
+                path = []
+                h = goal
+                while seen[h] is not None:
+                    h,step = seen[h]
+                    path.append(step)
+                witnesses.append(dict(square=case,return_steps=path[::-1]))
+                del pending[case]
+            elif not nxt:
+                return dict(all_degrees_reflects=False,unreachable_return=case,visited=len(seen))
+            else:
+                pending[case] = model,goal,seen,nxt
+    return dict(all_degrees_reflects=None if pending else True,rounds=depth,
+                returns=witnesses,unresolved=list(pending))
 
 
 def checks():
@@ -170,7 +244,44 @@ def checks():
                     reachable.add(j)
         pres = Presentation(graph,{n:(n,n) for n in 'abc'},[])
         assert spatial_triple(pres)==(('a','b','c') if 3 in reachable else None)
-    return dict(comparisons=tests,positive=positives,overlapping_window_rejected=True,
+    # The individual prisms are available on every path; only the full
+    # polygon windows determine whether the pair can supply a rectangle.
+    edges = {'f':(0,1),'k':(1,1),'g':(1,2)}
+    marks = {'a':('f','f'),'b':('g','g')}
+    polygons = [Rule('fk',((0,'a'),),((0,'a'),)),Rule('kg',((1,'b'),),((1,'b'),))]
+    pres = Presentation(edges,marks,polygons)
+    neg = [(1,0,(-1,1)),(0,1,(-1,0))]
+    pos = [(0,1,(0,0)),(1,0,(1,0))]
+    first = [(1,0),('swap',0),(0,0)]
+    second = [(0,1),('swap',0),(1,1)]
+    for length in range(1,8):
+        start = 'f'+'k'*length+'g'
+        model = Movies(pres,start)
+        source = ((length+1,'b'),(0,'a'))
+        for u,v in product((neg,pos),repeat=2):
+            cert = decide(model,source,first,second,(u,v))
+            assert (cert is not None)==(u==v or (u==neg and length>=2))
+    assert 'impossible_gap' in all_degrees(pres)
+    edges = {'f':(0,1),'g':(1,2)}
+    bare = Presentation(edges,marks,[])
+    split = Rule('f',((0,'a'),),((0,'a'),(0,'a')))
+    join = Rule('g',((0,'b'),(0,'b')),((0,'b'),))
+    bridge = Rule(*bare.square('a','','b'))
+    full = Presentation(edges,marks,[split,join,bridge])
+    assert all_degrees(full,0)['all_degrees_reflects'] is None
+    assert all_degrees(full)['returns']==[dict(square=('a','','b'),return_steps=[(2,0)])]
+    assert 'impossible_first_event' in all_degrees(bare)
+    gated = Rule('fg',bridge.source+((1,'b'),),bridge.target+((1,'b'),))
+    exhausted = all_degrees(Presentation(edges,marks,[gated,split]))
+    assert exhausted['unreachable_return']==('a','','b') and exhausted['visited']==1
+    growing = all_degrees(Presentation(edges,marks,[gated,split,join]),3)
+    assert growing['all_degrees_reflects'] is None and growing['unresolved']==[('a','','b')]
+    for witness in all_degrees(full)['returns']:
+        start,lr,rl = full.square(*witness['square'])
+        assert Movies(full,start).parse(lr,witness['return_steps'])[1]==rl
+    assert all_degrees(Presentation({}, {}, []))['all_degrees_reflects']
+    assert all_degrees(Presentation({}, {'a':('','')}, [], {'a':0}))['spatial_triple']==('a','a','a')
+    return dict(spatial_rectangle_queries=28,comparisons=tests,positive=positives,overlapping_window_rejected=True,
                 changing_exterior_accepted=True,degree_four_context_queries=1<<len(links))
 
 
@@ -179,20 +290,27 @@ if __name__=='__main__':
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--query',type=Path)
     modes.add_argument('--context',type=Path,help='decide reflection at every old degree-four type')
+    modes.add_argument('--all-degrees',type=Path,help='test every old type for an interchange-containing surface')
+    parser.add_argument('--rounds',type=int,help='limit return-search depth; unfinished cases report null')
     args = parser.parse_args()
-    if args.query or args.context:
-        q = json.loads((args.query or args.context).read_text())
+    if args.rounds is not None and args.all_degrees is None:
+        parser.error('--rounds applies to --all-degrees')
+    if args.query or args.context or args.all_degrees:
+        q = json.loads((args.query or args.context or args.all_degrees).read_text())
         if q.get('attachments'):
             raise ValueError('expected a 3-computad')
         rules = [Rule(r['path'],tuple(map(tuple,r['source'])),tuple(map(tuple,r['target']))) for r in q['rules']]
         pres = Presentation(q['edges'],q['marks'],rules,q.get('mark_roots'))
-        if args.context:
+        if args.all_degrees:
+            result = all_degrees(pres,args.rounds)
+        elif args.context:
             triple = spatial_triple(pres)
             result = dict(every_degree_four_judgment_reflects=triple is None,spatial_triple=triple)
         else:
             model = Movies(pres,q['start'])
-            cert = decide(model,tuple(map(tuple,q['source'])),q['first'],q['second'])
-            result = dict(raw=cert is not None,surface=cert is not None,schedule=cert)
+            cert = decide(model,tuple(map(tuple,q['source'])),q['first'],q['second'],q.get('prism_faces'))
+            result = dict(raw=cert is not None,surface=cert is not None)
+            result['rectangles' if 'prism_faces' in q else 'schedule'] = cert
     else:
         result = checks()
     print(json.dumps(result))

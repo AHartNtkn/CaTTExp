@@ -35,11 +35,11 @@
 -- part (Λ and the two end gaps) is `Layer`.
 --
 -- Every gap is filled by the relative-coherence procedure
--- (`General.solve`). `Wh.whisk-ok` and `Lw.whisk-ok` are CONDITIONAL on
+-- (`Naturality.Solve.solve`). `Wh.whisk-ok` and `Lw.whisk-ok` are CONDITIONAL on
 -- rcS answering each gap the construction uses (`WRC`, `LRC`), and on
 -- the cylinders of the two 1-dimensional composites in B being typed
--- (for the family of CaTTExp.Naturality.General these are cylinders of
--- dimension-1 terms, covered by `cylω-low`; that link is not made here).
+-- (in the family of CaTTExp.Naturality.General these are supplied by
+-- the family's own typing, `General.sR-ok` / `sL-ok`).
 -- For the whisker itself each gap should relate two cells with the
 -- same strict image (the 3-cell gaps differ by interchange,
 -- reassociation and identities, the 2-cell gaps by reassociation and
@@ -61,7 +61,7 @@ open import CaTTExp.DerivedBoundary
 open import CaTTExp.Naturality.Raw
 open import CaTTExp.Naturality.Typing using (module Hyp; T-∨-false)
 open import CaTTExp.Naturality.Boundary using (BaseD; module Typed)
-open import CaTTExp.Naturality.General using (solve; solve-ok; RCAt)
+open import CaTTExp.Naturality.Solve using (solve; solve-ok; RCAt)
 
 ------------------------------------------------------------------------
 -- Small facts.
@@ -207,15 +207,9 @@ cW-wf w =
 
 -- The construction, for an abstract gap filler fl (kept abstract so
 -- that the type checker never unfolds the solver).
-module WhF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : WQ ⊢ctx)
-           (VD : Hyp.ValidD K D WQ Δ) (fl : Ty → Tm → Tm → Tm) where
+module WhF (K : Filler) (Δ : Ctx) (D : Datum) (fl : Ty → Tm → Tm → Tm) where
   open Cyl K
-  open Hyp K using (module ValidD)
-  open ValidD VD
   open Typed K
-
-  base : BaseD D WQ Δ
-  base = record { bmm = vmm ; bmp = vmp ; bsame = vsame ; bup = vup }
 
   -- Copies and cylinders.
   X Yp Ym Z fm hp hU αU : Tm
@@ -293,9 +287,16 @@ module WhF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : WQ ⊢ctx)
   ----------------------------------------------------------------------
   -- Typing.
 
-  module _ (cy-fh : CylT D Δ fhT Axz) (cy-gh : CylT D Δ ghT Axz)
+  module _ (wQ : WQ ⊢ctx) (VD : Hyp.ValidD K D WQ Δ)
+           (cy-fh : CylT D Δ fhT Axz) (cy-gh : CylT D Δ ghT Axz)
            {c : Tm} (dc : WQ ⊢tm c ∶ Bw) (flok : FlOK c) where
     private
+      open Hyp K using (module ValidD)
+      open ValidD VD
+
+      base : BaseD D WQ Δ
+      base = record { bmm = vmm ; bmp = vmp ; bsame = vsame ; bup = vup }
+
       dfh : WQ ⊢tm fhT ∶ Axz
       dfh = ty-src (tm-ty dc)
 
@@ -420,8 +421,8 @@ module WhF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : WQ ⊢ctx)
       go false e = gap (g-ab e) d-ac d-bc
 
 -- The instance at the relative-coherence procedure.
-module Wh (K : Filler) {Δ : Ctx} {D : Datum} (wQ : WQ ⊢ctx) (VD : Hyp.ValidD K D WQ Δ) where
-  open WhF K wQ VD (solve Δ) public
+module Wh (K : Filler) (Δ : Ctx) (D : Datum) where
+  open WhF K Δ D (solve Δ) public
   open Typed K using (CylT)
 
   -- The hypothesis: rcS answers every gap the construction uses.
@@ -431,9 +432,9 @@ module Wh (K : Filler) {Δ : Ctx} {D : Datum} (wQ : WQ ⊢ctx) (VD : Hyp.ValidD 
   -- The theorem: for any 2-cell c : f ∗ h ⇒ g ∗ h over Q, the filler is
   -- c↑ : a_c → b_c, given that rcS answers its gaps and the cylinders
   -- of f ∗ h and g ∗ h are typed.
-  whisk-ok : CylT D Δ fhT Axz → CylT D Δ ghT Axz →
+  whisk-ok : WQ ⊢ctx → Hyp.ValidD K D WQ Δ → CylT D Δ fhT Axz → CylT D Δ ghT Axz →
              ∀ c → WQ ⊢tm c ∶ Bw → WRC c → Δ ⊢tm whisk c ∶ Cyl.cylTy K D c Bw
-  whisk-ok cfh cgh c dc rc = whiskF-ok cfh cgh dc (λ g du dv → solve-ok du dv (rc g))
+  whisk-ok wQ VD cfh cgh c dc rc = whiskF-ok wQ VD cfh cgh dc (λ g du dv → solve-ok du dv (rc g))
 
 
 ------------------------------------------------------------------------
@@ -487,15 +488,9 @@ cL-wf w =
     (lwT-wf 0 1 (var-wf w refl) refl (var-wf w refl))
 
 -- The construction, for an abstract gap filler fl.
-module LwF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : LQ ⊢ctx)
-           (VD : Hyp.ValidD K D LQ Δ) (fl : Ty → Tm → Tm → Tm) where
+module LwF (K : Filler) (Δ : Ctx) (D : Datum) (fl : Ty → Tm → Tm → Tm) where
   open Cyl K
-  open Hyp K using (module ValidD)
-  open ValidD VD
   open Typed K
-
-  base : BaseD D LQ Δ
-  base = record { bmm = vmm ; bmp = vmp ; bsame = vsame ; bup = vup }
 
   -- Copies and cylinders.
   Wm Xm Xp Y hm gp hU αU : Tm
@@ -575,9 +570,16 @@ module LwF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : LQ ⊢ctx)
   ----------------------------------------------------------------------
   -- Typing.
 
-  module _ (cy-hf : CylT D Δ hfT Awy) (cy-hg : CylT D Δ hgT Awy)
+  module _ (wQ : LQ ⊢ctx) (VD : Hyp.ValidD K D LQ Δ)
+           (cy-hf : CylT D Δ hfT Awy) (cy-hg : CylT D Δ hgT Awy)
            {c : Tm} (dc : LQ ⊢tm c ∶ Bl) (flok : FlOK c) where
     private
+      open Hyp K using (module ValidD)
+      open ValidD VD
+
+      base : BaseD D LQ Δ
+      base = record { bmm = vmm ; bmp = vmp ; bsame = vsame ; bup = vup }
+
       dhf : LQ ⊢tm hfT ∶ Awy
       dhf = ty-src (tm-ty dc)
 
@@ -692,8 +694,8 @@ module LwF (K : Filler) {Δ : Ctx} {D : Datum} (wQ : LQ ⊢ctx)
       go false e = gap (g-ab e) d-ac d-bc
 
 -- The instance at the relative-coherence procedure.
-module Lw (K : Filler) {Δ : Ctx} {D : Datum} (wQ : LQ ⊢ctx) (VD : Hyp.ValidD K D LQ Δ) where
-  open LwF K wQ VD (solve Δ) public
+module Lw (K : Filler) (Δ : Ctx) (D : Datum) where
+  open LwF K Δ D (solve Δ) public
   open Typed K using (CylT)
 
   -- The hypothesis: rcS answers every gap the construction uses.
@@ -703,6 +705,6 @@ module Lw (K : Filler) {Δ : Ctx} {D : Datum} (wQ : LQ ⊢ctx) (VD : Hyp.ValidD 
   -- The theorem: for any 2-cell c : h ∗ f ⇒ h ∗ g over LQ, the filler
   -- is c↑ : a_c → b_c, given that rcS answers its gaps and the
   -- cylinders of h ∗ f and h ∗ g are typed.
-  whisk-ok : CylT D Δ hfT Awy → CylT D Δ hgT Awy →
+  whisk-ok : LQ ⊢ctx → Hyp.ValidD K D LQ Δ → CylT D Δ hfT Awy → CylT D Δ hgT Awy →
              ∀ c → LQ ⊢tm c ∶ Bl → LRC c → Δ ⊢tm whisk c ∶ Cyl.cylTy K D c Bl
-  whisk-ok chf chg c dc rc = whiskF-ok chf chg dc (λ g du dv → solve-ok du dv (rc g))
+  whisk-ok wQ VD chf chg c dc rc = whiskF-ok wQ VD chf chg dc (λ g du dv → solve-ok du dv (rc g))

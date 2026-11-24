@@ -21,8 +21,13 @@ from semistrict_surface_serial_gate_tracks import read_track
 
 
 def analyse(data):
+    read_track(dict(data,charts=[dict(c,loop=()) for c in data['charts']]))
+    return trace_faces(data)
+
+
+def trace_faces(data,use_names=None):
+    """Read weighted gap traces of a validated serial history at named uses."""
     charts = data['charts']
-    read_track(dict(data,charts=[dict(c,loop=()) for c in charts]))
     weights = data.get('weights',{g:1 for g in data['edges']})
     if set(weights)!=set(data['edges']) or any(type(v) is not int or v<=0 for v in weights.values()):
         raise ValueError('each edge needs a positive integer weight')
@@ -70,8 +75,9 @@ def analyse(data):
                 before = sum(map(crosses,site_rows[:slot]))
                 m = sum(map(crosses,in_rows[slot:slot+len(c['input'])]))
                 outs = [g for x,y,g in slices[i+1][1][slot:slot+len(c['output'])] if x<gap<y]
-                ports[i] = ('a'*m,'a'*len(outs))
-                trace.append((before,i))
+                name = i if use_names is None else use_names[i]
+                ports[name] = ('a'*m,'a'*len(outs))
+                trace.append((before,name))
                 names[before:before+m] = outs
             assert names==[g for x,y,g in slices[i+1][1] if x<gap<y]
             times.append(len(trace))

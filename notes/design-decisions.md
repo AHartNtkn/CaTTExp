@@ -155,7 +155,7 @@ Reasons:
 
 ### 1.8 Revised decision (2026-11-24): the two crossing laws are object marks, not a file setting (ledger S31)
 
-**Decision.** There are no switch settings. The left split (inner composite-crossing law) and the right split R are **object marks**, `lsplit` and `rsplit`, written on object variables in the context like `iord` and `ord`. A coherence over a pasting context Δ with objects a₀, …, aₙ computes its side condition in V + S(Δ), where S(Δ) is the set of splits carried by every one of a₁, …, aₙ (`ord` carries both). With no marked object, that is V. A substitution may send an `lsplit` (`rsplit`) variable only to an `lsplit` (`rsplit`) or `ord` variable. (COH-ord) is unchanged. Spec §2.3 and §3.6 state the rule.
+**Decision.** There are no switch settings. The left split (inner composite-crossing law) and the right split R are **object marks**, `lsplit` and `rsplit`, written on object variables in the context like `iord` and `ord`. A coherence over a pasting context Δ with objects a₀, …, aₙ computes its side condition in V + S(Δ), where S(Δ) is the set of splits carried by every one of a₁, …, aₙ (`ord` carries both). With no marked object, that is V. *(Refined the same day in §1.9: the kernel imposes each split only on the crossings landing in the objects that carry it; for uniform markings the two agree.)* A substitution may send an `lsplit` (`rsplit`) variable only to an `lsplit` (`rsplit`) or `ord` variable. (COH-ord) is unchanged. Spec §2.3 and §3.6 state the rule.
 
 **Why the file setting goes.**
 - *It chose a class of models.* §1.6–1.7 justified the switches by "some models with directed inner crossings satisfy these laws and some do not", and let a development declare which kind it was about. The project has no intended model and no mechanism for choosing a class of models (spec §0.1 after ledger S32). That justification is gone.
@@ -178,9 +178,40 @@ Reasons:
 
 **Duality.** D_all exchanges the left split and R (`closed-structure.md` §D.4.3), so on marks it exchanges `lsplit` and `rsplit`.
 
-**Open (owner DSGN, folded into E15).** For a mixed head, the meet S(Δ) can be weaker than necessary. The left split could be imposed only on inner crossings landing in the objects that carry it, giving a theory between V + S(Δ) and V + (the union of the objects' splits). Whether that per-object quotient is admissible and decidable is the split-mark analogue of E15(a). The meet is sound and decidable now, so the rule does not wait on it.
+**Open (owner DSGN, folded into E15).** *Settled 2026-11-24 in §1.9: the kernel imposes each split only on crossings landing in objects that carry it.* For a mixed head, the meet S(Δ) can be weaker than necessary. The left split could be imposed only on inner crossings landing in the objects that carry it, giving a theory between V + S(Δ) and V + (the union of the objects' splits). Whether that per-object quotient is admissible and decidable is the split-mark analogue of E15(a). The meet is sound and decidable now, so the rule does not wait on it.
 
 **What would overturn this.** A construction whose correctness needs a split law to hold on an object that the construction itself introduces, not on an object variable of the context. A mark could not express that. None is known.
+
+### 1.9 Split marks per object (2026-11-24, ledger E15(d))
+
+§1.8 computed a mixed head in V + S∧, where S∧ is the set of splits carried by every object a₁, …, aₙ. That is sound and decidable, but it ignores the marks of objects that carry more. The marks say exactly this: the split holds for crossings landing in the marked object. So the rule now computes in the theory that says exactly that.
+
+**Definition.** For a marked pasting context Γ, V + S(Γ) is V together with every ground instance of the left split (right split) on Γ whose crossing lands in an object aⱼ marked `lsplit` (`rsplit`) or `ord`, closed under composition and whiskering. An instance of the generic split arity on Γ sends the arity's two objects to some aᵢ, aⱼ with i < j and its cells to cells of the hom 𝒦(aᵢ, aⱼ), possibly composites across intermediate objects. Its crossing **lands in** aⱼ.
+
+**Comparison.** With S∧ the meet and both splits on top, F_V(Γ) → F_{V+S∧}(Γ) → F_{V+S(Γ)}(Γ) → F_{T₁₂}(Γ), all identities on letters. On raw degree-4 syntax this is **Agda-checked** (`Uniform/SplitMarksPerObject.agda`: `lower-⊆`, `upper-⊆`, `meet→perObject`, `perObject→all`), together with: constant marks give exactly the old setting (`const-⊆`, `const-⊇`), stronger marks give more laws (`mark-mono`), and both sides of every per-object law are pure inner, so seed lists are kept (`lawO-inner`, `seedsO-≈`). The landing-object function is a parameter there, not computed from a pasting context.
+
+**Requirements 3 and 4.** They hold because F_{V+S(Γ)}(Γ) sits between F_V and F_{T₁₂}. The reverse of an elementary interchanger would map to one in F_{T₁₂}(Γ), which has none. The projection to 𝔉(Γ) factors through F_{T₁₂}(Γ).
+
+**Substitution (requirement 5, mark-respecting form).** A substitution σ : Δ → Γ that sends each object of Δ to one with at least its marks sends each selected instance on Δ to a selected instance on Γ. The instance's landing object aⱼ goes to σ(aⱼ), which carries the same split. Composition and whiskering are preserved. So σ induces F_{V+S(Δ)}(Δ) → F_{V+S(Γ)}(Γ). This is on paper.
+
+**Soundness.** As in §1.8, but per instance. An assignment γ respecting marks sends a selected instance landing in aⱼ to an instance in a hom 𝒦(γaᵢ, γaⱼ), and γaⱼ satisfies that split there. Equalities are preserved by composition and whiskering. So the model's map out of F_V(Γ) factors through F_{V+S(Γ)}(Γ). This is on paper.
+
+**Decidability (argued in-house, extending r10 Response 3).** Response 3 decides equality and reachability in V + S by four steps.
+1. It grounds the enabled switches into a **finite, computable list** of ground 4-path pairs on Γ. These are the substitution instances of the height-3 arity into the common, finite skeleton through dimension 3.
+2. It decides equality as connectivity in the graph of one-step replacements, by those pairs under fixed contexts, among the finitely many raw lifts of a T₁₂ normal word between normalized faces.
+3. Above degree 4 it carries the identifications through the lower labels.
+4. It decides reachability by breadth-first search over the finite vertex list.
+
+For S(Γ), the only change is in step 1. Each listed ground pair is an instance with determined generator images, so its landing object is computable (the image of the arity's target object). The list is filtered to the instances landing in an object with the matching mark, and the filtered list is still finite and computable. The correctness argument of each later step uses only these facts:
+- every listed edge is an equality of the theory;
+- every derivation step is a contextual application of a listed pair;
+- the comparison to T₁₂ reflects identities.
+
+All three hold for the filtered list. The first holds by definition. The second holds because the theory is generated by exactly the filtered instances. The third holds because the map to T₁₂ exists. Response 3 itself says the algorithm "also works if a left split is selected individually", which is a filter by law. Filtering by landing object is the same kind of selection, at the level of ground pairs. **Conclusion:** equality and reachability in F_{V+S(Γ)}(Γ) are decidable, uniformly in Γ, the degree and the marking. The cost bounds of r10 Responses 3–21 apply unchanged, since the filtered list is no longer than the unfiltered one.
+
+**Decision.** The kernel computes in V + S(Γ), not in V + S∧. This is the exact content of the marks, and it is sound and decidable. Nothing stated over S∧ changes for uniform markings, since the two agree there (`const-⊆`, `const-⊇`). The marks rules of spec §3.6 keep reading their split premises on the meet S∧. That is conservative, because each object a₁, …, aₙ carries S∧, and it is what `Uniform/SplitMarks.agda` checks.
+
+**What is not mechanized.** The landing-object function on actual pasting contexts. The decision procedure itself, which is r10 Response 3 with a filter. Substitution. The model-level factorization.
 
 ---
 

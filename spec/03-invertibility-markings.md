@@ -115,7 +115,7 @@ ps* is the right notion of "pseudo" in the sense of P. An r-cell of Fun^lax(B, C
 
 ## 3.6 Marks over the uniform core
 
-The rules of §3.3 are stated over U(Γ). Over V + S(Γ) (chapter 2, §2.3; S(Γ) is the set of splits marked on every object a₁, …, aₙ of Γ) they are restated by reading the **designated lift** c of a coherence (§2.2) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). The cases are:
+The rules of §3.3 are stated over U(Γ). Over V + S(Γ) (chapter 2, §2.3) they are restated by reading the **designated lift** c of a coherence (§2.2) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). In the premises below, "in S(Γ)" means carried by every object a₁, …, aₙ of Γ (the meet; conservative, since each such object carries it). The cases are:
 - the **Gray operation case**, π(c) = τ_Γ;
 - the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 

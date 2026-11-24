@@ -7,19 +7,20 @@
 --   βα  = (f◁β) ; (α▷g′)
 --   βα₂ = (1_{f;g} ; (f◁β)) ; (α▷g′)
 --
--- They are parallel, have the same image in 𝔉(HComp) (the 1-cell
--- ∂⁻τ of the lax square), and together use every variable of HComp.
--- So the type βα → βα₂ has exactly one inhabitant in the free model
--- (the identity; a strict ω-category of a loop-free Steiner complex has
--- no non-identity endo-cells), and that inhabitant uses every variable.
+-- They are parallel and together use every variable of HComp. Their
+-- closed supports agree (checked below), so by (B) they have the same
+-- image in 𝔉(HComp), the 1-cell ∂⁻τ of the lax square; and the type
+-- βα → βα₂ has exactly one inhabitant in the free model (the identity;
+-- a loop-free Steiner complex has no non-identity endo-cells). These two
+-- consequences are paper steps, not stated in Agda.
 --
 -- Facts checked here:
 --  (1) both terms are derivable, at the same type;
 --  (2) their supports agree (sameDown both ways), but are not the full
 --      Gray support of HComp: the top generator α⊗β is missing;
 --  (3) graySide rejects coh_{HComp, βα → βα₂}, in both directions,
---      so no single coherence over HComp has this type, and no
---      pasting sub-context of HComp contains all the variables used;
+--      so that head is underivable for every substitution (`no-single`);
+--      and no pasting sub-context of HComp contains all the variables used;
 --  (4) a *composite* of coherences of that type is derivable: the
 --      whiskering of the unitor λ : L ⇛ 1;L by R.
 --

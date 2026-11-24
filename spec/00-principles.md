@@ -35,7 +35,7 @@ What it does not exclude:
 The kernel has **no definitional equality** beyond syntactic identity of terms after substitution, as in CaTT. In particular:
 - no β or η rules for any type former or term former;
 - no computation rules for limits, free objects, internal homs or tensors;
-- a law of a strict theory used in a side condition (chapter 2) never becomes a definitional equality. It only makes certain cells derivable.
+- a law of the strict theory used to decide a side condition (chapter 2) never becomes a definitional equality. That theory is a decision device for a combinatorial test on pasting contexts, not a model, and its laws only make certain cells derivable.
 
 Every universal property is stated as the existence of cells: a structure map, a comparison cell, and a witness that the comparison is invertible where invertibility is meant. In the kernel, an equation is proved by exhibiting a cell, never by a conversion check.
 

@@ -16,11 +16,17 @@
 --    the two images equal (whole towers). This is the only place where
 --    the soundness proof `Strict.Soundness` uses the coherence-case
 --    hypothesis (`coh-top`); it is (B), `Strict.Recon.b-supp`, applied
---    to the two terms. So soundness of the modified rule in the strict
---    model is Strict.Soundness with `coh-top` replaced by `cohV-top`.
---    That replacement is NOT carried out as a separate typing instance
---    here (Strict.L and Strict.Hyp are instantiated at graySide's
---    typing); see the note.
+--    to the two terms. A soundness proof for graySideV needs more than
+--    this replacement: the support function `topS` (Gray.Support)
+--    decides between identity and total-cell image using graySide's
+--    `cohCase`, so it must be redefined with `cohCaseV`; the case split
+--    in `Soundness.cohX`/`cellX` must follow it, and the lemmas about
+--    `supp` (Strict.L, Strict.Hyp.flat-supp, Gray.Graded) must be
+--    re-checked at that definition. This is NOT carried out here
+--    (Strict.L and Strict.Hyp are instantiated at graySide's typing);
+--    see the note. (The evaluation checks below are unaffected: every
+--    coh occurring inside the tested terms is classified the same way
+--    by both rules.)
 --  * by evaluation: graySideV accepts the gap example of
 --    Gray.CohCaseGap in both directions, still rejects the reverse
 --    interchanger, and agrees with graySide on the Gray.Examples heads.

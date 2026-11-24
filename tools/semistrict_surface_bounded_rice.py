@@ -14,7 +14,7 @@ def replace_once(path, old, new):
     path.write_text(source.replace(old, new))
 
 
-def build(checkout, destination):
+def unpack_checker(checkout, destination):
     destination.mkdir(parents=True, exist_ok=True)
     if any(destination.iterdir()):
         raise ValueError(f'build destination must be empty: {destination}')
@@ -23,6 +23,9 @@ def build(checkout, destination):
         archive.seek(0)
         subprocess.run(['tar', '-x', '-C', destination], stdin=archive, check=True)
 
+
+def build(checkout, destination):
+    unpack_checker(checkout, destination)
     common = destination/'src/common.rs'
     replace_once(common, 'pub enum Insertion {\n    Pruning,',
                  'pub enum Insertion {\n    Bounded(usize),\n    Pruning,')

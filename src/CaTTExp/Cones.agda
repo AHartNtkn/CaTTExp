@@ -98,22 +98,23 @@ nest (suc n) = node (nest n ∷ [])
 Disk : Nat → Ctx
 Disk n = ctxOf (nest n)
 
+-- (The folds are top level so that proofs can reason about them.)
+diskGo : Nat → Cell → List Tm
+diskGo zero    c = fst c ∷ []
+diskGo (suc n) c = diskGo n (srcC c) ++ (fst (tgtC c) ∷ fst c ∷ [])
+
 diskList : Cell → List Tm
-diskList c = go (dimC c) c
-  where
-  go : Nat → Cell → List Tm
-  go zero    c = fst c ∷ []
-  go (suc n) c = go n (srcC c) ++ (fst (tgtC c) ∷ fst c ∷ [])
+diskList c = diskGo (dimC c) c
 
 -- The tail of diskList w after its first k-dimensional disk
 -- (the part of w's disk not shared with what it is glued to).
+restGo : Nat → Nat → Cell → List Tm
+restGo k zero    c = []
+restGo k (suc n) c = if dimC c ==ℕ k then []
+                     else (restGo k n (srcC c) ++ (fst (tgtC c) ∷ fst c ∷ []))
+
 restDisk : Nat → Cell → List Tm
-restDisk k c = go (dimC c) c
-  where
-  go : Nat → Cell → List Tm
-  go zero    c = []
-  go (suc n) c = if dimC c ==ℕ k then []
-                 else (go n (srcC c) ++ (fst (tgtC c) ∷ fst c ∷ []))
+restDisk k c = restGo k (dimC c) c
 
 -- The pasting tree of a p-disk and a q-disk glued along a k-disk.
 glueT : Nat → Nat → Nat → Tree
@@ -465,8 +466,43 @@ tyF (suc f) Γ (bn k u w) =
 fuel : Nat
 fuel = 64
 
+-- The fuel used for a context. A fixed fuel is not enough in every
+-- dimension: evaluating the specified cone over a d-dimensional
+-- diagram recurses to depth about 3d, so a fixed 64 fails from d = 21
+-- on. The fuel therefore grows with the largest dimension D of the
+-- context's types and the largest weight Ω of its variables, where an
+-- expression built from variables and binary composites weighs one
+-- more than its heaviest part and a variable one more than the
+-- heaviest expression in its type. CaTTExp.Lim.ConesEval proves that
+-- D + 2Ω + 1 is enough for the v/bn fragment. Other constructors weigh
+-- 0; for them the fuel is at least 64, as before. (The extra term is
+-- only computed once 64 steps are used up.)
+wtE : (Nat → Nat) → Ex → Nat
+wtE W (v i)      = W i
+wtE W (bn _ u w) = suc (max (wtE W u) (wtE W w))
+wtE W _          = 0
+
+wtTy : (Nat → Nat) → ExTy → Nat
+wtTy W ob          = 0
+wtTy W (hom A s t) = max (wtTy W A) (max (wtE W s) (wtE W t))
+
+-- Variable weights, left to right (a variable not yet weighed weighs 0).
+weightsGo : List Nat → ExCtx → List Nat
+weightsGo acc []       = acc
+weightsGo acc (A ∷ As) = weightsGo (acc ++ (suc (wtTy (λ i → nth 0 acc i) A) ∷ [])) As
+
+weights : ExCtx → List Nat
+weights Γ = weightsGo [] Γ
+
+maxL : List Nat → Nat
+maxL []       = 0
+maxL (x ∷ xs) = max x (maxL xs)
+
+fuelOf : ExCtx → Nat
+fuelOf Γ = fuel + suc (maxL (map dimE Γ) + (maxL (weights Γ) + maxL (weights Γ)))
+
 tyE : ExCtx → Ex → ExTy
-tyE = tyF fuel
+tyE Γ = tyF (fuelOf Γ) Γ
 
 -- Evaluation to CaTT syntax.
 mutual
@@ -509,13 +545,13 @@ mutual
   cellF (suc f) Γ e = evF f Γ e , evTyF f Γ (tyE Γ e)
 
 ev : ExCtx → Ex → Tm
-ev = evF fuel
+ev Γ = evF (fuelOf Γ) Γ
 
 evTy : ExCtx → ExTy → Ty
-evTy = evTyF fuel
+evTy Γ = evTyF (fuelOf Γ) Γ
 
 cellE : ExCtx → Ex → Cell
-cellE = cellF fuel
+cellE Γ = cellF (fuelOf Γ) Γ
 
 -- An ExCtx as a CaTT context.
 -- (The fold is top level so that CaTTExp.Lim.ConeAgree can reason
@@ -633,20 +669,18 @@ module ConeOf (Γ : ExCtx) where
   pE : Ex → Ex
   pE e = pr (idxE e)
 
-  -- The long side T_t, built from the inside out.
+  -- The long side T_t, built from the inside out: the accumulator
+  -- after step j is p_{σ^{m−j}t} ∗_j (… (p_{σᵐt} ∗₀ t)), with fuel m.
+  -- (The loop is top level so that CaTTExp.Lim.ConeAgree can reason
+  -- about it.)
+  longGo : Nat → Nat → Nat → Nat → Ex → Ex
+  longGo x m zero    j acc = acc
+  longGo x m (suc f) j acc =
+    if m ≤ℕ j then acc
+    else longGo x m f (suc j) (bn j (pE (srcIter Γ (m ∸ j) (v x))) acc)
+
   longSide : Nat → ExTy → Ex
-  longSide x A = go 1 (bn 0 (pE (srcIter Γ m (v x))) (v x))
-    where
-    m = dimE A
-    go : Nat → Ex → Ex
-    go j acc = if m ≤ℕ j then acc
-               else goF m j acc
-      where
-      goF : Nat → Nat → Ex → Ex
-      goF zero    j acc = acc
-      goF (suc f) j acc =
-        if m ≤ℕ j then acc
-        else goF f (suc j) (bn j (pE (srcIter Γ (m ∸ j) (v x))) acc)
+  longSide x A = longGo x (dimE A) (dimE A) 1 (bn 0 (pE (srcIter Γ (dimE A) (v x))) (v x))
 
   projTy : ExCtx → Nat → ExTy → ExTy
   projTy K x ob          = hom ob c (v x)

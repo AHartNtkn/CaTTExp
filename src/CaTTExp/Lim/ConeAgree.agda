@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 -- The repaired cone and the kernel's cone shape agree on every globular
--- diagram of dimension ≤ 2 (ledger S27 (h′)).
+-- diagram, in every dimension (ledger S27 (h′)).
 --
 -- Two constructions of Mikhail's specified cone (Thm 3.3) exist:
 --
@@ -10,32 +10,39 @@
 --    CaTT syntax; the kernel's limit heads take it as their cone shape
 --    (`coneShape`, CaTTExp.Binder.LimHeadsExamples).
 --
--- `cone-agrees` proves that for every globular diagram Γ of dimension
--- ≤ 2 (a well-formed context whose entries are objects, arrows between
--- objects, and 2-cells between parallel arrows), named canonically,
+-- `cone-agrees` proves that for every well-formed globular diagram Γ
+-- (every boundary of every variable is a variable, of the right type;
+-- the decidable test `gwf`), named canonically,
 --
 --   coneC Γ c >>= λ Π → lower (Γ, c, Π)   ≡   lower Γ >>= coneShape,
 --
 -- with c the next free name, and both sides are `just` the explicit
--- cone context `coneQ`. CaTTExp.Binder.LimRecognised checked this on
--- three diagrams; this is the general statement.
+-- cone context `QM.Qc` (spec §6.1):
 --
--- Diagrams are given as lists of entries (`Dg`, `Ent`) with a decidable
--- well-formedness test `wf`; `parse` reads a pure context as a diagram,
--- and `parse-sound` shows the context is the diagram's. The theorem is
--- stated for canonical naming (`named`: the variable at level i is
--- named i, the apex is named |Γ|), the naming used by Lim/Repaired's
--- examples; invariance of coneC under other injective namings is not
--- proved here.
+--   p_x : c → x                                          (dim x = 0)
+--   p_t : p_{τt} → p_{σt} ∗_{m−1} (… (p_{σᵐt} ∗₀ t))      (dim t = m ≥ 1)
+--
+-- typed by CaTTExp.Lim.ConeCells (`Proj.projN`). The kernel side uses
+-- the soundness of the kernel's evaluator (CaTTExp.Lim.ConesEval): the
+-- kernel's long side is a composable chain whose cell is ConeCells'
+-- T_t (spec Lemma 2.2 gives composability), so it evaluates to it.
+-- The theorem is stated for canonical naming (`named`: the variable at
+-- level i is named i, the apex is named |Γ|), the naming used by
+-- Lim/Repaired's examples; invariance of coneC under other injective
+-- namings is not proved here.
 ------------------------------------------------------------------------
 module CaTTExp.Lim.ConeAgree where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Pure hiding (∅; build)
 open import CaTTExp.Cones
-  using (Ex; ExTy; ExCtx; v; ob; hom; bn; nth; length; evF; evTyF; evTy;
-         tyE; tyF; cellF; binC; evCtx; evCtxGo; module ConeOf)
-open import CaTTExp.Lim.Terms using (comp; vcomp; whL)
+  using (Ex; ExTy; ExCtx; v; ob; hom; bn; nth; length; map; Cell; dimC; srcC; tgtC; dimE;
+         srcE; evCtx; evCtxGo; tyE; srcIter; module ConeOf)
+open import CaTTExp.Lim.ConeCells
+  using (pred; srcN; chainF; lenL; ChainOK; chain-dim; dim-srcN; module Proj)
+open import CaTTExp.Lim.ConesEval
+  using (Le; lt0; le-refl; le-trans; le-suc; le-step; lt-le; le-lt; +-zero; +-suc; subst₂;
+         length-++; nth-app-l; nth-last; nth-out; ScE; sv; sb; ScTy; Comp; module Main)
 open import CaTTExp.Lim.Named
   using (NCtx; ∅; _▹_∶_; _⧺_; names; size; levelOf; lower; renTy; renTm; renSub)
 open import CaTTExp.Lim.Rules using (coneCtx)
@@ -43,52 +50,16 @@ import CaTTExp.Lim.Repaired as R
 open import CaTTExp.Binder.LimHeadsExamples using (coneShape; toExCtx; toExTy)
 
 ------------------------------------------------------------------------
--- Arithmetic and list lemmas.
+-- Arithmetic and lists.
+
+data _⊎_ (A B : Set) : Set where
+  inl : A → A ⊎ B
+  inr : B → A ⊎ B
 
 private
-  data _⊎_ (A B : Set) : Set where
-    inl : A → A ⊎ B
-    inr : B → A ⊎ B
-
-  _&_ : ∀ {a b} → T a → T b → T (a ∧ b)
-  _&_ {true} _ q = q
-  infixr 6 _&_
-
-  +-zero : ∀ n → n + 0 ≡ n
-  +-zero zero    = refl
-  +-zero (suc n) = cong suc (+-zero n)
-
-  +-suc : ∀ n k → n + suc k ≡ suc (n + k)
-  +-suc zero    k = refl
-  +-suc (suc n) k = cong suc (+-suc n k)
-
-  <-suc : ∀ i n → T (i <ℕ n) → T (i <ℕ suc n)
-  <-suc zero    (suc n) _ = tt
-  <-suc (suc i) (suc n) p = <-suc i n p
-
-  n<suc : ∀ n → T (n <ℕ suc n)
-  n<suc zero    = tt
-  n<suc (suc n) = n<suc n
-
-  <-trans : ∀ i j k → T (i <ℕ j) → T (j <ℕ k) → T (i <ℕ k)
-  <-trans zero    (suc j) (suc k) _ _ = tt
-  <-trans (suc i) (suc j) (suc k) p q = <-trans i j k p q
-
-  -- i < suc m splits into i < m or i = m.
-  split : ∀ i m → T (i <ℕ suc m) → T (i <ℕ m) ⊎ (i ≡ m)
-  split zero    zero    _ = inr refl
-  split zero    (suc m) _ = inl tt
-  split (suc i) zero    p = ⊥-elim (lt0 i p)
-    where
-    lt0 : ∀ i → T (i <ℕ 0) → ⊥
-    lt0 _ ()
-  split (suc i) (suc m) p with split i m p
-  ... | inl q = inl q
-  ... | inr e = inr (cong suc e)
-
-  lt-irr : ∀ m → T (m <ℕ m) → ⊥
-  lt-irr zero    ()
-  lt-irr (suc m) p = lt-irr m p
+  lt-irr : ∀ m → (m <ℕ m) ≡ false
+  lt-irr zero    = refl
+  lt-irr (suc m) = lt-irr m
 
   eq-refl : ∀ m → (m ==ℕ m) ≡ true
   eq-refl zero    = refl
@@ -97,6 +68,17 @@ private
   lt-neq : ∀ i m → T (i <ℕ m) → (i ==ℕ m) ≡ false
   lt-neq zero    (suc m) _ = refl
   lt-neq (suc i) (suc m) p = lt-neq i m p
+  lt-neq i       zero    p = lt0 i p
+
+  <-trans : ∀ i j k → T (i <ℕ j) → T (j <ℕ k) → T (i <ℕ k)
+  <-trans i j k p q = le-lt i k (le-trans (suc i) j k (lt-le i j p) (le-trans j (suc j) k (le-suc j) (lt-le j k q)))
+
+  n<suc : ∀ n → T (n <ℕ suc n)
+  n<suc zero    = tt
+  n<suc (suc n) = n<suc n
+
+  <-suc : ∀ i n → T (i <ℕ n) → T (i <ℕ suc n)
+  <-suc i n p = <-trans i n (suc n) p (n<suc n)
 
   lt-add : ∀ n {a k} → T (a <ℕ k) → T ((n + a) <ℕ (n + k))
   lt-add zero    p = p
@@ -106,555 +88,629 @@ private
   le-add zero    k = tt
   le-add (suc n) k = le-add n k
 
-  lt-addr : ∀ a n k → T (a <ℕ n) → T (a <ℕ suc (n + k))
-  lt-addr a n k p = <-trans a n (suc (n + k)) p (le-add n k)
+  -- i < suc m splits into i < m or i = m.
+  split : ∀ i m → T (i <ℕ suc m) → T (i <ℕ m) ⊎ (i ≡ m)
+  split zero    zero    _ = inr refl
+  split zero    (suc m) _ = inl tt
+  split (suc i) zero    p = lt0 i p
+  split (suc i) (suc m) p with split i m p
+  ... | inl q = inl q
+  ... | inr e = inr (cong suc e)
 
-  -- Lists.
-  map : ∀ {A B : Set} → (A → B) → List A → List B
-  map f []       = []
-  map f (x ∷ xs) = f x ∷ map f xs
+  ∸0 : ∀ a → a ∸ 0 ≡ a
+  ∸0 zero    = refl
+  ∸0 (suc a) = refl
 
-  ++-assoc : ∀ {A : Set} (xs ys zs : List A) → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
-  ++-assoc []       ys zs = refl
-  ++-assoc (x ∷ xs) ys zs = cong (x ∷_) (++-assoc xs ys zs)
+  ∸-self : ∀ m → m ∸ m ≡ 0
+  ∸-self zero    = refl
+  ∸-self (suc m) = ∸-self m
 
-  map-++ : ∀ {A B : Set} (f : A → B) xs ys → map f (xs ++ ys) ≡ map f xs ++ map f ys
-  map-++ f []       ys = refl
-  map-++ f (x ∷ xs) ys = cong (f x ∷_) (map-++ f xs ys)
+  -- m ∸ j = suc (m ∸ suc j) when j < m.
+  ∸-step : ∀ m j → T (j <ℕ m) → m ∸ j ≡ suc (m ∸ suc j)
+  ∸-step (suc m) zero    _ = cong suc (sym (∸0 m))
+  ∸-step (suc m) (suc j) p = ∸-step m j p
+  ∸-step zero    j       p = lt0 j p
 
-  length-++ : ∀ {A : Set} (xs ys : List A) → length (xs ++ ys) ≡ length xs + length ys
-  length-++ []       ys = refl
-  length-++ (x ∷ xs) ys = cong suc (length-++ xs ys)
+  ∸-le′ : ∀ m j → Le (m ∸ j) m
+  ∸-le′ zero    zero    = tt
+  ∸-le′ zero    (suc j) = tt
+  ∸-le′ (suc m) zero    = le-refl m
+  ∸-le′ (suc m) (suc j) = le-step (m ∸ j) m (∸-le′ m j)
 
-  length-map : ∀ {A B : Set} (f : A → B) xs → length (map f xs) ≡ length xs
-  length-map f []       = refl
-  length-map f (x ∷ xs) = cong suc (length-map f xs)
+  ∸-suc : ∀ m k → Le k m → suc m ∸ k ≡ suc (m ∸ k)
+  ∸-suc m       zero    _ = cong suc (sym (∸0 m))
+  ∸-suc (suc m) (suc k) p = ∸-suc m k p
+  ∸-suc zero    (suc k) p = lt0 k p
 
-  nth-map : ∀ {A B : Set} (f : A → B) (d : A) xs i → nth (f d) (map f xs) i ≡ f (nth d xs i)
-  nth-map f d []       i       = refl
-  nth-map f d (x ∷ xs) zero    = refl
-  nth-map f d (x ∷ xs) (suc i) = nth-map f d xs i
+  -- m ∸ (m ∸ j) = j when j ≤ m.
+  ∸-∸ : ∀ m j → Le j m → m ∸ (m ∸ j) ≡ j
+  ∸-∸ m       zero    _ = trans (cong (m ∸_) (∸0 m)) (∸-self m)
+  ∸-∸ (suc m) (suc j) p = trans (∸-suc m (m ∸ j) (∸-le′ m j)) (cong suc (∸-∸ m j p))
+  ∸-∸ zero    (suc j) p = lt0 j p
 
-  nth-app-l : ∀ {A : Set} (d : A) xs ys i → T (i <ℕ length xs) → nth d (xs ++ ys) i ≡ nth d xs i
-  nth-app-l d (x ∷ xs) ys zero    _ = refl
-  nth-app-l d (x ∷ xs) ys (suc i) p = nth-app-l d xs ys i p
+nth-app-r : ∀ {A : Set} (d : A) xs ys j → nth d (xs ++ ys) (length xs + j) ≡ nth d ys j
+nth-app-r d []       ys j = refl
+nth-app-r d (x ∷ xs) ys j = nth-app-r d xs ys j
 
-  nth-app-r : ∀ {A : Set} (d : A) xs ys j → nth d (xs ++ ys) (length xs + j) ≡ nth d ys j
-  nth-app-r d []       ys j = refl
-  nth-app-r d (x ∷ xs) ys j = nth-app-r d xs ys j
+nth-map : ∀ {A B : Set} (f : A → B) (d : A) xs i → nth (f d) (map f xs) i ≡ f (nth d xs i)
+nth-map f d []       i       = refl
+nth-map f d (x ∷ xs) zero    = refl
+nth-map f d (x ∷ xs) (suc i) = nth-map f d xs i
 
-  nth-last : ∀ {A : Set} (d : A) xs (x : A) i → length xs ≡ i → nth d (xs ++ (x ∷ [])) i ≡ x
-  nth-last d xs x i refl = trans (cong (nth d (xs ++ (x ∷ []))) (sym (+-zero (length xs))))
-                                 (nth-app-r d xs (x ∷ []) 0)
+length-map : ∀ {A B : Set} (f : A → B) xs → length (map f xs) ≡ length xs
+length-map f []       = refl
+length-map f (x ∷ xs) = cong suc (length-map f xs)
+
+snoc-len : ∀ {A : Set} (xs : List A) x → length (xs ++ (x ∷ [])) ≡ suc (length xs)
+snoc-len []       x = refl
+snoc-len (y ∷ xs) x = cong suc (snoc-len xs x)
+
+lt-snoc : ∀ {A : Set} (xs : List A) x i → T (i <ℕ length (xs ++ (x ∷ []))) → T (i <ℕ length xs) ⊎ (i ≡ length xs)
+lt-snoc xs x i p = split i (length xs) (subst (λ n → T (i <ℕ n)) (snoc-len xs x) p)
 
 ------------------------------------------------------------------------
--- Diagrams of dimension ≤ 2.
+-- Diagrams: pure contexts read left to right.
 
-data Ent : Set where
-  obj : Ent                            -- an object
-  ar  : Nat → Nat → Ent                -- an arrow a → b
-  tw  : Nat → Nat → Nat → Nat → Ent    -- a 2-cell f ⇒ g, f g : a → b
+tyList : Ctx → List Ty
+tyList ε       = []
+tyList (Γ ▸ A) = tyList Γ ++ (A ∷ [])
 
-infixl 5 _,,_
-data Dg : Set where
-  dε   : Dg
-  _,,_ : Dg → Ent → Dg
+len-tyList : ∀ Γ → length (tyList Γ) ≡ len Γ
+len-tyList ε       = refl
+len-tyList (Γ ▸ A) = trans (snoc-len (tyList Γ) A) (cong suc (len-tyList Γ))
 
-toP : Ent → Ty
-toP obj          = ⋆
-toP (ar a b)     = arr ⋆ (var a) (var b)
-toP (tw a b f g) = arr (arr ⋆ (var a) (var b)) (var f) (var g)
+-- A list of types as a context.
+ctxGo : Ctx → List Ty → Ctx
+ctxGo acc []       = acc
+ctxGo acc (A ∷ As) = ctxGo (acc ▸ A) As
 
-toX : Ent → ExTy
-toX obj          = ob
-toX (ar a b)     = hom ob (v a) (v b)
-toX (tw a b f g) = hom (hom ob (v a) (v b)) (v f) (v g)
+ctxGo-snoc : ∀ acc As A → ctxGo acc (As ++ (A ∷ [])) ≡ ctxGo acc As ▸ A
+ctxGo-snoc acc []       A = refl
+ctxGo-snoc acc (B ∷ As) A = ctxGo-snoc (acc ▸ B) As A
 
-pureOf : Dg → Ctx
-pureOf dε       = ε
-pureOf (d ,, e) = pureOf d ▸ toP e
+ctx-tyList : ∀ Γ → ctxGo ε (tyList Γ) ≡ Γ
+ctx-tyList ε       = refl
+ctx-tyList (Γ ▸ A) = trans (ctxGo-snoc ε (tyList Γ) A) (cong (_▸ A) (ctx-tyList Γ))
 
-lenD : Dg → Nat
-lenD d = len (pureOf d)
+-- A globular type as an expression type.
+exTy : Ty → ExTy
+exTy ⋆                       = ob
+exTy (arr A (var s) (var t)) = hom (exTy A) (v s) (v t)
+exTy _                       = ob
 
-at : Dg → Nat → Ent
-at dε       i = obj
-at (d ,, e) i = if i ==ℕ lenD d then e else at d i
+-- Well-formed globular types over G, below level i: every boundary is
+-- a variable below i of the right type.
+data OkT (G : List Ty) (i : Nat) : Ty → Set where
+  ok⋆ : OkT G i ⋆
+  okA : ∀ {A s t} → T (s <ℕ i) → T (t <ℕ i) → nth ⋆ G s ≡ A → nth ⋆ G t ≡ A → OkT G i A →
+        OkT G i (arr A (var s) (var t))
 
-ents : Dg → List Ent
-ents dε       = []
-ents (d ,, e) = ents d ++ (e ∷ [])
+WF : List Ty → Set
+WF G = ∀ i → T (i <ℕ length G) → OkT G i (nth ⋆ G i)
 
-exOf : Dg → ExCtx
-exOf dε       = []
-exOf (d ,, e) = exOf d ++ (toX e ∷ [])
+-- The decidable test: each entry is well formed over the entries before it.
+okTy : List Ty → Ty → Bool
+okTy Ts ⋆ = true
+okTy Ts (arr A (var s) (var t)) =
+  (s <ℕ length Ts) ∧ (t <ℕ length Ts) ∧ (nth ⋆ Ts s ==Ty A) ∧ (nth ⋆ Ts t ==Ty A) ∧ okTy Ts A
+okTy Ts (arr A _ _) = false
 
-isObj : Ent → Bool
-isObj obj = true
-isObj _   = false
-
-isAr : Nat → Nat → Ent → Bool
-isAr a b (ar a' b') = (a ==ℕ a') ∧ (b ==ℕ b')
-isAr _ _ _          = false
-
-wfE : Dg → Ent → Bool
-wfE d obj          = true
-wfE d (ar a b)     = (a <ℕ lenD d) ∧ (b <ℕ lenD d) ∧ isObj (at d a) ∧ isObj (at d b)
-wfE d (tw a b f g) = (a <ℕ lenD d) ∧ (b <ℕ lenD d) ∧ (f <ℕ lenD d) ∧ (g <ℕ lenD d) ∧
-                     isObj (at d a) ∧ isObj (at d b) ∧ isAr a b (at d f) ∧ isAr a b (at d g)
-
-wf : Dg → Bool
-wf dε       = true
-wf (d ,, e) = wf d ∧ wfE d e
-
--- Reading a pure context as a diagram.
-private
-  varOf : Tm → Maybe Nat
-  varOf (var i) = just i
-  varOf _       = nothing
-
-  varOf-sound : ∀ t i → varOf t ≡ just i → t ≡ var i
-  varOf-sound (var j)     i refl = refl
-  varOf-sound (coh _ _ _) i ()
-
-parseTy : Ty → Maybe Ent
-parseTy ⋆ = just obj
-parseTy (arr ⋆ s t) = varOf s >>= λ a → varOf t >>= λ b → just (ar a b)
-parseTy (arr (arr ⋆ s t) u w) =
-  varOf s >>= λ a → varOf t >>= λ b → varOf u >>= λ f → varOf w >>= λ g → just (tw a b f g)
-parseTy (arr (arr (arr _ _ _) _ _) _ _) = nothing
-
-parse : Ctx → Maybe Dg
-parse ε       = just dε
-parse (Γ ▸ A) = parse Γ >>= λ d → parseTy A >>= λ e → just (d ,, e)
+gwf : Ctx → Bool
+gwf ε       = true
+gwf (Γ ▸ A) = gwf Γ ∧ okTy (tyList Γ) A
 
 private
-  bind-just : ∀ {A B : Set} (m : Maybe A) (k : A → Maybe B) {y} →
-              (m >>= k) ≡ just y → Σ A (λ x → (m ≡ just x) × (k x ≡ just y))
-  bind-just (just x) k p = x , (refl , p)
+  okTy-sound : ∀ Ts A → T (okTy Ts A) → OkT Ts (length Ts) A
+  okTy-sound Ts ⋆ _ = ok⋆
+  okTy-sound Ts (arr A (var s) (var t)) p =
+    okA (∧-fst p) (∧-fst p2) (==Ty-sound _ A (∧-fst p3)) (==Ty-sound _ A (∧-fst p4))
+        (∧-snd {nth ⋆ Ts t ==Ty A} p4 ▷ okTy-sound Ts A)
+    where
+    _▷_ : ∀ {X Y : Set} → X → (X → Y) → Y
+    x ▷ f = f x
+    p2 = ∧-snd {s <ℕ length Ts} p
+    p3 = ∧-snd {t <ℕ length Ts} p2
+    p4 = ∧-snd {nth ⋆ Ts s ==Ty A} p3
+  okTy-sound Ts (arr A (var s) (coh _ _ _)) ()
+  okTy-sound Ts (arr A (var s) (cst ()))
+  okTy-sound Ts (arr A (coh _ _ _) u) ()
+  okTy-sound Ts (arr A (cst ()) u)
 
-  just-inj : ∀ {A : Set} {x y : A} → just x ≡ just y → x ≡ y
-  just-inj refl = refl
+  -- OkT only looks below its level.
+  okT-ext : ∀ G G′ i → (∀ j → T (j <ℕ i) → nth ⋆ G′ j ≡ nth ⋆ G j) → ∀ {A} → OkT G i A → OkT G′ i A
+  okT-ext G G′ i h ok⋆ = ok⋆
+  okT-ext G G′ i h (okA qs qt es et ok) =
+    okA qs qt (trans (h _ qs) es) (trans (h _ qt) et) (okT-ext G G′ i h ok)
 
-parseTy-sound : ∀ A e → parseTy A ≡ just e → toP e ≡ A
-parseTy-sound ⋆ .obj refl = refl
-parseTy-sound (arr ⋆ s t) e p
-  with bind-just (varOf s) _ p
-... | a , (es , p1) with bind-just (varOf t) _ p1
-...   | b , (pt , refl)
-  rewrite varOf-sound s a es | varOf-sound t b pt = refl
-parseTy-sound (arr (arr ⋆ s t) u w) e p
-  with bind-just (varOf s) _ p
-... | a , (es , p1) with bind-just (varOf t) _ p1
-...   | b , (pt , p2) with bind-just (varOf u) _ p2
-...     | f , (pu , p3) with bind-just (varOf w) _ p3
-...       | g , (pw , refl)
-  rewrite varOf-sound s a es | varOf-sound t b pt | varOf-sound u f pu | varOf-sound w g pw = refl
-parseTy-sound (arr (arr (arr _ _ _) _ _) _ _) e ()
-
-parse-sound : ∀ Γ d → parse Γ ≡ just d → pureOf d ≡ Γ
-parse-sound ε .dε refl = refl
-parse-sound (Γ ▸ A) d p with bind-just (parse Γ) _ p
-... | d′ , (pd , p1) with bind-just (parseTy A) _ p1
-...   | e , (pe , refl) = cong₂ _▸_ (parse-sound Γ d′ pd) (parseTy-sound A e pe)
+gwf-sound : ∀ Γ → T (gwf Γ) → WF (tyList Γ)
+gwf-sound ε       _ i p = lt0 i p
+gwf-sound (Γ ▸ A) w i p with lt-snoc (tyList Γ) A i p
+... | inl q =
+  subst (OkT G′ i) (sym (nth-app-l ⋆ G (A ∷ []) i q))
+        (okT-ext G G′ i (λ j r → nth-app-l ⋆ G (A ∷ []) j (<-trans j i (length G) r q))
+                 (gwf-sound Γ (∧-fst w) i q))
+  where
+  G = tyList Γ
+  G′ = G ++ (A ∷ [])
+... | inr refl =
+  subst (OkT G′ (length G)) (sym (nth-last ⋆ G A))
+        (okT-ext G G′ (length G) (λ j r → nth-app-l ⋆ G (A ∷ []) j r)
+                 (okTy-sound G A (∧-snd {gwf Γ} w)))
+  where
+  G = tyList Γ
+  G′ = G ++ (A ∷ [])
 
 ------------------------------------------------------------------------
--- Lookups in a diagram.
+-- The explicit cone over a diagram G, apex n, p_x at level n + 1 + x.
 
-at-new : ∀ d e → at (d ,, e) (lenD d) ≡ e
-at-new d e rewrite eq-refl (lenD d) = refl
-
-at-old : ∀ d e i → T (i <ℕ lenD d) → at (d ,, e) i ≡ at d i
-at-old d e i p rewrite lt-neq i (lenD d) p = refl
-
-isObj-sound : ∀ e → T (isObj e) → e ≡ obj
-isObj-sound obj _ = refl
-
-isAr-sound : ∀ a b e → T (isAr a b e) → e ≡ ar a b
-isAr-sound a b (ar a′ b′) p
-  rewrite ==ℕ-sound a a′ (∧-fst p) | ==ℕ-sound b b′ (∧-snd p) = refl
-
-private
-  facts4 : ∀ x y z w → T (x ∧ y ∧ z ∧ w) → T x × T y × T z × T w
-  facts4 true true true true _ = tt , tt , tt , tt
-  facts4 false _ _ _ ()
-  facts4 true false _ _ ()
-  facts4 true true false _ ()
-  facts4 true true true false ()
-
-  facts8 : ∀ x y z w x′ y′ z′ w′ → T (x ∧ y ∧ z ∧ w ∧ x′ ∧ y′ ∧ z′ ∧ w′) →
-           T x × T y × T z × T w × T x′ × T y′ × T z′ × T w′
-  facts8 true true true true x′ y′ z′ w′ q with facts4 x′ y′ z′ w′ q
-  ... | a , b , c , d = tt , tt , tt , tt , a , b , c , d
-  facts8 false _ _ _ _ _ _ _ ()
-  facts8 true false _ _ _ _ _ _ ()
-  facts8 true true false _ _ _ _ _ ()
-  facts8 true true true false _ _ _ _ ()
-
--- What well-formedness says about the entry at level k of D.
-WfEnt : Dg → Nat → Ent → Set
-WfEnt D k obj          = ⊤
-WfEnt D k (ar a b)     = T (a <ℕ k) × T (b <ℕ k) × (at D a ≡ obj) × (at D b ≡ obj)
-WfEnt D k (tw a b f g) =
-  T (a <ℕ k) × T (b <ℕ k) × T (f <ℕ k) × T (g <ℕ k) ×
-  (at D a ≡ obj) × (at D b ≡ obj) × (at D f ≡ ar a b) × (at D g ≡ ar a b)
-
--- A prefix of D.
-data Pfx (D : Dg) : Dg → Set where
-  top  : Pfx D D
-  drop : ∀ {d e} → Pfx D (d ,, e) → Pfx D d
-
-pfx-le : ∀ {D d} → Pfx D d → T (lenD d <ℕ suc (lenD D))
-pfx-le {D} top = n<suc (lenD D)
-pfx-le {D} (drop {d} p) = <-trans (lenD d) (suc (lenD d)) (suc (lenD D)) (n<suc (lenD d)) (pfx-le p)
-
-pfx-lt : ∀ {D d e} → Pfx D (d ,, e) → T (lenD d <ℕ lenD D)
-pfx-lt p = pfx-le p
-
-pfx-at : ∀ {D d} → Pfx D d → ∀ j → T (j <ℕ lenD d) → at D j ≡ at d j
-pfx-at top j _ = refl
-pfx-at (drop {d} {e} p) j q =
-  trans (pfx-at p j (<-suc j (lenD d) q)) (at-old d e j q)
-
-pfx-ent : ∀ {D d e} → Pfx D (d ,, e) → at D (lenD d) ≡ e
-pfx-ent {D} {d} {e} p = trans (pfx-at p (lenD d) (n<suc (lenD d))) (at-new d e)
-
-pfx-wf : ∀ {D d} → Pfx D d → T (wf D) → T (wf d)
-pfx-wf top w = w
-pfx-wf (drop p) w = ∧-fst (pfx-wf p w)
-
--- Well-formedness at each level.
-wf-at : ∀ D → T (wf D) → ∀ {d e} → Pfx D (d ,, e) → WfEnt D (lenD d) e
-wf-at D w {d} {e} p = go e (∧-snd (pfx-wf p w))
-  where
-  k = lenD d
-  up : ∀ j → T (j <ℕ k) → at D j ≡ at d j
-  up j q = trans (pfx-at p j (<-suc j k q)) (at-old d e j q)
-  go : ∀ e′ → T (wfE d e′) → WfEnt D k e′
-  go obj _ = tt
-  go (ar a b) q with facts4 (a <ℕ k) (b <ℕ k) (isObj (at d a)) (isObj (at d b)) q
-  ... | qa , qb , oa , ob′ =
-    qa , qb , trans (up a qa) (isObj-sound _ oa) , trans (up b qb) (isObj-sound _ ob′)
-  go (tw a b f g) q
-    with facts8 (a <ℕ k) (b <ℕ k) (f <ℕ k) (g <ℕ k)
-                (isObj (at d a)) (isObj (at d b)) (isAr a b (at d f)) (isAr a b (at d g)) q
-  ... | qa , qb , qf , qg , oa , ob′ , af , ag =
-    qa , qb , qf , qg ,
-    trans (up a qa) (isObj-sound _ oa) , trans (up b qb) (isObj-sound _ ob′) ,
-    trans (up f qf) (isAr-sound a b _ af) , trans (up g qg) (isAr-sound a b _ ag)
-
--- Every level below |D| is the last level of a prefix.
-pfx-of : ∀ D j → T (j <ℕ lenD D) → Σ Dg (λ d → Σ Ent (λ e → Pfx D (d ,, e) × (lenD d ≡ j)))
-pfx-of D j q = go D top j q
-  where
-  go : ∀ d → Pfx D d → ∀ j → T (j <ℕ lenD d) → Σ Dg (λ d′ → Σ Ent (λ e → Pfx D (d′ ,, e) × (lenD d′ ≡ j)))
-  go (d ,, e) p j q with split j (lenD d) q
-  ... | inl r = go d (drop p) j r
-  ... | inr r = d , e , p , sym r
-
-wf-lvl : ∀ D → T (wf D) → ∀ j → T (j <ℕ lenD D) → WfEnt D j (at D j)
-wf-lvl D w j q with pfx-of D j q
-... | d , e , p , refl rewrite pfx-ent p = wf-at D w p
-
--- Lists of entries and expression contexts.
-len-ents : ∀ d → length (ents d) ≡ lenD d
-len-ents dε = refl
-len-ents (d ,, e) = trans (length-++ (ents d) (e ∷ [])) (trans (+-suc (length (ents d)) 0)
-                      (cong suc (trans (+-zero _) (len-ents d))))
-
-exOf-map : ∀ d → exOf d ≡ map toX (ents d)
-exOf-map dε = refl
-exOf-map (d ,, e) = trans (cong (_++ (toX e ∷ [])) (exOf-map d)) (sym (map-++ toX (ents d) (e ∷ [])))
-
-len-exOf : ∀ d → length (exOf d) ≡ lenD d
-len-exOf d = trans (cong length (exOf-map d)) (trans (length-map toX (ents d)) (len-ents d))
-
-nth-ents : ∀ d i → T (i <ℕ lenD d) → nth obj (ents d) i ≡ at d i
-nth-ents (d ,, e) i q with split i (lenD d) q
-... | inl r = trans (nth-app-l obj (ents d) (e ∷ []) i (subst (λ m → T (i <ℕ m)) (sym (len-ents d)) r))
-                (trans (nth-ents d i r) (sym (at-old d e i r)))
-... | inr refl = trans (nth-last obj (ents d) e (lenD d) (len-ents d)) (sym (at-new d e))
-
-nth-exOf : ∀ d i → T (i <ℕ lenD d) → nth ob (exOf d) i ≡ toX (at d i)
-nth-exOf d i q = trans (cong (λ E → nth ob E i) (exOf-map d))
-                   (trans (nth-map toX obj (ents d) i) (cong toX (nth-ents d i q)))
-
-------------------------------------------------------------------------
--- Evaluation of the cone cells (CaTTExp.Cones) for symbolic indices.
--- The fuel is kept symbolic so that only the needed layers unfold.
-
-evF-wh : ∀ n (K : ExCtx) c a b f g x pa →
-  nth ob K pa ≡ hom ob (v c) (v a) →
-  nth ob K x ≡ hom (hom ob (v a) (v b)) (v f) (v g) →
-  evF (6 + n) K (bn 0 (v pa) (v x)) ≡ whL (var c) (var a) (var pa) (var b) (var f) (var g) (var x)
-evF-wh n K c a b f g x pa e1 e5 rewrite e1 | e5 = refl
-
-tyE-wh : ∀ n (K : ExCtx) c a b f g x pa →
-  nth ob K pa ≡ hom ob (v c) (v a) →
-  nth ob K f ≡ hom ob (v a) (v b) →
-  nth ob K x ≡ hom (hom ob (v a) (v b)) (v f) (v g) →
-  tyF (3 + n) K (bn 0 (v pa) (v x)) ≡ hom (hom ob (v c) (v b)) (bn 0 (v pa) (v f)) (bn 0 (v pa) (v g))
-tyE-wh n K c a b f g x pa e1 e3 e5 rewrite e5 | e1 | e3 | e1 = refl
-
-evF-comp : ∀ n (K : ExCtx) c a p b x →
-  nth ob K p ≡ hom ob (v c) (v a) → nth ob K x ≡ hom ob (v a) (v b) →
-  evF (6 + n) K (bn 0 (v p) (v x)) ≡ comp (var c) (var a) (var p) (var b) (var x)
-evF-comp n K c a p b x ep ex rewrite ep | ex = refl
-
-evF-vc : ∀ n (K : ExCtx) c a b f g x pa pb pf →
-  nth ob K pa ≡ hom ob (v c) (v a) →
-  nth ob K f ≡ hom ob (v a) (v b) → nth ob K g ≡ hom ob (v a) (v b) →
-  nth ob K x ≡ hom (hom ob (v a) (v b)) (v f) (v g) →
-  nth ob K pf ≡ hom (hom ob (v c) (v b)) (v pb) (bn 0 (v pa) (v f)) →
-  evF (10 + n) K (bn 1 (v pf) (bn 0 (v pa) (v x)))
-  ≡ vcomp (var c) (var b) (var pb) (comp (var c) (var a) (var pa) (var b) (var f)) (var pf)
-          (comp (var c) (var a) (var pa) (var b) (var g))
-          (whL (var c) (var a) (var pa) (var b) (var f) (var g) (var x))
-evF-vc n K c a b f g x pa pb pf e1 e3 e4 e5 e6 =
-  cong₂ (λ U W → fst (binC 1 U W)) cPf cWh
-  where
-  tyAB : ∀ m → evTyF (8 + m) K (hom (hom ob (v c) (v b)) (bn 0 (v pa) (v f)) (bn 0 (v pa) (v g)))
-             ≡ arr (arr ⋆ (var c) (var b)) (comp (var c) (var a) (var pa) (var b) (var f))
-                   (comp (var c) (var a) (var pa) (var b) (var g))
-  tyAB m = cong₂ (arr (arr ⋆ (var c) (var b))) (evF-comp (1 + m) K c a pa b f e1 e3) (evF-comp (1 + m) K c a pa b g e1 e4)
-  cWh : cellF (9 + n) K (bn 0 (v pa) (v x)) ≡ (whL (var c) (var a) (var pa) (var b) (var f) (var g) (var x) , _)
-  cWh = cong₂ _,_ (evF-wh (2 + n) K c a b f g x pa e1 e5) (trans (cong (evTyF (8 + n) K) (tyE-wh 61 K c a b f g x pa e1 e3 e5)) (tyAB n))
-  cPf : cellF (9 + n) K (v pf) ≡ (var pf , _)
-  cPf = cong (var pf ,_) (trans (cong (evTyF (8 + n) K) e6)
-          (cong (λ t → arr (arr ⋆ (var c) (var b)) (var pb) t) (evF-comp (1 + n) K c a pa b f e1 e3)))
-
-------------------------------------------------------------------------
--- The explicit cone over a diagram (apex n, projection of level j at
--- level P j = n + 1 + j), as expressions and as CaTT types.
-
-module Proj (n : Nat) where
+module QM (G : List Ty) (n : Nat) where
   P : Nat → Nat
-  P j = suc (n + j)
+  P x = suc (n + x)
 
-  pr : Nat → Ex
-  pr j = v (P j)
+  open Proj n P public using (projN; pcs; pc; Tc; pv; dim-projN; len-pcs; pcs-ok; tgt-pc; chain-comp)
 
-  projX : Nat → Ent → ExTy
-  projX k obj          = hom ob (v n) (v k)
-  projX k (ar a b)     = hom (hom ob (v n) (v b)) (pr b) (bn 0 (pr a) (v k))
-  projX k (tw a b f g) =
-    hom (hom (hom ob (v n) (v b)) (pr b) (bn 0 (pr a) (v g))) (pr g)
-        (bn 1 (pr f) (bn 0 (pr a) (v k)))
+  cellOf : Nat → Cell
+  cellOf x = var x , nth ⋆ G x
 
-  cmp : Nat → Nat → Nat → Tm
-  cmp a b x = comp (var n) (var a) (var (P a)) (var b) (var x)
+  projEnt : Nat → Ty
+  projEnt x = projN (var x) (nth ⋆ G x)
 
-  projP : Nat → Ent → Ty
-  projP k obj          = arr ⋆ (var n) (var k)
-  projP k (ar a b)     = arr (arr ⋆ (var n) (var b)) (var (P b)) (cmp a b k)
-  projP k (tw a b f g) =
-    arr (arr (arr ⋆ (var n) (var b)) (var (P b)) (cmp a b g)) (var (P g))
-        (vcomp (var n) (var b) (var (P b)) (cmp a b f) (var (P f)) (cmp a b g)
-               (whL (var n) (var a) (var (P a)) (var b) (var f) (var g) (var k)))
+  pl : Nat → Nat → List Ty
+  pl k zero    = []
+  pl k (suc m) = projEnt k ∷ pl (suc k) m
 
-  projL : Nat → List Ent → ExCtx
-  projL k []       = []
-  projL k (e ∷ es) = projX k e ∷ projL (suc k) es
+  QL : List Ty
+  QL = G ++ (⋆ ∷ pl 0 n)
 
-  -- The cone context: the diagram, the apex, the projections of the
-  -- levels of d.
-  Qpre : Dg → Dg → Ctx
-  Qpre D dε       = pureOf D ▸ ⋆
-  Qpre D (d ,, e) = Qpre D d ▸ projP (lenD d) e
-
-coneQ : Dg → Ctx
-coneQ D = Proj.Qpre (lenD D) D D
-
-------------------------------------------------------------------------
--- The kernel's side: CaTTExp.Cones' cone over the diagram evaluates to
--- the explicit cone.
-
-private
-  ++-[] : ∀ {A : Set} (xs : List A) → xs ++ [] ≡ xs
-  ++-[] []       = refl
-  ++-[] (x ∷ xs) = cong (x ∷_) (++-[] xs)
-
-  lt-self : ∀ k m → T (k <ℕ k + suc m)
-  lt-self zero    m = tt
-  lt-self (suc k) m = lt-self k m
-
-  go-app : ∀ K xs ys acc → evCtxGo K (xs ++ ys) acc ≡ evCtxGo K ys (evCtxGo K xs acc)
-  go-app K []       ys acc = refl
-  go-app K (x ∷ xs) ys acc = go-app K xs ys (acc ▸ evTy K x)
-
-  evTy-toX : ∀ K e → evTy K (toX e) ≡ toP e
-  evTy-toX K obj          = refl
-  evTy-toX K (ar a b)     = refl
-  evTy-toX K (tw a b f g) = refl
-
-  go-E : ∀ K d → evCtxGo K (exOf d) ε ≡ pureOf d
-  go-E K dε       = refl
-  go-E K (d ,, e) =
-    trans (go-app K (exOf d) (toX e ∷ []) ε)
-          (cong₂ _▸_ (go-E K d) (evTy-toX K e))
-
-  toExCtx-ok : ∀ d → toExCtx (pureOf d) ≡ just (exOf d)
-  toExCtx-ok dε = refl
-  toExCtx-ok (d ,, obj)        rewrite toExCtx-ok d = refl
-  toExCtx-ok (d ,, ar a b)     rewrite toExCtx-ok d = refl
-  toExCtx-ok (d ,, tw a b f g) rewrite toExCtx-ok d = refl
-
-module ConeSide (D : Dg) (w : T (wf D)) where
-  E : ExCtx
-  E = exOf D
-
-  N : Nat
-  N = length E
-
-  module C = ConeOf E
-  open Proj N
+  Qc : Ctx
+  Qc = ctxGo ε QL
 
   private
-    -- n = |D|, as the bound for levels.
-    toN : ∀ {i} → T (i <ℕ lenD D) → T (i <ℕ N)
-    toN {i} q = subst (λ m → T (i <ℕ m)) (sym (len-exOf D)) q
+    nth-pl : ∀ k m x → T (x <ℕ m) → nth ⋆ (pl k m) x ≡ projEnt (k + x)
+    nth-pl k (suc m) zero    _ = cong projEnt (sym (+-zero k))
+    nth-pl k (suc m) (suc x) p = trans (nth-pl (suc k) m x p) (cong projEnt (sym (+-suc k x)))
+    nth-pl k zero    x       p = lt0 x p
 
-  -- One step of ConeOf.build: the projection type of a level, given
-  -- the lookups it uses.
-  pt-ar : ∀ K k a b → nth ob E k ≡ hom ob (v a) (v b) →
-          nth ob K (P b) ≡ hom ob (v N) (v b) →
-          C.projTy K k (hom ob (v a) (v b)) ≡ projX k (ar a b)
-  pt-ar K k a b ek eb rewrite ek | eb = refl
+    len-pl : ∀ k m → length (pl k m) ≡ m
+    len-pl k zero    = refl
+    len-pl k (suc m) = cong suc (len-pl (suc k) m)
 
-  pt-tw : ∀ K k a b f g → nth ob E k ≡ hom (hom ob (v a) (v b)) (v f) (v g) →
-          nth ob E f ≡ hom ob (v a) (v b) →
-          nth ob K (P g) ≡ projX g (ar a b) →
-          C.projTy K k (hom (hom ob (v a) (v b)) (v f) (v g)) ≡ projX k (tw a b f g)
-  pt-tw K k a b f g ek ef eg rewrite ek | ef | eg = refl
+  module _ (hn : length G ≡ n) where
+    QL-G : ∀ i → T (i <ℕ n) → nth ⋆ QL i ≡ nth ⋆ G i
+    QL-G i p = nth-app-l ⋆ G _ i (subst (λ m → T (i <ℕ m)) (sym hn) p)
 
-  pt : ∀ K k e → T (k <ℕ lenD D) → at D k ≡ e → WfEnt D k e →
-       (∀ j → T (j <ℕ k) → nth ob K (P j) ≡ projX j (at D j)) →
-       C.projTy K k (toX e) ≡ projX k e
-  pt K k obj q ek _ hp = refl
-  pt K k (ar a b) q ek (qa , qb , oa , ob′) hp =
-    pt-ar K k a b (trans (nth-exOf D k q) (cong toX ek))
-                  (trans (hp b qb) (cong (projX b) ob′))
-  pt K k (tw a b f g) q ek (qa , qb , qf , qg , oa , ob′ , af , ag) hp =
-    pt-tw K k a b f g (trans (nth-exOf D k q) (cong toX ek))
-                      (trans (nth-exOf D f (<-trans f k (lenD D) qf q)) (cong toX af))
-                      (trans (hp g qg) (cong (projX g) ag))
+    QL-c : nth ⋆ QL n ≡ ⋆
+    QL-c = trans (cong (nth ⋆ QL) (sym (trans (+-zero (length G)) hn))) (nth-app-r ⋆ G _ 0)
 
-  build-ok : ∀ k K es →
-    (∀ j → T (j <ℕ length es) → nth obj es j ≡ at D (k + j)) →
-    k + length es ≡ lenD D →
-    length K ≡ suc (N + k) →
-    (∀ j → T (j <ℕ k) → nth ob K (P j) ≡ projX j (at D j)) →
-    C.build k K (map toX es) ≡ K ++ projL k es
-  build-ok k K [] he hl hK hp = sym (++-[] K)
-  build-ok k K (e ∷ es) he hl hK hp =
-    trans (cong (λ X → C.build (suc k) (K ++ (X ∷ [])) (map toX es)) step)
-          (trans (build-ok (suc k) K′ es he′ hl′ hK′ hp′) (++-assoc K (projX k e ∷ []) (projL (suc k) es)))
+    QL-P : ∀ x → T (x <ℕ n) → nth ⋆ QL (P x) ≡ projEnt x
+    QL-P x p =
+      trans (cong (nth ⋆ QL) (sym (trans (+-suc (length G) x) (cong (λ m → suc (m + x)) hn))))
+            (trans (nth-app-r ⋆ G _ (suc x)) (nth-pl 0 n x p))
+
+    len-QL : length QL ≡ suc (n + n)
+    len-QL = trans (length-++ G _) (trans (cong₂ _+_ hn (cong suc (len-pl 0 n))) (+-suc n n))
+
+------------------------------------------------------------------------
+-- Cells and their iterated sources.
+
+private
+  srcN-srcC : ∀ k c → srcN k (srcC c) ≡ srcC (srcN k c)
+  srcN-srcC zero    c = refl
+  srcN-srcC (suc k) c = srcN-srcC k (srcC c)
+
+module PcsLemmas (n : Nat) (P : Nat → Nat) where
+  open Proj n P
+
+  pcs-pos : ∀ d → T (0 <ℕ dimC d) → pcs (snd d) ≡ pc (srcC d) ∷ pcs (snd (srcC d))
+  pcs-pos (y , arr B s t) _ = refl
+  pcs-pos (y , ⋆) ()
+
+  pcs-zero : ∀ d → dimC d ≡ 0 → pcs (snd d) ≡ []
+  pcs-zero (y , ⋆) _ = refl
+  pcs-zero (y , arr B s t) ()
+
+  -- The projections of the iterated sources: pcs of the k-fold source.
+  pcs-step : ∀ k c → T (0 <ℕ dimC (srcN k c)) →
+             pcs (snd (srcN k c)) ≡ pc (srcN (suc k) c) ∷ pcs (snd (srcN (suc k) c))
+  pcs-step k c p =
+    trans (pcs-pos (srcN k c) p)
+          (cong (λ d → pc d ∷ pcs (snd d)) (sym (srcN-srcC k c)))
+
+------------------------------------------------------------------------
+-- Scoping is monotone.
+
+private
+  scE-mono : ∀ {a b} → Le a b → ∀ {e} → ScE a e → ScE b e
+  scE-mono {a} {b} q (sv {j} p) = sv (le-lt j b (le-trans (suc j) a b (lt-le j a p) q))
+  scE-mono q (sb su sw) = sb (scE-mono q su) (scE-mono q sw)
+
+  scTy-mono : ∀ {a b} → Le a b → ∀ X → ScTy a X → ScTy b X
+  scTy-mono q ob          _              = tt
+  scTy-mono q (hom X s t) (sX , ss , st) = scTy-mono q X sX , scE-mono q ss , scE-mono q st
+
+------------------------------------------------------------------------
+-- The kernel side: ConeOf's cone over a well-formed globular diagram
+-- evaluates to the explicit cone.
+
+module KS (G : List Ty) (wf : WF G) where
+  E : ExCtx
+  E = map exTy G
+
+  module C = ConeOf E
+
+  n : Nat
+  n = length E
+
+  hn : length G ≡ n
+  hn = sym (length-map exTy G)
+
+  open QM G n
+  open PcsLemmas n P
+
+  nth-E : ∀ i → nth ob E i ≡ exTy (nth ⋆ G i)
+  nth-E i = nth-map exTy ⋆ G i
+
+  wf′ : ∀ i → T (i <ℕ n) → OkT G i (nth ⋆ G i)
+  wf′ i p = wf i (subst (λ m → T (i <ℕ m)) (sym hn) p)
+
+  ------------------------------------------------------------------
+  -- The layout of ConeOf.build.
+
+  private
+    lt-snoc′ : ∀ (K : ExCtx) a j → T (j <ℕ length K) → T (j <ℕ length (K ++ (a ∷ [])))
+    lt-snoc′ K a j p = subst (λ m → T (j <ℕ m)) (sym (snoc-len K a)) (<-suc j (length K) p)
+
+  len-build : ∀ x K As → length (C.build x K As) ≡ length K + length As
+  len-build x K []       = sym (+-zero (length K))
+  len-build x K (A ∷ As) =
+    trans (len-build (suc x) (K ++ (C.projTy K x A ∷ [])) As)
+          (trans (cong (_+ length As) (snoc-len K _)) (sym (+-suc (length K) (length As))))
+
+  build-pre : ∀ x K As j → T (j <ℕ length K) → nth ob (C.build x K As) j ≡ nth ob K j
+  build-pre x K []       j p = refl
+  build-pre x K (A ∷ As) j p =
+    trans (build-pre (suc x) (K ++ (a ∷ [])) As j (lt-snoc′ K a j p)) (nth-app-l ob K (a ∷ []) j p)
+    where a = C.projTy K x A
+
+  build-new : ∀ x K As m → T (m <ℕ length As) →
+    Σ ExCtx (λ K′ → (length K′ ≡ length K + m) ×
+                    (∀ j → T (j <ℕ length K′) → nth ob K′ j ≡ nth ob (C.build x K As) j) ×
+                    (nth ob (C.build x K As) (length K + m) ≡ C.projTy K′ (x + m) (nth ob As m)))
+  build-new x K (A ∷ As) zero _ =
+    K , sym (+-zero (length K)) ,
+    (λ j p → sym (build-pre x K (A ∷ As) j p)) ,
+    trans (cong (nth ob (C.build (suc x) K₁ As)) (+-zero (length K)))
+      (trans (build-pre (suc x) K₁ As (length K) (subst (λ m → T (length K <ℕ m)) (sym (snoc-len K a)) (n<suc (length K))))
+        (trans (nth-last ob K a) (cong (λ y → C.projTy K y A) (sym (+-zero x)))))
     where
-    q : T (k <ℕ lenD D)
-    q = subst (λ m → T (k <ℕ m)) hl (lt-self k (length es))
-    ek : at D k ≡ e
-    ek = sym (trans (he 0 tt) (cong (at D) (+-zero k)))
-    step : C.projTy K k (toX e) ≡ projX k e
-    step = pt K k e q ek (subst (WfEnt D k) ek (wf-lvl D w k q)) hp
-    K′ = K ++ (projX k e ∷ [])
-    he′ : ∀ j → T (j <ℕ length es) → nth obj es j ≡ at D (suc k + j)
-    he′ j r = trans (he (suc j) r) (cong (at D) (+-suc k j))
-    hl′ : suc k + length es ≡ lenD D
-    hl′ = trans (sym (+-suc k (length es))) hl
-    hK′ : length K′ ≡ suc (N + suc k)
-    hK′ = trans (length-++ K (projX k e ∷ []))
-            (trans (+-suc (length K) 0)
-              (trans (cong suc (trans (+-zero (length K)) hK)) (cong suc (sym (+-suc N k)))))
-    hp′ : ∀ j → T (j <ℕ suc k) → nth ob K′ (P j) ≡ projX j (at D j)
-    hp′ j r with split j k r
-    ... | inl s = trans (nth-app-l ob K (projX k e ∷ []) (P j)
-                          (subst (λ m → T (P j <ℕ m)) (sym hK) (lt-add N s)))
-                        (hp j s)
-    ... | inr refl = trans (nth-last ob K (projX k e) (P k) hK) (cong (projX k) (sym ek))
+    a = C.projTy K x A
+    K₁ = K ++ (a ∷ [])
+  build-new x K (A ∷ As) (suc m) p with build-new (suc x) (K ++ (C.projTy K x A ∷ [])) As m p
+  ... | K′ , lK , pre , ent =
+    K′ , trans lK (trans (cong (_+ m) (snoc-len K _)) (sym (+-suc (length K) m))) , pre ,
+    trans (cong (nth ob (C.build (suc x) (K ++ (C.projTy K x A ∷ [])) As))
+                (trans (+-suc (length K) m) (cong (_+ m) (sym (snoc-len K (C.projTy K x A))))))
+          (trans ent (cong (λ y → C.projTy K′ y (nth ob As m)) (sym (+-suc x m))))
+  build-new x K [] m p = lt0 m p
 
-  -- The cone context of ConeOf, as a list.
+  K₀ : ExCtx
+  K₀ = E ++ (ob ∷ [])
+
   Kc : ExCtx
-  Kc = (E ++ (ob ∷ [])) ++ projL 0 (ents D)
+  Kc = C.cone
 
-  cone-list : C.cone ≡ Kc
-  cone-list =
-    trans (cong (C.build 0 (E ++ (ob ∷ []))) (exOf-map D))
-          (build-ok 0 (E ++ (ob ∷ [])) (ents D)
-             (λ j r → nth-ents D j (subst (λ m → T (j <ℕ m)) (len-ents D) r))
-             (len-ents D)
-             (trans (length-++ E (ob ∷ [])) (+-suc N 0))
-             (λ j ()))
+  len-Kc : length Kc ≡ suc (n + n)
+  len-Kc = trans (len-build 0 K₀ E) (cong (_+ n) (snoc-len E ob))
 
-  nth-projL : ∀ k es j → T (j <ℕ length es) → nth ob (projL k es) j ≡ projX (k + j) (nth obj es j)
-  nth-projL k (e ∷ es) zero    _ = cong (λ m → projX m e) (sym (+-zero k))
-  nth-projL k (e ∷ es) (suc j) r = trans (nth-projL (suc k) es j r) (cong (λ m → projX m (nth obj es j)) (sym (+-suc k j)))
+  kc-E : ∀ i → T (i <ℕ n) → nth ob Kc i ≡ exTy (nth ⋆ G i)
+  kc-E i p = trans (build-pre 0 K₀ E i (lt-snoc′ E ob i p)) (trans (nth-app-l ob E (ob ∷ []) i p) (nth-E i))
 
-  kc-diag : ∀ i → T (i <ℕ lenD D) → nth ob Kc i ≡ toX (at D i)
-  kc-diag i q =
-    trans (nth-app-l ob (E ++ (ob ∷ [])) (projL 0 (ents D)) i
-             (subst (λ m → T (i <ℕ m)) (sym (trans (length-++ E (ob ∷ [])) (+-suc N 0)))
-                    (<-suc i (N + 0) (subst (λ m → T (i <ℕ m)) (sym (+-zero N)) (toN q)))))
-          (trans (nth-app-l ob E (ob ∷ []) i (toN q)) (nth-exOf D i q))
+  kc-c : nth ob Kc n ≡ ob
+  kc-c = trans (build-pre 0 K₀ E n (subst (λ m → T (n <ℕ m)) (sym (snoc-len E ob)) (n<suc n)))
+               (nth-last ob E ob)
 
-  kc-proj : ∀ j → T (j <ℕ lenD D) → nth ob Kc (P j) ≡ projX j (at D j)
-  kc-proj j q =
-    trans (cong (nth ob Kc) (sym idx))
-          (trans (nth-app-r ob (E ++ (ob ∷ [])) (projL 0 (ents D)) j)
-                 (trans (nth-projL 0 (ents D) j (subst (λ m → T (j <ℕ m)) (sym (len-ents D)) q))
-                        (cong (projX j) (nth-ents D j q))))
+  kc-P : ∀ x → T (x <ℕ n) →
+    Σ ExCtx (λ K′ → (length K′ ≡ P x) × (∀ j → T (j <ℕ length K′) → nth ob K′ j ≡ nth ob Kc j) ×
+                    (nth ob Kc (P x) ≡ C.projTy K′ x (exTy (nth ⋆ G x))))
+  kc-P x p with build-new 0 K₀ E x p
+  ... | K′ , lK , pre , ent =
+    K′ , trans lK (cong (_+ x) (snoc-len E ob)) , pre ,
+    trans (cong (nth ob Kc) (cong (_+ x) (sym (snoc-len E ob)))) (trans ent (cong (C.projTy K′ x) (nth-E x)))
+
+  ------------------------------------------------------------------
+  -- The intended cells: variable i is the cell (var i, QL_i).
+
+  semV : Nat → Cell
+  semV i = var i , nth ⋆ QL i
+
+  open Main Kc semV
+
+  x<P : ∀ x → T (x <ℕ P x)
+  x<P x = CaTTExp.Lim.ConesEval.le-+l n x
+
+  ------------------------------------------------------------------
+  -- Diagram entries.
+
+  repD : ∀ i y {A} → OkT G i A → Le i n → Rep (exTy A) (var y , A)
+  repD i y ok⋆ _ = refl
+  repD i y (okA {A} {s} {t} qs qt es et ok) le =
+    (gv s , gv t) ,
+    (cong (var s ,_) (trans (QL-G hn s (lt s qs)) es) , cong (var t ,_) (trans (QL-G hn t (lt t qt)) et)) ,
+    tt , repD i s ok le
     where
-    idx : length (E ++ (ob ∷ [])) + j ≡ P j
-    idx = cong (_+ j) (trans (length-++ E (ob ∷ [])) (trans (+-suc N 0) (cong suc (+-zero N))))
+    lt : ∀ j → T (j <ℕ i) → T (j <ℕ n)
+    lt j q = le-lt j n (le-trans (suc j) i n (lt-le j i q) le)
 
-  -- Each projection type evaluates to the explicit one.
-  evP : ∀ k e → T (k <ℕ lenD D) → at D k ≡ e → WfEnt D k e → evTy Kc (projX k e) ≡ projP k e
-  evP k obj q ek _ = refl
-  evP k (ar a b) q ek (qa , qb , oa , ob′) =
-    cong (arr (arr ⋆ (var N) (var b)) (var (P b)))
-         (evF-comp 57 Kc N a (P a) b k
-            (trans (kc-proj a qa′) (cong (projX a) oa))
-            (trans (kc-diag k q) (cong toX ek)))
-    where qa′ = <-trans a k (lenD D) qa q
-  evP k (tw a b f g) q ek (qa , qb , qf , qg , oa , ob′ , af , ag) =
-    cong₂ (λ s t → arr (arr (arr ⋆ (var N) (var b)) (var (P b)) s) (var (P g)) t)
-          (evF-comp 56 Kc N a (P a) b g epa eg)
-          (evF-vc 53 Kc N a b f g k (P a) (P b) (P f) epa ef eg ek′ epf)
+  scD : ∀ i {A} → OkT G i A → ScTy i (exTy A)
+  scD i ok⋆                  = tt
+  scD i (okA qs qt _ _ ok)   = scD i ok , sv qs , sv qt
+
+  dim-exTy : ∀ i {A} → OkT G i A → dimE (exTy A) ≡ dim A
+  dim-exTy i ok⋆                = refl
+  dim-exTy i (okA _ _ _ _ ok)   = cong suc (dim-exTy i ok)
+
+  ------------------------------------------------------------------
+  -- Iterated sources in the diagram are variables.
+
+  σ-lem : ∀ k x → T (x <ℕ n) → Le k (dim (nth ⋆ G x)) →
+    Σ Nat (λ y → (srcIter E k (v x) ≡ v y) × (srcN k (cellOf x) ≡ cellOf y) × Le (k + y) x × T (y <ℕ n))
+  σ-lem zero    x p q = x , refl , refl , le-refl x , p
+  σ-lem (suc k) x p q = σ-step (nth ⋆ G x) refl (wf′ x p) q
     where
-    lt : ∀ x → T (x <ℕ k) → T (x <ℕ lenD D)
-    lt x r = <-trans x k (lenD D) r q
-    epa = trans (kc-proj a (lt a qa)) (cong (projX a) oa)
-    ef  = trans (kc-diag f (lt f qf)) (cong toX af)
-    eg  = trans (kc-diag g (lt g qg)) (cong toX ag)
-    ek′ = trans (kc-diag k q) (cong toX ek)
-    epf = trans (kc-proj f (lt f qf)) (cong (projX f) af)
+    σ-step : ∀ A → nth ⋆ G x ≡ A → OkT G x A → Le (suc k) (dim A) →
+      Σ Nat (λ y → (srcIter E (suc k) (v x) ≡ v y) × (srcN (suc k) (cellOf x) ≡ cellOf y) ×
+                   Le (suc k + y) x × T (y <ℕ n))
+    σ-step ⋆ ex ok q′ = lt0 k q′
+    σ-step (arr B (var s) (var t)) ex (okA qs qt es et ok) q′
+      with σ-lem k s (<-trans s x n qs p) (subst (λ D → Le k (dim D)) (sym es) q′)
+    ... | y , e1 , e2 , e3 , e4 =
+      y ,
+      trans (cong (λ X → srcIter E k (srcE X)) (trans (nth-E x) (cong exTy ex))) e1 ,
+      trans (cong (λ D → srcN k (srcC (var x , D))) ex) (trans (cong (λ D → srcN k (var s , D)) (sym es)) e2) ,
+      le-trans (suc (k + y)) (suc s) x e3 (lt-le s x qs) ,
+      e4
 
-  projL-snoc : ∀ k xs x → projL k (xs ++ (x ∷ [])) ≡ projL k xs ++ (projX (k + length xs) x ∷ [])
-  projL-snoc k []       x = cong (λ m → projX m x ∷ []) (sym (+-zero k))
-  projL-snoc k (y ∷ xs) x =
-    cong (projX k y ∷_) (trans (projL-snoc (suc k) xs x)
-      (cong (λ m → projL (suc k) xs ++ (projX m x ∷ [])) (sym (+-suc k (length xs)))))
+  ------------------------------------------------------------------
+  -- The long side over x is a composable chain with cell T_x.
 
-  go-P : ∀ d → Pfx D d → evCtxGo Kc (projL 0 (ents d)) (pureOf D ▸ ⋆) ≡ Qpre D d
-  go-P dε p = refl
-  go-P (d ,, e) p =
-    trans (cong (λ L → evCtxGo Kc L (pureOf D ▸ ⋆)) (projL-snoc 0 (ents d) e))
-      (trans (go-app Kc (projL 0 (ents d)) (projX (length (ents d)) e ∷ []) (pureOf D ▸ ⋆))
-        (cong₂ _▸_ (go-P d (drop p))
-          (trans (cong (λ m → evTy Kc (projX m e)) (len-ents d))
-                 (evP (lenD d) e (pfx-lt p) (pfx-ent p)
-                      (subst (WfEnt D (lenD d)) (pfx-ent p) (wf-lvl D w (lenD d) (pfx-lt p)))))))
+  module Long (x : Nat) (px : T (x <ℕ n)) where
+    c : Cell
+    c = cellOf x
 
-  cone-ev : evCtx C.cone ≡ Qpre D D
-  cone-ev =
-    trans (cong (λ K → evCtxGo K K ε) cone-list)
-      (trans (go-app Kc (E ++ (ob ∷ [])) (projL 0 (ents D)) ε)
-        (trans (cong (evCtxGo Kc (projL 0 (ents D)))
-                     (trans (go-app Kc E (ob ∷ []) ε) (cong (_▸ ⋆) (go-E Kc D))))
-               (go-P D top)))
+    m : Nat
+    m = dim (nth ⋆ G x)
 
-  -- The kernel's cone shape of the diagram.
-  shape-ok : coneShape (pureOf D) ≡ just (Qpre D D)
-  shape-ok rewrite toExCtx-ok D = cong just cone-ev
+    Inv : Nat → Ex → Set
+    Inv j acc = Good acc × (sem acc ≡ chainF (pcs (snd (srcN (m ∸ j) c))) c) × ScE (P x) acc
+
+    private
+      dsN : ∀ k → dimC (srcN k c) ≡ m ∸ k
+      dsN k = dim-srcN k c
+
+    step : ∀ j acc → T (j <ℕ m) → Inv j acc → Inv (suc j) (bn j (C.pE (srcIter E (m ∸ j) (v x))) acc)
+    step j acc jm (gacc , eacc , sacc) with σ-lem (m ∸ j) x px (∸-le′ m j)
+    ... | y , e1 , e2 , e3 , e4 =
+      subst (λ e → Inv (suc j) (bn j (C.pE e) acc)) (sym e1)
+        (good , esem , sb (sv (lt-add n {y} {x} yx)) sacc)
+      where
+      d = srcN (m ∸ j) c
+      V = chainF (pcs (snd d)) c
+      k = m ∸ suc j
+      ek : m ∸ j ≡ suc k
+      ek = ∸-step m j jm
+      yx : T (y <ℕ x)
+      yx = le-lt y x (le-trans (suc y) (suc (k + y)) x (CaTTExp.Lim.ConesEval.le-+l k y)
+                               (subst (λ a → Le (a + y) x) ek e3))
+      dd : dimC d ≡ j
+      dd = trans (dsN (m ∸ j)) (∸-∸ m j (lt-le j m jm ▹ λ q → le-trans j (suc j) m (le-suc j) q))
+        where
+        _▹_ : ∀ {A B : Set} → A → (A → B) → B
+        a ▹ f = f a
+      spy : sem (v (P y)) ≡ pc d
+      spy = trans (cong (var (P y) ,_) (QL-P hn y e4)) (cong pc (sym e2))
+      okV : ChainOK (pcs (snd d)) m
+      okV = pcs-ok (snd d) m (subst (λ a → T (a <ℕ m)) (sym dd) jm)
+      dV : dimC V ≡ m
+      dV = chain-dim (pcs (snd d)) c okV
+      lenV : lenL (pcs (snd d)) ≡ j
+      lenV = trans (len-pcs (snd d)) dd
+      esem : sem (bn j (v (P y)) acc) ≡ chainF (pcs (snd (srcN (m ∸ suc j) c))) c
+      esem =
+        trans (cong₂ (CaTTExp.Lim.ConeCells.bcell j) spy eacc)
+          (trans (cong (λ l → CaTTExp.Lim.ConeCells.bcell l (pc d) V) (sym lenV))
+            (sym (trans (cong (λ ps → chainF ps c)
+                              (pcs-step k c (subst (λ a → T (0 <ℕ a)) (sym (dsN k)) (∸-pos-lt))))
+                        (cong (λ d′ → chainF (pc d′ ∷ pcs (snd d′)) c) (cong (λ a → srcN a c) (sym ek))))))
+        where
+        ∸-pos-lt : T (0 <ℕ m ∸ k)
+        ∸-pos-lt = subst (λ a → T (0 <ℕ a)) (sym (∸-∸ m (suc j) (lt-le j m jm))) tt
+      cmp : Comp j (pc d) V
+      cmp = trans (cong (λ a → CaTTExp.Lim.ConeCells.tgtN (a ∸ j) (pc d))
+                        (trans (dim-projN (fst d) (snd d)) (cong suc dd)))
+              (trans (cong (λ a → CaTTExp.Lim.ConeCells.tgtN a (pc d)) (sk∸k j))
+                (trans (chain-comp (m ∸ j) c (le-lt′))
+                       (cong (λ a → srcN (a ∸ j) V) (sym dV))))
+        where
+        y′ = fst d
+        sk∸k : ∀ k → suc k ∸ k ≡ 1
+        sk∸k zero    = refl
+        sk∸k (suc k) = sk∸k k
+        le-lt′ : T ((m ∸ j) <ℕ suc (dimC c))
+        le-lt′ = ∸-le′ m j
+      good : Good (bn j (v (P y)) acc)
+      good = gb (gv (P y)) gacc
+               (subst (λ e → T (j <ℕ dimC e)) (sym spy)
+                      (subst (λ a → T (j <ℕ a)) (sym (trans (dim-projN (fst d) (snd d)) (cong suc dd))) (n<suc j)))
+               (subst (λ e → T (j <ℕ dimC e)) (sym eacc) (subst (λ a → T (j <ℕ a)) (sym dV) jm))
+               (subst₂ (Comp j) (sym spy) (sym eacc) cmp)
+
+    private
+      antisym : ∀ a b → Le a b → Le b a → a ≡ b
+      antisym zero    zero    _ _ = refl
+      antisym (suc a) (suc b) p q = cong suc (antisym a b p q)
+      antisym zero    (suc b) _ q = lt0 b q
+      antisym (suc a) zero    p _ = lt0 a p
+
+      nle-lt : ∀ a b → (a <ℕ suc b) ≡ false → T (b <ℕ a)
+      nle-lt zero    b       ()
+      nle-lt (suc a) zero    _ = tt
+      nle-lt (suc a) (suc b) e = nle-lt a b e
+
+    loop : ∀ f j acc → Le j m → Le m (j + f) → Inv j acc → Inv m (C.longGo x m f j acc)
+    loop zero    j acc p q inv =
+      subst (λ a → Inv a acc) (antisym j m p (subst (λ a → Le m a) (+-zero j) q)) inv
+    loop (suc f) j acc p q inv with m <ℕ suc j in e
+    ... | true  = subst (λ a → Inv a acc) (antisym j m p (subst T (sym e) tt)) inv
+    ... | false =
+      loop f (suc j) _ (lt-le j m (nle-lt m j e)) (subst (λ a → Le m a) (+-suc j f) q)
+           (step j acc (nle-lt m j e) inv)
+
+    init : Inv 0 (v x)
+    init = gv x ,
+           trans (cong (var x ,_) (QL-G hn x px))
+                 (sym (cong (λ ps → chainF ps c) (pcs-zero (srcN m c) (trans (dsN m) (∸-self m))))) ,
+           sv (x<P x)
+
+    -- The kernel's long side.
+    LS : Ex
+    LS = C.longSide x (exTy (nth ⋆ G x))
+
+    ls-ok : T (0 <ℕ m) → Inv m LS
+    ls-ok pm =
+      subst (λ M → Inv m (C.longGo x M M 1 (bn 0 (C.pE (srcIter E M (v x))) (v x))))
+            (sym (dim-exTy x (wf′ x px)))
+            (loop m 1 _ (lt-le 0 m pm) (le-suc m) (step 0 (v x) pm init))
+
+    ls-sem : (pm : T (0 <ℕ m)) → sem LS ≡ Tc c
+    ls-sem pm = trans (fst (snd (ls-ok pm))) (cong (λ a → chainF (pcs (snd (srcN a c))) c) (∸-self m))
+
+  ------------------------------------------------------------------
+  -- Projection entries, by strong induction.
+
+  RP : Nat → Set
+  RP x = Rep (nth ob Kc (P x)) (semV (P x)) × ScTy (P x) (nth ob Kc (P x))
+
+  private
+    n<P : ∀ x → T (n <ℕ P x)
+    n<P x = le-add n x
+
+    P-mono : ∀ t x → T (t <ℕ x) → T (P t <ℕ P x)
+    P-mono t x q = lt-add n {t} {x} q
+
+  repP : ∀ N x → T (x <ℕ N) → T (x <ℕ n) → RP x
+  repP zero    x q _  = lt0 x q
+  repP (suc N) x q px with kc-P x px
+  ... | K′ , lK , pre , ent =
+    subst (λ X → Rep X (semV (P x)) × ScTy (P x) X) (sym ent)
+      (subst (λ D → Rep (C.projTy K′ x (exTy (nth ⋆ G x))) (var (P x) , D) × ScTy (P x) (C.projTy K′ x (exTy (nth ⋆ G x))))
+             (sym (QL-P hn x px))
+             (helper refl (wf′ x px)))
+    where
+    helper : ∀ {A} → nth ⋆ G x ≡ A → OkT G x A →
+      Rep (C.projTy K′ x (exTy A)) (var (P x) , projN (var x) A) × ScTy (P x) (C.projTy K′ x (exTy A))
+    helper ex ok⋆ =
+      ((gv n , gv x) , (cong (var n ,_) (QL-c hn) , cong (var x ,_) (trans (QL-G hn x px) ex)) , tt , refl) ,
+      (tt , sv (n<P x) , sv (x<P x))
+    helper {arr B (var s) (var t)} ex (okA qs qt es et ok) =
+      ((gv (P t) , gLS) , (es1 , els) , tt , repT) , (scT , sv (P-mono t x qt) , sLS)
+      where
+      A = arr B (var s) (var t)
+      pt : T (t <ℕ n)
+      pt = <-trans t x n qt px
+      pm : T (0 <ℕ Long.m x px)
+      pm = subst (λ D → T (0 <ℕ dim D)) (sym ex) tt
+      module L = Long x px
+      inv : L.Inv L.m (C.longSide x (exTy A))
+      inv = subst (λ D → L.Inv L.m (C.longSide x (exTy D))) ex (L.ls-ok pm)
+      gLS = fst inv
+      sLS = snd (snd inv)
+      es1 : sem (v (P t)) ≡ (var (P t) , projN (var t) B)
+      es1 = cong (var (P t) ,_) (trans (QL-P hn t pt) (cong (projN (var t)) et))
+      els : sem (C.longSide x (exTy A)) ≡ tgtC (var (P x) , projN (var x) A)
+      els = trans (subst (λ D → sem (C.longSide x (exTy D)) ≡ Tc (var x , D)) ex (L.ls-sem pm))
+                  (sym (tgt-pc (var x , A)))
+      IH : RP t
+      IH = repP N t (le-lt t N (le-trans (suc t) x N (lt-le t x qt) q)) pt
+      pre-eq : nth ob K′ (P t) ≡ nth ob Kc (P t)
+      pre-eq = pre (P t) (subst (λ a → T (P t <ℕ a)) (sym lK) (P-mono t x qt))
+      repT : Rep (nth ob K′ (P t)) (var (P t) , projN (var t) B)
+      repT = subst₂ Rep (sym pre-eq) (trans (cong (var (P t) ,_) refl) es1) (fst IH)
+      scT : ScTy (P x) (nth ob K′ (P t))
+      scT = scTy-mono {P t} {P x} (lt-le (P t) (P x) (P-mono t x qt) ▹ le-pred′) (nth ob K′ (P t))
+                      (subst (ScTy (P t)) (sym pre-eq) (snd IH))
+        where
+        _▹_ : ∀ {X Y : Set} → X → (X → Y) → Y
+        a ▹ f = f a
+        le-pred′ : Le (suc (P t)) (P x) → Le (P t) (P x)
+        le-pred′ r = le-trans (P t) (suc (P t)) (P x) (le-suc (P t)) r
+
+  ------------------------------------------------------------------
+  -- The hypotheses of ConesEval, and the evaluated cone.
+
+  private
+    split-n : ∀ i → (i <ℕ n) ≡ false → i ≡ n + (i ∸ n)
+    split-n i e = go n i e
+      where
+      go : ∀ n i → (i <ℕ n) ≡ false → i ≡ n + (i ∸ n)
+      go zero    i       _ = refl
+      go (suc n) zero    ()
+      go (suc n) (suc i) e = cong suc (go n i e)
+
+  data Where (i : Nat) : Set where
+    atD : T (i <ℕ n) → Where i
+    atC : i ≡ n → Where i
+    atP : ∀ x → i ≡ P x → T (x <ℕ n) → Where i
+
+  classify : ∀ i → T (i <ℕ length Kc) → Where i
+  classify i p with i <ℕ n in e
+  ... | true  = atD (subst T (sym e) tt)
+  ... | false with i ∸ n | split-n i e
+  ...   | zero  | ei = atC (trans ei (+-zero n))
+  ...   | suc x | ei =
+    atP x (trans ei (+-suc n x))
+          (lt-add-inv n x n (subst (λ a → T (a <ℕ suc (n + n))) (trans ei (+-suc n x)) (subst (λ a → T (i <ℕ a)) len-Kc p)))
+    where
+    lt-add-inv : ∀ n a b → T ((n + a) <ℕ (n + b)) → T (a <ℕ b)
+    lt-add-inv zero    a b q = q
+    lt-add-inv (suc n) a b q = lt-add-inv n a b q
+
+  rep : ∀ i → T (i <ℕ length Kc) → Rep (nth ob Kc i) (semV i)
+  rep i p with classify i p
+  ... | atD q =
+    subst (λ X → Rep X (semV i)) (sym (kc-E i q))
+      (subst (λ D → Rep (exTy (nth ⋆ G i)) (var i , D)) (sym (QL-G hn i q))
+             (repD i i (wf′ i q) (lt-le′ i n q)))
+    where
+    lt-le′ : ∀ i n → T (i <ℕ n) → Le i n
+    lt-le′ i n q = le-trans i (suc i) n (le-suc i) (lt-le i n q)
+  ... | atC refl = subst (λ X → Rep X (semV n)) (sym kc-c) (QL-c hn)
+  ... | atP x refl px = fst (repP (suc x) x (n<suc x) px)
+
+  sc : ∀ i → T (i <ℕ length Kc) → ScTy i (nth ob Kc i)
+  sc i p with classify i p
+  ... | atD q = subst (ScTy i) (sym (kc-E i q)) (scD i (wf′ i q))
+  ... | atC refl = subst (ScTy n) (sym kc-c) tt
+  ... | atP x refl px = snd (repP (suc x) x (n<suc x) px)
+
+  len-KQ : length Kc ≡ length QL
+  len-KQ = trans len-Kc (sym (len-QL hn))
+
+  repOut : ∀ i → (i <ℕ length Kc) ≡ false → snd (semV i) ≡ ⋆
+  repOut i e = nth-out ⋆ QL i (trans (cong (i <ℕ_) (sym len-KQ)) e)
+
+  module H = Hyp rep repOut (λ i → refl) sc
+
+  private
+    semGo-ok : ∀ As j acc → (∀ m → T (m <ℕ length As) → nth ⋆ QL (j + m) ≡ nth ⋆ As m) →
+               semGo j (length As) acc ≡ ctxGo acc As
+    semGo-ok []       j acc h = refl
+    semGo-ok (A ∷ As) j acc h =
+      trans (cong (λ B → semGo (suc j) (length As) (acc ▸ B)) (trans (cong (nth ⋆ QL) (sym (+-zero j))) (h 0 tt)))
+            (semGo-ok As (suc j) (acc ▸ A) (λ m q → trans (cong (nth ⋆ QL) (sym (+-suc j m))) (h (suc m) q)))
+
+  -- The kernel's evaluated cone is the explicit cone.
+  cone-ev : evCtx Kc ≡ Qc
+  cone-ev = trans H.evCtx-ok (trans (cong (λ l → semGo 0 l ε) len-KQ) (semGo-ok QL 0 ε (λ m _ → refl)))
 
 ------------------------------------------------------------------------
 -- Canonical naming, and lowering it.
@@ -686,7 +742,7 @@ names-lt (Γ ▸ A) x p with elem-++ x (names (named Γ)) (len Γ ∷ []) p
 
 fresh-named : ∀ Γ → elem (len Γ) (names (named Γ)) ≡ false
 fresh-named Γ with elem (len Γ) (names (named Γ)) | names-lt Γ (len Γ)
-... | true  | h = ⊥-elim (lt-irr (len Γ) (h tt))
+... | true  | h = ⊥-elim (subst T (lt-irr (len Γ)) (h tt))
 ... | false | _ = refl
 
 levelOf-named : ∀ Γ x → T (x <ℕ len Γ) → levelOf (named Γ) x ≡ just x
@@ -736,141 +792,343 @@ lower-named (Γ ▸ A) (sΓ , sA)
         | renTy-id (levelOf (named Γ)) (len Γ) (levelOf-named Γ) A sA = refl
 
 ------------------------------------------------------------------------
+-- The kernel's cone shape of a well-formed globular diagram.
+
+private
+  map-snoc : ∀ {A B : Set} (f : A → B) xs x → map f (xs ++ (x ∷ [])) ≡ map f xs ++ (f x ∷ [])
+  map-snoc f []       x = refl
+  map-snoc f (y ∷ xs) x = cong (f y ∷_) (map-snoc f xs x)
+
+  toExTy-ok : ∀ Ts A → T (okTy Ts A) → toExTy A ≡ just (exTy A)
+  toExTy-ok Ts ⋆ _ = refl
+  toExTy-ok Ts (arr A (var s) (var t)) p
+    rewrite toExTy-ok Ts A (∧-snd {nth ⋆ Ts t ==Ty A} (∧-snd {nth ⋆ Ts s ==Ty A}
+                             (∧-snd {t <ℕ length Ts} (∧-snd {s <ℕ length Ts} p)))) = refl
+  toExTy-ok Ts (arr A (var s) (coh _ _ _)) ()
+  toExTy-ok Ts (arr A (var s) (cst ()))
+  toExTy-ok Ts (arr A (coh _ _ _) u) ()
+  toExTy-ok Ts (arr A (cst ()) u)
+
+toExCtx-ok : ∀ Γ → T (gwf Γ) → toExCtx Γ ≡ just (map exTy (tyList Γ))
+toExCtx-ok ε       _ = refl
+toExCtx-ok (Γ ▸ A) w
+  rewrite toExCtx-ok Γ (∧-fst w) | toExTy-ok (tyList Γ) A (∧-snd {gwf Γ} w) =
+  cong just (sym (map-snoc exTy (tyList Γ) A))
+
+len-exList : ∀ Γ → length (map exTy (tyList Γ)) ≡ len Γ
+len-exList Γ = trans (length-map exTy (tyList Γ)) (len-tyList Γ)
+
+-- The kernel's cone shape is the explicit cone.
+shape-ok : ∀ Γ (w : T (gwf Γ)) → coneShape Γ ≡ just (QM.Qc (tyList Γ) (len Γ))
+shape-ok Γ w rewrite toExCtx-ok Γ w =
+  cong just (trans (KS.cone-ev (tyList Γ) (gwf-sound Γ w))
+                   (cong (QM.Qc (tyList Γ)) (len-exList Γ)))
+
+------------------------------------------------------------------------
+-- Scoping of cells, composites and projection types.
+
+WsCell : Nat → Cell → Set
+WsCell m c = WsTm m (fst c) × WsTy m (snd c)
+
+WsL : Nat → List Tm → Set
+WsL m []       = ⊤
+WsL m (t ∷ ts) = WsTm m t × WsL m ts
+
+private
+  ws-++ : ∀ m xs ys → WsL m xs → WsL m ys → WsL m (xs ++ ys)
+  ws-++ m []       ys _        q = q
+  ws-++ m (x ∷ xs) ys (px , p) q = px , ws-++ m xs ys p q
+
+  ws-subGo : ∀ m σ ts → WsSub m σ → WsL m ts → WsSub m (subGo σ ts)
+  ws-subGo m σ []       p _        = p
+  ws-subGo m σ (t ∷ ts) p (pt , q) = ws-subGo m (σ ,ₛ t) ts (p , pt) q
+
+  ws-src : ∀ m c → WsCell m c → WsCell m (srcC c)
+  ws-src m (x , ⋆)       w                   = w
+  ws-src m (x , arr A s t) (_ , (wA , ws , _)) = ws , wA
+
+  ws-tgt : ∀ m c → WsCell m c → WsCell m (tgtC c)
+  ws-tgt m (x , ⋆)       w                   = w
+  ws-tgt m (x , arr A s t) (_ , (wA , _ , wt)) = wt , wA
+
+  ws-disk : ∀ m n c → WsCell m c → WsL m (CaTTExp.Cones.diskGo n c)
+  ws-disk m zero    c w = fst w , tt
+  ws-disk m (suc n) c w =
+    ws-++ m _ _ (ws-disk m n (srcC c) (ws-src m c w)) (fst (ws-tgt m c w) , fst w , tt)
+
+  ws-rest : ∀ m k n c → WsCell m c → WsL m (CaTTExp.Cones.restGo k n c)
+  ws-rest m k zero    c w = tt
+  ws-rest m k (suc n) c w with dimC c ==ℕ k
+  ... | true  = tt
+  ... | false = ws-++ m _ _ (ws-rest m k n (srcC c) (ws-src m c w)) (fst (ws-tgt m c w) , fst w , tt)
+
+  ws-binC : ∀ m k u w → WsCell m u → WsCell m w → WsTm m (fst (CaTTExp.Cones.binC k u w))
+  ws-binC m k u w wu ww =
+    ws-subGo m ⟨⟩ _ tt (ws-++ m _ _ (ws-disk m (dimC u) u wu) (ws-rest m k (dimC w) w ww))
+
+  ws-lo : ∀ m r c → WsCell m c → WsCell m (CaTTExp.Lim.ConeCells.loC r c)
+  ws-lo m r c w with dimC c <ℕ r
+  ... | true  = w
+  ... | false = ws-src m c w
+
+  ws-hi : ∀ m r c → WsCell m c → WsCell m (CaTTExp.Lim.ConeCells.hiC r c)
+  ws-hi m r c w with dimC c <ℕ r
+  ... | true  = w
+  ... | false = ws-tgt m c w
+
+  ws-bty : ∀ m r k u w → WsCell m u → WsCell m w → WsTy m (CaTTExp.Lim.ConeCells.btyR r k u w)
+  ws-bty m zero     k u w wu ww = tt
+  ws-bty m (suc r′) k u w wu ww with r′ ==ℕ k
+  ... | true  = snd (ws-src m u wu) , fst (ws-src m u wu) , fst (ws-tgt m w ww)
+  ... | false =
+    ws-bty m r′ k lu lw wlu wlw , ws-binC m k lu lw wlu wlw ,
+    ws-binC m k (CaTTExp.Lim.ConeCells.hiC (suc r′) u) (CaTTExp.Lim.ConeCells.hiC (suc r′) w)
+            (ws-hi m (suc r′) u wu) (ws-hi m (suc r′) w ww)
+    where
+    lu = CaTTExp.Lim.ConeCells.loC (suc r′) u
+    lw = CaTTExp.Lim.ConeCells.loC (suc r′) w
+    wlu = ws-lo m (suc r′) u wu
+    wlw = ws-lo m (suc r′) w ww
+
+ws-bcell : ∀ m k u w → WsCell m u → WsCell m w → WsCell m (CaTTExp.Lim.ConeCells.bcell k u w)
+ws-bcell m k u w wu ww = ws-binC m k u w wu ww , ws-bty m (max (dimC u) (dimC w)) k u w wu ww
+
+AllWs : Nat → List Cell → Set
+AllWs m []       = ⊤
+AllWs m (c ∷ cs) = WsCell m c × AllWs m cs
+
+ws-chain : ∀ m Ps c → AllWs m Ps → WsCell m c → WsCell m (chainF Ps c)
+ws-chain m []       c _        wc = wc
+ws-chain m (P ∷ Ps) c (wP , w) wc = ws-bcell m (lenL Ps) P (chainF Ps c) wP (ws-chain m Ps c w wc)
+
+module WsProj (n : Nat) (pn : Nat → Nat) (m : Nat) (nm : T (n <ℕ m)) where
+  open Proj n pn
+
+  -- The projections of the boundaries are in scope.
+  PvOK : Ty → Set
+  PvOK ⋆           = ⊤
+  PvOK (arr B s t) = (WsTm m (pv s) × WsTm m (pv t)) × PvOK B
+
+  mutual
+    ws-projN : ∀ x A → WsTm m x → WsTy m A → PvOK A → WsTy m (projN x A)
+    ws-projN x ⋆           wx _                pA = tt , nm , wx
+    ws-projN x (arr B s t) wx (wB , ws , wt) ((wps , wpt) , pB) =
+      ws-projN t B wt wB pB , wpt ,
+      fst (ws-chain m (pcs (arr B s t)) (x , arr B s t) (ws-pcs (arr B s t) (wB , ws , wt) ((wps , wpt) , pB))
+                    (wx , wB , ws , wt))
+
+    ws-pcs : ∀ A → WsTy m A → PvOK A → AllWs m (pcs A)
+    ws-pcs ⋆           _              _               = tt
+    ws-pcs (arr B s t) (wB , ws , wt) ((wps , wpt) , pB) = (wps , ws-projN s B ws wB pB) , ws-pcs B wB pB
+
+------------------------------------------------------------------------
 -- The repaired side: Lim/Repaired's coneC on the canonically named
 -- diagram, lowered, is the explicit cone.
 
-module NamedSide (D : Dg) (w : T (wf D)) where
-  n : Nat
-  n = lenD D
+-- Prefixes of a context.
+data Pfx (Γ : Ctx) : Ctx → Set where
+  top  : Pfx Γ Γ
+  drop : ∀ {Δ A} → Pfx Γ (Δ ▸ A) → Pfx Γ Δ
 
-  open Proj n
+pfx-le : ∀ {Γ Δ} → Pfx Γ Δ → Le (len Δ) (len Γ)
+pfx-le {Γ} top = le-refl (len Γ)
+pfx-le {Γ} (drop {Δ} {A} p) = le-trans (len Δ) (suc (len Δ)) (len Γ) (le-suc (len Δ)) (pfx-le p)
+
+pfx-nth : ∀ {Γ Δ} → Pfx Γ Δ → ∀ j → T (j <ℕ len Δ) → nth ⋆ (tyList Γ) j ≡ nth ⋆ (tyList Δ) j
+pfx-nth top      j q = refl
+pfx-nth {Γ} (drop {Δ} {A} p) j q =
+  trans (pfx-nth p j (<-suc j (len Δ) q))
+        (nth-app-l ⋆ (tyList Δ) (A ∷ []) j (subst (λ a → T (j <ℕ a)) (sym (len-tyList Δ)) q))
+
+pfx-at : ∀ {Γ Δ A} → Pfx Γ (Δ ▸ A) → nth ⋆ (tyList Γ) (len Δ) ≡ A
+pfx-at {Γ} {Δ} {A} p =
+  trans (pfx-nth p (len Δ) (n<suc (len Δ)))
+        (trans (cong (nth ⋆ (tyList Δ ++ (A ∷ []))) (sym (len-tyList Δ))) (nth-last ⋆ (tyList Δ) A))
+
+module NS (Γ : Ctx) (w : T (gwf Γ)) where
+  G : List Ty
+  G = tyList Γ
+
+  n : Nat
+  n = len Γ
+
+  hn : length G ≡ n
+  hn = len-tyList Γ
+
+  wfG : WF G
+  wfG = gwf-sound Γ w
+
+  open QM G n
+
+  okAt : ∀ {Δ A} → Pfx Γ (Δ ▸ A) → OkT G (len Δ) A
+  okAt {Δ} {A} p =
+    subst (OkT G (len Δ)) (pfx-at p)
+          (wfG (len Δ) (subst (λ a → T (len Δ <ℕ a)) (sym hn) (pfx-le p)))
+
+  ltAt : ∀ {Δ A} → Pfx Γ (Δ ▸ A) → T (len Δ <ℕ n)
+  ltAt p = pfx-le p
 
   Γn : NCtx
-  Γn = named (pureOf D)
+  Γn = named Γ
 
   pn : Nat → Nat
   pn = R.pName Γn n
 
   pn-ok : ∀ a → T (a <ℕ n) → pn a ≡ P a
-  pn-ok a q rewrite levelOf-named (pureOf D) a q = refl
+  pn-ok a q rewrite levelOf-named Γ a q = refl
 
-  projTy-ok : ∀ k e → T (k <ℕ n) → WfEnt D k e → R.projTy n pn k (toP e) ≡ just (projP k e)
-  projTy-ok k obj q _ = refl
-  projTy-ok k (ar a b) q (qa , qb , _)
-    rewrite pn-ok a (<-trans a k n qa q) | pn-ok b (<-trans b k n qb q) = refl
-  projTy-ok k (tw a b f g) q (qa , qb , qf , qg , _)
-    rewrite pn-ok a (<-trans a k n qa q) | pn-ok b (<-trans b k n qb q)
-          | pn-ok f (<-trans f k n qf q) | pn-ok g (<-trans g k n qg q) = refl
+  -- projN only uses the projection names of the boundaries.
+  module _ (pn′ : Nat → Nat) (i : Nat) (h : ∀ a → T (a <ℕ i) → pn′ a ≡ P a) where
+    mutual
+      pN-cong : ∀ {A} → OkT G i A → ∀ x → Proj.projN n pn′ x A ≡ projN x A
+      pN-cong ok⋆ x = refl
+      pN-cong (okA {A} {s} {t} qs qt es et ok) x =
+        cong₂ (λ a bc → arr a (fst bc) (fst (chainF (snd bc) (x , arr A (var s) (var t)))))
+              (pN-cong ok (var t))
+              (cong₂ _,_ (cong var (h t qt)) (pcs-cong (okA qs qt es et ok)))
 
-  Πn : Dg → NCtx
-  Πn dε       = ∅
-  Πn (d ,, e) = Πn d ▹ P (lenD d) ∶ projP (lenD d) e
+      pcs-cong : ∀ {A} → OkT G i A → Proj.pcs n pn′ A ≡ pcs A
+      pcs-cong ok⋆ = refl
+      pcs-cong (okA {A} {s} {t} qs qt es et ok) =
+        cong₂ _∷_ (cong₂ _,_ (cong var (h s qs)) (pN-cong ok (var s))) (pcs-cong ok)
 
-  coneWith-ok : ∀ d → Pfx D d → R.coneWith n pn (named (pureOf d)) ≡ just (Πn d)
-  coneWith-ok dε p = refl
-  coneWith-ok (d ,, e) p
-    rewrite coneWith-ok d (drop p)
-          | projTy-ok (lenD d) e (pfx-lt p) (wf-at D w p)
-          | pn-ok (lenD d) (pfx-lt p) = refl
+  globTy-ok : ∀ {i A} → OkT G i A → R.globTy A ≡ true
+  globTy-ok ok⋆              = refl
+  globTy-ok (okA _ _ _ _ ok) = globTy-ok ok
 
-  len-Qpre : ∀ d → len (Qpre D d) ≡ P (lenD d)
-  len-Qpre dε       = cong suc (sym (+-zero n))
-  len-Qpre (d ,, e) = trans (cong suc (len-Qpre d)) (cong suc (sym (+-suc n (lenD d))))
+  Πn : Ctx → NCtx
+  Πn ε       = ∅
+  Πn (Δ ▸ A) = Πn Δ ▹ P (len Δ) ∶ projEnt (len Δ)
 
-  ⧺-ok : ∀ d → (Γn ▹ n ∶ ⋆) ⧺ Πn d ≡ named (Qpre D d)
-  ⧺-ok dε       = refl
-  ⧺-ok (d ,, e) = cong₂ (λ K x → K ▹ x ∶ projP (lenD d) e) (⧺-ok d) (sym (len-Qpre d))
+  coneWith-ok : ∀ Δ → Pfx Γ Δ → R.coneWith n pn (named Δ) ≡ just (Πn Δ)
+  coneWith-ok ε       p = refl
+  coneWith-ok (Δ ▸ A) p
+    rewrite coneWith-ok Δ (drop p) | globTy-ok (okAt p)
+          | pN-cong pn (len Δ) (λ a q → pn-ok a (<-trans a (len Δ) n q (ltAt p))) (okAt p) (var (len Δ))
+          | pn-ok (len Δ) (ltAt p) =
+    cong (λ X → just (Πn Δ ▹ P (len Δ) ∶ projN (var (len Δ)) X)) (sym (pfx-at p))
+
+  -- The explicit cone with its first m projections.
+  Qm : Nat → Ctx
+  Qm m = ctxGo (Γ ▸ ⋆) (pl 0 m)
+
+  private
+    pl-snoc : ∀ k m → pl k (suc m) ≡ pl k m ++ (projEnt (k + m) ∷ [])
+    pl-snoc k zero    = cong (λ a → projEnt a ∷ []) (sym (+-zero k))
+    pl-snoc k (suc m) = cong (projEnt k ∷_) (trans (pl-snoc (suc k) m) (cong (λ a → pl (suc k) m ++ (projEnt a ∷ [])) (sym (+-suc k m))))
+
+    len-ctxGo : ∀ acc As → len (ctxGo acc As) ≡ len acc + length As
+    len-ctxGo acc []       = sym (+-zero (len acc))
+    len-ctxGo acc (A ∷ As) = trans (len-ctxGo (acc ▸ A) As) (sym (+-suc (len acc) (length As)))
+
+    len-pl′ : ∀ k m → length (pl k m) ≡ m
+    len-pl′ k zero    = refl
+    len-pl′ k (suc m) = cong suc (len-pl′ (suc k) m)
+
+    ctxGo-++ : ∀ acc As Bs → ctxGo acc (As ++ Bs) ≡ ctxGo (ctxGo acc As) Bs
+    ctxGo-++ acc []       Bs = refl
+    ctxGo-++ acc (A ∷ As) Bs = ctxGo-++ (acc ▸ A) As Bs
+
+  Qm-suc : ∀ m → Qm (suc m) ≡ Qm m ▸ projEnt m
+  Qm-suc m = trans (cong (ctxGo (Γ ▸ ⋆)) (pl-snoc 0 m)) (ctxGo-snoc (Γ ▸ ⋆) (pl 0 m) (projEnt m))
+
+  len-Qm : ∀ m → len (Qm m) ≡ P m
+  len-Qm m = trans (len-ctxGo (Γ ▸ ⋆) (pl 0 m)) (cong (λ a → suc (n + a)) (len-pl′ 0 m))
+
+  Qc-Qm : Qc ≡ Qm n
+  Qc-Qm = trans (ctxGo-++ ε G (⋆ ∷ pl 0 n)) (cong (λ D → ctxGo (D ▸ ⋆) (pl 0 n)) (ctx-tyList Γ))
+
+  ⧺-ok : ∀ Δ → (Γn ▹ n ∶ ⋆) ⧺ Πn Δ ≡ named (Qm (len Δ))
+  ⧺-ok ε       = refl
+  ⧺-ok (Δ ▸ A) =
+    trans (cong₂ (λ K a → K ▹ a ∶ projEnt (len Δ)) (⧺-ok Δ) (sym (len-Qm (len Δ))))
+          (cong named (sym (Qm-suc (len Δ))))
 
   -- Scoping of the explicit cone.
   private
-    module W (k : Nat) (q : T (k <ℕ n)) where
-      m = suc (n + k)
-      wn : T (n <ℕ m)
-      wn = le-add n k
-      wd : ∀ x → T (x <ℕ k) → T (x <ℕ m)
-      wd x r = lt-addr x n k (<-trans x k n r q)
-      wk : T (k <ℕ m)
-      wk = lt-addr k n k q
-      wP : ∀ x → T (x <ℕ k) → T (P x <ℕ m)
-      wP x r = lt-add n r
-      wcmp : ∀ a b x → T (a <ℕ k) → T (b <ℕ k) → T (x <ℕ m) → WsTm m (cmp a b x)
-      wcmp a b x qa qb qx = ((((tt , wn) , wd a qa) , wP a qa) , wd b qb) , qx
+    ws-okT : ∀ i m {A} → OkT G i A → Le i m → WsTy m A
+    ws-okT i m ok⋆ _ = tt
+    ws-okT i m (okA {A} {s} {t} qs qt _ _ ok) le =
+      ws-okT i m ok le , lt s qs , lt t qt
+      where
+      lt : ∀ j → T (j <ℕ i) → T (j <ℕ m)
+      lt j q = le-lt j m (le-trans (suc j) i m (lt-le j i q) le)
 
-    ws-projP : ∀ k e → T (k <ℕ n) → WfEnt D k e → WsTy (suc (n + k)) (projP k e)
-    ws-projP k obj q _ = tt , W.wn k q , W.wk k q
-    ws-projP k (ar a b) q (qa , qb , _) =
-      (tt , wn , wd b qb) , wP b qb , wcmp a b k qa qb wk
-      where open W k q
-    ws-projP k (tw a b f g) q (qa , qb , qf , qg , _) =
-      ((tt , wn , wd b qb) , wP b qb , wcmp a b g qa qb (wd g qg)) , wP g qg ,
-      (((((((tt , wn) , wd b qb) , wP b qb) , wcmp a b f qa qb (wd f qf)) , wP f qf) ,
-        wcmp a b g qa qb (wd g qg)) ,
-       ((((((tt , wn) , wd a qa) , wP a qa) , wd b qb) , wd f qf) , wd g qg) , wk)
-      where open W k q
+    pv-okT : ∀ i {A} → OkT G i A → WsProj.PvOK n P (P i) (le-add n i) A
+    pv-okT i ok⋆ = tt
+    pv-okT i (okA qs qt _ _ ok) = (lt-add n qs , lt-add n qt) , pv-okT i ok
 
-    ws-toP : ∀ k e → WfEnt D k e → WsTy k (toP e)
-    ws-toP k obj _ = tt
-    ws-toP k (ar a b) (qa , qb , _) = tt , qa , qb
-    ws-toP k (tw a b f g) (qa , qb , qf , qg , _) = (tt , qa , qb) , qf , qg
+  sc-Γ : ∀ Δ → Pfx Γ Δ → ScC Δ
+  sc-Γ ε       p = tt
+  sc-Γ (Δ ▸ A) p = sc-Γ Δ (drop p) , ws-okT (len Δ) (len Δ) (okAt p) (le-refl (len Δ))
 
-    sc-pure : ∀ d → Pfx D d → ScC (pureOf d)
-    sc-pure dε p = tt
-    sc-pure (d ,, e) p = sc-pure d (drop p) , ws-toP (lenD d) e (wf-at D w p)
+  sc-Qm : ∀ m → Le m n → ScC (Qm m)
+  sc-Qm zero    _ = sc-Γ Γ top , tt
+  sc-Qm (suc m) q =
+    subst ScC (sym (Qm-suc m))
+      (sc-Qm m (le-trans m (suc m) n (le-suc m) q) ,
+       subst (λ a → WsTy a (projEnt m)) (sym (len-Qm m))
+             (WsProj.ws-projN n P (P m) nm (var m) (nth ⋆ G m) (le-+l′ n m)
+                              (ws-okT m (P m) okm (le-trans m (suc m) (P m) (le-suc m) (lt-le m (P m) (le-+l′ n m))))
+                              (pv-okT m okm)))
+    where
+    nm : T (n <ℕ P m)
+    nm = le-add n m
+    le-+l′ : ∀ n m → T (m <ℕ suc (n + m))
+    le-+l′ n m = CaTTExp.Lim.ConesEval.le-+l n m
+    okm : OkT G m (nth ⋆ G m)
+    okm = wfG m (subst (λ a → T (m <ℕ a)) (sym hn) q)
 
-    sc-Q : ∀ d → Pfx D d → ScC (Qpre D d)
-    sc-Q dε p = sc-pure D top , tt
-    sc-Q (d ,, e) p =
-      sc-Q d (drop p) ,
-      subst (λ m → WsTy m (projP (lenD d) e)) (sym (len-Qpre d))
-            (ws-projP (lenD d) e (pfx-lt p) (wf-at D w p))
-
-  sc-D : ScC (pureOf D)
-  sc-D = sc-pure D top
-
-  specified-ok : (R.coneC Γn n >>= λ Π → lower (coneCtx Γn n Π)) ≡ just (Qpre D D)
-  specified-ok rewrite coneWith-ok D top | ⧺-ok D = lower-named (Qpre D D) (sc-Q D top)
+  -- The specified cone, lowered, is the explicit cone.
+  specified-ok : (R.coneC Γn n >>= λ Π → lower (coneCtx Γn n Π)) ≡ just Qc
+  specified-ok rewrite coneWith-ok Γ top | ⧺-ok Γ =
+    trans (lower-named (Qm n) (sc-Qm n (le-refl n))) (cong just (sym Qc-Qm))
 
 ------------------------------------------------------------------------
 -- The theorem.
 
-cone-agrees-dg : ∀ D → T (wf D) →
-  (R.coneC (named (pureOf D)) (lenD D) >>= λ Π → lower (coneCtx (named (pureOf D)) (lenD D) Π))
-  ≡ (lower (named (pureOf D)) >>= coneShape)
-cone-agrees-dg D w
-  rewrite NamedSide.specified-ok D w | lower-named (pureOf D) (NamedSide.sc-D D w)
-        | ConeSide.shape-ok D w | len-exOf D = refl
+-- For every well-formed globular diagram Γ, in every dimension, the
+-- repaired cone (named canonically, apex the next name, lowered) is
+-- the kernel's cone shape; both are the explicit cone.
+cone-is-explicit : ∀ Γ (w : T (gwf Γ)) →
+  (R.coneC (named Γ) (len Γ) >>= λ Π → lower (coneCtx (named Γ) (len Γ) Π))
+  ≡ just (QM.Qc (tyList Γ) (len Γ))
+cone-is-explicit Γ w = NS.specified-ok Γ w
 
--- For every pure context that reads as a well-formed diagram of
--- dimension ≤ 2, the repaired cone (named canonically, apex the next
--- name, lowered) is the kernel's cone shape.
-cone-agrees : ∀ Γ D → parse Γ ≡ just D → T (wf D) →
+shape-is-explicit : ∀ Γ (w : T (gwf Γ)) →
+  (lower (named Γ) >>= coneShape) ≡ just (QM.Qc (tyList Γ) (len Γ))
+shape-is-explicit Γ w rewrite lower-named Γ (NS.sc-Γ Γ w Γ top) = shape-ok Γ w
+
+cone-agrees : ∀ Γ → T (gwf Γ) →
   (R.coneC (named Γ) (len Γ) >>= λ Π → lower (coneCtx (named Γ) (len Γ) Π))
   ≡ (lower (named Γ) >>= coneShape)
-cone-agrees Γ D p w with parse-sound Γ D p
-... | refl = cone-agrees-dg D w
+cone-agrees Γ w = trans (cone-is-explicit Γ w) (sym (shape-is-explicit Γ w))
 
 ------------------------------------------------------------------------
--- Instances: Mikhail's Example 4.1 (x, y, f g : x → y, α : f ⇒ g) and
--- the loop are covered (they parse as well-formed diagrams); a
--- 3-dimensional cell and an ill-typed 2-cell are not.
+-- Instances: Mikhail's Example 4.1 (x, y, f g : x → y, α : f ⇒ g), the
+-- loop, and a 3-dimensional cell between parallel 2-cells are covered;
+-- an ill-typed 2-cell and a non-globular boundary are not.
 
 private
   Γ41 : Ctx
   Γ41 = ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ arr ⋆ (var 0) (var 1)
           ▸ arr (arr ⋆ (var 0) (var 1)) (var 2) (var 3)
 
-  _ = cone-agrees Γ41 _ refl tt
+  _ = cone-agrees Γ41 tt
 
   Γloop : Ctx
   Γloop = ε ▸ ⋆ ▸ arr ⋆ (var 0) (var 0) ▸ arr (arr ⋆ (var 0) (var 0)) (var 1) (var 1)
 
-  _ = cone-agrees Γloop _ refl tt
+  _ = cone-agrees Γloop tt
 
-  _ : parse (ε ▸ ⋆ ▸ arr ⋆ (var 0) (var 0) ▸ arr (arr ⋆ (var 0) (var 0)) (var 1) (var 1)
-               ▸ arr (arr (arr ⋆ (var 0) (var 0)) (var 1) (var 1)) (var 2) (var 2)) ≡ nothing
-  _ = refl
+  -- x, y, f g : x → y, α β : f ⇒ g, Θ : α ⇛ β.
+  Γ3 : Ctx
+  Γ3 = Γ41 ▸ arr (arr ⋆ (var 0) (var 1)) (var 2) (var 3)
+           ▸ arr (arr (arr ⋆ (var 0) (var 1)) (var 2) (var 3)) (var 4) (var 5)
+
+  _ = cone-agrees Γ3 tt
 
   -- α : f ⇒ g with f : x → y but g : y → x.
-  _ : (parse (ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ arr ⋆ (var 1) (var 0)
-                ▸ arr (arr ⋆ (var 0) (var 1)) (var 2) (var 3)) >>= λ D → just (wf D)) ≡ just false
+  _ : gwf (ε ▸ ⋆ ▸ ⋆ ▸ arr ⋆ (var 0) (var 1) ▸ arr ⋆ (var 1) (var 0)
+             ▸ arr (arr ⋆ (var 0) (var 1)) (var 2) (var 3)) ≡ false
   _ = refl

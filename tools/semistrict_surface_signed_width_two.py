@@ -213,6 +213,9 @@ class Movies:
         if ((len(u)<len(v) and not any(d>0 for d in self.deltas)) or
             (len(u)>len(v) and not any(d<0 for d in self.deltas))):
             return dict(surface=False,states=0)
+        from semistrict_surface_two_slot_polygons import compare as two_slot_compare, width_at_most_two
+        if not self.attachments and any(width_at_most_two(self,source,r) for r in (u,v)):
+            return two_slot_compare(self,source,first,second,u,v,True)
         limit = max(len(u),len(v))
         if first==second and not self.globally_thin:
             return dict(surface=True,states=1,moves=[])
@@ -383,7 +386,7 @@ def mixed_port_checks():
     model = Movies(Presentation(edges,marks,[scalar],{'z':0}),'')
     initial = ((0,'z'),(0,'z'))
     assert not model.thin(initial)
-    assert model.compare(initial, [('swap',0),(0,0)], [(0,0)])['surface'] is None
+    assert model.compare(initial, [('swap',0),(0,0)], [(0,0)])['surface'] is False
     assert model.compare(initial, [(0,1)], [(0,0)])['surface'] is False
     return dict(mixed_empty_port_queries=comparisons, cyclic_connector_queries=2)
 

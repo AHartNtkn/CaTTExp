@@ -77,10 +77,13 @@ def raw_updates(model, actions, histories, windows, limit):
 def raw_compare(model, source, first, second):
     first,second = tuple(map(tuple,first)),tuple(map(tuple,second))
     model.pres.walk(model.start,source)
-    _,end = model.parse(source,first)
-    _,other = model.parse(source,second)
+    u,end = model.parse(source,first)
+    v,other = model.parse(source,second)
     if end != other:
         raise ValueError('expected parallel old readings')
+    from semistrict_surface_two_slot_polygons import compare as two_slot_compare, width_at_most_two
+    if not model.attachments and any(width_at_most_two(model,source,r) for r in (u,v)):
+        return two_slot_compare(model,source,first,second,u,v,False)
     limit = max(sum(n!='swap' for n,_ in face) for face in (first,second))
     seen = {first}
     todo = deque(seen)

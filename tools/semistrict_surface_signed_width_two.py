@@ -307,7 +307,7 @@ class Movies:
             if padded['surface'] is not None:
                 return dict(states=len(previous),**padded)
             from semistrict_surface_phase_gains import decide as phase_gains
-            phases = phase_gains(self,source,first,second)
+            phases = phase_gains(self,source,first,second,split_signs=True)
             if phases['surface'] is not None:
                 return dict(states=len(previous),**phases)
             from semistrict_surface_link_schedules import decide as link_schedules

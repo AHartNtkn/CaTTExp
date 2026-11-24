@@ -1,13 +1,15 @@
-"""Decide whether each polygon needs at most one prism, in arbitrary chronological order."""
+"""Decide signed polygon comparisons with one gain per occurrence or per crossing sign."""
 from argparse import ArgumentParser
 from collections import deque
+from functools import lru_cache
 import json
 from pathlib import Path
 
 from semistrict_surface_component_braids import restrict
 from semistrict_surface_history_group import inv
 from semistrict_surface_joint_labels import positive_normal
-from semistrict_surface_packet_meetings import cut
+from semistrict_surface_meridian_transport import content,prod,quasi
+from semistrict_surface_packet_meetings import Packet,cut,gain_factors
 from semistrict_surface_polygon_grades import resolution
 from semistrict_surface_shared_edge import braid_image
 from semistrict_surface_signed_meetings import Signed,follow,ordinary,orthogonal,verify_original
@@ -69,13 +71,42 @@ def signature(calc,movie):
     return h,cuts,sets,braid_image(calc.width,total)
 
 
-def gain(calc,movie,k,desired,target_cut):
+def substitute(frame,word):
+    return prod(*(frame[abs(x)-1] if x>0 else inv(frame[-x-1]) for x in word))
+
+
+@lru_cache(maxsize=1024)
+def first_slot_braid(n,atom):
+    """Find an ambient word for the specified first meridian, after deciding existence."""
+    names=content(atom)
+    if len(names)!=1 or next(iter(names.values()))!=1:
+        return None
+    if not quasi(atom) or not quasi(prod(inv(atom),tuple(range(1,n+1)))):
+        return None
+    if len(atom)==1:
+        return tuple(-j for j in range(atom[0]-1,0,-1))
+    # Left action on a single free word suffices. The compatible conjugate
+    # factorizations of the meridian and its complement form a braid frame.
+    actions=[(g,braid_image(n,(g,))) for i in range(1,n) for g in (i,-i)]
+    seen={atom}
+    todo=deque([(atom,())])
+    while todo:
+        v,path=todo.popleft()
+        for g,frame in actions:
+            u=substitute(frame,v)
+            if u==(1,):
+                return path+(-g,)
+            if u not in seen:
+                seen.add(u)
+                todo.append((u,path+(-g,)))
+    raise AssertionError('compatible first meridian has no ambient frame')
+
+
+def gain(calc,movie,k,target_cut,goal_prefix=None):
     boxes,seams=movie
     p,i=boxes[k]
     _,records,places,_=calc.scan(movie)
-    old,_,_=records[p]
-    after,_,_=desired[p]
-    relative=inv(old)+after
+    old,start,size=records[p]
     h,_=places[p]
     rule=calc.model.pres.rules[p]
     a,b=len(rule.source),len(rule.target)
@@ -89,7 +120,20 @@ def gain(calc,movie,k,desired,target_cut):
     right=h[i+a:]
     if not right:
         return None
-    shadow=restrict(calc.width,relative,first[i+a:])
+    if goal_prefix is not None:
+        shadow=restrict(calc.width,inv(old)+goal_prefix,first[i+a:])
+    else:
+        # In the current basis, the gain factor is the product of the
+        # exposed spectator's units. Forgetting all but one chooses its
+        # actual first-slot meridian on the right macro chart.
+        current=cut(braid_image(calc.width,old),start,size)
+        factor=prod(inv(current.after),target_cut.after)
+        local=substitute(braid_image(calc.width,inv(old)),factor)
+        keep={v+1:j+1 for j,v in enumerate(first[i+a:])}
+        atom=prod(tuple(keep[abs(x)]*(1 if x>0 else -1) for x in local if abs(x) in keep))
+        shadow=first_slot_braid(len(right),atom)
+        if shadow is None:
+            return None
     exposed=executable_cut(calc.model,right,shadow,0,1)
     if exposed is None:
         return None
@@ -110,7 +154,13 @@ def gain(calc,movie,k,desired,target_cut):
     return None
 
 
-def decide(model,source,first,second):
+def intermediate(source,v,negative):
+    atoms=tuple(prod(inv(v),a,v) for a in source.atoms) if negative else source.atoms
+    return Packet(prod(source.after,v,inv(prod(*atoms))),atoms)
+
+
+def decide(model,source,first,second,split_signs=False):
+    criterion='one_per_sign' if split_signs else 'one_per_polygon'
     if model.attachments:
         raise ValueError('expected a positive 3-computad')
     pos=ordinary(first),ordinary(second)
@@ -119,7 +169,7 @@ def decide(model,source,first,second):
     arities=[(len(r.source),len(r.target)) for r in model.pres.rules]
     data=resolution(source,pos,arities,'swap')
     def no(reason):
-        return dict(one_per_polygon=False,surface=False,obstruction=reason)
+        return {criterion:False,'surface':False,'obstruction':reason}
     if data is None:
         return no('named incidence')
     calc=Signed(model,source,data)
@@ -129,7 +179,7 @@ def decide(model,source,first,second):
     if h!=end or total!=last:
         return no('resolved total or final names')
     desired=calc.scan(goal)[1]
-    changed=set()
+    routes={}
     forced=True
     scopes=cables(list(data[1]),data[2],data[2])
     # cables() indexes units by initial wire and within-wire offset, whereas
@@ -145,49 +195,74 @@ def decide(model,source,first,second):
             if initial[p]!=final[p]:
                 return no('stationary packet cut')
             continue
-        changed.add(p)
-        choices=[s for s in bundles if s<=gained]
-        if set().union(*choices)!=gained:
-            return no('gained units have no wire cover')
-        if set().union(*(s for s in choices if s!=gained))==gained:
-            forced=False
-        if gained not in choices:
-            eligible=False
+        cohorts=[gained]
+        route={0:[(1,final[p])]}
+        if split_signs:
+            factors=gain_factors(initial[p],final[p])
+            if factors is None:
+                return no('packet meridian transport')
+            neg,pos=factors
+            cohorts=[{e-1 for e in content(f)} for f in factors if f]
+            if len(cohorts)==2:
+                # If the positive gain comes first its factor conjugates
+                # the collected positive factor by the unique negative one.
+                positive_first=prod(neg,pos,inv(neg))
+                candidates=[intermediate(initial[p],neg,True),
+                            intermediate(initial[p],positive_first,False)]
+                route={0:[(j,t) for j,t in enumerate(candidates,2)],
+                       2:[(1,final[p])],3:[(1,final[p])]}
+        routes[p]=route
+        for cohort in cohorts:
+            choices=[s for s in bundles if s<=cohort]
+            if set().union(*choices)!=cohort:
+                return no('gained units have no wire cover')
+            if set().union(*(s for s in choices if s!=cohort))==cohort:
+                forced=False
+            if cohort not in choices:
+                eligible=False
     if not eligible:
-        return dict(one_per_polygon=False,surface=None if not forced else False,
-                    obstruction='a polygon requires several gains')
+        return {criterion:False,'surface':None if not forced else False,
+                'obstruction':'a gain cohort requires several spectators'}
     target_order=tuple(p for p,_ in goal[0])
-    def key(movie,done): return tuple(p for p,_ in movie[0]),done
-    start_key=key(start,frozenset())
+    moving=tuple(routes)
+    index={p:j for j,p in enumerate(moving)}
+    def key(movie,phases): return tuple(p for p,_ in movie[0]),phases
+    start_key=key(start,(0,)*len(moving))
     todo=deque([(start,start_key)])
     seen={start_key:None}
     while todo:
         movie,current=todo.popleft()
-        order,done=current
-        if order==target_order and done==changed:
+        order,phases=current
+        if order==target_order and all(j==1 for j in phases):
             moves=[]
             while seen[current] is not None:
                 current,step=seen[current]
                 moves.append(step)
-            return dict(one_per_polygon=True,surface=True,phase_states=len(seen),actions=moves[::-1])
+            return {criterion:True,'surface':True,'phase_states':len(seen),'actions':moves[::-1]}
         def put(m,updated,step):
             new=key(m,updated)
             if new not in seen:
                 seen[new]=current,step
                 todo.append((m,new))
         for k,p in enumerate(order):
-            if p in changed-done and (order,done|{p}) not in seen:
-                candidate=gain(calc,movie,k,desired,final[p])
-                if candidate is not None:
-                    put(candidate,done|{p},('gain',p))
+            if p not in routes:
+                continue
+            j=index[p]
+            for stage,target in routes[p].get(phases[j],()):
+                updated=phases[:j]+(stage,)+phases[j+1:]
+                if (order,updated) not in seen:
+                    prefix=desired[p][0] if stage==1 else None
+                    candidate=gain(calc,movie,k,target,prefix)
+                    if candidate is not None:
+                        put(candidate,updated,('gain',p))
         for k,(p,q) in enumerate(zip(order,order[1:])):
             other=order[:k]+(q,p)+order[k+2:]
-            if (other,done) not in seen:
+            if (other,phases) not in seen:
                 candidate=calc.exchange(movie,k)
                 if candidate is not None:
-                    put(candidate,done,('meet',p,q))
-    return dict(one_per_polygon=False,surface=False if forced else None,phase_states=len(seen),
-                obstruction='no one-gain phase schedule')
+                    put(candidate,phases,('meet',p,q))
+    return {criterion:False,'surface':False if forced else None,'phase_states':len(seen),
+            'obstruction':'no permitted gain schedule'}
 
 
 def cut_checks():
@@ -240,6 +315,57 @@ def cut_checks():
                     checked+=1
     assert 0<alternative<realized<checked
     return dict(cut_queries=checked,executable_cuts=realized,illegal_representatives=alternative)
+
+
+def opposite_checks():
+    from itertools import product
+    from semistrict_surface_link_schedules import decide as counts
+    from semistrict_surface_raw_movie_graph import raw_compare,steps
+    s=((0,'s'),)
+    bubble=((0,'b'),(0,'d'))
+    def model(window):
+        return Movies(Presentation({'f':(0,0)},{'s':('',''),'b':('','f'),'d':('f','')},
+                     [Rule(window,s,bubble),Rule('',s,s)],{'s':0,'b':0}),window)
+    def literal(w):
+        return tuple(('swap' if g>0 else 'inverse',abs(g)-1) for g in w)
+    x=steps((1,0,1,0))+((0,0),(1,3))+steps((2,1,0))
+    y=steps((0,1))+((1,2),)+steps((0,1))+((0,2),)+steps((0,1,2))
+    m=model('')
+    direct=decide(m,s*3,x,y,True)
+    assert direct['actions']==[('gain',0),('meet',0,1),('gain',0)]
+    assert m.compare(s*3,x,y)['surface'] and not raw_compare(m,s*3,x,y)['raw']
+    assert counts(m,s*3,x,y)['surface'] is None and decide(m,s*3,x,y)['surface'] is None
+    padded=decide(model('f'),s*3,x,y,True)
+    assert padded['surface'] is False
+    # Each target below is constructed by two literal native gains. The
+    # passive input and output spellings can have genuinely nonabelian order.
+    witnesses=0
+    for order,u,v in product((-1,1),((),(1,),(1,1,2,2),(2,2,1,1),(-2,-1,2,1)),
+                              ((),(1,),(-1,-1))):
+        before=slots(u,1)+(order,)+slots(v,2)+(-order*2,)
+        after=inv((-order*3,-order*2))+inv(slots(v,3))+inv((order*2,order))+inv(slots(u,2))
+        z=literal(before)+((0,2),)+literal(after)
+        assert decide(m,s*4,((0,0),),z,True)['surface'] is True
+        witnesses+=1
+    # Independent first-slot realization in B2: at length <=7 the two
+    # powers of each exponent magnitude suffice since B2 is infinite cyclic
+    # and the meridian lengths grow by four every additional full twist.
+    targets={braid_image(2,((1 if k>=0 else -1),)*abs(k))[0] for k in range(-12,13)}
+    basis=(1,2)
+    cases=accepted=0
+    for depth in range(4):
+        for z in product((-2,-1,1,2),repeat=depth):
+            for e in basis:
+                atom=prod(z,(e,),inv(z))
+                result=first_slot_braid(2,atom)
+                assert (result is not None)==(atom in targets)
+                if result is not None:
+                    assert braid_image(2,result)[0]==atom
+                    accepted+=1
+                cases+=1
+    assert 0<accepted<cases
+    return dict(mixed_witness=direct,padded_negative=padded,explicit_signed_comparisons=witnesses,
+                cyclic_meridian_queries=cases,cyclic_meridians_realized=accepted)
 
 
 def checks():
@@ -323,13 +449,14 @@ def checks():
                 assert answer['surface']==moving.compare(s*2,x,y)['surface']
                 yes+=answer['surface']
                 queries+=1
-    return dict(**cut_checks(),changing_splits=positive,padded_splits=padded,
+    return dict(**cut_checks(),**opposite_checks(),changing_splits=positive,padded_splits=padded,
                 private_decisions=questions,private_yes=accepted,width_two_decisions=queries,width_two_yes=yes)
 
 
 if __name__=='__main__':
     parser=ArgumentParser(description=__doc__)
     parser.add_argument('--query',type=Path)
+    parser.add_argument('--opposite-signs',action='store_true',help='allow one gain of each sign per polygon')
     args=parser.parse_args()
     if args.query:
         q=json.loads(args.query.read_text())
@@ -338,7 +465,7 @@ if __name__=='__main__':
         model=Movies(Presentation(q['edges'],q['marks'],rules,q.get('mark_roots')),q['start'])
         source=tuple(map(tuple,q['source']))
         model.pres.walk(model.start,source,q.get('vertex'))
-        ans=decide(model,source,q['first'],q['second'])
+        ans=decide(model,source,q['first'],q['second'],split_signs=args.opposite_signs)
     else:
         ans=checks()
     print(json.dumps(ans))

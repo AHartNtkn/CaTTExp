@@ -32,23 +32,27 @@ def cut(frame, i, k):
     return Packet(prod(*frame[:i]), frame[i:i+k])
 
 
-def transport(s, t):
-    if s == t:
-        return True
+def gain_factors(s, t):
+    """Products of negative and positive gain factors after collecting negatives first."""
     if s.names != t.names:
-        return False
+        return None
     # All packet meridians must share the conjugator of the negative gains.
     u, e = meridian(s.atoms[0])
     v, _ = meridian(t.atoms[0])
     d = content(v).get(e, 0) - content(u).get(e, 0)
     neg = prod(u, ((e if d >= 0 else -e),)*abs(d), inverse(v))
     if any(prod(a, neg) != prod(neg, b) for a,b in zip(s.atoms, t.atoms)):
-        return False
+        return None
     total = prod(inverse(s.after), t.after)
     gain = content(total)
     if any(x in s.names or k != 1 for x,k in gain.items()):
-        return False
-    return quasi(neg) and quasi(prod(inverse(neg), total))
+        return None
+    pos = prod(inverse(neg), total)
+    return (neg,pos) if quasi(neg) and quasi(pos) else None
+
+
+def transport(s, t):
+    return s == t or gain_factors(s,t) is not None
 
 
 def compatible(s, t):

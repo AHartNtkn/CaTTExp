@@ -21,24 +21,30 @@
 -- (COH-ord).
 --
 -- This module proves, on the rule data of CaTTExp.Uniform.MarksRepaired:
---   * marking every object with S gives exactly the old file setting S,
---     so every old development is a development with marks
+--   * for a head with at least one hom, marking every object a₁ … aₙ
+--     with laws S (and none `ord`, unless S is both) gives S(Γ) = S,
+--     the old file setting; the judgments then agree by congruence
 --                                                   (uniform-recovers)
 --   * every object of the head carries every law of S(Γ), the step the
 --     soundness argument uses                        (meet-lb)
 --   * stronger marks give a larger setting, hence more judgments
+--     (pointwise mark order; substitution itself is not modelled)
 --                                                   (meet-mono, invM-mono)
---   * `ord` carries both laws                        (ord-both)
+--   * `ord` carries both laws, by definition of `laws`; justified by
+--     law-trivial below plus the paper parallelism step (ord-both)
 --   * directed Eckmann–Hilton (spec §3.6 Example (a)): with C marked
---     lsplit and a inv, (INN-fac) applies; unmarked it does not
---                                                   (eh-lsplit, eh-none,
---                                                    eh-rsplit-wrong-side)
+--     lsplit and a inv, or rsplit and b inv, (INN-fac) applies;
+--     unmarked, or with the split on the wrong side, it does not; the
+--     marks of a₀ are ignored         (eh-lsplit, eh-rsplit, eh-none,
+--                                       eh-*-wrong-side)
 --   * at degree 4, both sides of every split law are built from inner
 --     interchangers, identities and whiskerings only, so any predicate
 --     closed under those constructors (for example "is an identity" in
 --     a model with trivial inner letters) holds of both sides
 --                                                   (law-trivial)
--- Not mechanized: that the two sides of a law are parallel (by the
+-- Not mechanized: that `str` in the split marks agrees with `om` in the
+-- components; any link between Degree4's laws (indexed by Switches)
+-- and the marks; that the two sides of a law are parallel (by the
 -- typing of T, by inspection), so that two identities are equal; the
 -- factorization of a model's map through F_{V+S(Γ)}(Γ) (paper, design-
 -- decisions.md §1.8); laws in degrees above 4 (paper).
@@ -167,41 +173,76 @@ meet-mono {m ∷ ms} {m′ ∷ ms′} ((il , rr) ∷ ps) with meet-mono ps
 
 ------------------------------------------------------------------------
 -- The rule: the uniform marks rules of MarksRepaired, with the setting
--- read off the head's marks instead of a file header. `hm` lists the
--- split marks of a₁ … aₙ.
+-- computed from the head. `sm` lists a split mark for each component,
+-- indexed like `cs`; the head's hm is read at the indices objs h, minus
+-- a₀. Not mechanized: that `str` in `sm` agrees with `om` in `cs`
+-- ((COH-ord) still reads `cs`), by convention of the encoding.
+
+nthS : Nat → List SMark → SMark
+nthS _       []       = smark false false noM
+nthS zero    (m ∷ _)  = m
+nthS (suc n) (_ ∷ ms) = nthS n ms
+
+mapL : ∀ {A B : Set} → (A → B) → List A → List B
+mapL f []       = []
+mapL f (x ∷ xs) = f x ∷ mapL f xs
+
+tailL : ∀ {A : Set} → List A → List A
+tailL []       = []
+tailL (_ ∷ xs) = xs
+
+-- the marks of a₁ … aₙ
+headMarks : Head → List SMark → List SMark
+headMarks h sm = mapL (λ i → nthS i sm) (tailL (Head.objs h))
 
 invM : List SMark → Head → List Comp → Bool
-invM hm h cs = invU (meet hm) h cs
+invM sm h cs = invU (meet (headMarks h sm)) h cs
 
-invM-mono : ∀ {hm hm′} → Pointwise _≤M_ hm hm′ → ∀ h cs →
-            T (invM hm h cs) → T (invM hm′ h cs)
-invM-mono le h cs = setting-mono′ (meet-mono le) h cs
+-- Stronger marks at the head's objects give more judgments.
+invM-mono : ∀ {sm sm′} h → Pointwise _≤M_ (headMarks h sm) (headMarks h sm′) → ∀ cs →
+            T (invM sm h cs) → T (invM sm′ h cs)
+invM-mono h le cs = setting-mono′ (meet-mono le) h cs
 
 ------------------------------------------------------------------------
 -- Directed Eckmann–Hilton (spec §3.6 Example (a)) with split marks.
--- Components: X, C, a, b; C is component 1; the head's only hom lands
--- in C, so hm = [marks of C].
+-- Components: X, C, a, b; C is component 1, the head's objects are
+-- X (a₀) and C (a₁), and the elementary inner interchanger has left
+-- input a (2) and right input b (3).
 
 private
   ehHead : Head
   ehHead = head innerC [] [] false (just (2 , 3)) 1 (0 ∷ 1 ∷ [])
 
-  unm ainv : Comp
-  unm  = comp (ip false false false) noM
-  ainv = comp (ip true false false) noM
+  unm inv : Comp
+  unm = comp (ip false false false) noM
+  inv = comp (ip true false false) noM
 
-  cs : List Comp
-  cs = unm ∷ unm ∷ ainv ∷ unm ∷ []
+  csA csB : List Comp
+  csA = unm ∷ unm ∷ inv ∷ unm ∷ []     -- a inv
+  csB = unm ∷ unm ∷ unm ∷ inv ∷ []     -- b inv
 
-eh-none : invM (smark false false noM ∷ []) ehHead cs ≡ false
+  -- split marks on C only; X carries the opposite marks, which must
+  -- not matter (a₀ is the target of no hom)
+  onC : Bool → Bool → List SMark
+  onC l r = smark (not l) (not r) noM ∷ smark l r noM ∷
+            smark false false noM ∷ smark false false noM ∷ []
+
+eh-none : invM (onC false false) ehHead csA ≡ false
 eh-none = refl
 
-eh-lsplit : invM (smark true false noM ∷ []) ehHead cs ≡ true
+eh-lsplit : invM (onC true false) ehHead csA ≡ true
 eh-lsplit = refl
 
+eh-rsplit : invM (onC false true) ehHead csB ≡ true
+eh-rsplit = refl
+
 -- R alone needs the right input b invertible; here only a is.
-eh-rsplit-wrong-side : invM (smark false true noM ∷ []) ehHead cs ≡ false
+eh-rsplit-wrong-side : invM (onC false true) ehHead csA ≡ false
 eh-rsplit-wrong-side = refl
+
+-- lsplit alone needs a; here only b is.
+eh-lsplit-wrong-side : invM (onC true false) ehHead csB ≡ false
+eh-lsplit-wrong-side = refl
 
 ------------------------------------------------------------------------
 -- Degree 4: both sides of a split law are pure inner, so a predicate

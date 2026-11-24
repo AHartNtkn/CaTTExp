@@ -169,6 +169,23 @@ class HistoryGroup:
         return h,reduced(result)
 
 
+def placements(h, root, initial, atoms, edges, marks):
+    """Yield every matching temporal interval and spatial subpath at its slice."""
+    path = initial
+    for k in range(len(h)+1):
+        for a in atoms:
+            for offset in range(len(path)-len(a.path)+1):
+                if not (path.startswith(a.path,offset) and end_vertex(edges,root,path[:offset]) == a.root):
+                    continue
+                fragment = tuple((p+offset,x) for p,x in a.history)
+                if h[k:k+len(fragment)] == fragment:
+                    yield k, a
+        if k < len(h):
+            pos,x = h[k]
+            before,after = marks[x]
+            path = path[:pos]+after+path[pos+len(before):]
+
+
 class Presentation(HistoryGroup):
     def __init__(self, data):
         edges,rules = data['edges'],data['rules']
@@ -184,23 +201,11 @@ class Presentation(HistoryGroup):
         self.query = q
         self.atoms = defaultdict(set)
         self.defects = set()
-        width = len(q.history)
         for h in sorted(self.tree_paths):
-            path = q.path
-            for k in range(width+1):
-                for a in atoms:
-                    for offset in range(len(path)-len(a.path)+1):
-                        if not (path.startswith(a.path,offset) and end_vertex(edges,q.root,path[:offset]) == a.root):
-                            continue
-                        fragment = tuple((p+offset,x) for p,x in a.history)
-                        if h[k:k+len(fragment)] == fragment:
-                            l,r = (tuple(j+k for j in w) for w in (a.left,a.right))
-                            self.atoms[h].add((l,r))
-                            self.relation(h,l,r,self.defects)
-                if k < width:
-                    pos,x = h[k]
-                    before,after = self.marks[x]
-                    path = path[:pos]+after+path[pos+len(before):]
+            for k, a in placements(h, q.root, q.path, atoms, edges, self.marks):
+                l,r = (tuple(j+k for j in w) for w in (a.left,a.right))
+                self.atoms[h].add((l,r))
+                self.relation(h,l,r,self.defects)
         self.target = reduced(self.read(q.history,q.right)[1]+inv(self.read(q.history,q.left)[1]))
         self.relators.discard(())
         self.simplify()

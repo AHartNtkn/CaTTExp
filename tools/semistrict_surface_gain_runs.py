@@ -124,6 +124,11 @@ def decide(model,source,first,second,radius=None):
         from semistrict_surface_single_mover import solve
         answer=solve(calc,start,goal,initial,final,next(iter(moving)),radius)
         return dict(answer,endpoint_meetings=answer['surface'],endpoints_forced=forced)
+    from semistrict_surface_pair_runs import meeting_components,solve as pair_runs
+    if len(initial)==2:
+        return dict(pair_runs(calc,start,goal,initial,final,moving,radius),endpoints_forced=forced)
+    components=meeting_components(initial,final)
+    independent=all(len(c)<=2 or len(c&moving)<=1 for c in components)
     prefixes=calc.scan(goal)[1]
     finish=tuple(p for p,_ in goal[0]),frozenset(moving)
     source_key=tuple(p for p,_ in start[0]),frozenset()
@@ -154,8 +159,9 @@ def decide(model,source,first,second,radius=None):
             nxt=order[:k]+(q,p)+order[k+2:],done
             if nxt not in prev:
                 put(nxt,calc.exchange(movie,k),('meet',p,q))
-    return dict(surface=False if forced and not unresolved else None,
-                endpoint_meetings=None if unresolved else False,endpoints_forced=forced,run_states=len(prev))
+    return dict(surface=False if (forced or independent) and not unresolved else None,
+                endpoint_meetings=None if unresolved else False,endpoints_forced=forced,
+                independent_components=independent,run_states=len(prev))
 
 
 def checks():

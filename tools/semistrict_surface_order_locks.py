@@ -1,10 +1,9 @@
-"""Exclude polygon meetings by restricted positive braid-prefix intervals."""
+"""Exclude polygon meetings by positive braid-prefix intervals at the endpoint cuts."""
 from argparse import ArgumentParser
 from itertools import combinations
 import json
 from pathlib import Path
 
-from semistrict_surface_component_braids import restrict
 from semistrict_surface_joint_labels import positive_normal
 from semistrict_surface_polygon_grades import resolution
 from semistrict_surface_serial_polygons import decide as serial, frames
@@ -56,38 +55,24 @@ def charts(model, source, first, second):
     return n, a, b, x, y
 
 
-def interval(n, word, prefix_len, location, size, selected):
-    prefix = restrict(n,word[:prefix_len],selected)
-    suffix = restrict(n,word,selected)[len(prefix):]
-    width = len(selected)
+def interval(n, word, prefix_len, location, size):
     stop = location+size
-    lo = tuple(reversed(spelling(coset(width,prefix,location,stop))))
-    hi = prefix+passive_prefix(width,suffix,location,stop)[0]
+    prefix,suffix=word[:prefix_len],word[prefix_len:]
+    lo = tuple(reversed(spelling(coset(n,prefix,location,stop))))
+    hi = prefix+passive_prefix(n,suffix,location,stop)[0]
     return lo,hi
 
 
 def permits(chart, p, q):
-    """Necessary for a common prefix with P in earlier temporal slots than Q."""
+    """A meeting P before Q forces the initial P and final Q cuts to meet."""
     n,a,b,x,y = chart
-    start, P, pa = x[p]
-    finish, Q, qb = y[q]
-    if not start.union(P) <= finish or set(Q).intersection(P):
+    start,P,pa=x[p]
+    finish,Q,qb=y[q]
+    if not start.union(P)<=finish or set(Q).intersection(P):
         return False
-    # If P is earlier, on an exterior named unit its before-P bit implies
-    # its before-Q bit. Retain the units where this fixes the old P bit
-    # and final Q bit simultaneously.
-    selected = set(P) | set(Q)
-    for unit in set(range(n))-selected:
-        p0, p1 = int(unit in start), int(unit in y[p][0])
-        q0, q1 = int(unit in x[q][0]), int(unit in finish)
-        options = [(s,t) for s in range(p0,p1+1) for t in range(q0,q1+1) if s <= t]
-        if not options:
-            return False
-        if options == [(p0,q1)]:
-            selected.add(unit)
-    u = interval(n,a,pa,len(start & selected),len(P),selected)
-    v = interval(n,b,qb,len(finish & selected),len(Q),selected)
-    return divides(len(selected),u[0],v[1]) and divides(len(selected),v[0],u[1])
+    u=interval(n,a,pa,len(start),len(P))
+    v=interval(n,b,qb,len(finish),len(Q))
+    return divides(n,u[0],v[1]) and divides(n,v[0],u[1])
 
 
 def locks(model, source, first, second):

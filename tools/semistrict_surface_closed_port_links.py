@@ -22,7 +22,7 @@ from semistrict_surface_shared_edge import braid_image
 
 
 class Corner:
-    def __init__(self,data):
+    def __init__(self,data,accept_wired_port=None):
         self.blocks = data['blocks']
         self.model = Presentation(dict(data,rules={k:[k,b] for k,b in self.blocks.items()}))
         self.joint = self.model.diagram
@@ -35,8 +35,9 @@ class Corner:
             raise ValueError('give expanded gates distinct occurrence names apart from markers')
         self.sizes = {}
         for k,b in self.blocks.items():
-            if not b or self.model.ports[k]!=('',''):
-                raise ValueError('expected a point site with a nonempty closed port')
+            if not b or (self.model.ports[k]!=('','') and
+                         (accept_wired_port is None or not accept_wired_port(self.model,k,b))):
+                raise ValueError('port does not satisfy the selected corner criterion')
             sizes = [1]*len(names)
             pos = names.index(b[0][1])
             sizes[pos:pos+len(b)] = [len(b)]+[0]*(len(b)-1)
@@ -64,8 +65,8 @@ class Corner:
         return x
 
 
-def solve(data):
-    corner = Corner(data)
+def solve(data,accept_wired_port=None):
+    corner = Corner(data,accept_wired_port)
     paths = {k:tuple(w) for k,w in data['paths'].items()}
     if set(paths)!=set(corner.blocks):
         raise ValueError('supply a corner path for each selected site')

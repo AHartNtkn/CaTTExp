@@ -2,10 +2,11 @@
 
 Use vertex, edges, gates and rules mapping a name to [object,input,output].
 A port is an ordered list of [spatial offset, gate colour]. --dependent requires
-each successive pair of uses to share a generated gate occurrence. Needs islpy.
+each successive pair of uses to share a generated gate occurrence. Only general
+multiset transitions require islpy; one-root rules use polynomial matching.
 """
 from argparse import ArgumentParser
-from collections import Counter
+from collections import Counter, deque
 from functools import lru_cache
 from itertools import product
 import json
@@ -13,10 +14,76 @@ from pathlib import Path
 
 from semistrict_surface_component_braids import Components
 from semistrict_surface_gate_forests import Presentation
-from semistrict_surface_history_group import HistoryGroup
-from semistrict_surface_positive_labels import reachable
+from semistrict_surface_return_gaps import exchange_at
 from semistrict_surface_probe_movies import Faces
-from semistrict_surface_scalar_leaves import swapped
+
+
+def core_normal_form(row,ports):
+    """Right-normalize a single connected core, tracking its corner labels."""
+    order = list(range(len(row)))
+    i = 0
+    while i+1<len(row):
+        moved = exchange_at(row,i,ports)
+        if moved is None:
+            i += 1
+        else:
+            row = moved
+            order[i],order[i+1] = order[i+1],order[i]
+            i = max(0,i-1)
+    return row,order
+
+
+def unary_markings(moves):
+    """Decide exact unary multiset reachability by matching token trajectories."""
+    adj = {}
+    for a,b in moves:
+        src = a[0] if a else None
+        dst = b[0] if b else None
+        adj.setdefault(src,set()).add(dst)
+
+    @lru_cache(None)
+    def destinations(src):
+        seen = {src}
+        todo = [src]
+        while todo:
+            for v in adj.get(todo.pop(),()):
+                if v not in seen:
+                    seen.add(v)
+                    todo.append(v)
+        return seen
+
+    def test(left,right):
+        sources = (*left,*([None]*len(right)))
+        targets = (*right,*([None]*len(left)))
+        match = {}
+        for start in range(len(sources)):
+            todo = deque([start])
+            previous = {start:None}
+            entered = {}
+            while todo:
+                i = todo.popleft()
+                allowed = destinations(sources[i])
+                for j,t in enumerate(targets):
+                    if t not in allowed or j in entered:
+                        continue
+                    entered[j] = i
+                    if j not in match:
+                        while j is not None:
+                            i = entered[j]
+                            match[j] = i
+                            j = previous[i]
+                        break
+                    holder = match[j]
+                    if holder not in previous:
+                        previous[holder] = j
+                        todo.append(holder)
+                else:
+                    continue
+                break
+            else:
+                return False
+        return True
+    return test
 
 
 class Templates:
@@ -45,9 +112,7 @@ class Templates:
                 wires[p:p+len(before)] = [i in core]*len(after)
             row = tuple(row)
             base = self.gates[row[0][1][0]][0]
-            graph = HistoryGroup(row,ports)
-            normal = min(graph.tree_paths)
-            order = swapped(range(len(row)),graph.tree_paths[normal])
+            normal,order = core_normal_form(row,ports)
             faces = Faces(tuple((p,i) for i,(p,_) in enumerate(row)),
                           {i:ports[g] for i,(_,g) in enumerate(row)},0)
             # The port-order corner of a canonically indexed gate names its
@@ -70,14 +135,18 @@ class Templates:
             for child, parent in parts.parent.items():
                 if parent == root:
                     region = faces.spots[locations[min(parts.skeleton[child])]]
-                    contents[region].append(build(child))
+                    contents[region].append(built[child])
             slots = tuple(sorted((addresses[r],types[r],tuple(sorted(kids))) for r,kids in contents.items()))
             node = (base, normal, slots)
             if node not in self.ids:
                 self.ids[node] = len(self.node)
                 self.node.append(node)
             return self.ids[node]
-        roots = tuple(sorted(build(r) for r,p in parts.parent.items() if p is None))
+        built = {}
+        # Each bounded face opens after its enclosing core has started.
+        for r in sorted(parts.parent,reverse=True):
+            built[r] = build(r)
+        roots = tuple(sorted(built[r] for r,p in parts.parent.items() if p is None))
         assert all(self.node[r][0]==vertex for r in roots)
         return roots
 
@@ -117,12 +186,20 @@ def decide(data, dependent=False):
             counts = Counter(items)
             return tuple(counts[p] for p in places)
         @lru_cache(None)
+        def moves_at(x):
+            moves = [(a,b) for y,a,b in rules if y==x]
+            moves.extend(((i,),(j,)) for i,j in summaries if lib.node[i][0]==x)
+            unary = all(len(a)<=1 and len(b)<=1 for a,b in moves)
+            return moves,unary_markings(moves) if unary else None
+        @lru_cache(None)
         def test(x,left,right):
             if left==right:
                 return True
+            moves,match = moves_at(x)
+            if match is not None:
+                return match(left,right)
+            from semistrict_surface_positive_labels import reachable
             places = [i for i,item in enumerate(lib.node) if item[0]==x]
-            moves = [(a,b) for y,a,b in rules if y==x]
-            moves.extend(((i,),(j,)) for i,j in summaries if lib.node[i][0]==x)
             net = dict(source=vector(left,places),target=vector(right,places),
                        transitions=[(vector(a,places),vector(b,places)) for a,b in moves])
             return reachable(net)

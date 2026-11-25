@@ -1,35 +1,25 @@
 ------------------------------------------------------------------------
--- Soundness of two-tier L in its strict model.
+-- Soundness in the strict model of two-tier L with a parameterised
+-- coherence-case predicate cc (S30; copy of CaTTExp.Strict.Soundness
+-- over CaTTExp.Gray.SupportG; the parameterised analogue of Theorem 1(1)
+-- of notes/pseudo-vs-gray.md §3.6).
 --
--- Every derivable term t : A over a pasting context Γ is a cell of
--- ν(K(Γ)), the free strict Gray-enriched category on Γ (hom by hom, the
--- strict ω-category of the Steiner complex λΘᵢ₊₁ ⊗ … ⊗ λΘⱼ):
+-- Every term t : A derivable with side condition SupportG.sideG over a
+-- pasting context Γ is a cell of ν(K(Γ)):
 --
---     sound-tm : PsInv Γ → Γ ⊢tm t ∶ A → IsCellTm Γ t A
+--     Soundness.sound-tm : PsInv Γ → Γ ⊢tm t ∶ A → IsCellTm Γ t A
 --
 -- where a coh is interpreted as the image, under the chain map of its
--- substitution, of
---   * the total cell T of its pasting context (operation case), or
---   * the identity on its source (coherence case).
--- This is Theorem 1(1) of notes/pseudo-vs-gray.md §3.6.
+-- substitution, of the total cell T of its pasting context (operation
+-- case, stated with closure comparisons) or the identity on its source
+-- (cc-case).
 --
--- It rests on no hypothesis. The facts about Steiner complexes it uses
--- are theorems:
---  * the table T of the Gray tensor ⟨Θ₁⟩ ⊗ … ⊗ ⟨Θₙ⟩ is a cell
---    (CaTTExp.Strict.Bridge, `T-cell`; also checked by evaluation on 18
---    shapes in CaTTExp.Strict.CheckCells);
---  * in the operation case, a cell in a hom x → y whose downward-closed
---    support (CaTTExp.Gray.Support's `down`) equals that of a boundary
---    ∂^sg T of the total cell T is that boundary (BBdry). This is an
---    instance of "support determines the cell" (BSupp), proved without
---    atoms in CaTTExp.Strict.Recon (`b-supp`, `b-bdry`), following
---    notes/conjectures/answered/steiner-support-formalizable-2026-11-18.md;
---    the literature proof is Hadzihasanovic, arXiv 2404.07273,
---    Prop. 8.3.17 and Thm 11.2.18;
---  * in the coherence case, two cells whose supports both equal T's
---    have equal top chains (CaTTExp.Strict.CohCase, `coh-top`).
+-- It rests on one hypothesis, `CohSound` (cc forces equal closed
+-- supports). In the coherence case, two cells with equal closed supports
+-- are equal (`Strict.Recon.b-supp`), so the coh's image is an identity.
+-- The operation case uses `Strict.Bridge.T-cell` and `Strict.Recon.b-bdry`
+-- as in the original.
 ------------------------------------------------------------------------
--- (header replaced: copy of CaTTExp.Strict.Soundness over Gray.SupportG, S30)
 open import CaTTExp.Prelude
 open import CaTTExp.Signature
 open import CaTTExp.Pure using (∅)

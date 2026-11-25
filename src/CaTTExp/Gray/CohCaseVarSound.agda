@@ -16,7 +16,7 @@
 --  * ccF, the full-Gray-support clause in closure form, as a control:
 --    the same theorem for (closure-form) graySide.
 --  * evaluation checks on the gap example βα → βα₂ of Gray.CohCaseGap:
---    sideV accepts it, the support function now gives it the identity
+--    SV.sideG (SupportG's sideG at ccV) accepts it, the support function now gives it the identity
 --    image (empty top chain), the certified checker produces a
 --    derivation, and `soundV` turns that derivation into a cell.
 --
@@ -24,7 +24,7 @@
 -- (sameDownClosure); graySide uses the generator form (sameDown). They
 -- agree on every comparison made in a pasting context (Gray.Graded,
 -- Gray.DownAgree), but that agreement is not re-proved for SupportG's
--- support function, so `sideV` is stated here in closure form.
+-- support function, so SV.sideG is stated here in closure form.
 ------------------------------------------------------------------------
 module CaTTExp.Gray.CohCaseVarSound where
 

@@ -42,7 +42,7 @@ def span(rows, zero, modulus):
 
 
 def local_names(deck_rank, modulus, rank, inputs):
-    if min(deck_rank, rank) < 1 or modulus < 2:
+    if min(deck_rank, rank) < 1 or (modulus is not None and modulus < 2):
         raise ValueError("positive ranks and modulus >= 2 required")
     names = {((), i) for i in range(rank)}
     columns = []
@@ -52,7 +52,7 @@ def local_names(deck_rank, modulus, rank, inputs):
             if not 0 <= i < rank:
                 raise ValueError("invalid module coordinate")
             w = reduced(word, deck_rank)
-            if c % modulus:
+            if c and (modulus is None or c % modulus):
                 names.update((w[j:], i) for j in range(len(w) + 1))
                 terms.append(((w, i), c))
         columns.append(terms)

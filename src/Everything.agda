@@ -217,6 +217,14 @@ import CaTTExp.RCProc.StripExamples
 import CaTTExp.RCProc.Descent.Lift
 import CaTTExp.RCProc.Descent.Fill
 import CaTTExp.RCProc.Descent.FillExamples
+import CaTTExp.RCProc.Descent.MapGen
+import CaTTExp.RCProc.Descent.MapGenExamples
+import CaTTExp.RCProc.Descent.LiftOp
+import CaTTExp.RCProc.Descent.LiftOpExamples
+import CaTTExp.RCProc.Descent.Square
+import CaTTExp.RCProc.Descent.Piece
+import CaTTExp.RCProc.Descent.RcD
+import CaTTExp.RCProc.Descent.PieceExamples
 import CaTTExp.Naturality.Raw
 import CaTTExp.Naturality.Commute
 import CaTTExp.Naturality.Typing

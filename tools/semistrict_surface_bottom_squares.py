@@ -159,7 +159,7 @@ if __name__ == '__main__':
         degree_one_labels_detected = (
             args.bottom == args.rank + 1 and
             ((args.bottom + 1).bit_count() > 1 or
-             all(args.orders[j] == 0 for j, _ in basis))
+             all(args.orders[j] % 4 == 0 for j, _ in basis))
         )
         if args.bottom % 2 == 0 or not basis or degree_one_labels_detected:
             print(f'Exact kernel rank over F2: {len(basis)}')

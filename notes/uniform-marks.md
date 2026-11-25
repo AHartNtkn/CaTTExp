@@ -293,3 +293,32 @@ This settles the rules for unmarked terms in the term model of a pasting diagram
 Then A is invertible and W(A, B) has no inverse. What is unchecked is whether this table still satisfies V + S. Round 1's check used two facts that change here: the short homs were chains, and advance counts were positive. That check, together with the general line (which operand configurations and which outer letters propagate invertibility in every algebra, absorbing E14(c)), is posed in `conjectures/outbox/invertibility-in-directed-interchange-r2.md`.
 
 **Consequence if the conjecture holds.** Two rules are then sound only in restricted settings or in strict-enough models (strict Gray-enriched categories, strict ω-categories): (INV-fac)/(PS-fac) for two or more positive factors, and the ps\* branch. The uniform rule set would keep them only for operand-pure letters of kinds (i)–(iii), with the premise read on the letter itself, i.e. a premise `G(x)[γ] inv` that is declared rather than derived.
+
+### 8.6 E14(b), (c) answered in every algebra (2026-11-25)
+
+`conjectures/answered/invertibility-in-directed-interchange-r2-2026-11-25.md`, Response 1, verified there. The conjecture of §8.5 holds, and the exact dividing line is known for principal disk trees.
+
+**The factor rule [proved by the researcher, checked].** Let a Gray cell be lifted by a planar binary bracketing of its consecutive factors (pure action at vertex factors, principal disk at two positive factors), with each node labelled by the sum of the hom-dimensions below it. Invertibility of factor i propagates to the cell in **every** algebra of V + S, in all four settings, iff
+
+> (1) on the path from leaf i to the root, no node has two children of dimension ≥ 2.
+
+The answer is the same when every inner letter is also required to be invertible. Binary cases: (1, p) and (p, 1) pass, in either position, for every p ≥ 1, and **(2, 2) fails** (W). The proposed signed strip of §8.5 is an algebra of V + S. With three or more factors **the bracketing matters**: on (2, 1, 1) with the first factor invertible, the left bracketing passes and the right bracketing W(A, χ(b, c)) fails, although both have the same Gray atom.
+
+**The ps\* factor rule is false in every setting** (d = (2, 2, 2), middle input ps\*). This holds whichever bracketing is chosen.
+
+**Other outer letters.**
+- K and J fail from every positive position, through their unit rules.
+- W on composite operands fails.
+- Outer join h(A, B): from A, exactly when the correcting square ῑ₋ is invertible, as in (OP-inv_S′)(iii). From B it never propagates.
+- Shifted joins: no one-input rule, even with every elementary square invertible and both splits imposed.
+- Higher unary naturalities follow (1). Routes are composites of their steps.
+
+**No total decision procedure.** For letters on composite operands in a finite matching context, propagation is undecidable: a single letter W(ewZ, B) encodes the word problem. It is r.e., by round 1's finite-derivation criterion.
+
+**Consequences for the rules of §8.2 and spec chapter 3.**
+- (INV-fac) for a uniform Gray cell is sound in every algebra **exactly** under (1), read on the bracketing of the head's interpretation (its forced value, `design-decisions.md` §5). The rule must therefore carry (1) as a side condition. A single dᵢ = 1 on the path is what makes it pass. For (2, 2) and above, the only sound form is case (i) of (OP-inv_S′), where the premise is on the Gray cell itself, declared rather than derived.
+- **The ps\* branch of (OP-ps_S′) and (PS-fac) with ≥ 2 positive factors are unsound** in general algebras. They stay sound in 𝓜_S (strict Gray-enriched models) and on free algebras over pasting diagrams (§8.5). In the uniform rule set they should be removed, or kept only for a binary pair with the pseudo input last (which is the definition of ps\*).
+- (OP-inv_S′) (Theorem 8.1) is unaffected, since its premises are on the letters themselves.
+- E14(c) is closed: the list above, together with the undecidability, is the general answer. Further positive instances are certified one at a time by round 1's semi-decision.
+
+**Formalization (standard 9).** `Uniform/MarksRepaired.agda` should get: criterion (1) as a decidable predicate on bracketing trees; the repaired (INV-fac) with (1) as a side condition; removal of the ps\* branch; and a check that the old rule accepts the (2, 2) shape while the new one rejects it. Owner: MKL (ledger E14).

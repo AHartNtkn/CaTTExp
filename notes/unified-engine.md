@@ -271,7 +271,7 @@ The kernel checks four classes of contexts: pasting contexts (⊢ps), positive c
 | S37(d) | (PW) is the single input for S36(a) and S36(b) (Proposition U3.2) | MKL (S36), notified |
 | S37(e) | U4: write out REP's soundness, Proposition U4.1 at level n (the Tr_n / cotensor identification), and the §7.4 reduction as a construction | this thread |
 | S37(f) | dcoh_S as an (E)-style rule: precedent for (E)-style intrinsic naming; not an inhabitation loss for (D), since both O₃ fillers are composites of forced cells; (i′) stays open | S11 owner ("Settle the designated-lift choice"), notified |
-| S37(g) | U4 for the Agda binder kernel: lim, colim and ⟦Γ⟧ as INIT/REP instances instead of separate head families (relevant to S26g, S26k, S26m) | proposal to COLIM and HEADS, via the coordinator |
+| S37(g) | U4 for the Agda binder kernel: lim, colim and ⟦Γ⟧ as INIT/REP instances instead of separate head families (relevant to S26g, S26k, S26m) | COLIM, evaluated 2026-11-25 (PR #630): ⟦Γ⟧ := μ(Δ_Γ) adopted, colim as μ(Cocone) held until S37(e), lim unchanged |
 
 ## 9. Sources
 

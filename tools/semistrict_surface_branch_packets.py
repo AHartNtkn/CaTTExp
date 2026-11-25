@@ -125,10 +125,11 @@ def packets(reduction):
     identity = [(i+1,) for i in range(len(end)-b)]
     assert [evaluate(w,backward) for w in forward]==identity
     assert [evaluate(w,forward) for w in backward]==identity
+    dimension = 0 if b==2 and not start else max(0,b-1)
     return dict(classified=True,reversed=backwards,initial=flatten(start),final=end,
                 leading_braid=lead,trailing_braid=pending,movie=compressed,
                 packet_births=b,probes=k,probe_group_rank=len(end)-b,
-                structural_dimension_bound=max(0,b-1),probe_basis_map=forward,probe_basis_inverse=backward)
+                structural_dimension_bound=dimension,probe_basis_map=forward,probe_basis_inverse=backward)
 
 
 def analyze_faces(data):
@@ -184,6 +185,13 @@ def audit():
     wired['seams'] = [[],*[[g+1 if g>0 else g-1 for g in w] for w in d['seams']],[]]
     case, = [r for r in analyze_faces(wired) if r['packet_births']]
     assert case['packet_births']==1 and len(case['initial'])==3 and case['probe_group_rank']==4
+    # Two packets with an intervening split, a probe and signed transport.
+    d = sample([],[(0,0,2),(1,1,2),(2,0,2),(0,0,0)],[[-1,-1],[2,2],[-3,-3]])
+    for movie in (d,dict(d,charts=[dict(c,input=c['output'],output=c['input']) for c in reversed(d['charts'])],
+                         seams=[inv(w) for w in reversed(d['seams'])])):
+        case, = analyze_faces(movie)
+        assert case['initial']==[] and case['packet_births']==2 and case['probes']==1
+        assert case['structural_dimension_bound']==0 and case['probe_group_rank']==3
     print(f'{trials} signed forests and their reversals replayed at their written ends.')
     print('Each has two independent packet births, one probe, and a free complement group of rank six.')
 

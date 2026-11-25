@@ -136,11 +136,16 @@ Route tried: show every term is connected to a canonical one by induction on the
 ## 6. Uniform L
 
 - **Against oriented (∞,ω) models: incomplete, by design.** Over Σ(ΣD¹ ∨ ΣD¹) (`spec/02` §2.3 Example (c)) the interchanger inside an object is an identity in 𝔉, so the reverse cell exists canonically in every oriented (∞,ω)-category, and every setting of V + S rejects it. Uniform L targets models whose objects are themselves lax, so this is the intended gap, not a defect. Its completeness has to be measured against F_{V+S}.
-- **Against its own free objects.** SH relative to all admissible theories is the leastness of V (`spec/02` §2.3: a cell exists in F_V(Γ) iff it exists in every admissible theory). FULL relative to F_{V+S} needs:
-  1. surjectivity: every cell of F_{V+S}(Δ) is the image of a term. The operation case only produces *designated* lifts (`spec/02` §2.2). Other lifts, such as the loop H on Σ[2] ∨ Σ[2], must arise as composites of whiskered elementary interchangers; plausible, not proved;
-  2. EL in pasting contexts, which needs Lemma V (ii) of `surface-conservativity.md` (injectivity of F_{V+S}(Δ′) → F_{V+S}(Δ), open) and runs into the same coherence-case issue: the spec's coherence case asks for π-full support, so the Var-shaped repair of §4 would be needed there too;
-  3. S11: if two lifts of one head are not connected (E13: H and 1_w are not), FULL still holds as long as both are images of terms; it is the *single* head that cannot name both.
-- **Status:** open, owned by this thread (S30).
+- **Against its own free objects (2026-11-25).** With the coherence clause the spec now uses for V + S (PR #591: ⟦t⟧ = ⟦u⟧ in F_{V+S} and Var-full), the reduction of §3 goes through, and FULL for uniform L comes down to one generation question.
+  1. **EL in pasting contexts holds [proved on paper].** Let u, u′ : A be parallel uniform-L terms over a pasting Δ with equal images in F_{V+S}(Δ).
+     - Every uniform-L derivation is a two-tier L^V derivation of the same syntax: an accepted operation case projects to τ, and the coherence clause projects to L^V's (equal images project to equal images; Var is syntactic). So Lemma 4.2 applies: Var(u : A) = Var(u′ : A) =: Δ′ is a pasting sub-context (both equal the projected support of the common π-image).
+     - Strengthen u, u′ to ũ, ũ′ over Δ′.
+     - **F_{V+S}(ι) is injective for a sub-pasting inclusion ι : Δ′ → Δ** (this is Lemma V (ii) of `surface-conservativity.md`, there listed as open). Proof: ι has a retraction r : Δ → Δ′ by a substitution, r ∘ ι = id: remove the variables of Δ outside Δ′ one locally maximal variable at a time, sending it to the identity on the face that stays (in a pasting diagram a sub-pasting diagram is reached by such elementary collapses [argued, standard for Batanin trees]). By requirement 5 (closure under substitution) F_{V+S} is functorial in substitutions, so F(r) ∘ F(ι) = id and F(ι) is injective. The argument works for every admissible theory.
+     - So ⟦ũ⟧ = ⟦ũ′⟧ in F_{V+S}(Δ′) and both are Var-full there: coh_{Δ′, ũ → ũ′} and its reverse pass the coherence clause, with identity images.
+  2. **KC** follows by Theorem B of `surface-conservativity.md`, whose whiskering heads over linear trees are accepted in every setting.
+  3. **So FULL for uniform L ⟺ surjectivity**: every cell of F_{V+S}(Δ) is the image of a derivable term. Equivalently (by KC), every cell lies in the closure 𝒯 of the generators under substitution into cells that are the interpretation of a single head over their own pasting diagram. The operation case only realizes the *designated* lift, so a cell like the loop H on Σ[2] ∨ Σ[2] must arise by substitution and composition from other heads. This is open. It is posed in general form in [`conjectures/outbox/uniform-primitive-generation.md`](conjectures/outbox/uniform-primitive-generation.md) (ready to send): is every cell of F_{V+S}(Γ) generated under substitution by *primitive* cells (the unique full-projection cell between its faces over its own pasting diagram, or an identity on a Var-full cell)?
+  4. S11 is separate: FULL can hold while two lifts of one head stay unconnected (E13: H and 1_w), as long as both are images of terms.
+- **Status:** EL for uniform L proved on paper (2026-11-25); surjectivity open, outbox prompt ready, attempted further here; owned by S30.
 
 ## 7. Open items
 
@@ -151,4 +156,4 @@ Route tried: show every term is connected to a canonical one by induction on the
 | ~~Full strict-soundness typing instance for graySideV~~ **done** 2026-11-25 (`Gray/CohCaseVarSound`) | — |
 | Lemma 4.2 in Agda: the ⇒ half (entries of ↓supp(t : A) are variables of t : A) **done** for every coherence predicate (`Gray/G/SuppVars`, 2026-11-25); open: the ⇐ half in several homs (the single-hom case is `Strict/SuppFV`), that Var is a pasting sub-context, and strengthening | S30 |
 | `surface-conservativity.md` Prop. 4.3 / Corollary 4.4: proof does not apply to two-tier L as written; holds for L^V by Theorem 1 | S19 owner (notified) |
-| Uniform L: surjectivity onto F_{V+S}, EL, Var-shaped coherence case | S30 |
+| Uniform L: EL **proved on paper** (§6, including Lemma V (ii) for every admissible theory by retraction); surjectivity onto F_{V+S} open, outbox prompt `conjectures/outbox/uniform-primitive-generation.md` (ready to send) | S30 |

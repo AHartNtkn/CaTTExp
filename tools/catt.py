@@ -47,6 +47,60 @@ def id_memo(f):
     g.__wrapped__ = f
     return g
 
+# ---------------------------------------------------------------- hash-consing
+#
+# The oracle builds terms as DAGs whose subterms are rebuilt many times over
+# (equal but distinct tuples: a bridge witness of query (2) is ~1.5M objects
+# but ~0.1M distinct terms).  mk_coh returns one canonical object per
+# coherence head and argument tuple, so equal terms built from canonical
+# parts are the same object: identity memos then hit, and comparisons stop
+# at the first shared subterm.  The table only removes duplicates; clearing
+# it (when it grows past HC_LIMIT) loses sharing, never correctness.
+
+_HC = {}      # (id P, id A, arg keys) -> term; the entry keeps its args alive
+_HID = {}     # (id P, id A) -> (P, A, canonical (P, A))
+_HV = {}      # (P, A) -> canonical (P, A), by value (heads are small)
+HC_LIMIT = [3000000]
+
+def _head(P, A):
+    h = _HID.get((id(P), id(A)))
+    if h is not None and h[0] is P and h[1] is A:
+        return h[2]
+    c = _HV.setdefault((P, A), (P, A))
+    _HID[(id(P), id(A))] = (P, A, c)
+    return c
+
+def mk_coh(P, A, args):
+    """('coh', P, A, args), shared with any equal term built from the same
+    canonical parts."""
+    P, A = _head(P, A)
+    key = (id(P), id(A)) + tuple(-1 - u[1] if u[0] == 'v' else id(u) for u in args)
+    r = _HC.get(key)
+    if r is None:
+        if len(_HC) > HC_LIMIT[0]:
+            _HC.clear(); _HID.clear()
+        r = ('coh', P, A, tuple(args))
+        _HC[key] = r
+    return r
+
+def hc(t, memo=None):
+    """Canonical copy of t (children first, iteratively)."""
+    if memo is None:
+        memo = {}
+    st = [t]
+    while st:
+        x = st[-1]
+        if id(x) in memo:
+            st.pop(); continue
+        if x[0] == 'v':
+            memo[id(x)] = (x, x); st.pop(); continue
+        pend = [u for u in x[3] if id(u) not in memo]
+        if pend:
+            st.extend(pend); continue
+        st.pop()
+        memo[id(x)] = (x, mk_coh(x[1], x[2], tuple(memo[id(u)][1] for u in x[3])))
+    return memo[id(t)][1]
+
 def subst_tm(t, s, _m=None):
     # memoized by identity within one call: shared subterms stay shared
     if t[0] == 'v':
@@ -57,7 +111,7 @@ def subst_tm(t, s, _m=None):
     hit = _m.get(k)
     if hit is not None and hit[0] is t:
         return hit[1]
-    r = ('coh', t[1], t[2], tuple(subst_tm(u, s, _m) for u in t[3]))
+    r = mk_coh(t[1], t[2], tuple(subst_tm(u, s, _m) for u in t[3]))
     _m[k] = (t, r)
     return r
 

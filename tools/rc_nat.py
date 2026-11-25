@@ -53,7 +53,7 @@ def rename_map(w, m, memo=None):
         if x[0] == 'v':
             y = m.get(x[1], x)
         else:
-            y = ('coh', x[1], x[2], tuple(go(u) for u in x[3]))
+            y = mk_coh(x[1], x[2], tuple(go(u) for u in x[3]))
         memo[id(x)] = (x, y)
         return y
     return go(w)

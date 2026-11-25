@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import lru_cache
+from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -14,6 +15,9 @@ from relative_coherence_exchange_faces import head
 from relative_coherence_hidden_seam import identity
 from semistrict_surface_exact_boundary import accepted, run
 from partial_cylinder_steiner import trees
+from semistrict_surface_history_group import inv, reduced
+from semistrict_surface_mixed_word_tests import point_push
+from semistrict_surface_shared_edge import braid_image
 from semistrict_surface_scalar_pairs import branches, divergence, positions, splice, trunk
 
 
@@ -213,6 +217,59 @@ def check_squares(emitter):
             assert edges == Counter({edge: mass * charge * coef for edge, coef in cycle.items()})
 
 
+def winding_matrix(holes, probes, words):
+    """Exponent sums indexed by the probe colour and the stationary colour."""
+    coordinates = Counter()
+    for probe, word in zip(probes, words, strict=True):
+        for letter in word:
+            if not 1 <= abs(letter) <= len(holes):
+                raise ValueError('meridian outside the stationary row')
+            coordinates[probe, holes[abs(letter) - 1]] += 1 if letter > 0 else -1
+    return {pair: value for pair, value in coordinates.items() if value}
+
+
+def check_stationary_action():
+    # Use clockwise meridians so conjugation by a stationary half twist
+    # agrees with the orientation of braid_image on a leftmost probe.
+    def push(word):
+        return point_push(tuple(-i for i in word))
+
+    checks = 0
+    for h in range(2, 7):
+        for i in range(1, h):
+            for braid in ((i,), (-i,), (i, i)):
+                lift = tuple((1 if j > 0 else -1) * (abs(j) + 1) for j in braid)
+                action = braid_image(h, braid)
+                for j, image in enumerate(action, 1):
+                    transported = lift + push((j,)) + inv(lift)
+                    assert braid_image(h + 1, transported) == braid_image(h + 1, push(image))
+                    checks += 1
+            # The second meridian after a pure twist gives the exact adjacent
+            # commutator relation when it is equated to its initial value.
+            square = braid_image(h, (i, i))
+            assert reduced(square[i] + (-(i + 1),)) == (i, i + 1, -i, -(i + 1))
+            for j in range(i + 1, h + 1):
+                move = tuple(range(-j + 1, -i))  # inverse twists, distant end first
+                transported = braid_image(h, move)
+                assert (transported[i - 1], transported[i]) == ((i,), (j,))
+    return checks
+
+
+def check_colour_sums():
+    holes, probes = ('a', 'b', 'a'), ('u', 'u', 'v')
+    words = [(1, -2, 3), (2, -1), (-3, 2, -1)]
+    expected = {('u', 'a'): 1, ('v', 'a'): -2, ('v', 'b'): 1}
+    assert winding_matrix(holes, probes, words) == expected
+    assert winding_matrix(holes, probes, [words[1], words[0], words[2]]) == expected
+    # A braid interchanging the two a positions, across the intervening b.
+    coloured = braid_image(3, (1, 2, -1))
+    def act(word):
+        return reduced(j for i in word for j in
+                       (coloured[i - 1] if i > 0 else inv(coloured[-i - 1])))
+    for word in product((1, -1, 2, -2, 3, -3), repeat=4):
+        assert winding_matrix(holes, ('u',), [act(word)]) == winding_matrix(holes, ('u',), [word])
+
+
 def check_published(checkout):
     text = (checkout / 'examples/syllepsis-su.catt').read_text()
     defs = text[text.index('def swap ='):text.index('def left u')]
@@ -221,10 +278,14 @@ def check_published(checkout):
         (folder / 'Winding.catt').write_text(defs + """
 def circuit (x : *) (q : id(id(x)) -> id(id(x))) (b : id(x) -> id(x))
   : comp[[q],b] -> comp[[q],b] = comp[swapnatleft(q,b),swapnatright(b,q)]
+def slide (x : *) (q : id(id(x)) -> id(id(x))) (w : id(x) -> id(x)) (s : w -> w)
+  : comp[comp[[q],w],s] -> comp[s,comp[[q],w]] = swap(q,s)
+def stationary (x : *) (q : id(id(x)) -> id(id(x))) (w : id(x) -> id(x))
+  : swap(q,id(w)) -> id(comp[[q],w]) = id(swap(q,id(w)))
 """)
         for mode in ('--su', '--sua'):
             accepted(run(checkout / 'target/release/catt_strict', folder, 'Winding.catt', [mode]),
-                     'Winding.catt', ['circuit'])
+                     'Winding.catt', ['circuit', 'slide', 'stationary'])
 
 
 if __name__ == '__main__':
@@ -235,6 +296,9 @@ if __name__ == '__main__':
     emitter = Emitter()
     check_squares(emitter)
     print('Two typed squares give the oriented four-cycle at all 20 signed labellings.')
+    print(f'{check_stationary_action()} Artin actions agree with conjugation of the probe push.')
+    check_colour_sums()
+    print('Colour sums agree through 1,296 transported meridian words.')
     counts = check_mixed_splices()
     print(f"Mixed pairs after splicing: {counts['exterior']} exterior and {counts['interior']} interior.")
     if args.agda_dir:

@@ -62,7 +62,7 @@ def cone_path(root, start, end):
     return edges
 
 
-def evaluate(term, labels):
+def evaluate(term, labels, moving_rank=3):
     if term[0] == 'v':
         return labels[term[1]]
     _, arity, ty, sub = term
@@ -71,27 +71,29 @@ def evaluate(term, labels):
     if degree < 2:
         return out
     first, at = slots(arity)
-    inputs = [evaluate(value, labels) for value in sub]
+    inputs = [evaluate(value, labels, moving_rank) for value in sub]
     masses = {p: inputs[i].mass for p, i in first.items() if len(p) == 2}
     if degree == 2:
         return Reading(mass=sum(masses.values()))
+    if degree < moving_rank:
+        return out
     for p, i in first.items():
         if len(p) == degree:
-            if degree == 3:
+            if degree == moving_rank:
                 out.charge += inputs[i].charge
                 out.vertices.update(inputs[i].vertices)
-            elif degree == 4:
+            elif degree == moving_rank + 1:
                 out.edges.update(inputs[i].edges)
-    assert degree in (3, 4)
+    assert degree in (moving_rank, moving_rank + 1)
     for active, i in first.items():
-        if len(active) != 3 or not inputs[i].charge:
+        if len(active) != moving_rank or not inputs[i].charge:
             continue
         for standing, mass in masses.items():
             weight = inputs[i].charge * mass
             if not weight or active[:2] == standing:
                 continue
             root = fork(active[:2], standing)
-            if degree == 3:
+            if degree == moving_rank:
                 out.vertices[root] += weight
                 continue
             # Distinguish the two generic slots even when their actual faces
@@ -99,7 +101,7 @@ def evaluate(term, labels):
             tags = [Reading(mass=int(pos == standing), charge=int(pos == active)) for pos in at]
             vertices = []
             for face in ty[2:]:
-                reading = evaluate(face, tags)
+                reading = evaluate(face, tags, moving_rank)
                 vertex, = reading.vertices
                 assert reading.vertices[vertex] == reading.charge == 1
                 vertices.append(vertex)
@@ -150,9 +152,9 @@ def origins(position, branch, width):
     return branch + (0,) * len(tail), (0,) * level + (i - start,) + tail
 
 
-def check_mixed_splices():
+def check_mixed_splices(moving_rank=3, edge_bound=6):
     counts = Counter()
-    shapes = [t for size in range(7) for t in trees(size)]
+    shapes = [t for size in range(edge_bound + 1) for t in trees(size)]
     for outer in shapes:
         for branch, height in branches(outer):
             for inner in shapes:
@@ -163,9 +165,9 @@ def check_mixed_splices():
                     node, = node
                 width = len(node)
                 joined = splice(outer, branch, inner)
-                for active in positions(joined, 3):
+                for active in positions(joined, moving_rank):
                     old_a, inner_a = origins(active, branch, width)
-                    assert old_a in positions(outer, 3)
+                    assert old_a in positions(outer, moving_rank)
                     for standing in positions(joined, 2):
                         if active[:2] == standing:
                             continue
@@ -175,7 +177,7 @@ def check_mixed_splices():
                             inherited = fork(old_a[:2], old_b)
                             counts['exterior'] += 1
                         else:
-                            assert inner_a in positions(inner, 3) and inner_b in positions(inner, 2)
+                            assert inner_a in positions(inner, moving_rank) and inner_b in positions(inner, 2)
                             inherited = fork(inner_a[:2], inner_b)
                             counts['interior'] += 1
                         assert fork(active[:2], standing) == inherited

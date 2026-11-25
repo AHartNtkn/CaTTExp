@@ -7,10 +7,11 @@ from semistrict_surface_insertion_cut import Assertions
 
 
 class RankCut:
-    def __init__(self, rank, binary, directory):
+    def __init__(self, rank, binary, directory, flags=('--sua',)):
         self.rank = rank
         self.binary = binary
         self.directory = directory
+        self.flags = flags
 
     @cache
     def context(self, ctx):
@@ -70,7 +71,7 @@ class RankCut:
         return (self.equal_type(left[1], left[2], right[2])
                 and all(self.equal_term(ctx, a, b) for a, b in zip(left[3], right[3], strict=True)))
 
-    def published_equal(self, ctx, left, right):
+    def published_equal(self, ctx, left, right, flags=None):
         code = Assertions()
         telescope = []
         for i, ty in enumerate(ctx):
@@ -79,7 +80,7 @@ class RankCut:
         query = f'assert {code.term(left)} = {code.term(right)} in ' + ' '.join(telescope)
         name = 'LowRankEquality.catt'
         (self.directory / name).write_text('\n'.join([*code.commands, query]) + '\n')
-        result = run(self.binary, self.directory, name, ['--sua'])
+        result = run(self.binary, self.directory, name, self.flags if flags is None else flags)
         if 'Error: Assertion failed:' in result and 'are not equal' in result:
             return False
         if 'Error: Terms ' in result and 'do not have matching types' in result:

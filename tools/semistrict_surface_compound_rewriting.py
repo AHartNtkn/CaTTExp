@@ -14,6 +14,7 @@ from semistrict_surface_equal_rank import suspend
 from semistrict_surface_flat_heads import check_weak
 from semistrict_surface_grid_tracks import temporal
 from semistrict_surface_rank_cut import RankCut
+from semistrict_surface_strict_factors import height, proper_factors, strict
 
 
 def rewrites(word, lhs, rhs):
@@ -84,6 +85,7 @@ class Serial:
         self.names = tuple(v(len(base) + i) for i in range(len(names)))
         self.ctx = base + tuple(arr(infer(base, a), a, b) for a, b in names)
         self.bridges = {}
+        self.poles = {strict(base, self.pole)}
         for a, b in names:
             self.check_poles(a, b)
         self.rules = []
@@ -94,10 +96,19 @@ class Serial:
         self.binary_tips = maximal_vars(self.arity)
 
     def check_poles(self, a, b):
+        poles = self.poles.copy()
         for x in (a, b):
             if infer(self.base, x) != infer(self.base, self.pole):
                 raise ValueError('The lower poles must be literally parallel')
-            self.bridge(self.pole, x)
+            d = strict(self.base, x)
+            if d in poles:
+                continue
+            if height(d) != self.rank - 1:
+                raise ValueError('Each pole needs a top-dimensional occurrence')
+            if any(y in proper_factors(d) or d in proper_factors(y) for y in poles):
+                raise ValueError('One strict pole is a proper factor of another')
+            poles.add(d)
+        self.poles = poles
 
     def bridge(self, a, b):
         if (a, b) not in self.bridges:
@@ -192,6 +203,30 @@ class Serial:
         self.types.append(ty)
         self.arrows.append(v(len(self.ctx)))
         self.ctx += (arr(ty, a, b),)
+
+    def typed_search(self, source, target, counts=None, weights=None):
+        ty = infer(self.ctx, source)
+        if infer(self.ctx, target) != ty:
+            raise ValueError('Query faces must be parallel')
+        self.check_poles(*ty[2:])
+        def encode(term):
+            word = self.word(term)
+            indices = [infer(self.ctx, term)[2]] + [infer(self.ctx, self.names[j])[3] for j in word]
+            poles = [strict(self.base, x) for x in indices]
+            encoded = [('pole', poles[0])]
+            for j, d in zip(word, poles[1:]):
+                encoded.extend([('letter', j), ('pole', d)])
+            return tuple(encoded)
+        rules = [(encode(self.ctx[g[1]][2]), encode(self.ctx[g[1]][3])) for g in self.arrows]
+        weighted = None
+        if weights is not None:
+            weighted = {('pole', d): 1 for d in self.poles}
+            weighted.update({('letter', j): 2 * w - 1 for j, w in weights.items()})
+        history = search(rules, encode(source), encode(target), counts, weighted)
+        if history is None:
+            return None
+        assert all(pos % 2 == 0 for _, pos in history)
+        return [(rule, pos // 2) for rule, pos in history]
 
     def replay(self, source, target, moves):
         ctx, rank = self.ctx, self.rank

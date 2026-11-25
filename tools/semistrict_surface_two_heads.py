@@ -278,8 +278,8 @@ def chart_checks():
     from relative_coherence_hidden_seam import identity
     from catt import glue_tree, ucomp
     checked = 0
-    for tree in ((), disc_tree(1), disc_tree(2), glue_tree(1, 1, 0),
-                 glue_tree(2, 1, 0), glue_tree(1, 2, 0), glue_tree(2, 2, 1)):
+    for tree in ((), disc_tree(1), disc_tree(2), glue_tree(1, 0, 1),
+                 glue_tree(2, 0, 1), glue_tree(1, 0, 2), glue_tree(2, 1, 2), glue_tree(3, 2, 3)):
         ctx = tree_ctx(tree)
         total = ucomp(ctx)
         # Deep padded expressions have enormous written tuples. Compare complete

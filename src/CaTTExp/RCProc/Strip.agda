@@ -27,7 +27,7 @@ open import CaTTExp.RCProc using (rcP)
 open import CaTTExp.RCProc.Glue using (Ans)
 open import CaTTExp.RCProc.TypedSub
 open import CaTTExp.RCProc.TypedOps using (rcomp?; lcomp?; ansT)
-open import CaTTExp.RCProc.GlueP using (glueT; varT; bdT; transT?)
+open import CaTTExp.RCProc.GlueP using (glueT; varT; bdT; transT?; treeCtx)
 
 -- A recursion oracle: an answer a ⇛ b for typed parallel a, b.
 Rec : Ctx → Set
@@ -95,12 +95,13 @@ chainTree k dims = wrap k (node (mapL (λ d → disc (d ∸ suc k)) dims))
 
 -- The glue cell lhs ⇛ rhs over the chain context of `cells` along cut
 -- k; lhs, rhs are given the typed maximal variables of P.
-gcoh : ∀ {Γ} → Γ ⊢ctx → (k : Nat) → (cells : List (TTm Γ)) →
-       (∀ {Δ} → List (TTm Δ) → Maybe (TTm Δ)) →
-       (∀ {Δ} → List (TTm Δ) → Maybe (TTm Δ)) → Maybe (TTm Γ)
+Ends : Set
+Ends = ∀ {Δ} → Δ ⊢ctx → List (TTm Δ) → Maybe (TTm Δ)
+
+gcoh : ∀ {Γ} → Γ ⊢ctx → (k : Nat) → (cells : List (TTm Γ)) → Ends → Ends → Maybe (TTm Γ)
 gcoh w k cells lhs rhs =
   glueT w Tc (zipL mx cells) λ v →
-    mapM v mx >>= λ xs → lhs xs >>= λ a → rhs xs >>= λ b → just (a , b)
+    mapM v mx >>= λ xs → lhs (treeCtx Tc) xs >>= λ a → rhs (treeCtx Tc) xs >>= λ b → just (a , b)
   where
   Tc = chainTree k (mapD cells)
     where
@@ -114,11 +115,11 @@ gcoh w k cells lhs rhs =
 unitT : ∀ {Γ} → Γ ⊢ctx → (k : Nat) → Bool → TTm Γ → Maybe (TTm Γ)
 unitT w k back x = gcoh w 0 (x ∷ []) (if back then one else plain) (if back then plain else one)
   where
-  plain one : ∀ {Δ} → List (TTm Δ) → Maybe (TTm Δ)
-  plain (y ∷ _) = just y
-  plain []      = nothing
-  one (y ∷ _) = iter (dimT y ∸ k) tgtT y >>= idT >>= comp2? k y
-  one []      = nothing
+  plain one : Ends
+  plain _ (y ∷ _) = just y
+  plain _ []      = nothing
+  one _ (y ∷ _) = iter (dimT y ∸ k) tgtT y >>= idT >>= comp2? k y
+  one _ []      = nothing
 
 vchain : ∀ {Γ} → List (Maybe (TTm Γ)) → Maybe (TTm Γ)
 vchain []       = nothing
@@ -146,11 +147,99 @@ stripR w rec t u K V =
         ∷ unitT w m true u ∷ [])
   where
   m = dimT t ∸ 1
-  la ra : ∀ {Δ} → List (TTm Δ) → Maybe (TTm Δ)
-  la (x ∷ a ∷ b ∷ _) = comp2? m a b >>= comp2? m x
-  la _ = nothing
-  ra (x ∷ a ∷ b ∷ _) = comp2? m x a >>= λ xa → comp2? m xa b
-  ra _ = nothing
+  la ra : Ends
+  la _ (x ∷ a ∷ b ∷ _) = comp2? m a b >>= comp2? m x
+  la _ _ = nothing
+  ra _ (x ∷ a ∷ b ∷ _) = comp2? m x a >>= λ xa → comp2? m xa b
+  ra _ _ = nothing
   -- x(KK⁻) ⇛ (xK)K⁻, or back
   assoc : TTm _ → TTm _ → Bool → Maybe (TTm _)
   assoc x Ki back = gcoh w m (x ∷ K ∷ Ki ∷ []) (if back then ra else la) (if back then la else ra)
+
+------------------------------------------------------------------------
+-- The strip at cut k = n − 2 (tools/rc_descent.py strip_lower).  From
+-- V : t ;ₖ A ⇛ u ;ₖ A (t, u n-cells, A an (n−1)-cell on their k-target
+-- p) to t ⇛ u, after whiskering V by A⁻, in three transports
+--     (xA)A⁻  →  x(AA⁻)  →  x1ₚ  →  x .
+-- Whiskering at k changes boundaries, so each transport is a square
+-- S(x) : b_s(x) ;ₘ F(x) ⇛ G(x) ;ₘ b_t(x) (a glue cell over the chain
+-- context of x and the moving cells), conjugating V; the common b_t is
+-- then removed by stripR.
+
+module _ {Γ} (w : Γ ⊢ctx) (rec : Rec Γ) (n : Nat) where
+  private
+    k m : Nat
+    k = n ∸ 2
+    m = n ∸ 1
+
+    -- y(BB′) ⇛ (yB)B′ over the chain of three cells along k, or back
+    la ra : Ends
+    la _ (y ∷ a ∷ b ∷ _) = comp2? k a b >>= comp2? k y
+    la _ _ = nothing
+    ra _ (y ∷ a ∷ b ∷ _) = comp2? k y a >>= λ ya → comp2? k ya b
+    ra _ _ = nothing
+
+    re : ∀ {Δ} → Δ ⊢ctx → Bool → TTm Δ → TTm Δ → TTm Δ → Maybe (TTm Δ)
+    re wΔ back y a b = gcoh wΔ k (y ∷ a ∷ b ∷ []) (if back then ra else la) (if back then la else ra)
+
+    -- W = S(t)⁻ ; (b_s(t) ◃ Vi) ; S(u), then stripR by b_t(t)
+    transport : (S : Bool → TTm Γ → Maybe (TTm Γ)) → (bs bt : TTm Γ → Maybe (TTm Γ)) →
+                (Gt Gu Vi t u : TTm Γ) → Maybe (TTm Γ)
+    transport S bs bt Gt Gu Vi t u =
+      bs t >>= λ bst → bt t >>= λ btt →
+      vchain (S true t ∷ comp2? m bst Vi ∷ S false u ∷ []) >>= λ W →
+      stripR w rec Gt Gu btt W
+
+  stripL : (t u A V : TTm Γ) → Maybe (TTm Γ)
+  stripL t u A V =
+    srcT A >>= λ p → tgtT A >>= λ q →
+    rec q p >>= λ Ai →
+    comp2? k A Ai >>= λ AAi →
+    idT p >>= λ one →
+    rec AAi one >>= λ c →
+    rec one AAi >>= λ ci →
+    -- 1. (xA)A⁻ → x(AA⁻)
+    comp2? k V Ai >>= λ V1 →
+    G1 Ai t >>= λ G1t → G1 Ai u >>= λ G1u →
+    transport (S1 Ai) (λ x → srcT x >>= λ y → re w false y A Ai) (λ x → tgtT x >>= λ y → re w false y A Ai)
+              G1t G1u V1 t u >>= λ V2 →
+    -- 2. x(AA⁻) → x1ₚ, by the interchange with c⁻ : 1ₚ ⇛ AA⁻
+    comp2? k t one >>= λ G2t → comp2? k u one >>= λ G2u →
+    transport (S2 ci) (λ x → srcT x >>= λ y → comp2? k y ci) (λ x → tgtT x >>= λ y → comp2? k y ci)
+              G2t G2u V2 t u >>= λ V3 →
+    -- 3. x1ₚ → x, by the unit squares
+    transport S3 (λ x → srcT x >>= unitT w k false) (λ x → tgtT x >>= unitT w k false)
+              t u V3 t u
+    where
+    G1 : TTm Γ → TTm Γ → Maybe (TTm Γ)
+    G1 Ai x = comp2? k A Ai >>= comp2? k x
+    -- S1(x) : re(σx) ;ₘ (xA)A⁻ ⇛ x(AA⁻) ;ₘ re(τx), cells x, A, A⁻
+    S1 : TTm Γ → Bool → TTm Γ → Maybe (TTm Γ)
+    S1 Ai back x = gcoh w k (x ∷ A ∷ Ai ∷ []) (if back then rhs else lhs) (if back then lhs else rhs)
+      where
+      lhs rhs : Ends
+      lhs wΔ (X ∷ B ∷ Bi ∷ _) = srcT X >>= λ y → re wΔ false y B Bi >>= λ r → ra wΔ (X ∷ B ∷ Bi ∷ []) >>= comp2? m r
+      lhs _ _ = nothing
+      rhs wΔ (X ∷ B ∷ Bi ∷ _) = tgtT X >>= λ y → re wΔ false y B Bi >>= λ r → la wΔ (X ∷ B ∷ Bi ∷ []) >>= λ l → comp2? m l r
+      rhs _ _ = nothing
+    -- S2(x) : (σx ;ₖ C) ;ₘ (x ;ₖ τC) ⇛ (x ;ₖ σC) ;ₘ (τx ;ₖ C), cells x, C
+    S2 : TTm Γ → Bool → TTm Γ → Maybe (TTm Γ)
+    S2 C back x = gcoh w k (x ∷ C ∷ []) (if back then rhs else lhs) (if back then lhs else rhs)
+      where
+      lhs rhs : Ends
+      lhs _ (X ∷ D ∷ _) = srcT X >>= λ sx → tgtT D >>= λ td →
+                          comp2? k sx D >>= λ a → comp2? k X td >>= λ b → comp2? m a b
+      lhs _ _ = nothing
+      rhs _ (X ∷ D ∷ _) = tgtT X >>= λ tx → srcT D >>= λ sd →
+                          comp2? k X sd >>= λ a → comp2? k tx D >>= λ b → comp2? m a b
+      rhs _ _ = nothing
+    -- S3(x) : unit(σx) ;ₘ (x ;ₖ 1) ⇛ x ;ₘ unit(τx), over the disc of x
+    S3 : Bool → TTm Γ → Maybe (TTm Γ)
+    S3 back x = gcoh w 0 (x ∷ []) (if back then rhs else lhs) (if back then lhs else rhs)
+      where
+      lhs rhs : Ends
+      lhs wΔ (X ∷ _) = srcT X >>= unitT wΔ k false >>= λ us →
+                       iter (dimT X ∸ k) tgtT X >>= idT >>= comp2? k X >>= comp2? m us
+      lhs _ _ = nothing
+      rhs wΔ (X ∷ _) = tgtT X >>= unitT wΔ k false >>= comp2? m X
+      rhs _ _ = nothing

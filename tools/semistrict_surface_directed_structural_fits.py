@@ -178,7 +178,7 @@ def check_whiskered_row(emitter, actual_ctx, labels):
         emitter.check_typed(name, actual_ctx, cmp)
 
 
-def check_rectangle(emitter):
+def left_subdivision():
     rect = chart(2, 1)
     a, d, b = map(v, maximal_vars(rect))
     first = comp2(rect, 1, crossing(rect, a, b), comp2(rect, 0, d, tgt(rect, b)))
@@ -188,12 +188,58 @@ def check_rectangle(emitter):
                   distributor(rect, a, d, tgt(rect, b), True))
     end = comp2(rect, 1, distributor(rect, a, d, src(rect, b), False),
                 comp2(rect, 0, tgt(rect, d), b))
+    return fitted_subdivision(rect, direct, start, first, last, end)
+
+
+def right_subdivision():
+    rect = chart(1, 2)
+    a, b, d = map(v, maximal_vars(rect))
+    first = comp2(rect, 1, comp2(rect, 0, src(rect, a), b), crossing(rect, a, d))
+    last = comp2(rect, 1, crossing(rect, a, b), comp2(rect, 0, tgt(rect, a), d))
+    direct = crossing(rect, a, comp2(rect, 1, b, d))
+
+    row = tree_ctx(((), ((), ())))
+    e, x, y = map(v, maximal_vars(row))
+    block = comp2(row, 0, e, comp2(row, 1, x, y))
+    separated = comp2(row, 1, comp2(row, 0, e, x), comp2(row, 0, e, y))
+    expand = apply(rect, (row, head(row, block, separated)), (src(rect, a), b, d))
+    contract = apply(rect, (row, head(row, separated, block)), (tgt(rect, a), b, d))
+    start = comp2(rect, 1, expand, comp2(rect, 0, a, tgt(rect, d)))
+    end = comp2(rect, 1, comp2(rect, 0, a, src(rect, b)), contract)
+    return fitted_subdivision(rect, direct, start, first, last, end)
+
+
+def fitted_subdivision(rect, direct, start, first, last, end):
     pieces = [start, row_fit(rect, tgt(rect, start), src(rect, first)), first,
               row_fit(rect, tgt(rect, first), src(rect, last)), last,
               row_fit(rect, tgt(rect, last), src(rect, end)), end]
     split = composite(rect, 2, pieces)
     assert src(rect, split) == src(rect, direct) and tgt(rect, split) == tgt(rect, direct)
+    return rect, direct, split
 
+
+def check_three_spans(emitter):
+    wide = tree_ctx((((),),) * 3)
+    gates = list(map(v, maximal_vars(wide)))
+    for name, offset, (rect, direct, split) in [
+            ('left', 0, left_subdivision()), ('right', 1, right_subdivision())]:
+        a, b = gates[offset:offset + 2]
+        serial = [comp2(wide, 0, a, src(wide, b)), comp2(wide, 0, tgt(wide, a), b)]
+        labels = gates[:offset] + serial + gates[offset + 2:]
+        faces = [apply(wide, (rect, face), labels) for face in (direct, split)]
+        assert faces[0] != faces[1]
+        for suffix, old, new, start, end in [
+                ('Expand', direct, split, *faces), ('Contract', split, direct, *reversed(faces))]:
+            witness = apply(wide, (rect, head(rect, old, new)), labels)
+            emitter.check_type(name + suffix, wide, witness, arr(infer(wide, start), start, end))
+        g, ty = emitter.ctx(wide), emitter.ty(infer(wide, faces[0]))
+        s, t = map(emitter.tm, faces)
+        emitter.checks.append(f'{name}Wide : cohCase {g} {ty} {s} {t} ≡ false\n'
+                              f'{name}Wide = refl\n')
+
+
+def check_rectangle(emitter):
+    rect, direct, split = left_subdivision()
     line = tree_ctx(((), (), ()))
     edges = list(map(v, maximal_vars(line)))
     left = composite(line, 0, edges)
@@ -236,12 +282,13 @@ def main():
     count = check_overlaps()
     emitter = Emitter()
     check_rectangle(emitter)
+    check_three_spans(emitter)
     if args.agda_dir:
         args.agda_dir.mkdir(parents=True, exist_ok=True)
         module = emitter.module('DirectedStructuralFits', __doc__)
         (args.agda_dir / 'DirectedStructuralFits.agda').write_text(
             module.replace('open import CaTTExp.Pure', 'open import CaTTExp.Gray.Pure'))
-    print(f'Checked {count} ordered critical overlaps and both compound rectangle comparisons.')
+    print(f'Checked {count} ordered critical overlaps and two-way strip comparisons on compound faces and three spatial spans.')
 
 
 if __name__ == '__main__':

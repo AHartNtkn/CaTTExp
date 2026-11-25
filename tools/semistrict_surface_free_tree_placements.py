@@ -41,12 +41,12 @@ def span(rows, zero, modulus):
     return group
 
 
-def compile_tree(deck_rank, modulus, rank, steps, face, relations):
+def local_names(deck_rank, modulus, rank, inputs):
     if min(deck_rank, rank) < 1 or modulus < 2:
         raise ValueError("positive ranks and modulus >= 2 required")
     names = {((), i) for i in range(rank)}
     columns = []
-    for column in [*steps, face, *relations]:
+    for column in inputs:
         terms = []
         for word, i, c in column:
             if not 0 <= i < rank:
@@ -57,6 +57,11 @@ def compile_tree(deck_rank, modulus, rank, steps, face, relations):
                 terms.append(((w, i), c))
         columns.append(terms)
     index = {name: j for j, name in enumerate(sorted(names))}
+    return index, columns
+
+
+def compile_tree(deck_rank, modulus, rank, steps, face, relations):
+    index, columns = local_names(deck_rank, modulus, rank, [*steps, face, *relations])
     zero = (0,) * len(index)
 
     def vector(terms):

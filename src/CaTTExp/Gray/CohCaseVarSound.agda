@@ -15,9 +15,11 @@
 --    operation-case cohs as the total cell.
 --  * ccF, the full-Gray-support clause in closure form, as a control:
 --    the same theorem for (closure-form) graySide.
---  * Lemma 4.2 for ccV, both halves (`var-used`, `used-var`): over a
---    pasting context, v is an entry of a tuple of ↓supp(t : A) iff v is
---    a non-object variable of t : A (Strict.G.SuppFV, Gray.G.SuppVars).
+--  * Lemma 4.2 for ccV (`var-used`, `used-var`, `used-nonobj`): over a
+--    pasting context and for A an arrow type, v is an entry of a tuple
+--    of ↓supp(t : A) iff v is a non-object variable of t : A
+--    (Strict.G.SuppFV, Gray.G.SuppVars). At A = ⋆ the support of an
+--    object x is (x) itself.
 --  * evaluation checks on the gap example βα → βα₂ of Gray.CohCaseGap:
 --    SV.sideG (SupportG's sideG at ccV) accepts it, the support function now gives it the identity
 --    image (empty top chain), the certified checker produces a
@@ -91,8 +93,10 @@ soundF = F.Soundness.sound-tm hccF
 
 ------------------------------------------------------------------------
 -- Lemma 4.2, both halves, for the Var-shaped rule: over a pasting
--- context, v is used by ↓supp(t : A) iff v is a non-object variable of
--- t : A. (⇒: Gray.G.SuppVars; ⇐: Strict.G.SuppFV.)
+-- context and for A an arrow type, v is used by ↓supp(t : A) iff v is a
+-- non-object variable of t : A. (⇒: Gray.G.SuppVars for "variable of
+-- t : A", Strict.G.SuppFV.supp-nonobj for "not an object"; ⇐:
+-- Strict.G.SuppFV.supp-fv⇐.)
 
 import CaTTExp.Strict.G.SuppFV
 import CaTTExp.Gray.G.SuppVars
@@ -122,6 +126,11 @@ used-var {Γ} {t} {A} P d {v} u
 ...   | j , mj , e with ==ℕ-sound v j e
 ...     | refl with down-out P (SV.supp t A) {τ} (memT-complete τ _ mτ)
 ...       | s , ms , k , r = SVV.supp-vars HV.closed (HV.inv-gr (LV.psInv P)) d ms r mj
+
+-- ⇒, the rest: over an arrow type no object is used.
+used-nonobj : ∀ {Γ t B p q} → TV._⊢ps Γ → TV._⊢tm_∶_ Γ t (arr B p q) → ∀ {v} →
+              T (usesVar v (down Γ (SV.supp t (arr B p q)))) → lookup Γ v ≡ just ⋆ → ⊥
+used-nonobj P d = FV.supp-nonobj hccV hvfV P d
 
 ------------------------------------------------------------------------
 -- Evaluation checks on the gap example.

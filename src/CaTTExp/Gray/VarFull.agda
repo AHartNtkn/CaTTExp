@@ -4,8 +4,8 @@
 --
 -- The coherence clause of L^V (Gray.CohCaseVar, Gray.CohCaseVarSound)
 -- asks this of both supp(t : A) and supp(u : A). Strict.G.SuppFV shows
--- that, over a pasting context, the variables used by ↓supp(t : A) are
--- exactly the non-object variables of t : A.
+-- that, over a pasting context and for A an arrow type, the variables
+-- used by ↓supp(t : A) are exactly the non-object variables of t : A.
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Signature

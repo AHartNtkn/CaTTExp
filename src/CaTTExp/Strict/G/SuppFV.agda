@@ -9,12 +9,14 @@
 -- for two-tier L whose coherence-case predicate cc forces equal closed
 -- supports (CohSound, as for soundness) and Var-fullness of the source's
 -- support (`VarFullHyp`); ccV of Gray.CohCaseVarSound satisfies both.
--- With the ⇒ half (Gray.G.SuppVars): over a pasting context the
--- variables used by ↓supp(t : A) are exactly the non-object variables
--- of t : A, i.e. Var(t : A) is the projected Gray support.
+-- With `supp-nonobj` (below) and the ⇒ half (Gray.G.SuppVars): over a
+-- pasting context and for A an arrow type, the variables used by
+-- ↓supp(t : A) are exactly the non-object variables of t : A.
 --
--- This generalises Strict.SuppFV (single hom, full-support rule). The
--- proof is the same induction on derivations; what changes:
+-- The proof generalises that of Strict.SuppFV (single hom, graySide);
+-- that theorem is not an instance of this one (different support
+-- function, and its conclusion is (v) ∈ ↓supp). The proof is the same
+-- induction on derivations; what changes:
 --   * entries are tracked as members of tuples, not as singletons;
 --   * for a coh c = coh_Δ(…)[σ] and a tuple s of the top support of
 --     σ(g), a tuple τ_g = pre ++ g ∷ post of K(Δ) with 1-cells around g
@@ -56,7 +58,7 @@ open import CaTTExp.Strict.CohCase using (count-∈L; ∈L-++r; down-in; down-ou
 open import CaTTExp.Strict.Recon using (flat-sub; Sub-cell; topdeg; ∈L-++l)
 open import CaTTExp.Strict.LiftImage using (image)
 open import CaTTExp.Strict.SigmaFacts using (reach-obj)
-open import CaTTExp.Strict.PsSteps using (objs-lookup; face-step; AllEnt; wft-ent; reach-ent; through'; reach-pre; reach-app)
+open import CaTTExp.Strict.PsSteps using (objs-lookup; face-step; AllEnt; _∷_; wft-ent; reach-ent; through'; reach-pre; reach-app)
 open import CaTTExp.Strict.DegBound using (deg-wft)
 import CaTTExp.Gray.Cover as C
 open import CaTTExp.Gray.Cover using (Any; any-witness; _≤_; z≤n; s≤s; ≤-trans; ≤-refl; All-T)
@@ -506,6 +508,23 @@ module _ (hcc : CohSound) (hvf : VarFullHyp) {Γ : Ctx} (PΓ : Γ ⊢ps) where
     usesVar⇐ : ∀ v S {z} → z ∈L S → v ∈ᴺ z → T (usesVar v S)
     usesVar⇐ v S {z} mz mv =
       anyS⇐ _ S (C.any-mono (λ { refl → anyS⇐ (λ j → v ==ℕ j) z (C.any-mono (λ { refl → ==ℕ-refl v }) mv) }) mz)
+
+  -- Conversely, over an arrow type the closed support uses no object.
+  supp-nonobj : ∀ {t B p q} → Γ ⊢tm t ∶ arr B p q → ∀ {v} →
+                T (usesVar v (down Γ (supp t (arr B p q)))) → NonObj v
+  supp-nonobj {t} {B} {p} {q} d {v} u with any-witness (anyS⇒ _ (down Γ (supp t (arr B p q))) u)
+  ... | τ , mτ , uτ with any-witness (anyS⇒ (λ j → v ==ℕ j) τ uτ)
+  ...   | j , mj , e with ==ℕ-sound v j e
+  ...     | refl with down-out PΓ (supp t (arr B p q)) {τ} (memT-complete τ _ mτ)
+  ...       | s , ms , k , r with sound-tm invΓ d
+  ...         | _ , _ , _ , _ , cX with cell-wft PΓ cX (supp-flat t B p q ms)
+  ...           | _ , _ , ws = ent-nonobj (reach-ent Γ PFΓ r (wft-ent Γ PFΓ s ws)) mj
+    where
+    ent-nonobj : ∀ {z} → AllEnt Γ PFΓ z → v ∈ᴺ z → NonObj v
+    ent-nonobj ((C , lC , st) ∷ _) (hereA refl) lo with trans (sym lC) lo
+    ... | refl with st
+    ...   | ()
+    ent-nonobj (_ ∷ es) (thereA m) lo = ent-nonobj es m lo
 
   supp-fv⇐ : ∀ {t A} → Γ ⊢tm t ∶ A → ∀ {v} → v ∈ᴺ fvTmTy t A → NonObj v →
              T (usesVar v (down Γ (supp t A)))

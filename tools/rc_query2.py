@@ -144,6 +144,8 @@ def full(limit=120, cache=None):
              stats['rc'], stats['piece'], stats['cached']))
     if w is not None:
         catt.INFER_LIMIT[0] = 10 ** 9
+        catt._IDC.clear()               # check from an empty memo, as a fresh process would
+        catt._IDN[0] = 0
         t0 = time.time()
         ok = infer(G, w) == arr(A, t, u)
         print('answer type-checks as t -> u: %s (%.0f s)' % (ok, time.time() - t0))

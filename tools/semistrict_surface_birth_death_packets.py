@@ -18,8 +18,64 @@ from relative_coherence_exchange_faces import composite, head, steps, string_tre
 from relative_coherence_hidden_seam import identity
 from semistrict_surface_component_braids import restrict
 from semistrict_surface_gate_forests import Presentation, cable
-from semistrict_surface_history_group import exchange
+from semistrict_surface_history_group import cyclic, exchange, inv
+from semistrict_surface_scalar_leaves import swapped
 from semistrict_surface_shared_edge import braid_image
+
+
+def cap_seam(data):
+    """Read a scalar birth-first seam; birth and death slots are zero-based."""
+    from semistrict_surface_trefoil_mixed import substitute
+    m,p,q,a,d = (data[k] for k in ('through','created','consumed','birth_slot','death_slot'))
+    n = m+p+q
+    if (any(type(v) is not int for v in (m,p,q,a,d)) or m<0 or min(p,q)<1
+            or not 0<=a<=n-p or not 0<=d<=n-q):
+        raise ValueError('invalid packet sizes or site positions')
+    word = tuple(data['seam'])
+    if any(type(g) is not int or not 0<abs(g)<n for g in word):
+        raise ValueError('invalid signed seam')
+    row = swapped(range(n),word)
+    if set(row[d:d+q]).intersection(range(a,a+p)):
+        raise ValueError('the death consumes a born leaf; the sites are dependent')
+    curve = substitute(range(a+1,a+p+1),braid_image(n,inv(word)))
+    turn = tuple(range(d+1,d+q))*q
+    disjoint = cyclic(curve)==cyclic(substitute(curve,braid_image(n,turn)))
+    return dict(meets_tie=disjoint,carried_curve=cyclic(curve),
+                complement_generators=n,complement_relators=[cyclic(curve),tuple(range(d+1,d+q+1))],
+                birth_first_free_rank=(1 if m==0 else 'countably infinite') if disjoint else 0,
+                total_free_rank=0)
+
+
+def audit_cap_seams():
+    from semistrict_surface_serial_gate_tracks import push
+    # At the first site slide the entire born packet about the spectator
+    # word. Independently impose both site and fixed-end equations.
+    tested = 0
+    for m in (0,1):
+        n = 4+m
+        for seam in ((),(2,2),(1,1),(3,3),(2,2,3,3,-2,-2,-3,-3)):
+            result = cap_seam(dict(through=m,created=2,consumed=2,birth_slot=0,death_slot=2,seam=seam))
+            matches = []
+            for length in range(1,4):
+                for letters in product(range(1,m+3),repeat=length):
+                    loop = cable(push(letters),[2]+[1]*(m+2))
+                    at_death = inv(seam)+loop+tuple(seam)
+                    keep = set(range(n))-{3}
+                    site = restrict(n,at_death,keep)
+                    recabled = cable(site,[1,1,2]+[1]*m)
+                    final = restrict(n,at_death,set(range(n))-{2,3})
+                    if (braid_image(n,at_death)==braid_image(n,recabled)
+                            and braid_image(n-2,final)==braid_image(n-2,())):
+                        matches.append(letters)
+                    tested += 1
+            assert bool(matches)==result['meets_tie']
+    # This seam preserves every two-strand reading and prevents a tie.
+    comm = (2,2,3,3,-2,-2,-3,-3)
+    assert not cap_seam(dict(through=0,created=2,consumed=2,birth_slot=0,death_slot=2,seam=comm))['meets_tie']
+    for i in range(4):
+        for j in range(i):
+            assert braid_image(2,restrict(4,comm,{i,j}))==braid_image(2,())
+    print(f'{tested} birth-first site-loop candidates compared with the signed disk test.')
 
 
 def follow(diagram, word, ports):
@@ -209,10 +265,14 @@ if __name__=='__main__':
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('input',type=Path,nargs='?')
     parser.add_argument('--agda-dir',type=Path)
+    parser.add_argument('--cap-seam',type=Path,help='JSON with through, created, consumed, birth_slot, death_slot, seam')
     args = parser.parse_args()
-    if args.input:
+    if args.cap_seam:
+        print(json.dumps(cap_seam(json.loads(args.cap_seam.read_text())),indent=2))
+    elif args.input:
         print(json.dumps({'joint_path':lift(json.loads(args.input.read_text()))}))
     else:
         audit()
         audit_intersection()
+        audit_cap_seams()
         typed(args.agda_dir)

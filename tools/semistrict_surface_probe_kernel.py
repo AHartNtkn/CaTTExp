@@ -1,9 +1,10 @@
-"""Certify independent higher probe differences forced by a filled degree-five loop.
+"""Certify independent higher probe differences at a fixed history.
 
 JSON: sphere_degree k>=2, count>=1, and either a stationary holes/word
 query, a pairs/braid/word plat, or a generators/faces/word complement group.
 A supplied finite permutation action uses the plat solver's right-action
 convention. General group searches assume a genuine probe-complement group.
+For a finite deck support, give generators, faces, deck_words and count.
 """
 from argparse import ArgumentParser
 from itertools import count,permutations,product
@@ -113,7 +114,50 @@ def group_orbit(rank,faces,w,length,supplied):
                 return dict(raw_loop_null=True,rewrites=proof['rewrites']),[]
 
 
+def deck_bands(rank,faces,words,n):
+    """Separate copies of the whole support; letters within a copy may share height."""
+    from relative_coherence_frame_module import echelon
+    if type(rank) is not int or rank<0 or type(n) is not int or n<1 or not words:
+        raise ValueError('expected a finite presentation, nonempty deck support and positive count')
+    columns = [{} for _ in range(rank)]
+    for word in [*faces,*words]:
+        if any(type(g) is not int or not 1<=abs(g)<=rank for g in word):
+            raise ValueError('deck words must use signed presentation generators')
+    for i,face in enumerate(faces):
+        for j in range(rank):
+            power = face.count(j+1)-face.count(-j-1)
+            if power:
+                columns[j][i] = power
+    _,kernel = echelon(columns)
+    if not kernel:
+        return dict(integral_character_exists=False)
+    character = [kernel[0].get(j,0) for j in range(rank)]
+
+    def height(word):
+        return sum(character[abs(g)-1]*(1 if g>0 else -1) for g in word)
+
+    assert all(height(face)==0 for face in faces)
+    step = next(j+1 for j,h in enumerate(character) if h)
+    if height([step])<0:
+        step = -step
+    heights = list(map(height,words))
+    width = max(heights)-min(heights)
+    power = 1+width//height([step])
+    stride = power*height([step])
+    modulus = n*stride
+    # Start the first band at min(heights), including when it is negative.
+    supports = [sorted({(h+j*stride)%modulus for h in heights}) for j in range(n)]
+    pinches = [[all((h-min(heights)-i*stride)%modulus<stride for h in sheets)
+                for sheets in supports] for i in range(n)]
+    assert pinches==[[i==j for j in range(n)] for i in range(n)]
+    return dict(integral_character_exists=True,character=character,step=step,
+                power=power,stride=stride,modulus=modulus,heights=heights,
+                supports=supports,pinches=pinches)
+
+
 def solve(data):
+    if 'deck_words' in data:
+        return deck_bands(data['generators'],data['faces'],data['deck_words'],data['count'])
     k = data['sphere_degree']
     if 'old_sphere' in data:
         return sphere_brackets(data['old_sphere'],data['parked_coefficients'],k)
@@ -173,7 +217,21 @@ def audit():
     for k in range(3,9):
         for parking in ([0],[-5,2,0],[1,1,1,1]):
             sphere_brackets([0,-3,2],parking,k)
+    tests = 0
+    for faces in ([],presentation(2,[2,2,2]),[[1,1,2,2,2]],[[1,2,-1,-2]]):
+        support = [[],[1,2,-1,-2],[-1,-1],[2,2,2],[1,2,2,-1]]
+        for n in range(1,8):
+            bands = deck_bands(2,faces,support,n)
+            size = bands['modulus']
+            actions = [tuple((i+c)%size for i in range(size)) for c in bands['character']]
+            assert all(word_value(face,actions,size)==tuple(range(size)) for face in faces)
+            for j,sheets in enumerate(bands['supports']):
+                prefix = [bands['step']]*(j*bands['power'])
+                assert {word_value(prefix+w,actions,size)[0] for w in support}==set(sheets)
+            tests += 1
+    assert not deck_bands(1,[[1,1]],[[]],2)['integral_character_exists']
     print(f'Checked {cases} orbit matrices, 18 lifted sphere matrices, Hopf and trefoil controls in four degrees, and a five-sheet cyclic action.')
+    print(f'Checked {tests} disjoint deck-support families by replaying signed words in their cyclic covers.')
 
 
 if __name__=='__main__':

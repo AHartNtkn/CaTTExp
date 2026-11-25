@@ -13,7 +13,7 @@
 --     (E14(b), uniform-marks.md §8.6): (INV-fac) carries criterion (1)
 --     on the bracketing tree, (PS-fac) is kept only for a binary pair
 --     with the ps* factor last, and the ps* branch of (OP-ps_S′) is
---     removed                              (crit, crit-iff, grayInvU)
+--     removed                              (crit, crit-sound, crit-complete, grayInvU)
 --   * two object marks, `iord` (inner letters invertible) and `ord`
 --     (inner letters trivial), ord ⇒ iord;
 --   * (COH-ord): a head whose objects are all `ord` is read with the

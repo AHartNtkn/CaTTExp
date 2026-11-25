@@ -267,11 +267,12 @@ Grpd_k(C : ⋆)   :=  ∀ t with 0-target C and hd(t) ≥ k.  t [Inv]
 - (S-intro) Clause cells with evidence for their marks: for Inv this is inv-intro (§3.7).
 - (S-∀) Instances of ∀-clauses: for Ps this is (PS-fac), for Grpd_k it is (OBJ-k). ∀-clauses have no intro (`notes/marking-alternatives.md` Prop. 8.2).
 - (S-sub) Substitution into a scheme-marked variable supplies evidence (S21(c)).
-- (S-coh) Coherence-case cohs carry every scheme whose clause types are built from t and earlier clause cells [sketch].
+- (S-coh′) A coherence-case coh carries P when P passes the **generic check**: P's base is a disk, and at the generic identity t₀ = 1_u over Dⁿ⁻¹, each clause cell can be chosen as a coherence-case coh over Dⁿ⁻¹, recursively for the schemes the clauses name. Proved on paper; Agda-checked on examples (`Gray/MarkSchemes.agda`, evidence `cohS`). The earlier form, "every scheme whose clause types are built from t and earlier clause cells", is false: an arrow from the target of t back to its source fails at 1_f (`notes/mark-schemes.md` §8.2, §9.1).
 
 **What stays specific to Inv.**
 - *Closure.* (COH-inv), (OP-inv), (INV-fac), (INV-obj), (DES-inv) and (PS-fac) remain kernel rules of the Inv scheme. Closure is a theorem about particular schemes, not about all of them: idempotent structure is not closed under composition.
-- *Proof-irrelevance.* Inv is a **property scheme** (its towers are unique up to contractible choice in the intended semantics), so projections may depend on t only. Other schemes are proof-relevant, and their projections take evidence, as in §3.7.
+- *Closure for user schemes.* No decidable closure criterion exists (verified researcher answer, `notes/mark-schemes.md` §8). A user scheme gets a closure rule only through a closure certificate (a finite postfixed family of paste templates with recipes, §9.2 there).
+- *Proof-irrelevance.* Inv is a **property scheme** (its towers are unique up to contractible choice in the intended semantics), so projections may depend on t only. Other schemes are proof-relevant, and their projections take evidence, as in §3.7. LAdj (adjoints at every level, two triangles) is **not** a property; the half-adjoint scheme HAdj (one triangle, η and ε invertible) is, with the support of Inv (`notes/mark-schemes.md` §9.3).
 
 **Not schemes.** `ord`, `iord`, `lsplit` and `rsplit` remain object modes acting through the side condition. Their coherence towers range over every pasting shape (E12, E13), which no finite scheme can name.
 

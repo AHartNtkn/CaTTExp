@@ -33,6 +33,35 @@ def core_normal_form(row,ports):
     return row,order
 
 
+def matching_size(options):
+    """Maximum matching for left vertices with the listed right neighbours."""
+    match = {}
+    for start in range(len(options)):
+        todo = deque([start])
+        previous = {start:None}
+        entered = {}
+        while todo:
+            i = todo.popleft()
+            for j in options[i]:
+                if j in entered:
+                    continue
+                entered[j] = i
+                if j not in match:
+                    while j is not None:
+                        i = entered[j]
+                        match[j] = i
+                        j = previous[i]
+                    break
+                holder = match[j]
+                if holder not in previous:
+                    previous[holder] = j
+                    todo.append(holder)
+            else:
+                continue
+            break
+    return len(match)
+
+
 def unary_markings(moves):
     """Decide exact unary multiset reachability by matching token trajectories."""
     adj = {}
@@ -55,34 +84,8 @@ def unary_markings(moves):
     def test(left,right):
         sources = (*left,*([None]*len(right)))
         targets = (*right,*([None]*len(left)))
-        match = {}
-        for start in range(len(sources)):
-            todo = deque([start])
-            previous = {start:None}
-            entered = {}
-            while todo:
-                i = todo.popleft()
-                allowed = destinations(sources[i])
-                for j,t in enumerate(targets):
-                    if t not in allowed or j in entered:
-                        continue
-                    entered[j] = i
-                    if j not in match:
-                        while j is not None:
-                            i = entered[j]
-                            match[j] = i
-                            j = previous[i]
-                        break
-                    holder = match[j]
-                    if holder not in previous:
-                        previous[holder] = j
-                        todo.append(holder)
-                else:
-                    continue
-                break
-            else:
-                return False
-        return True
+        return matching_size([[j for j,t in enumerate(targets) if t in destinations(s)]
+                              for s in sources])==len(sources)
     return test
 
 

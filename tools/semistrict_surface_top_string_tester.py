@@ -7,7 +7,7 @@ from catt import (arr, infer, maximal_vars, ps_boundary_vars, src, sub_from, sub
                   tdim_tm, tgt, tree_ctx, ucomp, v)
 from ct_suspension import ident
 from emit_agda import Emitter
-from relative_coherence_exchange_faces import composite
+from relative_coherence_exchange_faces import composite, head
 from semistrict_surface_positional_tags import loop_tower
 
 
@@ -95,6 +95,7 @@ def check_labelled_cycle(emitter):
     graph += (parallel,) * 3
     ab, ba, ac, cb = (v(len(graph) + i) for i in range(4))
     graph += tuple(arr(parallel, start, end) for start, end in [(a, b), (b, a), (a, c), (c, b)])
+    check_stationary_tester(rank, graph, (a, b, c), (ab, cb, ac), emitter)
     long, short = row(rank, (3, 3, 0)), row(rank, (1, 0, 0))
     top, idle_loop, idle = map(v, maximal_vars(short))
     original = sub_from(long, graph, dict(zip(maximal_vars(long), (ab, ba, ac, cb, ba, ac, b), strict=True)))
@@ -134,6 +135,52 @@ def check_labelled_cycle(emitter):
                 ('testPaste', test, tested, infer(test, tested), 'compressedPaste', 'testLabels')]:
             emitter.checks.append(f'{name} : {emitter.ctx(target)} ⊢tm {emitter.tm(term)} ∶ {emitter.ty(expected)}\n'
                                   f'{name} = substL {premise} {assignment}\n')
+
+
+def check_stationary_tester(rank, graph, colours, changes, emitter):
+    skeleton = row(rank, (0, 0, 0))
+    slots = maximal_vars(skeleton)
+    first, middle, last = map(v, slots)
+    cut = rank - 2
+    left = composite(skeleton, cut, (first, middle, last))
+    right = composite(skeleton, cut, (first, composite(skeleton, cut, (middle, last))))
+    comparison = head(skeleton, left, right)
+    tower = loop_tower(rank - 1)
+    fold = sub_from(skeleton, tower, {i: v(rank - 1) for i in slots})
+    folded = subst_tm(comparison, fold)
+    assert src(tower, folded) != tgt(tower, folded)
+
+    # Two slots change from a to b and c to b. The last goes from a to c.
+    # Each action uses the generic extension of just one occurrence of a slot.
+    a, _, c = colours
+    labels = [a, c, a]
+    initial = sub_from(skeleton, graph, dict(zip(slots, labels, strict=True)))
+    steps = []
+    for place, change in enumerate(changes):
+        enlarged = row(rank, tuple(int(i == place) for i in range(len(slots))))
+        tips = list(map(v, maximal_vars(enlarged)))
+        top = tips[place]
+        ends = []
+        for face in (src, tgt):
+            tips[place] = face(enlarged, top)
+            section = sub_from(skeleton, enlarged, dict(zip(slots, tips, strict=True)))
+            ends.append(subst_tm(left, section))
+        generic = head(enlarged, *ends)
+        assert labels[place] == src(graph, change)
+        inputs = labels.copy()
+        inputs[place] = change
+        actual = sub_from(enlarged, graph, dict(zip(maximal_vars(enlarged), inputs, strict=True)))
+        steps.append(subst_tm(generic, actual))
+        labels[place] = tgt(graph, change)
+    final = sub_from(skeleton, graph, dict(zip(slots, labels, strict=True)))
+    steps.append(subst_tm(comparison, final))
+    replayed = composite(graph, rank - 1, steps)
+    old_left, old_right = subst_tm(left, initial), subst_tm(right, final)
+    expected = arr(infer(graph, old_left), old_left, old_right)
+    assert infer(graph, replayed) == expected
+    if emitter is not None:
+        emitter.check_type('stationaryTest', tower, folded, subst_ty(infer(skeleton, comparison), fold))
+        emitter.check_type('slotwiseReplay', graph, replayed, expected)
 
 
 def main():

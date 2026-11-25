@@ -434,13 +434,19 @@ def strip_right(G, n, t, u, K, V, rec):
     return _vchain(G, n, steps)
 
 def strip_lower(G, n, t, u, A, V, rec):
-    """From V : t *_{n-2} A -> u *_{n-2} A (A an invertible (n-1)-cell on the
-    (n-2)-target p of t, u) to t -> u. With c^-1 : 1_p -> A A^-1 and
-    K = y' *_{n-2} c^-1, the interchange of t with c^-1 gives
-    (t 1) *_{n-1} K -> (y c^-1) *_{n-1} (t (A A^-1)); regroup, apply V, and
-    come back for u; then strip K by strip_right and remove the units."""
+    """From V : t *_k A -> u *_k A (k = n-2, A an invertible (n-1)-cell on
+    the k-target p of t, u) to t -> u, in three transports
+        (t A) A^-1  ->  t (A A^-1)  ->  t 1_p  ->  t,
+    after whiskering V by A^-1. Whiskering at k changes boundaries, so each
+    transport is a square S_x : b_s *_{n-1} F(x) -> G(x) *_{n-1} b_t
+    (a coherence over the chain context of x and the moving cells), with
+    b_s, b_t n-cells from the (n-1)-boundaries of G(x) to those of F(x);
+    the common b_t is then
+    removed by strip_right."""
     import rc_inverse as I
+    import rc_oracle as R
     k = n - 2
+    m = n - 1
     Ai = I.inverse(G, A)
     if Ai is None:
         return None
@@ -453,29 +459,61 @@ def strip_lower(G, n, t, u, A, V, rec):
         ci = rec(G, Bc[1], Bc[3], Bc[2])
         if ci is None:
             return None
-    y, y2 = src(G, t), tgt(G, t)
-    K = comp2(G, k, y2, ci)
-    def inter(x, back=False):
+    one = tgt(G, c)
+    def transport(Vi, Ft, Fu, Gt, Gu, S, bs, bt):
+        W = _vchain(G, n, [S(t, True), comp2(G, m, bs(t), Vi), S(u)])
+        if src(G, W) != comp2(G, m, Gt, bt(t)) or tgt(G, W) != comp2(G, m, Gu, bt(u)):
+            return None
+        return strip_right(G, n, Gt, Gu, bt(t), W, rec)
+    ra = lambda P, xs: comp2(P, k, comp2(P, k, xs[0], xs[1]), xs[2])   # (y A) A^-1
+    la = lambda P, xs: comp2(P, k, xs[0], comp2(P, k, xs[1], xs[2]))   # y (A A^-1)
+    def re(P, y, A_, Ai_, back):
+        # y (A A^-1) -> (y A) A^-1, or back
+        return _gcoh(P, k, [m, m, m], [y, A_, Ai_], *((la, ra)[::(-1 if back else 1)]))
+    # 1. (x A) A^-1 -> x (A A^-1)
+    def S1(x, back=False):
+        def lhs(P, xs):
+            X, A_, Ai_ = xs
+            return comp2(P, m, re(P, src(P, X), A_, Ai_, False), ra(P, xs))
+        def rhs(P, xs):
+            X, A_, Ai_ = xs
+            return comp2(P, m, la(P, xs), re(P, tgt(P, X), A_, Ai_, False))
+        return _gcoh(G, k, [n, m, m], [x, A, Ai], *((lhs, rhs)[::(-1 if back else 1)]))
+    V1 = comp2(G, k, V, Ai)
+    F = lambda x: comp2(G, k, comp2(G, k, x, A), Ai)
+    G1 = lambda x: comp2(G, k, x, comp2(G, k, A, Ai))
+    V2 = transport(V1, F(t), F(u), G1(t), G1(u), S1,
+                   lambda x: re(G, src(G, x), A, Ai, False), lambda x: re(G, tgt(G, x), A, Ai, False))
+    if V2 is None:
+        return None
+    # 2. x (A A^-1) -> x 1_p, by the interchange with c^-1 : 1_p -> A A^-1
+    def S2(x, back=False):
         def lhs(P, xs):
             X, C = xs
-            return comp2(P, n - 1, comp2(P, k, X, src(P, C)), comp2(P, k, tgt(P, X), C))
+            return comp2(P, m, comp2(P, k, src(P, X), C), comp2(P, k, X, tgt(P, C)))
         def rhs(P, xs):
             X, C = xs
-            return comp2(P, n - 1, comp2(P, k, src(P, X), C), comp2(P, k, X, tgt(P, C)))
+            return comp2(P, m, comp2(P, k, X, src(P, C)), comp2(P, k, tgt(P, X), C))
         return _gcoh(G, k, [n, n], [x, ci], *((lhs, rhs)[::(-1 if back else 1)]))
-    def assoc(x, back=False):
-        l = lambda P, xs: comp2(P, k, xs[0], comp2(P, k, xs[1], xs[2]))
-        r = lambda P, xs: comp2(P, k, comp2(P, k, xs[0], xs[1]), xs[2])
-        return _gcoh(G, k, [n, n - 1, n - 1], [x, A, Ai], *((l, r)[::(-1 if back else 1)]))
-    yc = comp2(G, k, y, ci)
-    inner = _vchain(G, n, [assoc(t), comp2(G, k, V, Ai), assoc(u, True)])
-    V2 = _vchain(G, n, [inter(t), comp2(G, n - 1, yc, inner), inter(u, True)])
-    t1 = tgt(G, _unit(G, n, k, t))
-    u1 = tgt(G, _unit(G, n, k, u))
-    W = strip_right(G, n, t1, u1, K, V2, rec)
-    if W is None:
+    G2 = lambda x: comp2(G, k, x, one)
+    V3 = transport(V2, G1(t), G1(u), G2(t), G2(u), S2,
+                   lambda x: comp2(G, k, src(G, x), ci), lambda x: comp2(G, k, tgt(G, x), ci))
+    if V3 is None:
         return None
-    return _vchain(G, n, [_unit(G, n, k, t), W, _unit(G, n, k, u, True)])
+    # 3. x 1_p -> x, by the unit squares
+    def S3(x, back=False):
+        def lhs(P, xs):
+            X = xs[0]
+            return comp2(P, m, _unit(P, m, k, src(P, X)), comp2(P, k, X, R.identity(P, _pole(P, X, k, '+'))))
+        def rhs(P, xs):
+            X = xs[0]
+            return comp2(P, m, X, _unit(P, m, k, tgt(P, X)))
+        return _gcoh(G, 0, [n], [x], *((lhs, rhs)[::(-1 if back else 1)]))
+    if comp2(G, k, t, R.identity(G, _pole(G, t, k, '+'))) != G2(t):
+        return None
+    V4 = transport(V3, G2(t), G2(u), t, u, S3,
+                   lambda x: _unit(G, m, k, src(G, x)), lambda x: _unit(G, m, k, tgt(G, x)))
+    return V4
 
 def _pole(G, x, k, sign):
     """The k-dimensional pole of a term x."""

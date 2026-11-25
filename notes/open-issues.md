@@ -54,7 +54,7 @@ Thread ids used below:
 | NATF | "Mechanize the naturality filler in Agda" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbA9jgC8NB8j31qNsUxxcYcm` | active (added 2026-11-23): owns C1d and S26h (the same item; `src/CaTTExp/Naturality/`) |
 | HEADS | "Extend Agda metatheory to operation heads" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb5i53hN9ewvENukaJETRhdF` | active (added 2026-11-23): owns S27 (b)–(h′); (b)–(h) done or closed (operation heads in the Agda kernel, suspension, which heads suspend, uni, presupposition for lim and the cone, the link to Lim/Repaired; `notes/operation-heads.md`), remaining only (e′) horns at n ≥ 1 over 2-dimensional Γ (needs depth-2 lifts); (e″), (f′), (h′) done (`Binder.UniMark`, `Binder.UniPresup`, `Lim/ConeAgree`, (h′) now in every dimension). Also took over B18 from CONE (2026-11-23), done 2026-11-24 |
 | COLIM | "Add colimit, tensor and product formers to binder kernel" `cmsg_018pe2CvdFGDdsWgn8Tjn5gbL5UoimEdH891SHwgZacoRm` | active (added 2026-11-23): owns S26g's colimit, ⊗ and × formers (`src/CaTTExp/Binder/`), taken over from BIND, S26j (multimap judgment in the binder kernel) and S26k (chapter 7 free-object heads), S26l (η over marked contexts) and S26m (one ⊤, as lim_ε) |
-| DAGC | "Build a sharing-aware Agda checker" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb6hPwnXFpkuUJYYPYFCQPKW` | active (added 2026-11-25): owns G6 (`src/CaTTExp/Dag/`, `notes/dag-certificates.md`) |
+| DAGC | "Build a sharing-aware Agda checker" `cmsg_018pe2CvdFGDdsWgn8Tjn5gb6hPwnXFpkuUJYYPYFCQPKW` | active (added 2026-11-25): owns G6, including (a′) tying the Horiz3 query (2) to the Agda cone (`src/CaTTExp/Dag/`, `notes/dag-certificates.md`) |
 
 ---
 

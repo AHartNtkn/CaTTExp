@@ -250,7 +250,24 @@ _IDC = {}   # id(G) -> (G, {id(t): (t, type)}): identity-keyed memo, so that
 
 _IDN = [0]
 
+_IDEPTH = [0]
+INFER_LIMIT = [2000000]
+
 def infer(G, t, _cache={}):
+    # The memo is bounded by clearing, but only between top-level calls: a
+    # clear in the middle of a walk left the frames below it writing into
+    # their stale memo (kept alive, growing) while the walk restarted with an
+    # empty one, so a term past the bound was re-walked exponentially.
+    if _IDEPTH[0] == 0 and _IDN[0] > INFER_LIMIT[0]:
+        _IDC.clear()
+        _IDN[0] = 0
+    _IDEPTH[0] += 1
+    try:
+        return _infer_memo(G, t, _cache)
+    finally:
+        _IDEPTH[0] -= 1
+
+def _infer_memo(G, t, _cache):
     g = _IDC.get(id(G))
     if g is None or g[0] is not G:
         g = (G, {}, {})
@@ -274,10 +291,7 @@ def infer(G, t, _cache={}):
     else:
         r = _infer(G, t, _cache)
     g[1][id(t)] = (t, r)
-    _IDN[0] += 1
-    if _IDN[0] > 400000:          # the memo keeps its terms alive: bound it
-        _IDC.clear()
-        _IDN[0] = 0
+    _IDN[0] += 1                  # the memo keeps its terms alive: bounded above
     return r
 
 def _infer(G, t, _cache):

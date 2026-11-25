@@ -17,13 +17,16 @@ from semistrict_surface_bubble_transfer import block_word
 from semistrict_surface_first_events import occurrences
 
 
-def bubble(edges, rules, width):
+def bubble(edges, rules, width, *, roots=None):
     if width < 0 or any(len(edge) != 1 for edge in edges):
         raise ValueError('expected nonnegative width and single-character edges')
     for root, source, target in rules.values():
         if end_vertex(edges, root, source) != end_vertex(edges, root, target):
             raise ValueError('nonparallel rule')
-    for root in sorted({v for v, source, _ in rules.values() if not source}):
+    starts = {v for v, source, _ in rules.values() if not source}
+    if roots is not None:
+        starts.intersection_update(roots)
+    for root in sorted(starts):
         queue = deque([''])
         parent = {'': None}
         while queue:

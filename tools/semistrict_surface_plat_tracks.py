@@ -16,13 +16,18 @@ from semistrict_surface_scalar_leaves import swapped
 from semistrict_surface_shared_edge import braid_image
 
 
-def sphere_push(word,n=4):
+def sphere_action(word,n):
     # On filling infinity the ordered product of the terminal meridians is one.
     images = [(j,) for j in range(1,n)] + [inv(tuple(range(1,n)))]
     for g in word:
         artin(images,g)
+    return images[:-1]
+
+
+def sphere_push(word,n=4):
+    images = sphere_action(word,n)
     conjugators = []
-    for i,w in enumerate(images[:-1],1):
+    for i,w in enumerate(images,1):
         j = 0
         while 2*j+1<len(w) and w[j]==-w[-j-1]:
             j += 1
@@ -32,7 +37,7 @@ def sphere_push(word,n=4):
     candidate = max(conjugators,key=len)
     # In a common conjugator only the trailing run of one generator can
     # disappear. The other two stripped images recover the whole word.
-    if all(w==reduced(candidate+(i,)+inv(candidate)) for i,w in enumerate(images[:-1],1)):
+    if all(w==reduced(candidate+(i,)+inv(candidate)) for i,w in enumerate(images,1)):
         return candidate
     return None
 

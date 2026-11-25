@@ -125,11 +125,10 @@ def packets(reduction):
     identity = [(i+1,) for i in range(len(end)-b)]
     assert [evaluate(w,backward) for w in forward]==identity
     assert [evaluate(w,forward) for w in backward]==identity
-    dimension = 0 if b<=2 else b-1
     return dict(classified=True,reversed=backwards,initial=flatten(start),final=end,
                 leading_braid=lead,trailing_braid=pending,movie=compressed,
                 packet_births=b,probes=k,probe_group_rank=len(end)-b,
-                structural_dimension_bound=dimension,probe_basis_map=forward,probe_basis_inverse=backward)
+                structural_dimension_bound=0,probe_basis_map=forward,probe_basis_inverse=backward)
 
 
 def analyze_faces(data):
@@ -192,6 +191,12 @@ def audit():
         case, = analyze_faces(movie)
         assert case['initial']==[] and case['packet_births']==2 and case['probes']==1
         assert case['structural_dimension_bound']==0 and case['probe_group_rank']==3
+    for count in (3,4,7):
+        changes = [(0,0,2)]*count + [(1,1,3),(0,0,0)]
+        d = sample(['root'],changes,[[1,1]]*(len(changes)-1))
+        case, = analyze_faces(d)
+        assert case['packet_births']==count and case['structural_dimension_bound']==0
+        assert case['probes']==1 and case['probe_group_rank']==count+3
     print(f'{trials} signed forests and their reversals replayed at their written ends.')
     print('Each has two independent packet births, one probe, and a free complement group of rank six.')
 

@@ -18,16 +18,16 @@ def nonzero(coefficients):
     return {key: value for key, value in coefficients.items() if value}
 
 
-def evaluate(tree, letters):
+def evaluate(tree, letters, *, odd_letters=True):
     if type(tree) is int and 0 <= tree < len(letters):
         letter = letters[tree]
         return 1, {} if letter is None else {(letter,): 1}
     if not isinstance(tree, list) or len(tree) != 2:
         raise ValueError('a bracket needs two children or a valid meridian index')
-    p, left = evaluate(tree[0], letters)
-    q, right = evaluate(tree[1], letters)
+    p, left = evaluate(tree[0], letters, odd_letters=odd_letters)
+    q, right = evaluate(tree[1], letters, odd_letters=odd_letters)
     values = Counter()
-    sign = (-1)**(p*q)
+    sign = (-1)**(p*q) if odd_letters else 1
     for a, x in left.items():
         for b, y in right.items():
             values[a+b] += x*y

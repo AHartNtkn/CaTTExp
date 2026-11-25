@@ -1,4 +1,4 @@
-"""Find two ordinary heads sharing an unspecified literal middle face."""
+"""Find ordinary heads incident to one unspecified literal face."""
 
 import argparse
 from functools import cache
@@ -75,12 +75,15 @@ def outer_charts(ctx, term, rank, edges, reverse):
                 yield tree, template, sigma, tuple(middle), segments
 
 
-def primitives(left, alpha, right, beta):
-    lift_left = inverse_substitution(left, alpha)
-    lift_right = inverse_substitution(right, beta)
-    pairs = {(v(i), y) for i, actual in enumerate(alpha) for y in lift_right(actual)}
-    pairs.update((x, v(i)) for i, actual in enumerate(beta) for x in lift_left(actual))
-    return pairs
+def primitives(shapes, substitutions, lifts, dimension):
+    """Synchronized labels with a variable on at least one leg."""
+    result = set()
+    for leg, (shape, sigma) in enumerate(zip(shapes, substitutions)):
+        for i, actual in enumerate(sigma):
+            if tdim_tm(shape, v(i)) == dimension:
+                choices = [(v(i),) if j == leg else lift(actual) for j, lift in enumerate(lifts)]
+                result.update(product(*choices))
+    return result
 
 
 def widths(tree):
@@ -115,14 +118,19 @@ def bounded_trees(bounds, parents=1):
                 yield tuple(forest)
 
 
-def parallel_templates(shape, mu, nu, left_type, right_type):
-    if left_type == STAR:
+def common_preimages(shape, projections, terms):
+    """All raw lifts of a fixed tuple through the given projections."""
+    for x in inverse_substitution(shape, projections[0])(terms[0]):
+        if all(subst_tm(x, mu) == t for mu, t in zip(projections[1:], terms[1:])):
+            yield x
+
+
+def parallel_templates(shape, projections, types):
+    if types[0] == STAR:
         if shape == (STAR,):
             yield v(0)
         return
-    lift = inverse_substitution(shape, mu)
-    possible = [[x for x in lift(a) if subst_tm(x, nu) == b]
-                for a, b in zip(left_type[2:], right_type[2:])]
+    possible = [common_preimages(shape, projections, terms) for terms in zip(*(ty[2:] for ty in types))]
     for source, target in product(*possible):
         h = mk_coh(shape, arr(infer(shape, source), source, target), variables(shape))
         try:
@@ -132,45 +140,41 @@ def parallel_templates(shape, mu, nu, left_type, right_type):
         yield h
 
 
-def middles(left_tree, alpha, left_type, right_tree, beta, right_type):
-    left, right = tree_ctx(left_tree), tree_ctx(right_tree)
-    pairs = primitives(left, alpha, right, beta)
-    for shape, terms in ((left, [x for x, _ in pairs]), (right, [y for _, y in pairs])):
-        covered = set().union(*(fv_tm(t) for t in terms))
-        if not set(maximal_vars(shape)) <= covered:
-            return
-    lo, hi = widths(left_tree), widths(right_tree)
-    domains, bounds = {}, []
-    for d in range(max(len(lo), len(hi))):
-        group = [(x, y) for x, y in pairs if tdim_tm(left, x) == d]
+def shared_components(charts):
+    """Yield (arity, projections, full representative) for the common middle writings."""
+    trees, substitutions, types = zip(*charts)
+    shapes = [tree_ctx(t) for t in trees]
+    lifts = [inverse_substitution(shape, sigma) for shape, sigma in zip(shapes, substitutions)]
+    levels = [widths(tree) for tree in trees]
+    height = max(map(len, levels)) - 1
+    domains, bounds = {}, [0] * (height + 1)
+    for d in range(height, -1, -1):
+        group = primitives(shapes, substitutions, lifts, d)
         if not group:
             return
         domains[d] = group
-        a = lo[d] if d < len(lo) else 0
-        b = hi[d] if d < len(hi) else 0
-        cap = a + b
-        if all(x[0] == 'v' for x, _ in group):
-            cap = min(cap, a)
-        if all(y[0] == 'v' for _, y in group):
-            cap = min(cap, b)
-        bounds.append(cap)
+        sizes = [level[d] if d < len(level) else 0 for level in levels]
+        bounds[d] = min([sum(sizes)] + [size for j, size in enumerate(sizes)
+                                        if all(p[j][0] == 'v' for p in group)])
+    for j, shape in enumerate(shapes):
+        covered = set().union(*(fv_tm(p[j]) for group in domains.values() for p in group))
+        if not set(maximal_vars(shape)) <= covered:
+            return
     for tree, in bounded_trees(bounds[1:]):
         shape = tree_ctx(tree)
         tips = tip_paths(tree)
         for values in product(*(domains[len(path)] for path, _ in tips)):
             try:
-                mu, nu = [sub_from(shape, target, {i: p[j] for (_, i), p in zip(tips, values)})
-                          for j, target in enumerate((left, right))]
+                projections = tuple(sub_from(shape, target, {i: p[j] for (_, i), p in zip(tips, values)})
+                                    for j, target in enumerate(shapes))
             except TypeError_:
                 continue
-            for h in parallel_templates(shape, mu, nu, left_type, right_type):
-                x, y = subst_tm(h, mu), subst_tm(h, nu)
-                if infer(left, x) != left_type or infer(right, y) != right_type:
-                    continue
-                if (len(fv_tm(x) | fv_ty(left_type)) == len(left)
-                        and len(fv_tm(y) | fv_ty(right_type)) == len(right)):
-                    assert subst_tm(x, alpha) == subst_tm(y, beta)
-                    yield x, y
+            for h in parallel_templates(shape, projections, types):
+                terms = [subst_tm(h, mu) for mu in projections]
+                if all(infer(s, x) == ty and len(fv_tm(x) | fv_ty(ty)) == len(s)
+                       for s, x, ty in zip(shapes, terms, types)):
+                    assert len({subst_tm(x, sigma) for x, sigma in zip(terms, substitutions)}) == 1
+                    yield shape, projections, h
 
 
 def realize(chart, mid, walks, alphabet, ctx, reverse):
@@ -185,35 +189,50 @@ def realize(chart, mid, walks, alphabet, ctx, reverse):
     return assemble(ctx, tree, template, mid, sigma, paths, alphabet)
 
 
-def two_heads(ctx, source, target, alphabet=(), counts=None):
-    """Two flat heads in succession with unrestricted intermediate syntax; return both or None."""
-    rank = tdim_tm(ctx, source)
-    ty = infer(ctx, source)
-    if infer(ctx, target) != ty or any(tdim_tm(ctx, x) != rank + 1 for x in alphabet):
+def shared_heads(ctx, ports, alphabet=(), counts=None):
+    """Find a raw head at each (fixed face, reverse) port, sharing one literal face."""
+    ports = tuple(ports)
+    if not ports:
+        raise ValueError('Expected at least one port')
+    alphabet = tuple(alphabet)
+    rank = tdim_tm(ctx, ports[0][0])
+    ty = infer(ctx, ports[0][0])
+    if any(infer(ctx, t) != ty for t, _ in ports) or any(tdim_tm(ctx, x) != rank + 1 for x in alphabet):
         raise ValueError('Expected parallel faces and top-dimensional labels')
     edges = [infer(ctx, x)[2:] for x in alphabet]
     if counts is not None:
         counts = tuple(counts)
         if len(counts) != len(edges) or any(type(i) is not int or i < 0 for i in counts):
             raise ValueError('Expected a nonnegative count for every letter')
-    right_charts = list(outer_charts(ctx, target, rank, edges, True))
-    for left in outer_charts(ctx, source, rank, edges, False):
-        for right in right_charts:
-            segments = left[4] + right[4]
-            walks = routes(segments, edges, counts)
-            if walks is None:
-                continue
-            mid = next(middles(left[0], left[3], infer(tree_ctx(left[0]), left[1]),
-                               right[0], right[3], infer(tree_ctx(right[0]), right[1])), None)
-            if mid is None:
-                continue
-            cut = len(left[4])
-            a = realize(left, mid[0], walks[:cut], alphabet, ctx, False)
-            b = realize(right, mid[1], walks[cut:], alphabet, ctx, True)
-            a_type, b_type = infer(ctx, a), infer(ctx, b)
-            assert a_type == arr(ty, source, b_type[2]) and b_type == arr(ty, a_type[3], target)
-            return a, b
+    choices = [outer_charts(ctx, term, rank, edges, reverse) for term, reverse in ports]
+    for charts in product(*choices):
+        segments = [segment for chart in charts for segment in chart[4]]
+        walks = routes(segments, edges, counts)
+        if walks is None:
+            continue
+        sections = [(tree, alpha, infer(tree_ctx(tree), template))
+                    for tree, template, _, alpha, _ in charts]
+        component = next(shared_components(sections), None)
+        if component is None:
+            continue
+        _, projections, h = component
+        start, heads = 0, []
+        for chart, mu, (fixed, reverse) in zip(charts, projections, ports):
+            stop = start + len(chart[4])
+            mid = subst_tm(h, mu)
+            head = realize(chart, mid, walks[start:stop], alphabet, ctx, reverse)
+            actual = subst_tm(mid, chart[3])
+            boundary = (actual, fixed) if reverse else (fixed, actual)
+            assert infer(ctx, head) == arr(ty, *boundary)
+            heads.append(head)
+            start = stop
+        return tuple(heads)
     return None
+
+
+def two_heads(ctx, source, target, alphabet=(), counts=None):
+    """Two successive flat heads with unrestricted intermediate syntax."""
+    return shared_heads(ctx, ((source, False), (target, True)), alphabet, counts)
 
 
 def cascades(suspensions, checker):

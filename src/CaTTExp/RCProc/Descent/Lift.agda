@@ -80,9 +80,10 @@ module _ {Γ Δ : Ctx} (F : FillO) (D : TDatum Γ Δ) where
     mmS = fst (mmT D)
     mpS = fst (mpT D)
 
-    copyM copyP : TTm Γ → TTm Δ
-    copyM x = tt[ tm x [ mmS ]tm ∶ ty x [ mmS ]ty , tm[] (der x) (snd (mmT D)) ]
-    copyP x = tt[ tm x [ mpS ]tm ∶ ty x [ mpS ]ty , tm[] (der x) (snd (mpT D)) ]
+  -- the two copies t⁻ = t[mm], t⁺ = t[mp] of a typed term
+  copyM copyP : TTm Γ → TTm Δ
+  copyM x = tt[ tm x [ mmS ]tm ∶ ty x [ mmS ]ty , tm[] (der x) (snd (mmT D)) ]
+  copyP x = tt[ tm x [ mpS ]tm ∶ ty x [ mpS ]ty , tm[] (der x) (snd (mpT D)) ]
 
   mutual
     -- t↑ for a typed t of Γ (by recursion on its derivation)

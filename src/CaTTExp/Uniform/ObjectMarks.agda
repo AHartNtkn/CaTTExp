@@ -25,8 +25,14 @@
 -- `Base` and `Formers`). Those are the strict readings of the chapter 9
 -- rules (T-lim, T-hom, T-coprod, T-graph, T-init, INIT's mark) and the
 -- dimension count "inner letters have hom-dimension ≥ 2"; they are
--- proved on paper in notes/object-marks.md §3. The limit clause for the
--- inner marks (`lim-innId` etc.) uses the hypothesis (PW) of §3 there.
+-- proved on paper in notes/object-marks.md §3, with two exceptions that
+-- are open: the limit clause for the inner marks (`lim-innId` etc.) uses
+-- the hypothesis (PW) of §3.4 there (ledger S36(a)), and `mu-decl` for the
+-- inner atoms (iord, ord, lsplit, rsplit) is INIT's soundness for a class
+-- not known to be closed (§3.6 there, ledger S36(b)); for trunc and grpd
+-- atoms `mu-decl` is INIT's soundness for reflective classes (§9.1).
+-- The T-init shape flag of `mu` is taken from the syntax (it is the
+-- decidable positivity/shape check of §9.3, not recomputed here).
 ------------------------------------------------------------------------
 module CaTTExp.Uniform.ObjectMarks where
 
@@ -567,7 +573,7 @@ record Formers (B : Base) : Set₁ where
     lim-rs     : ∀ vs → AllO vs RS → RS (limₘ vs)                   -- (PW)
     cop-tr    : ∀ A B t → T (2 ≤? t) → Holds A (trunc t) → Holds B (trunc t) →
                 Holds (copₘ A B) (trunc t)                           -- T-coprod
-    mu-decl   : ∀ xs ps ok → AllH (muₘ xs ps ok) xs                  -- (O-init)
+    mu-decl   : ∀ xs ps ok → AllH (muₘ xs ps ok) xs                  -- (O-init); for inner atoms open, S36(b)
     mu-tinit  : ∀ xs ps ok t → T ok → T (2 ≤? t) →
                 AllO ps (λ p → Holds p (trunc t)) → Holds (muₘ xs ps ok) (trunc t)  -- T-init
 
@@ -659,7 +665,9 @@ private
 
 ℕ ℤ Two S¹ : Ob
 ℕ    = mu [] [] true                 -- μ(X, z : ⊤ → X, s : X → X)
-ℤ    = mu [] [] true                 -- μ(X, z, s inv by bi-invertibility data)
+ℤ    = mu [] [] true                 -- μ(X, z, s inv by bi-invertibility data); same
+                                     -- term as ℕ: Ob keeps only X's marks, the
+                                     -- parameters and the shape flag of Δ
 Two  = cop top top
 S¹   = mu (grpd 0 ∷ []) [] false     -- μ(X : grpd, b, l : b → b)
 

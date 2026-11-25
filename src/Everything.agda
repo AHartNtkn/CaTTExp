@@ -584,3 +584,12 @@ import CaTTExp.Binder.GenHeadsExamples
 import CaTTExp.Uniform.MarksRepaired
 import CaTTExp.Uniform.SplitMarks
 import CaTTExp.Uniform.SplitMarksPerObject
+import CaTTExp.Dag.Table
+import CaTTExp.Dag.Trie
+import CaTTExp.Dag.NatMap
+import CaTTExp.Dag.Lemmas
+import CaTTExp.Dag.Unfold
+import CaTTExp.Dag.Check
+import CaTTExp.Dag.QEq
+import CaTTExp.Dag.Run
+import CaTTExp.Dag.Sound

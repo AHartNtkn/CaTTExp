@@ -74,7 +74,9 @@ ord⇒iord : ∀ m → T (isO m) → T (isI m)
 ord⇒iord ordM _ = tt
 
 -- A substitution may send a variable marked m to one marked m′ when m′
--- is at least as strong.
+-- is at least as strong. For object terms in general see
+-- CaTTExp.Uniform.ObjectMarks (S36), where `iord`/`ord` are atoms with
+-- an entailment relation and a judgment on every object former.
 _≼_ : OMark → OMark → Bool
 noM   ≼ _     = true
 iordM ≼ m′    = isI m′

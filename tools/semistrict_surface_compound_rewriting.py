@@ -1,7 +1,7 @@
 """Replay positioned string rewrites as ordinary CaTT witnesses at heterogeneous compound poles."""
 
 import argparse
-from collections import deque
+from collections import Counter, deque
 from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -23,12 +23,16 @@ def rewrites(word, lhs, rhs):
             yield pos, word[:pos] + rhs + word[pos + len(lhs):]
 
 
-def search(rules, source, target, counts=None, weights=None):
+def search(rules, source, target, counts=None, weights=None, free_rules=()):
     """BFS with exact budgets or checked positive weight bounds; otherwise semidecide."""
     if counts is not None:
         counts = tuple(counts)
         if len(counts) != len(rules) or any(type(n) is not int or n < 0 for n in counts):
             raise ValueError('Expected a nonnegative count per rule')
+    counted = len(rules)
+    if any(Counter(a) != Counter(b) for a, b in free_rules):
+        raise ValueError('Free moves must preserve letter multiplicities')
+    rules = (*rules, *free_rules)
     limit = None
     if weights is not None:
         letters = set(source + target).union(*(set(a + b) for a, b in rules))
@@ -55,9 +59,11 @@ def search(rules, source, target, counts=None, weights=None):
                 moves.append(move)
             return list(reversed(moves))
         for i, (a, b) in enumerate(rules):
-            if budget is not None and not budget[i]:
+            if budget is not None and i < counted and not budget[i]:
                 continue
-            rest = None if budget is None else budget[:i] + (budget[i] - 1,) + budget[i + 1:]
+            rest = budget
+            if budget is not None and i < counted:
+                rest = budget[:i] + (budget[i] - 1,) + budget[i + 1:]
             for pos, result in rewrites(word, a, b):
                 if limit is not None and weight(result) > limit:
                     continue

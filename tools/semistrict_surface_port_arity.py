@@ -73,6 +73,36 @@ def binary_ports(net):
     return d
 
 
+def exact_cover_ports(instance,reverse=False):
+    """Choose sets in order, accumulating exactly the elements in the closing port."""
+    universe = instance['universe']
+    subsets = instance['sets']
+    if len(set(universe))!=len(universe) or any(len(set(s))!=len(s) or not set(s)<=set(universe) for s in subsets):
+        raise ValueError('expected a universe and subsets with distinct elements')
+    # Use separate object types so the exterior birth cannot act inside a lens.
+    elems = {v:'p'+str(i) for i,v in enumerate(universe)}
+    gates = {n:['y','',''] for n in elems.values()}
+    gates.update(B=['x','','fg'],D=['x','fg',''])
+    rules = {}
+    def control(n):
+        gates[n] = ['y','','']
+        return [(0,n)]
+    def lens(row):
+        return [(0,'B')]+[(1,g) for _,g in row]+[(0,'D')]
+    for i,subset in enumerate(subsets):
+        start,finish = control(f'c{i}'),control(f'c{i+1}')
+        rules[f'skip{i}'] = ['y',start,finish]
+        for j,v in enumerate(subset):
+            end = finish if j+1==len(subset) else control(f'c{i}_{j}')
+            rules[f'take{i}_{j}'] = ['y',start,end+[(0,elems[v])]]
+            start = end
+    rules['open'] = ['x',[],lens(control('c0'))]
+    rules['close'] = ['x',lens(control(f'c{len(subsets)}')+[(0,n) for n in elems.values()]),[]]
+    if reverse:
+        rules = {k:[x,b,a] for k,(x,a,b) in rules.items()}
+    return dict(vertex='x',edges={'f':['x','y'],'g':['y','x']},gates=gates,rules=rules)
+
+
 def replay_calls(d):
     # Deterministic circuits (AND only) have one possible next instruction
     # inside their first lens. Replay the real written diagrams at their slots.
@@ -163,6 +193,39 @@ def audit():
         # The intermediate controller cannot accept or start a second transition.
         for dependent in (False,True):
             assert decide(d,dependent)['positive_return']==(b!=2)
+    u = list('abc')
+    for mask in range(16):
+        options = [s for j,s in enumerate(['ab','bc','a','c']) if mask & (1<<j)]
+        cover = any(sorted(v for s,b in zip(options,bits) if b for v in s)==u
+                    for bits in product((0,1),repeat=len(options)))
+        for backwards,dep in product((False,True),repeat=2):
+            d = exact_cover_ports(dict(universe=u,sets=options),backwards)
+            assert decide(d,dep)['positive_return']==cover
+    from semistrict_surface_closed_returns import branching_markings
+    # A disconnected amplifying cycle satisfies the integer balance.
+    # Its two source-free extra tokens become possible only after a real seed.
+    moves = [((0,),(0,1)),((1,),(2,2))]
+    assert not branching_markings(moves)((),(2,2))
+    assert branching_markings(moves+[((),(0,)),((0,),())])((),(2,2))
+    moves = [((0,),(1,1)),((0,),(2,)),((1,),(2,)),((2,),(1,)),((1,),())]
+    for mask in range(1<<len(moves)):
+        active = [r for i,r in enumerate(moves) if mask & (1<<i)]
+        reach = branching_markings(active)
+        seen,todo = {(0,)},[(0,)]
+        while todo:
+            state = todo.pop()
+            for (p,),outs in active:
+                if p in state:
+                    after = list(state)
+                    after.remove(p)
+                    dest = tuple(sorted(after+list(outs)))
+                    if dest not in seen:
+                        seen.add(dest)
+                        todo.append(dest)
+        for target in [(),(0,),(1,),(2,),(1,1),(1,2),(2,2),(0,1)]:
+            assert reach((0,),target)==(target in seen)
+    print('256 branching and cycling markings agree with complete explicit firing graphs.')
+    print('64 one-sided decisions agree with exact-cover enumeration. A disconnected balanced cycle is rejected.')
     print('2304 unary marking comparisons, 16 circuit truth-table decisions, and a 63-use dependent replay passed.')
     print('All 120 connected-core orders agree at each of two distinct face addresses, with and without a gate mark.')
     print('The two-child return distinguishes the dependence condition. Six two-root controller queries passed.')
@@ -173,9 +236,13 @@ if __name__=='__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--circuit',type=Path,help='JSON list of booleans and [and/or, left, right] nodes')
     group.add_argument('--net',type=Path,help='marking reachability instance with explicit arc multiplicities')
+    group.add_argument('--cover',type=Path,help='exact cover with universe and sets')
+    parser.add_argument('--reverse-cover',action='store_true',help='emit the one-output exact-cover encoding')
     args = parser.parse_args()
     if args.circuit:
         print(json.dumps(circuit_ports(json.loads(args.circuit.read_text())),indent=2))
+    elif args.cover:
+        print(json.dumps(exact_cover_ports(json.loads(args.cover.read_text()),args.reverse_cover),indent=2))
     elif args.net:
         print(json.dumps(binary_ports(json.loads(args.net.read_text())),indent=2))
     else:

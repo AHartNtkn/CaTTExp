@@ -86,6 +86,41 @@ def unary_markings(moves):
     return test
 
 
+def branching_markings(moves):
+    """Esparza's state equation with source access inside its positive support."""
+    import islpy as isl
+
+    moves = sorted(set((a,b) for a,b in moves if a!=b))
+    def test(left,right):
+        places = sorted(set(left+right).union(*(set(a+b) for a,b in moves)))
+        levels = {p:'d'+str(i) for i,p in enumerate(places)}
+        counts = ['n'+str(i) for i in range(len(moves))]
+        conditions = [n+'>=0' for n in counts]
+        for p,d in levels.items():
+            terms = [str(left.count(p))]
+            parents = []
+            for (a,b),n in zip(moves,counts):
+                gain = b.count(p)-a.count(p)
+                if gain:
+                    terms.append(f'({gain}*{n})')
+                if p in b:
+                    from_lower = f' and 1<={levels[a[0]]}<{d}' if a else ''
+                    parents.append(f'({n}>0{from_lower})')
+                if a==(p,):
+                    conditions.append(f'({n}=0 or {d}>0)')
+            conditions.append('+'.join(terms)+'='+str(right.count(p)))
+            if p in left:
+                conditions.append(d+'=1')
+            else:
+                conditions.append(f'0<={d}<={len(places)+1}')
+                conditions.append('('+' or '.join([d+'=0',*parents])+')')
+        if not conditions:
+            return True
+        formula = '{ ['+','.join([*counts,*levels.values()])+'] : '+' and '.join(conditions)+' }'
+        return not isl.Set(formula).is_empty()
+    return test
+
+
 class Templates:
     def __init__(self, data):
         self.gates = data['gates']
@@ -189,8 +224,16 @@ def decide(data, dependent=False):
         def moves_at(x):
             moves = [(a,b) for y,a,b in rules if y==x]
             moves.extend(((i,),(j,)) for i,j in summaries if lib.node[i][0]==x)
-            unary = all(len(a)<=1 and len(b)<=1 for a,b in moves)
-            return moves,unary_markings(moves) if unary else None
+            one_input = all(len(a)<=1 for a,_ in moves)
+            one_output = all(len(b)<=1 for _,b in moves)
+            if one_input and one_output:
+                return moves,unary_markings(moves)
+            if one_input:
+                return moves,branching_markings(moves)
+            if one_output:
+                reverse = branching_markings([(b,a) for a,b in moves])
+                return moves,lambda left,right: reverse(right,left)
+            return moves,None
         @lru_cache(None)
         def test(x,left,right):
             if left==right:

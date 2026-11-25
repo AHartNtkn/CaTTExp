@@ -1,4 +1,4 @@
-"""Decide rank-two loop-label squares bounded by the local Hopf-map action."""
+"""Compute rank-two loop-label squares from bottom orders and the local Hopf action."""
 
 from argparse import ArgumentParser
 from itertools import product
@@ -21,6 +21,32 @@ def restrict_characters(characters, forbidden):
             yield character
 
 
+def dependencies(images, allowed, visible):
+    """Relations of the visible eta coordinates among the allowed bottom generators."""
+    pivots = {}
+    for j in allowed:
+        value, source = images[j] & visible, 1 << j
+        while value:
+            bit = value.bit_length() - 1
+            if bit not in pivots:
+                pivots[bit] = value, source
+                break
+            v, x = pivots[bit]
+            value ^= v
+            source ^= x
+        else:
+            yield source
+
+
+def surgery_relations(images, orders, bottom_orders):
+    relations = list(dependencies(images, range(len(images)), (1 << len(orders)) - 1))
+    for level in sorted({valuation(k) for k in bottom_orders if k and k % 2 == 0}):
+        allowed = [j for j, k in enumerate(bottom_orders) if k and valuation(k) <= level]
+        visible = parity_mask([int(bool(k and valuation(k) <= level)) for k in orders])
+        relations.extend(dependencies(images, allowed, visible))
+    return row_reduce(relations)
+
+
 def eta_bounds(orders, columns, shell, bottom_orders=None):
     # columns are the actual images of bottom generators in H = pi_(d+1) K.
     if any(k < 0 for k in orders):
@@ -28,6 +54,7 @@ def eta_bounds(orders, columns, shell, bottom_orders=None):
     if len(columns) != len(shell):
         raise ValueError("supply one shell coordinate per eta column")
     images = []
+    known_bottom = bottom_orders is not None
     if bottom_orders is None:
         bottom_orders = [2] * len(shell)
     if len(bottom_orders) != len(shell) or any(k < 0 for k in bottom_orders):
@@ -54,7 +81,13 @@ def eta_bounds(orders, columns, shell, bottom_orders=None):
     shell_bits = parity_mask(shell)
     detected = any((shell_bits & c).bit_count() % 2 for c in certified)
     status = "zero" if not image else ("nonzero" if detected else "undetermined")
-    return len(row_reduce(certified)), len(row_reduce(images)), status
+    low = len(row_reduce(certified))
+    if known_bottom:
+        relations = surgery_relations(images, orders, bottom_orders)
+        high = len(images) - len(relations)
+        assert high == low and all((r & c).bit_count() % 2 == 0 for r in relations.values() for c in certified)
+        return low, high, "nonzero" if detected else "zero"
+    return low, len(row_reduce(images)), status
 
 
 def audit():
@@ -95,9 +128,22 @@ def audit():
                 low, high, answer = eta_bounds(orders, columns, shell, bottom)
                 assert low == len(row_reduce(valid))
                 assert (answer == "nonzero") == any((v & parity_mask(shell)).bit_count() % 2 for v in valid)
-                if bottom == (0, 0):
-                    assert low == high
+                assert low == high
                 mixed += 1
+    framed = 0
+    for r in range(1, 8):
+        for s in range(1, 9):
+            modulus = 2**s
+            # Cellular Ext representative for the spherical surgery, and all coboundaries.
+            image = {2**r * z % modulus for z in range(modulus)}
+            assert ((modulus // 2) in image) == (r < s)
+            exact = eta_bounds([modulus], [[modulus // 2]], [1], [2**r])
+            assert (exact[2] == "zero") == (r < s)
+            framed += 1
+    # Two independent eta values can cancel in the visible coordinates at an intermediate level.
+    example = eta_bounds([2, 4], [[1, 0], [1, 2]], [1, 1], [2, 2])
+    assert example == (1, 1, "zero")
+    print(f"Verified {framed} two-stage surgery coefficient maps and mixed relations.")
     print(f"Verified {mixed:,} coefficient-lifting cases by enumeration of both homomorphisms.")
     print(f"Verified {count:,} shell classifications against the cyclic groups and their doubles.")
 
@@ -106,7 +152,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--orders", nargs="*", type=int)
     parser.add_argument("--bottom-orders", nargs="*", type=int,
-                        help="bottom cyclic orders, with zero for free and default 2 for unknown")
+                        help="bottom cyclic orders, with zero for free; omit for bounds independent of these orders")
     parser.add_argument("--column", action="append", nargs="*", type=int, default=[])
     parser.add_argument("--shell", nargs="*", type=int)
     args = parser.parse_args()

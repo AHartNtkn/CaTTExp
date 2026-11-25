@@ -37,6 +37,8 @@ import CaTTExp.Gray.Examples
 import CaTTExp.Gray.Cube
 import CaTTExp.Gray.CohCaseGap
 import CaTTExp.Gray.CohCaseVar
+import CaTTExp.Gray.CohCaseVarSound
+import CaTTExp.Gray.G.SuppVars
 import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls

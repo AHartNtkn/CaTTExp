@@ -1,5 +1,7 @@
 # Which semistrict definitional equalities are conservative over CaTT-style theories? (round 2)
 
+*Round-2 prompt (2026-11-24) with Researcher Responses 1–258 (2026-11-25). Status and checks: [`semistrict-surface-conservativity-r2-summary-2026-11-25.md`](semistrict-surface-conservativity-r2-summary-2026-11-25.md). Follow-up: [`../outbox/semistrict-surface-conservativity-r3.md`](../outbox/semistrict-surface-conservativity-r3.md).*
+
 *A self-contained problem. Standard higher category theory is the only background assumed. This is the second round. The first round's prompt and its 267 responses are reproduced in the repository file `notes/conjectures/answered/semistrict-surface-conservativity-2026-11-24.md` ("Response n" below refers to them). §2 summarises what they settled. Those results are taken as known and are not re-asked.*
 
 **What we are asking for.** For a CaTT-style theory T, whose coherence side condition is read off a family of strict free structures, and for a set S of strict laws, is T with the laws of S added as definitional equalities conservative over T for inhabitation, in every finite context and every dimension? Round 1 settled this for every S over the Gray variant CaTT_G, and for every S without interchange over CaTT. Three cases remain. We want them settled as instances of one general statement, not one context or dimension at a time:

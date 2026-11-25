@@ -1,6 +1,6 @@
 # Which semistrict definitional equalities are conservative over CaTT and over its Gray variant?
 
-*Round-1 prompt (2026-11-22) with Researcher Responses 1–267 (2026-11-24). Status and checks: [`semistrict-surface-conservativity-partial-2026-11-24.md`](semistrict-surface-conservativity-partial-2026-11-24.md). Follow-up: [`../outbox/semistrict-surface-conservativity-r2.md`](../outbox/semistrict-surface-conservativity-r2.md).*
+*Round-1 prompt (2026-11-22) with Researcher Responses 1–267 (2026-11-24). Status and checks: [`semistrict-surface-conservativity-partial-2026-11-24.md`](semistrict-surface-conservativity-partial-2026-11-24.md). Follow-up: [`semistrict-surface-conservativity-r2-2026-11-25.md`](semistrict-surface-conservativity-r2-2026-11-25.md) (round 2, answered 2026-11-25).*
 
 ## Setting
 

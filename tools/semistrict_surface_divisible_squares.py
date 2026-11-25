@@ -1,4 +1,4 @@
-"""Decide rank-two square comparisons with signed attachments to upper spheres."""
+"""Decide square comparisons and detecting levels for signed cellular attachments."""
 
 from argparse import ArgumentParser
 from itertools import product
@@ -85,7 +85,64 @@ def solve(rows, b, c, shell):
     return b - len(pivots), stage, (char, images, disks)
 
 
+def first_stage(rows, b, c, shell, start=1):
+    """Find the first cyclic character detecting this shell, with upper-sphere readings."""
+    matrix, columns, rank = diagonalize(rows, b, c)
+    thresholds = [valuation(matrix[i][b+i]) + 1 for i in range(rank)]
+    for level in sorted({start, *(t for t in thresholds if t > start)}):
+        constrained = [parity_mask(row[:b]) for i, row in enumerate(matrix)
+                       if i >= rank or level < thresholds[i]]
+        character = separate(shell, row_reduce(constrained))
+        if character is None:
+            continue
+        half = 1 << (level - 1)
+        modulus = 2 * half
+        z = [0] * c
+        for i in range(rank):
+            if level < thresholds[i]:
+                continue
+            pivot = matrix[i][b+i]
+            divisor = 1 << valuation(pivot)
+            reading = (parity_mask(matrix[i][:b]) & character).bit_count() % 2
+            z[i] = (reading * (half // divisor) * pow(pivot // divisor, -1, modulus // divisor)
+                    ) % (modulus // divisor)
+        upper = tuple(sum(x*y for x, y in zip(row, z, strict=True)) % modulus for row in columns)
+        for row in rows:
+            left = sum(x*y for x, y in zip(row[b:], upper, strict=True))
+            right = half * (parity_mask(row[:b]) & character).bit_count()
+            assert (left - right) % modulus == 0
+        return level, character, upper
+    return None
+
+
+def audit_first_stages():
+    count = 0
+    for bottom in product(range(2), repeat=4):
+        for upper in product((-4, -1, 0, 2, 4), repeat=2):
+            rows = [(*bottom[:2], upper[0]), (*bottom[2:], upper[1])]
+            for start in (1, 2):
+                # Direct enumeration in the original coordinates, with signed disk boundaries.
+                expected = {}
+                for level in range(start, 4):
+                    half = 1 << (level - 1)
+                    for character in range(1, 4):
+                        if any(all((r[2]*z - half*(parity_mask(r[:2]) & character).bit_count())
+                                   % (2*half) == 0 for r in rows) for z in range(2*half)):
+                            for shell in range(4):
+                                if (shell & character).bit_count() % 2:
+                                    expected.setdefault(shell, level)
+                for shell in range(4):
+                    result = first_stage(rows, 2, 1, shell, start)
+                    assert (result[0] if result else None) == expected.get(shell)
+                    count += 1
+    # Two independent upper spheres, followed by integral changes of row and column bases.
+    rows = [(1, 0, 3, 6), (1, 1, 11, 30), (2, 1, 14, 36)]
+    assert [first_stage(rows, 2, 2, shell)[0] for shell in (1, 2, 3)] == [1, 4, 1]
+    print(f"Checked {count:,} least detecting levels against direct finite-group character search.")
+
+
 def audit():
+    audit_first_stages()
     checked = 0
     for entries in product((-1, 0, 1), repeat=6):
         rows = [entries[:3], entries[3:]]
@@ -147,20 +204,32 @@ def main():
     parser.add_argument("--shell", nargs="+", type=int)
     parser.add_argument("--stable-orders", nargs="+", type=int,
                         help="cyclic orders of reduced stable pi_7 of a degree-11 label (0 for Z)")
+    parser.add_argument("--first-stage", type=int, metavar="START",
+                        help="find the first detecting tower level at or above START")
     args = parser.parse_args()
     b, c = args.bottom_count, args.upper_count
     if args.stable_orders is not None:
-        if b is not None or c or args.row or args.shell or any(q < 0 for q in args.stable_orders):
+        if b is not None or c or args.row or args.shell or args.first_stage is not None or any(q < 0 for q in args.stable_orders):
             parser.error("supply the nonnegative stable orders independently of an attaching matrix")
         print(f"Universal degree-11 tester stage {stable_stage(args.stable_orders)} suffices.")
         return
-    if b is None and not c and not args.row and args.shell is None:
+    if b is None and not c and not args.row and args.shell is None and args.first_stage is None:
         audit()
         return
     if b is None or b <= 0 or c < 0 or any(len(r) != b+c for r in args.row):
         parser.error("choose a positive bottom count, nonnegative upper count and matching rows")
     if args.shell is None or len(args.shell) != b:
         parser.error("supply one square coefficient per bottom generator")
+    if args.first_stage is not None:
+        if args.first_stage < 1:
+            parser.error("tower levels start at one")
+        result = first_stage(args.row, b, c, parity_mask(args.shell), args.first_stage)
+        if result is None:
+            print("The raw square is zero.")
+        else:
+            level, character, upper = result
+            print(f"First detecting level {level}. Bottom character mask {character}. Upper readings {upper}.")
+        return
     rank, stage, fold = solve(args.row, b, c, parity_mask(args.shell))
     print(f"Exact raw kernel rank {rank}, sufficient tester stage {stage}.")
     if fold is None:

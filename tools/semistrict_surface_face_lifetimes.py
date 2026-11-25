@@ -47,7 +47,7 @@ def classify(data):
     return dict(groups=groups,degree_six_rank=sum(comb(len(g['births']),2) for g in groups))
 
 
-def lens_movie(pattern,twist=False,wire_pair=False):
+def lens_movie(pattern,twist=False,wire_pairs=0,close_with_positive_ports=False):
     """One root with successive lenses; insert the indicated siblings in each."""
     ports = {'b':('','f'),'d':('f',''),'h':('f','f'),'s':('f','ff'),'m':('ff','f')}
     gates,charts,seams,rows = {},[],[],[]
@@ -80,13 +80,19 @@ def lens_movie(pattern,twist=False,wire_pair=False):
     a,h = change(index(a),0,[a],'bh','','f')
     for count in pattern:
         s,m = change(index(h),0,[h],'sm','f','f')
-        if wire_pair:
+        for _ in range(wire_pairs):
             pair = change(index(m),0,[],'ms','ff','ff')
             change(index(m)-2,0,pair,'','ff','ff')
         children = [change(index(m),1,[],'bd','','') for _ in range(count)]
         for b,d in children:
             change(index(b),1,[b,d],'','','')
-        h, = change(index(s),0,[s,m],'h','f','f')
+        if close_with_positive_ports:
+            merge,split = change(index(m),0,[],'ms','ff','ff')
+            lower, = change(index(s),0,[s,merge],'h','f','f')
+            upper, = change(index(split),0,[split,m],'h','f','f')
+            h, = change(index(lower),0,[lower,upper],'h','f','f')
+        else:
+            h, = change(index(s),0,[s,m],'h','f','f')
     a, = change(index(a),0,[a,h],'b','','f')
     change(index(a),0,[a,z],'','','')
     change(0,0,[g for _,g in rows],'','','')
@@ -110,7 +116,7 @@ def audit():
         result = classify(diamond([int(i in left) for i in range(4)]))
         assert result['degree_six_rank']==0 and result['groups'][0]['births']==[0]
     assert classify(dict(path='',diagram=[],charts=[],seams=[]))['groups']==[]
-    for excluded in (lens_movie([1],wire_pair=True),sample([],[(0,0,2),(0,2,0)],[[]])):
+    for excluded in (lens_movie([1],wire_pairs=1),sample([],[(0,0,2),(0,2,0)],[[]])):
         movie(excluded)
         try:
             classify(excluded)
@@ -158,17 +164,21 @@ def typed(directory):
     split,merge = (read(gates[k]) for k in ('s','m'))
     def pair_fit(a,b):
         return apply(ctx,(pair,head(pair,a,b)),[split,merge])
-    lens = raw_row(ctx,2,[pair_fit(direct,padded),fit(ctx,split,between,merge),pair_fit(padded,direct)])
-    parent = raw_row(ctx,2,[rule['cancel-fork-to-h',True],lens,rule['cancel-fork-to-h',False]])
-    # The parent starts as b;d. Its b grows to b;h, and h carries the lens.
-    rooted = raw_row(ctx,2,[seed,comp2(ctx,1,rule['leaf-b',False],read(gates['d'])),
-                            fit(ctx,read(gates['b']),parent,read(gates['d'])),
-                            comp2(ctx,1,rule['leaf-b',True],read(gates['d'])),close])
+    def rooted_lens(program):
+        lens = raw_row(ctx,2,[pair_fit(direct,padded),fit(ctx,split,program,merge),pair_fit(padded,direct)])
+        parent = raw_row(ctx,2,[rule['cancel-fork-to-h',True],lens,rule['cancel-fork-to-h',False]])
+        # The parent starts as b;d. Its b grows to b;h, and h carries the lens.
+        return raw_row(ctx,2,[seed,comp2(ctx,1,rule['leaf-b',False],read(gates['d'])),
+                              fit(ctx,read(gates['b']),parent,read(gates['d'])),
+                              comp2(ctx,1,rule['leaf-b',True],read(gates['d'])),close])
+    rooted = rooted_lens(between)
+    barrier = rooted_lens(comp2(ctx,2,rule['wire-pair',False],rule['wire-pair',True]))
     typ = raw_hom(ctx,src(ctx,seed),src(ctx,seed))
-    assert infer(ctx,rooted)==typ
+    assert infer(ctx,rooted)==infer(ctx,barrier)==typ
     if directory:
         emitter = Emitter()
         emitter.check_type('childInReturningLens',ctx,rooted,typ)
+        emitter.check_type('wireBarrierInsideReturningLens',ctx,barrier,typ)
         (directory/'FaceLifetimes.agda').write_text(emitter.module('FaceLifetimes',__doc__.splitlines()[0]))
 
 

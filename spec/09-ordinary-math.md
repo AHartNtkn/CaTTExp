@@ -29,7 +29,7 @@ The notes state this chapter under P (pseudo ambient) and say where L differs. F
 
 ## 9.1 h-levels
 
-**Rule.** For n ≥ −2, the judgment `Γ ⊢ C trunc n` ("C is an n-category": every cell into C of level > n is invertible and fillable). It is a judgment, not a type.
+**Rule.** For n ≥ −2, the judgment `Γ ⊢ C trunc n` ("C is an n-category": every cell into C of level > n is invertible and fillable). It is a judgment, not a type. `trunc n` is one atom of the family of object marks of chapter 3 (§3.2, ledger S36): one judgment on object terms, one entailment relation, and substitution of a marked variable by any object term with the derived mark.
 
 Use rules:
 ```
@@ -42,7 +42,9 @@ Introduction and closure rules:
 (T-var)    declarations may carry a truncation  C : ⋆^{≤n};  substitutions must certify it
 (T-cum)    C trunc n  ⟹  C trunc (n+1)
 (T-unit)   ⊤ trunc (−2);   ⊥ trunc (−1)
-(T-lim)    every object vertex of γ has trunc n  ⟹  lim_{Γ^μ}[γ] trunc n   (any marking)
+(T-lim)    every object vertex of γ has trunc n  ⟹  lim_{Γ^μ}[γ] trunc n   (any marking;
+           likewise for every object mark of §3.2, the inner ones given (PW), S36(a))
+(O-init)   X carries the object mark m in Δ  ⟹  μΔ m         (read off Δ; S36)
 (T-hom)    C trunc n,  a, b : ⊤ → C  ⟹  Hom_C(a, b) trunc (n − 1)          (n ≥ −1)
 (T-hom⁻)   (s, t) : [⟦D¹⟧, C] → C × C  relatively trunc (n − 1)
            ⟹  C trunc n                       (n = −1 or n ≥ 1; at n = 0 also C grpd_1)
@@ -69,7 +71,7 @@ Derived:
 
 **No complete clause with cell variables.** Allowing cell variables makes `trunc n` undecidable: (X : grpd, X : ⋆^{≤1}, b, g_i : b → b, ρ_j : w_j ⇒ 1_b) has μΔ = BG for the presented group G, which is trunc 0 iff G is trivial (Adian–Rabin). So extensions of T-init can only be sound sufficient conditions; candidates (Gersten's weight test for groupoidal 2-dimensional contexts, homotopical polygraphs for directed ones, ledger B24) are in `notes/higher-inductive.md` §7 (F11d).
 
-**Relation to `grpd_k`.** `C grpd_k` (chapter 3) makes cells of hom-dimension ≥ k invertible: C is an (∞, k−1)-category. `C trunc n` makes them also fillable above level n: C is an n-truncated object. For n ≥ 0, `trunc n` implies `grpd_{n+1}`; the converse fails.
+**Relation to `grpd_k` and `ord`.** `C grpd_k` (chapter 3) makes cells of hom-dimension ≥ k invertible: C is an (∞, k−1)-category. `C trunc n` makes them also fillable above level n: C is an n-truncated object. `trunc n` implies `grpd_{n+1}` (and `grpd_1` for n < 0); the converse fails. Since every inner letter has hom-dimension ≥ 2, `trunc n` implies `ord` for n ≤ 1, and `grpd_k` implies `iord` for k ≤ 2 (`notes/object-marks.md` §2). So sets, 1-categories such as ⟦Γ⟧ of a graph, and their limits are `ord`, and lemmas over `(C : ⋆)^ord` apply to ℕ, ℤ and ‖A‖₀. These are entailments of one judgment, **Agda-checked** with the substitution lemma (`Uniform/ObjectMarks.agda`).
 
 **Semantics.** Closure under limits and homs: proved (sketch level). T-hom⁻: sound in its range, since n-truncation is tested on globes and the fibres of `Map(⟦Dᵏ⟧, C) → C^≃ × C^≃` are maps into homs; a k-cell of C is a (k−1)-cell of a hom, which settles every k > n when n ≥ 1, and contractible homs force C ≃ ⊤ or ∅ when n = −1. T-init: sound, since the Adámek tower stays inside n-truncated objects, which are closed under coproducts (n ≥ 0), finite products and filtered colimits, and an `inv` mark is a reflective condition closed under these.
 

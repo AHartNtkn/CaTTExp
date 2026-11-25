@@ -24,7 +24,8 @@
 --    `supp` (Strict.L, Strict.Hyp.flat-supp, Gray.Graded) must be
 --    re-checked at that definition. This is NOT carried out here
 --    (Strict.L and Strict.Hyp are instantiated at graySide's typing);
---    see the note. (The evaluation checks below are unaffected: every
+--    see the note; it is carried out for the closure-form rule in
+--    Gray.CohCaseVarSound. (The evaluation checks below are unaffected: every
 --    coh occurring inside the tested terms is classified the same way
 --    by both rules.)
 --  * by evaluation: graySideV accepts the gap example of

@@ -1,9 +1,11 @@
 ------------------------------------------------------------------------
 -- Running the DAG checker on a certificate written as strings
--- (tools/dag_cert.py). The decoder is untrusted plumbing: soundness
--- (CaTTExp.Dag.Sound) is about whatever tables it produces, and the
--- final statement only mentions the query, compared with the decoded
--- root inside the checked boolean.
+-- (tools/dag_cert.py). For the certificate's own tables the decoder is
+-- untrusted plumbing: soundness (CaTTExp.Dag.Sound) is about whatever
+-- tables it produces. For a query given as a table (runCertQ) the
+-- decoder also defines what the query means: certifiedQ is about the
+-- unfolding queryCtxOf / queryTyOf of the decoded query table, and
+-- queryMatches relates it to ordinary syntax when the query is small.
 --
 -- Performance note: Agda does not memoize top-level definitions, so the
 -- decoded tables are always passed as function arguments (shared thunks

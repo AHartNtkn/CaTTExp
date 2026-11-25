@@ -25,9 +25,9 @@ The certificate also carries **untrusted claims**: typing claims J(c, n) = A ("i
 - a coherence claim checks the argument claims against the head's context instantiated by the substitution (instantiation of head types is by ids, memoized within one claim), the head (pasting context by `checkPs`, the type well formed, the side condition from the F claims), and that the claimed type is the instantiated head type;
 - F claims are checked from the F claims of the subterms (a merge of sorted lists).
 
-No check ever unfolds a term. Equality of terms is equality of ids; the generator hash-conses, so this is complete for its output, and soundness never depends on it.
+No check unfolds the terms of the answer: the only unfoldings are of head contexts (pasting contexts, for `checkPs` and the side condition) and, for `certified`, of the root's context and type for the comparison with the query. Equality of terms is equality of ids; the generator hash-conses, so this is complete for its output, and soundness never depends on it.
 
-**Soundness** (`Dag.Sound`): if every item and claim passes, then every claim is a real derivation of the unfolded judgment, `⟦ c ⟧c ⊢tm ⟦ n ⟧ ∶ ⟦ A ⟧ty` (induction on ids, with the semantic invariants `SemJ`, `SemC`, `SemH`). The decoder, the tries and the claims are untrusted: the theorem holds for whatever tables they produce.
+**Soundness** (`Dag.Sound`): if every item and claim passes, then every claim is a real derivation of the unfolded judgment, `⟦ c ⟧c ⊢tm ⟦ n ⟧ ∶ ⟦ A ⟧ty` (induction on ids, with the semantic invariants `SemJ`, `SemC`, `SemH`). The decoder, the tries and the claims are untrusted for the certificate's own tables: the theorem holds for whatever tables they produce.
 
 **The query.** For queries small enough to write in ordinary syntax, the certificate's root is compared with the query by `==Ctx`/`==Ty` (`certified`). Large queries are trees too: Horiz3 query (2)'s type unfolds to millions of nodes, and comparing it as a tree was what ran out of memory. So the query is given as its own hash-consed table (2,700 items for Horiz3 query (2)) and compared with the certificate's root by ids, with a memo of pairs already shown equal (`Dag.QEq`, sound for decreasing tables). The statement proved is
 
@@ -36,7 +36,7 @@ certifiedQ : runCertQ K is cs fs qs g n A qg qA ≡ true →
              Σ Tm (λ w → queryCtxOf qs qg ⊢tm w ∶ queryTyOf qs qA)
 ```
 
-where `queryCtxOf`/`queryTyOf` unfold the query table. For small queries, `queryMatches` checks (by `refl`) that the query table unfolds to the query in ordinary syntax.
+where `queryCtxOf`/`queryTyOf` unfold the query table. **For `certifiedQ` the query decoder is trusted for meaning**: the derivation is real for whatever query the strings decode and unfold to (`nums`, `natmap`, `unpack`, `parseI`, `rty`, `Unfold`), so "this is the intended query" rests on those definitions and on `dag_cert.emit_qtable`. For small queries, `queryMatches` checks (by `refl`) that the query table unfolds to the query in ordinary syntax, which closes the gap (`DagSmallCheck.answer′`). For Horiz3 query (2) the query is specified by the Python fixture `tools/fixtures/rc_horiz3_query2.txt.gz` plus `emit_qtable` plus the decoder; nothing in Agda yet ties it to an Agda-side statement of the cone over the horizontal 3-globe composite.
 
 ## Running it
 

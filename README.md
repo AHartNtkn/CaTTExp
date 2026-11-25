@@ -19,8 +19,11 @@ Requires Agda 2.6.3 or later; there is no standard library dependency.
 
 ```
 cd src
-LC_ALL=C.UTF-8 agda Everything.agda
+LC_ALL=C.UTF-8 agda +RTS -M12G -RTS Everything.agda
 ```
+
+The full check needs a larger heap than Agda's default (it runs out at
+3.5 GB); `-M12G` is enough.
 
 `src/CaTTExp/` contains core CaTT (syntax, typing, pasting contexts, a
 certified checker), worked examples, and exploratory sketches under

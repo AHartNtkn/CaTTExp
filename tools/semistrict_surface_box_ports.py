@@ -95,7 +95,7 @@ class Move:
     reverse: bool = False
     frames: tuple = ()
 
-    def ends(self):
+    def ends(self,rules=None):
         if self.name=='rectangle':
             rows = self.grid
             assert rows and rows[0] and all(len(row)==len(rows[0]) for row in rows)
@@ -105,7 +105,7 @@ class Move:
             assert not self.reverse
             a,b = h,h
         else:
-            a,b = library[self.name]
+            a,b = (library if rules is None else rules)[self.name]
         if self.reverse:
             a,b = b,a
         for axis,l,r in self.frames:
@@ -125,9 +125,9 @@ class PathProof:
     moves: list
 
 
-def step(name,rows=()):
+def step(name,rows=(),rules=None):
     move = Move(name,tuple(map(tuple,rows)))
-    return PathProof(*move.ends(),[move])
+    return PathProof(*move.ends(rules),[move])
 
 
 def same(c):
@@ -227,10 +227,10 @@ def normalize(c):
     return step('leaf-'+name)
 
 
-def replay(path):
+def replay(path,rules=None):
     state = path.start
     for move in path.moves:
-        src,dst = move.ends()
+        src,dst = move.ends(rules)
         assert state==src, (move.name,state,src)
         state = dst
     assert state==path.end
@@ -334,24 +334,28 @@ def audit():
     print('The lens attachment compiles at its original ends; its two ports lie in separate planar exchange components.')
 
 
-def typed(directory):
+def raw_row(ctx,cut,cells):
     from functools import reduce
-    from catt import STAR,arr,check_ctx,comp2,disc_tree,infer,src,subst_tm,subst_ty,tgt,tree_ctx,v
-    from emit_agda import Emitter
+    from catt import comp2
+    return reduce(lambda a,b:comp2(ctx,cut,a,b),cells)
+
+
+def raw_hom(ctx,a,b):
+    from catt import arr,infer
+    return arr(infer(ctx,a),a,b)
+
+
+def fixed_context(rules):
+    from catt import STAR,arr,check_ctx,comp2,subst_tm,tree_ctx,v
     from relative_coherence_exchange_faces import head
     from relative_coherence_hidden_seam import identity as unit
-    from semistrict_surface_directed_power_queries import apply
 
-    def row(ctx,cut,cells):
-        return reduce(lambda a,b:comp2(ctx,cut,a,b),cells)
     def path(ctx,x,letters):
-        return row(ctx,0,letters) if letters else unit(ctx,x)
-    def hom(ctx,a,b):
-        return arr(infer(ctx,a),a,b)
+        return raw_row(ctx,0,letters) if letters else unit(ctx,x)
     graph = (STAR,arr(STAR,v(0),v(0)))
     def wires(n):
         return path(graph,v(0),[v(1)]*n)
-    base = graph+tuple(hom(graph,wires(c.source),wires(c.target)) for c in gates.values())
+    base = graph+tuple(raw_hom(graph,wires(c.source),wires(c.target)) for c in gates.values())
     names = {name:v(i+2) for i,name in enumerate(gates)}
 
     @lru_cache(None)
@@ -372,7 +376,7 @@ def typed(directory):
         if c.op=='id':
             return unit(base,wires(c.source))
         if c.op=='stack':
-            return row(base,1,list(map(read,c.children)))
+            return raw_row(base,1,list(map(read,c.children)))
         if c.op!='beside':
             return names[c.op]
         a = c.children[0]
@@ -381,19 +385,33 @@ def typed(directory):
         for y in c.children[1:]:
             middle = comp2(base,0,term,read(y))
             terms = [u for u in (fit(r,y.source,True),middle,fit(k,y.target,False)) if u is not None]
-            term = row(base,1,terms)
+            term = raw_row(base,1,terms)
             r,k = r+y.source,k+y.target
         return term
 
     full = base
     instruction = {}
-    for name,(a,z) in library.items():
+    for name,(a,z) in rules.items():
         for back,l,r in [(False,a,z),(True,z,a)]:
             instruction[name,back] = v(len(full))
-            full += (hom(base,read(l),read(r)),)
+            full += (raw_hom(base,read(l),read(r)),)
     update = v(len(full))
-    full += (hom(base,names['h'],names['h']),)
+    full += (raw_hom(base,names['h'],names['h']),)
     check_ctx(full)
+    return full,read,instruction,update
+
+
+def typed(directory):
+    from catt import comp2,disc_tree,infer,src,subst_tm,subst_ty,tgt,tree_ctx,v
+    from emit_agda import Emitter
+    from relative_coherence_exchange_faces import head
+    from relative_coherence_hidden_seam import identity as unit
+    from semistrict_surface_directed_power_queries import apply
+
+    full,read,instruction,update = fixed_context(library)
+    names = {k:read(g) for k,g in gates.items()}
+    graph = full[:2]
+    row,hom = raw_row,raw_hom
     emitter = Emitter() if directory else None
     for name,left,right in [('leaf-t',names['m'],names['s']),('leaf-id0',names['b'],names['d'])]:
         centre = row(full,1,[left,update,right])
@@ -405,7 +423,7 @@ def typed(directory):
 
     # Distinct source/target 2-gates at two-wire ends; a packet wire decodes
     # to ff. Verify the decoder and its actual fixed-boundary correction.
-    ff = wires(2)
+    ff = comp2(graph,0,v(1),v(1))
     old = graph+(hom(graph,ff,ff),)*2
     old += (hom(old,v(2),v(3)),)
     named = old[:4]+(graph[1],)

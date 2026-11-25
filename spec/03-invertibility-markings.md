@@ -115,7 +115,7 @@ ps* is the right notion of "pseudo" in the sense of P. An r-cell of Fun^lax(B, C
 
 ## 3.6 Marks over the uniform core
 
-The rules of §3.3 are stated over U(Γ). Over V + S (chapter 2, §2.3) they are restated by reading the **designated lift** c of a coherence (§2.2) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). The cases are:
+The rules of §3.3 are stated over U(Γ). Over V + S(Γ) (chapter 2, §2.3) they are restated by reading the **forced lift** c of a coherence (its interpretation, §2.2; formerly called the designated lift) through the Gray projection π. Every letter of c is **outer** (π sends it to a whiskered Gray generator) or **inner** (π sends it to an identity). In the premises below, "in S(Γ)" means carried by every object a₁, …, aₙ of Γ (the meet; conservative, since each such object carries it). The cases are:
 - the **Gray operation case**, π(c) = τ_Γ;
 - the **Gray coherence case**, π(c) an identity, which is either the coherence case (⟦t⟧ = ⟦u⟧ in F_{V+S}(Γ)) or an **inner coherence** (⟦t⟧ ≠ ⟦u⟧, as for an inner interchanger).
 
@@ -126,47 +126,50 @@ TopGray(Γ) is the set of top generators of U(Γ). inner-top(Γ, A) holds iff so
 (C : ⋆)^iord       every inner letter whose hom lands in a hom 𝒦(X, C) is invertible
 (C : ⋆)^ord        every inner letter whose hom lands in a hom 𝒦(X, C) is trivial
                    (an identity in strict models; so in particular invertible)
+(C : ⋆)^lsplit     every inner crossing in a hom 𝒦(X, C) satisfies the left split
+(C : ⋆)^rsplit     every inner crossing in a hom 𝒦(X, C) satisfies the right split R
+                   (ord implies lsplit and rsplit; chapter 2, §2.3)
 (COH-ord)    Γ^ord ⊢ps (objects a₁, …, aₙ of Γ marked ord), SC_𝔉(Γ, t → u),
              γ sends a₁, …, aₙ to ord variables              ⊢  coh^ord_{Γ, t → u}[γ];
              (a₀ is the target of no hom of Γ, so its mark is irrelevant)
              its marks are the two-tier rules of §3.3
 
 (COH-inv)    coherence case                                                   ⇒  inv
-(OP-inv_S′)  Gray operation case, designated lift c; every outer top letter ℓ
+(OP-inv_S′)  Gray operation case, forced lift c; every outer top letter ℓ
              of c has generators of Γ as operands and is one of
                (i)   a whiskered Gray cell G(x₁, …, xₙ), with g[γ] inv,
                (ii)  an outer cylinder whose moving input x has x[γ] inv,
                (iii) h(A, B) with A[γ] inv and (ord-tgt, or the split on
-                     the side of the A-cylinder in ῑ₋ is in S);
+                     the side of the A-cylinder in ῑ₋ is in S(Γ));
              and (inner-top(Γ, A) ⇒ ord-tgt)                                   ⇒  inv
 (OP-ps_S′)   as (OP-inv_S′), except that in case (i) "g[γ] inv" may be
              replaced by "some xⱼ with dⱼ ≥ 1 has xⱼ[γ] ps*"                    ⇒  ps
 (ORD)        inner coherence, ord-tgt                                          ⇒  inv
 (INN-fac_S)  inner coherence whose head is the elementary inner interchanger,
-             with (inner law ∈ S and its left input inv) or (R ∈ S and its right input inv)
+             with (left split ∈ S(Γ) and its left input inv) or (R ∈ S(Γ) and its right input inv)
                                                                                ⇒  inv
 ```
-The Gray cells g[γ] are the operation-case coherences over wedges of disks, as in §3.1. (INV-fac), (INV-obj), (PS-fac), (INV⇒PS), (PS*), (OBJ-k), (DES) and the mark rule are unchanged. A `ord` mark, like `grpd_k`, may only be sent by a substitution to an object variable marked `ord`.
+The Gray cells g[γ] are the operation-case coherences over wedges of disks, as in §3.1. (INV-fac), (INV-obj), (PS-fac), (INV⇒PS), (PS*), (OBJ-k), (DES) and the mark rule are unchanged. A `ord` mark, like `grpd_k`, may only be sent by a substitution to an object variable marked `ord`; an `lsplit` (`rsplit`) mark only to one marked `lsplit` (`rsplit`) or `ord`.
 
 **Side condition and decision procedure.** Finite, given the side-condition procedure of §2.3. That procedure is not yet implemented (ledger S3), so the Agda encoding takes its output as a parameter.
 
-**Example (a): directed Eckmann–Hilton inside an object.** The inner interchanger head over Σ(ΣD¹ ∨ ΣD¹), substituted with identity 1-cells and 2-cells a, b : 1_x ⇒ 1_x of the hom 𝒦(X, C), gives EH₁ : b ∗ a ⇛ a ∗ b; swapping a and b gives EH₂ : a ∗ b ⇛ b ∗ a. These are two directed cells, not inverse to each other. With `(C : ⋆)^ord` both are invertible by (ORD). With the inner law on and a marked `inv`, or with R on and b marked `inv`, (INN-fac_S) makes them invertible without `ord`. In setting ∅, with no marks, nothing makes them invertible. In two-tier L the same head is one coherence in the coherence case, and EH is invertible with no marks.
+**Example (a): directed Eckmann–Hilton inside an object.** The inner interchanger head over Σ(ΣD¹ ∨ ΣD¹), substituted with identity 1-cells and 2-cells a, b : 1_x ⇒ 1_x of the hom 𝒦(X, C), gives EH₁ : b ∗ a ⇛ a ∗ b; swapping a and b gives EH₂ : a ∗ b ⇛ b ∗ a. These are two directed cells, not inverse to each other. With `(C : ⋆)^ord` both are invertible by (ORD). With `(C : ⋆)^lsplit` and a marked `inv`, or with `(C : ⋆)^rsplit` and b marked `inv`, (INN-fac_S) makes them invertible without `ord` (`Uniform/SplitMarks.agda`, `eh-lsplit`, `eh-rsplit`; the wrong-side cases are rejected, `eh-*-wrong-side`). With no marks, nothing makes them invertible. In two-tier L the same head is one coherence in the coherence case, and EH is invertible with no marks.
 
 **Example (b): why `ord` is needed in the Gray operation case.** For hom-1 cells α, β of 𝒦(X, C) composable along a hom-0 cell, the strict composite is the Gray operation case, but a lift from one layering to the other has the inner interchanger ι(α, β) as a top letter. So a composite of invertible cells inside an object is invertible only when C is `ord` (or (INN-fac_S) applies).
 
-**Semantics.** The intended models are algebras of admissible theories satisfying S (§2.3), with strict inverses. `C ord` quantifies over all inner letters, not only elementary interchangers.
-- **Sound in every model:** (COH-inv), (ORD), (INN-fac_S), and (INV-fac)/(INV-obj) for Gray cells with one positive factor (from the outer unary subdivisions of V's base B). (INN-fac_S) uses the switched split law together with the unit law ι(1, G) = 1.
+**Semantics.** Soundness is checked in algebras of admissible theories in which each marked object satisfies its split marks (§2.3), with strict inverses. `C ord` quantifies over all inner letters, not only elementary interchangers.
+- **Sound in every model:** (COH-inv), (ORD), (INN-fac_S), and (INV-fac)/(INV-obj) for Gray cells with one positive factor (from the outer unary subdivisions of V's base B). (INN-fac_S) uses the marked split law together with the unit law ι(1, G) = 1.
 - **Also sound in every model:** (OP-inv_S′) (`notes/uniform-marks.md` Theorem 8.1). Each top letter of the lift is invertible: in case (i) by closure under substitution, in case (ii) by the cylinder result, in case (iii) by r̄₁ = h(A, B) · ῑ₋, and inner top letters by `ord`.
-- **Sound only in the model class 𝓜_S:** the ps* branch of (OP-ps_S′), and the factor rules for Gray cells with several positive factors. 𝓜_S is cut out by the hypothesis (IL): an outer letter is invertible whenever the Gray cell of its Gray image is. 𝓜_S contains every strict Gray-enriched category and every strict ω-category, but **no free algebra of V + S**.
-- **Why the operands must be generators of Γ.** A premise read only on the Gray generator g[γ] would not be sound, because (IL) is false on free algebras, in every setting. The letter E(Z, b), with Z an inner square composed with a generator x, has Gray cell G(x, b). A substitution contracting x makes that Gray cell an identity, while the letter becomes E(I, b), which is not invertible. Requiring the operands of the letter to be generators of Γ removes the gap.
-- **Both switch conditions are exact.** An inner interchanger with an invertible input need not be invertible without the matching split. Invertible elementary inner interchangers do not make the other inner letters invertible. So `ord` has to quantify over all inner letters, and (INN-fac_S) is as strong as possible.
+- **Sound only in the model class 𝓜_S** (whether in every model is open, ledger E14): the ps* branch of (OP-ps_S′), and the factor rules for Gray cells with several positive factors. 𝓜_S is cut out by the hypothesis (IL): an outer letter is invertible whenever the Gray cell of its Gray image is. 𝓜_S contains every strict Gray-enriched category and every strict ω-category, but **no free algebra of V + S**.
+- **Why the operands must be generators of Γ.** A premise read only on the Gray generator g[γ] would not be sound, because (IL) is false on free algebras, with any split marks. The letter E(Z, b), with Z an inner square composed with a generator x, has Gray cell G(x, b). A substitution contracting x makes that Gray cell an identity, while the letter becomes E(I, b), which is not invertible. Requiring the operands of the letter to be generators of Γ removes the gap.
+- **Both split conditions are exact.** An inner interchanger with an invertible input need not be invertible without the matching split. Invertible elementary inner interchangers do not make the other inner letters invertible. So `ord` has to quantify over all inner letters, and (INN-fac_S) is as strong as possible.
 
 **`ord` everywhere is two-tier L** (`notes/ord-recovers-two-tier.md`, ledger S16(b)). With every object variable marked `ord`, (COH-ord) accepts exactly the two-tier heads, and the uniform rule set derives exactly two-tier L's terms, types and marks (there, Corollary 3.2, **proved on paper**). **Agda-checked** (`Uniform/OrdCoh.agda`, `recovers`, `conservative`): only the Boolean form of the acceptance rule, on abstract side conditions, assuming the inclusion SC_{V+S} ⇒ SC_𝔉 of S2. S2 is closed under the S1 reading of the side condition. (COH-ord) is sound in every strict model whose `ord` objects have trivial inner letters: such a model kills every inner letter of the head, so its map out of F_{V+S}(Γ) factors through the quotient 𝔉(Γ) (requirement 4). The path-level form of that factorization is **Agda-checked** (`OrdCoh.Erase.factor`); the algebra-level step is proved on paper. With no `ord` marks, nothing changes.
 
-**Why `ord` must change the side condition.** A mark that only made inner letters invertible would not give two-tier L's coherences, **in any setting**. With such a mark on every object, the uniform rule set would derive `inv` and `ps` only for designated lifts whose outer top letters have generator operands and are of kinds (i)–(iii).
+**Why `ord` must change the side condition.** A mark that only made inner letters invertible would not give two-tier L's coherences, **with any split marks**. With such a mark on every object, the uniform rule set would derive `inv` and `ps` only for forced lifts whose outer top letters have generator operands and are of kinds (i)–(iii).
 - **The loop.** The loop H : w ⇛ w on Σ[2] ∨ Σ[2] (a whiskered inner interchanger) and 1_w have the same Gray image. In a V + S algebra in which every inner letter is invertible they still differ, and no higher cell joins them. Inverting the inner letters therefore creates no cell H ⇛ 1_w.
-- **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both switches.
-- **The inner strip.** It is equal exactly when the inner law holds. Without the inner law it stays unconnected after localization.
+- **The outer strip.** The outer W-strip on C_{2,1} is a second witness, and it survives both split marks.
+- **The inner strip.** It is equal exactly when the left split holds. Without it it stays unconnected after localization.
 
 So invertibility alone does not make an object an ordinary ω-category up to coherence. Any mark that recovers two-tier coherences must force inner letters to be trivial, and therefore has to act through the side condition, because the kernel has no definitional equality. **Both readings are kept** (decided 2026-11-23, `notes/ord-recovers-two-tier.md` §6):
 - `iord` (inner letters invertible) is enough for (ORD) and (OP-inv_S′). It is sound in strictly more strict models, for example the E13 loop model, where the inner letters are invertible but not identities.
@@ -180,7 +183,7 @@ This is the lax / pseudo / strict pattern of §0.4 applied to interchange inside
 - (INN-fac_S): **Agda-checked** (`Uniform/InnerInv.agda`, `left-inv`, `right-inv`, from the sesquicategory axioms, the unit law and the split, as record fields).
 - Outer cylinders: **proved**.
 - (OP-inv_S′): **proved** in every model (`notes/uniform-marks.md` Theorem 8.1). The ps* branch of (OP-ps_S′) and the factor rules for several positive factors: **proved** for 𝓜_S only, which excludes the free algebras. Whether they hold in every model is open (ledger E14).
-- **Agda-checked, repaired rules** (`Uniform/MarksRepaired.agda`): (OP-inv_S′)/(OP-ps_S′) per top letter, `iord`/`ord`, (COH-ord). The first version accepts the E13 shape and the repaired rule rejects it (`old-accepts`, `new-rejects`, by evaluation). Also checked: uniform ⇒ two-tier given the projection data as a hypothesis; `iord` suffices for (ORD); all-`ord` heads use the two-tier rules; setting monotonicity. `sound′` reduces soundness to the paper theorems given as fields of `Sem′` (4.3, 4.4, 8.1, 2.2/2.3, and `compose` = decomposition of the coherence image into the letters of its lift plus Lemma 4.1); `iso-path` and `join-iso` are proved separately. In the operation case `sound-op` connects `iso-path`: invertibility is IsIso of the path composite, and two inputs remain unchecked: (1) that the coherence's image is `pcomp p` for the lift's letter images (`p` is a free field, not tied to `liftTops h`, so `OpModel` can be inhabited with `p = nil`), and (2) `letters`, the per-letter step. None of those fields is (IL).
+- **Agda-checked, repaired rules** (`Uniform/MarksRepaired.agda`): (OP-inv_S′)/(OP-ps_S′) per top letter, `iord`/`ord`, (COH-ord). The first version accepts the E13 shape and the repaired rule rejects it (`old-accepts`, `new-rejects`, by evaluation). Also checked: uniform ⇒ two-tier given the projection data as a hypothesis; `iord` suffices for (ORD); all-`ord` heads use the two-tier rules; setting monotonicity (with split marks: `Uniform/SplitMarks.agda`, `invM-mono`). `sound′` reduces soundness to the paper theorems given as fields of `Sem′` (4.3, 4.4, 8.1, 2.2/2.3, and `compose` = decomposition of the coherence image into the letters of its lift plus Lemma 4.1); `iso-path` and `join-iso` are proved separately. In the operation case `sound-op` connects `iso-path`: invertibility is IsIso of the path composite, and two inputs remain unchecked: (1) that the coherence's image is `pcomp p` for the lift's letter images (`p` is a free field, not tied to `liftTops h`, so `OpModel` can be inhabited with `p = nil`), and (2) `letters`, the per-letter step. None of those fields is (IL).
 - **Agda-checked, first version** (`Uniform/Marks.agda`, superseded; its premise is read on g[γ] rather than on the letter's operands): the decision procedure on head data, uniform ⇒ two-tier, ord-covers-two-tier, setting monotonicity, non-collapse, soundness from the per-rule statements, and Example (a) by evaluation. These statements are about the encoded rules on abstract head data. The encoded two-tier rules (`invT`, `psT`) share only `grayInv` and `grayPs` with `Gray/Marks.agda`. The identification of two-tier's coherence case with `coherenceC ∨ innerC` on the projected head is a paper step (§3.6 Semantics), as is the head classification itself until S3. `innFac-sem` takes the unit and split laws as hypotheses on the model. That they hold as 3-cell equations in the intended models is proved on paper only (`notes/uniform-marks.md` §4.4).
 - Ledger S4, E7 and E13 are done. What remains is ledger E14.
 
@@ -238,7 +241,40 @@ The note proposed M1; the choice is left open here.
 - *Option A: expose only `ps*`, written "pseudo".* Matches the meaning in P; every pseudo modification must have pseudo boundaries anyway.
 - *Option B: expose both.* `ps` alone is the more general building block, but no rule currently uses it as a premise, so it would be a mark the user can write and nothing can consume.
 
-**Q3.3. How `ord` is scoped.** Under uniform L, inner interchange is directed in every object unless marked. The same question applies to `iord`, and so does the choice of which of the two marks a default writes. (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, in every switch setting, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
+**Q3.3. How object marks are supplied.** Under uniform L, inner interchange is directed in every object unless marked. The same question applies to `iord`, `lsplit` and `rsplit`. Whatever the surface does, the kernel context it produces carries every mark on its variable, so a mark is always a hypothesis of the statement proved. Files carry no meaning, so no option is a per-file default (chapter 0, §0.1). (Whatever the scope, with (COH-ord) an `ord` object is ordinary in the full two-tier sense, whatever the split marks of other objects, because SC_𝔉 does not depend on S, §3.6. Heads that mix `ord` and non-`ord` objects use the uniform rule until ledger E15 is settled.)
 - *Option A: per object declaration* (`(C : ⋆)^ord`). Precise; most objects in ordinary use need the mark.
-- *Option B: a per-file default "all objects ord" with an opt-out.* Ordinary mathematics needs no annotation; a development that forgets the opt-out silently proves a statement only about ordinary ω-categories.
-- *Option C: a per-development setting, like the switch setting of chapter 2.* Uniform with Q2.1; coarse.
+- *Option B: the surface infers the weakest marks a proof needs* (§0.5 allows inferring marks). It writes each inferred mark into the elaborated context, and the user can ask to see it. Nothing is assumed that the proof does not use. Inference has to be decidable and proved conservative like every surface layer, and an error appears only when a needed mark contradicts a declared one.
+- *Option D (proposed by Anthony, 2026-11-24): sections.* A delimited block `begin S … end S` declares assumptions (variables with their marks) once; each declaration inside is elaborated with those assumptions prepended to its context, and after `end S` it is stated with them as ordinary hypotheses. A section is explicit syntax with a visible scope, so it is compatible with files carrying no meaning (§0.1), and its elaboration is context extension, so conservativity is immediate. Design point: whether a declaration receives every section assumption or only those its statement and proof use (the Coq-style choice, more general by §0.4); with used-only, D composes with B, which can further weaken the marks of the variables used.
+- *Worked example.* A lemma about a composite of invertible 2-cells inside an object C needs C `ord` or (INN-fac_S) (§3.6 Example (b)). Under A, the author writes `(C : ⋆)^ord` in the lemma. Under B, the surface infers the mark the proof uses and shows it in the lemma's elaborated statement. Under D, the author writes `(C : ⋆)^ord` once in a section. This lemma, L₁, is discharged with C `ord`. A second lemma L₂ in the same section that mentions C but uses no interchange inside it is also discharged with C `ord`, because the mark belongs to the declaration, unless D is combined with B, in which case L₂ gets C unmarked.
+- *Comparison by generality (§0.4).* A statement is more general the fewer marks its context carries. A states exactly what the author writes, which is as general as the author's care. B states the weakest marks the proof uses, so it is the most general by construction, and A is its special case where the author writes the marks out. D with used-only scoping drops unused assumptions per declaration, but on its own it keeps every declared mark on the assumptions a declaration does use, so it sits with A (L₂ above is over-marked).
+- *D combined with B.* The two are independent: D decides **which assumptions** a statement has, B decides **which marks** they carry. At `end S`, each declaration is stated over the section assumptions it uses, with the weakest marks its proof needs. A mark written in the section acts as an upper bound and as the tie-breaker where the minimum is not unique (see *What B needs*). This gives D's ergonomics (assumptions written once) with B's generality (each statement assumes only what its proof uses). Used-only scoping needs strengthening (dropping unused context variables), standard for CaTT-style systems but not formalized here (`notes/lax-sc-completeness.md` §4 relies on it too).
+- *What B needs.* Marks on an object range over a finite set: none, `iord`, `ord`, `lsplit`, `rsplit` and their combinations, with `ord` implying the rest. Every rule is monotone in the marks. So the assignments that make a proof check form an up-closed subset of a finite lattice, and finding its minimal elements is decidable, though naively exponential in the number of objects. The minimum need not be unique. In the worked example with a and b both marked `inv`, {C `lsplit`} and {C `rsplit`} each suffice through (INN-fac_S) and are incomparable. So B must report the minimal choices when there are several and let the author pick, or accept a written mark (A) that settles it.
+- *Recommendation: D with used-only scoping, combined with B, with written marks always accepted.* Sections remove the repetition that makes A tedious; inference keeps every statement as general as its proof allows; a mark written in the section settles the cases where the weakest marks are not unique. Costs: B's decision procedure over mark assignments and D's used-only discharge (strengthening), each with its conservativity proof. The choice is Anthony's (ledger S6).
+
+## 3.9 Marks as declared towers (schemes) [proposal]
+
+An `inv` mark is a finite name for an infinite tower: (DES) gives the first level, and the marks on λ_t and ρ_t give the rest. It never touches the side condition. So it is one instance of a general form, a **scheme**: a finite marked context extension over a generic cell of dimension n, suspension-stable, read coinductively. A scheme is written inline in the mark, like μΔ in chapter 9, so files carry no meaning.
+
+```
+Inv(t : u → v)  :=  ∃ s, s′ : v → u.  ∃ l : s ; t → 1_v [Inv].  ∃ r : t ; s′ → 1_u [Inv]
+Ps(t)           :=  ∀ y with hd(y) ≥ 1 composed before t.  (y ⊗ t) [Inv]      (ps* as in §3.4)
+Grpd_k(C : ⋆)   :=  ∀ t with 0-target C and hd(t) ≥ k.  t [Inv]
+```
+
+**Generic rules.**
+- (S-mark) A marked variable carries its scheme.
+- (S-proj) Projections onto the ∃-clauses: for Inv these are (DES).
+- (S-intro) Clause cells with evidence for their marks: for Inv this is inv-intro (§3.7).
+- (S-∀) Instances of ∀-clauses: for Ps this is (PS-fac), for Grpd_k it is (OBJ-k). ∀-clauses have no intro (`notes/marking-alternatives.md` Prop. 8.2).
+- (S-sub) Substitution into a scheme-marked variable supplies evidence (S21(c)).
+- (S-coh) Coherence-case cohs carry every scheme whose clause types are built from t and earlier clause cells [sketch].
+
+**What stays specific to Inv.**
+- *Closure.* (COH-inv), (OP-inv), (INV-fac), (INV-obj), (DES-inv) and (PS-fac) remain kernel rules of the Inv scheme. Closure is a theorem about particular schemes, not about all of them: idempotent structure is not closed under composition.
+- *Proof-irrelevance.* Inv is a **property scheme** (its towers are unique up to contractible choice in the intended semantics), so projections may depend on t only. Other schemes are proof-relevant, and their projections take evidence, as in §3.7.
+
+**Not schemes.** `ord`, `iord`, `lsplit` and `rsplit` remain object modes acting through the side condition. Their coherence towers range over every pasting shape (E12, E13), which no finite scheme can name.
+
+**Gain.** Towers the `inv` marks cannot express become declarable, for example right inverses at every level and adjoints at every level. Every judgment of §3.3–§3.7 is unchanged.
+
+**Status.** Agda-checked for dimensions 1–2: the generic checker, ICaTT's inv-intro as the generic intro of the Inv scheme for all inputs with S21 unit evidence, and an RInv tower (`Gray/MarkSchemes.agda`). Projections and ∀-clauses are not encoded. Soundness of the generic rules: sketch. The closure criterion for general schemes, whether Inv's closure rules are syntactically admissible over L, and the property criterion are open: ledger S35, `conjectures/outbox/mark-scheme-closure.md`. **Source:** `notes/mark-schemes.md`.

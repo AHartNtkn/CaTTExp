@@ -35,6 +35,8 @@ import CaTTExp.Gray.Check
 import CaTTExp.Gray.Pure
 import CaTTExp.Gray.Examples
 import CaTTExp.Gray.Cube
+import CaTTExp.Gray.CohCaseGap
+import CaTTExp.Gray.CohCaseVar
 import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls
@@ -209,6 +211,7 @@ import CaTTExp.Naturality.Typing
 import CaTTExp.Naturality.Boundary
 import CaTTExp.Naturality.CylCtx
 import CaTTExp.Naturality.DimOne
+import CaTTExp.Naturality.Solve
 import CaTTExp.Naturality.General
 import CaTTExp.Naturality.Ladder
 import CaTTExp.Naturality.Column
@@ -309,6 +312,7 @@ import CaTTExp.Strict.FreeGlob
 import CaTTExp.Gray.Marks
 import CaTTExp.Gray.MarksExamples
 import CaTTExp.Gray.MarksSaturation
+import CaTTExp.Gray.MarkSchemes
 import CaTTExp.Gray.MarksSubst
 import CaTTExp.GrayDuality
 import CaTTExp.GrayDualityUniform
@@ -415,6 +419,7 @@ import CaTTExp.Uniform.Grid
 import CaTTExp.Uniform.GridExamples
 import CaTTExp.Uniform.RuleFin
 import CaTTExp.Uniform.KernelDec
+import CaTTExp.Uniform.ForcedLift
 import CaTTExp.Uniform.GridFive
 import CaTTExp.Uniform.GridFiveExamples
 import CaTTExp.Uniform.GridLink
@@ -557,3 +562,5 @@ import CaTTExp.Binder.GenHeadsLaws
 import CaTTExp.Binder.GenHeadsPresup
 import CaTTExp.Binder.GenHeadsExamples
 import CaTTExp.Uniform.MarksRepaired
+import CaTTExp.Uniform.SplitMarks
+import CaTTExp.Uniform.SplitMarksPerObject

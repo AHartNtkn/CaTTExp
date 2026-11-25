@@ -4,15 +4,21 @@ These are the constraints every later chapter satisfies. They are design commitm
 
 ## 0.1 What the system is about
 
-The system is a type theory in the style of CaTT (Finster–Mimram) whose intended model is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it.
+The system is a type theory in the style of CaTT (Finster–Mimram). It is not built to capture a chosen model or a chosen class of models. Models are a tool for justifying rules: a rule is explained by reading it in a model and checked by proving it sound there. Among candidate rules, the kernel takes the most general one by the ordering of §0.4.
+
+**One system, not a family of model classes.** Every development is checked by the same rules. No declaration, switch or setting lets a development choose the class of models it is about. Every assumption is a context variable or a mark on one, such as the crossing-law marks of chapter 2, §2.3. **Files carry no meaning**: what a judgment means depends only on its context and its terms, never on the file it is written in, so neither the kernel nor the surface has per-file settings or defaults (ledger S31, S32).
+
+**Files carry no semantic meaning** (Anthony, 2026-11-24). A file is only a container for declarations. Nothing that affects what a statement means or whether it checks (marks, laws, defaults, scoping of assumptions) is attached to a file, so splitting, merging or reordering files never changes a judgment. Every assumption a statement depends on is in its context.
+
+**The reference model.** The model the later chapters use to explain and check rules is **the ω-category of ω-categories with lax transformations**. That object is not an ω-category: it is an *oriented category*, a category enriched in ω-categories for the lax Gray tensor (Gepner–Heine, arXiv 2510.10504; strictly, Ara–Maltsiniotis's ∞-Cat_lax, arXiv 1607.00668, Ex. C.18). Write 𝒦 for it. It is a reference, not a target: the kernel's rules also have models that are not of this kind (chapter 2, §2.3: objects whose own compositions interchange directedly). Read in 𝒦:
 
 - A term of type ⋆ is an object of 𝒦, that is, an ω-category.
 - A term of type `a → b` between objects is a 1-cell of 𝒦, a functor. A term between 1-cells is a lax transformation, and so on up.
 - Inside one hom 𝒦(a, b), cells compose as in an ω-category. Composition **across** objects, 𝒦(a, b) ⊗ 𝒦(b, c) → 𝒦(a, c), is Gray: it has a directed interchanger and no horizontal composite.
 
-The ambient 𝒦 stays **external**: it is the model the judgments are about, not a term inside the theory. Internal quantifiers in Lawvere's style (a rule that binds an object variable and has a universal property witnessed by cells) are allowed where the rules below support them.
+Every model, 𝒦 included, stays **external**: a model is what the judgments are interpreted in, not a term inside the theory. Internal quantifiers in Lawvere's style (a rule that binds an object variable and has a universal property witnessed by cells) are allowed where the rules below support them.
 
-*Source:* `notes/pseudo-vs-gray.md` §0, §2.1–2.2; `notes/conventions.md` §4.
+*Source:* `notes/pseudo-vs-gray.md` §0, §2.1–2.2; `notes/conventions.md` §4; Anthony, spec walkthrough 2026-11-24 (no mechanism for choosing a class of models; ledger S32).
 
 ## 0.2 No universes
 
@@ -35,7 +41,7 @@ What it does not exclude:
 The kernel has **no definitional equality** beyond syntactic identity of terms after substitution, as in CaTT. In particular:
 - no β or η rules for any type former or term former;
 - no computation rules for limits, free objects, internal homs or tensors;
-- a law of a strict theory used in a side condition (chapter 2) never becomes a definitional equality. It only makes certain cells derivable.
+- a law of the strict theory used to decide a side condition (chapter 2) never becomes a definitional equality. That theory is a decision device for a combinatorial test on pasting contexts, not a model, and its laws only make certain cells derivable.
 
 Every universal property is stated as the existence of cells: a structure map, a comparison cell, and a witness that the comparison is invertible where invertibility is meant. In the kernel, an equation is proved by exhibiting a cell, never by a conversion check.
 
@@ -52,23 +58,23 @@ Where a construction has lax, pseudo and strict versions, the kernel takes the *
 - the side condition computes in the **least** admissible theory V, so every derivable judgment holds in every admissible theory's models (chapter 2, §2.3);
 - pseudo transformations, ordinary ω-categories and groupoids are marks on top of L (`inv`, `ps`, `ord`, `grpd_k`), never separate kernels (see below for how far each goes).
 
-**The generality ordering**, from most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
+**The generality ordering is the design criterion.** From most to least general, is uniform L ⊂ two-tier L ⊂ P (plain CaTT with pseudo transformations). It is an ordering by derivability. Every uniform-L derivation projects to a two-tier derivation, and every two-tier derivation collapses to a P derivation (chapter 2, §2.6). "More general" means fewer derivable cells and more models.
 
 **How far marks go back down the ordering.**
 - *From two-tier L to P:* by marks. P is two-tier L with every interchanger invertible, and the relative coherence lemma for 𝔉 → ν holds (ledger E5).
 - *From uniform L to two-tier L:* by marks, with `ord` read as "the inner letters into this object are trivial".
   - The rule (COH-ord) accepts a head all of whose objects are `ord` on the two-tier side condition. With every object marked `ord`, uniform L then derives exactly two-tier L: the same terms, types and marks (chapter 3, §3.6; ledger S16(b)).
-  - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, in any setting. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
+  - The mark has to act through the side condition. A mark that only makes inner letters invertible does **not** give two-tier coherences, whatever the split marks. The loop H and 1_w, and the outer W-strip, share a Gray image and stay unconnected after every inner letter is inverted (ledger E13).
   - Heads that mix `ord` and non-`ord` objects use the uniform rule (ledger E15).
 
-Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation has.
+Specialisation happens only for a concrete, recorded reason. The one recorded stop is at directed interchange: dropping the interchanger altogether (ω-sesquicategories) would lose the naturality cells that every lax transformation of 𝒦 has.
 
 *Source:* project standard 4; `notes/pseudo-vs-gray.md` §2.5, §7; `notes/design-decisions.md` §1.7.
 
 ## 0.5 The kernel and the surface are kept apart
 
 The **kernel** is an explicit, decidable system. It has:
-- no defaults (every mark, every switch setting, every bracketing is written out);
+- no defaults (every mark, every bracketing is written out);
 - no implicit arguments, no notation, no overloading, no computation rules;
 - a checker that decides every judgment.
 

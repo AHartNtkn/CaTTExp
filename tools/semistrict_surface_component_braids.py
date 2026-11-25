@@ -124,7 +124,7 @@ def restrict(n, word, selected):
 
 def cabling(face, word):
     sizes = [j-i for _, i, j in face]
-    offset = face[0][1]
+    offset = face[0][1] if face else 0
     out = []
     for g in word:
         i = abs(g)-1

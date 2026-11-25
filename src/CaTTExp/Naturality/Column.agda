@@ -16,7 +16,7 @@
 -- Q_m, and `col-ok` types the ladder filler as c↑ : a_c → b_c.
 --
 -- The gaps of the ladder are filled by the relative-coherence
--- procedure (`General.solve`). `col-ok` is CONDITIONAL on rcS answering
+-- procedure (`Naturality.Solve.solve`). `col-ok` is CONDITIONAL on rcS answering
 -- each gap the construction uses (`ColRC`). When c is the vertical
 -- composite, each gap should relate two 2-cells with the same strict
 -- image (they differ by reassociation and identities), so that the
@@ -36,7 +36,7 @@ open import CaTTExp.Naturality.Raw
 open import CaTTExp.Naturality.Typing using (module Hyp; T-∨-false; ∨-false-l; ∨-false-r)
 open import CaTTExp.Naturality.Boundary using (BaseD; module Typed; module Shape)
 open import CaTTExp.Naturality.Ladder using (module Raw2; module Typ2)
-open import CaTTExp.Naturality.General using (solve; solve-ok; RCAt)
+open import CaTTExp.Naturality.Solve using (solve; solve-ok; RCAt)
 
 -- The column and its cells.
 colC : Nat → Ctx
@@ -62,12 +62,9 @@ lk-a m j p = lookupΣ (chainC m) (edge (suc j)) (lookup-edge m j p)
 Bc : Nat → Ty
 Bc m = arr Af (var (fv 0)) (var (fv m))
 
-module Col (K : Filler) {Δ : Ctx} {D : Datum} (m : Nat) (wQ : colC m ⊢ctx)
-           (VD : Hyp.ValidD K D (colC m) Δ) where
+-- The raw filler (no typing hypotheses).
+module ColR (K : Filler) (Δ : Ctx) (D : Datum) (m : Nat) where
   open Cyl K
-  open Hyp K using (module ValidD)
-  open ValidD VD
-  open Typed K
 
   X Y : Tm
   X = P D 0 (var 0) ⋆
@@ -89,6 +86,22 @@ module Col (K : Filler) {Δ : Ctx} {D : Datum} (m : Nat) (wQ : colC m ⊢ctx)
   fl = solve Δ
 
   open Raw2 X Y xm xp xt em ep et xs es fl public
+
+  -- The filler for a 2-cell c : f_0 ⇒ f_m of Q_m.
+  colFill : Tm → Tm
+  colFill c = fill m (P D 1 c (Bc m)) (L D 1 c (Bc m))
+
+  -- The hypothesis: rcS answers every gap the construction uses.
+  ColRC : Tm → Tm → Set
+  ColRC c⁻ c⁺ = ∀ {j u v} → Conn m c⁻ c⁺ j u v → RCAt Δ (arr (Aj j) u v)
+
+module Col (K : Filler) {Δ : Ctx} {D : Datum} (m : Nat) (wQ : colC m ⊢ctx)
+           (VD : Hyp.ValidD K D (colC m) Δ) where
+  open Cyl K
+  open Hyp K using (module ValidD)
+  open ValidD VD
+  open Typed K
+  open ColR K Δ D m public
 
   base : BaseD D (colC m) Δ
   base = record { bmm = vmm ; bmp = vmp ; bsame = vsame ; bup = vup }
@@ -126,10 +139,6 @@ module Col (K : Filler) {Δ : Ctx} {D : Datum} (m : Nat) (wQ : colC m ⊢ctx)
         go z≤n     = z≤n
         go (s≤s r) = s≤s (go r)
 
-  -- The hypothesis: rcS answers every gap the construction uses.
-  ColRC : Tm → Tm → Set
-  ColRC c⁻ c⁺ = ∀ {j u v} → Conn m c⁻ c⁺ j u v → RCAt Δ (arr (Aj j) u v)
-
   lok : ∀ c⁻ c⁺ → ColRC c⁻ c⁺ → Typ2.LOK {Δ} {X} {Y} {xm} {xp} {xt} {em} {ep} {et} {xs} {es} {fl} m c⁻ c⁺
   lok c⁻ c⁺ rc = record
     { wX     = Sb.lookup-sub closed wQ lk-x vmm
@@ -163,7 +172,7 @@ module Col (K : Filler) {Δ : Ctx} {D : Datum} (m : Nat) (wQ : colC m ⊢ctx)
   -- The theorem: for any 2-cell c : f_0 ⇒ f_m over Q_m, the ladder
   -- filler is c↑ : a_c → b_c, given that rcS answers its gaps.
   col-ok : ∀ c → colC m ⊢tm c ∶ Bc m → ColRC (P D 1 c (Bc m)) (L D 1 c (Bc m)) →
-           Δ ⊢tm fill m (P D 1 c (Bc m)) (L D 1 c (Bc m)) ∶ cylTy D c (Bc m)
+           Δ ⊢tm colFill c ∶ cylTy D c (Bc m)
   col-ok c dc rc with cylTy-wf base dc (bdF , cy-f 0 z≤n , cy-f m ≤-refl)
   ... | arr-wf da' db' = Typ2.fill-wf m c⁻ c⁺ (lok c⁻ c⁺ rc) da' db'
     where

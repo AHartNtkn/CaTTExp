@@ -6,19 +6,30 @@
 -- the filler c↑ is a 3-term (in general an (n+1)-term) in the cylinder
 -- context Q↑Y between the two parallel cells a_c and b_c. Conjecture N
 -- (notes/relative-coherence.md §4) says such a cell exists; Proposition
--- R reduces it to relative coherence on Q↑Y. This module takes that
--- reduction at face value and defines the filler as the answer of the
--- relative-coherence procedure itself:
+-- R reduces it to relative coherence on Q↑Y. This module defines the
+-- filler from the relative-coherence procedure, with the selected top
+-- cell layered in for the compositions it knows:
 --
 --   Kω Q B Y = K₁ Q B Y                              (dim B = 1)
---   Kω Q B Y = rcS (a_c) (b_c)  on Q↑Y               (dim B ≥ 2)
+--   Kω Q B Y = layered filler                         (dim B = 2, shapes below)
+--   Kω Q B Y = rcS (a_c) (b_c)  on Q↑Y               (otherwise)
 --
 -- where K₁ is the explicit dimension-1 family of
 -- CaTTExp.Naturality.DimOne, rcS is CaTTExp.RCProc.rcS, and the typing
 -- derivations rcS needs are produced by the certified checker
--- (CaTTExp.Completeness: dec-ctx, dec-tm). The boundary a_c, b_c of the
--- query mentions the cylinders of B's boundary terms, so the family is
--- defined by recursion on the size of B (`Kb`, `Kω`, `stab`).
+-- (CaTTExp.Completeness: dec-ctx, dec-tm; `Naturality.Solve`). The
+-- layered shapes (`shape`, recognised by syntactic equality) are the
+-- compositions of dimension 2 whose fillers are built so far:
+--
+--   sR     the right whisker α ∗₀ h, Q = BK 0 1   (Naturality.Whisker)
+--   sL     the left whisker h ∗₀ α, Q = LK 0 1    (Naturality.Whisker)
+--   sC m   the vertical composite of m 2-cells, Q = ΣΘ_m; ∗₁ = rwT 1 0
+--          is m = 2                               (Naturality.Column)
+--
+-- Their fillers layer the selected top cell's cylinder and fill the
+-- remaining gaps with rcS. The boundary a_c, b_c mentions the
+-- cylinders of B's boundary terms, so the family is defined by
+-- recursion on the size of B (`Kb`, `Kω`, `stab`).
 --
 -- What is proved, with no postulate:
 --
@@ -27,24 +38,29 @@
 -- where Good Q B holds when every coherence occurring in B, and B itself,
 -- is either 1-dimensional or satisfies
 --
---   RCq Q B : for every admissible Y, rcS answers the query
---             (a_c, b_c) on Q↑Y for all typing derivations of its sides.
+--   RCq Q B : for every admissible Y, rcS answers the gaps of the
+--             filler on Q↑Y (`LayRC`): the one query (a_c, b_c) for
+--             shape sO, the gaps listed by the layered filler's `Conn`
+--             for the other shapes, for all typing derivations.
 --
 -- So for coherences of dimension ≥ 2 the theorem is CONDITIONAL on RCq:
 -- it holds exactly where the relative-coherence procedure answers the
--- cylinder query. Nothing here proves RCq for any coherence of
+-- filler's gaps. Nothing here proves RCq for any coherence of
 -- dimension ≥ 2. Discharging it needs (i) totality of rcS on parallel
 -- 2-cells with equal strict image (Theorem A, ledger S20 / RC thread),
--- (ii) equality of the strict images of a_c and b_c, and (iii) for
--- dimension ≥ 3, RC(n) (the descent, RCGEN). See open-issues C1d.
+-- (ii) equality of the strict images of the two sides of every gap
+-- (expected, not proved; open-issues C1d), and (iii) for dimension
+-- ≥ 3, RC(n) (the descent, RCGEN).
 --
--- RCq is NOT expected to hold for a composition c (dim Q = dim c) with
--- a selected top cell q: then a_c and b_c have different strict images
--- (they differ by the generator q↑), so Theorem A does not apply and
--- nothing will discharge RCq there. okAll gives nothing for those c. They need
--- the layered filler of Proposition R (relative-coherence.md §4.1), not
--- yet built. Kω is the intended filler for coherences, and for
--- compositions whose top cells are all unselected.
+-- RCq is NOT expected to hold for a composition of shape sO (dim Q =
+-- dim c) with a selected top cell q: then a_c and b_c have different
+-- strict images (they differ by q↑), so Theorem A does not apply. Of
+-- the 2-dimensional compositions, only the shapes above have layered
+-- fillers so far; general composites (several columns, whiskers by
+-- composite paths) and all compositions of dimension ≥ 3 are still sO.
+-- Their cylinders are obtained through the recursion of Typing when
+-- the composition is written with the shapes above (for instance
+-- (u ∗₀ λ) ∗₁ a is rwT 1 0 applied to a left whisker and a coherence).
 --
 -- For terms all of whose coherences are 1-dimensional (in particular
 -- every term of dimension ≤ 1) Good holds outright (`low-h`), so
@@ -59,7 +75,7 @@ open Sb using (ScTm)
 open import CaTTExp.PureMetatheory using (closed)
 import CaTTExp.Completeness ∅ cattSide (λ ()) (λ ()) as Ch
 open Ch using (Dec; yes; no)
-open import CaTTExp.Derived using (idS; id-wf; id-ty; tm-ctx)
+open import CaTTExp.Derived using (idS; id-wf; id-ty; tm-ctx; tm-ty)
 open import CaTTExp.DerivedBoundary using (dim[])
 open import CaTTExp.GrayCtx.NaturalWF using (<-suc; n<sn; ≤-<-trans; <-≤-trans; <suc-≢)
 open import CaTTExp.GraphFillerTotal using (⋆-var)
@@ -70,8 +86,11 @@ open import CaTTExp.Naturality.Typing using (UpSel; module Hyp; module Main)
 open import CaTTExp.Naturality.Boundary using (module Typed)
 open import CaTTExp.Naturality.Commute using (Scoped; eq-sound)
 open import CaTTExp.Naturality.CylCtx using (module CW)
+open import CaTTExp.Naturality.Solve public
 open import CaTTExp.Naturality.DimOne
-  using (K₀; K₁; K₁-sc; K₁-ok; clean; clean-sc; clean-eq; module Indep; LowCtx; low-chain)
+  using (K₀; K₁; K₁-sc; K₁-ok; clean; clean-sc; clean-eq; module Indep; LowCtx; low-chain; half)
+open import CaTTExp.Naturality.Column using (colC; Bc; module ColR; module Col)
+open import CaTTExp.Naturality.Whisker using (WQ; Bw; LQ; Bl; module Wh; module Lw; ty-src; ty-tgt'; fhT; ghT; hfT; hgT)
 
 private
   cong₃ : ∀ {A B C D : Set} (f : A → B → C → D) {a a' b b' c c'} →
@@ -245,63 +264,81 @@ ty-inv : ∀ {Γ X a b} → Γ ⊢ty arr X a b → (Γ ⊢tm a ∶ X) × (Γ ⊢
 ty-inv (arr-wf da db) = da , db
 
 ------------------------------------------------------------------------
--- The solver: run the certified checker on the two sides of a query,
--- then rcS on the derivations it returns.
-
-private
-  fromAns : ∀ {Γ X a b} → Maybe (Ans Γ X a b) → Tm
-  fromAns (just (w , _)) = w
-  fromAns nothing        = junk
-
-  solveD : ∀ Γ X a b → Dec (Γ ⊢tm a ∶ X) → Dec (Γ ⊢tm b ∶ X) → Tm
-  solveD Γ X a b (yes da) (yes db) = fromAns (rcS da db)
-  solveD Γ X a b _        _        = junk
-
-  solveW : ∀ Γ X a b → Dec (Γ ⊢ctx) → Tm
-  solveW Γ X a b (yes w) = solveD Γ X a b (Ch.dec-tm Γ w a X) (Ch.dec-tm Γ w b X)
-  solveW Γ X a b (no _)  = junk
-
-solve : Ctx → Ty → Tm → Tm → Tm
-solve Γ X a b = solveW Γ X a b (Ch.dec-ctx Γ)
-
-solveTy : Ctx → Ty → Tm
-solveTy Γ ⋆           = junk
-solveTy Γ (arr X a b) = solve Γ X a b
-
--- The hypothesis under which the solver answers: rcS answers the query
--- for every pair of derivations of its sides.
-RCAt : Ctx → Ty → Set
-RCAt Γ ⋆           = ⊤
-RCAt Γ (arr X a b) = (da : Γ ⊢tm a ∶ X) (db : Γ ⊢tm b ∶ X) → T (is-just (rcS da db))
-
-solve-ok : ∀ {Γ X a b} → Γ ⊢tm a ∶ X → Γ ⊢tm b ∶ X → RCAt Γ (arr X a b) → Γ ⊢tm solve Γ X a b ∶ arr X a b
-solve-ok {Γ} {X} {a} {b} da db rc = goW (Ch.dec-ctx Γ)
-  where
-  goA : (m : Maybe (Ans Γ X a b)) → T (is-just m) → Γ ⊢tm fromAns m ∶ arr X a b
-  goA (just (w , dw)) _ = dw
-
-  goD : (p : Dec (Γ ⊢tm a ∶ X)) (q : Dec (Γ ⊢tm b ∶ X)) → Γ ⊢tm solveD Γ X a b p q ∶ arr X a b
-  goD (yes da') (yes db') = goA (rcS da' db') (rc da' db')
-  goD (yes _)   (no nb)   = ⊥-elim (nb db)
-  goD (no na)   _         = ⊥-elim (na da)
-
-  goW : (p : Dec (Γ ⊢ctx)) → Γ ⊢tm solveW Γ X a b p ∶ arr X a b
-  goW (yes w) = goD (Ch.dec-tm Γ w a X) (Ch.dec-tm Γ w b X)
-  goW (no nw) = ⊥-elim (nw (tm-ctx da))
-
-------------------------------------------------------------------------
 -- The family, by recursion on the size of B.
 
 isDim1 : Ty → Bool
 isDim1 (arr ⋆ _ _) = true
 isDim1 _           = false
 
+------------------------------------------------------------------------
+-- Shapes with a layered filler: the right whisker α ∗₀ h (BK 0 1), the
+-- left whisker h ∗₀ α (LK 0 1) and the vertical composite of m 2-cells
+-- (the column ΣΘ_m; ∗₁ = rwT 1 0 is the case m = 2). Every other
+-- coherence (sO) gets the single query (a_c, b_c).
+
+data Shape : Set where
+  sR sL sO : Shape
+  sC : Nat → Shape
+
+colM : Ctx → Nat
+colM Q = half (len Q ∸ 3)
+
+private
+  sh3 : Bool → Nat → Shape
+  sh3 true  m = sC m
+  sh3 false m = sO
+
+  sh2 : Bool → Ctx → Ty → Shape
+  sh2 true  Q B = sL
+  sh2 false Q B = sh3 ((Q ==Ctx colC (colM Q)) ∧ (B ==Ty Bc (colM Q))) (colM Q)
+
+  sh1 : Bool → Ctx → Ty → Shape
+  sh1 true  Q B = sR
+  sh1 false Q B = sh2 ((Q ==Ctx LQ) ∧ (B ==Ty Bl)) Q B
+
+shape : Ctx → Ty → Shape
+shape Q B = sh1 ((Q ==Ctx WQ) ∧ (B ==Ty Bw)) Q B
+
+ShapeOK : Shape → Ctx → Ty → Set
+ShapeOK sR     Q B = (Q ≡ WQ) × (B ≡ Bw)
+ShapeOK sL     Q B = (Q ≡ LQ) × (B ≡ Bl)
+ShapeOK (sC m) Q B = (Q ≡ colC m) × (B ≡ Bc m)
+ShapeOK sO     Q B = ⊤
+
+shape-ok : ∀ Q B → ShapeOK (shape Q B) Q B
+shape-ok Q B = go1 ((Q ==Ctx WQ) ∧ (B ==Ty Bw)) refl
+  where
+  both : ∀ {a b} → T (a ∧ b) → T a × T b
+  both {true} {true} _ = tt , tt
+
+  eqs : ∀ {Q' B'} → T ((Q ==Ctx Q') ∧ (B ==Ty B')) → (Q ≡ Q') × (B ≡ B')
+  eqs p = ==Ctx-sound _ _ (fst (both p)) , ==Ty-sound _ _ (snd (both p))
+
+  go3 : ∀ v → ((Q ==Ctx colC (colM Q)) ∧ (B ==Ty Bc (colM Q))) ≡ v → ShapeOK (sh3 v (colM Q)) Q B
+  go3 true  e = eqs (subst T (sym e) tt)
+  go3 false e = tt
+
+  go2 : ∀ v → ((Q ==Ctx LQ) ∧ (B ==Ty Bl)) ≡ v → ShapeOK (sh2 v Q B) Q B
+  go2 true  e = eqs (subst T (sym e) tt)
+  go2 false e = go3 _ refl
+
+  go1 : ∀ v → ((Q ==Ctx WQ) ∧ (B ==Ty Bw)) ≡ v → ShapeOK (sh1 v Q B) Q B
+  go1 true  e = eqs (subst T (sym e) tt)
+  go1 false e = go2 _ refl
+
+-- The filler of each shape, computed with the cylinders of K.
+stepS : Shape → Filler → Filler
+stepS sR     K Q B Y = Wh.whisk K (Cyl.cylCtx K Q Y) (Cyl.gen K Y) (Cyl.cohId K Q B)
+stepS sL     K Q B Y = Lw.whisk K (Cyl.cylCtx K Q Y) (Cyl.gen K Y) (Cyl.cohId K Q B)
+stepS (sC m) K Q B Y = ColR.colFill K (Cyl.cylCtx K Q Y) (Cyl.gen K Y) m (Cyl.cohId K Q B)
+stepS sO     K Q B Y = solveTy (Cyl.cylCtx K Q Y) (Cyl.cylTy K (Cyl.gen K Y) (Cyl.cohId K Q B) B)
+
 -- One level: the filler of c = coh Q B id, computed with the cylinders
 -- of K (which is only consulted on the coherences in B's boundary).
 stepRaw : Filler → Filler
 stepRaw K Q B Y =
   if isDim1 B then K₁ Q B Y
-  else solveTy (Cyl.cylCtx K Q Y) (Cyl.cylTy K (Cyl.gen K Y) (Cyl.cohId K Q B) B)
+  else stepS (shape Q B) K Q B Y
 
 step : Filler → Filler
 step K Q B Y = clean (cnt Y) (stepRaw K Q B Y)
@@ -367,11 +404,21 @@ module _ (n : Nat) where
 ------------------------------------------------------------------------
 -- The hypothesis, and the class of coherences it covers.
 
--- rcS answers the cylinder query of c = coh Q B id on Q↑Y, for every
--- admissible Y.
+-- rcS answers the gaps of the filler of c = coh Q B id on Q↑Y, for
+-- every admissible Y: the one query (a_c, b_c) for shape sO, and the
+-- gaps of the layered filler (Wh.WRC, Lw.LRC, ColR.ColRC) for the
+-- other shapes. The latter are stated with the cylinders of
+-- Kb (sizeTy B), which agree with Kω's on B's boundary (AgB).
+LayRC : Shape → Ctx → Ty → Sel → Set
+LayRC sR     Q B Y = Wh.WRC (Kb (sizeTy B)) (Cyl.cylCtx (Kb (sizeTy B)) Q Y) (Cyl.gen (Kb (sizeTy B)) Y) (Cyl.cohId Kω Q B)
+LayRC sL     Q B Y = Lw.LRC (Kb (sizeTy B)) (Cyl.cylCtx (Kb (sizeTy B)) Q Y) (Cyl.gen (Kb (sizeTy B)) Y) (Cyl.cohId Kω Q B)
+LayRC (sC m) Q B Y = ColR.ColRC (Kb (sizeTy B)) (Cyl.cylCtx (Kb (sizeTy B)) Q Y) G m
+                       (Cyl.P (Kb (sizeTy B)) G 1 (Cyl.cohId Kω Q B) (Bc m)) (Cyl.L (Kb (sizeTy B)) G 1 (Cyl.cohId Kω Q B) (Bc m))
+  where G = Cyl.gen (Kb (sizeTy B)) Y
+LayRC sO     Q B Y = RCAt (Cyl.cylCtx Kω Q Y) (Cyl.cylTy Kω (Cyl.gen Kω Y) (Cyl.cohId Kω Q B) B)
+
 RCq : Ctx → Ty → Set
-RCq Q B = ∀ Y → lenSel Y ≡ len Q → UpSel Q Y → T (anySel Y) →
-          RCAt (Cyl.cylCtx Kω Q Y) (Cyl.cylTy Kω (Cyl.gen Kω Y) (Cyl.cohId Kω Q B) B)
+RCq Q B = ∀ Y → lenSel Y ≡ len Q → UpSel Q Y → T (anySel Y) → LayRC (shape Q B) Q B Y
 
 -- 1-dimensional coherences need nothing; the others need RCq.
 Gd : Ctx → Ty → Set
@@ -402,6 +449,92 @@ GoodB : Nat → Ctx → Ty → Set
 GoodB n Q B = Good Q B × T (sizeTy B <ℕ n)
 
 open Hyp Kω using (AllGood; AllGoodS; FillerOK)
+
+------------------------------------------------------------------------
+-- Kb n is scoped, and well typed wherever Kω is (on coherences of size
+-- < n).
+
+Kb-sc : ∀ n → Scoped (Kb n)
+Kb-sc zero    Q B Y = tt
+Kb-sc (suc n) Q B Y = go (sizeTy B ==ℕ n)
+  where
+  go : ∀ v → ScTm (cnt Y) (if v then step (Kb n) Q B Y else Kb n Q B Y)
+  go true  = clean-sc (cnt Y) (stepRaw (Kb n) Q B Y)
+  go false = Kb-sc n Q B Y
+
+okKb : ∀ n → FillerOK (GoodB n) → Hyp.FillerOK (Kb n) (GoodB n)
+okKb n IH {Q} {A} {s} {u} {Y} pQ wQ wB side lY upY anyY (g , p) =
+  tr (AgB.cylCtx-ag n Q Y (AgB.ps-oc n pQ))
+     (AgB.cylTy-gen n Y (Cyl.cohId Kω Q B) B (b-ty n B (<-suc (sizeTy B) n p)))
+     (stab n Q B Y p)
+     (IH pQ wQ wB side lY upY anyY (g , p))
+  where
+  B = arr A s u
+  tr : ∀ {Γ Γ' X X' w w'} → Γ ≡ Γ' → X ≡ X' → w ≡ w' → Γ' ⊢tm w' ∶ X' → Γ ⊢tm w ∶ X
+  tr refl refl refl d = d
+
+-- Pasting contexts have only variables in their types.
+module PsG (K : Filler) (Ksc : Scoped K) (G : Ctx → Ty → Set) (ok : Hyp.FillerOK K G) where
+  open CW K Ksc G ok using (GoodCtx; GoodTy)
+
+  ps-good : ∀ {Q' x A'} → Q' ⊢ps x ∶ A' → GoodCtx Q' × GoodTy A'
+  ps-good pss     = (tt , tt) , tt
+  ps-good (pse d) = let (gQ , gA) = ps-good d in ((gQ , gA) , (gA , tt , tt)) , (gA , tt , tt)
+  ps-good (psd d) = let (gQ , (gA , _ , _)) = ps-good d in gQ , gA
+
+  ps-goodc : ∀ {Q'} → Q' ⊢ps → GoodCtx Q'
+  ps-goodc (ps d) = fst (ps-good d)
+
+-- The cylinder context and generic datum of Kb (sizeTy B) on Q, valid.
+module Env {Q : Ctx} (B : Ty) {Y : Sel} (pQ : Q ⊢ps) (wQ : Q ⊢ctx) (lY : lenSel Y ≡ len Q) (upY : UpSel Q Y)
+           (IH : FillerOK (GoodB (sizeTy B))) where
+  sz = sizeTy B
+  Kq  = Kb sz
+  okK = okKb sz IH
+  module Mb = Main Kq (Kb-sc sz) (GoodB sz) okK
+  Δb = Cyl.cylCtx Kq Q Y
+  Gb = Cyl.gen Kq Y
+  VDb : Hyp.ValidD Kq Gb Q Δb
+  VDb = snd (CW.cylCtx-ok Kq (Kb-sc sz) (GoodB sz) okK Q Y wQ (PsG.ps-goodc Kq (Kb-sc sz) (GoodB sz) okK pQ) lY upY)
+
+LayOK : Shape → Ctx → Ty → Sel → Set
+LayOK s Q B Y = Cyl.cylCtx (Kb (sizeTy B)) Q Y ⊢tm stepS s (Kb (sizeTy B)) Q B Y
+                  ∶ Cyl.cylTy (Kb (sizeTy B)) (Cyl.gen (Kb (sizeTy B)) Y) (Cyl.cohId Kω Q B) B
+
+-- The right whisker.
+sR-ok : ∀ {Q B Y} → Q ≡ WQ → B ≡ Bw → Q ⊢ps → Q ⊢ctx → lenSel Y ≡ len Q → UpSel Q Y →
+        FillerOK (GoodB (sizeTy B)) → Q ⊢tm Cyl.cohId Kω Q B ∶ B → LayRC sR Q B Y → LayOK sR Q B Y
+sR-ok {Y = Y} refl refl pQ wQ lY upY IH dc rc =
+  Wh.whisk-ok Kq Δb Gb wQ VDb (λ q → Mb.cyl-wf VDb dfh agf q) (λ q → Mb.cyl-wf VDb dgh agg q) _ dc rc
+  where
+  open Env Bw pQ wQ lY upY IH
+  dfh = ty-src (tm-ty dc)
+  dgh = ty-tgt' (tm-ty dc)
+  agf : Hyp.AllGood Kq (GoodB sz) fhT
+  agf = ((tt , (tt , tt , tt)) , tt) , (((((tt , tt) , tt) , tt) , tt) , tt)
+  agg : Hyp.AllGood Kq (GoodB sz) ghT
+  agg = ((tt , (tt , tt , tt)) , tt) , (((((tt , tt) , tt) , tt) , tt) , tt)
+
+-- The left whisker.
+sL-ok : ∀ {Q B Y} → Q ≡ LQ → B ≡ Bl → Q ⊢ps → Q ⊢ctx → lenSel Y ≡ len Q → UpSel Q Y →
+        FillerOK (GoodB (sizeTy B)) → Q ⊢tm Cyl.cohId Kω Q B ∶ B → LayRC sL Q B Y → LayOK sL Q B Y
+sL-ok {Y = Y} refl refl pQ wQ lY upY IH dc rc =
+  Lw.whisk-ok Kq Δb Gb wQ VDb (λ q → Mb.cyl-wf VDb dhf agf q) (λ q → Mb.cyl-wf VDb dhg agg q) _ dc rc
+  where
+  open Env Bl pQ wQ lY upY IH
+  dhf = ty-src (tm-ty dc)
+  dhg = ty-tgt' (tm-ty dc)
+  agf : Hyp.AllGood Kq (GoodB sz) hfT
+  agf = ((tt , (tt , tt , tt)) , tt) , (((((tt , tt) , tt) , tt) , tt) , tt)
+  agg : Hyp.AllGood Kq (GoodB sz) hgT
+  agg = ((tt , (tt , tt , tt)) , tt) , (((((tt , tt) , tt) , tt) , tt) , tt)
+
+-- The vertical composite of m 2-cells.
+sC-ok : ∀ {Q B Y} m → Q ≡ colC m → B ≡ Bc m → Q ⊢ps → Q ⊢ctx → lenSel Y ≡ len Q → UpSel Q Y →
+        FillerOK (GoodB (sizeTy B)) → Q ⊢tm Cyl.cohId Kω Q B ∶ B → LayRC (sC m) Q B Y → LayOK (sC m) Q B Y
+sC-ok {Y = Y} m refl refl pQ wQ lY upY IH dc rc = Col.col-ok Kq m wQ VDb _ dc rc
+  where
+  open Env (Bc m) pQ wQ lY upY IH
 
 ------------------------------------------------------------------------
 -- The induction step: Kω is well typed on c = coh Q B id, given that it
@@ -471,21 +604,40 @@ module _ {Q A s u Y} (pQ : Q ⊢ps) (wQ : Q ⊢ctx) (wB : Q ⊢ty arr A s u) (si
     finish {w} dw = subst (λ v → Δ ⊢tm v ∶ Cω.cylTy (Cω.gen Y) c B)
                       (sym (clean-eq (cnt Y) w (subst (λ m → ScTm m w) lenΔ (Sb.tm-sc closed dw)))) dw
 
-    -- dimension ≥ 2: the solver, on Kb sz's cylinders, which are Kω's.
-    hi : ∀ A₀ s₀ u₀ → A ≡ arr A₀ s₀ u₀ →
-         Δ ⊢tm solveTy (Cyl.cylCtx (Kb sz) Q Y) (Cyl.cylTy (Kb sz) (Cyl.gen (Kb sz) Y) c B)
-            ∶ Cω.cylTy (Cω.gen Y) c B
-    hi A₀ s₀ u₀ refl =
-      subst₂' (AgB.cylCtx-ag sz Q Y (AgB.ps-oc sz pQ))
-              (AgB.cylTy-gen sz Y c B (b-ty sz B (n<sn sz)))
-              (solve-ok da db (fst g Y lY upY anyY))
+    -- dimension ≥ 2: the filler of the shape, on Kb sz's cylinders,
+    -- which are Kω's.
+    toω : ∀ {w} → Cyl.cylCtx (Kb sz) Q Y ⊢tm w ∶ Cyl.cylTy (Kb sz) (Cyl.gen (Kb sz) Y) c B →
+          Δ ⊢tm w ∶ Cω.cylTy (Cω.gen Y) c B
+    toω {w} d = tr (AgB.cylCtx-ag sz Q Y (AgB.ps-oc sz pQ)) (AgB.cylTy-gen sz Y c B (b-ty sz B (n<sn sz))) d
       where
-      da = fst (ty-inv wT)
-      db = snd (ty-inv wT)
-      subst₂' : ∀ {Γ X} → Γ ≡ Δ → X ≡ Cω.cylTy (Cω.gen Y) c B →
-                Δ ⊢tm solveTy Δ (Cω.cylTy (Cω.gen Y) c B) ∶ Cω.cylTy (Cω.gen Y) c B →
-                Δ ⊢tm solveTy Γ X ∶ Cω.cylTy (Cω.gen Y) c B
-      subst₂' refl refl d = d
+      tr : ∀ {Γ X} → Γ ≡ Δ → X ≡ Cω.cylTy (Cω.gen Y) c B → Γ ⊢tm w ∶ X → Δ ⊢tm w ∶ Cω.cylTy (Cω.gen Y) c B
+      tr refl refl d = d
+
+    hi : ∀ A₀ s₀ u₀ → A ≡ arr A₀ s₀ u₀ →
+         Δ ⊢tm stepS (shape Q B) (Kb sz) Q B Y ∶ Cω.cylTy (Cω.gen Y) c B
+    hi A₀ s₀ u₀ refl = go (shape Q B) refl
+      where
+      rcY : LayRC (shape Q B) Q B Y
+      rcY = fst g Y lY upY anyY
+
+      go : ∀ v → shape Q B ≡ v → Δ ⊢tm stepS v (Kb sz) Q B Y ∶ Cω.cylTy (Cω.gen Y) c B
+      go sO e =
+        subst₂' (AgB.cylCtx-ag sz Q Y (AgB.ps-oc sz pQ))
+                (AgB.cylTy-gen sz Y c B (b-ty sz B (n<sn sz)))
+                (solve-ok da db (subst (λ v → LayRC v Q B Y) e rcY))
+        where
+        da = fst (ty-inv wT)
+        db = snd (ty-inv wT)
+        subst₂' : ∀ {Γ X} → Γ ≡ Δ → X ≡ Cω.cylTy (Cω.gen Y) c B →
+                  Δ ⊢tm solveTy Δ (Cω.cylTy (Cω.gen Y) c B) ∶ Cω.cylTy (Cω.gen Y) c B →
+                  Δ ⊢tm solveTy Γ X ∶ Cω.cylTy (Cω.gen Y) c B
+        subst₂' refl refl d = d
+      go sR e = toω (sR-ok (fst ok) (snd ok) pQ wQ lY upY IH dc (subst (λ v → LayRC v Q B Y) e rcY))
+        where ok = subst (λ v → ShapeOK v Q B) e (shape-ok Q B)
+      go sL e = toω (sL-ok (fst ok) (snd ok) pQ wQ lY upY IH dc (subst (λ v → LayRC v Q B Y) e rcY))
+        where ok = subst (λ v → ShapeOK v Q B) e (shape-ok Q B)
+      go (sC m) e = toω (sC-ok m (fst ok) (snd ok) pQ wQ lY upY IH dc (subst (λ v → LayRC v Q B Y) e rcY))
+        where ok = subst (λ v → ShapeOK v Q B) e (shape-ok Q B)
 
   step-ok : Δ ⊢tm Kω Q B Y ∶ Cω.cylTy (Cω.gen Y) c B
   step-ok = go A refl

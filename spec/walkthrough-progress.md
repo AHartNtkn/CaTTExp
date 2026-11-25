@@ -59,7 +59,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 - [ ] 3.7 The form of the marks, and saturation (added 2026-11-22, S17)
 - [ ] Q3.1 (surface question): Where marks are written.
 - [ ] Q3.2 (surface question): Whether `ps` and `ps*` are both visible.
-- [ ] Q3.3 (surface question): How `ord` is scoped.
+- [ ] Q3.3 (surface question): How object marks are supplied.
 
 ## Chapter 4. Context checking
 
@@ -133,6 +133,10 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S32 (2.3): a development must not choose its class of models (models stay a justification tool).
+- S31 (2.3): per-file switch settings may be unjustified; proposal to drop them.
+- S30 (2.2): completeness of the lax side condition is unstated.
+- S29 (2.2): §2.2 frames SC as computed in a strict theory; should present it as a combinatorial test with soundness alongside.
 - S28 (1.6): user postulates removed; the signature is closed to users, and assumptions are context variables.
 - S27 (1.5): how kernel extensions enter (closed constants vs substitution-applied heads) is under-specified; metatheory doesn't cover limit formers.
 - S26 (1.1): §1.6 forbids the binders §0.2 allows.

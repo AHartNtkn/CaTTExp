@@ -10,7 +10,7 @@ If the spec and a note disagree, that is a bug in one of them. It is recorded in
 |---|---|---|---|
 | 0 | [`00-principles.md`](00-principles.md) | No universes; universal properties witnessed by cells; lax by default; the kernel/surface split | both |
 | 1 | [`01-core-syntax.md`](01-core-syntax.md) | Pasting shapes, contexts, types, terms, substitution, the coherence rule | kernel |
-| 2 | [`02-lax-core.md`](02-lax-core.md) | The lax core L: directed coherence, the side condition computed in V, the four switch settings | kernel |
+| 2 | [`02-lax-core.md`](02-lax-core.md) | The lax core L: directed coherence, the side condition computed in V + S(Δ), the split marks | kernel |
 | 3 | [`03-invertibility-markings.md`](03-invertibility-markings.md) | Marks `inv`, `ps`, `ps*`, `grpd_k`, `ord`; pseudo = L + marks | kernel |
 | 4 | [`04-context-checking.md`](04-context-checking.md) | Pasting contexts for `coh`; arbitrary bases read weakly. §4.4 (the `⊢hpol` fast path) is above the kernel | kernel (§4.4: conservative extension) |
 | 5 | [`05-derived-constructions.md`](05-derived-constructions.md) | Gray tensor of contexts, cylinders, naturality, cones, as algorithms | derived |

@@ -554,6 +554,10 @@ import CaTTExp.Lim.ConeCells
 import CaTTExp.Lim.ConesEval
 import CaTTExp.Lim.ConeAgree
 import CaTTExp.Binder.HeadMark
+import CaTTExp.Binder.FreeModelMark
+import CaTTExp.Binder.FreeModelMarkPos
+import CaTTExp.Binder.FreeModelMarkCatt
+import CaTTExp.Binder.FreeModelMarkInstances
 import CaTTExp.Binder.UniMark
 import CaTTExp.Binder.UniMarkExamples
 import CaTTExp.Binder.UniPresup

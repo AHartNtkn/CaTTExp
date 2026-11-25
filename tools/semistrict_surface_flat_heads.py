@@ -57,6 +57,27 @@ def skeletons(rank, source, target):
         yield from trees_with_leaves(rank, leaves)
 
 
+def inverse_substitution(shape, sigma):
+    @cache
+    def lift(actual):
+        choices = {v(i) for i, x in enumerate(sigma) if x == actual}
+        if actual[0] == 'coh':
+            _, arity, ty, args = actual
+            mx = maximal_vars(arity)
+            for group in product(*(lift(args[i]) for i in mx)):
+                try:
+                    sub = sub_from(arity, shape, dict(zip(mx, group)))
+                    lifted = mk_coh(arity, ty, sub)
+                    infer(shape, lifted)
+                except TypeError_:
+                    continue
+                if subst_tm(lifted, sigma) == actual:
+                    choices.add(lifted)
+        return choices
+
+    return lift
+
+
 def charts(ctx, term, shape):
     """All full-support templates on shape specializing literally to term."""
     tips = maximal_vars(shape)
@@ -69,24 +90,7 @@ def charts(ctx, term, shape):
         except TypeError_:
             continue
 
-        @cache
-        def lift(actual):
-            choices = {v(i) for i, x in enumerate(sigma) if x == actual}
-            if actual[0] == 'coh':
-                _, arity, ty, args = actual
-                mx = maximal_vars(arity)
-                for group in product(*(lift(args[i]) for i in mx)):
-                    try:
-                        sub = sub_from(arity, shape, dict(zip(mx, group)))
-                        lifted = mk_coh(arity, ty, sub)
-                        infer(shape, lifted)
-                    except TypeError_:
-                        continue
-                    if subst_tm(lifted, sigma) == actual:
-                        choices.add(lifted)
-            return choices
-
-        for template in lift(term):
+        for template in inverse_substitution(shape, sigma)(term):
             if len(fv_tm(template) | fv_ty(infer(shape, template))) == len(shape):
                 yield template, sigma
 

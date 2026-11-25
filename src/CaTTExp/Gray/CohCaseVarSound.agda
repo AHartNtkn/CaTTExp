@@ -15,6 +15,11 @@
 --    operation-case cohs as the total cell.
 --  * ccF, the full-Gray-support clause in closure form, as a control:
 --    the same theorem for (closure-form) graySide.
+--  * Lemma 4.2 for ccV (`var-used`, `used-var`, `used-nonobj`): over a
+--    pasting context and for A an arrow type, v is an entry of a tuple
+--    of ↓supp(t : A) iff v is a non-object variable of t : A
+--    (Strict.G.SuppFV, Gray.G.SuppVars). At A = ⋆ the support of an
+--    object x is (x) itself.
 --  * evaluation checks on the gap example βα → βα₂ of Gray.CohCaseGap:
 --    SV.sideG (SupportG's sideG at ccV) accepts it, the support function now gives it the identity
 --    image (empty top chain), the certified checker produces a
@@ -40,14 +45,7 @@ open import CaTTExp.Gray.CohCaseGap using (βα₂)
 ------------------------------------------------------------------------
 -- The two coherence-case predicates.
 
-usesVar : Nat → TSet → Bool
-usesVar i S = any (λ tup → any (λ j → i ==ℕ j) tup) S
-
-isObj : Ctx → Nat → Bool
-isObj Θ i = any (λ j → i ==ℕ j) (objs Θ)
-
-varFull : Ctx → TSet → Bool
-varFull Θ S = all (λ i → isObj Θ i ∨ usesVar i (down Θ S)) (upto (len Θ ∸ 1))
+open import CaTTExp.Gray.VarFull ∅ public using (usesVar; isObj; varFull)
 
 ccV : Ctx → Ty → TSet → TSet → Bool
 ccV Θ A St Su = endsOK Θ A ∧ (sameDownClosure Θ St Su ∧ (varFull Θ St ∧ varFull Θ Su))
@@ -92,6 +90,47 @@ soundV = V.Soundness.sound-tm hccV
 -- …and for the full-Gray-support clause (closure form).
 soundF : ∀ {Γ t A} → LF.PsInv Γ → TF._⊢tm_∶_ Γ t A → LF.IsCellTm Γ t A
 soundF = F.Soundness.sound-tm hccF
+
+------------------------------------------------------------------------
+-- Lemma 4.2, both halves, for the Var-shaped rule: over a pasting
+-- context and for A an arrow type, v is used by ↓supp(t : A) iff v is a
+-- non-object variable of t : A. (⇒: Gray.G.SuppVars for "variable of
+-- t : A", Strict.G.SuppFV.supp-nonobj for "not an object"; ⇐:
+-- Strict.G.SuppFV.supp-fv⇐.)
+
+import CaTTExp.Strict.G.SuppFV
+import CaTTExp.Gray.G.SuppVars
+import CaTTExp.Strict.G.Hyp
+open import CaTTExp.Gray.SetFacts ∅ using (_∈ᴺ_; anyS⇒)
+open import CaTTExp.Gray.Cover using (any-witness)
+open import CaTTExp.Gray.DownAgree ∅ using (memT-complete)
+open import CaTTExp.Strict.CohCase using (down-out)
+module FV  = CaTTExp.Strict.G.SuppFV ccV
+module SVV = CaTTExp.Gray.G.SuppVars ∅ ccV
+module HV  = CaTTExp.Strict.G.Hyp ccV
+
+hvfV : FV.VarFullHyp
+hvfV Θ A St Su p = ∧-fst (T-∧r (sameDownClosure Θ St Su) (T-∧r (endsOK Θ A) p))
+
+-- ⇐: every non-object variable of t : A is used by ↓supp(t : A).
+var-used : ∀ {Γ t A} → TV._⊢ps Γ → TV._⊢tm_∶_ Γ t A → ∀ {v} → v ∈ᴺ fvTmTy t A →
+           (lookup Γ v ≡ just ⋆ → ⊥) → T (usesVar v (down Γ (SV.supp t A)))
+var-used P d = FV.supp-fv⇐ hccV hvfV P d
+
+-- ⇒: every variable used by ↓supp(t : A) is a variable of t : A.
+used-var : ∀ {Γ t A} → TV._⊢ps Γ → TV._⊢tm_∶_ Γ t A → ∀ {v} →
+           T (usesVar v (down Γ (SV.supp t A))) → v ∈ᴺ fvTmTy t A
+used-var {Γ} {t} {A} P d {v} u
+  with any-witness (anyS⇒ _ (down Γ (SV.supp t A)) u)
+... | τ , mτ , uτ with any-witness (anyS⇒ (λ j → v ==ℕ j) τ uτ)
+...   | j , mj , e with ==ℕ-sound v j e
+...     | refl with down-out P (SV.supp t A) {τ} (memT-complete τ _ mτ)
+...       | s , ms , k , r = SVV.supp-vars HV.closed (HV.inv-gr (LV.psInv P)) d ms r mj
+
+-- ⇒, the rest: over an arrow type no object is used.
+used-nonobj : ∀ {Γ t B p q} → TV._⊢ps Γ → TV._⊢tm_∶_ Γ t (arr B p q) → ∀ {v} →
+              T (usesVar v (down Γ (SV.supp t (arr B p q)))) → lookup Γ v ≡ just ⋆ → ⊥
+used-nonobj P d = FV.supp-nonobj hccV hvfV P d
 
 ------------------------------------------------------------------------
 -- Evaluation checks on the gap example.

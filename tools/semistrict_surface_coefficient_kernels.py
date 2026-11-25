@@ -15,7 +15,7 @@ from semistrict_surface_four_complex_operations import subgroup
 from semistrict_surface_quadratic_image import reduction
 
 
-def evaluate(data):
+def image_rows(data):
     pair = data.get('lower') == 'pair'
     if 'lower' in data and not pair:
         raise ValueError('unknown lower type')
@@ -36,13 +36,21 @@ def evaluate(data):
         vector(v,len(source))
         image.append([sum(c*row[j] for c,row in zip(v,matrix)) for j in range(len(top))])
     orders = [[n*int(i == j) for j in range(len(top))] for i,n in enumerate(top) if n]
+    return orders,image
+
+
+def evaluate(data):
+    orders,image = image_rows(data)
+    top = data['top']
+    pair = data.get('lower') == 'pair'
     parts = subgroup(orders,len(top),image)
     result = {'kernel_if_pair_fills' if pair else 'kernel_orders':parts}
     if pair:
         result['degree_reflection'] = 'equivalent_to_pair_nonfilling' if parts else 'yes'
     if 'face' in data:
         face = data['face']
-        vector(face,len(top))
+        if len(face) != len(top) or any(type(x) is not int for x in face):
+            raise ValueError('invalid face coordinates')
         inside = reduction(orders+image,len(top))[1](face) == 1
         if pair:
             zero = reduction(orders,len(top))[1](face) == 1

@@ -133,7 +133,7 @@ Ps and Grpd_k quantify over cells that do not exist yet: every y composed before
 ## 5. Machine check
 
 `src/CaTTExp/Gray/MarkSchemes.agda` (checks under `--safe`, Agda 2.7.0.1, no postulates):
-- **Schemes as data.** Clause types over the disk context, clause marks naming schemes. Inv and RInv are presented at dimensions 1 and 2. Clause marks that land in dimension 3 name schemes without a presentation, which accept only `hyp` (and, for Inv, the existing evidence layer).
+- **Schemes as data.** Clause types over the disk context, clause marks naming schemes. Inv and RInv are presented at dimensions 1 and 2. Clause marks that land in dimension 3 name schemes without a presentation, which accept `hyp`, the existing evidence layer for Inv, and (since §9.1) `cohS` through the suspension assumption.
 - **Generic checker `checkS`.** Evidence `hyp`, `old e` (the S21 layer, Inv schemes only) and `intro cs es`. Clause cells are type-checked with the certified checker, and their types are compared with the instantiated clause types.
 - **`inv₁-instance`, `inv₂-instance`.** For every marked context, term t, candidate cells s, s′, l, r and S21 evidence eL, eR, the generic intro of the Inv scheme, with the unit cells' evidence given as `old eL`, `old eR`, gives the same answer as `inv₁` / `inv₂` of `Gray/MarksSaturation.agda`. So ICaTT's inv-intro is the generic intro of one scheme. Scheme evidence of other forms on the unit cells (`hyp`, nested `intro`) is outside the theorem and can accept more, since scheme hypotheses are invisible to the S21 layer.
 - **The Inv tower is connected inside the mechanism.** Inv₁'s unit cells are marked Inv₂, and an example derives Inv₁ for x in Γ₁ from scheme hypotheses on l and r alone, with a wrong-scheme control.
@@ -142,7 +142,7 @@ Ps and Grpd_k quantify over cells that do not exist yet: every y composed before
 - **Reviewed** by an independent agent (2026-11-24): honest. Its findings were all fixed: Inv₁'s unit cells had been marked with the dimension-3 name, the theorem scope was stated too broadly, and a negative example failed for an arity reason.
 - The Γ₁ example of `MarksSaturation` re-derived through the generic intro.
 
-**Not encoded:** projections as term formers (no destructors in the core syntax, E4), ∀-clauses (they are the existing rules, reached through `old`), suspension to dimensions ≥ 3, (S-coh) and (S-sub).
+**Not encoded:** projections as term formers (no destructors in the core syntax, E4), ∀-clauses (they are the existing rules, reached through `old`), presentations at dimensions ≥ 3 (suspension is assumed for `cohS` only), the (S-coh′) theorem itself (only its check and examples are encoded, §9.1), and (S-sub).
 
 ## 6. Verdict by the evidence
 
@@ -216,7 +216,7 @@ The old sketch assumed that a clause type built from t's boundary stays a cohere
 
 **Condition (generic check).** Let P be a scheme of dimension n whose base is the disk Dⁿ, with no restrictions on t such as "t is an endomorphism". Work over the disk Dⁿ⁻¹ with top variable u, and put t₀ = 1_u. For i = 1, …, k, let cᵢ be the coh over Dⁿ⁻¹ of the clause type Aᵢ instantiated at (bd t₀, t₀, c₁, …, c_{i−1}). P **passes** if every cᵢ is accepted in the coherence case, and every scheme named by a clause mark passes too.
 
-The recursion is over finitely many scheme names. Because schemes are suspension-stable, each name is checked at its base dimension.
+The recursion is over finitely many scheme names. In two-tier L no 1-cell coh is in the coherence case (even 1_x is an operation), so the check is made at n = 2, the lowest dimension with coherence-case cells, and the suspended instances above rely on the assumption below. For a scheme of base dimension 1 the theorem says nothing about 1-cells, since none are coherence-case.
 
 **Theorem (S-coh′).** If P passes, then every coherence-case coh c = coh_{Γ,A}[γ] carries P. Its clause cells, at every level, are coherence-case cohs over Γ substituted by γ.
 

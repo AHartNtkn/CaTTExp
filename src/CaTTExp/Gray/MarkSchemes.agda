@@ -10,8 +10,8 @@
 -- presentation in the spec is dimension-generic (by suspension); here
 -- each scheme is presented at dimensions 1 and 2, and the clause marks
 -- that land in dimension 3 name a scheme with no encoded presentation
--- (`InvHi`, `RInvHi`), which only accepts the evidence forms that do not
--- need one.
+-- (`InvHi`, `RInvHi`), which accepts only the evidence forms that do not
+-- need one: `hyp`, `old` (Inv only) and `cohS` (by assumed suspension).
 --
 -- Evidence that t carries scheme S:
 --   hyp            t is a variable marked S in the context
@@ -49,7 +49,9 @@
 --    with no inv marks in the context.
 --
 -- Scope, stated honestly:
---  * Dimensions 1 and 2 only (no suspension), as in Gray.MarksSaturation.
+--  * Schemes are presented at dimensions 1 and 2 only. The dimension-3
+--    names (`InvHi`, `RInvHi`) have no presentation; besides `hyp` (and
+--    `old` for Inv) they accept `cohS`, through the suspension assumption.
 --  * The scheme marks `sm` are assumed well-formed: `hyp` does not check
 --    the dimension of the marked variable, and `old e` does not check
 --    the dimension of t (the S21 layer's `inv` is one predicate across
@@ -190,6 +192,9 @@ genOK : Maybe Scheme → Bool
 genOK (just (scheme 2 cl)) = all (λ c → wt D¹ c ∧ isCohCase c) (genCells cl [])
 genOK _                    = false
 
+-- A hand-filled table: the recursion through clause marks ("every scheme
+-- named by a clause mark passes") is not computed; for the current names
+-- the clause marks are InvHi / RInvHi, which reuse the dimension-2 check.
 genericOK : SName → Bool
 genericOK Inv₂   = genOK (present Inv₂)
 genericOK InvHi  = genOK (present Inv₂)     -- suspension (assumed)
@@ -397,7 +402,9 @@ _ = refl
 -- The generic check: Inv and RInv pass, P₁ (Back₂) fails. Its clause
 -- cell would be a coh over D¹ of type y → x, which the checker rejects:
 -- this is the counterexample to the old (S-coh) sketch, whose premise
--- (a clause type built from the boundary of t) P₁ satisfies.
+-- (a clause type built from the boundary of t) P₁ satisfies. (Any
+-- dimension-1 clause also fails `isCohCase`, since 1-cells are never in
+-- the coherence case; the `wt` refusal below is the informative fact.)
 _ : genericOK Inv₂ ≡ true
 _ = refl
 _ : genericOK RInv₂ ≡ true
@@ -426,7 +433,8 @@ _ : checkS [] [] Γ₃ RInv₂ cohS r ≡ false
 _ = refl
 -- cohS closes a tower one level down: 1_f carries RInv₂ by intro, with
 -- right inverse 1_f and counit the coherence 1_f;1_f ⇛ 1_f, whose
--- dimension-3 tower is given by cohS. No hypothesis is used.
+-- dimension-3 tower is given by cohS. No hypothesis is used, but the
+-- cohS step relies on the suspension assumption (genericOK RInvHi).
 ρ₀ : Tm
 ρ₀ = coh D¹ (arr (arr (arr ⋆ (v 0) (v 1)) (v 2) (v 2))
                  (vcomp (v 0) (v 1) (v 2) (v 2) t₀ (v 2) t₀) t₀) (idₛ D¹)

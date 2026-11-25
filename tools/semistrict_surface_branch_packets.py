@@ -125,7 +125,7 @@ def packets(reduction):
     identity = [(i+1,) for i in range(len(end)-b)]
     assert [evaluate(w,backward) for w in forward]==identity
     assert [evaluate(w,forward) for w in backward]==identity
-    dimension = 0 if b==2 and not start else max(0,b-1)
+    dimension = 0 if b<=2 else b-1
     return dict(classified=True,reversed=backwards,initial=flatten(start),final=end,
                 leading_braid=lead,trailing_braid=pending,movie=compressed,
                 packet_births=b,probes=k,probe_group_rank=len(end)-b,
@@ -155,7 +155,7 @@ def audit():
                        seams=[inv(w) for w in reversed(d['seams'])]) if reverse else d
             ans = packets(prune(cur))
             assert ans['reversed']==reverse and ans['packet_births']==2 and ans['probes']==1
-            assert ans['structural_dimension_bound']==1 and ans['probe_group_rank']==6
+            assert ans['structural_dimension_bound']==0 and ans['probe_group_rank']==6
             for chart in ans['movie']['charts']:
                 assert not chart['input']
             # Compare the actual signed graph complement before and after

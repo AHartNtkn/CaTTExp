@@ -53,7 +53,7 @@ Grpd_k(C : ⋆)   :=  ∀ t with 0-target C and hd(t) ≥ k.  t [Inv].
 - (S-intro) If cells c₁ … c_k have the clause types, with evidence for the marked clauses, then `Γ ⊢ t : P by intro(c⃗; e⃗)`. For Inv this is ICaTT's inv-intro.
 - (S-∀) If `Γ ⊢ t : P` and P has the ∀-clause (Π, s, Q), then for every substitution of Π, `s[t, π] : Q`. For Ps this is (PS-fac); for Grpd_k it is (OBJ-k). **∀-clauses have no intro rule**: Prop. 8.2 of `marking-alternatives.md` shows that a Ps-intro from data could only certify invertible cells, and the same generic-cell argument applies to any ∀-clause whose test can be freely attached.
 - (S-sub) A substitution into a P-marked variable must supply evidence that the image carries P. This is S21(c), generalized.
-- (S-coh) **[sketch]** Every coherence-case coh carries every scheme whose ∃-clause types are built only from t, its boundary and earlier clause cells. *Argument:* take each clause cell to be a coherence-case coh over the same pasting context. In F_V(Γ), every ingredient is an identity, and parallel cells built from identities by the operations of V are the same identity (a Gray cell with an identity factor is an identity). So each clause type is again a coherence-case type, and the construction repeats one dimension up. For Inv this is (COH-inv) together with BM's Prop. 16. The fullness half of the coherence case is not written out.
+- (S-coh) **[sketch — false as stated, see §8.2; repaired as (S-coh′) in §9.1]** Every coherence-case coh carries every scheme whose ∃-clause types are built only from t, its boundary and earlier clause cells. *Argument:* take each clause cell to be a coherence-case coh over the same pasting context. In F_V(Γ), every ingredient is an identity, and parallel cells built from identities by the operations of V are the same identity (a Gray cell with an identity factor is an identity). So each clause type is again a coherence-case type, and the construction repeats one dimension up. For Inv this is (COH-inv) together with BM's Prop. 16. The fullness half of the coherence case is not written out.
 
 **Decidability.** Evidence is finite and checked structurally. Clause cells are type-checked by the certified checker, and their types are compared syntactically. So checking is decidable, as for the S21 evidence layer **[Agda, dimensions 1–2]**. Theorem 3.3 of `marking-alternatives.md` still applies: no scheme that contains Inv can be saturated *and* proof-irrelevant *and* decidable. Evidence is what makes saturation decidable.
 
@@ -133,7 +133,7 @@ Ps and Grpd_k quantify over cells that do not exist yet: every y composed before
 ## 5. Machine check
 
 `src/CaTTExp/Gray/MarkSchemes.agda` (checks under `--safe`, Agda 2.7.0.1, no postulates):
-- **Schemes as data.** Clause types over the disk context, clause marks naming schemes. Inv and RInv are presented at dimensions 1 and 2. Clause marks that land in dimension 3 name schemes without a presentation, which accept only `hyp` (and, for Inv, the existing evidence layer).
+- **Schemes as data.** Clause types over the disk context, clause marks naming schemes. Inv and RInv are presented at dimensions 1 and 2. Clause marks that land in dimension 3 name schemes without a presentation, which accept `hyp`, the existing evidence layer for Inv, and (since §9.1) `cohS` through the suspension assumption.
 - **Generic checker `checkS`.** Evidence `hyp`, `old e` (the S21 layer, Inv schemes only) and `intro cs es`. Clause cells are type-checked with the certified checker, and their types are compared with the instantiated clause types.
 - **`inv₁-instance`, `inv₂-instance`.** For every marked context, term t, candidate cells s, s′, l, r and S21 evidence eL, eR, the generic intro of the Inv scheme, with the unit cells' evidence given as `old eL`, `old eR`, gives the same answer as `inv₁` / `inv₂` of `Gray/MarksSaturation.agda`. So ICaTT's inv-intro is the generic intro of one scheme. Scheme evidence of other forms on the unit cells (`hyp`, nested `intro`) is outside the theorem and can accept more, since scheme hypotheses are invisible to the S21 layer.
 - **The Inv tower is connected inside the mechanism.** Inv₁'s unit cells are marked Inv₂, and an example derives Inv₁ for x in Γ₁ from scheme hypotheses on l and r alone, with a wrong-scheme control.
@@ -142,7 +142,7 @@ Ps and Grpd_k quantify over cells that do not exist yet: every y composed before
 - **Reviewed** by an independent agent (2026-11-24): honest. Its findings were all fixed: Inv₁'s unit cells had been marked with the dimension-3 name, the theorem scope was stated too broadly, and a negative example failed for an arity reason.
 - The Γ₁ example of `MarksSaturation` re-derived through the generic intro.
 
-**Not encoded:** projections as term formers (no destructors in the core syntax, E4), ∀-clauses (they are the existing rules, reached through `old`), suspension to dimensions ≥ 3, (S-coh) and (S-sub).
+**Not encoded:** projections as term formers (no destructors in the core syntax, E4), ∀-clauses (they are the existing rules, reached through `old`), presentations at dimensions ≥ 3 (suspension is assumed for `cohS` only), the (S-coh′) theorem itself (only its check and examples are encoded, §9.1), and (S-sub).
 
 ## 6. Verdict by the evidence
 
@@ -207,3 +207,93 @@ Standard 4 (most general first) picks schemes. They strictly extend what can be 
 3. Decide whether a finite coherent-adjunction scheme (LAdj with one triangle witness and a swallowtail, or a half-adjoint form) is a property with the support of Inv. Attempt in-house first, then the outbox if it stalls (standard 12).
 4. Decide whether Inv's Gray factor rules are admissible in the CaTT-style syntax of L, by a uniform construction or by a search in L's own free objects. The researcher's search needs a syntax with pasting along arbitrary globe attachments.
 5. Agda (standard 9): encode P₁ and the Idem composite as a negative example for the old (S-coh) sketch, and encode the corrected statement.
+
+## 9. Follow-ups after the answer (2026-11-25, SCHEME)
+
+### 9.1 (S-coh′): a repaired coherence rule [proved on paper, Agda on examples]
+
+The old sketch assumed that a clause type built from t's boundary stays a coherence-case type at a coherence. P₁ refutes this: at 1_f, its clause asks for an arrow 1 → 0, and the two endpoints are different objects. The repair checks the scheme once, at a generic identity, instead of arguing about all coherences at once.
+
+**Condition (generic check).** Let P be a scheme of dimension n whose base is the disk Dⁿ, with no restrictions on t such as "t is an endomorphism". Work over the disk Dⁿ⁻¹ with top variable u, and put t₀ = 1_u. For i = 1, …, k, let cᵢ be the coh over Dⁿ⁻¹ of the clause type Aᵢ instantiated at (bd t₀, t₀, c₁, …, c_{i−1}). P **passes** if every cᵢ is accepted in the coherence case, and every scheme named by a clause mark passes too.
+
+The recursion is over finitely many scheme names. In two-tier L no 1-cell coh is in the coherence case (even 1_x is an operation), so the check is made at n = 2, the lowest dimension with coherence-case cells, and the suspended instances above rely on the assumption below. For a scheme of base dimension 1 the theorem says nothing about 1-cells, since none are coherence-case.
+
+**Theorem (S-coh′).** If P passes, then every coherence-case coh c = coh_{Γ,A}[γ] carries P. Its clause cells, at every level, are coherence-case cohs over Γ substituted by γ.
+
+*Proof.* Work at γ = id, then substitute: substitution preserves acceptance and the scheme relation. Let A = (p → q), so ⟦p⟧ = ⟦q⟧ in F_{V+S}(Γ), Var(p) = Var(q) = Var(Γ), and ⟦c⟧ is the identity (spec §2.2: in the coherence case the only simple path is empty).
+1. There is an algebra map φ : F_V(Dⁿ⁻¹) → F_{V+S}(Γ) with u ↦ ⟦p⟧. It exists because F_V(Dⁿ⁻¹) is free on the disk, and V ⊆ V + S.
+2. Define the clause cells at c by the same recipe: c′ᵢ := coh_Γ of Aᵢ instantiated at (bd c, c, c′₁, …).
+3. By induction on i, ⟦c′ᵢ⟧ is an identity, so the endpoints of the instantiated type at c are φ applied to the endpoints at t₀. This uses ⟦c⟧ = 1 = φ⟦t₀⟧ and, inductively, ⟦c′ⱼ⟧ = 1 = φ⟦cⱼ⟧.
+4. Hence the two endpoints have equal images, because they do at t₀.
+5. Fullness: an endpoint at t₀ uses every variable of Dⁿ⁻¹, so it mentions u (the only top variable). Its counterpart at c then mentions p, q, c or an earlier clause cell, and each of these uses every variable of Γ.
+6. So each c′ᵢ is accepted in the coherence case. A marked clause cell is again a coherence-case coh, and its scheme passes, so the argument repeats one level up. This gives the tower coinductively, as a postfixed family. ∎
+
+**What it covers.**
+- Inv, RInv and LAdj pass.
+- P₁ fails: its cell would be coh_{D¹, y → x}, which is not accepted.
+- Idem is excluded by the disk condition. Its weak failure (the associator endomorphism α(1, 1, 1) of the C₂ cocycle) needs the endpoints to be identified by the substitution γ, which the generic check never sees.
+- ∀-clauses are not covered. Ps uses its own rules.
+
+The condition is sufficient, not necessary. A clause whose endpoints are equal but not full, such as 1_a → 1_a on the ultimate source, is refused although an identity would fill it.
+
+**Assumption.** The check at the base dimension stands for the suspended instances. This needs coherence-case acceptance to be stable under suspension, which is not proved for the uniform side condition here **[assumption]**.
+
+**Agda.** In `Gray/MarkSchemes.agda`:
+- evidence `cohS`, with the generic check `genericOK` at dimension 2;
+- Inv₂ and RInv₂ pass; P₁ (`Back₂`) fails, and its would-be cell is rejected by the certified checker;
+- 1_f and the left unitor carry Inv₂ by `cohS`; 1_f is refused for P₁; a 2-cell variable is refused;
+- an RInv₂ tower at 1_f is closed by `cohS` one level down, with no hypotheses.
+
+The theorem itself, the step from the generic check to every coherence, is on paper.
+
+### 9.2 Closure certificates for user schemes [proposal, RInv instance on paper]
+
+No decidable criterion exists (§8.1), so a user scheme earns a closure rule by a certificate checked per scheme.
+
+**Definition.** A *closure certificate* for P is a finite set 𝒮 of *paste templates*. Each template is a term over a generic context (generic P-cells, generic cells, coherences), stable under suspension. For each template T there is a *recipe*: terms over T's generic context that fill P's ∃-clauses at T. Each clause cell must be a substitution instance of a template in 𝒮 (possibly suspended), a coherence-case coh of a passing scheme (§9.1), or a generic P-cell's own clause cell.
+
+Checking is decidable: recipes are type-checked, and membership is syntactic. Soundness follows from the greatest postfixed point: the instances of 𝒮 form a postfixed family. A certificate yields the closure rule "every instance of a template in 𝒮 carries P".
+
+**RInv instance (closure under (a)–(d)).** Let 𝒮 be the vertical composites, in one hom, of whiskerings of generic RInv-cells and coherence-case cells, in every dimension. The recipes:
+- *(b) whisker:* for w ◁ x, take s := w ◁ s_x and r := (coh) ; (w ◁ r_x). Here w ◁ r_x is a whisker of an RInv-cell one dimension up, so it lies in 𝒮.
+- *(c) composite:* for x ; y, take s := s_y ; s_x. Take r to be the vertical composite of: the associator, the whiskering x ◁ r_y ▷ s_x, the unitor, and r_x. That is a composite of coherences and whiskered RInv-cells one dimension up, so it lies in 𝒮.
+- *(a):* by §9.1.
+- *(d):* layer the paste into a vertical composite of whiskered top cells (a coherence-case coh relates the paste to a layering, as in spec §2.4 "two layerings"), then apply (b) and (c).
+
+This matches the researcher's postfixed-family proof for RInv. LAdj is the same with two clauses. **Agda:** not yet encoded. It needs generic recipes over templates (open, SCHEME).
+
+### 9.3 A coherent-adjunction scheme that is a property [proved, modulo standard facts]
+
+**HAdj** (half-adjoint), for t : u → v:
+- s : v → u;
+- η : 1_u → t ; s, marked Inv;
+- ε : s ; t → 1_v, marked Inv;
+- τ, the single triangle: the composite t ≅ 1_u ; t ⇒(η ▷ t) (t ; s) ; t ≅ t ; (s ; t) ⇒(t ◁ ε) t ; 1_v ≅ t, related to 1_t by τ, marked Inv.
+
+**Support.** HAdj(t) implies that t is invertible: s is a two-sided inverse up to the invertible η and ε. Conversely, every invertible t has an HAdj structure, by the usual improvement of η. So the support is Inv's.
+
+**Property (weak, coinductive setting).** Fix an invertible t. Then each block of the structure space is a contractible fibre.
+- *Block (s, η).* Inv is a property, so an Inv-marked η is a point of the core. The block is the fibre over 1_u of the core of t ; – : 𝒦(v, u) → 𝒦(u, u). That map is an equivalence of homs, so the fibre is contractible.
+- *Block (ε, τ).* Given (s, η), the map ε ↦ (the triangle composite built from ε) is precomposition with the invertible η ▷ t followed by whiskering t ◁ –. Both are equivalences of homs. So the pair (ε, τ) is a point of the fibre over 1_t of an equivalence, which is contractible.
+
+So the structure space is contractible whenever it is inhabited: HAdj is a property. This is the ω-analogue of "isHAE is a proposition". It uses only that whiskering by an equivalence is an equivalence of homs and that the fibres of an equivalence are contractible, both standard in the coinductive theory.
+
+LAdj fails because its second triangle adds a block that is not of this form. In K(C₂, 3) that block is exactly the C₂ the researcher found.
+
+**Consequence.** For uses that need a proof-irrelevant adjoint-equivalence scheme, HAdj is the property scheme. LAdj, adjoints at every level, stays structure. That answers §8.3 item 3 without the outbox.
+
+### 9.4 Inv's Gray factor rules in L's raw syntax [reduction]
+
+Write x ⊗ y with x Inv. The natural uniform recipe is:
+- inverse x⁻ˡ ⊗ y, a substitution instance of the same interchanger head;
+- unit: (x⁻ˡ ⊗ y) ; (x ⊗ y) ≅ (x⁻ˡ ; x) ⊗ y, a binary subdivision of the Gray cell along x's direction;
+- then λ_x ⊗ y : (x⁻ˡ ; x) ⊗ y → 1 ⊗ y, an (INV-fac) instance one dimension up;
+- then 1 ⊗ y ≅ 1, a degenerate Gray cell, which is a coherence.
+
+The family "pastes of Gray cells with an Inv factor and coherence-case cells" is postfixed under this recipe. So the rule is admissible exactly where the side condition supplies the binary subdivision coherence, in every dimension.
+- **Two-tier L:** the strict Gray tensor is functorial in each variable, so the subdivision holds in 𝔉(Γ), and the coherence exists in every dimension. The rule is **admissible by the uniform recipe** **[sketch]**. (OP-inv) is admissible the same way: reverse a layering of whiskered tops, with telescoping cancellation as in Benjamin–Markakis Thm 33.
+- **Uniform L over V + S:**
+  - the outer unary subdivisions are in V, so the recipe works for crossings with one factor of hom-dimension 1;
+  - the binary subdivision of W at (2, 2) fails in every setting (the outer W-strip, E13), so the uniform recipe is blocked there.
+
+  Whether the factor rule holds at all at (2, 2), in every algebra of V + S, is E14(b), already out as `outbox/invertibility-in-directed-interchange-r2.md` Q1. Per standard 11 this item is merged into that line rather than given its own prompt. If E14(b) is negative, (INV-fac) at (2, 2) leaves the kernel, and the admissibility question disappears. If it is positive, a non-uniform construction is needed, which the researcher's search provides in presheaf syntax.

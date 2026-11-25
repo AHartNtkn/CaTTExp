@@ -28,7 +28,7 @@ def subgroup(rows, width, generators):
     return reduction([row[:size] for row in matrix[used:]], size)[0]
 
 
-def solve(bottom, middle, quadratic, face=None):
+def operation_presentation(bottom, middle, quadratic):
     if any(type(n) is not int or n < 0 or n == 1 for n in [*bottom, *middle]):
         raise ValueError('cyclic orders must be zero or at least two')
     rank, size = len(bottom), len(middle)
@@ -69,6 +69,13 @@ def solve(bottom, middle, quadratic, face=None):
         rows.append(row)
     bottom_gens = [block(k,v) for v in quadratic for k in range(rank+1)]
     eta_gens = [block(0,v) for v in units]
+    return rows,bottom_gens,eta_gens
+
+
+def solve(bottom, middle, quadratic, face=None):
+    rows,bottom_gens,eta_gens = operation_presentation(bottom,middle,quadratic)
+    rank,size = len(bottom),len(middle)
+    width = (rank+1)*size
     ambient, order = reduction(rows, width)
     bottom_group = subgroup(rows, width, bottom_gens)
     joined_group = subgroup(rows, width, bottom_gens + eta_gens)
@@ -77,8 +84,8 @@ def solve(bottom, middle, quadratic, face=None):
     if face is not None:
         if len(face) != rank+1:
             raise ValueError('face needs eta and one bracket row per bottom letter')
-        for v in face:
-            validate(v)
+        if any(len(v) != size or any(type(x) is not int for x in v) for v in face):
+            raise ValueError('expected one integral coordinate per middle generator')
         flat = [c for v in face for c in v]
         result['raw_order'] = order(flat)
         for label, generators in [('bottom',bottom_gens), ('joined', bottom_gens + eta_gens)]:

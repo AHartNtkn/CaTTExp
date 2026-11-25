@@ -44,6 +44,11 @@
 --               distinct (the loop H of (K34)/(K45) against 1_w,
 --               ledger E13): every Hⁿ is a witness of w → w, and the
 --               head is forced at the identity.
+--   LetterHeads option (E) of design-decisions §5.8: forced heads plus
+--               native one-letter heads (Native is an abstract parameter).
+--   Bridge      the raising bridge B on ΣD⁴ ∨ ΣD⁴: not forced, shortest,
+--               accepted by (E) (values: count of B, toy supports).
+--   StripE      the strip head is rejected by (E) (no native letters).
 ------------------------------------------------------------------------
 open import CaTTExp.Prelude
 open import CaTTExp.Join.Quiver using (_⊎_; inj₁; inj₂; Dec; yes; no)
@@ -528,7 +533,8 @@ module Loop where
 --
 -- Proved: E-unique (the value is unique, also when both kinds apply),
 -- D⊆E, E-sc (E accepts no head the old rule rejects), and E-shortest
--- (a letter head's value is that of a shortest witness, so E ⊆ (B1)).
+-- (a letter head's one-letter path is a shortest witness; so on a single
+-- head (E) agrees with (B1) wherever (B1)'s pick is unique).
 
 module LetterHeads (L : Layer) (C : Cells L) (Native : Layer.Letter L → Set) where
   open Layer L

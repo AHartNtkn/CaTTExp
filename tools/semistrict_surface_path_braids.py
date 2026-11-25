@@ -67,6 +67,104 @@ def unary_coverage(tails, closed, erasable):
     return len(seen) == start + period
 
 
+def route_coverage(rays, points, translated, exact, erased):
+    """Decide coverage for finite routes and routes with one cycle count."""
+    from semistrict_surface_triple_attachments import one_counter
+
+    moves = {(left, right, fixed) for pairs, fixed in ((translated, False), (exact, True))
+             for a, b in pairs for left, right in ((a, b), (b, a))}
+    adjacency = {q: [] for q in rays}
+    for (q, a), (r, b), fixed in moves:
+        if not fixed:
+            adjacency[q].append((a, r, b))
+
+    tests = [(q, 0) for q in points]
+    for root in rays:
+        # Potentials are displacements on the spanning tree. A disagreement
+        # closes a walk with nonzero displacement by reversing the tree route.
+        paths = {root: ()}
+        potential = {root: 0}
+        pending = [root]
+        loop = ()
+        while pending and not loop:
+            q = pending.pop()
+            for a, r, b in adjacency[q]:
+                walk = paths[q] + ((a, b),)
+                height = potential[q] + b - a
+                if r not in paths:
+                    paths[r], potential[r] = walk, height
+                    pending.append(r)
+                elif potential[r] != height:
+                    loop = walk + tuple((y, x) for x, y in reversed(paths[r]))
+                    break
+        if not loop:
+            return False
+        shift = sum(b - a for a, b in loop)
+        if shift < 0:
+            loop = tuple((b, a) for a, b in reversed(loop))
+            shift = -shift
+        offset = threshold = 0
+        for a, b in loop:
+            threshold = max(threshold, a - offset)
+            offset += b - a
+        tests.extend((root, i) for i in range(threshold + shift))
+    return all(any(one_counter(p, d, moves) for d in erased) for p in tests)
+
+
+def audit_path_growth():
+    # The graph has an entry l, a unary loop a, and two exits p and q.
+    # These two equations are suffixes, and the last one is a whole path.
+    translated = [(('p', 0), ('q', 1)), (('q', 1), ('p', 3))]
+    exact = [(('q', 0), ('p', 0))]
+    routes = {'p', 'q'}
+    for erased in ([], [('p', 0)], [('p', 0), ('q', 2), ('p', 2)]):
+        # Independent finite quotient of the literal path rewrites: 3 laps at
+        # exit p are a period, and a nonempty q suffix connects to p.
+        residues = {(i if q == 'p' else max(0, i - 1)) % 3 for q, i in erased}
+        assert route_coverage(routes, [], translated, exact, erased) == (len(residues) == 3)
+    assert not route_coverage(routes | {'z'}, [], translated, exact + [(('z', 7), ('p', 1))],
+                              [('p', 0), ('p', 1), ('p', 2)])
+    assert route_coverage(set(), ['p', 'q'], [], [(('p', 0), ('q', 0))], [('p', 0)])
+
+    # Compare all literal contextual replacements with two-counter steps at
+    # and away from zero. Every word has exactly one named control edge.
+    rules = [('P', 'aQ'), ('aQ', 'R'), ('lQ', 'lS'), ('R', 'Tb'),
+             ('Tb', 'P'), ('Tr', 'Sr'), ('aS', 'S'), ('lS', 'lU'),
+             ('Ub', 'U'), ('Ur', 'Vr'), ('aV', 'V'), ('lVb', 'lV')]
+    def spelling(q, i, j):
+        return 'l' + 'a' * i + q + 'b' * j + 'r'
+
+    def step(q, i, j):
+        if q == 'P':
+            return 'Q', i + 1, j
+        if q == 'Q':
+            return ('R', i - 1, j) if i else ('S', i, j)
+        if q == 'R':
+            return 'T', i, j + 1
+        if q == 'T':
+            return ('P', i, j - 1) if j else ('S', i, j)
+        if q == 'S':
+            return ('S', i - 1, j) if i else ('U', i, j)
+        if q == 'U':
+            return ('U', i, j - 1) if j else ('V', i, j)
+        if i:
+            return 'V', i - 1, j
+        if j:
+            return 'V', i, j - 1
+        return None
+
+    for q, i, j in product('PQRSTUV', range(8), range(8)):
+        word = spelling(q, i, j)
+        direct = {word.replace(a, b, 1) for a, b in rules if a in word}
+        following = step(q, i, j)
+        assert direct == ({spelling(*following)} if following else set())
+        incoming = {word.replace(b, a, 1) for a, b in rules if b in word}
+        expected = {spelling(p, x, y) for p, x, y in product('PQRSTUV', range(9), range(9))
+                    if step(p, x, y) == (q, i, j)}
+        assert incoming == expected
+    print("Verified 5 route coverage cases and both directions at 448 two-counter configurations.")
+
+
 def code(letter):
     return '11' + '0' * letter
 
@@ -239,6 +337,7 @@ if __name__ == '__main__':
         if args.crossings:
             parser.error('supply --keep for a braid query')
         audit()
+        audit_path_growth()
         audit_codes()
         audit_path_equations()
     else:

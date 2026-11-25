@@ -14,7 +14,7 @@ from semistrict_surface_history_group import reduced
 from semistrict_surface_planar_tiers import artin_step
 
 
-def resolve(data):
+def select_paths(data):
     initial = data['initial']
     if type(initial) is not int or initial < 0:
         raise ValueError('initial must be a nonnegative number of points')
@@ -56,7 +56,11 @@ def resolve(data):
     for i,path in enumerate(paths):
         assert handles[i] in path and not set(handles[i+1:]).intersection(path)
     assert all(packets)
+    return initial,events,paths,packets,handles,live
 
+
+def resolve(data):
+    initial,events,paths,packets,handles,live = select_paths(data)
     threads = [thread for edge in range(initial) for thread in packets[edge]]
     meridians = [(t+1,) for t in threads]
     braid = []

@@ -34,8 +34,10 @@ open import CaTTExp.RCProc.GlueP using (bdT)
 
 -- The cylinder contexts do not depend on the filler family when the
 -- boundaries of Q's types are variables (as in every pasting context).
-private
-  module C0 = Cyl (λ _ _ _ → junk)
+K0 : Filler
+K0 _ _ _ = junk
+
+module C0 = Cyl K0
 
 cylCtx : Ctx → Sel → Ctx
 cylCtx = C0.cylCtx

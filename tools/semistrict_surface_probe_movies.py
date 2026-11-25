@@ -111,7 +111,7 @@ def event_homology(nodes,vertex_ranks,ties,columns):
                 event_groups=list(islands.values()))
 
 
-def movie(data, *, with_homology=False):
+def movie(data, *, with_homology=False, with_births=False):
     charts = data['charts']
     read_track(dict(data,charts=[dict(c,loop=()) for c in charts]), require_shared_gate=False)
     ports = {g:(s,t) for g,(_,s,t) in data['gates'].items()}
@@ -119,6 +119,7 @@ def movie(data, *, with_homology=False):
     regions = Partition()
     gaps,vertices,edges = [],{},[]
     placements = {}
+    births = []
     columns = []
     for j,c in enumerate(charts):
         rows = tuple(map(tuple,c['diagram']))
@@ -143,6 +144,8 @@ def movie(data, *, with_homology=False):
             back = {y:x for x,y in forward.items()}
             m = {f:back[g] for f,g in m.items()}
         gaps.append(right)
+        if with_births and ports[site]==('','') and not c['input'] and c['output']:
+            births.append((j,m[joint.spots[slot,p]]))
         # A cut face missed by the exterior at the tie lies entirely inside
         # the written output. Record a placement there before any seam move.
         new_faces = set(right.spots.values())-set(n.values())
@@ -204,6 +207,11 @@ def movie(data, *, with_homology=False):
         group['probe_indices'].append(index)
         group['probes'] += 1
     result = list(by_root.values())
+    if with_births:
+        for c in result:
+            c['births'] = []
+        for node in births:
+            by_root[regions.at(node)]['births'].append(node[0])
     for c in result:
         c['higher_obstruction'] = ('collision sphere' if c['probes']>=2 else
             'none' if not c['probes'] or c['free_rank'] is not None or c['injective_face_maps'] else 'requires one-probe test')

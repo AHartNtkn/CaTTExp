@@ -39,6 +39,7 @@ import CaTTExp.Gray.CohCaseGap
 import CaTTExp.Gray.CohCaseVar
 import CaTTExp.Gray.CohCaseVarSound
 import CaTTExp.Gray.G.SuppVars
+import CaTTExp.Gray.VarFull
 import CaTTExp.Gray.BiclosedNF
 import CaTTExp.Gray.BiclosedNFData
 import CaTTExp.Gray.BiclosedNFControls
@@ -394,6 +395,9 @@ import CaTTExp.Strict.LiftImage
 import CaTTExp.Strict.SigmaFacts
 import CaTTExp.Strict.SuppFV
 import CaTTExp.Strict.Order
+import CaTTExp.Strict.DegBound
+import CaTTExp.Strict.PsSteps
+import CaTTExp.Strict.G.SuppFV
 import CaTTExp.GrayCtx.Elab
 import CaTTExp.GrayCtx.CylGen
 import CaTTExp.GrayCtx.Cylinder

@@ -325,7 +325,15 @@ def comp_tree(tree, G, maxims):
     return subst_tm(ucomp(P), s)
 
 def tdim_tm(G, t):
-    return tdim(infer(G, t)) + 1
+    """Dimension of `t`, computed structurally.  For a coherence
+    ('coh', P, A, s) the arrow depth of subst_ty(A, s) is that of A, so the
+    dimension needs neither type inference nor a walk of the substitution:
+    inferring it walks the whole term, which is the dominant cost (and, with
+    the memo holding substituted types alive, the dominant memory use) when
+    the oracle composes deeply shared terms."""
+    if t[0] == 'v':
+        return tdim(G[t[1]]) + 1
+    return tdim(t[2]) + 1
 
 def glue_tree(p, k, q):
     """D^p glued to D^q along a k-disc (k < p, q)."""

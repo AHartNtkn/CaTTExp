@@ -30,6 +30,13 @@ So a bug in the generator can only make an answer missing, never wrong.
    - 3e. Lemma E (the exchange cell over E) and sorting a 2-path by exchange moves.
    - 3f. Totality of Theorem A: equal strict images (the free 2-category on the 2-polygraph) imply exchange-equivalent 2-paths, stated against `CaTTExp.Strict`.
    - 3g. The remaining local reductions of §3 ((b)–(e)) as constructions with typing proofs; abstraction (e) is `pullA` along the abstracting substitution.
+   *Stage 4 plan (the descent in Agda; owner "Make the relative-coherence construction executable", 2026-11-25).* Target: `rcD : (fuel : ℕ) → Γ ⊢tm t ∶ A → Γ ⊢tm u ∶ A → Maybe (Ans Γ A t u)`, first `rcS`, then the single-piece step of `tools/rc_descent.py` (answered query (2), §7), every answer typed by proved lemmas. Soundness first: fuel bounds the recursion, so no termination proof is needed for typing; totality (Response 15's measure) comes last. The choices the Python makes (the piece U_θ, J, R, which generators move) are data: they need no proof, only the terms built from them must be typed. Each step below is a construction with its typing proved once for all inputs.
+   - 4a. Typed substitutions from typed entries: given typed terms whose types match the target context's types up to the substitution built so far (a syntactic equality, decided), a typed substitution. This types J : W → Γ, R : U_θ → W and the abstract context's substitution H → Γ; entries are generators of the inputs (typed by inversion of the inputs' derivations) or recursive answers (typed by recursion).
+   - 4b. Generic glue cells over chain pasting contexts (`_gcoh`: reassociation, unit, interchange along a cut, whiskering) for every dimension and cut, typed by parametric shape proofs (as `GrayCtx.ElabCorrect` does for `vcomp`, by suspension); inverse of a coherence answer (the reversed coherence, whose side condition is symmetric).
+   - 4c. Strips: `strip_right` (top cut, by inverse and cancellation) and `strip_lower` (cut n − 2, by transport squares), typed from 4b and `Glue.transA`.
+   - 4d. Lax and oplax squares of an input along moved generators, from the naturality cylinders (`Naturality.Typing.cyl-wf`, NATF) with fillers supplied by recursive calls; the oplax form needs the reversed bridges of moved top generators (`down_map`).
+   - 4e. The single-piece step: the abstract context H (each new variable's type built from typed endpoints), bridges as recursive calls, the comparison in W by `rcS` (globular: `rcS-glob`), the transfer X = w_t ; mid ; w_u, and the strips; then `rcD`.
+   - 4f. Totality on strong-Steiner contexts (Response 15's measure), after Theorem A.
 Until a case is proved, its answers still come from the certified tables above.
 
 Reproducing the checks:

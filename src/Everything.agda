@@ -582,5 +582,6 @@ import CaTTExp.Binder.GenHeadsLaws
 import CaTTExp.Binder.GenHeadsPresup
 import CaTTExp.Binder.GenHeadsExamples
 import CaTTExp.Uniform.MarksRepaired
+import CaTTExp.Uniform.ObjectMarks
 import CaTTExp.Uniform.SplitMarks
 import CaTTExp.Uniform.SplitMarksPerObject

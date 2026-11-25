@@ -133,6 +133,7 @@ Spec version at start: main @ 2d75c32 (2026-11-21).
 
 ## Findings raised during the walkthrough
 
+- S36 (2.6): object marks (ord, grpd_k) cannot reach defined objects (μΔ, limits, free objects).
 - S32 (2.3): a development must not choose its class of models (models stay a justification tool).
 - S31 (2.3): per-file switch settings may be unjustified; proposal to drop them.
 - S30 (2.2): completeness of the lax side condition is unstated.

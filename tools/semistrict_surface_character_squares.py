@@ -120,7 +120,12 @@ def check_certificate(length):
     terms = set()
     for word in certificate(length):
         assert sum(word) == length
-        assert word[1] - sum(word[2:]) >= length - 2*(length & -length) + 1
+        excess_bound = length - 2 * (length & -length) + 1
+        excess = word[1] - sum(word[2:])
+        assert excess >= excess_bound
+        if excess == excess_bound:
+            # At equality the outer Bockstein acts on the square of a Bockstein.
+            assert word[0] == word[2] == 1
         terms.symmetric_difference_update(admissible_form(word))
     assert terms == {(length,)}
 

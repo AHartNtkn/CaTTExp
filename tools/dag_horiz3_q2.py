@@ -14,8 +14,8 @@ tools/fixtures/rc_horiz3_query2.txt.gz (a pickled catt term; the cone
 thread keeps it as rc_query2_answer.pkl in the project files). The
 answer is re-checked by catt.infer in Python before anything is emitted,
 then written as CaTTExp.Generated.DagHoriz3Q2{Data,QTable,Check} under
-OUTDIR (notes/dag-certificates.md). The data module is about 76 MB, so it
-is not committed; checking DagHoriz3Q2Check needs about an hour.
+OUTDIR (notes/dag-certificates.md). The data is about 82 MB, so it is
+not committed; checking DagHoriz3Q2Check takes about 75 min and 4 GB.
 """
 import ast
 import gzip

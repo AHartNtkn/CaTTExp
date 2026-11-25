@@ -52,8 +52,10 @@ Performance notes (Agda 2.7.0.1, evaluation of `refl`):
 |---|---|---|---|---|
 | `DagSmallCheck` (with tree comparison of the query) | 631 | 716 | 28 s | small |
 | `DagMidCheck` (subterm of the Horiz3 answer) | 18,794 | 19,036 | 75 s | 150 MB |
-| Horiz3 query (2) | 779,079 | 824,300 | see below | |
+| `DagHoriz3Q2Check` (the whole answer) | 779,079 | 824,300 | 73.5 min | 1.34 GB (3.6 GB in use) |
 
 ## Status
 
-See the G6 row of `open-issues.md`.
+**Horiz3 query (2) is certified in Agda** (2026-11-25): `DagHoriz3Q2Check` (`accepted = refl`, `answer = certifiedQ …`) type-checks with Agda 2.7.0.1 under `--safe`, in 73.5 min with a 1.34 GB maximum residency (`+RTS -M12G`), from the interfaces of the data modules. Checking the 82 MB data module itself took 6 GB of residency; `dag_cert.py` now splits large data into part modules. The generated modules (not in git) are in the project files under `dag-certs/` and are rebuilt by `tools/dag_horiz3_q2.py`. As said above, the query is the one specified by the Python fixture and the query-table decoder.
+
+Open items are in the G6 row of `open-issues.md`.

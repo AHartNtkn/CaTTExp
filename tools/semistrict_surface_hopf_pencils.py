@@ -11,8 +11,27 @@ from itertools import combinations, combinations_with_replacement
 from pathlib import Path
 
 from semistrict_surface_four_complex_operations import solve
+from semistrict_surface_framed_relations import separate
 from semistrict_surface_lens_squares import row_reduce
 from semistrict_surface_pair_hopf import factor
+
+
+def character_equations(rank, forms):
+    pairs = list(combinations_with_replacement(range(rank), 2))
+    size = len(forms)
+    cubics = list(combinations_with_replacement(range(rank), 3))
+    index = {monomial:i for i,monomial in enumerate(cubics)}
+    equations = [0]*len(cubics)
+    for s, form in enumerate(forms):
+        for v,(i,j) in enumerate(pairs):
+            if not form >> v & 1:
+                continue
+            for k in range(rank):
+                equations[index[tuple(sorted((i,j,k)))]] ^= 1 << ((k+1)*size+s)
+            if i != j:
+                for monomial in ((i,i,j),(i,j,j)):
+                    equations[index[monomial]] ^= 1 << s
+    return equations
 
 
 def analyze(rank, forms, face=None):
@@ -27,18 +46,7 @@ def analyze(rank, forms, face=None):
     width = (rank+1)*size
     if face is not None and (type(face) is not int or not 0 <= face < 1 << width):
         raise ValueError('face outside the eta and bracket coordinates')
-    cubics = list(combinations_with_replacement(range(rank), 3))
-    index = {monomial:i for i,monomial in enumerate(cubics)}
-    equations = [0]*len(cubics)
-    for s, form in enumerate(forms):
-        for v,(i,j) in enumerate(pairs):
-            if not form >> v & 1:
-                continue
-            for k in range(rank):
-                equations[index[tuple(sorted((i,j,k)))]] ^= 1 << ((k+1)*size+s)
-            if i != j:
-                for monomial in ((i,i,j),(i,j,j)):
-                    equations[index[monomial]] ^= 1 << s
+    equations = character_equations(rank, forms)
     relations = row_reduce(equations)
     readings = []
     for gamma in range(1,1 << size):
@@ -61,7 +69,7 @@ def analyze(rank, forms, face=None):
     result = dict(bottom_dimension=dim, tester_rank=image_rank,
                   undetected_dimension=dim-image_rank, readings=readings)
     if face is not None:
-        result['raw_nonzero'] = len(row_reduce([*relations.values(),face])) != len(relations)
+        result['raw_nonzero'] = separate(face, relations) is not None
         result['detecting_axes'] = [r['bottom_axes'] for r in readings
                                     if (face & r['character']).bit_count() % 2]
     return result

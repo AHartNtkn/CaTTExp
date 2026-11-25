@@ -47,6 +47,60 @@ def id_memo(f):
     g.__wrapped__ = f
     return g
 
+# ---------------------------------------------------------------- hash-consing
+#
+# The oracle builds terms as DAGs whose subterms are rebuilt many times over
+# (equal but distinct tuples: a bridge witness of query (2) is ~1.5M objects
+# but ~0.1M distinct terms).  mk_coh returns one canonical object per
+# coherence head and argument tuple, so equal terms built from canonical
+# parts are the same object: identity memos then hit, and comparisons stop
+# at the first shared subterm.  The table only removes duplicates; clearing
+# it (when it grows past HC_LIMIT) loses sharing, never correctness.
+
+_HC = {}      # (id P, id A, arg keys) -> term; the entry keeps its args alive
+_HID = {}     # (id P, id A) -> (P, A, canonical (P, A))
+_HV = {}      # (P, A) -> canonical (P, A), by value (heads are small)
+HC_LIMIT = [3000000]
+
+def _head(P, A):
+    h = _HID.get((id(P), id(A)))
+    if h is not None and h[0] is P and h[1] is A:
+        return h[2]
+    c = _HV.setdefault((P, A), (P, A))
+    _HID[(id(P), id(A))] = (P, A, c)
+    return c
+
+def mk_coh(P, A, args):
+    """('coh', P, A, args), shared with any equal term built from the same
+    canonical parts."""
+    P, A = _head(P, A)
+    key = (id(P), id(A)) + tuple(-1 - u[1] if u[0] == 'v' else id(u) for u in args)
+    r = _HC.get(key)
+    if r is None:
+        if len(_HC) > HC_LIMIT[0]:
+            _HC.clear(); _HID.clear()
+        r = ('coh', P, A, tuple(args))
+        _HC[key] = r
+    return r
+
+def hc(t, memo=None):
+    """Canonical copy of t (children first, iteratively)."""
+    if memo is None:
+        memo = {}
+    st = [t]
+    while st:
+        x = st[-1]
+        if id(x) in memo:
+            st.pop(); continue
+        if x[0] == 'v':
+            memo[id(x)] = (x, x); st.pop(); continue
+        pend = [u for u in x[3] if id(u) not in memo]
+        if pend:
+            st.extend(pend); continue
+        st.pop()
+        memo[id(x)] = (x, mk_coh(x[1], x[2], tuple(memo[id(u)][1] for u in x[3])))
+    return memo[id(t)][1]
+
 def subst_tm(t, s, _m=None):
     # memoized by identity within one call: shared subterms stay shared
     if t[0] == 'v':
@@ -57,7 +111,7 @@ def subst_tm(t, s, _m=None):
     hit = _m.get(k)
     if hit is not None and hit[0] is t:
         return hit[1]
-    r = ('coh', t[1], t[2], tuple(subst_tm(u, s, _m) for u in t[3]))
+    r = mk_coh(t[1], t[2], tuple(subst_tm(u, s, _m) for u in t[3]))
     _m[k] = (t, r)
     return r
 
@@ -196,7 +250,24 @@ _IDC = {}   # id(G) -> (G, {id(t): (t, type)}): identity-keyed memo, so that
 
 _IDN = [0]
 
+_IDEPTH = [0]
+INFER_LIMIT = [2000000]
+
 def infer(G, t, _cache={}):
+    # The memo is bounded by clearing, but only between top-level calls: a
+    # clear in the middle of a walk left the frames below it writing into
+    # their stale memo (kept alive, growing) while the walk restarted with an
+    # empty one, so a term past the bound was re-walked exponentially.
+    if _IDEPTH[0] == 0 and _IDN[0] > INFER_LIMIT[0]:
+        _IDC.clear()
+        _IDN[0] = 0
+    _IDEPTH[0] += 1
+    try:
+        return _infer_memo(G, t, _cache)
+    finally:
+        _IDEPTH[0] -= 1
+
+def _infer_memo(G, t, _cache):
     g = _IDC.get(id(G))
     if g is None or g[0] is not G:
         g = (G, {}, {})
@@ -220,10 +291,7 @@ def infer(G, t, _cache={}):
     else:
         r = _infer(G, t, _cache)
     g[1][id(t)] = (t, r)
-    _IDN[0] += 1
-    if _IDN[0] > 400000:          # the memo keeps its terms alive: bound it
-        _IDC.clear()
-        _IDN[0] = 0
+    _IDN[0] += 1                  # the memo keeps its terms alive: bounded above
     return r
 
 def _infer(G, t, _cache):
@@ -325,7 +393,15 @@ def comp_tree(tree, G, maxims):
     return subst_tm(ucomp(P), s)
 
 def tdim_tm(G, t):
-    return tdim(infer(G, t)) + 1
+    """Dimension of `t`, computed structurally.  For a coherence
+    ('coh', P, A, s) the arrow depth of subst_ty(A, s) is that of A, so the
+    dimension needs neither type inference nor a walk of the substitution:
+    inferring it walks the whole term, which is the dominant cost (and, with
+    the memo holding substituted types alive, the dominant memory use) when
+    the oracle composes deeply shared terms."""
+    if t[0] == 'v':
+        return tdim(G[t[1]]) + 1
+    return tdim(t[2]) + 1
 
 def glue_tree(p, k, q):
     """D^p glued to D^q along a k-disc (k < p, q)."""

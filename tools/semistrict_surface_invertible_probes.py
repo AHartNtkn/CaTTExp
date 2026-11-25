@@ -1,13 +1,14 @@
-"""Compute the raw image of old mixed tracks after making the free probe invertible."""
+"""Check inverse-probe presentations, signed track readings and scanning degrees."""
 from argparse import ArgumentParser
 from itertools import permutations, product
 import json
 from pathlib import Path
 
-from catt import STAR, arr, comp2, infer, src, tgt, v
+from catt import (STAR, arr, comp2, disc_tree, infer, maximal_vars, src, sub_from,
+                  subst_tm, tdim, tgt, tree_ctx, v)
 from ct_suspension import ident
 from emit_agda import Emitter
-from relative_coherence_exchange_faces import composite
+from relative_coherence_exchange_faces import composite, head, string_tree
 
 
 def parity(sequence):
@@ -114,11 +115,13 @@ def circle_charges():
     return count
 
 
-def typed(directory):
+def inverse_context(rank):
     ctx = (STAR,)
-    edge = ident(ctx, v(0))
-    e = ident(ctx, edge)
-    ctx += (arr(infer(ctx, edge), edge, edge),)
+    lower = v(0)
+    for _ in range(rank - 1):
+        lower = ident(ctx, lower)
+    e = ident(ctx, lower)
+    ctx += (arr(infer(ctx, lower), lower, lower),)
     ty = arr(infer(ctx, e), e, e)
     ctx += (ty, ty)
     q, r = v(2), v(3)
@@ -131,21 +134,104 @@ def typed(directory):
         return name
     fits = []
     for s, t in ((q, r), (r, q)):
-        p = comp2(ctx, 2, s, t)
+        p = comp2(ctx, rank, s, t)
         fits.append((arrow(p, stop), arrow(stop, p)))
     for f, g in fits:
         for a, b in ((f, g), (g, f)):
-            twice, identity = comp2(ctx, 3, a, b), ident(ctx, src(ctx, a))
+            twice, identity = comp2(ctx, rank + 1, a, b), ident(ctx, src(ctx, a))
             arrow(twice, identity)
             arrow(identity, twice)
     assert len(ctx) == 16
-    completed = ctx
-    a = arrow(q, q)
+    return ctx, stop, fits
+
+
+def triangle(rank, writer):
+    ctx, _, fits = inverse_context(rank)
+    q, r = v(2), v(3)
+    row = tree_ctx(string_tree(rank, [rank + 1] * 3))
+    slots = maximal_vars(row)
+    x, y, z = map(v, slots)
+    left = comp2(row, rank, comp2(row, rank, x, y), z)
+    right = comp2(row, rank, x, comp2(row, rank, y, z))
+    assoc = subst_tm(head(row, left, right), sub_from(row, ctx, dict(zip(slots, (q, r, q)))))
+    disk = tree_ctx(disc_tree(rank + 1))
+    peak, = maximal_vars(disk)
+    a = v(peak)
+    pad_left = comp2(disk, rank, ident(disk, src(disk, a)), a)
+    pad_right = comp2(disk, rank, a, ident(disk, tgt(disk, a)))
+    sub = sub_from(disk, ctx, {peak: q})
+    l, u = (subst_tm(head(disk, padded, a), sub) for padded in (pad_left, pad_right))
+    paths = (composite(ctx, rank + 1, [comp2(ctx, rank, fits[0][0], q), l]),
+             composite(ctx, rank + 1, [assoc, comp2(ctx, rank, q, fits[1][0]), u]))
+    boundary = arr(infer(ctx, q), comp2(ctx, rank, comp2(ctx, rank, q, r), q), q)
+    # The ordinary strict top chain sees exactly the slots of the output rank.
+    def weight(t):
+        if t[0] == 'v':
+            return int(t == fits[0][0]) - int(t == fits[0][1])
+        _, arity, _, sigma = t
+        return sum(weight(sigma[j]) for j, ty in enumerate(arity) if tdim(ty) + 1 == rank + 2)
+    for i, t in enumerate(paths):
+        assert infer(ctx, t) == boundary
+        assert weight(t) == 1 - i
+        writer.check_type(f'triangle{rank}route{i}', ctx, t, boundary)
+    for ty in ctx[8:]:
+        assert weight(ty[2]) == weight(ty[3])
+    if rank == 2:
+        for i in range(8, 16, 2):
+            for a, b in ((v(i), v(i + 1)), (v(i + 1), v(i))):
+                pair = comp2(ctx, rank + 2, a, b)
+                unit = ident(ctx, src(ctx, a))
+                assert infer(ctx, pair) == infer(ctx, unit)
+                base = infer(ctx, pair)
+                ctx += (arr(base, pair, unit), arr(base, unit, pair))
+        assert len(ctx) == 32
+        g = writer.ctx(ctx)
+        writer.checks.append(f'throughSix : {g} ⊢ctx\nthroughSix = from-just (checkCtx {g})\n')
+
+
+def scanning_degrees():
+    # Count the signed preimages in the parameter disk of an extended track.
+    # One generic centre value for each scanning coordinate fixes the spatial
+    # point and the circle-label time. Only the coned parameter triangles remain.
+    def det(a, b, c):
+        return (b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0])
+    origin, base = (-13, 17), (-4, -2)
+    centres = [(0, 0), (8, 0)]
+    def circuit(x):
+        a = (x-1, -1)
+        return [base, a, (x+1,-1), (x+1,1), (x-1,1), a, base]
+    trials = 0
+    for size in range(5):
+        for word in product((-2, -1, 1, 2), repeat=size):
+            path = [base]
+            for g in word:
+                loop = circuit(centres[abs(g)-1][0])
+                path.extend((loop if g > 0 else loop[::-1])[1:])
+            degrees = []
+            for centre in centres:
+                value = 0
+                for a, b in zip(path, path[1:]):
+                    signs = det(origin, a, centre), det(a, b, centre), det(b, origin, centre)
+                    assert 0 not in signs
+                    value += int(min(signs) > 0) - int(max(signs) < 0)
+                degrees.append(value)
+            assert degrees == read(2, [word], [0])['winding']
+            trials += 1
+    return trials
+
+
+def typed(directory):
+    completed, stop, fits = inverse_context(2)
+    q, r = v(2), v(3)
+    a = v(len(completed))
+    ctx = completed + (arr(infer(completed, q), q, q),)
     f, g = fits[0]
     moved = composite(ctx, 3, [g, comp2(ctx, 2, a, r), f])
     assert (src(ctx, moved), tgt(ctx, moved)) == (stop, stop)
+    writer = Emitter()
+    for rank in (2, 3):
+        triangle(rank, writer)
     if directory:
-        writer = Emitter()
         writer.checks.append('inverseContext : ' + writer.ctx(completed) + ' ⊢ctx\n'
                              'inverseContext = from-just (checkCtx ' + writer.ctx(completed) + ')\n')
         writer.check_type('loopAtIdentity', ctx, moved, arr(infer(ctx, stop), stop, stop))
@@ -160,7 +246,7 @@ def audit():
     assert read(2, [[1, 1, 2], [2, -1]], [0, 1])['winding'] == [1, 2]
     assert read(2, [[], [], []], [2, 0, 1])['raw_fills']
     return dict(sign_checks=parity_tables(), finite_group_and_derived_sizes=finite_wreath(),
-                geometric_charges=circle_charges())
+                geometric_charges=circle_charges(), scanning_degrees=scanning_degrees())
 
 
 def main():

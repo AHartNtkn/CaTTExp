@@ -27,6 +27,11 @@ def swapped(order,word):
 def read_edges(data):
     if data['path'] or any(s or t or x!=data['vertex'] for x,s,t in data['gates'].values()):
         raise ValueError('expected a one-object point-gate movie')
+    return gate_segments(data)
+
+
+def gate_segments(data):
+    """Trace individual 2-gate segments through actual port blocks and signed seams."""
     charts = data['charts']
     read_track(dict(data,charts=[dict(c,loop=()) for c in charts]),require_shared_gate=False)
     initial = list(range(len(expanded(charts[0],'input'))))

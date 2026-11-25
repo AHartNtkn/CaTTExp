@@ -693,3 +693,26 @@ subdivision check, and the double-variation disk check also pass
 The all-arity validation is the equation-schema verification above.
 The finite computations test its face conventions, guard multiplicities
 and counterexample evaluations.
+
+## Verification (2026-11-25, thread "Process new researcher responses")
+
+**Status: verified for the binary list, the (2, 2) countermodel, the bracketing dependence, Q2 and the undecidability reduction. The separating algebras in every arity are verified at the level of their structure and by the committed checker.** Consequences are in `../../uniform-marks.md` §8.6.
+
+**Checks run** (from the repository root, all pass):
+- `python3 -B scripts/e6/interchange_factor_rules.py`: 153 triple assignments, 8 with different labels under the two bracketings, 4 double pseudo failures; 511 regular-action words.
+- `interchange_invertibility.py`, `interchange_path_grading.py`, `interchange_gray_composition.py`, `interchange_double_variation.py` (same directory): pass.
+
+**Results and how they were checked.**
+- *Criterion (1)* (principal disk trees, every setting, also with every inner letter invertible): the factor rule for leaf i holds iff no node on the path from i to the root has two children of dimension ≥ 2.
+  - Sufficiency: the subdivision argument (substitute e, e⁻¹ and then e⁻¹, e; pads invertible). It uses only the unguarded outer unary subdivisions and the pure action. Checked.
+  - Necessity: the polynomial-row algebra with the ℕ-label δ at the bad node. Checked at the level of its structure. The label is (w, b) multiplication in a square-zero extension. Every guarded mixed-paste occurrence with a nonzero label has nonzero masses on both sides, so its guard fails (the polynomial ring is a domain). The new δ contributions in the triple law likewise fail their guards. The row-by-row verification of every round-5 schema was not redone independently.
+  - Instances checked by hand: binary (1, p) and (p, 1) pass, (2, 2) fails. On (2, 1, 1) the left bracketing passes and the right bracketing W(A, χ(b, c)) fails at the root, although both have the same Gray atom.
+- *The candidate (2, 2) countermodel is an algebra.* In the walking isomorphism, two non-identity spatially composable advances would cross the same object interval twice, so transported short squares keep a zero factor. In each mixed-paste law, every occurrence with a nonzero 5-label has ab = 1 and fails its own premise. For A ; A⁻¹ the tile tests are b and −b, so the conjunction fails. Checked. **So no guarded equation of V links W(A, B) to W(A⁻¹, B), and the two-tier proof W(A,B) ∗ W(A⁻¹,B) = 1 has no uniform analogue.**
+- *Q2 (ps\* factor) is false in every setting.* Take d = (2, 2, 2) with the middle input ps\*. The binary pairs ending at object 2 have zero unsigned weight and zero label, so they are strictly invertible. The δ at the root still marks both bracketings. Checked by reading; the checker's 4 pseudo cases confirm it.
+- *Q3.*
+  - K and J fail, by their unit rules K(1_A, B) = W(A, B) and J(1_A, 1_B) = K(1_A, B). Checked.
+  - W on composite operands fails. Checked.
+  - Outer join: for the left input, exactly the correcting square ῑ₋ must be invertible (this agrees with E13 / Theorem 4.4's split). For the right input it fails, via r(A, β) in the strict Gray disk. A countermodel with t(n) = n + 1, s(n) = max(n − 1, 0) and ts = 1 ≠ st shows that a non-invertible bare inner square need not realize the correcting square. Checked.
+  - Shifted joins fail even with every elementary square invertible and both splits imposed. Checked by reading.
+  - Higher naturalities are principal disks and obey (1). Routes compose. Guarded auxiliary bridges have no one-input rule. Read.
+- *No exact decision for all operations on composite operands.* Fix one finite matching context and the single letter ℓ_w = W(ewZ, B). It propagates invertibility from its right operand iff w = 1 in a fixed finitely presented group H with unsolvable word problem. The positive case uses only the unit law. The negative case is a family algebra over the regular action of H on the signed strip, with Z = 0 at the identity index and +1 elsewhere. Checked. It applies even when all inner letters are required to be invertible. The problem is r.e. (round 1's finite-derivation criterion) and undecidable. It concerns composite operands in a matching context, not primitive heads on their generic arities, where (1) is decidable.

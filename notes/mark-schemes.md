@@ -170,3 +170,40 @@ Standard 4 (most general first) picks schemes. They strictly extend what can be 
 | (S-coh) written out, with the fullness half | S35(c) | in progress (this thread) |
 | Agda: projections on evidence, ∀-clauses as schemes, suspension | S35(d) | blocked on E4 (destructors in the core syntax) for projections; ∀-clauses and suspension unblocked |
 | S21(c) substitution with evidence becomes (S-sub) for all schemes | S21 | owner unchanged |
+
+## 8. After the researcher answer (2026-11-25)
+
+`conjectures/answered/mark-scheme-closure-2026-11-25.md`, Response 1, verified there. It answers S35(a) and (b) and changes three statements above.
+
+**8.1 What is now known.**
+- **No decidable closure criterion exists** **[proved by the researcher, checked]**. Already for existential schemes on endo-1-cells and vertical composition (c), closure is undecidable: a finitely presented group with unsolvable word problem is encoded by Britton's lemma. So "a criterion on the clause list, as decidable as possible" has no decidable form, even for (c) alone.
+- **The exact criterion is semantic** (free-arity theorem, existential schemes, both settings). Form the walking arity A of the operation, glue the walking P-cells W onto its structured inputs, U = A ⊔_{∐Dᵢ} ∐Wᵢ. The closure rule holds in every model iff the output D_o → U extends along D_o → W. On failure, U with its tautological inputs is the countermodel. With ∀-clauses there is no walking object. A set-sized countermodel search is still exact, but it is not effective.
+- **The proposed syntactic conditions are false.** "Built from t and earlier clause cells" plus "functorial in t" does not give (a), (b) or (e). The scheme P_n(t) = "an arrow from the ultimate target of t to its ultimate source" fails on 1_f in the walking arrow f : 0 → 1, while 1_{1_0} has it, and 1_f = f ◁ 1_{1_0}.
+- **Uniform constructions.** In general there are none, even when closure holds semantically. A ∀-scheme that holds on every arrow has no substitution-natural recipe for whiskering, because its output must change under an inclusion of models. For **Inv's two Gray factor rules** (x ⊗ y with x or y Inv) there is a finite recipe: a dovetailed search for one whole layer (two reverses, two cancellations) in the generic presentation of Eⁿ ⊗ Dᵐ. It terminates because the collapse Dⁿ⁻¹ ⊗ Dᵐ has no non-identity cells in degree ≥ n + m. This is a search, not a Benjamin–Markakis-style closed form. Its admissibility is stated for the researcher's presheaf syntax (pasting along globe attachments, Kan fillers), not for a CaTT-style raw syntax.
+- **Table** (existence of closure; property in the weak setting).
+
+| Scheme | (a) coh | (b) whisker | (c) vertical | (d) pasting | (e) earlier / later | property |
+|---|---|---|---|---|---|---|
+| Inv | yes | yes | yes | yes | yes / yes | yes |
+| RInv | yes | yes | yes | yes | no / no | no |
+| LAdj | yes | yes | yes | yes | yes / yes | **no** |
+| Idem | strict yes, weak no | yes | no | no | no / no | no |
+| Ps₀ (top test only) | yes | yes | yes | yes | yes / yes | yes |
+| Ps_* (with boundaries) | no | no | yes | no | no / no | yes |
+
+- **LAdj has exactly the support of Inv.** In an LAdj tower every cell has two contractions, so its members are invertible. Conversely, every invertible cell has an adjoint-equivalence tower. So LAdj adds no new supported cells, only structure.
+- **Property criterion.** A representable scheme is a property iff the fold W ⊔ʰ_D W → W is an equivalence. On clauses: the limit of the prefix spaces is subterminal. A sufficient syntactic condition is blocks of the form "a new endpoint together with a path to it".
+- **LAdj is not a property** in the ω case. In K(C₂, 3) two LAdj structures on the identity differ only in their triangle witnesses, and a mod-2 cohomology class separates them. The swallowtail is missing.
+
+**8.2 Corrections to the sections above.**
+- §2 **(S-coh) [sketch] is false as stated.** P₁ has its only ∃-clause type built from t's boundary, yet the identity coherence 1_f does not carry it. The sketch's step "each clause type is again a coherence-case type" fails whenever a clause type relates boundary cells that the coherence does not identify. (S-coh) holds for Inv, LAdj and Ps₀ (table, column (a)). For a general scheme the exact condition is the free-arity test at the coherence arity, which is semantic. A repaired syntactic sufficient condition is needed (S35(c), owned by SCHEME).
+- §4.3 "So is LAdj **[conj]**" is **refuted**: LAdj as written (two triangle witnesses, no swallowtail) is structure. It cannot be used proof-irrelevantly.
+- §4.2 "Inv's closure rules over L can be derived rather than assumed" (open) is **answered for the two Gray factor rules**, in the researcher's syntax and by search. For CaTT-style raw syntax over L it is still open.
+- §0 item 4 and §6 "until a closure criterion makes them instances of something general": no decidable criterion exists. A user scheme can gain a closure rule only through a **closure certificate** checked per scheme. One natural form is the postfixed-family proofs the researcher uses for RInv and LAdj: a finite grammar of pastes S, with a finite recipe showing that S is postfixed for the scheme. This is in-house work (§8.3).
+
+**8.3 Follow-ups (owners in the ledger, S35).**
+1. Restate (S-coh) with a sufficient syntactic condition, and prove it.
+2. Define closure certificates for user schemes, and check that RInv's (a)–(d) and LAdj's support proofs are instances. This replaces "until a closure criterion".
+3. Decide whether a finite coherent-adjunction scheme (LAdj with one triangle witness and a swallowtail, or a half-adjoint form) is a property with the support of Inv. Attempt in-house first, then the outbox if it stalls (standard 12).
+4. Decide whether Inv's Gray factor rules are admissible in the CaTT-style syntax of L, by a uniform construction or by a search in L's own free objects. The researcher's search needs a syntax with pasting along arbitrary globe attachments.
+5. Agda (standard 9): encode P₁ and the Idem composite as a negative example for the old (S-coh) sketch, and encode the corrected statement.

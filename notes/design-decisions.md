@@ -516,3 +516,18 @@ Consequences recorded:
 **What would overturn this.**
 - A counterexample to Lemma F: a cell between term images that is only the value of an unforced head. Then (D) would name strictly fewer cells than F_{V+S} has, and the choice between (D) and a canonical choice (B) would be re-derived from that example.
 - A proof that every lift set is a singleton after loop removal. Then (A) and (D) coincide, and the restriction costs nothing. The strip already rules this out in settings ∅ and {R}.
+
+### 5.7 Lemma F is false (2026-11-25)
+
+`conjectures/answered/forced-lift-generation-2026-11-25.md`, Response 1, verified there. The first "what would overturn this" case above has occurred.
+
+**The counterexample.** Take Γ = ΣD⁴ ∨ ΣD⁴, in every setting S. The auxiliary bridge B = b₄¹ of the round-5 raising recursion is a single proper letter of global degree 6, with boundary (1) D⁰⁰Y_v⁰X_v¹ → X_u⁰D¹⁰Y_v¹. The same boundary has a second simple witness (2): the elementary exchange of the disjoint updates X and Y, followed by the smaller bridge b whiskered by Y_v¹. Both have the same Gray image and full support, and their values differ (B-count 1 against 0, by rigid factorization). So the head (∂⁻B → ∂⁺B) is **not forced**.
+
+B is also not reachable another way. Every forced value, composite and substitution instance has B-count 0 in degree 6. So B is not the value of any term built from forced heads, in any arity. Suspending gives failures in every degree ≥ 6. Through degree 5, every native head is forced on its arity, including W, h, ι, K and J (Q3 of the prompt, positive). If any witness value may be named (the family G⁺), every cell is reachable. So the loss is due to forcedness alone. Forcedness of a generic letter is decidable by one finite reachability computation per tag.
+
+**What this does and does not cost (in-house reading, 2026-11-25).**
+- **Inhabitation of the boundary type is not lost here.** Under (D), the type ∂⁻B → ∂⁺B is still inhabited by the term for path (2): the exchange and b are heads of degree ≤ 5, and those are forced. What (D) loses is the **cell** B. No (D)-term denotes it.
+- **(A) and (B1) name B.** B is the unique shortest witness (one letter against two), so the designated lift and the fewest-letters lift are both B, and (2) is reached as a composite. (C) names both. (B2) (most split) needs checking on this pair.
+- So (D) names strictly fewer cells than F_{V+S} has, from degree 6 on. Whether this loses any **type inhabitation** is the open question that now decides between (D) and (B1). One example would be a type whose only inhabitants in F_{V+S} use B, such as a head with B in one face. S30 (uniform fullness) is exactly the statement about such types.
+
+**Status of the decision.** §5.6 stands until the re-derivation that §5.6 itself calls for is done. Its owner is the thread "Settle the designated-lift choice" (ledger S11). The inputs are: (i) whether (D) loses inhabitation of any type (a head whose face contains B is the first test); (ii) whether (B1) is well defined, i.e. has unique fewest-letter witnesses (the 3 × 4 grid tie is still unchecked), and whether it respects dualities; (iii) Agda: add B's boundary pair as an example in `Uniform/ForcedLift.agda` (two simple witnesses with different values, as `Strip`, with the values separated by a count as in rigid factorization), per standard 9.

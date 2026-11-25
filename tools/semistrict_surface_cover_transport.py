@@ -14,11 +14,11 @@ from semistrict_surface_mixed_winding import slots
 
 
 @cache
-def context(generators):
+def context(generators, sphere_rank=4):
     # Include a reverse letter for each edge. Relations constrain the allowed actions.
     ctx = (STAR,) + (arr(STAR, v(0), v(0)),) * (2*generators)
     pole = v(0)
-    for _ in range(3):
+    for _ in range(sphere_rank - 1):
         pole = identity(ctx, pole)
     ty = arr(infer(ctx, pole), pole, pole)
     return ctx + (ty,), identity(ctx, pole)
@@ -45,7 +45,7 @@ def inverse(perm):
     return out
 
 
-def reader(perms):
+def reader(perms, sphere_rank=4):
     arrows = [*perms, *(inverse(p) for p in perms)]
     def read(term, sheet):
         if term[0] == 'v':
@@ -62,9 +62,9 @@ def reader(perms):
                 starts.append(end)
                 end, _ = read(sub[i], end)
         loads = Counter()
-        if tdim(ty) + 1 == 4:
+        if tdim(ty) + 1 == sphere_rank:
             for pos, i in first.items():
-                if len(pos) == 4:
+                if len(pos) == sphere_rank:
                     _, contribution = read(sub[i], starts[pos[0]])
                     loads.update(contribution)
         return end, loads

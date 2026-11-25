@@ -18,6 +18,9 @@ def tests(rank, bottom, orders):
             if q and q % 2 == 0:
                 candidates.append((j, q // 2))
         elif bottom not in (3, 7) and q % 2 == 0:
+            if bottom in (15, 31, 63) and q % 4 == 2:
+                # The odd multiple (q/2)x has order two and the same square.
+                continue
             candidates.append((j, 1))
     return candidates
 
@@ -122,6 +125,8 @@ def audit():
     assert tests(2, 3, (0, 2, 6)) == tests(6, 7, (0, 2, 6)) == []
     assert tests(3, 4, (0, 2, 3, 4, 6)) == [(1, 1), (3, 2), (4, 3)]
     assert tests(4, 5, (0, 2, 3, 4)) == [(0, 1), (1, 1), (3, 1)]
+    for m in (15, 31, 63):
+        assert tests(2, m, (0, 2, 4, 6, 9, 10)) == [(0, 1), (2, 1)]
     squares = 0
     for m in (3, 4, 5, 6):
         for q in (2, 4, 8):
@@ -151,9 +156,12 @@ if __name__ == '__main__':
         print(f'Old filler degree {args.rank + 2 * args.bottom - 1}')
         for j, c in basis:
             print(f'{c} times the Whitehead square of bottom generator {j + 1}')
-        free_case = (args.bottom == args.rank + 1 and
-                     all(q == 0 or q % 2 for q in args.orders))
-        if args.bottom % 2 == 0 or not basis or free_case:
+        degree_one_labels_detected = (
+            args.bottom == args.rank + 1 and
+            ((args.bottom + 1).bit_count() > 1 or
+             all(args.orders[j] == 0 for j, _ in basis))
+        )
+        if args.bottom % 2 == 0 or not basis or degree_one_labels_detected:
             print(f'Exact kernel rank over F2: {len(basis)}')
         else:
             print('The indicated squares generate the kernel in the actual homotopy group.')

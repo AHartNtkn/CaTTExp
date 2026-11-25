@@ -188,7 +188,7 @@ So "marking every object `ord` gives two-tier L" is **true for marks** (5.2), **
 | Item | Owner |
 |---|---|
 | ~~Outbox Q1, Q2~~: answered 2026-11-21, see §8 (`conjectures/answered/invertibility-in-directed-interchange-2026-11-21.md`) | done |
-| Re-encode (OP-inv_S′) in Agda; ps* branch and several-factor rules in every algebra; further outer letters under `ord` | E14, MKL |
+| Re-encode (OP-inv_S′) in Agda; ps* branch and several-factor rules in every algebra; further outer letters under `ord` | E14, MKL: **done** (§8.6–8.7) |
 | Conjecture 3.2: realize the strict comparison cell as an L⁺ term | E5, MKL |
 | Running the E7 head computations on actual F_V (needs the uniform checker) | ULC (S3) |
 | S11 (uniqueness of lifts) affects only the remark after Theorem 4.4 | SPEC |
@@ -247,12 +247,12 @@ The repair keeps the premise on the letter's own operands. Call an outer top let
 
 Lemma 4.1 then concludes. ∎
 
-**The ps* branch.** (OP-ps_S′) keeps the old status: proved for 𝓜_S. Case (i) needs no (IL), because the letter is its Gray cell. What it still needs is that two-tier Lemma 2.3 transfers to a uniform Gray cell with several positive factors in an arbitrary V-algebra. That transfer is open and logged as E14.
+**The ps* branch.** (OP-ps_S′) keeps the old status: proved for 𝓜_S. Case (i) needs no (IL), because the letter is its Gray cell. What it still needs is that two-tier Lemma 2.3 transfers to a uniform Gray cell with several positive factors in an arbitrary V-algebra. That transfer is open and logged as E14. **[Resolved, §8.6–8.7: it fails; the ps\* branch is removed.]**
 
 **What the repair costs.**
 - `ord` everywhere still gives every two-tier `inv` judgement for heads whose designated lift has operand-pure top letters of kinds (i)–(iii). Every head over a wedge of disks qualifies, and so does every head whose lift is a single whiskered Gray cell.
 - For other designated lifts, the uniform rules now derive less than §5.2 claimed. Typical examples are lifts with W-type letters on composite operands, or lifts with auxiliary letters K, J or shifted joins at the top.
-- `Uniform/Marks.agda` encodes the old (OP-inv_S). Its theorems remain true as statements about that encoding, relative to the `Sem` hypotheses. But `Sem`'s field for the operation case is now known to fail on free algebras. Re-encoding the repaired rule is ledger E14.
+- `Uniform/Marks.agda` encodes the old (OP-inv_S). Its theorems remain true as statements about that encoding, relative to the `Sem` hypotheses. But `Sem`'s field for the operation case is now known to fail on free algebras. Re-encoding the repaired rule is ledger E14. **[Done: `Uniform/MarksRepaired.agda`, §8.7.]**
 
 ### 8.3 E7 and S8, revised
 
@@ -322,3 +322,24 @@ The answer is the same when every inner letter is also required to be invertible
 - E14(c) is closed: the list above, together with the undecidability, is the general answer. Further positive instances are certified one at a time by round 1's semi-decision.
 
 **Formalization (standard 9).** `Uniform/MarksRepaired.agda` should get: criterion (1) as a decidable predicate on bracketing trees; the repaired (INV-fac) with (1) as a side condition; removal of the ps\* branch; and a check that the old rule accepts the (2, 2) shape while the new one rejects it. Owner: MKL (ledger E14).
+
+### 8.7 The rules after §8.6 (2026-11-25)
+
+Spec §3.6 now states the repaired rule set.
+- **(INV-fac_V)** replaces (INV-fac) for Gray cells under V + S. Its side condition is criterion (1), read on the bracketing tree of the head's forced value. By §8.6 it is sound in every algebra and exact.
+- **(PS-fac_V)** keeps (PS-fac) only for exactly two factors, both positive, with the later one ps\*. This is the definition of ps\* (spec §3.4), so it is sound by definition. (PS-fac) with three or more factors is removed.
+- **(OP-ps_S′)** now has the premises of (OP-inv_S′). It concludes ps for hd ≥ 1, so it is (OP-inv_S′) followed by (INV⇒PS). The ps\* branch is removed.
+- The letter kinds (i)–(iii) and operand purity stay as in §8.2. §8.6 shows that they cannot be widened by a decidable test: K, J, W on composites and shifted joins fail, the join never propagates from B, and propagation on composite operands is undecidable.
+- Heads accepted by (COH-ord) keep the two-tier rules, including two-tier (INV-fac) and (PS-fac). Their models factor through 𝔉 (`ord-recovers-two-tier.md` Theorem 2.3), where Lemma 2.1 holds.
+
+**Agda** (`Uniform/MarksRepaired.agda`).
+- `BTree` is a bracketing tree with leaves (dᵢ, component).
+- `crit` is criterion (1) as a Boolean. `crit-sound` and `crit-complete` prove it equivalent to the per-leaf statement `Crit1`: some leaf position p with dᵢ ≥ 1, xᵢ inv, and `clear p` (no node on the path has two children of dimension ≥ 2).
+- `grayInvU` = `crit` ∨ (INV-obj) ∨ `psBin` judges case (i). `psV` uses the (OP-inv_S′) letter premises, so the ps\* branch is gone.
+- `invV₀` and `psV₀` keep the pre-§8.6 rules for comparison.
+- The following hold by `refl`:
+  - `old-accepts-22` / `new-rejects-22`;
+  - `old-accepts-211R` / `new-rejects-211R` (W(A, χ(b, c)));
+  - `old-ps-222` / `new-ps-222` (both bracketings);
+  - `new-accepts-21`, `new-accepts-12`, `new-accepts-211L` and `new-ps-bin`.
+- What is not checked in Agda: soundness of (1) itself. That is the r2 theorem, which enters through the `letter` field of `Sem′` / `letters` of `OpModel`, as before.

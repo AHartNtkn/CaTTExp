@@ -9,6 +9,11 @@
 --   * (OP-inv_S′)/(OP-ps_S′): premises on each top letter of the
 --     designated lift, which must be operand-pure and of kind
 --     (i) Gray cell, (ii) cylinder, (iii) binary join h(A, B);
+--   * the factor rules for a Gray cell of kind (i) after the r2 answer
+--     (E14(b), uniform-marks.md §8.6): (INV-fac) carries criterion (1)
+--     on the bracketing tree, (PS-fac) is kept only for a binary pair
+--     with the ps* factor last, and the ps* branch of (OP-ps_S′) is
+--     removed                              (crit, crit-iff, grayInvU)
 --   * two object marks, `iord` (inner letters invertible) and `ord`
 --     (inner letters trivial), ord ⇒ iord;
 --   * (COH-ord): a head whose objects are all `ord` is read with the
@@ -17,6 +22,10 @@
 -- (no checker for V + S exists yet, ledger S3):
 --   * the old rule accepts the E13 counterexample shape and the
 --     repaired one rejects it                       (old-accepts, new-rejects)
+--   * the pre-r2 rule accepts the (2, 2) shape, the right-bracketed
+--     (2, 1, 1) shape and the (2, 2, 2) ps* shape, and the current rule
+--     rejects all three; (2, 1) and left-bracketed (2, 1, 1) pass
+--                                                    (*-22, *-211, *-222)
 --   * uniform ⇒ two-tier for operation-case heads, given the
 --     projection data                                (uniform-⊆-two-tier′)
 --   * `iord` on the target suffices for (ORD)       (iord-ORD)
@@ -41,7 +50,7 @@ module CaTTExp.Uniform.MarksRepaired where
 
 open import CaTTExp.Prelude
 open import CaTTExp.Pure using (∅)
-open import CaTTExp.Gray.Marks ∅ using (IP; ip; jinv; jps; jpss; grayInv; grayPs)
+open import CaTTExp.Gray.Marks ∅ using (IP; ip; jinv; jps; jpss; pos; grayInv; grayPs)
 open import CaTTExp.Gray.Support ∅ using (map)
 open import CaTTExp.Uniform.Marks
   using (Setting; setting; innerLaw; rSplit; _≤S_;
@@ -87,6 +96,99 @@ facs : List Comp → List (Nat × Nat) → List (Nat × IP)
 facs cs g = map (λ x → fst x , jdg (nthC (snd x) cs)) g
 
 ------------------------------------------------------------------------
+-- The factor rules over V + S (E14(b), uniform-marks.md §8.6).
+--
+-- A Gray cell G(x₁, …, xₙ) is lifted by a planar binary bracketing of its
+-- consecutive factors, the one the head's forced value uses
+-- (design-decisions.md §5). A leaf is (hom-dimension dᵢ, component
+-- index of xᵢ); a node has the sum of the dimensions below it.
+
+data BTree : Set where
+  leaf : Nat → Nat → BTree
+  node : BTree → BTree → BTree
+
+tdim : BTree → Nat
+tdim (leaf d _) = d
+tdim (node l r) = tdim l + tdim r
+
+leaves : BTree → List (Nat × Nat)
+leaves (leaf d i) = (d , i) ∷ []
+leaves (node l r) = leaves l ++ leaves r
+
+big : Nat → Bool
+big (suc (suc _)) = true
+big _             = false
+
+-- a node through which invertibility does not pass: two children of
+-- dimension ≥ 2
+blocks : BTree → BTree → Bool
+blocks l r = big (tdim l) ∧ big (tdim r)
+
+-- (INV-fac) with criterion (1), as a Boolean: some leaf with dᵢ ≥ 1 and
+-- xᵢ[γ] inv such that no node on its path to the root blocks.
+crit : List Comp → BTree → Bool
+crit cs (leaf d i) = pos d ∧ jinv (jdg (nthC i cs))
+crit cs (node l r) = not (blocks l r) ∧ (crit cs l ∨ crit cs r)
+
+-- Criterion (1) as stated, per leaf.
+data Pos : BTree → Set where
+  here : ∀ {d i} → Pos (leaf d i)
+  inL  : ∀ {l r} → Pos l → Pos (node l r)
+  inR  : ∀ {l r} → Pos r → Pos (node l r)
+
+clear : ∀ {t} → Pos t → Bool
+clear here            = true
+clear (inL {l} {r} p) = not (blocks l r) ∧ clear p
+clear (inR {l} {r} p) = not (blocks l r) ∧ clear p
+
+leafOK : List Comp → ∀ {t} → Pos t → Bool
+leafOK cs (here {d} {i}) = pos d ∧ jinv (jdg (nthC i cs))
+leafOK cs (inL p)        = leafOK cs p
+leafOK cs (inR p)        = leafOK cs p
+
+Crit1 : List Comp → BTree → Set
+Crit1 cs t = Σ (Pos t) (λ p → T (clear p) × T (leafOK cs p))
+
+private
+  upL : ∀ cs {l r} → T (not (blocks l r)) → Crit1 cs l → Crit1 cs (node l r)
+  upL cs {l} {r} nb (p , c , o) = inL p , ∧-intro {not (blocks l r)} nb c , o
+
+  upR : ∀ cs {l r} → T (not (blocks l r)) → Crit1 cs r → Crit1 cs (node l r)
+  upR cs {l} {r} nb (p , c , o) = inR p , ∧-intro {not (blocks l r)} nb c , o
+
+crit-sound : ∀ cs t → T (crit cs t) → Crit1 cs t
+crit-sound cs (leaf d i) q = here , tt , q
+crit-sound cs (node l r) q =
+  ∨-elim (crit cs l) (crit cs r)
+    (λ x → upL cs nb (crit-sound cs l x))
+    (λ x → upR cs nb (crit-sound cs r x))
+    (sndT (not (blocks l r)) q)
+  where nb = fstT (not (blocks l r)) q
+
+crit-complete : ∀ cs t → Crit1 cs t → T (crit cs t)
+crit-complete cs (leaf d i) (here , _ , o) = o
+crit-complete cs (node l r) (inL p , c , o) =
+  ∧-intro {not (blocks l r)} (fstT (not (blocks l r)) c)
+    (∨-introl (crit cs r) (crit-complete cs l (p , sndT (not (blocks l r)) c , o)))
+crit-complete cs (node l r) (inR p , c , o) =
+  ∧-intro {not (blocks l r)} (fstT (not (blocks l r)) c)
+    (∨-intror (crit cs l) (crit-complete cs r (p , sndT (not (blocks l r)) c , o)))
+
+-- (INV-obj): no positive factor, every factor inv.
+objInv : List Comp → BTree → Bool
+objInv cs t = all (λ x → not (pos (fst x)) ∧ jinv (jdg (nthC (snd x) cs))) (leaves t)
+
+-- (PS-fac), kept only where it is the definition of ps*: exactly two
+-- factors, both positive, the later one ps*.
+psBin : List Comp → BTree → Bool
+psBin cs (node (leaf d₁ _) (leaf d₂ j)) = pos d₁ ∧ pos d₂ ∧ jpss (jdg (nthC j cs))
+psBin cs _                              = false
+
+-- g[γ] inv for a Gray cell over V + S.
+grayInvU : List Comp → BTree → Bool
+grayInvU cs t = crit cs t ∨ objInv cs t ∨ psBin cs t
+
+------------------------------------------------------------------------
 -- Head data.
 
 data LKind : Set where
@@ -98,7 +200,7 @@ record TopL : Set where
   field
     kind     : LKind
     pure     : Bool                -- operands are generators of Γ
-    factors  : List (Nat × Nat)    -- (i): the factors of its Gray cell
+    tree     : BTree               -- (i): its Gray cell, bracketed
     mover    : Nat                 -- (ii): moving input; (iii): A
     leftSide : Bool                -- (iii): the A-cylinder is the left
                                    --        input of ῑ₋ (left split)
@@ -130,10 +232,10 @@ innFac S (just (l , r)) cs =
 innerOK : Head → List Comp → Bool
 innerOK h cs = not (innerTop h) ∨ iordTgt h cs
 
--- (OP-inv_S′)(a′) for one letter
+-- (OP-inv_S′)(a′) for one letter; case (i) uses the V + S factor rules
 kindInv : Setting → Head → List Comp → TopL → Bool
 kindInv S h cs ℓ with kind ℓ
-... | grayL = grayInv (facs cs (factors ℓ))
+... | grayL = grayInvU cs (tree ℓ)
 ... | cylL  = jinv (jdg (nthC (mover ℓ) cs))
 ... | joinL = jinv (jdg (nthC (mover ℓ) cs))
               ∧ (iordTgt h cs ∨ (if leftSide ℓ then innerLaw S else rSplit S))
@@ -141,11 +243,19 @@ kindInv S h cs ℓ with kind ℓ
 letterInv : Setting → Head → List Comp → TopL → Bool
 letterInv S h cs ℓ = pure ℓ ∧ kindInv S h cs ℓ
 
--- (OP-ps_S′): case (i) may use ps* instead of inv
-letterPs : Setting → Head → List Comp → TopL → Bool
-letterPs S h cs ℓ with kind ℓ
-... | grayL = pure ℓ ∧ grayPs (facs cs (factors ℓ))
-... | _     = letterInv S h cs ℓ
+-- The pre-r2 version (E14(a)), for comparison: case (i) used the
+-- two-tier factor rules on the unbracketed factors, and (OP-ps_S′) had
+-- a ps* branch in case (i).
+kindInv₀ : Setting → Head → List Comp → TopL → Bool
+kindInv₀ S h cs ℓ with kind ℓ
+... | grayL = grayInv (facs cs (leaves (tree ℓ)))
+... | _     = kindInv S h cs ℓ
+
+letterInv₀ letterPs₀ : Setting → Head → List Comp → TopL → Bool
+letterInv₀ S h cs ℓ = pure ℓ ∧ kindInv₀ S h cs ℓ
+letterPs₀ S h cs ℓ with kind ℓ
+... | grayL = pure ℓ ∧ grayPs (facs cs (leaves (tree ℓ)))
+... | _     = letterInv₀ S h cs ℓ
 
 -- the two-tier rules on the projected head
 invT psT : Head → List Comp → Bool
@@ -159,8 +269,14 @@ invV S h cs =
      isCoh (case h)                                                     -- (COH-inv)
   ∨ (isInner (case h) ∧ (iordTgt h cs ∨ innFac S (elemIC h) cs))        -- (ORD), (INN-fac_S)
   ∨ (isOp (case h) ∧ all (letterInv S h cs) (liftTops h) ∧ innerOK h cs) -- (OP-inv_S′)
+-- (OP-ps_S′) without the ps* branch: the premises of (OP-inv_S′). ps
+-- enters case (i) only through psBin, the definition of ps*.
 psV S h cs =
-  isOp (case h) ∧ all (letterPs S h cs) (liftTops h) ∧ innerOK h cs      -- (OP-ps_S′)
+  isOp (case h) ∧ all (letterInv S h cs) (liftTops h) ∧ innerOK h cs     -- (OP-ps_S′)
+
+invV₀ psV₀ : Setting → Head → List Comp → Bool
+invV₀ S h cs = isOp (case h) ∧ all (letterInv₀ S h cs) (liftTops h) ∧ innerOK h cs
+psV₀  S h cs = isOp (case h) ∧ all (letterPs₀ S h cs) (liftTops h) ∧ innerOK h cs
 
 -- with (COH-ord): an all-ord head is a two-tier head
 invU psU : Setting → Head → List Comp → Bool
@@ -189,7 +305,7 @@ private
 
 ezb : Head
 ezb = head grayOpC (((3 , 3) ∷ (1 , 4) ∷ []) ∷ [])
-           (topL cylL false ((3 , 3) ∷ (1 , 4) ∷ []) 3 true ∷ [])
+           (topL cylL false (node (leaf 3 3) (leaf 1 4)) 3 true ∷ [])
            false nothing 2 (0 ∷ 1 ∷ 2 ∷ [])
 
 ezb-cs : List Comp
@@ -200,6 +316,70 @@ old-accepts = refl
 
 new-rejects : invU (setting true true) ezb ezb-cs ≡ false
 new-rejects = refl
+
+------------------------------------------------------------------------
+-- The r2 shapes (uniform-marks.md §8.6). One pure Gray top letter on
+-- three unmarked objects (components 0, 1, 2) and factors from
+-- component 3 on. `iv` is an inv factor, `ps` a ps* one.
+
+private
+  iv ps : Comp
+  iv = comp (ip true true true) noM
+  ps = comp (ip false true true) noM
+
+  grayHead : BTree → Head
+  grayHead t = head grayOpC (leaves t ∷ [])
+                    (topL grayL true t 0 true ∷ []) false nothing 2 (0 ∷ 1 ∷ 2 ∷ [])
+
+  S₂ : Setting
+  S₂ = setting true true
+
+-- (2, 2), first factor inv: W(A, B). Fails in every setting.
+t22 : BTree
+t22 = node (leaf 2 3) (leaf 2 4)
+
+old-accepts-22 : invV₀ S₂ (grayHead t22) (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ []) ≡ true
+old-accepts-22 = refl
+new-rejects-22 : invU S₂ (grayHead t22) (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ []) ≡ false
+new-rejects-22 = refl
+
+-- (2, 1) and (1, 2): pass, from either factor.
+new-accepts-21 : invU S₂ (grayHead (node (leaf 2 3) (leaf 1 4)))
+                         (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ []) ≡ true
+new-accepts-21 = refl
+new-accepts-12 : invU S₂ (grayHead (node (leaf 1 3) (leaf 2 4)))
+                         (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ []) ≡ true
+new-accepts-12 = refl
+
+-- (2, 1, 1), first factor inv: the bracketing matters.
+t211L t211R : BTree
+t211L = node (node (leaf 2 3) (leaf 1 4)) (leaf 1 5)
+t211R = node (leaf 2 3) (node (leaf 1 4) (leaf 1 5))     -- W(A, χ(b, c))
+
+new-accepts-211L : invU S₂ (grayHead t211L) (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ unm ∷ []) ≡ true
+new-accepts-211L = refl
+old-accepts-211R : invV₀ S₂ (grayHead t211R) (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ unm ∷ []) ≡ true
+old-accepts-211R = refl
+new-rejects-211R : invU S₂ (grayHead t211R) (obj ∷ obj ∷ obj ∷ iv ∷ unm ∷ unm ∷ []) ≡ false
+new-rejects-211R = refl
+
+-- (2, 2, 2), middle input ps*: the ps* factor rule, false in every
+-- setting and for either bracketing.
+t222L t222R : BTree
+t222L = node (node (leaf 2 3) (leaf 2 4)) (leaf 2 5)
+t222R = node (leaf 2 3) (node (leaf 2 4) (leaf 2 5))
+
+old-ps-222 : (psV₀ S₂ (grayHead t222L) (obj ∷ obj ∷ obj ∷ unm ∷ ps ∷ unm ∷ []) ≡ true)
+           × (psV₀ S₂ (grayHead t222R) (obj ∷ obj ∷ obj ∷ unm ∷ ps ∷ unm ∷ []) ≡ true)
+old-ps-222 = refl , refl
+new-ps-222 : (psU S₂ (grayHead t222L) (obj ∷ obj ∷ obj ∷ unm ∷ ps ∷ unm ∷ []) ≡ false)
+           × (psU S₂ (grayHead t222R) (obj ∷ obj ∷ obj ∷ unm ∷ ps ∷ unm ∷ []) ≡ false)
+new-ps-222 = refl , refl
+
+-- A binary pair with the ps* factor last is still inv (definition of ps*).
+new-ps-bin : invU S₂ (grayHead (node (leaf 2 3) (leaf 2 4)))
+                     (obj ∷ obj ∷ obj ∷ unm ∷ ps ∷ []) ≡ true
+new-ps-bin = refl
 
 ------------------------------------------------------------------------
 -- (ORD) needs only iord on the target; ord on every object gives the
@@ -368,7 +548,7 @@ record Sem′ (S : Setting) (h : Head) (cs : List Comp) : Set₁ where
     ord-sem  : case h ≡ innerC → T (iordTgt h cs) → Inv                 -- Thm 4.3 (iord reading)
     inn-sem  : case h ≡ innerC → T (innFac S (elemIC h) cs) → Inv       -- Thm 4.4 (InnerInv)
     two-sem  : T (allOrd h cs) → T (invT h cs) → Inv                    -- Thm 2.3 of ord-recovers-two-tier
-    letter   : ∀ ℓ → T (letterInv S h cs ℓ) → LetInv ℓ                  -- Thm 8.1 (i)–(iii)
+    letter   : ∀ ℓ → T (letterInv S h cs ℓ) → LetInv ℓ                  -- Thm 8.1 (i)–(iii); in (i), §8.6 for crit/psBin
     innerTop : T (innerOK h cs) → InnInv                                -- (b): iord target
     compose  : (∀ ℓ → T (letterInv S h cs ℓ) → LetInv ℓ) →
                T (all (letterInv S h cs) (liftTops h)) → InnInv → Inv  -- Lemma 4.1 (iso-path)

@@ -726,6 +726,21 @@ module ConcreteQ (K : Nat) (Rt : NatMap) (Jt : Trie NatMap) (Ft : NatMap) (Qt : 
     subst₂ : ∀ {X Y : Set} (P : X → Y → Set) {x x' y y'} → x ≡ x' → y ≡ y' → P x y → P x' y'
     subst₂ P refl refl q = q
 
+  ctxQOK-sound : ∀ g qg → T (ctxQOK K Rt Jt Ft Qt g qg) → UQ′.⟦ qg ⟧c ⊢ctx
+  ctxQOK-sound g qg p =
+    subst _⊢ctx (sym (Sound.qeqCOK-sound decQ (dec tabs) (qfuel K Rt Jt Ft Qt) qg g (∧-snd {qdecOK K Rt Jt Ft Qt} r₂)))
+      (fst (snd (sem tabs g)) cg)
+    where
+    r : T (isCtx (Rof K Rt Jt Ft g) ∧ (qdecOK K Rt Jt Ft Qt ∧ qeqCOK (qfuel K Rt Jt Ft Qt) qg g))
+    r = ∧-fst p
+    tabs : T (tablesOK K Rt Jt Ft)
+    tabs = ∧-snd {isCtx (Rof K Rt Jt Ft g) ∧ (qdecOK K Rt Jt Ft Qt ∧ qeqCOK (qfuel K Rt Jt Ft Qt) qg g)} p
+    cg : T (isCtx (Rof K Rt Jt Ft g))
+    cg = ∧-fst r
+    r₂ = ∧-snd {isCtx (Rof K Rt Jt Ft g)} r
+    decQ : UQ.Decreasing
+    decQ k it e = found-ok itemOf (okD K Rt Jt Ft Qt) (λ _ → tt) Qt (∧-fst r₂) k e
+
 -- The end-to-end statement for a query given as a table: a certificate
 -- the checker accepts yields a derivation of the query, i.e. of the
 -- unfolding of the query table.
@@ -742,3 +757,11 @@ queryMatches-sound qs qg qA Γ B ok =
   ==Ctx-sound _ Γ (∧-fst p) , ==Ty-sound _ B (∧-snd {ctxIn (natmap (nums qs)) qg ==Ctx Γ} p)
   where
   p = true-T ok
+
+-- A context given as a table (queryCtxOf) is well formed, when the
+-- checker accepts a certificate for it.
+certifiedCtxQ : ∀ K (is cs fs qs : List String) g qg →
+                runCtxQ K is cs fs qs g qg ≡ true → queryCtxOf qs qg ⊢ctx
+certifiedCtxQ K is cs fs qs g qg ok =
+  ConcreteQ.ctxQOK-sound K (natmap (nums is)) (claims (nums cs)) (natmap (nums fs)) (natmap (nums qs))
+    g qg (true-T ok)

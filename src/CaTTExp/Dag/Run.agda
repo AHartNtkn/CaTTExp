@@ -248,6 +248,10 @@ module _ (K : Nat) (Rt : NatMap) (Jt : Trie NatMap) (Ft : NatMap) (Qt : NatMap) 
   certQOK : Nat → Nat → RTy → Nat → RTy → Bool
   certQOK g n A qg qA = rootQOK g n A qg qA ∧ tablesOK K Rt Jt Ft
 
+  -- A context query: the certificate's context g is the query context.
+  ctxQOK : Nat → Nat → Bool
+  ctxQOK g qg = (isCtx (Rof K Rt Jt Ft g) ∧ (qdecOK ∧ qeqCOK qfuel qg g)) ∧ tablesOK K Rt Jt Ft
+
 ------------------------------------------------------------------------
 -- Entry points used by generated modules.
 
@@ -264,3 +268,11 @@ runCert K is cs fs g n A Γ B = go (natmap (nums is)) (claims (nums cs)) (natmap
   where
   go : NatMap → Trie NatMap → NatMap → Bool
   go Rt Jt Ft = certOK K Rt Jt Ft g n (fst (rty A)) Γ B
+
+-- A context given as a table is well formed.
+runCtxQ : Nat → List String → List String → List String → List String → Nat → Nat → Bool
+runCtxQ K is cs fs qs g qg =
+  go (natmap (nums is)) (claims (nums cs)) (natmap (nums fs)) (natmap (nums qs))
+  where
+  go : NatMap → Trie NatMap → NatMap → NatMap → Bool
+  go Rt Jt Ft Qt = ctxQOK K Rt Jt Ft Qt g qg

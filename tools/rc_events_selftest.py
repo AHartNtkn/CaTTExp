@@ -1,7 +1,7 @@
 """
 Regression checks for the top-rank step (tools/rc_events.py, r9 Response 3).
 
-  python3 tools/rc_events_selftest.py          # the small cases (about 2 min)
+  python3 tools/rc_events_selftest.py          # the small cases (seconds)
   python3 tools/rc_events_selftest.py cow17    # also the round-21 change of
                                                # writing (fixture, long)
 
@@ -61,7 +61,13 @@ def small_fixture_cases():
     # an old cell composed with the event, so the event's composite source
     # is not a face of the head until the head is distributed (unfold)
     G, A, t, u = _fixture('rc_round21_unfold15.txt.gz')
-    return [('round21-unfold', G, t, u, 'unfold')]
+    out = [('round21-unfold', G, t, u, 'unfold')]
+    # a sub-query of the round-21 run whose sort moves L_e past an old block
+    # that writes f's composite source (a rebracketing creates it): the
+    # block is pulled back across L_e by its oplax square along e first
+    G, A, t, u = _fixture('rc_round21_pull17.txt.gz')
+    out.append(('round21-pull-back', G, t, u, 'pull'))
+    return out
 
 def fixture_cases():
     G, A, t, u = _fixture('rc_round21_cow17.txt.gz')

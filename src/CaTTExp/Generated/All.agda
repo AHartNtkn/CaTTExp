@@ -29,3 +29,4 @@ import CaTTExp.Generated.RCCoconeThreeCheck
 import CaTTExp.CoconeRCThree
 import CaTTExp.Generated.DagSmallCheck
 import CaTTExp.Generated.DagMidCheck
+import CaTTExp.Generated.DagCtxSmallCheck

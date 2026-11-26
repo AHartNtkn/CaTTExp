@@ -77,6 +77,10 @@ mutual
 qeqOK : Nat → Nat → Nat → RTy → RTy → Bool
 qeqOK fuel qg g qA A = is-just (eqC fuel qg g (tleaf , tleaf) >>= eqRT fuel qA A)
 
+-- A query that is a context alone.
+qeqCOK : Nat → Nat → Nat → Bool
+qeqCOK fuel qg g = is-just (eqC fuel qg g (tleaf , tleaf))
+
 ------------------------------------------------------------------------
 -- Soundness
 
@@ -241,3 +245,7 @@ module Sound (decQ : UQ.Decreasing) (decR : UR.Decreasing) where
   ... | M₂ , e with bind-just (eqC fuel qg g (tleaf , tleaf)) e
   ... | M₁ , e₁ , e₂ with eqC-sound fuel qg g _ inv₀ e₁
   ... | inv₁ , ectx = ectx , snd (eqRT-sound fuel qA A M₁ inv₁ e₂)
+
+  qeqCOK-sound : ∀ fuel qg g → T (qeqCOK fuel qg g) → UQ.⟦ qg ⟧c ≡ UR.⟦ g ⟧c
+  qeqCOK-sound fuel qg g p with is-just-sound _ p
+  ... | M , e = snd (eqC-sound fuel qg g _ inv₀ e)

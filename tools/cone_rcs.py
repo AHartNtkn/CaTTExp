@@ -15,13 +15,16 @@ so the same construction runs in polynomial time.
 Trust: none. This file only computes the next oracle query. It mirrors the
 Agda definitions clause by clause (names kept), and `check_against`
 compares its queries with the ones the Agda driver printed for the rounds
-it finished. The cone itself is certified in Agda as before.
+it finished. The cone is meant to be certified in Agda (a DAG certificate
+of the context, then tied to `ConeRCS.cone`); for Horiz3 neither is done
+yet.
 
 Covered: the expression constructors the cone construction and the
 three-dimensional shapes use (v, bn, idn, raw). Fuel: the Agda functions
-take fuel; with the fuel the Agda code gives (64 + context bounds), it is
-never exhausted on these inputs, so it is not modelled except in P, where
-it is cheap and exact.
+take fuel, which is not modelled here except in P, where it is cheap and
+exact. On Horiz3 it is checked not to run out: the depth Agda's fuelled
+tyF / evF / evTyF need is at most 52, against fuelOf K >= 81 (measured in
+the review of PR #636). For another shape, check this again.
 
 Usage:
   import cone_rcs as C
@@ -186,15 +189,19 @@ class Ctx:
         if r is not None:
             return r
         r = self._tyF(e)
-        if not (e[0] == 'v' and e[1] >= len(self.tys)):
-            self._ty[id(e)] = r
+        self._ty[id(e)] = r
         return r
 
     def _tyF(self, e):
         tag = e[0]
         if tag == 'v':
             i = e[1]
-            return self.tys[i] if i < len(self.tys) else OB
+            if i >= len(self.tys):
+                # Agda gives ob here and recomputes at a larger K; a memo
+                # would go stale, so fail loudly instead (never happens on
+                # a well-formed diagram: projections refer to earlier entries)
+                raise IndexError('cone_rcs: variable %d outside the context' % i)
+            return self.tys[i]
         if tag == 'idn':
             return hom(self.tyE(e[1]), e[1], e[1])
         if tag == 'raw':
@@ -227,8 +234,7 @@ class Ctx:
             r = binC(e[1], self.cell(e[2]), self.cell(e[3]))[0]
         else:
             raise NotImplementedError('ev: ' + tag)
-        if not (tag == 'v' and e[1] >= len(self.tys)):
-            self._ev[id(e)] = r
+        self._ev[id(e)] = r
         return r
 
     def evTy(self, A):

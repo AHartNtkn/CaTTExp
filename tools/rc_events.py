@@ -47,9 +47,10 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from catt import *
 
-STATS = {'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0}
+STATS = {'split': 0, 'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0}
 TRACE = [False]
 DUMP = [None]
+PUSH = [True]
 
 def _log(*a):
     if TRACE[0]:
@@ -253,7 +254,13 @@ class Step:
         M = self.marker(z)
         Em = M.to_m(E)
         if Em is None:
-            raise Fail('event factor has no marker form')
+            # a top slot holding a composite along n-1 (an old cell before
+            # or after the event, so the event's source is not a face of
+            # E's head): distribute the head over it first
+            r = self.unfold(E, reverse)
+            if r is None:
+                raise Fail('event factor has no marker form')
+            return r
         Tm = src(M.Gm, Em)
         Lm = M.lift(Tm, self.rec)
         kinds = [('L', z, Tm)]
@@ -266,10 +273,93 @@ class Step:
         q = (M.back(LQ), E) if reverse else (E, M.back(LQ))
         if q == self.query or q == self.query[::-1]:
             raise Fail('single-event comparison is the query itself')
-        Xm = self.call('one', M.Gm, LQ, Em) if reverse else self.call('one', M.Gm, Em, LQ)
+        Xm = None
+        try:
+            Xm = self.head_base(M, Em, Lm, Qm, reverse)
+        except Fail as ex:
+            _log('head base:', ex)
+        if Xm is None:
+            Xm = self.call('one', M.Gm, LQ, Em) if reverse else self.call('one', M.Gm, Em, LQ)
         units = [M.back(Lm)] + ([M.back(Qm)] if Qm is not None else [])
         kinds += ['old'] * (len(units) - 1)
         return units, kinds, M.back(Xm)
+
+    def unfold(self, E, reverse):
+        """E = H(.., c, ..) with each top-slot argument a composite of k >= 2
+        factors along n-1: (units of H(f_1) ... H(f_k), kinds, D), D the
+        interchange coherence E -> that (back when reverse); None if E is
+        not of that shape."""
+        G, n = self.G, self.n
+        h2, D = _H().distribute(G, E, not reverse)
+        if D is None:
+            return None
+        units = _R().vfactors(G, h2, n)
+        if len(units) < 2:
+            return None
+        STATS['unfold'] = STATS.get('unfold', 0) + 1
+        _log('unfold into', len(units))
+        return units, ['ev' if events(G, x, n) else 'old' for x in units], D
+
+    def head_base(self, M, Em, Lm, Qm, reverse):
+        """The single-event comparison Em -> Lm Qm (or back) when Em is a
+        composition head H(e) whose pasting context has one top slot,
+        holding the event (r9 Response 3, sequentializing: recurse on the
+        proper argument e): e -> L_e Q_e by recursion, H(e) -> H(L_e Q_e)
+        by top-slot congruence, -> H(L_e) H(Q_e) by distribution, and
+        H(L_e) = L(src Em) literally; then H(Q_e) against Qm is an old
+        call."""
+        Hh = _H()
+        G, n = M.Gm, self.n
+        if Em[0] != 'coh':
+            return None
+        _, P, B, sg = Em
+        if tdim(B) + 1 != n or ps_dim(P) != n:
+            return None
+        tops = [i for i, C in enumerate(P) if C != STAR and tdim(C) + 1 == n]
+        if len(tops) != 1:
+            return None
+        i = tops[0]
+        em = sg[i]
+        if em[0] == 'v':
+            return None
+        Le = M.lift(src(G, em), self.rec)
+        Qe = None
+        if tgt(G, Le) != tgt(G, em):
+            Qe = self.call('low', G, tgt(G, Le), tgt(G, em))
+        LQe = Le if Qe is None else comp2(G, n - 1, Le, Qe)
+        cells = []
+        h1 = Em
+        if LQe != em:
+            Xe = self.call('one', G, LQe, em) if reverse else self.call('one', G, em, LQe)
+            Cg, h1 = Hh.congruence(G, Em, {i: (LQe, Xe)}, not reverse)
+            cells.append(Cg)
+        h2 = h1
+        if Qe is not None:
+            h2, Dc = Hh.distribute(G, h1, not reverse)
+            if Dc is None:
+                raise Fail('head base: no distribution')
+            cells.append(Dc)
+        R = _R()
+        f2 = R.vfactors(G, h2, n)
+        fl = R.vfactors(G, Lm, n)
+        if f2[:len(fl)] != fl:
+            raise Fail('head base: H(L_e) is not the lift')
+        rest = f2[len(fl):]
+        face = tgt(G, Lm)
+        ro = vc_or_id(G, n, rest, face)
+        qo = Qm if Qm is not None else R.identity(G, face)
+        if ro != qo:
+            X = self.call('old', G, qo, ro) if reverse else self.call('old', G, ro, qo)
+            W = comp2(G, n - 1, Lm, X)
+            cells.append(W)
+        # orient: forward cells run Em -> ... -> Lm Qm; reverse cells were
+        # built as their reversals, so they run in the opposite order
+        if reverse:
+            cells = list(reversed(cells))
+            start, end = (Lm if Qm is None else comp2(G, n - 1, Lm, Qm)), Em
+        else:
+            start, end = Em, (Lm if Qm is None else comp2(G, n - 1, Lm, Qm))
+        return chain(G, n, start, cells, end)
 
     def canonical(self, T):
         """Make every 'ev' unit of the track canonical."""
@@ -297,13 +387,23 @@ class Step:
             raise Fail('factor with several events does not split')
         seq, D = r
         if src(G, D) != E:
-            raise Fail('split: the coherence does not start at the factor')
-        if reverse:
+            # the split's head writes the factor differently (the nested
+            # and general splits): glue E to it, by a rebracketing when the
+            # top factors agree, else by a comparison
+            try:
+                g = rebr(G, n, E, src(G, D))
+            except Fail:
+                g = self.call('split', G, E, src(G, D))
+            D = compose(G, n, [g, D])
+            if reverse:
+                D = self.call('split', G, seq, E)
+        elif reverse:
             _, P, B, sg = D
             B2 = arr(B[1], B[3], B[2])
-            if not side_ok(P, B2[1], B2[2], B2[3]):
-                raise Fail('split: reversed head is not a coherence')
-            D = ('coh', P, B2, sg)
+            if side_ok(P, B2[1], B2[2], B2[3]):
+                D = ('coh', P, B2, sg)
+            else:
+                D = self.call('split', G, seq, E)
         units = _R().vfactors(G, seq, n)
         return units, ['ev' if events(G, x, n) else 'old' for x in units], D
 
@@ -344,6 +444,84 @@ class Step:
             kinds.append('ev' if zs else 'old')
         T.replace(p, q + 1, new, kinds, sq)
 
+    def back_replace(self, U, i, j, new, new_kinds, cell, back_cells):
+        """As Track.replace, for the u side: cell : vc(new) -> vc(units[i:j])
+        (towards u), whiskered and recorded in back_cells."""
+        G, n = self.G, self.n
+        if any(x is None for x in new):
+            raise Fail('back_replace: a new unit is None')
+        pre, post = U.units[:i], U.units[j:]
+        if cell is not None:
+            W = cell
+            if new and src(G, cell) != vc(G, n, new):
+                W = compose(G, n, [rebr(G, n, vc(G, n, new), src(G, cell)), W])
+            if post:
+                W = comp2(G, n - 1, W, vc(G, n, post))
+            if pre:
+                W = comp2(G, n - 1, vc(G, n, pre), W)
+            back_cells.append(W)
+        U.units = pre + list(new) + post
+        U.kinds = U.kinds[:i] + list(new_kinds) + U.kinds[j:]
+
+    def push_left(self, Tr, forward, back_cells=None):
+        """Move every elementary arrow to the left across the old block
+        before it (since the previous event or the start): with W that
+        block, the naturality square W L(tgt W) -> L(src W) W⁺ (forward,
+        on t) or its oplax form L(src W) W⁺ -> W L(tgt W) (nat_op, on u,
+        recorded towards u). The states before the events then are the
+        targets of the previous elementary arrows, the same on t and u, and
+        the old material collects after the events, renamed by them."""
+        import rc_nat as N
+        G, n = self.G, self.n
+        R = _R()
+        e = 0
+        while True:
+            lifts = [i for i, kd in enumerate(Tr.kinds) if isinstance(kd, tuple)]
+            if e >= len(lifts):
+                return
+            p = lifts[e]
+            s0 = lifts[e - 1] + 1 if e else 0
+            e += 1
+            if p == s0:
+                continue
+            z, Tm = Tr.kinds[p][1], Tr.kinds[p][2]
+            M = self.marker(z)
+            W = vc(G, n, Tr.units[s0:p])
+            Wm = M.to_m(W)
+            if Wm is None or M.x not in fv_tm(Wm) or M.to_m(tgt(G, W)) != Tm:
+                _log('push: block has no marker form')
+                continue
+            Sm = M.to_m(src(G, W))
+            if Sm is None:
+                continue
+            try:
+                if forward:
+                    STATS['square'] += 1
+                    sq, a, b = M.square(Wm, self.rec)
+                else:
+                    STATS['square'] += 1
+                    try:
+                        sq, a, b = N.nat_op(M.Gm, M.Y, M.pmap, M.umap, Wm, self.rec)
+                    except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError) as ex:
+                        raise Fail('op square: %s' % type(ex).__name__)
+                L = M.back(M.lift(Sm, self.rec))
+            except Fail as ex:
+                _log('push failed:', ex)
+                continue
+            sq, b = M.back(sq), M.back(b)
+            fb, fl = R.vfactors(G, b, n), R.vfactors(G, L, n)
+            if fb[:len(fl)] != fl:
+                _log('push: square target does not start with the lift')
+                continue
+            rest = fb[len(fl):]
+            new = [L] + rest
+            kinds = [('L', z, Sm)] + ['ev' if events(G, x, n) else 'old' for x in rest]
+            _log('push', z, 'past', p - s0, 'units')
+            if forward:
+                Tr.replace(s0, p + 1, new, kinds, sq)
+            else:
+                self.back_replace(Tr, s0, p + 1, new, kinds, sq, back_cells)
+
     def sort(self, T, order):
         while True:
             cur = T.order()
@@ -381,24 +559,16 @@ class Step:
                 units, kinds, cell = self.split(E, reverse=True)
             else:
                 units, kinds, cell = self.canon(E, zs[0], reverse=True)
-            # whisker the reversed cell into U's units
-            pre, post = U.units[:k], U.units[k + 1:]
-            if cell is not None:
-                W = cell
-                if src(G, cell) != vc(G, n, units):
-                    W = compose(G, n, [rebr(G, n, vc(G, n, units), src(G, cell)), W])
-                if post:
-                    W = comp2(G, n - 1, W, vc(G, n, post))
-                if pre:
-                    W = comp2(G, n - 1, vc(G, n, pre), W)
-                back_cells.append(W)
-            U.units = pre + units + post
-            U.kinds = U.kinds[:k] + kinds + U.kinds[k + 1:]
+            self.back_replace(U, k, k + 1, units, kinds, cell, back_cells)
         order = U.order()
         if sorted(order) != sorted(T.order()) or len(set(order)) != len(order):
             raise Fail('event lists differ')
         _log('orders', T.order(), order)
         self.sort(T, order)
+        if PUSH[0]:
+            self.push_left(T, True)
+            self.canonical(T)
+            self.push_left(U, False, back_cells)
         # change of writing, event by event
         lt = [i for i, kd in enumerate(T.kinds) if isinstance(kd, tuple)]
         lu = [i for i, kd in enumerate(U.kinds) if isinstance(kd, tuple)]
@@ -494,10 +664,13 @@ def rename_plus(M, Jm):
 
 DEPTH = [0]
 MAX_DEPTH = [4]
+FAILS = [None]    # a list to collect the failed (G, A, t, u) in, for debugging
 
 def normalize(G, A, t, u, rec):
     n = tdim(A) + 1
     if n < 2 or t == u or DEPTH[0] >= MAX_DEPTH[0]:
+        return None
+    if _R().strict_image(G, t) != _R().strict_image(G, u):
         return None
     DEPTH[0] += 1
     try:
@@ -509,6 +682,8 @@ def normalize(G, A, t, u, rec):
             import traceback
             if TRACE[0]:
                 traceback.print_exc()
+        if FAILS[0] is not None:
+            FAILS[0].append(((G, A, t, u), str(e)))
         return None
     finally:
         DEPTH[0] -= 1

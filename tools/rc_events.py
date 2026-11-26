@@ -47,7 +47,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from catt import *
 
-STATS = {'split': 0, 'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0, 'unfold': 0}
+STATS = {'split': 0, 'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0, 'unfold': 0, 'pull': 0}
 TRACE = [False]
 DUMP = [None]
 PUSH = [True]
@@ -417,6 +417,18 @@ class Step:
         Mf = self.marker(f)
         W = vc(G, n, T.units[p:q])
         Wm = Mf.to_m(W)
+        if (Wm is None or Mf.x not in fv_tm(Wm)) and q > p + 1 and not getattr(self, '_pulling', False):
+            # f's composite source is written by the old block B after
+            # L_e, not by the state before it: move B before L_e (the
+            # oplax square of B along e), then swap the bare L_e
+            self.pull_back(T, p, q)
+            self._pulling = True
+            try:
+                lifts = [i for i, kd in enumerate(T.kinds) if isinstance(kd, tuple)]
+                qf = next(i for i in lifts if T.kinds[i][1] == f)
+                return self.swap(T, lifts[lifts.index(qf) - 1])
+            finally:
+                self._pulling = False
         if Wm is None:
             raise Fail('swap: no marker form of the moving block')
         if Mf.x not in fv_tm(Wm):
@@ -443,6 +455,44 @@ class Step:
             new.append(x)
             kinds.append('ev' if zs else 'old')
         T.replace(p, q + 1, new, kinds, sq)
+
+    def pull_back(self, T, p, q):
+        """Units p (the elementary arrow L_e(S)) and p+1..q-1 (an old block
+        B): replace L_e(S) B by B⁻ L_e(tgt B⁻) along the oplax square of
+        B⁻ along e (rc_nat.nat_op: (src B⁻)↑ B -> B⁻ (tgt B⁻)↑), where B⁻
+        is B with e's target b_e written back as e's source (B = (B⁻)⁺)."""
+        import rc_nat as N
+        from rc_heur import _replace
+        G, n = self.G, self.n
+        e, Sm = T.kinds[p][1], T.kinds[p][2]
+        if any(T.kinds[k] != 'old' for k in range(p + 1, q)):
+            raise Fail('pull back: the block is not old')
+        Me = self.marker(e)
+        B = vc(G, n, T.units[p + 1:q])
+        Bm = Me.to_m(B)
+        if Bm is None:
+            raise Fail('pull back: no marker form of the block')
+        be = Me.pmap[Me.x]
+        Bm_ = _replace(Bm, be, v(Me.x))
+        try:
+            infer(Me.Gm, Bm_)
+        except (TypeError_, AssertionError, KeyError):
+            raise Fail('pull back: the block does not write back')
+        if N.rename_map(Bm_, Me.pmap) != Bm or src(Me.Gm, Bm_) != Sm:
+            raise Fail('pull back: the block is not the image of its pullback')
+        STATS['pull'] += 1
+        try:
+            sq, a, b = N.nat_op(Me.Gm, Me.Y, Me.pmap, Me.umap, Bm_, self.rec)
+        except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError) as ex:
+            raise Fail('pull back: op square: %s' % type(ex).__name__)
+        sq = Me.back(sq)
+        R = _R()
+        Tm2 = tgt(Me.Gm, Bm_)
+        L2 = Me.back(Me.lift(Tm2, self.rec))
+        new = R.vfactors(G, Me.back(Bm_), n) + [L2]
+        kinds = ['old'] * (len(new) - 1) + [('L', e, Tm2)]
+        _log('pull back', e, 'across', q - p - 1, 'units')
+        T.replace(p, q, new, kinds, sq)
 
     def back_replace(self, U, i, j, new, new_kinds, cell, back_cells):
         """As Track.replace, for the u side: cell : vc(new) -> vc(units[i:j])

@@ -9,9 +9,11 @@ any other rank >= 3 query to the oracle and then the single-piece step
 
 Options (module globals): RC_LIMIT, seconds for each outermost oracle
 call (rc_heur's local reductions can search for a long time; on timeout
-the query goes to the descent); CACHE, a path for a pickle of rank >= 3
-answers keyed by sha1 digests, so that a stopped run resumes; LOG, print
-one line per rank >= 3 query.
+the query goes to the descent); CACHE, a directory of rank >= 3 answers
+keyed by sha1 digests (one pickle each), so that a stopped run resumes;
+MEM_GB, past which the module memos are dropped; EXIT_GB, past which the
+process exits with code 75 for a restart from the cache; LOG, print one
+line per rank >= 3 query.
 """
 import sys, os, pickle, time, hashlib, signal
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -42,7 +44,7 @@ class _Disk:
     """Answers on disk, one pickle per query under a directory, with a
     small in-memory window: a run's answers are large shared terms, and
     holding all of them (and pickling them whole) exhausted memory."""
-    def __init__(self, path, window=64):
+    def __init__(self, path, window=8):
         self.path, self.window, self.mem = path, window, {}
         os.makedirs(path, exist_ok=True)
     def _f(self, k):
@@ -128,11 +130,14 @@ def restrict(G, A, t, u):
 def preload(G, A, t, u, w):
     """Put a known answer w : t -> u (checked here) into the cache, under
     the key of its support-restricted query."""
-    assert infer(G, w) == arr(A, t, u), 'preload: ill-typed answer'
     H, incl, AH, tH, uH = restrict(G, A, t, u)
     if incl is not None:
         raise ValueError('preload: give the answer on the restricted query')
-    _C[key(H, AH, tH, uH)] = catt.hc(w)
+    k = key(H, AH, tH, uH)
+    if k in _C:
+        return
+    assert infer(G, w) == arr(A, t, u), 'preload: ill-typed answer'
+    _C[k] = catt.hc(w)
 
 def rec(G, A, t, u):
     """Answered on the dependency-closed support, pulled back."""
@@ -145,6 +150,7 @@ def rec(G, A, t, u):
     return catt.subst_tm(w, incl) if incl is not None else w
 
 MEM_GB = [6.0]
+EXIT_GB = [None]   # past this after a trim, exit (code 75): answers so far are on disk
 _NEXT = [6.0]
 
 def _rss_gb():
@@ -171,6 +177,9 @@ def _trim():
         ctypes.CDLL('libc.so.6').malloc_trim(0)
     except (OSError, AttributeError):
         pass
+    if EXIT_GB[0] and _rss_gb() > EXIT_GB[0]:
+        print('trim: rss %.1f GB past EXIT_GB, exiting for a restart' % _rss_gb(), flush=True)
+        os._exit(75)
     # what is left is live: trim again only after a further 2 GB
     _NEXT[0] = max(MEM_GB[0], _rss_gb() + 2.0)
     if LOG[0]:

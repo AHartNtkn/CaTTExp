@@ -47,7 +47,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from catt import *
 
-STATS = {'split': 0, 'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0}
+STATS = {'split': 0, 'old': 0, 'one': 0, 'low': 0, 'swap': 0, 'square': 0, 'unfold': 0}
 TRACE = [False]
 DUMP = [None]
 PUSH = [True]
@@ -296,7 +296,7 @@ class Step:
         units = _R().vfactors(G, h2, n)
         if len(units) < 2:
             return None
-        STATS['unfold'] = STATS.get('unfold', 0) + 1
+        STATS['unfold'] += 1
         _log('unfold into', len(units))
         return units, ['ev' if events(G, x, n) else 'old' for x in units], D
 

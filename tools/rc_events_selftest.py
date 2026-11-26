@@ -50,11 +50,21 @@ def cases():
     out.append(('change-of-writing-rev', H, u, t, 'square'))
     return out
 
-def fixture_cases():
+def _fixture(name):
     import gzip, ast
-    fx = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fixtures', 'rc_round21_cow17.txt.gz')
+    fx = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fixtures', name)
     with gzip.open(fx, 'rt') as f:
-        G, A, t, u = ast.literal_eval(f.read())
+        return ast.literal_eval(f.read())
+
+def small_fixture_cases():
+    # a sub-query of the round-21 run: an event factor whose top slot holds
+    # an old cell composed with the event, so the event's composite source
+    # is not a face of the head until the head is distributed (unfold)
+    G, A, t, u = _fixture('rc_round21_unfold15.txt.gz')
+    return [('round21-unfold', G, t, u, 'unfold')]
+
+def fixture_cases():
+    G, A, t, u = _fixture('rc_round21_cow17.txt.gz')
     return [('round21-cow17', G, t, u, 'square')]
 
 def run(cs):
@@ -65,13 +75,13 @@ def run(cs):
             E.STATS[k] = 0
         T = time.time()
         w = E.normalize(G, A, t, u, rc_top.rec)
-        good = w is not None and infer(G, w) == arr(A, t, u) and E.STATS[need] > 0
+        good = w is not None and infer(G, w) == arr(A, t, u) and E.STATS.get(need, 0) > 0
         print('%-24s %s (%.0f s, %s)' % (name, 'answered' if good else 'FAILED', time.time() - T, dict(E.STATS)), flush=True)
         ok &= good
     return ok
 
 if __name__ == '__main__':
-    cs = cases()
+    cs = cases() + small_fixture_cases()
     if 'cow17' in sys.argv[1:]:
         cs += fixture_cases()
     sys.exit(0 if run(cs) else 1)

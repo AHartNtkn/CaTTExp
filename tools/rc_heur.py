@@ -1426,10 +1426,13 @@ def change_of_writing(G, A, t, u, rec):
     except (N.NoFiller, TypeError_, AssertionError, KeyError, ValueError):
         return None
     fl = R.vfactors(G, lift2, n)
+    # the lift sits after C1 J^-1, possibly after further old factors of
+    # the square's target (the square's own whiskers): find it
     k0 = len(C1) + 1
-    if fw[k0:k0 + len(fl)] != fl:
+    pos = next((s_ for s_ in range(k0, len(fw) - len(fl) + 1) if fw[s_:s_ + len(fl)] == fl), None)
+    if pos is None:
         return None
-    left, rest = fw[:k0], fw[k0 + len(fl):]
+    left, rest = fw[:pos], fw[pos + len(fl):]
     Q = None
     if tgt(G, lift2) != tgt(G, E2):
         Q = rec(G, infer(G, tgt(G, lift2)), tgt(G, lift2), tgt(G, E2))

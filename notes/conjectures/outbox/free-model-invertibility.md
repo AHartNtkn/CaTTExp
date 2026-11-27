@@ -64,3 +64,85 @@ A complete answer to Q1 for all E between V and 𝔉, positive or negative, in e
 - Bourke–Lobbia, arXiv 2610.31448 (sharp coherence for lax interchange).
 
 A search for localizations of free higher categories on pasting diagrams and decidability of invertibility found nothing further. None of these treats localizations of free algebras with directed interchange at inner cuts.
+
+# Researcher Response 1
+
+**Q1 is false for a fixed recursively enumerable admissible theory, on a fixed two-dimensional pasting diagram with one marked generator. Q2's letterwise equivalence also fails there.** Only the queried cell varies, and it always has degree five. Thus the dimension restriction in Q3 still admits both counterexamples.
+
+More precisely, let \(P\) be any subset of \(\{3,4,5,\ldots\}\). We construct a theory \(E_P\), a marked diagram \((\Gamma,M)\), and a computable family of single contextual letters \(c_p\), indexed by the integers \(p\ge3\), such that
+\[
+               q(c_p)\text{ is invertible in }F_{E_P}(\Gamma)[M^{-1}]
+                  \quad\Longleftrightarrow\quad p\in P.
+\]
+All the \(E_P\) have exactly the free algebras of \(V\) on unmarked pasting diagrams. The distinction arises on assignments of a strict inverse to the marked generator. We use the finitary partial Horn laws on the given signature allowed in the [definition of the minimum theory](../answered/lax-interchange-every-dimension-r8-2026-11-20.md#the-minimum-on-pasting-diagrams).
+
+### Two loops and their crossing
+
+Take \(\Gamma=\Sigma[2]\vee\Sigma[4]\). Write \(a_1,a_2\) and \(b_1,\ldots,b_4\) for the generating 2-cells of the respective short homs. Mark just \(a_1\). Subdivide the crossing of the two full strings into two chronological 3-cells, first crossing both \(a\)'s with \(b_3,b_4\), then with \(b_1,b_2\), with the stationary flanks in place. Each block has two expansions using the left and right subdivisions. They have the same first and last events and exchange their two middle events. The inner square on those middle events, padded by the first and last, is consequently a 4-endomorphism of the block. Denote the early and late 4-loops by \(X,Y\). They live on **consecutive** 3-cells. If \(a_1\) is an identity, one middle event in each block is an identity, so \(X,Y\) are identities by the square unit law. These are the two doubled blocks of the [degree-five grid presentation](../answered/directed-interchange-all-degree-presentation-2026-11-22.md#5-all-two-chain-grids-in-global-degree-five).
+
+Use \(X^j\) for a chronological power of the loop, and put \(c_j=\delta(X^j,Y)\), the bare temporal square at cut two. Write its faces as \(YX^j\) and \(X^jY\), suppressing the fixed insertions of the other interval. Also use the following two-letter path \(d\):
+\[
+ YXXX \xrightarrow{\ c_1\text{ with suffix }X^2\ } XYXX
+       \xrightarrow{\ c_2\text{ with prefix }X\ } XXXY .
+\]
+The three copies of \(X\) act on the same early interval. The prefixes and suffixes in this display are 4-cells. In particular the second move is a single square on a composite operand.
+
+### The extension and its unmarked free algebras
+
+For a term \(z\) on this grid let \(L(z)\) be the law which makes \(z\) an identity whenever \(a_1\) has a specified two-sided inverse. Quantify the grid variables and a variable \(a'\) with reverse boundary. Take both cancellation equations for \(a_1,a'\) as premises. In globular sorts the conclusion is \(z=1_{s z}\). Equivalently, first equate \(s z,t z\) under the premises, then give the parallel identity equation. This law uses only existing operations. Define
+\[
+                 E_P= V + L(d) + \{L(c_p)\mid p\in P\}.
+\]
+
+Consider *any* assignment of the premises in *any* \(F_V(\Theta)\) for a finite pasting diagram \(\Theta\). By (M5) the image of \(a_1\) is an identity. Thus both loops specialize to identities and every displayed conclusion holds. Each \(F_V(\Theta)\) is already an \(E_P\)-algebra, and the universal extension of any generator assignment into an \(E_P\)-algebra is the same homomorphism as for \(V\). This proves equality of the free algebras, including their substitution maps. Moreover the conclusions hold in every Gray algebra because \(\delta\) is an inner square. They hold in every strict algebra as well. Both quotient presentations of requirement 4 therefore retain their universal properties. This proves admissibility, preserves the values of both switch bits of \(V\), and places \(E_P\) between \(V\) and the Gray quotient. In the localization the inverse in the premise is available at the generating assignment. Hence \(q(d)\) and each \(q(c_p)\) for \(p\in P\) are identities.
+
+### Algebras separating each omitted index
+
+Fix an integer \(r\ge3\). We construct a \(V\)-algebra \(D_r\) satisfying \(L(d)\) and every \(L(c_p)\) for \(p\ne r\). We will also use \(D_\infty\), obtained by omitting the exceptional \(r\)-case below.
+
+Use outer objects \(0,1,2\), terminal endomorphism homs and empty backward homs. Take the short homs to be the one-object arrow group \((\mathbb Z,+)\) and the ordinal category \([4]\), in that order, with identities in higher degrees. Write \(a\) for a signed arrow in the first and \(b\) for the length of an arrow in the second. The long hom has a unique global 1-cell and 2-cell. Its 3-cells are integers \(x\), and its 4-cells over \(x\) are endomorphisms \((x,u)\) labelled by integers. Chronological 4-composition at \(x\) adds the labels. At lower cuts add the 3-values and the labels separately. Use the following operations through rank four.
+
+- Pure short actions into the long hom have their unique lower values. The outer square on short arrows has 3-value \(ab\).
+- The cut-one square on long 3-values \(x,y\) has 4-value \((x+y,xy)\). Units have label zero. Use the prescribed unit cases of the outer naturalities and join.
+
+These operations extend the four-crossing algebra to signed lengths in the first short hom. The outer subdivisions are the two distributive laws for \(ab\), valid also on cancellation of signed lengths. There are no proper short higher variations or three consecutive proper outer spans. The varying-whisker corrections have a unit varying operand and the outer join factorization specializes to its unit cases. The two inner subdivisions are distributivity for \(xy\). Transport from a short hom preserves its identity inner squares, and terminal exterior spans preserve the long values. These checks give the low equations on arbitrary assignments. [Four-crossing algebra](../answered/invertibility-in-directed-interchange-2026-11-21.md#the-four-crossing-loop-survives-both-localizations)
+
+Over each long 4-cell take 5-endomorphisms labelled by the monoid of maps \(\mathbb N\to\mathbb N\), composed in chronological order. A fixed lower pad acts on the underlying cell and keeps the label. Each such action is functorial, and Godement composition performs the two maps in its prescribed order. Write \(T(n)=n+1\) and \(S(n)=\max(n-1,0)\). Chronologically \(TS=1\), while \(ST(0)=1\). Neither map is a unit. [Map labels for sesquicategorical whiskering](../answered/invertibility-in-directed-interchange-r2-2026-11-25.md)
+
+On the cut-two square with long 4-operands \((x,u),(y,v)\), the two schedules have the **same** 4-value \((x+y,u+v)\). Give the square the label
+\[
+ B_r(u,v)=
+ \begin{cases}
+ T & v\ne0\text{ and }(u=v\text{ or }u=r v),\\
+ S & v\ne0\text{ and }u=2v,\\
+ 1 & \text{otherwise}.
+ \end{cases}
+\]
+For \(B_\infty\) omit \(u=rv\). Give each other proper mixed 5-head the identity map on its declared boundary. Use the specified values on unit specializations. Above degree five take a unique filler of every parallel pair in the long hom, recursively.
+
+To verify the conditional equations of \(V\), allow arbitrary long cells in every assignment, including cells with negative labels.
+
+1. At cut zero, a pair of nonterminal consecutive spans must be the two short homs. Their highest proper inputs are arrows. Thus the only proper mixed disk there is the outer square. Every higher identity input restricts to the prescribed lower face and identity. On a long input with a terminal partner there is just the pure action or its specified unit specialization. In particular the unguarded degree-five outer unary subdivisions and transports have identity map labels.
+2. Inside the long hom the proper cut-one heads of degree five are the two unary naturalities and the shifted join. Naturality compares \(xy+u\) with \(u+xy\) for a varying loop at \(x\), and likewise at \(y\). The join compares the orders of \(u,v,xy\). Their 4-faces agree by commutativity of integer addition, so the assigned identity maps exist. The guarded shifted-join equation compares this join with a padded unary, both with identity map label, even when its correcting square passes the guard. At cut two the only mixed head of this degree is \(\delta\). Its unit cases have \(u=0\) or \(v=0\), giving the identity map. Larger cuts have no proper degree-five head.
+3. In the remaining degree-five guard families the positive mixed disks, auxiliary factorizations and bracketings would need a higher short variation or a third proper outer span. Their unit branches give the indicated lower operation on both sides. In particular an outer mixed paste on a pair of short disks has no degree-five atom, and with a terminal partner the atomic lift restricts to the same pure action. The outer whiskering test likewise has only the unit stationary edge or a moving input in a short hom with no proper 4-cell. A cut-two square can occur in the *test* for the shifted join. There is no top equation subdividing this square in \(V\). Thus the checks impose no multiplicativity requirement on \(B_r\). At higher ranks the disk boundary recursion supplies parallel faces, the prescribed unit values have those faces, and uniqueness of the filler gives all parallel equations. Strict inversion of 5-cells is tested by equality in the map monoid. [Relation and guard table](../answered/directed-interchange-all-degree-presentation-2026-11-22.md#2-relations-and-guards)
+
+Consider an arbitrary assignment of the grid in this algebra. If both block loops have nonzero labels, the two grid spans must map to the two short homs in order. Every other choice has a terminal partner, making the middle crossings identities. Write \(\alpha_i\in\mathbb Z\) and \(\beta_j\ge0\) for the short arrow values. Since the four right arrows compose in \([4]\), \(\sum_j\beta_j\le4\). Each loop exchanges two middle events, one on each left arrow and one on each right arrow of its block. Fixed whiskers retain the product of their 3-values. Consequently the labels of \(X,Y\) are respectively
+\[
+ u=\alpha_1\alpha_2\beta_3\beta_4,\qquad
+ v=\alpha_1\alpha_2\beta_1\beta_2.
+\]
+If \(uv\ne0\), all four \(\beta_j\) are positive, hence all four equal one. In this case \(u=v\ne0\), including for negative signed lengths. If either label vanishes, all squares used in the added laws have identity map label. In the nonzero case the label of \(c_j\) is \(B_r(ju,v)\). The two padded moves of \(d\) therefore have labels \(T,S\), in that order, and compose to the identity. For each \(p\ge3\) with \(p\ne r\) the label of \(c_p\) is the identity. The schedules also agree in the underlying 4-table. This proves the asserted laws for every assignment of their premises.
+
+Finally send each \(a_i\) to \(+1\) in the group and each \(b_j\) to the corresponding unit-length arrow in \([4]\). The mark has inverse \(-1\). Now \(u=v=1\). If \(r\notin P\), the universal property gives a homomorphism from the localization to \(D_r\) sending \(c_r\) to \(T\). The missing preimage of zero rules out a two-sided inverse. This proves the claimed equivalence. The same result holds in the version with \(O\) as input, already for \(O=\varnothing\), or for \(O=\{0\}\), since the initial outer object has only its terminal incoming endomorphism hom.
+
+### Consequences for decision procedures and for letters
+
+Take \(P=\{e+3\mid\text{machine }e\text{ halts on input }e\}\). Its laws can be enumerated by dovetailing the simulations. A decision procedure on the one diagram and mark would decide diagonal halting. Every r.e. set reduces to these queries. Given an input, compute the index \(e\) of a machine that ignores its own input and waits for the given input to appear in the enumeration, then output \(c_{e+3}\). [Open Logic Project, computable enumerability and the halting set](https://builds.openlogicproject.org/content/computability/computability-theory/non-comp-set.pdf)
+
+Strict invertibility for this fixed effectively presented theory is r.e.-complete. For the upper bound, enumerate terms and finite derivations in the localized partial Horn presentation, including proofs of face matches and of conditional premises. Accept \(c:s\to t\) when some \(u,v:t\to s\) have proofs of \(cu=1_s\) and \(vc=1_t\). The term model gives completeness of the enumeration, and \(v=v(cu)=(vc)u=u\) proves soundness. For the object variant one can enumerate the extra inverse generators by enumerating original letters and checking their Gray projection and target object in the common unmarked free tables. Taking \(P=\{e+3\mid\text{machine }e\text{ diverges on input }e\}\) gives a fixed admissible theory for which the invertible members of the displayed family are not r.e. The recursively enumerable example already suffices for undecidability. On the displayed family the exact dividing line is recursiveness of \(P\).
+
+For **letterwise invertibility**, even the single-law extension \(E_{\varnothing}=V+L(d)\) suffices. Use \(D_\infty\) at the same generating assignment. It satisfies the laws for every \(P\). The two contextual letters of \(d\) map to \(T\) and \(S\), so neither is invertible. To address the word *some* in the definition, apply the unmarked free-algebra result above. On this two-row grid the degree-five normal form in \(F_V(\Gamma)\) is the typed chronological list of contextual squares over the normalized lower labels. The only proper heads are the temporal squares, unit specializations reduce to the existing records or identities, and there are no positive top relations. In particular the one-square move on \(X^2\) is a different record from a pair of one-copy moves. Every path representing \(d\) has the same two proper records in the same order. Thus \(d\) has **no** letterwise invertible representative, although \(q(d)=1\). The implication from letterwise invertibility to invertibility always holds by reversing the list of inverses. The replacement in general is the two-sided cancellation criterion for the **whole path** just proved. For effective theories it supplies finite positive certificates.
+
+Even on *generator* operands the visible switch bits cannot give an exact test across all admissible extensions. For example, adjoin to \(V\) the law making the bare cut-one square on two generating 3-cells an identity if its left input has a specified inverse. The positivity and Gray arguments above again preserve the unmarked free algebras and both switch bits. With the left generator marked this square becomes an identity. In \(V\) itself the same marked query fails by the [cyclic separating algebra for the left input](../answered/invertibility-in-directed-interchange-2026-11-21.md#input-positions-and-the-elementary-tests). The general obstruction therefore concerns precisely the permission to vary the theory on inverse-bearing assignments. The individual decision problems for the four specified \(V+S\) and for the Gray endpoint remain separate. The fixed-grid counterexample resolves the all-theories question posed in §§3–4.
+
+**Validation.** Run `python3 -B scripts/e6/check_free_model_invertibility.py`. The checker builds the two native subdivision classes, checks both middle exchanges in the full grid, and evaluates the two pasted moves with their distinct 4-pads. It checks 52,500 indexed queries over all composable right length tuples and left lengths from \(-2\) through \(2\). Map composition uses the exact maps on \(\mathbb N\). The arbitrary-input checks are the product formula for \(u,v\), the length bound in \([4]\), and the guard verification above. [Reduction checker](../../../scripts/e6/check_free_model_invertibility.py)

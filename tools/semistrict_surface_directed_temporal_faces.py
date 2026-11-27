@@ -56,6 +56,33 @@ def check_derived_seam(emitter):
     emitter.check_type('composeAcrossDerivedSeam', ctx, result, arr(boundary, left, right))
 
 
+def check_moving_boundary(emitter):
+    wing = tree_ctx((chain_tree(1), (), ()))
+    alpha, g, h = map(v, maximal_vars(wing))
+    before = comp2(wing, 0, comp2(wing, 0, alpha, g), h)
+    after = comp2(wing, 0, alpha, comp2(wing, 0, g, h))
+    line = tree_ctx(chain_tree(3))
+    x, y, z = map(v, maximal_vars(line))
+    left = comp2(line, 0, comp2(line, 0, x, y), z)
+    right = comp2(line, 0, x, comp2(line, 0, y, z))
+    enter = subst_tm(head(line, right, left), assignment(line, wing, (src(wing, alpha), g, h)))
+    leave = subst_tm(head(line, left, right), assignment(line, wing, (tgt(wing, alpha), g, h)))
+    fitted = comp2(wing, 1, enter, comp2(wing, 1, before, leave))
+    assert infer(wing, before) != infer(wing, after)
+    assert infer(wing, fitted) == infer(wing, after) and fitted != after
+    to_fitted, from_fitted = head(wing, after, fitted), head(wing, fitted, after)
+
+    beta = v(len(wing))
+    ctx = wing + (infer(wing, alpha),)
+    second = assignment(wing, ctx, (beta, g, h))
+    witness = v(len(ctx))
+    ctx += (arr(infer(ctx, before), before, subst_tm(before, second)),)
+    moved = comp2(ctx, 1, enter, comp2(ctx, 1, witness, leave))
+    result = comp2(ctx, 2, to_fitted, comp2(ctx, 2, moved, subst_tm(from_fitted, second)))
+    emitter.check_type('returnAtMovingSphere', ctx, result,
+                       arr(infer(ctx, after), after, subst_tm(after, second)))
+
+
 def check(emitter):
     p = chart(1, 1)
     f, g = map(v, maximal_vars(p))
@@ -123,8 +150,9 @@ if __name__ == '__main__':
     check(emitter)
     check_first_face(emitter)
     check_derived_seam(emitter)
+    check_moving_boundary(emitter)
     out.mkdir(parents=True, exist_ok=True)
     module = 'DirectedTemporalFaces'
     program = emitter.module(module, __doc__).replace('open import CaTTExp.Pure', 'open import CaTTExp.Gray.Pure')
     (out / (module + '.agda')).write_text(program)
-    print('Generated six Gray judgments and the literal first-face inequality.')
+    print('Generated seven Gray judgments and the literal first-face inequality.')

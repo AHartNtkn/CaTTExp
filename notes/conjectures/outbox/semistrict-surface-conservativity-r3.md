@@ -178,3 +178,91 @@ For each of (a), (b) and (c): a proof valid in every finite context and every de
 - Finster–Reutter–Rice–Vicary (arXiv 2007.08307) prove Catt_su conservative for terms over pasting diagrams. Finster–Rice–Vicary (arXiv 2302.05303) define Catt_sua. Rice's thesis (arXiv 2502.17068, Ch. 4) gives partial rehydration over pasting contexts. None of these proves conservativity in arbitrary contexts.
 - Chanavat–Hadzihasanovic (arXiv 2507.00146) use top associativity in globular operations.
 - No published treatment of CaTT-style theories with directed interchange at every level was found.
+
+## Researcher Response 1
+
+### Finite extensions (Q2)
+
+Fix one of the surfaces in Q1 and its raw kernel, using either coherence rule in (a). If it has a counterexample in degree \(n\), **every finite context has a finite extension with a counterexample in that same degree**. Consequently, if Q1 fails for this surface, no nonempty class of conservative contexts is closed under all finite extensions.
+
+**Proof.** Let \((\Gamma,A)\) be a counterexample and let \(X\) be any finite context. Append a fresh, disjoint copy of \(\Gamma\) to \(X\), carrying its attaching terms along the renaming. Call the result \(X\sqcup\Gamma\). The surface inhabitant of \(A\) weakens to this extension.
+
+To see that \(A\) is still empty in the kernel, take the disjoint union of the underlying globular sets of the two raw term models \(H_X\) and \(H_\Gamma\). Interpret the raw constructors on this union as follows. A tuple for a coherence head labels a nonempty globular pasting diagram. Its initial vertex selects a summand. At each pasting-context extension, the new cell and its two faces belong to the same summand, since both face maps preserve the summand. One of these faces was already labelled. Induction shows that the entire tuple belongs to the chosen summand. Evaluate the head in that raw model. This gives the required faces and respects substitution, because both assertions hold in each summand and every generic head test is made on its own arity. In particular the construction works for an operation with a chosen lift. It uses no comparison of lifts chosen on different arities.
+
+Interpret the generators of \(X\sqcup\Gamma\) by their own generators in this model. On each half of the telescope, induction on declarations and terms gives its original interpretation followed by the summand inclusion. The empty context has no surface terms. Indeed a variable needs a declaration, a head needs at least one argument, and a conversion needs a term premise. Every nonempty context already has a raw object. A failing \(A\) must therefore have positive degree. Any cell at its weakened type has its source in \(H_\Gamma\), and hence belongs to \(H_\Gamma\) itself. By the definition of the raw term model it would give a raw inhabitant at the original written type \(A\). This contradiction proves the assertion. Taking \(X\) in a proposed nonempty extension-closed class proves the conclusion about classes. The extension exhibited here adjoins a disjoint context. The argument leaves open what adjoining a generator directly at \(A\) does to other judgments.
+
+There is also a short proof of the exact closure criterion asked for in Q2. The empty context is conservative by the empty-context argument. Every finite well-formed context is obtained from it by successive one-declaration extensions. Thus the class of *all* conservative contexts is closed under finite extension if and only if the surface is conservative everywhere.
+
+**Validation.** The following Agda check proves both implications of this last equivalence for the repository's surface typing judgments, with an arbitrary head test and surface equality on the empty signature. In particular the empty-context step covers conversion and heads with surface-typed arguments. The disjoint-extension strengthening follows from the two-summand model above. To reproduce the check from the repository root, run
+
+```sh
+checkdir=$(mktemp -d)
+note=notes/conjectures/outbox/semistrict-surface-conservativity-r3.md
+awk '/^```$/ {inside=0} inside {print} /^```agda$/ {inside=1}' "$note" > "$checkdir/ExtensionClosure.agda"
+agda --safe --no-libraries -i src -i "$checkdir" "$checkdir/ExtensionClosure.agda"
+```
+
+```agda
+module ExtensionClosure where
+
+open import CaTTExp.Prelude
+open import CaTTExp.Pure using (∅)
+open import CaTTExp.Signature
+open Signature ∅
+open import CaTTExp.Pasting ∅
+import CaTTExp.TypingWith as Raw
+import CaTTExp.Surface.Conservativity as Surface
+
+private
+  nonempty : ∀ {Γ x A} → Γ ⊢ps x ∶ A → Γ ≡ ε → ⊥
+  nonempty pss ()
+  nonempty (pse p) ()
+  nonempty (psd p) = nonempty p
+
+module _ (side : Ctx → Ty → Tm → Tm → Bool) where
+  open Raw ∅ side
+  open Surface ∅ side (λ ())
+
+  module _ (E : SurfaceEq) where
+    no-closed-term : ∀ {t A} → _⊢ˢtm_∶_ E ε t A → ⊥
+    no-closed-term (varˢ _ ())
+    no-closed-term (cohˢ (ps p) _ _ _ (⟨⟩ˢ _)) = nonempty p refl
+    no-closed-term (cohˢ _ _ _ _ (,ˢ _ d)) = no-closed-term d
+    no-closed-term (cstˢ {k = ()} _ _)
+    no-closed-term (convˢ d _ _) = no-closed-term d
+
+    Reflects : Ctx → Set
+    Reflects Γ = ∀ {t A} → Γ ⊢ty A → _⊢ˢtm_∶_ E Γ t A →
+                 ∃ λ u → Γ ⊢tm u ∶ A
+
+    ClosedUnderExtension : Set
+    ClosedUnderExtension =
+      ∀ {Γ A} → Γ ⊢ctx → Γ ⊢ty A → Reflects Γ → Reflects (Γ ▸ A)
+
+    global : ClosedUnderExtension → ∀ {Γ} → Γ ⊢ctx → Reflects Γ
+    global step ε-wf _ d = ⊥-elim (no-closed-term d)
+    global step (▸-wf w a) = step w a (global step w)
+
+    closure : (∀ {Γ} → Γ ⊢ctx → Reflects Γ) → ClosedUnderExtension
+    closure all-contexts w a _ = all-contexts (▸-wf w a)
+```
+
+### What the reductions imply for Q1
+
+**Globular generators and compound attachments in (a).** R2.109 and R2.114 quantify over finite globular sets of generators. There is an obstruction even to presenting a general computad as a retract of such a context by raw substitutions. Take
+\[
+ S=(x:\star,\ a:1_x\to 1_x).
+\]
+Suppose substitutions interpreted the generators of \(S\) in a globular context \(Z\) and those of \(Z\) back in \(S\), with composite the identity on \(S\). Pass to ordinary strict values. In the free strict category on \(Z\), a generating 2-cell replaces a single edge by a single edge. In a whiskered step its source path therefore has positive length. Every strict 2-cell is a vertical string of such steps, by ordinary interchange, and higher generators impose no equations on the 2-truncation. Hence the only strict 2-cell on an empty path is its identity. The first substitution must send \(a\) to that identity, which the second substitution preserves. But \(a\) has nonidentity ordinary strict value in \(S\). For a separating strict model take one object, one arrow and natural-number 2-cells with both compositions given by addition. Interpret \(a\) as 1. Interchange holds by commutativity, and the identity is 0. This contradicts the proposed retraction. The same argument applies to the directed syntax by ordinary projection. It rules out this way of extending the globular reduction. A different comparison at written boundaries, as required in R2.9, remains possible. [R2.9](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-9) · [R2.114](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-114)
+
+Here it matters which strict category one uses for an arbitrary computad in §1.1. On the one-object graph with loop edges \(f,g\), the free strict category distinguishes the words \(fg\) and \(gf\). In Steiner's chain complex both have 1-chain \([f]+[g]\) and the same two 0-faces, so they define the same 1-cell of \(\nu\lambda\). Thus the notation \(\nu(\lambda\Gamma)\) in §1.1 cannot in general compute the free strict category on arbitrary attachments. The free monoid on \(f,g\), viewed as a one-object strict category with only identity higher cells, therefore separates the two faces of the old type \(fg\to gf\). The raw head tests still take place on pasting arities, where the Steiner comparison applies. [Steiner, *Omega-categories and chain complexes*](https://arxiv.org/abs/math/0403237)
+
+**Location of a possible failure in (b) or (c).** Write \(V_r=D_r\) for (b) and \(V_r=B_r\) for (c), with rank zero the raw theory. If a raw degree-\(n\) boundary witnesses a failure, there is a least \(r\) at which that *same* boundary becomes inhabited. For (b), R2.227 and R2.230 give a witness using the equal-rank generators. For (c), take a finite published derivation. In either case the finite derivation uses only finitely many generating equation ranks. The least such \(r\) satisfies
+\[
+                         3\le r\le n-3 .
+\]
+Indeed, all generators of \(V_2\) have arity of dimension at most two, so R1.26 reflects any such inhabitant at the old boundary to raw CaTT. For the other inequality, if \(n\le r+2\), §2.6 gives a \(V_{r-1}\)-inhabitant at that very boundary, contradicting minimality. In particular a degree-six failure must first appear at rank three. This implication leaves open the possibility that the least failing degree is larger than six. [R1.26](../answered/semistrict-surface-conservativity-2026-11-24.md#researcher-response-26) · [R2.233](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-233) · [R2.235](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-235)
+
+One can test the scope of an argument using only reflection on arities against the join \(J\) of §2.4. On a pasting arity \(P\), a \(J\)-inhabitant of an old type gives a strict cell by strict soundness of both sets of equations. Ordinary raw lifting on \(P\) returns a term at the prescribed old faces with that strict value. Thus \(J\) reflects at *every* old type on *every* pasting arity. Nevertheless it fails on \(S\) by §2.4. To obtain (b) or (c) from arity calculations one must use a property distinguishing the respective equation system from the join when passing to compound attachments. For the rank route, the outstanding step is realizing the higher comparisons in the preceding theory after substitution at those attachments. Published rehydration supplies the pasting-context comparison for (c). [Ordinary arity lifting](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-227) · [Scalar obstruction for the join](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-1) · [Rice, Theorem 4.5.3 and §4.5.2](https://arxiv.org/abs/2502.17068)
+
+Q2 is settled conditionally for each surface. Q1(a) for both coherence forms, Q1(b), and Q1(c) remain open in arbitrary finite contexts and all degrees.

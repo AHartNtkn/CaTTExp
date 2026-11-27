@@ -42,6 +42,20 @@ def check_first_face(emitter):
                           'bracketingsDiffer ()\n')
 
 
+def check_derived_seam(emitter):
+    line = tree_ctx(chain_tree(3))
+    f, g, h = map(v, maximal_vars(line))
+    left = comp2(line, 0, comp2(line, 0, f, g), h)
+    right = comp2(line, 0, f, comp2(line, 0, g, h))
+    boundary = infer(line, left)
+    ctx = line + (arr(boundary, left, left), arr(boundary, right, right))
+    a, b = v(len(line)), v(len(line) + 1)
+    assert tgt(ctx, a) != src(ctx, b)
+    bridge = head(line, left, right)
+    result = comp2(ctx, 1, a, comp2(ctx, 1, bridge, b))
+    emitter.check_type('composeAcrossDerivedSeam', ctx, result, arr(boundary, left, right))
+
+
 def check(emitter):
     p = chart(1, 1)
     f, g = map(v, maximal_vars(p))
@@ -108,8 +122,9 @@ if __name__ == '__main__':
     emitter = Emitter()
     check(emitter)
     check_first_face(emitter)
+    check_derived_seam(emitter)
     out.mkdir(parents=True, exist_ok=True)
     module = 'DirectedTemporalFaces'
     program = emitter.module(module, __doc__).replace('open import CaTTExp.Pure', 'open import CaTTExp.Gray.Pure')
     (out / (module + '.agda')).write_text(program)
-    print('Generated five Gray judgments and the literal first-face inequality.')
+    print('Generated six Gray judgments and the literal first-face inequality.')

@@ -74,3 +74,48 @@ module Attachment
                     (trans (cong (ret s ∘_) (sym same))
                     (trans (sym (assoc (ret s) (inc s) k))
                     (trans (cong (_∘ k) (split s)) (left-unit k))))
+
+-- Reachability in a graph pushout. A path may change summands whenever
+-- a vertex of the common graph is glued to its image in the old graph.
+module Reachability where
+  data Walk {V : Set} (E : V → V → Set) : V → V → Set where
+    stay : ∀ {a} → Walk E a a
+    step : ∀ {a b c} → E a b → Walk E b c → Walk E a c
+
+  append : ∀ {V} {E : V → V → Set} {a b c} →
+           Walk E a b → Walk E b c → Walk E a c
+  append stay q = q
+  append (step e p) q = step e (append p q)
+
+  module Pushout
+    {X P K : Set} (old-edge : X → X → Set) (chart-edge : P → P → Set)
+    (attach : K → X) (inc : K → P)
+    (return-cut : ∀ a b → Walk chart-edge (inc a) (inc b) →
+                          Walk old-edge (attach a) (attach b))
+    where
+    data Vertex : Set where
+      prior : X → Vertex
+      chart : P → Vertex
+
+    data Move : Vertex → Vertex → Set where
+      prior-step : ∀ {x y} → old-edge x y → Move (prior x) (prior y)
+      chart-step : ∀ {x y} → chart-edge x y → Move (chart x) (chart y)
+      enter : ∀ k → Move (prior (attach k)) (chart (inc k))
+      leave : ∀ k → Move (chart (inc k)) (prior (attach k))
+
+    Carry : X → Vertex → Set
+    Carry x (prior y) = Walk old-edge x y
+    Carry x (chart p) = Σ _ λ k → Walk old-edge x (attach k) × Walk chart-edge (inc k) p
+
+    advance : ∀ {x u v} → Move u v → Carry x u → Carry x v
+    advance (prior-step e) p = append p (step e stay)
+    advance (chart-step e) (k , p , q) = k , p , append q (step e stay)
+    advance (enter k) p = k , p , stay
+    advance (leave l) (k , p , q) = append p (return-cut k l q)
+
+    follow : ∀ {x u v} → Walk Move u v → Carry x u → Carry x v
+    follow stay p = p
+    follow (step e q) p = follow q (advance e p)
+
+    return-walk : ∀ {x y} → Walk Move (prior x) (prior y) → Walk old-edge x y
+    return-walk {x} p = follow {x = x} p stay

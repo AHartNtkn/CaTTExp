@@ -76,11 +76,11 @@ class Assertions:
         self.commands.append(f'assert {lterm} = {rterm} in {shape(ctx)}')
         self.count[case] += 1
 
-    def run(self, binary):
+    def run(self, binary, mode='--sua'):
         with tempfile.TemporaryDirectory() as scratch:
             program = Path(scratch) / 'cut.catt'
             program.write_text('\n'.join(self.commands) + '\n')
-            run = subprocess.run([binary, '--sua', program], capture_output=True, text=True)
+            run = subprocess.run([binary, mode, program], capture_output=True, text=True)
         stdout = re.sub(r'\x1b\[[0-9;]*m', '', run.stdout)
         if run.returncode or stdout.count('are equal') != sum(self.count.values()):
             raise RuntimeError(run.stderr[-4000:] + '\n' + stdout[-2000:])

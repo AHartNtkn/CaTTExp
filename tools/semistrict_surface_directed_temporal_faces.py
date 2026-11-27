@@ -2,7 +2,7 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
-from catt import arr, chain_tree, comp2, infer, maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v
+from catt import arr, chain_tree, comp2, disc_tree, infer, maximal_vars, src, sub_from, subst_tm, tgt, tree_ctx, v
 from emit_agda import Emitter
 from relative_coherence_exchange_faces import head
 from relative_coherence_hidden_seam import identity
@@ -83,6 +83,51 @@ def check_moving_boundary(emitter):
                        arr(infer(ctx, after), after, subst_tm(after, second)))
 
 
+def check_top_slot(emitter, moving):
+    base = chart(1, 1)
+    x, y = map(v, maximal_vars(base))
+    # Keep both possible strict schedules. They need different placements
+    # of the stationary factor when the selected slot changes.
+    def schedules(ctx, a, b, a0, a1, b0, b1):
+        return (comp2(ctx, 2, comp2(ctx, 1, a, b0), comp2(ctx, 1, a1, b)),
+                comp2(ctx, 2, comp2(ctx, 1, a0, b), comp2(ctx, 1, a, b1)))
+
+    previous = schedules(base, x, y, src(base, x), tgt(base, x), src(base, y), tgt(base, y))
+    op = ('coh', base, infer(base, previous[0]), variables(base))
+    for depth in (1, 2):
+        columns = [disc_tree(1), disc_tree(1)]
+        columns[moving] = disc_tree(1 + depth)
+        ctx = tree_ctx((tuple(columns),))
+        args = list(map(v, maximal_vars(ctx)))
+        embeddings = []
+        for face in (src, tgt):
+            lifted = args.copy()
+            lifted[moving] = face(ctx, args[moving])
+            embeddings.append(assignment(base, ctx, lifted))
+        lo, hi = [subst_tm(op, embedding) for embedding in embeddings]
+        op = head(ctx, lo, hi)
+        name = ('Left' if moving == 0 else 'Right') + ('Once' if depth == 1 else 'Twice')
+        emitter.check_type('raiseHead' + name, ctx, op, arr(infer(ctx, lo), lo, hi))
+        poles = args.copy()
+        for _ in range(depth):
+            poles[moving] = src(ctx, poles[moving])
+        a, b = poles
+        new = schedules(ctx, *args, src(ctx, a), tgt(ctx, a), src(ctx, b), tgt(ctx, b))
+        for order, (prior, route) in enumerate(zip(previous, new, strict=True)):
+            faces = [subst_tm(prior, embedding) for embedding in embeddings]
+            assert faces == [src(ctx, route), tgt(ctx, route)]
+            emitter.check_type(('scheduleA' if order == 0 else 'scheduleB') + name, ctx, route,
+                               arr(infer(ctx, faces[0]), *faces))
+        previous, base = new, ctx
+        if depth == 1:
+            target = v(len(ctx))
+            extended = ctx + (infer(ctx, lo),)
+            marker = v(len(extended))
+            extended += (arr(infer(ctx, lo), hi, target),)
+            emitter.check_type('carryAttachment' + name, extended, comp2(extended, 3, op, marker),
+                               arr(infer(ctx, lo), lo, target))
+
+
 def check(emitter):
     p = chart(1, 1)
     f, g = map(v, maximal_vars(p))
@@ -151,8 +196,10 @@ if __name__ == '__main__':
     check_first_face(emitter)
     check_derived_seam(emitter)
     check_moving_boundary(emitter)
+    for moving in (0, 1):
+        check_top_slot(emitter, moving)
     out.mkdir(parents=True, exist_ok=True)
     module = 'DirectedTemporalFaces'
     program = emitter.module(module, __doc__).replace('open import CaTTExp.Pure', 'open import CaTTExp.Gray.Pure')
     (out / (module + '.agda')).write_text(program)
-    print('Generated seven Gray judgments and the literal first-face inequality.')
+    print('Checked both top slots at two successive ranks, both schedules and both compound attachments.')

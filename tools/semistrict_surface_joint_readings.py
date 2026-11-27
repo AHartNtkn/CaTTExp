@@ -62,12 +62,76 @@ def join(left, right):
     return mk_coh(left[1], left[2], tuple(map(join, left[3], right[3])))
 
 
+def meet(left, right):
+    """Intersection of expanded occurrences in two cuts of one writing."""
+    if left[0] == 'v':
+        return left
+    if right[0] == 'v':
+        return right
+    assert left[1:3] == right[1:3]
+    return mk_coh(left[1], left[2], tuple(map(meet, left[3], right[3])))
+
+
 def greatest(diagrams):
     diagrams = set(diagrams)
     assert diagrams
     for a, b in product(diagrams, repeat=2):
         assert tuple(map(join, a, b)) in diagrams
+        assert tuple(map(meet, a, b)) in diagrams
     return next(a for a in diagrams if all(tuple(map(join, a, b)) == a for b in diagrams))
+
+
+def check_separate_poles(point, context, unit, marker, generic, emitter):
+    line = tree_ctx(((), ()))
+    edges = [v(i) for i, ty in enumerate(line) if ty != STAR]
+    l_form, _, r_form, _ = generic
+    one = tree_ctx(disc_tree(1))
+
+    def at(term, destination, argument):
+        return subst_tm(term, sub_from(one, destination, {len(one) - 1: argument}))
+
+    # The positions can be opened independently, even with the same old label.
+    readings = [comp2(line, 0, src(line, at(form, line, edges[0])), edges[1])
+                for form in (l_form, r_form)]
+    names, atoms, _ = finite_names(point, (unit,))
+    choices = atoms[unit], identity(names, atoms[v(0)])
+    accepted = []
+    for i, j in product(range(2), repeat=2):
+        assignment = sub_from(line, names, {edges[0][1]: choices[i], edges[1][1]: choices[j]})
+        left, right = [subst_tm(t, assignment) for t in readings]
+        if left == right:
+            accepted.append((i, j))
+    assert accepted == [(1, 0), (1, 1)]
+
+    # Construct the fitted comparison on the unfolded 2-disc, before folding
+    # its top slot onto a marker at a compound identity face.
+    two = tree_ctx(disc_tree(2))
+    top = v(len(two) - 1)
+    project = sub_from(two, context, {top[1]: marker})
+    source, target = src(two, top), tgt(two, top)
+
+    def frame(start, middle, end, ambient):
+        return comp2(ambient, 1, start, comp2(ambient, 1, middle, end))
+
+    for direction, l, li, r, ri in (('forward', *generic),
+                                    ('backward', generic[2], generic[3], generic[0], generic[1])):
+        p = frame(at(l, two, source), top, at(li, two, target), two)
+        q = frame(at(r, two, source), top, at(ri, two, target), two)
+        move_l = head(one, src(one, r), src(one, l))
+        move_r = head(one, src(one, l), src(one, r))
+        fitted = frame(at(move_l, two, source), p, at(move_r, two, target), two)
+        compare = subst_tm(head(two, fitted, q), project)
+        orig, dest = [subst_tm(t, project) for t in (p, q)]
+        k, h = [at(t, point, unit) for t in (move_l, move_r)]
+        pole = src(point, k)
+        neutral = identity(point, pole)
+        insert = head(two, top, frame(identity(two, source), top, identity(two, target), two))
+        start = subst_tm(insert, sub_from(two, context, {top[1]: orig}))
+        open_l = comp2(context, 1, head(point, neutral, k), comp2(context, 1, orig, neutral))
+        open_r = comp2(context, 1, k, comp2(context, 1, orig, head(point, neutral, h)))
+        result = comp2(context, 2, start, comp2(context, 2, open_l, comp2(context, 2, open_r, compare)))
+        emitter.check_type(direction + 'SeparatePoles', context, result, arr(infer(context, orig), orig, dest))
+    print('separate poles: least expansion (1, 0); two directed returns')
 
 
 def check_unitors(point, ctx, unit, b, emitter):
@@ -76,6 +140,7 @@ def check_unitors(point, ctx, unit, b, emitter):
     left = comp2(disc, 0, identity(disc, src(disc, f)), f)
     right = comp2(disc, 0, f, identity(disc, tgt(disc, f)))
     generic = [head(disc, a, z) for a, z in ((left, f), (f, left), (right, f), (f, right))]
+    check_separate_poles(point, ctx, unit, b, generic, emitter)
     at_unit = sub_from(disc, point, {f[1]: unit})
     l, li, r, ri = [subst_tm(t, at_unit) for t in generic]
 

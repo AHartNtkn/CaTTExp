@@ -404,3 +404,399 @@ Let 𝒯 be the least family of cells (over all finite pasting diagrams Γ) that
 ## 5. What counts as a solution
 
 A proof that 𝒯 is everything for the four settings (preferably for every admissible theory), or an explicit cell outside 𝒯 with a proof, together with a description of the closure; or a published result.
+
+## Researcher Response 1
+
+**Q1 and Q3 have negative answers in all four settings.** The binary join
+on two consecutive 3-globes is missing in degree four. There are also proper
+5-loops, with identity Gray projection, all of whose positive powers are
+missing. Both obstructions persist if one admits *every* lift in the
+operation clause. On the particular two-by-two grid of Q2 the answer depends
+on the rule. Only the identity power of $H$ belongs to the original
+family. Every choice in Q2 generates $H$ and all its powers.
+
+We use the equality $\pi c=\tau_P$ in §4 in its stated degree. For
+$P=\bigvee_i\Sigma\Theta_i$ with at least one span, put
+$d(P)=1+\sum_i\dim\Theta_i$. To see that this is the degree of $\tau_P$,
+choose a maximal-dimensional generator in each factor and take their
+tensor. Its degree in the long hom is the sum of their dimensions.
+An identity elevation of $\tau_P$ has the same closed support in a
+higher degree. The equality of degrees in the operation clause matters
+for the bare inner exchange.
+
+### A missing 4-cell, independent of choices
+
+Write $D(X)$ for the degree-four values expressible using 4-generators,
+identities, the two outer prisms $r,t$, the inner exchange $\iota$,
+chronological composition and fixed whiskers. Allow all matching lower
+cells as arguments. By (K30), (K32) and (K45), the only further proper
+letter to consider in this degree is the outer join $h$. The triangle is
+already $r(\chi,-)=t(-,\chi)$.
+
+In an outer interval of total hom height at most one, every 3-cell is an
+identity. Indeed the 3-letters are generating changes and outer crossings.
+The first needs a height-two factor and the second needs two positive
+factors. A proper $h$ needs proper 3-inputs on disjoint outer intervals.
+Thus a generic operation in degree four, whose total hom height is three,
+has a spelling in $D(P)$. The unit cases of $h$ are a prism or an
+identity. Substituting $D$-values for its 4-generators preserves this
+spelling, and substituting into a coherence gives an identity. Induction on
+generation therefore puts every generated degree-four value in $D(X)$,
+even with all lifts allowed. This uses no hypothesis on the expressibility
+of the generic faces.
+
+Take $L=\Sigma D^2\vee\Sigma D^2$, with generating changes $A,B$ and
+crossing $C$. In the interval of (K32) each 3-history schedules $A,B,C$
+once. The $D(L)$-steps on these schedules are exactly
+$$
+ BCA\longrightarrow CBA\longrightarrow CAB\longrightarrow ACB,\qquad
+ BCA\longrightarrow BAC,\qquad ABC\longrightarrow BAC,\qquad
+ ABC\longrightarrow ACB .
+$$
+The prisms move $BC$ to $CB$ or $CA$ to $AC$. The inner square
+puts the spatially left change first, and the spatial order changes at
+$C$. There is no further slot to vary or subdivide. The common
+degree-three presentation distinguishes the six schedules. From $BCA$
+one cannot reach $ABC$ in this graph, whereas (K45) supplies
+$h(A,B):BCA\to ABC$. This proves Q1, including the failure for every
+proposed choice in Q2. The same interval was computed for the syntactic
+head question in [Response 13 of the surface analysis](../answered/semistrict-surface-conservativity-r2-2026-11-25.md#researcher-response-13).
+
+### An exact description of the closure in every degree
+
+Here is an effective increasing union of finite sets describing
+$\mathcal T(\Gamma)_j$. It uses the unrestricted free tables and involves
+no oracle for primitivity or generation. First compute a test on an arity
+and a pair $a,b$ of proposed faces. Take the finite contextual-step graph
+of (K74) for reaching $b$ from $a$. Use proper steps. At each vertex
+also record the accumulated Gray cell, initialized at $1_{\pi a}$ and
+updated by composition with the projected step. This is a finite product
+graph since the Gray tables in fixed degree are finite by their Steiner
+supports. Retain the states on walks from the initial state to a state over
+$b$ with full support. Use *all* those final states, including the
+initial state when it qualifies.
+
+A directed cycle in this retained graph gives two full-support values of
+different positive-step weights by traversing the cycle one extra time.
+Here the additive top weight is pulled back from $T_{12}$, positive on
+each proper step by (K50), (K58) and (K74). In the acyclic case, list the
+finitely many accepting paths, including the empty path when applicable,
+and identify their values by (K74). Record an operation exactly when there
+is one class and its projection is $\tau_P$. This also proves necessity
+of the test since every free cell has a contextual path spelling.
+
+Fix a finite-alphabet coding of diagrams and expressions. At cutoff $N$
+list all well-typed expressions of length at most $N$, in degrees at most
+$j$, on trees of code length at most $N$, including the query tree in
+the list. Identify entries on each tree by free equality. On the listed
+arities run the preceding test at all listed pairs, using the *entire*
+graph for the test. Also record $1_a$ for each listed base $a$ passing
+the projected generator-occurrence test. On $\Gamma$, mark the listed
+generators. For every recorded operation or identity, try every compatible
+tuple of marked entries indexed by **all** its arity generators. Evaluate
+on the tuple and mark any equal listed result. Iterate to stability. Take
+the union over $N$ of the marked degree-$j$ entries.
+
+Each mark has a derivation by §4. Conversely every derivation has a finite
+tree of applications on $\Gamma$, with finitely many generic heads,
+generic faces and argument values. All have finite spellings and fit at
+one cutoff. Its entries are marked from the leaves up. Arity heights in
+such a derivation never exceed the output degree of the head, as follows
+from $d(P)$ for an operation and from occurrence in the projected base
+for a coherence. The procedure needs no earlier mark for that generic
+base. In particular the description applies even to identities on bases
+whose generation has never been established. It gives a uniform positive
+membership search.
+
+### Why the unique-lift rule misses $H$
+
+Write $G=\Sigma[2]\vee\Sigma[2]$. In fact every degree-four value of
+$\mathcal T(G)$ is an identity. We prove this by induction on the last
+application. There are no 4-generators in $G$, and a coherence gives an
+identity. For an operation let its degree-four arguments already be
+identities. Each outer span maps to an ordered interval of objects of
+$G$. For an outer prism to survive, its 3-change would have to act
+on one interval while a proper 2-step acts on a disjoint one, and neither
+short span of $G$ has a proper 3-cell. By the height bound it remains
+to test whether a *unique* full lift can contribute a surviving
+$\iota$. The positive hom heights of its arity partition three.
+
+We give the schedule details of this test. In a height-one column the
+2-steps form a line of slots. A height-two column has a line of slots
+with a string of generating 3-changes at each slot, possibly empty.
+Expand every 3-history into generating changes and elementary crossings
+using the two outer subdivisions (K30). Each atomic 3-step contributes
+a positive basis element to its Gray chain, so reading the chain of a
+prescribed face accounts for every such step. Crossing two blocks of slots
+preserves the order within each block. At fixed 2-faces the possible
+expansions are schedules of adjacent swaps. Fixed outer 1-arrows can be
+carried throughout. They have no events, and (K30)'s whiskering and (K58)'s
+exterior and intervening transports place the same calls at these fixed
+arrows. We use the following fact about two blocks several times.
+
+In a complete rectangle of crossings, index the rows by the left-factor
+slots in their order in the 2-word. To put a smaller row earlier, swap
+two consecutive out-of-row-order crossings. They use different slots on
+both sides, since the order on each shared slot is prescribed. The
+smaller row is spatially left, so this is a forward $\iota$. This sorts
+any schedule to row order. Sorting the other way by *inverse* moves gives
+the other extreme, column order (on a fixed column the row order is
+forced). Equivalently the two priority orders of the rectangle poset take
+opposite orders on **every** incomparable pair. Both extremes spell the
+same block $\chi$ by (K30). Hence any complete schedule can reach that
+block and the block can reach any complete schedule. If both side lengths
+are at least two, obtain a positive loop by subdividing off a
+two-by-two subrectangle and inserting the whiskered (K34) loop there.
+Its weight is positive by (K45). Any full lift whose faces can be joined
+through such a block in a fixed 3-context fails uniqueness, by inserting
+that loop into the path. This observation applies when the path projects
+to $\tau_P$, since the inserted inner step projects to an identity.
+
+**One height-three column.** In the single active column the proper
+4-steps are literal 4-globe updates and inner exchanges. A 3-history
+lists the generating changes at each slot in order, interleaved across
+slots. A 4-globe replaces the version of one such change by its next
+parallel version. Full support uses a literal 4-globe. If a route also
+uses an inner exchange, perform all the version updates first and then
+the same exchanges, or perform the exchanges first and all updates last.
+Changing the version preserves the two faces of
+the change and exchanging adjacent disjoint blocks transports its
+position. Keep the order of successive updates of a version. Both routes
+project to the same strict-hom paste. They are different in the four
+settings. On this column the chronological list of literal 4-globes
+separates gaps of inner exchanges. The structural laws preserve the
+list and the optional subdivisions replace a proper block exchange by
+proper exchanges in the same gap. No proper outer law is enabled. Thus
+a nonempty exchange gap before the first globe cannot equal an empty
+one. A unique head here uses only globe updates and specializes to an
+identity.
+
+**A height-two column and a line.** First put the moving column on the
+left. Write $m$ for its number of slots, $n$ for the length of the
+stationary line. Write $u,v$ for the orders of moving changes in the
+two proposed 3-faces, read by forgetting the crossings. In an expanded
+source face each change at row $i$ follows all $n$ crossings of that
+row. In a target face it precedes them all. Indeed the Gray faces of the
+total are the source and target of the prism on the entire moving paste
+and stationary line. Expansion uses every required change and crossing
+once. The order of a change and a crossing on its own row is visible in
+the version of the row at the crossing in the projected Steiner table.
+The following construction works for every such pair admitting a lift.
+
+1. From a source spelling extract its first moving change, say at row
+   $i$, to the front. The crossing prefix contains the complete first
+   $i$ rows. Sort those rows to the front of the prefix by the forward
+   disjoint swaps above and put that rectangle in block form. The
+   remaining prefix uses rows to the right of $i$, so the change can
+   pass it towards the front by forward inner swaps. Use $r$ to move
+   the change through the block of the first $i$ rows, whiskering it
+   by the other slots in those rows. Repeat in the remaining suffix.
+   This gives $u$ followed by a complete rectangular crossing.
+2. At this stage one can change $u$ to $v$. Contracting the stationary
+   column in the given lift gives a path of inner exchanges of the moving
+   changes. For reachability each such swap of disjoint blocks can be
+   executed by successive adjacent right-first to left-first swaps,
+   regardless of any subdivision equation.
+3. From $v$ followed by a block one can reach the prescribed target.
+   Choose the order of crossings in that target using the complete
+   rectangle fact. Interleave them into $v$ in the prescribed order.
+   Each crossing that must precede a pending change lies in a strictly
+   smaller row, since a crossing of the same or a larger row would require
+   a crossing of that change's row already to have occurred. Moving
+   the crossing earlier is therefore a forward inner swap.
+
+All the constructed paths between the prescribed faces project to the
+total. Each moving change crosses the stationary line by its prism once,
+with the other rows fixed. In the Gray hom these contribute exactly the
+tensor of that change with each stationary edge and the inner steps
+contribute zero. This is the top chain of the total, and its lower rows
+are fixed by the prescribed faces. In particular, if $m,n\ge2$, step 1
+exhibits the block where the positive loop can be inserted.
+
+There is a second way to perform step 2 if $u\ne v$. Execute its
+adjacent swaps *before* step 1. For a desired swap of successive moving
+changes at rows $j>i$, any intervening crossings have row greater
+than $j$, since all crossings of row $j$ preceded its change, and hence
+so did all crossings of earlier rows. Move the row-$i$ change earlier
+over the intervening crossings, then swap the two changes. This keeps
+the source-face condition. Iterate, extract the changes by step 1 and
+finish by step 3. These two lifts are unequal. Mark a pair of changes
+whose order switches and one stationary edge. In the early route the
+two changes exchange after both have crossed the marked edge in the
+2-word. In the late route they exchange before either has crossed it.
+To check that this distinguishes values, retain just the two marked
+changes at their two slots and one stationary edge by contraction. On
+this strip a 3-history has a unique atomic spelling: the moving updates
+are literal and a crossing against one stationary edge splits in its
+prescribed row order. Count exchanges of the marked pair with that edge
+on their right. For an exchange of two histories, read the pair at its
+individual swap in a subdivision into atomic swaps. Its position is
+well-defined even when a block split is optional. At that swap exactly
+the two prefixes internal to the respective operands have executed. They
+act on disjoint spatial intervals, so either order gives the same 2-word.
+Consequently dividing either operand partitions the same count. Balancing
+and fixed whiskering preserve the marked positions, and the
+extra exchanges in the varying-whisker laws each have a crossing as one
+operand. No proper join is possible. These exhaust the positive
+degree-four laws here by (K30), (K45) and (K58). The pair changes order
+only once under the oriented swaps. Thus the early and late counts are
+one and zero.
+
+For a right moving column the identical path argument is obtained by
+reflecting the slot word, interchanging the two outer factors and reading
+each 4-route backwards. At the level of schedules this exchanges the
+source of $r$ with the target of $t$, and right-first before a forward
+swap with left-first after the reflected swap. It exchanges the two
+prism subdivision and varying-whisker checks. Only prisms, inner squares
+and the two outer crossing subdivisions enter this argument.
+
+Now specialize to $G$. If the moving column covers both actual spans,
+the stationary column collapses. A surviving inner square has a change
+from each moving operand and reverses their relative order. The moving
+row positions are fixed, so forward swaps cannot undo that reversal.
+This requires $u\ne v$, just excluded for a unique head. Otherwise
+all its generating 3-changes specialize to identities. A surviving
+inner square must then exchange disjoint crossing histories. Each
+operand needs a slot from each of the two columns, hence $m,n\ge2$,
+also excluded. Subdivision inside a substituted slot does not change
+the disjointness of the two generic slot intervals.
+
+**Three lines.** Denote their ordered blocks of slots by $A,B,C$
+from left to right along the outer spine. In the initial 2-word they
+occur as $CBA$. For every choice of one slot per block the total's
+3-source orders its crossings $BC,AC,AB$ and its target orders them
+$AB,AC,BC$, by the triangle of (K30). These orders follow also by
+restricting the projected faces to that triple. The expanded histories
+have each inter-block pair crossing exactly once.
+
+From any source spelling move all $BC$ crossings to the front. No
+$AB$ crossing can precede an unfinished $BC$, since the first $AB$
+uses the last $B$-slot, which must already have crossed every
+$C$-slot. An intervening $AC$ that precedes a pending $BC$ can
+be interchanged with it when adjacent. The two crossings are disjoint,
+and the $C$-slot meeting $A$ has already passed all of $B$, placing the $BC$ crossing spatially left. Thus the required swaps are
+forward. The initial $BC$ rectangle and the remaining crossing of
+$A$ with the ordered block $BC$ are both complete. Put each in
+block form. From a target spelling the reverse procedure using
+*inverse* inner swaps moves all $AB$ crossings to the front. The
+first $BC$ needs the first $B$-slot to have crossed all of $A$,
+and a pending $AB$ is spatially right of an intervening $AC$.
+The remaining rectangle crosses the ordered block $AB$ with $C$.
+The two resulting block spellings are joined by the full triangle
+$t(A,\chi(B,C))=r(\chi(A,B),C)$. Reading the target preparation
+backwards therefore finishes a full lift to the prescribed target.
+
+If two line lengths are at least two, one of the rectangles on this
+route admits the positive loop, since the source rectangles have sizes
+$|B|\times|C|$ and $|A|\times(|B|+|C|)$.
+Under a substitution to $G$, at most two outer columns can occupy
+distinct nonempty object intervals. A surviving inner exchange needs
+a crossing in each of two disjoint operands. Both occupied columns
+must therefore have at least two generic slots. The loop on the
+constructed route excludes uniqueness.
+
+This exhausts the partitions of three and proves the induction on
+$G$. By (K45) and comparison to $T_{12}$, $H^k$ is proper for
+every $k>0$. Its zeroth power is the coherence on the block crossing, whose
+projection uses all four generating advances.
+
+### Why every choice generates $H$
+
+Use the single outer column $D^4 *_1 D^3$. On its left temporal
+interval put $U:A_0\to A_1$ in degree four, and on its right interval
+put the generating 3-change $B$. Use as faces the right-first schedule
+on $A_0,B$ and the left-first schedule on $A_1,B$. Updating the
+version and then exchanging the changes gives a lift of the proper
+4-dimensional total. Its value in the strict Gray hom is $U$ pasted with
+the identity on $B$. Collapse $U$ to $1_A$ and both versions to
+$A$ on $D^3 *_1 D^3$. Between the resulting two schedules there is
+exactly one 4-cell. There are just two generating changes, one forward
+inner exchange and no further proper letter. Thus **every** choice at
+the padded faces specializes to $\iota(A,B)$. The collapse uses only
+generators and the identity of a generator, available by coherence on
+its globe.
+
+The outer elementary square on two 2-globes is unique on its generic
+faces and gives each crossing used in (K34). The structural operations
+needed there are available at their exact values as well. Top composition
+uses a temporal stack of two globes and a fixed whisker uses a globe
+with a single adjacent slot of dimension one above the cut. On these
+arities there is just the indicated order of the top changes, with the
+lower slot stationary. No two disjoint changes are available for an
+exchange at that cut. The resulting full top paste is unique (at cut
+zero the exterior 1-arrow is a point factor in the tensor). Through degree
+three every cell is a structural paste of variables and elementary outer
+crossings. This supplies all faces needed for the substitutions.
+One can therefore substitute the two outer crossings into the padded-square
+construction and put its value between the fixed corners $p,q$.
+This gives precisely $H$. Top composition gives every power. The
+argument uses only the forced image after collapse, so it applies to
+every choice satisfying Q2's condition.
+
+### A loop missed even with every lift
+
+On three consecutive outer blocks take two copies $L_1,L_2$ of
+$L$ above and the arity $R$ of the weight-one 5-loop $J$ of
+(K69). Explicitly $R$ has two consecutive outer spans, two
+top-composable hom 2-globes on the first and a two-edge line on the
+second. The two subdivisions of the outer unary have the same first
+and last moves and exchange the order of the middle two. The contextual
+exchange of these middle moves gives $J$, with charge one in
+$T_{12}$. [Construction and charge](../answered/lax-interchange-every-dimension-r9-2026-11-20.md#power-splits-on-actual-pasting-diagrams)
+
+On the wedge of these blocks form the 5-cell
+$$
+                 X=(1_{h_1} *_0 1_{h_2}) *_0 J .
+$$
+It is a loop by the face formula. Its projection is an identity since
+$J$ is an inner exchange in context. Collapsing everything except
+$R$ gives $J$, so $X^k$ is proper for every $k>0$.
+Collapsing to either $L_i$ sends its 4-source to $h_i$ by strict units.
+
+Suppose such a power were generated, allowing every lift. The wedge has
+no 5-generator, and the output is proper, so its final head is a
+5-operation on some $P$ of total hom height four. Spell its 4-source
+in the degree-four presentation, using the generating skeleton through
+degree four. Under either collapse every assigned 4-generator has value
+in $D(L_i)$. To see this, compose the generation derivation for its assignment
+with the collapse, which sends generators to generators or iterated
+identities on vertices. Such post-substitution preserves generation by
+induction on the derivation. Since $h_i\notin D(L_i)$, at least one
+native join in this source spelling must remain proper after collapse
+to $L_i$. Otherwise the argument spellings and the specialized source
+give a $D(L_i)$-expression.
+
+The two operands of that surviving join must act on the two distinct
+short spans of $L_i$. On either span the only proper 3-change is its
+generating globe. In an expanded generic 3-operand some 3-variable
+must supply that change, since a crossing restricted to a single short span
+has a unit operand. Thus one generic outer column of height at least
+two supplies the left change and a strictly later such column supplies
+the right change. Under the original substitution their object
+intervals contain the respective actual short spans of $L_i$.
+
+There can be at most two height-two-or-higher columns in $P$. Hence
+the *same* earlier column must supply both left changes and the same
+later column both right changes. But the right span of $L_1$
+precedes the left span of $L_2$. Ordered images of two consecutive
+groups of outer columns have disjoint interiors, so the earlier image
+cannot cover the left span of $L_2$ while the later one covers the
+right span of $L_1$. This contradiction proves the claimed exclusion
+for every positive power and finishes Q3.
+
+### Validation
+
+Run `python3 -B scripts/e6/check_uniform_primitive_generation.py` from
+the repository root. The checker grounds the directed transports on all
+five source and five target classes of the two-by-two prism. It checks
+all 22 source and 22 target schedules across the three placements of
+the singleton line in the subdivided cube. On the one-edge stationary
+prism it verifies that the early and late exchanges specialize to the
+same bare swap and occupy different equation classes. The rectangle
+sorting and height arguments above supply the unbounded steps.
+[Boundary checker](../../../scripts/e6/check_uniform_primitive_generation.py)
+
+The six-schedule interval and the positive weight of the contextual
+loop can be checked independently with `python3 -B scripts/e6/t_binary_interval.py`
+and `python3 -B scripts/e6/interchange_loop_weights.py`. The degree-five
+loop uses the two subdivisions in (K69).
